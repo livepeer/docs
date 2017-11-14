@@ -46,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Livepeer'
-copyright = u'2017, Doug Petkanics'
+copyright = u'2017, Livepeer, Inc'
 author = u'Doug Petkanics'
 
 # The version info for the project you're documenting, acts as replacement for
