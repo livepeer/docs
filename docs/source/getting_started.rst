@@ -27,7 +27,7 @@ Download ``livepeer`` and ``livepeer_cli`` from https://github.com/livepeer/go-l
     $ mv livepeer_darwin livepeer
     $ mv livepeer_cli_darwin livepeer_cli
     $ chmod 755 livepeer livepeer_cli   
-    $ ./livepeer --testnet --offchain
+    $ ./livepeer -bootnode -offchain
 
 This will start a Livepeer node.
 
@@ -51,11 +51,11 @@ Play the stream
 - Visit http://media.livepeer.org/player.html in your browser.
 - Paste the stream ID and press play.
 
-You should now see your stream. Anyone else on the Livepeer test network should also be able to see your stream.
+You should now see your stream. Anyone else on your own private Livepeer test network should also be able to see your stream. 
 
 .. _whatsnext:
 
 What's Next?
 ---------------------
 
-You just demonstrated sending video around the P2P network in ``--offchain`` mode. Time to go on chain to utilize the Livepeer network's true power. The next sections will teach you how to run a node on the blockchain, use Livepeer to broadcast to a large audience, how to build an app with video functionality using LIvepeer, and how to participate in the Livepeer protocol as a delegator or transcoder.
+You just demonstrated sending video around the P2P network in ``--offchain`` mode. Time to go on chain to utilize the Livepeer network's true power, and learn how to use more convenient tools to broadcast and consume the streams. The next sections will teach you how to run a node on the blockchain, use Livepeer to broadcast to a large audience, how to build an app with video functionality using LIvepeer, and how to participate in the Livepeer protocol as a delegator or transcoder.
