@@ -1,0 +1,142 @@
+# Broadcasting on Livepeer
+
+Broadcasting to Livepeer using existing broadcasting tools is
+easy. After a Livepeer node is running, it exposes an RTMP interface
+on port 1935. You can broadcast into Livepeer using this port.
+
+The following instructions assume that you have followed the
+installation instructions and [have the node running](node.html).
+
+## Broadcast Using livepeer_cli
+
+Start livepeer_cli
+
+```
+$ livepeer_cli
+```
+
+It will read data from the currently running node, and display a list
+of options. Choose the option to `Broadcast Video`:
+
+```
+What would you like to do? (default = stats)
+ 1. Get node status
+ 2. Deposit token
+ 3. Broadcast video
+ 4. Stream video
+ 5. Set transcoder config
+ 6. Set broadcast config
+ 7. Bond
+ 8. Unbond
+ 9. Withdraw bond
+ 10. Become a transcoder
+ 11. Get test Livepeer Token
+ 12. Get test Ether
+ 13. List registered transcoders
+> 3
+
+Current RTMP setting: http://localhost:1935/streams
+Current HTTP setting: http://localhost:8935/streams
+Keep it? (Y/n) > Y
+New rtmp port? (default 1935)> 
+New http port? (default 8935)> 
+New RTMP setting: http://localhost:1935/streams
+New HTTP setting: http://localhost:8935/streams
+Now broadcasting - 
+StreamID: 1220354cd445c228356df6625d8646d5000581bd151454c45a4a17879d5aa015b7afacbcfdd09cfe54a27d033dac3be03061e11045c3f272a1a7534f6b4b2d548005
+Type `q` to stop broadcasting
+```
+
+You are now broadcasting into Livepeer, and anyone else on your
+Livepeer network can request the video using the StreamID that is
+printed out.
+
+## Playing the Stream
+
+You can request your stream in a number of ways.
+
+* Request the stream through the [web player](http://media.livepeer.org/player.html).
+* Request the stream using `ffplay`
+
+```
+$ ffplay http://localhost:8935/stream/{streamID}.m3u8
+```
+
+When you're finished broadcasting you can type `q` to stop the stream.
+
+## Broadcasting Using OBS
+
+It is far more convenient to broadcast using existing tools that have
+features for screen capture, composites, overlays, multiple video and
+audio sources, etc. One such tool is
+[OBS](https://obsproject.com/). To use OBS you have to change one
+setting:
+
+* Settings -> Stream -> URL. Set it as `rtmp://localhost:1935/movie`
+* Start streaming as usual.
+
+The tricky part is that OBS is not aware of the Livepeer Stream
+IDs. You can find the streamID in the console output of the Livepeer
+node. Or you can request it from the Livepeer node through curl:
+
+```
+$ curl http://localhost:8935/streamID
+```
+
+Now that you have the streamID you can share it or play the stream as
+described above using the web player or ffplay.
+
+
+## Broadcasting Using FFMPEG
+
+To broadcast using ffmpeg you can try the following command:
+
+```
+ffmpeg -f avfoundation -framerate 30 -pixel_format uyvy422 -i "0:0" -vcodec libx264 -tune zerolatency -b 1000k -x264-params keyint=60:min-keyint=60 -acodec aac -ac 1 -b:a 96k -f flv rtmp://localhost:1935/movie
+```
+
+As described above, you can now find the streamID and share it to play.
+
+## Broadcasting from Mobile
+
+There is not currently a natively Livepeer aware mobile app, but much
+like [using OBS](#broadcasting-using-obs), as described above, you can
+use any existing mobile broadcasting tool such as ManyCam on iOS or
+RTMPCamera on Android to broadcast into Livepeer.
+
+Instead of setting the rtmp output to `localhost:1935`, you'll want to
+set it to a remote Livepeer node that you are running on a
+server. Replace `localhost` with the IP address of the server.
+
+Again, the tricky part will be finding the streamID since the app
+won't be aware.
+
+A good solution to this would be for someone to fork one of the open
+source mobile broadcasting apps to make it Livepeer aware, by fetching
+the streamID from the server and displaying it when the user starts
+broadcasting. Another solution we're working on is making web and
+mobile native Livepeer clients, so there's no need to connect to a
+remote node.
+
+## Reaching Many Viewers at Scale
+
+Any user on the Livepeer network who has the ID for your stream should
+be able to request and access it. The current relay-based solution for
+delivering the video works in a p2p fashion, but may be susceptible to
+user churn or low bandwidth connections. Future versions of the
+software promise resilience against this by implementing more robust
+p2p protocols.
+
+In the meantime however, if you would like to take your output video
+and make it available via a conventional CDN, then you have the option
+to do so.
+
+* Run a Livepeer node on a server, and expose port `8935`.
+* Configure your CDN to cache video content running at
+`http://hostname:8935/stream/{streamID}.m3u8`
+
+Now any requests that come into your site or DApp for video streaming
+through Livepeer will pull the video from the network, but will be
+served off of a CDN. In the future, we would like to replace this
+option with the p2p network that Livepeer forms around a stream.
+
