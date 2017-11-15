@@ -1,9 +1,9 @@
 Need Help
 =============
 
-If you need help, please visit the chat room at http://gitter.im/livepeer/Lobby
+The Livepeer team and community are available to help with any additional questions. You can find them on:
 
-Need further help
------------------------
-
-Please visit the forum at http://forum.livepeer.org
+* Gitter chat room: http://gitter.im/livepeer/Lobby
+* Forum: http://forum.livepeer.org
+* Twitter: http://twitter.com/LivepeerOrg
+* Reddit: http://reddit.com/r/livepeer

@@ -40,7 +40,7 @@ In another terminal window::
 
     $ ./livepeer_cli
     
-Select Broadcast a video. This will print out a stream ID, and you are now streaming live.
+Select Broadcast a video. This will print out a stream ID, and you are now streaming live from your laptop's web cam.
 
 .. _stream:
 
@@ -58,4 +58,4 @@ You should now see your stream. Anyone else on your own private Livepeer test ne
 What's Next?
 ---------------------
 
-You just demonstrated sending video around the P2P network in ``--offchain`` mode. Time to go on chain to utilize the Livepeer network's true power, and learn how to use more convenient tools to broadcast and consume the streams. The next sections will teach you how to run a node on the blockchain, use Livepeer to broadcast to a large audience, how to build an app with video functionality using LIvepeer, and how to participate in the Livepeer protocol as a delegator or transcoder.
+You just demonstrated sending video around the P2P network in ``--offchain`` mode. Time to go on chain to utilize the Livepeer network's true power, and learn how to use more convenient tools to broadcast and consume the streams. The next sections will teach you how to run a node on the blockchain, use Livepeer to broadcast to a large audience, how to build an app with video functionality using Livepeer, and how to participate in the Livepeer protocol as a delegator or transcoder.
