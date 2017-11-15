@@ -1,6 +1,6 @@
 # Livepeer Documentation
 
-These docs are visible at (readthedocs.io).
+These docs are visible at http://livepeer.readthedocs.io
 
 ## Building Locally
 
