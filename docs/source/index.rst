@@ -38,5 +38,10 @@ Index
    :maxdepth: 2
 
    getting_started
+   node
+   broadcasting
+   bonding_and_delegation
+   transcoding
+   developers
    license
    help
