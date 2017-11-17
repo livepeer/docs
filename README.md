@@ -14,6 +14,14 @@ $ make html
 $ open build/html/index.html
 ```
 
+Another nice option is to use `sphinx-autobuild` which will run a server that automatically rebuilds the updates for you after any changes. If you're in the `./docs` subdirectory...
+
+```
+sphinx-autobuild  ./source/ _build/html/
+```
+
+You can access the docs at http://localhost:8000
+
 ## Contributing
 
 All contributions and doc updates are appreciated! Please make pull requests into the master branch with updates.
