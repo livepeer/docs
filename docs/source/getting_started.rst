@@ -10,12 +10,9 @@ The first step in getting started with Livepeer is to try to run the Livepeer ex
 Dependencies
 ---------------
 
-Livepeer has a dependency on `ffmpeg`_. Please install ffmpeg:
+Livepeer has a dependency on a pre-compiled version of `ffmpeg`_. It can be downloaded from https://github.com/livepeer/ffmpeg-static
 
 .. _ffmpeg: http://ffmpeg.org
-
-- On OSX run ``brew install ffmpeg --with-ffplay``.
-- On Debian based linux run ``apt-get install ffmpeg``.
 
 .. _install:
 
