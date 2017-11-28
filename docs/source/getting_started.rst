@@ -22,8 +22,10 @@ Install Livepeer
 Download ``livepeer`` and ``livepeer_cli`` from https://github.com/livepeer/go-livepeer/releases. Choose the _darwin version for OS X and the _linux versions for Linux, and then untar them::
 
     $ tar -xvf livepeer_darwin.tar
+    $ mv ./livepeer_darwin/livepeer ./livepeer
     $ tar -xvf livepeer_cli_darwin.tar
-    $ ./livepeer_darwin/livepeer -testnet -offchain
+    $ mv ./livepeer_cli_darwin/livepeer_cli ./livepeer_cli
+    $ ./livepeer -testnet -offchain
 
 This will start a Livepeer node.
 
