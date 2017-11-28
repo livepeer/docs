@@ -38,9 +38,7 @@ In another terminal window::
 
     $ ./livepeer_cli
     
-Select Broadcast a video. This will print out a manifestID, and you are now streaming live from your laptop's web cam.
-
-.. code-block::
+Select Broadcast a video. This will print out a manifestID, and you are now streaming live from your laptop's web cam::
   
   Current RTMP setting: http://localhost:1935/streams
   Current HTTP setting: http://localhost:8935/streams
