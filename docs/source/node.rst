@@ -54,7 +54,7 @@ The Livepeer testnet is a set of nodes that are available syncing with a private
 Run Livepeer
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Make sure that you have gone through the installation steps for both Livepeer, and its dependencies ffmpeg and geth. Make sure geth is running. Now you can start Livepeer::
+Make sure that you have gone through the installation steps for both Livepeer, and its dependencies ffmpeg and.  Now you can start Livepeer::
 
   $ livepeer --testnet
 
