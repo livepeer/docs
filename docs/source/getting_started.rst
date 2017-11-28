@@ -19,12 +19,11 @@ Livepeer has a dependency on a pre-compiled version of `ffmpeg`_. It can be down
 Install Livepeer
 -----------------
 
-Download ``livepeer`` and ``livepeer_cli`` from https://github.com/livepeer/go-livepeer/releases. Choose the _darwin version for OS X and the _linux versions for Linux, and then rename them::
+Download ``livepeer`` and ``livepeer_cli`` from https://github.com/livepeer/go-livepeer/releases. Choose the _darwin version for OS X and the _linux versions for Linux, and then untar them::
 
-    $ mv livepeer_darwin livepeer
-    $ mv livepeer_cli_darwin livepeer_cli
-    $ chmod 755 livepeer livepeer_cli   
-    $ ./livepeer -bootnode -offchain
+    $ tar -xvf livepeer_darwin.tar
+    $ tar -xvf livepeer_cli_darwin.tar
+    $ ./livepeer_darwin/livepeer -testnet -offchain
 
 This will start a Livepeer node.
 
@@ -37,16 +36,23 @@ In another terminal window::
 
     $ ./livepeer_cli
     
-Select Broadcast a video. This will print out a stream ID, and you are now streaming live from your laptop's web cam.
+Select Broadcast a video. This will print out a manifest ID (New HLS Video), and you are now streaming live from your laptop's web cam.
+
+.. code-block::
+  
+  New HLS Video: 1220cad22d9509e03e61e9995f912f348aa3ccb4bc07a5325fe14a4c1dd4bd2cffa3d53ef9f6cca304974b75df8955ee5559196e8c5df026cb2824d8a8c7b7ba4c7c
+  strmID: 1220cad22d9509e03e61e9995f912f348aa3ccb4bc07a5325fe14a4c1dd4bd2cffa3d53ef9f6cca304974b75df8955ee5559196e8c5df026cb2824d8a8c7b7ba4c7cP720p30fps16x9
+
+
 
 .. _stream:
 
 Play the stream
 ---------------------
 
-- Copy the streamID.
+- Copy the manifestID (New HLS Video).
 - Visit http://media.livepeer.org/player.html in your browser.
-- Paste the stream ID and press play.
+- Paste the manifestID and press play.
 
 You should now see your stream. Anyone else on your own private Livepeer test network should also be able to see your stream. 
 
