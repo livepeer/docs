@@ -38,12 +38,16 @@ In another terminal window::
 
     $ ./livepeer_cli
     
-Select Broadcast a video. This will print out a manifest ID (New HLS Video), and you are now streaming live from your laptop's web cam.
+Select Broadcast a video. This will print out a manifestID, and you are now streaming live from your laptop's web cam.
 
 .. code-block::
   
-  New HLS Video: 1220cad22d9509e03e61e9995f912f348aa3ccb4bc07a5325fe14a4c1dd4bd2cffa3d53ef9f6cca304974b75df8955ee5559196e8c5df026cb2824d8a8c7b7ba4c7c
-  strmID: 1220cad22d9509e03e61e9995f912f348aa3ccb4bc07a5325fe14a4c1dd4bd2cffa3d53ef9f6cca304974b75df8955ee5559196e8c5df026cb2824d8a8c7b7ba4c7cP720p30fps16x9
+  Current RTMP setting: http://localhost:1935/streams
+  Current HTTP setting: http://localhost:8935/streams
+  Keep it? (Y/n) >
+  Now broadcasting -
+  ManifestID: 1220cad22d9509e03e61e9995f912f348aa3ccb4bc07a5325fe14a4c1dd4bd2cffa3f1841bda0921035bd431636bbc0daac03ae3ea1a3005bec9dc93974af98019a4
+  Type `q` to stop broadcasting
 
 
 
@@ -52,7 +56,7 @@ Select Broadcast a video. This will print out a manifest ID (New HLS Video), and
 Play the stream
 ---------------------
 
-- Copy the manifestID (New HLS Video).
+- Copy the manifestID.
 - Visit http://media.livepeer.org/player.html in your browser.
 - Paste the manifestID and press play.
 
