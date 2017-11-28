@@ -49,45 +49,6 @@ Running a node on the Livepeer Testnet
 
 The Livepeer testnet is a set of nodes that are available syncing with a private Ethereum blockchain. The homepage for the testnet is available at http://eth-testnet.livepeer.org/.
 
-Install and start Geth
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Geth is the Ethereum client which is required to sync the testnet blockchain. The instructions for installing geth are available on the `Ethereum installation guide`_. Generally this is just downloading a binary file for your platform.
-
-The "connect yourself" tab on the `Testnet Homepage`_ provides instructions for how to initialize Geth and launch it. It can be summarized as:
-
-* Create a geth data directory. For example::
-
-  $ mkdir ~/.lpGeth
-  
-  We recommend creating a new directory even if you already have one, so the Livepeer testing data will be stored separately.
-
-* Download the genesis json `lptestnet.json`_. It can be saved anywhere. It'll just be used once for the next step
-
-* Initialize your local geth node with testnet genesis block. For example::
-
-  $ geth --datadir ~/.lpGeth init lptestnet.json
-  
-.. note:: Depending on your geth version, you may see a complaint about 'genesis.number' related to your .json file. To fix the issue, delete the "number" field in the json.
-
-* Create a new geth account and provide a password::
-
-    $ geth --datadir ~/.lpGeth account new
-
-* Copy this account address down somewhere and remember the password, as you'll need them when you start the Livepeer node.
-    
-* Start geth with the network id ``858585`` and the Livepeer testnet bootnode. For example::
-
-    $ geth --datadir ~/.lpGeth --networkid 858585 --bootnodes "enode://080ebca2373d15762c29ca8d85ddc848f10a7ffc745f7110cacba4694728325d645292cb512d7168323bd0af1650fca825ff54c8dba20aec8878498fae3ff3c6@18.221.67.74:30303"
-    
-  Now the geth node should be running, and it should soon start downloading blocks.
-
-.. note: The actual values for networkid and bootnodes flags should be taken from the "Connect Yourself" tab on the `Testnet Homepage`_.
-
-.. _Ethereum installation guide: https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum
-.. _Testnet Homepage: http://eth-testnet.livepeer.org/
-.. _lptestnet.json: http://eth-testnet.livepeer.org/lptestnet.json
-
 .. _run livepeer:
 
 Run Livepeer
@@ -95,7 +56,7 @@ Run Livepeer
 
 Make sure that you have gone through the installation steps for both Livepeer, and its dependencies ffmpeg and geth. Make sure geth is running. Now you can start Livepeer::
 
-  $ livepeer --testnet --ethAccountAddr <ethereum account address created above> --ethPassword <pw to the eth account created above>
+  $ livepeer --testnet
 
 In a separate terminal window, run livepeer_cli::
 
@@ -135,6 +96,45 @@ Now that you have Livepeer token and ETH you can use them broadcast, bond and de
   
 * :doc:`transcoding`
 
+Install and start Geth
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Geth is the Ethereum client, and you can run your own Geth instances instead of using the Livepeer testnet Geth instances. The instructions for installing geth are available on the `Ethereum installation guide`_. Generally this is just downloading a binary file for your platform.
+
+The "connect yourself" tab on the `Testnet Homepage`_ provides instructions for how to initialize Geth and launch it. It can be summarized as:
+
+* Create a geth data directory. For example::
+
+  $ mkdir ~/.lpGeth
+  
+  We recommend creating a new directory even if you already have one, so the Livepeer testing data will be stored separately.
+
+* Download the genesis json `lptestnet.json`_. It can be saved anywhere. It'll just be used once for the next step
+
+* Initialize your local geth node with testnet genesis block. For example::
+
+  $ geth --datadir ~/.lpGeth init lptestnet.json
+  
+.. note:: Depending on your geth version, you may see a complaint about 'genesis.number' related to your .json file. To fix the issue, delete the "number" field in the json.
+
+* Create a new geth account and provide a password::
+
+    $ geth --datadir ~/.lpGeth account new
+
+* Copy this account address down somewhere and remember the password, as you'll need them when you start the Livepeer node.
+    
+* Start geth with the network id ``858585`` and the Livepeer testnet bootnode. For example::
+
+    $ geth --datadir ~/.lpGeth --networkid 858585 --bootnodes "enode://2975123a0b613588a52a4cc80981a1d101ce4dc0176e62757b771237073bccbf4066b03b5c647d36fcbdd7422fda434029563641bd6e4d2afdb96d73f574fd90@18.216.122.204:30303"
+    
+  Now the geth node should be running, and it should soon start downloading blocks.
+
+.. note: The actual values for networkid and bootnodes flags should be taken from the "Connect Yourself" tab on the `Testnet Homepage`_.
+
+.. _Ethereum installation guide: https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum
+.. _Testnet Homepage: http://eth-testnet.livepeer.org/
+.. _lptestnet.json: http://eth-testnet.livepeer.org/lptestnet.json
+
 .. _private network:
 
 Running a node on a private network
@@ -146,14 +146,14 @@ Instructions for creating a private ethereum chain are on the `geth README`_.
 
 Start Livepeer with the ``--bootnode`` flag::
 
-  $ livepeer --bootnode --v 4  --ethAccountAddr <ethereum address> --ethPassword <eth account pw>
+  $ livepeer --bootnode --v 4  --ethAcctAddr <ethereum address> --ethPassword <eth account pw>
 
 * The ``bootID`` will print out and will look something like ``1220354cd445c228356df6625d8646d5000581bd151454c45a4a17879d5aa015b7af``.
 * The ``bootAddr`` will print out, and there may be a variety for different protocols, internal and external IP addresses. Choose one that's accessible to the nodes who you want to join your network depending on whether they are internal or external on the open internet. Example value is: ``/ip4/127.0.0.1/tcp/15000``.
 
 Start a second Livepeer node specifying the bootID and bootAddr values. If you are on the same machine, specify new ports for rtmp, http, and port values. In this example, we added 1 to each of the default ports which are in use by the first node Consider creating a second ethereum account address in the new data directory::
 
-  $ livepeer --bootID <above bootID> --bootAddr <above bootAddr> --rtmp 1936 --http 8936 --p 15001 --datadir <new datadir eg. ~/.livepeer2> --ethAccountAddr <ethereum address> --ethPassword <eth account pw>
+  $ livepeer --bootID <above bootID> --bootAddr <above bootAddr> --rtmp 1936 --http 8936 --p 15001 --datadir <new datadir eg. ~/.livepeer2> --ethAcctAddr <ethereum address> --ethPassword <eth account pw>
 
 The second node should start and connect to the first node. You're now running a private network where the nodes can play different roles such as broadcaster and transcoder.
 
