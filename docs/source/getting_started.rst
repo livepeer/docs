@@ -25,7 +25,7 @@ Download ``livepeer`` and ``livepeer_cli`` from https://github.com/livepeer/go-l
     $ mv ./livepeer_darwin/livepeer ./livepeer
     $ tar -xvf livepeer_cli_darwin.tar
     $ mv ./livepeer_cli_darwin/livepeer_cli ./livepeer_cli
-    $ ./livepeer -testnet -offchain
+    $ ./livepeer -bootnode -offchain
 
 This will start a Livepeer node.
 
