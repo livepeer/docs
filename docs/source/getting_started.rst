@@ -10,7 +10,7 @@ The first step in getting started with Livepeer is to try to run the Livepeer ex
 Dependencies
 ---------------
 
-Livepeer has a dependency on a pre-compiled version of `ffmpeg`_. It can be downloaded from https://github.com/livepeer/ffmpeg-static
+Livepeer has a dependency on a pre-compiled version of `ffmpeg`_. It can be downloaded from https://github.com/livepeer/ffmpeg-static.  You should add the appropriate version to your PATH to make sure it can be invoked by the Livepeer binary.
 
 .. _ffmpeg: http://ffmpeg.org
 
