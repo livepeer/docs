@@ -7,6 +7,8 @@ on port 1935. You can broadcast into Livepeer using this port.
 The following instructions assume that you have followed the
 installation instructions and [have the node running](node.html).
 
+Note: make sure you have deposited tokens if you are running in onchain mode.
+
 ## Broadcast Using livepeer_cli
 
 Start livepeer_cli
