@@ -45,19 +45,20 @@ New http port? (default 8935)>
 New RTMP setting: http://localhost:1935/streams
 New HTTP setting: http://localhost:8935/streams
 Now broadcasting - 
-StreamID: 1220354cd445c228356df6625d8646d5000581bd151454c45a4a17879d5aa015b7afacbcfdd09cfe54a27d033dac3be03061e11045c3f272a1a7534f6b4b2d548005
+ManifestID: 12204673fd38ca1c13201ae714ac10758275bf2ae34d8ed004f36c04fa0ec0228f36138528423d33b8b27e1d3c4e5026b7fe9c05833346495130ce276015a86fbf95
 Type `q` to stop broadcasting
 ```
 
 You are now broadcasting into Livepeer, and anyone else on your
-Livepeer network can request the video using the StreamID that is
+Livepeer network can request the video using the ManifestID that is
 printed out.
 
 ## Playing the Stream
 
 You can request your stream in a number of ways.
 
-* Request the stream through the [web player](http://media.livepeer.org/player.html).
+* Request the stream using your channel through the per-broadcaster [web player](http://media.livepeer.org). Use the Eth address that is printed out in the Livepeer CLI or the node output. 
+* Request the stream using the manifest ID through the [web player](http://media.livepeer.org/player.html).
 * Request the stream using `ffplay`
 
 ```
@@ -77,15 +78,15 @@ setting:
 * Settings -> Stream -> URL. Set it as `rtmp://localhost:1935/movie`
 * Start streaming as usual.
 
-The tricky part is that OBS is not aware of the Livepeer Stream
-IDs. You can find the streamID in the console output of the Livepeer
+The tricky part is that OBS is not aware of the Livepeer Manifest
+IDs. You can find the manifestID in the console output of the Livepeer
 node. Or you can request it from the Livepeer node through curl:
 
 ```
-$ curl http://localhost:8935/streamID
+$ curl http://localhost:8935/manifestID
 ```
 
-Now that you have the streamID you can share it or play the stream as
+Now that you have the manifestID you can share it or play the stream as
 described above using the web player or ffplay.
 
 
@@ -97,7 +98,7 @@ To broadcast using ffmpeg you can try the following command:
 ffmpeg -f avfoundation -framerate 30 -pixel_format uyvy422 -i "0:0" -vcodec libx264 -tune zerolatency -b 1000k -x264-params keyint=60:min-keyint=60 -acodec aac -ac 1 -b:a 96k -f flv rtmp://localhost:1935/movie
 ```
 
-As described above, you can now find the streamID and share it to play.
+As described above, you can now find the manifestID and share it to play.
 
 ## Broadcasting from Mobile
 
@@ -110,12 +111,12 @@ Instead of setting the rtmp output to `localhost:1935`, you'll want to
 set it to a remote Livepeer node that you are running on a
 server. Replace `localhost` with the IP address of the server.
 
-Again, the tricky part will be finding the streamID since the app
+Again, the tricky part will be finding the manifestID since the app
 won't be aware.
 
 A good solution to this would be for someone to fork one of the open
 source mobile broadcasting apps to make it Livepeer aware, by fetching
-the streamID from the server and displaying it when the user starts
+the manifestID from the server and displaying it when the user starts
 broadcasting. Another solution we're working on is making web and
 mobile native Livepeer clients, so there's no need to connect to a
 remote node.
