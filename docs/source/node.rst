@@ -45,7 +45,7 @@ You are now running a node, and can use it to develop and test Livepeer locally,
 .. _testnet:
 
 Running a node on the Livepeer Testnet
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The Livepeer testnet is a set of nodes that are available syncing with a private Ethereum blockchain. The homepage for the testnet is available at http://eth-testnet.livepeer.org/.
 
