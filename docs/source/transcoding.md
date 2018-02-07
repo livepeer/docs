@@ -29,7 +29,7 @@ Run `livepeer_cli`, and make sure you have test ETH and test LPT as
 described in [Getting Started](getting_started.html). 
 
 ```
-$ livepeer_cli
+$ livepeer_cli -transcoder
 ```
 
 You should see the Transcoder Status as "Not Registered".
