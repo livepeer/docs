@@ -24,10 +24,9 @@ Download ``livepeer`` and ``livepeer_cli`` from https://github.com/livepeer/go-l
     $ tar -xvf livepeer_darwin.tar
     $ mv ./livepeer_darwin/livepeer ./livepeer
     $ mv ./livepeer_darwin/livepeer_cli ./livepeer_cli
-    $ ./livepeer -testnet
+    $ ./livepeer -rinkeby
 
-This will start a Livepeer node and join the latest Livepeer
-testnet. It will ask you to set a password and use this same password
+This will start a Livepeer node running on the Rinkeby Ethereum test network. It will ask you to set a password and use this same password
 to unlock your ETH account.
 
 .. _fund:
@@ -36,8 +35,7 @@ Fund your account with test ETH
 -------------------------------
 
 Before you can broadcast on Livepeer, you need Ethereum's
-token: ETH. The Livepeer testnet has a faucet which will give you some test
-ETH for free.
+token: ETH. The best way to get test ETH from the Rinkeby network is using the Rinkeby faucet.
 
 In a separate terminal window, run livepeer_cli::
 
@@ -73,7 +71,7 @@ It should present an array of options for interacting with Livepeer::
   16. Stream video
   17. Set broadcast config
 
-* Get some test eth from the eth faucet from http://eth-testnet.livepeer.org/. Make sure to use the Eth account address printed out above in ``livepeer_cli``. Remember to add 0x as a prefix to address, if not present.
+* Get some test eth from the Rinkeby eth faucet. Make sure to use the Eth account address printed out above in ``livepeer_cli``. Remember to add 0x as a prefix to address, if not present.
 
 * You can check that the request is successful by going to ``livepeer_cli`` and selecting Get node status. You should see a positive Eth balance.
 
@@ -113,4 +111,4 @@ network who you share the link to should also be able to see your stream.
 What's Next?
 ---------------------
 
-You just demonstrated sending video around the Livepeer testnet. Time to learn how to use more convenient tools to broadcast and consume the streams. The next sections will teach you how to run a node on the blockchain, use Livepeer to broadcast to a large audience, how to build an app with video functionality using Livepeer, and how to participate in the Livepeer protocol as a delegator or transcoder.
+You just demonstrated sending video around the Livepeer network on Rinkeby. Time to learn how to use more convenient tools to broadcast and consume the streams. The next sections will teach you how to run a node on the blockchain, use Livepeer to broadcast to a large audience, how to build an app with video functionality using Livepeer, and how to participate in the Livepeer protocol as a delegator or transcoder.
