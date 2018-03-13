@@ -22,7 +22,7 @@ We'll walk through the steps of becoming a transcoder on the test
 network. Start livepeer with the `--transcoder` flag:
 
 ```
-$ livepeer --testnet --transcoder
+$ livepeer --rinkeby --transcoder
 ```
 
 Run `livepeer_cli`, and make sure you have test ETH and test LPT as

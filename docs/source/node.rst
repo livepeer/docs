@@ -5,7 +5,7 @@ The Livepeer node is a command line executable called ``livepeer``  that connect
 
 The below instructions are comprehensive for a number of scenarios, but generally running a single Livepeer node and joining the test network consists of simply running the command::
 
-  $ livepeer --testnet
+  $ livepeer --rinkeby
 
 Installation
 ------------------
@@ -44,10 +44,11 @@ You are now running a node, and can use it to develop and test Livepeer locally,
 
 .. _testnet:
 
-Running a node on the Livepeer Testnet
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Running a Livepeer node on the Ethereum Rinkeby Testnet
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The Livepeer testnet is a set of nodes that are available syncing with a private Ethereum blockchain. The homepage for the testnet is available at http://eth-testnet.livepeer.org/.
+The Livepeer testnet is a set of nodes that are running on Ethereum's
+Rinkeby testnet  blockchain. 
 
 .. _run livepeer:
 
@@ -56,7 +57,7 @@ Run Livepeer
 
 Make sure that you have gone through the installation steps for both Livepeer, and its dependencies ffmpeg and.  Now you can start Livepeer::
 
-  $ livepeer --testnet
+  $ livepeer --rinkeby
 
 In a separate terminal window, run livepeer_cli::
 
@@ -80,7 +81,7 @@ Livepeer CLI will print out your account address, ETH balance, Livepeer token ba
 
 The testnet contains faucets for providing you with test ETH and test Livepeer Token (LPT), which you will need to take other actions in Livepeer.
 
-* Get some test eth from the eth faucet from http://eth-testnet.livepeer.org/. Make sure to use the Eth account address printed out above in ``livepeer_cli``. Remember to add 0x as a prefix to address, if not present.
+* Get some test eth from the eth faucet from https://faucet.rinkeby.io/. Make sure to use the Eth account address printed out above in ``livepeer_cli``. Remember to add 0x as a prefix to address, if not present.
 
   * You can check that the request is successful by going to ``livepeer_cli`` and selecting Get node status. You should see a positive Eth balance.
 
@@ -109,7 +110,7 @@ The "connect yourself" tab on the `Testnet Homepage`_ provides instructions for 
   
   We recommend creating a new directory even if you already have one, so the Livepeer testing data will be stored separately.
 
-* Download the genesis json `lptestnet.json`_. It can be saved anywhere. It'll just be used once for the next step
+* Download the genesis json `rinkeby.json`_. It can be saved anywhere. It'll just be used once for the next step
 
 * Initialize your local geth node with testnet genesis block. For example::
 
@@ -132,8 +133,8 @@ The "connect yourself" tab on the `Testnet Homepage`_ provides instructions for 
 .. note: The actual values for networkid and bootnodes flags should be taken from the "Connect Yourself" tab on the `Testnet Homepage`_.
 
 .. _Ethereum installation guide: https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum
-.. _Testnet Homepage: http://eth-testnet.livepeer.org/
-.. _lptestnet.json: http://eth-testnet.livepeer.org/lptestnet.json
+.. _Testnet Homepage: https://www.rinkeby.io/#stats
+.. _rinkeby.json: https://www.rinkeby.io/rinkeby.json
 
 .. _private network:
 
