@@ -64,6 +64,10 @@ Wait for the next round to start, and your transcoder will become
 active. At this point, the Livepeer node should handle everything for
 you. The important thing is that you keep the node running.
 
+## FAQ
+Q: After running the transcoder for a while, I get an error that says "too many open files".
+A: This means you have to increase the default file limit. This is a requirement for running an IPFS node. Since Livepeer transcoders run an internal IPFS node, we also have that requirement. The default file limit is 1024, increasing it to something like 4096 should be good. See [this forum post](https://forum.livepeer.org/t/increase-file-limit-as-a-transcoder/170) for more details.
+
 TODO: These documents could be expanded with far more information
 about the transactions that a Livepeer Transcoder has to submit on a
 regular basis to avoid being penalized and to earn their rewards and fees.
