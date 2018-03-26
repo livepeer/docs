@@ -22,7 +22,7 @@ For the livepeer node, check out the `go-livepeer repo`_ and `go-livepeer-basicn
 
 For the livepeer media server implementation, take a look at the `LPMS repo`_. It requires some video engineering knowledge. The `demuxed conf videos`_ and the `Apple Live streaming doc`_ are good resources to start learning.
 
-If you're interested in the any of the above challenges, or are building video features into an application, jump into our `development chat room on Gitter`_ and join the conversation.
+If you're interested in the any of the above challenges, or are building video features into an application, jump into our `development chat room on Discord`_ and join the conversation.
 
 .. _protocol repo: https://github.com/livepeer/protocol
 .. _Solidity: https://solidity.readthedocs.io/en/develop/
@@ -34,7 +34,7 @@ If you're interested in the any of the above challenges, or are building video f
 .. _LPMS repo: https://github.com/livepeer/lpms
 .. _demuxed conf videos: https://www.twitch.tv/demuxed/videos/all
 .. _Apple Live streaming doc: https://developer.apple.com/library/content/documentation/NetworkingInternet/Conceptual/StreamingMediaGuide/Introduction/Introduction.html
-.. _development chat room on Gitter: https://gitter.im/livepeer/dev
+.. _development chat room on Discord: https://discord.gg/7wRSUGX
 .. _thoses instructions: https://github.com/livepeer/devenv
 
 Open Projects
