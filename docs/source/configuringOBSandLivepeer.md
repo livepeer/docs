@@ -22,9 +22,9 @@ In order to _create_ a `broadcaster node` using [`Livepeer`](http://livepeer.org
 
     - requires _MacOS 10.10_ or above
 
-  - connected to internet with at least `330kbps` upload bandwidth)
+  - connected to internet with at least `348kbps` upload bandwidth)
 
-    - the minimum bitrate possible to stream from  [OBS](http://obsproject.com) is `220kbps`, however we recommend `50%` contingency when streaming due to _network instabilities_.
+    - the minimum bitrate possible to stream from  [OBS](http://obsproject.com) is `232kbps`, however we recommend `50%` contingency when streaming due to _network instabilities_.
     - wired `Ethernet` connection is preferable but not compulsory - _Wi-Fi_ / `4G` is also fine
 
   - with power supply (_battery_ or _power supply_)
