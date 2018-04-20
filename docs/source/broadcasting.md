@@ -4,54 +4,23 @@ Broadcasting to Livepeer using existing broadcasting tools is
 easy. After a Livepeer node is running, it exposes an RTMP interface
 on port 1935. You can broadcast into Livepeer using this port.
 
+## Install Livepeer and Have the Node Running
+
 The following instructions assume that you have followed the
-installation instructions and [have the node running](node.html).
+[installation instructions] (http://livepeer.readthedocs.io/en/latest/node.html#installation)
+
+and [have the node running](node.html).
 
 Note: make sure you have deposited tokens if you are running in onchain mode.
 
-## Broadcast Using livepeer_cli
+## Broadcasting Using OBS
 
-Start livepeer_cli
+It is far more convenient to broadcast using existing tools that have
+features for screen capture, composites, overlays, multiple video and
+audio sources, etc. One such tool is
+[OBS](https://obsproject.com/). 
 
-```
-$ livepeer_cli
-```
-
-It will read data from the currently running node, and display a list
-of options. Choose the option to `Broadcast Video`:
-
-```
-What would you like to do? (default = stats)
- 1. Get node status
- 2. Deposit token
- 3. Broadcast video
- 4. Stream video
- 5. Set transcoder config
- 6. Set broadcast config
- 7. Bond
- 8. Unbond
- 9. Withdraw bond
- 10. Become a transcoder
- 11. Get test Livepeer Token
- 12. Get test Ether
- 13. List registered transcoders
-> 3
-
-Current RTMP setting: http://localhost:1935/streams
-Current HTTP setting: http://localhost:8935/streams
-Keep it? (Y/n) > Y
-New rtmp port? (default 1935)> 
-New http port? (default 8935)> 
-New RTMP setting: http://localhost:1935/streams
-New HTTP setting: http://localhost:8935/streams
-Now broadcasting - 
-ManifestID: 12204673fd38ca1c13201ae714ac10758275bf2ae34d8ed004f36c04fa0ec0228f36138528423d33b8b27e1d3c4e5026b7fe9c05833346495130ce276015a86fbf95
-Type `q` to stop broadcasting
-```
-
-You are now broadcasting into Livepeer, and anyone else on your
-Livepeer network can request the video using the ManifestID that is
-printed out.
+Start by reading our [step by step guide] (https://github.com/livepeer/wiki/wiki/How-to:-set-up-a-broadcasting-node-using-Livepeer-and-OBS#you-are-now-ready-to-broadcast-on-livepeer)
 
 ## Playing the Stream
 
@@ -66,28 +35,6 @@ $ ffplay http://localhost:8935/stream/{streamID}.m3u8
 ```
 
 When you're finished broadcasting you can type `q` to stop the stream.
-
-## Broadcasting Using OBS
-
-It is far more convenient to broadcast using existing tools that have
-features for screen capture, composites, overlays, multiple video and
-audio sources, etc. One such tool is
-[OBS](https://obsproject.com/). To use OBS you have to change one
-setting:
-
-* Settings -> Stream -> URL. Set it as `rtmp://localhost:1935/movie`
-* Start streaming as usual.
-
-The tricky part is that OBS is not aware of the Livepeer Manifest
-IDs. You can find the manifestID in the console output of the Livepeer
-node. Or you can request it from the Livepeer node through curl:
-
-```
-$ curl http://localhost:8935/manifestID
-```
-
-Now that you have the manifestID you can share it or play the stream as
-described above using the web player or ffplay.
 
 
 ## Broadcasting Using FFMPEG
@@ -111,7 +58,7 @@ Instead of setting the rtmp output to `localhost:1935`, you'll want to
 set it to a remote Livepeer node that you are running on a
 server. Replace `localhost` with the IP address of the server.
 
-Again, the tricky part will be finding the manifestID since the app
+The tricky part will be finding the manifestID since the app
 won't be aware.
 
 A good solution to this would be for someone to fork one of the open
@@ -143,3 +90,6 @@ through Livepeer will pull the video from the network, but will be
 served off of a CDN. In the future, we would like to replace this
 option with the p2p network that Livepeer forms around a stream.
 
+## FAQ
+Check out our Broadcasting Forum for [frequently asked questions] (https://forum.livepeer.org/c/using-livepeer-for-broadcasting)
+If you have any questions, reach out to Chris Hobcroft on our [community chat] (https://discord.gg/RR4kFAh)
