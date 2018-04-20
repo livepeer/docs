@@ -4,70 +4,18 @@ Broadcasting to Livepeer using existing broadcasting tools is
 easy. After a Livepeer node is running, it exposes an RTMP interface
 on port 1935. You can broadcast into Livepeer using this port.
 
+## Install Livepeer and Have the Node Running
+
 The following instructions assume that you have followed the
-installation instructions and [have the node running](node.html).
+[installation instructions] (http://livepeer.readthedocs.io/en/latest/node.html#installation)
+
+and [have the node running](node.html).
 
 Note: make sure you have deposited tokens if you are running in onchain mode.
 
-## Broadcast Using livepeer_cli
-
-Start livepeer_cli
-
-```
-$ livepeer_cli
-```
-
-It will read data from the currently running node, and display a list
-of options. Choose the option to `Broadcast Video`:
-
-```
-What would you like to do? (default = stats)
- 1. Get node status
- 2. Deposit token
- 3. Broadcast video
- 4. Stream video
- 5. Set transcoder config
- 6. Set broadcast config
- 7. Bond
- 8. Unbond
- 9. Withdraw bond
- 10. Become a transcoder
- 11. Get test Livepeer Token
- 12. Get test Ether
- 13. List registered transcoders
-> 3
-
-Current RTMP setting: http://localhost:1935/streams
-Current HTTP setting: http://localhost:8935/streams
-Keep it? (Y/n) > Y
-New rtmp port? (default 1935)> 
-New http port? (default 8935)> 
-New RTMP setting: http://localhost:1935/streams
-New HTTP setting: http://localhost:8935/streams
-Now broadcasting - 
-ManifestID: 12204673fd38ca1c13201ae714ac10758275bf2ae34d8ed004f36c04fa0ec0228f36138528423d33b8b27e1d3c4e5026b7fe9c05833346495130ce276015a86fbf95
-Type `q` to stop broadcasting
-```
-
-You are now broadcasting into Livepeer, and anyone else on your
-Livepeer network can request the video using the ManifestID that is
-printed out.
-
-## Playing the Stream
-
-You can request your stream in a number of ways.
-
-* Request the stream using your channel through the per-broadcaster [web player](http://media.livepeer.org). Use the Eth address that is printed out in the Livepeer CLI or the node output. 
-* Request the stream using the manifest ID through the [web player](http://media.livepeer.org/player.html).
-* Request the stream using `ffplay`
-
-```
-$ ffplay http://localhost:8935/stream/{streamID}.m3u8
-```
-
-When you're finished broadcasting you can type `q` to stop the stream.
-
 ## Broadcasting Using OBS
+
+Start by reading our [step by step guide] (https://github.com/livepeer/wiki/wiki/How-to:-set-up-a-broadcasting-node-using-Livepeer-and-OBS#you-are-now-ready-to-broadcast-on-livepeer)
 
 It is far more convenient to broadcast using existing tools that have
 features for screen capture, composites, overlays, multiple video and
@@ -88,6 +36,22 @@ $ curl http://localhost:8935/manifestID
 
 Now that you have the manifestID you can share it or play the stream as
 described above using the web player or ffplay.
+
+
+
+## Playing the Stream
+
+You can request your stream in a number of ways.
+
+* Request the stream using your channel through the per-broadcaster [web player](http://media.livepeer.org). Use the Eth address that is printed out in the Livepeer CLI or the node output. 
+* Request the stream using the manifest ID through the [web player](http://media.livepeer.org/player.html).
+* Request the stream using `ffplay`
+
+```
+$ ffplay http://localhost:8935/stream/{streamID}.m3u8
+```
+
+When you're finished broadcasting you can type `q` to stop the stream.
 
 
 ## Broadcasting Using FFMPEG
