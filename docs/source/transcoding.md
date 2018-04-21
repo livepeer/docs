@@ -14,15 +14,15 @@ to earn fees from the network.
 
 Quicklinks:
 
-[Megathread on Forum] - (https://forum.livepeer.org/t/transcoder-megathread-start-here-to-learn-about-playing-the-role-of-transcoder-on-livepeer/190)
+[Megathread on Forum](https://forum.livepeer.org/t/transcoder-megathread-start-here-to-learn-about-playing-the-role-of-transcoder-on-livepeer/190)
 
-[Transcoder Election Dashboard (currently Rinkeby testnet)] - (https://explorer.livepeer.org/transcoders)
+[Transcoder Election Dashboard (currently Rinkeby testnet)](https://explorer.livepeer.org/transcoders)
 
 Transcoder campaign thread - (Coming soon)
 
-[Livepeer Whitepaper] - (https://github.com/livepeer/wiki/blob/master/WHITEPAPER.md)
+[Livepeer Whitepaper](https://github.com/livepeer/wiki/blob/master/WHITEPAPER.md)
 
-[Transcoder chat] - (https://discord.gg/cBfD23u)
+[Transcoder chat](https://discord.gg/cBfD23u)
 
 
 ## Becoming a Transcoder
