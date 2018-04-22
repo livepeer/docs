@@ -3,17 +3,23 @@
 Bonding is how most users participate in the Livepeer protocol and add
 value to the network long term by vetting and electing the best nodes
 to provide [transcoding](transcoding.html) and video services to the
-network. See this
-[forum post](https://forum.livepeer.org/t/an-overview-of-bonding/97)
-which describes what bonding and delegation is at a high level.
+network. See the
+[Delegator Wikipage](https://github.com/livepeer/wiki/wiki/Delegating)
+which describes what bonding and delegation is, how to do it, as well as tutorials on how to weigh various Transcoder statistics
 
-If you bond, your Livepeer Token (LPT) will be tied up to the network
-for a period of weeks or months specified by the `UnbondingPeriod`,
-but you will also receive newly minted LPT through inflation in
-proportion to your bonded stake. Users who do not bond will not
-receive new token, so your ownership stake in the network will
-actually grow.
+The protocol mints new token every round and rewards participation in the network as a Delegator or Transcoder
 
+## Delegating using [Explorer](https://explorer.livepeer.org/)
+Explorer is a tool we built to interface with livepeer cli in a less technical way
+* [How to Delegate](https://github.com/livepeer/wiki/wiki/Delegating#how-to-delegate)
+
+## Assessing Transcoders
+Assess transcoders based on performance, statistics and social campaigns
+* Social Campaigns can be found in the [Forum](https://forum.livepeer.org/c/transcoders)
+* Stats can be viewed on [Explorer](https://explorer.livepeer.org/)
+* Definitions and examples are [on the Delegator Wiki](https://github.com/livepeer/wiki/wiki/Delegating#applying-these-methods-examples)
+
+## Delegating using the Terminal
 In order to bond your Livepeer Token (LPT) you use `livepeer_cli`.
 
 ```
@@ -47,6 +53,8 @@ fees and inflationary token issuance. Select wisely!
 * Choose the option to `Bond` when you'd like to bond.
 
 ## Unbonding
+
+A ***Guide to Unbonding and Claiming Fees*** can be found on our [Delegator Wiki](https://github.com/livepeer/wiki/wiki/Delegating#getting-your-tokens-and-rewards)
 
 * Choose the option to `Unbond` when you'd like to withdraw your bond
 from a particular transcoder.
