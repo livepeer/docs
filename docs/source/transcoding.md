@@ -14,7 +14,7 @@ to earn fees from the network.
 
 Quicklinks:
 
-[Megathread on Forum](https://forum.livepeer.org/t/transcoder-megathread-start-here-to-learn-about-playing-the-role-of-transcoder-on-livepeer/190)
+[Transcoder Megathread on Forum](https://forum.livepeer.org/t/transcoder-megathread-start-here-to-learn-about-playing-the-role-of-transcoder-on-livepeer/190)
 
 [Transcoder Election Dashboard (currently Rinkeby testnet)](https://explorer.livepeer.org/transcoders)
 
