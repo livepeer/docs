@@ -11,16 +11,31 @@ The following instructions assume that you have followed the
 
 and [have the node running](node.html).
 
-Note: make sure you have deposited tokens if you are running in onchain mode.
+Note: make sure you have deposited ETH if you would like to broadcast.
 
 ## Broadcasting Using OBS
+
+Start by reading our [step by step guide](https://github.com/livepeer/wiki/wiki/How-to:-set-up-a-broadcasting-node-using-Livepeer-and-OBS#you-are-now-ready-to-broadcast-on-livepeer)
 
 It is far more convenient to broadcast using existing tools that have
 features for screen capture, composites, overlays, multiple video and
 audio sources, etc. One such tool is
-[OBS](https://obsproject.com/). 
+[OBS](https://obsproject.com/). To use OBS you have to change one
+setting:
 
-Start by reading our [step by step guide] (https://github.com/livepeer/wiki/wiki/How-to:-set-up-a-broadcasting-node-using-Livepeer-and-OBS#you-are-now-ready-to-broadcast-on-livepeer)
+* Settings -> Stream -> URL. Set it as `rtmp://localhost:1935/movie`
+* Start streaming as usual.
+
+The tricky part is that OBS is not aware of the Livepeer Manifest
+IDs. You can find the manifestID in the console output of the Livepeer
+node. Or you can request it from the Livepeer node through curl:
+
+```
+$ curl http://localhost:8935/manifestID
+```
+
+Now that you have the manifestID you can share it or play the stream as
+described above using the web player or ffplay.
 
 ## Playing the Stream
 
