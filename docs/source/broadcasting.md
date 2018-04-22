@@ -7,11 +7,11 @@ on port 1935. You can broadcast into Livepeer using this port.
 ## Install Livepeer and Have the Node Running
 
 The following instructions assume that you have followed the
-[installation instructions](http://livepeer.readthedocs.io/en/latest/node.html#installation)
+[installation instructions] (http://livepeer.readthedocs.io/en/latest/node.html#installation)
 
 and [have the node running](node.html).
 
-Note: make sure you have deposited tokens if you are running in onchain mode.
+Note: make sure you have deposited ETH if you would like to broadcast.
 
 ## Broadcasting Using OBS
 
@@ -36,8 +36,6 @@ $ curl http://localhost:8935/manifestID
 
 Now that you have the manifestID you can share it or play the stream as
 described above using the web player or ffplay.
-
-
 
 ## Playing the Stream
 
@@ -75,7 +73,7 @@ Instead of setting the rtmp output to `localhost:1935`, you'll want to
 set it to a remote Livepeer node that you are running on a
 server. Replace `localhost` with the IP address of the server.
 
-Again, the tricky part will be finding the manifestID since the app
+The tricky part will be finding the manifestID since the app
 won't be aware.
 
 A good solution to this would be for someone to fork one of the open
@@ -107,3 +105,7 @@ through Livepeer will pull the video from the network, but will be
 served off of a CDN. In the future, we would like to replace this
 option with the p2p network that Livepeer forms around a stream.
 
+## FAQ
+Check out our Broadcasting Forum for [frequently asked questions] (https://forum.livepeer.org/c/using-livepeer-for-broadcasting)
+
+If you have any questions, reach out to Chris Hobcroft on our [community chat] (https://discord.gg/RR4kFAh)
