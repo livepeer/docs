@@ -78,7 +78,7 @@ you. The important thing is that you keep the node running.
 
 - This means you have to increase the default file limit. This is a requirement for running an IPFS node. Since Livepeer transcoders run an internal IPFS node, we also have that requirement. The default file limit is 1024, increasing it to something like 4096 should be good. See [this forum post](https://forum.livepeer.org/t/increase-file-limit-as-a-transcoder/170) for more details.
 
-**I get a lot of error messages saying things like `EOF`**
+**I get a lot of error messages saying things like "Error with x:EOF".  And a lot of times, the transcoder doesn't do anything when it's suppose to take some action (like call `reward`, do transcoding jobs, etc).**
 
 -- This is most likely because the connection between the Livepeer node and the Ethereum network is flaky.  It is recommended to run a local `Geth` or `Parity` node when running a Livepeer transcoder.  If you have a local `Geth` or `Parity` running, you can use the `--ethIpcPath` flag to specify the local IPC file location, which is a much more stable way to connect to the Ethereum network.
 
