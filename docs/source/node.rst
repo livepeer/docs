@@ -154,7 +154,7 @@ Start Livepeer with the ``--bootnode`` flag::
 
 Start a second Livepeer node specifying the bootID and bootAddr values. If you are on the same machine, specify new ports for rtmp, http, and port values. In this example, we added 1 to each of the default ports which are in use by the first node Consider creating a second ethereum account address in the new data directory::
 
-  $ livepeer --bootID <above bootID> --bootAddr <above bootAddr> --rtmp 1936 --http 8936 --p 15001 --datadir <new datadir eg. ~/.livepeer2> --ethAcctAddr <ethereum address> --ethPassword <eth account pw>
+  $ livepeer --bootIDs <above bootID> --bootAddrs <above bootAddr> --rtmp 1936 --http 8936 --p 15001 --datadir <new datadir eg. ~/.livepeer2> --ethAcctAddr <ethereum address> --ethPassword <eth account pw>
 
 The second node should start and connect to the first node. You're now running a private network where the nodes can play different roles such as broadcaster and transcoder.
 
