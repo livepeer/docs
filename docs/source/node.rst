@@ -28,7 +28,10 @@ The latest instructions for building the `go-livepeer project`_ can be found on 
 
 Running a node
 -------------------------------
+Once you have installed the executable, you can invoke it by running: 
 
+  $ livepeer
+  
 .. _offchain:
 
 In offchain mode
