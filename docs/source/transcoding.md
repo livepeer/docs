@@ -80,7 +80,7 @@ you. The important thing is that you keep the node running.
 
 **I get a lot of error messages saying things like "Error with x:EOF".  And a lot of times, the transcoder doesn't do anything when it's suppose to take some action (like call `reward`, do transcoding jobs, etc).**
 
--- This is most likely because the connection between the Livepeer node and the Ethereum network is flaky.  It is recommended to run a local `Geth` or `Parity` node when running a Livepeer transcoder.  If you have a local `Geth` or `Parity` running, you can use the `--ethIpcPath` flag to specify the local IPC file location, which is a much more stable way to connect to the Ethereum network.
+- This is most likely because the connection between the Livepeer node and the Ethereum network is flaky.  It is recommended to run a local `Geth` or `Parity` node when running a Livepeer transcoder.  If you have a local `Geth` or `Parity` running, you can use the `--ethIpcPath` flag to specify the local IPC file location, which is a much more stable way to connect to the Ethereum network.
 
 TODO: These documents could be expanded with far more information
 about the transactions that a Livepeer Transcoder has to submit on a
