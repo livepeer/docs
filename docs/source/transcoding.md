@@ -18,7 +18,7 @@ Quicklinks:
 
 [Transcoder Election Dashboard (currently Rinkeby testnet)](https://explorer.livepeer.org/transcoders)
 
-Transcoder campaign thread - (Coming soon)
+[Transcoder campaign thread](https://forum.livepeer.org/c/transcoders/transcoder-campaign)
 
 [Livepeer Whitepaper](https://github.com/livepeer/wiki/blob/master/WHITEPAPER.md)
 
