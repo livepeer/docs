@@ -84,7 +84,7 @@ you. The important thing is that you keep the node running.
 
 **I get an error that looks something like "failed to estimate gas needed: gas required exceeds allowance or always failing transaction".**
 
-- This is because the gas estimator is giving incorrect estimates.  To fix it, you can manually pass in a gas limit using `-gasLimit`.  For example, `livepeer -transcoder -publicIP x.x.x.x -gasLimit 400000`.
+- This is because the gas estimator is giving incorrect estimates.  To fix it, you can manually pass in a gas limit using `-gasLimit`.  For example, `$ livepeer -transcoder -publicIP x.x.x.x -gasLimit 400000`.
 
 TODO: These documents could be expanded with far more information
 about the transactions that a Livepeer Transcoder has to submit on a
