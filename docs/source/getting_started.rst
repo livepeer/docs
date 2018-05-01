@@ -1,9 +1,11 @@
 Getting Started
 =====================
 
-This guide will get you started with broadcasting your first video using the Livepeer tools in 5 minutes. Livepeer is currently under active development, and it is accessed through the command line on OS X or Linux.
+This guide will get you started with broadcasting your first livestream using the Livepeer tools in 5 minutes. Livepeer is currently under active development, and it is accessed through the command line on OS X or Linux.
 
-The first step in getting started with Livepeer is to try to run the Livepeer executables and to broadcast a simple video. 
+The first step in getting started with Livepeer is to try to run the Livepeer executables and to broadcast a simple livestream.
+
+For beginners, or for those who are not so familiar with command line interfaces (`Terminal`), here is a [simple step-by-step guide to getting started as a broadcaster](https://github.com/livepeer/wiki/wiki/Blueprint:-set-up-a-broadcasting-node-using-Livepeer-and-OBS).
 
 Download Livepeer
 -----------------
