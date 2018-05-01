@@ -82,6 +82,10 @@ you. The important thing is that you keep the node running.
 
 - This is most likely because the connection between the Livepeer node and the Ethereum network is flaky.  It is recommended to run a local `Geth` or `Parity` node when running a Livepeer transcoder.  If you have a local `Geth` or `Parity` running, you can use the `--ethIpcPath` flag to specify the local IPC file location, which is a much more stable way to connect to the Ethereum network.
 
+**I get an error that looks something like "failed to estimate gas needed: gas required exceeds allowance or always failing transaction".**
+
+- This is because the gas estimator is giving incorrect estimates.  To fix it, you can manually pass in a gas limit using `-gasLimit`.  For example, `livepeer -transcoder -publicIP x.x.x.x -gasLimit 400000`.
+
 TODO: These documents could be expanded with far more information
 about the transactions that a Livepeer Transcoder has to submit on a
 regular basis to avoid being penalized and to earn their rewards and fees.
