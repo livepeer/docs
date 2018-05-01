@@ -5,7 +5,7 @@ This guide will get you started with broadcasting your first livestream using th
 
 The first step in getting started with Livepeer is to try to run the Livepeer executables and to broadcast a simple livestream.
 
-For beginners, or for those who are not so familiar with command line interfaces (`Terminal`), here is a [simple step-by-step guide to getting started as a broadcaster](https://github.com/livepeer/wiki/wiki/Blueprint:-set-up-a-broadcasting-node-using-Livepeer-and-OBS).
+For beginners, or for those who are not so familiar with command line interfaces (`Terminal`), here is a [simple step-by-step guide to getting started as a broadcaster] (https://github.com/livepeer/wiki/wiki/Blueprint:-set-up-a-broadcasting-node-using-Livepeer-and-OBS).
 
 Download Livepeer
 -----------------
