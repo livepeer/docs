@@ -24,7 +24,7 @@ For the livepeer media server implementation, take a look at the `LPMS repo`_. I
 
 If you're interested in the any of the above challenges, or are building video features into an application, jump into our `development chat room on Discord`_ and join the conversation.
 
-.. _SDK: https://github.com/livepeer/livepeerjs/tree/master/%40livepeer/sdk
+.. _SDK: https://github.com/livepeer/livepeerjs/tree/master/packages/sdk
 .. _core protocol: https://github.com/livepeer/protocol
 .. _clients: https://github.com/livepeer/go-livepeer
 .. _protocol repo: https://github.com/livepeer/protocol
