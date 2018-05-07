@@ -31,7 +31,9 @@ Running a node
 Once you have installed the executable, you can invoke it by running: 
 
   $ livepeer
-  
+
+Note: by default Livepeer listens to the local interface.  This means if you are running Livepeer on a cloud-hosted instance, you need to use additional flags ``--rtmpIP 0.0.0.0`` and ``--httpIP 0.0.0.0`` if you want it to listen to incoming network requests.
+
 .. _offchain:
 
 In offchain mode
