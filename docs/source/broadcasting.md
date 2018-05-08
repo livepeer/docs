@@ -56,8 +56,14 @@ When you're finished broadcasting you can type `q` to stop the stream.
 
 To broadcast using ffmpeg you can try the following command:
 
+For Mac:
 ```
 ffmpeg -f avfoundation -framerate 30 -pixel_format uyvy422 -i "0:0" -vcodec libx264 -tune zerolatency -b 1000k -x264-params keyint=60:min-keyint=60 -acodec aac -ac 1 -b:a 96k -f flv rtmp://localhost:1935/movie
+```
+
+For Linux:
+```
+ffmpeg -f dshow -framerate 30 -pixel_format uyvy422 -i "0:0" -vcodec libx264 -tune zerolatency -b 1000k -x264-params keyint=60:min-keyint=60 -acodec aac -ac 1 -b:a 96k -f flv rtmp://localhost:1935/movie
 ```
 
 As described above, you can now find the manifestID and share it to play.
