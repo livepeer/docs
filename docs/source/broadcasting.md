@@ -15,7 +15,7 @@ Note: make sure you have deposited ETH if you would like to broadcast.
 
 ## Broadcasting Using OBS
 
-Start by reading our [step by step guide](https://github.com/livepeer/wiki/wiki/How-to:-set-up-a-broadcasting-node-using-Livepeer-and-OBS#you-are-now-ready-to-broadcast-on-livepeer)
+Start by reading our [step by step guide](https://github.com/livepeer/wiki/wiki/Blueprint:-set-up-a-broadcasting-node-using-Livepeer-and-OBS)
 
 It is far more convenient to broadcast using existing tools that have
 features for screen capture, composites, overlays, multiple video and
