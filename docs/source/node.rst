@@ -32,7 +32,9 @@ Once you have installed the executable, you can invoke it by running:
 
   $ livepeer
 
-Note: by default Livepeer listens to the local interface.  This means if you are running Livepeer on a cloud-hosted instance, you need to use additional flags ``--rtmpIP 0.0.0.0`` and ``--httpIP 0.0.0.0`` if you want it to listen to incoming network requests.
+Note: by default Livepeer listens to the local interface.  This means if you are running Livepeer on a cloud-hosted instance, you need to set the ``--rtmpIP 0.0.0.0`` flag.
+
+One word of caution about setting ``--httpIP``. The CLI interface works via HTTP, and from there it can bond and transfer LPT, deposit and withdraw ETH, initialize rounds, manage broadcast and transcoding configurations, and so forth. Hence, mis-configuring ``--httpIP`` may open up your node to the world for manipulation! Only set ``--httpIP`` if you need to remotely configure your node, and you know how to restrict access from the outside world. Most users don't have a need for this, so it is strongly recommended to leave ``--httpIP`` alone.
 
 .. _offchain:
 
