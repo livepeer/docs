@@ -20,10 +20,14 @@ Start by reading our [step by step guide](https://github.com/livepeer/wiki/wiki/
 It is far more convenient to broadcast using existing tools that have
 features for screen capture, composites, overlays, multiple video and
 audio sources, etc. One such tool is
-[OBS](https://obsproject.com/). To use OBS you have to change one
-setting:
+[OBS](https://obsproject.com/). To use OBS you have to change two
+settings:
 
 * Settings -> Stream -> URL. Set it as `rtmp://localhost:1935/movie`
+* Settings -> Output -> Output Mode. Set it to Advanced. Ensure the following settings are enabled:
+  * Encoder: x264
+  * Rate Control: CBR
+  * Keyframe Interval: 4
 * Start streaming as usual.
 
 The tricky part is that OBS is not aware of the Livepeer Manifest
