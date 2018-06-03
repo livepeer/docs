@@ -7,7 +7,7 @@ on port 1935. You can broadcast into Livepeer using this port.
 ## Install Livepeer and Have the Node Running
 
 The following instructions assume that you have followed the
-[installation instructions] (http://livepeer.readthedocs.io/en/latest/node.html#installation)
+[installation instructions](http://livepeer.readthedocs.io/en/latest/node.html#installation)
 
 and [have the node running](node.html).
 
