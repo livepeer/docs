@@ -3,19 +3,24 @@ Developing on Livepeer
 
 Building Video Dapps
 ---------------------
-* Video-based Dapps (for example, [livepeer.tv](http://livepeer.tv))
+* Video-based Dapps (for example, `livepeer.tv`_)
 * Infrastructure tools and services for broadcasters or live streamers (for example, SAAS services on top of Livepeer)
+.. _livepeer.tv: http://livepeer.tv
 
 Building Livepeer Protocol Dapps
 --------------------------------
-* Dapps for the Livepeer ecosystem. (for example, [livepeer protocol explorer](https://explorer.livepeer.org/), [Supermax](https://www.supermax.cool/livepeer)
-
+* Dapps for the Livepeer ecosystem. (for example, `livepeer protocol explorer`_ or `Supermax`_)
+.. _livepeer protocol explorer: https://explorer.livepeer.org/
+.. _Supermax: https://www.supermax.cool/livepeer
 
 Building Tools for Livepeer
 ---------------------------
-* SDKs for Livepeer (for example, [livepeerjs-sdk](https://github.com/livepeer/livepeerjs/tree/master/packages/sdk), [livepeerjs-graphql](https://github.com/livepeer/livepeerjs/tree/master/packages/graphql-sdk)
-* Client implementation for Livepeer (for example, [go-livepeer](https://github.com/livepeer/go-livepeer))
+* SDKs for Livepeer (for example, `livepeerjs-sdk`_ or `livepeerjs-graphql`_)
+* Client implementation for Livepeer (for example, `go-livepeer`_)
 
+.. _livepeerjs-sdk: https://github.com/livepeer/livepeerjs/tree/master/packages/sdk
+.. _livepeerjs-graphql: https://github.com/livepeer/livepeerjs/tree/master/packages/graphql-sdk
+.. _go-livepeer: https://github.com/livepeer/go-livepeer
 
 Open Projects
 ------------------
