@@ -48,6 +48,7 @@ Livepeer also posts open problems for discussion, ideas, and collaboration on Gi
 * `Open Project Proposals`_
 * `Open Research Areas`_
 
-.. _Open Project Proposals: https://github.com/livepeer/project-proposals/projects/1
 .. _Open Research Areas: https://github.com/livepeer/research/projects/1
+.. _Open Project Proposals: https://github.com/livepeer/project-proposals/projects/1
+
 
