@@ -1,11 +1,32 @@
 Developing on Livepeer
 ===================
 
-Livepeer is an open development platform. Some of the things that can be built on top of, or within Livepeer include:
+Building Video Dapps
+---------------------
+* Video-based Dapps (for example, [livepeer.tv](http://livepeer.tv))
+* Infrastructure tools and services for broadcasters or live streamers (for example, SAAS services on top of Livepeer)
 
-* Live video featuers within an app or DApp
-* Infrastructure tools and services for existing broadcasters or live streamers
-* Tools for the Livepeer ecosystem, including the Livepeer SDK_, Livepeer `core protocol`_ and clients_ themselves
+Building Livepeer Protocol Dapps
+--------------------------------
+* Dapps for the Livepeer ecosystem. (for example, [livepeer protocol explorer](https://explorer.livepeer.org/), [Supermax](https://www.supermax.cool/livepeer)
+
+
+Building Tools for Livepeer
+---------------------------
+* SDKs for Livepeer (for example, [livepeerjs-sdk](https://github.com/livepeer/livepeerjs/tree/master/packages/sdk), [livepeerjs-graphql](https://github.com/livepeer/livepeerjs/tree/master/packages/graphql-sdk)
+* Client implementation for Livepeer (for example, [go-livepeer](https://github.com/livepeer/go-livepeer))
+
+
+Open Projects
+------------------
+
+Livepeer also posts open problems for discussion, ideas, and collaboration on Github. Check out:
+
+* `Open Project Proposals`_
+* `Open Research Areas`_
+
+.. _Open Project Proposals: https://github.com/livepeer/project-proposals/projects/1
+.. _Open Research Areas: https://github.com/livepeer/research/projects/1
 
 Contributing to Livepeer
 --------------------------
@@ -40,15 +61,5 @@ If you're interested in the any of the above challenges, or are building video f
 .. _development chat room on Discord: https://discord.gg/7wRSUGX
 .. _thoses instructions: https://github.com/livepeer/devenv
 
-Open Projects
-------------------
-
-Livepeer also posts open problems for discussion, ideas, and collaboration on Github. Check out:
-
-* `Open Project Proposals`_
-* `Open Research Areas`_
-
-.. _Open Research Areas: https://github.com/livepeer/research/projects/1
-.. _Open Project Proposals: https://github.com/livepeer/project-proposals/projects/1
 
 
