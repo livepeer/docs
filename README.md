@@ -10,12 +10,16 @@ If you have questions, feel free to join our chat room at (http://gitter.im/live
 
 ## Building Locally
 
-These docs are generated using Sphinx.
+These docs are generated using Sphinx. A Python virtual environment is recommended for
+dependency installation and running sphinx-autobuild. If you are new to Python
+virtual environments and needs assistance installing and using one, then please
+visit [virtual environment guide](https://virtualenv.pypa.io/en/stable/installation/)
+for instructions.
 
 ```
-$ pip install sphinx
 $ git clone https://github.com/livepeer/docs.git
 $ cd docs/docs
+$ pip install -r requirements.txt
 $ make html
 $ open build/html/index.html
 ```
