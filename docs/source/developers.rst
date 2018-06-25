@@ -1,15 +1,17 @@
 Developing on Livepeer
-===================
+======================
 
 Building Video Dapps
 ---------------------
 * Video-based Dapps (for example, `livepeer.tv`_)
 * Infrastructure tools and services for broadcasters or live streamers (for example, SAAS services on top of Livepeer)
+
 .. _livepeer.tv: http://livepeer.tv
 
 Building Livepeer Protocol Dapps
 --------------------------------
 * Dapps for the Livepeer ecosystem. (for example, `livepeer protocol explorer`_ or `Supermax`_)
+
 .. _livepeer protocol explorer: https://explorer.livepeer.org/
 .. _Supermax: https://www.supermax.cool/livepeer
 
@@ -41,7 +43,7 @@ For developers who are looking for interesting to problems to work on related to
 * Protocol implementation (Smart Contract)
 * Livepeer Node (Distributed Systems / Networking)
 * Livepeer Media Server (Video Engineering)
-  
+
 For the protocol , you can follow the `protocol repo`_. It requires some background in `Solidity`_ and the `Livepeer Whitepaper`_.
 
 For the livepeer node, check out the `go-livepeer repo`_ and `go-livepeer-basicnet repo`_. It requires some understanding of Golang, `libp2p`_, and `Geth`_. Setting up a development enviroment can be done by following `thoses instructions`_.
