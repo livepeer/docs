@@ -31,7 +31,7 @@ For instructions on broadcasting / playing videos, go to http://livepeer.readthe
 Rinkeby Testnet
 ---------------
 
-Livepeer also runs on the Ethereum Rinkeby testnet.  If you want to try out Livepeer without spending real Ether / Livepeer tokens, you can simply run Livepeer with `livepeer -rinkeby`.
+Livepeer also runs on the Ethereum Rinkeby testnet.  If you want to try out Livepeer without spending real Ether / Livepeer tokens, you can simply run Livepeer with ``livepeer -rinkeby``.
 
 .. _fund:
 
@@ -54,7 +54,7 @@ use it to play your video later.::
   |                 ETH Account |                           0x5A4a992c26CbA8459Ec0d77f4c66216D2a8Fd18F |
   *-----------------------------*----------------------------------------------------------------------*
 
-It should present an array of options for interacting with Livepeer::
+It should present an array of options for interacting with Livepeer:
 
 What would you like to do? (default = stats)
  1. Get node status
@@ -73,7 +73,7 @@ What would you like to do? (default = stats)
  14. Deposit (ETH)
  15. Withdraw deposit (ETH)
  16. Set broadcast config
- 
+
 * Get some test eth from the Rinkeby eth faucet. Make sure to use the Eth account address printed out above in ``livepeer_cli``. Remember to add 0x as a prefix to address, if not present.
 
 * You can check that the request is successful by going to ``livepeer_cli`` and selecting Get node status. You should see a positive Eth balance.
