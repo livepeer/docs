@@ -43,7 +43,7 @@ In a separate terminal window, run livepeer_cli::
   $ livepeer_cli
 
 Livepeer CLI will print out your account address, ETH balance,
-Livepeer token balance, and more info. Take note of the ETH Account
+Livepeer token balance, and more info. Take note of the ETH Account address
 that is printed out, and copy this to your clipboard so that you can
 use it to play your video later.::
 
@@ -73,8 +73,8 @@ What would you like to do? (default = stats)
  17. Get test ETH
 
 * Before you can broadcast on Livepeer, you need Ethereum's token: ETH. 
-  The best way to get test ETH from the Rinkeby network is using the Rinkeby faucet:https://faucet.rinkeby.io/
-  Make sure to post your Eth account address (printed out above in ``livepeer_cli``) somewhere through google+/tweet/facebook, and provide correspond URI to Rinkeby faucet.
+  The best way to get test ETH from the Rinkeby network is using the Rinkeby faucet:https://faucet.rinkeby.io/ , 
+  Make sure to post your Eth account address somewhere through google+/tweet/facebook, and provide correspond URI to Rinkeby faucet.
 
 * You can check that the request is successful by going to ``livepeer_cli`` and selecting Get node status. You should see a positive Eth balance.
 
