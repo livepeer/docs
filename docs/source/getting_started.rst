@@ -38,10 +38,7 @@ Livepeer also runs on the Ethereum Rinkeby testnet.  If you want to try out Live
 Fund your account with test ETH
 -------------------------------
 
-Before you can broadcast on Livepeer, you need Ethereum's
-token: ETH. The best way to get test ETH from the Rinkeby network is using the Rinkeby faucet:https://faucet.rinkeby.io/
-
-Then, In a separate terminal window, run livepeer_cli::
+In a separate terminal window, run livepeer_cli::
 
   $ livepeer_cli
 
@@ -75,7 +72,9 @@ What would you like to do? (default = stats)
  16. Get test LPT
  17. Get test ETH
 
-* Get some test eth from the Rinkeby eth faucet. Make sure to use the Eth account address printed out above in ``livepeer_cli``. Remember to add 0x as a prefix to address, if not present.
+* Before you can broadcast on Livepeer, you need Ethereum's token: ETH. 
+  The best way to get test ETH from the Rinkeby network is using the Rinkeby faucet:https://faucet.rinkeby.io/
+  Make sure to post your Eth account address (printed out above in ``livepeer_cli``) somewhere through google+/tweet/facebook, and provide correspond URI to Rinkeby faucet.
 
 * You can check that the request is successful by going to ``livepeer_cli`` and selecting Get node status. You should see a positive Eth balance.
 
