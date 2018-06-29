@@ -38,15 +38,12 @@ Livepeer also runs on the Ethereum Rinkeby testnet.  If you want to try out Live
 Fund your account with test ETH
 -------------------------------
 
-Before you can broadcast on Livepeer, you need Ethereum's
-token: ETH. The best way to get test ETH from the Rinkeby network is using the Rinkeby faucet.
-
 In a separate terminal window, run livepeer_cli::
 
   $ livepeer_cli
 
 Livepeer CLI will print out your account address, ETH balance,
-Livepeer token balance, and more info. Take note of the ETH Account
+Livepeer token balance, and more info. Take note of the ETH Account address
 that is printed out, and copy this to your clipboard so that you can
 use it to play your video later.::
 
@@ -59,22 +56,25 @@ It should present an array of options for interacting with Livepeer:
 What would you like to do? (default = stats)
  1. Get node status
  2. View protocol parameters
- 3. Initialize round
- 4. Bond
- 5. Unbond
- 6. Withdraw stake (LPT)
- 7. Withdraw fees (ETH)
- 8. Claim rewards and fees
- 9. Transfer LPT
- 10. Get test LPT
- 11. Get test ETH
- 12. List registered transcoders
- 13. Print latest jobs
- 14. Deposit (ETH)
- 15. Withdraw deposit (ETH)
- 16. Set broadcast config
+ 3. List registered transcoders
+ 4. Print latest jobs
+ 5. Invoke "initialize round"
+ 6. Invoke "bond"
+ 7. Invoke "unbond"
+ 8. Invoke "withdraw stake" (LPT)
+ 9. Invoke "withdraw fees" (ETH)
+ 10. Invoke "claim" (for rewards and fees)
+ 11. Invoke "transfer" (LPT)
+ 12. Invoke "deposit" (ETH)
+ 13. Invoke "withdraw deposit" (ETH)
+ 14. Set broadcast config
+ 15. Set Eth gas price
+ 16. Get test LPT
+ 17. Get test ETH
 
-* Get some test eth from the Rinkeby eth faucet. Make sure to use the Eth account address printed out above in ``livepeer_cli``. Remember to add 0x as a prefix to address, if not present.
+* Before you can broadcast on Livepeer, you need Ethereum's token: ETH. 
+  The best way to get test ETH from the Rinkeby network is using the Rinkeby faucet:https://faucet.rinkeby.io/ , 
+  Make sure to post your Eth account address somewhere through google+/tweet/facebook, and provide correspond URI to Rinkeby faucet.
 
 * You can check that the request is successful by going to ``livepeer_cli`` and selecting Get node status. You should see a positive Eth balance.
 
