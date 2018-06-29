@@ -17,7 +17,7 @@ Download ``livepeer`` and ``livepeer_cli`` from https://github.com/livepeer/go-l
     $ mv ./livepeer_darwin/livepeer_cli ./livepeer_cli
     $ ./livepeer
 
-This will start a Livepeer node running on the Ethereum network. It will ask you to set a password and use this same password
+This will start a Livepeer node running on the Ethereum main network. It will ask you to set a password and use this same password
 to unlock your ETH account.
 
 .. _broadcast:
