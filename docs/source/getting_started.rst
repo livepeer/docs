@@ -12,7 +12,7 @@ Download Livepeer
 
 Download ``livepeer`` and ``livepeer_cli`` from https://github.com/livepeer/go-livepeer/releases. Choose the _darwin version for OS X and the _linux versions for Linux, and then untar them::
 
-    $ tar -xvf livepeer_darwin.tar
+    $ tar -zxvf livepeer_darwin.tar.gz
     $ mv ./livepeer_darwin/livepeer ./livepeer
     $ mv ./livepeer_darwin/livepeer_cli ./livepeer_cli
     $ ./livepeer
