@@ -35,7 +35,7 @@ IDs. You can find the manifestID in the console output of the Livepeer
 node. Or you can request it from the Livepeer node through curl:
 
 ```
-$ curl http://localhost:7935/manifestID
+$ curl http://localhost:8935/manifestID
 ```
 
 Now that you have the manifestID you can share it or play the stream as
@@ -52,8 +52,6 @@ You can request your stream in a number of ways.
 ```
 $ ffplay http://localhost:8935/stream/{streamID}.m3u8
 ```
-
-Note that the default playback port, 8935, is different than the internal API port, 7935, which is used for diagnostics such as `/manifestID`.
 
 When you're finished broadcasting you can type `q` to stop the stream.
 
