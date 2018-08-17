@@ -32,9 +32,11 @@ Once you have installed the executable, you can invoke it by running:
 
   $ livepeer
 
-Note: by default Livepeer listens to the local interface.  This means if you are running Livepeer on a cloud-hosted instance, you need to set the ``--rtmpIP 0.0.0.0`` flag.
+Note: by default Livepeer listens to the local interface.  This means if you are running Livepeer on a cloud-hosted instance, you need to set the ``--rtmpAddr 0.0.0.0:1935`` flag. However, there is no security built into the RTMP listener, so use with caution.
 
-One word of caution about setting ``--httpIP``. The CLI interface works via HTTP, and from there it can bond and transfer LPT, deposit and withdraw ETH, initialize rounds, manage broadcast and transcoding configurations, and so forth. Hence, mis-configuring ``--httpIP`` may open up your node to the world for manipulation! Only set ``--httpIP`` if you need to remotely configure your node, and you know how to restrict access from the outside world. Most users don't have a need for this, so it is strongly recommended to leave ``--httpIP`` alone.
+There are two other options that control the use of Livepeer services. The first is the API for the CLI interface. The CLI is meant to be a control interface towards the node: it can bond and transfer LPT, deposit and withdraw ETH, initialize rounds, manage broadcast and transcoding configurations, and so forth. Hence, it is strongly recommended to keep the CLI internal-only: the default setting is ```--cliAddr 127.0.0.1:7935``. Only change the listening IP if you need to remotely configure your node, and you are absolutely certain that the listening interface is secure from the outside world.
+
+The second option is the RPC/HTTP port. Broadcasters and transcoders use RPC messaging to interact and users can view streams via HTTP. The RPC and HTTP functions share the same port, and are configured with the same option. For the broadcaster, the default is ``-httpAddr 127.0.0.1:8935`` . For transcoders, the default is ``-httpAddr 0.0.0.0:8935``.
 
 .. _offchain:
 
@@ -43,9 +45,7 @@ In offchain mode
 
 Using offchain mode does not require syncing with the Ethereum blockchain. Start a node in offchain mode with the command::
 
-  $ livepeer --offchain --bootnode
-
-The ``--bootnode`` flag tells this node not to look to connect to a remote boot node in order to discover other peers. Instead, this role itself will play the role of boot node, that other peers can connect to.
+  $ livepeer --offchain
 
 You are now running a node, and can use it to develop and test Livepeer locally, or even use it as the basis to begin forming a `private network`_.
 
@@ -74,19 +74,26 @@ Livepeer CLI will print out your account address, ETH balance, Livepeer token ba
 
   What would you like to do? (default = stats)
   1. Get node status
-  2. Deposit token
-  3. Broadcast video
-  4. Stream video
-  5. Set broadcast config
-  6. Bond
-  7. Unbond
-  8. Withdraw bond
-  9. Get test Livepeer Token
-  10. Get test Ether
-  11. List registered transcoders
+  2. View protocol parameters
+  3. List registered transcoders
+  4. Print latest jobs
+  5. Invoke "initialize round"
+  6. Invoke "bond"
+  7. Invoke "unbond"
+  8. Invoke "rebond"
+  9. Invoke "withdraw stake" (LPT)
+  10. Invoke "withdraw fees" (ETH)
+  11. Invoke "claim" (for rewards and fees)
+  12. Invoke "transfer" (LPT)
+  13. Invoke "deposit" (ETH)
+  14. Invoke "withdraw deposit" (ETH)
+  15. Set broadcast config
+  16. Set Eth gas price
+  17. Get test LPT
+  18. Get test ETH
 
 
-The testnet contains faucets for providing you with test ETH and test Livepeer Token (LPT), which you will need to take other actions in Livepeer.
+The testnet contains faucets for providing you with test ETH and test Livepeer Token (LPT), which you will need to take other actions in Livepeer. The options for the faucets are present only when running with the ``--rinkeby`` flag enabled.
 
 * Get some test eth from the eth faucet from https://faucet.rinkeby.io/. Make sure to use the Eth account address printed out above in ``livepeer_cli``. Remember to add 0x as a prefix to address, if not present.
 
@@ -148,21 +155,18 @@ The "connect yourself" tab on the `Testnet Homepage`_ provides instructions for 
 Running a node on a private network
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can also create your own private network without connecting to the public test network. To do so you'll initialize a private ethereum chain using Geth, and you'll start Livepeer as a bootnode, noting down the ``bootID`` and ``bootAddr`` to share with other nodes on your private network.
+You can also create your own private network without connecting to the public test network. To do so you'll initialize a private ethereum chain using Geth.
 
 Instructions for creating a private ethereum chain are on the `geth README`_.
 
-Start Livepeer with the ``--bootnode`` flag::
+Start Livepeer::
 
-  $ livepeer --bootnode --v 4  --ethAcctAddr <ethereum address> --ethPassword <eth account pw>
+  $ livepeer --v 4 --devenv --ethAcctAddr <ethereum address> --ethPassword <eth account pw>
 
-* The ``bootID`` will print out and will look something like ``1220354cd445c228356df6625d8646d5000581bd151454c45a4a17879d5aa015b7af``.
-* The ``bootAddr`` will print out, and there may be a variety for different protocols, internal and external IP addresses. Choose one that's accessible to the nodes who you want to join your network depending on whether they are internal or external on the open internet. Example value is: ``/ip4/127.0.0.1/tcp/15000``.
+If you are on the same machine, specify new ports for ``rtmpAddr``, ``httpAddr`` and ``cliAddr``. In this example, we added 1 to each of the default ports which are in use by the first node Consider creating a second ethereum account address in the new data directory::
 
-Start a second Livepeer node specifying the bootID and bootAddr values. If you are on the same machine, specify new ports for rtmp, http, and port values. In this example, we added 1 to each of the default ports which are in use by the first node Consider creating a second ethereum account address in the new data directory::
+  $ livepeer --v 4 --devenv --rtmpAddr 127.0.0.1:1936 --httpAddr 127.0.0.1:8936 --cliAddr 127.0.0.1:7936 --datadir <new datadir eg. ~/.livepeer2> --ethAcctAddr <ethereum address> --ethPassword <eth account pw>
 
-  $ livepeer --bootIDs <above bootID> --bootAddrs <above bootAddr> --rtmp 1936 --http 8936 --p 15001 --datadir <new datadir eg. ~/.livepeer2> --ethAcctAddr <ethereum address> --ethPassword <eth account pw>
-
-The second node should start and connect to the first node. You're now running a private network where the nodes can play different roles such as broadcaster and transcoder.
+The second node should start. You're now running a private network where the nodes can play different roles such as broadcaster and transcoder. Note that if you become an transcoder within a private network, the ``--serviceAddr`` option might need to be set in order to match the on-chain Service URI (which you will set when registering the transcoder).
 
 .. _geth README: https://github.com/ethereum/go-ethereum#operating-a-private-network
