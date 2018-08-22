@@ -31,7 +31,7 @@ We'll walk through the steps of becoming a transcoder on the test
 network. Start livepeer with the `--transcoder` flag:
 
 ```
-$ livepeer --rinkeby --transcoder --publicIP {nodeIP}
+$ livepeer --rinkeby --transcoder
 ```
 
 Run `livepeer_cli`, and make sure you have test ETH and test LPT as
@@ -65,7 +65,9 @@ not set them already:
   delegators who delegate towards you in exchange for doing the work
   of performing this valuable service of transcoding
   reliably. Example: 3%.
-
+  
+* `Public IP:Port` - Transcoders must be publicly accessible at the IP:port
+   in order to receive streams from broadcasters.
 
 If Successful, you should see the Transcoder Status change to "Registered"
 
@@ -84,7 +86,19 @@ you. The important thing is that you keep the node running.
 
 **I get an error that looks something like "failed to estimate gas needed: gas required exceeds allowance or always failing transaction".**
 
-- This is because the gas estimator is giving incorrect estimates.  To fix it, you can manually pass in a gas limit using `-gasLimit`.  For example, `$ livepeer -transcoder -publicIP x.x.x.x -gasLimit 400000`.
+- This is because the gas estimator is giving incorrect estimates.  To fix it, you can manually pass in a gas limit using `-gasLimit`.  For example, `$ livepeer -transcoder -gasLimit 400000`.
+
+**What does being 'publicly accessible' mean? Can I run a transcoder from home?**
+
+- The transcoder should be reachable by broadcasters via the public IP and port that is set during transcoder configuration. Transcoders will not be able to serve the Livepeer network if they are behind a NAT (eg, a home router). If this is the case, special accommodations must be made for the transcoder, such as port forwarding or putting the the transcoder in the DMZ. The only port that is required to be public is the one that was set during the transcoder registration step (default 8935). Be aware that there are many risks to running a public server. Only set up a transcoder if you are comfortable with managing these risks.
+
+**What is the Service URI? Does this need to be an IP?**
+
+The Service Registry acts as a discovery mechanism to allow broadcasters to look up the addresses of transcoders on the network. Transcoders register their Service URI at configuration time; this is submitted to the blockchain as a standalone transaction. While the configuration tool only asks for your IP:port, the URI stored on the blockchain in the form of `https://IP:port`. Transcoders are expected to provide a consistent and reliable service, so IPs here *should* remain static. However, a host (DNS) name is also allowed for the service URI to give transcoders some flexibility.
+
+**What does this error mean? "Service address https://127.0.0.1:4433 did not match discovered address https://127.1.5.10:8935; set the correct address in livepeer_cli or use -serviceAddr"**
+
+- When starting up, the transcoder checks if the current public IP matches the IP that is stored on the blockchain. If there is a mismatch, there is a possibility that your node is not publicly accessible. Override the locally inferred IP address by setting `-serviceAddr IP:port` to what is on the blockchain. Ensure your node is actually accessible at that address.
 
 TODO: These documents could be expanded with far more information
 about the transactions that a Livepeer Transcoder has to submit on a
