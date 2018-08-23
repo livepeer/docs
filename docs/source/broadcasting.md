@@ -108,7 +108,8 @@ In the meantime however, if you would like to take your output video
 and make it available via a conventional CDN, then you have the option
 to do so.
 
-* Run a Livepeer node on a server, and expose port `8935`.
+* Run a Livepeer node on a server, and expose ports `8935 and 1935`.
+* Boot up the livepeer node with the --rtmpAddr 0.0.0.0 and -httpAddr 0.0.0.0 flags
 * Configure your CDN to cache video content running at
 `http://hostname:8935/stream/{streamID}.m3u8`
 
