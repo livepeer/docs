@@ -5,6 +5,7 @@ Building Video Dapps
 ---------------------
 * Video-based Dapps (for example, `livepeer.tv`_)
 * Infrastructure tools and services for broadcasters or live streamers (for example, SAAS services on top of Livepeer)
+* Livepeer Player - A react component for playing live video - https://github.com/livepeer/livepeerjs/tree/master/packages/chroma
 
 .. _livepeer.tv: http://livepeer.tv
 
