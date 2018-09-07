@@ -31,7 +31,7 @@ For instructions on broadcasting / playing videos, go to http://livepeer.readthe
 Rinkeby Testnet
 ---------------
 
-Livepeer also runs on the Ethereum Rinkeby testnet.  If you want to try out Livepeer without spending real Ether / Livepeer tokens, you can simply run Livepeer with ``livepeer -rinkeby``.
+Livepeer also runs on the Ethereum Rinkeby testnet.  If you want to try out Livepeer without spending real Ether / Livepeer tokens, you can simply run Livepeer with ``livepeer -rinkeby``. Note: Change the price you are willing to pay to 200 to avoid being paired with a faulty transcoder. (15 - Set broadcast config)
 
 .. _fund:
 
