@@ -43,15 +43,16 @@ described above using the web player or ffplay.
 
 ## Playing the Stream
 
-You can request your stream in a number of ways.
-
-* Request the stream using your channel through the per-broadcaster [web player](http://media.livepeer.org). Use the Eth address that is printed out in the Livepeer CLI or the node output. 
-* Request the stream using the manifest ID through the [web player](http://media.livepeer.org/player.html).
+You can request your stream from your local node, or remotely if your node is exposed to the world.
+ 
 * Request the stream using `ffplay`
 
 ```
 $ ffplay http://localhost:8935/stream/{streamID}.m3u8
 ```
+
+* Request the stream using the manifest ID through the [web player](http://media.livepeer.org/player.html) which should pull from localhost only.
+* See [Reaching many viewers at scale](#reaching-many-viewers-at-scale) below for recommended scaled streaming setups.
 
 Note that the default playback port, 8935, is different than the internal API port, 7935, which is used for diagnostics such as `/manifestID`.
 
