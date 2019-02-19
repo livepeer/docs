@@ -1,4 +1,4 @@
-# Broadcasting on Livepeer
+# Broadcasting To A Livepeer Node
 
 Broadcasting to Livepeer using existing broadcasting tools is
 easy. After a Livepeer node is running, it exposes an RTMP interface
@@ -58,7 +58,7 @@ $ ffplay http://localhost:8935/stream/current.m3u8
 ```
 
 
-## Broadcasting Using FFMPEG
+## Broadcasting To A Local Node Using FFMPEG
 
 To broadcast using ffmpeg you can try the following command:
 
@@ -72,9 +72,9 @@ For Linux:
 ffmpeg -f dshow -framerate 30 -pixel_format uyvy422 -i "0:0" -vcodec libx264 -tune zerolatency -b 1000k -x264-params keyint=60:min-keyint=60 -acodec aac -ac 1 -b:a 96k -f flv rtmp://localhost:1935/movie
 ```
 
-As described above, you can now find the manifestID and share it to play.
+You can now verify if the broadcast is successful.
 
-## Broadcasting from Mobile
+## Broadcasting To A Remote Node From Mobile
 
 There is not currently a natively Livepeer aware mobile app, but much
 like [using OBS](#broadcasting-using-obs), as described above, you can
@@ -85,28 +85,12 @@ Instead of setting the rtmp output to `localhost:1935`, you'll want to
 set it to a remote Livepeer node that you are running on a
 server. Replace `localhost` with the IP address of the server.
 
-The tricky part will be finding the manifestID since the app
-won't be aware.
-
-A good solution to this would be for someone to fork one of the open
-source mobile broadcasting apps to make it Livepeer aware, by fetching
-the manifestID from the server and displaying it when the user starts
-broadcasting. Another solution we're working on is making web and
-mobile native Livepeer clients, so there's no need to connect to a
-remote node.
+Make sure the node is started with `-currentManifest` to make this process easier.
 
 ## Reaching Many Viewers at Scale
 
-Any user on the Livepeer network who has the ID for your stream should
-be able to request and access it. The current relay-based solution for
-delivering the video works in a p2p fashion, but may be susceptible to
-user churn or low bandwidth connections. Future versions of the
-software promise resilience against this by implementing more robust
-p2p protocols.
-
-In the meantime however, if you would like to take your output video
-and make it available via a conventional CDN, then you have the option
-to do so.
+If you would like to take your output video and make it available via a 
+conventional CDN, then you have the option to do so.
 
 * Run a Livepeer node on a server, and expose ports `8935 and 1935`.
 * Boot up the livepeer node with the --rtmpAddr 0.0.0.0 and -httpAddr 0.0.0.0 flags
