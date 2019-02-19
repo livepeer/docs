@@ -13,7 +13,7 @@ and [have the node running](node.html).
 
 Note: make sure you have deposited ETH if you would like to broadcast.
 
-## Broadcasting to a local node using OBS
+## Broadcasting To A Local Node Using OBS
 
 Start by reading our [step by step guide](https://github.com/livepeer/wiki/wiki/Blueprint:-set-up-a-broadcasting-node-using-Livepeer-and-OBS)
 
@@ -46,7 +46,7 @@ If you have used `-currentManifest` to start your Livepeer node, you can verify 
 710ed610/source.m3u8
 ```
 
-## Playing the local video stream
+## Playing The Local Video Stream
 
 Make sure you have used `-currentManifest` to start your Livepeer node. You can watch your stream via:
 
