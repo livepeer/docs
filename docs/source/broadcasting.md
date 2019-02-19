@@ -23,40 +23,39 @@ audio sources, etc. One such tool is
 [OBS](https://obsproject.com/). To use OBS you have to change two
 settings:
 
-* Settings -> Stream -> URL. Set it as `rtmp://localhost:1935/movie`
+* Settings -> Stream -> URL. Set it as `rtmp://localhost:1935`
 * Settings -> Output -> Output Mode. Set it to Advanced. Ensure the following settings are enabled:
   * Encoder: x264
   * Rate Control: CBR
   * Keyframe Interval: 4
 * Start streaming as usual.
 
-The tricky part is that OBS is not aware of the Livepeer Manifest
-IDs. You can find the manifestID in the console output of the Livepeer
-node. Or you can request it from the Livepeer node through curl:
-
-```
-$ curl http://localhost:7935/manifestID
+If the broadcast is successful, you should see a log in the terminal like:
 ```
 
-Now that you have the manifestID you can share it or play the stream as
-described above using the web player or ffplay.
+Video Created With ManifestID: 710ed610
+
+```
+
+If you have used `-currentManifest` to start your Livepeer node, you can verify that the broadcast is successful by running `curl http://localhost:8935/stream/current.m3u8`.  It should return a valid HLS playlist like:
+
+```
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-STREAM-INF:PROGRAM-ID=0,BANDWIDTH=4000000,RESOLUTION=1120x700
+710ed610/source.m3u8
+```
 
 ## Playing the Stream
 
-You can request your stream in a number of ways.
+Make sure you have used `-currentManifest` to start your Livepeer node. You can watch your stream via:
 
-* Request the stream using your channel through the per-broadcaster [web player](http://media.livepeer.org). Use the Eth address that is printed out in the Livepeer CLI or the node output. 
-* Request the stream using the manifest ID through the [web player](http://media.livepeer.org/player.html).
-* Request the stream using `ffplay`
+* Playing the stream through the [web player](http://media.livepeer.org). Use `http://localhost:8935/stream/current.m3u8`
+* Playing the stream using `ffplay`
 
 ```
-$ ffplay http://localhost:8935/stream/{streamID}.m3u8
+$ ffplay http://localhost:8935/stream/current.m3u8
 ```
-
-Note that the default playback port, 8935, is different than the internal API port, 7935, which is used for diagnostics such as `/manifestID`.
-
-When you're finished broadcasting you can type `q` to stop the stream.
-
 
 ## Broadcasting Using FFMPEG
 
