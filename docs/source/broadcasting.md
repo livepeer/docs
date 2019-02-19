@@ -13,7 +13,7 @@ and [have the node running](node.html).
 
 Note: make sure you have deposited ETH if you would like to broadcast.
 
-## Broadcasting Using OBS
+## Broadcasting to a local node using OBS
 
 Start by reading our [step by step guide](https://github.com/livepeer/wiki/wiki/Blueprint:-set-up-a-broadcasting-node-using-Livepeer-and-OBS)
 
@@ -46,16 +46,17 @@ If you have used `-currentManifest` to start your Livepeer node, you can verify 
 710ed610/source.m3u8
 ```
 
-## Playing the Stream
+## Playing the local video stream
 
 Make sure you have used `-currentManifest` to start your Livepeer node. You can watch your stream via:
 
-* Playing the stream through the [web player](http://media.livepeer.org). Use `http://localhost:8935/stream/current.m3u8`
+* Playing the stream through the [Livepeer media player](http://media.livepeer.org). Use `http://localhost:8935/stream/current.m3u8` as the URL for the video stream.
 * Playing the stream using `ffplay`
 
 ```
 $ ffplay http://localhost:8935/stream/current.m3u8
 ```
+
 
 ## Broadcasting Using FFMPEG
 
