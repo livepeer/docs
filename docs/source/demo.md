@@ -7,22 +7,22 @@ Please [contact us](mailto:beta@liveeer.org?subject=Ingest+URL+Provision+Request
 
 ## Setup: obtain an ingest server URL from Livepeer
 
-Livepeer will give you a set of RTMP ingest, HLS output, and status URLs. The `manifestID` parameter in the ingest URL can be used to form the output URL. 
+Livepeer will give you a set of RTMP `<ingest-url>`, HLS `<streaming-url>`, and `<status-url>`. The `manifestID` parameter in the ingest URL can be used to form the output URL. 
 
 **For example:**
 The ingest URL can be:
 ```
-rtmp://35.231.43.235:2281/?manifestID=stream1
+rtmp://<ingest-url>/?manifestID=stream1
 ```
 
-the output URL can be: 
+the streaming URL can be: 
 ```
-http://35.231.43.235:9601/stream/stream1.m3u8
+http://<stream-url>/stream/stream1.m3u8
 ```
 
 and the status URL can be:
 ```
-http://35.231.43.235:8539/status
+http://<status-url>/status
 ```
 
 ## 1. Create your source streamer and / or capture software.
@@ -31,11 +31,11 @@ There are many tools for this. Some common ones include:
 
 * FFmpeg from a mac laptop
   * ```
-    ffmpeg -f avfoundation -framerate 60 -pixel_format uyvy422 -i "0:0" -vcodec libx264 -acodec aac -b 500k -x264-params keyint=120:min-keyint=120 -f flv rtmp://35.231.43.235:2281/?manifestID=stream1
+    ffmpeg -f avfoundation -framerate 60 -pixel_format uyvy422 -i "0:0" -vcodec libx264 -acodec aac -b 500k -x264-params keyint=120:min-keyint=120 -f flv rtmp://<ingest-url>/?manifestID=stream1
     ```
 * FFmpeg for a video file
   * ```
-    ffmpeg -re -i <input-video-file> -c:a copy -c:v copy -f flv rtmp://35.231.43.235:2281/?manifestID=stream1
+    ffmpeg -re -i <input-video-file> -c:a copy -c:v copy -f flv rtmp://<ingest-url>/?manifestID=stream1
     ```
 * [OBS](https://obsproject.com/) for desktops and laptops
   * Refer to our [guide](https://livepeer.readthedocs.io/en/latest/broadcasting.html#broadcasting-to-a-local-node-using-obs) on using OBS with Livepeer
@@ -47,7 +47,7 @@ There are many tools for this. Some common ones include:
 
 Using the status endpoint, you can get status of all of the streams on a Livepeer node.  For example:
 ```
-curl http://35.231.43.235:8539/status | jq
+curl http://<status-url>/status | jq
 ```
 
 You should see something like
@@ -61,14 +61,14 @@ You should see something like
 ```
 If you see an error like `-bash: jq: command not found`, use 
 ```
-curl http://35.231.43.235:8539/status
+curl http://<status-url>/status
 ```
 
 ## 3. View your stream
 
 An easy option is to use the [Livepeer player](http://media.livepeer.org/).  Simply put the stream output URL there to view your stream.  For example: 
 ```
-http://35.231.43.235:9601/stream/stream1.m3u8
+http://<streaming-url>/stream/stream1.m3u8
 ```
 
 ## FAQs
