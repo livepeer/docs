@@ -114,7 +114,7 @@ Now that you have Livepeer token and ETH you can use them broadcast, bond and de
 Install and start Geth
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Geth is the Ethereum client, and you can run your own Geth instances instead of using the Livepeer testnet Geth instances. The instructions for installing geth are available on the `Ethereum installation guide`_. Generally this is just downloading a binary file for your platform.
+Geth is the Ethereum client, and you can run your own Geth instances instead of using the Livepeer testnet Geth instances. The instructions for installing geth are available on the `Ethereum installation guide`_. Generally this is just downloading a binary file for your platform. (If you are using Parity, you can use the `--geth` flag to emulate Geth behavior)
 
 The "connect yourself" tab on the `Testnet Homepage`_ provides instructions for how to initialize Geth and launch it. It can be summarized as:
 
