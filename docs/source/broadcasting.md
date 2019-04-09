@@ -103,6 +103,6 @@ served off of a CDN. In the future, we would like to replace this
 option with the p2p network that Livepeer forms around a stream.
 
 ## FAQ
-Check out our Broadcasting Forum for [frequently asked questions] (https://forum.livepeer.org/c/using-livepeer-for-broadcasting)
+Check out our Broadcasting Forum for [frequently asked questions](https://forum.livepeer.org/c/using-livepeer-for-broadcasting)
 
-If you have any questions, reach out to Chris Hobcroft on our [community chat] (https://discord.gg/RR4kFAh)
+If you have any questions, reach out to Chris Hobcroft on our [community chat](https://discord.gg/RR4kFAh)
