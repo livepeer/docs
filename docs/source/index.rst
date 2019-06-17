@@ -17,7 +17,9 @@ Livepeer, participate in the Livepeer protocol as a transcoder or
 delegator, and build apps or DApps with video based features using
 Livepeer.
 
-We suggest you start with :doc:`getting_started`.
+We suggest you start with :doc:`getting_started`. If you are interested in testing out Livepeer without setting up your own nodes, sign up for `early access`_ to the pilots program.
+
+.. _early access: https://mailchi.mp/livepeer.org/pluginpartner
 
 .. _contributing:
 
