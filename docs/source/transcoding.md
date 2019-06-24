@@ -53,11 +53,7 @@ not set them already:
   charge to transcode a 4 second segment of video? Keep in mind that 1 LPT ==
   10^18 base unit LPT. Example 1000.
 
-* `FeeShare` - You will collect fees from broadcasters based upon the
-  above price that you charge and how many segments you
-  transcode. What % of fees would you to keep? The remaining fees will
-  be passed to your
-  [delegators](bonding_and_delegation.html). Example 98%.
+* `FeeShare` - How much [delegators](bonding_and_delegation.html) receive of the PricePerSegment. For example, if FeeShare is 25%, and if you as a transcoder were to charge 100WEI in fees per segment, you would pay 25WEI to the delegators and keep 75WEI.
 
 * `BlockRewardCut` - All [delegators](bonding_and_delegation.html) are
   entitled to their share of newly minted inflationary Livepeer
