@@ -44,6 +44,7 @@ Index
    broadcasting
    bonding_and_delegation
    transcoding
+   infrastructure
    developers
    license
    help
