@@ -44,7 +44,7 @@ Index
    broadcasting
    bonding_and_delegation
    transcoding
-   infrastructure
+   streamflow-public-testnet
    developers
    license
    help
