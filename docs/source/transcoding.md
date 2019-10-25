@@ -25,7 +25,29 @@ Quicklinks:
 [Transcoder chat](https://discord.gg/cBfD23u)
 
 
-## Becoming a Transcoder
+## Running a Transcoding Node in Development
+The easiest way to try running a transcoding node in development is by running an offchain node via:
+
+```
+$ livepeer -orchestrator -transcoder -httpAddr 0.0.0.0:8935 -serviceAddr 127.0.0.1:8935 -v 99
+```
+
+This brings up an orchestrating AND transcoding node, running on port 8935.
+
+To test out the broadcasting workflow, you can launch a broadcaster node via:
+```
+$ livepeer -broadcaster -orchAddr 127.0.0.1:8935 -rtmpAddr 0.0.0.0:1935 -httpAddr 0.0.0.0:8936  -cliAddr 0.0.0.0:7936
+```
+
+You can follow the [broadcasting guide](https://livepeer.readthedocs.io/en/latest/broadcasting.html) to send a live video to the broadcaster node.
+
+*Note: The computation load for transcoding is quite intensive.  If you are seeing skipped video segments, chances are your machine is overloaded.  You can verify that by monitoring the CPU usage.*
+
+## Running a Transcoding Node on GPUs
+Please follow the [following guide](https://github.com/mk-livepeer/bot-miner-setup) to set up transcoding nodes on GPUs.
+
+
+## Becoming a Transcoder (instruction for Streamflow coming soon)
 
 We'll walk through the steps of becoming a transcoder on the test
 network. Start livepeer with the `--transcoder` flag:
