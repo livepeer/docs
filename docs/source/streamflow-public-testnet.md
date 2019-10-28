@@ -1,6 +1,6 @@
 # Streamflow Public Testnet
 
-Livepeer recently deployed a new public test network to test out the upcoming Streamflow release - aimed at making Livepeer scalable, reliable, and cost effective for scaled usage. This document provides a background on transcoding, the Streamflow updates, and the steps you need to take to get up and running on the Streamflow Testnet.
+Livepeer recently deployed a new public test network to test out the upcoming Streamflow release - aimed at making Livepeer scalable, reliable, and cost effective for scaled usage. This document provides a background on the role you play in transcoding video on Livepeer, the Streamflow updates, and the steps you need to take to get up and running on the Streamflow Testnet.
 
 Transcoding is the process of taking an input video in one format and
 bitrate, and converting it into many formats and bitrates to make it
