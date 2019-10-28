@@ -63,11 +63,13 @@ $ livepeer -network rinkeby -orchestrator -transcoder -pricePerUnit 1
 
 ### Run a broadcaster
 
-Starting `livepeer` with the `-broadcaster` flag starts the node in broadcaster mode.
+Starting `livepeer` with the `-broadcaster` flag starts the node in broadcaster mode enabling you to stream video to be transcoded on the network. 
 
 ```
 $ livepeer -network rinkeby -broadcaster
 ```
+
+*Note that if you are already running an orchestrator node on the same machine, you will also have to pass additional flags into this command to specify unique ports so as not to conflict with your orchestrator node. See the below section on testing your transcoding setup for more detail.*
 
 ### Getting test ETH
 
@@ -101,6 +103,8 @@ Select the option to get test LPT (note: the option numbering will be slightly d
 |                 ETH Balance |                        9999925448000000000 |
 *-----------------------------*--------------------------------------------*
 ```
+
+You now have a node running, and have the test ETH and LPT you need to begin interacting with the Livepeer network. Read on to learn how to activate your orchestrator node and confirm that it is transcoding video correctly.
 
 ## Transcoding
 
