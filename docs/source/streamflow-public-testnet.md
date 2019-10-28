@@ -137,6 +137,22 @@ Upon selecting the option, you should be prompted to:
 
 After answering the wizard's prompt, you should see a few transactions submitted by your node. After the transactions confirm, you can see your orchestrator's registration status, stake, commission rates and pricing information by refreshing the wizard. If your orchestrator is in the top 100, it will join the active set at the beginning of the next round.
 
+### Testing your transcoding setup 
+
+You can test your orchestrator setup by setting up your own broadcaster and routing the broadcaster's requests directly to your orchestrator.
+
+Start a broadcaster that will connect directly to your orhcestrator:
+
+```
+$ livepeer -network rinkeby -broadcaster -orchAddr <ORCH_SERVICE_URI>
+```
+
+`<ORCH_SERVICE_URI>` should be the publicly accessible `serviceURI` that your orchestrator registered on-chain.
+
+Follow the steps in the [broadcasting](#broadcasting) section to deposit funds, configure broadcasting preferences and stream video into your broadcaster.
+
+Look at the log output on your **orchestrator** node, and you should see your orchestrator start to transcode the incoming video. The broadcaster node will also receive the transcoded output back from the orchestrator and you can view your stream and each rendition in any web based or command line video player.
+
 ### Configuring payment parameters
 
 The Streamflow protocol upgrade introduces two main changes to the transcoding payment flow:
@@ -159,20 +175,6 @@ The following [script](https://github.com/livepeer/pm-params-calculator) can use
 
 - The value received per hour (in terms of ticket expected value)
 - The frequency of winning tickets (in terms of hours)
-
-### Testing your transcoding setup 
-
-You can test your orchestrator setup by setting up your own broadcaster and routing the broadcaster's requests directly to your orchestrator.
-
-Start a broadcaster that will connect directly to your orhcestrator:
-
-```
-$ livepeer -network rinkeby -broadcaster -orchAddr <ORCH_SERVICE_URI>
-```
-
-`<ORCH_SERVICE_URI>` should be the publicly accessible `serviceURI` that your orchestrator registered on-chain.
-
-Follow the steps in the [broadcasting](#broadcasting) section to deposit funds, configure broadcasting preferences and stream video into your broadcaster. You should see your orchestrator start to transcode the incoming video.
 
 ### Scaling transcoding
 
@@ -200,7 +202,7 @@ You can run the above command on any number of machines that you would like to d
 
 ### GPU transcoding
 
-When you setup split transcoding for your orchestrator, you can run individual transcoders on not only CPUs, but GPUs as well. The GPUs that transcoders run on can be dedicated purely to transcoding or can also be mining cryptocurrencies simultaneously. See the [following guide](https://github.com/mk-livepeer/bot-miner-setup) for instructions on how to setup transcoders on GPUs.
+When you setup split transcoding for your orchestrator, you can run individual transcoders on not only CPUs, but GPUs as well. The GPUs that transcoders run on can be dedicated purely to transcoding or can also be mining cryptocurrencies simultaneously. See [this guide](https://github.com/mk-livepeer/bot-miner-setup) for instructions on how to setup transcoders on GPUs.
 
 ## Broadcasting
 
@@ -265,7 +267,7 @@ Then, you will pick a set of video profiles that you would like your input video
 
 ### Broadcasting video
 
-See the [broadcasting guide](https://livepeer.readthedocs.io/en/latest/broadcasting.html) for information on sending video into your broadcaster node.
+See the [broadcasting guide](https://livepeer.readthedocs.io/en/latest/broadcasting.html) for information on sending video into your broadcaster node and viewing the output transcoded video.
 
 ## Running an Ethereum node
 
