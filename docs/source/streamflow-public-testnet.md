@@ -155,7 +155,7 @@ First, make sure to turn on verbose logging on your orchestrator (transcoding/pa
 $ livepeer -network rinkeby -orchestrator -transcoder -pricePerUnit 1 -v 99
 ```
 
-Start a broadcaster that will connect directly to your orhcestrator:
+Start a broadcaster that will connect directly to your orchestrator:
 
 ```
 $ livepeer -network rinkeby -broadcaster -orchAddr <ORCH_SERVICE_URI>
@@ -166,6 +166,26 @@ $ livepeer -network rinkeby -broadcaster -orchAddr <ORCH_SERVICE_URI>
 Follow the steps in the [broadcasting](#broadcasting) section to deposit funds, configure broadcasting preferences and stream video into your broadcaster.
 
 Look at the log output on your **orchestrator** node, and you should see your orchestrator start to transcode the incoming video. The broadcaster node will also receive the transcoded output back from the orchestrator and you can view your stream and each rendition in any web based or command line video player.
+
+You can also test that your orchestrator is able to properly redeem [winning tickets](#configuring-payment-parameters) received from your broadcaster. Typically, the frequency of winning tickets in terms of clock time would be dynamically determined by the orchestrator based on the desired ticket expected value and price per pixel (these parameters are set by the orchestrator) as well as the current projected gas price required to redeem winning tickets and the amount/type of video that the orchestrator is transcoding. However, in this test scenario, since you are operating both the orchestrator and broadcaster, you can control all of the parameters mentioned to target a specific frequency of winning tickets.
+
+First, check your orchestrator's logs to see the projected gas price for redeeming tickets (should see that the current gas price cached at a regular interval). Next, [select the renditions](#configuring-broadcasting-preferences) to request for encoding. Now, run the [PM calculator script](https://github.com/livepeer/pm-params-calculator) using the following command:
+
+```
+$ python3 calc.py -t
+```
+
+You should be prompted for the desired ticket expected value, the projected gas price for redeeming tickets, the desired time (denominated in hours) for receiving a winning ticket and the set of renditions that will be encoded. After answering all of the prompts, the script should output the price per pixel that your orchestrator should set in order to receive a winning ticket in the desired time (this is just an approximation - if the desired time is 1 hour you will not necessarily receive a winning ticket exactly in 1 hour, but rather in 1 hour on average so the time elapsed might be more or less than 1 hour in practice).
+
+Restart your orchestrator with the values used in the script and the price per pixel outputted by the script:
+
+```
+$ livepeer -network rinkeby -orchestrator -transcoder -ticketEV <TICKET_EXPECTED_VALUE> -pricePerUnit <PRICE_PER_PIXEL> -v 99
+```
+
+Start streaming into your broadcaster and monitor the orchestrator's logs for a `redeemWinningTicket` log. Once this log is observed, you can use `livepeer_cli` and verify that the `Pending Fees` field in the wizard increased.
+
+See the section on [configuring payment parameters](#configuring-payment-parameters) for a more detailed walkthrough of the payment parameter configuration process.
 
 ### Configuring payment parameters
 
@@ -189,6 +209,8 @@ The following [script](https://github.com/livepeer/pm-params-calculator) can use
 
 - The value received per hour (in terms of ticket expected value)
 - The frequency of winning tickets (in terms of hours)
+
+The script can also be used to calculate the price per pixel needed to target a desired frequency of winning tickets (in terms of hours) which can be useful for testing that your orchestrator can properly redeem winning tickets.
 
 ### Scaling transcoding
 
