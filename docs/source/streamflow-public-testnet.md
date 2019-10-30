@@ -137,7 +137,8 @@ Upon selecting the option, you should be prompted to:
 
 - Set a `rewardCut` which is the percentage of inflationary LPT rewards that you will keep (the rest will be shared with your delegators)
 - Set a `feeShare` which is the percentage of ETH transcoding fees that you will share with your delegators (the rest you will keep)
-- Set a `pricePerPixel` which is the price that you charge (denominated in wei) per pixel of transcoding. See the [configuring payment parameters](#configuring-payment-parameters) for more details on pricing per pixel
+- Set a `pixelsPerUnit` which is the number of pixels you define to be in a unit, which will form the basis for your charging.
+- Set a `pricePerUnit` which is the price that you charge per unit of transcoding (whole number, denominated in wei). See the [configuring payment parameters](#configuring-payment-parameters) for more details on pricing per pixel.
 - Set an amount of LPT to stake and self-delegate
 - Set a `serviceURI` which is the public accessible IP and port that broadcasters can send requests and video to be transcoded
     - The `serviceURI` is stored on-chain in the form `https://IP:port` (when registering you will just be asked for the IP and port). The IP should remain static since orchestrators are expected to provide consistent and reliable service, but a host (DNS) name can also be used for the `serviceURI` which provides orchestrators some flexibility. Orchestrators will not be able to serve the network if they are behind a NAT (i.e. a home router). If an orchestrator is behind a NAT, you will need to make special accomodations such as enabling port forwarding or putting the orchestrator in the DMZ. Be aware that there are many risks to running a public server. You should only run an orchestrator if you are comfortable managing these risks
