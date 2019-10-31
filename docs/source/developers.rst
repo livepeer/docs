@@ -47,7 +47,7 @@ For developers who are looking for interesting to problems to work on related to
 
 For the protocol , you can follow the `protocol repo`_. It requires some background in `Solidity`_ and the `Livepeer Whitepaper`_.
 
-For the livepeer node, check out the `go-livepeer repo`_. It requires some understanding of Golang and `Geth`_. Setting up a development enviroment can be done by following `these instructions`_.
+For the livepeer node, check out the `go-livepeer repo`_. It requires some understanding of Golang and `Geth`_.
 
 For the livepeer media server implementation, take a look at the `LPMS repo`_. It requires some video engineering knowledge. The `demuxed conf videos`_ and the `Apple Live streaming doc`_ are good resources to start learning.
 
@@ -65,7 +65,7 @@ If you're interested in the any of the above challenges, or are building video f
 .. _demuxed conf videos: https://www.twitch.tv/demuxed/videos/all
 .. _Apple Live streaming doc: https://developer.apple.com/library/content/documentation/NetworkingInternet/Conceptual/StreamingMediaGuide/Introduction/Introduction.html
 .. _development chat room on Discord: https://discord.gg/7wRSUGX
-.. _thoses instructions: https://github.com/livepeer/devenv
+
 
 
 
