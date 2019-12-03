@@ -322,8 +322,10 @@ By default `livepeer` will use Infura as the ETH RPC provider. If you would like
 Run `geth`:
 
 ```
-$ geth -rinkeby
+$ geth -rinkeby -rpc -rpcapi eth,net,web3
 ```
+
+If `geth` is running on a different machine than `livepeer` you will have to specify the `-rpcaddr` flag to indicate the interface to listen on.
 
 Wait until `geth` is fully synced with the latest block on the Rinkeby testnet. You can check if `geth` is done syncing by using the Geth Javascript Console:
 
