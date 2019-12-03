@@ -148,7 +148,7 @@ After answering the wizard's prompt, you should see a few transactions submitted
 
 ### Testing your transcoding setup 
 
-You can test your orchestrator setup by setting up your own broadcaster and routing the broadcaster's requests directly to your orchestrator.
+You can test your orchestrator setup by setting up your own broadcaster and routing the broadcaster's requests directly to your orchestrator. Your orchestrator must be active before you can test the full transcoding/payment workflow - see the [activation section](#activation) for details on how to active your orchestrator. 
 
 First, make sure to turn on verbose logging on your orchestrator (transcoding/payment related logs will not be shown with the default logging level):
 
@@ -322,8 +322,10 @@ By default `livepeer` will use Infura as the ETH RPC provider. If you would like
 Run `geth`:
 
 ```
-$ geth -rinkeby
+$ geth -rinkeby -rpc -rpcapi eth,net,web3
 ```
+
+If `geth` is running on a different machine than `livepeer` you will have to specify the `-rpcaddr` flag to indicate the interface to listen on.
 
 Wait until `geth` is fully synced with the latest block on the Rinkeby testnet. You can check if `geth` is done syncing by using the Geth Javascript Console:
 
