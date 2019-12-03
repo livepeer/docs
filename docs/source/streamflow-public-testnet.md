@@ -148,7 +148,7 @@ After answering the wizard's prompt, you should see a few transactions submitted
 
 ### Testing your transcoding setup 
 
-You can test your orchestrator setup by setting up your own broadcaster and routing the broadcaster's requests directly to your orchestrator.
+You can test your orchestrator setup by setting up your own broadcaster and routing the broadcaster's requests directly to your orchestrator. Your orchestrator must be active before you can test the full transcoding/payment workflow - see the [activation section](#activation) for details on how to active your orchestrator. 
 
 First, make sure to turn on verbose logging on your orchestrator (transcoding/payment related logs will not be shown with the default logging level):
 
