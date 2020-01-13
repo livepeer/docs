@@ -193,7 +193,7 @@ See the section on [configuring payment parameters](#configuring-payment-paramet
 The Streamflow protocol upgrade introduces two main changes to the transcoding payment flow:
 
 - A [probabilistic micropayment](https://medium.com/livepeer-blog/streamflow-probabilistic-micropayments-f3a647672462) protocol. Broadcasters send lottery tickets to orchestrators in exchange for transcoded results. Each lottery ticket is defined with a `faceValue`, the payout to the orchestrator if the ticket wins, and a `winProb`, the probability that the ticket will win. Each ticket is treated as a micropayment worth the expected value of the ticket (calculated as `faceValue * winProb`). Orchestrators will redeem winning tickets on-chain to receive the `faceValue` of tickets.
-- A payment accounting protocol that meters the resources consumed by an orchestrator during transcoding using pixels. Orchestrators define a price per pixel (denominated in wei) which is the amount an orchestrator expects to be paid per pixel transcoded. The video profiles requested by a broadcaster will impact the number of pixels that need to be transcoded by the orchestrator for each video segment. The more costly in terms of pixels it is to transcode a segment, the more tickets a broadcaster will need to send to compensate the orchestrator
+- A payment accounting protocol that meters the resources consumed by an orchestrator during transcoding using pixels. Orchestrators define a price per pixel (denominated in wei) which is the amount an orchestrator expects to be paid per pixel transcoded. The advertised price is used by broadcasters to filter the eligible orchestrators for selection (the default broadcaster implementation currently filters out orchestrators that advertise a price that exceeds the broadcaster's own max price). The video profiles requested by a broadcaster will impact the number of pixels that need to be transcoded by the orchestrator for each video segment. The more costly in terms of pixels it is to transcode a segment, the more tickets a broadcaster will need to send to compensate the orchestrator
 
 An orchestrator can set its price per pixel by setting its price per unit, the amount of wei to charge for each unit of work, and its pixels per unit, the number of pixels that constitute a single unit of work. An orchestrator can set its price per pixel to be fractional wei by setting the number of pixels per unit to be greater than 1. The price per pixel can be set via:
 
@@ -211,7 +211,115 @@ The following [script](https://github.com/livepeer/pm-params-calculator) can use
 - The value received per hour (in terms of ticket expected value)
 - The frequency of winning tickets (in terms of hours)
 
+Find below an example of using the script to project the value received per hour and frequency of winning tickets when transcoding 10 streams into 240p, 360p and 720p renditions:
+
+```
+➜  pm-params-calculator git:(master) python3 calc.py -f
+DEFAULTS
+---------
+Ticket redemption gas cost: 100000
+Transaction cost overhead: 0.01
+
+
+Enter the desired ticket expected value (gwei): 1000
+
+
+Enter the gas price (gwei) to use for ticket redemption transactions: 5
+Ticket redemption gas price: 5.0 gwei
+
+
+Transaction cost to redeem a ticket: 0.0005000000 ether ($0.1000000000)
+Ticket face value: 0.0500000000 ether ($10.0000000000)
+Ticket winning probability: 0.000020000000000
+1 out of 49999 tickets will win
+
+
+Enter the price per pixel (wei) to charge: 1000
+Price per pixel: 1000 wei
+
+
+Would you like to add a rendition to be encoded? (y/n): y
+Enter the output width: 426
+Enter the output height: 240
+Enter the output FPS (frames per second): 30
+Enter the number of streams of this renditions: 10
+Would you like to add a rendition to be encoded? (y/n): y
+Enter the output width: 640
+Enter the output height: 360
+Enter the output FPS (frames per second): 30
+Enter the number of streams of this renditions: 10
+Would you like to add a rendition to be encoded? (y/n): y
+Enter the output width: 1280
+Enter the output height: 720
+Enter the output FPS (frames per second): 30
+Enter the number of streams of this renditions: 10
+Would you like to add a rendition to be encoded? (y/n): n
+
+
+Given the specified renditions you will:
+Encode 1354579200000.0 pixels per hour
+Receive 1354 tickets per hour
+Receive 0.0013540000 ether ($0.2708000000) (in terms of ticket expected value) per hour
+Receive 1 winning ticket every 36.92688330871492 hours
+```
+
+In the above example, if an orchestrator transcodes 10 streams into 240p, 360p and 720p renditions, sets the ticket EV to 1000 gwei, redeems winning tickets on-chain using a gas price of 5 gwei and sets the price per pixel to 1000 wei then the orchestrator will receive approximately .001354 ETH of value per hour and 1 winning ticket every ~36.929 hours.
+
 The script can also be used to calculate the price per pixel needed to target a desired frequency of winning tickets (in terms of hours) which can be useful for testing that your orchestrator can properly redeem winning tickets.
+
+```
+➜  pm-params-calculator git:(master) python3 calc.py -t
+DEFAULTS
+---------
+Ticket redemption gas cost: 100000
+Transaction cost overhead: 0.01
+
+
+Enter the desired ticket expected value (gwei): 1000
+Ticket expected value: 1000.0 gwei
+
+
+Enter the gas price (gwei) to use for ticket redemption transactions: 5
+Ticket redemption gas price: 5.0 gwei
+
+
+Transaction cost to redeem a ticket: 0.0005000000 ether ($0.1000000000)
+Ticket face value: 0.0500000000 ether ($10.0000000000)
+Ticket winning probability: 0.000020000000000
+1 out of 49999 tickets will win
+
+
+Enter the desired number of hours (i.e. 1, .5, etc.) until receiving a winning ticket: 1
+
+
+Would you like to add a rendition to be encoded? (y/n): y
+Enter the output width: 426
+Enter the output height: 240
+Enter the output FPS (frames per second): 30
+Enter the number of streams of this renditions: 10
+Would you like to add a rendition to be encoded? (y/n): y
+Enter the output width: 640
+Enter the output height: 360
+Enter the output FPS (frames per second): 30
+Enter the number of streams of this renditions: 10
+Would you like to add a rendition to be encoded? (y/n): y
+Enter the output width: 1280
+Enter the output height: 720
+Enter the output FPS (frames per second): 30
+Enter the number of streams of this renditions: 10
+Would you like to add a rendition to be encoded? (y/n): n
+
+
+Given the specified renditions you will and a target of 1 winning ticket every 1.0 hours you will:
+Need to charge 36911.09386590315 wei per pixel
+Encode 1354579200000.0 pixels per hour
+Receive 49999.0 tickets per hour
+Receive 0.0499990000 ether ($9.9998000000) (in terms of ticket expected value) per hour
+```
+
+In the above example, if an orchestrator transcodes 10 streams into 240p, 360p and 720p renditions, sets the ticket EV to 1000 gwei, redeems winning tickets on-chain using a gas price of 5 gwei and targets 1 winning ticket every hour then the orchestrator should set the price per pixel to 36911.09386590315 wei.
+
+In practice, the price set by orchestrators will likely also be influenced by the market rate for transcoding on the network and an orchestrator's own infrastructure cost. This information can be surfaced by tools that will be built in the future.
 
 ### Scaling transcoding
 
