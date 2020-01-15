@@ -6,7 +6,7 @@ These docs are visible at http://livepeer.readthedocs.io
 
 All contributions and doc updates are appreciated! The docs are written in Markdown and RestructuredText, and can be edited directly in this repo or by editing the page that you want at http://livepeer.readthedocs.io. Please make pull requests into the master branch with updates.
 
-If you have questions, feel free to join our chat room at (http://gitter.im/livepeer/Lobby).
+If you have questions, feel free to join [the Livepeer Discord server](https://discord.gg/RR4kFAh).
 
 ## Building Locally
 
