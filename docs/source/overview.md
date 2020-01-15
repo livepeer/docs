@@ -1,6 +1,6 @@
 # Overview
 
-(Livepeer)[https://livepeer.org] is a live video streaming network protocol that is fully decentralized, highly scalable, crypto token incentivized, and results in a solution which is cheaper to an app developer or broadcaster than using traditional centralized live video solutions.
+[Livepeer](https://livepeer.org) is a live video streaming network protocol that is fully decentralized, highly scalable, crypto token incentivized, and results in a solution which is cheaper to an app developer or broadcaster than using traditional centralized live video solutions.
 
 Users that participate in the Livepeer protocol have one of following roles:
 
