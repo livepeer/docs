@@ -38,10 +38,10 @@ Index
 
 .. toctree::
    :maxdepth: 2
-
+   
+   overview
    quickstart
    installation
-   overview
    transcoding
    broadcasting
    developers
