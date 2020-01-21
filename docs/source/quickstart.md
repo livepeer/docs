@@ -20,13 +20,13 @@ $ livepeer -network rinkeby -broadcaster
 
 *Note that if you are already running an orchestrator node on the same machine, you will also have to pass additional flags into this command to specify unique ports so as not to conflict with your orchestrator node. See the below section on testing your transcoding setup for more detail.*
 
-### Getting test ETH
+## Getting test ETH
 
 If you are connecting to the Rinkeby public testnet you can get test ETH from the [Rinkeby faucet](https://faucet.rinkeby.io/).
 
-### Getting test LPT
+## Getting test LPT
 
-You can get test LPT using `livepeer_cli`. Before getting test LPT, make sure your account has test ETH.
+You can get test LPT using `livepeer_cli` when running on Rinkeby. Before getting test LPT, make sure your account has test ETH.
 
 In a separate terminal window other than the one that is running `livepeer`, run:
 
