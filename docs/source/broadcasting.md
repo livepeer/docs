@@ -4,14 +4,9 @@ Broadcasting to Livepeer using existing broadcasting tools is
 easy. After a Livepeer node is running, it exposes an RTMP interface
 on port 1935. You can broadcast into Livepeer using this port.
 
-## Install Livepeer and Have the Node Running
+### Install Livepeer
 
-The following instructions assume that you have followed the
-[installation instructions](http://livepeer.readthedocs.io/en/latest/node.html#installation)
-
-and [have the node running](node.html).
-
-Note: make sure you have deposited ETH if you would like to broadcast.
+The following instructions assume that you have followed the [installation](installation.html) and [quickstart](quickstart.html) instructions.
 
 ### Deposit broadcasting funds
 

@@ -2,7 +2,7 @@
 
 ## Run an orchestrator
 
-Starting `livepeer` with the `-orchestrator` and `-transcoder` flags starts the node in orchestrator mode with solo transcoding. This is the simplest and fastest way to run an orchestrator and start transcoding video on the network. The [transcoding](#transcoding) section will describe the difference between solo and split transcoding as well as how to scale transcoding on your orchestrator with split transcoding.
+Starting `livepeer` with the `-orchestrator` and `-transcoder` flags starts the node in orchestrator mode with solo transcoding. This is the simplest and fastest way to run an orchestrator and start transcoding video on the network. The [transcoding](transcoding.html) section will describe the difference between solo and split transcoding as well as how to scale transcoding on your orchestrator with split transcoding.
 
 The example commands in this document will use the `-network rinkeby` flag to connect the node to the Rinkeby public testnet. If you are connecting the node to mainnet, you should use the `-network mainnet` flag.
 
