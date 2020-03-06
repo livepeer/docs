@@ -257,6 +257,17 @@ You can run the above command on any number of machines that you would like to d
 
 When you setup split transcoding for your orchestrator, you can run individual transcoders on not only CPUs, but GPUs as well. The GPUs that transcoders run on can be dedicated purely to transcoding or can also be mining cryptocurrencies simultaneously. See [this guide](https://github.com/livepeer/bot-miner-setup) for instructions on how to setup transcoders on GPUs.
 
+**Running a standalone Transcoder with GPUs**
+
+```
+$ livepeer -transcoder -orchAddr <ORCH_SERVICE_URI> -orchSecret <ORCH_SECRET> -nvidia <GPU IDS (comma separated)>
+```
+
+`<ORCH_SECRET>` should be the secret defined by your orchestrator. `<ORCH_SERVICE_URI>` should be the publicly accessible `serviceURI` that your orchestrator registered on-chain.
+
+You can choose which GPUs you want to use by their PCIe ID. To get the PCIe IDs of your GPUs you can use `nvidia-smi`. 
+
+
 ## FAQ
 **What does being 'publicly accessible' mean? Can I run a transcoder from home?**
 
