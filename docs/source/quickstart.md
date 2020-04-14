@@ -60,7 +60,7 @@ Starting `livepeer` with the `-orchestrator` and `-transcoder` flags starts the 
 The example commands in this document will use the `-network rinkeby` flag to connect the node to the Rinkeby public testnet. If you are connecting the node to mainnet, you should use the `-network mainnet` flag.
 
 ```
-$ livepeer -network rinkeby -orchestrator -transcoder -pricePerUnit 1
+$ livepeer -network rinkeby -ethUrl <ETH_RPC_URL> -orchestrator -transcoder -pricePerUnit 1
 ```
 
 ## Run a broadcaster
@@ -68,7 +68,7 @@ $ livepeer -network rinkeby -orchestrator -transcoder -pricePerUnit 1
 Starting `livepeer` with the `-broadcaster` flag starts the node in broadcaster mode enabling you to stream video to be transcoded on the network. 
 
 ```
-$ livepeer -network rinkeby -broadcaster
+$ livepeer -network rinkeby -ethUrl <ETH_RPC_URL> -broadcaster
 ```
 
 *Note that if you are already running an orchestrator node on the same machine, you will also have to pass additional flags into this command to specify unique ports so as not to conflict with your orchestrator node. See the below section on testing your transcoding setup for more detail.*

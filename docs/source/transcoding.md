@@ -24,6 +24,12 @@ Quicklinks:
 
 [Transcoder chat](https://discord.gg/cBfD23u)
 
+## Install Livepeer
+
+The following instructions assume that you have followed the [installation](installation.html) and [quickstart](quickstart.html) instructions.
+
+Some of the `livepeer` commands in these instructions require an Ethereum node JSON-RPC URL to be provided via the `-ethUrl <ETH_RPC_URL>` flag. See the [quickstart](quickstart.html) instructions for more details on obtaining an Ethereum node JSON-RPC URL.
+
 ## Activation
 
 In order to start transcoding video on the network and earning fees, your orchestrator node must be active.
@@ -61,13 +67,13 @@ You can test your orchestrator setup by setting up your own broadcaster and rout
 First, make sure to turn on verbose logging on your orchestrator (transcoding/payment related logs will not be shown with the default logging level):
 
 ```
-$ livepeer -network rinkeby -orchestrator -transcoder -pricePerUnit 1 -v 99
+$ livepeer -network rinkeby -ethUrl <ETH_RPC_URL> -orchestrator -transcoder -pricePerUnit 1 -v 99
 ```
 
 Start a broadcaster that will connect directly to your orchestrator:
 
 ```
-$ livepeer -network rinkeby -broadcaster -orchAddr <ORCH_SERVICE_URI>
+$ livepeer -network rinkeby -ethUrl <ETH_RPC_URL> -broadcaster -orchAddr <ORCH_SERVICE_URI>
 ```
 
 `<ORCH_SERVICE_URI>` should be the publicly accessible `serviceURI` that your orchestrator registered on-chain.

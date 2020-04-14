@@ -8,6 +8,8 @@ on port 1935. You can broadcast into Livepeer using this port.
 
 The following instructions assume that you have followed the [installation](installation.html) and [quickstart](quickstart.html) instructions.
 
+Some of the `livepeer` commands in these instructions require an Ethereum node JSON-RPC URL to be provided via the `-ethUrl <ETH_RPC_URL>` flag. See the [quickstart](quickstart.html) instructions for more details on obtaining an Ethereum node JSON-RPC URL.
+
 ### Deposit broadcasting funds
 
 You will need to deposit funds (ETH) used to pay orchestrators on the network for transcoding video.
@@ -117,7 +119,7 @@ Verifier server listening in port 5000
 If you are running the verifier on the same machine as the broadcaster, then you can run the below command in order to connect the broadcaster with the verifier:
 
 ```
-livepeer -network rinkeby -broadcaster -verifierUrl http://localhost:5000/verify -verifierPath ~/verification-classifier/stream
+livepeer -network rinkeby -ethUrl <ETH_RPC_URL> -broadcaster -verifierUrl http://localhost:5000/verify -verifierPath ~/verification-classifier/stream
 ```
 
 The broadcaster logs should indicate the address of the verifier being used:
@@ -153,7 +155,7 @@ sshfs -o IdentityFile=<SSH_KEY_FILE> <USER>@<HOSTNAME>:<FOLDER_ON_VERIFIER> <FOL
 After the SSH tunnel is setup and the remote volume is mounted, run the following command to start the broadcaster:
 
 ```
-livepeer -network rinkeby -broadcaster -verifierUrl http://localhost:5000/verify -verifierPath <FOLDER_ON_BROADCASTER>
+livepeer -network rinkeby -ethUrl <ETH_RPC_URL> -broadcaster -verifierUrl http://localhost:5000/verify -verifierPath <FOLDER_ON_BROADCASTER>
 ```
 
 The broadcaster also supports sharing segment data with a verifier using external cloud storage providers such as Amazon's S3 or Google's GCS. Documentation on using external cloud storage providers will be added in the future.
