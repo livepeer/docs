@@ -8,6 +8,8 @@ on port 1935. You can broadcast into Livepeer using this port.
 
 The following instructions assume that you have followed the [installation](installation.html) and [quickstart](quickstart.html) instructions.
 
+Some of the `livepeer` commands in these instructions require an Ethereum node JSON-RPC URL to be provided via the `-ethUrl <ETH_RPC_URL>` flag. See the [quickstart](quickstart.html) instructions for more details on obtaining an Ethereum node JSON-RPC URL.
+
 ### Deposit broadcasting funds
 
 You will need to deposit funds (ETH) used to pay orchestrators on the network for transcoding video.
@@ -117,7 +119,7 @@ Verifier server listening in port 5000
 If you are running the verifier on the same machine as the broadcaster, then you can run the below command in order to connect the broadcaster with the verifier:
 
 ```
-livepeer -network rinkeby -broadcaster -verifierUrl http://localhost:5000/verify -verifierPath ~/verification-classifier/stream
+livepeer -network rinkeby -ethUrl <ETH_RPC_URL> -broadcaster -verifierUrl http://localhost:5000/verify -verifierPath ~/verification-classifier/stream
 ```
 
 The broadcaster logs should indicate the address of the verifier being used:
@@ -153,49 +155,10 @@ sshfs -o IdentityFile=<SSH_KEY_FILE> <USER>@<HOSTNAME>:<FOLDER_ON_VERIFIER> <FOL
 After the SSH tunnel is setup and the remote volume is mounted, run the following command to start the broadcaster:
 
 ```
-livepeer -network rinkeby -broadcaster -verifierUrl http://localhost:5000/verify -verifierPath <FOLDER_ON_BROADCASTER>
+livepeer -network rinkeby -ethUrl <ETH_RPC_URL> -broadcaster -verifierUrl http://localhost:5000/verify -verifierPath <FOLDER_ON_BROADCASTER>
 ```
 
 The broadcaster also supports sharing segment data with a verifier using external cloud storage providers such as Amazon's S3 or Google's GCS. Documentation on using external cloud storage providers will be added in the future.
-
-## Running an Ethereum node
-
-By default `livepeer` will use Infura as the ETH RPC provider. If you would like to run your own ETH node you can use `geth` (the Rinkeby testnet is only supported by `geth`) which can be installed using the instructions on the [installing geth page](https://geth.ethereum.org/docs/install-and-build/installing-geth). 
-
-Run `geth`:
-
-```
-$ geth -rinkeby -rpc -rpcapi eth,net,web3
-```
-
-If `geth` is running on a different machine than `livepeer` you will have to specify the `-rpcaddr` flag to indicate the interface to listen on.
-
-Wait until `geth` is fully synced with the latest block on the Rinkeby testnet. You can check if `geth` is done syncing by using the Geth Javascript Console:
-
-```
-$ geth attach http://localhost:8545
-Welcome to the Geth JavaScript console!
-
-instance: Geth/v1.9.0-stable-52f24617/linux-amd64/go1.12.7
-coinbase: 0x0161e041aad467a890839d5b08b138c1e6373072
-at block: 583 (Wed, 23 Oct 2019 17:41:00 EDT)
- modules: debug:1.0 eth:1.0 miner:1.0 net:1.0 personal:1.0 rpc:1.0 txpool:1.0 web3:1.0
-
-> eth.syncing
-false
-```
-
-In order to connect to your own ETH node, you will need to set the `-ethUrl` flag on your `livepeer` node to the ETH node's RPC URL.
-
-For example, you could use the following command to connect an orchestrator to an ETH node running at `localhost:8545`.
-
-```
-$ livepeer -network rinkeby -orchestrator -pricePerUnit 1 -ethUrl http://localhost:8545
-```
-
-## Migrating to Streamflow
-
-If you are upgrading from a go-livepeer < v0.5.3 you do not need to take any additional action - the node will create a fresh DB that is compatible with the changes included in the Streamflow protocol upgrade.
 
 ## Broadcasting To A Local Node Using OBS
 
