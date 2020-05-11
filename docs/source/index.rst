@@ -44,6 +44,7 @@ Index
    installation
    transcoding
    broadcasting
+   governance
    developers
    help
    license
