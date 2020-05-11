@@ -24,13 +24,15 @@ Orchestrator operators can use `livepeer_cli` to vote in a poll without exportin
 In `livepeer_cli`, select the following option:
 
 ```
-19. Vote on a poll
+17. Vote on a poll
 ```
+
+Note: On Rinkeby, the option will be number 19.
 
 Upon selecting the option, you will be prompted to enter the contract address for the poll you want to vote on:
 
 ```
-> 19
+> 17
 Enter the contract address for the poll you want to vote on - >
 ```
 
