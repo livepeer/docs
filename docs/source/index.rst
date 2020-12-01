@@ -1,25 +1,23 @@
 Welcome to the Livepeer Documentation
 ========================================
 
-`Livepeer`_ is a decentralized video broadcasting platform powered by
-a crypto token on the Ethereum blockchain. Livepeer is for:
+`Livepeer`_ is a decentralized video streaming network build on the Ethereum blockchain. Livepeer is for:
 
 .. _Livepeer: http://livepeer.org
 
 - Developers who want to build applications that include live video.
+- Tokenholders who want to help improve and secure the network by acquiring and staking LPT.
+- Node operators who want to transcode video in exchange for ETH and LPT rewards.
 
-- Users who want to stream video, gaming, coding, entertainment, educational courses, and other types of content..
+Use this documentation to learn how to:
 
-- Broadcasters who currently have large audiences and high streaming bills or infrastructure costs can use the Livepeer network to potentially reduce costs or infrastructure overhead.
+- Broadcast video on the network.
+- Participate as an orchestrator, transcoder or delegator.
+- Build applications with live video features.
 
-Use this documentation to learn how to broadcast video through
-Livepeer, participate in the Livepeer protocol as a transcoder or
-delegator, and build apps or DApps with video based features using
-Livepeer.
+If you want a walkthrough of the core concepts of Livepeer, start with the :doc:`overview` and then jump into the :doc:`quickstart`. 
 
-We suggest you start with :doc:`quickstart`. If you are interested in testing out Livepeer without setting up your own nodes, sign up for `early access`_ to the pilots program.
-
-.. _early access: https://mailchi.mp/livepeer.org/pluginpartner
+The guides section contains a list of step-by-step instructions for accomplishing various tasks and the references section contains technical reference materials.
 
 .. _contributing:
 
@@ -38,6 +36,7 @@ Index
 
 .. toctree::
    :maxdepth: 2
+   :caption: Core Concepts
    
    overview
    quickstart
@@ -48,3 +47,11 @@ Index
    developers
    help
    license
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Guides
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Reference
