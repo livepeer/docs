@@ -55,3 +55,5 @@ Index
 .. toctree::
    :maxdepth: 2
    :caption: Reference
+
+   reference/leaderboard_faq
