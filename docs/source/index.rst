@@ -56,4 +56,5 @@ Index
    :maxdepth: 2
    :caption: Reference
 
+   reference/hardware_requirements
    reference/leaderboard_faq
