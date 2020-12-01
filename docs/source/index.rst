@@ -57,4 +57,5 @@ Index
    :caption: Reference
 
    reference/hardware_requirements
+   reference/bandwidth_requirements
    reference/leaderboard_faq
