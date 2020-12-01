@@ -130,7 +130,7 @@ A few things you can explore to improve the speed of transcoding include:
 - Evaluate your current transcoding speed by using a transcoding benchmarking tool
 - Review the :doc:`hardware_requirements` and consider upgrading your hardware
 - If you have access to a `supported GPU <https://github.com/livepeer/wiki/blob/master/GPU-SUPPORT.md>`_:
-    - Consider running an orchestrator with GPU transcoding
+    - Consider running an :doc:`orchestrator with GPU transcoding <../guides/orchestrator_transcoder_gpu>`
     - Consider running a standalone orchestrator that sends transcoding tasks to standalone GPU transcoders
 
 A few things you can explore to improve the speed of data upload/download:
