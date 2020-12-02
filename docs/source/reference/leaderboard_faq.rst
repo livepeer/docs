@@ -30,7 +30,7 @@ The software used to run these tests consists of:
 - A `broadcaster node <https://github.com/livepeer/go-livepeer>`_
 - A `stream-tester <https://github.com/livepeer/stream-tester>`_ that sends streams to the broadcaster
 - A `monitoring instance <https://github.com/livepeer/docker-livepeer/tree/master/monitoring>`_ that collects metrics from the broadcaster
-- An `orch-tester process <#>`_ that automates tests and saves metrics
+- An `orch-tester process <https://github.com/livepeer/stream-tester/tree/master/cmd/orch-tester>`_ that automates tests and saves metrics
 
 What happens during a transcoding test?
 *****************************************
