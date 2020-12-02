@@ -1,4 +1,4 @@
-How To Benchmark A Transcoder
+How To Benchmark Transcoding
 =============================
 
 Pre-requisites

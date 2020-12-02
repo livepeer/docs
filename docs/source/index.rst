@@ -53,7 +53,7 @@ Index
    :caption: Guides
 
    guides/orchestrator_transcoder_gpu
-   guides/transcoder_benchmark
+   guides/benchmark_transcoding
 
 .. toctree::
    :maxdepth: 2
