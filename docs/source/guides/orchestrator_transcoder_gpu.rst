@@ -40,6 +40,7 @@ The following flags are required to run an orchestrator with GPU transcoding:
 
     livepeer -orchestrator \
         -transcoder \
+        -network mainnet \
         -ethURL <ETH RPC URL> \
         -nvidia <NVIDIA GPU DEVICE IDs>
 
@@ -50,6 +51,7 @@ For example, the following command will use GPUs 0-5 when transcoding:
 
     livepeer -orchestrator \
         -transcoder \
+        -network mainnet \
         -ethURL http://127.0.0.1:8545 \
         -nvidia 0,1,2,3,4
 
@@ -60,6 +62,7 @@ For example, the following command will not use GPU #1 when transcoding:
 
     livepeer -orchestrator \
         -transcoder \
+        -network mainnet \
         -ethURL http://127.0.0.1:8545 \
         -nvidia 0,2,3,4
 
@@ -69,6 +72,7 @@ You can use an optional :code:`-v 6` flag to set the logging level to verbose in
 
     livepeer -orchestrator \
         -transcoder \
+        -network mainnet \
         -ethURL http://127.0.0.1:8545 \
         -nvidia 0,1,2,3,4 \
         -v 6
