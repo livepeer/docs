@@ -1,7 +1,7 @@
 How To Run An Orchestrator With GPU Transcoding
 ===============================================
 
-Orchestrators can use a GPU to transcode streams.
+Orchestrators can use GPUs to transcode streams.
 
 Pre-requisites
 **************
@@ -76,6 +76,10 @@ You can use an optional :code:`-v 6` flag to set the logging level to verbose in
 On startup, the orchestrator will automatically run a test to confirm that it is able to transcode using the specified GPUs.
 The orchestrator will exit if this test fails. If the test passes, you should see the following message in the log output without any
 additional error messages following it indicating that your orchestrator is ready to transcode streams using the specified GPUs:
+
+::
+
+    Received Ping request  
 
 Transcoding information
 ***********************
