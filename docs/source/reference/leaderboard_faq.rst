@@ -31,6 +31,7 @@ The software used to run these tests consists of:
 - A `stream-tester <https://github.com/livepeer/stream-tester>`_ that sends streams to the broadcaster
 - A `monitoring instance <https://github.com/livepeer/docker-livepeer/tree/master/monitoring>`_ that collects metrics from the broadcaster
 - An `orch-tester process <https://github.com/livepeer/stream-tester/tree/master/cmd/orch-tester>`_ that automates tests and saves metrics
+- A `leaderboard API <https://github.com/livepeer/leaderboard-serverless>`_ that serves aggregated and raw test metrics
 
 What happens during a transcoding test?
 *****************************************
@@ -145,3 +146,26 @@ A few things you can explore to improve the speed of transcoding include:
 A few things you can explore to improve the speed of data upload/download:
 
 - Review the :doc:`bandwidth_requirements` and consider upgrading your bandwidth 
+
+How can I view the historical test results for an orchestrator on the leaderboard? 
+************************************************************************************
+
+To get an average total score, latency score and success rate over time for an orchestrator since a particular timestamp use:
+
+::
+
+    curl https://leaderboard-serverless.vercel.app/api/aggregated_stats?orchestrator=<ORCHESTRATOR>?since=<TIMESTAMP>?region=<REGION>
+
+- :code:`<ORCHESTRATOR>` the orchestrator's Ethereum address to get the metrics for.
+- :code:`<TIMESTAMP>` the timestamp at which to evaluate the query. This defaults to the last 24 hours, to get the aggregated stats for all time you can use `since=1`.
+- :code:`<REGION>` the region to get results for, returns all regions by default.
+
+To get each individual test entry for an orchestrator since a particular timestamp use:
+
+:: 
+
+    curl https://leaderboard-serverless.vercel.app/api/raw_stats??orchestrator=<ORCHESTRATOR>?since=<TIMESTAMP>?region=<REGION>
+
+- :code:`<ORCHESTRATOR>` the orchestrator's Ethereum address to get the metrics for (required).
+- :code:`<TIMESTAMP>` the timestamp at which to evaluate the query. This defaults to the last 24 hours, to get the aggregated stats for all time you can use `since=1`.
+- :code:`<REGION>` the region to get results for, returns all regions by default.
