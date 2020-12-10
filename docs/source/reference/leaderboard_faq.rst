@@ -117,6 +117,15 @@ The formula for the total score is subject to change as additional performance m
 
 The leaderboard in the explorer scales this metric and displays it as a value in the range 0-10.
 
+As an orchestrator operator, why are my current metrics on the leaderboard all 0?
+***********************************************************************************
+
+If your current metrics are 0, check whether the following conditions are met:
+
+- Your service URI is publicly accessible
+    - `curl <SERVICE_URI>` from a separate machine and you should see a self-signed certificate message or use a third-party website or tool that checks public accessibility
+- Your node's price per pixel is set below the leaderboard's maximum price of 50,000 wei per pixel. 
+
 As an orchestrator operator, how can I improve my metrics on the leaderboard?
 *******************************************************************************
 
