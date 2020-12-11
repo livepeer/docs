@@ -54,6 +54,7 @@ Index
 
    guides/orchestrator_transcoder_gpu
    guides/benchmark_transcoding
+   guides/session_limits
 
 .. toctree::
    :maxdepth: 2
