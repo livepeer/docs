@@ -6,20 +6,18 @@ Pre-requisites
 
 Before proceeding with this guide:
 
-- Setup go-livepeer and its dependencies by following the pre-requisites and setup section in the `go-livepeer installation guide <https://github.com/livepeer/go-livepeer/blob/master/doc/install.md#pre-requisites-and-setup>`_.
+- Get the pre-built executable for the benchmark tool ``livepeer_bench`` by following the livepeer `installation guide <https://github.com/livepeer/go-livepeer/blob/master/doc/install.md#option-1-download-pre-built-executables-from-livepeer>`_.
 
-- Build the benchmark tool ``livepeer_bench`` from source:
+- Alternatively, you can manually build it from source by first following the `setup instructions <https://github.com/livepeer/go-livepeer/blob/master/doc/install.md#pre-requisites-and-setup>`_ and then running make:
 
 ::
 
-    $ cd go-livepeer
     $ PKG_CONFIG_PATH=~/compiled/lib/pkgconfig make livepeer_bench
 
 - Download the `test stream <https://storage.googleapis.com/lp_testharness_assets/bbb_1080p_30fps_1min_2sec_hls.tar.gz>`_ and unarchive it:
 
 ::
     
-    $ cd go-livepeer
     $ wget -c https://storage.googleapis.com/lp_testharness_assets/bbb_1080p_30fps_1min_2sec_hls.tar.gz
     $ tar -xvf bbb_1080p_30fps_1min_2sec_hls.tar.gz
     $ ls bbb/   # Should print the stream *.ts segments and source.m3u8 manifest
@@ -49,12 +47,12 @@ By default the benchmark transcodes the stream only once. You can optionally spe
         -concurrentSessions 5
     
 The default configuration for the output renditions is - 240p30fps, 360p30fps, 720p30fps.
-You may follow the `transcoding options guide <https://github.com/livepeer/go-livepeer/blob/master/doc/transcodingoptions.md>`_ to set custom output profiles, or use the JSON for most common configuration found on the network as:
+You may follow the `transcoding options guide <https://github.com/livepeer/go-livepeer/blob/master/doc/transcodingoptions.md>`_ to set custom output profiles, or use the JSON for most `common configuration <https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json>`_ found on the network as:
 
 ::
 
     ./livepeer_bench -in bbb/source.m3u8 \
-        -transcodingOptions cmd/livepeer_bench/transcodingOptions.json
+        -transcodingOptions transcodingOptions.json
 
 Benchmark output
 ****************
