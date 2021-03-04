@@ -11,7 +11,5 @@ $ wget https://github.com/livepeer/go-livepeer/releases/download/<RELEASE_VERSIO
 After downloading the file, untar the archive and move the `livepeer` binary so that it is executable within your `$PATH`:
 
 ```
-$ tar -zxvf livepeer-<YOUR_PLATFORM>-amd64.tar.gz
-$ mv livepeer-<YOUR_PLATFORM>-amd64/livepeer /usr/local/bin
-$ mv livepeer-<YOUR_PLATFORM>-amd64/livepeer_cli /usr/local/bin
+$ tar -C /usr/local/bin -fxz livepeer-<YOUR_PLATFORM>-amd64.tar.gz
 ```
