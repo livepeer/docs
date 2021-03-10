@@ -164,7 +164,7 @@ To get each individual test entry for an orchestrator since a particular timesta
 
 :: 
 
-    curl https://leaderboard-serverless.vercel.app/api/raw_stats??orchestrator=<ORCHESTRATOR>?since=<TIMESTAMP>?region=<REGION>
+    curl https://leaderboard-serverless.vercel.app/api/raw_stats?orchestrator=<ORCHESTRATOR>?since=<TIMESTAMP>?region=<REGION>
 
 - :code:`<ORCHESTRATOR>` the orchestrator's Ethereum address to get the metrics for (required).
 - :code:`<TIMESTAMP>` the timestamp at which to evaluate the query. This defaults to the last 24 hours, to get the aggregated stats for all time you can use `since=1`.
