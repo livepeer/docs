@@ -46,6 +46,13 @@ By default the benchmark transcodes the stream only once. You can optionally spe
     ./livepeer_bench -in bbb/source.m3u8 \
         -concurrentSessions 5
     
+The segments by default get queued one-by-one as they would arrive in a live stream. To queue all the segments at once (replicating a VOD usecase) you may manually set the live mode off:
+
+::
+
+    ./livepeer_bench -in bbb/source.m3u8 \
+        -live=false
+
 The default configuration for the output renditions is - 240p30fps, 360p30fps, 720p30fps.
 You may follow the `transcoding options guide <https://github.com/livepeer/go-livepeer/blob/master/doc/transcodingoptions.md>`_ to set custom output profiles, or use the JSON for most `common configuration <https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json>`_ found on the network as:
 
@@ -61,7 +68,7 @@ Running a sample benchmark on a GTX 1060 with default profiles:
 
 ::
     
-    ./livepeer_bench -in bbb/source.m3u8 -nvidia 0
+    ./livepeer_bench -in bbb/source.m3u8 -nvidia 0 -segs 10
 
 The first few lines of the output would show the source manifest, the profiles, and number of concurrent sessions:
 
@@ -71,63 +78,45 @@ The first few lines of the output would show the source manifest, the profiles, 
     | Source File         | .../go-livepeer/bbb/source.m3u8              |
     | Transcoding Options | P240p30fps16x9,P360p30fps16x9,P720p30fps16x9 |
     | Concurrent Sessions | 1                                            |
+    | Live Mode           | true                                         |
     *---------------------*----------------------------------------------*
 
 Then as each segment gets transcoded, its metrics will be output in CSV format:
 
 ::
 
-    timestamp,session,segment,transcode_time
-    2020-12-03 02:21:25.7953,0,0,0.2782
-    2020-12-03 02:21:25.917,0,1,0.1216
-    2020-12-03 02:21:26.0199,0,2,0.1029
-    2020-12-03 02:21:26.1123,0,3,0.09238
-    2020-12-03 02:21:26.207,0,4,0.09467
-    2020-12-03 02:21:26.3012,0,5,0.0941
-    2020-12-03 02:21:26.4,0,6,0.09877
-    2020-12-03 02:21:26.5025,0,7,0.1025
-    2020-12-03 02:21:26.6073,0,8,0.1047
-    2020-12-03 02:21:26.7085,0,9,0.1013
-    2020-12-03 02:21:26.8179,0,10,0.1093
-    2020-12-03 02:21:26.9216,0,11,0.1036
-    2020-12-03 02:21:27.0175,0,12,0.09585
-    2020-12-03 02:21:27.1185,0,13,0.101
-    2020-12-03 02:21:27.2134,0,14,0.0949
-    2020-12-03 02:21:27.3171,0,15,0.1037
-    2020-12-03 02:21:27.42,0,16,0.1028
-    2020-12-03 02:21:27.5236,0,17,0.1035
-    2020-12-03 02:21:27.627,0,18,0.1034
-    2020-12-03 02:21:27.7622,0,19,0.1352
-    2020-12-03 02:21:27.8608,0,20,0.09819
-    2020-12-03 02:21:27.9576,0,21,0.09678
-    2020-12-03 02:21:28.0526,0,22,0.09495
-    2020-12-03 02:21:28.148,0,23,0.09533
-    2020-12-03 02:21:28.2408,0,24,0.09276
-    2020-12-03 02:21:28.3362,0,25,0.09531
-    2020-12-03 02:21:28.4292,0,26,0.09297
-    2020-12-03 02:21:28.5288,0,27,0.09961
-    2020-12-03 02:21:28.6285,0,28,0.09969
-    2020-12-03 02:21:28.6961,0,29,0.06757
+    timestamp,session,segment,seg_dur,transcode_time
+    2021-03-12 00:21:29.1412,0,0,2,0.2545
+    2021-03-12 00:21:30.998,0,1,2,0.1107
+    2021-03-12 00:21:32.9816,0,2,2,0.09381
+    2021-03-12 00:21:34.9786,0,3,2,0.09031
+    2021-03-12 00:21:36.9806,0,4,2,0.09178
+    2021-03-12 00:21:38.9811,0,5,2,0.09216
+    2021-03-12 00:21:40.9831,0,6,2,0.09363
+    2021-03-12 00:21:42.9874,0,7,2,0.09746
+    2021-03-12 00:21:44.9885,0,8,2,0.09811
+    2021-03-12 00:21:46.9851,0,9,2,0.09412
 
-When all the transcoding sessions end it will output the total time taken for transcoding, total number of segments in the stream, and the total duration of the segments:
+When all the transcoding sessions end it will output some metrics. The ones to look out for are the two Real-Time Ratios - "Segs Ratio" captures the number of segments completed in real-time, and "Duration Ratio" captures the total time taken to transcode a segment compared to the total source video duration.
 
 ::
 
-    Took 3.281 seconds to transcode 30 segments of total duration 60s (1 concurrent sessions)
+    *------------------------------*---------------------*
+    | Concurrent Sessions          | 1                   |
+    | Total Segs Transcoded        | 10                  |
+    | Real-Time Segs Transcoded    | 10                  |
+    | * Real-Time Segs Ratio *     | 1                   |
+    | Total Source Duration        | 20s                 |
+    | Total Transcoding Duration   | 1.1165546499999999s |
+    | * Real-Time Duration Ratio * | 0.05583             |
+    *------------------------------*---------------------*
 
-**NB**: This benchmark only gauges local transcoding capacity. An estimate of *good performance* is if the time taken to transcode is *significantly less* than the total segment duration - such that the overall transcoding happens in real-time for a live-stream on the network.
+**NB**: This benchmark only gauges local transcoding capacity. An estimate of *good performance* is if the duration ratio is roughly < 0.8 - such that the overall transcoding happens ~20% faster than real-time leaving buffer room for network transit. The segs ratio could also be used to measure performance, for example > 0.95 would mean less than 5% of segments fail to get transcoded in real-time.
 
-If you want to get a rough idea of how many streams the transcoder can handle at-a-time, you can increase the number of concurrent sessions via ``-concurrentSessions #`` and compare the total time taken.
+If you want to get a rough idea of how many streams the transcoder can handle at-a-time, you can increase the number of concurrent sessions via ``-concurrentSessions #`` until the real-time ratios become poor. Refer to the :doc:`Session Limits Guide <session_limits>` for more.
 
 To export the segment-wise CSV data to a file ``output.csv`` and analyze it with other tools, redirect the ``stdout`` like:
 
 ::
 
     ./livepeer_bench -in bbb/source.m3u8 -nvidia 0 > output.csv
-
-    *---------------------*----------------------------------------------*
-    | Source File         | .../go-livepeer/bbb/source.m3u8              |
-    | Transcoding Options | P240p30fps16x9,P360p30fps16x9,P720p30fps16x9 |
-    | Concurrent Sessions | 1                                            |
-    *---------------------*----------------------------------------------*
-    Took 3.281 seconds to transcode 30 segments of total duration 60s (1 concurrent sessions)

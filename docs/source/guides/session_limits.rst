@@ -40,7 +40,7 @@ For example to test for a range of concurrent sessions on a single Nvidia GPU wi
         ./livepeer_bench -in bbb/source.m3u8 \
         -transcodingOptions transcodingOptions.json \
         -nvidia 0 \
-        -concurrentSessions $i |& grep "Took" >> bench.log
+        -concurrentSessions $i |& grep "Duration Ratio" >> bench.log
     done
 
 To test on a CPU omit the ``-nvidia 0`` flag and change the loop's maximum from **20** to something lower like **5**.
@@ -49,12 +49,12 @@ You will see the final output in a file called ``bench.log`` as following
 
 ::
 
-    Took <X> seconds to transcode 30 segments of total duration 60s (1 concurrent sessions)
-    Took <X> seconds to transcode 30 segments of total duration 60s (2 concurrent sessions)
+    | * Real-Time Duration Ratio * | <Ratio> |    // Concurrent Session Count 1
+    | * Real-Time Duration Ratio * | <Ratio> |    // Concurrent Session Count 2
     ...
-    Took <X> seconds to transcode 30 segments of total duration 60s (20 concurrent sessions)
+    | * Real-Time Duration Ratio * | <Ratio> |    // Concurrent Session Count 20
 
-The goal here is to have the transcode time ``X`` remain within real-time, leaving about ~20% buffer room for network transit. Thus ``X <= 60s/1.20 = 50 seconds``.
+The goal here is to have the duration ratio remain within real-time, leaving about ~20% buffer room for network transit - i.e. roughly speaking ``Ratio <= 0.8``.
 
 If your transcode time was quite fast even for the limit of **20** sessions in the above script, feel free to increase it to something higher. If you have multiple GPUs you can multiply whatever limit you calculate with a single GPU above, or pass all your devices in like ``-nvidia 0,1,2``.
 
