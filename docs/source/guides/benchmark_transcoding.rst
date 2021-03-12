@@ -68,7 +68,7 @@ Running a sample benchmark on a GTX 1060 with default profiles:
 
 ::
     
-    ./livepeer_bench -in bbb/source.m3u8 -nvidia 0 -segs 10
+    ./livepeer_bench -in bbb/source.m3u8 -nvidia 0
 
 The first few lines of the output would show the source manifest, the profiles, and number of concurrent sessions:
 
