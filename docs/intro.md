@@ -19,6 +19,8 @@ might be helpful. All documentation is editable via
 
 ## Something missing? {#something-missing}
 
-If you find issues with the documentation or have suggestions on how to improve the documentation or the project in general, please [file an issue](https://github.com/facebook/docusaurus) for us, or send a tweet mentioning the [@docusaurus](https://twitter.com/docusaurus) Twitter account.
+We'd love to hear how we can improve! Here are a few ways you can make suggestions or contribute to the docs:
 
-For new feature requests, you can create a post on our [feature requests board (Canny)](/feature-requests), which is a handy tool for roadmapping and allows for sorting by upvotes, which gives the core team a better indicator of what features are in high demand, as compared to GitHub issues which are harder to triage. Refrain from making a Pull Request for new features (especially large ones) as someone might already be working on it or will be part of our roadmap. Talk to us first!
+-   Edit this article using the link at the bottom of the page.
+-  [File an issue](https://github.com/livepeer/docs) for us.
+-   Come talk to us in [Discord](https://discord.gg/uaPhtyrWsF)

@@ -1,55 +1,40 @@
 ---
+title: Overview
 sidebar_position: 1
 ---
 
-# Overview
+# Video Miner Overview
 
-Docusaurus can manage multiple versions of your docs.
+This section of the livepeer.org documentation is for **video miners**. Video
+miners in the Livepeer network provide video transcoding services.
 
-## Create a docs version
+## Quick Access
 
-Release a version 1.0 of your project:
-
-```bash
-npm run docusaurus docs:version 1.0
-```
-
-The `docs` folder is copied into `versioned_docs/version-1.0` and `versions.json` is created.
-
-Your docs now have 2 versions:
-
-- `1.0` at `http://localhost:3000/docs/` for the version 1.0 docs
-- `current` at `http://localhost:3000/docs/next/` for the **upcoming, unreleased docs**
-
-## Add a Version Dropdown
-
-To navigate seamlessly across versions, add a version dropdown.
-
-Modify the `docusaurus.config.js` file:
-
-```js title="docusaurus.config.js"
-module.exports = {
-  themeConfig: {
-    navbar: {
-      items: [
-        // highlight-start
-        {
-          type: "docsVersionDropdown",
-        },
-        // highlight-end
-      ],
-    },
-  },
-};
-```
-
-The docs version dropdown appears in your navbar:
-
-![Docs Version Dropdown](/img/tutorial/docsVersionDropdown.png)
-
-## Update an existing version
-
-It is possible to edit versioned docs in their respective folder:
-
-- `versioned_docs/version-1.0/hello.md` updates `http://localhost:3000/docs/hello`
-- `docs/hello.md` updates `http://localhost:3000/docs/next/hello`
+<DocsCardsContainer>
+  <DocsCard
+    key={1}
+    title="Getting Started"
+    description="A hands-on introduction to Livepeer for video miners. Recommended for all new
+users."
+    href="/docs/video-miners/getting-started/overview"
+  />
+  <DocsCard
+    key={2}
+    title="How-to Guides"
+    description="Practical step-by-step guides to help you achieve a specific goal. Most useful
+when you're trying to get something done."
+    href="/docs/video-miners/how-to-guides/overview"
+  />
+  <DocsCard
+    key={3}
+    title="Core Concepts"
+    description="Big-picture explanations of higher-level video mining concepts. Most useful for building understanding of a particular topic."
+    href="/docs/video-miners/core-concepts/overview"
+  />
+  <DocsCard
+    key={4}
+    title="Reference"
+    description="Covers tools, components, commands and resources. Most useful when you need detailed information about video miner APIs."
+    href="/docs/video-miners/reference/overview"
+  />
+</DocsCardsContainer>
