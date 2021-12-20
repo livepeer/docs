@@ -6,42 +6,53 @@ title: Configure Livepeer
 # Overview
 
 `livepeer` has a number of configurable options. You can set your configuration
-using either command-line flags or a config file as described below.
+using either command-line flags, environment variables, or a config file as
+described below.
 
 For a list of all configuration options, see the reference
 [here](/docs/video-miners/reference/configuration).
 
 # Configure Livepeer using command-line flags
 
-`livepeer` can be configured with a number of command line flags as follows
+`livepeer` can be configured with a number of command line flags as follows:
 
 ```bash
 livepeer \
+    -broadcaster
     -network mainnet
     -ethUrl https://mainnet.infura.io/v3/<PROJECT_ID>
 ```
 
-# Configure Livepeer using a config file
+# Configure Livepeer using environment variables
 
-If you wish, you can use a config file (.conf) to configure `livepeer`. This may
-be desirable for non-bash environments.
-
-**Important: If you use a config file and also supply command-line flags, the
-flags will override the values in the config file.**
-
-#### Sample usage:
+`livepeer` can be configured using environment variables as follows:
 
 ```bash
-$: livepeer -config livepeer.conf
+export LP_BROADCASTER=true
+export LP_NETWORK='mainnet'
+export LP_ETHURL='https://mainnet.infura.io/v3/<PROJECT_ID>'
+livepeer
 ```
 
-#### Sample livepeer.conf
+**Important: If you use environment variables and also supply command-line
+flags, the flags will override environment variables.**
+
+# Configure Livepeer using a config file
+
+`livepeer` can be configured using a config file as follows:
+
+#### livepeer.conf
 
 ```
 broadcaster
-cliAddr :7937
-httpAddr :8938
-orchAddr 127.0.0.1:8935,127.0.0.1:8936
-v 6
+network mainnet
+ethUrl https://mainnet.infura.io/v3/<PROJECT_ID>
 ```
 
+```bash
+livepeer -config livepeer.conf
+```
+
+**Important: If you use a config file and also supply environment variables or
+command-line flags, the environment variables and flags will override the values
+in the config file.**

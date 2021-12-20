@@ -6,7 +6,7 @@ sidebar_position: 5
 # Overview
 
 `livepeer` has a number of configurable options. You can
-[set your configuration using either command-line flags or a config file](/installation/configuring-livepeer).
+[set your configuration using command-line flags, environment variables, or a config file](/docs/installation/configuring-livepeer).
 
 A comprehensive list of options can be found below. They are sourced and
 regularly updated from
@@ -157,4 +157,3 @@ orchWebhookURL: Orchestrator discovery callback URL. No default
 
 detectionWebhookURL: (Experimental) Detection results callback URL. No default
 ```
-
