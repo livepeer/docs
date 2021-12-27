@@ -7,7 +7,7 @@ title: Connect an Orchestrator with Separate Transcoders
 ## Pre-requisites
 
 - Make sure you have
-  [activated your orchestrator](/docs/video-miners/getting-started/activation)
+  [activated your orchestrator](/video-miners/getting-started/activation)
 
 ## Run a standalone orchestrator
 

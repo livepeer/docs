@@ -7,7 +7,7 @@ title: Dual Mine
 ## Pre-requisites
 
 - Make sure you have
-  [activated your orchestrator](/docs/video-miners/getting-started/activation)
+  [activated your orchestrator](/video-miners/getting-started/activation)
 
 ## Dual ethash mining and transcoding
 

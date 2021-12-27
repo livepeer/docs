@@ -11,7 +11,7 @@ title: Video Miner Architecture
 - Combined orchestrator and transcoder mode (`-orchestrator -transcoder`)
 
 An introduction to orchestrators and transcoders can be found in the
-[getting started section](/docs/video-miners/getting-started/overview). Given
+[getting started section](/video-miners/getting-started/overview). Given
 these modes of operation, video miners can consider different architectures. Two
 of the most common architectures are:
 
@@ -32,7 +32,7 @@ The split orchestrator and transcoder architecture allows the orchestrator to
 outsource transcoding to remote transcoders. These transcoders can be run by the
 same operator as the orchestrator or by third parties. For more information
 about the latter, see the
-[transcoding pools](/docs/video-miners/core-concepts/pools) section. Some of the
+[transcoding pools](/video-miners/core-concepts/pools) section. Some of the
 benefits of using this architecture include:
 
 - Enables operators to leverage remote hardware to increase an orchestrator's

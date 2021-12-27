@@ -42,7 +42,7 @@ There are still a few tradeoffs and points to consider when dual mining:
   hashrate for ethash mining will linearly decrease as more streams are
   concurrently transcoded. The use of CUDA MPS with newer generation GPUs can
   help reduce the rate at which hashrate decreases - see the
-  [dual mining guide](/docs/video-miners/how-to-guides/dual-mining) for more
+  [dual mining guide](/video-miners/how-to-guides/dual-mining) for more
   information
 - If you are just transcoding right now, then dual mining another cryptocurrency
   can increase power consumption on your GPU especially if the other

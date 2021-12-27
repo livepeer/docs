@@ -8,7 +8,7 @@ sidebar_position: 4
 ## Pre-requisites
 
 - Make sure you have
-  [activated your orchestrator](/docs/video-miners/getting-started/activation)
+  [activated your orchestrator](/video-miners/getting-started/activation)
 - Make sure your orchestrator is running
 
 ## Check public accessibility
@@ -51,5 +51,5 @@ in the leaderboard.
 
 More information on the orchestrator leaderboard as well as steps to take if you
 observe poor results on the leaderboard can be found
-[here](/docs/video-miners/reference/leaderboard).
+[here](/video-miners/reference/leaderboard).
 

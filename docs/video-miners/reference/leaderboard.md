@@ -173,8 +173,8 @@ In order to improve your metrics, the following factors should be considered:
 A few things you can explore to improve the speed of transcoding include:
 
 - Evaluate your current transcoding speed by using a
-  [transcoding benchmarking tool](/docs/video-miners/how-to-guides/benchmarking)
-- Review the [hardware requirements](/docs/video-miners/reference/hardware) and
+  [transcoding benchmarking tool](/video-miners/how-to-guides/benchmarking)
+- Review the [hardware requirements](/video-miners/reference/hardware) and
   consider upgrading your hardware
 - If you have access to a
   [supported GPU](https://github.com/livepeer/wiki/blob/master/GPU-SUPPORT.md):
@@ -184,7 +184,7 @@ A few things you can explore to improve the speed of transcoding include:
 
 A few things you can explore to improve the speed of data upload/download:
 
-- Review the [bandwidth requirements](/docs/video-miners/reference/bandwidth)
+- Review the [bandwidth requirements](/video-miners/reference/bandwidth)
   and consider upgrading your bandwidth
 
 ## How can I view the historical test results for an orchestrator on the performance leaderboard?

@@ -14,11 +14,11 @@ inside your application.
 > testing your livestreams. If you're livestreaming in a production setting make
 > sure to change the network to `mainnet`. Learn more about supported networks,
 > including Ethereum mainnet and Rinkeby,
-> [here](/docs/installation/connect-to-ethereum#supported-networks).
+> [here](/installation/connect-to-ethereum#supported-networks).
 
 ## Pre-requisites
 
-- Make sure you have `livepeer` [installed](/docs/installation/install-livepeer)
+- Make sure you have `livepeer` [installed](/installation/install-livepeer)
 - Make sure you have access to an
-  [Ethereum JSON-RPC URL](/docs/installation/connect-to-ethereum)
+  [Ethereum JSON-RPC URL](/installation/connect-to-ethereum)
 

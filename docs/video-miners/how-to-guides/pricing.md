@@ -7,7 +7,7 @@ title: Set Pricing
 ## Pre-requisities
 
 - Make sure you have
-  [activated your orchestrator](/docs/video-miners/getting-started/activation)
+  [activated your orchestrator](/video-miners/getting-started/activation)
 - Make sure your orchestrator is running
 
 ## Choose a price
@@ -27,7 +27,7 @@ You can configure your orchestrator to advertise a constant price by starting it
 with the `-autoAdjustPrice=false` flag. Otherwise, the orchestrator will
 automatically adjust its price based on the overhead of ticket redemption. Refer
 to the
-[Automatic Price Adjustment](/docs/video-miners/core-concepts/payments#automatic-price-adjustments)
+[Automatic Price Adjustment](/video-miners/core-concepts/payments#automatic-price-adjustments)
 docs for more information.
 
 ## Set the price with livepeer_cli

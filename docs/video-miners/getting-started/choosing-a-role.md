@@ -7,7 +7,7 @@ sidebar_position: 2
 
 As a video miner, you can take on the role of an orchestrator or transcoder. A
 full description of the roles and responsibilities can be found
-[here](/docs/video-miners/core-concepts/roles-and-responsibilities).
+[here](/video-miners/core-concepts/roles-and-responsibilities).
 
 You may want to consider running an orchestrator if you are:
 
@@ -32,7 +32,7 @@ You may want to consider running a transcoder if you are:
   of transcoding pools will vary and they may only payout ETH fees
 
 If you want to run a transcoder, see the
-[transcoding pools](/docs/video-miners/core-concepts/pools) section for
+[transcoding pools](/video-miners/core-concepts/pools) section for
 information on pools that are live on the network today.
 
 If you want to run an orchestrator, continue with the next part of this section.

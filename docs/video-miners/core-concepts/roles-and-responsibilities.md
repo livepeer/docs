@@ -39,7 +39,7 @@ itself, but also has the option of outsourcing transcoding to one or many
 separate transcoders similar to how PoW mining pools outsource PoW hashing to
 one or many separate miners. Orchestrators that outsource transcoding to one or
 many separate transcoders are commonly referred to as
-[transcoding pools](/docs/video-miners/core-concepts/pools).
+[transcoding pools](/video-miners/core-concepts/pools).
 
 ## Transcoding
 

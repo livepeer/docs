@@ -25,7 +25,7 @@ distributed relative to the ETH transaction cost.
 ## Pre-requisites
 
 - Make sure you have
-  [activated your orchestrator](/docs/video-miners/getting-started/activation)
+  [activated your orchestrator](/video-miners/getting-started/activation)
 
 ## Disable automatic reward calls
 

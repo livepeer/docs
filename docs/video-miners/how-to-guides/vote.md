@@ -7,7 +7,7 @@ title: Vote
 ## Pre-requisities
 
 - Make sure you have
-  [activated your orchestrator](/docs/video-miners/getting-started/activation)
+  [activated your orchestrator](/video-miners/getting-started/activation)
 - Make sure your orchestrator is running
 
 ## Vote with livepeer_cli
@@ -16,7 +16,7 @@ Orchestrators can use `livepeer_cli` to vote in governance polls without
 exporting their keys from the machine that their orchestrator node is running
 on.
 
-Refer to [this section](/docs/protocol/core-concepts/governance) for more
+Refer to [this section](/protocol/core-concepts/governance) for more
 information on governance.
 
 1. Find the contract address for the poll in the explorer page for the poll.

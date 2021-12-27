@@ -7,4 +7,4 @@ sidebar_position: 1
 
 This section contains video developer references:
 
-- [Ingest](/docs/video-developers/reference/ingest)
+- [Ingest](/video-developers/reference/ingest)

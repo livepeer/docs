@@ -7,7 +7,7 @@ title: Benchmark Transcoding
 ## Pre-requisites
 
 - Make sure `livepeer_bench` is installed by following the
-  [installation guide](/docs/installation/install-livepeer). `livepeer_bench` is
+  [installation guide](/installation/install-livepeer). `livepeer_bench` is
   included in all binary releases and can also be built using the build from
   source instructions
 
@@ -113,7 +113,7 @@ orchestrator.
 If you want to get a rough idea of how many streams you can transcode
 simultaneously, you can increase the number of concurrent sessions via
 `-concurrentSessions` and compare the total time taken. Refer to the
-[session limits guide](/docs/video-miners/how-to-guides/session-limits) for more
+[session limits guide](/video-miners/how-to-guides/session-limits) for more
 details.
 
 To export the segment-wise CSV data to a file `output.csv` and analyze it with

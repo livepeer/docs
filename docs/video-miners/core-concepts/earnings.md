@@ -8,7 +8,7 @@ Orchestrators are compensated for video transcoding services with rewards
 denominated in LPT and fees denominated in ETH.
 
 Note that transcoders participating in
-[pools](/docs/video-miners/core-concepts/pools) are compensated based on the
+[pools](/video-miners/core-concepts/pools) are compensated based on the
 rules of the particular pool.
 
 ## Rewards

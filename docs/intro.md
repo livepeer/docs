@@ -7,10 +7,10 @@ sidebar_position: 1
 
 Welcome! The pages that follow contain comprehensive documentation of the
 Livepeer ecosystem. The documentation is split into two parts: Livepeer for
-[video developers](/docs/video-developers/overview) and Livepeer for
-[video miners](/docs/video-miners/overview). If you are new to Livepeer and
+[video developers](/video-developers/overview) and Livepeer for
+[video miners](/video-miners/overview). If you are new to Livepeer and
 interested in how it works, you might want to check out the
-[Protocol Overview](/docs/protocol/core-concepts/overview).
+[Protocol Overview](/protocol/core-concepts/overview).
 
 The documentation is an open-source community effort, so feel free to suggest
 new topics, add new how-to guides, and provide examples wherever you think it

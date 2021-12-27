@@ -7,8 +7,8 @@ sidebar_position: 1
 
 This section contains video miner references:
 
-- [Configuration](/docs/video-miners/reference/configuration)
-- [Hardware requirements](/docs/video-miners/reference/hardware)
-- [Bandwidth requirements](/docs/video-miners/reference/bandwidth)
-- [Orchestrator performance leaderboard](/docs/video-miners/reference/leaderboard)
-- [Glossary](/docs/video-miners/reference/glossary)
+- [Configuration](/video-miners/reference/configuration)
+- [Hardware requirements](/video-miners/reference/hardware)
+- [Bandwidth requirements](/video-miners/reference/bandwidth)
+- [Orchestrator performance leaderboard](/video-miners/reference/leaderboard)
+- [Glossary](/video-miners/reference/glossary)

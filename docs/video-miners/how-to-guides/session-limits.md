@@ -7,7 +7,7 @@ title: Set Session Limits
 ## Pre-requisites
 
 - Make sure you know how to
-  [benchmark transcoding](/docs/video-miners/how-to-guides/benchmarking)
+  [benchmark transcoding](/video-miners/how-to-guides/benchmarking)
 
 ## Session limits
 
@@ -120,7 +120,7 @@ your network provider's limits. For example a typical broadband connection with
 upstream/downstream of 100 Mbps should serve ~16 streams reliably. You can
 probably stretch it by ~20% more as not all streams' segments would be processed
 at the same time. You may want to refer to some suggestions in the
-[bandwidth requirements](/docs/video-miners/reference/bandwidth) around testing
+[bandwidth requirements](/video-miners/reference/bandwidth) around testing
 your available upload/download bandwidth.
 
 ### Derive a session limit based on hardware and bandwidth

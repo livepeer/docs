@@ -10,7 +10,7 @@ using either command-line flags, environment variables, or a config file as
 described below.
 
 For a list of all configuration options, see the reference
-[here](/docs/video-miners/reference/configuration).
+[here](/video-miners/reference/configuration).
 
 # Configure Livepeer using command-line flags
 

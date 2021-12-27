@@ -7,6 +7,6 @@ sidebar_position: 1
 
 This section contains protocol references:
 
-- [Subgraph API overview](/docs/protocol/reference/api)
-- [Subgraph API entities](/docs/protocol/reference/entities)
+- [Subgraph API overview](/protocol/reference/api)
+- [Subgraph API entities](/protocol/reference/entities)
 
