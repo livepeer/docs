@@ -38,12 +38,12 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      algolia: {
-        appId: "TIWEI9YB8Y",
-        apiKey: "7030b10ebe1bfc5913762385f6f1b6c7",
-        indexName: "livepeer-org-docs",
-        contextualSearch: true,
-      },
+      // algolia: {
+      //   appId: "TIWEI9YB8Y",
+      //   apiKey: "7030b10ebe1bfc5913762385f6f1b6c7",
+      //   indexName: "livepeer-org-docs",
+      //   contextualSearch: true,
+      // },
       navbar: {
         title: "Livepeer Docs",
         logo: {
