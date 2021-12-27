@@ -8,7 +8,7 @@ sidebar_position: 1
 This section of the livepeer.org documentation is for **video miners**. Video
 miners in the Livepeer network provide video transcoding services.
 
-## Quick Access
+<!-- ## Quick Access
 
 <DocsCardsContainer>
   <DocsCard
@@ -37,4 +37,4 @@ when you're trying to get something done."
     description="Covers tools, components, commands and resources. Most useful when you need detailed information about video miner APIs."
     href="/docs/video-miners/reference/overview"
   />
-</DocsCardsContainer>
+</DocsCardsContainer> -->

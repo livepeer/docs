@@ -20,7 +20,7 @@ community will be happy to assist.
 > access to the Livepeer network and traditional payment rails check out
 > [Livepeer.com](https://livepeer.com).
 
-## Quick Access
+<!-- ## Quick Access
 
 <DocsCardsContainer>
   <DocsCard
@@ -49,4 +49,4 @@ new users."
     href="/docs/video-developers/reference/overview"
   />
 
-</DocsCardsContainer>
+</DocsCardsContainer> -->

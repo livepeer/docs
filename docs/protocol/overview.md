@@ -8,7 +8,7 @@ sidebar_position: 1
 This section of the documentation provides an overview of the Livepeer protocol
 along with API documentation for interacting it.
 
-## Quick Access
+<!-- ## Quick Access
 
 <DocsCardsContainer>
   <DocsCard
@@ -26,4 +26,4 @@ understanding of a particular topic.
 "
     href="/docs/protocol/reference/overview"
   />
-</DocsCardsContainer>
+</DocsCardsContainer> -->
