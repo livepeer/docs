@@ -8,7 +8,7 @@ sidebar_position: 3
 
 ## Pre-requisites
 
-- Make sure you have `livepeer`[installed](/installation/install-livepeer)
+- Make sure you have `livepeer`[installed](/installation/install-livepeer/overview)
 - Make sure you have access to an
   [Ethereum JSON-RPC URL](/installation/connect-to-ethereum)
 - If you are transcoding with Nvidia GPUs:
