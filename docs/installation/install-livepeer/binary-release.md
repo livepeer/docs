@@ -32,6 +32,9 @@ tar -zxvf livepeer-linux-amd64.tar.gz
 
 # Finally, move it to the appropriate directory
 mv livepeer-linux-amd64/* /usr/local/bin/
+
+# Currently, packages are available for Arch Linux
+paru go-livepeer-bin
 ```
 
 ### Windows
