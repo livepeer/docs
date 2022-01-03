@@ -14,7 +14,7 @@ title: Dual Mine
 ### Choosing a miner
 
 Dual ethash mining and transcoding has been tested on the GPUs in
-[this list](https://github.com/livepeer/wiki/blob/master/GPU-SUPPORT.md) and
+[this list](/video-miners/reference/gpu-support) and
 with the following miners:
 
 - [t-rex](https://github.com/trexminer/T-Rex)

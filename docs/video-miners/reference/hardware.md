@@ -19,7 +19,7 @@ Currently, `livepeer` only supports Nvidia GPUs with
 [NVENC (hardware video encoder) and NVDEC (hardware video decoder) support](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new).
 For a list of of GPUs that have been tested and that are known to be supported
 by `livepeer`, see
-[this page](https://github.com/livepeer/wiki/blob/master/GPU-SUPPORT.md).
+[this page](/video-miners/reference/gpu-support).
 
 ## CPU
 

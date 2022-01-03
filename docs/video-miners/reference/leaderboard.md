@@ -177,7 +177,7 @@ A few things you can explore to improve the speed of transcoding include:
 - Review the [hardware requirements](/video-miners/reference/hardware) and
   consider upgrading your hardware
 - If you have access to a
-  [supported GPU](https://github.com/livepeer/wiki/blob/master/GPU-SUPPORT.md):
+  [supported GPU](/video-miners/reference/gpu-support):
   - Consider running an orchestrator with GPU transcoding
   - Consider running a standalone orchestrator that sends transcoding tasks to
     standalone GPU transcoders
