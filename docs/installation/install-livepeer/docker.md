@@ -27,7 +27,7 @@ docker pull livepeer/go-livepeer:<RELEASE_VERSION>
 ```
 
 
-## Running livepeer-cli with Docker
+## Running livepeer-cli with Docker (rudimentary approach)
 Once you've pulled the image, retrieve the image id and start the container. 
 
 **Any flags you provide will be passed to the binary**, so you can pass [your configuration](/installation/configuring-livepeer) here.
