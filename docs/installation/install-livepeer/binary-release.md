@@ -4,10 +4,14 @@ sidebar_position: 2
 
 # Install using a Binary Release
 
+Run the appropriate commands for your operating system; then, using the same directory, follow the steps to [configure Livepeer](/installation/configuring-livepeer).
+
 ### Darwin (macOS)
 
 ```bash
 # <RELEASE_VERSION> is the release version i.e. 0.5.14
+
+# IMPORTANT: if you are using macOS with an M1 chip, you'll need to run these commands using the Rosetta emulator
 
 # First, fetch the latest release
 wget https://github.com/livepeer/go-livepeer/releases/download/<RELEASE_VERSION>/livepeer-darwin-amd64.tar.gz
