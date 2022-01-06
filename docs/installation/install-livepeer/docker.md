@@ -27,11 +27,20 @@ docker pull livepeer/go-livepeer:<RELEASE_VERSION>
 ```
 
 
-## Running livepeer-cli with Docker (rudimentary approach)
+## Running livepeer-cli with Docker (rudimentary approach for command-line)
 Once you've pulled the image, retrieve the image id and start the container. 
 
 **Any flags you provide will be passed to the binary**, so you can pass [your configuration](/installation/configuring-livepeer) here.
 
 ```bash
-docker run --platform linux/amd64 <image id> <livepeer configuration flags>
+docker run <image id> <livepeer configuration flags>
+
+# Mac M1 only
+# docker run --platform linux/amd64 <image id> <livepeer configuration flags>
+```
+
+Once you've started the container, retrieve the name and start the CLI
+
+```bash
+docker exec -it <container_name> livepeer_cli
 ```
