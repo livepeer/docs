@@ -1,6 +1,6 @@
 ---
-title: Testing
-sidebar_position: 4
+title: Checking Discoverability
+sidebar_position: 2
 ---
 
 # Testing
