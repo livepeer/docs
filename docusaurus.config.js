@@ -40,7 +40,7 @@ const config = {
       algolia: {
         appId: "TIWEI9YB8Y",
         apiKey: "bee5caa76c6df12c16be24f2f04e7c7c",
-        indexName: "livepeer-org-docs",
+        indexName: "2022-livepeer-org-docs",
         contextualSearch: true,
       },
       navbar: {
