@@ -24,7 +24,7 @@ const config = {
         docs: {
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/livepeer/docs/blob/main/docs",
+          editUrl: "https://github.com/livepeer/docs/blob/main",
         },
         blog: false,
         theme: {
