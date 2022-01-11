@@ -24,3 +24,14 @@ $ yarn build
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
 
+### Regenerate Algolia Index
+
+If you have not already installed [jq](https://github.com/stedolan/jq/wiki/Installation), please do so.
+
+In `.env.docsearch`, replace the placeholder API key with a key that has write access to the appropriate Algolia application.
+
+Next, navigate to the folder root, then run:
+
+```
+docker run -it --env-file=.env.docsearch -e "CONFIG=$(cat docsearch.config.json | jq -r tostring)" algolia/docsearch-scraper
+```

@@ -7,11 +7,20 @@ Welcome to the Livepeer Docs Contribution Guide!
 
 The goal of this page is to point you in the right direction if you want to contribute to the documentation. If you're interested in contributing to [go-livepeer](https://github.com/livepeer/go-livepeer/blob/master/doc/contributing.md), [livepeer-js](https://github.com/livepeer/livepeerjs#contributing), or the [core protocol](https://github.com/livepeer/protocol), please refer to the contribution guides for those repos or message a core contributor on [Discord](https://discord.gg/uaPhtyrWsF).
 
+## Community Guidelines
+Livepeer has a strong mission - to give everyone an equal voice. Our community is a reflection of our core mission. As members of the community, we agree to behave in the a way that helps the inclusion and prosperity our community. Here are some quick guidelines.
+
+- Be respectful to fellow community members: no regional, racial, gender, or other abuse will be tolerated. Report abusive behavior to abuse@livepeer.org
+- Encourage diversity and participation: Anyone should be able to contribute, regardless of their background and extend of contribution. We will do the best we can to make everyoen feel welcomed.
+- Don't break the law: we are inventing the future, but we want to do it safely so no one gets in trouble.
+
+
 ## Ways to contribute
 There are many ways to contribute to this documentation. Here are a few good places to start:
 - [Editing existing docs](#making-quick-edits-to-existing-documents)
 - [Reviewing open PRs](#reviewing-open-prs)
 - [Creating quality issues](#creating-quality-issues)
+- Translating docs to more languages
 
 ## Notes on Workflow
 - **All updates must be submitted as pull requests**, including updates made by core contributors. 

@@ -13,8 +13,8 @@ const config = {
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
-  organizationName: "livepeer", // Usually your GitHub org/user name.
-  projectName: "docs", // Usually your repo name.
+  organizationName: "livepeer",
+  projectName: "docs",
 
   presets: [
     [
@@ -24,8 +24,7 @@ const config = {
         docs: {
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
-          // Please change this to your repo.
-          editUrl: "https://github.com/livepeer/docs/tree/main/docs",
+          editUrl: "https://github.com/livepeer/docs/blob/main/docs",
         },
         blog: false,
         theme: {
@@ -38,12 +37,12 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      // algolia: {
-      //   appId: "TIWEI9YB8Y",
-      //   apiKey: "7030b10ebe1bfc5913762385f6f1b6c7",
-      //   indexName: "livepeer-org-docs",
-      //   contextualSearch: true,
-      // },
+      algolia: {
+        appId: "TIWEI9YB8Y",
+        apiKey: "bee5caa76c6df12c16be24f2f04e7c7c",
+        indexName: "2022-livepeer-org-docs",
+        contextualSearch: true,
+      },
       navbar: {
         title: "Livepeer Docs",
         logo: {

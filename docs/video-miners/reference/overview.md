@@ -11,4 +11,5 @@ This section contains video miner references:
 - [Hardware requirements](/video-miners/reference/hardware)
 - [Bandwidth requirements](/video-miners/reference/bandwidth)
 - [Orchestrator performance leaderboard](/video-miners/reference/leaderboard)
+- [Supported GPUs](/video-miners/reference/gpu-support)
 - [Glossary](/video-miners/reference/glossary)
