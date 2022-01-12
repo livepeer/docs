@@ -34,6 +34,8 @@ Once you’ve run the Livepeer CLI, select “Get test LPT” from the list of o
 
 Once you’ve received Rinkeby LPT, select “Invoke multistep ‘become an orchestrator’”. Follow the prompts to start your Orchestrator.
 
+If this is your first time starting an Orchestrator, please refer to [the activation guide](/video-miners/getting-started/activation).
+
 6. **Check that you are correctly connected to the network**
 
 Once your orchestrator is running, check that you’re connected to the correct network:
