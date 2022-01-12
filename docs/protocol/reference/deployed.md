@@ -38,7 +38,6 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 - Controller: [0x9a9827455911a858E55f07911904fACC0D66027E](https://rinkeby.etherscan.io/address/0x9a9827455911a858E55f07911904fACC0D66027E)
 - LivepeerToken: [0xEf5F154eb0261CB0331a28BC0fB60CA73E716617](https://rinkeby.etherscan.io/address/0xEf5F154eb0261CB0331a28BC0fB60CA73E716617)
 - LivepeerTokenFaucet: [0xdeD94096FcB94CC44862E8c84a0cF8aa2e8aE8dA](https://rinkeby.etherscan.io/address/0xdeD94096FcB94CC44862E8c84a0cF8aa2e8aE8dA)
-- ManagerProxy: [0x6c2A6B5cFDB30DAC34BD54af06611267e66fB07F](https://rinkeby.etherscan.io/address/0x6c2A6B5cFDB30DAC34BD54af06611267e66fB07F)
 - MerkleSnapshot: [0xC83978D78D2B089253f4FF9f1fE3768a6ca36578](https://rinkeby.etherscan.io/address/0xC83978D78D2B089253f4FF9f1fE3768a6ca36578)
 - Minter: [0x187E962A5a1CD2cE2D133e80182A82f0eBd29Ef5](https://rinkeby.etherscan.io/address/0x187E962A5a1CD2cE2D133e80182A82f0eBd29Ef5)
 - PollCreator: [0x6749dFa7990Aa27E0B82dCD735C8100BC711AeE7](https://rinkeby.etherscan.io/address/0x6749dFa7990Aa27E0B82dCD735C8100BC711AeE7)
