@@ -33,24 +33,24 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 - MerkleSnapshot: [0x24ebEd82c681f435E944BEEbFAEEAaE443D08438](https://etherscan.io/address/0x24ebed82c681f435e944beebfaeeaae443d08438)
 
 ## Ethereum Rinkeby (Confluence)
-- BondingManager: 0xC40df4db2f99e7e235780A93B192F1a934f0c45b
-- BondingManagerProxy: 0xC40df4db2f99e7e235780A93B192F1a934f0c45b
-- BondingManagerTarget: 0x5a9C9DB2393a1a5ae8e8a17EA0d8123a3BC9e4c5
-- Controller: 0x9a9827455911a858E55f07911904fACC0D66027E
-- LivepeerToken: 0xEf5F154eb0261CB0331a28BC0fB60CA73E716617
-- LivepeerTokenFaucet: 0xdeD94096FcB94CC44862E8c84a0cF8aa2e8aE8dA
-- ManagerProxy: 0x6c2A6B5cFDB30DAC34BD54af06611267e66fB07F
-- MerkleSnapshot: 0xC83978D78D2B089253f4FF9f1fE3768a6ca36578
-- Minter: 0x187E962A5a1CD2cE2D133e80182A82f0eBd29Ef5
-- PollCreator: 0x6749dFa7990Aa27E0B82dCD735C8100BC711AeE7
-- RoundsManager: 0x6c2A6B5cFDB30DAC34BD54af06611267e66fB07F
-- RoundsManagerProxy: 0x6c2A6B5cFDB30DAC34BD54af06611267e66fB07F
-- RoundsManagerTarget: 0x3757DB506ECd9CBE643660C0F5b70db5b321202C
-- ServiceRegistry: 0xE9C2d88ffcCe434000aFAc366Db840b8E55459E5
-- SortedDoublyLL: 0xbd5Ebd4Eee5af21e5f920Da5b01930fc98cCFA64
-- TicketBroker: 0x242f1361CCdaAe8CCdf8539DE183Cb518856254f
-- TicketBrokerProxy: 0x242f1361CCdaAe8CCdf8539DE183Cb518856254f
-- TicketBrokerTarget: 0xCA2a0B1944109641142EE73A6929A0AE28b82c02
+- BondingManager: [0xC40df4db2f99e7e235780A93B192F1a934f0c45b](https://rinkeby.etherscan.io/address/0xC40df4db2f99e7e235780A93B192F1a934f0c45b)
+- BondingManagerProxy: [0xC40df4db2f99e7e235780A93B192F1a934f0c45b](https://rinkeby.etherscan.io/address/0xC40df4db2f99e7e235780A93B192F1a934f0c45b)
+- BondingManagerTarget: [0x5a9C9DB2393a1a5ae8e8a17EA0d8123a3BC9e4c5](https://rinkeby.etherscan.io/address/0x5a9C9DB2393a1a5ae8e8a17EA0d8123a3BC9e4c5)
+- Controller: [0x9a9827455911a858E55f07911904fACC0D66027E](https://rinkeby.etherscan.io/address/0x9a9827455911a858E55f07911904fACC0D66027E)
+- LivepeerToken: [0xEf5F154eb0261CB0331a28BC0fB60CA73E716617](https://rinkeby.etherscan.io/address/0xEf5F154eb0261CB0331a28BC0fB60CA73E716617)
+- LivepeerTokenFaucet: [0xdeD94096FcB94CC44862E8c84a0cF8aa2e8aE8dA](https://rinkeby.etherscan.io/address/0xdeD94096FcB94CC44862E8c84a0cF8aa2e8aE8dA)
+- ManagerProxy: [0x6c2A6B5cFDB30DAC34BD54af06611267e66fB07F](https://rinkeby.etherscan.io/address/0x6c2A6B5cFDB30DAC34BD54af06611267e66fB07F)
+- MerkleSnapshot: [0xC83978D78D2B089253f4FF9f1fE3768a6ca36578](https://rinkeby.etherscan.io/address/0xC83978D78D2B089253f4FF9f1fE3768a6ca36578)
+- Minter: [0x187E962A5a1CD2cE2D133e80182A82f0eBd29Ef5](https://rinkeby.etherscan.io/address/0x187E962A5a1CD2cE2D133e80182A82f0eBd29Ef5)
+- PollCreator: [0x6749dFa7990Aa27E0B82dCD735C8100BC711AeE7](https://rinkeby.etherscan.io/address/0x6749dFa7990Aa27E0B82dCD735C8100BC711AeE7)
+- RoundsManager: [0x6c2A6B5cFDB30DAC34BD54af06611267e66fB07F](https://rinkeby.etherscan.io/address/0x6c2A6B5cFDB30DAC34BD54af06611267e66fB07F)
+- RoundsManagerProxy: [0x6c2A6B5cFDB30DAC34BD54af06611267e66fB07F](https://rinkeby.etherscan.io/address/0x6c2A6B5cFDB30DAC34BD54af06611267e66fB07F)
+- RoundsManagerTarget: [0x3757DB506ECd9CBE643660C0F5b70db5b321202C](https://rinkeby.etherscan.io/address/0x3757DB506ECd9CBE643660C0F5b70db5b321202C)
+- ServiceRegistry: [0xE9C2d88ffcCe434000aFAc366Db840b8E55459E5](https://rinkeby.etherscan.io/address/0xE9C2d88ffcCe434000aFAc366Db840b8E55459E5)
+- SortedDoublyLL: [0xbd5Ebd4Eee5af21e5f920Da5b01930fc98cCFA64](https://rinkeby.etherscan.io/address/0xbd5Ebd4Eee5af21e5f920Da5b01930fc98cCFA64)
+- TicketBroker: [0x242f1361CCdaAe8CCdf8539DE183Cb518856254f](https://rinkeby.etherscan.io/address/0x242f1361CCdaAe8CCdf8539DE183Cb518856254f)
+- TicketBrokerProxy: [0x242f1361CCdaAe8CCdf8539DE183Cb518856254f](https://rinkeby.etherscan.io/address/0x242f1361CCdaAe8CCdf8539DE183Cb518856254f)
+- TicketBrokerTarget: [0xCA2a0B1944109641142EE73A6929A0AE28b82c02](https://rinkeby.etherscan.io/address/0xCA2a0B1944109641142EE73A6929A0AE28b82c02)
 
 
 
