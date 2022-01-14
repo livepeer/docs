@@ -24,6 +24,8 @@ $: livepeer \
 		-orchestrator
 ```
 
+If you're running on the same machine as your mainnet Orchestrator, you may encounter an error such as `expecting chainID of 1, but got 4. Did you change networks without changing network name or datadir`. This is because your testnet setup is trying to access the same `.lpData` that it used for mainnet, and it's finding a conflict on `chainId`. To fix this, specify a new data directory using the `-data-dir` flag when you start your Orchestrator. Specify only the directory, not the file.
+
 4. **Acquire some Rinkeby LPT from the livepeer-cli**
 
 Once you’ve run the Livepeer CLI, select “Get test LPT” from the list of options. This transaction will send you 10 Rinkeby LPT. Please note that **if you do not have any Rinkeby ETH in your wallet, this transaction will fail**
