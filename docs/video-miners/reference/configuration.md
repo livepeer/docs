@@ -79,7 +79,7 @@ sceneClassificationModelPath: Path to scene classification model. No default
 ### Onchain
 
 ```
-ethAccountAddr: Existing Eth account address. No default
+ethAcctAddr: Existing Eth account address. No default
 
 ethPassword: Password for existing Eth account address. No default
 
