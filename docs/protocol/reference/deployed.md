@@ -34,7 +34,7 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 
 ## Ethereum Rinkeby (Confluence)
 - BondingManager (Proxy): [0xC40df4db2f99e7e235780A93B192F1a934f0c45b](https://rinkeby.etherscan.io/address/0xC40df4db2f99e7e235780A93B192F1a934f0c45b)
-- BondingManager (Target): [0x5a9C9DB2393a1a5ae8e8a17EA0d8123a3BC9e4c5](https://rinkeby.etherscan.io/address/0x5a9C9DB2393a1a5ae8e8a17EA0d8123a3BC9e4c5)
+- BondingManager (Target): [0xF96D54E490317c557A967ABfA5d6e33006BE69b3](https://rinkeby.etherscan.io/address/0xF96D54E490317c557A967ABfA5d6e33006BE69b3)
 - Controller: [0x9a9827455911a858E55f07911904fACC0D66027E](https://rinkeby.etherscan.io/address/0x9a9827455911a858E55f07911904fACC0D66027E)
 - LivepeerToken: [0xEf5F154eb0261CB0331a28BC0fB60CA73E716617](https://rinkeby.etherscan.io/address/0xEf5F154eb0261CB0331a28BC0fB60CA73E716617)
 - LivepeerTokenFaucet: [0xdeD94096FcB94CC44862E8c84a0cF8aa2e8aE8dA](https://rinkeby.etherscan.io/address/0xdeD94096FcB94CC44862E8c84a0cF8aa2e8aE8dA)
@@ -88,6 +88,10 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
   - V1: [0xd8e8328501e9645d16cf49539efc04f734606ee4](https://etherscan.io/address/0xd8e8328501e9645d16cf49539efc04f734606ee4)
 - JobLib
   - V1: [0x4969dccf5186e1c49411638fc8a2a020fdab752e](https://etherscan.io/address/0x4969dccf5186e1c49411638fc8a2a020fdab752e)
+
+## Ethereum Rinkeby (Confluence)
+- BondingManager (Target)
+  - V1: [0x5a9C9DB2393a1a5ae8e8a17EA0d8123a3BC9e4c5](https://rinkeby.etherscan.io/address/0x5a9C9DB2393a1a5ae8e8a17EA0d8123a3BC9e4c5)
 
 ## Rinkeby (LPSFT-0)
 - Governor: [0x70A8A9b6DCef9c47eF14400eE702CA823f7e7526](https://rinkeby.etherscan.io/address/0x70a8a9b6dcef9c47ef14400ee702ca823f7e7526)
