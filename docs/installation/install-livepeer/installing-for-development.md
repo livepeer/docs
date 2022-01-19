@@ -97,6 +97,9 @@ Building `livepeer` requires Go. Follow the
    cp livepeer* /usr/local/bin
    ```
 
+   **Note for Mac M1 users**
+   If you see an error like `ld: symbol(s) not found for architecture x86_64`, this is because of a conflict between dependency builds and the Livepeer build. You should check that you are using the [*-darwin-arm64 binary](https://go.dev/dl/go1.17.6.darwin-arm64.pkg) instead of the `*-darwin-amd64` binary. You can check what Go architecture you're using with `go version`.
+
 ## Build with Docker
 
 1. Clone the repository:
