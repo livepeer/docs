@@ -49,6 +49,10 @@ prevent it from being transcoded. There are no actionable steps for an operator
 in this scenario since the broadcaster is responsible for sending video segments
 that are supported by the Livepeer network.
 
+## My node is still calling the reward claims function and spending gas, even though I have set `reward` to false
+
+Make sure to add `-reward=false` as an override in the launch command, even if using a `.conf` file. Also make sure that if you have Orchestrator and Transcoder processes running separately that all launch commands have `reward` set to false. To be safe, you can also remove the `ethUrl` option from the Transcoder process(es) to ensure that they are not performing any onchain actions on behalf of your orchestrator if using the same wallet.
+
 ## Common Questions
 
 **What does being ‘publicly accessible’ mean? Can I run a transcoder from
