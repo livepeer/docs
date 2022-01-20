@@ -129,7 +129,7 @@ monitor: Set to true to send performance metrics. Default `false`
 
 version: Print out the version. Default `false`
 
-verbosity: Log verbosity -  {4|5|6}. No default
+v: Log verbosity -  {4|5|6}. No default
 
 metadataQueueUri: URI for message broker to send operation metadata. No default
 
