@@ -123,7 +123,7 @@ redeemer: Set to true to run a ticket redemption service. Default `false`
 
 redeemerAddr: URL of the ticket redemption service to use. No default
 
-reward: Set to true to run a reward service. Default `false`
+reward: Run a reward service, set false to disable automatic reward claims. Default `true`
 
 monitor: Set to true to send performance metrics. Default `false`
 
