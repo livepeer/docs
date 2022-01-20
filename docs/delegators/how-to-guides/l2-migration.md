@@ -1,7 +1,6 @@
 ---
 title: One-time Migration to Arbitrum
 ---
-**IMPORTANT: READ BEFORE STARTING THIS GUIDE**
 
 **Claiming LPT delegated stake and earned ETH fees is highly encouraged to ensure that (1) you continue earning inflationary rewards and fees and (2) you will be able to withdraw any currently delegated stake and earned ETH fees. As of `<date tbd>`, withdrawals on the Ethereum Mainnet will be disabled and all inflationary rewards and ETH fees will be disbursed on Arbitrum.**
 

@@ -1,7 +1,6 @@
 ---
 title: One-time Migration to Arbitrum
 ---
-**IMPORTANT: READ BEFORE STARTING THIS GUIDE**
 
 ## Prerequisites for all chains
 - You will need make sure your connected Ethereum account has enough ETH to cover gas for the `migrate` transaction. If you do not have ETH in your wallet, you will need to add some using another wallet or an on-ramp.
