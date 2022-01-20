@@ -123,7 +123,7 @@ redeemer: Set to true to run a ticket redemption service. Default `false`
 
 redeemerAddr: URL of the ticket redemption service to use. No default
 
-reward: Set to true to run a reward service. If you do not want to automatically call `reward()`, you need to explicitly set this to `false` for any node that's registered onchain (orchestrators or transcoders). Otherwise, it will default to true.
+reward: Set to true to run a reward service. If you do not want to automatically call `reward()`, you need to explicitly set this to `false` for any node that's registered onchain. Otherwise, it will default to true.
 
 monitor: Set to true to send performance metrics. Default `false`
 
