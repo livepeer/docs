@@ -32,7 +32,7 @@ Other options are: [use the Offchain Labs public endpoint](https://developer.off
 
     Navigate to the [testnet explorer](http://rinkeby.explorer.livepeer.org) or [mainnet explorer](http://explorer.livepeer.org). If you have not connected a wallet, connect on using the prompt in the upper left hand corner. 
     
-    This does not have to be the same wallet you use for your orchestrator, but **if you are using a different wallet to submit the transaction, you will still need to access the wallet that you use for your orchestrator so that you can sign a message**
+    This does not have to be the same wallet you use for your orchestrator, but **if you are using a different wallet to submit the transaction, you will still need to access the wallet that you use for your orchestrator so that you can sign a typed data message**
      
     <img src="/docs-assets/video-miners/how-to-guides/connect-wallet.png" alt="connect wallet to livepeer" width="300"/>
     
@@ -60,7 +60,7 @@ Other options are: [use the Offchain Labs public endpoint](https://developer.off
     
     3b. **Sign using CLI**
     
-    If you'd rather sign a message through the CLI, select "Sign using CLI" in the explorer interface. You'll be taken to an alternate migration screen, where you will be asked to enter the public address of the orchestrator you wish to migrate
+    If you'd rather sign a typed data message through the CLI, select "Sign using CLI" in the explorer interface. You'll be taken to an alternate migration screen, where you will be asked to enter the public address of the orchestrator you wish to migrate
     
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli.png" alt="sign cli" width="300"/>
     
