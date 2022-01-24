@@ -42,16 +42,16 @@ This guide is applicable to delegators who delegated their LPT to an orchestrato
     
     ***If your orchestrator has migrated, no action is required here. You may skip to Step 4 or choose to select a new orchestrator as described below.***
     
-    If your orchestrator delegate has not migrated OR if you would like to change delegates, you will need to choose a new orchestrator. Using the prompts shown below, select a new orchestrator. For more on this choosing an orchestrator delegate, please see [guide]
+    If your orchestrator has not migrated, you will need to choose a new orchestrator. Using the prompts shown below, select a new orchestrator.
     
     <img src="/docs-assets/delegators/how-to-guides/confirm-d.png" alt="confirm orchestrator" width="300"/>
     
 4. **Claim your delegated stake and earned fees**
     
     
-    Once you have confirmed your orchestrator delegate, you will be given an option to claim your delegated stake and any accumulated rewards or ETH fees.
+    Once you have confirmed your orchestrator, you will be given an option to claim your delegated stake and any accumulated rewards or ETH fees.
     
-    Please review the choice of delegate, the delegated stake, and estimated network fees, and then submit the transaction to claim.
+    Please review the choice of orchestrator, the delegated stake, and estimated network fees, and then submit the transaction to claim.
     
      <img src="/docs-assets/delegators/how-to-guides/claim-d.png" alt="claim LPT and fees" width="300"/>
     
