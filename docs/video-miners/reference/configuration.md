@@ -43,9 +43,9 @@ verifierURL: URL of the verifier to use. No default.
 
 verifierPath: Path to verifier shared volume. No default.
 
-localVerify: Set to true to enable local verification i.e. pixel count and signature verification. Default `true`
+localVerify: Set to true to enable local verification i.e. pixel count and signature verification. Default `true`. However, if you are running in offchain mode, this will be set to false.
 
-httpIngest: Set to true to enable HTTP ingest. Default `true`
+httpIngest: Set to true to enable HTTP ingest. Default `true`. However, if (1) you do not provide a value, (2) you provide a non-local URL for `httpAddr`, and (3) you do not provide an `authWebhookURL`, this will be set to false.
 ```
 
 ### Transcoding
@@ -95,7 +95,7 @@ maxTxReplacements: Number of times to automatically replace pending Ethereum tra
 
 gasLimit: Gas limit for ETH transaction. Default `0`
 
-minGasPrice: Minimum gas price (priority fee + base fee) for ETH transactions in wei, 10 Gwei = 10000000000. Default `0`
+minGasPrice: Minimum gas price (priority fee + base fee) for ETH transactions in wei, 10 Gwei = 10000000000. If not set, this will be the network's default min gas fee.
 
 maxGasPrice: Maximum gas price (priority fee + base fee) for ETH transactions in wei, 40 Gwei = 40000000000. Default `0`
 
@@ -109,7 +109,7 @@ maxTicketEV: The maximum acceptable expected value for PM tickets. Default `3000
 
 depositMultiplier: The deposit multiplier used to determine max acceptable faceValue for PM tickets. Default `1`
 
-pricePerUnit: The price per 'pixelsPerUnit' amount pixels. Default `0`
+pricePerUnit: The price per 'pixelsPerUnit' amount pixels. Must be greater than 0. Error if not set.
 
 maxPricePerUnit: The maximum transcoding price (in wei) per 'pixelsPerUnit' a broadcaster is willing to accept. If not set explicitly, broadcaster is willing to accept ANY price. Default `0`
 
@@ -123,13 +123,13 @@ redeemer: Set to true to run a ticket redemption service. Default `false`
 
 redeemerAddr: URL of the ticket redemption service to use. No default
 
-reward: Set to true to run a reward service. Default `false`
+reward: Set to true to run a reward service. If you do not want to automatically call `reward()`, you need to explicitly set this to `false` for any node that's registered onchain. Otherwise, it will default to true.
 
 monitor: Set to true to send performance metrics. Default `false`
 
 version: Print out the version. Default `false`
 
-verbosity: Log verbosity -  {4|5|6}. No default
+v: Log verbosity -  {4|5|6}. No default
 
 metadataQueueUri: URI for message broker to send operation metadata. No default
 
