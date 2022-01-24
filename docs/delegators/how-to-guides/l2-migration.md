@@ -18,7 +18,7 @@ This guide is applicable to delegators who delegated their LPT to an orchestrato
 
 ## Claiming via the Explorer
 
-1.    Navigate to the [testnet explorer](http://rinkeby.explorer.livepeer.org) or [mainnet explorer](http://explorer.livepeer.org). If you have not connected the wallet that you used to delegate your LPT, connect it using the prompt in the upper left hand corner. 
+1.    Navigate to the [testnet explorer](http://rinkeby.explorer.livepeer.org) or [mainnet explorer](http://explorer.livepeer.org). If you have not connected the wallet that you used to delegate your LPT, connect it using the prompt in the upper left hand corner. If you haven't switched your network to Arbitrum, you'll be prompted to do so.
     
     
     <img src="/docs-assets/delegators/how-to-guides/connect-wallet-d.png" alt="connect wallet to livepeer" width="300"/>
@@ -26,17 +26,9 @@ This guide is applicable to delegators who delegated their LPT to an orchestrato
     There are a few options for connecting a wallet to Livepeer. The wallet you choose should be the same one with which you originally delegated your LPT on the Ethereum mainnet. It should also contain a small amount of arbETH to pay for the `claim` on Arbitrum.
     
     <img src="/docs-assets/delegators/how-to-guides/connect-wallet-d2.png" alt="connect wallet to livepeer" width="300"/>
-    
-2.  **Switch your network from Ethereum to Arbitrum**
-    
-    Once you've connected a wallet, you will see a prompt to switch your network from Ethereum to Arbitrum. 
-    
-    Selecting Arbitrum in the dropdown will connect you to the Arbitrum network; if you have not already added it to your browser wallet, it will prompt you to add the network
-    
-    <img src="/docs-assets/delegators/how-to-guides/migrate-d1.png" alt="switch livepeer explorer to arbitrum" width="300"/>
-    
 
-3. **Confirm your Delegate** 
+
+2. **Confirm your Delegate** 
     
     Once you have switched to Arbitrum, you will be asked to confirm the orchestrator to whom you'd like to delegate.
     
@@ -45,18 +37,8 @@ This guide is applicable to delegators who delegated their LPT to an orchestrato
     If your orchestrator has not migrated, you will need to choose a new orchestrator. Using the prompts shown below, select a new orchestrator.
     
     <img src="/docs-assets/delegators/how-to-guides/confirm-d.png" alt="confirm orchestrator" width="300"/>
-    
-4. **Claim your delegated stake and earned fees**
-    
-    
-    Once you have confirmed your orchestrator, you will be given an option to claim your delegated stake and any accumulated rewards or ETH fees.
-    
-    Please review the choice of orchestrator, the delegated stake, and estimated network fees, and then submit the transaction to claim.
-    
-     <img src="/docs-assets/delegators/how-to-guides/claim-d.png" alt="claim LPT and fees" width="300"/>
-    
 
-5. **View your profile**
+3. **View your profile**
     
     Once the `claim` transaction has been confirmed (this usually takes a few seconds on Arbitrum), you see a link to your profile. Here, you'll be able to see your newly claimed balances. 
     
