@@ -30,7 +30,7 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
 
 1. **Connect your wallet**
 
-    Navigate to the [testnet explorer](http://rinkeby.explorer.livepeer.org) or [mainnet explorer](http://explorer.livepeer.org). If you have not connected a wallet, connect on using the prompt in the upper left hand corner. 
+    Navigate to the [testnet explorer](http://rinkeby.explorer.livepeer.org) or [mainnet explorer](http://explorer.livepeer.org). If you have not connected a wallet, connect one using the prompt in the upper left hand corner. 
     
     This does not have to be the same wallet you use for your orchestrator, but **if you are using a different wallet to submit the transaction, you will still need to access the wallet that you use for your orchestrator so that you can sign a typed data message**
      
@@ -43,7 +43,7 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     
 2. **Follow the prompt to "Begin Migration"**
     
-    Please note that if you are signing with the CLI and your connected wallet is NOT your orchestrator wallet, the stake amounts will not be accurate until after you sign the transaction and we autodetect your orchestrator account from the signature.
+    Please note that if you are signing with the CLI and your connected wallet is NOT your orchestrator wallet, the stake amount will not appear until after you enter your ethereum account address.
     
 
     <img src="/docs-assets/video-miners/how-to-guides/stake-info.png" alt="stake info" width="300"/>
