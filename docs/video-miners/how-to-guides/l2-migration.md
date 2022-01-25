@@ -14,7 +14,7 @@ This guide is applicable to orchestrators who registered onchain on the Ethereum
 
 Before starting the migration process, you will need to acquire an RPC url for Arbitrum. We recommend using [the Offchain Labs public endpoint](https://developer.offchainlabs.com/docs/mainnet). 
 
-Other options are: [use the Offchain Labs public endpoint](https://developer.offchainlabs.com/docs/mainnet), [set up an Arbitrum node](https://developer.offchainlabs.com/docs/running_node) or acquire an Arbitrum RPC url using a third-party service like [Alchemy](https://www.alchemy.com/) or [Infura](https://infura.io/). 
+Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/docs/running_node) or acquire an Arbitrum RPC url using a third-party service like [Alchemy](https://www.alchemy.com/) or [Infura](https://infura.io/). 
 
 
 ## Testnet
@@ -22,7 +22,7 @@ This guide is applicable to orchestrators who registered onchain on Rinkeby prio
 
 Before starting the migration process, you will need to acquire an RPC url for Arbitrum. We recommend using [the Offchain Labs public testnet endpoint](https://developer.offchainlabs.com/docs/public_testnet). 
 
-Other options are: [use the Offchain Labs public endpoint](https://developer.offchainlabs.com/docs/mainnet), [set up an Arbitrum node](https://developer.offchainlabs.com/docs/running_node) or acquire an Arbitrum RPC url using a third-party service like [Alchemy](https://www.alchemy.com/) or [Infura](https://infura.io/). 
+Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/docs/running_node) or acquire an Arbitrum RPC url using a third-party service like [Alchemy](https://www.alchemy.com/) or [Infura](https://infura.io/). 
 
 
 
@@ -30,7 +30,7 @@ Other options are: [use the Offchain Labs public endpoint](https://developer.off
 
 1. **Connect your wallet**
 
-    Navigate to the [testnet explorer](http://rinkeby.explorer.livepeer.org) or [mainnet explorer](http://explorer.livepeer.org). If you have not connected a wallet, connect on using the prompt in the upper left hand corner. 
+    Navigate to the [testnet explorer](http://rinkeby.explorer.livepeer.org) or [mainnet explorer](http://explorer.livepeer.org). If you have not connected a wallet, connect one using the prompt in the upper left hand corner. 
     
     This does not have to be the same wallet you use for your orchestrator, but **if you are using a different wallet to submit the transaction, you will still need to access the wallet that you use for your orchestrator so that you can sign a typed data message**
      
@@ -41,7 +41,7 @@ Other options are: [use the Offchain Labs public endpoint](https://developer.off
     <img src="/docs-assets/video-miners/how-to-guides/connect-wallet2.png" alt="connect wallet to livepeer options" width="300"/>
 
     
-2. **Follow the prompt to "Begin Migration"**
+2. **Follow the prompt to begin migration to Arbitrum**
     
     Please note that if you are signing with the CLI and your connected wallet is NOT your orchestrator wallet, the stake amounts will not be accurate until after you sign the transaction and we autodetect your orchestrator account from the signature.
     <img src="/docs-assets/video-miners/how-to-guides/begin-migration.png" alt="begin migration" width="300"/>
@@ -53,7 +53,7 @@ Other options are: [use the Offchain Labs public endpoint](https://developer.off
     
     If you prefer to sign using the wallet that you have connected to the explorer, click "Approve Migration" and approve the transaction using your browser extension
 
-    <img src="/docs-assets/video-miners/how-to-guides/sign-web.png" alt="stake info" width="300"/>
+    <img src="/docs-assets/video-miners/how-to-guides/sign-web.png" alt="sign web" width="300"/>
     
     3b. **Sign using CLI**
     
@@ -63,7 +63,7 @@ Other options are: [use the Offchain Labs public endpoint](https://developer.off
     
     Once you have entered an address, you will see a message to sign and a text entry box for the signature.
     
-    First, copy the message provided. Then go into your CLI and select option 16: Sign Typed Data
+    First, copy the message provided. Then go into your CLI and select option 19: Sign Typed Data.
     
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli2.png" alt="sign cli" width="300"/>
     
@@ -73,7 +73,7 @@ Other options are: [use the Offchain Labs public endpoint](https://developer.off
     
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli3.png" alt="sign cli" width="300"/>
     
-    Paste this message in the provided box and click Continue
+    Paste this message in the provided box and click Continue.
     
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli4.png" alt="sign cli" width="300"/>
     
@@ -98,8 +98,8 @@ Other options are: [use the Offchain Labs public endpoint](https://developer.off
     
     ```bash
     livepeer \
-      -network arbitrum
-      -ethUrl <Arbitrum RPC Url>
+      -network arbitrum-one-mainnet # testnet: arbitrum-one-rinkeby
+      -ethUrl <Arbitrum RPC Url> # testnet: arbitrum rinkeby RPC url
     ```
     
 4. **Register your service URI and fee structure on Arbitrum  using “Set orchestrator config”**
