@@ -41,9 +41,9 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     <img src="/docs-assets/video-miners/how-to-guides/connect-wallet2.png" alt="connect wallet to livepeer options" width="300"/>
 
     
-2. **Follow the prompt to "Begin Migration"**
+2. **Follow the prompt to begin migration to Arbitrum**
     
-    Please note that if you are signing with the CLI and your connected wallet is NOT your orchestrator wallet, the stake amount will not appear until after you enter your ethereum account address.
+    Please note that if you are signing with the CLI and your connected wallet is NOT your orchestrator wallet, the stake amount will not appear until after you enter your Ethereum account address.
     
 
     <img src="/docs-assets/video-miners/how-to-guides/stake-info.png" alt="stake info" width="300"/>
@@ -53,28 +53,28 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     
     3a. **Sign using connected wallet**
     
-    If you prefer to sign using the wallet that you have connected to the explorer, click "Approve Migration" and approve the transaction using your browser extension
+    If you prefer to sign using the wallet that you have connected to the explorer, click "Approve Migration" and approve the transaction using your browser extension.
     
     <img src="/docs-assets/video-miners/how-to-guides/sign-web.png" alt="sign web" width="300"/>
 
     
     3b. **Sign using CLI**
     
-    If you'd rather sign a typed data message through the CLI, select "Sign using CLI" in the explorer interface. You'll be taken to an alternate migration screen, where you will be asked to enter the public address of the orchestrator you wish to migrate
+    If you'd rather sign a typed data message through the CLI, connect your wallet to the Explorer with any another account. You'll be asked to enter the public address of the orchestrator you wish to migrate.
     
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli.png" alt="sign cli" width="300"/>
     
     Once you have entered an address, you will see a message to sign and a text entry box for the signature.
     
-    First, copy the message provided. Then go into your CLI and select option 19: Sign Typed Data
+    First, copy the message provided. Then go into your CLI and select option 19: Sign Typed Data.
     
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli2.png" alt="sign cli" width="300"/>
     
-    Follow the CLI's prompts to generate a signature
+    Follow the CLI's prompts to generate a signature.
     
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli3.png" alt="sign cli" width="300"/>
     
-    Paste this message in the provided box and click Continue
+    Paste this message in the provided box and click Continue.
     
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli4.png" alt="sign cli" width="300"/>
     
