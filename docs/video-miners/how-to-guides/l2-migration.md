@@ -45,8 +45,9 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     
     Please note that if you are signing with the CLI and your connected wallet is NOT your orchestrator wallet, the stake amount will not appear until after you enter your Ethereum account address.
     
+    <img src="/docs-assets/video-miners/how-to-guides/stake-info.png" alt="stake info" width="300" />
 
-    <img src="/docs-assets/video-miners/how-to-guides/stake-info.png" alt="stake info" width="300"/>
+
 
 3. **Sign the `migrate` transaction** 
     
