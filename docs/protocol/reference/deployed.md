@@ -32,6 +32,26 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 - PollCreator: [0xBf824EDb6b94D9B52d972d5B25bCc19b4e6E3F3C](https://etherscan.io/address/0xbf824edb6b94d9b52d972d5b25bcc19b4e6e3f3c)
 - MerkleSnapshot: [0x24ebEd82c681f435E944BEEbFAEEAaE443D08438](https://etherscan.io/address/0x24ebed82c681f435e944beebfaeeaae443d08438)
 
+## Arbitrum Rinkeby (Confluence)
+- BondingManager (Proxy): [0xe42229d764F673EB3FB8B9a56016C2a4DA45ffd7](https://testnet.arbiscan.io/address/0xe42229d764F673EB3FB8B9a56016C2a4DA45ffd7)
+- BondingManager (Target): [0x53ebC58f6D5c326fa29c6ce58B16997E7A0b95D1](https://testnet.arbiscan.io/address/0x53ebC58f6D5c326fa29c6ce58B16997E7A0b95D1)
+- Controller: [0x9ceC649179e2C7Ab91688271bcD09fb707b3E574](https://testnet.arbiscan.io/address/0x9ceC649179e2C7Ab91688271bcD09fb707b3E574)
+- LivepeerToken: [0x743b8469e5f54cD765F1954604cD4dfA67b64bF6](https://testnet.arbiscan.io/address/0x743b8469e5f54cD765F1954604cD4dfA67b64bF6)
+- LivepeerTokenFaucet: [0xb59253931a679D506F6DC5d58F0D680d9c708e26](https://testnet.arbiscan.io/address/0xb59253931a679D506F6DC5d58F0D680d9c708e26)
+- MerkleSnapshot: [0x4756766C61e0755db5963Ab3505280Ddf1B36cD8](https://testnet.arbiscan.io/address/0x4756766C61e0755db5963Ab3505280Ddf1B36cD8)
+- Minter: [0xC10525f660F2A0a71E46340e8ee8cc7b1cD26Dd4](https://testnet.arbiscan.io/address/0xC10525f660F2A0a71E46340e8ee8cc7b1cD26Dd4)
+- PollCreator: [0x7e3305D48489e43B7fBf318D575D5dF654EE175c](https://testnet.arbiscan.io/address/0x7e3305D48489e43B7fBf318D575D5dF654EE175c)
+- RoundsManager (Proxy): [0x3BEc08BA9D8A5b44F5C5E38F654b3efE73555d58](https://testnet.arbiscan.io/address/0x3BEc08BA9D8A5b44F5C5E38F654b3efE73555d58)
+- RoundsManager (Target): [0x8F3E9b6E78d525154A0649Add585eff8cB0BAd52](https://testnet.arbiscan.io/address/0x8F3E9b6E78d525154A0649Add585eff8cB0BAd52)
+- ServiceRegistry: [0x22BEc4A040f9F3491F510E7BfbbbBEf347dbb8bf](https://testnet.arbiscan.io/address/0x22BEc4A040f9F3491F510E7BfbbbBEf347dbb8bf)
+- SortedDoublyLL: [0x8b2cd2D3363ED88701AFe2b31a30f6F6E4AA2C83](https://testnet.arbiscan.io/address/0x8b2cd2D3363ED88701AFe2b31a30f6F6E4AA2C83)
+- TicketBroker (Proxy): [0xD218f6eA99907C2EDB889A151DF326aCd0F70D88](https://testnet.arbiscan.io/address/0xD218f6eA99907C2EDB889A151DF326aCd0F70D88)
+- TicketBroker (Target): [0xd50AC3a667BFe57B5B69Efb0eDD44ABb4443A97a](https://testnet.arbiscan.io/address/0xd50AC3a667BFe57B5B69Efb0eDD44ABb4443A97a)
+- DelegatorPool: [0x3308fE256A91DfccCAa64cb8Df39Ae8f1E7619a1](https://testnet.arbiscan.io/address/0x3308fE256A91DfccCAa64cb8Df39Ae8f1E7619a1)
+- L2LPTDataCache: [0xd348394B6Fa2F698eC6A26352390663047735388](https://testnet.arbiscan.io/address/0xd348394B6Fa2F698eC6A26352390663047735388)
+- L2LPTGateway: [0xBD04C4Bd3F01029944B2dCfa34773758353102ec](https://testnet.arbiscan.io/address/0xBD04C4Bd3F01029944B2dCfa34773758353102ec)
+- L2Migrator: [0xe2f931931B8E04a01c99a2DeBA44A9FF782F688a](https://testnet.arbiscan.io/address/0xe2f931931B8E04a01c99a2DeBA44A9FF782F688a)
+
 ## Ethereum Rinkeby (Confluence)
 - BondingManager (Proxy): [0xC40df4db2f99e7e235780A93B192F1a934f0c45b](https://rinkeby.etherscan.io/address/0xC40df4db2f99e7e235780A93B192F1a934f0c45b)
 - BondingManager (Target): [0xF96D54E490317c557A967ABfA5d6e33006BE69b3](https://rinkeby.etherscan.io/address/0xF96D54E490317c557A967ABfA5d6e33006BE69b3)
@@ -47,8 +67,11 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 - SortedDoublyLL: [0xbd5Ebd4Eee5af21e5f920Da5b01930fc98cCFA64](https://rinkeby.etherscan.io/address/0xbd5Ebd4Eee5af21e5f920Da5b01930fc98cCFA64)
 - TicketBroker (Proxy): [0x242f1361CCdaAe8CCdf8539DE183Cb518856254f](https://rinkeby.etherscan.io/address/0x242f1361CCdaAe8CCdf8539DE183Cb518856254f)
 - TicketBroker (Target): [0xCA2a0B1944109641142EE73A6929A0AE28b82c02](https://rinkeby.etherscan.io/address/0xCA2a0B1944109641142EE73A6929A0AE28b82c02)
-
-
+- BridgeMinter: [0x527416c2AE642e3e1b24C1d10816551183885BBA](https://rinkeby.etherscan.io/address/0x527416c2AE642e3e1b24C1d10816551183885BBA)
+- L1Escrow: [0x192683D5Cb514da2081C543f6887EeaFD76EC64a](https://rinkeby.etherscan.io/address/0x192683D5Cb514da2081C543f6887EeaFD76EC64a)
+- L1LPTDataCache: [0xD218f6eA99907C2EDB889A151DF326aCd0F70D88](https://rinkeby.etherscan.io/address/0xD218f6eA99907C2EDB889A151DF326aCd0F70D88)
+- L1LPTGateway: [0x831C51Cd8A38C3E42D98Acd77F06BF537D29800e](https://rinkeby.etherscan.io/address/0x831C51Cd8A38C3E42D98Acd77F06BF537D29800e)
+- L1Migrator: [0x4756766C61e0755db5963Ab3505280Ddf1B36cD8](https://rinkeby.etherscan.io/address/0x4756766C61e0755db5963Ab3505280Ddf1B36cD8)
 
 # Historical (DEPRECATED - FOR REFERENCE ONLY)
 
