@@ -99,8 +99,8 @@ Other options are: [use the Offchain Labs public endpoint](https://developer.off
     
     ```bash
     livepeer \
-      -network arbitrum
-      -ethUrl <Arbitrum RPC Url>
+      -network arbitrum # arbitrum-one-rinkeby
+      -ethUrl <Arbitrum RPC Url> # arbitrum rinkeby RPC url
     ```
     
 4. **Register your service URI and fee structure on Arbitrum  using “Set orchestrator config”**
