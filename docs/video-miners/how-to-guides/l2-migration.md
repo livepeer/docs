@@ -14,7 +14,7 @@ This guide is applicable to orchestrators who registered onchain on the Ethereum
 
 Before starting the migration process, you will need to acquire an RPC url for Arbitrum. We recommend using [the Offchain Labs public endpoint](https://developer.offchainlabs.com/docs/mainnet). 
 
-Other options are: [use the Offchain Labs public endpoint](https://developer.offchainlabs.com/docs/mainnet), [set up an Arbitrum node](https://developer.offchainlabs.com/docs/running_node) or acquire an Arbitrum RPC url using a third-party service like [Alchemy](https://www.alchemy.com/) or [Infura](https://infura.io/). 
+Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/docs/running_node) or acquire an Arbitrum RPC url using a third-party service like [Alchemy](https://www.alchemy.com/) or [Infura](https://infura.io/). 
 
 
 ## Testnet
@@ -22,7 +22,7 @@ This guide is applicable to orchestrators who registered onchain on Rinkeby prio
 
 Before starting the migration process, you will need to acquire an RPC url for Arbitrum. We recommend using [the Offchain Labs public testnet endpoint](https://developer.offchainlabs.com/docs/public_testnet). 
 
-Other options are: [use the Offchain Labs public endpoint](https://developer.offchainlabs.com/docs/mainnet), [set up an Arbitrum node](https://developer.offchainlabs.com/docs/running_node) or acquire an Arbitrum RPC url using a third-party service like [Alchemy](https://www.alchemy.com/) or [Infura](https://infura.io/). 
+Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/docs/running_node) or acquire an Arbitrum RPC url using a third-party service like [Alchemy](https://www.alchemy.com/) or [Infura](https://infura.io/). 
 
 
 
@@ -99,8 +99,8 @@ Other options are: [use the Offchain Labs public endpoint](https://developer.off
     
     ```bash
     livepeer \
-      -network arbitrum # arbitrum-one-rinkeby
-      -ethUrl <Arbitrum RPC Url> # arbitrum rinkeby RPC url
+      -network arbitrum-one # testnet: arbitrum-one-rinkeby
+      -ethUrl <Arbitrum RPC Url> # testnet: arbitrum rinkeby RPC url
     ```
     
 4. **Register your service URI and fee structure on Arbitrum  using “Set orchestrator config”**
