@@ -57,7 +57,7 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     
     3b. **Sign using CLI**
     
-    If you'd rather sign a typed data message through the CLI, select "Sign using CLI" in the explorer interface. You'll be taken to an alternate migration screen, where you will be asked to enter the public address of the orchestrator you wish to migrate
+    If you'd rather sign a typed data message through the CLI, connect your wallet to the Explorer with any other account. You'll be asked to enter the public address of the orchestrator you wish to migrate.
 
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli.png" alt="sign cli" width="300"/>
     
