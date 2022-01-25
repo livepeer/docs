@@ -41,9 +41,8 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     <img src="/docs-assets/video-miners/how-to-guides/connect-wallet2.png" alt="connect wallet to livepeer options" width="300"/>
 
     
-2. **Follow the prompt to begin migration to Arbitrum**
-    
-    Please note that if you are signing with the CLI and your connected wallet is NOT your orchestrator wallet, the stake amounts will not be accurate until after you sign the transaction and we autodetect your orchestrator account from the signature.
+2. **Navigate to the L2 Migration Tool to begin migration to Arbitrum**
+
     <img src="/docs-assets/video-miners/how-to-guides/begin-migration.png" alt="begin migration" width="300"/>
 
 3. **Sign the `migrate` transaction** 
@@ -52,14 +51,16 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     3a. **Sign using connected wallet**
     
     If you prefer to sign using the wallet that you have connected to the explorer, click "Approve Migration" and approve the transaction using your browser extension
-
     <img src="/docs-assets/video-miners/how-to-guides/sign-web.png" alt="sign web" width="300"/>
     
     3b. **Sign using CLI**
     
+    Please note that if you are signing with the CLI and your connected wallet is NOT your orchestrator wallet, the stake amount will not appear until after you enter your Ethereum account address.
+
     If you'd rather sign a typed data message through the CLI, connect your wallet to the Explorer with any other account. You'll be asked to enter the public address of the orchestrator you wish to migrate.
 
-    <img src="/docs-assets/video-miners/how-to-guides/sign-cli.png" alt="sign cli" width="300"/>
+    <img src="/docs-assets/video-miners/how-to-guides/sign-cli.png" alt="sign cli" width="300"/>     
+
     
     Once you have entered an address, you will see a message to sign and a text entry box for the signature.
     
