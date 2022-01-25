@@ -54,10 +54,10 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     <img src="/docs-assets/video-miners/how-to-guides/sign-web.png" alt="sign web" width="300"/>
     
     3b. **Sign using CLI**
-    
-    Please note that if you are signing with the CLI and your connected wallet is NOT your orchestrator wallet, the stake amount will not appear until after you enter your Ethereum account address.
 
     If you'd rather sign a typed data message through the CLI, connect your wallet to the Explorer with any other account. You'll be asked to enter the public address of the orchestrator you wish to migrate.
+
+    Please note that if you are signing with the CLI and your connected wallet is NOT your orchestrator wallet, the stake amount will not appear until after you enter your Ethereum account address.
 
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli.png" alt="sign cli" width="300"/>     
 
