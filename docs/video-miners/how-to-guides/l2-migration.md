@@ -44,9 +44,7 @@ Other options are: [use the Offchain Labs public endpoint](https://developer.off
 2. **Follow the prompt to "Begin Migration"**
     
     Please note that if you are signing with the CLI and your connected wallet is NOT your orchestrator wallet, the stake amounts will not be accurate until after you sign the transaction and we autodetect your orchestrator account from the signature.
-    
-
-    <img src="/docs-assets/video-miners/how-to-guides/stake-info.png" alt="stake info" width="300"/>
+    <img src="/docs-assets/video-miners/how-to-guides/begin-migration.png" alt="begin migration" width="300"/>
 
 3. **Sign the `migrate` transaction** 
     
@@ -54,13 +52,14 @@ Other options are: [use the Offchain Labs public endpoint](https://developer.off
     3a. **Sign using connected wallet**
     
     If you prefer to sign using the wallet that you have connected to the explorer, click "Approve Migration" and approve the transaction using your browser extension
-    
-    <img src="/docs-assets/video-miners/how-to-guides/sign-web.png" alt="sign web" width="300"/>
 
+    <img src="/docs-assets/video-miners/how-to-guides/sign-web.png" alt="stake info" width="300"/>
     
     3b. **Sign using CLI**
     
     If you'd rather sign a typed data message through the CLI, select "Sign using CLI" in the explorer interface. You'll be taken to an alternate migration screen, where you will be asked to enter the public address of the orchestrator you wish to migrate
+
+    
     
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli.png" alt="sign cli" width="300"/>
     
@@ -70,7 +69,9 @@ Other options are: [use the Offchain Labs public endpoint](https://developer.off
     
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli2.png" alt="sign cli" width="300"/>
     
-    Follow the CLI's prompts to generate a signature
+    Follow the CLI's prompts to generate a signature.
+
+    **IMPORTANT: If you are using Windows, you'll need to type `ctrl+Z` after pasting the typed data instead of `ctrl+D`.**
     
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli3.png" alt="sign cli" width="300"/>
     
