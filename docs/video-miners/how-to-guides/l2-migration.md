@@ -47,7 +47,8 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     
     <img src="/docs-assets/video-miners/how-to-guides/stake-info.png" alt="stake info" width="300" />
 
-<br />
+
+
 3. **Sign the `migrate` transaction** 
     
     
