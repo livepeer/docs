@@ -99,7 +99,7 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     
     ```bash
     livepeer \
-      -network arbitrum-one # testnet: arbitrum-one-rinkeby
+      -network arbitrum-one-mainnet # testnet: arbitrum-one-rinkeby
       -ethUrl <Arbitrum RPC Url> # testnet: arbitrum rinkeby RPC url
     ```
     
