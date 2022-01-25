@@ -96,6 +96,10 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     
     Once you're ready, you should restart your orchestrator using your usual flags, changing only the `network` and `ethUrl` as shown below. 
     
+    If you're running on the same machine as your mainnet Orchestrator, you may encounter an error such as `expecting chainID of 4, but got 421611. Did you change networks without changing network name or datadir`. This is because your testnet setup is trying to access the same `.lpData` that it used for mainnet, and it's finding a conflict on `chainId`. To fix this, specify a new data directory using the `-datadir` flag when you start your Orchestrator. Specify only the directory, not the file.
+
+    Additionally, you may need to copy your keystore to `/.lpData/keystore/arbitrum-one-< mainnet / rinkeby >`.
+
     ```bash
     livepeer \
       -network arbitrum-one-mainnet # testnet: arbitrum-one-rinkeby
@@ -104,7 +108,7 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     
 4. **Register your service URI and fee structure on Arbitrum  using “Set orchestrator config”**
 
-To receive work, you must register your service URI and fees so that broadcasters can discover your orchestrator. This can be done by selecting option `13: Set orchestrator config` in the Livepeer CLI.
+To receive work, you must register your service URI and fees so that broadcasters can discover your orchestrator. This can be done by selecting option `13: Set orchestrator config` in the Livepeer CLI. To do this, you'll need some arbETH in your wallet to pay for the transaction.
 
 Once this is complete, you're all set to receive work, rewards, and fees on Arbitrum.
 
