@@ -66,7 +66,7 @@ Other options are: [use the Offchain Labs public endpoint](https://developer.off
     
     Once you have entered an address, you will see a message to sign and a text entry box for the signature.
     
-    First, copy the message provided. Then go into your CLI and select option 16: Sign Typed Data
+    First, copy the message provided. Then go into your CLI and select option 19: Sign Typed Data
     
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli2.png" alt="sign cli" width="300"/>
     
