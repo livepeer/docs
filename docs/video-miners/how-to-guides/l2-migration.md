@@ -41,29 +41,26 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     <img src="/docs-assets/video-miners/how-to-guides/connect-wallet2.png" alt="connect wallet to livepeer options" width="300"/>
 
     
-2. **Follow the prompt to begin migration to Arbitrum**
-    
-    Please note that if you are signing with the CLI and your connected wallet is NOT your orchestrator wallet, the stake amount will not appear until after you enter your Ethereum account address.
-    
-    <img src="/docs-assets/video-miners/how-to-guides/stake-info.png" alt="stake info" width="300" />
+2. **Navigate to the L2 Migration Tool to begin migration to Arbitrum**
 
-
+    <img src="/docs-assets/video-miners/how-to-guides/begin-migration.png" alt="begin migration" width="300"/>
 
 3. **Sign the `migrate` transaction** 
     
     
     3a. **Sign using connected wallet**
     
-    If you prefer to sign using the wallet that you have connected to the explorer, click "Approve Migration" and approve the transaction using your browser extension.
-    
+    If you prefer to sign using the wallet that you have connected to the explorer, click "Approve Migration" and approve the transaction using your browser extension
     <img src="/docs-assets/video-miners/how-to-guides/sign-web.png" alt="sign web" width="300"/>
-
     
     3b. **Sign using CLI**
-    
+
     If you'd rather sign a typed data message through the CLI, connect your wallet to the Explorer with any other account. You'll be asked to enter the public address of the orchestrator you wish to migrate.
-    
-    <img src="/docs-assets/video-miners/how-to-guides/sign-cli.png" alt="sign cli" width="300"/>
+
+    Please note that if you are signing with the CLI and your connected wallet is NOT your orchestrator wallet, the stake amount will not appear until after you enter your Ethereum account address.
+
+    <img src="/docs-assets/video-miners/how-to-guides/sign-cli.png" alt="sign cli" width="300"/>     
+
     
     Once you have entered an address, you will see a message to sign and a text entry box for the signature.
     
@@ -72,6 +69,8 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli2.png" alt="sign cli" width="300"/>
     
     Follow the CLI's prompts to generate a signature.
+
+    **IMPORTANT: If you are using Windows, you'll need to type `ctrl+Z` after pasting the typed data instead of `ctrl+D`.**
     
     <img src="/docs-assets/video-miners/how-to-guides/sign-cli3.png" alt="sign cli" width="300"/>
     
@@ -98,6 +97,10 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     
     Once you're ready, you should restart your orchestrator using your usual flags, changing only the `network` and `ethUrl` as shown below. 
     
+    If you're running on the same machine as your mainnet Orchestrator, you may encounter an error such as `expecting chainID of 4, but got 421611. Did you change networks without changing network name or datadir`. This is because your testnet setup is trying to access the same `.lpData` that it used for mainnet, and it's finding a conflict on `chainId`. To fix this, specify a new data directory using the `-datadir` flag when you start your Orchestrator. Specify only the directory, not the file.
+
+    Additionally, you may need to copy your keystore to `/.lpData/keystore/arbitrum-one-< mainnet / rinkeby >`.
+
     ```bash
     livepeer \
       -network arbitrum-one-mainnet # testnet: arbitrum-one-rinkeby
@@ -106,7 +109,7 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     
 4. **Register your service URI and fee structure on Arbitrum  using “Set orchestrator config”**
 
-To receive work, you must register your service URI and fees so that broadcasters can discover your orchestrator. This can be done by selecting option `13: Set orchestrator config` in the Livepeer CLI.
+To receive work, you must register your service URI and fees so that broadcasters can discover your orchestrator. This can be done by selecting option `13: Set orchestrator config` in the Livepeer CLI. To do this, you'll need some arbETH in your wallet to pay for the transaction.
 
 Once this is complete, you're all set to receive work, rewards, and fees on Arbitrum.
 
