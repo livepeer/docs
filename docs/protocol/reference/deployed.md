@@ -39,7 +39,7 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 - LivepeerToken: [0x743b8469e5f54cD765F1954604cD4dfA67b64bF6](https://testnet.arbiscan.io/address/0x743b8469e5f54cD765F1954604cD4dfA67b64bF6)
 - LivepeerTokenFaucet: [0xb59253931a679D506F6DC5d58F0D680d9c708e26](https://testnet.arbiscan.io/address/0xb59253931a679D506F6DC5d58F0D680d9c708e26)
 - MerkleSnapshot: [0x4756766C61e0755db5963Ab3505280Ddf1B36cD8](https://testnet.arbiscan.io/address/0x4756766C61e0755db5963Ab3505280Ddf1B36cD8)
-- Minter: [0xC10525f660F2A0a71E46340e8ee8cc7b1cD26Dd4](https://testnet.arbiscan.io/address/0xC10525f660F2A0a71E46340e8ee8cc7b1cD26Dd4)
+- Minter: [0xE5bE54705D41DAaA33A043aa51dE472ED637C3d9](https://testnet.arbiscan.io/address/0xE5bE54705D41DAaA33A043aa51dE472ED637C3d9)
 - PollCreator: [0x7e3305D48489e43B7fBf318D575D5dF654EE175c](https://testnet.arbiscan.io/address/0x7e3305D48489e43B7fBf318D575D5dF654EE175c)
 - RoundsManager (Proxy): [0x3BEc08BA9D8A5b44F5C5E38F654b3efE73555d58](https://testnet.arbiscan.io/address/0x3BEc08BA9D8A5b44F5C5E38F654b3efE73555d58)
 - RoundsManager (Target): [0x8F3E9b6E78d525154A0649Add585eff8cB0BAd52](https://testnet.arbiscan.io/address/0x8F3E9b6E78d525154A0649Add585eff8cB0BAd52)
@@ -111,6 +111,10 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
   - V1: [0xd8e8328501e9645d16cf49539efc04f734606ee4](https://etherscan.io/address/0xd8e8328501e9645d16cf49539efc04f734606ee4)
 - JobLib
   - V1: [0x4969dccf5186e1c49411638fc8a2a020fdab752e](https://etherscan.io/address/0x4969dccf5186e1c49411638fc8a2a020fdab752e)
+
+## Arbitrum Rinkeby (Confluence)
+- Minter
+  - V1: [0xC10525f660F2A0a71E46340e8ee8cc7b1cD26Dd4](https://testnet.arbiscan.io/address/0xC10525f660F2A0a71E46340e8ee8cc7b1cD26Dd4)
 
 ## Ethereum Rinkeby (Confluence)
 - BondingManager (Target)
