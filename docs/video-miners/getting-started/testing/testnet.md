@@ -9,7 +9,7 @@ This guide will walk you through the process of running an orchestrator on the A
 
 You can use an existing third-party faucet for this. We recommend [the official Rinkeby faucet](https://www.rinkeby.io/#faucet) (requires Twitter or Facebook auth), or [the Chainlink faucet](https://faucets.chain.link/rinkeby) (no auth required). Most faucets provide ~0.1 ETH per request, but you can use them multiple times if you need more.
 
-Once you've acquired the Rinkeby ETH, use the [Arbitrum bridge](https://bridge.arbitrum.io) to send Rinkeby ETH to Arbitrum. After bridging, you will want to send the ETH to the wallet that you will be using to run your orchestrator.
+Once you've acquired the Rinkeby ETH, use the [Arbitrum bridge](https://bridge.arbitrum.io) to send Rinkeby ETH to Arbitrum. After bridging, you will want to send the Arbitrum Rinkeby ETH to the wallet that you will be using to run your orchestrator.
 
 2. **Get an Arbitrum Rinkeby RPC url, either by running a node or by using a url from Infura or Alchemy**
 
