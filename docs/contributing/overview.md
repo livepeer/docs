@@ -11,7 +11,7 @@ The goal of this page is to point you in the right direction if you want to cont
 Livepeer has a strong mission - to give everyone an equal voice. Our community is a reflection of our core mission. As members of the community, we agree to behave in the a way that helps the inclusion and prosperity our community. Here are some quick guidelines.
 
 - Be respectful to fellow community members: no regional, racial, gender, or other abuse will be tolerated. Report abusive behavior to abuse@livepeer.org
-- Encourage diversity and participation: Anyone should be able to contribute, regardless of their background and extend of contribution. We will do the best we can to make everyoen feel welcomed.
+- Encourage diversity and participation: Anyone should be able to contribute, regardless of their background or extent of contribution. We will do the best we can to make every one feel welcome.
 - Don't break the law: we are inventing the future, but we want to do it safely so no one gets in trouble.
 
 
