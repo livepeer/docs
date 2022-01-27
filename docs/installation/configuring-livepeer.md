@@ -19,8 +19,8 @@ For a list of all configuration options, see the reference
 ```bash
 livepeer \
     -broadcaster
-    -network mainnet
-    -ethUrl https://mainnet.infura.io/v3/<PROJECT_ID>
+    -network arbitrum-one-mainnet
+    -ethUrl https://arbitrum-mainnet.infura.io/v3/<PROJECT_ID>
 ```
 
 # Configure Livepeer using environment variables
@@ -29,8 +29,8 @@ livepeer \
 
 ```bash
 export LP_BROADCASTER=true
-export LP_NETWORK='mainnet'
-export LP_ETHURL='https://mainnet.infura.io/v3/<PROJECT_ID>'
+export LP_NETWORK='arbitrum-one-mainnet'
+export LP_ETHURL='https://arbitrum-mainnet.infura.io/v3/<PROJECT_ID>'
 livepeer
 ```
 
@@ -45,8 +45,8 @@ flags, the flags will override environment variables.**
 
 ```
 broadcaster
-network mainnet
-ethUrl https://mainnet.infura.io/v3/<PROJECT_ID>
+network arbitrum-one-mainnet
+ethUrl https://arbitrum-mainnet.infura.io/v3/<PROJECT_ID>
 ```
 
 ```bash

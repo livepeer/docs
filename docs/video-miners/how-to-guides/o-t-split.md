@@ -13,7 +13,7 @@ title: Connect an Orchestrator with Separate Transcoders
 
 ```bash
 livepeer \
-    -network mainnet \
+    -network arbitrum-one-mainnet \
     -ethURL <ETH_URL> \
     -orchestrator \
     -orchSecret <ORCH_SECRET> \

@@ -196,7 +196,7 @@ orchestrator since a particular timestamp use:
 curl https://leaderboard-serverless.vercel.app/api/aggregated_stats?orchestrator=<ORCHESTRATOR>&since=<TIMESTAMP>&region=<REGION>
 ```
 
-- `<ORCHESTRATOR>` the orchestrator's Ethereum address to get the metrics for.
+- `<ORCHESTRATOR>` the orchestrator's wallet address to get the metrics for.
 - `<TIMESTAMP>` the timestamp at which to evaluate the query. This defaults to
   the last 24 hours, to get the aggregated stats for all time you can use
   `since=1`.
@@ -209,7 +209,7 @@ timestamp use:
 curl https://leaderboard-serverless.vercel.app/api/raw_stats?orchestrator=<ORCHESTRATOR>&since=<TIMESTAMP>&region=<REGION>
 ```
 
-- `<ORCHESTRATOR>` the orchestrator's Ethereum address to get the metrics for
+- `<ORCHESTRATOR>` the orchestrator's wallet address to get the metrics for
   (required).
 - `<TIMESTAMP>` the timestamp at which to evaluate the query. This defaults to
   the last 24 hours, to get the aggregated stats for all time you can use

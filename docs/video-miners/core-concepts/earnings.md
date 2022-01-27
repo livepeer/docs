@@ -44,7 +44,7 @@ Ways to earn more fees include:
 
 Costs incurred while operating on the network include:
 
-- Ethereum transaction fees
+- Arbitrum transaction fees
 - Hardware costs
 - Bandwidth costs
 - Electricity costs

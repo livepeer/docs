@@ -10,7 +10,7 @@ sidebar_position: 3
 
 - Make sure you have `livepeer`[installed](/installation/install-livepeer/overview)
 - Make sure you have access to an
-  [Ethereum JSON-RPC URL](/installation/connect-to-ethereum)
+  [Arbitrum JSON-RPC URL](/installation/connect-to-ethereum)
 - If you are transcoding with Nvidia GPUs:
   - Make sure you have a
     [Nvidia driver](https://www.nvidia.com/Download/index.aspx) installed
@@ -40,7 +40,7 @@ Start your orchestrator before activation:
 
 ```bash
 livepeer \
-    -network mainnet \
+    -network arbitrum-one-mainnet \
     -ethUrl <ETH_URL> \
     -ethAcctAddr <ETH_ACCT_ADDR> \ # Only required if you already have an ETH account you want to use
     -orchestrator \
@@ -52,7 +52,7 @@ livepeer \
 
 - `-ethAcctAddr` is used to specify the ETH account address that you want the
   node to use. The wallet file for the account address should be stored in the
-  keystore directory which defaults to `~/.lpData/mainnet/keystore`. The flag is
+  keystore directory which defaults to `~/.lpData/arbitrum-one-mainnet/keystore`. The flag is
   only required if you already have an account that you want to use
 - Using both the `-orchestrator` and `-transcoder` flags will configure the node
   to be an orchestrator and a transcoder meaning that it will receive video from
@@ -80,7 +80,7 @@ Passphrase:
 ```
 
 This account will be used to identify your orchestrator on the network. The
-wallet file for the account will be stored under `~/.lpData/mainnet/keystore` by
+wallet file for the account will be stored under `~/.lpData/arbitrum-one-mainnet/keystore` by
 default. It is **very important** to safeguard both the wallet file and the
 passphrase because together they allow someone to sign messages and send
 transactions using the account.

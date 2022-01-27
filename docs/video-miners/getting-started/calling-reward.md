@@ -7,7 +7,7 @@ sidebar_position: 5
 # Calling Reward
 
 By default, an active orchestrator will automatically call reward in each round
-meaning that it will submit an Ethereum transaction that will distribute newly
+meaning that it will submit an Arbitrum transaction that will distribute newly
 minted LPT rewards to itself and its delegators.
 
 The amount of LPT rewards distributed by the reward call will depend on the
@@ -34,7 +34,7 @@ flags omitted):
 
 ```bash
 livepeer \
-    -network mainnet \
+    -network arbitrum-one-mainnet \
     -reward=false
 ```
 
