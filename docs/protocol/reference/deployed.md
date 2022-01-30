@@ -49,7 +49,7 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 - TicketBroker (Target): [0xd50AC3a667BFe57B5B69Efb0eDD44ABb4443A97a](https://testnet.arbiscan.io/address/0xd50AC3a667BFe57B5B69Efb0eDD44ABb4443A97a)
 - DelegatorPool: [0x3308fE256A91DfccCAa64cb8Df39Ae8f1E7619a1](https://testnet.arbiscan.io/address/0x3308fE256A91DfccCAa64cb8Df39Ae8f1E7619a1)
 - L2LPTDataCache: [0xd348394B6Fa2F698eC6A26352390663047735388](https://testnet.arbiscan.io/address/0xd348394B6Fa2F698eC6A26352390663047735388)
-- L2LPTGateway: [0xBD04C4Bd3F01029944B2dCfa34773758353102ec](https://testnet.arbiscan.io/address/0xBD04C4Bd3F01029944B2dCfa34773758353102ec)
+- L2LPTGateway: [0x7e0ba3791B23D0D577Cf8D09C4FDd5821222208C](https://testnet.arbiscan.io/address/0x7e0ba3791b23d0d577cf8d09c4fdd5821222208c)
 - L2Migrator: [0xe2f931931B8E04a01c99a2DeBA44A9FF782F688a](https://testnet.arbiscan.io/address/0xe2f931931B8E04a01c99a2DeBA44A9FF782F688a)
 
 ## Ethereum Rinkeby (Confluence)
@@ -115,6 +115,8 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 ## Arbitrum Rinkeby (Confluence)
 - Minter
   - V1: [0xC10525f660F2A0a71E46340e8ee8cc7b1cD26Dd4](https://testnet.arbiscan.io/address/0xC10525f660F2A0a71E46340e8ee8cc7b1cD26Dd4)
+- L2LPTGateway
+  - V1: [0xBD04C4Bd3F01029944B2dCfa34773758353102ec](https://testnet.arbiscan.io/address/0xBD04C4Bd3F01029944B2dCfa34773758353102ec)
 
 ## Ethereum Rinkeby (Confluence)
 - BondingManager (Target)
