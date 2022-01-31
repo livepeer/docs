@@ -11,7 +11,7 @@ You can use an existing third-party faucet for this. We recommend [the official 
 
 Once you've acquired the Rinkeby ETH, use the [Arbitrum bridge](https://bridge.arbitrum.io) to send Rinkeby ETH to Arbitrum. After bridging, you will want to send the Arbitrum Rinkeby ETH to the wallet that you will be using to run your orchestrator.
 
-2. **Get an Arbitrum Rinkeby RPC url, either by running a node or by using a url from Infura or Alchemy**
+2. **Get an Arbitrum Rinkeby RPC url**
 
 We recommend using [the Offchain Labs public testnet endpoint](https://developer.offchainlabs.com/docs/public_testnet). Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/docs/running_node) or acquire an Arbitrum RPC url using a third-party service like [Alchemy](https://www.alchemy.com/) or [Infura](https://infura.io/). 
 
@@ -22,7 +22,7 @@ If you have not already installed the Livepeer CLI, please refer to [this guide]
 ```bash
 $: livepeer \
     -network arbitrum-one-rinkeby
-    -ethUrl <ETH_URL> # RPC Url for Arbitrum Rinkeby provider, acquired in Step 2 above
+    -ethUrl https://rinkeby.arbitrum.io/rpc # RPC Url for Arbitrum Rinkeby provider, acquired in Step 2 above
 		-orchestrator
 ```
 
