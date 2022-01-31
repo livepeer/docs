@@ -31,5 +31,6 @@ Public pools allow any transcoder to participate.
 Public pools that are live today:
 
 - [Livepool.io](http://livepool.io/)
+- [Titan-Node.com](https://titan-node.com/)
 
 
