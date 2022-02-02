@@ -2,7 +2,7 @@
 title: One-time Migration to Arbitrum
 ---
 
-**Claiming LPT delegated stake and earned ETH fees is highly encouraged to ensure that (1) you continue earning inflationary rewards and fees and (2) you will be able to withdraw any currently delegated stake and earned ETH fees. As of `<date tbd>`, withdrawals on the Ethereum Mainnet will be disabled and all inflationary rewards and ETH fees will be disbursed on Arbitrum.**
+**Claiming LPT delegated stake and earned ETH fees is highly encouraged to ensure that (1) you continue earning inflationary rewards and fees and (2) you will be able to withdraw any currently delegated stake and earned ETH fees. As of February 14th, 2022, withdrawals on the Ethereum Mainnet will be disabled and all inflationary rewards and ETH fees will be disbursed on Arbitrum.**
 
 ## Prerequisites for all chains
 - Before using this guide, you will need make sure your Arbitrum wallet has enough arbETH to cover gas for the `claim` transaction. If you do not have arbETH in your wallet, you will need to add some using one of the  bridges or on-ramps listed [here](https://portal.arbitrum.one/).
@@ -11,7 +11,7 @@ title: One-time Migration to Arbitrum
 
 
 ## Mainnet
-This guide is applicable to delegators who delegated their LPT to an orchestrator on the Ethereum mainnet prior to `<date tbd>`. Once you have successfully completed the migration, this guide is no longer applicable and you will use Arbitrum in lieu of Ethereum for all protocol actions.
+This guide is applicable to delegators who delegated their LPT to an orchestrator on the Ethereum mainnet prior to February 14th, 2022. It can be used successfully starting on February 22nd, 2022. Once you have successfully completed the migration, this guide is no longer applicable and you will use Arbitrum in lieu of Ethereum for all protocol actions.
 
 ## Testnet
 This guide is applicable to delegators who delegated their LPT to an orchestrator on Rinkeby prior to January 24th, 2022. Once you have successfully completed the migration, this guide is no longer applicable and you will use Arbitrum Rinkeby in lieu of Rinkeby for all protocol actions.
