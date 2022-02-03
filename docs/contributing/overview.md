@@ -5,7 +5,7 @@ title: Contribution Guide
 
 Welcome to the Livepeer Docs Contribution Guide!
 
-The goal of this page is to point you in the right direction if you want to contribute to the documentation. If you're interested in contributing to [go-livepeer](https://github.com/livepeer/go-livepeer/blob/master/doc/contributing.md), [livepeer-js](https://github.com/livepeer/livepeerjs#contributing), or the [core protocol](https://github.com/livepeer/protocol), please refer to the contribution guides for those repos or message a core contributor on [Discord](https://discord.gg/uaPhtyrWsF).
+The goal of this page is to point you in the right direction if you want to contribute to the documentation. If you're interested in contributing to [go-livepeer](https://github.com/livepeer/go-livepeer/blob/master/CONTRIBUTING.md), [livepeer-js](https://github.com/livepeer/livepeerjs#contributing), or the [core protocol](https://github.com/livepeer/protocol), please refer to the contribution guides for those repos or message a core contributor on [Discord](https://discord.gg/uaPhtyrWsF).
 
 ## Community Guidelines
 Livepeer has a strong mission - to give everyone an equal voice. Our community is a reflection of our core mission. As members of the community, we agree to behave in the a way that helps the inclusion and prosperity our community. Here are some quick guidelines.
