@@ -109,7 +109,7 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     
 4. **Register your service URI and fee structure on Arbitrum  using “Set orchestrator config”**
 
-To receive work, you must register your service URI and fees so that broadcasters can discover your orchestrator. This can be done by selecting option `13: Set orchestrator config` in the Livepeer CLI. To do this, you'll need some arbETH in your wallet to pay for the transaction.
+To receive work, you must register your service URI and fees so that broadcasters can discover your orchestrator. This can be done by selecting option `13: Set orchestrator config` in the Livepeer CLI. To do this, you'll need some arbETH in your wallet to pay for the transaction. Use the [Arbitrum bridge](https://bridge.arbitrum.io) to send Ethereum on Layer 1, to Arbitrum on Layer 2, over the appropriate (Mainnet / Rinkeby) network.
 
 Once this is complete, you're all set to receive work, rewards, and fees on Arbitrum.
 
