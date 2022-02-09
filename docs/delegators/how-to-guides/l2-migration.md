@@ -28,15 +28,13 @@ This guide is applicable to delegators who delegated their LPT to an orchestrato
     <img src="/docs-assets/delegators/how-to-guides/connect-wallet-d2.png" alt="connect wallet to livepeer" width="300"/>
 
 
-2. **Confirm your Delegate** 
+2. **Claim your stake, rewards, and fees** 
     
-    Once you have switched to Arbitrum, you will be asked to confirm the orchestrator to whom you'd like to delegate.
-    
-    ***If your orchestrator has migrated, no action is required here. You may skip to Step 4 or choose to select a new orchestrator as described below.***
-    
-    If your orchestrator has not migrated, you will need to choose a new orchestrator. Using the prompts shown below, select a new orchestrator.
-    
+    Click `Claim` to initiate a transaction that will claim your stake, rewards and fees.
+        
     <img src="/docs-assets/delegators/how-to-guides/confirm-d.png" alt="confirm orchestrator" width="300"/>
+
+    **If your orchestrator has not migrated and has not conveyed plans to migrate, you will see a prompt to choose a new orchestrator.**
 
 3. **View your profile**
     
