@@ -1,5 +1,5 @@
 ---
-title: Video Miner How Tos
+title: Video Mining How Tos
 sidebar_position: 1
 ---
 

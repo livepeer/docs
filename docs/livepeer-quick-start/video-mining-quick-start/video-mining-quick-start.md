@@ -1,5 +1,5 @@
 ---
-title: Video Mining Getting Started
+title: Video Mining Quick Start
 sidebar_position: 1
 ---
 
