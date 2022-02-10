@@ -27,10 +27,11 @@ At Livepeer we support:
 - access to an Ethereum network	
 
 * **Developers**
+
 	- Go language
 	- Git
 	- building from source and/or
-	- building from Docker
+	- building from Docker	
 
 ## Installation Workflow
 
