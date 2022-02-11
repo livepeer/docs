@@ -4,9 +4,16 @@ title: Livepeer Quick Start Guide
 ---
 
 
-The following provides information about what you need to get started with Livepeer. It assumes you are familiar with Livepeer [Core Concepts](/core-concepts/core-concepts.md)
+The following provides information about how to get started with Livepeer. Orchestrators who wish to run a node, transcode, or develop video streaming to integrate with your applications can quickly get up and running:
 
-## Prerequisites
+1. [Install Livepeer](#Instal-Livepeer)
+2. Start Transcoding
+3. Run a Node
+
+Information about Livepeer capabilities can be found in [Core Concepts](/core-concepts/core-concepts.md). 
+
+
+## Requirements and Prerequisites
 
 At Livepeer we support:
 
@@ -33,27 +40,22 @@ At Livepeer we support:
 	- building from source and/or
 	- building from Docker	
 
-## Installation Workflow
 
-Depending on your workflow, you may prefer to install `livepeer`
-[using a binary release](/installation/install-livepeer/binary-release) or
-a [Docker image](/installation/install-livepeer/docker).
+## Install Livepeer
 
-## Current Release
+Depending on your workflow, you may prefer to install `livepeer
+`
+- [using a binary release](/installation/install-livepeer/binary-release) or
+- [Docker image](/installation/install-livepeer/docker).
 
-Find the latest release for your
-platform on the [releases page](https://github.com/livepeer/go-livepeer/releases).
+**Current Release**
 
-
-* Install Using a [Binary](/live-peer-quick-start/binary-release)
-* Install using [Docker](/live-peer-quick-start/docker)
+Find the latest release for your platform on the [releases page](https://github.com/livepeer/go-livepeer/releases).
 
 
+## Start Video Mining
 
-
-
-
-
+## Start Developing
 
 
 
