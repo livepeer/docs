@@ -27,6 +27,11 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 - SortedDoublyLL: [0xC45f6918F7Bcac7aBc8fe05302b3cDF39776cdeb](https://arbiscan.io/address/0xC45f6918F7Bcac7aBc8fe05302b3cDF39776cdeb)
 - PollCreator: [0x8bb50806D60c492c0004DAD5D9627DAA2d9732E6](https://arbiscan.io/address/0x8bb50806D60c492c0004DAD5D9627DAA2d9732E6)
 - MerkleSnapshot: [0x10736ffaCe687658F88a46D042631d182C7757f7](https://arbiscan.io/address/0x10736ffaCe687658F88a46D042631d182C7757f7)
+- DelegatorPool: [0xfdb06109032AD3671a8f14f5f2E78f4B9E81b567](https://arbiscan.io/address/0xfdb06109032AD3671a8f14f5f2E78f4B9E81b567)
+- L2LPTDataCache: [0xd78b6bD09cd28A83cFb21aFa0DA95c685A6bb0B1](https://arbiscan.io/address/0xd78b6bD09cd28A83cFb21aFa0DA95c685A6bb0B1)
+- L2LPTGateway: [0x6D2457a4ad276000A615295f7A80F79E48CcD318](https://arbiscan.io/address/0x6D2457a4ad276000A615295f7A80F79E48CcD318)
+- L2Migrator (Proxy): [0x148D5b6B4df9530c7C76A810bd1Cdf69EC4c2085](https://arbiscan.io/address/0x148D5b6B4df9530c7C76A810bd1Cdf69EC4c2085)
+- L2Migrator (Target): [0x4F59b39e2ea628fe8371BDfd51B063319339c7EE](https://arbiscan.io/address/0x4F59b39e2ea628fe8371BDfd51B063319339c7EE)
 
 ## Ethereum Mainnet
 - Governor: [0xFC3CBed6A3476F7616CC70f078397700136eEBFd](https://etherscan.io/address/0xfc3cbed6a3476f7616cc70f078397700136eebfd)
@@ -48,6 +53,10 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 - Refunder: [0x780c98cbb0cc21d6617c05332bd5cf6f847c71c2](https://etherscan.io/address/0x780c98cbb0cc21d6617c05332bd5cf6f847c71c2)
 - PollCreator: [0xBf824EDb6b94D9B52d972d5B25bCc19b4e6E3F3C](https://etherscan.io/address/0xbf824edb6b94d9b52d972d5b25bcc19b4e6e3f3c)
 - MerkleSnapshot: [0x24ebEd82c681f435E944BEEbFAEEAaE443D08438](https://etherscan.io/address/0x24ebed82c681f435e944beebfaeeaae443d08438)
+- L1Escrow: [0xAc60c5260249cE0a8FbbB5D100688f37a64f06Ea](https://etherscan.io/address/0xAc60c5260249cE0a8FbbB5D100688f37a64f06Ea)
+- L1LPTDataCache: [0xB0D25B02fc24f13bC0CD901670fE79D4f3a09787](https://etherscan.io/address/0xB0D25B02fc24f13bC0CD901670fE79D4f3a09787)
+- L1LPTGateway: [0xD82c27966eBB293b2D8646D8eAcb293BC260698E](https://etherscan.io/address/0xD82c27966eBB293b2D8646D8eAcb293BC260698E)
+- L1Migrator: [0xC3ee6a18ACB2975E873fe106cB0E7132145616De](https://etherscan.io/address/0xC3ee6a18ACB2975E873fe106cB0E7132145616De)
 
 ## Arbitrum Rinkeby (Confluence)
 - BondingManager (Proxy): [0xe42229d764F673EB3FB8B9a56016C2a4DA45ffd7](https://testnet.arbiscan.io/address/0xe42229d764F673EB3FB8B9a56016C2a4DA45ffd7)
