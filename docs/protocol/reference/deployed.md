@@ -11,6 +11,23 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 
 # Current
 
+## Arbitrum Mainnet (Confluence)
+- Governor: [0xD9dEd6f9959176F0A04dcf88a0d2306178A736a6](https://arbiscan.io/address/0xD9dEd6f9959176F0A04dcf88a0d2306178A736a6)
+- Controller: [0xD8E8328501E9645d16Cf49539efC04f734606ee4](https://arbiscan.io/address/0xD8E8328501E9645d16Cf49539efC04f734606ee4)
+- LivepeerToken: [0x289ba1701C2F088cf0faf8B3705246331cB8A839](https://arbiscan.io/address/0x289ba1701C2F088cf0faf8B3705246331cB8A839)
+- Minter: [0x4969dcCF5186e1c49411638fc8A2a020Fdab752E](https://arbiscan.io/address/0x4969dcCF5186e1c49411638fc8A2a020Fdab752E)
+- BondingManager (Proxy): [0x35Bcf3c30594191d53231E4FF333E8A770453e40](https://arbiscan.io/address/0x35Bcf3c30594191d53231E4FF333E8A770453e40)
+- BondingManager (Target): [0xe479B9fbA2Cd65f822f451fC8C145c663B995CE6](https://arbiscan.io/address/0xe479B9fbA2Cd65f822f451fC8C145c663B995CE6)
+- TicketBroker (Proxy): [0xa8bB618B1520E284046F3dFc448851A1Ff26e41B](https://arbiscan.io/address/0xa8bB618B1520E284046F3dFc448851A1Ff26e41B)
+- TicketBroker (Target): [0x7Beb84c52ce96DFd90431FAA97378994a8baa6df](https://arbiscan.io/address/0x7Beb84c52ce96DFd90431FAA97378994a8baa6df#code)
+- RoundsManager (Proxy): [0xdd6f56DcC28D3F5f27084381fE8Df634985cc39f](https://arbiscan.io/address/0xdd6f56DcC28D3F5f27084381fE8Df634985cc39f)
+- RoundsManager (Target): [0x92d804Ed49D92438aEA6fe552BD9163aacb7E841](https://arbiscan.io/address/0x92d804Ed49D92438aEA6fe552BD9163aacb7E841)
+- ServiceRegistry (Proxy): [0xC92d3A360b8f9e083bA64DE15d95Cf8180897431](https://arbiscan.io/address/0xC92d3A360b8f9e083bA64DE15d95Cf8180897431)
+- ServiceRegistry (Target): [0x38093CDca43aeCd7bb474983519A246e93A3b0a7](https://arbiscan.io/address/0x38093CDca43aeCd7bb474983519A246e93A3b0a7)
+- SortedDoublyLL: [0xC45f6918F7Bcac7aBc8fe05302b3cDF39776cdeb](https://arbiscan.io/address/0xC45f6918F7Bcac7aBc8fe05302b3cDF39776cdeb)
+- PollCreator: [0x8bb50806D60c492c0004DAD5D9627DAA2d9732E6](https://arbiscan.io/address/0x8bb50806D60c492c0004DAD5D9627DAA2d9732E6)
+- MerkleSnapshot: [0x10736ffaCe687658F88a46D042631d182C7757f7](https://arbiscan.io/address/0x10736ffaCe687658F88a46D042631d182C7757f7)
+
 ## Ethereum Mainnet
 - Governor: [0xFC3CBed6A3476F7616CC70f078397700136eEBFd](https://etherscan.io/address/0xfc3cbed6a3476f7616cc70f078397700136eebfd)
 - Controller: [0xf96d54e490317c557a967abfa5d6e33006be69b3](https://etherscan.io/address/0xf96d54e490317c557a967abfa5d6e33006be69b3)
