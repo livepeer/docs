@@ -57,6 +57,7 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 - L1LPTDataCache: [0xB0D25B02fc24f13bC0CD901670fE79D4f3a09787](https://etherscan.io/address/0xB0D25B02fc24f13bC0CD901670fE79D4f3a09787)
 - L1LPTGateway: [0xD82c27966eBB293b2D8646D8eAcb293BC260698E](https://etherscan.io/address/0xD82c27966eBB293b2D8646D8eAcb293BC260698E)
 - L1Migrator: [0xC3ee6a18ACB2975E873fe106cB0E7132145616De](https://etherscan.io/address/0xC3ee6a18ACB2975E873fe106cB0E7132145616De)
+- BridgeMinter: [0x8dDDB96CF36AC8860f1DE5C7c4698fd499FAB405](https://etherscan.io/address/0x8dDDB96CF36AC8860f1DE5C7c4698fd499FAB405)
 
 ## Arbitrum Rinkeby (Confluence)
 - BondingManager (Proxy): [0xe42229d764F673EB3FB8B9a56016C2a4DA45ffd7](https://testnet.arbiscan.io/address/0xe42229d764F673EB3FB8B9a56016C2a4DA45ffd7)
