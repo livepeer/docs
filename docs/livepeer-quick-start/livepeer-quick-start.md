@@ -6,7 +6,7 @@ title: Livepeer Quick Start Guide
 
 The following provides information about how to get started with Livepeer. Orchestrators who wish to run a node, transcode, or develop video streaming to integrate with your applications can quickly get up and running:
 
-1. [Install Livepeer](#Instal-Livepeer)
+1. [Install Livepeer](#Install-Livepeer)
 2. Start Transcoding
 3. Run a Node
 
