@@ -8,9 +8,17 @@ sidebar_position: 1
 The Livepeer project aims to deliver a live video streaming network protocol that is fully decentralized, highly scalable, crypto token incentivized, and
 results in a solution which is cheaper to an app developer than using traditional centralized live video solutions. 
 
+### What's new 
+
+- Check out our [latest releases](https://github.com/livepeer/go-livepeer/releases).
+
+- Keep up to date about our roadmap on the [Livepeer Blog](https://medium.com/livepeer-blog),
+
+- Follow us @LivepeerOrg on twitter, and join our [community chat](https://discord.gg/RR4kFAh) on Discord.
+
 ## About Livepeer documentation
 
-The pages that follow contain comprehensive documentation designed for [Orchestrators](/livepeer-quick-start/video-mining-quick-start/choosing-a-role.md) on the Livepeer Ecosystem:
+The pages that follow contain comprehensive documentation designed for [Orchestrators](/livepeer-quick-start/video-mining-quick-start/choosing-a-role.md) on the Livepeer Network:
 
 - [Video Mining](/core-concepts/video-mining-concepts/video-mining-core-concepts.md)
 - [Video Development](/how-to-guides/video-development/video-developers
@@ -18,11 +26,14 @@ The pages that follow contain comprehensive documentation designed for [Orchestr
 
 **Note** Delegators can also benefit from this content, with some information included for you as well.
 
-## New to Livepeer? 
+## Livepeer Quickstart
+Install and get up and running with [Livepeer Quickstart](/livepeer-quick-start/) guide.
 
-**Check out our [Livepeer Primer](https://livepeer.org/primer)**. Once you go through the Primer, you will be able decide how you want to participate in the Livepeer community.
+### New to Livepeer? 
 
-**Learn more about how Livepeer works** check out [Core-Concepts](/core-concepts/core-concepts.md)including detailed high-level information with related topics to familiarize yourself with the Livepeer platform capabilities.
+**Check out** the [Livepeer Primer](https://livepeer.org/primer). Once you go through the Primer, you will be able decide how you want to participate in the Livepeer community.
+
+**Learn more about how Livepeer works**, check out [Core-Concepts](/core-concepts/core-concepts.md) including relevant detailed high-level topics to familiarize yourself more in-depth with the Livepeer platform capabilities.
 
 <!---[Protocol Overview](/protocol/core-concepts/overview).--->
 
@@ -35,9 +46,9 @@ All documentation is editable via [GitHub](https://github.com/livepeer/livepeer-
 
 We frequently update this documentation focusing on continuous improvement and very much appreciate and encourage your participation. You can make suggestions and contribute content to the docs in the following ways:
 
--   **"Edit this page"** links are included at the bottom of a page and bring you to the documentation in our Git repository. 
+-   ***"Edit this page"*** links are included at the bottom of a page and bring you to the documentation in our Git repository. 
 
-***Note*** If this is your first time editing a page, please check out the [contribution guide](/contributing/overview).
+***Note:*** If this is your first time editing a page, please check out the [contribution guide](/contributing/overview).
 
 -  [File an issue](https://github.com/livepeer/docs) for us. To avoid duplicates, we ask that you do a quick search of existing issues to see if any similar issues exist.
 
