@@ -15,12 +15,9 @@ docker pull livepeer/go-livepeer:master
 
 ### Installing a binary pre-release
 
-Binaries are produced from every GitHub commit and download links are available
-in
-[the #builds channel of the Livepeer Discord server](https://discord.gg/drApskX).
+Binaries are produced from every GitHub commit and download links are available in [the #builds channel of the Livepeer Discord server](https://discord.gg/drApskX).
 
-These binaries are produced from go-livepeer's CI process, shown in this
-diagram:
+These binaries are produced from go-livepeer's CI process, shown in this diagram:
 
 ![image](https://user-images.githubusercontent.com/257909/58923612-3709a800-86f5-11e9-838b-6202f296bce8.png)
 

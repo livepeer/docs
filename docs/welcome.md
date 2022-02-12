@@ -5,29 +5,27 @@ sidebar_position: 1
 
 # Welcome to Livepeer!
 
-The Livepeer project aims to deliver a live video streaming network protocol that is fully decentralized, highly scalable, crypto token incentivized, and
-results in a solution which is cheaper to an app developer than using traditional centralized live video solutions. 
+The Livepeer project aims to deliver a live video streaming network protocol that is fully decentralized, highly scalable, crypto token incentivized, and results in a solution which is cheaper to an app developer than using traditional centralized live video solutions. 
 
 ### What's new 
 
 - Check out our [latest releases](https://github.com/livepeer/go-livepeer/releases).
 
-- Keep up to date about our roadmap on the [Livepeer Blog](https://medium.com/livepeer-blog),
+- Keep up to date about our roadmap on the [Livepeer Blog](https://medium.com/livepeer-blog).
 
-- Follow us @LivepeerOrg on twitter, and join our [community chat](https://discord.gg/RR4kFAh) on Discord.
+- Follow us [@LivepeerOrg](https://twitter.com/LivepeerOrg?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor) on twitter, and join our [community chat](https://discord.gg/RR4kFAh) on Discord.
 
 ## About Livepeer documentation
 
-The pages that follow contain comprehensive documentation designed for [Orchestrators](/livepeer-quick-start/video-mining-quick-start/choosing-a-role.md) on the Livepeer Network:
+This site is organized by topics including concepts, tasks, and reference information designed for [Orchestrators](/livepeer-quick-start/video-mining-quick-start/choosing-a-role.md) on the Livepeer Network:
 
-- [Video Mining](/core-concepts/video-mining-concepts/video-mining-core-concepts.md)
-- [Video Development](/how-to-guides/video-development/video-developers
-)
+- [Video Mining](/livepeer-quick-start/video-mining-quick-start/choosing-a-role)
+- [Video Development](/how-to-guides/video-development/video-developers)
 
-**Note** Delegators can also benefit from this content, with some information included for you as well.
+**Note** [Delegators](core-concepts/ecosystem-participants#delegator) can also benefit from content on this site, with some information included for you as well.
 
 ## Livepeer Quickstart
-Install and get up and running with [Livepeer Quickstart](/livepeer-quick-start/) guide.
+Install and get up and running with the [Livepeer Quickstart](/livepeer-quick-start/) guide for Video Miners and Developers.
 
 ### New to Livepeer? 
 
@@ -42,14 +40,13 @@ Install and get up and running with [Livepeer Quickstart](/livepeer-quick-start/
 
 This project is an open-source community effort, so feel free to suggest updates and new topics, add new guides and tutorials, or provide examples wherever you think it might be helpful.
 
-All documentation is editable via [GitHub](https://github.com/livepeer/livepeer-org/tree/master/docs).
-
 We frequently update this documentation focusing on continuous improvement and very much appreciate and encourage your participation. You can make suggestions and contribute content to the docs in the following ways:
 
--   ***"Edit this page"*** links are included at the bottom of a page and bring you to the documentation in our Git repository. 
+> **Note** All documentation is editable via [GitHub](https://github.com/livepeer/livepeer-org/tree/master/docs). If this is your first time editing a page in the Livepeer repo, please check out the [contribution guide](/contributing/overview).
 
-***Note:*** If this is your first time editing a page, please check out the [contribution guide](/contributing/overview).
 
--  [File an issue](https://github.com/livepeer/docs) for us. To avoid duplicates, we ask that you do a quick search of existing issues to see if any similar issues exist.
+- ***"Edit this page"*** links are included at the bottom of a page and bring you to the documentation in our Git repository. 
 
--   Come talk with us in our [Discord](https://discord.gg/uaPhtyrWsF) channel.
+- [File an issue](https://github.com/livepeer/docs) for us. To avoid duplicates, we ask that you do a quick search of existing issues to see if any similar issues exist.
+
+- Come talk with us in our [Discord](https://discord.gg/uaPhtyrWsF) channel.

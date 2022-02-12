@@ -13,7 +13,7 @@ The community is excited to see what you build. For examples of what Livepeer de
 
 - Video Development Support 
 
-If you get stuck introduce yourself
+If you get stuck, introduce yourself
 in the [#broadcasting](https://discord.gg/8Vr6B2qERb) Discord channel and the
 community will be happy to assist.
 

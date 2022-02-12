@@ -5,7 +5,7 @@ sidebar_position: 2
 
 # Choosing a Role
 
-As a video miner, you can take on the role of an orchestrator or transcode*r. A
+As a video miner, you can take on the role of an orchestrator or transcoder. A
 full description of the roles and responsibilities can be found
 [here](/video-miners/core-concepts/roles-and-responsibilities).
 
