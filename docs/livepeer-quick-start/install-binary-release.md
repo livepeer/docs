@@ -1,6 +1,8 @@
 ---
 sidebar_position: 2
+title: Install using a binary
 ---
+
 
 # Install using a Binary Release
 

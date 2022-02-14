@@ -56,8 +56,8 @@ At Livepeer we support:
 ## Installation Workflow
 
 Depending on your workflow, you may prefer to install Livepeer:
-- [using a binary release](/livepeer-quick-start/binary-release) or
-- [Docker image](/livepeer-quick-start/docker).
+- [using a binary release](/livepeer-quick-start/install-binary-release) or
+- [Docker image](/livepeer-quick-start/install-docker).
 
 **Current Release**
 
