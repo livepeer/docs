@@ -1,6 +1,7 @@
 ---
-title: Video Mining Core Concepts
+slug: /video-mining-concepts/core-concepts/video-mining-concepts
 sidebar_position: 1
+title: Video Mining Core Concepts
 ---
 
 Video miners in the Livepeer network provide video transcoding services.

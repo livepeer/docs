@@ -1,4 +1,5 @@
 ---
+slug: /livepeer-quick-start
 sidebar_position: 1
 title: Livepeer Quick Start Guide
 ---
@@ -66,7 +67,7 @@ Before getting started, [Choose a role](/livepeer-quick-start/video-mining-quick
 
 ## [Start Developing](/livepeer-quick-start/#start-developing)
 
-1. Perform a [developer install](/livepeer-quick-start/developing-quick-start/installing-for-development) of the node software 
+1. Perform a [developer install](/livepeer-quick-start/develop-quick-start/install-development) of the node software 
 2. Connect an orchestrator with separate transcoders
 3. Benchmark transcoding
 4. Set transcoding session limits

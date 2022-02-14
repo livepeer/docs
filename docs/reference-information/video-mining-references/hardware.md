@@ -1,4 +1,5 @@
 ---
+slug: /video-mining-references/reference-information/hardware
 title: Hardware Requirements
 sidebar_position: 2
 ---

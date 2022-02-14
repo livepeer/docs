@@ -1,4 +1,6 @@
 ---
+slug: /livepeer-quick-start/develop-quick-start/install-development
+title: Install for Development
 sidebar_position: 2
 ---
 

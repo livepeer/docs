@@ -1,5 +1,8 @@
 ---
+slug: /video-miners/core-concepts/roles-and-responsibilities
+sidebar_position: 2
 title: Roles and Responsibilities
+
 ---
 
 # Roles and Responsibilities

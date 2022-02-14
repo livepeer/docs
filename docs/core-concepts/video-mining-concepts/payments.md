@@ -1,6 +1,7 @@
 ---
+slug: /video-miners/core-concepts/payments
+sidebar_position: 8
 title: Payments
-sidebar_position: 3
 ---
 
 # Payments

@@ -1,6 +1,7 @@
 ---
+slug: /video-development/how-to-guides/livepeer-development-guides
 title: Livepeer Development Guides
-sidebar_position: 2
+sidebar_position: 
 ---
 
 Current Video Development Guides include:

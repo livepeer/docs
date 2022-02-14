@@ -1,4 +1,6 @@
 ---
+slug: /video-mining-concepts/core-concepts/selection
+sidebar_position: 5
 title: Selection
 ---
 

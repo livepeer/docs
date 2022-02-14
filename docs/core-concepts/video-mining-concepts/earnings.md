@@ -1,4 +1,6 @@
 ---
+slug: /video-mining-concepts/core-concepts/earnings
+sidebar_position: 6
 title: Earnings
 ---
 
@@ -8,7 +10,7 @@ Orchestrators are compensated for video transcoding services with rewards
 denominated in LPT and fees denominated in ETH.
 
 Note that transcoders participating in
-[pools](/video-miners/core-concepts/pools) are compensated based on the
+[pools](/video-mining-concepts/core-concepts/pools) are compensated based on the
 rules of the particular pool.
 
 ## Rewards

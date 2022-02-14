@@ -1,5 +1,6 @@
 ---
-sidebar_position: 2
+slug: /livepeer-quick-start/develop-quick-start
+sidebar_position: 1
 title: Developing with Livepeer
 ---
 

@@ -1,6 +1,7 @@
 ---
-title: Protocol References
+slug: /protocol-references/reference-information
 sidebar_position: 1
+title: Protocol References
 ---
 
 This section contains protocol references:

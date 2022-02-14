@@ -1,21 +1,62 @@
 ---
-title: Video Development
-sidebar_position: 3
+slug: /video-development/how-to-guides/video-development
+title: About Livepeer Development
+sidebar_position: 1
 ---
 
-# Video Development
+This section of the documentation is for developers who want to integrate the public network's live video transcoding service into an application or video workflow. 
 
-The getting started tutorial will walk you through the steps required to send a livestream into the Livepeer public network for transcoding and play it back inside your application.
+## Examples
+The community is excited to see what you build. For examples of what Livepeer developers can create, *See...*
 
-> **Note:** for the sake of this guide, we'll be livestreaming using the Rinkeby test network. You can think of this network like a sandbox environment for testing your livestreams. 
+- [Video Development Use Cases](/video-developers/use-cases-library) for Livepeer.
 
-If you're livestreaming in a production setting make sure to change the network to `mainnet`. 
+- Current Video Development Guides include:
 
-Learn more about supported networks, including Ethereum mainnet and Rinkeby [here](/livepeer-quick-start/connect-to-ethereum#supported-networks).
+- [Configure your broadcasting preferences](/video-developers/how-to-guides/broadcasting-preferences)
+- [Integrate with a CDN](/video-developers/how-to-guides/cdn-integration)
+- [Withdraw your broadcaster funds](/video-developers/how-to-guides/withdrawing-broadcaster-funds)
+- [Enable verification (experimental)](/video-developers/how-to-guides/verification)
+- [Troubleshoot Live Peer](/video-developers/how-to-guides/troubleshooting)
 
 
-## Pre-requisites
+- Video Development Support 
 
-- Make sure you have `livepeer` [installed](livepeer-quick-start/developing-quick-start/installing-for-development)
-- Make sure you have access to an
-  [Ethereum JSON-RPC URL](/livepeer-quick-start/connect-to-ethereum)
+If you get stuck, introduce yourself
+in the [#broadcasting](https://discord.gg/8Vr6B2qERb) Discord channel and the
+community will be happy to assist.
+
+**Note** These docs are geared towards developers interested in building services and applications using the open and permissionless Livepeer public network directly. **This requires self-hosting client software and managing your own crypto wallet for payments.** 
+
+**Note** If you prefer a serverless hosted service with API access to the Livepeer network and traditional payment rails,  check out [Livepeer.com](https://livepeer.com).
+
+<!-- ## Quick Access
+
+<DocsCardsContainer>
+  <DocsCard
+    key={1}
+    title="Getting Started"
+    description="A hands-on introduction to Livepeer for video developers. Recommended for all
+new users."
+    href="/docs/video-developers/getting-started/overview"
+  />
+  <DocsCard
+    key={2}
+    title="How-to Guides"
+    description="Practical step-by-step guides to help you achieve a specific goal."
+    href="/docs/video-developers/how-to-guides/overview"
+  />
+  <DocsCard
+    key={3}
+    title="Core Concepts"
+    description="Big-picture explanations of higher-level Livepeer development concepts."
+    href="/docs/video-developers/core-concepts/overview"
+  />
+  <DocsCard
+    key={4}
+    title="Reference"
+    description="Covers tools, components, commands and resources. Most useful when you need detailed information about Livepeer broadcasting APIs."
+    href="/docs/video-developers/reference/overview"
+  />
+
+</DocsCardsContainer> -->

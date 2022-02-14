@@ -1,4 +1,5 @@
 ---
+slug: /video-developer-references/reference-information/api
 title: Subgraph API Overview
 sidebar_position: 2
 ---

@@ -1,4 +1,5 @@
 ---
+slug: /governance
 title: Protocol Governance
 sidebar_position: 2
 ---

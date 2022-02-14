@@ -5,9 +5,9 @@ sidebar_position: 2
 ---
 
 
-## About the Livepeer Protocol 
+This covers detailed highlevel information for building with the Livepeer protocol for better understanding of how it works, and with links to API reference documentation for interacting it.
 
-Includes detailed highlevel information for building with the Livepeer protocol. It explains the Livepeer protocol providing you with an understanding of how it works, and with links to API reference documentation for interacting it.
+[Protocol References](reference-information/protocol-references)
 
 
 

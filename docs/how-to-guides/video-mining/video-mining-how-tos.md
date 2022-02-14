@@ -1,4 +1,5 @@
 ---
+slug: /video-mining/how-to-guides
 title: Video Mining How Tos
 sidebar_position: 1
 ---
