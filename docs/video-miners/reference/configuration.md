@@ -85,13 +85,13 @@ ethPassword: Password for existing Eth account address. No default
 
 ethKeystorePath: Path for the Eth Key. No default
 
-ethOrchAddr: ETH address of an on-chain registered orchestrator. No default
+ethOrchAddr: address of an on-chain registered orchestrator. No default
 
-ethUrl: Ethereum node JSON-RPC URL. No default
+ethUrl: EVM-compatible chain node JSON-RPC URL. No default
 
-txTimeout: Amount of time (ms) to wait for an Ethereum transaction to confirm before timing out. Default `300000 (5 mins)`
+txTimeout: Amount of time (ms) to wait for a transaction to confirm before timing out. Default `300000 (5 mins)`
 
-maxTxReplacements: Number of times to automatically replace pending Ethereum transactions. Default `1`
+maxTxReplacements: Number of times to automatically replace pending transactions. Default `1`
 
 gasLimit: Gas limit for ETH transaction. Default `0`
 
