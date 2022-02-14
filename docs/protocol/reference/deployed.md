@@ -51,6 +51,7 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 - L2LPTDataCache: [0xd348394B6Fa2F698eC6A26352390663047735388](https://testnet.arbiscan.io/address/0xd348394B6Fa2F698eC6A26352390663047735388)
 - L2LPTGateway: [0x7e0ba3791B23D0D577Cf8D09C4FDd5821222208C](https://testnet.arbiscan.io/address/0x7e0ba3791b23d0d577cf8d09c4fdd5821222208c)
 - L2Migrator: [0xe2f931931B8E04a01c99a2DeBA44A9FF782F688a](https://testnet.arbiscan.io/address/0xe2f931931B8E04a01c99a2DeBA44A9FF782F688a)
+- L2Migrator (Broadcaster Migrations): [0x4b42a3CA60dd41F0E5a5eD8cf13F4e5a866EcD99](https://testnet.arbiscan.io/address/0x4b42a3CA60dd41F0E5a5eD8cf13F4e5a866EcD99)
 
 ## Ethereum Rinkeby (Confluence)
 - BondingManager (Proxy): [0xC40df4db2f99e7e235780A93B192F1a934f0c45b](https://rinkeby.etherscan.io/address/0xC40df4db2f99e7e235780A93B192F1a934f0c45b)
@@ -72,6 +73,7 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 - L1LPTDataCache: [0xD218f6eA99907C2EDB889A151DF326aCd0F70D88](https://rinkeby.etherscan.io/address/0xD218f6eA99907C2EDB889A151DF326aCd0F70D88)
 - L1LPTGateway: [0x831C51Cd8A38C3E42D98Acd77F06BF537D29800e](https://rinkeby.etherscan.io/address/0x831C51Cd8A38C3E42D98Acd77F06BF537D29800e)
 - L1Migrator: [0x4756766C61e0755db5963Ab3505280Ddf1B36cD8](https://rinkeby.etherscan.io/address/0x4756766C61e0755db5963Ab3505280Ddf1B36cD8)
+- L1Migrator (Broadcaster Migrations): [0x743b8469e5f54cD765F1954604cD4dfA67b64bF6](https://rinkeby.etherscan.io/address/0x743b8469e5f54cD765F1954604cD4dfA67b64bF6)
 
 # Historical (DEPRECATED - FOR REFERENCE ONLY)
 
