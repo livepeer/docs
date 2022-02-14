@@ -1,6 +1,6 @@
 ---
 title: Ecosystem Participants
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 # Ecosystem Participants

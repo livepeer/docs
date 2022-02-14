@@ -1,12 +1,19 @@
 ---
 sidebar_position: 2
-title: Install using a binary
+title: Install using a binary release
 ---
 
 
-# Install using a Binary Release
+As a video miner you will;
 
-Run the appropriate commands for your operating system; then, using the same directory, follow the steps to [configure Livepeer](/installation/configuring-livepeer).
+1. **Run the appropriate commands** for your operating system as listed here below 
+
+2. **[configure Livepeer](/livepeer-quick-start/configuring-livepeer)** using the same directory
+
+## Instructions by operating system
+- Darwin (macOS)
+- Linux
+- Windows
 
 ### Darwin (macOS)
 
@@ -56,7 +63,8 @@ mv livepeer-windows-amd64/* /usr/local/bin/
 ```
 A community created Bash script to update Livepeer is [available on the forum](https://forum.livepeer.org/t/bash-script-to-update-livepeer/1513).
 
-## Third-party packages
+### Third-party packages
+
 Packages for different Linux distributions are maintained by Livepeer community members. Before using these packages, please verify that they have been updated to use the [latest builds of go-livepeer](https://github.com/livepeer/go-livepeer/releases). This list will be updated as a best-effort, but we cannot guarantee if individual packages are up-to-date or verify their integrity.
 
 In the future, Livepeer core contributors may publish official packages for the distributions below.

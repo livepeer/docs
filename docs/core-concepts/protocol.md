@@ -1,10 +1,15 @@
 ---
+slug: /core-concepts/protocol
 title: Livepeer Protocol
-sidebar_position: 1
+sidebar_position: 2
 ---
 
-This section of the documentation provides an overview of the Livepeer protocol
-along with API documentation for interacting it.
+
+## About the Livepeer Protocol 
+
+Includes detailed highlevel information for building with the Livepeer protocol. It explains the Livepeer protocol providing you with an understanding of how it works, and with links to API reference documentation for interacting it.
+
+
 
 <!-- ## Quick Access
 

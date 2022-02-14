@@ -3,16 +3,24 @@ sidebar_position: 5
 title: Configure Livepeer
 ---
 
-# Livepeer configuration options
+# Set your Livepeer configuration options
 
-You can set your `livepeer` configuration using one of the following: 
+You can set your `livepeer` configuration using one of the following:
 
 - command-line flags 
 - environment variables
-- a config file as described below.
+- your config file -- as described below
 
-For a list of all configuration options, see the reference
-[here](/reference-information/video-mining-references/configuration).
+**Important** It is important to note that if you use a config file and also supply environment variables or command-line flags, the environment variables and flags will override the values
+in the config file.
+
+### Configuration Options
+`livepeer` has a number of configurable options.
+
+For an indepth list of 
+[Configuration options](/reference-information/video-mining-references/configuration)
+
+
 
 ## Configure Livepeer using command-line flags
 
@@ -55,6 +63,4 @@ ethUrl https://mainnet.infura.io/v3/<PROJECT_ID>
 livepeer -config livepeer.conf
 ```
 
-**Important: If you use a config file and also supply environment variables or
-command-line flags, the environment variables and flags will override the values
-in the config file.**
+

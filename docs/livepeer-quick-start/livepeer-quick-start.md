@@ -5,23 +5,16 @@ title: Livepeer Quick Start Guide
 
 Orchestrators who wish to run a node, provide transcoding services, or develop video streaming to integrate with your applications can quickly get up and running in just a few steps:
 
-1.	[Install Livepeer](/livepeer-quick-start/#installation-workflow)
-2.	[Start Video Mining](/livepeer-quick-start/#start-video-mining)
-	
-	Transcoding or Running a Node as an Orchestrator, 
+1. Check the specified requirements and pre-requisites  
+2. Follow the Installation workflow for 
+> - [video miners](/livepeer-quick-start/#start-video-mining)
+> - [developers](/livepeer-quick-start/#start-developing)
 
-	or 
-	
-	[Start Developing](/livepeer-quick-start/#start-developing)
-
->**Note** Further information about Livepeer capabilities can be found in [Core Concepts](/core-concepts/core-concepts.md). 
-
-
-## Requirements and Prerequisites
-
-At Livepeer we support:
+>**Recommendations** If you are new to Livepeer, you can familiarize yourself futher about our platform capabilities highlighted in [Core Concepts](/core-concepts/core-concepts.md). 
 
 ### Technical Requirements
+
+At Livepeer we support:
 
 **Operating Systems** Linux, Darwin (macOS), and Windows
 
@@ -33,51 +26,45 @@ At Livepeer we support:
 **Network [Bandwidth](/reference-information/video-mining-references/bandwidth)**
 
 
-
 ### What you need to know
-
-**Video Miners, Transcoders, Developers**
 - working knowledge of a command line interface
 		 `wget` is recommended
 		 `cURL` alternatively can be used
-
-- working with a Binary and/or Docker
+- working with a Binary and/or Docker installation
 - familiary with networking concepts
 - access to an Ethereum network	
 
 **Developers**
-
-	- Go language
-	- Git
-	- building from source and/or
-	- building from Docker	
-
+- Go language
+- Git
+- building from source and/or
+- building from Docker	
 
 ## Installation Workflow
 
-Depending on your workflow, you may prefer to install Livepeer:
-- [using a binary release](/livepeer-quick-start/install-binary-release) or
-- [Docker image](/livepeer-quick-start/install-docker).
+**Current Releases** for your operating system can be found in our Github repository on the [releases page](https://github.com/livepeer/go-livepeer/releases).
 
-**Current Release**
+1. Depending on your workflow, instructions are provided so that you can install Livepeer:
+> * [using a binary release](/livepeer-quick-start/install-binary-release), found on our github release page, or
+> * [Docker image](/livepeer-quick-start/install-docker), found in our docker hub repo
 
-Find the latest release for your platform on the [releases page](https://github.com/livepeer/go-livepeer/releases).
+> **Developers** have the option to follow instructions on how to perform a [developer install](/livepeer-quick-start/developing-quick-start/installing-for-development)
 
 
-## Start Video Mining
+## [Start Video Mining](/livepeer-quick-start/video-mining-quick-start/)
 
 Before getting started, [Choose a role](/livepeer-quick-start/video-mining-quick-start/choosing-a-role) as an Orchestrator or Transcoder.
 
 1. Install the node software
-	- Docker or 
-	- Binary
+	- [Docker](/livepeer-quick-start/install-docker) or 
+	- [Binary](/livepeer-quick-start/install-binary-release)
 2. Connect to an Ethereum network
 3. Activate on the network
 4. Test to ensure they can receive work on the network
 5. Call reward to distribute LPT rewards
 
 
-## Start Developing
+## [Start Developing](/livepeer-quick-start/#start-developing)
 
 1. Perform a [developer install](/livepeer-quick-start/developing-quick-start/installing-for-development) of the node software 
 2. Connect an orchestrator with separate transcoders
