@@ -1,5 +1,4 @@
 ---
-slug: /contributors
 title: Contribution Guide
 sidebar_position: 1
 ---

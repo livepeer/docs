@@ -1,4 +1,5 @@
 ---
+slug: /livepeer-quick-start/configuring-livepeer
 sidebar_position: 5
 title: Configure Livepeer
 ---

@@ -1,5 +1,4 @@
 ---
-slug: /contributors/git
 title: Git and GitHub
 sidebar_position: 1
 ---
