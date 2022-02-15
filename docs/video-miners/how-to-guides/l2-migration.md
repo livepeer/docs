@@ -99,7 +99,7 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     
     If you're running on the same machine as your mainnet Orchestrator, you may encounter an error such as `expecting chainID of 4, but got 421611. Did you change networks without changing network name or datadir`. This is because your testnet setup is trying to access the same `.lpData` that it used for mainnet, and it's finding a conflict on `chainId`. To fix this, specify a new data directory using the `-datadir` flag when you start your Orchestrator. Specify only the directory, not the file.
 
-    Additionally, you may need to copy your keystore to `/.lpData/keystore/arbitrum-one-< mainnet / rinkeby >`.
+    Additionally, you may need to copy your keystore to `/.lpData/arbitrum-one-< mainnet / rinkeby >/keystore`.
 
     ```bash
     livepeer \
