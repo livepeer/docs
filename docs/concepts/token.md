@@ -1,5 +1,4 @@
 ---
-slug: /core-concepts/token
 title: Livepeer Token
 sidebar_position: 4
 ---

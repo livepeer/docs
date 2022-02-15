@@ -1,5 +1,4 @@
 ---
-slug: /core-concepts/about-livepeer-installation
 title: About Installing Livepeer
 sidebar_position: 1
 ---

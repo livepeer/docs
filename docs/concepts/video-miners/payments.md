@@ -1,5 +1,4 @@
 ---
-slug: /video-miners/core-concepts/payments
 title: Payments
 sidebar_position: 8
 ---

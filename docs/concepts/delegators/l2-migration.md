@@ -1,5 +1,4 @@
 ---
-slug: /core-concepts/delegators/l2-migration
 title: One-time Migration to Arbitrum
 sidebar_position: 1
 ---

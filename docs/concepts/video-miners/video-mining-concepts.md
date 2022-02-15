@@ -1,5 +1,4 @@
 ---
-slug: /core-concepts/video-mining-concepts
 title: Video Mining Core Concepts
 sidebar_position: 1
 ---

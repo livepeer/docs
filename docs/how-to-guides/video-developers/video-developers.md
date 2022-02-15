@@ -1,6 +1,5 @@
 ---
-slug: /video-development/how-to-guides/video-development
-title: About Livepeer Development
+title: About Livepeer Video Development
 sidebar_position: 1
 ---
 

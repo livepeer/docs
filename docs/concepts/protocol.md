@@ -1,5 +1,4 @@
 ---
-slug: /core-concepts/protocol
 title: Livepeer Protocol
 sidebar_position: 2
 ---

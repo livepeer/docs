@@ -1,5 +1,4 @@
 ---
-slug: /video-mining-concepts/core-concepts/earnings
 title: Earnings
 sidebar_position: 6
 ---

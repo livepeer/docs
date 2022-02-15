@@ -1,5 +1,4 @@
 ---
-slug: /video-miners/core-concepts/dual-mining
 title: Dual Mining
 sidebar_position: 7
 ---

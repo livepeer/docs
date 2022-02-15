@@ -1,5 +1,4 @@
 ---
-slug: /core-concepts/video-mining-concepts/pools
 title: Transcoding Pools
 sidebar_position: 4
 ---
