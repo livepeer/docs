@@ -31,7 +31,7 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 - L2LPTDataCache: [0xd78b6bD09cd28A83cFb21aFa0DA95c685A6bb0B1](https://arbiscan.io/address/0xd78b6bD09cd28A83cFb21aFa0DA95c685A6bb0B1)
 - L2LPTGateway: [0x6D2457a4ad276000A615295f7A80F79E48CcD318](https://arbiscan.io/address/0x6D2457a4ad276000A615295f7A80F79E48CcD318)
 - L2Migrator (Proxy): [0x148D5b6B4df9530c7C76A810bd1Cdf69EC4c2085](https://arbiscan.io/address/0x148D5b6B4df9530c7C76A810bd1Cdf69EC4c2085)
-- L2Migrator (Target): [0x4F59b39e2ea628fe8371BDfd51B063319339c7EE](https://arbiscan.io/address/0x4F59b39e2ea628fe8371BDfd51B063319339c7EE)
+- L2Migrator (Target): [0x93BB030735747708b4D33093A98d4c804Cd6B58C](https://arbiscan.io/address/0x93BB030735747708b4D33093A98d4c804Cd6B58C)
 
 ## Ethereum Mainnet
 - Governor: [0xFC3CBed6A3476F7616CC70f078397700136eEBFd](https://etherscan.io/address/0xfc3cbed6a3476f7616cc70f078397700136eebfd)
