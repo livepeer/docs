@@ -127,11 +127,11 @@ Once you have your orchestrator running, you can activate using `livepeer_cli`.
    Enter block reward cut percentage (current=0 default=10) - >
    ```
 
-4. Set the percentage of ETH fees that you will share with your delegators (the
-   rest you will keep):
+4. Set the percentage of ETH fees that you will keep (the rest will be shared
+   with your delegators):
 
    ```bash
-   Enter fee share percentage (current=0 default=5) - >
+   Enter fee cut percentage (current=100 default=95) - >
    ```
 
 5. Set the number of pixels in a single unit of work you will charge a price
