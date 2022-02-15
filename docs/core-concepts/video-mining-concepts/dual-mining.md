@@ -1,7 +1,7 @@
 ---
 slug: /video-miners/core-concepts/dual-mining
-sidebar_position: 7
 title: Dual Mining
+sidebar_position: 7
 ---
 
 # Dual Mining

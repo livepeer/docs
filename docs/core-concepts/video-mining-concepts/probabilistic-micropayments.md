@@ -1,4 +1,5 @@
 ---
+slug: /core-concepts/video-mining-concepts/probablistic-micropayments
 title: Probabilistic Micropayments
 sidebar_position: 4
 ---

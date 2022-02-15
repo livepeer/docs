@@ -1,4 +1,5 @@
 ---
+slug: /core-concepts/video-development-concepts/
 title: Video Development Core Concepts
 sidebar_position: 1
 ---

@@ -1,4 +1,5 @@
 ---
+slug: /contributors/markdown
 title: Markdown
 sidebar_position: 2
 ---

@@ -1,7 +1,7 @@
 ---
 slug: /contributors
-sidebar_position: 1
 title: Contribution Guide
+sidebar_position: 1
 ---
 
 Welcome to the Livepeer Docs Contribution Guide!

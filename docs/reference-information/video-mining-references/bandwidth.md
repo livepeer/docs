@@ -1,4 +1,5 @@
 ---
+slug: /video-mining-references/reference-information/bandwidth
 title: Bandwidth Requirements
 sidebar_position: 3
 ---

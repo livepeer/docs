@@ -1,7 +1,7 @@
 ---
-slug: /video-mining-concepts/core-concepts/architecture
-side bar position: 3
+slug: /core-concepts/video-mining-concepts/architecture
 title: Video Miner Architecture
+side bar position: 3
 ---
 
 # Video Miner Architecture

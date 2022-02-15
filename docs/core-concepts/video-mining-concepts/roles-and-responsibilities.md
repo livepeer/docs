@@ -1,8 +1,7 @@
 ---
-slug: /video-miners/core-concepts/roles-and-responsibilities
-sidebar_position: 2
+slug: /core-concepts/video-mining-concepts/roles-and-responsibilities
 title: Roles and Responsibilities
-
+sidebar_position: 2
 ---
 
 # Roles and Responsibilities
@@ -42,7 +41,7 @@ itself, but also has the option of outsourcing transcoding to one or many
 separate transcoders similar to how PoW mining pools outsource PoW hashing to
 one or many separate miners. Orchestrators that outsource transcoding to one or
 many separate transcoders are commonly referred to as
-[transcoding pools](/video-miners/core-concepts/pools).
+[transcoding pools](core-concepts/video-mining-concepts/pools).
 
 ## Transcoding
 

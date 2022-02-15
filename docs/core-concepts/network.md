@@ -1,7 +1,9 @@
 ---
+slug: /core-concepts/network
 title: The Livepeer Network
 sidebar_position: 5
 ---
+
 
 # The Livepeer Network
 

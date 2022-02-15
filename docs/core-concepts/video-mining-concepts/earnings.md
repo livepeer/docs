@@ -1,7 +1,7 @@
 ---
 slug: /video-mining-concepts/core-concepts/earnings
-sidebar_position: 6
 title: Earnings
+sidebar_position: 6
 ---
 
 # Earnings

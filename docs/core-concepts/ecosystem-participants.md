@@ -1,4 +1,5 @@
 ---
+slug: /core-concepts/ecosystem-participants
 title: Ecosystem Participants
 sidebar_position: 3
 ---

@@ -1,4 +1,5 @@
 ---
+slug: /core-concepts/lpms
 title: Livepeer Media Server
 sidebar_position: 4
 ---
