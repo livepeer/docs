@@ -83,9 +83,9 @@ Building `livepeer` requires Go. Follow the
    Set the `BUILD_TAGS` variable to enable mainnet support:
 
    ```bash
-   export BUILD_TAGS=arbitrum-one-mainnet
+   export BUILD_TAGS=mainnet
    # To build with support for only development networks and the Rinkeby test network
-   # export BUILD_TAGS=arbitrum-one-rinkeby
+   # export BUILD_TAGS=rinkeby
    # To build with support for only development networks
    # export BUILD_TAGS=dev
    ```
