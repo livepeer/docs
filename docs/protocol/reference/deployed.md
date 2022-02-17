@@ -15,7 +15,7 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 - Governor: [0xD9dEd6f9959176F0A04dcf88a0d2306178A736a6](https://arbiscan.io/address/0xD9dEd6f9959176F0A04dcf88a0d2306178A736a6)
 - Controller: [0xD8E8328501E9645d16Cf49539efC04f734606ee4](https://arbiscan.io/address/0xD8E8328501E9645d16Cf49539efC04f734606ee4)
 - LivepeerToken: [0x289ba1701C2F088cf0faf8B3705246331cB8A839](https://arbiscan.io/address/0x289ba1701C2F088cf0faf8B3705246331cB8A839)
-- Minter: [0x4969dcCF5186e1c49411638fc8A2a020Fdab752E](https://arbiscan.io/address/0x4969dcCF5186e1c49411638fc8A2a020Fdab752E)
+- Minter: [0xc20DE37170B45774e6CD3d2304017fc962f27252](https://arbiscan.io/address/0xc20DE37170B45774e6CD3d2304017fc962f27252)
 - BondingManager (Proxy): [0x35Bcf3c30594191d53231E4FF333E8A770453e40](https://arbiscan.io/address/0x35Bcf3c30594191d53231E4FF333E8A770453e40)
 - BondingManager (Target): [0xe479B9fbA2Cd65f822f451fC8C145c663B995CE6](https://arbiscan.io/address/0xe479B9fbA2Cd65f822f451fC8C145c663B995CE6)
 - TicketBroker (Proxy): [0xa8bB618B1520E284046F3dFc448851A1Ff26e41B](https://arbiscan.io/address/0xa8bB618B1520E284046F3dFc448851A1Ff26e41B)
@@ -103,6 +103,10 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 - L1Migrator (Broadcaster Migrations): [0x743b8469e5f54cD765F1954604cD4dfA67b64bF6](https://rinkeby.etherscan.io/address/0x743b8469e5f54cD765F1954604cD4dfA67b64bF6)
 
 # Historical (DEPRECATED - FOR REFERENCE ONLY)
+
+## Arbitrum Mainnet (Confluence)
+- Minter
+  - V1: [0x4969dcCF5186e1c49411638fc8A2a020Fdab752E](https://arbiscan.io/address/0x4969dcCF5186e1c49411638fc8A2a020Fdab752E)
 
 ## Ethereum Mainnet
 - LivepeerVerifier
