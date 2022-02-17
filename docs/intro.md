@@ -10,30 +10,40 @@ The Livepeer project aims to deliver a live video streaming network protocol tha
 
 This site is organized by topics including concepts, tasks, and reference information designed for [Orchestrators](/livepeer-quick-start/video-mining-quick-start/choosing-a-role.md) on the Livepeer Network including:
 
-- [Video Miners](/livepeer-quick-start/video-mining-quick-start/choosing-a-role)
-- [Video Developers](/how-to-guides/video-development/video-developers)
+- [Video Miners](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners), including [Transcoders](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
+- [Video Developers](/video-developers/overview)
 
-**Note** [Delegators](core-concepts/ecosystem-participants#delegator) can also benefit from content on this site, with some information included for you as well.
+**Note** [Delegators](/protocol/core-concepts/ecosystem-participants#delegator) can also benefit from content on this site, with some information included for you as well.
 
-### What's new 
+### What's new
 
-- Check out our [latest releases](https://github.com/livepeer/go-livepeer/releases).
-- Keep up to date about our roadmap on the [Livepeer Blog](https://medium.com/livepeer-blog).
-- Follow us [@LivepeerOrg](https://twitter.com/LivepeerOrg?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor) on twitter, and join our [community chat](https://discord.gg/RR4kFAh) on Discord.
+**[Livepeer Network Upgrade](https://medium.com/livepeer-blog/the-confluence-upgrade-is-live-3b6b342ea71e)**
+Livepeer now offers faster transactions and lower costs for Livepeer broadcasters, orchestrators, and delegators.
+
+**[How to Migrate to Arbitrum](https://docs.livepeer.org/video-miners/how-to-guides/l2-migration)** 
+Instructions for One-time Migration to Arbitrum (L2)
+
+**[Latest Releases](https://github.com/livepeer/go-livepeer/releases)** We strongly encourage all node operators to upgrade to this release by February 21 so you can connect to Arbitrum Mainnet after the LIP-73 block.
+
+**Follow our roadmap** on the [Livepeer Blog](https://medium.com/livepeer-blog)
+
+**Follow us** 
+- [@LivepeerOrg](https://twitter.com/LivepeerOrg?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor) on twitter 
+- join our [community chat](https://discord.gg/RR4kFAh) on Discord.
 
 ## Livepeer Quickstart
-Install and get up and running with the [Livepeer Quickstart](/livepeer-quick-start/) guide for Video Miners, Transcoders, and additional information for Developers.
+Install and get up and running with the [Livepeer Quickstart](/installation/livepeer-quickstart) guide for Video Miners, Transcoders, and additional information for Developers.
 
 ### New to Livepeer? 
 
 **Check out** the [Livepeer Primer](https://livepeer.org/primer). Once you go through the Primer, you will be able decide how you want to participate in the Livepeer community.
 
-**Learn more about how Livepeer works**, check out [Core-Concepts](/core-concepts/core-concepts.md) including relevant detailed high-level topics to familiarize yourself more in-depth with the Livepeer platform capabilities.
+**Learn more about how Livepeer works**, check out [Core-Concepts](/protocol/core-concepts/overview) including relevant detailed high-level topics to familiarize yourself more in-depth with the Livepeer platform capabilities.
 
 <!---[Protocol Overview](/protocol/core-concepts/overview).--->
 
 
-## Become a [Contributor](/contributors) 
+## Become a [Contributor](/contributing/overview) 
 
 This project is an open-source, decentralized community effort, so feel free to suggest updates and new topics, add new guides and tutorials, or provide examples wherever you think it might be helpful.
 
