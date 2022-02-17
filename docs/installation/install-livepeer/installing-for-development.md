@@ -33,7 +33,7 @@ Building `livepeer` requires some system dependencies.
 Linux (Ubuntu: 16.04 or 18.04):
 
 ```bash
-apt-get update && apt-get -y install build-essential pkg-config autoconf git curl
+apt-get update && apt-get -y install build-essential pkg-config autoconf git curl protobuf-compiler-grpc golang-goprotobuf-dev
 # To enable transcoding on Nvidia GPUs
 apt-get -y install clang-8 clang-tools-8
 ```
