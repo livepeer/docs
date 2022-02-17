@@ -1,26 +1,50 @@
 ---
 slug: /
-sidebar_position: 1
+title: Welcome
+sidebar_position: 1  
 ---
 
-# Introduction
+# Welcome to Livepeer!
 
-Welcome! The pages that follow contain comprehensive documentation of the
-Livepeer ecosystem. The documentation is split into two parts: Livepeer for
-[video developers](/video-developers/overview) and Livepeer for
-[video miners](/video-miners/overview). If you are new to Livepeer and
-interested in how it works, you might want to check out the
-[Protocol Overview](/protocol/core-concepts/overview).
+The Livepeer project aims to deliver a live video streaming network protocol that is fully decentralized, highly scalable, crypto token incentivized, and results in a solution which is cheaper to an app developer than using traditional centralized live video solutions. 
 
-The documentation is an open-source community effort, so feel free to suggest
-new topics, add new how-to guides, and provide examples wherever you think it
-might be helpful. All documentation is editable via
-[GitHub](https://github.com/livepeer/livepeer-org/tree/master/docs).
+This site is organized by topics including concepts, tasks, and reference information designed for [Orchestrators](/livepeer-quick-start/video-mining-quick-start/choosing-a-role.md) on the Livepeer Network including:
 
-## Something missing? {#something-missing}
+- [Video Miners](/livepeer-quick-start/video-mining-quick-start/choosing-a-role)
+- [Video Developers](/how-to-guides/video-development/video-developers)
 
-We are constantly improving this documentation. Here are a few ways you can make suggestions or contribute to the docs:
+**Note** [Delegators](core-concepts/ecosystem-participants#delegator) can also benefit from content on this site, with some information included for you as well.
 
--   Edit this article using the link at the bottom of the page. If this is your first time editing a page, please check out the [contribution guide](/contributing/overview).
--  [File an issue](https://github.com/livepeer/docs) for us. To avoid duplicates, we ask that you do a quick search of existing issues to see if any similar issues exist.
--   Come talk to us in [Discord](https://discord.gg/uaPhtyrWsF)
+### What's new 
+
+- Check out our [latest releases](https://github.com/livepeer/go-livepeer/releases).
+- Keep up to date about our roadmap on the [Livepeer Blog](https://medium.com/livepeer-blog).
+- Follow us [@LivepeerOrg](https://twitter.com/LivepeerOrg?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor) on twitter, and join our [community chat](https://discord.gg/RR4kFAh) on Discord.
+
+## Livepeer Quickstart
+Install and get up and running with the [Livepeer Quickstart](/livepeer-quick-start/) guide for Video Miners, Transcoders, and additional information for Developers.
+
+### New to Livepeer? 
+
+**Check out** the [Livepeer Primer](https://livepeer.org/primer). Once you go through the Primer, you will be able decide how you want to participate in the Livepeer community.
+
+**Learn more about how Livepeer works**, check out [Core-Concepts](/core-concepts/core-concepts.md) including relevant detailed high-level topics to familiarize yourself more in-depth with the Livepeer platform capabilities.
+
+<!---[Protocol Overview](/protocol/core-concepts/overview).--->
+
+
+## Become a [Contributor](/contributors) 
+
+This project is an open-source, decentralized community effort, so feel free to suggest updates and new topics, add new guides and tutorials, or provide examples wherever you think it might be helpful.
+
+We frequently update this documentation focusing on continuous improvement and very much appreciate and encourage your participation. 
+
+> **Note** All documentation is editable via [GitHub](https://github.com/livepeer/livepeer-org/tree/master/docs). If this is your first time working in the Livepeer repo, please check out the [contribution guide](/contributing/overview) for instructions.
+
+You can make suggestions and contribute content to the docs in the following ways:
+
+- ***"Edit this page"*** links are included at the bottom of each page and bring you to the document stored in our Github repository where you can edit directly in the document.  
+
+- [File an issue](https://github.com/livepeer/docs) for us. To avoid duplicates, we ask that you do a quick search of existing issues to see if any similar ones exist.
+
+- Come talk with us in our [Discord](https://discord.gg/uaPhtyrWsF) channel.
