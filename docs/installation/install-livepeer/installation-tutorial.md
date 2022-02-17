@@ -1,8 +1,11 @@
 ---
 sidebar_position: 1
-title: About Livepeer Installation
+title: Installation Tutorial
 ---
 
+This tutorial walks you through the setup of a Livepeer Orchestrator and earn passive income utilizing your current GPUs for video mining on the Livepeer network.
+
+## About Livepeer Installation
 
 The following covers information to keep in mind as you go through the steps of an installation.
 
@@ -10,10 +13,19 @@ It is based on the following video tutorial [How to set up a Livepeer Orchestrat
 
 **Note** This tutorial is for a Windows machine, from which you should be able to glean the information needed for your implementation.
 
+### Recommendations
 
-### Requirements
+Familiarity with [Livepeer Concepts](/video-miners/core-concepts/overview)
+
+## Requirements
 
 Before you perform an installation, it is important to understand and be able to address the following requirements for your implementation. 
+
+### Installation Workflow
+
+Depending on your workflow, you may prefer to install `livepeer`
+[using a binary release](/installation/install-livepeer/binary-release) or
+a [Docker image](/installation/install-livepeer/docker).
 
 - Nvidia GPU (the only brand of GPU that works on the Livepeer network)
 - Other GPUs and CPUs
