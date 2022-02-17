@@ -107,6 +107,8 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 ## Arbitrum Mainnet (Confluence)
 - Minter
   - V1: [0x4969dcCF5186e1c49411638fc8A2a020Fdab752E](https://arbiscan.io/address/0x4969dcCF5186e1c49411638fc8A2a020Fdab752E)
+- L2Migrator (Target)
+  - V1: [0x4F59b39e2ea628fe8371BDfd51B063319339c7EE](https://arbiscan.io/address/0x4F59b39e2ea628fe8371BDfd51B063319339c7EE)
 
 ## Ethereum Mainnet
 - LivepeerVerifier
