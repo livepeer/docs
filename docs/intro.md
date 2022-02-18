@@ -15,6 +15,12 @@ This site is organized by topics including concepts, tasks, and reference inform
 
 **Note** [Delegators](/protocol/core-concepts/ecosystem-participants#delegator) can also benefit from content on this site, with some information included for you as well.
 
+
+-   Edit this article using the link at the bottom of the page. If this is your first time editing a page, please check out the [contribution guide](/contributing/overview).
+-  [File an issue](https://github.com/livepeer/docs) for us. To avoid duplicates, we ask that you do a quick search of existing issues to see if any similar issues exist.
+-   Come talk to us in [Discord](https://discord.gg/uaPhtyrWsF)
+
+
 ### What's new
 
 **[Livepeer Network Upgrade](https://medium.com/livepeer-blog/the-confluence-upgrade-is-live-3b6b342ea71e)**
@@ -51,10 +57,12 @@ We frequently update this documentation focusing on continuous improvement and v
 
 > **Note** All documentation is editable via [GitHub](https://github.com/livepeer/livepeer-org/tree/master/docs). If this is your first time working in the Livepeer repo, please check out the [contribution guide](/contributing/overview) for instructions.
 
-You can make suggestions and contribute content to the docs in the following ways:
+### You can make suggestions and contribute content to the docs in the following ways:
+
 
 - ***"Edit this page"*** links are included at the bottom of each page and bring you to the document stored in our Github repository where you can edit directly in the document.  
 
 - [File an issue](https://github.com/livepeer/docs) for us. To avoid duplicates, we ask that you do a quick search of existing issues to see if any similar ones exist.
 
 - Come talk with us in our [Discord](https://discord.gg/uaPhtyrWsF) channel.
+
