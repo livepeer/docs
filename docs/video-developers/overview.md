@@ -5,13 +5,14 @@ sidebar_position: 1
 
 # Video Developer Overview
 
-This section of the documentation is for developers who want to integrate the
-public network's live video transcoding service into an application or video
-workflow. There are many
-[use cases](/video-developers/core-concepts/use-cases) for Livepeer and the
-community is excited to see what you build. If you get stuck introduce yourself
-in the [#broadcasting](https://discord.gg/8Vr6B2qERb) Discord channel and the
-community will be happy to assist.
+This section of the documentation is for developers who want to integrate the public network's live video transcoding service into an application or video
+workflow. 
+
+There are many
+[use cases](/video-developers/core-concepts/use-cases) for Livepeer and the community is excited to see what you build. 
+
+If you get stuck introduce yourself
+in the [#broadcasting](https://discord.gg/8Vr6B2qERb) Discord channel and the community will be happy to assist.
 
 > Note: These docs are geared towards developers interested in building services
 > and applications using the open and permissionless Livepeer public network
