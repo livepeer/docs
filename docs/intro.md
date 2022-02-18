@@ -8,7 +8,7 @@ sidebar_position: 1
 
 The Livepeer project aims to deliver a live video streaming network protocol that is fully decentralized, highly scalable, crypto token incentivized, and results in a solution which is cheaper to an app developer than using traditional centralized live video solutions. 
 
-This site is organized by topics including concepts, tasks, and reference information designed for [Orchestrators](/livepeer-quick-start/video-mining-quick-start/choosing-a-role.md) on the Livepeer Network including:
+This site is organized by topics including concepts, tasks, and reference information designed for [participants](/video-miners/getting-started/choosing-a-role.md) on the Livepeer Network including:
 
 - [Video Miners](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners), including [Transcoders](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
 - [Video Developers](/video-developers/overview)
@@ -38,7 +38,7 @@ Instructions for One-time Migration to Arbitrum (L2)
 - join our [community chat](https://discord.gg/RR4kFAh) on Discord.
 
 ## Livepeer Quickstart
-Install and get up and running with the [Livepeer Quickstart](/installation/livepeer-quickstart) guide for Video Miners, Transcoders, and additional information for Developers.
+Install and get up and running with the [Quickstart](/installation/prerequisites) guide for Video Miners and Video Developers.
 
 ### New to Livepeer? 
 
