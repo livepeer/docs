@@ -27,6 +27,8 @@ possible. If you do not have access to this amount of bandwidth you will still
 be able to transcode on the network, but you will have a lower ceiling on the
 number of streams you will be able to handle.
 
+### Test your bandwidth
+
 Upload/download bandwidth available can be tested with tools such as:
 
 - [speedtest](https://www.speedtest.net/apps/cli)
