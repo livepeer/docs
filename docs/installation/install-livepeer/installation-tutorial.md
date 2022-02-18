@@ -7,8 +7,6 @@ This tutorial is for those new to video mining with a brief overview of how Live
 
 ## About video mining on Livepeer
 
-
-
 ### Livepeer Explorer 
 
 ## About Livepeer Installation
