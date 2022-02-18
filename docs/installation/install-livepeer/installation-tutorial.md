@@ -3,7 +3,11 @@ sidebar_position: 1
 title: Installation Tutorial
 ---
 
-This tutorial walks you through the setup of a Livepeer Orchestrator and earn passive income utilizing your current GPUs for video mining on the Livepeer network.
+This tutorial is for those new to video mining with a brief overview of how Livepeer works, with contextual information about the steps to setup a Livepeer Orchestrator to earn passive income utilizing your current GPUs for video mining on the Livepeer network.
+
+## About video mining on Livepeer
+
+### Livepeer Explorer 
 
 ## About Livepeer Installation
 
@@ -21,35 +25,21 @@ Familiarity with [Livepeer Concepts](/video-miners/core-concepts/overview)
 
 Before you perform an installation, it is important to understand and be able to address the following requirements for your implementation. 
 
-### Installation Workflow
-
-Depending on your workflow, you may prefer to install `livepeer`
-[using a binary release](/installation/install-livepeer/binary-release) or
-a [Docker image](/installation/install-livepeer/docker).
-
-- Nvidia GPU (the only brand of GPU that works on the Livepeer network)
-- Other GPUs and CPUs
-<!-- If you have IRIS, as is common with new Windows machines, or for your preference, `livepeer` does accomodate running  with your CPU but this is not recommended) as it does not provide for maximum performance. -->
-
-- Calculating your [bandwith](/video-mining-references/reference-information/bandwidth)
-- Minimum and Ideal Internet Bandwidth -- 120 mbs
-- - Network Knowledge -- Understanding static and dynamic IP addresses, firewalls is necessary as you change configurations during set-up and troubleshooting
-
-Static IP -- `Livepeer` will work with a dynamic IP address. However, when receiving streams for broadcasters you will want a static IP to make sure it goes to the same location each time.
-
-- Required LPT - required Livepeer token 
-- Livepeer explorer
-- Optimization for increased access
-There are 100 available slots. In order to see where you can fit in, go to the livepeer explorer to see how 
-- Gas fees L2 -- Ethereum to cover gas fees - (Also ***See*** LPT2 migration information )
 
 ### GPU
 
-- [Nvidia GPU](/video-miners/reference/gpu-support) (the only brand of GPU that works on the Livepeer network)
+- [Nvidia GPU](/video-miners/reference/gpu-support) (the only brand of GPU that works on the Livepeer network) 
+
 - Other GPUs and CPUs
 <!-- If you have IRIS, as is common with new Windows machines, or for your preference, `livepeer` does accomodate running  with your CPU but this is not recommended) as it does not provide for maximum performance. -->
 
 ### Network
+
+
+#### Livepeer explorer
+- Optimization for increased access
+There are 100 available slots. In order to see where you can fit in, go to the livepeer explorer to see how 
+- Gas fees L2 -- Ethereum to cover gas fees - (Also ***See*** LPT2 migration information )
 
 #### Bandwidth
 - Internet Bandwidth: each stream requires about 6Mbs up/down per stream
@@ -62,6 +52,7 @@ e.g., 1660 super 20 streams -- 120 Mbs/sec for that video card.
 
 #### Static IP
 Static IP -- `Livepeer` will work with a dynamic IP address. However, when receiving streams for broadcasters you will want a static IP to make sure it goes to the same location each time.
+
 
 ### LPT -- Livepeer Token
 
@@ -78,4 +69,5 @@ There are 100 available slots. In order to see where you can fit in, go to the l
 Depending on your workflow, you may prefer to install `livepeer`
 [using a binary release](/installation/install-livepeer/binary-release) or
 a [Docker image](/installation/install-livepeer/docker).
+
 
