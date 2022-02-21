@@ -53,6 +53,8 @@ We frequently update this documentation focusing on continuous improvement and v
 
 ### You can make suggestions and contribute content to the docs in the following ways:
 
+
+
 - ***"Edit this page"*** links are included at the bottom of each page and bring you to the document stored in our Github repository where you can edit directly in the document.  
 
 - [File an issue](https://github.com/livepeer/docs) for us. To avoid duplicates, we ask that you do a quick search of existing issues to see if any similar ones exist.
