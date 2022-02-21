@@ -8,18 +8,12 @@ sidebar_position: 1
 
 The Livepeer project aims to deliver a live video streaming network protocol that is fully decentralized, highly scalable, crypto token incentivized, and results in a solution which is cheaper to an app developer than using traditional centralized live video solutions. 
 
-This site is organized by topics including concepts, tasks, and reference information designed for [Orchestrators](/livepeer-quick-start/video-mining-quick-start/choosing-a-role.md) on the Livepeer Network including:
+This site is organized by topics including concepts, tasks, and reference information designed for [Orchestrators](/installation/livepeer-quick-start/video-mining-quick-start/choosing-a-role.md) on the Livepeer Network:
 
-- [Video Miners](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners), including [Transcoders](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
+- [Video Miners](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
 - [Video Developers](/video-developers/overview)
 
-**Note** [Delegators](/protocol/core-concepts/ecosystem-participants#delegator) can also benefit from content on this site, with some information included for you as well.
-
-
--   Edit this article using the link at the bottom of the page. If this is your first time editing a page, please check out the [contribution guide](/contributing/overview).
--  [File an issue](https://github.com/livepeer/docs) for us. To avoid duplicates, we ask that you do a quick search of existing issues to see if any similar issues exist.
--   Come talk to us in [Discord](https://discord.gg/uaPhtyrWsF)
-
+**Note** [Delegators](/protocol/core-concepts/ecosystem-participants#delegator) can also benefit from content on this site.
 
 ### What's new
 
@@ -38,7 +32,7 @@ Instructions for One-time Migration to Arbitrum (L2)
 - join our [community chat](https://discord.gg/RR4kFAh) on Discord.
 
 ## Livepeer Quickstart
-Install and get up and running with the [Livepeer Quickstart](/installation/livepeer-quickstart) guide for Video Miners, Transcoders, and additional information for Developers.
+Install and get up and running with the [Livepeer Quickstart](/installation/livepeer-quickstart) guide for Video Miners and Video Developers.
 
 ### New to Livepeer? 
 
@@ -58,7 +52,6 @@ We frequently update this documentation focusing on continuous improvement and v
 > **Note** All documentation is editable via [GitHub](https://github.com/livepeer/livepeer-org/tree/master/docs). If this is your first time working in the Livepeer repo, please check out the [contribution guide](/contributing/overview) for instructions.
 
 ### You can make suggestions and contribute content to the docs in the following ways:
-
 
 - ***"Edit this page"*** links are included at the bottom of each page and bring you to the document stored in our Github repository where you can edit directly in the document.  
 
