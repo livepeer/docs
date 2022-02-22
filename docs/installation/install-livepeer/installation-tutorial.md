@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-title: Installation Tutorial DRAFT
+title: Installation Tutorial
 ---
 
 This tutorial includes a brief overview of how Livepeer works with contextual information about the steps to setup a Livepeer Orchestrator. 
