@@ -17,7 +17,7 @@ We recommend using [the Offchain Labs public testnet endpoint](https://developer
 
 3. **Run the Livepeer CLI, pointing at Arbitrum Rinkeby**
 
-If you have not already installed the Livepeer CLI, please refer to [this guide](https://livepeer.org/docs/installation/install-livepeer/overview) before running the command below
+If you have not already installed the Livepeer CLI, please refer to [this guide](https://livepeer.org/docs/installation/install-livepeer/) before running the command below
 
 ```bash
 $: livepeer \

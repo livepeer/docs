@@ -9,7 +9,7 @@ This getting started tutorial will help video miners to:
   miner
 - Understand [hardware](/video-miners/reference/hardware) and
   [bandwidth](/video-miners/reference/bandwidth) requirements
-- [Install](/installation/install-livepeer/overview) the node software
+- [Install](/installation/install-livepeer/) the node software
 - [Connect](/installation/connect-to-ethereum) to an Ethereum network
 - [Activate](/video-miners/getting-started/activation) on the network
 - [Test](/video-miners/getting-started/testing/test) to ensure they can receive
