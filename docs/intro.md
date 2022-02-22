@@ -32,7 +32,7 @@ Instructions for One-time Migration to Arbitrum (L2)
 - join our [community chat](https://discord.gg/RR4kFAh) on Discord.
 
 ## Livepeer Quickstart
-Install and get up and running with the [Livepeer Quickstart](/installation/livepeer-quickstart) guide for Video Miners and Video Developers.
+Install and get up and running with the [Livepeer Quickstart](/installation/quickstart) guide for Video Miners and Video Developers.
 
 ### New to Livepeer? 
 
@@ -51,9 +51,7 @@ We frequently update this documentation focusing on continuous improvement and v
 
 > **Note** All documentation is editable via [GitHub](https://github.com/livepeer/livepeer-org/tree/master/docs). If this is your first time working in the Livepeer repo, please check out the [contribution guide](/contributing/overview) for instructions.
 
-### You can make suggestions and contribute content to the docs in the following ways:
-
-
+**You can make suggestions and contribute content to the docs in the following ways:**
 
 - ***"Edit this page"*** links are included at the bottom of each page and bring you to the document stored in our Github repository where you can edit directly in the document.  
 

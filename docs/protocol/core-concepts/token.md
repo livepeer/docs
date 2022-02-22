@@ -9,7 +9,7 @@ Before getting into the Livepeer token, it is worth noting that developers
 (broadcasters) pay to use the network in Ethereum's ETH. ETH is the medium of
 exchange token in the Livepeer network.
 
-The Livepeer Token is a protocol token for staking, used by those who want to
+The Livepeer Token (LPT) is a protocol token for staking, used by those who want to
 perform work on the network, that serves the following purposes:
 
 - It serves as a bonding mechanism in a delegated proof of stake system, in
