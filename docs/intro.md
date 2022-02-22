@@ -12,24 +12,21 @@ This site is organized by topics including concepts, tasks, and reference inform
 
 - [Video Miners](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
 - [Video Developers](/video-developers/overview)
-
-**Note** [Delegators](/protocol/core-concepts/ecosystem-participants#delegator) can also benefit from content on this site.
+- [Delegators and Tokenholders](/protocol/core-concepts/ecosystem-participants#delegator)
 
 ### What's new
 
-**[Livepeer Network Upgrade](https://medium.com/livepeer-blog/the-confluence-upgrade-is-live-3b6b342ea71e)**
-Livepeer now offers faster transactions and lower costs for Livepeer broadcasters, orchestrators, and delegators.
+**[Livepeer Network Upgrade](https://medium.com/livepeer-blog/the-confluence-upgrade-is-live-3b6b342ea71e)** - Livepeer now offers faster transactions and lower costs for Livepeer broadcasters, orchestrators, and delegators.
 
-**[How to Migrate to Arbitrum](https://docs.livepeer.org/video-miners/how-to-guides/l2-migration)** 
-Instructions for One-time Migration to Arbitrum (L2)
+**[How to Migrate your Orchestrator to Arbitrum](https://docs.livepeer.org/video-miners/how-to-guides/l2-migration)**  - Instructions for One-time Migration to Arbitrum (L2)
 
-**[Latest Releases](https://github.com/livepeer/go-livepeer/releases)** We strongly encourage all node operators to upgrade to this release by February 21 so you can connect to Arbitrum Mainnet after the LIP-73 block.
+**[Latest Releases](https://github.com/livepeer/go-livepeer/releases)** - We strongly encourage all node operators to upgrade to >=0.5.28 by February 21 so you can connect to Arbitrum Mainnet after the LIP-73 block.
 
 **Follow our roadmap** on the [Livepeer Blog](https://medium.com/livepeer-blog)
 
 **Follow us** 
 - [@LivepeerOrg](https://twitter.com/LivepeerOrg?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor) on twitter 
-- join our [community chat](https://discord.gg/RR4kFAh) on Discord.
+- Join our [community chat](https://discord.gg/RR4kFAh) on Discord.
 
 ## Livepeer Quickstart
 Install and get up and running with the [Livepeer Quickstart](/installation/install-livepeer) guide for Video Miners and Video Developers.
