@@ -59,6 +59,14 @@ Technical understanding of how encoding and decoding works.
 
 [References](https://www.haivision.com/resources/streaming-video-definitions/h-264/)
 
+- [Open source software for live streaming] (https://obsproject.com/download)
+
+- [In-browser broadcasting](https://livepeer.com/docs/guides/start-live-streaming/tutorial#step-2-option-2-go-live-using-in-browser-broadcaster)
+
+- [Streamyard](https://streamyard.com/) or [Restream Studio](https://restream.io/)
+
+
+
 - Encoding Types
 
 	- Live
@@ -222,14 +230,71 @@ all videos on your machine should have unlimited concurrent sessions
 In this case it will be `.zip` binary-release for Windows 64bit
 And extract the package, and you will see the following application files:
 
- - `livepeer`
- - `livepeer_bench`
- - `livepeer_cli`
- - `livepeer_router`
+ - `livepeer` file
+ - `livepeer_bench` livepeer benchmark application
+ - `livepeer_cli` livepeer client application
+ - `livepeer_router` livepeer router application
 
 
-6. Run the Benchmarking tool
+6. Download the rest of the Benchmarking files
 
+	- you can download this [example video](https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbEtxRk5rcXZxWjRQcHJYc2NhOHZZVGFHNl9yUXxBQ3Jtc0tsd0pPMmdrZnl0N3dXbi1IUk9iRzlONTR3THo0T3NVeXdSZzFfZlpNS1J4VnRfdHlCc1ZFMUEwMW1VY0RKZUptS3NSODZlQ3lGQkU1OXhFZDVKVE9CRmdXTGxPWVV1TXRLMUowS3VFbDRVOGpseHBYdw&q=https%3A%2F%2Fstorage.googleapis.com%2Flp_testharness_assets%2Fbbb_1080p_30fps_1min_2sec_hls.tar.gz) to test for benchmarking
+
+	
+	or Create your own example videos
+
+	- [OBS Studio](https://obsproject.com/) open source open broadcaster software
+	Free and open source software for video recording and live streaming.
+
+	- Save the [Configuration file](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json) for the benchmark tool into your file folder.
+
+	- click on the raw file and save-as to your folder with the programs in it.
+
+	- bbb folder
+	- configuration transcoding .json file
+	
+	create a batch file to run the benchmarking tool program in orde to be able to know if you patched the video card correctly
+	and how well the benchmarking can do based on the video GPU(s) you will be running
+
+
+	create a .txt file `run benchmark` 
+	select it, change the name adding the `.bat`. extension
+
+	add commands to run the benching programs make sure the cases are all correct
+
+```
+
+`livepeer_bench.exe -in bbb/source.m3u8 -transcodingOptions transcodingOptions.json - nvidia slot or type all -concurrentSessions 20
+PAUSE
+
+```
+
+it will take all the segments and transcode them with the results on the bottom
+
+in this case, you will be running 20 sessions on all of the GPUs, in this case one GPU
+
+- Metrics
+	- **realtime Duration Ratio**, realtime segments ration should be under 0.2 to get performance and not lose any segments
+	- othewise, reduce the number of bench marks in your batch file until your reach 0.2
+
+	so in this example you will try 16
+
+
+> **Note** that if you are running other software using GPU, this will affect the transcoding capacity
+
+
+	- Open the Firewall to allow the internet to connect to the node, so that when Broadcasters send their livestream they can get throug the firewalls
+
+	-- Open a firewall port
+	-- create a new rule
+	-- open tcp port 
+
+
+
+7. Run the Benchmarking tool
+
+	- `livepeer_bench`
+	-
 
 
 
