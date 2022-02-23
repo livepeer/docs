@@ -225,7 +225,7 @@ a confirmation will notify you that the patch has been installed with no errors
 all videos on your machine should have unlimited concurrent sessions
 
 
-5. Dowloand Livepeer and Livepeer Benchmarking tool
+5. Download Livepeer and Livepeer Benchmarking tool
 
 In this case it will be `.zip` binary-release for Windows 64bit
 And extract the package, and you will see the following application files:
@@ -279,7 +279,6 @@ in this case, you will be running 20 sessions on all of the GPUs, in this case o
 
 	so in this example you will try 16
 
-
 > **Note** that if you are running other software using GPU, this will affect the transcoding capacity
 
 
@@ -290,10 +289,9 @@ in this case, you will be running 20 sessions on all of the GPUs, in this case o
 	-- open tcp port 
 
 
-
 7. Run the Benchmarking tool
 
-	- `livepeer_bench`
+	- s`livepeer_bench`
 	-
 
 
