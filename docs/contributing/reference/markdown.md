@@ -11,7 +11,7 @@ Below are [Additional Resources](#additional-resources) including several primer
 
 ### Livepeer Markdown file template
 
-At the root of this repository, you'll find a Markdown template file named `template.md`. You can use this template file as a "starter file" if you need to create a new article for submission to the documentation repository.
+At the root of this repository, you'll find a Markdown template file named `template.md`. If you want to create a new article for submission to the documentation repository, you can use this template file as a "starter file".
 
 ### Additional Resources
 - [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)
