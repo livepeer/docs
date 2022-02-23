@@ -41,7 +41,7 @@ apt-get -y install clang-8 clang-tools-8
 Linux (Ubuntu: 20.04):
 
 ```bash
-apt-get install protobuf-compiler-grpc golang-goprotobuf-dev 
+apt-get -y install protobuf-compiler-grpc golang-goprotobuf-dev 
 ```
 
 Darwin (macOS):
