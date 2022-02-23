@@ -38,6 +38,12 @@ apt-get update && apt-get -y install build-essential pkg-config autoconf git cur
 apt-get -y install clang-8 clang-tools-8
 ```
 
+Linux (Ubuntu: 20.04):
+
+```bash
+apt-get -y install protobuf-compiler-grpc golang-goprotobuf-dev 
+```
+
 Darwin (macOS):
 
 ```bash
