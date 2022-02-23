@@ -22,8 +22,6 @@ Transcoding takes input as video, decoding to raw formated video and encoding in
 You may already be an [ETH Miner](https://ethereum.org/en/developers/docs/consensus-mechanisms/pow/mining/#what-is-ethereum-mining) or not, and if you add your GPU on the Livepeer network to perform transcoding, or run a node with multiple transcoders, with your own GPU(s) or with those who are on the network, and earn [ETH](https://bitflyer.com/en-us/ethereum-chart) fees. instead of solving proof-of-work algorithms you will earn ETH with your GPU working to decodes and encodes video
 
 
-
-
 ### Livepeer Explorer
 
 Familarize yourself with the [Livepeer Explorer](https://explorer.livepeer.org/whats-new) where you can visualize Orchestrators and earnings according to performance.
@@ -109,7 +107,7 @@ This is a tutorial for windows, and checking the following will be performed thr
 
 - Other GPUs and CPUs
 
-<!-- If you have IRIS, as is common with new Windows machines, or for your preference, `livepeer` does accomodate running  with your CPU but this is not recommended) as it does not provide for maximum performance. -->
+If you have IRIS, as is common with new Windows machines, or for your preference, `livepeer` does accomodate running  with your CPU but this is not recommended) as it does not provide for maximum performance.
 
 Any GPU Nvidia 10 series and up should have NVENC and NVDEC chips. You can find a list of supported [Nvidia GPUs](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new), and those supported on the Livepeer network can be found [here]()
 
@@ -167,9 +165,7 @@ a [Docker image](/installation/install-livepeer/docker).
 
 **Benchmarking**
 
-
 **Launching of the network**
-
 
 
 ### Installation Tutorial
