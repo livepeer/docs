@@ -80,6 +80,7 @@ Technical understanding of how encoding and decoding works.
 	To achieve these levels of compression, video encoders use video compression algorithms known as codecs (such as H.264/AVC or H.265/HEVC) can reduce the raw content data by as much as 1,000 times.
 
 - Codecs
+[Add Codec Support to Guide re:](https://livepeer.com/docs/guides/start-live-streaming/support-matrix)
 	
 	A way to compress and decompress a sequence of images
 	For example, A codec based on the H.264 standard compresses a digital video file (or stream) so that it only requires half of the storage space (or network bandwidth) of MPEG-2. Through this compression, the codec is able to maintain the same video quality despite using only half of the storage space.
@@ -203,19 +204,19 @@ Check the max concurrent sessions allowed on each card. In order to remove restr
 
 1. Download the [patch tool](https://github.com/keylase/nvidia-patch/tree/master/win#nvenc-patch-step-by-step-guide) tool saving the .rar file on your desktop
 
-2. Select and save the version of the patch to your desktop so you can locate it later. This file (1337) should match the [version](https://github.com/keylase/nvidia-patch/tree/master/win#windows-10-drivers) of the driver you have on your computer.
+1. Select and save the version of the patch to your desktop so you can locate it later. This file (1337) should match the [version](https://github.com/keylase/nvidia-patch/tree/master/win#windows-10-drivers) of the driver you have on your computer.
 
 
 > **Note** You can find your version via your Nvidia Control Panel. Make sure you are running the latest version or update before proceeding further.
 
 
 
-3. You can run the patch tool application or manually extract it from the `win.rar` file
+1. You can run the patch tool application or manually extract it from the `win.rar` file
 
 Follow the prompt; **locate** and **select** the 1337 patch file you downloaded and saved to your desktop. 
 
 
-4. and it will prompt you 
+1. and it will prompt you 
 for the NVIDIA dll files
 
 c: windows/system32/ scroll to the 
@@ -225,7 +226,7 @@ a confirmation will notify you that the patch has been installed with no errors
 all videos on your machine should have unlimited concurrent sessions
 
 
-5. Download Livepeer and Livepeer Benchmarking tool
+1. Download Livepeer and Livepeer Benchmarking tool
 
 In this case it will be `.zip` binary-release for Windows 64bit
 And extract the package, and you will see the following application files:
@@ -236,7 +237,7 @@ And extract the package, and you will see the following application files:
  - `livepeer_router` livepeer router application
 
 
-6. Download the rest of the Benchmarking files
+1. Download the rest of the Benchmarking files
 
 	- you can download this [example video](https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbEtxRk5rcXZxWjRQcHJYc2NhOHZZVGFHNl9yUXxBQ3Jtc0tsd0pPMmdrZnl0N3dXbi1IUk9iRzlONTR3THo0T3NVeXdSZzFfZlpNS1J4VnRfdHlCc1ZFMUEwMW1VY0RKZUptS3NSODZlQ3lGQkU1OXhFZDVKVE9CRmdXTGxPWVV1TXRLMUowS3VFbDRVOGpseHBYdw&q=https%3A%2F%2Fstorage.googleapis.com%2Flp_testharness_assets%2Fbbb_1080p_30fps_1min_2sec_hls.tar.gz) to test for benchmarking
 
@@ -246,7 +247,7 @@ And extract the package, and you will see the following application files:
 	- [OBS Studio](https://obsproject.com/) open source open broadcaster software
 	Free and open source software for video recording and live streaming.
 
-	- Save the [Configuration file](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json) for the benchmark tool into your file folder.
+	- Save the [Configuration file](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json) for the benchmark tool into your file folder. This is a .json file that provides configurations for transcoding options.
 
 	- click on the raw file and save-as to your folder with the programs in it.
 
@@ -282,16 +283,87 @@ in this case, you will be running 20 sessions on all of the GPUs, in this case o
 > **Note** that if you are running other software using GPU, this will affect the transcoding capacity
 
 
-	- Open the Firewall to allow the internet to connect to the node, so that when Broadcasters send their livestream they can get throug the firewalls
+1. Open the Firewall to allow the internet to connect to the node, so that when Broadcasters send their livestream they can get through the firewall and land at the correct place.
+
+	Windows -- Windows Defender Firewall with Advanced Security Settings on local computer
+	
+	- Select `inbound rules`
+	- Select `new rule` to bring up the `New Inbound Rule Wizard Protocol and Ports dialog to assign  and open tcp port `8935` as the default port for Livepeer.
+
+		- 'Rule Type' dialog, Select `port` radio button
+			- TCP radio button should have been selected
+		- `Protocol and Ports` dialog 
+			- Select `Specific Local ports:` radio button and enter  `8935` 
+			- Click `Next'
+		- `Action dialog` select 'Allow the Connections' radio button, click `Next`
+		- `Profile' dialog check 'Domain' `Private`, and `Public` for the rule to apply to all of these profiles, click `Next`
+		- `Name` dialog, enter a new name, e.g. `8935`
+			- it's optional to provide a description
+			- Select `Finish` and this brings you back to the `Inbound Rules` list, you should see the rule under the name 8935 and `Profile` All
+
+			 Create the same rule as above for UDP
+
+			- 'Rule Type' dialog, Select `port` radio button
+			- `UDP` radio button should have been selected
+		- `Protocol and Ports` dialog 
+			- Select `Specific Local ports:` radio button and enter  `8935` 
+			- Click `Next'
+		- `Action dialog` select 'Allow the Connections' radio button, click `Next`
+		- `Profile' dialog check 'Domain' `Private`, and `Public` for the rule to apply to all of these profiles, click `Next`
+		- `Name` dialog, enter a new name, e.g. `8935`
+			- it's optional to provide a description
+			- Select `Finish` and this brings you back to the `Inbound Rules` list, you should see the rule under the name 8935 and `Profile` All
+
+
+			Now you can see 2 rules named 8935 in the `Inbound Rules` list with the ports opened for incoming streams from Broadcasters.
+
+			Close the Firewall Security tool
+
+
+			> **Note** If you are behind a router and need to port forward on the router -- each router has different settings. Check your port forwarding settings on your router and forward to port `8935` 
+
+			Routers may have firewalls hardcoded that do not allow port 8935 
+
+1. Setup to connect to the Ethereum blockchain to submit transactions
+
+- Scenario 1 - download the nodes
+- Scenario 2 - download a light node and connect it directly locally
+- Scenario 3 - use a 3rd Party Service, e.g. Infura, Alchemy to connect to their applications
+
+
+Scenario 3 - Connect to Infura API service
+
+You can create an account and login to [Infura](https://infura.io/product/ethereum)
+
+1. Launch the node
+
+
+
+
+
+
+
+
+
+
+1. Start the Node 
+
+
+
+
+		- Launch the `livepeer.exe` program to start the installation
+
+
+
 
 	-- Open a firewall port
 	-- create a new rule
 	-- open tcp port 
 
 
-7. Run the Benchmarking tool
+1. Run the Benchmarking tool
 
-	- s`livepeer_bench`
+	- `livepeer_bench`
 	-
 
 
