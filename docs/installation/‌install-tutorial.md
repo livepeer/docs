@@ -51,7 +51,7 @@ Familiarity with [Livepeer Concepts](/video-miners/core-concepts/overview)
 
 Device converts video from one format to another, OTT or ABR, one masterfile or mezanine stream to other formats or resolutions, in other words transmit video accross the network to different devices, you use the transcoder to convert video to all formats and resolutions you need to support
 
-After production of a video, it's transcoded in different formats to be sent of a cdn to end user devises, and convert stream over LAN or WAN (network) 
+After production of a video, it's transcoded in different formats to be sent of a cdn to end user devices, and convert stream over LAN or WAN (network) 
 
 ### Encoding and Decoding
 
@@ -80,6 +80,7 @@ Technical understanding of how encoding and decoding works.
 	To achieve these levels of compression, video encoders use video compression algorithms known as codecs (such as H.264/AVC or H.265/HEVC) can reduce the raw content data by as much as 1,000 times.
 
 - Codecs
+
 [Add Codec Support to Guide re:](https://livepeer.com/docs/guides/start-live-streaming/support-matrix)
 	
 	A way to compress and decompress a sequence of images
@@ -89,19 +90,22 @@ Technical understanding of how encoding and decoding works.
 
 - Compression Standards
 
-	Take a video signal to up to 3 gigs/sec HD, squeezes to 1 or 10 mps in an IP stream, takes info and in near real time squeezes it down, taking advantage of compression standards, H264 1000:1, and HEVC or H265 new standard that is 2x as effect, each generation is 2:1 , saving bandwidth or improving quality of bandwidth links.
+	Take a video signal to up to 3 gigs/sec HD, squeezes to 1 or 10 mps in an IP stream, takes info and in near real time squeezes it down, taking advantage of compression standards, H264 1000:1, and HEVC or H265 new standard that is 2x as effective, each generation update to the compression standard is improved by at least a 2:1 ratio, saving bandwidth or improving quality of bandwidth links.
 
 	The H.264 standard is also flexible enough to be applied to a wide variety of applications, networks, and systems, including those with low and high bit rates, low and high resolution video, broadcast, storage, IP packet networks, many types of networks, such as internet, MPLS, satellite, cable, and also ITU-T multimedia telephony systems. H.264 is widely adopted within many verticals and by a wide range of devices—from professional decoders, all the way down to browsers and mobile devices.
 
 - Compression Principles
 
-	Video Compression Standards: mpeg 4 h264 High definition Digital video, AVC - Advanced Video Compression,  h265 all rely on the same principles, estimate motion, resolution and information represent the same image with the same quality, close to the real raw data that comes in 1mb file reproduce to the same exact file. 
+	Video Compression Standards: mpeg 4 h264 High definition Digital video, AVC - Advanced Video Compression,  h265 all rely on the same principles; estimate motion, resolution and information to represent the same image with the same quality, close to the real raw data that comes in 1mb file reproduce to the same exact file. 
 
 	You may be losing quality depending on how you compress/decompress (spatial point of view), 5mbs vs 2 mbs bandwidth to give the same quality
 
 
 ### Location
+
 Are you located in a place where there is a high demand for transcoding, Europe, North America -- USA.
+
+<!-- include link with Location information  -->
 
 ## Requirements
 
@@ -143,7 +147,7 @@ Download - 24 mbps
 
 To get started, you can use a dynamic IP.
 
-**Firewalls**
+**Firewalls** open ports for `livepeer` streams
 
 **Communication Protocols**  -- How computers talk to eachother
 
@@ -263,11 +267,9 @@ And extract the package, and you will see the following application files:
 
 	add commands to run the benching programs make sure the cases are all correct
 
-```
-
+```bash
 `livepeer_bench.exe -in bbb/source.m3u8 -transcodingOptions transcodingOptions.json - nvidia slot or type all -concurrentSessions 20
 PAUSE
-
 ```
 
 it will take all the segments and transcode them with the results on the bottom
@@ -337,6 +339,10 @@ You can create an account and login to [Infura](https://infura.io/product/ethere
 
 1. Launch the node
 
+- create a launch.bat for launching an orchestrator node trranscoding on the same machines
+- set the maxSessions
+
+> WARNING if you have multiple GPUs 
 
 
 
