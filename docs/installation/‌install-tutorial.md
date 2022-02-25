@@ -287,6 +287,10 @@ in this case, you will be running 20 sessions on all of the GPUs, in this case o
 
 1. Open the Firewall to allow the internet to connect to the node, so that when Broadcasters send their livestream they can get through the firewall and land at the correct place.
 
+	-- Open a firewall port
+	-- create a new rule
+	-- open tcp port 
+
 	Windows -- Windows Defender Firewall with Advanced Security Settings on local computer
 	
 	- Select `inbound rules`
@@ -337,12 +341,16 @@ Scenario 3 - Connect to Infura API service
 
 You can create an account and login to [Infura](https://infura.io/product/ethereum)
 
+Create and Name a New Project
+
+Endpoints: Select the Mainnet and copy the mainnet key and save it to a text file for future use 
+
 1. Launch the node
 
 - create a launch.bat for launching an orchestrator node trranscoding on the same machines
 - set the maxSessions
 
-> WARNING if you have multiple GPUs 
+> WARNING if you have multiple GPUs make sure you set the maxSessions to no more than what you tested as if it crashes, it will be difficult to  
 
 
 
@@ -362,9 +370,7 @@ You can create an account and login to [Infura](https://infura.io/product/ethere
 
 
 
-	-- Open a firewall port
-	-- create a new rule
-	-- open tcp port 
+
 
 
 1. Run the Benchmarking tool
