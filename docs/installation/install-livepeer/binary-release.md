@@ -69,7 +69,7 @@ unzip livepeer-windows-amd64.zip
 move livepeer-windows-amd64 /*/usr/local/<folder-name>
 ```
 
-> **Note** At this time Livepeer does not provide automatic updates. You will have to manually update or use a script bash script. A community created Bash script to update Livepeer is available **[on the livepeer Forum](https://forum.livepeer.org/t/bash-script-to-update-livepeer/1513)**.
+> **Note** At this time Livepeer does not provide automatic updates. You will have to manually update or use a script. A community created Bash script to update Livepeer is available **[on the livepeer Forum](https://forum.livepeer.org/t/bash-script-to-update-livepeer/1513)**.
 
 ## Third-party packages
 Packages for different Linux distributions are maintained by Livepeer community members. Before using these packages, please verify that they have been updated to use the [latest builds of go-livepeer](https://github.com/livepeer/go-livepeer/releases). This list will be updated as a best-effort, but we cannot guarantee if individual packages are up-to-date or verify their integrity.
