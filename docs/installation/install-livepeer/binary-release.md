@@ -12,7 +12,7 @@ Run the appropriate commands for your operating system; then, using the same dir
 # <RELEASE_VERSION> is the release version, e.g. v0.5.29
 # IMPORTANT: if you are using macOS with an M1 chip, you'll need to run these commands using the Rosetta emulator
 
-# First, fetch the latest release
+# Fetch the latest release
 wget https://github.com/livepeer/go-livepeer/releases/download/<RELEASE_VERSION>/livepeer-darwin-amd64.tar.gz
 
 # Next, extract it
@@ -27,7 +27,7 @@ mv livepeer-darwin-amd64/* /usr/local/bin/
 ```bash
 # <RELEASE_VERSION> is the release version, e.g. v0.5.29
 
-# First, fetch the latest release
+# Fetch the latest release
 wget https://github.com/livepeer/go-livepeer/releases/download/<RELEASE_VERSION>/livepeer-linux-amd64.tar.gz
 
 # Next, extract it
