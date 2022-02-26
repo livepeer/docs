@@ -9,7 +9,7 @@ This guide will walk tokenholders through the process of moving LPT from the Eth
 Please note that you will need some ETH in your wallet to complete this guide. If you are using testnet, you will need Rinkeby ETH.
 
 1. Make sure your wallet (i.e. Metamask) is connected to the Ethereum mainnet (Rinkeby if using testnet) and then navigate to the [Arbitrum Bridge](https://bridge.arbitrum.io/)
-2. Click "Token", and enter the L1 LPT contract address ([0x58b6a8a3302369daec383334672404ee733ab239](/protocol/reference/deployed)). If you are using testnet, use the `LivepeerToken` address for Rinkeby.
+2. Click "Token", and enter the L1 LPT contract address ([0x58b6a8a3302369daec383334672404ee733ab239](/protocol/reference/deployed)) _then press return and wait a few moments - the token should appear_. If you are using testnet, use the `LivepeerToken` address for Rinkeby.
 3. Select LPT from the dropdown. Once you've done this, you should see your L1 balance.
 4. Click `Deposit` to move your L1 LPT to L2.  This will initiate an Approval transaction.  The first of 2 transactions required to bridge LPT to Arbitrum.
 5. After the Approval transaction status changes from pending to success (about 10 mins) LPT can now be Deposited.
