@@ -186,6 +186,8 @@ a [Docker image](/installation/install-livepeer/docker).
 
 **Scenario:**  Installing `livepeer` on Windows 10 Professional
 
+You will be setting up a standalone [Orchestrator with a transcoder](https://docs.livepeer.org/video-miners/core-concepts/architecture) so that you will be able to manage it, get it listed on the Orchestrator list and view it on the [Livepeer Explorer](https://explorer.livepeer.org/orchestrators)
+
 ## Setup/Preparation
 
 Before installing and getting started setting up an Orchestrator node you will need to prepare your graphics card so you can transcode unlimited concurrent streams.
@@ -343,32 +345,77 @@ You can create an account and login to [Infura](https://infura.io/product/ethere
 
 Create and Name a New Project
 
-Endpoints: Select the Mainnet and copy the mainnet key and save it to a text file for future use 
+- ENDPOINTS Scroll and select the Arbitrum Mainnet Add-on 
+
+Copy the mainnet key and save it to a text file for future use 
 
 1. Launch the node
+You will creatomg a Launch batch file to run a full node:
 
-- create a launch.bat for launching an orchestrator node trranscoding on the same machines
-- set the maxSessions
+**Scenario:**
+- You will first create a `launch.bat` for launching an orchestrator node transcoding on the same machines
 
-> WARNING if you have multiple GPUs make sure you set the maxSessions to no more than what you tested as if it crashes, it will be difficult to  
+>  Your batch file `.bat` can include launching `livepeer.exe` with flags, i.e. settings and commands with a -dash, that will indicate:
+
+- `livepeer.exe` to launch the application
+- network `-network mainnet`
+- as an:
+	- `-orchestrator` (with a transcoder on this machine)
+	- `transcoder`
+	- broadcaster
+- `maxSessions` Follow the limit tested in an earlier step and ***See*** [Set session limits](/video-miners/how-to-guides/session-limits#set-session-limits-1)
+
+> **Note**  unless you have multiple GPUs, if you are only working on one machine, make sure you **set the maxSessions to no more sessions than what you tested** prior;  if you receive an `out of memory error`, it will be difficult to recover to that point as performance significantly decreases after it crashes.  
+
+- eth2Url of the node you will connect to, e.g. [Infura ETH2](https://25ZK6PtBLNbyFKKBGVqPJC4VhLO:e78080d062a27880796969777bf18b99@eth2-beacon-mainnet.infura.io)
+
+- `pricePerUnit` price per unit the orchestrator be charging (e.g., price/pixel) 
+> **Note** recommended setting by Livepeer is between 800 and 1000 per pixel
+
+- `serviceAddrservice` address for the transcoder will be your ip address followed by the port of 8935 and then the domain name (e.g., your-node-orch.com:8935) that points to the ip address of the machine.
+
+> **Note** Ensure it `ping`s properly so
+> **Note** Make sure you put the port after the ip address or domain name 
+
+- **Note**: As a recommendation; optionally you can add `PAUSE` on the next line in case the `Launch Node.exe` fails it won't close without being able to read the error it gives upon fail
+
+```bash
+`livepeer.exe` \
+	-network mainnet \
+	-orchestrator \
+	-transcoder \
+	-maxSessions xx \
+	-ehtUrl https://25ZK6PtBLNbyFKKBGVqPJC4VhLO:e78080d062a27880796969777bf18b99@eth2-beacon-mainnet.infura.io \
+	-pricePerUnit 800 \
+	-serviceAddr <your-node-orch.com>:8935 \
+PAUSE
+
+```
+
+> **Note** *See* the Configuration Reference for [**Additional Flags**](http://localhost:3000/video-miners/reference/configuration), e.g. logs, monitoring, etc...
 
 
-
-
-
-
-
-
+- Now you can close the `Launch Node.exe` and use it to launch the node.
 
 1. Start the Node 
 
+		- Launch the node, double-click the `livepeer.exe` program 
+		- enter the passphrase and it will generate a new ethereum account ending in 640 
+		log into the newly created account with your passphrase.
 
+		It is caught up with the rest of the blockchain by downloading all the blocks. 
 
+		- Check Orchestrator is running properly: 
+		When the blockchain backfill is complete, scroll to the end of the window,  
+		- certification for the ip address
+		- listening for the ping on the port:8935
+		- verify ping request `Received Ping request`
 
-		- Launch the `livepeer.exe` program to start the installation
+> **Note** For Windows using a cmd.exe, **to prevent the node from pausing** and at the same time be able to work on the node, be sure to set the properties to turn off the Edit Options, especially the Quick Edit Mode
 
-
-
+1. To interact and communicate with the node, use the `livepeer_cli`
+ - at the top of the screen you can view Node Statistics
+ - 
 
 
 
