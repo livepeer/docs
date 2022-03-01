@@ -49,7 +49,7 @@ wget https://github.com/livepeer/go-livepeer/releases/download/<RELEASE_VERSION>
 unzip livepeer-windows-amd64.zip
 
 # Finally, move it to the appropriate directory, e.g. C:\Users\UserName\livepeer-folder
-move livepeer-windows-amd64 
+move livepeer-windows-amd64 e.g. C:\Users\UserName\livepeer-folder
 ```
 
 > **Note** At this time Livepeer does not provide automatic updates. You can perform a manual update or use a script. **A community-created** [Bash script to update Livepeer is available on the livepeer Forum](https://forum.livepeer.org/t/bash-script-to-update-livepeer/1513).
