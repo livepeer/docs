@@ -1,5 +1,6 @@
 ---
 title: Monitor Metrics
+sidebar_position: 5
 ---
 
 # Monitor Metrics

@@ -9,6 +9,7 @@ sidebar_position: 1
 The Livepeer project aims to deliver a live video streaming network protocol that is fully decentralized, highly scalable, crypto token incentivized, and results in a solution which is cheaper to an app developer than using traditional centralized live video solutions. 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 This site is organized by topics including concepts, tasks, and reference information designed for [Orchestrators](/livepeer-quick-start/video-mining-quick-start/choosing-a-role.md) on the Livepeer Network including:
 
 - [Video Miners](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners), including [Transcoders](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
@@ -40,28 +41,47 @@ This site is organized by topics including concepts, tasks, and reference inform
 
 ### What's new
 
+=======
+This site is organized by topics including concepts, tasks, and reference information designed for [participants](/protocol/core-concepts/ecosystem-participants) on the Livepeer Network:
+
+- [Video Miners](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
+- [Video Developers](/video-developers/overview)
+- [Delegators and Tokenholders](/protocol/core-concepts/ecosystem-participants#delegator)
+
+### What's new
+
+>>>>>>> ca8c85c56db12be9479746ed2073e064f96f4853
 **[Livepeer Network Upgrade](https://medium.com/livepeer-blog/the-confluence-upgrade-is-live-3b6b342ea71e)** - Livepeer now offers faster transactions and lower costs for Livepeer broadcasters, orchestrators, and delegators.
 
 **[How to Migrate your Orchestrator to Arbitrum](https://docs.livepeer.org/video-miners/how-to-guides/l2-migration)**  - Instructions for One-time Migration to Arbitrum (L2)
 
 **[Latest Releases](https://github.com/livepeer/go-livepeer/releases)** - We strongly encourage all node operators to upgrade to >=0.5.28 by February 21 so you can connect to Arbitrum Mainnet after the LIP-73 block.
+<<<<<<< HEAD
 >>>>>>> b9c33cb452ac3c3d2dac61ec26bbf26b23f936bd
+=======
+>>>>>>> ca8c85c56db12be9479746ed2073e064f96f4853
 
 **Follow our roadmap** on the [Livepeer Blog](https://medium.com/livepeer-blog)
 
 **Follow us** 
 - [@LivepeerOrg](https://twitter.com/LivepeerOrg?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor) on twitter 
 <<<<<<< HEAD
+<<<<<<< HEAD
 - join our [community chat](https://discord.gg/RR4kFAh) on Discord.
 
 ## Livepeer Quickstart
 Install and get up and running with the [Livepeer Quickstart](/installation/livepeer-quickstart) guide for Video Miners, Transcoders, and additional information for Developers.
 =======
+=======
+>>>>>>> ca8c85c56db12be9479746ed2073e064f96f4853
 - Join our [community chat](https://discord.gg/RR4kFAh) on Discord.
 
 ## Livepeer Quickstart
 Install and get up and running with the [Livepeer Quickstart](/installation/install-livepeer) guide for Video Miners and Video Developers.
+<<<<<<< HEAD
 >>>>>>> b9c33cb452ac3c3d2dac61ec26bbf26b23f936bd
+=======
+>>>>>>> ca8c85c56db12be9479746ed2073e064f96f4853
 
 ### New to Livepeer? 
 
@@ -74,6 +94,7 @@ Install and get up and running with the [Livepeer Quickstart](/installation/inst
 
 ## Become a [Contributor](/contributing/overview) 
 
+<<<<<<< HEAD
 This project is an open-source, decentralized community effort, so feel free to suggest updates and new topics, add new guides and tutorials, or provide examples wherever you think it might be helpful.
 
 We frequently update this documentation focusing on continuous improvement and very much appreciate and encourage your participation. 
@@ -96,3 +117,6 @@ We frequently update this documentation focusing on continuous improvement and v
 =======
 - Come talk with us in our [Discord](https://discord.gg/uaPhtyrWsF) channel.
 >>>>>>> b9c33cb452ac3c3d2dac61ec26bbf26b23f936bd
+=======
+This project is an open-source, decentralized community effort, so feel free to suggest updates and new topics, add new guides and tutorials, or provide examples wherever you think it might be helpful.
+>>>>>>> ca8c85c56db12be9479746ed2073e064f96f4853

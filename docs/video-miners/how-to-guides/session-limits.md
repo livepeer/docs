@@ -1,5 +1,6 @@
 ---
 title: Set Session Limits
+sidebar_position: 4
 ---
 
 # Set Session Limits

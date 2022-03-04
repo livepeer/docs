@@ -1,5 +1,6 @@
 ---
 title: One-time Migration to Arbitrum
+sidebar_position: 9
 ---
 
 ## Prerequisites for all chains

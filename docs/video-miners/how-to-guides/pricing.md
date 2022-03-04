@@ -1,5 +1,6 @@
 ---
 title: Set Pricing
+sidebar_position: 7
 ---
 
 # Set Pricing
