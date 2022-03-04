@@ -10,9 +10,8 @@ enabling you to stream video into the Livepeer network.
 
 ```bash
 livepeer \
-  -network rinkeby \
-  -ethUrl <ETH_URL> \
   -broadcaster \
-  -currentManifest
+  -network arbitrum-one-rinkeby \
+  -ethUrl https://rinkeby.arbitrum.io/rpc \
 ```
 

@@ -10,7 +10,7 @@ You will need to deposit funds used to pay the node operators on the network
 paid in a cryptocurrency called Ether (ETH).
 
 Since we're using the Rinkeby test network for this tutorial you'll need to acquire
-some free test ETH. You can get some [here](https://faucet.rinkeby.io/).
+some free test ETH. You can get some [here (requires social media account)](https://faucet.rinkeby.io/) or [here](https://fauceth.komputing.org/?chain=421611).
 
 Once you've acquired your test ETH, in a separate terminal window other than the
 one that is running livepeer, run the `livepeer_cli`:

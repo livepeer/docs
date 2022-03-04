@@ -38,6 +38,12 @@ apt-get update && apt-get -y install build-essential pkg-config autoconf git cur
 apt-get -y install clang-8 clang-tools-8
 ```
 
+Linux (Ubuntu: 20.04):
+
+```bash
+apt-get -y install protobuf-compiler-grpc golang-goprotobuf-dev 
+```
+
 Darwin (macOS):
 
 ```bash
@@ -96,6 +102,9 @@ Building `livepeer` requires Go. Follow the
    make
    cp livepeer* /usr/local/bin
    ```
+
+   **Note for Mac M1 users**
+   If you see an error like `ld: symbol(s) not found for architecture x86_64`, this is because of a conflict between dependency builds and the Livepeer build. You should check that you are using the [*-darwin-arm64 binary](https://go.dev/dl/go1.17.6.darwin-arm64.pkg) instead of the `*-darwin-amd64` binary. You can check what Go architecture you're using with `go version`.
 
 ## Build with Docker
 
