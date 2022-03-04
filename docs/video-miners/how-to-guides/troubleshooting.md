@@ -1,5 +1,6 @@
 ---
 title: Troubleshoot
+sidebar_position: 9
 ---
 
 # Troubleshoot

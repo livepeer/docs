@@ -1,5 +1,6 @@
 ---
 title: Connect an Orchestrator with Separate Transcoders
+sidebar_position: 2
 ---
 
 # Connect an orchestrator with separate transcoders

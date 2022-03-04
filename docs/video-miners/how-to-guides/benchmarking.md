@@ -1,5 +1,6 @@
 ---
 title: Benchmark Transcoding
+sidebar_position: 3
 ---
 
 # Benchmark transcoding

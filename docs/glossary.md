@@ -58,3 +58,7 @@ session count refers to the maximum number of simultaneous jobs they can receive
 from broadcasters. For a transcoder, this maximum session count refers to the
 maximum number of simultaneous transcoding tasks they can receive from
 broadcasters.
+
+## Wei
+
+[Wei](https://academy.binance.com/en/glossary/wei)

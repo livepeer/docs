@@ -1,5 +1,6 @@
 ---
 title: Dual Mine
+sidebar_position: 6
 ---
 
 # Dual Mine
