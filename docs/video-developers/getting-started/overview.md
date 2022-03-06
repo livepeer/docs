@@ -16,9 +16,6 @@ inside your application.
 > including Arbitrum mainnet and Arbitrum Rinkeby,
 > [here](/installation/connect-to-ethereum#supported-networks).
 
-## Pre-requisites
+## Pre-requisite
 
 - Make sure you have `livepeer` [installed](/installation/install-livepeer/)
-- Make sure you have access to an
-  [Arbitrum JSON-RPC URL](/installation/connect-to-ethereum)
-
