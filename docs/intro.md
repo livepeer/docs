@@ -42,9 +42,6 @@ Install and get up and running with the [Livepeer Quickstart](/installation/inst
 
 ## Become a [Contributor](/contributing/overview) 
 
-<<<<<<< HEAD
-This project is an open-source, decentralized community effort, so feel free to suggest updates and new topics, add new guides and tutorials, or provide examples wherever you think it might be helpful.
-=======
 This project is an open-source, decentralized community effort, so feel free to suggest updates and new topics, add new guides and tutorials, or provide examples wherever you think it might be helpful.
 
 We frequently update this documentation focusing on continuous improvement and very much appreciate and encourage your participation. 
@@ -58,4 +55,3 @@ We frequently update this documentation focusing on continuous improvement and v
 - [File an issue](https://github.com/livepeer/docs) for us. To avoid duplicates, we ask that you do a quick search of existing issues to see if any similar ones exist.
 
 - Come talk with us in our [Discord](https://discord.gg/uaPhtyrWsF) channel.
->>>>>>> 3df210321b48b2ebb7bb4079f30ea1d931e3bbf4
