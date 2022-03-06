@@ -8,6 +8,8 @@ sidebar_position: 1
 
 The Livepeer project aims to deliver a live video streaming network protocol that is fully decentralized, highly scalable, crypto token incentivized, and results in a solution which is cheaper to an app developer than using traditional centralized live video solutions. 
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 This site is organized by topics including concepts, tasks, and reference information designed for [Orchestrators](/livepeer-quick-start/video-mining-quick-start/choosing-a-role.md) on the Livepeer Network including:
 
 - [Video Miners](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners), including [Transcoders](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
@@ -48,6 +50,7 @@ This site is organized by topics including concepts, tasks, and reference inform
 
 ### What's new
 
+>>>>>>> ca8c85c56db12be9479746ed2073e064f96f4853
 **[Livepeer Network Upgrade](https://medium.com/livepeer-blog/the-confluence-upgrade-is-live-3b6b342ea71e)** - Livepeer now offers faster transactions and lower costs for Livepeer broadcasters, orchestrators, and delegators.
 
 **[How to Migrate your Orchestrator to Arbitrum](https://docs.livepeer.org/video-miners/how-to-guides/l2-migration)**  - Instructions for One-time Migration to Arbitrum (L2)
