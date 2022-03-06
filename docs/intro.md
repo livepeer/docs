@@ -42,4 +42,20 @@ Install and get up and running with the [Livepeer Quickstart](/installation/inst
 
 ## Become a [Contributor](/contributing/overview) 
 
+<<<<<<< HEAD
 This project is an open-source, decentralized community effort, so feel free to suggest updates and new topics, add new guides and tutorials, or provide examples wherever you think it might be helpful.
+=======
+This project is an open-source, decentralized community effort, so feel free to suggest updates and new topics, add new guides and tutorials, or provide examples wherever you think it might be helpful.
+
+We frequently update this documentation focusing on continuous improvement and very much appreciate and encourage your participation. 
+
+> **Note** All documentation is editable via [GitHub](https://github.com/livepeer/livepeer-org/tree/master/docs). If this is your first time working in the Livepeer repo, please check out the [contribution guide](/contributing/overview) for instructions.
+
+### You can make suggestions and contribute content to the docs in the following ways:
+
+- ***"Edit this page"*** links are included at the bottom of each page and bring you to the document stored in our Github repository where you can edit directly in the document.  
+
+- [File an issue](https://github.com/livepeer/docs) for us. To avoid duplicates, we ask that you do a quick search of existing issues to see if any similar ones exist.
+
+- Come talk with us in our [Discord](https://discord.gg/uaPhtyrWsF) channel.
+>>>>>>> 3df210321b48b2ebb7bb4079f30ea1d931e3bbf4

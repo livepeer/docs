@@ -8,7 +8,7 @@ sidebar_position: 3
 ## Pre-requisites
 
 - Make sure `livepeer_bench` is installed by following the
-  [installation guide](/installation/install-livepeer/overview). `livepeer_bench` is
+  [installation guide](/installation/install-livepeer/). `livepeer_bench` is
   included in all binary releases and can also be built using the build from
   source instructions
 
