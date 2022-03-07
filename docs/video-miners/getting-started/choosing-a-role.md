@@ -9,6 +9,8 @@ As a video miner, you can take on the role of an orchestrator or transcoder. A
 full description of the roles and responsibilities can be found
 [here](/video-miners/core-concepts/roles-and-responsibilities).
 
+## Orchestrator
+
 You may want to consider running an orchestrator if you are:
 
 - Interested in earning LPT rewards
@@ -21,6 +23,9 @@ You may want to consider running an orchestrator if you are:
 - Comfortable with managing and securing Ethereum private keys
 - Comfortable with managing and spending ETH to pay for transactions to redeem
   payments and distribute rewards
+
+
+## Transcoder
 
 You may want to consider running a transcoder if you are:
 
