@@ -7,8 +7,7 @@ title: One-time Migration to Arbitrum
 ## Prerequisites for all chains
 - Before using this guide, you will need make sure your Arbitrum wallet has enough arbETH to cover gas for the `claim` transaction. If you do not have arbETH in your wallet, you will need to add some using one of the  bridges or on-ramps listed [here](https://portal.arbitrum.one/).
 - The migration must be completed using the Livepeer explorer
-- **If you use a contract account rather than an EOA**: You will need to interact directly with the Migrator contract methods. Please reach out to us in [Discord](https://discord.gg/uaPhtyrWsF) and we will be happy to walk you through the process. *If you don’t know what this means, it probably doesn’t apply to you.*
-
+- **If you use a contract account rather than an EOA**: You will need to interact directly with the Migrator contract methods. Please use the guide [here](/video-miners/how-to-guides/contract-wallet-migration). *If you don’t know what this means, it probably doesn’t apply to you.*
 
 ## Mainnet
 This guide is applicable to delegators who delegated their LPT to an orchestrator on the Ethereum mainnet prior to February 14th, 2022. It can be used successfully starting on February 22nd, 2022. Once you have successfully completed the migration, this guide is no longer applicable and you will use Arbitrum in lieu of Ethereum for all protocol actions.
