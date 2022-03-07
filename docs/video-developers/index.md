@@ -28,25 +28,25 @@ community will be happy to assist.
     title="Getting Started"
     description="A hands-on introduction to Livepeer for video developers. Recommended for all
 new users."
-    href="/docs/video-developers/getting-started/overview"
+    href="/docs/video-developers/getting-started/"
   />
   <DocsCard
     key={2}
     title="How-to Guides"
     description="Practical step-by-step guides to help you achieve a specific goal."
-    href="/docs/video-developers/how-to-guides/overview"
+    href="/docs/video-developers/how-to-guides/"
   />
   <DocsCard
     key={3}
     title="Core Concepts"
     description="Big-picture explanations of higher-level Livepeer development concepts."
-    href="/docs/video-developers/core-concepts/overview"
+    href="/docs/video-developers/core-concepts/"
   />
   <DocsCard
     key={4}
     title="Reference"
     description="Covers tools, components, commands and resources. Most useful when you need detailed information about Livepeer broadcasting APIs."
-    href="/docs/video-developers/reference/overview"
+    href="/docs/video-developers/reference/"
   />
 
 </DocsCardsContainer> -->

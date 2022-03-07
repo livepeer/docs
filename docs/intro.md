@@ -11,7 +11,7 @@ The Livepeer project aims to deliver a live video streaming network protocol tha
 This site is organized by topics including concepts, tasks, and reference information designed for [participants](/protocol/core-concepts/ecosystem-participants) on the Livepeer Network:
 
 - [Video Miners](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
-- [Video Developers](/video-developers/overview)
+- [Video Developers](/video-developers/)
 - [Delegators and Tokenholders](/protocol/core-concepts/ecosystem-participants#delegator)
 
 ### What's new
@@ -35,18 +35,18 @@ Install and get up and running with the [Livepeer Quickstart](/installation/inst
 
 **Check out** the [Livepeer Primer](https://livepeer.org/primer). Once you go through the Primer, you will be able decide how you want to participate in the Livepeer community.
 
-**Learn more about how Livepeer works**, check out [Core-Concepts](/protocol/core-concepts/overview) including relevant detailed high-level topics to familiarize yourself more in-depth with the Livepeer platform capabilities.
+**Learn more about how Livepeer works**, check out [Core-Concepts](/protocol/core-concepts/) including relevant detailed high-level topics to familiarize yourself more in-depth with the Livepeer platform capabilities.
 
-<!---[Protocol Overview](/protocol/core-concepts/overview).--->
+<!---[Protocol Overview](/protocol/core-concepts/).--->
 
 
-## Become a [Contributor](/contributing/overview) 
+## Become a [Contributor](/contributing/) 
 
 This project is an open-source, decentralized community effort, so feel free to suggest updates and new topics, add new guides and tutorials, or provide examples wherever you think it might be helpful.
 
 We frequently update this documentation focusing on continuous improvement and very much appreciate and encourage your participation. 
 
-> **Note** All documentation is editable via [GitHub](https://github.com/livepeer/livepeer-org/tree/master/docs). If this is your first time working in the Livepeer repo, please check out the [contribution guide](/contributing/overview) for instructions.
+> **Note** All documentation is editable via [GitHub](https://github.com/livepeer/livepeer-org/tree/master/docs). If this is your first time working in the Livepeer repo, please check out the [contribution guide](/contributing/) for instructions.
 
 ### You can make suggestions and contribute content to the docs in the following ways:
 
