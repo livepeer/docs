@@ -1,12 +1,13 @@
 ---
 title: One-time Migration to Arbitrum
+sidebar_position: 10
 ---
 
 ## Prerequisites for all chains
 - You will need make sure your connected Ethereum account has enough ETH to cover gas for the `migrate` transaction. If you do not have ETH in your wallet, you will need to add some using another wallet or an on-ramp.
 - The migration must be completed using the Livepeer explorer, but ***you will have the option to sign a typed data message via the CLI if you so desire.***
 - Ensure you're interacting with the correct contracts. Addresses can be found [here](/protocol/reference/deployed.md)
-- **If you use a contract account rather than an EOA**: You will need to interact directly with the Migrator contract methods. Please reach out to us in [Discord](https://discord.gg/uaPhtyrWsF) and we will be happy to walk you through the process. *If you don’t know what this means, it probably doesn’t apply to you.*
+- **If you use a contract account rather than an EOA**: You will need to interact directly with the Migrator contract methods. Please use the guide [here](/video-miners/how-to-guides/contract-wallet-migration). *If you don’t know what this means, it probably doesn’t apply to you.*
 - You must be using a `go-livepeer` [release](https://github.com/livepeer/go-livepeer/releases) >= 0.5.28
 - To register your Orchestrator on the destination chain, you'll need to [bridge some ETH to pay for the transaction](https://bridge.arbitrum.io/)
 
