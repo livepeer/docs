@@ -30,5 +30,5 @@ referenced directly for the most reliable live data).**
 ## Making Queries
 
 To learn more about querying a subgraph refer to
-[The Graph's documentation](https://thegraph.com/docs/introduction).
+[The Graph's documentation](https://thegraph.com/docs/en/).
 
