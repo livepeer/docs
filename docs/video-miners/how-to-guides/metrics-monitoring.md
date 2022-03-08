@@ -23,6 +23,12 @@ livepeer \
     -monitor
 ```
 
+Additionally, you can add the following parameters:
+- `-metricsPerStream`: groups performance metrics per stream
+- `-metricsClientIP`: exposes client's IP in metrics
+
+To check what metrics are exposed, please refer to [Prometheus Metrics](/video-miners/reference/metrics).
+
 ## Monitoring with Prometheus and Grafana
 
 The metrics recorded by `livepeer` can be exported to
