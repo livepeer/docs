@@ -17,13 +17,13 @@ along with API documentation for interacting it.
     description="Big-picture explanations of the Livepeer protocol. Most useful for building
 understanding of a particular topic.
 "
-    href="/docs/protocol/core-concepts/overview"
+    href="/docs/protocol/core-concepts/"
   />
   <DocsCard
     key={2}
     title="Reference"
     description="Covers APIs for interacting with Livepeer protocol data.
 "
-    href="/docs/protocol/reference/overview"
+    href="/docs/protocol/reference/"
   />
 </DocsCardsContainer> -->
