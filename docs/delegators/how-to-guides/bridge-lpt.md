@@ -32,7 +32,7 @@ Please note that you will need some ETH in your wallet to complete this guide. I
 ### Bridging from L2 to L1
 The same general instructions apply with three differences:
 - You should start with your wallet connected to Arbitrum (Arbitrum Rinkeby if using testnet)
-- You will need to manually approve the amount that you are bridging using the [Arbiscan UI](https://arbiscan.io/address/0x289ba1701C2F088cf0faf8B3705246331cB8A839#writeContract). To do so, connect your wallet, scroll to the Approve function, enter your address and the amount you'll be transferring, and click "Write"
+- You will need to manually approve the amount that you are bridging using the [Arbiscan UI](https://arbiscan.io/address/0x289ba1701C2F088cf0faf8B3705246331cB8A839#writeContract). To do so, connect your wallet, scroll to the Approve function, enter the L2LPTGateway address [0x6D2457a4ad276000A615295f7A80F79E48CcD318](https://arbiscan.io/address/0x6D2457a4ad276000A615295f7A80F79E48CcD318) and the amount you'll be transferring, and click "Write"
     - We are looking into options to remove this step. If it seems complex, we recommend swapping to ETH via [Uniswap](https://app.uniswap.org/#/swap?chain=arbitrum) and then transferring the ETH from L2 to L1 instead.
 - Enter the L2 LPT contract address ([0x289ba1701C2F088cf0faf8B3705246331cB8A839](/protocol/reference/deployed)) as the destination address on the [Arbitrum Bridge](https://bridge.arbitrum.io/)
 
