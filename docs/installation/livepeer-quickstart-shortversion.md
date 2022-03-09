@@ -5,7 +5,7 @@ title: Livepeer Quickstart
 
 Orchestrators who wish to run a node, provide transcoding services, or develop video streaming to integrate with your applications can connect, activate, and optimize your implementation to run on the network:
 
-- Familiarize yourself further about our platform capabilities highlighted in [Core Concepts](/core-concepts/core-concepts.md). 
+- You can familiarize yourself further with our platform capabilities highlighted in [Core Concepts](/core-concepts/core-concepts.md). 
 
 - Set up your environment [requirements and pre-requisites](/installation/livepeer-quickstart-shortversion#technical-requirements).
 
@@ -15,7 +15,7 @@ Orchestrators who wish to run a node, provide transcoding services, or develop v
 
 ### Technical Requirements
 
-Livepeer supports the following to install and run livepeer on the network:  
+Livepeer supports the following to install and run `livepeer` on the network:  
 
 **Operating Systems** Linux, Darwin (macOS), and Windows
 
@@ -43,7 +43,7 @@ Livepeer supports the following to install and run livepeer on the network:
 
 ### Installation Workflow
 
-**Current Releases** for supported operating system are found on our Github repository [releases page](https://github.com/livepeer/go-livepeer/releases).
+**Current Releases** for supported operating systems are found on our Github repository [releases page](https://github.com/livepeer/go-livepeer/releases).
 
 Depending on your workflow, instructions are provided so that you can install Livepeer:
 > * [Using a binary release](/installation/install-livepeer/binary-release)
@@ -58,7 +58,7 @@ You can decide how you want to participate on the network. Set up a node and tra
 - [Orchestrator](/video-miners/getting-started/choosing-a-role#orchestrator)
 - [Transcoder](/video-miners/getting-started/choosing-a-role#transcoder)
 
-## Architecture
+### Architecture
 
 This example follows the combined orchestrator and transcoder architecture that you can view in detail [***here***](/video-miners/core-concepts/architecture)
 
@@ -71,9 +71,7 @@ The following are steps to follow to set up your environment prior to connecting
 - [Docker](/installation/install-livepeer/docker), or
 - [Developer Install](/installation/install-livepeer/installing-for-development) 
 
-http://localhost:3000/video-miners/how-to-guides/l2-migration#testnet
-
-#### Patch your NVIDIA GPU
+#### Check and Patch the NVIDIA GPU 
 
 1.  Make sure your [NVIDIA GPUs](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new)  provides for Encoding and Decoding.  
 
@@ -83,17 +81,11 @@ Any GPU NVIDIA 10 series and up should have NVENC and NVDEC chips. You can find 
 
 > **NOTE** Patches are required for all operating systems, in order to run unlimited concurrent streams.
 
-To find your GPU capacity on your machine, check the Display Adapters and drivers on your system directly or through a NVIDIA Control Panel. 
-
-1. Check [Livepeer Supported NVIDIA GPUs](/video-miners/reference/gpu-support)
-
-1.  Make sure your [NVIDIA GPUs](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new)  provides for Encoding and Decoding.  
-
-1. Make sure you are running the latest driver version on your NVIDIA GPU or update your driver before proceeding further.
+You can access the patch tool, patches, and instructions to [Patch your GPU](/video-miners/reference/gpu-patch).
 
 #### Benchmarking Test
 
-You first should [test your GPU capacity](/video-miners/how-to-guides/benchmarking) downloading a test stream, running `livepeer_bench`, and, analyzing the output metrics.
+Before proceeding, [test your GPU capacity](/video-miners/how-to-guides/benchmarking), downloading a test stream, running `livepeer_bench`, and analyzing the output metrics.
 
 ## Connect to Arbitrum 
 
