@@ -11,8 +11,9 @@ Livepeer exposes a number of metrics via the Prometheus exporter. This page docu
 
 ### General
 
-| Name                                                     | Description                                                                                                      | Type |
+| Name                                                     | Description                                                                                                      | Unit |
 | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---- |
+| `livepeer_versions`                                      | Version information.                                                                                             | Num  |
 | `livepeer_segment_source_appeared_total`                 | SegmentSourceAppeared                                                                                            | tot  |
 | `livepeer_segment_source_emerged_total`                  | SegmentEmerged                                                                                                   | tot  |
 | `livepeer_segment_source_emerged_unprocessed_total`      | SegmentEmerged, counted by number of transcode profiles                                                          | tot  |
@@ -61,7 +62,7 @@ Livepeer exposes a number of metrics via the Prometheus exporter. This page docu
 
 ### Sending payments
 
-| Name                             | Description                                        | Type |
+| Name                             | Description                                        | Unit |
 | -------------------------------- | -------------------------------------------------- | ---- |
 | `livepeer_ticket_value_sent`     | TicketValueSent                                    | gwei |
 | `livepeer_tickets_sent`          | TicketsSent                                        | tot  |
@@ -72,7 +73,7 @@ Livepeer exposes a number of metrics via the Prometheus exporter. This page docu
 
 ### Receiving payments
 
-| Name                                | Description           | Type |
+| Name                                | Description           | Unit |
 | ----------------------------------- | --------------------- | ---- |
 | `livepeer_ticket_value_recv`        | TicketValueRecv       | gwei |
 | `livepeer_tickets_recv`             | TicketsRecv           | tot  |
@@ -87,16 +88,48 @@ Livepeer exposes a number of metrics via the Prometheus exporter. This page docu
 
 ### Pixel accounting
 
-| Name                            | Description        | Type       |
+| Name                            | Description        | Unit       |
 | ------------------------------- | ------------------ | ---------- |
 | `livepeer_mil_pixels_processed` | MilPixelsProcessed | mil pixels |
 
 ### Fast verification
 
-| Name                                                        | Description                                                                                                             | Type |
+| Name                                                        | Description                                                                                                             | Unit |
 | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ---- |
 | `livepeer_fast_verification_done`                           | FastVerificationDone                                                                                                    | tot  |
 | `livepeer_fast_verification_failed`                         | FastVerificationFailed                                                                                                  | tot  |
 | `livepeer_fast_verification_enabled_current_sessions_total` | Number of currently transcoded streams that have fast verification enabled                                              | tot  |
 | `livepeer_fast_verification_using_current_sessions_total`   | Number of currently transcoded streams that have fast verification enabled and that are using an untrusted orchestrator | tot  |
 
+## Golang metrics
+
+| Name                               | Description                                                                                 |
+| ---------------------------------- | ------------------------------------------------------------------------------------------- |
+| `go_gc_duration_seconds`           | A summary of the pause duration of garbage collection cycles.                               |
+| `go_goroutines`                    | Number of goroutines that currently exist.                                                  |
+| `go_info`                          | Information about the Go environment.                                                       |
+| `go_memstats_alloc_bytes`          | Number of bytes allocated and still in use.                                                 |
+| `go_memstats_alloc_bytes_total`    | Total number of bytes allocated, even if freed.                                             |
+| `go_memstats_buck_hash_sys_bytes`  | Number of bytes used by the profiling bucket hash table.                                    |
+| `go_memstats_frees_total`          | Total number of frees.                                                                      |
+| `go_memstats_gc_cpu_fraction`      | The fraction of this program's available CPU time used by the GC since the program started. |
+| `go_memstats_gc_sys_bytes`         | Number of bytes used for garbage collection system metadata.                                |
+| `go_memstats_heap_alloc_bytes`     | Number of heap bytes allocated and still in use.                                            |
+| `go_memstats_heap_idle_bytes`      | Number of heap bytes waiting to be used.                                                    |
+| `go_memstats_heap_inuse_bytes`     | Number of heap bytes that are in use.                                                       |
+| `go_memstats_heap_objects`         | Number of allocated objects.                                                                |
+| `go_memstats_heap_released_bytes`  | Number of heap bytes released to OS.                                                        |
+| `go_memstats_heap_sys_bytes`       | Number of heap bytes obtained from system.                                                  |
+| `go_memstats_last_gc_time_seconds` | Number of seconds since 1970 of last garbage collection.                                    |
+| `go_memstats_lookups_total`        | Total number of pointer lookups.                                                            |
+| `go_memstats_mallocs_total`        | Total number of mallocs.                                                                    |
+| `go_memstats_mcache_inuse_bytes`   | Number of bytes in use by mcache structures.                                                |
+| `go_memstats_mcache_sys_bytes`     | Number of bytes used for mcache structures obtained from system.                            |
+| `go_memstats_mspan_inuse_bytes`    | Number of bytes in use by mspan structures.                                                 |
+| `go_memstats_mspan_sys_bytes`      | Number of bytes used for mspan structures obtained from system.                             |
+| `go_memstats_next_gc_bytes`        | Number of heap bytes when next garbage collection will take place.                          |
+| `go_memstats_other_sys_bytes`      | Number of bytes used for other system allocations.                                          |
+| `go_memstats_stack_inuse_bytes`    | Number of bytes in use by the stack allocator.                                              |
+| `go_memstats_stack_sys_bytes`      | Number of bytes obtained from system for stack allocator.                                   |
+| `go_memstats_sys_bytes`            | Number of bytes obtained from system.                                                       |
+| `go_threads`                       | Number of OS threads created.                                                               |
