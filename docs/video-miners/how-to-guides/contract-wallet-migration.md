@@ -23,47 +23,16 @@ The L2 address can be that of a contract wallet (i.e. [Gnosis Safe](https://gnos
 
 ### Generate Migration Transaction Parameters
 
-Use a command line tool to generate the required parameters for the migration transaction:
+You can use the tool at https://explorer.livepeer.org/migrate/delegator/contract-wallet-tool to generate the required parameters for the migration transactions. Upon entering an L1 address and an L2 address (**this is the address that you should have created at the beginning of the guide**), the tool will show you:
 
-```
-# Clone the repository
-git clone https://github.com/livepeer/arbitrum-lpt-bridge
-# Navigate into the repository
-cd arbitrum-lpt-bridge
-# Set environment variables
-export MAINNET_URL=<ETHEREUM_MAINNET_RPC_URL>
-export ARB_MAINNET_URL=<ARBITRUM_MAINNET_RPC_URL>
-# Run command
-npx hardhat migrate-delegator \
-    --network mainnet \
-    --estimatel2 true \
-    --l1addr <L1_ADDR> \
-    --l2addr <L2_ADDR>
-```
+- The `migrateDelegator` transaction parameters if the L1 address has stake to migrate
+- The `migrateUnbondingLocks` transaction parameters if the L1 address has unbonding locks (i.e. undelegated stake) to migrate
 
-`<L1_ADDR>` is the address of your contract wallet on L1 that has stake to migrate.
+The parameter values will be used in the next sections.
 
-`<L2_ADDR>` is the address that will receive migrated stake on L2. **This is the address that you should have created at the beginning of the guide**.
+### Submit Stake Migration Transaction
 
-`<ETHEREUM_MAINNET_RPC_URL>` is the JSON-RPC URL for an Ethereum mainnet provider.
-
-`<ARBITRUM_MAINNET_RPC_URL>` is the JSON-RPC URL for an Arbitrum mainnet provider.
-
-You should observe an output that looks like this (in practice the output will look different for you):
-
-```
-WARNING: You MUST ensure that you have access to 0x2d72A1c2ceE244e7d996FfE0f2CF491F7475804a on L2 or else you may lose access to migrated funds
-maxGas: 3948836
-gasPriceBid: 581246045
-maxSubmissionCost: 469664455740
-value: 2295714971809360
-```
-
-These values will be used in the next section.
-
-### Submit Migration Transaction
-
-Next, you will need to submit the migration transaction from your contract wallet. The transaction will be a function call to the L1Migrator on **Ethereum Mainnet**.
+If your L1 address has stake to migrate, you will need to submit the stake migration transaction from your contract wallet. The transaction will be a function call to the L1Migrator on **Ethereum Mainnet**.
 
 - The contract address is 0x21146B872D3A95d2cF9afeD03eE5a783DaE9A89A
 - The contract ABI can be copied from [here](https://etherscan.io/address/0x21146B872D3A95d2cF9afeD03eE5a783DaE9A89A#code)
@@ -76,9 +45,35 @@ Next, you will need to submit the migration transaction from your contract walle
     - `uint256 _maxSubmissionCost`: This should be the `maxSubmissionCost`  printed by the command line tool
 - The ETH value to include with the function call should be the `value` printed by the command line tool. **The `value` printed by the command line tool is denominated in Wei so make sure to convert it into the units (i.e. Ether) that is required by the tool you are using to submit the transaction**
 
-After this transaction is submitted by the contract wallet and is confirmed on L1, there will be roughly ~10 minutes until the transaction is finalized on L2. During this time you can use the following command to monitor for when the transaction is finalized on L2:
+### Submit Unbonding Lock Migration Transaction
+
+If your L1 address has unbonding locks to migrate, you will need to submit the unbonding locks migration transaction from your contract wallet. The transaction will be a function call to the L1Migrator on **Ethereum Mainnet**.
+
+- The contract address is 0x21146B872D3A95d2cF9afeD03eE5a783DaE9A89A
+- The contract ABI can be copied from [here](https://etherscan.io/address/0x21146B872D3A95d2cF9afeD03eE5a783DaE9A89A#code)
+- The function name is `migrateUnbondingLocks` with the following parameters:
+    - `address _l1Addr`: The address of your L1 contract wallet that has unbonding locks to migrate
+    - `address _l2Addr`: The address on L2 that will receive the total stake of migrated unbonding locks. **This is the address that you should have created at the beginning of the guide**
+    - `uint256[] _unbondingLockIds`: The array of IDs for unbonding locks that will be migrated
+    - `bytes _sig`: This parameter can be ignored and left blank
+    - `uint256 _maxGas`: This should be the `maxGas` printed by the command line tool
+    - `uint256 _gasPriceBid`: This should be the `gasPriceBid` printed by the command line tool
+    - `uint256 _maxSubmissionCost`: This should be the `maxSubmissionCost`  printed by the command line tool
+- The ETH value to include with the function call should be the `value` printed by the command line tool. **The `value` printed by the command line tool is denominated in Wei so make sure to convert it into the units (i.e. Ether) that is required by the tool you are using to submit the transaction**
+
+### Waiting For Transaction Finalization on L2
+
+After a migration transaction is submitted by the contract wallet and is confirmed on L1, there will be roughly ~10 minutes until the transaction is finalized on L2. During this time you can use a command line tool to monitor for when the transaction is finalized on L2:
 
 ```
+# Clone the repository
+git clone https://github.com/livepeer/arbitrum-lpt-bridge
+# Navigate into the repository
+cd arbitrum-lpt-bridge
+# Set environment variables
+export MAINNET_URL=<ETHEREUM_MAINNET_RPC_URL>
+export ARB_MAINNET_URL=<ARBITRUM_MAINNET_RPC_URL>
+# Run command
 npx hardhat wait-to-relay-tx-to-l2 <L1_TX_HASH>
 ```
 
