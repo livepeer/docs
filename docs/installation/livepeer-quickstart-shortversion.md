@@ -5,13 +5,11 @@ title: Livepeer Quickstart
 
 Orchestrators who wish to run a node, provide transcoding services, or develop video streaming to integrate with your applications can connect, activate, and optimize your implementation to run on the network:
 
-## Considerations
-
 - Familiarize yourself further about our platform capabilities highlighted in [Core Concepts](/core-concepts/core-concepts.md). 
 
 - Set up your environment [requirements and pre-requisites](/installation/livepeer-quickstart-shortversion#technical-requirements).
 
-- Follow the workflow for: 
+- Follow the setup workflow for: 
 	- [video miners](/installation/livepeer-quickstart-shortversion#start-video-mining)
 	- [developers](/installation/install-livepeer/installing-for-development)
 
@@ -34,9 +32,9 @@ Livepeer supports the following to install and run livepeer on the network:
 - working knowledge of a command line interface
 		 `wget` is recommended
 		 `cURL` alternatively can be used
-- working with a Binary and/or Docker installation
-- familiary with networking concepts
-- access to an Ethereum network	
+- working with a Binary and/or Docker installations
+- familiary with networking configurations
+- access to an [EVM-compatible](https://ethereum.org/en/developers/docs/evm/) network (Livepeer is on [Arbitrum](/video-miners/how-to-guides/l2-migration))	
 
 **Developers**
 - Go language
@@ -54,7 +52,7 @@ Depending on your workflow, instructions are provided so that you can install Li
 
 ## Start Video Mining
 
-You can decide how you want to participate on the network. Set up a node and transcode, simply transcode on your own or join a transcoding pool. [About Video Mining](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners).
+You can decide how you want to participate on the network. Set up a node and transcode, simply transcode on your own, or join a transcoding pool, ***See*** [About Video Mining](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners).
 
 **Choose your role:**
 - [Orchestrator](/video-miners/getting-started/choosing-a-role#orchestrator)
@@ -70,7 +68,10 @@ The following are steps to follow to set up your environment prior to connecting
 #### Install the node software
 
 - [Binary](/installation/install-livepeer/binary-release)
-- [Docker](/installation/install-livepeer/docker) or 
+- [Docker](/installation/install-livepeer/docker), or
+- [Developer Install](/installation/install-livepeer/installing-for-development) 
+
+http://localhost:3000/video-miners/how-to-guides/l2-migration#testnet
 
 #### Patch your NVIDIA GPU
 
