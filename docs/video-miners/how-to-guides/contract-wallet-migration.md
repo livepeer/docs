@@ -70,6 +70,8 @@ After a migration transaction is submitted by the contract wallet and is confirm
 git clone https://github.com/livepeer/arbitrum-lpt-bridge
 # Navigate into the repository
 cd arbitrum-lpt-bridge
+# Install dependencies
+yarn
 # Set environment variables
 export MAINNET_URL=<ETHEREUM_MAINNET_RPC_URL>
 export ARB_MAINNET_URL=<ARBITRUM_MAINNET_RPC_URL>
