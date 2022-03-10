@@ -1,30 +1,30 @@
 ---
-title: GPU Patches
+title: Patch the GPU 
 sidebar_position: 7
 ---
 
-There is a patch which should be run for all operating systems to run unlimited concurrent streams (currently restricted on NVIDIA GPUs).
+To run unlimited concurrent encoding sessions (currently restricted on commercial-grade NVIDIA GPUs), you can install an NVENC patch for your operating system.
 
-Once you have confirmed your [NVIDIA GPU(s)](/video-miners/reference/gpu-support) are supported by Livepeer for transcoding, you can patch your GPU.
+Once you have confirmed your [NVIDIA GPU](/video-miners/reference/gpu-support) is supported by Livepeer, you can patch your GPU as follows:
 
 ### Prerequisite
 
-Make sure you are running the latest driver version on your NVIDIA GPU or update your driver before proceeding further.
+Check you are running the latest driver version on your NVIDIA GPU, or update your driver before proceeding. Access the GPU configuration, Display Adapters, and drivers for your operating system either directly or through your NVIDIA Control Panel. 
 
-To find your GPU(s) capacity, check the Display Adapters and drivers on your system directly, or through your NVIDIA Control Panel. 
-
-You will need a [Patch Tool](https://github.com/keylase/nvidia-patch/tree/master/win) and patch that matches the version for your GPU.
+You can download the NVENC [Patch Tool](https://github.com/keylase/nvidia-patch) for your operating system, and the patch that matches the version for your GPU.
 
 ### Run the patch tool
 
-This follows running a Windows version but the patch can be run on any system.
+This example follows the installation of the [Windows version](https://github.com/keylase/nvidia-patch/tree/master/win) of the patch tool and patches, but versions for other operating systems are also available.
 
-1. Download the version of the [patch tool](https://github.com/keylase/nvidia-patch) and the patch that matches the version of your GPU, saving and extracting the files to your desired location.
+1. Download the [patch tool](https://github.com/keylase/nvidia-patch) and patch that matches your GPU, and save and extract these files to your desired location.
 
-1. Extract and `Run` the patch tool application which you can do via your `cli` or double-clicking the `patch.exe` file. Follow the prompt; **locate** and **select** the patch file `1337` you saved to your desktop for the your version of the GPU. 
+1. Extract and `run` the patch tool application via your `cli`, or double-click the `patch.exe` file. Follow the prompt; **locate** and **select** the patch file for your version of the GPU, i.e. file `1337` you saved locally. 
 
-1. Double click on the patch - it will prompt you for the NVIDIA `.dll` file. 
+1. You will be prompted by the patch tool for the NVIDIA `.dll` file, found in  `c: windows/system32/`. 
 
-1. In this Windows example, a `.dll` will be found in  `c: windows/system32/`, open the `.dll`, then double-click the patch tool to apply the patch. 
+1. Open the `.dll`, then double-click the patch tool to apply the patch. 
 
-	A dialog with a confirmation will notify you that the patch has been installed with no errors. Now videos streams on your machine should be provided with unlimited concurrent sessions.
+A confirmation dialog will display a notification that the patch is installed with no errors. 
+
+You can test streaming can be performed with unlimited concurrent sessions using the  `livepeer_bench.exe` [benchmarking tool](/video-miners/how-to-guides/benchmarking).
