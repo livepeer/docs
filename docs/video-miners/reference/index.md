@@ -13,3 +13,4 @@ This section contains video miner references:
 - [Orchestrator performance leaderboard](/video-miners/reference/leaderboard)
 - [Supported GPUs](/video-miners/reference/gpu-support)
 - [Glossary](/video-miners/reference/glossary)
+- [Prometheus Metrics](/video-miners/reference/metrics)
