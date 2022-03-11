@@ -3,7 +3,7 @@ title: Assess concurrent stream capabilities
 sidebar_position: 7
 ---
 
-Once you have confirmed that your [hardware](/video-miners/reference/gpu-support) is supported by Livepeer, you should assess your capacity.
+Once you have confirmed that your [hardware](/video-miners/reference/gpu-support) is supported by Livepeer, you should assess how many concurrent streams your hardware can support.
 
 ## Hardware functionality and constraints
 
