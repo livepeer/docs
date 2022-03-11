@@ -7,9 +7,9 @@ Once you have confirmed that your [hardware](/video-miners/reference/gpu-support
 
 ## Hardware functionality and constraints
 
-The Livepeer protocol enables those with the excess hardware and bandwidth available to earn additional revenue by advertising video encoding services on an open marketplace, and using their idle hardware to perform the work. There are a number of different types of hardware capable of performing video encoding in a performant and cost-effective manner, each with its own unique capabilities and terms of use. 
+The Livepeer protocol enables those with the excess hardware and bandwidth available to earn additional revenue by advertising video encoding services on an open marketplace, and using their idle hardware to perform the work. There are a number of different types of hardware capable of encoding video in a performant and cost-effective manner, each with its own unique capabilities and terms of use. 
 
-Some of these terms restrict users from utilizing their own hardware to its full capacity through artificial restrictions. While googling for open-source patches reveals workarounds to these limitations, Livepeer encourages operators on the network to read and comply with the terms of service and usage policies of the hardware that they are using to operate on the network.
+Some of these terms restrict users from utilizing their own hardware to its full capacity through artificial restrictions. While googling for open-source patches reveals workarounds to these limitations, Livepeer encourages operators on the network to read and comply with the terms of service and usage policies of the hardware that they are using.
 
 ### NVIDIA
 
