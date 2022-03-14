@@ -20,10 +20,10 @@ please use the following commands (for popular ubuntu/mac systems):
 
 ```bash
 # For ubuntu
-# apt install curl gnupg2
+# apt install curl coreutils gnupg2
 
 # For macOS
-# brew install curl coreutils
+# brew install curl coreutils gnupg
 ```
 
 ### Installation
