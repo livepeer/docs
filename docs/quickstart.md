@@ -63,7 +63,7 @@ How to participate as a Video Miner on the network:
 
 ### Install `livepeer`
 
-You can follow the instructions provided for your chosen [installation workflow](/installation/quickstart-short#installation-workflow).
+You can follow the instructions provided for your chosen [installation workflow](#installation-workflow).
 
 
 ### Check your bandwidth
@@ -74,7 +74,7 @@ You can check Upload/download bandwidth with these [speedtest tools](/video-mine
 
 Operators on the network are encouraged to read and comply with the terms of service and usage policies of the hardware that they are using. 
 
-- [Assess the concurrent stream capabilities](/video-miners/reference/concurrency-check) on the [hardware]((/video-miners/reference/gpu-support)) you will be using to operate on the network.
+- [Assess the concurrent stream capabilities](/video-miners/reference/concurrency-check) on the [hardware](/video-miners/reference/gpu-support) you will be using to operate on the network.
 
 ### Test your Benchmarking
 
@@ -150,6 +150,6 @@ Once you have completed the instructions for updating your parameters to the Arb
 
 ## Optimize your Orchestrator
 
-Once Activated on the Network, you can to optimize your setup following the [How-to Guides](/video-miners/how-to-guides/overview) .
+Once Activated on the Network, you can to optimize your setup following the [How-to Guides](/video-miners/how-to-guides/) .
 
 
