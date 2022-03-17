@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-title: Livepeer Quickstart
+title: Orchestrator Quickstart
 ---
 
 This Quickstart guide includes a detailed overview of how Livepeer works with contextual information about the steps to set up a [combined Livepeer Orchestrator and Transcoder](/video-miners/core-concepts/architecture).
