@@ -68,7 +68,7 @@ You can follow the instructions provided for your chosen [installation workflow]
 
 ### Check your bandwidth
 
-You can check upload/download bandwidth with these [speedtest tools](/video-miners/reference/bandwidth), or use your own.
+You can check upload/download bandwidth with these [speedtest tools](/video-miners/reference/bandwidth), or use your own. Low bandwidth will result in poor performance on the network.
 
 ### Assess concurrent stream capabilities
 
@@ -76,7 +76,7 @@ To ensure optimal performance, you should [assess the concurrent stream capabili
 
 ### Test your Benchmarking
 
-Next, download test streams and test your GPU capacity with the [benchmarking tool](/video-miners/how-to-guides/benchmarking) `livepeer_bench.exe`.
+You can download test streams and test your GPU capacity with the [benchmarking tool](/video-miners/how-to-guides/benchmarking) `livepeer_bench.exe`.
 
 To do this, you should:
 
@@ -119,7 +119,7 @@ Depending on your operational setup, this may need to be done via your router.
 
 ### Start an Orchestrator on Arbitrum Testnet
 
-- Follow the Arbitrum [Testnet](/video-miners/getting-started/testing/testnet) guide.
+Follow the Arbitrum [Testnet](/video-miners/getting-started/testing/testnet) guide.
  
 ### Navigate to the Livepeer Explorer on Arbitrum Testnet
 
