@@ -53,6 +53,22 @@ that are supported by the Livepeer network.
 
 Make sure to add `-reward=false` as an override in the launch command, even if using a `.conf` file. Also make sure that if you have Orchestrator and Transcoder processes running separately that all launch commands have `reward` set to false. To be safe, you can also remove the `ethUrl` option from the Transcoder process(es) to ensure that they are not performing any onchain actions on behalf of your orchestrator if using the same wallet.
 
+## TicketParams expired
+
+This error indicates that the broadcaster sent a payment ticket with too old parameters. This may be caused by the broadcaster's delay (between getting the last orchestrator info message and sending the segment) or by the delay in polling chain blocks (the expiration time is measured in L1 blocks). For more details please check [TicketParams expiration time](https://github.com/livepeer/go-livepeer/issues/1343). There are no actionable steps for an operator, broadcaster will retry a request with the updated ticket parameters.
+
+## Error creating Ethereum account manager
+
+This error means that Livepeer was not able to fetch your ETH account (or create a new one). Livepeer stores ETH accounts in the `<datadir>/keystore/` directory (by deafult `~/.lpData/<network>/keystore/`).
+
+Please make sure that one of the files in that directory contains the account you specified with the `-ethAcctAddr` parameter. If you used another `datadir` (or different `network`) in the past, you may need to copy the your keystore files.
+
+Please also make sure that your `keystore` directory has correct file permissions.
+
+## Unsupported input pixel format
+
+This error occurs when someone submits a stream with an unsupported pixel format. There are no actionable steps, the video of this format cannot be transcoded in Livepeer.
+
 ## Common Questions
 
 **What does being ‘publicly accessible’ mean? Can I run a transcoder from
