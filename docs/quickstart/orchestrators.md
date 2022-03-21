@@ -3,9 +3,9 @@ sidebar_position: 2
 title: Orchestrators
 ---
 
-This Quickstart guide includes a detailed overview of how Livepeer works with contextual information about the steps to set up a [combined Livepeer Orchestrator and Transcoder](/video-miners/core-concepts/architecture).
+This Quick Start guide includes a detailed overview of how to set up a [combined Livepeer Orchestrator and Transcoder](/video-miners/core-concepts/architecture).
 
-As a [**Video Miner**](/video-miners/core-concepts/roles-and-responsibilities), you will be able to install and set up an Orchestrator for video mining and use your GPU for transcoding.
+By the end of this guide, you will be able to install and set up an Orchestrator for video mining and use your GPU for transcoding.
  
 ## What You Need to Know
 
@@ -31,8 +31,6 @@ Livepeer supports [NVIDIA **GPUs**](/video-miners/reference/gpu-support) for enc
 
 > **Note:** Additional hardware support will be added in the future; please refer to [GPU Support](/video-miners/reference/gpu-support) for a full list. 
 
-A [concurrency check](/video-miners/reference/concurrency-check) is recommended to assess concurrent streams capabilities.
-
 **Network** 
 
 - **Bandwidth** should provide a recommended minimum 1G upload/download. [**Test your available bandwith**](/video-miners/reference/bandwidth).
@@ -55,12 +53,13 @@ You will be setting up a [combined orchestrator and transcoder](video-miners/how
 
 ### Choose your role
 
-How to participate as a Video Miner on the network:
+There are multiple ways to participate as a Video Miner on the network:
 
 - [Orchestrator](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
     
 - [Transcoder](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
 
+This guide focuses on the steps necessary to participate as a combined Orchestrator / Transcoder.
 
 ### Install `livepeer`
 
@@ -69,7 +68,7 @@ You can follow the instructions provided for your chosen [installation workflow]
 
 ### Check your bandwidth
 
-You can check Upload/download bandwidth with these [speedtest tools](/video-miners/reference/bandwidth), or use your own.
+You can check upload/download bandwidth with these [speedtest tools](/video-miners/reference/bandwidth), or use your own.
 
 ### Assess concurrent stream capabilities
 
@@ -83,7 +82,7 @@ To do this, you should:
 
 - Download the [JSON file](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json) `transcodingOptions.json`.
 
-- Be sure to set the `-nvidia` GPU flag; otherwise, the benchmarking will default to CPU transcoding and significantly slow down and impact the performance of your machine.
+- Be sure to set the `-nvidia` GPU flag; otherwise, the benchmarking will default to CPU transcoding and drastically impact the results
 
 -  Set the `-concurrentSessions all` to transcode all the test segments, or specify the number of segments you want to test.
 
@@ -98,31 +97,25 @@ To do this, you should:
 livepeer_bench \
     -in bbb/source.m3u8 \
     -transcodingOptions transcodingOptions.json \
-    -nvidia <NVIDIA_GPU_IDs> # Only required for transcoding with GPUs
+    -nvidia <NVIDIA_GPU_IDs> \ # Only required for transcoding with GPUs
     -concurrentSessions <CONCURRENT_SESSIONS>
 PAUSE    
 ```
 > **Note:** *Pause is not required but will keep the log open so you can make changes. You can remove it once you have completed your testing.*
 
-> **Note:** To avoid performance issues, it is highly recommended you run a benchmarking test to guage the capacity of your GPU before proceeding.
+> **Note:** To avoid performance issues, it is highly recommended you run a benchmarking test to gauge the capacity of your GPU before proceeding.
 
-###  Open Ports
-
-Open ports and port forwarding to `8935` so that you can receive streams on the network:
-
-- Open port `8935` TCP and UDP.
-
-### Set Static IP and Port Forwarding
+### Set Static IP and Set Up Port Forwarding
 
 > **Note:** In your initial setup for testing, you can use a dynamic IP, but **to operate on the network, IPs must be static**.
 
 When receiving streams for broadcasters, the IP should be static to ensure broadcasters can access the same location each time they want to connect. Alternatively, for some configurations or business goals, you can use a hostname instead to provide more operational flexibility. 
 
-On your router or instance:
-
+#### Ports and Forwarding
+- Ensure that port `8935` can receive external requests.
 - Set up port forwarding to forward requests to the service URI to port `8935`
 
-> **Note:** Each router is distinct and in some cases, ports are hardcoded and do not allow for other configurations.
+Depending on your operational setup, this may need to be done via your router.
 
 ### Start an Orchestrator on Arbitrum Testnet
 
@@ -152,5 +145,5 @@ Once you have activated your orchestrator on the Arbitrum Mainnet, you should be
 
 ## Optimize your Orchestrator
 
-Finally, you can optimize your setup following the [How-to Guides](/video-miners/how-to-guides/).
+Finally, you can optimize your setup using the [How-to Guides](/video-miners/how-to-guides/).
 
