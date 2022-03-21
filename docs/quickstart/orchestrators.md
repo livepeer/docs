@@ -145,5 +145,5 @@ Once you have activated your orchestrator on the Arbitrum Mainnet, you should be
 
 ## Optimize your Orchestrator
 
-Finally, you can optimize your setup using the [How-to Guides](/video-miners/how-to-guides/).
+Finally, you can optimize your orchestrator using the [How-to Guides](/video-miners/how-to-guides/).
 
