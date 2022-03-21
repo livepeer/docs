@@ -109,7 +109,7 @@ PAUSE
 
 > **Note:** In your initial setup for testing, you can use a dynamic IP, but **to operate on the network, IPs must be static**.
 
-When receiving streams for broadcasters, the IP should be static to ensure broadcasters can access the same location each time they want to connect. Alternatively, for some configurations or business goals, you can use a hostname instead to provide more operational flexibility. 
+When receiving streams for broadcasters, the IP should be static to ensure broadcasters can access the same location each time they want to connect. For some configurations or business goals, it may be helpful use a hostname instead to provide more operational flexibility. 
 
 #### Ports and Forwarding
 - Ensure that port `8935` can receive external requests.
