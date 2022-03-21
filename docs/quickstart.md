@@ -7,28 +7,29 @@ This Quickstart guide includes a detailed overview of how Livepeer works with co
 
 [**Video Miners**](/video-miners/core-concepts/roles-and-responsibilities) will be able to install and set up an Orchestrator for video mining and use your current GPU for transcoding. 
  
-## What you need to know
+## What You Need to Know
 
-- familiarity with platform capabilities highlighted in [Protocol Core Concepts](/protocol/core-concepts/).
-- how to work with a command-line interface
+- Familiarity with platform capabilities highlighted in [Protocol Core Concepts](/protocol/core-concepts/).
+- How to work with a command-line interface
     -  `wget` is recommended (alternatively, `cURL`  can be used)
     - [grpcurl](https://github.com/fullstorydev/grpcurl#grpcurl) for interacting with gRPC servers for testing and monitoring
-- how to perform installations with Binaries and/or Docker 
-- familiarity with networking concepts and configuration (URLs, ports and port forwarding, static IPs, )
-- ability to access an [EVM-compatible network](/installation/connect-to-ethereum)
-- working with faucets and funding wallets    
+- How to perform installations with binaries and/or Docker 
+- Familiarity with networking concepts and configuration (URLs, ports and port forwarding, static IPs, )
+- Understanding of how to send and receive funds using [EVM-based networks](/installation/connect-to-ethereum)    
 
 ## Technical Requirements
 
-Livepeer supports the following to install and run `livepeer` on the network:  
+To install and run `livepeer` on the network, you will need to meet the following technical requirements:  
 
 **Operating Systems** 
 
-Linux, Darwin (macOS), and Windows
+Linux, Darwin (macOS), or Windows
 
 **Hardware** 
 
 Livepeer supports [NVIDIA **GPUs**](/video-miners/reference/gpu-support) for encoding/decoding. 
+
+> **Note:** Additional hardware support will be added in the future; please refer to [GPU Support](/video-miners/reference/gpu-support) for a full list. 
 
 A [concurrency check](/video-miners/reference/concurrency-check) is recommended to assess concurrent streams capabilities.
 
@@ -36,7 +37,7 @@ A [concurrency check](/video-miners/reference/concurrency-check) is recommended 
 
 - **Bandwidth** should provide a recommended minimum 1G upload/download. [**Test your available bandwith**](/video-miners/reference/bandwidth).
 - **Static IP/Hostname** to receive video streams 
-(to get started, Dynamic IP will suffice but **should be static for ongoing use**).
+(to get started, a Dynamic IP will suffice but **should be static for ongoing use**).
 - **Ports and Routing** ability to open ports and modify port forwarding.
 
 ## Installation Workflow
@@ -50,7 +51,7 @@ Depending on your workflow, you can install Livepeer:
 
 ## Start Video Mining on Testnet
 
-You will be setting up a standalone Orchestrator with a transcoder so that you will be able to manage it, get it listed on the Orchestrator list and view it on the Livepeer Explorer.
+You will be setting up a standalone Orchestrator with a transcoder so that you will be able to manage it, make it discoverable on the network, and view it on the Livepeer Explorer.
 
 ### Choose your role
 
@@ -90,7 +91,7 @@ Operators on the network are encouraged to read and comply with the terms of ser
 
 > **Realtime Duration Ratio**: should be under 0.2 for proper performance and not lose any segments. 
 
-- Provide the number of `concurrentSessions` until your reach 0.2 so that streams can process at real-time speed--sufficient performance for participating on the network. 
+- Provide the number of `concurrentSessions` until you reach 0.2 so that streams can process at real-time speed--sufficient performance for participating on the network. 
 
 **For Example:**
 
@@ -150,6 +151,5 @@ Once you have completed the instructions for updating your parameters to the Arb
 
 ## Optimize your Orchestrator
 
-Once Activated on the Network, you can to optimize your setup following the [How-to Guides](/video-miners/how-to-guides/) .
-
+Once Activated on the Network, you can to optimize your setup following the [How-to Guides](/video-miners/how-to-guides/).
 
