@@ -15,7 +15,6 @@ const config = {
   favicon: "img/favicon.ico",
   organizationName: "livepeer",
   projectName: "docs",
-
   presets: [
     [
       '@docusaurus/preset-classic',
@@ -49,6 +48,38 @@ const config = {
           alt: "Livepeer Logo",
           src: "img/logo.svg",
         },
+        items: [
+          {
+            href: "/contributing",
+            label: "Contributing",
+            position: "left",
+          },
+          {
+            href: "/installation",
+            label: "Installation",
+            position: "left",
+          },
+          {
+            href: "/protocol",
+            label: "Protocol",
+            position: "left",
+          },
+          {
+            href: "/video-miners",
+            label: "Orchestrators",
+            position: "left",
+          },
+          {
+            href: "/video-developers",
+            label: "Video Developers",
+            position: "left",
+          },
+          {
+            href: "/delegators",
+            label: "Delegators",
+            position: "left",
+          },
+        ],
       },
       colorMode: {
         defaultMode: 'light'
