@@ -55,6 +55,11 @@ const config = {
             position: "left",
           },
           {
+            href: "/installation",
+            label: "Installation",
+            position: "left",
+          },
+          {
             href: "/protocol",
             label: "Protocol",
             position: "left",
