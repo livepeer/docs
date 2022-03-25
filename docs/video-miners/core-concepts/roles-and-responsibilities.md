@@ -2,7 +2,7 @@
 title: About Livepeer Video Miners
 ---
 
-In the context of the Proof-of-Work (PoW) consensus mechanisms and protocols, e.g., Bitcoin, the term "miner" refers to participants using computational power to secure a blockchain. 
+In the context of Proof-of-Work (PoW) consensus mechanisms and protocols, e.g., Bitcoin, the term "miner" refers to participants using computational power to secure a blockchain. 
 
 Livepeer video miners participate in an open marketplace using their computational power to provide video transcoding services (and in the future, other video infrastructure services as well), enabling developers to build scalable video applications. Video miners get compensated for these services with [Livepeer token (LPT) and Ether (ETH)](/video-miners/core-concepts/earnings#fees). 
 
@@ -15,7 +15,7 @@ Video miners can take on different roles in the network:
 
 ### About Orchestrators 
 
-An orchestrator coordinates work on the network. They earn LPT rewards by staking their own LPT, attracting the stake of delegators by sharing earnings, and earning ETH fees for providing high-quality transcoding services to broadcasters. 
+An orchestrator coordinates work on the network. They earn LPT rewards by staking their own LPT, and earn ETH fees for providing high-quality transcoding services to broadcasters. Their earnings are influenced by their delegated stake, which they've attracted by sharing earnings.
 
 The quality of transcoding services is influenced by a combination of factors, including but not limited to: 
 
@@ -25,7 +25,7 @@ The quality of transcoding services is influenced by a combination of factors, i
 
 A broadcaster selects orchestrators to send work to based on these factors. Hence, an orchestrator's earning potential depends on their performance in these areas.
 
-An orchestrator can perform transcoding with the additional capability of outsourcing transcoding to one or many transcoders commonly referred to as a [transcoding pool](/video-miners/core-concepts/pools). They are similar to how PoW mining pools outsource PoW hashing to one or many separate miners. 
+An orchestrator running a combined orchestrator/transcoder can perform transcoding with the additional capability of outsourcing transcoding to one or many transcoders, commonly referred to as a [transcoding pool](/video-miners/core-concepts/pools). They are similar to how PoW mining pools outsource PoW hashing to one or many separate miners. 
 
 ### Running an Orchestrator
 
@@ -33,7 +33,7 @@ Video miners who run an orchestrator:
 
 - Earn LPT rewards
 - Participate in governance with your staked LPT
-- Can scale up your operation over time to maximize the amount of work received (instead of only sharing work received by another orchestrator -- like a transcoder)
+- Can scale up their operation over time to maximize the amount of work received (instead of only sharing work received by another orchestrator -- like a transcoder)
 - Should be able to maintain a static IP or DNS hostname for broadcasters to access
 - Should be able to maintain a publicly accessible server on the Internet
 - Manage and secure Ethereum private keys
@@ -58,7 +58,7 @@ Video miners who run a transcoder:
 - Take on a share of the work received by an orchestrator
 - Receive and convert source video to required formats and bitrates
 - Require less technical implementation than an orchestrator
-- Understand the compensation structure of transcoding pools will vary according to the [transcoding pools](/video-miners/core-concepts/pools) in which they participate.
+- Understand that the compensation structure of transcoding pools will vary according to the [transcoding pools](/video-miners/core-concepts/pools) in which they participate.
 
 To run a transcoder, see the
 [transcoding pools](/video-miners/core-concepts/pools) section for information on pools that are live on the network today.
