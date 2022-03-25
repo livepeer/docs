@@ -15,7 +15,7 @@ By the end of this guide, you will be able to install and set up an Orchestrator
     - [grpcurl](https://github.com/fullstorydev/grpcurl#grpcurl) for interacting with gRPC servers for testing and monitoring
 - Basic familiarity with installing binaries directly or with Docker
 - Familiarity with networking concepts and configuration (URLs, ports and port forwarding, static IPs, )
-- Understanding of how to send and receive funds using [EVM-based networks](/installation/connect-to-ethereum)    
+- Understanding of how to send and receive funds using [EVM-based networks](/installation/connect-to-ethereum)  
 
 ## Technical Requirements
 
@@ -80,7 +80,11 @@ You can download test streams and test your GPU capacity with the [benchmarking 
 
 To do this, you should:
 
-- Download the [JSON file](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json) `transcodingOptions.json`.
+- Download the [test streams](/video-miners/how-to-guides/benchmarking#download-the-test-stream) folder and save it in your `livepeer` folder.
+
+- Save the [JSON](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json) file `transcodingOptions.json` and save it in your `livepeer` folder.
+
+> #### To run `livepeer_bench`
 
 - Be sure to set the `-nvidia` GPU flag; otherwise, the benchmarking will default to CPU transcoding and drastically impact the results
 
@@ -145,5 +149,5 @@ Once you have activated your orchestrator on the Arbitrum Mainnet, you should be
 
 ## Optimize your Orchestrator
 
-Finally, you can optimize your orchestrator using the [How-to Guides](/video-miners/how-to-guides/).
+The following [How-to Guides](/video-miners/how-to-guides/) provide further instruction on how video miners can optimize an activated orchestrator.
 

@@ -19,33 +19,23 @@ of following roles:
 
 ## Orchestrator
 
-An **orchestrator** is a protocol-aware, smart, 24/7 process that is responsible
-to the end user of the network for transcoding jobs being performed correctly.
-They stake LPT to secure the work that they perform, and ensure it is done
-correctly. They can be penalized if they maliciously cheat and mistranscode an
-end users content.
+An **orchestrator** is a protocol-aware, smart, 24/7 process that is responsible to the end user of the network for transcoding jobs being performed correctly.
+They stake LPT to secure the work that they perform, and ensure it is done correctly. They can be penalized if they maliciously cheat and mistranscode an end users content.
 
 ## Transcoder
 
-A **transcoder** on the other hand, is a simple process that knows how to take
-an input segment of video, and transcode it to the desired outcome. It is not
-Livepeer protocol aware, it has no requirement for high reliability or being
-online 24/7, it makes no representation to the end user, and it has nothing at
-risk. A user in this role can run many transcoder processes, likely connected to
-many GPUs. It is possible to come up with constructions for "public transcoder
-pools" that allow orchestrators to distribute work to random transcoders.
+A **transcoder** is a simple process that takes an input segment of video, and transcodes it to the desired outcome. 
+
+- Transcoding is not a Livepeer protocol aware process, 
+- There is no requirement for high reliability or being online 24/7, makes no representation to the end user, and it has nothing at risk. 
+
+A user in this role can run many transcoder processes, likely connected to many GPUs. It is possible to come up with constructions for "public [transcoder pools](/video-miners/core-concepts/pools)" that allow orchestrators to distribute work to random transcoders.
 
 ## Broadcaster
 
-A **broadcaster** is a protocol-aware process that fulfills the demand side of
-the Livepeer network, it takes input streams from the end-user on its exposed
-RTMP interface to have them transcoded by the infrastructure providers running
-on Livepeer. The broadcaster takes care of splitting up streams into segments
-for transcoding and aggregating the transcoded results in a media playlist.
-Broadcasters are able to determine the output renditions and maximum price per
-pixel for transcoding jobs it sends into the Livepeer network and pay for these
-jobs in ETH using
-[probabilistic micropayments](https://medium.com/livepeer-blog/streamflow-probabilistic-micropayments-f3a647672462).
+A **broadcaster** is a protocol-aware process that fulfills the demand side of the Livepeer network, it takes input streams from the end-user on its exposed RTMP interface to have them transcoded by the infrastructure providers running on Livepeer. The broadcaster takes care of splitting up streams into segments for transcoding and aggregating the transcoded results in a media playlist.
+Broadcasters are able to determine the output renditions and maximum price per pixel for transcoding jobs it sends into the Livepeer network and pay for these
+jobs in ETH using [probabilistic micropayments](https://medium.com/livepeer-blog/streamflow-probabilistic-micropayments-f3a647672462).
 
 ## Delegator
 
