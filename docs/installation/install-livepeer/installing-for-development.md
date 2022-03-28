@@ -34,14 +34,20 @@ Linux (Ubuntu: 16.04 or 18.04):
 
 ```bash
 apt-get update && apt-get -y install build-essential pkg-config autoconf git curl
-# To enable transcoding on Nvidia GPUs
-apt-get -y install clang-8 clang-tools-8
 ```
 
 Linux (Ubuntu: 20.04):
 
 ```bash
 apt-get -y install protobuf-compiler-grpc golang-goprotobuf-dev 
+```
+
+To enable transcoding using Nvidia GPUs on Linux systems
+
+- CUDA must be installed on the system (https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html)
+- `clang` must be installed as well. The script that will install `ffmpeg` dependencies uses ```which clang``` command to determine whether `clang` is installed or not. Please check this on your system. If the path is empty, please install `clang`. For example on the Ubuntu machine one can do
+```bash
+apt-get -y install clang clang-tools
 ```
 
 Darwin (macOS):
@@ -75,6 +81,7 @@ Building `livepeer` requires Go. Follow the
    ```bash
    ./install_ffmpeg.sh
    ```
+   (note - this is the step that requires `which clang` to return clang path in order to build CUDA support, as described above)
 
 3. Set build environment variables.
 

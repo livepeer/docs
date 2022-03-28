@@ -1,6 +1,6 @@
 ---
-sidebar_position: 1
-title: Platforms and Releases
+sidebar_position: 2
+title: Overview
 ---
 
 ### Supported Platforms
