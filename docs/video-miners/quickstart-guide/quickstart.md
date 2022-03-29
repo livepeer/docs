@@ -1,12 +1,13 @@
 ---
-sidebar_position: 2
-title: Orchestrators
+title: Quickstart Guide
+sidebar_position: 1
 ---
 
-This Quick Start guide includes a detailed overview of how to set up a [combined Livepeer Orchestrator and Transcoder](/video-miners/core-concepts/architecture).
+This Quickstart guide includes a detailed overview of how to set up a [combined Livepeer Orchestrator and Transcoder](/video-miners/core-concepts/architecture).
 
 By the end of this guide, you will be able to install and set up an Orchestrator for video mining and use your GPU for transcoding.
  
+
 ## What You Need to Know
 
 - Familiarity with platform capabilities highlighted in [Protocol Core Concepts](/protocol/core-concepts/).

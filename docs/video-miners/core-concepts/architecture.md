@@ -2,8 +2,6 @@
 title: Video Miner Architecture
 ---
 
-# Video Miner Architecture
-
 `livepeer` currently supports 3 modes of operation for video miners:
 
 - Standalone orchestrator mode (`-orchestrator`)

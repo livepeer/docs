@@ -1,9 +1,7 @@
 ---
-title: Overview
+title: About Video Developers
 sidebar_position: 1
 ---
-
-# Video Developer Overview
 
 This section of the documentation is for developers who want to integrate the
 public network's live video transcoding service into an application or video

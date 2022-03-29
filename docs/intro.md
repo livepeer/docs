@@ -10,7 +10,7 @@ The Livepeer project aims to deliver a live video streaming network protocol tha
 
 This site is organized by topics including concepts, tasks, and reference information designed for [participants](/protocol/core-concepts/ecosystem-participants) on the Livepeer Network:
 
-- [Video Miners](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
+- [Video Miners](/video-miners/)
 - [Video Developers](/video-developers/)
 - [Delegators and Tokenholders](/protocol/core-concepts/ecosystem-participants#delegator)
 
@@ -29,7 +29,7 @@ This site is organized by topics including concepts, tasks, and reference inform
 - Join our [community chat](https://discord.gg/RR4kFAh) on Discord.
 
 ## Livepeer Quickstart
-Install and get up and running with the [Livepeer Quickstart](/quickstart/orchestrators) guide for Video Miners and Video Developers.
+Install and get up and running with the [Livepeer Quickstart](/video-miners/quickstart/) guide for Video Miners and Video Developers.
 
 ### New to Livepeer? 
 
@@ -48,7 +48,9 @@ We frequently update this documentation focusing on continuous improvement and v
 
 > **Note** All documentation is editable via [GitHub](https://github.com/livepeer/livepeer-org/tree/master/docs). If this is your first time working in the Livepeer repo, please check out the [contribution guide](/contributing/) for instructions.
 
-### You can make suggestions and contribute content to the docs in the following ways:
+### How To Contribute
+
+You can make suggestions and contribute content to the docs in the following ways:
 
 - ***"Edit this page"*** links are included at the bottom of each page and bring you to the document stored in our Github repository where you can edit directly in the document.  
 
