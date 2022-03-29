@@ -1,6 +1,6 @@
 ---
-title: Calling Reward
-sidebar_position: 5
+title: Reward Calls
+sidebar_position: 6
 ---
 
 

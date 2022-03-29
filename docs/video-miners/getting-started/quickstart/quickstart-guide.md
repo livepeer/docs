@@ -1,12 +1,13 @@
 ---
-title: Quickstart Guide
+title: Quickstart 
 sidebar_position: 1
 ---
 
-This Quickstart guide includes a detailed overview of how to set up a [combined Livepeer Orchestrator and Transcoder](/video-miners/core-concepts/architecture).
+This Quickstart guide includes steps to follow in order for you be able to install and set up an Orchestrator for video mining and use your GPU for transcoding.
 
-By the end of this guide, you will be able to install and set up an Orchestrator for video mining and use your GPU for transcoding.
- 
+Livepeer [architecture](/video-miners/core-concepts/architecture) supports several modes of operation you can choose from based on your use case and preferences.
+
+This Quickstart guide includes a detailed overview of **how to set up a [combined Livepeer Orchestrator and Transcoder](/video-miners/core-concepts/architecture)**.
 
 ## What You Need to Know
 
@@ -52,7 +53,7 @@ Depending on your workflow, you can install Livepeer:
 
 You will be setting up a [combined orchestrator and transcoder](video-miners/how-to-guides/o-t-split) that you will be able to manage, make discoverable on the network, and view on the Livepeer Explorer. For advanced users, it may be preferable to run an [orchestrator / transcoder split](video-miners/how-to-guides/o-t-split).
 
-### Choose your role
+### Choosing your role
 
 There are multiple ways to participate as a Video Miner on the network:
 
@@ -60,7 +61,7 @@ There are multiple ways to participate as a Video Miner on the network:
     
 - [Transcoder](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
 
-This guide focuses on the steps necessary to participate as a combined Orchestrator / Transcoder.
+This guide focuses on the steps necessary to participate as a [combined Orchestrator/Transcoder](/video-miners/core-concepts/architecture).
 
 ### Install `livepeer`
 

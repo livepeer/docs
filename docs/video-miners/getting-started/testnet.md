@@ -1,6 +1,6 @@
 ---
 title: Running on Testnet
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 This guide will walk you through the process of running an orchestrator on the Arbitrum Rinkeby testnet. This is an important step to (1) ensure that your orchestrator is correctly configured, and (2) take any troubleshooting steps and make any tweaks in a lower-risk environment than mainnet.
