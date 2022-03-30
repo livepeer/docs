@@ -1,5 +1,5 @@
 ---
-title: Accessibility Check
+title: Discoverability Check
 sidebar_position: 5
 ---
 

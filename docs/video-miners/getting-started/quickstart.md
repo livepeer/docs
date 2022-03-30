@@ -49,7 +49,7 @@ Depending on your workflow, you can install Livepeer:
 > * [Using a Docker image](/installation/install-livepeer/docker)
 > * [From the source code](/installation/install-livepeer/installing-for-development)
 
-## Start Video Mining on Testnet
+## Start Video Mining
 
 You will be setting up a [combined orchestrator and transcoder](video-miners/how-to-guides/o-t-split) that you will be able to manage, make discoverable on the network, and view on the Livepeer Explorer. For advanced users, it may be preferable to run an [orchestrator / transcoder split](video-miners/how-to-guides/o-t-split).
 
