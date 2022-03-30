@@ -29,7 +29,7 @@ This site is organized by topics including concepts, tasks, and reference inform
 - Join our [community chat](https://discord.gg/RR4kFAh) on Discord.
 
 ## Livepeer Quickstart
-Install and get up and running with the [Livepeer Quickstart](/video-miners/quickstart/) guide for Video Miners and Video Developers.
+Install and get up and running with the [Livepeer Quickstart](/video-miners/getting-started/quickstart/) guide for Video Miners and Video Developers.
 
 ### New to Livepeer? 
 

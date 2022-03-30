@@ -57,9 +57,9 @@ You will be setting up a [combined orchestrator and transcoder](video-miners/how
 
 There are multiple ways to participate as a Video Miner on the network:
 
-- [Orchestrator](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
+- [Orchestrator](/video-miners/#types-of-video-miners)
     
-- [Transcoder](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
+- [Transcoder](/video-miners/#types-of-video-miners)
 
 This guide focuses on the steps necessary to participate as a [combined Orchestrator/Transcoder](/video-miners/core-concepts/architecture).
 
@@ -125,11 +125,11 @@ Depending on your operational setup, this may need to be done via your router.
 
 ### Start an Orchestrator on Arbitrum Testnet
 
-Follow the Arbitrum [Testnet](/video-miners/getting-started/testing/testnet) guide.
+Follow the Arbitrum [Testnet](/video-miners/getting-started/testnet) guide.
  
 ### Navigate to the Livepeer Explorer on Arbitrum Testnet
 
- Once you've successfully completed the [Testnet](/video-miners/getting-started/testing/testnet) instructions, you should be able to see your Orchestrator on the [Testnet Explorer](https://arbitrum-rinkeby.explorer.livepeer.org/orchestrators).
+ Once you've successfully completed the [Testnet](/video-miners/getting-started/testnet) instructions, you should be able to see your Orchestrator on the [Testnet Explorer](https://arbitrum-rinkeby.explorer.livepeer.org/orchestrators).
 
 ## Video Mining on Arbitrum Mainnet
 
