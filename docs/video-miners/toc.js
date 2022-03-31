@@ -2,7 +2,7 @@ const toc = [
     "video-miners/index",
     { 
         "Core Concepts": [
-            "video-miners/core-concepts/index",
+            "video-miners/core-concepts/core-concepts",
             "video-miners/core-concepts/selection",
             "video-miners/core-concepts/architecture",
             "video-miners/core-concepts/dual-mining",
@@ -13,7 +13,7 @@ const toc = [
     },
     {
         "Getting Started":[
-            "video-miners/getting-started/quickstart",
+            "video-miners/getting-started/getting-started",
             "video-miners/getting-started/testnet",
             "video-miners/getting-started/activation",
             "video-miners/getting-started/discoverability",
@@ -22,7 +22,7 @@ const toc = [
     },
     {
         "Guides":[
-            "video-miners/guides/index",
+            "video-miners/guides/guides",
             "video-miners/guides/benchmarking",
             "video-miners/guides/contract-wallet-migration",
             "video-miners/guides/dual-mining",
@@ -37,12 +37,12 @@ const toc = [
     },
     {
         "Reference":[
+            "video-miners/reference/reference",
             "video-miners/reference/bandwidth",
             "video-miners/reference/concurrency-check",
              "video-miners/reference/configuration",
             "video-miners/reference/gpu-support",
             "video-miners/reference/hardware",
-            "video-miners/reference/index",
             "video-miners/reference/leaderboard",
             "video-miners/reference/metrics"
         ]

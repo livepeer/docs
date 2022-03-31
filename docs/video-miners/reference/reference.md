@@ -1,9 +1,7 @@
 ---
-title: Overview
+title: Reference
 sidebar_position: 1
 ---
-
-# Overview
 
 This section contains video miner references:
 
