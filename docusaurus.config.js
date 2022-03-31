@@ -22,6 +22,7 @@ const config = {
       ({
         docs: {
           routeBasePath: "/",
+          breadcrumbs: true,
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: "https://github.com/livepeer/docs/blob/main",
         },
