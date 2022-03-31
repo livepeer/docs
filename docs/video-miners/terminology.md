@@ -3,8 +3,6 @@ title: Terminology
 sidebar_position: 6
 ---
 
-# Glossary
-
 ## Transcoding
 
 Transcoding is the process of taking an input source video in one format andbitrate, and converting it to many output rendition videos with different formats and bitrates such that the video can be played on the majority of the
