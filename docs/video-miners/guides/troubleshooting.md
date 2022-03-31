@@ -11,7 +11,7 @@ most common issues that a video miner might encounter.
 
 This error means that your orchestrator has hit its session limit so it is not
 longer accepting work from broadcasters. See the
-[session limit guide](/video-miners/how-to-guides/session-limits) for
+[session limit guide](/video-miners/guides/session-limits) for
 information on setting the session limit.
 
 ## Cannot allocate memory error
@@ -135,7 +135,7 @@ blockchain. Ensure your node is actually accessible at that address.
 
 If you set the `-v 6` flag when starting `livepeer`, more verbose logs
 indicating transcoding activity will be available. You can also setup
-[metrics monitoring](/video-miners/how-to-guides/metrics-monitoring).
+[metrics monitoring](/video-miners/guides/metrics-monitoring).
 
 **How do I keep a record of my node's logs?**
 

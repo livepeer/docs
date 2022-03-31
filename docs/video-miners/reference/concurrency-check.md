@@ -19,4 +19,4 @@ Concurrent session caps for NVIDIA hardware can be found [here](https://develope
 
 ## Testing 
 
-You can test the performance of your card using the `livepeer_bench` [benchmarking tool](/video-miners/how-to-guides/benchmarking).
+You can test the performance of your card using the `livepeer_bench` [benchmarking tool](/video-miners/guides/benchmarking).

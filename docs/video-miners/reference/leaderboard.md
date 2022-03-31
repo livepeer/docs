@@ -173,7 +173,7 @@ In order to improve your metrics, the following factors should be considered:
 A few things you can explore to improve the speed of transcoding include:
 
 - Evaluate your current transcoding speed by using a
-  [transcoding benchmarking tool](/video-miners/how-to-guides/benchmarking)
+  [transcoding benchmarking tool](/video-miners/guides/benchmarking)
 - Review the [hardware requirements](/video-miners/reference/hardware) and
   consider upgrading your hardware
 - If you have access to a
