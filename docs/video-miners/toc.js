@@ -22,17 +22,17 @@ const toc = [
     },
     {
         "Guides":[
-            "video-miners/how-to-guides/index",
-            "video-miners/how-to-guides/benchmarking",
-            "video-miners/how-to-guides/contract-wallet-migration",
-            "video-miners/how-to-guides/dual-mining",
-            "video-miners/how-to-guides/l2-migration",
-            "video-miners/how-to-guides/metrics-monitoring",
-            "video-miners/how-to-guides/o-t-split",
-            "video-miners/how-to-guides/pricing",
-            "video-miners/how-to-guides/session-limits",
-            "video-miners/how-to-guides/troubleshooting",
-            "video-miners/how-to-guides/vote"
+            "video-miners/guides/index",
+            "video-miners/guides/benchmarking",
+            "video-miners/guides/contract-wallet-migration",
+            "video-miners/guides/dual-mining",
+            "video-miners/guides/l2-migration",
+            "video-miners/guides/metrics-monitoring",
+            "video-miners/guides/o-t-split",
+            "video-miners/guides/pricing",
+            "video-miners/guides/session-limits",
+            "video-miners/guides/troubleshooting",
+            "video-miners/guides/vote"
         ]
     },
     {
