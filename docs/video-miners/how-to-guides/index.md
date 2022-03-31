@@ -7,13 +7,13 @@ sidebar_position: 1
 
 The following are guides that provide information and instruction about how you can learn more about Livepeer and how to work with an Orchestrator.
 
-- [Connect an orchestrator with separate transcoders](/video-miners/guides/o-t-split): The split orchestrator and transcoder architecture allows the orchestrator to outsource transcoding to remote transcoders run by the same orchestrator or  third parties. 
+- [Connect an orchestrator with separate transcoders](/video-miners/how-to-guides/o-t-split): The split orchestrator and transcoder architecture allows the orchestrator to outsource transcoding to remote transcoders run by the same orchestrator or  third parties. 
 
-- [Benchmark Transcoding](/video-miners/guides/benchmarking): How to configure and run the `livepeer_bench` to test the capacity to process livestream segments.
+- [Benchmark Transcoding](/video-miners/how-to-guides/benchmarking): How to configure and run the `livepeer_bench` to test the capacity to process livestream segments.
 
 - [Set transcoding session limits](/video-miners/how-to-guides/session-limits): Manage transcoding capacity to maximize work received while also protecting against performance degradation due to overload.
 
-- [Setup orchestrator and transcoder metrics monitoring](/video-miners/guides/metrics-monitoring): Configure Livepeer, to enabling metrics monitoring for your orchestrator and transcoder(s).
+- [Setup orchestrator and transcoder metrics monitoring](/video-miners/how-to-guides/metrics-monitoring): Configure Livepeer, to enabling metrics monitoring for your orchestrator and transcoder(s).
 
 - [Dual mine](/video-miners/how-to-guides/dual-mining): Configure an orchestrator to transcode video on GPUs while concurrently mining cryptocurrencies and performing other CUDA operations such as machine learning.
 
