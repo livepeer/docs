@@ -8,7 +8,7 @@ This guide provides steps to walk you through the process of running an orchestr
 - To ensure that your orchestrator is correctly configured, and 
 - To take any [troubleshooting](/video-miners/guides/troubleshooting) steps and test any modifications you make to your settings. 
 
-> **Note:** If you are new to Livepeer be sure to read [Quickstart guide](/video-miners/getting-started/) before proceeding.
+> **Note:** If you are new to Livepeer be sure to read [Quickstart guide](/video-miners/getting-started/getting-started) before proceeding.
 
 ### Run on Arbitrum Rinkeby testnet
 
