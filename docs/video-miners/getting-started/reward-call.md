@@ -6,21 +6,13 @@ sidebar_position: 6
 
 # Calling Reward
 
-By default, an active orchestrator will automatically call reward in each round
-meaning that it will submit an Arbitrum transaction that will distribute newly
+By default, an active orchestrator will automatically call reward in each round meaning that it will submit an Arbitrum transaction that will distribute newly
 minted LPT rewards to itself and its delegators.
 
-The amount of LPT rewards distributed by the reward call will depend on the
-orchestrator's stake (includes both its own self-delegated stake and the stake
-of its delegators). Note that it is possible for the ETH transaction cost of
-calling reward to exceed the amount of LPT rewards distributed for
+The amount of LPT rewards distributed by the reward call will depend on the orchestrator's stake (includes both its own self-delegated stake and the stake of its delegators). Note that it is possible for the ETH transaction cost of calling reward to exceed the amount of LPT rewards distributed for
 orchestrator's with very low stake.
 
-As you are getting started, the recommendation is to initially disable automatic
-reward calls, manually make reward calls via `livepeer_cli` in each round based
-on whether it makes economic senese to do so and enable automatic reward calls
-only when you feel comfortable with the amount of LPT rewards expected to be
-distributed relative to the ETH transaction cost.
+As you are getting started, the recommendation is to initially disable automatic reward calls, manually make reward calls via `livepeer_cli` in each round based on whether it makes economic senese to do so and enable automatic reward calls only when you feel comfortable with the amount of LPT rewards expected to be distributed relative to the ETH transaction cost.
 
 ## Pre-requisites
 
@@ -54,8 +46,7 @@ You can manually call reward via `livepeer_cli`:
 
 3. Enter the number corresponding to the `Invoke "reward"` option
 
-4. Wait for transaction to confirm. You should see the logs of your orchestrator
-   indicating a transaction being submitted and confirmed on-chain.
+4. Wait for transaction to confirm. You should see the logs of your orchestrator indicating a transaction being submitted and confirmed on-chain.
 
 ## Enable automatic reward calls
 

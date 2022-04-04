@@ -18,7 +18,7 @@ This site is organized by topics including concepts, tasks, and reference inform
 
 **[Livepeer Network Upgrade](https://medium.com/livepeer-blog/the-confluence-upgrade-is-live-3b6b342ea71e)** - Livepeer now offers faster transactions and lower costs for Livepeer broadcasters, orchestrators, and delegators.
 
-**[How to Migrate your Orchestrator to Arbitrum](https://docs.livepeer.org/video-miners/guides/l2-migration)**  - Instructions for One-time Migration to Arbitrum (L2)
+**[How to Migrate your Orchestrator to Arbitrum](/video-miners/guides/l2-migration)**  - Instructions for One-time Migration to Arbitrum (L2)
 
 **[Latest Releases](https://github.com/livepeer/go-livepeer/releases)** - We strongly encourage all node operators to upgrade to >=0.5.28 by February 21 so you can connect to Arbitrum Mainnet after the LIP-73 block.
 
@@ -29,7 +29,7 @@ This site is organized by topics including concepts, tasks, and reference inform
 - Join our [community chat](https://discord.gg/RR4kFAh) on Discord.
 
 ## Livepeer Quickstart
-Install and get up and running with the [Livepeer Quickstart](/video-miners/getting-started/quickstart/) guide for Video Miners and Video Developers.
+Install and get up and running with the [Livepeer Quickstart](/video-miners/getting-started/) guide for Video Miners and Video Developers.
 
 ### New to Livepeer? 
 

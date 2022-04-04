@@ -10,7 +10,7 @@ const toc = [
                     "installation/install-livepeer/installing-for-development"]
             },
             "installation/configuring-livepeer",
-            "installation/connect-to-ethereum",
+            "installation/connect-to-arbitrum",
         ]
     },
     "video-miners/terminology"
