@@ -95,9 +95,9 @@ maxTxReplacements: Number of times to automatically replace pending transactions
 
 gasLimit: Gas limit for ETH transaction. Default `0`
 
-minGasPrice: Minimum gas price (priority fee + base fee) for ETH transactions in wei, 10 Gwei = 10000000000. If not set, this will be the network's default min gas fee.
+minGasPrice: Minimum gas price (priority fee + base fee) for Arbitrum-ETH transactions in ArbGas
 
-maxGasPrice: Maximum gas price (priority fee + base fee) for ETH transactions in wei, 40 Gwei = 40000000000. Default `0`
+maxGasPrice: Maximum gas price (priority fee + base fee) for Arbitrum-ETH transactions in ArbGas
 
 ethController: Protocol smart contract address. No default
 
