@@ -66,7 +66,7 @@ Video miners who run a transcoder:
 To run a transcoder, see the
 [transcoding pools](/video-miners/core-concepts/pools) section for information on pools that are live on the network today.
 
-To run an orchestrator, continue to the [Livepeer Quickstart](/video-miners/getting-started/getting-started) guide.
+To run an orchestrator, continue to the [Livepeer Quickstart](/video-miners/getting-started/getting-started.md) guide.
 
 <!-- ## Quick Access
 

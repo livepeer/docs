@@ -10,7 +10,7 @@ sidebar_position: 4
 
 - Make sure you have `livepeer`[installed](/installation/install-livepeer/)
 - Make sure you have access to an
-  [Arbitrum JSON-RPC URL](/installation/connect-to-ethereum)
+  [Arbitrum JSON-RPC URL](/installation/connect-to-arbitrum)
 - If you are transcoding with Nvidia GPUs:
   - Make sure you have a
     [Nvidia driver](https://www.nvidia.com/Download/index.aspx) installed

@@ -29,7 +29,7 @@ This site is organized by topics including concepts, tasks, and reference inform
 - Join our [community chat](https://discord.gg/RR4kFAh) on Discord.
 
 ## Livepeer Quickstart
-Install and get up and running with the [Livepeer Quickstart](/video-miners/getting-started/getting-started) guide for Video Miners and Video Developers.
+Install and get up and running with the [Livepeer Quickstart](/video-miners/getting-started/getting-started.md) guide for Video Miners and Video Developers.
 
 ### New to Livepeer? 
 
@@ -46,7 +46,7 @@ This project is an open-source, decentralized community effort, so feel free to 
 
 We frequently update this documentation focusing on continuous improvement and very much appreciate and encourage your participation. 
 
-> **Note** All documentation is editable via [GitHub](https://github.com/livepeer/livepeer-org/tree/master/docs). If this is your first time working in the Livepeer repo, please check out the [contribution guide](/contributing/) for instructions.
+> **Note** All documentation is editable via [GitHub](https://github.com/livepeer/docs). If this is your first time working in the Livepeer repo, please check out the [contribution guide](/contributing/) for instructions.
 
 ### How To Contribute
 
