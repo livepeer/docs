@@ -1,6 +1,9 @@
 ---
-title: About Livepeer Video Miners
+sidebar_position: 1
+title: About Video Mining
 ---
+
+This section of the livepeer.org documentation is for **video miners**. Video miners in the Livepeer network provide video transcoding services.
 
 In the context of Proof-of-Work (PoW) consensus mechanisms and protocols, e.g., Bitcoin, the term "miner" refers to participants using computational power to secure a blockchain. 
 
@@ -10,8 +13,8 @@ Livepeer video miners participate in an open marketplace using their computation
 
 Video miners can take on different roles in the network:
 
-- [Orchestrators](/video-miners/core-concepts/roles-and-responsibilities#about-orchestrators) are responsible for receiving video from broadcasters and returning transcoded results.
-- [Transcoders](/video-miners/core-concepts/roles-and-responsibilities#about-transcoders) are responsible for transcoding video.
+- [Orchestrators](/video-miners/#about-orchestrators) are responsible for receiving video from broadcasters and returning transcoded results.
+- [Transcoders](/video-miners/#about-transcoders) are responsible for transcoding video.
 
 ### About Orchestrators 
 
@@ -63,5 +66,4 @@ Video miners who run a transcoder:
 To run a transcoder, see the
 [transcoding pools](/video-miners/core-concepts/pools) section for information on pools that are live on the network today.
 
-To run an orchestrator, continue to the [Livepeer Quickstart](/video-miners/quickstart/orchestrators) guide.
-
+To run an orchestrator, continue to the [Livepeer Quickstart](/video-miners/getting-started/getting-started.md) guide.

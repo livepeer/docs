@@ -5,8 +5,7 @@ sidebar_position: 1
 
 # Overview
 
-This section of the documentation provides an overview of the Livepeer protocol
-along with API documentation for interacting it.
+This section of the documentation provides an overview of the Livepeer protocol along with API documentation for interacting it.
 
 <!-- ## Quick Access
 

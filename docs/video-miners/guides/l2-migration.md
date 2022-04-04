@@ -7,7 +7,7 @@ sidebar_position: 10
 - You will need make sure your connected Ethereum account has enough ETH to cover gas for the `migrate` transaction. If you do not have ETH in your wallet, you will need to add some using another wallet or an on-ramp.
 - The migration must be completed using the Livepeer explorer, but ***you will have the option to sign a typed data message via the CLI if you so desire.***
 - Ensure you're interacting with the correct contracts. Addresses can be found [here](/protocol/reference/deployed.md)
-- **If you use a contract account rather than an EOA**: You will need to interact directly with the Migrator contract methods. Please use the guide [here](/video-miners/how-to-guides/contract-wallet-migration). *If you don’t know what this means, it probably doesn’t apply to you.*
+- **If you use a contract account rather than an EOA**: You will need to interact directly with the Migrator contract methods. Please use the guide [here](/video-miners/guides/contract-wallet-migration). *If you don’t know what this means, it probably doesn’t apply to you.*
 - You must be using a `go-livepeer` [release](https://github.com/livepeer/go-livepeer/releases) >= 0.5.28
 - To register your Orchestrator on the destination chain, you'll need to [bridge some ETH to pay for the transaction](https://bridge.arbitrum.io/)
 
@@ -35,16 +35,16 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     
     This does not have to be the same wallet you use for your orchestrator, but **if you are using a different wallet to submit the transaction, you will still need to access the wallet that you use for your orchestrator so that you can sign a typed data message**
      
-    <img src="/docs-assets/video-miners/how-to-guides/connect-wallet.png" alt="connect wallet to livepeer" width="300"/>
+    <img src="/docs-assets/video-miners/guides/connect-wallet.png" alt="connect wallet to livepeer" width="300"/>
     
     There are a few options for connecting a wallet to Livepeer. The wallet you choose should  contain a small amount of ETH to pay for the `migrate` transaction
     
-    <img src="/docs-assets/video-miners/how-to-guides/connect-wallet2.png" alt="connect wallet to livepeer options" width="300"/>
+    <img src="/docs-assets/video-miners/guides/connect-wallet2.png" alt="connect wallet to livepeer options" width="300"/>
 
     
 2. **Navigate to the L2 Migration Tool to begin migration to Arbitrum**
 
-    <img src="/docs-assets/video-miners/how-to-guides/begin-migration.png" alt="begin migration" width="300"/>
+    <img src="/docs-assets/video-miners/guides/begin-migration.png" alt="begin migration" width="300"/>
 
 3. **Sign the `migrate` transaction** 
     
@@ -52,7 +52,7 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
     3a. **Sign using connected wallet**
     
     If you prefer to sign using the wallet that you have connected to the explorer, click "Approve Migration" and approve the transaction using your browser extension
-    <img src="/docs-assets/video-miners/how-to-guides/sign-web.png" alt="sign web" width="300"/>
+    <img src="/docs-assets/video-miners/guides/sign-web.png" alt="sign web" width="300"/>
     
     3b. **Sign using CLI**
 
@@ -60,24 +60,24 @@ Other options are: [set up an Arbitrum node](https://developer.offchainlabs.com/
 
     Please note that if you are signing with the CLI and your connected wallet is NOT your orchestrator wallet, the stake amount will not appear until after you enter your Ethereum account address.
 
-    <img src="/docs-assets/video-miners/how-to-guides/sign-cli.png" alt="sign cli" width="300"/>     
+    <img src="/docs-assets/video-miners/guides/sign-cli.png" alt="sign cli" width="300"/>     
 
     
     Once you have entered an address, you will see a message to sign and a text entry box for the signature.
     
     First, copy the message provided. Then go into your CLI and select option 19: Sign Typed Data.
     
-    <img src="/docs-assets/video-miners/how-to-guides/sign-cli2.png" alt="sign cli" width="300"/>
+    <img src="/docs-assets/video-miners/guides/sign-cli2.png" alt="sign cli" width="300"/>
     
     Follow the CLI's prompts to generate a signature.
 
     **IMPORTANT: If you are using Windows, you'll need to type `ctrl+Z` after pasting the typed data instead of `ctrl+D`.**
     
-    <img src="/docs-assets/video-miners/how-to-guides/sign-cli3.png" alt="sign cli" width="300"/>
+    <img src="/docs-assets/video-miners/guides/sign-cli3.png" alt="sign cli" width="300"/>
     
     Paste this message in the provided box and click Continue.
     
-    <img src="/docs-assets/video-miners/how-to-guides/sign-cli4.png" alt="sign cli" width="300"/>
+    <img src="/docs-assets/video-miners/guides/sign-cli4.png" alt="sign cli" width="300"/>
     
     Finally, click "Approve Migration" to send the transaction to Ethereum. The connected browser wallet will pay gas, but it will use the provided signature.
     

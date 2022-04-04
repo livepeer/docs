@@ -7,7 +7,7 @@ title: Set Session Limits
 ## Pre-requisites
 
 - Make sure you know how to
-  [benchmark transcoding](/video-miners/how-to-guides/benchmarking)
+  [benchmark transcoding](/video-miners/guides/benchmarking)
 
 ## Session limits
 

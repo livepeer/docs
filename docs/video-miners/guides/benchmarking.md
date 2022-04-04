@@ -113,7 +113,7 @@ orchestrator.
 If you want to get a rough idea of how many streams you can transcode
 simultaneously, you can increase the number of concurrent sessions via
 `-concurrentSessions` and compare the total time taken. Refer to the
-[session limits guide](/video-miners/how-to-guides/session-limits) for more
+[session limits guide](/video-miners/guides/session-limits) for more
 details.
 
 To export the segment-wise CSV data to a file `output.csv` and analyze it with

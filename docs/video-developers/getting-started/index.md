@@ -14,11 +14,11 @@ inside your application.
 > testing your livestreams. If you're livestreaming in a production setting make
 > sure to change the network to `arbitrum-one-mainnet`. Learn more about supported networks,
 > including Arbitrum mainnet and Arbitrum Rinkeby,
-> [here](/installation/connect-to-ethereum#supported-networks).
+> [here](/installation/connect-to-arbitrum#supported-networks).
 
 ## Pre-requisites
 
 - Make sure you have `livepeer` [installed](/installation/install-livepeer/)
 - Make sure you have access to an
-  [Arbitrum JSON-RPC URL](/installation/connect-to-ethereum)
+  [Arbitrum JSON-RPC URL](/installation/connect-to-arbitrum)
 

@@ -1,17 +1,14 @@
 ---
-title: Glossary
+title: Terminology
 sidebar_position: 6
 ---
 
-# Glossary
-
 ## Transcoding
 
-Transcoding is the process of taking an input source video in one format and
-bitrate, and converting it to many output rendition videos with different
-formats and bitrates such that the video can be played on the majority of the
-devices in the world at any internet connection speed. Additional details on
-transcoding can be found in
+Transcoding is the process of taking an input source video in one format andbitrate, and converting it to many output rendition videos with different formats and bitrates such that the video can be played on the majority of the
+devices in the world at any internet connection speed. 
+
+Additional details on transcoding can be found in
 [this blog post](https://livepeer.com/blog/intro-to-transcoding).
 
 ## Orchestrator

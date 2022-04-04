@@ -1,9 +1,7 @@
 ---
-title: Overview
+title: Reference
 sidebar_position: 1
 ---
-
-# Overview
 
 This section contains video miner references:
 
@@ -12,5 +10,5 @@ This section contains video miner references:
 - [Bandwidth requirements](/video-miners/reference/bandwidth)
 - [Orchestrator performance leaderboard](/video-miners/reference/leaderboard)
 - [Supported GPUs](/video-miners/reference/gpu-support)
-- [Glossary](/video-miners/reference/glossary)
+- [Terminology](/video-miners/terminology)
 - [Prometheus Metrics](/video-miners/reference/metrics)

@@ -1,12 +1,14 @@
 ---
-sidebar_position: 2
-title: Orchestrators
+title: Quickstart
+sidebar_position: 1
 ---
 
-This Quick Start guide includes a detailed overview of how to set up a [combined Livepeer Orchestrator and Transcoder](/video-miners/core-concepts/architecture).
+This Quickstart guide provides steps to follow in order for you to be able to install and understand how to set up an Orchestrator for video mining and use your GPU for transcoding.
 
-By the end of this guide, you will be able to install and set up an Orchestrator for video mining and use your GPU for transcoding.
- 
+Livepeer [architecture](/video-miners/core-concepts/architecture) supports several modes of operation you can choose from based on your use case and preferences.
+
+The following includes detailed high-level descriptions and links with instructions about **how to set up a [combined Livepeer Orchestrator and Transcoder](/video-miners/core-concepts/architecture)**.
+
 ## What You Need to Know
 
 - Familiarity with platform capabilities highlighted in [Protocol Core Concepts](/protocol/core-concepts/).
@@ -15,7 +17,7 @@ By the end of this guide, you will be able to install and set up an Orchestrator
     - [grpcurl](https://github.com/fullstorydev/grpcurl#grpcurl) for interacting with gRPC servers for testing and monitoring
 - Basic familiarity with installing binaries directly or with Docker
 - Familiarity with networking concepts and configuration (URLs, ports and port forwarding, static IPs, )
-- Understanding of how to send and receive funds using [EVM-based networks](/installation/connect-to-ethereum)    
+- Understanding of how to send and receive funds using [EVM-based networks](/installation/connect-to-arbitrum)  
 
 ## Technical Requirements
 
@@ -47,19 +49,19 @@ Depending on your workflow, you can install Livepeer:
 > * [Using a Docker image](/installation/install-livepeer/docker)
 > * [From the source code](/installation/install-livepeer/installing-for-development)
 
-## Start Video Mining on Testnet
+## Start Video Mining
 
-You will be setting up a [combined orchestrator and transcoder](video-miners/how-to-guides/o-t-split) that you will be able to manage, make discoverable on the network, and view on the Livepeer Explorer. For advanced users, it may be preferable to run an [orchestrator / transcoder split](video-miners/how-to-guides/o-t-split).
+You will be setting up a [combined orchestrator and transcoder](/video-miners/core-concepts/architecture) that you will be able to manage, make discoverable on the network, and view on the Livepeer Explorer. For advanced users, it may be preferable to run an [orchestrator / transcoder split](/video-miners/guides/o-t-split).
 
-### Choose your role
+### Choosing your role
 
 There are multiple ways to participate as a Video Miner on the network:
 
-- [Orchestrator](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
+- [Orchestrator](/video-miners/#about-orchestrators)
     
-- [Transcoder](/video-miners/core-concepts/roles-and-responsibilities#types-of-video-miners)
+- [Transcoder](/video-miners/#about-transcoders)
 
-This guide focuses on the steps necessary to participate as a combined Orchestrator / Transcoder.
+This guide focuses on the steps necessary to participate as a [combined Orchestrator/Transcoder](/video-miners/core-concepts/architecture).
 
 ### Install `livepeer`
 
@@ -76,11 +78,15 @@ To ensure optimal performance, you should [assess the concurrent stream capabili
 
 ### Test your Benchmarking
 
-You can download test streams and test your GPU capacity with the [benchmarking tool](/video-miners/how-to-guides/benchmarking) `livepeer_bench.exe`.
+You can download test streams and test your GPU capacity with the [benchmarking tool](/video-miners/guides/benchmarking) `livepeer_bench.exe`.
 
 To do this, you should:
 
-- Download the [JSON file](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json) `transcodingOptions.json`.
+- Download the [test streams](/video-miners/guides/benchmarking#download-the-test-stream) folder and save it in your `livepeer` folder.
+
+- Save the [JSON](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json) file `transcodingOptions.json` and save it in your `livepeer` folder.
+
+> #### To run `livepeer_bench`
 
 - Be sure to set the `-nvidia` GPU flag; otherwise, the benchmarking will default to CPU transcoding and drastically impact the results
 
@@ -119,11 +125,11 @@ Depending on your operational setup, this may need to be done via your router.
 
 ### Start an Orchestrator on Arbitrum Testnet
 
-Follow the Arbitrum [Testnet](/video-miners/getting-started/testing/testnet) guide.
+Follow the Arbitrum [Testnet](/video-miners/getting-started/testnet) guide.
  
 ### Navigate to the Livepeer Explorer on Arbitrum Testnet
 
- Once you've successfully completed the [Testnet](/video-miners/getting-started/testing/testnet) instructions, you should be able to see your Orchestrator on the [Testnet Explorer](https://arbitrum-rinkeby.explorer.livepeer.org/orchestrators).
+ Once you've successfully completed the [Testnet](/video-miners/getting-started/testnet) instructions, you should be able to see your Orchestrator on the [Testnet Explorer](https://arbitrum-rinkeby.explorer.livepeer.org/orchestrators).
 
 ## Video Mining on Arbitrum Mainnet
 
@@ -131,13 +137,13 @@ Once you have been able to connect and activate on the test network, you are rea
 
 - Make sure to [Fund your account](/video-miners/getting-started/activation#fund-your-account-with-eth-and-lpt) with ETH for transaction fees, and LPT to stake.
 
-- When starting your orchestrator, be sure to set the `ethUrl` and `network` flags to connect to the [Arbitrum Mainnet](http:///installation/connect-to-ethereum) instead of testnet
+- When starting your orchestrator, be sure to set the `ethUrl` and `network` flags to connect to the [Arbitrum Mainnet](/installation/connect-to-arbitrum) instead of testnet
 
 ### Start an Orchestrator on the Arbitrum Mainnet
 
 Follow the tutorial to [start a combined orchestrator / transcoder](/video-miners/getting-started/activation#start-a-combined-orchestrator-and-transcoder).
 
-Once you've started your combined orchestrator/transcoder with parameters pointing at Arbitrum Mainnet, follow the guide to [activate your orchestrator](/video-miners/getting-started/activation#activate).
+Once you've started your combined orchestrator/transcoder with parameters pointing at Arbitrum Mainnet, follow the guide to [activate your orchestrator](/video-miners/getting-started/activation).
 
 ### Navigate to the Livepeer Explorer on Arbitrum Mainnet
 
@@ -145,5 +151,5 @@ Once you have activated your orchestrator on the Arbitrum Mainnet, you should be
 
 ## Optimize your Orchestrator
 
-Finally, you can optimize your orchestrator using the [How-to Guides](/video-miners/how-to-guides/).
+The following [How-to Guides](/video-miners/guides/) provide further instruction on how video miners can optimize an activated orchestrator.
 
