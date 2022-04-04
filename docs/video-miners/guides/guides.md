@@ -29,19 +29,19 @@ Configure and manage transcoding capacity to maximize work received while also p
 
 Configure `livepeer` to enable metrics monitoring for your orchestrator and transcoder(s).
 
-### [Set pricing](/video-miners/how-to-guides/pricing) 
+### [Set pricing](/video-miners/guides/pricing) 
 
 Orchestrators set and configure pricing to charge for transcoding advertised to broadcasters off-chain.
 
-### [Vote](/video-miners/how-to-guides/vote)
+### [Vote](/video-miners/guides/vote)
 
 Orchestrators can use `livepeer_cli` to vote in governance polls without exporting their keys from the machine that their orchestrator node is running on.
 
-### [Troubleshooting](/video-miners/how-to-guides/troubleshooting)
+### [Troubleshooting](/video-miners/guides/troubleshooting)
 
 Notes on troubleshooting advice for video miners and lists some of the most common issues a video miner might encounter.
 
-### [Dual mine](/video-miners/how-to-guides/dual-mining)
+### [Dual mine](/video-miners/guides/dual-mining)
 
 Configure an orchestrator to transcode video on GPUs while concurrently mining cryptocurrencies and performing other CUDA operations such as machine learning.
 

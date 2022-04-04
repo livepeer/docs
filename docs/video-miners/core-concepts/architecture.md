@@ -9,7 +9,7 @@ title: Video Miner Architecture
 - Combined orchestrator and transcoder mode (`-orchestrator -transcoder`)
 
 An introduction to orchestrators and transcoders can be found in the
-[getting started section](/video-miners/getting-started/quickstart). Given
+[getting started section](/video-miners/getting-started/). Given
 these modes of operation, video miners can consider different architectures. Two
 of the most common architectures are:
 
