@@ -25,6 +25,7 @@ const config = {
           breadcrumbs: true,
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: "https://github.com/livepeer/docs/blob/main",
+          
         },
         blog: false,
         theme: {
@@ -33,11 +34,10 @@ const config = {
         googleAnalytics: {
           trackingID: 'UA-111259858-1',
           anonymizeIP: true,
-        }
+        },
       }),
     ],
   ],
-
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({

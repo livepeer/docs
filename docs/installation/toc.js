@@ -1,7 +1,11 @@
 const toc = [
-    "installation/index",
     {
-        "Guides": [
+        type: 'category',
+        label: 'Guides',
+        collapsible: true,
+        collapsed: false,
+        link: { type: "doc", id: "installation/index"},
+        items: [
             {
                 "Install Livepeer": [
                     "installation/install-livepeer/index", 

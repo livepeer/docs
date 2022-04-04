@@ -2,7 +2,11 @@ const toc = [
     "contributing/index",
     "contributing/developing-with-livepeer",
     { 
-        "Reference": [
+        type: 'category',
+        label: 'Reference',
+        collapsible: true,
+        collapsed: false,
+        items: [
             "contributing/reference/git",
             "contributing/reference/markdown",
             "contributing/reference/founders-statement"

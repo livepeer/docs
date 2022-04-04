@@ -1,14 +1,23 @@
 const toc = [
     "video-developers/index",
     { 
-        "Core Concepts": [
-            "video-developers/core-concepts/index",
+        type: 'category',
+        label: 'Core Concepts',
+        collapsible: true,
+        collapsed: true,
+        link: { type: "doc", id:"video-developers/core-concepts/index", },
+        items: [     
             "video-developers/core-concepts/payments",
             "video-developers/core-concepts/use-cases"
         ]
     },
     {
-        "Getting Started":[
+        type: 'category',
+        label: 'Getting Started',
+        collapsible: true,
+        collapsed: false,
+        link: { type: "doc", id:"video-developers/getting-started/index", },
+        items:[
             "video-developers/getting-started/index",
             "video-developers/getting-started/create-livestream",
             "video-developers/getting-started/deposit-broadcasting-funds",
@@ -17,8 +26,12 @@ const toc = [
         ]
     },
     {
-        "Guides":[
-            "video-developers/how-to-guides/index",
+        type: 'category',
+        label: 'Guides',
+        collapsible: true,
+        collapsed: true,
+        link: { type: "doc", id:"video-developers/how-to-guides/index", },
+        items:[
             "video-developers/how-to-guides/broadcasting-preferences",
             "video-developers/how-to-guides/cdn-integration",
             "video-developers/how-to-guides/troubleshooting",
@@ -27,8 +40,12 @@ const toc = [
         ]
     },
     {
-        "Reference":[
-            "video-developers/reference/index",
+        type: 'category',
+        label: 'Reference',
+        collapsible: true,
+        collapsed: true,
+        link: { type: "doc", id: "video-developers/reference/index",},
+        items:[
             "video-developers/reference/ingest"
         ]
     },

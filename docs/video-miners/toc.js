@@ -1,8 +1,12 @@
 const toc = [
     "video-miners/video-miners",
     { 
-        "Core Concepts": [
-            "video-miners/core-concepts/core-concepts",
+        type: 'category',
+        label: 'Core Concepts',
+        collapsible: true,
+        collapsed: true,
+        link: { type: "doc", id: "video-miners/core-concepts/core-concepts" },
+        items: [
             "video-miners/core-concepts/selection",
             "video-miners/core-concepts/architecture",
             "video-miners/core-concepts/dual-mining",
@@ -12,17 +16,25 @@ const toc = [
         ]
     },
     {
-        "Getting Started":[
-            "video-miners/getting-started/getting-started",
-            "video-miners/getting-started/testnet",
-            "video-miners/getting-started/activation",
-            "video-miners/getting-started/discoverability",
-            "video-miners/getting-started/reward-call",
-        ]
-    },
+        type: 'category',
+        label: 'Getting Started',
+        collapsible: true,
+        collapsed: false,
+        link: { type: "doc", id:"video-miners/getting-started/getting-started" },
+        items:[
+                "video-miners/getting-started/testnet",
+                "video-miners/getting-started/activation",
+                "video-miners/getting-started/discoverability",
+                "video-miners/getting-started/reward-call",
+            ]
+        },
     {
-        "Guides":[
-            "video-miners/guides/guides",
+        type: 'category',
+        label: 'Guides',
+        collapsible: true,
+        collapsed: true,
+        link: { type: "doc", id:"video-miners/guides/guides" },
+        items:[
             "video-miners/guides/benchmarking",
             "video-miners/guides/contract-wallet-migration",
             "video-miners/guides/dual-mining",
@@ -36,8 +48,12 @@ const toc = [
         ]
     },
     {
-        "Reference":[
-            "video-miners/reference/reference",
+        type: 'category',
+        label: 'Reference',
+        collapsible: true,
+        collapsed: true,
+        link: { type: "doc", id: "video-miners/reference/reference" },
+        items:[
             "video-miners/reference/bandwidth",
             "video-miners/reference/concurrency-check",
              "video-miners/reference/configuration",
