@@ -4,7 +4,7 @@ const toc = [
         type: 'category',
         label: 'Core Concepts',
         collapsible: true,
-        collapsed: false,
+        collapsed: true,
         link: { type: "doc", id: "protocol/core-concepts/index", },
         items: [
             "protocol/core-concepts/network",

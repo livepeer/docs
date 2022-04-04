@@ -19,7 +19,7 @@ const toc = [
         type: 'category',
         label: 'Getting Started',
         collapsible: true,
-        collapsed: false,
+        collapsed: true,
         link: { type: "doc", id:"video-miners/getting-started/getting-started" },
         items:[
                 "video-miners/getting-started/testnet",
