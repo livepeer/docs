@@ -7,8 +7,6 @@ This is a guide for migrating stake from L1 (Ethereum Mainnet) to L2 (Arbitrum M
 
 It is designed to be used in conjunction with the [orchestrator](https://explorer.livepeer.org/migrate/orchestrator/contract-wallet-tool), [broadcaster](https://explorer.livepeer.org/migrate/broadcaster/contract-wallet-tool), and [delegator](https://explorer.livepeer.org/migrate/delegator/contract-wallet-tool) contract wallet migration tools.
 
-
-
 ## Create an L2 Address
 
 **You MUST make sure that you have a valid L2 address that can own funds migrated from L1 before moving on. If you use the L1 address of your contract wallet as the L2 address you could lose access to your L1 assets after the migration**

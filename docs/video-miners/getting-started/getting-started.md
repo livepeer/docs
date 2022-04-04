@@ -17,7 +17,7 @@ The following includes detailed high-level descriptions and links with instructi
     - [grpcurl](https://github.com/fullstorydev/grpcurl#grpcurl) for interacting with gRPC servers for testing and monitoring
 - Basic familiarity with installing binaries directly or with Docker
 - Familiarity with networking concepts and configuration (URLs, ports and port forwarding, static IPs, )
-- Understanding of how to send and receive funds using [EVM-based networks](/installation/connect-to-ethereum)  
+- Understanding of how to send and receive funds using [EVM-based networks](/installation/connect-to-arbitrum)  
 
 ## Technical Requirements
 
@@ -51,15 +51,15 @@ Depending on your workflow, you can install Livepeer:
 
 ## Start Video Mining
 
-You will be setting up a [combined orchestrator and transcoder](video-miners/guides/o-t-split) that you will be able to manage, make discoverable on the network, and view on the Livepeer Explorer. For advanced users, it may be preferable to run an [orchestrator / transcoder split](video-miners/guides/o-t-split).
+You will be setting up a [combined orchestrator and transcoder](/video-miners/core-concepts/architecture) that you will be able to manage, make discoverable on the network, and view on the Livepeer Explorer. For advanced users, it may be preferable to run an [orchestrator / transcoder split](/video-miners/guides/o-t-split).
 
 ### Choosing your role
 
 There are multiple ways to participate as a Video Miner on the network:
 
-- [Orchestrator](/video-miners/#types-of-video-miners)
+- [Orchestrator](/video-miners/#about-orchestrators)
     
-- [Transcoder](/video-miners/#types-of-video-miners)
+- [Transcoder](/video-miners/#about-transcoders)
 
 This guide focuses on the steps necessary to participate as a [combined Orchestrator/Transcoder](/video-miners/core-concepts/architecture).
 
@@ -137,13 +137,13 @@ Once you have been able to connect and activate on the test network, you are rea
 
 - Make sure to [Fund your account](/video-miners/getting-started/activation#fund-your-account-with-eth-and-lpt) with ETH for transaction fees, and LPT to stake.
 
-- When starting your orchestrator, be sure to set the `ethUrl` and `network` flags to connect to the [Arbitrum Mainnet](http:///installation/connect-to-ethereum) instead of testnet
+- When starting your orchestrator, be sure to set the `ethUrl` and `network` flags to connect to the [Arbitrum Mainnet](/installation/connect-to-arbitrum) instead of testnet
 
 ### Start an Orchestrator on the Arbitrum Mainnet
 
 Follow the tutorial to [start a combined orchestrator / transcoder](/video-miners/getting-started/activation#start-a-combined-orchestrator-and-transcoder).
 
-Once you've started your combined orchestrator/transcoder with parameters pointing at Arbitrum Mainnet, follow the guide to [activate your orchestrator](/video-miners/getting-started/activation#activate).
+Once you've started your combined orchestrator/transcoder with parameters pointing at Arbitrum Mainnet, follow the guide to [activate your orchestrator](/video-miners/getting-started/activation).
 
 ### Navigate to the Livepeer Explorer on Arbitrum Mainnet
 

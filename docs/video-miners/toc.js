@@ -1,5 +1,5 @@
 const toc = [
-    "video-miners/index",
+    "video-miners/video-miners",
     { 
         "Core Concepts": [
             "video-miners/core-concepts/core-concepts",
