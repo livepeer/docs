@@ -3,17 +3,17 @@ title: Activation
 sidebar_position: 4
 ---
 
-This guide provides steps to activate on the Livepeer network so that you can receive video streams from broadcasters in order to provide transcoding services. You will set several parameters, including but not limited to the onchain price and address broadcasters use to find an orchestrator/node.
+This guide includes steps to activate an orchestrator on the Livepeer network. You will set the parameters for pricing, and register your node on-chain so that broadcasters are able to discover your services.
 
-- You will run `livepeer` with an `ethURL` that tells the `livepeer` process how to communicate to the chain.
+- You will run `livepeer` with an `ethURL` that tells the `livepeer` process how to communicate with the blockchain.
 
-- Set several parameters via an onchain transaction (i.e., price / pixel, fee cut, reward cut, service URI, etc) required to activate.
+- Set several parameters via an on-chain transaction (e.g., price / pixel, fee cut, reward cut, service URI, etc.) required to activate.
 
-> **Note:** Be sure to follow the [Livepeer Quickstart](/video-miners/getting-started/) before proceeding.
+**Note:** Be sure to complete the [Livepeer Quickstart](/video-miners/getting-started/) before proceeding.
 
 ## Preparation 
 
-Before Activating:
+Before activating:
 - You will identify the GPUs you will be using for receiving streams and transcoding
 - Set your parameters
 - Start your node
@@ -21,7 +21,9 @@ Before Activating:
 ### Print a list of your accessible GPUs
 
 Once you have checked your [Nvidia driver](https://www.nvidia.com/Download/index.aspx) is installed, your Nvidia GPUs on your machine should be [accessible on Livepeer](/video-miners/getting-started/activation#nvidia-gpu-i-ds). 
- 
+
+**Note:** Instructions for non-Nvidia GPUs will be added in the future.
+
 - Use the `nvidia-smi` (installed with the Nvidia driver) to print a list of GPUs:
 
 **For example:**
@@ -37,6 +39,7 @@ GPU 2: GeForce GTX 1070 Ti (UUID: GPU-32b7c120-c2c9-0069-6130-cb67afd89642)
 GPU 3: GeForce GTX 1070 Ti (UUID: GPU-9e4163c3-a120-3cbb-7869-1223b322eab2)
 GPU 4: GeForce GTX 1070 Ti (UUID: GPU-3370975a-f669-e108-6428-602be9eba7d4)
 ```
+
 
 ### Start a combined orchestrator and transcoder
 
@@ -63,9 +66,11 @@ livepeer \
 
 > **Note:** This flag is only required if you already have an account that you want to use.
 
-- Be sure the wallet file for the account address is  stored in the keystore directory. 
+- Be sure the private key for the account address is stored in the keystore directory. 
 
-> **Note:** This defaults to  `~/.lpData/arbitrum-one-mainnet/keystore`. 
+> This defaults to  `~/.lpData/arbitrum-one-mainnet/keystore`. 
+
+> **Note:** It is paramount that you securely manage the private key, as it controls your wallet and funds.
 
 - Use both the `-orchestrator` and `-transcoder` flags to configure the node to be an orchestrator and a transcoder;  it will receive video from broadcasters, transcode the video itself, and return the transcoded results to the broadcasters.
 
@@ -86,13 +91,13 @@ I0302 15:26:06.886147   25387 accountmanager.go:53] (no characters will appear i
 Passphrase:
 ```
 
-This account will be used to identify your orchestrator on the network. **By default**, the wallet file for the account will be stored under: 
+This account will be used to identify your orchestrator on the network. **By default**, the private key for the account will be stored under: 
 
 ```bash
 ~/.lpData/arbitrum-one-mainnet/keystore
 ```
 
-> **Note:** It is **very important** to safeguard both the wallet file and the passphrase because together they allow someone to sign messages and send transactions using the account.
+> **Note:** It is **very important** to safeguard both the private key and the passphrase because together they allow someone to sign messages and send transactions using the account.
 
 ### Check the node is accessible
 
@@ -108,7 +113,7 @@ I0302 15:27:28.463151   25418 rpc.go:207] Received Ping request
 
 In order to activate on Livepeer, your account should have:
 
-- ETH to pay for transaction fees
+- arbETH to pay for transaction fees
   - Recommendation: Start with a small amount and add more when needed.
     `livepeer` and `livepeer_cli` will inform you if your account's ETH balance
     is insufficient to pay for transaction fees when attempting to submit the
