@@ -35,17 +35,17 @@ const toc = [
         collapsed: true,
         link: { type: "doc", id:"video-miners/guides/guides" },
         items:[
-            "video-miners/guides/benchmarking",
             "video-miners/guides/contract-wallet-migration",
-            "video-miners/guides/dual-mining",
             "video-miners/guides/l2-migration",
-            "video-miners/guides/metrics-monitoring",
-            "video-miners/guides/o-t-split",
-            "video-miners/guides/pricing",
+            "video-miners/guides/benchmarking",
             "video-miners/guides/session-limits",
+            "video-miners/guides/metrics-monitoring",
+            "video-miners/guides/pricing",
+            "video-miners/guides/vote",
             "video-miners/guides/troubleshooting",
-            "video-miners/guides/vote"
-        ]
+            "video-miners/guides/dual-mining",
+            "video-miners/guides/o-t-split"        
+            ]
     },
     {
         type: 'category',
