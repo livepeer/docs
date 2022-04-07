@@ -37,6 +37,7 @@ const toc = [
             "video-developers/how-to-guides/troubleshooting",
             "video-developers/how-to-guides/verification",
             "video-developers/how-to-guides/withdrawing-broadcaster-funds",
+            "video-developers/how-to-guides/recording-stream",
         ]
     },
     {
