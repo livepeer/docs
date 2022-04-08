@@ -10,7 +10,7 @@ This guide provides instructions and recommendations on the ways to call reward 
 
 By default, an active orchestrator will automatically call reward in each round, submitting an Arbitrum transaction that distributes newly minted LPT rewards to itself and its delegators.
 
-The amount of LPT rewards distributed by the reward call depends on the orchestrator's stake, i.e. its own stake and that of its delegators. It is important to note that for orchestrators with very low stake, the ETH transaction cost of calling reward may exceed the amount of LPT rewards distributed. The threshold to profitably call reward depends on several factors including the market price of LPT and the current inflation rate.
+The amount of LPT rewards distributed by the reward call depends on the orchestrator's stake, i.e. its own stake and that of its delegators. It is important to note that for orchestrators with very low stake, the ETH transaction cost of calling reward may exceed the amount of LPT rewards distributed. The threshold to profitably call reward depends on several factors, including but not limited to the market price of LPT and the current inflation rate.
 
 ## Getting Started with Reward Calls
 
