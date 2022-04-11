@@ -3,22 +3,45 @@ title: One-time Migration to Arbitrum
 sidebar_position: 10
 ---
 
+This guide provides instructions for the one-time migration from the L1 Ethereum Mainnet to the L2 Arbitrum Mainnet, as per the [Livepeer Confluence upgrade](https://medium.com/livepeer-blog/the-confluence-upgrade-is-live-3b6b342ea71e)
+
+This guide is designed for node operators who have not yet upgraded to Livepeer >=0.5.28,
+connecting to Arbitrum Mainnet after the LIP-73 block.
+
 ## Prerequisites for all chains
-- You will need make sure your connected Ethereum account has enough ETH to cover gas for the `migrate` transaction. If you do not have ETH in your wallet, you will need to add some using another wallet or an on-ramp.
-- The migration must be completed using the Livepeer explorer, but ***you will have the option to sign a typed data message via the CLI if you so desire.***
-- Ensure you're interacting with the correct contracts. Addresses can be found [here](/protocol/reference/deployed.md)
-- **If you use a contract account rather than an EOA**: You will need to interact directly with the Migrator contract methods. Please use the guide [here](/video-miners/guides/contract-wallet-migration). *If you don’t know what this means, it probably doesn’t apply to you.*
-- You must be using a `go-livepeer` [release](https://github.com/livepeer/go-livepeer/releases) >= 0.5.28
-- To register your Orchestrator on the destination chain, you'll need to [bridge some ETH to pay for the transaction](https://bridge.arbitrum.io/)
+
+- You will need make sure your connected Ethereum account has enough ETH to cover gas for the `migrate` transaction. 
+
+If you do not have ETH in your wallet, you will need to add some using another wallet or an on-ramp.
+
+- The migration must be completed using the [Livepeer Explorer](https://explorer.livepeer.org/migrate), **or** you may opt to **sign a typed data message via the CLI**, instead. 
+
+- Ensure you are interacting with the correct contracts. Addresses can be found [here](/protocol/reference/deployed.md)/
+- **If you use a contract account rather than an EOA**: You will need to interact directly with the Migrator contract methods. Please follow the [Contract Wallet Migration](/video-miners/guides/contract-wallet-migration) guide. 
+
+> **Note:** If you don’t know what this means, it probably does not apply to you.
+
+- You must use a `go-livepeer` [release](https://github.com/livepeer/go-livepeer/releases) >= 0.5.28
+- To register your Orchestrator on the destination chain, you'll need to [bridge some ETH to pay for the transaction](https://bridge.arbitrum.io/).
 
 
 ## Mainnet
-This guide is applicable to orchestrators who registered onchain on the Ethereum mainnet prior to February 14th, 2022. It can be used successfully starting on February 14th, 2022. Once you have successfully completed the migration, this guide is no longer applicable and you will use Arbitrum in lieu of Ethereum for all protocol actions.
 
-Before starting the migration process, you will need to acquire an RPC url for Arbitrum. Your options are: [set up an Arbitrum node](https://developer.offchainlabs.com/docs/running_node) or acquire an Arbitrum RPC url using a third-party service like [Alchemy](https://www.alchemy.com/) or [Infura](https://infura.io/). 
+This guide is applicable to orchestrators who registered onchain on the Ethereum mainnet prior to February 14th, 2022. It can be used successfully starting on February 14th, 2022. 
+
+**Once you have successfully completed the migration, this guide is no longer applicable** and you will use Arbitrum in lieu of Ethereum for all protocol actions.
+
+Before starting the migration process, you will need to acquire an RPC url for Arbitrum. 
+
+Your options are: 
+
+- [Set up an Arbitrum node](https://developer.offchainlabs.com/docs/running_node), or 
+
+- Acquire an Arbitrum RPC url using a third-party service (e.g., [Alchemy](https://www.alchemy.com/) or [Infura](https://infura.io/)). 
 
 
 ## Testnet
+
 This guide is applicable to orchestrators who registered onchain on Rinkeby prior to January 24th, 2022. Once you have successfully completed the migration, this guide is no longer applicable and you will use Arbitrum Rinkeby in lieu of Rinkeby for all protocol actions.
 
 Before starting the migration process, you will need to acquire an RPC url for Arbitrum. We recommend using [the Offchain Labs public testnet endpoint](https://developer.offchainlabs.com/docs/public_testnet). 
