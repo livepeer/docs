@@ -75,8 +75,8 @@ const config = {
             position: "left",
           },
           {
-            href: "/video-developers",
-            label: "Video Developers",
+            href: "/broadcasters",
+            label: "Broadcasters",
             position: "left",
           },
           {

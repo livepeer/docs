@@ -5,6 +5,12 @@ sidebar_position: 5
 
 ## Playback a Livestream
 
+### Using the Aqueduct Dashboard
+
+placeholder
+
+
+### Using localhost
 To play back your livestream, use the playback url that was created for you by
 your broadcaster node.
 

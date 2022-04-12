@@ -1,10 +1,10 @@
 ---
-title: About Video Developers
+title: About Video Development
 sidebar_position: 1
 ---
 
 This section of the documentation is for developers who want to integrate the
-public network's live video transcoding service into an application or video
+Livepeer Network's live video transcoding service into an application or video
 workflow. There are many
 [use cases](/video-developers/core-concepts/use-cases) for Livepeer and the
 community is excited to see what you build. If you get stuck introduce yourself
@@ -12,8 +12,8 @@ in the [#broadcasting](https://discord.gg/8Vr6B2qERb) Discord channel and the
 community will be happy to assist.
 
 > Note: These docs are geared towards developers interested in building services
-> and applications using the open and permissionless Livepeer public network
-> directly. This requires self-hosting client software and managing your own
+> and applications using the open and permissionless Livepeer Network
+> directly. This requires self-hosting the Project Aqueduct client software and managing your own
 > crypto wallet for payments. If you prefer a serverless hosted service with API
 > access to the Livepeer network and traditional payment rails check out
 > [Livepeer.com](https://livepeer.com).

@@ -5,7 +5,7 @@ sidebar_position: 7
 
 # Recording a stream
 
-Livepeer has a built-in feature that allows you to record your stream on s3 like object storage. You can use it with the flag `-recordStore `
+Livepeer has a built-in feature that allows you to record your stream on s3-like object storage. You can use it with the flag `-recordStore `
 
 Here are some examples of value for this option:
 

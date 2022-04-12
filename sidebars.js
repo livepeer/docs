@@ -1,6 +1,6 @@
 const videoMinerToc = require("./docs/video-miners/toc")
 const protocolToc = require("./docs/protocol/toc")
-const videoDeveloperToc = require("./docs/video-developers/toc")
+const videoDeveloperToc = require("./docs/broadcasters/toc")
 const contributingToc = require("./docs/contributing/toc")
 const installationToc = require("./docs/installation/toc")
 const delegatorToc = require("./docs/delegators/toc")
