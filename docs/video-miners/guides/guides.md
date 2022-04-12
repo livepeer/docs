@@ -9,7 +9,7 @@ The following is an annotated list of guides providing information and instructi
 
 You can use this guide in conjunction with the orchestrator, broadcaster, and delegator contract wallet migration tools to migrate your stake from L1 (Ethereum Mainnet) to L2 (Arbitrum Mainnet).
 
-> **Note:** This guide is applicable to anyone using a contract wallet (i.e. multisig) to stake on L1. 
+**Note:** This guide is applicable to anyone using a contract wallet (i.e. multisig) to stake on L1. 
 
 ### [One-time Migration to Arbitrum](/video-miners/guides/l2-migration)
 
