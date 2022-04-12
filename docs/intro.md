@@ -11,7 +11,7 @@ The Livepeer project aims to deliver a live video streaming network protocol tha
 This site is organized by topics including concepts, tasks, and reference information designed for [participants](/protocol/core-concepts/ecosystem-participants) on the Livepeer Network:
 
 - [Video Miners](/video-miners/)
-- [Video Developers](/video-developers/)
+- [Video Developers](/broadcasters/)
 - [Delegators and Tokenholders](/protocol/core-concepts/ecosystem-participants#delegator)
 
 ### What's new
