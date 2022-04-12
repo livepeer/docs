@@ -17,9 +17,9 @@ The migration process will transfer ownership of funds (i.e., stake) owned by yo
 
 **Before moving your stake, you MUST confirm that you have a valid L2 address that can own funds migrated from L1. Otherwise, you could lose access to your L1 assets after the migration if you use the L1 address of your contract wallet as the L2 address**
 
-The L2 address can be that of a contract wallet (i.e. [Gnosis Safe](https://gnosis-safe.io/)) deployed on L2, or an EOA, an externally owned account managed by a hardware wallet (e.g., Ledger), or a browser wallet (e.g., Metamask). 
+The L2 address can be that of a contract wallet (i.e. [Gnosis Safe](https://gnosis-safe.io/)) deployed on L2, or an EOA (an externally owned account managed by a hardware wallet (e.g., Ledger)), or a browser wallet (e.g., Metamask). 
 
-If you would like to use a contract wallet on L2 you MUST make sure that the contract wallet is deployed on L2 and that you have control of it before proceeding.
+**If you would like to use a contract wallet on L2 you MUST make sure that the contract wallet is deployed on L2 and that you have control of it before proceeding.**
 
 > **Note:** If you are unsure about how to ensure you have a valid L2 address, please **reach out to the core team on Discord** in the [#layer2-confluence-support channel](https://discord.gg/5eQ3YfK2a8).
 
