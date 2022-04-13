@@ -61,6 +61,7 @@ Alternatively, you can:
 ## Migrating to Arbitrum
 
 1. Connect your wallet
+<<<<<<< HEAD
 
 If you have not connected a wallet, connect one using the prompt in the upper left-hand corner of the Livepeer Explorer as follows: 
 
@@ -76,6 +77,23 @@ The wallet you choose should contain a small amount of ETH to pay for the `migra
      
     <img src="/docs-assets/video-miners/guides/connect-wallet.png" alt="connect wallet to livepeer" width="300"/>
     
+=======
+
+    If you have not connected a wallet, connect one using the prompt in the upper left-hand corner of the Livepeer Explorer as follows: 
+
+    - If you are on testnet, navigate to the [Arbitrum testnet explorer](http://rinkeby.explorer.livepeer.org), or
+    - If you are migrating from Ethereum to Arbitrum mainnet, navigate to the [Arbitrum mainnet explorer](http://explorer.livepeer.org). 
+
+    The wallet you choose should contain a small amount of ETH to pay for the `migrate` transaction.
+
+    > **Note:** You do not have to use the same wallet you use for your orchestrator. However, if you are using a different wallet to submit the transaction, you will still need to access the wallet that you use for your orchestrator so that you can sign a typed data message.
+
+    **For example:** 
+
+        
+    <img src="/docs-assets/video-miners/guides/connect-wallet.png" alt="connect wallet to livepeer" width="300"/>
+    <br/>
+>>>>>>> 847c119c44fa0952407d79775e35a72bae67593e
     <img src="/docs-assets/video-miners/guides/connect-wallet2.png" alt="connect wallet to livepeer options" width="300"/>
 
     

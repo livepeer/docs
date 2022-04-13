@@ -4,12 +4,29 @@ title: Benchmark Transcoding
 
 # Benchmark transcoding
 
-## Pre-requisites
+This guide provides steps to test the performance of your GPU(s) with `livepeer_bench`. It is designed to gauges local transcoding capacity. 
 
-- Make sure `livepeer_bench` is installed by following the
-  [installation guide](/installation/install-livepeer/). `livepeer_bench` is
-  included in all binary releases and can also be built using the build from
-  source instructions
+- simulate live-mode in the benchmarking tool.
+- output statistics to show real-time segment ratio and stream duration ratio.
+
+Specific updates (required)
+
+Adds an option to enable live-mode, which would wait to transcode segments based on their duration in the input playlist.
+Improve output statistics
+
+
+Generally, you want the transcode time to at least be lower than the total segment duration
+which means that you are transcoding locally in under real-time. 
+
+- the lower the transcode time is relative to the total segment duration, the better because overall transcoding performance on the network depends on how fast video is transcoded and how fast video is uploaded/downloaded from an
+orchestrator.
+
+If you want to get a rough idea of how many streams you can transcode simultaneously, you can increase the number of concurrent sessions via
+`-concurrentSessions` and compare the total time taken. Refer to the
+[session limits guide](/video-miners/guides/session-limits) for more
+details.
+
+- 
 
 ## Download the test stream
 
@@ -23,9 +40,8 @@ ls bbb/   # Should print the stream *.ts segments and source.m3u8 manifest
 
 ## Run livepeer_bench
 
-The number and type of output renditions will affect benchmark results. The
-following instructions will use a
-[common output rendition configuration](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json).
+The number and type of output renditions will affect benchmark results. The following instructions will use a [common output rendition configuration](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json).
+
 Make sure to copy and paste the JSON file for that configuration into a file
 called `transcodingOptions.json`.
 
@@ -102,22 +118,7 @@ all source segments.
 *------------------------------*---------------------*
 ```
 
-**Note**: This benchmark only gauges local transcoding capacity. Generally, you
-want the transcode time to at least be lower than the total segment duration
-which means that you are transcoding locally in under real-time. That being
-said, the lower the transcode time is relative to the total segment duration,
-the better because overall transcoding performance on the network depends on how
-fast video is transcoded _and_ how fast video is uploaded/downloaded from an
-orchestrator.
-
-If you want to get a rough idea of how many streams you can transcode
-simultaneously, you can increase the number of concurrent sessions via
-`-concurrentSessions` and compare the total time taken. Refer to the
-[session limits guide](/video-miners/guides/session-limits) for more
-details.
-
-To export the segment-wise CSV data to a file `output.csv` and analyze it with
-other tools:
+To export the segment-wise CSV data to a file `output.csv` and analyze it with other tools:
 
 ```bash
 livepeer_bench \
