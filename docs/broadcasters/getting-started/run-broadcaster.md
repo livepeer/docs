@@ -1,17 +1,43 @@
 ---
-title: Run Broadcaster
+title: Run Aqueduct
 sidebar_position: 2
 ---
 
-# Run Broadcaster
+## Running Aqueduct with Docker
+Once you've [installed Aqueduct](/broadcasters/getting-started/install), you'll want to retrieve the image id and start the container. 
 
-Starting livepeer with the `-broadcaster` starts the node in broadcaster mode
-enabling you to stream video into the Livepeer network.
+When running Aqueduct, you have the option to run it:
+- [Locally, using local transcoding capacity](#running-aqueduct-locally)
+- [Onchain, using Livepeer Network transcoding capacity](#running-aqueduct-on-mainnet)
+- [Onchain, using Livepeer Video Services transcoding capacity](#running-aqueduct-with-livepeercom)
+- [Onchain, using transcoding capacity from a specific orchestrator or set of orchestrators](/broadcasters/how-to-guides/choose-orchestrator)
+
+Once you are running, it will be helpful to [start the broadcaster CLI](#running-the-broadcaster-cli) to conduct any necessary onchain actions
+
+### Running Aqueduct Locally
+
+To run Aqueduct using local (offchain) transcoding, specify `--mode local`. Running in offchain mode does not require depositing broadcaster funds onchain, so this can be a cost-effective way to run a small-scale workflow. Scaled deployments can run locally as well, although this may require a more complex configuration and [the choice of specific orchestrators](/broadcasters/how-to-guides/choose-orchestrator).
 
 ```bash
-livepeer \
-  -broadcaster \
-  -network arbitrum-one-rinkeby \
-  -ethUrl https://rinkeby.arbitrum.io/rpc \
+docker run <image id> --mode local
+
+# Mac M1 only
+# docker run --platform linux/amd64 <image id>  --mode local
 ```
 
+### Running Aqueduct on Mainnet
+
+To run Aqueduct using Livepeer Network on-chain transcoding, specify `--mode mainnet`. Running in mainnet mode requires [depositing broadcaster funds on-chain](/broadcasters/getting-started/deposit-broadcasting-funds.md) so that orchestrators are certain to receive payment for their work.
+
+### Running Aqueduct with Livepeer.com
+
+To run Aqueduct using Livepeer Video Services transcoding capacity, specify `--mode com`. Running in LVS mode requires [depositing broadcaster funds on-chain](/broadcasters/getting-started/deposit-broadcasting-funds.md) so that orchestrators are certain to receive payment for their work.
+
+
+### Running the broadcaster CLI 
+
+To conduct critical actions like adding and withdrawing broadcaster deposits, you'll need to run the Livepeer CLI. Once you've started the Docker container, you can retrieve the name and start the CLI.
+
+```bash
+docker exec -it <container_name> livepeer_cli
+```
