@@ -47,6 +47,7 @@ const toc = [
             },
         "broadcasters/how-to-guides/choose-orchestrator",
         "broadcasters/how-to-guides/grafana",
+        "broadcasters/how-to-guides/low-funds-alert",
         "broadcasters/how-to-guides/recording-stream",
         "broadcasters/how-to-guides/cdn-integration",
     ],
