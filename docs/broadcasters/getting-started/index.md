@@ -36,5 +36,5 @@ Once your broadcaster is running, you can [launch the Aqueduct Dashboard](/broad
 
 ## Set up monitoring 
 
-To ensure that your instance of Aqueduct is healthy, it's helpful to set up monitoring. Two particularly important monitoring tools are [a Grafana dashboard](/broadcasters/how-to-guides/grafana) and a [low funds alert](/broadcasters/how-to-guides/managing-broadcasters/low-funds-alert.md) to let you know when your broadcaster is running low on funds.
+To ensure that your instance of Aqueduct is healthy, it's helpful to set up monitoring. Two particularly important monitoring tools are [a Grafana dashboard](/broadcasters/how-to-guides/managing-broadcasters/monitoring) and a [low funds alert](/broadcasters/how-to-guides/managing-broadcasters/low-funds-alert) to let you know when your broadcaster is running low on funds.
 
