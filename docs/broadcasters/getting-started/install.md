@@ -20,7 +20,7 @@ If you are running macOS with an M1 chip, you'll need to [run your terminal usin
 
 ```bash
 # <RELEASE_VERSION> is the release version i.e. 0.0.1
-docker pull livepeer/aqueduct:<RELEASE_VERSION>
+docker pull livepeerci/aqueduct:20220414030946
 
 # Mac M1 only
 # docker pull --platform linux/amd64 livepeer/aqueduct:<RELEASE_VERSION> 

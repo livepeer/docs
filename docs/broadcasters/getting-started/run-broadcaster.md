@@ -1,5 +1,5 @@
 ---
-title: Run Aqueduct
+title: Running Aqueduct
 sidebar_position: 2
 ---
 
@@ -19,7 +19,7 @@ Once you are running, it will be helpful to [start the broadcaster CLI](#running
 To run Aqueduct using local (offchain) transcoding, specify `--mode local`. Running in offchain mode does not require depositing broadcaster funds onchain, so this can be a cost-effective way to run a small-scale workflow. Scaled deployments can run locally as well, although this may require a more complex configuration and [the choice of specific orchestrators](/broadcasters/how-to-guides/choose-orchestrator).
 
 ```bash
-docker run <image id> --mode local
+docker run -p 4242:4242 -p 8080:8080 -p 1935:1935 <image id> --mode local
 
 # Mac M1 only
 # docker run --platform linux/amd64 <image id>  --mode local
@@ -29,9 +29,16 @@ docker run <image id> --mode local
 
 To run Aqueduct using Livepeer Network on-chain transcoding, specify `--mode mainnet`. Running in mainnet mode requires [depositing broadcaster funds on-chain](/broadcasters/getting-started/deposit-broadcasting-funds.md) so that orchestrators are certain to receive payment for their work.
 
+It may be helpful to expose ports 4242 (dashboard), 8080 (placeholder), and 1935 (placeholder).
+
 ### Running Aqueduct with Livepeer.com
 
 To run Aqueduct using Livepeer Video Services transcoding capacity, specify `--mode com`. Running in LVS mode requires [depositing broadcaster funds on-chain](/broadcasters/getting-started/deposit-broadcasting-funds.md) so that orchestrators are certain to receive payment for their work.
+
+It may be helpful to expose ports 4242 (dashboard), 8080 (placeholder), and 1935 (placeholder).
+
+
+### Viewing the Aqueduct Dashboard
 
 
 ### Running the broadcaster CLI 

@@ -32,7 +32,7 @@ To stream into the network, you will need to [start your broadcaster](/broadcast
 
 ## Launch the Aqueduct Dashboard and start your first stream
 
-Once your broadcaster is running, you can [launch the Aqueduct Dashboard](/broadcasters/getting-started/launch-dashboard) and [start your first stream](/broadcasters/getting-started/create-livestream).
+Once your broadcaster is running, you can [launch the Aqueduct Dashboard](/broadcasters/getting-started/run-broadcaster#viewing-the-aqueduct-dashboard) and [start your first stream](/broadcasters/getting-started/create-livestream).
 
 ## Set up monitoring 
 
