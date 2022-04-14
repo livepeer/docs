@@ -29,13 +29,13 @@ docker run -p 4242:4242 -p 8080:8080 -p 1935:1935 <image id> --mode local
 
 To run Aqueduct using Livepeer Network on-chain transcoding, specify `--mode mainnet`. Running in mainnet mode requires [depositing broadcaster funds on-chain](/broadcasters/getting-started/deposit-broadcasting-funds.md) so that orchestrators are certain to receive payment for their work.
 
-It may be helpful to expose ports 4242 (dashboard), 8080 (placeholder), and 1935 (placeholder).
+It may be helpful to expose ports 4242 (Aqueduct dashboard), 8080 (placeholder), and 1935 (RTMP Server URL).
 
 ### Running Aqueduct with Livepeer.com
 
 To run Aqueduct using Livepeer Video Services transcoding capacity, specify `--mode com`. Running in LVS mode requires [depositing broadcaster funds on-chain](/broadcasters/getting-started/deposit-broadcasting-funds.md) so that orchestrators are certain to receive payment for their work.
 
-It may be helpful to expose ports 4242 (dashboard), 8080 (placeholder), and 1935 (placeholder).
+It may be helpful to expose ports 4242 (Aqueduct dashboard), 8080 (placeholder), and 1935 (RTMP Server URL).
 
 
 ### Viewing the Aqueduct Dashboard

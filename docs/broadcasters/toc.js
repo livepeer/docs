@@ -22,7 +22,6 @@ const toc = [
             "broadcasters/getting-started/install",
             "broadcasters/getting-started/run-broadcaster",
             "broadcasters/getting-started/deposit-broadcasting-funds",
-            "broadcasters/getting-started/launch-dashboard",
             "broadcasters/getting-started/create-livestream",
             "broadcasters/getting-started/playback-livestream",
         ]
@@ -41,7 +40,6 @@ const toc = [
                 collapsed: true,
                 items:[
                 "broadcasters/how-to-guides/managing-broadcasters/broadcasting-preferences",
-                
                 "broadcasters/how-to-guides/managing-broadcasters/troubleshooting",
                 "broadcasters/how-to-guides/managing-broadcasters/verification",
                 "broadcasters/how-to-guides/managing-broadcasters/withdrawing-broadcaster-funds",
