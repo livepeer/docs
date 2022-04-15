@@ -21,15 +21,15 @@ Instructions for One-time Migration to Arbitrum (L2).
 
 Configure and run `livepeer_bench` to test the capacity to process Livestream segments.
 
-### [Set transcoding session limits](/video-miners/guides/session-limits)
+### [Set Transcoding Session Limits](/video-miners/guides/session-limits)
 
 Configure and manage transcoding capacity to maximize work received while also protecting against performance degradation due to overload.
 
-### [Setup orchestrator and transcoder metrics monitoring](/video-miners/guides/metrics-monitoring)
+### [Setup Orchestrator and Transcoder Metrics Monitoring](/video-miners/guides/metrics-monitoring)
 
 Configure `livepeer` to enable metrics monitoring for your orchestrator and transcoder(s).
 
-### [Set pricing](/video-miners/guides/pricing) 
+### [Set Pricing](/video-miners/guides/pricing) 
 
 Orchestrators set and configure pricing to charge for transcoding advertised to broadcasters off-chain.
 
@@ -41,7 +41,7 @@ Orchestrators can use `livepeer_cli` to vote in governance polls without exporti
 
 Notes on troubleshooting advice for video miners and lists some of the most common issues a video miner might encounter.
 
-### [Dual mine](/video-miners/guides/dual-mining)
+### [Dual Mine](/video-miners/guides/dual-mining)
 
 Configure an orchestrator to transcode video on GPUs while concurrently mining cryptocurrencies and performing other CUDA operations such as machine learning.
 
