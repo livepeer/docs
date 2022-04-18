@@ -25,9 +25,15 @@ inside your application.
 
 First, you will need to [install the Aqueduct client software](/broadcasters/getting-started/install). This will provide you with a Livepeer broadcaster node and the full-featured MistServer toolkit, which you can use to stream using the Livepeer Network or your own onchain or offchain transcoding capacity.
 
+> **Note:** If you're interested in using a hosted service, [Livepeer Video Services](https://livepeer.com) provides a hosted gateway.
+
 ## Start your broadcaster and add funds
 
 To stream into the network, you will need to [start your broadcaster](/broadcasters/getting-started/run-broadcaster) and [supply it with funds](/broadcasters/getting-started/deposit-broadcasting-funds) so that you are able to pay orchestrators for their services.
+
+## Ensure that your broadcaster's private key is stored safely
+
+When your broadcaster starts for the first time, it will generate a wallet for you. The key will be stored in `~/.lpData/arbitrum-one-mainnet/keystore` if you are running on mainnet. **If you delete the Docker container that the broadcaster is running in, this file will be deleted. It is imperative that you safely store the keystore file in a secure locations outside the container.
 
 
 ## Launch the Aqueduct Dashboard and start your first stream

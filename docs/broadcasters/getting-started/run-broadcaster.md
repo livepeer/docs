@@ -31,15 +31,9 @@ To run Aqueduct using Livepeer Network on-chain transcoding, specify `--mode mai
 
 It may be helpful to expose ports 4242 (Aqueduct dashboard), 8080 (placeholder), and 1935 (RTMP Server URL).
 
-### Running Aqueduct with Livepeer.com
-
-To run Aqueduct using Livepeer Video Services transcoding capacity, specify `--mode com`. Running in LVS mode requires [depositing broadcaster funds on-chain](/broadcasters/getting-started/deposit-broadcasting-funds.md) so that orchestrators are certain to receive payment for their work.
-
-It may be helpful to expose ports 4242 (Aqueduct dashboard), 8080 (placeholder), and 1935 (RTMP Server URL).
-
-
 ### Viewing the Aqueduct Dashboard
 
+The dashboard (currently the MistServer interface), will be available at port 4242. For comprehensive documentation, please refer to the [Mist documentation](https://mistserver.org/documentation).
 
 ### Running the broadcaster CLI 
 
