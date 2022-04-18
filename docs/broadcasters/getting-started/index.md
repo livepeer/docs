@@ -33,7 +33,9 @@ To stream into the network, you will need to [start your broadcaster](/broadcast
 
 ## Ensure that your broadcaster's private key is stored safely
 
-When your broadcaster starts for the first time, it will generate a wallet for you. The key will be stored in `~/.lpData/arbitrum-one-mainnet/keystore` if you are running on mainnet. **If you delete the Docker container that the broadcaster is running in, this file will be deleted. It is imperative that you safely store the keystore file in a secure locations outside the container.
+When your broadcaster starts for the first time, it will generate a wallet for you. The key will be stored in `~/.lpData/<chain flag, e.g. arbitrum-one-mainnet>/keystore`. It is imperative that you safely store the keystore file in a secure locations outside the container; if you lose it you will lose access to your funds.
+
+**If you delete the Docker container that the broadcaster is running in, this file will be deleted. It can be recovered from a stopped container, but not from a deleted container** 
 
 
 ## Launch the Aqueduct Dashboard and start your first stream
