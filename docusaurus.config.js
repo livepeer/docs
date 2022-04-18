@@ -76,7 +76,7 @@ const config = {
           },
           {
             href: "/broadcasters",
-            label: "Broadcasters",
+            label: "Broadcasting",
             position: "left",
           },
           {
