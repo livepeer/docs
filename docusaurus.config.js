@@ -7,7 +7,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Livepeer Docs",
-  tagline: "The world's open video infrastructor",
+  tagline: "The world's open video infrastructure",
   url: "https://livepeer.org",
   baseUrl: "/",
   onBrokenLinks: "throw",
