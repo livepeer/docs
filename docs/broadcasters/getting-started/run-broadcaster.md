@@ -14,6 +14,8 @@ When running Catalyst, you have the option to run it:
 
 Once you are running, it will be helpful to [start the broadcaster CLI](#running-the-broadcaster-cli) to conduct any necessary onchain actions
 
+**Important: if you have previously run Catalyst in one mode (e.g., local) and want to run it in another (e.g., mainnet), you'll need to do it in a new container and mount new directory for Catalyst to store essential files. The --mode command will not override the configuration in an existing container.**
+
 ### Running Catalyst Locally
 
 To run Catalyst using local (offchain) transcoding, specify `--mode local`. Running in offchain mode does not require depositing broadcaster funds onchain, so this can be a cost-effective way to run a small-scale workflow. Scaled deployments can run locally as well, although this may require a more complex configuration and [the choice of specific orchestrators](/broadcasters/how-to-guides/choose-orchestrator).
