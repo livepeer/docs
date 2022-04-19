@@ -15,7 +15,7 @@ const toc = [
         type: 'category',
         label: 'Getting Started',
         collapsible: true,
-        collapsed: true,
+        collapsed: false,
         link: { type: "doc", id:"broadcasters/getting-started/index", },
         items:[
             "broadcasters/getting-started/index",
