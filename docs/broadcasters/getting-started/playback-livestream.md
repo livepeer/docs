@@ -5,9 +5,9 @@ sidebar_position: 5
 
 ## Playback a Livestream
 
-### Using the Aqueduct Dashboard
+### Using the Catalyst Dashboard
 
-The Aqueduct dashboard (powered by MistServer) simplifies the process of serving a stream. To display your stream, replace the stream name placeholders with the stream name from the Aqueduct dashboard on port 4242 and embed the following code in your page.
+The Catalyst dashboard (powered by MistServer) simplifies the process of serving a stream. To display your stream, replace the stream name placeholders with the stream name from the Catalyst dashboard on port 4242 and embed the following code in your page.
 
 ```html
 <div class="mistvideo" id="<my_id>">

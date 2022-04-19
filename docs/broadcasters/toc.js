@@ -41,9 +41,9 @@ const toc = [
                 items:[
                 "broadcasters/how-to-guides/managing-broadcasters/broadcasting-preferences",
                 "broadcasters/how-to-guides/managing-broadcasters/troubleshooting",
-                "broadcasters/how-to-guides/managing-broadcasters/monitoring",
+                // "broadcasters/how-to-guides/managing-broadcasters/monitoring",
                 "broadcasters/how-to-guides/managing-broadcasters/verification",
-                "broadcasters/how-to-guides/managing-broadcasters/low-funds-alert",
+                // "broadcasters/how-to-guides/managing-broadcasters/low-funds-alert",
                 "broadcasters/how-to-guides/managing-broadcasters/withdrawing-broadcaster-funds",
                 ]
             },

@@ -10,7 +10,7 @@ protecting your broadcaster node from being inundated with requests.
 
 Here is how to make your output video available via a conventional CDN:
 
-1. Run Aqueduct with ports `8935` and `1935` exposed.
+1. Run Catalyst with ports `8935` and `1935` exposed.
 2. Configure your CDN to cache video content running at
    `http://hostname:8935/stream/{streamID}.m3u8`
 

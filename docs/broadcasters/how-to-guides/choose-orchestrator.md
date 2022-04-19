@@ -4,7 +4,7 @@ title: Choose a specific orchestrator
 
 Depending on your business goals, it may be desirable to route streams to a specific orchestrator or set of orchestrators. 
 
-To do this, you can run Aqueduct with the `ethOrchAddr` flag, which accepts an orchestrator address or a space-separated list of orchestrator addresses.
+To do this, you can run Catalyst with the `ethOrchAddr` flag, which accepts an orchestrator address or a space-separated list of orchestrator addresses.
 
 **For example**
 

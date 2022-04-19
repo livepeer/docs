@@ -4,7 +4,7 @@ title: Quickstart
 
 # Overview
 
-The getting started tutorial will walk you through the steps required to set up Project Aqueduct, send a
+The getting started tutorial will walk you through the steps required to set up Catalyst, send a
 livestream into the Livepeer Network for transcoding, and play it back
 inside your application.
 
@@ -21,9 +21,9 @@ inside your application.
 - Make sure you have access to an
   [Arbitrum JSON-RPC URL](/installation/connect-to-arbitrum)
 
-## Install Aqueduct
+## Install Catalyst
 
-First, you will need to [install the Aqueduct client software](/broadcasters/getting-started/install). This will provide you with a Livepeer broadcaster node and the full-featured MistServer toolkit, which you can use to stream using the Livepeer Network or your own onchain or offchain transcoding capacity.
+First, you will need to [install the Catalyst client software](/broadcasters/getting-started/install). This will provide you with a Livepeer broadcaster node and the full-featured MistServer toolkit, which you can use to stream using the Livepeer Network or your own onchain or offchain transcoding capacity.
 
 > **Note:** If you're interested in using a hosted service, [Livepeer Video Services](https://livepeer.com) provides a hosted gateway.
 
@@ -38,11 +38,11 @@ When your broadcaster starts for the first time, it will generate a wallet for y
 **If you delete the Docker container that the broadcaster is running in, this file will be deleted. It can be recovered from a stopped container, but not from a deleted container** 
 
 
-## Launch the Aqueduct Dashboard and start your first stream
+## Launch the Catalyst Dashboard and start your first stream
 
-Once your broadcaster is running, you can [launch the Aqueduct Dashboard](/broadcasters/getting-started/run-broadcaster#viewing-the-aqueduct-dashboard) and [start your first stream](/broadcasters/getting-started/create-livestream).
+Once your broadcaster is running, you can [launch the Catalyst Dashboard](/broadcasters/getting-started/run-broadcaster#viewing-the-Catalyst-dashboard) and [start your first stream](/broadcasters/getting-started/create-livestream).
 
 ## Set up monitoring 
 
-To ensure that your instance of Aqueduct is healthy, it's helpful to set up monitoring. Two particularly important monitoring tools are [a Grafana dashboard](/broadcasters/how-to-guides/managing-broadcasters/monitoring) and a [low funds alert](/broadcasters/how-to-guides/managing-broadcasters/low-funds-alert) to let you know when your broadcaster is running low on funds.
+To ensure that your instance of Catalyst is healthy, it's helpful to set up monitoring. Two particularly important monitoring tools are [a Grafana dashboard](/broadcasters/how-to-guides/managing-broadcasters/monitoring) and a [low funds alert](/broadcasters/how-to-guides/managing-broadcasters/low-funds-alert) to let you know when your broadcaster is running low on funds.
 

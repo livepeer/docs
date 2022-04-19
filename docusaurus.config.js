@@ -76,7 +76,7 @@ const config = {
           },
           {
             href: "/broadcasters",
-            label: "Broadcasting",
+            label: "DMS",
             position: "left",
           },
           {

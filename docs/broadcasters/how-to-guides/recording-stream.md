@@ -7,7 +7,7 @@ sidebar_position: 7
 
 Livepeer has a built-in feature that allows you to record your stream on s3-like object storage. You can use it with the flag `-recordStore ` on the broadcaster node.
 
-**Please note that this option is not yet exposed when running Aqueduct.** To enable it in Aqueduct, you'll need to add a line to `mist.conf` specifying the `recordStore`. In `mist.conf["config"]["protocols"]`, find the object with `connector: livepeer` and `broadcaster:true`. Then, add a key-value pair `"recordStore": <s3-like url>`.
+**Please note that this option is not yet exposed when running Catalyst.** To enable it in Catalyst, you'll need to add a line to `mist.conf` specifying the `recordStore`. In `mist.conf["config"]["protocols"]`, find the object with `connector: livepeer` and `broadcaster:true`. Then, add a key-value pair `"recordStore": <s3-like url>`.
 
 Here are some examples of value for `recordStore`:
 

@@ -5,7 +5,7 @@ sidebar_position: 3
 
 # Deposit Broadcasting Funds
 
-If you are [running Aqueduct in onchain mode](/broadcasters/getting-started/run-broadcaster#running-aqueduct-on-mainnet) or [using Livepeer Video Services capacity](/broadcasters/getting-started/run-broadcaster#running-aqueduct-with-livepeercom) will need to deposit funds used to pay the node operators on the network (orchestrators) responsible for transcoding your live video. Node operators get paid in a cryptocurrency called Ether (ETH). 
+If you are [running Catalyst in onchain mode](/broadcasters/getting-started/run-broadcaster#running-Catalyst-on-mainnet) or [using Livepeer Video Services capacity](/broadcasters/getting-started/run-broadcaster#running-Catalyst-with-livepeercom) will need to deposit funds used to pay the node operators on the network (orchestrators) responsible for transcoding your live video. Node operators get paid in a cryptocurrency called Ether (ETH). 
 
 **Be sure that you safely store [the private key](/broadcasters/getting-started/index#ensure-that-your-broadcasters-private-key-is-stored-safely) of the wallet that your broadcaster is using**
 
@@ -16,7 +16,7 @@ some free test ETH. You can get some [here](https://fauceth.komputing.org/?chain
 
 Once you've acquired your test ETH, [run the `livepeer_cli`](/broadcasters/getting-started/run-broadcaster#running-the-broadcaster-cli)
 
-> Note: The `livepeer_cli` binary is provided when you install Aqueduct.
+> Note: The `livepeer_cli` binary is provided when you install Catalyst.
 
 This command starts the CLI interactive wizard which can be used to issue
 commands to be executed by your broadcaster node.
