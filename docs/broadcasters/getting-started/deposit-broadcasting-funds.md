@@ -14,7 +14,7 @@ If you are [running Aqueduct in onchain mode](/broadcasters/getting-started/run-
 Since we're using the Arbitrum Rinkeby test network for this tutorial you'll need to acquire
 some free test ETH. You can get some [here](https://fauceth.komputing.org/?chain=421611), or bridge[Rinkeby ETH](https://faucet.rinkeby.io/) to Arbitrum Rinkeby using the [Arbitrum bridge](https://bridge.arbitrum.io)
 
-Once you've acquired your test ETH, , [run the `livepeer_cli`](/broadcasters/getting-started/run-broadcaster#running-the-broadcaster-cli)
+Once you've acquired your test ETH, [run the `livepeer_cli`](/broadcasters/getting-started/run-broadcaster#running-the-broadcaster-cli)
 
 > Note: The `livepeer_cli` binary is provided when you install Aqueduct.
 

@@ -25,5 +25,5 @@ Select `Custom` in the dropdown, and enter the RTMP Server URL provided by your 
 
 At the bottom of the main OBS window is a box called 'Sources'. Click on the + (or right click inside the box) and pick the source you want. For example, select Game Capture if you're capturing a game, Window for non-game applications, or Video Capture Device for a webcam or capture card.
 
-Double check that all your settings are how you want them in Settings -> Output. Finally, click "Start Streaming"
+Double-check that all your settings are how you want them in Settings -> Output. Finally, click "Start Streaming".
 
