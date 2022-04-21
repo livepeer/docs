@@ -35,7 +35,7 @@ docker run
 
 To run Catalyst using Livepeer Network on-chain transcoding, specify `--mode mainnet`. Running in mainnet mode requires [depositing broadcaster funds on-chain](/broadcasters/getting-started/deposit-broadcasting-funds.md) so that orchestrators are certain to receive payment for their work.
 
-It may be helpful to expose ports 4242 (Catalyst dashboard), 8080 (Mist player), and 1935 (RTMP Server URL).
+It may be helpful to expose ports 8080 (Mist player), 8889 (SRT), 1935 (RTMP Server URL).
 
 ```
 docker run
