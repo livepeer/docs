@@ -45,10 +45,6 @@ network.
 A **broadcaster** is a protocol-aware media server or cluster of media servers which 1) deliver video and audio content to clients that request it and 2) is connected to the Livepeer network. It fulfills the demand side of the Livepeer network by taking input streams from developers, splitting up streams into segments, sending the segments to orchestrators for video processing, and aggregating the transcoded results in a media playlist. Broadcasters are able to determine the output renditions and maximum price per pixel for video processing jobs it sends into the Livepeer network and pay for these
 jobs in ETH using [probabilistic micropayments](https://medium.com/livepeer-blog/streamflow-probabilistic-micropayments-f3a647672462).
 
-## Developer
-
-A **developer** sends input streams to broadcasters for use in an application or service. A developer can either self-host its own broadcaster or use a third party provider such as [Livepeer Video Services](https://livepeer.com).
-
 ## Core Team and Community
 
 The Livepeer core team along with the broader Livepeer community drives

@@ -8,7 +8,7 @@ sidebar_position: 1
 
 The Livepeer project aims to deliver a live video streaming network protocol that is fully decentralized, highly scalable, crypto token incentivized, and results in a solution which is cheaper to an app developer than using traditional centralized live video solutions.
 
-This site is organized by topics including concepts, tasks, and reference information designed for the following Livepeer [network roles](/protocol/core-concepts/network-roles):
+This site is organized by topics including concepts, tasks, and reference information designed for:
 
 - [Orchestrators](/video-miners/)
 - [Developers](/developers)
