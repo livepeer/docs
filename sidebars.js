@@ -1,9 +1,9 @@
-const videoMinerToc = require("./docs/video-miners/toc")
-const protocolToc = require("./docs/protocol/toc")
-const videoDeveloperToc = require("./docs/broadcasters/toc")
-const contributingToc = require("./docs/contributing/toc")
-const installationToc = require("./docs/installation/toc")
-const delegatorToc = require("./docs/delegators/toc")
+const videoMinerToc = require("./docs/video-miners/toc");
+const protocolToc = require("./docs/protocol/toc");
+const videoDeveloperToc = require("./docs/developers/toc");
+const contributingToc = require("./docs/contributing/toc");
+const installationToc = require("./docs/installation/toc");
+const delegatorToc = require("./docs/delegators/toc");
 
 // @ts-check
 
@@ -14,7 +14,7 @@ const sidebars = {
   protocol: protocolToc,
   orchestrators: videoMinerToc,
   video_devs: videoDeveloperToc,
-  delegators: delegatorToc
+  delegators: delegatorToc,
 };
 
 module.exports = sidebars;

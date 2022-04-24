@@ -17,7 +17,7 @@ const config = {
   projectName: "docs",
   presets: [
     [
-      '@docusaurus/preset-classic',
+      "@docusaurus/preset-classic",
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
@@ -25,14 +25,13 @@ const config = {
           breadcrumbs: true,
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: "https://github.com/livepeer/docs/blob/main",
-          
         },
         blog: false,
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
         },
         googleAnalytics: {
-          trackingID: 'UA-111259858-1',
+          trackingID: "UA-111259858-1",
           anonymizeIP: true,
         },
       }),
@@ -75,8 +74,8 @@ const config = {
             position: "left",
           },
           {
-            href: "/broadcasters",
-            label: "DMS",
+            href: "/developers",
+            label: "Developers",
             position: "left",
           },
           {
@@ -87,7 +86,7 @@ const config = {
         ],
       },
       colorMode: {
-        defaultMode: 'light'
+        defaultMode: "dark",
       },
       footer: {
         style: "dark",
@@ -105,18 +104,18 @@ const config = {
               },
               {
                 label: "Blog",
-                href: "https://medium.com/livepeer-blog"
+                href: "https://medium.com/livepeer-blog",
               },
               {
                 label: "Forum",
-                href: "https://forum.livepeer.org/"
+                href: "https://forum.livepeer.org/",
               },
               {
                 label: "Reddit",
-                href: "https://www.reddit.com/r/livepeer/"
-              }
+                href: "https://www.reddit.com/r/livepeer/",
+              },
             ],
-          }
+          },
         ],
         copyright: `Copyright © ${new Date().getFullYear()} Livepeer, Inc.`,
       },
