@@ -36,4 +36,3 @@ correspond to the
 currently supported by the node. If you need to use custom video profiles, refer
 to this
 [guide](https://github.com/livepeer/go-livepeer/blob/master/doc/transcodingoptions.md).
-
