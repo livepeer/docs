@@ -65,4 +65,4 @@ provide economic security to broadcasters.
 
 ## Video Mining
 
-***see*** [About Video Mining](/video-miners/)
+***See*** [About Video Mining](/video-miners/)
