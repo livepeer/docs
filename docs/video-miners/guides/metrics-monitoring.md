@@ -42,4 +42,4 @@ Follow the instructions in this
 
 ## Monitoring with Docker
 
-You can use the [Docker container](https://github.com/livepeer/docker-livepeer/tree/master/monitoring). It bundles Prometheus, Grafana, and a few starter Grafana dashboard templates.
+You can use the [Docker container](https://github.com/livepeer/livepeer-monitoring) maintained by [Livepeer Video Services](https://livepeer.com/) to easily start monitoring your orchestrator or transcoder.. It bundles Prometheus, Grafana, and a few starter Grafana dashboard templates.
