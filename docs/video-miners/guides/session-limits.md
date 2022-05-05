@@ -2,49 +2,41 @@
 title: Set Session Limits
 ---
 
-# Set Session Limits
+This guide provides instructions on setting [session](/video-miners/terminology#session) limits to manage transcoding capacity. You will be able to maximize work received while also protecting against performance degradation due to overload. Once you have completed the benchmark transcoding via the `livepeer_bench` tool, provided with the [Livepeer installation](/installation/install-livepeer/), and the [common output rendition configuration](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json) `transcodingOptions.json` you stored during the benchmarking, you can work with this guide to fine tune your configuration:
 
-## Pre-requisites
+- Calculate session limits
+- Evaluate hardware capacity
+- Benchmark transcoding for a range of concurrent sessions 
+- Evaluate bandwidth
+- Derive a session limit
+- Set session limits
 
-- Make sure you know how to
-  [benchmark transcoding](/video-miners/guides/benchmarking)
+> **Note:** It is recommended you complete the steps in [Benchmark transcoding](/video-miners/guides/benchmarking) before proceeding.
 
-## Session limits
+## Livepeer Session Limits
 
-Session limits allow orchestrators and transcoders to manage transcoding
-capacity. When session limits are set properly, orchestrators and transcoders
-will be able to maximize work received while also protecting against performance
-degradation due to overload.
+For orchestrators and transcoders, the **default limit of concurrent sessions is set to 10**. When this limit is exceeded, the orchestrator returns an error, `OrchestratorCapped`, to the broadcaster and transcoders and they will stop receiving work from orchestrators. The session limit should then be set depending on available hardware and bandwidth.
 
-By default, the session limit on orchestrators and transcoders is set to 10.
-Whenever the number of concurrent sessions goes above this, orchestrators return
-an `OrchestratorCapped` error to the broadcaster and transcoders will stop
-receiving work from orchestrators. The appropriate session limit will vary
-depending on available hardware and bandwidth.
+## Calculating session limits
 
-## Calculate session limits
+The session limit is an estimate and may require adjustments after running live on the network.
 
-Calculate the session limit based on (1) transcoding hardware and (2) bandwidth
-as explained below, and take the minimum of the two. Finally, pass it through
-the `-maxSessions` parameter to your node as explained above.
+The bandwidth and computational power needed to transcode a video stream varies with the source video and requested output configuration. 
 
-The bandwidth and computational power needed to transcode a video stream varies
-with the source video and requested outputs' configuration. Thus any session
-limit estimate only serves as a ballpark, and you may want to tweak it after
-some real use on the network.
+Session limits are passed through the `-maxSessions` parameter to the node where they should be set based on taking the minimum of:
 
-The steps below assume that the incoming streams are configured with the
-most-commonly found Adaptive Bitrate (ABR) ladder on the network. You may
-calculate it similarly for a different ABR ladder.
+- Transcoding Hardware, and 
+- Bandwidth  
 
-### Evaluate hardware
+## Set Session Limits
 
-The following assumes that you have `livepeer_bench` installed and have the
-[common output rendition configuration](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json)
-stored in a file called `transcodingOptions.json`.
+The following steps require that incoming streams are configured with the common web video streaming [Adaptive Bitrate (ABR) ladder](/video-miners/terminology) on the Livestream network. Session limits can be similarly calculated for a different ABR ladder.
 
-You can use the following script to benchmark transcoding for a range of
-concurrent sessions:
+1. Evaluate hardware
+
+    The recommendation for determining a hardware level limit is to use the concurrent sessions value of the last log indicating that the real-time duration ratio `X` was less than or equal 0.8. This leaves a ~20% buffer for upload/download within real-time.
+
+- You can use the following script with the  `livepeer_bench` tool to benchmark transcoding for a range of concurrent sessions:
 
 ```bash
 #!/bin/bash
@@ -58,20 +50,15 @@ do
 done
 ```
 
-If you are transcoding with multiple identical Nvidia GPUs, benchmarking with a
-single GPU should suffice and then you can multiply the limit for a single GPU
-by the number of available GPUs. If you are transcoding multiple different
-Nvidia GPUs, you should benchmark each unique GPU and determine a limit that is
-specific to that GPU.
+- Transcoding with multiple identical Nvidia GPUs: 
 
-You can adjust the loop range (`{1..20}`) to reflect the maximum number of
-concurrent sessions that you want to benchmark. If the real-time duration is
-still below 1.0 at 20 maximum concurrent sessions then you should increase the
-maximum number of concurrent sessions. If you are transcoding with a CPU, you
-will likely want to adjust the maximum number of concurrent sessions to a
-smaller value (i.e. 5).
+    Benchmarking with a single GPU should suffice and then you can multiply the limit for a single GPU by the number of available GPUs. If you are transcoding multiple different Nvidia GPUs, you should benchmark each unique GPU and determine a limit that is specific to that GPU.
 
-You will see the final output in a file called `bench.log`:
+- Adjust the loop range (`{1..20}`) to reflect the maximum number of concurrent sessions you want to benchmark. If at 20 maximum concurrent sessions real-time duration is still below 1.0, you should increase the maximum number of concurrent sessions. 
+
+- View the final output in a file called `bench.log`.
+
+**For Example:**
 
 ```bash
 | * Real-Time Duration Ratio * | <Ratio> |    // Concurrent Session Count 1
@@ -80,16 +67,11 @@ You will see the final output in a file called `bench.log`:
 | * Real-Time Duration Ratio * | <Ratio> |    // Concurrent Session Count 20
 ```
 
-The recommendation for determining a hardware level limit is to use the
-concurrent sessions value of the last log indicating that the real-time duration
-ratio `X` was less than or equal 0.8 which leaves a ~20% buffer for
-upload/download within real-time.
+>   **Note:** If you are transcoding with a CPU, you will likely want to lower the value of the maximum number of concurrent sessions (i.e. 5).
 
-### Evaluate bandwidth
+2. Evaluate bandwidth
 
-The most
-[common output rendition configuration](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json)
-found on the network is (assuming source is `1080p30fps`):
+The most [common output rendition configuration](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json) found on the network is (assuming source is `1080p30fps`):
 
 ```bash
 +------------------------+----------+
@@ -107,41 +89,38 @@ found on the network is (assuming source is `1080p30fps`):
 +------------------------+----------+
 ```
 
-For a single stream you will require 6000 kbps for downloading the source
-rendition and 5600 kbps for uploading the output renditions. Thus, you will
-roughly need:
+A single stream requires an approximation of:
 
-_Download Bandwidth_ = **6 Mbps** Per Stream
+- _Download Bandwidth_ = **6 Mbps** Per Stream. This is about 6000 kbps for downloading the source rendition. 
 
-_Upload Bandwidth_ = **5.6 Mbps** Per Stream
+- _Upload Bandwidth_ = **5.6 Mbps** Per Stream. This is about 5600 kbps for uploading the output rendition.
 
-To get an idea of the number of streams you can handle, divide the above from
-your network provider's limits. For example a typical broadband connection with
-upstream/downstream of 100 Mbps should serve ~16 streams reliably. You can
-probably stretch it by ~20% more as not all streams' segments would be processed
-at the same time. You may want to refer to some suggestions in the
-[bandwidth requirements](/video-miners/reference/bandwidth) around testing
-your available upload/download bandwidth.
+- To estimate the number of streams you can process, divide the above from your network provider's limits. 
 
-### Derive a session limit based on hardware and bandwidth
 
-Once you have calculated a hardware level limit and a bandwidth level limit,
-take the minimum of the two and use that as your session limit which is set via
-the `-maxSessions` flag.
+**For example:**
 
-Session management in orchestrators and transcoders is still constantly being
-improved so in practice, your mileage may vary with this approach - you may find
-that your orchestrator or transcoder performance may be better or worse with a
-higher session limit. Further experimentation with tweaking the session limit
-values after performing real work on the network is recommended.
+ A typical broadband connection with `upstream/downstream` speed of `100 Mbps` should reliably be able to serve/process ~16 streams. 
 
-## Set session limits
+ However, as not all streams' segments may be processed at the same time, you may be able to extend this by an additional ~20%. 
 
-The `-maxSessions` flag is used to set session limits on both orchestrators and
-transcoders.
+> **Note:** [Bandwidth Requirements](/video-miners/reference/bandwidth) provides further information about testing your available upload/download bandwidth.
 
-Example of sessing the session limit to 30 for a combined orchestrator and
-transcoder (other flags omitted):
+3. Derive a session limit based on hardware and bandwidth
+
+Once you have calculated a hardware level limit and a bandwidth level limit, the minimum of the two can be used as your session limit. This is set via the `-maxSessions` flag.
+
+Session management in orchestrators and transcoders is still constantly being improved. Your mileage may vary with this approach; you may find that your orchestrator or transcoder performance may be affected with a higher session limit. 
+
+Further adjusting the session limit values after performing work on the network may be necessary.
+
+4. Set session limits
+
+The `-maxSessions` flag is used to set session limits on both orchestrators and transcoders.
+
+**For Example:** 
+
+For a combined orchestrator and transcoder, set the session limit to 30:
 
 ```bash
 livepeer \
@@ -149,3 +128,5 @@ livepeer \
     -transcoder \
     -maxSessions 30
 ```
+
+> **Note:** For the purpose of this example, other flags have been omitted:
