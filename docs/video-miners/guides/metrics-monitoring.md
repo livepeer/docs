@@ -1,20 +1,29 @@
 ---
-title: Monitor Metrics
+title: Monitoring Metrics
 ---
 
-# Monitor Metrics
+This guide provides instructions on configuring metrics monitoring for orchestrators that have been [activated](/video-miners/getting-started/activation) on the Livepeer network.
 
-## Pre-requisites
+- Enable Metrics Monitoring
+- Monitor with visualizations
+  - Prometheus
+  - Grafana
+- Monitor with Docker 
 
-- Make sure you have
-  [activated your orchestrator](/video-miners/getting-started/activation)
+> **Note:** You can refer to [Prometheus Metrics](/video-miners/reference/metrics) to check what metrics are exposed.  
 
-## Enable metrics
+## Enabling Metrics Monitoring
 
-You can enable metrics monitoring in `livepeer` using the `-monitor` flag.
+You can enable metrics monitoring with  `livepeer.exe` adding the `-monitor` flag and additional parameters:
 
-Example of enabling metrics monitoring with a combined orchestrator and
-transcoder (other flags omitted):
+- `-monitor`: enables metric monitoring
+- `-metricsPerStream`: groups performance metrics per stream
+- `-metricsClientIP`: exposes client's IP in metrics
+
+**For Example:**
+
+Enable metrics monitoring with a combined orchestrator and
+transcoder:
 
 ```bash
 livepeer \
@@ -22,23 +31,15 @@ livepeer \
     -transcoder \
     -monitor
 ```
+> **Note:** For the purpose of this example, other flags have been omitted. 
 
-Additionally, you can add the following parameters:
-- `-metricsPerStream`: groups performance metrics per stream
-- `-metricsClientIP`: exposes client's IP in metrics
+## Monitoring With Prometheus and Grafana
 
-To check what metrics are exposed, please refer to [Prometheus Metrics](/video-miners/reference/metrics).
+Follow the instructions in this
+[monitoring guide](https://forum.livepeer.org/t/guide-transcoder-monitoring-with-prometheus-grafana/1225) to learn how metrics recorded by `livepeer` can be: 
+- Exported to [Prometheus](https://prometheus.io/), and 
+- Visualized in [Grafana](https://grafana.com/) 
 
-## Monitoring with Prometheus and Grafana
+## Monitoring with Docker
 
-The metrics recorded by `livepeer` can be exported to
-[Prometheus](https://prometheus.io/) and visualized in
-[Grafana](https://grafana.com/) by following the instructions in this
-[monitoring guide](https://forum.livepeer.org/t/guide-transcoder-monitoring-with-prometheus-grafana/1225).
-
-## Monitoring with the livepeer monitoring container
-
-A
-[Docker container](https://github.com/livepeer/docker-livepeer/tree/master/monitoring)
-that bundles Prometheus, Grafana and a few starter Grafana dashboard templates
-can also be used.
+You can use the [Docker container](https://github.com/livepeer/livepeer-monitoring) maintained by [Livepeer Video Services](https://livepeer.com/) to easily start monitoring your orchestrator or transcoder. It bundles Prometheus, Grafana, and a few starter Grafana dashboard templates.
