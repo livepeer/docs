@@ -2,67 +2,61 @@
 title: Vote
 ---
 
-# Vote
+Once your orchestrator is activated and running, follow the steps below to set and configure voting in governance polls with `livepeer_cli`. You can do this without exporting keys from the machine on which the orchestrator node is running.
 
-## Pre-requisities
+> **Note:** For more information, refer to [Governace](/protocol/core-concepts/governance) in our Protocol documentation.
 
-- Make sure you have
-  [activated your orchestrator](/video-miners/getting-started/activation)
-- Make sure your orchestrator is running
+## Voting With the `livepeer_cli`
 
-## Vote with livepeer_cli
+Follow the steps herein to access and vote with the `livepeer_cli`:
 
-Orchestrators can use `livepeer_cli` to vote in governance polls without
-exporting their keys from the machine that their orchestrator node is running
-on.
-
-Refer to [this section](/protocol/core-concepts/governance) for more
-information on governance.
-
-1. Find the contract address for the poll in the explorer page for the poll.
+1. Find the contract address for the poll in the [Livepeer Explorer](https://explorer.livepeer.org/voting) page for the poll.
 
    ![PollDetailView](/docs-assets/poll.png)
 
-   The poll page will include the following box:
+   The poll page displays the following message:
 
    ![LivepeerCLIVoteCTA](/docs-assets/vote-livepeer-cli.png)
 
-   Click the "Follow the instructions" link to display the instructions for
-   voting with `livepeer_cli`:
+   Click the link, "Follow these instructions", to display the instructions for voting with `livepeer_cli`:
 
    ![LivepeerCLIVoteInstructions](/docs-assets/vote-livepeer-cli-instructions.png)
 
-   Make note of the poll contract address which will be used later.
+
+> **Note:** It is important to note the poll contract address for upcoming steps.
 
 2. Run `livepeer_cli`
 
-3. Enter the number corresponding to the `Vote on a poll` option
+3. Enter the number corresponding to the option to `Vote on a poll` 
 
-4. Enter the contract address from the instructions from the first step:
+4. Enter the contract address saved in step 1.:
 
    ```bash
    Enter the contract address for the poll you want to vote on - >
    ```
 
-   You will be prompted with the voting options:
+    You will be prompted with the following voting options:
 
    ```bash
-   Identifier	Voting Options
-   0		Yes
-   1		No
+   Identifier  Voting Options
+   0     Yes
+   1     No
    ```
 
-5. Choose and confirm the option you want to vote for:
+5. Choose and confirm your vote
 
-   ```
+*For example:**
+
+   ```bash
    Enter the ID of the option you want to vote for - > 0
    Are you sure you want to vote "Yes" ? (y/n) - > y
 
    success
    ```
 
-6. Wait for the transaction to confirm. You should observe your node submitting
-   the vote transaction:
+6. Wait for the transaction to be confirmed. You should be able to view your node submitting the vote transaction.
+
+**For example:**
 
    ```bash
    I0422 03:30:44.191809   43457 backend.go:96]
@@ -73,6 +67,5 @@ information on governance.
    **************************************************************************
    ```
 
-   Once the vote transaction is confirmed you will be able to see your vote
-   reflected in the explorer poll page.
+7. Once the vote transaction is confirmed, you will be able to see your vote reflected in the explorer poll page of the UI.
 
