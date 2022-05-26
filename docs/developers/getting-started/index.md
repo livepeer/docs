@@ -4,7 +4,7 @@ title: Quickstart
 
 # Overview
 
-This tutorial provides detailed high-level information for you to get started developing with Livepeer. 
+This tutorial provides detailed high-level information for you to get started developing with Livepeer Catalyst. 
 
 It includes steps required to:
 
@@ -30,7 +30,7 @@ It includes steps required to:
 
 This includes:
 
-- A Livepeer broadcaster node, and 
+- A Livepeer broadcaster DMS node, and 
 - The full-featured [MistServer toolkit](https://livepeer.com/docs/guides/media-server/introduction). 
 
   You can use the toolkit to stream on the Livepeer network, or your own on-chain or off-chain transcoding capacity.
@@ -39,13 +39,15 @@ This includes:
 
 To stream into the Livepeer network: 
 
-1. [Start Catalyst](/developers/getting-started/run-broadcaster) ,  and 
+1. [Start Catalyst](/developers/getting-started/run-broadcaster)
 
 2. [Provide funds](/developers/getting-started/deposit-broadcasting-funds) so that you are able to pay orchestrators for their services.
 
+> **Note:** You only need to add funds if you are streaming into the network (i.e., running in onchain mode).
+
 ## Safely Store Your Private Key
 
-First time starting Catalyst:
+**If this is your first time starting Catalyst:**
 
 - You will be required to specify a directory where your private key will be stored:
 
@@ -59,7 +61,7 @@ First time starting Catalyst:
 
 ## Launch the Catalyst Dashboard and Start Your First Stream
 
-Once your broadcaster is running:
+Once your DMS is running:
 
  1. [Launch the Catalyst Dashboard](/developers/getting-started/run-broadcaster#viewing-the-Catalyst-dashboard) ,  and 
 
