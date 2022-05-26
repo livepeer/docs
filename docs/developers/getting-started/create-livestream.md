@@ -3,8 +3,6 @@ title: Create a Livestream
 sidebar_position: 4
 ---
 
-@TODO NEED UPDATES HERE
-
 # Create a Livestream
 
 Livepeer supports livestreaming using the RTMP protocol, which is supported by
