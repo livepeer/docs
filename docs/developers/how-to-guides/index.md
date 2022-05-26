@@ -27,8 +27,8 @@ Use the Livepeer built-in feature to record your stream on the s3-like object st
 
 ### [Enable verification (experimental)](/developers/how-to-guides/managing-broadcasters/verification)
 
-Install and run a verifier alongside a broadcaster to verify transcoded results received from orchestrators. 
+Automatically verify the correctness of transcoded results received from orchestrators. 
 
 ### [Troubleshooting](/developers/how-to-guides/managing-broadcasters/troubleshooting)
 
-Enable detailed logs, and troubleshoot errors you may encounter when managing broadcasters.
+Enable detailed logs, and troubleshoot errors you may encounter when managing DMSs.
