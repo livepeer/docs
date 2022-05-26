@@ -10,9 +10,9 @@ protecting your broadcaster node from being inundated with requests.
 
 Here is how to make your output video available via a conventional CDN:
 
-1. Run Catalyst with ports `8935` and `1935` exposed.
+1. Run Catalyst with port `8080` exposed.
 2. Configure your CDN to cache video content running at
-   `http://hostname:8935/stream/{streamID}.m3u8`
+   `http://hostname:8080/hls/{streamID}/index.m3u8`
 
 Now any requests that come into your site or DApp for video streaming through
 Livepeer will pull the video from the network, but will be served off of a CDN.
