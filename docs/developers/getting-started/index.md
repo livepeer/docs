@@ -4,38 +4,68 @@ title: Quickstart
 
 # Overview
 
-The getting started tutorial will walk you through the steps required to set up Catalyst, send a
-livestream into the Livepeer Network for transcoding, and play it back
-inside your application.
+This tutorial provides detailed high-level information for you to get started developing with Livepeer Catalyst. 
 
-> Note: for the sake of this guide, we'll be livestreaming using the Rinkeby
-> test network. You can think of this network like a sandbox environment for
-> testing your livestreams. If you're livestreaming in a production setting make
-> sure to change the network to `arbitrum-one-mainnet`. Learn more about supported networks,
-> including Arbitrum mainnet and Arbitrum Rinkeby,
-> [here](/installation/connect-to-arbitrum#supported-networks).
+It includes steps required to:
+
+- Set up [Catalyst](https://livepeer.com/products/media-server), 
+
+- Send a livestream into the Livepeer network for transcoding, and 
+
+- Play back the livestream inside your application
+
+>   **Note:** For the purposes of this guide, we'll be livestreaming using the [Rinkeby test network](/video-miners/getting-started/testnet#run-on-arbitrum-rinkeby-testnet) a kind of sandbox environment for testing your livestreams.  
+
+- **If you are livestreaming in a production setting** make sure to set the network to `arbitrum-one-mainnet`.  
+- **To Learn more about supported networks**, including Arbitrum mainnet and Arbitrum Rinkeby, in our [Installation Guide](/installation/connect-to-arbitrum#supported-networks).
 
 ## Pre-requisites
 
-- Make sure you have `livepeer` [installed](/installation/install-livepeer/)
-- Make sure you have access to an
-  [Arbitrum JSON-RPC URL](/installation/connect-to-arbitrum)
+- [Install](/installation/install-livepeer/) `livepeer` 
+- Get access to an [Arbitrum JSON-RPC URL](/installation/connect-to-arbitrum)
 
 ## Install Catalyst
 
-First, you will need to [install the Catalyst software](/developers/getting-started/install). This will provide you with a Livepeer broadcaster node and the full-featured MistServer toolkit, which you can use to stream using the Livepeer Network or your own onchain or offchain transcoding capacity.
+- Install the [Catalyst](/developers/getting-started/install) software. 
 
-## Start Catalyst and add funds
+This includes:
 
-To stream into the network, you will need to [start Catalyst](/developers/getting-started/run-broadcaster) and [supply it with funds](/developers/getting-started/deposit-broadcasting-funds) so that you are able to pay orchestrators for their services.
+- A Livepeer broadcaster DMS node, and 
+- The full-featured [MistServer toolkit](https://livepeer.com/docs/guides/media-server/introduction). 
 
-## Ensure that your private key is stored safely
+  You can use the toolkit to stream on the Livepeer network, or your own on-chain or off-chain transcoding capacity.
 
-When Catalyst starts for the first time, it will require you to specify a directory (such as `~/.lpData/catalyst`). The private key for your media server will be stored there. It is imperative that you securely store this keystore file; if you lose it you will lose access to your funds.
+## Start Catalyst and Add Funds
 
-## Launch the Catalyst Dashboard and start your first stream
+To stream into the Livepeer network: 
 
-Once your broadcaster is running, you can [launch the Catalyst Dashboard](/developers/getting-started/run-broadcaster#viewing-the-Catalyst-dashboard) and [start your first stream](/developers/getting-started/create-livestream).
+1. [Start Catalyst](/developers/getting-started/run-broadcaster)
+
+2. [Provide funds](/developers/getting-started/deposit-broadcasting-funds) so that you are able to pay orchestrators for their services.
+
+> **Note:** You only need to add funds if you are streaming into the network (i.e., running in onchain mode).
+
+## Safely Store Your Private Key
+
+**If this is your first time starting Catalyst:**
+
+- You will be required to specify a directory where your private key will be stored:
+
+**For example:**
+
+```bash
+  ~/.lpData/catalyst
+```  
+
+> **Note:** It is imperative that you securely store this keystore file. **Losing a the keystore file will cause you to lose access to your funds.**
+
+## Launch the Catalyst Dashboard and Start Your First Stream
+
+Once your DMS is running:
+
+ 1. [Launch the Catalyst Dashboard](/developers/getting-started/run-broadcaster#viewing-the-Catalyst-dashboard) ,  and 
+
+ 2. [Start your first stream](/developers/getting-started/create-livestream)
 
 <!-- ## Set up monitoring
 
