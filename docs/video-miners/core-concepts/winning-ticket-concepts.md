@@ -1,10 +1,12 @@
-# About Tickets
+# Tickets
 
-The following information provides a brief technical description of how tickets work at a deeper level and how adjusting attributes in tickets impact orchestrator behavior:
+The following provides a detailed high level overview about tickets and how their attributes impact orchestrators including but not limited to:
 
-- understand what tickets are and how they work
-- understanding about how adjusting orchestrator attributes that affect tickets affect your payouts as an orchestrator
-- understanding of how an orchestrator behavior changes with incoming tickets
+- What are tickets and how do they work
+- How adjusting orchestrator attributes affecting tickets impact orchestator payouts
+- How orchestrator behavior changes with incoming tickets
+
+***Related documentation*** [Earnings](https://docs.livepeer.org/video-miners/core-concepts/earnings) and [Payments](https://docs.livepeer.org/video-miners/core-concepts/payments).
 
 ## What is a ticket?
 
