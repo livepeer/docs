@@ -1,4 +1,10 @@
-# Ticket EV for Orchestrators
+# About Tickets
+
+The following information provides a brief technical description of how tickets work at a deeper level and how adjusting attributes in tickets impact orchestrator behavior:
+
+- understand what tickets are and how they work
+- understanding about how adjusting orchestrator attributes that affect tickets affect your payouts as an orchestrator
+- understanding of how an orchestrator behavior changes with incoming tickets
 
 ## What is a ticket?
 
