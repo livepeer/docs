@@ -20,18 +20,18 @@ This guide is applicable to delegators who delegated their LPT to an orchestrato
 1.    Navigate to the [testnet explorer](http://rinkeby.explorer.livepeer.org) or [mainnet explorer](http://explorer.livepeer.org). If you have not connected the wallet that you used to delegate your LPT, connect it using the prompt in the upper left hand corner. If you haven't switched your network to Arbitrum, you'll be prompted to do so.
     
     
-    <img src="/docs-assets/delegators/how-to-guides/connect-wallet-d.png" alt="connect wallet to livepeer" width="300"/>
+    <img src="/docs-assets/delegators/reference/connect-wallet-d.png" alt="connect wallet to livepeer" width="300"/>
     
     There are a few options for connecting a wallet to Livepeer. The wallet you choose should be the same one with which you originally delegated your LPT on the Ethereum mainnet. It should also contain a small amount of arbETH to pay for the `claim` on Arbitrum.
     
-    <img src="/docs-assets/delegators/how-to-guides/connect-wallet-d2.png" alt="connect wallet to livepeer" width="300"/>
+    <img src="/docs-assets/delegators/reference/connect-wallet-d2.png" alt="connect wallet to livepeer" width="300"/>
 
 
 2. **Claim your stake, rewards, and fees** 
     
     Click `Claim` to initiate a transaction that will claim your stake, rewards and fees.
         
-    <img src="/docs-assets/delegators/how-to-guides/confirm-d.png" alt="confirm orchestrator" width="300"/>
+    <img src="/docs-assets/delegators/reference/confirm-d.png" alt="confirm orchestrator" width="300"/>
 
     **If your orchestrator has not migrated and has not conveyed plans to migrate, you will see a prompt to choose a new orchestrator.**
 

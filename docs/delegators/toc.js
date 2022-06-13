@@ -6,8 +6,9 @@ const toc = [
         collapsed: false,
         link: {type: "doc", id: "delegators/index"},
         items: [
-            "delegators/how-to-guides/bridge-lpt",
-            "delegators/how-to-guides/l2-migration",
+            "delegators/reference/bridge-lpt",
+            "delegators/reference/l2-migration",
+            "delegators/reference/yield-calculation",
         ]
     },
     "video-miners/terminology"
