@@ -42,9 +42,38 @@ If an orchestrator receives a winning ticket, the ticket can submit the ticket a
 
 Although each “win” is awarded randomly, the probabilistic in “probabilistic micropayments” ensures that even with adverse impact from factors like gas prices or fluctuation in network activity - at a high level payments follow a linear distribution trend.
 
-- how long it takes to approach certainty mathematically with payments
-    - within 25% of where you should in theory be
-    - std dv of where you should
-    
-
 ## Creating and Redeeming Tickets
+
+Assuming that the orchestrator and broadcaster have connected prior and completed the initial handshake.  
+
+**Every new ticket T (emanating from a broadcaster) will result in the following steps completed by the broadcaster:**
+
+1. Append recipientRandHash to T.
+2. Append corresponding recipient, winProb and faceValue to T.
+3. Generate senderNonce and append to T.
+4. Send the ticket, associated signature and recipientSeed to the orchestrator.
+
+**The orchestrator will receive each of these tickets and then complete the following steps:**
+
+1. Compute the recipientRandHash by hashing recipientSecret AND recipientSeed
+2. check the recipientRandHash
+    1. if this fails, the ticket is rejected
+3. Check that the recipientAddress matches the current orchestrator addresss
+4. Check that the ticket has a valid signature and corresponds to the broadcaster address
+5. Assert that the random identifier assigned to the ticket is truly random
+
+The above process is loosely how the orchestrator keeps track of tickets flowing from various broadcasters and associated metrics are derived by counting these processes.
+
+**If an orchestrator wins a ticket the following process begins:**
+
+1. Submit the transaction (depending on orchestrator config this may be automatic) to the [TicketBroker smart contract](https://etherscan.io/address/0x58b6a8a3302369daec383334672404ee733ab239) with the below attributes included.
+    - Ticket T
+    - recipientRand
+    - Broadcaster Signature
+2. Assert that T has not already been identified or redeemed.
+3. Assert that hashing recipientRand is equal to recipientRandHash
+4. Recover the broadcaster payer address
+5. Assert that the broadcaster has penalty collateral in escrow.
+6. Hash the transaction against recipientRand and compare against winProb to see if the ticket actually indeed won
+7. If the broadcaster’s deposit is less than faceValue of T, consume the broadcaster’s collateral escrow funds (proportionally relative to faceValue of T) to the orchestrator.  Otherwise, just transfer the faceValue of T.
+8. Mark ticket as identified AND redeemed.
