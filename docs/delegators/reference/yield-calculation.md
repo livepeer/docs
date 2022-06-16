@@ -32,7 +32,7 @@ Lastly, orchestrators earn fees for work performed, and the average is taken ove
 
 There are also protocol-level parameters which factor into how inflationary rewards are distributed and change over time.
 
-The inflation rate increases/decreases when the target participation rate is not met. For simplicity, we assume in the ROI calculation that the current inflation rate, $r_{inf}$, will stay constant.
+The inflation rate increases/decreases when the target participation rate is not met. For simplicity, we assume in the yield calculation that the current inflation rate, $r_{inf}$, will stay constant.
 
 The current token supply is defined as $l_{total}$ and the current active stake (LPT which has been delegated) is $l_{active}$.
 
@@ -43,7 +43,7 @@ The current token supply is defined as $l_{total}$ and the current active stake 
 The transcoding fees are simpler and calculated using:
 
 $$
-ROI_{ETH} = ({v_{daily} * 365}) * (s_{fees}) * {\left( p \over p + l_{orch}  \right)}
+yield_{ETH} = ({v_{daily} * 365}) * (s_{fees}) * {\left( p \over p + l_{orch}  \right)}
 $$
 
 The first part calculates the estimated fee volume in ETH for the orchestrator for the year.
@@ -57,7 +57,7 @@ The last part takes the ratio of the delegator's stake to the total orchestrator
 The combined equation also includes input from the user, which is the amount of LPT they want to stake. This principle is defined as $p$.
 
 $$
-ROI_{LPT} = { \left( l_{total} * (1+r_{inf})^{417} - l_{total} \over l_{active} \right)} * {((p + l_{orch}) * r_{rewards}) } * (s_{rewards} * {p \over (p + l_{orch})})
+yield_{LPT} = { \left( l_{total} * (1+r_{inf})^{417} - l_{total} \over l_{active} \right)} * {((p + l_{orch}) * r_{rewards}) } * (s_{rewards} * {p \over (p + l_{orch})})
 $$
 
 The first part of the equation is the estimated total rewards which will be given out to all orchestrators over the next year, based on current inflation, active stake, and Ethereum block times (417 rounds in one year).
@@ -68,13 +68,13 @@ The last part calculates the ratio that the delegator will receive, based on the
 
 #### Combined Equation
 
-The total ROI can then be calculated as (with $price_{LPT/ETH}$ pulled from Uniswap):
+The total yield can then be calculated as (with $price_{LPT/ETH}$ pulled from Uniswap):
 
 $$
-ROI_{total} = ROI_{LPT} + ROI_{ETH} * (price_{LPT/ETH})
+yield_{total} = yield_{LPT} + yield_{ETH} * (price_{LPT/ETH})
 $$
 
-The implementation of this equation can be found in the Explorer Github repository under [lib/roi.ts](https://github.com/livepeer/explorer/blob/main/lib/roi.ts).
+The implementation of this equation can be found in the [Explorer Github repository](https://github.com/livepeer/explorer/blob/main/lib/roi.ts).
 
 ## Inaccuracies/Pitfalls
 
@@ -84,4 +84,4 @@ The parameters which an orchestrator sets for their fee cut and reward cut are h
 
 ### Inflation Rate Change
 
-As mentioned previously, the inflation rate is subject to change depending on the participation rate (the amount of LPT staked in the network). The ROI calculation assumes that the participation rate will stay constant, but this could prove to be inaccurate.
+As mentioned previously, the inflation rate is subject to change depending on the participation rate (the amount of LPT staked in the network). The yield calculation assumes that the participation rate will stay constant, but this could prove to be inaccurate.
