@@ -2,7 +2,7 @@ const toc = [
   "delegators/index",
   {
     type: "category",
-    label: "Reference",
+    label: "Guides",
     collapsible: true,
     collapsed: false,
     link: { type: "doc", id: "delegators/how-to-guides/index" },
@@ -13,7 +13,7 @@ const toc = [
   },
   {
     type: "category",
-    label: "Guides",
+    label: "Reference",
     collapsible: true,
     collapsed: true,
     link: { type: "doc", id: "delegators/reference/index" },
