@@ -1,9 +1,9 @@
 ---
-title: Core Concepts
+title: Guides
 sidebar_position: 1
 ---
 
-# Core Concepts
+# Guides
 
 This section will help delegators understand:
 

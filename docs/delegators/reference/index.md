@@ -1,9 +1,9 @@
 ---
-title: Core Concepts
+title: Reference
 sidebar_position: 1
 ---
 
-# Core Concepts
+# Reference
 
 This section will help delegators understand:
 
