@@ -10,6 +10,7 @@ const toc = [
             "video-miners/core-concepts/selection",
             "video-miners/core-concepts/architecture",
             "video-miners/core-concepts/dual-mining",
+            "video-miners/core-concepts/winning-ticket-concepts",
             "video-miners/core-concepts/earnings",
             "video-miners/core-concepts/payments",
             "video-miners/core-concepts/pools",
