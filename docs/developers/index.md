@@ -14,6 +14,4 @@ community will be happy to assist.
 > directly. This requires self-hosting Catalyst and managing your own
 > crypto wallet for payments.
 >
-> If you prefer traditional payment rails, you can run Catalyst with a
-> [Livepeer Studio](https://livepeer.studio) API key. LVS also offers a serverless hosted service
-> with API access to the Livepeer Network.
+> If you prefer using a hosted gateway, check out Livepeer Studio, a video toolkit with API access to the Livepeer Network.
