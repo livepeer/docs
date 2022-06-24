@@ -28,7 +28,7 @@ decentralized network of transcoding node operators (video miners).
 
 If you’re interested in building your video-centric creator platform app on top
 of Livepeer we recommend using a hosted Livepeer service such as
-[Livepeer.com](https://livepeer.studio) for an easy-to-use gateway API that
+[Livepeer Studio](https://livepeer.studio) for an easy-to-use gateway API that
 abstracts away a lot of the dev ops and engineering required to support this use
 case.
 
