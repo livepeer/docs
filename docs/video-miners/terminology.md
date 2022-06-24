@@ -15,7 +15,7 @@ Capacity refers to the total transcoding that an orchestrator or transcoder can 
 
 ## Concurrent Sessions
 
-***See*** the definition of [Sessions](video-miners/terminology#session)
+**_See_** the definition of [Sessions](video-miners/terminology#session)
 
 ## Orchestrator
 
@@ -29,13 +29,13 @@ Transcoders are video miners that are responsible for transcoding video. They pe
 ## Transcoding
 
 Transcoding is the process of taking an input source video in one format andbitrate, and converting it to many output rendition videos with different formats and bitrates such that the video can be played on the majority of the
-devices in the world at any internet connection speed. 
+devices in the world at any internet connection speed.
 
-Additional details on transcoding can be found in [this blog post](https://livepeer.com/blog/intro-to-transcoding).
+Additional details on transcoding can be found in [this blog post](https://livepeer.studio/blog/intro-to-transcoding).
 
-## Real-time segment ratio 
+## Real-time segment ratio
 
-"Real-Time Segs Ratio" captures the number of segments transcoded in real-time. 
+"Real-Time Segs Ratio" captures the number of segments transcoded in real-time.
 
 ## Session
 
@@ -47,7 +47,6 @@ Transcoding is performed in individual sessions that are created on orchestrator
 - **Concurrent Sessions** is the sum of all of the logical TCP connection existing at a given point in time, a pathway on the network, whereby the transfer of data is considered as a session. In Livepeer, multiple concurrent sessions for a related segment may be open.
 
 <!--- https://developer.att.com/video-optimizer/docs/best-practices/video-concurrency -->
-
 
 ## Stake
 
@@ -61,8 +60,8 @@ provide economic security to broadcasters.
 
 ## Video Miners
 
-***See*** [Roles and Responsibilities](/video-miners/)
+**_See_** [Roles and Responsibilities](/video-miners/)
 
 ## Video Mining
 
-***See*** [About Video Mining](/video-miners/)
+**_See_** [About Video Mining](/video-miners/)

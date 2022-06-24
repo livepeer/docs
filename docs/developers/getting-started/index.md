@@ -4,40 +4,40 @@ title: Quickstart
 
 # Overview
 
-This tutorial provides detailed high-level information for you to get started developing with Livepeer Catalyst. 
+This tutorial provides detailed high-level information for you to get started developing with Livepeer Catalyst.
 
 It includes steps required to:
 
-- Set up [Catalyst](https://livepeer.com/products/media-server), 
+- Set up [Catalyst](https://livepeer.studio/products/media-server),
 
-- Send a livestream into the Livepeer network for transcoding, and 
+- Send a livestream into the Livepeer network for transcoding, and
 
 - Play back the livestream inside your application
 
->   **Note:** For the purposes of this guide, we'll be livestreaming using the [Rinkeby test network](/video-miners/getting-started/testnet#run-on-arbitrum-rinkeby-testnet) a kind of sandbox environment for testing your livestreams.  
+> **Note:** For the purposes of this guide, we'll be livestreaming using the [Rinkeby test network](/video-miners/getting-started/testnet#run-on-arbitrum-rinkeby-testnet) a kind of sandbox environment for testing your livestreams.
 
-- **If you are livestreaming in a production setting** make sure to set the network to `arbitrum-one-mainnet`.  
+- **If you are livestreaming in a production setting** make sure to set the network to `arbitrum-one-mainnet`.
 - **To Learn more about supported networks**, including Arbitrum mainnet and Arbitrum Rinkeby, in our [Installation Guide](/installation/connect-to-arbitrum#supported-networks).
 
 ## Pre-requisites
 
-- [Install](/installation/install-livepeer/) `livepeer` 
+- [Install](/installation/install-livepeer/) `livepeer`
 - Get access to an [Arbitrum JSON-RPC URL](/installation/connect-to-arbitrum)
 
 ## Install Catalyst
 
-- Install the [Catalyst](/developers/getting-started/install) software. 
+- Install the [Catalyst](/developers/getting-started/install) software.
 
 This includes:
 
-- A Livepeer broadcaster DMS node, and 
-- The full-featured [MistServer toolkit](https://livepeer.com/docs/guides/media-server/introduction). 
+- A Livepeer broadcaster DMS node, and
+- The full-featured [MistServer toolkit](https://livepeer.studio/docs/guides/media-server/introduction).
 
   You can use the toolkit to stream on the Livepeer network, or your own on-chain or off-chain transcoding capacity.
 
 ## Start Catalyst and Add Funds
 
-To stream into the Livepeer network: 
+To stream into the Livepeer network:
 
 1. [Start Catalyst](/developers/getting-started/run-broadcaster)
 
@@ -55,7 +55,7 @@ To stream into the Livepeer network:
 
 ```bash
   ~/.lpData/catalyst
-```  
+```
 
 > **Note:** It is imperative that you securely store this keystore file. **Losing a the keystore file will cause you to lose access to your funds.**
 
@@ -63,9 +63,9 @@ To stream into the Livepeer network:
 
 Once your DMS is running:
 
- 1. [Launch the Catalyst Dashboard](/developers/getting-started/run-broadcaster#viewing-the-Catalyst-dashboard) ,  and 
+1.  [Launch the Catalyst Dashboard](/developers/getting-started/run-broadcaster#viewing-the-Catalyst-dashboard) , and
 
- 2. [Start your first stream](/developers/getting-started/create-livestream)
+2.  [Start your first stream](/developers/getting-started/create-livestream)
 
 <!-- ## Set up monitoring
 

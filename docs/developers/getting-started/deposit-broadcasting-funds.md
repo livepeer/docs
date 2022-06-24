@@ -5,11 +5,11 @@ sidebar_position: 3
 
 # Deposit Broadcasting Funds
 
-If you are [running Catalyst in onchain mode](/developers/getting-started/run-broadcaster#running-Catalyst-on-mainnet) or [using Livepeer Video Services capacity](/developers/getting-started/run-broadcaster#running-Catalyst-with-livepeercom) will need to deposit funds used to pay the node operators on the network (orchestrators) responsible for transcoding your live video. Node operators get paid in a cryptocurrency called Ether (ETH).
+If you are [running Catalyst in onchain mode](/developers/getting-started/run-broadcaster#running-Catalyst-on-mainnet) or [using Livepeer Studio capacity](/developers/getting-started/run-broadcaster#running-Catalyst-with-livepeercom) will need to deposit funds used to pay the node operators on the network (orchestrators) responsible for transcoding your live video. Node operators get paid in a cryptocurrency called Ether (ETH).
 
 **Be sure that you safely store [the private key](/developers/getting-started/index#ensure-that-your-broadcasters-private-key-is-stored-safely) of the wallet that your broadcaster is using**
 
-> **Note:** If you do not want to manage your own funds onchain, [Livepeer Video Services](https://livepeer.com) offers a hosted API that accepts credit cards.
+> **Note:** If you do not want to manage your own funds onchain, [Livepeer Studio](https://livepeer.studio) offers a hosted API that accepts credit cards.
 
 Since we're using the Arbitrum Rinkeby test network for this tutorial you'll need to acquire
 some free test ETH. You can get some [here](https://fauceth.komputing.org/?chain=421611), or bridge[Rinkeby ETH](https://faucet.rinkeby.io/) to Arbitrum Rinkeby using the [Arbitrum bridge](https://bridge.arbitrum.io)

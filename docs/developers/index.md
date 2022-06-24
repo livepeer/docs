@@ -15,5 +15,5 @@ community will be happy to assist.
 > crypto wallet for payments.
 >
 > If you prefer traditional payment rails, you can run Catalyst with a
-> [Livepeer Video Services](https://livepeer.com) API key. LVS also offers a serverless hosted service
+> [Livepeer Studio](https://livepeer.studio) API key. LVS also offers a serverless hosted service
 > with API access to the Livepeer Network.

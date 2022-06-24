@@ -5,9 +5,9 @@ title: About Video Mining
 
 This section of the livepeer.org documentation is for **video miners**. Video miners in the Livepeer network provide video transcoding services.
 
-In the context of Proof-of-Work (PoW) consensus mechanisms and protocols, e.g., Bitcoin, the term "miner" refers to participants using computational power to secure a blockchain. 
+In the context of Proof-of-Work (PoW) consensus mechanisms and protocols, e.g., Bitcoin, the term "miner" refers to participants using computational power to secure a blockchain.
 
-Livepeer video miners participate in an open marketplace using their computational power to provide video transcoding services (and in the future, other video infrastructure services as well), enabling developers to build scalable video applications. Video miners get compensated for these services with [Livepeer token (LPT) and Ether (ETH)](/video-miners/core-concepts/earnings#fees). 
+Livepeer video miners participate in an open marketplace using their computational power to provide video transcoding services (and in the future, other video infrastructure services as well), enabling developers to build scalable video applications. Video miners get compensated for these services with [Livepeer token (LPT) and Ether (ETH)](/video-miners/core-concepts/earnings#fees).
 
 ## Roles and Responsibilities
 
@@ -16,19 +16,19 @@ Video miners can take on different roles in the network:
 - [Orchestrators](/video-miners/#about-orchestrators) are responsible for receiving video from broadcasters and returning transcoded results.
 - [Transcoders](/video-miners/#about-transcoders) are responsible for transcoding video.
 
-### About Orchestrators 
+### About Orchestrators
 
 An orchestrator coordinates work on the network. They earn LPT rewards by staking their own LPT, and earn ETH fees for providing high-quality transcoding services to broadcasters. Their earnings are influenced by their delegated stake, which they've attracted by sharing earnings.
 
-The quality of transcoding services is influenced by a combination of factors, including but not limited to: 
+The quality of transcoding services is influenced by a combination of factors, including but not limited to:
 
-- Economic security (the stake of the orchestrator and its delegators which can be slashed if the work is performed incorrectly), 
+- Economic security (the stake of the orchestrator and its delegators which can be slashed if the work is performed incorrectly),
 
 - Geographic coverage and transcoding capacity (affected by bandwidth and computational capacity).
 
 A broadcaster selects orchestrators to send work to based on these factors. Hence, an orchestrator's earning potential depends on their performance in these areas.
 
-An orchestrator running a combined orchestrator/transcoder can perform transcoding with the additional capability of outsourcing transcoding to one or many transcoders, commonly referred to as a [transcoding pool](/video-miners/core-concepts/pools). They are similar to how PoW mining pools outsource PoW hashing to one or many separate miners. 
+An orchestrator running a combined orchestrator/transcoder can perform transcoding with the additional capability of outsourcing transcoding to one or many transcoders, commonly referred to as a [transcoding pool](/video-miners/core-concepts/pools). They are similar to how PoW mining pools outsource PoW hashing to one or many separate miners.
 
 ### Running an Orchestrator
 
@@ -44,15 +44,15 @@ Video miners who run an orchestrator:
 
 ### About Transcoders
 
-A transcoder performs transcoding work on the network with their hardware resources, thus providing computational capacity to orchestrators. 
+A transcoder performs transcoding work on the network with their hardware resources, thus providing computational capacity to orchestrators.
 
-Transcoding is the process of taking an input source video in one format and bitrate and converting it to many output rendition videos with different formats and bitrates such that the video can be played on most devices running video at any internet connection speed. Additional resources about transcoding can be found in [the Livepeer Blog](https://livepeer.com/blog/intro-to-transcoding).
+Transcoding is the process of taking an input source video in one format and bitrate and converting it to many output rendition videos with different formats and bitrates such that the video can be played on most devices running video at any internet connection speed. Additional resources about transcoding can be found in [the Livepeer Blog](https://livepeer.studio/blog/intro-to-transcoding).
 
 ### Transcoding on the Livepeer Network
 
-A broadcaster selects an orchestrator and begins streaming video to them via the Livepeer network. The orchestrator sends video segments to a transcoder. They transcode and return the segments to the orchestrator to return to the broadcaster.  
+A broadcaster selects an orchestrator and begins streaming video to them via the Livepeer network. The orchestrator sends video segments to a transcoder. They transcode and return the segments to the orchestrator to return to the broadcaster.
 
-In the Livepeer network, broadcasters and video miners establish a price for transcoding on the open market. The fees an orchestrator receives for the transcoded segments are based on an agreed-upon price with the broadcaster, whereas exact economics for transcoders depends entirely on the implementation of the [transcoding pool](/video-miners/core-concepts/pools) to which they belong. For example, one pool could distribute [LPT rewards and ETH fees](/video-miners/core-concepts/earnings#fees) to transcoders, while another just distributes ETH fees. 
+In the Livepeer network, broadcasters and video miners establish a price for transcoding on the open market. The fees an orchestrator receives for the transcoded segments are based on an agreed-upon price with the broadcaster, whereas exact economics for transcoders depends entirely on the implementation of the [transcoding pool](/video-miners/core-concepts/pools) to which they belong. For example, one pool could distribute [LPT rewards and ETH fees](/video-miners/core-concepts/earnings#fees) to transcoders, while another just distributes ETH fees.
 
 ### Running a Transcoder
 

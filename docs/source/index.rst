@@ -1,1 +1,1 @@
-The Livepeer documentation has moved to https://livepeer.com/docs
+The Livepeer documentation has moved to https://livepeer.studio/docs

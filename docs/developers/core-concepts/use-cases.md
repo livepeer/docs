@@ -28,7 +28,7 @@ decentralized network of transcoding node operators (video miners).
 
 If you’re interested in building your video-centric creator platform app on top
 of Livepeer we recommend using a hosted Livepeer service such as
-[Livepeer.com](https://livepeer.com) for an easy-to-use gateway API that
+[Livepeer.com](https://livepeer.studio) for an easy-to-use gateway API that
 abstracts away a lot of the dev ops and engineering required to support this use
 case.
 
@@ -41,4 +41,3 @@ Infrastructure developers who would otherwise have to continue provisioning
 transcoding servers, licensing media servers, and efficiently manage resources
 to handle spikes, can tap into the Livepeer transcoding network to automatically
 scale to support any number of streams at a highly disruptive cost.
-

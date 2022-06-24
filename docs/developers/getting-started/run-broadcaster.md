@@ -11,7 +11,7 @@ When running Catalyst, you have the option to run it:
 
 - [Locally, using local transcoding capacity](#running-Catalyst-locally)
 - [Onchain, using Livepeer Network transcoding capacity](#running-Catalyst-on-mainnet)
-- [Onchain, using Livepeer Video Services transcoding capacity](#running-Catalyst-with-livepeercom)
+- [Onchain, using Livepeer Studio transcoding capacity](#running-Catalyst-with-livepeercom)
 - [Onchain, using transcoding capacity from a specific orchestrator or set of orchestrators](/developers/how-to-guides/choose-orchestrator)
 
 Once you are running, it will be helpful to [start the broadcaster CLI](#running-the-broadcaster-cli) to conduct any necessary onchain actions
