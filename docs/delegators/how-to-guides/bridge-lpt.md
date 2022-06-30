@@ -46,6 +46,6 @@ The Arbitrum rollup can fail to bridge tokens correctly if the gas prices are fl
 
 In the event of a failure of LPT to bridge due to gas spikes, you should see a message similar to the following:
 
-![Arbitrum UI](/docs-assets/delegators/how-to-guides/arbitrum-oog.png)
+![Arbitrum UI](https://user-images.githubusercontent.com/23727056/176745651-98ff56d0-9c0a-4c2d-b9fe-bf3ba1d537a7.png)
 
 You should then be able to connect your wallet and resubmit the bridge transaction. This will retry the previous transaction. Make sure to do this in a timely manner, since the [L2 retry buffer is limited](https://github.com/OffchainLabs/arbitrum/blob/master/docs/L1_L2_Messages.md).
