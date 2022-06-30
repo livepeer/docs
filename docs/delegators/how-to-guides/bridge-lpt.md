@@ -40,7 +40,7 @@ The same general instructions apply with three differences:
 
 ### Bridging Failures
 
-The Arbitrum rollup can fail to bridge tokens correctly if the gas prices are fluctuating by too much. This can be caused by gas prices changing from when the original "bridge" transaction was submitted, to when it was sequenced and submitted on L2. In this case, tokens will not reach your L2 wallet after an hour. Arbitrum [provides a page](https://retryable-tx-panel.arbitrum.io/) to check on the status of your L1 deposit transaction:
+The Arbitrum rollup can fail to bridge tokens correctly if the gas prices are fluctuating by too much, or if the transaction runs out of gas. The former can be caused by gas prices changing from when the original "bridge" transaction was submitted, to when it was sequenced and submitted on L2. In this case, tokens will not reach your L2 wallet after an hour. Arbitrum [provides a page](https://retryable-tx-panel.arbitrum.io/) to check on the status of your L1 deposit transaction:
 
 ![Arbitrum UI](/docs-assets/delegators/how-to-guides/arbitrum-retry-ui.png)
 
