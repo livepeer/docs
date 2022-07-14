@@ -26,7 +26,7 @@ This site is organized by topics including concepts, tasks, and reference inform
 
 **Follow us**
 
-- [@LivepeerOrg](https://twitter.com/LivepeerOrg?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor) on twitter
+- [@Livepeer](https://twitter.com/Livepeer?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor) on twitter
 - Join our [community chat](https://discord.gg/RR4kFAh) on Discord.
 
 ## Livepeer Quickstart
