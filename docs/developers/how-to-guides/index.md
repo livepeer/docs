@@ -13,7 +13,7 @@ Set options and follow methods to configure broadcasting preferences provided fo
 
 Make your output video available via a conventional [CDN](/developers/how-to-guides/cdn-integration) so that requests into your site or DApp for video streaming through Livepeer pull video from the network while served off of a CDN.
 
-> 	**Note:** In the future, we aim to provide this option with the p2p network that Livepeer forms around a stream.
+>     **Note:** In the future, we aim to provide this option with the p2p network that Livepeer forms around a stream.
 
 ### [Withdraw Broadcasting Funds](/developers/how-to-guides/managing-broadcasters/withdrawing-broadcaster-funds)
 
@@ -27,8 +27,8 @@ Use the Livepeer built-in feature to record your stream on the s3-like object st
 
 ### [Enable verification (experimental)](/developers/how-to-guides/managing-broadcasters/verification)
 
-Automatically verify the correctness of transcoded results received from orchestrators. 
+Automatically verify the correctness of transcoded results received from orchestrators.
 
 ### [Troubleshooting](/developers/how-to-guides/managing-broadcasters/troubleshooting)
 
-Enable detailed logs, and troubleshoot errors you may encounter when managing DMSs.
+Enable detailed logs, and troubleshoot errors you may encounter when running Catalyst.

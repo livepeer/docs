@@ -8,7 +8,7 @@ This tutorial provides detailed high-level information for you to get started de
 
 It includes steps required to:
 
-- Set up [Catalyst](https://livepeer.studio/products/media-server),
+- Set up [Catalyst](https://github.com/livepeer/catalyst),
 
 - Send a livestream into the Livepeer network for transcoding, and
 
@@ -27,13 +27,6 @@ It includes steps required to:
 ## Install Catalyst
 
 - Install the [Catalyst](/developers/getting-started/install) software.
-
-This includes:
-
-- A Livepeer broadcaster DMS node, and
-- The full-featured [MistServer toolkit](https://livepeer.studio/docs/guides/media-server/introduction).
-
-  You can use the toolkit to stream on the Livepeer network, or your own on-chain or off-chain transcoding capacity.
 
 ## Start Catalyst and Add Funds
 
@@ -61,7 +54,7 @@ To stream into the Livepeer network:
 
 ## Launch the Catalyst Dashboard and Start Your First Stream
 
-Once your DMS is running:
+Once Catalyst is running:
 
 1.  [Launch the Catalyst Dashboard](/developers/getting-started/run-broadcaster#viewing-the-Catalyst-dashboard) , and
 
