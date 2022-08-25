@@ -17,7 +17,7 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
 - LivepeerToken: [0x289ba1701C2F088cf0faf8B3705246331cB8A839](https://arbiscan.io/address/0x289ba1701C2F088cf0faf8B3705246331cB8A839)
 - Minter: [0xc20DE37170B45774e6CD3d2304017fc962f27252](https://arbiscan.io/address/0xc20DE37170B45774e6CD3d2304017fc962f27252)
 - BondingManager (Proxy): [0x35Bcf3c30594191d53231E4FF333E8A770453e40](https://arbiscan.io/address/0x35Bcf3c30594191d53231E4FF333E8A770453e40)
-- BondingManager (Target): [0x0f9C425E7374602C20370d3fd263155B4c3bDc91](https://arbiscan.io/address/0x0f9C425E7374602C20370d3fd263155B4c3bDc91)
+- BondingManager (Target): [0x3a941e1094B9E33efABB26a9047a8ABb4b257907](https://arbiscan.io/address/0x3a941e1094B9E33efABB26a9047a8ABb4b257907)
 - TicketBroker (Proxy): [0xa8bB618B1520E284046F3dFc448851A1Ff26e41B](https://arbiscan.io/address/0xa8bB618B1520E284046F3dFc448851A1Ff26e41B)
 - TicketBroker (Target): [0xD906D192e2503Aafd1BC5F5fc4163E842D5B1d6e](https://arbiscan.io/address/0xD906D192e2503Aafd1BC5F5fc4163E842D5B1d6e)
 - RoundsManager (Proxy): [0xdd6f56DcC28D3F5f27084381fE8Df634985cc39f](https://arbiscan.io/address/0xdd6f56DcC28D3F5f27084381fE8Df634985cc39f)
@@ -109,6 +109,7 @@ Rinkeby (LPT) is the set of contracts that originally implemented the alpha prot
   - V1: [0xe479B9fbA2Cd65f822f451fC8C145c663B995CE6](https://arbiscan.io/address/0xe479B9fbA2Cd65f822f451fC8C145c663B995CE6)
   - V2: [0xC40df4db2f99e7e235780A93B192F1a934f0c45b](https://arbiscan.io/address/0xC40df4db2f99e7e235780A93B192F1a934f0c45b)
   - V3: [0x3757DB506ECd9CBE643660C0F5b70db5b321202C](https://arbiscan.io/address/0x3757DB506ECd9CBE643660C0F5b70db5b321202C)
+  - V4: [0x0f9C425E7374602C20370d3fd263155B4c3bDc91](https://arbiscan.io/address/0x0f9C425E7374602C20370d3fd263155B4c3bDc91)
 - TicketBroker (Target)
   - V1: [0x7Beb84c52ce96DFd90431FAA97378994a8baa6df](https://arbiscan.io/address/0x7Beb84c52ce96DFd90431FAA97378994a8baa6df#code)
 - Minter
