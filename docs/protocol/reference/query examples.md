@@ -3,105 +3,69 @@ sidebar_position: 3
 title: Sample Queries
 ---
 
-## Sample Queries
+# Sample Queries
 
 Below are some sample queries you can use to gather information from the Livepeer contracts.
 
 You can build your own queries using a [GraphQL Explorer](https://graphiql-online.com/graphiql) and enter your endpoint to limit the data to exactly what you need.
 
-## Transcoders
+Livepeer endpoint https://api.thegraph.com/subgraphs/name/livepeer/livepeer
 
-````
+## Transcoder
 
-{% tabs %}
-{% tab title="Request" %}
+Query Description: Search active delegators, how long and how much they delegated
 
 ```graphql
 {
-  transcoders(where: {id: "0x4a43b1d7e6227c8b0512e413f406555647ff7bdb"}) {
+  transcoders(where: { id: "0x4a43b1d7e6227c8b0512e413f406555647ff7bdb" }) {
     active
-    rewardCut
-    feeShare
-    totalStake
-    totalVolumeETH
-    totalVolumeUSD
-  }
-}
-````
-
-{% endtab %}
-
-{% tab title="Response" %}
-
-```javascript
-{
-  "data":{
-    "transcoders": [
-      {
-      "active": true
-      "rewardCut": "100000",
-      "feeShare": "50000",
-      "totalStake": "11007.283760839111991305",
-      "totalVolumeETH": "1.805454545454545454",
-      "totalVolumeUSD":
-"6615.395713508667866907061241155882"
+    delegators(first: 1000) {
+      id
+      delegatedAmount
+      principal
+      startRound
+      delegate {
+        id
+        lastRewardRound {
+          id
+          length
+        }
+        delegator {
+          delegatedAmount
+        }
       }
-    ]
+    }
   }
 }
 ```
 
-{% endtab %}
-{% endtabs %}
+## Subquery
 
-## Transcoders
-
-````
-
-{% tabs %}
-{% tab title="Request" %}
+Query Description: get all delegators of a given orchestrator
 
 ```graphql
 {
-  transcoders (where: {serviceURI:"https://lp.jasonernst.com:8935"}) {
-    id
-    active
-    activationRound
-    deactivationRound
-    totalStake
-    rewardCut
-    feeShare
-    serviceURI
-  }
-}
-````
-
-{% endtab %}
-
-{% tab title="Response" %}
-
-```javascript
-{
-  "data": {
-    "transcoders": [
-      {
-        "id":
-"0x74ba897f65f04008d8eff364efcc54b0a20e17eb",
-        "active": true,
-        "activationRound": "2455",
-        "deactivationRound":
-"57896044618658097711785492504343953926634992332820282019728792003956564819967",
-
-        "totalStake": "38.773870428139860977",
-        "rewardCut": "100000",
-        "feeShare": "50000",
-        "serviceURI":
-"https://lp.jasonernst.com:8935"
-      }
-    ]
+  transcoder(id: "0x4a43b1d7e6227c8b0512e413f406555647ff7bdb") {
+    delegators(first: 1000) {
+      id
+      bondedAmount
+      startRound
+    }
   }
 }
 ```
 
-{% endtab %}
-{% endtabs %}
+## Rounds
+
+Query Description: search round by total supply, active stake, participation rate and length of round
+
+```graphql
+{
+  rounds(orderBy: id) {
+    totalSupply
+    totalActiveStake
+    participationRate
+    length
+  }
+}
+```
