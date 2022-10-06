@@ -26,7 +26,6 @@ In most cases, you should set up an orchestrator and transcoder using [this guid
 Prior to developing with the Livepeer Explorer, you must [deploy the Livepeer Subgraph](https://github.com/livepeer/subgraph#deploy-the-livepeer-subgraph-locally). Once you've done so, you can follow the instructions in [this guide](https://github.com/livepeer/explorer) to begin developing with the Livepeer Explorer.
 
 ### Developing with Livepeer.js
-**Prerequisites:** Private ETH network with Livepeer contracts deployed
 Livepeer.js allows you to easily interact with a Livepeer node. For installation and usage, please refer to [this guide](https://livepeerjs.org/react/getting-started)
 
 ### Contract Development
