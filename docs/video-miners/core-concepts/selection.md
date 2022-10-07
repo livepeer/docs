@@ -34,7 +34,7 @@ selected.
 
 The latency of an orchestrator is the total time for an orchestrator to return
 transcoded results to a broadcaster. This includes the time it takes for the
-broadcaster to upload a segment to the orchesterator, the time it takes for the
+broadcaster to upload a segment to the orchestrator, the time it takes for the
 orchestrator to transcode the segment (and in the case of a split orchestrator
 and transcoder this includes the network transit time between the orchestrator
 and transcoder) and the time it takes for the broadcaster to download the
