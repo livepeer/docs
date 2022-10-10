@@ -14,7 +14,7 @@ This subgraph is can be used to query Livepeer data.
 [Creating an API Key Video Tutorial](https://www.youtube.com/watch?v=UrfIpm-Vlgs)
 
 - [Explorer Page](https://thegraph.com/explorer/subgraph?id=FDD65maya4xVfPnCjSgDRBz6UBWKAcmGtgY6BmUueJCg&view=Overview)
-- Graphql Endpoint: https://gateway.thegraph.com/api/[api-key]/subgraphs/id/FDD65maya4xVfPnCjSgDRBz6UBWKAcmGtgY6BmUueJCg
+- Graphql Endpoint: https://thegraph.com/hosted-service/subgraph/livepeer/arbitrum-one
 - [Code Repo](https://github.com/livepeer/subgraph)
 
 ## Helpful Links
