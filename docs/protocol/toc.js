@@ -22,8 +22,9 @@ const toc = [
     link: { type: "doc", id: "protocol/reference/index" },
     items: [
       "protocol/reference/deployed",
-      "protocol/reference/api",
+      "protocol/reference/subgraph-info",
       "protocol/reference/entities",
+      "protocol/reference/query-examples",
     ],
   },
   "video-miners/terminology",
