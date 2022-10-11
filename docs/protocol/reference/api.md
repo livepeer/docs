@@ -1,34 +1,26 @@
 ---
-title: Subgraph API Overview
-sidebar_position: 2
+sidebar_position: 1
+title: Subgraph Data Introduction
 ---
 
-# Subgraph API Overview
+# Livepeer Subgraph Introduction
 
-This section explains the Livepeer Subgraph and how to interact with it. The
-Livepeer subgraph indexes data from the Livepeer contracts over time. It
-organizes data about orchestrators, delegators, and more. The subgraph updates
-any time a transaction is made on Livepeer. It runs on
-[The Graph](https://thegraph.com/) protocol's hosted service and can be openly
-queried.
+Livepeer has a GraphQL API Endpoint hosted by [The Graph](https://thegraph.com/docs/about/introduction#what-the-graph-is) called a subgraph for indexing and organizing data from the Livepeer smart contracts.
 
-## Resources
+This subgraph is can be used to query Livepeer data.
 
-- [Subgraph Explorer](https://thegraph.com/explorer/subgraph/livepeer/livepeer) -
-  sandbox for querying data and endpoints for developers.
-- [Livepeer Subgraph](https://github.com/livepeer/livepeerjs/tree/master/packages/subgraph) -
-  source code for deployed subgraph.
+## Ethereum Mainnet
 
-## Usage
+[Creating an API Key Video Tutorial](https://www.youtube.com/watch?v=UrfIpm-Vlgs)
 
-The subgraph provides a snapshot of the current state of Livepeer and also
-tracks historical data. It is currently used to power
-[explorer.livepeer.org](https://explorer.livepeer.org). **It is not intended to
-be used as a data source for structuring transactions (contracts should be
-referenced directly for the most reliable live data).**
+- [Explorer Page](https://thegraph.com/explorer/subgraph?id=FDD65maya4xVfPnCjSgDRBz6UBWKAcmGtgY6BmUueJCg&view=Overview)
+- [Graphql Endpoint] (https://thegraph.com/hosted-service/subgraph/livepeer/arbitrum-one) *Note: this will eventually be deprecated once The Graph [sunsets their Hosted Service](https://thegraph.com/blog/transitioning-to-decentralized-graph-network/). This will likely happen in late 2023 or later, see their blog or Discord channel for more information.
+- [Code Repo](https://github.com/livepeer/subgraph)
 
-## Making Queries
+## Helpful Links
 
-To learn more about querying a subgraph refer to
-[The Graph's documentation](https://thegraph.com/docs/en/).
+[Querying from an Application](https://thegraph.com/docs/en/developer/querying-from-your-app/)
+
+[Managing your API Key & Setting your indexer preferences](https://thegraph.com/docs/en/studio/managing-api-keys/)
+
 
