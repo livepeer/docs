@@ -24,6 +24,7 @@ const toc = [
       "protocol/reference/deployed",
       "protocol/reference/api",
       "protocol/reference/entities",
+      "protocol/reference/query-examples",
     ],
   },
   "video-miners/terminology",
