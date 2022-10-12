@@ -14,7 +14,7 @@ This subgraph is can be used to query Livepeer data.
 [Creating an API Key Video Tutorial](https://www.youtube.com/watch?v=UrfIpm-Vlgs)
 
 - [Explorer Page](https://thegraph.com/explorer/subgraph?id=FDD65maya4xVfPnCjSgDRBz6UBWKAcmGtgY6BmUueJCg&view=Overview)
-- [Graphql Endpoint] (https://thegraph.com/hosted-service/subgraph/livepeer/arbitrum-one) *Note: this will eventually be deprecated once The Graph [sunsets their Hosted Service](https://thegraph.com/blog/transitioning-to-decentralized-graph-network/). This will likely happen in late 2023 or later, see their blog or Discord channel for more information.
+- [Graphql Endpoint](https://thegraph.com/hosted-service/subgraph/livepeer/arbitrum-one) *Note: this will eventually be deprecated once The Graph [sunsets their Hosted Service](https://thegraph.com/blog/transitioning-to-decentralized-graph-network/). This will likely happen in late 2023 or later, see their blog or Discord channel for more information.
 - [Code Repo](https://github.com/livepeer/subgraph)
 
 ## Helpful Links
