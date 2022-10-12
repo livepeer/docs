@@ -9,7 +9,7 @@ Below are some sample queries you can use to gather information from the Livepee
 
 You can build your own queries using a [GraphQL Explorer](https://graphiql-online.com/graphiql) and enter your endpoint to limit the data to exactly what you need.
 
-Livepeer endpoint https://api.thegraph.com/subgraphs/name/livepeer/livepeer
+The GraphQL endpoint uses the The Graph's Hosted Service on [Arbitrum One](https://thegraph.com/hosted-service/subgraph/livepeer/arbitrum-one). _Note: this will eventually be deprecated once The Graph [sunsets their Hosted Service](https://thegraph.com/blog/transitioning-to-decentralized-graph-network/). This will likely happen in late 2023 or later, see their blog or Discord channel for more information._
 
 ## Transcoder
 
