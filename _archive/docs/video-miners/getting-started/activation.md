@@ -1,0 +1,183 @@
+---
+title: Activation
+sidebar_position: 4
+---
+
+This guide includes steps to activate an orchestrator on the Livepeer network. You will set the parameters for pricing, and register your node on-chain so that broadcasters are able to discover your services.
+
+- You will run `livepeer` with an `ethURL` that tells the `livepeer` process how to communicate with the blockchain.
+
+- Set several parameters via an on-chain transaction (e.g., price / pixel, fee cut, reward cut, service URI, etc.) required to activate.
+
+**Note:** Be sure to complete the [Livepeer Quickstart](/video-miners/getting-started/) before proceeding.
+
+## Preparation 
+
+Before activating:
+- You will identify the GPUs you will be using for receiving streams and transcoding
+- Set your parameters
+- Start your node
+
+### Print a list of your accessible GPUs
+
+Once you have checked your [Nvidia driver](https://www.nvidia.com/Download/index.aspx) is installed, your Nvidia GPUs on your machine should be [accessible on Livepeer](/video-miners/getting-started/activation#nvidia-gpu-i-ds). 
+
+**Note:** Instructions for non-Nvidia GPUs will be added in the future.
+
+- Use the `nvidia-smi` (installed with the Nvidia driver) to print a list of GPUs:
+
+**For example:**
+
+The following output indicates that there are 5 GPUs accessible on the machine with
+IDs from 0 through 4.
+
+``` bash
+nvidia-smi -L
+GPU 0: GeForce GTX 1070 Ti (UUID: GPU-fcbaffa0-38ae-02d0-5c47-f8fd9922eb75)
+GPU 1: GeForce GTX 1070 Ti (UUID: GPU-d46a085e-0d66-0214-34d3-96860a5c778f)
+GPU 2: GeForce GTX 1070 Ti (UUID: GPU-32b7c120-c2c9-0069-6130-cb67afd89642)
+GPU 3: GeForce GTX 1070 Ti (UUID: GPU-9e4163c3-a120-3cbb-7869-1223b322eab2)
+GPU 4: GeForce GTX 1070 Ti (UUID: GPU-3370975a-f669-e108-6428-602be9eba7d4)
+```
+
+
+### Start a combined orchestrator and transcoder
+
+You must first start the orchestrator before you activate:
+
+**For example:**
+
+```bash
+livepeer \
+    -network arbitrum-one-mainnet \
+    -ethUrl <ETH_URL> \
+    -ethAcctAddr <ETH_ACCT_ADDR> \ # Only required if you already have an ETH account you want to use
+    -orchestrator \
+    -transcoder \
+    -nvidia <NVIDIA_DEVICE_IDs> \ # Only required for transcoding with Nvidia GPUs
+    -pricePerUnit <PRICE_PER_UNIT> \
+    -serviceAddr <SERVICE_ADDR> # Hostname/IP:port
+```
+
+
+#### Flags
+
+- Use the `-ethAcctAddr` flag to specify the ETH account address that you want the node to use. 
+
+> **Note:** This flag is only required if you already have an account that you want to use.
+
+- Be sure the private key for the account address is stored in the keystore directory. 
+
+> This defaults to  `~/.lpData/arbitrum-one-mainnet/keystore`. 
+
+> **Note:** It is paramount that you securely manage the private key, as it controls your wallet and funds.
+
+- Use both the `-orchestrator` and `-transcoder` flags to configure the node to be an orchestrator and a transcoder;  it will receive video from broadcasters, transcode the video itself, and return the transcoded results to the broadcasters.
+
+- `-nvidia` is used to specify a comma delimited string of Nvidia GPU IDs. The flag is only required when transcoding with Nvidia GPUs
+- `-pricePerUnit` is used to specify the price (wei per pixel) for transcoding. The flag is required on startup, but the value can be changed later.
+- `-serviceAddr` is used to specify the publicly accessible address that the orchestrator should receive requests at. Changing this requires a blockchain transaction, so it's preferable to use a hostname for a domain you own, not an IP address that may change.
+
+### Automatic ETH account creation
+
+If you did not use the `-ethAcctAddr` flag, an ETH account will automatically be created and you will be prompted for a passphrase:
+
+```bash
+I0302 15:26:06.886115   25387 accountmanager.go:49] No Ethereum account found. Creating a new account
+I0302 15:26:06.886134   25387 accountmanager.go:50] This process will create a new Ethereum account for this Livepeer node
+I0302 15:26:06.886138   25387 accountmanager.go:51] Please enter a passphrase to encrypt the Private Keystore file for the Ethereum account.
+I0302 15:26:06.886143   25387 accountmanager.go:52] This process will ask for this passphrase every time it is launched
+I0302 15:26:06.886147   25387 accountmanager.go:53] (no characters will appear in Terminal when the passphrase is entered)
+Passphrase:
+```
+
+This account will be used to identify your orchestrator on the network. **By default**, the private key for the account will be stored under: 
+
+```bash
+~/.lpData/arbitrum-one-mainnet/keystore
+```
+
+> **Note:** It is **very important** to safeguard both the private key and the passphrase because together they allow someone to sign messages and send transactions using the account.
+
+### Check the node is accessible
+
+Once node completes the start up process, you should see the following logs
+indicating that the node is publicly accessible:
+
+```bash
+I0302 15:27:26.456804   25418 rpc.go:167] Listening for RPC on :8935
+I0302 15:27:28.463151   25418 rpc.go:207] Received Ping request
+```
+
+## Fund your account with ETH and LPT
+
+In order to activate on Livepeer, your account should have:
+
+- arbETH to pay for transaction fees
+  - Recommendation: Start with a small amount and add more when needed.
+    `livepeer` and `livepeer_cli` will inform you if your account's ETH balance
+    is insufficient to pay for transaction fees when attempting to submit the
+    transactions
+- LPT to stake in order to activate
+  - Recommendation: Check the [explorer](https://explorer.livepeer.org/) and
+    find the 100th orchestrator with the most stake. This is the amount of stake
+    required for you to activate. Note that more stake will help you receive
+    more work.
+
+> **Note:**  For further detail, you can check out the topics on [Earnings](/video-miners/core-concepts/earnings) and [Payments](/video-miners/core-concepts/payments). 
+
+## Activate
+
+The active orchestrator set consists of the top 100 orchestrators with the most LPT stake on the network. You can check this on the [Livepeer Explorer](https://explorer.livepeer.org/). 
+
+### Activate using `livepeer_cli`
+Once the orchestrator has been started and is running you can activate the orchestrator:
+
+1. Run `livepeer_cli`
+
+2. Enter the number corresponding to the `Invoke multi-step "become an orchestrator"` option.
+
+3. Set the percentage of LPT rewards that you will keep (the rest will be shared with your delegators):
+
+   ```bash
+   Enter block reward cut percentage (current=0 default=10) - >
+   ```
+
+4. Set the percentage of ETH fees that you will keep (the rest will be shared with your delegators):
+
+   ```bash
+   Enter fee cut percentage (current=100 default=95) - >
+   ```
+
+5. Set the number of pixels in a single unit of work you will charge a price for (You can use the default (1) and change this later if needed):
+
+   ```bash
+   Enter amount of pixels that make up a single unit (default: 1 pixel) >
+   ```
+
+6. Set the price (in `Wei`) that you will charge per unit of work. This can be the same as or different from the value used with the `-pricePerUnit` flag when starting your orchestrator:
+
+   ```bash
+   Enter the price for 1 pixels in Wei (required) >
+   ```
+
+7. Set the publicly accessible service address that your orchestrator will receive requests. This should be the same as the value used with the `-serviceAddr` flag when starting your orchestrator, i.e.:
+
+   ```bash
+   Enter the public host:port of node (default: 1.1.1.1:8935)>
+   ```
+
+8. Set the amount of LPTU (1 LPT = 1e18 LPTU) that you want to stake. It is important this amount is denominated in LPTU; if you want to bond 5 LPT, you would enter 5000000000000000000.
+
+**For example:**
+
+   ```bash
+   You must bond to yourself in order to become a orchestrator
+   Enter bond amount - >
+   ```
+
+> **Note:** If the active orchestrator set is full (i.e. at 100 orchestrators), the minimum stake you need to stake to activate is the lowest total stake of an orchestrator in the active set found on the [Livepeer Explorer](https://explorer.livepeer.org/).
+
+
+9. Wait for transactions to confirm. You should see the logs of your orchestrator indicating transactions are submitted and confirmed on-chain. Once the transactions have confirmed, your orchestrator will join the active set in the following round.
+
