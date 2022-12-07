@@ -12,7 +12,7 @@ const activeStyle = {
 };
 
 const acceptStyle = {
-  borderColor: '#5842c3',
+  borderColor: '#00a55f',
 };
 
 const rejectStyle = {
@@ -55,7 +55,7 @@ export const Asset = () => {
     isDragReject,
   } = useDropzone({
     accept: {
-      'video/*': ['*.mp4'],
+      'video/*': ['.mp4'],
     },
     maxFiles: 1,
     onDrop,
@@ -108,7 +108,7 @@ export const Asset = () => {
               p: '$1',
               mb: '$0',
               height: 'auto',
-              border: '1px solid $colors$primary7',
+              border: '1px solid $colors$green7',
               borderRadius: '$1',
             }}
             {...getRootProps({ style })}
@@ -119,7 +119,7 @@ export const Asset = () => {
               css={{
                 width: '100%',
                 height: '100%',
-                border: '1px dotted $colors$primary7',
+                border: '1px dotted $colors$green7',
                 borderRadius: '$1',
                 m: 0,
                 fontSize: '$3',
@@ -134,7 +134,7 @@ export const Asset = () => {
             >
               <Text variant="gray">
                 Drag and drop or{' '}
-                <Box as="span" css={{ color: '$primary9', fontWeight: 700 }}>
+                <Box as="span" css={{ color: '$green9', fontWeight: 700 }}>
                   browse files
                 </Box>
               </Text>
@@ -179,7 +179,7 @@ export const Asset = () => {
               router.push(`/examples/react/video-nft?id=${asset[0].id}`)
             }
             disabled={asset[0]?.status?.phase !== 'ready'}
-            variant="primary"
+            variant="green"
             size="2"
           >
             {isLoading && <Spinner size={16} css={{ mr: '$1' }} />}
@@ -194,7 +194,7 @@ export const Asset = () => {
             }}
             size="2"
             disabled={isLoading || !createAsset}
-            variant="primary"
+            variant="green"
           >
             {isLoading && <Spinner size={16} css={{ mr: '$1' }} />}
             Upload

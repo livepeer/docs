@@ -5,7 +5,7 @@ import Image from 'next/image';
 const playbackId =
   'bafybeida3w2w7fch2fy6rfvfttqamlcyxgd3ddbf4u25n7fxzvyvcaegxy';
 
-import blenderPoster from '../../public/images/blender-poster.png';
+import blenderPoster from '../../../public/images/blender-poster.png';
 
 const PosterImage = () => {
   return (

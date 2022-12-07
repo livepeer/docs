@@ -91,7 +91,7 @@ export const AccessControl = () => {
               }}
               size="2"
               disabled={isLoading || !createStream || Boolean(stream)}
-              variant="primary"
+              variant="green"
             >
               {isLoading && <Spinner size={16} css={{ mr: '$1' }} />}
               Create Gated Stream
@@ -151,7 +151,7 @@ export const AccessControl = () => {
           )}
           <Button
             onClick={() => setJwtDetailsShown(!jwtDetailsShown)}
-            variant="primary"
+            variant="green"
             size="2"
             css={{ mt: '$3' }}
           >

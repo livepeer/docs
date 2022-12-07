@@ -159,7 +159,7 @@ export const WagmiNft = () => {
                   !name ||
                   !description
                 }
-                variant="primary"
+                variant="green"
               >
                 {isLoading && <Spinner size={16} css={{ mr: '$1' }} />}
                 Upload to IPFS
@@ -173,7 +173,7 @@ export const WagmiNft = () => {
                 <Button
                   css={{ display: 'flex', ai: 'center' }}
                   size="2"
-                  variant="primary"
+                  variant="green"
                 >
                   View Mint Transaction
                 </Button>
@@ -190,7 +190,7 @@ export const WagmiNft = () => {
                 }}
                 size="2"
                 disabled={isLoading}
-                variant="primary"
+                variant="green"
               >
                 {isLoading && <Spinner size={16} css={{ mr: '$1' }} />}
                 Mint NFT

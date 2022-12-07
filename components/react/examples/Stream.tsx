@@ -60,7 +60,7 @@ export const Stream = () => {
             }}
             size="2"
             disabled={isLoading || !createStream}
-            variant="primary"
+            variant="green"
           >
             {isLoading && <Spinner size={16} css={{ mr: '$1' }} />}
             Create Stream

@@ -174,6 +174,7 @@ export const AptosNft = () => {
         size="3"
         disabled={!isAptosDefined || Boolean(address)}
         onClick={connectWallet}
+        variant="green"
       >
         {!address ? (
           'Connect Wallet'
@@ -267,6 +268,7 @@ export const AptosNft = () => {
                 onClick={() => {
                   updateAsset?.();
                 }}
+                variant="green"
                 size="2"
                 disabled={
                   !updateAsset ||
@@ -276,7 +278,6 @@ export const AptosNft = () => {
                   !name ||
                   !description
                 }
-                variant="primary"
               >
                 {isLoading && <Spinner size={16} css={{ mr: '$1' }} />}
                 Upload to IPFS
@@ -290,7 +291,7 @@ export const AptosNft = () => {
                 <Button
                   css={{ display: 'flex', ai: 'center' }}
                   size="2"
-                  variant="primary"
+                  variant="green"
                 >
                   View Mint Transaction
                 </Button>
@@ -301,7 +302,7 @@ export const AptosNft = () => {
                 onClick={mintNft}
                 size="2"
                 disabled={isLoading}
-                variant="primary"
+                variant="green"
               >
                 {isLoading && <Spinner size={16} css={{ mr: '$1' }} />}
                 Mint NFT
