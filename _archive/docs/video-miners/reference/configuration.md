@@ -1,0 +1,159 @@
+---
+title: Configuration
+sidebar_position: 5
+---
+
+# Overview
+
+`livepeer` has a number of configurable options. You can
+[set your configuration using command-line flags, environment variables, or a config file](/installation/configuring-livepeer).
+
+A comprehensive list of options can be found below. They are sourced and
+regularly updated from
+[this file](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer/livepeer.go).
+The
+[go-livepeer developer docs](https://github.com/livepeer/go-livepeer/tree/master/doc)
+also contain instructions for using flags to enable certain functionality in
+`livepeer`.
+
+# Options
+
+### Configuration
+
+```
+config: Path to config file.
+```
+
+### Network and Addresses
+
+```
+network: Network to connect to. Default `offchain`
+
+rtmpAddr: Address to bind for RTMP commands. Default `127.0.0.1:+RtmpPort`
+
+cliAddr: Address to bind for  CLI commands. Default `127.0.0.1:+CliPort`
+
+httpAddr: Address to bind for HTTP commands. No default
+
+serviceAddr: Orchestrator only. Overrides the on-chain serviceURI that broadcasters can use to contact this node; may be an IP or hostname. No default
+
+orchAddr: Orchestrator to connect to as a standalone transcoder. No default.
+
+verifierURL: URL of the verifier to use. No default.
+
+verifierPath: Path to verifier shared volume. No default.
+
+localVerify: Set to true to enable local verification i.e. pixel count and signature verification. Default `true`. However, if you are running in offchain mode, this will be set to false.
+
+httpIngest: Set to true to enable HTTP ingest. Default `true`. However, if (1) you do not provide a value, (2) you provide a non-local URL for `httpAddr`, and (3) you do not provide an `authWebhookURL`, this will be set to false.
+```
+
+### Transcoding
+
+```
+orchestrator: Set to true to be an orchestrator. Default `false`
+
+transcoder: Set to true to be an transcoder. Default `false`
+
+broadcaster: Set to true to be an broadcaster. Default `false`
+
+orchSecret: Shared secret with the orchestrator as a standalone transcoder. No default
+
+transcodingOptions: Transcoding options for broadcast job, or path to json config. Default `P240p30fps16x9,P360p30fps16x9`
+
+maxAttempts: Maximum transcode attempts. Default `3`
+
+selectRandFreq: Frequency to randomly select unknown orchestrators (on-chain mode only). Default `0.3`
+
+maxSessions: Maximum number of concurrent transcoding sessions for Orchestrator, maximum number or RTMP streams for Broadcaster, or maximum capacity for transcoder. Default `10`
+
+currentManifest: Expose the currently active ManifestID as \"/stream/current.m3u8\". Default `false`
+
+nvidia: Comma-separated list of Nvidia GPU device IDs (or \"all\" for all available devices). No default
+
+testTranscoder: Test Nvidia GPU transcoding at startup. Default `true`
+
+sceneClassificationModelPath: Path to scene classification model. No default
+```
+
+### Onchain
+
+```
+ethAcctAddr: Existing Eth account address. No default
+
+ethPassword: Password for existing Eth account address. No default
+
+ethKeystorePath: Path for the Eth Key. No default
+
+ethOrchAddr: address of an on-chain registered orchestrator. No default
+
+ethUrl: EVM-compatible chain node JSON-RPC URL. No default
+
+txTimeout: Amount of time (ms) to wait for a transaction to confirm before timing out. Default `300000 (5 mins)`
+
+maxTxReplacements: Number of times to automatically replace pending transactions. Default `1`
+
+gasLimit: Gas limit for ETH transaction. Default `0`
+
+minGasPrice: Minimum gas price (priority fee + base fee) for ETH transactions in wei, 10 Gwei = 10000000000. If not set, this will be the network's default min gas fee.
+
+maxGasPrice: Maximum gas price (priority fee + base fee) for ETH transactions in wei, 40 Gwei = 40000000000. Default `0`
+
+ethController: Protocol smart contract address. No default
+
+initializeRound: Set to true if running as a transcoder and the node should automatically initialize new rounds. Default false.
+
+ticketEV: The expected value for PM tickets. Default `1000000000000`
+
+maxTicketEV: The maximum acceptable expected value for PM tickets. Default `3000000000000`
+
+depositMultiplier: The deposit multiplier used to determine max acceptable faceValue for PM tickets. Default `1`
+
+pricePerUnit: The price per 'pixelsPerUnit' amount pixels. Must be greater than 0. Error if not set.
+
+maxPricePerUnit: The maximum transcoding price (in wei) per 'pixelsPerUnit' a broadcaster is willing to accept. If not set explicitly, broadcaster is willing to accept ANY price. Default `0`
+
+pixelsPerUnit: Amount of pixels per unit. Set to '> 1' to have smaller price granularity than 1 wei / pixel. Default `1`
+
+autoAdjustPrice: Enable/disable automatic price adjustments based on the overhead for redeeming tickets. Default `true`
+
+blockPollingInterval: Interval in seconds at which different blockchain event services poll for blocks. Default `5`
+
+redeemer: Set to true to run a ticket redemption service. Default `false`
+
+redeemerAddr: URL of the ticket redemption service to use. No default
+
+reward: Set to true to run a reward service. If you do not want to automatically call `reward()`, you need to explicitly set this to `false` for any node that's registered onchain. Otherwise, it will default to true.
+
+monitor: Set to true to send performance metrics. Default `false`
+
+version: Print out the version. Default `false`
+
+v: Log verbosity -  {4|5|6}. No default
+
+metadataQueueUri: URI for message broker to send operation metadata. No default
+
+metadataAmqpExchange: Name of AMQP exchange to send operation metadata. Default `lp_golivepeer_metadata`
+
+metadataPublishTimeout: Max time (ms) to wait in background for publishing operation metadata events. Default `1000 (1s)`
+```
+
+### Storage
+
+```
+datadir: Directory that data is stored in. No default
+
+objectstore: URL of primary object store. No default
+
+recordstore: URL of object store for recodings. No default
+```
+
+### API
+
+```
+authWebhookURL: RTMP authentication webhook URL. No default
+
+orchWebhookURL: Orchestrator discovery callback URL. No default
+
+detectionWebhookURL: (Experimental) Detection results callback URL. No default
+```
