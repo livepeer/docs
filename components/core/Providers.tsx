@@ -84,7 +84,7 @@ const livepeerDarkTheme: ThemeConfig = {
   },
   colors: {
     ...livepeerLightTheme.colors,
-    containerBorderColor: 'rgba(0, 145, 255, 0.5)',
+    accent: '#00a55f',
   },
   fonts: {
     ...livepeerLightTheme.fonts,

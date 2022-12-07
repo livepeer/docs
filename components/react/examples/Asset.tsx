@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useCallback, useMemo, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
-import { Spinner } from '../core';
+import { Spinner } from '../../core';
 
 const activeStyle = {
   borderColor: 'white',

@@ -11,7 +11,7 @@ import {
 
 import Image from 'next/image';
 
-import blenderPoster from '../../../public/images/blender-poster-2.png';
+import blenderPoster from '../../../../public/images/blender-poster-2.png';
 import { DocsDemoPlayer } from './DocsDemoPlayer';
 
 const PosterImage = () => {

@@ -2,7 +2,7 @@ import { Player } from '@livepeer/react';
 import Image from 'next/image';
 import * as React from 'react';
 
-import waterfallsPoster from '../../public/images/waterfalls-poster.png';
+import waterfallsPoster from '../../../public/images/waterfalls-poster.png';
 
 const PosterImage = () => {
   return (

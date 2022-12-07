@@ -7,7 +7,7 @@ import { Callout } from 'nextra-theme-docs';
 import { useMemo, useState } from 'react';
 import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
 
-import { Spinner } from '../core';
+import { Spinner } from '../../core';
 import { videoNftAbi } from './videoNftAbi';
 
 export const WagmiNft = () => {

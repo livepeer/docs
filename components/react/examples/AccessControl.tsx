@@ -5,12 +5,12 @@ import { useMutation } from '@tanstack/react-query';
 import { b64UrlDecode } from 'livepeer/utils';
 import { useEffect, useMemo, useState } from 'react';
 
-import { ApiError } from '../../lib/error';
+import { ApiError } from '../../../lib/error';
 import {
   CreateSignedPlaybackBody,
   CreateSignedPlaybackResponse,
-} from '../../pages/api/create-signed-jwt';
-import { Spinner } from '../core';
+} from '../../../pages/api/create-signed-jwt';
+import { Spinner } from '../../core';
 
 export const AccessControl = () => {
   const [jwtDetailsShown, setJwtDetailsShown] = useState<boolean>(false);

@@ -7,14 +7,14 @@ import { Callout } from 'nextra-theme-docs';
 
 import { useCallback, useContext, useMemo, useState } from 'react';
 
-import { formatAddress } from '../../lib/address';
-import { ApiError } from '../../lib/error';
+import { formatAddress } from '../../../lib/address';
+import { ApiError } from '../../../lib/error';
 import {
   CreateAptosTokenBody,
   CreateAptosTokenResponse,
-} from '../../pages/api/create-aptos-token';
+} from '../../../pages/api/create-aptos-token';
 
-import { AptosContext, Spinner } from '../core';
+import { AptosContext, Spinner } from '../../core';
 
 declare global {
   interface Window {

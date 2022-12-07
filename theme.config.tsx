@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 const github = 'https://github.com/livepeer/livepeer.js';
 
 const TITLE_WITH_TRANSLATIONS = {
-  'en-US': 'Livepeer for JS',
+  'en-US': 'Livepeer Documentation',
 } as const;
 
 const EDIT_LINK_WITH_TRANSLATIONS = {
@@ -75,20 +75,19 @@ const config: DocsThemeConfig = {
         <span
           className="font-extrabold hidden md:inline select-none"
           title={
-            'livepeer.js: ' +
             TITLE_WITH_TRANSLATIONS[
               (locale as keyof typeof TITLE_WITH_TRANSLATIONS) ?? 'en-US'
             ]
           }
         >
-          livepeer.js
+          livepeer
         </span>
       </div>
     );
   },
-  getNextSeoProps() {
+  useNextSeoProps() {
     return {
-      titleTemplate: `%s - livepeer.js`,
+      titleTemplate: `%s - Livepeer Documentation`,
     };
   },
   head() {
@@ -99,7 +98,7 @@ const config: DocsThemeConfig = {
     const title = config?.frontMatter?.title || 'Build with Livepeer';
     const description =
       config?.frontMatter?.description ||
-      'livepeer.js makes building with Livepeer effortless.';
+      'Build decentralized video apps with Livepeer.';
     const image = config?.frontMatter?.image || '/og.png';
     const folder = theme === 'light' ? '/light' : '/dark';
 
@@ -141,21 +140,21 @@ const config: DocsThemeConfig = {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@livepeer" />
         <meta name="twitter:image" content={image} />
-        <meta name="og:title" content={`${title} – livepeer.js`} />
+        <meta name="og:title" content={`${title} – Livepeer Documentation`} />
         <meta name="og:image" content={image} />
-        <meta name="apple-mobile-web-app-title" content="livepeer.js" />
+        <meta name="apple-mobile-web-app-title" content="Livepeer Documentation" />
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-YNF68V1ND1"
         ></script>
         <script>
           {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'G-YNF68V1ND1');
-          `}
+             window.dataLayer = window.dataLayer || [];
+             function gtag(){dataLayer.push(arguments);}
+             gtag('js', new Date());
+ 
+             gtag('config', 'G-YNF68V1ND1');
+           `}
         </script>
       </>
     );

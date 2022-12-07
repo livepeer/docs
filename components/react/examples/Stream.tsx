@@ -3,7 +3,7 @@ import { Player, useCreateStream } from '@livepeer/react';
 
 import { useMemo, useState } from 'react';
 
-import { Spinner } from '../core';
+import { Spinner } from '../../core';
 
 export const Stream = () => {
   const [streamName, setStreamName] = useState<string>('');
