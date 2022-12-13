@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 
 const TITLE_WITH_TRANSLATIONS: Record<string, string> = {
-  'en-US': 'livepeer.js',
+  'en-US': 'Livepeer.js reference',
 };
 
 export function Header() {
@@ -10,12 +10,10 @@ export function Header() {
   const title = TITLE_WITH_TRANSLATIONS[resolvedLocale];
 
   return (
-    <header className="mb-4 flex flex-col items-center">
-      <h1 className="text-center font-bold text-3xl mt-4 mb-8 md:!text-4xl">
-        {title}
-      </h1>
+    <header className="mb-4 flex flex-col">
+      <h1 className="font-bold text-3xl mt-4 mb-8 md:!text-4xl">{title}</h1>
 
-      <div className="flex flex-wrap gap-2 justify-center max-w-[28rem] min-h-[3rem]">
+      <div className="flex flex-wrap gap-2 max-w-[28rem] min-h-[3rem]">
         <a
           aria-label="Version"
           href="https://www.npmjs.com/package/livepeer"

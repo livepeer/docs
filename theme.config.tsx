@@ -3,14 +3,14 @@
  */
 import { useRouter } from 'next/router';
 
-const github = 'https://github.com/livepeer/livepeer.js';
+const github = 'https://github.com/livepeer/docs';
 
 const TITLE_WITH_TRANSLATIONS = {
   'en-US': 'Livepeer Documentation',
 } as const;
 
 const EDIT_LINK_WITH_TRANSLATIONS = {
-  'en-US': 'Questions? Give us feedback →',
+  'en-US': 'Edit this page on GitHub →',
 } as const;
 
 import { DocsThemeConfig, useConfig, useTheme } from 'nextra-theme-docs';
@@ -19,20 +19,62 @@ const Logo = ({ height }: { height: number }) => {
   const { theme } = useTheme();
 
   return (
-    <svg width={height} height={height} viewBox="0 0 1024 1024" fill="none">
-      <circle
-        cx="512"
-        cy="512"
-        r="512"
-        fill={theme === 'light' ? '#131418' : 'white'}
-      />
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M292 662L292 762L392 762L392 662L292 662ZM292 462L292 562L392 562L392 462L292 462ZM692 462L692 562L792.001 562L792.001 462L692 462ZM292 362L292 262L392 262L392 362L292 362ZM492 461.999L492 361.999L592 361.999L592 461.999L492 461.999ZM492 561.999L492 661.999L592 661.999L592 561.999L492 561.999Z"
-        fill={theme === 'light' ? 'white' : '#131418'}
-      />
-    </svg>
+    <div style={{ alignItems: 'center' }} className="flex items-center gap-2">
+      <svg
+        width={18}
+        height={18}
+        viewBox="0 0 64 68"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect
+          x="52"
+          y="40"
+          width="12"
+          height="12"
+          transform="rotate(-90 52 40)"
+          fill={theme === 'light' ? '#131418' : 'white'}
+        />
+        <rect
+          x="26"
+          y="26"
+          width="12"
+          height="12"
+          transform="rotate(-90 26 26)"
+          fill={theme === 'light' ? '#131418' : 'white'}
+        />
+        <rect
+          x="26"
+          y="54"
+          width="12"
+          height="12"
+          transform="rotate(-90 26 54)"
+          fill={theme === 'light' ? '#131418' : 'white'}
+        />
+        <rect
+          y="68"
+          width="12"
+          height="12"
+          transform="rotate(-90 0 68)"
+          fill={theme === 'light' ? '#131418' : 'white'}
+        />
+        <rect
+          y="40"
+          width="12"
+          height="12"
+          transform="rotate(-90 0 40)"
+          fill={theme === 'light' ? '#131418' : 'white'}
+        />
+        <rect
+          y="12"
+          width="12"
+          height="12"
+          transform="rotate(-90 0 12)"
+          fill={theme === 'light' ? '#131418' : 'white'}
+        />
+      </svg>
+      <span style={{ fontWeight: 'bold', fontSize: 18 }}>Livepeer Docs</span>
+    </div>
   );
 };
 
@@ -54,14 +96,6 @@ const config: DocsThemeConfig = {
   primaryHue: {
     dark: 162,
     light: 212,
-  },
-  banner: {
-    key: 'livepeerjs-launch',
-    text: (
-      <div className="flex justify-center items-center gap-2">
-        We've just launched - check out our docs! 📗
-      </div>
-    ),
   },
   footer: {
     text: `MIT ${new Date().getFullYear()} © Livepeer Inc.`,
@@ -128,7 +162,7 @@ const config: DocsThemeConfig = {
           crossOrigin="true"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
         <meta name="theme-color" content="#ffffff" />
@@ -142,7 +176,10 @@ const config: DocsThemeConfig = {
         <meta name="twitter:image" content={image} />
         <meta name="og:title" content={`${title} – Livepeer Documentation`} />
         <meta name="og:image" content={image} />
-        <meta name="apple-mobile-web-app-title" content="Livepeer Documentation" />
+        <meta
+          name="apple-mobile-web-app-title"
+          content="Livepeer Documentation"
+        />
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-YNF68V1ND1"
@@ -160,7 +197,7 @@ const config: DocsThemeConfig = {
     );
   },
   sidebar: {
-    defaultMenuCollapseLevel: 2,
+    defaultMenuCollapseLevel: 1,
     titleComponent: ({ title, type }) =>
       type === 'separator' ? (
         <div className="flex items-center gap-2">

@@ -1,0 +1,59 @@
+---
+title: GET assets
+---
+
+# `GET` Assets
+
+To list all assets in your account call `GET /api/asset`:
+
+```jsx
+curl --location --request GET 'https://livepeer.studio/api/asset' \
+--header 'Authorization: Bearer $API_TOKEN'
+```
+
+### **Request path & query params**
+
+# Retrieve an Asset
+
+Retrieves the details of an `Asset` that has previously been imported or
+uploaded. Supply the unique `Asset` ID that was returned from your previous
+request, and Livepeer will return the corresponding `Asset` information.
+
+```jsx
+curl --location --request GET 'https://livepeer.studio/api/asset/$ASSET_ID' \
+--header 'Authorization: Bearer $API_TOKEN'
+```
+
+### Response Example
+
+```jsx
+{
+    "id": "$ASSET_ID",
+    "hash": [
+        {
+            "hash": "61b42e9371c1d29a9b99a7f62621e584",
+            "algorithm": "md5"
+        },
+        {
+            "hash": "b3b5891d6f0767012706fc8548f397b38876d309ca90689314c94615fb4c6e62",
+            "algorithm": "sha256"
+        }
+    ],
+    "name": "Example name",
+    "size": 52615193,
+    "status": "ready",
+    "userId": "$USER_ID",
+    "createdAt": 1644546528636,
+    "updatedAt": 1644546541218,
+    "videoSpec": {
+        "format": "mp4",
+        "duration": 309.986393
+    },
+    "playbackId": "$PLAYBACK_ID",
+    "downloadUrl": "https://livepeercdn.com/asset/$PLAYBACK_ID/video"
+}
+```
+
+> **NOTE** Notice that, by default, the asset comes without the audio and video
+> `tracks` specification. You can pass `?details=true` as an additional
+> parameter to the request to get the `videoSpec` with the `tracks` included.

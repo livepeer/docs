@@ -1,0 +1,36 @@
+---
+title: POST signing key
+---
+
+# `POST` Create a signing key
+
+A `signing key` is used to sign JWTs and are necessary to make a stream private.
+
+When you create a `signing key`, the request returns a base64 encoded `pem` keypair, where
+- The `publicKey` is a representation of the public key, encoded as base 64 and is passed as a string
+- The `privateKey` is displayed *only* on creation. This is the only moment where the client can save the private key, otherwise it will be lost.
+Remember to decode your string when signing JWTs
+
+Up to 10 signing keys can be generated, after that you must delete at least one `signing key` to create a new one.
+
+## Request
+
+```bash
+curl https://livepeer.studio/api/access-control/signing-key \
+--header 'Authorization: Bearer {api_key}' \
+  -X POST \
+  -H "Content-Type: application/json" \
+```
+
+## Response
+
+```jsx
+{
+    "id": "0f6a1b5a-333c-4ef3-9775-589a2907e105",
+    "name": "Signing Key 2",
+    "userId": "2b22f1de-875e-45a0-908d-593281988fb2",
+    "createdAt": 1663863391700,
+    "publicKey": "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFeVlZZGNKL0tFbUIrWjAvb29sbXJ2bXNlblRiNgpnc1FuQmhnRVhmdkhycDgxNFg0b0lBbVg1VjlnZzhEclJLUFRhNWxlRkhRYm5LQ0VvTk1NckoxK2F3PT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==",
+    "privateKey": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg+Sebp896yp2JZouz\n9v1hlnu5ivJMp0CeXzxEr/6ZTL2hRANCAATJhh1wn8oSYH5nT+iiWau+ax6dNvqC\nxCcGGARd+8eunzXhfiggCZflX2CDwOtEo9NrmV4UdBucoISg0wysnX5r\n-----END PRIVATE KEY-----\n"
+}
+```

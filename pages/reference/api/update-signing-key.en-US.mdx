@@ -1,0 +1,61 @@
+---
+title: "PATCH update signing key"
+---
+
+# `PATCH` Update signing key
+
+`PATCH /access-control/signing-key/{KEY_ID}` updates an existing `signing key`. 
+It is a single endpoint that can update any of the mutable properties of a stream. Specifically:
+- `name`
+- `disabled`
+
+All fields are optional, and if any field is not included in the request payload
+it will be kept unchanged from the saved object.
+
+## Request
+
+### Disabling a signing key
+
+This is useful when you want to rotate signing keys but don't want to risk deleting the old one permanently. 
+Instead you can disable it first and check that nothing broke to only then delete it permanently.
+
+```bash
+curl https://livepeer.studio/api/access-control/signing-key/${KEY_ID} \
+--header 'Authorization: Bearer {api_key}' \
+  -X PATCH \
+  -H "Content-Type: application/json" \
+--data-raw '{
+    "disabled": true
+}'
+```
+
+### Changing signing key name
+
+Notice that you can also provide a name to the signing key upon creation. Just provide the same `"name"` field on the creation API.
+
+```bash
+curl https://livepeer.studio/api/access-control/signing-key/${KEY_ID} \
+--header 'Authorization: Bearer {api_key}' \
+  -X PATCH \
+  -H "Content-Type: application/json" \
+--data-raw '{
+    "name": "My new name for signing key"
+}'
+```
+
+### Updating all fields
+
+```bash
+curl https://livepeer.studio/api/access-control/signing-key/${KEY_ID} \
+--header 'Authorization: Bearer {api_key}' \
+  -X PATCH \
+  -H "Content-Type: application/json" \
+--data-raw '{
+    "disabled": true,
+    "name": "My new name for signing key"
+}'
+```
+
+## Response
+
+A `204 No Content` status response indicates the `signing key` was successfully updated.

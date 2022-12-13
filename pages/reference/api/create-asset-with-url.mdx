@@ -1,0 +1,98 @@
+---
+title: POST asset via URL
+---
+
+# `POST` Upload asset via URL
+
+Upload a video `Asset` from an external URL through the
+`POST /api/asset/import` API.
+
+## Request
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+  <TabItem value="curl" label="curl">
+
+```bash
+curl --location --request POST 'https://livepeer.studio/api/asset/import' \
+--header 'Authorization: Bearer $API_TOKEN' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "url":"$EXTERNAL_URL",
+    "name":"Example name"
+}'
+
+```
+
+</TabItem>
+
+<TabItem value="js" label="javascript">
+
+```js
+const response = await fetch("https://livepeer.studio/api/asset/upload/url", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${api_key}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      url: "$EXTERNAL_URL"
+      name: "Example name",
+    }),
+  })
+
+const result = await response.json();
+```
+
+</TabItem>
+</Tabs>
+
+<!--
+<Table
+  data={[
+    {
+      parameter: <code>url</code>,
+      type: <code>string</code>,
+      description: "The URL of the file that Livepeer should download and use.",
+    },
+    {
+      parameter: <code>name</code>,
+      type: <code>string</code>,
+      description:
+        "The name of the `Asset` containing a custom human-readable description or title.",
+    },
+  ]}
+/> -->
+
+## Response
+
+```jsx
+{
+    "asset": {
+        "id": "7d042176-230b-464c-a677-4a19b513193c",
+        "playbackId": "7d048tbcfrv6gvzs",
+        "userId": "80dc8f6e-69d5-401f-bbd7-bfc09a2a5320",
+        "createdAt": 1659715086322,
+        "status": {
+            "phase": "waiting",
+            "updatedAt": 1659715086322
+        },
+        "name": "Example name"
+    },
+    "task": {
+        "id": "d3a2ab1b-8dd1-450d-ac8e-498fd9d91865"
+    }
+}
+```
+
+## How do I upload a livestream into my assets?
+
+Livestream recordings are automatically uploaded as `Asset`
+objects. All you need to do is enable recording on your streams.
+
+When the stream session ends, the platform waits `6min` to give a chance for the
+user to reconnect on the same recording session. After that delay, the recording
+is processed and you should have a new asset in your account which you can
+retrieve from the list assets API.

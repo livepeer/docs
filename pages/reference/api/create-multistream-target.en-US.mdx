@@ -1,0 +1,62 @@
+---
+title: POST multistream target
+---
+
+# `POST` multistream target
+
+`POST /multistream/target` creates a `multistream target` object.
+
+## Parameters
+
+**Required**
+
+- The only parameter you are required to set is the `url` of your target.
+
+- The `name` will be derived from the `url` host, if not specified.
+
+> **Note:** Creating only a `multistream target` is not sufficient to start
+> multistreaming. You also need to reference the target from the `stream` that
+> you want to streamed.
+
+You can also refer to the [Multistreams](/guides/live/multistream) guide for
+more information.
+
+## Example Request
+
+Create and name a `multistream target`, and reference the target from the
+`stream` that you want to streamed.
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+### Request
+
+<Tabs>
+  <TabItem value="curl" label="curl">
+
+```bash
+curl -X POST 'https://livepeer.studio/api/multistream/target' \
+-H 'content-type: application/json' \
+-H 'authorization: Bearer {api-key}' \
+-d '{
+    "name": "My Multistream Target",
+    "url": "rtmp://rtmp.streaming.tv/live/SECRET"
+}'
+```
+
+</TabItem>
+
+</Tabs>
+
+### Response
+
+201 Created
+
+```json
+{
+  "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaa",
+  "userId": "bbbbbbbb-bbbb-bbbb-bbbb-bbbb",
+  "name": "My Multistream Target",
+  "url": "rtmp://rtmp.streaming.tv/live/SECRET"
+}
+```

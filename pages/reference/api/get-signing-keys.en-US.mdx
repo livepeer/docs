@@ -1,0 +1,64 @@
+---
+title: GET signing keys
+---
+
+# `GET` Signing keys
+
+## List signing keys
+
+You can list all the `signing keys` in your account by making a `GET` request on `/api/access-control/signing-key`.
+
+### Request
+
+```jsx
+curl https://livepeer.studio/api/access-control/signing-key \
+--header 'Authorization: Bearer {api_key}' \
+  -X GET \
+  -H "Content-Type: application/json" \
+```
+
+### Response
+
+```jsx
+[
+    {
+        "id": "0f6a1b5a-333c-4ef3-9775-589a2907e105",
+        "name": "Signing Key 2",
+        "userId": "2b22f1de-875e-45a0-908d-593281988fb2",
+        "createdAt": 1663863391700,
+        "publicKey": "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFeVlZZGNKL0tFbUIrWjAvb29sbXJ2bXNlblRiNgpnc1FuQmhnRVhmdkhycDgxNFg0b0lBbVg1VjlnZzhEclJLUFRhNWxlRkhRYm5LQ0VvTk1NckoxK2F3PT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg=="
+    },
+    {
+        "id": "ebeca6b8-6880-46fb-be0b-d057b8dc3c5f",
+        "name": "Signing Key 1",
+        "userId": "2b22f1de-875e-45a0-908d-593281988fb2",
+        "createdAt": 1663860183641,
+        "publicKey": "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFY0FCTGhsL2ZLSHgrTDJTSFh6SkRyZElDbzYrTQpLdEUyNjZuYmlFK1ZPbUptRUZNSzNSdlJ0ZU1uRGd3Y3k0c3o1QWZCalBIQk9KeWVmT04ycWlyTVZBPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg=="
+    }
+]
+```
+
+## Get Signing Keys by ID
+
+You can get a specific `signing key` by making a `GET` request and passing a `signing key ID`.
+
+### Request
+
+```jsx
+curl https://livepeer.studio/api/access-control/signing-key/${KEY_ID} \
+--header 'Authorization: Bearer {api_key}' \
+  -X GET \
+  -H "Content-Type: application/json" \
+```
+
+### Response
+
+```jsx
+{
+    "id": "0f6a1b5a-333c-4ef3-9775-589a2907e105",
+    "name": "Signing Key 2",
+    "userId": "2b22f1de-875e-45a0-908d-593281988fb2",
+    "createdAt": 1663863391700,
+    "publicKey": "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFeVlZZGNKL0tFbUIrWjAvb29sbXJ2bXNlblRiNgpnc1FuQmhnRVhmdkhycDgxNFg0b0lBbVg1VjlnZzhEclJLUFRhNWxlRkhRYm5LQ0VvTk1NckoxK2F3PT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg=="
+}
+```
