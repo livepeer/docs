@@ -15,14 +15,13 @@ const EDIT_LINK_WITH_TRANSLATIONS = {
 
 import { DocsThemeConfig, useConfig, useTheme } from 'nextra-theme-docs';
 
-const Logo = ({ height }: { height: number }) => {
+const Logo = ({ height, width }: { height: number; width: number }) => {
   const { theme } = useTheme();
-
   return (
     <div style={{ alignItems: 'center' }} className="flex items-center gap-2">
       <svg
-        width={18}
-        height={18}
+        width={height || 18}
+        height={width || 18}
         viewBox="0 0 64 68"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -105,7 +104,7 @@ const config: DocsThemeConfig = {
     const { locale } = useRouter();
     return (
       <div className="flex items-center gap-2">
-        <Logo height={25} />
+        <Logo width={18} height={18} />
         <span
           className="font-extrabold hidden md:inline select-none"
           title={
@@ -201,7 +200,7 @@ const config: DocsThemeConfig = {
     titleComponent: ({ title, type }) =>
       type === 'separator' ? (
         <div className="flex items-center gap-2">
-          <Logo height={10} />
+          <Logo height={10} width={10} />
           {title}
         </div>
       ) : (

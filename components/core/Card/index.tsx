@@ -1,41 +1,26 @@
-import { Box } from '@livepeer/design-system';
 import Link from 'next/link';
 
 function Card({ title, description, icon, href }: any) {
   return (
     <Link href={href}>
-      <Box
-        css={{
-          display: 'flex',
-          minWidth: '150px',
-          px: '$4',
-          flexDirection: 'column',
-          pt: '$4',
-          pb: '$3',
-          cursor: 'pointer',
-          borderRadius: '10px',
-          border: '1px solid $neutral4',
-          boxShadow: '0px 6px 10px rgb(0 0 0 / 5%)',
-          backgroundColor: '$neutral2',
-          backdropFilter: 'blur(10px)',
-          height: '100%',
-        }}
-      >
-        <Box css={{ fontSize: '$7', mb: '$1' }}>{icon}</Box>
-        <Box>
-          <h3>{title}</h3>
-          <p>{description}</p>
-        </Box>
-      </Box>
+      <a>
+        <div className="p-4 group flex flex-col justify-start overflow-hidden rounded-lg border border-gray-200 bg-transparent text-current no-underline shadow-sm shadow-gray-100 transition-all duration-200 dark:border-neutral-700 dark:shadow-none hover:border-gray-300 hover:bg-slate-50 hover:shadow-md hover:shadow-gray-100 dark:hover:border-neutral-700 dark:hover:bg-neutral-900 dark:hover:shadow-none active:shadow-sm active:shadow-gray-200">
+          <div className="mb-2 text-lg">{icon}</div>
+          <div>
+            <div className="text-lg mb-1 font-bold">{title}</div>
+            <div>{description}</div>
+          </div>
+        </div>
+      </a>
     </Link>
   );
 }
 
 export function Cards({ children, num, ...props }: any) {
   return (
-    <Box
-      css={{
-        mt: 4,
+    <div
+      style={{
+        marginTop: 4,
         gap: '16px',
         display: 'grid',
         '--rows': num || 3,
@@ -45,7 +30,7 @@ export function Cards({ children, num, ...props }: any) {
       {...props}
     >
       {children}
-    </Box>
+    </div>
   );
 }
 
