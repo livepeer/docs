@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box } from '@livepeer/design-system';
 import Link from 'next/link';
 

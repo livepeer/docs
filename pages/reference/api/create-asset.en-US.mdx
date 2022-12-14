@@ -18,12 +18,6 @@ First generate a URL to directly upload a video `Asset` to Livepeer on
 
 ### Request
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-<Tabs>
-  <TabItem value="curl" label="curl">
-
 ```bash
 curl --location --request POST 'https://livepeer.studio/api/asset/request-upload' \
 --header 'Authorization: Bearer $API_TOKEN' \
@@ -32,41 +26,6 @@ curl --location --request POST 'https://livepeer.studio/api/asset/request-upload
     "name":"Example name"
 }'
 ```
-
-</TabItem>
-
-<TabItem value="js" label="Fetch">
-
-```js
-const response = await fetch("https://livepeer.studio/api/asset/request-upload", {
-    headers: {
-      method: "POST"
-      Authorization: "Bearer {api_key}",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name: "Example name",
-    }),
-  })
-
-  const result = await response.json();
-```
-
-</TabItem>
-</Tabs>
-
-<!-- ### Request body parameters
-
-<Table
-  data={[
-    {
-      parameter: <code>name</code>,
-      type: <code>string</code>,
-      description:
-        "The name of the `Asset` containing a custom human-readable description or title.",
-    }
-  ]}
-/> -->
 
 ### Response example
 
@@ -104,22 +63,11 @@ For a direct upload, make a `PUT` request to the URL received in the `url` field
 of the response above, with the raw video file as the request body. response
 above:
 
-<Tabs>
-  <TabItem value="curl" label="curl">
-
 ```bash
 curl --location --request PUT "${url}" \
 --header 'Content-Type: video/mp4' \
 --data-binary '@$VIDEO_FILE_PATH'
 ```
-
-</TabItem>
-
-</Tabs>
-
-> **Notice** that we only support mp4 files encoded with H264 video and AAC
-> audio at the moment. If you are unsure about these, try sending the file
-> anyway and check any returned errors!
 
 ### Step 2b: Resumable Upload
 

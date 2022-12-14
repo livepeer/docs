@@ -13,6 +13,7 @@ module.exports = {
   plugins: ['@typescript-eslint', 'import', 'compat'],
   extends: [
     'eslint:recommended',
+    'plugin:@next/next/recommended',
     'plugin:compat/recommended',
     'plugin:eslint-comments/recommended',
     'plugin:@typescript-eslint/recommended',

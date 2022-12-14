@@ -9,12 +9,6 @@ Upload a video `Asset` from an external URL through the
 
 ## Request
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-<Tabs>
-  <TabItem value="curl" label="curl">
-
 ```bash
 curl --location --request POST 'https://livepeer.studio/api/asset/import' \
 --header 'Authorization: Bearer $API_TOKEN' \
@@ -25,46 +19,6 @@ curl --location --request POST 'https://livepeer.studio/api/asset/import' \
 }'
 
 ```
-
-</TabItem>
-
-<TabItem value="js" label="javascript">
-
-```js
-const response = await fetch("https://livepeer.studio/api/asset/upload/url", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${api_key}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      url: "$EXTERNAL_URL"
-      name: "Example name",
-    }),
-  })
-
-const result = await response.json();
-```
-
-</TabItem>
-</Tabs>
-
-<!--
-<Table
-  data={[
-    {
-      parameter: <code>url</code>,
-      type: <code>string</code>,
-      description: "The URL of the file that Livepeer should download and use.",
-    },
-    {
-      parameter: <code>name</code>,
-      type: <code>string</code>,
-      description:
-        "The name of the `Asset` containing a custom human-readable description or title.",
-    },
-  ]}
-/> -->
 
 ## Response
 
