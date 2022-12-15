@@ -8,8 +8,8 @@ import { AccessControl } from '@components/react/examples';
 
 # Stream with Access Control
 
-Adding access control to a stream only takes a few lines of code. The example below uses [`useCreateStream`](/react/hooks/useCreateStream)
-and [`useStream`](/react/hooks/useStream) to create and watch a gated livestream.
+Adding access control to a stream only takes a few lines of code. The example below uses [`useCreateStream`](/reference/livepeer-js/hooks/useCreateStream)
+and [`useStream`](/reference/livepeer-js/hooks/useStream) to create and watch a gated livestream.
 
 <AccessControl />
 
@@ -18,10 +18,11 @@ and [`useStream`](/react/hooks/useStream) to create and watch a gated livestream
 <Callout>
   This example assumes you have chosen a component library with typical
   components like `Button`, `TextField`, `Spinner`, etc. The
-  [`Player`](/react/Player) is the only visual component provided.
+  [`Player`](/reference/livepeer-js/Player) is the only visual component
+  provided.
 </Callout>
 
-First step, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/react/providers/studio#apikey):
+First step, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey):
 
 ```tsx filename="App.tsx"
 import {
@@ -188,7 +189,7 @@ Lastly, when the stream is created, we make a POST request to the `/api/create-s
 (using [React Query](https://tanstack.com/query/v4/docs/overview) to manage the mutation state handling).
 We pass along the `playbackId` for the stream, which is used to create the JWT.
 
-Then, we pass the JWT to the Player using the [`jwt`](/react/Player#jwt) prop, which will use that JWT to prove access to the streaming content!
+Then, we pass the JWT to the Player using the [`jwt`](/reference/livepeer-js/Player#jwt) prop, which will use that JWT to prove access to the streaming content!
 
 ```tsx filename="AccessControl.tsx"
 import { Player, useCreateStream, useStream } from '@livepeer/react';
