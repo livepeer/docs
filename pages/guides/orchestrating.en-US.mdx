@@ -1,38 +1,20 @@
 import Card, { Cards } from '@components/core/Card';
+import guides from './orchestrating/_meta.en-US.json';
 
 # Orchestrator Guides
 
 lorem ipsum
 
-<Cards num={3}>
-  <Card
-    title="Title"
-    description="Description..."
-    icon="🧰"
-    href="/guides/developing/quickstart"
-  />
-  <Card
-    title="Title"
-    description="Description..."
-    icon="📜"
-    href="/guides/developing/quickstart"
-  />
-  <Card
-    title="Title"
-    description="Description..."
-    icon="🧑‍🚀"
-    href="/guides/developing/quickstart"
-  />
-  <Card
-    title="Title"
-    description="Description..."
-    icon="📜"
-    href="/guides/developing/quickstart"
-  />
-  <Card
-    title="Title"
-    description="Description..."
-    icon="📱"
-    href="/guides/developing/quickstart"
-  />
-</Cards>
+<Cards
+  num={3}
+  items={guides}
+  children={Object.keys(guides).map((key, i) => (
+    <Card
+      key={i}
+      title={guides[key].title}
+      description={guides[key].description}
+      icon={guides[key].icon}
+      href={guides[key].href}
+    />
+  ))}
+/>
