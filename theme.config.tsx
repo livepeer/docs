@@ -82,6 +82,14 @@ const config: DocsThemeConfig = {
   chat: {
     link: 'https://discord.gg/livepeer',
   },
+  banner: {
+    key: 'docs-launch',
+    text: (
+      <div className="flex justify-center items-center gap-2">
+        Welcome to the new Livepeer docs experience! 👋
+      </div>
+    ),
+  },
   toc: {
     float: true,
   },
