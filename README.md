@@ -6,7 +6,7 @@
 </p>
 
 <h3 align="center">
-  docs
+  Livepeer Documentation
 </h3>
 
 ## Documentation
