@@ -1,0 +1,244 @@
+---
+title: 'Explore Viewer Engagement'
+description: 'Learn how to check out viewer engagement on Livepeer'
+---
+
+import { Callout } from 'nextra-theme-docs';
+import { Tab, Tabs } from 'nextra-theme-docs';
+
+# Explore Viewer Engagement
+
+The Livepeer Studio Dashboard is a frontend interface for publishing live or
+on-demand video streams with no code. In this guide, we'll show you how to use
+the dashboard to retrieve viewership metrics.
+
+## Step 1: Navigate to the [Assets page](https://livepeer.studio/dashboard/assets)
+
+![Assets page](/images/engagement/Dashboard-1.png)
+
+## Step 2: Click on an existing asset
+
+Click on an existing asset and you'll be brought to that asset's specific
+details page. If you haven't created an asset yet, you can follow the
+[upload a video asset guide](/guides/developing/view-asset).
+
+![Assets page](/images/engagement/Dashboard-4.png)
+
+## Step 3: View your asset's viewership metrics
+
+In the asset's specific detail page you can view its total number of views.
+
+![Asset views](/images/engagement/Dashboard-10.png)
+
+<Callout>
+  The viewership API is still in development. Currently, viewer count metrics
+  are only available for on demand assets. The count registers start views with
+  deduping logic that prevents users from attempting to inflate view counts. In
+  the future, we'll support additional viewership and engagement metrics so you
+  can better understand popularity and performance.
+</Callout>
+
+[Let us know](https://livepeer.studio/contact) if you have any particular
+feature requests related to metrics.
+
+## Using the Livepeer Player
+
+### Step 1: Register viewership metrics
+
+To collect and register viewership metrics, you first need to configure your player.
+We recommend that you use the [Livepeer player](/reference/livepeer-js/Player)
+to get viewership metrics, as it comes fully configured.
+You can follow the Player guide to get started.
+
+### Step 2: Get the `asset.id` of an existing asset
+
+Get the `asset.id` of an existing asset. An `asset.id` can be found in the
+response object of any API call working with assets. If you haven't created an
+asset yet, you can follow the
+[upload a video asset guide](/guides/developing/view-asset).
+
+### Step 3: Retrieve viewership data
+
+Once you have the `asset.id`, you can make a request to get the viewership data.
+
+<Tabs items={['JavaScript', 'cURL']}>
+  <Tab>
+
+```js
+const response = await fetch(
+  'https://livepeer.studio/api/data/views/{assetId}/total',
+  {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${process.env.API_TOKEN}`,
+    },
+  },
+);
+
+const { startViews } = (await response.json())[0];
+```
+
+  </Tab>
+  <Tab>
+
+```bash
+curl --location --request GET https://livepeer.studio/api/data/views/{assetId}/total \
+    -H "Authorization: Bearer $API_TOKEN"
+```
+
+  </Tab>
+
+</Tabs>
+
+## Using a Custom Player
+
+### Step 1: Register viewership metrics
+
+We also support viewership metrics for applications using custom players.
+In order for metrics to be tracked by Livepeer, you will need to configure
+your player using `addMediaMetrics`.
+
+Here's how to configure your player:
+
+<Tabs items={['JavaScript', 'React']}>
+  <Tab>
+
+```js
+import { addMediaMetrics } from 'livepeer';
+
+const source =
+  'https://livepeercdn.com/recordings/bd600224-d93a-4ddc-a6ac-2d71e3c36768/index.m3u8';
+const video = document.getElementById('my-video');
+
+// set up your player before calling addMediaMetrics
+
+addMediaMetrics(video, source, (e) => console.error('Error adding metrics', e));
+```
+
+  </Tab>
+  <Tab>
+
+```js
+import { addMediaMetrics } from 'livepeer';
+import React, { useEffect, useRef, useState } from 'react';
+
+export default function VideoPlayer() {
+  const videoRef = useRef(null);
+  const [source, setSource] = useState(
+    'https://livepeercdn.com/recordings/bd600224-d93a-4ddc-a6ac-2d71e3c36768/index.m3u8',
+  );
+
+  useEffect(() => {
+    if (videoRef.current) {
+      // set up other stuff in your player before calling addMediaMetrics
+      const metrics = addMediaMetrics(videoRef.current, source, (e) =>
+        console.error('Error adding metrics', e),
+      );
+      return metrics?.destroy;
+    }
+  }, [videoRef, source]);
+
+  return (
+    <video
+      controls
+      ref={videoRef}
+      src={source}
+      style={{ width: '100%', maxWidth: '500px' }}
+    />
+  );
+}
+```
+
+  </Tab>
+
+</Tabs>
+
+<Tabs items={['JavaScript', 'React']}>
+  <Tab>
+
+```js
+import { addMediaMetrics } from 'livepeer';
+
+const source =
+  'https://livepeercdn.com/recordings/bd600224-d93a-4ddc-a6ac-2d71e3c36768/index.m3u8';
+const video = document.getElementById('my-video');
+
+// setup your player before calling addMediaMetrics
+
+addMediaMetrics(video, source, (e) => console.error('Error adding metrics', e));
+```
+
+  </Tab>
+  <Tab>
+
+```js
+import { addMediaMetrics } from 'livepeer';
+import React, { useEffect, useRef, useState } from 'react';
+
+export default function VideoPlayer() {
+  const videoRef = useRef(null);
+  const [source, setSource] = useState(
+    'https://livepeercdn.com/recordings/bd600224-d93a-4ddc-a6ac-2d71e3c36768/index.m3u8',
+  );
+
+  useEffect(() => {
+    if (videoRef.current) {
+      // set up other stuff in your player before calling addMediaMetrics
+      const metrics = addMediaMetrics(videoRef.current, source, (e) =>
+        console.error('Error adding metrics', e),
+      );
+      return metrics?.destroy;
+    }
+  }, [videoRef, source]);
+
+  return (
+    <video
+      controls
+      ref={videoRef}
+      src={source}
+      style={{ width: '100%', maxWidth: '500px' }}
+    />
+  );
+}
+```
+
+  </Tab>
+</Tabs>
+
+### Step 2: Get the `asset.id` of an existing asset
+
+Get the `asset.id` of an existing asset. An `asset.id` can be found in the
+response object of any API call working with assets. If you haven't created an
+asset yet, you can follow the upload a video asset guide.
+
+### Step 3: Retrieve viewership data
+
+Once you have the `asset.id`, you can make a request to get the viewership data.
+
+<Tabs items={['JavaScript', 'cURL']}>
+  <Tab>
+
+```js
+const response = await fetch(
+  'https://livepeer.studio/api/data/views/{assetId}/total',
+  {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${process.env.API_TOKEN}`,
+    },
+  },
+);
+
+const { startViews } = (await response.json())[0];
+```
+
+  </Tab>
+  <Tab>
+
+```bash
+curl --location --request GET https://livepeer.studio/api/data/views/{assetId}/total \
+    -H "Authorization: Bearer $API_TOKEN"
+```
+
+  </Tab>
+</Tabs>

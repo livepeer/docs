@@ -1,0 +1,79 @@
+---
+title: 'Stream via OBS'
+description: 'Learn how to stream into Livepeer with OBS'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+# Stream via OBS
+
+The purpose of this guide is to allow you to get a more in-depth look at setting
+up a livestream using Livepeer Studio with OBS. In order to broadcast a live
+stream, you’ll need a stream key.
+
+## Introduction
+
+[OBS](https://obsproject.com/) is the way that many users stream into Livepeer
+because it is easy to use, open source, and offers a high degree of customization.
+
+## Prepare the environment
+
+- Download [OBS](https://obsproject.com/)
+- Login or sign up at [Livepeer Studio](https://livepeer.studio)
+- [Create a stream](./view-stream)
+
+## Open OBS and create a source
+
+1. Click the **+ icon** under sources and select **Video Capture Device** if
+   you’d like to stream using a camera or webcam. If you’d like to stream a
+   browser window, select **Window Capture**.
+2. Give the device a name:
+
+![OBS1](/images/obs/OBS1.png)
+![OBS2](/images/obs/OBS2.png)
+![OBS3](/images/obs/OBS3.png)
+
+## Input Your Stream Settings
+
+1. Select **Stream** settings.
+1. Select **Custom** for services.
+1. Copy and paste the **RTMP ingest URL** and **Stream Key** and paste it into
+   the **“Server”** and **“Stream Key”** fields.
+
+<Callout>
+  The RTMP ingest URL and stream key can be found on the dashboard, on the
+  Stream Detail page after creating a stream or in the API.
+</Callout>
+
+![OBS4](/images/obs/OBS4.png)
+
+## Select Output Settings and Streaming tab
+
+1. In the Output Mode select `Advanced`.
+1. Set the keyframe interval to 2 seconds.
+1. Save your settings.
+
+<Callout>
+  Livepeer Studio works best with consistent, short keyframe intervals, ideally
+  2 seconds. You should set or encourage your users to set this in their
+  broadcasting software.
+</Callout>
+
+![OBS5](/images/obs/OBS5.png)
+
+## Stream and Check Output
+
+After saving your settings, OBS will return to the stream console.
+
+1. Press start streaming (from the output you selected when inputting your stream
+   settings above).
+
+![LVS4](/images/obs/LVS4.png)
+
+2. Navigate to the Livepeer Dashboard, log in, and select the stream name that
+   you are currently using. This should now be marked as “Active.”
+
+3. Under the Health tab, the video you are streaming in through OBS should be
+   visible.
+
+![LVS5](/images/obs/LVS5.png)
