@@ -78,7 +78,7 @@ const Logo = ({ height, width }: { height: number; width: number }) => {
 };
 
 const config: DocsThemeConfig = {
-  docsRepositoryBase: `${github}/tree/main/docs/pages`,
+  docsRepositoryBase: `${github}/blob/main`,
   chat: {
     link: 'https://discord.gg/livepeer',
   },
