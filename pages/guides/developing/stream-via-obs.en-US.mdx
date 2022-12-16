@@ -1,231 +1,79 @@
 ---
-title: Stream via OBS
+title: 'Stream via OBS'
+description: 'Learn how to stream into Livepeer with OBS'
 ---
 
+import { Callout } from 'nextra-theme-docs';
+
+# Stream via OBS
+
 The purpose of this guide is to allow you to get a more in-depth look at setting
-up a livestream using Livepeer Studio with OBS.
+up a livestream using Livepeer Studio with OBS. In order to broadcast a live
+stream, you’ll need a stream key.
 
-## About Streaming via [OBS](https://obsproject.com/)
+## Introduction
 
-[OBS](https://obsproject.com/) is the way that most users stream into Livepeer
-because it is easy to use and offers a high degree of customization.
-
-## Methods to Stream via [OBS](https://obsproject.com/)
-
-- Livestreaming with a broadcasting software
+[OBS](https://obsproject.com/) is the way that many users stream into Livepeer
+because it is easy to use, open source, and offers a high degree of customization.
 
 ## Prepare the environment
 
 - Download [OBS](https://obsproject.com/)
-- Login or Sign up for a [Livepeer Studio](https://livepeer.studio) account
-- [Create a stream](https://livepeer.studio/preview/blog/stream-into-livepeer-studio-first-time)
+- Login or sign up at [Livepeer Studio](https://livepeer.studio)
+- [Create a stream](./view-stream)
 
 ## Open OBS and create a source
 
 1. Click the **+ icon** under sources and select **Video Capture Device** if
    you’d like to stream using a camera or webcam. If you’d like to stream a
    browser window, select **Window Capture**.
-2. Give the device a name
+2. Give the device a name:
 
-![OBS1](../../../static/docs-assets/obs/OBS1.png)
-![OBS2](../../../static/docs-assets/obs/OBS2.png)
-![OBS3](../../../static/docs-assets/obs/OBS3.png)
+![OBS1](/images/obs/OBS1.png)
+![OBS2](/images/obs/OBS2.png)
+![OBS3](/images/obs/OBS3.png)
 
 ## Input Your Stream Settings
 
-1. Select **Stream** settings
-1. Select **custom** for services
+1. Select **Stream** settings.
+1. Select **Custom** for services.
 1. Copy and paste the **RTMP ingest URL** and **Stream Key** and paste it into
    the **“Server”** and **“Stream Key”** fields.
 
-- `RTMP ingest URL` and Stream Key can be found on the dashboard on the Stream
-  Detail page after creating a stream or in the API.
+<Callout>
+  The RTMP ingest URL and stream key can be found on the dashboard, on the
+  Stream Detail page after creating a stream or in the API.
+</Callout>
 
-![OBS4](../../../static/docs-assets/obs/OBS4.png)
+![OBS4](/images/obs/OBS4.png)
 
 ## Select Output Settings and Streaming tab
 
-1. In the Output Mode select Advance
-1. Set the keyframe interval to 2 seconds
-1. Save your settings
+1. In the Output Mode select `Advanced`.
+1. Set the keyframe interval to 2 seconds.
+1. Save your settings.
 
-![OBS5](../../../static/docs-assets/obs/OBS5.png)
+<Callout>
+  Livepeer Studio works best with consistent, short keyframe intervals, ideally
+  2 seconds. You should set or encourage your users to set this in their
+  broadcasting software.
+</Callout>
+
+![OBS5](/images/obs/OBS5.png)
 
 ## Stream and Check Output
 
 After saving your settings, OBS will return to the stream console.
 
-1. Press start streaming from the output you selected when inputting your stream
-   settings above.
+1. Press start streaming (from the output you selected when inputting your stream
+   settings above).
 
-![LVS4](../../../static/docs-assets/obs/LVS4.png)
+![LVS4](/images/obs/LVS4.png)
 
-2. Navigate to the Livepeer Dashboard, login, and select the stream name that
+2. Navigate to the Livepeer Dashboard, log in, and select the stream name that
    you are currently using. This should now be marked as “Active.”
 
 3. Under the Health tab, the video you are streaming in through OBS should be
    visible.
 
-**For Example:**
-
-![LVS5](../../../static/docs-assets/obs/LVS5.png)
-
-## Previewing a Stream in a Browser
-
-There are several options to display the livestream in the browser and
-**previewing a stream in your browser requires a video player**.
-
-For instructions and information about this, access the
-[Playback](/guides/playback-a-video-stream) guide.
-
-This guide provides information on configuring your broadcasting software:
-
-- Ways to get the `streamKey`
-- Using the `RTMP URL`
-
-- Setting the keyframe intervals
-
-## About Broadcasting Configuration
-
-Understanding how to configure the broadcasting software being used so that you
-able to push an RTMP stream into Livepeer Studio. In order to broadcast a live
-stream, you’ll need a stream key.
-
-## What You Can Build Here
-
-| Implementation                          | Description                                                                                         |
-| --------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Set up broadcast software configuration | Configuring the settings of the broadcasting software using the `RTMP URL` long with the stream key |
-| Set up keyframe intervals               | Adjusting the keyframe levels for optimizing the stream                                             |
-
-## Technical Preparation
-
-Before getting started, you can set up your environment to prepare for
-developing your application:
-
-- Sign up for a free Livepeer Studio account
-- Get an API key
-- Access the [API Reference](/category/api)
-
-## Ways to Find Your Stream Key:
-
-There are two ways to find the stream key:
-
-- Via the API
-- Via the dashboard(no code)
-
-## Get the stream key using the API
-
-### Getting the stream key from creating a stream
-
-### Request
-
-When you create a `stream` object with a `POST` request to `/api/stream`
-
-> **Note:** The value of the `streamKey` in the response.
-
-### Response
-
-```json
-{
-  "lastSeen": 0,
-  "isActive": false,
-  "record": false,
-  "suspended": false,
-  "sourceSegments": 0,
-  "transcodedSegments": 0,
-  "sourceSegmentsDuration": 0,
-  "transcodedSegmentsDuration": 0,
-  "sourceBytes": 0,
-  "transcodedBytes": 0,
-  "profiles": [
-    {
-      "name": "720p",
-      "bitrate": 2000000,
-      "fps": 0,
-      "width": 1280,
-      "height": 720
-    },
-    {
-      "name": "480p",
-      "bitrate": 1000000,
-      "fps": 0,
-      "width": 854,
-      "height": 480
-    },
-    {
-      "name": "360p",
-      "bitrate": 500000,
-      "fps": 0,
-      "width": 640,
-      "height": 360
-    }
-  ],
-  "name": "test_stream",
-  "kind": "stream",
-  "userId": "eada599f-3d58-499b-ba24-c7f3faf988de",
-  "renditions": {},
-  "id": "ijkl61f3-95bd-4971-a7b1-4dcb5d39e78a",
-  "createdAt": 1596081229373,
-  "streamKey": "abcd-uimq-jtgy-x98v",
-  "playbackId": "efghb2mxupongp5k",
-  "createdByTokenName": "test_stream",
-  "multistream": {
-    "targets": []
-  }
-}
-```
-
-### Getting the stream key from a stream
-
-### Request
-
-Make a `GET` request to `/api/stream/[id]`
-
-> **Note** The value of the`streamKey` in the response.
-
-### Reponse
-
-```json
-  {
-      "name":"test_stream",
-      "profiles":[
-          {"name":"720p","bitrate":2000000,"fps":30,"width":1280,"height":720},
-          {"name":"480p","bitrate":1000000,"fps":30,"width":854,"height":480},
-          {"name":"360p","bitrate":500000,"fps":30,"width":640,"height":360},
-        ],
-      "id":"ijkl61f3-95bd-4971-a7b1-4dcb5d39e78a",
-      "createdAt":1596081229373,
-      "streamKey":"abcd-uimq-jtgy-x98v",
-      "playbackId":"efghb2mxupongp5k",
-      {other asset object keys}
-  }
-```
-
-## Get the stream key with Livepeer Studio Dashboard
-
-- Login to the Livepeer Studio Dashboard, navigate to the
-  [streams list page](https://livepeer.studio/dashboard/streams), and click on a
-  stream name. Reveal and copy your secret stream key.
-
-When configuring broadcast software to push streams, use the secret `streamKey`
-and the Livepeer Studio RTMP ingest URL, `rtmp://rtmp.livepeer.studio/live`.
-
-Depending on the software used to push your RTMP stream, you’ll be prompted for
-the following:
-
-- Stream Key: In some cases, this is called a "Stream Name." Input your Livepeer
-  Studio `streamKey` not the name of your stream.
-- Server URL: Input the RTMP ingest URL, `rtmp://rtmp.livepeer.studio/live`.
-- Location or URL: Input the ingest url with the `streamKey` appended. For
-  example, `rtmp://rtmp.livepeer.studio/live/[streamKey]`.
-
-## Optimization: Set keyframe intervals
-
-Livepeer Studio works best with consistent, short keyframe intervals, ideally 2
-seconds.
-
-You should set or encourage your users to set this in their broadcasting
-software. In [OBS](https://obsproject.com/), you can set this by going to
-"Settings" --> "Output", change the "Output Mode" from "Simple" to "Advanced"
-and set the "Keyframe interval" to 2.
+![LVS5](/images/obs/LVS5.png)

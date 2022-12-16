@@ -1,8 +1,11 @@
 ---
-title: Monitor stream health
+title: Monitor Stream Health
+description: Learn how to monitor stream metrics on Livepeer
 ---
 
-This guide provides instructions and information about using stream metrics:
+# Monitor Stream Health
+
+This guide provides instructions and information about using stream metrics to:
 
 - Monitor any active stream for issues that may impact the quality of your
   stream
@@ -40,18 +43,18 @@ curl -H 'authorization: Bearer {api-key}' \
 
 ```json
 {
-    "name":"test_stream",
-    "id":"ijkl61f3-95bd-4971-a7b1-4dcb5d39e78a",
-    "createdAt":1596081229373,
-    "streamKey":"abcd-uimq-jtgy-x98v",
-    "playbackId":"efghb2mxupongp5k",
-    "isActive":"true",
-    "lastSeen":1596119750455",
-    "sourceSegments":1360,
-    "transcodedSegments":5480,
-    "sourceSegmentsDuration":2630.53200000000004,
-    "transcodedSegmentsDuration":10620.1280000000004,
-    {other asset object keys, like profiles and parentId}
+  "name": "test_stream",
+  "id": "ijkl61f3-95bd-4971-a7b1-4dcb5d39e78a",
+  "createdAt": 1596081229373,
+  "streamKey": "abcd-uimq-jtgy-x98v",
+  "playbackId": "efghb2mxupongp5k",
+  "isActive": "true",
+  "lastSeen": 1596119750455,
+  "sourceSegments": 1360,
+  "transcodedSegments": 5480,
+  "sourceSegmentsDuration": 2630.53200000000004,
+  "transcodedSegmentsDuration": 10620.1280000000004
+  // other asset object keys, like profiles and parentId
 }
 ```
 
@@ -117,7 +120,7 @@ your viewers.
 
 ## Monitoring Stream Health Using The Dashboard
 
-In the dashboard, there will be a `health` tab on the right side
+In the dashboard, there will be a `health` tab on the right side:
 
 ![image](https://user-images.githubusercontent.com/79172645/135450248-bf3edea4-e666-4927-8114-f972cd2879fe.png)
 
@@ -128,17 +131,11 @@ health indicators.
 
 ![image](https://user-images.githubusercontent.com/79172645/135450340-4abed968-df77-473d-b926-88c11b5799d2.png)
 
-At the bottom of the page, a chart will show the ingest rate of a livestream
+At the bottom of the page, a chart will show the ingest rate of a livestream:
 
 ![image](https://user-images.githubusercontent.com/79172645/135467197-08ec63ab-4c44-4cad-a0d5-95a76b80e5c5.png)
 
 ## Monitor Stream Health Using The API
-
-**Note:** The Stream Health API is currently in `beta` and some elements may
-change as we mature the product. Before you start building with it, let us know
-at
-[help@livepeer.studio](mailto:hello@livepeer.studio?subject=New%20Stream%20Health%20API%20user&body=Please%20include%20details%20about%20your%20app)
-so we can give you a heads up before any breaking changes.
 
 The health information about a stream can also be queried using a separate
 Stream Health API resides on a different root path `/data`. To use it, you need
@@ -322,7 +319,7 @@ Livepeer infrastructure. Some fields are always present, specifically:
 - `timestamp`: the timestamp of the event in milliseconds since the Unix epoch.
 
 You can also get historical events within a time range by specifying the `from`
-and `to` query parameters with Unix Millis timestamps. For example:
+and `to` query parameters with Unix millis timestamps. For example:
 
 - `/data/stream/{id}/events?from=1635437394000` to get all events since
   `Oct 28 16:09:54Z 2021` (exclusively) and stay connected for live events.
