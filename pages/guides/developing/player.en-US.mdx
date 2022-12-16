@@ -13,14 +13,11 @@ import { Callout } from 'nextra-theme-docs';
 
 # Add a Player
 
-We demonstrate below how to use either the Livepeer.JS React Player, Video.JS, or
-our embeddable iFrame player.
+We demonstrate below how to use either the Livepeer.js or Video.js.
 
-## Using livepeer.js with React
+## Using the Livepeer.js Player
 
-The example below shows our drop-in player for easily viewing media content! The example below uses the
-[`Player`](/reference/livepeer-js/Player) to view a video asset, with some custom styles to demonstrate what's possible with
-the player.
+The example below show to use the Livepeer.js [`Player`](/reference/livepeer-js/Player) to view a video asset, with some custom styles to demonstrate what's possible.
 
 <br />
 
@@ -28,7 +25,7 @@ the player.
 
 ### Step 1: Configuring Providers
 
-First, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey),
+First, we create a new livepeer.js client with a gateway provider and a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey),
 as well as a theme to use for all livepeer.js React components.
 
 ```tsx filename="App.tsx"
@@ -199,37 +196,3 @@ Here is an example of how to use the playback URL in video.js player.
 ```
 
 <VideoJSPlayer />
-
-## Using the embeddable player
-
-<Callout type="warning">
-  The embeddable player is currently in beta and some elements may change as we
-  mature the product. For a production-grade application consider using
-  Livepeer.js instead.
-</Callout>
-
-This is one of the easiest way to play back a video on your website/applications.
-You can embed the player on your website/applications by using the below code
-snippet.
-
-You can replace the `PLAYBACK_ID` with your video's playback id.
-
-```html
-<iframe
-  src="https://lvpr.tv?v={PLAYBACK_ID}"
-  allowfullscreen
-  allow="autoplay; encrypted-media; picture-in-picture"
-  sandbox="allow-same-origin allow-scripts"
->
-</iframe>
-```
-
-<IframePlayer />
-
-import { prefetchPlayerStaticProps } from '@lib/prefetchStaticProps';
-
-export const getStaticProps = async () => {
-  return prefetchPlayerStaticProps(
-    'bafybeida3w2w7fch2fy6rfvfttqamlcyxgd3ddbf4u25n7fxzvyvcaegxy',
-  );
-};
