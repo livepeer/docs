@@ -2,6 +2,8 @@
 title: 'Benchmark Transcoding'
 ---
 
+import { Callout } from 'nextra-theme-docs';
+
 # Benchmark Transcoding
 
 This guide provides steps to test the performance of your GPU(s) with the `livepeer_bench` benchmark transcoding tool provided with the [Livepeer install](/guides/orchestrating/install-go-livepeer/).
@@ -17,11 +19,15 @@ The benchmarking tool is designed to:
 
 Overall transcoding performance on the network depends on the speed video is transcoded and uploaded/downloaded from an orchestrator.
 
-The transcode time should be as low as possible. At the least, it should be lower than the total [segment duration](/video-miners/terminology#stream-duration-ratio), which is faster than real-time.
+The transcode time should be as low as possible. At the least, it should be lower than the total segment duration which is faster than real-time.
 
 If you want to get an approximation of how many streams you can transcode simultaneously, increase the number of concurrent sessions with the `-concurrentSessions` flag to assess the total transcoding time.
 
-> **Note:** After running your benchmark transcoding, you can follow up with further instructions about setting [session limits](/guides/orchestrating/set-session-limits).
+<Callout type="info" emoji="ℹ️">
+  After running your benchmark transcoding, you can follow up with further
+  instructions about setting [session
+  limits](/guides/orchestrating/set-session-limits).
+</Callout>
 
 ## Start Benchmarking
 
@@ -33,13 +39,16 @@ tar -xvf bbb_1080p_30fps_1min_2sec_hls.tar.gz
 ls bbb/   # Should print the stream *.ts segments and source.m3u8 manifest
 ```
 
-> **Note:** It is important to note that running this benchmarking only gauges local transcoding capacity.
+<Callout type="info" emoji="ℹ️">
+  It is important to note that running this benchmarking only gauges local
+  transcoding capacity.
+</Callout>
 
 2. Download the [common output rendition configuration](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json) `.json` file that you can copy and save in the Livepeer folder as `transcodingOptions.json`.
 
 1. Run `livepeer_bench`
 
-The number and type of [output renditions](/video-miners/terminology#transcoding) will impact benchmark results.
+The number and type of output renditions will impact benchmark results.
 
 ```bash
 livepeer_bench \
@@ -69,7 +78,9 @@ livepeer_bench \
   -live=false
 ```
 
-> **Note:** for the purposes of this example above, all other flags are omitted.
+<Callout type="info" emoji="ℹ️">
+  For the purposes of this example above, all other flags are omitted.
+</Callout>
 
 The first few lines of the output should display the source file, the output rendition profiles, and the number of concurrent sessions.
 
