@@ -86,7 +86,7 @@ const config: DocsThemeConfig = {
     key: 'docs-launch',
     text: (
       <div className="flex justify-center items-center gap-2">
-        Welcome to the new Livepeer docs experience! 👋
+        Welcome to the new, unified Livepeer documentation! 👋
       </div>
     ),
   },
