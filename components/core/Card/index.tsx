@@ -8,7 +8,9 @@ function Card({ title, description, icon, href }: any) {
           <div className="mb-2 text-lg">{icon}</div>
           <div>
             <h3 className="text-lg mb-1 font-bold">{title}</h3>
-            <div className="nx-text-gray-400">{description}</div>
+            {description && (
+              <div className="nx-text-gray-400">{description}</div>
+            )}
           </div>
         </div>
       </a>
