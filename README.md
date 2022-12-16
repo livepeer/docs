@@ -1,37 +1,30 @@
-# Livepeer Docs
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./public/logos/logo-dark.svg"/>
+    <img alt="livepeer logo" src="./public/logos/logo-light.svg" width="auto" height="150"/>
+  </picture>
+</p>
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+<h3 align="center">
+  Livepeer Documentation
+</h3>
 
-### Installation
+## Documentation
 
-```
-$ yarn
-```
+For our documentation, visit [docs.livepeer.org](https://docs.livepeer.org).
 
-### Local Development
+## Community
 
-```
-$ yarn start
-```
+Check out the following places for more livepeer-related content:
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+- Take a look at our [GitHub](https://github.com/livepeer)
+- Follow [@livepeer](https://twitter.com/livepeer) on Twitter for project updates
+- Jump into our [Discord](https://discord.gg/livepeer)
 
-### Build
+## Contributing
 
-```
-$ yarn build
-```
+If you're interested in contributing, please read the [contributing docs](/.github/CONTRIBUTING.md) **before submitting a pull request**.
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+## License
 
-### Regenerate Algolia Index
-
-If you have not already installed [jq](https://github.com/stedolan/jq/wiki/Installation), please do so.
-
-In `.env.docsearch`, replace the placeholder API key with a key that has write access to the appropriate Algolia application.
-
-Next, navigate to the folder root, then run:
-
-```
-docker run -it --env-file=.env.docsearch -e "CONFIG=$(cat docsearch.config.json | jq -r tostring)" algolia/docsearch-scraper
-```
+[MIT](/LICENSE) License

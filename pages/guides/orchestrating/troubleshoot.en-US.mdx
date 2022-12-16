@@ -1,0 +1,148 @@
+---
+title: Troubleshoot
+---
+
+# Troubleshoot
+
+This page contains troubleshooting advice for video miners and lists some of the most common issues that a video miner might encounter.
+
+## OrchestratorCapped error
+
+This error means that your orchestrator has hit its session limit so it is not
+longer accepting work from broadcasters. See the
+[session limit guide](/guides/orchestrating/set-session-limits) for
+information on setting the session limit.
+
+## Cannot allocate memory error
+
+If this error occurs on startup when using the `-nvidia` flag, the transcoding
+test using the Nvidia GPUs likely failed because it hit the maximum number of
+video encoding/decoding sessions supported on a single GPU. Different Nvidia
+GPUs have different limits (if any) - more information can be found on
+[this page](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new)
+and by searching for "nvenc nvdec session limit" online.
+
+## insufficient funds for gas \* price + value error
+
+This error means that the node attempted to submit a transaction, but its
+account did not have enough ETH available for the transaction. You should add
+more ETH to your account in order to submit the transaction.
+
+## Transcode loop timed out and Segment loop timed out logs
+
+These logs indicate that a session that was previously being used to transcode a
+stream was cleaned up because no segments were received for awhile. These are
+not errors and are expected to show up.
+
+## MB rate > Level limit warning
+
+This is a warning about the source video segment being transcoded (see this
+[page](https://en.wikipedia.org/wiki/Advanced_Video_Coding#Levels) for more
+technical details), but typically should not impact operation as long as
+transcoding completes.
+
+## Unable to transcode errors
+
+These errors occur when a source video segment with certain properties that
+prevent it from being transcoded. There are no actionable steps for an operator
+in this scenario since the broadcaster is responsible for sending video segments
+that are supported by the Livepeer network.
+
+## My node is still calling the reward claims function and spending gas, even though I have set `reward` to false
+
+Make sure to add `-reward=false` as an override in the launch command, even if using a `.conf` file. Also make sure that if you have Orchestrator and Transcoder processes running separately that all launch commands have `reward` set to false. To be safe, you can also remove the `ethUrl` option from the Transcoder process(es) to ensure that they are not performing any onchain actions on behalf of your orchestrator if using the same wallet.
+
+## TicketParams expired
+
+This error indicates that the broadcaster sent a payment ticket with too old parameters. This may be caused by the broadcaster's delay (between getting the last orchestrator info message and sending the segment) or by the delay in polling chain blocks (the expiration time is measured in L1 blocks). For more details please check [TicketParams expiration time](https://github.com/livepeer/go-livepeer/issues/1343). There are no actionable steps for an operator, broadcaster will retry a request with the updated ticket parameters.
+
+## Error creating Ethereum account manager
+
+This error means that Livepeer was not able to fetch your ETH account (or create a new one). Livepeer stores ETH accounts in the `<datadir>/keystore/` directory (by deafult `~/.lpData/<network>/keystore/`).
+
+Please make sure that one of the files in that directory contains the account you specified with the `-ethAcctAddr` parameter. If you used another `datadir` (or different `network`) in the past, you may need to copy the your keystore files.
+
+Please also make sure that your `keystore` directory has correct file permissions.
+
+## Unsupported input pixel format
+
+This error occurs when someone submits a stream with an unsupported pixel format. There are no actionable steps, the video of this format cannot be transcoded in Livepeer.
+
+## Common Questions
+
+**What does being ‘publicly accessible’ mean? Can I run a transcoder from
+home?**
+
+Orchestrators should be reachable by broadcasters via the public IP and port
+that is set during registration. The only port that is required to be public is
+the one that was set during registration (default 8935). Be aware that there are
+many risks to running a public server. Only set up an orchestrator if you are
+comfortable with managing these risks.
+
+Orchestrators will not be able to serve the Livepeer network if they are behind
+a NAT (eg, a home router). If this is the case, special accommodations must be
+made for the transcoder, such as port forwarding or putting the orchestrator in
+the DMZ. The only port that is required to be public is the one that was set
+during the orchestrator registration step (default 8935). Be aware that there
+are many risks to running a public server. Only set up an orchestrator if you
+are comfortable with managing these risks.
+
+**Can I run an orchestrator from home?**
+
+Running an orchestrator at home likely means that you will be behind a NAT (i.e.
+a home router). This is generally not recommended. But, if you do choose to do
+so, special accommodations will need to be made for the orchestrator such as
+port forwarding or putting the orchestrator in the DMZ.
+
+Some orchestrators in the past have used
+[hairpinning](https://en.wikipedia.org/wiki/Hairpinning) by:
+
+- Adding a second rule to the SNAT chain like:
+
+  ```bash
+  13119   786268 DNAT       tcp  --  *      *       0.0.0.0/0            <EXTERNAL_IP>       tcp dpt:8935 to:10.0.0.10
+     2      120 SNAT       tcp  --  *      *       10.0.0.10            10.0.0.10            to:<EXTERNAL_IP>
+  ```
+
+- Running a command like:
+
+  ```bash
+  iptables -t nat -A POSTROUTING -p tcp -s 10.0.0.10 -d 10.0.0.10 -j SNAT --to-source <EXTERNAL_IP>
+  ```
+
+**What is the service URI? Does this need to be an IP?**
+
+The service registry acts as a discovery mechanism to allow broadcasters to look
+up the addresses of orchestrators on the network. Orchestrators register their
+service URI by storing it on the blockchain. During registration you are only
+asked for your IP:port, but the URI stored on the blockchain in the form of
+https://IP:port. Orchestrators are expected to provide a consistent and reliable
+service, so IPs here should remain static. However, a host (DNS) name is also
+allowed for the service URI to give some flexibility.
+
+**What does this error mean? “Service address https://127.0.0.1:4433 did not
+match discovered address https://127.1.5.10:8935; set the correct address in
+livepeer_cli or use -serviceAddr”**
+
+When starting up, the orchestrator checks if the current public IP matches the
+IP that is stored on the blockchain. If there is a mismatch, there is a
+possibility that your node is not publicly accessible. Override the locally
+inferred IP address by setting `-serviceAddr IP:port` to what is stored on the
+blockchain. Ensure your node is actually accessible at that address.
+
+**How do I know if my node is transcoding?**
+
+If you set the `-v 6` flag when starting `livepeer`, more verbose logs
+indicating transcoding activity will be available. You can also setup
+[metrics monitoring](/guides/orchestrating/monitor-metrics).
+
+**How do I keep a record of my node's logs?**
+
+By default, `livepeer` will only send logs to stdout so they can be shown in
+your terminal. However, a tool such as
+[tee](https://linuxize.com/post/linux-tee-command/) can be used to pipe the logs
+to both stdout and a log file.
+
+```bash
+livepeer ... 2>&1 | tee livepeer.log
+```
