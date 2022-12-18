@@ -20,6 +20,20 @@ const config = {
     // Disable type checking since eslint handles this
     ignoreBuildErrors: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/video-miners/getting-started',
+        destination: '/guides/orchestrating/get-started',
+        permanent: false,
+      },
+      {
+        source: '/video-miners',
+        destination: '/guides/orchestrating',
+        permanent: false,
+      },
+    ];
+  },
 };
 
 if (process.env.NODE_ENV === 'development') {
