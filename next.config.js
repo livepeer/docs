@@ -33,6 +33,11 @@ const config = {
         permanent: false,
       },
       {
+        source: '/developers',
+        destination: '/guides/developers',
+        permanent: false,
+      },
+      {
         source: '/protocol/reference/deployed',
         destination: '/reference/deployed-contract-addresses',
         permanent: false,
