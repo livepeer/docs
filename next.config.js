@@ -32,6 +32,12 @@ const config = {
         destination: '/guides/orchestrating',
         permanent: false,
       },
+      // temporary until protocol docs are properly imported
+      {
+        source: '/protocol',
+        destination: '/guides/orchestrating',
+        permanent: false,
+      },
       {
         source: '/developers',
         destination: '/guides/developers',
