@@ -32,6 +32,11 @@ const config = {
         destination: '/guides/orchestrating',
         permanent: false,
       },
+      {
+        source: '/protocol/reference/deployed',
+        destination: '/reference/deployed-contract-addresses',
+        permanent: false,
+      },
     ];
   },
 };
