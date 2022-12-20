@@ -3,6 +3,7 @@ title: 'LivepeerConfig'
 description: 'The LivepeerConfig component manages configuration for all hooks using React Context.'
 ---
 
+import { Callout } from 'nextra-theme-docs';
 import { SyncedTab, SyncedTabs } from '@components/core';
 
 # LivepeerConfig
@@ -16,6 +17,27 @@ The `LivepeerConfig` component manages configuration for all hooks using [React 
     ```tsx filename="React"
     import { LivepeerConfig } from '@livepeer/react';
     ```
+    
+    The `LivepeerConfig` should wrap all of your pages, so every page can use hooks provided by livepeer.js.
+
+    ```tsx filename="App.js"
+    const client = createReactClient({
+      provider: studioProvider({ apiKey: 'yourStudioApiKey' }),
+    });
+
+    function App() {
+      return (
+        <LivepeerConfig client={client}>
+          <YourRoutes />
+        </LivepeerConfig>
+      );
+    }
+    ```
+
+    <Callout>
+      If you are using an SSR framework (like Next.js), see [SSR](#ssr) for specific instructions on how to configure
+      the `head` of the document, to ensure hydration happens correctly.
+    </Callout>
 
   </SyncedTab>
   <SyncedTab>
@@ -23,24 +45,24 @@ The `LivepeerConfig` component manages configuration for all hooks using [React 
     import { LivepeerConfig } from '@livepeer/react-native';
     ```
 
+    The `LivepeerConfig` should wrap all of your screens, so every screen can use hooks provided by livepeer.js.
+
+    ```tsx filename="App.js"
+    const client = createReactClient({
+      provider: studioProvider({ apiKey: 'yourStudioApiKey' }),
+    });
+
+    function App() {
+      return (
+        <LivepeerConfig client={client}>
+          <YourRoutes />
+        </LivepeerConfig>
+      );
+    }
+    ```
+
   </SyncedTab>
 </SyncedTabs>
-
-The `LivepeerConfig` should wrap all of your pages, so every page can use hooks provided by livepeer.js.
-
-```tsx filename="App.js"
-const client = createReactClient({
-  provider: studioProvider({ apiKey: 'yourStudioApiKey' }),
-});
-
-function App() {
-  return (
-    <LivepeerConfig client={client}>
-      <YourRoutes />
-    </LivepeerConfig>
-  );
-}
-```
 
 ## Configuration
 
@@ -93,3 +115,43 @@ function App() {
   );
 }
 ```
+
+## SSR
+
+<Callout type="warning">
+  The following section only applies to web-based use-cases - React Native has
+  no concept of SSR.
+</Callout>
+
+You can get access to the CSS string by using the `getCssText` function. This function is made available by the createStitches function.
+This will give you all the CSS you need to server-side render it.
+
+For a better hydration strategy, we highly recommend adding an `id="stitches"` to your style tag.
+
+Here's an example of SSR with Next.js:
+
+```tsx {2,9-12}
+import NextDocument, { Html, Head, Main, NextScript } from 'next/document';
+import { getCssText } from '@livepeer/react';
+
+export default class Document extends NextDocument {
+  render() {
+    return (
+      <Html lang="en">
+        <Head>
+          <style
+            id="stitches"
+            dangerouslySetInnerHTML={{ __html: getCssText() }}
+          />
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
+}
+```
+
+See the [Stitches](https://stitches.dev/docs/server-side-rendering) documentation for further information.
