@@ -1,12 +1,14 @@
 ---
-sidebar_position: 1
+title: Install Go Livepeer
+description: Learn how to install go-livepeer and become an orchestrator
 ---
 
-# Install `Go Livepeer`
+import { Callout } from 'nextra-theme-docs';
 
-Depending on your workflow, you may prefer to install `Go livepeer`
-[using a binary release](/guides/orchestrating/install-go-livepeer#install-using-a-binary-release) or
-a [Docker image](/guides/orchestrating/install-go-livepeer#install-using-a-docker-image).
+# Install Go Livepeer
+
+Depending on your workflow, you may prefer to install `go-livepeer`
+using a binary release, a Docker image, or from source.
 
 ## Install using a Binary Release
 
@@ -22,10 +24,10 @@ please use the following commands (for popular ubuntu/mac systems):
 
 ```bash
 # For ubuntu
-# apt install curl coreutils gnupg2
+apt install curl coreutils gnupg2
 
 # For macOS
-# brew install curl coreutils gnupg
+brew install curl coreutils gnupg
 ```
 
 #### Installation
@@ -39,7 +41,7 @@ Additional steps to install custom release for individual OS are declared below.
 ### Darwin (macOS)
 
 ```bash
-# <RELEASE_VERSION> is the release version, e.g. v0.5.29
+# <RELEASE_VERSION> is the release version, e.g. v0.5.35
 # IMPORTANT: if you are using macOS with an M1 chip, you'll need to run these commands using the Rosetta emulator
 
 # Fetch the latest release
@@ -55,7 +57,7 @@ mv livepeer-darwin-amd64/* /usr/local/bin/
 ### Linux
 
 ```bash
-# <RELEASE_VERSION> is the release version, e.g. v0.5.29
+# <RELEASE_VERSION> is the release version, e.g. v0.5.35
 
 # Fetch the latest release
 wget https://github.com/livepeer/go-livepeer/releases/download/<RELEASE_VERSION>/livepeer-linux-amd64.tar.gz
@@ -70,7 +72,7 @@ mv livepeer-linux-amd64/* /usr/local/bin/
 ### Windows
 
 ```shell
-# <RELEASE_VERSION> is the release version, e.g. v0.5.29
+# <RELEASE_VERSION> is the release version, e.g. v0.5.35
 
 # Fetch the latest release .zip
 wget https://github.com/livepeer/go-livepeer/releases/download/<RELEASE_VERSION>/livepeer-windows-amd64.zip
@@ -82,11 +84,12 @@ unzip livepeer-windows-amd64.zip
 move livepeer-windows-amd64 e.g. C:\Users\UserName\livepeer-folder
 ```
 
-> **Note** At this time Livepeer does not provide automatic
-> updates. You can perform a manual update or use a script. **A
-> community-created** [Bash script to update Livepeer is available on
-> the livepeer
-> Forum](https://forum.livepeer.org/t/bash-script-to-update-livepeer/1513).
+<Callout>
+  At this time Livepeer does not provide automatic updates. You can perform a
+  manual update or use a script. A community-created [Bash script to update
+  Livepeer is available on the livepeer
+  Forum](https://forum.livepeer.org/t/bash-script-to-update-livepeer/1513).
+</Callout>
 
 ### Third-party packages
 
@@ -100,17 +103,9 @@ individual packages are up to date or verify their integrity.
 In the future, Livepeer core contributors may publish official
 packages for the distributions below.
 
-#### Arch Linux
-
-**Source**
-
-https://aur.archlinux.org/packages/go-livepeer-bin/
-
-**Installation**
-
-```
-paru go-livepeer-bin
-```
+| Platform   | Installation           | Source                                              |
+| ---------- | ---------------------- | --------------------------------------------------- |
+| Arch Linux | `paru go-livepeer-bin` | https://aur.archlinux.org/packages/go-livepeer-bin/ |
 
 ## Install using a Docker image
 
@@ -131,7 +126,7 @@ If you are running macOS with an M1 chip, you'll need to [run your terminal usin
 docker pull livepeer/go-livepeer:<RELEASE_VERSION>
 
 # Mac M1 only
-# docker pull --platform linux/amd64 livepeer/go-livepeer:<RELEASE_VERSION>
+docker pull --platform linux/amd64 livepeer/go-livepeer:<RELEASE_VERSION>
 ```
 
 ### Running livepeer-cli with Docker
@@ -144,11 +139,140 @@ Once you've pulled the image, retrieve the image id and start the container.
 docker run <image id> <livepeer configuration flags>
 
 # Mac M1 only
-# docker run --platform linux/amd64 <image id> <livepeer configuration flags>
+docker run --platform linux/amd64 <image id> <livepeer configuration flags>
 ```
 
 Once you've started the container, retrieve the name and start the CLI
 
 ```bash
 docker exec -it <container_name> livepeer_cli
+```
+
+### Installing pre-releases with Docker
+
+To pull the latest pre-release version:
+
+```bash
+docker pull livepeer/go-livepeer:master
+```
+
+## Build from source
+
+### System dependencies
+
+Building `livepeer` requires some system dependencies.
+
+#### Linux (Ubuntu: 16.04 or 18.04)
+
+```bash
+apt-get update && apt-get -y install build-essential pkg-config autoconf git curl
+```
+
+#### Linux (Ubuntu: 20.04)
+
+```bash
+apt-get -y install protobuf-compiler-grpc golang-goprotobuf-dev
+```
+
+To enable transcoding using Nvidia GPUs on Linux systems
+
+- CUDA must be [installed on the system](<(https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html)>)
+- `clang` must be installed as well. The script that will install `ffmpeg` dependencies uses `which clang` command to determine whether `clang` is installed or not. Please check this on your system. If the path is empty, please install `clang`. For example on the Ubuntu machine one can do
+
+```bash
+apt-get -y install clang clang-tools
+```
+
+#### Darwin (macOS)
+
+```bash
+brew update && brew install pkg-config autoconf
+```
+
+#### Windows
+
+The steps in
+[this file](https://github.com/livepeer/go-livepeer/blob/master/.github/workflows/windows.yml)
+can be used as a reference.
+
+### Go
+
+Building `livepeer` requires Go. Follow the
+[official Go installation instructions](https://golang.org/doc/install).
+
+### Build and install
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/livepeer/go-livepeer.git
+cd go-livepeer
+```
+
+2. Install `ffmpeg` dependencies:
+
+```bash
+./install_ffmpeg.sh
+```
+
+<Callout>
+  This is the step that requires `which clang` to return clang path in order to
+  build CUDA support, as described above
+</Callout>
+
+3. Set build environment variables.
+
+Set the `PKG_CONFIG_PATH` variable so that `pkg-config` can find the `ffmpeg`
+dependency files installed in step 2:
+
+```bash
+# install_ffmpeg.sh stores ffmpeg dependency files in this directory by default
+export PKG_CONFIG_PATH=~/compiled/lib/pkgconfig
+```
+
+Set the `BUILD_TAGS` variable to enable mainnet support:
+
+```bash
+export BUILD_TAGS=mainnet
+# To build with support for only development networks and the Rinkeby test network
+# export BUILD_TAGS=rinkeby
+# To build with support for only development networks
+# export BUILD_TAGS=dev
+```
+
+4. Build and install `livepeer`:
+
+```bash
+make
+cp livepeer* /usr/local/bin
+```
+
+<Callout>
+  **Mac M1 users**: If you see an error like `ld: symbol(s) not found for
+  architecture x86_64`, this is because of a conflict between dependency builds
+  and the Livepeer build. You should check that you are using the
+  [\*-darwin-arm64 binary](https://go.dev/dl/go1.17.6.darwin-arm64.pkg) instead
+  of the `*-darwin-amd64` binary. You can check what Go architecture you're
+  using with `go version`.
+</Callout>
+
+## Build with Docker
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/livepeer/go-livepeer.git
+cd go-livepeer
+```
+
+2. Export tags:
+
+```bash
+echo $(git describe --tags) > .git.describe
+```
+
+3. Build image:
+
+```bash
+docker build -t livepeerbinary:debian -f docker/Dockerfile.debian .
 ```

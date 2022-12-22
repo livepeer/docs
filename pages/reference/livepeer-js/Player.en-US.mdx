@@ -54,6 +54,7 @@ was passed to the viewer.
           poster={<PosterImage />}
           showPipButton
           objectFit="cover"
+          priority
         />
       );
     };
@@ -229,6 +230,26 @@ function PlayerComponent() {
       title="Agent 327: Operation Barbershop"
       playbackId="6d7el73r1y12chxr"
       jwt={jwt}
+    />
+  );
+}
+```
+
+### priority
+
+When true, the media will be considered high priority and preload. Lazy loading is automatically disabled for media using `priority`.
+You should use the priority property on any media detected as the [Largest Contentful Paint (LCP)](https://web.dev/lcp/) element.
+It may be appropriate to have multiple, as different content may be the LCP element for different viewport sizes.
+
+Should only be used when the media is visible above the fold. Defaults to false.
+
+```tsx filename="React & React Native" {6}
+function PlayerComponent() {
+  return (
+    <Player
+      title="Agent 327: Operation Barbershop"
+      playbackId="6d7el73r1y12chxr"
+      priority
     />
   );
 }
