@@ -54,9 +54,21 @@ const client = createReactClient({
 The default strategy to persist and cache data. Used for both state management and query caching.
 Defaults to `window.localStorage`.
 
+To disable the use of localStorage, we provide a convenient "no-op" storage option:
+
     ```tsx filename="React"
+    import {
+      createReactClient,
+      studioProvider,
+      noopStorage,
+      createStorage,
+    } from "@livepeer/react";
+
     const client = createReactClient({
       provider: studioProvider({ apiKey: 'yourStudioApiKey' }),
+      storage: createStorage({
+        storage: noopStorage,
+      }),
     });
     ```
 
