@@ -16,6 +16,8 @@ If you do not define transcoding rendition `profiles` when creating the
 attributes of the source stream only, will not take advantage of adaptive
 bitrate streaming and will likely buffer.
 
+The playback policy is set to `public` by default for new streams. It can also be added upon the creation of a new stream by adding `"playbackPolicy": {"type": "jwt"}`
+
 Here is an example request:
 
 ```bash
@@ -47,6 +49,7 @@ curl -X POST \
       "height": 360
     }
   ]
+  "playbackPolicy": {"type": "jwt"}
 }' \
 https://livepeer.studio/api/stream
 ```
@@ -60,6 +63,7 @@ https://livepeer.studio/api/stream
         {"name":"720p","bitrate":2000000,"fps":30,"width":1280,"height":720},
         {"name":"480p","bitrate":1000000,"fps":30,"width":854,"height":480}],
         {"name":"360p","bitrate":500000,"fps":30,"width":640,"height":360}],
+    "playbackPolicy": { "type": "jwt"},
     "id":"ijkl61f3-95bd-4971-a7b1-4dcb5d39e78a",
     "createdAt":1596081229373,
     "streamKey":"abcd-uimq-jtgy-x98v",
