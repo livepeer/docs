@@ -140,7 +140,8 @@ const config: DocsThemeConfig = {
     const description =
       config?.frontMatter?.description ||
       'Explore guides and a variety of resources to help you get started adding live and on demand video experiences to your application using the open and decentralized Livepeer Protocol.';
-    const image = config?.frontMatter?.image || '/og.png';
+    const image =
+      config?.frontMatter?.image || 'https://docs.livepeer.org/og.png';
     const folder = theme === 'light' ? '/light' : '/dark';
 
     return (
