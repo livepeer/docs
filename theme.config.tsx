@@ -188,6 +188,7 @@ const config: DocsThemeConfig = {
         <meta property="og:description" content={description} />
         <meta property="og:title" content={composedTitle} />
         <meta property="og:image" content={image} />
+        <meta property="og:type" content="website" />
         <meta
           name="apple-mobile-web-app-title"
           content="Livepeer Documentation"
