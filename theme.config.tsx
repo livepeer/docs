@@ -140,9 +140,10 @@ const config: DocsThemeConfig = {
     const description =
       config?.frontMatter?.description ||
       'Explore guides and a variety of resources to help you get started adding live and on demand video experiences to your application using the open and decentralized Livepeer Protocol.';
-    const image =
-      config?.frontMatter?.image || 'https://docs.livepeer.org/og.png';
+    const image = config?.frontMatter?.image || '/og.jpg';
     const folder = theme === 'light' ? '/light' : '/dark';
+
+    const composedTitle = `${title} – Livepeer Documentation`;
 
     return (
       <>
@@ -177,13 +178,17 @@ const config: DocsThemeConfig = {
         <meta name="msapplication-TileColor" content="#00a300" />
         <link rel="manifest" href={`${folder}/site.webmanifest`} />
         <meta httpEquiv="Content-Language" content="en" />
+        <meta name="title" content={composedTitle} />
         <meta name="description" content={description} />
-        <meta name="og:description" content={description} />
+
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@livepeer" />
         <meta name="twitter:image" content={image} />
-        <meta name="og:title" content={`${title} – Livepeer Documentation`} />
-        <meta name="og:image" content={image} />
+
+        <meta property="og:description" content={description} />
+        <meta property="og:title" content={composedTitle} />
+        <meta property="og:image" content={image} />
+        <meta property="og:type" content="website" />
         <meta
           name="apple-mobile-web-app-title"
           content="Livepeer Documentation"
