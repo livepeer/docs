@@ -43,7 +43,7 @@ function App() {
 
 ## Step 2: Create a Gated Stream
 
-We then can create our gated stream, with the stream key returned once we create it (styling has been removed for simplicity):
+We then can create our gated stream, with the stream key returned once we create it (styling has been removed for simplicity)
 
 ```tsx filename="AccessControl.tsx"
 import { useCreateStream, useStream } from '@livepeer/react';
@@ -96,6 +96,12 @@ export const AccessControl = () => {
 
 Next, we add an API route - since we are using Next.JS, we add a custom [Next.js API route](https://nextjs.org/docs/api-routes/introduction).
 We add a check in the API route for a special "secret" that must be passed in the POST body for the user to gain access to the stream.
+
+<Callout>
+  Make sure to [create a signing key](/reference/api/create-signing-keys) -
+  those values will be used as the environment variables
+  `ACCESS_CONTROL_PRIVATE_KEY` and `NEXT_PUBLIC_ACCESS_CONTROL_PUBLIC_KEY`.
+</Callout>
 
 ```typescript filename="/api/sign-jwt.ts"
 // use the signAccessJwt export from `livepeer` in Node.JS
