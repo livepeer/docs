@@ -16,13 +16,15 @@ To get support for setting a price that will allow you to receive work on the ne
 
 ## Configure Automatic Price Adjustments
 
-By default, an orchestrator will automatically adjust its price based on the overhead of ticket redemption.
+The default behavior of orchestrators is to automatically adjust their advertised price per pixel based on the estimated overhead for redeeming a ticket. The overhead for redeeming a ticket is the estiamted transaction cost of the redemption transaction divided by the face value of the ticket represented as a percentage. For example, given a base price per pixel of 1000 wei:
 
-Configure your orchestrator to advertise a constant price:
+- If the overhead is 1%, the advertised price would be 1010 wei
+- If the overhead is 20%, the advertised price would be 1200 wei
+- If the overhead is 50%, the advertised price is 1500 wei
 
-- Start the orchestrator with the `-autoAdjustPrice=false` flag.
+The motivation for this automatic price adjustment mechanism is to allow orchestrators to dynamically adjust their price to compensate for higher overheads for ticket redemptions when gas prices are high.
 
-- Additionally, you can refer to the [Automatic Price Adjustment](/video-miners/core-concepts/payments#automatic-price-adjustments) docs for more in-depth information.
+Orchestrators can disable this mechanism and advertise a constant price by setting the `-autoAdjustPrice=false` flag.
 
 ## Set a Price With `livepeer_cli`
 
