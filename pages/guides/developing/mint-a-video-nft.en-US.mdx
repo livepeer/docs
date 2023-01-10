@@ -132,11 +132,6 @@ We first add the required dependencies using `npm` (or your preferred package ma
 
 ## Step 3: Add Connect Wallet Button
 
-<Callout>
-  This example assumes you have chosen a component library with typical
-  components like `Button`, `Box`, `Flex`, etc.
-</Callout>
-
 <SyncedTabs group="chain" items={['wagmi', 'aptos']}>
   <SyncedTab>
 
@@ -152,9 +147,9 @@ We first add the required dependencies using `npm` (or your preferred package ma
       const { address } = useAccount();
 
       return (
-        <Box>
+        <div>
           <ConnectButton />
-        </Box>
+        </div>
       );
     };
     ```
@@ -200,14 +195,14 @@ We first add the required dependencies using `npm` (or your preferred package ma
       }, [isAptosDefined]);
 
       return (
-        <Box>
-          <Button
+        <div>
+          <button
             disabled={!isAptosDefined || Boolean(address)}
             onClick={connectWallet}
           >
             {!address ? 'Connect Wallet' : address}
-          </Button>
-        </Box>
+          </button>
+        </div>
       );
     };
     ```
@@ -249,21 +244,21 @@ IPFS which points to that Asset's CID.
       });
 
       return (
-        <Box>
+        <div>
           <ConnectButton />
           {address && assetId && (
             <>
-              <Text>{assetId}</Text>
-              <Button
+              <p>{assetId}</p>
+              <button
                 onClick={() => {
                   updateAsset?.();
                 }}
               >
                 Upload to IPFS
-              </Button>
+              </button>
             </>
           )}
-        </Box>
+        </div>
       );
     };
     ```
@@ -322,23 +317,23 @@ IPFS which points to that Asset's CID.
       });
 
       return (
-        <Box>
-          <Button
+        <div>
+          <button
             disabled={!isAptosDefined || Boolean(address)}
             onClick={connectWallet}
           >
             {!address ? 'Connect Wallet' : address}
-          </Button>
+          </button>
           {address && (
-            <Button
+            <button
               onClick={() => {
                 updateAsset?.();
               }}
             >
               Upload to IPFS
-            </Button>
+            </button>
           )}
-        </Box>
+        </div>
       );
     };
     ```
@@ -441,45 +436,43 @@ so the user can see the blockchain confirmation.
       } = useContractWrite(config);
 
       return (
-        <Box>
+        <div>
           <ConnectButton />
           {address && assetId && (
             <>
-              <Text>{assetId}</Text>
-              <Flex>
+              <p>{assetId}</p>
                 {asset?.status?.phase === 'ready' &&
                 asset?.storage?.status?.phase !== 'ready' ? (
-                  <Button
+                  <button
                     onClick={() => {
                       updateAsset?.();
                     }}
                   >
                     Upload to IPFS
-                  </Button>
+                  </button>
                 ) : contractWriteData?.hash && isSuccess ? (
                   <a
                     target="_blank"
                     href={`https://mumbai.polygonscan.com/tx/${contractWriteData.hash}`}
                   >
-                    <Button>View Mint Transaction</Button>
+                    <button>View Mint Transaction</button>
                   </a>
                 ) : contractWriteError ? (
-                  <Text>{contractWriteError.message}</Text>
+                  <p>{contractWriteError.message}</p>
                 ) : asset?.storage?.status?.phase === 'ready' && write ? (
-                  <Button
+                  <button
                     onClick={() => {
                       write();
                     }}
                   >
                     Mint NFT
-                  </Button>
+                  </button>
                 ) : (
                   <></>
                 )}
-              </Flex>
             </>
           )}
-        </Box>
+        </div>
       );
     };
     ```
@@ -764,8 +757,8 @@ so the user can see the blockchain confirmation.
       ]);
 
       return (
-        <Box>
-          <Button
+        <div>
+          <button
             disabled={!isAptosDefined || Boolean(address)}
             onClick={connectWallet}
           >
@@ -774,13 +767,12 @@ so the user can see the blockchain confirmation.
             ) : (
               address
             )}
-          </Button>
+          </button>
           {address && (
             <>
-              <Flex>
                 {asset?.status?.phase === 'ready' &&
                 asset?.storage?.status?.phase !== 'ready' ? (
-                  <Button
+                  <button
                     onClick={() => {
                       updateAsset?.();
                     }}
@@ -789,24 +781,23 @@ so the user can see the blockchain confirmation.
                     }
                   >
                     Upload to IPFS
-                  </Button>
+                  </button>
                 ) : creationHash ? (
                   <a href={`https://explorer.aptoslabs.com/txn/${creationHash}?network=Devnet`}>
                     View Mint Transaction
                   </a>
                 ) : asset?.storage?.status?.phase === 'ready' ? (
-                  <Button
+                  <button
                     onClick={mintNft}
                   >
                     Mint NFT
-                  </Button>
+                  </button>
                 ) : (
                   <></>
                 )}
-              </Flex>
             </>
           )}
-        </Box>
+        </div>
       );
     };
     ```

@@ -15,13 +15,6 @@ and [`useStream`](/reference/livepeer-js/stream/useStream) to create and watch a
 
 ## Step 1: Configuring Providers
 
-<Callout>
-  This example assumes you have chosen a component library with typical
-  components like `Button`, `TextField`, `Spinner`, etc. The
-  [`Player`](/reference/livepeer-js/Player) is the only visual component
-  provided.
-</Callout>
-
 Same as before, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey):
 
 ```tsx filename="App.tsx"
@@ -67,20 +60,20 @@ export const Stream = () => {
 
   return (
     <>
-      <TextField
+      <input
         type="text"
         placeholder="Stream name"
         onChange={(e) => setStreamName(e.target.value)}
       />
 
-      <Button
+      <button
         onClick={() => {
           createStream?.();
         }}
         disabled={createStatus === 'loading' || !createStream}
       >
         Create Stream
-      </Button>
+      </button>
     </>
   );
 };
@@ -102,8 +95,6 @@ import { Player, useCreateStream } from '@livepeer/react';
 
 import { useMemo, useState } from 'react';
 
-import { Spinner } from '../core';
-
 export const Stream = () => {
   const [streamName, setStreamName] = useState<string>('');
   const {
@@ -115,14 +106,12 @@ export const Stream = () => {
   const isLoading = useMemo(() => status === 'loading', [status]);
 
   return (
-    <Box>
-      <Box>
-        <TextField
-          type="text"
-          placeholder="Stream name"
-          onChange={(e) => setStreamName(e.target.value)}
-        />
-      </Box>
+    <div>
+      <input
+        type="text"
+        placeholder="Stream name"
+        onChange={(e) => setStreamName(e.target.value)}
+      />
 
       {stream?.playbackId && (
         <Player
@@ -133,20 +122,19 @@ export const Stream = () => {
         />
       )}
 
-      <Flex>
+      <div>
         {!stream && (
-          <Button
+          <button
             onClick={() => {
               createStream?.();
             }}
             disabled={isLoading || !createStream}
-            variant="primary"
           >
             Create Stream
-          </Button>
+          </button>
         )}
-      </Flex>
-    </Box>
+      </div>
+    </div>
   );
 };
 ```
