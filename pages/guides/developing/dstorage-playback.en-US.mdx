@@ -68,19 +68,15 @@ export const DecentralizedStoragePlayback = () => {
   const idParsed = useMemo(() => parseCid(url) ?? parseArweaveTxId(url), [url]);
 
   return (
-    <>
-      <Box>
-        <Text>IPFS or Arweave URL</Text>
-        <TextField
-          type="text"
-          placeholder="ipfs://... or ar://"
-          onChange={(e) => setUrl(e.target.value)}
-        />
+    <div>
+      <p>IPFS or Arweave URL</p>
+      <input
+        type="text"
+        placeholder="ipfs://... or ar://"
+        onChange={(e) => setUrl(e.target.value)}
+      />
 
-        {url && !idParsed && (
-          <Text>Provided value is not a valid identifier.</Text>
-        )}
-      </Box>
+      {url && !idParsed && <p>Provided value is not a valid identifier.</p>}
 
       {idParsed && (
         <Player
@@ -91,7 +87,7 @@ export const DecentralizedStoragePlayback = () => {
           autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
         />
       )}
-    </>
+    </div>
   );
 };
 ```

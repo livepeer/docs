@@ -15,13 +15,6 @@ and [`useStream`](/reference/livepeer-js/hooks/useStream) to create and watch a 
 
 ## Step 1: Configuring Providers
 
-<Callout>
-  This example assumes you have chosen a component library with typical
-  components like `Button`, `TextField`, `Spinner`, etc. The
-  [`Player`](/reference/livepeer-js/Player) is the only visual component
-  provided.
-</Callout>
-
 First step, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey):
 
 ```tsx filename="App.tsx"
@@ -80,18 +73,21 @@ export const AccessControl = () => {
   const isLoading = useMemo(() => status === 'loading', [status]);
 
   return (
-    <Box>
-      <TextField onChange={(e) => setStreamName(e.target.value)} />
+    <div>
+      <input
+        placeholder="Stream Name"
+        onChange={(e) => setStreamName(e.target.value)}
+      />
 
-      <Button
+      <button
         onClick={() => {
           createStream?.();
         }}
         disabled={isLoading || !createStream || Boolean(stream)}
       >
         Create Gated Stream
-      </Button>
-    </Box>
+      </button>
+    </div>
   );
 };
 ```
@@ -260,20 +256,21 @@ export const AccessControl = () => {
   const isLoading = useMemo(() => status === 'loading', [status]);
 
   return (
-    <Box>
+    <div>
       {!stream?.id ? (
         <>
-          <TextField onChange={(e) => setStreamName(e.target.value)} />
-          <Flex>
-            <Button
-              onClick={() => {
-                createStream?.();
-              }}
-              disabled={isLoading || !createStream || Boolean(stream)}
-            >
-              Create Gated Stream
-            </Button>
-          </Flex>
+          <input
+            placeholder="Stream Name"
+            onChange={(e) => setStreamName(e.target.value)}
+          />
+          <button
+            onClick={() => {
+              createStream?.();
+            }}
+            disabled={isLoading || !createStream || Boolean(stream)}
+          >
+            Create Gated Stream
+          </button>
         </>
       ) : (
         <Player
@@ -284,7 +281,7 @@ export const AccessControl = () => {
           jwt={(createdJwt as CreateSignedPlaybackResponse)?.token}
         />
       )}
-    </Box>
+    </div>
   );
 };
 ```

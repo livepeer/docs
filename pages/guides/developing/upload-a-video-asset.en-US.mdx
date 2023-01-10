@@ -15,13 +15,6 @@ to create and view a video asset.
 
 ## Step 1: Configuring Providers
 
-<Callout>
-  This example assumes you have chosen a component library with typical
-  components like `Button`, `TextField`, `Spinner`, etc. The
-  [`Player`](/reference/livepeer-js/Player) is the only visual component
-  provided.
-</Callout>
-
 First, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey):
 
 ```tsx filename="App.tsx"
@@ -105,31 +98,24 @@ export const CreateAndViewAsset = () => {
 
   return (
     <>
-      <Box {...getRootProps()}>
-        <Box as="input" {...getInputProps()} />
-        <Box as="p">
-          <Text>Drag and drop or browse files</Text>
-        </Box>
-      </Box>
+      <div {...getRootProps()}>
+        <input {...getInputProps()} />
+        <p>Drag and drop or browse files</p>
+      </div>
 
-      {createError?.message && <Text>{createError.message}</Text>}
+      {createError?.message && <p>{createError.message}</p>}
 
-      {video ? (
-        <Badge>{video.name}</Badge>
-      ) : (
-        <Text>Select a video file to upload.</Text>
-      )}
-      {progressFormatted && <Text>{progressFormatted}</Text>}
+      {video ? <p>{video.name}</p> : <p>Select a video file to upload.</p>}
+      {progressFormatted && <p>{progressFormatted}</p>}
 
-      <Button
+      <button
         onClick={() => {
           createAsset?.();
         }}
-        size="2"
         disabled={!createAsset || createStatus === 'loading'}
       >
         Upload
-      </Button>
+      </button>
     </>
   );
 };
@@ -202,48 +188,41 @@ export const Asset = () => {
   );
 
   return (
-    <Box>
+    <div>
       {!asset && (
-        <Box>
-          <Box as="div" {...getRootProps()}>
-            <Box as="input" {...getInputProps()} />
-            <Box as="p">
-              <Text>Drag and drop or browse files</Text>
-            </Box>
-          </Box>
+        <div {...getRootProps()}>
+          <input {...getInputProps()} />
+          <p>Drag and drop or browse files</p>
 
-          {error?.message && <Text variant="red">{error.message}</Text>}
-        </Box>
+          {error?.message && <p>{error.message}</p>}
+        </div>
       )}
 
       {asset?.[0]?.playbackId && (
         <Player title={asset[0].name} playbackId={asset[0].playbackId} />
       )}
 
-      <Flex>
-        <Flex>
-          {metrics?.metrics?.[0] && (
-            <Badge>Views: {metrics?.metrics?.[0]?.startViews}</Badge>
-          )}
-          {video ? (
-            <Badge>{video.name}</Badge>
-          ) : (
-            <Text>Select a video file to upload.</Text>
-          )}
-          {progressFormatted && <Text>{progressFormatted}</Text>}
-        </Flex>
+      <div>
+        {metrics?.metrics?.[0] && (
+          <p>Views: {metrics?.metrics?.[0]?.startViews}</p>
+        )}
+
+        {video ? <p>{video.name}</p> : <p>Select a video file to upload.</p>}
+
+        {progressFormatted && <p>{progressFormatted}</p>}
+
         {!asset?.[0].id && (
-          <Button
+          <button
             onClick={() => {
               createAsset?.();
             }}
             disabled={isLoading || !createAsset}
           >
             Upload
-          </Button>
+          </button>
         )}
-      </Flex>
-    </Box>
+      </div>
+    </div>
   );
 };
 ```
