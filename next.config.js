@@ -48,6 +48,11 @@ const config = {
         destination: '/reference/deployed-contract-addresses',
         permanent: false,
       },
+      {
+        source: '/delegators/how-to-guides/bridge-lpt',
+        destination: '/guides/delegating/bridge-lpt-to-arbitrum',
+        permanent: false,
+      },
     ];
   },
 };
