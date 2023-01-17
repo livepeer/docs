@@ -18,6 +18,16 @@ class Document extends NextDocument {
             id="stitches"
             dangerouslySetInnerHTML={{ __html: getCssText() }}
           />
+          {/* Global Site Tag (gtag.js) - Google Analytics */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+          `,
+            }}
+          />
         </Head>
         <body>
           <SkipNavLink />
