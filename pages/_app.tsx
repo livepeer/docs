@@ -1,9 +1,15 @@
 import type { AppProps } from 'next/app';
+
 import { useRouter } from 'next/router';
+
 import Script from 'next/script';
+
 import * as React from 'react';
+
 import { Providers } from '../components/core';
+
 import '../styles/globals.css';
+
 import * as gtag from '../lib/gtag';
 
 function App({ Component, pageProps }: AppProps<{ dehydratedState: string }>) {
