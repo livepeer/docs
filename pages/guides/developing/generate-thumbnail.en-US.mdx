@@ -7,15 +7,120 @@ import { Callout } from 'nextra-theme-docs';
 
 # Generate thumbnail for assets
 
-Thumbnails can be created on the front-end or on the server side of an application.
+Thumbnails can be created on the front-end or on the server side of an application. In this guide, you will learn how to generate video thumbnails on the frontend as well as on the server side.
 
-While it is possible to generate thumbnails on the front-end, it is generally more resource-intensive and may not be suitable for larger videos. Therefore, it is often recommended to generate thumbnails on the server side. In this guide, you will learn how to generate video thumbnails on the server side using Node.js and Python.
+<Callout>
+  While it is possible to generate thumbnails on the front-end, it is generally
+  more resource-intensive and may not be suitable for larger videos. Therefore,
+  it is often recommended to generate thumbnails on the server side.
+</Callout>
 
-## Node.js
+## Frontend
 
-Generating thumbnails for your assets with node.js is pretty easy. We will be using a FFmpeg package which is very straightforward and easy.
+In this guide, we will be using HTML canvas in a Next.js application to generate thumbnails.
 
-### Set up a node project
+#### Set up a Next.js project
+
+This guide assumes that you already have Next.js and Livepeer.js setup. If you haven't already, you can follow the [Getting started](/reference/livepeer-js/getting-started) guide to set up a Next.js project with Livepeer.js.
+
+Once you have a Next.js project setup, remove the code inside `pages/index.js` file and replace it with the following code:
+
+```jsx
+import { Player } from '@livepeer/react';
+import { useRef, useState, useEffect } from 'react';
+
+export default function Home() {
+  const canvasRef = useRef();
+  const [dimensions, setDimensions] = useState();
+  const [videoRef, setVideoRef] = useState();
+
+  return (
+    <div
+      style={{
+        width: '40%',
+      }}
+    >
+      <Player
+        title="Agent 327: Operation Barbershop"
+        playbackId="6d7el73r1y12chxr"
+        showPipButton
+        objectFit="cover"
+        mediaElementRef={video}
+        priority
+      />
+    </div>
+  );
+}
+```
+
+In the above code, we are using the `Player` component from Livepeer.js to play the video. The `mediaElementRef` prop is used to get a reference to the video element. We will use this reference to generate a thumbnail.
+
+If you run the app now, you should see a video player on the page.
+![Image](/images/thumbnail/6.png)
+
+#### Generate thumbnail
+
+Next, we need to calculate the dimensions of the video element. To do this, we will use the `useEffect` hook to get the dimensions of the video element and store them in the `dimensions` state variable.
+
+```jsx
+useEffect(() => {
+  const handleMetadata = () => {
+    setDimensions({
+      width: videoRef.videoWidth,
+      height: videoRef.videoHeight,
+    });
+  };
+  if (videoRef) {
+    videoRef.addEventListener('loadedmetadata', handleMetadata);
+    return () => videoRef.removeEventListener('loadedmetadata', handleMetadata);
+  }
+}, [videoRef]);
+```
+
+The above code will run whenever the `videoRef` state variable changes. It will add an event listener to the video element and calculate the dimensions of the video element. The dimensions are then stored in the `dimensions` state variable.
+
+Next, we need to create a function that will generate a thumbnail. To do this, we will use the `canvasRef` state variable to get a reference to the canvas element. Then, we will use the `drawImage` method to draw the video element on the canvas element.
+
+```jsx
+const takeScreenShot = () => {
+  if (!dimensions) return;
+  const ctx = canvasRef.current.getContext('2d');
+  canvasRef.current.width = dimensions.width;
+  canvasRef.current.height = dimensions.height;
+  ctx.drawImage(videoRef, 0, 0, dimensions.width, dimensions.height);
+};
+```
+
+The above code will run whenever the `takeScreenShot` function is called. It will draw the video element on the canvas element.
+
+Finally, we need to call the `takeScreenShot` function whenever the video element is paused. To do this, add a button to the page and add an `onClick` handler to it.
+
+```jsx
+<button onClick={takeScreenShot}>Take screenshot</button>
+```
+
+You also need to add a `canvas` element to the page. The `canvas` element will be used to display the thumbnail.
+
+```jsx
+<canvas crossOrigin="anonymous" ref={canvas} />
+```
+
+If you run the app now, you should see a video player on the page with a button to generate a thumbnail. Click on the button, you should see a thumbnail of the video.
+
+![Image](/images/thumbnail/7.png)
+
+<Callout>
+  In order to post this thumbnail to your backend server, or storage provider,
+  you will need to convert it to a base64 string. You can use the
+  [toDataURL](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL)
+  method to do this.
+</Callout>
+
+## Backend
+
+In this guide, we will be using Node.js to generate thumbnails. But the proccess should be similar for any other backend language. Generating thumbnails for your assets with node.js is pretty easy. We will be using a FFmpeg package which is very straightforward and easy.
+
+#### Set up a node project
 
 The first step is to setup a node.js project. Open your terminal and run the following command.
 
@@ -32,7 +137,7 @@ npm install express fluent-ffmpeg
 `express` is a popular web framework for node.js that makes it easy to build web applications and APIs.
 `ffmpeg` is a powerful too for working with video/audio file.
 
-### Generate thumbnails
+#### Generate thumbnails
 
 Now that you have installed the necessary dependencies, it is time to create a REST API that can be used to generate thumbnails for your assets. To do this, you will need to create a new file called **`index.js`** in the root directory of your project and add the following code to it:
 
@@ -113,7 +218,7 @@ Go to your project directory and you should be able to see `thumbnail.jpg`. Thes
 
 ![Image](/images/thumbnail/2.png)
 
-### Generate multiple thumbnails
+#### Generate multiple thumbnails
 
 To generate multiple thumbnails at different time frames, just replace the FFmpeg function with the below code,
 
@@ -135,74 +240,3 @@ ffmpeg(url)
 If you send a request to API, you should now be able to see multiple thumbnails.
 
 ![Multiple-Image](/images/thumbnail/3.png)
-
-## Python
-
-If you app is built with Python, you can use the following steps to generate thumbnails.
-
-### Set up a python project
-
-The first step is to setup a python project. Open your terminal and run the following command.
-
-```bash
-mkdir server && cd server && touch app.py
-```
-
-This command will create a new directory called `server` and initialize a python project inside of it. Next, we need to install a few dependencies to our application. Go ahead and run the below command to install and `ffmpeg`.
-
-```bash
-pip install ffmpeg-python
-```
-
-The `ffmpeg-python` package is a Python wrapper for FFmpeg. It provides a simple API for running FFmpeg commands using Python.
-
-### Generate thumbnails
-
-Once the necessary dependencies installed, open `app.py` and add the following code to it.
-
-```py
-import ffmpeg
-input_url = input('Enter the URL of the video: ')
-
-input_file = ffmpeg.input(input_url)
-# Set the frame rate to 1 frame per second
-input_file = input_file.filter('fps', fps=1)
-# Generate the thumbnail at the first second of the video
-input_file = input_file.filter('scale', '1280x720').filter('trim', start=0, end=1) # scale and trim
-(
-    ffmpeg.output(input_file, 'thumbnail.jpg', vframes=1) # vframes is the number of frames to output
-    .run(overwrite_output=True)
-)
-
-```
-
-Run the above code and enter the video URL when prompted. The thumbnail will be saved as `thumbnail.jpg` in the same directory as the `app.py` file.
-
-![Python-Image](/images/thumbnail/4.png)
-
-### Generate multiple thumbnails
-
-To generate multiple thumbnails at different time frames, just replace the app.py code with the below snippet.
-
-```py
-import ffmpeg
-
-input_url = input('Enter the video url: ')
-
-times = [1, 2, 3]  # list of times to generate the thumbnails
-
-for time in times:
-    input_file = ffmpeg.input(input_url)
-    # Set the frame rate to 1 frame per second
-    input_file = input_file.filter('fps', fps=1)
-    # Generate the thumbnail at the specified time of the video
-    input_file = input_file.filter('scale', '1280x720').filter('trim', start=time, end=time+1)  # scale and trim
-    (
-        ffmpeg.output(input_file, f'thumbnail_{time}.jpg', vframes=1)  # vframes is the number of frames to output
-        .run(overwrite_output=True)
-    )
-```
-
-This method is bit different from node.js method. Here we are looping through the points and generating thumbnails at each point. If you run the above code, you should be able to see multiple thumbnails in the same directory.
-
-![Python-Multiple-Image](/images/thumbnail/5.png)
