@@ -18,7 +18,7 @@ import { DocsThemeConfig, useConfig, useTheme } from 'nextra-theme-docs';
 const Logo = ({ height, width }: { height: number; width: number }) => {
   const { theme } = useTheme();
   return (
-    <div style={{ alignItems: 'center' }} className="flex items-center gap-2">
+    <div style={{ alignItems: 'center', display: 'flex', gap: '8px' }}>
       <svg
         width={height || 18}
         height={width || 18}
