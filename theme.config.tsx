@@ -109,20 +109,9 @@ const config: DocsThemeConfig = {
   },
   logo() {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { locale } = useRouter();
     return (
       <div className="flex items-center gap-2">
         <Logo width={18} height={18} />
-        <span
-          className="font-extrabold hidden md:inline select-none"
-          title={
-            TITLE_WITH_TRANSLATIONS[
-              (locale as keyof typeof TITLE_WITH_TRANSLATIONS) ?? 'en-US'
-            ]
-          }
-        >
-          livepeer
-        </span>
       </div>
     );
   },
