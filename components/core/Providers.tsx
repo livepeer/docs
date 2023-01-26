@@ -10,23 +10,24 @@ import { AptosClient } from 'aptos';
 
 import { useTheme } from 'nextra-theme-docs';
 import { ReactNode, createContext, useMemo } from 'react';
-import { WagmiConfig, chain, configureChains, createClient } from 'wagmi';
+import { WagmiConfig, configureChains, createClient } from 'wagmi';
+import { polygonMumbai } from 'wagmi/chains';
 
 import { infuraProvider } from 'wagmi/providers/infura';
 
 import { publicProvider } from 'wagmi/providers/public';
 
+import { SyncedTabsContext, SyncedTabsState } from './SyncedTabs';
 import { useLocalStorage } from '../../hooks';
 
 import { provider as livepeerProvider } from '../../lib/provider';
-import { SyncedTabsContext, SyncedTabsState } from './SyncedTabs';
 
 import '@rainbow-me/rainbowkit/styles.css';
 
 export const AptosContext = createContext<AptosClient | null>(null);
 
 const { chains, provider } = configureChains(
-  [chain.polygonMumbai],
+  [polygonMumbai],
   [
     infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY ?? '' }),
     publicProvider(),
