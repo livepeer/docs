@@ -6,9 +6,9 @@ import Script from 'next/script';
 
 import * as React from 'react';
 
-import { Providers } from '../components/core';
-
 import GoogleTagManager from '../components/GoogleTagManager';
+
+import { Providers } from '../components/core';
 
 import '../styles/globals.css';
 
