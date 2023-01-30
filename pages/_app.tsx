@@ -8,6 +8,8 @@ import * as React from 'react';
 
 import { Providers } from '../components/core';
 
+import GoogleTagManager from '../components/GoogleTagManager';
+
 import '../styles/globals.css';
 
 import * as gtag from '../lib/gtag';
@@ -31,6 +33,7 @@ function App({ Component, pageProps }: AppProps<{ dehydratedState: string }>) {
 
   return (
     <Providers dehydratedState={pageProps?.dehydratedState}>
+      <GoogleTagManager />
       {/* Global Site Tag (gtag.js) - Google Analytics */}
       <Script
         strategy="afterInteractive"
