@@ -52,6 +52,115 @@ curl --location --request GET 'https://livepeer.studio/api/asset/$ASSET_ID' \
 }
 ```
 
+# Retrieve an Asset with IPFS CID or Arweave URL
+
+Retrieves the details of an `Asset` that has previously been
+uploaded using IPFS or Arweave. Supply the unique `CID` from IPFS or `URL` from Arweave associated with that asset, and Livepeer will return the corresponding `Asset` information.
+
+For IPFS
+```jsx
+curl --location --request GET 'https://livepeer.studio/api/asset?cid={CID}' \
+--header 'Authorization: Bearer $API_TOKEN'
+```
+
+For Arweave
+```jsx
+curl --location --request GET 'https://livepeer.studio/api/asset?cid=ar://{URL}' \
+--header 'Authorization: Bearer $API_TOKEN'
+```
+### Response Example for IPFS
+
+```jsx
+[
+    {
+        "id": "$ASSET_ID",
+    "hash": [
+        {
+            "hash": "61b42e9371c1d29a9b99a7f62621e584",
+            "algorithm": "md5"
+        },
+        {
+            "hash": "b3b5891d6f0767012706fc8548f397b38876d309ca90689314c94615fb4c6e62",
+            "algorithm": "sha256"
+        }
+    ],
+    "name": "Example name",
+        "size": 52615193,
+        "files": [
+            {
+                "path": "index.m3u8",
+                "type": "catalyst_hls_manifest"
+            },
+            {
+                "path": "video",
+                "type": "source_file"
+            },
+            {
+                "path": "video.json",
+                "type": "metadata"
+            }
+        ],
+        "source": {
+            "type": "directUpload"
+        },
+        "status": {
+            "phase": "ready",
+            "updatedAt": 1644546541218
+        },
+        "userId": "80dc8f6e-69d5-401f-bbd7-bfc09a2a5320",
+        "storage": {
+            "ipfs": {
+                "cid": "bafybeicxlwxn37mkfkmdtut7wny3t6a2woi3ftucf4bfc4jgqbtueyfb2e",
+                "spec": {},
+                "updatedAt": 1644546541218,
+                "nftMetadata": {
+                    "cid": "bafkreibpbcxpw2xpf3yji2xbak5lxcka4skfa66mjqb76losi4uocmujqm",
+                    "url": "ipfs://bafkreibpbcxpw2xpf3yji2xbak5lxcka4skfa66mjqb76losi4uocmujqm",
+                    "gatewayUrl": "https://ipfs.livepeer.studio/ipfs/bafkreibpbcxpw2xpf3yji2xbak5lxcka4skfa66mjqb76losi4uocmujqm"
+                },
+                "url": "bafybeicxlwxn37mkfkmdtut7wny3t6a2woi3ftucf4bfc4jgqbtueyfb2e",
+                "gatewayUrl": "https://ipfs.livepeer.studio/ipfs/bafybeicxlwxn37mkfkmdtut7wny3t6a2woi3ftucf4bfc4jgqbtueyfb2e"
+            },
+            "status": {
+                "phase": "ready",
+                "tasks": {
+                    "last": "092049d1-4ac3-4aee-9ddc-27a39de0b8d6"
+                }
+            }
+        },
+        "createdAt": 1644546528636,
+        "videoSpec": {
+            "format": "mp4",
+            "tracks": [
+                {
+                    "fps": 25,
+                    "type": "video",
+                    "codec": "h264",
+                    "width": 1280,
+                    "height": 720,
+                    "bitrate": 642919,
+                    "duration": 262.32,
+                    "pixelFormat": "yuv420p"
+                },
+                {
+                    "type": "audio",
+                    "codec": "aac",
+                    "bitrate": 128011,
+                    "channels": 2,
+                    "duration": 262.339048,
+                    "sampleRate": 44100
+                }
+            ],
+            "duration": 262.338984
+        },
+        "playbackId": "$PLAYBACK",
+        "objectStoreId": "0q60614c-0aa5-4d42-bf51-40c332a6d19e",
+        "playbackUrl": "https://lp-playback.com/hls/{PLAYBACK_ID}/index.m3u8",
+        "downloadUrl": "https://lp-playback.com/hls/{PLAYBACK_ID/video"
+    }
+]
+```
+
 > **NOTE** Notice that, by default, the asset comes without the audio and video
 > `tracks` specification. You can pass `?details=true` as an additional
 > parameter to the request to get the `videoSpec` with the `tracks` included.
