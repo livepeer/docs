@@ -51,7 +51,7 @@ export const VideoJSPlayer = () => {
     fluid: true,
     sources: [
       {
-        src: 'https://livepeercdn.com/asset/6d7el73r1y12chxr/video',
+        src: 'https://lp-playback.com/hls/f5eese9wwl88k4g8/video',
         type: 'video/mp4',
       },
     ],

@@ -18,7 +18,7 @@ export const ImagePosterPlayer = () => {
   return (
     <DocsDemoPlayer
       title="Agent 327: Operation Barbershop"
-      playbackId="bafybeida3w2w7fch2fy6rfvfttqamlcyxgd3ddbf4u25n7fxzvyvcaegxy"
+      playbackId="f5eese9wwl88k4g8"
       poster={<PosterImage />}
     />
   );

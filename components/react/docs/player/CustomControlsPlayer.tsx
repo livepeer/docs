@@ -22,10 +22,7 @@ const title = 'Agent 327: Operation Barbershop';
 
 export const CustomControlsPlayer = () => {
   return (
-    <DocsDemoPlayer
-      title={title}
-      playbackId="bafybeida3w2w7fch2fy6rfvfttqamlcyxgd3ddbf4u25n7fxzvyvcaegxy"
-    >
+    <DocsDemoPlayer title={title} playbackId="f5eese9wwl88k4g8">
       <ControlsContainer
         poster={<Poster content={<PosterImage />} title={title} />}
         top={<Title content={title} />}

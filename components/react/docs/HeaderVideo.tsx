@@ -16,8 +16,7 @@ const PosterImage = () => {
   );
 };
 
-const playbackId =
-  'bafybeigtqixg4ywcem3p6sitz55wy6xvnr565s6kuwhznpwjices3mmxoe';
+const playbackId = '667f7flfr0od837u';
 
 export function HeaderVideo() {
   return (
