@@ -171,6 +171,64 @@ The API will return a JSON payload which looks like:
 The format of this payload is [defined here](https://github.com/livepeer/studio/blob/919536ffd76df4b6f81d8040e65e934284cbef28/packages/api/src/controllers/playback.ts#L13-L24).
 The `url` field can be used as the playback URL.
 
+### Short form playback URLs
+
+Short form playback URLs allow you to obtain alternative MP4 URLs for your video asset 
+to enable mobile applications to cache short videos for instant playback of subsequent 
+videos. This means that viewers can experience instant time-to-first-frame (TTFF) when 
+watching short videos.
+
+It is important to note that short form playback URLs are only available for 
+video assets that are less than 2 minutes in duration. You can get the short 
+form playback URLs by using the same endpoint format for the HLS playback URL, replacing 
+PLAYBACK_ID with your asset's playbackId:
+
+```txt
+https://livepeer.studio/api/playback/{PLAYBACK_ID}
+```
+
+The API will return a JSON payload which looks like:
+
+```json
+{
+  "type": "vod",
+  "meta": {
+    "source": [
+      {
+          "hrn": "MP4",
+          "type": "html5/video/mp4",
+          "url": "https://asset-cdn.lp-playback.com/hls/{PLAYBACK_ID}/static360p0.mp4",
+          "size": 494778,
+          "width": 204,
+          "height": 360,
+          "bitrate": 449890
+      },
+      {
+          "hrn": "MP4",
+          "type": "html5/video/mp4",
+          "url": "https://asset-cdn.lp-playback.com/hls/{PLAYBACK_ID}/static720p0.mp4",
+          "size": 1869154,
+          "width": 406,
+          "height": 720,
+          "bitrate": 1996936
+      },
+      {
+        "hrn": "HLS (TS)",
+        "type": "html5/application/vnd.apple.mpegurl",
+        "url": "https://livepeercdn.studio/recordings/{RECORDING_ID}/index.m3u8"
+      }
+    ]
+  }
+}
+```
+<Callout type="warning">
+  When you make a request for playback URLs, in the response MP4 URLs are always listed 
+  before HLS URLs. Additionally, each MP4 URL includes additional metadata about the video, 
+  such as its width, height, bitrate, and size. This metadata can be useful for mobile 
+  applications that want to optimize playback quality and size based on the viewer's 
+  device and network conditions.
+</Callout>
+
 ### Use the playback URL in a player
 
 You can use the playback URL with any video player that supports HLS. Here is a
