@@ -117,26 +117,25 @@ export const DemoPlayer = () => {
 ## Using your own player
 
 Using livepeer.js is the recommended way to play back a video or a
-live stream - it handles errors from the API correctly and is a true web3-native media player.
+live stream - it handles MP4 renditions, errors from the API, and is a true web3-native media player.
 However, if you want to use an alternative, you can do so by
 following the instructions below.
 
-<Callout>
-  Please note that to play back live streams inside your application you'll need
-  to use a video player component that supports HLS.
+<Callout type="error">
+  To ensure consistent viewer experience, we strongly recommend using a player
+  (like the Livepeer Player) that handles choosing the correct MP4 rendition and
+  gracefully recovers from routine RTMP reconnects through custom polling logic.
+  In the absence of this capability, reconnects may severely degrade viewer
+  experience and require a hard refresh to resolve, and an incorrect MP4
+  rendition for the screen size may be chosen.
 </Callout>
-
-
-<Callout type="warning">
-  To ensure consistent viewer experience, we strongly recommend using a player (like the Livepeer Player) that gracefully recovers from routine RTMP reconnects through custom polling logic. In the absence of this capability, reconnects may degrade viewer experience and require a hard refresh to resolve.
-</Callout>
-
 
 ### Fetch the playback URL
 
-To playback a live stream in other players, you'll need to fetch the HLS URL.
+To playback a live stream in other players, you'll need to fetch the playback URL(s).
+By default, all content has an HLS endpoint.
 HLS is a protocol that allows you to stream video and audio content over HTTP.
-Most of the video you watch on the web is delivered using HLS. Livepeer also
+Much of the video you watch on the web is delivered using HLS. Livepeer
 uses HLS to deliver video and audio content.
 
 <Callout type="warning">
@@ -168,19 +167,24 @@ The API will return a JSON payload which looks like:
 }
 ```
 
-The format of this payload is [defined here](https://github.com/livepeer/studio/blob/919536ffd76df4b6f81d8040e65e934284cbef28/packages/api/src/controllers/playback.ts#L13-L24).
+<Callout>
+  Please note that to play back live streams inside your application you'll need
+  to use a video player component that supports HLS.
+</Callout>
+
+The format of this payload is [defined here](/reference/api/get-playback).
 The `url` field can be used as the playback URL.
 
-### Short form playback URLs
+#### Short form playback URLs
 
-Short form playback URLs allow you to obtain alternative MP4 URLs for your video asset 
-to enable mobile applications to cache short videos for instant playback of subsequent 
-videos. This means that viewers can experience instant time-to-first-frame (TTFF) when 
+Short form playback URLs allow you to obtain alternative MP4 URLs for your video asset
+to enable mobile applications to cache short videos for instant playback of subsequent
+videos. This means that viewers can experience instant time-to-first-frame (TTFF) when
 watching short videos.
 
-It is important to note that short form playback URLs are only available for 
-video assets that are less than 2 minutes in duration. You can get the short 
-form playback URLs by using the same endpoint format for the HLS playback URL, replacing 
+It is important to note that short form playback URLs are only available for
+video assets that are less than 2 minutes in duration. You can get the short
+form playback URLs by using the same endpoint format for the HLS playback URL, replacing
 PLAYBACK_ID with your asset's playbackId:
 
 ```txt
@@ -195,22 +199,22 @@ The API will return a JSON payload which looks like:
   "meta": {
     "source": [
       {
-          "hrn": "MP4",
-          "type": "html5/video/mp4",
-          "url": "https://asset-cdn.lp-playback.com/hls/{PLAYBACK_ID}/static360p0.mp4",
-          "size": 494778,
-          "width": 204,
-          "height": 360,
-          "bitrate": 449890
+        "hrn": "MP4",
+        "type": "html5/video/mp4",
+        "url": "https://asset-cdn.lp-playback.com/hls/{PLAYBACK_ID}/static360p0.mp4",
+        "size": 494778,
+        "width": 204,
+        "height": 360,
+        "bitrate": 449890
       },
       {
-          "hrn": "MP4",
-          "type": "html5/video/mp4",
-          "url": "https://asset-cdn.lp-playback.com/hls/{PLAYBACK_ID}/static720p0.mp4",
-          "size": 1869154,
-          "width": 406,
-          "height": 720,
-          "bitrate": 1996936
+        "hrn": "MP4",
+        "type": "html5/video/mp4",
+        "url": "https://asset-cdn.lp-playback.com/hls/{PLAYBACK_ID}/static720p0.mp4",
+        "size": 1869154,
+        "width": 406,
+        "height": 720,
+        "bitrate": 1996936
       },
       {
         "hrn": "HLS (TS)",
@@ -221,12 +225,14 @@ The API will return a JSON payload which looks like:
   }
 }
 ```
+
 <Callout type="warning">
-  When you make a request for playback URLs, in the response MP4 URLs are always listed 
-  before HLS URLs. Additionally, each MP4 URL includes additional metadata about the video, 
-  such as its width, height, bitrate, and size. This metadata can be useful for mobile 
-  applications that want to optimize playback quality and size based on the viewer's 
-  device and network conditions.
+  When you make a request for playback URLs, in the response MP4 URLs are always
+  listed before HLS URLs. Additionally, each MP4 URL includes additional
+  metadata about the video, such as its width, height, bitrate, and size. This
+  metadata can be useful for mobile applications that want to optimize playback
+  quality and size based on the viewer's device and network conditions. **The
+  Livepeer.js Player automatically handles this.**
 </Callout>
 
 ### Use the playback URL in a player
@@ -275,9 +281,9 @@ Here is an example of how to use the playback URL in video.js player.
 ## Embeddable Player
 
 <Callout type="warning" emoji="⚠️">
-The embeddable player is currently in beta and some elements may change as we
-mature the product. For a production-grade application consider using
-Livepeer.js instead.
+  The embeddable player is currently in beta and some elements may change as we
+  mature the product. For a production-grade application consider using
+  Livepeer.js instead.
 </Callout>
 
 This is one of the easiest way to playback a video on your website/applications.
@@ -292,7 +298,8 @@ You can replace the `PLAYBACK_ID` with your video's playback id.
   frameborder="0"
   allowfullscreen
   allow="autoplay; encrypted-media; picture-in-picture"
-  sandbox="allow-scripts">
+  sandbox="allow-scripts"
+>
 </iframe>
 ```
 
