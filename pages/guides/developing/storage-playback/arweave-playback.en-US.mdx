@@ -1,0 +1,231 @@
+import { Callout } from 'nextra-theme-docs';
+
+# Playback video from Arweave
+
+In this tutorial, you will learn how to upload videos to Arweave using Bundlr Network and playback the transcoded version of it using livepeer.js.
+
+Arweave is a decentralized storage network that allows anyone to upload and access data in a permanent and tamper-proof manner. Bundlr Network makes uploading files and interacting with Arweave very easy. It provides fast and mutichains support for Arweave. When combined with Livepeer, users can build decentralized video applications, archive videos, create video NFTs, and more.
+
+Here is what we are going to build:
+
+![Livepeer Access Control](/images/arweave-playback.gif)
+
+## Prerequisites
+
+Before you start with this tutorial, make sure you have the following:
+
+- [Node.js](https://nodejs.org/en/) v16 or later
+- [Livepeer Studio](https://livepeer.studio) API Key
+- [MetaMask Wallet](https://metamask.io/)
+- [Next.js](https://metamask.io) project with [Tailwind CSS](https://tailwindcss.com/) installed
+
+## Getting Started
+
+In this tutorial, we will be using Livepeer.js which is provides a set of ready-to-use hooks that make it easy to integrate Livepeer into a project. The first step is to install the `livepeer.js` package and few other dependencies which we will use to integrate Livepeer, Bundlr Network and stream the file respectively
+
+```txt
+npm install @livepeer/react @bundlr-network/client filereader-stream
+```
+
+To use Livepeer.js in your project, create a new directory named client the root directory, and add the following code to `livepeer.js`
+
+```jsx
+import { createReactClient } from '@livepeer/react';
+import { studioProvider } from 'livepeer/providers/studio';
+
+const LivepeerClient = createReactClient({
+  provider: studioProvider({ apiKey: 'YOUR_API_KEY' }),
+});
+
+export default LivepeerClient;
+```
+
+<Callout>
+  Make sure to replace `YOUR_API_KEY` with the key you got from Livepeer Studio.
+</Callout>
+
+Next, replace the code inside of `_app.js` in the page directory with the below code.
+
+```jsx
+import { LivepeerConfig } from '@livepeer/react';
+import '../styles/globals.css';
+// Import the client we created earlier
+import LivepeerClient from '../client/livepeer';
+
+function MyApp({ Component, pageProps }) {
+  return (
+    // Wrap the app with the LivepeerConfig component and pass the client as a prop
+    <LivepeerConfig client={LivepeerClient}>
+      <Component {...pageProps} />
+    </LivepeerConfig>
+  );
+}
+
+export default MyApp;
+```
+
+And that is it, you can now use Livepeer to upload and transcode assets.
+
+## Uploading Videos To Arweave
+
+We will be first using Bundlr Network to upload videos to Arweave and then playback the transcoded version using Livepeer’s Player.
+
+The Livepeer player automatically triggers video transcoding to ensure smooth playback.
+
+This can be useful for ensuring that your videos are of high quality and that they are accessible to a wide range of viewers, regardless of their device or connection speed.
+
+Inside `client` directory, create a new file named `bundlr.js` and add the below code inside of it.
+
+```jsx
+import { providers } from 'ethers';
+import { WebBundlr } from '@bundlr-network/client';
+
+const Bundlr = async () => {
+  // Request permission from the user to access their Ethereum account
+  await window.ethereum.enable();
+  // Create a new Web3 provider using the user's Ethereum account
+  const provider = new providers.Web3Provider(window.ethereum);
+  // Wait for the provider to be ready to use
+  await provider._ready();
+
+  // Create a new instance of the Bundlr and, passing in the provider and the URL of the Bundlr node
+  const bundlr = new WebBundlr(
+    'https://node1.bundlr.network',
+    'matic', // You can use any of the currencies supported by Bundlr
+    provider,
+  );
+  // Wait for the Bundlr instance to be ready to use
+  await bundlr.ready();
+
+  // Return the Bundlr instance
+  return bundlr;
+};
+
+export default Bundlr;
+```
+
+This file creates a new instance of the Bundlr's Web API, which can be used to interact with the Bundlr network, such as uploading files, checking the balance, and funding the account.
+
+Next, inside the `index.js` file in the `pages` directory, create two states, one for the video file and the other for the Arweave ID:
+
+```jsx
+const [video, setVideo] = useState(null);
+
+const [arweaveId, setArweaveId] = useState(null);
+```
+
+Then, add the following code to the `index.js`'s return statement:
+
+```jsx
+<div className="flex flex-col items-center mt-6">
+  <input
+    type="file"
+    accept="video/*"
+    onChange={(e) => setVideo(e.target.files[0])}
+  />
+  <button
+    onClick={uploadVideo}
+    className="bg-gradient-to-r from-[#00A660] to-[#28CE88]  text-white  rounded-md mt-6 px-6 py-2 "
+  >
+    Upload Video
+  </button>
+</div>
+```
+
+This code adds an input field where the user can select a video file, and a button that will call the `uploadVideo` function when clicked. Add the following function to handle the uploading of the video:
+
+```jsx
+const uploadVideo = async () => {
+  const bundlr = await Bundlr();
+  // Uses the fileReaderStream function to create a stream from the video
+  const stream = fileReaderStream(video);
+  // Passing the stream to Bundlr to upload the video
+  const { data } = await bundlr.uploader.chunkedUploader.uploadData(stream, {
+    tags: [{ name: 'Content-Type', value: 'video/mp4' }],
+  });
+  // Save the ID to state we declared earlier
+  setArweaveId(data.id);
+};
+```
+
+Finally, add Livepeer Player to playback the video from the Arweave network.
+
+```jsx
+{
+  arweaveId && (
+    <div className="mt-6 w-1/2">
+      <Player
+        src={arweaveId}
+        controls
+        autoPlay
+        muted
+        autoUrlUpload={{
+          fallback: true,
+        }}
+      />
+    </div>
+  );
+}
+```
+
+Here is what you final code should look like:
+
+```jsx
+import { useState } from 'react';
+import Bundlr from '../client/bundlr';
+import fileReaderStream from 'filereader-stream';
+import { Player } from '@livepeer/react';
+
+export default function Home() {
+  const [video, setVideo] = useState(null);
+  const [arweaveId, setArweaveId] = useState(null);
+
+  const uploadVideo = async () => {
+    const bundlr = await Bundlr();
+    const stream = fileReaderStream(video);
+    const { data } = await bundlr.uploader.chunkedUploader.uploadData(stream, {
+      tags: [{ name: 'Content-Type', value: 'video/mp4' }],
+    });
+    setArweaveId(`ar://${data.id}`);
+  };
+
+  return (
+    <div className="flex flex-col justify-center items-center h-screen font-poppins">
+      <h1 className="text-7xl font-bold text-slate-900 text-transparent bg-clip-text bg-gradient-to-r from-[#00A660] to-[#28CE88]">
+        Livepeer x Arweave x Bundlr
+      </h1>
+      <h3 className="text-xl mt-6 text-slate-800 w-[50%] text-center">
+        Playback transcode video from Arweave using Livepeer
+      </h3>
+      <div className="flex flex-col items-center mt-6">
+        <input
+          type="file"
+          accept="video/*"
+          onChange={(e) => setVideo(e.target.files[0])}
+        />
+        <button
+          onClick={uploadVideo}
+          className="bg-gradient-to-r from-[#00A660] to-[#28CE88]  text-white  rounded-md mt-6 px-6 py-2 "
+        >
+          Upload Video
+        </button>
+      </div>
+      {arweaveId && (
+        <div className="mt-6 w-1/2">
+          <Player
+            src={arweaveId}
+            controls
+            autoPlay
+            muted
+            autoUrlUpload={{
+              fallback: true,
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+Visit [Bundlr](https://bundlr.network) to learn more about its capabilities and the service on Arweave.
