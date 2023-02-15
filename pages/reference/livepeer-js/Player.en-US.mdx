@@ -761,6 +761,178 @@ function PlayerComponent() {
   </SyncedTab>
 </SyncedTabs>
 
+## Hooks
+
+### usePlayerList
+
+<Callout type="warning">
+  `usePlayerList` is currently only available for React Native, since there are
+  List primitives which provide a standard API to hook into. We are working on a
+  React version.
+</Callout>
+
+The `usePlayerList` hook makes it easy to preload and display videos in a
+[`FlatList`](https://reactnative.dev/docs/flatlist)-compatible list, by using
+[`viewabilityConfigCallbackPairs`](https://reactnative.dev/docs/flatlist#viewabilityconfigcallbackpairs) to
+trigger preloading on upcoming videos, and automatically playing/pausing media when it is shown/hidden from the list.
+
+See our [Expo sample app](https://github.com/livepeer/livepeer.js/tree/main/examples/expo) for a real-world example.
+
+#### Usage
+
+```tsx
+const videos = [
+  {
+    title: 'Fountain',
+    playbackId: '6119i9hncfr7gopr',
+  },
+  {
+    title: 'Happy Dog',
+    playbackId: '8cf0gfaqtuajakyf',
+  },
+];
+
+function SomeComponent() {
+  const { listProps } = usePlayerList({
+    data: videos,
+    itemVisibleMinimumViewTime: 100,
+    itemVisiblePercentThreshold: 60,
+    itemPreload: 2,
+  });
+
+  return (
+    <FlatList
+      data={listProps.data}
+      viewabilityConfigCallbackPairs={listProps.viewabilityConfigCallbackPairs}
+      renderItem={({ item, index }) => (
+        <Player
+          {...item.playerProps}
+          playbackId={item.playbackId}
+          title={item.title}
+          autoPlay
+          loop
+        />
+      )}
+    />
+  );
+}
+```
+
+#### Return Value
+
+The return value extends the `data` array which is passed into the hook, to add Player-specific props to it. The `viewabilityConfigCallbackPairs`
+prop is also returned, which must be passed into the `FlatList`-compatible list to maintain the correct preloading/playing states for the Player(s).
+
+```tsx
+{
+  data: (
+    TInputArray & {
+      playerProps: {
+        _isCurrentlyShown: boolean;
+        priority: boolean;
+      };
+    }
+  )[];
+
+  viewabilityConfigCallbackPairs: ViewabilityConfigCallbackPairs;
+}
+```
+
+#### Configuration
+
+##### data
+
+The data used in the list - required. This is extended to add Player-specific props, which are passed into the Player using `item.playerProps`.
+
+```tsx {3,10}
+function SomeComponent() {
+  const { listProps } = usePlayerList({
+    data: videos,
+  });
+
+  return (
+    <FlatList
+      {...listProps}
+      renderItem={({ item }) => (
+        <Player {...item.playerProps} playbackId={item.playbackId} />
+      )}
+    />
+  );
+}
+```
+
+##### itemPreload
+
+The number of items to preload ahead of the currently-viewable Player. For instance, if `itemPreload` is set to 8 and there are 30 items in the Player list,
+when the user is currently viewing the 5th item, the 6th-14th Players will actively preload in the background. Defaults to 3.
+
+```tsx {4}
+function SomeComponent() {
+  const { listProps } = usePlayerList({
+    data: videos,
+    itemPreload: 8,
+  });
+}
+```
+
+##### itemVisibleMinimumViewTime
+
+The minimum amount of time in milliseconds that an item must be viewable before it is considered "shown". This will also be the delay
+between when the item becomes visible and when the autoPlay logic is triggered. Defaults to 100 ms, use `null` to unset.
+See [FlatList's `viewabilityConfig`](https://reactnative.dev/docs/flatlist#viewabilityconfig) for more details.
+
+```tsx {4}
+function SomeComponent() {
+  const { listProps } = usePlayerList({
+    data: videos,
+    itemVisibleMinimumViewTime: 300,
+  });
+}
+```
+
+##### itemVisiblePercentThreshold
+
+The percent of the item that must be visible for the item to count as "viewable", from 0-100. Defaults to 60%, use `null` to unset.
+See [FlatList's `viewabilityConfig`](https://reactnative.dev/docs/flatlist#viewabilityconfig) for more details.
+
+```tsx {4}
+function SomeComponent() {
+  const { listProps } = usePlayerList({
+    data: videos,
+    itemVisiblePercentThreshold: 35,
+  });
+}
+```
+
+##### itemVisibleViewAreaCoveragePercentThreshold
+
+The percent of the viewport that must be covered for a partially occluded item to count as "viewable", 0-100. No default value.
+See [FlatList's `viewabilityConfig`](https://reactnative.dev/docs/flatlist#viewabilityconfig) for more details.
+
+```tsx {4-5}
+function SomeComponent() {
+  const { listProps } = usePlayerList({
+    data: videos,
+    itemVisiblePercentThreshold: null, // the default item percent can be unset, if needed
+    itemVisibleViewAreaCoveragePercentThreshold: 75,
+  });
+}
+```
+
+##### itemVisibleWaitForInteraction
+
+Indicates that the item is not considered viewable until the user scrolls or `recordInteraction` is called after render. Defaults to false.
+See [FlatList's `viewabilityConfig`](https://reactnative.dev/docs/flatlist#viewabilityconfig) for more details.
+
+```tsx {4}
+function SomeComponent() {
+  const { listProps } = usePlayerList({
+    data: videos,
+    itemVisibleWaitForInteraction: true,
+  });
+}
+```
+
 ## SSR
 
 <Callout type="warning">
