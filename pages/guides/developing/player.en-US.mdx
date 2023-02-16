@@ -175,23 +175,25 @@ The API will return a JSON payload which looks like:
 The format of this payload is [defined here](/reference/api/get-playback).
 The `url` field can be used as the playback URL.
 
-#### Short form playback URLs
+### Handling MP4 sources
 
-Short form playback URLs allow you to obtain alternative MP4 URLs for your video asset
-to enable mobile applications to cache short videos for instant playback of subsequent
+The playback info endpoint can return multiple sources in the response, as outlined above.
+These may include short form MP4 playback URLs, which allow you to obtain alternative
+URLs for your video asset to enable applications (and CDNs) to cache short videos for
+instant playback of subsequent
 videos. This means that viewers can experience instant time-to-first-frame (TTFF) when
 watching short videos.
 
 It is important to note that short form playback URLs are only available for
 video assets that are less than 2 minutes in duration. You can get the short
-form playback URLs by using the same endpoint format for the HLS playback URL, replacing
-PLAYBACK_ID with your asset's playbackId:
+form playback URLs by retrieving the playback info, replacing
+`PLAYBACK_ID` with your asset's playbackId:
 
 ```txt
 https://livepeer.studio/api/playback/{PLAYBACK_ID}
 ```
 
-The API will return a JSON payload which looks like:
+If there are MP4 renditions available, the API will return a JSON payload similar to:
 
 ```json
 {
@@ -226,13 +228,19 @@ The API will return a JSON payload which looks like:
 }
 ```
 
-<Callout type="warning">
+There are multiple renditions you can choose from, and it is up to you to decide how you want to prioritize
+each source for your custom player. See the [Player's technical
+details](/reference/livepeer-js/Player#technical-details) for more
+information on how livepeer.js handles this.
+
+<Callout>
   When you make a request for playback URLs, in the response MP4 URLs are always
   listed before HLS URLs. Additionally, each MP4 URL includes additional
   metadata about the video, such as its width, height, bitrate, and size. This
   metadata can be useful for mobile applications that want to optimize playback
   quality and size based on the viewer's device and network conditions. **The
-  Livepeer.js Player automatically handles this.**
+  Livepeer.js Player automatically handles this.** See the [Player
+  docs](/reference/livepeer-js/Player#technical-details) for more information.
 </Callout>
 
 ### Use the playback URL in a player

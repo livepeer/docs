@@ -1037,3 +1037,24 @@ export const handleRequest = async (req, res) => {
   `);
 };
 ```
+
+## Technical Details
+
+The Player is opinionated about the ways it handles playback of media, specifically regarding HLS reconnect and playback URL choices.
+
+### HLS Reconnect
+
+The Player will perform a linear backoff strategy when it encounters any network/response errors. The reconnect will initially wait one second,
+and add one second every retry. This ensures that if there are any intermittent network/API errors, they are resolved as quickly as possible.
+Most open source players do not do this automatically, which results in a poor playback experience for the user.
+
+### MP4 Playback URLs
+
+When videos are uploaded which are shorter than two minutes, the Studio provider will automatically generate MP4 renditions alongside the
+usual HLS playback URL. This allows for rapid playback/caching at the CDN layer to enable your application to load video instantly.
+
+The MP4 renditions will be prioritized over HLS and are chosen with the following algorithm: the device screen width is multiplied by a
+static multiplier (currently set to `x2.5`). This value is then compared to the rendition widths, and the
+renditions are prioritized based on the distance between these values. This results in a choice of a rendition
+which is close to the screen size without visual quality issues. For instance, a device with a 1280 pixel width
+would compute `1280px * 2.5 = 3200px`, and then sort the MP4 renditions by which are closest to this value.
