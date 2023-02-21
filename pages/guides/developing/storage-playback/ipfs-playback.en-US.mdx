@@ -1,0 +1,123 @@
+import { Callout } from 'nextra-theme-docs';
+
+# Playback video from IPFS
+
+IPFS is a decentralized peer-to-peer network that allows anyone to store and share files. Unlike traditional centralized storage systems, IPFS stores data across a network of distributed nodes, making it impossible to tamper with or lose data. 4everland makes it very easy to upload, stone, pin and fetch files from IPFS. When combined with Livepeer, users can build decentralized video applications, archive videos, create video NFTs, and more.
+
+## Prerequisites
+
+Before you get started, make sure to have the following
+
+- [Livepeer Studio](https://livepeer.studio) API Key
+- [Next.js](https://metamask.io) project with [Tailwind CSS](https://tailwindcss.com/) installed
+
+## Step 1: Install Dependencies
+
+The first step is to install the `livepeer.js` package which we will use to integrate Livepeer into Next.js application
+
+```txt
+npm install @livepeer/react
+```
+
+## Step 2: Setup Livepeer Client
+
+Create a new directory named `client`` in the root directory and add the following code to livepeer.js file:
+
+```jsx
+import { createReactClient } from '@livepeer/react';
+import { studioProvider } from 'livepeer/providers/studio';
+
+const LivepeerClient = createReactClient({
+  provider: studioProvider({ apiKey: 'YOUR_API_KEY' }),
+});
+
+export default LivepeerClient;
+```
+
+<Callout>
+  Make sure to replace `YOUR_API_KEY` with the key you got from Livepeer Studio.
+</Callout>
+
+Replace the code inside `_app.js` file in the pages directory with the following code:
+
+```jsx
+import { LivepeerConfig } from '@livepeer/react';
+import '../styles/globals.css';
+// Import the client we created earlier
+import LivepeerClient from '../client/livepeer';
+
+function MyApp({ Component, pageProps }) {
+  return (
+    // Wrap the app with the LivepeerConfig component and pass the client as a prop
+    <LivepeerConfig client={LivepeerClient}>
+      <Component {...pageProps} />
+    </LivepeerConfig>
+  );
+}
+
+export default MyApp;
+```
+
+## Step 3: Create IPFS Bucket
+
+We will be first using 4everland to upload videos to IPFS and then playback the transcoded version using Livepeer’s Player.
+
+The Livepeer player automatically triggers video transcoding to ensure smooth playback.
+
+This can be useful for ensuring that your videos are of high quality and that they are accessible to a wide range of viewers, regardless of their device or connection speed.
+
+Head to the [4everland](https://4everland.org) website and sign up for an account. Once you've created your account, navigate to the "buckets" section in the sidebar and click on "create bucket". Give your bucket a name and select IPFS as the storage option.
+
+You can then use the 4everland [dashboard](https://dashboard.4everland.org) or the [API](https://docs.4everland.org/s3-compatible-api) to upload your videos to IPFS.
+
+## Step 5: Playback videos
+
+Once you have uploaded the video, you can add Livepeer Player to playback the video from the IPFS.
+
+```jsx
+<div className="mt-6 w-1/2">
+  <Player
+    src={'IPFS_CID'}
+    controls
+    autoPlay
+    muted
+    autoUrlUpload={{
+      fallback: true,
+    }}
+  />
+</div>
+```
+
+Here is what you final code should look like:
+
+```jsx
+import { useState } from 'react';
+import { Player } from '@livepeer/react';
+
+export default function Home() {
+
+  return (
+    <div className="flex flex-col justify-center items-center h-screen font-poppins">
+      <h1 className="text-7xl font-bold text-slate-900 text-transparent bg-clip-text bg-gradient-to-r from-[#00A660] to-[#28CE88]">
+        Livepeer x IPFS x 4everland
+      </h1>
+      <h3 className="text-xl mt-6 text-slate-800 w-[50%] text-center">
+        Playback transcode video from IPFS using Livepeer
+      </h3>
+      </div>
+        <div className="mt-6 w-1/2">
+          <Player
+            src={"IPFS_CID"}
+            controls
+            autoPlay
+            muted
+            autoUrlUpload={{
+              fallback: true,
+            }}
+          />
+    </div>
+  );
+}
+```
+
+Visit [4everland](https://4everland.org) to learn more about its capabilities and the service on IPFS.
