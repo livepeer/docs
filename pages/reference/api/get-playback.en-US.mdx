@@ -2,9 +2,20 @@
 title: 'Retrieve Playback Info'
 ---
 
+import { Callout } from 'nextra-theme-docs';
+
 # Retrieve Playback Info
 
 You can retrieve the playback information by calling the `GET` playback endpoint with the `playbackId`.
+
+<Callout type="warning">
+  By providing an IPFS CID or an Arweave transaction ID, you can retrieve the
+  playback information of the relevant asset. However, if the request is not
+  authenticated, the response will only provide the first available source
+  associated with that ID. To access the sources of your own assets, you must
+  authenticate the request by including the Authorization header with the Bearer
+  token.
+</Callout>
 
 ### Request
 
@@ -22,22 +33,22 @@ curl 'https://livepeer.studio/api/playback/{id}'
   "meta": {
     "source": [
       {
-          "hrn": "MP4",
-          "type": "html5/video/mp4",
-          "url": "https://asset-cdn.lp-playback.monster/hls/1bde4o2i6xycudoy/static360p0.mp4",
-          "size": 494778,
-          "width": 204,
-          "height": 360,
-          "bitrate": 449890
+        "hrn": "MP4",
+        "type": "html5/video/mp4",
+        "url": "https://asset-cdn.lp-playback.monster/hls/1bde4o2i6xycudoy/static360p0.mp4",
+        "size": 494778,
+        "width": 204,
+        "height": 360,
+        "bitrate": 449890
       },
       {
-          "hrn": "MP4",
-          "type": "html5/video/mp4",
-          "url": "https://asset-cdn.lp-playback.monster/hls/1bde4o2i6xycudoy/static720p0.mp4",
-          "size": 1869154,
-          "width": 406,
-          "height": 720,
-          "bitrate": 1996936
+        "hrn": "MP4",
+        "type": "html5/video/mp4",
+        "url": "https://asset-cdn.lp-playback.monster/hls/1bde4o2i6xycudoy/static720p0.mp4",
+        "size": 1869154,
+        "width": 406,
+        "height": 720,
+        "bitrate": 1996936
       },
       {
         "hrn": "HLS (TS)",
