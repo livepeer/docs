@@ -52,6 +52,8 @@ function App() {
 
 Now that our providers are set up, we can add a text input for an IPFS CID or an IPFS/Arweave HTTP gateway URL.
 
+Note: For IPFS HTTP gateway URLs, the Studio provider currently only supports “path style” URLs and does not support “subdomain style” URLs. The Studio provider will support both styles of URLs in a future update.
+
 The raw input is passed to the [`Player`](/reference/livepeer-js/Player), which automatically detects if it is a valid CID and attempts
 to fetch the playback info for that CID. If the provider does not have an `Asset` with that CID, the Player will automatically attempt
 to upload the CID from IPFS, and then play the transcoded content back, without any additional code on the frontend. To ensure that there is no delay in playback, we recommend uploading via `useCreateAsset` before displaying it in the player.
