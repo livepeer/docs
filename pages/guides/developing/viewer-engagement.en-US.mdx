@@ -87,6 +87,17 @@ curl --location --request GET https://livepeer.studio/api/data/views/{assetId}/t
 
 </Tabs>
 
+<Callout type="warning">
+  To ensure that you are accessing the correct asset when calling the viewership
+  API for an asset stored on IPFS or Arweave, it is important to use the
+  corresponding assetId for the asset being used in your player. When using the
+  playback API to retrieve the playback URL, an unauthenticated request will
+  provide the first available source associated with the CID or Arweave
+  Transaction ID. If you want to ensure to access the sources of your own
+  assets, you must authenticate the request by including the Authorization
+  header with the Bearer token.
+</Callout>
+
 ## Using a Custom Player
 
 ### Step 1: Register viewership metrics
