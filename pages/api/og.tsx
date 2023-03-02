@@ -5,6 +5,7 @@ export const config = {
   runtime: 'edge',
 };
 
+// eslint-disable-next-line compat/compat
 const font = fetch(
   new URL('../../public/fonts/Poppins-Medium.ttf', import.meta.url),
 ).then((res) => res.arrayBuffer());

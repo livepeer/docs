@@ -1,7 +1,11 @@
 import Image from 'next/image';
+
 import { useRouter } from 'next/router';
+
 import React, { useEffect, useState } from 'react';
+
 import tutorials from 'pages/tutorials/developing/_meta.en-US.json';
+
 import { Tutorial } from 'types/tutorial';
 
 export function getTutorialByRouteName(
@@ -11,7 +15,7 @@ export function getTutorialByRouteName(
   const hashTable: Record<string, Tutorial> = {};
 
   // Create hash table based on route/href name - It is a faster than loop implementation
-  for (let key in json) {
+  for (const key in json) {
     const item = json[key];
     if (item && item.href) {
       hashTable[item.href] = item;

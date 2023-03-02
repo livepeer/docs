@@ -1,5 +1,7 @@
 import Image from 'next/image';
+
 import Link from 'next/link';
+
 import { Tutorial } from 'types/tutorial';
 
 function Card({
