@@ -30,25 +30,32 @@ export default function Header() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [tutorial, setTutorial] = useState<Tutorial | null>(null);
 
-  const ogImage = `http://localhost:3000/api/og?title=${tutorial?.title}&category=${tutorial?.category}`;
+  const ogImage = `/api/og?title=${tutorial?.title}&category=${tutorial?.category}`;
 
   const metadata = {
-    title: tutorial?.longTitle,
-    openGraph: {
-      title: tutorial?.longTitle,
-      type: 'article',
-      url: `https://docs.livepeer.org/${router.asPath}`,
-      images: [
-        {
-          url: ogImage,
-        },
-      ],
+    '@context': 'https://schema.org/',
+    '@type': 'BlogPosting',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://docs.livepeer.org/${router.asPath}`,
     },
-    twitter: {
-      card: 'summary_large_image',
-      title: tutorial?.title,
-      images: [ogImage],
+    headline: `${tutorial?.longTitle}`,
+    description: `${tutorial?.description}`,
+    image: {
+      '@type': 'ImageObject',
+      url: ogImage,
+      width: '1920',
+      height: '1080',
     },
+    author: {
+      '@type': 'Person',
+      name: `${tutorial?.author}`,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Livepeer Docs',
+    },
+    datePublished: `${tutorial?.createdAt}`,
   };
 
   useEffect(() => {

@@ -1,6 +1,7 @@
 export interface Tutorial {
   title: string;
   longTitle: string;
+  description: string;
   level: string;
   category: string;
   author: Author;
