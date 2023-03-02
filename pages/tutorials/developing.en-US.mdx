@@ -1,0 +1,24 @@
+import Card, { Cards } from '@components/core/Tutorial/Card';
+import developingGuides from './developing/_meta.en-US.json';
+
+## Developer Tutorials
+
+Welcome to our curated list of community tutorials.
+
+<Cards
+  num={1}
+  children={Object.keys(developingGuides)
+    .filter((key) => developingGuides[key].category === 'developing')
+    .map((key, i) => (
+      <Card
+        key={i}
+        title={developingGuides[key].longTitle}
+        level={developingGuides[key].level}
+        category={developingGuides[key].category}
+        author={developingGuides[key].author}
+        createdAt={developingGuides[key].createdAt}
+        minutesRead={developingGuides[key].minutesRead}
+        href={developingGuides[key].href}
+      />
+    ))}
+/>
