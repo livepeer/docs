@@ -7,7 +7,7 @@ export const config = {
 
 // eslint-disable-next-line compat/compat
 const font = fetch(
-  new URL('../../public/fonts/Poppins-Medium.ttf', import.meta.url),
+  new URL('../../public/fonts/Inter-Medium.otf', import.meta.url),
 ).then((res) => res.arrayBuffer());
 
 export default async function handler(req: NextRequest) {
@@ -35,12 +35,12 @@ export default async function handler(req: NextRequest) {
         <div
           style={{
             display: 'flex',
-            fontSize: 90,
-            fontFamily: 'Poppins',
+            fontSize: 100,
+            fontFamily: 'Inter',
             letterSpacing: '-0.05em',
             fontStyle: 'normal',
             color: 'white',
-            lineHeight: '90px',
+            lineHeight: '120px',
             whiteSpace: 'pre-wrap',
           }}
         >
@@ -50,7 +50,7 @@ export default async function handler(req: NextRequest) {
           style={{
             display: 'flex',
             fontSize: 30,
-            fontFamily: 'Poppins',
+            fontFamily: 'Inter',
             letterSpacing: '-0.05em',
             fontStyle: 'normal',
             color: '#757575',
@@ -73,7 +73,7 @@ export default async function handler(req: NextRequest) {
       height: 1080,
       fonts: [
         {
-          name: 'Poppins',
+          name: 'Inter',
           data: fontData,
           style: 'normal',
         },
