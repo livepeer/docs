@@ -8,7 +8,7 @@ export function IframePlayer() {
       height={530}
       allowFullScreen
       allow="autoplay; encrypted-media; picture-in-picture"
-      sandbox="allow-same-origin allow-scripts"
+      sandbox="allow-scripts"
     />
   );
 }
