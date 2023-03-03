@@ -7,7 +7,7 @@ export const config = {
 
 // eslint-disable-next-line compat/compat
 const font = fetch(
-  new URL('../../public/fonts/Inter-Medium.otf', import.meta.url),
+  'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fMZs.woff',
 ).then((res) => res.arrayBuffer());
 
 export default async function handler(req: NextRequest) {
