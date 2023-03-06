@@ -75,7 +75,7 @@ export default function Header() {
         <div className=" text-sm nx-text-gray-400 uppercase">
           {tutorial?.category}
         </div>
-        <div className="text-sm bg-gray-200 p-1.5 px-4 ml-4 rounded-full dark:bg-zinc-800 nx-text-gray-400 uppercase">
+        <div className="text-sm bg-gray-200 p-1.5 px-4 ml-4 rounded-full dark:bg-zinc-800 nx-text-gray-400 capitalize">
           {tutorial?.level}
         </div>
       </div>
