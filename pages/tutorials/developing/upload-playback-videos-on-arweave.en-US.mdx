@@ -1,0 +1,294 @@
+import BlogHeader from '@components/core/Tutorial/Header';
+
+<BlogHeader />
+
+Arweave is a decentralized storage network that allows anyone to upload and access data in a permanent and tamper-proof manner. Bundlr Network makes uploading files and interacting with Arweave very easy. It provides fast and mutichains support for Arweave. When combined with Livepeer, users can build decentralized video applications, archive videos, create video NFTs, and more.
+
+In this tutorial, you will learn how to upload videos to Arweave using Bundlr Network and playback the transcoded version of it using livepeer.js.
+
+## Prerequisites
+
+Before you start with this tutorial, make sure you have the following tool installed on your machine:
+
+- [Node.js](https://nodejs.org/en/) v16 or later
+
+## Setting up Next.js App
+
+First, create a directory for the project and then initialize a Next.js app using the following command in your terminal:
+
+```bash
+npx create-next-app .
+```
+
+This will create a new Next.js app in the current directory and install all the necessary dependencies.
+
+Next, let's install the `@livepeer/react` , `@bundlr-network/client` , `filereader-stream` libraries which we will use to integrate Livepeer, Bundlr Network and stream the file respectively:
+
+```bash
+npm install @livepeer/react @bundlr-network/client filereader-stream
+```
+
+### Adding TailwindCSS
+
+Tailwind CSS is a utility-first CSS framework that enables you to rapidly build user interfaces. We will use it to style our app. First, we need to install the `tailwindcss`, `postcss`, and `autoprefixer`dependencies. These dependencies are necessary for TailwindCSS to work properly in a Next.js app.
+
+Run the following command to install them:
+
+```bash
+npm install --dev tailwindcss postcss autoprefixer
+```
+
+Once the dependencies are installed, we need to initiate the Tailwind CSS. This will create the necessary configuration files and allow you to customize the default Tailwind CSS styles. To do that, run the below code in your terminal.
+
+```bash
+npx tailwind init -p
+```
+
+The above command will generate two files named `tailwind.config.js`
+and `postcss.config.js`. These files contain the configuration for Tailwind CSS and PostCSS, respectively. Next, open the `tailwind.config.js` file in code editor of your choice and replace its contents with the following code:
+
+```jsx
+module.exports = {
+  content: ['./pages//*.{js,ts,jsx,tsx}', './components//*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+The above code tells Tailwind CSS which files to process. At last, add the tailwind directives for each of Tailwind’s layers to the `./styles/globals.css` file.
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+You can also check if Tailwind CSS is integrated successfully by updating the code inside of the `pages/index.js` file, with below code.
+
+```jsx
+<div className="flex flex-col justify-center items-center h-screen font-poppins">
+  <h1 className="text-7xl font-bold text-slate-900 text-transparent bg-clip-text bg-gradient-to-r from-[#00A660] to-[#28CE88]">
+    Livepeer x Arweave x Bundlr
+  </h1>
+  <h3 className="text-xl mt-6 text-slate-800 w-[50%] text-center">
+    Playback transcode video from Arweave using Livepeer
+  </h3>
+</div>
+```
+
+Save the file and run `npm run dev` to start the next.js app and you should see a similar page.
+
+{/* ![Untitled](Arweave%20&%20Bundlr%20Network%20c1ac95c52df744bc8d6ce73cb7986e8f/Untitled.png) */}
+
+## Integrating Livepeer
+
+Livepeer is a decentralized video platform that allows users to upload, transcode, and serve video content. The Livepeer.js JavaScript SDK provides a set of ready-to-use hooks that make it easy to integrate Livepeer into a project.
+
+To get started, navigate to [https://livepeer.studio/register](https://livepeer.studio/register) and create a new account on Livepeer Studio. This will give you access to your Livepeer dashboard, where you can manage your account and access your API keys.
+
+Once you have created an account, in the dashboard, click on the Developers on the sidebar.
+
+![Livepeer Studio, API key page](/images/quickstart/create-an-api-key.png)
+
+Then, click on Create API Key, give a name to your key and then copy it as we will need it later.
+
+To use Livepeer.js in your project, create a new directory named `client`in the root directory, and add the following code to `livepeer.js`
+
+```jsx
+import { createReactClient } from '@livepeer/react';
+import { studioProvider } from 'livepeer/providers/studio';
+
+const LivePeerClient = createReactClient({
+  provider: studioProvider({ apiKey: 'YOUR_API_KEY' }),
+});
+
+export default LivePeerClient;
+```
+
+Make sure to replace the `YOUR_API_KEY` with the key which you just copied from the Livepeer dashboard. And also replace the code inside of `_app.js` in the page directory with the below code.
+
+```jsx
+import { LivepeerConfig } from '@livepeer/react';
+import LivepeerClient from '../client/livepeer';
+import '../styles/globals.css';
+
+function MyApp({ Component, pageProps }) {
+  return (
+    <LivepeerConfig client={LivepeerClient}>
+      <Component {...pageProps} />
+    </LivepeerConfig>
+  );
+}
+
+export default MyApp;
+```
+
+And that is it, you can now use Livepeer to upload and transcode assets.
+
+## Uploading Videos To Arweave
+
+We will be first using Bundlr Network to upload videos to Arweave and then playback the transcoded version using Livepeer’s Player.
+
+The Livepeer player automatically triggers video transcoding to ensure smooth playback.
+
+This can be useful for ensuring that your videos are of high quality and that they are accessible to a wide range of viewers, regardless of their device or connection speed.
+
+Inside `client` directory, create a new file named `bundlr.js` and add the below code inside of it.
+
+```jsx
+import { providers } from 'ethers';
+import { WebBundlr } from '@bundlr-network/client';
+
+const Bundlr = async () => {
+  // Request permission from the user to access their Ethereum account
+  await window.ethereum.enable();
+  // Create a new Web3 provider using the user's Ethereum account
+  const provider = new providers.Web3Provider(window.ethereum);
+  // Wait for the provider to be ready to use
+  await provider._ready();
+
+  // Create a new instance of the Bundlr and, passing in the provider and the URL of the Bundlr node
+  const bundlr = new WebBundlr(
+    'https://node1.bundlr.network',
+    'matic', // You can use any of the currencies supported by Bundlr
+    provider,
+  );
+  // Wait for the Bundlr instance to be ready to use
+  await bundlr.ready();
+
+  // Return the Bundlr instance
+  return bundlr;
+};
+
+export default Bundlr;
+```
+
+This file creates a new instance of the Bundlr's Web API, which can be used to interact with the Bundlr network, such as uploading files, checking the balance, and funding the account.
+
+Next, inside the `index.js` file in the `pages` directory, create two states, one for the video file and the other for the Arweave ID:
+
+```jsx
+const [video, setVideo] = useState(null);
+
+const [arweaveId, setArweaveId] = useState(null);
+```
+
+Then, below the paragraph tag, add the following input and button:
+
+```jsx
+<div className="flex flex-col items-center mt-6">
+  <input
+    type="file"
+    accept="video/*"
+    onChange={(e) => setVideo(e.target.files[0])}
+  />
+  <button
+    onClick={uploadVideo}
+    className="bg-gradient-to-r from-[#00A660] to-[#28CE88]  text-white  rounded-md mt-6 px-6 py-2 "
+  >
+    Upload Video
+  </button>
+</div>
+```
+
+This code adds an input field where the user can select a video file, and a button that will call the `uploadVideo` function when clicked.
+
+Add the following function to handle the uploading of the video:
+
+```jsx
+const uploadVideo = async () => {
+  const bundlr = await Bundlr();
+  // Uses the fileReaderStream function to create a stream from the video
+  const stream = fileReaderStream(video);
+  // Passing the stream to Bundlr to upload the video
+  const { data } = await bundlr.uploader.chunkedUploader.uploadData(stream, {
+    tags: [{ name: 'Content-Type', value: 'video/mp4' }],
+  });
+  // Save the ID to state we declared earlier
+  setArweaveId(data.id);
+};
+```
+
+Finally, add Livepeer Player to playback the video from the Arweave network.
+
+```jsx
+{
+  arweaveId && (
+    <div className="mt-6 w-1/2">
+      <Player
+        src={arweaveId}
+        controls
+        autoPlay
+        muted
+        autoUrlUpload={{
+          fallback: true,
+        }}
+      />
+    </div>
+  );
+}
+```
+
+Here is what you final code should look like:
+
+```jsx
+import { useState } from 'react';
+import Bundlr from '../client/bundlr';
+import fileReaderStream from 'filereader-stream';
+import { Player } from '@livepeer/react';
+
+export default function Home() {
+  const [video, setVideo] = useState(null);
+  const [arweaveId, setArweaveId] = useState(null);
+
+  const uploadVideo = async () => {
+    const bundlr = await Bundlr();
+    const stream = fileReaderStream(video);
+    const { data } = await bundlr.uploader.chunkedUploader.uploadData(stream, {
+      tags: [{ name: 'Content-Type', value: 'video/mp4' }],
+    });
+    setArweaveId(`ar://${data.id}`);
+  };
+
+  return (
+    <div className="flex flex-col justify-center items-center h-screen font-poppins">
+      <h1 className="text-7xl font-bold text-slate-900 text-transparent bg-clip-text bg-gradient-to-r from-[#00A660] to-[#28CE88]">
+        Livepeer x Arweave x Bundlr
+      </h1>
+      <h3 className="text-xl mt-6 text-slate-800 w-[50%] text-center">
+        Playback transcode video from Arweave using Livepeer
+      </h3>
+      <div className="flex flex-col items-center mt-6">
+        <input
+          type="file"
+          accept="video/*"
+          onChange={(e) => setVideo(e.target.files[0])}
+        />
+        <button
+          onClick={uploadVideo}
+          className="bg-gradient-to-r from-[#00A660] to-[#28CE88]  text-white  rounded-md mt-6 px-6 py-2 "
+        >
+          Upload Video
+        </button>
+      </div>
+      {arweaveId && (
+        <div className="mt-6 w-1/2">
+          <Player
+            src={arweaveId}
+            controls
+            autoPlay
+            muted
+            autoUrlUpload={{
+              fallback: true,
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+Visit [Bundlr](https://bundlr.network/) to learn more about its capabilities and the service on [Arweave](https://www.arweave.org/).
