@@ -73,10 +73,10 @@ export default function Header() {
       <script type="application/ld+json">{JSON.stringify(metadata)}</script>
       <div className="flex  items-center">
         <div className=" text-sm nx-text-gray-400 uppercase">
-          {tutorial?.level}
-        </div>
-        <div className="text-sm bg-gray-200 p-1.5 px-4 ml-4 rounded-full dark:bg-zinc-800 nx-text-gray-400 capitalize">
           {tutorial?.category}
+        </div>
+        <div className="text-sm bg-gray-200 p-1.5 px-4 ml-4 rounded-full dark:bg-zinc-800 nx-text-gray-400 uppercase">
+          {tutorial?.level}
         </div>
       </div>
       <h3 className="text-4xl mb-6 mt-4 font-bold ">{tutorial?.longTitle}</h3>
