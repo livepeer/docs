@@ -34,6 +34,9 @@ const config = {
     // Disable type checking since eslint handles this
     ignoreBuildErrors: true,
   },
+  images: {
+    domains: ["docs.livepeer.org"]
+  },
   sentry: {
     // Use `hidden-source-map` rather than `source-map` as the Webpack `devtool`
     // for client-side builds. (This will be the default starting in
