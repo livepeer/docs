@@ -26,8 +26,7 @@ export default async function handler(req: NextRequest) {
           flexDirection: 'column',
           alignItems: 'flex-start',
           justifyContent: 'center',
-          backgroundImage:
-            'url(https://res.cloudinary.com/doxkn6teg/image/upload/v1677773730/bg_ixxj23.jpg)',
+          backgroundImage: 'url(https://docs.livepeer.org/og-bg.jpg)',
           paddingLeft: 135,
           paddingRight: 450,
         }}
