@@ -1,0 +1,384 @@
+import BlogHeader from '@components/core/Tutorial/Header';
+
+<BlogHeader />
+
+IPFS is a decentralized peer-to-peer network that allows anyone to store and share files. Unlike traditional centralized storage systems, IPFS stores data across a network of distributed nodes, making it impossible to tamper with or lose data.
+
+In this tutorial, you will learn how to use Livepeer to upload, transcode, and playback videos on IPFS using Livepeer.
+
+## Prerequisites
+
+Before you start with this tutorial, make sure you have the following tools installed on your machine:
+
+- [Node.js](https://nodejs.org/en/) v16 or later
+
+## Setting up Next.js App
+
+First, let's create a directory for your project and initialize a Next.js app using the following command in your terminal:
+
+```bash
+npx create-next-app .
+```
+
+This will create a new Next.js app in the current directory and install all the necessary dependencies.
+
+Next, let's install the `@livepeer/react`, library which we will use to integrate Livepeer:
+
+```bash
+npm install @livepeer/react dotenv
+```
+
+### Adding TailwindCSS
+
+Tailwind CSS is a utility-first CSS framework that enables you to rapidly build user interfaces. We will use it to style our app. First, we need to install the `tailwindcss`, `postcss`, and `autoprefixer`dependencies. These dependencies are necessary for TailwindCSS to work properly in a Next.js app.
+
+Run the following command to install them:
+
+```bash
+npm install --dev tailwindcss postcss autoprefixer
+```
+
+Once the dependencies are installed, we need to initiate the Tailwind CSS. This will create the necessary configuration files and allow you to customize the default Tailwind CSS styles. To do that, run the below code in your terminal.
+
+```bash
+npx tailwind init -p
+```
+
+The above command will generate two files named `tailwind.config.js`
+ and `postcss.config.js`. These files contain the configuration for Tailwind CSS and PostCSS, respectively. Next, open the `tailwind.config.js` file in code editor of your choice and replace its contents with the following code:
+
+```jsx
+module.exports = {
+  content: ['./pages//*.{js,ts,jsx,tsx}', './components//*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+The above code tells Tailwind CSS which files to process. At last, add the tailwind directives for each of Tailwind’s layers to the  `./styles/globals.css` file.
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+You can also check if Tailwind CSS is integrated successfully by updating the code inside of the `pages/index.js` file, with below code.
+
+```jsx
+<div className="flex flex-col justify-center items-center h-screen font-poppins">
+  <h1 className="text-9xl font-bold text-slate-900 text-transparent bg-clip-text bg-gradient-to-r from-[#00A660] to-[#28CE88]">
+    Livepeer x IPFS
+  </h1>
+  <h3 className="text-xl mt-6 text-slate-800 w-[50%] text-center">
+    Upload, stream, and transcode video on the decentralized web with Livepeer
+    and IPFS.
+  </h3>
+</div>
+```
+
+Save the file and run `npm run dev` to start the next.js app and you should see a similar page.
+
+## Integrating Livepeer
+
+Livepeer is a decentralized video platform that allows users to upload, transcode, and serve video content. The Livepeer.js JavaScript SDK provides a set of ready-to-use hooks that make it easy to integrate Livepeer into a project.
+
+To get started, navigate to [https://livepeer.studio/register](https://livepeer.studio/register) and create a new account on Livepeer Studio. This will give you access to your Livepeer dashboard, where you can manage your account and access your API keys.
+
+Once you have created an account, in the dashboard, click on the Developers on the sidebar.
+
+![Livepeer Studio, API key page](/images/quickstart/create-an-api-key.png)
+
+Then, click on Create API Key, give a name to your key and then copy it as we will need it later.
+
+To use Livepeer.js in your project, create a new directory named `client`in the root directory, and add the following code to `index.js`
+
+```jsx
+import { createReactClient } from '@livepeer/react';
+import { studioProvider } from 'livepeer/providers/studio';
+
+const LivepeerClient = createReactClient({
+  provider: studioProvider({ apiKey: 'YOUR_API_KEY' }),
+});
+
+export default LivepeerClient;
+```
+
+Make sure to replace the `YOUR_API_KEY` with the key which you just copied from the Livepeer dashboard. And also replace the code inside of `_app.js` in the page directory with the below code.
+
+```jsx
+import { LivepeerConfig } from '@livepeer/react';
+import LivepeerClient from '../client';
+import '../styles/globals.css';
+
+function MyApp({ Component, pageProps }) {
+  return (
+    <LivepeerConfig client={LivepeerClient}>
+      <Component {...pageProps} />
+    </LivepeerConfig>
+  );
+}
+
+export default MyApp;
+```
+
+And that is it, you can now use Livepeer to upload and transcode assets.
+
+Create a components folder named and inside of it create a new file named `Button.js`. Add the below code to it.
+
+```jsx
+import React from 'react';
+
+export default function Button({ children, onClick }) {
+  return (
+    <button
+      className="bg-slate-900 text-white py-3 px-8 rounded-full mt-4"
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+Next, in the `pages/index.js` file, import the Button component and add it below the `p` tag. This is how your file should look like
+
+```jsx
+import Button from '../components/Button';
+
+export default function Home() {
+  return (
+    <div className="flex flex-col justify-center items-center h-screen font-poppins">
+      <h1 className="text-9xl font-bold text-slate-900 text-transparent bg-clip-text bg-gradient-to-r from-[#00A660] to-[#28CE88]">
+        Livepeer x IPFS
+      </h1>
+      <h3 className="text-xl mt-6 text-slate-800 w-[50%] text-center">
+        Upload, stream, and transcode video on the decentralized web with
+        Livepeer and IPFS.
+      </h3>
+      <Button onClick={asset ? uploadAsset : ChooseAsset}>
+        {asset ? 'Upload the asset' : 'Choose an asset'}
+      </Button>
+    </div>
+  );
+}
+```
+
+Add the a file input with class name hidden below the Button component.
+
+```jsx
+<input type="file" ref={fileInput} className="hidden" onChange={onChange} />
+```
+
+Next, create a useState named asset and also a reference for the file input.
+
+```jsx
+// State for the asset
+const [asset, setAsset] = useState(null);
+
+// Ref for the file input
+const fileInput = useRef(null);
+```
+
+I have already commented on each line of the code so you can understand what is going on.
+
+```jsx
+const ChooseAsset = async () => {
+  // When user clicks the button, open the file input dialog
+  ref.current?.click();
+};
+
+const onChange = async (e) => {
+  // Get the file
+  const file = e.target.files?.[0];
+  // If no file, return
+  if (!file) return;
+  // If there is a file, set the asset state to the file
+  setAsset(file);
+};
+
+const uploadAsset = async () => {};
+```
+
+Save the file and now you should be able to select a file from your computer.
+
+Next, import the `useCreateAsset` from the `@livepeer/react` and add the hook to the index.js file.
+
+```jsx
+const {
+    mutate: createAsset,
+    data: assets,
+    progress,
+    error,
+  } = useCreateAsset(
+    asset
+      ? {
+          sources: [{ name: asset.name, file: asset }] as const,
+        }
+      : null
+  );
+```
+
+Update the `uploadAsset` function and save the files. You can now choose and upload videos to Livepeer.
+
+```jsx
+const uploadAsset = async () => {
+  await createAsset?.();
+};
+```
+
+You can also add the below code to check the progress of the asset upload/transcode.
+
+```jsx
+const progressFormatted = useMemo(
+  () =>
+    progress?.[0].phase === 'failed'
+      ? 'Failed to process video.'
+      : progress?.[0].phase === 'waiting'
+      ? 'Waiting'
+      : progress?.[0].phase === 'uploading'
+      ? `Uploading: ${Math.round(progress?.[0]?.progress * 100)}%`
+      : progress?.[0].phase === 'processing'
+      ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
+      : null,
+  [progress],
+);
+```
+
+Now, let’s also print the asset information once it is uploaded successfuly. To do that simply add the below code below the input tag.
+
+```jsx
+{
+  assets?.map((asset) => (
+    <div key={asset.id}>
+      <div>
+        <div>Asset Name: {asset?.name}</div>
+        <div>Playback URL: {asset?.playbackUrl}</div>
+        <div>IPFS CID: {asset?.storage?.ipfs?.cid ?? 'None'}</div>
+      </div>
+    </div>
+  ));
+}
+```
+
+Finally this is how your code should look like:
+
+```jsx
+import { useCreateAsset } from '@livepeer/react';
+import { useMemo, useRef, useState } from 'react';
+import Button from '../components/Button';
+
+export default function Home() {
+  // State for the asset
+  const [asset, setAsset] = useState(null);
+
+  // Ref for the file input
+  const fileInput = useRef(null);
+  const {
+    mutate: createAsset,
+    data: assets,
+    progress,
+    error,
+  } = useCreateAsset(
+    asset
+      ? {
+          sources: [{ name: asset.name, file: asset }],
+        }
+      : null,
+  );
+
+  const ChooseAsset = async () => {
+    // When user clicks the button, open the file input dialog
+    fileInput.current?.click();
+  };
+
+  const onChange = async (e) => {
+    // Get the file
+    const file = e.target.files?.[0];
+    // If no file, return
+    if (!file) return;
+    // If there is a file, set the asset state to the file
+    setAsset(file);
+  };
+
+  const uploadAsset = async () => {
+    await createAsset?.();
+  };
+
+  const progressFormatted = useMemo(
+    () =>
+      progress?.[0].phase === 'failed'
+        ? 'Failed to process video.'
+        : progress?.[0].phase === 'waiting'
+        ? 'Waiting'
+        : progress?.[0].phase === 'uploading'
+        ? `Uploading: ${Math.round(progress?.[0]?.progress * 100)}%`
+        : progress?.[0].phase === 'processing'
+        ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
+        : null,
+    [progress],
+  );
+
+  return (
+    <div className="flex flex-col justify-center items-center h-screen font-poppins">
+      <h1 className="text-9xl font-bold text-slate-900 text-transparent bg-clip-text bg-gradient-to-r from-[#00A660] to-[#28CE88]">
+        Livepeer x IPFS
+      </h1>
+      <h3 className="text-xl mt-6 text-slate-800 w-[50%] text-center">
+        Upload, stream, and transcode video on the decentralized web with
+        Livepeer and IPFS.
+      </h3>
+      <Button onClick={asset ? uploadAsset : ChooseAsset}>
+        {asset ? 'Upload the asset' : 'Choose an asset'}
+      </Button>
+      <input
+        type="file"
+        ref={fileInput}
+        className="hidden"
+        onChange={onChange}
+      />
+      <p>{progressFormatted}</p>
+      {assets?.map((asset) => (
+        <div key={asset.id}>
+          <div>
+            <div>Asset Name: {asset?.name}</div>
+            <div>Playback URL: {asset?.playbackUrl}</div>
+            <div>IPFS CID: {asset?.storage?.ipfs?.cid ?? 'None'}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+Go a head choose and upload a video and then navigate to [https://livepeer.studio/dashboard/assets](https://livepeer.studio/dashboard/assets) you should be able to see the video which you just uploaded.
+
+## Uploading Videos To IPFS
+
+By default, the assets which you upload would be saved on Livepeer’ storage. If you want to upload the videos to IPFS, you can use `useUpdateAsset` hook from livepeer.js or Livepeer Studio’s REST API. In this tutorial we would be using the livepeer.js hook.
+
+Import the `useUpdateAsset` hook from the livepeer.js and add it after the useCreateAsset
+
+```jsx
+const { mutate: updateAsset, status } = useUpdateAsset({
+  // Here we are providing the assetId of the video
+  assetId: assets?.[0].id,
+  // And choose IPFS : true to make sure the video is uploaded to IPFS
+  storage: { ipfs: true },
+});
+```
+
+And also include a Button to call the updateAsset hook in the map function:
+
+```jsx
+<Button onClick={() => updateAsset?.()}>Upload to IPFS</Button>
+```
+
+If you have saved your videos on other IPFS services like web3.storage, you can easily playback them using Livepeer's decentralized storage player. This player transcodes your videos to ensure that they playback smoothly and without any issues.
+
+This can be useful for ensuring that your videos are of high quality and that they are accessible to a wide range of viewers, regardless of their device or connection speed.
+
+You can find out more about this player and how it works [here](https://docs.livepeer.org/guides/developing/dstorage-playback).

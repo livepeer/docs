@@ -30,7 +30,7 @@ export default function Header() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [tutorial, setTutorial] = useState<Tutorial | null>(null);
 
-  const ogImage = `/api/og?title=${tutorial?.title}&category=${tutorial?.category}`;
+  const ogImage = `https://docs.livepeer.org/api/og?title=${tutorial?.title}&category=${tutorial?.category}`;
 
   const metadata = {
     '@context': 'https://schema.org/',
@@ -99,11 +99,12 @@ export default function Header() {
           {tutorial?.minutesRead} minutes read
         </div>
       </div>
-      <div className="relative lg:w-[114%] lg:-ml-14 aspect-[16/9] mb-16 mt-6">
-        <img
+      <div className="relative lg:w-[114%] lg:-ml-14 aspect-[16/9] mb-16 mt-12">
+        <Image
           src={ogImage}
           alt={`An image with a black background and a gradient of green and blue shades, along with Livepeer logo and text "${tutorial?.title}" written in white`}
-          className="mt-6"
+          fill
+          quality={100}
         />
       </div>
     </section>
