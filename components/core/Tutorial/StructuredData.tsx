@@ -1,6 +1,7 @@
 import Head from 'next/head';
+import { JsonLd } from 'types/tutorial';
 
-export default function StructuredData({ data }: any) {
+export default function StructuredData({ data }: { data: JsonLd }) {
   return (
     <Head>
       <script

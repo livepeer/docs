@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 
 import tutorials from 'pages/tutorials/developing/_meta.en-US.json';
 
-import { Tutorial } from 'types/tutorial';
+import { JsonLd, Tutorial } from 'types/tutorial';
 
 import StructuredData from './StructuredData';
 
@@ -34,7 +34,7 @@ export default function Header() {
 
   const ogImage = `https://docs.livepeer.org/api/og?title=${tutorial?.title}&category=${tutorial?.category}`;
 
-  const structuredData = {
+  const structuredData: JsonLd = {
     '@context': 'https://schema.org/',
     '@type': 'BlogPosting',
     mainEntityOfPage: {
@@ -49,6 +49,7 @@ export default function Header() {
       width: '1920',
       height: '1080',
     },
+    datePublished: `${tutorial?.createdAt}`,
     author: {
       '@type': 'Person',
       name: `${tutorial?.author}`,
@@ -57,7 +58,6 @@ export default function Header() {
       '@type': 'Organization',
       name: 'Livepeer Docs',
     },
-    datePublished: `${tutorial?.createdAt}`,
   };
 
   useEffect(() => {
