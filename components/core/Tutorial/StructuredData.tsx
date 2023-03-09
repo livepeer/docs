@@ -1,4 +1,5 @@
 import Head from 'next/head';
+
 import { JsonLd } from 'types/tutorial';
 
 export default function StructuredData({ data }: { data: JsonLd }) {
