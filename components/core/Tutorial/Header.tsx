@@ -7,6 +7,8 @@ import React, { useEffect, useState } from 'react';
 import tutorials from 'pages/tutorials/developing/_meta.en-US.json';
 
 import { Tutorial } from 'types/tutorial';
+import Head from 'next/head';
+import StructuredData from './StructuredData';
 
 export function getTutorialByRouteName(
   json: Record<string, Tutorial>,
@@ -32,7 +34,7 @@ export default function Header() {
 
   const ogImage = `https://docs.livepeer.org/api/og?title=${tutorial?.title}&category=${tutorial?.category}`;
 
-  const metadata = {
+  const structuredData = {
     '@context': 'https://schema.org/',
     '@type': 'BlogPosting',
     mainEntityOfPage: {
@@ -69,44 +71,46 @@ export default function Header() {
   }
 
   return (
-    <section className="mt-5">
-      <script type="application/ld+json">{JSON.stringify(metadata)}</script>
-      <div className="flex  items-center">
-        <div className=" text-sm nx-text-gray-400 uppercase">
-          {tutorial?.category}
+    <>
+      <StructuredData data={structuredData} />
+      <section className="mt-5">
+        <div className="flex  items-center">
+          <div className=" text-sm nx-text-gray-400 uppercase">
+            {tutorial?.category}
+          </div>
+          <div className="text-sm bg-gray-200 p-1.5 px-4 ml-4 rounded-full dark:bg-zinc-800 nx-text-gray-400 capitalize">
+            {tutorial?.level}
+          </div>
         </div>
-        <div className="text-sm bg-gray-200 p-1.5 px-4 ml-4 rounded-full dark:bg-zinc-800 nx-text-gray-400 capitalize">
-          {tutorial?.level}
+        <h3 className="text-4xl mb-6 mt-4 font-bold ">{tutorial?.longTitle}</h3>
+        <div className="flex items-center">
+          <div className="h-7 w-7 relative">
+            <Image
+              src={tutorial?.author?.image || ''}
+              alt={`Picture of ${tutorial?.author?.name}`}
+              fill
+              className="rounded-full"
+            />
+          </div>
+          <div className="text-sm font-semibold ml-2">
+            {tutorial?.author?.name}
+          </div>
+          <div className="text-sm nx-text-gray-400 ml-4">
+            {tutorial?.createdAt}
+          </div>
+          <div className="text-sm nx-text-gray-400 ml-4">
+            {tutorial?.minutesRead} minutes read
+          </div>
         </div>
-      </div>
-      <h3 className="text-4xl mb-6 mt-4 font-bold ">{tutorial?.longTitle}</h3>
-      <div className="flex items-center">
-        <div className="h-7 w-7 relative">
+        <div className="relative lg:w-[114%] lg:-ml-14 aspect-[16/9] mb-16 mt-12">
           <Image
-            src={tutorial?.author?.image || ''}
-            alt={`Picture of ${tutorial?.author?.name}`}
+            src={ogImage}
+            alt={`An image with a black background and a gradient of green and blue shades, along with Livepeer logo and text "${tutorial?.title}" written in white`}
             fill
-            className="rounded-full"
+            quality={100}
           />
         </div>
-        <div className="text-sm font-semibold ml-2">
-          {tutorial?.author?.name}
-        </div>
-        <div className="text-sm nx-text-gray-400 ml-4">
-          {tutorial?.createdAt}
-        </div>
-        <div className="text-sm nx-text-gray-400 ml-4">
-          {tutorial?.minutesRead} minutes read
-        </div>
-      </div>
-      <div className="relative lg:w-[114%] lg:-ml-14 aspect-[16/9] mb-16 mt-12">
-        <Image
-          src={ogImage}
-          alt={`An image with a black background and a gradient of green and blue shades, along with Livepeer logo and text "${tutorial?.title}" written in white`}
-          fill
-          quality={100}
-        />
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
