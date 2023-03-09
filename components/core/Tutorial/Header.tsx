@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import tutorials from 'pages/tutorials/developing/_meta.en-US.json';
 
 import { Tutorial } from 'types/tutorial';
-import Head from 'next/head';
+
 import StructuredData from './StructuredData';
 
 export function getTutorialByRouteName(
