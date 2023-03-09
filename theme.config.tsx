@@ -122,14 +122,17 @@ const config: DocsThemeConfig = {
   },
   head() {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const config = useConfig();
+    const { frontMatter } = useConfig();
+
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { theme } = useTheme();
-    const title = config?.frontMatter?.title || 'Build with Livepeer';
+    const title = frontMatter?.title || 'Build with Livepeer';
     const description =
-      config?.frontMatter?.description ||
+      frontMatter?.description ||
       'Explore guides and a variety of resources to help you get started adding live and on demand video experiences to your application using the open and decentralized Livepeer Protocol.';
-    const image = config?.frontMatter?.image || '/og.jpg';
+    const image = frontMatter?.type
+      ? `https://docs.livepeer.org/api/og?title=${frontMatter?.ogImageText}&category=Developing`
+      : frontMatter?.image || '/og.jpg';
     const folder = theme === 'light' ? '/light' : '/dark';
 
     const composedTitle = `${title} – Livepeer Documentation`;
