@@ -58,6 +58,11 @@ const config = {
         destination: '/guides/orchestrating',
         permanent: false,
       },
+      {
+        source: '/video-miners/guides/metrics-monitoring',
+        destination: '/guides/orchestrating/monitor-metrics',
+        permanent: false,
+      },
       // temporary until protocol docs are properly imported
       {
         source: '/protocol',
