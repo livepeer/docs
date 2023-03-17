@@ -1,0 +1,1058 @@
+---
+title: 'How to build a decentralized video application with FVM and Livepeer'
+description: 'Learn how to Build a decentralized video application with FVM and Livepeer'
+type: 'tutorial'
+category: 'developing'
+ogImageText: 'Build a decentralized video application with FVM and Livepeer'
+---
+
+import BlogHeader from '@components/core/Tutorial/Header';
+
+<BlogHeader />
+
+The Filecoin Virtual Machine (FVM) is a runtime environment designed for executing smart contracts on the Filecoin network. It enables developers to write and deploy custom code on Filecoin blockchain unleashing the ability to write software that automates the storage, retrieval, and ultimately the transformation of data in a Web3-native way. This allows for decentralized applications to provide permanent storage guarantees for user content through smart contracts that store video data securely on Filecoin. FVM allows developers to write smart contracts on the Filecoin blockchain to automate storage, retrieval, and transformation of data.
+
+For end-users, Web3 apps provide greater security, privacy, and control over their data. By leveraging the power of blockchain technology, users can be sure that their data is stored in a tamper-proof and decentralized manner, which means that no single entity has complete control over their data. This provides greater protection against data breaches, hacks, and other security threats.
+
+When combined with Livepeer, developers can build decentralized video applications, archive videos, create video NFTs, and more. In this tutorial, you will learn how to build a decentralized video application with FVM and Livepeer.
+
+## Prerequisites
+
+Before you start with this tutorial, make sure you have the following tool installed on your machine:
+
+- [Node.js](https://nodejs.org/en/) v16 or later
+- [Metamask](https://metamask.io/download/) extension
+
+In addition to the above tools, this tutorial assumes that you have a basic understanding of Solidity and Next.js
+
+## Setting up Next.js App
+
+First, create a directory for the project and then initialize a Next.js app using the following command in your terminal:
+
+```
+npx create-next-app .
+```
+
+This will create a new Next.js app in the current directory and install all the necessary dependencies. Once the project is created successfully, run the following command to install a few other dependencies.
+
+```jsx
+npm install @livepee/react lighthouse-web3/sdk react-icons ethers moment
+```
+
+### Adding TailwindCSS
+
+Tailwind CSS is a utility-first CSS framework that enables you to rapidly build user interfaces. We will use it to style our app. First, we need to install the `tailwindcss`, `postcss`, and `autoprefixer`dependencies. These dependencies are necessary for TailwindCSS to work properly in a Next.js app.
+
+Run the following command to install them:
+
+```
+npm install --dev tailwindcss postcss autoprefixer
+```
+
+Once the dependencies are installed, we need to initiate the Tailwind CSS. This will create the necessary configuration files and allow you to customize the default Tailwind CSS styles. To do that, run the below code in your terminal.
+
+```
+npx tailwind init -p
+```
+
+The above command will generate two files named `tailwind.config.js` and `postcss.config.js`. These files contain the configuration for Tailwind CSS and PostCSS, respectively. Next, open the `tailwind.config.js` file in code editor of your choice and replace its contents with the following code:
+
+```
+module.exports = {
+  content: [
+    "./pages//*.{js,ts,jsx,tsx}",
+    "./components//*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
+
+The above code tells Tailwind CSS which files to process. At last, add the tailwind directives for each of Tailwind’s layers to the `./styles/globals.css` file.
+
+```
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+## The smart contract
+
+Now that the project setup is completed, we can start writing smart contracts for our application. In this article, I will be using Solidity.
+
+> A smart contract is a decentralized program that responds to events by executing business logic.
+
+To quickly create and deploy a contract, you can use Remix - a browser-based IDE developed by the Ethereum Foundation. Here's how you can get started:
+
+- Open your web browser and go to [remix.ethereum.org](https://remix.ethereum.org/).
+- Create a new workspace by selecting Blank.
+- Copy and paste the below contract code into the editor.
+
+```jsx
+//SPDX-License-Identifier: Unlicense
+pragma solidity ^0.8.0;
+
+contract YouTube {
+    // Declaring the videoCount 0 by default
+    uint256 public videoCount = 0;
+    // Name of your contract
+    string public name = "YouTube";
+    // Creating a mapping of videoCount to Video
+    mapping(uint256 => Video) public videos;
+
+    //  Create a struct called 'Video' with the following properties:
+    struct Video {
+        uint256 id;
+        string hash;
+        string title;
+        string description;
+        string location;
+        string category;
+        string thumbnailHash;
+        string date;
+        address author;
+    }
+
+    // Create a 'VideoUploaded' event that emits the properties of the video
+    event VideoUploaded(
+        uint256 id,
+        string hash,
+        string title,
+        string description,
+        string location,
+        string category,
+        string thumbnailHash,
+        string date,
+        address author
+    );
+
+    constructor() {}
+
+    // Function to upload a video
+    function uploadVideo(
+        string memory _videoHash,
+        string memory _title,
+        string memory _description,
+        string memory _location,
+        string memory _category,
+        string memory _thumbnailHash,
+        string memory _date
+    ) public {
+        // Validating the video hash, title and author's address
+        require(bytes(_videoHash).length > 0);
+        require(bytes(_title).length > 0);
+        require(msg.sender != address(0));
+
+        // Incrementing the video count
+        videoCount++;
+        // Adding the video to the contract
+        videos[videoCount] = Video(
+            videoCount,
+            _videoHash,
+            _title,
+            _description,
+            _location,
+            _category,
+            _thumbnailHash,
+            _date,
+            msg.sender
+        );
+        // Triggering the event
+        emit VideoUploaded(
+            videoCount,
+            _videoHash,
+            _title,
+            _description,
+            _location,
+            _category,
+            _thumbnailHash,
+            _date,
+            msg.sender
+        );
+    }
+}
+```
+
+- Switch to the Deploy tab.
+- [Add Hyperspace testnet](https://docs.filecoin.io/developers/smart-contracts/how-tos/add-to-metamask/) to your Metamask account and choose your network from the Environment tab.
+- If everything goes well, you should see a success message at the bottom of the IDE window along with your contract address.
+- To download the artifacts folder from Remix, click on the backup folder and look for the folder inside the `.workspace` directory.
+
+## The Frontend
+
+Now that we have completed smart contracts, it is time to work on the front end of the application. Let’s start with the Authentication of the app.
+
+### Authentication
+
+The first step is to set up authentication in our app that allows users to connect their wallets. Create a new folder named `landing` inside of the pages folder and create a new file inside of it named index.js. This file will have the code for the landing page in our application, which will also allow users to connect their wallets.
+
+Erase everything inside of `index.js` in the page directory and inside import the `Landing` file to the file. Here is what your index.js file should look like.
+
+```jsx
+import React from 'react';
+import Landing from './landing';
+
+export default function index() {
+  return <Landing />;
+}
+```
+
+Now, on the landing page, we will create a simple hero component with connect wallet button that will allow users to connect their wallets and access our application.
+
+Add the below code to the landing page. I have already added comments so you can understand them properly.
+
+```jsx
+import React, { useState } from 'react';
+
+function Landing() {
+  // Creating a function to connect user's wallet
+  const connectWallet = async () => {
+    try {
+      const { ethereum } = window;
+
+      // Checking if user have Metamask installed
+      if (!ethereum) {
+        // If user doesn't have Metamask installed, throw an error
+        alert('Please install MetaMask');
+        return;
+      }
+
+      // If user has Metamask installed, connect to the user's wallet
+      const accounts = await ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+
+      // At last save the user's wallet address in browser's local storage
+      localStorage.setItem('walletAddress', accounts[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <>
+      {/* Creating a hero component with black background and centering everything in the screen */}
+      <section className="relative bg-black flex flex-col h-screen justify-center items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="pt-32 pb-12 md:pt-40 md:pb-20">
+            <div className="text-center pb-12 md:pb-16">
+              <h1
+                className="text-5xl text-white md:text-6xl font-extrabold leading-tighter tracking-tighter mb-4"
+                data-aos="zoom-y-out"
+              >
+                It is YouTube, but{' '}
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
+                  Decentralized
+                </span>
+              </h1>
+              <div className="max-w-3xl mx-auto">
+                <p
+                  className="text-xl text-gray-400 mb-8"
+                  data-aos="zoom-y-out"
+                  data-aos-delay="150"
+                >
+                  A YouTube Clone built on top of FVM, allow users to create,
+                  share and watch videos, without worrying about their privacy.
+                </p>
+                <button
+                  className="items-center  bg-white rounded-full font-medium  p-4 shadow-lg"
+                  onClick={() => {
+                    // Calling the connectWallet function when user clicks on the button
+                    connectWallet();
+                  }}
+                >
+                  <span>Connect wallet</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+export default Landing;
+```
+
+If everything goes fine you should see a similar screen. You should also be able to connect your MetaMask wallet.
+
+![https://cdn.hashnode.com/res/hashnode/image/upload/v1661941716345/AJGoGQEew.png?auto=compress,format&format=webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1661941716345/AJGoGQEew.png?auto=compress,format&format=webp)
+
+### Uploading videos
+
+Now that users are able to connect their wallets, it is time to add upload video functionality to our app.
+
+Create a new folder in the pages directory named `upload` and add a file named `index.js`. Inside the file add the below code.
+
+```jsx
+import React, { useState, useRef } from 'react';
+import { BiCloud, BiMusic, BiPlus } from 'react-icons/bi';
+
+export default function Upload() {
+  // Creating state for the input field
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
+  const [location, setLocation] = useState('');
+  const [thumbnail, setThumbnail] = useState('');
+  const [video, setVideo] = useState('');
+
+  //  Creating a ref for thumbnail and video
+  const thumbnailRef = useRef();
+  const videoRef = useRef();
+
+  return (
+    <div className="w-full h-screen bg-[#1a1c1f] flex flex-row">
+      <div className="flex-1 flex flex-col">
+        <div className="mt-5 mr-10 flex  justify-end">
+          <div className="flex items-center">
+            <button className="bg-transparent  text-[#9CA3AF] py-2 px-6 border rounded-lg  border-gray-600  mr-6">
+              Discard
+            </button>
+            <button
+              onClick={() => {
+                handleSubmit();
+              }}
+              className="bg-blue-500 hover:bg-blue-700 text-white  py-2  rounded-lg flex px-4 justify-between flex-row items-center"
+            >
+              <BiCloud />
+              <p className="ml-2">Upload</p>
+            </button>
+          </div>
+        </div>
+        <div className="flex flex-col m-10     mt-5  lg:flex-row">
+          <div className="flex lg:w-3/4 flex-col ">
+            <label className="text-[#9CA3AF]  text-sm">Title</label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Rick Astley - Never Gonna Give You Up (Official Music Video)"
+              className="w-[90%] text-white placeholder:text-gray-600  rounded-md mt-2 h-12 p-2 border  bg-[#1a1c1f] border-[#444752] focus:outline-none"
+            />
+            <label className="text-[#9CA3AF] mt-10">Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Never Gonna Give You Up was a global smash on its release in July 1987, topping the charts in 25 countries including Rick’s native UK and the US Billboard Hot 100.  It also won the Brit Award for Best single in 1988. Stock Aitken and Waterman wrote and produced the track which was the lead-off single and lead track from Rick’s debut LP “Whenever You Need Somebody."
+              className="w-[90%] text-white h-32 placeholder:text-gray-600  rounded-md mt-2 p-2 border  bg-[#1a1c1f] border-[#444752] focus:outline-none"
+            />
+
+            <div className="flex flex-row mt-10 w-[90%]  justify-between">
+              <div className="flex flex-col w-2/5    ">
+                <label className="text-[#9CA3AF]  text-sm">Location</label>
+                <input
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  type="text"
+                  placeholder="Bali - Indonesia"
+                  className="w-[90%] text-white placeholder:text-gray-600  rounded-md mt-2 h-12 p-2 border  bg-[#1a1c1f] border-[#444752] focus:outline-none"
+                />
+              </div>
+              <div className="flex flex-col w-2/5    ">
+                <label className="text-[#9CA3AF]  text-sm">Category</label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-[90%] text-white placeholder:text-gray-600  rounded-md mt-2 h-12 p-2 border  bg-[#1a1c1f] border-[#444752] focus:outline-none"
+                >
+                  <option>Music</option>
+                  <option>Sports</option>
+                  <option>Gaming</option>
+                  <option>News</option>
+                  <option>Entertainment</option>
+                  <option>Education</option>
+                  <option>Science & Technology</option>
+                  <option>Travel</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+            <label className="text-[#9CA3AF]  mt-10 text-sm">Thumbnail</label>
+
+            <div
+              onClick={() => {
+                thumbnailRef.current.click();
+              }}
+              className="border-2 w-64 border-gray-600  border-dashed rounded-md mt-2 p-2  h-36 items-center justify-center flex"
+            >
+              {thumbnail ? (
+                <img
+                  onClick={() => {
+                    thumbnailRef.current.click();
+                  }}
+                  src={URL.createObjectURL(thumbnail)}
+                  alt="thumbnail"
+                  className="h-full rounded-md"
+                />
+              ) : (
+                <BiPlus size={40} color="gray" />
+              )}
+            </div>
+
+            <input
+              type="file"
+              className="hidden"
+              ref={thumbnailRef}
+              onChange={(e) => {
+                setThumbnail(e.target.files[0]);
+              }}
+            />
+          </div>
+
+          <div
+            onClick={() => {
+              videoRef.current.click();
+            }}
+            className={
+              video
+                ? ' w-96   rounded-md  h-64 items-center justify-center flex'
+                : 'border-2 border-gray-600  w-96 border-dashed rounded-md mt-8   h-64 items-center justify-center flex'
+            }
+          >
+            {video ? (
+              <video
+                controls
+                src={URL.createObjectURL(video)}
+                className="h-full rounded-md"
+              />
+            ) : (
+              <p className="text-[#9CA3AF]">Upload Video</p>
+            )}
+          </div>
+        </div>
+        <input
+          type="file"
+          className="hidden"
+          ref={videoRef}
+          accept={'video/*'}
+          onChange={(e) => {
+            setVideo(e.target.files[0]);
+            console.log(e.target.files[0]);
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+```
+
+And you should see a similar screen if you navigate to [http://localhost:3000/upload](http://localhost:3000/upload).
+
+![https://cdn.hashnode.com/res/hashnode/image/upload/v1661950450236/UF9styJpw.png?auto=compress,format&format=webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1661950450236/UF9styJpw.png?auto=compress,format&format=webp)
+
+This is a basic upload page, for now, we just have the inputs and save their value of them in the state.
+
+Before working on the handle submit function, create a new folder named `utils`, and inside of it create a file named `getContract`. This file will be used to interact with your contract on the upload page. Add the below code to it and make sure to replace the contract address and artifacts.
+
+```jsx
+import ContractAbi from '../artifacts/contracts/YouTube.sol/YouTube.json';
+import { ethers } from 'ethers';
+
+export default function getContract() {
+  // Creating a new provider
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  // Getting the signer
+  const signer = provider.getSigner();
+  // Creating a new contract factory with the signer, address and ABI
+  let contract = new ethers.Contract(
+    'YOUR_CONTRACT_ADDRESS',
+    ContractAbi.abi,
+    signer,
+  );
+  // Returning the contract
+  return contract;
+}
+```
+
+### Integrating IPFS (Web3 Storage)
+
+Now we need an IPFS client to upload thumbnails. There are many services that offer IPFS service, but for this tutorial, we will use [lighthouse.storage](https://www.lighthouse.storage/).
+
+Create a new account in lighthouse.storage and then navigate to the API Key page. Create a new token and copy the generated token as we will need it later.
+
+Next, we need to integrate Livepeer in order to upload the videos and serve them through Livepeer CDN.
+
+### Integrating Livepeer
+
+Livepeer is a decentralized video processing network and developer platform which you can use to build video applications. It is very fast, easy to integrate, and cheap. In this tutorial, we will be using Livepeer to upload videos and serve it.
+
+Navigate to [https://livepeer.studio/register](https://livepeer.studio/register) and create a new account on Livepeer Studio.
+
+![https://cdn.hashnode.com/res/hashnode/image/upload/v1663499520514/a6Qlgqg4F.png?auto=compress,format&format=webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1663499520514/a6Qlgqg4F.png?auto=compress,format&format=webp)
+
+Once you have created an account, in the dashboard, click on the Developers on the sidebar.
+
+![https://cdn.hashnode.com/res/hashnode/image/upload/v1663499536756/KdjmEOLfU.png?auto=compress,format&format=webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1663499536756/KdjmEOLfU.png?auto=compress,format&format=webp)
+
+Then, click on Create API Key, give a name to your key and then copy it as we will need it later.
+
+![https://cdn.hashnode.com/res/hashnode/image/upload/v1663499827857/f6ZXyzHdd.png?auto=compress,format&format=webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1663499827857/f6ZXyzHdd.png?auto=compress,format&format=webp)
+
+Now back to the code, create a new file inside of the root directory named `livepeer.js` and add the below code to initialize a Livepeer client.
+
+```
+import { createReactClient } from "@livepeer/react";
+import { studioProvider } from "livepeer/providers/studio";
+
+const LivepeerClient = createReactClient({
+  provider: studioProvider({ apiKey: "YOUR_API_KEY" }),
+});
+
+export default LivepeerClient;
+
+```
+
+Make sure to replace the `YOUR_API_KEY` with the key which you just copied from the Livepeer dashboard. And also replace the code inside of `_app.js` in the page directory with the below code.
+
+```
+import "../styles/globals.css";
+import { LivepeerConfig } from "@livepeer/react";
+import LivepeerClient from "../livepeer";
+
+function MyApp({ Component, pageProps }) {
+  return (
+    <LivepeerConfig client={LivepeerClient}>
+      <Component {...pageProps} />
+    </LivepeerConfig>
+  );
+}
+
+export default MyApp;
+
+```
+
+And that is it, you can now use Livepeer to upload assets/videos.
+
+Back to the upload page, add the following functions to the `upload.js`.
+
+```jsx
+const goBack = () => {
+  window.history.back();
+};
+
+const uploadToLighthouse = async (e, type) => {
+  setIsUploading(true);
+  const output = await lighthouse.upload(
+    e,
+    process.env.NEXT_PUBLIC_LIGHTHOUSE_KEY,
+  );
+  let cid = output.data.Hash;
+  if (type == 'thumbnail') {
+    setThumbnail(cid);
+  } else {
+    setVideo(cid);
+  }
+  setIsUploading(false);
+};
+
+const handleSubmit = async () => {
+  let data = {
+    video,
+    title,
+    description,
+    location,
+    category,
+    thumbnail,
+    UploadedDate: Date.now(),
+  };
+
+  await saveVideo(data);
+};
+
+const saveVideo = async (data) => {
+  let contract = await getContract();
+  await contract.uploadVideo(
+    data.video,
+    data.title,
+    data.description,
+    data.location,
+    data.category,
+    data.thumbnail,
+    false,
+    data.UploadedDate,
+  );
+};
+```
+
+Finally, this is how your code should look like:
+
+```jsx
+import React, { useState, useEffect, useRef } from "react";
+import { Sidebar, Header } from "../../layout";
+import { BiCloud, BiPlus } from "react-icons/bi";
+import { getContract } from "../../utils";
+import lighthouse from "@lighthouse-web3/sdk";
+
+export default function Upload() {
+
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
+  const [thumbnail, setThumbnail] = useState<string>();
+  const [video, setVideo] = useState<string>("");
+  const [isUploading, setIsUploading] = useState<boolean>();
+
+  const thumbnailRef = useRef<HTMLInputElement>(null);
+
+  const goBack = () => {
+    window.history.back();
+  };
+
+  const uploadToLighthouse = async (e, type) => {
+    setIsUploading(true);
+    const output = await lighthouse.upload(
+      e,
+      process.env.NEXT_PUBLIC_LIGHTHOUSE_KEY
+    );
+    let cid = output.data.Hash;
+    if (type == "thumbnail") {
+      setThumbnail(cid);
+    } else {
+      setVideo(cid);
+    }
+    setIsUploading(false);
+  };
+
+  const handleSubmit = async () => {
+    let data = {
+      video,
+      title,
+      description,
+      location,
+      category,
+      thumbnail,
+      UploadedDate: Date.now(),
+    };
+
+    await saveVideo(data);
+  };
+
+  const saveVideo = async (data) => {
+    let contract = await getContract();
+    await contract.uploadVideo(
+      data.video,
+      data.title,
+      data.description,
+      data.location,
+      data.category,
+      data.thumbnail,
+      false,
+      data.UploadedDate
+    );
+  };
+
+  return (
+   <div className="w-full h-screen bg-[#1a1c1f] flex flex-row">
+      <div className="flex-1 flex flex-col">
+        <div className="mt-5 mr-10 flex  justify-end">
+          <div className="flex items-center">
+            <button className="bg-transparent  text-[#9CA3AF] py-2 px-6 border rounded-lg  border-gray-600  mr-6">
+              Discard
+            </button>
+            <button
+              onClick={() => {
+                handleSubmit();
+              }}
+              className="bg-blue-500 hover:bg-blue-700 text-white  py-2  rounded-lg flex px-4 justify-between flex-row items-center"
+            >
+              <BiCloud />
+              <p className="ml-2">Upload</p>
+            </button>
+          </div>
+        </div>
+        <div className="flex flex-col m-10     mt-5  lg:flex-row">
+          <div className="flex lg:w-3/4 flex-col ">
+            <label className="text-[#9CA3AF]  text-sm">Title</label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Rick Astley - Never Gonna Give You Up (Official Music Video)"
+              className="w-[90%] text-white placeholder:text-gray-600  rounded-md mt-2 h-12 p-2 border  bg-[#1a1c1f] border-[#444752] focus:outline-none"
+            />
+            <label className="text-[#9CA3AF] mt-10">Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Never Gonna Give You Up was a global smash on its release in July 1987, topping the charts in 25 countries including Rick’s native UK and the US Billboard Hot 100.  It also won the Brit Award for Best single in 1988. Stock Aitken and Waterman wrote and produced the track which was the lead-off single and lead track from Rick’s debut LP “Whenever You Need Somebody."
+              className="w-[90%] text-white h-32 placeholder:text-gray-600  rounded-md mt-2 p-2 border  bg-[#1a1c1f] border-[#444752] focus:outline-none"
+            />
+
+            <div className="flex flex-row mt-10 w-[90%]  justify-between">
+              <div className="flex flex-col w-2/5    ">
+                <label className="text-[#9CA3AF]  text-sm">Location</label>
+                <input
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  type="text"
+                  placeholder="Bali - Indonesia"
+                  className="w-[90%] text-white placeholder:text-gray-600  rounded-md mt-2 h-12 p-2 border  bg-[#1a1c1f] border-[#444752] focus:outline-none"
+                />
+              </div>
+              <div className="flex flex-col w-2/5    ">
+                <label className="text-[#9CA3AF]  text-sm">Category</label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-[90%] text-white placeholder:text-gray-600  rounded-md mt-2 h-12 p-2 border  bg-[#1a1c1f] border-[#444752] focus:outline-none"
+                >
+                  <option>Music</option>
+                  <option>Sports</option>
+                  <option>Gaming</option>
+                  <option>News</option>
+                  <option>Entertainment</option>
+                  <option>Education</option>
+                  <option>Science & Technology</option>
+                  <option>Travel</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+            <label className="text-[#9CA3AF]  mt-10 text-sm">Thumbnail</label>
+
+            <div
+              onClick={() => {
+                thumbnailRef.current.click();
+              }}
+              className="border-2 w-64 border-gray-600  border-dashed rounded-md mt-2 p-2  h-36 items-center justify-center flex"
+            >
+              {thumbnail ? (
+                <img
+                  onClick={() => {
+                    thumbnailRef.current.click();
+                  }}
+                  src={URL.createObjectURL(thumbnail)}
+                  alt="thumbnail"
+                  className="h-full rounded-md"
+                />
+              ) : (
+                <BiPlus size={40} color="gray" />
+              )}
+            </div>
+
+            <input
+              type="file"
+              className="hidden"
+              ref={thumbnailRef}
+              onChange={(e) => {
+                uploadToLighthouse(e);
+              }}
+            />
+          </div>
+
+          <div
+            onClick={() => {
+              videoRef.current.click();
+            }}
+            className={
+              video
+                ? " w-96   rounded-md  h-64 items-center justify-center flex"
+                : "border-2 border-gray-600  w-96 border-dashed rounded-md mt-8   h-64 items-center justify-center flex"
+            }
+          >
+            {video ? (
+              <video
+                controls
+                src={URL.createObjectURL(video)}
+                className="h-full rounded-md"
+              />
+            ) : (
+              <p className="text-[#9CA3AF]">Upload Video</p>
+            )}
+          </div>
+        </div>
+        <input
+          type="file"
+          className="hidden"
+          ref={videoRef}
+          accept={"video/*"}
+          onChange={(e) => {
+            uploadToLighthouse(e);
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+```
+
+Save the file and we are done with the upload functionality. You should now be able to upload videos to the contract.
+
+![https://cdn.hashnode.com/res/hashnode/image/upload/v1661952430514/BUSgXVGH9.png?auto=compress,format&format=webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1661952430514/BUSgXVGH9.png?auto=compress,format&format=webp)
+
+### Fetching videos from Blockchain
+
+Create a new file named `index.js` inside of a new folder named `home`. And for now you can add the below code to the file.
+
+```jsx
+import React, { useEffect, useState } from 'react';
+import { useApolloClient, gql } from '@apollo/client';
+
+export default function Main() {
+  // Creating a state to store the uploaded video
+  const [videos, setVideos] = useState([]);
+
+  // Function to get the videos from contract
+  const getVideos = async () => {
+    // Get the videos from the contract
+    let contract = await getContract();
+    let videosCount = await contract.videoCount();
+    console.log(String(videosCount));
+    let videos = [];
+    for (var i = videosCount; i >= 1; i--) {
+      let video = await contract.videos(i);
+      videos.push(video);
+    }
+    setVideos(videos);
+  };
+
+  useEffect(() => {
+    // Runs the function getVideos when the component is mounted
+    getVideos();
+  }, []);
+  return (
+    <div className="w-full bg-[#1a1c1f] flex flex-row">
+      <div className="flex-1 h-screen flex flex-col">
+        <div className="flex flex-row flex-wrap">
+          {videos.map((video) => (
+            <div className="w-80">
+              <p>{video.title}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+Save the file and you should see a similar output.
+
+![https://cdn.hashnode.com/res/hashnode/image/upload/v1661952959457/31JZTlIzT.png?auto=compress,format&format=webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1661952959457/31JZTlIzT.png?auto=compress,format&format=webp)
+
+As you can see for now we are just fetching the video title. So let's create a reusable component to display the videos nicely.
+
+> Make sure to upload a few videos so you can see the above output
+
+Create a folder named `components`, and then create a new file named `Video.js` inside of it. Add the below code the file. It is a very basic video component.
+
+```jsx
+import React from 'react';
+import { BiCheck } from 'react-icons/bi';
+import moment from 'moment';
+
+export default function Video({ horizontal, video }) {
+  return (
+    <div
+      className={`${
+        horizontal
+          ? 'flex flex-row mx-5 mb-5  item-center justify-center'
+          : 'flex flex-col m-5'
+      } `}
+    >
+      <img
+        className={
+          horizontal
+            ? 'object-cover rounded-lg w-60  '
+            : 'object-cover rounded-lg w-full h-40'
+        }
+        src={`https://ipfs.io/ipfs/${video.thumbnailHash}`}
+        alt=""
+      />
+      <div className={horizontal && 'ml-3  w-80'}>
+        <h4 className="text-md font-bold dark:text-white mt-3">
+          {video.title}
+        </h4>
+        <p className="text-sm flex items-center text-[#878787] mt-1">
+          {video.category + ' • ' + moment(video.createdAt * 1000).fromNow()}
+        </p>
+        <p className="text-sm flex items-center text-[#878787] mt-1">
+          {video?.author?.slice(0, 9)}...{' '}
+          <BiCheck size="20px" color="green" className="ml-1" />
+        </p>
+      </div>
+    </div>
+  );
+}
+```
+
+Import the Video component to the home file and replace the map function with the below code.
+
+```jsx
+{
+  videos.map((video) => (
+    <div
+      className="w-80"
+      onClick={() => {
+        // Navigation to the video screen (which we will create later)
+        window.location.href = `/video?id=${video.id}`;
+      }}
+    >
+      <Video video={video} />
+    </div>
+  ));
+}
+```
+
+Save the file and now you should see a nice-looking homepage, similar to below image.
+
+![https://cdn.hashnode.com/res/hashnode/image/upload/v1662216234585/PiCmF_MwI.png?auto=compress,format&format=webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1662216234585/PiCmF_MwI.png?auto=compress,format&format=webp)
+
+### Video page
+
+Now that we are able to fetch the videos on the home screen. Let's work on the video page where the user will be redirected if they click on any video component.
+
+Create a new file in the components folder named `Player` and add the below code to it. We are using Livepeer player to create a video player component.
+
+```jsx
+import React from 'react';
+import { useAsset, Player } from '@livepeer/react';
+
+interface PlayerProps {
+  id: any;
+}
+
+const VideoPlayer: React.FC<PlayerProps> = ({ id }) => {
+  return (
+    <Player
+      src={'ipfs://' + id}
+      showPipButton
+      showTitle={false}
+      aspectRatio="16to9"
+      controls={{
+        autohide: 3000,
+      }}
+    />
+  );
+};
+
+export default VideoPlayer;
+```
+
+Create another file in the same directory named `VideoContainer`. Imagine this component as the left side of the youtube video page, which contains a player, video title, upload date, and description. Add the below code to the file.
+
+```jsx
+import React from 'react';
+import Player from './Player';
+
+export default function VideoComponent({ video }) {
+  return (
+    <div>
+      <Player hash={video.hash} />
+      <div className="flex justify-between flex-row py-4">
+        <div>
+          <h3 className="text-2xl dark:text-white">{video.title}</h3>
+          <p className="text-gray-500 mt-1">
+            {video.category} •{' '}
+            {new Date(video.createdAt * 1000).toLocaleString('en-IN')}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+At last, create a new folder named video inside of the `pages` directory and create a new file `index.js` of it. For now, you can add the following code to the file.
+
+```jsx
+import { useRouter } from "next/router";
+import { Header, Sidebar } from "../../layout";
+import React, { useEffect, useState } from "react";
+import { Background, Player, Video as RelatedVideos } from "../../components";
+import lighthouse from "@lighthouse-web3/sdk";
+import Link from "next/link";
+import moment from "moment";
+import { BiCheck } from "react-icons/bi";
+import Avvvatars from "avvvatars-react";
+import { IVideo } from "../../types";
+import { getContract } from "../../utils";
+
+export default function Video() {
+  const router = useRouter();
+  const { id } = router.query;
+  const [video, setVideo] = useState<IVideo | null>(null);
+  const [relatedVideos, setRelatedVideos] = useState<IVideo[]>([]);
+
+  const fetchVideos = async () => {
+    if (id) {
+      let contract = await getContract();
+      let video = await contract.videos(id);
+      let videosCount = await contract.videoCount();
+      let videos = [];
+      for (var i = videosCount; i >= 1; i--) {
+        let video = await contract.videos(i);
+        videos.push(video);
+      }
+      setRelatedVideos(videos);
+      setVideo(video);
+    }
+  };
+
+  useEffect(() => {
+    fetchVideos();
+  }, [id]);
+
+  return (
+    <Background className="flex  h-screen w-full flex-row">
+      <Sidebar />
+      <div className="flex flex-1 flex-col">
+        <Header />
+        {video && (
+          <div className="m-10 flex flex-col justify-between	  lg:flex-row">
+            <div className="w-6/6 lg:w-4/6">
+              <Player id={video.hash} />
+              <div className="border-border-light dark:border-border-dark flex flex-row justify-between border-b-2 py-4">
+                <div>
+                  <h3 className="text-transform: text-2xl capitalize dark:text-white">
+                    {video.title}
+                  </h3>
+                  <p className="mt-1 text-gray-500 ">{video.category} </p>
+                </div>
+              </div>
+              <div>
+                <div className="mt-5 flex flex-row items-center ">
+                  <div className="w-12">
+                    <Avvvatars value={video.author.slice(2, 13)} size={50} />
+                  </div>
+                  <div className="ml-3 flex flex-col">
+                    <p className="text-md mt-1 flex items-center text-black dark:text-white">
+                      {video.author.slice(0, 13)}...{" "}
+                      <BiCheck size="20px" className="fill-gray ml-1" />
+                    </p>
+                    <p className="text-subtitle-light flex items-center text-sm ">
+                      Video by {video.author}
+                    </p>
+                  </div>
+                </div>
+                <p className="text-text-light dark:text-text-dark text-textSubTitle mt-4 ml-16 text-sm">
+                  {video.description}
+                </p>
+              </div>
+            </div>
+            <div className="w-2/6">
+              <h4 className="text-md ml-5 mb-3 font-bold text-black dark:text-white">
+                Related Videos
+              </h4>
+              {relatedVideos.map((video) => (
+                <Link href={`/video/${video.id}`} key={video.id}>
+                  <RelatedVideos video={video} horizontal={true} />
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </Background>
+  );
+}
+```
+
+Save the file and click on any videos on the home screen. You should be redirected to the video screen similar to the below page.
+
+![https://cdn.hashnode.com/res/hashnode/image/upload/v1662216213152/aBmEGvHak.png?auto=compress,format&format=webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1662216213152/aBmEGvHak.png?auto=compress,format&format=webp)
+
+That is it for this tutorial, visit [FVM](https://docs.filecoin.io/developers/smart-contracts/filecoin-virtual-machine/) docs to learn more about its capabilities
