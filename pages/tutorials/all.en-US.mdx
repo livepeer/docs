@@ -7,19 +7,21 @@ Welcome to our curated list of community tutorials.
 
 <Cards
   num={1}
-  children={Object.keys(developingGuides).map(
-    // once we have other guides such as Orchestrating and Delegating, we can replace this code to include those as well
-    (key, i) => (
-      <Card
-        key={i}
-        title={developingGuides[key].longTitle}
-        level={developingGuides[key].level}
-        category={developingGuides[key].category}
-        author={developingGuides[key].author}
-        createdAt={developingGuides[key].createdAt}
-        minutesRead={developingGuides[key].minutesRead}
-        href={developingGuides[key].href}
-      />
-    ),
-  )}
+  children={Object.keys(developingGuides)
+    .reverse()
+    .map(
+      // once we have other guides such as Orchestrating and Delegating, we can replace this code to include those as well
+      (key, i) => (
+        <Card
+          key={i}
+          title={developingGuides[key].longTitle}
+          level={developingGuides[key].level}
+          category={developingGuides[key].category}
+          author={developingGuides[key].author}
+          createdAt={developingGuides[key].createdAt}
+          minutesRead={developingGuides[key].minutesRead}
+          href={developingGuides[key].href}
+        />
+      ),
+    )}
 />
