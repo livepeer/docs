@@ -1,0 +1,55 @@
+---
+title: 'Livestream'
+description: 'Information related to livestreaming'
+---
+
+# Livestream FAQ
+
+
+## Is there a token gating feature for livestreams?
+
+Yes, there are two important factors to consider, `create signing keys` and also specify the `playbackPolicy` type.
+
+> The playbackPolicy parameter can be added to a stream when it is being created or to an existing stream.
+> 
+
+Here is the [Playbackpolicy Guide](../guides/developing/access-control) that has information on how to set this up.
+
+
+## How can I set the bit rate of a livestream?
+
+You can set the bitrate of a stream when creating a new stream. Here is the documentation on how to set them:
+
+- Using the [API Reference](../reference/api/create-stream)
+- Using the [SDK Reference](../reference/livepeer-js/stream/useCreateStream#profiles)
+
+## Can I stop in the middle of a livestream?
+
+Yes, you can use the `suspend` parameter in the `stream`
+API endpoint along with the stream Id. More information on this process is found in the [API Reference](../reference/api/update-stream#suspend-stream).
+
+
+## Is there a way to play a livestream with only the audio?
+
+If you want to provide only the audio of the stream, you can use `?video=none`at the end of a `.m3u8` URL to get an audio-only stream.
+
+For example:`https://livepeercdn.com/hls/{playbackId}/index.m3u8?video=none`.
+
+## Why does my latency seem to be high when livestreaming?
+
+If you are having latency issues, try checking your network speed using [Speedtest](https://www.speedtest.net), also check your settings for your broadcaster, as they can be some primary factors.
+
+For more information on the configurations see our [support matrix](../reference/api-support-matrix#livestream).
+
+## How do I start streaming with Livepeer Studio?
+
+Here are guides on how to [create a stream and watch](../guides/developing/create-a-livestream)
+and [stream using OBS](../guides/developing/stream-via-obs).
+
+## How do I set up a custom RTMP domain?
+
+Go to your hosting service and configure your CNAME to use `rtmp.livepeer.com` 
+
+## Can I stream directly from the browser with Livepeer?
+
+We do not have WebRTC technology for livestreaming. but we do have `WebRTMP SDK` demo in our [Example Apps](../reference/example-applications).
