@@ -27,16 +27,7 @@ In the dialogue field, enter a name for your API key.
 
 ![Quickstart 2](/images/quickstart/create-key.png)
 
-### Step 2 (optional): Enable CORS
-
-If you are developing a frontend application and want to get started quickly
-with the API, you can create an API key with CORS access enabled. API keys
-created with this option can be used from the browser from any origin for which
-it is configured.
-
-![Quickstart 3](/images/quickstart/cors.png)
-
-### Step 3: Using the API Key
+### Step 2: Using the API Key
 
 To use an API key, you can simply add an `Authorization` header to your request
 with the`Bearer` scheme and the API key as the value.
@@ -51,7 +42,7 @@ curl -X GET \
 
 With this, you're ready to start building!
 
-### Step 4: Start Building
+### Step 3: Start Building
 
 Don't know where to start? Check out these guides to get more familiar with
 Livepeer development:
@@ -61,3 +52,76 @@ Livepeer development:
 
 Once you complete this tutorial, let us know how your experience was; if you have any feedback, tag us on Twitter
 [`@livepeer`](https://twitter.com/livepeer)!
+
+### Enable CORS (optional)
+
+By default, API keys can only be used from a backend server. This is to ensure
+maximum security and prevent that you accidentally expose your account by
+including the secret API key in some public web page.
+
+However, if you are developing a frontend application and want to get started
+quickly with the Livepeer API, you can also create an API key with CORS access
+enabled. API keys created with that option can be used from the browser, from
+any origin that you configure it for.
+
+> Note: An origin is just a combination of a scheme, like `https`, with a domain like `example.com`. You will also need to include the port number if you are using a non-standard port.(e.g.`http://localhost:8080` when developing locally on port 8080 or `https://my.app.io` after deploying it on a public domain).
+
+To enable CORS, simply tick the `Allow CORS access` checkbox when creating your
+API key. You will then be prompted to add all the origins that you would like
+the API key to be used from:
+
+We recommend that you add the minimal list of origins to your API key. Ideally
+also creating separate API keys to be used for development or production. At
+your own discretion, you can use the same API key for all your environments and
+allow all the origins for it. You can also just add the `*` special value to
+allow the key to be used from any origin.
+
+> Note: CORS is only a client-side check that browsers make and sometimes does
+  not prevent the API from being called. It also does not prevent the API key
+  from being used from other places like a backend or a custom client. 
+
+![Quickstart 3](/images/quickstart/cors.png)
+
+#### API access
+For an additional layer of security, we also limit the access of the
+CORS-enabled keys to the API. 
+
+CORS-enabled API keys have restricted access to the API by default. This means
+that they are only allowed to call some specific endpoints of the API.
+
+This is another intermediate security measure, so that even if a malicious actor
+snoops the API key from your web page they still won't be able access the most
+sensitive data in your account. For example, APIs that expose PIIs, payment
+information or list API resources created by other users are disallowed.
+
+| Feature | Endpoint| Description |
+| ---- | ---- | ----------- |
+| Livestream | `POST /api/stream`  | [Create a new stream](../../reference/api/create-stream) |
+| Livestream | `GET /api/stream/{id}`  | [Retrieve a stream by ID](../../reference/api/get-stream)| 
+| Livestream | `GET /api/stream/{id}/sessions`  | [List sessions from a specific parent stream ID](../../reference/api/get-sessions) | 
+| Livestream | `GET /api/session/{id}`  | [Retrieve a session by ID](../../reference/api/get-stream)| 
+| Livestream | `PATCH /api/stream/{id}`  | [Update a specific stream by ID](../../reference/api/update-stream) | 
+| On Demand| `POST /api/asset/request-upload`  | [Create an asset via direct upload](../../reference/api/create-asset) | 
+| On Demand| `GET /api/asset/{id}`  | [Retrieve an asset by ID](../../reference/api/get-assets) | 
+| On Demand| `POST /api/asset/{id}/export`  | [Export an asset (e.g. to IPFS)](../../reference/api/update-asset#updating-storage) | 
+| On Demand| `POST /api/asset/{id}/transcode`  | Transcode an asset to another rendition | 
+| On Demand| `GET /api/task/{id}`  | [Monitor the progress of a specific task by ID](../../reference/api/get-tasks) | 
+
+#### Full API access
+
+If your application needs further access to the API, it is strongly recommended
+that you run a backend to secure an API key and call the API privately. From it
+you can also perform any custom authentication with your frontend and validate
+the API calls to protect your Livepeer Studio account. Check the
+[livepeer-web-api-proxy](https://github.com/victorges/livepeer-web-api-proxy)
+for a sample project with such a backend.
+
+If you are aware of the implications but still want to create an API key with
+full access to your account, you can do so by ticking the `Full API access`
+checkbox when creating your API key.
+
+An API key with `Full API access` will be able to access and manage every
+information in your account, including: 
+- All your contact info provided on registration
+- Change your billing plan
+- List and delete all the streams and assets stored in your account.
