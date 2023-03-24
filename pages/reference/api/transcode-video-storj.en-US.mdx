@@ -2,19 +2,19 @@
 title: Transcode Video with Storj
 ---
 
-# Introduction
+## Introduction
 
 This guide will describe how to use the Livepeer [transcode API](/reference/api/transcode-video) to transcode and store video files in Storj using Storj’s S3 API.
 
 There are [code examples](#code-examples) provided for reference.
 
-# Storj S3 Credentials
+## Storj S3 Credentials
 
 This step assumes that you have already created an account at [https://www.storj.io/](https://www.storj.io/).
 
 Follow the [Storj guide for generating S3 credentials](https://docs.storj.io/dcs/api-reference/s3-compatible-gateway#I7p7Q) using either the web interface or `uplink`. Make sure that the credentials have the proper read/write permissions for the bucket that your video files will be read from and that transcoded videos will be written to. The access key and secret key of the credentials will be used in the next step.
 
-# Upload Video to Storj
+## Upload Video to Storj
 
 Make sure you have a video file uploaded to your Storj bucket. You must upload the video file using one of the following methods:
 
@@ -25,7 +25,7 @@ Make sure you have a video file uploaded to your Storj bucket. You must upload t
 
 Note: At the moment, you can *not* use `uplink` to upload the video file to Storj because `uplink` does not support generating the required S3 object metadata.
 
-# Transcode with Livepeer
+## Transcode with Livepeer
 
 This step assumes that you have already created a [Livepeer Studio account](https://livepeer.studio/) and an [API key](https://docs.livepeer.org/guides/developing/quickstart).
 
@@ -90,7 +90,7 @@ Use the task ID in the response to query for the transcoding task status. Once t
 
 For more information about transcode API usage refer to the [docs](/reference/api/transcode-video).
 
-# Playback From Storj
+## Playback From Storj
 
 You can create a public playback URL for the transcoded video by first creating a shared Storj URL:
 
@@ -112,6 +112,6 @@ https://link.storjshare.io/jwjfgdxkvmfgngsgitii6pny62za/demo-bucket
 
 You can playback the transcoded video from Storj using this URL with any HLS player. For example, `https://lvpr.tv/?url=https://link.storjshare.io/raw/jwjfgdx…/demo-bucket/samplevideo/hls/index.m3u8` will playback the video using the hosted Livepeer player.
 
-# Code Examples
+## Code Examples
 
 - [Nodejs](https://github.com/livepeer/storj-livepeer-nodejs-example)
