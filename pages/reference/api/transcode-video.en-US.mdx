@@ -146,44 +146,44 @@ Transcoding is asynchronous so you will need to check the status of the task in 
 
 ```bash
 curl --location --request GET "https://livepeer.studio/api/task/$TASK_ID" \
-    --header 'Authorization: Bearer $API_KEY' \
-    --header 'Content-Type: application/json'
+     --header 'Authorization: Bearer $API_KEY' \
+     --header 'Content-Type: application/json'
 ```
 
 When `status.phase` is `completed`,  transcoding will be complete and the results will be stored in the storage service and the specified output location.
 
 ```bash
 {
-"id": "...",
-    "type": "transcode-file",
-    "output": {
-        "transcodeFile": {
-            "hls": {
-            "path": "/index.m3u8"
+   "id":"...",
+   "type":"transcode-file",
+   "output":{
+      "transcodeFile":{
+         "hls":{
+            "path":"/index.m3u8"
+         }
+      }
+   },
+   "params":{
+      "transcode-file":{
+         "input":{
+            "url":"s3+https://***:***@gateway.storjshare.io/demo-bucket/bbb_sunflower_1080p_30fps_5s.mp4"
+         },
+         "outputs":{
+            "hls":{
+               "path":"/samplevideo/hls"
             }
-        }
-    },
-    "params": {
-        "transcode-file": {
-            "input": {
-                "url": "s3+https://***:***@gateway.storjshare.io/demo-bucket/bbb_sunflower_1080p_30fps_5s.mp4"
-            },
-            "outputs": {
-                "hls": {
-                    "path": "/samplevideo/hls"
-                }
-            },
-            "storage": {
-                "url": "s3+https://***:***@gateway.storjshare.io/demo-bucket"
-            }
-        }
-    },
-    "status": {
-        "phase": "completed",
-        "updatedAt": 1671559615227
-    },
-    "userId": "...",
-    "createdAt": 1671559567391
+         },
+         "storage":{
+            "url":"s3+https://***:***@gateway.storjshare.io/demo-bucket"
+         }
+      }
+   },
+   "status":{
+      "phase":"completed",
+      "updatedAt":1671559615227
+   },
+   "userId":"...",
+   "createdAt":1671559567391
 }
 ```
 
@@ -249,7 +249,7 @@ This endpoint currently supports the following storage services:
 
 ```json
 {
-		"type": "s3",
+	"type": "s3",
     "endpoint": "https://gateway.storjshare.io",
     "credentials": {
         "accessKeyId": "$ACCESS_KEY_ID",
@@ -271,7 +271,7 @@ This endpoint currently supports the following storage services:
 
 ```json
 {
-		"type": "web3.storage",
+	"type": "web3.storage",
     "credentials": {
         "proof": "$UCAN_DELEGATION_PROOF",
     }

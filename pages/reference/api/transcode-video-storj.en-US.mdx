@@ -1,16 +1,35 @@
 ---
-title: Transcode Video
+title: Transcode Video with Storj
 ---
 
-# `POST` Transcode video files
+# Introduction
 
-`POST /transcode` transcodes a video file and uploads the results to the specified storage service. 
+This guide will describe how to use the Livepeer [transcode API](https://www.notion.so/Transcode-API-Doc-b36b0c8c1a794e3b8edbf6a4fb1d49f5) to transcode and store video files in Storj using Storj’s S3 API.
 
-## Request
+There are [code examples](https://www.notion.so/Transcoded-Video-Storage-and-Delivery-with-Storj-618f1230de384b59916971a17a2ba1cf) provided for reference.
 
-A request to the `/api/transcode` endpoint will create a task to begin transcoding the file.
+# Storj S3 Credentials
 
-### cURL
+This step assumes that you have already created an account at [https://www.storj.io/](https://www.storj.io/).
+
+Follow the [Storj guide for generating S3 credentials](https://docs.storj.io/dcs/api-reference/s3-compatible-gateway#I7p7Q) using either the web interface or `uplink`. Make sure that the credentials have the proper read/write permissions for the bucket that your video files will be read from and that transcoded videos will be written to. The access key and secret key of the credentials will be used in the next step.
+
+# Upload Video to Storj
+
+Make sure you have a video file uploaded to your Storj bucket. You must upload the video file using one of the following methods:
+
+- Via the Storj web interface
+- Via a S3 API client
+    - [AWS has S3 API client implementations](https://aws.amazon.com/developer/tools/) in different programming languages
+    - The [code examples](https://www.notion.so/Transcoded-Video-Storage-and-Delivery-with-Storj-618f1230de384b59916971a17a2ba1cf) illustrate how to upload a video file to Storj using a S3 API client
+
+Note: At the moment, you can *not* use `uplink` to upload the video file to Storj because `uplink` does not support generating the required S3 object metadata.
+
+# Transcode with Livepeer
+
+This step assumes that you have already created a [Livepeer Studio account](https://livepeer.studio/) and an [API key](https://docs.livepeer.org/guides/developing/quickstart).
+
+Submit the following request:
 
 ```bash
 curl --location --request POST 'https://livepeer.studio/api/transcode' \
@@ -18,7 +37,14 @@ curl --location --request POST 'https://livepeer.studio/api/transcode' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "input": {
-        "url": "https://www.example.com/video.mp4"
+        "type": "s3",
+		    "endpoint": "https://gateway.storjshare.io",
+		    "credentials": {
+		        "accessKeyId": "$ACCESS_KEY_ID",
+		        "secretAccessKey": "$SECRET_ACCESS_KEY"
+				 },
+		    "bucket": "mybucket",
+		    "path": "/video/source.mp4"
     },
     "storage": {
         "type": "s3",
@@ -53,252 +79,39 @@ curl --location --request POST 'https://livepeer.studio/api/transcode' \
 }'
 ```
 
-### Javascript
+- `$API_KEY` should be your Livepeer Studio API key
+- `$ACCESS_KEY_ID` should be the access key and `$SECRET_ACCESS_KEY` should be the secret key of the S3 credentials you generated in the previous step
+- `input.bucket` should be the name of your Storj bucket
+- `input.path` should be the path that your video file can be found in the Storj bucket
+- `outputs.hls.path` will be the path that the HLS playlist and mpegts segments will be found in when transcoding is complete
+- `profiles` is an optional parameter to specify the desired properties of transcoded video
 
-```jsx
-var headers = new Headers();
-headers.append("Authorization", "Bearer $API_KEY");
-headers.append("Content-Type", "application/json");
+[Use the task ID in the response](https://www.notion.so/Transcode-API-Doc-b36b0c8c1a794e3b8edbf6a4fb1d49f5) to query for the transcoding task status. Once the task is complete, the HLS playlist and mpegts segments will be available at `outputs.hls.path`.
 
-var raw = JSON.stringify({
-  "input": {
-    "url": "https://www.example.com/video.mp4"
-  },
-  "storage": {
-    "type": "s3",
-    "endpoint": "https://gateway.storjshare.io",
-    "credentials": {
-      "accessKeyId": "$ACCESS_KEY_ID",
-      "secretAccessKey": "$SECRET_ACCESS_KEY"
-    },
-    "bucket": "mybucket"
-  },
-  "outputs": {
-    "hls": {
-      "path": "/samplevideo/hls"
-    }
-  },
-  "profiles": [
-    {
-      "name": "480p",
-      "bitrate": 1000000,
-      "fps": 30,
-      "width": 854,
-      "height": 480
-    },
-    {
-      "name": "360p",
-      "bitrate": 500000,
-      "fps": 30,
-      "width": 640,
-      "height": 360
-    }
-	 ]
-});
+For more information about transcode API usage refer to the [docs](https://www.notion.so/Transcode-API-Doc-b36b0c8c1a794e3b8edbf6a4fb1d49f5).
 
-fetch(
-	"https://livepeer.studio/api/transcode",
-  { method: 'POST', headers: headers, body: raw }
-);
-```
+# Playback From Storj
 
-**Parameters**
+You can create a public playback URL for the transcoded video by first creating a shared Storj URL:
 
-| Name | Type | Description |
-| --- | --- | --- |
-| input | See Input. | The configuration for reading the input file. |
-| storage | See Storage. | The configuration for the storage service that transcoded results will be uploaded to. |
-| outputs | See Outputs. | The configuration for the location within the storage service that transcoded results will be uploaded to. |
-| profiles (optional) |  | The configuration of the transcoded video proprties. |
-| targetSegmentSizeSecs (optional) | Number | Override the default (currently 10) segment size in seconds of the HLS segments that are produced  |
+- If you are using `uplink`, follow the [Storj Link Sharing guide](https://docs.storj.io/dcs/api-reference/uplink-cli/share-command/#f-jKX) to create a URL for your bucket
+- Ex. `uplink share sj://demo-bucket/ --url --not-after=none --base-url=https://link.storjshare.io`
+- If you are using the web interface, navigate to your bucket under “Buckets” and click the “Share Bucket” button to create a URL for your bucket
 
-## Response
-
-```json
-{
-    "id": "...",
-    "createdAt": 1671547898446,
-    "type": "transcode-file",
-    "userId": "...",
-    "params": {
-        "transcode-file": {
-            "input": {
-                "url": "https://www.example.com/video.mp4"
-            },
-            "storage": {
-                "url": "s3+https://***:***@gateway.storjshare.io/outbucket"
-            },
-            "outputs": {
-                "hls": {
-                    "path": "/samplevideo/hls"
-                }
-            }
-        }
-    },
-    "status": {
-        "phase": "pending",
-        "updatedAt": 1671547898446
-    }
-}
-```
-
-Transcoding is asynchronous so you will need to check the status of the task in order to determine when transcoding is complete. The `id` field in the response is the unique ID for the transcoding `Task`. The task status can be queried using the [GET tasks endpoint](https://docs.livepeer.org/reference/api/get-tasks):
+The URL should look like this:
 
 ```bash
-curl --location --request GET "https://livepeer.studio/api/task/$TASK_ID" \
-    --header 'Authorization: Bearer $API_KEY' \
-    --header 'Content-Type: application/json'
+[https://link.storjshare.io/jwjfgdx…/demo-bucket](https://link.storjshare.io/jwjfgdxkvmfgngsgitii6pny62za/demo-bucket)
 ```
 
-When `status.phase` is `completed`,  transcoding will be complete and the results will be stored in the storage service and the specified output location.
+Suppose `outputs.hls.path` for the request in the previous step was `/samplevideo/hls`. The master HLS playlist used for playback will be available at:
 
 ```bash
-{
-"id": "...",
-    "type": "transcode-file",
-    "output": {
-        "transcodeFile": {
-            "hls": {
-            "path": "/index.m3u8"
-            }
-        }
-    },
-    "params": {
-        "transcode-file": {
-            "input": {
-                "url": "s3+https://***:***@gateway.storjshare.io/demo-bucket/bbb_sunflower_1080p_30fps_5s.mp4"
-            },
-            "outputs": {
-                "hls": {
-                    "path": "/samplevideo/hls"
-                }
-            },
-            "storage": {
-                "url": "s3+https://***:***@gateway.storjshare.io/demo-bucket"
-            }
-        }
-    },
-    "status": {
-        "phase": "completed",
-        "updatedAt": 1671559615227
-    },
-    "userId": "...",
-    "createdAt": 1671559567391
-}
+[https://link.storjshare.io/raw/jwjfgdx…/demo-bucket](https://link.storjshare.io/jwjfgdxkvmfgngsgitii6pny62za/demo-bucket)/samplevideo/hls/index.m3u8
 ```
 
-The results will be available under `params.outputs.hls.path` in the specified storage service.
+You can playback the transcoded video from Storj using this URL with any HLS player. For example, [`https://lvpr.tv/](https://lvpr.tv/)?url=[https://link.storjshare.io/raw/jwjfgdx…/demo-bucket](https://link.storjshare.io/jwjfgdxkvmfgngsgitii6pny62za/demo-bucket)/samplevideo/hls/index.m3u8` will playback the video using the hosted Livepeer player.
 
-## Input
+# Code Examples
 
-This endpoint currently supports the following inputs:
-
-- HTTP
-- S3 API Compatible Service
-
-**HTTP**
-
-A public HTTP URL can be used to read a video file.
-
-```json
-{
-    "url": "https://www.example.com/video.mp4"
-}
-```
-
-| Name | Type | Description |
-| --- | --- | --- |
-| url | string | A public HTTP URL for the video file. |
-
-Note: For IPFS HTTP gateway URLs, the API currently only supports “path style” URLs and does not support “subdomain style” URLs. The API will support both styles of URLs in a future update.
-
-**S3 API Compatible Service**
-
-S3 credentials can be used to authenticate with a S3 API compatible service to read a video file.
-
-```json
-{
-    "type": "s3",
-    "endpoint": "https://gateway.storjshare.io",
-    "credentials": {
-        "accessKeyId": "$ACCESS_KEY_ID",
-        "secretAccessKey": "$SECRET_ACCESS_KEY"
-    },
-    "bucket": "inbucket",
-    "path": "/video/source.mp4"
-}
-```
-
-| Name | Type | Description |
-| --- | --- | --- |
-| type | string | The type of storage service. Supported: “s3”. |
-| endpoint | string | The S3 endpoint. |
-| credentials.accessKeyId | string | The S3 access key ID. |
-| credentials.secretAccessKey | string | The S3 access key secret. |
-| bucket | string | The name of the S3 bucket. |
-| path | string | The path within the S3 bucket of the video file. |
-
-## Storage
-
-This endpoint currently supports the following storage services:
-
-- S3 API Compatible Service
-- Web3 Storage
-
-**S3 API Compatible Service**
-
-```json
-{
-		"type": "s3",
-    "endpoint": "https://gateway.storjshare.io",
-    "credentials": {
-        "accessKeyId": "$ACCESS_KEY_ID",
-        "secretAccessKey": "$SECRET_ACCESS_KEY"
-    },
-    "bucket": "mybucket"
-}
-```
-
-| Name | Type | Description |
-| --- | --- | --- |
-| type | string | The type of storage service. |
-| endpoint | string | The S3 endpoint. |
-| credentials.accessKeyId | string | The S3 access key ID. |
-| credentials.secretAccessKey | string | The S3 access key secret. |
-| bucket | string | The path within the S3 bucket of the video file. |
-
-**Web3 Storage**
-
-```json
-{
-		"type": "web3.storage",
-    "credentials": {
-        "proof": "$UCAN_DELEGATION_PROOF",
-    }
-}
-```
-
-| Name | Type | Description |
-| --- | --- | --- |
-| type | string | The type of storage service. |
-| credentials.proof | string | Base64-encoded UCAN delegation proof. |
-
-## Outputs
-
-This endpoint currently supports the following output types:
-
-- HLS
-
-**HLS**
-
-```json
-{
-	"hls": {
-        "path": "/samplevideo/hls"
-    }
-}
-```
-
-| Name | Type | Description |
-| --- | --- | --- |
-| path | string | The path of the directory that HLS playlists and mpegts segments will be stored in. |
+- [Nodejs](https://github.com/livepeer/storj-livepeer-nodejs-example)
