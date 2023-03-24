@@ -17,39 +17,39 @@ curl --location --request POST 'https://livepeer.studio/api/transcode' \
 --header 'Authorization: Bearer $API_KEY' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "input": {
-        "url": "https://www.example.com/video.mp4"
-    },
-    "storage": {
-        "type": "s3",
-        "endpoint": "https://gateway.storjshare.io",
-        "credentials": {
-            "accessKeyId": "$ACCESS_KEY_ID",
-            "secretAccessKey": "$SECRET_ACCESS_KEY"
-        },
-        "bucket": "mybucket"
-    },
-    "outputs": {
-        "hls": {
-            "path": "/samplevideo/hls"
-        }
-    },
-		"profiles": [
-		    {
-		      "name": "480p",
-		      "bitrate": 1000000,
-		      "fps": 30,
-		      "width": 854,
-		      "height": 480
-		    },
-		    {
-		      "name": "360p",
-		      "bitrate": 500000,
-		      "fps": 30,
-		      "width": 640,
-		      "height": 360
-		    }
-	  ]
+   "input":{
+      "url":"https://www.example.com/video.mp4"
+   },
+   "storage":{
+      "type":"s3",
+      "endpoint":"https://gateway.storjshare.io",
+      "credentials":{
+         "accessKeyId":"$ACCESS_KEY_ID",
+         "secretAccessKey":"$SECRET_ACCESS_KEY"
+      },
+      "bucket":"mybucket"
+   },
+   "outputs":{
+      "hls":{
+         "path":"/samplevideo/hls"
+      }
+   },
+   "profiles":[
+      {
+         "name":"480p",
+         "bitrate":1000000,
+         "fps":30,
+         "width":854,
+         "height":480
+      },
+      {
+         "name":"360p",
+         "bitrate":500000,
+         "fps":30,
+         "width":640,
+         "height":360
+      }
+   ]
 }'
 ```
 

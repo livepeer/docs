@@ -4,9 +4,9 @@ title: Transcode Video with Web3 Storage
 
 # Introduction
 
-This guide will describe how to use the Livepeer [transcode API](https://www.notion.so/Transcode-API-Doc-b36b0c8c1a794e3b8edbf6a4fb1d49f5) to transcode and store video files in [web3.storage](http://web3.storage).
+This guide will describe how to use the Livepeer [transcode API](/reference/api/transcode-video) to transcode and store video files in [web3.storage](http://web3.storage).
 
-There are [code examples](https://www.notion.so/Transcoded-Video-Storage-and-Delivery-with-web3-storage-e396981adf074cca8af415403727adad) provided for reference.
+There are [code examples](#code-examples) provided for reference.
 
 # UCAN Proof
 
@@ -49,36 +49,36 @@ curl --location --request POST 'https://livepeer.studio/api/transcode' \
 --header 'Authorization: Bearer $API_KEY' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "input": {
-        "url": "$INPUT_VIDEO_URL",
-    },
-    "storage": {
-        "type": "web3.storage",
-        "credentials": {
-            "proof": "$DELEGATION_PROOF",
-        },
-    },
-    "outputs": {
-        "hls": {
-            "path": "/"
-        }
-    },
-		"profiles": [
-		    {
-		      "name": "480p",
-		      "bitrate": 1000000,
-		      "fps": 30,
-		      "width": 854,
-		      "height": 480
-		    },
-		    {
-		      "name": "360p",
-		      "bitrate": 500000,
-		      "fps": 30,
-		      "width": 640,
-		      "height": 360
-		    }
-	  ]
+   "input":{
+      "url":"$INPUT_VIDEO_URL"
+   },
+   "storage":{
+      "type":"web3.storage",
+      "credentials":{
+         "proof":"$DELEGATION_PROOF"
+      }
+   },
+   "outputs":{
+      "hls":{
+         "path":"/"
+      }
+   },
+   "profiles":[
+      {
+         "name":"480p",
+         "bitrate":1000000,
+         "fps":30,
+         "width":854,
+         "height":480
+      },
+      {
+         "name":"360p",
+         "bitrate":500000,
+         "fps":30,
+         "width":640,
+         "height":360
+      }
+   ]
 }'
 ```
 
@@ -88,7 +88,7 @@ curl --location --request POST 'https://livepeer.studio/api/transcode' \
 - `outputs.hls.path` will be the relative path that the HLS playlist and mpegts segments will be found in when transcoding is complete
 - `profiles` is an optional parameter to specify the desired properties of transcoded video
 
-[Use the task ID in the response](https://www.notion.so/Transcode-API-Doc-b36b0c8c1a794e3b8edbf6a4fb1d49f5) to query for the transcoding task status. Once the task is complete, you’ll see the output directory IPFS URL in the `/api/task` response in the `output.transcodeFile.baseUrl` field.
+Use the task ID in the response to query for the transcoding task status. Once the task is complete, you’ll see the output directory IPFS URL in the `/api/task` response in the `output.transcodeFile.baseUrl` field.
 
 ```json
 {
@@ -96,7 +96,7 @@ curl --location --request POST 'https://livepeer.studio/api/transcode' \
   "type": "transcode-file",
   "output": {
     "transcodeFile": {
-      "baseUrl": "ipfs://bafybeiakkypfc7uzk6jnk6pg3f2fwumkahrmgbii7cigyyc7oejjo3ff4e"
+      "baseUrl": "ipfs://bafybeiakkypfc7uzk6jnk6pg3f2fwumkahrmgbii7cigyyc7oejjo3ff4e",
       "hls": {
         "path": "/index.m3u8"
        }
@@ -106,7 +106,7 @@ curl --location --request POST 'https://livepeer.studio/api/transcode' \
 }
 ```
 
-For more information about transcode API usage refer to the [docs](https://www.notion.so/Transcode-API-Doc-b36b0c8c1a794e3b8edbf6a4fb1d49f5).
+For more information about transcode API usage refer to the [docs](/reference/api/transcode-video).
 
 # Playback From web3.storage
 
@@ -125,7 +125,7 @@ Then, the master HLS playlist used for transcoded video playback will be availab
 https://bafybeiakkypfc7uzk6jnk6pg3f2fwumkahrmgbii7cigyyc7oejjo3ff4e.ipfs.w3s.link/index.m3u8
 ```
 
-You can playback the transcoded video from web3.storage using this URL with any HLS player. For example, [`https://lvpr.tv/](https://lvpr.tv/)?url=https://bafybeiakkypfc7uzk6jnk6pg3f2fwumkahrmgbii7cigyyc7oejjo3ff4e.ipfs.w3s.link/index.m3u8` will playback the video using the hosted Livepeer player.
+You can playback the transcoded video from web3.storage using this URL with any HLS player. For example, `https://lvpr.tv/?url=https://bafybeiakkypfc7uzk6jnk6pg3f2fwumkahrmgbii7cigyyc7oejjo3ff4e.ipfs.w3s.link/index.m3u8` will playback the video using the hosted Livepeer player.
 
 # Code Examples
 
