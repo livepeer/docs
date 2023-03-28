@@ -37,7 +37,7 @@ Hook for creating a new [Asset](https://github.com/livepeer/livepeer.js/blob/mai
 The following example shows how an asset can be created with the `mutate` function. The variables are passed into the
 `useCreateAsset` hook, and `createAsset` return type is defined when the variables are truthy.
 
-```tsx {12-16, 34}
+```tsx
 function SomeComponent() {
   const [video, setVideo] = useState<File | undefined>(undefined);
   const {
@@ -51,7 +51,19 @@ function SomeComponent() {
     // for the returned data
     video
       ? {
-          sources: [{ name: video.name, file: video }] as const,
+          sources: [
+            {
+              name: video.name,
+              file: video,
+              storage: {
+                ipfs: true,
+                metadata: {
+                  name: 'interesting video',
+                  description: 'a great description of the video',
+                },
+              },
+            },
+          ] as const,
         }
       : null,
   );
@@ -131,12 +143,24 @@ to infer types properly from the `sources` parameter - please see below for an e
 <SyncedTabs group="lang" items={['React', 'React Native']}>
   <SyncedTab>
 
-```tsx {5} filename="React"
+```tsx filename="React"
 import { useCreateAsset } from '@livepeer/react';
 
 function SomeComponent() {
   const { mutate: createAsset, status } = useCreateAsset({
-    sources: [{ name: video.name, file: video }] as const,
+    sources: [
+      {
+        name: video.name,
+        file: video,
+        storage: {
+          ipfs: true,
+          metadata: {
+            name: 'interesting video',
+            description: 'a great description of the video',
+          },
+        },
+      },
+    ] as const,
   });
 }
 ```
@@ -151,7 +175,19 @@ function SomeComponent() {
   // get the URI from a file picker
   // then pass the URI into the source
   const { mutate: createAsset, status } = useCreateAsset({
-    sources: [{ name: video.name, file: { uri } }] as const,
+    sources: [
+      {
+        name: video.name,
+        file: { uri },
+        storage: {
+          ipfs: true,
+          metadata: {
+            name: 'interesting video',
+            description: 'a great description of the video',
+          },
+        },
+      },
+    ] as const,
   });
 }
 ```
