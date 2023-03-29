@@ -114,25 +114,6 @@ Use the task ID in the response to query for the transcoding task status. Once t
 
 For more information about transcode API usage refer to the [docs](/reference/api/transcode-video).
 
-## Playback From web3.storage
-
-You can use web3.storage’s w3link gateway to playback the transcoded video.
-
-Note: The w3link gateway currently does not handle playback of large transcoded videos (i.e. > 500 MB source video files) well. The team is currently working with the [web3.storage](http://web3.storage) team to identify and resolve this issue.
-
-Suppose you have the following task:
-
-- The value of `output.transcodeFile.baseUrl` for your task is `ipfs://bafybeiakkypfc7uzk6jnk6pg3f2fwumkahrmgbii7cigyyc7oejjo3ff4e`
-- The value of `output.transcodeFile.hls.path` is `/index.m3u8`
-
-Then, the master HLS playlist used for transcoded video playback will be available at:
-
-```bash
-https://bafybeiakkypfc7uzk6jnk6pg3f2fwumkahrmgbii7cigyyc7oejjo3ff4e.ipfs.w3s.link/index.m3u8
-```
-
-You can playback the transcoded video from web3.storage using this URL with any HLS player. For example, `https://lvpr.tv/?url=https://bafybeiakkypfc7uzk6jnk6pg3f2fwumkahrmgbii7cigyyc7oejjo3ff4e.ipfs.w3s.link/index.m3u8` will playback the video using the hosted Livepeer player.
-
 ## Code Examples
 
 - [Nodejs](https://github.com/livepeer/web3storage-livepeer-nodejs-example)
