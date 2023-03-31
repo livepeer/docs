@@ -1,0 +1,27 @@
+---
+title: 'Update Webhook'
+---
+
+# Update Webhook
+
+You can update a webhook by calling the `PATCH` webhook endpoint with the `webhookId`.
+It is a single endpoint that can update any of the mutable properties of a webhook. Specifically:
+
+- `name`
+- `url`
+- `events`
+
+### Request
+
+```bash
+curl --location --request PATCH 'https://livepeer.studio/api/webhook/{id}' \
+--header 'Authorization: Bearer {api_key}' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "url":"https://webhook.site/16a269f9-6963-469d-813a-95a6e6fc60c3"
+}'
+```
+
+### Response
+
+204 No Content

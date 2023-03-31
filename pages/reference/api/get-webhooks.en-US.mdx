@@ -1,0 +1,64 @@
+---
+title: 'Retrieve Webhooks'
+---
+
+# Retrieve Webhooks
+
+You can retrieve the webhooks by calling the `GET` webhook endpoint with the `webhookId`.
+
+### Request
+
+```bash
+curl 'https://livepeer.studio/api/webhook/{id}'
+```
+
+### Response
+
+200 OK
+
+```json
+[
+  {
+    "id": "209f21a3-17cc-472f-bc43-400df7087732",
+    "url": "https://webhook.site/16a269f9-6963-469d-813a-95a6e6fc60c1",
+    "kind": "webhook",
+    "name": "My webhook",
+    "events": ["stream.ended"],
+    "status": {
+      "lastFailure": {
+        "timestamp": 1679406648152,
+        "statusCode": 500
+      },
+      "lastTriggeredAt": 1679406661654
+    },
+    "userId": "8f175616-1a6d-4481-86f5-7351c041b5c1",
+    "createdAt": 1679404745721
+  },
+  {
+    "id": "543b536e-382e-4f19-9f91-04c6303efd22",
+    "url": "https://webhook.site/6c53ca89-d65c-4ede-93d0-693ce59283c1",
+    "kind": "webhook",
+    "name": "Token gate webhook (third-party)",
+    "events": ["playback.accessControl"],
+    "status": {
+      "lastFailure": {
+        "timestamp": 1680187690734,
+        "statusCode": 401
+      },
+      "lastTriggeredAt": 1680188774877
+    },
+    "userId": "8f175616-1a6d-4481-86f5-7351c041b5c1",
+    "createdAt": 1680187320312
+  }
+]
+```
+
+# Retrieve subscribed webhooks
+
+You can retrieve webhooks subscribed to a specific event by calling the `GET` webhook subscribed endpoint with the `event` name.
+
+### Request
+
+```bash
+curl 'https://livepeer.studio/api/webhook/subscribed/{event}'
+```
