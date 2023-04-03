@@ -29,40 +29,10 @@ This is an example of a payload this endpoint would receive:
 
 ## Step 2: Register a playback.accessControl webhook
 
-Use the Livepeer API to create a new webhook with the type playback.accessControl and specify the URL of your access control endpoint.
+Use the Livepeer Studio dashboard to create a new webhook with the type playback.accessControl and specify the URL of your access control endpoint.
+https://livepeer.studio/dashboard/developers/webhooks
 
-```tsx
-import fetch from 'node-fetch';
-
-const createWebhook = async () => {
-  try {
-    const response = await fetch('https://livepeer.studio/api/webhook', {
-      method: 'POST',
-      headers: {
-        Authorization: 'Bearer XXXXXXX',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        events: ['playback.accessControl'],
-        url: 'https://yourdomain.com/check-access',
-        name: 'Token gate webhook',
-      }),
-    });
-
-    if (response.ok) {
-      console.log('Request sent successfully!');
-    } else {
-      console.log('Error sending request.');
-    }
-  } catch (error) {
-    console.error('Error:', error);
-  }
-};
-
-createWebhook();
-```
-
-You are going to receive back a JSON containing the id of the webhook.
+You can then take the id of the webhook you created and use it in the next step.
 
 ## Step 3: Create an asset with a playback policy webhook
 
