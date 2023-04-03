@@ -159,10 +159,20 @@ Configuration for stream playback access-control policy. Defaults to `public`.
 type PlaybackPolicy = {
   /**
    * The type of playback policy to apply. `jwt` requires a signed JWT for
-   * playback. `public` indicates no access control will be applied (anyone
-   * with the `playbackId` can view without a JWT).
+   * playback. `webhook` requires that a webhook is configured and passed during the
+   * creation of the asset. `public` indicates no
+   * access control will be applied (anyone with the `playbackId` can
+   * view without a JWT or webhook).
    */
-  type: 'jwt' | 'public';
+  type: 'webhook' | 'jwt' | 'public';
+};
+
+type WebhookPlaybackPolicy<TContext extends object> = PlaybackPolicy & {
+  type: 'webhook';
+  /** The ID of the webhook which has already been created. */
+  webhookId: string;
+  /** The context which is passed to the webhook when it is called on playback. */
+  webhookContext: TContext;
 };
 ```
 
