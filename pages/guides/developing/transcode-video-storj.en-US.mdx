@@ -1,0 +1,116 @@
+---
+title: Transcode Video with Storj
+---
+
+## Introduction
+
+This guide will describe how to use the Livepeer [transcode API](/reference/api/transcode-video) to transcode and store video files in Storj using Storj’s S3 API.
+
+There are [code examples](#code-examples) provided for reference.
+
+## Storj S3 Credentials
+
+This step assumes that you have already created an account at [https://www.storj.io/](https://www.storj.io/).
+
+Follow the [Storj guide for generating S3 credentials](https://docs.storj.io/dcs/api-reference/s3-compatible-gateway#I7p7Q) using either the web interface or `uplink`. Make sure that the credentials have the proper read/write permissions for the bucket that your video files will be read from and that transcoded videos will be written to. The access key and secret key of the credentials will be used in the next step.
+
+## Upload Video to Storj
+
+Make sure you have a video file uploaded to your Storj bucket. You must upload the video file using one of the following methods:
+
+- Via the Storj web interface
+- Via the [Storj uplink CLI](https://www.storj.io/integrations/uplink-cli)
+- Via a S3 API client
+    - [AWS has S3 API client implementations](https://aws.amazon.com/developer/tools/) in different programming languages
+    - The [code examples](#code-examples) illustrate how to upload a video file to Storj using a S3 API client
+
+## Transcode with Livepeer
+
+This step assumes that you have already created a [Livepeer Studio account](https://livepeer.studio/) and an [API key](https://docs.livepeer.org/guides/developing/quickstart).
+
+Submit the following request:
+
+```bash
+curl --location --request POST 'https://livepeer.studio/api/transcode' \
+--header 'Authorization: Bearer $API_KEY' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+   "input":{
+      "type":"s3",
+      "endpoint":"https://gateway.storjshare.io",
+      "credentials":{
+         "accessKeyId":"$ACCESS_KEY_ID",
+         "secretAccessKey":"$SECRET_ACCESS_KEY"
+      },
+      "bucket":"mybucket",
+      "path":"/video/source.mp4"
+   },
+   "storage":{
+      "type":"s3",
+      "endpoint":"https://gateway.storjshare.io",
+      "credentials":{
+         "accessKeyId":"$ACCESS_KEY_ID",
+         "secretAccessKey":"$SECRET_ACCESS_KEY"
+      },
+      "bucket":"mybucket"
+   },
+   "outputs":{
+      "hls":{
+         "path":"/samplevideo/hls"
+      }
+   },
+   "profiles":[
+      {
+         "name":"480p",
+         "bitrate":1000000,
+         "fps":30,
+         "width":854,
+         "height":480
+      },
+      {
+         "name":"360p",
+         "bitrate":500000,
+         "fps":30,
+         "width":640,
+         "height":360
+      }
+   ]
+}'
+```
+
+- `$API_KEY` should be your Livepeer Studio API key
+- `$ACCESS_KEY_ID` should be the access key and `$SECRET_ACCESS_KEY` should be the secret key of the S3 credentials you generated in the previous step
+- `input.bucket` should be the name of your Storj bucket
+- `input.path` should be the path that your video file can be found in the Storj bucket
+- `outputs.hls.path` will be the path that the HLS playlist and mpegts segments will be found in when transcoding is complete
+- `profiles` is an optional parameter to specify the desired properties of transcoded video
+
+Use the task ID in the response to query for the transcoding task status. Once the task is complete, the HLS playlist and mpegts segments will be available at `outputs.hls.path`.
+
+For more information about transcode API usage refer to the [docs](/reference/api/transcode-video).
+
+## Playback From Storj
+
+You can create a public playback URL for the transcoded video by first creating a shared Storj URL:
+
+- If you are using `uplink`, follow the [Storj Link Sharing guide](https://docs.storj.io/dcs/api-reference/uplink-cli/share-command/#f-jKX) to create a URL for your bucket
+- Ex. `uplink share sj://demo-bucket/ --url --not-after=none --base-url=https://link.storjshare.io`
+- If you are using the web interface, navigate to your bucket under “Buckets” and click the “Share Bucket” button to create a URL for your bucket
+
+The URL should look like this:
+
+```bash
+https://link.storjshare.io/jwjfgdxkvmfgngsgitii6pny62za/demo-bucket
+```
+
+Suppose `outputs.hls.path` for the request in the previous step was `/samplevideo/hls`. The master HLS playlist used for playback will be available at:
+
+```bash
+https://link.storjshare.io/jwjfgdxkvmfgngsgitii6pny62za/demo-bucket
+```
+
+You can playback the transcoded video from Storj using this URL with any HLS player. For example, `https://lvpr.tv/?url=https://link.storjshare.io/raw/jwjfgdx…/demo-bucket/samplevideo/hls/index.m3u8` will playback the video using the hosted Livepeer player.
+
+## Code Examples
+
+- [Nodejs](https://github.com/livepeer/storj-livepeer-nodejs-example)
