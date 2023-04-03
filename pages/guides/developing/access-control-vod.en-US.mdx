@@ -8,15 +8,22 @@ import { AccessControl } from '@components/react/examples';
 
 # VOD with Access Control
 
-Adding access control to a video on-demand only takes a few lines of code. The example below uses useCreateAsset and a webhook to create and watch a gated video on-demand.
+Adding access control to a video on-demand only takes a few lines of code.
+The example below uses `useCreateAsset` and a webhook to create and watch a gated video on-demand.
 
-## Step 1: Create an Access Control webhook handler
+<Callout>
+  The `webhook` access control flow also works the same with Streams - this
+  example just shows it being used with Assets as a demonstration.
+</Callout>
 
-Set up an endpoint (e.g., https://yourdomain.com/check-access) to handle the logic for granting or denying access to your VOD assets. This endpoint should accept a POST request with a JSON payload containing the access key and webhook context.
+## Step 1: Create an Access Control Webhook Handler
+
+Set up an endpoint (e.g., https://yourdomain.com/api/check-access) to handle the logic for granting or denying access to your VOD assets.
+This endpoint should accept a POST request with a JSON payload containing the access key and webhook context.
 
 This is an example of a payload this endpoint would receive:
 
-```tsx
+```json filename="POST /api/check-access"
 {
   "accessKey": "your-access-key",
   "context": {
@@ -27,16 +34,18 @@ This is an example of a payload this endpoint would receive:
 }
 ```
 
-## Step 2: Register a playback.accessControl webhook
+The payload in `context` is defined by your application.
 
-Use the Livepeer Studio dashboard to create a new webhook with the type playback.accessControl and specify the URL of your access control endpoint.
+## Step 2: Register an Access Control Webhook
+
+Use the Livepeer Studio dashboard to create a new webhook with the type `playback.accessControl` and specify the URL of your access control endpoint.
 https://livepeer.studio/dashboard/developers/webhooks
 
-You can then take the id of the webhook you created and use it in the next step.
+You can then take the ID of the webhook you created and use it in the next step.
 
 ## Step 3: Create an asset with a playback policy webhook
 
-You can now create an asset with a playback policy webhook, passing the id of the webhook you created in step 2.
+You can now create an asset with a playback policy webhook, passing the ID of the webhook you created in Step 2.
 
 ```tsx
 import { useCreateAsset } from '@livepeer/react';
@@ -127,27 +136,46 @@ export const CreateAndViewAsset = () => {
 };
 ```
 
-## Step 4: Configure the player with an access key
+## Step 4: Configure the Player with an Access Key
 
-When setting up the player, append the access key to the m3u8 URL as a query parameter, like https://playback.livepeer.studio/asset/hls/abcd1234/index.m3u8?accessKey=your-access-key.
+If you are using the Livepeer.js Player, you can use the [`accessKey`](/reference/livepeer-js/Player#accesskey)
+prop to provide your custom access key, which is then passed to the webhook you created to verify that it is valid.
 
-## Step 5: Receive the webhook call from Livepeer
+```tsx
+import { Player } from '@livepeer/react';
 
-When a user attempts to access the VOD asset, Livepeer will call your access control endpoint with the access key and webhook context. Your endpoint should process the request and return a response indicating whether the stream access should be allowed or disallowed.
-Example request sent to your access control endpoint:
+export const CreateAndViewAsset = () => {
+  const accessKey = getAccessKeyForYourApplication();
+
+  return <Player playbackId={playbackId} accessKey={accessKey} />;
+};
+```
+
+If you are not using the player, you will need to manually append the access key to the m3u8 URL as a query parameter, similar to:
 
 ```
-POST ${webhook URL}
+https://playback.livepeer.studio/asset/hls/abcd1234/index.m3u8?accessKey=your-access-key
+```
+
+## Step 5: Receive the Webhook from Livepeer
+
+When a user attempts to access the VOD asset, Livepeer will call your access control endpoint with the access key and webhook context.
+Your endpoint should process the request and return a response indicating whether the stream access should be allowed or disallowed.
+
+Here is an example request sent to your access control endpoint:
+
+```json filename="POST /api/check-access"
 {
-  context: {
+  "context": {
     // Same value from the `asset.playbackPolicy.webhookContext` field
   },
-	accessKey: "<access_key> (exact value of the query string in the playbackURL)"
+  "accessKey": "<access_key>" // this is exact value of the prop passed to the Player, or the query parameter
 }
 ```
 
-In your access control endpoint, implement the logic to verify the access key and decide whether to grant access to the VOD asset. If the access is allowed, return a 2XX response. Otherwise, the playback will be disallowed.
+In your access control endpoint, implement the logic to verify the access key and decide whether to grant access to the VOD asset.
+If the access is allowed, return a `2XX` response. Otherwise, the playback will be disallowed.
 
 ## Wrap Up
 
-That's it! Access control, added. You now have a solution for gating on-demand content!
+That's it! Access control, added. You now have a solution for gating on-demand content with webhooks! This also works for streams as well.
