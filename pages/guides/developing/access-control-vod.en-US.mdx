@@ -1,0 +1,153 @@
+---
+title: 'VOD with Access Control'
+description: 'Learn how to add access control to a VOD with livepeer.js'
+---
+
+import { Callout } from 'nextra-theme-docs';
+import { AccessControl } from '@components/react/examples';
+
+# VOD with Access Control
+
+Adding access control to a video on-demand only takes a few lines of code. The example below uses useCreateAsset and a webhook to create and watch a gated video on-demand.
+
+## Step 1: Create an Access Control webhook handler
+
+Set up an endpoint (e.g., https://yourdomain.com/check-access) to handle the logic for granting or denying access to your VOD assets. This endpoint should accept a POST request with a JSON payload containing the access key and webhook context.
+
+This is an example of a payload this endpoint would receive:
+
+```tsx
+{
+  "accessKey": "your-access-key",
+  "context": {
+    "assetId": "abcd1234",
+    "userId": "user5678"
+  },
+  "timestamp": 1680530722502
+}
+```
+
+## Step 2: Register a playback.accessControl webhook
+
+Use the Livepeer Studio dashboard to create a new webhook with the type playback.accessControl and specify the URL of your access control endpoint.
+https://livepeer.studio/dashboard/developers/webhooks
+
+You can then take the id of the webhook you created and use it in the next step.
+
+## Step 3: Create an asset with a playback policy webhook
+
+You can now create an asset with a playback policy webhook, passing the id of the webhook you created in step 2.
+
+```tsx
+import { useCreateAsset } from '@livepeer/react';
+
+import { useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+
+export const CreateAndViewAsset = () => {
+  const [video, setVideo] = useState<File | undefined>();
+  const {
+    mutate: createAsset,
+    data: asset,
+    status,
+    progress,
+    error,
+  } = useCreateAsset(
+    video
+      ? {
+          sources: [
+            {
+              name: video.name,
+              file: video,
+              playbackPolicy: {
+                type: 'webhook',
+                // This is the id of the webhook you created in step 2
+                webhookId: '<webhook_id>',
+                webhookContext: {
+                  // This is the context you want to pass to your webhook
+                  // It can be anything you want, and it will be passed back to your webhook
+                },
+              },
+            },
+          ] as const,
+        }
+      : null,
+  );
+
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    if (acceptedFiles && acceptedFiles.length > 0 && acceptedFiles?.[0]) {
+      setVideo(acceptedFiles[0]);
+    }
+  }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      'video/*': ['*.mp4'],
+    },
+    maxFiles: 1,
+    onDrop,
+  });
+
+  const progressFormatted = useMemo(
+    () =>
+      progress?.[0].phase === 'failed'
+        ? 'Failed to process video.'
+        : progress?.[0].phase === 'waiting'
+        ? 'Waiting'
+        : progress?.[0].phase === 'uploading'
+        ? `Uploading: ${Math.round(progress?.[0]?.progress * 100)}%`
+        : progress?.[0].phase === 'processing'
+        ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
+        : null,
+    [progress],
+  );
+
+  return (
+    <>
+      <div {...getRootProps()}>
+        <input {...getInputProps()} />
+        <p>Drag and drop or browse files</p>
+      </div>
+
+      {createError?.message && <p>{createError.message}</p>}
+
+      {video ? <p>{video.name}</p> : <p>Select a video file to upload.</p>}
+      {progressFormatted && <p>{progressFormatted}</p>}
+
+      <button
+        onClick={() => {
+          createAsset?.();
+        }}
+        disabled={!createAsset || createStatus === 'loading'}
+      >
+        Upload
+      </button>
+    </>
+  );
+};
+```
+
+## Step 4: Configure the player with an access key
+
+When setting up the player, append the access key to the m3u8 URL as a query parameter, like https://playback.livepeer.studio/asset/hls/abcd1234/index.m3u8?accessKey=your-access-key.
+
+## Step 5: Receive the webhook call from Livepeer
+
+When a user attempts to access the VOD asset, Livepeer will call your access control endpoint with the access key and webhook context. Your endpoint should process the request and return a response indicating whether the stream access should be allowed or disallowed.
+Example request sent to your access control endpoint:
+
+```
+POST ${webhook URL}
+{
+  context: {
+    // Same value from the `asset.playbackPolicy.webhookContext` field
+  },
+	accessKey: "<access_key> (exact value of the query string in the playbackURL)"
+}
+```
+
+In your access control endpoint, implement the logic to verify the access key and decide whether to grant access to the VOD asset. If the access is allowed, return a 2XX response. Otherwise, the playback will be disallowed.
+
+## Wrap Up
+
+That's it! Access control, added. You now have a solution for gating on-demand content!

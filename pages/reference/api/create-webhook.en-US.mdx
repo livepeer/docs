@@ -1,0 +1,59 @@
+---
+title: Create Webhook
+---
+
+# Create webhook
+
+To create a new webhook, you need to make an API call with the events you want to listen for and the URL that will be called when those events occur.
+
+### Request
+
+```bash
+curl \
+    --location --request POST 'https://livepeer.studio/api/webhook' \
+    -H "Authorization: Bearer $API_TOKEN" \
+    -H "Content-Type: application/json" \
+    --data-raw '{
+      "events": ["event_name_1", "event_name_2"],
+      "url": "{webhook_url}",
+      "name": "Webhook name"
+  }' \
+  https://livepeer.studio/api/webhook
+```
+
+### Response example
+
+```jsx
+{
+  "createdAt": 1624939859628,
+  "events": ["event_name_1", "event_name_2"],
+  "id": "e7b8a281-8952-4791-b837-183cb95bbf32",
+  "kind": "webhook",
+  "name": "Webhook name",
+  "url": "{webhook_url}",
+  "userId": "ffcd3b74-9908-4d23-be05-58e1480e752a"
+}
+```
+
+## Types of Events
+
+| Name                       | Description                                                                                                                                                            |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `stream.started`           | The parent stream object's isActive value is marked as true and the .m3u8 HLS URL works                                                                                |
+| `stream.idle`              | The parent stream object's isActive value should be marked as false and the .m3u8 HLS URL no longer works                                                              |
+| `recording.ready`          | This fires when a recording is ready to be downloaded                                                                                                                  |
+| `recording.started`        | This fires when recording has started on an active stream                                                                                                              |
+| `recording.waiting`        | This fires after a stream with recording on has concluded and is not yet ready to be downloaded. Typically it takes 5 minutes for recordings to be ready for download. |
+| `multistream.connected`    | This fires when we've successfully connected to the multistream target                                                                                                 |
+| `multistream.error`        | This fires when we've encountered an error either while attempting to connect to the third party streaming service or while broadcasting.                              |
+| `multistream.disconnected` | This fires when we are no longer sending video to the multistream target.                                                                                              |
+| `asset.created`            | This fires when a On Demand asset is created.                                                                                                                          |
+| `asset.updated`            | This fires when a On Demand asset is updated.                                                                                                                          |
+| `asset.ready`              | This fires when a On Demand asset is ready.                                                                                                                            |
+| `asset.failed`             | This fires when a On Demand asset fails during the upload or during processing.                                                                                        |
+| `asset.deleted`            | This fires when a On Demand asset is deleted.                                                                                                                          |
+| `task.spawned`             | This fires when a task is spawned. (For example, an On Demand upload)                                                                                                  |
+| `task.updated`             | This fires when a task is updated.                                                                                                                                     |
+| `task.completed`           | This fires when a task completes its execution successfully.                                                                                                           |
+| `task.failed`              | This fires when a task has failed.                                                                                                                                     |
+| `playback.accessControl`   | A specialized webhook for playback access control. Unlike other events, this is only used for assets and streams that reference its ID on their playback policy.       |
