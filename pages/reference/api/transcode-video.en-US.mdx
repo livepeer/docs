@@ -32,6 +32,9 @@ curl --location --request POST 'https://livepeer.studio/api/transcode' \
    "outputs":{
       "hls":{
          "path":"/samplevideo/hls"
+      },
+      "mp4":{
+         "path":"/samplevideo/mp4"
       }
    },
    "profiles":[
@@ -76,7 +79,10 @@ var raw = JSON.stringify({
   "outputs": {
     "hls": {
       "path": "/samplevideo/hls"
-    }
+    },
+    "mp4": {
+      "path": "/samplevideo/mp4"
+    },    
   },
   "profiles": [
     {
@@ -131,6 +137,9 @@ fetch(
             "outputs": {
                 "hls": {
                     "path": "/samplevideo/hls"
+                },
+                "mp4": {
+                    "path": "/samplevideo/mp4"
                 }
             }
         }
@@ -159,8 +168,13 @@ When `status.phase` is `completed`,  transcoding will be complete and the result
    "output":{
       "transcodeFile":{
          "hls":{
-            "path":"/index.m3u8"
-         }
+            "path":"/samplevideo/hls/index.m3u8"
+         },
+         "mp4": [
+            { "path": "/samplevideo/mp4/static360p0.mp4" },
+            { "path": "/samplevideo/mp4/static720p0.mp4" },
+            { "path": "/samplevideo/mp4/static1080p0.mp4" }
+         ]
       }
    },
    "params":{
@@ -171,6 +185,9 @@ When `status.phase` is `completed`,  transcoding will be complete and the result
          "outputs":{
             "hls":{
                "path":"/samplevideo/hls"
+            },
+            "mp4":{
+               "path":"/samplevideo/mp4"
             }
          },
          "storage":{
@@ -187,7 +204,7 @@ When `status.phase` is `completed`,  transcoding will be complete and the result
 }
 ```
 
-The results will be available under `params.outputs.hls.path` in the specified storage service.
+The results will be available under `params.outputs.hls.path` and `params.outputs.mp4.path` in the specified storage service.
 
 ## Input
 
@@ -288,6 +305,7 @@ This endpoint currently supports the following storage services:
 This endpoint currently supports the following output types:
 
 - HLS
+- MP4
 
 **HLS**
 
@@ -302,3 +320,17 @@ This endpoint currently supports the following output types:
 | Name | Type | Description |
 | --- | --- | --- |
 | path | string | The path of the directory that HLS playlists and mpegts segments will be stored in. |
+
+**MP4**
+
+```json
+{
+	"mp4": {
+        "path": "/samplevideo/mp4"
+    }
+}
+```
+
+| Name | Type | Description |
+| --- | --- | --- |
+| path | string | The path of the directory that MP4 output videos will be stored in. |

@@ -57,6 +57,9 @@ curl --location --request POST 'https://livepeer.studio/api/transcode' \
    "outputs":{
       "hls":{
          "path":"/samplevideo/hls"
+      },
+      "mp4":{
+         "path":"/samplevideo/mp4"
       }
    },
    "profiles":[
@@ -83,9 +86,10 @@ curl --location --request POST 'https://livepeer.studio/api/transcode' \
 - `input.bucket` should be the name of your Storj bucket
 - `input.path` should be the path that your video file can be found in the Storj bucket
 - `outputs.hls.path` will be the path that the HLS playlist and mpegts segments will be found in when transcoding is complete
+- `outputs.mp4.path` will be the path that the MP4 video files will be found in when transcoding is complete
 - `profiles` is an optional parameter to specify the desired properties of transcoded video
 
-Use the task ID in the response to query for the transcoding task status. Once the task is complete, the HLS playlist and mpegts segments will be available at `outputs.hls.path`.
+Use the task ID in the response to query for the transcoding task status. Once the task is complete, the HLS playlist and mpegts segments will be available at `outputs.hls.path` and MP4 output videos will be available at `outputs.mp4.path`.
 
 For more information about transcode API usage refer to the [docs](/reference/api/transcode-video).
 
