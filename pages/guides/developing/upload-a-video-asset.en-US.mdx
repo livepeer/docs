@@ -121,7 +121,39 @@ export const CreateAndViewAsset = () => {
 };
 ```
 
-## Step 3: Stream Transcoded Video
+## Step 3: Upload video to IPFS
+
+If you want to upload the video directly to IPFS, you can simple update the [sources](https://docs.livepeer.org/reference/livepeer-js/asset/useCreateAsset#sources) array in `useCreateAsset` hook.
+
+```jsx {14-20}
+  const {
+    mutate: createAsset,
+    data: asset,
+    status,
+    progress,
+    error,
+  } = useCreateAsset(
+    video
+      ? {
+          sources: [
+            {
+              name: video.name,
+              file: video,
+              storage: {
+                ipfs: true,
+                metadata: {
+                  name: 'interesting video',
+                  description: 'a great description of the video',
+                }
+              }
+            }
+          ] as const,
+        }
+      : null,
+  );
+```
+
+## Step 4: Stream Transcoded Video
 
 Lastly, when the video is uploaded, we wait for `useCreateAsset` to poll the API until the asset has been processed and
 has a `playbackId`. Then, we show the video using the [`Player`](/reference/livepeer-js/Player).
