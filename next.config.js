@@ -84,6 +84,11 @@ const config = {
         destination: '/guides/delegating/bridge-lpt-to-arbitrum',
         permanent: false,
       },
+      {
+        source: '/orchestrators',
+        destination: '/guides/orchestrating/get-started',
+        permanent: false,
+      },
     ];
   },
 };
