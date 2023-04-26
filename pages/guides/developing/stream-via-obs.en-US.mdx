@@ -46,7 +46,7 @@ because it is easy to use, open source, and offers a high degree of customizatio
 ## Select Output Settings and Streaming tab
 
 1. In the Output Mode select `Advanced`.
-2. Set the keyframe interval to 2 seconds (see the [low latency](#configuring-obs-for-low-latency) section below).
+2. Set the keyframe interval to 2-5 seconds (see the [low latency](#configuring-obs-for-low-latency) section below).
 3. Save your settings.
 
 ![OBS5](/images/obs/OBS5.png)
@@ -57,7 +57,6 @@ After saving your settings, OBS will return to the stream console.
 
 1. Press start streaming (from the output you selected when inputting your stream
    settings above).
-
 2. Navigate back to your created stream in Livepeer Studio. It should now appear as "Active."
 
 ![LVS4](/images/obs/LVS4.png)
@@ -98,7 +97,7 @@ This profile offers a good mix between quality and latency, making it suitable f
 ```python filename="Constant Bitrate Profile"
 Rate Control: CBR
 Bit Rate: 2000
-Keyframe Interval: 5
+Keyframe Interval: 2
 CPU Usage Preset: Very fast
 Profile: High
 Tune: None
@@ -112,13 +111,17 @@ This profile prioritizes maintaining a certain level of quality without being to
 ```python filename="Constant Quality Profile"
 Rate Control: CRF
 CRF: 25
-Keyframe Interval: 5
+Keyframe Interval: 2
 CPU Usage Preset: Very fast
 Profile: High
 Tune: None
 No additional x264 options
 ```
 
-The optimal stream settings may vary depending on your specific requirements. Use the recommended profiles as a starting point
-and experiment to find the best balance between latency, quality, and user experience. Remember that the key to finding the best
-settings is to understand the impact of each setting and adapt them to your needs.
+Since Livepeer is mostly HLS-based, a 2-second keyframe interval is generally encouraged, as HLS has a minimum latency of around 3-5
+keyframe intervals. This choice would prioritize low latency.
+
+However, if the connection is fairly poor, a 5-second keyframe interval will allow for higher quality per bit at the expense
+of more latency. If quality is valued over latency, this is a better choice, and you could even consider going for longer
+intervals. It is essential to understand the impact of each setting and adapt them to your specific requirements and priorities.
+The optimal stream settings may vary depending on your specific requirements.
