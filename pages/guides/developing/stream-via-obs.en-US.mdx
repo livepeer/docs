@@ -46,14 +46,8 @@ because it is easy to use, open source, and offers a high degree of customizatio
 ## Select Output Settings and Streaming tab
 
 1. In the Output Mode select `Advanced`.
-2. Set the keyframe interval to 2 seconds.
+2. Set the keyframe interval to 2 seconds (see the [low latency](#configuring-obs-for-low-latency) section below).
 3. Save your settings.
-
-<Callout>
-  Livepeer works best with consistent, short keyframe intervals, ideally
-  2 seconds. You should set or encourage your users to set this in their
-  broadcasting software.
-</Callout>
 
 ![OBS5](/images/obs/OBS5.png)
 
@@ -64,6 +58,67 @@ After saving your settings, OBS will return to the stream console.
 1. Press start streaming (from the output you selected when inputting your stream
    settings above).
 
-2. Navigate back to your created stream in Livepeer Studio. It should now appear as “Active.”
+2. Navigate back to your created stream in Livepeer Studio. It should now appear as "Active."
 
 ![LVS4](/images/obs/LVS4.png)
+
+## Configuring OBS for Low Latency
+
+### Balancing Low Latency with User Experience
+
+Achieving the right balance between low latency and stream quality is essential for providing the best possible user experience.
+Two settings that significantly impact your stream quality, latency, and user experience are:
+
+- **Rate Control:** This setting dictates the bitrate or "quality" of the stream. A high amount of bandwidth usually means better
+  quality, but keep in mind that your output can never improve the quality of your stream beyond your input.
+- **Keyframe Interval:** Video streams consist of full frames and data relative to the full frames. This setting determines how often
+  a full frame appears, which heavily influences latency.
+
+#### Optimizing for Low Latency
+
+Low latency is primarily determined by the _keyframe interval_. Having keyframes appear more frequently allows viewers to "hook
+onto" a point closer to the actual live point. However, full frames have a higher bit cost, so more bandwidth is needed to
+generate a stream of the same quality compared to a lower number of keyframes.
+
+#### Optimizing for Stream Quality and User Experience
+
+Stream quality and user experience are mainly decided by the rate control of the stream. When optimizing for user experience,
+consider the stability of the video playback and the smoothness of the video. This is mostly decided by the peak bitrate of
+the video. A high peak bitrate can cause playback problems like buffering or skips in video playback for some viewers.
+
+### Recommended OBS Settings
+
+The following profiles provide a good starting point for balancing low latency with stream quality and user experience.
+You may need to adjust the settings to suit your specific situation.
+
+#### Constant Bitrate
+
+This profile offers a good mix between quality and latency, making it suitable for most situations.
+
+```python filename="Constant Bitrate Profile"
+Rate Control: CBR
+Bit Rate: 2000
+Keyframe Interval: 5
+CPU Usage Preset: Very fast
+Profile: High
+Tune: None
+No additional x264 options
+```
+
+#### Constant Quality
+
+This profile prioritizes maintaining a certain level of quality without being too concerned about the bitrate.
+
+```python filename="Constant Quality Profile"
+Rate Control: CRF
+CRF: 25
+Keyframe Interval: 5
+CPU Usage Preset: Very fast
+Profile: High
+Tune: None
+No additional x264 options
+```
+
+The optimal stream settings may vary depending on your specific requirements. Use the recommended profiles as a starting point
+and experiment to find the best balance between latency, quality, and user experience. Remember that the key to finding the best
+settings is to understand the impact of each setting and adapt them to your needs.
