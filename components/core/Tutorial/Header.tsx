@@ -61,7 +61,8 @@ export default function Header() {
   };
 
   useEffect(() => {
-    const fetchedTutorial = getTutorialByRouteName(tutorials, router.asPath);
+    const asPath = router.asPath.split('?')[0] || '';
+    const fetchedTutorial = getTutorialByRouteName(tutorials, asPath);
     setTutorial(fetchedTutorial);
     setIsLoading(false);
   }, [router.asPath]);
