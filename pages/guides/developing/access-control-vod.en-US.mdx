@@ -50,7 +50,7 @@ You can now create an asset with a playback policy webhook, passing the ID of th
 ```tsx
 import { useCreateAsset } from '@livepeer/react';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useMemo } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 export const CreateAndViewAsset = () => {
@@ -58,9 +58,9 @@ export const CreateAndViewAsset = () => {
   const {
     mutate: createAsset,
     data: asset,
-    status,
+    status: createStatus,
     progress,
-    error,
+    error: createError,
   } = useCreateAsset(
     video
       ? {
