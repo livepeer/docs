@@ -1,0 +1,54 @@
+---
+title: 'Setting Up Multiparticipant Livestreams'
+description: 'Learn how to set up a multiparticipant livestream with Livepeer API'
+---
+
+# Setting Up Multiparticipant Livestreams
+
+This guide will describe how to set up a virtual room with multiple participants in a typical meeting style interface and optionally a livestream for viewers.
+
+The following steps assume that you have already created a [Livepeer Studio account](https://livepeer.studio/) and an [API key](https://docs.livepeer.org/guides/developing/quickstart).
+
+## Step 1: Create a Room
+
+```bash filename="Call the create room API"
+curl --location --request POST "https://livepeer.studio/api/room" \
+--header "Authorization: Bearer $API_KEY"
+```
+
+## Step 2: Add a Participant
+
+Using the room ID returned in the previous step now make the following API call.
+
+```bash filename="Call the add participant API"
+curl --location --request POST "https://livepeer.studio/api/room/$ROOM_ID/user" \
+--header "Authorization: Bearer $API_KEY" \
+--header "Content-Type: application/json" \
+--data-raw '{
+  "name": "$PARTICIPANT_NAME"
+}'
+```
+
+- `$ROOM_ID` should be the room ID returned in the previous step
+- `$PARTICIPANT_NAME` should be a human readable display name for the participant
+
+## Step 3: Join the Room
+
+The response from the previous step will give you a joining link which you can open in a browser to join the room. Repeat the previous step to add the required number of participants.
+
+It's also possible to build a custom front end using the [LiveKit client SDKs](https://docs.livekit.io/references/client-sdks/) and pass in the token returned from the response in the previous step rather than the joining link. We intend to add support for other client SDKs in the future.
+
+## Step 4 (Optional): Start a Livestream for the Room
+
+For viewer only participants it's possible to set up a livestream for the room. Firstly create a livestream using your preferred method e.g. the [Livestream API](/reference/api/create-stream). Then make the following API call.
+
+```bash filename="Call the start egress API"
+curl --location --request POST "https://livepeer.studio/api/room/$ROOM_ID/egress" \
+--header "Authorization: Bearer $API_KEY" \
+--header "Content-Type: application/json" \
+--data-raw '{
+  "streamId": "$STREAM_ID"
+}'
+```
+
+- `$STREAM_ID` should be the ID of the livestream you created e.g. `48d3d8b8-ce4c-4a6e-bae8-b4c76c52431f`
