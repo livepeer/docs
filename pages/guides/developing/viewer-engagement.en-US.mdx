@@ -270,7 +270,7 @@ data.
 
 ```js
 const response = await fetch(
-  'https://livepeer.studio/api/data/views/query/total/${playbackId}',
+  `https://livepeer.studio/api/data/views/query/total/${inputPlaybackId}`,
   {
     method: 'GET',
     headers: {
@@ -279,7 +279,17 @@ const response = await fetch(
   },
 );
 
-const { viewCount, playtimeMins } = await response.json();
+const { playbackId, dStorageUrl, viewCount, playtimeMins } =
+  await response.json();
+if (playbackId) {
+  console.log(
+    `Playback ID ${playbackId} had ${viewCount} views and ${playtimeMins} minutes of playtime`,
+  );
+} else {
+  console.log(
+    `All assets for ${dStorageUrl} had ${viewCount} views and ${playtimeMins} minutes of playtime`,
+  );
+}
 ```
 
   </Tab>
@@ -292,3 +302,120 @@ curl --location --request GET "https://livepeer.studio/api/data/views/query/tota
 
  </Tab>
 </Tabs>
+
+### Step 4: Diving deeper
+
+For more information about the API schema for all the endpoints in this guide
+(mentioned above and below), check our [API
+reference](/todo-api-reference-link).
+
+If you're happy with the above metrics you can stop here. If you want to build
+more advanced analytics, you can use the following API endpoints to get more
+detailed data.
+
+#### Creator API
+
+This API can be called from the frontend to retrieve detailed engagmenet metrics
+for a specific resource. The only restriction it has is that it has to be called
+with an `assetId` or `streamId` values, which are private values today that only
+the asset creator should have access. Soon this creator ownership will be
+validated using wallet signatures instead.
+
+The idea for this API is to build creator analytics dashboards. It can be called
+from the frontend and can provide detailed insights to creators about their
+assets and streams.
+
+<Tabs items={['JavaScript', 'cURL']}>
+  <Tab>
+
+```js
+const response = await fetch(
+  `https://livepeer.studio/api/data/views/query/creator?assetId=${assetId}&timeStep=day&breakdownBy[]=timezone`,
+  {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${process.env.API_TOKEN}`,
+    },
+  },
+);
+
+const metrics = await response.json();
+for (const metric of metrics) {
+  const { playbackId, timestamp, timezone, viewCount, playtimeMins } = metric;
+  const date = new Date(timestamp).toDateString();
+  console.log(
+    `Playback ID ${playbackId} had ${viewCount} views and ${playtimeMins} minutes of playtime on ${date} from users in ${timezone}`,
+  );
+}
+```
+
+  </Tab>
+  <Tab>
+
+```bash
+curl --location --request GET "https://livepeer.studio/api/data/views/query/creator?assetId=${assetId}&timeStep=day&breakdownBy[]=timezone" \
+    -H "Authorization: Bearer $API_TOKEN"
+```
+
+ </Tab>
+</Tabs>
+
+#### Full access API
+
+This API can be called from the backend to retrieve detailed engagmenet metrics
+for a specific resource. It requires a non-CORS API key to be used, meaning that
+it cannot be called from the frontend. This is for securitt reasons since it
+provides full access to all metrics in the account.
+
+The idea is that developers can build their own abstraction and authorization
+workflows and expose these metrics to user in their own dashboards. This API
+also provides the most flexibility in queries.
+
+<Tabs items={['JavaScript', 'cURL']}>
+  <Tab>
+
+```js
+const response = await fetch(
+  `https://livepeer.studio/api/data/views/query?breakdownBy[]=device&breakdownBy[]=browser`,
+  {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${process.env.API_TOKEN}`,
+    },
+  },
+);
+
+const metrics = await response.json();
+for (const metric of metrics) {
+  // when no playbackId is specified we get metrics from all assets in the account.
+  const {
+    playbackId,
+    device,
+    browser,
+    viewCount,
+    playtimeMins,
+    ttfMs,
+    rebufferRatio,
+    errorRate,
+    existsBeforeStart,
+  } = metric;
+  const date = new Date(timestamp).toDateString();
+  console.log(
+    `Playback ID ${playbackId} has got ${viewCount} views and ${playtimeMins} minutes of playtime from users on ${device} using ${browser}`,
+  );
+}
+```
+
+  </Tab>
+  <Tab>
+
+```bash
+curl --location --request GET "https://livepeer.studio/api/data/views/query?breakdownBy[]=device&breakdownBy[]=browser" \
+    -H "Authorization: Bearer $API_TOKEN"
+```
+
+ </Tab>
+</Tabs>
+
+To see the full list of option that you can use in your queries check our [API
+reference](/todo-api-reference-link).
