@@ -303,17 +303,16 @@ curl --location --request GET "https://livepeer.studio/api/data/views/query/tota
  </Tab>
 </Tabs>
 
-### Step 4: Diving deeper
+For more information on the API used here check the [API
+reference](/reference/api#/paths/~1data~1views~1query~1total~1%7Bplaybackid%7D/get).
 
-For more information about the API schema for all the endpoints in this guide
-(mentioned above and below), check our [API
-reference](/todo-api-reference-link).
+### Step 4: Diving deeper
 
 If you're happy with the above metrics you can stop here. If you want to build
 more advanced analytics, you can use the following API endpoints to get more
 detailed data.
 
-#### Creator API
+#### [Creator metrics API](/reference/api#/paths/~1data~1views~1query~1creator/get)
 
 This API can be called from the frontend to retrieve detailed engagmenet metrics
 for a specific resource. The only restriction it has is that it has to be called
@@ -360,16 +359,17 @@ curl --location --request GET "https://livepeer.studio/api/data/views/query/crea
  </Tab>
 </Tabs>
 
-#### Full access API
+#### [All metrics access API](/reference/api#/paths/~1data~1views~1query/get)
 
 This API can be called from the backend to retrieve detailed engagmenet metrics
 for a specific resource. It requires a non-CORS API key to be used, meaning that
-it cannot be called from the frontend. This is for securitt reasons since it
-provides full access to all metrics in the account.
+it cannot be called from the frontend. This is for security reasons since this
+API provides full access to all metrics in the account, meaning it provides the
+most flexibility in queries.
 
-The idea is that developers can build their own abstraction and authorization
-workflows and expose these metrics to user in their own dashboards. This API
-also provides the most flexibility in queries.
+The idea is that developers should build their own abstraction and access
+control logics on top of this API and abstract it as higher level API in their
+apps.
 
 <Tabs items={['JavaScript', 'cURL']}>
   <Tab>
@@ -416,6 +416,3 @@ curl --location --request GET "https://livepeer.studio/api/data/views/query?brea
 
  </Tab>
 </Tabs>
-
-To see the full list of option that you can use in your queries check our [API
-reference](/todo-api-reference-link).
