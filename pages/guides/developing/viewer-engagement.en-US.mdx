@@ -37,12 +37,14 @@ To provide a comprehensive view of viewer behavior, our data product includes se
 - Continent, Country, and Subdivisions: Segment your data by location to identify regional trends and tailor your platform to local preferences.
 - Time Zone: Measure viewer behavior across different time zones, so you can optimize your platform for peak usage times.
 - Time: Analyze viewer behavior across different time periods (hour, day, week, month, year, all-time) to identify trends.
-<Callout>
+
+      <Callout>
+
   Notes:
 
 - Data is refreshed every 5 minutes
 - Newly uploaded videos may take up to an hour before viewership data is available
-</Callout>
+  </Callout>
 
 ## Using the Livepeer Studio Dashboard
 
@@ -240,22 +242,35 @@ export default function VideoPlayer() {
   </Tab>
 </Tabs>
 
-### Step 2: Get the `asset.id` of an existing asset
+### Step 2: Get the `playbackId` of an existing asset
 
-Get the `asset.id` of an existing asset. An `asset.id` can be found in the
+Get the `playbackId` of an existing asset. A `playbackId` can be found in the
 response object of any API call working with assets. If you haven't created an
 asset yet, you can follow the upload a video asset guide.
 
+<Callout>
+  The `playbackId` can be a canonical playback ID from a specific Livepeer asset
+  or stream objects, or dStorage identifiers for assets. Queries by dStorage ID
+  are universal/cross-acccount, as explained below, so check what makes the most
+  sense for your app.
+</Callout>
+
+When querying by dStorage ID (e.g. ipfs:// or ar:// URLs, or CID/txID), you will
+get views for all assets with that dStorage ID across any Livepeer account. This
+is useful to display global metrics from a video. To display the viewership
+metrics only from the videos in your account, use the API objects `playbackId`.
+
 ### Step 3: Retrieve viewership data
 
-Once you have the `asset.id`, you can make a request to get the viewership data.
+Once you have the `playbackId`, you can make a request to get the viewership
+data.
 
 <Tabs items={['JavaScript', 'cURL']}>
   <Tab>
 
 ```js
 const response = await fetch(
-  'https://livepeer.studio/api/data/views/{assetId}/total',
+  'https://livepeer.studio/api/data/views/query/total/${playbackId}',
   {
     method: 'GET',
     headers: {
@@ -264,16 +279,16 @@ const response = await fetch(
   },
 );
 
-const { startViews } = (await response.json())[0];
+const { viewCount, playtimeMins } = await response.json();
 ```
 
   </Tab>
   <Tab>
 
 ```bash
-curl --location --request GET https://livepeer.studio/api/data/views/{assetId}/total \
+curl --location --request GET "https://livepeer.studio/api/data/views/query/total/${playbackId}" \
     -H "Authorization: Bearer $API_TOKEN"
 ```
 
-  </Tab>
+ </Tab>
 </Tabs>
