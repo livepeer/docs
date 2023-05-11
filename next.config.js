@@ -94,6 +94,11 @@ const config = {
         destination: '/reference/api',
         permanent: false,
       },
+      {
+        source: '/react/LivepeerConfig',
+        destination: '/reference/livepeer-js/LivepeerConfig',
+        permanent: false,
+      },
     ];
   },
 };
