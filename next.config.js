@@ -99,6 +99,11 @@ const config = {
         destination: '/reference/livepeer-js/LivepeerConfig',
         permanent: false,
       },
+      {
+        source: '/docs/Player',
+        destination: '/reference/livepeer-js/Player',
+        permanent: false,
+      },
     ];
   },
 };
