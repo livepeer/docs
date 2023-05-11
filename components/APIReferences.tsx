@@ -13,7 +13,7 @@ export default function APIReferences() {
       : theme === 'dark';
 
   return (
-    <div className="w-screen ">
+    <div className="w-screen">
       <RedocStandalone
         specUrl="https://raw.githubusercontent.com/livepeer/studio/master/packages/api/src/schema/api-schema.yaml"
         options={{
