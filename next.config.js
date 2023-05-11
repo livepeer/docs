@@ -35,7 +35,7 @@ const config = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ["docs.livepeer.org"]
+    domains: ['docs.livepeer.org'],
   },
   sentry: {
     // Use `hidden-source-map` rather than `source-map` as the Webpack `devtool`
@@ -87,6 +87,11 @@ const config = {
       {
         source: '/orchestrators',
         destination: '/guides/orchestrating/get-started',
+        permanent: false,
+      },
+      {
+        source: '/reference/api/:slug',
+        destination: '/reference/api',
         permanent: false,
       },
     ];
