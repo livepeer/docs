@@ -1141,9 +1141,10 @@ would compute `1280px * 2.5 = 3200px`, and then sort the MP4 renditions by which
 
 The Player, after `@livepeer/react@2.5.0`, will play back livestreams with low-latency WebRTC by default.
 If this does not succeed in playing back (commonly due to a slow network or connectivity issues), the Player
-will automatically fall back to HLS playback. Also, if the stream contains "bframes" (which are common for
-users streaming with OBS or other streaming apps), the Player will automatically fall back, so that out-of-order
-frames are not displayed.
+will automatically fall back to HLS playback. Also, if the stream contains B-frames, or bidirectional frames,
+(which are common for users streaming with OBS or other streaming apps), the Player will automatically fall
+back, so that out-of-order frames are not displayed. _Users should be instructed to turn off B-frames in their
+app._
 
 We only allow WebRTC playback through ICE servers, which are used to route traffic in restricted networking environments.
 

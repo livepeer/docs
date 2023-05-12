@@ -79,6 +79,14 @@ Low latency is primarily determined by the _keyframe interval_. Having keyframes
 onto" a point closer to the actual live point. However, full frames have a higher bit cost, so more bandwidth is needed to
 generate a stream of the same quality compared to a lower number of keyframes.
 
+<Callout>
+  We also require that the user turns off B-frames for lowest latency. B-frames,
+  or bidirectional frames, are a type of video compression frame used in video
+  encoding processes. They can improve video compression in certain situations,
+  but are not able to be played back in our WebRTC video playback, due to frames
+  appearing out-of-order.
+</Callout>
+
 #### Optimizing for Stream Quality and User Experience
 
 Stream quality and user experience are mainly decided by the rate control of the stream. When optimizing for user experience,
