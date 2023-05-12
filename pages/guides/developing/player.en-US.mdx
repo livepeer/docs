@@ -175,25 +175,28 @@ The API will return a JSON payload which looks like:
 The format of this payload is [defined here](/reference/api/get-playback).
 The `url` field can be used as the playback URL.
 
-### Handling MP4 sources
+### Handling various playback sources
 
 The playback info endpoint can return multiple sources in the response, as outlined above.
 These may include short form MP4 playback URLs, which allow you to obtain alternative
 URLs for your video asset to enable applications (and CDNs) to cache short videos for
-instant playback of subsequent
-videos. This means that viewers can experience instant time-to-first-frame (TTFF) when
+instant playback of subsequent videos. This means that viewers can experience instant time-to-first-frame (TTFF) when
 watching short videos.
 
 It is important to note that short form playback URLs are only available for
-video assets that are less than 2 minutes in duration. You can get the short
-form playback URLs by retrieving the playback info, replacing
+video assets that are less than 2 minutes in duration.
+
+These may also include WebRTC URLs for low latency livestream playback. These _must_ be played back with our
+ICE servers, which are used to route traffic in restricted networking environments.
+
+You can get the playback URLs by retrieving the playback info, replacing
 `PLAYBACK_ID` with your asset's playbackId:
 
 ```txt
 https://livepeer.studio/api/playback/{PLAYBACK_ID}
 ```
 
-If there are MP4 renditions available, the API will return a JSON payload similar to:
+If there are MP4 renditions or WebRTC playback available, the API will return a JSON payload similar to:
 
 ```json
 {
