@@ -152,6 +152,7 @@ function SomeComponent() {
       {
         name: video.name,
         file: video,
+        creatorId: '0xabcd000000000000000000000000000000001234',
         storage: {
           ipfs: true,
           metadata: {
@@ -179,6 +180,7 @@ function SomeComponent() {
       {
         name: video.name,
         file: { uri },
+        creatorId: '0xabcd000000000000000000000000000000001234',
         storage: {
           ipfs: true,
           metadata: {
@@ -212,6 +214,15 @@ type CreateAssetSourceUrl = {
   url: string;
   /** The storage configs for the new asset (e.g. IPFS) */
   storage?: Storage;
+  /**
+   * Sets the playback policy for the asset created.
+   */
+  playbackPolicy?: PlaybackPolicy;
+  /**
+   * Sets the creator ID for the asset that is created.
+   * This should be an wallet's public address.
+   */
+  creatorId?: CreateAssetCreatorId;
 };
 
 /** React Native file type */
@@ -226,11 +237,26 @@ type CreateAssetSourceFile = {
   file: File | ReadStream | NativeFile;
   /** The storage configs for the new asset (e.g. IPFS) */
   storage?: Storage;
+  /**
+   * Sets the playback policy for the asset created.
+   */
+  playbackPolicy?: PlaybackPolicy;
+  /**
+   * Sets the creator ID for the asset that is created.
+   * This should be an wallet's public address.
+   */
+  creatorId?: CreateAssetCreatorId;
 };
 
 /** Source(s) to upload - can be a file or URL source */
 type Sources = CreateAssetSourceFile[] | CreateAssetSourceUrl[];
 ```
+
+<Callout type="info">
+  We are planning on adding further features to the creator ID such as provable
+  claims. Reach out to us on [Discord](https://discord.gg/livepeer) if you're
+  interested!
+</Callout>
 
 If `CreateAssetSourceFile` is passed in the array, the `useCreateAsset` hook uses [tus](https://github.com/tus/tus-js-client) for resumable uploads and checks for existing uploads by default, before starting a
 new upload.

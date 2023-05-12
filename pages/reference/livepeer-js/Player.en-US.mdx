@@ -16,6 +16,9 @@ import {
 
 The `Player` component provides an easy way to display video or audio.
 
+It automatically handles different source types from a Livepeer provider, such as WebRTC, MP4, and HLS.
+These are seamlessly integrated so that playback has low latency under all network conditions.
+
 ## Usage
 
 <SyncedTabs group="lang" items={['React', 'React Native']}>
@@ -622,6 +625,28 @@ function PlayerComponent() {
   </SyncedTab>
 </SyncedTabs>
 
+### viewerId
+
+Allows a wallet identifier to be passed to the backend which allows for querying views by an identifier. This should be an wallet's public address.
+
+<Callout type="info">
+  We are planning on adding further features to the viewer ID, such as "verified
+  views" with a provable signature claim attached to these view counts. Reach
+  out to us on [Discord](https://discord.gg/livepeer) if you're interested!
+</Callout>
+
+```tsx filename="React & React Native" {6}
+function PlayerComponent() {
+  return (
+    <Player
+      title="Agent 327: Operation Barbershop"
+      playbackId="f5eese9wwl88k4g8"
+      viewerId="0xabcd000000000000000000000000000000001234"
+    />
+  );
+}
+```
+
 ### autoUrlUpload
 
 Enables automatic upload and playback from decentralized storage providers. Currently supports IPFS CIDs and IPFS/Arweave URLs. Defaults to `true`.
@@ -1111,3 +1136,18 @@ static multiplier (currently set to `x2.5`). This value is then compared to the 
 renditions are prioritized based on the distance between these values. This results in a choice of a rendition
 which is close to the screen size without visual quality issues. For instance, a device with a 1280 pixel width
 would compute `1280px * 2.5 = 3200px`, and then sort the MP4 renditions by which are closest to this value.
+
+### Low Latency Playback
+
+The Player, after `@livepeer/react@2.5.0`, will play back livestreams with low-latency WebRTC by default.
+If this does not succeed in playing back (commonly due to a slow network or connectivity issues), the Player
+will automatically fall back to HLS playback. Also, if the stream contains "bframes" (which are common for
+users streaming with OBS or other streaming apps), the Player will automatically fall back, so that out-of-order
+frames are not displayed.
+
+We only allow WebRTC playback through ICE servers, which are used to route traffic in restricted networking environments.
+
+<Callout>
+  We are planning on adding similar functionality to the React Native `Player` -
+  please reach out on Discord if you are interested.
+</Callout>
