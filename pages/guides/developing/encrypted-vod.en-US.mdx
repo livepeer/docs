@@ -1,0 +1,186 @@
+---
+title: 'Upload encrypted files to Livepeer'
+description: 'Learn how to upload and playback an encrypted video asset'
+---
+
+import { Callout } from 'nextra-theme-docs';
+
+# Encrypted VOD with Livepeer
+
+Livepeer enables you to upload encrypted video content or import it from decentralized storages. It creates a playback URL that can be covered by playback policies and access control.
+
+<Callout>
+	This guide utilize snippets in Golang as examples.
+</Callout>
+
+## Step 1: Generate an encryption key
+
+First, we generate a 256-bit encryption key to encrypt the file. 
+
+```go filename="main.go"
+// Generate random 256-bit encryption key
+key := make([]byte, 32)
+_, err = rand.Read(key)
+if err != nil {
+  log.Fatalf("Error generating random key: %v", err)
+}
+```
+
+## Step 2: Encrypt your video using the encryption key
+
+To encrypt a video file with the key we just generated, we follow these steps:
+
+1. Generate a random 128-bit initialization vector (IV).
+2. Pad the data using PKCS#7 padding.
+3. Encrypt the data using AES-CBC.
+
+```go filename="main.go"
+// Read the input file
+data, err := ioutil.ReadFile("your/local/path/source.mp4")
+if err != nil {
+  log.Fatalf("Error reading input file: %v", err)
+}
+
+// Generate random 128-bit IV
+iv := make([]byte, aes.BlockSize)
+_, err = rand.Read(iv)
+if err != nil {
+  log.Fatalf("Error generating random IV: %v", err)
+}
+
+// Pad the data using PKCS#7 padding
+paddedData := pkcs7Pad(data, aes.BlockSize)
+
+// Encrypt the data using AES-CBC with PKCS#7 padding
+block, err := aes.NewCipher(key)
+if err != nil {
+  log.Fatalf("Error creating AES cipher: %v", err)
+}
+ciphertext := make([]byte, len(paddedData))
+mode := cipher.NewCBCEncrypter(block, iv)
+mode.CryptBlocks(ciphertext, paddedData)
+
+// Write the encrypted data and IV to the output file
+encryptedData := make([]byte, aes.BlockSize+len(ciphertext))
+copy(encryptedData[:aes.BlockSize], iv)
+copy(encryptedData[aes.BlockSize:], ciphertext)
+err = ioutil.WriteFile("your/local/path/encrypted.mp4", encryptedData, 0644)
+if err != nil {
+  log.Fatalf("Error writing encrypted data to output file: %v", err)
+}
+```
+<Callout>
+  Currently Livepeer supports only video content encrypted using AES-CBC with PKCS#7 padding.
+</Callout>
+
+## Step 3: Retrieve the Livepeer Public Key
+
+After obtaining an encryption key and encrypting a video file with it, the next step is to retrieve the Livepeer Public Key. This key will be used to encrypt our encryption key, which can then be shared with Livepeer when creating a video asset.
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"log"
+)
+
+type Response struct {
+	PublicKey string `json:"public_key"`
+}
+
+func main() {
+	publicKey, err := fetchPublicKey()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(publicKey)
+}
+
+func fetchPublicKey() (string, error) {
+	// Create a new request using http
+	req, err := http.NewRequest("GET", "https://livepeer.studio/api/access-control/public-key", nil)
+	if err != nil {
+		return "", err
+	}
+
+	// Add authorization header to the req
+	req.Header.Add("Authorization", "Bearer XXXX-XXXXXXX-XXXXXX-XXXXX")
+
+	// Send req using http Client
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	
+	defer resp.Body.Close()
+
+	// Check the server response for errors
+	if resp.StatusCode != 200 {
+		return "", fmt.Errorf("server returned: %s", resp.Status)
+	}
+
+	// Read the response body
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	// Unmarshal the JSON response
+	var response Response
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return "", err
+	}
+
+	return response.PublicKey, nil
+}
+```
+
+## Step 4: Encrypt the encryption key
+
+Now, we can use asymmetric encryption with the Livepeer Public Key to encrypt our Encryption Key. The resulting data is then encoded in base64 before being sent to Livepeer along with the video file.
+
+```go filename="main.go"
+// Encrypt the key with the RSA public key
+encryptedKey, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, publicKey, encryptionKey, nil)
+if err != nil {
+  log.Fatalf("Error encrypting key: %v", err)
+}
+
+// Save encrypted key as a base64 encoded string
+encodedKey := base64.StdEncoding.EncodeToString(encryptedKey)
+```
+
+## Step 5: Upload the video file or Import it from decentralized storages
+
+We're all set to upload the video file. There are two ways to do this:
+
+- Request a direct upload and add the `encryptedKey` to the payload under the `encryption` object.
+- Import it from a decentralized or external storage and add the `encryptedKey` to the payload under the `encryption` object.
+
+When calling the `import` API:
+```json
+{
+    "url":"ipfs://QmaxiZYQhdDQrHrS3rnPHfvdJx8XfuVLv2nGv4y8cdVUnM",
+    "name":"import_from_ipfs",
+    "encryption":{
+        "encryptedKey":"<YOUR_BASE_64_ENCODED_ENCRYPTED_ENCRYPTION_KEY>"
+    }
+}
+```
+
+When calling the `request-upload` API:
+```json
+{
+    "name": "request_direct_upload",
+    "encryption":{
+        "encryptedKey":"<YOUR_BASE_64_ENCODED_ENCRYPTED_ENCRYPTION_KEY>"
+    }
+}
+```
