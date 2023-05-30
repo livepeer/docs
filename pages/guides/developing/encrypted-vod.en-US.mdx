@@ -7,7 +7,7 @@ import { Callout } from 'nextra-theme-docs';
 
 # Encrypted VOD with Livepeer
 
-Livepeer enables you to upload encrypted video content or import it from decentralized storages. It creates a playback URL that can be covered by playback policies and access control.
+Livepeer enables you to upload encrypted video content or import it from decentralized storages. It creates a playback URL that can have independent access control through playback policies.
 
 ## Step 1: Generate an encryption key
 
@@ -59,7 +59,7 @@ new Uint8Array(resultBuffer).set(new Uint8Array(encrypted), iv.length);
 const blob = new Blob([resultBuffer], { type: "application/octet-stream" });
 ```
 <Callout>
-  Currently Livepeer supports only video content encrypted using AES-CBC with PKCS#7 padding.
+	Currently Livepeer supports only video content encrypted using [SubtleCrypto.encrypt](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt) with `AES-CBC` algorithm, which is also the encryption used by other web3 protocols like [Lit](https://developer.litprotocol.com/sdk/explanation/encryption/). It can implemented in other environments with regular AES-CBC encryption using PKCS#7 padding.
 </Callout>
 
 ## Step 3: Retrieve the Livepeer Public Key
@@ -125,23 +125,10 @@ Now, we can use asymmetric encryption with the Livepeer Public Key to encrypt ou
 
 ## Step 5: Upload the video file or Import it from decentralized storages
 
-We're all set to upload the video file. There are two ways to do this:
+We're all set to upload the video file.
 
-- Request a direct upload and add the `encryptedKey` to the payload under the `encryption` object.
-- Import it from a decentralized or external storage and add the `encryptedKey` to the payload under the `encryption` object.
-
-When calling the `import` API:
-```json
-{
-    "url":"ipfs://QmaxiZYQhdDQrHrS3rnPHfvdJx8XfuVLv2nGv4y8cdVUnM",
-    "name":"import_from_ipfs",
-    "encryption":{
-        "encryptedKey":"<YOUR_BASE_64_ENCODED_ENCRYPTED_ENCRYPTION_KEY>"
-    }
-}
-```
-
-When calling the `request-upload` API:
+When requesting an upload to the Livpeer API, you can simply add an `encryption` field with your encrypted key.
+[Api Reference](https://docs.livepeer.org/reference/api/create-asset-via-url)
 ```json
 {
     "name": "request_direct_upload",
