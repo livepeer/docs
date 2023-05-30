@@ -9,21 +9,26 @@ import { Callout } from 'nextra-theme-docs';
 
 Livepeer enables you to upload encrypted video content or import it from decentralized storages. It creates a playback URL that can be covered by playback policies and access control.
 
-<Callout>
-	This guide utilize snippets in Golang as examples.
-</Callout>
-
 ## Step 1: Generate an encryption key
 
 First, we generate a 256-bit encryption key to encrypt the file. 
 
-```go filename="main.go"
-// Generate random 256-bit encryption key
-key := make([]byte, 32)
-_, err = rand.Read(key)
-if err != nil {
-  log.Fatalf("Error generating random key: %v", err)
-}
+```js
+// Generate a random 256-bit key
+const key = await window.crypto.subtle.generateKey(
+	{
+		name: "AES-CBC",
+		length: 256,
+	},
+	true,
+	["encrypt", "decrypt"]
+);
+
+// Export the key as raw data
+const keyData = await window.crypto.subtle.exportKey("raw", key);
+
+// Encode the key in Base64
+const keyBase64 = btoa(String.fromCharCode(...new Uint8Array(keyData)));
 ```
 
 ## Step 2: Encrypt your video using the encryption key
@@ -34,40 +39,24 @@ To encrypt a video file with the key we just generated, we follow these steps:
 2. Pad the data using PKCS#7 padding.
 3. Encrypt the data using AES-CBC.
 
-```go filename="main.go"
-// Read the input file
-data, err := ioutil.ReadFile("your/local/path/source.mp4")
-if err != nil {
-  log.Fatalf("Error reading input file: %v", err)
-}
+```js
+const iv = window.crypto.getRandomValues(new Uint8Array(16));
 
-// Generate random 128-bit IV
-iv := make([]byte, aes.BlockSize)
-_, err = rand.Read(iv)
-if err != nil {
-  log.Fatalf("Error generating random IV: %v", err)
-}
+const encrypted = await window.crypto.subtle.encrypt(
+	{
+		name: "AES-CBC",
+		iv: iv,
+	},
+	key, // from generateKey or importKey above
+	arrayBuffer // ArrayBuffer of data you want to encrypt
+);
 
-// Pad the data using PKCS#7 padding
-paddedData := pkcs7Pad(data, aes.BlockSize)
+// Concatenate IV and encrypted file into a new ArrayBuffer
+const resultBuffer = new ArrayBuffer(iv.length + encrypted.byteLength);
+new Uint8Array(resultBuffer).set(new Uint8Array(iv), 0);
+new Uint8Array(resultBuffer).set(new Uint8Array(encrypted), iv.length);
 
-// Encrypt the data using AES-CBC with PKCS#7 padding
-block, err := aes.NewCipher(key)
-if err != nil {
-  log.Fatalf("Error creating AES cipher: %v", err)
-}
-ciphertext := make([]byte, len(paddedData))
-mode := cipher.NewCBCEncrypter(block, iv)
-mode.CryptBlocks(ciphertext, paddedData)
-
-// Write the encrypted data and IV to the output file
-encryptedData := make([]byte, aes.BlockSize+len(ciphertext))
-copy(encryptedData[:aes.BlockSize], iv)
-copy(encryptedData[aes.BlockSize:], ciphertext)
-err = ioutil.WriteFile("your/local/path/encrypted.mp4", encryptedData, 0644)
-if err != nil {
-  log.Fatalf("Error writing encrypted data to output file: %v", err)
-}
+const blob = new Blob([resultBuffer], { type: "application/octet-stream" });
 ```
 <Callout>
   Currently Livepeer supports only video content encrypted using AES-CBC with PKCS#7 padding.
@@ -77,84 +66,61 @@ if err != nil {
 
 After obtaining an encryption key and encrypting a video file with it, the next step is to retrieve the Livepeer Public Key. This key will be used to encrypt our encryption key, which can then be shared with Livepeer when creating a video asset.
 
-```go
-package main
+```js
+// Fetch the public key from Livepeer
+const publicKeyResponse = await fetch('https://livepeer.monster/api/access-control/public-key', {
+	headers: {
+		'Authorization': 'Bearer XXXX-XXXXXX-XXXXXXX-XXXX',
+	},
+});
 
-import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"log"
-)
-
-type Response struct {
-	PublicKey string `json:"public_key"`
-}
-
-func main() {
-	publicKey, err := fetchPublicKey()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println(publicKey)
-}
-
-func fetchPublicKey() (string, error) {
-	// Create a new request using http
-	req, err := http.NewRequest("GET", "https://livepeer.studio/api/access-control/public-key", nil)
-	if err != nil {
-		return "", err
-	}
-
-	// Add authorization header to the req
-	req.Header.Add("Authorization", "Bearer XXXX-XXXXXXX-XXXXXX-XXXXX")
-
-	// Send req using http Client
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return "", err
-	}
-	
-	defer resp.Body.Close()
-
-	// Check the server response for errors
-	if resp.StatusCode != 200 {
-		return "", fmt.Errorf("server returned: %s", resp.Status)
-	}
-
-	// Read the response body
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
-	}
-
-	// Unmarshal the JSON response
-	var response Response
-	err = json.Unmarshal(body, &response)
-	if err != nil {
-		return "", err
-	}
-
-	return response.PublicKey, nil
-}
+const publicKeyData = await publicKeyResponse.json();
+const publicKey = publicKeyData.public_key;
 ```
 
 ## Step 4: Encrypt the encryption key
 
 Now, we can use asymmetric encryption with the Livepeer Public Key to encrypt our Encryption Key. The resulting data is then encoded in base64 before being sent to Livepeer along with the video file.
 
-```go filename="main.go"
-// Encrypt the key with the RSA public key
-encryptedKey, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, publicKey, encryptionKey, nil)
-if err != nil {
-  log.Fatalf("Error encrypting key: %v", err)
-}
+<Callout>
+	The Web Cryptography API built into modern browsers does not directly support PEM or PKCS#1 formatted keys. It only supports the SPKI format for public keys and the PKCS8 format for private keys. This is an example of a server-side Golang handler receiving the encryptionKey and the publicKey.
+</Callout>
 
-// Save encrypted key as a base64 encoded string
-encodedKey := base64.StdEncoding.EncodeToString(encryptedKey)
+```go filename="main.go"
+    encryptionKey := // Encryption key
+	pubKey := // Livepeer public key
+
+	// Load the public key
+	data, err := base64.StdEncoding.DecodeString(pubKey)
+	if err != nil {
+		log.Fatalf("Error decoding public key: %v", err)
+	}
+
+	block, _ := pem.Decode(data)
+	if block == nil {
+		log.Fatalf("Failed to parse PEM block containing the key")
+	}
+
+	pub, err := x509.ParsePKCS1PublicKey(block.Bytes)
+	if err != nil {
+		log.Fatalf("Error parsing public key: %v", err)
+	}
+
+	key, err := base64.StdEncoding.DecodeString(string(encryptionKey))
+	if err != nil {
+		http.Error(w, "Invalid base64  key", http.StatusBadRequest)
+		return
+	}
+
+	// Encrypt the key
+	encryptedKey, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, pubKey, key, nil)
+	if err != nil {
+		http.Error(w, "Error encrypting key", http.StatusInternalServerError)
+		return
+	}
+
+	// Return the encrypted key
+	json.NewEncoder(w).Encode(EncryptedKey{Key: base64.StdEncoding.EncodeToString(encryptedKey)})
 ```
 
 ## Step 5: Upload the video file or Import it from decentralized storages
