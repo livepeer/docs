@@ -1,64 +1,94 @@
-import { useTheme } from 'next-themes';
+import Link from 'next/link';
+
+import { OpenAPIV3_1 } from 'openapi-types';
+
 import React from 'react';
-import { RedocStandalone } from 'redoc';
 
-export default function APIReferences() {
-  const { theme } = useTheme();
+import Endpoint from './openapi/Endpoint';
 
-  const isDark =
-    theme === 'system'
-      ? window.matchMedia('(prefers-color-scheme: dark)').matches ||
-        (window.matchMedia('(prefers-color-scheme: no-preference)').matches &&
-          window.matchMedia('(prefers-color-scheme: light)').matches)
-      : theme === 'dark';
+import Pre from './openapi/shared/Pre';
+
+interface APIReferenceProps {
+  openApiData?: OpenAPIV3_1.Document;
+}
+
+const APIReference: React.FC<APIReferenceProps> = ({ openApiData }) => {
+  const renderEndpoints = () => {
+    if (!openApiData || !openApiData.paths) return null;
+
+    return Object.entries(openApiData.paths).map(([path, pathInfo]) => {
+      if (!pathInfo) return null;
+
+      return Object.entries(pathInfo).map(([method, methodInfo]) => {
+        if (methodInfo && typeof methodInfo === 'object') {
+          const operationInfo = methodInfo as OpenAPIV3_1.OperationObject;
+          const key = `${path}-${method}`;
+
+          return (
+            <Endpoint
+              key={key}
+              path={path}
+              schemas={openApiData}
+              method={method}
+              methodInfo={operationInfo}
+            />
+          );
+        }
+
+        return null;
+      });
+    });
+  };
+
+  const renderGettingStarted = () => {
+    if (!openApiData || !openApiData.servers) return null;
+
+    const baseUrl = openApiData.servers[0]?.url;
+
+    return (
+      <div className="flex mb-14">
+        <div className="w-1/2">
+          <h1 className="text-3xl font-semibold">Livepeer API Reference</h1>
+          <p className="mt-4">
+            Welcome to the Livepeer API reference docs. Here you'll find all the
+            endpoints exposed on the standard Livepeer API, learn how to use
+            them and what they return.
+          </p>
+          <p className="mt-4">
+            The Livepeer API is organized around REST, has predictable
+            resource-oriented URLs, accepts form-encoded request bodies, returns
+            JSON-encoded responses, and uses standard HTTP response codes,
+            authentication, and verbs.
+          </p>
+        </div>
+        <div className="mt-2 w-2/5 ml-20">
+          <h3 className="font-semibold uppercase">Just Getting Started?</h3>
+          <p className="mt-2">
+            Head over to{' '}
+            <Link
+              className="text-blue-500 dark:text-green-500"
+              href={'livepeer.studio'}
+            >
+              Livepeer Studio
+            </Link>
+            , create an account and start building with Livepeer.
+          </p>
+          <Pre filename="BASE URL">{baseUrl}</Pre>
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div className="w-screen">
-      <RedocStandalone
-        specUrl="https://raw.githubusercontent.com/livepeer/studio/master/packages/api/src/schema/api-schema.yaml"
-        options={{
-          nativeScrollbars: true,
-          hideDownloadButton: true,
-          hideLoading: true,
-          hideSingleRequestSampleTab: true,
-          theme: {
-            colors: {
-              primary: {
-                main: '#00a55f',
-              },
-              text: {
-                primary: isDark ? '#fff' : '#000',
-                secondary: '#4d4d4d',
-              },
-              http: {
-                get: 'rgba(0, 200, 219, 1)',
-                post: 'rgba(28, 184, 65, 1)',
-                put: 'rgba(255, 187, 0, 1)',
-                delete: 'rgba(254, 39, 35, 1)',
-              },
-            },
-            typography: {
-              fontSize: '16px',
-              fontFamily: 'Inter',
-              optimizeSpeed: true,
-              smoothing: 'antialiased',
-              headings: {
-                fontWeight: 'bold',
-                lineHeight: '1em',
-              },
-            },
-            sidebar: {
-              width: '300px',
-              backgroundColor: 'transparent',
-              textColor: isDark ? '#9CA3AF' : '#000',
-            },
-            rightPanel: {
-              backgroundColor: isDark ? '#121212' : '#2F343C',
-              textColor: '#FFFFFF',
-            },
-          },
-        }}
-      />
+    <div className="mt-8">
+      {openApiData && (
+        <>
+          {renderGettingStarted()}
+          {renderEndpoints()}
+        </>
+      )}
     </div>
   );
-}
+};
+
+export default APIReference;
