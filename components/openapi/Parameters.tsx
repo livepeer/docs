@@ -18,17 +18,15 @@ interface ParametersProps {
 }
 
 const RecursiveParameters: React.FC<ParametersProps> = ({ params }) => {
+  const [showChildren, setShowChildren] = useState(false);
+
+  const toggleChildren = () => {
+    setShowChildren(!showChildren);
+  };
+
   return (
     <>
       {params?.map((param, index) => {
-        const [showChildren, setShowChildren] = useState(false);
-
-        console.log(params);
-
-        const toggleChildren = () => {
-          setShowChildren(!showChildren);
-        };
-
         return (
           <div
             key={index}

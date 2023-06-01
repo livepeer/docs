@@ -1,8 +1,12 @@
+import { Code, Table, Td, Th } from 'nextra/components';
+
 import React, { ReactNode } from 'react';
+
 import ReactMarkdown from 'react-markdown';
-import Pre from './Pre';
-import { Code, Table, Th, Td } from 'nextra/components';
+
 import remarkGfm from 'remark-gfm';
+
+import Pre from './Pre';
 
 interface MarkdownProps {
   children: string;
@@ -27,13 +31,7 @@ const Markdown: React.FC<MarkdownProps> = ({ children }) => {
     return child;
   };
 
-  const renderCode = ({
-    node,
-    inline,
-    className,
-    children,
-    ...props
-  }: any): JSX.Element => {
+  const renderCode = ({ className, children, ...props }: any): JSX.Element => {
     return (
       <Code {...props} className={className}>
         {children}
@@ -41,13 +39,7 @@ const Markdown: React.FC<MarkdownProps> = ({ children }) => {
     );
   };
 
-  const renderPre = ({
-    node,
-    inline,
-    className,
-    children,
-    ...props
-  }: any): JSX.Element => {
+  const renderPre = ({ className, children, ...props }: any): JSX.Element => {
     return (
       <Pre {...props} className={className}>
         {children}
