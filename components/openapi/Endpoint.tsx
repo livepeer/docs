@@ -37,7 +37,7 @@ const Endpoint: React.FC<EndpointProps> = ({
   return (
     <div
       id={summaryName}
-      className="border-t py-20 border-gray-200 dark:border-zinc-800"
+      className="border-t py-14 border-gray-200 dark:border-zinc-800"
     >
       <div className="flex">
         <div className="w-1/2">

@@ -1,5 +1,7 @@
 import { OpenAPIV3_1 } from 'openapi-types';
 
+import Link from 'next/link';
+
 import React from 'react';
 
 import Endpoint from './openapi/Endpoint';
@@ -44,7 +46,7 @@ const APIReference: React.FC<APIReferenceProps> = ({ openApiData }) => {
     const baseUrl = openApiData.servers[0]?.url;
 
     return (
-      <div className="flex mb-20">
+      <div className="flex mb-14">
         <div className="w-1/2">
           <h1 className="text-3xl font-semibold">Livepeer API Reference</h1>
           <p className="mt-4">
@@ -62,8 +64,14 @@ const APIReference: React.FC<APIReferenceProps> = ({ openApiData }) => {
         <div className="mt-2 w-2/5 ml-20">
           <h3 className="font-semibold uppercase">Just Getting Started?</h3>
           <p className="mt-2">
-            Head over to livepeer.studio, create an account and start building
-            with Livepeer.
+            Head over to{' '}
+            <Link
+              className="text-blue-500 dark:text-green-500"
+              href={'livepeer.studio'}
+            >
+              Livepeer Studio
+            </Link>
+            , create an account and start building with Livepeer.
           </p>
           <Pre filename="BASE URL">{baseUrl}</Pre>
         </div>

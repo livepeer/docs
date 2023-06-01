@@ -1,3 +1,4 @@
+import { Code } from 'nextra/components';
 import React, { useState } from 'react';
 
 export interface ParameterInfo {
@@ -53,6 +54,18 @@ const RecursiveParameters: React.FC<ParametersProps> = ({ params }) => {
             </div>
             <p className="mt-2">
               {param.description || param?.arraySchema?.description}
+            </p>
+            <p className="mt-2">
+              {param.enums && param.enums.length > 0 && (
+                <span>
+                  Enum:{' '}
+                  {param.enums.map((enumValue, enumIndex) => (
+                    <Code className="ml-2" key={enumIndex}>
+                      {enumValue}
+                    </Code>
+                  ))}
+                </span>
+              )}
             </p>
             {(param.objectProperties || param?.arraySchema?.objectProperties) &&
               showChildren && (
