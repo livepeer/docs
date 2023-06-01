@@ -1,7 +1,39 @@
----
-title: 'API Reference'
----
+import { useSSG } from 'nextra/ssg';
+import yaml from 'js-yaml';
+import APIReference from '@components/APIReferences';
 
-import APIReferences from '@components/APIReferences';
+export const getStaticProps = async ({ params }) => {
+  let openApiData = null;
+  try {
+    const response = await fetch(
+      'https://raw.githubusercontent.com/suhailkakar/livepeer-studio/master/packages/api/src/schema/api-schema.yaml',
+    );
+    const yamlContent = await response.text();
+    openApiData = yaml.load(yamlContent);
+    // Convert the Date object to a string representation
+    if (
+      openApiData.components?.schemas?.usage?.properties?.id?.example instanceof
+      Date
+    ) {
+      openApiData.components.schemas.usage.properties.id.example =
+        openApiData.components.schemas.usage.properties.id.example.toISOString();
+    }
+  } catch (error) {
+    console.error('Error fetching OpenAPI YAML:', error);
+  }
+  return {
+    props: {
+      ssg: {
+        openApiData,
+      },
+    },
+  };
+};
 
-<APIReferences />
+export const References = () => {
+  // Get the data from SSG, and render it as a component.
+  const { openApiData } = useSSG();
+  return <APIReference openApiData={openApiData} />;
+};
+
+<References />
