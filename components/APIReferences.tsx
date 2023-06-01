@@ -1,6 +1,6 @@
-import { OpenAPIV3_1 } from 'openapi-types';
-
 import Link from 'next/link';
+
+import { OpenAPIV3_1 } from 'openapi-types';
 
 import React from 'react';
 
