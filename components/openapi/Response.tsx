@@ -7,9 +7,16 @@ interface ResponseProps {
 }
 
 const Response: React.FC<ResponseProps> = ({ response }) => {
-  const formattedResponse = JSON.stringify(response, null, 2);
+  const is204Response = response == '204 - No Content';
+  const formattedResponse = is204Response
+    ? response
+    : JSON.stringify(response, null, 2);
 
-  return <Pre filename={`RESPONSE`}>{formattedResponse}</Pre>;
+  return (
+    <Pre className={is204Response ? 'italic' : ''} filename={`RESPONSE`}>
+      {formattedResponse}
+    </Pre>
+  );
 };
 
 export default Response;

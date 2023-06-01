@@ -14,6 +14,11 @@ export function useResponseInfo(
       const response: { [responseCode: string]: any } = {};
 
       for (const responseCode in methodInfo?.responses) {
+        if (responseCode === '204') {
+          response[responseCode] = '204 - No Content'; // Custom message for code 204
+          continue;
+        }
+
         const responseInfo = methodInfo.responses[responseCode];
         const content = responseInfo.content?.['application/json'];
         const schema = content?.schema;

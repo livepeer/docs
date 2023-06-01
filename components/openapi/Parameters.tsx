@@ -39,7 +39,7 @@ const RecursiveParameters: React.FC<ParametersProps> = ({ params }) => {
                   {param.property || 'undefined'}
                 </code>
                 <span className="text-xs font-medium text-gray-400 ml-1">
-                  {param.type} {param.optional && 'optional'}
+                  {param.type}
                 </span>
               </p>
               {(param.objectProperties ||
