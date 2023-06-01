@@ -22,6 +22,27 @@ export function useRequestParameters(
     useState<ParameterInfo | null>(null);
 
   useEffect(() => {
+    const getPathParameters = (schema: any): ParameterInfo[] => {
+      const pathParameters: ParameterInfo[] = [];
+
+      if (schema && schema.parameters) {
+        for (const parameter of schema.parameters) {
+          if (parameter.in === 'path') {
+            const resolvedSchema = parameter.schema?.$ref
+              ? resolveRef(parameter.schema.$ref)
+              : parameter.schema;
+            const parameterInfo: ParameterInfo =
+              extractParameterInfo(resolvedSchema);
+            parameterInfo.property = parameter.name ?? ''; // Set the property name or default to empty string
+            parameterInfo.description = parameter.description ?? ''; // Set the description or default to empty string
+            pathParameters.push(parameterInfo);
+          }
+        }
+      }
+
+      return pathParameters;
+    };
+
     const getSchemaByPath = (
       schemas: OpenAPIV3_1.Document,
       path: string,
@@ -81,7 +102,10 @@ export function useRequestParameters(
       if (parameterSchema?.type === 'object' && parameterSchema?.properties) {
         info.object = true;
         info.objectProperties = Object.entries(parameterSchema.properties).map(
-          ([property, propertySchema]) => {
+          ([property, propertySchema]: [
+            property: string,
+            propertySchema: any,
+          ]) => {
             const resolvedSchema = propertySchema.$ref
               ? resolveRef(propertySchema.$ref)
               : propertySchema;
@@ -101,12 +125,25 @@ export function useRequestParameters(
     ): ParameterInfo | null {
       const schema = getSchemaByPath(schemas, path);
       const requestSchema = getRequestSchema(schema);
-      if (requestSchema) {
-        const resolvedSchema = requestSchema.$ref
+
+      const pathParameters = getPathParameters(schema);
+
+      if (requestSchema || pathParameters.length > 0) {
+        const resolvedSchema = requestSchema?.$ref
           ? resolveRef(requestSchema.$ref)
           : requestSchema;
-        return extractParameterInfo(resolvedSchema);
+        const requestParameters = extractParameterInfo(resolvedSchema);
+
+        if (pathParameters.length > 0) {
+          requestParameters.objectProperties = [
+            ...(requestParameters.objectProperties || []),
+            ...pathParameters,
+          ];
+        }
+
+        return requestParameters;
       }
+
       return null;
     }
 
