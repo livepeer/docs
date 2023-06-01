@@ -48,8 +48,9 @@ const Markdown: React.FC<MarkdownProps> = ({ children }) => {
   };
 
   const renderH2 = ({ children }: any): JSX.Element => {
-    return <h2 className="text-xl font-semibold">{children}</h2>;
+    return <h2 className="text-xl font-semibold mt-4 mb-1">{children}</h2>;
   };
+
   const renderUl = ({ children }: any): JSX.Element => {
     return <p>{children}</p>;
   };

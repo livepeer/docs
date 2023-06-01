@@ -24,18 +24,46 @@ export function useRequestParameters(
   useEffect(() => {
     const getPathParameters = (schema: any): ParameterInfo[] => {
       const pathParameters: ParameterInfo[] = [];
+      const addedProperties = new Set();
 
-      if (schema && schema.parameters) {
-        for (const parameter of schema.parameters) {
-          if (parameter.in === 'path') {
+      const parameterLocations = [
+        'parameters',
+        'get.parameters',
+        'post.parameters',
+        'patch.parameters',
+        'delete.parameters',
+      ];
+
+      for (const location of parameterLocations) {
+        const locationParts = location.split('.');
+        let currentObject = schema;
+
+        for (const part of locationParts) {
+          if (!currentObject || !currentObject[part]) {
+            currentObject = undefined;
+            break;
+          }
+          currentObject = currentObject[part];
+        }
+
+        if (currentObject) {
+          for (const parameter of currentObject) {
             const resolvedSchema = parameter.schema?.$ref
               ? resolveRef(parameter.schema.$ref)
               : parameter.schema;
             const parameterInfo: ParameterInfo =
               extractParameterInfo(resolvedSchema);
-            parameterInfo.property = parameter.name ?? ''; // Set the property name or default to empty string
-            parameterInfo.description = parameter.description ?? ''; // Set the description or default to empty string
+
+            const property = parameter.name ?? '';
+            if (addedProperties.has(property)) {
+              continue; // Skip this parameter if the property is already added
+            }
+
+            parameterInfo.property = property;
+            parameterInfo.description = parameter.description ?? '';
+
             pathParameters.push(parameterInfo);
+            addedProperties.add(property);
           }
         }
       }

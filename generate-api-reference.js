@@ -2,7 +2,7 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 
 const API_SCHEMA_URL =
-  'https://raw.githubusercontent.com/suhailkakar/livepeer-studio/master/packages/api/src/schema/api-schema.yaml';
+  'https://raw.githubusercontent.com/livepeer/studio/master/packages/api/src/schema/api-schema.yaml';
 
 async function fetchAPISchema() {
   try {
@@ -24,7 +24,7 @@ function generateJSONOutput(schema) {
     for (const method in methods) {
       const { summary = '' } = methods[method];
       const summaryName = summary.replace(/ /g, '-').toLowerCase();
-      const href = `#${summaryName}`;
+      const href = `/reference/api/#${summaryName}`;
 
       if (summary) {
         jsonOutput[summaryName] = {
