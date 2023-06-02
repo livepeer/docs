@@ -39,15 +39,15 @@ const Endpoint: React.FC<EndpointProps> = ({
       id={summaryName}
       className="border-t py-14 border-gray-200 dark:border-zinc-800"
     >
-      <div className="flex">
-        <div className="w-1/2">
+      <div className="flex flex-col lg:flex-row">
+        <div className=" lg:w-1/2">
           <h2 className="font-medium text-2xl">{methodInfo.summary}</h2>
           {methodInfo.description && (
             <Markdown>{methodInfo.description}</Markdown>
           )}
           <Parameters params={requestParameters?.objectProperties} />
         </div>
-        <div className="mt-2 w-2/5 ml-20">
+        <div className="mt-2  lg:w-2/5 lg:ml-20">
           <Request
             baseUrl={schemas.servers?.[0]?.url}
             path={path}

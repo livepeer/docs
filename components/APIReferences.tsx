@@ -46,8 +46,8 @@ const APIReference: React.FC<APIReferenceProps> = ({ openApiData }) => {
     const baseUrl = openApiData.servers[0]?.url;
 
     return (
-      <div className="flex mb-14">
-        <div className="w-1/2">
+      <div className="flex mb-14 flex-col lg:flex-row">
+        <div className=" lg:w-1/2">
           <h1 className="text-3xl font-semibold">Livepeer API Reference</h1>
           <p className="mt-4">
             Welcome to the Livepeer API reference docs. Here you'll find all the
@@ -61,7 +61,7 @@ const APIReference: React.FC<APIReferenceProps> = ({ openApiData }) => {
             authentication, and verbs.
           </p>
         </div>
-        <div className="mt-2 w-2/5 ml-20">
+        <div className="mt-10 lg:mt-2 lg:w-2/5 lg:ml-20 ">
           <h3 className="font-semibold uppercase">Just Getting Started?</h3>
           <p className="mt-2">
             Head over to{' '}
