@@ -76,15 +76,15 @@ Two settings that significantly impact your stream quality, latency, and user ex
 #### Optimizing for Low Latency
 
 Low latency is primarily determined by the _keyframe interval_. Having keyframes appear more frequently allows viewers to "hook
-onto" a point closer to the actual live point. However, full frames have a higher bit cost, so more bandwidth is needed to
-generate a stream of the same quality compared to a lower number of keyframes.
+onto" a point closer to the actual live point. However, full frames can't (re)use references to other frames, so more bandwidth
+is needed to generate a stream of the same quality compared to one with a lower number of keyframes.
 
 <Callout>
   We also require that the user turns off B-frames for lowest latency. B-frames,
-  or bidirectional frames, are a type of video compression frame used in video
-  encoding processes. They can improve video compression in certain situations,
-  but are not able to be played back in our WebRTC video playback, due to frames
-  appearing out-of-order.
+  or bidirectional frames, are a type of video frame that makes use of references
+  from the past as well as the future. They improve video compression by having more
+  context, but also increase latency because they require a bigger encode buffer.
+  Furthermore, in WebRTC video playback, B-frames will appear out-of-order on most systems.
 </Callout>
 
 #### Optimizing for Stream Quality and User Experience
@@ -93,38 +93,7 @@ Stream quality and user experience are mainly decided by the rate control of the
 consider the stability of the video playback and the smoothness of the video. This is mostly decided by the peak bitrate of
 the video. A high peak bitrate can cause playback problems like buffering or skips in video playback for some viewers.
 
-### Recommended OBS Settings
-
-The following profiles provide a good starting point for balancing low latency with stream quality and user experience.
-You may need to adjust the settings to suit your specific situation.
-
-#### Constant Bitrate
-
-This profile offers a good mix between quality and latency, making it suitable for most situations.
-
-```python filename="Constant Bitrate Profile"
-Rate Control: CBR
-Bit Rate: 2000
-Keyframe Interval: 2
-CPU Usage Preset: Very fast
-Profile: High
-Tune: None
-No additional x264 options
-```
-
-#### Constant Quality
-
-This profile prioritizes maintaining a certain level of quality without being too concerned about the bitrate.
-
-```python filename="Constant Quality Profile"
-Rate Control: CRF
-CRF: 25
-Keyframe Interval: 2
-CPU Usage Preset: Very fast
-Profile: High
-Tune: None
-No additional x264 options
-```
+#### Livepeer-specific considerations
 
 Since Livepeer is mostly HLS-based, a 2-second keyframe interval is generally encouraged, as HLS has a minimum latency of around 3-5
 keyframe intervals. This choice would prioritize low latency.
@@ -133,3 +102,87 @@ However, if the connection is fairly poor, a 5-second keyframe interval will all
 of more latency. If quality is valued over latency, this is a better choice, and you could even consider going for longer
 intervals. It is essential to understand the impact of each setting and adapt them to your specific requirements and priorities.
 The optimal stream settings may vary depending on your specific requirements.
+
+### Recommended OBS Settings
+
+The following profiles provide a good starting point for balancing low latency with stream quality and user experience.
+You may need to adjust the settings to suit your specific situation.
+
+
+#### Low latency, high quality
+This profile prioritizes low latency, but still maintains a good quality at the cost of more (and more unpredictably spiking) bandwidth.
+```python filename="Low latency, high quality Profile"
+Rate Control: CRF
+CRF: 25
+Keyframe Interval: 1
+CPU Usage Preset: Very fast
+Profile: High
+Tune: None
+x264 options: bframes=0
+Resolution: 1080p
+```
+
+#### Low latency for bad connections
+This profile prioritizes low latency, sacrificing quality to maintain a low bit rate so that even those with bad connections can watch reliably.
+```python filename="Low latency for bad connections Profile"
+Rate Control: CBR
+Bit Rate: 1200
+Keyframe Interval: 1
+CPU Usage Preset: Very fast
+Profile: High
+Tune: None
+x264 options: bframes=0
+Resolution: 720p
+```
+
+#### Balanced high quality
+A good balance between reasonable latency and reasonable bit rate, but with consistently high quality.
+```python filename="Balanced high quality Profile"
+Rate Control: CRF
+CRF: 25
+Keyframe Interval: 2
+CPU Usage Preset: Very fast
+Profile: High
+Tune: None
+No additional x264 options
+Resolution: Any
+```
+
+#### Balanced for bad connections
+A good balance between reasonable latency and reasonable quality, but with a consistent bit rate that should be comfortably viewable for most modern internet connections.
+```python filename="Balanced for bad connections Profile"
+Rate Control: CBR
+Bit Rate: 2000
+Keyframe Interval: 2
+CPU Usage Preset: Very fast
+Profile: High
+Tune: None
+No additional x264 options
+Resolution: Up to 1080p
+```
+
+#### High quality, high latency
+This profile prioritizes quality over everything else, sacrificing latency to keep the bit rate within reasonable bounds.
+```python filename="High quality, high latency"
+Rate Control: CRF
+CRF: 27
+Keyframe Interval: 10
+CPU Usage Preset: Very fast
+Profile: High
+Tune: None
+x264 options: bframes=3
+Resolution: 1080p
+```
+
+#### Low bandwidth, high latency
+This profile prioritizes watchability, even for really bad connections, sacrificing both quality and latency to do so.
+```python filename="Low bandwidth, high latency Profile"
+Rate Control: CBR
+Bit Rate: 700
+Keyframe Interval: 10
+CPU Usage Preset: Very fast
+Profile: High
+Tune: None
+x264 options: bframes=3
+Resolution: 720p or lower
+```
