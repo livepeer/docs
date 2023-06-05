@@ -11,21 +11,21 @@ Livepeer enables you to upload encrypted video content or import it from decentr
 
 ## Step 1: Generate an encryption key
 
-First, we generate a 256-bit encryption key to encrypt the file. 
+First, we generate a 256-bit encryption key to encrypt the file.
 
 ```js
 // Generate a random 256-bit key
 const key = await window.crypto.subtle.generateKey(
-	{
-		name: "AES-CBC",
-		length: 256,
-	},
-	true,
-	["encrypt", "decrypt"]
+  {
+    name: 'AES-CBC',
+    length: 256,
+  },
+  true,
+  ['encrypt', 'decrypt'],
 );
 
 // Export the key as raw data
-const keyData = await window.crypto.subtle.exportKey("raw", key);
+const keyData = await window.crypto.subtle.exportKey('raw', key);
 
 // Encode the key in Base64
 const keyBase64 = btoa(String.fromCharCode(...new Uint8Array(keyData)));
@@ -43,12 +43,12 @@ To encrypt a video file with the key we just generated, we follow these steps:
 const iv = window.crypto.getRandomValues(new Uint8Array(16));
 
 const encrypted = await window.crypto.subtle.encrypt(
-	{
-		name: "AES-CBC",
-		iv: iv,
-	},
-	key, // from generateKey or importKey above
-	arrayBuffer // ArrayBuffer of data you want to encrypt
+  {
+    name: 'AES-CBC',
+    iv: iv,
+  },
+  key, // from generateKey or importKey above
+  arrayBuffer, // ArrayBuffer of data you want to encrypt
 );
 
 // Concatenate IV and encrypted file into a new ArrayBuffer
@@ -56,10 +56,17 @@ const resultBuffer = new ArrayBuffer(iv.length + encrypted.byteLength);
 new Uint8Array(resultBuffer).set(new Uint8Array(iv), 0);
 new Uint8Array(resultBuffer).set(new Uint8Array(encrypted), iv.length);
 
-const blob = new Blob([resultBuffer], { type: "application/octet-stream" });
+const blob = new Blob([resultBuffer], { type: 'application/octet-stream' });
 ```
+
 <Callout>
-	Currently Livepeer supports only video content encrypted using [SubtleCrypto.encrypt](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt) with `AES-CBC` algorithm, which is also the encryption used by other web3 protocols like [Lit](https://developer.litprotocol.com/sdk/explanation/encryption/). It can implemented in other environments with regular AES-CBC encryption using PKCS#7 padding.
+  Currently Livepeer supports only video content encrypted using
+  [SubtleCrypto.encrypt](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt)
+  with `AES-CBC` algorithm, which is also the encryption used by other web3
+  protocols like
+  [Lit](https://developer.litprotocol.com/sdk/explanation/encryption/). It can
+  implemented in other environments with regular AES-CBC encryption using PKCS#7
+  padding.
 </Callout>
 
 ## Step 3: Retrieve the Livepeer Public Key
@@ -68,14 +75,17 @@ After obtaining an encryption key and encrypting a video file with it, the next 
 
 ```js
 // Fetch the public key from Livepeer
-const publicKeyResponse = await fetch('https://livepeer.monster/api/access-control/public-key', {
-	headers: {
-		'Authorization': 'Bearer XXXX-XXXXXX-XXXXXXX-XXXX',
-	},
-});
+const publicKeyResponse = await fetch(
+  'https://livepeer.monster/api/access-control/public-key',
+  {
+    headers: {
+      Authorization: 'Bearer XXXX-XXXXXX-XXXXXXX-XXXX',
+    },
+  },
+);
 
 const publicKeyData = await publicKeyResponse.json();
-const publicKey = publicKeyData.public_key;
+const publicKey = publicKeyData.spki_public_key;
 ```
 
 ## Step 4: Encrypt the encryption key
@@ -83,44 +93,44 @@ const publicKey = publicKeyData.public_key;
 Now, we can use asymmetric encryption with the Livepeer Public Key to encrypt our Encryption Key. The resulting data is then encoded in base64 before being sent to Livepeer along with the video file.
 
 <Callout>
-	The Web Cryptography API built into modern browsers does not directly support PEM or PKCS#1 formatted keys. It only supports the SPKI format for public keys and the PKCS8 format for private keys. This is an example of a server-side Golang handler receiving the encryptionKey and the publicKey.
+  The Web Cryptography API built into modern browsers does not directly support
+  PEM or PKCS#1 formatted keys. It only supports the SPKI format for public keys
+  and the PKCS8 format for private keys. In Javascript, you need to use the
+  `spki_public_key`.
 </Callout>
 
-```go filename="main.go"
-    encryptionKey := // Encryption key
-	pubKey := // Livepeer public key
+```js
+// Decode the SPKI public key from base64 and convert it to a buffer
+spkiPublicKey = atob(publicKeyData.spki_public_key);
+const publicKeyBuffer = Uint8Array.from(atob(spkiPublicKey), (c) =>
+  c.charCodeAt(0),
+).buffer;
 
-	// Load the public key
-	data, err := base64.StdEncoding.DecodeString(pubKey)
-	if err != nil {
-		log.Fatalf("Error decoding public key: %v", err)
-	}
+// Import the public key
+const publicKey = await window.crypto.subtle.importKey(
+  'spki',
+  publicKeyBuffer,
+  {
+    name: 'RSA-OAEP',
+    hash: { name: 'SHA-256' },
+  },
+  false,
+  ['encrypt'],
+);
 
-	block, _ := pem.Decode(data)
-	if block == nil {
-		log.Fatalf("Failed to parse PEM block containing the key")
-	}
+// Encrypt the key data with the public key
+const encryptedKeyData = await window.crypto.subtle.encrypt(
+  {
+    name: 'RSA-OAEP',
+  },
+  publicKey,
+  keyData,
+);
 
-	pub, err := x509.ParsePKCS1PublicKey(block.Bytes)
-	if err != nil {
-		log.Fatalf("Error parsing public key: %v", err)
-	}
-
-	key, err := base64.StdEncoding.DecodeString(string(encryptionKey))
-	if err != nil {
-		http.Error(w, "Invalid base64  key", http.StatusBadRequest)
-		return
-	}
-
-	// Encrypt the key
-	encryptedKey, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, pubKey, key, nil)
-	if err != nil {
-		http.Error(w, "Error encrypting key", http.StatusInternalServerError)
-		return
-	}
-
-	// Return the encrypted key
-	json.NewEncoder(w).Encode(EncryptedKey{Key: base64.StdEncoding.EncodeToString(encryptedKey)})
+// Base64 encode the encrypted key data
+const encryptedKeyBase64 = btoa(
+  String.fromCharCode(...new Uint8Array(encryptedKeyData)),
+);
 ```
 
 ## Step 5: Upload the video file or Import it from decentralized storages
@@ -129,32 +139,36 @@ We're all set to upload the video file.
 
 When requesting an upload to the Livpeer API, you can simply add an `encryption` field with your encrypted key.
 [Api Reference](https://docs.livepeer.org/reference/api/create-asset-via-url)
+
 ```js
 // Request the upload URL
-const response = await fetch('https://livepeer.monster/api/asset/request-upload', {
-	method: 'POST',
-	headers: {
-		'Authorization': 'Bearer XXXX-XXXXXX-XXXXXX-XXXX',
-		'Content-Type': 'application/json',
-	},
-	body: JSON.stringify({
-		"name": "File name",
-		"encryption": {
-			"encryptedKey": encryptedKey
-		}
-	})
-});
+const response = await fetch(
+  'https://livepeer.monster/api/asset/request-upload',
+  {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer XXXX-XXXXXX-XXXXXX-XXXX',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: 'File name',
+      encryption: {
+        encryptedKey: encryptedKeyBase64,
+      },
+    }),
+  },
+);
 
 if (!response.ok) {
-	alert('Error requesting upload URL');
-	return;
+  alert('Error requesting upload URL');
+  return;
 }
 
 const data = await response.json();
 
 // Upload the encrypted file to the returned URL
 const uploadResponse = await fetch(data.url, {
-	method: 'PUT',
-	body: encryptedFile,
+  method: 'PUT',
+  body: encryptedFile,
 });
 ```
