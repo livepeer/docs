@@ -29,7 +29,6 @@ export const getStaticProps = async ({ params }) => {
     props: {
       ssg: {
         stringElement,
-        openApiData,
       },
     },
     revalidate: 60,
@@ -38,8 +37,8 @@ export const getStaticProps = async ({ params }) => {
 
 export const References = () => {
   // Get the data from SSG, and render it as a component.
-  const { openApiData, stringElement } = useSSG();
-  return <APIReference openApiData={openApiData} />;
+  const { stringElement } = useSSG();
+  return <div dangerouslySetInnerHTML={{ __html: stringElement }} />;
 };
 
 <References />
