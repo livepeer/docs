@@ -43,7 +43,6 @@ module.exports = {
       'error',
       {
         groups: ['external', 'internal'],
-        'newlines-between': 'always-and-inside-groups',
         alphabetize: {
           order: 'asc',
         },
