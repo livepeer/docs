@@ -1,11 +1,7 @@
 import Link from 'next/link';
-
 import { OpenAPIV3_1 } from 'openapi-types';
-
 import React from 'react';
-
 import Endpoint from './openapi/Endpoint';
-
 import Pre from './openapi/shared/Pre';
 
 interface APIReferenceProps {
@@ -47,7 +43,7 @@ const APIReference: React.FC<APIReferenceProps> = ({ openApiData }) => {
 
     return (
       <div className="flex mb-14 flex-col lg:flex-row">
-        <div className=" lg:w-1/2">
+        <div className="lg:w-1/2">
           <h1 className="text-3xl font-semibold">Livepeer API Reference</h1>
           <p className="mt-4">
             Welcome to the Livepeer API reference docs. Here you'll find all the
