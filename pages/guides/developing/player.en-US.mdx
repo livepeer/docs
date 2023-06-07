@@ -187,7 +187,9 @@ It is important to note that short form playback URLs are only available for
 video assets that are less than 2 minutes in duration.
 
 These may also include WebRTC URLs for low latency livestream playback. These _must_ be played back with our
-ICE servers, which are used to route traffic in restricted networking environments.
+ICE servers, which are used to route traffic in restricted networking environments. The WebRTC WHEP negotiation
+should send back these STUN/TURN servers in the SDP response, so there should not be any customization necessary
+to use the ICE servers with a custom player.
 
 You can get the playback URLs by retrieving the playback info, replacing
 `PLAYBACK_ID` with your asset's playbackId:
