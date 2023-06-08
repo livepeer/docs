@@ -89,7 +89,6 @@ const RecursiveParameters: React.FC<ParametersProps> = ({ params }) => {
   );
 };
 
-
 const Parameters: React.FC<ParametersProps> = ({ params }) => {
   return (
     <div className="mt-6">
