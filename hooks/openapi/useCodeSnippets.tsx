@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ParameterInfo } from '@components/openapi/Parameters';
 
 interface Snippet {
-  languageName: string
+  languageName: string;
   request: string;
 }
 
@@ -15,57 +15,9 @@ function useCodeSnippets(
   const [codeSnippets, setCodeSnippets] = useState<Snippet[]>([]);
 
   useEffect(() => {
-
-    const constructRequestBody = (
-      params: ParameterInfo[] | undefined,
-    ): string => {
-      const requestBody: { [key: string]: any } = {};
-
-      params?.forEach((property) => {
-        if (property.property && property.example) {
-          requestBody[property.property] = property.example;
-        }
-
-        if (property.objectProperties && property.objectProperties.length > 0) {
-          const nestedObject = buildNestedObject(property.objectProperties);
-
-          if (Object.keys(nestedObject).length > 0) {
-            requestBody[property.property] = nestedObject;
-          }
-        }
-
-        if (
-          property.array &&
-          property.arraySchema &&
-          property.arraySchema.length > 0
-        ) {
-          const nestedArray: { [key: string]: any }[] = [];
-          property.arraySchema.forEach((nestedItem: ParameterInfo) => {
-            const nestedObject: { [key: string]: any } = {};
-            nestedItem.objectProperties?.forEach((nestedProperty) => {
-              if (nestedProperty.property && nestedProperty.example) {
-                nestedObject[nestedProperty.property] = nestedProperty.example;
-              }
-            });
-            if (Object.keys(nestedObject).length > 0) {
-              nestedArray.push(nestedObject);
-            }
-          });
-          if (nestedArray.length > 0) {
-            requestBody[property.property] = nestedArray;
-          }
-        }
-      });
-
-      return JSON.stringify(requestBody, null, 2);
-    };
-
-
-    const requestBody = constructRequestBody(params);
-
-
     const generateCurlCommand = (): string => {
       // Generate cURL command
+      const requestBody = constructRequestBody(params);
 
       const curlCommand = `curl -X ${method.toUpperCase()} -H 'content-type: application/json' -d '${requestBody}' ${baseUrl ? baseUrl + path : path
         }`;
@@ -74,7 +26,7 @@ function useCodeSnippets(
 
     const generateRubySnippet = (): string => {
       // Generate Ruby code snippet
-
+      const requestBody = constructRequestBody(params);
       const rubySnippet = `require 'net/http'
 require 'uri'
 
@@ -93,7 +45,7 @@ puts response.body`;
 
     const generatePythonSnippet = (): string => {
       // Generate Python code snippet
-
+      const requestBody = constructRequestBody(params);
       const pythonSnippet = `import requests
 
 url = '${baseUrl ? baseUrl + path : path}'
@@ -107,7 +59,7 @@ print(response.json())`;
 
     const generatePhpSnippet = (): string => {
       // Generate PHP code snippet
-
+      const requestBody = constructRequestBody(params);
       const phpSnippet = `<?php
 
 $url = '${baseUrl ? baseUrl + path : path}';
@@ -135,7 +87,7 @@ echo $response;
 
     const generateJavaSnippet = (): string => {
       // Generate Java code snippet
-
+      const requestBody = constructRequestBody(params);
       const javaSnippet = `import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -169,7 +121,7 @@ public class Main {
 
     const generateNodejsSnippet = (): string => {
       // Generate Node.js code snippet
-
+      const requestBody = constructRequestBody(params);
       const nodejsSnippet = `const axios = require('axios');
 
 const url = '${baseUrl ? baseUrl + path : path}';
@@ -187,7 +139,7 @@ axios.${method.toLowerCase()}(url, data)
 
     const generateGoSnippet = (): string => {
       // Generate Go code snippet
-
+      const requestBody = constructRequestBody(params);
       const goSnippet = `package main
 
 import (
@@ -232,7 +184,7 @@ func main() {
 
     const generateDotNetSnippet = (): string => {
       // Generate .NET code snippet
-
+      const requestBody = constructRequestBody(params);
       const dotNetSnippet = `using System;
 using System.IO;
 using System.Net;
@@ -288,7 +240,49 @@ class Program
       return nestedObject;
     };
 
+    const constructRequestBody = (
+      params: ParameterInfo[] | undefined,
+    ): string => {
+      const requestBody: { [key: string]: any } = {};
 
+      params?.forEach((property) => {
+        if (property.property && property.example) {
+          requestBody[property.property] = property.example;
+        }
+
+        if (property.objectProperties && property.objectProperties.length > 0) {
+          const nestedObject = buildNestedObject(property.objectProperties);
+
+          if (Object.keys(nestedObject).length > 0) {
+            requestBody[property.property] = nestedObject;
+          }
+        }
+
+        if (
+          property.array &&
+          property.arraySchema &&
+          property.arraySchema.length > 0
+        ) {
+          const nestedArray: { [key: string]: any }[] = [];
+          property.arraySchema.forEach((nestedItem: ParameterInfo) => {
+            const nestedObject: { [key: string]: any } = {};
+            nestedItem.objectProperties?.forEach((nestedProperty) => {
+              if (nestedProperty.property && nestedProperty.example) {
+                nestedObject[nestedProperty.property] = nestedProperty.example;
+              }
+            });
+            if (Object.keys(nestedObject).length > 0) {
+              nestedArray.push(nestedObject);
+            }
+          });
+          if (nestedArray.length > 0) {
+            requestBody[property.property] = nestedArray;
+          }
+        }
+      });
+
+      return JSON.stringify(requestBody, null, 2);
+    };
 
     const snippets: Snippet[] = [];
 
