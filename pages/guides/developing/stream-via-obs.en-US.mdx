@@ -37,19 +37,13 @@ because it is easy to use, open source, and offers a high degree of customizatio
 ## Input Your Stream Settings
 
 1. Select **Stream** settings.
-2. Select **Custom** for services.
-3. Paste the **RTMP ingest URL** and **Stream Key** provided by Livepeer Studio into
-   the OBS **“Server”** and **“Stream Key”** fields.
+2. Select **Show All...** and then **Livepeer** for the service.
+3. Keep the **Default** Server and paste the **Stream Key** provided by Livepeer Studio into
+   the OBS **“Stream Key”** fields. It is highly recommended to not ignore the streaming service
+   recommendations. If you choose to do this, please see the
+   [low latency](#configuring-obs-for-low-latency) section below.
 
 ![OBS4](/images/obs/OBS4.png)
-
-## Select Output Settings and Streaming tab
-
-1. In the Output Mode select `Advanced`.
-2. Set the keyframe interval to 2-5 seconds (see the [low latency](#configuring-obs-for-low-latency) section below).
-3. Save your settings.
-
-![OBS5](/images/obs/OBS5.png)
 
 ## Stream and Check Output
 
@@ -81,10 +75,11 @@ is needed to generate a stream of the same quality compared to one with a lower 
 
 <Callout>
   We also require that the user turns off B-frames for lowest latency. B-frames,
-  or bidirectional frames, are a type of video frame that makes use of references
-  from the past as well as the future. They improve video compression by having more
-  context, but also increase latency because they require a bigger encode buffer.
-  Furthermore, in WebRTC video playback, B-frames will appear out-of-order on most systems.
+  or bidirectional frames, are a type of video frame that makes use of
+  references from the past as well as the future. They improve video compression
+  by having more context, but also increase latency because they require a
+  bigger encode buffer. Furthermore, in WebRTC video playback, B-frames will
+  appear out-of-order on most systems.
 </Callout>
 
 #### Optimizing for Stream Quality and User Experience
@@ -108,9 +103,10 @@ The optimal stream settings may vary depending on your specific requirements.
 The following profiles provide a good starting point for balancing low latency with stream quality and user experience.
 You may need to adjust the settings to suit your specific situation.
 
-
 #### Low latency, high quality
+
 This profile prioritizes low latency, but still maintains a good quality at the cost of more (and more unpredictably spiking) bandwidth.
+
 ```python filename="Low latency, high quality Profile"
 Rate Control: CRF
 CRF: 25
@@ -123,7 +119,9 @@ Resolution: 1080p
 ```
 
 #### Low latency for bad connections
+
 This profile prioritizes low latency, sacrificing quality to maintain a low bit rate so that even those with bad connections can watch reliably.
+
 ```python filename="Low latency for bad connections Profile"
 Rate Control: CBR
 Bit Rate: 1200
@@ -136,7 +134,9 @@ Resolution: 720p
 ```
 
 #### Balanced high quality
+
 A good balance between reasonable latency and reasonable bit rate, but with consistently high quality.
+
 ```python filename="Balanced high quality Profile"
 Rate Control: CRF
 CRF: 25
@@ -149,7 +149,9 @@ Resolution: Any
 ```
 
 #### Balanced for bad connections
+
 A good balance between reasonable latency and reasonable quality, but with a consistent bit rate that should be comfortably viewable for most modern internet connections.
+
 ```python filename="Balanced for bad connections Profile"
 Rate Control: CBR
 Bit Rate: 2000
@@ -162,7 +164,9 @@ Resolution: Up to 1080p
 ```
 
 #### High quality, high latency
+
 This profile prioritizes quality over everything else, sacrificing latency to keep the bit rate within reasonable bounds.
+
 ```python filename="High quality, high latency"
 Rate Control: CRF
 CRF: 27
@@ -175,7 +179,9 @@ Resolution: 1080p
 ```
 
 #### Low bandwidth, high latency
+
 This profile prioritizes watchability, even for really bad connections, sacrificing both quality and latency to do so.
+
 ```python filename="Low bandwidth, high latency Profile"
 Rate Control: CBR
 Bit Rate: 700

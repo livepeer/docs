@@ -187,7 +187,9 @@ It is important to note that short form playback URLs are only available for
 video assets that are less than 2 minutes in duration.
 
 These may also include WebRTC URLs for low latency livestream playback. These _must_ be played back with our
-ICE servers, which are used to route traffic in restricted networking environments.
+ICE servers, which are used to route traffic in restricted networking environments. The WebRTC WHEP negotiation
+should send back these STUN/TURN servers in the SDP response, so there should not be any customization necessary
+to use the ICE servers with a custom player.
 
 You can get the playback URLs by retrieving the playback info, replacing
 `PLAYBACK_ID` with your asset's playbackId:
@@ -312,5 +314,19 @@ You can replace the `PLAYBACK_ID` with your video's playback id.
 >
 </iframe>
 ```
+
+You may also specify `&lowLatency=true` in the query string - this will enable livestreams to play back
+with low-latency WebRTC. If this does not succeed in
+playing back (commonly due to a slow network or connectivity issues), the embeddable
+will automatically fall back to HLS playback. Also, if the stream contains B-frames, or bidirectional frames,
+(which are common for users streaming with OBS or other streaming apps), the Player will automatically fall
+back, so that out-of-order frames are not displayed. This only applies to users who are playing
+back livestreams.
+
+<Callout type="warning">
+  OBS users should be instructed to use the Livepeer stream profile, or to
+  manually turn off B-frames in their stream. See our [Stream from
+  OBS](/guides/developing/stream-via-obs) docs for more information.
+</Callout>
 
 <IframePlayer />

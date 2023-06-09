@@ -305,6 +305,35 @@ function PlayerComponent() {
 }
 ```
 
+### lowLatency
+
+When true, the Player will play back livestreams with low-latency WebRTC. If this does not succeed in
+playing back (commonly due to a slow network or connectivity issues), the Player
+will automatically fall back to HLS playback. Also, if the stream contains B-frames, or bidirectional frames,
+(which are common for users streaming with OBS or other streaming apps), the Player will automatically fall
+back, so that out-of-order frames are not displayed.
+
+<Callout type="warning">
+  OBS users should be instructed to use the Livepeer stream profile, or to
+  manually turn off B-frames in their stream. See our [Stream from
+  OBS](/guides/developing/stream-via-obs) docs for more information.
+</Callout>
+
+This only applies to video elements which are playing back livestreams. Defaults to false.
+
+<Callout>
+  We are planning on adding similar functionality to the React Native `Player` -
+  please reach out on Discord if you are interested.
+</Callout>
+
+```tsx filename="React & React Native" {6}
+function PlayerComponent() {
+  return (
+    <Player title="My Livestream" playbackId="wwl88k4g8f5eese9" lowLatency />
+  );
+}
+```
+
 ### title
 
 The `title` for the content. This is highly recommended, since it is used for [accessibility labels](https://web.dev/semantics-aria/)
@@ -1136,19 +1165,3 @@ static multiplier (currently set to `x2.5`). This value is then compared to the 
 renditions are prioritized based on the distance between these values. This results in a choice of a rendition
 which is close to the screen size without visual quality issues. For instance, a device with a 1280 pixel width
 would compute `1280px * 2.5 = 3200px`, and then sort the MP4 renditions by which are closest to this value.
-
-### Low Latency Playback
-
-The Player, after `@livepeer/react@2.5.0`, will play back livestreams with low-latency WebRTC by default.
-If this does not succeed in playing back (commonly due to a slow network or connectivity issues), the Player
-will automatically fall back to HLS playback. Also, if the stream contains B-frames, or bidirectional frames,
-(which are common for users streaming with OBS or other streaming apps), the Player will automatically fall
-back, so that out-of-order frames are not displayed. _Users should be instructed to turn off B-frames in their
-app._
-
-We only allow WebRTC playback through ICE servers, which are used to route traffic in restricted networking environments.
-
-<Callout>
-  We are planning on adding similar functionality to the React Native `Player` -
-  please reach out on Discord if you are interested.
-</Callout>
