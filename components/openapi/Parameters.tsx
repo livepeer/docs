@@ -19,15 +19,18 @@ interface ParametersProps {
 }
 
 const RecursiveParameters: React.FC<ParametersProps> = ({ params }) => {
-  const [showChildren, setShowChildren] = useState(false);
+  const [showChildren, setShowChildren] = useState<number | null>(null);
 
-  const toggleChildren = () => {
-    setShowChildren(!showChildren);
+  const toggleChildren = (index: number) => {
+    setShowChildren((prevIndex) => (prevIndex === index ? null : index));
   };
 
   return (
     <>
       {params?.map((param, index) => {
+        const hasChildren =
+          param.objectProperties || param?.arraySchema?.objectProperties;
+
         return (
           <div
             key={index}
@@ -42,13 +45,14 @@ const RecursiveParameters: React.FC<ParametersProps> = ({ params }) => {
                   {param.type}
                 </span>
               </p>
-              {(param.objectProperties ||
-                param?.arraySchema?.objectProperties) && (
+              {hasChildren && (
                 <button
                   className="nx-text-gray-500  rounded-full px-4 py-1 text-xs "
-                  onClick={toggleChildren}
+                  onClick={() => toggleChildren(index)}
                 >
-                  {showChildren ? 'Hide child params' : 'Show child params'}
+                  {showChildren === index
+                    ? 'Hide child params'
+                    : 'Show child params'}
                 </button>
               )}
             </div>
@@ -67,18 +71,17 @@ const RecursiveParameters: React.FC<ParametersProps> = ({ params }) => {
                 </span>
               )}
             </p>
-            {(param.objectProperties || param?.arraySchema?.objectProperties) &&
-              showChildren && (
-                <div className="m-3 border p-3 border-gray-200 rounded-lg dark:border-neutral-700">
-                  <p className="mb-2 text-sm font-semibold">Child parameters</p>
-                  <RecursiveParameters
-                    params={
-                      param.objectProperties ||
-                      param.arraySchema?.objectProperties
-                    }
-                  />
-                </div>
-              )}
+            {hasChildren && showChildren === index && (
+              <div className="m-3 border p-3 border-gray-200 rounded-lg dark:border-neutral-700">
+                <p className="mb-2 text-sm font-semibold">Child parameters</p>
+                <RecursiveParameters
+                  params={
+                    param.objectProperties ||
+                    param.arraySchema?.objectProperties
+                  }
+                />
+              </div>
+            )}
           </div>
         );
       })}

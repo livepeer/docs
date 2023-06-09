@@ -12,6 +12,26 @@ interface RequestProps {
 }
 
 const Request: React.FC<RequestProps> = ({ baseUrl, params, method, path }) => {
+  const buildNestedObject = (
+    properties: ParameterInfo[],
+  ): { [key: string]: any } => {
+    const nestedObject: { [key: string]: any } = {};
+
+    properties.forEach((property: ParameterInfo) => {
+      nestedObject[property.property] = property.example || null;
+
+      if (property.objectProperties && property.objectProperties.length > 0) {
+        const nestedNestedObject = buildNestedObject(property.objectProperties);
+
+        if (Object.keys(nestedNestedObject).length > 0) {
+          nestedObject[property.property] = nestedNestedObject;
+        }
+      }
+    });
+
+    return nestedObject;
+  };
+
   const generateCurlCommand = (): string => {
     const curlCommand = `curl -X ${method.toUpperCase()} -H 'content-type: application/json'`;
 
@@ -21,17 +41,15 @@ const Request: React.FC<RequestProps> = ({ baseUrl, params, method, path }) => {
       if (property.property && property.example) {
         requestBody[property.property] = property.example;
       }
+
       if (property.objectProperties && property.objectProperties.length > 0) {
-        const nestedObject: { [key: string]: any } = {};
-        property.objectProperties?.forEach((nestedProperty: ParameterInfo) => {
-          if (nestedProperty.property && nestedProperty.example) {
-            nestedObject[nestedProperty.property] = nestedProperty.example;
-          }
-        });
+        const nestedObject = buildNestedObject(property.objectProperties);
+
         if (Object.keys(nestedObject).length > 0) {
           requestBody[property.property] = nestedObject;
         }
       }
+
       if (
         property.array &&
         property.arraySchema &&
@@ -55,7 +73,8 @@ const Request: React.FC<RequestProps> = ({ baseUrl, params, method, path }) => {
       }
     });
 
-    const requestBodyString = JSON.stringify(requestBody, null, 2);
+    const requestBodyString =
+      method !== 'get' && JSON.stringify(requestBody, null, 2);
     const requestUrl = baseUrl ? `${baseUrl}${path}` : path;
     return `${curlCommand} -d '${requestBodyString}' ${requestUrl}`;
   };

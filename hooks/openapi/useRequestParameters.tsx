@@ -129,18 +129,17 @@ export function useRequestParameters(
 
       if (parameterSchema?.type === 'object' && parameterSchema?.properties) {
         info.object = true;
-        info.objectProperties = Object.entries(parameterSchema.properties).map(
-          ([property, propertySchema]: [
-            property: string,
-            propertySchema: any,
-          ]) => {
+        info.objectProperties = Object.entries(parameterSchema.properties)
+          .filter(([property, propertySchema]: [string, any]) => {
+            return !propertySchema.readOnly; // Filter out readOnly properties
+          })
+          .map(([property, propertySchema]: [string, any]) => {
             const resolvedSchema = propertySchema.$ref
               ? resolveRef(propertySchema.$ref)
               : propertySchema;
             resolvedSchema.property = property;
             return extractParameterInfo(resolvedSchema);
-          },
-        );
+          });
       }
 
       return info;
