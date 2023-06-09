@@ -2,12 +2,14 @@ import cn from 'clsx';
 
 import type { ComponentProps, ReactElement, RefObject } from 'react';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 interface PreProps extends ComponentProps<'pre'> {
   filename?: string;
   dark?: boolean;
   method?: string;
+  fromRequest?: boolean;
+  requestSamples?: { languageName: string; request: string }[];
 }
 
 const Pre = ({
@@ -16,9 +18,12 @@ const Pre = ({
   filename,
   dark,
   method,
+  fromRequest,
+  requestSamples,
   ...props
 }: PreProps): ReactElement => {
   const preRef: RefObject<HTMLPreElement> = useRef(null);
+  const [selectedLanguage, setSelectedLanguage] = useState('');
 
   const getFilenameSection = () => {
     if (!filename) {
@@ -29,15 +34,67 @@ const Pre = ({
       <div
         className={cn(
           dark ? 'text-white' : 'nx-text-gray-700 dark:nx-text-gray-200',
-          'nx-absolute nx-top-0 nx-z-[1] nx-w-full nx-truncate nx-rounded-t-xl nx-bg-primary-700/5 nx-py-2 nx-px-4 nx-text-xs dark:nx-bg-primary-300/10',
+          'nx-absolute nx-top-0 nx-z-[1] nx-w-full nx-truncate nx-rounded-t-xl nx-bg-primary-700/5 nx-py-2 nx-px-4 nx-text-xs dark:nx-bg-primary-300/10 flex flex-row justify-between',
         )}
       >
-        {method && (
-          <span className="uppercase mr-3 text-green-600">{method}</span>
-        )}
-        {filename}
+        <div>
+          {method && (
+            <span className="uppercase mr-3 text-green-600">{method}</span>
+          )}
+          {filename}
+        </div>
+        {renderLanguageSelector()}
       </div>
     );
+  };
+
+  const handleLanguageChange = (language: string) => {
+    setSelectedLanguage(language);
+  };
+
+  const renderLanguageSelector = () => {
+    if (!fromRequest || !requestSamples) {
+      return null;
+    }
+
+    return (
+      <div className="nx-ml-4">
+        <select
+          id="languageSelect"
+          value={selectedLanguage}
+          className="bg-transparent focus:outline-none"
+          onChange={(e) => handleLanguageChange(e.target.value)}
+        >
+          {requestSamples.map((sample, index) => (
+            <option
+              key={sample.languageName}
+              value={sample.languageName}
+              selected={index === 0}
+            >
+              {sample.languageName}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  };
+  const renderContent = () => {
+    if (!selectedLanguage && requestSamples && requestSamples.length > 0) {
+      setSelectedLanguage(requestSamples[0]?.languageName ?? '');
+      return requestSamples[0]?.languageName ?? '';
+    }
+
+    if (selectedLanguage && requestSamples) {
+      const selectedSample = requestSamples.find(
+        (sample) => sample.languageName === selectedLanguage,
+      );
+
+      if (selectedSample) {
+        return selectedSample.request;
+      }
+    }
+
+    return children;
   };
 
   return (
@@ -54,7 +111,7 @@ const Pre = ({
         ref={preRef}
         {...props}
       >
-        {children}
+        {renderContent()}
       </pre>
       <div
         className={cn(
