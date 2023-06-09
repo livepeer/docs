@@ -101,7 +101,7 @@ Now, we can use asymmetric encryption with the Livepeer Public Key to encrypt ou
 
 ```js
 // Decode the SPKI public key from base64 and convert it to a buffer
-spkiPublicKey = atob(publicKeyData.spki_public_key);
+const spkiPublicKey = atob(publicKeyData.spki_public_key);
 const publicKeyBuffer = Uint8Array.from(atob(spkiPublicKey), (c) =>
   c.charCodeAt(0),
 ).buffer;
@@ -140,6 +140,13 @@ We're all set to upload the video file.
 When requesting an upload to the Livpeer API, you can simply add an `encryption` field with your encrypted key.
 [Api Reference](https://docs.livepeer.org/reference/api/create-asset-via-url)
 
+<Callout>
+  When uploading an encrypted video, specifying a `playbackPolicy` is required.
+  You can still specify the type of the playback policy as `public`, but be
+  aware that anyone with the `playbackId` or `playbackUrl` would be able to
+  watch it.
+</Callout>
+
 ```js
 // Request the upload URL
 const response = await fetch(
@@ -154,6 +161,9 @@ const response = await fetch(
       name: 'File name',
       encryption: {
         encryptedKey: encryptedKeyBase64,
+      },
+      playbackPolicy: {
+        // Your playback policy
       },
     }),
   },
