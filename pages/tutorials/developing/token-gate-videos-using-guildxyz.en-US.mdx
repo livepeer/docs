@@ -1,0 +1,750 @@
+---
+title: 'How to Token Gate Videos Using Livepeer and Guild.xyz: A Step-by-Step Tutorial'
+description: 'Learn how to token gate videos using Livepeer and Guild.xyz: A step-by-step tutorial'
+type: 'tutorial'
+category: 'developing'
+ogImageText: 'Token Gate Videos Using Livepeer and Guild.xyz: A Step-by-Step Tutorial'
+---
+
+import BlogHeader from '@components/core/Tutorial/Header';
+
+<BlogHeader />
+
+Token gating is a method of restricting access to videos based on ownership of a specific type of token or cryptocurrency. It can be used to restrict access to certain videos to those who hold a specific type of token, such as an NFT (non-fungible token). One of the primary benefits of token gating is that it allows creators to monetise their content more effectively. It can also provide creators with more control over their content and its distribution. By restricting access to certain videos to those who hold a specific token, creators can ensure that their content is only being viewed by those who have a genuine interest in it.
+
+Guild.xyz is an online tool for token-curated communities. Guild.xyz creates access to online communities based on NFTs, NFT attributes, tokens, and more
+
+When combined with Livepeer, developers can build token-gated video applications and allow creators to token-gate their video with specific tokens, NFTs, addresses, etc. In this tutorial, you will learn how to build a token-gated video application with Guild.xyz and Livepeer.
+
+Here is a high-level workflow diagram of how Livepeer’s access control feature works and how we will use it in our app:
+
+![VoD Workflow](/images/tutorials/vod-diagram.png)
+
+When implementing token gating for your video streams, it's important to ensure that the video infrastructure enforces the same restrictions to prevent unauthorized sharing of the video links. Without proper validations, it can be easy for users with access to the video to copy and share the link with others who should not have access. This is an important consideration to keep the content secure.
+
+In this tutorial, we will be having a very simple JWT-based authentication but if you want to build a production app, make sure to have a very good logic for your token gating system.
+
+## **Prerequisites**
+
+Before you start with this tutorial, make sure you have the following tool installed on your machine:
+
+- Latest [Node.js](https://nodejs.org/en/) version
+- An Ethereum wallet such as Metamask or Rainbow
+
+In addition to the above tools, this tutorial assumes that you have a basic understanding of Next.js
+
+## **Setting up Next.js App**
+
+First, create a directory for the project and then initialize a Next.js app using the following command in your terminal:
+
+```
+npx create-next-app .
+```
+
+This will create a new Next.js app in the current directory and install all the necessary dependencies.
+
+> While creating a Next.js application, you will be prompted if you would want to use Tailwind. In this tutorial, we will be using Tailwind, so make sure to set up a Next.js app with Tailwind.
+
+Once the project is created successfully, run the following command to install a few other dependencies.
+
+```
+npm install @livepeer/react @rainbow-me/rainbowkit ethers wagmi axios react-hot-toast @guildxyz/sdk
+```
+
+## **Setting up Clients**
+
+In this tutorial, we will be using Rainbow kit and WAGMI to handle authentication such as connecting wallet and signing the message. Let’s start by setting up the client for it.
+
+### RainbowKit and WAGMI
+
+First, inside of `_app.js` import the following from Rainbow and WAGMI.
+
+```jsx
+import '@rainbow-me/rainbowkit/styles.css';
+
+import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { mainnet } from 'wagmi/chains';
+
+import { publicProvider } from 'wagmi/providers/public';
+```
+
+Then, configure your desired chains (in this tutorial, we will be using Ethereum mainnet) and generate the required connectors. You will also need to set up a WAGMI client.
+
+```jsx
+// ... import { alchemyProvider } from 'wagmi/providers/alchemy';
+// ... import { publicProvider } from 'wagmi/providers/public';
+
+const { chains, provider } = configureChains([mainnet], [publicProvider()]);
+const { connectors } = getDefaultWallets({
+  appName: 'My Awesome App',
+  chains,
+});
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider,
+});
+```
+
+Finally, wrap your application with `RainbowKitProvider` and `WagmiConfig`
+
+```jsx
+const App = () => {
+  return (
+    <WagmiConfig client={wagmiClient}>
+      <RainbowKitProvider chains={chains}>
+        <Component {...pageProps} />
+      </RainbowKitProvider>
+    </WagmiConfig>
+  );
+};
+```
+
+### **Livepeer**
+
+Livepeer is a decentralized video infrastructure protocol that allows users to upload, transcode, and serve video content. The Livepeer.js JavaScript SDK provides a set of ready-to-use hooks that make it easy to integrate Livepeer into a project.
+
+To get started, navigate to [https://livepeer.studio/register](https://livepeer.studio/register) and create a new account on Livepeer Studio. This will give you access to your Livepeer dashboard, where you can manage your account and access your API keys.
+
+Once you have created an account, in the dashboard, click on the Developers on the sidebar.
+
+![Livepeer Studio - Create API key page](/images/tutorials/studio-create-api.png)
+
+Then, click on Create API Key, give a name to your key, and then copy it as we will need it later.
+
+To use Livepeer.js in your project, create a new directory named `client` in the root directory, and add the following code to `index.js`
+
+```jsx
+import { createReactClient } from '@livepeer/react';
+import { studioProvider } from 'livepeer/providers/studio';
+
+const LivepeerClient = createReactClient({
+  provider: studioProvider({ apiKey: 'YOUR_API_KEY' }),
+});
+
+export default LivepeerClient;
+```
+
+Make sure to replace the `YOUR_API_KEY` with the key which you just copied from the Livepeer dashboard. And also replace the code inside of `_app.js` in the page directory with the below code.
+
+```jsx
+//... import { publicProvider } from 'wagmi/providers/public';
+
+import { LivepeerConfig } from '@livepeer/react';
+import LivepeerClient from '../client';
+
+//... const wagmiClient = createClient({
+
+function MyApp({ Component, pageProps }) {
+  return (
+    <LivepeerConfig client={LivepeerClient}>
+      <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider chains={chains}>
+          <Component {...pageProps} />
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </LivepeerConfig>
+  );
+}
+
+export default MyApp;
+```
+
+And that is it, you can now use Livepeer to upload and transcode assets.
+
+## Backend
+
+The first step is to set up a background route that will handle the webhook and verify the token. Since we are using Next.js, we can simply use the `api` routes.
+
+### \***\*Create a Webhook Handler\*\***
+
+The first step is to create an access control webhook handler. We need to set up an endpoint (e.g., [https://yourdomain.com/api/check-access](https://yourdomain.com/api/check-access)) to handle the logic for granting or denying access to your VOD assets. This endpoint should accept a POST request with a JSON payload containing the access key and webhook context.
+
+```jsx
+{
+  "accessKey": "your-access-key",
+  "context": {
+    "assetId": "abcd1234",
+    "userId": "user5678"
+  },
+  "timestamp": 1680530722502
+}
+```
+
+In the Next.js `api` directory, create a new file named `generate-jwt.js` and add the following code to it.
+
+```jsx
+import type { NextApiRequest, NextApiResponse } from 'next';
+import jwt from 'jsonwebtoken';
+
+const secretKey = 'your-secret-key';
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { guildId } = req.body;
+  const token = jwt.sign({ guildId }, secretKey);
+
+  res.status(200).json({ token });
+};
+
+export default handler;
+```
+
+In the above code, we are using `jsonwebtoken` package to generate JWT. This API will be called if the user satisfies the requirement.
+
+Next, create a new file named `verify-jwt.js` and add the following code to it.
+
+```jsx
+import type { NextApiRequest, NextApiResponse } from 'next';
+import jwt from 'jsonwebtoken';
+
+const secretKey = 'your-secret-key';
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { token, webhookContext } = req.body;
+
+  try {
+    // Verify the JWT using the secret key
+    const decodedToken = jwt.verify(token, secretKey);
+
+    // Check if the guild ID in the token matches the one provided in the request
+    if (decodedToken.guildId === webhookContext.guildId) {
+      res.status(200).json({ valid: true });
+    } else {
+      res.status(403).json({ valid: false });
+    }
+  } catch (error) {
+    res.status(401).json({ valid: false });
+  }
+};
+
+export default handler;
+```
+
+The above code verifies a JWT access token and checks if its payload matches the webhook.
+
+If the access token is not verified, an HTTP response with a status code of 403 is returned. If everything is fine, the handler returns an HTTP response with a status code of 200.
+
+Next, deploy your Next.js app to Vercel or any other hosting provider as we will need a link to the verify JWT API.
+
+### \***\*Register an Access Control Webhook\*\***
+
+Once you deployed, you can use the Livepeer Studio dashboard to create a new webhook with the type `playback.accessControl` and specify the URL of your access control endpoint.
+
+![Livepeer Studio - Add Webhook page](/images/tutorials/studio-add-webhook.png)
+
+Once created, copy the id of Webhook as we will need it later in the next step.
+
+## Frontend
+
+Now that we have set up the clients and backend, we can move to the front end and add the upload and access control features to our app.
+
+### Wallet Connection
+
+First, we need to allow users to connect their wallets. Create a new directory named `components` and inside of it, create a new file named `Connect` and add the following code to it.
+
+```jsx
+import React from 'react';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
+export default function Navbar() {
+  return (
+    <div className="absolute top-0 left-0  ml-10 mt-10 flex items-center ">
+      <ConnectButton />
+    </div>
+  );
+}
+```
+
+It is a simple component that imports ConnectButton from Rainbow which would handle the authentication.
+
+### Upload page
+
+In the pages directory, we can use `index.jsx` as the upload page, or you can also create a new file named `upload.jsx` for the upload page. In this tutorial, we will be using `index.jsx` as the upload page and it will be the index page of our app.
+
+First import the following in the `index.jsx` file.
+
+```jsx
+import React, { useMemo, useRef, useState } from 'react';
+import Steps from '../Steps';
+import { toast } from 'react-hot-toast';
+import { useAsset, useCreateAsset } from '@livepeer/react';
+import Link from 'next/link';
+import { useAccount } from 'wagmi';
+import axios from 'axios';
+```
+
+Next, add the following hooks inside the component. The code contains a few useStates for managing the state and the `useAccount` hook that is imported from WAGMI.
+
+```jsx
+	// Inputs
+  const [file, setFile] = useState(undefined);
+  const fileInputRef = useRef(null);
+
+	// Guild.xyz
+  const [guildId, setGuildId] = useState<string | null>();
+
+  // Misc
+  const { address: publicKey } = useAccount();
+```
+
+Next, we can use `useCreateAsset` to upload the video to Livepeer. In the below code, we also specify the webhook id, which we created earlier. And `useAsset` hook to check if the asset upload/processing is completed
+
+```tsx
+// Step 1: Creating an asset
+const {
+  mutate: createAsset,
+  data: createdAsset,
+  status: createStatus,
+  progress,
+} = useCreateAsset(
+  file
+    ? {
+        sources: [
+          {
+            file: file,
+            name: file.name,
+            playbackPolicy: {
+              type: 'webhook',
+              webhookId: 'WEBHOOK_ID',
+              webhookContext: {
+                guildId,
+              },
+            },
+          },
+        ],
+      }
+    : null,
+);
+
+// Step 3: Getting asset and refreshing for the status
+const {
+  data: asset,
+  error,
+  status: assetStatus,
+} = useAsset({
+  assetId: createdAsset?.[0].id,
+  refetchInterval: (asset) =>
+    asset?.storage?.status?.phase !== 'ready' ? 5000 : false,
+});
+```
+
+You can also add the below code to check the status of the upload.
+
+```jsx
+const progressFormatted = useMemo(
+  () =>
+    progress?.[0].phase === 'failed' || createStatus === 'error'
+      ? 'Failed to upload video.'
+      : progress?.[0].phase === 'waiting'
+      ? 'Waiting'
+      : progress?.[0].phase === 'uploading'
+      ? `Uploading: ${Math.round(progress?.[0]?.progress * 100)}%`
+      : progress?.[0].phase === 'processing'
+      ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
+      : null,
+  [progress, createStatus],
+);
+
+const isLoading = useMemo(
+  () =>
+    createStatus === 'loading' ||
+    assetStatus === 'loading' ||
+    (asset && asset?.status?.phase !== 'ready') ||
+    (asset?.storage && asset?.storage?.status?.phase !== 'ready'),
+  [asset, assetStatus, createStatus],
+);
+```
+
+Add the following code that to also check if the guildId is valid using [Guild.xyz](http://Guild.xyz) API.
+
+```jsx
+const checkGuildId = async () => {
+  try {
+    const res = await axios.get(`https://api.guild.xyz/v1/guild/${guildId}`);
+    console.log(res.data);
+    return res.data;
+  } catch {
+    return false;
+  }
+};
+const handleClick = async () => {
+  if (!publicKey) {
+    toast('Please connect your wallet to continue', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+    return;
+  }
+
+  if (!file) {
+    toast('Please choose a file', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+    return;
+  }
+  if (!guildId) {
+    toast('Please enter the guild id', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+    return;
+  }
+
+  const isValidGuild = await checkGuildId();
+  if (isValidGuild) {
+    createAsset?.();
+  } else {
+    toast('Invalid Guild Id, please try again', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+  }
+};
+const handleClick = async () => {
+  if (!publicKey) {
+    toast('Please connect your wallet to continue', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+    return;
+  }
+
+  if (!file) {
+    toast('Please choose a file', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+    return;
+  }
+  if (!guildId) {
+    toast('Please enter the guild id', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+    return;
+  }
+
+  const isValidGuild = await checkGuildId();
+  if (isValidGuild) {
+    createAsset?.();
+  } else {
+    toast('Invalid Guild Id, please try again', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+  }
+};
+```
+
+Finally, we can write a function that would call the createAsset to upload the video.
+
+```jsx
+const handleClick = async () => {
+  if (!publicKey) {
+    toast('Please connect your wallet to continue', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+    return;
+  }
+
+  if (!file) {
+    toast('Please choose a file', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+    return;
+  }
+  if (!guildId) {
+    toast('Please enter the guild id', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+    return;
+  }
+
+  const isValidGuild = await checkGuildId();
+  if (isValidGuild) {
+    createAsset?.();
+  } else {
+    toast('Invalid Guild Id, please try again', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+  }
+};
+```
+
+Next, in the return function add the following JSX code. It is pretty long, but I am going to explain it.
+
+```jsx
+return (
+<section className="p-10 h-screen flex flex-col lg:flex-row-reverse">
+      <div className="w-full h-1/2 lg:h-full lg:w-1/2 ">
+        <div className="relative">
+          <img
+            src="https://cdn.midjourney.com/c4dd420f-e216-4548-a4e2-bdcfa166a7d4/0_1_640_N.webp"
+            alt="BannerImage"
+            className=" h-[90vh] w-full lg:object-cover lg:block hidden rounded-xl"
+          />
+        </div>
+      </div>
+      <div className="lg:w-1/2  w-full h-full lg:mr-20">
+        <p className="text-base font-light text-primary lg:mt-20 mt-5">
+          Livepeer x Ethereum x Guild.xyz
+        </p>
+        <h1 className="text-5xl font-bold font-MontHeavy text-gray-100 mt-6 leading-tight">
+          Control who can watch your videos with Livepeer and Guild.xyz
+        </h1>
+        <p className="text-base font-light text-zinc-500 mt-2">
+          Token gating is a powerful tool for content creators who want to
+          monetize their video content. With Livepeer, you can easily create a
+          gated video that requires users to hold a certain amount of tokens/NFT
+          in order to access the content. <br /> <br /> Livepeer&apos;s token
+          gating feature is easy to use and highly customizable
+        </p>
+        <div className="flex flex-col mt-6">
+          <div className="h-4" />
+          <div
+            onClick={() => fileInputRef.current?.click()}
+            className="w-full border-dashed border-zinc-800 border rounded-md text-zinc-700  p-4 flex items-center justify-center hover:border-zinc-700 "
+          >
+            <p className="">
+              {file ? (
+                file.name +
+                " - " +
+                Number(file.size / 1024 / 1024).toFixed() +
+                " MB"
+              ) : (
+                <>Choose a video file to upload</>
+              )}
+            </p>
+          </div>
+          <div className="h-5" />
+          <Input
+            onChange={(e) => setGuildId(e.target.value)}
+            placeholder={"Guild Id"}
+          />
+
+          <input
+            onChange={(e) => {
+              if (e.target.files) {
+                setFile(e.target.files[0]);
+              }
+            }}
+            type="file"
+            accept="video/*"
+            ref={fileInputRef}
+            hidden
+          />
+        </div>
+        <div className="flex flex-row items-center mb-20 lg:mb-0">
+          <Button onClick={handleClick}>
+            {isLoading ? progressFormatted || "Uploading..." : "Upload"}
+          </Button>
+          {asset?.status?.phase === "ready" && (
+            <div>
+              <div className="flex flex-col justify-center items-center ml-5 font-matter">
+                <p className="mt-6 text-white">
+                  Your token-gated video is uploaded, and you can view it{" "}
+                  <Link
+                    className="text-primary"
+                    target={"_blank"}
+                    rel={"noreferrer"}
+                    href={`/watch/${asset?.playbackId}`}
+                  >
+                    here
+                  </Link>
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+```
+
+The first section contains a banner image and some text that describes the purpose of token gating on the Livepeer platform. Then we have two input fields. The first input field allows the user to select a video file to upload. The second input field allows the user to set the guildId.
+
+And that is it for the upload page. Save the file and you should see a similar page:
+
+![Guild.xyz app homepage](/images/tutorials/guildxyz-app-homepage.png)
+
+### Watch Page
+
+For this watch page, you can create a new directory named `watch` inside the page and then create a new file named `[playbackId].tsx`. This will tell Next.js to match any link of `/watch/anything` to this page. Next, import the following into the page.
+
+```jsx
+import React, { useEffect, useState } from 'react';
+import { Nav } from '../../components';
+import { useRouter } from 'next/router';
+import { useAccount } from 'wagmi';
+import { Player, usePlaybackInfo } from '@livepeer/react';
+import axios from 'axios';
+```
+
+Then, add the following hooks inside of the page:
+
+```jsx
+// ... import axios from "axios";
+
+export default function Watch() {
+  const router = useRouter();
+  const playbackId = router.query.playbackId?.toString();
+  const { address } = useAccount();
+
+  const [jwt, setJwt] = useState("");
+  const [hasAccess, setHasAccess] = useState<string | boolean>("checking");
+```
+
+Next, we would need to fetch the playback info using the playback id. We can do this very easily using the `usePlaybackInfo` hook from `@livepeer/react`
+
+```jsx
+// Step 1: Fetch playback URL
+const { data: playbackInfo, status: playbackInfoStatus } = usePlaybackInfo({
+  playbackId,
+});
+```
+
+Next, we need a function to check whether the users have access. This function can easily be handled with the Next.js API which we created earlier.
+
+```jsx
+const generateJwt = async (guildId: string) => {
+    const { data } = await axios.post("/api/generate-jwt", {
+      guildId,
+    });
+    if (data?.token) {
+      setJwt(data?.token);
+      setHasAccess(true);
+    }
+  };
+
+  const checkAccess = async (playbackPolicy: any) => {
+    console.log("checking", playbackPolicy);
+    const guildId = playbackPolicy.webhookContext.guildId;
+    const { data } = await axios.get(
+      `https://api.guild.xyz/v1/guild/access/${guildIduseEffect(() => {
+    if (playbackInfo) {
+      const { playbackPolicy } = playbackInfo?.meta ?? {};
+      checkAccess(playbackPolicy);
+    }
+  }, [playbackInfo]);}/${address}`
+    );
+    if (data.length > 0) {
+      generateJwt(guildId);
+    } else {
+      setHasAccess(false);
+    }
+  };
+```
+
+And finally, we can add a `useEffect` function to get playback info and check Guild access control when the component mounts.
+
+```jsx
+useEffect(() => {
+  if (playbackInfo) {
+    const { playbackPolicy } = playbackInfo?.meta ?? {};
+    checkAccess(playbackPolicy);
+  }
+}, [playbackInfo]);
+```
+
+And that is it. We can add the following code to the return function to render the player if the JWT is valid, otherwise show a message that the user doesn’t have access.
+
+```jsx
+return (
+		<>
+      <div className="flex flex-col text-lg items-center justify-center mt-40"></div>
+      <div className="flex justify-center text-center font-matter">
+        <div className="overflow-auto   rounded-md p-6 w-3/5 mt-20">
+          {hasAccess == "checking" && (
+            <p className="text-white">Checking, please wait...</p>
+          )}
+
+          {!hasAccess && (
+            <p className="text-white">
+              Sorry, you do not have access to this content
+            </p>
+          )}
+          {jwt && <Player playbackId={playbackId} accessKey={jwt} />}
+        </div>
+      </div>
+    </>
+```
+
+Save the file. Now try uploading a video and then once it is uploading come to the watch screen and check if you have access to it.
+
+## Token gate multiple assets with the same ACL condition
+
+If you want to token gate multiple assets with the same access control conditions, then you can simply get the guildId from the user and then send the same info to as many assets as would like to token gate.
+
+The access controls conditions and resource id should be inside of the Webhook Context.
+
+```jsx
+const {
+    mutate: createAsset,
+    data: createdAsset,
+    status: createStatus,
+    progress,
+  } = useCreateAsset(
+    file
+      ? {
+          sources: [
+            {
+              file: file,
+              name: file.name,
+              playbackPolicy: {
+                type: "webhook",
+                webhookId: "WEBHOOK_ID",
+                webhookContext: {
+		               guildId,
+                },
+              },
+            },
+          ] as const,
+        }
+      : null
+  );
+```
+
+## Remove the ACL conditions
+
+If you want to remove the access control conditions from an asset. You need to update the asset using the Livepeer Studio API or Livepeer.js.
