@@ -87,7 +87,7 @@ export function useRequestParameters(
     };
 
     const resolveRef = (ref: string): any => {
-      const refPath = ref.split('/').slice(1);
+      let refPath = ref.split('/').slice(1);
       let currentSchema: any = schemas;
 
       for (const path of refPath) {
@@ -104,8 +104,54 @@ export function useRequestParameters(
         }
       }
 
+      // Check if there are any $ref in the current schema
+      if (containsRef(currentSchema)) {
+        for (const key in currentSchema) {
+          if (currentSchema[key] && typeof currentSchema[key] === 'object') {
+            currentSchema[key] = resolveNestedRefs(currentSchema[key]);
+          }
+        }
+      }
+
       return currentSchema;
     };
+
+    function containsRef(schema: any): boolean {
+      if (!schema || typeof schema !== 'object') {
+        return false;
+      }
+
+      for (const key in schema) {
+        if (
+          key === '$ref' ||
+          (schema[key] &&
+            typeof schema[key] === 'object' &&
+            containsRef(schema[key]))
+        ) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    function resolveNestedRefs(schema: any): any {
+      if (Array.isArray(schema)) {
+        return schema.map((item) => resolveNestedRefs(item));
+      }
+
+      if (schema && typeof schema === 'object') {
+        if (schema.$ref) {
+          return resolveRef(schema.$ref);
+        }
+
+        for (const key in schema) {
+          schema[key] = resolveNestedRefs(schema[key]);
+        }
+      }
+
+      return schema;
+    }
 
     const extractParameterInfo = (parameterSchema: any): ParameterInfo => {
       const info: ParameterInfo = {
@@ -127,7 +173,7 @@ export function useRequestParameters(
         info.arraySchema = extractParameterInfo(arraySchema);
       }
 
-      if (parameterSchema?.type === 'object' && parameterSchema?.properties) {
+      if (parameterSchema?.properties) {
         info.object = true;
         info.objectProperties = Object.entries(parameterSchema.properties)
           .filter(([property, propertySchema]: [string, any]) => {
@@ -159,6 +205,9 @@ export function useRequestParameters(
         const resolvedSchema = requestSchema?.$ref
           ? resolveRef(requestSchema.$ref)
           : requestSchema;
+        if (path === '/asset/upload/url') {
+          console.log(resolvedSchema);
+        }
         const requestParameters = extractParameterInfo(resolvedSchema);
 
         if (pathParameters.length > 0) {
