@@ -16,7 +16,12 @@ async function fetchAPISchema() {
 }
 
 function generateJSONOutput(schema) {
-  const jsonOutput = {};
+  const jsonOutput = {
+    authentication: {
+      title: 'Authentication',
+      href: `/reference/api/#authentication`,
+    },
+  };
 
   for (const path in schema.paths) {
     const methods = schema.paths[path];
