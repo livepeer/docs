@@ -10,19 +10,22 @@ import BlogHeader from '@components/core/Tutorial/Header';
 
 <BlogHeader />
 
-In May 2023, we released powerful engagement metrics offering detailed information on viewer behavior and playback quality on your platform. 
+In May 2023, we released powerful engagement metrics offering detailed information on viewer behavior and playback quality on your platform.
 The API includes engagement metrics such as view counts and watch time, as well as performance metrics such as error rate, time to first frame, rebuffer ratio, and exit-before-starts across a variety of dimensions.
-For more details, check out the docs [here](https://docs.livepeer.org/guides/developing/viewer-engagement.en-US).
+For more details, check out the docs [here](/guides/developing/viewer-engagement).
 
-In this tutorial we will introduce a simple, free, and customizable method to quickly visualize the core metrics and dimensions of the API. 
+In this tutorial we will introduce a simple, free, and customizable method to quickly visualize the core metrics and dimensions of the API.
 
 ## Prerequisites
 
 Before you begin this tutorial, make sure you have:
-1. Integrated the necessary components to capture viewership data. Detail ![here](https://docs.livepeer.org/guides/developing/viewer-engagement.en-US#registering-views).
+
+1. Integrated the necessary components to capture viewership data. Detail [here](/guides/developing/viewer-engagement#registering-views).
 2. Viewed videos via (1) to collect data.
 3. Created an CORS-enabled API Key here: [https://livepeer.com/dashboard/developers/api-keys](https://livepeer.com/dashboard/developers/api-keys)
-  * The key must allow CORS access from your Grafana origin, or from all (*)
+
+- The key must allow CORS access from your Grafana origin, or from all (\*)
+
 3. Set up a Grafana account and workspace. A free account is sufficient and available at [Grafana.com](https://grafana.com/)
 
 With that we are ready to set up our dashboard!
@@ -32,30 +35,30 @@ With that we are ready to set up our dashboard!
 1. Login to Grafana
 2. Click “Connections” > "Connect Data"
 
-    ![Grafana Connections](/images/tutorials/grafana-connections.jpg)
+   ![Grafana Connections](/images/tutorials/granfa-connections.jpg)
 
 3. Install “JSON Api” by either searching for it or using this url: `<your-grafana-url>/grafana/connections/datasources/marcusolsson-json-datasource`
 4. Set up your JSON Api:
-    1. Name: e.g. “Engagement Data”
-    2. URL: [`https://livepeer.com/api/data/views/query`](https://livepeer.com/api/data/views/query)
-    3. Custom HTTP Headers
-        1. Header: “Authorization”
-        2. Value: “Bearer <your api key>”
+   1. Name: e.g. “Engagement Data”
+   2. URL: [`https://livepeer.com/api/data/views/query`](https://livepeer.com/api/data/views/query)
+   3. Custom HTTP Headers
+      1. Header: “Authorization”
+      2. Value: `Bearer <your api key>`
 5. Save and Test
 6. Get your data source’s `uid` from the url
-    1. e.g. `<your-grafana-url>/grafana/connections/your-connections/datasources/edit/<datasource-uid>`
+   1. e.g. `<your-grafana-url>/grafana/connections/your-connections/datasources/edit/<datasource-uid>`
 7. Copy and paste this uid into the json template
-    1. json template available: [here](https://gist.github.com/ecmulli/20d7f24c784ba17eb53278c3014ac638)
-    2. open in your favorite code editor
-    3. ctrl+f 
-    4. search for `<data_uid>` 
-    5. replace with your data source uid 
+   1. json template available: [here](https://gist.github.com/ecmulli/20d7f24c784ba17eb53278c3014ac638)
+   2. open in your favorite code editor
+   3. ctrl+f
+   4. search for `<data_uid>`
+   5. replace with your data source uid
 8. “Import the Dashboard” using your formatted json file
-    
-    ![Grafana Import](/images/tutorials/grafana-import-dashboard)
-    
-    1. Click “Upload Dashboard JSON File”
-    2. Rename the dashboard if you’d prefer
-    3. “Import”
+
+   ![Grafana Import](/images/tutorials/grafana-import-dashboard.jpg)
+
+   1. Click “Upload Dashboard JSON File”
+   2. Rename the dashboard if you’d prefer
+   3. “Import”
 
 That's it! Let us know if you have any questions on [Discord](https://discord.gg/livepeer)
