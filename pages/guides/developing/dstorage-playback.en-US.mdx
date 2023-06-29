@@ -3,7 +3,7 @@ title: 'Play a Video from IPFS or Arweave'
 description: 'Learn how to automatically upload and play back a video on IPFS and Arweave with livepeer.js'
 ---
 
-import { Callout } from 'nextra-theme-docs';
+import { Callout, Steps } from 'nextra-theme-docs';
 import { DecentralizedStoragePlayback } from '@components/react/examples';
 
 # Play a Video from IPFS or Arweave
@@ -20,7 +20,8 @@ IPFS is a network of nodes that allow you to read content from the network using
   Github](https://github.com/suhailkakar/livepeer-dStorage-playback).
 </Callout>
 
-## Step 1: Configuring Providers
+<Steps>
+### Configuring Providers
 
 First, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey):
 
@@ -48,11 +49,15 @@ function App() {
 }
 ```
 
-## Step 2: Automatic Playback
+#### Automatic Playback
 
 Now that our providers are set up, we can add a text input for an IPFS CID or an IPFS/Arweave HTTP gateway URL.
 
-<Callout>For IPFS HTTP gateway URLs, the Studio provider currently only supports “path style” URLs and does not support “subdomain style” URLs. The Studio provider will support both styles of URLs in a future update.</Callout>
+<Callout>
+  For IPFS HTTP gateway URLs, the Studio provider currently only supports “path
+  style” URLs and does not support “subdomain style” URLs. The Studio provider
+  will support both styles of URLs in a future update.
+</Callout>
 
 The raw input is passed to the [`Player`](/reference/livepeer-js/Player), which automatically detects if it is a valid CID and attempts
 to fetch the playback info for that CID. If the provider does not have an `Asset` with that CID, the Player will automatically attempt
@@ -102,6 +107,7 @@ export const DecentralizedStoragePlayback = () => {
   possible, we recommend uploading via `useCreateAsset` before displaying it in
   the player for best performance.
 </Callout>
+</Steps>
 
 ## Wrap Up
 
