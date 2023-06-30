@@ -25,7 +25,7 @@ const Endpoint: React.FC<EndpointProps> = ({
   methodInfo,
   schemas,
 }) => {
-  const requestParameters = useRequestParameters(schemas, path);
+  const requestParameters = useRequestParameters(schemas, path, method);
   const response = useResponseInfo(methodInfo, schemas.components?.schemas);
 
   if (!methodInfo.summary) {
