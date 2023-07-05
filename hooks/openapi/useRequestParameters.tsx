@@ -83,22 +83,9 @@ export function useRequestParameters(
       schema: OpenAPIV3_1.PathItemObject | null | undefined,
       method: string,
     ): OpenAPIV3_1.SchemaObject | null => {
-      if (method == 'put') {
-        return (
-          schema?.put?.requestBody?.content?.['application/json']?.schema ??
-          null
-        );
-      } else if (method == 'delete') {
-        return (
-            schema?.delete?.requestBody?.content?.['application/json']?.schema ??
-            null
-        );
-      } else {
-        return (
-          schema?.post?.requestBody?.content?.['application/json']?.schema ??
-          null
-        );
-      }
+      return (
+        schema?.[method]?.requestBody?.content?.['application/json']?.schema ?? null
+      );
     };
 
     const resolveRef = (ref: string): any => {
