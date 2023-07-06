@@ -17,6 +17,7 @@ interface ParameterInfo {
 export function useRequestParameters(
   schemas: OpenAPIV3_1.Document,
   path: string,
+  method: string,
 ): ParameterInfo | null {
   const [requestParameters, setRequestParameters] =
     useState<ParameterInfo | null>(null);
@@ -80,9 +81,10 @@ export function useRequestParameters(
 
     const getRequestSchema = (
       schema: OpenAPIV3_1.PathItemObject | null | undefined,
+      method: string,
     ): OpenAPIV3_1.SchemaObject | null => {
       return (
-        schema?.post?.requestBody?.content?.['application/json']?.schema ?? null
+        schema?.[method]?.requestBody?.content?.['application/json']?.schema ?? null
       );
     };
 
@@ -195,9 +197,10 @@ export function useRequestParameters(
     function getRequestParameters(
       schemas: OpenAPIV3_1.Document,
       path: string,
+      method: string,
     ): ParameterInfo | null {
       const schema = getSchemaByPath(schemas, path);
-      const requestSchema = getRequestSchema(schema);
+      const requestSchema = getRequestSchema(schema, method);
 
       const pathParameters = getPathParameters(schema);
 
@@ -223,7 +226,7 @@ export function useRequestParameters(
       return null;
     }
 
-    const parameters = getRequestParameters(schemas, path);
+    const parameters = getRequestParameters(schemas, path, method);
     setRequestParameters(parameters);
   }, [schemas, path]);
 
