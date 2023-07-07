@@ -809,12 +809,18 @@ Overrides the custom controls for the Player. See the
 [`Player` default controls](https://github.com/livepeer/livepeer.js/blob/main/packages/react/src/components/media/Player.tsx)
 for more details on how the `ControlsContainer` component is used.
 
+This can be used alongside `renderChildrenOutsideContainer` to render the children outside of the aspect ratio container.
+This is used for custom controls, so children of the Player can use `useMediaController` without any parent elements.
+
   </SyncedTab>
   <SyncedTab>
 
 Overrides the custom controls for the Player. See the
 [React Native `Player` default controls](https://github.com/livepeer/livepeer.js/blob/main/packages/react-native/src/components/media/Player.tsx)
 for more details on how the `ControlsContainer` component is used.
+
+This can be used alongside `renderChildrenOutsideContainer` to render the children outside of the aspect ratio container.
+This is used for custom controls, so children of the Player can use `useMediaController` without any parent elements.
 
   </SyncedTab>
 </SyncedTabs>
@@ -867,6 +873,25 @@ function PlayerComponent() {
 
   </SyncedTab>
 </SyncedTabs>
+
+### onPlaybackStatusUpdate
+
+Callback called when the Player store status updates.
+**This should be used with `playbackStatusSelector` to limit state updates.**
+This allows developers to use the underlying state of the Player component in their UI.
+
+```tsx filename="React & React Native" {6-7}
+function PlayerComponent() {
+  return (
+    <Player
+      title="Agent 327: Operation Barbershop"
+      playbackId="f5eese9wwl88k4g8"
+      onPlaybackStatusUpdate={(muted) => console.log(muted)}
+      playbackStatusSelector={(state) => state.muted}
+    />
+  );
+}
+```
 
 ## Hooks
 
