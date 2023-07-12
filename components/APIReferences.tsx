@@ -4,8 +4,6 @@ import { OpenAPIV3_1 } from 'openapi-types';
 
 import React from 'react';
 
-import Authentication from './openapi/Authentication';
-
 import Endpoint from './openapi/Endpoint';
 
 import Pre from './openapi/shared/Pre';
@@ -86,7 +84,6 @@ const APIReference: React.FC<APIReferenceProps> = ({ openApiData }) => {
       {openApiData && (
         <>
           {renderGettingStarted()}
-          <Authentication />
           {renderEndpoints()}
         </>
       )}
