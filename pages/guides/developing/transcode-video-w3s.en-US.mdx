@@ -2,10 +2,12 @@
 title: Transcode Video with Web3 Storage
 ---
 
-import { Callout } from 'nextra-theme-docs';
+import { Callout, Steps } from 'nextra-theme-docs';
 
 <Callout type="warning">
-    The playback of long videos (longer than 1h) stored in Web3 Storage can be slow due to the W3 Link issue tracked [here](https://github.com/web3-storage/w3link/issues/46). 
+  The playback of long videos (longer than 1h) stored in Web3 Storage can be
+  slow due to the W3 Link issue tracked
+  [here](https://github.com/web3-storage/w3link/issues/46).
 </Callout>
 
 ## Introduction
@@ -14,7 +16,8 @@ This guide will describe how to use the Livepeer [transcode API](/reference/api/
 
 There are [code examples](#code-examples) provided for reference.
 
-## UCAN Proof
+<Steps>
+### UCAN Proof
 
 This step assumes that you have [w3 CLI](https://github.com/web3-storage/w3cli) installed. Follow the [Getting Started](https://github.com/web3-storage/w3cli#getting-started) instructions to create new space for storing data and register the space.
 
@@ -40,11 +43,11 @@ w3 delegation create <livepeer-studio-did-key> | base64
 
 This returns the base64-encoded delegation proof which authorizes the Livepeer Studio DID to store data to your space. Note that the proof should not contain any whitespaces.
 
-## Upload Video to web3.storage
+### Upload Video to web3.storage
 
 Make sure you have a video file uploaded to web3.storage. You can do upload a file using the `w3 up` command by following [these instructions](https://github.com/web3-storage/w3cli#w3-up-path-path).
 
-## Transcode with Livepeer
+### Transcode with Livepeer
 
 This step assumes that you have already created a [Livepeer Studio account](https://livepeer.studio/) and an [API key](https://docs.livepeer.org/guides/developing/quickstart).
 
@@ -123,6 +126,7 @@ Use the task ID in the response to query for the transcoding task status. Once t
 
 For more information about transcode API usage refer to the [docs](/reference/api/transcode-video).
 
-## Code Examples
+</Steps>
+### Code Examples
 
 - [Nodejs](https://github.com/livepeer/web3storage-livepeer-nodejs-example)
