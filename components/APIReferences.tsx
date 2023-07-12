@@ -80,7 +80,7 @@ const APIReference: React.FC<APIReferenceProps> = ({ openApiData }) => {
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-8 w-[75vw]">
       {openApiData && (
         <>
           {renderGettingStarted()}
