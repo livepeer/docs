@@ -1,9 +1,10 @@
+import Link from 'next/link';
+
 import { Code } from 'nextra/components';
 
 import React from 'react';
 
 import Pre from './shared/Pre';
-import Link from 'next/link';
 
 const Authentication: React.FC = () => {
   return (
