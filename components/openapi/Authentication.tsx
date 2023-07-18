@@ -20,7 +20,7 @@ const Authentication: React.FC = () => {
             You need to pass your API key in the header with <Code>
               Bearer
             </Code>{' '}
-            prefex while sending a request
+            prefix while sending a request
             <br /> <br />
             It's important to note that your API keys come with significant
             privileges, so it's essential to keep them safe and secure! Refrain
