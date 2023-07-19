@@ -19,8 +19,9 @@ function useCodeSnippets(
       // Generate cURL command
       const requestBody = constructRequestBody(params);
 
-      const curlCommand = `curl -X ${method.toUpperCase()} -H 'content-type: application/json' -d '${requestBody}' ${baseUrl ? baseUrl + path : path
-        }`;
+      const curlCommand = `curl -X ${method.toUpperCase()} -H 'content-type: application/json' -d '${requestBody}' ${
+        baseUrl ? baseUrl + path : path
+      }`;
       return curlCommand;
     };
 
@@ -33,8 +34,9 @@ require 'uri'
 url = URI.parse('${baseUrl ? baseUrl + path : path}')
 http = Net::HTTP.new(url.host, url.port)
 
-request = Net::HTTP::${method.charAt(0).toUpperCase() + method.slice(1)
-        }(url.path)
+request = Net::HTTP::${
+        method.charAt(0).toUpperCase() + method.slice(1)
+      }(url.path)
 request.add_field('Content-Type', 'application/json')
 request.body = '${requestBody}'
 
@@ -312,7 +314,7 @@ class Program
     });
 
     snippets.push({
-      languageName: 'Node.js',
+      languageName: 'JavaScript',
       request: generateNodejsSnippet(),
     });
 
