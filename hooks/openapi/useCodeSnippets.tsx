@@ -304,6 +304,11 @@ class Program
     });
 
     snippets.push({
+      languageName: 'PHP',
+      request: generatePhpSnippet(),
+    });
+
+    snippets.push({
       languageName: 'Java',
       request: generateJavaSnippet(),
     });
@@ -316,6 +321,11 @@ class Program
     snippets.push({
       languageName: 'Go',
       request: generateGoSnippet(),
+    });
+
+    snippets.push({
+      languageName: '.NET',
+      request: generateDotNetSnippet(),
     });
 
     setCodeSnippets(snippets);

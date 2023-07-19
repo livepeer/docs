@@ -14,7 +14,14 @@ import 'prismjs/components/prism-java';
 
 import 'prismjs/components/prism-go';
 
+import 'prismjs/components/prism-markup-templating';
+
+import 'prismjs/components/prism-php';
+
 import 'prismjs/components/prism-bash';
+
+import 'prismjs/components/prism-csharp';
+
 import type { ComponentProps, ReactElement, RefObject } from 'react';
 
 import { useEffect, useRef, useState } from 'react';
@@ -128,6 +135,8 @@ const Pre = ({
           filename ? 'nx-pt-12 nx-pb-4' : 'nx-py-4',
           selectedLanguage && selectedLanguage == 'cURL'
             ? `language-bash`
+            : selectedLanguage == '.NET'
+            ? 'language-csharp'
             : `language-${selectedLanguage}`,
           className,
         )}
