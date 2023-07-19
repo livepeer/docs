@@ -13,7 +13,11 @@ const Response: React.FC<ResponseProps> = ({ response }) => {
     : JSON.stringify(response, null, 2);
 
   return (
-    <Pre className={is204Response ? 'italic' : ''} filename={`RESPONSE`}>
+    <Pre
+      className={is204Response ? 'italic' : ''}
+      filename={`RESPONSE`}
+      language="json"
+    >
       {formattedResponse}
     </Pre>
   );

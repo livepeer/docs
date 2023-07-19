@@ -23,7 +23,6 @@ const Request: React.FC<RequestProps> = ({
 
   return (
     <Pre
-      dark
       method={method}
       filename={path}
       fromRequest={true}
