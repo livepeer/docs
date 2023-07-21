@@ -319,18 +319,21 @@ You can replace the `PLAYBACK_ID` with your video's playback id.
 </iframe>
 ```
 
-You may also specify `&lowLatency=true` in the query string - this will enable livestreams to play back
-with low-latency WebRTC. If this does not succeed in
-playing back (commonly due to a slow network or connectivity issues), the embeddable
+If the embeddable player does not succeed in playing back or errors (due to a slow network or connectivity issues), it
 will automatically fall back to HLS playback. Also, if the stream contains B-frames, or bidirectional frames,
 (which are common for users streaming with OBS or other streaming apps), the Player will automatically fall
 back, so that out-of-order frames are not displayed. This only applies to users who are playing
 back livestreams.
+
+You may also specify `lowLatency=force` or `lowLatency=false` in the query string - `force` will disable HLS fallback
+and _only_ attempt playback from WebRTC, and `false` will completely disable WebRTC playback with livestreams.
 
 <Callout type="warning">
   OBS users should be instructed to use the Livepeer stream profile, or to
   manually turn off B-frames in their stream. See our [Stream from
   OBS](/guides/developing/stream-via-obs) docs for more information.
 </Callout>
+
+<br />
 
 <IframePlayer />
