@@ -1,0 +1,149 @@
+---
+title: "Create livestream"
+description: "Learn how to create a livestream"
+icon: "camera"
+---
+
+import { Callout, Steps } from "nextra-theme-docs";
+import { Stream } from "@components/react/examples";
+
+# Create a livestream
+
+Creating and watching a live stream is easy! The example below uses [`useCreateStream`](/reference/livepeer-js/stream/useCreateStream)
+and [`useStream`](/reference/livepeer-js/stream/useStream) to create and watch a livestream.
+
+<Stream />
+
+<Steps>
+
+### Configuring Providers
+
+Same as before, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey):
+
+```tsx filename="App.tsx"
+import {
+  LivepeerConfig,
+  createReactClient,
+  studioProvider,
+} from "@livepeer/react";
+import * as React from "react";
+
+const livepeerClient = createReactClient({
+  provider: studioProvider({
+    apiKey: process.env.NEXT_PUBLIC_STUDIO_API_KEY,
+  }),
+});
+
+// Pass client to React Context Provider
+function App() {
+  return (
+    <LivepeerConfig client={livepeerClient}>
+      <CreateAndViewAsset />
+    </LivepeerConfig>
+  );
+}
+```
+
+### Stream Creation
+
+We then can create our stream, with the stream key returned once we create it (styling has been removed for simplicity):
+
+```tsx filename="Stream.tsx"
+import { useCreateStream } from "@livepeer/react";
+
+import { useState } from "react";
+
+export const Stream = () => {
+  const [streamName, setStreamName] = useState<string>("");
+  const {
+    mutate: createStream,
+    data: createdStream,
+    status: createStatus,
+  } = useCreateStream();
+
+  return (
+    <>
+      <input
+        type="text"
+        placeholder="Stream name"
+        onChange={(e) => setStreamName(e.target.value)}
+      />
+
+      <button
+        onClick={() => {
+          createStream?.();
+        }}
+        disabled={createStatus === "loading" || !createStream}
+      >
+        Create Stream
+      </button>
+    </>
+  );
+};
+```
+
+### Stream Content
+
+Lastly, when the stream is created, we display the streaming content using the [`Player`](/reference/livepeer-js/Player).
+
+<Callout>
+  In a production application, the viewer **should not have access** to the
+  stream ID. The `playbackId` should be passed to the viewer instead, since this
+  allows the viewer to watch the video without the ability to view the stream
+  key.
+</Callout>
+
+```tsx filename="Stream.tsx"
+import { Player, useCreateStream } from "@livepeer/react";
+
+import { useMemo, useState } from "react";
+
+export const Stream = () => {
+  const [streamName, setStreamName] = useState<string>("");
+  const {
+    mutate: createStream,
+    data: stream,
+    status,
+  } = useCreateStream(streamName ? { name: streamName } : null);
+
+  const isLoading = useMemo(() => status === "loading", [status]);
+
+  return (
+    <div>
+      <input
+        type="text"
+        placeholder="Stream name"
+        onChange={(e) => setStreamName(e.target.value)}
+      />
+
+      {stream?.playbackId && (
+        <Player
+          title={stream?.name}
+          playbackId={stream?.playbackId}
+          autoPlay
+          muted
+        />
+      )}
+
+      <div>
+        {!stream && (
+          <button
+            onClick={() => {
+              createStream?.();
+            }}
+            disabled={isLoading || !createStream}
+          >
+            Create Stream
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+```
+
+</ Steps>
+
+### Wrap Up
+
+That's it! Streaming, complete. You now have a solution for streaming live video content.
