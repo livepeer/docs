@@ -121,50 +121,74 @@ export const DemoPlayer = () => {
 ## Using your own player
 
 Using livepeer.js is the recommended way to play back a video or a
-live stream - it handles MP4 renditions, errors from the API, and is a true web3-native media player.
+livestream - it handles different playback sources, errors from the API, and is a
+true web3-native media player.
 However, if you want to use an alternative, you can do so by
 following the instructions below.
 
-<Callout type="error">
-  To ensure consistent viewer experience, we strongly recommend using a player
-  (like the Livepeer Player) that handles choosing the correct MP4 rendition and
-  gracefully recovers from routine RTMP reconnects through custom polling logic.
-  In the absence of this capability, reconnects may severely degrade viewer
-  experience and require a hard refresh to resolve, and an incorrect MP4
-  rendition for the screen size may be chosen.
-</Callout>
+### Fetch playback URLs
 
-### Fetch the playback URL
-
-To playback a live stream in other players, you'll need to fetch the playback URL(s).
-By default, all content has an HLS endpoint.
-HLS is a protocol that allows you to stream video and audio content over HTTP.
-Much of the video you watch on the web is delivered using HLS. Livepeer
-uses HLS to deliver video and audio content.
+To play back video in other players, you'll need to fetch the playback URL(s).
+By default, all content has an HLS endpoint. HLS is a protocol that allows you to stream
+video and audio content over HTTP. Also, livestreams always have a WebRTC (WHEP) playback URL,
+and short-form VODs (static video assets) can optionally have an MP4 playback URL.
 
 <Callout type="warning">
   The playback URL format is subject to change. Do not try to create the
   playback URLs manually, as they may change periodically.
 </Callout>
 
-You can get the playback url by using the below format and replacing the
+You can get the playback URL by making a GET request to the playback endpoint and replacing the
 `PLAYBACK_ID` with your stream or asset's `playbackId`.
 
-```txt
-https://livepeer.studio/api/playback/{PLAYBACK_ID}
+```bash
+curl "https://livepeer.studio/api/playback/{PLAYBACK_ID}"
 ```
 
-The API will return a JSON payload which looks like:
+If the playback ID corresponds to a VOD, the API will return a JSON payload which looks like:
 
-```json
+```json filename="VOD Response"
 {
   "type": "vod",
   "meta": {
+    "playbackPolicy": null,
+    "source": [
+      {
+        "hrn": "MP4",
+        "type": "html5/video/mp4",
+        "url": "https://asset-cdn.lp-playback.monster/hls/{PLAYBACK_ID}/270p0.mp4",
+        "size": 1240220,
+        "width": 480,
+        "height": 270,
+        "bitrate": 209221
+      },
+      {
+        "hrn": "HLS (TS)",
+        "type": "html5/application/vnd.apple.mpegurl",
+        "url": "https://asset-cdn.lp-playback.monster/hls/{PLAYBACK_ID}/index.m3u8"
+      }
+    ]
+  }
+}
+```
+
+If it corresponds to a livestream, it will respond with:
+
+```json filename="Livestream Response"
+{
+  "type": "live",
+  "meta": {
+    "live": 0,
     "source": [
       {
         "hrn": "HLS (TS)",
         "type": "html5/application/vnd.apple.mpegurl",
-        "url": "https://livepeercdn.studio/recordings/{RECORDING_ID}/index.m3u8"
+        "url": "https://livepeercdn.studio/hls/{PLAYBACK_ID}/index.m3u8"
+      },
+      {
+        "hrn": "WebRTC (H264)",
+        "type": "html5/video/h264",
+        "url": "https://livepeercdn.studio/webrtc/{PLAYBACK_ID}"
       }
     ]
   }
@@ -173,13 +197,25 @@ The API will return a JSON payload which looks like:
 
 <Callout>
   Please note that to play back live streams inside your application you'll need
-  to use a video player component that supports HLS.
+  to use a video player component that supports these protocols. For
+  livestreams, we always provide both WebRTC and HLS, and for VOD, we always
+  provide HLS.
 </Callout>
 
-The format of this payload is [defined here](/reference/api/get-playback).
-The `url` field can be used as the playback URL.
+The format of this payload is [defined here](/reference/api#retrieve-playback-info).
+The `meta.source[number].url` values can be used as the playback URLs.
 
-### Handling various playback sources
+### MP4 (Short Form Videos)
+
+<Callout type="error">
+  To ensure consistent viewer experience, the livepeer.js Player handles
+  choosing the correct MP4 rendition and gracefully recovers from routine RTMP
+  reconnects through custom polling logic. In the absence of this capability,
+  reconnects may severely degrade viewer experience and require a hard refresh
+  to resolve, and an incorrect MP4 rendition for the screen size may be chosen.
+</Callout>
+
+#### Get the playback URL
 
 The playback info endpoint can return multiple sources in the response, as outlined above.
 These may include short form MP4 playback URLs, which allow you to obtain alternative
@@ -190,89 +226,50 @@ watching short videos.
 It is important to note that short form playback URLs are only available for
 video assets that are less than 2 minutes in duration.
 
-You can get the playback URLs by retrieving the playback info, replacing
-`PLAYBACK_ID` with your asset's playbackId:
-
-```txt
-https://livepeer.studio/api/playback/{PLAYBACK_ID}
-```
-
-If there are MP4 renditions or WebRTC playback available, the API will return a JSON payload similar to:
-
-```json
+```json filename="VOD Response"
 {
   "type": "vod",
   "meta": {
+    "playbackPolicy": null,
     "source": [
       {
         "hrn": "MP4",
         "type": "html5/video/mp4",
-        "url": "https://asset-cdn.lp-playback.com/hls/{PLAYBACK_ID}/static360p0.mp4",
-        "size": 494778,
-        "width": 204,
-        "height": 360,
-        "bitrate": 449890
-      },
-      {
-        "hrn": "MP4",
-        "type": "html5/video/mp4",
-        "url": "https://asset-cdn.lp-playback.com/hls/{PLAYBACK_ID}/static720p0.mp4",
-        "size": 1869154,
-        "width": 406,
-        "height": 720,
-        "bitrate": 1996936
+        "url": "https://asset-cdn.lp-playback.monster/hls/{PLAYBACK_ID}/270p0.mp4",
+        "size": 1240220,
+        "width": 480,
+        "height": 270,
+        "bitrate": 209221
       },
       {
         "hrn": "HLS (TS)",
         "type": "html5/application/vnd.apple.mpegurl",
-        "url": "https://livepeercdn.studio/recordings/{RECORDING_ID}/index.m3u8"
+        "url": "https://asset-cdn.lp-playback.monster/hls/{PLAYBACK_ID}/index.m3u8"
       }
     ]
   }
 }
 ```
 
-There are multiple renditions you can choose from, and it is up to you to decide how you want to prioritize
+There can be multiple MP4 renditions (and one HLS URL) which you can choose from, and it is up to
+you to decide how you want to prioritize
 each source for your custom player. See the [Player's technical
 details](/reference/livepeer-js/Player#technical-details) for more
 information on how livepeer.js handles this.
 
 <Callout>
-  When you make a request for playback URLs, in the response MP4 URLs are always
-  listed before HLS URLs. Additionally, each MP4 URL includes additional
-  metadata about the video, such as its width, height, bitrate, and size. This
-  metadata can be useful for mobile applications that want to optimize playback
-  quality and size based on the viewer's device and network conditions. **The
-  Livepeer.js Player automatically handles this.** See the [Player
+  When you make a request for playback URLs, the MP4 URLs are always listed
+  before HLS URLs. Additionally, each MP4 URL includes additional metadata about
+  the video, such as its width, height, bitrate, and size. This metadata can be
+  useful for mobile applications that want to optimize playback quality and size
+  based on the viewer's device and network conditions. **The Livepeer.js Player
+  automatically handles this.** See the [Player
   docs](/reference/livepeer-js/Player#technical-details) for more information.
 </Callout>
 
-The playback URLs may also include WebRTC URLs for low latency livestream playback. These _must_ be played back with our
-ICE servers, which are used to route traffic in restricted networking environments. The WebRTC WHEP negotiation
-should use ICE servers. See the
-[Stream via Browser](/guides/developing/stream-via-browser#adding-broadcasting-with-plain-webrtc)
-docs for the steps to get the ICE config which should be used with playback - the
-steps are the same to get a config similar to:
+#### Use a video player
 
-```tsx
-const iceServers = [
-  {
-    urls: `stun:${host}`,
-  },
-  {
-    urls: `turn:${host}`,
-    username: 'livepeer',
-    credential: 'livepeer',
-  },
-];
-
-const peerConnection = new RTCPeerConnection({ iceServers });
-```
-
-### Use the playback URL in a player
-
-You can use the playback URL with any video player that supports HLS. Here is a
-list of popular players that support HLS:
+You can then use the MP4 or HLS URL with any video player. For HLS/MP4, here is a list of popular players:
 
 - [Video.js](https://videojs.com/)
 - [Plyr.io](https://plyr.io/)
@@ -280,7 +277,7 @@ list of popular players that support HLS:
 - [Bitmovin Player](https://bitmovin.com/video-player/)
 - [HLS.js](https://github.com/video-dev/hls.js) (requires custom logic to wire to a video element)
 
-Here is an example of how to use the playback URL in video.js player.
+Here is an example of how to use the HLS playback URL in video.js player.
 
 ```html
 <head>
@@ -311,6 +308,76 @@ Here is an example of how to use the playback URL in video.js player.
 ```
 
 <VideoJSPlayer />
+
+### WebRTC (Low Latency Livestreams)
+
+<Callout type="error">
+  To ensure consistent viewer experience, the livepeer.js Player handles
+  retrying WebRTC WHEP SDP negotiation and any HTTP status codes from the SDP
+  endpoint - the endpoint will 404 if the stream not currently online, and this
+  must be handled with retry.
+</Callout>
+
+The playback URLs may also include WebRTC URLs for low latency livestream playback. These _must_ be played back with our
+ICE servers, which are used to route traffic in restricted networking environments. The WebRTC WHEP negotiation
+should use ICE servers. This is similar to the
+[Stream via Browser](/guides/developing/stream-via-browser#adding-broadcasting-with-plain-webrtc)
+docs for the steps to get the ICE config which should be used with playback.
+
+#### Get the SDP Host
+
+You will need to make a request to get the proper egress URL for the region which your end user is in.
+We have a global
+presence, and we handle redirects based on GeoDNS to allow users to get the lowest latency server.
+
+To do this, make a GET request to the WebRTC URL which was returned from the playback info endpoint:
+
+```bash
+curl -L 'https://livepeercdn.studio/webrtc/{PLAYBACK_ID}'
+...
+> Location: https://lax-prod-catalyst-2.lp-playback.studio/webrtc/{PLAYBACK_ID}
+```
+
+You may safely ignore any errors returned from the GET request - we are only interested in getting the redirect URL from the final response,
+so that we can set up the correct ICE servers.
+
+<Callout type="warning" emoji="⚠️">
+  The process will change in the future to remove the need for this extraneous
+  GET request - please check back later.
+</Callout>
+
+#### Play the Livestream
+
+Now that we have the endpoint for the ICE servers, we can start SDP negotiation following the [WHIP spec](https://www.ietf.org/archive/id/draft-ietf-wish-whip-01.html)
+and kick off a livestream. First, form an SDP offer with your library of choice. Make sure you specify the ICE servers, so that connectivity issues are not an issue.
+
+```tsx
+const host = new URL(redirectUrl).host;
+
+const iceServers = [
+  {
+    urls: `stun:${host}`,
+  },
+  {
+    urls: `turn:${host}`,
+    username: 'livepeer',
+    credential: 'livepeer',
+  },
+];
+
+const peerConnection = new RTCPeerConnection({ iceServers });
+```
+
+Then send it to the host you received in the previous step (adding the path shown below).
+
+```bash
+curl -X POST \
+  -H 'Content-Type: application/sdp' \
+  --data-binary @payload.sdp \
+  'https://lax-prod-catalyst-2.lp-playback.studio/webrtc/{PLAYBACK_ID}'
+```
+
+The server will respond with an SDP response that you can then use to set up your WebRTC playback!
 
 ## Embeddable Player
 
