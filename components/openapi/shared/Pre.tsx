@@ -1,29 +1,51 @@
 import cn from 'clsx';
 
+import Prism from 'prismjs';
+
+import 'prismjs/components/prism-javascript';
+
+import 'prismjs/components/prism-ruby';
+
+import 'prismjs/components/prism-python';
+
+import 'prismjs/components/prism-json';
+
+import 'prismjs/components/prism-java';
+
+import 'prismjs/components/prism-go';
+
+import 'prismjs/components/prism-markup-templating';
+
+import 'prismjs/components/prism-php';
+
+import 'prismjs/components/prism-bash';
+
+import 'prismjs/components/prism-csharp';
+
 import type { ComponentProps, ReactElement, RefObject } from 'react';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface PreProps extends ComponentProps<'pre'> {
   filename?: string;
-  dark?: boolean;
   method?: string;
   fromRequest?: boolean;
   requestSamples?: { languageName: string; request: string }[];
+  language?: string;
 }
 
 const Pre = ({
   children,
   className,
   filename,
-  dark,
   method,
   fromRequest,
   requestSamples,
+  language,
   ...props
 }: PreProps): ReactElement => {
   const preRef: RefObject<HTMLPreElement> = useRef(null);
-  const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState(language);
 
   const getFilenameSection = () => {
     if (!filename) {
@@ -33,7 +55,7 @@ const Pre = ({
     return (
       <div
         className={cn(
-          dark ? 'text-white' : 'nx-text-gray-700 dark:nx-text-gray-200',
+          'nx-text-gray-700 dark:nx-text-gray-200',
           'nx-absolute nx-top-0 nx-z-[1] nx-w-full nx-truncate nx-rounded-t-xl nx-bg-primary-700/5 nx-py-2 nx-px-4 nx-text-xs dark:nx-bg-primary-300/10 flex flex-row justify-between',
         )}
       >
@@ -97,15 +119,25 @@ const Pre = ({
     return children;
   };
 
+  useEffect(() => {
+    if (preRef.current) {
+      Prism.highlightElement(preRef.current);
+    }
+  }, [children, selectedLanguage]);
+
   return (
     <div className="nextra-code-block nx-relative nx-mt-6 first:nx-mt-0">
       {getFilenameSection()}
       <pre
         className={cn(
-          'nx-mb-4 nx-overflow-x-auto nx-rounded-xl nx-font-medium nx-subpixel-antialiased dark:nx-bg-primary-300/10 nx-text-[.9em]',
+          'nx-mb-4 nx-overflow-x-auto nx-rounded-xl nx-font-medium nx-subpixel-antialiased dark:nx-bg-primary-300/10 nx-bg-primary-700/5 nx-text-[.9em]',
           'contrast-more:nx-border contrast-more:nx-border-primary-900/20 contrast-more:nx-contrast-150 contrast-more:dark:nx-border-primary-100/40',
           filename ? 'nx-pt-12 nx-pb-4' : 'nx-py-4',
-          dark ? 'bg-slate-800 text-gray-300' : 'nx-bg-primary-700/5',
+          selectedLanguage && selectedLanguage == 'cURL'
+            ? `language-bash`
+            : selectedLanguage == '.NET'
+            ? 'language-csharp'
+            : `language-${selectedLanguage}`,
           className,
         )}
         ref={preRef}

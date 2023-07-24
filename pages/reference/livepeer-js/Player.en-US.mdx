@@ -307,7 +307,7 @@ function PlayerComponent() {
 
 ### lowLatency
 
-When true, the Player will play back livestreams with low-latency WebRTC. If this does not succeed in
+When enabled, the Player will play back livestreams with low-latency WebRTC. If this does not succeed in
 playing back (commonly due to a slow network or connectivity issues), the Player
 will automatically fall back to HLS playback. Also, if the stream contains B-frames, or bidirectional frames,
 (which are common for users streaming with OBS or other streaming apps), the Player will automatically fall
@@ -319,7 +319,12 @@ back, so that out-of-order frames are not displayed.
   OBS](/guides/developing/stream-via-obs) docs for more information.
 </Callout>
 
-This only applies to video elements which are playing back livestreams. Defaults to false.
+This only applies to video elements which are playing back livestreams - VOD assets will play back with MP4 or HLS.
+Defaults to `false`.
+
+You may also specify `"force"`, which forces WebRTC and disables fallback to HLS. This is not a recommended default unless
+your application requires low latency (and should not play if low latency is not available),
+due to the possible connectivity issues which WebRTC can face, which HLS is not subject to.
 
 <Callout>
   We are planning on adding similar functionality to the React Native `Player` -
@@ -809,12 +814,18 @@ Overrides the custom controls for the Player. See the
 [`Player` default controls](https://github.com/livepeer/livepeer.js/blob/main/packages/react/src/components/media/Player.tsx)
 for more details on how the `ControlsContainer` component is used.
 
+This can be used alongside `renderChildrenOutsideContainer` to render the children outside of the aspect ratio container.
+This is used for custom controls, so children of the Player can use `useMediaController` without any parent elements.
+
   </SyncedTab>
   <SyncedTab>
 
 Overrides the custom controls for the Player. See the
 [React Native `Player` default controls](https://github.com/livepeer/livepeer.js/blob/main/packages/react-native/src/components/media/Player.tsx)
 for more details on how the `ControlsContainer` component is used.
+
+This can be used alongside `renderChildrenOutsideContainer` to render the children outside of the aspect ratio container.
+This is used for custom controls, so children of the Player can use `useMediaController` without any parent elements.
 
   </SyncedTab>
 </SyncedTabs>
@@ -867,6 +878,25 @@ function PlayerComponent() {
 
   </SyncedTab>
 </SyncedTabs>
+
+### onPlaybackStatusUpdate
+
+Callback called when the Player store status updates.
+**This should be used with `playbackStatusSelector` to limit state updates.**
+This allows developers to use the underlying state of the Player component in their UI.
+
+```tsx filename="React & React Native" {6-7}
+function PlayerComponent() {
+  return (
+    <Player
+      title="Agent 327: Operation Barbershop"
+      playbackId="f5eese9wwl88k4g8"
+      onPlaybackStatusUpdate={(muted) => console.log(muted)}
+      playbackStatusSelector={(state) => state.muted}
+    />
+  );
+}
+```
 
 ## Hooks
 

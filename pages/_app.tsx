@@ -8,6 +8,8 @@ import * as React from 'react';
 
 import { Providers } from '../components/core';
 
+import '../styles/prism.css';
+
 import '../styles/globals.css';
 
 import * as gtag from '../lib/gtag';
