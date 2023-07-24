@@ -1,0 +1,166 @@
+---
+title: 'Stream from the Browser'
+description: 'Learn how to broadcast using our WebRTC solution'
+---
+
+import {
+  DemoPlayer,
+  VideoJSPlayer,
+  IframePlayer,
+} from '@components/react/examples';
+
+import { Callout, Steps } from 'nextra-theme-docs';
+
+# Stream from the Browser
+
+We demonstrate below how to broadcast from the web using Livepeer's low latency WebRTC broadcast.
+
+## Using the Livepeer.js Broadcast
+
+The example below show to use the Livepeer.js [`Broadcast`](/reference/livepeer-js/Broadcast) to broadcast from the web.
+
+<Steps>
+
+### Configuring Providers
+
+First, we create a new livepeer.js client with a gateway provider and a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey),
+as well as a theme to use for all livepeer.js React components.
+
+```tsx filename="App.tsx"
+import {
+  LivepeerConfig,
+  createReactClient,
+  studioProvider,
+} from '@livepeer/react';
+import * as React from 'react';
+
+const livepeerClient = createReactClient({
+  provider: studioProvider({
+    apiKey: process.env.NEXT_PUBLIC_STUDIO_API_KEY,
+  }),
+});
+
+function App() {
+  return (
+    <LivepeerConfig client={livepeerClient}>
+      <CreateAndViewAsset />
+    </LivepeerConfig>
+  );
+}
+```
+
+### Broadcast
+
+Now that our providers are set up, we use the [`Broadcast`](/reference/livepeer-js/Broadcast) with a stream key, from a stream we created.
+We also override some of the custom styling to match the flow of our app!
+
+```tsx filename="DemoBroadcast.tsx"
+import { Broadcast } from '@livepeer/react';
+
+const streamKey = 'your-stream-key';
+
+export const DemoBroadcast = () => {
+  return (
+    <Broadcast
+      streamKey={streamKey}
+      controls={{
+        autohide: 3000,
+      }}
+      theme={{
+        borderStyles: { containerBorderStyle: 'hidden' },
+        radii: { containerBorderRadius: '10px' },
+      }}
+    />
+  );
+};
+```
+
+</Steps>
+
+## Embeddable Broadcast
+
+<Callout type="warning" emoji="⚠️">
+  The embeddable broadcast is currently in beta and some elements may change as
+  we mature the product. For a production-grade application consider using
+  Livepeer.js instead.
+</Callout>
+
+This is one of the easiest way to broadcast video from your website/applications.
+You can embed the iframe on your website/applications by using the below code
+snippet.
+
+You can replace the `STREAM_KEY` with your stream key for the stream.
+
+```html
+<iframe
+  src="https://lvpr.tv/broadcast/{STREAM_KEY}"
+  allowfullscreen
+  allow="autoplay; encrypted-media; picture-in-picture"
+  sandbox="allow-same-origin allow-scripts"
+>
+</iframe>
+```
+
+This will automatically stream from the browser, using the STUN/TURN servers to ensure that network connectivity issues
+are rare.
+
+## Adding broadcasting with plain WebRTC
+
+Using livepeer.js is the recommended way to add easy broadcasting via WebRTC. If you want to add broadcasting to your app
+and handle the WebRTC negotiation, you can follow the steps below.
+
+<Steps>
+
+### Get the SDP Host
+
+First, you will need to make a request to get the proper ingest URL for the region which your end user is in. We have a global
+presence, and we handle redirects based on GeoDNS to allow users to get the lowest latency server.
+
+To do this,
+
+```bash
+curl -L 'https://webrtc.livepeer.studio/webrtc/{STREAM_KEY}'
+...
+> Host: lax-prod-catalyst-2.lp-playback.studio
+```
+
+You may safely ignore any errors returned from the GET request - we are only interested in getting the redirect URL from the final response,
+so that we can set up the correct ICE servers.
+
+<Callout type="warning" emoji="⚠️">
+  The process will change in the future to remove the need for this extraneous
+  GET request - please check back later.
+</Callout>
+
+### Broadcast
+
+Now that we have the endpoint for the ICE servers, we can start SDP negotiation following the [WHIP spec](https://www.ietf.org/archive/id/draft-ietf-wish-whip-01.html)
+and kick off a livestream. First, form an SDP offer with your library of choice. Make sure you specify the ICE servers, so that connectivity issues are not an issue.
+
+```tsx
+const iceServers = [
+  {
+    urls: `stun:${host}`,
+  },
+  {
+    urls: `turn:${host}`,
+    username: 'livepeer',
+    credential: 'livepeer',
+  },
+];
+
+const peerConnection = new RTCPeerConnection({ iceServers });
+```
+
+Then send it to the host you received in the previous step (adding the path shown below).
+
+```bash
+curl -X POST \
+  -H 'Content-Type: application/sdp' \
+  --data-binary @payload.sdp \
+  'https://lax-prod-catalyst-2.lp-playback.studio/webrtc/{STREAM_KEY}'
+```
+
+The server will respond with an SDP response that you can then use to set up your WebRTC broadcast!
+
+</Steps>
