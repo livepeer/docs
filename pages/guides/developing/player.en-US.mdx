@@ -190,11 +190,6 @@ watching short videos.
 It is important to note that short form playback URLs are only available for
 video assets that are less than 2 minutes in duration.
 
-These may also include WebRTC URLs for low latency livestream playback. These _must_ be played back with our
-ICE servers, which are used to route traffic in restricted networking environments. The WebRTC WHEP negotiation
-should send back these STUN/TURN servers in the SDP response, so there should not be any customization necessary
-to use the ICE servers with a custom player.
-
 You can get the playback URLs by retrieving the playback info, replacing
 `PLAYBACK_ID` with your asset's playbackId:
 
@@ -251,6 +246,27 @@ information on how livepeer.js handles this.
   Livepeer.js Player automatically handles this.** See the [Player
   docs](/reference/livepeer-js/Player#technical-details) for more information.
 </Callout>
+
+The playback URLs may also include WebRTC URLs for low latency livestream playback. These _must_ be played back with our
+ICE servers, which are used to route traffic in restricted networking environments. The WebRTC WHEP negotiation
+should use ICE servers. See the
+[Stream via Browser](/guides/developing/stream-via-browser#adding-broadcasting-with-plain-webrtc).
+docs for the exact steps to get the ICE config which should be used with playback - the steps are the exact same to get a config similar to:
+
+```tsx
+const iceServers = [
+  {
+    urls: `stun:${host}`,
+  },
+  {
+    urls: `turn:${host}`,
+    username: 'livepeer',
+    credential: 'livepeer',
+  },
+];
+
+const peerConnection = new RTCPeerConnection({ iceServers });
+```
 
 ### Use the playback URL in a player
 
