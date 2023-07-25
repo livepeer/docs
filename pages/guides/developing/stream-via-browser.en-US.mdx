@@ -196,7 +196,7 @@ if (!ofr) {
  * This specifies how the client should communicate,
  * and what kind of media client and server have negotiated to exchange.
  */
-const sdpResponse = await fetch(endpoint, {
+const sdpResponse = await fetch(redirectUrl, {
   method: 'POST',
   mode: 'cors',
   headers: {
@@ -228,22 +228,6 @@ We just negotiated following the WHIP spec (which outlines the structure for the
 and we did SDP negotiation to create a new livestream. We then retrieved a local webcam source and started
 a broadcast!
 
-### Clean Up
-
-After the user is done broadcasting, you _must_ signal to our WebRTC ingest server that the stream is completed.
-To do this, make a `DELETE` request to the `Location` header returned in the SDP response.
-
-```tsx
-const cleanupPath = sdpResponse.headers.get('Location'); // looks something like videorec+8600amnqv1443osc/332905
-
-await fetch(`https://${host}/${cleanupPath}`, {
-  method: 'DELETE',
-  mode: 'cors',
-});
-```
-
-This must be done every time a user completes a broadcast. This is also outlined in more detail in the WHIP spec.
-
 To make the above process clearer, here is the flow (credit to the authors of the WHIP spec):
 
 ```text filename="WHIP Outline"
@@ -269,5 +253,8 @@ To make the above process clearer, here is the flow (credit to the authors of th
            | 200 OK                                                      |
            <-------------------------------------------------------------x
 ```
+
+The final HTTP DELETE is not needed for our media server, since we detect the end of broadcast
+by the lack of incoming packets from the broadcaster.
 
 </Steps>
