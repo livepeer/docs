@@ -15,9 +15,9 @@ import { Callout, Steps } from 'nextra-theme-docs';
 
 We demonstrate below how to broadcast from the web using Livepeer's low latency WebRTC broadcast.
 
-## Using the Livepeer.js Broadcast
+## Using Livepeer.js Broadcast
 
-The example below show to use the Livepeer.js [`Broadcast`](/reference/livepeer-js/Broadcast) to broadcast from the web.
+The example below show to use Livepeer.js [`Broadcast`](/reference/livepeer-js/Broadcast) to broadcast from the web.
 
 <Steps>
 
@@ -116,16 +116,19 @@ and handle the WebRTC negotiation, you can follow the steps below.
 First, you will need to make a request to get the proper ingest URL for the region which your end user is in. We have a global
 presence, and we handle redirects based on GeoDNS to allow users to get the lowest latency server.
 
-To do this,
+To do this make a GET request to the WebRTC redirect endpoint:
 
 ```bash
-curl -L 'https://webrtc.livepeer.studio/webrtc/{STREAM_KEY}'
+curl -L 'https://livepeer.studio/webrtc/{STREAM_KEY}'
 ...
-> Host: lax-prod-catalyst-2.lp-playback.studio
+> Location: https://lax-prod-catalyst-2.lp-playback.studio/webrtc/{STREAM_KEY}
 ```
 
 You may safely ignore any errors returned from the GET request - we are only interested in getting the redirect URL from the final response,
 so that we can set up the correct ICE servers.
+
+We know from the above response headers that the WebRTC ingest URL is `https://lax-prod-catalyst-2.lp-playback.studio/webrtc/{STREAM_KEY}`.
+We will use this in the next step.
 
 <Callout type="warning" emoji="⚠️">
   The process will change in the future to remove the need for this extraneous
@@ -135,9 +138,23 @@ so that we can set up the correct ICE servers.
 ### Broadcast
 
 Now that we have the endpoint for the ICE servers, we can start SDP negotiation following the [WHIP spec](https://www.ietf.org/archive/id/draft-ietf-wish-whip-01.html)
-and kick off a livestream. First, form an SDP offer with your library of choice. Make sure you specify the ICE servers, so that connectivity issues are not an issue.
+and kick off a livestream.
+
+The outline of the steps are:
+
+1. Create a new `RTCPeerConnection` with the ICE servers from the redirect URL.
+2. Construct an SDP offer using the library of your choice.
+3. Wait for ICE gathering.
+4. Send the SDP offer to the server and get the response.
+5. Use the response to set the remote description on the `RTCPeerConnection`.
+6. Get a local media stream and add the track to the peer connection, and set the video element `src` to the `srcObject`.
 
 ```tsx
+// the redirect URL from the above GET request
+const redirectUrl = `https://lax-prod-catalyst-2.lp-playback.studio/webrtc/{STREAM_KEY}`;
+// we use the host from the redirect URL in the ICE server configuration
+const host = new URL(redirectUrl).host;
+
 const iceServers = [
   {
     urls: `stun:${host}`,
@@ -150,17 +167,94 @@ const iceServers = [
 ];
 
 const peerConnection = new RTCPeerConnection({ iceServers });
+
+/**
+ * https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createOffer
+ * We create an SDP offer here which will be shared with the server
+ */
+const offer = await peerConnection.createOffer();
+/** https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/setLocalDescription */
+await peerConnection.setLocalDescription(offer);
+
+/** Wait for ICE gathering to complete */
+const ofr = await new Promise<RTCSessionDescription | null>((resolve) => {
+  /** Wait at most five seconds for ICE gathering. */
+  setTimeout(() => {
+    resolve(peerConnection.localDescription);
+  }, 5000);
+  peerConnection.onicegatheringstatechange = (_ev) => {
+    if (peerConnection.iceGatheringState === 'complete') {
+      resolve(peerConnection.localDescription);
+    }
+  };
+});
+if (!ofr) {
+  throw Error('failed to gather ICE candidates for offer');
+}
+/**
+ * This response contains the server's SDP offer.
+ * This specifies how the client should communicate,
+ * and what kind of media client and server have negotiated to exchange.
+ */
+const sdpResponse = await fetch(redirectUrl, {
+  method: 'POST',
+  mode: 'cors',
+  headers: {
+    'content-type': 'application/sdp',
+  },
+  body: ofr.sdp,
+});
+if (sdpResponse.ok) {
+  const answerSDP = await sdpResponse.text();
+  await peerConnection.setRemoteDescription(
+    new RTCSessionDescription({ type: 'answer', sdp: answerSDP }),
+  );
+}
+
+// get user media from the browser (which are camera/audio sources)
+const mediaStream = await navigator.mediaDevices.getUserMedia({
+  video: true,
+  audio: true,
+});
+// add the tracks to the peer connection
+for (const track of mediaStream.getTracks()) {
+  peerConnection.addTrack(track);
+}
+// set the media stream on the video element
+element.srcObject = mediaStream;
 ```
 
-Then send it to the host you received in the previous step (adding the path shown below).
+We just negotiated following the WHIP spec (which outlines the structure for the POST requests seen above)
+and we did SDP negotiation to create a new livestream. We then retrieved a local webcam source and started
+a broadcast!
 
-```bash
-curl -X POST \
-  -H 'Content-Type: application/sdp' \
-  --data-binary @payload.sdp \
-  'https://lax-prod-catalyst-2.lp-playback.studio/webrtc/{STREAM_KEY}'
+To make the above process clearer, here is the flow (credit to the authors of the WHIP spec):
+
+```text filename="WHIP Outline"
++-----------------+         +---------------+ +--------------+ +----------------+
+ | WebRTC Producer |         | WHIP endpoint | | Media Server | | WHIP Resource  |
+ +---------+-------+         +-------+- -----+ +------+-------+ +--------|-------+
+           |                         |                |                  |
+           |                         |                |                  |
+           |HTTP POST (SDP Offer)    |                |                  |
+           +------------------------>+                |                  |
+           |201 Created (SDP answer) |                |                  |
+           +<------------------------+                |                  |
+           |          ICE REQUEST                     |                  |
+           +----------------------------------------->+                  |
+           |          ICE RESPONSE                    |                  |
+           <------------------------------------------+                  |
+           |          DTLS SETUP                      |                  |
+           <==========================================>                  |
+           |          RTP/RTCP FLOW                   |                  |
+           +------------------------------------------>                  |
+           | HTTP DELETE                                                 |
+           +------------------------------------------------------------>+
+           | 200 OK                                                      |
+           <-------------------------------------------------------------x
 ```
 
-The server will respond with an SDP response that you can then use to set up your WebRTC broadcast!
+The final HTTP DELETE is not needed for our media server, since we detect the end of broadcast
+by the lack of incoming packets from the broadcaster.
 
 </Steps>
