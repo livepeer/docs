@@ -1,0 +1,36 @@
+---
+title: Broadcaster Introspection
+icon: tower-broadcast
+---
+
+We launched a public API to enable Broadcaster introspection. Users of the API will be able to review the activity inside the Livepeer Broadcaster nodes and understand the selection algorithms used to assign work to Orchestrator nodes.
+
+This is the initial release of the API, and only a few log lines have been enabled in the public logs. Orchestrators are encouraged to open pull requests to enable additional logs, which will be closely reviewed by the Livepeer team. Additionally, the core Livepeer team will publish more logs from Livepeer Broadcasters that may aid in understanding the selection algorithms.
+
+This API uses Grafana's Loki for log aggregation. Examples of API usage are provided below. For more guidance, refer to [this page](https://grafana.com/docs/loki/v2.4.x/api/#get-lokiapiv1query).
+
+### API usage
+
+- Public logs from Livepeer Broadcasters are available through the public Loki instance at: [https://loki.livepeer.report/loki/api/v1/](https://loki.livepeer.report/loki/api/v1/)
+- Example queries:
+
+```bash
+# logs from all regions:
+curl -G -s https://loki.livepeer.report/loki/api/v1/query \
+     --data-urlencode "query={region=~\".+\"}" | jq
+
+# logs from all regions between two timestamps (UNIX epoch nanoseconds)
+curl -G -s https://loki.livepeer.report/loki/api/v1/query_range \
+     --data-urlencode "query={region=~\".+\"}" --data 'start=1688043600000000000' --data 'end=1688132768695047984' | jq
+
+# logs from a specific region (e.g. NYC):
+curl -G -s https://loki.livepeer.report/loki/api/v1/query \
+     --data-urlencode "query={region=~\"nyc\"}" | jq
+
+# logs related to a specfic orchestrator IP-address:
+curl -G -s https://loki.livepeer.report/loki/api/v1/query \
+     --data-urlencode "query={region=~\".+\"} |= \"clientIP=37.228.130.23\"" | jq
+
+# list of all possible regions:
+curl -G -s https://loki.livepeer.report/api/prom/label/region/values | jq '.values'
+```
