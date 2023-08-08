@@ -12,6 +12,7 @@ interface ParameterInfo {
   type: string;
   arraySchema?: any;
   objectProperties?: ParameterInfo[];
+  oneOf?: ParameterInfo[];
 }
 
 export function useRequestParameters(
@@ -84,7 +85,8 @@ export function useRequestParameters(
       method: string,
     ): OpenAPIV3_1.SchemaObject | null => {
       return (
-        schema?.[method]?.requestBody?.content?.['application/json']?.schema ?? null
+        schema?.[method]?.requestBody?.content?.['application/json']?.schema ??
+        null
       );
     };
 
@@ -190,6 +192,15 @@ export function useRequestParameters(
           });
       }
 
+      if (parameterSchema?.oneOf) {
+        info.oneOf = parameterSchema.oneOf.map((subSchema: any) => {
+          const resolvedSchema = subSchema.$ref
+            ? resolveRef(subSchema.$ref)
+            : subSchema;
+          return extractParameterInfo(resolvedSchema);
+        });
+      }
+
       return info;
     };
 
@@ -208,9 +219,7 @@ export function useRequestParameters(
         const resolvedSchema = requestSchema?.$ref
           ? resolveRef(requestSchema.$ref)
           : requestSchema;
-        if (path === '/asset/upload/url') {
-          console.log(resolvedSchema);
-        }
+
         const requestParameters = extractParameterInfo(resolvedSchema);
 
         if (pathParameters.length > 0) {
