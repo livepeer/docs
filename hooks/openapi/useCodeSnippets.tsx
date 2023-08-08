@@ -226,7 +226,8 @@ class Program
       const nestedObject: { [key: string]: any } = {};
 
       properties.forEach((property: ParameterInfo) => {
-        nestedObject[property.property] = property.example || property.type;
+        nestedObject[property.property] =
+          property.example || property?.enums[0] || property.type;
 
         if (property.objectProperties && property.objectProperties.length > 0) {
           const nestedNestedObject = buildNestedObject(
