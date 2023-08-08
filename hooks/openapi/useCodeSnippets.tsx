@@ -248,6 +248,51 @@ class Program
       const requestBody: { [key: string]: any } = {};
 
       params?.forEach((property) => {
+        if (property.oneOf && property.oneOf.length > 0) {
+          const defaultOption = property.oneOf[0] as ParameterInfo;
+          defaultOption.property = property.property;
+          if (defaultOption.property && defaultOption.example) {
+            requestBody[defaultOption.property] = defaultOption.example;
+          }
+
+          if (
+            defaultOption.objectProperties &&
+            defaultOption.objectProperties.length > 0
+          ) {
+            const nestedObject = buildNestedObject(
+              defaultOption.objectProperties,
+            );
+            if (Object.keys(nestedObject).length > 0) {
+              requestBody[defaultOption.property] = nestedObject;
+            }
+          }
+
+          if (
+            defaultOption.array &&
+            defaultOption.arraySchema &&
+            defaultOption.arraySchema.length > 0
+          ) {
+            const nestedArray: { [key: string]: any }[] = [];
+            defaultOption.arraySchema.forEach((nestedItem: ParameterInfo) => {
+              const nestedObject: { [key: string]: any } = {};
+              nestedItem.objectProperties?.forEach((nestedProperty) => {
+                if (nestedProperty.property && nestedProperty.example) {
+                  nestedObject[nestedProperty.property] =
+                    nestedProperty.example;
+                }
+              });
+              if (Object.keys(nestedObject).length > 0) {
+                nestedArray.push(nestedObject);
+              }
+            });
+            if (nestedArray.length > 0) {
+              requestBody[defaultOption.property] = nestedArray;
+            }
+          }
+
+          return;
+        }
+
         if (property.property && property.example) {
           requestBody[property.property] = property.example;
         }

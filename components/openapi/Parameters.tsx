@@ -12,6 +12,7 @@ export interface ParameterInfo {
   type: string;
   arraySchema?: any;
   objectProperties?: ParameterInfo[];
+  oneOf?: ParameterInfo[];
 }
 
 interface ParametersProps {
@@ -38,10 +39,8 @@ const RecursiveParameters: React.FC<ParametersProps> = ({ params }) => {
           >
             <div className="flex items-center justify-between">
               <p>
-                <code className="font-bold text-sm">
-                  {param.property || 'undefined'}
-                </code>
-                <span className="text-xs font-medium text-gray-400 ml-1">
+                <code className="font-bold text-sm mr-1">{param.property}</code>
+                <span className="text-xs font-medium text-gray-400">
                   {param.type}
                 </span>
               </p>
@@ -71,6 +70,18 @@ const RecursiveParameters: React.FC<ParametersProps> = ({ params }) => {
                 </span>
               )}
             </p>
+
+            {param.oneOf && (
+              <div className=" border p-3 border-gray-200 rounded-lg dark:border-neutral-700">
+                <p className="mb-2 text-sm font-semibold">One of:</p>
+                {param.oneOf.map((alternativeSchema, altIndex) => (
+                  <div key={altIndex} className="mt-3">
+                    <RecursiveParameters params={[alternativeSchema]} />
+                  </div>
+                ))}
+              </div>
+            )}
+
             {hasChildren && showChildren === index && (
               <div className="m-3 border p-3 border-gray-200 rounded-lg dark:border-neutral-700">
                 <p className="mb-2 text-sm font-semibold">Child parameters</p>
