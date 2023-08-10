@@ -104,11 +104,6 @@ const config = {
         destination: '/reference/livepeer-js/Player',
         permanent: false,
       },
-      {
-        source: '/guides/developing/broadcast',
-        destination: '/guides/developing/stream-via-browser',
-        permanent: false,
-      },
     ];
   },
 };
