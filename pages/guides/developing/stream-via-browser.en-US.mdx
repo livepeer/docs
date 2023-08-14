@@ -168,7 +168,33 @@ const iceServers = [
   },
 ];
 
+// get user media from the browser (which are camera/audio sources)
+const mediaStream = await navigator.mediaDevices.getUserMedia({
+  video: true,
+  audio: true,
+});
+
 const peerConnection = new RTCPeerConnection({ iceServers });
+
+// set the media stream on the video element
+element.srcObject = mediaStream;
+
+const newVideoTrack = mediaStream?.getVideoTracks?.()?.[0] ?? null;
+const newAudioTrack = mediaStream?.getAudioTracks?.()?.[0] ?? null;
+
+if (newVideoTrack) {
+  videoTransceiver =
+    peerConnection?.addTransceiver(newVideoTrack, {
+      direction: "sendonly",
+    }) ?? null;
+}
+
+if (newAudioTrack) {
+  audioTransceiver =
+    peerConnection?.addTransceiver(newAudioTrack, {
+      direction: "sendonly",
+    }) ?? null;
+}
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createOffer
@@ -179,7 +205,7 @@ const offer = await peerConnection.createOffer();
 await peerConnection.setLocalDescription(offer);
 
 /** Wait for ICE gathering to complete */
-const ofr = await new Promise<RTCSessionDescription | null>((resolve) => {
+const ofr = await new Promise((resolve) => {
   /** Wait at most five seconds for ICE gathering. */
   setTimeout(() => {
     resolve(peerConnection.localDescription);
@@ -212,18 +238,6 @@ if (sdpResponse.ok) {
     new RTCSessionDescription({ type: 'answer', sdp: answerSDP }),
   );
 }
-
-// get user media from the browser (which are camera/audio sources)
-const mediaStream = await navigator.mediaDevices.getUserMedia({
-  video: true,
-  audio: true,
-});
-// add the tracks to the peer connection
-for (const track of mediaStream.getTracks()) {
-  peerConnection.addTrack(track);
-}
-// set the media stream on the video element
-element.srcObject = mediaStream;
 ```
 
 We just negotiated following the WHIP spec (which outlines the structure for the POST requests seen above)
