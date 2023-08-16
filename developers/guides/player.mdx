@@ -3,34 +3,28 @@ title: "Add a Player"
 description: "Learn how to use a media player with Livepeer"
 ---
 
-import {
-  DemoPlayer,
-  VideoJSPlayer,
-  IframePlayer,
-} from "@components/react/examples";
-
-import { Callout, Steps } from "nextra-theme-docs";
-
-# Add a Player
-
-We demonstrate below how to playback live or on demand videos in your application using either Livepeer.js or Video.js.
+In this guide, we demonstrate how to playback live or on demand videos in your application using either Livepeer.js or Video.js.
 
 ## Using the Livepeer.js Player
 
 The example below show to use the Livepeer.js [`Player`](/reference/livepeer-js/Player) to view a video asset, with some custom styles to demonstrate what's possible.
 
-<br />
+<iframe
+  src="https://lvpr.tv/?v=f5eese9wwl88k4g8"
+  frameborder="0"
+  width="100%"
+    height="410"
 
-<DemoPlayer />
-
-<Steps>
+  webkitallowfullscreen
+  mozallowfullscreen
+  allowfullscreen
+></iframe>
 
 ### Configuring Providers
 
-First, we create a new livepeer.js client with a gateway provider and a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey),
-as well as a theme to use for all livepeer.js React components.
+First, we create a new livepeer.js client with a gateway provider and a CORS-protected API key, as well as a theme to use for all livepeer.js React components.
 
-```tsx filename="App.tsx"
+```tsx app.tsx
 import {
   LivepeerConfig,
   ThemeConfig,
@@ -73,7 +67,7 @@ be a simple image URL.
 
 We also override some of the custom styling to match the flow of our app!
 
-```tsx filename="DemoPlayer.tsx"
+```tsx DemoPlayer.tsx
 import { Player } from "@livepeer/react";
 
 import Image from "next/image";
@@ -116,7 +110,6 @@ export const DemoPlayer = () => {
 };
 ```
 
-</Steps>
 
 ## Using your own player
 
@@ -125,14 +118,14 @@ live stream - it handles MP4 renditions, errors from the API, and is a true web3
 However, if you want to use an alternative, you can do so by
 following the instructions below.
 
-<Callout type="error">
+<Info>
   To ensure consistent viewer experience, we strongly recommend using a player
   (like the Livepeer Player) that handles choosing the correct MP4 rendition and
   gracefully recovers from routine RTMP reconnects through custom polling logic.
   In the absence of this capability, reconnects may severely degrade viewer
   experience and require a hard refresh to resolve, and an incorrect MP4
   rendition for the screen size may be chosen.
-</Callout>
+</Info>
 
 ### Fetch the playback URL
 
@@ -293,15 +286,14 @@ Here is an example of how to use the playback URL in video.js player.
 </body>
 ```
 
-<VideoJSPlayer />
 
 ## Embeddable Player
 
-<Callout type="warning" emoji="⚠️">
+<Warning>
   The embeddable player is currently in beta and some elements may change as we
   mature the product. For a production-grade application consider using
   Livepeer.js instead.
-</Callout>
+</Warning>
 
 This is one of the easiest way to playback a video on your website/applications.
 You can embed the player on your website/applications by using the below code
@@ -327,10 +319,19 @@ will automatically fall back to HLS playback. Also, if the stream contains B-fra
 back, so that out-of-order frames are not displayed. This only applies to users who are playing
 back livestreams.
 
-<Callout type="warning">
+<Warning>
   OBS users should be instructed to use the Livepeer stream profile, or to
   manually turn off B-frames in their stream. See our [Stream from
   OBS](/guides/developing/stream-via-obs) docs for more information.
-</Callout>
+</Warning>
 
-<IframePlayer />
+<iframe
+  src="https://lvpr.tv/?v=f5eese9wwl88k4g8"
+  frameborder="0"
+  width="100%"
+    height="410"
+
+  webkitallowfullscreen
+  mozallowfullscreen
+  allowfullscreen
+></iframe>

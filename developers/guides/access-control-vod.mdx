@@ -3,19 +3,15 @@ title: "VOD with Access Control"
 description: "Learn how to add access control to a VOD with livepeer.js"
 ---
 
-import { Callout, Steps } from "nextra-theme-docs";
-import { AccessControl } from "@components/react/examples";
-
-# VOD with Access Control
 
 Adding access control to a video on-demand only takes a few lines of code.
 The example below uses `useCreateAsset` and a webhook to create and watch a gated video on-demand.
 
-<Callout>
+<Info>
   The `webhook` access control flow also works the same with Streams - this
   example just shows it being used with Assets as a demonstration.
-</Callout>
-<Steps>
+</Info>
+
 ### Create an Access Control Webhook Handler
 
 Set up an endpoint (e.g., https://yourdomain.com/api/check-access) to handle the logic for granting or denying access to your VOD assets.
@@ -23,7 +19,7 @@ This endpoint should accept a POST request with a JSON payload containing the ac
 
 This is an example of a payload this endpoint would receive:
 
-```json filename="POST /api/check-access"
+```json POST /api/check-access
 {
   "accessKey": "your-access-key",
   "context": {
@@ -176,7 +172,6 @@ Here is an example request sent to your access control endpoint:
 In your access control endpoint, implement the logic to verify the access key and decide whether to grant access to the VOD asset.
 If the access is allowed, return a `2XX` response. Otherwise, the playback will be disallowed.
 
-</Steps>
 ## Wrap Up
 
 That's it! Access control, added. You now have a solution for gating on-demand content with webhooks! This also works for streams as well.

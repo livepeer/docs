@@ -3,9 +3,6 @@ title: "Viewer engagement"
 description: "Learn how to check out viewer engagement on Livepeer"
 ---
 
-import { Callout, Tab, Tabs, Steps } from "nextra-theme-docs";
-
-# Explore Viewer Engagement
 
 Livepeer offers detailed information on viewer behavior and playback quality on your platform. The API includes engagement metrics such as view counts and watch time, as well as performance metrics such as error rate, time to first frame, rebuffer ratio, and exit-before-starts across a variety of dimensions.
 
@@ -37,18 +34,14 @@ To provide a comprehensive view of viewer behavior, our data product includes se
 - Time Zone: Measure viewer behavior across different time zones, so you can optimize your platform for peak usage times.
 - Time: Analyze viewer behavior across different time periods (hour, day, week, month, year, all-time) to identify trends.
 
-<Callout>
-Notes:
-
-- Data is refreshed every 5 minutes
-- Newly uploaded videos may take up to an hour before viewership data is available
-
-</Callout>
+<Info>
+Please note that data is refreshed every 5 minutes and newly uploaded videos may take up to an hour before viewership data is available
+</Info>
 
 ## Registering views
 
-<Tabs items={['Livepeer Player', 'Custom Player']}>
-  <Tab>
+<Tabs>
+  <Tab title="Livepeer Player">
 
 To collect and register viewership metrics, you first need to configure your player.
 We recommend that you use the [Livepeer player](/reference/livepeer-js/Player)
@@ -56,7 +49,7 @@ to get viewership metrics, as it comes fully configured.
 You can follow the Player guide to get started.
 
   </Tab>
-  <Tab>
+  <Tab title="Custom Player">
 
 We also support viewership metrics for applications using custom players.
 In order for metrics to be tracked by Livepeer, you will need to configure
@@ -64,8 +57,8 @@ your player using `addMediaMetrics`.
 
 Here's how to configure your player:
 
-<Tabs items={['JavaScript', 'React']}>
-  <Tab>
+<Tabs >
+  <Tab title="JavaScript">
 
 ```js
 import { addMediaMetrics } from "livepeer/media/browser";
@@ -80,7 +73,7 @@ addMediaMetrics(video, source, (e) => console.error("Error adding metrics", e));
 ```
 
   </Tab>
-  <Tab>
+  <Tab title="React">
 
 ```js
 import { addMediaMetrics } from "livepeer/media/browser";
@@ -125,7 +118,6 @@ The Livepeer Studio Dashboard is a frontend interface for publishing live or
 on-demand video streams with no code. In this guide, we'll show you how to use
 the dashboard to retrieve viewership metrics.
 
-<Steps>
 ###  Navigate to the [Assets page](https://livepeer.studio/dashboard/assets)
 
 ![Assets page](/images/engagement/Dashboard-1.png)
@@ -144,10 +136,8 @@ In the asset's specific detail page you can view its total number of views.
 
 ![Asset views](/images/engagement/Dashboard-10.png)
 
-</Steps>
 ## Retrieving views from the API
 
-<Steps>
 ###  Get the `playbackId` of an existing asset
 
 Get the `playbackId` of an existing asset. A `playbackId` can be found in the
@@ -155,12 +145,12 @@ asset page on the dashboard or from any VOD API call. If you haven't created an
 asset yet, you can follow the [upload a video asset
 guide](/guides/developing/upload-a-video-asset).
 
-<Callout>
+<Info>
   The `playbackId` can be a canonical playback ID from a specific Livepeer asset
   or stream objects, or dStorage identifiers for assets. Queries by dStorage ID
   are universal/cross-account, as explained below, so check what makes the most
   sense for your app.
-</Callout>
+</Info>
 
 When querying by dStorage ID (e.g. `ipfs://` or `ar://` URLs, or CID/txID), you
 will get views for all assets with that dStorage ID across any Livepeer account.
@@ -172,8 +162,8 @@ metrics only from the videos in your account, use the API objects `playbackId`.
 Once you have the `playbackId`, you can make a request to get the viewership
 data.
 
-<Tabs items={['JavaScript', 'cURL']}>
-  <Tab>
+<Tabs >
+  <Tab title="JavaScript">
 
 ```js
 const response = await fetch(
@@ -200,7 +190,7 @@ if (playbackId) {
 ```
 
   </Tab>
-  <Tab>
+  <Tab title="cURL">
 
 ```bash
 curl --location --request GET "https://livepeer.studio/api/data/views/query/total/${playbackId}" \
@@ -231,8 +221,8 @@ The idea for this API is to build creator analytics dashboards. It can be called
 from the frontend and can provide detailed insights to creators about their
 assets and streams.
 
-<Tabs items={['JavaScript', 'cURL']}>
-  <Tab>
+<Tabs >
+  <Tab title="JavaScript">
 
 ```js
 const response = await fetch(
@@ -256,7 +246,7 @@ for (const metric of metrics) {
 ```
 
   </Tab>
-  <Tab>
+  <Tab title="cURL">
 
 ```bash
 curl --location --request GET "https://livepeer.studio/api/data/views/query/creator?assetId=${assetId}&timeStep=day&breakdownBy[]=timezone" \
@@ -278,8 +268,8 @@ The idea is that developers should build their own abstraction and access
 control logics on top of this API and abstract it as higher level API in their
 apps.
 
-<Tabs items={['JavaScript', 'cURL']}>
-  <Tab>
+<Tabs >
+  <Tab title="JavaScript">
 
 ```js
 const response = await fetch(
@@ -314,7 +304,7 @@ for (const metric of metrics) {
 ```
 
   </Tab>
-  <Tab>
+  <Tab title="cURL">
 
 ```bash
 curl --location --request GET "https://livepeer.studio/api/data/views/query?breakdownBy[]=device&breakdownBy[]=browser" \
@@ -329,7 +319,6 @@ curl --location --request GET "https://livepeer.studio/api/data/views/query?brea
 If you are ready to take a deep dive into your data, then visualizations are the next step.
 We have put together a tutorial complete with templates to get you started.
 
-</Steps>
 
 #### Visualize Engagement Metrics with Grafana
 

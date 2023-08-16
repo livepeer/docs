@@ -3,13 +3,9 @@ title: "Upload encrypted files"
 description: "Learn how to upload and playback an encrypted video asset"
 ---
 
-import { Callout, Steps } from "nextra-theme-docs";
-
-# Encrypted VOD with Livepeer
 
 Livepeer enables you to upload encrypted video content or import it from decentralized storages. It creates a playback URL that can have independent access control through playback policies.
 
-<Steps>
 ### Generate an encryption key
 
 First, we generate a 256-bit encryption key to encrypt the file.
@@ -60,7 +56,7 @@ new Uint8Array(resultBuffer).set(new Uint8Array(encrypted), iv.length);
 const blob = new Blob([resultBuffer], { type: "application/octet-stream" });
 ```
 
-<Callout>
+<Info>
   Currently Livepeer supports only video content encrypted using
   [SubtleCrypto.encrypt](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt)
   with `AES-CBC` algorithm, which is also the encryption used by other web3
@@ -68,7 +64,7 @@ const blob = new Blob([resultBuffer], { type: "application/octet-stream" });
   [Lit](https://developer.litprotocol.com/sdk/explanation/encryption/). It can
   implemented in other environments with regular AES-CBC encryption using PKCS#7
   padding.
-</Callout>
+</Info>
 
 ### Retrieve the Livepeer Public Key
 
@@ -93,12 +89,12 @@ const publicKey = publicKeyData.spki_public_key;
 
 Now, we can use asymmetric encryption with the Livepeer Public Key to encrypt our Encryption Key. The resulting data is then encoded in base64 before being sent to Livepeer along with the video file.
 
-<Callout>
+<Info>
   The Web Cryptography API built into modern browsers does not directly support
   PEM or PKCS#1 formatted keys. It only supports the SPKI format for public keys
   and the PKCS8 format for private keys. In Javascript, you need to use the
   `spki_public_key`.
-</Callout>
+</Info>
 
 ```js
 // Decode the SPKI public key from base64 and convert it to a buffer
@@ -141,12 +137,12 @@ We're all set to upload the video file.
 When requesting an upload to the Livpeer API, you can simply add an `encryption` field with your encrypted key.
 [Api Reference](https://docs.livepeer.org/reference/api/create-asset-via-url)
 
-<Callout>
+<Info>
   When uploading an encrypted video, specifying a `playbackPolicy` is required.
   You can still specify the type of the playback policy as `public`, but be
   aware that anyone with the `playbackId` or `playbackUrl` would be able to
   watch it.
-</Callout>
+</Info>
 
 ```js
 // Request the upload URL
@@ -183,5 +179,3 @@ const uploadResponse = await fetch(data.url, {
   body: encryptedFile,
 });
 ```
-
-</Steps>
