@@ -4,64 +4,297 @@ description: "Learn about the core concepts and API primitives of Livepeer."
 icon: "notes"
 ---
 
-## Asset
+<ParamField path="Asset">
+An Asset is representing a video object that can be identified, stored and processed within Livepeer. Livepeer is responsible for the life cycle management (i.e. CRUD) of an Asset. An Asset has a unique Asset ID and a well-defined metadata describing its characteristics (see the screenshot). An asset is created only when a video is uploaded to Livepeer successfully through its API, or when a recording is converted to an Asset.
 
-An asset or VOD is a stored video unit, complete with its related details like title and transcoded versions. It's the video content that users can request and watch anytime they want. Any changes made to these videos are quickly updated in the system, and you can manage or stream them using our API. Simply put, think of it as a video file that's ready to play whenever a user asks for it.
+An Asset can only be deleted using Livepeer API or in Studio. When an Asset is created successfully, `asset.created` webhook event is fired to allow customized processing logic triggered, while `asset.failed` fired otherwise. Viewer Engagement Metrics [REF]provide more comprehensive of viewer behavior using Livepeer Engagement API.
 
-## Stream
+</ParamField>
 
-A stream refers to a video feed being broadcast in real-time. Unlike an "Asset" which is pre-recorded content, a stream captures and delivers video as it's happening. Users can tune in to watch these live broadcasts as they occur. It's like watching a live event on TV, but through Livepeer. If you want to share content with viewers as it unfolds, this is the way to go.
+<ParamField path="Stream">
+A Stream is representing a Live Stream Object that can be identified, recorded, and processed within Livepeer. Stream is a video feed being broadcasted in real-time. Livepeer is responsible for the life cycle management (CRUD) of a Stream. A Stream is uniquely identified by the Stream ID, and associated with a defined metadata describing its characteristics (see the screenshot). A Stream is created when create stream API (`POST /stream`)  is executed successfully. Once a Stream is created, there are set of webhook events to notify its state transitions, including `stream.started`, `stream.idle`.
 
-## Room
+If Recording [a ref to Recording Concept] is enabled, there is a set of webhook events to notify recording’s state transitions including: `recording.ready`, `recording.started`, `recording.waiting`. The recording can be stored as an Asset[Ref to Asset]. A Stream can also be directed to multiple stream targets, such as youbube, twitter, using MultiStream[REF]. Using Livepeer Player[REF], a stream can be easily viewed by passing Playback ID, while using 3rd party player, a full playback url is required.
 
-A room signifies a virtual space where multiple participants can join and interact in real-time. Think of it as a digital meeting spot. Inside a Room, participants can share video, audio, or other data streams with each other. It's central for collaborative activities, live discussions, or any situation where multi-way communication is essential. When you create a Room, you're setting up a shared session where people can connect and engage together.
+RTMP is the ingest protocol for streaming, while WebRTC by default is playback protocol and HLS as fall back, when Livepeer Player is used. WebRTC will ensure a low latency playback around 2-5s on transcoded renditions, and sub-s on source.
 
-## Participant
+While a Stream is delivered, Stream Health [REF] is an object provides a set of metrics about its monitoring state. Further more, Viewer Engagement Metrics [REF]provide more comprehensive of viewer behavior using Livepeer Engagement API.
 
-A participant refers to any individual who joins a Room. They represent active users in a multi-participant session and can share or receive video, audio, or other data streams. Every participant has a unique identifier, making it easy to manage and differentiate them. Simply put, if a Room is like a digital meeting space, Participants are the attendees engaging within that space.
+</ParamField>
 
-## Access control
+<ParamField path="Room">
+A "Room" is a fundamental conceptual unit within the Livepeer, representing a virtual space or container for hosting real-time interactive sessions in a participant stream. This construct facilitates synchronized communication and collaboration, making it a cornerstone for various real-time experiences.
 
-In Livepeer, access control denotes the measures and protocols in place to manage who can enter or interact within a specific asset or stream. It ensures that only authorized participants can join sessions or access specific resources. This can be managed through password protection, token verification, or other authentication methods. Essentially, access control acts as a security gatekeeper, determining who gets in and who stays out, safeguarding privacy and content integrity.
+In a Room, participants have the ability to engage in dynamic interactions and exchange audio, video, and other data streams. The Room acts as a environment where participants can connect and communicate with each other in a seamless and coordinated manner. When a Room is created, it establishes a shared session that enables individuals to join, share content, and interact with one another in a multi-participant context.
 
-## Usage
+The creation of a Room can be initiated using Livepeer’s Room API[REF] and automatically triggered when the first participant enters. As participants join and leave the Room, updates about changes to other participants and their activities are communicated to ensure a synchronized state. For instance, modifications to participant tracks, such as additions, removals, or changes in state (like muting), are broadcast to all other participants within the same Room.
 
-Usage in the context of VOD and Stream refers to the cumulative resources and services utilized when content is processed, stored, and delivered. For VOD, this can encompass the duration a video is stored, the amount of time it's viewed, and the resources used to transcode it for optimal viewing. For streaming, usage can relate to the length of live broadcasts, the bandwidth consumed during these streams, and the number of viewers accessing the stream in real-time.
+To initiate multi-participant live streams, the Room API can be used to generate a unique room identifier. This identifier allows participants to easily join the designated Room and become part of the dynamic real-time interaction facilitated within that digital environment.
 
-## Webhook
+</ParamField>
 
-A "webhook" is a method for one system (Livepeer) to provide real-time information to another system (your app) as soon as an event occurs. Instead of a system continuously checking or polling another system for updates, the platform will simply send (or "push") data immediately after a specific event happens such as when an asset is ready to play. Webhooks are commonly used in applications to integrate different systems and services, ensuring they can react promptly to new events or changes.
+<ParamField path="Access control">
+  Gated Playback is a webhook based framework for applications to customize
+  their authorized video/stream playback control. Whenever a stream playback
+  request is initiated, Livepeer initiated a `playback.accessControl` webhook
+  event, as a result, applications can register a webhook handler to respond to
+  this event by checking the Access Control Conditions. If it is authorized,
+  Livepeer will enable “playback”, otherwise rejected. Using this framework, a
+  blockchain agonistic Token Gating feature can be easily implemented. Rich ACC
+  providers, such as lit has been integrated.
+</ParamField>
 
-## Webhook Trigger Event
+<ParamField path="Livepeer Webhook Event">
 
 A webhook trigger event refers to a specific occurrence or action in Livepeer that prompts the webhook to send data to another system. Once this pre-determined event takes place, the webhook activates, "pushing" relevant information or notifications to a designated endpoint.
 
-## Recording
+> Livepeer Webhook Event, is a collection of webhook events fired when a state is satisfied. [Here](https://docs.livepeer.org/guides/developing/listen-for-webhooks#types-of-events) is the detailed definition of each event.
 
-Recording refers to the process of capturing and saving a video stream for later playback. While the content is being broadcasted in real-time, Livepeer simultaneously stores a copy of that content. This allows users to access, review, or share the broadcast even after the live event has concluded. Recording streams is particularly useful for creating archives, ensuring content longevity, or allowing viewers who missed the live broadcast to watch it at their convenience
+### Types of Events
 
-## Player
+| Name                     | Description                                                                                                                                                            |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| stream.started           | The parent stream object's isActive value is marked as true and the .m3u8 HLS URL works                                                                                |
+| stream.idle              | The parent stream object's isActive value should be marked as false and the .m3u8 HLS URL no longer works                                                              |
+| recording.ready          | This fires when a recording is ready to be downloaded                                                                                                                  |
+| recording.started        | This fires when recording has started on an active stream                                                                                                              |
+| recording.waiting        | This fires after a stream with recording on has concluded and is not yet ready to be downloaded. Typically it takes 5 minutes for recordings to be ready for download. |
+| multistream.connected    | This fires when we've successfully connected to the multistream target                                                                                                 |
+| multistream.error        | This fires when we've encountered an error either while attempting to connect to the third party streaming service or while broadcasting.                              |
+| multistream.disconnected | This fires when we are no longer sending video to the multistream target.                                                                                              |
+| asset.created            | This fires when a On Demand asset is created.                                                                                                                          |
+| asset.updated            | This fires when a On Demand asset is updated. The asset payload will contain a playback URL when playback is available.                                                |
+| asset.ready              | This fires when a On Demand asset is ready. Playback will be available with all transcoded renditions.                                                                 |
+| asset.failed             | This fires when a On Demand asset fails during the upload or during processing.                                                                                        |
+| asset.deleted            | This fires when a On Demand asset is deleted.                                                                                                                          |
+| task.spawned             | This fires when a task is spawned. (For example, an On Demand upload)                                                                                                  |
+| task.updated             | This fires when a task is updated.                                                                                                                                     |
+| task.completed           | This fires when a task completes its execution successfully.                                                                                                           |
+| task.failed              | This fires when a task has failed.                                                                                                                                     |
+| playback.accessControl   | A specialized webhook for playback access control. Unlike other events, this is only used for assets and streams that reference its ID on their playback policy.       |
 
-The Player is a component designed for easily play video content. Tailored to work with a Livepeer provider, the Player intuitively manages various source formats, including WebRTC, MP4, and HLS. Its integration ensures swift and smooth playback, minimizing delays regardless of network conditions. Simply put, it's your go-to tool for consistent and efficient media playback.
+</ParamField>
 
-## HLS
+<ParamField  path="Player">
+Livepeer Player is a drop-in component that you can put in your web or native mobile application (supporting reactive native) to play Livepeer Assets [REF]. 
+Livepeer Player supports:
+- on-demand assets
+- live streams
+- low-latency live streams
 
-HLS, or HTTP Live Streaming, is a streaming protocol developed by Apple. It's designed to deliver audio and video content over the internet, ensuring optimal playback regardless of network conditions. HLS works by breaking down the content into a series of small segments, typically of a few seconds each, and delivering them via HTTP.
+Livepeer Player can be used as either a web component `<Player />` from livepeer.js.
 
-## WebRTC
+Livepeer Player is fully-featured video player for content hosted by Livepeer. Livepeer Player is fully integrated with Livepeer Engagement Metrics Data without any extra configuration. Livepeer Player provides a responsive UI based on video player dimensions and stream type, automatic thumbnail previews and poster images, and modern video player capabilities (fullscreen, picture-in-picture, Chromecast, Airplay).
 
-WebRTC Video Playback refers to the ability to receive and display video content in real-time using the WebRTC protocol. Unlike traditional video streaming methods that involve buffering and rely on specific server infrastructures, WebRTC video playback facilitates immediate, peer-to-peer streaming. This results in minimal latency.
+</ParamField>
 
-## API Key
+<ParamField  path="Multistream">
+A multistream is an advanced capability within the Livepeer that facilitates the simultaneous broadcast of a source stream, along with its transcoded renditions, to various RTMP(s) destinations like Twitch, Facebook Live, and YouTube Live. This feature ensures that users can maximize their audience reach across multiple platforms with a single streaming session.
 
-An API-Key is a code passed along with API calls to identify the calling program. It's essentially a password that allows applications to communicate with Livepeer. API-Keys ensure that the request is coming from a trusted source, helping platforms manage and control who can access their data and functionalities.
+In setting up multistreaming, users have the option to either utilize the Studio[REF] or directly interface with the Livepeer REST API[REF] or the Livepeer SDK[REF]. All options offer comprehensive management tools to configure, modify, or delete specific Multistream Targets linked with individual streams. It's important to note that configurations are stream-specific; hence, they don't automatically transfer when generating new streams. The essential parameters for setting up a target include naming the target, adding the mandatory Ingest URL, and, if relevant, adding a stream key, provided by Livepeer. Users can also specify which rendition profile they intend to dispatch to the target.
 
-## Multistream
+After creating a Multistream Target, there's flexibility in toggling its activation status. Both the dashboard and API provide options for editing or deleting these targets. However, to initiate multistreaming, merely establishing a Multistream Target object isn't sufficient. This target needs to be referenced within the Stream object it's associated with.
 
-Multistream is a feature that amplifies the reach of a single broadcast by simultaneously sending it to multiple streaming platforms. With Multistream, you can take one source stream, along with its transcoded versions, and push it to various RTMP(S) targets in real-time. This means you can broadcast the same content on platforms like Twitch, Facebook Live, and YouTube Live all at once.
+For performance monitoring and understanding stream health, Studio offers real-time indicators through its dashboard and API, showing whether a Multistream Target is currently active or offline. Such status updates might experience slight delays before the stream's live status gets mirrored on the destination platform. Via the dashboard's "Health" tab, users can obtain a detailed view of the ingest rate for the active source stream.
 
-It not only saves bandwidth and resources but also ensures a broader audience base across different platforms gets to view the content without any need for separate, individual streams for each platform
+Additionally, Livepeer have three webhooks to monitor Multistream Targets:
 
-## Encrypted Asset
+1. `multistream.connected`: Indicates a successful connection to the Multistream Target and confirms the stream's live status on the corresponding service.
+2. `multistream.error`: Flags issues during the connection process, suggesting potential configuration errors or problems with the destination platform.
+3. `multistream.disconnected`: Notifies users when a stream concludes and multistreaming to a particular target has also ended.
 
-An encrypted asset refers to a video content/asset that has been encrypted to protect its data from unauthorized access. Encryption transforms the original content into a format that can only be decoded and played back using a specific key or set of credentials. This ensures that the asset remains confidential and can only be accessed or viewed by those with the necessary permissions
+</ParamField>
+
+<ParamField  path="Encrypted Asset">
+An Encrypted Asset refers to a video object within the Livepeer that has undergone cryptographic encryption for security purposes, ensuring its contents remain confidential and are only accessible to authorized users. The encryption process utilizes a 256-bit[REF] key generated using the 'AES-CBC' algorithm[REF]. This key encrypts the video file, and then this encryption key itself is encrypted using the Livepeer Public Key, a form of asymmetric encryption. This double layer of encryption ensures that the video content remains secure during its life cycle in Livepeer.
+
+To create an Encrypted Asset, one must first generate an encryption key, use it to encrypt their video content, retrieve the Livepeer Public Key, and then encrypt the original encryption key. The encrypted video file, alongside its encrypted encryption key, is then uploaded to Livepeer. Livepeer only supports video content encrypted using the `SubtleCrypto.encrypt` method with the AES-CBC algorithm, compatible with other web3 protocols like Lit [REF].
+
+When an Encrypted Asset is uploaded to Livepeer, a playback URL is generated. Access to this URL and the contents of the Encrypted Asset can be controlled through playback policies [REF to access control concept], ensuring content security and selective accessibility.
+
+To decrypt and view the asset, the correct decryption key, which has been encrypted using Livepeer's Public Key, is required. Thus, even if one has the playbackId or playbackUrl, without the appropriate decryption capabilities, the Encrypted Asset remains secure and unviewable.
+
+</ParamField>
+
+<ParamField  path="Stream Health">
+
+Stream Health is a multi-faceted indicator representing the operational and performance status of a video stream within Livepeer.
+
+1. Global Health Status: This is a holistic status of the stream. It can be one of the following:
+   - Healthy: All health checks are in a good state.
+   - Unhealthy: One or more health checks indicate a problem.
+   - Idle: The stream is not currently active.
+2. Health Checks: These are specific metrics that contribute to the global health status of the stream. They include:
+   - Transcoding: Shows if video transcoding is successful and multiple stream profiles are available for playback. An unhealthy status implies only the original video is available.
+   - Real-time: Indicates if the stream is transcoded faster than in real-time, meaning the latency of the transcoded video is less than the duration of the original video.
+   - Multistreaming: Reflects the connection status of all configured Multistream Targets. It can show the following states:
+     - Idle: Stream and multistreaming aren't active.
+     - Pending: The system is trying to connect to the Multistream Target.
+     - Online: Successful connection to the Multistream Target.
+     - Offline: There was an error connecting to the Multistream Target.
+3. Logs: Provide alerts and error messages related to the streaming process. This includes notifications such as when the stream starts/stops or if there are any fatal errors during the transcoding process.
+4. Session Ingest Rate: This is a measure of the bitrate of the video being received by the Livepeer servers. It's updated every 10 seconds. A high, stable bitrate indicates good stream quality and a reliable internet connection, while a fluctuating or low bitrate might point to potential issues with the encoder or the streamer's internet connection.
+5. Monitoring Tools: Stream Health can be monitored in two primary ways:
+   - Studio: Offers a visual representation with health indicators for an active stream, including a chart showing the ingest rate.
+   - REST API & SDK: Allows for querying the health information of a stream, including detailed metrics and events sent by the Livepeer video-processing services.
+6. Health Metrics (from API): When using the API, you can retrieve detailed metrics about the stream's health. This includes:
+   - Conditions: These represent specific states of stream health, such as whether the stream is active, if it's transcoding in real-time, and if there are no errors during transcoding. Each condition provides a status, frequency, and timestamps for when the condition was last checked and when it last changed.
+   - Metrics: Experimental at the time of the document, they provide specific measurements related to stream health.
+
+By monitoring and analyzing these various facets, users can ensure the optimum performance and reliability of their streams on the Livepeer.
+
+</ParamField>
+
+<ParamField  path="Orchestrator">
+
+An Orchestrator in Livepeer network is an entity or node that facilitates the video processing tasks such as transcoding. Orchestrators provide their computational resources, which can include CPU, GPU, and bandwidth, to assist broadcasters and developers in transcoding/delivering videos. By running specific software, like the `go-livepeer` client [REF], individuals can join the Livepeer network as Orchestrators.
+
+In essence, Orchestrators play a pivotal role in transcoding and distributing video streams on the Livepeer network. They advertise the price they would charge for their video processing services, and when a job is directed their way, it is routed to their computational resources for execution. Importantly, Orchestrators can leverage different parts of their GPUs to handle video encoding tasks without significantly interrupting other tasks, like cryptocurrency mining. This setup allows for optimal utilization of the Orchestrator's resources.
+
+Moreover, Orchestrators earn fees for their service. These fees can be in the form of cryptocurrencies such as ETH or stablecoins pegged to traditional currencies, like DAI. To become an active Orchestrator and be eligible for these rewards, they need to stake a certain amount of LPT tokens. The active set of Orchestrators comprises the top 100 Orchestrators with the highest stake on the network. Activation, management of rates, and other settings can be done through tools like `livepeer_cli`.
+
+For ease of operation and to ensure they are accessible for jobs, Orchestrators are required to set up specific parameters and ensure they have the necessary prerequisites, including proper networking configurations, accessibility to Arbitrum nodes, sufficient bandwidth, and more. They can also manage their ETH accounts for transactions and rewards either manually or let the Livepeer system handle it automatically.
+
+In summary, Orchestrators are essential components of the Livepeer ecosystem, offering their computational resources for video processing while earning rewards for their contributions.
+
+</ParamField>
+
+<ParamField  path="Delegators">
+Delegators are a crucial group within the Livepeer protocol, playing a vital but passive role in the system's operations and security. They are individuals or entities who hold Livepeer tokens and, rather than actively processing or broadcasting video content themselves, opt to back and support other active participants - Orchestrators. By "staking" their tokens, which can be equated to placing a deposit, Delegators essentially lock up their tokens for a designated period, signaling their trust and support for chosen Orchestrators [REF].
+
+The act of staking helps in multiple ways. Firstly, it reinforces the network's overall security by ensuring participants have a vested interest in the system's proper functioning. The locked tokens can serve as a form of collateral, ensuring the system remains resistant to malicious intentions or attacks.
+
+Apart from security, staking also empowers Delegators with the right to have a say in the network's governance. They can weigh in on protocol proposals, thus making collaborative decisions on the network's future direction. Additionally, the amount of staked and delegated token determines how tasks or jobs are distributed within the network, thereby acting as a mechanism for work coordination.
+
+Delegators can get Livepeer tokens (LPT) [REF], which are ERC-20 compliant, through various channels, including trading platforms like Uniswap [REF]. The distribution of these tokens was initially executed via a 'Merkle Mine' technique during the network's inception phase. The token's value is subject to inflation based on an algorithmic issuance model over time.
+
+For those interested in exploring or managing their staking activities, the Livepeer Explorer [REF] offers a comprehensive interface, ensuring transparency and ease of operations in the staking process.
+
+</ParamField>
+
+<ParamField  path="Livepeer Network">
+The Livepeer Network is an Ethereum-based decentralized infrastructure designed to revolutionize video processing and distribution by providing a secure, cost-effective, and efficient solution for content creators and developers. At its core, the Livepeer Network operates as a platform that connects two key types of participants: orchestrators[REF] and delegators [REF].
+
+The network's native asset, the Livepeer Token (LPT), serves as a coordination and incentive mechanism within the Livepeer Network. LPT is used to facilitate the distribution of video processing tasks among orchestrators and to incentivize their active participation. Orchestrators are allocated tasks based on the amount of LPT they have staked, their geographical location, and their reliability. The more LPT staked, the more tasks are allocated, leading to higher rewards.
+
+[IMAGE HERE]
+
+The Livepeer Network operates on a round-based model, with each round typically lasting about 24 hours. New LPT tokens are minted at the end of each round and distributed to both delegators and orchestrators based on their stakes. This issuance mechanism ensures that participants who contribute actively to the network receive a proportionate share of the rewards, while those who are less active receive fewer rewards.
+
+Overall, the Livepeer Network addresses the challenges of traditional centralized video processing methods by creating a decentralized ecosystem that leverages distributed processing power, incentivized participation, and a transparent rewards distribution system. This network empowers content creators, developers, and users by offering a more efficient and democratized approach to video transcoding and distribution.
+
+</ParamField>
+
+<ParamField  path="Studio">
+
+Studio is an all-in one dashboard and toolkit offered by Livepeer, designed for developer in creating, broadcasting, and sharing video content on the decentralized web through the Livepeer Protocol. Livepeer Studio serves as an integrated solution for web3 applications, providing a suite of tools to facilitate various aspects of video content management and distribution.
+
+[IMAGE HERE]
+
+Features offered on Studio are:
+
+- Asset Lifecycle Management:
+  Users can upload video assets to Livepeer Studio, which represent video content. These assets are then managed through their entire lifecycle within the platform. This includes creation, storage, processing, and eventual deletion. Livepeer is responsible for handling the CRUD (Create, Read, Update, Delete) operations of assets, ensuring seamless asset management.
+- Stream Lifecycle Management:
+  Users have the capability to create video streams within Livepeer Studio. Streams represent live video feeds that can be broadcasted in real-time. Each stream is assigned a unique Stream ID, and associated metadata can be defined to describe the stream's characteristics.
+- In-browser broadcast:
+  Livepeer Studio allows users to initiate live broadcasts directly from a web browser. This feature simplifies the process of starting live streaming sessions, making it more accessible and user-friendly.
+- Manage API Key:
+  Users can manage their API keys through Livepeer Studio. API keys play a crucial role in authenticating and authorizing API requests. Studio allows users to review and update their API keys for secure interaction with the Livepeer API.
+- Usage Analytics:
+  Studio provides usage analytics that allow users to monitor and analyze the usage of the platform's features. This feature provides insights into how assets and streams are being utilized, helping users make informed decisions.
+- Manage Webhooks:
+  Webhooks enable users to receive real-time notifications about specific events occurring within Livepeer Studio. Users can configure and manage webhooks to stay informed about asset and stream lifecycle changes, ensuring proactive management.
+- Billing Management:
+  The platform offers billing management capabilities, allowing users to monitor and manage their billing information, subscription plans, and usage costs associated with using Livepeer Studio's services.
+
+The Livepeer Studio REST API serves as the interface for interacting with the Livepeer’s features and functionalities programmatically. Designed with a RESTful architecture, this API adopts predictable resource-oriented URLs, accepts form-encoded request bodies, and returns responses in `JSON` format. It adheres to standard HTTP response codes, authentication methods, and HTTP verbs for consistent and efficient communication.
+
+Authentication within the Studio API is achieved using API keys, specifically utilizing Bearer Authentication. API keys play a crucial role in verifying and authorizing requests made to the API. These keys are managed through Livepeer Studio and must be included in the header of API requests, prefixed by the term 'Bearer'.
+
+```
+Bearer YOUR_API_KEY
+```
+
+</ParamField>
+
+<ParamField  path="In-browser Broadcast">
+
+An in-browser broadcast refers to the process of transmitting live video content directly from a user's web browser to online audiences in real-time, facilitated by Livepeer's low latency WebRTC (Web Real-Time Communication) technology. This method eliminates the need for specialized broadcasting equipment or external software such as OBS, allowing content creators to engage with their viewers effortlessly.
+
+Process Overview:
+
+- Configuration and Initialization:
+  - A Livepeer client is established within the web application using the `livepeer.js` library, creating a connection to Livepeer's infrastructure.
+  - A live stream object, known as a "Stream,"[REF] is created through Livepeer's API, setting the foundation for the live video feed.
+- Broadcast Initiation:
+  - The broadcasting interface is seamlessly integrated into the web application using the `Broadcast` component provided by the `livepeer.js` library.
+  - The component is configured with the appropriate stream key, and custom styling options are applied to ensure a consistent user experience.
+- WebRTC Broadcasting:
+  - The user's webcam and microphone capture live video and audio content directly from the browser.
+  - WebRTC technology is employed to transmit this media content to Livepeer's infrastructure in real-time.
+- Stream Presentation:
+  - The live video content is made accessible to viewers through an embedded iframe or player on the web page.
+  - The iframe references a specific URL associated with the stream key, allowing viewers to watch the broadcast.
+- STUN/TURN Server Utilization:
+  - STUN (Session Traversal Utilities for NAT) and TURN (Traversal Using Relays around NAT) servers are utilized to enhance network connectivity, ensuring minimal disruptions due to firewalls or network challenges.
+
+In-browser broadcasting through Livepeer's WebRTC technology empowers content creators to effortlessly share live video content with their audiences, fostering real-time engagement and interaction directly from the web browser.
+
+</ParamField>
+
+<ParamField  path="Multi-participant Live Stream">
+
+A Multi-Participant Live Stream is a dynamic and collaborative broadcasting format. It enables real-time interactions between multiple participants, allowing them to engage in virtual gatherings, meetings, conferences, or similar events. This type of live stream involves the simultaneous participation of several individuals, each contributing their video and audio feeds to create a comprehensive and engaging multimedia experience for viewers.
+
+A multi-participant live stream can be created using the `Room` API , which generates a unique room ID. Participants are added to the virtual room using the `participant` API call. Each participant is identified by a human-readable display name, and they contribute their video and audio streams to the live stream.
+
+It's important to note that Livepeer's underlying technology leverages LiveKit, an open-source project based on WebRTC. This technology ensures scalability and reliability for managing multi-user interactions and streaming capabilities, resulting in a seamless and interactive Multi-Participant Live Stream experience.
+
+Developers can utilize custom front-end interfaces built using Livepeer and Livekit client SDKs. This approach involves passing the authentication token received from the API response to access the virtual room and participate in the live stream.
+
+</ParamField>
+
+<ParamField  path="Video NFT">
+
+A Video NFT (Non-Fungible Token)[REF TO ETHEREUM DOCS] is a digital representation of a unique video asset that is stored and managed on a blockchain. NFTs are used to establish ownership and provenance of digital content, including videos, artwork, music, and other multimedia. Each Video NFT is distinct and cannot be replicated or interchanged with other tokens, unlike cryptocurrencies or fungible assets like Bitcoin or Ethereum.
+
+Creating a Video NFT involves uploading the video content and associated metadata to a decentralized storage system, often IPFS (InterPlanetary File System), and minting the NFT on a blockchain. Once minted, the Video NFT can be bought, sold, traded, or displayed on NFT marketplaces, providing a new way for creators to monetize their digital content and engage with a global audience.
+
+Livepeer is designed to be chain-agnostic, meaning that it supports multiple blockchain networks for minting videos NFTs. This flexibility allows users to upload their videos to Livepeer regardless of the specific blockchain network they intend to use for minting NFTs or other purposes.
+
+</ParamField>
+
+<ParamField  path="Video On-Demand">
+Video on Demand (VoD) refers to a content delivery model that allows users to access and watch video content at their convenience. In the context of the Livepeer, Video on Demand refers to the capability to upload, store, and view video assets. VoD provides users with the flexibility to select and play videos as desired, unlike traditional broadcast or scheduled streaming where content is delivered in real-time.
+
+Key Aspects of Video on Demand on the Livepeer:
+
+- Asset Creation and Uploading: VoD allows users to create and upload video assets to the Livepeer. These assets can include prerecorded videos, movies, tutorials, or any other type of video content.
+- Asset Management: Once uploaded, video assets are managed within the Livepeer ecosystem. Each asset is associated with unique metadata, such as its name, description, and characteristics. These metadata attributes facilitate organization and searchability of the content.
+- Asset Processing: After uploading, video assets undergo processing to make them available for playback. This processing can involve various steps, including transcoding the video into different formats and qualities to accommodate different devices and network conditions.
+- Playback: Once processed, users can initiate playback of their video assets. The Video on Demand model allows viewers to start, pause, resume, and rewind videos at their convenience.
+- Asynchronous Viewing: Unlike live streaming, where content is streamed in real-time, VoD enables asynchronous viewing. Users can access the content whenever they want, eliminating the need to follow a fixed schedule.
+- Player Integration: Livepeer provides player integration features that allow users to embed and display the video player within their applications or websites. This player facilitates seamless playback and user interaction.
+- Storage Options: Video assets can be stored using different storage options, such as IPFS (InterPlanetary File System) or Arweave. Storing assets on decentralized platforms like IPFS ensures durability, availability, and decentralized access to the content.
+- Scalability: Livepeer are designed to scale efficiently to accommodate a growing library of video assets. Livepeer with its transcoding and storage capabilities, supports the growth of content over time.
+- Metrics and Analytics: Livepeer provide insights into viewership metrics, such as the number of views, viewer engagement, and playback duration. These analytics help content creators understand audience behavior and preferences.
+- Content Monetization: Depending on the platform's features, content creators may have the option to monetize their VoD content through subscription models, pay-per-view, advertisements, or other revenue-generation methods.
+- Playback Policy: VoDs can have different playback policies. By default, videos are set to public, allowing anyone with the `playbackId` to view the content. Other policies, such as JWT-based authentication, can be implemented for secure access.
+
+</ParamField>
+
+<ParamField  path="Livestream">
+
+Livestream refers to the real-time broadcasting of audio and visual content over the internet, allowing viewers to watch events, presentations, or other activities as they happen. In the context of the Livepeer platform, a live stream involves creating, broadcasting, and watching live video content in a seamless manner.
+
+Key Aspects of livestream on the Livepeer
+
+- Stream Creation: Live streaming begins with the creation of a stream. This involves defining a stream name and, optionally, configuring transcoding profiles that determine the quality and formats in which the live stream will be available.
+- Stream Start: Once the stream is created, the broadcasting process begins. Users can start the livestream using a unique stream key associated with the stream with OBS or in-browser broadcast offered Livepeer. The stream key ensures that only authorized users can contribute content to the stream.
+- Playback Policy: Streams can have different playback policies. By default, streams are set to public, allowing anyone with the `playbackId` to view the content. Other policies, such as JWT-based authentication, can be implemented for secure access.
+- Stream Management: Livepeer offers capabilities to manage live streams, including starting, pausing, resuming, and stopping streams. These features provide flexibility and control to content creators during live events.
+- Playback Accessibility: Once the live stream is ended, the content can be made available for on-demand playback (if recording is enabled), allowing viewers who missed the live event to watch it at a later time.
+- Metrics and Analytics: Livepeer provide real-time analytics about viewer count, engagement, and other relevant metrics, helping content creators and developers assess the success and impact of their live streams.
+
+</ParamField>
