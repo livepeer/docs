@@ -3,7 +3,6 @@ title: Monitor Stream Health
 description: Learn how to monitor stream metrics on Livepeer
 ---
 
-
 This guide provides instructions and information about using stream metrics to:
 
 - Monitor any active stream for issues that may impact the quality of your
@@ -24,17 +23,257 @@ session (or the session recording).
 
 **`GET /stream/{id}` to retrieve a stream object**
 
-```bash
-curl -H 'authorization: Bearer {api-key}' \
-"https://livepeer.studio/api/stream/{id}"
-```
+<Tabs>
+  <Tab title="Node.js">
+    ```javascript
+    import { Livepeer } from "livepeer";
+
+    const apiKey = 'YOUR_API_KEY'; // Replace with your API key
+    const streamId = 'STREAM_ID'; // Replace with the stream ID you want to retrieve
+
+    const livepeer = new Livepeer(apiKey);
+
+    livepeer
+      .getStream(streamId)
+      .then((response) => {
+        console.log("Stream details:", response);
+      })
+      .catch((error) => {
+        console.error("Error fetching stream details:", error);
+      });
+    ```
+
+  </Tab>
+
+  <Tab title="Python">
+    ```python
+    from livepeer import Livepeer
+
+    # Initialize the Livepeer client with your API key
+    api_key = "YOUR_API_KEY"
+    livepeer = Livepeer(api_key)
+
+    # Define the stream ID you want to retrieve
+    stream_id = "STREAM_ID"
+
+    try:
+        # Get stream details by stream ID
+        response = livepeer.get_stream(stream_id)
+        print("Stream details:", response)
+    except Exception as e:
+        print("Error fetching stream details:", e)
+    ```
+
+  </Tab>
+
+  <Tab title="Ruby">
+    ```ruby
+    require 'livepeer'
+
+    # Initialize the Livepeer client with your API key
+    api_key = 'YOUR_API_KEY'
+    client = Livepeer::Client.new(api_key: api_key)
+
+    # Define the stream ID you want to retrieve
+    stream_id = 'STREAM_ID'
+
+    begin
+      # Get stream details by stream ID
+      response = client.get_stream(stream_id)
+      puts 'Stream details:', response
+    rescue StandardError => e
+      puts 'Error fetching stream details:', e.message
+    end
+    ```
+
+  </Tab>
+
+  <Tab title="PHP">
+    ```php
+    <?php
+
+    require 'vendor/autoload.php';
+
+    use Livepeer\Livepeer;
+    use Livepeer\LivepeerException;
+
+    // Initialize the Livepeer client with your API key
+    $api_key = 'YOUR_API_KEY';
+    $livepeer = new Livepeer($api_key);
+
+    // Define the stream ID you want to retrieve
+    $stream_id = 'STREAM_ID';
+
+    try {
+        // Get stream details by stream ID
+        $response = $livepeer->getStream($stream_id);
+        echo 'Stream details: ' . json_encode($response) . PHP_EOL;
+    } catch (LivepeerException $e) {
+        echo 'Error fetching stream details: ' . $e->getMessage() . PHP_EOL;
+    }
+    ```
+
+  </Tab>
+
+  <Tab title="Go">
+    ```go
+    package main
+
+    import (
+      "fmt"
+      "os"
+
+      "github.com/livepeer/go-livepeer/livepeer"
+    )
+
+    func main() {
+      // Initialize the Livepeer client with your API key
+      apiKey := "YOUR_API_KEY"
+      client := livepeer.NewLivepeerClient(apiKey)
+
+      // Define the stream ID you want to retrieve
+      streamID := "STREAM_ID"
+
+      // Get stream details by stream ID
+      response, err := client.GetStream(streamID)
+      if err != nil {
+        fmt.Printf("Error fetching stream details: %v\n", err)
+        os.Exit(1)
+      }
+
+      fmt.Printf("Stream details: %+v\n", response)
+    }
+    ```
+
+  </Tab>
+</Tabs>
 
 **`GET /session/{id}` to retrieve a session object**
 
-```bash
-curl -H 'authorization: Bearer {api-key}' \
-"https://livepeer.studio/api/session/{id}"
-```
+<Tabs>
+  <Tab title="Node.js">
+    ```javascript
+    import { Livepeer } from "livepeer";
+
+    const apiKey = 'YOUR_API_KEY'; // Replace with your API key
+    const sessionId = 'SESSION_ID'; // Replace with the session ID you want to retrieve
+
+    const livepeer = new Livepeer(apiKey);
+
+    livepeer
+      .getSession(sessionId)
+      .then((response) => {
+        console.log("Session details:", response);
+      })
+      .catch((error) => {
+        console.error("Error fetching session details:", error);
+      });
+    ```
+
+  </Tab>
+
+  <Tab title="Python">
+    ```python
+    from livepeer import Livepeer
+
+    # Initialize the Livepeer client with your API key
+    api_key = "YOUR_API_KEY"
+    livepeer = Livepeer(api_key)
+
+    # Define the session ID you want to retrieve
+    session_id = "SESSION_ID"
+
+    try:
+        # Get session details by session ID
+        response = livepeer.get_session(session_id)
+        print("Session details:", response)
+    except Exception as e:
+        print("Error fetching session details:", e)
+    ```
+
+  </Tab>
+
+  <Tab title="Ruby">
+    ```ruby
+    require 'livepeer'
+
+    # Initialize the Livepeer client with your API key
+    api_key = 'YOUR_API_KEY'
+    client = Livepeer::Client.new(api_key: api_key)
+
+    # Define the session ID you want to retrieve
+    session_id = 'SESSION_ID'
+
+    begin
+      # Get session details by session ID
+      response = client.get_session(session_id)
+      puts 'Session details:', response
+    rescue StandardError => e
+      puts 'Error fetching session details:', e.message
+    end
+    ```
+
+  </Tab>
+
+  <Tab title="PHP">
+    ```php
+    <?php
+
+    require 'vendor/autoload.php';
+
+    use Livepeer\Livepeer;
+    use Livepeer\LivepeerException;
+
+    // Initialize the Livepeer client with your API key
+    $api_key = 'YOUR_API_KEY';
+    $livepeer = new Livepeer($api_key);
+
+    // Define the session ID you want to retrieve
+    $session_id = 'SESSION_ID';
+
+    try {
+        // Get session details by session ID
+        $response = $livepeer->getSession($session_id);
+        echo 'Session details: ' . json_encode($response) . PHP_EOL;
+    } catch (LivepeerException $e) {
+        echo 'Error fetching session details: ' . $e->getMessage() . PHP_EOL;
+    }
+    ```
+
+  </Tab>
+
+  <Tab title="Go">
+    ```go
+    package main
+
+    import (
+      "fmt"
+      "os"
+
+      "github.com/livepeer/go-livepeer/livepeer"
+    )
+
+    func main() {
+      // Initialize the Livepeer client with your API key
+      apiKey := "YOUR_API_KEY"
+      client := livepeer.NewLivepeerClient(apiKey)
+
+      // Define the session ID you want to retrieve
+      sessionID := "SESSION_ID"
+
+      // Get session details by session ID
+      response, err := client.GetSession(sessionID)
+      if err != nil {
+        fmt.Printf("Error fetching session details: %v\n", err)
+        os.Exit(1)
+      }
+
+      fmt.Printf("Session details: %+v\n", response)
+    }
+    ```
+
+  </Tab>
+</Tabs>
 
 ### Response
 
@@ -159,12 +398,130 @@ The stream ID is the same one as used in the Livestream API.
 
 `GET livepeer.studio/data/stream/{id}/health`
 
-`Content-Type: application/json`
+<Tabs>
+  <Tab title="Node.js">
+    ```javascript
+    import { Livepeer } from "livepeer";
 
-```bash
-curl 'https://livepeer.studio/data/stream/{id}/health' \
--H 'authorization: Bearer {api-key}'
-```
+    const apiKey = 'YOUR_API_KEY'; // Replace with your API key
+    const streamId = 'STREAM_ID'; // Replace with the stream ID for which you want to check health
+
+    const livepeer = new Livepeer(apiKey);
+
+    livepeer
+      .getStreamHealth(streamId)
+      .then((response) => {
+        console.log("Stream health:", response);
+      })
+      .catch((error) => {
+        console.error("Error fetching stream health:", error);
+      });
+    ```
+
+  </Tab>
+
+  <Tab title="Python">
+    ```python
+    from livepeer import Livepeer
+
+    # Initialize the Livepeer client with your API key
+    api_key = "YOUR_API_KEY"
+    livepeer = Livepeer(api_key)
+
+    # Define the stream ID for which you want to check health
+    stream_id = "STREAM_ID"
+
+    try:
+        # Get stream health by stream ID
+        response = livepeer.get_stream_health(stream_id)
+        print("Stream health:", response)
+    except Exception as e:
+        print("Error fetching stream health:", e)
+    ```
+
+  </Tab>
+
+  <Tab title="Ruby">
+    ```ruby
+    require 'livepeer'
+
+    # Initialize the Livepeer client with your API key
+    api_key = 'YOUR_API_KEY'
+    client = Livepeer::Client.new(api_key: api_key)
+
+    # Define the stream ID for which you want to check health
+    stream_id = 'STREAM_ID'
+
+    begin
+      # Get stream health by stream ID
+      response = client.get_stream_health(stream_id)
+      puts 'Stream health:', response
+    rescue StandardError => e
+      puts 'Error fetching stream health:', e.message
+    end
+    ```
+
+  </Tab>
+
+  <Tab title="PHP">
+    ```php
+    <?php
+
+    require 'vendor/autoload.php';
+
+    use Livepeer\Livepeer;
+    use Livepeer\LivepeerException;
+
+    // Initialize the Livepeer client with your API key
+    $api_key = 'YOUR_API_KEY';
+    $livepeer = new Livepeer($api_key);
+
+    // Define the stream ID for which you want to check health
+    $stream_id = 'STREAM_ID';
+
+    try {
+        // Get stream health by stream ID
+        $response = $livepeer->getStreamHealth($stream_id);
+        echo 'Stream health: ' . json_encode($response) . PHP_EOL;
+    } catch (LivepeerException $e) {
+        echo 'Error fetching stream health: ' . $e->getMessage() . PHP_EOL;
+    }
+    ```
+
+  </Tab>
+
+  <Tab title="Go">
+    ```go
+    package main
+
+    import (
+      "fmt"
+      "os"
+
+      "github.com/livepeer/go-livepeer/livepeer"
+    )
+
+    func main() {
+      // Initialize the Livepeer client with your API key
+      apiKey := "YOUR_API_KEY"
+      client := livepeer.NewLivepeerClient(apiKey)
+
+      // Define the stream ID for which you want to check health
+      streamID := "STREAM_ID"
+
+      // Get stream health by stream ID
+      response, err := client.GetStreamHealth(streamID)
+      if err != nil {
+        fmt.Printf("Error fetching stream health: %v\n", err)
+        os.Exit(1)
+      }
+
+      fmt.Printf("Stream health: %+v\n", response)
+    }
+    ```
+
+  </Tab>
+</Tabs>
 
 ### Response
 
@@ -272,18 +629,136 @@ The stream ID is the same one used in the Livestream API.
 
 `GET livepeer.studio/data/stream/{id}/events`
 
-`Content-Type: text/event-stream`
+<Tabs>
+  <Tab title="Node.js">
+    ```javascript
+    import { Livepeer } from "livepeer";
 
-```bash
-curl 'https://livepeer.studio/data/stream/{id}/events' \
--H 'authorization: Bearer {api-key}'
-```
+    const apiKey = 'YOUR_API_KEY'; // Replace with your API key
+    const streamId = 'STREAM_ID'; // Replace with the stream ID for which you want to fetch events
+
+    const livepeer = new Livepeer(apiKey);
+
+    livepeer
+      .getStreamEvents(streamId)
+      .then((response) => {
+        console.log("Stream events:", response);
+      })
+      .catch((error) => {
+        console.error("Error fetching stream events:", error);
+      });
+    ```
+
+  </Tab>
+
+  <Tab title="Python">
+    ```python
+    from livepeer import Livepeer
+
+    # Initialize the Livepeer client with your API key
+    api_key = "YOUR_API_KEY"
+    livepeer = Livepeer(api_key)
+
+    # Define the stream ID for which you want to fetch events
+    stream_id = "STREAM_ID"
+
+    try:
+        # Get stream events by stream ID
+        response = livepeer.get_stream_events(stream_id)
+        print("Stream events:", response)
+    except Exception as e:
+        print("Error fetching stream events:", e)
+    ```
+
+  </Tab>
+
+  <Tab title="Ruby">
+    ```ruby
+    require 'livepeer'
+
+    # Initialize the Livepeer client with your API key
+    api_key = 'YOUR_API_KEY'
+    client = Livepeer::Client.new(api_key: api_key)
+
+    # Define the stream ID for which you want to fetch events
+    stream_id = 'STREAM_ID'
+
+    begin
+      # Get stream events by stream ID
+      response = client.get_stream_events(stream_id)
+      puts 'Stream events:', response
+    rescue StandardError => e
+      puts 'Error fetching stream events:', e.message
+    end
+    ```
+
+  </Tab>
+
+  <Tab title="PHP">
+    ```php
+    <?php
+
+    require 'vendor/autoload.php';
+
+    use Livepeer\Livepeer;
+    use Livepeer\LivepeerException;
+
+    // Initialize the Livepeer client with your API key
+    $api_key = 'YOUR_API_KEY';
+    $livepeer = new Livepeer($api_key);
+
+    // Define the stream ID for which you want to fetch events
+    $stream_id = 'STREAM_ID';
+
+    try {
+        // Get stream events by stream ID
+        $response = $livepeer->getStreamEvents($stream_id);
+        echo 'Stream events: ' . json_encode($response) . PHP_EOL;
+    } catch (LivepeerException $e) {
+        echo 'Error fetching stream events: ' . $e->getMessage() . PHP_EOL;
+    }
+    ```
+
+  </Tab>
+
+  <Tab title="Go">
+    ```go
+    package main
+
+    import (
+      "fmt"
+      "os"
+
+      "github.com/livepeer/go-livepeer/livepeer"
+    )
+
+    func main() {
+      // Initialize the Livepeer client with your API key
+      apiKey := "YOUR_API_KEY"
+      client := livepeer.NewLivepeerClient(apiKey)
+
+      // Define the stream ID for which you want to fetch events
+      streamID := "STREAM_ID"
+
+      // Get stream events by stream ID
+      response, err := client.GetStreamEvents(streamID)
+      if err != nil {
+        fmt.Printf("Error fetching stream events: %v\n", err)
+        os.Exit(1)
+      }
+
+      fmt.Printf("Stream events: %+v\n", response)
+    }
+    ```
+
+  </Tab>
+</Tabs>
 
 ### Response
 
 Returns an object with a `200 OK` response
 
-```json
+```
 retry: 10000
 
 id: b6e0d6a4-0718-4db4-b2ec-31bb23a9fde0

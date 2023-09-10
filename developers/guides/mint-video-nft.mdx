@@ -3,26 +3,15 @@ title: "Mint video NFT"
 description: "Learn how to mint a video NFT on the Aptos or an EVM-compatible blockchain with livepeer.js"
 ---
 
-
 Livepeer is blockchain agnostic. The example below shows how to mint a video NFT using either [`wagmi`](https://wagmi.sh/) for EVM-compatible blockchains or
 [`aptos`](https://aptos.dev/) for the Aptos blockchain. However, you can use Livepeer to mint NFTs with any blockchain by following the chain-specific NFT standards.
 
-<SyncedTabs group="chain" items={["wagmi", "aptos"]}>
-  <SyncedTab>
-    <WagmiNft />
-  </SyncedTab>
-  <SyncedTab>
-    <AptosNft />
-  </SyncedTab>
-</SyncedTabs>
-
-<Steps>
-###  Adding Dependencies
+### Adding Dependencies
 
 We first add the required dependencies using `npm` (or your preferred package manager).
 
-<SyncedTabs group="chain" items={['wagmi', 'aptos']}>
-  <SyncedTab>
+<Tabs>
+  <Tab title="Ethereum">
     ```bash
     npm i wagmi ethers
     ```
@@ -34,18 +23,18 @@ We first add the required dependencies using `npm` (or your preferred package ma
     npm i @rainbow-me/rainbowkit
     ```
 
-  </SyncedTab>
-  <SyncedTab>
+  </Tab>
+  <Tab title="Aptos">
     ```bash
     npm i aptos
     ```
-  </SyncedTab>
-</SyncedTabs>
+  </Tab>
+</Tabs>
 
 ### Setting Up Providers
 
-<SyncedTabs group="chain" items={['wagmi', 'aptos']}>
-  <SyncedTab>
+<Tabs>
+  <Tab title="Ethereum">
 
     We create both a new livepeer.js client (using a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey))
     and a `wagmi` client which is configured to interact with our demo NFT contract on the
@@ -82,8 +71,8 @@ We first add the required dependencies using `npm` (or your preferred package ma
     }
     ```
 
-  </SyncedTab>
-  <SyncedTab>
+  </Tab>
+  <Tab title="Aptos">
 
     We create both a new livepeer.js client (using a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey))
     and a React `Context` which contains an `AptosClient` to interact with our demo NFT collection on
@@ -123,13 +112,13 @@ We first add the required dependencies using `npm` (or your preferred package ma
     }
     ```
 
-  </SyncedTab>
-</SyncedTabs>
+  </Tab >
+</Tabs>
 
 ### Add Connect Wallet Button
 
-<SyncedTabs group="chain" items={['wagmi', 'aptos']}>
-  <SyncedTab>
+<Tabs>
+  <Tab title="Ethereum">
 
     Now that our providers are set up, we add a connect button which "logs in" a user using their wallet. We use
     RainbowKit for the wallet connection flow. It integrates easily with `wagmi` hooks, as well as WalletConnect and Metamask
@@ -150,8 +139,8 @@ We first add the required dependencies using `npm` (or your preferred package ma
     };
     ```
 
-  </SyncedTab>
-  <SyncedTab>
+  </Tab>
+  <Tab title="Aptos">
 
     Now that our providers are set up, we add a connect button which "logs in" a user using their wallet. We recommend using
     [Petra Wallet](https://petra.app/) - it has a similar interface to Metamask and helps facilitate interactions with
@@ -203,8 +192,8 @@ We first add the required dependencies using `npm` (or your preferred package ma
     };
     ```
 
-  </SyncedTab>
-</SyncedTabs>
+  </Tab>
+</Tabs>
 
 ### Upload Asset to IPFS
 
@@ -212,13 +201,13 @@ We then add a feature to let a user upload the Asset to IPFS. Under the hood, th
 to IPFS, then generate [ERC-721 compatible metadata](https://eips.ethereum.org/EIPS/eip-721) in
 IPFS which points to that Asset's CID.
 
-<SyncedTabs group="chain" items={['wagmi', 'aptos']}>
-  <SyncedTab>
-    <Callout>
+<Tabs>
+  <Tab title="Etheruem">
+    <Info>
       In this example, the Asset ID is hardcoded in the component for simplicity, but could be
       dynamic (see the [WagmiNft component](https://github.com/livepeer/livepeer.js/blob/livepeer%402.1.4/docs/components/examples/WagmiNft.tsx)
       used for this page, which uses the query string to get the Asset ID).
-    </Callout>
+    </Info>
 
     ```tsx filename="WagmiNft.tsx"
     import { useAsset, useUpdateAsset } from '@livepeer/react';
@@ -259,13 +248,13 @@ IPFS which points to that Asset's CID.
     };
     ```
 
-  </SyncedTab>
-  <SyncedTab>
-    <Callout>
+  </Tab>
+  <Tab title="Aptos">
+    <Info>
       In this example, the Asset ID is hardcoded in the component for simplicity, but could be
       dynamic (see the [AptosNft component](https://github.com/livepeer/livepeer.js/tree/main/docs/components/examples/AptosNft.tsx)
       used for this page, which uses the query string to get the Asset ID).
-    </Callout>
+    </Info>
 
     ```tsx filename="AptosNft.tsx"
     import { useUpdateAsset } from '@livepeer/react';
@@ -334,8 +323,8 @@ IPFS which points to that Asset's CID.
     };
     ```
 
-  </SyncedTab>
-</SyncedTabs>
+  </Tab>
+</Tabs>
 
 Here is an [example](https://ipfs.livepeer.studio/ipfs/bafkreibjmojxcnydouibk2c3ci4q6tt7ygevtoxoya3lrlqwbfyj5v4uqa) of
 the ERC-721 compatible metadata which will be created in IPFS.
@@ -360,8 +349,8 @@ The metadata can also be customized to override any of these default fields!
 We can now use the NFT metadata CID to mint a video NFT! After the transaction is successful, we show a link to a blockchain explorer
 so the user can see the blockchain confirmation.
 
-<SyncedTabs group="chain" items={['wagmi', 'aptos']}>
-  <SyncedTab>
+<Tabs>
+  <Tab title="Ethereum">
 
     In this example, we rely on [`usePrepareContractWrite`](https://wagmi.sh/docs/hooks/useContractWrite) to write to our demo
     [Polygon Mumbai NFT contract](https://mumbai.polygonscan.com/address/0xA4E1d8FE768d471B048F9d73ff90ED8fcCC03643). This could be
@@ -473,14 +462,14 @@ so the user can see the blockchain confirmation.
     };
     ```
 
-  </SyncedTab>
-  <SyncedTab>
-    <Callout>
+  </Tab>
+  <Tab title="Aptos">
+    <Info>
       We add a custom [Next.js API route](https://nextjs.org/docs/api-routes/introduction) for the Aptos NFT minting, to
       demonstrate the "offer token" flow which can be used
       to mint NFTs. This is different from the EVM demo, since we have an NFT collection which we mint a new NFT and
       "offer" it to the recipient. The recipient can then accept this offer and transfer the token to their wallet.
-    </Callout>
+    </Info>
 
     ```typescript filename="/api/create-aptos-nft.ts"
     import { AptosAccount, AptosClient, HexString, TokenClient } from 'aptos';
@@ -798,7 +787,5 @@ so the user can see the blockchain confirmation.
     };
     ```
 
-  </SyncedTab>
-</SyncedTabs>
-
-</Steps>
+  </Tab>
+</Tabs>

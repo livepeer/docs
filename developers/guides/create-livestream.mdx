@@ -3,80 +3,147 @@ title: "Create livestream"
 description: "Learn how to create a livestream"
 ---
 
-
-Creating and watching a live stream is easy! The example below uses [`useCreateStream`](/reference/livepeer-js/stream/useCreateStream)
-and [`useStream`](/reference/livepeer-js/stream/useStream) to create and watch a livestream.
-
-
-### Configuring Providers
-
-Same as before, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey):
-
-```tsx App.tsx
-import {
-  LivepeerConfig,
-  createReactClient,
-  studioProvider,
-} from "@livepeer/react";
-import * as React from "react";
-
-const livepeerClient = createReactClient({
-  provider: studioProvider({
-    apiKey: process.env.NEXT_PUBLIC_STUDIO_API_KEY,
-  }),
-});
-
-// Pass client to React Context Provider
-function App() {
-  return (
-    <LivepeerConfig client={livepeerClient}>
-      <CreateAndViewAsset />
-    </LivepeerConfig>
-  );
-}
-```
+Creating and watching a live stream is easy! The example below uses [create stream api](/api-reference/stream/create) to create and watch a livestream.
 
 ### Stream Creation
 
-We then can create our stream, with the stream key returned once we create it (styling has been removed for simplicity):
+We can use the Livepeer SDK to create a stream, it is very simple and easy to use. The example below uses the [create stream api](/api-reference/stream/create) to create a stream.
 
-```tsx Stream.tsx
-import { useCreateStream } from "@livepeer/react";
+<Tabs>
+  <Tab title="Node.js">
+    ```javascript
+    import { Livepeer } from "livepeer";
 
-import { useState } from "react";
+    const apiKey = 'YOUR_API_KEY'; // Replace with your API key
 
-export const Stream = () => {
-  const [streamName, setStreamName] = useState<string>("");
-  const {
-    mutate: createStream,
-    data: createdStream,
-    status: createStatus,
-  } = useCreateStream();
+    const livepeer = new Livepeer(apiKey);
 
-  return (
-    <>
-      <input
-        type="text"
-        placeholder="Stream name"
-        onChange={(e) => setStreamName(e.target.value)}
-      />
+    const streamData = {
+      name: "test_stream"
+    };
 
-      <button
-        onClick={() => {
-          createStream?.();
-        }}
-        disabled={createStatus === "loading" || !createStream}
-      >
-        Create Stream
-      </button>
-    </>
-  );
-};
-```
+    livepeer
+      .createStream(streamData)
+      .then((response) => {
+        console.log("Stream created:", response);
+      })
+      .catch((error) => {
+        console.error("Error creating stream:", error);
+      });
+    ```
+
+  </Tab>
+
+  <Tab title="Python">
+    ```python
+    from livepeer import Livepeer
+
+    # Initialize the Livepeer client with your API key
+    api_key = "YOUR_API_KEY"
+    livepeer = Livepeer(api_key)
+
+    stream_data = {
+      "name": "test_stream"
+    }
+
+    try:
+        # Create the stream
+        response = livepeer.create_stream(stream_data)
+        print("Stream created:", response)
+    except Exception as e:
+        print("Error creating stream:", e)
+    ```
+
+  </Tab>
+
+  <Tab title="Ruby">
+    ```ruby
+    require 'livepeer'
+
+    # Initialize the Livepeer client with your API key
+    api_key = 'YOUR_API_KEY'
+    client = Livepeer::Client.new(api_key: api_key)
+
+    stream_data = {
+      "name": "test_stream"
+    }
+
+    begin
+      # Create the stream
+      response = client.create_stream(stream_data)
+      puts 'Stream created:', response
+    rescue StandardError => e
+      puts 'Error creating stream:', e.message
+    end
+    ```
+
+  </Tab>
+
+  <Tab title="PHP">
+    ```php
+    <?php
+
+    require 'vendor/autoload.php';
+
+    use Livepeer\Livepeer;
+    use Livepeer\LivepeerException;
+
+    // Initialize the Livepeer client with your API key
+    $api_key = 'YOUR_API_KEY';
+    $livepeer = new Livepeer($api_key);
+
+    $stream_data = [
+      "name" => "test_stream"
+    ];
+
+    try {
+        // Create the stream
+        $response = $livepeer->createStream($stream_data);
+        echo 'Stream created: ' . json_encode($response) . PHP_EOL;
+    } catch (LivepeerException $e) {
+        echo 'Error creating stream: ' . $e->getMessage() . PHP_EOL;
+    }
+    ```
+
+  </Tab>
+
+  <Tab title="Go">
+    ```go
+    package main
+
+    import (
+      "fmt"
+      "os"
+
+      "github.com/livepeer/go-livepeer/livepeer"
+    )
+
+    func main() {
+      // Initialize the Livepeer client with your API key
+      apiKey := "YOUR_API_KEY"
+      client := livepeer.NewLivepeerClient(apiKey)
+
+      streamData := map[string]interface{}{
+        "name": "test_stream",
+      }
+
+      // Create the stream
+      response, err := client.CreateStream(streamData)
+      if err != nil {
+        fmt.Printf("Error creating stream: %v\n", err)
+        os.Exit(1)
+      }
+
+      fmt.Printf("Stream created: %+v\n", response)
+    }
+    ```
+
+  </Tab>
+</Tabs>
 
 ### Stream Content
 
-Lastly, when the stream is created, we display the streaming content using the [`Player`](/reference/livepeer-js/Player).
+Lastly, when the stream is created, we display the streaming content using the [`Player`](/reference/livepeer-js/Player) on a React.js app.
 
 <Info>
   In a production application, the viewer **should not have access** to the
@@ -85,55 +152,22 @@ Lastly, when the stream is created, we display the streaming content using the [
   key.
 </Info>
 
-```tsx Stream.tsx
+```tsx
 import { Player, useCreateStream } from "@livepeer/react";
 
-import { useMemo, useState } from "react";
-
 export const Stream = () => {
-  const [streamName, setStreamName] = useState<string>("");
-  const {
-    mutate: createStream,
-    data: stream,
-    status,
-  } = useCreateStream(streamName ? { name: streamName } : null);
-
-  const isLoading = useMemo(() => status === "loading", [status]);
-
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Stream name"
-        onChange={(e) => setStreamName(e.target.value)}
+      <Player
+        title={stream?.name}
+        playbackId={stream?.playbackId}
+        autoPlay
+        muted
       />
-
-      {stream?.playbackId && (
-        <Player
-          title={stream?.name}
-          playbackId={stream?.playbackId}
-          autoPlay
-          muted
-        />
-      )}
-
-      <div>
-        {!stream && (
-          <button
-            onClick={() => {
-              createStream?.();
-            }}
-            disabled={isLoading || !createStream}
-          >
-            Create Stream
-          </button>
-        )}
-      </div>
     </div>
   );
 };
 ```
-
 
 ### Wrap Up
 

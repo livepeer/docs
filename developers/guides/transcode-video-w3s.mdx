@@ -2,7 +2,6 @@
 title: Transcode with W3S
 ---
 
-
 This guide will describe how to use the Livepeer [transcode API](/reference/api/transcode-video) to transcode and store video files in [web3.storage](http://web3.storage).
 
 <Warning>
@@ -10,8 +9,6 @@ This guide will describe how to use the Livepeer [transcode API](/reference/api/
   slow due to the W3 Link issue tracked
   [here](https://github.com/web3-storage/w3link/issues/46).
 </Warning>
-
-
 
 There are [code examples](#code-examples) provided for reference.
 
@@ -51,46 +48,249 @@ This step assumes that you have already created a [Livepeer Studio account](http
 
 Submit the following request:
 
-```bash
-curl --location --request POST 'https://livepeer.studio/api/transcode' \
---header 'Authorization: Bearer $API_KEY' \
---header 'Content-Type: application/json' \
---data-raw '{
-   "input":{
-      "url":"$INPUT_VIDEO_URL"
-   },
-   "storage":{
-      "type":"web3.storage",
-      "credentials":{
-         "proof":"$DELEGATION_PROOF"
-      }
-   },
-   "outputs":{
-      "hls":{
-         "path":"/"
-      },
-      "mp4":{
-         "path":"/"
-      }
-   },
-   "profiles":[
-      {
-         "name":"480p",
-         "bitrate":1000000,
-         "fps":30,
-         "width":854,
-         "height":480
-      },
-      {
-         "name":"360p",
-         "bitrate":500000,
-         "fps":30,
-         "width":640,
-         "height":360
-      }
-   ]
-}'
+<Tabs>
+  <Tab title="Node.js">
+```javascript
+import { Livepeer } from "livepeer";
+
+const livepeer = new Livepeer("$API_KEY");
+
+livepeer.transode({
+  input: {
+    url: "$INPUT_VIDEO_URL",
+  },
+  storage: {
+    type: "web3.storage",
+    credentials: {
+      proof: "$DELEGATION_PROOF",
+    },
+  },
+  outputs: {
+    hls: {
+      path: "/",
+    },
+    mp4: {
+      path: "/",
+    },
+  },
+  profiles: [
+    {
+      name: "480p",
+      bitrate: 1000000,
+      fps: 30,
+      width: 854,
+      height: 480,
+    },
+    {
+      name: "360p",
+      bitrate: 500000,
+      fps: 30,
+      width: 640,
+      height: 360,
+    },
+  ],
+});
+
+
+````
+ </Tab>
+  <Tab title="Python">
+  ```python
+  import livepeer
+
+  livepeer.api_key = "$API_KEY"
+
+ params = {
+    "input": {
+        "url": "$INPUT_VIDEO_URL"
+    },
+    "storage": {
+        "type": "web3.storage",
+        "credentials": {
+            "proof": "$DELEGATION_PROOF"
+        }
+    },
+    "outputs": {
+        "hls": {
+            "path": "/"
+        },
+        "mp4": {
+            "path": "/"
+        }
+    },
+    "profiles": [
+        {
+            "name": "480p",
+            "bitrate": 1000000,
+            "fps": 30,
+            "width": 854,
+            "height": 480
+        },
+        {
+            "name": "360p",
+            "bitrate": 500000,
+            "fps": 30,
+            "width": 640,
+            "height": 360
+        }
+    ]
+}
+
+ video = livepeer.transcode(params)
+print(video)
 ```
+  </Tab>
+  <Tab title="Ruby">
+   ```ruby
+   require 'livepeer'
+
+   Livepeer.api_key = "$API_KEY"
+
+    params = {
+    "input": {
+        "url": "$INPUT_VIDEO_URL"
+    },
+    "storage": {
+        "type": "web3.storage",
+        "credentials": {
+            "proof": "$DELEGATION_PROOF"
+        }
+    },
+    "outputs": {
+        "hls": {
+            "path": "/"
+        },
+        "mp4": {
+            "path": "/"
+        }
+    },
+    "profiles": [
+        {
+            "name": "480p",
+            "bitrate": 1000000,
+            "fps": 30,
+            "width": 854,
+            "height": 480
+        },
+        {
+            "name": "360p",
+            "bitrate": 500000,
+            "fps": 30,
+            "width": 640,
+            "height": 360
+        }
+    ]
+}
+
+   video = Livepeer.transcode(params)
+   puts video
+   ```
+  </Tab>
+
+   <Tab title="PHP">
+   ```PHP
+   $livepeer = Livepeer::client("$API_KEY");
+
+   $livepeer->transcode({
+       "input": {
+        "url": "$INPUT_VIDEO_URL"
+    },
+    "storage": {
+        "type": "web3.storage",
+        "credentials": {
+            "proof": "$DELEGATION_PROOF"
+        }
+    },
+    "outputs": {
+        "hls": {
+            "path": "/"
+        },
+        "mp4": {
+            "path": "/"
+        }
+    },
+    "profiles": [
+        {
+            "name": "480p",
+            "bitrate": 1000000,
+            "fps": 30,
+            "width": 854,
+            "height": 480
+        },
+        {
+            "name": "360p",
+            "bitrate": 500000,
+            "fps": 30,
+            "width": 640,
+            "height": 360
+        }
+    ]
+
+   })
+```
+  </Tab>
+
+   <Tab title="Go">
+   ```go
+   package main
+
+   import (
+    "fmt"
+    "github.com/livepeer/livepeer-go-sdk"
+   )
+
+   func main() {
+      api_key = "$API_KEY"
+
+      client := livepeer.NewClient(apiKey)
+
+      params = {
+         "input": {
+            "url": "$INPUT_VIDEO_URL"
+         },
+         "storage": {
+            "type": "web3.storage",
+            "credentials": {
+                  "proof": "$DELEGATION_PROOF"
+            }
+         },
+         "outputs": {
+            "hls": {
+                  "path": "/"
+            },
+            "mp4": {
+                  "path": "/"
+            }
+         },
+         "profiles": [
+            {
+                  "name": "480p",
+                  "bitrate": 1000000,
+                  "fps": 30,
+                  "width": 854,
+                  "height": 480
+            },
+            {
+                  "name": "360p",
+                  "bitrate": 500000,
+                  "fps": 30,
+                  "width": 640,
+                  "height": 360
+            }
+         ]
+      }
+
+ sent, err := client.transcode(params)
+    if err != nil {
+        fmt.Println(err.Error())
+        return
+    }
+    fmt.Println(sent.Id)
+}
+```
+</Tab>
+
+</Tabs>
 
 - `$API_KEY` should be your Livepeer Studio API key
 - `$DELEGATION_PROOF` should be the delegation proof you created using `w3`
@@ -120,7 +320,7 @@ Use the task ID in the response to query for the transcoding task status. Once t
    },
   ...
 }
-```
+````
 
 For more information about transcode API usage refer to the [docs](/reference/api/transcode-video).
 
