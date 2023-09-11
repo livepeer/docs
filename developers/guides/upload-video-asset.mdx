@@ -3,23 +3,169 @@ title: "Upload asset"
 description: "Learn how to upload and playback an asset"
 ---
 
-Creating and viewing assets is easy with livepeer.js! The example below uses [`useCreateAsset`](/reference/livepeer-js/asset/useCreateAsset)
-to create and view a video asset.
+Uploading and watching an asset is easy! The example below uses [create asset api](/api-reference/asset/upload) to create an upload link to upload a video.
 
 <Info>
   **For rapid processing of assets that will also be archived on IPFS or
-  Arweave, we strongly encourage either (1) uploading to Livepeer with the [IPFS storage option enabled](/#step-3-upload-video-to-ipfs),
-  or (2) uploading the raw file to Livepeer via `useCreateAsset` or the API
-  prior to archiving on dStorage, rather than passing the IPFS / Arweave gateway
-  URL. The gateway URL will work, but may incur longer-than-usual processing
-  time.**
+  Arweave, we strongly encourage either (1) uploading to Livepeer with the [IPFS
+  storage option enabled](/#step-3-upload-video-to-ipfs), or (2) uploading the
+  raw file to Livepeer via `useCreateAsset` or the API prior to archiving on
+  dStorage, rather than passing the IPFS / Arweave gateway URL. The gateway URL
+  will work, but may incur longer-than-usual processing time.**
 </Info>
 
-### Configuring Providers
+## Using Livepeer SDK
+
+We can use the Livepeer SDK to create an upload link, it is very simple and easy to use.
+
+<Tabs>
+  <Tab title="Node.js">
+    ```javascript
+    import { Livepeer } from "livepeer";
+
+    const apiKey = 'YOUR_API_KEY'; // Replace with your API key
+    const fileName = 'filename.mp4'; // Replace with the desired file name
+
+    const livepeer = new Livepeer(apiKey);
+
+    const assetData = {
+      name: fileName
+    };
+
+    livepeer
+      .requestAssetUpload(assetData)
+      .then((response) => {
+        console.log("Asset upload request:", response);
+      })
+      .catch((error) => {
+        console.error("Error requesting asset upload:", error);
+      });
+    ```
+
+  </Tab>
+
+  <Tab title="Python">
+    ```python
+    from livepeer import Livepeer
+
+    # Initialize the Livepeer client with your API key
+    api_key = "YOUR_API_KEY"
+    livepeer = Livepeer(api_key)
+
+    file_name = "filename.mp4"  # Replace with the desired file name
+
+    asset_data = {
+        "name": file_name
+    }
+
+    try:
+        # Request asset upload
+        response = livepeer.request_asset_upload(asset_data)
+        print("Asset upload request:", response)
+    except Exception as e:
+        print("Error requesting asset upload:", e)
+    ```
+
+  </Tab>
+
+  <Tab title="Ruby">
+    ```ruby
+    require 'livepeer'
+
+    # Initialize the Livepeer client with your API key
+    api_key = 'YOUR_API_KEY'
+    client = Livepeer::Client.new(api_key: api_key)
+
+    file_name = 'filename.mp4'  # Replace with the desired file name
+
+    asset_data = {
+      "name": file_name
+    }
+
+    begin
+      # Request asset upload
+      response = client.request_asset_upload(asset_data)
+      puts 'Asset upload request:', response
+    rescue StandardError => e
+      puts 'Error requesting asset upload:', e.message
+    end
+    ```
+
+  </Tab>
+
+  <Tab title="PHP">
+    ```php
+    <?php
+
+    require 'vendor/autoload.php';
+
+    use Livepeer\Livepeer;
+    use Livepeer\LivepeerException;
+
+    // Initialize the Livepeer client with your API key
+    $api_key = 'YOUR_API_KEY';
+    $livepeer = new Livepeer($api_key);
+
+    $file_name = 'filename.mp4';  // Replace with the desired file name
+
+    $asset_data = [
+      "name" => $file_name
+    ];
+
+    try {
+        // Request asset upload
+        $response = $livepeer->requestAssetUpload($asset_data);
+        echo 'Asset upload request: ' . json_encode($response) . PHP_EOL;
+    } catch (LivepeerException $e) {
+        echo 'Error requesting asset upload: ' . $e->getMessage() . PHP_EOL;
+    }
+    ```
+
+  </Tab>
+
+  <Tab title="Go">
+    ```go
+    package main
+
+    import (
+      "fmt"
+      "os"
+
+      "github.com/livepeer/go-livepeer/livepeer"
+    )
+
+    func main() {
+      // Initialize the Livepeer client with your API key
+      apiKey := "YOUR_API_KEY"
+      client := livepeer.NewLivepeerClient(apiKey)
+
+      fileName := "filename.mp4" // Replace with the desired file name
+
+      assetData := map[string]interface{}{
+        "name": fileName,
+      }
+
+      // Request asset upload
+      response, err := client.RequestAssetUpload(assetData)
+      if err != nil {
+        fmt.Printf("Error requesting asset upload: %v\n", err)
+        os.Exit(1)
+      }
+
+      fmt.Printf("Asset upload request: %+v\n", response)
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+Once the upload link is created, you can use it to upload your video file to Livepeer. The upload link is TUS protocol compatible, so you can use any TUS client to upload your video file
+
+## Using React Hooks
 
 First, we create a new livepeer.js client with the Studio provider and a CORS-protected API key
 
-```tsx app.tsx
+```jsx
 import {
   LivepeerConfig,
   createReactClient,
@@ -43,12 +189,9 @@ function App() {
 }
 ```
 
-### Video File Upload
+Now that our providers are set up, we set up file uploads with React Dropzone, a library for easily creating HTML5-compliant drag and drop zones for files (you can use another solution for file uploads):
 
-Now that our providers are set up, we set up file uploads with [React Dropzone](https://react-dropzone.js.org/),
-a library for easily creating HTML5-compliant drag and drop zones for files (you can use another solution for file uploads):
-
-```tsx create-asset.tsx
+```jsx
 import { useCreateAsset } from "@livepeer/react";
 
 import { useCallback, useState } from "react";
@@ -123,11 +266,11 @@ export const CreateAndViewAsset = () => {
 };
 ```
 
-### Upload video to IPFS
+## Upload video to IPFS
 
-If you want to upload the video directly to IPFS, you can simple update the [sources](https://docs.livepeer.org/reference/livepeer-js/asset/useCreateAsset#sources) array in `useCreateAsset` hook.
+If you want to upload the video directly to IPFS, you can simple update the [sources](https://docs.livepeer.org/reference/livepeer-js/asset/useCreateAsset#sources) array in `update asset` api.
 
-```jsx {14-20}
+```jsx
   const {
     mutate: createAsset,
     data: asset,
@@ -160,7 +303,7 @@ If you want to upload the video directly to IPFS, you can simple update the [sou
 Lastly, when the video is uploaded, we wait for `useCreateAsset` to poll the API until the asset has been processed and
 has a `playbackId`. Then, we show the video using the [`Player`](/reference/livepeer-js/Player).
 
-```tsx create-asset.tsx
+```tsx
 import { Player, useAssetMetrics, useCreateAsset } from "@livepeer/react";
 
 import { useCallback, useMemo, useState } from "react";
