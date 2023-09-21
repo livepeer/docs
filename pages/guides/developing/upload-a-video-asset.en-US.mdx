@@ -3,7 +3,7 @@ title: 'Upload a video asset'
 description: 'Learn how to upload and playback a video asset'
 ---
 
-import { Callout } from 'nextra-theme-docs';
+import { Callout, Steps } from 'nextra-theme-docs';
 import { Asset } from '@components/react/examples';
 
 # Upload a video asset
@@ -11,9 +11,15 @@ import { Asset } from '@components/react/examples';
 Creating and viewing assets is easy with livepeer.js! The example below uses [`useCreateAsset`](/reference/livepeer-js/asset/useCreateAsset)
 to create and view a video asset.
 
+<Callout type="warning" emoji="⚠️">
+  **For rapid processing of assets that will also be archived on IPFS or Arweave, we strongly encourage either (1) uploading to Livepeer with the [IPFS storage option enabled](/guides/developing/upload-a-video-asset#step-3-upload-video-to-ipfs), or (2) uploading the raw file to Livepeer via `useCreateAsset` or the API prior to archiving on dStorage, rather than passing the IPFS / Arweave gateway URL. The gateway URL will work, but may incur longer-than-usual processing time.**
+</Callout>
+
+
 <Asset />
 
-## Step 1: Configuring Providers
+<Steps>
+###  Configuring Providers
 
 First, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey):
 
@@ -41,7 +47,7 @@ function App() {
 }
 ```
 
-## Step 2: Video File Upload
+### Video File Upload
 
 Now that our providers are set up, we set up file uploads with [React Dropzone](https://react-dropzone.js.org/),
 a library for easily creating HTML5-compliant drag and drop zones for files (you can use another solution for file uploads):
@@ -121,7 +127,7 @@ export const CreateAndViewAsset = () => {
 };
 ```
 
-## Step 3: Upload video to IPFS
+### Upload video to IPFS
 
 If you want to upload the video directly to IPFS, you can simple update the [sources](https://docs.livepeer.org/reference/livepeer-js/asset/useCreateAsset#sources) array in `useCreateAsset` hook.
 
@@ -153,7 +159,7 @@ If you want to upload the video directly to IPFS, you can simple update the [sou
   );
 ```
 
-## Step 4: Stream Transcoded Video
+### Stream Transcoded Video
 
 Lastly, when the video is uploaded, we wait for `useCreateAsset` to poll the API until the asset has been processed and
 has a `playbackId`. Then, we show the video using the [`Player`](/reference/livepeer-js/Player).
@@ -259,6 +265,8 @@ export const Asset = () => {
 };
 ```
 
-## Wrap Up
+</Steps>
+
+### Wrap Up
 
 That's it! You just set up a scalable, decentralized video asset streaming solution for an app.

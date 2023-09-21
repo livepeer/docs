@@ -3,7 +3,7 @@ title: 'Quickstart'
 description: 'Learn how to create an API key and start building with Livepeer!'
 ---
 
-import { Callout } from 'nextra-theme-docs';
+import { Callout, Steps } from 'nextra-theme-docs';
 
 # Quickstart
 
@@ -11,7 +11,9 @@ Learn how to create an API key and start building!
 
 ## Get Started
 
-### Step 1: Create an API key in Livepeer Studio
+<Steps>
+
+### Create an API key in Livepeer Studio
 
 First, go to [Livepeer Studio](https://livepeer.studio/dashboard). Click `Create API Key`. A dialogue should appear.
 
@@ -27,7 +29,7 @@ In the dialogue field, enter a name for your API key.
 
 ![Quickstart 2](/images/quickstart/create-key.png)
 
-### Step 2: Using the API Key
+### Using the API Key
 
 To use an API key, you can simply add an `Authorization` header to your request
 with the`Bearer` scheme and the API key as the value.
@@ -42,7 +44,7 @@ curl -X GET \
 
 With this, you're ready to start building!
 
-### Step 3: Start Building
+### Start Building
 
 Don't know where to start? Check out these guides to get more familiar with
 Livepeer development:
@@ -77,14 +79,15 @@ allow all the origins for it. You can also just add the `*` special value to
 allow the key to be used from any origin.
 
 > Note: CORS is only a client-side check that browsers make and sometimes does
-  not prevent the API from being called. It also does not prevent the API key
-  from being used from other places like a backend or a custom client. 
+> not prevent the API from being called. It also does not prevent the API key
+> from being used from other places like a backend or a custom client.
 
 ![Quickstart 3](/images/quickstart/cors.png)
 
 #### API access
+
 For an additional layer of security, we also limit the access of the
-CORS-enabled keys to the API. 
+CORS-enabled keys to the API.
 
 CORS-enabled API keys have restricted access to the API by default. This means
 that they are only allowed to call some specific endpoints of the API.
@@ -94,23 +97,22 @@ snoops the API key from your web page they still won't be able access the most
 sensitive data in your account. For example, APIs that expose PIIs, payment
 information or list API resources created by other users are disallowed.
 
-
-| Feature | Endpoint| Description |
-| ---- | ---- | ----------- |
-| Livestream | `POST /api/stream`  | [Create a new stream](../../reference/api/create-stream) |
-| Livestream | `POST /api/multistream/target`  | [Create a multistream target](../../reference/api/create-multistream-target) |
-| Livestream | `PATCH /api/stream/{id}`  | [Update a stream object](../../reference/api/update-stream) |
-| Livestream | `PATCH /api/multistream/target/{id}`  | [Update an existing multistream target](../../reference/api/update-multistream-target) |
-| Livestream | `GET /api/stream/{id}`  | [Retrieve a stream by ID](../../reference/api/get-stream)| 
-| Livestream | `GET /api/multistream/target/{id}`  | [Retrieve a multistream target by ID](../../reference/api/get-multistream-target)| 
-| Livestream | `GET /api/stream/{id}/sessions`  | [List sessions from a specific parent stream ID](../../reference/api/get-sessions) | 
-| Livestream | `GET /api/session/{id}`  | [Retrieve a session by ID](../../reference/api/get-session)| 
-| On Demand| `POST /api/asset/request-upload`  | [Create an asset via direct upload](../../reference/api/create-asset) | 
-| On Demand| `POST /api/asset/url`  | [Create an asset from external url](../../reference/api/create-asset-via-url) | 
-| On Demand| `PATCH /api/asset/{id}`  | [Update an asset by ID](../../reference/api/update-asset) | 
-| On Demand| `GET /api/asset/{id}`  | [Retrieve an asset by ID](../../reference/api/get-assets) | 
-| On Demand| `GET /api/task/{id}`  | [Monitor the progress of a specific task by ID](../../reference/api/get-tasks) | 
-| Data| `GET /data/views/{id}/total`  | [Retrieve viewership data by asset ID](../../guides/developing/viewer-engagement#step-3-retrieve-viewership-data) | 
+| Feature    | Endpoint                             | Description                                                                                                       |
+| ---------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| Livestream | `POST /api/stream`                   | [Create a new stream](../../reference/api/create-stream)                                                          |
+| Livestream | `POST /api/multistream/target`       | [Create a multistream target](../../reference/api/create-multistream-target)                                      |
+| Livestream | `PATCH /api/stream/{id}`             | [Update a stream object](../../reference/api/update-stream)                                                       |
+| Livestream | `PATCH /api/multistream/target/{id}` | [Update an existing multistream target](../../reference/api/update-multistream-target)                            |
+| Livestream | `GET /api/stream/{id}`               | [Retrieve a stream by ID](../../reference/api/get-stream)                                                         |
+| Livestream | `GET /api/multistream/target/{id}`   | [Retrieve a multistream target by ID](../../reference/api/get-multistream-target)                                 |
+| Livestream | `GET /api/stream/{id}/sessions`      | [List sessions from a specific parent stream ID](../../reference/api/get-sessions)                                |
+| Livestream | `GET /api/session/{id}`              | [Retrieve a session by ID](../../reference/api/get-session)                                                       |
+| On Demand  | `POST /api/asset/request-upload`     | [Create an asset via direct upload](../../reference/api/create-asset)                                             |
+| On Demand  | `POST /api/asset/url`                | [Create an asset from external url](../../reference/api/create-asset-via-url)                                     |
+| On Demand  | `PATCH /api/asset/{id}`              | [Update an asset by ID](../../reference/api/update-asset)                                                         |
+| On Demand  | `GET /api/asset/{id}`                | [Retrieve an asset by ID](../../reference/api/get-assets)                                                         |
+| On Demand  | `GET /api/task/{id}`                 | [Monitor the progress of a specific task by ID](../../reference/api/get-tasks)                                    |
+| Data       | `GET /data/views/{id}/total`         | [Retrieve viewership data by asset ID](../../guides/developing/viewer-engagement#step-3-retrieve-viewership-data) |
 
 #### Full API access
 
@@ -126,7 +128,10 @@ full access to your account, you can do so by ticking the `Full API access`
 checkbox when creating your API key.
 
 An API key with `Full API access` will be able to access and manage every
-information in your account, including: 
+information in your account, including:
+
 - All your contact info provided on registration
 - Change your billing plan
 - List and delete all the streams and assets stored in your account.
+
+</Steps>

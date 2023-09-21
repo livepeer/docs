@@ -19,8 +19,9 @@ function useCodeSnippets(
       // Generate cURL command
       const requestBody = constructRequestBody(params);
 
-      const curlCommand = `curl -X ${method.toUpperCase()} -H 'content-type: application/json' -d '${requestBody}' ${baseUrl ? baseUrl + path : path
-        }`;
+      const curlCommand = `curl -X ${method.toUpperCase()} -H 'content-type: application/json' -d '${requestBody}' ${
+        baseUrl ? baseUrl + path : path
+      }`;
       return curlCommand;
     };
 
@@ -33,8 +34,9 @@ require 'uri'
 url = URI.parse('${baseUrl ? baseUrl + path : path}')
 http = Net::HTTP.new(url.host, url.port)
 
-request = Net::HTTP::${method.charAt(0).toUpperCase() + method.slice(1)
-        }(url.path)
+request = Net::HTTP::${
+        method.charAt(0).toUpperCase() + method.slice(1)
+      }(url.path)
 request.add_field('Content-Type', 'application/json')
 request.body = '${requestBody}'
 
@@ -224,7 +226,8 @@ class Program
       const nestedObject: { [key: string]: any } = {};
 
       properties.forEach((property: ParameterInfo) => {
-        nestedObject[property.property] = property.example || property.type;
+        nestedObject[property.property] =
+          property.example || property?.enums[0] || property.type;
 
         if (property.objectProperties && property.objectProperties.length > 0) {
           const nestedNestedObject = buildNestedObject(
@@ -246,6 +249,51 @@ class Program
       const requestBody: { [key: string]: any } = {};
 
       params?.forEach((property) => {
+        if (property.oneOf && property.oneOf.length > 0) {
+          const defaultOption = property.oneOf[0] as ParameterInfo;
+          defaultOption.property = property.property;
+          if (defaultOption.property && defaultOption.example) {
+            requestBody[defaultOption.property] = defaultOption.example;
+          }
+
+          if (
+            defaultOption.objectProperties &&
+            defaultOption.objectProperties.length > 0
+          ) {
+            const nestedObject = buildNestedObject(
+              defaultOption.objectProperties,
+            );
+            if (Object.keys(nestedObject).length > 0) {
+              requestBody[defaultOption.property] = nestedObject;
+            }
+          }
+
+          if (
+            defaultOption.array &&
+            defaultOption.arraySchema &&
+            defaultOption.arraySchema.length > 0
+          ) {
+            const nestedArray: { [key: string]: any }[] = [];
+            defaultOption.arraySchema.forEach((nestedItem: ParameterInfo) => {
+              const nestedObject: { [key: string]: any } = {};
+              nestedItem.objectProperties?.forEach((nestedProperty) => {
+                if (nestedProperty.property && nestedProperty.example) {
+                  nestedObject[nestedProperty.property] =
+                    nestedProperty.example;
+                }
+              });
+              if (Object.keys(nestedObject).length > 0) {
+                nestedArray.push(nestedObject);
+              }
+            });
+            if (nestedArray.length > 0) {
+              requestBody[defaultOption.property] = nestedArray;
+            }
+          }
+
+          return;
+        }
+
         if (property.property && property.example) {
           requestBody[property.property] = property.example;
         }
@@ -312,7 +360,7 @@ class Program
     });
 
     snippets.push({
-      languageName: 'Node.js',
+      languageName: 'JavaScript',
       request: generateNodejsSnippet(),
     });
 

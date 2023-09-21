@@ -69,9 +69,9 @@ import { Callout } from 'nextra-theme-docs';
 | Ingest Format                | RTMP, SRT                                                                                                                                                                                   |
 | Ingest Codec                 | H264 + AAC                                                                                                                                                                                  |
 | Ingest Authentication        | Webhook based                                                                                                                                                                               |
-| Encoder Software             | Supported tested: OBS 25.0.8, ffmpeg 4.3, Streamaxia Supported untested: Xsplit, other versions of OBS and ffmpeg, other RTMP encoders, SRT encodersUnsupported: WebRTC                     |
+| Encoder Software             | Supported tested: OBS 25.0.8, ffmpeg 4.3, Streamaxia, WebRTC via WHIP Supported untested: Xsplit, other versions of OBS and ffmpeg, other RTMP encoders, SRT encoders                  |
 | Framerate                    | Between 5fps and 60fps, passthrough or custom                                                                                                                                               |
-| GOP Size (Keyframe Interval) | Supported tested: Constant GOP, Variable GOP of 0.5s to 8s Supported untested: Xsplit, Other versions of OBS and ffmpeg, other RTMP encodersUnsupported: Variable GOP not within 0.5s to 8s |
+| GOP Size (Keyframe Interval) | Supported tested: Constant GOP, Variable GOP of 0.5s to 8s Supported untested: Xsplit, Other versions of OBS and ffmpeg, other RTMP encoders Unsupported: Variable GOP not within 0.5s to 8s |
 
 ### Transcoding Support
 
@@ -80,8 +80,8 @@ import { Callout } from 'nextra-theme-docs';
 | Location                  | EU, US                                                                                                                           |
 | Codec                     | H264 + AAC                                                                                                                       |
 | H264 Transcoding Profiles | Baseline, Main, High                                                                                                             |
-| FPS                       | Supported tested: 24, 25, 30, 60 fps, uniform across all renditionsSupported untested: custom fps, uniform across all renditions |
-| Resolution                | Supported tested: Custom resolution up to 1080pSupported untested: Custom resolution up to 4k                                    |
+| FPS                       | Supported tested: 24, 25, 30, 60 fps, uniform across all renditions Supported untested: custom fps, uniform across all renditions |
+| Resolution                | Supported tested: Custom resolution up to 1080p Supported untested: Custom resolution up to 4k                                    |
 | Pixel format              | YUV4:2:0                                                                                                                         |
 
 ### Video Workflow Support
@@ -90,15 +90,16 @@ import { Callout } from 'nextra-theme-docs';
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | On Demand upload format   | MP4                                                                                                                                                                                                |
 | Live latency              | 10-18 seconds with good RTMP ingest health, 2s segment size, and standard 3 seg buffering in player                                                                                                |
+| Low latency               | 3-5 seconds for transcoded rendition and sub-seconds for the source for browser-based applications                                                                                                 |
 | Live output format        | HLS playback URL (m3u8)                                                                                                                                                                            |
 | H264 Transcoding Profiles | Baseline, Main, High                                                                                                                                                                               |
 | Video players             | Supported tested: livepeer.js, video.js, hls.js, safari/ios native player, Theoplayer; Supported untested: JWPlayer, android native, Shaka, Exo, Bitmovin, Brightcove                              |
-| Video Delivery Location   | Supported tested: EU, USSupported untested: Asia, South America, Australia, Africa                                                                                                                 |
-| Live stream recording     | Only available for paying users. HLS playback URL (m3u8) available 5 minutes after session ends. Livepeer.com stores recording and serves playback via CDN. There is no limit on recording length. |
+| Video Delivery Location   | Supported tested: Globally                                                                                                               |
+| Live stream recording     | Only available for paying users. HLS playback URL (m3u8) is available 5 minutes after the session ends. Livepeer Studio stores recording and serves playback via CDN. When recording is enabled, `mp4` files are made available by default for recordings under 12 hours and are available on request for recordings over 12 hours. `m3u8` files are available for all recordings. |
 | Recording output format   | HLS playback URL (m3u8)                                                                                                                                                                            |
 | CDN delivery              | CDN delivery is only available for paying users.                                                                                                                                                   |
 | Non-CDN Delivery          | Non-CDN delivery for free tier users is limited to 10 viewers per account. Free tier users will have transcoding limited to 240p after 30 free minutes.                                            |
 | Custom CDN                | Only for custom pricing tier users.                                                                                                                                                                |
 | Stream Status             | active or inactive                                                                                                                                                                                 |
-| Stream length             | We can support streams up to 12 hours in length. Please reach out to contact@livepeer.org if you’re looking to run longer uninterrupted streams through Livepeer.com.                              |
+| Stream length             | We can support streams up to 28 days in length. Please reach out to contact@livepeer.org if you’re looking to run longer uninterrupted streams through Livepeer Studio.                              |
 | Scalability               | 1000 concurrent streams across all users. Please contact us at contact@livepeer.org for additional capacity                                                                                        |

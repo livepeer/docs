@@ -3,7 +3,7 @@ title: 'Mint a Video NFT'
 description: 'Learn how to mint a video NFT on the Aptos or an EVM-compatible blockchain with livepeer.js'
 ---
 
-import { Callout, Tabs, Tab } from 'nextra-theme-docs';
+import { Callout, Tabs, Tab, Steps } from 'nextra-theme-docs';
 import { SyncedTab, SyncedTabs } from '@components/core';
 import { AptosNft, WagmiNft } from '@components/react/examples';
 
@@ -21,7 +21,8 @@ Livepeer is blockchain agnostic. The example below shows how to mint a video NFT
   </SyncedTab>
 </SyncedTabs>
 
-## Step 1: Adding Dependencies
+<Steps>
+###  Adding Dependencies
 
 We first add the required dependencies using `npm` (or your preferred package manager).
 
@@ -46,7 +47,7 @@ We first add the required dependencies using `npm` (or your preferred package ma
   </SyncedTab> 
 </SyncedTabs>
 
-## Step 2: Setting Up Providers
+### Setting Up Providers
 
 <SyncedTabs group="chain" items={['wagmi', 'aptos']}>
   <SyncedTab>
@@ -130,7 +131,7 @@ We first add the required dependencies using `npm` (or your preferred package ma
   </SyncedTab>
 </SyncedTabs>
 
-## Step 3: Add Connect Wallet Button
+### Add Connect Wallet Button
 
 <SyncedTabs group="chain" items={['wagmi', 'aptos']}>
   <SyncedTab>
@@ -210,7 +211,7 @@ We first add the required dependencies using `npm` (or your preferred package ma
   </SyncedTab>
 </SyncedTabs>
 
-## Step 4: Upload Asset to IPFS
+### Upload Asset to IPFS
 
 We then add a feature to let a user upload the Asset to IPFS. Under the hood, the livepeer provider will upload the Asset file
 to IPFS, then generate [ERC-721 compatible metadata](https://eips.ethereum.org/EIPS/eip-721) in
@@ -359,7 +360,7 @@ The metadata can also be customized to override any of these default fields!
 }
 ```
 
-## Step 5: Mint a Video NFT
+### Mint a Video NFT
 
 We can now use the NFT metadata CID to mint a video NFT! After the transaction is successful, we show a link to a blockchain explorer
 so the user can see the blockchain confirmation.
@@ -804,3 +805,5 @@ so the user can see the blockchain confirmation.
 
   </SyncedTab>
 </SyncedTabs>
+
+</Steps>
