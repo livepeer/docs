@@ -1,0 +1,78 @@
+---
+title: "Get engagement analytics via Timeplus"
+description: "Learn how to analyze Livepeer video engagement metrics with Timeplus"
+---
+
+Video engagement metrics are important to video creators, serving as valuable indicators of content quality, helping users manage their time effectively, facilitating interaction with content creators and other viewers, and contributing to the overall user experience on video-sharing platforms.
+
+In May 2023, Livepeer released their version of these [engagement metrics](/developers/guides/get-engagement-analytics-via-api) offering detailed information on viewer behavior and playback quality on your platform. The API includes engagement metrics such as view counts and watch time, as well as performance metrics such as error rate, time to first frame, rebuffer ratio, and exit-before-starts across a variety of dimensions.
+
+There are many different data analysis tools available today which can be used to help analyze these engagement metrics. Typically, users need to import the data into a data platform, and then build queries (SQL or non-SQL based) and dashboards on that platform to support interactive data exploration or monitoring what’s happening with those metrics data using visualizations.
+
+# What is Timeplus?
+
+Timeplus is a real-time streaming data analytics platform, it provides analytics functionality combined with both real-time streaming data and historical batching data. You can take it as a combination of streaming processing (such as Apache Flink) + real-time OLAP (such as Apache Druid).
+
+Timeplus is a great tool that can be used for engagement metrics analysis due to:
+
+- Timeplus offers query analytics capabilities based on SQL, making it user-friendly for those already proficient in SQL.
+- Timeplus delivers ultra-low latency real-time queries, instantly delivering analytical results to users as events occur.
+- Timeplus facilitates the extraction of query time information, eliminating the need for traditional ETL processes. Users can swiftly create analytics by combining diverse data sources.
+
+<Frame>
+  <img src="/images/tutorials/timeplus.jpg" title="Timeplus" />
+</Frame>
+
+# How to get started using Timeplus with Livepeer's Engagement Data
+
+Analyzing Livepeer engagement metrics on Timeplus is incredibly easy. Based on the [Timeplus terraform provider](https://www.timeplus.com/post/timeplus-terraform-provider), users can create the whole analytic solution with a few simple commands.
+
+Here is the process, assuming you have both a Livepeer studio account and a Timeplus workspace created.
+
+1. Create your Livepeer API Key [https://docs.livepeer.org/guides/developing/quickstart](https://docs.livepeer.org/guides/developing/quickstart)
+2. Create your Timeplus API Key [https://docs.timeplus.com/apikey](https://docs.timeplus.com/apikey)
+3. Install terraform [https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
+4. Download the Livepeer terraform resource definition from [https://github.com/timeplus-io/livepeer-source/blob/main/stacks/main.tf](https://github.com/timeplus-io/livepeer-source/blob/main/stacks/main.tf) to your local directory
+5. Open a terminal from the directory and add following environments
+
+```bash
+export TF_VAR_timeplus_apikey=your_timeplus_api_key
+export TF_VAR_timeplus_workspace=your_timeplus_workspace_id
+export TF_VAR_timeplus_endpoint=timeplus_cloud_endpoint
+export TF_VAR_livepeer_apikey=your_livepeer_apikey
+```
+
+6. Deploy the resources to Timeplus Cloud by run the following commands
+
+```bash
+terraform init
+terraform apply
+```
+
+This resource template will help users to create the following resources in Timeplus:
+
+- A [stream](https://docs.timeplus.com/working-with-streams) of engagement metrics with name `livepeer_viewership_metrics_kv`
+- A Livepeer [source](https://docs.timeplus.com/source) which will periodically pull data from Livepeer API and store the metrics data into the defined stream
+- A [user defined function](https://docs.timeplus.com/udf) (UDF) that turns the geohash into geo locations with longitude and latitude.
+- A [dashboard](https://docs.timeplus.com/viz#dashboard) that contains the following:
+  - Hourly Views and Watch Time
+  - Engagement by OS
+  - View count by Video (Top 5)
+  - View count by Device Type (Top 5)
+  - Rebuffering Percentage
+  - Time to First Frame
+  - View By Geo Locations
+
+Here is the dashboard that you will instantly get after the resources being deployed to Timeplus:
+
+<Frame>
+  <img
+    src="/images/tutorials/livepeer_dashboard.png"
+    title="Dashboard"
+    width="80%"
+  />
+</Frame>
+
+# Summary
+
+In today’s blog, we show how Timeplus can be used to create analytic solutions for Livepeer’s engagement metrics with a few commands. We will show you how to build more advanced video stream data analytics functions based on Timeplus in follow up blogs. Stay tuned!
