@@ -56,41 +56,40 @@ import { Livepeer } from "livepeer";
 const livepeer = new Livepeer("$API_KEY");
 
 livepeer.transode({
-  input: {
-    url: "$INPUT_VIDEO_URL",
+input: {
+url: "$INPUT_VIDEO_URL",
   },
   storage: {
     type: "web3.storage",
     credentials: {
       proof: "$DELEGATION_PROOF",
-    },
-  },
-  outputs: {
-    hls: {
-      path: "/",
-    },
-    mp4: {
-      path: "/",
-    },
-  },
-  profiles: [
-    {
-      name: "480p",
-      bitrate: 1000000,
-      fps: 30,
-      width: 854,
-      height: 480,
-    },
-    {
-      name: "360p",
-      bitrate: 500000,
-      fps: 30,
-      width: 640,
-      height: 360,
-    },
-  ],
+},
+},
+outputs: {
+hls: {
+path: "/",
+},
+mp4: {
+path: "/",
+},
+},
+profiles: [
+{
+name: "480p",
+bitrate: 1000000,
+fps: 30,
+width: 854,
+height: 480,
+},
+{
+name: "360p",
+bitrate: 500000,
+fps: 30,
+width: 640,
+height: 360,
+},
+],
 });
-
 
 ````
  </Tab>
