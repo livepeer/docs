@@ -1,9 +1,7 @@
 ---
-title: "Multiparticipant streams"
+title: "Setup a multiparticipant livestream"
 description: "Learn how to set up a multiparticipant livestream with Livepeer API"
 ---
-
-# Setting Up Multiparticipant Livestreams
 
 This guide will describe how to set up a virtual room with multiple participants in a typical meeting style interface and optionally a livestream for viewers.
 
@@ -56,47 +54,49 @@ The following steps assume that you have already created a [Livepeer Studio acco
   ```ruby
   require 'livepeer'
 
-  # Initialize the Livepeer client with your API key
-  api_key = 'YOUR_API_KEY'
-  client = Livepeer::Client.new(api_key: api_key)
+# Initialize the Livepeer client with your API key
 
-  # Define the room data as a hash
-  room_data = { name: 'My room' }
+api_key = 'YOUR_API_KEY'
+client = Livepeer::Client.new(api_key: api_key)
 
-  begin
-    # Create the room
-    response = client.create_room(room_data)
-    puts 'Room created:', response
-  rescue StandardError => e
-    puts 'Error creating room:', e.message
-  end
+# Define the room data as a hash
+
+room_data = { name: 'My room' }
+
+begin # Create the room
+response = client.create_room(room_data)
+puts 'Room created:', response
+rescue StandardError => e
+puts 'Error creating room:', e.message
+end
+
+````
+
+</Tab>
+<Tab title="PHP">
+  ```php
+  <?php
+
+  require 'vendor/autoload.php';
+
+  use Livepeer\Livepeer;
+  use Livepeer\LivepeerException;
+
+  // Initialize the Livepeer client with your API key
+  $apiKey = 'YOUR_API_KEY';
+  $livepeer = new Livepeer($apiKey);
+
+  // Define the room data as an associative array
+  $roomData = ['name' => 'My room'];
+
+  try {
+      // Create the room
+      $response = $livepeer->createRoom($roomData);
+      echo 'Room created: ' . json_encode($response) . PHP_EOL;
+  } catch (LivepeerException $e) {
+      echo 'Error creating room: ' . $e->getMessage() . PHP_EOL;
+  }
   ```
-
-  </Tab>
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API key
-    $apiKey = 'YOUR_API_KEY';
-    $livepeer = new Livepeer($apiKey);
-
-    // Define the room data as an associative array
-    $roomData = ['name' => 'My room'];
-
-    try {
-        // Create the room
-        $response = $livepeer->createRoom($roomData);
-        echo 'Room created: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error creating room: ' . $e->getMessage() . PHP_EOL;
-    }
-    ``` 
 </Tab>
 <Tab title="Go">
 ```go
@@ -128,7 +128,8 @@ func main() {
 
 	fmt.Printf("Room created: %+v\n", response)
 }
-```
+````
+
 </Tab>
 </Tabs>
 
@@ -152,6 +153,7 @@ Using the room ID returned in the previous step now make the following API call.
         console.error("Error creating user:", error);
       });
     ```
+
   </Tab>
 
   <Tab title="Python">
@@ -176,6 +178,7 @@ Using the room ID returned in the previous step now make the following API call.
     except Exception as e:
         print("Error creating user:", e)
     ```
+
   </Tab>
 
   <Tab title="Ruby">
@@ -201,6 +204,7 @@ Using the room ID returned in the previous step now make the following API call.
       puts 'Error creating user:', e.message
     end
     ```
+
   </Tab>
 
   <Tab title="PHP">
@@ -231,6 +235,7 @@ Using the room ID returned in the previous step now make the following API call.
         echo 'Error creating user: ' . $e->getMessage() . PHP_EOL;
     }
     ```
+
   </Tab>
 
   <Tab title="Go">
@@ -268,9 +273,9 @@ Using the room ID returned in the previous step now make the following API call.
       fmt.Printf("User created: %+v\n", response)
     }
     ```
+
   </Tab>
 </Tabs>
-
 
 - `$ROOM_ID` should be the room ID returned in the previous step
 - `$PARTICIPANT_NAME` should be a human readable display name for the participant
@@ -301,6 +306,7 @@ For viewer only participants it's possible to set up a livestream for the room. 
         console.error("Error creating egress:", error);
       });
     ```
+
   </Tab>
 
   <Tab title="Python">
@@ -325,6 +331,7 @@ For viewer only participants it's possible to set up a livestream for the room. 
     except Exception as e:
         print("Error creating egress:", e)
     ```
+
   </Tab>
 
   <Tab title="Ruby">
@@ -350,6 +357,7 @@ For viewer only participants it's possible to set up a livestream for the room. 
       puts 'Error creating egress:', e.message
     end
     ```
+
   </Tab>
 
   <Tab title="PHP">
@@ -380,6 +388,7 @@ For viewer only participants it's possible to set up a livestream for the room. 
         echo 'Error creating egress: ' . $e->getMessage() . PHP_EOL;
     }
     ```
+
   </Tab>
 
   <Tab title="Go">
@@ -417,8 +426,8 @@ For viewer only participants it's possible to set up a livestream for the room. 
       fmt.Printf("Egress created: %+v\n", response)
     }
     ```
+
   </Tab>
 </Tabs>
-
 
 - `$STREAM_ID` should be the ID of the livestream you created e.g. `48d3d8b8-ce4c-4a6e-bae8-b4c76c52431f`
