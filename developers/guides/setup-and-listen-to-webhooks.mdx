@@ -103,6 +103,31 @@ Select the an event to receive notifications for and click "Create Webhook".
 
 That is it! You should now receive webhook notifications for the event you selected.
 
+## Webhook Payload
+
+Webhook payloads contain information about the event that triggered the webhook. The payload is a JSON object that contains different properties depending on the event type. Here is an example of how the webhook playload looks like:
+
+<ParamField path="webhookId" type="string">
+  The id of webhook
+</ParamField>
+
+<ParamField path="createdAt" type="string">
+  The time when the webhook was created
+</ParamField>
+
+<ParamField path="timestamp" type="string">
+  The time when the webhook was triggered
+</ParamField>
+
+<ParamField path="event" type="string">
+  The event type that triggered the webhook
+</ParamField>
+
+<ParamField path="event_object" type="string">
+  The object payload such as stream/asset/task (More info about each payload can
+  be found in the [API references](/api-reference/overview/introduction))
+</ParamField>
+
 ## Webhook Signatures
 
 You can verify webhook requests that Livepeer Studio sends to your endpoints,
@@ -154,3 +179,45 @@ Compare the signature (or signatures) in the header to the expected signature.
 
 - **To protect against timing attacks:** use a constant-time string comparison
   to compare the expected signature to each of the received signatures.
+
+## Troubleshooting Common Issues
+
+During the setup and operation of your webhook in conjunction with Livepeer Studio, you may encounter issues that prevent your application from receiving or processing webhook events as expected. Here, we'll outline some common issues, their solutions, and how to debug them.
+
+### Local Endpoint Configuration
+
+1. **Not Receiving Webhook Calls:**
+
+   - Make sure that your local server is running and accessible. If using Ngrok, ensure it's properly forwarding requests to your local server.
+   - Check the Ngrok's web interface (usually accessible at http://localhost:4040) to see the list of HTTP requests being forwarded to your local server.
+   - Ensure that the URL you set in Livepeer Studio for your webhook endpoint is correct and is the public URL provided by Ngrok.
+
+2. **Error Messages in Your Server Logs:**
+
+   - Look at the console logs in your terminal where your Node.js server is running to see if there are any error messages.
+   - Common errors might include problems parsing the request body, or errors in your route handling logic.
+
+3. **Verifying Webhook Signatures:**
+   - If you are having trouble verifying the webhook signatures, double-check the logic in your verification code against the steps outlined in the guide above.
+   - Ensure you are correctly extracting the timestamp and signatures from the header and preparing the `signed_payload` string as described.
+
+### Debugging Tips
+
+1. **Logging:**
+
+   - Add `console.log` statements in your Express.js route handler to output the request headers, body, and any other relevant information to the console.
+   - This can help you understand the data you're receiving and identify any discrepancies between what you expect and what you're actually getting.
+
+2. **Error Handling:**
+
+   - Add error handling logic to your route handler to catch and log errors. This can help you identify issues in your code or configuration.
+   - Return meaningful error responses from your server to assist in debugging. For example, return a 400 Bad Request status code with a message indicating what was wrong with the request.
+
+3. **Tools:**
+
+   - Use tools like [Postman](https://www.postman.com/) to send test requests to your server to ensure it's responding as expected.
+   - Utilize Ngrok's web interface to inspect the HTTP requests and responses being sent between Livepeer Studio and your server.
+
+4. **Livepeer Studio Dashboard:**
+
+   - Check the Livepeer Studio dashboard for any error messages or logs related to your webhook configuration or the events you are subscribed to.
