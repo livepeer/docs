@@ -3,8 +3,8 @@ title: "Control access to livestreams"
 description: "Learn how to add access control to a stream with livepeer.js"
 ---
 
-Adding access control to a stream only takes a few lines of code. The example below uses [`useCreateStream`](/reference/livepeer-js/stream/useCreateStream)
-and [`useStream`](/reference/livepeer-js/stream/useStream) to create and watch a gated livestream.
+Adding access control to a stream only takes a few lines of code. The example below uses [`useCreateStream`](/sdks/livepeer-js/stream/useCreateStream)
+and [`useStream`](/sdks/livepeer-js/stream/useStream) to create and watch a gated livestream.
 
 <Info>
   This guide is written for developers using `@livepeer/react` in a React
@@ -13,7 +13,7 @@ and [`useStream`](/reference/livepeer-js/stream/useStream) to create and watch a
 
 ### Configuring Providers
 
-First step, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey):
+First step, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/sdks/livepeer-js/providers/studio#apikey):
 
 ```tsx app.tsx
 import {
@@ -96,9 +96,9 @@ Next, we add an API route - since we are using Next.JS, we add a custom [Next.js
 We add a check in the API route for a special "secret" that must be passed in the POST body for the user to gain access to the stream.
 
 <Info>
-  Make sure to [create a signing key](/reference/api/create-signing-keys) -
-  those values will be used as the environment variables
-  `ACCESS_CONTROL_PRIVATE_KEY` and `NEXT_PUBLIC_ACCESS_CONTROL_PUBLIC_KEY`.
+  Make sure to [create a signing key](/api-reference/signing-key/create) - those
+  values will be used as the environment variables `ACCESS_CONTROL_PRIVATE_KEY`
+  and `NEXT_PUBLIC_ACCESS_CONTROL_PUBLIC_KEY`.
 </Info>
 
 ```typescript /api/sign-jwt.ts
@@ -189,7 +189,7 @@ Lastly, when the stream is created, we make a POST request to the `/api/create-s
 (using [React Query](https://tanstack.com/query/v4/docs/overview) to manage the mutation state handling).
 We pass along the `playbackId` for the stream, which is used to create the JWT.
 
-Then, we pass the JWT to the Player using the [`jwt`](/reference/livepeer-js/Player#jwt) prop, which will use that JWT to prove access to the streaming content!
+Then, we pass the JWT to the Player using the [`jwt`](/sdks/livepeer-js/Player#jwt) prop, which will use that JWT to prove access to the streaming content!
 
 ```tsx access-control.tsx
 import { Player, useCreateStream, useStream } from "@livepeer/react";

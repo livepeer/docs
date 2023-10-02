@@ -22,9 +22,7 @@ recommend it for typical usage because it may result in long load times for
 viewers.
 
 For rapid processing of assets that will also be archived on IPFS or
-Arweave, we strongly encourage either (1) uploading to Livepeer with the [IPFS
-storage option
-enabled](/guides/developing/upload-a-video-asset#step-3-upload-video-to-ipfs),
+Arweave, we strongly encourage either (1) uploading to Livepeer with the storage option enabled,
 or (2) uploading the raw file to Livepeer via `useCreateAsset` or the API
 prior to archiving on dStorage, rather than passing the IPFS / Arweave gateway
 URL. The gateway URL will work, but may incur longer-than-usual processing
@@ -36,7 +34,7 @@ Github](https://github.com/suhailkakar/livepeer-dStorage-playback).
 
 ### Configuring Providers
 
-First, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/reference/livepeer-js/providers/studio#apikey):
+First, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/sdks/livepeer-js/providers/studio#apikey):
 
 ```tsx App.tsx
 import {
@@ -72,7 +70,7 @@ Now that our providers are set up, we can add a text input for an IPFS CID or an
   will support both styles of URLs in a future update.
 </Callout>
 
-The raw input is passed to the [`Player`](/reference/livepeer-js/Player), which automatically detects if it is a valid CID and attempts
+The raw input is passed to the [`Player`](/sdks/livepeer-js/Player), which automatically detects if it is a valid CID and attempts
 to fetch the playback info for that CID. If the provider does not have an `Asset` with that CID, the Player will automatically attempt
 to upload the CID from IPFS, and then play the transcoded content back, without any additional code on the frontend. To ensure that there is no delay in playback, we recommend uploading via `useCreateAsset` before displaying it in the player.
 
