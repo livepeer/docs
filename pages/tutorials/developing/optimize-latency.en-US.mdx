@@ -14,8 +14,7 @@ import { Callout } from 'nextra-theme-docs';
 One of the first questions that many developers ask during Livepeer Studio onboarding is how to optimize for low latency. This is for good reason; many livestreaming apps and sites rely on low latency to promote engagement and interaction between viewers and streamers. 
 
 <Callout>
-💡 Latency refers to the lapse in time between a camera capturing an action in real life and viewers of a livestream seeing it happen on their screen. Ultra-low latency is when that time is short enough, typically 0.5 - 3 seconds, so viewers of a live-streaming application can interact with what's happening in the stream in a way that feels natural.
-
+Latency refers to the lapse in time between a camera capturing an action in real life and viewers of a livestream seeing it happen on their screen. Ultra-low latency is when that time is short enough, typically 0.5 - 3 seconds, so viewers of a live-streaming application can interact with what's happening in the stream in a way that feels natural.
 </Callout>
 
 There’s a range of latencies to support a variety of use cases; low or ultra-low latency is a common goal, but it is one of many viable latency choices. The right latency depends on what you’re trying to achieve.
@@ -53,11 +52,11 @@ WebRTC is available as a delivery protocol for all streams regardless of input p
 - [Playing WebRTC Livestreams with the Livepeer Player](/guides/developing/player#using-the-livepeerjs-player)
 - [Playing WebRTC Livestreams with other clients](/guides/developing/player#webrtc-low-latency-livestreams)
 
-<aside>
-💡 Please note that ************************************************************************************************if b-frames are present in a livestream, WebRTC renditions will not be available************************************************************************************************. This is because in WebRTC video playback, b-frames will appear out-of-order on most systems.
 
-</aside>
-
+<Callout type="warning">
+Please note that ************************************************************************************************if b-frames are present in a livestream, WebRTC renditions will not be available************************************************************************************************. This is because in WebRTC video playback, b-frames will appear out-of-order on most systems.
+</Callout>
+💡 
 ## Optimizing for Lower Latency (HLS and WebRTC ingest and playback)
 
 > **Depending on your goals, you may or may not want to optimize for the lowest latency; for example, if your user base has a high percentage of low-bandwidth mobile users, it may be preferable to optimize for bandwidth efficiency over latency.**
@@ -70,10 +69,10 @@ Achieving the right balance between low latency and stream quality is essential 
 - **Rate Control:** This setting dictates the bitrate or "quality" of the stream. A high amount of bandwidth usually means better quality, but keep in mind that your output can never improve the quality of your stream beyond your input.
 - **Keyframe Interval:** Video streams consist of full frames and data relative to the full frames. This setting determines how often a full frame appears, which heavily influences latency.
 
-<aside>
-💡 To allow streamers to easily configure OBS for best performance with Livepeer Studio, we’ve created an OBS preset that can be selected in the OBS Settings panel.
 
-</aside>
+<Callout>
+To allow streamers to easily configure OBS for best performance with Livepeer Studio, we’ve created an OBS preset that can be selected in the OBS Settings panel.
+</Callout>
 
 You can read more about configuring OBS here
 
