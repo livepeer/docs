@@ -31,7 +31,9 @@ HLS (HTTP Live Streaming), initially developed by Apple for iOS devices, serves 
 
 However, HLS has very high overhead and latency. Specifically, its chunked segment delivery means that viewers must wait for the current segment to finish downloading before they can start viewing it. Similarly, HLS players often buffer a few segments in advance to ensure smooth playback and to handle network fluctuations. This buffer introduces additional latency, as the player waits to accumulate enough data before starting playback. Buffer behavior is heavily dependent on client implementation.
 
+<Callout>
 **HLS delivers video with standard latency of 10-20 seconds. Streaming HLS with Livepeer Studio’s recommended low-latency settings lead to ~10s latency.** 
+</Callout>
 
 ### Delivering video with WebRTC
 
@@ -39,7 +41,9 @@ WebRTC (Web Real-Time Communication) is a streaming protocol known for its low-l
 
 WebRTC offers low latency by prioritizing real-time communication, direct peer-to-peer connections, UDP transport, and adaptive streaming while minimizing intermediaries. It is a preferred choice for applications where minimizing delay is critical, such as video conferencing and live interactive streaming.
 
+<Callout>
 **WebRTC delivers video with ultra-low latency of 0 - 3 seconds.**
+</Callout>
 
 # Optimizing Playback for Low Latency
 
@@ -56,11 +60,10 @@ WebRTC is available as a delivery protocol for all streams regardless of input p
 <Callout type="warning">
 Please note that ************************************************************************************************if b-frames are present in a livestream, WebRTC renditions will not be available************************************************************************************************. This is because in WebRTC video playback, b-frames will appear out-of-order on most systems.
 </Callout>
-💡 
+
 ## Optimizing for Lower Latency (HLS and WebRTC ingest and playback)
 
 > **Depending on your goals, you may or may not want to optimize for the lowest latency; for example, if your user base has a high percentage of low-bandwidth mobile users, it may be preferable to optimize for bandwidth efficiency over latency.**
-> 
 
 ### Streaming with OBS
 
