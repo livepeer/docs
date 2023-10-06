@@ -1,0 +1,116 @@
+---
+title: 'Optimize Latency with Livepeer Studio'
+description: 'Learn how to achieve the optimal blend of latency and quality with Livepeer Studio'
+type: 'tutorial'
+category: 'developing'
+---
+
+import BlogHeader from '@components/core/Tutorial/Header';
+import { Callout } from 'nextra-theme-docs';
+
+<BlogHeader />
+
+
+One of the first questions that many developers ask during Livepeer Studio onboarding is how to optimize for low latency. This is for good reason; many livestreaming apps and sites rely on low latency to promote engagement and interaction between viewers and streamers. 
+
+<Callout>
+Latency refers to the lapse in time between a camera capturing an action in real life and viewers of a livestream seeing it happen on their screen. Ultra-low latency is when that time is short enough, typically 0.5 - 3 seconds, so viewers of a live-streaming application can interact with what's happening in the stream in a way that feels natural.
+</Callout>
+
+There’s a range of latencies to support a variety of use cases; low or ultra-low latency is a common goal, but it is one of many viable latency choices. The right latency depends on what you’re trying to achieve.
+
+In this primer, we provide an overview of Livepeer Studio’s approach to latency. By the end of the primer, you should have an understanding of how to achieve the right latency / quality balance for your workflow. 
+
+## Understanding Protocols
+
+Livepeer Studio delivers video using several protocols. The most common (though not the only) delivery protocols supported by Livepeer Studio are **HLS** and **WebRTC**. 
+
+### Delivering video with HLS
+
+HLS (HTTP Live Streaming), initially developed by Apple for iOS devices, serves video with a series of segmented `.ts` files. It is broadly supported across many device types and is extremely well-optimized for serving multiple renditions; these characteristics position HLS as the default choice for many broadcasters.
+
+However, HLS has very high overhead and latency. Specifically, its chunked segment delivery means that viewers must wait for the current segment to finish downloading before they can start viewing it. Similarly, HLS players often buffer a few segments in advance to ensure smooth playback and to handle network fluctuations. This buffer introduces additional latency, as the player waits to accumulate enough data before starting playback. Buffer behavior is heavily dependent on client implementation.
+
+<Callout>
+**HLS delivers video with standard latency of 10-20 seconds. Streaming HLS with Livepeer Studio’s recommended low-latency settings lead to ~10s latency.** 
+</Callout>
+
+### Delivering video with WebRTC
+
+WebRTC (Web Real-Time Communication) is a streaming protocol known for its low-latency capabilities, making it suitable for real-time communication applications like video conferencing, online gaming, and live streaming. Unlike HLS, which is designed for adaptive streaming and on-demand content, WebRTC focuses on minimizing latency. 
+
+WebRTC offers low latency by prioritizing real-time communication, direct peer-to-peer connections, UDP transport, and adaptive streaming while minimizing intermediaries. It is a preferred choice for applications where minimizing delay is critical, such as video conferencing and live interactive streaming.
+
+<Callout>
+**WebRTC delivers video with ultra-low latency of 0 - 3 seconds.**
+</Callout>
+
+# Optimizing Playback for Low Latency
+
+## Lowest possible latency (WebRTC playback)
+
+WebRTC is available as a delivery protocol for all streams regardless of input protocol; to achieve the lowest possible latency of 0 - 3 seconds, use of WebRTC delivery is required. We implement the WHIP/WHEP spec with a few minor nuances around SDP negotiation, documented [here](/guides/developing/player#webrtc-low-latency-livestreams).
+
+**To play back a WebRTC rendition, you will need to use a WebRTC-compatible player, such as the Livepeer Player.**
+
+- [Playing WebRTC Livestreams with the Livepeer Player](/guides/developing/player#using-the-livepeerjs-player)
+- [Playing WebRTC Livestreams with other clients](/guides/developing/player#webrtc-low-latency-livestreams)
+
+
+<Callout type="warning">
+Please note that ************************************************************************************************if b-frames are present in a livestream, WebRTC renditions will not be available************************************************************************************************. This is because in WebRTC video playback, b-frames will appear out-of-order on most systems.
+</Callout>
+
+## Optimizing for Lower Latency (HLS and WebRTC ingest and playback)
+
+> **Depending on your goals, you may or may not want to optimize for the lowest latency; for example, if your user base has a high percentage of low-bandwidth mobile users, it may be preferable to optimize for bandwidth efficiency over latency.**
+
+### Streaming with OBS
+
+Achieving the right balance between low latency and stream quality is essential for providing the best possible user experience. Two settings that significantly impact your stream quality, latency, and user experience are:
+
+- **Rate Control:** This setting dictates the bitrate or "quality" of the stream. A high amount of bandwidth usually means better quality, but keep in mind that your output can never improve the quality of your stream beyond your input.
+- **Keyframe Interval:** Video streams consist of full frames and data relative to the full frames. This setting determines how often a full frame appears, which heavily influences latency.
+
+
+<Callout>
+To allow streamers to easily configure OBS for best performance with Livepeer Studio, we’ve created an OBS preset that can be selected in the OBS Settings panel.
+</Callout>
+
+You can read more about configuring OBS here
+
+- [Selecting the Livepeer Studio preset](/guides/developing/stream-via-obs#input-your-stream-settings)
+- [Optimizing OBS for low latency](/guides/developing/stream-via-obs#optimizing-for-low-latency)
+- [Optimizing for Stream Quality](/guides/developing/stream-via-obs#optimizing-for-stream-quality-and-user-experience)
+
+Finally, we’ve compiled a set of recommended settings to achieve specific experience goals (e.g., highest quality but high latency, average quality but lower latency, or a balanced approach):
+
+- [Sample settings](/guides/developing/stream-via-obs#recommended-obs-settings)
+
+## In-browser broadcasting
+
+Livepeer Studio allows users to broadcast from within their browser using WebRTC broadcast. **These broadcasts are optimized for low latency by default** and can play back in HLS (8-10s latency) or WebRTC (0.5 - 3s latency). 
+
+You can leverage this capability in three ways:
+
+- [Implement the customizable React component](/guides/developing/stream-via-browser#using-livepeerjs-broadcast)
+- [Embed a hosted version](/guides/developing/stream-via-browser#embeddable-broadcast)
+- [Roll your own broadcasting experience with plain WebRTC](/guides/developing/stream-via-browser#adding-broadcasting-with-plain-webrtc)
+
+# Smoke testing your workflow
+
+When you first implement your livestreaming workflow, you may see higher-than-expected latency. This is common and likely means that a few settings need to be tweaked.
+
+### Step 1: Check latency using the Livepeer Player
+
+Go to [`https://lvpr.tv/?v=](https://lvpr.tv/?v=)<playbackId>` and observe the latency. This will help isolate the cause of the latency. 
+
+If you are seeing higher-than-expected latency on the Livepeer Player (>15s for HLS or >4s for WebRTC), it suggests something about the incoming stream is causing high latency. Check your keyframe interval, bitrate, and b-frame settings.
+
+### Step 2: If you’re using another HLS player, compare your HLS config to the Livepeer Player
+
+Our defaults can be found [here](https://github.com/livepeer/livepeer.js/blob/47e572880224739f538e75ef192bb290b85a852f/packages/core-web/src/media/browser/hls/index.ts#L55-L61). Please note that this config is a starting point that we feel is a good balance for latency, quality, rebuffering, etc.
+
+### Step 3: Reach out to the Livepeer Studio team
+
+We will be happy to help troubleshoot so that you are able to achieve 0.5-3s latency with WebRTC or ~10s latency with HLS for the bulk of your users. Often, we achieve improvements by helping you tweak broadcasting settings or optimizing HLS configs.
