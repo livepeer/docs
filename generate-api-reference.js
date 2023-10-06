@@ -20,6 +20,9 @@ function generateJSONOutput(schema) {
 
   for (const path in schema.paths) {
     const methods = schema.paths[path];
+    if (path == 'room') {
+      continue;
+    }
 
     for (const method in methods) {
       const { summary = '' } = methods[method];
