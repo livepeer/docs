@@ -1,9 +1,9 @@
 ---
-title: "Upload asset"
-description: "Learn how to upload and playback an asset"
+title: "Upload an asset"
+description: "Learn how to upload and play back an asset"
 ---
 
-Uploading and watching an asset is easy! The example below uses [create asset api](/api-reference/asset/upload) to create an upload link to upload a video.
+Uploading and watching an asset is easy! The example below uses the [Create Asset API](/api-reference/asset/upload) to create an upload link to upload a video.
 
 <Info>
   **For rapid processing of assets that will also be archived on IPFS or
@@ -16,7 +16,7 @@ Uploading and watching an asset is easy! The example below uses [create asset ap
 
 ## Using Livepeer SDK
 
-We can use the Livepeer SDK to create an upload link, it is very simple and easy to use.
+We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
 
 <Tabs>
   <Tab title="Node.js">
@@ -159,35 +159,13 @@ We can use the Livepeer SDK to create an upload link, it is very simple and easy
   </Tab>
 </Tabs>
 
-Once the upload link is created, you can use it to upload your video file to Livepeer. The upload link is TUS protocol compatible, so you can use any TUS client to upload your video file
+Once an upload endpoint is created, you can use it to upload your video file to Livepeer.
+The upload endpoint is tus compatible, so you can use any tus-compatible client (like [tus-js-client](https://github.com/tus/tus-js-client)) to upload your video file
+from the frontend.
 
 ## Using React Hooks
 
-First, we create a new livepeer.js client with the Studio provider and a CORS-protected API key
-
-```jsx
-import {
-  LivepeerConfig,
-  createReactClient,
-  studioProvider,
-} from "@livepeer/react";
-import * as React from "react";
-
-const livepeerClient = createReactClient({
-  provider: studioProvider({
-    apiKey: process.env.NEXT_PUBLIC_STUDIO_API_KEY,
-  }),
-});
-
-// Pass client to React Context Provider
-function App() {
-  return (
-    <LivepeerConfig client={livepeerClient}>
-      <CreateAndViewAsset />
-    </LivepeerConfig>
-  );
-}
-```
+We [create a new livepeer.js client and wrap the app with `LivepeerConfig`](/sdks/livepeer-js/getting-started).
 
 Now that our providers are set up, we set up file uploads with React Dropzone, a library for easily creating HTML5-compliant drag and drop zones for files (you can use another solution for file uploads):
 
@@ -266,112 +244,6 @@ export const CreateAndViewAsset = () => {
 };
 ```
 
-### Stream Transcoded Video
+### Play an Asset
 
-Lastly, when the video is uploaded, we wait for `useCreateAsset` to poll the API until the asset has been processed and
-has a `playbackId`. Then, we show the video using the [`Player`](/sdks/livepeer-js/Player).
-
-```tsx
-import { Player, useAssetMetrics, useCreateAsset } from "@livepeer/react";
-
-import { useCallback, useMemo, useState } from "react";
-import { useDropzone } from "react-dropzone";
-
-export const Asset = () => {
-  const [video, setVideo] = useState<File | undefined>();
-  const {
-    mutate: createAsset,
-    data: asset,
-    status,
-    progress,
-    error,
-  } = useCreateAsset(
-    video
-      ? {
-          sources: [{ name: video.name, file: video }] as const,
-        }
-      : null
-  );
-  const { data: metrics } = useAssetMetrics({
-    assetId: asset?.[0].id,
-    refetchInterval: 30000,
-  });
-
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    if (acceptedFiles && acceptedFiles.length > 0 && acceptedFiles?.[0]) {
-      setVideo(acceptedFiles[0]);
-    }
-  }, []);
-
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: {
-      "video/*": ["*.mp4"],
-    },
-    maxFiles: 1,
-    onDrop,
-  });
-
-  const isLoading = useMemo(
-    () =>
-      status === "loading" ||
-      (asset?.[0] && asset[0].status?.phase !== "ready"),
-    [status, asset]
-  );
-
-  const progressFormatted = useMemo(
-    () =>
-      progress?.[0].phase === "failed"
-        ? "Failed to process video."
-        : progress?.[0].phase === "waiting"
-        ? "Waiting..."
-        : progress?.[0].phase === "uploading"
-        ? `Uploading: ${Math.round(progress?.[0]?.progress * 100)}%`
-        : progress?.[0].phase === "processing"
-        ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
-        : null,
-    [progress]
-  );
-
-  return (
-    <div>
-      {!asset && (
-        <div {...getRootProps()}>
-          <input {...getInputProps()} />
-          <p>Drag and drop or browse files</p>
-
-          {error?.message && <p>{error.message}</p>}
-        </div>
-      )}
-
-      {asset?.[0]?.playbackId && (
-        <Player title={asset[0].name} playbackId={asset[0].playbackId} />
-      )}
-
-      <div>
-        {metrics?.metrics?.[0] && (
-          <p>Views: {metrics?.metrics?.[0]?.startViews}</p>
-        )}
-
-        {video ? <p>{video.name}</p> : <p>Select a video file to upload.</p>}
-
-        {progressFormatted && <p>{progressFormatted}</p>}
-
-        {!asset?.[0].id && (
-          <button
-            onClick={() => {
-              createAsset?.();
-            }}
-            disabled={isLoading || !createAsset}
-          >
-            Upload
-          </button>
-        )}
-      </div>
-    </div>
-  );
-};
-```
-
-### Wrap Up
-
-That's it! You just set up a scalable, decentralized video asset streaming solution for an app.
+To learn how to play a stream, see the [Play an Asset](/developers/guides/playback-an-asset) guide.

@@ -1,8 +1,22 @@
-Gated Playback is a webhook based framework for applications to customize
-their authorized video/stream playback control. Whenever a stream playback
-request is initiated, Livepeer initiated a `playback.accessControl` webhook
-event, as a result, applications can register a webhook handler to respond to
-this event by checking the Access Control Conditions. If it is authorized,
-Livepeer will enable “playback”, otherwise rejected. Using this framework, a
-blockchain agonistic Token Gating feature can be easily implemented. Rich ACC
-providers, such as lit has been integrated.
+Livepeer supports access control on streams and assets, which lets developers restrict who can view media on their platform, depending on their application needs.
+The API supports both webhook and JWT-based access control.
+
+#### Webhook
+
+The recommended option for application access control for applications is to use webhooks.
+It has the simplest integration path, and is familiar for developers.
+
+A user can mark a stream or asset as "gated", which means that a viewer cannot access the stream without a token.
+
+When stream playback is attempted, Studio sends a `playback.accessControl` webhook event, and applications can register a webhook handler to respond to this event.
+
+If the webhook responds with a `2XX` HTTP response code, Livepeer will enable playback. If it is non-2XX, playback will be rejected.
+The access control check happens at the playback layer, which means that even if a user gets access to the underlying `playbackId`,
+they will not be able to play the media without valid credentials.
+
+Using this framework, a blockchain agonistic Token Gating feature can be easily implemented. Rich ACC
+providers, like [Lit](https://litprotocol.com/), can be integrated using webhook access control.
+
+#### JWT
+
+Insert JWT docs here

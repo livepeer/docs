@@ -1,7 +1,37 @@
-A Stream is representing a Live Stream Object that can be identified, recorded, and processed within Livepeer. Stream is a video feed being broadcasted in real-time. Livepeer is responsible for the life cycle management (CRUD) of a Stream. A Stream is uniquely identified by the Stream ID, and associated with a defined metadata describing its characteristics (see the screenshot). A Stream is created when create stream API (`POST /stream`) is executed successfully. Once a Stream is created, there are set of webhook events to notify its state transitions, including `stream.started`, `stream.idle`.
+A Stream represents a livestream object that can be identified, recorded, and processed within Livepeer. A stream is a video feed that is broadcast in real-time. Livepeer is responsible for the lifecycle management (CRUD) of a stream. A stream is uniquely identified by its Stream ID, and associated with a defined metadata describing its characteristics.
 
-If Recording is enabled, there is a set of webhook events to notify recording’s state transitions including: `recording.ready`, `recording.started`, `recording.waiting`. The recording can be stored as an Asset[Ref to Asset]. A Stream can also be directed to multiple stream targets, such as youbube, twitter, using [MultiStream](/developers/core-concepts/core-api/multiparticipant-stream). Using Livepeer [Player](/developers/core-concepts/player), a stream can be easily viewed by passing Playback ID, while using 3rd party player, a full playback url is required.
+A stream can be created with the [Create Stream](/api-reference/stream/create) API endpoint. Once a stream is created, there are set of webhook events to notify its state transitions, including `stream.started`, `stream.idle`.
 
-RTMP is the ingest protocol for streaming, while WebRTC by default is playback protocol and HLS as fall back, when Livepeer Player is used. WebRTC will ensure a low latency playback around 2-5s on transcoded renditions, and sub-s on source.
+#### Recording
 
-While a Stream is delivered, [Stream Health](/developers/core-concepts/studio/stream-health) is an object provides a set of metrics about its monitoring state. Further more, Viewer Engagement Metrics provide more comprehensive of viewer behavior using Livepeer Engagement API.
+If recording is enabled, there are a set of webhook events which can notify your backend of a recording’s state transitions, including: `recording.ready`, `recording.started`, and `recording.waiting`. The recording is stored as an [asset](/developers/core-concepts/core-api/asset#recording).
+
+#### Multistream
+
+A stream can be directed to multiple stream targets, such as YouTube or Twitter, using [multistream](/developers/core-concepts/core-api/multistream).
+
+#### Ingest
+
+RTMP is the default ingest protocol for streaming. WebRTC and SRT ingest are also supported. See the [Stream from the browser](/developers/guides/livestream-from-browser)
+guide on how to use WebRTC ingest.
+
+When a stream is live, [stream health](/developers/core-concepts/studio/stream-health) provides a set of metrics about its performance and ingest health. This provides
+tangible feedback for creators who want better livestream performance.
+
+Also, Livepeer provides [viewership metrics](/developers/guides/get-engagement-analytics-via-api), which allow a more comprehensive look into viewer behavior using the [livepeer viewership API](/api-reference/viewership/get-viewership-metrics).
+Reporting is enabled by default in the Livepeer Player, and can be integrated into any third party player.
+
+#### Playback
+
+A stream can be easily viewed by passing a `playbackId` to the [Livepeer Player](/developers/core-concepts/player/overview). If using a third party player, the full playback url is required. This can be fetched from the [Playback Info](/api-reference/playback/get) API endpoint.
+
+The Livepeer Player will default to [WebRTC playback](developers/core-concepts/player/low-latency). WebRTC ensures low latency that is sub-second on source and around 2-5 seconds on transcoded renditions.
+This means that (depending on stream settings) users will often have a sub-second viewing experience.
+
+The Livepeer Player will fall back to HLS playback using HLS.js if b-frames are detected in the stream or there is a transient network error with WebRTC initiation.
+
+<Warning>
+  A B-frame is short for bi-directional frame, and they [commonly occur with
+  default OBS settings](/developers/guides/stream-via-obs). Ensure you instruct
+  any OBS users to turn off b-frames for the best livestream experience.
+</Warning>

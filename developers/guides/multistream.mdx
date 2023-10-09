@@ -3,76 +3,85 @@ title: "Set up a multistream"
 description: "Learn how to add multistreaming"
 ---
 
-Multistream allows a source stream and transcoded renditions to be pushed to
-multiple RTMP(S) targets, such as Twitch, Facebook Live, and YouTube
-Live.
+[Multistreaming](/developers/core-concepts/core-api/multistream) allows a source stream and transcoded renditions to be pushed to
+multiple RTMP(S) targets, such as Twitch, Facebook Live, and YouTube Live.
 
-## Manage Multistream targets in the Livepeer Studio Dashboard
+## Multistream targets with the API
 
-To add, manage, and delete `Multistream Targets`, navigate to the [Streams page](https://livepeer.studio/dashboard/streams)
-and click on a stream name. On the stream detail page, on the `Overview` tab,
+You can manage multistream target objects from
+the API - see the [API reference](/api-reference/multistream/create).
+Each target represents a specific endpoint where a stream could be
+multistreamed to.
+
+Note that the creation of a multistream target itself is not enough - you also need to reference the target from the
+stream object that should be multistreamed. To avoid managing the separate
+multistream target objects, you can also create the targets inlined in the
+stream [creation](/api-reference/stream/create) and [update](/api-reference/stream/update) APIs.
+
+<Info>
+  Any changes to multistream targets, including creating new targets, will apply
+  only to the next active session. If you make changes while a stream is active,
+  those changes will not apply until the current session has ended and a new
+  session begins.
+</Info>
+
+## Multistream targets in the Studio dashboard
+
+To add, manage, and delete multistream targets, navigate to the [Streams page](https://livepeer.studio/dashboard/streams)
+and click on a stream name. On the stream detail page, on the Overview tab,
 you can view all configured targets. You must configure new
-`Multistream Targets` for each stream. This will apply the multistream
-configuration to that stream. `Multistream Targets` do not carry over when you
-create new streams.
+multistream targets for each stream. This will apply the multistream
+configuration to that stream. Multistream targets **do not carry over when you
+create new streams.**
 
-To add a new target, select `Create` on the right side of the
-`Multistream Targets` section. You'll be asked to name your target, provide the
+To add a new target, click Create on the right side of the
+multistream targets section. You'll be asked to name your target, provide the
 Ingest URL and a stream key, being Ingest URL the only required value. The
 Ingest URL and stream key should be provided by the platform that you're
 streaming into and can be of the RTMP, RTMPS or SRT protocols. Select the
 rendition profile that you'd like to send to that target and click
-`Create Target`. Once created, you can toggle the targets on and off.
+Create Target. Once created, you can toggle the targets on and off.
 
-To edit a `Multistream Target`, click on the three dots to the right of the
-target name and then on `Edit` to open up the target settings. Select
-`Update target` when you've completed your changes.
+To edit a multistream target, click on the three dots to the right of the
+target name and then on Edit to open up the target settings. Select
+Update Target when you've completed your changes.
 
 To delete a multistream target, click on the three dots to the right of the
-target name and then on `Delete`.
+target name and then on Delete.
 
-> **Note:** Any changes to <code>Multistream Targets</code>, including creating
-> new targets, will apply only to the next active session. If you make changes
-> while a stream is active, those changes will not apply until the current
-> session has ended and a new session begins.
-
-## Managing Multistream targets with the API
-
-### About Multistream Target Objects
-
-You can also manage `Multistream Target` objects, `/multistream/target`, from
-the API. Each target represents a specific endpoint where a stream could be
-multistreamed to. See details in the [API reference](/api-reference/multistream/create).
-
-Notice that the existence of a `Multistream Target` object itself is not enough
-for the multistream to happen. You also need to reference the target from the
-`Stream` object that should be multistreamed. To avoid managing the separate
-`Multistream Target` objects, you can also create the targets inlined in the
-`Stream` creation and update APIs.
+<Info>
+  Any changes to multistream targets, including creating new targets, will apply
+  only to the next active session. If you make changes while a stream is active,
+  those changes will not apply until the current session has ended and a new
+  session begins.
+</Info>
 
 ## Understanding Multistream Performance
 
 ### Dashboard
 
 While a session is active that has multistream targets configured, you'll be
-able to see if a destination is "Active" or "Offline". **_NOTE:_** There may be
-a slight delay between starting the stream and the push destinations connecting.
-When starting to stream to multistream targets, use these indicators to
-understand whether it has connected to its target(s).
+able to see if a destination is `Active` or `Offline`.
+
+<Info>
+  There may be a slight delay between starting the stream and the push
+  destinations connecting. When starting to stream to multistream targets, use
+  these indicators to understand whether it has connected to its target(s).
+</Info>
 
 On the stream page where you've configured your multistream targets, select the
-"Health" tab at the top. While a session is active, you'll see the ingest rate
+Health tab at the top. While a session is active, you'll see the ingest rate
 of the source stream.
 
 ### Webhooks
 
-We have 3 webhooks to help you monitor the state of your `Multistream Targets`:
+There are three webhooks to help you monitor the state of your multistream targets:
 
-- `multistream.connected`: When we have successfully connected to the
-  `Multistream Target` and you're also online in the other service you are
+- `multistream.connected`: When Studio has successfully connected to the
+  multistream target and you're also online in the other service you are
   multistreaming to.
 - `multistream.error`: In case any error has occurred during connection to the
-  `Multistream Target`. This means some kind of problem with the configuration
+  multistream target. This means some kind of problem with the configuration
   or the other service you are multistreaming to.
 - `multistream.disconnected`: Sent after a stream is ended to indicate that
   Multistream has also ended for the respective target.

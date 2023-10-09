@@ -1,6 +1,6 @@
 ---
-title: "Upload encrypted files"
-description: "Learn how to upload and playback an encrypted video asset"
+title: "Upload encrypted assets"
+description: "Learn how to upload and play back an encrypted video asset"
 ---
 
 Livepeer enables you to upload encrypted video content or import it from decentralized storages. It creates a playback URL that can have independent access control through playback policies.
@@ -32,7 +32,7 @@ const keyData = await window.crypto.subtle.exportKey("raw", key);
 const keyBase64 = btoa(String.fromCharCode(...new Uint8Array(keyData)));
 ```
 
-### Encrypt your video using the encryption key
+### Encrypt your video
 
 To encrypt a video file with the key we just generated, we follow these steps:
 
@@ -134,19 +134,16 @@ const encryptedKeyBase64 = btoa(
 );
 ```
 
-### Upload the video file or Import it from decentralized storages
+### Upload/import the video file
 
-We're all set to upload the video file.
+When requesting an upload to the Livepeer API, you can simply [add an `encryption` field](/api-reference/asset/upload-via-url) with your encrypted key.
 
-When requesting an upload to the Livpeer API, you can simply add an `encryption` field with your encrypted key.
-[Api Reference](/api-reference/asset/upload-via-url)
-
-<Info>
+<Warning>
   When uploading an encrypted video, specifying a `playbackPolicy` is required.
   You can still specify the type of the playback policy as `public`, but be
   aware that anyone with the `playbackId` or `playbackUrl` would be able to
   watch it.
-</Info>
+</Warning>
 
 ```js
 // Request the upload URL

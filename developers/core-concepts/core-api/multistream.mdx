@@ -1,10 +1,21 @@
-A multistream is an advanced capability within the Livepeer that facilitates the simultaneous broadcast of a source stream, along with its transcoded renditions, to various RTMP(s) destinations like Twitch, Facebook Live, and YouTube Live. This feature ensures that users can maximize their audience reach across multiple platforms with a single streaming session.
+A multistream facilitates the simultaneous broadcast of a source stream, along with its transcoded renditions, to various RTMP/RTMPS destinations like Twitch, Facebook Live, and YouTube Live.
+This feature ensures that users can maximize their audience reach across multiple platforms with a single streaming session.
 
-In setting up multistreaming, users have the option to either utilize the [Studio](https://livepeer.studio) or directly interface with the [Livepeer REST API](/api-reference) or the [Livepeer SDK](/sdks). All options offer comprehensive management tools to configure, modify, or delete specific Multistream Targets linked with individual streams. It's important to note that configurations are stream-specific; hence, they don't automatically transfer when generating new streams. The essential parameters for setting up a target include naming the target, adding the mandatory Ingest URL, and, if relevant, adding a stream key, provided by Livepeer. Users can also specify which rendition profile they intend to dispatch to the target.
+When setting up a multistream, users have the option to either utilize [Studio](https://livepeer.studio) or directly interface with the [create multistream API](/api-reference/multistream/create). 
+These offer comprehensive management tools to configure, modify, or delete specific multistream targets linked with individual streams. It's important to note that configurations are stream-specific; hence, they don't automatically transfer when generating new streams.
 
-After creating a Multistream Target, there's flexibility in toggling its activation status. Both the dashboard and API provide options for editing or deleting these targets. However, to initiate multistreaming, merely establishing a Multistream Target object isn't sufficient. This target needs to be referenced within the Stream object it's associated with.
+The essential parameters for setting up a target include a name, the ingest URL, and, if relevant, adding a stream key. Users can also specify which rendition profile they intend to dispatch to the target.
 
-For performance monitoring and understanding stream health, Studio offers real-time indicators through its dashboard and API, showing whether a Multistream Target is currently active or offline. Such status updates might experience slight delays before the stream's live status gets mirrored on the destination platform. Via the dashboard's "Health" tab, users can obtain a detailed view of the ingest rate for the active source stream.
+After creating a multistream target, it can be toggled as active/inactive. Also, both the dashboard and API provide options for editing or deleting these targets.
+**To initiate multistreaming, the multistream target needs to be linked to a stream.**
+
+#### Monitoring
+
+For performance monitoring and understanding stream health, Studio offers real-time indicators through its dashboard and API, showing whether a multistream target is currently active or offline.
+The status updates might experience a slight delay before the stream's live status gets mirrored on the destination platform.
+In Studio's "Health" tab, users can obtain a detailed view of the ingest rate for the active source stream.
+
+#### Webhooks
 
 Additionally, Livepeer have three webhooks to monitor Multistream Targets:
 

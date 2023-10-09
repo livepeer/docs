@@ -3,15 +3,8 @@ title: "Set up and listen for webhooks"
 description: "Learn how to set up a webhook using Node.js and Ngrok to receive notifications from Livepeer."
 ---
 
-A webhook trigger event refers to a specific occurrence or action in Livepeer that prompts the webhook to send data to another system. You can learn more about the different webhook events [here](/developers/core-concepts/studio/webhook-event).
-
-Livepeer Studio uses webhooks to communicate with your application
-asynchronously when events for your stream occur. For example, you may want to
-know when a stream has `active` or `idle`, so that you can surface this
-information to viewers.
-
-When these events happen, you can make a `POST` request
-to a URL that you specify.
+A webhook trigger event refers to a specific occurrence or action in Livepeer that prompts the webhook to send data to another system.
+You can learn more about the different webhook events in the Studio [Webhook Core Concept](/developers/core-concepts/studio/webhooks) section.
 
 Setting up a webhook using Node.js and Ngrok allows you to receive real-time data from Livepeer. In this guide, we'll walk you through the steps to set up a webhook using Node.js and Ngrok to receive notifications from Livepeer.
 
@@ -77,7 +70,7 @@ Your Express server is now running locally on http://localhost:3000.
   In this case, we're using Ngrok to expose our local server to the internet. If
   you're running your server on a remote server, you can skip the next step. And
   for production applications, you'll want to deploy your server to a cloud
-  provider like AWS or Heroku.
+  provider like Vercel or Fly.io.
 </Info>
 
 ### Set Up Ngrok
@@ -92,20 +85,22 @@ If you don't have Ngrok installed, you can download it [here](https://ngrok.com/
 
 Ngrok will provide a public URL (e.g., https://abc123.ngrok.io). You'll use this URL as your webhook endpoint.
 
-### Set Up a Webhook in the Livepeer Studio
+### Set Up a Webhook in Livepeer Studio
 
-Log in to the [Livepeer Studio](https://studio.livepeer.org/) and navigate to the [Developers/Webhooks](https://livepeer.studio/dashboard/developers/webhooks) page.
+Log in to [Livepeer Studio](https://studio.livepeer.org/) and navigate to the [Developers/Webhooks](https://livepeer.studio/dashboard/developers/webhooks) page.
 
 <Frame>![Webhooks](/images/webhooks.png)</Frame>
 
-Click the "Create Webhook" button and enter your Ngrok URL as the webhook endpoint.
-Select the an event to receive notifications for and click "Create Webhook".
+Click the Create Webhook button and enter your Ngrok URL as the webhook endpoint.
+Select the an event to receive notifications for and click Create Webhook.
 
-That is it! You should now receive webhook notifications for the event you selected.
+You should now receive webhook requests for the event you selected.
 
 ## Webhook Payload
 
-Webhook payloads contain information about the event that triggered the webhook. The payload is a JSON object that contains different properties depending on the event type. Here is an example of how the webhook playload looks like:
+Webhook payloads contain information about the event that triggered the webhook. The payload is a JSON object that contains different properties depending on the event type.
+
+The fields are defined as:
 
 <ParamField path="webhookId" type="string">
   The id of webhook
@@ -124,52 +119,56 @@ Webhook payloads contain information about the event that triggered the webhook.
 </ParamField>
 
 <ParamField path="event_object" type="string">
-  The object payload such as stream/asset/task (More info about each payload can
-  be found in the [API references](/api-reference/overview/introduction))
+  The object payload. This will be a stream/asset/task. The definitions can be
+  found in the [API reference](/api-reference/overview/introduction) for the
+  specific object type.
 </ParamField>
 
 ## Webhook Signatures
 
-You can verify webhook requests that Livepeer Studio sends to your endpoints,
-using the request header signature included by Livepeer Studio. This signature
-will help you verify the incoming request comes from Livepeer Studio and not a
-third party.
+<Info>
+  It is highly recommended that you verify signatures of incoming webhooks. If
+  anyone has access to your webhook URL, they can fake events from Studio. See
+  [Webhooks.fyi](https://webhooks.fyi/) for examples on best practices for
+  webhooks.
+</Info>
+
+You should verify the webhook requests that Livepeer Studio sends to your endpoints,
+using the request header signature. This signature
+will help you verify the incoming request.
 
 - Livepeer Studio will include a signature in each event’s `Livepeer-Signature`
   header.
-
 - The timestamp is prefixed by `t=` and the signature is prefixed by a scheme.
-
 - Schemes start with `v`, followed by an integer. Currently, the only valid
   signature scheme is v1. Livepeer Studio generates signatures using HMAC with
   SHA2-256.
 
-```
+```bash
 Livepeer-Signature: t=36285904404,v1=88f3ff0fds9sf8a98vb0b096e81507cfd5c932fc17cf63a4a55566fd38da3a2d3d2
 ```
 
-## Validate the signature, take the following steps:
-
-### Extract the timestamp and signatures from the header
+### Extract from the header
 
 1. Split the header, using the `,` character as the separator, to get a list of
    elements.
-
 2. Split each element, using the `=` character as the separator, to get a prefix
    and value pair.
 
-- The value for the prefix `t` corresponds to the timestamp, and
-- `v1` corresponds to the signature (or signatures). You can discard all other
-  elements.
+The value for the prefix `t` corresponds to the timestamp, and `v1` corresponds to the signature (or signatures). You can discard all other
+elements.
 
-### Prepare the signed_payload string
+```bash
+t=36285904404
+v1=88f3ff0fds9sf8a98vb0b096e81507cfd5c932fc17cf63a4a55566fd38da3a2d3d2
+```
+
+### Prepare the signed payload
 
 The `signed_payload` is the raw request payload.
 
-It is important to **Note:** that the `JSON` in the request payload includes the
+It is important to note that the `JSON` in the request payload includes the
 same `timestamp` from the signature header to protect against replay attacks.
-
-### Determine the expected signature
 
 Compare the signature (or signatures) in the header to the expected signature.
 
