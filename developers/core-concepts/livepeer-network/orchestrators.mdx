@@ -1,11 +1,17 @@
-An Orchestrator in Livepeer network is an entity or node that facilitates the video processing tasks such as transcoding. Orchestrators provide their computational resources, which can include CPU, GPU, and bandwidth, to assist broadcasters and developers in transcoding/delivering videos. By running specific software, like the [`go-livepeer` client](https://github.com/livepeer/go-livepeer), individuals can join the Livepeer network as Orchestrators.
+An Orchestrator on the Livepeer network is an entity or node that facilitates the video processing tasks such as transcoding. Orchestrators provide their computational resources to assist broadcasters and developers in transcoding/delivering videos. By running the [`go-livepeer` client](https://github.com/livepeer/go-livepeer), individuals can join the Livepeer network as Orchestrators.
 
 <Frame>![Orchestrator](/images/titan-node.png)</Frame>
 
-In essence, Orchestrators play a pivotal role in transcoding and distributing video streams on the Livepeer network. They advertise the price they would charge for their video processing services, and when a job is directed their way, it is routed to their computational resources for execution. Importantly, Orchestrators can leverage different parts of their GPUs to handle video encoding tasks without significantly interrupting other tasks, like cryptocurrency mining. This setup allows for optimal utilization of the Orchestrator's resources.
+#### Micropayments
 
-Moreover, Orchestrators earn fees for their service. These fees can be in the form of cryptocurrencies such as ETH or stablecoins pegged to traditional currencies, like DAI. To become an active Orchestrator and be eligible for these rewards, they need to stake a certain amount of LPT tokens. The active set of Orchestrators comprises the top 100 Orchestrators with the highest stake on the network. Activation, management of rates, and other settings can be done through tools like `livepeer_cli`.
+Orchestrators play a pivotal role in transcoding and distributing video streams on the Livepeer network. They advertise the price they charge for their video processing services, and when they receive a transcode job, they perform transcoding. In return, they receive payments in the form of a [probabilistic micropayment](https://medium.com/livepeer-blog/a-primer-on-livepeers-probabilistic-micropayments-e16788b29331).
+
+In order to become an active Orchestrator and be eligible for payments, they need to stake a certain amount of LPT. The active set of Orchestrators comprises the top 100 Orchestrators with the highest stake on the network. Activation, management of rates, and other settings can be done through tools like `livepeer_cli`.
+
+#### Configuration
+
+Orchestrators leverage different parts of their GPUs (typically using [Nvidia's NVENC/NVDEC](https://developer.nvidia.com/blog/nvidia-ffmpeg-transcoding-guide/)) to handle video encoding tasks without significantly interrupting other tasks, like cryptocurrency mining. This setup allows for optimal utilization of the Orchestrator's resources.
 
 For ease of operation and to ensure they are accessible for jobs, Orchestrators are required to set up specific parameters and ensure they have the necessary prerequisites, including proper networking configurations, accessibility to Arbitrum nodes, sufficient bandwidth, and more. They can also manage their ETH accounts for transactions and rewards either manually or let the Livepeer system handle it automatically.
 
-In summary, Orchestrators are essential components of the Livepeer ecosystem, offering their computational resources for video processing while earning rewards for their contributions.
+Orchestrators are essential components of the Livepeer ecosystem, offering their computational resources for video processing while earning rewards for their contributions.

@@ -7,12 +7,12 @@ This guide will describe how to use the Livepeer [transcode API](/api-reference/
 There are [code examples](#code-examples) provided for reference.
 
 <Info>
-  The Transcode API can be used with any S3-compatible storage providers
+  The Transcode API can be used with any S3-compatible storage provider.
 </Info>
 
 ### Storj S3 Credentials
 
-This step assumes that you have already created an account at [https://www.storj.io/](https://www.storj.io/).
+This step assumes that you have already created an account with [Storj](https://www.storj.io/).
 
 Follow the [Storj guide for generating S3 credentials](https://docs.storj.io/dcs/api-reference/s3-compatible-gateway#I7p7Q) using either the web interface or `uplink`. Make sure that the credentials have the proper read/write permissions for the bucket that your video files will be read from and that transcoded videos will be written to. The access key and secret key of the credentials will be used in the next step.
 
@@ -28,314 +28,314 @@ Make sure you have a video file uploaded to your Storj bucket. You must upload t
 
 ### Transcode with Livepeer
 
-This step assumes that you have already created a [Livepeer Studio account](https://livepeer.studio/) and an [API key](https://docs.livepeer.org/developers/guides/quickstart).
-
-Submit the following request:
+This step assumes that you have already created a [Livepeer Studio account](https://livepeer.studio/) and an [API key](/api-reference/overview/authentication).
 
 <Tabs>
   <Tab title="Node.js">
-```js
-import { Livepeer } from "livepeer";
+    ```javascript
+    import { Livepeer } from "livepeer";
 
-const livepeer = new Livepeer("$API_KEY");
+    const livepeer = new Livepeer("$API_KEY");
 
-livepeer.transode({
-"input":{
-"type":"s3",
-"endpoint":"https://gateway.storjshare.io",
-"credentials":{
-"accessKeyId":"$ACCESS_KEY_ID",
-         "secretAccessKey":"$SECRET_ACCESS_KEY"
-},
-"bucket":"mybucket",
-"path":"/video/source.mp4"
-},
-"storage":{
-"type":"s3",
-"endpoint":"https://gateway.storjshare.io",
-"credentials":{
-"accessKeyId":"$ACCESS_KEY_ID",
-         "secretAccessKey":"$SECRET_ACCESS_KEY"
-},
-"bucket":"mybucket"
-},
-"outputs":{
-"hls":{
-"path":"/samplevideo/hls"
-},
-"mp4":{
-"path":"/samplevideo/mp4"
-}
-},
-"profiles":[
-{
-"name":"480p",
-"bitrate":1000000,
-"fps":30,
-"width":854,
-"height":480
-},
-{
-"name":"360p",
-"bitrate":500000,
-"fps":30,
-"width":640,
-"height":360
-}
-]
-});
-
-````
- </Tab>
-   <Tab title="Python">
-  ```python
-  import livepeer
-
-  livepeer.api_key = "$API_KEY"
-
- params = {
-"input":{
-"type":"s3",
-"endpoint":"https://gateway.storjshare.io",
-"credentials":{
-"accessKeyId":"$ACCESS_KEY_ID",
-         "secretAccessKey":"$SECRET_ACCESS_KEY"
-},
-"bucket":"mybucket",
-"path":"/video/source.mp4"
-},
-"storage":{
-"type":"s3",
-"endpoint":"https://gateway.storjshare.io",
-"credentials":{
-"accessKeyId":"$ACCESS_KEY_ID",
-         "secretAccessKey":"$SECRET_ACCESS_KEY"
-},
-"bucket":"mybucket"
-},
-"outputs":{
-"hls":{
-"path":"/samplevideo/hls"
-},
-"mp4":{
-"path":"/samplevideo/mp4"
-}
-},
-"profiles":[
-{
-"name":"480p",
-"bitrate":1000000,
-"fps":30,
-"width":854,
-"height":480
-},
-{
-"name":"360p",
-"bitrate":500000,
-"fps":30,
-"width":640,
-"height":360
-}
-]
-}
-
- video = livepeer.transcode(params)
-print(video)
-```
+    livepeer.transcode({
+      input: {
+        type: "s3",
+        endpoint: "https://gateway.storjshare.io",
+        credentials: {
+          accessKeyId: "$ACCESS_KEY_ID",
+          secretAccessKey: "$SECRET_ACCESS_KEY"
+        },
+        bucket: "mybucket",
+        path: "/video/source.mp4"
+      },
+      storage: {
+        type: "s3",
+        endpoint: "https://gateway.storjshare.io",
+        credentials: {
+          accessKeyId: "$ACCESS_KEY_ID",
+          secretAccessKey: "$SECRET_ACCESS_KEY"
+        },
+        bucket: "mybucket"
+      },
+      outputs: {
+        hls: {
+          path: "/samplevideo/hls"
+        },
+        mp4: {
+          path: "/samplevideo/mp4"
+        }
+      },
+      profiles: [
+        {
+          name: "480p",
+          bitrate: 1000000,
+          fps: 30,
+          width: 854,
+          height: 480
+        },
+        {
+          name: "360p",
+          bitrate: 500000,
+          fps: 30,
+          width: 640,
+          height: 360
+        }
+      ]
+    });
+    ```
   </Tab>
-  <Tab title="Ruby">
-   ```ruby
-   require 'livepeer'
 
-   Livepeer.api_key = "$API_KEY"
+  <Tab title="Python">
+    ```python
+    import livepeer
+
+    livepeer.api_key = "$API_KEY"
 
     params = {
-"input":{
-"type":"s3",
-"endpoint":"https://gateway.storjshare.io",
-"credentials":{
-"accessKeyId":"$ACCESS_KEY_ID",
-         "secretAccessKey":"$SECRET_ACCESS_KEY"
-},
-"bucket":"mybucket",
-"path":"/video/source.mp4"
-},
-"storage":{
-"type":"s3",
-"endpoint":"https://gateway.storjshare.io",
-"credentials":{
-"accessKeyId":"$ACCESS_KEY_ID",
-         "secretAccessKey":"$SECRET_ACCESS_KEY"
-},
-"bucket":"mybucket"
-},
-"outputs":{
-"hls":{
-"path":"/samplevideo/hls"
-},
-"mp4":{
-"path":"/samplevideo/mp4"
-}
-},
-"profiles":[
-{
-"name":"480p",
-"bitrate":1000000,
-"fps":30,
-"width":854,
-"height":480
-},
-{
-"name":"360p",
-"bitrate":500000,
-"fps":30,
-"width":640,
-"height":360
-}
-]
-}
+      "input": {
+        "type": "s3",
+        "endpoint": "https://gateway.storjshare.io",
+        "credentials": {
+          "accessKeyId": "$ACCESS_KEY_ID",
+          "secretAccessKey": "$SECRET_ACCESS_KEY"
+        },
+        "bucket": "mybucket",
+        "path": "/video/source.mp4"
+      },
+      "storage": {
+        "type": "s3",
+        "endpoint": "https://gateway.storjshare.io",
+        "credentials": {
+          "accessKeyId": "$ACCESS_KEY_ID",
+          "secretAccessKey": "$SECRET_ACCESS_KEY"
+        },
+        "bucket": "mybucket"
+      },
+      "outputs": {
+        "hls": {
+          "path": "/samplevideo/hls"
+        },
+        "mp4": {
+          "path": "/samplevideo/mp4"
+        }
+      },
+      "profiles": [
+        {
+          "name": "480p",
+          "bitrate": 1000000,
+          "fps": 30,
+          "width": 854,
+          "height": 480
+        },
+        {
+          "name": "360p",
+          "bitrate": 500000,
+          "fps": 30,
+          "width": 640,
+          "height": 360
+        }
+      ]
+    }
 
-   video = Livepeer.transcode(params)
-   puts video
-   ```
+    video = livepeer.transcode(params)
+    print(video)
+    ```
   </Tab>
 
-   <Tab title="PHP">
-   ```PHP
-   $livepeer = Livepeer::client("$API_KEY");
+  <Tab title="Ruby">
+    ```ruby
+    require 'livepeer'
 
-   $livepeer->transcode({
-"input":{
-"type":"s3",
-"endpoint":"https://gateway.storjshare.io",
-"credentials":{
-"accessKeyId":"$ACCESS_KEY_ID",
-         "secretAccessKey":"$SECRET_ACCESS_KEY"
-},
-"bucket":"mybucket",
-"path":"/video/source.mp4"
-},
-"storage":{
-"type":"s3",
-"endpoint":"https://gateway.storjshare.io",
-"credentials":{
-"accessKeyId":"$ACCESS_KEY_ID",
-         "secretAccessKey":"$SECRET_ACCESS_KEY"
-},
-"bucket":"mybucket"
-},
-"outputs":{
-"hls":{
-"path":"/samplevideo/hls"
-},
-"mp4":{
-"path":"/samplevideo/mp4"
-}
-},
-"profiles":[
-{
-"name":"480p",
-"bitrate":1000000,
-"fps":30,
-"width":854,
-"height":480
-},
-{
-"name":"360p",
-"bitrate":500000,
-"fps":30,
-"width":640,
-"height":360
-}
-]
-})
-```
+    Livepeer.api_key = "$API_KEY"
+
+    params = {
+      input: {
+        type: "s3",
+        endpoint: "https://gateway.storjshare.io",
+        credentials: {
+          accessKeyId: "$ACCESS_KEY_ID",
+          secretAccessKey: "$SECRET_ACCESS_KEY"
+        },
+        bucket: "mybucket",
+        path: "/video/source.mp4"
+      },
+      storage: {
+        type: "s3",
+        endpoint: "https://gateway.storjshare.io",
+        credentials: {
+          accessKeyId: "$ACCESS_KEY_ID",
+          secretAccessKey: "$SECRET_ACCESS_KEY"
+        },
+        bucket: "mybucket"
+      },
+      outputs: {
+        hls: {
+          path: "/samplevideo/hls"
+        },
+        mp4: {
+          path: "/samplevideo/mp4"
+        }
+      },
+      profiles: [
+        {
+          name: "480p",
+          bitrate: 1000000,
+          fps: 30,
+          width: 854,
+          height: 480
+        },
+        {
+          name: "360p",
+          bitrate: 500000,
+          fps: 30,
+          width: 640,
+          height: 360
+        }
+      ]
+    }
+
+    video = Livepeer.transcode(params)
+    puts video
+    ```
   </Tab>
 
-   <Tab title="Go">
-   ```go
-   package main
+  <Tab title="PHP">
+    ```php
+    $livepeer = new Livepeer("$API_KEY");
 
-   import (
-    "fmt"
-    "github.com/livepeer/livepeer-go-sdk"
-   )
+    $params = [
+      "input" => [
+        "type" => "s3",
+        "endpoint" => "https://gateway.storjshare.io",
+        "credentials" => [
+          "accessKeyId" => "$ACCESS_KEY_ID",
+          "secretAccessKey" => "$SECRET_ACCESS_KEY"
+        ],
+        "bucket" => "mybucket",
+        "path" => "/video/source.mp4"
+      ],
+      "storage" => [
+        "type" => "s3",
+        "endpoint" => "https://gateway.storjshare.io",
+        "credentials" => [
+          "accessKeyId" => "$ACCESS_KEY_ID",
+          "secretAccessKey" => "$SECRET_ACCESS_KEY"
+        ],
+        "bucket" => "mybucket"
+      ],
+      "outputs" => [
+        "hls" => [
+          "path" => "/samplevideo/hls"
+        ],
+        "mp4" => [
+          "path" => "/samplevideo/mp4"
+        ]
+      ],
+      "profiles" => [
+        [
+          "name" => "480p",
+          "bitrate" => 1000000,
+          "fps" => 30,
+          "width" => 854,
+          "height" => 480
+        ],
+        [
+          "name" => "360p",
+          "bitrate" => 500000,
+          "fps" => 30,
+          "width" => 640,
+          "height" => 360
+        ]
+      ]
+    ];
 
-   func main() {
-      api_key = "$API_KEY"
+    $livepeer->transcode($params);
+    ```
+  </Tab>
 
+  <Tab title="Go">
+    ```go
+    package main
+
+    import (
+      "fmt"
+      livepeer "github.com/livepeer/livepeer-go-sdk"
+    )
+
+    func main() {
+      apiKey := "$API_KEY"
       client := livepeer.NewClient(apiKey)
 
-      params = {
-"input":{
-"type":"s3",
-"endpoint":"https://gateway.storjshare.io",
-"credentials":{
-"accessKeyId":"$ACCESS_KEY_ID",
-         "secretAccessKey":"$SECRET_ACCESS_KEY"
-},
-"bucket":"mybucket",
-"path":"/video/source.mp4"
-},
-"storage":{
-"type":"s3",
-"endpoint":"https://gateway.storjshare.io",
-"credentials":{
-"accessKeyId":"$ACCESS_KEY_ID",
-         "secretAccessKey":"$SECRET_ACCESS_KEY"
-},
-"bucket":"mybucket"
-},
-"outputs":{
-"hls":{
-"path":"/samplevideo/hls"
-},
-"mp4":{
-"path":"/samplevideo/mp4"
-}
-},
-"profiles":[
-{
-"name":"480p",
-"bitrate":1000000,
-"fps":30,
-"width":854,
-"height":480
-},
-{
-"name":"360p",
-"bitrate":500000,
-"fps":30,
-"width":640,
-"height":360
-}
-]
-}
+      params := map[string]interface{}{
+        "input": map[string]interface{}{
+          "type": "s3",
+          "endpoint": "https://gateway.storjshare.io",
+          "credentials": map[string]string{
+            "accessKeyId": "$ACCESS_KEY_ID",
+            "secretAccessKey": "$SECRET_ACCESS_KEY",
+          },
+          "bucket": "mybucket",
+          "path": "/video/source.mp4",
+        },
+        "storage": map[string]interface{}{
+          "type": "s3",
+          "endpoint": "https://gateway.storjshare.io",
+          "credentials": map[string]string{
+            "accessKeyId": "$ACCESS_KEY_ID",
+            "secretAccessKey": "$SECRET_ACCESS_KEY",
+          },
+          "bucket": "mybucket",
+        },
+        "outputs": map[string]interface{}{
+          "hls": map[string]string{
+            "path": "/samplevideo/hls",
+          },
+          "mp4": map[string]string{
+            "path": "/samplevideo/mp4",
+          },
+        },
+        "profiles": []map[string]interface{}{
+          {
+            "name": "480p",
+            "bitrate": 1000000,
+            "fps": 30,
+            "width": 854,
+            "height": 480,
+          },
+          {
+            "name": "360p",
+            "bitrate": 500000,
+            "fps": 30,
+            "width": 640,
+            "height": 360,
+          },
+        },
+      }
 
- sent, err := client.transcode(params)
-    if err != nil {
-        fmt.Println(err.Error())
+      sent, err := client.Transcode(params)
+      if err != nil {
+        fmt.Println(err)
         return
+      }
+      fmt.Println(sent.ID)
     }
-    fmt.Println(sent.Id)
-}
-```
-</Tab>
+    ```
+  </Tab>
+</Tabs>
 
- </Tabs>
+The parameters are defined as:
 
-
-- `$API_KEY` should be your Livepeer Studio API key
-- `$ACCESS_KEY_ID` should be the access key and `$SECRET_ACCESS_KEY` should be the secret key of the S3 credentials you generated in the previous step
-- `input.bucket` should be the name of your Storj bucket
-- `input.path` should be the path that your video file can be found in the Storj bucket
-- `outputs.hls.path` will be the path that the HLS playlist and mpegts segments will be found in when transcoding is complete
-- `outputs.mp4.path` will be the path that the MP4 video files will be found in when transcoding is complete
+- `$API_KEY` is your Livepeer Studio API key
+- `$ACCESS_KEY_ID` is the access key and `$SECRET_ACCESS_KEY` is the secret key of the S3 credentials you generated in the previous step
+- `input.bucket` is the name of your Storj bucket
+- `input.path` is the path that your video file can be found in the Storj bucket
+- `outputs.hls.path` is the path that the HLS playlist and mpegts segments is found in when transcoding is complete
+- `outputs.mp4.path` is the path that the MP4 video files is found in when transcoding is complete
 - `profiles` is an optional parameter to specify the desired properties of transcoded video
 
-Use the task ID in the response to query for the transcoding task status. Once the task is complete, the HLS playlist and mpegts segments will be available at `outputs.hls.path` and MP4 output videos will be available at `outputs.mp4.path`.
+Use the task ID in the response to query for the transcoding task status. Once the task is complete, the HLS playlist and mpegts segments will be available at `outputs.hls.path`, and MP4 output videos will be available at `outputs.mp4.path`.
 
-For more information about transcode API usage refer to the [docs](/api-reference/transcode/create).
+For more information about the transcode API refer to the [API reference docs](/api-reference/transcode/create).
 
 ### Playback From Storj
 
@@ -349,15 +349,15 @@ The URL should look like this:
 
 ```bash
 https://link.storjshare.io/jwjfgdxkvmfgngsgitii6pny62za/demo-bucket
-````
+```
 
-Suppose `outputs.hls.path` for the request in the previous step was `/samplevideo/hls`. The master HLS playlist used for playback will be available at:
+For example, if the `outputs.hls.path` for the request in the previous step was `/samplevideo/hls`, then the master HLS playlist used for playback will be available at:
 
 ```bash
 https://link.storjshare.io/jwjfgdxkvmfgngsgitii6pny62za/demo-bucket
 ```
 
-You can playback the transcoded video from Storj using this URL with any HLS player. For example, `https://lvpr.tv/?url=https://link.storjshare.io/raw/jwjfgdx…/demo-bucket/samplevideo/hls/index.m3u8` will playback the video using the hosted Livepeer player.
+You can play back the transcoded video from Storj using this URL with any HLS player. For example, `https://lvpr.tv/?url=https://link.storjshare.io/raw/jwjfgdx…/demo-bucket/samplevideo/hls/index.m3u8` will play back the video using the embeddable Livepeer player.
 
 ### Code Examples
 

@@ -1,0 +1,39 @@
+---
+title: Player
+---
+
+The Livepeer Player is a drop-in React component that you can put in your web or native mobile application (with React Native) to play assets/livestreams.
+It provides a responsive UI based on video player dimensions and playback type, poster image support, and modern video player capabilities.
+
+An embeddable version is also hosted at `https://lvpr.tv`, with many of the props exposed via query params, so that you can easily embed it using
+an iframe.
+
+#### Playback
+
+The Player is optimized for low latency playback:
+
+- [Livestream playback](/developers/guides/playback-a-livestream) prioritizes low latency WebRTC using WHEP (by default)
+- [Asset playback](/developers/guides/playback-an-asset) prioritizes [MP4 renditions](/sdks/livepeer-js/Player#mp4-playback-urls),
+  which are cached with a CDN for rapid delivery
+
+If any of these options fail, it will fall back to HLS playback, using [HLS.js](https://github.com/video-dev/hls.js). This ensures a smooth
+viewing experience for your users.
+
+There is also [custom retry logic](/sdks/livepeer-js/Player#technical-details) in the Player to make sure that if a livestream is offline or there are any transient
+network issues, playback will be retried.
+
+#### Embed
+
+To embed the Player, a URL can be added to an iframe similar to:
+
+```bash
+https://lvpr.tv?v={playbackId}&lowLatency=true
+```
+
+To see all of the available query parameters, see the [embeddable player](/developers/guides/playback-an-asset#embeddable-player) section.
+
+#### Metrics
+
+The Livepeer Player reports engagement metrics without any extra configuration. These metrics can then be queried using the
+[viewership API](/developers/guides/get-engagement-analytics-via-api) and shown alongside the Player, for display of view count
+and other valuable viewership data.

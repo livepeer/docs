@@ -2,25 +2,25 @@ Stream Health is a multi-faceted indicator representing the operational and perf
 
 <Frame>![Stream Health](/images/stream-health.png)</Frame>
 
-1. Global Health Status: This is a holistic status of the stream. It can be one of the following:
-   - Healthy: All health checks are in a good state.
-   - Unhealthy: One or more health checks indicate a problem.
-   - Idle: The stream is not currently active.
-2. Health Checks: These are specific metrics that contribute to the global health status of the stream. They include:
-   - Transcoding: Shows if video transcoding is successful and multiple stream profiles are available for playback. An unhealthy status implies only the original video is available.
-   - Real-time: Indicates if the stream is transcoded faster than in real-time, meaning the latency of the transcoded video is less than the duration of the original video.
-   - Multistreaming: Reflects the connection status of all configured Multistream Targets. It can show the following states:
-     - Idle: Stream and multistreaming aren't active.
-     - Pending: The system is trying to connect to the Multistream Target.
-     - Online: Successful connection to the Multistream Target.
-     - Offline: There was an error connecting to the Multistream Target.
-3. Logs: Provide alerts and error messages related to the streaming process. This includes notifications such as when the stream starts/stops or if there are any fatal errors during the transcoding process.
-4. Session Ingest Rate: This is a measure of the bitrate of the video being received by the Livepeer servers. It's updated every 10 seconds. A high, stable bitrate indicates good stream quality and a reliable internet connection, while a fluctuating or low bitrate might point to potential issues with the encoder or the streamer's internet connection.
-5. Monitoring Tools: Stream Health can be monitored in two primary ways:
-   - Studio: Offers a visual representation with health indicators for an active stream, including a chart showing the ingest rate.
-   - REST API & SDK: Allows for querying the health information of a stream, including detailed metrics and events sent by the Livepeer video-processing services.
-6. Health Metrics (from API): When using the API, you can retrieve detailed metrics about the stream's health. This includes:
-   - Conditions: These represent specific states of stream health, such as whether the stream is active, if it's transcoding in real-time, and if there are no errors during transcoding. Each condition provides a status, frequency, and timestamps for when the condition was last checked and when it last changed.
-   - Metrics: Experimental at the time of the document, they provide specific measurements related to stream health.
+1. **Global Health Status** is a holistic status of the stream. It can be one of the following:
+   - `Healthy`: All health checks are in a good state.
+   - `Unhealthy`: One or more health checks indicate a problem.
+   - `Idle`: The stream is not currently active.
+2. **Health Checks** are specific metrics that contribute to the global health status of the stream. They include:
+   - **Transcoding**: Shows if video transcoding is successful and multiple stream profiles are available for playback. An unhealthy status implies only the original video is available.
+   - **Real-time**: Indicates if the stream is transcoded faster than in real-time, meaning the latency of the transcoded video is less than the duration of the original video.
+   - **Multistreaming**: Reflects the connection status of all configured Multistream Targets. It can show the following states:
+     - `Idle`: Stream and multistreaming aren't active.
+     - `Pending`: The system is trying to connect to the Multistream Target.
+     - `Online`: Successful connection to the Multistream Target.
+     - `Offline`: There was an error connecting to the Multistream Target.
+3. **Logs** provide alerts and error messages related to the streaming process. This includes notifications such as when the stream starts/stops or if there are any fatal errors during the transcoding process.
+4. **Session Ingest Rate** is a measure of the bitrate of the video being received by Livepeer servers. It's updated every 10 seconds. A high, stable bitrate indicates good stream quality and a reliable internet connection, while a fluctuating or low bitrate might point to potential issues with the encoder or the streamer's internet connection.
+5. **Monitoring Tools** allow for a detailed view with:
+   - **Studio**: Offers a visual representation with health indicators for an active stream, including a chart showing the ingest rate.
+   - **REST API & SDK**: Allows for querying the health information of a stream, including detailed metrics and events sent by the Livepeer video-processing services.
+6. **Health Metrics (from API)** allows you to retrieve detailed metrics about the stream's health. This includes:
+   - **Conditions**: These represent specific states of stream health, such as whether the stream is active, if it's transcoding in real-time, and if there are no errors during transcoding. Each condition provides a status, frequency, and timestamps for when the condition was last checked and when it last changed.
+   - **Metrics**: Experimental at the time of the document, they provide specific measurements related to stream health.
 
-By monitoring and analyzing these various facets, users can ensure the optimum performance and reliability of their streams on the Livepeer.
+By monitoring and analyzing these various options, users can ensure the optimum performance and reliability of their streams on Livepeer.

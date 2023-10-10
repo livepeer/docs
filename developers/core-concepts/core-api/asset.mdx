@@ -1,18 +1,35 @@
-An Asset is representing a video object that can be identified, stored and processed within Livepeer. Livepeer is responsible for the life cycle management (i.e. CRUD) of an Asset. An Asset has a unique Asset ID and a well-defined metadata describing its characteristics (see the screenshot). An asset is created only when a video is uploaded to Livepeer successfully through its API, or when a recording is converted to an Asset.
+An asset represents a static video object that can be identified, stored and processed within Livepeer. Livepeer is responsible for the life cycle management (i.e. CRUD) of an asset. An asset has a unique asset ID and a well-defined metadata describing its characteristics. An asset is created only when a video is uploaded to Livepeer successfully through its API, or when a [recording](#recording) or [clip](#clip) is created. An asset can only be deleted using Livepeer API or in Studio.
 
-An Asset can only be deleted using Livepeer API or in Studio. When an Asset is created successfully, `asset.created` webhook event is fired to allow customized processing logic triggered, while `asset.failed` fired otherwise. [Viewer Engagement Metrics](/developers/guides/get-engagement-analytics-via-api) provide more comprehensive of viewer behavior using Livepeer Engagement API.
+When an asset is created successfully, an `asset.created` webhook event is fired to allow customized processing logic triggered, and if not, an `asset.failed` webhook will be fired.
 
 <Info>
   Video assets are stored with an s3-compatible storage provider managed by
   Livepeer Studio, along with unique metadata such as name and description.
 </Info>
 
-### Encrypted Asset
+#### Playback
 
-An Encrypted Asset refers to a video object within the Livepeer that has undergone cryptographic encryption for security purposes, ensuring its contents remain confidential and are only accessible to authorized users. The encryption process utilizes a [256-bit](https://www.techopedia.com/definition/29703/256-bit-encryption) key generated using the ['AES-CBC' algorithm](https://www.educative.io/answers/what-is-cbc). This key encrypts the video file, and then this encryption key itself is encrypted using the Livepeer Public Key, a form of asymmetric encryption. This double layer of encryption ensures that the video content remains secure during its life cycle in Livepeer.
+An asset can be easily viewed by passing a `playbackId` to Livepeer's [Player](/developers/core-concepts/player). If using a third party player, then the full playback url is required. This can be fetched from the [Playback Info](/api-reference/playback/get) API endpoint.
+
+Also, Livepeer provides [viewership metrics](/developers/guides/get-engagement-analytics-via-api), which allow a more comprehensive look into viewer behavior using the [livepeer viewership API](/api-reference/viewership/get-viewership-metrics).
+Reporting is enabled by default in the Livepeer Player, and can be integrated into any third party player.
+
+#### Recording
+
+A recording is an asset that has been created from a transcoded version of a stream - Livepeer supports recording a stream, which will be
+processed and stored as an asset.
+
+#### Clip
+
+A clip is an asset that was created from a stream. This is usually separate from a recording, where it is shorter and the creation is triggered by a viewer
+or creator.
+
+#### Encrypted Asset
+
+An Encrypted Asset refers to a video object within the Livepeer that has undergone cryptographic encryption for security purposes, ensuring its contents remain confidential and are only accessible to authorized users. The encryption process utilizes a [256-bit](https://www.techopedia.com/definition/29703/256-bit-encryption) key generated using the ['AES-CBC' algorithm](https://www.educative.io/answers/what-is-cbc). This key encrypts the video file, and then this encryption key itself is encrypted using the Livepeer Public Key, a form of asymmetric encryption. This double layer of encryption ensures that the video content remains secure during its lifecycle in Livepeer.
 
 To create an Encrypted Asset, one must first generate an encryption key, use it to encrypt their video content, retrieve the Livepeer Public Key, and then encrypt the original encryption key. The encrypted video file, alongside its encrypted encryption key, is then uploaded to Livepeer. Livepeer only supports video content encrypted using the `SubtleCrypto.encrypt` method with the AES-CBC algorithm, compatible with other web3 protocols like [Lit](/developers/tutorials/token-gate-videos-with-lit).
 
-When an Encrypted Asset is uploaded to Livepeer, a playback URL is generated. Access to this URL and the contents of the Encrypted Asset can be controlled through [playback policies](/developers/core-concepts/core-api/access-control) , ensuring content security and selective accessibility.
+When an Encrypted Asset is uploaded to Livepeer, a playback URL is generated. Access to this URL and the contents of the Encrypted Asset can be controlled through [playback policies](/developers/core-concepts/core-api/access-control), ensuring content security and selective accessibility.
 
-To decrypt and view the asset, the correct decryption key, which has been encrypted using Livepeer's Public Key, is required. Thus, even if one has the playbackId or playbackUrl, without the appropriate decryption capabilities, the Encrypted Asset remains secure and unviewable.
+To decrypt and view the asset, the correct decryption key, which has been encrypted using Livepeer's Public Key, is required. Thus, even if one has the `playbackId` or `playbackUrl`, without the appropriate decryption, the Encrypted Asset remains secure and unviewable.

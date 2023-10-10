@@ -1,6 +1,6 @@
 ---
-title: "Control access to video assets"
-description: "Learn how to add access control to a VOD with livepeer.js"
+title: "Control access to assets"
+description: "Learn how to add access control to an asset with livepeer.js"
 ---
 
 Adding access control to a video on-demand only takes a few lines of code.
@@ -14,7 +14,7 @@ The example below uses `useCreateAsset` and a webhook to create and watch a gate
 
 ### Create an Access Control Webhook Handler
 
-Set up an endpoint (e.g., https://yourdomain.com/api/check-access) to handle the logic for granting or denying access to your VOD assets.
+Set up an endpoint (e.g., https://yourdomain.com/api/check-access) to handle the logic for granting or denying access to your assets.
 This endpoint should accept a POST request with a JSON payload containing the access key and webhook context.
 
 This is an example of a payload this endpoint would receive:
@@ -34,10 +34,9 @@ The payload in `context` is defined by your application.
 
 ### Register an Access Control Webhook
 
-Use the Livepeer Studio dashboard to create a new webhook with the type `playback.accessControl` and specify the URL of your access control endpoint.
-https://livepeer.studio/dashboard/developers/webhooks
+Use the [Livepeer Studio dashboard](https://livepeer.studio/dashboard/developers/webhooks) to create a new webhook with the type `playback.accessControl` and specify the URL of your access control endpoint.
 
-You can then take the ID of the webhook you created and use it in the next step.
+You can then use the ID of the webhook in the next step.
 
 ### Create an asset with a playback policy webhook
 
@@ -171,7 +170,3 @@ Here is an example request sent to your access control endpoint:
 
 In your access control endpoint, implement the logic to verify the access key and decide whether to grant access to the VOD asset.
 If the access is allowed, return a `2XX` response. Otherwise, the playback will be disallowed.
-
-## Wrap Up
-
-That's it! Access control, added. You now have a solution for gating on-demand content with webhooks! This also works for streams as well.

@@ -13,31 +13,7 @@ and [`useStream`](/sdks/livepeer-js/stream/useStream) to create and watch a gate
 
 ### Configuring Providers
 
-First step, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/sdks/livepeer-js/providers/studio#apikey):
-
-```tsx app.tsx
-import {
-  LivepeerConfig,
-  createReactClient,
-  studioProvider,
-} from "@livepeer/react";
-import * as React from "react";
-
-const livepeerClient = createReactClient({
-  provider: studioProvider({
-    apiKey: process.env.NEXT_PUBLIC_STUDIO_API_KEY,
-  }),
-});
-
-// Pass client to React Context Provider
-function App() {
-  return (
-    <LivepeerConfig client={livepeerClient}>
-      <AccessControl />
-    </LivepeerConfig>
-  );
-}
-```
+First, we [create a new livepeer.js client and wrap the app with `LivepeerConfig`](/sdks/livepeer-js/getting-started).
 
 ### Create a Gated Stream
 
@@ -289,7 +265,3 @@ export const AccessControl = () => {
   );
 };
 ```
-
-## Wrap Up
-
-That's it! Access control, added. You now have a solution for gating content!

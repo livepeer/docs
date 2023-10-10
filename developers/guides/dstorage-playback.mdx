@@ -1,5 +1,5 @@
 ---
-title: "Playback video from IPFS/Arweave"
+title: "Play video from IPFS/Arweave"
 description: "Learn how to automatically upload and play back a video on IPFS and Arweave with livepeer.js"
 ---
 
@@ -12,14 +12,16 @@ Playing back transcoded video from IPFS or Arweave is easy with livepeer.js! The
 
 IPFS is a network of nodes that allow you to read content from the network using a content identifier unique to the data you’re requesting, ensuring you are able to securely and verifiably get exactly what you are asking for, regardless of where the data is physically stored. Arweave is a set of nodes that are incentivized to store data permanently; content stored on the network is pulled through an Arweave gateway.
 
-This example illustrates how Livepeer can be used as a video processing and
-caching layer on top of content available on IPFS or the Arweave gateway for
-optimized video playback.\*\* We recommend uploading via `useCreateAsset` or the
-API before displaying it in the player for best performance. For comprehensive
-IPFS / Arweave support we offer a fallback option to play directly from
-IPFS/Arweave while the video is being uploaded to Livepeer, but do not
-recommend it for typical usage because it may result in long load times for
-viewers.
+<Warning>
+  **This example illustrates how Livepeer can be used as a video processing and
+  caching layer on top of content available on IPFS or the Arweave gateway for
+  optimized video playback.** We recommend uploading via `useCreateAsset` or
+  the API before displaying it in the player for best performance. For
+  comprehensive IPFS / Arweave support we offer a fallback option to play
+  directly from IPFS/Arweave while the video is being uploaded to Livepeer, but
+  do not recommend it for typical usage because it may result in long load times
+  for viewers.
+</Warning>
 
 For rapid processing of assets that will also be archived on IPFS or
 Arweave, we strongly encourage either (1) uploading to Livepeer with the storage option enabled,
@@ -34,41 +36,17 @@ Github](https://github.com/suhailkakar/livepeer-dStorage-playback).
 
 ### Configuring Providers
 
-First, we create a new livepeer.js client with the Studio provider and a [CORS-protected API key](/sdks/livepeer-js/providers/studio#apikey):
-
-```tsx App.tsx
-import {
-  LivepeerConfig,
-  createReactClient,
-  studioProvider,
-} from "@livepeer/react";
-import * as React from "react";
-
-const livepeerClient = createReactClient({
-  provider: studioProvider({
-    apiKey: process.env.NEXT_PUBLIC_STUDIO_API_KEY,
-  }),
-});
-
-// Pass client to React Context Provider
-function App() {
-  return (
-    <LivepeerConfig client={livepeerClient}>
-      <DecentralizedStoragePlayback />
-    </LivepeerConfig>
-  );
-}
-```
+We [create a new livepeer.js client and wrap the app with `LivepeerConfig`](/sdks/livepeer-js/getting-started).
 
 #### Automatic Playback
 
 Now that our providers are set up, we can add a text input for an IPFS CID or an IPFS/Arweave HTTP gateway URL.
 
-<Callout>
+<Info>
   For IPFS HTTP gateway URLs, the Studio provider currently only supports “path
   style” URLs and does not support “subdomain style” URLs. The Studio provider
   will support both styles of URLs in a future update.
-</Callout>
+</Info>
 
 The raw input is passed to the [`Player`](/sdks/livepeer-js/Player), which automatically detects if it is a valid CID and attempts
 to fetch the playback info for that CID. If the provider does not have an `Asset` with that CID, the Player will automatically attempt
@@ -109,12 +87,3 @@ export const DecentralizedStoragePlayback = () => {
   );
 };
 ```
-
-## Wrap Up
-
-That's it! You just configured a caching & transcoding layer on top of IPFS and Arweave with a few lines of code!
-
-Check out these resources for more about Livepeer:
-
-- The Livepeer Studio [introductory blog post](https://livepeer.studio/blog/welcome-livepeer-studio)
-- Our [10-minute Primer](https://livepeer.org/primer) to learn about our decentralized compute network

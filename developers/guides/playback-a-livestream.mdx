@@ -1,9 +1,15 @@
 ---
-title: "Playback a livestream"
+title: "Play a livestream"
 description: "Learn how to use a media player with Livepeer"
 ---
 
-In this guide, we demonstrate how to playback livestreams in your application using either Livepeer.js or Video.js.
+In this guide, we demonstrate how to play livestreams in your application using either Livepeer.js or Video.js.
+
+<Warning>
+  In a production application, with [CORS-enabled API keys](/api-reference/overview/authentication), the viewer **should not have access** to the
+  stream ID. The `playbackId` should be passed to the viewer only, since this
+  allows the viewer to watch the asset.
+</Warning>
 
 ## Using the Livepeer.js Player
 
@@ -23,41 +29,7 @@ allowfullscreen
 
 ### Configuring Providers
 
-First, we create a new livepeer.js client with a gateway provider and a CORS-protected API key, as well as a theme to use for all livepeer.js React components.
-
-```tsx app.tsx
-import {
-  LivepeerConfig,
-  ThemeConfig,
-  createReactClient,
-  studioProvider,
-} from "@livepeer/react";
-import * as React from "react";
-
-const livepeerClient = createReactClient({
-  provider: studioProvider({
-    apiKey: process.env.NEXT_PUBLIC_STUDIO_API_KEY,
-  }),
-});
-
-const theme: ThemeConfig = {
-  colors: {
-    accent: "rgb(0, 145, 255)",
-    containerBorderColor: "rgba(0, 145, 255, 0.9)",
-  },
-  fonts: {
-    display: "Inter",
-  },
-};
-
-function App() {
-  return (
-    <LivepeerConfig client={livepeerClient} theme={theme}>
-      <CreateAndViewAsset />
-    </LivepeerConfig>
-  );
-}
-```
+We [create a new livepeer.js client and wrap the app with `LivepeerConfig`](/sdks/livepeer-js/getting-started).
 
 ### Play Video
 
@@ -129,16 +101,16 @@ following the instructions below.
 
 ### Fetch the playback URL
 
-To playback a livestream in other players, you'll need to fetch the playback URL(s).
+To play back a livestream in other players, you'll need to fetch the playback URL(s).
 By default, all content has an HLS endpoint.
 HLS is a protocol that allows you to stream video and audio content over HTTP.
 Much of the video you watch on the web is delivered using HLS. Livepeer
 uses HLS to deliver video and audio content.
 
-<Callout type="warning">
+<Warning>
   The playback URL format is subject to change. Do not try to create the
   playback URLs manually, as they may change periodically.
-</Callout>
+</Warning>
 
 You can get the playback url by using the below format and replacing the
 `PLAYBACK_ID` with your stream or asset's `playbackId`.
@@ -164,10 +136,10 @@ The API will return a JSON payload which looks like:
 }
 ```
 
-<Callout>
+<Info>
   Please note that to play back live streams inside your application you'll need
   to use a video player component that supports HLS.
-</Callout>
+</Info>
 
 The format of this payload is [defined here](/api-reference/playback/get).
 The `url` field can be used as the playback URL.
@@ -235,7 +207,7 @@ each source for your custom player. See the [Player's technical
 details](/sdks/livepeer-js/Player#technical-details) for more
 information on how livepeer.js handles this.
 
-<Callout>
+<Info>
   When you make a request for playback URLs, in the response MP4 URLs are always
   listed before HLS URLs. Additionally, each MP4 URL includes additional
   metadata about the video, such as its width, height, bitrate, and size. This
@@ -243,7 +215,7 @@ information on how livepeer.js handles this.
   quality and size based on the viewer's device and network conditions. **The
   Livepeer.js Player automatically handles this.** See the [Player
   docs](/sdks/livepeer-js/Player#technical-details) for more information.
-</Callout>
+</Info>
 
 ### Use the playback URL in a player
 
@@ -294,7 +266,7 @@ Here is an example of how to use the playback URL in video.js player.
   Livepeer.js instead.
 </Warning>
 
-This is one of the easiest way to playback a video on your website/applications.
+This is one of the easiest way to play back a video on your website/applications.
 You can embed the player on your website/applications by using the below code
 snippet.
 

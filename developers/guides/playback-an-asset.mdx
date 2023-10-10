@@ -1,9 +1,15 @@
 ---
-title: "Playback a video on-demand"
-description: "Learn how to use a media player with Livepeer"
+title: "Play an asset"
+description: "Learn how to play assets with Livepeer"
 ---
 
-In this guide, we demonstrate how to playback on demand videos in your application using either Livepeer.js or Video.js.
+In this guide, we demonstrate how to play back assets in your application using either Livepeer.js or Video.js.
+
+<Warning>
+  In a production application, with [CORS-enabled API keys](/api-reference/overview/authentication), the viewer **should not have access** to the
+  asset ID. The `playbackId` should be passed to the viewer only, since this
+  allows the viewer to watch the asset.
+</Warning>
 
 ## Using the Livepeer.js Player
 
@@ -23,41 +29,7 @@ allowfullscreen
 
 ### Configuring Providers
 
-First, we create a new livepeer.js client with a gateway provider and a CORS-protected API key, as well as a theme to use for all livepeer.js React components.
-
-```tsx app.tsx
-import {
-  LivepeerConfig,
-  ThemeConfig,
-  createReactClient,
-  studioProvider,
-} from "@livepeer/react";
-import * as React from "react";
-
-const livepeerClient = createReactClient({
-  provider: studioProvider({
-    apiKey: process.env.NEXT_PUBLIC_STUDIO_API_KEY,
-  }),
-});
-
-const theme: ThemeConfig = {
-  colors: {
-    accent: "rgb(0, 145, 255)",
-    containerBorderColor: "rgba(0, 145, 255, 0.9)",
-  },
-  fonts: {
-    display: "Inter",
-  },
-};
-
-function App() {
-  return (
-    <LivepeerConfig client={livepeerClient} theme={theme}>
-      <CreateAndViewAsset />
-    </LivepeerConfig>
-  );
-}
-```
+We [create a new livepeer.js client and wrap the app with `LivepeerConfig`](/sdks/livepeer-js/getting-started).
 
 ### Play Video
 
@@ -129,47 +101,26 @@ following the instructions below.
 
 ### Fetch the playback URL
 
-To playback a livestream in other players, you'll need to fetch the playback URL(s).
+To play back a livestream in other players, you'll need to fetch the playback URL(s).
 By default, all content has an HLS endpoint.
 HLS is a protocol that allows you to stream video and audio content over HTTP.
-Much of the video you watch on the web is delivered using HLS. Livepeer
-uses HLS to deliver video and audio content.
 
-<Callout type="warning">
+<Warning>
   The playback URL format is subject to change. Do not try to create the
   playback URLs manually, as they may change periodically.
-</Callout>
+</Warning>
 
-You can get the playback url by using the below format and replacing the
-`PLAYBACK_ID` with your stream or asset's `playbackId`.
+You can get the playback details for an asset by using the [playback info API endpoint](/api-reference/playback/get). The `url` field can be used as the playback URL.
 
-```txt
-https://livepeer.studio/api/playback/{PLAYBACK_ID}
-```
+#### Source playback
 
-The API will return a JSON payload which looks like:
-
-```json
-{
-  "type": "vod",
-  "meta": {
-    "source": [
-      {
-        "hrn": "HLS (TS)",
-        "type": "html5/application/vnd.apple.mpegurl",
-        "url": "https://livepeercdn.studio/recordings/{RECORDING_ID}/index.m3u8"
-      }
-    ]
-  }
-}
-```
-
-The format of this payload is [defined here](/api-reference/playback/get).
-The `url` field can be used as the playback URL.
+When an asset is initially created, we will provide a "source playback" URL in the list returned from the [playback info endpoint](/api-reference/playback/get).
+This is a non-transcoded version of the asset that can be played immediately, while processing happens in the background.
+The playback info endpoint will then automatically update with the transcoded renditions when processing is completed.
 
 ### Handling various playback sources
 
-The playback info endpoint can return multiple sources in the response, as outlined above.
+The playback info endpoint can return multiple sources in the response.
 These may include short form MP4 playback URLs, which allow you to obtain alternative
 URLs for your video asset to enable applications (and CDNs) to cache short videos for
 instant playback of subsequent videos. This means that viewers can experience instant time-to-first-frame (TTFF) when
@@ -179,18 +130,9 @@ It is important to note that short form playback URLs are only available for
 video assets that are less than 2 minutes in duration.
 
 These may also include WebRTC URLs for low latency livestream playback. These _must_ be played back with our
-ICE servers, which are used to route traffic in restricted networking environments. The WebRTC WHEP negotiation
-should send back these STUN/TURN servers in the SDP response, so there should not be any customization necessary
-to use the ICE servers with a custom player.
+ICE servers, which are used to route traffic in restricted networking environments.
 
-You can get the playback URLs by retrieving the playback info, replacing
-`PLAYBACK_ID` with your asset's playbackId:
-
-```txt
-https://livepeer.studio/api/playback/{PLAYBACK_ID}
-```
-
-If there are MP4 renditions or WebRTC playback available, the API will return a JSON payload similar to:
+If there are MP4 renditions or WebRTC playback available, the [playback info endpoint](/api-reference/playback/get) will return:
 
 ```json
 {
@@ -230,7 +172,7 @@ each source for your custom player. See the [Player's technical
 details](/sdks/livepeer-js/Player#technical-details) for more
 information on how livepeer.js handles this.
 
-<Callout>
+<Info>
   When you make a request for playback URLs, in the response MP4 URLs are always
   listed before HLS URLs. Additionally, each MP4 URL includes additional
   metadata about the video, such as its width, height, bitrate, and size. This
@@ -238,7 +180,7 @@ information on how livepeer.js handles this.
   quality and size based on the viewer's device and network conditions. **The
   Livepeer.js Player automatically handles this.** See the [Player
   docs](/sdks/livepeer-js/Player#technical-details) for more information.
-</Callout>
+</Info>
 
 ### Use the playback URL in a player
 
@@ -283,13 +225,7 @@ Here is an example of how to use the playback URL in video.js player.
 
 ## Embeddable Player
 
-<Warning>
-  The embeddable player is currently in beta and some elements may change as we
-  mature the product. For a production-grade application consider using
-  Livepeer.js instead.
-</Warning>
-
-This is one of the easiest way to playback a video on your website/applications.
+This is one of the easiest way to play back a video on your website/applications.
 You can embed the player on your website/applications by using the below code
 snippet.
 
@@ -305,13 +241,20 @@ You can replace the `PLAYBACK_ID` with your video's playback id.
 </iframe>
 ```
 
-You may also specify `&lowLatency=true` in the query string - this will enable livestreams to play back
-with low-latency WebRTC. If this does not succeed in
-playing back (commonly due to a slow network or connectivity issues), the embeddable
+You may also specify `&lowLatency=false` in the query string - this will disable low-latency WebRTC.
+This is enabled by default - if low latency does not succeed in
+playing back (commonly due to a slow network or connectivity issues), the embeddable player
 will automatically fall back to HLS playback. Also, if the stream contains B-frames, or bidirectional frames,
 (which are common for users streaming with OBS or other streaming apps), the Player will automatically fall
 back, so that out-of-order frames are not displayed. This only applies to users who are playing
 back livestreams.
+
+To enable clipping, `&clipLength={seconds}` can be passed, which will allow viewers to clip livestreams. The length
+in seconds **must be less than 120 seconds**.
+
+Also, the embed supports "constant" playback with `constant=true`, which means that audio will not be distorted if the playhead
+falls behind the livestream. This is usually used for music applications, where audio quality/consistency is more important than
+latency.
 
 <Warning>
   OBS users should be instructed to use the Livepeer stream profile, or to

@@ -1,20 +1,16 @@
-An in-browser broadcast refers to the process of transmitting live video content directly from a user's web browser to online audiences in real-time, facilitated by Livepeer's low latency WebRTC (Web Real-Time Communication) technology. This method eliminates the need for specialized broadcasting equipment or external software such as OBS, allowing content creators to engage with their viewers effortlessly.
+An in-browser broadcast refers to the process of transmitting live video content directly from a user's web browser to online audiences in real-time, facilitated by Livepeer's low latency WebRTC technology.
+This method eliminates the need for specialized broadcasting equipment or external software such as OBS, allowing content creators to engage with their viewers effortlessly.
 
-Process Overview:
+1. **Initialization:**
+  - A stream is created through Livepeer's API.
+  - A WebRTC connection is created within a web application using the stream key. [SDP negotiation using WHIP](https://datatracker.ietf.org/doc/html/draft-ietf-wish-whip) creates a low-latency WebRTC connection to Livepeer's infrastructure.
+    - Optionally, a developer can use the livepeer.js Broadcast component to do this automatically, given a stream key.
+2. **WebRTC Broadcast:**
+  - The user's webcam and microphone capture live video and audio content directly from the browser. This can also include screen capture, using browser APIs.
+3. **Stream Presentation:**
+  - The live video content is made accessible to viewers through an embedded iframe or player.
+  - The iframe references a specific URL associated with the stream playback ID, allowing viewers to watch the broadcast.
+4. **STUN/TURN Server Utilization:**
+  - STUN (Session Traversal Utilities for NAT) and TURN (Traversal Using Relays around NAT) servers are utilized to enhance network connectivity, ensuring minimal disruptions due to firewalls or network challenges. **STUN/TURN are required for broadcasting.**
 
-- Configuration and Initialization:
-  - A Livepeer client is established within the web application using the `livepeer.js` library, creating a connection to Livepeer's infrastructure.
-  - A livestream object, known as a "Stream" is created through Livepeer's API, setting the foundation for the live video feed.
-- Broadcast Initiation:
-  - The broadcasting interface is seamlessly integrated into the web application using the `Broadcast` component provided by the `livepeer.js` library.
-  - The component is configured with the appropriate stream key, and custom styling options are applied to ensure a consistent user experience.
-- WebRTC Broadcasting:
-  - The user's webcam and microphone capture live video and audio content directly from the browser.
-  - WebRTC technology is employed to transmit this media content to Livepeer's infrastructure in real-time.
-- Stream Presentation:
-  - The live video content is made accessible to viewers through an embedded iframe or player on the web page.
-  - The iframe references a specific URL associated with the stream key, allowing viewers to watch the broadcast.
-- STUN/TURN Server Utilization:
-  - STUN (Session Traversal Utilities for NAT) and TURN (Traversal Using Relays around NAT) servers are utilized to enhance network connectivity, ensuring minimal disruptions due to firewalls or network challenges.
-
-In-browser broadcasting through Livepeer's WebRTC technology empowers content creators to effortlessly share live video content with their audiences, fostering real-time engagement and interaction directly from the web browser.
+In-browser broadcasting empowers content creators to effortlessly share live video with their audiences, allowing real-time engagement and interaction directly from the browser.

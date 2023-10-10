@@ -1,41 +1,18 @@
 ---
-title: "Livestream from the browser"
+title: "Stream from the browser"
 description: "Learn how to broadcast using WebRTC"
 ---
 
 We demonstrate below how to broadcast from the web using Livepeer's low latency WebRTC broadcast.
+Developers can either use the Livepeer.js Broadcast React component, or build their own WebRTC solution.
 
 ## Using Livepeer.js Broadcast
 
-The example below show to use Livepeer.js [`Broadcast`](/sdks/livepeer-js/Broadcast) to broadcast from the web.
+The example below show to use the Livepeer.js [`Broadcast`](/sdks/livepeer-js/Broadcast) component to broadcast from the web.
 
-### Configuring Providers
+### Configuring providers
 
-First, we create a new livepeer.js client with a gateway provider and a [CORS-protected API key](/sdks/livepeer-js/providers/studio#apikey),
-as well as a theme to use for all livepeer.js React components.
-
-```tsx App.tsx
-import {
-  LivepeerConfig,
-  createReactClient,
-  studioProvider,
-} from "@livepeer/react";
-import * as React from "react";
-
-const livepeerClient = createReactClient({
-  provider: studioProvider({
-    apiKey: process.env.NEXT_PUBLIC_STUDIO_API_KEY,
-  }),
-});
-
-function App() {
-  return (
-    <LivepeerConfig client={livepeerClient}>
-      <CreateAndViewAsset />
-    </LivepeerConfig>
-  );
-}
-```
+First, we [create a new livepeer.js client and wrap the app with `LivepeerConfig`](/sdks/livepeer-js/getting-started).
 
 ### Broadcast
 
@@ -63,13 +40,7 @@ export const DemoBroadcast = () => {
 };
 ```
 
-## Embeddable Broadcast
-
-<Warning>
-  The embeddable broadcast is currently in beta and some elements may change as
-  we mature the product. For a production-grade application consider using
-  Livepeer.js instead.
-</Warning>
+## Embeddable broadcast
 
 This is one of the easiest way to broadcast video from your website/applications.
 You can embed the iframe on your website/applications by using the below code
@@ -90,17 +61,16 @@ You can replace the `STREAM_KEY` with your stream key for the stream.
 This will automatically stream from the browser, using the STUN/TURN servers to ensure that network connectivity issues
 are rare.
 
-## Adding broadcasting with plain WebRTC
+## Adding custom broadcasting
 
-Using livepeer.js is the recommended way to add easy broadcasting via WebRTC. If you want to add broadcasting to your app
-and handle the WebRTC negotiation, you can follow the steps below.
+If you want to add custom broadcasting to your app and handle the WebRTC SDP negotiation, you can follow the steps below.
 
 ### Get the SDP Host
 
 First, you will need to make a request to get the proper ingest URL for the region which your end user is in. We have a global
 presence, and we handle redirects based on GeoDNS to allow users to get the lowest latency server.
 
-To do this make a GET request to the WebRTC redirect endpoint:
+To do this make a `GET` request to the WebRTC redirect endpoint:
 
 ```bash
 curl -L 'https://livepeer.studio/webrtc/{STREAM_KEY}'

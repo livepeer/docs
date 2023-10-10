@@ -1,17 +1,20 @@
-A Multi-Participant Live Stream is a dynamic and collaborative broadcasting format. It enables real-time interactions between multiple participants, allowing them to engage in virtual gatherings, meetings, conferences, or similar events. This type of livestream involves the simultaneous participation of several individuals, each contributing their video and audio feeds to create a comprehensive and engaging multimedia experience for viewers.
+A multi-participant live stream is a dynamic and collaborative broadcasting format. It enables real-time interactions between multiple participants, allowing them to engage in virtual gatherings, meetings, conferences, or similar events.
+This type of livestream involves the simultaneous participation of several individuals, each contributing their video and audio feeds to create a comprehensive and engaging multimedia experience for viewers.
 
-A multi-participant livestream can be created using the `Room` API , which generates a unique room ID. Participants are added to the virtual room using the `participant` API call. Each participant is identified by a human-readable display name, and they contribute their video and audio streams to the livestream.
+A multi-participant livestream can be created using the [create room API](/api-reference/room/create), which generates a unique room ID.
+Participants can then be added to the virtual room using the [create room user API](/api-reference/room/create-user).
+Each participant is identified by a human-readable display name.
 
-It's important to note that Livepeer's underlying technology leverages LiveKit, an open-source project based on WebRTC. This technology ensures scalability and reliability for managing multi-user interactions and streaming capabilities, resulting in a seamless and interactive Multi-Participant Live Stream experience.
+It's important to note that Livepeer's underlying technology leverages [LiveKit](https://docs.livekit.io/realtime/), an open-source project based on WebRTC.
+This technology ensures scalability and reliability for managing multi-user interactions and streaming capabilities, resulting in a seamless and interactive multi-participant live stream experience.
 
-Developers can utilize custom front-end interfaces built using Livepeer and Livekit client SDKs. This approach involves passing the authentication token received from the API response to access the virtual room and participate in the livestream.
+Developers can utilize custom front-end interfaces built using Livepeer and LiveKit client SDKs. This approach involves passing the authentication token received from the API response to access the virtual room and participate in the livestream.
 
-### Room
+#### Room
 
-A "Room" is a fundamental conceptual unit within the Livepeer, representing a virtual space or container for hosting real-time interactive sessions in a participant stream. This construct facilitates synchronized communication and collaboration, making it a cornerstone for various real-time experiences.
+A room is a fundamental conceptual unit within Livepeer, representing a virtual space or container for hosting real-time interactive sessions in a participant stream.
+In a room, participants have the ability to engage in dynamic interactions and exchange audio, video, and other data streams, like a Zoom or Google Meet call.
 
-In a Room, participants have the ability to engage in dynamic interactions and exchange audio, video, and other data streams. The Room acts as a environment where participants can connect and communicate with each other in a seamless and coordinated manner. When a Room is created, it establishes a shared session that enables individuals to join, share content, and interact with one another in a multi-participant context.
-
-The creation of a Room can be initiated using [Livepeer’s Room API](/api-reference/room/create) and automatically triggered when the first participant enters. As participants join and leave the Room, updates about changes to other participants and their activities are communicated to ensure a synchronized state. For instance, modifications to participant tracks, such as additions, removals, or changes in state (like muting), are broadcast to all other participants within the same Room.
-
-To initiate multi-participant live streams, the Room API can be used to generate a unique room identifier. This identifier allows participants to easily join the designated Room and become part of the dynamic real-time interaction facilitated within that digital environment.
+The creation of a room can be initiated using [create room API](/api-reference/room/create) and automatically opened when the first participant enters.
+As participants join and leave the room, updates about changes to other participants and their activities are communicated to ensure a synchronized state.
+For instance, modifications to participant tracks, such as additions, removals, or changes in state (like muting), are broadcast to all other participants within the same room.
