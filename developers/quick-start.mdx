@@ -7,8 +7,10 @@ icon: "bolt"
 First, go to [Livepeer Studio](https://livepeer.studio), if you haven't already, and create an account. Once you've created an account, you'll be able to create an API key by clicking on the "Create API Key" button on Developers page.
 
 <Warning>
-  If you are planning on making API requests from the frontend in your application, we recommend creating a ["CORS-enabled" API key](/api-reference/overview/authentication).
-  This is a limited, public API key which has a security model that allows for requests from the frontend.
+  If you are planning on making API requests from the frontend in your
+  application, we recommend creating a ["CORS-enabled" API
+  key](/api-reference/overview/authentication). This is a limited, public API
+  key which has a security model that allows for requests from the frontend.
 </Warning>
 
 <Frame>
@@ -20,7 +22,7 @@ You can now use this API key in Livepeer SDKs and APIs in order to authenticate 
 
 <Info>
   We recommend creating separate API keys for your development and production
-  environment. This will allow you to easily manage your API keys and revoke
+  environments. This will allow you to easily manage your API keys and revoke
   them, if needed.
 </Info>
 
@@ -28,30 +30,36 @@ You can now use this API key in Livepeer SDKs and APIs in order to authenticate 
 
 <Tabs>
   <Tab title="Node.js">
-  ```sh
-  npm install livepeer
-  ```
-  </Tab>
-  <Tab title="Python">
-  ```sh
-  pip install livepeer
-  ```
-  </Tab>
-  <Tab title="Ruby">
   ```sh 
-  gem install livepeer 
+  npm install livepeer 
   ```
   </Tab>
-  <Tab title="PHP">
+      <Tab title="React.js">
+  ```sh 
+  npm install @livepeer/react
+  ```
+  </Tab>
+    <Tab title="Python">
+  ```sh 
+  pip install livepeer 
+  ```
+  </Tab>
+    <Tab title="Ruby">
+  ```sh 
+ gem install livepeer 
+  ```
+  </Tab>
+    <Tab title="PHP">
   ```sh 
   composer require livepeer/livepeer-php 
   ```
   </Tab>
-  <Tab title="Go">
+    <Tab title="Go">
   ```sh 
-  go get github.com/livepeer/livepeer-go-sdk 
+  go get github.com/livepeer/livepeer-go-sdk
   ```
   </Tab>
+
 </Tabs>
 
 ## Configure the SDK
@@ -67,60 +75,93 @@ You can now use this API key in Livepeer SDKs and APIs in order to authenticate 
     ```
 
   </Tab>
+      <Tab title="React.js">
+  ```js 
+import { createReactClient, studioProvider } from '@livepeer/react';
 
-  <Tab title="Python">
-    ```python
-    from livepeer import Livepeer
+const client = createReactClient({
+provider: studioProvider({ apiKey: 'YOUR_API_KEY' }),
+});
 
-    # Initialize the Livepeer client with your API key
-    api_key = "YOUR_API_KEY"
-    livepeer = Livepeer(api_key)
-    ```
+````
 
-  </Tab>
+### Wrap your app with `LivepeerConfig`
 
-  <Tab title="Ruby">
-    ```ruby
-    require 'livepeer'
+```js
+import {
+  LivepeerConfig,
+  createReactClient,
+  studioProvider,
+} from '@livepeer/react';
 
-    # Initialize the Livepeer client with your API key
-    api_key = 'YOUR_API_KEY'
-    client = Livepeer::Client.new(api_key: api_key)
-    ```
+const client = createReactClient({
+  provider: studioProvider({ apiKey: 'yourStudioApiKey' }),
+});
 
-  </Tab>
+function App() {
+  return (
+    <LivepeerConfig client={client}>
+      <SomeComponent />
+    </LivepeerConfig>
+  );
+}
+```
+</Tab>
 
-  <Tab title="PHP">
-    ```php
-    <?php
 
-    require 'vendor/autoload.php';
+<Tab title="Python">
+  ```python
+  from livepeer import Livepeer
 
-    use Livepeer\Livepeer;
+  # Initialize the Livepeer client with your API key
+  api_key = "YOUR_API_KEY"
+  livepeer = Livepeer(api_key)
+  ```
 
+</Tab>
+
+<Tab title="Ruby">
+  ```ruby
+  require 'livepeer'
+
+  # Initialize the Livepeer client with your API key
+  api_key = 'YOUR_API_KEY'
+  client = Livepeer::Client.new(api_key: api_key)
+  ```
+
+</Tab>
+
+<Tab title="PHP">
+  ```php
+  <?php
+
+  require 'vendor/autoload.php';
+
+  use Livepeer\Livepeer;
+
+  // Initialize the Livepeer client with your API key
+  $api_key = 'YOUR_API_KEY';
+  $livepeer = new Livepeer($api_key);
+  ```
+
+</Tab>
+
+<Tab title="Go">
+  ```go
+  package main
+
+  import (
+    "github.com/livepeer/go-sdk"
+  )
+
+  func main() {
     // Initialize the Livepeer client with your API key
-    $api_key = 'YOUR_API_KEY';
-    $livepeer = new Livepeer($api_key);
-    ```
+    apiKey := "YOUR_API_KEY"
+    client := livepeer.NewLivepeerClient(apiKey)
+  }
+  ```
 
-  </Tab>
-
-  <Tab title="Go">
-    ```go
-    package main
-
-    import (
-      "github.com/livepeer/go-sdk"
-    )
-
-    func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
-    }
-    ```
-
-  </Tab>
+</Tab>
 </Tabs>
 
 ## Make your first request
@@ -128,135 +169,135 @@ You can now use this API key in Livepeer SDKs and APIs in order to authenticate 
 Now you are ready to start building! Here is an example to create a livestream using the SDKs:
 
 <Tabs>
-  <Tab title="Node.js">
-    ```javascript
-    import { Livepeer } from "livepeer";
+<Tab title="Node.js">
+  ```javascript
+  import { Livepeer } from "livepeer";
 
-    const apiKey = 'YOUR_API_KEY'; // Replace with your API key
+  const apiKey = 'YOUR_API_KEY'; // Replace with your API key
 
-    const livepeer = new Livepeer(apiKey);
+  const livepeer = new Livepeer(apiKey);
 
-    const streamData = {
-      name: "test_stream"
-    };
+  const streamData = {
+    name: "test_stream"
+  };
 
-    livepeer
-      .createStream(streamData)
-      .then((response) => {
-        console.log("Stream created:", response);
-      })
-      .catch((error) => {
-        console.error("Error creating stream:", error);
-      });
-    ```
+  livepeer
+    .createStream(streamData)
+    .then((response) => {
+      console.log("Stream created:", response);
+    })
+    .catch((error) => {
+      console.error("Error creating stream:", error);
+    });
+  ```
 
-  </Tab>
+</Tab>
 
-  <Tab title="Python">
-    ```python
-    from livepeer import Livepeer
+<Tab title="Python">
+  ```python
+  from livepeer import Livepeer
 
-    # Initialize the Livepeer client with your API key
-    api_key = "YOUR_API_KEY"
-    livepeer = Livepeer(api_key)
+  # Initialize the Livepeer client with your API key
+  api_key = "YOUR_API_KEY"
+  livepeer = Livepeer(api_key)
 
-    stream_data = {
-      "name": "test_stream"
-    }
+  stream_data = {
+    "name": "test_stream"
+  }
 
-    try:
-        # Create the stream
-        response = livepeer.create_stream(stream_data)
-        print("Stream created:", response)
-    except Exception as e:
-        print("Error creating stream:", e)
-    ```
-
-  </Tab>
-
-  <Tab title="Ruby">
-    ```ruby
-    require 'livepeer'
-
-    # Initialize the Livepeer client with your API key
-    api_key = 'YOUR_API_KEY'
-    client = Livepeer::Client.new(api_key: api_key)
-
-    stream_data = {
-      "name": "test_stream"
-    }
-
-    begin
+  try:
       # Create the stream
-      response = client.create_stream(stream_data)
-      puts 'Stream created:', response
-    rescue StandardError => e
-      puts 'Error creating stream:', e.message
-    end
-    ```
+      response = livepeer.create_stream(stream_data)
+      print("Stream created:", response)
+  except Exception as e:
+      print("Error creating stream:", e)
+  ```
 
-  </Tab>
+</Tab>
 
-  <Tab title="PHP">
-    ```php
-    <?php
+<Tab title="Ruby">
+  ```ruby
+  require 'livepeer'
 
-    require 'vendor/autoload.php';
+  # Initialize the Livepeer client with your API key
+  api_key = 'YOUR_API_KEY'
+  client = Livepeer::Client.new(api_key: api_key)
 
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
+  stream_data = {
+    "name": "test_stream"
+  }
 
-    // Initialize the Livepeer client with your API key
-    $api_key = 'YOUR_API_KEY';
-    $livepeer = new Livepeer($api_key);
+  begin
+    # Create the stream
+    response = client.create_stream(stream_data)
+    puts 'Stream created:', response
+  rescue StandardError => e
+    puts 'Error creating stream:', e.message
+  end
+  ```
 
-    $stream_data = [
-      "name" => "test_stream"
-    ];
+</Tab>
 
-    try {
-        // Create the stream
-        $response = $livepeer->createStream($stream_data);
-        echo 'Stream created: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error creating stream: ' . $e->getMessage() . PHP_EOL;
-    }
-    ```
+<Tab title="PHP">
+  ```php
+  <?php
 
-  </Tab>
+  require 'vendor/autoload.php';
 
-  <Tab title="Go">
-    ```go
-    package main
+  use Livepeer\Livepeer;
+  use Livepeer\LivepeerException;
 
-    import (
-      "fmt"
-      "os"
+  // Initialize the Livepeer client with your API key
+  $api_key = 'YOUR_API_KEY';
+  $livepeer = new Livepeer($api_key);
 
-      "github.com/livepeer/go-sdk"
-    )
+  $stream_data = [
+    "name" => "test_stream"
+  ];
 
-    func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
-
-      streamData := map[string]interface{}{
-        "name": "test_stream",
-      }
-
+  try {
       // Create the stream
-      response, err := client.CreateStream(streamData)
-      if err != nil {
-        fmt.Printf("Error creating stream: %v\n", err)
-        os.Exit(1)
-      }
+      $response = $livepeer->createStream($stream_data);
+      echo 'Stream created: ' . json_encode($response) . PHP_EOL;
+  } catch (LivepeerException $e) {
+      echo 'Error creating stream: ' . $e->getMessage() . PHP_EOL;
+  }
+  ```
 
-      fmt.Printf("Stream created: %+v\n", response)
+</Tab>
+
+<Tab title="Go">
+  ```go
+  package main
+
+  import (
+    "fmt"
+    "os"
+
+    "github.com/livepeer/go-sdk"
+  )
+
+  func main() {
+    // Initialize the Livepeer client with your API key
+    apiKey := "YOUR_API_KEY"
+    client := livepeer.NewLivepeerClient(apiKey)
+
+    streamData := map[string]interface{}{
+      "name": "test_stream",
     }
-    ```
 
-  </Tab>
+    // Create the stream
+    response, err := client.CreateStream(streamData)
+    if err != nil {
+      fmt.Printf("Error creating stream: %v\n", err)
+      os.Exit(1)
+    }
+
+    fmt.Printf("Stream created: %+v\n", response)
+  }
+  ```
+
+</Tab>
 </Tabs>
 
 Once the stream is created, you will receive a [stream object](/api-reference/stream/create) in response.
@@ -275,4 +316,4 @@ Don't know where to start? Check out these four tutorials:
 - [Learn how to upload and play an asset](/developers/guides/upload-video-asset)
 - [Learn how to create a livestream](/developers/guides/create-livestream)
 - [Learn how to mint a video NFT](/developers/guides/mint-video-nft)
-- [Learn how to set up a multiparticipant livestream](/developers/guides/multiparticipant-stream)
+````
