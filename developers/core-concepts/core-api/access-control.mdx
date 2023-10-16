@@ -19,4 +19,14 @@ providers, like [Lit](https://litprotocol.com/), can be integrated using webhook
 
 #### JWT
 
-Insert JWT docs here
+JSON Web Tokens (JWTs) offer another secure mechanism for developers to implement access control on their platform's media content.
+
+To use this method, a content piece — a stream or an asset — can be marked with a JWT-specific playback policy. This means viewers will require a valid JWT to access the content.
+
+Upon a playback request, Livepeer checks the provided JWT for validity. The validation process involves ensuring the JWT was signed with the correct `signingKey` and that it hasn't expired. If the JWT is valid, access to the content is granted; otherwise, it's denied.
+
+JWTs provide the flexibility of defining various claims or data within the token itself, which can be used to carry additional metadata or access control logic. For instance, specific viewer information or expiration details can be embedded directly in the JWT.
+
+To implement this feature, developers can utilize the livepeer.js client to create JWT-gated content. Upon content creation, developers can then use custom API routes to sign and issue JWTs for authorized viewers, ensuring that only those with the correct tokens can view the content.
+
+Depending on the player used, the JWT can either be passed as a specific prop or appended to the playback URL as a query parameter to authenticate the viewer.
