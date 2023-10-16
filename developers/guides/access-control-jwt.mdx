@@ -1,10 +1,11 @@
 ---
-title: "Control access to livestreams"
-description: "Learn how to add access control to a stream with livepeer.js"
+title: "Control access using JWTs"
+description: "Learn how to add access control to a content with livepeer.js, using JWTs"
 ---
 
-Adding access control to a stream only takes a few lines of code. The example below uses [`useCreateStream`](/sdks/livepeer-js/stream/useCreateStream)
-and [`useStream`](/sdks/livepeer-js/stream/useStream) to create and watch a gated livestream.
+Using JSON Web Tokens (JWTs) provides a robust way to control access to both your assets and livestreams. The JWTs can be signed and validated to ensure that only authorized users can access the content. Below are examples for both assets and livestreams.
+
+Adding access control to a content only takes a few lines of code.
 
 <Info>
   This guide is written for developers using `@livepeer/react` in a React
@@ -15,9 +16,11 @@ and [`useStream`](/sdks/livepeer-js/stream/useStream) to create and watch a gate
 
 First, we [create a new livepeer.js client and wrap the app with `LivepeerConfig`](/sdks/livepeer-js/getting-started).
 
-### Create a Gated Stream
+### Create a Gated Content
 
-We then can create our gated stream, with the stream key returned once we create it (styling has been removed for simplicity)
+#### For livestreams
+
+Create your gated stream, with the stream key returned once we create it (styling has been removed for simplicity)
 
 ```tsx accessControl.tsx
 import { useCreateStream, useStream } from "@livepeer/react";
@@ -65,6 +68,36 @@ export const AccessControl = () => {
   );
 };
 ```
+
+#### For assets
+
+Create your gated asset, with the jwt playback policy type.
+
+````tsx accessControl.tsx
+
+```tsx accessControl.tsx
+import { useCreateAsset, useAsset } from "@livepeer/react";
+
+import { useMemo, useState } from "react";
+
+export const AccessControlAssets = () => {
+  const [assetName, setAssetName] = useState<string>("");
+  const {
+    mutate: createAsset,
+    data: createdAsset,
+    status,
+  } = useCreateAsset(
+    assetName
+      ? {
+          name: assetName,
+          playbackPolicy: { type: "jwt" },
+        }
+      : null
+  );
+
+  // ... Rest of the code for managing and playing assets with JWT
+};
+````
 
 ### Sign a JWT (Node.JS API Route)
 
@@ -159,13 +192,13 @@ const handler = async (
 export default handler;
 ```
 
-### Stream Content
+### Configure the Player with the JWT
 
-Lastly, when the stream is created, we make a POST request to the `/api/create-signed-jwt` API route we created in the previous step
-(using [Tanstack Query](https://tanstack.com/query/v4/docs/overview) to manage the mutation state handling).
-We pass along the `playbackId` for the stream, which is used to create the JWT.
+Lastly, when the content is created, we make a POST request to the `/api/create-signed-jwt` API route we created in the previous step
+(using [React Query](https://tanstack.com/query/v4/docs/overview) to manage the mutation state handling).
+We pass along the `playbackId` for the content, which is used to create the JWT.
 
-Then, we pass the JWT to the Player using the [`jwt`](/sdks/livepeer-js/Player#jwt) prop, which will use that JWT to prove access to the streaming content!
+Then, we pass the JWT to the Player using the [`jwt`](/sdks/livepeer-js/Player#jwt) prop, which will use that JWT to prove access to the content!
 
 ```tsx access-control.tsx
 import { Player, useCreateStream, useStream } from "@livepeer/react";
@@ -264,4 +297,10 @@ export const AccessControl = () => {
     </div>
   );
 };
+```
+
+If you are not using the player, you will need to manually append the jwt to the URL as a query parameter, similar to:
+
+```
+https://playback.livepeer.studio/asset/hls/abcd1234/index.m3u8?jwt=your-jwt
 ```
