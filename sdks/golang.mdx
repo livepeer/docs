@@ -1,0 +1,57 @@
+---
+title: Go
+description: "Learn how to create your first stream using the Livepeer Go SDK."
+---
+
+## Prerequisites
+
+To get the most out of this guide, you’ll need to:
+
+- [Create an API key](https://livepeer.studio/dashboard/developers/api-keys)
+
+## Install the SDK
+
+Get the Livepeer Go SDK.
+
+```bash
+go get github.com/livepeer/livepeer-go-sdk
+```
+
+## Create a stream
+
+Create a new stream using the Livepeer Go SDK.
+
+```go
+package main
+
+import (
+  "fmt"
+  "os"
+
+  "github.com/livepeer/go-sdk"
+)
+
+func main() {
+  // Initialize the Livepeer client with your API key
+  apiKey := "YOUR_API_KEY"
+  client := livepeer.NewLivepeerClient(apiKey)
+
+  streamData := map[string]interface{}{
+    "name": "test_stream",
+  }
+
+  // Create the stream
+  response, err := client.CreateStream(streamData)
+  if err != nil {
+    fmt.Printf("Error creating stream: %v\n", err)
+    os.Exit(1)
+  }
+
+  fmt.Printf("Stream created: %+v\n", response)
+}
+
+```
+
+## Next steps
+
+Checkout Livepeer [API Reference](/api-reference) to learn more about the Livepeer API and the Go SDK.

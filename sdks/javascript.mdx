@@ -1,0 +1,67 @@
+---
+title: JavaScript
+description: "Learn how to create your first stream using the Livepeer javascript SDK."
+---
+
+## Prerequisites
+
+To get the most out of this guide, you’ll need to:
+
+- [Create an API key](https://livepeer.studio/dashboard/developers/api-keys)
+
+## Install the SDK
+
+Get the Livepeer javascript SDK.
+
+<Tabs>
+<Tab title="npm">
+
+```bash
+npm install livepeer
+```
+
+</Tab>
+<Tab title="yarn">
+
+```bash
+yarn add livepeer
+```
+
+</Tab>
+<Tab title="pnpm">
+
+```bash
+pnpm install livepeer
+```
+
+</Tab>
+</Tabs>
+
+## Create a stream
+
+Create a new stream using the Livepeer javascript SDK.
+
+```js
+import { Livepeer } from "livepeer";
+
+const apiKey = "YOUR_API_KEY"; // Replace with your API key
+
+const livepeer = new Livepeer(apiKey);
+
+const streamData = {
+  name: "test_stream",
+};
+
+livepeer
+  .createStream(streamData)
+  .then((response) => {
+    console.log("Stream created:", response);
+  })
+  .catch((error) => {
+    console.error("Error creating stream:", error);
+  });
+```
+
+## Next steps
+
+Checkout Livepeer [API Reference](/api-reference) to learn more about the Livepeer API and the javascript SDK.

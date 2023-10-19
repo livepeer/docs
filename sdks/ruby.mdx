@@ -1,0 +1,47 @@
+---
+title: Ruby
+description: "Learn how to create your first stream using the Livepeer ruby SDK."
+---
+
+## Prerequisites
+
+To get the most out of this guide, you’ll need to:
+
+- [Create an API key](https://livepeer.studio/dashboard/developers/api-keys)
+
+## Install the SDK
+
+Get the Livepeer ruby SDK.
+
+```
+gem install livepeer
+```
+
+## Create a stream
+
+Create a new stream using the Livepeer ruby SDK.
+
+```ruby
+require 'livepeer'
+
+# Initialize the Livepeer client with your API key
+api_key = 'YOUR_API_KEY'
+client = Livepeer::Client.new(api_key: api_key)
+
+stream_data = {
+  "name": "test_stream"
+}
+
+begin
+  # Create the stream
+  response = client.create_stream(stream_data)
+  puts 'Stream created:', response
+rescue StandardError => e
+  puts 'Error creating stream:', e.message
+end
+
+```
+
+## Next steps
+
+Checkout Livepeer [API Reference](/api-reference) to learn more about the Livepeer API and the ruby SDK.

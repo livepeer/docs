@@ -26,76 +26,37 @@ You can now use this API key in Livepeer SDKs and APIs in order to authenticate 
   them, if needed.
 </Info>
 
+In this example, we will use the [Livepeer React SDK](/sdks/livepeer-js/getting-started) to upload a video. Make sure to setup a react app first.
+
 ## Install the SDK
 
-<Tabs>
-  <Tab title="Node.js">
-  ```sh 
-  npm install livepeer 
-  ```
-  </Tab>
-      <Tab title="React.js">
-  ```sh 
-  npm install @livepeer/react
-  ```
-  </Tab>
-    <Tab title="Python">
-  ```sh 
-  pip install livepeer 
-  ```
-  </Tab>
-    <Tab title="Ruby">
-  ```sh 
- gem install livepeer 
-  ```
-  </Tab>
-    <Tab title="PHP">
-  ```sh 
-  composer require livepeer/livepeer-php 
-  ```
-  </Tab>
-    <Tab title="Go">
-  ```sh 
-  go get github.com/livepeer/livepeer-go-sdk
-  ```
-  </Tab>
+```
+npm install @livepeer/react
+```
 
-</Tabs>
+## Set up the SDK
 
-## Configure the SDK
+Next, create a new [livepeer.js client](/sdks/livepeer-js/getting-started) and wrap the app with `LivepeerConfig`.
 
-<Tabs>
-  <Tab title="Node.js">
-    ```javascript
-    import { Livepeer } from "livepeer";
-
-    const apiKey = 'YOUR_API_KEY'; // Replace with your API key
-
-    const livepeer = new Livepeer(apiKey);
-    ```
-
-  </Tab>
-      <Tab title="React.js">
-  ```js 
-import { createReactClient, studioProvider } from '@livepeer/react';
+```jsx
+import { createReactClient, studioProvider } from "@livepeer/react";
 
 const client = createReactClient({
-provider: studioProvider({ apiKey: 'YOUR_API_KEY' }),
+  provider: studioProvider({ apiKey: "yourStudioApiKey" }),
 });
+```
 
-````
+Wrap the app with the LivepeerConfig component, passing the client to it
 
-### Wrap your app with `LivepeerConfig`
-
-```js
+```jsx
 import {
   LivepeerConfig,
   createReactClient,
   studioProvider,
-} from '@livepeer/react';
+} from "@livepeer/react";
 
 const client = createReactClient({
-  provider: studioProvider({ apiKey: 'yourStudioApiKey' }),
+  provider: studioProvider({ apiKey: "yourStudioApiKey" }),
 });
 
 function App() {
@@ -106,204 +67,119 @@ function App() {
   );
 }
 ```
-</Tab>
 
+## Upload a video
 
-<Tab title="Python">
-  ```python
-  from livepeer import Livepeer
+Now that our providers are set up, we set up file uploads with React Dropzone, a library for easily creating HTML5-compliant drag and drop zones for files (you can use another solution for file uploads):
 
-  # Initialize the Livepeer client with your API key
-  api_key = "YOUR_API_KEY"
-  livepeer = Livepeer(api_key)
-  ```
+```jsx
+import { useCreateAsset } from "@livepeer/react";
 
-</Tab>
+import { useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
 
-<Tab title="Ruby">
-  ```ruby
-  require 'livepeer'
+export const CreateAndViewAsset = () => {
+  const [video, setVideo] = useState<File | undefined>();
+  const {
+    mutate: createAsset,
+    data: asset,
+    status,
+    progress,
+    error,
+  } = useCreateAsset(
+    video
+      ? {
+          sources: [{ name: video.name, file: video }] as const,
+        }
+      : null
+  );
 
-  # Initialize the Livepeer client with your API key
-  api_key = 'YOUR_API_KEY'
-  client = Livepeer::Client.new(api_key: api_key)
-  ```
-
-</Tab>
-
-<Tab title="PHP">
-  ```php
-  <?php
-
-  require 'vendor/autoload.php';
-
-  use Livepeer\Livepeer;
-
-  // Initialize the Livepeer client with your API key
-  $api_key = 'YOUR_API_KEY';
-  $livepeer = new Livepeer($api_key);
-  ```
-
-</Tab>
-
-<Tab title="Go">
-  ```go
-  package main
-
-  import (
-    "github.com/livepeer/go-sdk"
-  )
-
-  func main() {
-    // Initialize the Livepeer client with your API key
-    apiKey := "YOUR_API_KEY"
-    client := livepeer.NewLivepeerClient(apiKey)
-  }
-  ```
-
-</Tab>
-</Tabs>
-
-## Make your first request
-
-Now you are ready to start building! Here is an example to create a livestream using the SDKs:
-
-<Tabs>
-<Tab title="Node.js">
-  ```javascript
-  import { Livepeer } from "livepeer";
-
-  const apiKey = 'YOUR_API_KEY'; // Replace with your API key
-
-  const livepeer = new Livepeer(apiKey);
-
-  const streamData = {
-    name: "test_stream"
-  };
-
-  livepeer
-    .createStream(streamData)
-    .then((response) => {
-      console.log("Stream created:", response);
-    })
-    .catch((error) => {
-      console.error("Error creating stream:", error);
-    });
-  ```
-
-</Tab>
-
-<Tab title="Python">
-  ```python
-  from livepeer import Livepeer
-
-  # Initialize the Livepeer client with your API key
-  api_key = "YOUR_API_KEY"
-  livepeer = Livepeer(api_key)
-
-  stream_data = {
-    "name": "test_stream"
-  }
-
-  try:
-      # Create the stream
-      response = livepeer.create_stream(stream_data)
-      print("Stream created:", response)
-  except Exception as e:
-      print("Error creating stream:", e)
-  ```
-
-</Tab>
-
-<Tab title="Ruby">
-  ```ruby
-  require 'livepeer'
-
-  # Initialize the Livepeer client with your API key
-  api_key = 'YOUR_API_KEY'
-  client = Livepeer::Client.new(api_key: api_key)
-
-  stream_data = {
-    "name": "test_stream"
-  }
-
-  begin
-    # Create the stream
-    response = client.create_stream(stream_data)
-    puts 'Stream created:', response
-  rescue StandardError => e
-    puts 'Error creating stream:', e.message
-  end
-  ```
-
-</Tab>
-
-<Tab title="PHP">
-  ```php
-  <?php
-
-  require 'vendor/autoload.php';
-
-  use Livepeer\Livepeer;
-  use Livepeer\LivepeerException;
-
-  // Initialize the Livepeer client with your API key
-  $api_key = 'YOUR_API_KEY';
-  $livepeer = new Livepeer($api_key);
-
-  $stream_data = [
-    "name" => "test_stream"
-  ];
-
-  try {
-      // Create the stream
-      $response = $livepeer->createStream($stream_data);
-      echo 'Stream created: ' . json_encode($response) . PHP_EOL;
-  } catch (LivepeerException $e) {
-      echo 'Error creating stream: ' . $e->getMessage() . PHP_EOL;
-  }
-  ```
-
-</Tab>
-
-<Tab title="Go">
-  ```go
-  package main
-
-  import (
-    "fmt"
-    "os"
-
-    "github.com/livepeer/go-sdk"
-  )
-
-  func main() {
-    // Initialize the Livepeer client with your API key
-    apiKey := "YOUR_API_KEY"
-    client := livepeer.NewLivepeerClient(apiKey)
-
-    streamData := map[string]interface{}{
-      "name": "test_stream",
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    if (acceptedFiles && acceptedFiles.length > 0 && acceptedFiles?.[0]) {
+      setVideo(acceptedFiles[0]);
     }
+  }, []);
 
-    // Create the stream
-    response, err := client.CreateStream(streamData)
-    if err != nil {
-      fmt.Printf("Error creating stream: %v\n", err)
-      os.Exit(1)
-    }
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      "video/*": ["*.mp4"],
+    },
+    maxFiles: 1,
+    onDrop,
+  });
 
-    fmt.Printf("Stream created: %+v\n", response)
-  }
-  ```
+  const progressFormatted = useMemo(
+    () =>
+      progress?.[0].phase === "failed"
+        ? "Failed to process video."
+        : progress?.[0].phase === "waiting"
+        ? "Waiting"
+        : progress?.[0].phase === "uploading"
+        ? `Uploading: ${Math.round(progress?.[0]?.progress * 100)}%`
+        : progress?.[0].phase === "processing"
+        ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
+        : null,
+    [progress]
+  );
 
-</Tab>
-</Tabs>
+  return (
+    <>
+      <div {...getRootProps()}>
+        <input {...getInputProps()} />
+        <p>Drag and drop or browse files</p>
+      </div>
 
-Once the stream is created, you will receive a [stream object](/api-reference/stream/create) in response.
-You can also view the stream on Livepeer Studio:
+      {createError?.message && <p>{createError.message}</p>}
 
-<Frame>![Livepeer Studio - Stream page](/images/stream-page.png)</Frame>
+      {video ? <p>{video.name}</p> : <p>Select a video file to upload.</p>}
+      {progressFormatted && <p>{progressFormatted}</p>}
+
+      <button
+        onClick={() => {
+          createAsset?.();
+        }}
+        disabled={!createAsset || createStatus === "loading"}
+      >
+        Upload
+      </button>
+    </>
+  );
+};
+```
+
+## Play the asset
+
+We can now use Player component from the SDK to play the asset:
+
+```jsx
+import { Player } from "@livepeer/react";
+
+const playbackId = "f5eese9wwl88k4g8";
+
+export const DemoPlayer = () => {
+  return (
+    <Player
+      title="Waterfalls"
+      playbackId={playbackId}
+      showPipButton
+      showTitle={false}
+      aspectRatio="16to9"
+      controls={{
+        autohide: 3000,
+      }}
+      theme={{
+        borderStyles: { containerBorderStyle: "hidden" },
+        radii: { containerBorderRadius: "10px" },
+      }}
+    />
+  );
+};
+```
+
+Once the asset is upload, you will also receive a [asset object](/api-reference/asset/upload) in response.
+You can view the asset on Livepeer Studio:
+
+<Frame>![Livepeer Studio - Stream page](/images/asset-page.png)</Frame>
 
 ## Start building
 
@@ -313,7 +189,6 @@ You can also refer to the [Guides](/developers/guides/overview) section for more
 
 Don't know where to start? Check out these four tutorials:
 
-- [Learn how to upload and play an asset](/developers/guides/upload-video-asset)
 - [Learn how to create a livestream](/developers/guides/create-livestream)
 - [Learn how to mint a video NFT](/developers/guides/mint-video-nft)
-````
+- [Learn how to listen a asset events](/developers/guides/listen-to-asset-events)

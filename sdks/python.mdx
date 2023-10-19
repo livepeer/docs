@@ -1,0 +1,46 @@
+---
+title: Python
+description: "Learn how to create your first stream using the Livepeer python SDK."
+---
+
+## Prerequisites
+
+To get the most out of this guide, you’ll need to:
+
+- [Create an API key](https://livepeer.studio/dashboard/developers/api-keys)
+
+## Install the SDK
+
+Get the Livepeer python SDK.
+
+```bash
+pip install resend
+```
+
+## Create a stream
+
+Create a new stream using the Livepeer python SDK.
+
+```python
+from livepeer import Livepeer
+
+# Initialize the Livepeer client with your API key
+api_key = "YOUR_API_KEY"
+livepeer = Livepeer(api_key)
+
+stream_data = {
+  "name": "test_stream"
+}
+
+try:
+    # Create the stream
+    response = livepeer.create_stream(stream_data)
+    print("Stream created:", response)
+except Exception as e:
+    print("Error creating stream:", e)
+
+```
+
+## Next steps
+
+Checkout Livepeer [API Reference](/api-reference) to learn more about the Livepeer API and the python SDK.

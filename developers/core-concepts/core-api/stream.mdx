@@ -1,6 +1,6 @@
-A Stream represents a livestream object that can be identified, recorded, and processed within Livepeer. A stream is a video feed that is broadcast in real-time. Livepeer is responsible for the lifecycle management (CRUD) of a stream. A stream is uniquely identified by its Stream ID, and associated with a defined metadata describing its characteristics.
+A Stream represents a livestream object that can be identified, recorded, and processed within Livepeer. A livestream is a video feed that is broadcast in real-time. Livepeer is responsible for the lifecycle management (CRUD) of a livestream. A livestream is uniquely identified by its Stream ID, and associated with a defined metadata describing its characteristics.
 
-A stream can be created with the [Create Stream](/api-reference/stream/create) API endpoint. Once a stream is created, there are set of webhook events to notify its state transitions, including `stream.started`, `stream.idle`.
+A livestream can be created with the [Create livestream](/api-reference/stream/create) API endpoint. Once a livestream is created, there are set of webhook events to notify its state transitions, including `stream.started`, `stream.idle`.
 
 <Info>
   You can learn more about webhooks
@@ -12,14 +12,14 @@ If recording is enabled, there are a set of webhook events which can notify your
 
 #### Multistream
 
-A stream can be directed to multiple stream targets, such as YouTube or Twitter, using [multistream](/developers/core-concepts/core-api/multistream).
+A livestream can be directed to multiple livestream targets, such as YouTube or Twitter, using [multistream](/developers/core-concepts/core-api/multistream).
 
 #### Ingest
 
 RTMP is the default ingest protocol for streaming. WebRTC and SRT ingest are also supported. See the [in-browser broadcasting](/developers/guides/livestream-from-browser)
 guide on how to use WebRTC ingest.
 
-When a stream is live, [stream health](/developers/core-concepts/studio/stream-health) provides a set of metrics about its performance and ingest health. This provides
+When a livestream is live, [livestream health](/developers/core-concepts/studio/stream-health) provides a set of metrics about its performance and ingest health. This provides
 tangible feedback for creators who want better livestream performance.
 
 Also, Livepeer provides [viewership metrics](/developers/guides/get-engagement-analytics-via-api), which allow a more comprehensive look into viewer behavior using the [livepeer viewership API](/api-reference/viewership/get-viewership-metrics).
@@ -27,12 +27,12 @@ Reporting is enabled by default in the Livepeer Player, and can be integrated in
 
 #### Playback
 
-A stream can be easily viewed by passing a `playbackId` to the [Livepeer Player](/developers/core-concepts/player/overview). If using a third party player, the full playback url is required. This can be fetched from the [Playback Info](/api-reference/playback/get) API endpoint.
+A livestream can be easily viewed by passing a `playbackId` to the [Livepeer Player](/developers/core-concepts/player/overview). If using a third party player, the full playback url is required. This can be fetched from the [Playback Info](/api-reference/playback/get) API endpoint.
 
 The Livepeer Player will default to [WebRTC playback](developers/core-concepts/player/low-latency). WebRTC ensures low latency that is sub-second on source and around 2-5 seconds on transcoded renditions.
-This means that (depending on stream settings) users will often have a sub-second viewing experience.
+This means that (depending on livestream settings) users will often have a sub-second viewing experience.
 
-The Livepeer Player will fall back to HLS playback using HLS.js if b-frames are detected in the stream or there is a transient network error with WebRTC initiation.
+The Livepeer Player will fall back to HLS playback using HLS.js if b-frames are detected in the livestream or there is a transient network error with WebRTC initiation.
 
 <Warning>
   A B-frame is short for bi-directional frame, and they [commonly occur with
