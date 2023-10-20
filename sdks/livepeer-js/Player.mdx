@@ -317,7 +317,7 @@ back, so that out-of-order frames are not displayed.
 </Warning>
 
 This only applies to video elements which are playing back livestreams - assets will play back with MP4 or HLS.
-Defaults to `false`.
+Defaults to `true`.
 
 You may also specify `"force"`, which forces WebRTC and disables fallback to HLS. This is not a recommended default unless
 your application requires low latency (and should not play if low latency is not available),
@@ -331,7 +331,69 @@ due to the possible connectivity issues which WebRTC can face, which HLS is not 
 ```tsx
 function PlayerComponent() {
   return (
-    <Player title="My Livestream" playbackId="wwl88k4g8f5eese9" lowLatency />
+    <Player
+      title="My Livestream"
+      playbackId="wwl88k4g8f5eese9"
+      lowLatency="force"
+    />
+  );
+}
+```
+
+### clipLength
+
+The clip length enables the "live clipping" feature - the value is in seconds, and controls the length of the clip
+that is created when the clip button is clicked by a viewer. This can be one of 90, 60, 45, 30, 15, or 10 seconds.
+
+This allows for dynamic viewing experiences, along with the
+`onClipStarted`, `onClipCreated`, and `onClipError` callbacks for clips.
+
+<Tip>
+  You can use the `onClipStarted`, `onClipCreated`, and `onClipError` callbacks
+  to control UI outside of the Player, to show toasts or other loading
+  indicators, as well as track the status of the Asset which is created and
+  processed. See `useAsset` for how to poll the status of the asset.
+</Tip>
+
+```tsx
+function PlayerComponent() {
+  return (
+    <Player
+      title="Live Stream"
+      playbackId="terese9wwl88k4g8"
+      clipLength={30}
+      onClipStarted={() => {
+        console.log("Clip API request is pending...");
+      }}
+      onClipCreated={(asset: Asset) => {
+        // poll the status of the asset for the
+        // download URL or playback ID
+        console.log(asset.id);
+      }}
+      onClipError={(error: Error) => {
+        console.error(error.message);
+      }}
+    />
+  );
+}
+```
+
+### playRecording
+
+When allowed, the Player will include recording URLs in playback. This is the HLS URL that allows users to watch the entire
+recording of a stream, without requiring the user to play from the latest playhead (as is usually required in stream
+playback). This can be used to create historical clipping experiences for streams - users can watch a version of the
+stream that constantly appended with the latest segments.
+
+<Info>
+  Keep in mind that latency for the latest segments will be higher when this
+  option is enabled, and is not recommended for low latency applications.
+</Info>
+
+```tsx
+function PlayerComponent() {
+  return (
+    <Player title="Live Stream" playbackId="terese9wwl88k4g8" playRecording />
   );
 }
 ```
