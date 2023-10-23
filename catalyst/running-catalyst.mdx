@@ -1,0 +1,66 @@
+---
+title: Running Catalyst
+icon: person-running
+---
+
+First, select a directory for persisting your database and video content; in
+this example we will be using `$HOME/livepeer-catalyst`.
+
+```shell
+CATALYST_DIR="$HOME/livepeer-catalyst"
+mkdir -p $CATALYST_DIR
+docker run \
+	-v $CATALYST_DIR:/data \
+	--rm \
+	-it \
+	--name catalyst \
+	--shm-size=4gb \
+	-p 8888:8888 \
+	-p 5432:5432 \
+	-p 1935:1935 \
+	-p 4242:4242 \
+	-p 3478:3478 \
+	-p 3478:3478/udp \
+	-p 5349:5349 \
+	-p 40000-40100:40000-40100/udp \
+	livepeer/catalyst
+```
+
+You will be greeted with a very large amount of spam — give it a minute or so to
+boot up. You can then connect to your local box instance:
+
+Address: [https://localhost:8888](https://localhost:8888)  
+Email: `admin@example.com`  
+Password: `livepeer`
+
+To get you started, the database snapshot includes a few predefined streams.
+
+| Stream           | Stream Key          | Playback ID  | Recording enabled? |
+| ---------------- | ------------------- | ------------ | ------------------ |
+| [tiny-transcode] | 2222-2222-2222-2222 | 222222222222 | No                 |
+| [tiny-recording] | 4444-4444-4444-4444 | 444444444444 | Yes                |
+
+[tiny-transcode]:
+  http://localhost:8888/dashboard/streams/22222222-2222-2222-2222-222222222222
+[tiny-recording]:
+  http://localhost:8888/dashboard/streams/44444444-4444-4444-4444-444444444444
+
+For properly testing a livestream input comparable to OBS output, you will want
+a low-bitrate test file with no B-Frames and a short GOP length.
+[Here's a sample appropriately-formatted Big Buck Bunny file you can use](BBB).
+To stream in to your local box, you can use an `ffmpeg` command such as:
+
+```shell
+curl -LO https://test-harness-gcp.livepeer.fish/Big_Buck_Bunny_360p_1sGOP_NoBFrames.mp4
+ffmpeg \
+    -stream_loop \
+    -1 \
+    -re \
+    -i Big_Buck_Bunny_360p_1sGOP_NoBFrames.mp4 \
+    -c copy \
+    -f flv \
+    rtmp://localhost/live/2222-2222-2222-2222
+```
+
+[BBB]:
+  https://test-harness-gcp.livepeer.fish/Big_Buck_Bunny_360p_1sGOP_NoBFrames.mp4
