@@ -3,35 +3,55 @@ title: "Engagement via API"
 description: "Learn how to check out viewer engagement on Livepeer"
 ---
 
-Livepeer offers detailed information on viewer behavior and playback quality on your platform. The API includes engagement metrics such as view counts and watch time, as well as performance metrics such as error rate, time to first frame, rebuffer ratio, and exit-before-starts across a variety of dimensions.
+Livepeer offers detailed information on viewer behavior and playback quality on
+your platform. The API includes engagement metrics such as view counts and watch
+time, as well as performance metrics such as error rate, time to first frame,
+rebuffer ratio, and exit-before-starts across a variety of dimensions.
 
 ### Usage Metrics
 
-This API also includes usage metrics to help you understand how viewers are engaging with your platform:
+This API also includes usage metrics to help you understand how viewers are
+engaging with your platform:
 
-- Number of Views: This metric gives you a comprehensive view of the total number of views across your platform. We colloquially define a view as “play intent”, which means the video either played, stalled, or encountered an error.
-- Minutes of Watch Time: Measure the total amount of time viewers spend on your platform, so you can track engagement and identify areas for improvement.
+- Number of Views: This metric gives you a comprehensive view of the total
+  number of views across your platform. We colloquially define a view as “play
+  intent”, which means the video either played, stalled, or encountered an
+  error.
+- Minutes of Watch Time: Measure the total amount of time viewers spend on your
+  platform, so you can track engagement and identify areas for improvement.
 
 ### Performance Metrics
 
-This API offers several key performance metrics to help you understand your platforms performance:
+This API offers several key performance metrics to help you understand your
+platforms performance:
 
 - Error Rate: Percentage of views that encountered an error.
-- Time to First Frame (TTFF): Measures the time in milliseconds it takes between the player requesting video and the first frame being ready to play.
-- Rebuffer Ratio: Percentage of time a viewer spends experiencing rebuffering during playback.
-- Exit Before Starts: Percentage of views that are abandoned before the video begins to play, potentially indicating issues with playback.
+- Time to First Frame (TTFF): Measures the time in milliseconds it takes between
+  the player requesting video and the first frame being ready to play.
+- Rebuffer Ratio: Percentage of time a viewer spends experiencing rebuffering
+  during playback.
+- Exit Before Starts: Percentage of views that are abandoned before the video
+  begins to play, potentially indicating issues with playback.
 
 ### Dimensions
 
-To provide a comprehensive view of viewer behavior, our data product includes several dimensions to help you segment your data and identify patterns:
+To provide a comprehensive view of viewer behavior, our data product includes
+several dimensions to help you segment your data and identify patterns:
 
-- Video: View metrics for individual videos, queryable by playback ID or by dStorage ID’s, such as CID.
-- Browser: Understand how different browsers impact viewer behavior and performance, so you can optimize your platform for each browser type.
-- Device: Understand how different devices impact viewer behavior, so you can optimize your platform for each device type.
-- OS: Understand how different operating systems impact viewer behavior, so you can optimize your platform for each OS.
-- Continent, Country, and Subdivisions: Segment your data by location to identify regional trends and tailor your platform to local preferences.
-- Time Zone: Measure viewer behavior across different time zones, so you can optimize your platform for peak usage times.
-- Time: Analyze viewer behavior across different time periods (hour, day, week, month, year, all-time) to identify trends.
+- Video: View metrics for individual videos, queryable by playback ID or by
+  dStorage ID’s, such as CID.
+- Browser: Understand how different browsers impact viewer behavior and
+  performance, so you can optimize your platform for each browser type.
+- Device: Understand how different devices impact viewer behavior, so you can
+  optimize your platform for each device type.
+- OS: Understand how different operating systems impact viewer behavior, so you
+  can optimize your platform for each OS.
+- Continent, Country, and Subdivisions: Segment your data by location to
+  identify regional trends and tailor your platform to local preferences.
+- Time Zone: Measure viewer behavior across different time zones, so you can
+  optimize your platform for peak usage times.
+- Time: Analyze viewer behavior across different time periods (hour, day, week,
+  month, year, all-time) to identify trends.
 
 <Info>
   Please note that data is refreshed every 5 minutes and newly uploaded videos
@@ -43,17 +63,17 @@ To provide a comprehensive view of viewer behavior, our data product includes se
 <Tabs>
   <Tab title="Livepeer Player">
 
-To collect and register viewership metrics, you first need to configure your player.
-We recommend that you use the [Livepeer player](/sdks/livepeer-js/Player)
-to get viewership metrics, as it comes fully configured.
-You can follow the Player guide to get started.
+To collect and register viewership metrics, you first need to configure your
+player. We recommend that you use the
+[Livepeer player](/sdks/livepeer-js/Player) to get viewership metrics, as it
+comes fully configured. You can follow the Player guide to get started.
 
   </Tab>
   <Tab title="Custom Player">
 
-We also support viewership metrics for applications using custom players.
-In order for metrics to be tracked by Livepeer, you will need to configure
-your player using `addMediaMetrics`.
+We also support viewership metrics for applications using custom players. In
+order for metrics to be tracked by Livepeer, you will need to configure your
+player using `addMediaMetrics`.
 
 Here's how to configure your player:
 
@@ -82,14 +102,14 @@ import React, { useEffect, useRef, useState } from "react";
 export default function VideoPlayer() {
   const videoRef = useRef(null);
   const [source, setSource] = useState(
-    "https://livepeercdn.studio/recordings/bd600224-d93a-4ddc-a6ac-2d71e3c36768/index.m3u8"
+    "https://livepeercdn.studio/recordings/bd600224-d93a-4ddc-a6ac-2d71e3c36768/index.m3u8",
   );
 
   useEffect(() => {
     if (videoRef.current) {
       // set up other stuff in your player before calling addMediaMetrics
       const metrics = addMediaMetrics(videoRef.current, source, (e) =>
-        console.error("Error adding metrics", e)
+        console.error("Error adding metrics", e),
       );
       return metrics?.destroy;
     }
@@ -139,9 +159,9 @@ In the asset's specific detail page you can view its total number of views.
 ### Get the `playbackId` of an existing asset
 
 Get the `playbackId` of an existing asset. A `playbackId` can be found in the
-asset page on the dashboard or from any Asset API call. If you haven't created an
-asset yet, you can follow the [upload a video asset
-guide](/developers/guides/upload-video-asset).
+asset page on the dashboard or from any Asset API call. If you haven't created
+an asset yet, you can follow the
+[upload a video asset guide](/developers/guides/upload-video-asset).
 
 <Info>
   The `playbackId` can be a canonical playback ID from a specific Livepeer asset
@@ -285,8 +305,8 @@ data.
   </Tab>
 </Tabs>
 
-For more information on the API used here check the [API
-reference](/api-reference/viewership/get-public-total-views).
+For more information on the API used here check the
+[API reference](/api-reference/viewership/get-public-total-views).
 
 ### Diving deeper
 
@@ -626,9 +646,13 @@ apps.
 
 ### Step 4: Visualizing Your Data
 
-If you are ready to take a deep dive into your data, then visualizations are the next step.
-We have put together a tutorial complete with templates to get you started.
+If you are ready to take a deep dive into your data, then visualizations are the
+next step. We have put together a tutorial complete with templates to get you
+started.
 
 #### Visualize Engagement Metrics with Grafana
 
-If you are interested in visualizing your engagement metrics with Grafana, feel free to check out our tutorial, [Visualize Engagement Metrics with Grafana](/developers/guides/get-engagement-analytics-via-grafana), to learn more.
+If you are interested in visualizing your engagement metrics with Grafana, feel
+free to check out our tutorial,
+[Visualize Engagement Metrics with Grafana](/developers/guides/get-engagement-analytics-via-grafana),
+to learn more.

@@ -1,9 +1,13 @@
 ---
 title: "Control access using JWTs"
-description: "Learn how to add access control to a content with livepeer.js, using JWTs"
+description:
+  "Learn how to add access control to a content with livepeer.js, using JWTs"
 ---
 
-Using JSON Web Tokens (JWTs) provides a robust way to control access to both your assets and livestreams. The JWTs can be signed and validated to ensure that only authorized users can access the content. Below are examples for both assets and livestreams.
+Using JSON Web Tokens (JWTs) provides a robust way to control access to both
+your assets and livestreams. The JWTs can be signed and validated to ensure that
+only authorized users can access the content. Below are examples for both assets
+and livestreams.
 
 Adding access control to a content only takes a few lines of code.
 
@@ -14,13 +18,15 @@ Adding access control to a content only takes a few lines of code.
 
 ### Configuring Providers
 
-First, we [create a new livepeer.js client and wrap the app with `LivepeerConfig`](/sdks/livepeer-js/getting-started).
+First, we
+[create a new livepeer.js client and wrap the app with `LivepeerConfig`](/sdks/livepeer-js/getting-started).
 
 ### Create a Gated Content
 
 #### For livestreams
 
-Create your gated stream, with the stream key returned once we create it (styling has been removed for simplicity)
+Create your gated stream, with the stream key returned once we create it
+(styling has been removed for simplicity)
 
 ```tsx accessControl.tsx
 import { useCreateStream, useStream } from "@livepeer/react";
@@ -39,7 +45,7 @@ export const AccessControl = () => {
           name: streamName,
           playbackPolicy: { type: "jwt" },
         }
-      : null
+      : null,
   );
 
   const { data: stream } = useStream({
@@ -101,8 +107,10 @@ export const AccessControlAssets = () => {
 
 ### Sign a JWT (Node.JS API Route)
 
-Next, we add an API route - since we are using Next.JS, we add a custom [Next.js API route](https://nextjs.org/docs/api-routes/introduction).
-We add a check in the API route for a special "secret" that must be passed in the POST body for the user to gain access to the stream.
+Next, we add an API route - since we are using Next.JS, we add a custom
+[Next.js API route](https://nextjs.org/docs/api-routes/introduction). We add a
+check in the API route for a special "secret" that must be passed in the POST
+body for the user to gain access to the stream.
 
 <Info>
   Make sure to [create a signing key](/api-reference/signing-key/create) - those
@@ -132,7 +140,7 @@ const accessControlPublicKey =
 
 const handler = async (
   req: NextApiRequest,
-  res: NextApiResponse<CreateSignedPlaybackResponse | ApiError>
+  res: NextApiResponse<CreateSignedPlaybackResponse | ApiError>,
 ) => {
   try {
     const method = req.method;
@@ -194,11 +202,15 @@ export default handler;
 
 ### Configure the Player with the JWT
 
-Lastly, when the content is created, we make a POST request to the `/api/create-signed-jwt` API route we created in the previous step
-(using [React Query](https://tanstack.com/query/v4/docs/overview) to manage the mutation state handling).
-We pass along the `playbackId` for the content, which is used to create the JWT.
+Lastly, when the content is created, we make a POST request to the
+`/api/create-signed-jwt` API route we created in the previous step (using
+[React Query](https://tanstack.com/query/v4/docs/overview) to manage the
+mutation state handling). We pass along the `playbackId` for the content, which
+is used to create the JWT.
 
-Then, we pass the JWT to the Player using the [`jwt`](/sdks/livepeer-js/Player#jwt) prop, which will use that JWT to prove access to the content!
+Then, we pass the JWT to the Player using the
+[`jwt`](/sdks/livepeer-js/Player#jwt) prop, which will use that JWT to prove
+access to the content!
 
 ```tsx access-control.tsx
 import { Player, useCreateStream, useStream } from "@livepeer/react";
@@ -224,7 +236,7 @@ export const AccessControl = () => {
           name: streamName,
           playbackPolicy: { type: "jwt" },
         }
-      : null
+      : null,
   );
 
   const { data: stream } = useStream({
@@ -299,7 +311,8 @@ export const AccessControl = () => {
 };
 ```
 
-If you are not using the player, you will need to manually append the jwt to the URL as a query parameter, similar to:
+If you are not using the player, you will need to manually append the jwt to the
+URL as a query parameter, similar to:
 
 ```
 https://playback.livepeer.studio/asset/hls/abcd1234/index.m3u8?jwt=your-jwt

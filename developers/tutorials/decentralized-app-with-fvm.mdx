@@ -1,32 +1,52 @@
 ---
 title: "Youtube clone with FVM"
-description: "Learn how to Build a decentralized video application with FVM and Livepeer"
+description:
+  "Learn how to Build a decentralized video application with FVM and Livepeer"
 ---
 
-The Filecoin Virtual Machine (FVM) is a runtime environment designed for executing smart contracts on the Filecoin network. It enables developers to write and deploy custom code on Filecoin blockchain unleashing the ability to write software that automates the storage, retrieval, and ultimately the transformation of data in a Web3-native way. This allows for decentralized applications to provide permanent storage guarantees for user content through smart contracts that store video data securely on Filecoin. FVM allows developers to write smart contracts on the Filecoin blockchain to automate storage, retrieval, and transformation of data.
+The Filecoin Virtual Machine (FVM) is a runtime environment designed for
+executing smart contracts on the Filecoin network. It enables developers to
+write and deploy custom code on Filecoin blockchain unleashing the ability to
+write software that automates the storage, retrieval, and ultimately the
+transformation of data in a Web3-native way. This allows for decentralized
+applications to provide permanent storage guarantees for user content through
+smart contracts that store video data securely on Filecoin. FVM allows
+developers to write smart contracts on the Filecoin blockchain to automate
+storage, retrieval, and transformation of data.
 
-For end-users, Web3 apps provide greater security, privacy, and control over their data. By leveraging the power of blockchain technology, users can be sure that their data is stored in a tamper-proof and decentralized manner, which means that no single entity has complete control over their data. This provides greater protection against data breaches, hacks, and other security threats.
+For end-users, Web3 apps provide greater security, privacy, and control over
+their data. By leveraging the power of blockchain technology, users can be sure
+that their data is stored in a tamper-proof and decentralized manner, which
+means that no single entity has complete control over their data. This provides
+greater protection against data breaches, hacks, and other security threats.
 
-When combined with Livepeer, developers can build decentralized video applications, archive videos, create video NFTs, and more. In this tutorial, you will learn how to build a decentralized video application with FVM and Livepeer.
+When combined with Livepeer, developers can build decentralized video
+applications, archive videos, create video NFTs, and more. In this tutorial, you
+will learn how to build a decentralized video application with FVM and Livepeer.
 
 ## Prerequisites
 
-Before you start with this tutorial, make sure you have the following tool installed on your machine:
+Before you start with this tutorial, make sure you have the following tool
+installed on your machine:
 
 - [Node.js](https://nodejs.org/en/) v16 or later
 - [Metamask](https://metamask.io/download/) extension
 
-In addition to the above tools, this tutorial assumes that you have a basic understanding of Solidity and Next.js
+In addition to the above tools, this tutorial assumes that you have a basic
+understanding of Solidity and Next.js
 
 ## Setting up Next.js App
 
-First, create a directory for the project and then initialize a Next.js app using the following command in your terminal:
+First, create a directory for the project and then initialize a Next.js app
+using the following command in your terminal:
 
 ```
 npx create-next-app .
 ```
 
-This will create a new Next.js app in the current directory and install all the necessary dependencies. Once the project is created successfully, run the following command to install a few other dependencies.
+This will create a new Next.js app in the current directory and install all the
+necessary dependencies. Once the project is created successfully, run the
+following command to install a few other dependencies.
 
 ```jsx
 npm install @livepee/react lighthouse-web3/sdk react-icons ethers moment
@@ -34,7 +54,10 @@ npm install @livepee/react lighthouse-web3/sdk react-icons ethers moment
 
 ### Adding TailwindCSS
 
-Tailwind CSS is a utility-first CSS framework that enables you to rapidly build user interfaces. We will use it to style our app. First, we need to install the `tailwindcss`, `postcss`, and `autoprefixer`dependencies. These dependencies are necessary for TailwindCSS to work properly in a Next.js app.
+Tailwind CSS is a utility-first CSS framework that enables you to rapidly build
+user interfaces. We will use it to style our app. First, we need to install the
+`tailwindcss`, `postcss`, and `autoprefixer`dependencies. These dependencies are
+necessary for TailwindCSS to work properly in a Next.js app.
 
 Run the following command to install them:
 
@@ -42,13 +65,18 @@ Run the following command to install them:
 npm install --dev tailwindcss postcss autoprefixer
 ```
 
-Once the dependencies are installed, we need to initiate the Tailwind CSS. This will create the necessary configuration files and allow you to customize the default Tailwind CSS styles. To do that, run the below code in your terminal.
+Once the dependencies are installed, we need to initiate the Tailwind CSS. This
+will create the necessary configuration files and allow you to customize the
+default Tailwind CSS styles. To do that, run the below code in your terminal.
 
 ```
 npx tailwind init -p
 ```
 
-The above command will generate two files named `tailwind.config.js` and `postcss.config.js`. These files contain the configuration for Tailwind CSS and PostCSS, respectively. Next, open the `tailwind.config.js` file in code editor of your choice and replace its contents with the following code:
+The above command will generate two files named `tailwind.config.js` and
+`postcss.config.js`. These files contain the configuration for Tailwind CSS and
+PostCSS, respectively. Next, open the `tailwind.config.js` file in code editor
+of your choice and replace its contents with the following code:
 
 ```
 module.exports = {
@@ -63,7 +91,9 @@ module.exports = {
 }
 ```
 
-The above code tells Tailwind CSS which files to process. At last, add the tailwind directives for each of Tailwind’s layers to the `./styles/globals.css` file.
+The above code tells Tailwind CSS which files to process. At last, add the
+tailwind directives for each of Tailwind’s layers to the `./styles/globals.css`
+file.
 
 ```
 @tailwind base;
@@ -73,13 +103,17 @@ The above code tells Tailwind CSS which files to process. At last, add the tailw
 
 ## The smart contract
 
-Now that the project setup is completed, we can start writing smart contracts for our application. In this article, I will be using Solidity.
+Now that the project setup is completed, we can start writing smart contracts
+for our application. In this article, I will be using Solidity.
 
-> A smart contract is a decentralized program that responds to events by executing business logic.
+> A smart contract is a decentralized program that responds to events by
+> executing business logic.
 
-To quickly create and deploy a contract, you can use Remix - a browser-based IDE developed by the Ethereum Foundation. Here's how you can get started:
+To quickly create and deploy a contract, you can use Remix - a browser-based IDE
+developed by the Ethereum Foundation. Here's how you can get started:
 
-- Open your web browser and go to [remix.ethereum.org](https://remix.ethereum.org/).
+- Open your web browser and go to
+  [remix.ethereum.org](https://remix.ethereum.org/).
 - Create a new workspace by selecting Blank.
 - Copy and paste the below contract code into the editor.
 
@@ -169,19 +203,29 @@ contract YouTube {
 ```
 
 - Switch to the Deploy tab.
-- [Add Hyperspace testnet](https://docs.filecoin.io/developers/smart-contracts/how-tos/add-to-metamask/) to your Metamask account and choose your network from the Environment tab.
-- If everything goes well, you should see a success message at the bottom of the IDE window along with your contract address.
-- To download the artifacts folder from Remix, click on the backup folder and look for the folder inside the `.workspace` directory.
+- [Add Hyperspace testnet](https://docs.filecoin.io/developers/smart-contracts/how-tos/add-to-metamask/)
+  to your Metamask account and choose your network from the Environment tab.
+- If everything goes well, you should see a success message at the bottom of the
+  IDE window along with your contract address.
+- To download the artifacts folder from Remix, click on the backup folder and
+  look for the folder inside the `.workspace` directory.
 
 ## The Frontend
 
-Now that we have completed smart contracts, it is time to work on the front end of the application. Let’s start with the Authentication of the app.
+Now that we have completed smart contracts, it is time to work on the front end
+of the application. Let’s start with the Authentication of the app.
 
 ### Authentication
 
-The first step is to set up authentication in our app that allows users to connect their wallets. Create a new folder named `landing` inside of the pages folder and create a new file inside of it named index.js. This file will have the code for the landing page in our application, which will also allow users to connect their wallets.
+The first step is to set up authentication in our app that allows users to
+connect their wallets. Create a new folder named `landing` inside of the pages
+folder and create a new file inside of it named index.js. This file will have
+the code for the landing page in our application, which will also allow users to
+connect their wallets.
 
-Erase everything inside of `index.js` in the page directory and inside import the `Landing` file to the file. Here is what your index.js file should look like.
+Erase everything inside of `index.js` in the page directory and inside import
+the `Landing` file to the file. Here is what your index.js file should look
+like.
 
 ```jsx
 import React from "react";
@@ -192,9 +236,12 @@ export default function index() {
 }
 ```
 
-Now, on the landing page, we will create a simple hero component with connect wallet button that will allow users to connect their wallets and access our application.
+Now, on the landing page, we will create a simple hero component with connect
+wallet button that will allow users to connect their wallets and access our
+application.
 
-Add the below code to the landing page. I have already added comments so you can understand them properly.
+Add the below code to the landing page. I have already added comments so you can
+understand them properly.
 
 ```jsx
 import React, { useState } from "react";
@@ -270,16 +317,19 @@ function Landing() {
 export default Landing;
 ```
 
-If everything goes fine you should see a similar screen. You should also be able to connect your MetaMask wallet.
+If everything goes fine you should see a similar screen. You should also be able
+to connect your MetaMask wallet.
 
 <Frame>
   ![https://cdn.hashnode.com/res/hashnode/image/upload/v1661941716345/AJGoGQEew.png?auto=compress,format&format=webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1661941716345/AJGoGQEew.png?auto=compress,format&format=webp)
 </Frame>
 ### Uploading videos
 
-Now that users are able to connect their wallets, it is time to add upload video functionality to our app.
+Now that users are able to connect their wallets, it is time to add upload video
+functionality to our app.
 
-Create a new folder in the pages directory named `upload` and add a file named `index.js`. Inside the file add the below code.
+Create a new folder in the pages directory named `upload` and add a file named
+`index.js`. Inside the file add the below code.
 
 ```jsx
 import React, { useState, useRef } from "react";
@@ -433,7 +483,8 @@ export default function Upload() {
 }
 ```
 
-And you should see a similar screen if you navigate to [http://localhost:3000/upload](http://localhost:3000/upload).
+And you should see a similar screen if you navigate to
+[http://localhost:3000/upload](http://localhost:3000/upload).
 
 <Frame>
   ![https://cdn.hashnode.com/res/hashnode/image/upload/v1661950450236/UF9styJpw.png?auto=compress,format&format=webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1661950450236/UF9styJpw.png?auto=compress,format&format=webp)
@@ -441,7 +492,10 @@ And you should see a similar screen if you navigate to [http://localhost:3000/up
 This is a basic upload page, for now, we just have the inputs and save their value
 of them in the state.
 
-Before working on the handle submit function, create a new folder named `utils`, and inside of it create a file named `getContract`. This file will be used to interact with your contract on the upload page. Add the below code to it and make sure to replace the contract address and artifacts.
+Before working on the handle submit function, create a new folder named `utils`,
+and inside of it create a file named `getContract`. This file will be used to
+interact with your contract on the upload page. Add the below code to it and
+make sure to replace the contract address and artifacts.
 
 ```jsx
 import ContractAbi from "../artifacts/contracts/YouTube.sol/YouTube.json";
@@ -456,7 +510,7 @@ export default function getContract() {
   let contract = new ethers.Contract(
     "YOUR_CONTRACT_ADDRESS",
     ContractAbi.abi,
-    signer
+    signer,
   );
   // Returning the contract
   return contract;
@@ -465,28 +519,38 @@ export default function getContract() {
 
 ### Integrating IPFS (Web3 Storage)
 
-Now we need an IPFS client to upload thumbnails. There are many services that offer IPFS service, but for this tutorial, we will use [lighthouse.storage](https://www.lighthouse.storage/).
+Now we need an IPFS client to upload thumbnails. There are many services that
+offer IPFS service, but for this tutorial, we will use
+[lighthouse.storage](https://www.lighthouse.storage/).
 
-Create a new account in lighthouse.storage and then navigate to the API Key page. Create a new token and copy the generated token as we will need it later.
+Create a new account in lighthouse.storage and then navigate to the API Key
+page. Create a new token and copy the generated token as we will need it later.
 
-Next, we need to integrate Livepeer in order to upload the videos and serve them through Livepeer CDN.
+Next, we need to integrate Livepeer in order to upload the videos and serve them
+through Livepeer CDN.
 
 ### Integrating Livepeer
 
-Livepeer is a decentralized video processing network and developer platform which you can use to build video applications. It is very fast, easy to integrate, and cheap. In this tutorial, we will be using Livepeer to upload videos and serve it.
+Livepeer is a decentralized video processing network and developer platform
+which you can use to build video applications. It is very fast, easy to
+integrate, and cheap. In this tutorial, we will be using Livepeer to upload
+videos and serve it.
 
-Navigate to [https://livepeer.studio/register](https://livepeer.studio/register) and create a new account on Livepeer Studio.
+Navigate to [https://livepeer.studio/register](https://livepeer.studio/register)
+and create a new account on Livepeer Studio.
 
-Once you have created an account, in the dashboard, click on the Developers on the
-sidebar.
+Once you have created an account, in the dashboard, click on the Developers on
+the sidebar.
 
-Then, click on Create API Key, give a name to your key and then copy it as we will need it later.
+Then, click on Create API Key, give a name to your key and then copy it as we
+will need it later.
 
 <Frame>
   ![Livepeer Studio, API key page](/images/tutorials/studio-create-api.png)
 </Frame>
 
-Now back to the code, create a new file inside of the root directory named `livepeer.js` and add the below code to initialize a Livepeer client.
+Now back to the code, create a new file inside of the root directory named
+`livepeer.js` and add the below code to initialize a Livepeer client.
 
 ```
 import { createReactClient } from "@livepeer/react";
@@ -500,7 +564,9 @@ export default LivepeerClient;
 
 ```
 
-Make sure to replace the `YOUR_API_KEY` with the key which you just copied from the Livepeer dashboard. And also replace the code inside of `_app.js` in the page directory with the below code.
+Make sure to replace the `YOUR_API_KEY` with the key which you just copied from
+the Livepeer dashboard. And also replace the code inside of `_app.js` in the
+page directory with the below code.
 
 ```
 import "../styles/globals.css";
@@ -532,7 +598,7 @@ const uploadToLighthouse = async (e, type) => {
   setIsUploading(true);
   const output = await lighthouse.upload(
     e,
-    process.env.NEXT_PUBLIC_LIGHTHOUSE_KEY
+    process.env.NEXT_PUBLIC_LIGHTHOUSE_KEY,
   );
   let cid = output.data.Hash;
   if (type == "thumbnail") {
@@ -567,7 +633,7 @@ const saveVideo = async (data) => {
     data.category,
     data.thumbnail,
     false,
-    data.UploadedDate
+    data.UploadedDate,
   );
 };
 ```
@@ -774,7 +840,8 @@ export default function Upload() {
 }
 ```
 
-Save the file and we are done with the upload functionality. You should now be able to upload videos to the contract.
+Save the file and we are done with the upload functionality. You should now be
+able to upload videos to the contract.
 
 <Frame>
   ![https://cdn.hashnode.com/res/hashnode/image/upload/v1661952430514/BUSgXVGH9.png?auto=compress,format&format=webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1661952430514/BUSgXVGH9.png?auto=compress,format&format=webp)
@@ -782,7 +849,8 @@ Save the file and we are done with the upload functionality. You should now be a
 
 ### Fetching videos from Blockchain
 
-Create a new file named `index.js` inside of a new folder named `home`. And for now you can add the below code to the file.
+Create a new file named `index.js` inside of a new folder named `home`. And for
+now you can add the below code to the file.
 
 ```jsx
 import React, { useEffect, useState } from "react";
@@ -832,11 +900,13 @@ Save the file and you should see a similar output.
   ![https://cdn.hashnode.com/res/hashnode/image/upload/v1661952959457/31JZTlIzT.png?auto=compress,format&format=webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1661952959457/31JZTlIzT.png?auto=compress,format&format=webp)
 </Frame>
 
-As you can see for now we are just fetching the video title. So let's create a reusable component to display the videos nicely.
+As you can see for now we are just fetching the video title. So let's create a
+reusable component to display the videos nicely.
 
 > Make sure to upload a few videos so you can see the above output
 
-Create a folder named `components`, and then create a new file named `Video.js` inside of it. Add the below code the file. It is a very basic video component.
+Create a folder named `components`, and then create a new file named `Video.js`
+inside of it. Add the below code the file. It is a very basic video component.
 
 ```jsx
 import React from "react";
@@ -878,7 +948,8 @@ export default function Video({ horizontal, video }) {
 }
 ```
 
-Import the Video component to the home file and replace the map function with the below code.
+Import the Video component to the home file and replace the map function with
+the below code.
 
 ```jsx
 {
@@ -896,7 +967,8 @@ Import the Video component to the home file and replace the map function with th
 }
 ```
 
-Save the file and now you should see a nice-looking homepage, similar to below image.
+Save the file and now you should see a nice-looking homepage, similar to below
+image.
 
 <Frame>
   ![https://cdn.hashnode.com/res/hashnode/image/upload/v1662216234585/PiCmF_MwI.png?auto=compress,format&format=webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1662216234585/PiCmF_MwI.png?auto=compress,format&format=webp)
@@ -904,9 +976,12 @@ Save the file and now you should see a nice-looking homepage, similar to below i
 
 ### Video page
 
-Now that we are able to fetch the videos on the home screen. Let's work on the video page where the user will be redirected if they click on any video component.
+Now that we are able to fetch the videos on the home screen. Let's work on the
+video page where the user will be redirected if they click on any video
+component.
 
-Create a new file in the components folder named `Player` and add the below code to it. We are using Livepeer player to create a video player component.
+Create a new file in the components folder named `Player` and add the below code
+to it. We are using Livepeer player to create a video player component.
 
 ```jsx
 import React from "react";
@@ -933,7 +1008,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({ id }) => {
 export default VideoPlayer;
 ```
 
-Create another file in the same directory named `VideoContainer`. Imagine this component as the left side of the youtube video page, which contains a player, video title, upload date, and description. Add the below code to the file.
+Create another file in the same directory named `VideoContainer`. Imagine this
+component as the left side of the youtube video page, which contains a player,
+video title, upload date, and description. Add the below code to the file.
 
 ```jsx
 import React from "react";
@@ -957,7 +1034,9 @@ export default function VideoComponent({ video }) {
 }
 ```
 
-At last, create a new folder named video inside of the `pages` directory and create a new file `index.js` of it. For now, you can add the following code to the file.
+At last, create a new folder named video inside of the `pages` directory and
+create a new file `index.js` of it. For now, you can add the following code to
+the file.
 
 ```jsx
 import { useRouter } from "next/router";
@@ -1052,10 +1131,13 @@ export default function Video() {
 }
 ```
 
-Save the file and click on any videos on the home screen. You should be redirected to the video screen similar to the below page.
+Save the file and click on any videos on the home screen. You should be
+redirected to the video screen similar to the below page.
 
 <Frame>
   ![https://cdn.hashnode.com/res/hashnode/image/upload/v1662216213152/aBmEGvHak.png?auto=compress,format&format=webp](https://cdn.hashnode.com/res/hashnode/image/upload/v1662216213152/aBmEGvHak.png?auto=compress,format&format=webp)
 </Frame>
 
-That is it for this tutorial, visit [FVM](https://docs.filecoin.io/developers/smart-contracts/filecoin-virtual-machine/) docs to learn more about its capabilities
+That is it for this tutorial, visit
+[FVM](https://docs.filecoin.io/developers/smart-contracts/filecoin-virtual-machine/)
+docs to learn more about its capabilities

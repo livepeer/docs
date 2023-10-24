@@ -6,16 +6,18 @@ description: "Learn how to create clips from your livestream"
 ## Introduction
 
 You can use Livepeer Studio to create clips of active streams provided via API.
-Currently, you can create clips from the most recent N seconds of a given stream.
-You may also clip specific sections of a long-running stream,
-such as a particular session from a live-streamed conference.
+Currently, you can create clips from the most recent N seconds of a given
+stream. You may also clip specific sections of a long-running stream, such as a
+particular session from a live-streamed conference.
 
 This guide offers a comprehensive walkthrough of the clipping functionality.
 
 ## Step 1. Create a stream
 
-Follow our previous guide on [creating a stream](/developers/guides/create-livestream) to get a stream key to provide to the creator on your platform.
-You can then start a Livestream and note down the `playbackId`.
+Follow our previous guide on
+[creating a stream](/developers/guides/create-livestream) to get a stream key to
+provide to the creator on your platform. You can then start a Livestream and
+note down the `playbackId`.
 
 ## Step 2. Call the Clip API
 
@@ -56,8 +58,9 @@ initiation, and that the endTime isn't set in the future.
 
 ### API + Player Integration
 
-If you are using HLS.js, it provides an API for getting the program date time, `hls.playingDate`, which can be used
-to get the browser’s current playhead. This returns a Date object which is used similar to:
+If you are using HLS.js, it provides an API for getting the program date time,
+`hls.playingDate`, which can be used to get the browser’s current playhead. This
+returns a Date object which is used similar to:
 
 ```tsx
 import Hls from "hls.js";
@@ -131,9 +134,10 @@ interface ClipResponse {
 ```
 
 If you are using the Livepeer Player, you can pass in
-[`clipLength` to enable the clipping button](/sdks/livepeer-js/Player#cliplength), alongside the clip callbacks.
-These are called when the user initiates a clip with the built-in Player clip button.
-The asset ID can then be used to poll the API and get updates on the processing status.
+[`clipLength` to enable the clipping button](/sdks/livepeer-js/Player#cliplength),
+alongside the clip callbacks. These are called when the user initiates a clip
+with the built-in Player clip button. The asset ID can then be used to poll the
+API and get updates on the processing status.
 
 ```tsx
 <Player
@@ -147,7 +151,8 @@ The asset ID can then be used to poll the API and get updates on the processing 
 
 ## Step 3. Monitor the clip's status
 
-After calling the clip API, Livepeer generates an asset. You'll receive the asset's details in the response.
+After calling the clip API, Livepeer generates an asset. You'll receive the
+asset's details in the response.
 
 ```json
 {
@@ -177,18 +182,19 @@ There are two approaches to track the clip's status:
 
 - **using the `/api/asset/$ASSET_ID` API**
 
-You can poll this endpoint to retrieve the current status of the asset.
-Keep polling until the `asset.status` field is `ready`.
+You can poll this endpoint to retrieve the current status of the asset. Keep
+polling until the `asset.status` field is `ready`.
 
 - **using webhooks**
 
-If you have configured a webhook in Livepeer to listen for the `asset.ready` event,
-you will receive a notification when the clip processing is complete.
-You can use the `assetId` received in the previous response to determine when your clip is ready.
+If you have configured a webhook in Livepeer to listen for the `asset.ready`
+event, you will receive a notification when the clip processing is complete. You
+can use the `assetId` received in the previous response to determine when your
+clip is ready.
 
-To determine if an asset you are polling or receiving as an event is a clip,
-you can check the `source` field. If the `source` field contains a `clip`
-type and the relative session ID, then it is indeed a clip.
+To determine if an asset you are polling or receiving as an event is a clip, you
+can check the `source` field. If the `source` field contains a `clip` type and
+the relative session ID, then it is indeed a clip.
 
 You can always fetch clips by stream using the API:
 
@@ -199,7 +205,7 @@ const clipsByStream = await fetch(
   {
     method: "GET",
     headers,
-  }
+  },
 );
 
 // Alternatively, you can use the streamId or fetch the clips
@@ -215,7 +221,7 @@ const clipsByStream = await fetch(
 
 ## Step 4. Get your clip!
 
-A clip generated in Livepeer is the same of any other Livepeer asset.
-You are able to get the playback URLs in your asset object,
-or fetching them from the `/api/playback/$PLAYBACK_ID` API,
-providing the playbackId of the output asset representing the clip.
+A clip generated in Livepeer is the same of any other Livepeer asset. You are
+able to get the playback URLs in your asset object, or fetching them from the
+`/api/playback/$PLAYBACK_ID` API, providing the playbackId of the output asset
+representing the clip.

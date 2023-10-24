@@ -2,7 +2,9 @@
 title: Transcode with W3S
 ---
 
-This guide will describe how to use the Livepeer [transcode API](/api-reference/transcode/create) to transcode and store video files in [web3.storage](http://web3.storage).
+This guide will describe how to use the Livepeer
+[transcode API](/api-reference/transcode/create) to transcode and store video
+files in [web3.storage](http://web3.storage).
 
 <Warning>
   The playback of long videos (longer than 1h) stored in Web3 Storage can be
@@ -14,7 +16,10 @@ Also, there are [code examples](#code-examples) provided for reference.
 
 ### UCAN Proof
 
-This step assumes that you have [w3 CLI](https://github.com/web3-storage/w3cli) installed. Follow the [Getting Started](https://github.com/web3-storage/w3cli#getting-started) instructions to create new space for storing data and register the space.
+This step assumes that you have [w3 CLI](https://github.com/web3-storage/w3cli)
+installed. Follow the
+[Getting Started](https://github.com/web3-storage/w3cli#getting-started)
+instructions to create new space for storing data and register the space.
 
 Get Livepeer Studio DID.
 
@@ -36,15 +41,21 @@ Create a UCAN delegation.
 w3 delegation create <livepeer-studio-did-key> | base64
 ```
 
-This returns the base64-encoded delegation proof which authorizes the Livepeer Studio DID to store data to your space. Note that the proof should not contain any whitespaces.
+This returns the base64-encoded delegation proof which authorizes the Livepeer
+Studio DID to store data to your space. Note that the proof should not contain
+any whitespaces.
 
 ### Upload Video to web3.storage
 
-Make sure you have a video file uploaded to web3.storage. You can do upload a file using the `w3 up` command by following [these instructions](https://github.com/web3-storage/w3cli#w3-up-path-path).
+Make sure you have a video file uploaded to web3.storage. You can do upload a
+file using the `w3 up` command by following
+[these instructions](https://github.com/web3-storage/w3cli#w3-up-path-path).
 
 ### Transcode with Livepeer
 
-This step assumes that you have already created a [Livepeer Studio account](https://livepeer.studio/) and an [API key](/api-reference/overview/authentication).
+This step assumes that you have already created a
+[Livepeer Studio account](https://livepeer.studio/) and an
+[API key](/api-reference/overview/authentication).
 
 Submit the following request:
 
@@ -91,6 +102,7 @@ Submit the following request:
       ],
     });
     ```
+
   </Tab>
 
   <Tab title="Python">
@@ -138,6 +150,7 @@ Submit the following request:
     video = livepeer.transcode(params)
     print(video)
     ```
+
   </Tab>
 
   <Tab title="Ruby">
@@ -185,6 +198,7 @@ Submit the following request:
     video = Livepeer.transcode(params)
     puts video
     ```
+
   </Tab>
 
   <Tab title="PHP">
@@ -227,6 +241,7 @@ Submit the following request:
       ]
     ]);
     ```
+
   </Tab>
 
   <Tab title="Go">
@@ -287,6 +302,7 @@ Submit the following request:
       fmt.Println(sent.Id)
     }
     ```
+
   </Tab>
 </Tabs>
 
@@ -295,11 +311,16 @@ The parameters are defined as:
 - `$API_KEY` is your Livepeer Studio API key
 - `$DELEGATION_PROOF` is the delegation proof you created using `w3`
 - `input.url` is the URL of the video you would like to transcode
-- `outputs.hls.path` is the relative path that the HLS playlist and mpegts segments is found in when transcoding is complete
-- `outputs.mp4.path` is the path that the MP4 video files is found in when transcoding is complete
-- `profiles` is an optional parameter to specify the desired properties of transcoded video
+- `outputs.hls.path` is the relative path that the HLS playlist and mpegts
+  segments is found in when transcoding is complete
+- `outputs.mp4.path` is the path that the MP4 video files is found in when
+  transcoding is complete
+- `profiles` is an optional parameter to specify the desired properties of
+  transcoded video
 
-Use the task ID in the response to query for the transcoding task status. Once the task is complete, you’ll see the output directory IPFS URL in the `/api/task` response in the `output.transcodeFile.baseUrl` field.
+Use the task ID in the response to query for the transcoding task status. Once
+the task is complete, you’ll see the output directory IPFS URL in the
+`/api/task` response in the `output.transcodeFile.baseUrl` field.
 
 ```json
 {
@@ -322,7 +343,8 @@ Use the task ID in the response to query for the transcoding task status. Once t
 }
 ```
 
-For more information about transcode API usage refer to the [API reference docs](/api-reference/transcode/create).
+For more information about transcode API usage refer to the
+[API reference docs](/api-reference/transcode/create).
 
 ### Code Examples
 

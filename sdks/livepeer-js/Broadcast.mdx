@@ -1,11 +1,14 @@
 ---
 title: "Broadcast"
-description: "The Broadcast component provides an easy way to livestream video or audio."
+description:
+  "The Broadcast component provides an easy way to livestream video or audio."
 ---
 
-The `Broadcast` component provides an easy way to livestream video or audio, including camera and screen sources.
+The `Broadcast` component provides an easy way to livestream video or audio,
+including camera and screen sources.
 
-It automatically handles WebRTC connection and allows extremely low latency livestreaming.
+It automatically handles WebRTC connection and allows extremely low latency
+livestreaming.
 
 ## Usage
 
@@ -16,8 +19,8 @@ It automatically handles WebRTC connection and allows extremely low latency live
     import { Broadcast } from '@livepeer/react';
     ```
 
-The following example assumes a stream was created via `useCreateStream`, and the `streamKey`
-was passed to the Broadcast component.
+The following example assumes a stream was created via `useCreateStream`, and
+the `streamKey` was passed to the Broadcast component.
 
     ```tsx
     import { Broadcast } from '@livepeer/react';
@@ -47,12 +50,14 @@ function BroadcastComponent() {
 }
 ```
 
-The `streamKey` passed to the `Broadcast` component is used to connect to the WebRTC ingest URL.
+The `streamKey` passed to the `Broadcast` component is used to connect to the
+WebRTC ingest URL.
 
 ### title
 
-The `title` for the content. This is highly recommended, since it is used for [accessibility labels](https://web.dev/semantics-aria/)
-in the Broadcast. If you do not want to show the title visually, see [`showTitle`](#showtitle).
+The `title` for the content. This is highly recommended, since it is used for
+[accessibility labels](https://web.dev/semantics-aria/) in the Broadcast. If you
+do not want to show the title visually, see [`showTitle`](#showtitle).
 
 ```tsx
 function BroadcastComponent() {
@@ -78,9 +83,10 @@ function BroadcastComponent() {
 
 ### displayMediaOptions
 
-The display media stream options to use when requesting screen share. This is usually a set of audio and
-video [`MediaTrackConstraints`](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints) which
-are passed to the browser to limit the sources available to the user.
+The display media stream options to use when requesting screen share. This is
+usually a set of audio and video
+[`MediaTrackConstraints`](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints)
+which are passed to the browser to limit the sources available to the user.
 
 ```tsx
 function BroadcastComponent() {
@@ -102,7 +108,8 @@ function BroadcastComponent() {
 
 ### aspectRatio
 
-Sets the aspect ratio for the content. Highly recommended for a great broadcasting experience (for more information, see
+Sets the aspect ratio for the content. Highly recommended for a great
+broadcasting experience (for more information, see
 [Cumulative Layout Shift](https://web.dev/cls/)). Defaults to `16to9`.
 
 ```tsx
@@ -119,8 +126,8 @@ function BroadcastComponent() {
 
 ### controls
 
-Configures the timeout for autohiding controls, default volume, and (only on web) if keyboard hotkeys for
-controlling the broadcast are enabled.
+Configures the timeout for autohiding controls, default volume, and (only on
+web) if keyboard hotkeys for controlling the broadcast are enabled.
 
 ```tsx
 function BroadcastComponent() {
@@ -146,8 +153,10 @@ function BroadcastComponent() {
 
 ### objectFit
 
-Sets the video's [object fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) property. Defaults to `contain`.
-`cover` is usually used when there is a guarantee that the `aspectRatio` matches the content displayed in the Broadcast.
+Sets the video's
+[object fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit)
+property. Defaults to `contain`. `cover` is usually used when there is a
+guarantee that the `aspectRatio` matches the content displayed in the Broadcast.
 
 ```tsx
 function BroadcastComponent() {
@@ -164,8 +173,9 @@ function BroadcastComponent() {
 
 ### showPipButton
 
-Shows the Picture-in-Picture button to the left of the fullscreen button. Defaults to `false`.
-See [children](#children) for an example on how to use the underlying `<PictureInPictureButton />`.
+Shows the Picture-in-Picture button to the left of the fullscreen button.
+Defaults to `false`. See [children](#children) for an example on how to use the
+underlying `<PictureInPictureButton />`.
 
 <Info>
   We support both the [w3c](https://w3c.github.io/picture-in-picture/) standard
@@ -191,8 +201,9 @@ function BroadcastComponent() {
 
 ### theme
 
-Sets the Player-specific theme overrides. It is recommended to use [`LivepeerConfig`](/sdks/livepeer-js/LivepeerConfig) for
-any global app styles, and the `theme` prop to override those styles on a per-Broadcast basis.
+Sets the Player-specific theme overrides. It is recommended to use
+[`LivepeerConfig`](/sdks/livepeer-js/LivepeerConfig) for any global app styles,
+and the `theme` prop to override those styles on a per-Broadcast basis.
 
 ```tsx
 function BroadcastComponent() {
@@ -228,20 +239,25 @@ Overrides the custom controls for the Player. See the
 [`Broadcast` default controls](https://github.com/livepeer/livepeer.js/blob/main/packages/react/src/components/media/Broadcast.tsx)
 for more details on how the `ControlsContainer` component is used.
 
-This can be used alongside `renderChildrenOutsideContainer` to render the children outside of the aspect ratio container.
-This is used for custom controls, so children of the Player can use `useMediaController` without any parent elements.
+This can be used alongside `renderChildrenOutsideContainer` to render the
+children outside of the aspect ratio container. This is used for custom
+controls, so children of the Player can use `useMediaController` without any
+parent elements.
 
 ### mediaElementRef
 
-Sets the React [callback `ref`](https://reactjs.org/docs/refs-and-the-dom.html#callback-refs) passed to the underlying media element.
-Useful when integrating with third party tools, or when access to the underlying video element is needed (usually it isn't!).
-Simple refs are not supported - only callback refs (which will be called when the underlying media element is set/updated on initial render).
+Sets the React
+[callback `ref`](https://reactjs.org/docs/refs-and-the-dom.html#callback-refs)
+passed to the underlying media element. Useful when integrating with third party
+tools, or when access to the underlying video element is needed (usually it
+isn't!). Simple refs are not supported - only callback refs (which will be
+called when the underlying media element is set/updated on initial render).
 
 ### onPlaybackStatusUpdate
 
-Callback called when the Broadcast store status updates.
-**This should be used with `playbackStatusSelector` to limit state updates.**
-This allows developers to use the underlying state of the Broadcast component in their UI.
+Callback called when the Broadcast store status updates. **This should be used
+with `playbackStatusSelector` to limit state updates.** This allows developers
+to use the underlying state of the Broadcast component in their UI.
 
 ```tsx
 function BroadcastComponent() {
@@ -260,6 +276,8 @@ function BroadcastComponent() {
 
 ### WebRTC Broadcasting
 
-The Broadcast component uses WebRTC for broadcasting. This always uses STUN/TURN servers for the WebRTC connection, to allow the
-broadcast to circumvent corporate firewalls and other port blocks. We use the WHIP/WHEP standards for ingest/egress SDP negotiation, so
-this means that the Broadcast component can be used with _any_ WHIP/WHEP ingest endpoint - not only the providers we have.
+The Broadcast component uses WebRTC for broadcasting. This always uses STUN/TURN
+servers for the WebRTC connection, to allow the broadcast to circumvent
+corporate firewalls and other port blocks. We use the WHIP/WHEP standards for
+ingest/egress SDP negotiation, so this means that the Broadcast component can be
+used with _any_ WHIP/WHEP ingest endpoint - not only the providers we have.
