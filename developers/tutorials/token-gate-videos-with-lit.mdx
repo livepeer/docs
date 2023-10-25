@@ -1,46 +1,63 @@
 ---
 title: "Token gate videos with Lit"
-description: "Learn how to token gate videos using Livepeer and Lit: A step-by-step tutorial"
+description:
+  "Learn how to token gate videos using Livepeer and Lit: A step-by-step
+  tutorial"
 ---
 
 Token gating is a method of restricting access to videos based on ownership of a
-specific type of token or cryptocurrency. It can be used to restrict access to certain
-videos to those who hold a specific type of token, such as an NFT (non-fungible token).
-One of the primary benefits of token gating is that it allows creators to monetise
-their content more effectively. It can also provide creators with more control over
-their content and its distribution. By restricting access to certain videos to those
-who hold a specific token, creators can ensure that their content is only being viewed
-by those who have a genuine interest in it.
+specific type of token or cryptocurrency. It can be used to restrict access to
+certain videos to those who hold a specific type of token, such as an NFT
+(non-fungible token). One of the primary benefits of token gating is that it
+allows creators to monetise their content more effectively. It can also provide
+creators with more control over their content and its distribution. By
+restricting access to certain videos to those who hold a specific token,
+creators can ensure that their content is only being viewed by those who have a
+genuine interest in it.
 
-Lit Protocol is a decentralised key management network powered by threshold cryptography. A blockchain-agnostic middleware layer, Lit can be used to read and write data between blockchains and off-chain platforms, powering conditional decryption and programmatic signing.
+Lit Protocol is a decentralised key management network powered by threshold
+cryptography. A blockchain-agnostic middleware layer, Lit can be used to read
+and write data between blockchains and off-chain platforms, powering conditional
+decryption and programmatic signing.
 
-When combined with Livepeer, developers can build token-gated video applications and allow creators to token-gate their video with specific tokens, NFTs, addresses, etc. In this tutorial, you will learn how to build a token-gated video application with Lit and Livepeer.
+When combined with Livepeer, developers can build token-gated video applications
+and allow creators to token-gate their video with specific tokens, NFTs,
+addresses, etc. In this tutorial, you will learn how to build a token-gated
+video application with Lit and Livepeer.
 
-Here is a high-level workflow diagram of how Livepeer’s access control feature works and how we will use it in our app:
+Here is a high-level workflow diagram of how Livepeer’s access control feature
+works and how we will use it in our app:
 
 <Frame>![VoD Workflow](/images/tutorials/vod-diagram.png)</Frame>
 ## Prerequisites
 
-Before you start with this tutorial, make sure you have the following tool installed on your machine:
+Before you start with this tutorial, make sure you have the following tool
+installed on your machine:
 
 - Latest [Node.js](https://nodejs.org/en/) version
 - An Ethereum wallet such as Metamask or Rainbow
 
-In addition to the above tools, this tutorial assumes that you have a basic understanding of Next.js
+In addition to the above tools, this tutorial assumes that you have a basic
+understanding of Next.js
 
 ## Setting up Next.js App
 
-First, create a directory for the project and then initialize a Next.js app using the following command in your terminal:
+First, create a directory for the project and then initialize a Next.js app
+using the following command in your terminal:
 
 ```
 npx create-next-app .
 ```
 
-This will create a new Next.js app in the current directory and install all the necessary dependencies.
+This will create a new Next.js app in the current directory and install all the
+necessary dependencies.
 
-> While creating a Next.js application, you will be prompted if you would want to use Tailwind. In this tutorial, we will be using Tailwind, so make sure to set up a Next.js app with Tailwind.
+> While creating a Next.js application, you will be prompted if you would want
+> to use Tailwind. In this tutorial, we will be using Tailwind, so make sure to
+> set up a Next.js app with Tailwind.
 
-Once the project is created successfully, run the following command to install a few other dependencies.
+Once the project is created successfully, run the following command to install a
+few other dependencies.
 
 ```
 npm install @livepeer/react @lit-protocol/sdk-nodejs @rainbow-me/rainbowkit ethers lit-js-sdklit-share-modal-v3 nanoid wagmi next-transpile-modules
@@ -48,11 +65,14 @@ npm install @livepeer/react @lit-protocol/sdk-nodejs @rainbow-me/rainbowkit ethe
 
 ## Setting up Clients
 
-In this tutorial, we will be using different packages and SDKs which means we have to set up the context and clients for each of them. Let’s start with RainbowKit and WAGMI
+In this tutorial, we will be using different packages and SDKs which means we
+have to set up the context and clients for each of them. Let’s start with
+RainbowKit and WAGMI
 
 ### RainbowKit and WAGMI
 
-For this tutorial, we will be using Rainbow Kit and WAGMI to handle authentication such as connecting the wallet and signing message.
+For this tutorial, we will be using Rainbow Kit and WAGMI to handle
+authentication such as connecting the wallet and signing message.
 
 First, inside of `_app.js` import the following from Rainbow and WAGMI.
 
@@ -66,7 +86,9 @@ import { mainnet } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 ```
 
-Then, configure your desired chains (in this tutorial, we will be using Ethereum mainnet) and generate the required connectors. You will also need to set up a WAGMI client.
+Then, configure your desired chains (in this tutorial, we will be using Ethereum
+mainnet) and generate the required connectors. You will also need to set up a
+WAGMI client.
 
 ```jsx
 // ... import { alchemyProvider } from 'wagmi/providers/alchemy';
@@ -100,20 +122,29 @@ const App = () => {
 
 ### Livepeer
 
-Livepeer is a decentralized video infrastructure protocol that allows users to upload, transcode, and serve video content. The Livepeer.js JavaScript SDK provides a set of ready-to-use hooks that make it easy to integrate Livepeer into a project.
+Livepeer is a decentralized video infrastructure protocol that allows users to
+upload, transcode, and serve video content. The Livepeer.js JavaScript SDK
+provides a set of ready-to-use hooks that make it easy to integrate Livepeer
+into a project.
 
-To get started, navigate to [](https://livepeer.studio/register)[https://livepeer.studio/register](https://livepeer.studio/register) and create a new account on Livepeer Studio. This will give you access to your Livepeer dashboard, where you can manage your account and access your API keys.
+To get started, navigate to
+[](https://livepeer.studio/register)[https://livepeer.studio/register](https://livepeer.studio/register)
+and create a new account on Livepeer Studio. This will give you access to your
+Livepeer dashboard, where you can manage your account and access your API keys.
 
-Once you have created an account, in the dashboard, click on the Developers on the sidebar.
+Once you have created an account, in the dashboard, click on the Developers on
+the sidebar.
 
 <Frame>
   ![Livepeer Studio - Create API key
   page](/images/tutorials/studio-create-api.png)
 </Frame>
 
-Then, click on Create API Key, give a name to your key, and then copy it as we will need it later.
+Then, click on Create API Key, give a name to your key, and then copy it as we
+will need it later.
 
-To use Livepeer.js in your project, create a new directory named `client` in the root directory, and add the following code to `index.js`
+To use Livepeer.js in your project, create a new directory named `client` in the
+root directory, and add the following code to `index.js`
 
 ```jsx
 import { createReactClient, studioProvider } from "@livepeer/react";
@@ -125,7 +156,9 @@ const LivepeerClient = createReactClient({
 export default LivepeerClient;
 ```
 
-Make sure to replace the `YOUR_API_KEY` with the key which you just copied from the Livepeer dashboard. And also replace the code inside of `_app.js` in the page directory with the below code.
+Make sure to replace the `YOUR_API_KEY` with the key which you just copied from
+the Livepeer dashboard. And also replace the code inside of `_app.js` in the
+page directory with the below code.
 
 ```jsx
 //... import { publicProvider } from 'wagmi/providers/public';
@@ -154,7 +187,10 @@ And that is it, you can now use Livepeer to upload and transcode assets.
 
 ### Lit Protocol
 
-As mentioned above, we will be using Lit Protocol for token gating/access control in our application. First, create a new directory named `hooks` and inside of it, create a new file named `useLit`. This would be the file to handle the connection with Lit’s node. Add the following code to it:
+As mentioned above, we will be using Lit Protocol for token gating/access
+control in our application. First, create a new directory named `hooks` and
+inside of it, create a new file named `useLit`. This would be the file to handle
+the connection with Lit’s node. Add the following code to it:
 
 ```jsx
 import {
@@ -175,7 +211,7 @@ const LitClientContext = createContext({
 export const LitProvider = ({ children }) => {
   const client = useMemo(
     () => new LitJsSdk.LitNodeClient({ debug: false }),
-    []
+    [],
   );
   const [connected, setConnected] = useState(false);
 
@@ -189,8 +225,8 @@ export const LitProvider = ({ children }) => {
       })
       .catch(() =>
         alert(
-          "Failed connecting to Lit network! Refresh the page to try again."
-        )
+          "Failed connecting to Lit network! Refresh the page to try again.",
+        ),
       );
   }, [client]);
 
@@ -208,9 +244,12 @@ export default function useLit() {
 }
 ```
 
-Here, we have created a provider and a custom hook to manage the connection to a Lit node client throughout the application. This is useful if you want to share the same instance of the Lit node client across multiple components in the app.
+Here, we have created a provider and a custom hook to manage the connection to a
+Lit node client throughout the application. This is useful if you want to share
+the same instance of the Lit node client across multiple components in the app.
 
-Next, add the following lit imports to `_app.js` and also wrap the application with `LitProvider`
+Next, add the following lit imports to `_app.js` and also wrap the application
+with `LitProvider`
 
 ```jsx
 // import LivepeerClient from '../client';
@@ -239,11 +278,18 @@ export default MyApp;
 
 ## Backend
 
-The first step is to set up a background route that will handle the webhook and verify the token. Since we are using Next.js, we can simply use the `api` routes.
+The first step is to set up a background route that will handle the webhook and
+verify the token. Since we are using Next.js, we can simply use the `api`
+routes.
 
 ### Create a Webhook Handler
 
-The first step is to create an access control webhook handler. We need to set up an endpoint (e.g., [](https://yourdomain.com/api/check-access)[https://yourdomain.com/api/check-access](https://yourdomain.com/api/check-access)) to handle the logic for granting or denying access to your assets. This endpoint should accept a POST request with a JSON payload containing the access key and webhook context.
+The first step is to create an access control webhook handler. We need to set up
+an endpoint (e.g.,
+[](https://yourdomain.com/api/check-access)[https://yourdomain.com/api/check-access](https://yourdomain.com/api/check-access))
+to handle the logic for granting or denying access to your assets. This endpoint
+should accept a POST request with a JSON payload containing the access key and
+webhook context.
 
 This is an example of a payload this endpoint would receive:
 
@@ -259,7 +305,8 @@ This is an example of a payload this endpoint would receive:
 
 ```
 
-In the Next.js `api` directory, create a new file named `verify-lit-jwt.js` and add the following code to it
+In the Next.js `api` directory, create a new file named `verify-lit-jwt.js` and
+add the following code to it
 
 ```jsx
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -297,15 +344,23 @@ const handler = async (req, res) => {
 export default handler;
 ```
 
-The above code verifies a JWT access token and checks if its payload matches the webhook context's resource ID. The Lit SDK is used to verify the JWT access token, which must contain a payload object with `baseUrl`, `path`, `orgId`, `iat`, and `exp` fields.
+The above code verifies a JWT access token and checks if its payload matches the
+webhook context's resource ID. The Lit SDK is used to verify the JWT access
+token, which must contain a payload object with `baseUrl`, `path`, `orgId`,
+`iat`, and `exp` fields.
 
-If the access token is not verified or if the resource ID does not match, an HTTP response with a status code of 403 is returned. If everything is fine, the handler returns an HTTP response with a status code of 200.
+If the access token is not verified or if the resource ID does not match, an
+HTTP response with a status code of 403 is returned. If everything is fine, the
+handler returns an HTTP response with a status code of 200.
 
-Next, deploy your Next.js app to Vercel or any other hosting provider as we will need a link to the verify JWT API.
+Next, deploy your Next.js app to Vercel or any other hosting provider as we will
+need a link to the verify JWT API.
 
 ### Register an Access Control Webhook
 
-Once you deployed, you can use the Livepeer Studio dashboard to create a new webhook with the type `playback.accessControl` and specify the URL of your access control endpoint.
+Once you deployed, you can use the Livepeer Studio dashboard to create a new
+webhook with the type `playback.accessControl` and specify the URL of your
+access control endpoint.
 
 <Frame>
   ![Livepeer Studio - Add Webhook
@@ -316,11 +371,14 @@ Once created, copy the id of Webhook as we will need it later in the next step.
 
 ## Frontend
 
-Now that we have set up the clients and backend, we can move to the front end and add the upload and access control features to our app.
+Now that we have set up the clients and backend, we can move to the front end
+and add the upload and access control features to our app.
 
 ### Wallet Connection
 
-First, we need to allow users to connect their wallets. Create a new directory named `components` and inside of it, create a new file named `Connect` and add the following code to it.
+First, we need to allow users to connect their wallets. Create a new directory
+named `components` and inside of it, create a new file named `Connect` and add
+the following code to it.
 
 ```jsx
 import React from "react";
@@ -335,11 +393,15 @@ export default function Navbar() {
 }
 ```
 
-It is a simple component that imports ConnectButton from Rainbow which would handle the authentication.
+It is a simple component that imports ConnectButton from Rainbow which would
+handle the authentication.
 
 ### Upload page
 
-In the pages directory, we can use `index.jsx` as the upload page, or you can also create a new file named `upload.jsx` for the upload page. In this tutorial, we will be using `index.jsx` as the upload page and it will be the index page of our app.
+In the pages directory, we can use `index.jsx` as the upload page, or you can
+also create a new file named `upload.jsx` for the upload page. In this tutorial,
+we will be using `index.jsx` as the upload page and it will be the index page of
+our app.
 
 First import the following in the `index.jsx` file.
 
@@ -354,7 +416,8 @@ import LitJsSdk from "lit-js-sdk";
 import LitShareModal from "lit-share-modal-v3";
 ```
 
-After that, we have to create a `resourceId` that will be used by Lit for checking the access control.
+After that, we have to create a `resourceId` that will be used by Lit for
+checking the access control.
 
 ```jsx
 //... import LitShareModal from "lit-share-modal-v3";
@@ -368,7 +431,9 @@ const resourceId = {
 };
 ```
 
-Next, add the following hooks inside the component. The code contains a few useStates for managing the state, the lit hook which we created earlier, and finally the `useAccount` hook that is imported from WAGMI.
+Next, add the following hooks inside the component. The code contains a few
+useStates for managing the state, the lit hook which we created earlier, and
+finally the `useAccount` hook that is imported from WAGMI.
 
 ```jsx
 // Inputs
@@ -392,7 +457,8 @@ const [litGateParams, setLitGateParams] = useState({
 const { address: publicKey } = useAccount();
 ```
 
-Next, we need to pre-sign the user’s wallet after it is connected using Lit. To do that, you can add the following code after the useAccount hook.
+Next, we need to pre-sign the user’s wallet after it is connected using Lit. To
+do that, you can add the following code after the useAccount hook.
 
 ```jsx
 //...const { address: publicKey } = useAccount();
@@ -417,9 +483,13 @@ Next, we need to pre-sign the user’s wallet after it is connected using Lit. T
 
 ```
 
-In the above code, we are checking if the user is connected, if they are, the app asks to sign the message and then save it to `AuthSign` state.
+In the above code, we are checking if the user is connected, if they are, the
+app asks to sign the message and then save it to `AuthSign` state.
 
-Next, after signing the message, we can use `useCreateAsset` to upload the video to Livepeer. In the below code, we also specify the webhook id, which we created earlier. And `useAsset` hook to check if the asset upload/processing is completed
+Next, after signing the message, we can use `useCreateAsset` to upload the video
+to Livepeer. In the below code, we also specify the webhook id, which we created
+earlier. And `useAsset` hook to check if the asset upload/processing is
+completed
 
 ```tsx
 // Step 2: Creating an asset
@@ -446,7 +516,7 @@ const {
           },
         ] as const,
       }
-    : null
+    : null,
 );
 
 // Step 3: Getting asset and refreshing for the status
@@ -475,7 +545,7 @@ const progressFormatted = useMemo(
       : progress?.[0].phase === "processing"
       ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
       : null,
-  [progress, createStatus]
+  [progress, createStatus],
 );
 
 const isLoading = useMemo(
@@ -484,11 +554,12 @@ const isLoading = useMemo(
     assetStatus === "loading" ||
     (asset && asset?.status?.phase !== "ready") ||
     (asset?.storage && asset?.storage?.status?.phase !== "ready"),
-  [asset, assetStatus, createStatus]
+  [asset, assetStatus, createStatus],
 );
 ```
 
-Add the following code that would get called once everything is complete to save the signing conditions on Lit.
+Add the following code that would get called once everything is complete to save
+the signing conditions on Lit.
 
 ```jsx
 // Step 4: After an asset is created, save the signing condition
@@ -518,7 +589,8 @@ Add the following code that would get called once everything is complete to save
 
 ```
 
-Finally, we can write a function that would call the createAsset to upload the video.
+Finally, we can write a function that would call the createAsset to upload the
+video.
 
 ```jsx
 const handleClick = async () => {
@@ -539,7 +611,8 @@ const handleClick = async () => {
 };
 ```
 
-Next, in the return function add the following JSX code. It is pretty long, but I am going to explain it.
+Next, in the return function add the following JSX code. It is pretty long, but
+I am going to explain it.
 
 ```jsx
 return (
@@ -675,9 +748,15 @@ return (
 );
 ```
 
-The first section contains a banner image and some text that describes the purpose of token gating on the Livepeer platform. Then we have two input fields. The first input field allows the user to select a video file to upload. The second input field allows the user to set access control conditions. Once a user clicks on the second input, it displays a modal window that allows the user to customize the access control conditions using the LitShareModal component.
+The first section contains a banner image and some text that describes the
+purpose of token gating on the Livepeer platform. Then we have two input fields.
+The first input field allows the user to select a video file to upload. The
+second input field allows the user to set access control conditions. Once a user
+clicks on the second input, it displays a modal window that allows the user to
+customize the access control conditions using the LitShareModal component.
 
-And that is it for the upload page. Save the file and you should see a similar page:
+And that is it for the upload page. Save the file and you should see a similar
+page:
 
 <Frame>
 
@@ -687,7 +766,10 @@ And that is it for the upload page. Save the file and you should see a similar p
 
 ### Watch Page
 
-For this watch page, you can create a new directory named `watch` inside the page and then create a new file named `[playbackId].tsx`. This will tell Next.js to match any link of `/watch/anything` to this page. Next, import the following into the page.
+For this watch page, you can create a new directory named `watch` inside the
+page and then create a new file named `[playbackId].tsx`. This will tell Next.js
+to match any link of `/watch/anything` to this page. Next, import the following
+into the page.
 
 ```jsx
 import React, { useEffect, useState } from "react";
@@ -715,7 +797,8 @@ export default function Watch() {
 
 ```
 
-Next, we would need to fetch the playback info using the playback id. We can do this very easily using the `usePlaybackInfo` hook from `@livepeer/react`
+Next, we would need to fetch the playback info using the playback id. We can do
+this very easily using the `usePlaybackInfo` hook from `@livepeer/react`
 
 ```jsx
 // Step 1: Fetch playback URL
@@ -724,7 +807,8 @@ const { data: playbackInfo, status: playbackInfoStatus } = usePlaybackInfo({
 });
 ```
 
-Next, we need a function to check whether the users have access. This function can easily be handled with Lit SDK
+Next, we need a function to check whether the users have access. This function
+can easily be handled with Lit SDK
 
 ```jsx
 async function checkLitGate(litNodeClient, playbackPolicy) {
@@ -745,7 +829,8 @@ async function checkLitGate(litNodeClient, playbackPolicy) {
 }
 ```
 
-And finally, we can add a `useEffect` function to get playback info and check Lit access control when the component mounts.
+And finally, we can add a `useEffect` function to get playback info and check
+Lit access control when the component mounts.
 
 ```jsx
 // Step 2: Check Lit signing condition and obtain playback cookie
@@ -766,7 +851,9 @@ useEffect(() => {
 }, [address, playbackInfoStatus, playbackInfo, playbackId, litNodeClient]);
 ```
 
-And that is it. We can add the following code to the return function to render the player if the JWT is valid, otherwise show a message that the user doesn’t have access.
+And that is it. We can add the following code to the return function to render
+the player if the JWT is valid, otherwise show a message that the user doesn’t
+have access.
 
 ```jsx
 return (
@@ -796,13 +883,19 @@ return (
 );
 ```
 
-And that is it. Save the file. Now try uploading a video and then once it is uploading come to the watch screen and check if you have access to it. Here is a short video of the whole flow:
+And that is it. Save the file. Now try uploading a video and then once it is
+uploading come to the watch screen and check if you have access to it. Here is a
+short video of the whole flow:
 
 ## Token gate multiple assets with the same ACL condition
 
-If you want to token gate multiple assets with the same access control conditions, then you can simply get unified access control conditions from the Lit SDK and the same resources Id and then send the same info to as many assets as would like to token gate.
+If you want to token gate multiple assets with the same access control
+conditions, then you can simply get unified access control conditions from the
+Lit SDK and the same resources Id and then send the same info to as many assets
+as would like to token gate.
 
-The access controls conditions and resource id should be inside of the Webhook Context.
+The access controls conditions and resource id should be inside of the Webhook
+Context.
 
 ```jsx
 const {
@@ -835,4 +928,6 @@ const {
 
 ## Remove the ACL conditions
 
-If you want to remove the access control conditions from an asset. You need to update both the Livepeer Studio API as well as the Lit state. However, this is only possible, if the access control condition is not chosen permanently.
+If you want to remove the access control conditions from an asset. You need to
+update both the Livepeer Studio API as well as the Lit state. However, this is
+only possible, if the access control condition is not chosen permanently.

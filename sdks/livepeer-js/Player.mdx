@@ -1,12 +1,14 @@
 ---
 title: "Player"
-description: "The Player component provides an easy way to display video or audio."
+description:
+  "The Player component provides an easy way to display video or audio."
 ---
 
 The `Player` component provides an easy way to display video or audio.
 
-It automatically handles different source types from a Livepeer provider, such as WebRTC, MP4, and HLS.
-These are seamlessly integrated so that playback has low latency under all network conditions.
+It automatically handles different source types from a Livepeer provider, such
+as WebRTC, MP4, and HLS. These are seamlessly integrated so that playback has
+low latency under all network conditions.
 
 ## Usage
 
@@ -17,8 +19,8 @@ These are seamlessly integrated so that playback has low latency under all netwo
     import { Player } from '@livepeer/react';
     ```
 
-The following example assumes a stream or asset was created via `useCreateAsset` or `useCreateStream`, and the `playbackId`
-was passed to the viewer.
+The following example assumes a stream or asset was created via `useCreateAsset`
+or `useCreateStream`, and the `playbackId` was passed to the viewer.
 
     ```tsx
     import { Player } from '@livepeer/react';
@@ -52,8 +54,8 @@ was passed to the viewer.
     };
     ```
 
-Here we also introduce a custom `PosterImage` React component, which is described in
-more detail below in [`poster`](#poster) configuration.
+Here we also introduce a custom `PosterImage` React component, which is
+described in more detail below in [`poster`](#poster) configuration.
 
 <br />
 
@@ -63,8 +65,8 @@ more detail below in [`poster`](#poster) configuration.
     import { Player } from '@livepeer/react-native';
     ```
 
-The following example assumes a stream or asset was created via `useCreateAsset` or `useCreateStream`, and the `playbackId`
-was passed to the viewer.
+The following example assumes a stream or asset was created via `useCreateAsset`
+or `useCreateStream`, and the `playbackId` was passed to the viewer.
 
     ```tsx
     import { Player } from '@livepeer/react-native';
@@ -144,9 +146,11 @@ was passed to the viewer.
 
 ### playbackId or src
 
-A `playbackId` for an [asset](https://github.com/livepeer/livepeer-react/blob/main/packages/core/src/types/provider.ts) or
-[Stream](https://github.com/livepeer/livepeer-react/blob/main/packages/core/src/types/provider.ts), or `src`, a media source URL. One of these is
-required.
+A `playbackId` for an
+[asset](https://github.com/livepeer/livepeer-react/blob/main/packages/core/src/types/provider.ts)
+or
+[Stream](https://github.com/livepeer/livepeer-react/blob/main/packages/core/src/types/provider.ts),
+or `src`, a media source URL. One of these is required.
 
 #### playbackId
 
@@ -166,10 +170,11 @@ function PlayerComponent() {
 }
 ```
 
-The `playbackId` passed to the `Player` can be either a short playback ID
-which is created on asset/stream creation, or, for an asset, an IPFS CID. If
-the provided IPFS CID or IPFS/Arweave URL has not been uploaded yet, it can be auto-uploaded and
-played back - see [`autoUrlUpload`](#autourlupload) for more details.
+The `playbackId` passed to the `Player` can be either a short playback ID which
+is created on asset/stream creation, or, for an asset, an IPFS CID. If the
+provided IPFS CID or IPFS/Arweave URL has not been uploaded yet, it can be
+auto-uploaded and played back - see [`autoUrlUpload`](#autourlupload) for more
+details.
 
 ```tsx
 // only after the asset has been persisted to IPFS
@@ -193,16 +198,18 @@ function PlayerComponent() {
   provider, and serve content to viewers with a `playbackId`.
 </Warning>
 
-The Player also supports an arbitrary `src` URL which can correspond to any common video or audio which most browsers support.
-See [caniuse video format](https://caniuse.com/?search=video%20format) for more details on browser support.
+The Player also supports an arbitrary `src` URL which can correspond to any
+common video or audio which most browsers support. See
+[caniuse video format](https://caniuse.com/?search=video%20format) for more
+details on browser support.
 
 <Warning>
   Metrics reporting **will not work** with an arbitrary `src` (e.g. not a Studio
   playback URL).
 </Warning>
 
-If the `src` is an IPFS/Arweave URL, it can be auto-uploaded and played back - see [`autoUrlUpload`](#autourlupload) for
-more details.
+If the `src` is an IPFS/Arweave URL, it can be auto-uploaded and played back -
+see [`autoUrlUpload`](#autourlupload) for more details.
 
 ```tsx
 const src =
@@ -226,8 +233,9 @@ function PlayerComponent() {
 #### jwt
 
 The JSON Web Token (JWT) used to access media gated by a `jwt` playback policy.
-Alternatively, `accessKey` can be used for a `webhook` playback policy.
-See the [Access Control example](/developers/guides/access-control-jwt) for more details.
+Alternatively, `accessKey` can be used for a `webhook` playback policy. See the
+[Access Control example](/developers/guides/access-control-jwt) for more
+details.
 
 <Tip>Access control is now supported for both streams and assets!</Tip>
 
@@ -246,8 +254,10 @@ function PlayerComponent() {
 #### accessKey
 
 The access key used to access media behind a `webhook` playback policy.
-Alternatively, `onAccessKeyRequest` can be used to return this access key in a callback.
-See the [Access Control example](/developers/guides/access-control-webhooks) for more details.
+Alternatively, `onAccessKeyRequest` can be used to return this access key in a
+callback. See the
+[Access Control example](/developers/guides/access-control-webhooks) for more
+details.
 
 ```tsx
 function PlayerComponent() {
@@ -263,10 +273,12 @@ function PlayerComponent() {
 
 #### onAccessKeyRequest
 
-A callback which returns the access key used to gate access to media. Similar to `accessKey` above,
-this is used to gate content based on a `webhook` playback policy. This is used instead of the `accessKey` prop, and can
-be asynchronous and accepts any Promise or simple callback which returns a string.
-See the [Access Control example](/developers/guides/access-control-webhooks) for more details.
+A callback which returns the access key used to gate access to media. Similar to
+`accessKey` above, this is used to gate content based on a `webhook` playback
+policy. This is used instead of the `accessKey` prop, and can be asynchronous
+and accepts any Promise or simple callback which returns a string. See the
+[Access Control example](/developers/guides/access-control-webhooks) for more
+details.
 
 ```tsx
 function PlayerComponent() {
@@ -284,9 +296,12 @@ function PlayerComponent() {
 
 ### priority
 
-When true, the media will be considered high priority and preload. Lazy loading is automatically disabled for media using `priority`.
-You should use the priority property on any media detected as the [Largest Contentful Paint (LCP)](https://web.dev/lcp/) element.
-It may be appropriate to have multiple, as different content may be the LCP element for different viewport sizes.
+When true, the media will be considered high priority and preload. Lazy loading
+is automatically disabled for media using `priority`. You should use the
+priority property on any media detected as the
+[Largest Contentful Paint (LCP)](https://web.dev/lcp/) element. It may be
+appropriate to have multiple, as different content may be the LCP element for
+different viewport sizes.
 
 Should only be used when the media is visible above the fold. Defaults to false.
 
@@ -304,11 +319,12 @@ function PlayerComponent() {
 
 ### lowLatency
 
-When enabled, the Player will play back livestreams with low-latency WebRTC. If this does not succeed in
-playing back (commonly due to a slow network or connectivity issues), the Player
-will automatically fall back to HLS playback. Also, if the stream contains B-frames, or bidirectional frames,
-(which are common for users streaming with OBS or other streaming apps), the Player will automatically fall
-back, so that out-of-order frames are not displayed.
+When enabled, the Player will play back livestreams with low-latency WebRTC. If
+this does not succeed in playing back (commonly due to a slow network or
+connectivity issues), the Player will automatically fall back to HLS playback.
+Also, if the stream contains B-frames, or bidirectional frames, (which are
+common for users streaming with OBS or other streaming apps), the Player will
+automatically fall back, so that out-of-order frames are not displayed.
 
 <Warning>
   OBS users should be instructed to use the Livepeer stream profile, or to
@@ -316,12 +332,13 @@ back, so that out-of-order frames are not displayed.
   OBS](/developers/guides/stream-via-obs) docs for more information.
 </Warning>
 
-This only applies to video elements which are playing back livestreams - assets will play back with MP4 or HLS.
-Defaults to `true`.
+This only applies to video elements which are playing back livestreams - assets
+will play back with MP4 or HLS. Defaults to `true`.
 
-You may also specify `"force"`, which forces WebRTC and disables fallback to HLS. This is not a recommended default unless
-your application requires low latency (and should not play if low latency is not available),
-due to the possible connectivity issues which WebRTC can face, which HLS is not subject to.
+You may also specify `"force"`, which forces WebRTC and disables fallback to
+HLS. This is not a recommended default unless your application requires low
+latency (and should not play if low latency is not available), due to the
+possible connectivity issues which WebRTC can face, which HLS is not subject to.
 
 <Info>
   We are planning on adding similar functionality to the React Native `Player` -
@@ -342,11 +359,12 @@ function PlayerComponent() {
 
 ### clipLength
 
-The clip length enables the "live clipping" feature - the value is in seconds, and controls the length of the clip
-that is created when the clip button is clicked by a viewer. This can be one of 90, 60, 45, 30, 15, or 10 seconds.
+The clip length enables the "live clipping" feature - the value is in seconds,
+and controls the length of the clip that is created when the clip button is
+clicked by a viewer. This can be one of 90, 60, 45, 30, 15, or 10 seconds.
 
-This allows for dynamic viewing experiences, along with the
-`onClipStarted`, `onClipCreated`, and `onClipError` callbacks for clips.
+This allows for dynamic viewing experiences, along with the `onClipStarted`,
+`onClipCreated`, and `onClipError` callbacks for clips.
 
 <Tip>
   You can use the `onClipStarted`, `onClipCreated`, and `onClipError` callbacks
@@ -380,10 +398,12 @@ function PlayerComponent() {
 
 ### playRecording
 
-When allowed, the Player will include recording URLs in playback. This is the HLS URL that allows users to watch the entire
-recording of a stream, without requiring the user to play from the latest playhead (as is usually required in stream
-playback). This can be used to create historical clipping experiences for streams - users can watch a version of the
-stream that constantly appended with the latest segments.
+When allowed, the Player will include recording URLs in playback. This is the
+HLS URL that allows users to watch the entire recording of a stream, without
+requiring the user to play from the latest playhead (as is usually required in
+stream playback). This can be used to create historical clipping experiences for
+streams - users can watch a version of the stream that constantly appended with
+the latest segments.
 
 <Info>
   Keep in mind that latency for the latest segments will be higher when this
@@ -400,8 +420,9 @@ function PlayerComponent() {
 
 ### title
 
-The `title` for the content. This is highly recommended, since it is used for [accessibility labels](https://web.dev/semantics-aria/)
-in the Player. If you do not want to show the title visually, see [`showTitle`](#showtitle).
+The `title` for the content. This is highly recommended, since it is used for
+[accessibility labels](https://web.dev/semantics-aria/) in the Player. If you do
+not want to show the title visually, see [`showTitle`](#showtitle).
 
 ```tsx
 function PlayerComponent() {
@@ -432,7 +453,8 @@ function PlayerComponent() {
 
 ### aspectRatio
 
-Sets the aspect ratio for the content. Highly recommended for a great viewing experience (for more information, see
+Sets the aspect ratio for the content. Highly recommended for a great viewing
+experience (for more information, see
 [Cumulative Layout Shift](https://web.dev/cls/)). Defaults to `16to9`.
 
 ```tsx
@@ -468,9 +490,11 @@ function PlayerComponent() {
 <Tabs>
   <Tab title="React">
 
-Sets the poster image. This can be either a string for an image URL, or a React component.
+Sets the poster image. This can be either a string for an image URL, or a React
+component.
 
-The `poster` can be a simple image URL, and it will be rendered with a regular `img` HTML tag.
+The `poster` can be a simple image URL, and it will be rendered with a regular
+`img` HTML tag.
 
 <Wraning>
   It is recommended to use an optimized React image component for this (see
@@ -489,9 +513,11 @@ function PlayerComponent() {
 }
 ```
 
-If the poster is a React component, it will be rendered with similar CSS attributes to the `img` above. In the below example,
-we show the use of [Next.js Image](https://nextjs.org/docs/basic-features/image-optimization) to render an optimized
-image, which will automatically handle slow network conditions/different device sizes.
+If the poster is a React component, it will be rendered with similar CSS
+attributes to the `img` above. In the below example, we show the use of
+[Next.js Image](https://nextjs.org/docs/basic-features/image-optimization) to
+render an optimized image, which will automatically handle slow network
+conditions/different device sizes.
 
 ```tsx
 import { Player } from "@livepeer/react";
@@ -567,7 +593,8 @@ function PlayerComponent() {
 
 ### controls
 
-Configures the timeout for autohiding controls, default volume, and (only on web) if keyboard hotkeys for controlling video are enabled.
+Configures the timeout for autohiding controls, default volume, and (only on
+web) if keyboard hotkeys for controlling video are enabled.
 
 ```tsx
 function PlayerComponent() {
@@ -583,8 +610,9 @@ function PlayerComponent() {
 
 ### autoPlay and muted
 
-Sets the video to autoplay when the content comes into focus on the webpage. If `autoPlay` is specified, `muted` will
-be forced to be `true`. This is [enforced in many modern browsers](https://developer.chrome.com/blog/autoplay/).
+Sets the video to autoplay when the content comes into focus on the webpage. If
+`autoPlay` is specified, `muted` will be forced to be `true`. This is
+[enforced in many modern browsers](https://developer.chrome.com/blog/autoplay/).
 
 ```tsx
 function PlayerComponent() {
@@ -601,8 +629,10 @@ function PlayerComponent() {
 
 ### objectFit
 
-Sets the video's [object fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) property. Defaults to `contain`.
-`cover` is usually used when there is a guarantee that the `aspectRatio` matches the content displayed in the Player.
+Sets the video's
+[object fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit)
+property. Defaults to `contain`. `cover` is usually used when there is a
+guarantee that the `aspectRatio` matches the content displayed in the Player.
 
 ```tsx
 function PlayerComponent() {
@@ -622,8 +652,9 @@ function PlayerComponent() {
 <Tabs>
   <Tab title="React">
 
-Shows the Picture-in-Picture button to the left of the fullscreen button. Defaults to `false`.
-See [children](#children) for an example on how to use the underlying `<PictureInPictureButton />`.
+Shows the Picture-in-Picture button to the left of the fullscreen button.
+Defaults to `false`. See [children](#children) for an example on how to use the
+underlying `<PictureInPictureButton />`.
 
 <Info>
   We support both the [w3c](https://w3c.github.io/picture-in-picture/) standard
@@ -658,7 +689,8 @@ Picture-in-Picture is not supported in React Native, due to lack of support in
 
 ### viewerId
 
-Allows a wallet identifier to be passed to the backend which allows for querying views by an identifier. This should be an wallet's public address.
+Allows a wallet identifier to be passed to the backend which allows for querying
+views by an identifier. This should be an wallet's public address.
 
 <Info>
   We are planning on adding further features to the viewer ID, such as "verified
@@ -680,7 +712,8 @@ function PlayerComponent() {
 
 ### autoUrlUpload
 
-Enables automatic upload and playback from decentralized storage providers. Currently supports IPFS CIDs and IPFS/Arweave URLs. Defaults to `true`.
+Enables automatic upload and playback from decentralized storage providers.
+Currently supports IPFS CIDs and IPFS/Arweave URLs. Defaults to `true`.
 
 <Info>
   For IPFS HTTP gateway URLs, the player currently only supports “path style”
@@ -688,13 +721,18 @@ Enables automatic upload and playback from decentralized storage providers. Curr
   styles of URLs in a future update.
 </Info>
 
-If `fallback` is specified, while the URL upload is being processed in the background, the video will start non-transcoded playback immediately
-(defaulting to `w3s.link` for IPFS and `arweave.net` for Arweave). Once this finishes, the Player will switch to playing from the transcoded version
-from the Livepeer provider. To show/hide the indicator of current upload progress, see [`showUploadingIndicator`](#showuploadingindicator).
+If `fallback` is specified, while the URL upload is being processed in the
+background, the video will start non-transcoded playback immediately (defaulting
+to `w3s.link` for IPFS and `arweave.net` for Arweave). Once this finishes, the
+Player will switch to playing from the transcoded version from the Livepeer
+provider. To show/hide the indicator of current upload progress, see
+[`showUploadingIndicator`](#showuploadingindicator).
 
-It is highly recommended for the best playback experience to upload from an Arweave/IPFS URL using `useCreateAsset` (with the format `ipfs://<CID>` or `ar://<HASH>`)
-before presenting the content to the user - the first view with automatic URL upload can take a few minutes, then it will be permanently
-cached and play back quickly.
+It is highly recommended for the best playback experience to upload from an
+Arweave/IPFS URL using `useCreateAsset` (with the format `ipfs://<CID>` or
+`ar://<HASH>`) before presenting the content to the user - the first view with
+automatic URL upload can take a few minutes, then it will be permanently cached
+and play back quickly.
 
 <Info>
   An IPFS [v0 or v1 CID](https://docs.ipfs.tech/concepts/content-addressing/) or
@@ -726,7 +764,8 @@ function PlayerComponent() {
 
 ### showUploadingIndicator
 
-Shows/hides the uploading indication for `autoUrlUpload`. Defaults to `true` - only used with `autoUrlUpload`.
+Shows/hides the uploading indication for `autoUrlUpload`. Defaults to `true` -
+only used with `autoUrlUpload`.
 
 ```tsx
 function PlayerComponent() {
@@ -743,8 +782,9 @@ function PlayerComponent() {
 
 ### theme
 
-Sets the Player-specific theme overrides. It is recommended to use [`LivepeerConfig`](/sdks/livepeer-js/LivepeerConfig) for
-any global app styles, and the `theme` prop to override those styles on a per-Player basis.
+Sets the Player-specific theme overrides. It is recommended to use
+[`LivepeerConfig`](/sdks/livepeer-js/LivepeerConfig) for any global app styles,
+and the `theme` prop to override those styles on a per-Player basis.
 
 ```tsx
 function PlayerComponent() {
@@ -783,8 +823,10 @@ Overrides the custom controls for the Player. See the
 [`Player` default controls](https://github.com/livepeer/livepeer-react/blob/main/packages/react/src/components/media/Player.tsx)
 for more details on how the `ControlsContainer` component is used.
 
-This can be used alongside `renderChildrenOutsideContainer` to render the children outside of the aspect ratio container.
-This is used for custom controls, so children of the Player can use `useMediaController` without any parent elements.
+This can be used alongside `renderChildrenOutsideContainer` to render the
+children outside of the aspect ratio container. This is used for custom
+controls, so children of the Player can use `useMediaController` without any
+parent elements.
 
   </Tab>
   <Tab title="React Native">
@@ -793,17 +835,22 @@ Overrides the custom controls for the Player. See the
 [React Native `Player` default controls](https://github.com/livepeer/livepeer-react/blob/main/packages/react-native/src/components/media/Player.tsx)
 for more details on how the `ControlsContainer` component is used.
 
-This can be used alongside `renderChildrenOutsideContainer` to render the children outside of the aspect ratio container.
-This is used for custom controls, so children of the Player can use `useMediaController` without any parent elements.
+This can be used alongside `renderChildrenOutsideContainer` to render the
+children outside of the aspect ratio container. This is used for custom
+controls, so children of the Player can use `useMediaController` without any
+parent elements.
 
   </Tab>
 </Tabs>
 
 ### mediaElementRef
 
-Sets the React [callback `ref`](https://reactjs.org/docs/refs-and-the-dom.html#callback-refs) passed to the underlying media element.
-Useful when integrating with third party tools, or when access to the underlying video element is needed (usually it isn't!).
-Simple refs are not supported - only callback refs (which will be called when the underlying media element is set/updated on initial render).
+Sets the React
+[callback `ref`](https://reactjs.org/docs/refs-and-the-dom.html#callback-refs)
+passed to the underlying media element. Useful when integrating with third party
+tools, or when access to the underlying video element is needed (usually it
+isn't!). Simple refs are not supported - only callback refs (which will be
+called when the underlying media element is set/updated on initial render).
 
 <Tabs >
   <Tab title="React">
@@ -850,9 +897,9 @@ function PlayerComponent() {
 
 ### onPlaybackStatusUpdate
 
-Callback called when the Player store status updates.
-**This should be used with `playbackStatusSelector` to limit state updates.**
-This allows developers to use the underlying state of the Player component in their UI.
+Callback called when the Player store status updates. **This should be used with
+`playbackStatusSelector` to limit state updates.** This allows developers to use
+the underlying state of the Player component in their UI.
 
 ```tsx
 function PlayerComponent() {
@@ -879,10 +926,13 @@ function PlayerComponent() {
 
 The `usePlayerList` hook makes it easy to preload and display videos in a
 [`FlatList`](https://reactnative.dev/docs/flatlist)-compatible list, by using
-[`viewabilityConfigCallbackPairs`](https://reactnative.dev/docs/flatlist#viewabilityconfigcallbackpairs) to
-trigger preloading on upcoming videos, and automatically playing/pausing media when it is shown/hidden from the list.
+[`viewabilityConfigCallbackPairs`](https://reactnative.dev/docs/flatlist#viewabilityconfigcallbackpairs)
+to trigger preloading on upcoming videos, and automatically playing/pausing
+media when it is shown/hidden from the list.
 
-See our [Expo sample app](https://github.com/livepeer/livepeer-react/tree/main/examples/expo) for a real-world example.
+See our
+[Expo sample app](https://github.com/livepeer/livepeer-react/tree/main/examples/expo)
+for a real-world example.
 
 #### Usage
 
@@ -926,8 +976,10 @@ function SomeComponent() {
 
 #### Return Value
 
-The return value extends the `data` array which is passed into the hook, to add Player-specific props to it. The `viewabilityConfigCallbackPairs`
-prop is also returned, which must be passed into the `FlatList`-compatible list to maintain the correct preloading/playing states for the Player(s).
+The return value extends the `data` array which is passed into the hook, to add
+Player-specific props to it. The `viewabilityConfigCallbackPairs` prop is also
+returned, which must be passed into the `FlatList`-compatible list to maintain
+the correct preloading/playing states for the Player(s).
 
 ```tsx
 {
@@ -948,7 +1000,8 @@ prop is also returned, which must be passed into the `FlatList`-compatible list 
 
 ##### data
 
-The data used in the list - required. This is extended to add Player-specific props, which are passed into the Player using `item.playerProps`.
+The data used in the list - required. This is extended to add Player-specific
+props, which are passed into the Player using `item.playerProps`.
 
 ```tsx
 function SomeComponent() {
@@ -969,8 +1022,10 @@ function SomeComponent() {
 
 ##### itemPreload
 
-The number of items to preload ahead of the currently-viewable Player. For instance, if `itemPreload` is set to 8 and there are 30 items in the Player list,
-when the user is currently viewing the 5th item, the 6th-14th Players will actively preload in the background. Defaults to 3.
+The number of items to preload ahead of the currently-viewable Player. For
+instance, if `itemPreload` is set to 8 and there are 30 items in the Player
+list, when the user is currently viewing the 5th item, the 6th-14th Players will
+actively preload in the background. Defaults to 3.
 
 ```tsx
 function SomeComponent() {
@@ -983,9 +1038,12 @@ function SomeComponent() {
 
 ##### itemVisibleMinimumViewTime
 
-The minimum amount of time in milliseconds that an item must be viewable before it is considered "shown". This will also be the delay
-between when the item becomes visible and when the autoPlay logic is triggered. Defaults to 100 ms, use `null` to unset.
-See [FlatList's `viewabilityConfig`](https://reactnative.dev/docs/flatlist#viewabilityconfig) for more details.
+The minimum amount of time in milliseconds that an item must be viewable before
+it is considered "shown". This will also be the delay between when the item
+becomes visible and when the autoPlay logic is triggered. Defaults to 100 ms,
+use `null` to unset. See
+[FlatList's `viewabilityConfig`](https://reactnative.dev/docs/flatlist#viewabilityconfig)
+for more details.
 
 ```tsx {4}
 function SomeComponent() {
@@ -998,8 +1056,10 @@ function SomeComponent() {
 
 ##### itemVisiblePercentThreshold
 
-The percent of the item that must be visible for the item to count as "viewable", from 0-100. Defaults to 60%, use `null` to unset.
-See [FlatList's `viewabilityConfig`](https://reactnative.dev/docs/flatlist#viewabilityconfig) for more details.
+The percent of the item that must be visible for the item to count as
+"viewable", from 0-100. Defaults to 60%, use `null` to unset. See
+[FlatList's `viewabilityConfig`](https://reactnative.dev/docs/flatlist#viewabilityconfig)
+for more details.
 
 ```tsx
 function SomeComponent() {
@@ -1012,8 +1072,10 @@ function SomeComponent() {
 
 ##### itemVisibleViewAreaCoveragePercentThreshold
 
-The percent of the viewport that must be covered for a partially occluded item to count as "viewable", 0-100. No default value.
-See [FlatList's `viewabilityConfig`](https://reactnative.dev/docs/flatlist#viewabilityconfig) for more details.
+The percent of the viewport that must be covered for a partially occluded item
+to count as "viewable", 0-100. No default value. See
+[FlatList's `viewabilityConfig`](https://reactnative.dev/docs/flatlist#viewabilityconfig)
+for more details.
 
 ```tsx
 function SomeComponent() {
@@ -1027,8 +1089,10 @@ function SomeComponent() {
 
 ##### itemVisibleWaitForInteraction
 
-Indicates that the item is not considered viewable until the user scrolls or `recordInteraction` is called after render. Defaults to false.
-See [FlatList's `viewabilityConfig`](https://reactnative.dev/docs/flatlist#viewabilityconfig) for more details.
+Indicates that the item is not considered viewable until the user scrolls or
+`recordInteraction` is called after render. Defaults to false. See
+[FlatList's `viewabilityConfig`](https://reactnative.dev/docs/flatlist#viewabilityconfig)
+for more details.
 
 ```tsx
 function SomeComponent() {
@@ -1048,11 +1112,15 @@ function SomeComponent() {
 
 ### Next.js
 
-The Player also comes with a [Tanstack Query](https://tanstack.com/query/v4/docs/guides/ssr) prefetch query, `prefetchPlayer`,
-which makes it easy to prefetch the data used internally for the Player during server-side rendering.
+The Player also comes with a
+[Tanstack Query](https://tanstack.com/query/v4/docs/guides/ssr) prefetch query,
+`prefetchPlayer`, which makes it easy to prefetch the data used internally for
+the Player during server-side rendering.
 
-First, you add a [`getStaticProps`](https://nextjs.org/docs/basic-features/data-fetching/get-static-props) function to the page which
-you want to prefetch data on. The props should match the Player props to ensure that the correct data is prefetched.
+First, you add a
+[`getStaticProps`](https://nextjs.org/docs/basic-features/data-fetching/get-static-props)
+function to the page which you want to prefetch data on. The props should match
+the Player props to ensure that the correct data is prefetched.
 
 ```tsx
 import { prefetchPlayer, studioProvider } from "@livepeer/react";
@@ -1060,7 +1128,7 @@ import { prefetchPlayer, studioProvider } from "@livepeer/react";
 export const getStaticProps = async () => {
   const dehydratedState = await prefetchPlayer(
     { playbackId },
-    { provider: studioProvider({ apiKey: "yourStudioApiKey" }) }
+    { provider: studioProvider({ apiKey: "yourStudioApiKey" }) },
   );
 
   return {
@@ -1072,8 +1140,9 @@ export const getStaticProps = async () => {
 };
 ```
 
-We need to update the `_app.tsx` to pass the `dehydratedState` in `pageProps` to the LivepeerConfig. We also move the
-`livepeerClient` into a useMemo hook so that a new client is created on each request.
+We need to update the `_app.tsx` to pass the `dehydratedState` in `pageProps` to
+the LivepeerConfig. We also move the `livepeerClient` into a useMemo hook so
+that a new client is created on each request.
 
 ```tsx
 import {
@@ -1095,7 +1164,7 @@ function App({ Component, pageProps }: AppProps<{ dehydratedState: string }>) {
           apiKey: process.env.NEXT_PUBLIC_STUDIO_API_KEY,
         }),
       }),
-    []
+    [],
   );
 
   return (
@@ -1109,12 +1178,14 @@ function App({ Component, pageProps }: AppProps<{ dehydratedState: string }>) {
 }
 ```
 
-That's it! You now have data prefetching on the server, which is passed to the browser and used to hydrate the initial query client.
+That's it! You now have data prefetching on the server, which is passed to the
+browser and used to hydrate the initial query client.
 
 ### Other Frameworks
 
-The process is very similar for other frameworks, with the exception that there is a `clearClient` boolean which should be used
-to ensure that the client cache is not reused across users.
+The process is very similar for other frameworks, with the exception that there
+is a `clearClient` boolean which should be used to ensure that the client cache
+is not reused across users.
 
 ```tsx
 import { prefetchPlayer, studioProvider } from "@livepeer/react";
@@ -1125,7 +1196,7 @@ export const handleRequest = async (req, res) => {
       playbackId,
       clearClient: true,
     },
-    { provider: studioProvider({ apiKey: "yourStudioApiKey" }) }
+    { provider: studioProvider({ apiKey: "yourStudioApiKey" }) },
   );
 
   // sanitize the custom SSR generated data
@@ -1146,21 +1217,30 @@ export const handleRequest = async (req, res) => {
 
 ## Technical Details
 
-The Player is opinionated about the ways it handles playback of media, specifically regarding HLS reconnect and playback URL choices.
+The Player is opinionated about the ways it handles playback of media,
+specifically regarding HLS reconnect and playback URL choices.
 
 ### HLS Reconnect
 
-The Player will perform a linear backoff strategy when it encounters any network/response errors. The reconnect will initially wait one second,
-and add one second every retry. This ensures that if there are any intermittent network/API errors, they are resolved as quickly as possible.
-Most open source players do not do this automatically, which results in a poor playback experience for the user.
+The Player will perform a linear backoff strategy when it encounters any
+network/response errors. The reconnect will initially wait one second, and add
+one second every retry. This ensures that if there are any intermittent
+network/API errors, they are resolved as quickly as possible. Most open source
+players do not do this automatically, which results in a poor playback
+experience for the user.
 
 ### MP4 Playback URLs
 
-When videos are uploaded which are shorter than two minutes, the Studio provider will automatically generate MP4 renditions alongside the
-usual HLS playback URL. This allows for rapid playback/caching at the CDN layer to enable your application to load video instantly.
+When videos are uploaded which are shorter than two minutes, the Studio provider
+will automatically generate MP4 renditions alongside the usual HLS playback URL.
+This allows for rapid playback/caching at the CDN layer to enable your
+application to load video instantly.
 
-The MP4 renditions will be prioritized over HLS and are chosen with the following algorithm: the device screen width is multiplied by a
-static multiplier (currently set to `x2.5`). This value is then compared to the rendition widths, and the
-renditions are prioritized based on the distance between these values. This results in a choice of a rendition
-which is close to the screen size without visual quality issues. For instance, a device with a 1280 pixel width
-would compute `1280px * 2.5 = 3200px`, and then sort the MP4 renditions by which are closest to this value.
+The MP4 renditions will be prioritized over HLS and are chosen with the
+following algorithm: the device screen width is multiplied by a static
+multiplier (currently set to `x2.5`). This value is then compared to the
+rendition widths, and the renditions are prioritized based on the distance
+between these values. This results in a choice of a rendition which is close to
+the screen size without visual quality issues. For instance, a device with a
+1280 pixel width would compute `1280px * 2.5 = 3200px`, and then sort the MP4
+renditions by which are closest to this value.

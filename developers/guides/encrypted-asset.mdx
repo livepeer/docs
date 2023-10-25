@@ -3,7 +3,10 @@ title: "Upload encrypted assets"
 description: "Learn how to upload and play back an encrypted video asset"
 ---
 
-Livepeer enables you to upload encrypted video content or import it from decentralized storages. It creates a playback URL that can have independent access control through Livepeer's [access control](/developers/guides/overview#access-control) feature.
+Livepeer enables you to upload encrypted video content or import it from
+decentralized storages. It creates a playback URL that can have independent
+access control through Livepeer's
+[access control](/developers/guides/overview#access-control) feature.
 
 <Info>
   This guide is written for developers using JavaScript, but the concepts can be
@@ -22,7 +25,7 @@ const key = await window.crypto.subtle.generateKey(
     length: 256,
   },
   true,
-  ["encrypt", "decrypt"]
+  ["encrypt", "decrypt"],
 );
 
 // Export the key as raw data
@@ -49,7 +52,7 @@ const encrypted = await window.crypto.subtle.encrypt(
     iv: iv,
   },
   key, // from generateKey or importKey above
-  arrayBuffer // ArrayBuffer of data you want to encrypt
+  arrayBuffer, // ArrayBuffer of data you want to encrypt
 );
 
 // Concatenate IV and encrypted file into a new ArrayBuffer
@@ -72,7 +75,10 @@ const blob = new Blob([resultBuffer], { type: "application/octet-stream" });
 
 ### Retrieve the Livepeer Public Key
 
-After obtaining an encryption key and encrypting a video file with it, the next step is to retrieve the Livepeer Public Key. This key will be used to encrypt our encryption key, which can then be shared with Livepeer when creating a video asset.
+After obtaining an encryption key and encrypting a video file with it, the next
+step is to retrieve the Livepeer Public Key. This key will be used to encrypt
+our encryption key, which can then be shared with Livepeer when creating a video
+asset.
 
 ```js
 // Fetch the public key from Livepeer
@@ -82,7 +88,7 @@ const publicKeyResponse = await fetch(
     headers: {
       Authorization: "Bearer XXXX-XXXXXX-XXXXXXX-XXXX",
     },
-  }
+  },
 );
 
 const publicKeyData = await publicKeyResponse.json();
@@ -91,7 +97,9 @@ const publicKey = publicKeyData.spki_public_key;
 
 ### Encrypt the encryption key
 
-Now, we can use asymmetric encryption with the Livepeer Public Key to encrypt our Encryption Key. The resulting data is then encoded in base64 before being sent to Livepeer along with the video file.
+Now, we can use asymmetric encryption with the Livepeer Public Key to encrypt
+our Encryption Key. The resulting data is then encoded in base64 before being
+sent to Livepeer along with the video file.
 
 <Info>
   The Web Cryptography API built into modern browsers does not directly support
@@ -104,7 +112,7 @@ Now, we can use asymmetric encryption with the Livepeer Public Key to encrypt ou
 // Decode the SPKI public key from base64 and convert it to a buffer
 const spkiPublicKey = atob(publicKeyData.spki_public_key);
 const publicKeyBuffer = Uint8Array.from(atob(spkiPublicKey), (c) =>
-  c.charCodeAt(0)
+  c.charCodeAt(0),
 ).buffer;
 
 // Import the public key
@@ -116,7 +124,7 @@ const publicKey = await window.crypto.subtle.importKey(
     hash: { name: "SHA-256" },
   },
   false,
-  ["encrypt"]
+  ["encrypt"],
 );
 
 // Encrypt the key data with the public key
@@ -125,18 +133,20 @@ const encryptedKeyData = await window.crypto.subtle.encrypt(
     name: "RSA-OAEP",
   },
   publicKey,
-  keyData
+  keyData,
 );
 
 // Base64 encode the encrypted key data
 const encryptedKeyBase64 = btoa(
-  String.fromCharCode(...new Uint8Array(encryptedKeyData))
+  String.fromCharCode(...new Uint8Array(encryptedKeyData)),
 );
 ```
 
 ### Upload/import the video file
 
-When requesting an upload to the Livepeer API, you can simply [add an `encryption` field](/api-reference/asset/upload-via-url) with your encrypted key.
+When requesting an upload to the Livepeer API, you can simply
+[add an `encryption` field](/api-reference/asset/upload-via-url) with your
+encrypted key.
 
 <Warning>
   When uploading an encrypted video, specifying a `playbackPolicy` is required.
@@ -164,7 +174,7 @@ const response = await fetch(
         // Your playback policy
       },
     }),
-  }
+  },
 );
 
 if (!response.ok) {

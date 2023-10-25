@@ -3,21 +3,27 @@ title: "In-browser broadcasting"
 description: "Learn how to broadcast using WebRTC"
 ---
 
-We demonstrate below how to [broadcast from the web](/developers/core-concepts/studio/in-browser-broadcast) using Livepeer's low latency WebRTC broadcast.
-Developers can either use the Livepeer.js Broadcast React component, or build their own WebRTC solution.
+We demonstrate below how to
+[broadcast from the web](/developers/core-concepts/studio/in-browser-broadcast)
+using Livepeer's low latency WebRTC broadcast. Developers can either use the
+Livepeer.js Broadcast React component, or build their own WebRTC solution.
 
 ## Using Livepeer.js Broadcast
 
-The example below show to use the Livepeer.js [`Broadcast`](/sdks/livepeer-js/Broadcast) component to broadcast from the web.
+The example below show to use the Livepeer.js
+[`Broadcast`](/sdks/livepeer-js/Broadcast) component to broadcast from the web.
 
 ### Configuring providers
 
-First, we [create a new React client and wrap the app with `LivepeerConfig`](/sdks/livepeer-js/getting-started).
+First, we
+[create a new React client and wrap the app with `LivepeerConfig`](/sdks/livepeer-js/getting-started).
 
 ### Broadcast
 
-Now that our providers are set up, we use the [`Broadcast`](/sdks/livepeer-js/Broadcast) with a stream key, from a stream we created.
-We also override some of the custom styling to match the flow of our app!
+Now that our providers are set up, we use the
+[`Broadcast`](/sdks/livepeer-js/Broadcast) with a stream key, from a stream we
+created. We also override some of the custom styling to match the flow of our
+app!
 
 ```tsx Broadcast.tsx
 import { Broadcast } from "@livepeer/react";
@@ -42,9 +48,9 @@ export const DemoBroadcast = () => {
 
 ## Embeddable broadcast
 
-This is one of the easiest way to broadcast video from your website/applications.
-You can embed the iframe on your website/applications by using the below code
-snippet.
+This is one of the easiest way to broadcast video from your
+website/applications. You can embed the iframe on your website/applications by
+using the below code snippet.
 
 You can replace the `STREAM_KEY` with your stream key for the stream.
 
@@ -58,17 +64,19 @@ You can replace the `STREAM_KEY` with your stream key for the stream.
 </iframe>
 ```
 
-This will automatically stream from the browser, using the STUN/TURN servers to ensure that network connectivity issues
-are rare.
+This will automatically stream from the browser, using the STUN/TURN servers to
+ensure that network connectivity issues are rare.
 
 ## Adding custom broadcasting
 
-If you want to add custom broadcasting to your app and handle the WebRTC SDP negotiation, you can follow the steps below.
+If you want to add custom broadcasting to your app and handle the WebRTC SDP
+negotiation, you can follow the steps below.
 
 ### Get the SDP Host
 
-First, you will need to make a request to get the proper ingest URL for the region which your end user is in. We have a global
-presence, and we handle redirects based on GeoDNS to allow users to get the lowest latency server.
+First, you will need to make a request to get the proper ingest URL for the
+region which your end user is in. We have a global presence, and we handle
+redirects based on GeoDNS to allow users to get the lowest latency server.
 
 To do this make a `GET` request to the WebRTC redirect endpoint:
 
@@ -84,8 +92,9 @@ curl -L 'https://livepeer.studio/webrtc/{STREAM_KEY}'
   set up the correct ICE servers.
 </Warning>
 
-We know from the above response headers that the WebRTC ingest URL is `https://lax-prod-catalyst-2.lp-playback.studio/webrtc/{STREAM_KEY}`.
-We will use this in the next step.
+We know from the above response headers that the WebRTC ingest URL is
+`https://lax-prod-catalyst-2.lp-playback.studio/webrtc/{STREAM_KEY}`. We will
+use this in the next step.
 
 <Warning>
   The process will change in the future to remove the need for this extraneous
@@ -94,8 +103,10 @@ We will use this in the next step.
 
 ### Broadcast
 
-Now that we have the endpoint for the ICE servers, we can start SDP negotiation following the [WHIP spec](https://www.ietf.org/archive/id/draft-ietf-wish-whip-01.html)
-and kick off a livestream.
+Now that we have the endpoint for the ICE servers, we can start SDP negotiation
+following the
+[WHIP spec](https://www.ietf.org/archive/id/draft-ietf-wish-whip-01.html) and
+kick off a livestream.
 
 The outline of the steps are:
 
@@ -104,7 +115,8 @@ The outline of the steps are:
 3. Wait for ICE gathering.
 4. Send the SDP offer to the server and get the response.
 5. Use the response to set the remote description on the `RTCPeerConnection`.
-6. Get a local media stream and add the track to the peer connection, and set the video element `src` to the `srcObject`.
+6. Get a local media stream and add the track to the peer connection, and set
+   the video element `src` to the `srcObject`.
 
 ```tsx
 // the redirect URL from the above GET request
@@ -190,16 +202,17 @@ const sdpResponse = await fetch(redirectUrl, {
 if (sdpResponse.ok) {
   const answerSDP = await sdpResponse.text();
   await peerConnection.setRemoteDescription(
-    new RTCSessionDescription({ type: "answer", sdp: answerSDP })
+    new RTCSessionDescription({ type: "answer", sdp: answerSDP }),
   );
 }
 ```
 
-We just negotiated following the WHIP spec (which outlines the structure for the POST requests seen above)
-and we did SDP negotiation to create a new livestream. We then retrieved a local webcam source and started
-a broadcast!
+We just negotiated following the WHIP spec (which outlines the structure for the
+POST requests seen above) and we did SDP negotiation to create a new livestream.
+We then retrieved a local webcam source and started a broadcast!
 
-To make the above process clearer, here is the flow (credit to the authors of the WHIP spec):
+To make the above process clearer, here is the flow (credit to the authors of
+the WHIP spec):
 
 ```txt WHIP Outline
 +-----------------+         +---------------+ +--------------+ +----------------+
@@ -225,5 +238,5 @@ To make the above process clearer, here is the flow (credit to the authors of th
            <-------------------------------------------------------------x
 ```
 
-The final HTTP DELETE is not needed for our media server, since we detect the end of broadcast
-by the lack of incoming packets from the broadcaster.
+The final HTTP DELETE is not needed for our media server, since we detect the
+end of broadcast by the lack of incoming packets from the broadcaster.

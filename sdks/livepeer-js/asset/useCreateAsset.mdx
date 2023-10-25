@@ -3,7 +3,9 @@ title: "useCreateAsset"
 description: "React Hook for creating a new asset."
 ---
 
-useCreateAsset is a React Hook for creating a new asset. It returns a `mutate` function that can be called to create an asset. Multiple assets can be created at once by passing in an array of `sources`.
+useCreateAsset is a React Hook for creating a new asset. It returns a `mutate`
+function that can be called to create an asset. Multiple assets can be created
+at once by passing in an array of `sources`.
 
 ## Usage
 
@@ -29,8 +31,9 @@ useCreateAsset is a React Hook for creating a new asset. It returns a `mutate` f
   [`Player`](/sdks/livepeer-js/Player).
 </Warning>
 
-The following example shows how an asset can be created with the `mutate` function. The variables are passed into the
-`useCreateAsset` hook, and `createAsset` return type is defined when the variables are truthy.
+The following example shows how an asset can be created with the `mutate`
+function. The variables are passed into the `useCreateAsset` hook, and
+`createAsset` return type is defined when the variables are truthy.
 
 ```tsx
 function SomeComponent() {
@@ -60,7 +63,7 @@ function SomeComponent() {
             },
           ] as const,
         }
-      : null
+      : null,
   );
 
   return (
@@ -103,12 +106,14 @@ function SomeComponent() {
 
 ## Return Value
 
-The return value is partially based on [Tanstack Query](https://tanstack.com/query/v4/docs/reference/useMutation), with some return types
-aggregated for simplicity.
+The return value is partially based on
+[Tanstack Query](https://tanstack.com/query/v4/docs/reference/useMutation), with
+some return types aggregated for simplicity.
 
-The value `progress` is an array of progress values which contains the upload progress from
-[tus](https://github.com/tus/tus-js-client), as well as the processing progress of the asset from the provider. These values are polled consistently
-until the asset succeeds or fails to be processed by the provider.
+The value `progress` is an array of progress values which contains the upload
+progress from [tus](https://github.com/tus/tus-js-client), as well as the
+processing progress of the asset from the provider. These values are polled
+consistently until the asset succeeds or fails to be processed by the provider.
 
 ```tsx
 {
@@ -130,10 +135,12 @@ until the asset succeeds or fails to be processed by the provider.
 
 ### sources
 
-The `sources` used for the asset creation can be an array of either a URL or a local File/ReadStream/object with a `uri` string.
-_It is highly recommended to use
+The `sources` used for the asset creation can be an array of either a URL or a
+local File/ReadStream/object with a `uri` string. _It is highly recommended to
+use
 [const assertions](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions)
-to infer types properly from the `sources` parameter - please see below for an example._
+to infer types properly from the `sources` parameter - please see below for an
+example._
 
 <Tabs>
   <Tab title="React">
@@ -253,15 +260,20 @@ type Sources = CreateAssetSourceFile[] | CreateAssetSourceUrl[];
   interested!
 </Info>
 
-If `CreateAssetSourceFile` is passed in the array, the `useCreateAsset` hook uses [tus](https://github.com/tus/tus-js-client) for resumable uploads and checks for existing uploads by default, before starting a
-new upload.
+If `CreateAssetSourceFile` is passed in the array, the `useCreateAsset` hook
+uses [tus](https://github.com/tus/tus-js-client) for resumable uploads and
+checks for existing uploads by default, before starting a new upload.
 
-If `CreateAssetSourceUrl` is passed in the array, the hook will make a request to the background to start an import. This can also
-be an IPFS URL (`ipfs://<CID>`) or Arweave URL (`ar://<HASH>`). **Either a URL or file must be provided.**
+If `CreateAssetSourceUrl` is passed in the array, the hook will make a request
+to the background to start an import. This can also be an IPFS URL
+(`ipfs://<CID>`) or Arweave URL (`ar://<HASH>`). **Either a URL or file must be
+provided.**
 
 #### storage
 
-The `storage` configs can be applied on asset creation. See `useUpdateAsset` for more details on these configs. If the `storage` parameter is omitted, the asset will not be stored in decentralized storage.
+The `storage` configs can be applied on asset creation. See `useUpdateAsset` for
+more details on these configs. If the `storage` parameter is omitted, the asset
+will not be stored in decentralized storage.
 
 <Info>
   If you would like to use Arweave as storage, we recommend you upload to
@@ -280,10 +292,9 @@ type Storage = {
    *
    * @see {@link https://eips.ethereum.org/EIPS/eip-721}
    */
-  metadata?:
-    | Partial<Metadata> & {
-        [k: string]: unknown;
-      };
+  metadata?: Partial<Metadata> & {
+    [k: string]: unknown;
+  };
   /**
    * The metadata template to use. `player` will embed the Livepeer Player's IPFS CID while `file`
    * will reference only the immutable media files.
@@ -292,8 +303,9 @@ type Storage = {
 };
 ```
 
-The metadata can be overridden when the Asset and its metadata are exported to IPFS - we provide some
-helper types for metadata best practices based on ERC-721 and ERC-1155:
+The metadata can be overridden when the Asset and its metadata are exported to
+IPFS - we provide some helper types for metadata best practices based on ERC-721
+and ERC-1155:
 
 ```tsx
 type Metadata = {
@@ -326,8 +338,10 @@ type Metadata = {
 
 ### noWait
 
-The `noWait` config option skips the polling mechanism which waits for the Asset upload to succeed or fail. It will immediately return after the file upload is complete,
-or in the case of a URL upload, it will return after the URL is `POST`ed to the backend.
+The `noWait` config option skips the polling mechanism which waits for the Asset
+upload to succeed or fail. It will immediately return after the file upload is
+complete, or in the case of a URL upload, it will return after the URL is
+`POST`ed to the backend.
 
 ```tsx
 import { useCreateAsset } from "@livepeer/react";
@@ -342,8 +356,10 @@ function SomeComponent() {
 
 ### mutationConfig
 
-The `mutationConfig` parameter allows for any [Tanstack Query](https://tanstack.com/query/v4/docs/reference/useMutation) `useMutation` options, such as
-`cacheTime` or `retry`. These override any configs passed by default by the internal hook.
+The `mutationConfig` parameter allows for any
+[Tanstack Query](https://tanstack.com/query/v4/docs/reference/useMutation)
+`useMutation` options, such as `cacheTime` or `retry`. These override any
+configs passed by default by the internal hook.
 
 ```tsx
 import { useCreateAsset } from "@livepeer/react";

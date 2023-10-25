@@ -1,11 +1,17 @@
 ---
 title: "Control access using webhooks"
-description: "Learn how to add access control to a content with React, using webhooks"
+description:
+  "Learn how to add access control to a content with React, using webhooks"
 ---
 
-Webhooks offer a versatile and dynamic approach to access control for both assets and livestreams. By setting up a webhook, you can validate access requests on the fly, allowing for real-time, context-sensitive decisions.
+Webhooks offer a versatile and dynamic approach to access control for both
+assets and livestreams. By setting up a webhook, you can validate access
+requests on the fly, allowing for real-time, context-sensitive decisions.
 
-When a user requests access to content, the webhook you've specified will be called. This webhook can then decide whether to grant or deny access based on custom logic, such as user authentication, subscription status, or any other criteria.
+When a user requests access to content, the webhook you've specified will be
+called. This webhook can then decide whether to grant or deny access based on
+custom logic, such as user authentication, subscription status, or any other
+criteria.
 
 <Info>
   This guide is written for developers using `@livepeer/react` in a React
@@ -16,8 +22,10 @@ The example below uses webhook to create and watch a gated content.
 
 ### Create an Access Control Webhook Handler
 
-Set up an endpoint (e.g., https://yourdomain.com/api/check-access) to handle the logic for granting or denying access to your assets.
-This endpoint should accept a POST request with a JSON payload containing the access key and webhook context.
+Set up an endpoint (e.g., https://yourdomain.com/api/check-access) to handle the
+logic for granting or denying access to your assets. This endpoint should accept
+a POST request with a JSON payload containing the access key and webhook
+context.
 
 This is an example of a payload this endpoint would receive:
 
@@ -36,7 +44,10 @@ The payload in `context` is defined by your application.
 
 ### Register an Access Control Webhook
 
-Use the [Livepeer Studio dashboard](https://livepeer.studio/dashboard/developers/webhooks) to create a new webhook with the type `playback.accessControl` and specify the URL of your access control endpoint.
+Use the
+[Livepeer Studio dashboard](https://livepeer.studio/dashboard/developers/webhooks)
+to create a new webhook with the type `playback.accessControl` and specify the
+URL of your access control endpoint.
 
 You can then use the ID of the webhook in the next step.
 
@@ -44,7 +55,8 @@ You can then use the ID of the webhook in the next step.
 
 #### For assets
 
-Create an asset with a playback policy webhook, passing the ID of the webhook you created in Step 2.
+Create an asset with a playback policy webhook, passing the ID of the webhook
+you created in Step 2.
 
 ```tsx accessControl.tsx
 import { useCreateAsset } from "@livepeer/react";
@@ -79,7 +91,7 @@ export const CreateAndViewAsset = () => {
             },
           ] as const,
         }
-      : null
+      : null,
   );
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -107,7 +119,7 @@ export const CreateAndViewAsset = () => {
         : progress?.[0].phase === "processing"
         ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
         : null,
-    [progress]
+    [progress],
   );
 
   return (
@@ -137,7 +149,8 @@ export const CreateAndViewAsset = () => {
 
 #### For livestreams
 
-Create a stream with a playback policy webhook, passing the ID of the webhook you created in Step 2.
+Create a stream with a playback policy webhook, passing the ID of the webhook
+you created in Step 2.
 
 ```tsx accessControl.tsx
 import { useCreateStream, useStream } from "@livepeer/react";
@@ -162,9 +175,9 @@ export const AccessControl = () => {
               // This is the context you want to pass to your webhook
               // It can be anything you want, and it will be passed back to your webhook
             },
-          }
+          },
         }
-      : null
+      : null,
   );
 
   const { data: stream } = useStream({
@@ -196,8 +209,10 @@ export const AccessControl = () => {
 
 ### Configure the Player with an Access Key
 
-If you are using the Livepeer.js Player, you can use the [`accessKey`](/sdks/livepeer-js/Player#accesskey)
-prop to provide your custom access key, which is then passed to the webhook you created to verify that it is valid.
+If you are using the Livepeer.js Player, you can use the
+[`accessKey`](/sdks/livepeer-js/Player#accesskey) prop to provide your custom
+access key, which is then passed to the webhook you created to verify that it is
+valid.
 
 ```tsx
 import { Player } from "@livepeer/react";
@@ -209,7 +224,8 @@ export const CreateAndViewAsset = () => {
 };
 ```
 
-If you are not using the player, you will need to manually append the access key to the m3u8 URL as a query parameter, similar to:
+If you are not using the player, you will need to manually append the access key
+to the m3u8 URL as a query parameter, similar to:
 
 ```
 https://playback.livepeer.studio/asset/hls/abcd1234/index.m3u8?accessKey=your-access-key
@@ -217,8 +233,10 @@ https://playback.livepeer.studio/asset/hls/abcd1234/index.m3u8?accessKey=your-ac
 
 ### Receive the Webhook from Livepeer
 
-When a user attempts to access the content, Livepeer will call your access control endpoint with the access key and webhook context.
-Your endpoint should process the request and return a response indicating whether the stream access should be allowed or disallowed.
+When a user attempts to access the content, Livepeer will call your access
+control endpoint with the access key and webhook context. Your endpoint should
+process the request and return a response indicating whether the stream access
+should be allowed or disallowed.
 
 Here is an example request sent to your access control endpoint:
 
@@ -231,5 +249,6 @@ Here is an example request sent to your access control endpoint:
 }
 ```
 
-In your access control endpoint, implement the logic to verify the access key and decide whether to grant access to the content.
-If the access is allowed, return a `2XX` response. Otherwise, the playback will be disallowed.
+In your access control endpoint, implement the logic to verify the access key
+and decide whether to grant access to the content. If the access is allowed,
+return a `2XX` response. Otherwise, the playback will be disallowed.

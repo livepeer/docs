@@ -1,29 +1,40 @@
 ---
 title: "Play from Arweave"
-description: "Learn how to upload and stream videos from Arweave using Bundlr and Livepeer"
+description:
+  "Learn how to upload and stream videos from Arweave using Bundlr and Livepeer"
 ---
 
-Arweave is a decentralized storage network that allows anyone to upload and access data in a permanent and tamper-proof manner. Bundlr Network makes uploading files and interacting with Arweave very easy. It provides fast and mutichains support for Arweave. When combined with Livepeer, users can build decentralized video applications, archive videos, create video NFTs, and more.
+Arweave is a decentralized storage network that allows anyone to upload and
+access data in a permanent and tamper-proof manner. Bundlr Network makes
+uploading files and interacting with Arweave very easy. It provides fast and
+mutichains support for Arweave. When combined with Livepeer, users can build
+decentralized video applications, archive videos, create video NFTs, and more.
 
-In this tutorial, you will learn how to upload videos to Arweave using Bundlr Network and playback the transcoded version of it using Livepeer React.
+In this tutorial, you will learn how to upload videos to Arweave using Bundlr
+Network and playback the transcoded version of it using Livepeer React.
 
 ## Prerequisites
 
-Before you start with this tutorial, make sure you have the following tool installed on your machine:
+Before you start with this tutorial, make sure you have the following tool
+installed on your machine:
 
 - [Node.js](https://nodejs.org/en/) v16 or later
 
 ## Setting up Next.js App
 
-First, create a directory for the project and then initialize a Next.js app using the following command in your terminal:
+First, create a directory for the project and then initialize a Next.js app
+using the following command in your terminal:
 
 ```bash
 npx create-next-app .
 ```
 
-This will create a new Next.js app in the current directory and install all the necessary dependencies.
+This will create a new Next.js app in the current directory and install all the
+necessary dependencies.
 
-Next, let's install the `@livepeer/react` , `@bundlr-network/client` , `filereader-stream` libraries which we will use to integrate Livepeer, Bundlr Network and stream the file respectively:
+Next, let's install the `@livepeer/react` , `@bundlr-network/client` ,
+`filereader-stream` libraries which we will use to integrate Livepeer, Bundlr
+Network and stream the file respectively:
 
 ```bash
 npm install @livepeer/react @bundlr-network/client filereader-stream
@@ -31,7 +42,10 @@ npm install @livepeer/react @bundlr-network/client filereader-stream
 
 ### Adding TailwindCSS
 
-Tailwind CSS is a utility-first CSS framework that enables you to rapidly build user interfaces. We will use it to style our app. First, we need to install the `tailwindcss`, `postcss`, and `autoprefixer`dependencies. These dependencies are necessary for TailwindCSS to work properly in a Next.js app.
+Tailwind CSS is a utility-first CSS framework that enables you to rapidly build
+user interfaces. We will use it to style our app. First, we need to install the
+`tailwindcss`, `postcss`, and `autoprefixer`dependencies. These dependencies are
+necessary for TailwindCSS to work properly in a Next.js app.
 
 Run the following command to install them:
 
@@ -39,14 +53,18 @@ Run the following command to install them:
 npm install --dev tailwindcss postcss autoprefixer
 ```
 
-Once the dependencies are installed, we need to initiate the Tailwind CSS. This will create the necessary configuration files and allow you to customize the default Tailwind CSS styles. To do that, run the below code in your terminal.
+Once the dependencies are installed, we need to initiate the Tailwind CSS. This
+will create the necessary configuration files and allow you to customize the
+default Tailwind CSS styles. To do that, run the below code in your terminal.
 
 ```bash
 npx tailwind init -p
 ```
 
-The above command will generate two files named `tailwind.config.js`
-and `postcss.config.js`. These files contain the configuration for Tailwind CSS and PostCSS, respectively. Next, open the `tailwind.config.js` file in code editor of your choice and replace its contents with the following code:
+The above command will generate two files named `tailwind.config.js` and
+`postcss.config.js`. These files contain the configuration for Tailwind CSS and
+PostCSS, respectively. Next, open the `tailwind.config.js` file in code editor
+of your choice and replace its contents with the following code:
 
 ```jsx
 module.exports = {
@@ -58,7 +76,9 @@ module.exports = {
 };
 ```
 
-The above code tells Tailwind CSS which files to process. At last, add the tailwind directives for each of Tailwind’s layers to the `./styles/globals.css` file.
+The above code tells Tailwind CSS which files to process. At last, add the
+tailwind directives for each of Tailwind’s layers to the `./styles/globals.css`
+file.
 
 ```css
 @tailwind base;
@@ -66,7 +86,8 @@ The above code tells Tailwind CSS which files to process. At last, add the tailw
 @tailwind utilities;
 ```
 
-You can also check if Tailwind CSS is integrated successfully by updating the code inside of the `pages/index.js` file, with below code.
+You can also check if Tailwind CSS is integrated successfully by updating the
+code inside of the `pages/index.js` file, with below code.
 
 ```jsx
 <div className="flex flex-col justify-center items-center h-screen font-poppins">
@@ -79,23 +100,33 @@ You can also check if Tailwind CSS is integrated successfully by updating the co
 </div>
 ```
 
-Save the file and run `npm run dev` to start the next.js app and you should see a similar page.
+Save the file and run `npm run dev` to start the next.js app and you should see
+a similar page.
 
 ## Integrating Livepeer
 
-Livepeer is a decentralized video platform that allows users to upload, transcode, and serve video content. The Livepeer.js JavaScript SDK provides a set of ready-to-use hooks that make it easy to integrate Livepeer into a project.
+Livepeer is a decentralized video platform that allows users to upload,
+transcode, and serve video content. The Livepeer.js JavaScript SDK provides a
+set of ready-to-use hooks that make it easy to integrate Livepeer into a
+project.
 
-To get started, navigate to [https://livepeer.studio/register](https://livepeer.studio/register) and create a new account on Livepeer Studio. This will give you access to your Livepeer dashboard, where you can manage your account and access your API keys.
+To get started, navigate to
+[https://livepeer.studio/register](https://livepeer.studio/register) and create
+a new account on Livepeer Studio. This will give you access to your Livepeer
+dashboard, where you can manage your account and access your API keys.
 
-Once you have created an account, in the dashboard, click on the Developers on the sidebar.
+Once you have created an account, in the dashboard, click on the Developers on
+the sidebar.
 
 <Frame>
   ![Livepeer Studio, API key page](/images/tutorials/studio-create-api.png)
 </Frame>
 
-Then, click on Create API Key, give a name to your key and then copy it as we will need it later.
+Then, click on Create API Key, give a name to your key and then copy it as we
+will need it later.
 
-To use Livepeer.js in your project, create a new directory named `client`in the root directory, and add the following code to `livepeer.js`
+To use Livepeer.js in your project, create a new directory named `client`in the
+root directory, and add the following code to `livepeer.js`
 
 ```jsx
 import { createReactClient, studioProvider } from "@livepeer/react";
@@ -107,7 +138,9 @@ const LivepeerClient = createReactClient({
 export default LivepeerClient;
 ```
 
-Make sure to replace the `YOUR_API_KEY` with the key which you just copied from the Livepeer dashboard. And also replace the code inside of `_app.js` in the page directory with the below code.
+Make sure to replace the `YOUR_API_KEY` with the key which you just copied from
+the Livepeer dashboard. And also replace the code inside of `_app.js` in the
+page directory with the below code.
 
 ```jsx
 import { LivepeerConfig } from "@livepeer/react";
@@ -129,13 +162,18 @@ And that is it, you can now use Livepeer to upload and transcode assets.
 
 ## Uploading Videos To Arweave
 
-We will be first using Bundlr Network to upload videos to Arweave and then playback the transcoded version using Livepeer’s Player.
+We will be first using Bundlr Network to upload videos to Arweave and then
+playback the transcoded version using Livepeer’s Player.
 
-The Livepeer player automatically triggers video transcoding to ensure smooth playback.
+The Livepeer player automatically triggers video transcoding to ensure smooth
+playback.
 
-This can be useful for ensuring that your videos are of high quality and that they are accessible to a wide range of viewers, regardless of their device or connection speed.
+This can be useful for ensuring that your videos are of high quality and that
+they are accessible to a wide range of viewers, regardless of their device or
+connection speed.
 
-Inside `client` directory, create a new file named `bundlr.js` and add the below code inside of it.
+Inside `client` directory, create a new file named `bundlr.js` and add the below
+code inside of it.
 
 ```jsx
 import { providers } from "ethers";
@@ -153,7 +191,7 @@ const Bundlr = async () => {
   const bundlr = new WebBundlr(
     "https://node1.bundlr.network",
     "matic", // You can use any of the currencies supported by Bundlr
-    provider
+    provider,
   );
   // Wait for the Bundlr instance to be ready to use
   await bundlr.ready();
@@ -165,9 +203,12 @@ const Bundlr = async () => {
 export default Bundlr;
 ```
 
-This file creates a new instance of the Bundlr's Web API, which can be used to interact with the Bundlr network, such as uploading files, checking the balance, and funding the account.
+This file creates a new instance of the Bundlr's Web API, which can be used to
+interact with the Bundlr network, such as uploading files, checking the balance,
+and funding the account.
 
-Next, inside the `index.js` file in the `pages` directory, create two states, one for the video file and the other for the Arweave ID:
+Next, inside the `index.js` file in the `pages` directory, create two states,
+one for the video file and the other for the Arweave ID:
 
 ```jsx
 const [video, setVideo] = useState(null);
@@ -193,7 +234,8 @@ Then, below the paragraph tag, add the following input and button:
 </div>
 ```
 
-This code adds an input field where the user can select a video file, and a button that will call the `uploadVideo` function when clicked.
+This code adds an input field where the user can select a video file, and a
+button that will call the `uploadVideo` function when clicked.
 
 Add the following function to handle the uploading of the video:
 
@@ -291,4 +333,5 @@ export default function Home() {
 }
 ```
 
-Visit [Bundlr](https://bundlr.network/) to learn more about its capabilities and the service on [Arweave](https://www.arweave.org/).
+Visit [Bundlr](https://bundlr.network/) to learn more about its capabilities and
+the service on [Arweave](https://www.arweave.org/).
