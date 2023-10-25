@@ -1,32 +1,52 @@
-Livepeer supports access control on streams and assets, which lets developers restrict who can view media on their platform, depending on their application needs.
-The API supports both webhook and JWT-based access control.
+Livepeer supports access control on streams and assets, which lets developers
+restrict who can view media on their platform, depending on their application
+needs. The API supports both webhook and JWT-based access control.
 
 #### Webhook
 
-The recommended option for application access control for applications is to use webhooks.
-It has the simplest integration path, and is familiar for developers.
+The recommended option for application access control for applications is to use
+webhooks. It has the simplest integration path, and is familiar for developers.
 
-A user can mark a stream or asset as "gated", which means that a viewer cannot access the stream without a token.
+A user can mark a stream or asset as "gated", which means that a viewer cannot
+access the stream without a token.
 
-When stream playback is attempted, Studio sends a `playback.accessControl` webhook event, and applications can register a webhook handler to respond to this event.
+When stream playback is attempted, Studio sends a `playback.accessControl`
+webhook event, and applications can register a webhook handler to respond to
+this event.
 
-If the webhook responds with a `2XX` HTTP response code, Livepeer will enable playback. If it is non-2XX, playback will be rejected.
-The access control check happens at the playback layer, which means that even if a user gets access to the underlying `playbackId`,
-they will not be able to play the media without valid credentials.
+If the webhook responds with a `2XX` HTTP response code, Livepeer will enable
+playback. If it is non-2XX, playback will be rejected. The access control check
+happens at the playback layer, which means that even if a user gets access to
+the underlying `playbackId`, they will not be able to play the media without
+valid credentials.
 
-Using this framework, a blockchain agonistic Token Gating feature can be easily implemented. Rich ACC
-providers, like [Lit](https://litprotocol.com/), can be integrated using webhook access control.
+Using this framework, a blockchain agonistic Token Gating feature can be easily
+implemented. Rich ACC providers, like [Lit](https://litprotocol.com/), can be
+integrated using webhook access control.
 
 #### JWT
 
-JSON Web Tokens (JWTs) offer another secure mechanism for developers to implement access control on their platform's media content.
+JSON Web Tokens (JWTs) offer another secure mechanism for developers to
+implement access control on their platform's media content.
 
-To use this method, a content piece — a stream or an asset — can be marked with a JWT-specific playback policy. This means viewers will require a valid JWT to access the content.
+To use this method, a content piece — a stream or an asset — can be marked with
+a JWT-specific playback policy. This means viewers will require a valid JWT to
+access the content.
 
-Upon a playback request, Livepeer checks the provided JWT for validity. The validation process involves ensuring the JWT was signed with the correct `signingKey` and that it hasn't expired. If the JWT is valid, access to the content is granted; otherwise, it's denied.
+Upon a playback request, Livepeer checks the provided JWT for validity. The
+validation process involves ensuring the JWT was signed with the correct
+`signingKey` and that it hasn't expired. If the JWT is valid, access to the
+content is granted; otherwise, it's denied.
 
-JWTs provide the flexibility of defining various claims or data within the token itself, which can be used to carry additional metadata or access control logic. For instance, specific viewer information or expiration details can be embedded directly in the JWT.
+JWTs provide the flexibility of defining various claims or data within the token
+itself, which can be used to carry additional metadata or access control logic.
+For instance, specific viewer information or expiration details can be embedded
+directly in the JWT.
 
-To implement this feature, developers can utilize the livepeer.js client to create JWT-gated content. Upon content creation, developers can then use custom API routes to sign and issue JWTs for authorized viewers, ensuring that only those with the correct tokens can view the content.
+To implement this feature, developers can utilize the livepeer.js client to
+create JWT-gated content. Upon content creation, developers can then use custom
+API routes to sign and issue JWTs for authorized viewers, ensuring that only
+those with the correct tokens can view the content.
 
-Depending on the player used, the JWT can either be passed as a specific prop or appended to the playback URL as a query parameter to authenticate the viewer.
+Depending on the player used, the JWT can either be passed as a specific prop or
+appended to the playback URL as a query parameter to authenticate the viewer.

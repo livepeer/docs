@@ -3,7 +3,8 @@ title: "Play an asset"
 description: "Learn how to play assets with Livepeer"
 ---
 
-In this guide, we demonstrate how to play back assets in your application using either Livepeer.js or Video.js.
+In this guide, we demonstrate how to play back assets in your application using
+either Livepeer.js or Video.js.
 
 <Warning>
   In a production application, with [CORS-enabled API
@@ -14,7 +15,9 @@ In this guide, we demonstrate how to play back assets in your application using 
 
 ## Using the Livepeer.js Player
 
-The example below show to use the Livepeer.js [`Player`](/sdks/livepeer-js/Player) to view a video asset, with some custom styles to demonstrate what's possible.
+The example below show to use the Livepeer.js
+[`Player`](/sdks/livepeer-js/Player) to view a video asset, with some custom
+styles to demonstrate what's possible.
 
 <iframe
   src="https://lvpr.tv/?v=f5eese9wwl88k4g8"
@@ -22,22 +25,23 @@ The example below show to use the Livepeer.js [`Player`](/sdks/livepeer-js/Playe
   width="100%"
     height="410"
 
-webkitallowfullscreen
-mozallowfullscreen
-allowfullscreen
+webkitallowfullscreen mozallowfullscreen allowfullscreen
 
 > </iframe>
 
 ### Configuring Providers
 
-We [create a new livepeer.js client and wrap the app with `LivepeerConfig`](/sdks/livepeer-js/getting-started).
+We
+[create a new livepeer.js client and wrap the app with `LivepeerConfig`](/sdks/livepeer-js/getting-started).
 
 ### Play Video
 
-Now that our providers are set up, we use the [`Player`](/sdks/livepeer-js/Player) with an IPFS CID as our `playbackId`, which we created
-previously when uploading a video asset and [storing to IPFS](/sdks/livepeer-js/asset/useUpdateAsset). We use
-[Next.js Image](https://nextjs.org/docs/basic-features/image-optimization) as our optimized poster image, but this could also
-be a simple image URL.
+Now that our providers are set up, we use the
+[`Player`](/sdks/livepeer-js/Player) with an IPFS CID as our `playbackId`, which
+we created previously when uploading a video asset and
+[storing to IPFS](/sdks/livepeer-js/asset/useUpdateAsset). We use
+[Next.js Image](https://nextjs.org/docs/basic-features/image-optimization) as
+our optimized poster image, but this could also be a simple image URL.
 
 We also override some of the custom styling to match the flow of our app!
 
@@ -85,10 +89,10 @@ export const DemoPlayer = () => {
 
 ## Using your own player
 
-Using livepeer.js is the recommended way to play back a video or a
-livestream - it handles MP4 renditions, errors from the API, and is a true web3-native media player.
-However, if you want to use an alternative, you can do so by
-following the instructions below.
+Using livepeer.js is the recommended way to play back a video or a livestream -
+it handles MP4 renditions, errors from the API, and is a true web3-native media
+player. However, if you want to use an alternative, you can do so by following
+the instructions below.
 
 <Info>
   To ensure consistent viewer experience, we strongly recommend using a player
@@ -101,38 +105,45 @@ following the instructions below.
 
 ### Fetch the playback URL
 
-To play back a livestream in other players, you'll need to fetch the playback URL(s).
-By default, all content has an HLS endpoint.
-HLS is a protocol that allows you to stream video and audio content over HTTP.
+To play back a livestream in other players, you'll need to fetch the playback
+URL(s). By default, all content has an HLS endpoint. HLS is a protocol that
+allows you to stream video and audio content over HTTP.
 
 <Warning>
   The playback URL format is subject to change. Do not try to create the
   playback URLs manually, as they may change periodically.
 </Warning>
 
-You can get the playback details for an asset by using the [playback info API endpoint](/api-reference/playback/get). The `url` field can be used as the playback URL.
+You can get the playback details for an asset by using the
+[playback info API endpoint](/api-reference/playback/get). The `url` field can
+be used as the playback URL.
 
 #### Source playback
 
-When an asset is initially created, we will provide a "source playback" URL in the list returned from the [playback info endpoint](/api-reference/playback/get).
-This is a non-transcoded version of the asset that can be played immediately, while processing happens in the background.
-The playback info endpoint will then automatically update with the transcoded renditions when processing is completed.
+When an asset is initially created, we will provide a "source playback" URL in
+the list returned from the
+[playback info endpoint](/api-reference/playback/get). This is a non-transcoded
+version of the asset that can be played immediately, while processing happens in
+the background. The playback info endpoint will then automatically update with
+the transcoded renditions when processing is completed.
 
 ### Handling various playback sources
 
-The playback info endpoint can return multiple sources in the response.
-These may include short form MP4 playback URLs, which allow you to obtain alternative
-URLs for your video asset to enable applications (and CDNs) to cache short videos for
-instant playback of subsequent videos. This means that viewers can experience instant time-to-first-frame (TTFF) when
-watching short videos.
+The playback info endpoint can return multiple sources in the response. These
+may include short form MP4 playback URLs, which allow you to obtain alternative
+URLs for your video asset to enable applications (and CDNs) to cache short
+videos for instant playback of subsequent videos. This means that viewers can
+experience instant time-to-first-frame (TTFF) when watching short videos.
 
 It is important to note that short form playback URLs are only available for
 video assets that are less than 2 minutes in duration.
 
-These may also include WebRTC URLs for low latency livestream playback. These _must_ be played back with our
-ICE servers, which are used to route traffic in restricted networking environments.
+These may also include WebRTC URLs for low latency livestream playback. These
+_must_ be played back with our ICE servers, which are used to route traffic in
+restricted networking environments.
 
-If there are MP4 renditions or WebRTC playback available, the [playback info endpoint](/api-reference/playback/get) will return:
+If there are MP4 renditions or WebRTC playback available, the
+[playback info endpoint](/api-reference/playback/get) will return:
 
 ```json
 {
@@ -167,10 +178,10 @@ If there are MP4 renditions or WebRTC playback available, the [playback info end
 }
 ```
 
-There are multiple renditions you can choose from, and it is up to you to decide how you want to prioritize
-each source for your custom player. See the [Player's technical
-details](/sdks/livepeer-js/Player#technical-details) for more
-information on how livepeer.js handles this.
+There are multiple renditions you can choose from, and it is up to you to decide
+how you want to prioritize each source for your custom player. See the
+[Player's technical details](/sdks/livepeer-js/Player#technical-details) for
+more information on how livepeer.js handles this.
 
 <Info>
   When you make a request for playback URLs, in the response MP4 URLs are always
@@ -191,7 +202,8 @@ list of popular players that support HLS:
 - [Plyr.io](https://plyr.io/)
 - [JW Player](https://www.jwplayer.com/html5-video-player/)
 - [Bitmovin Player](https://bitmovin.com/video-player/)
-- [HLS.js](https://github.com/video-dev/hls.js) (requires custom logic to wire to a video element)
+- [HLS.js](https://github.com/video-dev/hls.js) (requires custom logic to wire
+  to a video element)
 
 Here is an example of how to use the playback URL in video.js player.
 
@@ -225,9 +237,9 @@ Here is an example of how to use the playback URL in video.js player.
 
 ## Embeddable Player
 
-This is one of the easiest way to play back a video on your website/applications.
-You can embed the player on your website/applications by using the below code
-snippet.
+This is one of the easiest way to play back a video on your
+website/applications. You can embed the player on your website/applications by
+using the below code snippet.
 
 You can replace the `PLAYBACK_ID` with your video's playback id.
 
@@ -241,20 +253,23 @@ You can replace the `PLAYBACK_ID` with your video's playback id.
 </iframe>
 ```
 
-You may also specify `&lowLatency=false` in the query string - this will disable low-latency WebRTC.
-This is enabled by default - if low latency does not succeed in
-playing back (commonly due to a slow network or connectivity issues), the embeddable player
-will automatically fall back to HLS playback. Also, if the stream contains B-frames, or bidirectional frames,
-(which are common for users streaming with OBS or other streaming apps), the Player will automatically fall
-back, so that out-of-order frames are not displayed. This only applies to users who are playing
-back livestreams.
+You may also specify `&lowLatency=false` in the query string - this will disable
+low-latency WebRTC. This is enabled by default - if low latency does not succeed
+in playing back (commonly due to a slow network or connectivity issues), the
+embeddable player will automatically fall back to HLS playback. Also, if the
+stream contains B-frames, or bidirectional frames, (which are common for users
+streaming with OBS or other streaming apps), the Player will automatically fall
+back, so that out-of-order frames are not displayed. This only applies to users
+who are playing back livestreams.
 
-To enable clipping, `&clipLength={seconds}` can be passed, which will allow viewers to clip livestreams. The length
-in seconds **must be less than 120 seconds**.
+To enable clipping, `&clipLength={seconds}` can be passed, which will allow
+viewers to clip livestreams. The length in seconds **must be less than 120
+seconds**.
 
-Also, the embed supports "constant" playback with `constant=true`, which means that audio will not be distorted if the playhead
-falls behind the livestream. This is usually used for music applications, where audio quality/consistency is more important than
-latency.
+Also, the embed supports "constant" playback with `constant=true`, which means
+that audio will not be distorted if the playhead falls behind the livestream.
+This is usually used for music applications, where audio quality/consistency is
+more important than latency.
 
 <Warning>
   OBS users should be instructed to use the Livepeer stream profile, or to
@@ -268,8 +283,6 @@ latency.
   width="100%"
     height="410"
 
-webkitallowfullscreen
-mozallowfullscreen
-allowfullscreen
+webkitallowfullscreen mozallowfullscreen allowfullscreen
 
 > </iframe>

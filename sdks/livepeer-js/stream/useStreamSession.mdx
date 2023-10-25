@@ -3,7 +3,8 @@ title: "useStreamSession"
 description: "React Hook for retrieving a stream session."
 ---
 
-Hook for retrieving a [Stream Session](https://github.com/livepeer/livepeer.js/blob/main/packages/core/src/types/provider.ts)
+Hook for retrieving a
+[Stream Session](https://github.com/livepeer/livepeer.js/blob/main/packages/core/src/types/provider.ts)
 based on a unique identifier.
 
 ## Usage
@@ -24,8 +25,9 @@ based on a unique identifier.
   </Tab>
 </Tabs>
 
-The following examples assume a stream session was created via streaming to an existing Stream. If a falsy
-stream session ID is provided, the query will be skipped.
+The following examples assume a stream session was created via streaming to an
+existing Stream. If a falsy stream session ID is provided, the query will be
+skipped.
 
 ```tsx
 function SomeComponent() {
@@ -35,8 +37,9 @@ function SomeComponent() {
 
 ## Return Value
 
-The return value is partially based on [Tanstack Query](https://tanstack.com/query/v4/docs/reference/useQuery), with some return types
-aggregated for simplicity.
+The return value is partially based on
+[Tanstack Query](https://tanstack.com/query/v4/docs/reference/useQuery), with
+some return types aggregated for simplicity.
 
 ```tsx
 {
@@ -70,8 +73,10 @@ function SomeComponent() {
 
 ### UseQueryOptions
 
-The `useStreamSession` hook also supports any [Tanstack Query](https://tanstack.com/query/v4/docs/reference/useQuery) `useQuery` options, such as
-`refetchInterval` or `enabled`. These override any configs passed by default by the internal hook.
+The `useStreamSession` hook also supports any
+[Tanstack Query](https://tanstack.com/query/v4/docs/reference/useQuery)
+`useQuery` options, such as `refetchInterval` or `enabled`. These override any
+configs passed by default by the internal hook.
 
 ```tsx
 function SomeComponent() {
@@ -92,11 +97,15 @@ function SomeComponent() {
 
 ### Next.js
 
-The `useStreamSession` hook also comes with a [Tanstack Query](https://tanstack.com/query/v4/docs/guides/ssr) prefetch query, `prefetchStreamSession`,
-which makes it easy to prefetch data for server-side rendering.
+The `useStreamSession` hook also comes with a
+[Tanstack Query](https://tanstack.com/query/v4/docs/guides/ssr) prefetch query,
+`prefetchStreamSession`, which makes it easy to prefetch data for server-side
+rendering.
 
-First, you add a [`getStaticProps`](https://nextjs.org/docs/basic-features/data-fetching/get-static-props) function to the page which
-you want to prefetch data on. The props should match the `useStreamSession` hook to ensure that the correct data is prefetched.
+First, you add a
+[`getStaticProps`](https://nextjs.org/docs/basic-features/data-fetching/get-static-props)
+function to the page which you want to prefetch data on. The props should match
+the `useStreamSession` hook to ensure that the correct data is prefetched.
 
 ```tsx
 // pages/demo.tsx
@@ -105,7 +114,7 @@ import { prefetchStreamSession, studioProvider } from "@livepeer/react";
 export const getStaticProps = async () => {
   const dehydratedState = await prefetchStreamSession(
     { streamSessionId },
-    { provider: studioProvider({ apiKey: "yourStudioApiKey" }) }
+    { provider: studioProvider({ apiKey: "yourStudioApiKey" }) },
   );
 
   return {
@@ -117,8 +126,9 @@ export const getStaticProps = async () => {
 };
 ```
 
-We need to update the `_app.tsx` to pass the `dehydratedState` in `pageProps` to the LivepeerConfig. We also move the
-`livepeerClient` into a useMemo hook so that a new client is created on each request.
+We need to update the `_app.tsx` to pass the `dehydratedState` in `pageProps` to
+the LivepeerConfig. We also move the `livepeerClient` into a useMemo hook so
+that a new client is created on each request.
 
 ```tsx
 // pages/_app.tsx
@@ -141,7 +151,7 @@ function App({ Component, pageProps }: AppProps<{ dehydratedState: string }>) {
           apiKey: process.env.NEXT_PUBLIC_STUDIO_API_KEY,
         }),
       }),
-    []
+    [],
   );
 
   return (
@@ -155,12 +165,14 @@ function App({ Component, pageProps }: AppProps<{ dehydratedState: string }>) {
 }
 ```
 
-That's it! You now have data prefetching on the server, which is passed to the browser and used to hydrate the initial query client.
+That's it! You now have data prefetching on the server, which is passed to the
+browser and used to hydrate the initial query client.
 
 ### Other Frameworks
 
-The process is very similar for other frameworks, with the exception that there is a `clearClient` boolean which should be used
-to ensure that the client cache is not reused across users.
+The process is very similar for other frameworks, with the exception that there
+is a `clearClient` boolean which should be used to ensure that the client cache
+is not reused across users.
 
 ```tsx
 import { prefetchStreamSession, studioProvider } from "@livepeer/react";
@@ -171,7 +183,7 @@ export const handleRequest = async (req, res) => {
       streamSessionId,
       clearClient: true,
     },
-    { provider: studioProvider({ apiKey: "yourStudioApiKey" }) }
+    { provider: studioProvider({ apiKey: "yourStudioApiKey" }) },
   );
 
   // sanitize the custom SSR generated data

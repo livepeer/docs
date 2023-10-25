@@ -3,22 +3,29 @@ title: "Benchmark Transcoding"
 icon: server
 ---
 
-This guide provides steps to test the performance of your GPU(s) with the `livepeer_bench` benchmark transcoding tool provided with the [Livepeer install](/orchestrators/guides/install-go-livepeer/).
+This guide provides steps to test the performance of your GPU(s) with the
+`livepeer_bench` benchmark transcoding tool provided with the
+[Livepeer install](/orchestrators/guides/install-go-livepeer/).
 
 The benchmarking tool is designed to:
 
 - Simulate live-mode to measure transcoding as if connected to the network
 - Gauge local transcoding capacity
-- Provide output statistics to show real-time segment ratio and stream duration ratio
+- Provide output statistics to show real-time segment ratio and stream duration
+  ratio
 - Provide for adjusting configurations according to GPU capacity
 
 ## Transcoding Performance
 
-Overall transcoding performance on the network depends on the speed video is transcoded and uploaded/downloaded from an orchestrator.
+Overall transcoding performance on the network depends on the speed video is
+transcoded and uploaded/downloaded from an orchestrator.
 
-The transcode time should be as low as possible. At the least, it should be lower than the total segment duration which is faster than real-time.
+The transcode time should be as low as possible. At the least, it should be
+lower than the total segment duration which is faster than real-time.
 
-If you want to get an approximation of how many streams you can transcode simultaneously, increase the number of concurrent sessions with the `-concurrentSessions` flag to assess the total transcoding time.
+If you want to get an approximation of how many streams you can transcode
+simultaneously, increase the number of concurrent sessions with the
+`-concurrentSessions` flag to assess the total transcoding time.
 
 <Info>
   After running your benchmark transcoding, you can follow up with further
@@ -41,7 +48,10 @@ ls bbb/   # Should print the stream *.ts segments and source.m3u8 manifest
   transcoding capacity.
 </Info>
 
-2. Download the [common output rendition configuration](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json) `.json` file that you can copy and save in the Livepeer folder as `transcodingOptions.json`.
+2. Download the
+   [common output rendition configuration](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer_bench/transcodingOptions.json)
+   `.json` file that you can copy and save in the Livepeer folder as
+   `transcodingOptions.json`.
 
 1. Run `livepeer_bench`
 
@@ -57,15 +67,21 @@ livepeer_bench \
 
 ### Flags
 
-- The `-nvidia` flag is only required when transcoding with Nvidia GPUs. It is used to specify a comma-delimited string of Nvidia GPU IDs.
+- The `-nvidia` flag is only required when transcoding with Nvidia GPUs. It is
+  used to specify a comma-delimited string of Nvidia GPU IDs.
 
-- The `-concurrentSessions` flag is used to specify the number of concurrent transcoding sessions. The default value is 1.
+- The `-concurrentSessions` flag is used to specify the number of concurrent
+  transcoding sessions. The default value is 1.
 
 ### Livestreams
 
-Livestreams are the most common type of workload on the network. By default, the flag is set to live mode `-live=*true*` so that the segments of the stream will be queued one-by-one as they arrive in a livestream.
+Livestreams are the most common type of workload on the network. By default, the
+flag is set to live mode `-live=*true*` so that the segments of the stream will
+be queued one-by-one as they arrive in a livestream.
 
-If you want to queue all segments at once without any gaps in time, thus replicating a video-on-demand scenario, you can switch off live mode by changing the 'live' flag to _`=false`_.
+If you want to queue all segments at once without any gaps in time, thus
+replicating a video-on-demand scenario, you can switch off live mode by changing
+the 'live' flag to _`=false`_.
 
 **For example:**
 
@@ -79,7 +95,8 @@ livepeer_bench \
   For the purposes of this example above, all other flags are omitted.
 </Info>
 
-The first few lines of the output should display the source file, the output rendition profiles, and the number of concurrent sessions.
+The first few lines of the output should display the source file, the output
+rendition profiles, and the number of concurrent sessions.
 
 **For example:**
 
@@ -92,7 +109,8 @@ The first few lines of the output should display the source file, the output ren
 *---------------------*----------------------------------------------*
 ```
 
-The transcoding metrics will be output in CSV format per segment as each segment gets transcoded.
+The transcoding metrics will be output in CSV format per segment as each segment
+gets transcoded.
 
 **For example:**
 
@@ -112,9 +130,11 @@ timestamp,session,segment,seg_dur,transcode_time
 
 When all the transcoding sessions end, metrics output will be generated.
 
-- `Real-Time Segs Ratio` captures the number of segments transcoded in real-time.
+- `Real-Time Segs Ratio` captures the number of segments transcoded in
+  real-time.
 
-- `Real-Time Duration Ratio` captures the total time taken to transcode all segments relative to the total duration of all source segments.
+- `Real-Time Duration Ratio` captures the total time taken to transcode all
+  segments relative to the total duration of all source segments.
 
 ```bash
 *------------------------------*---------------------*
@@ -128,7 +148,8 @@ When all the transcoding sessions end, metrics output will be generated.
 *------------------------------*---------------------*
 ```
 
-You can export the per-segment CSV data to an `output.csv` file to analyze it with other tools:
+You can export the per-segment CSV data to an `output.csv` file to analyze it
+with other tools:
 
 ```bash
 livepeer_bench \
