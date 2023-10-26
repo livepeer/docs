@@ -1,45 +1,40 @@
 ---
-title: "useAssetMetrics"
-description: "React Hook for retrieving metrics for an asset."
+title: "usePlaybackInfo"
+description: "React Hook for retrieving playback details for a playback ID."
 ---
 
-Hook for retrieving metrics for an Asset.
+Hook for retrieving playback information related to a playback ID. Used
+internally in the [`Player`](/sdks/livepeer-react/Player) to fetch the playback URL
+for a playback ID.
 
 ## Usage
 
 <Tabs>
   <Tab title="React">
     ```tsx 
-    import { useAssetMetrics } from '@livepeer/react';
+    import { usePlaybackInfo } from '@livepeer/react';
     ```
 
   </Tab>
   <Tab title="React Native">
 
     ```tsx
-    import { useAssetMetrics } from '@livepeer/react-native';
+    import { usePlaybackInfo } from '@livepeer/react-native';
     ```
 
   </Tab>
 </Tabs>
 
-<Info>
-  Metrics are currently only available if a user has the ID associated with an
-  asset. This should only be the user(s) with write access to the asset -
-  viewers are not able to use this hook.
-</Info>
-
-The following examples assume an ID has been created for an asset, and the
-[`Player`](/sdks/livepeer-js/Player) is used for playback (with its built-in
-metrics reporting).
+The following examples assume a playback ID has been created for an asset or
+stream.
 
 ```tsx
 function SomeComponent() {
-  const { data: metrics } = useAssetMetrics({ assetId });
+  const { data: playbackInfo } = usePlaybackInfo(playbackId);
 }
 ```
 
-If a falsy asset ID is provided, the query will be skipped.
+If a falsy playback ID is provided, the query will be skipped.
 
 ## Return Value
 
@@ -49,7 +44,7 @@ some return types aggregated for simplicity.
 
 ```tsx
 {
-  data?: ViewsMetrics,
+  data?: PlaybackInfo,
   error?: Error,
   status: 'idle' | 'loading' | 'success' | 'error',
   isError: boolean,
@@ -65,29 +60,29 @@ some return types aggregated for simplicity.
 
 ## Configuration
 
-### assetId
+### playbackId
 
-Asset identifier.
+Playback identifier. Can also be a string passed as the only parameter.
 
 ```tsx
 function SomeComponent() {
-  const { data: metrics } = useAssetMetrics({
-    assetId,
+  const { data: playbackInfo } = usePlaybackInfo({
+    playbackId,
   });
 }
 ```
 
 ### UseQueryOptions
 
-The `useAssetMetrics` hook also supports any
+The `usePlaybackInfo` hook also supports any
 [Tanstack Query](https://tanstack.com/query/v4/docs/reference/useQuery)
 `useQuery` options, such as `refetchInterval` or `enabled`. These override any
 configs passed by default by the internal hook.
 
 ```tsx
 function SomeComponent() {
-  const { data: metrics } = useAssetMetrics({
-    assetId,
+  const { data: playbackInfo } = usePlaybackInfo({
+    playbackId,
     refetchInterval: 30000,
   });
 }
@@ -102,23 +97,23 @@ function SomeComponent() {
 
 ### Next.js
 
-The `useAssetMetrics` hook also comes with a
+The `usePlaybackInfo` hook also comes with a
 [Tanstack Query](https://tanstack.com/query/v4/docs/guides/ssr) prefetch query,
-`prefetchAssetMetrics`, which makes it easy to prefetch data for server-side
+`prefetchPlaybackInfo`, which makes it easy to prefetch data for server-side
 rendering.
 
 First, you add a
 [`getStaticProps`](https://nextjs.org/docs/basic-features/data-fetching/get-static-props)
 function to the page which you want to prefetch data on. The props should match
-the `useAsset` hook to ensure that the correct data is prefetched.
+the `usePlaybackInfo` hook to ensure that the correct data is prefetched.
 
 ```tsx
 // pages/demo.tsx
-import { prefetchAssetMetrics, studioProvider } from "@livepeer/react";
+import { prefetchPlaybackInfo, studioProvider } from "@livepeer/react";
 
 export const getStaticProps = async () => {
-  const dehydratedState = await prefetchAssetMetrics(
-    { assetId },
+  const dehydratedState = await prefetchPlaybackInfo(
+    { playbackId },
     { provider: studioProvider({ apiKey: "yourStudioApiKey" }) },
   );
 
@@ -180,12 +175,12 @@ is a `clearClient` boolean which should be used to ensure that the client cache
 is not reused across users.
 
 ```tsx
-import { prefetchAssetMetrics, studioProvider } from "@livepeer/react";
+import { prefetchPlaybackInfo, studioProvider } from "@livepeer/react";
 
 export const handleRequest = async (req, res) => {
-  const dehydratedState = await prefetchAssetMetrics(
+  const dehydratedState = await prefetchPlaybackInfo(
     {
-      assetId,
+      playbackId,
       clearClient: true,
     },
     { provider: studioProvider({ apiKey: "yourStudioApiKey" }) },
