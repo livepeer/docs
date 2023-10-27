@@ -9,7 +9,7 @@ binary release, a Docker image, or from source.
 
 ## Install using a Binary Release
 
-#### Dependencies
+### Dependencies
 
 ```bash
 # For ubuntu
@@ -19,43 +19,53 @@ apt install curl coreutils gnupg2
 brew install curl coreutils gnupg
 ```
 
-#### Installation
-
-```bash
-sh -c "$(curl -fsSL https://raw.github.com/livepeer/go-livepeer/master/install.sh)"
-```
-
-Additional steps to install custom release for individual OS are declared below.
-
 ### Darwin (macOS)
 
 ```bash
 # <RELEASE_VERSION> is the release version, e.g. v0.5.35
-# IMPORTANT: if you are using macOS with an M1 chip, you'll need to run these commands using the Rosetta emulator
+# <ARCH> is the chip architecture (use arm64 for M1 and amd64 for Intel)
 
-# Fetch the latest release
-wget https://github.com/livepeer/go-livepeer/releases/download/<RELEASE_VERSION>/livepeer-darwin-amd64.tar.gz
+wget https://github.com/livepeer/go-livepeer/releases/download/<RELEASE_VERSION>/livepeer-darwin-<ARCH>.tar.gz
 
 # Next, extract it
-tar -zxvf livepeer-darwin-amd64.tar.gz
+tar -zxvf livepeer-darwin-<ARCH>.tar.gz
 
 # Finally, move it to the appropriate directory
-mv livepeer-darwin-amd64/* /usr/local/bin/
+mv livepeer-darwin-<ARCH>/* /usr/local/bin/
 ```
 
 ### Linux
 
 ```bash
 # <RELEASE_VERSION> is the release version, e.g. v0.5.35
+# <ARCH> is the chip architecture (use arm64 or amd64)
 
 # Fetch the latest release
-wget https://github.com/livepeer/go-livepeer/releases/download/<RELEASE_VERSION>/livepeer-linux-amd64.tar.gz
+wget https://github.com/livepeer/go-livepeer/releases/download/<RELEASE_VERSION>/livepeer-linux-<ARCH>.tar.gz
 
 # Next, extract it
 tar -zxvf livepeer-linux-amd64.tar.gz
 
 # Finally, move it to the appropriate directory
 mv livepeer-linux-amd64/* /usr/local/bin/
+```
+
+### Linux GPU
+
+There is a separate binary which supports transcoding on the NVIDIA GPU. The requirement for this binary is to have [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit) installed on your machine.
+
+```bash
+# <RELEASE_VERSION> is the release version, e.g. v0.5.35
+# <ARCH> is the chip architecture (use arm64 or amd64)
+
+# Fetch the latest release
+wget https://github.com/livepeer/go-livepeer/releases/download/<RELEASE_VERSION>/livepeer-linux-gpu-<ARCH>.tar.gz
+
+# Next, extract it
+tar -zxvf livepeer-linux-gpu-<ARCH>.tar.gz
+
+# Finally, move it to the appropriate directory
+mv livepeer-linux-gpu-<ARCH>/* /usr/local/bin/
 ```
 
 ### Windows
@@ -82,15 +92,15 @@ move livepeer-windows-amd64 e.g. C:\Users\UserName\livepeer-folder
 
 ### Third-party packages
 
-Packages for different Linux distributions are maintained by Livepeer community
-members. Before using these packages, please verify that they have been updated
-to use the
-[latest builds of go-livepeer](https://github.com/livepeer/go-livepeer/releases).
-This list will be updated as a best-effort, but we cannot guarantee if
+Packages for different Linux distributions are maintained by Livepeer
+community members. Before using these packages, please verify that
+they have been updated to use the [latest builds of
+go-livepeer](https://github.com/livepeer/go-livepeer/releases). This
+list will be updated as a best-effort, but we cannot guarantee if
 individual packages are up to date or verify their integrity.
 
-In the future, Livepeer core contributors may publish official packages for the
-distributions below.
+In the future, Livepeer core contributors may publish official
+packages for the distributions below.
 
 | Platform   | Installation           | Source                                              |
 | ---------- | ---------------------- | --------------------------------------------------- |
@@ -108,31 +118,22 @@ If you do not have Docker installed, you will need to install it using the guide
 With every release, Docker images are pushed to
 [DockerHub](https://hub.docker.com/r/livepeer/go-livepeer).
 
-If you are running macOS with an M1 chip, you'll need to
-[run your terminal using the Rosetta emulator](https://apple.stackexchange.com/a/428769)
-and specifically pull the `linux/amd64` release. In the future, we will provide
-alternative `arm64` builds.
-
 ```bash
 # <RELEASE_VERSION> is the release version i.e. 0.5.14
 docker pull livepeer/go-livepeer:<RELEASE_VERSION>
-
-# Mac M1 only
-docker pull --platform linux/amd64 livepeer/go-livepeer:<RELEASE_VERSION>
 ```
 
 ### Running livepeer-cli with Docker
 
 Once you've pulled the image, retrieve the image id and start the container.
 
-**Any flags you provide will be passed to the binary**, so you can pass your
-configuration here.
+**Any flags you provide will be passed to the binary**, so you can pass [your configuration](/installation/configuring-livepeer) here.
 
 ```bash
 docker run <image id> <livepeer configuration flags>
 
-# Mac M1 only
-docker run --platform linux/amd64 <image id> <livepeer configuration flags>
+# GPU support (Transcoder-only)
+docker run --gpus all <image id> <livepeer configuration flags>
 ```
 
 Once you've started the container, retrieve the name and start the CLI
@@ -158,23 +159,19 @@ Building `livepeer` requires some system dependencies.
 #### Linux (Ubuntu: 16.04 or 18.04)
 
 ```bash
-apt-get update && apt-get -y install build-essential pkg-config autoconf git curl
+apt-get update && apt-get -y install build-essential pkg-config autoconf git curl yasm
 ```
 
 #### Linux (Ubuntu: 20.04)
 
 ```bash
-apt-get -y install protobuf-compiler-grpc golang-goprotobuf-dev
+apt-get -y install protobuf-compiler-grpc golang-goprotobuf-dev yasm
 ```
 
 To enable transcoding using Nvidia GPUs on Linux systems
 
-- CUDA must be
-  [installed on the system](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html)
-- `clang` must be installed as well. The script that will install `ffmpeg`
-  dependencies uses `which clang` command to determine whether `clang` is
-  installed or not. Please check this on your system. If the path is empty,
-  please install `clang`. For example on the Ubuntu machine one can do
+- [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit) must be installed on the system
+- `clang` must be installed as well. The script that will install `ffmpeg` dependencies uses `which clang` command to determine whether `clang` is installed or not. Please check this on your system. If the path is empty, please install `clang`. For example on the Ubuntu machine one can do
 
 ```bash
 apt-get -y install clang clang-tools
@@ -185,12 +182,6 @@ apt-get -y install clang clang-tools
 ```bash
 brew update && brew install pkg-config autoconf
 ```
-
-#### Windows
-
-The steps in
-[this file](https://github.com/livepeer/go-livepeer/blob/master/.github/workflows/windows.yml)
-can be used as a reference.
 
 ### Go
 
@@ -211,11 +202,6 @@ cd go-livepeer
 ```bash
 ./install_ffmpeg.sh
 ```
-
-<Info>
-  This is the step that requires `which clang` to return clang path in order to
-  build CUDA support, as described above
-</Info>
 
 3. Set build environment variables.
 
@@ -244,32 +230,19 @@ make
 cp livepeer* /usr/local/bin
 ```
 
-<Info>
-  **Mac M1 users**: If you see an error like `ld: symbol(s) not found for
-  architecture x86_64`, this is because of a conflict between dependency builds
-  and the Livepeer build. You should check that you are using the
-  [\*-darwin-arm64 binary](https://go.dev/dl/go1.17.6.darwin-arm64.pkg) instead
-  of the `*-darwin-amd64` binary. You can check what Go architecture you're
-  using with `go version`.
-</Info>
+## Troubleshooting
 
-## Build with Docker
 
-1. Clone the repository:
+### Error while loading shared libraries
 
-```bash
-git clone https://github.com/livepeer/go-livepeer.git
-cd go-livepeer
+You may encounter the following issue when running the `livepeer` binary.
+
+```
+error while loading shared libraries: libnppig.so.11: cannot open shared object file: No such file or directory.
 ```
 
-2. Export tags:
+This means that you have installed the Livepeer GPU binary but it is unable to access your CUDA Toolkit libraries. If you do not intend to use GPU transcoding, please download `livepeer` instead of `livepeer-gpu`. However, if you wish to use GPU transcoding, please ensure that the CUDA Toolkit is installed and add its path to the shared libraries path.
 
-```bash
-echo $(git describe --tags) > .git.describe
 ```
-
-3. Build image:
-
-```bash
-docker build -t livepeerbinary:debian -f docker/Dockerfile.debian .
+export LD_LIBRARY_PATH="${HOME}/compiled/lib:/usr/local/cuda/lib64:${LD_LIBRARY_PATH}
 ```
