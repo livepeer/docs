@@ -1,6 +1,6 @@
 FROM node:current
 
-RUN npm install -g mintlify sharp
+RUN npm install -g mintlify
 
 WORKDIR /app
 
