@@ -1988,6 +1988,22 @@ paths:
         - stream
       summary: Create a stream
       operationId: createStream
+      description: |
+        POST /stream creates a stream object. The configuration on this stream
+        object is inherited by all live sessions using this stream's streamKey.
+
+        The only parameter you are required to set is the name of your stream,
+        but we also highly recommend that you define transcoding profiles
+        parameter that suits your specific broadcasting configuration.
+
+        If you do not define transcoding rendition profiles when creating the
+        stream, a default set of profiles will be used. These profiles include
+        240p,  360p, 480p and 720p.
+
+        The playback policy is set to public by default for new streams. It can
+        also be added upon the creation of a new stream by adding
+        `"playbackPolicy": {"type": "jwt"}`
+
       requestBody:
         required: true
         content:
@@ -2019,6 +2035,20 @@ paths:
         - stream
       summary: Retrieve streams
       operationId: getStreams
+      description: >
+        GET `/stream` endpoint is used to retrieve all stream objects with the
+        same userId. The response will include both parent stream objects and
+        the historic stream objects with a parentId, which represent a single
+        live stream session. Please note that the usage of these "child-session"
+        stream objects is deprecated, and it is recommended to use the session
+        endpoints instead.
+
+        \
+
+        \
+
+        To filter the API response and exclude the historic stream objects with
+        a parentId, you can add the `?streamsonly=true` query string.
       parameters:
         - name: streamsonly
           description:
@@ -2057,7 +2087,9 @@ paths:
         - stream
       summary: Retrieve a stream
       operationId: getStream
-
+      description: |
+        In order to retrieve a specific stream, you can just pass the stream id
+        to this API
       responses:
         "200":
           description: Success
@@ -2076,6 +2108,19 @@ paths:
         - stream
       summary: Update a stream
       operationId: updateStream
+      description: |
+        `PATCH /stream/{id}` can be used to modify a stream object. It is a single
+        endpoint that can update any of the mutable properties of a stream.
+        Specifically:
+        - record
+        - suspended
+        - multistream.targets
+
+        All fields in the request payload are optional, and any field that is
+        not included will keep the same value as before in the saved object.
+
+        A 204 No Content status response indicates the stream was successfully
+        updated
       requestBody:
         required: true
         content:
@@ -2096,6 +2141,13 @@ paths:
         - stream
       summary: Delete a stream
       operationId: deleteStream
+      description: |
+        `DELETE /stream/{id}` deletes an existing stream object.
+
+         This will also suspend any active stream sessions, so make sure to wait
+         until the stream has finished. To explicitly interrupt an active
+         session, consider instead updating the suspended field in the stream
+         using the PATCH stream API.
       parameters:
         - in: path
           name: id
@@ -2118,6 +2170,9 @@ paths:
         - multistream-target
       summary: Retrieve Multistream Targets
       operationId: getMultistreamTargets
+      description: |
+        Use /multistream/target to a return a list of your existing multistream
+        targets.
       responses:
         "200":
           description: Success
@@ -2171,6 +2226,8 @@ paths:
       tags:
         - multistream-target
       summary: Retrieve a multistream target
+      description:
+        You can retrieve a multistream target from its ID with this API.
       operationId: getMultistreamTarget
       responses:
         "200":
@@ -2190,6 +2247,15 @@ paths:
         - multistream-target
       summary: Update Multistream Target
       operationId: updateMultistreamTarget
+      description: |
+        `PATCH /multistream/target/{id}` updates an existing multistream target
+        object. You can change any user-defined field in the current object,
+        specifically name, url and disabled.
+
+        You cannot access the current url field for updating it since we redact
+        it from GET responses. If you want to update the URL you have to build
+        it from scratch. You can also omit it from the PATCH payload to keep it
+        as is.
       requestBody:
         required: true
         content:
@@ -2210,6 +2276,10 @@ paths:
         - multistream-target
       summary: Delete a multistream target
       operationId: deleteMultistreamTarget
+      description: |
+        DELETE /multistream/target/{id} deletes an existing multistream target
+        object. Make sure to remove any references to the target on existing
+        streams before actually deleting it from the API.
       responses:
         "204":
           description: Success
@@ -2298,6 +2368,10 @@ paths:
           schema:
             type: string
       summary: Update a webhook
+      description: |
+        You can update a webhook by calling the PATCH webhook endpoint with the
+        webhookId. It is a single endpoint that can update any of the mutable
+        properties of a webhook. Specifically: name, url and events fields.
       operationId: updateWebhook
       responses:
         "200":
@@ -2366,6 +2440,39 @@ paths:
         - asset
       summary: Upload an asset
       operationId: requestUpload
+      description: |
+        To upload an asset, your first need to request for a direct upload URL
+        and only then actually upload the contents of the asset.
+        \
+        \
+        Once you created a upload link, you have 2 options, resumable or direct
+        upload. For a more reliable experience, you should use resumable uploads
+        which will work better for users with unreliable or slow network
+        connections. If you want a simpler implementation though, you should
+        just use a direct upload.
+
+        ### Direct Upload
+        For a direct upload, make a PUT request to the URL received in the url
+        field of the response above, with the raw video file as the request
+        body. response above:
+
+        ### Resumable Upload
+        Livepeer supports resumable uploads via Tus. This section provides a
+        simple example of how to use tus-js-client to upload a video file.
+        \
+        \
+        From the previous section, we generated a URL to upload a video file to
+        Livepeer on POST /api/asset/request-upload. You should use the
+        tusEndpoint field of the response to upload the video file and track the
+        progress:
+
+
+
+        >  If you are using tus from node.js, you need to add a custom URL
+        storage to enable resuming from previous uploads. On the browser, this
+        is enabled by default using local storage. In node.js, add urlStorage:
+        `new tus.FileUrlStorage("path/")`, to the UploadFile object
+        definition above.
       requestBody:
         required: true
         content:
@@ -2414,6 +2521,8 @@ paths:
         - asset
       summary: Upload asset via URL
       operationId: uploadAssetViaURL
+      description: |
+        Import a video Asset from an external URL.
       requestBody:
         required: true
         content:
@@ -2634,11 +2743,11 @@ paths:
           in: path
           required: true
           example: 58069f71-dadc-4ae8-b483-9a5b0b2c4d8b
-
           schema:
             type: string
       summary: Create a room user
       operationId: createRoomUser
+
       responses:
         "201":
           description: Success
@@ -2759,6 +2868,9 @@ paths:
         - metrics
       summary: Query viewership metrics
       operationId: getViewershipsMetrics
+      description: |
+        Allows querying any metric in its raw form. Requires a private
+        (non-CORS) API key to be used.
       parameters:
         - name: playbackId
           in: query
@@ -2869,6 +2981,12 @@ paths:
       tags:
         - metrics
       summary: Query creator viewership metrics
+      description: |
+        Allows querying creator-specific metrics. Requires a proof of ownership
+        to be sent in the request, which for now is just the assetId or streamId
+        parameters (1 of those must be in the query-string). Returns only the
+        higher level metrics like viewCount and platimeMins. Can be used from
+        the frontend with a CORS key.
       operationId: getCreatorMetrics
       parameters:
         - name: from
@@ -2962,6 +3080,10 @@ paths:
       tags:
         - metrics
       summary: Query public total views metrics
+      description: |
+        Allows querying for the public metrics for viewership about a video.
+        This can be called from the frontend with a CORS key, or even
+        unauthenticated.
       operationId: getPublicTotalViewsMetrics
       parameters:
         - name: playbackId
@@ -3012,6 +3134,9 @@ paths:
         - metrics
       summary: Query usage metrics
       operationId: getUsageMetrics
+      description: |
+        Allows querying any metric in its raw form. 
+        This can be called from the frontend with a CORS key.
       parameters:
         - name: from
           in: query
@@ -3148,6 +3273,10 @@ paths:
       tags:
         - access-control
       summary: Create a signing key
+      description: |
+        `PATCH /access-control/signing-key/{KEY_ID}` updates an existing signing
+        key. It is a single endpoint that can update any of the mutable
+        properties of a stream. Specifically `name` and `disabled` fields.
       operationId: createSigningKey
       responses:
         "200":
@@ -3166,6 +3295,9 @@ paths:
       tags:
         - access-control
       summary: Retrieves signing keys
+      description: |
+        You can list all the signing keys in your account by making a GET
+        request on `/api/access-control/signing-key`.
       operationId: getSigningKeys
       responses:
         "200":
@@ -3238,6 +3370,15 @@ paths:
         - access-control
       summary: Update a signing key
       operationId: updateSigningKey
+      description: |
+        PATCH `/access-control/signing-key/{KEY_ID}` updates an existing signing
+        key. It is a single endpoint that can update any of the mutable
+        properties of a stream. Specifically:
+        - name
+        - disabled
+
+        All fields are optional, and if any field is not included in the request
+        payload it will be kept unchanged from the saved object.
       parameters:
         - in: path
           name: keyId
@@ -3297,6 +3438,10 @@ paths:
         - task
       summary: Retrieve a Task
       operationId: getTask
+      description: |
+        Retrieves the details of a Task, including progress updates and status.
+        Use the unique Task ID that was returned from your previous request
+        or from an Asset export.
       parameters:
         - in: path
           name: taskId
@@ -3319,6 +3464,197 @@ paths:
       tags:
         - transcode
       summary: Transcode a video
+      description: >
+        `POST /transcode` transcodes a video file and uploads the results to the
+
+        specified storage service. 
+
+        \
+
+        \
+
+        Transcoding is asynchronous so you will need to check the status of the
+
+        task in order to determine when transcoding is complete. The `id` field
+
+        in the response is the unique ID for the transcoding `Task`. The task
+
+        status can be queried using the [GET tasks
+
+        endpoint](https://docs.livepeer.org/reference/api/get-tasks):
+
+        \
+
+        \
+
+        When `status.phase` is `completed`,  transcoding will be complete and
+
+        the results will be stored in the storage service and the specified
+
+        output location.
+
+        \
+
+        \
+
+        The results will be available under `params.outputs.hls.path` and
+
+        `params.outputs.mp4.path` in the specified storage service.
+
+        ## Input
+
+        This endpoint currently supports the following inputs:
+
+        - HTTP
+
+        - S3 API Compatible Service
+
+        \
+
+        \
+
+        **HTTP**
+
+        \
+
+        A public HTTP URL can be used to read a video file.
+
+        ```js
+
+        {
+            "url": "https://www.example.com/video.mp4"
+        }
+
+        ```
+
+
+        Note: For IPFS HTTP gateway URLs, the API currently only supports “path
+
+        style” URLs and does not support “subdomain style” URLs. The API will
+
+        support both styles of URLs in a future update.
+
+        \
+
+        \
+
+        **S3 API Compatible Service**
+
+        \
+
+        \
+
+        S3 credentials can be used to authenticate with a S3 API compatible
+
+        service to read a video file.
+
+
+        ```json
+
+        {
+            "type": "s3",
+            "endpoint": "https://gateway.storjshare.io",
+            "credentials": {
+                "accessKeyId": "$ACCESS_KEY_ID",
+                "secretAccessKey": "$SECRET_ACCESS_KEY"
+            },
+            "bucket": "inbucket",
+            "path": "/video/source.mp4"
+        }
+
+        ```
+
+
+
+        ## Storage
+
+        \
+
+        This endpoint currently supports the following storage services:
+
+        - S3 API Compatible Service
+
+        - Web3 Storage
+
+        \
+
+        \
+
+        **S3 API Compatible Service**
+
+        ```json
+
+        {
+          "type": "s3",
+            "endpoint": "https://gateway.storjshare.io",
+            "credentials": {
+                "accessKeyId": "$ACCESS_KEY_ID",
+                "secretAccessKey": "$SECRET_ACCESS_KEY"
+            },
+            "bucket": "mybucket"
+        }
+
+        ```
+
+
+
+
+
+        **Web3 Storage**
+
+
+        ```json
+
+        {
+          "type": "web3.storage",
+            "credentials": {
+                "proof": "$UCAN_DELEGATION_PROOF",
+            }
+        }
+
+        ```
+
+
+
+
+        ## Outputs
+
+        \
+
+        This endpoint currently supports the following output types:
+
+        - HLS
+
+        - MP4
+
+
+        **HLS**
+
+
+        ```json
+
+        {
+          "hls": {
+                "path": "/samplevideo/hls"
+            }
+        }
+
+        ```
+
+
+        **MP4**
+
+
+        ```json
+
+        {
+          "mp4": {
+                "path": "/samplevideo/mp4"
+            }
+        }
+
+        ```
+
       operationId: transcode
       requestBody:
         required: true
@@ -3344,6 +3680,10 @@ paths:
       tags:
         - playback
       summary: Retrieve Playback Info
+      description: |
+        You can retrieve the playback information about any playback identifier
+        by calling this endpoint. It accepts playbackIds from any resource in
+        the API as well as dStorage IDs for assets.
       operationId: getPlaybackInfo
       parameters:
         - in: path
