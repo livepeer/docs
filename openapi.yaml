@@ -1052,6 +1052,18 @@ components:
                 upload asset endpoints and cannot be retrieved back.
           example:
             encryptedKey: "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZ1RDRzhRWDZKdkR0eC95ZDMKdlpkUHJKR25LcjhiWHRsdXNIL2FOYW5XdHEraFJBTkNBQVE0QnZ6ODI2L2lDaXV1U0NiZVkwc3FmOXljYWh0OApDRFYyUFF2bDFVM1FLSVRBcWRpaktLa0FSUFVkcWRrYWZzR21PMzBDeElPaDBLNWJSQW5XQzd4KwotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg=="
+    asset-patch-payload:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/asset/properties/name"
+        creatorId:
+          $ref: "#/components/schemas/input-creator-id"
+        playbackPolicy:
+          $ref: "#/components/schemas/playback-policy"
+        storage:
+          $ref: "#/components/schemas/new-asset-payload/properties/storage"
     room-user-payload:
       type: object
       required:
@@ -2496,6 +2508,37 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/error"
+    patch:
+      summary: Update an asset
+      tags:
+        - asset
+      parameters:
+        - in: path
+          name: assetId
+          schema:
+            type: string
+          description: ID of the asset
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/asset-patch-payload"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/asset"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+
   /room:
     post:
       tags:
