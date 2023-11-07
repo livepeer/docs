@@ -714,6 +714,7 @@ components:
                   type: string
                   enum:
                     - directUpload
+                    - clip
                 encryption:
                   $ref: "#/components/schemas/new-asset-payload/properties/encryption"
           example:
@@ -1159,7 +1160,6 @@ components:
           type: string
           description: User defined payload to store for the participant
           example: "host user"
-
     task:
       type: object
       additionalProperties: false
@@ -1179,6 +1179,7 @@ components:
             - export-data
             - transcode
             - transcode-file
+            - clip
         createdAt:
           readOnly: true
           type: number
@@ -1310,6 +1311,49 @@ components:
                     be
                 creatorId:
                   $ref: "#/components/schemas/input-creator-id"
+        clip:
+          properties:
+            url:
+              type: string
+              description: URL of the asset to "clip"
+            clipStrategy:
+              type: object
+              description: >-
+                Strategy to use for clipping the asset. If not specified, the
+                default strategy that Catalyst is configured for will be used.
+                This field only available for admin users, and is only used for
+                E2E testing.
+              additionalProperties: false
+              properties:
+                startTime:
+                  type: number
+                  description: Start time of the clip in milliseconds
+                endTime:
+                  type: number
+                  description: End time of the clip in milliseconds
+                playbackId:
+                  type: string
+                  description: Playback ID of the stream or asset to clip
+            catalystPipelineStrategy:
+              type: string
+              description: >-
+                Force to use a specific strategy in the Catalyst pipeline. If
+                not specified, the default strategy that Catalyst is configured
+                for will be used. This field only available for admin users, and
+                is only used for E2E testing.
+              enum:
+                - catalyst
+                - catalyst_ffmpeg
+                - background_external
+                - background_mist
+                - fallback_external
+                - external
+            sessionId:
+              type: string
+              description: ID of the session
+            inputId:
+              type: string
+              description: ID of the input asset or stream
         status:
           readOnly: true
           type: object
@@ -1432,7 +1476,6 @@ components:
                       type: string
                     assetSpec:
                       $ref: "#/components/schemas/asset"
-
     input-creator-id:
       oneOf:
         - $ref: "#/components/schemas/creator-id"
@@ -1993,6 +2036,29 @@ components:
             failed:
               type: string
               description: ID of the last task to fail execution.
+    clip-payload:
+      type: object
+      additionalProperties: false
+      required:
+        - playbackId
+        - startTime
+      properties:
+        playbackId:
+          type: string
+          description: Playback ID of the stream or asset to clip
+        startTime:
+          type: number
+          description: Start time of the clip in milliseconds
+        endTime:
+          type: number
+          description: End time of the clip in milliseconds
+        name:
+          type: string
+          description: Name of the clip
+        sessionId:
+          type: string
+          description: Session ID of the stream to clip
+
 paths:
   /stream:
     post:
@@ -3405,6 +3471,87 @@ paths:
                 $ref: "#/components/schemas/playback-info"
         "404":
           description: Playback not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+  /clip:
+    post:
+      summary: Create a clip
+      description: |
+        Create a clip from a livestream
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/clip-payload"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                  - asset
+                  - task
+                properties:
+                  asset:
+                    $ref: "#/components/schemas/asset"
+                  task:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 34d7618e-fd42-4798-acf5-19504616a11e
+  "/stream/{id}/clips":
+    get:
+      summary: Retrieve clips of a livestream
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          description: ID of the parent stream or playbackId of parent stream
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/asset"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+  "/session/{id}/clips":
+    get:
+      summary: Retrieve clips of a session
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          description: ID of the parent session
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/asset"
+        default:
+          description: Error
           content:
             application/json:
               schema:
