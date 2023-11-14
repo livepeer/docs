@@ -1,0 +1,94 @@
+---
+title: Golang
+description: "Learn how to create your first stream using the Livepeer Go SDK."
+---
+
+<Steps>
+  <Step title="Prerequisites">
+  To get the most out of this guide, you’ll need to:
+
+    - [Create an API key](https://livepeer.studio/dashboard/developers/api-keys)
+
+  </Step>
+
+<Step title="Install the SDK">
+
+Get the Livepeer Go SDK.
+
+```bash
+go get github.com/livepeer/livepeer-go
+```
+
+  </Step>
+  <Step title="Initialize the SDK">
+    
+The first step is to initialize the SDK with your Livepeer Studio API key.
+
+```go
+package main
+
+import(
+	"context"
+	"log"
+	"livepeer"
+	"livepeer/models/components"
+)
+
+func main() {
+    lpClient := livepeer.New(
+        livepeer.WithSecurity("") // Your API key
+    )
+}
+```
+
+  </Step>
+  <Step title="Use the SDK">
+    Now that you have the SDK installed and initialized, you can use it in your app.
+Let's create a stream.
+
+```go
+package main
+
+import(
+	"context"
+	"log"
+	"livepeer"
+	"livepeer/models/components"
+)
+
+func main() {
+    lpClient := livepeer.New(
+        livepeer.WithSecurity(""),
+    )
+
+    ctx := context.Background()
+    res, err := lpClient.Stream.Create(ctx, components.NewStreamPayload{
+        Name: "test_stream",
+    })
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    if res.Data != nil {
+        // handle response
+    }
+}
+```
+
+  </Step>
+    <Step title="Try it yourself">
+      <Card
+    title="Go Example"
+    href="https://github.com/livepeer/livepeer-go/tree/main/example"
+    icon="arrow-up-right-from-square"
+  >
+      See the full example on GitHub.
+  </Card>
+  </Step>
+  
+</Steps>
+
+## Next steps
+
+Checkout Livepeer [API Reference](/api-reference) to learn more about the
+Livepeer API and the Go SDK.

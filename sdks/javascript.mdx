@@ -4,13 +4,15 @@ description:
   "Learn how to create your first stream using the Livepeer Javascript SDK."
 ---
 
-## Prerequisites
+<Steps>
+  <Step title="Prerequisites">
+  To get the most out of this guide, you’ll need to:
 
-To get the most out of this guide, you’ll need to:
+    - [Create an API key](https://livepeer.studio/dashboard/developers/api-keys)
 
-- [Create an API key](https://livepeer.studio/dashboard/developers/api-keys)
+  </Step>
 
-## Install the SDK
+<Step title="Install the SDK">
 
 Get the Livepeer Javascript SDK.
 
@@ -36,32 +38,61 @@ pnpm install livepeer
 ```
 
 </Tab>
+<Tab title="bun">
+
+```bash
+bun install livepeer
+```
+
+</Tab>
 </Tabs>
-
-## Create a stream
-
-Create a new stream using the Livepeer Javascript SDK.
+  </Step>
+  <Step title="Initialize the SDK">
+    
+The first step is to initialize the SDK with your Livepeer Studio API key.
 
 ```js
 import { Livepeer } from "livepeer";
 
-const apiKey = "YOUR_API_KEY"; // Replace with your API key
+const livepeer = new Livepeer({
+  apiKey: "", // Your API key
+});
+```
 
-const livepeer = new Livepeer(apiKey);
+  </Step>
+  <Step title="Use the SDK">
+    Now that you have the SDK installed and initialized, you can use it in your app.
+Let's create a stream.
 
-const streamData = {
-  name: "test_stream",
+```js
+import { Livepeer } from "livepeer";
+
+const livepeer = new Livepeer({
+  apiKey: "",
+});
+
+const main = async () => {
+  const { data } = await livepeer.stream.create({
+    name: "Hello from JS SDK!",
+  });
+  console.log(data);
 };
 
-livepeer
-  .createStream(streamData)
-  .then((response) => {
-    console.log("Stream created:", response);
-  })
-  .catch((error) => {
-    console.error("Error creating stream:", error);
-  });
+main();
 ```
+
+  </Step>
+    <Step title="Try it yourself">
+      <Card
+    title="JavaScript Example"
+    href="https://github.com/livepeer/livepeer-js/tree/main/example"
+    icon="arrow-up-right-from-square"
+  >
+      See the full example on GitHub.
+  </Card>
+  </Step>
+  
+</Steps>
 
 ## Next steps
 
