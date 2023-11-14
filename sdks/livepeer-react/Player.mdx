@@ -319,12 +319,13 @@ function PlayerComponent() {
 
 ### lowLatency
 
-When enabled, the Player will play back livestreams with low-latency WebRTC. If
-this does not succeed in playing back (commonly due to a slow network or
-connectivity issues), the Player will automatically fall back to HLS playback.
-Also, if the stream contains B-frames, or bidirectional frames, (which are
-common for users streaming with OBS or other streaming apps), the Player will
-automatically fall back, so that out-of-order frames are not displayed.
+When enabled, the Player will play back **live streams** with low-latency
+WebRTC. Defaults to `true`. If this does not succeed in playing back (commonly
+due to a slow network or connectivity issues), the Player will automatically
+fall back to HLS playback. Also, if the stream contains B-frames (bidirectional
+frames, which are common for users streaming with OBS or other streaming apps),
+the Player will automatically switch to HLS, so that out-of-order frames are not
+displayed.
 
 <Warning>
   OBS users should be instructed to use the Livepeer stream profile, or to
@@ -333,7 +334,7 @@ automatically fall back, so that out-of-order frames are not displayed.
 </Warning>
 
 This only applies to video elements which are playing back livestreams - assets
-will play back with MP4 or HLS. Defaults to `true`.
+will play back with MP4 or HLS.
 
 You may also specify `"force"`, which forces WebRTC and disables fallback to
 HLS. This is not a recommended default unless your application requires low
@@ -591,6 +592,50 @@ function PlayerComponent() {
 }
 ```
 
+### hlsConfig
+
+Sets the underlying HLS.js config used for playback. See the
+[HLS.js docs](https://github.com/video-dev/hls.js/blob/8d75e45992a7139e7cf9b11a056c8474e9ef4546/docs/API.md)
+for more details on the possible values.
+
+```tsx
+function PlayerComponent() {
+  return (
+    <Player
+      title="Agent 327: Operation Barbershop"
+      playbackId="f5eese9wwl88k4g8"
+      hlsConfig={{ liveSyncDurationCount: Infinity }}
+    />
+  );
+}
+```
+
+### webrtcConfig
+
+Sets the underlying WebRTC config used for
+[WHEP SDP negotiation](https://datatracker.ietf.org/doc/draft-murillo-whep/).
+The possible config options are `constant` and `sdpTimeout`.
+
+A `constant=true` boolean indicates that audio will not be distorted if the
+playhead falls behind the livestream. This is usually used for music
+applications, where audio quality and consistency is more important than
+latency.
+
+The `sdpTimeout` config sets the amount of time in milliseconds that the Player
+will wait for a response from SDP negotiation before falling back to HLS.
+
+```tsx
+function PlayerComponent() {
+  return (
+    <Player
+      title="Agent 327: Operation Barbershop"
+      playbackId="f5eese9wwl88k4g8"
+      webrtcConfig={{ constant: true, sdpTimeout: 5000 }}
+    />
+  );
+}
+```
+
 ### controls
 
 Configures the timeout for autohiding controls, default volume, and (only on
@@ -783,8 +828,8 @@ function PlayerComponent() {
 ### theme
 
 Sets the Player-specific theme overrides. It is recommended to use
-[`LivepeerConfig`](/sdks/livepeer-react/LivepeerConfig) for any global app styles,
-and the `theme` prop to override those styles on a per-Player basis.
+[`LivepeerConfig`](/sdks/livepeer-react/LivepeerConfig) for any global app
+styles, and the `theme` prop to override those styles on a per-Player basis.
 
 ```tsx
 function PlayerComponent() {
@@ -843,6 +888,75 @@ parent elements.
   </Tab>
 </Tabs>
 
+### streamOfflineErrorComponent
+
+Sets the error component that is shown when playback fails due to the stream being offline.
+When this component is shown, the Player will retry playback in the background.
+This will override the
+[`OfflineStreamError` component](https://github.com/livepeer/livepeer-react/blob/main/packages/react/src/components/media/controls/PlaybackDisplayError.tsx).
+
+```tsx
+function PlayerComponent() {
+  return (
+    <Player
+      title="Agent 327: Operation Barbershop"
+      playbackId="f5eese9wwl88k4g8"
+      streamOfflineErrorComponent={
+        <div>
+          Stream is offline. Playback will start automatically once the stream has started.
+        </div>
+      }
+    />
+  );
+}
+```
+
+### accessControlErrorComponent
+
+Sets the error component that is shown when playback fails due to an access control error.
+This will override the
+[`PrivateStreamError` component](https://github.com/livepeer/livepeer-react/blob/main/packages/react/src/components/media/controls/PlaybackDisplayError.tsx).
+
+```tsx
+function PlayerComponent() {
+  return (
+    <Player
+      title="Agent 327: Operation Barbershop"
+      playbackId="f5eese9wwl88k4g8"
+      accessControlErrorComponent={
+        <div>
+          It looks like you don't have permission to view this content.
+        </div>
+      }
+    />
+  );
+}
+```
+
+### playbackFailedErrorComponent
+
+Sets the error component that is shown when playback fails for a generic reason (usually
+this is an intermittent network issue).
+When this component is shown, the Player will be retrying playback in the background,
+with linear backoff. This will override the
+[`GenericError` component](https://github.com/livepeer/livepeer-react/blob/main/packages/react/src/components/media/controls/PlaybackDisplayError.tsx).
+
+```tsx
+function PlayerComponent() {
+  return (
+    <Player
+      title="Agent 327: Operation Barbershop"
+      playbackId="f5eese9wwl88k4g8"
+      playbackFailedErrorComponent={
+        <div>
+          Playback failed! Please wait while we retry in the background.
+        </div>
+      }
+    />
+  );
+}
+```
+
 ### mediaElementRef
 
 Sets the React
@@ -897,7 +1011,7 @@ function PlayerComponent() {
 
 ### onPlaybackStatusUpdate
 
-Callback called when the Player store status updates. **This should be used with
+Callback called when the Player store status updates. **This must be used with
 `playbackStatusSelector` to limit state updates.** This allows developers to use
 the underlying state of the Player component in their UI.
 
@@ -1128,7 +1242,7 @@ import { prefetchPlayer, studioProvider } from "@livepeer/react";
 export const getStaticProps = async () => {
   const dehydratedState = await prefetchPlayer(
     { playbackId },
-    { provider: studioProvider({ apiKey: "yourStudioApiKey" }) },
+    { provider: studioProvider({ apiKey: "yourStudioApiKey" }) }
   );
 
   return {
@@ -1164,7 +1278,7 @@ function App({ Component, pageProps }: AppProps<{ dehydratedState: string }>) {
           apiKey: process.env.NEXT_PUBLIC_STUDIO_API_KEY,
         }),
       }),
-    [],
+    []
   );
 
   return (
@@ -1196,7 +1310,7 @@ export const handleRequest = async (req, res) => {
       playbackId,
       clearClient: true,
     },
-    { provider: studioProvider({ apiKey: "yourStudioApiKey" }) },
+    { provider: studioProvider({ apiKey: "yourStudioApiKey" }) }
   );
 
   // sanitize the custom SSR generated data
