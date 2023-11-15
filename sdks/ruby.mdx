@@ -4,44 +4,83 @@ description:
   "Learn how to create your first stream using the Livepeer Ruby SDK."
 ---
 
-## Prerequisites
+<Steps>
+  <Step title="Prerequisites">
+  To get the most out of this guide, you’ll need to:
 
-To get the most out of this guide, you’ll need to:
+    - [Create an API key](https://livepeer.studio/dashboard/developers/api-keys)
 
-- [Create an API key](https://livepeer.studio/dashboard/developers/api-keys)
+  </Step>
 
-## Install the SDK
+<Step title="Install the SDK">
 
 Get the Livepeer Ruby SDK.
 
-```
+<Tabs>
+<Tab title="RubyGems">
+
+```bash
 gem install livepeer
 ```
 
-## Create a stream
+</Tab>
+<Tab title="Gemfile">
 
-Create a new stream using the Livepeer Ruby SDK.
+```bash
+gem 'livepeer'
+```
+
+</Tab>
+</Tabs>
+  </Step>
+  <Step title="Initialize the SDK">
+    
+The first step is to initialize the SDK with your Livepeer Studio API key.
 
 ```ruby
-require 'livepeer'
+require_relative livepeer
 
-# Initialize the Livepeer client with your API key
-api_key = 'YOUR_API_KEY'
-client = Livepeer::Client.new(api_key: api_key)
+lpClient = Livepeer::SDK.new
 
-stream_data = {
-  "name": "test_stream"
-}
-
-begin
-  # Create the stream
-  response = client.create_stream(stream_data)
-  puts 'Stream created:', response
-rescue StandardError => e
-  puts 'Error creating stream:', e.message
-end
-
+lpClient.config_security(
+  security=Shared::Security.new(
+    api_key="", # Your API key
+  )
+)
 ```
+
+  </Step>
+  <Step title="Use the SDK">
+    Now that you have the SDK installed and initialized, you can use it in your app.
+Let's create a stream.
+
+```ruby
+require_relative livepeer
+
+
+lpClient = Livepeer::SDK.new
+
+lpClient.config_security(
+  security=Shared::Security.new(
+    api_key="",
+  )
+)
+
+req = Shared::NewStreamPayload.new(
+  request=Shared::NewStreamPayload.new(
+    name="test_stream",
+  ),
+)
+
+res = lpClient.stream.create(req)
+
+if ! res.data.nil?
+  # handle response
+end
+```
+
+  </Step>
+</Steps>
 
 ## Next steps
 

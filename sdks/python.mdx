@@ -4,13 +4,15 @@ description:
   "Learn how to create your first stream using the Livepeer Python SDK."
 ---
 
-## Prerequisites
+<Steps>
+  <Step title="Prerequisites">
+  To get the most out of this guide, you’ll need to:
 
-To get the most out of this guide, you’ll need to:
+    - [Create an API key](https://livepeer.studio/dashboard/developers/api-keys)
 
-- [Create an API key](https://livepeer.studio/dashboard/developers/api-keys)
+  </Step>
 
-## Install the SDK
+<Step title="Install the SDK">
 
 Get the Livepeer Python SDK.
 
@@ -18,31 +20,49 @@ Get the Livepeer Python SDK.
 pip install livepeer
 ```
 
-## Create a stream
-
-Create a new stream using the Livepeer Python SDK.
+  </Step>
+  <Step title="Initialize the SDK">
+    
+The first step is to initialize the SDK with your Livepeer Studio API key.
 
 ```python
-from livepeer import Livepeer
+import livepeer
+from livepeer.models import operations
 
-# Initialize the Livepeer client with your API key
-api_key = "YOUR_API_KEY"
-livepeer = Livepeer(api_key)
-
-stream_data = {
-  "name": "test_stream"
-}
-
-try:
-    # Create the stream
-    response = livepeer.create_stream(stream_data)
-    print("Stream created:", response)
-except Exception as e:
-    print("Error creating stream:", e)
-
+lpClient = livepeer.SDK(
+    api_key="", # Your API key
+)
 ```
+
+  </Step>
+  <Step title="Use the SDK">
+    Now that you have the SDK installed and initialized, you can use it in your app.
+Let's create a stream.
+
+```python
+import livepeer
+from livepeer.models import components
+
+lpClient = livepeer.SDK(
+    api_key="",
+)
+
+req = components.NewStreamPayload(
+    name='test_stream'
+)
+
+res = lpClient.stream.create(req)
+
+if res.data is not None:
+    # handle response
+    pass
+```
+
+  </Step>
+
+</Steps>
 
 ## Next steps
 
 Checkout Livepeer [API Reference](/api-reference) to learn more about the
-Livepeer API and the Python SDK.
+Livepeer API and the Javascript SDK.
