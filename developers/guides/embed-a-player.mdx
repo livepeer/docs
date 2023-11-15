@@ -3,16 +3,14 @@ title: "Embed a player"
 description: "Learn how to embed the Livepeer Player in your application"
 ---
 
-In this guide, we demonstrate how to embed asset or livestreams in your application using
-an hosted version of the Livepeer Player.
+In this guide, we demonstrate how to embed asset or live streams in your
+application using a hosted version of the Livepeer Player.
 
 <Warning>
-  The embeddable player is currently in beta and some elements may change as we
-  mature the product. For a production-grade application consider using
-  Livepeer React instead.
+  If you are using React, consider using Livepeer React instead.
 </Warning>
 
-This is one of the easiest way to play back an asset or livestream on your
+This is one of the easiest way to play back a video or livestream on your
 website/applications. You can embed the player on your website/applications by
 using the below code snippet.
 
@@ -28,36 +26,48 @@ You can replace the `PLAYBACK_ID` with your video's playback id.
 </iframe>
 ```
 
-For livestreams, you may also specify `&lowLatency=true` in the query string - this will enable
-livestreams to play back with low-latency WebRTC. If this does not succeed in
-playing back (commonly due to a slow network or connectivity issues), the
-embeddable will automatically fall back to HLS playback. Also, if the stream
-contains B-frames, or bidirectional frames, (which are common for users
-streaming with OBS or other streaming apps), the Player will automatically fall
-back to HLS, so that out-of-order frames are not displayed. This only applies to users
-who are playing back livestreams.
+## Low Latency
+
+For livestreams, you may also specify `&lowLatency=true` in the query string -
+this will enable livestreams to play back with low-latency WebRTC. If this does
+not succeed in playing back (commonly due to a slow network or connectivity
+issues), the embeddable player will automatically fall back to HLS playback.
+Also, if the stream contains B-frames (or bidirectional frames, which are common
+for users streaming with OBS or other streaming apps), the Player will
+automatically fall back to HLS, so that out-of-order frames are not displayed.
+This only applies to users who are playing livestreams.
+
+<Warning>
+  OBS users should be instructed to use the Livepeer Studio stream profile, or
+  to manually turn off B-frames in their stream. See our [Stream from
+  OBS](/developers/guides/stream-via-obs) docs for more information.
+</Warning>
+
+## Clipping
 
 To enable clipping, `&clipLength={seconds}` can be passed, which will allow
 viewers to clip livestreams. The length in seconds **must be less than 120
 seconds**.
 
-Also, the embed supports "constant" playback with `constant=true`, which means
-that audio will not be distorted if the playhead falls behind the livestream.
-This is usually used for music applications, where audio quality/consistency is
-more important than latency.
+## Constant Playback
 
-<Warning>
-  OBS users should be instructed to use the Livepeer Studio stream profile, or to
-  manually turn off B-frames in their stream. See our [Stream from
-  OBS](/developers/guides/stream-via-obs) docs for more information.
-</Warning>
+The embed supports "constant" playback with `constant=true`, which means that
+audio will not be distorted if the playhead falls behind the livestream. This is
+usually used for music applications, where audio quality/consistency is more
+important than latency.
+
+## Other Configs
+
+You can also override the default `muted` and `autoplay` behavior with
+`&muted=false` and/or `&autoplay=false`. These are set to true by default.
+Looping can also be set with `&loop=true`.
 
 <iframe
   src="https://lvpr.tv/?v=f5eese9wwl88k4g8"
   frameborder="0"
   width="100%"
-    height="410"
-
-webkitallowfullscreen mozallowfullscreen allowfullscreen
-
-> </iframe>
+  height="410"
+  webkitallowfullscreen
+  mozallowfullscreen
+  allowfullscreen
+/>
