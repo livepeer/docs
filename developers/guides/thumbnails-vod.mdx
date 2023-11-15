@@ -1,0 +1,65 @@
+---
+title: "Asset Thumbnails"
+description: "Learn how to retrieve thumbnails for a video asset"
+---
+
+For video assets we provide a way to retrieve a list of thumbnails for your video assets. Thumbnails will be generated as part of the upload processing, one per segment of video.
+
+Follow the steps below to find out how to use this.
+
+## Step 1. Upload an asset
+
+Follow our previous guide on
+[uploading an asset](/developers/guides/upload-video-asset). Note down the `playbackId`.
+
+## Step 2. Fetch playback info
+
+Once the processing has completed for your asset, fetch the playback info using the [playback info API endpoint](/api-reference/playback/get).
+
+Example response:
+```json
+{
+    "type": "vod",
+    "meta": {
+        "playbackPolicy": null,
+        "source": [
+            {
+                "hrn": "HLS (TS)",
+                "type": "html5/application/vnd.apple.mpegurl",
+                "url": "https://vod-cdn.lp-playback.studio/raw/jxf4iblf6wlsyor6526t4tcmtmqa/catalyst-vod-com/hls/95c9ih1y6tl97xbx/index.m3u8"
+            },
+            {
+                "hrn": "Thumbnails",
+                "type": "text/vtt",
+                "url": "https://vod-cdn.lp-playback.studio/raw/jxf4iblf6wlsyor6526t4tcmtmqa/catalyst-vod-com/hls/95c9ih1y6tl97xbx/thumbnails/thumbnails.vtt"
+            }
+        ]
+    }
+}
+```
+
+You should see an entry in the `source` array with the type `text/vtt`. This file uses the [WebVTT format](https://w3c.github.io/webvtt/) to represent the thumbnails associated with each time point in the video.
+
+This format was chosen with the use case of thumbnail scrubbing in mind, to allow a player to overlay thumbnail images as the user is seeking through a video, but it allows more general usage of selecting a desired time in your video and fetching a thumbnail for it.
+
+## Step 3. Download the VTT file
+
+Fetch the VTT file from the URL found above (an HTTP `GET`).
+
+Example VTT response:
+```
+WEBVTT
+00:00:00.000 --> 00:00:10.000
+keyframes_0.jpg
+
+00:00:10.000 --> 00:00:20.000
+keyframes_1.jpg
+
+00:00:20.000 --> 00:00:29.000
+keyframes_2.jpg
+```
+
+## Step 4. Download a thumbnail
+
+Use one of the JPG paths to download a thumbnail. As an example if your VTT URL for the above was `https://vod-cdn.lp-playback.studio/catalyst-vod-com/hls/ac906f1cs0oe9rb1/thumbnails/thumbnails.vtt` then you could fetch the first frame of the video with `https://vod-cdn.lp-playback.studio/catalyst-vod-com/hls/ac906f1cs0oe9rb1/thumbnails/keyframes_0.jpg`.
+
