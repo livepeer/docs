@@ -1,0 +1,51 @@
+<Card title="Is there an option to livestream audio only like a podcast?">
+  Diagnose: We do not have a feature to livestream audio only, but it is being
+  planned. Workaround: Add `?video=false` to the end of the playback URL. Ex.
+  [https://livepeercdn.com/hls/playbackId/index.m3u8?video=false](https://livepeercdn.com/hls/playbackId/index.m3u8?video=false)
+</Card>
+
+<Card title="How do I set up a stream in 4k?">
+Diagnose: This is supported but has not been thoroughly tested.
+Workaround: When creating a stream, add the following to the profile:
+```json
+{
+  "name": "1080p",
+  "bitrate": 5000000,
+  "fps": 30,
+  "width": 1920,
+  "height": 1080
+}
+```
+</Card>
+<Card title="How do I add closed captioning for the videos?">
+Diagnose: At the moment, we do not offer closed captioning features.
+Workaround: This has been added to the feature request [https://livepeer.canny.io/feature-requests/p/adding-subtitles-to-your-video-assets](https://livepeer.canny.io/feature-requests/p/adding-subtitles-to-your-video-assets)
+</Card>
+<Card title="How do I stop a livestream while live?">
+Diagnose: You can suspend the stream
+Workaround: Use either the API or SDK to suspend the stream. [https://docs.livepeer.org/reference/api#update-a-stream](https://docs.livepeer.org/reference/api#update-a-stream) or [https://docs.livepeer.org/reference/livepeer-js/stream/useUpdateStream#suspend](https://docs.livepeer.org/reference/livepeer-js/stream/useUpdateStream#suspend)
+</Card>
+<Card title="Is it possible on Livepeer (using the API) to determine the GB video streamed, in real-time or by querying the API?">
+Diagnose: Yes, it is under the `sourceBytes` in the stream object.
+Workaround: [https://docs.livepeer.org/reference/api#retrieve-a-stream](https://docs.livepeer.org/reference/api#retrieve-a-stream)
+</Card>
+<Card title="Short form videos are taking a while to load">
+Diagnose: Short form videos need to use the MP4 playback as default
+Workaround: Get the MP4 playback from the asset object and set it as the source. If you use the HLS instead for short form videos, this will affect the playback experience for users drastically.
+</Card>
+<Card title="Can I manually provide the region to broadcast the stream?">
+Diagnose: If you're using livepeer.studio you can force a region.
+Workaround: Replace the `rtmp://rtmp.livepeer.com/live/streamkey` with the region you want to force the broadcast to. Ex. `rtmp://sin-rtmp.livepeer.com/live/streamkey`
+</Card>
+<Card title="How can stream without any transcoding?">
+Diagnose: When creating a stream, set the profile object of the stream empty.
+Workaround: `profile:[]`
+</Card>
+<Card title="Can I increase latency on a stream?">
+Diagnose: You can use latency inject to increase the latency for a stream as a trade-off to reduce buffering.
+Workaround: You add the query to the end of the playback URL in the amount of seconds you want to increase the latency. Ex. `&latency=10&buffer=10`
+</Card>
+<Card title="Is there a track selection for a stream?">
+Diagnose: You can add a query to the end of the playback url.
+Workaround: `?video=640x360,1m&pswait&trackcount=9`
+</Card>

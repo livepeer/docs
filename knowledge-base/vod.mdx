@@ -1,0 +1,67 @@
+<Card title="What is the playback format for VOD?">
+Diagnose: The playback format is HLS and for any asset that is < 2 minutes is MP4.
+Workaround: N/A
+</Card>
+
+<Card title="How do I know the status of the asset being uploaded or not?">
+  Diagnose: You can use our webhook to get the status of an asset while it is
+  being uploaded. Workaround: You can use these events for asset statuses:
+  `asset.created` `asset.updated` `asset.ready` `asset.failed` `asset.deleted`
+  [https://docs.livepeer.org/guides/developing/listen-for-webhooks#request](https://docs.livepeer.org/guides/developing/listen-for-webhooks#request)
+</Card>
+
+<Card title="What happened when an asset with the same name is uploaded twice or multiple times?">
+  Diagnose: A new asset with a different Id will be created. Workaround: N/A
+</Card>
+
+<Card title="I am getting a message stating that I do not have permission to view an asset.">
+Diagnose: Check to make sure that the asset is not using access control.
+Workaround: Check the playback information of the asset and make sure that the playback policy is set to `null` or `public`   `https://livepeer.studio/api/playback/Playback_Id`
+
+</Card>
+
+<Card title="What happens if there is more than 1 video track?">
+  Diagnose: Anything with more than 1 video track will be reduced to 1 video
+  track. Workaround: N/A
+</Card>
+
+<Card title="How will other tracks besides audio and video be handled?">
+  Diagnose: Any other tracks and data types (subtitles/captions, metadata, track
+  titles, chapter data, etc) will be removed. Workaround: N/A
+</Card>
+
+<Card title="When using the transcoding API, the task fails with 'internal error processing file'">
+  Diagnose: If the error specifies 401 or 403, this is indicating that there is
+  an issue with the credentials of your storage. Workaround: Make sure that the
+  storage credentials allow for both reading and writing to it.
+</Card>
+
+<Card title="When I upload an asset in the Studio dashboard, it says it failed.">
+  Diagnose: If you close or refresh the page the video is being uploaded, this
+  can cause the asset to fail. Workaround: Do not refresh or close the page when
+  uploading with the Livepeer Studio dashboard, otherwise, it will cause the
+  asset to fail
+</Card>
+
+<Card title="I am unable to upload an asset either through the Studio dashboard, SDK, or the API.">
+  Diagnose: Check to see if the asset had codecs that are being supported.
+  Workaround: No support for assets using VP9 codec in an MP4 container see our
+  support matrix.
+</Card>
+
+<Card title="I cannot upload an asset that has the supported audio/video codec.">
+  Diagnose: Make sure the asset is not over the size limit. Workaround: Only up
+  to 30GB file size is supported
+</Card>
+
+<Card title="I am not able to batch-upload my assets.">
+  Diagnose: Make sure that the amount of uploads is not exceeding the limit.
+  Workaround: Limited to 20 uploads at a time with 5 assets processing at the
+  same time
+</Card>
+
+<Card title="I want to get a total hours of stored content.">
+  Diagnose: You can fetch usage of storage in a given time frame using the API
+  Workaround:
+  [https://livepeer.studio/data/usage/query?from=UNIX_TIMESTAMP_MILLISECONDS&to=UNIX_TIMESTAMP_MILLISECONDS](https://livepeer.studio/data/usage/query?from=UNIX_TIMESTAMP_MILLISECONDS&to=UNIX_TIMESTAMP_MILLISECONDS)
+</Card>
