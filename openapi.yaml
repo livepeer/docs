@@ -3746,6 +3746,8 @@ paths:
 
         - MP4
 
+        - fMP4 (Fragmented MP4)
+
 
         **HLS**
 
@@ -3771,6 +3773,106 @@ paths:
                 "path": "/samplevideo/mp4"
             }
         }
+
+        ```
+
+
+        **Fragmented MP4**
+
+        \
+
+        The path specified in the `fmp4` property of the request will be used to store the fragmented mp4 files packaged with both HLS and DASH. The audio and video tracks are stored as separate mp4 files. Note the following files in the example below:
+          - `index-stream0.mp4` —> audio track
+          - `index-streamN.mp4` —> renditions (e.g. 1080p, 720p, etc)
+          - `media_N.m3u8` —> HLS media playlists corresponding to renditions
+          - `index.mpd` —> DASH manifest
+          - `master.m3u8` —> HLS master manifest
+
+        ```json
+
+        {
+          "fmp4": {
+                "path": "/samplevideo/fmp4"
+            }
+        }
+
+        ```
+
+
+
+
+        ## Profiles
+
+        \
+
+        The output profiles of the transcoded videos will follow an ABR (Adaptive Bitrate Streaming) ladder and can be set in one of the following ways:
+
+        - Default ABR ladder
+
+        - Target ABR ladder
+
+        - Target Bitrate
+
+
+        **Default ABR**
+
+        \
+
+        The `profiles` can be left blank to generate output videos with Livepeer's default ABR ladder. This will include a resolution that matches the input video's resolution and some additional resolutions.
+
+
+        ```json
+
+         profiles: [
+           {}
+         ]
+
+        ```
+
+
+        **Target ABR**
+
+        \
+
+        To generate output videos with a specific ABR ladder, the `profiles` property can be set as follows.
+
+
+        ```json
+
+         profiles: [
+           {
+             name: "480p",
+             bitrate: 1000000,
+             fps: 30,
+             width: 854,
+             height: 480
+           },
+           {
+             name: "360p",
+             bitrate: 500000,
+             fps: 30,
+             width: 640,
+             height: 360
+           }
+         ]
+
+        ```
+
+
+        **Target Bitrate**
+
+        \
+
+        To generate a single output video that matches the input’s resolution with a target bitrate, set only the `bitrate` field of the `profiles` property.
+
+        ```json
+
+         profiles: [
+           {
+             name: "1080",
+             bitrate: 4000000
+           }
+         ]
 
         ```
 
