@@ -1,0 +1,178 @@
+---
+title: Developing with Catalyst
+icon: gear
+---
+
+Developing Catalyst is currently supported on macOS and Linux.
+
+### Dependencies
+
+You'll need the following things installed locally:
+
+- Docker (or Podman 4.6.0+, which works even better)
+- Buildah (for `docker buildx`, included with Podman and Docker for Mac)
+- Go v1.20+
+- Node.js v18+ (Studio development only)
+- Make
+- git
+- llvm (`brew install llvm` for compiling MistServer and go-livepeer on MacOS
+  only)
+
+You'll first need to clone the Catalyst repo if you haven't already.
+
+```shell
+git clone https://github.com/livepeer/catalyst.git
+cd catalyst
+```
+
+Then you'll need to download/build all the binaries that you'll need.
+
+```shell
+make              # downloads all the external binaries & builds the local ones
+make box          # builds the livepeer/in-a-box Docker image
+```
+
+## Development
+
+Now you're ready to boot up your development environment!
+
+```shell
+make box-dev
+```
+
+Lots and lots of logs will print out while all the dependencies finish booting
+up. After that, you'll now have a fully-functioning full-stack Livepeer Studio +
+Catalyst environment running locally! You can access it like so:
+
+- URL: [http://localhost:8888](http://localhost:8888)
+- Email: `admin@example.com`
+- Password: `livepeer`
+
+### Customizing the Environment
+
+If you need to add additional parameters to things running inside the box, you
+can create a `.env` file that contains key-value pairs:
+
+```shell
+echo "CATALYST_API_CDN_REDIRECT_PREFIX=https://externalcdn.livepeer.com/mist/" >> .env
+echo "CATALYST_API_CDN_REDIRECT_PLAYBACK_IDS=222222222222" >> .env
+```
+
+Note that this mechanism is limited to adding new configuration; existing
+configuration cannot be modified this way. If you need to modify existing
+configuration you can manually change the file in `config/full-stack.json`. A
+more robust configuration management system is under development.
+
+### Making changes
+
+TLDR: Use a command like this and the Makefile will take care of it for you:
+
+```shell
+make livepeer-catalyst-api
+```
+
+The general Livepeer in a Box development cycle works like this:
+
+1. Make changes to code on your local filesystem
+2. Build a Linux binary from that code
+3. Move that Linux binary into the `bin` directory of `catalyst`, which is
+   mounted by `make box-dev`
+4. Kill the old version of your binary and allow MistController to bring it back
+   up.
+
+Thankfully, this entire process has been automated. All you need to do is have
+the project you're working on cloned in a directory adjacent to `catalyst`. For
+example, if you're hacking on `task-runner`, you might have
+
+```
+/home/user/code/catalyst
+/home/user/code/task-runner
+```
+
+The catalyst Makefile is aware of the common paths for all of the other projects
+that go into the full stack. All that's necessary to build a new binary, package
+it in the container, and trigger a restart is a single command:
+
+```shell
+make livepeer-task-runner
+```
+
+Note that the names of all subprojects are prefixed with `livepeer`, just like
+the resulting binaries within the Catalyst container. This yields the following
+commands:
+
+| Project                     | Command                           |
+| --------------------------- | --------------------------------- |
+| [catalyst-api]              | `make livepeer-catalyst-api`      |
+| [catalyst-uploader]         | `make livepeer-catalyst-uploader` |
+| [task-runner]               | `make livepeer-task-runner`       |
+| [analyzer]                  | `make livepeer-analyzer`          |
+| [Studio Node.js API Server] | `make livepeer-api`               |
+| [MistServer]                | `make mistserver`                 |
+
+[catalyst-api]: https://github.com/livepeer/catalyst-api
+[catalyst-uploader]: https://github.com/livepeer/catalyst-uploader
+[task-runner]: https://github.com/livepeer/catalyst-uploader
+[analyzer]: https://github.com/livepeer/livepeer-data
+[Studio Node.js API Server]: https://github.com/livepeer/studio
+[MistServer]: https://github.com/livepeer/mistserver
+
+### Connecting the Frontend
+
+Livepeer in a Box comes with a [pkg](https://github.com/vercel/pkg)-bundled
+version of the Livepeer Studio API server and frontend, but does not include a
+full development environment for that frontend. If you are making changes to the
+frontend, you can boot it up as you usually would:
+
+```
+cd studio/packages/www
+yarn run dev
+```
+
+To connect it to the box; there's a hidden `localStorage` variable you can use
+to override the API server URL. Open your browser console and type in the
+following:
+
+```javascript
+localStorage.setItem("LP_API_SERVER_OVERRIDE", "http://localhost:8888");
+```
+
+Reload the page and your frontend should be connecting to the box as an API
+server.
+
+Additional note: in the interest of build speed, `make livepeer-api` does not
+package the frontend within the `livepeer-api` binary that it builds, so if you
+experience your frontend suddenly 404ing after you run `make livepeer-api` you
+will have to use the above instructions to boot up the frontend on your host.
+
+You can also build the full API server with a bundled frontend using
+`make livepeer-api-pkg`, but be aware this frequently takes 3-4 minutes to
+complete.
+
+### Notes
+
+- Your CockroachDB (Postgres) database and your Minio (S3) object store will be
+  saved in the `data` subdirectory of your Catalyst installation. If you want to
+  start from scratch again with the `admin@example.com` database snapshot, shut
+  down your box and `rm -rf data`.
+- You can press `Ctrl+C` to trigger a graceful shutdown of the container. If
+  you're impatient, following it up with a `Ctrl+\` can uncleanly shut things
+  down a bit more cleanly.
+- Sometimes the rate of logs produced by Catalyst somehow overwhelms Make and
+  log output simply stops. You'll know if you get in this state because you'll
+  press Ctrl+C and control will return immediately to your terminal instead of
+  shutting down the Docker image. You can start everything back up with
+  `docker rm -f catalyst` and `make box-dev`.
+
+## Changelog
+
+### 2023-08-12
+
+- Changed the hardcoded streams in the database snapshots to have
+  easy-to-remember stream keys like `2222-2222-2222-2222`
+- Changed the built-in streams to use the H264ConstrainedHigh profile so there
+  are no B-Frames in the output
+- Moved all references from `127.0.0.1` to `localhost`; this is needed for
+  WebRTC/Coturn to work properly
+- Removed outdated references to `GOOS=linux` and `KILL=true`; these are the
+  defaults now
