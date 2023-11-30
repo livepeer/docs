@@ -1,0 +1,67 @@
+---
+description:
+  "The Webhooks API is used to create, retrieve, update, delete webhooks object
+  from pipeline."
+---
+
+### Webhook Object
+
+<ResponseField name="id" type="string">
+  Unique identifier for the webhook.
+</ResponseField>
+<ResponseField name="name" type="string">
+  Name of the webhook.
+</ResponseField>
+<ResponseField name="createdAt" type="number">
+  Timestamp (in milliseconds) at which the webhook object was created.
+</ResponseField>
+<ResponseField name="events" type="array">
+  List of events that the webhook subscribes to. Possible events include
+  stream.started, stream.detection, recording.ready, etc.
+</ResponseField>
+<ResponseField name="url" type="string">
+  URL of the webhook endpoint.
+</ResponseField>
+<ResponseField name="sharedSecret" type="string">
+  Shared secret used to sign the webhook payload.
+</ResponseField>
+<ResponseField name="streamId" type="string">
+  StreamId of the stream to which the webhook is applied.
+</ResponseField>
+<ResponseField name="status" type="object">
+  Status of the webhook, including last failure and last triggered timestamp.
+  <ResponseStatusField name="lastFailure" type="object">
+    Details about the last failure of the webhook, including timestamp, error
+    message, response, and status code.
+  </ResponseStatusField>
+  <ResponseStatusField name="lastTriggeredAt" type="number">
+    Timestamp (in milliseconds) at which the webhook was last triggered.
+  </ResponseStatusField>
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "id": "de7818e7-610a-4057-8f6f-b785dc1e6f88",
+  "name": "My webhook",
+  "createdAt": 1587667174725,
+  "events": [
+    "stream.started",
+    "recording.ready"
+  ],
+  "url": "https://webhook.example.com",
+  "sharedSecret": "mySharedSecret",
+  "streamId": "de7818e7-610a-4057-8f6f-b785dc1e6f88",
+  "status": {
+    "lastFailure": {
+      "timestamp": 1587667174725,
+      "error": "Error message",
+      "response": "Response body",
+      "statusCode": 500
+    },
+    "lastTriggeredAt": 1587667174725
+  }
+}
+```
+
+</ResponseExample>

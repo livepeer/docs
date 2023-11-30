@@ -1,0 +1,142 @@
+---
+description:
+  "The Assets API is used to create, retrieve, update, delete assets object from
+  pipeline."
+---
+
+### Asset object
+
+<ResponseField name="id" type="string">
+  This is a unique identifier for the asset.
+</ResponseField>
+<ResponseField name="type" type="string">
+  Type of the asset. This can be either 'video' or 'audio'.
+</ResponseField>
+<ResponseField name="playbackId" type="string">
+  Used to form playback URL and storage folder.
+</ResponseField>
+<ResponseField name="staticMp4" type="boolean" writeOnly="true">
+  Whether to generate MP4s for the asset.
+</ResponseField>
+<ResponseField name="c2pa" type="boolean">
+  Attach Livepeer Studio C2PA Attestation in the output mp4 video.
+</ResponseField>
+<ResponseField name="playbackUrl" type="string">
+  URL for HLS playback.
+</ResponseField>
+<ResponseField name="downloadUrl" type="string">
+  URL to manually download the asset if desired.
+</ResponseField>
+<ResponseField name="playbackPolicy" type="object">
+  Reference to the playback-policy schema.
+</ResponseField>
+<ResponseField name="source" type="object">
+  Source of the asset, which can be URL, recording, directUpload, or clip.
+</ResponseField>
+<ResponseField name="creatorId" type="string">
+  Reference to the creator-id schema.
+</ResponseField>
+<ResponseField name="storage" type="object">
+  Information about the storage of the asset, particularly on IPFS.
+</ResponseField>
+<ResponseField name="status" type="object">
+  Status of the asset, including its phase, update time, and any error message.
+</ResponseField>
+<ResponseField name="name" type="string">
+  Name of the asset. This is not necessarily the filename, can be a custom name
+  or title.
+</ResponseField>
+<ResponseField name="createdAt" type="number">
+  Timestamp (in milliseconds) at which asset was created.
+</ResponseField>
+<ResponseField name="size" type="number">
+  Size of the asset in bytes.
+</ResponseField>
+<ResponseField name="hash" type="array">
+  Hash of the asset.
+</ResponseField>
+<ResponseField name="videoSpec" type="object">
+  Video metadata including format, duration, bitrate, and tracks information.
+</ResponseField>
+
+<ResponseExample>
+
+```json Response
+{
+  "id": "09F8B46C-61A0-4254-9875-F71F4C605BC7",
+  "type": "video",
+  "playbackId": "eaw4nk06ts2d0mzb",
+  "staticMp4": "boolean",
+  "c2pa": "boolean",
+  "playbackUrl": "https://livepeercdn.com/asset/ea03f37e-f861-4cdd-b495-0e60b6d753ad/index.m3u8",
+  "downloadUrl": "https://livepeercdn.com/asset/eaw4nk06ts2d0mzb/video",
+  "playbackPolicy": {
+    "type": "public",
+    "webhookId": "3e02c844-d364-4d48-b401-24b2773b5d6c",
+    "webhookContext": {
+      "foo": "bar"
+    }
+  },
+  "source": {
+    "type": "url",
+    "url": "https://example.com/video.mp4",
+    "gatewayUrl": "https://example.com/video.mp4"
+  },
+  "creatorId": "object",
+  "storage": {
+    "ipfs": {
+      "spec": {
+        "nftMetadataTemplate": "file",
+        "nftMetadata": {
+          "name": "My NFT",
+          "description": "My NFT description"
+        }
+      }
+    }
+  },
+  "status": {
+    "phase": "ready",
+    "updatedAt": 1587667174725,
+    "progress": 100
+  },
+  "name": "filename.mp4",
+  "createdAt": 1587667174725,
+  "size": 84934509,
+  "hash": [
+    {
+      "hash": "9b560b28b85378a5004117539196ab24e21bbd75b0e9eb1a8bc7c5fd80dc5b57",
+      "algorithm": "sha256"
+    }
+  ],
+  "videoSpec": {
+    "format": "mp4",
+    "duration": 23.8328,
+    "bitrate": 1000000,
+    "tracks": [
+      {
+        "type": "video",
+        "codec": "h264",
+        "startTime": 0,
+        "duration": 23.8328,
+        "bitrate": 1000000,
+        "width": 1920,
+        "height": 1080,
+        "pixelFormat": "yuv420p",
+        "fps": 30
+      },
+      {
+        "type": "audio",
+        "codec": "aac",
+        "startTime": 0,
+        "duration": 23.8328,
+        "bitrate": 1000000,
+        "channels": 2,
+        "sampleRate": 44100,
+        "bitDepth": 16
+      }
+    ]
+  }
+}
+```
+
+</ResponseExample>

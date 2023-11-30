@@ -1,0 +1,110 @@
+---
+description:
+  "The Sessions API is used to retrieve sessions object from pipeline."
+---
+
+### Session Object
+
+<ResponseField name="id" type="string">
+  Unique identifier for the session.
+</ResponseField>
+<ResponseField name="name" type="string">
+  Name of the session.
+</ResponseField>
+<ResponseField name="lastSeen" type="number">
+  Timestamp of the last activity in the session.
+</ResponseField>
+<ResponseField name="sourceSegments" type="number">
+  Number of source segments in the session.
+</ResponseField>
+<ResponseField name="transcodedSegments" type="number">
+  Number of transcoded segments in the session.
+</ResponseField>
+<ResponseField name="sourceSegmentsDuration" type="number">
+  Duration of all the source segments in seconds.
+</ResponseField>
+<ResponseField name="transcodedSegmentsDuration" type="number">
+  Duration of all the transcoded segments in seconds.
+</ResponseField>
+<ResponseField name="sourceBytes" type="number">
+  Total bytes of source segments.
+</ResponseField>
+<ResponseField name="transcodedBytes" type="number">
+  Total bytes of transcoded segments.
+</ResponseField>
+<ResponseField name="ingestRate" type="number">
+  Rate at which sourceBytes increases (bytes/second).
+</ResponseField>
+<ResponseField name="outgoingRate" type="number">
+  Rate at which transcodedBytes increases (bytes/second).
+</ResponseField>
+<ResponseField name="isHealthy" type="object">
+  Reference to the stream-health-payload schema for health status.
+</ResponseField>
+<ResponseField name="issues" type="object">
+  Reference to the stream-health-payload schema for human-readable issues.
+</ResponseField>
+<ResponseField name="createdAt" type="number">
+  Timestamp (in milliseconds) at which the session was created.
+</ResponseField>
+<ResponseField name="parentId" type="string">
+  Identifier of the parent stream object.
+</ResponseField>
+<ResponseField name="record" type="boolean">
+  Indicates whether the stream should be recorded.
+</ResponseField>
+<ResponseField name="recordingStatus" type="string">
+  Status of the recording process of this stream session.
+</ResponseField>
+<ResponseField name="recordingUrl" type="string">
+  URL for accessing the recording of this stream session.
+</ResponseField>
+<ResponseField name="mp4Url" type="string">
+  URL for the stream session recording packaged in an MP4 format.
+</ResponseField>
+<ResponseField name="playbackId" type="string">
+  Identifier used to form the playback URL.
+</ResponseField>
+<ResponseField name="profiles" type="array">
+  Array of profiles detailing various streaming qualities.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "id": "de7818e7-610a-4057-8f6f-b785dc1e6f88",
+  "name": "test_session",
+  "lastSeen": 1587667174725,
+  "sourceSegments": 1,
+  "transcodedSegments": 2,
+  "sourceSegmentsDuration": 1,
+  "transcodedSegmentsDuration": 2,
+  "sourceBytes": 1,
+  "transcodedBytes": 2,
+  "ingestRate": 1,
+  "outgoingRate": 2,
+  "isHealthy": true,
+  "issues": [
+    "Buffer underflow",
+    "Network congestion"
+  ],
+  "createdAt": 1587667174725,
+  "parentId": "de7818e7-610a-4057-8f6f-b785dc1e6f88",
+  "record": "boolean",
+  "recordingStatus": "waiting",
+  "recordingUrl": "https://lp-playback.com/hls/29eb9byolvwdbkue/index.m3u8",
+  "mp4Url": "https://lp-playback.com/hls/29eb9byolvwdqkue/720.mp4",
+  "playbackId": "eaw4nk06ts2d0mzb",
+  "profiles": [
+    {
+      "name": "720p",
+      "width": 1280,
+      "height": 720,
+      "bitrate": 3000,
+      "fps": 30
+    }
+  ]
+}
+```
+
+</ResponseExample>
