@@ -232,12 +232,10 @@ https://playback.livepeer.studio/asset/hls/abcd1234/index.m3u8?accessKey=your-ac
 ```
 
 If you prefer not to use query parameters to pass the Access Key, 
-it can alternatively be transmitted as a cookie. To accomplish this, 
-you must set a cookie named `X-Livepeer-Access-Key` with your access key as its value.
+it can alternatively be transmitted as a header. To accomplish this, 
+you must set a header named `Livepeer-Access-Key` with your access key as its value.
 
-In addition to setting the cookie, you must configure the player to permit 
-cross-origin credentials. This ensures that HTTP requests for assets include 
-the required cookies. Below is an example of how to enable credentials when using 
+Below is an example of how to use headers when using 
 the Livepeer Player:
 
 ```tsx
@@ -245,7 +243,7 @@ import { Player } from "@livepeer/react";
 
 const hlsConfig = {
   xhrSetup: function(xhr, url) {
-    xhr.withCredentials = true; // Allows cookies to be sent with the request
+    xhr.setRequestHeader('X-Livepeer-Access-Key', 'YOUR_ACCESS_KEY');
   }
 };
 
