@@ -1,0 +1,395 @@
+---
+description:
+  "The Transcode API is used to create transcode object from pipeline."
+---
+
+### Transcode Object
+
+<ResponseField name="id" type="string" readOnly="true">
+  Task ID.
+</ResponseField>
+<ResponseField name="type" type="string">
+  Type of the task, such as upload, import, export, etc.
+</ResponseField>
+<ResponseField name="createdAt" type="number" readOnly="true">
+  Timestamp (in milliseconds) at which the task was created.
+</ResponseField>
+<ResponseField name="scheduledAt" type="number" readOnly="true">
+  Timestamp (in milliseconds) at which the task was scheduled for execution.
+</ResponseField>
+<ResponseField name="inputAssetId" type="string">
+  ID of the input asset for the task.
+</ResponseField>
+<ResponseField name="outputAssetId" type="string">
+  ID of the output asset for the task.
+</ResponseField>
+<ResponseField name="params" type="object">
+  Parameters of the task, which vary depending on the task type.
+</ResponseField>
+<ResponseField name="status" type="object" readOnly="true">
+  Status of the task, including phase, update time, and error message.
+</ResponseField>
+<ResponseField name="output" type="object">
+  Output of the task, specifics depend on the task type.
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "id": "09F8B46C-61A0-4254-9875-F71F4C605BC7",
+  "type": "upload",
+  "createdAt": 1587667174725,
+  "scheduledAt": 1587667174725,
+  "inputAssetId": "09F8B46C-61A0-4254-9875-F71F4C605BC7",
+  "outputAssetId": "09F8B46C-61A0-4254-9875-F71F4C605BC7",
+  "params": {
+    "upload": {
+      "url": "https://cdn.livepeer.com/ABC123/filename.mp4",
+      "encryption": {
+        "encryptedKey": "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZ1RDRzhRWDZKdkR0eC95ZDMKdlpkUHJKR25LcjhiWHRsdXNIL2FOYW5XdHEraFJBTkNBQVE0QnZ6ODI2L2lDaXV1U0NiZVkwc3FmOXljYWh0OApDRFYyUFF2bDFVM1FLSVRBcWRpaktLa0FSUFVkcWRrYWZzR21PMzBDeElPaDBLNWJSQW5XQzd4KwotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg=="
+      },
+      "recordedSessionId": "78df0075-b5f3-4683-a618-1086faca35dc"
+    },
+    "import": {
+      "url": "https://cdn.livepeer.com/ABC123/filename.mp4",
+      "encryption": {
+        "encryptedKey": "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZ1RDRzhRWDZKdkR0eC95ZDMKdlpkUHJKR25LcjhiWHRsdXNIL2FOYW5XdHEraFJBTkNBQVE0QnZ6ODI2L2lDaXV1U0NiZVkwc3FmOXljYWh0OApDRFYyUFF2bDFVM1FLSVRBcWRpaktLa0FSUFVkcWRrYWZzR21PMzBDeElPaDBLNWJSQW5XQzd4KwotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg=="
+      },
+      "recordedSessionId": "78df0075-b5f3-4683-a618-1086faca35dc"
+    },
+    "exportData": {
+      "content": "object",
+      "ipfs": {
+        "nftMetadataTemplate": "file",
+        "nftMetadata": "object",
+        "pinata": {
+          "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDI4NjQwNzcsImlhdCI6MTYwMjI3NjA3NywiaXNzIjoiYXBpLmlzc3VlciIsInN1YiI6I"
+        }
+      },
+      "type": "string",
+      "id": "string"
+    },
+    "transcode": {
+      "profile": {
+        "width": 1280,
+        "name": "720p",
+        "height": 720,
+        "bitrate": 4000,
+        "fps": 30,
+        "fpsDen": 1,
+        "gop": "60",
+        "profile": "H264High",
+        "encoder": "h264"
+      }
+    },
+    "transcode-file": {
+      "input": {
+        "url": "https://cdn.livepeer.com/ABC123/filename.mp4"
+      },
+      "storage": {
+        "url": "s3+https://accessKeyId:secretAccessKey@s3Endpoint/bucket"
+      },
+      "outputs": {
+        "hls": {
+          "path": "/samplevideo/hls"
+        },
+        "mp4": {
+          "path": "/samplevideo/mp4"
+        }
+      },
+      "profiles": [
+        {
+          "width": 1280,
+          "name": "720p",
+          "height": 720,
+          "bitrate": 4000,
+          "fps": 30,
+          "fpsDen": 1,
+          "gop": "60",
+          "profile": "H264High",
+          "encoder": "h264"
+        }
+      ],
+      "targetSegmentSizeSecs": "number",
+      "c2pa": "boolean"
+    }
+  },
+  "clip": {
+    "url": "string",
+    "clipStrategy": {
+      "startTime": "number",
+      "endTime": "number",
+      "playbackId": "string"
+    },
+    "catalystPipelineStrategy": "catalyst",
+    "sessionId": "string",
+    "inputId": "string"
+  },
+  "status": {
+    "phase": "pending",
+    "updatedAt": 1587667174725,
+    "progress": "number",
+    "errorMessage": "string",
+    "retries": "number",
+    "step": "string"
+  },
+  "output": {
+    "upload": {
+      "videoFilePath": "string",
+      "metadataFilePath": "string",
+      "assetSpec": {
+        "id": "09F8B46C-61A0-4254-9875-F71F4C605BC7",
+        "type": "video",
+        "playbackId": "eaw4nk06ts2d0mzb",
+        "staticMp4": "boolean",
+        "c2pa": "boolean",
+        "playbackUrl": "https://livepeercdn.com/asset/ea03f37e-f861-4cdd-b495-0e60b6d753ad/index.m3u8",
+        "downloadUrl": "https://livepeercdn.com/asset/eaw4nk06ts2d0mzb/video",
+        "playbackPolicy": {
+          "type": "public",
+          "webhookId": "3e02c844-d364-4d48-b401-24b2773b5d6c",
+          "webhookContext": {
+            "foo": "bar"
+          }
+        },
+        "source": {
+          "type": "url",
+          "url": "https://example.com/video.mp4",
+          "gatewayUrl": "https://example.com/video.mp4"
+        },
+        "creatorId": "object",
+        "storage": {
+          "ipfs": {
+            "spec": {
+              "nftMetadataTemplate": "file",
+              "nftMetadata": {
+                "name": "My NFT",
+                "description": "My NFT description"
+              }
+            }
+          }
+        },
+        "status": {
+          "phase": "ready",
+          "updatedAt": 1587667174725,
+          "progress": 100
+        },
+        "name": "filename.mp4",
+        "createdAt": 1587667174725,
+        "size": 84934509,
+        "hash": [
+          {
+            "hash": "9b560b28b85378a5004117539196ab24e21bbd75b0e9eb1a8bc7c5fd80dc5b57",
+            "algorithm": "sha256"
+          }
+        ],
+        "videoSpec": {
+          "format": "mp4",
+          "duration": 23.8328,
+          "bitrate": 1000000,
+          "tracks": [
+            {
+              "type": "video",
+              "codec": "h264",
+              "startTime": 0,
+              "duration": 23.8328,
+              "bitrate": 1000000,
+              "width": 1920,
+              "height": 1080,
+              "pixelFormat": "yuv420p",
+              "fps": 30
+            },
+            {
+              "type": "audio",
+              "codec": "aac",
+              "startTime": 0,
+              "duration": 23.8328,
+              "bitrate": 1000000,
+              "channels": 2,
+              "sampleRate": 44100,
+              "bitDepth": 16
+            }
+          ]
+        }
+      }
+    },
+    "import": {
+      "videoFilePath": "string",
+      "metadataFilePath": "string",
+      "assetSpec": {
+        "id": "09F8B46C-61A0-4254-9875-F71F4C605BC7",
+        "type": "video",
+        "playbackId": "eaw4nk06ts2d0mzb",
+        "staticMp4": "boolean",
+        "c2pa": "boolean",
+        "playbackUrl": "https://livepeercdn.com/asset/ea03f37e-f861-4cdd-b495-0e60b6d753ad/index.m3u8",
+        "downloadUrl": "https://livepeercdn.com/asset/eaw4nk06ts2d0mzb/video",
+        "playbackPolicy": {
+          "type": "public",
+          "webhookId": "3e02c844-d364-4d48-b401-24b2773b5d6c",
+          "webhookContext": {
+            "foo": "bar"
+          }
+        },
+        "source": {
+          "type": "url",
+          "url": "https://example.com/video.mp4",
+          "gatewayUrl": "https://example.com/video.mp4"
+        },
+        "creatorId": "object",
+        "storage": {
+          "ipfs": {
+            "spec": {
+              "nftMetadataTemplate": "file",
+              "nftMetadata": {
+                "name": "My NFT",
+                "description": "My NFT description"
+              }
+            }
+          }
+        },
+        "status": {
+          "phase": "ready",
+          "updatedAt": 1587667174725,
+          "progress": 100
+        },
+        "name": "filename.mp4",
+        "createdAt": 1587667174725,
+        "size": 84934509,
+        "hash": [
+          {
+            "hash": "9b560b28b85378a5004117539196ab24e21bbd75b0e9eb1a8bc7c5fd80dc5b57",
+            "algorithm": "sha256"
+          }
+        ],
+        "videoSpec": {
+          "format": "mp4",
+          "duration": 23.8328,
+          "bitrate": 1000000,
+          "tracks": [
+            {
+              "type": "video",
+              "codec": "h264",
+              "startTime": 0,
+              "duration": 23.8328,
+              "bitrate": 1000000,
+              "width": 1920,
+              "height": 1080,
+              "pixelFormat": "yuv420p",
+              "fps": 30
+            },
+            {
+              "type": "audio",
+              "codec": "aac",
+              "startTime": 0,
+              "duration": 23.8328,
+              "bitrate": 1000000,
+              "channels": 2,
+              "sampleRate": 44100,
+              "bitDepth": 16
+            }
+          ]
+        }
+      }
+    },
+    "export": {
+      "ipfs": {
+        "videoFileCid": "string",
+        "videoFileUrl": "string",
+        "videoFileGatewayUrl": "string",
+        "nftMetadataCid": "string",
+        "nftMetadataUrl": "string",
+        "nftMetadataGatewayUrl": "string"
+      }
+    },
+    "exportData": {
+      "ipfs": {
+        "cid": "string"
+      }
+    },
+    "transcode": {
+      "asset": {
+        "videoFilePath": "string",
+        "metadataFilePath": "string",
+        "assetSpec": {
+          "id": "09F8B46C-61A0-4254-9875-F71F4C605BC7",
+          "type": "video",
+          "playbackId": "eaw4nk06ts2d0mzb",
+          "staticMp4": "boolean",
+          "c2pa": "boolean",
+          "playbackUrl": "https://livepeercdn.com/asset/ea03f37e-f861-4cdd-b495-0e60b6d753ad/index.m3u8",
+          "downloadUrl": "https://livepeercdn.com/asset/eaw4nk06ts2d0mzb/video",
+          "playbackPolicy": {
+            "type": "public",
+            "webhookId": "3e02c844-d364-4d48-b401-24b2773b5d6c",
+            "webhookContext": {
+              "foo": "bar"
+            }
+          },
+          "source": {
+            "type": "url",
+            "url": "https://example.com/video.mp4",
+            "gatewayUrl": "https://example.com/video.mp4"
+          },
+          "creatorId": "object",
+          "storage": {
+            "ipfs": {
+              "spec": {
+                "nftMetadataTemplate": "file",
+                "nftMetadata": {
+                  "name": "My NFT",
+                  "description": "My NFT description"
+                }
+              }
+            }
+          },
+          "status": {
+            "phase": "ready",
+            "updatedAt": 1587667174725,
+            "progress": 100
+          },
+          "name": "filename.mp4",
+          "createdAt": 1587667174725,
+          "size": 84934509,
+          "hash": [
+            {
+              "hash": "9b560b28b85378a5004117539196ab24e21bbd75b0e9eb1a8bc7c5fd80dc5b57",
+              "algorithm": "sha256"
+            }
+          ],
+          "videoSpec": {
+            "format": "mp4",
+            "duration": 23.8328,
+            "bitrate": 1000000,
+            "tracks": [
+              {
+                "type": "video",
+                "codec": "h264",
+                "startTime": 0,
+                "duration": 23.8328,
+                "bitrate": 1000000,
+                "width": 1920,
+                "height": 1080,
+                "pixelFormat": "yuv420p",
+                "fps": 30
+              },
+              {
+                "type": "audio",
+                "codec": "aac",
+                "startTime": 0,
+                "duration": 23.8328,
+                "bitrate": 1000000,
+                "channels": 2,
+                "sampleRate": 44100,
+                "bitDepth": 16
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+</ResponseExample>
