@@ -91,7 +91,7 @@ export const CreateAndViewAsset = () => {
             },
           ] as const,
         }
-      : null,
+      : null
   );
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -119,7 +119,7 @@ export const CreateAndViewAsset = () => {
         : progress?.[0].phase === "processing"
         ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
         : null,
-    [progress],
+    [progress]
   );
 
   return (
@@ -177,7 +177,7 @@ export const AccessControl = () => {
             },
           },
         }
-      : null,
+      : null
   );
 
   const { data: stream } = useStream({
@@ -214,6 +214,12 @@ If you are using the Livepeer React Player, you can use the
 access key, which is then passed to the webhook you created to verify that it is
 valid.
 
+<Info>
+  The React Player passes the access key with a header, `Livepeer-Access-Key`,
+  to the backend, for WebRTC and HLS playback. For MP4 playback, it uses a query
+  parameter, `accessKey`.
+</Info>
+
 ```tsx
 import { Player } from "@livepeer/react";
 
@@ -224,37 +230,58 @@ export const CreateAndViewAsset = () => {
 };
 ```
 
-If you are not using the player, you will need to manually append the access key
-to the m3u8 URL as a query parameter, similar to:
+#### Using a custom player
 
+If you are not using the player, you will need to pass a header,
+`Livepeer-Access-Key`, when you perform WebRTC SDP negotiation, or when you play
+back from a m3u8 URL.
+
+For WebRTC SDP negotation, here is an example of the header being passed:
+
+```bash
+curl -X POST \
+     -H "Content-Type: application/sdp" \
+     -H "Livepeer-Access-Key: your-access-key" \
+     --data-binary "@sdpfile.sdp" \
+     "https://livepeercdn.studio/webrtc/abcd1234"
 ```
-https://playback.livepeer.studio/asset/hls/abcd1234/index.m3u8?accessKey=your-access-key
+
+You can also append the access key to the WebRTC URL as a query parameter,
+similar to:
+
+```bash
+curl -X POST \
+     -H "Content-Type: application/sdp" \
+     --data-binary "@sdpfile.sdp" \
+     "https://livepeercdn.studio/webrtc/abcd1234?accessKey=your-access-key"
 ```
 
-If you prefer not to use query parameters to pass the Access Key, 
-it can alternatively be transmitted as a header. To accomplish this, 
-you must set a header named `Livepeer-Access-Key` with your access key as its value.
+Similarly, for HLS playback, you can pass the access key in a header:
 
-Below is an example of how to use headers when using 
-the Livepeer Player:
+```bash
+curl -X GET \
+     -H "Livepeer-Access-Key: your-access-key" \
+     "https://playback.livepeer.studio/asset/hls/abcd1234/index.m3u8"
+```
+
+<Info>
+  If you are using HLS.js for your own custom player, you can set the access key header like this:
 
 ```tsx
-import { Player } from "@livepeer/react";
-
 const hlsConfig = {
-  xhrSetup: function(xhr, url) {
-    xhr.setRequestHeader('X-Livepeer-Access-Key', 'YOUR_ACCESS_KEY');
-  }
+  xhrSetup: function (xhr, url) {
+    xhr.setRequestHeader("Livepeer-Access-Key", "your-access-key");
+  },
 };
+```
 
-export const CreateAndViewAsset = () => {
-  return (
-    <Player
-      playbackId={playbackId}
-      hlsConfig={hlsConfig}
-    />
-  );
-};
+</Info>
+
+Finally, you can append the access key to the m3u8 URL as a query parameter:
+
+```bash
+curl -X GET \
+     "https://playback.livepeer.studio/asset/hls/abcd1234/index.m3u8?accessKey=your-access-key"
 ```
 
 ### Receive the Webhook from Livepeer
