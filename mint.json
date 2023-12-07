@@ -315,7 +315,7 @@
     "raiseIssue": true,
     "thumbsRating": true
   },
-  "openapi": "openapi.yaml",
+  "openapi": "https://raw.githubusercontent.com/livepeer/studio/master/packages/api/src/schema/api-schema.yaml",
   "api": {
     "baseUrl": "https://livepeer.studio/api"
   },
@@ -350,6 +350,11 @@
       "url": "sdks"
     },
     {
+      "name": "Catalyst",
+      "icon": "flask",
+      "url": "catalyst"
+    },
+    {
       "name": "What's New",
       "icon": "rocket",
       "url": "https://livepeer.canny.io/changelog"
@@ -363,44 +368,7 @@
   "navigation": [
     {
       "group": "Getting Started",
-      "pages": [
-        "developers/introduction",
-        "developers/quick-start",
-        {
-          "group": "Core Concepts",
-          "icon": "notes",
-          "pages": [
-            {
-              "group": "Livepeer Primitives",
-              "pages": [
-                "developers/core-concepts/core-api/asset",
-                "developers/core-concepts/core-api/stream",
-                "developers/core-concepts/core-api/multistream",
-                "developers/core-concepts/core-api/access-control"
-              ]
-            },
-            {
-              "group": "Livepeer Studio Dashboard",
-              "pages": [
-                "developers/core-concepts/studio/webhooks",
-                "developers/core-concepts/studio/stream-health",
-                "developers/core-concepts/studio/in-browser-broadcast"
-              ]
-            },
-            {
-              "group": "Livepeer Player",
-              "pages": ["developers/core-concepts/player/overview"]
-            },
-            {
-              "group": "Livepeer Network",
-              "pages": [
-                "developers/core-concepts/livepeer-network/delegators",
-                "developers/core-concepts/livepeer-network/orchestrators"
-              ]
-            }
-          ]
-        }
-      ]
+      "pages": ["developers/introduction", "developers/quick-start"]
     },
     {
       "group": "Guides",
@@ -415,7 +383,8 @@
             "developers/guides/dstorage-playback",
             "developers/guides/listen-to-asset-events",
             "developers/guides/encrypted-asset",
-            "developers/guides/mint-video-nft"
+            "developers/guides/mint-video-nft",
+            "developers/guides/thumbnails-vod"
           ]
         },
         {
@@ -430,7 +399,8 @@
             "developers/guides/monitor-stream-health",
             "developers/guides/listen-to-stream-events",
             "developers/guides/multistream",
-            "developers/guides/clip-a-livestream"
+            "developers/guides/clip-a-livestream",
+            "developers/guides/thumbnails-live"
           ]
         },
         {
@@ -515,6 +485,14 @@
       "version": "Orchestrators"
     },
     {
+      "group": "Catalyst",
+      "pages": [
+        "catalyst/introduction",
+        "catalyst/running-catalyst",
+        "catalyst/developing-with-catalyst"
+      ]
+    },
+    {
       "group": "References",
       "pages": [
         "references/api-support-matrix",
@@ -534,23 +512,48 @@
         "references/awesome-livepeer"
       ]
     },
-
+    {
+      "group": "Core Concepts",
+      "icon": "notes",
+      "pages": [
+        {
+          "group": "Livepeer Primitives",
+          "pages": [
+            "developers/core-concepts/core-api/asset",
+            "developers/core-concepts/core-api/stream",
+            "developers/core-concepts/core-api/multistream",
+            "developers/core-concepts/core-api/access-control"
+          ]
+        },
+        {
+          "group": "Livepeer Studio Dashboard",
+          "pages": [
+            "developers/core-concepts/studio/webhooks",
+            "developers/core-concepts/studio/stream-health",
+            "developers/core-concepts/studio/in-browser-broadcast"
+          ]
+        },
+        {
+          "group": "Livepeer Player",
+          "pages": ["developers/core-concepts/player/overview"]
+        },
+        {
+          "group": "Livepeer Network",
+          "pages": [
+            "developers/core-concepts/livepeer-network/delegators",
+            "developers/core-concepts/livepeer-network/orchestrators"
+          ]
+        }
+      ]
+    },
     {
       "group": "Overview",
       "pages": ["sdks/introduction"]
     },
-
     {
       "group": "Quickstart",
-      "pages": [
-        "sdks/javascript",
-        "sdks/python",
-        "sdks/ruby",
-        "sdks/golang",
-        "sdks/php"
-      ]
+      "pages": ["sdks/javascript", "sdks/ruby", "sdks/go", "sdks/python"]
     },
-
     {
       "group": "Livepeer React",
       "pages": [
@@ -591,7 +594,6 @@
         }
       ]
     },
-
     {
       "group": "Overview",
       "pages": [
@@ -602,16 +604,22 @@
     {
       "group": "Stream",
       "pages": [
+        "api-reference/stream/overview",
         "api-reference/stream/create",
         "api-reference/stream/get",
         "api-reference/stream/update",
+        "api-reference/stream/terminate",
+
         "api-reference/stream/delete",
-        "api-reference/stream/get-all"
+        "api-reference/stream/get-all",
+        "api-reference/stream/create-clip",
+        "api-reference/stream/get-clip"
       ]
     },
     {
       "group": "Multistream target",
       "pages": [
+        "api-reference/multistream/overview",
         "api-reference/multistream/create",
         "api-reference/multistream/get",
         "api-reference/multistream/update",
@@ -622,6 +630,7 @@
     {
       "group": "Webhook",
       "pages": [
+        "api-reference/webhook/overview",
         "api-reference/webhook/create",
         "api-reference/webhook/get",
         "api-reference/webhook/update",
@@ -632,9 +641,11 @@
     {
       "group": "Asset",
       "pages": [
+        "api-reference/asset/overview",
         "api-reference/asset/upload",
         "api-reference/asset/upload-via-url",
         "api-reference/asset/get",
+        "api-reference/asset/update",
         "api-reference/asset/delete",
         "api-reference/asset/get-all"
       ]
@@ -643,14 +654,17 @@
     {
       "group": "Session",
       "pages": [
+        "api-reference/session/overview",
         "api-reference/session/get",
         "api-reference/session/get-all",
-        "api-reference/session/get-recording"
+        "api-reference/session/get-recording",
+        "api-reference/session/get-clip"
       ]
     },
     {
       "group": "Access control",
       "pages": [
+        "api-reference/signing-key/overview",
         "api-reference/signing-key/create",
         "api-reference/signing-key/get",
         "api-reference/signing-key/update",
@@ -660,15 +674,22 @@
     },
     {
       "group": "Task",
-      "pages": ["api-reference/task/get-all", "api-reference/task/get"]
+      "pages": [
+        "api-reference/task/overview",
+        "api-reference/task/get-all",
+        "api-reference/task/get"
+      ]
     },
     {
       "group": "Playback",
-      "pages": ["api-reference/playback/get"]
+      "pages": ["api-reference/playback/overview", "api-reference/playback/get"]
     },
     {
       "group": "Transcode",
-      "pages": ["api-reference/transcode/create"]
+      "pages": [
+        "api-reference/transcode/overview",
+        "api-reference/transcode/create"
+      ]
     },
     {
       "group": "Viewership",
@@ -687,6 +708,6 @@
     "discord": "https://discord.gg/livepeer"
   },
   "search": {
-    "prompt": "Search anything"
+    "prompt": "Need help? Ask our AI"
   }
 }

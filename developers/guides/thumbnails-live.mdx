@@ -1,0 +1,81 @@
+---
+title: "Get a livestream thumbnail"
+description: "Learn how to retrieve thumbnails for a live stream"
+---
+
+For live streams, we provide a single updating thumbnail URL - it will return
+the **first frame of the most recent segment of video**. Follow the steps below
+to find out how to use it.
+
+## Create a stream
+
+Follow our previous guide on
+[creating a stream](/developers/guides/create-livestream) to get a stream key.
+You can then start a stream and get the `playbackId`.
+
+## Fetch playback info
+
+After &lt;1 minute the thumbnail URL should be returned from the
+[playback info API endpoint](/api-reference/playback/get).
+
+Example response:
+
+```json
+{
+  "type": "live",
+  "meta": {
+    "live": 0,
+    "source": [
+      {
+        "hrn": "HLS (TS)",
+        "type": "html5/application/vnd.apple.mpegurl",
+        "url": "https://livepeercdn.studio/hls/61482gtjzi49cyvb/index.m3u8"
+      },
+      {
+        "hrn": "WebRTC (H264)",
+        "type": "html5/video/h264",
+        "url": "https://livepeercdn.studio/webrtc/61482gtjzi49cyvb"
+      },
+      {
+        "hrn": "Thumbnail (JPEG)",
+        "type": "image/jpeg",
+        "url": "https://storage.lp-playback.studio/raw/juixm77hfsmhyslrxtycnqfmnlfq/catalyst-recordings-com/hls/61482gtjzi49cyvb/6cf39a0f-8b68-4ff8-8c7b-b105d6a6a9ed/source/latest.jpg"
+      }
+    ]
+  }
+}
+```
+
+You should see an entry in the `source` array with the type `image/jpeg`. This
+URL will always return the **latest thumbnail of your stream**.
+
+<Info>
+  This will always have a `hrn` of `Thumbnail (JPEG)` and `type` of
+  `image/jpeg`.
+</Info>
+
+## Examples
+
+A common use for this feature is to show a live preview URL which constantly
+updates with the latest frame from the stream.
+
+```tsx
+function PreviewComponent() {
+  // Update to your thumbnail URL
+  const thumbnailUrl =
+    "https://storage.lp-playback.studio/raw/juixm77hfsmhyslrxtycnqfmnlfq/catalyst-recordings-com/hls/61482gtjzi49cyvb/6cf39a0f-8b68-4ff8-8c7b-b105d6a6a9ed/source/latest.jpg";
+
+  const [randomValue, setRandomValue] = useState(Date.now());
+
+  // We will append a random value to the URL to force the browser to fetch the latest image (at least every 5 seconds)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRandomValue(Date.now()); // Update the randomValue every 5 seconds
+    }, 5000);
+
+    return () => clearInterval(interval); // Clean up the interval on unmount
+  }, []);
+
+  return <img src={`${thumbnailUrl}?refresh=${randomValue}`} />;
+}
+```

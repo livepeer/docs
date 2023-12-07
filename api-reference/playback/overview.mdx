@@ -1,0 +1,118 @@
+---
+description:
+  "The Playback API is used to retrieve playback object from pipeline."
+---
+
+### Playback Object
+
+<ResponseField name="type" type="string">
+  Type of playback, such as live, vod, or recording.
+</ResponseField>
+<ResponseField name="meta" type="object">
+  Metadata for the playback information. This includes details about the source,
+  playback policy, and attestation.
+  <ResponseMetaField name="live" type="number">
+    Indicates if the playback is live (1) or not (0).
+  </ResponseMetaField>
+  <ResponseMetaField name="playbackPolicy" type="object">
+    Reference to the playback-policy schema.
+  </ResponseMetaField>
+  <ResponseMetaField name="source" type="array">
+    Array of source objects detailing the playback sources. Each source includes
+    HRN, type, URL, size, width, height, and bitrate.
+    <ResponseSourceField name="hrn" type="string">
+      Human-readable name (HRN) for the playback source format.
+    </ResponseSourceField>
+    <ResponseSourceField name="type" type="string">
+      MIME type of the playback source.
+    </ResponseSourceField>
+    <ResponseSourceField name="url" type="string">
+      URL for the playback source.
+    </ResponseSourceField>
+    <ResponseSourceField name="size" type="number">
+      Size of the playback source file.
+    </ResponseSourceField>
+    <ResponseSourceField name="width" type="number">
+      Width of the video in pixels.
+    </ResponseSourceField>
+    <ResponseSourceField name="height" type="number">
+      Height of the video in pixels.
+    </ResponseSourceField>
+    <ResponseSourceField name="bitrate" type="number">
+      Bitrate of the playback source.
+    </ResponseSourceField>
+  </ResponseMetaField>
+  <ResponseMetaField name="attestation" type="object">
+    Reference to the attestation schema.
+  </ResponseMetaField>
+</ResponseField>
+
+<ResponseExample>
+```json Response
+{
+  "type": "vod",
+  "meta": {
+    "live": 0,
+    "playbackPolicy": {
+      "type": "public",
+      "webhookId": "3e02c844-d364-4d48-b401-24b2773b5d6c",
+      "webhookContext": {
+        "foo": "bar"
+      }
+    },
+    "source": [
+      {
+        "hrn": "MP4",
+        "type": "html5/video/mp4",
+        "url": "https://asset-cdn.lp-playback.monster/hls/1bde4o2i6xycudoy/static360p0.mp4",
+        "size": 494778,
+        "width": 204,
+        "height": 360,
+        "bitrate": 449890
+      }
+    ],
+    "attestation": {
+      "id": "5b9e63bb-6fd0-4bea-aff2-cc5d4eb9cad0",
+      "primaryType": "VideoAttestation",
+      "domain": {
+        "name": "Verifiable Video",
+        "version": "1"
+      },
+      "message": {
+        "video": "string",
+        "attestations": [
+          {
+            "role": "string",
+            "address": "string"
+          }
+        ],
+        "signer": "string",
+        "timestamp": "number"
+      },
+      "signature": "string",
+      "createdAt": 1587667174725,
+      "signatureType": "eip712",
+      "storage": {
+        "ipfs": {
+          "cid": "bafybeihoqtemwitqajy6d654tmghqqvxmzgblddj2egst6yilplr5num6u",
+          "url": "ipfs://bafybeihoqtemwitqajy6d654tmghqqvxmzgblddj2egst6yilplr5num6u",
+          "gatewayUrl": "https://ipfs.io",
+          "updatedAt": 1587667174725
+        },
+        "status": {
+          "phase": "ready",
+          "progress": 0.5,
+          "errorMessage": "Failed to export to IPFS",
+          "tasks": {
+            "pending": "string",
+            "last": "string",
+            "failed": "string"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+</ResponseExample>
