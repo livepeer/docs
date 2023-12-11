@@ -45,7 +45,7 @@ export const AccessControl = () => {
           name: streamName,
           playbackPolicy: { type: "jwt" },
         }
-      : null,
+      : null
   );
 
   const { data: stream } = useStream({
@@ -79,8 +79,6 @@ export const AccessControl = () => {
 
 Create your gated asset, with the jwt playback policy type.
 
-````tsx accessControl.tsx
-
 ```tsx accessControl.tsx
 import { useCreateAsset, useAsset } from "@livepeer/react";
 
@@ -103,7 +101,7 @@ export const AccessControlAssets = () => {
 
   // ... Rest of the code for managing and playing assets with JWT
 };
-````
+```
 
 ### Sign a JWT (Node.JS API Route)
 
@@ -140,7 +138,7 @@ const accessControlPublicKey =
 
 const handler = async (
   req: NextApiRequest,
-  res: NextApiResponse<CreateSignedPlaybackResponse | ApiError>,
+  res: NextApiResponse<CreateSignedPlaybackResponse | ApiError>
 ) => {
   try {
     const method = req.method;
@@ -208,6 +206,12 @@ Lastly, when the content is created, we make a POST request to the
 mutation state handling). We pass along the `playbackId` for the content, which
 is used to create the JWT.
 
+<Info>
+  The React Player passes the JWT with a header, `Livepeer-Jwt`, to the backend,
+  for WebRTC and HLS playback. For MP4 playback, it uses a query parameter,
+  `jwt`.
+</Info>
+
 Then, we pass the JWT to the Player using the
 [`jwt`](/sdks/livepeer-react/Player#jwt) prop, which will use that JWT to prove
 access to the content!
@@ -236,7 +240,7 @@ export const AccessControl = () => {
           name: streamName,
           playbackPolicy: { type: "jwt" },
         }
-      : null,
+      : null
   );
 
   const { data: stream } = useStream({
@@ -311,9 +315,54 @@ export const AccessControl = () => {
 };
 ```
 
-If you are not using the player, you will need to manually append the jwt to the
-URL as a query parameter, similar to:
+#### Using a custom player
 
+If you are not using the player, you will need to pass a header, `Livepeer-Jwt`,
+when you perform WebRTC SDP negotiation, or when you play back from a m3u8 URL.
+
+For WebRTC SDP negotation, here is an example of the header being passed:
+
+```bash
+curl -X POST \
+     -H "Content-Type: application/sdp" \
+     -H "Livepeer-Jwt: your-jwt" \
+     --data-binary "@sdpfile.sdp" \
+     "https://livepeercdn.studio/webrtc/abcd1234"
 ```
-https://playback.livepeer.studio/asset/hls/abcd1234/index.m3u8?jwt=your-jwt
+
+You can also append the JWT to the WebRTC URL as a query parameter, similar to:
+
+```bash
+curl -X POST \
+     -H "Content-Type: application/sdp" \
+     --data-binary "@sdpfile.sdp" \
+     "https://livepeercdn.studio/webrtc/abcd1234?jwt=your-jwt"
+```
+
+Similarly, for HLS playback, you can pass the JWT in a header:
+
+```bash
+curl -X GET \
+     -H "Livepeer-Jwt: your-jwt" \
+     "https://playback.livepeer.studio/asset/hls/abcd1234/index.m3u8"
+```
+
+<Info>
+  If you are using HLS.js for your own custom player, you can set the JWT header like this:
+
+```tsx
+const hlsConfig = {
+  xhrSetup: function (xhr, url) {
+    xhr.setRequestHeader("Livepeer-Jwt", "your-jwt");
+  },
+};
+```
+
+</Info>
+
+Finally, you can append the JWT to the m3u8 URL as a query parameter:
+
+```bash
+curl -X GET \
+     "https://playback.livepeer.studio/asset/hls/abcd1234/index.m3u8?jwt=your-jwt"
 ```
