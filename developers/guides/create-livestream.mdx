@@ -90,34 +90,34 @@ We can use the Livepeer SDK to create a stream. The example below uses the
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/go-sdk"
+    import(
+      "context"
+      "log"
+      "livepeer"
+      "livepeer/models/components"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
+        lpClient := livepeer.New(
+            livepeer.WithSecurity(""),
+        )
 
-      streamData := map[string]interface{}{
-        "name": "test_stream",
-      }
+        ctx := context.Background()
+        res, err := lpClient.Stream.Create(ctx, components.NewStreamPayload{
+            Name: "test_stream",
+        })
+        if err != nil {
+            log.Fatal(err)
+        }
 
-      // Create the stream
-      response, err := client.CreateStream(streamData)
-      if err != nil {
-        fmt.Printf("Error creating stream: %v\n", err)
-        os.Exit(1)
-      }
-
-      fmt.Printf("Stream created: %+v\n", response)
+        if res.Data != nil {
+            // handle response
+        }
     }
-    ```
 
-  </Tab>
+```
+
+</Tab>
 </Tabs>
 
 You can find all the information required to broadcast to the stream in the
@@ -128,12 +128,13 @@ the `streamKey` is present in the response object. You can use these two values
 to broadcast to the stream.
 
 <Info>
-  To learn more about other stream functions such as stopping a stream,
-  recording a stream, and more, see the [Stream
-  API](/api-reference/stream/overview).
+To learn more about other stream functions such as stopping a stream,
+recording a stream, and more, see the [Stream
+API](/api-reference/stream/overview).
 </Info>
 
 ### Play a Stream
 
 To learn how to play a stream, see the
 [Play a Livestream](/developers/guides/playback-a-livestream) guide.
+```

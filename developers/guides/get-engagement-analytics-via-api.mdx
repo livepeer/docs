@@ -250,29 +250,30 @@ data.
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/go-sdk"
+    import(
+      "context"
+      "log"
+      "livepeer"
+      "livepeer/models/components"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API token
-      apiToken := "YOUR_API_TOKEN"
-      client := livepeer.NewLivepeerClient(apiToken)
+        lpClient := livepeer.New(
+            livepeer.WithSecurity(""),
+        )
 
-      // Define the playback ID you want to query
-      playbackID := "PLAYBACK_ID"
+        var playbackID string = "PLAYBACK_ID"
 
-      // Get total views by playback ID
-      response, err := client.GetTotalViews(playbackID)
-      if err != nil {
-        fmt.Printf("Error fetching total views: %v\n", err)
-        os.Exit(1)
-      }
+        ctx := context.Background()
 
-      fmt.Printf("Total views: %+v\n", response)
+        res, err := lpClient.Metrics.GetPublicTotalViews(ctx, playbackID)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        if res.Data != nil {
+            // handle response
+        }
     }
     ```
 
@@ -385,37 +386,33 @@ assets and streams.
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/go-sdk"
+    import(
+      "context"
+      "log"
+      "livepeer"
+      "livepeer/models/components"
+      "livepeer/models/operations"
+      "livepeer/types"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API token
-      apiToken := "YOUR_API_TOKEN"
-      client := livepeer.NewLivepeerClient(apiToken)
+        lpClient := livepeer.New(
+            livepeer.WithSecurity(""),
+        )
 
-      // Define the asset ID for which you want to query views
-      assetID := "ASSET_ID"
-      timeStep := "day" // Define the time step
-      breakdownBy := []string{"timezone"} // Define the breakdown criteria
+        ctx := context.Background()
+        res, err := lpClient.Metrics.GetCreatorViewership(ctx, operations.GetCreatorMetricsRequest{
+            BreakdownBy: []operations.QueryParamBreakdownBy{
+                operations.QueryParamBreakdownByDeviceType,
+            },
+        })
+        if err != nil {
+            log.Fatal(err)
+        }
 
-      queryParams := map[string]interface{}{
-        "assetId":      assetID,
-        "timeStep":     timeStep,
-        "breakdownBy":  breakdownBy,
-      }
-
-      // Get views by creator
-      response, err := client.GetViewsByCreator(queryParams)
-      if err != nil {
-        fmt.Printf("Error fetching views by creator: %v\n", err)
-        os.Exit(1)
-      }
-
-      fmt.Printf("Views by creator: %+v\n", response)
+        if res.Data != nil {
+            // handle response
+        }
     }
     ```
 
@@ -507,32 +504,30 @@ apps.
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/go-sdk"
+    import(
+      "context"
+      "log"
+      "livepeer"
+      "livepeer/models/components"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API token
-      apiToken := "YOUR_API_TOKEN"
-      client := livepeer.NewLivepeerClient(apiToken)
+        lpClient := livepeer.New(
+            livepeer.WithSecurity(""),
+        )
 
-      breakdownBy := []string{"device", "browser"} // Define the breakdown criteria
+        var playbackID string = "PLAYBACK_ID"
 
-      queryParams := map[string]interface{}{
-        "breakdownBy": breakdownBy,
-      }
+        ctx := context.Background()
 
-      // Get views
-      response, err := client.GetViews(queryParams)
-      if err != nil {
-        fmt.Printf("Error fetching views: %v\n", err)
-        os.Exit(1)
-      }
+        res, err := lpClient.Metrics.GetPublicTotalViews(ctx, playbackID)
+        if err != nil {
+            log.Fatal(err)
+        }
 
-      fmt.Printf("Views: %+v\n", response)
+        if res.Data != nil {
+            // handle response
+        }
     }
     ```
 

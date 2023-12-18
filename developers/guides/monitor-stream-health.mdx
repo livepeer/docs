@@ -93,29 +93,29 @@ or
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/go-sdk"
+    import(
+      "context"
+      "log"
+      "livepeer"
+      "livepeer/models/components"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
+        lpClient := livepeer.New(
+            livepeer.WithSecurity(""),
+        )
 
-      // Define the stream ID you want to retrieve
-      streamID := "STREAM_ID"
+        var id string = "STREAM_ID"
 
-      // Get stream details by stream ID
-      response, err := client.GetStream(streamID)
-      if err != nil {
-        fmt.Printf("Error fetching stream details: %v\n", err)
-        os.Exit(1)
-      }
+        ctx := context.Background()
+        res, err := lpClient.Stream.Get(ctx, id)
+        if err != nil {
+            log.Fatal(err)
+        }
 
-      fmt.Printf("Stream details: %+v\n", response)
+        if res.Stream != nil {
+            // handle response
+        }
     }
     ```
 
@@ -192,29 +192,30 @@ or
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/go-sdk"
+    import(
+      "context"
+      "log"
+      "livepeer"
+      "livepeer/models/components"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
+        lpClient := livepeer.New(
+            livepeer.WithSecurity(""),
+        )
 
-      // Define the session ID you want to retrieve
-      sessionID := "SESSION_ID"
 
-      // Get session details by session ID
-      response, err := client.GetSession(sessionID)
-      if err != nil {
-        fmt.Printf("Error fetching session details: %v\n", err)
-        os.Exit(1)
-      }
+        var id string = "SESSION_ID"
 
-      fmt.Printf("Session details: %+v\n", response)
+        ctx := context.Background()
+        res, err := lpClient.Session.Get(ctx, id)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        if res.Session != nil {
+            // handle response
+        }
     }
     ```
 

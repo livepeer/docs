@@ -101,76 +101,10 @@ This step assumes that you have already created a
 
   </Tab>
 
-  <Tab title="Go">
-    ```go
-    package main
-
-    import (
-      "fmt"
-      livepeer "github.com/livepeer/livepeer-go-sdk"
-    )
-
-    func main() {
-      apiKey := "$API_KEY"
-      client := livepeer.NewClient(apiKey)
-
-      params := map[string]interface{}{
-        "input": map[string]interface{}{
-          "type": "s3",
-          "endpoint": "https://gateway.storjshare.io",
-          "credentials": map[string]string{
-            "accessKeyId": "$ACCESS_KEY_ID",
-            "secretAccessKey": "$SECRET_ACCESS_KEY",
-          },
-          "bucket": "mybucket",
-          "path": "/video/source.mp4",
-        },
-        "storage": map[string]interface{}{
-          "type": "s3",
-          "endpoint": "https://gateway.storjshare.io",
-          "credentials": map[string]string{
-            "accessKeyId": "$ACCESS_KEY_ID",
-            "secretAccessKey": "$SECRET_ACCESS_KEY",
-          },
-          "bucket": "mybucket",
-        },
-        "outputs": map[string]interface{}{
-          "hls": map[string]string{
-            "path": "/samplevideo/hls",
-          },
-          "mp4": map[string]string{
-            "path": "/samplevideo/mp4",
-          },
-        },
-        "profiles": []map[string]interface{}{
-          {
-            "name": "480p",
-            "bitrate": 1000000,
-            "fps": 30,
-            "width": 854,
-            "height": 480,
-          },
-          {
-            "name": "360p",
-            "bitrate": 500000,
-            "fps": 30,
-            "width": 640,
-            "height": 360,
-          },
-        },
-      }
-
-      sent, err := client.Transcode(params)
-      if err != nil {
-        fmt.Println(err)
-        return
-      }
-      fmt.Println(sent.ID)
-    }
-    ```
-
-  </Tab>
 </Tabs>
+
+To learn more about sending requests to the Livepeer API using other SDKs or
+cURL, refer to the [API reference docs](/api-reference/transcode/create).
 
 The parameters are defined as:
 

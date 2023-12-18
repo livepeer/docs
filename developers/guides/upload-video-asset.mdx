@@ -106,32 +106,31 @@ We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/go-sdk"
+    import(
+      "context"
+      "log"
+      "livepeer"
+      "livepeer/models/components"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
+        lpClient := livepeer.New(
+            livepeer.WithSecurity(""),
+        )
 
-      fileName := "filename.mp4" // Replace with the desired file name
+        ctx := context.Background()
 
-      assetData := map[string]interface{}{
-        "name": fileName,
-      }
+        res, err := lpClient.Asset.Create(ctx, components.NewAssetPayload{
+            Name: "filename.mp4",
+        })
 
-      // Request asset upload
-      response, err := client.RequestAssetUpload(assetData)
-      if err != nil {
-        fmt.Printf("Error requesting asset upload: %v\n", err)
-        os.Exit(1)
-      }
+        if err != nil {
+            log.Fatal(err)
+        }
 
-      fmt.Printf("Asset upload request: %+v\n", response)
+        if res.Data != nil {
+            // handle response
+        }
     }
     ```
 
