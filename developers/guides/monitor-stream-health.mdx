@@ -69,22 +69,22 @@ or
 
   <Tab title="Ruby">
     ```ruby
-    require 'livepeer'
+      require 'livepeer'
 
-    # Initialize the Livepeer client with your API key
-    api_key = 'YOUR_API_KEY'
-    client = Livepeer::Client.new(api_key: api_key)
+      lpClient = Livepeer::SDK.new
+      lpClient.config_security(
+        security=Shared::Security.new(
+          api_key="",
+        )
+      )
 
-    # Define the stream ID you want to retrieve
-    stream_id = 'STREAM_ID'
+      res = lpClient.stream.create(request=Shared::NewStreamPayload.new(
+          name="test_stream",
+        ))
 
-    begin
-      # Get stream details by stream ID
-      response = client.get_stream(stream_id)
-      puts 'Stream details:', response
-    rescue StandardError => e
-      puts 'Error fetching stream details:', e.message
-    end
+      if ! res.data.nil?
+        # handle response
+      end
     ```
 
   </Tab>
@@ -170,19 +170,19 @@ or
     ```ruby
     require 'livepeer'
 
-    # Initialize the Livepeer client with your API key
-    api_key = 'YOUR_API_KEY'
-    client = Livepeer::Client.new(api_key: api_key)
+    lpClient = Livepeer::SDK.new
+    lpClient.config_security(
+      security=Shared::Security.new(
+        api_key="",
+      )
+    )
 
-    # Define the session ID you want to retrieve
-    session_id = 'SESSION_ID'
+    res = lpClient.session.get(path_params=Operations::GetSessionRequest.new(
+        id="SESSION_ID"
+      ))
 
-    begin
-      # Get session details by session ID
-      response = client.get_session(session_id)
-      puts 'Session details:', response
-    rescue StandardError => e
-      puts 'Error fetching session details:', e.message
+    if ! res.session.nil?
+      # handle response
     end
     ```
 

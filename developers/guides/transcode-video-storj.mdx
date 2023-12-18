@@ -101,64 +101,6 @@ This step assumes that you have already created a
 
   </Tab>
 
-  <Tab title="Ruby">
-    ```ruby
-    require 'livepeer'
-
-    Livepeer.api_key = "$API_KEY"
-
-    params = {
-      input: {
-        type: "s3",
-        endpoint: "https://gateway.storjshare.io",
-        credentials: {
-          accessKeyId: "$ACCESS_KEY_ID",
-          secretAccessKey: "$SECRET_ACCESS_KEY"
-        },
-        bucket: "mybucket",
-        path: "/video/source.mp4"
-      },
-      storage: {
-        type: "s3",
-        endpoint: "https://gateway.storjshare.io",
-        credentials: {
-          accessKeyId: "$ACCESS_KEY_ID",
-          secretAccessKey: "$SECRET_ACCESS_KEY"
-        },
-        bucket: "mybucket"
-      },
-      outputs: {
-        hls: {
-          path: "/samplevideo/hls"
-        },
-        mp4: {
-          path: "/samplevideo/mp4"
-        }
-      },
-      profiles: [
-        {
-          name: "480p",
-          bitrate: 1000000,
-          fps: 30,
-          width: 854,
-          height: 480
-        },
-        {
-          name: "360p",
-          bitrate: 500000,
-          fps: 30,
-          width: 640,
-          height: 360
-        }
-      ]
-    }
-
-    video = Livepeer.transcode(params)
-    puts video
-    ```
-
-  </Tab>
-
   <Tab title="Go">
     ```go
     package main

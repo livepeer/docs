@@ -64,20 +64,23 @@ We can use the Livepeer SDK to create a stream. The example below uses the
     ```ruby
     require 'livepeer'
 
-    # Initialize the Livepeer client with your API key
-    api_key = 'YOUR_API_KEY'
-    client = Livepeer::Client.new(api_key: api_key)
+    lpClient = Livepeer::SDK.new
+    lpClient.config_security(
+      security=Shared::Security.new(
+        api_key="",
+      )
+    )
 
-    stream_data = {
-      "name": "test_stream"
-    }
+    req = Shared::NewStreamPayload.new(
+      request=Shared::NewStreamPayload.new(
+        name="test_stream",
+      ),
+    )
 
-    begin
-      # Create the stream
-      response = client.create_stream(stream_data)
-      puts 'Stream created:', response
-    rescue StandardError => e
-      puts 'Error creating stream:', e.message
+    res = s.stream.create(req)
+
+    if ! res.data.nil?
+      # handle response
     end
     ```
 

@@ -226,19 +226,21 @@ data.
     ```ruby
     require 'livepeer'
 
-    # Initialize the Livepeer client with your API token
-    api_token = 'YOUR_API_TOKEN'
-    client = Livepeer::Client.new(api_key: api_token)
+    lpClient = Livepeer::SDK.new
+    lpClient.config_security(
+      security=Shared::Security.new(
+        api_key="",
+      )
+    )
 
-    # Define the playback ID you want to query
-    playback_id = 'PLAYBACK_ID'
 
-    begin
-      # Get total views by playback ID
-      response = client.get_total_views(playback_id)
-      puts 'Total views:', response
-    rescue StandardError => e
-      puts 'Error fetching total views:', e.message
+    res = lpClient.metrics.get_public_total_views(path_params=Operations::GetPublicTotalViewsMetricsRequest.new(
+        playback_id="PLAYBACK_ID"
+      )
+    )
+
+    if ! res.data.nil?
+      # handle response
     end
     ```
 
@@ -340,7 +342,6 @@ assets and streams.
       )
 
       req = operations.GetCreatorMetricsRequest(
-      dateutil.parser.isoparse('2021-06-16T23:48:30.007Z'),
       breakdown_by=[
         operations.QueryParamBreakdownBy.DEVICE_TYPE,
         ],
@@ -360,27 +361,21 @@ assets and streams.
     ```ruby
     require 'livepeer'
 
-    # Initialize the Livepeer client with your API token
-    api_token = 'YOUR_API_TOKEN'
-    client = Livepeer::Client.new(api_key: api_token)
+    lpClient = Livepeer::SDK.new
+    lpClient.config_security(
+      security=Shared::Security.new(
+        api_key="",
+      )
+    )
 
-    # Define the asset ID for which you want to query views
-    asset_id = 'ASSET_ID'
-    time_step = 'day'  # Define the time step
-    breakdown_by = ['timezone']  # Define the breakdown criteria
+    res = lpClient.metrics.get_creator_viewership(query_params=Operations::GetCreatorMetricsRequest.new(
+        breakdown_by=.new[
+          Operations::QueryParamBreakdownBy::DEVICE,
+        ],
+      ),)
 
-    query_params = {
-      'assetId' => asset_id,
-      'timeStep' => time_step,
-      'breakdownBy' => breakdown_by
-    }
-
-    begin
-      # Get views by creator
-      response = client.get_views_by_creator(query_params)
-      puts 'Views by creator:', response
-    rescue StandardError => e
-      puts 'Error fetching views by creator:', e.message
+    if ! res.data.nil?
+      # handle response
     end
     ```
 
@@ -490,22 +485,19 @@ apps.
     ```ruby
     require 'livepeer'
 
-    # Initialize the Livepeer client with your API token
-    api_token = 'YOUR_API_TOKEN'
-    client = Livepeer::Client.new(api_key: api_token)
+    lpClient = Livepeer::SDK.new
+    lpClient.config_security(
+      security=Shared::Security.new(
+        api_key="",
+      )
+    )
 
-    breakdown_by = ['device', 'browser']  # Define the breakdown criteria
+    res = lpClient.metrics.get_public_total_views(path_params=Operations::GetPublicTotalViewsMetricsRequest.new(
+        playback_id="PLAYBACK_ID"
+      ))
 
-    query_params = {
-      'breakdownBy' => breakdown_by
-    }
-
-    begin
-      # Get views
-      response = client.get_views(query_params)
-      puts 'Views:', response
-    rescue StandardError => e
-      puts 'Error fetching views:', e.message
+    if ! res.data.nil?
+      # handle response
     end
     ```
 

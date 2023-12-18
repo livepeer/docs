@@ -81,25 +81,23 @@ We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
 
   <Tab title="Ruby">
     ```ruby
-    require 'livepeer'
+      require 'livepeer'
 
-    # Initialize the Livepeer client with your API key
-    api_key = 'YOUR_API_KEY'
-    client = Livepeer::Client.new(api_key: api_key)
+      lpClient = Livepeer::SDK.new
+      lpClient.config_security(
+        security=Shared::Security.new(
+          api_key="",
+        )
+      )
 
-    file_name = 'filename.mp4'  # Replace with the desired file name
+      res = lpClient.asset.create(request=Shared::NewAssetPayload.new(
+          name="filename.mp4",
+        )
+      )
 
-    asset_data = {
-      "name": file_name
-    }
-
-    begin
-      # Request asset upload
-      response = client.request_asset_upload(asset_data)
-      puts 'Asset upload request:', response
-    rescue StandardError => e
-      puts 'Error requesting asset upload:', e.message
-    end
+      if ! res.data.nil?
+        # handle response
+      end
     ```
 
   </Tab>
