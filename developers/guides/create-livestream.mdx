@@ -19,14 +19,15 @@ We can use the Livepeer SDK to create a stream. The example below uses the
 
     const apiKey = 'YOUR_API_KEY'; // Replace with your API key
 
-    const livepeer = new Livepeer(apiKey);
+    const livepeer = new Livepeer({
+      apiKey: apiKey
+    });
 
     const streamData = {
       name: "test_stream"
     };
 
-    livepeer
-      .createStream(streamData)
+    livepeer.stream.create(streamData)
       .then((response) => {
         console.log("Stream created:", response);
       })

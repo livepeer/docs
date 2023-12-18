@@ -102,14 +102,14 @@ import React, { useEffect, useRef, useState } from "react";
 export default function VideoPlayer() {
   const videoRef = useRef(null);
   const [source, setSource] = useState(
-    "https://livepeercdn.studio/recordings/bd600224-d93a-4ddc-a6ac-2d71e3c36768/index.m3u8",
+    "https://livepeercdn.studio/recordings/bd600224-d93a-4ddc-a6ac-2d71e3c36768/index.m3u8"
   );
 
   useEffect(() => {
     if (videoRef.current) {
       // set up other stuff in your player before calling addMediaMetrics
       const metrics = addMediaMetrics(videoRef.current, source, (e) =>
-        console.error("Error adding metrics", e),
+        console.error("Error adding metrics", e)
       );
       return metrics?.destroy;
     }
@@ -188,10 +188,12 @@ data.
     const apiToken = 'YOUR_API_TOKEN'; // Replace with your API token
     const playbackId = 'PLAYBACK_ID'; // Replace with the playback ID you want to query
 
-    const livepeer = new Livepeer(apiToken);
+    const livepeer = new Livepeer({
+      apiKey: apiToken
+    });
 
     livepeer
-      .getTotalViews(playbackId)
+      .metrics.getPublicTotalViews(playbackId)
       .then((response) => {
         console.log("Total views:", response);
       })
@@ -336,7 +338,9 @@ assets and streams.
     const timeStep = 'day'; // Define the time step
     const breakdownBy = ['timezone']; // Define the breakdown criteria
 
-    const livepeer = new Livepeer(apiToken);
+    const livepeer = new Livepeer({
+      apiKey: apiToken
+    });
 
     const queryParams = {
       assetId: assetId,
@@ -345,7 +349,7 @@ assets and streams.
     };
 
     livepeer
-      .getViewsByCreator(queryParams)
+      .metrics.getCreatorViewership(queryParams)
       .then((response) => {
         console.log("Views by creator:", response);
       })
@@ -511,14 +515,16 @@ apps.
     const apiToken = 'YOUR_API_TOKEN'; // Replace with your API token
     const breakdownBy = ['device', 'browser']; // Define the breakdown criteria
 
-    const livepeer = new Livepeer(apiToken);
+    const livepeer = new Livepeer({
+      apiKey: apiToken
+    });
 
     const queryParams = {
       breakdownBy: breakdownBy
     };
 
     livepeer
-      .getViews(queryParams)
+      .metrics.getPublicTotalViews(queryParams)
       .then((response) => {
         console.log("Views:", response);
       })

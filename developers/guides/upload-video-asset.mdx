@@ -43,14 +43,16 @@ We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
     const apiKey = 'YOUR_API_KEY'; // Replace with your API key
     const fileName = 'filename.mp4'; // Replace with the desired file name
 
-    const livepeer = new Livepeer(apiKey);
+    const livepeer = new Livepeer({
+      apiKey : apiKey
+    });
 
     const assetData = {
       name: fileName
     };
 
     livepeer
-      .requestAssetUpload(assetData)
+      .asset.create(assetData)
       .then((response) => {
         console.log("Asset upload request:", response);
       })
