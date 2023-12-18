@@ -43,14 +43,16 @@ We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
     const apiKey = 'YOUR_API_KEY'; // Replace with your API key
     const fileName = 'filename.mp4'; // Replace with the desired file name
 
-    const livepeer = new Livepeer(apiKey);
+    const livepeer = new Livepeer({
+      apiKey : apiKey
+    });
 
     const assetData = {
       name: fileName
     };
 
     livepeer
-      .requestAssetUpload(assetData)
+      .asset.create(assetData)
       .then((response) => {
         console.log("Asset upload request:", response);
       })
@@ -63,79 +65,39 @@ We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+    import livepeer
+    from livepeer.models import components
 
-    # Initialize the Livepeer client with your API key
-    api_key = "YOUR_API_KEY"
-    livepeer = Livepeer(api_key)
+    lpClient = livepeer.SDK( api_key="" )
 
-    file_name = "filename.mp4"  # Replace with the desired file name
+    req = components.NewAssetPayload(name='filename.mp4')
 
-    asset_data = {
-        "name": file_name
-    }
+    res = lpClient.asset.create(req)
 
-    try:
-        # Request asset upload
-        response = livepeer.request_asset_upload(asset_data)
-        print("Asset upload request:", response)
-    except Exception as e:
-        print("Error requesting asset upload:", e)
-    ```
+    if res.data is not None: # handle response pass
+      ```
 
   </Tab>
 
   <Tab title="Ruby">
     ```ruby
-    require 'livepeer'
+      require 'livepeer'
 
-    # Initialize the Livepeer client with your API key
-    api_key = 'YOUR_API_KEY'
-    client = Livepeer::Client.new(api_key: api_key)
+      lpClient = Livepeer::SDK.new
+      lpClient.config_security(
+        security=Shared::Security.new(
+          api_key="",
+        )
+      )
 
-    file_name = 'filename.mp4'  # Replace with the desired file name
+      res = lpClient.asset.create(request=Shared::NewAssetPayload.new(
+          name="filename.mp4",
+        )
+      )
 
-    asset_data = {
-      "name": file_name
-    }
-
-    begin
-      # Request asset upload
-      response = client.request_asset_upload(asset_data)
-      puts 'Asset upload request:', response
-    rescue StandardError => e
-      puts 'Error requesting asset upload:', e.message
-    end
-    ```
-
-  </Tab>
-
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API key
-    $api_key = 'YOUR_API_KEY';
-    $livepeer = new Livepeer($api_key);
-
-    $file_name = 'filename.mp4';  // Replace with the desired file name
-
-    $asset_data = [
-      "name" => $file_name
-    ];
-
-    try {
-        // Request asset upload
-        $response = $livepeer->requestAssetUpload($asset_data);
-        echo 'Asset upload request: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error requesting asset upload: ' . $e->getMessage() . PHP_EOL;
-    }
+      if ! res.data.nil?
+        # handle response
+      end
     ```
 
   </Tab>
@@ -144,32 +106,31 @@ We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/go-sdk"
+    import(
+      "context"
+      "log"
+      "livepeer"
+      "livepeer/models/components"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
+        lpClient := livepeer.New(
+            livepeer.WithSecurity(""),
+        )
 
-      fileName := "filename.mp4" // Replace with the desired file name
+        ctx := context.Background()
 
-      assetData := map[string]interface{}{
-        "name": fileName,
-      }
+        res, err := lpClient.Asset.Create(ctx, components.NewAssetPayload{
+            Name: "filename.mp4",
+        })
 
-      // Request asset upload
-      response, err := client.RequestAssetUpload(assetData)
-      if err != nil {
-        fmt.Printf("Error requesting asset upload: %v\n", err)
-        os.Exit(1)
-      }
+        if err != nil {
+            log.Fatal(err)
+        }
 
-      fmt.Printf("Asset upload request: %+v\n", response)
+        if res.Data != nil {
+            // handle response
+        }
     }
     ```
 

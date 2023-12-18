@@ -102,14 +102,14 @@ import React, { useEffect, useRef, useState } from "react";
 export default function VideoPlayer() {
   const videoRef = useRef(null);
   const [source, setSource] = useState(
-    "https://livepeercdn.studio/recordings/bd600224-d93a-4ddc-a6ac-2d71e3c36768/index.m3u8",
+    "https://livepeercdn.studio/recordings/bd600224-d93a-4ddc-a6ac-2d71e3c36768/index.m3u8"
   );
 
   useEffect(() => {
     if (videoRef.current) {
       // set up other stuff in your player before calling addMediaMetrics
       const metrics = addMediaMetrics(videoRef.current, source, (e) =>
-        console.error("Error adding metrics", e),
+        console.error("Error adding metrics", e)
       );
       return metrics?.destroy;
     }
@@ -188,10 +188,12 @@ data.
     const apiToken = 'YOUR_API_TOKEN'; // Replace with your API token
     const playbackId = 'PLAYBACK_ID'; // Replace with the playback ID you want to query
 
-    const livepeer = new Livepeer(apiToken);
+    const livepeer = new Livepeer({
+      apiKey: apiToken
+    });
 
     livepeer
-      .getTotalViews(playbackId)
+      .metrics.getPublicTotalViews(playbackId)
       .then((response) => {
         console.log("Total views:", response);
       })
@@ -204,21 +206,18 @@ data.
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+    import livepeer
+    from livepeer.models import operations
 
-    # Initialize the Livepeer client with your API token
-    api_token = "YOUR_API_TOKEN"
-    livepeer = Livepeer(api_token)
+    lpClient = livepeer.SDK(
+      api_key="",
+    )
 
-    # Define the playback ID you want to query
-    playback_id = "PLAYBACK_ID"
+    res = livepeer.metrics.get_public_total_views(playback_id='PLAYBACK_ID')
 
-    try:
-        # Get total views by playback ID
-        response = livepeer.get_total_views(playback_id)
-        print("Total views:", response)
-    except Exception as e:
-        print("Error fetching total views:", e)
+    if res.data is not None:
+        # handle response
+        pass
     ```
 
   </Tab>
@@ -227,47 +226,22 @@ data.
     ```ruby
     require 'livepeer'
 
-    # Initialize the Livepeer client with your API token
-    api_token = 'YOUR_API_TOKEN'
-    client = Livepeer::Client.new(api_key: api_token)
+    lpClient = Livepeer::SDK.new
+    lpClient.config_security(
+      security=Shared::Security.new(
+        api_key="",
+      )
+    )
 
-    # Define the playback ID you want to query
-    playback_id = 'PLAYBACK_ID'
 
-    begin
-      # Get total views by playback ID
-      response = client.get_total_views(playback_id)
-      puts 'Total views:', response
-    rescue StandardError => e
-      puts 'Error fetching total views:', e.message
+    res = lpClient.metrics.get_public_total_views(path_params=Operations::GetPublicTotalViewsMetricsRequest.new(
+        playback_id="PLAYBACK_ID"
+      )
+    )
+
+    if ! res.data.nil?
+      # handle response
     end
-    ```
-
-  </Tab>
-
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API token
-    $api_token = 'YOUR_API_TOKEN';
-    $livepeer = new Livepeer($api_token);
-
-    // Define the playback ID you want to query
-    $playback_id = 'PLAYBACK_ID';
-
-    try {
-        // Get total views by playback ID
-        $response = $livepeer->getTotalViews($playback_id);
-        echo 'Total views: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error fetching total views: ' . $e->getMessage() . PHP_EOL;
-    }
     ```
 
   </Tab>
@@ -276,29 +250,30 @@ data.
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/go-sdk"
+    import(
+      "context"
+      "log"
+      "livepeer"
+      "livepeer/models/components"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API token
-      apiToken := "YOUR_API_TOKEN"
-      client := livepeer.NewLivepeerClient(apiToken)
+        lpClient := livepeer.New(
+            livepeer.WithSecurity(""),
+        )
 
-      // Define the playback ID you want to query
-      playbackID := "PLAYBACK_ID"
+        var playbackID string = "PLAYBACK_ID"
 
-      // Get total views by playback ID
-      response, err := client.GetTotalViews(playbackID)
-      if err != nil {
-        fmt.Printf("Error fetching total views: %v\n", err)
-        os.Exit(1)
-      }
+        ctx := context.Background()
 
-      fmt.Printf("Total views: %+v\n", response)
+        res, err := lpClient.Metrics.GetPublicTotalViews(ctx, playbackID)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        if res.Data != nil {
+            // handle response
+        }
     }
     ```
 
@@ -336,7 +311,9 @@ assets and streams.
     const timeStep = 'day'; // Define the time step
     const breakdownBy = ['timezone']; // Define the breakdown criteria
 
-    const livepeer = new Livepeer(apiToken);
+    const livepeer = new Livepeer({
+      apiKey: apiToken
+    });
 
     const queryParams = {
       assetId: assetId,
@@ -345,7 +322,7 @@ assets and streams.
     };
 
     livepeer
-      .getViewsByCreator(queryParams)
+      .metrics.getCreatorViewership(queryParams)
       .then((response) => {
         console.log("Views by creator:", response);
       })
@@ -358,29 +335,25 @@ assets and streams.
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+      import livepeer
+      from livepeer.models import operations
 
-    # Initialize the Livepeer client with your API token
-    api_token = "YOUR_API_TOKEN"
-    livepeer = Livepeer(api_token)
+      lpClient = livepeer.SDK(
+        api_key="",
+      )
 
-    # Define the asset ID for which you want to query views
-    asset_id = "ASSET_ID"
-    time_step = "day"  # Define the time step
-    breakdown_by = ["timezone"]  # Define the breakdown criteria
+      req = operations.GetCreatorMetricsRequest(
+      breakdown_by=[
+        operations.QueryParamBreakdownBy.DEVICE_TYPE,
+        ],
+      )
 
-    query_params = {
-        "assetId": asset_id,
-        "timeStep": time_step,
-        "breakdownBy": breakdown_by
-    }
+      res = lpClient.metrics.get_creator_viewership(req)
 
-    try:
-        # Get views by creator
-        response = livepeer.get_views_by_creator(query_params)
-        print("Views by creator:", response)
-    except Exception as e:
-        print("Error fetching views by creator:", e)
+      if res.data is not None:
+          # handle response
+          pass
+
     ```
 
   </Tab>
@@ -389,63 +362,22 @@ assets and streams.
     ```ruby
     require 'livepeer'
 
-    # Initialize the Livepeer client with your API token
-    api_token = 'YOUR_API_TOKEN'
-    client = Livepeer::Client.new(api_key: api_token)
+    lpClient = Livepeer::SDK.new
+    lpClient.config_security(
+      security=Shared::Security.new(
+        api_key="",
+      )
+    )
 
-    # Define the asset ID for which you want to query views
-    asset_id = 'ASSET_ID'
-    time_step = 'day'  # Define the time step
-    breakdown_by = ['timezone']  # Define the breakdown criteria
+    res = lpClient.metrics.get_creator_viewership(query_params=Operations::GetCreatorMetricsRequest.new(
+        breakdown_by=.new[
+          Operations::QueryParamBreakdownBy::DEVICE,
+        ],
+      ),)
 
-    query_params = {
-      'assetId' => asset_id,
-      'timeStep' => time_step,
-      'breakdownBy' => breakdown_by
-    }
-
-    begin
-      # Get views by creator
-      response = client.get_views_by_creator(query_params)
-      puts 'Views by creator:', response
-    rescue StandardError => e
-      puts 'Error fetching views by creator:', e.message
+    if ! res.data.nil?
+      # handle response
     end
-    ```
-
-  </Tab>
-
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API token
-    $api_token = 'YOUR_API_TOKEN';
-    $livepeer = new Livepeer($api_token);
-
-    // Define the asset ID for which you want to query views
-    $asset_id = 'ASSET_ID';
-    $time_step = 'day';  // Define the time step
-    $breakdown_by = ['timezone'];  // Define the breakdown criteria
-
-    $query_params = [
-      'assetId' => $asset_id,
-      'timeStep' => $time_step,
-      'breakdownBy' => $breakdown_by
-    ];
-
-    try {
-        // Get views by creator
-        $response = $livepeer->getViewsByCreator($query_params);
-        echo 'Views by creator: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error fetching views by creator: ' . $e->getMessage() . PHP_EOL;
-    }
     ```
 
   </Tab>
@@ -454,37 +386,33 @@ assets and streams.
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/go-sdk"
+    import(
+      "context"
+      "log"
+      "livepeer"
+      "livepeer/models/components"
+      "livepeer/models/operations"
+      "livepeer/types"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API token
-      apiToken := "YOUR_API_TOKEN"
-      client := livepeer.NewLivepeerClient(apiToken)
+        lpClient := livepeer.New(
+            livepeer.WithSecurity(""),
+        )
 
-      // Define the asset ID for which you want to query views
-      assetID := "ASSET_ID"
-      timeStep := "day" // Define the time step
-      breakdownBy := []string{"timezone"} // Define the breakdown criteria
+        ctx := context.Background()
+        res, err := lpClient.Metrics.GetCreatorViewership(ctx, operations.GetCreatorMetricsRequest{
+            BreakdownBy: []operations.QueryParamBreakdownBy{
+                operations.QueryParamBreakdownByDeviceType,
+            },
+        })
+        if err != nil {
+            log.Fatal(err)
+        }
 
-      queryParams := map[string]interface{}{
-        "assetId":      assetID,
-        "timeStep":     timeStep,
-        "breakdownBy":  breakdownBy,
-      }
-
-      // Get views by creator
-      response, err := client.GetViewsByCreator(queryParams)
-      if err != nil {
-        fmt.Printf("Error fetching views by creator: %v\n", err)
-        os.Exit(1)
-      }
-
-      fmt.Printf("Views by creator: %+v\n", response)
+        if res.Data != nil {
+            // handle response
+        }
     }
     ```
 
@@ -511,14 +439,16 @@ apps.
     const apiToken = 'YOUR_API_TOKEN'; // Replace with your API token
     const breakdownBy = ['device', 'browser']; // Define the breakdown criteria
 
-    const livepeer = new Livepeer(apiToken);
+    const livepeer = new Livepeer({
+      apiKey: apiToken
+    });
 
     const queryParams = {
       breakdownBy: breakdownBy
     };
 
     livepeer
-      .getViews(queryParams)
+      .metrics.getPublicTotalViews(queryParams)
       .then((response) => {
         console.log("Views:", response);
       })
@@ -531,24 +461,19 @@ apps.
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+      import livepeer
+      from livepeer.models import operations
 
-    # Initialize the Livepeer client with your API token
-    api_token = "YOUR_API_TOKEN"
-    livepeer = Livepeer(api_token)
+      lpClient = livepeer.SDK(
+          api_key="",
+      )
 
-    breakdown_by = ["device", "browser"]  # Define the breakdown criteria
 
-    query_params = {
-        "breakdownBy": breakdown_by
-    }
+      res = lpClient.metrics.get_public_total_views(playback_id='PLAYBACK_ID')
 
-    try:
-        # Get views
-        response = livepeer.get_views(query_params)
-        print("Views:", response)
-    except Exception as e:
-        print("Error fetching views:", e)
+      if res.data is not None:
+          # handle response
+          pass
     ```
 
   </Tab>
@@ -557,53 +482,20 @@ apps.
     ```ruby
     require 'livepeer'
 
-    # Initialize the Livepeer client with your API token
-    api_token = 'YOUR_API_TOKEN'
-    client = Livepeer::Client.new(api_key: api_token)
+    lpClient = Livepeer::SDK.new
+    lpClient.config_security(
+      security=Shared::Security.new(
+        api_key="",
+      )
+    )
 
-    breakdown_by = ['device', 'browser']  # Define the breakdown criteria
+    res = lpClient.metrics.get_public_total_views(path_params=Operations::GetPublicTotalViewsMetricsRequest.new(
+        playback_id="PLAYBACK_ID"
+      ))
 
-    query_params = {
-      'breakdownBy' => breakdown_by
-    }
-
-    begin
-      # Get views
-      response = client.get_views(query_params)
-      puts 'Views:', response
-    rescue StandardError => e
-      puts 'Error fetching views:', e.message
+    if ! res.data.nil?
+      # handle response
     end
-    ```
-
-  </Tab>
-
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API token
-    $api_token = 'YOUR_API_TOKEN';
-    $livepeer = new Livepeer($api_token);
-
-    $breakdown_by = ['device', 'browser'];  // Define the breakdown criteria
-
-    $query_params = [
-      'breakdownBy' => $breakdown_by
-    ];
-
-    try {
-        // Get views
-        $response = $livepeer->getViews($query_params);
-        echo 'Views: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error fetching views: ' . $e->getMessage() . PHP_EOL;
-    }
     ```
 
   </Tab>
@@ -612,32 +504,30 @@ apps.
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/go-sdk"
+    import(
+      "context"
+      "log"
+      "livepeer"
+      "livepeer/models/components"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API token
-      apiToken := "YOUR_API_TOKEN"
-      client := livepeer.NewLivepeerClient(apiToken)
+        lpClient := livepeer.New(
+            livepeer.WithSecurity(""),
+        )
 
-      breakdownBy := []string{"device", "browser"} // Define the breakdown criteria
+        var playbackID string = "PLAYBACK_ID"
 
-      queryParams := map[string]interface{}{
-        "breakdownBy": breakdownBy,
-      }
+        ctx := context.Background()
 
-      // Get views
-      response, err := client.GetViews(queryParams)
-      if err != nil {
-        fmt.Printf("Error fetching views: %v\n", err)
-        os.Exit(1)
-      }
+        res, err := lpClient.Metrics.GetPublicTotalViews(ctx, playbackID)
+        if err != nil {
+            log.Fatal(err)
+        }
 
-      fmt.Printf("Views: %+v\n", response)
+        if res.Data != nil {
+            // handle response
+        }
     }
     ```
 

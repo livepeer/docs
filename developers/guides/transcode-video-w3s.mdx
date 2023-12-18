@@ -64,9 +64,11 @@ Submit the following request:
     ```javascript
     import { Livepeer } from "livepeer";
 
-    const livepeer = new Livepeer("$API_KEY");
+    const livepeer = new Livepeer({
+      apiKey: ""
+    });
 
-    livepeer.transcode({
+    transcode.create({
       input: {
         url: "$INPUT_VIDEO_URL",
       },
@@ -105,206 +107,10 @@ Submit the following request:
 
   </Tab>
 
-  <Tab title="Python">
-    ```python
-    import livepeer
-
-    livepeer.api_key = "$API_KEY"
-
-    params = {
-      "input": {
-        "url": "$INPUT_VIDEO_URL"
-      },
-      "storage": {
-        "type": "web3.storage",
-        "credentials": {
-          "proof": "$DELEGATION_PROOF"
-        }
-      },
-      "outputs": {
-        "hls": {
-          "path": "/"
-        },
-        "mp4": {
-          "path": "/"
-        }
-      },
-      "profiles": [
-        {
-          "name": "480p",
-          "bitrate": 1000000,
-          "fps": 30,
-          "width": 854,
-          "height": 480
-        },
-        {
-          "name": "360p",
-          "bitrate": 500000,
-          "fps": 30,
-          "width": 640,
-          "height": 360
-        }
-      ]
-    }
-
-    video = livepeer.transcode(params)
-    print(video)
-    ```
-
-  </Tab>
-
-  <Tab title="Ruby">
-    ```ruby
-    require 'livepeer'
-
-    Livepeer.api_key = "$API_KEY"
-
-    params = {
-      "input": {
-        "url": "$INPUT_VIDEO_URL"
-      },
-      "storage": {
-        "type": "web3.storage",
-        "credentials": {
-          "proof": "$DELEGATION_PROOF"
-        }
-      },
-      "outputs": {
-        "hls": {
-          "path": "/"
-        },
-        "mp4": {
-          "path": "/"
-        }
-      },
-      "profiles": [
-        {
-          name: "480p",
-          bitrate: 1000000,
-          fps: 30,
-          width: 854,
-          height: 480
-        },
-        {
-          name: "360p",
-          bitrate: 500000,
-          fps: 30,
-          width: 640,
-          height: 360
-        }
-      ]
-    }
-
-    video = Livepeer.transcode(params)
-    puts video
-    ```
-
-  </Tab>
-
-  <Tab title="PHP">
-    ```PHP
-    $livepeer = Livepeer::client("$API_KEY");
-
-    $livepeer->transcode([
-      "input" => [
-        "url" => "$INPUT_VIDEO_URL"
-      ],
-      "storage" => [
-        "type" => "web3.storage",
-        "credentials" => [
-          "proof" => "$DELEGATION_PROOF"
-        ]
-      ],
-      "outputs" => [
-        "hls" => [
-          "path" => "/"
-        ],
-        "mp4" => [
-          "path" => "/"
-        ]
-      ],
-      "profiles" => [
-        [
-          "name" => "480p",
-          "bitrate" => 1000000,
-          "fps" => 30,
-          "width" => 854,
-          "height" => 480
-        ],
-        [
-          "name" => "360p",
-          "bitrate" => 500000,
-          "fps" => 30,
-          "width" => 640,
-          "height" => 360
-        ]
-      ]
-    ]);
-    ```
-
-  </Tab>
-
-  <Tab title="Go">
-    ```go
-    package main
-
-    import (
-      "fmt"
-      "github.com/livepeer/livepeer-go-sdk"
-    )
-
-    func main() {
-      apiKey := "$API_KEY"
-
-      client := livepeer.NewClient(apiKey)
-
-      params := map[string]interface{}{
-        "input": map[string]string{
-          "url": "$INPUT_VIDEO_URL",
-        },
-        "storage": map[string]interface{}{
-          "type": "web3.storage",
-          "credentials": map[string]string{
-            "proof": "$DELEGATION_PROOF",
-          },
-        },
-        "outputs": map[string]map[string]string{
-          "hls": {
-            "path": "/",
-          },
-          "mp4": {
-            "path": "/",
-          },
-        },
-        "profiles": []map[string]interface{}{
-          {
-            "name": "480p",
-            "bitrate": 1000000,
-            "fps": 30,
-            "width": 854,
-            "height": 480,
-          },
-          {
-            "name": "360p",
-            "bitrate": 500000,
-            "fps": 30,
-            "width": 640,
-            "height": 360,
-          },
-        },
-      }
-
-      sent, err := client.Transcode(params)
-      if err != nil {
-        fmt.Println(err.Error())
-        return
-      }
-      fmt.Println(sent.Id)
-    }
-    ```
-
-  </Tab>
 </Tabs>
+
+To learn more about sending requests to the Livepeer API using other SDKs or
+cURL, refer to the [API reference docs](/api-reference/transcode/create).
 
 The parameters are defined as:
 

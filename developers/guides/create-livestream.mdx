@@ -19,14 +19,15 @@ We can use the Livepeer SDK to create a stream. The example below uses the
 
     const apiKey = 'YOUR_API_KEY'; // Replace with your API key
 
-    const livepeer = new Livepeer(apiKey);
+    const livepeer = new Livepeer({
+      apiKey: apiKey
+    });
 
     const streamData = {
       name: "test_stream"
     };
 
-    livepeer
-      .createStream(streamData)
+    livepeer.stream.create(streamData)
       .then((response) => {
         console.log("Stream created:", response);
       })
@@ -39,22 +40,22 @@ We can use the Livepeer SDK to create a stream. The example below uses the
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+    import livepeer
+    from livepeer.models import components
 
-    # Initialize the Livepeer client with your API key
-    api_key = "YOUR_API_KEY"
-    livepeer = Livepeer(api_key)
+    lpClient = livepeer.SDK(
+      api_key="",
+    )
 
-    stream_data = {
-      "name": "test_stream"
-    }
+    req = components.NewStreamPayload(
+      name='test_stream',
+    )
 
-    try:
-        # Create the stream
-        response = livepeer.create_stream(stream_data)
-        print("Stream created:", response)
-    except Exception as e:
-        print("Error creating stream:", e)
+    res = lpClient.stream.create(req)
+
+    if res.data is not None:
+        # handle response
+        pass
     ```
 
   </Tab>
@@ -63,49 +64,24 @@ We can use the Livepeer SDK to create a stream. The example below uses the
     ```ruby
     require 'livepeer'
 
-    # Initialize the Livepeer client with your API key
-    api_key = 'YOUR_API_KEY'
-    client = Livepeer::Client.new(api_key: api_key)
+    lpClient = Livepeer::SDK.new
+    lpClient.config_security(
+      security=Shared::Security.new(
+        api_key="",
+      )
+    )
 
-    stream_data = {
-      "name": "test_stream"
-    }
+    req = Shared::NewStreamPayload.new(
+      request=Shared::NewStreamPayload.new(
+        name="test_stream",
+      ),
+    )
 
-    begin
-      # Create the stream
-      response = client.create_stream(stream_data)
-      puts 'Stream created:', response
-    rescue StandardError => e
-      puts 'Error creating stream:', e.message
+    res = s.stream.create(req)
+
+    if ! res.data.nil?
+      # handle response
     end
-    ```
-
-  </Tab>
-
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API key
-    $api_key = 'YOUR_API_KEY';
-    $livepeer = new Livepeer($api_key);
-
-    $stream_data = [
-      "name" => "test_stream"
-    ];
-
-    try {
-        // Create the stream
-        $response = $livepeer->createStream($stream_data);
-        echo 'Stream created: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error creating stream: ' . $e->getMessage() . PHP_EOL;
-    }
     ```
 
   </Tab>
@@ -114,34 +90,34 @@ We can use the Livepeer SDK to create a stream. The example below uses the
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/go-sdk"
+    import(
+      "context"
+      "log"
+      "livepeer"
+      "livepeer/models/components"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
+        lpClient := livepeer.New(
+            livepeer.WithSecurity(""),
+        )
 
-      streamData := map[string]interface{}{
-        "name": "test_stream",
-      }
+        ctx := context.Background()
+        res, err := lpClient.Stream.Create(ctx, components.NewStreamPayload{
+            Name: "test_stream",
+        })
+        if err != nil {
+            log.Fatal(err)
+        }
 
-      // Create the stream
-      response, err := client.CreateStream(streamData)
-      if err != nil {
-        fmt.Printf("Error creating stream: %v\n", err)
-        os.Exit(1)
-      }
-
-      fmt.Printf("Stream created: %+v\n", response)
+        if res.Data != nil {
+            // handle response
+        }
     }
-    ```
 
-  </Tab>
+```
+
+</Tab>
 </Tabs>
 
 You can find all the information required to broadcast to the stream in the
@@ -152,12 +128,13 @@ the `streamKey` is present in the response object. You can use these two values
 to broadcast to the stream.
 
 <Info>
-  To learn more about other stream functions such as stopping a stream,
-  recording a stream, and more, see the [Stream
-  API](/api-reference/stream/overview).
+To learn more about other stream functions such as stopping a stream,
+recording a stream, and more, see the [Stream
+API](/api-reference/stream/overview).
 </Info>
 
 ### Play a Stream
 
 To learn how to play a stream, see the
 [Play a Livestream](/developers/guides/playback-a-livestream) guide.
+```
