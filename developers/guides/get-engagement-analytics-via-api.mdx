@@ -247,33 +247,6 @@ data.
 
   </Tab>
 
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API token
-    $api_token = 'YOUR_API_TOKEN';
-    $livepeer = new Livepeer($api_token);
-
-    // Define the playback ID you want to query
-    $playback_id = 'PLAYBACK_ID';
-
-    try {
-        // Get total views by playback ID
-        $response = $livepeer->getTotalViews($playback_id);
-        echo 'Total views: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error fetching total views: ' . $e->getMessage() . PHP_EOL;
-    }
-    ```
-
-  </Tab>
-
   <Tab title="Go">
     ```go
     package main
@@ -419,41 +392,6 @@ assets and streams.
 
   </Tab>
 
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API token
-    $api_token = 'YOUR_API_TOKEN';
-    $livepeer = new Livepeer($api_token);
-
-    // Define the asset ID for which you want to query views
-    $asset_id = 'ASSET_ID';
-    $time_step = 'day';  // Define the time step
-    $breakdown_by = ['timezone'];  // Define the breakdown criteria
-
-    $query_params = [
-      'assetId' => $asset_id,
-      'timeStep' => $time_step,
-      'breakdownBy' => $breakdown_by
-    ];
-
-    try {
-        // Get views by creator
-        $response = $livepeer->getViewsByCreator($query_params);
-        echo 'Views by creator: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error fetching views by creator: ' . $e->getMessage() . PHP_EOL;
-    }
-    ```
-
-  </Tab>
-
   <Tab title="Go">
     ```go
     package main
@@ -580,36 +518,6 @@ apps.
     rescue StandardError => e
       puts 'Error fetching views:', e.message
     end
-    ```
-
-  </Tab>
-
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API token
-    $api_token = 'YOUR_API_TOKEN';
-    $livepeer = new Livepeer($api_token);
-
-    $breakdown_by = ['device', 'browser'];  // Define the breakdown criteria
-
-    $query_params = [
-      'breakdownBy' => $breakdown_by
-    ];
-
-    try {
-        // Get views
-        $response = $livepeer->getViews($query_params);
-        echo 'Views: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error fetching views: ' . $e->getMessage() . PHP_EOL;
-    }
     ```
 
   </Tab>

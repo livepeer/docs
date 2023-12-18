@@ -112,36 +112,6 @@ We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
 
   </Tab>
 
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API key
-    $api_key = 'YOUR_API_KEY';
-    $livepeer = new Livepeer($api_key);
-
-    $file_name = 'filename.mp4';  // Replace with the desired file name
-
-    $asset_data = [
-      "name" => $file_name
-    ];
-
-    try {
-        // Request asset upload
-        $response = $livepeer->requestAssetUpload($asset_data);
-        echo 'Asset upload request: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error requesting asset upload: ' . $e->getMessage() . PHP_EOL;
-    }
-    ```
-
-  </Tab>
-
   <Tab title="Go">
     ```go
     package main
