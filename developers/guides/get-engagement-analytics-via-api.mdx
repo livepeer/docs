@@ -206,21 +206,18 @@ data.
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+    import livepeer
+    from livepeer.models import operations
 
-    # Initialize the Livepeer client with your API token
-    api_token = "YOUR_API_TOKEN"
-    livepeer = Livepeer(api_token)
+    lpClient = livepeer.SDK(
+      api_key="",
+    )
 
-    # Define the playback ID you want to query
-    playback_id = "PLAYBACK_ID"
+    res = livepeer.metrics.get_public_total_views(playback_id='PLAYBACK_ID')
 
-    try:
-        # Get total views by playback ID
-        response = livepeer.get_total_views(playback_id)
-        print("Total views:", response)
-    except Exception as e:
-        print("Error fetching total views:", e)
+    if res.data is not None:
+        # handle response
+        pass
     ```
 
   </Tab>
@@ -335,29 +332,26 @@ assets and streams.
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+      import livepeer
+      from livepeer.models import operations
 
-    # Initialize the Livepeer client with your API token
-    api_token = "YOUR_API_TOKEN"
-    livepeer = Livepeer(api_token)
+      lpClient = livepeer.SDK(
+        api_key="",
+      )
 
-    # Define the asset ID for which you want to query views
-    asset_id = "ASSET_ID"
-    time_step = "day"  # Define the time step
-    breakdown_by = ["timezone"]  # Define the breakdown criteria
+      req = operations.GetCreatorMetricsRequest(
+      dateutil.parser.isoparse('2021-06-16T23:48:30.007Z'),
+      breakdown_by=[
+        operations.QueryParamBreakdownBy.DEVICE_TYPE,
+        ],
+      )
 
-    query_params = {
-        "assetId": asset_id,
-        "timeStep": time_step,
-        "breakdownBy": breakdown_by
-    }
+      res = lpClient.metrics.get_creator_viewership(req)
 
-    try:
-        # Get views by creator
-        response = livepeer.get_views_by_creator(query_params)
-        print("Views by creator:", response)
-    except Exception as e:
-        print("Error fetching views by creator:", e)
+      if res.data is not None:
+          # handle response
+          pass
+
     ```
 
   </Tab>
@@ -475,24 +469,19 @@ apps.
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+      import livepeer
+      from livepeer.models import operations
 
-    # Initialize the Livepeer client with your API token
-    api_token = "YOUR_API_TOKEN"
-    livepeer = Livepeer(api_token)
+      lpClient = livepeer.SDK(
+          api_key="",
+      )
 
-    breakdown_by = ["device", "browser"]  # Define the breakdown criteria
 
-    query_params = {
-        "breakdownBy": breakdown_by
-    }
+      res = lpClient.metrics.get_public_total_views(playback_id='PLAYBACK_ID')
 
-    try:
-        # Get views
-        response = livepeer.get_views(query_params)
-        print("Views:", response)
-    except Exception as e:
-        print("Error fetching views:", e)
+      if res.data is not None:
+          # handle response
+          pass
     ```
 
   </Tab>

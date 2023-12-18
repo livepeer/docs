@@ -40,22 +40,22 @@ We can use the Livepeer SDK to create a stream. The example below uses the
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+    import livepeer
+    from livepeer.models import components
 
-    # Initialize the Livepeer client with your API key
-    api_key = "YOUR_API_KEY"
-    livepeer = Livepeer(api_key)
+    lpClient = livepeer.SDK(
+      api_key="",
+    )
 
-    stream_data = {
-      "name": "test_stream"
-    }
+    req = components.NewStreamPayload(
+      name='test_stream',
+    )
 
-    try:
-        # Create the stream
-        response = livepeer.create_stream(stream_data)
-        print("Stream created:", response)
-    except Exception as e:
-        print("Error creating stream:", e)
+    res = lpClient.stream.create(req)
+
+    if res.data is not None:
+        # handle response
+        pass
     ```
 
   </Tab>

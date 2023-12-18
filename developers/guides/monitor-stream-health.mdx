@@ -50,21 +50,19 @@ or
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+    import livepeer
+    from livepeer.models import operations
 
-    # Initialize the Livepeer client with your API key
-    api_key = "YOUR_API_KEY"
-    livepeer = Livepeer(api_key)
+    lpClient = livepeer.SDK(
+        api_key="",
+    )
 
-    # Define the stream ID you want to retrieve
-    stream_id = "STREAM_ID"
 
-    try:
-        # Get stream details by stream ID
-        response = livepeer.get_stream(stream_id)
-        print("Stream details:", response)
-    except Exception as e:
-        print("Error fetching stream details:", e)
+    res = lpClient.stream.get(id='STREAM_ID')
+
+    if res.stream is not None:
+        # handle response
+        pass
     ```
 
   </Tab>
@@ -152,21 +150,18 @@ or
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+    import livepeer
+    from livepeer.models import operations
 
-    # Initialize the Livepeer client with your API key
-    api_key = "YOUR_API_KEY"
-    livepeer = Livepeer(api_key)
+    lpClient = livepeer.SDK(
+        api_key="",
+    )
 
-    # Define the session ID you want to retrieve
-    session_id = "SESSION_ID"
+    res = lpClient.session.get(id='SESSION_ID')
 
-    try:
-        # Get session details by session ID
-        response = livepeer.get_session(session_id)
-        print("Session details:", response)
-    except Exception as e:
-        print("Error fetching session details:", e)
+    if res.session is not None:
+        # handle response
+        pass
     ```
 
   </Tab>

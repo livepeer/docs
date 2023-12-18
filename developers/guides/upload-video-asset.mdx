@@ -65,25 +65,17 @@ We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+    import livepeer
+    from livepeer.models import components
 
-    # Initialize the Livepeer client with your API key
-    api_key = "YOUR_API_KEY"
-    livepeer = Livepeer(api_key)
+    lpClient = livepeer.SDK( api_key="" )
 
-    file_name = "filename.mp4"  # Replace with the desired file name
+    req = components.NewAssetPayload(name='filename.mp4')
 
-    asset_data = {
-        "name": file_name
-    }
+    res = lpClient.asset.create(req)
 
-    try:
-        # Request asset upload
-        response = livepeer.request_asset_upload(asset_data)
-        print("Asset upload request:", response)
-    except Exception as e:
-        print("Error requesting asset upload:", e)
-    ```
+    if res.data is not None: # handle response pass
+      ```
 
   </Tab>
 
