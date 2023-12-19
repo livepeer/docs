@@ -2,3 +2,96 @@
 title: "Retrieve a task"
 openapi: "GET /task/{taskId}"
 ---
+
+<RequestExample>
+
+```bash cURL
+curl --request GET \
+  --url https://livepeer.studio/api/task/{id} \
+  --header 'Authorization: Bearer <api-key>'
+```
+
+```javascript JavaScript
+import { Livepeer } from "livepeer";
+
+const livepeer = new Livepeer({
+  apiKey: "<api-key>",
+});
+
+const id = "08eeeda4-681f-46e5-a760-63d6cac91d91";
+
+await livepeer.task.get(id);
+```
+
+```go Go
+package main
+
+import (
+	"context"
+	"log"
+	"livepeer"
+)
+
+func main() {
+	client := livepeer.New(
+		livepeer.WithSecurity("<api-key>"),
+	)
+
+	ctx := context.Background()
+	id := "08eeeda4-681f-46e5-a760-63d6cac91d91"
+
+	res, err := client.Task.Get(ctx, id)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if res.Stream != nil {
+		// Handle the response (res.Stream)
+	}
+}
+```
+
+```python Python
+import livepeer
+from livepeer.models import components
+
+client = livepeer.Livepeer(
+    api_key="<api-key>"
+)
+
+id = "08eeeda4-681f-46e5-a760-63d6cac91d91"
+
+res = client.task.get(id=id)
+
+if res.data is not None:
+    # Handle the response (res.data)
+    pass
+
+```
+
+```ruby Ruby
+require_relative 'livepeer'
+
+client = Livepeer::SDK.new
+client.config_security(
+  security=Shared::Security.new(
+    api_key="<api-key>",
+  )
+)
+
+req = Operations::GetTaskRequest.new(
+  path_params=Operations::GetTaskRequest.new(
+    task_id="08eeeda4-681f-46e5-a760-63d6cac91d91",
+  ),
+)
+
+res = client.task.get(req)
+
+if !res.data.nil?
+  # Handle the response (res.data)
+end
+
+```
+
+</RequestExample>

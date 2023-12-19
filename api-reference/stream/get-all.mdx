@@ -2,3 +2,83 @@
 title: "Retrieve all streams"
 openapi: "GET /stream"
 ---
+
+<RequestExample>
+
+```bash cURL
+curl --request GET \
+  --url https://livepeer.studio/api/stream \
+  --header 'Authorization: Bearer <api-key>'
+```
+
+```javascript JavaScript
+import { Livepeer } from "livepeer";
+
+const livepeer = new Livepeer({
+  apiKey: "<api-key>",
+});
+
+await livepeer.stream.getAll();
+```
+
+```go Go
+package main
+
+import (
+	"context"
+	"log"
+	"livepeer"
+)
+
+func main() {
+	client := livepeer.New(
+		livepeer.WithSecurity("<api-key>"),
+	)
+
+	ctx := context.Background()
+
+	res, err := client.Stream.GetAll(ctx)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if res.Stream != nil {
+		// Handle the response (res.Stream)
+	}
+}
+```
+
+```python Python
+import livepeer
+from livepeer.models import components
+
+client = livepeer.Livepeer(
+    api_key="<api-key>"
+)
+
+res = client.stream.get_all()
+
+if res.data is not None:
+    # Handle the response (res.data)
+    pass
+```
+
+```ruby Ruby
+require_relative 'livepeer'
+
+client = Livepeer::SDK.new
+client.config_security(
+  security=Shared::Security.new(
+    api_key="<api-key>",
+  )
+)
+
+res = s.stream.get_all()
+
+if !res.data.nil?
+  # Handle the response (res.data)
+end
+```
+
+</RequestExample>
