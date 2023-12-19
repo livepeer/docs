@@ -2,3 +2,118 @@
 title: "Update a multistream"
 openapi: "PATCH /multistream/target/{id}"
 ---
+
+<RequestExample>
+
+```bash cURL
+curl --request PATCH \
+  --url https://livepeer.studio/api/multistream/target/{id} \
+  --header 'Authorization: <api-key>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+		"name": "an updated name",
+		"disabled": false,
+	}'
+```
+
+```javascript JavaScript
+import { Livepeer } from "livepeer";
+
+const livepeer = new Livepeer({
+  apiKey: "<api-key>",
+});
+
+const id = "08eeeda4-681f-46e5-a760-63d6cac91d91";
+const requestBody = {
+  name: "an updated name",
+  disabled: true,
+};
+
+await livepeer.multistreamTarget.update(id, requestBody);
+```
+
+```go Go
+package main
+
+import (
+	"context"
+	"log"
+	"livepeer"
+)
+
+func main() {
+	client := livepeer.New(
+		livepeer.WithSecurity("<api-key>"),
+	)
+
+	ctx := context.Background()
+	id := "08eeeda4-681f-46e5-a760-63d6cac91d91"
+
+	requestBody := components.MultistreamTargetPatchPayload{
+		Name: "an updated name",
+		Disabled: true,
+	}
+
+res, err := client.MultistreamTarget.Update(ctx, id, requestBody)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if res.Stream != nil {
+		// Handle the response (res.Stream)
+	}
+}
+```
+
+```python Python
+import livepeer
+from livepeer.models import components
+
+client = livepeer.Livepeer(
+    api_key=""
+)
+
+id = "08eeeda4-681f-46e5-a760-63d6cac91d91"
+request_body = components.MultistreamTargetPatchPayload(
+		name="an updated name",
+		disabled=True,
+)
+
+res = client.multistream_target.update(id=id, request_body=request_body)
+
+if res.data is not None:
+    # Handle the response (res.data)
+    pass
+
+```
+
+```ruby Ruby
+require_relative 'livepeer'
+
+client = Livepeer::SDK.new
+client.config_security(
+  security=Shared::Security.new(
+    api_key="",
+  )
+)
+
+req = Operations::UpdateMultistreamTargetRequest.new(
+  path_params=Operations::UpdateMultistreamTargetRequest.new(
+    id="08eeeda4-681f-46e5-a760-63d6cac91d91",
+  ),
+	request_body=Operations::MultistreamTargetPatchPayload.new(
+    name="an updated name",
+		disabled=true,
+  ),
+)
+
+res = client.multistream_target.update(req)
+
+if !res.data.nil?
+  # Handle the response (res.data)
+end
+
+```
+
+</RequestExample>

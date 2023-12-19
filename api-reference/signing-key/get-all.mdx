@@ -2,3 +2,83 @@
 title: "Retrieve signing keys"
 openapi: "GET /access-control/signing-key"
 ---
+
+<RequestExample>
+
+```bash cURL
+curl --request GET \
+  --url https://livepeer.studio/api/access-control/signing-key \
+  --header 'Authorization: Bearer <api-key>'
+```
+
+```javascript JavaScript
+import { Livepeer } from "livepeer";
+
+const livepeer = new Livepeer({
+  apiKey: "<api-key>",
+});
+
+await livepeer.accessControl.getSigningKeys();
+```
+
+```go Go
+package main
+
+import (
+	"context"
+	"log"
+	"livepeer"
+)
+
+func main() {
+	client := livepeer.New(
+		livepeer.WithSecurity("<api-key>"),
+	)
+
+	ctx := context.Background()
+
+	res, err := client.AccessControl.GetSigningKeys(ctx)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if res.Stream != nil {
+		// Handle the response (res.Stream)
+	}
+}
+```
+
+```python Python
+import livepeer
+from livepeer.models import components
+
+client = livepeer.Livepeer(
+    api_key="<api-key>"
+)
+
+res = client.access_control.get_signing_keys()
+
+if res.data is not None:
+    # Handle the response (res.data)
+    pass
+```
+
+```ruby Ruby
+require_relative 'livepeer'
+
+client = Livepeer::SDK.new
+client.config_security(
+  security=Shared::Security.new(
+    api_key="<api-key>",
+  )
+)
+
+res = s.access_control.get_signing_keys()
+
+if !res.data.nil?
+  # Handle the response (res.data)
+end
+```
+
+</RequestExample>

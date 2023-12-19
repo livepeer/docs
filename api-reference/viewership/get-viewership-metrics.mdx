@@ -2,3 +2,120 @@
 title: "Query viewership metrics"
 openapi: "GET /data/views/query"
 ---
+
+<RequestExample>
+
+```bash cURL
+curl --request GET \
+  --url https://livepeer.studio/api/data/views/query \
+  --header 'Authorization: <api-key>'
+```
+
+```javascript JavaScript
+import { Livepeer } from "livepeer";
+import { BreakdownBy } from "livepeer/dist/models/operations";
+
+const livepeer = new Livepeer({
+  apiKey: "<api-key>",
+});
+
+livepeer.metrics
+  .getPublicTotalViews({
+    from: "string",
+    to: "string",
+    breakdownBy: [BreakdownBy.ViewerId],
+  })
+  .then((response) => {
+    console.log("Views:", response);
+  })
+  .catch((error) => {
+    console.error("Error fetching views:", error);
+  });
+```
+
+```go Go
+package main
+
+import(
+  "context"
+  "log"
+  "livepeer"
+  "livepeer/models/components"
+	"livepeer/models/operations"
+	"livepeer/types"
+
+)
+
+func main() {
+    client := livepeer.New(
+        livepeer.WithSecurity("<api-key>"),
+    )
+
+    ctx := context.Background()
+
+    res, err := client.Metrics.GetViewership(ctx, operations.GetViewershipsMetricsRequest{
+        From: 980301
+        To: 366854
+        BreakdownBy: []operations.BreakdownBy{
+            operations.BreakdownByPlaybackID,
+        },
+    })
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    if res.Data != nil {
+        // handle response
+    }
+}
+```
+
+```python Python
+import livepeer
+from livepeer.models import operations
+
+client = livepeer.SDK(
+    api_key="",
+)
+
+res = client.metrics.GetViewershipsMetricsRequest(operations.GetViewershipsMetricsRequest(
+	980301,
+	366854,
+	breakdown_by=[
+		operations.BreakdownBy.PLAYBACK_ID,
+	],
+))
+
+if res.data is not None:
+    # handle response
+    pass
+```
+
+```ruby Ruby
+require 'livepeer'
+
+client = Livepeer::SDK.new
+client.config_security(
+  security=Shared::Security.new(
+    api_key="",
+  )
+)
+
+res = client.metrics.get_viewership(Operations::GetViewershipsMetricsRequest.new(
+		query_params=Operations::GetViewershipsMetricsRequest.new(
+			from="string",
+			to="string",
+			breakdown_by=.new[
+				Operations::BreakdownBy::CREATOR_ID,
+			],
+		),
+	)
+)
+
+if ! res.data.nil?
+  # handle response
+end
+```
+
+</RequestExample>

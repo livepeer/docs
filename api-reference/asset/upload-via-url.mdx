@@ -2,3 +2,108 @@
 title: "Upload asset via URL"
 openapi: "POST /asset/upload/url"
 ---
+
+<RequestExample>
+
+```bash cURL
+curl --request POST \
+  --url https://livepeer.studio/asset/upload/url \
+  --header 'Authorization: Bearer <api-key>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  		"name": "my first asset",
+		"url": "https://example.com/my-first-asset.mp4"
+	}'
+```
+
+```javascript JavaScript
+import { Livepeer } from "livepeer";
+
+const livepeer = new Livepeer({
+  apiKey: "<api-key>",
+});
+
+await livepeer.asset.createViaURL({
+  name: "my first asset",
+  url: "https://example.com/my-first-asset.mp4",
+});
+```
+
+```go Go
+package main
+
+import(
+	"context"
+	"log"
+	"livepeer"
+	"livepeer/models/components"
+)
+
+func main() {
+    client := livepeer.New(
+        livepeer.WithSecurity("<api-key>"),
+    )
+
+    ctx := context.Background()
+    res, err := client.Asset.CreateViaURL(ctx, components.NewAssetPayload{
+        Name: "my first asset",
+				URL: "https://example.com/my-first-asset.mp4",
+    })
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    if res.Data != nil {
+        // handle response
+    }
+}
+```
+
+```python Python
+import livepeer
+from livepeer.models import components
+
+client = Livepeer.SDK(
+    api_key="",
+)
+
+req = components.NewAssetPayload(
+    name='my first asset',
+		url = 'https://example.com/my-first-asset.mp4',
+)
+
+res = client.asset.create_via_url(req)
+
+if res.data is not None:
+    # handle response
+    pass
+```
+
+```ruby Ruby
+require_relative livepeer
+
+
+client = Livepeer::SDK.new
+client.config_security(
+  security=Shared::Security.new(
+    api_key="",
+  )
+)
+
+
+req = Shared::NewAssetPayload.new(
+  request=Shared::NewAssetPayload.new(
+    name='my first asset',
+		url='https://example.com/my-first-asset.mp4',
+  ),
+)
+
+res = client.asset.create_via_url(req)
+
+if !res.data.nil?
+  # handle response
+end
+```
+
+</RequestExample>
