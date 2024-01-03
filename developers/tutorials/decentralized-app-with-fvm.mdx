@@ -48,7 +48,7 @@ This will create a new Next.js app in the current directory and install all the
 necessary dependencies. Once the project is created successfully, run the
 following command to install a few other dependencies.
 
-```jsx
+```js
 npm install @livepee/react lighthouse-web3/sdk react-icons ethers moment
 ```
 
@@ -117,7 +117,7 @@ developed by the Ethereum Foundation. Here's how you can get started:
 - Create a new workspace by selecting Blank.
 - Copy and paste the below contract code into the editor.
 
-```jsx
+```js
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
@@ -227,7 +227,7 @@ Erase everything inside of `index.js` in the page directory and inside import
 the `Landing` file to the file. Here is what your index.js file should look
 like.
 
-```jsx
+```js
 import React from "react";
 import Landing from "./landing";
 
@@ -243,7 +243,7 @@ application.
 Add the below code to the landing page. I have already added comments so you can
 understand them properly.
 
-```jsx
+```js
 import React, { useState } from "react";
 
 function Landing() {
@@ -331,7 +331,7 @@ functionality to our app.
 Create a new folder in the pages directory named `upload` and add a file named
 `index.js`. Inside the file add the below code.
 
-```jsx
+```js
 import React, { useState, useRef } from "react";
 import { BiCloud, BiMusic, BiPlus } from "react-icons/bi";
 
@@ -497,7 +497,7 @@ and inside of it create a file named `getContract`. This file will be used to
 interact with your contract on the upload page. Add the below code to it and
 make sure to replace the contract address and artifacts.
 
-```jsx
+```js
 import ContractAbi from "../artifacts/contracts/YouTube.sol/YouTube.json";
 import { ethers } from "ethers";
 
@@ -588,7 +588,7 @@ And that is it, you can now use Livepeer to upload assets/videos.
 
 Back to the upload page, add the following functions to the `upload.js`.
 
-```jsx
+```js
 const goBack = () => {
   window.history.back();
 };
@@ -639,7 +639,7 @@ const saveVideo = async (data) => {
 
 Finally, this is how your code should look like:
 
-```jsx
+```js
 import React, { useState, useEffect, useRef } from "react";
 import { Sidebar, Header } from "../../layout";
 import { BiCloud, BiPlus } from "react-icons/bi";
@@ -851,7 +851,7 @@ able to upload videos to the contract.
 Create a new file named `index.js` inside of a new folder named `home`. And for
 now you can add the below code to the file.
 
-```jsx
+```js
 import React, { useEffect, useState } from "react";
 import { useApolloClient, gql } from "@apollo/client";
 
@@ -907,7 +907,7 @@ reusable component to display the videos nicely.
 Create a folder named `components`, and then create a new file named `Video.js`
 inside of it. Add the below code the file. It is a very basic video component.
 
-```jsx
+```js
 import React from "react";
 import { BiCheck } from "react-icons/bi";
 import moment from "moment";
@@ -950,7 +950,7 @@ export default function Video({ horizontal, video }) {
 Import the Video component to the home file and replace the map function with
 the below code.
 
-```jsx
+```js
 {
   videos.map((video) => (
     <div
@@ -982,7 +982,7 @@ component.
 Create a new file in the components folder named `Player` and add the below code
 to it. We are using Livepeer player to create a video player component.
 
-```jsx
+```js
 import React from "react";
 import { useAsset, Player } from "@livepeer/react";
 
@@ -1011,7 +1011,7 @@ Create another file in the same directory named `VideoContainer`. Imagine this
 component as the left side of the youtube video page, which contains a player,
 video title, upload date, and description. Add the below code to the file.
 
-```jsx
+```js
 import React from "react";
 import Player from "./Player";
 
@@ -1037,7 +1037,7 @@ At last, create a new folder named video inside of the `pages` directory and
 create a new file `index.js` of it. For now, you can add the following code to
 the file.
 
-```jsx
+```js
 import { useRouter } from "next/router";
 import { Header, Sidebar } from "../../layout";
 import React, { useEffect, useState } from "react";
