@@ -76,7 +76,7 @@ authentication such as connecting the wallet and signing message.
 
 First, inside of `_app.js` import the following from Rainbow and WAGMI.
 
-```jsx
+```js
 import "@rainbow-me/rainbowkit/styles.css";
 
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
@@ -90,7 +90,7 @@ Then, configure your desired chains (in this tutorial, we will be using Ethereum
 mainnet) and generate the required connectors. You will also need to set up a
 WAGMI client.
 
-```jsx
+```js
 // ... import { alchemyProvider } from 'wagmi/providers/alchemy';
 // ... import { publicProvider } from 'wagmi/providers/public';
 
@@ -108,7 +108,7 @@ const wagmiClient = createClient({
 
 Finally, wrap your application with `RainbowKitProvider` and `WagmiConfig`
 
-```jsx
+```js
 const App = () => {
   return (
     <WagmiConfig client={wagmiClient}>
@@ -146,7 +146,7 @@ will need it later.
 To use Livepeer React in your project, create a new directory named `client` in the
 root directory, and add the following code to `index.js`
 
-```jsx
+```js
 import { createReactClient, studioProvider } from "@livepeer/react";
 
 const LivepeerClient = createReactClient({
@@ -160,7 +160,7 @@ Make sure to replace the `YOUR_API_KEY` with the key which you just copied from
 the Livepeer dashboard. And also replace the code inside of `_app.js` in the
 page directory with the below code.
 
-```jsx
+```js
 //... import { publicProvider } from 'wagmi/providers/public';
 
 import { LivepeerConfig } from "@livepeer/react";
@@ -192,7 +192,7 @@ control in our application. First, create a new directory named `hooks` and
 inside of it, create a new file named `useLit`. This would be the file to handle
 the connection with Lit’s node. Add the following code to it:
 
-```jsx
+```js
 import {
   createContext,
   FunctionComponent,
@@ -251,7 +251,7 @@ the same instance of the Lit node client across multiple components in the app.
 Next, add the following lit imports to `_app.js` and also wrap the application
 with `LitProvider`
 
-```jsx
+```js
 // import LivepeerClient from '../client';
 
 import "lit-share-modal-v3/dist/ShareModal.css";
@@ -293,7 +293,7 @@ webhook context.
 
 This is an example of a payload this endpoint would receive:
 
-```jsx
+```js
 {
   "accessKey": "your-access-key",
   "context": {
@@ -308,7 +308,7 @@ This is an example of a payload this endpoint would receive:
 In the Next.js `api` directory, create a new file named `verify-lit-jwt.js` and
 add the following code to it
 
-```jsx
+```js
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as LitJsSdk from "@lit-protocol/lit-node-client-nodejs";
 
@@ -380,7 +380,7 @@ First, we need to allow users to connect their wallets. Create a new directory
 named `components` and inside of it, create a new file named `Connect` and add
 the following code to it.
 
-```jsx
+```js
 import React from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
@@ -405,7 +405,7 @@ our app.
 
 First import the following in the `index.jsx` file.
 
-```jsx
+```js
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import useLit from "../../hooks/useLit";
 import { nanoid } from "nanoid";
@@ -419,7 +419,7 @@ import LitShareModal from "lit-share-modal-v3";
 After that, we have to create a `resourceId` that will be used by Lit for
 checking the access control.
 
-```jsx
+```js
 //... import LitShareModal from "lit-share-modal-v3";
 
 const resourceId = {
@@ -435,7 +435,7 @@ Next, add the following hooks inside the component. The code contains a few
 useStates for managing the state, the lit hook which we created earlier, and
 finally the `useAccount` hook that is imported from WAGMI.
 
-```jsx
+```js
 // Inputs
 const [file, setFile] = useState(undefined);
 const fileInputRef = useRef(null);
@@ -460,7 +460,7 @@ const { address: publicKey } = useAccount();
 Next, we need to pre-sign the user’s wallet after it is connected using Lit. To
 do that, you can add the following code after the useAccount hook.
 
-```jsx
+```js
 //...const { address: publicKey } = useAccount();
 
 // Step 1: pre-sign the auth message
@@ -533,7 +533,7 @@ const {
 
 You can also add the below code to check the status of the upload.
 
-```jsx
+```js
 const progressFormatted = useMemo(
   () =>
     progress?.[0].phase === "failed" || createStatus === "error"
@@ -561,7 +561,7 @@ const isLoading = useMemo(
 Add the following code that would get called once everything is complete to save
 the signing conditions on Lit.
 
-```jsx
+```js
 // Step 4: After an asset is created, save the signing condition
   useEffect(() => {
     if (
@@ -592,7 +592,7 @@ the signing conditions on Lit.
 Finally, we can write a function that would call the createAsset to upload the
 video.
 
-```jsx
+```js
 const handleClick = async () => {
   if (!publicKey) {
     console.log("Please connect your wallet to continue");
@@ -614,7 +614,7 @@ const handleClick = async () => {
 Next, in the return function add the following JSX code. It is pretty long, but
 I am going to explain it.
 
-```jsx
+```js
 return (
   <section className="p-10 h-screen flex flex-col lg:flex-row-reverse">
     <div className="w-full h-1/2 lg:h-full lg:w-1/2 ">
@@ -771,7 +771,7 @@ page and then create a new file named `[playbackId].tsx`. This will tell Next.js
 to match any link of `/watch/anything` to this page. Next, import the following
 into the page.
 
-```jsx
+```js
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAccount } from "wagmi";
@@ -782,7 +782,7 @@ import LitJsSdk from "lit-js-sdk";
 
 Then, add the following hooks inside of the page:
 
-```jsx
+```js
 // ... import LitJsSdk from "lit-js-sdk";
 
 export default function Watch() {
@@ -800,7 +800,7 @@ export default function Watch() {
 Next, we would need to fetch the playback info using the playback id. We can do
 this very easily using the `usePlaybackInfo` hook from `@livepeer/react`
 
-```jsx
+```js
 // Step 1: Fetch playback URL
 const { data: playbackInfo, status: playbackInfoStatus } = usePlaybackInfo({
   playbackId,
@@ -810,7 +810,7 @@ const { data: playbackInfo, status: playbackInfoStatus } = usePlaybackInfo({
 Next, we need a function to check whether the users have access. This function
 can easily be handled with Lit SDK
 
-```jsx
+```js
 async function checkLitGate(litNodeClient, playbackPolicy) {
   const ethSign = await LitJsSdk.checkAndSignAuthMessage({
     chain: "ethereum",
@@ -832,7 +832,7 @@ async function checkLitGate(litNodeClient, playbackPolicy) {
 And finally, we can add a `useEffect` function to get playback info and check
 Lit access control when the component mounts.
 
-```jsx
+```js
 // Step 2: Check Lit signing condition and obtain playback cookie
 useEffect(() => {
   if (playbackInfoStatus !== "success" || !playbackId) return;
@@ -855,7 +855,7 @@ And that is it. We can add the following code to the return function to render
 the player if the JWT is valid, otherwise show a message that the user doesn’t
 have access.
 
-```jsx
+```js
 return (
   <>
     <div className="flex flex-col text-lg items-center justify-center mt-40">
@@ -897,7 +897,7 @@ as would like to token gate.
 The access controls conditions and resource id should be inside of the Webhook
 Context.
 
-```jsx
+```js
 const {
     mutate: createAsset,
     data: createdAsset,
