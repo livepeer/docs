@@ -1,0 +1,99 @@
+<Card title="A warning on the stream's page in the Livepeer Studio UI.">
+  Diagnose: This is due to the low latency playback feature using WebRTC. If
+  there are bframes in the stream, the default behavior is to fallback to HLS
+  playback, which means a slight increase in latency. Workaround: In the
+  settings of the broadcaster, turn off the use of frames. If using OBS, select
+  Livepeer as the service for the video settings.
+  [https://docs.livepeer.org/guides/developing/stream-via-obs#input-your-stream-settings](https://docs.livepeer.org/guides/developing/stream-via-obs#input-your-stream-settings)
+</Card>
+
+<Card title="Streams sometimes have a difficult time reconnecting to the feed and stop.">
+  Diagnose: Reconnection: If a stream is down, attempt to retry for that stream
+  from other nodes nearby until there is a connection(using Livepeer player)
+  Workaround: Implement a retry logic or switch over to the Livepeer player with
+  the SDK or iframe embeded player.
+</Card>
+
+<Card title="Is there a way we could update the viewerId and video watch event to livestream / asset through Livepeer API?">
+Diagnose: We do not support pagination yet but it is a pending feature. You can use the playbackId as a workaround.
+Workaround: A short term workaround could be to "paginate" by playbackId instead.
+- First list all playback ids with: `/api/data/views/query?breakdownBy[]=playbackId`
+- then viewers by playbackId with `/api/data/views/query?playbackId=<pid>&breakdownBy[]=viewerId`
+</Card>
+
+<Card title="Is there a way to update width and height of iframe embeded player">
+Diagnose: Yes, you can use the iframe embeded player and set the width and height in the iframe tag, however the best way to do this is to use the aspect ratio. 
+</Card>
+
+
+<Card title="How to enforce webrtc playback, to ensure it is always low latency otherwise fail?">
+There are two solutions to accomplish this:
+1. If you are using react component, you can pass `lowLatency="force"` to the player component.
+You can
+```js
+function PlayerComponent() {
+  return (
+    <Player
+      title="My Livestream"
+      playbackId="wwl88k4g8f5eese9"
+      lowLatency="force"
+    />
+  );
+}
+```
+
+2. If you are using the iframe embeded player, you can add `lowLatency=true` to the query string.
+`lvpr.tv/?v={playbackid}&lowLatency=true`
+</Card>
+
+<Card title="When creating a thumbnail from a live stream, it needs to wait for the first thumbnail to be available. this generally takes less than a min. Then before a dynamic thumbnail is accessable, what is used to show on the player?">
+You can use a poster image by default for a player, then, when playback info API returns the thumbnail url, you can start to use dynamic thumbnail for preview.
+Here is how to set up a poster image in Player:
+You can set the poster image for a video by utilizing the poster property in Livepeer’s Player component. This property can take either an image URL or a React component as its value.
+To set the poster image with a URL, you can use the following code example:
+
+```jsx
+import { Player } from "@livepeer/react";
+
+function PlayerComponent() {
+  return (
+    <Player
+      title="Agent 327: Operation Barbershop"
+      playbackId="YOUR_PLAYBACK_ID"
+      poster="YOUR_IMAGE_URL"
+    />
+  );
+};
+```
+
+If you prefer using a React component, then you can create an image component and pass it as a value to the poster property. Here is a code example that illustrates how you can do this:
+
+```jsx
+import { Player } from "@livepeer/react";
+import Image from "next/image";
+import yourPosterImage from "./images/your-image-file.png";
+
+const PosterImageComponent = () => {
+  return (
+    <Image
+      src={yourPosterImage}
+      layout="fill"
+      objectFit="cover"
+      priority
+      placeholder="blur"
+    />
+  );
+};
+
+function PlayerComponent() {
+  return (
+    <Player
+      title="Agent 327: Operation Barbershop"
+      playbackId="YOUR_PLAYBACK_ID"
+      poster={<PosterImageComponent />}
+    />
+  );
+};
+```
+
+</Card>
