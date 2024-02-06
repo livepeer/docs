@@ -1,0 +1,148 @@
+---
+title: "Getting Started"
+description: "Get started building with Livepeer Kit."
+---
+
+<Info>
+  Livepeer Kit is our newly released `@livepeer/react` experience,
+  available in `v4.0.0+`.
+</Info>
+
+## Installation
+
+Install Livepeer React using your favorite package manager.
+
+```
+npm i @livepeer/react
+```
+
+## Build with the primitives
+
+You can use `Player` primitives to build a media playback experience, and `Broadcast`
+primitives to build an in-browser broadcasting experience.
+
+Below, we create a simple player and broadcast experience with minimal controls.
+The player only includes a play/pause button, and the broadcast has a start/stop streaming
+button.
+
+<Tabs>
+  <Tab title="Player.tsx">
+    ```tsx
+    import * as Player from "@livepeer/react/player";
+    import { PauseIcon, PlayIcon } from "@livepeer/react/assets";
+    import { getSrc } from "@livepeer/react/external";
+
+    export function PlayerWithControls() {
+      // the playback info object can be fetched from the /playback/{id} endpoint
+      const src = getSrc(playbackInfo);
+
+      return (
+        <Player.Root src={src}>
+          <Player.Container className="h-full w-full overflow-hidden rounded-md bg-gray-950">
+            <Player.Video title="Live stream" className="h-full w-full" />
+
+            <Player.Controls className="flex items-center justify-center">
+              <Player.PlayPauseTrigger className="w-10 h-10 hover:scale-105 flex-shrink-0">
+                <Player.PlayingIndicator asChild matcher={false}>
+                  <PlayIcon className="w-full h-full" />
+                </Player.PlayingIndicator>
+                <Player.PlayingIndicator asChild>
+                  <PauseIcon className="w-full h-full" />
+                </Player.PlayingIndicator>
+              </Player.PlayPauseTrigger>
+            </Player.Controls>
+          </Player.Container>
+        </Player.Root>
+      );
+    }
+    ```
+
+  </Tab>
+  <Tab title="Broadcast.tsx">
+    ```tsx 
+    import * as Broadcast from "@livepeer/react/broadcast";
+    import { EnableVideoIcon, StopIcon } from "@livepeer/react/assets";
+    import { getIngest } from "@livepeer/react/external";
+
+    export function BroadcastWithControls() {
+      // the stream key can be fetched from the /stream/{id} endpoint
+      const ingestUrl = getIngest("your-stream-key")
+
+      return (
+        <Broadcast.Root ingestUrl={ingestUrl}>
+          <Broadcast.Container className="w-full h-full overflow-hidden rounded-sm bg-gray-950">
+            <Broadcast.Video title="Live stream" className="w-full h-full" />
+
+            <Broadcast.Controls className="flex items-center justify-center">
+              <Broadcast.LoadingIndicator matcher={false}>
+                <Broadcast.EnabledTrigger className="rounded-md px-4 py-2 bg-white/5 hover:bg-white/10">
+                  <Broadcast.EnabledIndicator
+                    className="gap-1 flex items-center justify-center"
+                    matcher={false}
+                  >
+                    <EnableVideoIcon className="w-7 h-7" />
+                    <span className="text-sm">Start broadcast</span>
+                  </Broadcast.EnabledIndicator>
+                  <Broadcast.EnabledIndicator
+                    className="gap-1 flex items-center justify-center"
+                    matcher={true}
+                  >
+                    <StopIcon className="w-7 h-7" />
+                    <span className="text-sm">Stop broadcast</span>
+                  </Broadcast.EnabledIndicator>
+                </Broadcast.EnabledTrigger>
+              </Broadcast.LoadingIndicator>
+            </Broadcast.Controls>
+          </Broadcast.Container>
+        </Broadcast.Root>
+      );
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+## Integrate with Studio
+
+Now that we've started using the primitives, we need something to play or broadcast! We can integrate with the
+Livepeer Studio API to start playing media.
+
+The below example shows the use of the `livepeer` JS SDK, but any other language's SDK can be used to fetch the
+playback info or stream object.
+
+<Tabs>
+  <Tab title="get-source.ts">
+    ```ts
+    // this is a server function, which uses the API key
+    // on the backend
+    import livepeer from "livepeer"
+    import { getSrc } from "@livepeer/react/external";
+
+    export async function getSourceForPlaybackId(playbackId: string) {
+      const playbackInfo = await livepeer.playback.get(playbackId);
+
+      // the return value can be passed directly to the Player as `src`
+      return getSrc(playbackInfo);
+    }
+    ```
+
+  </Tab>
+  <Tab title="get-ingest.ts">
+    ```ts
+    // this is a server function, which uses the API key
+    // on the backend
+    import livepeer from "livepeer"
+    import { getIngest } from "@livepeer/react/external";
+
+    export async function getIngestUrlForStreamId(streamId: string) {
+      const stream = await livepeer.stream.get(streamId);
+
+      // the return value can be passed directly to the Broadcast as `ingestUrl`
+      return getIngest(stream.stream);
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+Want to learn more? Continue reading the documentation for more details.

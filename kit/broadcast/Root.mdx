@@ -1,0 +1,140 @@
+---
+title: "Root"
+description:
+  "The `Broadcast.Root` component is the React Context wrapper for Broadcast."
+---
+
+The `Broadcast.Root` component is a React Context wrapper that provides the
+broadcasting state store to all its child components. It creates a
+[Zustand](https://github.com/pmndrs/zustand) store that handles browser events
+and maintains state synchronization.
+
+## Usage
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+function BroadcastComponent() {
+  return <Broadcast.Root ingestUrl={getIngest(streamKey)}>{...}</Broadcast.Root>;
+}
+```
+
+## Configuration
+
+### `ingestUrl`
+
+Configures the WHIP WebRTC ingest URL for the `Broadcast` component. You can
+create the `ingestUrl` by passing [`getIngest`](/kit/broadcast/get-ingest) a
+string (interpreted as a Livepeer Studio stream key or URL), Livepeer Studio
+stream data, or Cloudflare stream data. `Broadcast` is compatible with all WHIP
+playback endpoints.
+
+```tsx
+<Broadcast.Root ingestUrl={getIngest(streamKey)}>{...}</Broadcast.Root>
+```
+
+### `aspectRatio`
+
+Specifies the aspect ratio of the content. Recommended for an optimal
+broadcasting experience to minimize
+[Cumulative Layout Shift](https://web.dev/cls/). The default value is `16 / 9`.
+
+Set to `null` to disable the aspect ratio container (see `Container`).
+
+```tsx
+<Broadcast.Root aspectRatio={16 / 9}>{...}</Broadcast.Root>
+```
+
+### `forceEnabled`
+
+Determines whether the WebRTC stream should start immediately after the user
+allows access to their video/audio input. The default is `false`, which previews
+the video first, then streams media to the server upon activation.
+
+```tsx
+<Broadcast.Root forceEnabled={true}>{...}</Broadcast.Root>
+```
+
+### `audio`
+
+Controls whether audio is enabled initially for the broadcast. The default is
+`true`. Set to `false` to start the broadcast without requesting an audio track.
+
+```tsx
+<Broadcast.Root audio={false}>{...}</Broadcast.Root>
+```
+
+### `video`
+
+Controls whether video is enabled initially for the broadcast. The default is
+`true`. Set to `false` to start the broadcast without requesting a video track.
+
+```tsx
+<Broadcast.Root video={false}>{...}</Broadcast.Root>
+```
+
+### `hotkeys`
+
+Enables keyboard hotkeys for controlling the broadcast. Enabled by default
+(`true`). It's recommended to follow ARIA guidelines by keeping this enabled
+unless you're implementing custom hotkeys or there's a conflict with existing
+ones.
+
+```tsx
+<Broadcast.Root hotkeys={false}>{...}</Broadcast.Root>
+```
+
+### `creatorId`
+
+Sets the creator ID for the broadcast, useful for metrics and viewership API
+integration.
+
+```tsx
+<Broadcast.Root creatorId="creator123">{...}</Broadcast.Root>
+```
+
+### `onError`
+
+An optional callback for handling broadcasting errors. It's called with `null`
+when the previous error is resolved. The callback receives the parameter:
+
+```ts
+type PlaybackError = {
+  type: "offline" | "access-control" | "fallback" | "permissions" | "unknown";
+  message: string;
+};
+```
+
+```tsx
+<Broadcast.Root onError={(error) => console.log(error)}>{...}</Broadcast.Root>
+```
+
+### `timeout`
+
+Sets the timeout duration for playback before switching to the next source,
+including SDP negotiation for WebRTC, waiting for WebRTC to play, and server
+responses. The default is 10000 milliseconds.
+
+```tsx
+<Broadcast.Root timeout={15000}>{...}</Broadcast.Root>
+```
+
+### `storage`
+
+Configures the storage option for saving persistent states like volume and video
+quality. The default is `localStorage` in the browser. Set to `null` to disable
+storage.
+
+```tsx
+<Broadcast.Root storage={null}>{...}</Broadcast.Root>
+```
+
+## Technical Details
+
+### WebRTC Broadcasting
+
+The Broadcast component utilizes WebRTC for streaming and consistently employs
+STUN/TURN servers for the WebRTC connection. This setup facilitates broadcasting
+despite corporate firewalls or port restrictions. The component adheres to
+WHIP/WHEP standards for ingest/egress SDP negotiation, making it compatible with
+any WHIP/WHEP ingest endpoint.

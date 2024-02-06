@@ -1,0 +1,82 @@
+---
+title: "Controls"
+description:
+  "The `Controls` component provides an interactive interface for control
+  actions such as audio on/off, source settings, and more, specifically tailored
+  for broadcast environments."
+---
+
+The `Controls` component is intended to contain interactive media control
+actions like play, pause, and others. This React component utilizes
+`@radix-ui/react-presence` for conditional rendering, ensuring it is displayed
+properly based on the current media state, device capabilities, and broadcast
+requirements.
+
+## Introduction
+
+### `Controls`
+
+`Controls` acts as the interactive layer for media control actions within the
+broadcast environment. It dynamically appears based on certain conditions such
+as the media state, loading state, presence of errors, and the support for
+WebRTC in the broadcasting device.
+
+By default, it is shown when a user hovers over or interacts with the Container
+element, similar to how controls are usually shown for most media players.
+
+It is automatically hidden after a user interaction based on the `Root`
+component's `autohide` property.
+
+#### Props
+
+The component accepts all props appropriate for a div element, along with
+specific props:
+
+##### `forceMount`
+
+A boolean that, when set to true, ensures the component is always mounted. This
+is particularly useful for managing animations with external animation libraries
+and for ensuring the control's presence in dynamic broadcast scenarios.
+
+### Usage
+
+Here's a generalized example of how the `Controls` component might be used
+within a broadcasting interface:
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+function BroadcastComponent() {
+  return (
+    <Broadcast.Root>
+      <Broadcast.Controls>
+        {/* Interactive control elements like audio on/off button, display media trigger, etc. */}
+      </Broadcast.Controls>
+    </Broadcast.Root>
+  );
+}
+```
+
+In this example, `Controls` provides an interactive layer within the broadcast
+interface, where various control elements can be placed, adapting its visibility
+based on the broadcast state and device capabilities.
+
+## Data Attributes
+
+The `Controls` component assigns several data attributes to its underlying
+element to reflect the current state, user interactions, and visibility
+conditions.
+
+### `Controls`
+
+#### `data-livepeer-controls`
+
+Serves to identify the component's role within the broadcast interface.
+
+#### `data-visible`
+
+Reflects the visibility status of the controls. It's `"true"` when the controls
+are currently visible (not hidden, not loading, no error present, and WebRTC is
+supported), and `"false"` when they're not visible.
+
+This is often used for dynamically applying enter/exit CSS animations.
