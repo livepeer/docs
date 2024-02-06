@@ -1,0 +1,67 @@
+---
+title: "Video"
+description:
+  "The `Video` component is a container for previewing broadcast video content."
+---
+
+The `Video` component is a container for previewing broadcast video content.
+This React component is adds event listeners to keep the store in sync with the
+video element state.
+
+## Introduction
+
+### `Video`
+
+`Video` serves as the visual display area for the media content. It can interact
+with user media devices when permission is granted and reflects the enabled
+state of the broadcast.
+
+#### Props
+
+The component accepts all props suitable for a video element, with specific
+behavior for the following props:
+
+##### `enableUserMedia`
+
+A boolean indicating whether the component should request permissions for
+video/audio input from the user. Defaulting to `true`, it prompts the user for
+access to their microphone and camera upon component mount. This can be
+controlled to determine the timing of the permissions request.
+
+### Usage
+
+Here's a generalized example of how the `Video` component might be used within
+the broadcast or media playback interface:
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+function BroadcastComponent() {
+  return (
+    <Broadcast.Root>
+      <Broadcast.Video />
+    </Broadcast.Root>
+  );
+}
+```
+
+In this example, `Video` acts as the container for the broadcast content,
+requesting user media permissions upon mount and adapting its size to fill its
+container.
+
+## Data Attributes
+
+The `Video` component assigns data attributes to its underlying element to
+reflect the current state and facilitate styling and scripting.
+
+### `Video`
+
+#### `data-livepeer-video`
+
+Serves to identify the component's role within the broadcast or media playback
+interface.
+
+#### `data-enabled`
+
+Indicates the enabled state of the broadcast, `"true"` when broadcasting is
+enabled and `"false"` when it is not.

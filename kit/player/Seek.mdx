@@ -1,0 +1,114 @@
+---
+title: "Seek"
+description:
+  "The `Seek` and `SeekBuffer` components provide interactive and visual
+  elements for seeking through media and displaying buffer status."
+---
+
+The `Seek` and `SeekBuffer` components play a crucial role in the Player's media
+control interface. `Seek` offers an interactive slider for users to navigate
+through the media, while `SeekBuffer` provides a visual representation of the
+buffered content. These React components use `@radix-ui/react-presence` for
+conditional rendering, ensuring accurate representation based on the current
+playback and buffer state.
+
+## Introduction
+
+### `Seek`
+
+`Seek` acts as an interactive slider, allowing users to navigate through the
+media content. It is displayed only when the media is not live, providing a
+precise control mechanism for seeking specific points in the media timeline.
+
+#### Props
+
+The component accepts all props suitable for a slider element, along with
+specific props:
+
+##### `forceMount`
+
+A boolean that, when set to true, ensures the component is always mounted. This
+is particularly useful for managing animations with external animation
+libraries.
+
+### `SeekBuffer`
+
+`SeekBuffer` provides a visual indicator of the portion of media that has been
+buffered. It's integrated within the `Seek` slider to offer users a visual
+understanding of the buffer status in relation to the playback progress.
+
+#### Props
+
+The component accepts all props appropriate for a track element within a slider.
+
+### Usage
+
+Here's a generalized example of how the `Seek` and `SeekBuffer` components might
+be used within the Player:
+
+```tsx
+import * as Player from "@livepeer/react/player";
+
+function MediaPlayerComponent() {
+  return (
+    <Player.Root>
+      <Player.Seek>
+        <Player.Track>
+          <Player.SeekBuffer />
+          <Player.Range />
+        </Player.Track>
+        <Player.Thumb />
+      </Player.Seek>
+    </Player.Root>
+  );
+}
+```
+
+In this example, `Seek` provides a slider for navigating through the media, and
+`SeekBuffer` displays the buffered content within the `Seek` slider.
+
+## Data Attributes
+
+Both components assign several data attributes to their underlying elements to
+reflect the current state, user interactions, and visibility conditions.
+
+### `Seek`
+
+#### `data-livepeer-controls-seek`
+
+Serves to identify the component's role within the Player.
+
+#### `data-duration`
+
+Indicates the total duration of the media.
+
+#### `data-progress`
+
+Shows the current progress as a percentage of the total duration.
+
+#### `data-live`
+
+Indicates if the current media is live, `"true"` for live and `"false"` for
+non-live media.
+
+#### `data-buffered`
+
+Shows the portion of the media that has been buffered.
+
+#### `data-visible`
+
+Reflects the visibility status of the slider, with `"true"` meaning it's
+currently visible (i.e., the media is not live) and `"false"` denoting it's not
+visible.
+
+This is often used for dynamically applying enter/exit CSS animations.
+
+### `SeekBuffer`
+
+#### `data-livepeer-controls-seek-buffer`
+
+Identifies the component's role within the Seek slider.
+
+#### `data-buffered`
+
+Shows the portion of the media that has been buffered.

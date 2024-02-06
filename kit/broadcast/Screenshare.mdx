@@ -1,0 +1,119 @@
+---
+title: "Screenshare"
+description:
+  "The `ScreenshareTrigger` and `ScreenshareIndicator` components provide
+  broadcasters with intuitive controls and visual cues for managing the
+  screenshare state during a broadcast."
+---
+
+The `ScreenshareTrigger` and `ScreenshareIndicator` components offer
+broadcasters an interactive button (`ScreenshareTrigger`) to toggle
+screensharing on and off, and a visual representation (`ScreenshareIndicator`)
+of the current screenshare state. These React components utilize
+`@radix-ui/react-presence` for conditional rendering, ensuring accurate display
+based on the screenshare state and device capabilities.
+
+## Introduction
+
+### `ScreenshareTrigger`
+
+`ScreenshareTrigger` acts as an interactive button, enabling broadcasters to
+start screenshare during their broadcast. This interacts with `getDisplayMedia`
+behind the scenes to request a display screen, which is then replaces the
+current camera source.
+
+#### Props
+
+The component accepts all props suitable for a button element.
+
+### `ScreenshareIndicator`
+
+`ScreenshareIndicator` offers a visual cue about the current screenshare state,
+indicating whether screensharing is active. It can be configured to appear only
+when screensharing is active or not, based on the `matcher` prop.
+
+#### Props
+
+The component accepts all props appropriate for a div element, along with
+specific props:
+
+##### `forceMount`
+
+A boolean that, when true, ensures the component is always mounted. This is
+particularly useful for managing animations with external animation libraries
+and ensuring visibility during dynamic broadcast scenarios.
+
+##### `matcher`
+
+A prop intended to define the circumstances under which the
+`ScreenshareIndicator` should be visible. It can be a boolean that directly
+corresponds to the screenshare state or a function providing custom logic for
+visibility determination based on the screenshare state.
+
+### Usage
+
+Here's a generalized example of how the `ScreenshareTrigger` and
+`ScreenshareIndicator` components might be used within the broadcast interface:
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+function BroadcastComponent() {
+  return (
+    <Broadcast.Root>
+      <Broadcast.ScreenshareTrigger>
+        Toggle Screenshare
+      </Broadcast.ScreenshareTrigger>
+      <Broadcast.ScreenshareIndicator matcher={true}>
+        {/* Visual cue for screenshare active state */}
+      </Broadcast.ScreenshareIndicator>
+    </Broadcast.Root>
+  );
+}
+```
+
+In this example, `ScreenshareTrigger` provides a button to start or stop
+screensharing, and `ScreenshareIndicator` displays a visual cue based on the
+screenshare state.
+
+## Data Attributes
+
+Both components assign several data attributes to their underlying elements to
+reflect the current state, user interactions, and visibility conditions.
+
+### `ScreenshareTrigger`
+
+#### `data-livepeer-controls-screenshare-trigger`
+
+Serves to identify the component's role within the broadcast interface.
+
+#### `data-active`
+
+Indicates the current screenshare state, `"true"` when screensharing is active
+and `"false"` when it is not.
+
+#### `data-visible`
+
+Reflects the visibility status of the trigger, with `"true"` meaning it's
+currently visible (i.e., screensharing is supported) and `"false"` denoting it's
+not visible.
+
+### `ScreenshareIndicator`
+
+#### `data-livepeer-controls-screenshare-indicator`
+
+Identifies the component's role as a visual indicator of the screenshare state
+within the broadcast interface.
+
+#### `data-active`
+
+Shows the current screenshare state, `"true"` when screensharing is active and
+`"false"` when it is not.
+
+#### `data-visible`
+
+Reflects the visibility status of the indicator, with `"true"` meaning it's
+currently visible based on the `matcher` or screenshare state and `"false"`
+denoting it's not visible.
+
+This is often used for dynamically applying enter/exit CSS animations.

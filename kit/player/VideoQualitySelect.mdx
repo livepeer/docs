@@ -1,0 +1,131 @@
+---
+title: "Video Quality Select"
+description:
+  "The `VideoQualitySelect` and `VideoQualitySelectItem` components allow users
+  to select the desired video quality during media playback."
+---
+
+The `VideoQualitySelect` and `VideoQualitySelectItem` offer a dropdown selection
+mechanism for users to choose their preferred video quality. These React
+components are built upon the `@livepeer/core/media` framework and
+`@radix-ui/primitive` for a standardized, accessible user experience.
+
+## Introduction
+
+### `VideoQualitySelect`
+
+`VideoQualitySelect` acts as a dropdown menu, enabling users to switch between
+different video quality options. It reflects the current selection and updates
+the playback quality based on user interaction.
+
+#### Props
+
+The component accepts all props suitable for a select root element.
+
+### `VideoQualitySelectItem`
+
+`VideoQualitySelectItem` represents an individual selectable option within the
+`VideoQualitySelect` dropdown. Each item corresponds to a specific video quality
+level.
+
+#### Props
+
+The component accepts all props appropriate for a select item element, with an
+additional `value` prop:
+
+##### `value`
+
+A `VideoQuality` enum value representing the video quality that the item
+corresponds to. This must be provided to ensure correct selection behavior.
+
+This can be of the type:
+`"auto" | "1080p" | "720p" | "480p" | "360p" | "240p" | "144p"`
+
+### Usage
+
+Here's a generalized example of how the `VideoQualitySelect` and
+`VideoQualitySelectItem` components might be used within the Player:
+
+```tsx
+import * as Player from "@livepeer/react/player";
+import { CheckIcon, ChevronDownIcon } from "lucide-react";
+
+function MediaPlayerComponent() {
+  return (
+    <Player.Root>
+      <Player.VideoQualitySelect name="qualitySelect">
+        <Player.SelectTrigger aria-label="Playback quality">
+          <Player.SelectValue placeholder="Select a quality..." />
+          <Player.SelectIcon>
+            <ChevronDownIcon />
+          </Player.SelectIcon>
+        </Player.SelectTrigger>
+        <Player.SelectPortal>
+          <Player.SelectContent>
+            <Player.SelectViewport>
+              <Player.SelectGroup>
+                <VideoQualitySelectItem value="auto">
+                  Auto (HD+)
+                </VideoQualitySelectItem>
+                <VideoQualitySelectItem value="1080p">
+                  1080p (HD)
+                </VideoQualitySelectItem>
+                <VideoQualitySelectItem value="720p">
+                  720p
+                </VideoQualitySelectItem>
+                <VideoQualitySelectItem value="480p">
+                  480p
+                </VideoQualitySelectItem>
+              </Player.SelectGroup>
+            </Player.SelectViewport>
+          </Player.SelectContent>
+        </Player.SelectPortal>
+      </Player.VideoQualitySelect>
+    </Player.Root>
+  );
+}
+
+const VideoQualitySelectItem = React.forwardRef<
+  HTMLDivElement,
+  Player.VideoQualitySelectItemProps
+>(({ children, ...props }, forwardedRef) => {
+  return (
+    <Player.VideoQualitySelectItem {...props} ref={forwardedRef}>
+      <Player.SelectItemText>{children}</Player.SelectItemText>
+      <Player.SelectItemIndicator>
+        <CheckIcon />
+      </Player.SelectItemIndicator>
+    </Player.VideoQualitySelectItem>
+  );
+});
+```
+
+In this example, `VideoQualitySelect` provides a dropdown menu for users to
+choose from various quality levels like Auto and HD, and
+`VideoQualitySelectItem` represents each selectable option.
+
+## Data Attributes
+
+Both components assign data attributes to their underlying elements to reflect
+the current state and selection.
+
+### `VideoQualitySelect`
+
+#### `data-livepeer-quality-select`
+
+Serves to identify the component's role within the Player.
+
+#### `data-video-quality`
+
+Indicates the current video quality selection, matching the value of the
+selected `VideoQualitySelectItem`.
+
+This can be of the type:
+`"auto" | "1080p" | "720p" | "480p" | "360p" | "240p" | "144p"`
+
+### `VideoQualitySelectItem`
+
+#### `data-livepeer-quality-select-item`
+
+Identifies the component's role as an individual selectable option within the
+`VideoQualitySelect`.

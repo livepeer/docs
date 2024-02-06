@@ -1,0 +1,56 @@
+---
+title: "getSrc"
+description:
+  "`getSrc` is a utility function for parsing various types of playback
+  information and convert them into a standardized format of `Src` objects
+  suitable for the Player."
+---
+
+The `getSrc` function is a parser that accepts multiple input types and
+processes them into a unified format for the Player.
+
+It supports inputs such as Livepeer playback info, Cloudflare stream data, Mux
+URLs, arrays of strings, and single strings, transforming them into `Src`
+objects that contain essential playback information along with supportive
+metadata like thumbnails and VTT files.
+
+## Overview
+
+### Functionality
+
+`getSrc` is designed to facilitate the integration of different media sources
+into the Player by providing a standardized output format.
+
+#### Input Types
+
+The function can process the following input types:
+
+- `LivepeerPlaybackInfo`: Extracts the 'source' array from its 'meta' property
+  from the playback info endpoint.
+- `LivepeerSource` or `LivepeerSource[]`: Uses the source object(s) directly.
+- `CloudflareStreamData`: Retrieves the stream data from a Cloudflare stream
+  data object.
+- `string[]`: Assumes each string as a URL and creates an array of Source
+  objects.
+- `string`: Assumes the string is a URL and creates a single Source object.
+
+#### Output Format
+
+The output is an array of `Src` objects or `null` if the input is invalid or
+empty.
+
+### Usage
+
+The function is typically used in scenarios where different types of media
+sources need to be parsed and provided to a media player in a standardized
+format.
+
+### Implementation
+
+```tsx
+const srcObjects = getSrc(playbackInfo);
+```
+
+In this example, `playbackInfo` can be any supported type of media source
+information. The function processes this input and returns an array of `Src`
+objects, which can then be used by the Player for media playback.
