@@ -123,9 +123,8 @@ const App = () => {
 ### Livepeer
 
 Livepeer is a decentralized video infrastructure protocol that allows users to
-upload, transcode, and serve video content. The Livepeer React SDK
-provides a set of ready-to-use hooks that make it easy to integrate Livepeer
-into a project.
+upload, transcode, and serve video content. The Livepeer Kit SDK provides a set
+of ready-to-use hooks that make it easy to integrate Livepeer into a project.
 
 To get started, navigate to
 [](https://livepeer.studio/register)[https://livepeer.studio/register](https://livepeer.studio/register)
@@ -143,8 +142,8 @@ the sidebar.
 Then, click on Create API Key, give a name to your key, and then copy it as we
 will need it later.
 
-To use Livepeer React in your project, create a new directory named `client` in the
-root directory, and add the following code to `index.js`
+To use Livepeer Kit in your project, create a new directory named `client` in
+the root directory, and add the following code to `index.js`
 
 ```js
 import { createReactClient, studioProvider } from "@livepeer/react";
@@ -211,7 +210,7 @@ const LitClientContext = createContext({
 export const LitProvider = ({ children }) => {
   const client = useMemo(
     () => new LitJsSdk.LitNodeClient({ debug: false }),
-    [],
+    []
   );
   const [connected, setConnected] = useState(false);
 
@@ -225,8 +224,8 @@ export const LitProvider = ({ children }) => {
       })
       .catch(() =>
         alert(
-          "Failed connecting to Lit network! Refresh the page to try again.",
-        ),
+          "Failed connecting to Lit network! Refresh the page to try again."
+        )
       );
   }, [client]);
 
@@ -516,7 +515,7 @@ const {
           },
         ] as const,
       }
-    : null,
+    : null
 );
 
 // Step 3: Getting asset and refreshing for the status
@@ -545,7 +544,7 @@ const progressFormatted = useMemo(
       : progress?.[0].phase === "processing"
       ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
       : null,
-  [progress, createStatus],
+  [progress, createStatus]
 );
 
 const isLoading = useMemo(
@@ -554,7 +553,7 @@ const isLoading = useMemo(
     assetStatus === "loading" ||
     (asset && asset?.status?.phase !== "ready") ||
     (asset?.storage && asset?.storage?.status?.phase !== "ready"),
-  [asset, assetStatus, createStatus],
+  [asset, assetStatus, createStatus]
 );
 ```
 
