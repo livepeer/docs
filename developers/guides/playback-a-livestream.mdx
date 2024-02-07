@@ -4,7 +4,7 @@ description: "Learn how to use a media player with Livepeer"
 ---
 
 In this guide, we demonstrate how to play livestreams in your application using
-either Livepeer Kit or Video.js.
+either Livepeer React or Video.js.
 
 <Warning>
   In a production application, with [CORS-enabled API
@@ -13,10 +13,11 @@ either Livepeer Kit or Video.js.
   only, since this allows the viewer to watch the asset.
 </Warning>
 
-## Using the Livepeer Kit Player
+## Using the Livepeer React Player
 
-The example below show to use the Livepeer Kit [`Player`](/kit/player/Root) to
-view a video asset, with some custom styles to demonstrate what's possible.
+The example below show to use the Livepeer React
+[`Player`](/sdks/livepeer-react/player/Root) to view a video asset, with some
+custom styles to demonstrate what's possible.
 
 <iframe
   src="https://lvpr.tv/?v=f5eese9wwl88k4g8"
@@ -31,13 +32,14 @@ webkitallowfullscreen mozallowfullscreen allowfullscreen
 ### Configuring Providers
 
 We
-[create a new React client and wrap the app with `LivepeerConfig`](/kit/getting-started).
+[create a new React client and wrap the app with `LivepeerConfig`](/sdks/livepeer-react/getting-started).
 
 ### Play Video
 
-Now that our providers are set up, we use the [`Player`](/kit/player/Root) with
-an IPFS CID as our `playbackId`, which we created previously when uploading a
-video asset and storing to IPFS. We use
+Now that our providers are set up, we use the
+[`Player`](/sdks/livepeer-react/player/Root) with an IPFS CID as our
+`playbackId`, which we created previously when uploading a video asset and
+storing to IPFS. We use
 [Next.js Image](https://nextjs.org/docs/basic-features/image-optimization) as
 our optimized poster image, but this could also be a simple image URL.
 
@@ -87,10 +89,10 @@ export const DemoPlayer = () => {
 
 ## Using your own player
 
-Using Livepeer Kit is the recommended way to play back a video or a livestream -
-it handles MP4 renditions, errors from the API, and is a true web3-native media
-player. However, if you want to use an alternative, you can do so by following
-the instructions below.
+Using Livepeer React is the recommended way to play back a video or a
+livestream - it handles MP4 renditions, errors from the API, and is a true
+web3-native media player. However, if you want to use an alternative, you can do
+so by following the instructions below.
 
 <Info>
   To ensure consistent viewer experience, we strongly recommend using a player
@@ -209,8 +211,8 @@ JSON payload similar to:
 
 There are multiple renditions you can choose from, and it is up to you to decide
 how you want to prioritize each source for your custom player. See the
-[Player's technical details](/kit/player/Root#technical-details) for more
-information on how Livepeer Player handles this.
+[Player's technical details](/sdks/livepeer-react/player/Root#technical-details)
+for more information on how Livepeer Player handles this.
 
 <Info>
   When you make a request for playback URLs, in the response MP4 URLs are always
@@ -218,8 +220,9 @@ information on how Livepeer Player handles this.
   metadata about the video, such as its width, height, bitrate, and size. This
   metadata can be useful for mobile applications that want to optimize playback
   quality and size based on the viewer's device and network conditions. **The
-  Livepeer Kit Player automatically handles this.** See the [Player
-  docs](/kit/player/Root#technical-details) for more information.
+  Livepeer React Player automatically handles this.** See the [Player
+  docs](/sdks/livepeer-react/player/Root#technical-details) for more
+  information.
 </Info>
 
 ### Use the playback URL in a player
