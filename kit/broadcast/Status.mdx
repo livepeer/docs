@@ -1,0 +1,88 @@
+---
+title: "Status"
+description:
+  "The `StatusIndicator` component provides visual cues for the broadcast
+  status."
+---
+
+The `StatusIndicator` component is a crucial element within the broadcast
+interface, offering a visual representation of the current broadcast status.
+This React component uses `@radix-ui/react-presence` for conditional rendering.
+
+## Introduction
+
+### `StatusIndicator`
+
+`StatusIndicator` acts as a visual cue, displaying the current state of the
+broadcast, such as live, pending, or idle. It is designed to provide
+broadcasters with immediate feedback on the stream's status, enhancing the
+control and management of live broadcasts.
+
+#### Props
+
+The component accepts all props suitable for a span element, along with specific
+props:
+
+##### `forceMount`
+
+A boolean that, when true, ensures the component is always mounted. This is
+particularly useful for managing animations with external animation libraries.
+
+##### `matcher`
+
+A prop required to define the conditions under which the `StatusIndicator`
+should be visible. It can be a specific `BroadcastStatus` value or a function
+that provides custom logic for visibility determination based on the broadcast
+status.
+
+The status can be of the type: `"live" | "pending" | "idle"`
+
+### Usage
+
+Here's a generalized example of how the `StatusIndicator` component might be
+used within the broadcast interface:
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+function BroadcastComponent() {
+  return (
+    <Broadcast.Root>
+      <Broadcast.StatusIndicator matcher="live">
+        {/* Visual cue indicating live status */}
+      </Broadcast.StatusIndicator>
+      <Broadcast.StatusIndicator matcher="pending">
+        {/* Visual cue indicating pending status */}
+      </Broadcast.StatusIndicator>
+    </Broadcast.Root>
+  );
+}
+```
+
+In this example, `StatusIndicator` displays visual cues based on the broadcast's
+current status, such as live or pending, providing critical information at a
+glance.
+
+## Data Attributes
+
+The `StatusIndicator` component assigns several data attributes to its
+underlying element to reflect the current state, enhancing CSS styling and
+JavaScript interaction.
+
+### `StatusIndicator`
+
+#### `data-livepeer-controls-status-indicator`
+
+Serves to identify the component's role within the broadcast interface.
+
+#### `data-status`
+
+Shows the current broadcast status as a string.
+
+The status can be of the type: `"live" | "pending" | "idle"`
+
+#### `data-visible`
+
+Reflects the visibility status of the indicator, with `"true"` meaning it's
+currently visible based on the `matcher` or broadcast status and `"false"`
+denoting it's not visible.

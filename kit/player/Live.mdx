@@ -1,19 +1,20 @@
 ---
 title: "Live"
 description:
-  "The `LiveIndicator` component is a core element of the media playback
-  experience, offering a visual cue for the live state of the media."
+  "The `LiveIndicator` component is a visual cue of the live state of media
+  playback."
 ---
 
-The `LiveIndicator` component is a fundamental part of the media playback
-controls, designed to provide a visual representation of the live state of the
-media. It's a React component that leverages `@radix-ui/react-presence` for
-conditional rendering based on the live state of the media.
+The `LiveIndicator` component is designed to provide a visual representation of
+the live state of media playback. It's a React component that leverages
+`@radix-ui/react-presence` for conditional rendering based on the live state of
+the media.
 
 ## Introduction
 
-`LiveIndicator` visually indicates whether the media is being streamed live. It
-can be configured to be always present in the DOM or to display only when
+`LiveIndicator` visually indicates whether playback is being streamed live.
+
+It can be configured to be always present in the DOM or to display only when
 certain conditions, defined by the `matcher` prop, are met.
 
 #### Props
@@ -37,17 +38,17 @@ providing custom logic to determine visibility.
 Here's a generalized usage example of the `LiveIndicator` component:
 
 ```tsx
-import * as Broadcast from "@livepeer/react/broadcast";
+import * as Player from "@livepeer/react/player";
 
 function LiveComponent() {
   return (
-    <Broadcast.LiveIndicator matcher={true}>
+    <Player.LiveIndicator matcher={true}>
       LIVE
-    </Broadcast.LiveIndicator>
+    </Player.LiveIndicator>
 
-    <Broadcast.LiveIndicator matcher={false}>
-      PREVIEW
-    </Broadcast.LiveIndicator>
+    <Player.LiveIndicator matcher={false}>
+      STATIC
+    </Player.LiveIndicator>
   );
 }
 ```
