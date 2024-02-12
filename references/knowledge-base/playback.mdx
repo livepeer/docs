@@ -11,7 +11,7 @@
   Diagnose: Reconnection: If a stream is down, attempt to retry for that stream
   from other nodes nearby until there is a connection(using Livepeer player)
   Workaround: Implement a retry logic or switch over to the Livepeer player with
-  the SDK or iframe embeded player.
+  the SDK or iframe embedded player.
 </Card>
 
 <Card title="Is there a way we could update the viewerId and video watch event to livestream / asset through Livepeer API?">
@@ -21,10 +21,11 @@ Workaround: A short term workaround could be to "paginate" by playbackId instead
 - then viewers by playbackId with `/api/data/views/query?playbackId=<pid>&breakdownBy[]=viewerId`
 </Card>
 
-<Card title="Is there a way to update width and height of iframe embeded player">
-Diagnose: Yes, you can use the iframe embeded player and set the width and height in the iframe tag, however the best way to do this is to use the aspect ratio. 
+<Card title="Is there a way to update width and height of iframe embedded player">
+  Diagnose: Yes, you can use the iframe embedded player and set the width and
+  height in the iframe tag, however the best way to do this is to use the aspect
+  ratio.
 </Card>
-
 
 <Card title="How to enforce webrtc playback, to ensure it is always low latency otherwise fail?">
 There are two solutions to accomplish this:
@@ -42,16 +43,15 @@ function PlayerComponent() {
 }
 ```
 
-2. If you are using the iframe embeded player, you can add `lowLatency=true` to the query string.
-`lvpr.tv/?v={playbackid}&lowLatency=true`
-</Card>
+2. If you are using the iframe embedded player, you can add `lowLatency=true` to
+   the query string. `lvpr.tv/?v={playbackid}&lowLatency=true`
+   </Card>
 
-<Card title="When creating a thumbnail from a live stream, it needs to wait for the first thumbnail to be available. this generally takes less than a min. Then before a dynamic thumbnail is accessable, what is used to show on the player?">
+<Card title="When creating a thumbnail from a live stream, it needs to wait for the first thumbnail to be available. this generally takes less than a min. Then before a dynamic thumbnail is accessible, what is used to show on the player?">
 You can use a poster image by default for a player, then, when playback info API returns the thumbnail url, you can start to use dynamic thumbnail for preview.
 Here is how to set up a poster image in Player:
 You can set the poster image for a video by utilizing the poster property in Livepeer’s Player component. This property can take either an image URL or a React component as its value.
 To set the poster image with a URL, you can use the following code example:
-
 
 ```js
 import { Player } from "@livepeer/react";
@@ -64,11 +64,12 @@ function PlayerComponent() {
       poster="YOUR_IMAGE_URL"
     />
   );
-};
+}
 ```
 
-If you prefer using a React component, then you can create an image component and pass it as a value to the poster property. Here is a code example that illustrates how you can do this:
-
+If you prefer using a React component, then you can create an image component
+and pass it as a value to the poster property. Here is a code example that
+illustrates how you can do this:
 
 ```js
 =
