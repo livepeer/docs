@@ -1,44 +1,70 @@
 ---
 title: "Volume"
 description:
-  "The `Volume` and `VolumeIndicator` provide interactive controls and visual
-  cues for the volume level."
+  "The `Volume`, `VolumeIndicator`, and `MuteTrigger` components provide
+  interactive controls for the volume level."
 ---
 
-The `Volume` and `VolumeIndicator` components offer users interactive controls
-to adjust the volume and provide visual indicators for the current volume level.
-They utilize `@radix-ui/react-presence` for conditional rendering, ensuring they
-are displayed properly based on device capabilities and user interactions.
+<iframe
+  src="https://ui-kit-docs-embed.vercel.app/player/volume"
+  height={550}
+  width="100%"
+  frameborder="0"
+  allowfullscreen
+  allow="autoplay"
+  style={{
+    borderRadius: 10,
+  }}
+/>
 
-## Introduction
+<Info>
+  All of the `Volume` components extend from
+  [`@radix-ui/react-slider`](https://www.radix-ui.com/primitives/docs/components/slider),
+  and inherits all of the documentation for those child components.
+</Info>
 
-### `Volume`
+#### Features
 
-`Volume` serves as an interactive slider for users to control the media volume.
-It's displayed only if the device supports volume changes. This is notably _not_
-supported on iOS, and not shown on iOS Safari.
+- Conditional rendering based on volume status, customizable with the `matcher`
+  pattern
+- Keyboard shortcuts and adheres to [WAI-ARIA](https://w3c.github.io/aria/)
+  design patterns
+- Compatible with CSS animations for dynamic enter/exit animations
 
-#### Props
+### Anatomy
 
-The component accepts all props suitable for a slider element, along with
-specific props:
+Import the components and piece the parts together.
 
-##### `forceMount`
+```tsx
+import * as Player from "@livepeer/react/player";
 
-A boolean that, when set to true, ensures the component is always mounted. This
-is particularly useful for managing animations with external animation
-libraries.
+export default () => (
+  <Player.Root>
+    <Player.MuteTrigger>
+      <Player.VolumeIndicator />
+    </Player.MuteTrigger>
+    <Player.Volume>
+      <Player.Track>
+        <Player.Range />
+      </Player.Track>
+      <Player.Thumb />
+    </Player.Volume>
+  </Player.Root>
+);
+```
 
-### `VolumeIndicator`
+## Usage
 
-`VolumeIndicator` provides a visual cue for the current volume level and mute
-state. It can be configured to appear under certain conditions, defined by the
-`matcher` prop or the mute state.
+`LiveIndicator` provides a visual notification of live streaming, enabling
+viewers to easily discern the live status of the media.
 
-#### Props
+### Props
 
-The component accepts all props appropriate for a div element, along with
-specific props:
+#### MuteTrigger
+
+Accepts all props for a typical button element.
+
+#### VolumeIndicator
 
 ##### `forceMount`
 
@@ -53,77 +79,63 @@ should be visible. It can be a boolean matching the mute state or a function
 that provides custom logic for visibility determination based on the volume
 level.
 
-### Usage
+#### Volume
 
-Here's a generalized example of how the `Volume` and `VolumeIndicator`
-components might be used within the Player:
+#### `forceMount`
 
-```tsx
-import * as Player from "@livepeer/react/player";
+Keeps the component always mounted, aiding in managing animations.
 
-function MediaPlayerComponent() {
-  return (
-    <Player.Root>
-      <Player.Volume className="relative mr-1 flex-1 group flex cursor-pointer items-center select-none touch-none max-w-[120px] h-5">
-        <Player.Track>
-          <Player.Range />
-        </Player.Track>
-        <Player.Thumb />
-      </Player.Volume>
-      <Player.VolumeIndicator matcher={false}>
-        {/* Visual cue for muted */}
-      </Player.VolumeIndicator>
-    </Player.Root>
-  );
-}
-```
+### Data Attributes
 
-In this example, `Volume` provides a slider for users to control the volume, and
-`VolumeIndicator` displays a visual cue when the volume is muted.
+#### MuteTrigger
 
-## Data Attributes
+##### `data-livepeer-mute-trigger`
 
-Both components assign several data attributes to their underlying elements to
-reflect the current state, user interactions, and visibility conditions.
+Identifies the mute toggle component within the media player setup.
 
-### `Volume`
+##### `data-muted`
 
-#### `data-livepeer-controls-volume`
+Shows whether the audio is currently muted (`"true"`) or active (`"false"`),
+assisting in the visual representation and scripting based on the mute state.
 
-Serves to identify the component's role within the Player.
+#### VolumeIndicator
 
-#### `data-livepeer-muted`
-
-Indicates the mute state, `"true"` if muted and `"false"` otherwise.
-
-#### `data-livepeer-volume`
-
-Shows the current volume as a percentage, e.g., `"50"` for 50% volume.
-
-#### `data-visible`
-
-Reflects the visibility status of the slider, with `"true"` meaning it's
-currently visible (i.e., volume change is supported) and `"false"` denoting it's
-not visible.
-
-### `VolumeIndicator`
-
-#### `data-livepeer-controls-volume-indicator`
+##### `data-livepeer-controls-volume-indicator`
 
 Identifies the component's role within the Player.
 
-#### `data-livepeer-muted`
+##### `data-livepeer-muted`
 
 Indicates the mute state, `"true"` if muted and `"false"` otherwise.
 
-#### `data-livepeer-volume`
+##### `data-livepeer-volume`
 
 Shows the current volume as a percentage, e.g., `"50"` for 50% volume.
 
-#### `data-visible`
+##### `data-visible`
 
 Indicates the visibility status of the indicator, with `"true"` meaning it's
 currently visible based on the `matcher` or mute state and `"false"` denoting
 it's not visible.
 
 This is often used for dynamically applying enter/exit CSS animations.
+
+#### Volume
+
+##### `data-livepeer-controls-volume`
+
+Serves to identify the component's role within the Player.
+
+##### `data-livepeer-muted`
+
+Indicates the mute state, `"true"` if muted and `"false"` otherwise.
+
+##### `data-livepeer-volume`
+
+Shows the current volume as a percentage, e.g., `"50"` for 50% volume.
+
+##### `data-visible`
+
+Reflects the visibility status of the slider, with `"true"` meaning it's
+currently visible (i.e., volume change is supported) and `"false"` denoting it's
+not visible.

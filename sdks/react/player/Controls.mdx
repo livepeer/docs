@@ -5,78 +5,73 @@ description:
   actions such as play, pause, and more."
 ---
 
-The `Controls` offers a user-friendly interface for showing and hiding the
-controls elements. This React component utilizes `@radix-ui/react-presence` for
-conditional rendering, ensuring it is displayed properly based on the current
-media state, device capabilities, and user interactions.
+<iframe
+  src="https://ui-kit-docs-embed.vercel.app/player/controls"
+  height={550}
+  width="100%"
+  frameborder="0"
+  allowfullscreen
+  allow="autoplay"
+  style={{
+    borderRadius: 10,
+  }}
+/>
 
-## Introduction
+<Info>
+  `Controls` serves as the interactive layer for media control actions, dynamically displayed based on the media state, loading state, or presence of an error. It is designed to automatically show upon user interaction with the Container element and hides based on the `Root` component's `autohide` property.
 
-### `Controls`
+By default, controls are shown during hover or interaction, mimicking the
+behavior of standard media players.
 
-`Controls` serves as the interactive layer for media control actions. It is
-dynamically displayed based on certain conditions like the media state, loading
-state, or if an error is present.
+</Info>
 
-By default, it is shown when a user hovers over or interacts with the Container
-element, similar to how controls are usually shown for most media players.
+#### Features
 
-It is automatically hidden after a user interaction based on the `Root`
-component's `autohide` property.
+- Automatic conditional rendering based on user interactions
+- Compatible with CSS animations for dynamic enter/exit animations
 
-#### Props
+<Warning>
+  The visibility of `Controls` is managed automatically, relying on the
+  `autohide` property of the `Root` component to determine how long after a user
+  interaction to wait before hiding.
+</Warning>
 
-The component accepts all props appropriate for a div element, along with
-specific props:
+### Anatomy
 
-##### `forceMount`
-
-A boolean that, when set to true, ensures the component is always mounted. This
-is particularly useful for managing animations with external animation
-libraries.
-
-##### `autoHide`
-
-Optional. Sets the time to wait (in milliseconds) to auto-hide controls after a
-user interaction, like mouse or touch event. Defaults to 3000. Set to 0 for no
-hiding.
-
-### Usage
-
-Here's a generalized example of how the `Controls` component might be used
-within the Player:
+Import the components and piece the parts together.
 
 ```tsx
 import * as Player from "@livepeer/react/player";
 
-function MediaPlayerComponent() {
-  return (
-    <Player.Root>
-      <Player.Controls>
-        {/* Interactive control elements like play/pause button, progress bar, etc. */}
-      </Player.Controls>
-    </Player.Root>
-  );
-}
+export default () => (
+  <Player.Root>
+    <Player.Controls>
+      {/* Place interactive control elements here, like play/pause buttons, progress bars, etc. */}
+    </Player.Controls>
+  </Player.Root>
+);
 ```
 
-`Controls` provides an interactive layer within the Player, where various
-control elements like play/pause buttons, progress bars, etc., can be placed.
+## Usage
 
-## Data Attributes
+### Props
 
-The `Controls` component assigns several data attributes to its underlying
-element to reflect the current state, user interactions, and visibility
-conditions.
+#### `forceMount`
+
+Ensures the component is always in the DOM, useful for animation controls.
+
+#### `autoHide`
+
+Defines the auto-hide delay in milliseconds after user interaction. Default is
+3000ms. Set to 0 to disable auto-hide.
+
+### Data Attributes
 
 #### `data-livepeer-controls`
 
-Serves to identify the component's role within the Player.
+Identifies the control component within the Player.
 
 #### `data-visible`
 
-Reflects the visibility status of the controls, with `"true"` meaning they're
-currently visible (not hidden, not loading, and no error present) and `"false"`
-denoting they're not visible.
-
-This is often used for dynamically applying enter/exit CSS animations.
+Indicates if the controls are visible (`"true"`) or not (`"false"`), useful for
+CSS-based animations.

@@ -1,105 +1,97 @@
 ---
-title: "Play/Pause"
+title: "Play"
 description:
-  "The `PlayPauseTrigger` and `PlayingIndicator` components support interactive
-  play/pause functionality and visual cues for the playback state."
+  "The `PlayPauseTrigger` component enables users to toggle playback and the
+  `PlayingIndicator` provides a visual cue for the current playback state."
 ---
 
-The `PlayPauseTrigger` and `PlayingIndicator` components provide an interactive
-play/pause button (`PlayPauseTrigger`) and a visual representation of the
-playing state (`PlayingIndicator`). They use `@radix-ui/react-presence` for
-conditional rendering, ensuring accurate representation based on the current
-playback state.
+<iframe
+  src="https://ui-kit-docs-embed.vercel.app/player/play"
+  height={550}
+  width="100%"
+  frameborder="0"
+  allowfullscreen
+  allow="autoplay"
+  style={{
+    borderRadius: 10,
+  }}
+/>
 
-## Introduction
+<Info>
+  `PlayPauseTrigger` and `PlayingIndicator` integrate together to form the
+  typical play/pause interaction for media players. They do not have to be used
+  together and can combine with other components.
+</Info>
 
-### `PlayPauseTrigger`
+#### Features
 
-`PlayPauseTrigger` acts as an interactive button, allowing users to toggle
-between playing and pausing the media.
+- Controls the playback state and conditionally renders based on playing status,
+  customizable with the `matcher` pattern
+- Keyboard hotkeys and adheres to [WAI-ARIA](https://w3c.github.io/aria/) design
+  patterns
 
-#### Props
+### Anatomy
 
-The component accepts all props suitable for a button element.
-
-### `PlayingIndicator`
-
-`PlayingIndicator` offers a visual cue about the playing state of the media. It
-can be persistently present in the DOM or configured to appear only when the
-media is playing or paused, based on the `matcher` prop.
-
-#### Props
-
-The component accepts all props appropriate for a div element, along with
-specific props:
-
-##### `forceMount`
-
-A boolean that, when true, ensures the component is always mounted. This is
-particularly useful for controlling animations with external animation
-libraries.
-
-##### `matcher`
-
-A prop intended to define the circumstances under which the `PlayingIndicator`
-should be visible. It can be a boolean that directly corresponds to the playing
-state or a function that provides custom logic for visibility determination
-based on the playing state.
-
-### Usage
-
-Here's a generalized example of how the `PlayPauseTrigger` and
-`PlayingIndicator` components might be used within the Player:
+Import the components and piece the parts together.
 
 ```tsx
 import * as Player from "@livepeer/react/player";
 
-function MediaPlayerComponent() {
-  return (
-    <Player.Root>
-      <Player.PlayPauseTrigger>Toggle Play/Pause</Player.PlayPauseTrigger>
-      <Player.PlayingIndicator matcher={true}>
-        {/* Visual cue for actively playing state */}
-      </Player.PlayingIndicator>
-    </Player.Root>
-  );
-}
+export default () => (
+  <Player.Root>
+    <Player.PlayPauseTrigger />
+    <Player.PlayingIndicator />
+  </Player.Root>
+);
 ```
 
-In this example, `PlayPauseTrigger` provides a button to toggle play/pause, and
-`PlayingIndicator` displays a visual cue based on the playing state.
+## Usage
 
-## Data Attributes
+### Props
 
-Both components assign several data attributes to their underlying elements to
-reflect the current state, user interactions, and visibility conditions.
+#### `PlayPauseTrigger`
 
-### `PlayPauseTrigger`
+Accepts all props for a typical button element.
 
-#### `data-livepeer-controls-play-pause-trigger`
+#### `PlayingIndicator`
 
-Serves to identify the component's role within the Player.
+##### `forceMount`
 
-#### `data-playing`
+Ensures the component is always mounted, beneficial for animation consistency.
 
-Indicates the current playing state, `"true"` when the media is playing and
-`"false"` when it is paused.
+##### `matcher`
 
-### `PlayingIndicator`
+Defines the condition under which the `PlayingIndicator` displays, using a
+boolean or a custom function for tailored visibility logic.
 
-#### `data-livepeer-controls-play-pause-indicator`
+### Data Attributes
 
-Identifies the component's role within the Player.
+#### PlayPauseTrigger
 
-#### `data-playing`
+##### `data-livepeer-play-pause-trigger`
 
-Shows the current playing state, `"true"` when the media is playing and
-`"false"` when it is paused.
+Identifies the play/pause button within the Player.
 
-#### `data-visible`
+##### `data-playing`
 
-Reflects the visibility status of the indicator, with `"true"` meaning it's
-currently visible based on the `matcher` or playing state and `"false"` denoting
-it's not visible.
+Shows the playback status (`"true"` for playing, `"false"` for paused).
 
-This is often used for dynamically applying enter/exit CSS animations.
+##### `data-visible`
+
+Signifies if the indicator is visible (`"true"`) or hidden (`"false"`), useful
+for CSS-based animations and visibility adjustments.
+
+#### PlayingIndicator
+
+##### `data-livepeer-playing-indicator`
+
+Marks the playing status indicator component.
+
+##### `data-playing`
+
+Shows the playback status (`"true"` for playing, `"false"` for paused).
+
+##### `data-visible`
+
+Signifies if the indicator is visible (`"true"`) or hidden (`"false"`), useful
+for CSS-based animations.

@@ -1,0 +1,161 @@
+---
+title: "LivepeerConfig"
+description:
+  "The LivepeerConfig component manages configuration for all hooks using React
+  Context."
+---
+
+The `LivepeerConfig` component manages configuration for all hooks using
+[React Context](https://reactjs.org/docs/context.html).
+
+## Usage
+
+<Tabs>
+  <Tab title="React">
+    ```tsx 
+    import { LivepeerConfig } from '@livepeer/react';
+    ```
+    
+    The `LivepeerConfig` should wrap all of your pages, so every page can use hooks provided by Livepeer React.
+
+    ```tsx
+    const client = createReactClient({
+      provider: studioProvider({ apiKey: 'yourStudioApiKey' }),
+    });
+
+    function App() {
+      return (
+        <LivepeerConfig client={client}>
+          <YourRoutes />
+        </LivepeerConfig>
+      );
+    }
+    ```
+
+    <Info>
+      If you are using an SSR framework (like Next.js), see [SSR](#ssr) for specific instructions on how to configure
+      the `head` of the document, to ensure hydration happens correctly.
+    </Info>
+
+  </Tab>
+  <Tab title="React Native">
+
+    ```tsx
+    import { LivepeerConfig } from '@livepeer/react-native';
+    ```
+
+    The `LivepeerConfig` should wrap all of your screens, so every screen can use hooks provided by Livepeer React.
+
+    ```tsx
+    const client = createReactClient({
+      provider: studioProvider({ apiKey: 'yourStudioApiKey' }),
+    });
+
+    function App() {
+      return (
+        <LivepeerConfig client={client}>
+          <YourRoutes />
+        </LivepeerConfig>
+      );
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+## Configuration
+
+### client
+
+A livepeer [`Client`](/sdks/livepeer-react/client) instance that consists of
+configuration options. Required to connect to a provider.
+
+```tsx
+const client = createReactClient({
+  provider: studioProvider({ apiKey: "yourStudioApiKey" }),
+});
+
+function App() {
+  return (
+    <LivepeerConfig client={client}>
+      <YourRoutes />
+    </LivepeerConfig>
+  );
+}
+```
+
+### theme
+
+Sets the global theme overrides. It is recommended to use this for any global
+app styles. This is optional and every value has a default. See the source code
+for more information.
+
+```tsx {5-16,20}
+const client = createReactClient({
+  provider: studioProvider({ apiKey: "yourStudioApiKey" }),
+});
+
+const theme: ThemeConfig = {
+  colors: {
+    accent: "rgb(0, 145, 255)",
+    containerBorderColor: "rgba(0, 145, 255, 0.9)",
+  },
+  fonts: {
+    display: "Inter",
+  },
+  radii: {
+    slider: "4px",
+  },
+};
+
+function App() {
+  return (
+    <LivepeerConfig client={client} theme={theme}>
+      <YourRoutes />
+    </LivepeerConfig>
+  );
+}
+```
+
+## SSR
+
+<Warning>
+  The following section only applies to web-based use-cases - React Native has
+  no concept of SSR.
+</Warning>
+
+You can get access to the CSS string by using the `getCssText` function. This
+function is made available by the createStitches function. This will give you
+all the CSS you need to server-side render it.
+
+For a better hydration strategy, we highly recommend adding an `id="stitches"`
+to your style tag.
+
+Here's an example of SSR with Next.js:
+
+```tsx
+import NextDocument, { Html, Head, Main, NextScript } from "next/document";
+import { getCssText } from "@livepeer/react";
+
+export default class Document extends NextDocument {
+  render() {
+    return (
+      <Html lang="en">
+        <Head>
+          <style
+            id="stitches"
+            dangerouslySetInnerHTML={{ __html: getCssText() }}
+          />
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
+}
+```
+
+See the [Stitches](https://stitches.dev/docs/server-side-rendering)
+documentation for further information.

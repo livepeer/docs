@@ -1,0 +1,373 @@
+---
+title: "useCreateAsset"
+description: "React Hook for creating a new asset."
+---
+
+useCreateAsset is a React Hook for creating a new asset. It returns a `mutate`
+function that can be called to create an asset. Multiple assets can be created
+at once by passing in an array of `sources`.
+
+## Usage
+
+<Tabs>
+  <Tab title="React">
+    ```tsx 
+    import { useCreateAsset } from '@livepeer/react';
+    ```
+  </Tab>
+  <Tab title="React Native">
+
+    ```tsx
+    import { useCreateAsset } from '@livepeer/react-native';
+    ```
+
+  </Tab>
+</Tabs>
+
+<Warning>
+  The asset ID should only be passed to users who are allowed to modify the
+  asset. **Ensure viewers are only provided with the `playbackId`,** which is a
+  limited identifier that provides only the ability to stream media using the
+  [`Player`](/sdks/livepeer-react/Player).
+</Warning>
+
+The following example shows how an asset can be created with the `mutate`
+function. The variables are passed into the `useCreateAsset` hook, and
+`createAsset` return type is defined when the variables are truthy.
+
+```tsx
+function SomeComponent() {
+  const [video, setVideo] = useState<File | undefined>(undefined);
+  const {
+    mutate: createAsset,
+    data: assets,
+    status,
+    progress,
+    error,
+  } = useCreateAsset(
+    // we use a `const` assertion here to provide better Typescript types
+    // for the returned data
+    video
+      ? {
+          sources: [
+            {
+              name: video.name,
+              file: video,
+              storage: {
+                ipfs: true,
+                metadata: {
+                  name: "interesting video",
+                  description: "a great description of the video",
+                },
+              },
+            },
+          ] as const,
+        }
+      : null,
+  );
+
+  return (
+    <div>
+      <input
+        type="file"
+        multiple={false}
+        accept="video/*"
+        onChange={(e) => {
+          if (e.target.files) {
+            setVideo(e.target.files[0]);
+          }
+        }}
+      />
+      <button
+        disabled={status === "loading" || !createAsset}
+        onClick={() => {
+          createAsset?.();
+        }}
+      >
+        Create Asset
+      </button>
+      {assets?.map((asset) => (
+        <div key={asset.id}>
+          <div>
+            <div>Asset Name: {asset?.name}</div>
+            <div>Playback URL: {asset?.playbackUrl}</div>
+            <div>IPFS CID: {asset?.storage?.ipfs?.cid ?? "None"}</div>
+          </div>
+        </div>
+      ))}
+
+      {error && <div>{error.message}</div>}
+    </div>
+  );
+}
+```
+
+## Mutation
+
+## Return Value
+
+The return value is partially based on
+[Tanstack Query](https://tanstack.com/query/v4/docs/reference/useMutation), with
+some return types aggregated for simplicity.
+
+The value `progress` is an array of progress values which contains the upload
+progress from [tus](https://github.com/tus/tus-js-client), as well as the
+processing progress of the asset from the provider. These values are polled
+consistently until the asset succeeds or fails to be processed by the provider.
+
+```tsx
+{
+  data?: Asset[],
+  progress?: CreateAssetProgress,
+  error?: Error,
+  isError: boolean,
+  isIdle: boolean,
+  isLoading: boolean,
+  isSuccess: boolean,
+  status: 'idle' | 'loading' | 'success' | 'error',
+  mutate: () => void,
+  mutateAsync: () => Promise<Asset[]>,
+  variables?: CreateAssetArgs
+}
+```
+
+## Configuration
+
+### sources
+
+The `sources` used for the asset creation can be an array of either a URL or a
+local File/ReadStream/object with a `uri` string. _It is highly recommended to
+use
+[const assertions](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions)
+to infer types properly from the `sources` parameter - please see below for an
+example._
+
+<Tabs>
+  <Tab title="React">
+
+```tsx "
+import { useCreateAsset } from "@livepeer/react";
+
+function SomeComponent() {
+  const { mutate: createAsset, status } = useCreateAsset({
+    sources: [
+      {
+        name: video.name,
+        file: video,
+        creatorId: "0xabcd000000000000000000000000000000001234",
+        storage: {
+          ipfs: true,
+          metadata: {
+            name: "interesting video",
+            description: "a great description of the video",
+          },
+        },
+      },
+    ] as const,
+  });
+}
+```
+
+  </Tab>
+  <Tab title="React Native">
+
+```tsx
+import { useCreateAsset } from "@livepeer/react";
+
+function SomeComponent() {
+  // get the URI from a file picker
+  // then pass the URI into the source
+  const { mutate: createAsset, status } = useCreateAsset({
+    sources: [
+      {
+        name: video.name,
+        file: { uri },
+        creatorId: "0xabcd000000000000000000000000000000001234",
+        storage: {
+          ipfs: true,
+          metadata: {
+            name: "interesting video",
+            description: "a great description of the video",
+          },
+        },
+      },
+    ] as const,
+  });
+}
+```
+
+  </Tab>
+</Tabs>
+
+<Info>
+  The `useCreateAsset` hook uses [tus](https://github.com/tus/tus-js-client) for
+  resumable uploads and checks for existing uploads by default, before starting
+  a new upload. **It also automatically polls the livepeer provider's API to
+  update `status` until the import job is complete.**
+</Info>
+
+The `sources` type can be either a URL or a File/ReadStream:
+
+```tsx
+type CreateAssetSourceUrl = {
+  /** Name for the new asset */
+  name: string;
+  /** External URL to be imported */
+  url: string;
+  /** The storage configs for the new asset (e.g. IPFS) */
+  storage?: Storage;
+  /**
+   * Sets the playback policy for the asset created.
+   */
+  playbackPolicy?: PlaybackPolicy;
+  /**
+   * Sets the creator ID for the asset that is created.
+   * This should be an wallet's public address.
+   */
+  creatorId?: CreateAssetCreatorId;
+};
+
+/** React Native file type */
+type NativeFile = File & {
+  uri: string;
+};
+
+type CreateAssetSourceFile = {
+  /** Name for the new asset */
+  name: string;
+  /** Content to be uploaded or streamed */
+  file: File | ReadStream | NativeFile;
+  /** The storage configs for the new asset (e.g. IPFS) */
+  storage?: Storage;
+  /**
+   * Sets the playback policy for the asset created.
+   */
+  playbackPolicy?: PlaybackPolicy;
+  /**
+   * Sets the creator ID for the asset that is created.
+   * This should be an wallet's public address.
+   */
+  creatorId?: CreateAssetCreatorId;
+};
+
+/** Source(s) to upload - can be a file or URL source */
+type Sources = CreateAssetSourceFile[] | CreateAssetSourceUrl[];
+```
+
+<Info>
+  We are planning on adding further features to the creator ID such as provable
+  claims. Reach out to us on [Discord](https://discord.gg/livepeer) if you're
+  interested!
+</Info>
+
+If `CreateAssetSourceFile` is passed in the array, the `useCreateAsset` hook
+uses [tus](https://github.com/tus/tus-js-client) for resumable uploads and
+checks for existing uploads by default, before starting a new upload.
+
+If `CreateAssetSourceUrl` is passed in the array, the hook will make a request
+to the background to start an import. This can also be an IPFS URL
+(`ipfs://<CID>`) or Arweave URL (`ar://<HASH>`). **Either a URL or file must be
+provided.**
+
+#### storage
+
+The `storage` configs can be applied on asset creation. See `useUpdateAsset` for
+more details on these configs. If the `storage` parameter is omitted, the asset
+will not be stored in decentralized storage.
+
+<Info>
+  If you would like to use Arweave as storage, we recommend you upload to
+  Arweave first and then import the video.
+</Info>
+
+```tsx
+type Storage = {
+  /**
+   * If the asset should be stored on IPFS.
+   */
+  ipfs?: boolean;
+  /**
+   * Metadata exported to the storage provider. This will be deep merged with the default
+   * metadata from the livepeer provider. This should ideally be EIP-721/EIP-1155 compatible.
+   *
+   * @see {@link https://eips.ethereum.org/EIPS/eip-721}
+   */
+  metadata?: Partial<Metadata> & {
+    [k: string]: unknown;
+  };
+  /**
+   * The metadata template to use. `player` will embed the Livepeer Player's IPFS CID while `file`
+   * will reference only the immutable media files.
+   */
+  metadataTemplate?: "player" | "file";
+};
+```
+
+The metadata can be overridden when the Asset and its metadata are exported to
+IPFS - we provide some helper types for metadata best practices based on ERC-721
+and ERC-1155:
+
+```tsx
+type Metadata = {
+  /** Name of the Asset */
+  name?: string;
+  /** Description of the Asset */
+  description?: string;
+  /** Image URL for the Asset */
+  image?: string;
+  /** Properties of the Asset */
+  properties?: {
+    [k: string]: unknown;
+  };
+  /**
+   * Background color for the Asset (OpenSea Standard)
+   *
+   * @see {@link https://docs.opensea.io/docs/metadata-standards}
+   */
+  background_color?: string;
+  /**
+   * Attributes for the Asset (OpenSea Standard)
+   *
+   * @see {@link https://docs.opensea.io/docs/metadata-standards}
+   */
+  attributes?: {
+    [k: string]: unknown;
+  };
+};
+```
+
+### noWait
+
+The `noWait` config option skips the polling mechanism which waits for the Asset
+upload to succeed or fail. It will immediately return after the file upload is
+complete, or in the case of a URL upload, it will return after the URL is
+`POST`ed to the backend.
+
+```tsx
+import { useCreateAsset } from "@livepeer/react";
+
+function SomeComponent() {
+  const { mutate: createAsset } = useCreateAsset({
+    sources: [{ name: video.name, file: video }] as const,
+    noWait,
+  });
+}
+```
+
+### mutationConfig
+
+The `mutationConfig` parameter allows for any
+[Tanstack Query](https://tanstack.com/query/v4/docs/reference/useMutation)
+`useMutation` options, such as `cacheTime` or `retry`. These override any
+configs passed by default by the internal hook.
+
+```tsx
+import { useCreateAsset } from "@livepeer/react";
+
+function SomeComponent() {
+  const { mutate: createAsset } = useCreateAsset({
+    sources: [{ name: video.name, file: video }] as const,
+    mutationConfig: { retry: 5 },
+  });
+}
+```
