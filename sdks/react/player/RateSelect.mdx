@@ -1,0 +1,100 @@
+---
+title: "Playback Speed"
+description:
+  "The `RateSelect` and `RateSelectItem` components provide an interface for
+  users to adjust the playback speed of the media."
+---
+
+<iframe
+  src="https://ui-kit-docs-embed.vercel.app/player/rate"
+  height={550}
+  width="100%"
+  frameborder="0"
+  allowfullscreen
+  allow="autoplay"
+  style={{
+    borderRadius: 10,
+  }}
+/>
+
+#### Features
+
+- Composes a dropdown menu for selecting any playback speed, and handles syncing
+  with the underlying media element
+- Keyboard navigation (with Radix) and adheres to
+  [WAI-ARIA](https://w3c.github.io/aria/) design patterns
+
+### Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Player from "@livepeer/react/player";
+
+function MediaPlayerComponent() {
+  return (
+    <Player.Root>
+      <Player.LiveIndicator>
+        <Player.RateSelect>
+          <Player.SelectTrigger>
+            <Player.SelectValue />
+            <Player.SelectIcon />
+          </Player.SelectTrigger>
+          <Player.SelectPortal>
+            <Player.SelectContent>
+              <Player.SelectScrollUpButton />
+              <Player.SelectViewport>
+                <Player.RateSelectItem>
+                  <Player.SelectItemText />
+                  <Player.SelectItemIndicator />
+                </Player.RateSelectItem>
+
+                <Player.SelectGroup>
+                  <Player.SelectLabel />
+                  <Player.RateSelectItem>
+                    <Player.SelectItemText />
+                    <Player.SelectItemIndicator />
+                  </Player.RateSelectItem>
+                </Player.SelectGroup>
+
+                <Player.SelectSeparator />
+              </Player.SelectViewport>
+              <Player.SelectScrollDownButton />
+              <Player.SelectArrow />
+            </Player.SelectContent>
+          </Player.SelectPortal>
+        </Player.RateSelect>
+      </Player.LiveIndicator>
+    </Player.Root>
+  );
+}
+```
+
+## Usage
+
+### Props
+
+#### `PlaybackSpeedSelect`
+
+Takes all props of the Radix Select Root component.
+
+#### `RateSelectItem`
+
+#### `value`
+
+Required - denote the playback speed value as a number.
+
+### Data Attributes
+
+#### `data-livepeer-playback-speed-select`
+
+Identifies the playback speed selection component within the Player.
+
+#### `data-livepeer-playback-speed-option`
+
+Marks each option within the `PlaybackSpeedSelect`, indicating the selectable
+playback speeds.
+
+#### `data-rate`
+
+Shows the selected playback speed value.

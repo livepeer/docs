@@ -1,0 +1,114 @@
+---
+title: "Client"
+description:
+  "The livepeer Client is a framework agnostic client that manages wallet
+  connection state and configuration, such as: auto-connection, connectors, and
+  ethers providers."
+---
+
+The livepeer `Client` is a framework agnostic client that manages state and
+connection to a Livepeer provider. The `createReactClient` function wraps the
+`Client` with a React-specific caching layer for faster queries.
+
+## Usage
+
+<Tabs>
+  <Tab title="React">
+    ```tsx 
+    import { createReactClient } from '@livepeer/react';
+    ```
+
+  </Tab>
+  <Tab title="React Native">
+
+    ```tsx
+    import { createReactClient } from '@livepeer/react-native';
+    ```
+
+  </Tab>
+</Tabs>
+
+The client can be created using `createReactClient`.
+
+```tsx
+const client = createReactClient({
+  provider: studioProvider({ apiKey: "yourStudioApiKey" }),
+});
+```
+
+## Configuration
+
+### provider
+
+Livepeer provider interface for connecting to the network.
+
+```tsx
+const client = createReactClient({
+  provider: studioProvider({ apiKey: "yourStudioApiKey" }),
+});
+```
+
+### storage (optional)
+
+<Tabs>
+  <Tab title="React">
+
+The default strategy to persist and cache data. Used for both state management
+and query caching. Defaults to `window.localStorage`.
+
+To disable the use of localStorage, we provide a convenient "no-op" storage
+option:
+
+    ```tsx
+    import {
+      createReactClient,
+      studioProvider,
+      noopStorage,
+      createStorage,
+    } from "@livepeer/react";
+
+    const client = createReactClient({
+      provider: studioProvider({ apiKey: 'yourStudioApiKey' }),
+      storage: createStorage({
+        storage: noopStorage,
+      }),
+    });
+    ```
+
+  </Tab>
+   <Tab title="React Native">
+
+The default strategy to persist and cache data. Used for both state management
+and query caching. Defaults to no storage.
+
+    ```tsx
+    import AsyncStorage from '@react-native-async-storage/async-storage';
+
+    const client = createReactClient({
+      provider: studioProvider({ apiKey: 'yourStudioApiKey' }),
+      storage: createStorage({ storage: AsyncStorage }),
+    });
+    ```
+
+  </Tab>
+</Tabs>
+
+### queryClient (optional)
+
+The react-query
+[QueryClient](https://tanstack.com/query/v4/docs/reference/QueryClient) used to
+cache/deduplicate queries. Defaults to caching for 24 hours and no retries.
+
+```ts
+const client = createReactClient({
+  provider: studioProvider({ apiKey: "yourStudioApiKey" }),
+  queryClient: new QueryClient({
+    defaultOptions: {
+      queries: {
+        cacheTime: 1_000 * 60 * 60, // 1 hour
+        retry: 100,
+      },
+    },
+  }),
+});
+```

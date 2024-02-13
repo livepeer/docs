@@ -2,7 +2,7 @@
 title: "Play video from IPFS/Arweave"
 description:
   "Learn how to automatically upload and play back a video on IPFS and Arweave
-  with Livepeer Kit"
+  with Livepeer React"
 ---
 
 Playing back transcoded video from IPFS or Arweave is easy with Livepeer! The
@@ -45,7 +45,7 @@ To see a complete example of using dStorage playback in React, see our
 ### Configuring Providers
 
 We
-[create a new React client and wrap the app with `LivepeerConfig`](/kit/getting-started).
+[create a new React client and wrap the app with `LivepeerConfig`](/sdks/livepeer-react/getting-started).
 
 #### Automatic Playback
 
@@ -58,13 +58,13 @@ IPFS/Arweave HTTP gateway URL.
   will support both styles of URLs in a future update.
 </Info>
 
-The raw input is passed to the [`Player`](/kit/player/Root), which automatically
-detects if it is a valid CID and attempts to fetch the playback info for that
-CID. If the provider does not have an `Asset` with that CID, the Player will
-automatically attempt to upload the CID from IPFS, and then play the transcoded
-content back, without any additional code on the frontend. To ensure that there
-is no delay in playback, we recommend uploading via `useCreateAsset` before
-displaying it in the player.
+The raw input is passed to the [`Player`](/sdks/livepeer-react/player/Root),
+which automatically detects if it is a valid CID and attempts to fetch the
+playback info for that CID. If the provider does not have an `Asset` with that
+CID, the Player will automatically attempt to upload the CID from IPFS, and then
+play the transcoded content back, without any additional code on the frontend.
+To ensure that there is no delay in playback, we recommend uploading via
+`useCreateAsset` before displaying it in the player.
 
 ```tsx DecentralizedStoragePlayback.tsx
 import { Player } from "@livepeer/react";

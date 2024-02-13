@@ -1,0 +1,168 @@
+---
+title: "Getting Started"
+description: "Get started building with Livepeer React!"
+---
+
+<Info>
+  These docs are written for a React or React Native developer building on
+  `@livepeer/react` or `@livepeer/react-native`.
+</Info>
+
+## Installation
+
+Install Livepeer React using your favorite package manager.
+
+<Tabs>
+  <Tab title="React">
+```
+npm i @livepeer/react
+```
+
+  </Tab>
+  <Tab title="React Native">
+
+React Native also requires some peer dependencies (used in the `Player`
+component). We rely on `expo` for pod installation/linking. You must ensure that
+the
+[correct version of `react-native-svg`](https://github.com/software-mansion/react-native-svg#supported-react-native-versions)
+is installed.
+
+If you're installing this in a
+[bare React Native app](https://docs.expo.dev/introduction/managed-vs-bare/#bare-workflow),
+you should also follow the
+[extra `expo-av` installation instructions](https://github.com/expo/expo/tree/sdk-47/packages/expo-av).
+
+```bash React Native
+expo install @livepeer/react-native expo-av react-native-svg
+```
+
+  </Tab>
+
+</Tabs>
+
+## Create a livepeer client
+
+First, create a livepeer `Client` instance using
+[`createReactClient`](/sdks/livepeer-react/client), and pass a provider to it.
+
+<Tabs >
+  <Tab title="React">
+    ```tsx
+    import { createReactClient, studioProvider } from '@livepeer/react';
+
+    const client = createReactClient({
+      provider: studioProvider({ apiKey: 'yourStudioApiKey' }),
+    });
+    ```
+
+  </Tab>
+  <Tab title="React Native">
+    ```tsx 
+    import { createReactClient, studioProvider } from '@livepeer/react-native';
+
+    const client = createReactClient({
+      provider: studioProvider({ apiKey: 'yourStudioApiKey' }),
+    });
+    ```
+
+  </Tab>
+</Tabs>
+
+Note: If you choose to use Studio as a provider, you will need to configure an
+API key for the `studioProvider` which is
+[CORS-protected API key](/sdks/livepeer-react/providers/studio#apikey).
+
+[Read more about client configuration](/sdks/livepeer-react/client)
+
+## Wrap app with `LivepeerConfig`
+
+Next, wrap the app with the [`LivepeerConfig`](/sdks/livepeer-react/LivepeerConfig)
+component, passing the `client` to it.
+
+<Tabs>
+  <Tab title="React">
+
+    This is added to `_app.js` for Next.js or `App.js` with Create React App, so that the
+    `LivepeerConfig` React Context is available across every component.
+
+    ```tsx
+    import {
+      LivepeerConfig,
+      createReactClient,
+      studioProvider,
+    } from '@livepeer/react';
+
+    const client = createReactClient({
+      provider: studioProvider({ apiKey: 'yourStudioApiKey' }),
+    });
+
+    function App() {
+      return (
+        <LivepeerConfig client={client}>
+          <SomeComponent />
+        </LivepeerConfig>
+      );
+    }
+    ```
+
+  </Tab>
+  <Tab title="React Native">
+
+    This is added to `App.js`, so that the `LivepeerConfig` React Context is available across every component.
+
+    ```tsx
+    import {
+      LivepeerConfig,
+      createReactClient,
+      studioProvider,
+    } from '@livepeer/react-native';
+
+    const client = createReactClient({
+      provider: studioProvider({ apiKey: 'yourStudioApiKey' }),
+    });
+
+    function App() {
+      return (
+        <LivepeerConfig client={client}>
+          <SomeComponent />
+        </LivepeerConfig>
+      );
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+## Enjoy!
+
+Use hooks! Every component inside the `LivepeerConfig` is now set up to use the
+livepeer hooks.
+
+<Tabs >
+  <Tab title="React">
+    ```tsx 
+    import { useAsset } from '@livepeer/react';
+
+    function SomeComponent() {
+      const asset = useAsset({ assetId: 'd8e8b87d-6774-4083-a2d7-4e85872d18cd' });
+
+      return <div>Asset: {asset.name}</div>;
+    }
+    ```
+
+  </Tab>
+  <Tab title="React Native">
+    ```tsx 
+    import { useAsset } from '@livepeer/react-native';
+
+    function SomeComponent() {
+      const asset = useAsset({ assetId: 'd8e8b87d-6774-4083-a2d7-4e85872d18cd' });
+
+      return <div>Asset: {asset.name}</div>;
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+Want to learn more? Continue reading the documentation for more details.
