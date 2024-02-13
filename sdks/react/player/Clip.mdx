@@ -3,19 +3,12 @@ title: "Clip"
 description:
   "The `ClipTrigger` component enables users to create clips from live Player
   content."
+icon: scissors
 ---
 
-<iframe
-  src="https://ui-kit-docs-embed.vercel.app/player/clip"
-  height={550}
-  width="100%"
-  frameborder="0"
-  allowfullscreen
-  allow="autoplay"
-  style={{
-    borderRadius: 10,
-  }}
-/>
+import { ExampleWithCode } from "/snippets/ui-kit/react/iframe-example.mdx";
+
+<ExampleWithCode type="player" id="clip" />
 
 <Info>
   The `ClipTrigger` is designed to be used as a child of the `Player` component.
@@ -26,7 +19,7 @@ _Clipping is currently supported only for livestreams_.
 
 </Info>
 
-#### Features
+## Features
 
 - Automatically handles determining the current playback head in Unix time
 - Compatible with the [create clip API](/api-reference/stream/create-clip)
@@ -42,7 +35,7 @@ _Clipping is currently supported only for livestreams_.
   used.
 </Warning>
 
-### Anatomy
+## Anatomy
 
 Import the components and piece the parts together.
 
@@ -51,9 +44,18 @@ import * as Player from "@livepeer/react/player";
 
 export default () => (
   <Player.Root>
-    <Player.LiveIndicator>
-      <Player.ClipTrigger />
-    </Player.LiveIndicator>
+    <Player.Container>
+      <Player.LiveIndicator>
+        <Player.ClipTrigger />
+      </Player.LiveIndicator>
+    </Player.Container>
+    <Player.Container>
+      <Player.Controls>
+        <Player.LiveIndicator>
+          <Player.ClipTrigger />
+        </Player.LiveIndicator>
+      </Player.Controls>
+    </Player.Container>
   </Player.Root>
 );
 ```
@@ -67,33 +69,33 @@ passing a valid `clipLength` to the Root component).
 **It should be wrapped in a LiveIndicator, since the "last n seconds" clipping
 functionality is only supported on livestreams.**
 
-### Props
+## Props
 
 The component accepts all props suitable for a button element, along with
 specific props:
 
-#### `forceMount`
+### `forceMount`
 
 A boolean that, when set to true, ensures the component is always mounted. This
 is particularly useful for controlling animations with external animation
 libraries.
 
-#### `onClip`
+### `onClip`
 
 A function that gets called when a clip is requested. It receives an object
 containing the `playbackId`, `startTime`, and `endTime`, which can be used to
 handle the clip creation process.
 
-### Data Attributes
+## Data Attributes
 
 The `ClipTrigger` component assigns data attributes to its underlying element to
 reflect the current state and user interaction capabilities.
 
-#### `data-livepeer-controls-clip-button`
+### `data-livepeer-controls-clip-button`
 
 Serves to identify the component's role.
 
-#### `data-visible`
+### `data-visible`
 
 Indicates the visibility status of the trigger, with `"true"` meaning it's
 currently visible (i.e., clip functionality is enabled) and `"false"` denoting

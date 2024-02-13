@@ -54,10 +54,10 @@ export function PlayerWithControls(props: { src: Src[] | null }) {
 
   return (
     <Player.Root src={props.src}>
-      <Player.Container className="h-full w-full overflow-hidden bg-black outline-none transition-all">
+      <Player.Container className="h-full w-full overflow-hidden bg-black outline-none transition">
         <Player.Video
           title="Live stream"
-          className={cn("h-full w-full transition-all")}
+          className={cn("h-full w-full transition")}
         />
 
         <Player.LoadingIndicator className="w-full relative h-full bg-black/50 backdrop-blur data-[visible=true]:animate-in data-[visible=false]:animate-out data-[visible=false]:fade-out-0 data-[visible=true]:fade-in-0">
@@ -114,7 +114,7 @@ export function PlayerWithControls(props: { src: Src[] | null }) {
         <Player.Controls className="bg-gradient-to-b gap-1 px-3 md:px-3 py-2 flex-col-reverse flex from-black/5 via-80% via-black/30 duration-1000 to-black/60 data-[visible=true]:animate-in data-[visible=false]:animate-out data-[visible=false]:fade-out-0 data-[visible=true]:fade-in-0">
           <div className="flex justify-between gap-4">
             <div className="flex flex-1 items-center gap-3">
-              <Player.PlayPauseTrigger className="w-6 h-6 hover:scale-110 transition-all flex-shrink-0">
+              <Player.PlayPauseTrigger className="w-6 h-6 hover:scale-110 transition flex-shrink-0">
                 <Player.PlayingIndicator asChild matcher={false}>
                   <PlayIcon className="w-full h-full" />
                 </Player.PlayingIndicator>
@@ -134,7 +134,7 @@ export function PlayerWithControls(props: { src: Src[] | null }) {
                 <Player.Time className="text-sm tabular-nums select-none" />
               </Player.LiveIndicator>
 
-              <Player.MuteTrigger className="w-6 h-6 hover:scale-110 transition-all flex-shrink-0">
+              <Player.MuteTrigger className="w-6 h-6 hover:scale-110 transition flex-shrink-0">
                 <Player.VolumeIndicator asChild matcher={false}>
                   <MuteIcon className="w-full h-full" />
                 </Player.VolumeIndicator>
@@ -143,23 +143,23 @@ export function PlayerWithControls(props: { src: Src[] | null }) {
                 </Player.VolumeIndicator>
               </Player.MuteTrigger>
               <Player.Volume className="relative mr-1 flex-1 group flex cursor-pointer items-center select-none touch-none max-w-[120px] h-5">
-                <Player.Track className="bg-white/30 relative grow rounded-full transition-all h-[2px] md:h-[3px] group-hover:h-[3px] group-hover:md:h-[4px]">
+                <Player.Track className="bg-white/30 relative grow rounded-full transition h-[2px] md:h-[3px] group-hover:h-[3px] group-hover:md:h-[4px]">
                   <Player.Range className="absolute bg-white rounded-full h-full" />
                 </Player.Track>
-                <Player.Thumb className="block transition-all group-hover:scale-110 w-3 h-3 bg-white rounded-full" />
+                <Player.Thumb className="block transition group-hover:scale-110 w-3 h-3 bg-white rounded-full" />
               </Player.Volume>
             </div>
             <div className="flex sm:flex-1 md:flex-[1.5] justify-end items-center gap-2.5">
               <Player.FullscreenIndicator matcher={false} asChild>
-                <Settings className="w-6 h-6 transition-all flex-shrink-0" />
+                <Settings className="w-6 h-6 transition flex-shrink-0" />
               </Player.FullscreenIndicator>
               <Clip className="flex items-center w-6 h-6 justify-center" />
 
-              <Player.PictureInPictureTrigger className="w-6 h-6 hover:scale-110 transition-all flex-shrink-0">
+              <Player.PictureInPictureTrigger className="w-6 h-6 hover:scale-110 transition flex-shrink-0">
                 <PictureInPictureIcon className="w-full h-full" />
               </Player.PictureInPictureTrigger>
 
-              <Player.FullscreenTrigger className="w-6 h-6 hover:scale-110 transition-all flex-shrink-0">
+              <Player.FullscreenTrigger className="w-6 h-6 hover:scale-110 transition flex-shrink-0">
                 <Player.FullscreenIndicator asChild>
                   <ExitFullscreenIcon className="w-full h-full" />
                 </Player.FullscreenIndicator>
@@ -171,11 +171,11 @@ export function PlayerWithControls(props: { src: Src[] | null }) {
             </div>
           </div>
           <Player.Seek className="relative group flex cursor-pointer items-center select-none touch-none w-full h-5">
-            <Player.Track className="bg-white/30 relative grow rounded-full transition-all h-[2px] md:h-[3px] group-hover:h-[3px] group-hover:md:h-[4px]">
-              <Player.SeekBuffer className="absolute bg-black/30 transition-all duration-1000 rounded-full h-full" />
+            <Player.Track className="bg-white/30 relative grow rounded-full transition h-[2px] md:h-[3px] group-hover:h-[3px] group-hover:md:h-[4px]">
+              <Player.SeekBuffer className="absolute bg-black/30 transition duration-1000 rounded-full h-full" />
               <Player.Range className="absolute bg-white rounded-full h-full" />
             </Player.Track>
-            <Player.Thumb className="block group-hover:scale-110 w-3 h-3 bg-white transition-all rounded-full" />
+            <Player.Thumb className="block group-hover:scale-110 w-3 h-3 bg-white transition rounded-full" />
           </Player.Seek>
         </Player.Controls>
       </Player.Container>
@@ -252,7 +252,7 @@ function Clip({ className }: { className?: string }) {
       <Player.ClipTrigger
         onClip={createClipComposed}
         disabled={isPending}
-        className="hover:scale-110 transition-all flex-shrink-0"
+        className="hover:scale-110 transition flex-shrink-0"
       >
         {isPending ? (
           <LoadingIcon className="h-full w-full animate-spin" />
@@ -430,42 +430,3 @@ const VideoQualitySelectItem = React.forwardRef<
   );
 });
 ```
-
-## Components and Features
-
-The player interface consists of the following key components and features:
-
-- `Player.Root`: The root component that initializes and manages the player
-  context. It's responsible for setting up the player's environment and handling
-  the provided source.
-- `Player.Container`: A container for the player elements, ensuring proper
-  styling and layout. It wraps all player-related components.
-- `Player.Video`: Displays the video stream. It's the visual component where the
-  actual video is rendered.
-- `Player.LoadingIndicator`: Indicates the loading state with an animated icon.
-  It provides visual feedback when the player is buffering or loading.
-- `Player.ErrorIndicator`: Displays error messages and provides visual feedback
-  for different types of player errors like offline, access-control, and other
-  general errors.
-- `Player.Controls`: A set of interactive controls for managing the player,
-  including play/pause, mute/unmute, volume control, seek bar, fullscreen, and
-  picture-in-picture.
-  - `Player.PlayPauseTrigger`: A button for toggling play and pause states of
-    the video.
-  - `Player.LiveIndicator`: Indicates the live status of the stream and displays
-    the current playback time.
-  - `Player.MuteTrigger`: A button for toggling mute and unmute states of the
-    video.
-  - `Player.Volume`: A control for adjusting the volume of the video.
-  - `Player.FullscreenTrigger`: A button for toggling fullscreen mode.
-  - `Player.PictureInPictureTrigger`: A button for toggling picture-in-picture
-    mode.
-  - `Player.Seek`: A seek bar for navigating through the video.
-  - `Player.Settings`: A custom component that provides a popover with playback
-    settings, allowing users to adjust playback speed and quality.
-    - `Player.RateSelect`: Allows selection of playback speed from a dropdown
-      menu.
-    - `Player.VideoQualitySelect`: Allows selection of video quality from a
-      dropdown menu.
-  - `Player.ClipTrigger`: A custom component for creating video clips from the
-    current live stream.
