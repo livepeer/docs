@@ -2,24 +2,68 @@
 title: "Root"
 description:
   "The `Broadcast.Root` component is the React Context wrapper for Broadcast."
+icon: flag-checkered
 ---
 
-The `Broadcast.Root` component is a React Context wrapper that provides the
-broadcasting state store to all its child components. It creates a
-[Zustand](https://github.com/pmndrs/zustand) store that handles browser events
-and maintains state synchronization.
+import { ExampleWithCode } from "/snippets/ui-kit/react/iframe-example.mdx";
 
-## Usage
+<ExampleWithCode type="broadcast" id="root" />
+
+<Info>
+  This is a comprehensive example of how the Broadcast elements can fit together
+  to build an advanced in-browser streaming experience. This does not only show
+  the Root Broadcast, but how the Root can be used to provide a state store to
+  all of its children.
+</Info>
+
+## Features
+
+- Pure React Context provider to pass the broadcast and media state store to all
+  components
+- Automatic SDP negotiation with a
+  [WebRTC WHIP](https://www.ietf.org/archive/id/draft-ietf-wish-whip-01.html)
+  endpoint
+
+<Info>
+  The Broadcast component utilizes WebRTC for streaming and consistently employs
+  STUN/TURN servers for the WebRTC connection. This setup facilitates
+  broadcasting despite corporate firewalls or port restrictions. The component
+  adheres to WHIP/WHEP standards for ingest/egress SDP negotiation, making it
+  compatible with any WHIP/WHEP ingest endpoint.
+</Info>
+
+## Anatomy
+
+Import the components and piece the parts together.
 
 ```tsx
 import * as Broadcast from "@livepeer/react/broadcast";
 
-function BroadcastComponent() {
-  return <Broadcast.Root ingestUrl={getIngest(streamKey)}>{...}</Broadcast.Root>;
-}
+export default () => (
+  <Broadcast.Root>
+    {/* All child components which use the state store. */}
+  </Broadcast.Root>
+);
 ```
 
-## Configuration
+## Usage
+
+The `Player.Root` component is a React Context wrapper which passes the player
+state store down to all of the child components. It is responsible for creating
+the [Zustand](https://github.com/pmndrs/zustand) state store which is consumed
+by the children, and listens for media/browser events and keeps state in sync.
+
+<Info>
+  The Player automatically handles different source types, such as WebRTC, MP4, and HLS.
+  These are seamlessly integrated so that playback has low latency under all
+  network conditions.
+
+It is compatible with WebRTC WHEP endpoints, HLS (and low latency HLS), or
+typical media file playable by an HTML5 video element (MP4, WebM).
+
+</Info>
+
+## Props
 
 ### `ingestUrl`
 
@@ -129,13 +173,3 @@ storage.
 ```tsx
 <Broadcast.Root storage={null}>{...}</Broadcast.Root>
 ```
-
-## Technical Details
-
-### WebRTC Broadcasting
-
-The Broadcast component utilizes WebRTC for streaming and consistently employs
-STUN/TURN servers for the WebRTC connection. This setup facilitates broadcasting
-despite corporate firewalls or port restrictions. The component adheres to
-WHIP/WHEP standards for ingest/egress SDP negotiation, making it compatible with
-any WHIP/WHEP ingest endpoint.

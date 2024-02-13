@@ -3,35 +3,30 @@ title: "Volume"
 description:
   "The `Volume`, `VolumeIndicator`, and `MuteTrigger` components provide
   interactive controls for the volume level."
+icon: volume-high
 ---
 
-<iframe
-  src="https://ui-kit-docs-embed.vercel.app/player/volume"
-  height={550}
-  width="100%"
-  frameborder="0"
-  allowfullscreen
-  allow="autoplay"
-  style={{
-    borderRadius: 10,
-  }}
-/>
+import { ExampleWithCode } from "/snippets/ui-kit/react/iframe-example.mdx";
+
+<ExampleWithCode type="player" id="volume" />
 
 <Info>
   All of the `Volume` components extend from
   [`@radix-ui/react-slider`](https://www.radix-ui.com/primitives/docs/components/slider),
-  and inherits all of the documentation for those child components.
+  and inherits all of the documentation for those components.
 </Info>
 
-#### Features
+## Features
 
 - Conditional rendering based on volume status, customizable with the `matcher`
   pattern
 - Keyboard shortcuts and adheres to [WAI-ARIA](https://w3c.github.io/aria/)
   design patterns
 - Compatible with CSS animations for dynamic enter/exit animations
+- Persists to `localStorage` by default (with storage overrides customizable in
+  `Root`)
 
-### Anatomy
+## Anatomy
 
 Import the components and piece the parts together.
 
@@ -53,66 +48,61 @@ export default () => (
 );
 ```
 
-## Usage
+## Props
 
-`LiveIndicator` provides a visual notification of live streaming, enabling
-viewers to easily discern the live status of the media.
-
-### Props
-
-#### MuteTrigger
+### MuteTrigger
 
 Accepts all props for a typical button element.
 
-#### VolumeIndicator
+### VolumeIndicator
 
-##### `forceMount`
+#### `forceMount`
 
 A boolean that, when set to true, ensures the component is always mounted. This
 is particularly useful for managing animations with external animation
 libraries.
 
-##### `matcher`
+#### `matcher`
 
 A prop intended to define the circumstances under which the `VolumeIndicator`
 should be visible. It can be a boolean matching the mute state or a function
 that provides custom logic for visibility determination based on the volume
 level.
 
-#### Volume
+### Volume
 
 #### `forceMount`
 
 Keeps the component always mounted, aiding in managing animations.
 
-### Data Attributes
+## Data Attributes
 
-#### MuteTrigger
+### MuteTrigger
 
-##### `data-livepeer-mute-trigger`
+#### `data-livepeer-mute-trigger`
 
 Identifies the mute toggle component within the media player setup.
 
-##### `data-muted`
+#### `data-muted`
 
 Shows whether the audio is currently muted (`"true"`) or active (`"false"`),
 assisting in the visual representation and scripting based on the mute state.
 
-#### VolumeIndicator
+### VolumeIndicator
 
-##### `data-livepeer-controls-volume-indicator`
+#### `data-livepeer-controls-volume-indicator`
 
 Identifies the component's role within the Player.
 
-##### `data-livepeer-muted`
+#### `data-livepeer-muted`
 
 Indicates the mute state, `"true"` if muted and `"false"` otherwise.
 
-##### `data-livepeer-volume`
+#### `data-livepeer-volume`
 
 Shows the current volume as a percentage, e.g., `"50"` for 50% volume.
 
-##### `data-visible`
+#### `data-visible`
 
 Indicates the visibility status of the indicator, with `"true"` meaning it's
 currently visible based on the `matcher` or mute state and `"false"` denoting
@@ -120,21 +110,21 @@ it's not visible.
 
 This is often used for dynamically applying enter/exit CSS animations.
 
-#### Volume
+### Volume
 
-##### `data-livepeer-controls-volume`
+#### `data-livepeer-controls-volume`
 
 Serves to identify the component's role within the Player.
 
-##### `data-livepeer-muted`
+#### `data-livepeer-muted`
 
 Indicates the mute state, `"true"` if muted and `"false"` otherwise.
 
-##### `data-livepeer-volume`
+#### `data-livepeer-volume`
 
 Shows the current volume as a percentage, e.g., `"50"` for 50% volume.
 
-##### `data-visible`
+#### `data-visible`
 
 Reflects the visibility status of the slider, with `"true"` meaning it's
 currently visible (i.e., volume change is supported) and `"false"` denoting it's

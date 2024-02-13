@@ -3,33 +3,26 @@ title: "Live"
 description:
   "The `LiveIndicator` component visually signals the live status of media
   playback."
+icon: headset
 ---
 
-<iframe
-  src="https://ui-kit-docs-embed.vercel.app/player/live"
-  height={550}
-  width="100%"
-  frameborder="0"
-  allowfullscreen
-  allow="autoplay"
-  style={{
-    borderRadius: 10,
-  }}
-/>
+import { ExampleWithCode } from "/snippets/ui-kit/react/iframe-example.mdx";
+
+<ExampleWithCode type="player" id="live" />
 
 <Info>
   `LiveIndicator` is designed to provide a clear, visual cue of the live status
   of the media playback.
 </Info>
 
-#### Features
+## Features
 
 - Conditional rendering based on live playback status, customizable with the
   `matcher` pattern
 - Adheres to [WAI-ARIA](https://w3c.github.io/aria/) design patterns
 - Compatible with CSS animations for dynamic enter/exit animations
 
-### Anatomy
+## Anatomy
 
 Import the components and piece the parts together.
 
@@ -38,35 +31,40 @@ import * as Player from "@livepeer/react/player";
 
 export default () => (
   <Player.Root>
-    <Player.LiveIndicator />
+    <Player.Container>
+      <Player.LiveIndicator />
+    </Player.Container>
+    <Player.Container>
+      <Player.Controls>
+        <Player.LiveIndicator />
+      </Player.Controls>
+    </Player.Container>
   </Player.Root>
 );
 ```
 
-## Usage
+## Props
 
-### Props
-
-#### `forceMount`
+### `forceMount`
 
 Keeps the component always mounted, aiding in managing animations.
 
-#### `matcher`
+### `matcher`
 
 Determines when the `LiveIndicator` is shown, accepting a boolean or a function
 for customized visibility logic.
 
-### Data Attributes
+## Data Attributes
 
-#### `data-livepeer-live-indicator`
+### `data-livepeer-live-indicator`
 
 Designates the live indicator component within the Player.
 
-#### `data-live`
+### `data-live`
 
 Denotes the live status (`"true"` for live, `"false"` for not live).
 
-#### `data-visible`
+### `data-visible`
 
 Signifies if the indicator is visible (`"true"`) or hidden (`"false"`), useful
 for CSS-based animations.

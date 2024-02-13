@@ -1,71 +1,59 @@
 ---
-title: "Video"
-description:
-  "The `Video` component is the core element of the Player, rendering the actual
-  video content and managing various aspects of media playback."
+title: "Video" 
+description: "The `Video` component renders the actual video
+content and manages various aspects of media playback."
+icon: video
 ---
 
-The `Video` component is responsible for rendering the video content and
-handling media source changes, playback, and other key functionalities.
+import { ExampleWithCode } from "/snippets/ui-kit/react/iframe-example.mdx";
 
-## Introduction
+<ExampleWithCode type="player" id="video" />
 
-### `Video`
+#### Features
 
-`Video` displays the video content within the Player. It manages not only the
-display of the video but also the interaction with the media source, autoplay
-settings, preload configurations, and poster image handling.
+- Synchronizes state with the HTML5 video element
+- Keyboard hotkeys (`←`/`→` to seek, `K` to pause, `M` to toggle mute, `F`
+  fullscreen, `I` picture-in-picture)
+- Adheres to [WAI-ARIA](https://w3c.github.io/aria/) design patterns
 
-#### Props
+### Anatomy
 
-The component accepts most props suitable for a video tag, except for `src`,
-`poster`, `autoPlay`, and `preload`, which are managed internally or provided
-explicitly through props:
+Import the components and piece the parts together.
 
-##### `poster`
+```tsx
+import * as Player from "@livepeer/react/player";
+
+export default () => (
+  <Player.Root>
+    <Player.Video />
+  </Player.Root>
+);
+```
+
+## Props
+
+The component accepts most props suitable for a HTML5 `video` tag, except for
+`src`, `poster`, `autoPlay`, and `preload`, which are managed internally or
+provided explicitly through props.
+
+### `poster`
 
 Optional. Controls the poster source. By default, it uses the thumbnail from the
 `Root` src input. Set to `null` to disable the default poster image from the
 `Root` src.
 
-##### `hlsConfig`
+### `hlsConfig`
 
 Optional. Controls the HLS.js config. By default, it adds JWT or Access Token
 headers to HLS segment requests.
 
-### Usage
-
-Here's a generalized example of how the `Video` component might be used within
-the Player:
-
-```tsx
-import * as Player from "@livepeer/react/player";
-
-function MediaPlayerComponent() {
-  return (
-    <Player.Root>
-      <Player.Video poster={null} />
-      {/* Additional Player components like Controls, Seek, etc. */}
-    </Player.Root>
-  );
-}
-```
-
-In this example, `Video` is responsible for rendering the video content and
-overriding the default poster element to force it to not show.
-
 ## Data Attributes
 
-The `Video` component assigns data attributes to its underlying element to
-reflect the current source type and other relevant states.
-
-### `Video`
-
-#### `data-livepeer-video`
+### `data-livepeer-video`
 
 Serves to identify the component's role within the Player.
 
-#### `data-livepeer-source-type`
+### `data-livepeer-source-type`
 
 Indicates the type of the current source, such as "none" when there's no source,
 or other types based on the media being played.

@@ -2,19 +2,36 @@
 title: "Root"
 description:
   "The `Player.Root` component is the React Context wrapper for the Player."
+icon: flag-checkered
 ---
 
-The `Player.Root` component is a React Context wrapper which passes the player
-state store down to all of the child components. It is responsible for creating
-the zustand store which is consumed by the children, and which handles browser
-events and keeps state in sync.
+import { ExampleWithCode } from "/snippets/ui-kit/react/iframe-example.mdx";
 
-It automatically handles different source types, such as WebRTC, MP4, and HLS.
-These are seamlessly integrated so that playback has low latency under all
-network conditions.
+<ExampleWithCode type="player" id="root" />
 
-It is compatible with WebRTC WHEP endpoints, HLS (and low latency HLS), or
-typical media file playable by an HTML5 video element (MP4, WebM).
+<Info>
+  This is a comprehensive example of how the Player elements can fit together to
+  build an advanced video player. This does not only show the Root Player, but
+  how the Root can be used to provide a state store to all of its children.
+</Info>
+
+## Features
+
+- Pure React Context provider to pass the media store state to all components
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Player from "@livepeer/react/player";
+
+export default () => (
+  <Player.Root>
+    {/* All child components which use the state store. */}
+  </Player.Root>
+);
+```
 
 ## Compatibility
 
@@ -42,18 +59,26 @@ component is only a React context.
   [browserslist](https://browsersl.ist/) to track compatibility.
 </Info>
 
-## Introduction
+## Usage
 
-### `Player.Root`
+The `Player.Root` component is a React Context wrapper which passes the player
+state store down to all of the child components. It is responsible for creating
+the [Zustand](https://github.com/pmndrs/zustand) state store which is consumed
+by the children, and listens for media/browser events and keeps state in sync.
 
-`Player.Root` acts as the primary context provider for the media playback
-system. It does not render any HTML elements - only React Context.
+<Info>
+  The Player automatically handles different source types, such as WebRTC, MP4, and HLS.
+  These are seamlessly integrated so that playback has low latency under all
+  network conditions.
 
-#### Props
+It is compatible with WebRTC WHEP endpoints, HLS (and low latency HLS), or
+typical media file playable by an HTML5 video element (MP4, WebM).
 
-The component accepts a variety of props:
+</Info>
 
-##### `src`
+## Props
+
+### `src`
 
 Defines the source for the Player. It accepts `Src[]`, which can be derived from
 various sources like Livepeer playback info, Cloudflare stream data, Mux URLs,
@@ -61,7 +86,7 @@ or simple strings.
 
 See `getSrc` for docs on how to easily generate this parameter.
 
-##### `aspectRatio`
+### `aspectRatio`
 
 Specifies the aspect ratio of the content. Recommended for an optimal
 broadcasting experience to minimize
@@ -73,7 +98,7 @@ Set to `null` to disable the aspect ratio container (see `Container`).
 <Player.Root aspectRatio={16 / 9}>{...}</Player.Root>
 ```
 
-##### `hotkeys`
+### `hotkeys`
 
 Enables keyboard hotkeys for controlling the player. Enabled by default
 (`true`). It's recommended to follow ARIA guidelines by keeping this enabled
@@ -84,7 +109,7 @@ ones.
 <Player.Root hotkeys={false}>{...}</Player.Root>
 ```
 
-##### `viewerId`
+### `viewerId`
 
 Sets the viewer ID for the broadcast, useful for metrics and viewership API
 integration.
@@ -93,7 +118,7 @@ integration.
 <Player.Root viewerId="viewer123">{...}</Player.Root>
 ```
 
-##### `onError`
+### `onError`
 
 An optional callback for handling broadcasting errors. It's called with `null`
 when the previous error is resolved. The callback receives the parameter:
@@ -109,7 +134,7 @@ type PlaybackError = {
 <Player.Root onError={(error) => console.log(error)}>{...}</Player.Root>
 ```
 
-##### `jwt` or `accessKey`
+### `jwt` or `accessKey`
 
 <Info>
   These define ways to play back a video which has a playback policy applied to
@@ -128,7 +153,7 @@ criteria (e.g., having an activated account, etc.).
 <Player.Root accessKey="access-key">{...}</Player.Root>
 ```
 
-##### `lowLatency`
+### `lowLatency`
 
 Enables low-latency playback for live streams via WebRTC by default. If set to
 `"force"`, it forces WebRTC playback and disables fallback to HLS. This is ideal
@@ -151,7 +176,7 @@ will automatically switch to HLS, so that out-of-order frames are not displayed.
 <Player.Root lowLatency="force">{...}</Player.Root>
 ```
 
-##### `timeout`
+### `timeout`
 
 Sets the timeout duration for playback before switching to the next source,
 including SDP negotiation for WebRTC, waiting for WebRTC to play, and server
@@ -161,7 +186,7 @@ responses. The default is 10000 milliseconds.
 <Player.Root timeout={15000}>{...}</Player.Root>
 ```
 
-##### `storage`
+### `storage`
 
 Configures the storage option for saving persistent states like volume and video
 quality. The default is `localStorage` in the browser. Set to `null` to disable
@@ -170,22 +195,3 @@ storage.
 ```tsx
 <Player.Root storage={null}>{...}</Player.Root>
 ```
-
-### Usage
-
-Here's a generalized example of how the `Player` component might be used:
-
-```tsx
-import * as Player from "@livepeer/react/player";
-
-function MediaPlayerComponent() {
-  return (
-    <Player.Root src={sourceArray} aspectRatio={16 / 9}>
-      {/* Child components like Container, Controls, PlayPauseTrigger, Volume, Poster, etc. */}
-    </Player.Root>
-  );
-}
-```
-
-In this example, `Player` is configured with a media source and an aspect ratio,
-and hotkey support.

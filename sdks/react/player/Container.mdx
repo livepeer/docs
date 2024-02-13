@@ -1,0 +1,46 @@
+---
+title: "Container"
+description:
+  "The `Container` component is the container element for the Player. It wraps
+  all other elements and acts as an aspect ratio container by default."
+icon: tv
+---
+
+import ContainerAttributes from "/snippets/ui-kit/react/container-attributes.mdx";
+import { ExampleWithCode } from "/snippets/ui-kit/react/iframe-example.mdx";
+
+<ExampleWithCode type="player" id="container" />
+
+<Info>
+  The `Container` component acts as the container div element for the Player,
+  using either
+  [@radix-ui/react-aspect-ratio](https://www.radix-ui.com/primitives/docs/components/aspect-ratio)
+  or a standard div element. It selectively renders one of these based on the
+  presence of an `aspectRatio` prop. We show above how to disable the aspect
+  ratio element.
+</Info>
+
+## Features
+
+- Provides an aspect ratio container to reduce
+  [Cumulative Layout Shift](https://web.dev/cls/)
+- Dynamic data attributes for custom styling based on the current media state
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Player from "@livepeer/react/player";
+
+export default () => (
+  <Player.Root>
+    <Player.Container>
+      {/* Place child elements here, like Video and Controls */}
+    </Player.Container>
+    {/* Or place other controls outside of here, to not be bound by the aspect ratio Container */}
+  </Player.Root>
+);
+```
+
+<ContainerAttributes />

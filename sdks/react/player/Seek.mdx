@@ -1,57 +1,38 @@
 ---
 title: "Seek"
 description:
-  "The `Seek` and `SeekBuffer` components provide interactive and visual
-  elements for seeking through media and displaying buffer status."
+  "The `Seek` and `SeekBuffer` components provide visual elements for seeking
+  through media and displaying buffer status."
+icon: forward
 ---
 
-The `Seek` and `SeekBuffer` components play a crucial role in the Player's media
-control interface. `Seek` offers an interactive slider for users to navigate
-through the media, while `SeekBuffer` provides a visual representation of the
-buffered content. These React components use `@radix-ui/react-presence` for
-conditional rendering, ensuring accurate representation based on the current
-playback and buffer state.
+import { ExampleWithCode } from "/snippets/ui-kit/react/iframe-example.mdx";
 
-## Introduction
+<ExampleWithCode type="player" id="seek" />
 
-### `Seek`
+<Info>
+  All of the `Seek` components extend from
+  [`@radix-ui/react-slider`](https://www.radix-ui.com/primitives/docs/components/slider),
+  and inherits all of the documentation for those components.
+</Info>
 
-`Seek` acts as an interactive slider, allowing users to navigate through the
-media content. It is displayed only when the media is not live, providing a
-precise control mechanism for seeking specific points in the media timeline.
+## Features
 
-#### Props
+- Composes a slider for the current progress and buffer, and handles syncing
+  with the underlying media element
+- Keyboard navigation (with Radix) and adheres to
+  [WAI-ARIA](https://w3c.github.io/aria/) design patterns
 
-The component accepts all props suitable for a slider element, along with
-specific props:
+## Anatomy
 
-##### `forceMount`
-
-A boolean that, when set to true, ensures the component is always mounted. This
-is particularly useful for managing animations with external animation
-libraries.
-
-### `SeekBuffer`
-
-`SeekBuffer` provides a visual indicator of the portion of media that has been
-buffered. It's integrated within the `Seek` slider to offer users a visual
-understanding of the buffer status in relation to the playback progress.
-
-#### Props
-
-The component accepts all props appropriate for a track element within a slider.
-
-### Usage
-
-Here's a generalized example of how the `Seek` and `SeekBuffer` components might
-be used within the Player:
+Import the components and piece the parts together.
 
 ```tsx
 import * as Player from "@livepeer/react/player";
 
-function MediaPlayerComponent() {
-  return (
-    <Player.Root>
+export default () => (
+  <Player.Root>
+    <Player.LiveIndicator>
       <Player.Seek>
         <Player.Track>
           <Player.SeekBuffer />
@@ -59,13 +40,34 @@ function MediaPlayerComponent() {
         </Player.Track>
         <Player.Thumb />
       </Player.Seek>
-    </Player.Root>
-  );
-}
+    </Player.LiveIndicator>
+  </Player.Root>
+);
 ```
 
-In this example, `Seek` provides a slider for navigating through the media, and
-`SeekBuffer` displays the buffered content within the `Seek` slider.
+## Props
+
+### `Seek`
+
+The component accepts all props for a
+[Radix Slider](https://www.radix-ui.com/primitives/docs/components/slider)
+element.
+
+#### `forceMount`
+
+A boolean that, when set to true, ensures the component is always mounted. This
+is particularly useful for managing animations with external animation
+libraries.
+
+### `SeekBuffer`
+
+The component accepts all props for a
+[Radix Track](https://www.radix-ui.com/primitives/docs/components/slider)
+element.
+
+It is usually not used as the Slider Track (since the seekable media isn't
+constrained by the amount buffered), but can be used for it, depending on the
+use-case.
 
 ## Data Attributes
 
@@ -105,10 +107,10 @@ This is often used for dynamically applying enter/exit CSS animations.
 
 ### `SeekBuffer`
 
-#### `data-livepeer-controls-seek-buffer`
+##### `data-livepeer-controls-seek-buffer`
 
 Identifies the component's role within the Seek slider.
 
-#### `data-buffered`
+##### `data-buffered`
 
 Shows the portion of the media that has been buffered.
