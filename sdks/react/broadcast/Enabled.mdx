@@ -1,16 +1,27 @@
 ---
-title: "Enabled"
+title: "Enable"
 description:
   'The `EnabledTrigger` and `EnabledIndicator` components provide broadcasters
   with interactive controls and visual cues to manage the "enabled" state of the
   broadcast.'
+icon: clapperboard
 ---
 
-The `EnabledTrigger` and `EnabledIndicator` components offer broadcasters an
-interactive button (`EnabledTrigger`) to toggle the "enabled" state of the
-broadcast and a visual representation (`EnabledIndicator`) of this state. These
-React components utilize `@radix-ui/react-presence` for conditional rendering,
-ensuring accurate display based on the broadcast's enabled state.
+import { ExampleWithCode } from "/snippets/ui-kit/react/iframe-example.mdx";
+
+<ExampleWithCode type="broadcast" id="enabled" />
+
+<Info>
+  The `Enabled` components are used to generally start and stop the broadcast.
+  The broadcast, by default, starts disabled so the user can preview their video
+  before going live.
+</Info>
+
+## Features
+
+- Conditional rendering based on the enabled state, customizable with the
+  `matcher` pattern
+- Dynamic data attributes for custom styling based on the current enabled state
 
 <Info>
   Toggling "enabled" turns WHIP WebRTC ingest on or off, which when "on" the
@@ -18,29 +29,30 @@ ensuring accurate display based on the broadcast's enabled state.
   endpoint. When "off", it will stop sending data to the WebRTC ingest.
 </Info>
 
-## Introduction
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+export default () => (
+  <Broadcast.Root>
+    <Broadcast.EnabledTrigger />
+    <Broadcast.EnabledIndicator />
+  </Broadcast.Root>
+);
+```
+
+## Props
 
 ### `EnabledTrigger`
-
-`EnabledTrigger` acts as an interactive button, enabling broadcasters to toggle
-the enabled state of their broadcast. It provides an intuitive control for
-starting or stopping the broadcast stream.
-
-#### Props
 
 The component accepts all props suitable for a button element.
 
 ### `EnabledIndicator`
 
-`EnabledIndicator` provides a visual cue regarding the enabled state of the
-broadcast, indicating whether the broadcast is active. It can be configured to
-appear only when the broadcast is enabled or disabled, based on the `matcher`
-prop.
-
-#### Props
-
-The component accepts all props appropriate for a div element, along with
-specific props:
+The component accepts all props for a span element.
 
 ##### `forceMount`
 
@@ -55,34 +67,7 @@ should be visible. It can be a boolean that directly corresponds to the enabled
 state or a function providing custom logic for visibility determination based on
 the enabled state.
 
-### Usage
-
-Here's a generalized example of how the `EnabledTrigger` and `EnabledIndicator`
-components might be used within the broadcast interface:
-
-```tsx
-import * as Broadcast from "@livepeer/react/broadcast";
-
-function BroadcastComponent() {
-  return (
-    <Broadcast.Root>
-      <Broadcast.EnabledTrigger>Toggle Broadcast</Broadcast.EnabledTrigger>
-      <Broadcast.EnabledIndicator matcher={true}>
-        {/* Visual cue for broadcast active state */}
-      </Broadcast.EnabledIndicator>
-    </Broadcast.Root>
-  );
-}
-```
-
-In this example, `EnabledTrigger` provides a button to start or stop the
-broadcast, and `EnabledIndicator` displays a visual cue based on the broadcast's
-enabled state.
-
 ## Data Attributes
-
-Both components assign several data attributes to their underlying elements to
-reflect the current state, user interactions, and visibility conditions.
 
 ### `EnabledTrigger`
 

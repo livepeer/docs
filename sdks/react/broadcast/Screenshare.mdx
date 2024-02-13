@@ -2,84 +2,70 @@
 title: "Screenshare"
 description:
   "The `ScreenshareTrigger` and `ScreenshareIndicator` components provide
-  broadcasters with intuitive controls and visual cues for managing the
-  screenshare state during a broadcast."
+  broadcasters with controls for managing the screenshare state."
+icon: screencast
 ---
 
-The `ScreenshareTrigger` and `ScreenshareIndicator` components offer
-broadcasters an interactive button (`ScreenshareTrigger`) to toggle
-screensharing on and off, and a visual representation (`ScreenshareIndicator`)
-of the current screenshare state. These React components utilize
-`@radix-ui/react-presence` for conditional rendering, ensuring accurate display
-based on the screenshare state and device capabilities.
+import { ExampleWithCode } from "/snippets/ui-kit/react/iframe-example.mdx";
 
-## Introduction
+<ExampleWithCode type="broadcast" id="screenshare" />
 
-### `ScreenshareTrigger`
+## Features
 
-`ScreenshareTrigger` acts as an interactive button, enabling broadcasters to
-start screenshare during their broadcast. This interacts with `getDisplayMedia`
-behind the scenes to request a display screen, which is then replaces the
-current camera source.
+- Automatic conditional rendering based on
+  [`getDisplayMedia`](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia)
+  status and browser API availability, customizable with the `matcher` pattern
+- Handles all common browser APIs, and old WebKit APIs (see
+  [caniuse](https://caniuse.com/mdn-api_mediadevices_getdisplaymedia))
+- Compatible with CSS animations for dynamic enter/exit animations
 
-#### Props
+<Warning>
+  The `getDisplayMedia` API is only available in secure contexts (HTTPS).
+</Warning>
 
-The component accepts all props suitable for a button element.
+## Anatomy
 
-### `ScreenshareIndicator`
-
-`ScreenshareIndicator` offers a visual cue about the current screenshare state,
-indicating whether screensharing is active. It can be configured to appear only
-when screensharing is active or not, based on the `matcher` prop.
-
-#### Props
-
-The component accepts all props appropriate for a div element, along with
-specific props:
-
-##### `forceMount`
-
-A boolean that, when true, ensures the component is always mounted. This is
-particularly useful for managing animations with external animation libraries
-and ensuring visibility during dynamic broadcast scenarios.
-
-##### `matcher`
-
-A prop intended to define the circumstances under which the
-`ScreenshareIndicator` should be visible. It can be a boolean that directly
-corresponds to the screenshare state or a function providing custom logic for
-visibility determination based on the screenshare state.
-
-### Usage
-
-Here's a generalized example of how the `ScreenshareTrigger` and
-`ScreenshareIndicator` components might be used within the broadcast interface:
+Import the components and piece the parts together.
 
 ```tsx
 import * as Broadcast from "@livepeer/react/broadcast";
 
-function BroadcastComponent() {
-  return (
-    <Broadcast.Root>
-      <Broadcast.ScreenshareTrigger>
-        Toggle Screenshare
-      </Broadcast.ScreenshareTrigger>
-      <Broadcast.ScreenshareIndicator matcher={true}>
-        {/* Visual cue for screenshare active state */}
-      </Broadcast.ScreenshareIndicator>
-    </Broadcast.Root>
-  );
-}
+export default () => (
+  <Broadcast.Root>
+    <Broadcast.Container>
+      <Broadcast.ScreenshareTrigger />
+      <Broadcast.ScreenshareIndicator />
+    </Broadcast.Container>
+    <Broadcast.Container>
+      <Broadcast.Controls>
+        <Broadcast.ScreenshareTrigger />
+        <Broadcast.ScreenshareIndicator />
+      </Broadcast.Controls>
+    </Broadcast.Container>
+  </Broadcast.Root>
+);
 ```
 
-In this example, `ScreenshareTrigger` provides a button to start or stop
-screensharing, and `ScreenshareIndicator` displays a visual cue based on the
-screenshare state.
+## Props
+
+### `ScreenshareTrigger`
+
+Accepts all props for a typical button HTML element.
+
+### `ScreenshareIndicator`
+
+#### `forceMount`
+
+A boolean that, when true, keeps the component mounted at all times, useful for
+controlling animations with external libraries.
+
+#### `matcher`
+
+A prop to define the condition under which the `ScreenshareIndicator` should be
+visible. It can be a boolean directly matching the screenshare state or a
+function providing custom logic to determine visibility.
 
 ## Data Attributes
-
-Both components assign several data attributes to their underlying elements to
-reflect the current state, user interactions, and visibility conditions.
 
 ### `ScreenshareTrigger`
 

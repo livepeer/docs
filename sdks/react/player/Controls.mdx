@@ -1,21 +1,14 @@
 ---
 title: "Controls"
 description:
-  "The `Controls` component provides an interactive interface for media control
-  actions such as play, pause, and more."
+  "The `Controls` component provides an interactive container for all other
+  media control elements such as `Play`, `Fullscreen`, etc."
+icon: gamepad
 ---
 
-<iframe
-  src="https://ui-kit-docs-embed.vercel.app/player/controls"
-  height={550}
-  width="100%"
-  frameborder="0"
-  allowfullscreen
-  allow="autoplay"
-  style={{
-    borderRadius: 10,
-  }}
-/>
+import { ExampleWithCode } from "/snippets/ui-kit/react/iframe-example.mdx";
+
+<ExampleWithCode type="player" id="controls" />
 
 <Info>
   `Controls` serves as the interactive layer for media control actions, dynamically displayed based on the media state, loading state, or presence of an error. It is designed to automatically show upon user interaction with the Container element and hides based on the `Root` component's `autohide` property.
@@ -25,9 +18,10 @@ behavior of standard media players.
 
 </Info>
 
-#### Features
+## Features
 
 - Automatic conditional rendering based on user interactions
+- Click/touch to pause/play media
 - Compatible with CSS animations for dynamic enter/exit animations
 
 <Warning>
@@ -36,7 +30,7 @@ behavior of standard media players.
   interaction to wait before hiding.
 </Warning>
 
-### Anatomy
+## Anatomy
 
 Import the components and piece the parts together.
 
@@ -45,33 +39,33 @@ import * as Player from "@livepeer/react/player";
 
 export default () => (
   <Player.Root>
-    <Player.Controls>
-      {/* Place interactive control elements here, like play/pause buttons, progress bars, etc. */}
-    </Player.Controls>
+    <Player.Container>
+      <Player.Controls>
+        {/* Place interactive control elements here, like play/pause buttons, progress bars, etc. */}
+      </Player.Controls>
+    </Player.Container>
   </Player.Root>
 );
 ```
 
-## Usage
+## Props
 
-### Props
-
-#### `forceMount`
+### `forceMount`
 
 Ensures the component is always in the DOM, useful for animation controls.
 
-#### `autoHide`
+### `autoHide`
 
 Defines the auto-hide delay in milliseconds after user interaction. Default is
 3000ms. Set to 0 to disable auto-hide.
 
-### Data Attributes
+## Data Attributes
 
-#### `data-livepeer-controls`
+### `data-livepeer-controls`
 
 Identifies the control component within the Player.
 
-#### `data-visible`
+### `data-visible`
 
 Indicates if the controls are visible (`"true"`) or not (`"false"`), useful for
 CSS-based animations.

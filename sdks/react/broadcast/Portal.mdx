@@ -1,0 +1,51 @@
+---
+title: "Portal"
+description:
+  "The `Portal` component allows projection of content into different parts of
+  the DOM."
+icon: person-to-portal
+---
+
+import { ExampleWithCode } from "/snippets/ui-kit/react/iframe-example.mdx";
+
+<ExampleWithCode type="broadcast" id="portal" />
+
+<Info>
+  The `Portal` component is a simple wrapper over
+  [@radix-ui/react-portal](https://www.radix-ui.com/primitives/docs/utilities/portal#portal).
+  It inherits all of the documentation for the component.
+</Info>
+
+## Features
+
+- Provides an easy way to portal controls out of the Root components
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+export default () => (
+  <Broadcast.Root>
+    <Broadcast.Portal>
+      {/* Place portalled elements here, which can still 
+      consume the React Context from the Root, but are
+      appended to the document */}
+    </Broadcast.Portal>
+  </Broadcast.Root>
+);
+```
+
+## Props
+
+### `children`
+
+React nodes that are to be rendered inside the portal.
+
+### `container`
+
+An optional prop specifying a container element where the portal's children
+should be rendered. If not provided, the children are appended to the body of
+the document by default.

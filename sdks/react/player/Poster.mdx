@@ -3,19 +3,12 @@ title: "Poster"
 description:
   "The `Poster` component displays a visual placeholder for media content prior
   to playback."
+icon: image
 ---
 
-<iframe
-  src="https://ui-kit-docs-embed.vercel.app/player/poster"
-  height={550}
-  width="100%"
-  frameborder="0"
-  allowfullscreen
-  allow="autoplay"
-  style={{
-    borderRadius: 10,
-  }}
-/>
+import { ExampleWithCode } from "/snippets/ui-kit/react/iframe-example.mdx";
+
+<ExampleWithCode type="player" id="poster" />
 
 <Info>
   When used with Livepeer's playback info API, `getSrc` will automatically parse
@@ -24,52 +17,60 @@ description:
   source.
 </Info>
 
-#### Features
+## Features
 
-- Displays a preview image as a placeholder before media playback starts
+- Displays a preview image as a placeholder while media is loading
 - Conditionally renders based on the availability of a thumbnail image
 
-### Anatomy
+## Anatomy
 
 Import the components and piece the parts together.
 
 ```tsx
 import * as Player from "@livepeer/react/player";
 
-function MediaPlayerComponent() {
-  return (
-    <Player.Root>
-      <Player.PlayingIndicator>
+export default () => (
+  <Player.Root>
+    <Player.Container>
+      <Player.LoadingIndicator>
         <Player.Poster />
-      </Player.PlayingIndicator>
-    </Player.Root>
-  );
-}
+      </Player.LoadingIndicator>
+    </Player.Container>
+  </Player.Root>
+);
 ```
 
-## Usage
-
-### Props
+## Props
 
 `Poster` accepts all typical HTML `img` props.
 
-#### `forceMount`
+<Info>
+  It is usually used alongside a `Player.Video` with poster set to `null`, so
+  that the default poster URL is not parsed and set on the HTML5 video element.
+
+It can be composed with custom img renderers, like Next.js Image, with the
+`asChild` prop, so you can customize the image loading to go through your
+optimization pipeline.
+
+</Info>
+
+### `forceMount`
 
 Ensures consistent presence in the DOM, aiding in the smooth application of
 animations.
 
-#### `src`
+### `src`
 
 Specifies the URL for the poster image, allowing for a customized preview. If
 not set, the component attempts to retrieve a poster from the media's context.
 
-### Data Attributes
+## Data Attributes
 
-#### `data-livepeer-poster`
+### `data-livepeer-poster`
 
 Identifies the poster component within the Player.
 
-#### `data-visible`
+### `data-visible`
 
 Signifies if the poster is visible (`"true"`) or hidden (`"false"`), useful for
 CSS-based animations.
