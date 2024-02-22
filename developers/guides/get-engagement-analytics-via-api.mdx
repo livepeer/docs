@@ -64,9 +64,9 @@ several dimensions to help you segment your data and identify patterns:
   <Tab title="Livepeer Player">
 
 To collect and register viewership metrics, you first need to configure your
-player. We recommend that you use the
-[Livepeer player](/sdks/livepeer-react/player/Root) to get viewership metrics,
-as it comes fully configured. You can follow the Player guide to get started.
+player. We recommend that you use the [Livepeer player](/sdks/react/player/Root)
+to get viewership metrics, as it comes fully configured. You can follow the
+Player guide to get started.
 
   </Tab>
   <Tab title="Custom Player">
@@ -80,45 +80,66 @@ Here's how to configure your player:
 <Tabs >
   <Tab title="JavaScript">
 
-```js
-import { addMediaMetrics } from "@livepeer/core-web/media/browser";
+<Warning>
+  Make sure you have initialized your player before calling `addMediaMetrics`.
+</Warning>
 
-const source =
-  "https://livepeercdn.studio/recordings/bd600224-d93a-4ddc-a6ac-2d71e3c36768/index.m3u8";
+```js
+import { addMediaMetrics } from "@livepeer/core-web/browser";
+
 const video = document.getElementById("my-video");
 
-// set up your player before calling addMediaMetrics
+const { destroy } = addMediaMetrics(ref.current);
 
-addMediaMetrics(video, source, (e) => console.error("Error adding metrics", e));
+// or, you can *optionally* pass options to the addMediaMetrics function
+const { destroy } = addMediaMetrics(ref.current, {
+  // specify the source URL of the video, which should include a playbackId.
+  // this should only be used when using a custom video player that sets a `blob:...` URL or no `src` on the video element.
+  src: "https://livepeercdn.studio/hls/{playbackId}/index.m3u8",
+  // specify a unique viewer ID for tracking purposes
+  viewerId: "user123",
+  // monitor when the metrics fails to report
+  onError: (error) => {
+    console.error("Metrics collection error:", error);
+  },
+});
 ```
 
   </Tab>
   <Tab title="React">
 
-```js
+<Warning>
+  Make sure you have initialized your player before calling `addMediaMetrics`.
+</Warning>
+
+```tsx
 import { addMediaMetrics } from "@livepeer/core-web/media/browser";
 import React, { useEffect, useRef, useState } from "react";
 
+const source = "https://livepeercdn.studio/hls/{playbackId}/index.m3u8";
+
 export default function VideoPlayer() {
-  const videoRef = useRef(null);
-  const [source, setSource] = useState(
-    "https://livepeercdn.studio/recordings/bd600224-d93a-4ddc-a6ac-2d71e3c36768/index.m3u8"
-  );
+  const ref = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      // set up other stuff in your player before calling addMediaMetrics
-      const metrics = addMediaMetrics(videoRef.current, source, (e) =>
-        console.error("Error adding metrics", e)
-      );
-      return metrics?.destroy;
-    }
-  }, [videoRef, source]);
+    const { destroy } = addMediaMetrics(ref.current, {
+      // specify the source URL of the video, which should include a playbackId.
+      // this should only be used when using a custom video player that sets a `blob:...` URL or no `src` on the video element.
+      src: source,
+      // specify a unique viewer ID for tracking purposes
+      viewerId: "user123",
+      // monitor when the metrics fails to report
+      onError: (error) => {
+        console.error("Metrics collection error:", error);
+      },
+    });
+    return () => destroy();
+  }, []);
 
   return (
     <video
       controls
-      ref={videoRef}
+      ref={ref}
       src={source}
       style={{ width: "100%", maxWidth: "500px" }}
     />
