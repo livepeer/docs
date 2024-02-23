@@ -4,6 +4,13 @@ description:
   "Learn how to Build a decentralized video application with FVM and Livepeer"
 ---
 
+<Warning>
+  This tutorial is based on Livepeer React version 3.9 or earlier, which is now
+  deprecated. Please ensure that you use Livepeer React version 4 or later, with
+  the new Livepeer JavaScript SDK. The integration process may appear different,
+  but the underlying concepts remain same.
+</Warning>
+
 The Filecoin Virtual Machine (FVM) is a runtime environment designed for
 executing smart contracts on the Filecoin network. It enables developers to
 write and deploy custom code on Filecoin blockchain unleashing the ability to
@@ -510,7 +517,7 @@ export default function getContract() {
   let contract = new ethers.Contract(
     "YOUR_CONTRACT_ADDRESS",
     ContractAbi.abi,
-    signer,
+    signer
   );
   // Returning the contract
   return contract;
@@ -597,7 +604,7 @@ const uploadToLighthouse = async (e, type) => {
   setIsUploading(true);
   const output = await lighthouse.upload(
     e,
-    process.env.NEXT_PUBLIC_LIGHTHOUSE_KEY,
+    process.env.NEXT_PUBLIC_LIGHTHOUSE_KEY
   );
   let cid = output.data.Hash;
   if (type == "thumbnail") {
@@ -632,7 +639,7 @@ const saveVideo = async (data) => {
     data.category,
     data.thumbnail,
     false,
-    data.UploadedDate,
+    data.UploadedDate
   );
 };
 ```
