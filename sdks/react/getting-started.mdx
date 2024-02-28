@@ -67,8 +67,12 @@ language's SDK can be used to fetch the playback info or stream object.
     ```ts
     // this is a server function, which uses the API key
     // on the backend
-    import livepeer from "livepeer"
+    import { Livepeer } from "livepeer"
     import { getSrc } from "@livepeer/react/external";
+
+    const livepeer = new Livepeer({
+      apiKey: "YOUR_API_KEY"
+    })
 
     export async function getSourceForPlaybackId(playbackId: string) {
       const playbackInfo = await livepeer.playback.get(playbackId);
@@ -83,8 +87,12 @@ language's SDK can be used to fetch the playback info or stream object.
     ```ts
     // this is a server function, which uses the API key
     // on the backend
-    import livepeer from "livepeer"
+    import { Livepeer } from "livepeer"
     import { getIngest } from "@livepeer/react/external";
+
+    const livepeer = new Livepeer({
+      apiKey: "YOUR_API_KEY"
+    })
 
     export async function getIngestUrlForStreamId(streamId: string) {
       const stream = await livepeer.stream.get(streamId);
