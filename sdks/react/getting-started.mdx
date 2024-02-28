@@ -75,10 +75,10 @@ language's SDK can be used to fetch the playback info or stream object.
     })
 
     export async function getSourceForPlaybackId(playbackId: string) {
-      const playbackInfo = await livepeer.playback.get(playbackId);
+      const response = await livepeer.playback.get(playbackId);
 
       // the return value can be passed directly to the Player as `src`
-      return getSrc(playbackInfo);
+      return getSrc(response.playbackInfo);
     }
     ```
 
