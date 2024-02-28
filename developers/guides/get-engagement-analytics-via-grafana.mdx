@@ -1,6 +1,6 @@
 ---
 title: "Engagement via Grafana"
-description: "Learn how to visualize your rngagement metrics with Grafana"
+description: "Learn how to visualize your engagement metrics with Grafana"
 ---
 
 In May 2023, we released powerful engagement metrics offering detailed
@@ -8,7 +8,7 @@ information on viewer behavior and playback quality on your platform. The API
 includes engagement metrics such as view counts and watch time, as well as
 performance metrics such as error rate, time to first frame, rebuffer ratio, and
 exit-before-starts across a variety of dimensions. For more details, check out
-the docs [here](/developers/guides/get-engagement-analytics-via-api).
+[the docs here][1].
 
 In this tutorial we will introduce a simple, free, and customizable method to
 quickly visualize the core metrics and dimensions of the API.
@@ -17,20 +17,22 @@ quickly visualize the core metrics and dimensions of the API.
 
 Before you begin this tutorial, make sure you have:
 
-1. Integrated the necessary components to capture viewership data. Detail
-   [here](/developers/guides/get-engagement-analytics-via-api#registering-views).
+1. Integrated the necessary components to capture viewership data. Details
+   [here][2].
 2. Viewed videos via (1) to collect data.
-3. Created an [CORS-enabled API Key](/api-reference/overview/authentication).
-   The key must allow CORS access from your Grafana origin, or from all (\*)
-4. Set up a Grafana account and workspace. A free account is sufficient and
-   available at [Grafana.com](https://grafana.com/)
+3. Created an [CORS-enabled API Key][3].
+   The key must allow CORS access from your Grafana origin, or from all (`*`)
+4. Set up a Grafana account and workspace with permissions to add new dashboard
+   (and datasource/connection, if necessary). A free account is sufficient and
+   available at [grafana.com][4]
+5. Install the [`JSON API`][marcusolsson-json-datasource] plugin for grafana.
 
 With that we are ready to set up our dashboard!
 
 ## Setting up the Engagement Dashboard
 
-1. Login to Grafana
-2. Click “Connections” > "Connect Data"
+- Login to Grafana
+- Click "Connections" > "Connect Data"
 
 <Frame>
   <img
@@ -40,35 +42,35 @@ With that we are ready to set up our dashboard!
   />
 </Frame>
 
-3. Install “JSON Api” by either searching for it or using this url:
-   `<your-grafana-url>/grafana/connections/datasources/marcusolsson-json-datasource`
-4. Set up your JSON Api:
-   1. Name: e.g. “Engagement Data”
+- Set up your JSON API:
+   1. Name: e.g. "Livepeer Engagement Data"
    2. URL:
-      [`https://livepeer.studio/api/data/views/query`](https://livepeer.studio/api/data/views/query)
-   3. Custom HTTP Headers
-      1. Header: “Authorization”
-      2. Value: `Bearer <your api key>`
-5. Save and Test
-6. Get your data source’s `uid` from the browser's url, e.g.
-   `<your-grafana-url>/grafana/connections/your-connections/datasources/edit/<datasource-uid>`
-7. Copy and paste this uid into the json template
-   1. json template available:
-      [here](https://gist.github.com/ecmulli/20d7f24c784ba17eb53278c3014ac638)
-   2. open in your favorite code editor
-   3. ctrl+f
-   4. search for `<data_uid>`
-   5. replace with your data source uid
-8. “Import the Dashboard” using your formatted json file
+   [`https://livepeer.studio/api/data/views/query`][5]
+   3. Authentication methods: Forward OAuth Identity
+   4. TLS Settings: Skip TLS certificate validation
+   5. Custom HTTP Headers
+      1. Header: "Authorization"
+      2. Value: Full Access `Bearer <your api key>`
+- Save and Test
+- ["Import" the dashboard][6] from the official [Livepeer Studio Viewership
+  Engagement dashboard][dashboard] and using the JSON API datasource created
+  above.
 
 <Frame>
   <img
-    src="/images/tutorials/grafana-import-dashboard.jpg"
+    src="/images/tutorials/grafana-import-dashboard.png"
     title="Grafana Import"
-    width="30%"
   />
 </Frame>
 
-1.  Click “Upload Dashboard JSON File”
-2.  Rename the dashboard if you’d prefer
-3.  “Import”
+-  Rename the dashboard if you'd prefer
+
+
+  [1]: /developers/guides/get-engagement-analytics-via-api
+  [2]: /developers/guides/get-engagement-analytics-via-api#registering-views
+  [3]: /api-reference/overview/authentication
+  [4]: https://grafana.com/ "Grafana"
+  [5]: /api-reference/viewership/get-viewership-metrics
+  [6]: https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/import-dashboards/#import-a-dashboard
+  [dashboard]: https://grafana.com/grafana/dashboards/20511-livepeer-studio-user-engagement/
+  [marcusolsson-json-datasource]: https://grafana.com/grafana/plugins/marcusolsson-json-datasource/ "JSON API Grafana Plugin"
