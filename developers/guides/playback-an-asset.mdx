@@ -37,70 +37,64 @@ We
 ### Play Video
 
 Now that our providers are set up, we use the
-[`Player`](/sdks/react/player/Root) with an IPFS CID as our `playbackId`, which
-we created previously when uploading a video asset and storing to IPFS. We use
-[Next.js Image](https://nextjs.org/docs/basic-features/image-optimization) as
-our optimized poster image, but this could also be a simple image URL.
-
-We also override some of the custom styling to match the flow of our app!
+[`Player`](/sdks/react/player/Root) with a `playbackId`, which we created
+previously when uploading a video asset.
 
 ```tsx DemoPlayer.tsx
 import { Player } from "@livepeer/react";
+import { getSrc } from "@livepeer/react/external";
 
 import Image from "next/image";
 
 const playbackId = "f5eese9wwl88k4g8";
 
-import blenderPoster from "../../public/images/blender-poster.png";
+// fetch the playback info on the server, using React Server Components
+// or regular API routes
+export const getPlaybackSource = () => {
+  const playbackInfo = await livepeer.playback.get(playbackId);
 
-const PosterImage = () => {
-  return (
-    <Image
-      src={blenderPoster}
-      layout="fill"
-      objectFit="cover"
-      priority
-      placeholder="blur"
-    />
-  );
+  const src = getSrc(playbackInfo.playbackInfo);
+
+  return src;
 };
 
-export const DemoPlayer = () => {
+export const DemoPlayer = ({ src }: { src: Src[] | null }) => {
   return (
-    <Player
-      title="Waterfalls"
-      playbackId={playbackId}
-      showPipButton
-      showTitle={false}
-      aspectRatio="16to9"
-      poster={<PosterImage />}
-      controls={{
-        autohide: 3000,
-      }}
-      theme={{
-        borderStyles: { containerBorderStyle: "hidden" },
-        radii: { containerBorderRadius: "10px" },
-      }}
-    />
+    <Player.Root src={src}>
+      <Player.Container>
+        <Player.Video title="Live stream" />
+
+        <Player.Controls className="flex items-center justify-center">
+          <Player.PlayPauseTrigger className="w-10 h-10">
+            <Player.PlayingIndicator asChild matcher={false}>
+              <PlayIcon />
+            </Player.PlayingIndicator>
+            <Player.PlayingIndicator asChild>
+              <PauseIcon />
+            </Player.PlayingIndicator>
+          </Player.PlayPauseTrigger>
+        </Player.Controls>
+      </Player.Container>
+    </Player.Root>
   );
 };
 ```
 
 ## Using your own player
 
-Using Livepeer React is the recommended way to play back a video or a
+Using Livepeer UI Kit is the recommended way to play back a video or a
 livestream - it handles MP4 renditions, errors from the API, and is a true
 web3-native media player. However, if you want to use an alternative, you can do
 so by following the instructions below.
 
-<Info>
+<Warning>
   To ensure consistent viewer experience, we strongly recommend using a player
-  (like the Livepeer Player) that handles choosing the correct MP4 rendition and
-  gracefully recovers from routine RTMP reconnects through custom polling logic.
-  In the absence of this capability, reconnects may severely degrade viewer
-  experience and require a hard refresh to resolve, and an incorrect MP4
+  that handles choosing the correct MP4 rendition, gracefully recovers from
+  routine RTMP reconnects through custom polling logic, and handles WHEP
+  playback. In the absence of this capability, reconnects may severely degrade
+  viewer experience and require a hard refresh to resolve, and an incorrect MP4
   rendition for the screen size may be chosen.
-</Info>
+</Warning>
 
 ### Fetch the playback URL
 
@@ -108,14 +102,31 @@ To play back a livestream in other players, you'll need to fetch the playback
 URL(s). By default, all content has an HLS endpoint. HLS is a protocol that
 allows you to stream video and audio content over HTTP.
 
+Streams also have a WHEP WebRTC low latency URL. Short-form assets will have an
+MP4 source URL.
+
+Below, we show how to do this in Typescript using the
+[playback info API endpoint](/api-reference/playback/get), but we have a similar
+interface across all SDKs.
+
+```tsx DemoPlayer.tsx
+import { Player } from "@livepeer/react";
+import { getSrc } from "@livepeer/react/external";
+
+import Image from "next/image";
+
+const playbackId = "f5eese9wwl88k4g8";
+
+// fetch the playback info on the server
+const playbackInfo = await livepeer.playback.get(playbackId);
+
+// use the playbackInfo with your player
+```
+
 <Warning>
   The playback URL format is subject to change. Do not try to create the
   playback URLs manually, as they may change periodically.
 </Warning>
-
-You can get the playback details for an asset by using the
-[playback info API endpoint](/api-reference/playback/get). The `url` field can
-be used as the playback URL.
 
 #### Source playback
 
@@ -178,18 +189,14 @@ If there are MP4 renditions or WebRTC playback available, the
 ```
 
 There are multiple renditions you can choose from, and it is up to you to decide
-how you want to prioritize each source for your custom player. See the
-[Player's technical details](/sdks/react/player/Root#technical-details) for more
-information on how Livepeer React handles this.
+how you want to prioritize each source for your custom player.
 
 <Info>
   When you make a request for playback URLs, in the response MP4 URLs are always
   listed before HLS URLs. Additionally, each MP4 URL includes additional
   metadata about the video, such as its width, height, bitrate, and size. This
   metadata can be useful for mobile applications that want to optimize playback
-  quality and size based on the viewer's device and network conditions. **The
-  Livepeer React Player automatically handles this.** See the [Player
-  docs](/sdks/react/player/Root#technical-details) for more information.
+  quality and size based on the viewer's device and network conditions.
 </Info>
 
 ### Use the playback URL in a player

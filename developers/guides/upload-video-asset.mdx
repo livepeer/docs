@@ -4,23 +4,12 @@ description: "Learn how to upload and play back an asset"
 ---
 
 Uploading and watching an asset is easy! The example below uses the
-[Create asset API](/api-reference/asset/upload) to create an upload link to
+[Create Asset API](/api-reference/asset/upload) to create an upload URL to
 upload a video.
 
 <Info>
   **Pro Tip**: Livepeer supports resumable uploads through the TUS protocol,
   ensuring reliability and efficiency when transferring your asset.
-</Info>
-
-<Info>
-  **For rapid processing of assets that will also be archived on IPFS or
-  Arweave, we strongly encourage either (1) uploading to Livepeer with the [IPFS
-  storage option
-  enabled](/developers/tutorials/upload-playback-videos-on-ipfs#uploading-videos-to-ipfs),
-  or (2) uploading the raw file to Livepeer via `useCreateAsset` or the API
-  prior to archiving on dStorage, rather than passing the IPFS / Arweave gateway
-  URL. The gateway URL will work, but may incur longer-than-usual processing
-  time.**
 </Info>
 
 Livepeer provides versatile options for uploading and managing your assets:
@@ -31,9 +20,12 @@ Livepeer provides versatile options for uploading and managing your assets:
 - Resumable Upload: Discover the power of resumable uploads, ensuring
   reliability and efficiency when transferring your media files.
 
-## Using Livepeer SDK
+## Using a Livepeer SDK
 
-We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
+We can use a Livepeer SDK to create a
+[Tus-compatible](https://github.com/tus/tus-js-client) upload endpoint.
+
+We can then use Tus on the frontend to directly upload the asset to Livepeer.
 
 <Tabs>
   <Tab title="Node.js">
@@ -50,13 +42,16 @@ We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
     };
 
     livepeer
-      .requestAssetUpload(assetData)
+      .asset.create(assetData)
       .then((response) => {
         console.log("Asset upload request:", response);
       })
       .catch((error) => {
         console.error("Error requesting asset upload:", error);
       });
+
+    // pass the Tus endpoint to the frontend and use Tus to upload
+    // https://github.com/tus/tus-js-client
     ```
 
   </Tab>
@@ -77,10 +72,13 @@ We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
 
     try:
         # Request asset upload
-        response = livepeer.request_asset_upload(asset_data)
+        response = livepeer.asset.create(asset_data)
         print("Asset upload request:", response)
     except Exception as e:
         print("Error requesting asset upload:", e)
+
+    # pass the Tus endpoint to the frontend and use Tus to upload
+    # https://github.com/tus/tus-js-client
     ```
 
   </Tab>
@@ -101,11 +99,14 @@ We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
 
     begin
       # Request asset upload
-      response = client.request_asset_upload(asset_data)
+      response = client.asset.create(asset_data)
       puts 'Asset upload request:', response
     rescue StandardError => e
       puts 'Error requesting asset upload:', e.message
     end
+
+    # pass the Tus endpoint to the frontend and use Tus to upload
+    # https://github.com/tus/tus-js-client
     ```
 
   </Tab>
@@ -131,11 +132,14 @@ We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
 
     try {
         // Request asset upload
-        $response = $livepeer->requestAssetUpload($asset_data);
+        $response = $livepeer->asset->create($asset_data);
         echo 'Asset upload request: ' . json_encode($response) . PHP_EOL;
     } catch (LivepeerException $e) {
         echo 'Error requesting asset upload: ' . $e->getMessage() . PHP_EOL;
     }
+
+    // pass the Tus endpoint to the frontend and use Tus to upload
+    // https://github.com/tus/tus-js-client
     ```
 
   </Tab>
@@ -148,7 +152,7 @@ We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
       "fmt"
       "os"
 
-      "github.com/livepeer/go-sdk"
+      "github.com/livepeer/livepeer-go"
     )
 
     func main() {
@@ -171,6 +175,9 @@ We can use the Livepeer SDK to create a Tus-compatible upload endpoint.
 
       fmt.Printf("Asset upload request: %+v\n", response)
     }
+
+    // pass the Tus endpoint to the frontend and use Tus to upload
+    // https://github.com/tus/tus-js-client
     ```
 
   </Tab>
@@ -182,89 +189,16 @@ tus-compatible client (like
 [tus-js-client](https://github.com/tus/tus-js-client)) to upload your video file
 from the frontend.
 
-## Using React Hooks
-
-We
-[create a new React client and wrap the app with `LivepeerConfig`](/sdks/livepeer-react/getting-started).
-
-Now that our providers are set up, we set up file uploads with React Dropzone, a
-library for easily creating HTML5-compliant drag and drop zones for files (you
-can use another solution for file uploads):
-
-```js
-import { useCreateAsset } from "@livepeer/react";
-
-import { useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
-
-export const CreateAndViewAsset = () => {
-  const [video, setVideo] = useState<File | undefined>();
-  const {
-    mutate: createAsset,
-    data: asset,
-    status,
-    progress,
-    error,
-  } = useCreateAsset(
-    video
-      ? {
-          sources: [{ name: video.name, file: video }] as const,
-        }
-      : null
-  );
-
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    if (acceptedFiles && acceptedFiles.length > 0 && acceptedFiles?.[0]) {
-      setVideo(acceptedFiles[0]);
-    }
-  }, []);
-
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: {
-      "video/*": ["*.mp4"],
-    },
-    maxFiles: 1,
-    onDrop,
-  });
-
-  const progressFormatted = useMemo(
-    () =>
-      progress?.[0].phase === "failed"
-        ? "Failed to process video."
-        : progress?.[0].phase === "waiting"
-        ? "Waiting"
-        : progress?.[0].phase === "uploading"
-        ? `Uploading: ${Math.round(progress?.[0]?.progress * 100)}%`
-        : progress?.[0].phase === "processing"
-        ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
-        : null,
-    [progress]
-  );
-
-  return (
-    <>
-      <div {...getRootProps()}>
-        <input {...getInputProps()} />
-        <p>Drag and drop or browse files</p>
-      </div>
-
-      {createError?.message && <p>{createError.message}</p>}
-
-      {video ? <p>{video.name}</p> : <p>Select a video file to upload.</p>}
-      {progressFormatted && <p>{progressFormatted}</p>}
-
-      <button
-        onClick={() => {
-          createAsset?.();
-        }}
-        disabled={!createAsset || createStatus === "loading"}
-      >
-        Upload
-      </button>
-    </>
-  );
-};
-```
+<Info>
+  **For rapid processing of assets that will also be archived on IPFS or
+  Arweave, we strongly encourage either (1) uploading to Livepeer with the [IPFS
+  storage option
+  enabled](/developers/tutorials/upload-playback-videos-on-ipfs#uploading-videos-to-ipfs),
+  or (2) uploading the raw file to Livepeer via `useCreateAsset` or the API
+  prior to archiving on dStorage, rather than passing the IPFS / Arweave gateway
+  URL. The gateway URL will work, but may incur longer-than-usual processing
+  time.**
+</Info>
 
 ### Play an Asset
 

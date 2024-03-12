@@ -65,6 +65,8 @@ This asset was uploaded using the dashboard, but this can also be an asset
 created from an application.
 
 ```ts
+import { getSrc } from "@livepeer/react/external";
+
 const playbackId = "f5eese9wwl88k4g8";
 
 export const getPlaybackSource = () => {
@@ -78,7 +80,9 @@ export const getPlaybackSource = () => {
 
 ## Play the asset
 
-We can now use Player component from the SDK to play a video:
+We can now use Player component from the SDK to play a video. In the below
+example, we style the elements with Tailwind, but you can use any styling
+solution:
 
 ```tsx
 import { Player } from "@livepeer/react";
@@ -91,16 +95,16 @@ import { vodSource } from "./source";
 export const DemoPlayer = ({ src }: { src: Src[] | null }) => {
   return (
     <Player.Root src={src}>
-      <Player.Container className="h-full w-full overflow-hidden bg-gray-950">
-        <Player.Video title="Live stream" className="h-full w-full" />
+      <Player.Container>
+        <Player.Video title="Live stream" />
 
         <Player.Controls className="flex items-center justify-center">
-          <Player.PlayPauseTrigger className="w-10 h-10 hover:scale-105 flex-shrink-0">
+          <Player.PlayPauseTrigger className="w-10 h-10">
             <Player.PlayingIndicator asChild matcher={false}>
-              <PlayIcon className="w-full h-full" />
+              <PlayIcon />
             </Player.PlayingIndicator>
             <Player.PlayingIndicator asChild>
-              <PauseIcon className="w-full h-full" />
+              <PauseIcon />
             </Player.PlayingIndicator>
           </Player.PlayPauseTrigger>
         </Player.Controls>
