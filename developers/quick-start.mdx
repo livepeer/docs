@@ -11,10 +11,10 @@ and create an account. Once you've created an account, you'll be able to create
 an API key by clicking on the "Create API Key" button on Developers page.
 
 <Warning>
-  If you are planning on making API requests from the frontend in your
-  application, we recommend creating a ["CORS-enabled" API
-  key](/api-reference/overview/authentication). This is a limited, public API
-  key which has a security model that allows for requests from the frontend.
+  We do not recommend using ["CORS-enabled" API
+  keys](/api-reference/overview/authentication) - they will be deprecated in an
+  upcoming release. We recommend making requests from your backend to the
+  Livepeer Studio API.
 </Warning>
 
 <Frame>
@@ -26,171 +26,89 @@ You can now use this API key in Livepeer SDKs and APIs in order to authenticate
 your requests and start building.
 
 <Info>
-  We recommend creating separate API keys for your development and production
-  environments. This will allow you to easily manage your API keys and revoke
-  them, if needed.
+  We recommend creating separate accounts for your development and production
+  environments. This will allow you to easily isolate your environments. We will
+  be shipping a solution for multi-environment management soon.
 </Info>
 
-In this example, we will use the
-[Livepeer React SDK](/sdks/livepeer-react/getting-started) to upload a video.
-Make sure to setup a react app first.
+In this example, we will use Javascript and React to upload a video. Make sure
+to setup a React app first.
 
-## Install the SDK
+## Install the JS SDK and React UI Kit
+
+We install both the NodeJS SDK (which works in all JS environments with `fetch`)
+and the React UI Kit library, which provides composable React primitives for
+building video apps.
 
 ```
-npm install @livepeer/react
+npm install livepeer @livepeer/react
 ```
 
 ## Set up the SDK
 
-Next, create a new [React client](/sdks/livepeer-react/getting-started) and wrap
-the app with `LivepeerConfig`.
+Add a API key to the environment variables, and construct a new Livepeer SDK
+client.
 
-```js
-import { createReactClient, studioProvider } from "@livepeer/react";
+```tsx
+import Livepeer from "livepeer";
 
-const client = createReactClient({
-  provider: studioProvider({ apiKey: "yourStudioApiKey" }),
+const livepeer = new Livepeer({
+  apiKey: process.env.YOUR_PRIVATE_API_KEY,
 });
 ```
 
-Wrap the app with the LivepeerConfig component, passing the client to it
+## Retrieve playback info
 
-```js
-import {
-  LivepeerConfig,
-  createReactClient,
-  studioProvider,
-} from "@livepeer/react";
+We can now use the SDK on the backend to fetch the playback info for our asset.
 
-const client = createReactClient({
-  provider: studioProvider({ apiKey: "yourStudioApiKey" }),
-});
+This asset was uploaded using the dashboard, but this can also be an asset
+created from an application.
 
-function App() {
-  return (
-    <LivepeerConfig client={client}>
-      <SomeComponent />
-    </LivepeerConfig>
-  );
-}
-```
+```ts
+const playbackId = "f5eese9wwl88k4g8";
 
-## Upload a video
+export const getPlaybackSource = () => {
+  const playbackInfo = await livepeer.playback.get(playbackId);
 
-Now that our providers are set up, we set up file uploads with React Dropzone, a
-library for easily creating HTML5-compliant drag and drop zones for files (you
-can use another solution for file uploads):
+  const src = getSrc(playbackInfo.playbackInfo);
 
-```js
-import { useCreateAsset } from "@livepeer/react";
-
-import { useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
-
-export const CreateAndViewAsset = () => {
-  const [video, setVideo] = useState<File | undefined>();
-  const {
-    mutate: createAsset,
-    data: asset,
-    status,
-    progress,
-    error,
-  } = useCreateAsset(
-    video
-      ? {
-          sources: [{ name: video.name, file: video }] as const,
-        }
-      : null
-  );
-
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    if (acceptedFiles && acceptedFiles.length > 0 && acceptedFiles?.[0]) {
-      setVideo(acceptedFiles[0]);
-    }
-  }, []);
-
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: {
-      "video/*": ["*.mp4"],
-    },
-    maxFiles: 1,
-    onDrop,
-  });
-
-  const progressFormatted = useMemo(
-    () =>
-      progress?.[0].phase === "failed"
-        ? "Failed to process video."
-        : progress?.[0].phase === "waiting"
-        ? "Waiting"
-        : progress?.[0].phase === "uploading"
-        ? `Uploading: ${Math.round(progress?.[0]?.progress * 100)}%`
-        : progress?.[0].phase === "processing"
-        ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
-        : null,
-    [progress]
-  );
-
-  return (
-    <>
-      <div {...getRootProps()}>
-        <input {...getInputProps()} />
-        <p>Drag and drop or browse files</p>
-      </div>
-
-      {createError?.message && <p>{createError.message}</p>}
-
-      {video ? <p>{video.name}</p> : <p>Select a video file to upload.</p>}
-      {progressFormatted && <p>{progressFormatted}</p>}
-
-      <button
-        onClick={() => {
-          createAsset?.();
-        }}
-        disabled={!createAsset || createStatus === "loading"}
-      >
-        Upload
-      </button>
-    </>
-  );
+  return src;
 };
 ```
 
 ## Play the asset
 
-We can now use Player component from the SDK to play the asset:
+We can now use Player component from the SDK to play a video:
 
-```js
+```tsx
 import { Player } from "@livepeer/react";
 
-const playbackId = "f5eese9wwl88k4g8";
+import { PauseIcon, PlayIcon } from "@livepeer/react/assets";
+import { getSrc } from "@livepeer/react/external";
+import * as Player from "@livepeer/react/player";
+import { vodSource } from "./source";
 
-export const DemoPlayer = () => {
+export const DemoPlayer = ({ src }: { src: Src[] | null }) => {
   return (
-    <Player
-      title="Waterfalls"
-      playbackId={playbackId}
-      showPipButton
-      showTitle={false}
-      aspectRatio="16to9"
-      controls={{
-        autohide: 3000,
-      }}
-      theme={{
-        borderStyles: { containerBorderStyle: "hidden" },
-        radii: { containerBorderRadius: "10px" },
-      }}
-    />
+    <Player.Root src={src}>
+      <Player.Container className="h-full w-full overflow-hidden bg-gray-950">
+        <Player.Video title="Live stream" className="h-full w-full" />
+
+        <Player.Controls className="flex items-center justify-center">
+          <Player.PlayPauseTrigger className="w-10 h-10 hover:scale-105 flex-shrink-0">
+            <Player.PlayingIndicator asChild matcher={false}>
+              <PlayIcon className="w-full h-full" />
+            </Player.PlayingIndicator>
+            <Player.PlayingIndicator asChild>
+              <PauseIcon className="w-full h-full" />
+            </Player.PlayingIndicator>
+          </Player.PlayPauseTrigger>
+        </Player.Controls>
+      </Player.Container>
+    </Player.Root>
   );
 };
 ```
-
-Once the asset is upload, you will also receive a
-[asset object](/api-reference/asset/upload) in response. You can view the asset
-on Livepeer Studio:
-
-<Frame>![Livepeer Studio - Stream page](/images/asset-page.png)</Frame>
 
 ## Start building
 
