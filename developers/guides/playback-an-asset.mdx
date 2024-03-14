@@ -3,14 +3,13 @@ title: "Play an asset"
 description: "Learn how to play assets with Livepeer"
 ---
 
-In this guide, we demonstrate how to play back assets in your application using
-either Livepeer React or Video.js.
+In this guide, we demonstrate how to play back assets in your application.
 
 <Warning>
-  In a production application, with [CORS-enabled API
-  keys](/api-reference/overview/authentication), the viewer **should not have
-  access** to the asset ID. The `playbackId` should be passed to the viewer
-  only, since this allows the viewer to watch the asset.
+  We do not recommend using ["CORS-enabled" API
+  keys](/api-reference/overview/authentication) - they will be deprecated in an
+  upcoming release. We recommend making requests from your backend to the
+  Livepeer Studio API.
 </Warning>
 
 ## Using the Livepeer React Player
@@ -23,22 +22,17 @@ styles to demonstrate what's possible.
   src="https://lvpr.tv/?v=f5eese9wwl88k4g8"
   frameborder="0"
   width="100%"
-    height="410"
-
-webkitallowfullscreen mozallowfullscreen allowfullscreen
-
-> </iframe>
-
-### Configuring Providers
-
-We
-[create a new React client and wrap the app with `LivepeerConfig`](/sdks/livepeer-react/getting-started).
+  height="410"
+  webkitallowfullscreen
+  mozallowfullscreen
+  allowfullscreen
+/>
 
 ### Play Video
 
-Now that our providers are set up, we use the
-[`Player`](/sdks/react/player/Root) with a `playbackId`, which we created
-previously when uploading a video asset.
+This guide assumes you have configured a Livepeer JS SDK client with an API key.
+We can use the [`Player`](/sdks/react/player/Root) with a `playbackId`, which we
+created previously when uploading a video asset.
 
 ```tsx DemoPlayer.tsx
 import { Player } from "@livepeer/react";
@@ -58,6 +52,7 @@ export const getPlaybackSource = () => {
   return src;
 };
 
+// pass the parsed playback info Src[] into the player
 export const DemoPlayer = ({ src }: { src: Src[] | null }) => {
   return (
     <Player.Root src={src}>
@@ -80,20 +75,17 @@ export const DemoPlayer = ({ src }: { src: Src[] | null }) => {
 };
 ```
 
+Check out the [Player docs](/sdks/react/player/Root) for more details on the
+video primitives you can use to build custom viewing experiences.
+
 ## Using your own player
 
-Using Livepeer UI Kit is the recommended way to play back a video or a
-livestream - it handles MP4 renditions, errors from the API, and is a true
-web3-native media player. However, if you want to use an alternative, you can do
-so by following the instructions below.
-
 <Warning>
-  To ensure consistent viewer experience, we strongly recommend using a player
-  that handles choosing the correct MP4 rendition, gracefully recovers from
-  routine RTMP reconnects through custom polling logic, and handles WHEP
-  playback. In the absence of this capability, reconnects may severely degrade
-  viewer experience and require a hard refresh to resolve, and an incorrect MP4
-  rendition for the screen size may be chosen.
+  Using Livepeer UI Kit is the recommended way to play back an asset - it
+  handles prioritizing HLS & MP4 renditions, errors from the API, and is
+  composable to allow advanced video apps without writing a custom integration.
+  However, if you want to use an alternative, you can do so by following the
+  instructions below.
 </Warning>
 
 ### Fetch the playback URL
@@ -102,8 +94,7 @@ To play back a livestream in other players, you'll need to fetch the playback
 URL(s). By default, all content has an HLS endpoint. HLS is a protocol that
 allows you to stream video and audio content over HTTP.
 
-Streams also have a WHEP WebRTC low latency URL. Short-form assets will have an
-MP4 source URL.
+Short-form assets will also have one or more MP4 source URLs.
 
 Below, we show how to do this in Typescript using the
 [playback info API endpoint](/api-reference/playback/get), but we have a similar
@@ -111,9 +102,11 @@ interface across all SDKs.
 
 ```tsx DemoPlayer.tsx
 import { Player } from "@livepeer/react";
-import { getSrc } from "@livepeer/react/external";
+import Livepeer from "livepeer";
 
-import Image from "next/image";
+const livepeer = new Livepeer({
+  apiKey: process.env.YOUR_PRIVATE_API_KEY,
+});
 
 const playbackId = "f5eese9wwl88k4g8";
 
@@ -122,11 +115,6 @@ const playbackInfo = await livepeer.playback.get(playbackId);
 
 // use the playbackInfo with your player
 ```
-
-<Warning>
-  The playback URL format is subject to change. Do not try to create the
-  playback URLs manually, as they may change periodically.
-</Warning>
 
 #### Source playback
 
@@ -145,14 +133,12 @@ URLs for your video asset to enable applications (and CDNs) to cache short
 videos for instant playback of subsequent videos. This means that viewers can
 experience instant time-to-first-frame (TTFF) when watching short videos.
 
-It is important to note that short form playback URLs are only available for
-video assets that are less than 2 minutes in duration.
+<Info>
+  It is important to note that short form playback URLs are only available for
+  video assets that are less than 2 minutes in duration.
+</Info>
 
-These may also include WebRTC URLs for low latency livestream playback. These
-_must_ be played back with our ICE servers, which are used to route traffic in
-restricted networking environments.
-
-If there are MP4 renditions or WebRTC playback available, the
+If there are MP4 renditions or HLS playback available, the
 [playback info endpoint](/api-reference/playback/get) will return:
 
 ```json
@@ -243,7 +229,46 @@ Here is an example of how to use the playback URL in video.js player.
 
 ## Embeddable Player
 
-Livepeer Studio maintains an
-[embeddable version of the Livepeer Player](/developers/guides/embed-a-player)
-that is suitable for iframing or similar embeddings. See the guide for more
-details.
+Livepeer Studio maintains an embeddable version of the Livepeer Player that is
+suitable for iframing.
+
+<Warning>
+  If you are using React, consider using Livepeer UI Kit instead.
+</Warning>
+
+This is one of the easiest ways to play back a video on your website. You can
+embed the player by using the below code snippet.
+
+You can replace the `PLAYBACK_ID` with your video's playback id.
+
+```html
+<iframe
+  src="https://lvpr.tv?v={PLAYBACK_ID}"
+  allowfullscreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+  frameborder="0"
+>
+</iframe>
+```
+
+### Configuration
+
+<Info>
+  If you are using the iframe for livestreams as well as assets, see the
+  livestream embed docs for how to set up low latency, clipping, and other
+  configs for streams.
+</Info>
+
+You can override the default `muted` and `autoplay` behavior with `&muted=false`
+and/or `&autoplay=false`. These are set to true by default. Looping can also be
+set with `&loop=true`.
+
+<iframe
+  src="https://lvpr.tv/?v=f5eese9wwl88k4g8"
+  frameborder="0"
+  width="100%"
+  height="410"
+  webkitallowfullscreen
+  mozallowfullscreen
+  allowfullscreen
+/>
