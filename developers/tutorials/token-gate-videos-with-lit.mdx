@@ -875,7 +875,13 @@ return (
     </div>
     <div className="flex justify-center text-center font-matter">
       <div className="overflow-auto border border-solid border-[#00FFB250] rounded-md p-6 w-3/5 mt-20">
-        {jwt && <Player playbackId={playbackId} accessKey={jwt} />}
+        {jwt && (
+          <Player.Root src={src} jwt={jwt}>
+            <Player.Container>
+              <Player.Video />
+            </Player.Container>
+          </Player.Root>
+        )}
         {gateState == "checking" && (
           <p className="text-white">Checking, please wait...</p>
         )}

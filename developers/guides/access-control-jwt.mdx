@@ -301,13 +301,11 @@ export const AccessControl = () => {
           </button>
         </>
       ) : (
-        <Player
-          title={stream?.name}
-          playbackId={stream?.playbackId}
-          autoPlay
-          muted
-          jwt={(createdJwt as CreateSignedPlaybackResponse)?.token}
-        />
+        <Player.Root src={src} jwt={jwt}>
+          <Player.Container>
+            <Player.Video />
+          </Player.Container>
+        </Player.Root>
       )}
     </div>
   );

@@ -221,12 +221,18 @@ valid.
 </Info>
 
 ```tsx
-import { Player } from "@livepeer/react";
+import * as Player from "@livepeer/react/player";
 
 export const CreateAndViewAsset = () => {
   const accessKey = getAccessKeyForYourApplication();
 
-  return <Player playbackId={playbackId} accessKey={accessKey} />;
+  return (
+    <Player.Root src={src} accessKey={accessKey}>
+      <Player.Container>
+        <Player.Video />
+      </Player.Container>
+    </Player.Root>
+  );
 };
 ```
 

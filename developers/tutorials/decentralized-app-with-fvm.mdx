@@ -999,15 +999,11 @@ interface PlayerProps {
 
 const VideoPlayer: React.FC<PlayerProps> = ({ id }) => {
   return (
-    <Player
-      src={"ipfs://" + id}
-      showPipButton
-      showTitle={false}
-      aspectRatio="16to9"
-      controls={{
-        autohide: 3000,
-      }}
-    />
+    <Player.Root src={"ipfs://" + id}>
+      <Player.Container>
+        <Player.Video />
+      </Player.Container>
+    </Player.Root>
   );
 };
 

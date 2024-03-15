@@ -265,15 +265,11 @@ Finally, add Livepeer Player to playback the video from the Arweave network.
 {
   arweaveId && (
     <div className="mt-6 w-1/2">
-      <Player
-        src={arweaveId}
-        controls
-        autoPlay
-        muted
-        autoUrlUpload={{
-          fallback: true,
-        }}
-      />
+      <Player.Root src={arweaveId}>
+        <Player.Container>
+          <Player.Video />
+        </Player.Container>
+      </Player.Root>
     </div>
   );
 }
