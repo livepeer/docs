@@ -1,0 +1,174 @@
+---
+title: Deploying Catalyst
+icon: cloud-arrow-up
+---
+
+# Prerequisites
+
+You'll need a few things to get started with deploying a publicly-accessible
+Catalyst node:
+
+1. A Linux server with a publicly-accessible IP address.
+1. Docker, or another container runtime such as Podman.
+1. TCP Ports `80`, `443` and `1935` accessible through your firewall.
+   Additionally, WebRTC will require the ephemeral port range to be available
+   over UDP, `32768` - `60999`.
+1. A reverse proxy with a valid TLS certificate. It should be configured to
+   forward incoming traffic to `http://127.0.0.1:8888`.
+
+# Running the image
+
+There are two required parameters to boot the Catalyst node:
+
+1. `CATALYST_PUBLIC_URL`: This is the publicly-accessible address of your
+   Catalyst node, including the `https` prefix, with no trailing slash. Example
+   value: `https://example.com`
+2. `CATALYST_SECRET`: This is a secret identifier used to secure connections
+   into the node. You should generate your own and keep it secure.
+
+Additionally, you will need to bind-mount a local directory to the `/data` route
+to persist your Catalyst node's data.
+
+```shell
+CATALYST_DIR="$HOME/livepeer-catalyst" \
+CATALYST_SECRET="CHANGE_ME" \
+docker run \
+    -v $CATALYST_DIR:/data \
+    --rm \
+    -it \
+    -e CATALYST_PUBLIC_URL=https://example.com \
+    -e CATALYST_SECRET=$CATALYST_SECRET \
+    --name catalyst \
+    --shm-size=4gb \
+    -p 127.0.0.1:8888:8888 \
+    -p 1935:1935 \
+    -p 40000-40100:40000-40100/udp \
+    livepeer/catalyst:next
+```
+
+# Mainnet Transcoding
+
+Enabling mainnet transcoding requires some additional configuration.
+
+## Prerequisites
+
+1. You will need an RPC provider for Arbitrum One. This could be a local
+   fully-synced Arbitrum Nitro node, or one of many hosted services — the
+   [Arbitrum team maintains a list here](https://docs.arbitrum.io/node-running/node-providers).
+2. You will need funds sufficient to populate your deposit and reserve. At time
+   of writing, `0.2` Eth is sufficient to get started with transoding on
+   mainnet.
+
+## Creating a wallet
+
+The easiest way to create a wallet and deposit funds is to use the go-livepeer
+node itself along with the `livepeer_cli` command-line tool. Both are
+downloadable from the
+[go-livepeer releases page on GitHub](https://github.com/livepeer/go-livepeer/releases).
+Once you have those binaries, you can boot up a temporary livepeer broadcaster
+locally:
+
+```
+./livepeer \
+  -broadcaster \
+  -network arbitrum-one-mainnet \
+  -ethUrl https://ETH_RPC_PROVIDER_HERE
+```
+
+That command will prompt you for a password and then create a new Ethereum
+wallet for you. It will be located in
+`$HOME/.lpData/arbitrum-one-mainnet/keystore`. **BACK THIS FILE UP
+IMMEDIATELY!** Losing this wallet will make your funds unrecoverable.
+
+With the wallet created, you may boot up the `livepeer_cli` command-line
+interface. You will be shown output something like this:
+
+```
++-----------------------------------------------------------+
+| Welcome to livepeer-cli, your Livepeer command line tool  |
+|                                                           |
+| This tool lets you interact with a local Livepeer node    |
+| and participate in the Livepeer protocol without the	    |
+| hassle that it would normally entail.                     |
+|                                                           |
++-----------------------------------------------------------+
+
++-----------+
+|NODE STATS|
++-----------+
+*------------------------------------*--------------------------------------------*
+|                     Node's version |                             0.7.2-cad67131 |
+*------------------------------------*--------------------------------------------*
+|          Node's GO runtime version |                                   go1.20.4 |
+*------------------------------------*--------------------------------------------*
+|                Node's architecture |                                      amd64 |
+*------------------------------------*--------------------------------------------*
+|            Node's operating system |                                      linux |
+*------------------------------------*--------------------------------------------*
+|                          HTTP Port |                                       7935 |
+*------------------------------------*--------------------------------------------*
+|                 Controller Address | 0xD8E8328501E9645d16Cf49539efC04f734606ee4 |
+| FOR REFERENCE - DO NOT SEND TOKENS |                                            |
+*------------------------------------*--------------------------------------------*
+|              LivepeerToken Address | 0x289ba1701C2F088cf0faf8B3705246331cB8A839 |
+| FOR REFERENCE - DO NOT SEND TOKENS |                                            |
+*------------------------------------*--------------------------------------------*
+|        LivepeerTokenFaucet Address | 0x0000000000000000000000000000000000000000 |
+| FOR REFERENCE - DO NOT SEND TOKENS |                                            |
+*------------------------------------*--------------------------------------------*
+|                Broadcaster Account | YOUR WALLET HERE                           |
+|          YOUR WALLET FOR ETH & LPT |                                            |
+*------------------------------------*--------------------------------------------*
+|                        LPT Balance |                                     0 LPTU |
+*------------------------------------*--------------------------------------------*
+|                        ETH Balance |                                      0 ETH |
+*------------------------------------*--------------------------------------------*
+|                      Max Gas Price |                                        n/a |
+*------------------------------------*--------------------------------------------*
+|                      Min Gas Price |                                     0 GWei |
+*------------------------------------*--------------------------------------------*
+```
+
+At this point you may deposit your Eth into the "Broadcaster Account" address
+provided here. Once that transaction has posted to the Arbitrum One network, you
+can then invoke option 11: `Invoke "deposit broadcasting funds" (ETH)`. For
+example, if you intend to deposit 0.1 Eth in your deposit and 0.1 Eth in your
+reserve, that would look something like this:
+
+```
+> 11
+Current Deposit: 0.1 ETH
+Current Reserve: 0.1 ETH
+Enter deposit amount in ETH - > 0.1
+Enter reserve amount in ETH - > 0.1
+fundDepositAndReserve success true
+```
+
+Finally, you will need to securely upload this wallet to your server and place
+it into a directory that can be bind-mounted by Docker. In this example, we will
+be placing the keys at `/keystore`.
+
+And now you're ready to run a mainnet-enabled Catalyst!
+
+```shell
+CATALYST_DIR="$HOME/livepeer-catalyst" \
+CATALYST_SECRET="CHANGE_ME" \
+CATALYST_ETH_PASSWORD="YOUR_ETH_PASSWORD" \
+docker run \
+    -v $CATALYST_DIR:/data \
+    -v /keystore:/keystore \
+    --rm \
+    -it \
+    -e CATALYST_PUBLIC_URL=https://example.com \
+    -e CATALYST_SECRET=$CATALYST_SECRET \
+    -e CATALYST_NETWORK=arbitrum-one-mainnet \
+    -e CATALYST_ETH_PASSWORD=$CATALYST_ETH_PASSWORD \
+    --name catalyst \
+    --shm-size=4gb \
+    -p 127.0.0.1:8888:8888 \
+    -p 1935:1935 \
+    -p 40000-40100:40000-40100/udp \
+    livepeer/catalyst:next
+```
+
+And now your Catalyst should trancode on mainnet!
