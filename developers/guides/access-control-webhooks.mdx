@@ -20,7 +20,7 @@ criteria.
 
 The example below uses webhook to create and watch a gated content.
 
-### Create an Access Control Webhook Handler
+## Create an Access Control Webhook Handler
 
 Set up an endpoint (e.g., https://yourdomain.com/api/check-access) to handle the
 logic for granting or denying access to your assets. This endpoint should accept
@@ -42,7 +42,7 @@ This is an example of a payload this endpoint would receive:
 
 The payload in `context` is defined by your application.
 
-### Register an Access Control Webhook
+### Register the Access Control Webhook
 
 Use the
 [Livepeer Studio dashboard](https://livepeer.studio/dashboard/developers/webhooks)
@@ -51,163 +51,66 @@ URL of your access control endpoint.
 
 You can then use the ID of the webhook in the next step.
 
-### Create a content with a playback policy webhook
+## Create content with a playback policy webhook
 
-#### For assets
+### For assets
 
 Create an asset with a playback policy webhook, passing the ID of the webhook
 you created in the previous step.
 
-```tsx accessControl.tsx
-import { useCreateAsset } from "@livepeer/react";
+```tsx accessControl.ts
+import { Livepeer } from "livepeer";
+import { TypeT } from "livepeer/dist/models/components";
 
-import { useCallback, useState, useMemo } from "react";
-import { useDropzone } from "react-dropzone";
+const livepeer = new Livepeer({
+  apiKey: process.env.STUDIO_API_KEY ?? "",
+});
 
-export const CreateAndViewAsset = () => {
-  const [video, setVideo] = useState<File | undefined>();
-  const {
-    mutate: createAsset,
-    data: asset,
-    status: createStatus,
-    progress,
-    error: createError,
-  } = useCreateAsset(
-    video
-      ? {
-          sources: [
-            {
-              name: video.name,
-              file: video,
-              playbackPolicy: {
-                type: "webhook",
-                // This is the id of the webhook you created in step 2
-                webhookId: "<webhook_id>",
-                webhookContext: {
-                  // This is the context you want to pass to your webhook
-                  // It can be anything you want, and it will be passed back to your webhook
-                },
-              },
-            },
-          ] as const,
-        }
-      : null
-  );
-
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    if (acceptedFiles && acceptedFiles.length > 0 && acceptedFiles?.[0]) {
-      setVideo(acceptedFiles[0]);
-    }
-  }, []);
-
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: {
-      "video/*": ["*.mp4"],
+await livepeer.asset.create({
+  name: "...",
+  playbackPolicy: {
+    type: TypeT.Webhook,
+    // This is the id of the webhook you created in step 2
+    webhookId: "<webhook_id>",
+    webhookContext: {
+      // This is the context you want to pass to your webhook
+      // It can be anything you want, and it will be passed back to your webhook
     },
-    maxFiles: 1,
-    onDrop,
-  });
-
-  const progressFormatted = useMemo(
-    () =>
-      progress?.[0].phase === "failed"
-        ? "Failed to process video."
-        : progress?.[0].phase === "waiting"
-        ? "Waiting"
-        : progress?.[0].phase === "uploading"
-        ? `Uploading: ${Math.round(progress?.[0]?.progress * 100)}%`
-        : progress?.[0].phase === "processing"
-        ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
-        : null,
-    [progress]
-  );
-
-  return (
-    <>
-      <div {...getRootProps()}>
-        <input {...getInputProps()} />
-        <p>Drag and drop or browse files</p>
-      </div>
-
-      {createError?.message && <p>{createError.message}</p>}
-
-      {video ? <p>{video.name}</p> : <p>Select a video file to upload.</p>}
-      {progressFormatted && <p>{progressFormatted}</p>}
-
-      <button
-        onClick={() => {
-          createAsset?.();
-        }}
-        disabled={!createAsset || createStatus === "loading"}
-      >
-        Upload
-      </button>
-    </>
-  );
-};
+  },
+});
 ```
 
-#### For livestreams
+You can then use the [returned Tus URL](/api-reference/asset/upload) to upload
+the asset.
+
+### For livestreams
 
 Create a stream with a playback policy webhook, passing the ID of the webhook
 you created in the previous step.
 
-```tsx accessControl.tsx
-import { useCreateStream, useStream } from "@livepeer/react";
+```tsx accessControl.ts
+import { Livepeer } from "livepeer";
+import { TypeT } from "livepeer/dist/models/components";
 
-import { useMemo, useState } from "react";
+const livepeer = new Livepeer({
+  apiKey: process.env.STUDIO_API_KEY ?? "",
+});
 
-export const AccessControl = () => {
-  const [streamName, setStreamName] = useState<string>("");
-  const {
-    mutate: createStream,
-    data: createdStream,
-    status,
-  } = useCreateStream(
-    streamName
-      ? {
-          name: streamName,
-          playbackPolicy: {
-            type: "webhook",
-            // This is the id of the webhook you created in step 2
-            webhookId: "<webhook_id>",
-            webhookContext: {
-              // This is the context you want to pass to your webhook
-              // It can be anything you want, and it will be passed back to your webhook
-            },
-          },
-        }
-      : null
-  );
-
-  const { data: stream } = useStream({
-    streamId: createdStream?.id,
-    refetchInterval: (stream) => (!stream?.isActive ? 5000 : false),
-  });
-
-  const isLoading = useMemo(() => status === "loading", [status]);
-
-  return (
-    <div>
-      <input
-        placeholder="Stream Name"
-        onChange={(e) => setStreamName(e.target.value)}
-      />
-
-      <button
-        onClick={() => {
-          createStream?.();
-        }}
-        disabled={isLoading || !createStream || Boolean(stream)}
-      >
-        Create Gated Stream
-      </button>
-    </div>
-  );
-};
+await livepeer.stream.create({
+  name: "...",
+  playbackPolicy: {
+    type: TypeT.Webhook,
+    // This is the id of the webhook you created in step 2
+    webhookId: "<webhook_id>",
+    webhookContext: {
+      // This is the context you want to pass to your webhook
+      // It can be anything you want, and it will be passed back to your webhook
+    },
+  },
+});
 ```
 
-### Configure the Player with an Access Key
+### Configure the Player
 
 If you are using the Livepeer UI Kit Player, you can use the
 [`accessKey`](/sdks/react/player/Root#accesskey) prop to provide your custom
@@ -236,7 +139,7 @@ export const CreateAndViewAsset = () => {
 };
 ```
 
-#### Using a custom player
+### Using a custom player
 
 If you are not using the player, you will need to pass a header,
 `Livepeer-Access-Key`, when you perform WebRTC SDP negotiation, or when you play
