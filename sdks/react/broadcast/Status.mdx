@@ -1,0 +1,79 @@
+---
+title: "Status"
+description:
+  "The `StatusIndicator` component provides visual cues for the broadcast
+  status."
+icon: wave-pulse
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/broadcast/status`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+## Features
+
+- Synchronizes broadcast status with a visual indicator
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+export default () => (
+  <Broadcast.Root>
+    <Broadcast.Container>
+      <Broadcast.StatusIndicator />
+    </Broadcast.Container>
+    <Broadcast.Container>
+      <Broadcast.Controls>
+        <Broadcast.StatusIndicator />
+      </Broadcast.Controls>
+    </Broadcast.Container>
+  </Broadcast.Root>
+);
+```
+
+## Props
+
+### `forceMount`
+
+A boolean that, when true, ensures the component is always mounted. This is
+particularly useful for managing animations with external animation libraries.
+
+### `matcher`
+
+A prop required to define the conditions under which the `StatusIndicator`
+should be visible. It can be a specific `BroadcastStatus` value or a function
+that provides custom logic for visibility determination based on the broadcast
+status.
+
+The status can be of the type: `"live" | "pending" | "idle"`
+
+## Data Attributes
+
+### `data-livepeer-controls-status-indicator`
+
+Serves to identify the component's role within the broadcast interface.
+
+### `data-status`
+
+Shows the current broadcast status as a string.
+
+The status can be of the type: `"live" | "pending" | "idle"`
+
+### `data-visible`
+
+Reflects the visibility status of the indicator, with `"true"` meaning it's
+currently visible based on the `matcher` or broadcast status and `"false"`
+denoting it's not visible.

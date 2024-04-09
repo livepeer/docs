@@ -1,0 +1,70 @@
+---
+title: "Time" 
+description: "The `Time` component provides a display of the
+current time, total duration, and progress of the media." 
+icon: clock
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/player/time`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+## Features
+
+- Automatic display of friendly time from state store
+- Handles live and static assets (e.g. no fixed duration vs fixed duration)
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Player from "@livepeer/react/player";
+
+export default () => (
+  <Player.Root>
+    <Player.Container>
+      <Player.Time />
+    </Player.Container>
+    <Player.Container>
+      <Player.Controls>
+        <Player.Time />
+      </Player.Controls>
+    </Player.Container>
+  </Player.Root>
+);
+```
+
+## Props
+
+The component accepts all props suitable for a span element, except for
+`children`, since the formatted time will be rendered as the only child.
+
+## Data Attributes
+
+### `data-livepeer-controls-time`
+
+Serves to identify the component's role in the playback interface.
+
+### `data-duration`
+
+Displays the total duration of the media.
+
+### `data-progress`
+
+Indicates the current progress of the media playback, usually represented as a
+percentage or time elapsed.
+
+### `data-live`
+
+Shows the live state of the media, `"true"` for live streams and `"false"` for
+pre-recorded content.

@@ -1,0 +1,377 @@
+---
+title: "useMediaContext"
+description:
+  "The `useMediaContext` hook lets you build custom components which interact
+  directly with the media state store."
+icon: database
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/player/use_media_context`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Info>
+  The `useStore` hook is from
+  [`zustand`](https://github.com/pmndrs/zustand?tab=readme-ov-file#using-zustand-without-react),
+  and inherits all of the documentation for Zustand stores.
+</Info>
+
+## Features
+
+- Flexible interaction with the player state store
+- Based on Zustand's `useStore` hooks
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Player from "@livepeer/react/player";
+import { useMediaContext, useStore } from "@livepeer/react/player";
+
+export default () => (
+  <Player.Root>
+    {/** The `useMediaContext` hook can be used in any component,
+    as long as it's inside the Player.Root React Context provider */}
+    <CustomComponent />
+  </Player.Root>
+);
+
+function CustomComponent({ __scopeMedia }: MediaScopedProps) {
+  const context = useMediaContext("CustomComponent", __scopeMedia);
+
+  const { currentSource } = useStore(context.store, ({ currentSource }) => ({
+    currentSource,
+  }));
+
+  return currentSource?.type ?? null;
+}
+```
+
+## State
+
+The `useMediaContext` hook returns a Zustand store, which contains the
+`PlayerState`.
+
+### `aria`
+
+The ARIA text for the current state, providing accessible descriptions for media
+control actions.
+
+```tsx
+type AriaText = {
+  progress: string;
+  pictureInPicture: string;
+  fullscreen: string;
+  playPause: string;
+  clip: string | null;
+  time: string;
+};
+
+aria: AriaText;
+```
+
+### `buffered`
+
+Current buffered end time for the media in seconds.
+
+```tsx
+buffered: number;
+```
+
+### `bufferedPercent`
+
+Current buffered percent of the media, from 0 to 1.
+
+```tsx
+bufferedPercent: number;
+```
+
+### `canPlay`
+
+Indicates if the media has loaded sufficiently and can be played.
+
+### `currentSource`
+
+The current source that is playing.
+
+```tsx
+type Src =
+  | AudioSrc
+  | HlsSrc
+  | VideoSrc
+  | Base64Src
+  | WebRTCSrc
+  | ImageSrc
+  | VideoTextTrackSrc;
+
+currentSource: Src | null;
+```
+
+### `currentUrl`
+
+The final playback URL for the media that is playing, after any redirects.
+
+```tsx
+currentUrl: string | null;
+```
+
+### `duration`
+
+Current total duration of the media in seconds.
+
+```tsx
+duration: number;
+```
+
+### `error`
+
+If the media has experienced an error, this property provides details.
+
+```tsx
+type PlaybackError = {
+  type: "offline" | "access-control" | "fallback" | "permissions" | "unknown";
+  message: string;
+};
+
+error: PlaybackError | null;
+```
+
+### `errorCount`
+
+The number of consecutive errors that have occurred during the media playback,
+without resolution.
+
+```tsx
+errorCount: number;
+```
+
+### `stalled`
+
+Indicates if the media playback is currently stalled.
+
+### `fullscreen`
+
+Indicates if the media is being played in fullscreen mode.
+
+### `hasPlayed`
+
+Indicates if the media has been played yet.
+
+### `hidden`
+
+Indicates if all controls are currently hidden.
+
+### `live`
+
+Indicates if the content is live media.
+
+### `loading`
+
+Indicates if the media is currently loading.
+
+### `mounted`
+
+Indicates if the video element is mounted on the DOM. This is used for
+initialization logic.
+
+### `playbackRate`
+
+The current playback rate for the media. Defaults to 1. `constant` means playing
+WebRTC playback at a constant pace and not speeding up.
+
+```tsx
+type PlaybackRate = number | "constant";
+
+playbackRate: PlaybackRate;
+```
+
+### `pictureInPicture`
+
+Indicates if the media is in picture in picture mode.
+
+### `poster`
+
+The poster image URL for the media. Any thumbnails are automatically parsed from
+the input `Src[]`.
+
+```tsx
+poster: string | null;
+```
+
+### `progress`
+
+Current progress of the media in seconds.
+
+```tsx
+progress: number;
+```
+
+### `playing`
+
+Indicates if the media is currently trying to play or paused.
+
+### `sortedSources`
+
+The sorted sources that were passed into the Player. These are the playback
+sources which will be tried, in order (e.g. WebRTC with a fallback to HLS).
+
+```tsx
+sortedSources: Src[] | string | null;
+```
+
+### `volume`
+
+Current volume of the media. 0 if it is muted.
+
+```tsx
+volume: number;
+```
+
+### `waiting`
+
+Indicates if the media is currently waiting for data.
+
+### `videoQuality`
+
+The quality of the video playback.
+
+```tsx
+type VideoQuality =
+  | "1080p"
+  | "720p"
+  | "480p"
+  | "360p"
+  | "240p"
+  | "144p"
+  | "auto";
+
+videoQuality: VideoQuality;
+```
+
+### `ended`
+
+Indicates if the media playback has ended.
+
+### `__controlsFunctions`
+
+An object containing functions to manipulate the media's state, such as toggling
+play/pause, seeking, and changing volume.
+
+<Warning>
+  These functions are internal - please refer to the UI Kit source code before
+  interacting with these functions.
+</Warning>
+
+```tsx
+__controlsFunctions: {
+  setHidden: (hidden: boolean) => void;
+  onCanPlay: () => void;
+  onDurationChange: (duration: number) => void;
+  onEnded: () => void;
+  onError: (error: Error | null) => void;
+  onFinalUrl: (url: string | null) => void;
+  onLoading: () => void;
+  onPause: () => void;
+  onPlay: () => void;
+  onProgress: (time: number) => void;
+  onStalled: () => void;
+  onWaiting: () => void;
+  requestClip: () => void;
+  requestMeasure: () => void;
+  requestSeek: (time: number) => void;
+  requestSeekBack: (difference?: number) => void;
+  requestSeekDiff: (difference: number) => void;
+  requestSeekForward: (difference?: number) => void;
+  requestToggleFullscreen: () => void;
+  requestToggleMute: () => void;
+  requestTogglePictureInPicture: () => void;
+  requestVolume: (volume: number) => void;
+  setAutohide: (autohide: number) => void;
+  setFullscreen: (fullscreen: boolean) => void;
+  setHlsConfig: (hlsConfig: any) => void;
+  setLive: (live: boolean) => void;
+  setMounted: () => void;
+  setPictureInPicture: (pictureInPicture: boolean) => void;
+  setPlaybackRate: (rate: number | string) => void;
+  setPoster: (poster: string | null) => void;
+  setVideoQuality: (videoQuality: VideoQuality) => void;
+  setSize: (size: Partial<MediaSizing>) => void;
+  setVolume: (volume: number) => void;
+  setWebsocketMetadata: (metadata: Metadata) => void;
+  togglePlay: (force?: boolean) => void;
+  updateBuffered: (buffered: number) => void;
+  updateLastInteraction: () => void;
+  updatePlaybackOffsetMs: (offset: number) => void;
+};
+```
+
+### `__device`
+
+Information about the device's capabilities and support for media features. This
+is an internal object used by Player/Broadcast, but can be used for detecting
+device capabilities.
+
+```tsx
+type DeviceInformation = {
+  version: string;
+  isMobile: boolean;
+  isIos: boolean;
+  isAndroid: boolean;
+  userAgent: string;
+  screenWidth: number | null;
+  /** If the media supports changing the volume */
+  isVolumeChangeSupported: boolean;
+  /** If the media supports PiP */
+  isPictureInPictureSupported: boolean;
+  /** If the media supports fullscreen */
+  isFullscreenSupported: boolean;
+  /** If the media supports HLS playback */
+  isHlsSupported: boolean;
+  /** If the media supports WebRTC */
+  isWebRTCSupported: boolean;
+};
+
+__device: DeviceInformation;
+```
+
+### `__controls`
+
+Represents the state of various media control actions, such as play/pause and
+fullscreen changes. This is an internal object used by Player/Broadcast.
+
+```tsx
+__controls: ControlsState;
+```
+
+### `__initialProps`
+
+The initial properties passed into the media component. This is an internal
+object used by Player/Broadcast.
+
+```tsx
+__initialProps: InitialProps;
+```
+
+### `__metadata`
+
+Metadata related to the media, such as buffer window and frame rate. This is an
+internal object used by Player/Broadcast.
+
+```tsx
+type Metadata = {
+  bframes?: number;
+  bufferWindow?: number;
+};
+
+__metadata: Metadata | null;
+```

@@ -1,0 +1,118 @@
+---
+title: "Source"
+description:
+  "The `SourceSelect` component provides broadcasters with a dropdown interface
+  to choose between different media source devices like cameras and microphones."
+icon: sliders
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/broadcast/source`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Info>
+  All of the `SourceSelect` components extend from
+  [`@radix-ui/react-select`](https://www.radix-ui.com/primitives/docs/components/select),
+  and inherits all of the documentation for those components.
+</Info>
+
+## Features
+
+- Synchronizes state with the user media and the broadcast
+- Adheres to [WAI-ARIA](https://w3c.github.io/aria/) design patterns
+- Persists to `localStorage` by default (with storage overrides customizable in
+  `Root`)
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+export default () => (
+  <Broadcast.Root>
+    <Broadcast.SourceSelect>
+      <Broadcast.SelectTrigger>
+        <Broadcast.SelectValue />
+        <Broadcast.SelectIcon />
+      </Broadcast.SelectTrigger>
+      <Broadcast.SelectPortal>
+        <Broadcast.SelectContent>
+          <Broadcast.SelectScrollUpButton />
+          <Broadcast.SelectViewport>
+            <Broadcast.SelectItem>
+              <Broadcast.SelectItemText />
+              <Broadcast.SelectItemIndicator />
+            </Broadcast.SelectItem>
+
+            <Broadcast.SelectGroup>
+              <Broadcast.SelectLabel />
+              <Broadcast.SelectItem>
+                <Broadcast.SelectItemText />
+                <Broadcast.SelectItemIndicator />
+              </Broadcast.SelectItem>
+            </Broadcast.SelectGroup>
+
+            <Broadcast.SelectSeparator />
+          </Broadcast.SelectViewport>
+          <Broadcast.SelectScrollDownButton />
+          <Broadcast.SelectArrow />
+        </Broadcast.SelectContent>
+      </Broadcast.SelectPortal>
+    </Broadcast.SourceSelect>
+  </Broadcast.Root>
+);
+```
+
+## Props
+
+### `SourceSelect`
+
+Takes all props of the
+[Radix Select Root](https://www.radix-ui.com/primitives/docs/components/select)
+component.
+
+#### `forceMount`
+
+A boolean that, when set to true, ensures the component is always mounted. If
+this is not specified, it will only be shown when sources are detected.
+
+#### `type`
+
+A string indicating the type of media devices to list in the dropdown, either
+`"audioinput"` for microphones or `"videoinput"` for cameras.
+
+#### `children`
+
+A function that takes the available media devices as input and returns the React
+nodes (options) to be rendered inside the dropdown. This enables dynamic
+population of the dropdown based on the available devices. ™
+
+<Warning>The device ID must be used for the `SelectItem` value.</Warning>
+
+## Data Attributes
+
+### `data-livepeer-source-select`
+
+Serves to identify the component's role within the broadcast interface.
+
+### `data-type`
+
+Indicates the type of media source device the dropdown is currently displaying,
+either `"audioinput"` for microphones or `"videoinput"` for cameras.
+
+### `data-visible`
+
+Reflects the visibility status of the dropdown, with `"true"` meaning it's
+currently visible (i.e., device support is available) and `"false"` denoting
+it's not visible.

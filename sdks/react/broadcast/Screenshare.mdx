@@ -1,0 +1,114 @@
+---
+title: "Screenshare"
+description:
+  "The `ScreenshareTrigger` and `ScreenshareIndicator` components provide
+  broadcasters with controls for managing the screenshare state."
+icon: screencast
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/broadcast/screenshare`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+## Features
+
+- Automatic conditional rendering based on
+  [`getDisplayMedia`](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia)
+  status and browser API availability, customizable with the `matcher` pattern
+- Handles all common browser APIs, and old WebKit APIs (see
+  [caniuse](https://caniuse.com/mdn-api_mediadevices_getdisplaymedia))
+- Compatible with CSS animations for dynamic enter/exit animations
+
+<Warning>
+  The `getDisplayMedia` API is only available in secure contexts (HTTPS).
+</Warning>
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+export default () => (
+  <Broadcast.Root>
+    <Broadcast.Container>
+      <Broadcast.ScreenshareTrigger />
+      <Broadcast.ScreenshareIndicator />
+    </Broadcast.Container>
+    <Broadcast.Container>
+      <Broadcast.Controls>
+        <Broadcast.ScreenshareTrigger />
+        <Broadcast.ScreenshareIndicator />
+      </Broadcast.Controls>
+    </Broadcast.Container>
+  </Broadcast.Root>
+);
+```
+
+## Props
+
+### `ScreenshareTrigger`
+
+Accepts all props for a typical button HTML element.
+
+### `ScreenshareIndicator`
+
+#### `forceMount`
+
+A boolean that, when true, keeps the component mounted at all times, useful for
+controlling animations with external libraries.
+
+#### `matcher`
+
+A prop to define the condition under which the `ScreenshareIndicator` should be
+visible. It can be a boolean directly matching the screenshare state or a
+function providing custom logic to determine visibility.
+
+## Data Attributes
+
+### `ScreenshareTrigger`
+
+#### `data-livepeer-controls-screenshare-trigger`
+
+Serves to identify the component's role within the broadcast interface.
+
+#### `data-active`
+
+Indicates the current screenshare state, `"true"` when screensharing is active
+and `"false"` when it is not.
+
+#### `data-visible`
+
+Reflects the visibility status of the trigger, with `"true"` meaning it's
+currently visible (i.e., screensharing is supported) and `"false"` denoting it's
+not visible.
+
+### `ScreenshareIndicator`
+
+#### `data-livepeer-controls-screenshare-indicator`
+
+Identifies the component's role as a visual indicator of the screenshare state
+within the broadcast interface.
+
+#### `data-active`
+
+Shows the current screenshare state, `"true"` when screensharing is active and
+`"false"` when it is not.
+
+#### `data-visible`
+
+Reflects the visibility status of the indicator, with `"true"` meaning it's
+currently visible based on the `matcher` or screenshare state and `"false"`
+denoting it's not visible.
+
+This is often used for dynamically applying enter/exit CSS animations.

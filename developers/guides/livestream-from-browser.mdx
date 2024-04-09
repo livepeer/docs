@@ -8,40 +8,75 @@ We demonstrate below how to
 using Livepeer's low latency WebRTC broadcast. Developers can either use the
 Livepeer Broadcast React component, or build their own WebRTC solution.
 
-## Using Livepeer React Broadcast
+## Using UI Kit Broadcast
 
-The example below show to use the Livepeer React
-[`Broadcast`](/sdks/livepeer-react/Broadcast) component to broadcast from the web.
-
-### Configuring providers
-
-First, we
-[create a new React client and wrap the app with `LivepeerConfig`](/sdks/livepeer-react/getting-started).
+The example below show to use the Livepeer UI Kit
+[`Broadcast`](/sdks/livepeer-react/broadcast/Root) component to broadcast from
+the web.
 
 ### Broadcast
 
-Now that our providers are set up, we use the
-[`Broadcast`](/sdks/livepeer-react/Broadcast) with a stream key, from a stream we
-created. We also override some of the custom styling to match the flow of our
-app!
+This guide assumes you have configured a Livepeer JS SDK client with an API key.
+
+We can use the [`Broadcast`](/sdks/livepeer-react/broadcast/Root) primitives
+with a stream key, from a stream we created.
+
+We show some simple styling below with Tailwind CSS, but this can use any
+styling library, since the primitives ship as unstyled, composable components.
 
 ```tsx Broadcast.tsx
-import { Broadcast } from "@livepeer/react";
+import { EnableVideoIcon, StopIcon } from "@livepeer/react/assets";
+import * as Broadcast from "@livepeer/react/broadcast";
+import { getIngest } from "@livepeer/react/external";
 
 const streamKey = "your-stream-key";
 
 export const DemoBroadcast = () => {
   return (
-    <Broadcast
-      streamKey={streamKey}
-      controls={{
-        autohide: 3000,
-      }}
-      theme={{
-        borderStyles: { containerBorderStyle: "hidden" },
-        radii: { containerBorderRadius: "10px" },
-      }}
-    />
+    <Broadcast.Root ingestUrl={getIngest(streamKey)}>
+      <Broadcast.Container className="h-full w-full bg-gray-950">
+        <Broadcast.Video title="Current livestream" className="h-full w-full" />
+
+        <Broadcast.Controls className="flex items-center justify-center">
+          <Broadcast.EnabledTrigger className="w-10 h-10 hover:scale-105 flex-shrink-0">
+            <Broadcast.EnabledIndicator asChild matcher={false}>
+              <EnableVideoIcon className="w-full h-full" />
+            </Broadcast.EnabledIndicator>
+            <Broadcast.EnabledIndicator asChild>
+              <StopIcon className="w-full h-full" />
+            </Broadcast.EnabledIndicator>
+          </Broadcast.EnabledTrigger>
+        </Broadcast.Controls>
+
+        <Broadcast.LoadingIndicator asChild matcher={false}>
+          <div className="absolute overflow-hidden py-1 px-2 rounded-full top-1 left-1 bg-black/50 flex items-center backdrop-blur">
+            <Broadcast.StatusIndicator
+              matcher="live"
+              className="flex gap-2 items-center"
+            >
+              <div className="bg-red-500 animate-pulse h-1.5 w-1.5 rounded-full" />
+              <span className="text-xs select-none">LIVE</span>
+            </Broadcast.StatusIndicator>
+
+            <Broadcast.StatusIndicator
+              className="flex gap-2 items-center"
+              matcher="pending"
+            >
+              <div className="bg-white/80 h-1.5 w-1.5 rounded-full animate-pulse" />
+              <span className="text-xs select-none">LOADING</span>
+            </Broadcast.StatusIndicator>
+
+            <Broadcast.StatusIndicator
+              className="flex gap-2 items-center"
+              matcher="idle"
+            >
+              <div className="bg-white/80 h-1.5 w-1.5 rounded-full" />
+              <span className="text-xs select-none">IDLE</span>
+            </Broadcast.StatusIndicator>
+          </div>
+        </Broadcast.LoadingIndicator>
+      </Broadcast.Container>
+    </Broadcast.Root>
   );
 };
 ```
@@ -58,19 +93,20 @@ You can replace the `STREAM_KEY` with your stream key for the stream.
 <iframe
   src="https://lvpr.tv/broadcast/{STREAM_KEY}"
   allowfullscreen
-  allow="autoplay; encrypted-media; picture-in-picture; camera; microphone"
-  sandbox="allow-same-origin allow-scripts"
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  frameborder="0"
 >
 </iframe>
 ```
 
-This will automatically stream from the browser, using the STUN/TURN servers to
-ensure that network connectivity issues are rare.
+This will automatically stream from the browser with a fully composed UI, using
+STUN/TURN servers to avoid network firewall issues.
 
 ## Adding custom broadcasting
 
 If you want to add custom broadcasting to your app and handle the WebRTC SDP
-negotiation, you can follow the steps below.
+negotiation without using the React UI Kit primitives, you can follow the steps
+below.
 
 ### Get the SDP Host
 
@@ -78,27 +114,26 @@ First, you will need to make a request to get the proper ingest URL for the
 region which your end user is in. We have a global presence, and we handle
 redirects based on GeoDNS to allow users to get the lowest latency server.
 
-To do this make a `GET` request to the WebRTC redirect endpoint:
+To do this make a `HEAD` request to the WebRTC redirect endpoint:
 
 ```bash
-curl -L 'https://livepeer.studio/webrtc/{STREAM_KEY}'
+curl -I 'https://livepeer.studio/webrtc/{STREAM_KEY}'
 ...
 > Location: https://lax-prod-catalyst-2.lp-playback.studio/webrtc/{STREAM_KEY}
 ```
 
 <Warning>
-  You may safely ignore any errors returned from the GET request - we are only
-  interested in getting the redirect URL from the final response, so that we can
-  set up the correct ICE servers.
+  We are only interested in getting the redirect URL from the response, so that
+  we can set up the correct ICE servers.
 </Warning>
 
-We know from the above response headers that the WebRTC ingest URL is
+From the above response headers, the best WebRTC ingest URL for the user is
 `https://lax-prod-catalyst-2.lp-playback.studio/webrtc/{STREAM_KEY}`. We will
 use this in the next step.
 
 <Warning>
   The process will change in the future to remove the need for this extraneous
-  GET request - please check back later.
+  `HEAD` request - please check back later.
 </Warning>
 
 ### Broadcast
@@ -202,17 +237,22 @@ const sdpResponse = await fetch(redirectUrl, {
 if (sdpResponse.ok) {
   const answerSDP = await sdpResponse.text();
   await peerConnection.setRemoteDescription(
-    new RTCSessionDescription({ type: "answer", sdp: answerSDP }),
+    new RTCSessionDescription({ type: "answer", sdp: answerSDP })
   );
 }
 ```
 
 We just negotiated following the WHIP spec (which outlines the structure for the
 POST requests seen above) and we did SDP negotiation to create a new livestream.
-We then retrieved a local webcam source and started a broadcast!
+We then retrieved a local camera source and started a broadcast!
 
 To make the above process clearer, here is the flow (credit to the authors of
 the WHIP spec):
+
+<Info>
+  The final HTTP DELETE is not needed for our media server, since we detect the
+  end of broadcast by the lack of incoming packets from the broadcaster.
+</Info>
 
 ```txt WHIP Outline
 +-----------------+         +---------------+ +--------------+ +----------------+
@@ -237,6 +277,3 @@ the WHIP spec):
            | 200 OK                                                      |
            <-------------------------------------------------------------x
 ```
-
-The final HTTP DELETE is not needed for our media server, since we detect the
-end of broadcast by the lack of incoming packets from the broadcaster.

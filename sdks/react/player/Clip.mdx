@@ -1,0 +1,111 @@
+---
+title: "Clip"
+description:
+  "The `ClipTrigger` component enables users to create clips from live Player
+  content."
+icon: scissors
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/player/clip`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Info>
+  The `ClipTrigger` is designed to be used as a child of the `Player` component.
+  It interacts with the playback state to provide a user-friendly interface for creating media
+  clips, **based on the Unix timestamp from the current playback position**.
+
+_Clipping is currently supported only for livestreams_.
+
+</Info>
+
+## Features
+
+- Automatically handles determining the current playback head in Unix time
+- Compatible with the [create clip API](/api-reference/stream/create-clip)
+- Keyboard hotkeys and adheres to [WAI-ARIA](https://w3c.github.io/aria/) design
+  patterns
+- Conditional rendering if it is supported by the current media and is enabled
+
+<Warning>
+  `ClipTrigger` will automatically handle determining the Unix timestamp for the
+  current playback position. The playback position is _not_ the same as the
+  server livestream head, due to natural latency from server ingest to playback.
+  This is why Unix timestamps are required, and relative timestamps cannot be
+  used.
+</Warning>
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Player from "@livepeer/react/player";
+
+export default () => (
+  <Player.Root>
+    <Player.Container>
+      <Player.LiveIndicator>
+        <Player.ClipTrigger />
+      </Player.LiveIndicator>
+    </Player.Container>
+    <Player.Container>
+      <Player.Controls>
+        <Player.LiveIndicator>
+          <Player.ClipTrigger />
+        </Player.LiveIndicator>
+      </Player.Controls>
+    </Player.Container>
+  </Player.Root>
+);
+```
+
+## Usage
+
+`ClipTrigger` is a button that users can interact with to initiate the clip
+creation process. It's displayed only if clipping functionality is enabled (by
+passing a valid `clipLength` to the Root component).
+
+**It should be wrapped in a LiveIndicator, since the "last n seconds" clipping
+functionality is only supported on livestreams.**
+
+## Props
+
+The component accepts all props suitable for a button element, along with
+specific props:
+
+### `forceMount`
+
+A boolean that, when set to true, ensures the component is always mounted. This
+is particularly useful for controlling animations with external animation
+libraries.
+
+### `onClip`
+
+A function that gets called when a clip is requested. It receives an object
+containing the `playbackId`, `startTime`, and `endTime`, which can be used to
+handle the clip creation process.
+
+## Data Attributes
+
+The `ClipTrigger` component assigns data attributes to its underlying element to
+reflect the current state and user interaction capabilities.
+
+### `data-livepeer-controls-clip-button`
+
+Serves to identify the component's role.
+
+### `data-visible`
+
+Indicates the visibility status of the trigger, with `"true"` meaning it's
+currently visible (i.e., clip functionality is enabled) and `"false"` denoting
+it's not visible, useful for CSS-based animations.

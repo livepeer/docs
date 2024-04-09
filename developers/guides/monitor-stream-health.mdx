@@ -32,10 +32,9 @@ or
     const apiKey = 'YOUR_API_KEY';
     const streamId = 'STREAM_ID';
 
-    const livepeer = new Livepeer(apiKey);
+    const livepeer = new Livepeer({apiKey});
 
-    livepeer
-      .getStream(streamId)
+    livepeer.stream.get(streamId)
       .then((response) => {
         console.log("Stream details:", response);
       })
@@ -59,7 +58,7 @@ or
 
     try:
         # Get stream details by stream ID
-        response = livepeer.get_stream(stream_id)
+        response = livepeer.stream.get(stream_id)
         print("Stream details:", response)
     except Exception as e:
         print("Error fetching stream details:", e)
@@ -80,7 +79,7 @@ or
 
     begin
       # Get stream details by stream ID
-      response = client.get_stream(stream_id)
+      response = client.stream.get(stream_id)
       puts 'Stream details:', response
     rescue StandardError => e
       puts 'Error fetching stream details:', e.message
@@ -107,7 +106,7 @@ or
 
     try {
         // Get stream details by stream ID
-        $response = $livepeer->getStream($stream_id);
+        $response = $livepeer->stream->get($stream_id);
         echo 'Stream details: ' . json_encode($response) . PHP_EOL;
     } catch (LivepeerException $e) {
         echo 'Error fetching stream details: ' . $e->getMessage() . PHP_EOL;
@@ -124,7 +123,7 @@ or
       "fmt"
       "os"
 
-      "github.com/livepeer/go-sdk"
+      "github.com/livepeer/livepeer-go"
     )
 
     func main() {
@@ -136,7 +135,7 @@ or
       streamID := "STREAM_ID"
 
       // Get stream details by stream ID
-      response, err := client.GetStream(streamID)
+      response, err := client.Stream.Get(streamID)
       if err != nil {
         fmt.Printf("Error fetching stream details: %v\n", err)
         os.Exit(1)
@@ -159,10 +158,10 @@ or
     const apiKey = 'YOUR_API_KEY';
     const sessionId = 'SESSION_ID';
 
-    const livepeer = new Livepeer(apiKey);
+    const livepeer = new Livepeer({apiKey});
 
     livepeer
-      .getSession(sessionId)
+      .session.get(sessionId)
       .then((response) => {
         console.log("Session details:", response);
       })
@@ -186,7 +185,7 @@ or
 
     try:
         # Get session details by session ID
-        response = livepeer.get_session(session_id)
+        response = livepeer.session.get(session_id)
         print("Session details:", response)
     except Exception as e:
         print("Error fetching session details:", e)
@@ -207,7 +206,7 @@ or
 
     begin
       # Get session details by session ID
-      response = client.get_session(session_id)
+      response = client.session.get(session_id)
       puts 'Session details:', response
     rescue StandardError => e
       puts 'Error fetching session details:', e.message
@@ -234,7 +233,7 @@ or
 
     try {
         // Get session details by session ID
-        $response = $livepeer->getSession($session_id);
+        $response = $livepeer->session->get($session_id);
         echo 'Session details: ' . json_encode($response) . PHP_EOL;
     } catch (LivepeerException $e) {
         echo 'Error fetching session details: ' . $e->getMessage() . PHP_EOL;
@@ -251,7 +250,7 @@ or
       "fmt"
       "os"
 
-      "github.com/livepeer/go-sdk"
+      "github.com/livepeer/livepeer-go"
     )
 
     func main() {
@@ -263,7 +262,7 @@ or
       sessionID := "SESSION_ID"
 
       // Get session details by session ID
-      response, err := client.GetSession(sessionID)
+      response, err := client.Session.Get(sessionID)
       if err != nil {
         fmt.Printf("Error fetching session details: %v\n", err)
         os.Exit(1)
@@ -297,14 +296,14 @@ or
 }
 ```
 
-## Global Health Status
+### Global Health Status
 
 - `Healthy` indicates that all the Health Checks are in a `Healthy` state.
 - `Unhealthy` indicates that one or more of the Health Checks are in an
   `Unhealthy` state
 - `Idle` indicates that the stream is not currently active
 
-## Health Checks
+### Health Checks
 
 - **_Transcoding_** — A `Healthy` status indicates that video transcoding is
   occurring, and the multiple profiles of your stream are available for
@@ -333,7 +332,7 @@ or
     your destination service, re-configure your `multistream target` and restart
     your stream.
 
-## Logs
+### Logs
 
 Logs will surface informational alerts (ex., stream has started/stopped,
 multistream destinations have connected/disconnected) or any fatal errors from
@@ -347,7 +346,7 @@ Transcode error from ewr-prod-livepeer-orchestrator-0 for segment 0:
 If you run into this or any similar errors, check the configuration in your
 streaming software (e.g., OBS) and restart the stream.
 
-## Session Ingest Rate
+### Session Ingest Rate
 
 Session ingest rate tells you the bitrate of the video received by Livepeer
 ingest servers, updated every 10 seconds. A high bitrate is suggestive that
@@ -413,7 +412,7 @@ The stream ID is the same one as used in the Livestream API.
     const apiKey = 'YOUR_API_KEY';
     const streamId = 'STREAM_ID';
 
-    const livepeer = new Livepeer(apiKey);
+    const livepeer = new Livepeer({apiKey});
 
     livepeer
       .getStreamHealth(streamId)
@@ -505,7 +504,7 @@ The stream ID is the same one as used in the Livestream API.
       "fmt"
       "os"
 
-      "github.com/livepeer/go-sdk"
+      "github.com/livepeer/livepeer-go"
     )
 
     func main() {
@@ -644,7 +643,7 @@ The stream ID is the same one used in the Livestream API.
     const apiKey = 'YOUR_API_KEY';
     const streamId = 'STREAM_ID';
 
-    const livepeer = new Livepeer(apiKey);
+    const livepeer = new Livepeer({apiKey});
 
     livepeer
       .getStreamEvents(streamId)
@@ -736,7 +735,7 @@ The stream ID is the same one used in the Livestream API.
       "fmt"
       "os"
 
-      "github.com/livepeer/go-sdk"
+      "github.com/livepeer/livepeer-go"
     )
 
     func main() {

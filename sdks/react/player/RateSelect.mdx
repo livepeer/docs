@@ -1,0 +1,113 @@
+---
+title: "Playback Speed"
+description:
+  "The `RateSelect` and `RateSelectItem` components provide an interface for
+  users to adjust the playback speed of the media."
+icon: gauge-simple-high
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/player/rate`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Info>
+  All of the `RateSelect` components extend from
+  [`@radix-ui/react-select`](https://www.radix-ui.com/primitives/docs/components/select),
+  and inherits all of the documentation for those components.
+</Info>
+
+## Features
+
+- Composes a dropdown menu for selecting any playback speed, and handles syncing
+  with the underlying media element
+- Keyboard navigation (with Radix) and adheres to
+  [WAI-ARIA](https://w3c.github.io/aria/) design patterns
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Player from "@livepeer/react/player";
+
+export default () => (
+  <Player.Root>
+    <Player.LiveIndicator>
+      <Player.RateSelect>
+        <Player.SelectTrigger>
+          <Player.SelectValue />
+          <Player.SelectIcon />
+        </Player.SelectTrigger>
+        <Player.SelectPortal>
+          <Player.SelectContent>
+            <Player.SelectScrollUpButton />
+            <Player.SelectViewport>
+              <Player.RateSelectItem>
+                <Player.SelectItemText />
+                <Player.SelectItemIndicator />
+              </Player.RateSelectItem>
+
+              <Player.SelectGroup>
+                <Player.SelectLabel />
+                <Player.RateSelectItem>
+                  <Player.SelectItemText />
+                  <Player.SelectItemIndicator />
+                </Player.RateSelectItem>
+              </Player.SelectGroup>
+
+              <Player.SelectSeparator />
+            </Player.SelectViewport>
+            <Player.SelectScrollDownButton />
+            <Player.SelectArrow />
+          </Player.SelectContent>
+        </Player.SelectPortal>
+      </Player.RateSelect>
+    </Player.LiveIndicator>
+  </Player.Root>
+);
+```
+
+## Props
+
+### `RateSelect`
+
+Takes all props of the
+[Radix Select Root](https://www.radix-ui.com/primitives/docs/components/select)
+component.
+
+### `RateSelectItem`
+
+Takes all props of the
+[Radix Select Item](https://www.radix-ui.com/primitives/docs/components/select)
+component.
+
+#### `value`
+
+Required - denote the playback speed value as a number.
+
+## Data Attributes
+
+### `RateSelect`
+
+#### `data-livepeer-rate-select`
+
+Identifies the rate select component within the Player.
+
+#### `data-rate`
+
+Indicates the selected playback speed value.
+
+### `RateSelectItem`
+
+#### `data-livepeer-rate-select-item`
+
+Identifies the rate select item within the Player.

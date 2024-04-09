@@ -4,6 +4,13 @@ description:
   "Learn how to upload and stream videos from Arweave using Bundlr and Livepeer"
 ---
 
+<Warning>
+  This tutorial is based on Livepeer React version 3.9 or earlier, which is now
+  deprecated. Please ensure that you use Livepeer React version 4 or later, with
+  the new Livepeer JavaScript SDK. The integration process may appear different,
+  but the underlying concepts remain same.
+</Warning>
+
 Arweave is a decentralized storage network that allows anyone to upload and
 access data in a permanent and tamper-proof manner. Bundlr Network makes
 uploading files and interacting with Arweave very easy. It provides fast and
@@ -106,9 +113,8 @@ a similar page.
 ## Integrating Livepeer
 
 Livepeer is a decentralized video platform that allows users to upload,
-transcode, and serve video content. The Livepeer React SDK provides a
-set of ready-to-use hooks that make it easy to integrate Livepeer into a
-project.
+transcode, and serve video content. The Livepeer React SDK provides a set of
+ready-to-use hooks that make it easy to integrate Livepeer into a project.
 
 To get started, navigate to
 [https://livepeer.studio/register](https://livepeer.studio/register) and create
@@ -125,8 +131,8 @@ the sidebar.
 Then, click on Create API Key, give a name to your key and then copy it as we
 will need it later.
 
-To use Livepeer React in your project, create a new directory named `client`in the
-root directory, and add the following code to `livepeer.js`
+To use Livepeer React in your project, create a new directory named `client`in
+the root directory, and add the following code to `livepeer.js`
 
 ```js
 import { createReactClient, studioProvider } from "@livepeer/react";
@@ -191,7 +197,7 @@ const Bundlr = async () => {
   const bundlr = new WebBundlr(
     "https://node1.bundlr.network",
     "matic", // You can use any of the currencies supported by Bundlr
-    provider,
+    provider
   );
   // Wait for the Bundlr instance to be ready to use
   await bundlr.ready();
@@ -259,15 +265,11 @@ Finally, add Livepeer Player to playback the video from the Arweave network.
 {
   arweaveId && (
     <div className="mt-6 w-1/2">
-      <Player
-        src={arweaveId}
-        controls
-        autoPlay
-        muted
-        autoUrlUpload={{
-          fallback: true,
-        }}
-      />
+      <Player.Root src={arweaveId}>
+        <Player.Container>
+          <Player.Video />
+        </Player.Container>
+      </Player.Root>
     </div>
   );
 }

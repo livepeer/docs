@@ -1,0 +1,146 @@
+---
+title: "Container"
+description:
+  "The `Container` component is the container element for Broadcast. It wraps
+  all other elements and acts as an aspect ratio container by default."
+icon: tv
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/broadcast/container`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Info>
+  The `Container` component acts as the container div element for the Broadcast,
+  using either
+  [@radix-ui/react-aspect-ratio](https://www.radix-ui.com/primitives/docs/components/aspect-ratio)
+  or a standard div element. It selectively renders one of these based on the
+  presence of an `aspectRatio` prop. We show above how to disable the aspect
+  ratio element.
+</Info>
+
+## Features
+
+- Provides an aspect ratio container to reduce
+  [Cumulative Layout Shift](https://web.dev/cls/)
+- Dynamic data attributes for custom styling based on the current media state
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+export default () => (
+  <Broadcast.Root>
+    <Broadcast.Container>
+      {/* Place child elements here, like Video and Controls */}
+    </Broadcast.Container>
+    {/* Or place other controls outside of here, to not be bound by the aspect ratio Container */}
+  </Broadcast.Root>
+);
+```
+
+## Data Attributes
+
+These attributes are dynamically updated based on the current state.
+
+### `data-livepeer-aspect-ratio` or `data-livepeer-wrapper`
+
+Indicates the container type. It's present if the container is an aspect ratio
+container (with `data-livepeer-aspect-ratio`) or a regular div (with
+`data-livepeer-wrapper`).
+
+<Info>
+  When `aspectRatio` is set to `null` on the Root component, then it will be a
+  regular div wrapper with `position: relative`.
+</Info>
+
+### `data-fullscreen`
+
+Reflects whether the content is in fullscreen mode.
+
+- `"true"`: The content is in fullscreen mode.
+- `"false"`: The content is not in fullscreen mode.
+
+### `data-playing`
+
+Indicates if the content is currently playing.
+
+- `"true"`: The content is playing.
+- `"false"`: The content is not playing.
+
+### `data-can-play`
+
+Shows if the content can be played.
+
+- `"true"`: The content can be played.
+- `"false"`: The content cannot be played due to some restrictions or lack of
+  data.
+
+### `data-playback-rate`
+
+Displays the current playback rate.
+
+- `"normal"`: The playback is at normal speed.
+- `"fast"`: The playback is at a speed faster than normal.
+- `"slow"`: The playback is at a speed slower than normal.
+- `"constant"`: The playback rate is constant (neither fast nor slow).
+
+### `data-error`
+
+Indicates if there is an error in the content.
+
+- `"true"`: There is an error in the content.
+- `"false"`: There are no errors in the content.
+
+### `data-loading`
+
+Shows if the content is loading.
+
+- `"true"`: The content is loading.
+- `"false"`: The content is not loading.
+
+### `data-live`
+
+Indicates if the content is live.
+
+- `"true"`: The content is live.
+- `"false"`: The content is not live.
+
+### `data-has-played`
+
+Reflects if the content has been played.
+
+- `"true"`: The content has been played at least once.
+- `"false"`: The content has not been played yet.
+
+### `data-controls-hidden`
+
+Shows if the controls are hidden.
+
+- `"true"`: The controls are hidden.
+- `"false"`: The controls are visible.
+
+### `data-picture-in-picture`
+
+Indicates if the picture-in-picture mode is active.
+
+- `"true"`: The picture-in-picture mode is active.
+- `"false"`: The picture-in-picture mode is not active.
+
+### `data-video-quality`
+
+Displays the current video quality, directly reflecting the `videoQuality` value
+from the state. It can be a string indicating the quality level (e.g., `"720p"`,
+`"1080p"`).

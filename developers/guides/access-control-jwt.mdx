@@ -1,7 +1,7 @@
 ---
 title: "Control access using JWTs"
 description:
-  "Learn how to add access control to a content with Livepeer React, using JWTs"
+  "Learn how to add access control to a content with Livepeer UI Kit, using JWTs"
 ---
 
 Using JSON Web Tokens (JWTs) provides a robust way to control access to both
@@ -16,94 +16,50 @@ Adding access control to a content only takes a few lines of code.
   application.
 </Info>
 
-### Configuring Providers
+## Create Gated Content
 
-First, we
-[create a new React client and wrap the app with `LivepeerConfig`](/sdks/livepeer-react/getting-started).
-
-### Create a Gated Content
-
-#### For livestreams
+### For livestreams
 
 Create your gated stream, with the stream key returned once we create it
 (styling has been removed for simplicity)
 
 ```tsx accessControl.tsx
-import { useCreateStream, useStream } from "@livepeer/react";
+import { Livepeer } from "livepeer";
+import { TypeT } from "livepeer/dist/models/components";
 
-import { useMemo, useState } from "react";
+const livepeer = new Livepeer({
+  apiKey: process.env.STUDIO_API_KEY ?? "",
+});
 
-export const AccessControl = () => {
-  const [streamName, setStreamName] = useState<string>("");
-  const {
-    mutate: createStream,
-    data: createdStream,
-    status,
-  } = useCreateStream(
-    streamName
-      ? {
-          name: streamName,
-          playbackPolicy: { type: "jwt" },
-        }
-      : null
-  );
-
-  const { data: stream } = useStream({
-    streamId: createdStream?.id,
-    refetchInterval: (stream) => (!stream?.isActive ? 5000 : false),
-  });
-
-  const isLoading = useMemo(() => status === "loading", [status]);
-
-  return (
-    <div>
-      <input
-        placeholder="Stream Name"
-        onChange={(e) => setStreamName(e.target.value)}
-      />
-
-      <button
-        onClick={() => {
-          createStream?.();
-        }}
-        disabled={isLoading || !createStream || Boolean(stream)}
-      >
-        Create Gated Stream
-      </button>
-    </div>
-  );
-};
+await livepeer.stream.create({
+  name: "...",
+  playbackPolicy: {
+    type: TypeT.Jwt,
+  },
+});
 ```
 
-#### For assets
+### For assets
 
 Create your gated asset, with the jwt playback policy type.
 
-```tsx accessControl.tsx
-import { useCreateAsset, useAsset } from "@livepeer/react";
+```tsx accessControl.ts
+import { Livepeer } from "livepeer";
+import { TypeT } from "livepeer/dist/models/components";
 
-import { useMemo, useState } from "react";
+const livepeer = new Livepeer({
+  apiKey: process.env.STUDIO_API_KEY ?? "",
+});
 
-export const AccessControlAssets = () => {
-  const [assetName, setAssetName] = useState<string>("");
-  const {
-    mutate: createAsset,
-    data: createdAsset,
-    status,
-  } = useCreateAsset(
-    assetName
-      ? {
-          name: assetName,
-          playbackPolicy: { type: "jwt" },
-        }
-      : null
-  );
-
-  // ... Rest of the code for managing and playing assets with JWT
-};
+await livepeer.asset.create({
+  name: "...",
+  playbackPolicy: {
+    type: TypeT.Jwt,
+  },
+});
 ```
 
-### Sign a JWT (Node.JS API Route)
+## Sign a JWT (Node.JS API Route)
 
 Next, we add an API route - since we are using Next.JS, we add a custom
 [Next.js API route](https://nextjs.org/docs/api-routes/introduction). We add a
@@ -197,13 +153,10 @@ const handler = async (
 export default handler;
 ```
 
-### Configure the Player with the JWT
+### Configure the Player
 
 Lastly, when the content is created, we make a POST request to the
-`/api/create-signed-jwt` API route we created in the previous step (using
-[React Query](https://tanstack.com/query/v4/docs/overview) to manage the
-mutation state handling). We pass along the `playbackId` for the content, which
-is used to create the JWT.
+`/api/create-signed-jwt` API route we created in the previous step.
 
 <Info>
   The React Player passes the JWT with a header, `Livepeer-Jwt`, to the backend,
@@ -212,109 +165,24 @@ is used to create the JWT.
 </Info>
 
 Then, we pass the JWT to the Player using the
-[`jwt`](/sdks/livepeer-react/Player#jwt) prop, which will use that JWT to prove
+[`jwt`](/sdks/react/player/Root#jwt) prop, which will use that JWT to prove
 access to the content!
 
 ```tsx access-control.tsx
-import { Player, useCreateStream, useStream } from "@livepeer/react";
-
-import { useMutation } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
-
-import { ApiError } from "../../lib/error";
-import {
-  CreateSignedPlaybackBody,
-  CreateSignedPlaybackResponse,
-} from "../../pages/api/create-signed-jwt";
+import * as Player from "@livepeer/react/player";
 
 export const AccessControl = () => {
-  const [streamName, setStreamName] = useState<string>("");
-  const {
-    mutate: createStream,
-    data: createdStream,
-    status,
-  } = useCreateStream(
-    streamName
-      ? {
-          name: streamName,
-          playbackPolicy: { type: "jwt" },
-        }
-      : null
-  );
-
-  const { data: stream } = useStream({
-    streamId: createdStream?.id,
-    refetchInterval: (stream) => (!stream?.isActive ? 5000 : false),
-  });
-
-  const { mutate: createJwt, data: createdJwt } = useMutation({
-    mutationFn: async () => {
-      if (!stream?.playbackId) {
-        throw new Error("No playback ID yet.");
-      }
-
-      const body: CreateSignedPlaybackBody = {
-        playbackId: stream.playbackId,
-        // we pass along a "secret key" to demonstrate how gating can work
-        secret: "supersecretkey",
-      };
-
-      // we make a request to the Next.JS API route shown above
-      const response = await fetch("/api/create-signed-jwt", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
-
-      return response.json() as Promise<
-        CreateSignedPlaybackResponse | ApiError
-      >;
-    },
-  });
-
-  useEffect(() => {
-    if (stream?.playbackId) {
-      // when we have a playbackId for the stream, create a JWT
-      createJwt();
-    }
-  }, [stream?.playbackId, createJwt]);
-
-  const isLoading = useMemo(() => status === "loading", [status]);
-
   return (
-    <div>
-      {!stream?.id ? (
-        <>
-          <input
-            placeholder="Stream Name"
-            onChange={(e) => setStreamName(e.target.value)}
-          />
-          <button
-            onClick={() => {
-              createStream?.();
-            }}
-            disabled={isLoading || !createStream || Boolean(stream)}
-          >
-            Create Gated Stream
-          </button>
-        </>
-      ) : (
-        <Player
-          title={stream?.name}
-          playbackId={stream?.playbackId}
-          autoPlay
-          muted
-          jwt={(createdJwt as CreateSignedPlaybackResponse)?.token}
-        />
-      )}
-    </div>
+    <Player.Root src={src} jwt={jwt}>
+      <Player.Container>
+        <Player.Video />
+      </Player.Container>
+    </Player.Root>
   );
 };
 ```
 
-#### Using a custom player
+### Using a custom player
 
 If you are not using the player, you will need to pass a header, `Livepeer-Jwt`,
 when you perform WebRTC SDP negotiation, or when you play back from a m3u8 URL.

@@ -1,0 +1,62 @@
+---
+title: "getIngest"
+description:
+  "`getIngest` is a utility function for converting various types of ingest
+  information into a standardized WHIP URL format suitable for broadcasting."
+icon: link
+---
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+import { getIngest } from "@livepeer/react";
+
+// Usage with a stream key
+const streamKey = "your-stream-key-here";
+const whipUrl = getIngest(streamKey, {
+  baseUrl: "https://playback.livepeer.studio/webrtc",
+});
+
+// Usage with Livepeer stream data
+const livepeerStreamData = {
+  id: "stream-id",
+  streamKey: "your-stream-key-here",
+  // Other unused Livepeer stream data...
+};
+
+// This is either a string or null, depending on whether
+// the input was parsed successfully
+const whipUrlFromLivepeer = getIngest(livepeerStreamData);
+
+export default () => (
+  <Broadcast.Root ingest={whipUrlFromLivepeer}>
+    {/* All child components. */}
+  </Broadcast.Root>
+);
+```
+
+### Functionality
+
+`getIngest` simplifies the process of preparing ingest sources for broadcasting
+by standardizing them into WHIP URLs.
+
+#### Input Types
+
+The function supports a variety of input types to accommodate different
+broadcasting setups:
+
+- **String**: Directly returns the string if it's a valid URL. Constructs a WHIP
+  URL using a base URL for stream keys.
+- **LivepeerStream**: Uses the `streamKey` from Livepeer stream data to generate
+  a WHIP URL.
+- **CloudflareStreamData**: Extracts the URL from Cloudflare stream data
+  objects.
+
+Optional parameters (`opts`) include:
+
+- **baseUrl**: The base URL for constructing WHIP URLs. Essential when the input
+  is a stream key.
+
+#### Output Format
+
+The function outputs a WHIP URL string suitable for use in broadcasting setups,
+or `null` if the input can't be processed into a valid WHIP URL.

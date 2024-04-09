@@ -1,0 +1,80 @@
+---
+title: "Controls"
+description:
+  "The `Controls` component provides an interactive container for all other
+  media control elements such as `Play`, `Fullscreen`, etc."
+icon: gamepad
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/player/controls`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Info>
+  `Controls` serves as the interactive layer for media control actions, dynamically displayed based on the media state, loading state, or presence of an error. It is designed to automatically show upon user interaction with the Container element and hides based on the `Root` component's `autohide` property.
+
+By default, controls are shown during hover or interaction, mimicking the
+behavior of standard media players.
+
+</Info>
+
+## Features
+
+- Automatic conditional rendering based on user interactions
+- Click/touch to pause/play media
+- Compatible with CSS animations for dynamic enter/exit animations
+
+<Warning>
+  The visibility of `Controls` is managed automatically, relying on the
+  `autohide` property of the `Root` component to determine how long after a user
+  interaction to wait before hiding.
+</Warning>
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Player from "@livepeer/react/player";
+
+export default () => (
+  <Player.Root>
+    <Player.Container>
+      <Player.Controls>
+        {/* Place interactive control elements here, like play/pause buttons, progress bars, etc. */}
+      </Player.Controls>
+    </Player.Container>
+  </Player.Root>
+);
+```
+
+## Props
+
+### `forceMount`
+
+Ensures the component is always in the DOM, useful for animation controls.
+
+### `autoHide`
+
+Defines the auto-hide delay in milliseconds after user interaction. Default is
+3000ms. Set to 0 to disable auto-hide.
+
+## Data Attributes
+
+### `data-livepeer-controls`
+
+Identifies the control component within the Player.
+
+### `data-visible`
+
+Indicates if the controls are visible (`"true"`) or not (`"false"`), useful for
+CSS-based animations.

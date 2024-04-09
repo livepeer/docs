@@ -1,0 +1,108 @@
+---
+title: "Getting Started"
+description: "Get started building with the Livepeer React UI Kit."
+---
+
+Livepeer React UI Kit is a set of prebuilt and customizable UI primitives for
+building live or on-demand video experiences.
+
+## Installation
+
+Install Livepeer React UI Kit using your favorite package manager.
+
+```
+npm i @livepeer/react
+```
+
+## Build with the primitives
+
+You can use `Player` primitives to build a media playback experience, and
+`Broadcast` primitives to build an in-browser broadcasting experience.
+
+Below, we create a simple player and broadcast experience with minimal controls.
+The player only includes a play/pause button, and the broadcast has a start/stop
+streaming button.
+
+<Tabs>
+  <Tab title="Player.tsx">
+    <iframe
+      src={`https://ui-kit-docs-embed.vercel.app/player/getting_started`}
+      height="600px"
+      width="100%"
+      frameBorder="0"
+      allowFullScreen
+      allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+      style={{
+        borderRadius: 10,
+        backgroundColor: "black",
+      }}
+    />
+  </Tab>
+  <Tab title="Broadcast.tsx">
+    <iframe
+      src={`https://ui-kit-docs-embed.vercel.app/broadcast/getting_started`}
+      height="600px"
+      width="100%"
+      frameBorder="0"
+      allowFullScreen
+      allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+      style={{
+        borderRadius: 10,
+        backgroundColor: "black",
+      }}
+    />
+  </Tab>
+</Tabs>
+
+## Integrate with Studio
+
+Now that we've started using the primitives, we need something to play or
+broadcast! We can integrate with the Livepeer Studio API to start playing media.
+
+The below example shows the use of the `livepeer` JS SDK, but any other
+language's SDK can be used to fetch the playback info or stream object.
+
+<Tabs>
+  <Tab title="get-source.ts">
+    ```ts
+    // this is a server function, which uses the API key
+    // on the backend
+    import { Livepeer } from "livepeer"
+    import { getSrc } from "@livepeer/react/external";
+
+    const livepeer = new Livepeer({
+      apiKey: "YOUR_API_KEY"
+    })
+
+    export async function getSourceForPlaybackId(playbackId: string) {
+      const response = await livepeer.playback.get(playbackId);
+
+      // the return value can be passed directly to the Player as `src`
+      return getSrc(response.playbackInfo);
+    }
+    ```
+
+  </Tab>
+  <Tab title="get-ingest.ts">
+    ```ts
+    // this is a server function, which uses the API key
+    // on the backend
+    import { Livepeer } from "livepeer"
+    import { getIngest } from "@livepeer/react/external";
+
+    const livepeer = new Livepeer({
+      apiKey: "YOUR_API_KEY"
+    })
+
+    export async function getIngestUrlForStreamId(streamId: string) {
+      const stream = await livepeer.stream.get(streamId);
+
+      // the return value can be passed directly to the Broadcast as `ingestUrl`
+      return getIngest(stream.stream);
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+Want to learn more? Continue reading the documentation for more details.

@@ -1,0 +1,82 @@
+---
+title: "Loading"
+description:
+  "The `LoadingIndicator` component is a visual indicator of the loading state
+  of the media."
+icon: spinner
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/broadcast/loading`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Info>
+  The `Loading` component can be composed with any other elements. Typically it
+  is combined with Poster
+</Info>
+
+## Features
+
+- Conditional rendering based on the error state, customizable with the
+  `matcher` pattern
+- Dynamic data attributes for custom styling based on the current error state
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+export default () => (
+  <Broadcast.Root>
+    <Broadcast.Container>
+      <Broadcast.ErrorIndicator />
+    </Broadcast.Container>
+  </Broadcast.Root>
+);
+```
+
+## Props
+
+The component accepts all props suitable for a div element, in addition to the
+following specific props:
+
+### `forceMount`
+
+A boolean value that, when set to true, ensures the component is always mounted.
+This is particularly useful for managing animations with external animation
+libraries.
+
+### `matcher`
+
+A prop intended to define the circumstances under which the `LoadingIndicator`
+should be visible. It can be a direct boolean comparison with the loading state
+or a function that provides custom logic for visibility determination.
+
+## Data Attributes
+
+### `data-livepeer-loading-indicator`
+
+Serves to identify the component's role.
+
+### `data-loading`
+
+Displays the current loading state, `"true"` when media is loading and `"false"`
+when it's not.
+
+### `data-visible`
+
+Indicates the visibility status of the indicator, with `"true"` meaning it's
+currently visible and `"false"` denoting it's not.
+
+This is often used for dynamically applying enter/exit CSS animations.

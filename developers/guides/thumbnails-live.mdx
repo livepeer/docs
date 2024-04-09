@@ -4,19 +4,18 @@ description: "Learn how to retrieve thumbnails for a live stream"
 ---
 
 For live streams, we provide a single updating thumbnail URL - it will return
-the **first frame of the most recent segment of video**. Follow the steps below
-to find out how to use it.
+the **first frame of the most recent segment of video**.
 
 ## Create a stream
 
 Follow our previous guide on
-[creating a stream](/developers/guides/create-livestream) to get a stream key.
-You can then start a stream and get the `playbackId`.
+[creating a stream](/developers/guides/create-livestream) to get a stream key. A
+creator can then start a stream.
 
 ## Fetch playback info
 
-After &lt;1 minute the thumbnail URL should be returned from the
-[playback info API endpoint](/api-reference/playback/get).
+After &lt;1 minute of the stream ingest starting, a thumbnail URL should be
+returned from the [playback info API endpoint](/api-reference/playback/get).
 
 Example response:
 
@@ -29,17 +28,17 @@ Example response:
       {
         "hrn": "HLS (TS)",
         "type": "html5/application/vnd.apple.mpegurl",
-        "url": "https://livepeercdn.studio/hls/61482gtjzi49cyvb/index.m3u8"
+        "url": "https://livepeercdn.studio/hls/{playbackId}/index.m3u8"
       },
       {
         "hrn": "WebRTC (H264)",
         "type": "html5/video/h264",
-        "url": "https://livepeercdn.studio/webrtc/61482gtjzi49cyvb"
+        "url": "https://livepeercdn.studio/webrtc/{playbackId}"
       },
       {
         "hrn": "Thumbnail (JPEG)",
         "type": "image/jpeg",
-        "url": "https://storage.lp-playback.studio/raw/juixm77hfsmhyslrxtycnqfmnlfq/catalyst-recordings-com/hls/61482gtjzi49cyvb/6cf39a0f-8b68-4ff8-8c7b-b105d6a6a9ed/source/latest.jpg"
+        "url": "https://storage.lp-playback.studio/raw/{ID}/catalyst-recordings-com/hls/{playbackId}/{ID}/source/latest.jpg"
       }
     ]
   }
@@ -50,9 +49,13 @@ You should see an entry in the `source` array with the type `image/jpeg`. This
 URL will always return the **latest thumbnail of your stream**.
 
 <Info>
-  This will always have a `hrn` of `Thumbnail (JPEG)` and `type` of
+  The thumbnail will always have a `hrn` of `Thumbnail (JPEG)` and `type` of
   `image/jpeg`.
 </Info>
+
+This thumbnail is also used in the Player - it is automatically parsed in
+[`getSrc`](/sdks/react/player/get-src) and passed as the video `poster`
+attribute, and updated every few seconds.
 
 ## Examples
 
