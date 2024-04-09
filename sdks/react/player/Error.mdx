@@ -1,0 +1,89 @@
+---
+title: "Error"
+description:
+  "The `ErrorIndicator` component is a visual representation of error states in
+  media playback based on error types."
+icon: triangle-exclamation
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/player/error`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Info>
+  The `Error` component can be shown for all error types, or a subset of them.
+  It is usually recommended to be more granular in the error types, since some
+  errors are more "fatal" and some cannot be recovered from.
+</Info>
+
+## Features
+
+- Conditional rendering based on the error state, customizable with the
+  `matcher` pattern
+- Dynamic data attributes for custom styling based on the current error state
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Player from "@livepeer/react/player";
+
+export default () => (
+  <Player.Root>
+    <Player.Container>
+      <Player.ErrorIndicator />
+    </Player.Container>
+  </Player.Root>
+);
+```
+
+## Props
+
+The component accepts all props suitable for a div element, in addition to the
+following specific props:
+
+### `forceMount`
+
+A boolean to force the component's presence in the DOM, useful for controlling
+animations with external libraries.
+
+### `matcher`
+
+A prop to define the condition under which the `ErrorIndicator` should be
+visible. It can be a string indicating a broad category of errors (like `"all"`
+or `"not-permissions"`) or a more specific error type. Alternatively, it can be
+a function for custom logic, receiving the PlaybackError type and returning a
+boolean for whether it should be shown.
+
+## Data Attributes
+
+### `data-livepeer-error-indicator`
+
+Always present to indicate the component's role.
+
+### `data-error-state`
+
+Indicates whether there is an error (`"true"` or `"false"`).
+
+### `data-error-type`
+
+Specifies the type of the current error or `"none"` if no error is present.
+
+Could be one of:
+`"offline" | "access-control" | "fallback" | "permissions" | "unknown" | "none"`
+
+### `data-visible`
+
+Reflects whether the indicator is currently visible (`"true"` or `"false"`).
+
+This is often used for dynamically applying enter/exit CSS animations.

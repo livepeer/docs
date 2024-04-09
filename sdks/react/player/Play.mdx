@@ -1,0 +1,105 @@
+---
+title: "Play"
+description:
+  "The `PlayPauseTrigger` component enables users to toggle playback and the
+  `PlayingIndicator` provides a visual cue for the current playback state."
+icon: play
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/player/play`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Info>
+  `PlayPauseTrigger` and `PlayingIndicator` integrate together to form the
+  typical play/pause interaction for media players. They do not have to be used
+  together and can combine with other components.
+</Info>
+
+## Features
+
+- Controls the playback state and conditionally renders based on playing status,
+  customizable with the `matcher` pattern
+- Keyboard hotkeys and adheres to [WAI-ARIA](https://w3c.github.io/aria/) design
+  patterns
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Player from "@livepeer/react/player";
+
+export default () => (
+  <Player.Root>
+    <Player.Container>
+      <Player.PlayPauseTrigger />
+      <Player.PlayingIndicator />
+    </Player.Container>
+    <Player.Container>
+      <Player.Controls>
+        <Player.PlayPauseTrigger />
+        <Player.PlayingIndicator />
+      </Player.Controls>
+    </Player.Container>
+  </Player.Root>
+);
+```
+
+## Props
+
+### `PlayPauseTrigger`
+
+Accepts all props for a typical button element.
+
+### `PlayingIndicator`
+
+#### `forceMount`
+
+Ensures the component is always mounted, beneficial for animation consistency.
+
+#### `matcher`
+
+Defines the condition under which the `PlayingIndicator` displays, using a
+boolean or a custom function for tailored visibility logic.
+
+## Data Attributes
+
+### PlayPauseTrigger
+
+#### `data-livepeer-play-pause-trigger`
+
+Identifies the play/pause button within the Player.
+
+#### `data-playing`
+
+Shows the playback status (`"true"` for playing, `"false"` for paused).
+
+#### `data-visible`
+
+Signifies if the indicator is visible (`"true"`) or hidden (`"false"`), useful
+for CSS-based animations and visibility adjustments.
+
+### PlayingIndicator
+
+#### `data-livepeer-playing-indicator`
+
+Marks the playing status indicator component.
+
+#### `data-playing`
+
+Shows the playback status (`"true"` for playing, `"false"` for paused).
+
+#### `data-visible`
+
+Signifies if the indicator is visible (`"true"`) or hidden (`"false"`), useful
+for CSS-based animations.

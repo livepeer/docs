@@ -1,0 +1,170 @@
+---
+title: "Migration Guide for 4+"
+description: "Migration guide for the 4.0.0 release of Livepeer React."
+---
+
+<Info>
+  Livepeer React `v4.0.0+` was a complete rewrite of the library to support
+  video primitives.
+</Info>
+
+## Introduction
+
+This migration guide is designed to assist you in transitioning from the
+previous version of the `@livepeer/react` library to the new major release. This
+update is a significant overhaul aimed at addressing several key issues with the
+previous releases.
+
+## Before you start
+
+### Major changes
+
+- The library has been rewritten to offer unstyled, composable `<Player />` and
+  `<Broadcast />` primitives based on
+  [Radix UI](https://www.radix-ui.com/primitives/docs/overview/introduction).
+- The components are now highly composable, moving away from the monolithic
+  design of the previous versions.
+  - All components support the
+    [`asChild`](https://www.radix-ui.com/primitives/docs/guides/composition)
+    pattern, where the component will instead clone the part's child and passing
+    it the props and behavior required to make it functional.
+  - For instance: `<FullscreenTrigger asChild>{...}</FullscreenTrigger>` will
+    not render a DOM element, and instead copy all of it's properties to the
+    child component, which will behave as a fullscreen trigger.
+- The components are more aligned with web standards, allowing direct prop
+  passing to elements (notably the `Video` component).
+- Automatic data fetching and CORS API key usage within components have been
+  removed to enhance security and reduce developer confusion.
+  - We highly recommend moving away from CORS API keys and making API requests
+    from your backend. _We plan to deprecate CORS API keys in the future._
+- The React Native package has been deprecated. The package was not
+  well-maintained and we have focused on web components for Livepeer React.
+
+## Migration steps
+
+### Primitives
+
+Replace your usage of the single `<Player />` and `<Broadcast />` components
+with the new composable primitives. These include:
+
+#### Player
+
+- `<Player.Root />`
+- `<Player.Container />`
+- `<Player.Video />`
+- `<Player.Controls />`
+- `<Player.LoadingIndicator />`
+- `<Player.FullscreenTrigger />`
+- ...and more.
+
+Check out our [complete example](/sdks/livepeer-react/Player) for how these can
+be composed to build a video player, modeled after the 3.x versions of the
+Player.
+
+#### Broadcast
+
+- `<Broadcast.Root />`
+- `<Broadcast.Container />`
+- `<Broadcast.Video />`
+- `<Broadcast.Controls />`
+- `<Broadcast.SourceSelect />`
+- `<Broadcast.VideoEnabledIndicator />`
+- ...and more.
+
+Check out the [complete example](/sdks/livepeer-react/Broadcast) for how these
+can be composed to build a complete in-browser broadcast experience.
+
+### Data fetching
+
+1. All data fetching logic from the Livepeer Studio API has been removed from
+   the Player and Broadcast components.
+   - This includes all of the `useCreateAsset`, `useStream`, etc.
+2. You will now need to use the [`livepeer`](/sdks/javascript) JS SDK (or
+   [another SDK](/sdks/introduction), depending on your applications's API
+   language) for data fetching and interaction.
+   - You must now make API requests in your backend to fetch playback info for a
+     playback ID.
+   - Use [`getSrc`](/sdks/livepeer-react/player/get-src) utility function with
+     the Player or [`getIngest`](/sdks/livepeer-react/broadcast/get-ingest)
+     utility function with Broadcast to parse the JSON responses from the API.
+
+### Unstyled by default
+
+1. The components are now unstyled by default. You will need to apply your own
+   styles.
+2. Refer to the documentation for example styles that mimic the previous
+   versions, which you can customize as needed.
+
+### Recommendations
+
+1. Embrace the flexibility of **Composable components**. Use the `asChild`
+   pattern for more control over the rendering of components.
+2. Use **automatic poster images** by passing the
+   [playback info](/api-reference/playback/get) response to `getSrc`.
+3. There are no changes required to **resume progress on fallback**, which
+   resumes playback from where it was interrupted when an error occurs, and the
+   player falls back to another playback protocol.
+4. Use `useMediaContext` for building custom components. See the implementation
+   of the primitives as an example of how to implement them.
+
+### Callouts
+
+1. Note the discontinuation of `autoUrlUpload` and direct IPFS playback. See
+   below for recommendations for how to migrate from this.
+2. The new build system includes `use client` and `use server` directives in the
+   output. This means that you can directly import the client components into a
+   RSC and you don't need to wrap them. If you don't use React Server
+   Components, this doesn't affect you.
+
+### React Native
+
+The React Native package has been deprecated. Consider seeking alternative
+solutions or consulting the team for future support plans.
+
+### Replacing `autoUrlUpload`
+
+To replace the usage of `autoUrlUpload`, use the following pseudocode as a guide
+for how the logic used to work on the frontend.
+
+```tsx /api/playback
+import { Livepeer } from "livepeer";
+
+import { parseCid, parseArweaveTxId } from "@livepeer/core/utils";
+
+const livepeer = new Livepeer({
+  apiKey: process.env.STUDIO_API_KEY ?? "",
+});
+
+const possibleIpfsCid =
+  "https://cloudflare-ipfs.com/ipfs/bafybeie2hgozfameyzawq6kkzc3tuf67g4kkufm4hoefxczpfe2fen2riu";
+
+// if the source contains a CID or Arweave TX ID, these utility functions will parse out the
+// ID and be non-null
+const decentralizedSource =
+  parseCid(possibleIpfsCid) ?? parseArweaveTxId(possibleIpfsCid);
+
+if (decentralizedSource?.id) {
+  // we check if the CID/Arweave ID already exists in the playback info endpoint
+  const response = await livepeer.playback.get(decentralizedSource.id);
+
+  if (!response.playbackInfo) {
+    // the CID/Arweave ID doesn't exist, so we import it by the URL
+    await livepeer.asset.createViaURL({
+      // this is the IPFS CID, or Arweave transaction ID
+      name: decentralizedSource.id,
+      // the formatted IPFS CID or Arweave tx ID as a URL:
+      // ipfs://{CID} or ar://{CID}
+      url: decentralizedSource.url,
+    });
+
+    // ...continue to poll the created asset and use the decentralized identifier
+    // to get the playback info, and pass to `getSrc` to use with <Player.Root />
+
+    const imported = await livepeer.playback.get(decentralizedSource.id);
+
+    const source = getSrc(imported.playbackInfo);
+
+    return source;
+  }
+}
+```

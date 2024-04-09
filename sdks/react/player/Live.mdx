@@ -1,0 +1,79 @@
+---
+title: "Live"
+description:
+  "The `LiveIndicator` component visually signals the live status of media
+  playback."
+icon: headset
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/player/live`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Info>
+  `LiveIndicator` is designed to provide a clear, visual cue of the live status
+  of the media playback.
+</Info>
+
+## Features
+
+- Conditional rendering based on live playback status, customizable with the
+  `matcher` pattern
+- Adheres to [WAI-ARIA](https://w3c.github.io/aria/) design patterns
+- Compatible with CSS animations for dynamic enter/exit animations
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Player from "@livepeer/react/player";
+
+export default () => (
+  <Player.Root>
+    <Player.Container>
+      <Player.LiveIndicator />
+    </Player.Container>
+    <Player.Container>
+      <Player.Controls>
+        <Player.LiveIndicator />
+      </Player.Controls>
+    </Player.Container>
+  </Player.Root>
+);
+```
+
+## Props
+
+### `forceMount`
+
+Keeps the component always mounted, aiding in managing animations.
+
+### `matcher`
+
+Determines when the `LiveIndicator` is shown, accepting a boolean or a function
+for customized visibility logic.
+
+## Data Attributes
+
+### `data-livepeer-live-indicator`
+
+Designates the live indicator component within the Player.
+
+### `data-live`
+
+Denotes the live status (`"true"` for live, `"false"` for not live).
+
+### `data-visible`
+
+Signifies if the indicator is visible (`"true"`) or hidden (`"false"`), useful
+for CSS-based animations.

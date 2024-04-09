@@ -1,0 +1,117 @@
+---
+title: "Camera"
+description:
+  "The `VideoEnabledTrigger` and `VideoEnabledIndicator` components provide
+  broadcasters with interactive controls and visual cues to manage the video
+  enabled state during a broadcast."
+icon: camcorder
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/broadcast/camera`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Info>
+  `VideoEnabledTrigger` and `VideoEnabledIndicator` integrate together to form
+  the typical video on/off interaction for broadcasts. They do not have to be
+  used together and can combine with other components.
+</Info>
+
+## Features
+
+- Controls the video input state and conditionally renders based on video input
+  on/off status, customizable with the `matcher` pattern
+- Keyboard hotkeys and adheres to [WAI-ARIA](https://w3c.github.io/aria/) design
+  patterns
+- Handles all common browser APIs, and old WebKit/Firefox APIs (see
+  [caniuse](https://caniuse.com/mdn-api_mediadevices_getusermedia))
+
+<Warning>
+  The `getUserMedia` browser API used to get the video is only available in
+  secure contexts (HTTPS).
+</Warning>
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+export default () => (
+  <Broadcast.Root>
+    <Broadcast.Container>
+      <Broadcast.VideoEnabledTrigger />
+      <Broadcast.VideoEnabledIndicator />
+    </Broadcast.Container>
+    <Broadcast.Container>
+      <Broadcast.Controls>
+        <Broadcast.VideoEnabledTrigger />
+        <Broadcast.VideoEnabledIndicator />
+      </Broadcast.Controls>
+    </Broadcast.Container>
+  </Broadcast.Root>
+);
+```
+
+## Props
+
+### `VideoEnabledTrigger`
+
+Accepts all props for a typical button element.
+
+### `VideoEnabledIndicator`
+
+##### `forceMount`
+
+A boolean that, when true, ensures the component is always mounted. This is
+particularly useful for managing animations with external animation libraries.
+
+##### `matcher`
+
+A prop intended to define the circumstances under which the
+`VideoEnabledIndicator` should be visible. It can be a boolean that corresponds
+directly to the audio state or a function that provides custom logic for
+visibility determination based on the audio state.
+
+## Data Attributes
+
+### `VideoEnabledTrigger`
+
+#### `data-livepeer-controls-video-enabled-trigger`
+
+Serves to identify the component's role within the broadcast interface.
+
+#### `data-enabled`
+
+Indicates the current video state, `"true"` when video is enabled and `"false"`
+when it is disabled.
+
+### `VideoEnabledIndicator`
+
+#### `data-livepeer-controls-video-enabled-indicator`
+
+Identifies the component's role as a visual indicator of the video state within
+the broadcast interface.
+
+#### `data-enabled`
+
+Shows the current video enabled state, `"true"` when video is enabled and
+`"false"` when it is disabled.
+
+#### `data-visible`
+
+Reflects the visibility status of the indicator, with `"true"` meaning it's
+currently visible based on the `matcher` or video state and `"false"` denoting
+it's not visible.
+
+This is often used for dynamically applying enter/exit CSS animations.

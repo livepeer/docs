@@ -1,0 +1,63 @@
+---
+title: "getSrc"
+description:
+  "`getSrc` is a utility function for parsing various types of playback
+  information and converting them into a standardized format suitable for the
+  Player."
+icon: link
+---
+
+```tsx
+import { getSrc } from "@livepeer/react/external";
+import * as Player from "@livepeer/react/player";
+
+// An example response from the livepeer playback info API endpoint
+const vodSource = {
+  type: "vod",
+  meta: {
+    playbackPolicy: null,
+    source: [
+      {
+        hrn: "HLS (TS)",
+        type: "html5/application/vnd.apple.mpegurl",
+        url: "https://lp-playback.com/hls/f5eese9wwl88k4g8/index.m3u8",
+      },
+    ],
+  },
+};
+
+// This is either an array of `Src` or null,
+// and can be passed into the Player.Root `src`
+const src = getSrc(vodSource);
+
+export default () => (
+  <Player.Root src={src}>{/* All child components. */}</Player.Root>
+);
+```
+
+#### Features
+
+- Supports inputs like Livepeer playback info, Cloudflare stream data, Mux URLs,
+  arrays of strings, and single strings
+- Transforms into `Src[]` which contains essential playback information, along
+  with supportive metadata like thumbnails and VTT files.
+
+### Functionality
+
+#### Input Types
+
+The function can process the following input types:
+
+- `LivepeerPlaybackInfo`: Extracts the 'source' array from its 'meta' property
+  from the playback info endpoint.
+- `LivepeerSource` or `LivepeerSource[]`: Uses the source object(s) directly.
+- `CloudflareStreamData`: Retrieves the stream data from a Cloudflare stream
+  data object.
+- `string[]`: Assumes each string as a URL and creates an array of Source
+  objects.
+- `string`: Assumes the string is a URL and creates a single Source object.
+
+#### Output Format
+
+The output is an array of `Src` objects or `null` if the input is invalid or
+empty.

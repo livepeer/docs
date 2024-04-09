@@ -1,0 +1,106 @@
+---
+title: "Fullscreen"
+description:
+  "The `FullscreenIndicator` and `FullscreenTrigger` components provide visual
+  cues and interactive elements for fullscreen functionality."
+icon: expand
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/player/fullscreen`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+## Features
+
+- Automatic conditional rendering based on fullscreen status and browser API
+  availability, customizable with the `matcher` pattern
+- Handles all browser APIs back to IE11, with special handling for iOS
+- Compatible with CSS animations for dynamic enter/exit animations
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Player from "@livepeer/react/player";
+
+export default () => (
+  <Player.Root>
+    <Player.Container>
+      <Player.FullscreenTrigger />
+      <Player.FullscreenIndicator />
+    </Player.Container>
+    <Player.Container>
+      <Player.Controls>
+        <Player.FullscreenTrigger />
+        <Player.FullscreenIndicator />
+      </Player.Controls>
+    </Player.Container>
+  </Player.Root>
+);
+```
+
+## Props
+
+### `FullscreenIndicator`
+
+#### `forceMount`
+
+A boolean that, when true, keeps the component mounted at all times, useful for
+controlling animations with external libraries.
+
+#### `matcher`
+
+A prop to define the condition under which the `FullscreenIndicator` should be
+visible. It can be a boolean directly matching the fullscreen state or a
+function providing custom logic to determine visibility.
+
+### `FullscreenIndicator`
+
+#### `forceMount`
+
+A boolean that, when true, keeps the component mounted at all times, useful for
+controlling animations with external libraries.
+
+#### `matcher`
+
+A prop to define the condition under which the `FullscreenIndicator` should be
+visible. It can be a boolean directly matching the fullscreen state or a
+function providing custom logic to determine visibility.
+
+## Data Attributes
+
+### `FullscreenIndicator`
+
+#### `data-livepeer-controls-fullscreen-indicator`
+
+Indicates the component's role.
+
+#### `data-fullscreen`
+
+Shows the current fullscreen state (`"true"` or `"false"`).
+
+#### `data-visible`
+
+Reflects whether the indicator is currently visible (`"true"` or `"false"`).
+
+This is often used for dynamically applying enter/exit CSS animations.
+
+### `FullscreenTrigger`
+
+#### `data-livepeer-controls-fullscreen-trigger`
+
+Indicates the component's role.
+
+#### `data-fullscreen-state`
+
+Shows the current fullscreen state (`"true"` or `"false"`).

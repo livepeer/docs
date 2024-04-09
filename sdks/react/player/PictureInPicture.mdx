@@ -1,0 +1,73 @@
+---
+title: "Picture in Picture"
+description:
+  "The `PictureInPictureTrigger` component toggles the picture-in-picture mode."
+icon: clone
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/player/pip`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+## Features
+
+- Automatic conditional rendering based on browser API availability,
+  customizable with the `matcher` pattern
+- Supports both the [w3c](https://w3c.github.io/picture-in-picture/) standard
+  (which most modern browsers support), as well as the
+  [older Safari/iOS spec](https://developer.apple.com/documentation/webkitjs/adding_picture_in_picture_to_your_safari_media_controls)
+  (see the browsers which support Picture-in-Picture on
+  [caniuse](https://caniuse.com/picture-in-picture))
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Player from "@livepeer/react/player";
+
+export default () => (
+  <Player.Root>
+    <Player.Container>
+      <Player.PictureInPictureTrigger />
+    </Player.Container>
+    <Player.Container>
+      <Player.Controls>
+        <Player.PictureInPictureTrigger />
+      </Player.Controls>
+    </Player.Container>
+  </Player.Root>
+);
+```
+
+## Props
+
+The component accepts all props suitable for a button element.
+
+## Data Attributes
+
+### `data-livepeer-controls-picture-in-picture-trigger`
+
+Serves to identify the component's role.
+
+### `data-picture-in-picture`
+
+Indicates the current picture-in-picture state, `"true"` when the feature is
+active and `"false"` otherwise.
+
+### `data-visible`
+
+Reflects the visibility status of the trigger, with `"true"` meaning it's
+currently visible (i.e., picture-in-picture is supported and the media is not in
+fullscreen mode) and `"false"` denoting it's not visible.
+
+This is often used for dynamically applying enter/exit CSS animations.

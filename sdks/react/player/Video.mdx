@@ -1,0 +1,70 @@
+---
+title: "Video" 
+description: "The `Video` component renders the actual video
+content and manages various aspects of media playback."
+icon: video
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/player/video`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+#### Features
+
+- Synchronizes state with the HTML5 video element
+- Keyboard hotkeys (`←`/`→` to seek, `K` to pause, `M` to toggle mute, `F`
+  fullscreen, `I` picture-in-picture)
+- Adheres to [WAI-ARIA](https://w3c.github.io/aria/) design patterns
+
+### Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Player from "@livepeer/react/player";
+
+export default () => (
+  <Player.Root>
+    <Player.Video />
+  </Player.Root>
+);
+```
+
+## Props
+
+The component accepts most props suitable for a HTML5 `video` tag, except for
+`src`, `poster`, `autoPlay`, and `preload`, which are managed internally or
+provided explicitly through props.
+
+### `poster`
+
+Optional. Controls the poster source. By default, it uses the thumbnail from the
+`Root` src input. Set to `null` to disable the default poster image from the
+`Root` src.
+
+### `hlsConfig`
+
+Optional. Controls the HLS.js config. By default, it adds JWT or Access Token
+headers to HLS segment requests.
+
+## Data Attributes
+
+### `data-livepeer-video`
+
+Serves to identify the component's role within the Player.
+
+### `data-livepeer-source-type`
+
+Indicates the type of the current source, such as "none" when there's no source,
+or other types based on the media being played.
+
+This can be of the type: `"audio" | "video" | "hls" | "webrtc" | "none"`

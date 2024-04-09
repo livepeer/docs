@@ -1,0 +1,247 @@
+---
+title: "useBroadcastContext"
+description:
+  "The `useBroadcastContext` hook lets you build custom components which
+  interact directly with the Broadcast state store."
+icon: database
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/broadcast/use_broadcast_context`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Info>
+  The `useStore` hook is from
+  [`zustand`](https://github.com/pmndrs/zustand?tab=readme-ov-file#using-zustand-without-react),
+  and inherits all of the documentation for Zustand stores.
+</Info>
+
+## Features
+
+- Flexible interaction with the broadcast state store
+- Based on Zustand's `useStore` hooks
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+import { useBroadcastContext, useStore } from "@livepeer/react/broadcast";
+
+export default () => (
+  <Broadcast.Root>
+    {/** The `useBroadcastContext` hook can be used in any component,
+    as long as it's inside the Broadcast.Root React Context provider */}
+    <CustomComponent />
+  </Broadcast.Root>
+);
+
+function CustomComponent({
+  style,
+  __scopeBroadcast,
+}: Broadcast.BroadcastScopedProps<{}>) {
+  const context = useBroadcastContext("CustomComponent", __scopeBroadcast);
+
+  // use selectors with the Zustand store, to make sure your component doesn't render
+  // on every store state change
+  const { status } = useStore(context.store, ({ status }) => ({
+    status,
+  }));
+
+  return status;
+}
+```
+
+## State
+
+The `useBroadcastContext` hook returns a Zustand store, which contains the
+`BroadcastState`.
+
+### `aria`
+
+The ARIA text for the controls given the current state.
+
+```tsx
+type BroadcastAriaText = {
+  audioTrigger: string;
+  start: string;
+  screenshareTrigger: string;
+  videoTrigger: string;
+};
+```
+
+### `audio`
+
+Indicates whether the broadcast's audio track is turned on.
+
+### `enabled`
+
+Specifies whether the broadcast is currently active or in "preview" mode.
+
+### `hydrated`
+
+Reflects whether the broadcast store is hydrated, indicating if initial data has
+been loaded into the state.
+
+### `mediaDevices`
+
+A list of the current media devices (based on
+[MediaDeviceInfo](https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo)),
+which changes based on permissions or when a user starts sharing their display.
+
+```tsx
+type MediaDeviceInfoExtended = Omit<MediaDeviceInfo, "label" | "toJSON"> & {
+  /**
+   * This is a convenience field added to MediaDeviceInfo to help easily add a device picker.
+   *
+   * For security reasons, the label field will blank unless an active media stream exists
+   * or the user has granted persistent permission for media device access. The set of device labels
+   * could otherwise be used as part of a fingerprinting mechanism to identify a user.
+   *
+   * When the label field is not blank, these are the same value. Otherwise, the value is a friendly default.
+   */
+  friendlyName: string;
+  /**
+   * For security reasons, the label field is blank unless an active media stream exists
+   * or the user has granted persistent permission for media device access. The set of device labels
+   * could otherwise be used as part of a fingerprinting mechanism to identify a user.
+   *
+   * We override it here to be null when it is blank, for easier developer usage.
+   */
+  label: string | null;
+};
+
+mediaDevices: MediaDeviceInfoExtended[] | null;
+```
+
+### `mediaStream`
+
+The [MediaStream](https://developer.mozilla.org/en-US/docs/Web/API/MediaStream)
+for the current broadcast, containing the audio and video tracks.
+
+```tsx
+mediaStream: MediaStream | null;
+```
+
+### `mounted`
+
+Whether the broadcast component is currently mounted in the DOM.
+
+### `peerConnection`
+
+The
+[RTCPeerConnection](https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection)
+object for the broadcast, managing the connection between the local and remote
+peers.
+
+```tsx
+peerConnection: RTCPeerConnection | null;
+```
+
+### `status`
+
+The current status of the broadcast, which can be "live", "pending", or "idle".
+
+```tsx
+status: "live" | "pending" | "idle";
+```
+
+### `ingestUrl`
+
+The WHIP ingest URL used for the broadcast.
+
+```tsx
+ingestUrl: string | null;
+```
+
+### `video`
+
+Indicates if the broadcast's video track is turned on.
+
+### `mediaDeviceIds`
+
+The IDs of the currently selected media devices.
+
+```tsx
+mediaDeviceIds: MediaDeviceIds;
+```
+
+### `__initialProps`
+
+The initial properties passed into the broadcast component. This is an internal
+object used by Broadcast.
+
+```tsx
+__initialProps: InitialBroadcastProps;
+```
+
+### `__device`
+
+Information about the broadcast device's capabilities and support. This is an
+internal object used by Broadcast, but can be used for detecting device
+capabilities.
+
+```tsx
+type BroadcastDeviceInformation = {
+  version: string;
+  /** If the environment supports mediaDevices */
+  isMediaDevicesSupported: boolean;
+  /** If the environment supports RTCPeerConnection */
+  isRTCPeerConnectionSupported: boolean;
+  /** If the environment supports sharing display media */
+  isDisplayMediaSupported: boolean;
+};
+
+__device: BroadcastDeviceInformation;
+```
+
+### `__controls`
+
+The current state of broadcast controls. This is an internal object used by
+Broadcast.
+
+```tsx
+__controls: BroadcastControlsState;
+```
+
+### `__controlsFunctions`
+
+An object containing functions to manipulate the broadcast's state, such as
+toggling audio/video, updating the media stream, and setting the peer
+connection.
+
+<Warning>
+  These functions are internal - please refer to the UI Kit source code before
+  interacting with these functions.
+</Warning>
+
+```tsx
+__controlsFunctions: {
+    requestDeviceListInfo: () => void;
+    requestForceRenegotiate: () => void;
+    requestMediaDeviceId: (deviceId: AudioDeviceId, type: keyof MediaDeviceIds) => void;
+    rotateAudioSource: () => void;
+    rotateVideoSource: () => void;
+    setIngestUrl: (ingestUrl: string) => void;
+    setInitialState: (ids: MediaDeviceIds, audio: boolean, video: boolean) => void;
+    setPeerConnection: (peerConnection: RTCPeerConnection) => void;
+    setStatus: (status: BroadcastStatus) => void;
+    setMediaDeviceIds: (mediaDevices: Partial<MediaDeviceIds>) => void;
+    toggleAudio: () => void;
+    toggleDisplayMedia: () => void;
+    toggleEnabled: () => void;
+    toggleVideo: () => void;
+    updateDeviceList: (mediaDevices: MediaDeviceInfo[]) => void;
+    updateMediaStream: (mediaStream: MediaStream) => void;
+};
+```

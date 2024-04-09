@@ -12,14 +12,19 @@ particular session from a live-streamed conference.
 
 This guide offers a comprehensive walkthrough of the clipping functionality.
 
+<Warning>
+  Clipping is currently *only* supported by livestreams and livestream
+  recordings. Check back later for further support.
+</Warning>
+
 ## Create a stream
 
 Follow our previous guide on
 [creating a stream](/developers/guides/create-livestream) to get a stream key to
-provide to the creator on your platform. You can then start a Livestream and
-note down the `playbackId`.
+provide to the creator on your platform. They can then start broadcasting to
+that stream.
 
-## Call the Clip API
+## Create a clip
 
 <Info>
   Clips are created from the perspective of the user who initiates the clip. For
@@ -27,7 +32,8 @@ note down the `playbackId`.
   recent 30 seconds that they saw.
 </Info>
 
-Submit a request to the `api/clip` API using the following request parameters:
+Submit a request to the [Create Clip API](/api-reference/stream/create-clip)
+using the following request parameters:
 
 <ParamField path="startTime" type="number">
   UNIX timestamp (in milliseconds) of clip's start from the browser’s playhead
@@ -47,13 +53,9 @@ Submit a request to the `api/clip` API using the following request parameters:
   (Optional) Output clip's name
 </ParamField>
 
-<b>Note</b>: Ensure the startTime aligns with or postdates the stream's
-initiation, and that the endTime isn't set in the future.
-
 <Info>
-  Tip: HLS players typically provide a Program-Date-Time for each segment when
-  parsing an HLS manifest. You can utilize these Program-Date-Times to create a
-  clipping user interface (UI) and generate the correct timestamps.
+  Ensure the `startTime` aligns with or postdates the stream's initiation, and
+  that the `endTime` isn't set in the future.
 </Info>
 
 ### API + Player Integration
@@ -61,6 +63,12 @@ initiation, and that the endTime isn't set in the future.
 If you are using HLS.js, it provides an API for getting the program date time,
 `hls.playingDate`, which can be used to get the browser’s current playhead. This
 returns a Date object which is used similar to:
+
+<Info>
+  HLS players typically provide a `Program-Date-Time` for each segment when
+  parsing an HLS manifest. You can utilize `Program-Date-Time` to create a
+  clipping user interface (UI) and generate the correct timestamps.
+</Info>
 
 ```tsx
 import Hls from "hls.js";
@@ -73,80 +81,31 @@ const endTime = hls.playingDate.getTime(); // This retrieves the current playing
 const startTime = endTime - 30000; // 30 seconds before the endTime in milliseconds
 
 const playbackId = process.env.PLAYBACK_ID_OF_RUNNING_STREAM;
-const apiToken = process.env.PUBLIC_CORS_API_TOKEN;
 
-const data: ClipData = {
+const result = await livepeer.stream.createClip({
   startTime,
   endTime,
   playbackId,
   name: "Your clip name",
-};
-
-const headers = {
-  Authorization: `Bearer ${apiToken}`,
-  "Content-Type": "application/json",
-};
-
-async function createClip() {
-  try {
-    const response = await fetch("https://livepeer.studio/api/clip", {
-      method: "POST",
-      headers,
-      body: JSON.stringify(data),
-    });
-
-    const responseData: ClipResponse = await response.json();
-
-    console.log(responseData.asset.id);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-interface ClipData {
-  startTime: number;
-  endTime: number;
-  playbackId: string;
-  name?: string;
-}
-
-interface ClipResponse {
-  task: {
-    id: string;
-  };
-  asset: {
-    id: string;
-    playbackId: string;
-    userId: string;
-    createdAt: number;
-    status: {
-      phase: string;
-      updatedAt: number;
-    };
-    name: string;
-    source: {
-      type: string;
-      sessionId: string;
-    };
-    objectStoreId: string;
-  };
-}
+});
 ```
 
-If you are using the Livepeer Player, you can pass in
-[`clipLength` to enable the clipping button](/sdks/livepeer-react/Player#cliplength),
-alongside the clip callbacks. These are called when the user initiates a clip
-with the built-in Player clip button. The asset ID can then be used to poll the
-API and get updates on the processing status.
+If you are using the Livepeer Player, you use the
+[Clip Trigger](/sdks/react/player/Clip), which abstracts this functionality into
+an easy-to-use primitive. **You will need to call the Livepeer Clip API from
+your backend, and perform sanitization on the user input.**
 
 ```tsx
-<Player
-  playbackId={playbackId}
-  clipLength={30}
-  onClipStarted={onClipStarted}
-  onClipCreated={onClipCreated}
-  onClipError={onClipError}
-/>
+<Player.ClipTrigger
+  onClip={({ playbackId, startTime, endTime }) => {
+    // use the start/end time to call the Livepeer API, from your backend
+    // e.g. this should be a fetch to your /api/clip endpoint, which then
+    // makes a request to Livepeer's Clip endpoint, after validating the
+    // input parameters (e.g. clip is less than 60 seconds, etc)
+  }}
+>
+  <ClipIcon />
+</Player.ClipTrigger>
 ```
 
 ## Monitor the clip's status
@@ -196,32 +155,34 @@ To determine if an asset you are polling or receiving as an event is a clip, you
 can check the `source` field. If the `source` field contains a `clip` type and
 the relative session ID, then it is indeed a clip.
 
-You can always fetch clips by stream using the API:
+You can always fetch clips by stream using the
+[Clips for Livestream API](/api-reference/stream/get-clip):
 
 ```tsx
 const playbackId = process.env.PLAYBACK_ID_OF_RUNNING_STREAM;
-const clipsByStream = await fetch(
-  "https://livepeer.studio/api/stream/" + playbackId + "/clips",
-  {
-    method: "GET",
-    headers,
-  },
-);
+
+const livepeer = new Livepeer({
+  apiKey: "your_api_key_here",
+});
+
+const id = "08eeeda4-681f-46e5-a760-63d6cac91d91";
+
+await livepeer.stream.getAllClips(id);
 
 // Alternatively, you can use the streamId or fetch the clips
 // by session using the /api/session/$sessionId/clips endpoint.
 ```
 
 <Info>
-  Tip: Clips offer source playback just like other assets. On completion, a
-  transcode job is triggered. Even before this job concludes, the source
-  playback becomes available. The playbackUrl field in the asset gets populated
-  when the playback is ready, and the sourcePlayback field is set to true.
+  Clips offer source playback just like other assets. On completion, a transcode
+  job is triggered. Even before this job concludes, the source playback becomes
+  available. The `playbackUrl` field in the asset gets populated when the
+  playback is ready, and the `sourcePlayback` field is set to true.
 </Info>
 
 ## Get your clip!
 
 A clip generated in Livepeer is the same of any other Livepeer asset. You are
 able to get the playback URLs in your asset object, or fetching them from the
-`/api/playback/$PLAYBACK_ID` API, providing the playbackId of the output asset
-representing the clip.
+[Playback Info API](/api-reference/playback/get), providing the playbackId of
+the output asset representing the clip.

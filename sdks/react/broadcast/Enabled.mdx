@@ -1,0 +1,110 @@
+---
+title: "Enable"
+description:
+  'The `EnabledTrigger` and `EnabledIndicator` components provide broadcasters
+  with interactive controls and visual cues to manage the "enabled" state of the
+  broadcast.'
+icon: clapperboard
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/broadcast/enabled`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Info>
+  The `Enabled` components are used to generally start and stop the broadcast.
+  The broadcast, by default, starts disabled so the user can preview their video
+  before going live.
+</Info>
+
+## Features
+
+- Conditional rendering based on the enabled state, customizable with the
+  `matcher` pattern
+- Dynamic data attributes for custom styling based on the current enabled state
+
+<Info>
+  Toggling "enabled" turns WHIP WebRTC ingest on or off, which when "on" the
+  Broadcast component will make a POST request with an SDP payload to the WHIP
+  endpoint. When "off", it will stop sending data to the WebRTC ingest.
+</Info>
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+export default () => (
+  <Broadcast.Root>
+    <Broadcast.EnabledTrigger />
+    <Broadcast.EnabledIndicator />
+  </Broadcast.Root>
+);
+```
+
+## Props
+
+### `EnabledTrigger`
+
+The component accepts all props suitable for a button element.
+
+### `EnabledIndicator`
+
+The component accepts all props for a span element.
+
+##### `forceMount`
+
+A boolean that, when true, ensures the component is always mounted. This is
+particularly useful for managing animations with external animation libraries
+and ensuring visibility during dynamic broadcast scenarios.
+
+##### `matcher`
+
+A prop intended to define the circumstances under which the `EnabledIndicator`
+should be visible. It can be a boolean that directly corresponds to the enabled
+state or a function providing custom logic for visibility determination based on
+the enabled state.
+
+## Data Attributes
+
+### `EnabledTrigger`
+
+#### `data-livepeer-controls-enabled-trigger`
+
+Serves to identify the component's role within the broadcast interface.
+
+#### `data-enabled`
+
+Indicates the current broadcast state, `"true"` when broadcasting is enabled and
+`"false"` when it is disabled.
+
+### `EnabledIndicator`
+
+#### `data-livepeer-controls-enabled-indicator`
+
+Identifies the component's role as a visual indicator of the broadcast state
+within the broadcast interface.
+
+#### `data-enabled`
+
+Shows the current broadcast state, `"true"` when broadcasting is enabled and
+`"false"` when it is disabled.
+
+#### `data-visible`
+
+Reflects the visibility status of the indicator, with `"true"` meaning it's
+currently visible based on the `matcher` or broadcast state and `"false"`
+denoting it's not visible.
+
+This is often used for dynamically applying enter/exit CSS animations.

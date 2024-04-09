@@ -4,9 +4,9 @@ description: "Learn how to optimize latency for your Livepeer Studio workflow."
 ---
 
 One of the first questions that many developers ask during Livepeer Studio
-onboarding is how to optimize for low latency. This is for good reason; many
-livestreaming apps and sites rely on low latency to promote engagement and
-interaction between viewers and streamers.
+onboarding is: "How do we optimize for low latency?" Many live streaming apps
+and sites rely on low latency to promote engagement and interaction between
+viewers and streamers.
 
 <Info>
   Latency refers to the lapse in time between a camera capturing an action in
@@ -65,23 +65,24 @@ peer-to-peer connections, UDP transport, and adaptive streaming while minimizing
 intermediaries. It is a preferred choice for applications where minimizing delay
 is critical, such as video conferencing and live interactive streaming.
 
-<Info>**WebRTC delivers video with ultra-low latency of 0 - 3 seconds.**</Info>
+<Info>
+  **WebRTC delivers video with ultra-low latency of 0.5 - 3 seconds.**
+</Info>
 
 # Optimizing Playback for Low Latency
 
 ## Lowest possible latency (WebRTC playback)
 
 WebRTC is available as a delivery protocol for all streams regardless of input
-protocol; to achieve the lowest possible latency of 0 - 3 seconds, use of WebRTC
-delivery is required. We implement the WHIP/WHEP spec with a few minor nuances
-around SDP negotiation, documented
-[here](/guides/developing/player#webrtc-low-latency-livestreams).
+protocol; to achieve the lowest possible latency of 0.5 - 3 seconds, use of
+WebRTC delivery is required. We implement the WHIP/WHEP spec with
+[a few minor nuances around SDP negotiation](/developers/guides/livestream-from-browser#adding-custom-broadcasting).
 
-**To play back a WebRTC rendition, you will need to use a WebRTC-compatible
-player, such as the Livepeer Player.**
+To play back a WebRTC rendition, you will need to use a WebRTC-compatible
+player, such as the Livepeer Player.
 
-- [Playing WebRTC Livestreams with the Livepeer Player](/developers/guides/playback-a-livestream#using-the-livepeer-react-player)
-- [Playing WebRTC Livestreams with other clients](/developers/guides/playback-a-livestream#using-your-own-player)
+- [Playing WebRTC livestreams with the Livepeer Player](/developers/guides/playback-a-livestream)
+- [Playing WebRTC livestreams with other players](/developers/guides/playback-a-livestream#using-your-own-player)
 
 <Warning>
   Please note that **if b-frames are present in a livestream, WebRTC renditions
@@ -91,10 +92,12 @@ player, such as the Livepeer Player.**
 
 ## Optimizing for Lower Latency (HLS and WebRTC ingest and playback)
 
-> **Depending on your goals, you may or may not want to optimize for the lowest
-> latency; for example, if your user base has a high percentage of low-bandwidth
-> mobile users, it may be preferable to optimize for bandwidth efficiency over
-> latency.**
+<Info>
+  Depending on your goals, you may or may not want to optimize for the lowest
+  latency; for example, if your user base has a high percentage of low-bandwidth
+  mobile users, it may be preferable to optimize for bandwidth efficiency over
+  latency.
+</Info>
 
 ### Streaming with OBS
 
@@ -136,7 +139,7 @@ play back in HLS (8-10s latency) or WebRTC (0.5 - 3s latency).
 
 You can leverage this capability in three ways:
 
-- [Implement the customizable React component](/developers/guides/livestream-from-browser#using-livepeer-react-broadcast)
+- [Implement the customizable React component](/developers/guides/livestream-from-browser)
 - [Embed a hosted version](/developers/guides/livestream-from-browser#embeddable-broadcast)
 - [Roll your own broadcasting experience with plain WebRTC](/developers/guides/livestream-from-browser#adding-custom-broadcasting)
 
@@ -148,13 +151,16 @@ settings need to be tweaked.
 
 ### Check latency using the Livepeer Player
 
-Go to [`https://lvpr.tv/?v=](https://lvpr.tv/?v=)<playbackId>` and observe the
-latency. This will help isolate the cause of the latency.
+Go to `https://lvpr.tv/?v=<playbackId>` and observe the latency. This will help
+isolate the cause of the latency.
 
 If you are seeing higher-than-expected latency on the Livepeer Player (>15s for
 HLS or >4s for WebRTC), it suggests something about the incoming stream is
 causing high latency. Check your keyframe interval, bitrate, and b-frame
 settings.
+
+Viewers changing the resolution will also impact the latency for WebRTC, since
+this will necessarily incur transcode latency.
 
 ### If you’re using another HLS player, compare your HLS config to the Livepeer Player
 

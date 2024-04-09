@@ -1,0 +1,81 @@
+---
+title: "Controls"
+description:
+  "The `Controls` component provides an interactive container for all other
+  broadcast control elements such as `AudioTrigger`, `Fullscreen`, etc."
+icon: gamepad
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/broadcast/controls`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Info>
+  `Controls` serves as the interactive layer for broadcast control actions, dynamically displayed based on the broadcast state, loading state, or presence of an error. It is designed to automatically show upon user interaction with the Container element and hides based on the `Root` component's `autohide` property.
+
+By default, controls are shown during hover or interaction.
+
+</Info>
+
+## Features
+
+- Automatic conditional rendering based on user interactions
+- Compatible with CSS animations for dynamic enter/exit animations
+
+<Warning>
+  The visibility of `Controls` is managed automatically, relying on the
+  `autohide` property of the `Root` component to determine how long after a user
+  interaction to wait before hiding.
+</Warning>
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+export default () => (
+  <Broadcast.Root>
+    <Broadcast.Container>
+      <Broadcast.Controls>
+        {/* Place interactive control elements here, like enable/disable broadcast, screenshare toggle, etc. */}
+      </Broadcast.Controls>
+    </Broadcast.Container>
+  </Broadcast.Root>
+);
+```
+
+## Props
+
+### `forceMount`
+
+Ensures the component is always in the DOM, useful for animation controls.
+
+### `autoHide`
+
+Defines the auto-hide delay in milliseconds after user interaction. Default is
+3000ms. Set to 0 to disable auto-hide.
+
+## Data Attributes
+
+### `data-livepeer-controls`
+
+Serves to identify the component's role within the broadcast interface.
+
+### `data-visible`
+
+Reflects the visibility status of the controls. It's `"true"` when the controls
+are currently visible (not hidden, not loading, no error present, and WebRTC is
+supported), and `"false"` when they're not visible.
+
+This is often used for dynamically applying enter/exit CSS animations.

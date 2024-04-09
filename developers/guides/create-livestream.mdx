@@ -19,14 +19,14 @@ We can use the Livepeer SDK to create a stream. The example below uses the
 
     const apiKey = 'YOUR_API_KEY';
 
-    const livepeer = new Livepeer(apiKey);
+    const livepeer = new Livepeer({apiKey});
 
     const streamData = {
       name: "test_stream"
     };
 
     livepeer
-      .createStream(streamData)
+      .stream.create(streamData)
       .then((response) => {
         console.log("Stream created:", response);
       })
@@ -51,7 +51,7 @@ We can use the Livepeer SDK to create a stream. The example below uses the
 
     try:
         # Create the stream
-        response = livepeer.create_stream(stream_data)
+        response = livepeer.stream.create(stream_data)
         print("Stream created:", response)
     except Exception as e:
         print("Error creating stream:", e)
@@ -73,7 +73,7 @@ We can use the Livepeer SDK to create a stream. The example below uses the
 
     begin
       # Create the stream
-      response = client.create_stream(stream_data)
+      response = client.stream.create(stream_data)
       puts 'Stream created:', response
     rescue StandardError => e
       puts 'Error creating stream:', e.message
@@ -101,7 +101,7 @@ We can use the Livepeer SDK to create a stream. The example below uses the
 
     try {
         // Create the stream
-        $response = $livepeer->createStream($stream_data);
+        $response = $livepeer->stream->create($stream_data);
         echo 'Stream created: ' . json_encode($response) . PHP_EOL;
     } catch (LivepeerException $e) {
         echo 'Error creating stream: ' . $e->getMessage() . PHP_EOL;
@@ -118,7 +118,7 @@ We can use the Livepeer SDK to create a stream. The example below uses the
       "fmt"
       "os"
 
-      "github.com/livepeer/go-sdk"
+      "github.com/livepeer/livepeer-go"
     )
 
     func main() {
@@ -131,7 +131,7 @@ We can use the Livepeer SDK to create a stream. The example below uses the
       }
 
       // Create the stream
-      response, err := client.CreateStream(streamData)
+      response, err := client.Stream.Create(streamData)
       if err != nil {
         fmt.Printf("Error creating stream: %v\n", err)
         os.Exit(1)
@@ -150,6 +150,10 @@ You can find all the information required to broadcast to the stream in the
 The RTMP ingest URL of Livepeer Studio is `rtmp://rtmp.livepeer.com/live`, and
 the `streamKey` is present in the response object. You can use these two values
 to broadcast to the stream.
+
+You can also use WebRTC WHIP to broadcast, using the URL
+`https://playback.livepeer.studio/webrtc/{streamKey}`. This is used for
+[in-browser broadcasting](/developers/guides/livestream-from-browser).
 
 <Info>
   To learn more about other stream functions such as stopping a stream,

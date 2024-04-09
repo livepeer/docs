@@ -1,0 +1,75 @@
+---
+title: "Video" 
+description: "The `Video` component is a container for previewing
+broadcast video content."
+icon: video
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/broadcast/video`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Warning>
+  As you can see in the above example, the component will request permissions
+  for video/audio input - so it prompts the user for access to their microphone
+  and camera **upon component mount**.
+
+The `getUserMedia` browser API used to get the video/audio is only available in
+secure contexts (HTTPS).
+
+</Warning>
+
+#### Features
+
+- Synchronizes state with the HTML5 video element
+- Keyboard hotkeys (`B` to toggle whether the broadcast is enabled, `L` to
+  toggle audio, `V` to toggle video, `D` to broadcast display media, `C` for
+  next video source, `M` for next audio source)
+- Adheres to [WAI-ARIA](https://w3c.github.io/aria/) design patterns
+- Handles all common browser APIs, and old WebKit/Firefox APIs (see
+  [caniuse](https://caniuse.com/mdn-api_mediadevices_getusermedia))
+
+<Info>
+  The Broadcast above will work with only keyboard shortcuts, without any custom
+  controls.
+</Info>
+
+### Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+export default () => (
+  <Broadcast.Root>
+    <Broadcast.Video />
+  </Broadcast.Root>
+);
+```
+
+## Props
+
+The component accepts most props suitable for a HTML5 `video` tag, except for
+`src` and `poster` which are managed internally or provided explicitly through
+props.
+
+## Data Attributes
+
+### `data-livepeer-video`
+
+Serves to identify the component's role within the Broadcast.
+
+### `data-enabled`
+
+Indicates the enabled state of the broadcast, `"true"` when broadcasting is
+enabled and `"false"` when it is not.

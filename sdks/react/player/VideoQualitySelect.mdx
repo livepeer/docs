@@ -1,0 +1,119 @@
+---
+title: "Video Quality"
+description:
+  "The `VideoQualitySelect` and `VideoQualitySelectItem` components allow
+  viewers to select the desired video quality during media playback."
+icon: signal
+---
+
+<iframe
+  src={`https://ui-kit-docs-embed.vercel.app/player/video_quality`}
+  height="600px"
+  width="100%"
+  frameBorder="0"
+  allowFullScreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture; display-capture; camera; microphone"
+  style={{
+    borderRadius: 10,
+    backgroundColor: "black",
+  }}
+/>
+
+<Info>
+  All of the `VideoQualitySelect` components extend from
+  [`@radix-ui/react-select`](https://www.radix-ui.com/primitives/docs/components/select),
+  and inherits all of the documentation for those components.
+</Info>
+
+## Features
+
+- Synchronizes state with the HTML5 video element
+- Adheres to [WAI-ARIA](https://w3c.github.io/aria/) design patterns
+- Persists to `localStorage` by default (with storage overrides customizable in
+  `Root`)
+
+## Anatomy
+
+Import the components and piece the parts together.
+
+```tsx
+import * as Player from "@livepeer/react/player";
+
+export default () => (
+  <Player.Root>
+    <Player.VideoQualitySelect>
+      <Player.SelectTrigger>
+        <Player.SelectValue />
+        <Player.SelectIcon />
+      </Player.SelectTrigger>
+      <Player.SelectPortal>
+        <Player.SelectContent>
+          <Player.SelectScrollUpButton />
+          <Player.SelectViewport>
+            <Player.VideoQualitySelectItem>
+              <Player.SelectItemText />
+              <Player.SelectItemIndicator />
+            </Player.VideoQualitySelectItem>
+
+            <Player.SelectGroup>
+              <Player.SelectLabel />
+              <Player.VideoQualitySelectItem>
+                <Player.SelectItemText />
+                <Player.SelectItemIndicator />
+              </Player.VideoQualitySelectItem>
+            </Player.SelectGroup>
+
+            <Player.SelectSeparator />
+          </Player.SelectViewport>
+          <Player.SelectScrollDownButton />
+          <Player.SelectArrow />
+        </Player.SelectContent>
+      </Player.SelectPortal>
+    </Player.VideoQualitySelect>
+  </Player.Root>
+);
+```
+
+## Props
+
+### `VideoQualitySelect`
+
+Takes all props of the
+[Radix Select Root](https://www.radix-ui.com/primitives/docs/components/select)
+component.
+
+### `VideoQualitySelectItem`
+
+Takes all props of the
+[Radix Select Item](https://www.radix-ui.com/primitives/docs/components/select)
+component.
+
+#### `value`
+
+The `VideoQuality` enum value representing the video quality that the item
+corresponds to. This must be provided to ensure correct selection behavior.
+
+This can be of the type:
+`"auto" | "1080p" | "720p" | "480p" | "360p" | "240p" | "144p"`
+
+## Data Attributes
+
+### `VideoQualitySelect`
+
+#### `data-livepeer-quality-select`
+
+Serves to identify the component's role within the Player.
+
+#### `data-video-quality`
+
+Indicates the current video quality selection, matching the value of the
+selected `VideoQualitySelectItem`.
+
+This can be of the type:
+`"auto" | "1080p" | "720p" | "480p" | "360p" | "240p" | "144p"`
+
+### `VideoQualitySelectItem`
+
+#### `data-livepeer-quality-select-item`
+
+Serves to identify the component's role within the Player.
