@@ -1,0 +1,54 @@
+---
+title: On-chain configuration
+---
+
+In the previous section we covered the **off-chain** configuration of the AI Orchestrator node. In this section, we will cover how to connect your AI Orchestrator node to the AI subnet and earn fees for processing AI inference jobs.
+
+## Prerequisites
+
+- An established [Mainnet Orchestrator](/orchestrators/guides/get-started) within the Top 100 on the Livepeer network.
+- A dedicated static IP address or domain for your AI Orchestrator.
+- An additional Ethereum wallet, funded with enough gas to cover transaction fees for ticket redemption.
+
+## Ensure you can Redeem Tickets
+
+<Info>Coming Soon</Info>
+
+## Advertising Your AI Service URI
+
+To make your *AI Orchestrator* discoverable by *AI Gateway* nodes on the AI subnet, you need to advertise your **AI service URI** on-chain. This can be done by registering your service URI with the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5#code) contract on the [Arbitrum Mainnet](https://arbitrum.io). The simplest way to do this is by using the [Foundry](https://book.getfoundry.sh/getting-started/installation) smart contract deployment toolchain.
+
+1. **Install Foundry** using the following commands:
+
+    ```bash
+    curl -L https://foundry.paradigm.xyz | bash
+    source /home/<USERNAME>/.bashrc
+    foundryup
+    ```
+
+2. **Set your Service URI** using the `SetServiceURI` function on the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract. Utilize the KeyStore file and password from your *Mainnet Transcoding Orchestrator*'s wallet:
+
+    ```bash
+    cast send --keystore '<PATH_TO_KEYSTORE_FILE>' --password '<PASSWORD>' --rpc-url <ARBITRUM_RPC_URI> 0x04C0b249740175999E5BF5c9ac1dA92431EF34C5 "setServiceURI(string)" https://<PUBLIC_ORCH_IP_OR_URL>:<PUBLIC_ORCH_PORT>
+    ```
+
+    Upon successful execution, the output should resemble the following:
+
+    ```bash
+    blockHash:               0x214a65d2dffd1732e971bd3662dcb681663c2eb0c95a33c8918bab0a44e2d3ed
+    blockNumber:             200370198
+    ```
+
+3. **Verify your Service URI** by calling the `getServiceURI` function on the [AIServiceRegistry](https://arbiscan.io/address/0x5d31637eb0f442376053d5dea2347f663c4019dc) contract:
+
+    ```bash
+    cast call --rpc-url <ARBITRUM_RPC_URI> 0x04C0b249740175999E5BF5c9ac1dA92431EF34C5 "getServiceURI(address)" <PUBLIC_WALLET_KEY> | xxd -r -p
+    ```
+
+    If successful, you should see the following output:
+
+    ```bash
+    https://<PUBLIC_ORCH_IP_OR_URL>:<PUBLIC_ORCH_PORT>
+    ```
+
+Great job! Your _AI Orchestrator_ is now visible to _AI Gateway_ nodes on the AI Subnet 🚀!
