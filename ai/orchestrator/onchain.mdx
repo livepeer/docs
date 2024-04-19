@@ -2,13 +2,18 @@
 title: On-chain Configuration
 ---
 
-In the previous section we covered the **off-chain** configuration of the AI Orchestrator node. In this section, we will cover how to connect your AI Orchestrator node to the AI subnet and earn fees for processing AI inference jobs.
+In the previous section we covered the **off-chain** configuration of the AI
+Orchestrator node. In this section, we will cover how to connect your AI
+Orchestrator node to the AI subnet and earn fees for processing AI inference
+jobs.
 
 ## Prerequisites
 
-- An established [Mainnet Orchestrator](/orchestrators/guides/get-started) within the Top 100 on the Livepeer network.
+- An established [Mainnet Orchestrator](/orchestrators/guides/get-started)
+  within the Top 100 on the Livepeer network.
 - A dedicated static IP address or domain for your AI Orchestrator.
-- An additional Ethereum wallet, funded with enough gas to cover transaction fees for ticket redemption.
+- An additional Ethereum wallet, funded with enough gas to cover transaction
+  fees for ticket redemption.
 
 ## Ensure you can Redeem Tickets
 
@@ -16,39 +21,86 @@ In the previous section we covered the **off-chain** configuration of the AI Orc
 
 ## Advertising Your AI Service URI
 
-To make your *AI Orchestrator* discoverable by *AI Gateway* nodes on the AI subnet, you need to advertise your **AI service URI** on-chain. This can be done by registering your service URI with the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract on the [Arbitrum Mainnet](https://arbitrum.io). The simplest way to do this is by using the [Foundry](https://book.getfoundry.sh/getting-started/installation) smart contract deployment toolchain.
+To make your _AI Orchestrator_ discoverable by _AI Gateway_ nodes on the AI
+subnet, you need to advertise your **AI service URI** on-chain. This can be
+achieved by registering your service URI with the
+[AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5)
+contract on the [Arbitrum Mainnet](https://arbitrum.io).
 
-1. **Install Foundry** using the following commands:
+<Tabs>
+  <Tab title="Use Foundry Cast">
+    The easiest and recommended method is to use the [Foundry](https://book.getfoundry.sh/getting-started/installation) smart contract deployment toolchain.
 
-    ```bash
-    curl -L https://foundry.paradigm.xyz | bash
-    source /home/<USERNAME>/.bashrc
-    foundryup
-    ```
+    <Steps>
+      <Step title="Install Foundry Cast">
+        Install [Foundry Cast](https://book.getfoundry.sh/cast/) by executing the following commands in your terminal:
 
-2. **Set your Service URI** using the `SetServiceURI` function on the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract. Utilize the KeyStore file and password from your *Mainnet Transcoding Network Orchestrator* wallet:
+          ```bash
+          curl -L https://foundry.paradigm.xyz | bash
+          source /home/<USERNAME>/.bashrc
+          foundryup
+          ```
+      </Step>
+      <Step title="Set your Service URI">
+        Set your Service URI with the `SetServiceURI` function on the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract. Use the KeyStore file and password from your *Mainnet Transcoding Network Orchestrator* wallet:
 
-    ```bash
-    cast send --keystore '<PATH_TO_KEYSTORE_FILE>' --password '<PASSWORD>' --rpc-url <ARBITRUM_RPC_URI> 0x04C0b249740175999E5BF5c9ac1dA92431EF34C5 "setServiceURI(string)" https://<PUBLIC_ORCH_IP_OR_URL>:<PUBLIC_ORCH_PORT>
-    ```
+        ```bash
+        cast send --keystore '<PATH_TO_KEYSTORE_FILE>' --password '<PASSWORD>' --rpc-url <ARBITRUM_RPC_URI> 0x04C0b249740175999E5BF5c9ac1dA92431EF34C5 "setServiceURI(string)" https://<PUBLIC_ORCH_IP_OR_URL>:<PUBLIC_ORCH_PORT>
+        ```
 
-    Upon successful execution, the output should resemble the following:
+        After successful execution, the output should look like this:
 
-    ```bash
-    blockHash:               0x214a65d2dffd1732e971bd3662dcb681663c2eb0c95a33c8918bab0a44e2d3ed
-    blockNumber:             200370198
-    ```
+        ```bash
+        blockHash:               0x214a65d2dffd1732e971bd3662dcb681663c2eb0c95a33c8918bab0a44e2d3ed
+        blockNumber:             200370198
+        ```
+      </Step>
+      <Step title="Verify your Service URI">
+        Verify your Service URI by invoking the `getServiceURI` function on the [AIServiceRegistry](https://arbiscan.io/address/0x5d31637eb0f442376053d5dea2347f663c4019dc) contract:
 
-3. **Verify your Service URI** by calling the `getServiceURI` function on the [AIServiceRegistry](https://arbiscan.io/address/0x5d31637eb0f442376053d5dea2347f663c4019dc) contract:
+        ```bash
+        cast call --rpc-url <ARBITRUM_RPC_URI> 0x04C0b249740175999E5BF5c9ac1dA92431EF34C5 "getServiceURI(address)" <PUBLIC_WALLET_KEY> | xxd -r -p
+        ```
 
-    ```bash
-    cast call --rpc-url <ARBITRUM_RPC_URI> 0x04C0b249740175999E5BF5c9ac1dA92431EF34C5 "getServiceURI(address)" <PUBLIC_WALLET_KEY> | xxd -r -p
-    ```
+        If successful, the output should be:
 
-    If successful, you should see the following output:
+        ```bash
+        https://<PUBLIC_ORCH_IP_OR_URL>:<PUBLIC_ORCH_PORT>
+        ```
+      </Step>
+    </Steps>
 
-    ```bash
-    https://<PUBLIC_ORCH_IP_OR_URL>:<PUBLIC_ORCH_PORT>
-    ```
+    Congratulation! Your *AI Orchestrator* is now discoverable by *AI Gateway* nodes and primed to execute AI inference tasks on the AI Subnet. Onwards! 🚀
 
-Well done! Your _AI Orchestrator_ is now discoverable by _AI Gateway_ nodes and primed to execute AI inference tasks on the AI Subnet. Onwards! 🚀
+  </Tab>
+  <Tab title="Use Arbitrum Explorer">
+    If you prefer to interact with the contract through your browser, use the [Arbitrum Explorer](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) to call the `setServiceURI` function on the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract.
+
+    <Steps>
+        <Step title="Import Your Wallet">
+            Import the Ethereum wallet associated with your *Mainnet Transcoding Network Orchestrator* into your wallet browser extension. The steps to import your wallet may vary depending on the extension you are using. The steps for MetaMask can be found [here](https://support.metamask.io/hc/en-us/articles/360015489331-How-to-import-an-account).
+        </Step>
+        <Step title="Open the Contract page in the Arbitrum Explorer">
+            Visit the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract page on the Arbitrum Explorer and click on the `Contract` tab.
+
+            <Frame>![AIServiceRegistry Contract Page](/images/ai/ai-serviceregistry-explorer-page.png)</Frame>
+        </Step>
+        <Step title="Connect your Wallet">
+            Click the `Write Contract` button on the contract page and connect your wallet to the Arbitrum Explorer by clicking the `Connect to Web3` button. Select the wallet you imported in the first step.
+        </Step>
+        <Step title="Call the setServiceURI function">
+            Access the [setServiceURI](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5#writeContract#F2) function on the contract page and input the `Service URI` for your AI Orchestrator in the `_serviceURI` field. After clicking the `Write` button to execute the function, you mustto confirm the transaction in your wallet extension. Once the transaction is confirmed, which your wallet will notify you of, your AI Orchestrator's `Service URI` will be successfully set.
+
+            <Frame>![SetServiceURI](/images/ai/ai-serviceregistry-setserviceuri.png)</Frame>
+        </Step>
+        <Step title="Verify the Service URI">
+            To verify that the `Service URI` has been set correctly, click the `Read Contract` button on the contract page. Access the [getServiceURI](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5#readContract#F2) function and input the address of your *Mainnet Transcoding Network Orchestrator* in the `_addr` field. Click the `Query` button to retrieve the `Service URI` set for your AI Orchestrator.
+        </Step>
+    </Steps>
+
+    Congratulation! Your *AI Orchestrator* is now discoverable by *AI Gateway* nodes and primed to execute AI inference tasks on the AI Subnet. Onwards! 🚀
+  </Tab>
+  <Tab title="Use Livepeer CLI">
+    <Note>Currently, setting your AI service URI using the Livepeer CLI is not supported during the **Alpha** phase of the AI Subnet. This feature will be added in future releases.</Note>
+  </Tab>
+</Tabs>
