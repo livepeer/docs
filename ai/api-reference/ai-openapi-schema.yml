@@ -1,0 +1,334 @@
+openapi: 3.1.0
+info:
+  title: Livepeer AI Runner
+  description: An application to run AI pipelines
+  version: 0.1.0
+paths:
+  /health:
+    get:
+      summary: Health
+      operationId: health
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+  /text-to-image:
+    post:
+      summary: Text To Image
+      operationId: text_to_image
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TextToImageParams'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /image-to-image:
+    post:
+      summary: Image To Image
+      operationId: image_to_image
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_image_to_image_image_to_image_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /image-to-video:
+    post:
+      summary: Image To Video
+      operationId: image_to_video
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_image_to_video_image_to_video_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    APIError:
+      properties:
+        msg:
+          type: string
+          title: Msg
+      type: object
+      required:
+      - msg
+      title: APIError
+    Body_image_to_image_image_to_image_post:
+      properties:
+        prompt:
+          type: string
+          title: Prompt
+        image:
+          type: string
+          format: binary
+          title: Image
+        model_id:
+          type: string
+          title: Model Id
+          default: ''
+        strength:
+          type: number
+          title: Strength
+          default: 0.8
+        guidance_scale:
+          type: number
+          title: Guidance Scale
+          default: 7.5
+        negative_prompt:
+          type: string
+          title: Negative Prompt
+          default: ''
+        seed:
+          type: integer
+          title: Seed
+        num_images_per_prompt:
+          type: integer
+          title: Num Images Per Prompt
+          default: 1
+      type: object
+      required:
+      - prompt
+      - image
+      title: Body_image_to_image_image_to_image_post
+    Body_image_to_video_image_to_video_post:
+      properties:
+        image:
+          type: string
+          format: binary
+          title: Image
+        model_id:
+          type: string
+          title: Model Id
+          default: ''
+        height:
+          type: integer
+          title: Height
+          default: 576
+        width:
+          type: integer
+          title: Width
+          default: 1024
+        fps:
+          type: integer
+          title: Fps
+          default: 6
+        motion_bucket_id:
+          type: integer
+          title: Motion Bucket Id
+          default: 127
+        noise_aug_strength:
+          type: number
+          title: Noise Aug Strength
+          default: 0.02
+        seed:
+          type: integer
+          title: Seed
+      type: object
+      required:
+      - image
+      title: Body_image_to_video_image_to_video_post
+    HTTPError:
+      properties:
+        detail:
+          $ref: '#/components/schemas/APIError'
+      type: object
+      required:
+      - detail
+      title: HTTPError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    HealthCheck:
+      properties:
+        status:
+          type: string
+          title: Status
+          default: OK
+      type: object
+      title: HealthCheck
+    ImageResponse:
+      properties:
+        images:
+          items:
+            $ref: '#/components/schemas/Media'
+          type: array
+          title: Images
+      type: object
+      required:
+      - images
+      title: ImageResponse
+    Media:
+      properties:
+        url:
+          type: string
+          title: Url
+        seed:
+          type: integer
+          title: Seed
+      type: object
+      required:
+      - url
+      - seed
+      title: Media
+    TextToImageParams:
+      properties:
+        model_id:
+          type: string
+          title: Model Id
+          default: ''
+        prompt:
+          type: string
+          title: Prompt
+        height:
+          type: integer
+          title: Height
+        width:
+          type: integer
+          title: Width
+        guidance_scale:
+          type: number
+          title: Guidance Scale
+          default: 7.5
+        negative_prompt:
+          type: string
+          title: Negative Prompt
+          default: ''
+        seed:
+          type: integer
+          title: Seed
+        num_images_per_prompt:
+          type: integer
+          title: Num Images Per Prompt
+          default: 1
+      type: object
+      required:
+      - prompt
+      title: TextToImageParams
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    VideoResponse:
+      properties:
+        frames:
+          items:
+            items:
+              $ref: '#/components/schemas/Media'
+            type: array
+          type: array
+          title: Frames
+      type: object
+      required:
+      - frames
+      title: VideoResponse
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer
