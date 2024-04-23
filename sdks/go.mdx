@@ -22,23 +22,24 @@ go get github.com/livepeer/livepeer-go
 
   </Step>
   <Step title="Initialize the SDK">
-    
+
 The first step is to initialize the SDK with your Livepeer Studio API key.
 
 ```go
 package main
 
-import(
+import (
 	"context"
 	"log"
-	"livepeer"
-	"livepeer/models/components"
+
+	"github.com/livepeer/livepeer-go/livepeer"
+	"github.com/livepeer/livepeer-go/livepeer/models/components"
 )
 
 func main() {
-    lpClient := livepeer.New(
-        livepeer.WithSecurity("") // Your API key
-    )
+	lpClient := livepeer.New(
+		livepeer.WithSecurity(""), // Your API key
+	)
 }
 ```
 
@@ -50,29 +51,30 @@ Let's create a stream.
 ```go
 package main
 
-import(
+import (
 	"context"
 	"log"
-	"livepeer"
-	"livepeer/models/components"
+
+	"github.com/livepeer/livepeer-go"
+	"github.com/livepeer/livepeer-go/models/components"
 )
 
 func main() {
-    lpClient := livepeer.New(
-        livepeer.WithSecurity("<api-key>"),
-    )
+	lpClient := livepeer.New(
+		livepeer.WithSecurity("<api-key>"),
+	)
 
-    ctx := context.Background()
-    res, err := lpClient.Stream.Create(ctx, components.NewStreamPayload{
-        Name: "test_stream",
-    })
-    if err != nil {
-        log.Fatal(err)
-    }
+	ctx := context.Background()
+	res, err := lpClient.Stream.Create(ctx, components.NewStreamPayload{
+		Name: "test_stream",
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
 
-    if res.Data != nil {
-        // handle response
-    }
+	if res.Data != nil {
+		// handle response
+	}
 }
 ```
 
