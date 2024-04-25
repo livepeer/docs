@@ -3,6 +3,9 @@ info:
   title: Livepeer AI Runner
   description: An application to run AI pipelines
   version: 0.1.0
+servers:
+- url: https://dream-gateway.livepeer.cloud
+  description: Livepeer Cloud Community Gateway
 paths:
   /health:
     get:
@@ -171,6 +174,7 @@ components:
           default: 1
       type: object
       required:
+      - model_id
       - prompt
       - image
       title: Body_image_to_image_image_to_image_post
@@ -209,6 +213,7 @@ components:
           title: Seed
       type: object
       required:
+      - model_id
       - image
       title: Body_image_to_video_image_to_video_post
     HTTPError:
@@ -292,6 +297,7 @@ components:
           default: 1
       type: object
       required:
+      - model_id
       - prompt
       title: TextToImageParams
     ValidationError:

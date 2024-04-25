@@ -2,7 +2,65 @@
 title: Image-to-video
 ---
 
+## Overview
+
+The `image-to-video` pipeline of the AI subnet allows you to generate animated **high-quality** videos from images. This pipeline is powered by the latest diffusion models in the HugginFace [image-to-video](https://huggingface.co/models?pipeline_tag=image-to-video) pipeline.
+
+```mermaid
+graph LR
+    A[<img src="../../images/ai/cool-cat.webp"/>] --> B[Gateway]
+    B --> C[Orchestrator]
+    C --> B
+    B --> D[<img src="../../images/ai/cool-cat-hat-moving.gif"/>]
+```
+
+## Models
+
+### Warm Models
+
+During the **Alpha** phase of the AI Video Subnet, Orchestrators are encouraged to maintain at least **one model** per pipeline in an active state on their GPUs (known as "warm models"). This practice is designed to provide quicker response times for **early builders** on the Subnet. We're working to optimize GPU model loading/unloading to relax this requirement The current warm model requested for the `image-to-video` pipeline is:
+
+- [stabilityai/stable-video-diffusion-img2vid-xt-1-1](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt-1-1): An updated version of the stable-video-diffusion-img2vid-xt model with enhanced performance.
+
+<Tip>For faster responses with a different [image-to-video](https://huggingface.co/models?pipeline_tag=image-to-video) diffusion model, ask Orchestrators to load it on their GPU via our `ai-video` channel in [Our Discord Server](https://discord.gg/livepeer).</Tip>
+
+### On-Demand Models
+
+In addition to warm models, orchestrators can **load** any [image-to-video](https://huggingface.co/models?pipeline_tag=image-to-video) diffusion model from [Hugging Face](https://huggingface.co/) on-demand upon receiving a specific model's inference request. This approach efficiently manages GPU resources by loading models only when necessary. Although the subnet can theoretically support **any** image-to-video model from Hugging Face, in the **Alpha** phase,orchestrators must first download a model before it can be used. Below are the currently tested and verified diffusion models for the `image-to-video` pipeline:
+
+<Note>If you wish to use a specific model not listed here, please submit a [feature request](https://github.com/livepeer/ai-worker/issues/new?assignees=&labels=enhancement%2Cmodel&projects=&template=model_request.yml) on our GitHub. We will verify the model and add it to the list.</Note>
+
 <Accordion title="Tested and Verified Diffusion Models">
 - [stable-video-diffusion-img2vid-xt](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt): A model by Stability AI designed for stable video diffusion from images.
 - [stabilityai/stable-video-diffusion-img2vid-xt-1-1](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt-1-1): An updated version of the stable-video-diffusion-img2vid-xt model with enhanced performance.
 </Accordion>
+
+## Basic Usage Instructions
+
+<Tip>For an in-depth understanding of the `image-to-video` endpoint, as well as an interactive playground to experiment with the API, please visit the [AI Subnet API](/ai/api-reference/image-to-video) documentation.</Tip>
+
+To request an image generation task using the `image-to-video` pipeline, you need to send a `POST` request to the `image-to-video` API endpoint of the Gateway:
+
+```bash
+curl -X POST "https://<gateway-ip>/ai/image-to-video" \
+    -F model_id=stabilityai/stable-video-diffusion-img2vid-xt-1-1
+    -F image=@<PATH_TO_IMAGE>
+```
+
+In the above command:
+
+- Replace `<gateway-ip>` with the IP address of your AI Gateway.
+- The `image` field holds the **absolute** path to the image file to be transformed.
+- The `model_id` field identifies the diffusion model used for image generation.
+
+Additional parameters availble for the `image-to-video` pipeline are **optional** and can be found in the [AI Subnet API](/ai/api-reference/image-to-video) documentation. Upon successful execution, the AI subnet directs your request to the appropriate Orchestrator. Upon successful execution, the Gateway routes your request to the Orchestrator for processing and then receives it back to generate a response in this format:
+
+```json
+{"images":[{"seed":280278971,"url":"https://<STORAGE_ENDPOINT>/stream/34937c31/dc88c7c9.png"}]}
+```
+
+The `url` field in the response provides the URL of the generated image. To download the image, use the following command:
+
+```bash
+curl -O "https://<STORAGE_ENDPOINT>/stream/34937c31/dc88c7c9.png"
+```

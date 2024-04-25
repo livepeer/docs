@@ -4,7 +4,7 @@ title: On-chain Configuration
 
 In the previous section we covered the **off-chain** configuration of the AI
 Orchestrator node. In this section, we will cover how to connect your AI
-Orchestrator node to the AI subnet and earn fees for processing AI inference
+Orchestrator node to the _AI subnet_ and earn fees for processing AI inference
 jobs.
 
 ## Prerequisites
@@ -17,7 +17,36 @@ jobs.
 
 ## Ensure you can Redeem Tickets
 
-<Info>Coming Soon</Info>
+As the _AI subnet_ is in its Alpha phase, [its software](https://github.com/livepeer/go-livepeer/tree/ai-video) isn't integrated with the _Mainnet Transcoding Network_ [software stack](https://github.com/livepeer/go-livepeer) yet. This means your _Mainnet Transcoding Network Orchestrator_ can't directly redeem tickets. However, there are two methods to enable your _AI Orchestrator_ node to redeem tickets:
+
+<Tabs>
+  <Tab title="Set Ticket Receipient">
+    The simplest and **recommended** way to ensure your _AI Orchestrator_ can redeem tickets is to set the ticket recipient
+
+
+    way to ensure your _AI Orchestrator_ can redeem tickets is to create a separate Ethereum wallet and fund it with enough gas to cover transaction fees for ticket redemption. This wallet will be used exclusively for your _AI Orchestrator_.
+
+    <Steps>
+      <Step title="Create a New Wallet">
+        Create a new Ethereum account for your _AI Orchestrator_. It is recommended that you use a separate account from your _Mainnet Transcoding Network Orchestrator_ for security reasons.
+        Create a new Ethereum wallet using a wallet browser extension like MetaMask or a hardware wallet like Ledger. Ensure you securely store the wallet's private key or seed phrase.
+      </Step>
+      <Step title="Fund the Wallet">
+        Transfer enough ETH to the wallet to cover the gas costs of redeeming the AI tickets on-chain.
+      </Step>
+      <Step title="Connect the Wallet">
+
+        Connect the wallet to your _AI Orchestrator_ node by adding the wallet's private key or seed phrase to the node's configuration file.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Use Redemption Service">
+    <Warning>While this method is feasible, it's not recommended due to the potential disruption and added complexity it may cause to your _Mainnet Transcoding Network Orchestrator_. Only proceed if creating a separate wallet for your _AI Orchestrator_ isn't an option and you're fully aware of the implications.</Warning>
+
+    If creating a separate wallet for your _AI Orchestrator_ is not feasible, you can utilize a [redemption service](https://github.com/livepeer/go-livepeer/blob/master/doc/redeemer.md). This service allows your _Mainnet Transcoding Network Orchestrator_ node to redeem tickets on behalf of your _AI Orchestrator_ node. Detailed information about this process can be found [here](https://github.com/livepeer/go-livepeer/blob/master/doc/redeemer.md), and the arguments to start a redeemer are available in the [go-livepeer CLI documentation](https://docs.livepeer.org/references/go-livepeer/cli-reference#onchain).
+  </Tab>
+
+</Tabs>
 
 ## Advertising Your AI Service URI
 
@@ -42,7 +71,7 @@ contract on the [Arbitrum Mainnet](https://arbitrum.io).
           ```
       </Step>
       <Step title="Set your Service URI">
-        Set your Service URI with the `SetServiceURI` function on the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract. Use the KeyStore file and password from your *Mainnet Transcoding Network Orchestrator* wallet:
+        Set your Service URI with the `SetServiceURI` function on the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract. Use the KeyStore file and password from your **Mainnet Transcoding Network Orchestrator** wallet:
 
         ```bash
         cast send --keystore '<PATH_TO_KEYSTORE_FILE>' --password '<PASSWORD>' --rpc-url <ARBITRUM_RPC_URI> 0x04C0b249740175999E5BF5c9ac1dA92431EF34C5 "setServiceURI(string)" https://<PUBLIC_ORCH_IP_OR_URL>:<PUBLIC_ORCH_PORT>
@@ -78,7 +107,7 @@ contract on the [Arbitrum Mainnet](https://arbitrum.io).
 
     <Steps>
         <Step title="Import Your Wallet">
-            Import the Ethereum wallet associated with your *Mainnet Transcoding Network Orchestrator* into your wallet browser extension. The steps to import your wallet may vary depending on the extension you are using. The steps for MetaMask can be found [here](https://support.metamask.io/hc/en-us/articles/360015489331-How-to-import-an-account).
+            Import the Ethereum wallet associated with your **Mainnet Transcoding Network Orchestrator** into your wallet browser extension. The steps to import your wallet may vary depending on the extension you are using. The steps for MetaMask can be found [here](https://support.metamask.io/hc/en-us/articles/360015489331-How-to-import-an-account).
         </Step>
         <Step title="Open the Contract page in the Arbitrum Explorer">
             Visit the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract page on the Arbitrum Explorer and click on the `Contract` tab.
@@ -89,7 +118,7 @@ contract on the [Arbitrum Mainnet](https://arbitrum.io).
             Click the `Write Contract` button on the contract page and connect your wallet to the Arbitrum Explorer by clicking the `Connect to Web3` button. Select the wallet you imported in the first step.
         </Step>
         <Step title="Call the setServiceURI function">
-            Access the [setServiceURI](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5#writeContract#F2) function on the contract page and input the `Service URI` for your AI Orchestrator in the `_serviceURI` field. After clicking the `Write` button to execute the function, you mustto confirm the transaction in your wallet extension. Once the transaction is confirmed, which your wallet will notify you of, your AI Orchestrator's `Service URI` will be successfully set.
+            Access the [setServiceURI](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5#writeContract#F2) function on the contract page and input the `Service URI` for your _AI Orchestrator_ in the `_serviceURI` field. After clicking the `Write` button to execute the function, you mustto confirm the transaction in your wallet extension. Once the transaction is confirmed, which your wallet will notify you of, your _AI Orchestrator_'s `Service URI` will be successfully set.
 
             <Frame>![SetServiceURI](/images/ai/ai-serviceregistry-setserviceuri.png)</Frame>
         </Step>
