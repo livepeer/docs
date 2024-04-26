@@ -1,0 +1,176 @@
+---
+title: Docker Install
+icon: download
+---
+
+# Install & Configure Docker
+
+## Key folder structure
+
+Livepeer will require files to be placed on the host and within the docker
+container. Here is a list of the key folders used by the docker install.
+
+### Host Folders
+
+By default, docker will store all volumes in the `/var/lib/docker/volumes`
+directory
+
+This installation will create a volume called: `gateway-lpData` and it will
+be located at `/var/lib/docker/volumes/gateway-lpData/_data`
+
+### Container Folders
+
+Within the docker container, the volume `gateway-lpData` will be mounted at
+`/root/.lpData`
+
+## Install Prerequisites
+
+If docker is already installed, you can skip this step. The installation assumes
+you are running Docker 20.10.x. If an older version of docker is installed
+remove it with the following command:
+
+As the root user (or sudo), run the following:
+
+```
+apt remove docker*
+```
+
+Install Docker
+
+```
+curl https://releases.rancher.com/install-docker/20.10.sh | sh
+```
+
+Create a Docker volume
+
+```
+docker volume create gateway-lpData
+```
+
+Create Docker Compose file from the root user's home directory _/root/_
+
+```
+nano docker-compose.yml
+```
+
+Copy and paste the following and save the following
+
+```
+version: '3.9'
+
+services:
+   gateway:
+    image: livepeer/go-livepeer:<RELEASE_VERSION>
+    container_name: "gateway"
+    hostname: "gateway"
+    ports:
+      - 1935:1935
+      - 8935:8935
+    volumes:
+      - gateway-lpData:/root/.lpData
+    command: '-ethUrl=https://arb1.arbitrum.io/rpc/
+              -ethKeystorePath=/root/.lpData
+              -network=arbitrum-one-mainnet
+              -cliAddr=gateway:5935
+              -broadcaster=true
+              -monitor=true
+              -v=99
+              -blockPollingInterval=20
+              -maxPricePerUnit=300
+              -pixelsPerUnit=1
+              -rtmpAddr=0.0.0.0:1935
+              -httpAddr=0.0.0.0:8935
+              '
+volumes:
+  gateway-lpData:
+    external: true
+```
+
+# Create Livepeer Gateway ETH account
+
+In this step we need to start the Gateway in order to create an Ethereum
+account.
+
+```
+docker compose run -it gateway
+```
+
+When prompted for the ETH password, enter a strong password to secure your
+Ethereum account. This password is used to decrypt and access the ETH private
+key. **Make sure to never share or lose access to either the password or the
+keystore file.**
+
+**Note:** _Keep this password handy, we will use it in the following steps._
+
+After you see the message that the Ethereum account has been unlocked, CTRL+C to
+exit the Livepeer docker instance.
+
+Using the previously created ETH password, create the eth-secret file
+
+```
+nano -p /var/lib/docker/volumes/gateway-lpData/_data/eth-secret.txt
+```
+
+# Modify Docker compose file to include eth-secret.txt
+
+```
+nano docker-compose.yml
+```
+
+Add the following line below the `-ethKeystorePath` and save
+
+```
+-ethPassword=/root/.lpData/eth-secret.txt
+```
+
+Here is the full modified version of the docker-compose.yml file
+
+```
+version: '3.9'
+
+services:
+  gateway:
+    image: livepeer/go-livepeer:<RELEASE_VERSION>
+    container_name: "gateway"
+    hostname: "gateway"
+    ports:
+      - 1935:1935
+      - 8935:8935
+    volumes:
+      - gateway-lpData:/root/.lpData
+    command: '-ethUrl=<YOUR ARB APC>
+              -ethKeystorePath=/root/.lpData
+              -ethPassword=/root/.lpData/eth-secret.txt
+              -network=arbitrum-one-mainnet
+              -cliAddr=gateway:5935
+              -broadcaster=true
+              -monitor=true
+              -v=99
+              -blockPollingInterval=20
+              -maxPricePerUnit=300
+              -pixelsPerUnit=1
+              -rtmpAddr=0.0.0.0:1935
+              -httpAddr=0.0.0.0:8935
+              '
+volumes:
+  gateway-lpData:
+    external: true
+```
+
+Start Livepeer in the background
+
+```
+docker compose up -d
+```
+
+Launch the livepeer_cli
+
+```
+docker exec -it gateway /bin/bash
+livepeer_cli -host gateway -http 5935
+```
+
+Jump to
+[Configure Transcoding Options](/gateways/guides/transcoding-options) to
+finish configuring the Gateway
+
