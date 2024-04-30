@@ -4,50 +4,165 @@ icon: microchip-ai
 iconType: regular
 ---
 
-<Warning>**Notice:** The Livepeer AI Video Subnet is currently in its **Alpha** phase. During this early stage, you may encounter various bugs or issues. Should you discover any problems, please report them via our [issue tracker](https://github.com/livepeer/go-livepeer/issues/new/choose) on GitHub. We appreciate your patience and feedback as we work to improve the AI Subnet. Your contributions are vital to our progress, and we look forward to seeing what you'll create!</Warning>
+<Warning>
+  **Notice:** The Livepeer AI Video Subnet is in Alpha phase. You may encounter
+  bugs or issues. Please help us improve by reporting problems via our [issue
+  tracker](https://github.com/livepeer/go-livepeer/issues/new/choose). Your
+  feedback is invaluable as we enhance the AI Subnet. Thank you for your
+  contributions!
+</Warning>
 
-The **AI Subnet** is the newest addition to the Livepeer ecosystem, first outlined in [this SPE treasury proposal](https://explorer.livepeer.org/treasury/82843445347363563575858115586375001878287509193479217286690041153234635982713). This cutting-edge platform provides a **decentralized**, **open-source** framework for a broad array of Generative AI inference tasks, including image and video generation and upscaling, all within the Livepeer network. Leveraging Livepeer's decentralized protocol, the AI Subnet offers accessible, cost-effective generative AI capabilities, empowering developers and creators worldwide to incorporate advanced AI tools into their projects.
+The **AI Subnet** marks a pivotal expansion within the Livepeer ecosystem,
+aligning perfectly with our mission to build the world's open video
+infrastructure. Initially proposed in
+[this SPE treasury proposal](https://explorer.livepeer.org/treasury/82843445347363563575858115586375001878287509193479217286690041153234635982713),
+the AI Subnet introduces a **decentralized**, **open-source** framework that
+facilitates the execution and of a diverse array of AI inference tasks. These
+tasks integrated seamlessly within the Livepeer network include image and video
+generation and upscaling. This innovative development not only leverages but
+also extends the capabilities of the Livepeer Mainnet transcoding network, which
+is renowned for its low cost and high reliability.
 
-### Currently available Pipelines
-
-The AI Subnet currently supports the following generative AI pipelines:
-
-- **text-to-image**: Convert text descriptions into images.
-- **image-to-image**: Transform images from one style to another.
-- **image-super-resolution**: Enhance image quality by upscaling resolution.
-
-For more information on these pipelines, and the Diffusion models suported in these pipelines, refer to the [AI Subnet Pipelines](/ai/pipelines) page.
+Equipping video applications with **cutting-edge AI tools**, the AI Subnet is
+poised to transform creative processes in both the burgeoning web3 space and the
+established web2 domains. Advancing towards our vision where all internet video
+leverages Livepeer as an essential resource—akin to bandwidth or electricity—we
+are committed to empowering developers and creators worldwide. This initiative
+fosters the **cost-effective integration** of advanced AI tools into their
+projects, reducing reliance on centralized compute providers and promoting
+broader, more equitable access to AI capabilities.
 
 ### Advantages of Livepeer's AI Subnet
 
-- **Decentralization**: The AI Subnet operates on a decentralized network, ensuring that AI tasks are processed securely and efficiently.
-- **Cost-Effective**: By leveraging the Livepeer network, the AI Subnet offers cost-effective AI inference capabilities compared to traditional cloud-based solutions.
-- **Scalability**: The AI Subnet is designed to scale with demand, allowing for the addition of new Orchestrators and Gateways as needed.
-- **Open-Source**: The AI Subnet is built on open-source technology, enabling developers to contribute to its ongoing development and improvement.
+- **Decentralization**: Operating on a decentralized network, the AI Subnet
+  enhances security, efficiency, and resilience by eliminating single points of
+  failure. This robust infrastructure ensures seamless and reliable AI task
+  processing across a distributed network.
+- **Cost-Effectiveness**: By leveraging the decentralized architecture of the
+  Livepeer network, the AI Subnet is poised to offer AI inference capabilities
+  at a significantly lower cost than traditional cloud-based services. This
+  affordability makes cutting-edge AI technologies accessible to a broader
+  audience, democratizing advanced computing.
+- **Scalability**: The AI Subnet is engineered to scale dynamically according to
+  demand. It facilitates the seamless addition of new Orchestrators and
+  Gateways, ensuring the network can adapt and grow as user needs evolve without
+  service interruptions.
+- **Open-Source Innovation**: Rooted in open-source principles, the AI Subnet
+  fosters a collaborative environment that encourages innovation among
+  developers. This community-driven development model speeds up enhancements and
+  diversifies the applications and services the network can support.
 
-### Terminology
+### Current Limitations
 
-- **Mainnet Transcoding Network**: This network comprises Orchestrators and Gateways that perform or coordinate transcoding tasks on the mainnet.
-- **AI Subnet**: A specialized subnet of the Livepeer network, consisting of AI Orchestrators and AI Gateways, engineered specifically for managing AI inference tasks on the mainnet.
-- **Mainnet Transcoding Network Orchestrator**: A node that handles transcoding tasks within the _Mainnet Transcoding Network_. For simplicity, it's often referred to as _Orchestrator_ throughout the rest of the documentation.
-- **Mainnet Transcoding Network Gateway**: A node that routes transcoding tasks to the correct Orchestrators for processing on the _Mainnet Transcoding Network_. For simplicity, it's often referred to as _Gateway_ throughout the rest of the documentation.
-- **AI Orchestrator**: A specialized node tasked with carrying out AI inference operations on the _AI Subnet_.
-- **AI Gateway**: A specialized node that routes AI tasks to the correct AI Orchestrators for processing on the _AI Subnet_.
+- **Alpha Phase**: The AI Subnet is currently in its Alpha phase, and users may
+  encounter bugs or issues during this early stage. It is not yet meant to be
+  used with high demand production workloads.
+- **Supports Limited Set of Open-source Models**: The AI Subnet currently
+  supports a limited set of AI models and pipelines that are open-source and
+  available on [Hugging Face](https://huggingface.co/models). This range is
+  however slowely expanding with the aim to support any custom model in the
+  future.
+- **Only Higher VRAM GPUs Supported**: Currently the AI Subnet requires GPUs
+  with at least 16GB of VRAM to run AI inference tasks effectively. We are
+  working to expand this support to lower VRAM GPUs in the future.
 
-### How does it Work?
+### Available Generative Pipelines
 
-The AI Subnet is built on top of the existing Livepeer network, leveraging the same core infrastructure to facilitate AI inference tasks. The AI Orchestrator nodes are responsible for executing AI tasks, while the AI Gateway nodes manage the routing of these tasks to the appropriate Orchestrators. The AI Subnet is designed to be scalable, enabling the addition of new Orchestrators and Gateways as needed to accommodate growing demand.
+The AI Subnet currently supports the following generative AI pipelines, all
+employing [Diffusion models](https://huggingface.co/docs/diffusers/en/index):
 
-### Present Constraints
+- **Text-to-Image**: Converts textual descriptions into detailed images,
+  leveraging the capabilities of
+  [Diffusion models](https://huggingface.co/models?pipeline_tag=text-to-image).
+- **Image-to-image**: This pipeline transforms images from one style to another,
+  utilizing
+  [Diffusion models](https://huggingface.co/models?pipeline_tag=image-to-image).
+- **Image-to-video**: This pipeline generates short video clips from a text
+  prompt or an initial image, employing
+  [Diffusion models](https://huggingface.co/docs/diffusers/en/index).
 
-- **Alpha Phase**: The AI Subnet is currently in its Alpha phase, and users may encounter bugs or issues during this early stage.
-- **Supports Lited Set of Models**: The AI Subnet currently supports a limited set of AI models. This range is however slowely expanding with the aim to support any custom model in the future.
-- **Only Higher VRAM GPUs Supported**: Currently the AI Subnet requires GPUs with at least 16GB of VRAM to run AI inference tasks effectively. We are working to expand this support to lower VRAM GPUs in the future.
+Please refer to the [AI Subnet Pipelines](/ai/pipelines) page for additional
+information on these pipelines and the supported diffusion models. Note that
+while currently focused on Diffusion models, future expansions may include other
+types of models to accommodate a broader range of tasks.
+
+### How It Works
+
+The AI Subnet operates seamlessly atop the established Livepeer network,
+utilizing its robust, decentralized payment infrastructure to efficiently
+facilitate AI inference tasks. Below is a streamlined overview of the system
+components and their respective functions:
+
+- **AI Orchestrator Nodes**: These nodes execute AI tasks and are tailored to
+  support specific AI models. They maintain models "warm" on their GPUs for
+  immediate processing or load them dynamically as tasks are received,
+  optimizing response time and resource utilization.
+
+- **AI Gateway Nodes**: These nodes manage the flow of tasks, directing them to
+  the appropriate Orchestrators based on their capabilities and current load,
+  ensuring efficient task allocation and system scalability.
+
+The AI Subnet is designed for growth, seamlessly integrating additional
+Orchestrators and Gateways as needed to meet increasing demand. The
+infrastructure utilizes a specialized
+[ai-runner Docker container](https://github.com/livepeer/ai-worker/tree/main/runner)
+to execute AI models, simplifying the deployment and scalability of new
+pipelines and models. Future enhancements will focus on improving the speed and
+expanding the capabilities of this container to support more complex AI models
+and custom user-defined pipelines.
+
+Below is a streamlined diagram illustrating the AI inference pipeline within the
+Livepeer AI Subnet:
+
+```mermaid
+graph TD
+    A[AI Gateway Node] -->|Task Routing| B[AI Orchestrator Nodes]
+    B -->|Executes AI Tasks| C[ai-runner Docker Containers]
+    C -->|Pre-loads Models| D[GPU Ready/Warm Models]
+    C -->|Dynamically Loads Models| E[GPU On-Demand]
+    D -->|Execute Tasks| G[Task Completion]
+    E -->|Execute Tasks| G
+    G -->|Return Results| B
+    B -->|Send Results Back| A
+```
+
+This diagram succinctly visualizes the flow of tasks within the AI Subnet. Tasks
+commence at the AI Gateway Nodes, where they are routed to the appropriate AI
+Orchestrator Nodes. These nodes execute the tasks using ai-runner Docker
+Containers, which manage AI models in two primary ways:
+
+- **Pre-loaded Models:** Models that are frequently used remain 'warm' on the
+  GPUs to expedite task processing.
+- **Dynamically Loaded Models:** Other models are loaded as needed, providing
+  flexibility to handle diverse task requirements.
+
+After processing, the results are returned to the Orchestrator Nodes and sent
+back through the Gateway Nodes, completing the cycle. This efficient and
+flexible architecture ensures that the AI Subnet can scale and adapt to various
+AI applications.
+
+### AI Subnet Terminology
+
+- **Mainnet Transcoding Network**: This network comprises Orchestrators and
+  Gateways that perform or coordinate transcoding tasks on the mainnet.
+- **AI Subnet**: A specialized subnet of the Livepeer network, consisting of AI
+  Orchestrators and AI Gateways, engineered specifically for managing AI
+  inference tasks on the mainnet.
+- **Mainnet Transcoding Network Orchestrator**: A node that handles transcoding
+  tasks within the _Mainnet Transcoding Network_. For simplicity, it's often
+  referred to as _Orchestrator_ throughout the rest of the documentation.
+- **Mainnet Transcoding Network Gateway**: A node that routes transcoding tasks
+  to the correct Orchestrators for processing on the _Mainnet Transcoding
+  Network_. For simplicity, it's often referred to as _Gateway_ throughout the
+  rest of the documentation.
+- **AI Orchestrator**: A specialized node tasked with carrying out AI inference
+  operations on the _AI Subnet_.
+- **AI Gateway**: A specialized node that routes AI tasks to the correct AI
+  Orchestrators for processing on the _AI Subnet_.
 
 ### Kickstart Your Journey
 
-
-<CardGroup cols={2}>
+<CardGroup cols={3}>
   <Card
     href="/ai/orchestrator/get_started"
     title="Setup AI Orchestrator"
@@ -71,6 +186,14 @@ The AI Subnet is built on top of the existing Livepeer network, leveraging the s
     iconType="duotone"
   >
     Develop your innovative dApp on the AI Subnet efficiently and at scale.
+  </Card>
+  <Card
+    href="ai/contribute/overview"
+    title="Contribute to AI Subnet"
+    icon="heart"
+    iconType="duotone"
+  >
+    Contribute to the AI Subnet and help shape the future of AI on Livepeer.
   </Card>
   <Card
     href="/ai/api-reference"
