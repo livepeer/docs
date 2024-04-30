@@ -50,27 +50,24 @@ the `image-to-video` pipeline is:
 
 ### On-Demand Models
 
-In addition to warm models, orchestrators can **load** any
-[image-to-video](https://huggingface.co/models?pipeline_tag=image-to-video)
-diffusion model from [Hugging Face](https://huggingface.co/) on-demand upon
-receiving a specific model's inference request. This approach efficiently
-manages GPU resources by loading models only when necessary. Although the subnet
-can theoretically support **any** image-to-video model from Hugging Face, in the
-**Alpha** phase,orchestrators must first download a model before it can be used.
-Below are the currently tested and verified diffusion models for the
-`image-to-video` pipeline:
+Orchestrators can load any `image-to-video` diffusion model from Hugging Face
+on-demand, optimizing GPU resources by only loading models when needed. Although
+the subnet is designed to support **any** Hugging Face `image-to-video` model,
+during the **Alpha** phase, orchestrators need to pre-download a model. The
+following models have been tested and verified for the `image-to-video`
+pipeline:
 
 <Note>
-  If you wish to use a specific model not listed here, please submit a [feature
+  If a specific model you wish to use is not listed, please submit a [feature
   request](https://github.com/livepeer/ai-worker/issues/new?assignees=&labels=enhancement%2Cmodel&projects=&template=model_request.yml)
   on our GitHub. We will verify the model and add it to the list.
 </Note>
 
+{/* prettier-ignore */}
 <Accordion title="Tested and Verified Diffusion Models">
-  -
-  [stable-video-diffusion-img2vid-xt](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt):
-  A model by Stability AI designed for stable video diffusion from images. -
-  [stabilityai/stable-video-diffusion-img2vid-xt-1-1](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt-1-1):
+- [stable-video-diffusion-img2vid-xt](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt):
+  A model by Stability AI designed for stable video diffusion from images.
+- [stabilityai/stable-video-diffusion-img2vid-xt-1-1](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt-1-1):
   An updated version of the stable-video-diffusion-img2vid-xt model with
   enhanced performance.
 </Accordion>
@@ -78,49 +75,58 @@ Below are the currently tested and verified diffusion models for the
 ## Basic Usage Instructions
 
 <Tip>
-  For an in-depth understanding of the `image-to-video` endpoint, as well as an
-  interactive playground to experiment with the API, please visit the [AI Subnet
-  API](/ai/api-reference/image-to-video) documentation.
+  For a detailed understanding of the `image-to-video` endpoint and to
+  experiment with the API, see the [AI Subnet API
+  Reference](/ai/api-reference/image-to-video).
 </Tip>
 
-To request an image generation task using the `image-to-video` pipeline, you
-need to send a `POST` request to the `image-to-video` API endpoint of the
-Gateway:
+To generate an image with the `image-to-video` pipeline, send a `POST` request
+to the Gateway's `image-to-video` API endpoint:
 
 ```bash
-curl -X POST "https://<gateway-ip>/ai/image-to-video" \
+curl -X POST "https://<gateway-ip>/image-to-video" \
     -F model_id=stabilityai/stable-video-diffusion-img2vid-xt-1-1 \
     -F image=@<PATH_TO_IMAGE>
 ```
 
-In the above command:
+In this command:
 
-- Replace `<gateway-ip>` with the IP address of your AI Gateway.
+- `<gateway-ip>` should be replaced with your AI Gateway's IP address.
+- `model_id` is the diffusion model for image generation.
 - The `image` field holds the **absolute** path to the image file to be
   transformed.
-- The `model_id` field identifies the diffusion model used for image generation.
 
-Additional parameters availble for the `image-to-video` pipeline are
-**optional** and can be found in the
-[AI Subnet API](/ai/api-reference/image-to-video) documentation. Upon successful
-execution, the AI subnet directs your request to the appropriate Orchestrator.
-Upon successful execution, the Gateway routes your request to the Orchestrator
-for processing and then receives it back to generate a response in this format:
+For additional optional parameters, refer to the
+[AI Subnet API Reference](/ai/api-reference/image-to-video).
+
+After execution, the Orchestrator processes the request and returns the response
+to the Gateway:
 
 ```json
 {
   "images": [
     {
-      "seed": 280278971,
-      "url": "https://<STORAGE_ENDPOINT>/stream/34937c31/dc88c7c9.png"
+      "seed": 1914955328,
+      "url": "/stream/2b835716/01c0e9a6.mp4"
     }
   ]
 }
 ```
 
-The `url` field in the response provides the URL of the generated image. To
-download the image, use the following command:
+The `url` in the response is the URL of the generated image. Download the image
+with:
 
 ```bash
-curl -O "https://<STORAGE_ENDPOINT>/stream/34937c31/dc88c7c9.png"
+curl -O "https://<STORAGE_ENDPOINT>/stream/2b835716/01c0e9a6.mp4"
 ```
+
+## API Reference
+
+<Card
+  title="API Reference"
+  icon="rectangle-terminal"
+  href="/ai/api-reference/image-to-video"
+>
+  Explore the `image-to-video` endpoint and experiment with the API in the AI
+  Subnet API Reference.
+</Card>
