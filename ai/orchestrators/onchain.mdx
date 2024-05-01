@@ -4,7 +4,7 @@ title: On-chain Setup
 
 The previous section covered the **off-chain** configuration of the AI
 Orchestrator node. This section details how to connect an AI Orchestrator node
-to the _AI subnet_ and earn fees for processing AI inference jobs.
+to the AI Subnet and earn fees for processing AI inference jobs.
 
 ## Prerequisites
 
@@ -16,29 +16,29 @@ to the _AI subnet_ and earn fees for processing AI inference jobs.
 
 ## Ensure you can Redeem Tickets
 
-As the _AI subnet_ is in its Alpha phase,
+As the AI Subnet is in its Alpha phase,
 [its software](https://github.com/livepeer/go-livepeer/tree/ai-video) isn't
-integrated with the _Mainnet Transcoding Network_
+integrated with the Mainnet Transcoding Network
 [software stack](https://github.com/livepeer/go-livepeer) yet. This means that
-your _Mainnet Transcoding Network Orchestrator_ is currently unable to directly
-redeem AI related tickets. However, there are two methods to enable your _AI
-Orchestrator_ node to redeem tickets:
+your **Mainnet Transcoding Network Orchestrator** is currently unable to
+directly redeem AI related tickets. However, there are two methods to enable
+your AI Orchestrator node to redeem tickets:
 
 <Tabs>
   <Tab title="Set Ticket Recipient (recommended)">
-    To enable ticket redemption for your **AI Orchestrator**, set the ticket recipient to your _Mainnet Transcoding Network Orchestrator_'s ETH address. This method allows the earned fees to be credited directly to your **main orchestrator**, without requiring additional setup or causing disruption.
+    To enable ticket redemption for your **AI Orchestrator**, set the ticket recipient to your **Mainnet Transcoding Network Orchestrator**'s ETH address. This method allows the earned fees to be credited directly to your main Orchestrator, without requiring additional setup or causing disruption.
 
     <Steps>
       <Step title="Wallet Creation">
-        <Info>For security, it's advised to use a separate account from your _Mainnet Transcoding Network Orchestrator_.</Info>
+        <Info>For security, it's advised to use a separate account from your Mainnet Transcoding Network Orchestrator.</Info>
 
-        Create a new Ethereum wallet for your _AI Orchestrator_ node. Follow the [Create a Wallet](/catalyst/deploying-catalyst#creating-a-wallet) guide in the [Catalyst](/catalyst/deploying-catalyst) documentation for detailed instructions.
+        Create a new Ethereum wallet for your **AI Orchestrator**. Follow the [Create a Wallet](/catalyst/deploying-catalyst#creating-a-wallet) guide in the [Catalyst](/catalyst/deploying-catalyst) documentation for detailed instructions.
       </Step>
       <Step title="Wallet Funding">
         Transfer sufficient ETH to the new wallet to cover the gas costs for redeeming AI tickets on-chain.
       </Step>
       <Step title="Recipient Configuration">
-        To direct the fees earned by your _AI Orchestrator_ to your main orchestrator, set the ticket recipient as the Ethereum address of your main orchestrator. This can be done by adding the following flag when launching your _AI Orchestrator_ node:
+        To direct the fees earned by your AI Orchestrator to your main Orchestrator, set the ticket recipient as the Ethereum address of your main Orchestrator. This can be done by adding the following flag when launching your AI Orchestrator node:
 
         ```bash
         ./livepeer \
@@ -50,9 +50,9 @@ Orchestrator_ node to redeem tickets:
 
   </Tab>
   <Tab title="Use Redemption Service">
-    <Warning>While this method is possible, it's not recommended because it can disrupt performance and add complexity to your _Mainnet Transcoding Network Orchestrator_. Only proceed with this method if you are unable to create a separate wallet for your __AI Orchestrator__ and you understand the potential implications.</Warning>
+    <Warning>While this method is possible, it's not recommended because it can disrupt performance and add complexity to your _Mainnet Transcoding Network Orchestrator_. Only proceed with this method if you are unable to create a separate wallet for your _AI Orchestrator_ and you understand the potential implications.</Warning>
 
-    If creating a separate wallet for your _AI Orchestrator_ isn't an option, you might want to use a [redemption service](https://github.com/livepeer/go-livepeer/blob/master/doc/redeemer.md). This service allows your _Mainnet Transcoding Network Orchestrator_ node to redeem tickets for your _AI Orchestrator_ node. For more details, check out the [redemption service documentation](https://github.com/livepeer/go-livepeer/blob/master/doc/redeemer.md) and the [go-livepeer CLI documentation](https://docs.livepeer.org/references/go-livepeer/cli-reference#onchain).
+    If creating a separate wallet for your _AI Orchestrator_ isn't an option, you might want to use a [redemption service](https://github.com/livepeer/go-livepeer/blob/master/doc/redeemer.md). This service allows your _Mainnet Transcoding Network Orchestrator_ to redeem tickets for your AI Orchestrator. For more details, check out the [redemption service documentation](https://github.com/livepeer/go-livepeer/blob/master/doc/redeemer.md) and the [go-livepeer CLI documentation](/references/go-livepeer/cli-reference#onchain).
 
   </Tab>
 
@@ -60,8 +60,8 @@ Orchestrator_ node to redeem tickets:
 
 ## Advertising Your AI Service URI
 
-To make your _AI Orchestrator_ discoverable by _AI Gateway_ nodes on the AI
-subnet, you need to advertise your **AI service URI** on-chain. You can do this
+To make your AI Orchestrator node discoverable by AI Gateway nodes on the AI
+Subnet, you need to advertise your **AI service URI** on-chain. You can do this
 by registering your service URI with the
 [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5)
 contract on the [Arbitrum Mainnet](https://arbitrum.io).
@@ -109,7 +109,7 @@ contract on the [Arbitrum Mainnet](https://arbitrum.io).
       </Step>
     </Steps>
 
-    Congratulations! Your **AI Orchestrator** is now discoverable by **AI Gateway** nodes and is ready to execute AI inference tasks on the AI Subnet! 🚀
+    Congratulations! Your **AI Orchestrator** node is now discoverable by **AI Gateway** nodes and is ready to execute AI inference tasks on the AI Subnet! 🚀
 
   </Tab>
   <Tab title="Use Arbitrum Explorer">
@@ -128,16 +128,16 @@ contract on the [Arbitrum Mainnet](https://arbitrum.io).
             Click the `Write Contract` button on the contract page and connect your wallet to the Arbitrum Explorer by clicking the `Connect to Web3` button. Select the wallet you imported in the first step.
         </Step>
         <Step title="Call the setServiceURI function">
-            Access the [setServiceURI](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5#writeContract#F2) function on the contract page and input the `Service URI` for your _AI Orchestrator_ in the `_serviceURI` field. After clicking the `Write` button to execute the function, you mustto confirm the transaction in your wallet extension. Once the transaction is confirmed, which your wallet will notify you of, your _AI Orchestrator_'s `Service URI` will be successfully set.
+            Access the [setServiceURI](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5#writeContract#F2) function on the contract page and input the `Service URI` for your AI Orchestrator in the `_serviceURI` field. After clicking the `Write` button to execute the function, you mustto confirm the transaction in your wallet extension. Once the transaction is confirmed, which your wallet will notify you of, your AI Orchestrator's `Service URI` will be successfully set.
 
             <Frame>![SetServiceURI](/images/ai/ai-serviceregistry-setserviceuri.png)</Frame>
         </Step>
         <Step title="Verify the Service URI">
-            To verify that the `Service URI` has been set correctly, click the `Read Contract` button on the contract page. Access the [getServiceURI](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5#readContract#F2) function and input the address of your *Mainnet Transcoding Network Orchestrator* in the `_addr` field. Click the `Query` button to retrieve the `Service URI` set for your AI Orchestrator.
+            To verify that the `Service URI` has been set correctly, click the `Read Contract` button on the contract page. Access the [getServiceURI](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5#readContract#F2) function and input the address of your **Mainnet Transcoding Network Orchestrator** in the `_addr` field. Click the `Query` button to retrieve the `Service URI` set for your AI Orchestrator.
         </Step>
     </Steps>
 
-    Congratulations! Your **AI Orchestrator** is now discoverable by **AI Gateway** nodes and is ready to execute AI inference tasks on the AI Subnet! 🚀
+    Congratulations! Your **AI Orchestrator** node is now discoverable by **AI Gateway** nodes and is ready to execute AI inference tasks on the AI Subnet! 🚀
 
   </Tab>
   <Tab title="Use Livepeer CLI">
@@ -153,12 +153,12 @@ commands to start the **AI Orchestrator** are similar to those for the
 [off-chain Orchestrator](/ai/orchestrators/start-orchestrator), but with
 additional flags to enable on-chain functionality:
 
-- `-network=arbitrum-one-mainnet`: Connects the AI Orchestrator to the Arbitrum
-  Mainnet network.
+- `-network=arbitrum-one-mainnet`: Connects the AI Orchestrator node to the
+  Arbitrum Mainnet network.
 - `-ethUrl=https://arb1.arbitrum.io/rpc`: Sets the Arbitrum Mainnet RPC URL. You
   can replace this with your own RPC URL.
 - `-ethKeystorePath=/root/.lpData/arbitrum-one-mainnet/keystore`: Sets the path
-  to the _AI Orchestrator_'s Ethereum keystore file.
+  to the AI Orchestrator's Ethereum keystore file.
 - `-ethAcctAddr <AI_SUBNET_ORCH_ETH_ADDRESS>`: Sets the Ethereum address of the
   AI Orchestrator.
 - `-ethPassword=/root/.lpData/.eth_secret`: Sets the path to the Ethereum
@@ -166,10 +166,10 @@ additional flags to enable on-chain functionality:
 - `-ethOrchAddr=<MAIN_ORCH_ETH_ADDRESS>`: Sets the Ethereum address of the
   Mainnet Transcoding Network Orchestrator.
 
-Due to current limitations in the AI subnet software, two additional flags are
+Due to current limitations in the AI Subnet software, two additional flags are
 required:
 
-- `-pricePerUnit=70`: This flag is not used by the AI subnet but is required to
+- `-pricePerUnit=70`: This flag is not used by the AI Subnet but is required to
   start the `go-livepeer` software.
 - `-ticketEV=2999999999999`: This flag ensures that the AI Orchestrator doesn't
   trigger maximum ticket limits set by the `go-livepeer` software.
