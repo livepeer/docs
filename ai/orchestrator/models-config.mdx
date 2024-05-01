@@ -1,0 +1,82 @@
+---
+title: Configuring AI Models
+---
+
+Before deploying your _AI Orchestrator_ on the _AI Subnet_, you need to choose
+the AI models for which you want to perform AI inference tasks. This guide
+assists in configuring these models. The following page,
+[Download AI Models](/ai/orchestrator/models-download), provides instructions
+for their download. For details on supported pipelines and models, consult
+[Pipelines](/ai/pipelines/text-to-image).
+
+## Configuration File Format
+
+Orchestrators specify supported AI models in an `aiModels.json` file, typically
+located in the `~/.lpData` directory. Below is an example configuration showing
+currently **recommended** models and their respective prices.
+
+```json
+[
+  {
+    "pipeline": "text-to-image",
+    "model_id": "ByteDance/SDXL-Lightning",
+    "price_per_unit": 4768371
+  },
+  {
+    "pipeline": "image-to-image",
+    "model_id": "ByteDance/SDXL-Lightning",
+    "price_per_unit": 4768371
+  },
+  {
+    "pipeline": "image-to-video",
+    "model_id": "stabilityai/stable-video-diffusion-img2vid-xt-1-1",
+    "price_per_unit": 3390842,
+    "warm": true,
+    "optimization_flags": {
+      "SFAST": true
+    }
+  }
+]
+```
+
+### Key Configuration Fields
+
+<Info>During our alpha phase, only one 'warm' model per GPU is supported.</Info>
+
+<ParamField path="pipeline" type="string" required="true">
+  The inference pipeline to which the model belongs (e.g., `text-to-image`).
+</ParamField>
+<ParamField path="model_id" type="string" required="true">
+  The [Hugging Face model
+  ID](https://huggingface.co/docs/transformers/en/main_classes/model).
+</ParamField>
+<ParamField path="price_per_unit" type="integer" required="true">
+  The price in [Wei](https://ethdocs.org/en/latest/ether.html) per unit, which
+  varies based on the pipeline (e.g., per pixel for `image-to-video`).
+</ParamField>
+<ParamField path="warm" type="boolean">
+  If `true`, the model is preloaded on the GPU to decrease runtime.
+</ParamField>
+<ParamField path="optimization_flags" type="object">
+  Optional flags to enhance performance (details below).
+</ParamField>
+
+### Optimization Flags
+
+<Warning>
+  Flags are **experimental** and may not always perform as expected. If you
+  encounter any issues, please report them to the [go-livepeer
+  repository](https://github.com/livepeer/go-livepeer/issues/new/choose).
+</Warning>
+
+The _AI Subnet_ pipelines come with a set of optimization flags. These flags are
+designed to enhance model performance by either boosting **inference speed** or
+**minimizing VRAM** usage. At present, the following flag is available:
+
+<ParamField path="SFAST" type="boolean">
+  This flag enables the use of the [Stable
+  Fast](https://github.com/chengzeyi/stable-fast) optimization framework to
+  accelerate inference. **Note that this flag is currently only effective for
+  `warm` models in the `image-to-video` pipeline**, where it can boost inference
+  speed by up to 25%.
+</ParamField>
