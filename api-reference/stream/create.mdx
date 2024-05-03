@@ -2,3 +2,103 @@
 title: "Create a livestream"
 openapi: "POST /stream"
 ---
+
+<RequestExample>
+
+```bash cURL
+curl --request POST \
+  --url https://livepeer.studio/api/stream \
+  --header 'Authorization: Bearer <api-key>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "name": "test_stream",
+}'
+```
+
+```javascript JavaScript
+import { Livepeer } from "livepeer";
+
+const livepeer = new Livepeer({
+  apiKey: "<api-key>",
+});
+
+await livepeer.stream.create({
+  name: "test_stream",
+});
+```
+
+```go Go
+package main
+
+import(
+	"context"
+	"log"
+	"livepeer"
+	"livepeer/models/components"
+)
+
+func main() {
+    client := livepeer.New(
+        livepeer.WithSecurity("<api-key>"),
+    )
+
+    ctx := context.Background()
+    res, err := client.Stream.Create(ctx, components.NewStreamPayload{
+        Name: "test_stream",
+    })
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    if res.Data != nil {
+        // handle response
+    }
+}
+```
+
+```python Python
+import livepeer
+from livepeer.models import components
+
+client = Livepeer.SDK(
+    api_key="",
+)
+
+req = components.NewStreamPayload(
+    name='test_stream',
+)
+
+res = client.stream.create(req)
+
+if res.data is not None:
+    # handle response
+    pass
+```
+
+```ruby Ruby
+require_relative livepeer
+
+
+client = Livepeer::SDK.new
+client.config_security(
+  security=Shared::Security.new(
+    api_key="",
+  )
+)
+
+
+req = Shared::NewStreamPayload.new(
+  request=Shared::NewStreamPayload.new(
+    name="test_stream",
+  ),
+)
+
+res = client.stream.create(req)
+
+if !res.data.nil?
+  # handle response
+end
+```
+
+</RequestExample>
