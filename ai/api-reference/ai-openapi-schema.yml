@@ -7,17 +7,6 @@ servers:
 - url: https://dream-gateway.livepeer.cloud
   description: Livepeer Cloud Community Gateway
 paths:
-  /health:
-    get:
-      summary: Health
-      operationId: health
-      responses:
-        '200':
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HealthCheck'
   /text-to-image:
     post:
       summary: Text To Image
@@ -174,9 +163,9 @@ components:
           default: 1
       type: object
       required:
-      - model_id
       - prompt
       - image
+      - model_id
       title: Body_image_to_image_image_to_image_post
     Body_image_to_video_image_to_video_post:
       properties:
@@ -213,8 +202,8 @@ components:
           title: Seed
       type: object
       required:
-      - model_id
       - image
+      - model_id
       title: Body_image_to_video_image_to_video_post
     HTTPError:
       properties:
@@ -291,14 +280,18 @@ components:
         seed:
           type: integer
           title: Seed
+        num_inference_steps:
+          type: integer
+          title: Num Inference Steps
+          default: 50
         num_images_per_prompt:
           type: integer
           title: Num Images Per Prompt
           default: 1
       type: object
       required:
-      - model_id
       - prompt
+      - model_id
       title: TextToImageParams
     ValidationError:
       properties:
