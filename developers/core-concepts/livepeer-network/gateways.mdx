@@ -1,0 +1,33 @@
+A Gateway (formerly known as a Broadcaster) on the Livepeer network
+is a node that is using the network for video streaming or generative AI inference.
+Running a gateway is simple, and it exposes an API that allows you to build
+your video application on top of Livepeer.
+Under the hood, gateways are responsible for routing transcoding or
+AI inference tasks to the appropriate
+[Orchestrator](/developers/core-concepts/livepeer-network/orchestrators)
+nodes for processing. By running the
+[`go-livepeer` client](https://github.com/livepeer/go-livepeer), individuals can
+join the Livepeer network as Gateways.
+
+<Info>
+  Check out the [Livepeer primer](https://livepeer.org/primer) to learn more
+  about the Livepeer network.
+</Info>
+
+#### Configuration
+
+Gateways do not need to stake
+[LPT](/developers/core-concepts/livepeer-network/delegators#livepeer-token-lpt)
+to participate in the network. They only
+[require enough ETH](/gateways/guides/fund-gateway) to cover the cost of
+transcoding and AI inference jobs. Unlike Orchestrators, Gateways do not need a
+GPU to participate. Any machine with a decent CPU and sufficient bandwidth can
+operate as a Gateway.
+
+Gateways are essential components of the Livepeer ecosystem, serving as the
+bridge between the Orchestrators performing the work and the clients requesting
+the work. Many entities may run gateway nodes and make them available to others
+as a hosted service. They often provide additional services such as content delivery
+networks (CDNs) and base currency subscriptions, ensuring that jobs are
+delivered swiftly to the right client and that clients don't need to set up
+crypto wallets themselves.
