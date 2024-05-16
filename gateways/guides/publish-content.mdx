@@ -3,18 +3,24 @@ title: Publish Content
 icon: upload
 ---
 
-This section explains how to publish and consume content to the Livepeer Gateway.
+This section explains how to publish and consume content to the Livepeer
+Gateway.
 
-This can be done via a command line interface using FFmpeg, or from a graphical user interface using OBS Studio and VLC Media Player.
+This can be done via a command line interface using FFmpeg, or from a graphical
+user interface using OBS Studio and VLC Media Player.
 
 # Command Line Interface
-This section explains how to publish content to and from Livepeer Gateway using a command line interface (CLI).
+
+This section explains how to publish content to and from Livepeer Gateway using
+a command line interface (CLI).
 
 ## Install `FFmpeg`
 
-Install `FFmpeg` for your platform following the instructions on the [FFmpeg website](https://ffmpeg.org/download.html).
+Install `FFmpeg` for your platform following the instructions on the
+[FFmpeg website](https://ffmpeg.org/download.html).
 
 ## Run the following command to send an RTMP test stream to the Gateway:
+
 ```
 ffmpeg -re -f lavfi -i \
        testsrc=size=1280x720:rate=30,format=yuv420p \
@@ -22,13 +28,15 @@ ffmpeg -re -f lavfi -i \
        -x264-params keyint=60 -c:a aac -f flv \
        rtmp://<YOUR IP ADDRESS>:1935/test_source
 ```
-  - `test_source` is the "stream key" for this publication.
-  - `size=1280x720` defines the dimensions of the test video source in pixels
-  - `rate=30` defines the frame rate of the test video in frames per second
-  - `1000k` defines the bitrate for the stream
-  - `keyint=60` defines the keyframe interval in frames
+
+- `test_source` is the "stream key" for this publication.
+- `size=1280x720` defines the dimensions of the test video source in pixels
+- `rate=30` defines the frame rate of the test video in frames per second
+- `1000k` defines the bitrate for the stream
+- `keyint=60` defines the keyframe interval in frames
 
 ## Run the following command to send a recorded video file to the Gateway:
+
 ```
 ffmpeg \
         -re \
@@ -36,20 +44,26 @@ ffmpeg \
         -codec copy \
         -f flv rtmp://<YOUR IP ADDRESS>:1935/video_file
 ```
-  - `video_file` is the "stream key" for this stream.
+
+- `video_file` is the "stream key" for this stream.
 
 # Graphical User Interface
-This section explains how to publish media to the Livepeer Gateway using a graphical user interface (GUI).
+
+This section explains how to publish media to the Livepeer Gateway using a
+graphical user interface (GUI).
 
 ## Publish content using OBS Studio
+
 OBS Studio can be used to publish streaming media to the Livepeer Gateway:
 
 Download and install [OBS Studio](https://obsproject.com/)
 
 In the **Stream** section of OBS Studio enter the following:
+
 ```
 Service: Custom
 Server: rtmp://<YOUR IP ADDRESS>:1935
 Stream Key: stream-key
 ```
+
 In the main window choose **Start Streaming**
