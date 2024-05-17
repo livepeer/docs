@@ -33,7 +33,8 @@ currently **recommended** models and their respective prices.
     "price_per_unit": 3390842,
     "warm": true,
     "optimization_flags": {
-      "SFAST": true
+      "SFAST": true,
+      "DEEPCACHE": false
     }
   }
 ]
@@ -66,19 +67,33 @@ currently **recommended** models and their respective prices.
 ### Optimization Flags
 
 <Warning>
-  Flags are **experimental** and may not always perform as expected. If you
-  encounter any issues, please report them to the [go-livepeer
+  These flags are still **experimental** and may not always perform as expected.
+  If you encounter any issues, please report them to the [go-livepeer
   repository](https://github.com/livepeer/go-livepeer/issues/new/choose).
 </Warning>
 
-The AI Subnet pipelines come with a set of optimization flags. These flags are
-designed to enhance model performance by either boosting **inference speed** or
-**minimizing VRAM** usage. At present, the following flag is available:
+<Note>At this time, these flags are only compatible with **warm** models.</Note>
+
+Our AI Subnet pipelines offer a suite of optimization flags. These are designed
+to enhance the performance of **warm** models by either increasing **inference
+speed** or reducing **VRAM** usage. Currently, the following flags are
+available:
+
+#### Image-to-video Pipeline Optimization
 
 <ParamField path="SFAST" type="boolean">
-  This flag enables the use of the [Stable
-  Fast](https://github.com/chengzeyi/stable-fast) optimization framework to
-  accelerate inference. **Note that this flag is currently only effective for
-  `warm` models in the `image-to-video` pipeline**, where it can boost inference
-  speed by up to 25%.
+  The `SFAST` flag enables the [Stable
+  Fast](https://github.com/chengzeyi/stable-fast) optimization framework,
+  potentially boosting inference speed by up to **25%** with **no quality
+  loss**. Can not be used in conjunction with `DEEPCACHE`.
+</ParamField>
+
+#### General Pipeline Optimization
+
+<ParamField path="DEEPCACHE" type="boolean">
+  The `DEEPCACHE` flag enables the
+  [DeepCache](https://github.com/horseee/DeepCache) optimization framework,
+  which can enhance inference speed by up to **50%** with **minimal quality
+  loss**. The speedup becomes more pronounced as the number of inference steps
+  increases. Cannot be used simultaneously with `SFAST`.
 </ParamField>
