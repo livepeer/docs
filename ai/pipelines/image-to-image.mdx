@@ -1,0 +1,134 @@
+---
+title: Image-to-Image
+---
+
+## Overview
+
+The `image-to-image` pipeline of the AI Subnet enables **advanced image
+manipulations** including style transfer, image enhancement, and more. This
+pipeline leverages cutting-edge diffusion models from the HuggingFace
+[image-to-image](https://huggingface.co/models?pipeline_tag=image-to-image)
+pipeline.
+
+<div align="center">
+
+{/* TODO: Replace with relative url when mintlify fixed issue. */}
+
+```mermaid
+graph LR
+    A[<div style="width: 200px;"><img src="https://mintlify.s3-us-west-1.amazonaws.com/na-36-ai-video/images/ai/cool-cat.png" alt="Image of cool cat"/></div>] --> B[Gateway]
+    E["A hat"] --> B
+    B --> C[Orchestrator]
+    C --> B
+    B --> D[<div style="width: 200px;"><img src="https://mintlify.s3-us-west-1.amazonaws.com/na-36-ai-video/images/ai/cool-cat-hat.png" alt="Image of cool cat with hat"/></div>]
+```
+
+</div>
+
+## Models
+
+### Warm Models
+
+The current warm model requested for the `image-to-image` pipeline is:
+
+- [ByteDance/SDXL-Lightning](https://huggingface.co/ByteDance/SDXL-Lightning): A
+  high-performance diffusion model developed by ByteDance.
+
+<Tip>
+  For faster responses with different
+  [image-to-image](https://huggingface.co/models?pipeline_tag=image-to-image)
+  diffusion models, ask Orchestrators to load it on their GPU via the `ai-video`
+  channel in [Discord Server](https://discord.gg/livepeer).
+</Tip>
+
+### On-Demand Models
+
+The following models have been tested and verified for the `image-to-image`
+pipeline:
+
+<Note>
+  If a specific model you wish to use is not listed, please submit a [feature
+  request](https://github.com/livepeer/ai-worker/issues/new?assignees=&labels=enhancement%2Cmodel&projects=&template=model_request.yml)
+  on GitHub to get the model verified and added to the list.
+</Note>
+
+{/* prettier-ignore */}
+<Accordion title="Tested and Verified Diffusion Models">
+- [sd-turbo](https://huggingface.co/stabilityai/sd-turbo): A robust diffusion
+  model by Stability AI, designed for efficient and high-quality image
+  generation.
+- [sdxl-turbo](https://huggingface.co/stabilityai/sdxl-turbo): An
+  extended version of the sd-turbo model, offering enhanced performance for
+  larger and more complex tasks.
+- [ByteDance/SDXL-Lightning](https://huggingface.co/ByteDance/SDXL-Lightning):A
+  lightning-fast diffusion model by ByteDance, optimized for high-speed
+  image-to-image transformations.
+- [SG161222/RealVisXL_V4.0](https://huggingface.co/SG161222/RealVisXL_V4.0): A
+  diffusion model that excels in generating high-quality, photorealistic images.
+- [SG161222/RealVisXL_V4.0_Lightning](https://huggingface.co/SG161222/RealVisXL_V4.0_Lightning):
+  A streamlined version of RealVisXL_V4.0, designed for faster inference while
+  still aiming for photorealism.
+</Accordion>
+
+
+
+## Basic Usage Instructions
+
+<Tip>
+  For a detailed understanding of the `image-to-image` endpoint and to
+  experiment with the API, see the [AI Subnet API
+  Reference](/ai/api-reference/image-to-image).
+</Tip>
+
+To generate an image with the `image-to-image` pipeline, send a `POST` request
+to the Gateway's `image-to-image` API endpoint:
+
+```bash
+curl -X POST https://<gateway-ip>/image-to-image \
+    -F model_id="ByteDance/SDXL-Lightning" \
+    -F image=@<PATH_TO_IMAGE>/cool-cat.png \
+    -F prompt="a hat"
+```
+
+In this command:
+
+- `<gateway-ip>` should be replaced with your AI Gateway's IP address.
+- `model_id` is the diffusion model for image generation.
+- The `image` field holds the **absolute** path to the image file to be
+  transformed.
+- `prompt` is the text description for the image.
+
+For additional optional parameters, refer to the
+[AI Subnet API Reference](/ai/api-reference/image-to-image).
+
+After execution, the Orchestrator processes the request and returns the response
+to the Gateway:
+
+```json
+{
+  "images": [
+    {
+      "seed": 3197613440,
+      "url": "https://<gateway-ip>/stream/dd5ad78d/7adde483.png"
+    }
+  ]
+}
+```
+
+The `url` in the response is the URL of the generated image. Download the image
+with:
+
+```bash
+curl -O "https://<STORAGE_ENDPOINT>/stream/dd5ad78d/7adde483.png"
+```
+
+## API Reference
+
+<Card
+  title="API Reference"
+  icon="rectangle-terminal"
+  href="/ai/api-reference/image-to-image"
+>
+  Explore the `image-to-image` endpoint and experiment with the API in the AI
+  Subnet API Reference.
+</Card>

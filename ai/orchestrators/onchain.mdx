@@ -1,0 +1,175 @@
+---
+title: On-chain Setup
+---
+
+The previous section covered the **off-chain** configuration of the AI
+Orchestrator node. This section details how to connect an AI Orchestrator node
+to the AI Subnet and earn fees for processing AI inference jobs.
+
+## Prerequisites
+
+- An established [Mainnet Orchestrator](/orchestrators/guides/get-started)
+  within the Top 100 on the Livepeer network
+- A dedicated static IP address or domain name for your AI Orchestrator node
+- An additional Ethereum wallet, funded with enough gas to cover transaction
+  fees for ticket redemption
+
+## Ensure you can Redeem Tickets
+
+As the AI Subnet is in its Alpha phase,
+[its software](https://github.com/livepeer/go-livepeer/tree/ai-video) isn't
+integrated with the Mainnet Transcoding Network
+[software stack](https://github.com/livepeer/go-livepeer) yet. This means that
+your **Mainnet Transcoding Network Orchestrator** is currently unable to
+directly redeem AI-related tickets. However, there are two methods to enable
+your AI Orchestrator node to redeem tickets:
+
+<Tabs>
+  <Tab title="Set Ticket Recipient (recommended)">
+    To enable ticket redemption for your **AI Orchestrator**, set the ticket recipient to your **Mainnet Transcoding Network Orchestrator**'s ETH address. This method allows the earned fees to be credited directly to your main Orchestrator without requiring additional setup or causing disruption.
+
+    <Steps>
+      <Step title="Wallet Creation">
+        <Info>For security, it's advised to use a separate account from your Mainnet Transcoding Network Orchestrator.</Info>
+
+        Create a new Ethereum wallet for your **AI Orchestrator**. Follow the [Create a Wallet](/catalyst/deploying-catalyst#creating-a-wallet) guide in the [Catalyst](/catalyst/deploying-catalyst) documentation for detailed instructions.
+      </Step>
+      <Step title="Wallet Funding">
+        Transfer sufficient ETH to the new wallet to cover the gas costs for redeeming AI tickets on-chain.
+      </Step>
+      <Step title="Recipient Configuration">
+        To direct the fees earned by your AI Orchestrator to your main Orchestrator, set the ticket recipient as the Ethereum address of your main Orchestrator. This can be done by adding the following flag when launching your AI Orchestrator node:
+
+        ```bash
+        ./livepeer \
+          -ethOrchAddr <MAIN_ORCH_ADDRESS> \
+          ... \
+        ```
+      </Step>
+    </Steps>
+
+  </Tab>
+  <Tab title="Use Redemption Service">
+    <Warning>While this method is possible, it's not recommended because it can disrupt performance and add complexity to your _Mainnet Transcoding Network Orchestrator_. Only proceed with this method if you are unable to create a separate wallet for your _AI Orchestrator_, and you understand the potential implications.</Warning>
+
+    If creating a separate wallet for your _AI Orchestrator_ isn't an option, you might want to use a [redemption service](https://github.com/livepeer/go-livepeer/blob/master/doc/redeemer.md). This service allows your _Mainnet Transcoding Network Orchestrator_ to redeem tickets for your AI Orchestrator. For more details, check out the [redemption service documentation](https://github.com/livepeer/go-livepeer/blob/master/doc/redeemer.md) and the [go-livepeer CLI documentation](/references/go-livepeer/cli-reference#onchain).
+
+  </Tab>
+
+</Tabs>
+
+## Advertising Your AI Service URI
+
+To make your AI Orchestrator node discoverable by AI Gateway nodes on the AI
+Subnet, you need to advertise your **AI service URI** on-chain. You can do this
+by registering your service URI with the
+[AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5)
+contract on the [Arbitrum Mainnet](https://arbitrum.io).
+
+<Tabs>
+  <Tab title="Use Foundry Cast">
+    The easiest and recommended method is to use the [Foundry](https://book.getfoundry.sh/getting-started/installation) smart contract deployment toolchain.
+
+    <Steps>
+      <Step title="Install Foundry Cast">
+        Install [Foundry Cast](https://book.getfoundry.sh/cast/) by executing the following commands in your terminal:
+
+          ```bash
+          curl -L https://foundry.paradigm.xyz | bash
+          source /home/<USERNAME>/.bashrc
+          foundryup
+          ```
+      </Step>
+      <Step title="Set your Service URI">
+        <Tip>No need to move your **Mainnet Transcoding Network Orchestrator** wallet. You can run Foundry Cast and register your AI Orchestrator from any machine.</Tip>
+
+        Set your Service URI, ensuring it starts with `https://`, with the `SetServiceURI` function on the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract. Use the KeyStore file and password from your **Mainnet Transcoding Network Orchestrator** wallet:
+
+        ```bash
+        cast send --keystore '<PATH_TO_KEYSTORE_FILE>' --password '<PASSWORD>' --rpc-url <ARBITRUM_RPC_URI> 0x04C0b249740175999E5BF5c9ac1dA92431EF34C5 "setServiceURI(string)" https://<PUBLIC_ORCH_IP_OR_URL>:<PUBLIC_ORCH_PORT>
+        ```
+
+        After successful execution, the output should look like this:
+
+        ```bash
+        blockHash:               0x214a65d2dffd1732e971bd3662dcb681663c2eb0c95a33c8918bab0a44e2d3ed
+        blockNumber:             200370198
+        ```
+      </Step>
+      <Step title="Verify your Service URI">
+        Verify your Service URI by invoking the `getServiceURI` function on the [AIServiceRegistry](https://arbiscan.io/address/0x5d31637eb0f442376053d5dea2347f663c4019dc) contract:
+
+        ```bash
+        cast call --rpc-url <ARBITRUM_RPC_URI> 0x04C0b249740175999E5BF5c9ac1dA92431EF34C5 "getServiceURI(address)" <PUBLIC_WALLET_KEY> | xxd -r -p
+        ```
+
+        If successful, the output should be:
+
+        ```bash
+        https://<PUBLIC_ORCH_IP_OR_URL>:<PUBLIC_ORCH_PORT>
+        ```
+      </Step>
+    </Steps>
+
+    Congratulations! Your **AI Orchestrator** node is now discoverable by **AI Gateway** nodes and is ready to execute AI inference tasks on the AI Subnet! 🚀
+
+  </Tab>
+  <Tab title="Use Arbitrum Explorer">
+    If you prefer to interact with the contract through your browser, use the [Arbitrum Explorer](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) to call the `setServiceURI` function on the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract.
+
+    <Steps>
+        <Step title="Import Your Wallet">
+            Import the Ethereum wallet associated with your **Mainnet Transcoding Network Orchestrator** into your wallet browser extension. The steps to import your wallet may vary depending on the extension you are using. The steps for MetaMask can be found [here](https://support.metamask.io/hc/en-us/articles/360015489331-How-to-import-an-account).
+        </Step>
+        <Step title="Open the Contract page in the Arbitrum Explorer">
+            Visit the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract page on the Arbitrum Explorer and click on the `Contract` tab.
+
+            <Frame>![AIServiceRegistry Contract Page](/images/ai/ai-serviceregistry-explorer-page.png)</Frame>
+        </Step>
+        <Step title="Connect your Wallet">
+            On the contract page, click the `Write Contract` button and connect your wallet to the Arbitrum Explorer by clicking the `Connect to Web3` button. Then, select the wallet you imported in the first step.
+        </Step>
+        <Step title="Call the setServiceURI function">
+            Access the [setServiceURI](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5#writeContract#F2) function on the contract page and input the `Service URI` for your AI Orchestrator in the `_serviceURI` field. Make sure the `Service URI` starts with `https://`. After clicking the `Write` button to execute the function, you must confirm the transaction in your wallet extension. Once the transaction is confirmed, which your wallet will notify you of, your AI Orchestrator's `Service URI` will be successfully set.
+
+            <Frame>![SetServiceURI](/images/ai/ai-serviceregistry-setserviceuri.png)</Frame>
+        </Step>
+        <Step title="Verify the Service URI">
+            To verify that the `Service URI` has been set correctly, click the `Read Contract` button on the contract page. Access the [getServiceURI](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5#readContract#F2) function and input the address of your **Mainnet Transcoding Network Orchestrator** in the `_addr` field. Click the `Query` button to retrieve the `Service URI` set for your AI Orchestrator.
+        </Step>
+    </Steps>
+
+    Congratulations! Your **AI Orchestrator** node is now discoverable by **AI Gateway** nodes and is ready to execute AI inference tasks on the AI Subnet! 🚀
+
+  </Tab>
+  <Tab title="Use Livepeer CLI">
+    <Note>Currently, setting your AI service URI using the Livepeer CLI is not supported during the **Alpha** phase of the AI Subnet. This feature is planned for inclusion in future releases.</Note>
+  </Tab>
+</Tabs>
+
+## Launch your On-chain AI Orchestrator
+
+Once you've set your **AI service URI** on-chain, you can launch your **AI
+Orchestrator** node to start processing AI inference jobs on the AI Subnet. The
+commands to start the **AI Orchestrator** are similar to those for the
+[off-chain Orchestrator](/ai/orchestrators/start-orchestrator), but with
+additional flags to enable on-chain functionality:
+
+- `-network=arbitrum-one-mainnet`: Connects the AI Orchestrator node to the
+  Arbitrum Mainnet network.
+- `-ethUrl=https://arb1.arbitrum.io/rpc`: Sets the Arbitrum Mainnet RPC URL. You
+  can replace this with your own RPC URL.
+- `-ethKeystorePath=/root/.lpData/arbitrum-one-mainnet/keystore`: Sets the path
+  to the AI Orchestrator's Ethereum keystore file.
+- `-ethAcctAddr <AI_SUBNET_ORCH_ETH_ADDRESS>`: Sets the Ethereum address of the
+  AI Orchestrator.
+- `-ethPassword=/root/.lpData/.eth_secret`: Sets the Ethereum keystore password
+  file path.
+- `-ethOrchAddr=<MAIN_ORCH_ETH_ADDRESS>`: Sets the Ethereum address of the
+  Mainnet Transcoding Network Orchestrator.
+
+Due to current limitations in the AI Subnet software, two additional flags are
+required:
+
+- `-ticketEV=2999999999999`: This flag ensures that the AI Orchestrator doesn't
+  trigger maximum ticket limits set by the `go-livepeer` software.
