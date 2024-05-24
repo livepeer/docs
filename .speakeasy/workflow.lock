@@ -1,5 +1,11 @@
-speakeasyVersion: 1.277.4
-sources: {}
+speakeasyVersion: 1.296.0
+sources:
+    livepeer-studio-api:
+        sourceNamespace: livepeer-studio-api
+        sourceRevisionDigest: sha256:80a5e5c8ae5de2173fbd94c9dad48c7402b686ad99e822a7aa789c4650c0286e
+        sourceBlobDigest: sha256:438d20d6accb73cd097b6afd91cbe73c45d9133e46feeff67e5e2d6098bf91c5
+        tags:
+            - latest
 targets: {}
 workflow:
     workflowVersion: 1.0.0
@@ -7,8 +13,10 @@ workflow:
     sources:
         livepeer-studio-api:
             inputs:
-                - location: https://raw.githubusercontent.com/livepeer/studio/sk/schema-fixes/packages/api/src/schema/api-schema.yaml
+                - location: https://raw.githubusercontent.com/livepeer/studio/master/packages/api/src/schema/api-schema.yaml
             overlays:
                 - location: https://raw.githubusercontent.com/livepeer/livepeer-js/main/codeSamples.yaml
             output: output.yaml
+            registry:
+                location: registry.speakeasyapi.dev/livepeer/livepeer-studio/livepeer-studio-api
     targets: {}
