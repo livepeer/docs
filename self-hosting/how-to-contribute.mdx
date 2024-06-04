@@ -1,9 +1,14 @@
 ---
-title: Developing with Catalyst
+title: How to Contribute
 icon: gear
 ---
 
-Developing Catalyst is currently supported on macOS and Linux.
+Livepeer Studio is an open source project that is both under very active
+development and is also being used to ship code to everybody on livepeer.studio.
+We’re still working out the kinks to make contributing to this project as easy
+and transparent as possible, but we’re not quite there yet. Hopefully this
+document makes the process for contributing clear and answers some questions
+that you may have.
 
 ### Dependencies
 
@@ -18,7 +23,7 @@ You'll need the following things installed locally:
 - llvm (`brew install llvm` for compiling MistServer and go-livepeer on MacOS
   only)
 
-You'll first need to clone the Catalyst repo if you haven't already.
+You'll first need to clone the repo if you haven't already.
 
 ```shell
 git clone https://github.com/livepeer/catalyst.git
@@ -41,8 +46,8 @@ make box-dev
 ```
 
 Lots and lots of logs will print out while all the dependencies finish booting
-up. After that, you'll now have a fully-functioning full-stack Livepeer Studio +
-Catalyst environment running locally! You can access it like so:
+up. After that, you'll now have a fully-functioning Livepeer Studio environment
+running locally! You can access it like so:
 
 - URL: [http://localhost:8888](http://localhost:8888)
 - Email: `admin@example.com`
@@ -50,8 +55,8 @@ Catalyst environment running locally! You can access it like so:
 
 ### Customizing the Environment
 
-If you need to add additional parameters to things running inside the box, you
-can create a `.env` file that contains key-value pairs:
+If you need to add additional parameters to things running, you can create a
+`.env` file that contains key-value pairs:
 
 ```shell
 echo "CATALYST_API_CDN_REDIRECT_PREFIX=https://externalcdn.livepeer.com/mist/" >> .env
@@ -71,7 +76,7 @@ TLDR: Use a command like this and the Makefile will take care of it for you:
 make livepeer-catalyst-api
 ```
 
-The general Livepeer in a Box development cycle works like this:
+The general development workflow works like this:
 
 1. Make changes to code on your local filesystem
 2. Build a Linux binary from that code
@@ -119,10 +124,10 @@ commands:
 
 ### Connecting the Frontend
 
-Livepeer in a Box comes with a [pkg](https://github.com/vercel/pkg)-bundled
-version of the Livepeer Studio API server and frontend, but does not include a
-full development environment for that frontend. If you are making changes to the
-frontend, you can boot it up as you usually would:
+Livepeer Studio comes with a [pkg](https://github.com/vercel/pkg)-bundled
+version of the API server and frontend, but does not include a full development
+environment for that frontend. If you are making changes to the frontend, you
+can boot it up as you usually would:
 
 ```
 cd studio/packages/www
