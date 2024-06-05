@@ -1135,7 +1135,9 @@ components:
                     description: Size of the asset in bytes
                     example: 84934509
                 hash:
-                    type: array
+                    type:
+                        - array
+                        - "null"
                     description: Hash of the asset
                     items:
                         type: object
@@ -2172,7 +2174,7 @@ components:
             type:
                 - object
                 - "null"
-            description: Whether the playback policy for a asset or stream is public or signed
+            description: Whether the playback policy for an asset or stream is public or signed
             additionalProperties: false
             required:
                 - type
@@ -2711,7 +2713,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.create({
+                      const result = await livepeer.stream.create({
                         name: "test_stream",
                         pull: {
                           source: "https://myservice.com/live/stream.flv",
@@ -2765,6 +2767,142 @@ paths:
                     }
 
                     run();
+                - lang: go
+                  label: createStream
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/components"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        request := components.NewStreamPayload{
+                            Name: "test_stream",
+                            Pull: &components.Pull{
+                                Source: "https://myservice.com/live/stream.flv",
+                                Headers: map[string]string{
+                                    "Authorization": "Bearer 123",
+                                },
+                                Location: &components.Location{
+                                    Lat: 39.739,
+                                    Lon: -104.988,
+                                },
+                            },
+                            PlaybackPolicy: &components.PlaybackPolicy{
+                                Type: components.TypeWebhook,
+                                WebhookID: livepeergo.String("1bde4o2i6xycudoy"),
+                                WebhookContext: map[string]any{
+                                    "streamerId": "my-custom-id",
+                                },
+                                RefreshInterval: livepeergo.Float64(600),
+                            },
+                            Profiles: []components.FfmpegProfile{
+                                components.FfmpegProfile{
+                                    Width: 1280,
+                                    Name: "720p",
+                                    Height: 486589,
+                                    Bitrate: 3000000,
+                                    Fps: 30,
+                                    FpsDen: livepeergo.Int64(1),
+                                    Quality: livepeergo.Int64(23),
+                                    Gop: livepeergo.String("2"),
+                                    Profile: components.ProfileH264Baseline.ToPointer(),
+                                },
+                            },
+                            Record: livepeergo.Bool(false),
+                            Multistream: &components.Multistream{
+                                Targets: []components.Target{
+                                    components.Target{
+                                        Profile: "720p",
+                                        VideoOnly: livepeergo.Bool(false),
+                                        ID: livepeergo.String("PUSH123"),
+                                        Spec: &components.TargetSpec{
+                                            Name: livepeergo.String("My target"),
+                                            URL: "rtmps://live.my-service.tv/channel/secretKey",
+                                        },
+                                    },
+                                },
+                            },
+                        }
+                        ctx := context.Background()
+                        res, err := s.Stream.Create(ctx, request)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Stream != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: createStream
+                  source: |-
+                    import livepeer
+                    from livepeer.models import components
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.stream.create(request=components.NewStreamPayload(
+                        name='test_stream',
+                        pull=components.Pull(
+                            source='https://myservice.com/live/stream.flv',
+                            headers={
+                                'Authorization': 'Bearer 123',
+                            },
+                            location=components.Location(
+                                lat=39.739,
+                                lon=-104.988,
+                            ),
+                        ),
+                        playback_policy=components.PlaybackPolicy(
+                            type=components.Type.WEBHOOK,
+                            webhook_id='1bde4o2i6xycudoy',
+                            webhook_context={
+                                'streamerId': 'my-custom-id',
+                            },
+                            refresh_interval=600,
+                        ),
+                        profiles=[
+                            components.FfmpegProfile(
+                                width=1280,
+                                name='720p',
+                                height=486589,
+                                bitrate=3000000,
+                                fps=30,
+                                fps_den=1,
+                                quality=23,
+                                gop='2',
+                                profile=components.Profile.H264_BASELINE,
+                            ),
+                        ],
+                        record=False,
+                        multistream=components.Multistream(
+                            targets=[
+                                components.Target(
+                                    profile='720p',
+                                    video_only=False,
+                                    id='PUSH123',
+                                    spec=components.TargetSpec(
+                                        name='My target',
+                                        url='rtmps://live.my-service.tv/channel/secretKey',
+                                    ),
+                                ),
+                            ],
+                        ),
+                    ))
+
+                    if res.stream is not None:
+                        # handle response
+                        pass
         get:
             operationId: getStreams
             x-speakeasy-name-override: getAll
@@ -2803,13 +2941,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getAll("<value>");
+                      const result = await livepeer.stream.getAll("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getStreams
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var streamsonly *string = livepeergo.String("<value>")
+                        ctx := context.Background()
+                        res, err := s.Stream.GetAll(ctx, streamsonly)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getStreams
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.stream.get_all(streamsonly='<value>')
+
+                    if res.data is not None:
+                        # handle response
+                        pass
     "/stream/{id}":
         parameters:
             - name: id
@@ -2849,13 +3027,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.stream.get("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getStream
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Stream.Get(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Stream != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getStream
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.stream.get(id='<value>')
+
+                    if res.stream is not None:
+                        # handle response
+                        pass
         patch:
             operationId: updateStream
             x-speakeasy-name-override: update
@@ -2889,7 +3107,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.update("<value>", {
+                      const result = await livepeer.stream.update("<value>", {
                         record: false,
                         multistream: {
                           targets: [
@@ -2932,6 +3150,122 @@ paths:
                     }
 
                     run();
+                - lang: go
+                  label: updateStream
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/components"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+
+                        streamPatchPayload := components.StreamPatchPayload{
+                            Record: livepeergo.Bool(false),
+                            Multistream: &components.Multistream{
+                                Targets: []components.Target{
+                                    components.Target{
+                                        Profile: "720p",
+                                        VideoOnly: livepeergo.Bool(false),
+                                        ID: livepeergo.String("PUSH123"),
+                                        Spec: &components.TargetSpec{
+                                            Name: livepeergo.String("My target"),
+                                            URL: "rtmps://live.my-service.tv/channel/secretKey",
+                                        },
+                                    },
+                                },
+                            },
+                            PlaybackPolicy: &components.PlaybackPolicy{
+                                Type: components.TypeWebhook,
+                                WebhookID: livepeergo.String("1bde4o2i6xycudoy"),
+                                WebhookContext: map[string]any{
+                                    "streamerId": "my-custom-id",
+                                },
+                                RefreshInterval: livepeergo.Float64(600),
+                            },
+                            Profiles: []components.FfmpegProfile{
+                                components.FfmpegProfile{
+                                    Width: 1280,
+                                    Name: "720p",
+                                    Height: 857478,
+                                    Bitrate: 3000000,
+                                    Fps: 30,
+                                    FpsDen: livepeergo.Int64(1),
+                                    Quality: livepeergo.Int64(23),
+                                    Gop: livepeergo.String("2"),
+                                    Profile: components.ProfileH264Baseline.ToPointer(),
+                                },
+                            },
+                        }
+                        ctx := context.Background()
+                        res, err := s.Stream.Update(ctx, id, streamPatchPayload)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: updateStream
+                  source: |-
+                    import livepeer
+                    from livepeer.models import components
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.stream.update(id='<value>', stream_patch_payload=components.StreamPatchPayload(
+                        record=False,
+                        multistream=components.Multistream(
+                            targets=[
+                                components.Target(
+                                    profile='720p',
+                                    video_only=False,
+                                    id='PUSH123',
+                                    spec=components.TargetSpec(
+                                        name='My target',
+                                        url='rtmps://live.my-service.tv/channel/secretKey',
+                                    ),
+                                ),
+                            ],
+                        ),
+                        playback_policy=components.PlaybackPolicy(
+                            type=components.Type.WEBHOOK,
+                            webhook_id='1bde4o2i6xycudoy',
+                            webhook_context={
+                                'streamerId': 'my-custom-id',
+                            },
+                            refresh_interval=600,
+                        ),
+                        profiles=[
+                            components.FfmpegProfile(
+                                width=1280,
+                                name='720p',
+                                height=857478,
+                                bitrate=3000000,
+                                fps=30,
+                                fps_den=1,
+                                quality=23,
+                                gop='2',
+                                profile=components.Profile.H264_BASELINE,
+                            ),
+                        ],
+                    ))
+
+                    if res is not None:
+                        # handle response
+                        pass
         delete:
             operationId: deleteStream
             x-speakeasy-name-override: delete
@@ -2970,13 +3304,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.delete("<value>");
+                      const result = await livepeer.stream.delete("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: deleteStream
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Stream.Delete(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: deleteStream
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.stream.delete(id='<value>')
+
+                    if res is not None:
+                        # handle response
+                        pass
     "/stream/{id}/terminate":
         parameters:
             - name: id
@@ -3020,13 +3394,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.terminate("<value>");
+                      const result = await livepeer.stream.terminate("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: terminateStream
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Stream.Terminate(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: terminateStream
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.stream.terminate(id='<value>')
+
+                    if res is not None:
+                        # handle response
+                        pass
     "/stream/{id}/start-pull":
         parameters:
             - name: id
@@ -3069,13 +3483,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.startPull("<value>");
+                      const result = await livepeer.stream.startPull("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: startPullStream
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Stream.StartPull(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: startPullStream
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.stream.start_pull(id='<value>')
+
+                    if res is not None:
+                        # handle response
+                        pass
     /multistream/target:
         get:
             operationId: getMultistreamTargets
@@ -3110,13 +3564,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getAll();
+                      const result = await livepeer.multistream.getAll();
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getMultistreamTargets
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+
+                        ctx := context.Background()
+                        res, err := s.Multistream.GetAll(ctx)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getMultistreamTargets
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.multistream.get_all()
+
+                    if res.data is not None:
+                        # handle response
+                        pass
         post:
             operationId: createMultistreamTarget
             x-speakeasy-name-override: create
@@ -3154,7 +3648,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.create({
+                      const result = await livepeer.multistream.create({
                         url: "rtmps://live.my-service.tv/channel/secretKey",
                       });
 
@@ -3163,6 +3657,52 @@ paths:
                     }
 
                     run();
+                - lang: go
+                  label: createMultistreamTarget
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/components"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        request := components.MultistreamTargetInput{
+                            URL: "rtmps://live.my-service.tv/channel/secretKey",
+                        }
+                        ctx := context.Background()
+                        res, err := s.Multistream.Create(ctx, request)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.MultistreamTarget != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: createMultistreamTarget
+                  source: |-
+                    import livepeer
+                    from livepeer.models import components
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.multistream.create(request=components.MultistreamTargetInput(
+                        url='rtmps://live.my-service.tv/channel/secretKey',
+                    ))
+
+                    if res.multistream_target is not None:
+                        # handle response
+                        pass
     "/multistream/target/{id}":
         parameters:
             - name: id
@@ -3202,13 +3742,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.multistream.get("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getMultistreamTarget
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Multistream.Get(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.MultistreamTarget != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getMultistreamTarget
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.multistream.get(id='<value>')
+
+                    if res.multistream_target is not None:
+                        # handle response
+                        pass
         patch:
             operationId: updateMultistreamTarget
             x-speakeasy-name-override: update
@@ -3241,7 +3821,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.update("<value>", {
+                      const result = await livepeer.multistream.update("<value>", {
                         url: "rtmps://live.my-service.tv/channel/secretKey",
                       });
 
@@ -3250,6 +3830,54 @@ paths:
                     }
 
                     run();
+                - lang: go
+                  label: updateMultistreamTarget
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/components"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+
+                        multistreamTargetPatchPayload := components.MultistreamTargetPatchPayload{
+                            URL: "rtmps://live.my-service.tv/channel/secretKey",
+                        }
+                        ctx := context.Background()
+                        res, err := s.Multistream.Update(ctx, id, multistreamTargetPatchPayload)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: updateMultistreamTarget
+                  source: |-
+                    import livepeer
+                    from livepeer.models import components
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.multistream.update(id='<value>', multistream_target_patch_payload=components.MultistreamTargetPatchPayload(
+                        url='rtmps://live.my-service.tv/channel/secretKey',
+                    ))
+
+                    if res is not None:
+                        # handle response
+                        pass
         delete:
             operationId: deleteMultistreamTarget
             x-speakeasy-name-override: delete
@@ -3279,13 +3907,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.delete("<value>");
+                      const result = await livepeer.multistream.delete("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: deleteMultistreamTarget
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Multistream.Delete(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: deleteMultistreamTarget
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.multistream.delete(id='<value>')
+
+                    if res is not None:
+                        # handle response
+                        pass
     /webhook:
         get:
             x-speakeasy-name-override: getAll
@@ -3320,13 +3988,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getAll();
+                      const result = await livepeer.webhook.getAll();
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getWebhooks
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+
+                        ctx := context.Background()
+                        res, err := s.Webhook.GetAll(ctx)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getWebhooks
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.webhook.get_all()
+
+                    if res.data is not None:
+                        # handle response
+                        pass
         post:
             operationId: createWebhook
             x-speakeasy-name-override: create
@@ -3368,7 +4076,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.create({
+                      const result = await livepeer.webhook.create({
                         name: "test_webhook",
                         events: [
                           Events.StreamStarted,
@@ -3384,6 +4092,66 @@ paths:
                     }
 
                     run();
+                - lang: go
+                  label: createWebhook
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/components"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        request := components.WebhookInput{
+                            Name: "test_webhook",
+                            Events: []components.Events{
+                                components.EventsStreamStarted,
+                                components.EventsStreamIdle,
+                            },
+                            URL: "https://my-service.com/webhook",
+                            SharedSecret: livepeergo.String("my-secret"),
+                            StreamID: livepeergo.String("de7818e7-610a-4057-8f6f-b785dc1e6f88"),
+                        }
+                        ctx := context.Background()
+                        res, err := s.Webhook.Create(ctx, request)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Webhook != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: createWebhook
+                  source: |-
+                    import livepeer
+                    from livepeer.models import components
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.webhook.create(request=components.WebhookInput(
+                        name='test_webhook',
+                        events=[
+                            components.Events.STREAM_STARTED,
+                            components.Events.STREAM_IDLE,
+                        ],
+                        url='https://my-service.com/webhook',
+                        shared_secret='my-secret',
+                        stream_id='de7818e7-610a-4057-8f6f-b785dc1e6f88',
+                    ))
+
+                    if res.webhook is not None:
+                        # handle response
+                        pass
     "/webhook/{id}":
         get:
             operationId: getWebhook
@@ -3422,13 +4190,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.webhook.get("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getWebhook
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Webhook.Get(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Webhook != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getWebhook
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.webhook.get(id='<value>')
+
+                    if res.webhook is not None:
+                        # handle response
+                        pass
         put:
             parameters:
                 - name: id
@@ -3473,7 +4281,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.update("<value>", {
+                      const result = await livepeer.webhook.update("<value>", {
                         name: "test_webhook",
                         events: [
                           Events.StreamStarted,
@@ -3489,6 +4297,68 @@ paths:
                     }
 
                     run();
+                - lang: go
+                  label: updateWebhook
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/components"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+
+                        webhook := components.WebhookInput{
+                            Name: "test_webhook",
+                            Events: []components.Events{
+                                components.EventsStreamStarted,
+                                components.EventsStreamIdle,
+                            },
+                            URL: "https://my-service.com/webhook",
+                            SharedSecret: livepeergo.String("my-secret"),
+                            StreamID: livepeergo.String("de7818e7-610a-4057-8f6f-b785dc1e6f88"),
+                        }
+                        ctx := context.Background()
+                        res, err := s.Webhook.Update(ctx, id, webhook)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Webhook != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: updateWebhook
+                  source: |-
+                    import livepeer
+                    from livepeer.models import components
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.webhook.update(id='<value>', webhook=components.WebhookInput(
+                        name='test_webhook',
+                        events=[
+                            components.Events.STREAM_STARTED,
+                            components.Events.STREAM_IDLE,
+                        ],
+                        url='https://my-service.com/webhook',
+                        shared_secret='my-secret',
+                        stream_id='de7818e7-610a-4057-8f6f-b785dc1e6f88',
+                    ))
+
+                    if res.webhook is not None:
+                        # handle response
+                        pass
         delete:
             tags:
                 - webhook
@@ -3526,13 +4396,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.delete("<value>");
+                      const result = await livepeer.webhook.delete("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: deleteWebhook
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Webhook.Delete(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Webhook != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: deleteWebhook
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.webhook.delete(id='<value>')
+
+                    if res.webhook is not None:
+                        # handle response
+                        pass
     "/webhook/{id}/log":
         get:
             operationId: getWebhookLogs
@@ -3573,13 +4483,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getLogs("<value>");
+                      const result = await livepeer.webhook.getLogs("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getWebhookLogs
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Webhook.GetLogs(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getWebhookLogs
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.webhook.get_logs(id='<value>')
+
+                    if res.data is not None:
+                        # handle response
+                        pass
     "/webhook/{id}/log/{logId}":
         get:
             tags:
@@ -3623,13 +4573,55 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getLog("<value>", "<value>");
+                      const result = await livepeer.webhook.getLog("<value>", "<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getWebhookLog
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+
+                        var logID string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Webhook.GetLog(ctx, id, logID)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.WebhookLog != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getWebhookLog
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.webhook.get_log(id='<value>', log_id='<value>')
+
+                    if res.webhook_log is not None:
+                        # handle response
+                        pass
     "/webhook/{id}/log/{logId}/resend":
         post:
             tags:
@@ -3677,13 +4669,55 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.resendLog("<value>", "<value>");
+                      const result = await livepeer.webhook.resendLog("<value>", "<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: resendWebhook
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+
+                        var logID string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Webhook.ResendLog(ctx, id, logID)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.WebhookLog != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: resendWebhook
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.webhook.resend_log(id='<value>', log_id='<value>')
+
+                    if res.webhook_log is not None:
+                        # handle response
+                        pass
     /asset:
         get:
             operationId: getAssets
@@ -3718,13 +4752,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getAll();
+                      const result = await livepeer.asset.getAll();
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getAssets
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+
+                        ctx := context.Background()
+                        res, err := s.Asset.GetAll(ctx)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getAssets
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.asset.get_all()
+
+                    if res.data is not None:
+                        # handle response
+                        pass
     /asset/request-upload:
         post:
             operationId: requestUpload
@@ -3866,7 +4940,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.create({
+                      const result = await livepeer.asset.create({
                         name: "filename.mp4",
                         staticMp4: true,
                         playbackPolicy: {
@@ -3897,6 +4971,96 @@ paths:
                     }
 
                     run();
+                - lang: go
+                  label: requestUpload
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/components"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        request := components.NewAssetPayload{
+                            Name: "filename.mp4",
+                            StaticMp4: livepeergo.Bool(true),
+                            PlaybackPolicy: &components.PlaybackPolicy{
+                                Type: components.TypeWebhook,
+                                WebhookID: livepeergo.String("1bde4o2i6xycudoy"),
+                                WebhookContext: map[string]any{
+                                    "streamerId": "my-custom-id",
+                                },
+                                RefreshInterval: livepeergo.Float64(600),
+                            },
+                            Profiles: []components.TranscodeProfile{
+                                components.TranscodeProfile{
+                                    Width: livepeergo.Int64(1280),
+                                    Name: livepeergo.String("720p"),
+                                    Bitrate: 3000000,
+                                    Quality: livepeergo.Int64(23),
+                                    Fps: livepeergo.Int64(30),
+                                    FpsDen: livepeergo.Int64(1),
+                                    Gop: livepeergo.String("2"),
+                                    Profile: components.TranscodeProfileProfileH264Baseline.ToPointer(),
+                                    Encoder: components.TranscodeProfileEncoderH264.ToPointer(),
+                                },
+                            },
+                        }
+                        ctx := context.Background()
+                        res, err := s.Asset.Create(ctx, request)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: requestUpload
+                  source: |-
+                    import livepeer
+                    from livepeer.models import components
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.asset.create(request=components.NewAssetPayload(
+                        name='filename.mp4',
+                        static_mp4=True,
+                        playback_policy=components.PlaybackPolicy(
+                            type=components.Type.WEBHOOK,
+                            webhook_id='1bde4o2i6xycudoy',
+                            webhook_context={
+                                'streamerId': 'my-custom-id',
+                            },
+                            refresh_interval=600,
+                        ),
+                        profiles=[
+                            components.TranscodeProfile(
+                                width=1280,
+                                name='720p',
+                                bitrate=3000000,
+                                quality=23,
+                                fps=30,
+                                fps_den=1,
+                                gop='2',
+                                profile=components.TranscodeProfileProfile.H264_BASELINE,
+                                encoder=components.TranscodeProfileEncoder.H_264,
+                            ),
+                        ],
+                    ))
+
+                    if res.data is not None:
+                        # handle response
+                        pass
     /asset/upload/url:
         post:
             operationId: uploadAsset
@@ -3975,7 +5139,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.createViaUrl({
+                      const result = await livepeer.asset.createViaUrl({
                         name: "filename.mp4",
                         staticMp4: true,
                         playbackPolicy: {
@@ -4007,6 +5171,98 @@ paths:
                     }
 
                     run();
+                - lang: go
+                  label: uploadAsset
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/components"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        request := components.NewAssetFromURLPayload{
+                            Name: "filename.mp4",
+                            StaticMp4: livepeergo.Bool(true),
+                            PlaybackPolicy: &components.PlaybackPolicy{
+                                Type: components.TypeWebhook,
+                                WebhookID: livepeergo.String("1bde4o2i6xycudoy"),
+                                WebhookContext: map[string]any{
+                                    "streamerId": "my-custom-id",
+                                },
+                                RefreshInterval: livepeergo.Float64(600),
+                            },
+                            URL: "https://s3.amazonaws.com/my-bucket/path/filename.mp4",
+                            Profiles: []components.TranscodeProfile{
+                                components.TranscodeProfile{
+                                    Width: livepeergo.Int64(1280),
+                                    Name: livepeergo.String("720p"),
+                                    Bitrate: 3000000,
+                                    Quality: livepeergo.Int64(23),
+                                    Fps: livepeergo.Int64(30),
+                                    FpsDen: livepeergo.Int64(1),
+                                    Gop: livepeergo.String("2"),
+                                    Profile: components.TranscodeProfileProfileH264Baseline.ToPointer(),
+                                    Encoder: components.TranscodeProfileEncoderH264.ToPointer(),
+                                },
+                            },
+                        }
+                        ctx := context.Background()
+                        res, err := s.Asset.CreateViaURL(ctx, request)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.TwoHundredApplicationJSONData != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: uploadAsset
+                  source: |-
+                    import livepeer
+                    from livepeer.models import components
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.asset.create_via_url(request=components.NewAssetFromURLPayload(
+                        name='filename.mp4',
+                        static_mp4=True,
+                        playback_policy=components.PlaybackPolicy(
+                            type=components.Type.WEBHOOK,
+                            webhook_id='1bde4o2i6xycudoy',
+                            webhook_context={
+                                'streamerId': 'my-custom-id',
+                            },
+                            refresh_interval=600,
+                        ),
+                        url='https://s3.amazonaws.com/my-bucket/path/filename.mp4',
+                        profiles=[
+                            components.TranscodeProfile(
+                                width=1280,
+                                name='720p',
+                                bitrate=3000000,
+                                quality=23,
+                                fps=30,
+                                fps_den=1,
+                                gop='2',
+                                profile=components.TranscodeProfileProfile.H264_BASELINE,
+                                encoder=components.TranscodeProfileEncoder.H_264,
+                            ),
+                        ],
+                    ))
+
+                    if res.two_hundred_application_json_data is not None:
+                        # handle response
+                        pass
     "/asset/{assetId}":
         get:
             operationId: getAsset
@@ -4046,13 +5302,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.asset.get("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getAsset
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var assetID string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Asset.Get(ctx, assetID)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Asset != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getAsset
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.asset.get(asset_id='<value>')
+
+                    if res.asset is not None:
+                        # handle response
+                        pass
         patch:
             operationId: updateAsset
             x-speakeasy-name-override: update
@@ -4098,7 +5394,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.update("<value>", {
+                      const result = await livepeer.asset.update("<value>", {
                         name: "filename.mp4",
                         playbackPolicy: {
                           type: Type.Webhook,
@@ -4115,6 +5411,70 @@ paths:
                     }
 
                     run();
+                - lang: go
+                  label: updateAsset
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/components"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var assetID string = "<value>"
+
+                        assetPatchPayload := components.AssetPatchPayload{
+                            Name: livepeergo.String("filename.mp4"),
+                            PlaybackPolicy: &components.PlaybackPolicy{
+                                Type: components.TypeWebhook,
+                                WebhookID: livepeergo.String("1bde4o2i6xycudoy"),
+                                WebhookContext: map[string]any{
+                                    "streamerId": "my-custom-id",
+                                },
+                                RefreshInterval: livepeergo.Float64(600),
+                            },
+                        }
+                        ctx := context.Background()
+                        res, err := s.Asset.Update(ctx, assetID, assetPatchPayload)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Asset != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: updateAsset
+                  source: |-
+                    import livepeer
+                    from livepeer.models import components
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.asset.update(asset_id='<value>', asset_patch_payload=components.AssetPatchPayload(
+                        name='filename.mp4',
+                        playback_policy=components.PlaybackPolicy(
+                            type=components.Type.WEBHOOK,
+                            webhook_id='1bde4o2i6xycudoy',
+                            webhook_context={
+                                'streamerId': 'my-custom-id',
+                            },
+                            refresh_interval=600,
+                        ),
+                    ))
+
+                    if res.asset is not None:
+                        # handle response
+                        pass
         delete:
             operationId: deleteAsset
             x-speakeasy-name-override: delete
@@ -4148,13 +5508,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.delete("<value>");
+                      const result = await livepeer.asset.delete("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: deleteAsset
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var assetID string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Asset.Delete(ctx, assetID)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: deleteAsset
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.asset.delete(asset_id='<value>')
+
+                    if res is not None:
+                        # handle response
+                        pass
     /clip:
         post:
             operationId: createClip
@@ -4206,7 +5606,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.createClip({
+                      const result = await livepeer.stream.createClip({
                         playbackId: "eaw4nk06ts2d0mzb",
                         startTime: 1587667174725,
                         endTime: 1587667174725,
@@ -4219,6 +5619,60 @@ paths:
                     }
 
                     run();
+                - lang: go
+                  label: createClip
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/components"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        request := components.ClipPayload{
+                            PlaybackID: "eaw4nk06ts2d0mzb",
+                            StartTime: 1587667174725,
+                            EndTime: livepeergo.Float64(1587667174725),
+                            Name: livepeergo.String("My Clip"),
+                            SessionID: livepeergo.String("de7818e7-610a-4057-8f6f-b785dc1e6f88"),
+                        }
+                        ctx := context.Background()
+                        res, err := s.Stream.CreateClip(ctx, request)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: createClip
+                  source: |-
+                    import livepeer
+                    from livepeer.models import components
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.stream.create_clip(request=components.ClipPayload(
+                        playback_id='eaw4nk06ts2d0mzb',
+                        start_time=1587667174725,
+                        end_time=1587667174725,
+                        name='My Clip',
+                        session_id='de7818e7-610a-4057-8f6f-b785dc1e6f88',
+                    ))
+
+                    if res.data is not None:
+                        # handle response
+                        pass
     "/stream/{id}/clips":
         get:
             operationId: getClips
@@ -4260,13 +5714,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getClips("<value>");
+                      const result = await livepeer.stream.getClips("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getClips
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Stream.GetClips(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getClips
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.stream.get_clips(id='<value>')
+
+                    if res.data is not None:
+                        # handle response
+                        pass
     "/stream/{id}/create-multistream-target":
         post:
             operationId: addMultistreamTarget
@@ -4307,7 +5801,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.addMultistreamTarget("<value>", {
+                      const result = await livepeer.stream.addMultistreamTarget("<value>", {
                         profile: "720p0",
                         videoOnly: false,
                         id: "PUSH123",
@@ -4322,6 +5816,66 @@ paths:
                     }
 
                     run();
+                - lang: go
+                  label: addMultistreamTarget
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/components"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+
+                        targetAddPayload := components.TargetAddPayload{
+                            Profile: "720p0",
+                            VideoOnly: livepeergo.Bool(false),
+                            ID: livepeergo.String("PUSH123"),
+                            Spec: &components.TargetAddPayloadSpec{
+                                Name: livepeergo.String("My target"),
+                                URL: "rtmps://live.my-service.tv/channel/secretKey",
+                            },
+                        }
+                        ctx := context.Background()
+                        res, err := s.Stream.AddMultistreamTarget(ctx, id, targetAddPayload)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: addMultistreamTarget
+                  source: |-
+                    import livepeer
+                    from livepeer.models import components
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.stream.add_multistream_target(id='<value>', target_add_payload=components.TargetAddPayload(
+                        profile='720p0',
+                        video_only=False,
+                        id='PUSH123',
+                        spec=components.TargetAddPayloadSpec(
+                            name='My target',
+                            url='rtmps://live.my-service.tv/channel/secretKey',
+                        ),
+                    ))
+
+                    if res is not None:
+                        # handle response
+                        pass
     "/stream/{id}/multistream/{targetId}":
         delete:
             operationId: removeMultistreamTarget
@@ -4362,13 +5916,55 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.removeMultistreamTarget("<value>", "<value>");
+                      const result = await livepeer.stream.removeMultistreamTarget("<value>", "<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: removeMultistreamTarget
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+
+                        var targetID string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Stream.RemoveMultistreamTarget(ctx, id, targetID)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: removeMultistreamTarget
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.stream.remove_multistream_target(id='<value>', target_id='<value>')
+
+                    if res is not None:
+                        # handle response
+                        pass
     "/session/{id}/clips":
         get:
             operationId: getSessionClips
@@ -4410,13 +6006,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getClips("<value>");
+                      const result = await livepeer.session.getClips("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getSessionClips
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Session.GetClips(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getSessionClips
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.session.get_clips(id='<value>')
+
+                    if res.data is not None:
+                        # handle response
+                        pass
     /room:
         post:
             deprecated: true
@@ -4452,13 +6088,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.create();
+                      const result = await livepeer.room.create();
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: createRoom
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+
+                        ctx := context.Background()
+                        res, err := s.Room.Create(ctx)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.CreateRoomResponse != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: createRoom
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.room.create()
+
+                    if res.create_room_response is not None:
+                        # handle response
+                        pass
     "/room/{id}":
         get:
             deprecated: true
@@ -4498,13 +6174,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.room.get("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getRoom
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Room.Get(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Room != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getRoom
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.room.get(id='<value>')
+
+                    if res.room is not None:
+                        # handle response
+                        pass
         delete:
             deprecated: true
             operationId: deleteRoom
@@ -4538,13 +6254,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.delete("<value>");
+                      const result = await livepeer.room.delete("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: deleteRoom
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Room.Delete(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: deleteRoom
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.room.delete(id='<value>')
+
+                    if res is not None:
+                        # handle response
+                        pass
     "/room/{id}/egress":
         post:
             deprecated: true
@@ -4590,7 +6346,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.startEgress("<value>", {
+                      const result = await livepeer.room.startEgress("<value>", {
                         streamId: "aac12556-4d65-4d34-9fb6-d1f0985eb0a9",
                       });
 
@@ -4599,6 +6355,54 @@ paths:
                     }
 
                     run();
+                - lang: go
+                  label: startRoomEgress
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/components"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+
+                        roomEgressPayload := components.RoomEgressPayload{
+                            StreamID: "aac12556-4d65-4d34-9fb6-d1f0985eb0a9",
+                        }
+                        ctx := context.Background()
+                        res, err := s.Room.StartEgress(ctx, id, roomEgressPayload)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: startRoomEgress
+                  source: |-
+                    import livepeer
+                    from livepeer.models import components
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.room.start_egress(id='<value>', room_egress_payload=components.RoomEgressPayload(
+                        stream_id='aac12556-4d65-4d34-9fb6-d1f0985eb0a9',
+                    ))
+
+                    if res is not None:
+                        # handle response
+                        pass
         delete:
             deprecated: true
             operationId: stopRoomEgress
@@ -4632,13 +6436,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.stopEgress("<value>");
+                      const result = await livepeer.room.stopEgress("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: stopRoomEgress
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Room.StopEgress(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: stopRoomEgress
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.room.stop_egress(id='<value>')
+
+                    if res is not None:
+                        # handle response
+                        pass
     "/room/{id}/user":
         post:
             deprecated: true
@@ -4691,7 +6535,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.createUser("<value>", {
+                      const result = await livepeer.room.createUser("<value>", {
                         name: "name",
                         canPublish: true,
                         canPublishData: true,
@@ -4702,6 +6546,58 @@ paths:
                     }
 
                     run();
+                - lang: go
+                  label: createRoomUser
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/components"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+
+                        roomUserPayload := components.RoomUserPayload{
+                            Name: "name",
+                            CanPublish: livepeergo.Bool(true),
+                            CanPublishData: livepeergo.Bool(true),
+                        }
+                        ctx := context.Background()
+                        res, err := s.Room.CreateUser(ctx, id, roomUserPayload)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.RoomUserResponse != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: createRoomUser
+                  source: |-
+                    import livepeer
+                    from livepeer.models import components
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.room.create_user(id='<value>', room_user_payload=components.RoomUserPayload(
+                        name='name',
+                        can_publish=True,
+                        can_publish_data=True,
+                    ))
+
+                    if res.room_user_response is not None:
+                        # handle response
+                        pass
     "/room/{id}/user/{userId}":
         get:
             operationId: getRoomUser
@@ -4746,13 +6642,55 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getUser("<value>", "<value>");
+                      const result = await livepeer.room.getUser("<value>", "<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getRoomUser
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+
+                        var userID string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Room.GetUser(ctx, id, userID)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.GetRoomUserResponse != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getRoomUser
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.room.get_user(id='<value>', user_id='<value>')
+
+                    if res.get_room_user_response is not None:
+                        # handle response
+                        pass
         put:
             deprecated: true
             operationId: updateRoomUser
@@ -4798,7 +6736,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.updateUser("<value>", "<value>", {
+                      const result = await livepeer.room.updateUser("<value>", "<value>", {
                         canPublish: true,
                         canPublishData: true,
                       });
@@ -4808,6 +6746,58 @@ paths:
                     }
 
                     run();
+                - lang: go
+                  label: updateRoomUser
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/components"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+
+                        var userID string = "<value>"
+
+                        roomUserUpdatePayload := components.RoomUserUpdatePayload{
+                            CanPublish: livepeergo.Bool(true),
+                            CanPublishData: livepeergo.Bool(true),
+                        }
+                        ctx := context.Background()
+                        res, err := s.Room.UpdateUser(ctx, id, userID, roomUserUpdatePayload)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: updateRoomUser
+                  source: |-
+                    import livepeer
+                    from livepeer.models import components
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.room.update_user(id='<value>', user_id='<value>', room_user_update_payload=components.RoomUserUpdatePayload(
+                        can_publish=True,
+                        can_publish_data=True,
+                    ))
+
+                    if res is not None:
+                        # handle response
+                        pass
         delete:
             operationId: deleteRoomUser
             x-speakeasy-name-override: deleteUser
@@ -4846,13 +6836,55 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.deleteUser("<value>", "<value>");
+                      const result = await livepeer.room.deleteUser("<value>", "<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: deleteRoomUser
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+
+                        var userID string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Room.DeleteUser(ctx, id, userID)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: deleteRoomUser
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.room.delete_user(id='<value>', user_id='<value>')
+
+                    if res is not None:
+                        # handle response
+                        pass
     /data/views/query:
         get:
             operationId: getViewershipMetrics
@@ -4964,13 +6996,55 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getViewership({});
+                      const result = await livepeer.metrics.getViewership({});
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getViewershipMetrics
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/operations"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        request := operations.GetViewershipMetricsRequest{}
+                        ctx := context.Background()
+                        res, err := s.Metrics.GetViewership(ctx, request)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getViewershipMetrics
+                  source: |-
+                    import livepeer
+                    from livepeer.models import operations
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.metrics.get_viewership(request=operations.GetViewershipMetricsRequest())
+
+                    if res.data is not None:
+                        # handle response
+                        pass
     /data/views/query/creator:
         get:
             operationId: getCreatorViewershipMetrics
@@ -5072,13 +7146,55 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getCreatorViewership({});
+                      const result = await livepeer.metrics.getCreatorViewership({});
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getCreatorViewershipMetrics
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/operations"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        request := operations.GetCreatorViewershipMetricsRequest{}
+                        ctx := context.Background()
+                        res, err := s.Metrics.GetCreatorViewership(ctx, request)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getCreatorViewershipMetrics
+                  source: |-
+                    import livepeer
+                    from livepeer.models import operations
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.metrics.get_creator_viewership(request=operations.GetCreatorViewershipMetricsRequest())
+
+                    if res.data is not None:
+                        # handle response
+                        pass
     "/data/views/query/total/{playbackId}":
         get:
             operationId: getPublicViewershipMetrics
@@ -5141,13 +7257,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getPublicViewership("<value>");
+                      const result = await livepeer.metrics.getPublicViewership("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getPublicViewershipMetrics
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var playbackID string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Metrics.GetPublicViewership(ctx, playbackID)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getPublicViewershipMetrics
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.metrics.get_public_viewership(playback_id='<value>')
+
+                    if res.data is not None:
+                        # handle response
+                        pass
     /data/usage/query:
         get:
             operationId: getUsageMetrics
@@ -5220,13 +7376,55 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getUsage({});
+                      const result = await livepeer.metrics.getUsage({});
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getUsageMetrics
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/operations"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        request := operations.GetUsageMetricsRequest{}
+                        ctx := context.Background()
+                        res, err := s.Metrics.GetUsage(ctx, request)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.UsageMetric != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getUsageMetrics
+                  source: |-
+                    import livepeer
+                    from livepeer.models import operations
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.metrics.get_usage(request=operations.GetUsageMetricsRequest())
+
+                    if res.usage_metric is not None:
+                        # handle response
+                        pass
     /session:
         get:
             operationId: getSessions
@@ -5261,13 +7459,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getAll();
+                      const result = await livepeer.session.getAll();
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getSessions
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+
+                        ctx := context.Background()
+                        res, err := s.Session.GetAll(ctx)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getSessions
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.session.get_all()
+
+                    if res.data is not None:
+                        # handle response
+                        pass
     "/session/{id}":
         get:
             operationId: getSession
@@ -5307,13 +7545,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.session.get("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getSession
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Session.Get(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Session != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getSession
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.session.get(id='<value>')
+
+                    if res.session is not None:
+                        # handle response
+                        pass
     "/stream/{parentId}/sessions":
         get:
             operationId: getRecordedSessions
@@ -5331,8 +7609,10 @@ paths:
                 - in: query
                   name: record
                   schema:
-                    type: integer
-                    example: 1
+                    oneOf:
+                        - type: boolean
+                        - type: integer
+                    example: true
                   description: |
                     Flag indicating if the response should only include recorded
                     sessions
@@ -5363,13 +7643,58 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getRecorded("<value>", 1);
+                      const result = await livepeer.session.getRecorded("<value>", true);
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getRecordedSessions
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/operations"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var parentID string = "<value>"
+
+                        var record *operations.Record = operations.CreateRecordBoolean(
+                        true,
+                        )
+                        ctx := context.Background()
+                        res, err := s.Session.GetRecorded(ctx, parentID, record)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getRecordedSessions
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.session.get_recorded(parent_id='<value>', record=1)
+
+                    if res.data is not None:
+                        # handle response
+                        pass
     /access-control/signing-key:
         post:
             operationId: createSigningKey
@@ -5407,13 +7732,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.create();
+                      const result = await livepeer.accessControl.create();
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: createSigningKey
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+
+                        ctx := context.Background()
+                        res, err := s.AccessControl.Create(ctx)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.SigningKey != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: createSigningKey
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.access_control.create()
+
+                    if res.signing_key is not None:
+                        # handle response
+                        pass
         get:
             operationId: getSigningKeys
             x-speakeasy-name-override: getAll
@@ -5447,13 +7812,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getAll();
+                      const result = await livepeer.accessControl.getAll();
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getSigningKeys
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+
+                        ctx := context.Background()
+                        res, err := s.AccessControl.GetAll(ctx)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getSigningKeys
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.access_control.get_all()
+
+                    if res.data is not None:
+                        # handle response
+                        pass
     "/access-control/signing-key/{keyId}":
         delete:
             operationId: deleteSigningKey
@@ -5488,13 +7893,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.delete("<value>");
+                      const result = await livepeer.accessControl.delete("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: deleteSigningKey
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var keyID string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.AccessControl.Delete(ctx, keyID)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: deleteSigningKey
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.access_control.delete(key_id='<value>')
+
+                    if res is not None:
+                        # handle response
+                        pass
         get:
             operationId: getSigningKey
             x-speakeasy-name-override: get
@@ -5533,13 +7978,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.accessControl.get("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getSigningKey
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var keyID string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.AccessControl.Get(ctx, keyID)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.SigningKey != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getSigningKey
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.access_control.get(key_id='<value>')
+
+                    if res.signing_key is not None:
+                        # handle response
+                        pass
         patch:
             operationId: updateSigningKey
             x-speakeasy-name-override: update
@@ -5585,13 +8070,57 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.update("<value>", {});
+                      const result = await livepeer.accessControl.update("<value>", {});
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: updateSigningKey
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/operations"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var keyID string = "<value>"
+
+                        requestBody := operations.UpdateSigningKeyRequestBody{}
+                        ctx := context.Background()
+                        res, err := s.AccessControl.Update(ctx, keyID, requestBody)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: updateSigningKey
+                  source: |-
+                    import livepeer
+                    from livepeer.models import operations
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.access_control.update(key_id='<value>', request_body=operations.UpdateSigningKeyRequestBody())
+
+                    if res is not None:
+                        # handle response
+                        pass
     /task:
         get:
             operationId: getTasks
@@ -5626,13 +8155,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getAll();
+                      const result = await livepeer.task.getAll();
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getTasks
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+
+                        ctx := context.Background()
+                        res, err := s.Task.GetAll(ctx)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Data != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getTasks
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.task.get_all()
+
+                    if res.data is not None:
+                        # handle response
+                        pass
     "/task/{taskId}":
         get:
             operationId: getTask
@@ -5668,13 +8237,53 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.task.get("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getTask
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var taskID string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Task.Get(ctx, taskID)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Task != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getTask
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.task.get(task_id='<value>')
+
+                    if res.task is not None:
+                        # handle response
+                        pass
     /transcode:
         post:
             operationId: transcodeVideo
@@ -5836,7 +8445,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.create({
+                      const result = await livepeer.transcode.create({
                       input:     {
                             url: "https://s3.amazonaws.com/bucket/file.mp4",
                           },
@@ -5880,6 +8489,126 @@ paths:
                     }
 
                     run();
+                - lang: go
+                  label: transcodeVideo
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/components"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        request := components.TranscodePayload{
+                            Input: components.CreateInputInput1(
+                                    components.Input1{
+                                        URL: "https://s3.amazonaws.com/bucket/file.mp4",
+                                    },
+                            ),
+                            Storage: components.CreateTranscodePayloadStorageStorage1(
+                                    components.Storage1{
+                                        Type: components.StorageTypeS3,
+                                        Endpoint: "https://gateway.storjshare.io",
+                                        Bucket: "outputbucket",
+                                        Credentials: components.StorageCredentials{
+                                            AccessKeyID: "AKIAIOSFODNN7EXAMPLE",
+                                            SecretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+                                        },
+                                    },
+                            ),
+                            Outputs: components.Outputs{
+                                Hls: &components.Hls{
+                                    Path: "/samplevideo/hls",
+                                },
+                                Mp4: &components.Mp4{
+                                    Path: "/samplevideo/mp4",
+                                },
+                                Fmp4: &components.Fmp4{
+                                    Path: "/samplevideo/fmp4",
+                                },
+                            },
+                            Profiles: []components.TranscodeProfile{
+                                components.TranscodeProfile{
+                                    Width: livepeergo.Int64(1280),
+                                    Name: livepeergo.String("720p"),
+                                    Bitrate: 3000000,
+                                    Quality: livepeergo.Int64(23),
+                                    Fps: livepeergo.Int64(30),
+                                    FpsDen: livepeergo.Int64(1),
+                                    Gop: livepeergo.String("2"),
+                                    Profile: components.TranscodeProfileProfileH264Baseline.ToPointer(),
+                                    Encoder: components.TranscodeProfileEncoderH264.ToPointer(),
+                                },
+                            },
+                        }
+                        ctx := context.Background()
+                        res, err := s.Transcode.Create(ctx, request)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.Task != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: transcodeVideo
+                  source: |-
+                    import livepeer
+                    from livepeer.models import components
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.transcode.create(request=components.TranscodePayload(
+                        input=components.Input1(
+                            url='https://s3.amazonaws.com/bucket/file.mp4',
+                        ),
+                        storage=components.Storage1(
+                            type=components.StorageType.S3,
+                            endpoint='https://gateway.storjshare.io',
+                            bucket='outputbucket',
+                            credentials=components.StorageCredentials(
+                                access_key_id='AKIAIOSFODNN7EXAMPLE',
+                                secret_access_key='wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
+                            ),
+                        ),
+                        outputs=components.Outputs(
+                            hls=components.Hls(
+                                path='/samplevideo/hls',
+                            ),
+                            mp4=components.Mp4(
+                                path='/samplevideo/mp4',
+                            ),
+                            fmp4=components.Fmp4(
+                                path='/samplevideo/fmp4',
+                            ),
+                        ),
+                        profiles=[
+                            components.TranscodeProfile(
+                                width=1280,
+                                name='720p',
+                                bitrate=3000000,
+                                quality=23,
+                                fps=30,
+                                fps_den=1,
+                                gop='2',
+                                profile=components.TranscodeProfileProfile.H264_BASELINE,
+                                encoder=components.TranscodeProfileEncoder.H_264,
+                            ),
+                        ],
+                    ))
+
+                    if res.task is not None:
+                        # handle response
+                        pass
     "/playback/{id}":
         get:
             operationId: getPlaybackInfo
@@ -5920,10 +8649,50 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.playback.get("<value>");
 
                       // Handle the result
                       console.log(result)
                     }
 
                     run();
+                - lang: go
+                  label: getPlaybackInfo
+                  source: |-
+                    package main
+
+                    import(
+                    	livepeergo "github.com/livepeer/livepeer-go"
+                    	"context"
+                    	"log"
+                    )
+
+                    func main() {
+                        s := livepeergo.New(
+                            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                        )
+                        var id string = "<value>"
+                        ctx := context.Background()
+                        res, err := s.Playback.Get(ctx, id)
+                        if err != nil {
+                            log.Fatal(err)
+                        }
+                        if res.PlaybackInfo != nil {
+                            // handle response
+                        }
+                    }
+                - lang: python
+                  label: getPlaybackInfo
+                  source: |-
+                    import livepeer
+
+                    s = livepeer.Livepeer(
+                        api_key="<YOUR_BEARER_TOKEN_HERE>",
+                    )
+
+
+                    res = s.playback.get(id='<value>')
+
+                    if res.playback_info is not None:
+                        # handle response
+                        pass

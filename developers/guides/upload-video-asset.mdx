@@ -82,67 +82,6 @@ We can then use Tus on the frontend to directly upload the asset to Livepeer.
 
   </Tab>
 
-  <Tab title="Ruby">
-    ```ruby
-    require 'livepeer'
-
-    # Initialize the Livepeer client with your API key
-    api_key = 'YOUR_API_KEY'
-    client = Livepeer::Client.new(api_key: api_key)
-
-    file_name = 'filename.mp4'  # Replace with the desired file name
-
-    asset_data = {
-      "name": file_name
-    }
-
-    begin
-      # Request asset upload
-      response = client.asset.create(asset_data)
-      puts 'Asset upload request:', response
-    rescue StandardError => e
-      puts 'Error requesting asset upload:', e.message
-    end
-
-    # pass the Tus endpoint to the frontend and use Tus to upload
-    # https://github.com/tus/tus-js-client
-    ```
-
-  </Tab>
-
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API key
-    $api_key = 'YOUR_API_KEY';
-    $livepeer = new Livepeer($api_key);
-
-    $file_name = 'filename.mp4';
-
-    $asset_data = [
-      "name" => $file_name
-    ];
-
-    try {
-        // Request asset upload
-        $response = $livepeer->asset->create($asset_data);
-        echo 'Asset upload request: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error requesting asset upload: ' . $e->getMessage() . PHP_EOL;
-    }
-
-    // pass the Tus endpoint to the frontend and use Tus to upload
-    // https://github.com/tus/tus-js-client
-    ```
-
-  </Tab>
-
   <Tab title="Go">
     ```go
     package main

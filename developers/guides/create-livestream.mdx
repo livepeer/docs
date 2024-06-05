@@ -59,57 +59,6 @@ We can use the Livepeer SDK to create a stream. The example below uses the
 
   </Tab>
 
-  <Tab title="Ruby">
-    ```ruby
-    require 'livepeer'
-
-    # Initialize the Livepeer client with your API key
-    api_key = 'YOUR_API_KEY'
-    client = Livepeer::Client.new(api_key: api_key)
-
-    stream_data = {
-      "name": "test_stream"
-    }
-
-    begin
-      # Create the stream
-      response = client.stream.create(stream_data)
-      puts 'Stream created:', response
-    rescue StandardError => e
-      puts 'Error creating stream:', e.message
-    end
-    ```
-
-  </Tab>
-
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API key
-    $api_key = 'YOUR_API_KEY';
-    $livepeer = new Livepeer($api_key);
-
-    $stream_data = [
-      "name" => "test_stream"
-    ];
-
-    try {
-        // Create the stream
-        $response = $livepeer->stream->create($stream_data);
-        echo 'Stream created: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error creating stream: ' . $e->getMessage() . PHP_EOL;
-    }
-    ```
-
-  </Tab>
-
   <Tab title="Go">
     ```go
     package main
