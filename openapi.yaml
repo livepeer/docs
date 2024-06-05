@@ -1135,7 +1135,9 @@ components:
                     description: Size of the asset in bytes
                     example: 84934509
                 hash:
-                    type: array
+                    type:
+                        - array
+                        - "null"
                     description: Hash of the asset
                     items:
                         type: object
@@ -2172,7 +2174,7 @@ components:
             type:
                 - object
                 - "null"
-            description: Whether the playback policy for a asset or stream is public or signed
+            description: Whether the playback policy for an asset or stream is public or signed
             additionalProperties: false
             required:
                 - type
@@ -2711,7 +2713,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.create({
+                      const result = await livepeer.stream.create({
                         name: "test_stream",
                         pull: {
                           source: "https://myservice.com/live/stream.flv",
@@ -2939,7 +2941,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getAll("<value>");
+                      const result = await livepeer.stream.getAll("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -3025,7 +3027,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.stream.get("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -3105,7 +3107,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.update("<value>", {
+                      const result = await livepeer.stream.update("<value>", {
                         record: false,
                         multistream: {
                           targets: [
@@ -3302,7 +3304,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.delete("<value>");
+                      const result = await livepeer.stream.delete("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -3392,7 +3394,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.terminate("<value>");
+                      const result = await livepeer.stream.terminate("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -3481,7 +3483,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.startPull("<value>");
+                      const result = await livepeer.stream.startPull("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -3562,7 +3564,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getAll();
+                      const result = await livepeer.multistream.getAll();
 
                       // Handle the result
                       console.log(result)
@@ -3646,7 +3648,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.create({
+                      const result = await livepeer.multistream.create({
                         url: "rtmps://live.my-service.tv/channel/secretKey",
                       });
 
@@ -3740,7 +3742,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.multistream.get("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -3819,7 +3821,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.update("<value>", {
+                      const result = await livepeer.multistream.update("<value>", {
                         url: "rtmps://live.my-service.tv/channel/secretKey",
                       });
 
@@ -3905,7 +3907,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.delete("<value>");
+                      const result = await livepeer.multistream.delete("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -3986,7 +3988,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getAll();
+                      const result = await livepeer.webhook.getAll();
 
                       // Handle the result
                       console.log(result)
@@ -4074,7 +4076,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.create({
+                      const result = await livepeer.webhook.create({
                         name: "test_webhook",
                         events: [
                           Events.StreamStarted,
@@ -4188,7 +4190,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.webhook.get("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -4279,7 +4281,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.update("<value>", {
+                      const result = await livepeer.webhook.update("<value>", {
                         name: "test_webhook",
                         events: [
                           Events.StreamStarted,
@@ -4394,7 +4396,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.delete("<value>");
+                      const result = await livepeer.webhook.delete("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -4481,7 +4483,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getLogs("<value>");
+                      const result = await livepeer.webhook.getLogs("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -4571,7 +4573,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getLog("<value>", "<value>");
+                      const result = await livepeer.webhook.getLog("<value>", "<value>");
 
                       // Handle the result
                       console.log(result)
@@ -4667,7 +4669,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.resendLog("<value>", "<value>");
+                      const result = await livepeer.webhook.resendLog("<value>", "<value>");
 
                       // Handle the result
                       console.log(result)
@@ -4750,7 +4752,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getAll();
+                      const result = await livepeer.asset.getAll();
 
                       // Handle the result
                       console.log(result)
@@ -4938,7 +4940,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.create({
+                      const result = await livepeer.asset.create({
                         name: "filename.mp4",
                         staticMp4: true,
                         playbackPolicy: {
@@ -5137,7 +5139,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.createViaUrl({
+                      const result = await livepeer.asset.createViaUrl({
                         name: "filename.mp4",
                         staticMp4: true,
                         playbackPolicy: {
@@ -5300,7 +5302,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.asset.get("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -5392,7 +5394,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.update("<value>", {
+                      const result = await livepeer.asset.update("<value>", {
                         name: "filename.mp4",
                         playbackPolicy: {
                           type: Type.Webhook,
@@ -5506,7 +5508,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.delete("<value>");
+                      const result = await livepeer.asset.delete("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -5604,7 +5606,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.createClip({
+                      const result = await livepeer.stream.createClip({
                         playbackId: "eaw4nk06ts2d0mzb",
                         startTime: 1587667174725,
                         endTime: 1587667174725,
@@ -5712,7 +5714,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getClips("<value>");
+                      const result = await livepeer.stream.getClips("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -5799,7 +5801,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.addMultistreamTarget("<value>", {
+                      const result = await livepeer.stream.addMultistreamTarget("<value>", {
                         profile: "720p0",
                         videoOnly: false,
                         id: "PUSH123",
@@ -5914,7 +5916,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.removeMultistreamTarget("<value>", "<value>");
+                      const result = await livepeer.stream.removeMultistreamTarget("<value>", "<value>");
 
                       // Handle the result
                       console.log(result)
@@ -6004,7 +6006,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getClips("<value>");
+                      const result = await livepeer.session.getClips("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -6086,7 +6088,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.create();
+                      const result = await livepeer.room.create();
 
                       // Handle the result
                       console.log(result)
@@ -6172,7 +6174,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.room.get("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -6252,7 +6254,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.delete("<value>");
+                      const result = await livepeer.room.delete("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -6344,7 +6346,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.startEgress("<value>", {
+                      const result = await livepeer.room.startEgress("<value>", {
                         streamId: "aac12556-4d65-4d34-9fb6-d1f0985eb0a9",
                       });
 
@@ -6434,7 +6436,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.stopEgress("<value>");
+                      const result = await livepeer.room.stopEgress("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -6533,7 +6535,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.createUser("<value>", {
+                      const result = await livepeer.room.createUser("<value>", {
                         name: "name",
                         canPublish: true,
                         canPublishData: true,
@@ -6640,7 +6642,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getUser("<value>", "<value>");
+                      const result = await livepeer.room.getUser("<value>", "<value>");
 
                       // Handle the result
                       console.log(result)
@@ -6734,7 +6736,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.updateUser("<value>", "<value>", {
+                      const result = await livepeer.room.updateUser("<value>", "<value>", {
                         canPublish: true,
                         canPublishData: true,
                       });
@@ -6834,7 +6836,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.deleteUser("<value>", "<value>");
+                      const result = await livepeer.room.deleteUser("<value>", "<value>");
 
                       // Handle the result
                       console.log(result)
@@ -6994,7 +6996,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getViewership({});
+                      const result = await livepeer.metrics.getViewership({});
 
                       // Handle the result
                       console.log(result)
@@ -7144,7 +7146,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getCreatorViewership({});
+                      const result = await livepeer.metrics.getCreatorViewership({});
 
                       // Handle the result
                       console.log(result)
@@ -7255,7 +7257,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getPublicViewership("<value>");
+                      const result = await livepeer.metrics.getPublicViewership("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -7374,7 +7376,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getUsage({});
+                      const result = await livepeer.metrics.getUsage({});
 
                       // Handle the result
                       console.log(result)
@@ -7457,7 +7459,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getAll();
+                      const result = await livepeer.session.getAll();
 
                       // Handle the result
                       console.log(result)
@@ -7543,7 +7545,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.session.get("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -7607,8 +7609,10 @@ paths:
                 - in: query
                   name: record
                   schema:
-                    type: integer
-                    example: 1
+                    oneOf:
+                        - type: boolean
+                        - type: integer
+                    example: true
                   description: |
                     Flag indicating if the response should only include recorded
                     sessions
@@ -7639,7 +7643,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getRecorded("<value>", 1);
+                      const result = await livepeer.session.getRecorded("<value>", true);
 
                       // Handle the result
                       console.log(result)
@@ -7653,6 +7657,7 @@ paths:
 
                     import(
                     	livepeergo "github.com/livepeer/livepeer-go"
+                    	"github.com/livepeer/livepeer-go/models/operations"
                     	"context"
                     	"log"
                     )
@@ -7663,7 +7668,9 @@ paths:
                         )
                         var parentID string = "<value>"
 
-                        var record *int64 = livepeergo.Int64(1)
+                        var record *operations.Record = operations.CreateRecordBoolean(
+                        true,
+                        )
                         ctx := context.Background()
                         res, err := s.Session.GetRecorded(ctx, parentID, record)
                         if err != nil {
@@ -7725,7 +7732,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.create();
+                      const result = await livepeer.accessControl.create();
 
                       // Handle the result
                       console.log(result)
@@ -7805,7 +7812,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getAll();
+                      const result = await livepeer.accessControl.getAll();
 
                       // Handle the result
                       console.log(result)
@@ -7886,7 +7893,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.delete("<value>");
+                      const result = await livepeer.accessControl.delete("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -7971,7 +7978,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.accessControl.get("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -8063,7 +8070,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.update("<value>", {});
+                      const result = await livepeer.accessControl.update("<value>", {});
 
                       // Handle the result
                       console.log(result)
@@ -8148,7 +8155,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.getAll();
+                      const result = await livepeer.task.getAll();
 
                       // Handle the result
                       console.log(result)
@@ -8230,7 +8237,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.task.get("<value>");
 
                       // Handle the result
                       console.log(result)
@@ -8438,7 +8445,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.create({
+                      const result = await livepeer.transcode.create({
                       input:     {
                             url: "https://s3.amazonaws.com/bucket/file.mp4",
                           },
@@ -8642,7 +8649,7 @@ paths:
                     });
 
                     async function run() {
-                      const result = await livepeer.get("<value>");
+                      const result = await livepeer.playback.get("<value>");
 
                       // Handle the result
                       console.log(result)
