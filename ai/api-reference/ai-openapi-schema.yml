@@ -118,6 +118,43 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
       - HTTPBearer: []
+  /upscale:
+    post:
+      summary: Upscale
+      operationId: upscale
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upscale_upscale_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
 components:
   schemas:
     APIError:
@@ -217,6 +254,32 @@ components:
       - image
       - model_id
       title: Body_image_to_video_image_to_video_post
+    Body_upscale_upscale_post:
+      properties:
+        prompt:
+          type: string
+          title: Prompt
+        image:
+          type: string
+          format: binary
+          title: Image
+        model_id:
+          type: string
+          title: Model Id
+          default: ''
+        safety_check:
+          type: boolean
+          title: Safety Check
+          default: true
+        seed:
+          type: integer
+          title: Seed
+      type: object
+      required:
+      - prompt
+      - image
+      - model_id
+      title: Body_upscale_upscale_post
     HTTPError:
       properties:
         detail:
