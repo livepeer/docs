@@ -1071,6 +1071,15 @@ components:
                                 description: ID of the asset from which this asset was created.
                 creatorId:
                     $ref: "#/components/schemas/creator-id"
+                profiles:
+                    type: array
+                    description: |
+                        Requested profiles for the asset to be transcoded into. Currently
+                        only supported for livestream recording assets, configured through
+                        the `stream.recordingSpec` field. If this is not present it means
+                        that default profiles were derived from the input metadata.
+                    items:
+                        $ref: "#/components/schemas/ffmpeg-profile"
                 storage:
                     additionalProperties: false
                     properties:
@@ -2791,6 +2800,21 @@ paths:
                           },
                         ],
                         record: false,
+                        recordingSpec: {
+                          profiles: [
+                            {
+                              width: 1280,
+                              name: "720p",
+                              height: 489382,
+                              bitrate: 3000000,
+                              fps: 30,
+                              fpsDen: 1,
+                              quality: 23,
+                              gop: "2",
+                              profile: Profile.H264Baseline,
+                            },
+                          ],
+                        },
                         multistream: {
                           targets: [
                             {
@@ -2861,6 +2885,21 @@ paths:
                                 },
                             },
                             Record: livepeergo.Bool(false),
+                            RecordingSpec: &components.RecordingSpec{
+                                Profiles: []components.FfmpegProfile{
+                                    components.FfmpegProfile{
+                                        Width: 1280,
+                                        Name: "720p",
+                                        Height: 489382,
+                                        Bitrate: 3000000,
+                                        Fps: 30,
+                                        FpsDen: livepeergo.Int64(1),
+                                        Quality: livepeergo.Int64(23),
+                                        Gop: livepeergo.String("2"),
+                                        Profile: components.ProfileH264Baseline.ToPointer(),
+                                    },
+                                },
+                            },
                             Multistream: &components.Multistream{
                                 Targets: []components.Target{
                                     components.Target{
@@ -2929,6 +2968,21 @@ paths:
                             ),
                         ],
                         record=False,
+                        recording_spec=components.RecordingSpec(
+                            profiles=[
+                                components.FfmpegProfile(
+                                    width=1280,
+                                    name='720p',
+                                    height=489382,
+                                    bitrate=3000000,
+                                    fps=30,
+                                    fps_den=1,
+                                    quality=23,
+                                    gop='2',
+                                    profile=components.Profile.H264_BASELINE,
+                                ),
+                            ],
+                        ),
                         multistream=components.Multistream(
                             targets=[
                                 components.Target(
@@ -4122,6 +4176,7 @@ paths:
                     async function run() {
                       const result = await livepeer.webhook.create({
                         name: "test_webhook",
+                        projectId: "aac12556-4d65-4d34-9fb6-d1f0985eb0a9",
                         events: [
                           Events.StreamStarted,
                           Events.StreamIdle,
@@ -4154,6 +4209,7 @@ paths:
                         )
                         request := components.WebhookInput{
                             Name: "test_webhook",
+                            ProjectID: livepeergo.String("aac12556-4d65-4d34-9fb6-d1f0985eb0a9"),
                             Events: []components.Events{
                                 components.EventsStreamStarted,
                                 components.EventsStreamIdle,
@@ -4184,6 +4240,7 @@ paths:
 
                     res = s.webhook.create(request=components.WebhookInput(
                         name='test_webhook',
+                        project_id='aac12556-4d65-4d34-9fb6-d1f0985eb0a9',
                         events=[
                             components.Events.STREAM_STARTED,
                             components.Events.STREAM_IDLE,
@@ -4327,6 +4384,7 @@ paths:
                     async function run() {
                       const result = await livepeer.webhook.update("<value>", {
                         name: "test_webhook",
+                        projectId: "aac12556-4d65-4d34-9fb6-d1f0985eb0a9",
                         events: [
                           Events.StreamStarted,
                           Events.StreamIdle,
@@ -4361,6 +4419,7 @@ paths:
 
                         webhook := components.WebhookInput{
                             Name: "test_webhook",
+                            ProjectID: livepeergo.String("aac12556-4d65-4d34-9fb6-d1f0985eb0a9"),
                             Events: []components.Events{
                                 components.EventsStreamStarted,
                                 components.EventsStreamIdle,
@@ -4391,6 +4450,7 @@ paths:
 
                     res = s.webhook.update(id='<value>', webhook=components.WebhookInput(
                         name='test_webhook',
+                        project_id='aac12556-4d65-4d34-9fb6-d1f0985eb0a9',
                         events=[
                             components.Events.STREAM_STARTED,
                             components.Events.STREAM_IDLE,
