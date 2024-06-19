@@ -155,6 +155,43 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
       - HTTPBearer: []
+  /speech-to-text:
+    post:
+      summary: Speech To Text
+      operationId: speech_to_text
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_speech_to_text_speech_to_text_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
 components:
   schemas:
     APIError:
@@ -254,6 +291,24 @@ components:
       - image
       - model_id
       title: Body_image_to_video_image_to_video_post
+    Body_speech_to_text_speech_to_text_post:
+      properties:
+        audio:
+          type: string
+          format: binary
+          title: Audio
+        model_id:
+          type: string
+          title: Model Id
+          default: ''
+        seed:
+          type: integer
+          title: Seed
+      type: object
+      required:
+      - audio
+      - model_id
+      title: Body_speech_to_text_speech_to_text_post
     Body_upscale_upscale_post:
       properties:
         prompt:
@@ -333,6 +388,21 @@ components:
       - seed
       - nsfw
       title: Media
+    TextResponse:
+      properties:
+        text:
+          type: string
+          title: Text
+        chunks:
+          items:
+            $ref: '#/components/schemas/chunk'
+          type: array
+          title: Chunks
+      type: object
+      required:
+      - text
+      - chunks
+      title: TextResponse
     TextToImageParams:
       properties:
         model_id:
@@ -410,6 +480,20 @@ components:
       required:
       - frames
       title: VideoResponse
+    chunk:
+      properties:
+        timestamp:
+          items: {}
+          type: array
+          title: Timestamp
+        text:
+          type: string
+          title: Text
+      type: object
+      required:
+      - timestamp
+      - text
+      title: chunk
   securitySchemes:
     HTTPBearer:
       type: http
