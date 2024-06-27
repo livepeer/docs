@@ -4,8 +4,7 @@ title: Speech-to-Text
 
 ## Overview
 
-The `speech-to-text` pipeline of the AI Subnet allows you to transcribe mp3 audio files with timestamp detail. This pipeline powered by the
-latest diffusion models at HuggingFace 
+The `speech-to-text` pipeline transcribes audio from media files to text. This pipeline powered is by the latest diffusion models at HuggingFace 
 [automatic-speech-recognition](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition)
 pipeline.
 
@@ -22,7 +21,7 @@ pipeline.
 
 The current warm model requested for the `speech-to-text` pipeline is:
 
-- [SG161222/RealVisXL_V4.0_Lightning](https://huggingface.co/openai/whisper-large-v3):
+- [openai/whisper-large-v3](https://huggingface.co/openai/whisper-large-v3):
   Whisper is a pre-trained model for automatic speech recognition (ASR) and speech translation.
 
 <Tip>
@@ -64,7 +63,7 @@ the Gateway's `speech-to-text` API endpoint:
 ```bash
 curl -X POST "https://<gateway-ip>/speech-to-text" \
     -F model_id=openai/whisper-large-v3 \
-    -F audio=@<PATH_TO_MP3_FILE>
+    -F audio=@<PATH_TO_FILE>
 ```
 
 In this command:
@@ -72,6 +71,10 @@ In this command:
 - `<gateway-ip>` should be replaced with your AI Gateway's IP address.
 - `model_id` is the diffusion model for image generation.
 - `audio` is the path to the audio file to be transcribed.
+
+<Note>
+Supported file types: `wav`, `flac`, `mp3`, `m4a` and `webm`
+</Note>
 
 For additional optional parameters, refer to the
 [AI Subnet API Reference](/ai/api-reference/speech-to-text).
