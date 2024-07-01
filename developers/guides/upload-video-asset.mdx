@@ -87,36 +87,31 @@ We can then use Tus on the frontend to directly upload the asset to Livepeer.
 
   <Tab title="Go">
     ```go
-    package main
+      package main
 
-    import (
-      "fmt"
-      "os"
+      import(
+        livepeergo "github.com/livepeer/livepeer-go"
+        "github.com/livepeer/livepeer-go/models/components"
+        "context"
+        "log"
+      )
 
-      "github.com/livepeer/livepeer-go"
-    )
-
-    func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
-
-      fileName := "filename.mp4"
-
-      assetData := map[string]interface{}{
-        "name": fileName,
-      }
-
-      // Request asset upload
-      response, err := client.RequestAssetUpload(assetData)
-      if err != nil {
-        fmt.Printf("Error requesting asset upload: %v\n", err)
-        os.Exit(1)
-      }
-
-      fmt.Printf("Asset upload request: %+v\n", response)
-    }
-
+      func main() {
+        // Initialize the Livepeer client with your API key
+          client := livepeergo.New(
+              livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+          )
+          request := components.NewAssetPayload{
+              Name: "filename.mp4", // Replace with the desired file name
+          }
+          ctx := context.Background()
+          res, err := client.Asset.Create(ctx, request)
+          if err != nil {
+              log.Fatal(err)
+          }
+          if res.Data != nil {
+              // handle response
+          }
     // pass the Tus endpoint to the frontend and use Tus to upload
     // https://github.com/tus/tus-js-client
     ```
