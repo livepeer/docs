@@ -1008,6 +1008,38 @@ components:
       required:
         - name
       type: object
+    realtime-viewership-metric:
+      description: |
+        An individual metric about realtime viewership of a stream/asset.
+      properties:
+        browser:
+          description: The browser used by the viewer.
+          example: Safari
+          type: string
+        country:
+          description: The country where the viewer is located.
+          example: United States
+          type: string
+        device:
+          description: The device used by the viewer.
+          example: iPhone
+          type: string
+        errorRate:
+          description: The error rate for the stream/asset.
+          example: 0.1
+          type: number
+        playbackId:
+          description: The playback ID associated with the metric.
+          example: 1bde4o2i6xycudoy
+          type: string
+        viewCount:
+          description: The number of views for the stream/asset.
+          example: 100
+          type: integer
+      required:
+        - viewCount
+        - errorRate
+      type: object
     room:
       properties:
         createdAt:
@@ -2363,7 +2395,7 @@ components:
       type: object
     viewership-metric:
       description: |
-        An individual metric about viewership of an asset. Necessarily, at least
+        An individual metric about viewership of a stream/asset. Necessarily, at least
         1 of playbackId and dStorageUrl will be present, depending on the query.
       properties:
         browser:
@@ -2403,7 +2435,7 @@ components:
           example: mobile
           type: string
         errorRate:
-          description: The error rate for the asset.
+          description: The error rate for the stream/asset.
           example: 0.1
           type: number
         exitsBeforeStart:
@@ -2425,7 +2457,7 @@ components:
           example: 1bde4o2i6xycudoy
           type: string
         playtimeMins:
-          description: The total playtime in minutes for the asset.
+          description: The total playtime in minutes for the stream/asset.
           example: 10
           type: number
         rebufferRatio:
@@ -2454,7 +2486,7 @@ components:
           example: 100
           type: number
         viewCount:
-          description: The number of views for the asset.
+          description: The number of views for the stream/asset.
           example: 100
           type: integer
         viewerId:
@@ -4156,6 +4188,59 @@ paths:
                 # handle response
                 pass
       x-speakeasy-name-override: getUsage
+  /data/views/now:
+    get:
+      description: |
+        Requires a private (non-CORS) API key to be used.
+      operationId: getRealtimeViewershipNow
+      parameters:
+        - description: |
+            The playback ID to filter the query results. This can be a canonical
+            playback ID from Livepeer assets or streams, or dStorage identifiers
+            for assets
+          in: query
+          name: playbackId
+          schema:
+            type: string
+        - description: The creator ID to filter the query results
+          in: query
+          name: creatorId
+          schema:
+            type: string
+        - description: |
+            The list of fields to break down the query results. Specify this
+            query-string multiple times to break down by multiple fields.
+          in: query
+          name: breakdownBy[]
+          schema:
+            items:
+              enum:
+                - playbackId
+                - device
+                - browser
+                - country
+              type: string
+            type: array
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/realtime-viewership-metric'
+                type: array
+                x-speakeasy-name-override: data
+          description: A list of Metric objects
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error
+      summary: Query realtime viewership
+      tags:
+        - metrics
+      x-speakeasy-name-override: getRealtimeViewership
   /data/views/query:
     get:
       description: |
