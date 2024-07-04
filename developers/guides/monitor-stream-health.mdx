@@ -47,21 +47,20 @@ or
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+    import livepeer
 
-    # Initialize the Livepeer client with your API key
-    api_key = "YOUR_API_KEY"
-    livepeer = Livepeer(api_key)
+     // Initialize the Livepeer client with your API key
+    client = livepeer.Livepeer(
+        api_key="<YOUR_BEARER_TOKEN_HERE>",
+    )
 
-    # Define the stream ID you want to retrieve
-    stream_id = "STREAM_ID"
 
-    try:
-        # Get stream details by stream ID
-        response = livepeer.stream.get(stream_id)
-        print("Stream details:", response)
-    except Exception as e:
-        print("Error fetching stream details:", e)
+    // Replan <value> with the stream ID you want to retrieve
+    res = client.stream.get(id='<value>')
+
+    if res.stream is not None:
+        # handle response
+        pass
     ```
 
   </Tab>
@@ -70,29 +69,30 @@ or
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/livepeer-go"
+    import(
+      livepeergo "github.com/livepeer/livepeer-go"
+      "context"
+      "log"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
+        // Initialize the Livepeer client with your API key
+        client := livepeergo.New(
+            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+        )
 
-      // Define the stream ID you want to retrieve
-      streamID := "STREAM_ID"
+        // Define the stream ID you want to retrieve
+        var id string = "<value>" 
 
-      // Get stream details by stream ID
-      response, err := client.Stream.Get(streamID)
-      if err != nil {
-        fmt.Printf("Error fetching stream details: %v\n", err)
-        os.Exit(1)
-      }
+        ctx := context.Background()
+        res, err := client.Stream.Get(ctx, id)
 
-      fmt.Printf("Stream details: %+v\n", response)
+        if err != nil {
+            log.Fatal(err)
+        }
+        if res.Stream != nil {
+            // handle response
+        }
     }
     ```
 
@@ -125,21 +125,18 @@ or
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+    import livepeer
 
-    # Initialize the Livepeer client with your API key
-    api_key = "YOUR_API_KEY"
-    livepeer = Livepeer(api_key)
+    client = livepeer.Livepeer(
+        api_key="<YOUR_BEARER_TOKEN_HERE>",
+    )
 
-    # Define the session ID you want to retrieve
-    session_id = "SESSION_ID"
 
-    try:
-        # Get session details by session ID
-        response = livepeer.session.get(session_id)
-        print("Session details:", response)
-    except Exception as e:
-        print("Error fetching session details:", e)
+    res = client.session.get(id='<value>')
+
+    if res.session is not None:
+        # handle response
+        pass
     ```
 
   </Tab>
@@ -148,29 +145,25 @@ or
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/livepeer-go"
+    import(
+      livepeergo "github.com/livepeer/livepeer-go"
+      "context"
+      "log"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
-
-      // Define the session ID you want to retrieve
-      sessionID := "SESSION_ID"
-
-      // Get session details by session ID
-      response, err := client.Session.Get(sessionID)
-      if err != nil {
-        fmt.Printf("Error fetching session details: %v\n", err)
-        os.Exit(1)
-      }
-
-      fmt.Printf("Session details: %+v\n", response)
+        client := livepeergo.New(
+            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+        )
+        var id string = "<value>"
+        ctx := context.Background()
+        res, err := client.Session.Get(ctx, id)
+        if err != nil {
+            log.Fatal(err)
+        }
+        if res.Session != nil {
+            // handle response
+        }
     }
     ```
 
