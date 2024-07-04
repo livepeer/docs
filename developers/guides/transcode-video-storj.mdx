@@ -48,9 +48,11 @@ This step assumes that you have already created a
     ```javascript
     import { Livepeer } from "livepeer";
 
-    const livepeer = new Livepeer("$API_KEY");
+    const apiKey = "YOUR_API_KEY";
 
-    livepeer.transcode({
+    const livepeer = new Livepeer({ apiKey });
+
+    livepeer.transcode.create({
       input: {
         type: "s3",
         endpoint: "https://gateway.storjshare.io",
@@ -94,6 +96,10 @@ This step assumes that you have already created a
           height: 360
         }
       ]
+    }).then((video) => {
+      console.log(video);
+    }).catch((error) => {
+      console.error(error);
     });
     ```
 
@@ -102,8 +108,12 @@ This step assumes that you have already created a
   <Tab title="Python">
     ```python
     import livepeer
+    from livepeer.models import components
 
-    livepeer.api_key = "$API_KEY"
+    client = livepeer.Livepeer(
+        api_key="<YOUR_BEARER_TOKEN_HERE>",
+    )
+
 
     params = {
       "input": {
@@ -151,24 +161,30 @@ This step assumes that you have already created a
       ]
     }
 
-    video = livepeer.transcode(params)
-    print(video)
+    res = client.transcode.create(request=components.TranscodeRequest(**params))
+
+    if res.task is not None:
+    # handle response
+    pass
     ```
 
   </Tab>
 
   <Tab title="Go">
     ```go
-    package main
+      package main
 
-    import (
-      "fmt"
-      livepeer "github.com/livepeer/livepeer-go-sdk"
+    import(
+      livepeergo "github.com/livepeer/livepeer-go"
+      "github.com/livepeer/livepeer-go/models/components"
+      "context"
+      "log"
     )
 
     func main() {
-      apiKey := "$API_KEY"
-      client := livepeer.NewClient(apiKey)
+      client := livepeergo.New(
+        livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+    )
 
       params := map[string]interface{}{
         "input": map[string]interface{}{
@@ -216,12 +232,14 @@ This step assumes that you have already created a
         },
       }
 
-      sent, err := client.Transcode(params)
+      ctx := context.Background()
+      res, err := client.Transcode.Create(ctx, request)
       if err != nil {
-        fmt.Println(err)
-        return
+          log.Fatal(err)
       }
-      fmt.Println(sent.ID)
+      if res.Task != nil {
+          // handle response
+      }
     }
     ```
 

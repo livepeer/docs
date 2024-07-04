@@ -214,84 +214,16 @@ metrics only from the videos in your account, use the API objects `playbackId`.
 Once you have the `playbackId`, you can make a request to get the viewership
 data.
 
-<Tabs>
-  <Tab title="Node.js">
-    ```javascript
-    import { Livepeer } from "livepeer";
+```sh
+curl --request GET \
+  --url https://livepeer.studio/api/data/views/query/total/{playbackId} \
+  --header 'Authorization: Bearer <token>'
+```
 
-    const apiToken = 'YOUR_API_TOKEN';
-    const playbackId = 'PLAYBACK_ID';
-
-    const livepeer = new Livepeer(apiToken);
-
-    livepeer
-      .getTotalViews(playbackId)
-      .then((response) => {
-        console.log("Total views:", response);
-      })
-      .catch((error) => {
-        console.error("Error fetching total views:", error);
-      });
-    ```
-
-  </Tab>
-
-  <Tab title="Python">
-    ```python
-    from livepeer import Livepeer
-
-    # Initialize the Livepeer client with your API token
-    api_token = "YOUR_API_TOKEN"
-    livepeer = Livepeer(api_token)
-
-    # Define the playback ID you want to query
-    playback_id = "PLAYBACK_ID"
-
-    try:
-        # Get total views by playback ID
-        response = livepeer.get_total_views(playback_id)
-        print("Total views:", response)
-    except Exception as e:
-        print("Error fetching total views:", e)
-    ```
-
-  </Tab>
-
-  <Tab title="Go">
-    ```go
-    package main
-
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/livepeer-go"
-    )
-
-    func main() {
-      // Initialize the Livepeer client with your API token
-      apiToken := "YOUR_API_TOKEN"
-      client := livepeer.NewLivepeerClient(apiToken)
-
-      // Define the playback ID you want to query
-      playbackID := "PLAYBACK_ID"
-
-      // Get total views by playback ID
-      response, err := client.GetTotalViews(playbackID)
-      if err != nil {
-        fmt.Printf("Error fetching total views: %v\n", err)
-        os.Exit(1)
-      }
-
-      fmt.Printf("Total views: %+v\n", response)
-    }
-    ```
-
-  </Tab>
-</Tabs>
-
-For more information on the API used here check the
+<Info>
+For more information on the API and SDK methods, refer to the
 [API reference](/api-reference/viewership/get-public-total-views).
+</Info>
 
 ### Diving deeper
 
@@ -311,105 +243,17 @@ The idea for this API is to build creator analytics dashboards. It can be called
 from the frontend and can provide detailed insights to creators about their
 assets and streams.
 
-<Tabs>
-  <Tab title="Node.js">
-    ```javascript
-    import { Livepeer } from "livepeer";
+```sh
+curl --request GET \
+  --url 'https://livepeer.studio/api/data/views/query/creator?from=from&to=to&timeStep=day&assetId=asset_id_here&breakdownBy%5B%5D=browser' \
+  --header 'Authorization: Bearer <token>'
 
-    const apiToken = 'YOUR_API_TOKEN';
-    const assetId = 'ASSET_ID';
-    const timeStep = 'day';
-    const breakdownBy = ['timezone'];
+```
 
-    const livepeer = new Livepeer(apiToken);
-
-    const queryParams = {
-      assetId: assetId,
-      timeStep: timeStep,
-      breakdownBy: breakdownBy
-    };
-
-    livepeer
-      .getViewsByCreator(queryParams)
-      .then((response) => {
-        console.log("Views by creator:", response);
-      })
-      .catch((error) => {
-        console.error("Error fetching views by creator:", error);
-      });
-    ```
-
-  </Tab>
-
-  <Tab title="Python">
-    ```python
-    from livepeer import Livepeer
-
-    # Initialize the Livepeer client with your API token
-    api_token = "YOUR_API_TOKEN"
-    livepeer = Livepeer(api_token)
-
-    # Define the asset ID for which you want to query views
-    asset_id = "ASSET_ID"
-    time_step = "day"  # Define the time step
-    breakdown_by = ["timezone"]  # Define the breakdown criteria
-
-    query_params = {
-        "assetId": asset_id,
-        "timeStep": time_step,
-        "breakdownBy": breakdown_by
-    }
-
-    try:
-        # Get views by creator
-        response = livepeer.get_views_by_creator(query_params)
-        print("Views by creator:", response)
-    except Exception as e:
-        print("Error fetching views by creator:", e)
-    ```
-
-  </Tab>
-
-  <Tab title="Go">
-    ```go
-    package main
-
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/livepeer-go"
-    )
-
-    func main() {
-      // Initialize the Livepeer client with your API token
-      apiToken := "YOUR_API_TOKEN"
-      client := livepeer.NewLivepeerClient(apiToken)
-
-      // Define the asset ID for which you want to query views
-      assetID := "ASSET_ID"
-      timeStep := "day" // Define the time step
-      breakdownBy := []string{"timezone"} // Define the breakdown criteria
-
-      queryParams := map[string]interface{}{
-        "assetId":      assetID,
-        "timeStep":     timeStep,
-        "breakdownBy":  breakdownBy,
-      }
-
-      // Get views by creator
-      response, err := client.GetViewsByCreator(queryParams)
-      if err != nil {
-        fmt.Printf("Error fetching views by creator: %v\n", err)
-        os.Exit(1)
-      }
-
-      fmt.Printf("Views by creator: %+v\n", response)
-    }
-    ```
-
-  </Tab>
-</Tabs>
+<Info>
+For more information on the API and SDK methods, refer to the
+[API reference](/api-reference/viewership/get-creators-metrics).
+</Info>
 
 #### [All metrics API](/api-reference/viewership/get-usage-metrics)
 
@@ -423,91 +267,17 @@ The idea is that developers should build their own abstraction and access
 control logics on top of this API and abstract it as higher level API in their
 apps.
 
-<Tabs>
-  <Tab title="Node.js">
-    ```javascript
-    import { Livepeer } from "livepeer";
+```sh
+curl --request GET \
+  --url 'https://livepeer.studio/api/data/usage/query?timeStep=hour&breakdownBy%5B%5D=creatorId&from=from&to=to' \
+  --header 'Authorization: Bearer <token>'
+```
 
-    const apiToken = 'YOUR_API_TOKEN';
-    const breakdownBy = ['device', 'browser']; // Define the breakdown criteria
+<Info>
+For more information on the API and SDK methods, refer to the
+[API reference](/api-reference/viewership/get-usage-metrics).
+</Info>
 
-    const livepeer = new Livepeer(apiToken);
-
-    const queryParams = {
-      breakdownBy: breakdownBy
-    };
-
-    livepeer
-      .getViews(queryParams)
-      .then((response) => {
-        console.log("Views:", response);
-      })
-      .catch((error) => {
-        console.error("Error fetching views:", error);
-      });
-    ```
-
-  </Tab>
-
-  <Tab title="Python">
-    ```python
-    from livepeer import Livepeer
-
-    # Initialize the Livepeer client with your API token
-    api_token = "YOUR_API_TOKEN"
-    livepeer = Livepeer(api_token)
-
-    breakdown_by = ["device", "browser"]  # Define the breakdown criteria
-
-    query_params = {
-        "breakdownBy": breakdown_by
-    }
-
-    try:
-        # Get views
-        response = livepeer.get_views(query_params)
-        print("Views:", response)
-    except Exception as e:
-        print("Error fetching views:", e)
-    ```
-
-  </Tab>
-
-  <Tab title="Go">
-    ```go
-    package main
-
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/livepeer-go"
-    )
-
-    func main() {
-      // Initialize the Livepeer client with your API token
-      apiToken := "YOUR_API_TOKEN"
-      client := livepeer.NewLivepeerClient(apiToken)
-
-      breakdownBy := []string{"device", "browser"} // Define the breakdown criteria
-
-      queryParams := map[string]interface{}{
-        "breakdownBy": breakdownBy,
-      }
-
-      // Get views
-      response, err := client.GetViews(queryParams)
-      if err != nil {
-        fmt.Printf("Error fetching views: %v\n", err)
-        os.Exit(1)
-      }
-
-      fmt.Printf("Views: %+v\n", response)
-    }
-    ```
-
-  </Tab>
-</Tabs>
 
 ### Visualizing Your Data
 

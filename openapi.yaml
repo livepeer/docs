@@ -1008,6 +1008,38 @@ components:
       required:
         - name
       type: object
+    realtime-viewership-metric:
+      description: |
+        An individual metric about realtime viewership of a stream/asset.
+      properties:
+        browser:
+          description: The browser used by the viewer.
+          example: Safari
+          type: string
+        country:
+          description: The country where the viewer is located.
+          example: United States
+          type: string
+        device:
+          description: The device used by the viewer.
+          example: iPhone
+          type: string
+        errorRate:
+          description: The error rate for the stream/asset.
+          example: 0.1
+          type: number
+        playbackId:
+          description: The playback ID associated with the metric.
+          example: 1bde4o2i6xycudoy
+          type: string
+        viewCount:
+          description: The number of views for the stream/asset.
+          example: 100
+          type: integer
+      required:
+        - viewCount
+        - errorRate
+      type: object
     room:
       properties:
         createdAt:
@@ -2363,7 +2395,7 @@ components:
       type: object
     viewership-metric:
       description: |
-        An individual metric about viewership of an asset. Necessarily, at least
+        An individual metric about viewership of a stream/asset. Necessarily, at least
         1 of playbackId and dStorageUrl will be present, depending on the query.
       properties:
         browser:
@@ -2403,7 +2435,7 @@ components:
           example: mobile
           type: string
         errorRate:
-          description: The error rate for the asset.
+          description: The error rate for the stream/asset.
           example: 0.1
           type: number
         exitsBeforeStart:
@@ -2425,7 +2457,7 @@ components:
           example: 1bde4o2i6xycudoy
           type: string
         playtimeMins:
-          description: The total playtime in minutes for the asset.
+          description: The total playtime in minutes for the stream/asset.
           example: 10
           type: number
         rebufferRatio:
@@ -2454,7 +2486,7 @@ components:
           example: 100
           type: number
         viewCount:
-          description: The number of views for the asset.
+          description: The number of views for the stream/asset.
           example: 100
           type: integer
         viewerId:
@@ -3413,12 +3445,12 @@ paths:
                 assetPatchPayload := components.AssetPatchPayload{
                     Name: livepeergo.String("filename.mp4"),
                     PlaybackPolicy: &components.PlaybackPolicy{
+                        RefreshInterval: livepeergo.Float64(600),
                         Type: components.TypeWebhook,
-                        WebhookID: livepeergo.String("1bde4o2i6xycudoy"),
                         WebhookContext: map[string]any{
                             "streamerId": "my-custom-id",
                         },
-                        RefreshInterval: livepeergo.Float64(600),
+                        WebhookID: livepeergo.String("1bde4o2i6xycudoy"),
                     },
                 }
                 ctx := context.Background()
@@ -3478,7 +3510,7 @@ paths:
 
 
         ## Resumable Upload
-        Livepeer supports resumable uploads via Tus. This section provides a
+        Livepeer supports resumable uploads via TUS. This section provides a
         simple example of how to use tus-js-client to upload a video file.
         \
         \
@@ -3557,11 +3589,11 @@ paths:
                       - id
                     type: object
                   tusEndpoint:
-                    description: The [Tus-compatible](https://tus.io/) endpoint for resumable uploads. **This is the recommended way to upload assets.** See the [Tus-js](https://github.com/tus/tus-js-client) client for more information.
+                    description: The [TUS-compatible](https://tus.io/) endpoint for resumable uploads. **This is the recommended way to upload assets.** See the [TUS-js](https://github.com/tus/tus-js-client) client for more information.
                     example: https://origin.livepeer.com/api/asset/upload/tus?token=eyJhbGciOiJIUzI1NiJ9.eyJtc2ciOiJoZWxsbyBoYWNrZXIsIHRoZXJlJ3Mgbm90aGluZyBmb3IgeW91IGhlcmUg8J-YhiJ9.1YDjmXsqLcgNyMSzT4kXl_kIni46_EuGX_xfqmC7e0Q
                     type: string
                   url:
-                    description: The direct upload endpoint for which supports PUT requests. **It is recommended to use the Tus endpoint for a better upload experience.**
+                    description: The direct upload endpoint for which supports PUT requests. **It is recommended to use the TUS endpoint for a better upload experience.**
                     example: https://origin.livepeer.com/api/asset/upload/direct?token=eyJhbGciOiJIUzI1NiJ9.eyJtc2ciOiJoZWxsbyBoYWNrZXIsIHRoZXJlJ3Mgbm90aGluZyBmb3IgeW91IGhlcmUg8J-YhiJ9.1YDjmXsqLcgNyMSzT4kXl_kIni46_EuGX_xfqmC7e0Q
                     type: string
                 required:
@@ -3642,28 +3674,28 @@ paths:
                 )
                 request := components.NewAssetPayload{
                     Name: "filename.mp4",
-                    StaticMp4: livepeergo.Bool(true),
                     PlaybackPolicy: &components.PlaybackPolicy{
+                        RefreshInterval: livepeergo.Float64(600),
                         Type: components.TypeWebhook,
-                        WebhookID: livepeergo.String("1bde4o2i6xycudoy"),
                         WebhookContext: map[string]any{
                             "streamerId": "my-custom-id",
                         },
-                        RefreshInterval: livepeergo.Float64(600),
+                        WebhookID: livepeergo.String("1bde4o2i6xycudoy"),
                     },
                     Profiles: []components.TranscodeProfile{
                         components.TranscodeProfile{
-                            Width: livepeergo.Int64(1280),
-                            Name: livepeergo.String("720p"),
                             Bitrate: 3000000,
-                            Quality: livepeergo.Int64(23),
+                            Encoder: components.EncoderH264.ToPointer(),
                             Fps: livepeergo.Int64(30),
                             FpsDen: livepeergo.Int64(1),
                             Gop: livepeergo.String("2"),
-                            Profile: components.TranscodeProfileProfileH264Baseline.ToPointer(),
-                            Encoder: components.TranscodeProfileEncoderH264.ToPointer(),
+                            Name: livepeergo.String("720p"),
+                            Profile: components.ProfileH264Baseline.ToPointer(),
+                            Quality: livepeergo.Int64(23),
+                            Width: livepeergo.Int64(1280),
                         },
                     },
+                    StaticMp4: livepeergo.Bool(true),
                 }
                 ctx := context.Background()
                 res, err := s.Asset.Create(ctx, request)
@@ -3842,29 +3874,29 @@ paths:
                 )
                 request := components.NewAssetFromURLPayload{
                     Name: "filename.mp4",
-                    StaticMp4: livepeergo.Bool(true),
                     PlaybackPolicy: &components.PlaybackPolicy{
+                        RefreshInterval: livepeergo.Float64(600),
                         Type: components.TypeWebhook,
-                        WebhookID: livepeergo.String("1bde4o2i6xycudoy"),
                         WebhookContext: map[string]any{
                             "streamerId": "my-custom-id",
                         },
-                        RefreshInterval: livepeergo.Float64(600),
+                        WebhookID: livepeergo.String("1bde4o2i6xycudoy"),
                     },
-                    URL: "https://s3.amazonaws.com/my-bucket/path/filename.mp4",
                     Profiles: []components.TranscodeProfile{
                         components.TranscodeProfile{
-                            Width: livepeergo.Int64(1280),
-                            Name: livepeergo.String("720p"),
                             Bitrate: 3000000,
-                            Quality: livepeergo.Int64(23),
+                            Encoder: components.EncoderH264.ToPointer(),
                             Fps: livepeergo.Int64(30),
                             FpsDen: livepeergo.Int64(1),
                             Gop: livepeergo.String("2"),
-                            Profile: components.TranscodeProfileProfileH264Baseline.ToPointer(),
-                            Encoder: components.TranscodeProfileEncoderH264.ToPointer(),
+                            Name: livepeergo.String("720p"),
+                            Profile: components.ProfileH264Baseline.ToPointer(),
+                            Quality: livepeergo.Int64(23),
+                            Width: livepeergo.Int64(1280),
                         },
                     },
+                    StaticMp4: livepeergo.Bool(true),
+                    URL: "https://s3.amazonaws.com/my-bucket/path/filename.mp4",
                 }
                 ctx := context.Background()
                 res, err := s.Asset.CreateViaURL(ctx, request)
@@ -3997,11 +4029,11 @@ paths:
                     livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
                 )
                 request := components.ClipPayload{
-                    PlaybackID: "eaw4nk06ts2d0mzb",
-                    StartTime: 1587667174725,
                     EndTime: livepeergo.Float64(1587667174725),
                     Name: livepeergo.String("My Clip"),
+                    PlaybackID: "eaw4nk06ts2d0mzb",
                     SessionID: livepeergo.String("de7818e7-610a-4057-8f6f-b785dc1e6f88"),
+                    StartTime: 1587667174725,
                 }
                 ctx := context.Background()
                 res, err := s.Stream.CreateClip(ctx, request)
@@ -4156,6 +4188,59 @@ paths:
                 # handle response
                 pass
       x-speakeasy-name-override: getUsage
+  /data/views/now:
+    get:
+      description: |
+        Requires a private (non-CORS) API key to be used.
+      operationId: getRealtimeViewershipNow
+      parameters:
+        - description: |
+            The playback ID to filter the query results. This can be a canonical
+            playback ID from Livepeer assets or streams, or dStorage identifiers
+            for assets
+          in: query
+          name: playbackId
+          schema:
+            type: string
+        - description: The creator ID to filter the query results
+          in: query
+          name: creatorId
+          schema:
+            type: string
+        - description: |
+            The list of fields to break down the query results. Specify this
+            query-string multiple times to break down by multiple fields.
+          in: query
+          name: breakdownBy[]
+          schema:
+            items:
+              enum:
+                - playbackId
+                - device
+                - browser
+                - country
+              type: string
+            type: array
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/realtime-viewership-metric'
+                type: array
+                x-speakeasy-name-override: data
+          description: A list of Metric objects
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error
+      summary: Query realtime viewership
+      tags:
+        - metrics
+      x-speakeasy-name-override: getRealtimeViewership
   /data/views/query:
     get:
       description: |
@@ -5586,9 +5671,9 @@ paths:
                 var id string = "<value>"
 
                 roomUserPayload := components.RoomUserPayload{
-                    Name: "name",
                     CanPublish: livepeergo.Bool(true),
                     CanPublishData: livepeergo.Bool(true),
+                    Name: "name",
                 }
                 ctx := context.Background()
                 res, err := s.Room.CreateUser(ctx, id, roomUserPayload)
@@ -6386,9 +6471,42 @@ paths:
                     livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
                 )
                 request := components.NewStreamPayload{
+                    Multistream: &components.Multistream{
+                        Targets: []components.Target{
+                            components.Target{
+                                ID: livepeergo.String("PUSH123"),
+                                Profile: "720p",
+                                Spec: &components.TargetSpec{
+                                    Name: livepeergo.String("My target"),
+                                    URL: "rtmps://live.my-service.tv/channel/secretKey",
+                                },
+                                VideoOnly: livepeergo.Bool(false),
+                            },
+                        },
+                    },
                     Name: "test_stream",
+                    PlaybackPolicy: &components.PlaybackPolicy{
+                        RefreshInterval: livepeergo.Float64(600),
+                        Type: components.TypeWebhook,
+                        WebhookContext: map[string]any{
+                            "streamerId": "my-custom-id",
+                        },
+                        WebhookID: livepeergo.String("1bde4o2i6xycudoy"),
+                    },
+                    Profiles: []components.FfmpegProfile{
+                        components.FfmpegProfile{
+                            Bitrate: 3000000,
+                            Fps: 30,
+                            FpsDen: livepeergo.Int64(1),
+                            Gop: livepeergo.String("2"),
+                            Height: 486589,
+                            Name: "720p",
+                            Profile: components.FfmpegProfileProfileH264Baseline.ToPointer(),
+                            Quality: livepeergo.Int64(23),
+                            Width: 1280,
+                        },
+                    },
                     Pull: &components.Pull{
-                        Source: "https://myservice.com/live/stream.flv",
                         Headers: map[string]string{
                             "Authorization": "Bearer 123",
                         },
@@ -6396,54 +6514,21 @@ paths:
                             Lat: 39.739,
                             Lon: -104.988,
                         },
-                    },
-                    PlaybackPolicy: &components.PlaybackPolicy{
-                        Type: components.TypeWebhook,
-                        WebhookID: livepeergo.String("1bde4o2i6xycudoy"),
-                        WebhookContext: map[string]any{
-                            "streamerId": "my-custom-id",
-                        },
-                        RefreshInterval: livepeergo.Float64(600),
-                    },
-                    Profiles: []components.FfmpegProfile{
-                        components.FfmpegProfile{
-                            Width: 1280,
-                            Name: "720p",
-                            Height: 486589,
-                            Bitrate: 3000000,
-                            Fps: 30,
-                            FpsDen: livepeergo.Int64(1),
-                            Quality: livepeergo.Int64(23),
-                            Gop: livepeergo.String("2"),
-                            Profile: components.ProfileH264Baseline.ToPointer(),
-                        },
+                        Source: "https://myservice.com/live/stream.flv",
                     },
                     Record: livepeergo.Bool(false),
-                    RecordingSpec: &components.RecordingSpec{
-                        Profiles: []components.FfmpegProfile{
-                            components.FfmpegProfile{
-                                Width: 1280,
-                                Name: "720p",
-                                Height: 489382,
+                    RecordingSpec: &components.NewStreamPayloadRecordingSpec{
+                        Profiles: []components.TranscodeProfile{
+                            components.TranscodeProfile{
                                 Bitrate: 3000000,
-                                Fps: 30,
+                                Encoder: components.EncoderH264.ToPointer(),
+                                Fps: livepeergo.Int64(30),
                                 FpsDen: livepeergo.Int64(1),
-                                Quality: livepeergo.Int64(23),
                                 Gop: livepeergo.String("2"),
+                                Name: livepeergo.String("720p"),
                                 Profile: components.ProfileH264Baseline.ToPointer(),
-                            },
-                        },
-                    },
-                    Multistream: &components.Multistream{
-                        Targets: []components.Target{
-                            components.Target{
-                                Profile: "720p",
-                                VideoOnly: livepeergo.Bool(false),
-                                ID: livepeergo.String("PUSH123"),
-                                Spec: &components.TargetSpec{
-                                    Name: livepeergo.String("My target"),
-                                    URL: "rtmps://live.my-service.tv/channel/secretKey",
-                                },
+                                Quality: livepeergo.Int64(23),
+                                Width: livepeergo.Int64(1280),
                             },
                         },
                     },
@@ -6502,18 +6587,18 @@ paths:
                     ),
                 ],
                 record=False,
-                recording_spec=components.RecordingSpec(
+                recording_spec=components.NewStreamPayloadRecordingSpec(
                     profiles=[
-                        components.FfmpegProfile(
+                        components.TranscodeProfile(
                             width=1280,
                             name='720p',
-                            height=489382,
                             bitrate=3000000,
+                            quality=23,
                             fps=30,
                             fps_den=1,
-                            quality=23,
                             gop='2',
-                            profile=components.Profile.H264_BASELINE,
+                            profile=components.TranscodeProfileProfile.H264_BASELINE,
+                            encoder=components.TranscodeProfileEncoder.H_264,
                         ),
                     ],
                 ),
@@ -6801,39 +6886,54 @@ paths:
                 var id string = "<value>"
 
                 streamPatchPayload := components.StreamPatchPayload{
-                    Record: livepeergo.Bool(false),
                     Multistream: &components.Multistream{
                         Targets: []components.Target{
                             components.Target{
-                                Profile: "720p",
-                                VideoOnly: livepeergo.Bool(false),
                                 ID: livepeergo.String("PUSH123"),
+                                Profile: "720p",
                                 Spec: &components.TargetSpec{
                                     Name: livepeergo.String("My target"),
                                     URL: "rtmps://live.my-service.tv/channel/secretKey",
                                 },
+                                VideoOnly: livepeergo.Bool(false),
                             },
                         },
                     },
                     PlaybackPolicy: &components.PlaybackPolicy{
+                        RefreshInterval: livepeergo.Float64(600),
                         Type: components.TypeWebhook,
-                        WebhookID: livepeergo.String("1bde4o2i6xycudoy"),
                         WebhookContext: map[string]any{
                             "streamerId": "my-custom-id",
                         },
-                        RefreshInterval: livepeergo.Float64(600),
+                        WebhookID: livepeergo.String("1bde4o2i6xycudoy"),
                     },
                     Profiles: []components.FfmpegProfile{
                         components.FfmpegProfile{
-                            Width: 1280,
-                            Name: "720p",
-                            Height: 857478,
                             Bitrate: 3000000,
                             Fps: 30,
                             FpsDen: livepeergo.Int64(1),
-                            Quality: livepeergo.Int64(23),
                             Gop: livepeergo.String("2"),
-                            Profile: components.ProfileH264Baseline.ToPointer(),
+                            Height: 857478,
+                            Name: "720p",
+                            Profile: components.FfmpegProfileProfileH264Baseline.ToPointer(),
+                            Quality: livepeergo.Int64(23),
+                            Width: 1280,
+                        },
+                    },
+                    Record: livepeergo.Bool(false),
+                    RecordingSpec: &components.RecordingSpec{
+                        Profiles: []components.TranscodeProfile{
+                            components.TranscodeProfile{
+                                Bitrate: 3000000,
+                                Encoder: components.EncoderH264.ToPointer(),
+                                Fps: livepeergo.Int64(30),
+                                FpsDen: livepeergo.Int64(1),
+                                Gop: livepeergo.String("2"),
+                                Name: livepeergo.String("720p"),
+                                Profile: components.ProfileH264Baseline.ToPointer(),
+                                Quality: livepeergo.Int64(23),
+                                Width: livepeergo.Int64(1280),
+                            },
                         },
                     },
                 }
@@ -6893,6 +6993,21 @@ paths:
                         profile=components.Profile.H264_BASELINE,
                     ),
                 ],
+                recording_spec=components.RecordingSpec(
+                    profiles=[
+                        components.TranscodeProfile(
+                            width=1280,
+                            name='720p',
+                            bitrate=3000000,
+                            quality=23,
+                            fps=30,
+                            fps_den=1,
+                            gop='2',
+                            profile=components.TranscodeProfileProfile.H264_BASELINE,
+                            encoder=components.TranscodeProfileEncoder.H_264,
+                        ),
+                    ],
+                ),
             ))
 
             if res is not None:
@@ -7060,13 +7175,13 @@ paths:
                 var id string = "<value>"
 
                 targetAddPayload := components.TargetAddPayload{
-                    Profile: "720p0",
-                    VideoOnly: livepeergo.Bool(false),
                     ID: livepeergo.String("PUSH123"),
+                    Profile: "720p0",
                     Spec: &components.TargetAddPayloadSpec{
                         Name: livepeergo.String("My target"),
                         URL: "rtmps://live.my-service.tv/channel/secretKey",
                     },
+                    VideoOnly: livepeergo.Bool(false),
                 }
                 ctx := context.Background()
                 res, err := s.Stream.AddMultistreamTarget(ctx, id, targetAddPayload)
@@ -7862,41 +7977,41 @@ paths:
                                 URL: "https://s3.amazonaws.com/bucket/file.mp4",
                             },
                     ),
-                    Storage: components.CreateTranscodePayloadStorageStorage1(
-                            components.Storage1{
-                                Type: components.StorageTypeS3,
-                                Endpoint: "https://gateway.storjshare.io",
-                                Bucket: "outputbucket",
-                                Credentials: components.StorageCredentials{
-                                    AccessKeyID: "AKIAIOSFODNN7EXAMPLE",
-                                    SecretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
-                                },
-                            },
-                    ),
                     Outputs: components.Outputs{
+                        Fmp4: &components.Fmp4{
+                            Path: "/samplevideo/fmp4",
+                        },
                         Hls: &components.Hls{
                             Path: "/samplevideo/hls",
                         },
                         Mp4: &components.Mp4{
                             Path: "/samplevideo/mp4",
                         },
-                        Fmp4: &components.Fmp4{
-                            Path: "/samplevideo/fmp4",
-                        },
                     },
                     Profiles: []components.TranscodeProfile{
                         components.TranscodeProfile{
-                            Width: livepeergo.Int64(1280),
-                            Name: livepeergo.String("720p"),
                             Bitrate: 3000000,
-                            Quality: livepeergo.Int64(23),
+                            Encoder: components.EncoderH264.ToPointer(),
                             Fps: livepeergo.Int64(30),
                             FpsDen: livepeergo.Int64(1),
                             Gop: livepeergo.String("2"),
-                            Profile: components.TranscodeProfileProfileH264Baseline.ToPointer(),
-                            Encoder: components.TranscodeProfileEncoderH264.ToPointer(),
+                            Name: livepeergo.String("720p"),
+                            Profile: components.ProfileH264Baseline.ToPointer(),
+                            Quality: livepeergo.Int64(23),
+                            Width: livepeergo.Int64(1280),
                         },
                     },
+                    Storage: components.CreateTranscodePayloadStorageStorage1(
+                            components.Storage1{
+                                Bucket: "outputbucket",
+                                Credentials: components.StorageCredentials{
+                                    AccessKeyID: "AKIAIOSFODNN7EXAMPLE",
+                                    SecretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+                                },
+                                Endpoint: "https://gateway.storjshare.io",
+                                Type: components.StorageTypeS3,
+                            },
+                    ),
                 }
                 ctx := context.Background()
                 res, err := s.Transcode.Create(ctx, request)
@@ -8115,15 +8230,15 @@ paths:
                     livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
                 )
                 request := components.WebhookInput{
-                    Name: "test_webhook",
-                    ProjectID: livepeergo.String("aac12556-4d65-4d34-9fb6-d1f0985eb0a9"),
                     Events: []components.Events{
                         components.EventsStreamStarted,
                         components.EventsStreamIdle,
                     },
-                    URL: "https://my-service.com/webhook",
+                    Name: "test_webhook",
+                    ProjectID: livepeergo.String("aac12556-4d65-4d34-9fb6-d1f0985eb0a9"),
                     SharedSecret: livepeergo.String("my-secret"),
                     StreamID: livepeergo.String("de7818e7-610a-4057-8f6f-b785dc1e6f88"),
+                    URL: "https://my-service.com/webhook",
                 }
                 ctx := context.Background()
                 res, err := s.Webhook.Create(ctx, request)
@@ -8409,15 +8524,15 @@ paths:
                 var id string = "<value>"
 
                 webhook := components.WebhookInput{
-                    Name: "test_webhook",
-                    ProjectID: livepeergo.String("aac12556-4d65-4d34-9fb6-d1f0985eb0a9"),
                     Events: []components.Events{
                         components.EventsStreamStarted,
                         components.EventsStreamIdle,
                     },
-                    URL: "https://my-service.com/webhook",
+                    Name: "test_webhook",
+                    ProjectID: livepeergo.String("aac12556-4d65-4d34-9fb6-d1f0985eb0a9"),
                     SharedSecret: livepeergo.String("my-secret"),
                     StreamID: livepeergo.String("de7818e7-610a-4057-8f6f-b785dc1e6f88"),
+                    URL: "https://my-service.com/webhook",
                 }
                 ctx := context.Background()
                 res, err := s.Webhook.Update(ctx, id, webhook)
