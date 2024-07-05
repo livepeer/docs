@@ -1,10 +1,10 @@
 ---
-title: Speech-to-Text
+title: Audio-to-Text
 ---
 
 ## Overview
 
-The `speech-to-text` pipeline transcribes audio from media files to text. This pipeline powered is by the latest diffusion models at HuggingFace 
+The `audio-to-text` pipeline transcribes audio from media files to text. This pipeline powered is by the latest diffusion models at HuggingFace 
 [automatic-speech-recognition](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition)
 pipeline.
 
@@ -19,21 +19,21 @@ pipeline.
 
 ### Warm Models
 
-The current warm model requested for the `speech-to-text` pipeline is:
+The current warm model requested for the `audio-to-text` pipeline is:
 
 - [openai/whisper-large-v3](https://huggingface.co/openai/whisper-large-v3):
   Whisper is a pre-trained model for automatic speech recognition (ASR) and speech translation.
 
 <Tip>
   For faster responses with different
-  [speech-to-text](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition)
+  [audio-to-text](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition)
   diffusion models, ask Orchestrators to load it on their GPU via the `ai-video`
   channel in [Discord Server](https://discord.gg/livepeer).
 </Tip>
 
 ### On-Demand Models
 
-The following models have been tested and verified for the `speech-to-text`
+The following models have been tested and verified for the `audio-to-text`
 pipeline:
 
 <Note>
@@ -52,16 +52,16 @@ pipeline:
 ## Basic Usage Instructions
 
 <Tip>
-  For a detailed understanding of the `speech-to-text` endpoint and to experiment
+  For a detailed understanding of the `audio-to-text` endpoint and to experiment
   with the API, see the [AI Subnet API
-  Reference](/ai/api-reference/speech-to-text).
+  Reference](/ai/api-reference/audio-to-text).
 </Tip>
 
-To generate an image with the `speech-to-text` pipeline, send a `POST` request to
-the Gateway's `speech-to-text` API endpoint:
+To generate an image with the `audio-to-text` pipeline, send a `POST` request to
+the Gateway's `audio-to-text` API endpoint:
 
 ```bash
-curl -X POST "https://<gateway-ip>/speech-to-text" \
+curl -X POST "https://<gateway-ip>/audio-to-text" \
     -F model_id=openai/whisper-large-v3 \
     -F audio=@<PATH_TO_FILE>
 ```
@@ -73,11 +73,11 @@ In this command:
 - `audio` is the path to the audio file to be transcribed.
 
 <Note>
-Supported file types: `wav`, `flac`, `mp3`, `m4a` and `webm`
+Supported file types: `flac`, `mp3`, `m4a` and `webm`
 </Note>
 
 For additional optional parameters, refer to the
-[AI Subnet API Reference](/ai/api-reference/speech-to-text).
+[AI Subnet API Reference](/ai/api-reference/audio-to-text).
 
 After execution, the Orchestrator processes the request and returns the response
 to the Gateway:
@@ -109,8 +109,8 @@ to the Gateway:
 <Card
   title="API Reference"
   icon="rectangle-terminal"
-  href="/ai/api-reference/speech-to-text"
+  href="/ai/api-reference/audio-to-text"
 >
-  Explore the `speech-to-text` endpoint and experiment with the API in the AI
+  Explore the `audio-to-text` endpoint and experiment with the API in the AI
   Subnet API Reference.
 </Card>
