@@ -18,7 +18,7 @@ icon: python
 Get the Livepeer Python SDK.
 
 ```bash
-pip install livepeer
+pip install git+https://github.com/livepeer/livepeer-python.git
 ```
 
   </Step>
@@ -28,10 +28,10 @@ The first step is to initialize the SDK with your Livepeer Studio API key.
 
 ```python
 import livepeer
-from livepeer.models import operations
+from livepeer.models import components
 
-lpClient = livepeer.SDK(
-    api_key="", # Your API key
+lpClient = livepeer.Livepeer(
+    api_key="<YOUR_BEARER_TOKEN_HERE>",
 )
 ```
 
@@ -44,23 +44,31 @@ Let's create a stream.
 import livepeer
 from livepeer.models import components
 
-lpClient = livepeer.SDK(
-    api_key="",
+lpClient = livepeer.Livepeer(
+    api_key="<YOUR_BEARER_TOKEN_HERE>",
 )
 
 req = components.NewStreamPayload(
-    name='test_stream'
+    name='test_stream',
 )
 
-res = lpClient.stream.create(req)
+res = s.stream.create(req)
 
-if res.data is not None:
+if res.stream is not None:
     # handle response
     pass
 ```
 
   </Step>
-
+  <Step title="Try it yourself">
+      <Card
+    title="Python Example"
+    href="https://github.com/livepeer/livepeer-python/tree/main/example"
+    icon="arrow-up-right-from-square"
+  >
+      See an example on GitHub.
+  </Card>
+  </Step>
 </Steps>
 
 ## Next steps

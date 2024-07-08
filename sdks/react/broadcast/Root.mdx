@@ -78,10 +78,9 @@ typical media file playable by an HTML5 video element (MP4, WebM).
 
 Configures the WHIP WebRTC ingest URL for the `Broadcast` component. You can
 create the `ingestUrl` by passing
-[`getIngest`](/sdks/livepeer-react/broadcast/get-ingest) a string (interpreted
-as a Livepeer Studio stream key or URL), Livepeer Studio stream data, or
-Cloudflare stream data. `Broadcast` is compatible with all WHIP playback
-endpoints.
+[`getIngest`](/sdks/react/broadcast/get-ingest) a string (interpreted as a
+Livepeer Studio stream key or URL), Livepeer Studio stream data, or Cloudflare
+stream data. `Broadcast` is compatible with all WHIP playback endpoints.
 
 ```tsx
 <Broadcast.Root ingestUrl={getIngest(streamKey)}>{...}</Broadcast.Root>
@@ -114,6 +113,10 @@ the video first, then streams media to the server upon activation.
 Controls whether audio is enabled initially for the broadcast. The default is
 `true`. Set to `false` to start the broadcast without requesting an audio track.
 
+This can be an object that adheres to the structure of
+[`MediaTrackConstraints`](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints), which will
+constrain the audio track used in the broadcast.
+
 ```tsx
 <Broadcast.Root audio={false}>{...}</Broadcast.Root>
 ```
@@ -123,8 +126,20 @@ Controls whether audio is enabled initially for the broadcast. The default is
 Controls whether video is enabled initially for the broadcast. The default is
 `true`. Set to `false` to start the broadcast without requesting a video track.
 
+This can be an object that adheres to the structure of
+[`MediaTrackConstraints`](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints), which will
+constrain the video track used in the broadcast. This is usually used to limit the resolution of the video
+and improve bandwidth usage.
+
 ```tsx
-<Broadcast.Root video={false}>{...}</Broadcast.Root>
+<Broadcast.Root video={{
+  width: {
+    ideal: 1920,
+  },
+  height: {
+    ideal: 1080,
+  },
+}}>{...}</Broadcast.Root>
 ```
 
 ### `hotkeys`

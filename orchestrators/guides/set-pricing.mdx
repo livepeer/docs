@@ -4,12 +4,14 @@ icon: tag
 ---
 
 In this guide we'll go over how to set and configure pricing to charge for
-transcoding advertised to broadcasters off-chain.
+transcoding advertised to gateways off-chain.
+
+# Setting WEI Price
 
 ## Choose a Price
 
 To charge for transcoding orchestrators set a price per pixel denominated in Wei
-(1 ETH = 1e18 Wei), advertised to broadcasters off-chain.
+(1 ETH = 1e18 Wei), advertised to gateways off-chain.
 
 To get support for setting a price that will allow you to receive work on the
 network, contact us on our [Discord](https://discord.gg/uaPhtyrWsF) channel.
@@ -69,3 +71,61 @@ You can set the base price per pixel using the `livepeer_cli`:
    ```
 
 7. To verify the price was updated, check the log from your node.
+
+
+
+# Setting fiat-denominated price
+
+With the release of go-livepeer version 0.8.0, we are introducing a feature to allow specifying the transcoding price per pixel in USD. This is a backward-compatible change, which still supports setting the price in Wei but now gives the option of using custom currencies instead, with USD being the default.
+
+The feature works by integrating with a [Chainlink Price Feed](https://docs.chain.link/data-feeds/price-feeds) to fetch the quote of the given currency and periodically update the transcoding price on the running node. This is meant to be performed both in Bs and Os, keeping the price over the network consistent over time.
+
+## Configuration
+
+To set a price in USD, one just needs to add the `USD` suffix to the value provided in the `-pricePerUnit` flag sent to the `livepeer` binary. If the currency suffix is missing, it will default to Wei to keep backward-compatibility.
+
+Given the price per pixel in USD is going to be a really low number, the recommendation is to also set the `-pixelsPerUnit` flag so a more human-friendly number can be specified on the price per unit. The `-pixelsPerUnit` acts as a denominator on the `-pricePerUnit` and the recommendation is to keep it constant over time, updating only the price per unit as seen fit.
+
+e.g.:
+
+- To set a price of **$4.10 E -13**
+
+```jsx
+-pixelsPerUnit 1e12 \
+-pricePerUnit 0.41USD
+```
+
+- To set a price of **$6.65 E -14**
+
+```jsx
+-pixelsPerUnit 1e12 \
+-pricePerUnit 0.0665USD
+```
+
+Notice that the `-pixelsPerUnit` flag supports the exponential notation, so it’s easier to understand the value being set. The `-pricePerUnit` does not support it though, so a standard decimal notation must be used. This is also an incentive to use the `-pixelsPerUnit` value in order to keep the `-pricePerUnit` as an easily readable value.
+
+This feature is also supported by gateways, with the `-pixelsPerUnit` flag staying the same, while the `-maxPricePerUnit` should be set instead for the max price. The currency is specified in the same format.
+
+### Advanced
+
+The `livepeer` binary is automatically configured with the ETH/USD price feed in the Arbitrum mainnet. If you are running the node on a different network or would like to use a different currency to peg the price to, you should configure the `-priceFeedAddr` with the address of the corresponding price feed. You can search for existing price feed addresses on [Chainlink website](https://docs.chain.link/data-feeds/price-feeds/addresses?network=ethereum&page=1).
+
+Notice that the price feed must have both `ETH` and your desired currency in the quote pair. You should then specify the price per unit with the currency suffix corresponding to the currency provided by the price feed.
+
+e.g.
+
+- To use `USD` as the price currency in Ethereum mainnet:
+
+```jsx
+-priceFeedAddr 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419 \
+-pricePerUnit 1USD
+```
+
+- To use `BTC` as the price currency on Arbitrum mainnet:
+
+```jsx
+-priceFeedAddr 0xc5a90A6d7e4Af242dA238FFe279e9f2BA0c64B2e \
+-pricePerUnit 1BTC
+```
+
+The `-pixelsPerUnit` flag is independent of this. Also keep in mind that while custom currencies are supported, Livepeer Studio will be pegging their `-maxPricePerPixel` to USD so the recommendation is to also keep the default USD configuration on your node to stay in sync with the rest of the network.

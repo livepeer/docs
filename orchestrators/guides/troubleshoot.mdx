@@ -9,7 +9,7 @@ most common issues that a video miner might encounter.
 ## OrchestratorCapped error
 
 This error means that your orchestrator has hit its session limit so it is not
-longer accepting work from broadcasters. See the
+longer accepting work from gateways. See the
 [session limit guide](/orchestrators/guides/set-session-limits) for information
 on setting the session limit.
 
@@ -45,7 +45,7 @@ transcoding completes.
 
 These errors occur when a source video segment with certain properties that
 prevent it from being transcoded. There are no actionable steps for an operator
-in this scenario since the broadcaster is responsible for sending video segments
+in this scenario since the gateway is responsible for sending video segments
 that are supported by the Livepeer network.
 
 ## My node is still calling the reward claims function and spending gas, even though I have set `reward` to false
@@ -59,20 +59,20 @@ actions on behalf of your orchestrator if using the same wallet.
 
 ## TicketParams expired
 
-This error indicates that the broadcaster sent a payment ticket with too old
-parameters. This may be caused by the broadcaster's delay (between getting the
+This error indicates that the gateway sent a payment ticket with too old
+parameters. This may be caused by the gateway's delay (between getting the
 last orchestrator info message and sending the segment) or by the delay in
 polling chain blocks (the expiration time is measured in L1 blocks). For more
 details please check
 [TicketParams expiration time](https://github.com/livepeer/go-livepeer/issues/1343).
-There are no actionable steps for an operator, broadcaster will retry a request
+There are no actionable steps for an operator, gateway will retry a request
 with the updated ticket parameters.
 
 ## Error creating Ethereum account manager
 
 This error means that Livepeer was not able to fetch your ETH account (or create
 a new one). Livepeer stores ETH accounts in the `<datadir>/keystore/` directory
-(by deafult `~/.lpData/<network>/keystore/`).
+(by default `~/.lpData/<network>/keystore/`).
 
 Please make sure that one of the files in that directory contains the account
 you specified with the `-ethAcctAddr` parameter. If you used another `datadir`
@@ -93,7 +93,7 @@ transcoded in Livepeer.
 **What does being ‘publicly accessible’ mean? Can I run a transcoder from
 home?**
 
-Orchestrators should be reachable by broadcasters via the public IP and port
+Orchestrators should be reachable by gateways via the public IP and port
 that is set during registration. The only port that is required to be public is
 the one that was set during registration (default 8935). Be aware that there are
 many risks to running a public server. Only set up an orchestrator if you are
@@ -132,7 +132,7 @@ Some orchestrators in the past have used
 
 **What is the service URI? Does this need to be an IP?**
 
-The service registry acts as a discovery mechanism to allow broadcasters to look
+The service registry acts as a discovery mechanism to allow gateways to look
 up the addresses of orchestrators on the network. Orchestrators register their
 service URI by storing it on the blockchain. During registration you are only
 asked for your IP:port, but the URI stored on the blockchain in the form of .

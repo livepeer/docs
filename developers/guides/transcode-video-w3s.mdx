@@ -64,7 +64,9 @@ Submit the following request:
     ```javascript
     import { Livepeer } from "livepeer";
 
-    const livepeer = new Livepeer("$API_KEY");
+    const apiKey = "YOUR_API_KEY"
+
+    const livepeer = new Livepeer({apiKey});
 
     livepeer.transcode({
       input: {
@@ -100,6 +102,10 @@ Submit the following request:
           height: 360,
         },
       ],
+    }).then((video) => {
+      console.log(video);
+    }).catch((error) => {
+      console.error(error);
     });
     ```
 
@@ -108,8 +114,11 @@ Submit the following request:
   <Tab title="Python">
     ```python
     import livepeer
+    from livepeer.models import components
 
-    livepeer.api_key = "$API_KEY"
+    client = livepeer.Livepeer(
+        api_key="<YOUR_BEARER_TOKEN_HERE>",
+    )
 
     params = {
       "input": {
@@ -147,116 +156,29 @@ Submit the following request:
       ]
     }
 
-    video = livepeer.transcode(params)
-    print(video)
+    res = s.transcode.create(request=components.TranscodeRequest(**params))
+
+    if res.task is not None:
+      # handle response
+      pass
     ```
-
-  </Tab>
-
-  <Tab title="Ruby">
-    ```ruby
-    require 'livepeer'
-
-    Livepeer.api_key = "$API_KEY"
-
-    params = {
-      "input": {
-        "url": "$INPUT_VIDEO_URL"
-      },
-      "storage": {
-        "type": "web3.storage",
-        "credentials": {
-          "proof": "$DELEGATION_PROOF"
-        }
-      },
-      "outputs": {
-        "hls": {
-          "path": "/"
-        },
-        "mp4": {
-          "path": "/"
-        }
-      },
-      "profiles": [
-        {
-          name: "480p",
-          bitrate: 1000000,
-          fps: 30,
-          width: 854,
-          height: 480
-        },
-        {
-          name: "360p",
-          bitrate: 500000,
-          fps: 30,
-          width: 640,
-          height: 360
-        }
-      ]
-    }
-
-    video = Livepeer.transcode(params)
-    puts video
-    ```
-
-  </Tab>
-
-  <Tab title="PHP">
-    ```PHP
-    $livepeer = Livepeer::client("$API_KEY");
-
-    $livepeer->transcode([
-      "input" => [
-        "url" => "$INPUT_VIDEO_URL"
-      ],
-      "storage" => [
-        "type" => "web3.storage",
-        "credentials" => [
-          "proof" => "$DELEGATION_PROOF"
-        ]
-      ],
-      "outputs" => [
-        "hls" => [
-          "path" => "/"
-        ],
-        "mp4" => [
-          "path" => "/"
-        ]
-      ],
-      "profiles" => [
-        [
-          "name" => "480p",
-          "bitrate" => 1000000,
-          "fps" => 30,
-          "width" => 854,
-          "height" => 480
-        ],
-        [
-          "name" => "360p",
-          "bitrate" => 500000,
-          "fps" => 30,
-          "width" => 640,
-          "height" => 360
-        ]
-      ]
-    ]);
-    ```
-
   </Tab>
 
   <Tab title="Go">
     ```go
     package main
 
-    import (
-      "fmt"
-      "github.com/livepeer/livepeer-go-sdk"
+    import(
+      livepeergo "github.com/livepeer/livepeer-go"
+      "github.com/livepeer/livepeer-go/models/components"
+      "context"
+      "log"
     )
 
     func main() {
-      apiKey := "$API_KEY"
-
-      client := livepeer.NewClient(apiKey)
+      client := livepeergo.New(
+        livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+       )
 
       params := map[string]interface{}{
         "input": map[string]string{
@@ -294,12 +216,14 @@ Submit the following request:
         },
       }
 
-      sent, err := client.Transcode(params)
+      ctx := context.Background()
+      res, err := client.Transcode.Create(ctx, params)
       if err != nil {
-        fmt.Println(err.Error())
-        return
+          log.Fatal(err)
       }
-      fmt.Println(sent.Id)
+      if res.Task != nil {
+          // handle response
+      }
     }
     ```
 

@@ -52,7 +52,7 @@ mv livepeer-linux-amd64/* /usr/local/bin/
 
 ### Linux GPU
 
-There is a separate binary which supports transcoding on the NVIDIA GPU. The requirement for this binary is to have version 11 of the [CUDA Toolkit](https://developer.nvidia.com/cuda-11-7-0-download-archive) installed on your machine.
+There is a separate binary which supports transcoding on the NVIDIA GPU. The requirement for this binary is to have version 12 of the [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads) installed on your machine.
 
 ```bash
 # <RELEASE_VERSION> is the release version, e.g. v0.5.35
@@ -127,7 +127,7 @@ docker pull livepeer/go-livepeer:<RELEASE_VERSION>
 
 Once you've pulled the image, retrieve the image id and start the container.
 
-**Any flags you provide will be passed to the binary**, so you can pass [your configuration](/installation/configuring-livepeer) here.
+**Any flags you provide will be passed to the binary**, so you can pass [your configuration flags](/references/go-livepeer/cli-reference) here.
 
 ```bash
 docker run <image id> <livepeer configuration flags>
@@ -247,5 +247,5 @@ error while loading shared libraries: libnppig.so.11: cannot open shared object 
 This means that you have installed the Livepeer GPU binary but it is unable to access your CUDA Toolkit libraries. If you do not intend to use GPU transcoding, please download `livepeer` instead of `livepeer-gpu`. However, if you wish to use GPU transcoding, please ensure that the CUDA Toolkit is installed and add its path to the shared libraries path.
 
 ```
-export LD_LIBRARY_PATH="${HOME}/compiled/lib:/usr/local/cuda/lib64:${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH=${HOME}/compiled/lib:/usr/local/cuda/lib64:${LD_LIBRARY_PATH}
 ```

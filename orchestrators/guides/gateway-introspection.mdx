@@ -1,17 +1,17 @@
 ---
-title: Broadcaster Introspection
+title: Gateway Introspection
 icon: tower-broadcast
 ---
 
-We launched a public API to enable Broadcaster introspection. Users of the API
-will be able to review the activity inside the Livepeer Broadcaster nodes and
+We launched a public API to enable Gateway introspection. Users of the API
+will be able to review the activity inside the Livepeer Gateway nodes and
 understand the selection algorithms used to assign work to Orchestrator nodes.
 
 This is the initial release of the API, and only a few log lines have been
 enabled in the public logs. Orchestrators are encouraged to open pull requests
 to enable additional logs, which will be closely reviewed by the Livepeer team.
 Additionally, the core Livepeer team will publish more logs from Livepeer
-Broadcasters that may aid in understanding the selection algorithms.
+Gateways that may aid in understanding the selection algorithms.
 
 This API uses Grafana's Loki for log aggregation. Examples of API usage are
 provided below. For more guidance, refer to
@@ -19,7 +19,7 @@ provided below. For more guidance, refer to
 
 ### API usage
 
-- Public logs from Livepeer Broadcasters are available through the public Loki
+- Public logs from Livepeer Gateways are available through the public Loki
   instance.
 - Example queries:
 
@@ -36,7 +36,7 @@ curl -G -s https://loki.livepeer.report/loki/api/v1/query_range \
 curl -G -s https://loki.livepeer.report/loki/api/v1/query \
      --data-urlencode "query={region=~\"nyc\"}" | jq
 
-# logs related to a specfic orchestrator IP-address:
+# logs related to a specific orchestrator IP-address:
 curl -G -s https://loki.livepeer.report/loki/api/v1/query \
      --data-urlencode "query={region=~\".+\"} |= \"clientIP=37.228.130.23\"" | jq
 

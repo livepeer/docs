@@ -1,0 +1,60 @@
+---
+title: Fund The Livepeer Gateway
+icon: ethereum
+description:
+  The following steps will walk you through adding funds to the newly created
+  ETH account. This includes funding the ETH account on Ethereum Mainnet,
+  bridging the funds to Arbritrum's L2 Network, and finally using the Livepeer
+  CLI to allocate the proper deposit and reserve amounts.
+---
+
+# Add Funds to Gateway Wallet
+
+In order to use the Gateway you need to send ETH to your Gateway address on
+Ethereum Mainnet and then bridged to Arbitrum's L2 Network.
+
+<Note>
+  _If you have ETH on the Arbitrum L2 Network, you can simply transfer the funds
+  to the newly created Gateway ETH Account._
+</Note>
+<Note>
+  _Livepeer runs on the Arbitrium's L2 Network and requires the funds to be
+  bridged._
+</Note>
+
+# Bridge Funds to Arbitrum
+
+If you need to bridge ETH you can use the official bridge
+https://bridge.arbitrum.io/ or use an exchange that supports L2 transfers. For
+additonal information on bridging view the
+[Livepeer bridging guide.](/delegators/guides/bridge-lpt-to-arbitrum)
+
+Once you have ETH on the Arbitrum network, transfer it to your newly created
+Gateway address.
+
+# Deposit Gateway Funds via Livepeer CLI
+
+We now need to divide the Gateway funds into a **Deposit** and **Reserve**
+
+In this guide we are using a total of 0.1 ETH. This is minimum recommended and
+best suited for testing.
+
+To calculate the price your Gateway will pay for transcoding, divide the
+_Reserve_ amount by 100. In our example each payment will be 0.0003 ETH (0.03
+/ 100)
+
+As you pay for transcoding the amount paid is subtracted from your _Deposit_, so
+make sure to monitor your _Deposit_ balance and top it off to keep your Gateway
+transcoding.
+
+## Open the Livepeer CLI
+
+Open the Livepeer CLI by following the instructions for your platform.
+
+Choose **Option 11. Invoke "deposit broadcasting funds" (ETH)**
+
+- Enter 0.065 for the **Deposit** and 0.03 for the **Reserve** amounts when
+  prompted.
+
+Choose **Option 1. Get node status** and confirm that the correct amounts are
+visible in the **BROADCASTER STATS** section.

@@ -32,7 +32,7 @@ or
     const apiKey = 'YOUR_API_KEY';
     const streamId = 'STREAM_ID';
 
-    const livepeer = new Livepeer(apiKey);
+    const livepeer = new Livepeer({apiKey});
 
     livepeer.stream.get(streamId)
       .then((response) => {
@@ -47,70 +47,20 @@ or
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+    import livepeer
 
-    # Initialize the Livepeer client with your API key
-    api_key = "YOUR_API_KEY"
-    livepeer = Livepeer(api_key)
+     // Initialize the Livepeer client with your API key
+    client = livepeer.Livepeer(
+        api_key="<YOUR_BEARER_TOKEN_HERE>",
+    )
 
-    # Define the stream ID you want to retrieve
-    stream_id = "STREAM_ID"
 
-    try:
-        # Get stream details by stream ID
-        response = livepeer.stream.get(stream_id)
-        print("Stream details:", response)
-    except Exception as e:
-        print("Error fetching stream details:", e)
-    ```
+    // Replan <value> with the stream ID you want to retrieve
+    res = client.stream.get(id='<value>')
 
-  </Tab>
-
-  <Tab title="Ruby">
-    ```ruby
-    require 'livepeer'
-
-    # Initialize the Livepeer client with your API key
-    api_key = 'YOUR_API_KEY'
-    client = Livepeer::Client.new(api_key: api_key)
-
-    # Define the stream ID you want to retrieve
-    stream_id = 'STREAM_ID'
-
-    begin
-      # Get stream details by stream ID
-      response = client.stream.get(stream_id)
-      puts 'Stream details:', response
-    rescue StandardError => e
-      puts 'Error fetching stream details:', e.message
-    end
-    ```
-
-  </Tab>
-
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API key
-    $api_key = 'YOUR_API_KEY';
-    $livepeer = new Livepeer($api_key);
-
-    // Define the stream ID you want to retrieve
-    $stream_id = 'STREAM_ID';
-
-    try {
-        // Get stream details by stream ID
-        $response = $livepeer->stream->get($stream_id);
-        echo 'Stream details: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error fetching stream details: ' . $e->getMessage() . PHP_EOL;
-    }
+    if res.stream is not None:
+        # handle response
+        pass
     ```
 
   </Tab>
@@ -119,29 +69,30 @@ or
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/livepeer-go"
+    import(
+      livepeergo "github.com/livepeer/livepeer-go"
+      "context"
+      "log"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
+        // Initialize the Livepeer client with your API key
+        client := livepeergo.New(
+            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+        )
 
-      // Define the stream ID you want to retrieve
-      streamID := "STREAM_ID"
+        // Define the stream ID you want to retrieve
+        var id string = "<value>" 
 
-      // Get stream details by stream ID
-      response, err := client.Stream.Get(streamID)
-      if err != nil {
-        fmt.Printf("Error fetching stream details: %v\n", err)
-        os.Exit(1)
-      }
+        ctx := context.Background()
+        res, err := client.Stream.Get(ctx, id)
 
-      fmt.Printf("Stream details: %+v\n", response)
+        if err != nil {
+            log.Fatal(err)
+        }
+        if res.Stream != nil {
+            // handle response
+        }
     }
     ```
 
@@ -158,7 +109,7 @@ or
     const apiKey = 'YOUR_API_KEY';
     const sessionId = 'SESSION_ID';
 
-    const livepeer = new Livepeer(apiKey);
+    const livepeer = new Livepeer({apiKey});
 
     livepeer
       .session.get(sessionId)
@@ -174,70 +125,18 @@ or
 
   <Tab title="Python">
     ```python
-    from livepeer import Livepeer
+    import livepeer
 
-    # Initialize the Livepeer client with your API key
-    api_key = "YOUR_API_KEY"
-    livepeer = Livepeer(api_key)
+    client = livepeer.Livepeer(
+        api_key="<YOUR_BEARER_TOKEN_HERE>",
+    )
 
-    # Define the session ID you want to retrieve
-    session_id = "SESSION_ID"
 
-    try:
-        # Get session details by session ID
-        response = livepeer.session.get(session_id)
-        print("Session details:", response)
-    except Exception as e:
-        print("Error fetching session details:", e)
-    ```
+    res = client.session.get(id='<value>')
 
-  </Tab>
-
-  <Tab title="Ruby">
-    ```ruby
-    require 'livepeer'
-
-    # Initialize the Livepeer client with your API key
-    api_key = 'YOUR_API_KEY'
-    client = Livepeer::Client.new(api_key: api_key)
-
-    # Define the session ID you want to retrieve
-    session_id = 'SESSION_ID'
-
-    begin
-      # Get session details by session ID
-      response = client.session.get(session_id)
-      puts 'Session details:', response
-    rescue StandardError => e
-      puts 'Error fetching session details:', e.message
-    end
-    ```
-
-  </Tab>
-
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API key
-    $api_key = 'YOUR_API_KEY';
-    $livepeer = new Livepeer($api_key);
-
-    // Define the session ID you want to retrieve
-    $session_id = 'SESSION_ID';
-
-    try {
-        // Get session details by session ID
-        $response = $livepeer->session->get($session_id);
-        echo 'Session details: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error fetching session details: ' . $e->getMessage() . PHP_EOL;
-    }
+    if res.session is not None:
+        # handle response
+        pass
     ```
 
   </Tab>
@@ -246,29 +145,25 @@ or
     ```go
     package main
 
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/livepeer-go"
+    import(
+      livepeergo "github.com/livepeer/livepeer-go"
+      "context"
+      "log"
     )
 
     func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
-
-      // Define the session ID you want to retrieve
-      sessionID := "SESSION_ID"
-
-      // Get session details by session ID
-      response, err := client.Session.Get(sessionID)
-      if err != nil {
-        fmt.Printf("Error fetching session details: %v\n", err)
-        os.Exit(1)
-      }
-
-      fmt.Printf("Session details: %+v\n", response)
+        client := livepeergo.New(
+            livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+        )
+        var id string = "<value>"
+        ctx := context.Background()
+        res, err := client.Session.Get(ctx, id)
+        if err != nil {
+            log.Fatal(err)
+        }
+        if res.Session != nil {
+            // handle response
+        }
     }
     ```
 
@@ -356,7 +251,7 @@ may suggest that your encoder is misconfigured or that the streamer internet
 connection isn't as strong as it should be to deliver high-quality streams to
 your viewers.
 
-## Monitoring Stream Health Using The Dashboard
+### Monitoring in the Dashboard
 
 In the dashboard, there will be a `health` tab on the right side:
 
@@ -381,434 +276,9 @@ At the bottom of the page, a chart will show the ingest rate of a livestream:
   ![image](https://user-images.githubusercontent.com/79172645/135467197-08ec63ab-4c44-4cad-a0d5-95a76b80e5c5.png)
 </Frame>
 
-## Monitor Stream Health Using The API
-
-The health information about a stream can also be queried using a separate
-Stream Health API resides on a different root path `/data`. To use it, you need
-to include the same API key as the one used for the regular API. The API
-consists of the following endpoints:
-
-- Health Status (`/data/stream/{streamId}/health`): Grabs the latest health
-  status info about a given stream, referenced by its Stream ID. This API powers
-  the dashboard health checks and multistream status.
-- Events (`/data/stream/{streamId}/events`): Provides direct access to the
-  low-level events sent by Livepeer video-processing services. It also allows
-  subscribing via SSE to receive new events and is useful for debugging. This
-  API powers the log feed in the dashboard.
-
-Now let's go into more detail about each of the mentioned API endpoints.
-
-## Health Status
-
-The stream ID is the same one as used in the Livestream API.
-
-`GET livepeer.studio/data/stream/{id}/health`
-
-<Tabs>
-  <Tab title="Node.js">
-    ```javascript
-    import { Livepeer } from "livepeer";
-
-    const apiKey = 'YOUR_API_KEY';
-    const streamId = 'STREAM_ID';
-
-    const livepeer = new Livepeer(apiKey);
-
-    livepeer
-      .getStreamHealth(streamId)
-      .then((response) => {
-        console.log("Stream health:", response);
-      })
-      .catch((error) => {
-        console.error("Error fetching stream health:", error);
-      });
-    ```
-
-  </Tab>
-
-  <Tab title="Python">
-    ```python
-    from livepeer import Livepeer
-
-    # Initialize the Livepeer client with your API key
-    api_key = "YOUR_API_KEY"
-    livepeer = Livepeer(api_key)
-
-    # Define the stream ID for which you want to check health
-    stream_id = "STREAM_ID"
-
-    try:
-        # Get stream health by stream ID
-        response = livepeer.get_stream_health(stream_id)
-        print("Stream health:", response)
-    except Exception as e:
-        print("Error fetching stream health:", e)
-    ```
-
-  </Tab>
-
-  <Tab title="Ruby">
-    ```ruby
-    require 'livepeer'
-
-    # Initialize the Livepeer client with your API key
-    api_key = 'YOUR_API_KEY'
-    client = Livepeer::Client.new(api_key: api_key)
-
-    # Define the stream ID for which you want to check health
-    stream_id = 'STREAM_ID'
-
-    begin
-      # Get stream health by stream ID
-      response = client.get_stream_health(stream_id)
-      puts 'Stream health:', response
-    rescue StandardError => e
-      puts 'Error fetching stream health:', e.message
-    end
-    ```
-
-  </Tab>
-
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API key
-    $api_key = 'YOUR_API_KEY';
-    $livepeer = new Livepeer($api_key);
-
-    // Define the stream ID for which you want to check health
-    $stream_id = 'STREAM_ID';
-
-    try {
-        // Get stream health by stream ID
-        $response = $livepeer->getStreamHealth($stream_id);
-        echo 'Stream health: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error fetching stream health: ' . $e->getMessage() . PHP_EOL;
-    }
-    ```
-
-  </Tab>
-
-  <Tab title="Go">
-    ```go
-    package main
-
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/livepeer-go"
-    )
-
-    func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
-
-      // Define the stream ID for which you want to check health
-      streamID := "STREAM_ID"
-
-      // Get stream health by stream ID
-      response, err := client.GetStreamHealth(streamID)
-      if err != nil {
-        fmt.Printf("Error fetching stream health: %v\n", err)
-        os.Exit(1)
-      }
-
-      fmt.Printf("Stream health: %+v\n", response)
-    }
-    ```
-
-  </Tab>
-</Tabs>
-
-### Response
-
-Returns an object with a `200 OK` response
-
-```json
-{
-  "id": "{id}",
-  "healthy": {
-    "status": true,
-    "frequency": { "1m": 1, "10m": 0.9655, "60m": 0.9655 },
-    "lastProbeTime": 1635993921603,
-    "lastTransitionsTime": 1635993751824
-  },
-  "conditions": [
-    {
-      "type": "Active",
-      "status": true,
-      "extraData": {
-        "nodeId": "prod-mist-blue-server-1",
-        "region": "lon"
-      },
-      "frequency": { "1m": 1, "10m": 1, "60m": 1 },
-      "lastProbeTime": 1635993739354,
-      "lastTransitionsTime": 1635993739354
-    },
-    {
-      "type": "Transcoding",
-      "status": true,
-      "frequency": { "1m": 1, "10m": 1, "60m": 1 },
-      "lastProbeTime": 1635993920641,
-      "lastTransitionsTime": 1635993751824
-    },
-    {
-      "type": "TranscodeRealTime",
-      "status": true,
-      "frequency": { "1m": 1, "10m": 1, "60m": 1 },
-      "lastProbeTime": 1635993920641,
-      "lastTransitionsTime": 1635993751824
-    },
-    {
-      "type": "TranscodeNoErrors",
-      "status": true,
-      "frequency": { "1m": 1, "10m": 1, "60m": 1 },
-      "lastProbeTime": 1635993920641,
-      "lastTransitionsTime": 1635993751824
-    },
-    {
-      "type": "Multistreaming",
-      "status": null,
-      "lastProbeTime": null,
-      "lastTransitionsTime": null
-    }
-  ],
-  "metrics": {
-    "MediaTimeMillis": [
-      {
-        "name": "MediaTimeMillis",
-        "dimensions": { "nodeId": "prod-mist-blue-server-1" },
-        "last": [1635993921603, 182528]
-      }
-    ],
-    "TranscodeRealtimeRatio": [
-      {
-        "name": "TranscodeRealtimeRatio",
-        "dimensions": {
-          "nodeId": "prod-livepeer-broadcaster-6emu-97d8bf496-7zh9f"
-        },
-        "last": [1635993920641, 3.088169642857143]
-      }
-    ]
-  }
-}
-```
-
-In the above response payload:
-
-- All `timestamps` are represented in milliseconds since the Unix epoch, which
-  is the default representation of timestamps across all the Livepeer API.
-- The `healthy` top-level `condition` is a computed state based on some specific
-  stream conditions. As of writing this doc, a stream is `healthy` if it's both
-  `Active`, `Transcoding` in realtime (`TranscodeRealTime`), and if multistream
-  targets are configured, they are also healthy (`Multistreaming`).
-- The `conditions` array contains more specific information about the stream
-  health state, with the `type` field specifying what the condition means.
-- More generally, a `Condition` represents a specific state of the stream
-  health.
-  - The `status` field represents the value of the last reading for that
-    condition, and the `lastProbeTime` specified when that was.
-  - The `lastTransitionsTime` and the `frequency` fields provide some insight
-    into how it's changing over time.
-  - The `lastTransitionTime` is the timestamp of the last time where the
-    condition status changed, and;
-  - The `frequency` is the ratio of successful probes (`status: true`) in the
-    specified time ranges preceding `lastProbeTime`.
-- The `metrics` are still an experimental API and are not recommended for
-  production systems. But the `last` field is a tuple containing the `timestamp`
-  and the `value` of the last reading for that metric.
-
-## Events
-
-### Request
-
-The stream ID is the same one used in the Livestream API.
-
-`GET livepeer.studio/data/stream/{id}/events`
-
-<Tabs>
-  <Tab title="Node.js">
-    ```javascript
-    import { Livepeer } from "livepeer";
-
-    const apiKey = 'YOUR_API_KEY';
-    const streamId = 'STREAM_ID';
-
-    const livepeer = new Livepeer(apiKey);
-
-    livepeer
-      .getStreamEvents(streamId)
-      .then((response) => {
-        console.log("Stream events:", response);
-      })
-      .catch((error) => {
-        console.error("Error fetching stream events:", error);
-      });
-    ```
-
-  </Tab>
-
-  <Tab title="Python">
-    ```python
-    from livepeer import Livepeer
-
-    # Initialize the Livepeer client with your API key
-    api_key = "YOUR_API_KEY"
-    livepeer = Livepeer(api_key)
-
-    # Define the stream ID for which you want to fetch events
-    stream_id = "STREAM_ID"
-
-    try:
-        # Get stream events by stream ID
-        response = livepeer.get_stream_events(stream_id)
-        print("Stream events:", response)
-    except Exception as e:
-        print("Error fetching stream events:", e)
-    ```
-
-  </Tab>
-
-  <Tab title="Ruby">
-    ```ruby
-    require 'livepeer'
-
-    # Initialize the Livepeer client with your API key
-    api_key = 'YOUR_API_KEY'
-    client = Livepeer::Client.new(api_key: api_key)
-
-    # Define the stream ID for which you want to fetch events
-    stream_id = 'STREAM_ID'
-
-    begin
-      # Get stream events by stream ID
-      response = client.get_stream_events(stream_id)
-      puts 'Stream events:', response
-    rescue StandardError => e
-      puts 'Error fetching stream events:', e.message
-    end
-    ```
-
-  </Tab>
-
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API key
-    $api_key = 'YOUR_API_KEY';
-    $livepeer = new Livepeer($api_key);
-
-    // Define the stream ID for which you want to fetch events
-    $stream_id = 'STREAM_ID';
-
-    try {
-        // Get stream events by stream ID
-        $response = $livepeer->getStreamEvents($stream_id);
-        echo 'Stream events: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error fetching stream events: ' . $e->getMessage() . PHP_EOL;
-    }
-    ```
-
-  </Tab>
-
-  <Tab title="Go">
-    ```go
-    package main
-
-    import (
-      "fmt"
-      "os"
-
-      "github.com/livepeer/livepeer-go"
-    )
-
-    func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
-
-      // Define the stream ID for which you want to fetch events
-      streamID := "STREAM_ID"
-
-      // Get stream events by stream ID
-      response, err := client.GetStreamEvents(streamID)
-      if err != nil {
-        fmt.Printf("Error fetching stream events: %v\n", err)
-        os.Exit(1)
-      }
-
-      fmt.Printf("Stream events: %+v\n", response)
-    }
-    ```
-
-  </Tab>
-</Tabs>
-
-### Response
-
-Returns an object with a `200 OK` response
-
-```
-retry: 10000
-
-id: b6e0d6a4-0718-4db4-b2ec-31bb23a9fde0
-event: lp_event
-data: {"type":"media_server_metrics","id":"b6e0d6a4-0718-4db4-b2ec-31bb23a9fde0","timestamp":1635994871604,"streamId":"{id}","nodeId":"prod-mist-blue-server-1","region":"lon","stats":{"mediaTimeMs":1132566},"multistream":[]}
-
-id: 7a0e6f9e-baa1-42c4-a92f-4dfa2f50ac05
-event: lp_event
-data: {"type":"transcode","id":"7a0e6f9e-baa1-42c4-a92f-4dfa2f50ac05","timestamp":1635994875678,"streamId":"{id}","nodeId":"prod-livepeer-broadcaster-6emu-97d8bf496-7zh9f","segment":{"name":"","seqNo":292,"duration":8.334,"byteSize":2270100},"startTime":1635994874469,"latencyMs":1209,"success":true,"attempts":[{"orchestrator":{"address":"0x1cd98ad89a7d143847f62d2249e4005d09e10648","transcodeUri":"https://vno2-prod-livepeer-orchestrator-7.livepeer.studio:443"},"latencyMs":1209,"error":null}]}
-
-id: fd782a49-4986-4b3c-b3b4-9088ae76c152
-event: lp_event
-data:
-{"type":"media_server_metrics","id":"fd782a49-4986-4b3c-b3b4-9088ae76c152","timestamp":1635994881604,"streamId":"{id}","nodeId":"prod-mist-blue-server-1","region":"lon","stats":{"mediaTimeMs":1142550},"multistream":[]}
-...
-```
-
-The `/events` API response implements the
-[Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events)
-protocol using any SSE client. On JavaScript, we recommend using the
-[`eventsource`](https://www.npmjs.com/package/eventsource) NPM package to be
-able to add an `Authorization` header to the API request.
-
-The individual events sent over the SSE stream are all JSON objects and are
-precisely the same low-level objects as published by the services running in the
-Livepeer infrastructure. Some fields are always present, specifically:
-
-- `type`: the unique type of the event, which defines the structure of the rest
-  of the JSON object.
-- `id`: a unique identifier for the event, which SSE clients automatically use
-  to recover a connection without losing events.
-- `timestamp`: the timestamp of the event in milliseconds since the Unix epoch.
-
-You can also get historical events within a time range by specifying the `from`
-and `to` query parameters with Unix millis timestamps. For example:
-
-- `/data/stream/{id}/events?from=1635437394000` to get all events since
-  `Oct 28 16:09:54Z 2021` (exclusively) and stay connected for live events.
-- `/data/stream/{id}/events?from=1635437394000&to=1635447394000` to get all
-  events between `Oct 28 16:09:54Z 2021` (exclusively) and
-  `Oct 28 18:56:34Z 2021` (inclusively).
-
-Finally, we recommend using the events API primarily for debugging purposes, for
-example, to get all available information about a livestream to find any issues.
-The specific events that are published and
-[their respective schemas](https://github.com/livepeer/livepeer-data/tree/main/pkg/data)
-will keep evolving, so they are still subject to changes.
+### Monitor with the API
+
+<Info>
+  We are working on building a first-class solution to monitor stream health
+  using the API. Please reach out to us on Discord if you have any input.
+</Info>

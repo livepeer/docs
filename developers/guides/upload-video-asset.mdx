@@ -9,22 +9,25 @@ upload a video.
 
 <Info>
   Livepeer supports resumable uploads through the TUS protocol, which helps with
-  reliability and efficiency when transferring large assets.
+  reliability and efficiency when transferring large assets. **This is the
+  recommended approach for uploading media files.**
 </Info>
 
 Livepeer provides two options for uploading assets:
 
+- **TUS Resumable Upload (recommended for all use-cases)**: TUS uploads ensure
+  reliability and efficiency when transferring media files. It is recommended
+  for all use-cases, as it is compatible with all modern browsers and supports
+  resuming uploads.
 - **`PUT` Upload**: Upload assets via simple HTTP verbs for processing and play
   back.
-- **Tus Resumable Upload**: Discover the power of resumable uploads, ensuring
-  reliability and efficiency when transferring your media files.
 
 ## Using Livepeer's SDKs
 
 We can use one of the Livepeer SDKs to create a
-[Tus-compatible](https://github.com/tus/tus-js-client) upload endpoint.
+[TUS-compatible](https://github.com/TUS/TUS-js-client) upload endpoint.
 
-We can then use Tus on the frontend to directly upload the asset to Livepeer.
+We can then use TUS on the frontend to directly upload the asset to Livepeer.
 
 <Tabs>
   <Tab title="Node.js">
@@ -34,7 +37,7 @@ We can then use Tus on the frontend to directly upload the asset to Livepeer.
     const apiKey = 'YOUR_API_KEY';
     const fileName = 'filename.mp4';
 
-    const livepeer = new Livepeer(apiKey);
+    const livepeer = new Livepeer({apiKey});
 
     const assetData = {
       name: fileName
@@ -49,8 +52,8 @@ We can then use Tus on the frontend to directly upload the asset to Livepeer.
         console.error("Error requesting asset upload:", error);
       });
 
-    // pass the Tus endpoint to the frontend and use Tus to upload
-    // https://github.com/tus/tus-js-client
+    // pass the TUS endpoint to the frontend and use TUS to upload
+    // https://github.com/TUS/TUS-js-client
     ```
 
   </Tab>
@@ -76,116 +79,50 @@ We can then use Tus on the frontend to directly upload the asset to Livepeer.
     except Exception as e:
         print("Error requesting asset upload:", e)
 
-    # pass the Tus endpoint to the frontend and use Tus to upload
-    # https://github.com/tus/tus-js-client
-    ```
-
-  </Tab>
-
-  <Tab title="Ruby">
-    ```ruby
-    require 'livepeer'
-
-    # Initialize the Livepeer client with your API key
-    api_key = 'YOUR_API_KEY'
-    client = Livepeer::Client.new(api_key: api_key)
-
-    file_name = 'filename.mp4'  # Replace with the desired file name
-
-    asset_data = {
-      "name": file_name
-    }
-
-    begin
-      # Request asset upload
-      response = client.asset.create(asset_data)
-      puts 'Asset upload request:', response
-    rescue StandardError => e
-      puts 'Error requesting asset upload:', e.message
-    end
-
-    # pass the Tus endpoint to the frontend and use Tus to upload
-    # https://github.com/tus/tus-js-client
-    ```
-
-  </Tab>
-
-  <Tab title="PHP">
-    ```php
-    <?php
-
-    require 'vendor/autoload.php';
-
-    use Livepeer\Livepeer;
-    use Livepeer\LivepeerException;
-
-    // Initialize the Livepeer client with your API key
-    $api_key = 'YOUR_API_KEY';
-    $livepeer = new Livepeer($api_key);
-
-    $file_name = 'filename.mp4';
-
-    $asset_data = [
-      "name" => $file_name
-    ];
-
-    try {
-        // Request asset upload
-        $response = $livepeer->asset->create($asset_data);
-        echo 'Asset upload request: ' . json_encode($response) . PHP_EOL;
-    } catch (LivepeerException $e) {
-        echo 'Error requesting asset upload: ' . $e->getMessage() . PHP_EOL;
-    }
-
-    // pass the Tus endpoint to the frontend and use Tus to upload
-    // https://github.com/tus/tus-js-client
+    # pass the TUS endpoint to the frontend and use TUS to upload
+    # https://github.com/TUS/TUS-js-client
     ```
 
   </Tab>
 
   <Tab title="Go">
     ```go
-    package main
+      package main
 
-    import (
-      "fmt"
-      "os"
+      import(
+        livepeergo "github.com/livepeer/livepeer-go"
+        "github.com/livepeer/livepeer-go/models/components"
+        "context"
+        "log"
+      )
 
-      "github.com/livepeer/livepeer-go"
-    )
-
-    func main() {
-      // Initialize the Livepeer client with your API key
-      apiKey := "YOUR_API_KEY"
-      client := livepeer.NewLivepeerClient(apiKey)
-
-      fileName := "filename.mp4"
-
-      assetData := map[string]interface{}{
-        "name": fileName,
-      }
-
-      // Request asset upload
-      response, err := client.RequestAssetUpload(assetData)
-      if err != nil {
-        fmt.Printf("Error requesting asset upload: %v\n", err)
-        os.Exit(1)
-      }
-
-      fmt.Printf("Asset upload request: %+v\n", response)
-    }
-
-    // pass the Tus endpoint to the frontend and use Tus to upload
-    // https://github.com/tus/tus-js-client
+      func main() {
+        // Initialize the Livepeer client with your API key
+          client := livepeergo.New(
+              livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+          )
+          request := components.NewAssetPayload{
+              Name: "filename.mp4", // Replace with the desired file name
+          }
+          ctx := context.Background()
+          res, err := client.Asset.Create(ctx, request)
+          if err != nil {
+              log.Fatal(err)
+          }
+          if res.Data != nil {
+              // handle response
+          }
+    // pass the TUS endpoint to the frontend and use TUS to upload
+    // https://github.com/TUS/TUS-js-client
     ```
 
   </Tab>
 </Tabs>
 
 Once an upload endpoint is created, you can use it to upload your video file to
-Livepeer. The upload endpoint is tus compatible, so you can use any
-tus-compatible client (like
-[tus-js-client](https://github.com/tus/tus-js-client)) to upload your video file
+Livepeer. The upload endpoint is TUS compatible, so you can use any
+TUS-compatible client (like
+[TUS-js-client](https://github.com/TUS/TUS-js-client)) to upload your video file
 from the frontend.
 
 <Info>

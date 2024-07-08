@@ -1,0 +1,243 @@
+---
+title: Start your AI Orchestrator
+---
+
+<Warning>
+  The AI Subnet is currently in its **Alpha** stage and is undergoing active
+  development. Running it on the same machine as your main Orchestrator or
+  Gateway node may cause stability issues. Please proceed with caution.
+</Warning>
+
+The AI Subnet is not yet integrated into the main
+[go-livepeer](https://github.com/livepeer/go-livepeer) software due to its
+**Alpha** status. To equip your Orchestrator node with AI inference
+capabilities, please use the `ai-video` branch of
+[go-livepeer](https://github.com/livepeer/go-livepeer/tree/ai-video). This
+branch contains the necessary software for the AI Orchestrator. Currently, there
+are two methods to run the AI Subnet software:
+
+- **Docker**: This is the most straightforward and recommended method to run the
+  AI Orchestrator node.
+- **Pre-built Binaries**: Pre-built binaries are available if you prefer not to
+  use Docker.
+
+## Start the AI Orchestrator
+
+Please follow the steps below to start your AI Subnet Orchestrator node:
+
+<Tabs>
+    <Tab title="Use Docker (Recommended)">
+        <Steps>
+            <Step title="Retrieve the AI Subnet Docker Image">
+                Fetch the latest AI Subnet Docker image from the [Livepeer Docker Hub](https://hub.docker.com/r/livepeer/go-livepeer) with the following command:
+
+                ```bash
+                docker pull livepeer/go-livepeer:ai-video
+                ```
+            </Step>
+            <Step title="Fetch the Latest AI Runner Docker Image">
+                The Livepeer AI Subnet employs a [containerized workflow](https://www.ibm.com/topics/containerization) for running AI models. Fetch the latest [AI Runner](https://hub.docker.com/r/livepeer/ai-runner) image with this command:
+
+                ```bash
+                docker pull livepeer/ai-runner:latest
+                ```
+            </Step>
+            <Step title="Verify the AI Models are Available">
+                The AI Subnet leverages pre-trained AI models for inference tasks. Before launching the AI Orchestrator node, verify that the weights of these models are accessible on your machine. For more information, visit the [Download AI Models](/ai/orchestrators/models-download) page.
+            </Step>
+            <Step title="Configure your AI Orchestrator">
+                Confirm that the AI models are correctly set up in the `aiModels.json` file in the `~/.lpData/` directory. For guidance on configuring the `aiModels.json` file, refer to the [AI Models Configuration](/ai/orchestrators/models-config) page. The configuration file should resemble:
+
+                ```json
+                [
+                    {
+                        "pipeline": "text-to-image",
+                        "model_id": "ByteDance/SDXL-Lightning",
+                        "price_per_unit": 4768371,
+                        "warm": true,
+                    }
+                ]
+                ```
+            </Step>
+            <Step title="Launch an (Offchain) AI Orchestrator">
+                Execute the AI Subnet Docker image using the following command:
+
+                ```bash
+                docker run \
+                    --name livepeer_ai_orchestrator \
+                    -v ~/.lpData/:/root/.lpData/ \
+                    -v /var/run/docker.sock:/var/run/docker.sock \
+                    --network host \
+                    --gpus all \
+                    livepeer/go-livepeer:ai-video \
+                    -orchestrator \
+                    -transcoder \
+                    -serviceAddr 0.0.0.0:8936 \
+                    -v 6 \
+                    -nvidia "all" \
+                    -aiWorker \
+                    -aiModels /root/.lpData/aiModels.json \
+                    -aiModelsDir ~/.lpData/models
+                ```
+
+                This command launches an **offchain** AI Orchestrator node. While most of the commands are akin to those used when operating a Mainnet Transcoding Network Orchestrator node (explained in the [go-livepeer CLI reference](/references/go-livepeer/cli-reference)), there are a few AI Subnet specific flags:
+
+                - `-aiWorker`: This flag enables the AI Worker functionality.
+                - `-aiModels`: This flag sets the path to the JSON file that contains the AI models.
+                - `-aiModelsDir`: This flag indicates the directory where the AI models are stored on the host machine.
+                - `-aiRunnerImage`: This optional flag specifies which version of the ai-runner image is used. Example: `livepeer/ai-runner:0.0.2`
+                
+                Moreover, the `--network host` flag facilitates communication between the AI Orchestrator and the AI Runner container.
+
+                <Warning>Please note that since we use [docker-out-of-docker](https://tdongsi.github.io/blog/2017/04/23/docker-out-of-docker/), the `aiModelsDir` path should be defined as being on the host machine.</Warning>
+            </Step>
+            <Step title="Confirm Successful Startup of the AI Orchestrator">
+                If your AI Subnet Orchestrator node is functioning correctly, you should see the following output:
+
+                ```bash
+                2024/05/01 09:01:39 INFO Starting managed container gpu=0 name=text-to-image_ByteDance_SDXL-Lightning modelID=ByteDance/SDXL-Lightning
+                ...
+                I0405 22:03:17.427058 2655655 rpc.go:301] Connecting RPC to uri=https://0.0.0.0:8936
+                I0405 22:03:17.430371 2655655 rpc.go:254] Received Ping request
+                ```
+            </Step>
+            <Step title="Check Port Availability">
+                To make your AI Subnet Orchestrator node accessible from the internet, you need to configure your network settings. Ensure that port `8936` is unblocked on your machine. Additionally, consider setting up port forwarding on your router, allowing the Gateway node to be reachable from the internet.
+            </Step>
+        </Steps>
+    </Tab>
+    <Tab title="Use Binaries">
+        <Steps>
+            {/* TODO: Simplify this step */}
+            <Step title="Download the Latest AI Subnet Binary">
+                Download the latest AI subnet binary for your system:
+
+                ```bash
+                wget https://build.livepeer.live/go-livepeer/ai-video/latest/livepeer-<OS>-gpu-<ARCH>.tar.gz
+                ```
+
+                Replace `<OS>` and `<ARCH>` with your system's operating system and architecture. For example, for a Linux system with an AMD64 architecture, the command would be:
+
+                ```bash
+                wget https://build.livepeer.live/go-livepeer/ai-video/latest/livepeer-linux-gpu-amd64.tar.gz
+                ```
+
+                See the [go-livepeer installation guide](/orchestrators/guides/install-go-livepeer#install-using-a-binary-release) for more information on the available binaries.
+
+                <Info>The windows and MacOS (amd64) binaries of the AI Subnet are not available yet.</Info>
+            </Step>
+            <Step title="Extract and Configure the Binary">
+                Once downloaded, extract the binary to a directory of your choice.
+            </Step>
+            <Step title="Fetch the Latest AI Runner Docker Image">
+                The Livepeer AI Subnet employs a [containerized workflow](https://www.ibm.com/topics/containerization) for running AI models. Fetch the latest [AI Runner](https://hub.docker.com/r/livepeer/ai-runner) image with this command:
+
+                ```bash
+                docker pull livepeer/ai-runner:latest
+                ```
+            </Step>
+            <Step title="Verify the AI Models are Available">
+                The AI Subnet leverages pre-trained AI models for inference tasks. Before launching the AI Orchestrator node, verify that the weights of these models are accessible on your machine. For more information, visit the [Download AI Models](/ai/orchestrators/models-download) page.
+            </Step>
+            <Step title="Configure your AI Orchestrator">
+                Confirm that the AI models are correctly set up in the `aiModels.json` file in the `~/.lpData/` directory. For guidance on configuring the `aiModels.json` file, refer to the [AI Models Configuration](/ai/orchestrators/models-config) page. The configuration file should resemble:
+
+                ```json
+                [
+                    {
+                        "pipeline": "text-to-image",
+                        "model_id": "ByteDance/SDXL-Lightning",
+                        "price_per_unit": 4768371,
+                        "warm": true,
+                    }
+                ]
+                ```
+            </Step>
+            <Step title="Launch an (Offchain) AI Orchestrator">
+                Run the following command to start your AI Subnet Orchestrator node:
+
+                ```bash
+                ./livepeer \
+                    -orchestrator \
+                    -transcoder \
+                    -serviceAddr 0.0.0.0:8936 \
+                    -v 6 \
+                    -nvidia "all" \
+                    -aiWorker \
+                    -aiModels ~/.lpData/aiModels.json \
+                    -aiModelsDir ~/.lpData/models
+                ```
+
+                This command launches an **offchain** AI Orchestrator node. While most of the commands are akin to those used when operating a Mainnet Transcoding Network Orchestrator node (explained in the [go-livepeer CLI reference](/references/go-livepeer/cli-reference)), there are a few AI Subnet specific flags:
+
+                - `-aiWorker`: This flag enables the AI Worker functionality.
+                - `-aiModels`: This flag sets the path to the JSON file that contains the AI models.
+                - `-aiModelsDir`: This flag indicates the directory where the AI models are stored.
+                - `-aiRunnerImage`: This optional flag specifies which version of the ai-runner image is used. Example: `livepeer/ai-runner:0.0.2`
+
+            </Step>
+            <Step title="Confirm Successful Startup of the AI Orchestrator">
+                If your AI Subnet Orchestrator node is functioning correctly, you should see the following output:
+
+                ```bash
+                2024/05/01 09:01:39 INFO Starting managed container gpu=0 name=text-to-image_ByteDance_SDXL-Lightning modelID=ByteDance/SDXL-Lightning
+                ...
+                I0405 22:03:17.427058 2655655 rpc.go:301] Connecting RPC to uri=https://0.0.0.0:8936
+                I0405 22:03:17.430371 2655655 rpc.go:254] Received Ping request
+                ```
+            </Step>
+            <Step title="Check Port Availability">
+                To make your AI Subnet Orchestrator node accessible from the internet, you need to configure your network settings. Ensure that port `8936` is unblocked on your machine. Additionally, consider setting up port forwarding on your router, allowing the Gateway node to be reachable from the internet.
+            </Step>
+        </Steps>
+        <Note>
+            Suppose no binaries are available for your system. In that case, you can build the [ai-video branch](https://github.com/livepeer/go-livepeer/tree/ai-video) of [go-livepeer](https://github.com/livepeer/go-livepeer) from source by following the instructions in the [Livepeer repository](/orchestrators/guides/install-go-livepeer) or by reaching out to the Livepeer community on [Discord](https://discord.gg/livepeer).
+        </Note>
+    </Tab>
+
+</Tabs>
+
+## Confirm the AI Orchestrator is Operational
+
+Once the AI Subnet Orchestrator node is up and running, validate its operation
+by sending an AI inference request directly to the
+[ai-runner](https://hub.docker.com/r/livepeer/ai-runner) container. The most
+straightforward way to do this is through the
+[swagger UI](https://fastapi.tiangolo.com/features/) interface, accessible at
+`http://localhost:8000/docs`.
+
+![Swagger UI interface](/images/ai/swagger_ui.png)
+
+<Steps>
+    <Step title="Access the Swagger UI">
+        Navigate to `http://localhost:8000/docs` in your web browser to open the Swagger UI interface.
+    </Step>
+    <Step title="Initiate an Inference Request">
+        Initiate an inference request to the `POST /text-to-image` endpoint by clicking the `Try it out` button. Use the following example JSON payload:
+
+        ```json
+        {
+            "prompt": "A cool cat on the beach."
+        }
+        ```
+
+        This request will instruct the AI model to generate an image based on the text in the `prompt` field.
+    </Step>
+    <Step title="Inspect the Inference Response">
+        If the AI Orchestrator node is functioning correctly, you should receive a response similar to the following:
+
+        ```json
+        {
+            "images": [
+                {
+                    "url": "data:image/png;base64,iVBORw0KGgoAA...",
+                    "seed": 2724904334
+                }
+            ]
+        }
+        ```
+
+        The `url` field contains the base64 encoded image generated by the AI model. To convert this image to a png, use a base64 decoder such as [Base64.guru](https://base64.guru/converter/decode/image/png).
+    </Step>
+
+</Steps>

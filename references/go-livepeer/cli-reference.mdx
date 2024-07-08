@@ -31,8 +31,7 @@ also contain instructions for using flags to enable certain functionality in
 - httpAddr: Address to bind for HTTP commands. No default
 
 - serviceAddr: Orchestrator only. Overrides the on-chain serviceURI that
-  broadcasters can use to contact this node; may be an IP or hostname. No
-  default
+  gateways can use to contact this node; may be an IP or hostname. No default
 
 - orchAddr: Orchestrator to connect to as a standalone transcoder. No default.
 
@@ -54,7 +53,8 @@ also contain instructions for using flags to enable certain functionality in
 
 - transcoder: Set to true to be an transcoder. Default `false`
 
-- broadcaster: Set to true to be an broadcaster. Default `false`
+- gateway: Set to true to be an gateway (formerly known as *Broadcaster*). Default
+  `false`
 
 - orchSecret: Shared secret with the orchestrator as a standalone transcoder or
   path to file
@@ -68,8 +68,8 @@ also contain instructions for using flags to enable certain functionality in
   mode only). Default `0.3`
 
 - maxSessions: Maximum number of concurrent transcoding sessions for
-  Orchestrator, maximum number or RTMP streams for Broadcaster, or maximum
-  capacity for transcoder. Default `10`
+  Orchestrator, maximum number or RTMP streams for Gateway, or maximum capacity
+  for transcoder. Default `10`
 
 - currentManifest: Expose the currently active ManifestID as
   \"/stream/current.m3u8\". Default `false`
@@ -127,15 +127,15 @@ also contain instructions for using flags to enable certain functionality in
   than 0. Error if not set.
 
 - maxPricePerUnit: The maximum transcoding price (in wei) per 'pixelsPerUnit' a
-  broadcaster is willing to accept. If not set explicitly, broadcaster is
-  willing to accept ANY price. Default `0`
+  gateway is willing to accept. If not set explicitly, gateway is willing to
+  accept ANY price. Default `0`
 
 - pixelsPerUnit: Amount of pixels per unit. Set to '> 1' to have smaller price
   granularity than 1 wei / pixel. Default `1`
 
-- pricePerBroadcaster: json list of price per broadcaster or path to json config
-  file. Example:
-  `{"broadcasters":[{"ethaddress":"address1","priceperunit":1000,"pixelsperunit":1},{"ethaddress":"address2","priceperunit":1200,"pixelsperunit":1}]}`
+- pricePerGateway: json list of price per gateway or path to json config file.
+  Example:
+  `{"gateways":[{"ethaddress":"address1","priceperunit":1000,"pixelsperunit":1},{"ethaddress":"address2","priceperunit":1200,"pixelsperunit":1}]}`
 
 - autoAdjustPrice: Enable/disable automatic price adjustments based on the
   overhead for redeeming tickets. Default `true`
@@ -165,6 +165,8 @@ also contain instructions for using flags to enable certain functionality in
 
 - metadataPublishTimeout: Max time (ms) to wait in background for publishing
   operation metadata events. Default `1000 (1s)`
+
+- maxFaceValue: Set the maximum face value of a ticket (in wei). No default
 
 ### Storage
 
