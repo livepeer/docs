@@ -155,15 +155,15 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
       - HTTPBearer: []
-  /speech-to-text:
+  /audio-to-text:
     post:
-      summary: Speech To Text
-      operationId: speech_to_text
+      summary: Audio To Text
+      operationId: audio_to_text
       requestBody:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Body_speech_to_text_speech_to_text_post'
+              $ref: '#/components/schemas/Body_audio_to_text_audio_to_text_post'
         required: true
       responses:
         '200':
@@ -174,6 +174,18 @@ paths:
                 $ref: '#/components/schemas/TextResponse'
         '400':
           description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '413':
+          description: Request Entity Too Large
           content:
             application/json:
               schema:
@@ -203,6 +215,21 @@ components:
       required:
       - msg
       title: APIError
+    Body_audio_to_text_audio_to_text_post:
+      properties:
+        audio:
+          type: string
+          format: binary
+          title: Audio
+        model_id:
+          type: string
+          title: Model Id
+          default: ''
+      type: object
+      required:
+      - audio
+      - model_id
+      title: Body_audio_to_text_audio_to_text_post
     Body_image_to_image_image_to_image_post:
       properties:
         prompt:
@@ -291,24 +318,6 @@ components:
       - image
       - model_id
       title: Body_image_to_video_image_to_video_post
-    Body_speech_to_text_speech_to_text_post:
-      properties:
-        audio:
-          type: string
-          format: binary
-          title: Audio
-        model_id:
-          type: string
-          title: Model Id
-          default: ''
-        seed:
-          type: integer
-          title: Seed
-      type: object
-      required:
-      - audio
-      - model_id
-      title: Body_speech_to_text_speech_to_text_post
     Body_upscale_upscale_post:
       properties:
         prompt:
@@ -469,16 +478,14 @@ components:
       title: ValidationError
     VideoResponse:
       properties:
-        frames:
+        images:
           items:
-            items:
-              $ref: '#/components/schemas/Media'
-            type: array
+            $ref: '#/components/schemas/Media'
           type: array
-          title: Frames
+          title: Images
       type: object
       required:
-      - frames
+      - images
       title: VideoResponse
     chunk:
       properties:
