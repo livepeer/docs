@@ -1,0 +1,115 @@
+---
+title: Audio-to-Text
+---
+
+## Overview
+
+The `audio-to-text` pipeline converts audio from media files into text,
+utilizing cutting-edge diffusion models from HuggingFace's
+[automatic-speech-recognition (ASR) pipeline](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition).
+
+<div align="center">
+
+</div>
+
+## Models
+
+### Warm Models
+
+The current warm model requested for the `audio-to-text` pipeline is:
+
+- [openai/whisper-large-v3](https://huggingface.co/openai/whisper-large-v3):
+  Whisper is a pre-trained model for automatic speech recognition (ASR) and
+  speech translation.
+
+<Tip>
+  For faster responses with different
+  [audio-to-text](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition)
+  diffusion models, ask Orchestrators to load it on their GPU via the `ai-video`
+  channel in [Discord Server](https://discord.gg/livepeer).
+</Tip>
+
+### On-Demand Models
+
+The following models have been tested and verified for the `audio-to-text`
+pipeline:
+
+<Note>
+  If a specific model you wish to use is not listed, please submit a [feature
+  request](https://github.com/livepeer/ai-worker/issues/new?assignees=&labels=enhancement%2Cmodel&projects=&template=model_request.yml)
+  on GitHub to get the model verified and added to the list.
+</Note>
+
+{/* prettier-ignore */}
+<Accordion title="Tested and Verified Diffusion Models">
+- [openai/whisper-large-v3](https://huggingface.co/openai/whisper-large-v3): A high-performance
+  ASR model by Open AI.
+
+</Accordion>
+
+## Basic Usage Instructions
+
+<Tip>
+  For a detailed understanding of the `audio-to-text` endpoint and to experiment
+  with the API, see the [AI Subnet API
+  Reference](/ai/api-reference/audio-to-text).
+</Tip>
+
+To create an audio transcript using the `audio-to-text` pipeline, submit a
+`POST` request to the Gateway's `audio-to-text` API endpoint:
+
+```bash
+curl -X POST "https://<gateway-ip>/audio-to-text" \
+    -F model_id=openai/whisper-large-v3 \
+    -F audio=@<PATH_TO_FILE>
+```
+
+In this command:
+
+- `<gateway-ip>` should be replaced with your AI Gateway's IP address.
+- `model_id` is the diffusion model for image generation.
+- `audio` is the path to the audio file to be transcribed.
+
+<Note>
+  - Supported file types: `mp4`, `webm`, `mp3`, `flac`, `wav` and `m4a` -
+  Maximum request size: 50 MB
+</Note>
+
+For additional optional parameters, refer to the
+[AI Subnet API Reference](/ai/api-reference/audio-to-text).
+
+After execution, the Orchestrator processes the request and returns the response
+to the Gateway:
+
+```json
+{
+    "chunks": [
+        {
+            "text": " Explore the power of automatic speech recognition",
+            "timestamp": [
+                0,
+                1.35
+            ]
+        },
+        {
+            "text": " By extracting the text from audio",
+            "timestamp": [
+                1.35
+                2.07
+            ]
+        }
+    ],
+    "text": " Explore the power of automatic speech recognition By extracting the text from audio"
+}
+```
+
+## API Reference
+
+<Card
+  title="API Reference"
+  icon="rectangle-terminal"
+  href="/ai/api-reference/audio-to-text"
+>
+  Explore the `audio-to-text` endpoint and experiment with the API in the AI
+  Subnet API Reference.
+</Card>
