@@ -1,0 +1,816 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Livepeer AI Runner",
+        "description": "An application to run AI pipelines",
+        "version": "0.1.0"
+    },
+    "servers": [
+        {
+            "url": "https://dream-gateway.livepeer.cloud",
+            "description": "Livepeer Cloud Community Gateway"
+        }
+    ],
+    "paths": {
+        "/text-to-image": {
+            "post": {
+                "summary": "Text To Image",
+                "operationId": "text_to_image",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TextToImageParams"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ImageResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/image-to-image": {
+            "post": {
+                "summary": "Image To Image",
+                "operationId": "image_to_image",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_image_to_image_image_to_image_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ImageResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/image-to-video": {
+            "post": {
+                "summary": "Image To Video",
+                "operationId": "image_to_video",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_image_to_video_image_to_video_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VideoResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/upscale": {
+            "post": {
+                "summary": "Upscale",
+                "operationId": "upscale",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_upscale_upscale_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ImageResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/audio-to-text": {
+            "post": {
+                "summary": "Audio To Text",
+                "operationId": "audio_to_text",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_audio_to_text_audio_to_text_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TextResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "413": {
+                        "description": "Request Entity Too Large",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "APIError": {
+                "properties": {
+                    "msg": {
+                        "type": "string",
+                        "title": "Msg"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "msg"
+                ],
+                "title": "APIError"
+            },
+            "Body_audio_to_text_audio_to_text_post": {
+                "properties": {
+                    "audio": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "Audio"
+                    },
+                    "model_id": {
+                        "type": "string",
+                        "title": "Model Id",
+                        "default": ""
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "audio",
+                    "model_id"
+                ],
+                "title": "Body_audio_to_text_audio_to_text_post"
+            },
+            "Body_image_to_image_image_to_image_post": {
+                "properties": {
+                    "prompt": {
+                        "type": "string",
+                        "title": "Prompt"
+                    },
+                    "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "Image"
+                    },
+                    "model_id": {
+                        "type": "string",
+                        "title": "Model Id",
+                        "default": ""
+                    },
+                    "strength": {
+                        "type": "number",
+                        "title": "Strength",
+                        "default": 0.8
+                    },
+                    "guidance_scale": {
+                        "type": "number",
+                        "title": "Guidance Scale",
+                        "default": 7.5
+                    },
+                    "image_guidance_scale": {
+                        "type": "number",
+                        "title": "Image Guidance Scale",
+                        "default": 1.5
+                    },
+                    "negative_prompt": {
+                        "type": "string",
+                        "title": "Negative Prompt",
+                        "default": ""
+                    },
+                    "safety_check": {
+                        "type": "boolean",
+                        "title": "Safety Check",
+                        "default": true
+                    },
+                    "seed": {
+                        "type": "integer",
+                        "title": "Seed"
+                    },
+                    "num_inference_steps": {
+                        "type": "integer",
+                        "title": "Num Inference Steps",
+                        "default": 100
+                    },
+                    "num_images_per_prompt": {
+                        "type": "integer",
+                        "title": "Num Images Per Prompt",
+                        "default": 1
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "prompt",
+                    "image",
+                    "model_id"
+                ],
+                "title": "Body_image_to_image_image_to_image_post"
+            },
+            "Body_image_to_video_image_to_video_post": {
+                "properties": {
+                    "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "Image"
+                    },
+                    "model_id": {
+                        "type": "string",
+                        "title": "Model Id",
+                        "default": ""
+                    },
+                    "height": {
+                        "type": "integer",
+                        "title": "Height",
+                        "default": 576
+                    },
+                    "width": {
+                        "type": "integer",
+                        "title": "Width",
+                        "default": 1024
+                    },
+                    "fps": {
+                        "type": "integer",
+                        "title": "Fps",
+                        "default": 6
+                    },
+                    "motion_bucket_id": {
+                        "type": "integer",
+                        "title": "Motion Bucket Id",
+                        "default": 127
+                    },
+                    "noise_aug_strength": {
+                        "type": "number",
+                        "title": "Noise Aug Strength",
+                        "default": 0.02
+                    },
+                    "seed": {
+                        "type": "integer",
+                        "title": "Seed"
+                    },
+                    "safety_check": {
+                        "type": "boolean",
+                        "title": "Safety Check",
+                        "default": true
+                    },
+                    "num_inference_steps": {
+                        "type": "integer",
+                        "title": "Num Inference Steps",
+                        "default": 25
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "image",
+                    "model_id"
+                ],
+                "title": "Body_image_to_video_image_to_video_post"
+            },
+            "Body_upscale_upscale_post": {
+                "properties": {
+                    "prompt": {
+                        "type": "string",
+                        "title": "Prompt"
+                    },
+                    "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "Image"
+                    },
+                    "model_id": {
+                        "type": "string",
+                        "title": "Model Id",
+                        "default": ""
+                    },
+                    "safety_check": {
+                        "type": "boolean",
+                        "title": "Safety Check",
+                        "default": true
+                    },
+                    "seed": {
+                        "type": "integer",
+                        "title": "Seed"
+                    },
+                    "num_inference_steps": {
+                        "type": "integer",
+                        "title": "Num Inference Steps",
+                        "default": 75
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "prompt",
+                    "image",
+                    "model_id"
+                ],
+                "title": "Body_upscale_upscale_post"
+            },
+            "HTTPError": {
+                "properties": {
+                    "detail": {
+                        "$ref": "#/components/schemas/APIError"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "detail"
+                ],
+                "title": "HTTPError"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "HealthCheck": {
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "title": "Status",
+                        "default": "OK"
+                    }
+                },
+                "type": "object",
+                "title": "HealthCheck"
+            },
+            "ImageResponse": {
+                "properties": {
+                    "images": {
+                        "items": {
+                            "$ref": "#/components/schemas/Media"
+                        },
+                        "type": "array",
+                        "title": "Images"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "images"
+                ],
+                "title": "ImageResponse"
+            },
+            "Media": {
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "title": "Url"
+                    },
+                    "seed": {
+                        "type": "integer",
+                        "title": "Seed"
+                    },
+                    "nsfw": {
+                        "type": "boolean",
+                        "title": "Nsfw"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "url",
+                    "seed",
+                    "nsfw"
+                ],
+                "title": "Media"
+            },
+            "TextResponse": {
+                "properties": {
+                    "text": {
+                        "type": "string",
+                        "title": "Text"
+                    },
+                    "chunks": {
+                        "items": {
+                            "$ref": "#/components/schemas/chunk"
+                        },
+                        "type": "array",
+                        "title": "Chunks"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "text",
+                    "chunks"
+                ],
+                "title": "TextResponse"
+            },
+            "TextToImageParams": {
+                "properties": {
+                    "model_id": {
+                        "type": "string",
+                        "title": "Model Id",
+                        "default": ""
+                    },
+                    "prompt": {
+                        "type": "string",
+                        "title": "Prompt"
+                    },
+                    "height": {
+                        "type": "integer",
+                        "title": "Height"
+                    },
+                    "width": {
+                        "type": "integer",
+                        "title": "Width"
+                    },
+                    "guidance_scale": {
+                        "type": "number",
+                        "title": "Guidance Scale",
+                        "default": 7.5
+                    },
+                    "negative_prompt": {
+                        "type": "string",
+                        "title": "Negative Prompt",
+                        "default": ""
+                    },
+                    "safety_check": {
+                        "type": "boolean",
+                        "title": "Safety Check",
+                        "default": true
+                    },
+                    "seed": {
+                        "type": "integer",
+                        "title": "Seed"
+                    },
+                    "num_inference_steps": {
+                        "type": "integer",
+                        "title": "Num Inference Steps",
+                        "default": 50
+                    },
+                    "num_images_per_prompt": {
+                        "type": "integer",
+                        "title": "Num Images Per Prompt",
+                        "default": 1
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "prompt",
+                    "model_id"
+                ],
+                "title": "TextToImageParams"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            },
+            "VideoResponse": {
+                "properties": {
+                    "images": {
+                        "items": {
+                            "$ref": "#/components/schemas/Media"
+                        },
+                        "type": "array",
+                        "title": "Images"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "images"
+                ],
+                "title": "VideoResponse"
+            },
+            "chunk": {
+                "properties": {
+                    "timestamp": {
+                        "items": {},
+                        "type": "array",
+                        "title": "Timestamp"
+                    },
+                    "text": {
+                        "type": "string",
+                        "title": "Text"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "timestamp",
+                    "text"
+                ],
+                "title": "chunk"
+            }
+        },
+        "securitySchemes": {
+            "HTTPBearer": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
