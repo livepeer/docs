@@ -1,0 +1,53 @@
+name: Update AI API reference
+
+on:
+  repository_dispatch:
+    types: [update-ai-openapi]
+  workflow_dispatch:
+
+jobs:
+  update-ai-api-reference:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main repository
+        uses: actions/checkout@v4
+
+      - name: Checkout ai-worker repository
+        uses: actions/checkout@v4
+        with:
+          repository: "livepeer/ai-worker"
+          path: "ai-worker"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ai-worker/runner/requirements.txt
+
+      - name: Generate AI OpenAPI specification
+        run: |
+          cd ai-worker/runner
+          python gen_openapi.py --entrypoint gateway
+          mv openapi_gateway.json $GITHUB_WORKSPACE/ai/api-reference/ai_openapi_schema.json
+          cd $GITHUB_WORKSPACE
+
+      - name: Commit OpenAPI spec and create pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          add-paths: |
+            ai/api-reference/openapi_ai_gateway.json
+          commit-message: "chore(ai): update AI OpenAPI spec"
+          title: "Automated AI OpenAPI specification update"
+          body: |
+            This is an automated pull request to update the AI OpenAPI specification due to changes in the AI Worker OpenAPI specification(upstream commit [${{github.event.client_payload.sha}}](https://livepeer/ai-worker/commit/${{github.event.client_payload.sha}})).
+
+            > [!IMPORTANT]
+            > Please ensure to add new API reference pages to the `ai/api-reference` folder for any newly added pipelines.
+          branch: "update-openapi-spec"
+          base: "main"
