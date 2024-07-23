@@ -30,11 +30,10 @@ jobs:
           pip install -r ai-worker/runner/requirements.txt
 
       - name: Generate AI OpenAPI specification
+        working-directory: runner
         run: |
-          cd ai-worker/runner
           python gen_openapi.py --entrypoint gateway
           mv openapi_gateway.json $GITHUB_WORKSPACE/ai/api-reference/ai_openapi_schema.json
-          cd $GITHUB_WORKSPACE
 
       - name: Commit OpenAPI spec and create pull request
         uses: peter-evans/create-pull-request@v6
@@ -45,9 +44,10 @@ jobs:
           commit-message: "chore(ai): update AI OpenAPI spec"
           title: "Automated AI OpenAPI specification update"
           body: |
-            This is an automated pull request to update the AI OpenAPI specification due to changes in the AI Worker OpenAPI specification(upstream commit [${{github.event.client_payload.sha}}](https://livepeer/ai-worker/commit/${{github.event.client_payload.sha}})).
+            This is an automated pull request to update the AI OpenAPI specification due to changes in the AI Worker OpenAPI specification (upstream commit [${{github.event.client_payload.sha}}](https://livepeer/ai-worker/commit/${{github.event.client_payload.sha}})).
 
-            > [!IMPORTANT]
+            > [!IMPORTANT]  
             > Please ensure to add new API reference pages to the `ai/api-reference` folder for any newly added pipelines.
           branch: "update-openapi-spec"
           base: "main"
+          author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
