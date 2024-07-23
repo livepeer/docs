@@ -30,7 +30,7 @@ jobs:
           pip install -r ai-worker/runner/requirements.txt
 
       - name: Generate AI OpenAPI specification
-        working-directory: runner
+        working-directory: ai-worker/runner
         run: |
           python gen_openapi.py --entrypoint gateway
           mv openapi_gateway.json $GITHUB_WORKSPACE/ai/api-reference/ai_openapi_schema.json
