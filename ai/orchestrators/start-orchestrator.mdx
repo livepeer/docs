@@ -86,7 +86,7 @@ Please follow the steps below to start your AI Subnet Orchestrator node:
                 - `-aiModels`: This flag sets the path to the JSON file that contains the AI models.
                 - `-aiModelsDir`: This flag indicates the directory where the AI models are stored on the host machine.
                 - `-aiRunnerImage`: This optional flag specifies which version of the ai-runner image is used. Example: `livepeer/ai-runner:0.0.2`
-                
+
                 Moreover, the `--network host` flag facilitates communication between the AI Orchestrator and the AI Runner container.
 
                 <Warning>Please note that since we use [docker-out-of-docker](https://tdongsi.github.io/blog/2017/04/23/docker-out-of-docker/), the `aiModelsDir` path should be defined as being on the host machine.</Warning>
@@ -203,8 +203,9 @@ Once the AI Subnet Orchestrator node is up and running, validate its operation
 by sending an AI inference request directly to the
 [ai-runner](https://hub.docker.com/r/livepeer/ai-runner) container. The most
 straightforward way to do this is through the
-[swagger UI](https://fastapi.tiangolo.com/features/) interface, accessible at
-`http://localhost:8000/docs`.
+[Swagger UI](https://fastapi.tiangolo.com/features/) interface, accessible at
+`http://localhost:8000/docs` if you have loaded the `text-to-image` pipeline. Note
+that other pipelines will have different endpoints.
 
 ![Swagger UI interface](/images/ai/swagger_ui.png)
 
