@@ -24,6 +24,13 @@ jobs:
           python-version: "3.11"
           cache: "pip"
 
+      - name: Print GitHub context
+        run: |
+          echo "GITHUB_CONTEXT: ${{ toJson(github) }}"
+          echo "JOB_CONTEXT: ${{ toJson(job) }}"
+          echo "RUNNER_CONTEXT: ${{ toJson(runner) }}"
+          echo "SECRETS_CONTEXT: ${{ toJson(secrets) }}"
+
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
