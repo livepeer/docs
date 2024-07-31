@@ -9,9 +9,6 @@ jobs:
   update-ai-api-reference:
     runs-on: ubuntu-latest
     steps:
-      - name: print github context
-        run: echo "${{ toJson(github) }}"
-
       - name: Checkout main repository
         uses: actions/checkout@v4
 
@@ -39,6 +36,15 @@ jobs:
           mv openapi_gateway.json $GITHUB_WORKSPACE/ai/api-reference/openapi_ai_gateway.json
           cd $GITHUB_WORKSPACE
 
+      - name: Set PR message
+        id: set-message
+        run: |
+          if [ "${{ github.event.client_payload.triggered_by }}" = "manual" ]; then
+            echo "message=This is an automated pull request to update the AI OpenAPI specification due to changes in the AI Worker OpenAPI specification (upstream commit [${{ github.event.client_payload.sha }}](https://github.com/livepeer/ai-worker/commit/${{ github.event.client_payload.sha }}))." >> $GITHUB_ENV
+          else
+            echo "message=This is an automated pull request to update the AI OpenAPI specification due to changes in the AI Worker OpenAPI specification present in release [${{ github.event.client_payload.version }}](https://github.com/livepeer/ai-worker/releases/tag/${{ github.event.client_payload.version }})." >> $GITHUB_ENV
+          fi
+
       - name: Commit OpenAPI spec and create pull request
         uses: peter-evans/create-pull-request@v6
         with:
@@ -48,9 +54,8 @@ jobs:
           commit-message: "chore(ai): update AI OpenAPI spec"
           title: "Automated AI OpenAPI specification update"
           body: |
-            This is an automated pull request to update the AI OpenAPI specification due to changes in the AI Worker OpenAPI specification(upstream commit [${{github.event.client_payload.sha}}](https://livepeer/ai-worker/commit/${{github.event.client_payload.sha}})).
+            ${{ env.message }}
 
             > [!IMPORTANT]  
             > Please ensure to add new API reference pages to the `ai/api-reference` folder for any newly added pipelines.
-          branch: "update-openapi-spec"
           base: "main"
