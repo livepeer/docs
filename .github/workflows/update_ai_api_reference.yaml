@@ -44,15 +44,6 @@ jobs:
             echo "message=This is an automated pull request to update the AI OpenAPI specification due to changes in the AI Worker OpenAPI specification present in release [${{ github.event.client_payload.version }}](https://github.com/livepeer/ai-worker/releases/tag/${{ github.event.client_payload.version }})." >> $GITHUB_ENV
           fi
 
-      - name: Set PR message
-        id: set-message
-        run: |
-          if [ "${{ github.event.client_payload.triggered_by }}" = "manual" ]; then
-            echo "message=This is an automated pull request to update the AI OpenAPI specification due to changes in the AI Worker OpenAPI specification (upstream commit [${{ github.event.client_payload.sha }}](https://github.com/livepeer/ai-worker/commit/${{ github.event.client_payload.sha }}))." >> $GITHUB_ENV
-          else
-            echo "message=This is an automated pull request to update the AI OpenAPI specification due to changes in the AI Worker OpenAPI specification present in release [${{ github.event.client_payload.version }}](https://github.com/livepeer/ai-worker/releases/tag/${{ github.event.client_payload.version }})." >> $GITHUB_ENV
-          fi
-
       - name: Commit OpenAPI spec and create pull request
         uses: peter-evans/create-pull-request@v6
         with:
