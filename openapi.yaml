@@ -3076,7 +3076,7 @@ paths:
                         components.FfmpegProfile{
                             Width: 1280,
                             Name: "720p",
-                            Height: 486589,
+                            Height: 720,
                             Bitrate: 3000000,
                             Fps: 30,
                             FpsDen: livepeergo.Int64(1),
@@ -3091,6 +3091,7 @@ paths:
                             components.TranscodeProfile{
                                 Width: livepeergo.Int64(1280),
                                 Name: livepeergo.String("720p"),
+                                Height: livepeergo.Int64(720),
                                 Bitrate: 3000000,
                                 Quality: livepeergo.Int64(23),
                                 Fps: livepeergo.Int64(30),
@@ -3159,7 +3160,7 @@ paths:
                     components.FfmpegProfile(
                         width=1280,
                         name='720p',
-                        height=486589,
+                        height=720,
                         bitrate=3000000,
                         fps=30,
                         fps_den=1,
@@ -3174,6 +3175,7 @@ paths:
                         components.TranscodeProfile(
                             width=1280,
                             name='720p',
+                            height=720,
                             bitrate=3000000,
                             quality=23,
                             fps=30,
@@ -3262,9 +3264,9 @@ paths:
                 s := livepeergo.New(
                     livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
                 )
-                var streamsonly *string = livepeergo.String("<value>")
+
                 ctx := context.Background()
-                res, err := s.Stream.GetAll(ctx, streamsonly)
+                res, err := s.Stream.GetAll(ctx, nil)
                 if err != nil {
                     log.Fatal(err)
                 }
@@ -3510,7 +3512,7 @@ paths:
                         components.FfmpegProfile{
                             Width: 1280,
                             Name: "720p",
-                            Height: 857478,
+                            Height: 720,
                             Bitrate: 3000000,
                             Fps: 30,
                             FpsDen: livepeergo.Int64(1),
@@ -3524,6 +3526,7 @@ paths:
                             components.TranscodeProfile{
                                 Width: livepeergo.Int64(1280),
                                 Name: livepeergo.String("720p"),
+                                Height: livepeergo.Int64(720),
                                 Bitrate: 3000000,
                                 Quality: livepeergo.Int64(23),
                                 Fps: livepeergo.Int64(30),
@@ -3582,7 +3585,7 @@ paths:
                     components.FfmpegProfile(
                         width=1280,
                         name='720p',
-                        height=857478,
+                        height=720,
                         bitrate=3000000,
                         fps=30,
                         fps_den=1,
@@ -3596,6 +3599,7 @@ paths:
                         components.TranscodeProfile(
                             width=1280,
                             name='720p',
+                            height=720,
                             bitrate=3000000,
                             quality=23,
                             fps=30,
@@ -5354,6 +5358,7 @@ paths:
                         components.TranscodeProfile{
                             Width: livepeergo.Int64(1280),
                             Name: livepeergo.String("720p"),
+                            Height: livepeergo.Int64(720),
                             Bitrate: 3000000,
                             Quality: livepeergo.Int64(23),
                             Fps: livepeergo.Int64(30),
@@ -5399,6 +5404,7 @@ paths:
                     components.TranscodeProfile(
                         width=1280,
                         name='720p',
+                        height=720,
                         bitrate=3000000,
                         quality=23,
                         fps=30,
@@ -5556,6 +5562,7 @@ paths:
                         components.TranscodeProfile{
                             Width: livepeergo.Int64(1280),
                             Name: livepeergo.String("720p"),
+                            Height: livepeergo.Int64(720),
                             Bitrate: 3000000,
                             Quality: livepeergo.Int64(23),
                             Fps: livepeergo.Int64(30),
@@ -5602,6 +5609,7 @@ paths:
                     components.TranscodeProfile(
                         width=1280,
                         name='720p',
+                        height=720,
                         bitrate=3000000,
                         quality=23,
                         fps=30,
@@ -7325,15 +7333,9 @@ paths:
                 s := livepeergo.New(
                     livepeergo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
                 )
-                var playbackID *string = livepeergo.String("<value>")
 
-                var creatorID *string = livepeergo.String("<value>")
-
-                var breakdownBy []operations.BreakdownBy = []operations.BreakdownBy{
-                    operations.BreakdownByPlaybackID,
-                }
                 ctx := context.Background()
-                res, err := s.Metrics.GetRealtimeViewership(ctx, playbackID, creatorID, breakdownBy)
+                res, err := s.Metrics.GetRealtimeViewership(ctx, nil, nil, nil)
                 if err != nil {
                     log.Fatal(err)
                 }
@@ -9012,6 +9014,7 @@ paths:
                         components.TranscodeProfile{
                             Width: livepeergo.Int64(1280),
                             Name: livepeergo.String("720p"),
+                            Height: livepeergo.Int64(720),
                             Bitrate: 3000000,
                             Quality: livepeergo.Int64(23),
                             Fps: livepeergo.Int64(30),
@@ -9070,6 +9073,7 @@ paths:
                     components.TranscodeProfile(
                         width=1280,
                         name='720p',
+                        height=720,
                         bitrate=3000000,
                         quality=23,
                         fps=30,
