@@ -1,9 +1,22 @@
 workflowVersion: 1.0.0
+speakeasyVersion: latest
 sources:
-    merge-code-samples-into-spec:
+    livepeer-studio-api:
         inputs:
-            - location: registry.speakeasyapi.dev/livepeer-8mq/livepeer-ai/livepeerai-oas
+            - location: https://raw.githubusercontent.com/livepeer/studio/master/packages/api/src/schema/api-schema.yaml
         overlays:
-            - location: registry.speakeasyapi.dev/livepeer-8mq/livepeer-ai/code-samples-go-livepeerai-go:main
-        output: ./openapi.yaml
+            - location: https://raw.githubusercontent.com/livepeer/livepeer-js/main/codeSamples.yaml
+            - location: https://raw.githubusercontent.com/livepeer/livepeer-go/main/codeSamples.yaml
+            - location: https://raw.githubusercontent.com/livepeer/livepeer-python/main/codeSamples.yaml
+        registry:
+            location: registry.speakeasyapi.dev/livepeer/livepeer-studio/livepeer-studio-api
+        output: openapi.yaml
+    livepeer-ai-api:
+        inputs:
+            - location: https://raw.githubusercontent.com/livepeer/ai-worker/main/runner/gateway.openapi.json
+        # overlays:
+            # - location: https://raw.githubusercontent.com/livepeer/livepeer-ai-js/main/codeSamples.yaml
+        registry:
+            location: registry.speakeasyapi.dev/livepeer-8mq/livepeer-ai/livepeer-ai-oas
+        output: ai/api-reference/gateway.openapi.json
 targets: {}
