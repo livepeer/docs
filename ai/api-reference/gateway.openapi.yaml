@@ -4,8 +4,8 @@ info:
   description: An application to run AI pipelines
   version: v0.1.2
 servers:
-- url: https://dream-gateway.livepeer.cloud
-  description: Livepeer Cloud Community Gateway
+  - url: https://dream-gateway.livepeer.cloud
+    description: Livepeer Cloud Community Gateway
 paths:
   /text-to-image:
     post:
@@ -16,41 +16,96 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TextToImageParams'
+              $ref: "#/components/schemas/TextToImageParams"
         required: true
       responses:
-        '200':
+        "200":
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ImageResponse'
-        '400':
+                $ref: "#/components/schemas/ImageResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '401':
+                $ref: "#/components/schemas/HTTPError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '500':
+                $ref: "#/components/schemas/HTTPError"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '422':
+                $ref: "#/components/schemas/HTTPError"
+        "422":
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: "#/components/schemas/HTTPValidationError"
       security:
-      - HTTPBearer: []
+        - HTTPBearer: []
+      x-codeSamples:
+        - lang: typescript
+          label: text_to_image
+          source: |-
+            import { LivepeerAI } from "livepeer-ai";
+
+            const livepeerAI = new LivepeerAI({
+              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeerAI.textToImage({
+                prompt: "<value>",
+              });
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+        - lang: "python"
+          label: "text_to_image"
+          source:
+            "from livepeer_ai import LivepeerAI\n\ns =
+            LivepeerAI(\n    http_bearer=\"<YOUR_BEARER_TOKEN_HERE>\",\n)\n\n\nres
+            = s.text_to_image(request={\n    \"prompt\": \"<value>\",\n})\n\nif
+            res.image_response is not None:\n    # handle response\n    pass"
+        - lang: go
+          label: text_to_image
+          source: |-
+            package main
+
+            import(
+            	livepeeraigo "github.com/livepeer/livepeer-ai-go"
+            	"github.com/livepeer/livepeer-ai-go/models/components"
+            	"context"
+            	"log"
+            )
+
+            func main() {
+                s := livepeeraigo.New(
+                    livepeeraigo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                )
+                request := components.TextToImageParams{
+                    Prompt: "<value>",
+                }
+                ctx := context.Background()
+                res, err := s.TextToImage(ctx, request)
+                if err != nil {
+                    log.Fatal(err)
+                }
+                if res.ImageResponse != nil {
+                    // handle response
+                }
+            }
   /image-to-image:
     post:
       summary: Image To Image
@@ -60,41 +115,105 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Body_image_to_image_image_to_image_post'
+              $ref: "#/components/schemas/Body_image_to_image_image_to_image_post"
         required: true
       responses:
-        '200':
+        "200":
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ImageResponse'
-        '400':
+                $ref: "#/components/schemas/ImageResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '401':
+                $ref: "#/components/schemas/HTTPError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '500':
+                $ref: "#/components/schemas/HTTPError"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '422':
+                $ref: "#/components/schemas/HTTPError"
+        "422":
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: "#/components/schemas/HTTPValidationError"
       security:
-      - HTTPBearer: []
+        - HTTPBearer: []
+      x-codeSamples:
+        - lang: typescript
+          label: image_to_image
+          source: |-
+            import { LivepeerAI } from "livepeer-ai";
+            import { openAsBlob } from "node:fs";
+
+            const livepeerAI = new LivepeerAI({
+              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeerAI.imageToImage({
+                prompt: "<value>",
+                image: await openAsBlob("./sample-file"),
+              });
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+        - lang: "python"
+          label: "image_to_image"
+          source:
+            "from livepeer_ai import LivepeerAI\n\ns =
+            LivepeerAI(\n    http_bearer=\"<YOUR_BEARER_TOKEN_HERE>\",\n)\n\n\nres
+            = s.image_to_image(request={\n    \"prompt\":
+            \"<value>\",\n    \"image\": {\n        \"file_name\":
+            \"your_file_here\",\n        \"content\": open(\"<file_path>\",
+            \"rb\"),\n    },\n})\n\nif res.image_response is not None:\n    #
+            handle response\n    pass"
+        - lang: go
+          label: image_to_image
+          source: |-
+            package main
+
+            import(
+            	livepeeraigo "github.com/livepeer/livepeer-ai-go"
+            	"github.com/livepeer/livepeer-ai-go/models/components"
+            	"context"
+            	"log"
+            )
+
+            func main() {
+                s := livepeeraigo.New(
+                    livepeeraigo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                )
+                request := components.BodyImageToImageImageToImagePost{
+                    Prompt: "<value>",
+                    Image: components.Image{
+                        FileName: "your_file_here",
+                        Content: os.Open("<file_path>"),
+                    },
+                }
+                ctx := context.Background()
+                res, err := s.ImageToImage(ctx, request)
+                if err != nil {
+                    log.Fatal(err)
+                }
+                if res.ImageResponse != nil {
+                    // handle response
+                }
+            }
   /image-to-video:
     post:
       summary: Image To Video
@@ -104,41 +223,102 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Body_image_to_video_image_to_video_post'
+              $ref: "#/components/schemas/Body_image_to_video_image_to_video_post"
         required: true
       responses:
-        '200':
+        "200":
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VideoResponse'
-        '400':
+                $ref: "#/components/schemas/VideoResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '401':
+                $ref: "#/components/schemas/HTTPError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '500':
+                $ref: "#/components/schemas/HTTPError"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '422':
+                $ref: "#/components/schemas/HTTPError"
+        "422":
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: "#/components/schemas/HTTPValidationError"
       security:
-      - HTTPBearer: []
+        - HTTPBearer: []
+      x-codeSamples:
+        - lang: typescript
+          label: image_to_video
+          source: |-
+            import { LivepeerAI } from "livepeer-ai";
+            import { openAsBlob } from "node:fs";
+
+            const livepeerAI = new LivepeerAI({
+              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeerAI.imageToVideo({
+                image: await openAsBlob("./sample-file"),
+              });
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+        - lang: "python"
+          label: "image_to_video"
+          source:
+            "from livepeer_ai import LivepeerAI\n\ns =
+            LivepeerAI(\n    http_bearer=\"<YOUR_BEARER_TOKEN_HERE>\",\n)\n\n\nres
+            = s.image_to_video(request={\n    \"image\":
+            {\n        \"file_name\": \"your_file_here\",\n        \"content\":
+            open(\"<file_path>\", \"rb\"),\n    },\n})\n\nif res.video_response
+            is not None:\n    # handle response\n    pass"
+        - lang: go
+          label: image_to_video
+          source: |-
+            package main
+
+            import(
+            	livepeeraigo "github.com/livepeer/livepeer-ai-go"
+            	"github.com/livepeer/livepeer-ai-go/models/components"
+            	"context"
+            	"log"
+            )
+
+            func main() {
+                s := livepeeraigo.New(
+                    livepeeraigo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                )
+                request := components.BodyImageToVideoImageToVideoPost{
+                    Image: components.BodyImageToVideoImageToVideoPostImage{
+                        FileName: "your_file_here",
+                        Content: os.Open("<file_path>"),
+                    },
+                }
+                ctx := context.Background()
+                res, err := s.ImageToVideo(ctx, request)
+                if err != nil {
+                    log.Fatal(err)
+                }
+                if res.VideoResponse != nil {
+                    // handle response
+                }
+            }
   /upscale:
     post:
       summary: Upscale
@@ -148,41 +328,104 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Body_upscale_upscale_post'
+              $ref: "#/components/schemas/Body_upscale_upscale_post"
         required: true
       responses:
-        '200':
+        "200":
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ImageResponse'
-        '400':
+                $ref: "#/components/schemas/ImageResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '401':
+                $ref: "#/components/schemas/HTTPError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '500':
+                $ref: "#/components/schemas/HTTPError"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '422':
+                $ref: "#/components/schemas/HTTPError"
+        "422":
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: "#/components/schemas/HTTPValidationError"
       security:
-      - HTTPBearer: []
+        - HTTPBearer: []
+      x-codeSamples:
+        - lang: typescript
+          label: upscale
+          source: |-
+            import { LivepeerAI } from "livepeer-ai";
+            import { openAsBlob } from "node:fs";
+
+            const livepeerAI = new LivepeerAI({
+              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeerAI.upscale({
+                prompt: "<value>",
+                image: await openAsBlob("./sample-file"),
+              });
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+        - lang: "python"
+          label: "upscale"
+          source: |-
+            "from livepeer_ai import LivepeerAI\n\ns =
+            LivepeerAI(\n    http_bearer=\"<YOUR_BEARER_TOKEN_HERE>\",\n)\n\n\nres
+            = s.upscale(request={\n    \"prompt\": \"<value>\",\n    \"image\":
+            {\n        \"file_name\": \"your_file_here\",\n        \"content\":
+            open(\"<file_path>\", \"rb\"),\n    },\n})\n\nif res.image_response
+            is not None:\n    # handle response\n    pass"
+        - lang: go
+          label: upscale
+          source: |-
+            package main
+
+            import(
+            	livepeeraigo "github.com/livepeer/livepeer-ai-go"
+            	"github.com/livepeer/livepeer-ai-go/models/components"
+            	"context"
+            	"log"
+            )
+
+            func main() {
+                s := livepeeraigo.New(
+                    livepeeraigo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                )
+                request := components.BodyUpscaleUpscalePost{
+                    Prompt: "<value>",
+                    Image: components.BodyUpscaleUpscalePostImage{
+                        FileName: "your_file_here",
+                        Content: os.Open("<file_path>"),
+                    },
+                }
+                ctx := context.Background()
+                res, err := s.Upscale(ctx, request)
+                if err != nil {
+                    log.Fatal(err)
+                }
+                if res.ImageResponse != nil {
+                    // handle response
+                }
+            }
   /audio-to-text:
     post:
       summary: Audio To Text
@@ -192,47 +435,108 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Body_audio_to_text_audio_to_text_post'
+              $ref: "#/components/schemas/Body_audio_to_text_audio_to_text_post"
         required: true
       responses:
-        '200':
+        "200":
           description: Successful Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TextResponse'
-        '400':
+                $ref: "#/components/schemas/TextResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '401':
+                $ref: "#/components/schemas/HTTPError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '413':
+                $ref: "#/components/schemas/HTTPError"
+        "413":
           description: Request Entity Too Large
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '500':
+                $ref: "#/components/schemas/HTTPError"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPError'
-        '422':
+                $ref: "#/components/schemas/HTTPError"
+        "422":
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: "#/components/schemas/HTTPValidationError"
       security:
-      - HTTPBearer: []
+        - HTTPBearer: []
+      x-codeSamples:
+        - lang: typescript
+          label: audio_to_text
+          source: |-
+            import { LivepeerAI } from "livepeer-ai";
+            import { openAsBlob } from "node:fs";
+
+            const livepeerAI = new LivepeerAI({
+              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeerAI.audioToText({
+                audio: await openAsBlob("./sample-file"),
+              });
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+        - lang: "python"
+          label: "audio_to_text"
+          source:
+            "from livepeer_ai import LivepeerAI\n\ns =
+            LivepeerAI(\n    http_bearer=\"<YOUR_BEARER_TOKEN_HERE>\",\n)\n\n\nres
+            = s.audio_to_text(request={\n    \"audio\":
+            {\n        \"file_name\": \"your_file_here\",\n        \"content\":
+            open(\"<file_path>\", \"rb\"),\n    },\n})\n\nif res.text_response
+            is not None:\n    # handle response\n    pass"
+        - lang: go
+          label: audio_to_text
+          source: |-
+            package main
+
+            import(
+            	livepeeraigo "github.com/livepeer/livepeer-ai-go"
+            	"github.com/livepeer/livepeer-ai-go/models/components"
+            	"context"
+            	"log"
+            )
+
+            func main() {
+                s := livepeeraigo.New(
+                    livepeeraigo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                )
+                request := components.BodyAudioToTextAudioToTextPost{
+                    Audio: components.Audio{
+                        FileName: "your_file_here",
+                        Content: os.Open("<file_path>"),
+                    },
+                }
+                ctx := context.Background()
+                res, err := s.AudioToText(ctx, request)
+                if err != nil {
+                    log.Fatal(err)
+                }
+                if res.TextResponse != nil {
+                    // handle response
+                }
+            }
 components:
   schemas:
     APIError:
@@ -243,7 +547,7 @@ components:
           description: The error message.
       type: object
       required:
-      - msg
+        - msg
       title: APIError
       description: API error response model.
     Body_audio_to_text_audio_to_text_post:
@@ -257,11 +561,11 @@ components:
           type: string
           title: Model Id
           description: Hugging Face model ID used for transcription.
-          default: ''
+          default: ""
       type: object
       required:
-      - audio
-      - model_id
+        - audio
+        - model_id
       title: Body_audio_to_text_audio_to_text_post
     Body_image_to_image_image_to_image_post:
       properties:
@@ -278,36 +582,40 @@ components:
           type: string
           title: Model Id
           description: Hugging Face model ID used for image generation.
-          default: ''
+          default: ""
         strength:
           type: number
           title: Strength
-          description: Degree of transformation applied to the reference image (0
-            to 1).
+          description:
+            Degree of transformation applied to the reference image (0 to 1).
           default: 0.8
         guidance_scale:
           type: number
           title: Guidance Scale
-          description: Encourages model to generate images closely linked to the text
+          description:
+            Encourages model to generate images closely linked to the text
             prompt (higher values may reduce image quality).
           default: 7.5
         image_guidance_scale:
           type: number
           title: Image Guidance Scale
-          description: Degree to which the generated image is pushed towards the initial
+          description:
+            Degree to which the generated image is pushed towards the initial
             image.
           default: 1.5
         negative_prompt:
           type: string
           title: Negative Prompt
-          description: Text prompt(s) to guide what to exclude from image generation.
+          description:
+            Text prompt(s) to guide what to exclude from image generation.
             Ignored if guidance_scale < 1.
-          default: ''
+          default: ""
         safety_check:
           type: boolean
           title: Safety Check
-          description: Perform a safety check to estimate if generated images could
-            be offensive or harmful.
+          description:
+            Perform a safety check to estimate if generated images could be
+            offensive or harmful.
           default: true
         seed:
           type: integer
@@ -316,8 +624,9 @@ components:
         num_inference_steps:
           type: integer
           title: Num Inference Steps
-          description: Number of denoising steps. More steps usually lead to higher
-            quality images but slower inference. Modulated by strength.
+          description:
+            Number of denoising steps. More steps usually lead to higher quality
+            images but slower inference. Modulated by strength.
           default: 100
         num_images_per_prompt:
           type: integer
@@ -326,9 +635,9 @@ components:
           default: 1
       type: object
       required:
-      - prompt
-      - image
-      - model_id
+        - prompt
+        - image
+        - model_id
       title: Body_image_to_image_image_to_image_post
     Body_image_to_video_image_to_video_post:
       properties:
@@ -341,7 +650,7 @@ components:
           type: string
           title: Model Id
           description: Hugging Face model ID used for video generation.
-          default: ''
+          default: ""
         height:
           type: integer
           title: Height
@@ -360,20 +669,23 @@ components:
         motion_bucket_id:
           type: integer
           title: Motion Bucket Id
-          description: Used for conditioning the amount of motion for the generation.
-            The higher the number the more motion will be in the video.
+          description:
+            Used for conditioning the amount of motion for the generation. The
+            higher the number the more motion will be in the video.
           default: 127
         noise_aug_strength:
           type: number
           title: Noise Aug Strength
-          description: Amount of noise added to the conditioning image. Higher values
+          description:
+            Amount of noise added to the conditioning image. Higher values
             reduce resemblance to the conditioning image and increase motion.
           default: 0.02
         safety_check:
           type: boolean
           title: Safety Check
-          description: Perform a safety check to estimate if generated images could
-            be offensive or harmful.
+          description:
+            Perform a safety check to estimate if generated images could be
+            offensive or harmful.
           default: true
         seed:
           type: integer
@@ -382,13 +694,14 @@ components:
         num_inference_steps:
           type: integer
           title: Num Inference Steps
-          description: Number of denoising steps. More steps usually lead to higher
-            quality images but slower inference. Modulated by strength.
+          description:
+            Number of denoising steps. More steps usually lead to higher quality
+            images but slower inference. Modulated by strength.
           default: 25
       type: object
       required:
-      - image
-      - model_id
+        - image
+        - model_id
       title: Body_image_to_video_image_to_video_post
     Body_upscale_upscale_post:
       properties:
@@ -405,12 +718,13 @@ components:
           type: string
           title: Model Id
           description: Hugging Face model ID used for upscaled image generation.
-          default: ''
+          default: ""
         safety_check:
           type: boolean
           title: Safety Check
-          description: Perform a safety check to estimate if generated images could
-            be offensive or harmful.
+          description:
+            Perform a safety check to estimate if generated images could be
+            offensive or harmful.
           default: true
         seed:
           type: integer
@@ -419,31 +733,32 @@ components:
         num_inference_steps:
           type: integer
           title: Num Inference Steps
-          description: Number of denoising steps. More steps usually lead to higher
-            quality images but slower inference. Modulated by strength.
+          description:
+            Number of denoising steps. More steps usually lead to higher quality
+            images but slower inference. Modulated by strength.
           default: 75
       type: object
       required:
-      - prompt
-      - image
-      - model_id
+        - prompt
+        - image
+        - model_id
       title: Body_upscale_upscale_post
     HTTPError:
       properties:
         detail:
           allOf:
-          - $ref: '#/components/schemas/APIError'
+            - $ref: "#/components/schemas/APIError"
           description: Detailed error information.
       type: object
       required:
-      - detail
+        - detail
       title: HTTPError
       description: HTTP error response model.
     HTTPValidationError:
       properties:
         detail:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: "#/components/schemas/ValidationError"
           type: array
           title: Detail
       type: object
@@ -452,13 +767,13 @@ components:
       properties:
         images:
           items:
-            $ref: '#/components/schemas/Media'
+            $ref: "#/components/schemas/Media"
           type: array
           title: Images
           description: The generated images.
       type: object
       required:
-      - images
+        - images
       title: ImageResponse
       description: Response model for image generation.
     Media:
@@ -477,11 +792,12 @@ components:
           description: Whether the media was flagged as NSFW.
       type: object
       required:
-      - url
-      - seed
-      - nsfw
+        - url
+        - seed
+        - nsfw
       title: Media
-      description: A media object containing information about the generated media.
+      description:
+        A media object containing information about the generated media.
     TextResponse:
       properties:
         text:
@@ -490,14 +806,14 @@ components:
           description: The generated text.
         chunks:
           items:
-            $ref: '#/components/schemas/chunk'
+            $ref: "#/components/schemas/chunk"
           type: array
           title: Chunks
           description: The generated text chunks.
       type: object
       required:
-      - text
-      - chunks
+        - text
+        - chunks
       title: TextResponse
       description: Response model for text generation.
     TextToImageParams:
@@ -506,12 +822,17 @@ components:
           type: string
           title: Model Id
           description: Hugging Face model ID used for image generation.
-          default: ''
+          default: ""
+          examples:
+            - SG161222/RealVisXL_V4.0_Lightning
         prompt:
           type: string
           title: Prompt
-          description: Text prompt(s) to guide image generation. Separate multiple
-            prompts with '|' if supported by the model.
+          description:
+            Text prompt(s) to guide image generation. Separate multiple prompts
+            with '|' if supported by the model.
+          examples:
+            - A beautiful landscape with a sunset.
         height:
           type: integer
           title: Height
@@ -525,20 +846,23 @@ components:
         guidance_scale:
           type: number
           title: Guidance Scale
-          description: Encourages model to generate images closely linked to the text
+          description:
+            Encourages model to generate images closely linked to the text
             prompt (higher values may reduce image quality).
           default: 7.5
         negative_prompt:
           type: string
           title: Negative Prompt
-          description: Text prompt(s) to guide what to exclude from image generation.
+          description:
+            Text prompt(s) to guide what to exclude from image generation.
             Ignored if guidance_scale < 1.
-          default: ''
+          default: ""
         safety_check:
           type: boolean
           title: Safety Check
-          description: Perform a safety check to estimate if generated images could
-            be offensive or harmful.
+          description:
+            Perform a safety check to estimate if generated images could be
+            offensive or harmful.
           default: true
         seed:
           type: integer
@@ -547,8 +871,9 @@ components:
         num_inference_steps:
           type: integer
           title: Num Inference Steps
-          description: Number of denoising steps. More steps usually lead to higher
-            quality images but slower inference. Modulated by strength.
+          description:
+            Number of denoising steps. More steps usually lead to higher quality
+            images but slower inference. Modulated by strength.
           default: 50
         num_images_per_prompt:
           type: integer
@@ -557,16 +882,16 @@ components:
           default: 1
       type: object
       required:
-      - prompt
-      - model_id
+        - prompt
+        - model_id
       title: TextToImageParams
     ValidationError:
       properties:
         loc:
           items:
             anyOf:
-            - type: string
-            - type: integer
+              - type: string
+              - type: integer
           type: array
           title: Location
         msg:
@@ -577,21 +902,21 @@ components:
           title: Error Type
       type: object
       required:
-      - loc
-      - msg
-      - type
+        - loc
+        - msg
+        - type
       title: ValidationError
     VideoResponse:
       properties:
         images:
           items:
-            $ref: '#/components/schemas/Media'
+            $ref: "#/components/schemas/Media"
           type: array
           title: Images
           description: The generated images.
       type: object
       required:
-      - images
+        - images
       title: VideoResponse
       description: Response model for image generation.
     chunk:
@@ -607,8 +932,8 @@ components:
           description: The text of the chunk.
       type: object
       required:
-      - timestamp
-      - text
+        - timestamp
+        - text
       title: chunk
       description: A chunk of text with a timestamp.
   securitySchemes:
