@@ -1,0 +1,173 @@
+---
+title: Start your AI Gateway
+---
+
+The Livepeer AI Network is not yet integrated into the main
+[go-livepeer](https://github.com/livepeer/go-livepeer) software due to its
+**Alpha** status. To enable AI inference capabilities on your Gateway node,
+please use the `ai-video` branch of
+[go-livepeer](https://github.com/livepeer/go-livepeer/tree/ai-video). This
+branch contains the necessary software for the AI Gateway node. Currently, there
+are two methods to run the Livepeer AI Network software:
+
+- **Docker**: This is the most straightforward and recommended method to run the
+  AI Gateway node.
+- **Pre-built Binaries**: If you prefer not to use Docker, pre-built binaries
+  are available.
+
+## Start the AI Gateway
+
+Please follow the steps below to start your AI Livepeer AI Network Gateway node:
+
+<Tabs>
+    <Tab title="Use Docker (Recommended)">
+        <Steps>
+            <Step title="Retrieve the Livepeer AI Network Docker Image">
+                Fetch the latest Livepeer AI Network Docker image from the [Livepeer Docker Hub](https://hub.docker.com/r/livepeer/go-livepeer) with the following command:
+
+                ```bash
+                docker pull livepeer/go-livepeer:ai-video
+                ```
+            </Step>
+            <Step title="Launch an (Offchain) AI Gateway">
+                Execute the Livepeer AI Network Docker image using the following command:
+
+                ```bash
+                docker run \
+                    --name livepeer_ai_gateway \
+                    -v ~/.lpData2/:/root/.lpData2 \
+                    -p 8937:8937 \
+                    --network host \
+                    livepeer/go-livepeer:ai-video \
+                    -datadir ~/.lpData2 \
+                    -gateway \
+                    -orchAddr <ORCH_LIST> \
+                    -httpAddr 0.0.0.0:8937 \
+                    -v 6 \
+                    -httpIngest
+                ```
+
+                This launches an **offchain** AI Gateway node. The flags are similar to those used for a Mainnet Transcoding Network Gateway node. For more information, see the [go-livepeer CLI reference](/references/go-livepeer/cli-reference).
+            </Step>
+            <Step title="Confirm Successful Startup of the AI Gateway">
+                If your Livepeer AI Network Gateway node is functioning correctly, you should see the following output:
+
+                ```bash
+                I0501 11:07:47.609839       1 mediaserver.go:201] Transcode Job Type: [{P240p30fps16x9 600k 30 0 426x240 16:9 0 0 0s 0 0 0 0} {P360p30fps16x9 1200k 30 0 640x360 16:9 0 0 0s 0 0 0 0}]
+                I0501 11:07:47.609917       1 mediaserver.go:226] HTTP Server listening on http://0.0.0.0:8937
+                I0501 11:07:47.609963       1 lpms.go:92] LPMS Server listening on rtmp://127.0.0.1:1935
+                ```
+            </Step>
+            <Step title="Check Port Availability">
+                To make your Livepeer AI Network Gateway node accessible from the internet, you need to configure your network settings. Ensure that port `8937` is unblocked on your machine. Additionally, consider setting up port forwarding on your router, which will allow the Gateway node to be reachable from the internet.
+            </Step>
+        </Steps>
+    </Tab>
+    <Tab title="Use Binaries">
+        <Steps>
+            {/* TODO: Simplify this step */}
+            <Step title="Download the Latest Livepeer AI Network Binary">
+                Download the latest Livepeer AI Network binary for your system:
+
+                ```bash
+                wget https://build.livepeer.live/go-livepeer/ai-video/latest/livepeer-<OS>-<ARCH>.tar.gz
+                ```
+
+                Replace `<OS>` and `<ARCH>` with your system's operating system and architecture. For example, for a Linux system with an AMD64 architecture, the command would be:
+
+                ```bash
+                wget https://build.livepeer.live/go-livepeer/ai-video/latest/livepeer-linux-amd64.tar.gz
+                ```
+
+                See the [go-livepeer installation guide](/orchestrators/guides/install-go-livepeer#install-using-a-binary-release) for more information on the available binaries.
+
+                <Info>The windows and MacOS (amd64) binaries of the Livepeer AI Network are not available yet.</Info>
+            </Step>
+            <Step title="Extract and Configure the Binary">
+                Once downloaded, extract the binary to a directory of your choice.
+            </Step>
+            <Step title="Launch an (Offchain) AI Gateway">
+                Run the following command to start your Livepeer AI Network Gateway node:
+
+                ```bash
+                ./livepeer \
+                    -datadir ~/.lpData2 \
+                    -gateway \
+                    -orchAddr <ORCH_LIST> \
+                    -httpAddr 0.0.0.0:8937 \
+                    -v 6 \
+                    -httpIngest
+                ```
+
+                This command launches an **offchain** AI Gateway node. These flags are similar to running a Mainnet Transcoding Network Gateway node. For more information see the [go-livepeer CLI reference](/references/go-livepeer/cli-reference).
+            </Step>
+            <Step title="Confirm Successful Startup of the AI Gateway">
+                If your Livepeer AI Network Gateway node is functioning correctly, you should see the following output:
+
+                ```bash
+                I0501 11:07:47.609839       1 mediaserver.go:201] Transcode Job Type: [{P240p30fps16x9 600k 30 0 426x240 16:9 0 0 0s 0 0 0 0} {P360p30fps16x9 1200k 30 0 640x360 16:9 0 0 0s 0 0 0 0}]
+                I0501 11:07:47.609917       1 mediaserver.go:226] HTTP Server listening on http://0.0.0.0:8937
+                I0501 11:07:47.609963       1 lpms.go:92] LPMS Server listening on rtmp://127.0.0.1:1935
+                ```
+            </Step>
+            <Step title="Check Port Availability">
+                To make your Livepeer AI Network Gateway node accessible from the internet, you need to configure your network settings. Ensure that port `8937` is unblocked on your machine. Additionally, consider setting up port forwarding on your router, which will allow the Gateway node to be reachable from the internet.
+            </Step>
+        </Steps>
+        <Note>
+            If no binaries are available for your system, you can build the [ai-video branch](https://github.com/livepeer/go-livepeer/tree/ai-video) of [go-livepeer](https://github.com/livepeer/go-livepeer) from source by following the instructions in the [Livepeer repository](/Gateways/guides/install-go-livepeer) or by reaching out to the Livepeer community on [Discord](https://discord.gg/livepeer).
+        </Note>
+    </Tab>
+
+</Tabs>
+
+## Confirm the AI Gateway is Operational
+
+After launching the Livepeer AI Network Gateway node, verify its operation by sending an
+AI inference request directly to it. This requires an active **off-chain** AI
+Orchestrator node. For guidance on setting up an AI Orchestrator node, refer to
+the [AI Orchestrator Setup Guide](/ai/orchestrators/get-started).
+
+<Steps>
+    <Step title="Launch an AI Orchestrator">
+        Start an AI Orchestrator node on port `8936` following the [AI Orchestrator Setup Guide](/ai/orchestrators/get-started). Ensure it has loaded the desired model for inference (e.g., "ByteDance/SDXL-Lightning").
+    </Step>
+    <Step title="Link Gateway to AI Orchestrator">
+        To connect your Gateway node to the AI Orchestrator node, specify the Orchestrator's address when launching the Gateway node. Replace `<ORCH_LIST>` with the Orchestrator's address, like so:
+
+        ```bash
+        -orchAddr 0.0.0.0:8936
+        ```
+    </Step>
+    <Step title="Submit an Inference Request">
+        Refer to the [AI API reference](/ai/api-reference/text-to-image) to understand how to submit an inference request to the Gateway node. For instance, to generate an image from text, use the following `curl` command:
+
+        ```bash
+        curl -X POST "http://0.0.0.0:8937/text-to-image" \
+            -H "Content-Type: application/json" \
+            -d '{
+                "model_id":"ByteDance/SDXL-Lightning",
+                "prompt":"A cool cat on the beach",
+                "width": 1024,
+                "height": 1024
+            }'
+        ```
+    </Step>
+    <Step title="Inspect the Response">
+        If the Gateway node is functioning correctly, you should receive a response similar to the following:
+
+        ```json
+        {
+            "images": [
+                {
+                "seed": 2562822894,
+                "url": "https://0.0.0.0:8937/stream/d0fc1fc6/8fdf5a94.png"
+                }
+            ]
+        }
+        ```
+
+        Consult the [Text-to-image Pipeline Documentation](/ai/pipelines/text-to-image) for more details on interpreting the response.
+    </Step>
+
+</Steps>

@@ -1,0 +1,58 @@
+---
+title: Add new Model
+---
+
+Adding support for a new model to the Livepeer AI Network is a great way to get started
+with contributing to the Livepeer Livepeer AI Network. This guide will walk you through
+the steps to add a new model to the Livepeer AI Network.
+
+## Video Guide
+
+In this video, one of the Livepeer ecosystem's core Developers will walk you
+through the steps to add a new model to the Livepeer AI Network.
+
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/watch?v=aqz-KE-bpKQ"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
+
+## Step-by-Step Guide
+
+Adding a new model to the Livepeer AI Network is relatively straightforward since each
+supported [pipeline](/ai/guides/add-pipeline) is designed to support multiple
+diffusion models in the respective diffusion pipeline. To add a new model, you
+will need to follow these steps:
+
+1. **Fork the AI Worker Repository**: Fork the
+   [Livepeer AI Worker](https://github.com/livepeer/ai-worker) repository to
+   your GitHub account.
+2. **Clone the Repository**: Clone the forked repository to your local machine.
+3. **Find a Model**: Find a diffusion model from
+   [Hugging Face](https://huggingface.co/models?pipeline_tag=image-to-video)
+   that you would like to add to the Livepeer AI Network. Replace the `image-to-video`
+   pipeline tag in the URL with the pipeline tag of your choice.
+4. **Download the Model**: Update the
+   [runner/dl_checkpoints.sh](https://github.com/livepeer/ai-worker/blob/main/runner/dl_checkpoints.sh#L73)
+   script to download the model weights from Hugging Face.
+5. **Set the MODEL_ID env variable**: Set the `MODEL_ID` environment variable to
+   the hugging face identifier of the model you want to add.
+6. **Run the AI Worker**: Run the AI Worker with the updated
+   `runner/dl_checkpoints.sh` script to download the model weights. 6 **Test the
+   Model**: Test the model by starting the AI Worker (see the
+   [runner README](https://github.com/livepeer/ai-worker/tree/main/runner#readme)).
+7. **Make the necessary changes**: If a model does not work natively with the AI
+   worker, you may need to make changes to the respective pipeline the model is
+   in.
+
+<Tip>
+  The best way to develop the AI Worker is by using the [VScode Dev
+  Container](https://code.visualstudio.com/docs/devcontainers/containers)
+  provided in the repository. This will allow you to debug and test your changes
+  in a consistent environment. For more information, see [the runner dev
+  documentation](https://github.com/livepeer/ai-worker/blob/main/runner/dev/README.md).
+</Tip>
