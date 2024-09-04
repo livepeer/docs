@@ -2,10 +2,12 @@ openapi: 3.1.0
 info:
   title: Livepeer AI Runner
   description: An application to run AI pipelines
-  version: v0.1.2
+  version: v0.2.0
 servers:
 - url: https://dream-gateway.livepeer.cloud
   description: Livepeer Cloud Community Gateway
+- url: https://livepeer.studio/api/beta/generate
+  description: Livepeer Studio Gateway
 paths:
   /text-to-image:
     post:
@@ -233,6 +235,50 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
       - HTTPBearer: []
+  /segment-anything-2:
+    post:
+      summary: Segment Anything 2
+      description: Segment objects in an image.
+      operationId: segment_anything_2
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_segment_anything_2_segment_anything_2_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasksResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
 components:
   schemas:
     APIError:
@@ -390,6 +436,61 @@ components:
       - image
       - model_id
       title: Body_image_to_video_image_to_video_post
+    Body_segment_anything_2_segment_anything_2_post:
+      properties:
+        image:
+          type: string
+          format: binary
+          title: Image
+          description: Image to segment.
+        model_id:
+          type: string
+          title: Model Id
+          description: Hugging Face model ID used for image generation.
+          default: ''
+        point_coords:
+          type: string
+          title: Point Coords
+          description: Nx2 array of point prompts to the model, where each point is
+            in (X,Y) in pixels.
+        point_labels:
+          type: string
+          title: Point Labels
+          description: Labels for the point prompts, where 1 indicates a foreground
+            point and 0 indicates a background point.
+        box:
+          type: string
+          title: Box
+          description: A length 4 array given as a box prompt to the model, in XYXY
+            format.
+        mask_input:
+          type: string
+          title: Mask Input
+          description: A low-resolution mask input to the model, typically from a
+            previous prediction iteration, with the form 1xHxW (H=W=256 for SAM).
+        multimask_output:
+          type: boolean
+          title: Multimask Output
+          description: If true, the model will return three masks for ambiguous input
+            prompts, often producing better masks than a single prediction.
+          default: true
+        return_logits:
+          type: boolean
+          title: Return Logits
+          description: If true, returns un-thresholded mask logits instead of a binary
+            mask.
+          default: true
+        normalize_coords:
+          type: boolean
+          title: Normalize Coords
+          description: If true, the point coordinates will be normalized to the range
+            [0,1], with point_coords expected to be with respect to image dimensions.
+          default: true
+      type: object
+      required:
+      - image
+      - model_id
+      title: Body_segment_anything_2_segment_anything_2_post
     Body_upscale_upscale_post:
       properties:
         prompt:
@@ -461,6 +562,27 @@ components:
       - images
       title: ImageResponse
       description: Response model for image generation.
+    MasksResponse:
+      properties:
+        masks:
+          type: string
+          title: Masks
+          description: The generated masks.
+        scores:
+          type: string
+          title: Scores
+          description: The model's confidence scores for each generated mask.
+        logits:
+          type: string
+          title: Logits
+          description: The raw, unnormalized predictions (logits) for the masks.
+      type: object
+      required:
+      - masks
+      - scores
+      - logits
+      title: MasksResponse
+      description: Response model for object segmentation.
     Media:
       properties:
         url:
