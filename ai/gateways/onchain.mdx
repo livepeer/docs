@@ -44,6 +44,32 @@ for details. Below is a summary:
     - `-ethPassword=/root/.lpData/.eth_secret`: This flag sets the path to the Ethereum keystore password file.
     - `-ethOrchAddr=<MAIN_ORCH_ETH_ADDRESS>`: This flag sets the Ethereum address of the Mainnet Transcoding Network Gateway.
     - `-maxTotalEV=100000000000000`: This flag ensures that the AI Gateway doesn't trigger maximum total ticket value limits set by the `go-livepeer` software.
-
+    - `-maxPricePerUnit=<MAX PRICE in WEI or USD>`: This defaults to 0. Set to acceptable max price in wei (or USD, e.g. 0.02USD) willing to pay. Note: this can impact amount of Orchestrators available to process the work. 
+    - `-ignoreMaxPriceIfNeeded=<true or false>`: This defaults to false. Set to true if want to process requests if no Orchestrators are under maxPricePerUnit or do not want to use a max price.
+  </Step>
+  <Step title="Set Max Price Per Pipeline and Model (Optional)">
+    Set max price per unit for one or many pipeline/models by adding `-maxPricePerCapability /path/to/maxPrices.json` flag to AI Gateway launch.
+    
+    If a price is not set for a pipeline/model the `-maxPricePerUnit` price will be used.
+    
+    The flag input should be json file with the max prices specified.
+    Example below will do the following:
+    - set price for `image-to-image` pipeline and model `ByteDance/SDXL-Lightning` to 1700000 wei per unit. (image-to-image units is pixels)
+    - set price for `text-to-image` pipeline and model `stabilityai/stable-diffusion-3-medium-diffusers` to 4768371 wei per unit (text-to-image units is pixels)
+    - set price for `upscale` pipeline for all models to 4768371 wei per unit. `pixels_per_unit` defaults to `1` if not specified. (image-to-image units is pixels)
+    - set price for `image-to-video` pipeline for all models to 3390842 wei per unit. (image-to-video units is pixels)
+    - set price for `audio-to-text` pipeline for all models to 3390842 wei per unit. (audio-to-text units is milliseconds of audio)
+    ```
+    {
+       "capabilities-prices":
+      [
+        {"pipeline": "image-to-image", "model_id": "ByteDance/SDXL-Lightning", "price_per_unit": 1700000, "pixels_per_unit": 1}, 
+        {"pipeline": "text-to-image", "model_id": "stabilityai/stable-diffusion-3-medium-diffusers", "price_per_unit": 4768371, "pixels_per_unit": 1},
+        {"pipeline": "upscale", "model_id": "default", "price_per_unit": 4768371},
+        {"pipeline": "image-to-video", "price_per_unit": 3390842, "pixels_per_unit": 1},
+        {"pipeline": "audio-to-text", "price_per_unit": 12882811}
+      ]
+     }
+     ```
   </Step>
 </Steps>
