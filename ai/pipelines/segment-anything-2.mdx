@@ -1,0 +1,106 @@
+---
+title: Segment-anything-2
+---
+
+## Overview
+
+The `segment-anything-2` pipeline provides direct access to the
+[Segment Anything 2 pipeline](https://ai.meta.com/sam2/) developed by
+[Meta AI Research](https://research.facebook.com/). In its current version, it
+supports only image segmentation, enabling it to segment any object in an image.
+Future versions will also support direct video input, allowing the object to be
+consistently tracked across all frames of a video in real-time. This advancement
+will unlock new possibilities for video editing and enhance experiences in mixed
+reality. The pipeline is powered by the latest diffusion models from
+HuggingFace's
+[facebook/sam2-hiera-large](https://huggingface.co/facebook/sam2-hiera-large).
+
+<div align="center">
+
+## Models
+
+### Warm Models
+
+The current warm model requested for the `segment-anything-2` pipeline is:
+
+- [facebook/sam2-hiera-large](https://huggingface.co/facebook/sam2-hiera-large):
+  The largest model in the Segment Anything 2 model suite, designed for the most
+  accurate image segmentation.
+
+<Tip>
+  For faster responses with different
+  [segment-anything-2](https://github.com/facebookresearch/segment-anything-2)
+  diffusion models, ask Orchestrators to load it on their GPU via the `ai-video`
+  channel in [Discord Server](https://discord.gg/livepeer).
+</Tip>
+
+### On-Demand Models
+
+The following models have been tested and verified for the `segment-anything-2`
+pipeline:
+
+<Note>
+  If a specific model you wish to use is not listed, please submit a [feature
+  request](https://github.com/livepeer/ai-worker/issues/new?assignees=&labels=enhancement%2Cmodel&projects=&template=model_request.yml)
+  on GitHub to get the model verified and added to the list.
+</Note>
+
+{/* prettier-ignore */}
+<Accordion title="Tested and Verified Diffusion Models">
+- [facebook/sam2-hiera-base-plus](https://huggingface.co/facebook/sam2-hiera-base-plus): The second largest model in the Segment Anything 2 model suite, providing a balance between speed and accuracy.
+- [facebook/sam2-hiera-small](https://huggingface.co/facebook/sam2-hiera-small): A smaller model in the Segment Anything 2 model suite, designed for faster image segmentation.
+- [facebook/sam2-hiera-tiny](https://huggingface.co/facebook/sam2-hiera-tiny): The smallest model in the Segment Anything 2 model suite, optimized for real-time image segmentation.
+</Accordion>
+
+## Basic Usage Instructions
+
+<Tip>
+  For a detailed understanding of the `segment-anything-2` endpoint and to
+  experiment with the API, see the [AI Subnet API
+  Reference](/ai/api-reference/segment-anything-2).
+</Tip>
+
+To generate an image with the `segment-anything-2` pipeline, send a `POST`
+request to the Gateway's `segment-anything-2` API endpoint:
+
+```bash
+curl -X POST http://<gateway-ip>/segment-anything-2 \
+    -F model_id="facebook/sam2-hiera-large" \
+    -F point_coords="[[120,100],[120,50]]" \
+    -F point_labels="[1,0]" \
+    -F image=@<PATH_TO_IMAGE>/cool-cat.png
+```
+
+In this command:
+
+- `<gateway-ip>` should be replaced with your AI Gateway's IP address.
+- `model_id` is the diffusion model for image generation.
+- The `point_coords` field holds the coordinates of the points to be segmented.
+- The `point_labels` field holds the labels for the points to be segmented.
+- The `image` field holds the **absolute** path to the image file to be
+  transformed.
+
+For additional optional parameters, refer to the
+[AI Subnet API Reference](/ai/api-reference/segment-anything-2).
+
+After execution, the Orchestrator processes the request and returns the response
+to the Gateway:
+
+```json
+{
+  "masks": "[[[2.84, 2.83, ...], [2.92, 2.91, ...], [3.22, 3.56, ...], ...]]",
+  "scores": "[0.50, 0.37, ...]",
+  "logits": "[[[2.84, 2.66, ...], [3.59, 5.20, ...], [5.07, 5.68, ...], ...]]"
+}
+```
+
+## API Reference
+
+<Card
+  title="API Reference"
+  icon="rectangle-terminal"
+  href="/ai/api-reference/segment-anything-2"
+>
+  Explore the `segment-anything-2` endpoint and experiment with the API in
+  Livepeer AI API Reference.
+</Card>
