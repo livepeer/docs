@@ -11,6 +11,16 @@ for their download. For details on supported pipelines and models, consult
 
 ## Configuration File Format
 
+<Warning>
+  The `livepeer/ai-runner:segment-anything-2` container required to serve the [segment-anything-2](ai/pipelines/segment-anything-2) pipeline has not yet been released to our Docker registry. To serve this model as an orchestrator, please use the following command to download the source code and build the Docker container locally:
+
+  ```bash
+  docker pull livepeer/ai-runner:latest
+  docker tag livepeer/ai-runner:latest livepeer/ai-runner:base
+  docker build https://github.com/livepeer/ai-worker.git#main:runner/docker -t livepeer/ai-runner:segment-anything-2 -f Dockerfile.segment_anything_2
+  ```
+</Warning>
+
 Orchestrators specify supported AI models in an `aiModels.json` file, typically
 located in the `~/.lpData` directory. Below is an example configuration showing
 currently **recommended** models and their respective prices.
@@ -36,6 +46,14 @@ currently **recommended** models and their respective prices.
     "pipeline": "audio-to-text",
     "model_id": "openai/whisper-large-v3",
     "price_per_unit": 12882811
+  },
+  {
+    "pipeline": "segment-anything-2",
+    "model_id": "facebook/sam2-hiera-large",
+    "price_per_unit": 3565,
+    "pixels_per_unit": 1e13,
+    "currency": "USD",
+    "warm": true
   },
   {
     "pipeline": "image-to-video",
