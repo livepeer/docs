@@ -4,9 +4,9 @@ title: Image-to-video
 
 ## Overview
 
-The `image-to-video` pipeline of the AI Subnet allows you to generate animated
-**high-quality** videos from images. This pipeline is powered by the latest
-diffusion models in the HugginFace
+The `image-to-video` pipeline of the Livepeer AI network allows you to generate
+animated **high-quality** videos from images. This pipeline is powered by the
+latest diffusion models in the HuggingFace
 [image-to-video](https://huggingface.co/models?pipeline_tag=image-to-video)
 pipeline.
 
@@ -34,9 +34,10 @@ graph LR
 
 The current warm model requested for the `image-to-video` pipeline is:
 
-- [stabilityai/stable-video-diffusion-img2vid-xt-1-1](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt-1-1):
+- [stabilityai/stable-video-diffusion-img2vid-xt-1-1](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt-1-1):  
   An updated version of the stable-video-diffusion-img2vid-xt model with
-  enhanced performance ([limited-commercial use license](https://stability.ai/license)).
+  enhanced performance
+  ([limited-commercial use license](https://stability.ai/license)).
 
 <Tip>
   For faster responses with different
@@ -58,23 +59,22 @@ pipeline:
 
 {/* prettier-ignore */}
 <Accordion title="Tested and Verified Diffusion Models">
-- [stable-video-diffusion-img2vid-xt](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt):
+- [stable-video-diffusion-img2vid-xt](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt):  
   A model by Stability AI designed for stable video diffusion from images ([limited-commercial use license](https://stability.ai/license)).
-- [stabilityai/stable-video-diffusion-img2vid-xt-1-1](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt-1-1):
-  An updated version of the stable-video-diffusion-img2vid-xt model with
-  enhanced performance ([limited-commercial use license](https://stability.ai/license)).
+- [stabilityai/stable-video-diffusion-img2vid-xt-1-1](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt-1-1):  
+  An updated version of the stable-video-diffusion-img2vid-xt model with enhanced performance ([limited-commercial use license](https://stability.ai/license)).
 </Accordion>
 
 ## Basic Usage Instructions
 
 <Tip>
   For a detailed understanding of the `image-to-video` endpoint and to
-  experiment with the API, see the [AI Subnet API
+  experiment with the API, see the [Livepeer AI API
   Reference](/ai/api-reference/image-to-video).
 </Tip>
 
-To generate an image with the `image-to-video` pipeline, send a `POST` request
-to the Gateway's `image-to-video` API endpoint:
+To generate a video with the `image-to-video` pipeline, send a `POST` request to
+the Gateway's `image-to-video` API endpoint:
 
 ```bash
 curl -X POST "https://<gateway-ip>/image-to-video" \
@@ -85,12 +85,12 @@ curl -X POST "https://<gateway-ip>/image-to-video" \
 In this command:
 
 - `<gateway-ip>` should be replaced with your AI Gateway's IP address.
-- `model_id` is the diffusion model for image generation.
+- `model_id` is the diffusion model for video generation.
 - The `image` field holds the **absolute** path to the image file to be
   transformed.
 
 For additional optional parameters, refer to the
-[AI Subnet API Reference](/ai/api-reference/image-to-video).
+[Livepeer AI API Reference](/ai/api-reference/image-to-video).
 
 After execution, the Orchestrator processes the request and returns the response
 to the Gateway:
@@ -107,12 +107,21 @@ to the Gateway:
 }
 ```
 
-The `url` in the response is the URL of the generated image. Download the image
+The `url` in the response is the URL of the generated video. Download the video
 with:
 
 ```bash
 curl -O "https://<STORAGE_ENDPOINT>/stream/2b835716/01c0e9a6.mp4"
 ```
+
+## Orchestrator Configuration
+
+To configure your Orchestrator to serve the `image-to-video` pipeline, refer to
+the [Orchestrator Configuration](/ai/orchestrators/get-started) guide. The
+following system requirements are recommended for optimal performance:
+
+- [NVIDIA GPU](https://developer.nvidia.com/cuda-gpus) with **at least 24GB** of
+  VRAM.
 
 ## API Reference
 
@@ -121,6 +130,6 @@ curl -O "https://<STORAGE_ENDPOINT>/stream/2b835716/01c0e9a6.mp4"
   icon="rectangle-terminal"
   href="/ai/api-reference/image-to-video"
 >
-  Explore the `image-to-video` endpoint and experiment with the API in the AI
-  Subnet API Reference.
+  Explore the `image-to-video` endpoint and experiment with the API in the
+  Livepeer AI API Reference.
 </Card>

@@ -21,7 +21,7 @@ HuggingFace's
 
 The current warm model requested for the `segment-anything-2` pipeline is:
 
-- [facebook/sam2-hiera-large](https://huggingface.co/facebook/sam2-hiera-large):
+- [facebook/sam2-hiera-large](https://huggingface.co/facebook/sam2-hiera-large):  
   The largest model in the Segment Anything 2 model suite, designed for the most
   accurate image segmentation.
 
@@ -54,7 +54,7 @@ pipeline:
 
 <Tip>
   For a detailed understanding of the `segment-anything-2` endpoint and to
-  experiment with the API, see the [AI Subnet API
+  experiment with the API, see the [Livepeer AI API
   Reference](/ai/api-reference/segment-anything-2).
 </Tip>
 
@@ -72,14 +72,14 @@ curl -X POST http://<gateway-ip>/segment-anything-2 \
 In this command:
 
 - `<gateway-ip>` should be replaced with your AI Gateway's IP address.
-- `model_id` is the diffusion model for image generation.
+- `model_id` is the diffusion model for image segmentation.
 - The `point_coords` field holds the coordinates of the points to be segmented.
 - The `point_labels` field holds the labels for the points to be segmented.
 - The `image` field holds the **absolute** path to the image file to be
   transformed.
 
 For additional optional parameters, refer to the
-[AI Subnet API Reference](/ai/api-reference/segment-anything-2).
+[Livepeer AI API Reference](/ai/api-reference/segment-anything-2).
 
 After execution, the Orchestrator processes the request and returns the response
 to the Gateway:
@@ -91,6 +91,15 @@ to the Gateway:
   "logits": "[[[2.84, 2.66, ...], [3.59, 5.20, ...], [5.07, 5.68, ...], ...]]"
 }
 ```
+
+## Orchestrator Configuration
+
+To configure your Orchestrator to serve the `segment-anything-2` pipeline, refer
+to the [Orchestrator Configuration](/ai/orchestrators/get-started) guide. The
+following system requirements are recommended for optimal performance:
+
+- [NVIDIA GPU](https://developer.nvidia.com/cuda-gpus) with **at least 6GB** of
+  VRAM.
 
 ## API Reference
 
