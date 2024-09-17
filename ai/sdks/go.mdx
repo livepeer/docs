@@ -30,16 +30,14 @@ package main
 
 import (
 	"context"
-	livepeer "github.com/livepeer/livepeer-ai-go"
+	livepeeraigo "github.com/livepeer/livepeer-ai-go"
 	"github.com/livepeer/livepeer-ai-go/models/components"
-	"github.com/livepeer/livepeer-ai-go/retry"
 	"log"
-	"models/operations"
 )
 
 func main() {
-	s := livepeer.New(
-		livepeer.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+	s := livepeeraigo.New(
+		livepeeraigo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
 	)
 }
 ```
@@ -53,32 +51,20 @@ package main
 
 import (
 	"context"
-	livepeer "github.com/livepeer/livepeer-ai-go"
+	livepeeraigo "github.com/livepeer/livepeer-ai-go"
 	"github.com/livepeer/livepeer-ai-go/models/components"
-	"github.com/livepeer/livepeer-ai-go/retry"
 	"log"
-	"models/operations"
 )
 
 func main() {
-	s := livepeer.New(
-		livepeer.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+	s := livepeeraigo.New(
+		livepeeraigo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
 	)
 
 	ctx := context.Background()
 	res, err := s.Generate.TextToImage(ctx, components.TextToImageParams{
 		Prompt: "<value>",
-	}, operations.WithRetries(
-		retry.Config{
-			Strategy: "backoff",
-			Backoff: &retry.BackoffStrategy{
-				InitialInterval: 1,
-				MaxInterval:     50,
-				Exponent:        1.1,
-				MaxElapsedTime:  100,
-			},
-			RetryConnectionErrors: false,
-		}))
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
