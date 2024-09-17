@@ -1,0 +1,76 @@
+---
+title: JavaScript
+description:
+  "Learn how to run your first AI inference job using the Livepeer AI JS SDK."
+icon: js
+---
+
+<Steps>
+  <Step title="Prerequisites">
+  To get the most out of this guide, you’ll need to:
+
+    - [Choose an AI Gateway](/ai/builders/gateways)
+    - **Optional**: Get an API key (required for some gateways).
+
+  </Step>
+
+  <Step title="Install the SDK">
+  Get the Livepeer AI JavaScript SDK.
+
+```bash
+npm add @livepeer/ai
+```
+
+  </Step>
+  
+  <Step title="Initialize the SDK">
+  The first step is to initialize the SDK (with your API key if required).
+
+```js
+import { LivepeerAI } from "@livepeer/ai";
+
+const livepeerAI = new LivepeerAI({
+  httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
+});
+```
+
+  </Step>
+  <Step title="Use the SDK">
+  Now that you have the SDK installed and initialized, you can use it to request one of the [available AI services](/ai/pipelines/overview).
+
+```js
+import { LivepeerAI } from "@livepeer/ai";
+
+const livepeerAI = new LivepeerAI({
+  httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await livepeerAI.generate.textToImage({
+    prompt: "<value>",
+  });
+
+  // Handle the result
+  console.log(result);
+}
+
+run();
+```
+
+  </Step>
+  
+  <Step title="Try it yourself">
+    <Card
+      title="Javascript Examples"
+      href="https://github.com/livepeer/livepeer-ai-js/tree/main/docs/sdks/generate#generate"
+      icon="arrow-up-right-from-square"
+    >
+        See the examples on GitHub.
+    </Card>
+  </Step>
+</Steps>
+
+## Next steps
+
+Checkout Livepeer AI [API Reference](/ai/api-reference) to learn more about the
+Livepeer AI API and the Javascript SDK.
