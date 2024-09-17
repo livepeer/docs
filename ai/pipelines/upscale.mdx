@@ -69,7 +69,7 @@ To generate an image with the `upscale` pipeline, send a `POST` request to the
 Gateway's `upscale` API endpoint:
 
 ```bash
-curl -X POST https://<gateway-ip>/upscale \
+curl -X POST https://<GATEWAY_IP>/upscale \
     -F model_id="stabilityai/stable-diffusion-x4-upscaler" \
     -F image=@<PATH_TO_IMAGE>/low_res_cat.png \
     -F prompt="A white cat"
@@ -77,7 +77,7 @@ curl -X POST https://<gateway-ip>/upscale \
 
 In this command:
 
-- `<gateway-ip>` should be replaced with your AI Gateway's IP address.
+- `<GATEWAY_IP>` should be replaced with your AI Gateway's IP address.
 - `model_id` is the diffusion model for image generation.
 - The `image` field holds the **absolute** path to the image file to be
   upscaled.
@@ -96,7 +96,7 @@ to the Gateway:
     {
       "nsfw": false,
       "seed": 3197613440,
-      "url": "https://<gateway-ip>/stream/dd5ad78d/7adde483.png"
+      "url": "https://<GATEWAY_IP>/stream/dd5ad78d/7adde483.png"
     }
   ]
 }
@@ -106,7 +106,7 @@ The `url` in the response is the URL of the generated image. Download the image
 with:
 
 ```bash
-curl -O "https://<gateway-ip>/stream/dd5ad78d/7adde483.png"
+curl -O "https://<GATEWAY_IP>/stream/dd5ad78d/7adde483.png"
 ```
 
 ## Orchestrator Configuration
