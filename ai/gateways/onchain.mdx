@@ -1,49 +1,47 @@
----
-title: On-chain Setup
----
+### On-chain Setup
 
-The previous section covered the **off-chain** configuration of the AI Gateway
-node. This section will explain how to connect an AI Gateway node to the AI
-subnet and request AI inference jobs on-chain.
+In the previous section, we covered the **off-chain** configuration of your AI
+Gateway node. This section will explain how to connect your AI Gateway to the
+Livepeer AI network to start requesting AI inference jobs **on-chain**.
 
 ## Prerequisites
 
 - A dedicated static IP address or domain name for your AI Gateway node
-- A funded Ethereum account with enough ETH to cover gas fees and pay for AI
-  inference jobs
+- A funded Ethereum account with enough ETH to cover gas fees and AI inference
+  job payments
 
-## Launch your On-chain AI Gateway
+## Launching your On-chain AI Gateway
 
-After setting up your AI Gateway **off-chain**, it's time to connect it to the
-AI Subnet for on-chain AI inference jobs. This process is similar to the Mainnet
-Transcoding Network Gateway setup, with a few extra flags due to AI Subnet
-software limitations. See the
+Once your AI Gateway is set up **off-chain**, it's time to connect it to the
+Livepeer AI network for **on-chain** inference jobs. The process is similar to
+setting up a Mainnet Transcoding Network Gateway, with a few extra flags
+specific to Livepeer AI. You can refer to the
 [Mainnet Transcoding Network Gateway](/gateways/guides/gateway-overview) guide
-for details. Below is a summary:
+for more information. Here’s a summary of the key steps:
 
 <Steps>
   <Step title="Verify Off-chain AI Gateway">
-    Verify that your AI Gateway node is functioning correctly **off-chain** before connecting it to the AI Subnet. Refer to [the previous section](/ai/gateways/start-gateway) for more details.
+    Ensure your AI Gateway node is functioning correctly **off-chain** before connecting it to the Livepeer AI network. Refer to [the previous section](/ai/gateways/start-gateway) for details.
   </Step>
   <Step title="Prepare your Ethereum account">
-    Ensure your Ethereum account has enough ETH to cover gas fees and AI inference jobs. Refer to the [Fund Gateway Guide](/gateways/guides/fund-gateway) for more details.
+    Make sure your Ethereum account has enough ETH to cover gas fees and AI inference job payments. For more details, see the [Fund Gateway Guide](/gateways/guides/fund-gateway).
   </Step>
   <Step title="Fund your AI Gateway">
-    Fund your AI Gateway to ensure it has sufficient **deposit** and **reserve** to pay for AI inference requests. Refer to the [Deposit Gateway Funds via Livepeer CLI](/gateways/guides/fund-gateway#deposit-gateway-funds-via-livepeer-cli) guide for more information.
+    Deposit enough funds into your AI Gateway to cover the **deposit** and **reserve** needed for AI inference requests. Follow the steps in the [Deposit Gateway Funds via Livepeer CLI](/gateways/guides/fund-gateway#deposit-gateway-funds-via-livepeer-cli) guide.
   </Step>
   <Step title="Configure Transcoding Options">
-    Configure transcoding options, even though the AI Gateway is not a transcoding node, due to current AI Subnet software limitations. Refer to the [Transcoding Options](/gateways/guides/transcoding-options) guide for more details.
+    Configure transcoding options even though the AI Gateway doesn’t handle transcoding, due to current Livepeer AI software requirements. See the [Transcoding Options](/gateways/guides/transcoding-options) guide for more information.
   </Step>
-  <Step title="Launch an AI Gateway">
-    Launch your AI Gateway node. This process is similar to the **docker** or **binary** steps in the [previous section](/ai/gateways/start-gateway), but requires additional flags to enable on-chain functionality. Here's an example:
+  <Step title="Launch the AI Gateway">
+    Now launch your AI Gateway node. The process is similar to the **docker** or **binary** setup in the [previous section](/ai/gateways/start-gateway), but requires additional flags to enable on-chain functionality. Example:
 
-    - `-network=arbitrum-one-mainnet`: This flag connects the AI Gateway node to the Arbitrum Mainnet network.
-    - `-ethUrl=https://arb1.arbitrum.io/rpc`: This flag sets the Arbitrum Mainnet RPC URL. Replace this with your own RPC URL if needed.
-    - `-ethKeystorePath=/root/.lpData/arbitrum-one-mainnet/keystore`: This flag sets the path to the AI Gateway's Ethereum keystore file.
-    - `-ethAcctAddr <AI_SUBNET_ORCH_ETH_ADDRESS>`: This flag sets the Ethereum address of the AI Gateway.
-    - `-ethPassword=/root/.lpData/.eth_secret`: This flag sets the path to the Ethereum keystore password file.
-    - `-ethOrchAddr=<MAIN_ORCH_ETH_ADDRESS>`: This flag sets the Ethereum address of the Mainnet Transcoding Network Gateway.
-    - `-maxTotalEV=100000000000000`: This flag ensures that the AI Gateway doesn't trigger maximum total ticket value limits set by the `go-livepeer` software.
+    - `-network=arbitrum-one-mainnet`: Connects the AI Gateway to the Arbitrum Mainnet network.
+    - `-ethUrl=https://arb1.arbitrum.io/rpc`: Sets the Arbitrum Mainnet RPC URL. Replace it with your own if necessary.
+    - `-ethKeystorePath=/root/.lpData/arbitrum-one-mainnet/keystore`: Sets the path to the Ethereum keystore file for the AI Gateway.
+    - `-ethAcctAddr <LIVEPEER_AI_ORCH_ETH_ADDRESS>`: Sets the Ethereum account address for the AI Gateway.
+    - `-ethPassword=/root/.lpData/.eth_secret`: Sets the path to the Ethereum keystore password file.
+    - `-ethOrchAddr=<MAIN_ORCH_ETH_ADDRESS>`: Sets the Ethereum address of the Mainnet Transcoding Network Gateway.
+    - `-maxTotalEV=100000000000000`: Ensures the AI Gateway complies with the max ticket value limits in `go-livepeer`.
     - `-maxPricePerUnit=<MAX PRICE in WEI or USD>`: This defaults to 0. Set to acceptable max price in wei (or USD, e.g. 0.02USD) willing to pay. Note: this can impact amount of Orchestrators available to process the work.
     - `-ignoreMaxPriceIfNeeded=<true or false>`: This defaults to false. Set to true if want to process requests if no Orchestrators are under maxPricePerUnit or do not want to use a max price.
     - `-maxPricePerCapability=/path/to/maxPrices.json`: This flag sets the max price per unit for one or many pipeline/models. Refer to the [Set Max Price Per Pipeline and Model](#set-max-price-per-pipeline-and-model-optional) section for more details.

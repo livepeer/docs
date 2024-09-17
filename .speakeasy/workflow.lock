@@ -1,9 +1,9 @@
-speakeasyVersion: 1.377.1
+speakeasyVersion: 1.398.0
 sources:
     livepeer-studio-api:
         sourceNamespace: livepeer-studio-api
-        sourceRevisionDigest: sha256:5197f4c88d39d886d13d9fe23627b81bb78ae91a320fed534246269f5021c13c
-        sourceBlobDigest: sha256:18123773042d95027b9974233f8b369c4a09cd23854933d6089b88aacc8d6869
+        sourceRevisionDigest: sha256:e16d08b6efbd85c1c2055bdbff74543ee5d260eee882623d2bdec06afd8dbd44
+        sourceBlobDigest: sha256:ac71e4ab717d6b6fe8c32fbda0ac28dbb3baed3fdf8a0e55b414bc11275aff91
         tags:
             - latest
             - main
@@ -15,9 +15,13 @@ workflow:
         livepeer-ai-api:
             inputs:
                 - location: https://raw.githubusercontent.com/livepeer/ai-worker/main/runner/gateway.openapi.yaml
+            overlays:
+                - location: https://raw.githubusercontent.com/livepeer/livepeer-ai-js/main/codeSamples.yaml
+                - location: https://raw.githubusercontent.com/livepeer/livepeer-ai-go/main/codeSamples.yaml
+                - location: https://raw.githubusercontent.com/livepeer/livepeer-ai-python/main/codeSamples.yaml
             output: ai/api-reference/gateway.openapi.yaml
             registry:
-                location: registry.speakeasyapi.dev/livepeer-8mq/livepeer-ai/livepeer-ai-oas
+                location: registry.speakeasyapi.dev/livepeer/livepeer-ai/livepeer-ai-oas
         livepeer-studio-api:
             inputs:
                 - location: https://raw.githubusercontent.com/livepeer/studio/master/packages/api/src/schema/api-schema.yaml

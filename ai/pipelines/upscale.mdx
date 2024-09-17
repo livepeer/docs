@@ -4,8 +4,8 @@ title: Upscale
 
 ## Overview
 
-The AI Subnet's `upscale` pipeline provides **advanced image upscaling**.
-Powered by the latest diffusion models in HuggingFace's
+The Livepeer AI network's `upscale` pipeline provides **advanced image
+upscaling**. Powered by the latest diffusion models in HuggingFace's
 [super-resolution](https://huggingface.co/docs/diffusers/en/api/pipelines/stable_diffusion/upscale)
 pipeline, it enhances the resolution of input images by a factor of 4.
 
@@ -30,7 +30,7 @@ graph LR
 
 The current warm model requested for the `upscale` pipeline is:
 
-- [stabilityai/stable-diffusion-x4-upscaler](https://huggingface.co/stabilityai/stable-diffusion-x4-upscaler):
+- [stabilityai/stable-diffusion-x4-upscaler](https://huggingface.co/stabilityai/stable-diffusion-x4-upscaler):  
   A text-guided upscaling diffusion model trained on large LAION images,
   offering enhanced resolution and controlled noise addition.
 
@@ -62,14 +62,14 @@ The following models have been tested and verified for the `upscale` pipeline:
 
 <Tip>
   For a detailed understanding of the `upscale` endpoint and to experiment with
-  the API, see the [AI Subnet API Reference](/ai/api-reference/upscale).
+  the API, see the [Livepeer AI API Reference](/ai/api-reference/upscale).
 </Tip>
 
 To generate an image with the `upscale` pipeline, send a `POST` request to the
 Gateway's `upscale` API endpoint:
 
 ```bash
-curl -X POST https://<gateway-ip>/upscale \
+curl -X POST https://<GATEWAY_IP>/upscale \
     -F model_id="stabilityai/stable-diffusion-x4-upscaler" \
     -F image=@<PATH_TO_IMAGE>/low_res_cat.png \
     -F prompt="A white cat"
@@ -77,7 +77,7 @@ curl -X POST https://<gateway-ip>/upscale \
 
 In this command:
 
-- `<gateway-ip>` should be replaced with your AI Gateway's IP address.
+- `<GATEWAY_IP>` should be replaced with your AI Gateway's IP address.
 - `model_id` is the diffusion model for image generation.
 - The `image` field holds the **absolute** path to the image file to be
   upscaled.
@@ -85,7 +85,7 @@ In this command:
   image.
 
 For additional optional parameters, refer to the
-[AI Subnet API Reference](/ai/api-reference/upscale).
+[Livepeer AI API Reference](/ai/api-reference/upscale).
 
 After execution, the Orchestrator processes the request and returns the response
 to the Gateway:
@@ -96,7 +96,7 @@ to the Gateway:
     {
       "nsfw": false,
       "seed": 3197613440,
-      "url": "https://<gateway-ip>/stream/dd5ad78d/7adde483.png"
+      "url": "https://<GATEWAY_IP>/stream/dd5ad78d/7adde483.png"
     }
   ]
 }
@@ -106,8 +106,17 @@ The `url` in the response is the URL of the generated image. Download the image
 with:
 
 ```bash
-curl -O "https://<STORAGE_ENDPOINT>/stream/dd5ad78d/7adde483.png"
+curl -O "https://<GATEWAY_IP>/stream/dd5ad78d/7adde483.png"
 ```
+
+## Orchestrator Configuration
+
+To configure your Orchestrator to serve the `upscale` pipeline, refer to the
+[Orchestrator Configuration](/ai/orchestrators/get-started) guide. The following
+system requirements are recommended for optimal performance:
+
+- [NVIDIA GPU](https://developer.nvidia.com/cuda-gpus) with **at least 24GB** of
+  VRAM.
 
 ## API Reference
 
@@ -116,6 +125,6 @@ curl -O "https://<STORAGE_ENDPOINT>/stream/dd5ad78d/7adde483.png"
   icon="rectangle-terminal"
   href="/ai/api-reference/upscale"
 >
-  Explore the `upscale` endpoint and experiment with the API in the AI Subnet
+  Explore the `upscale` endpoint and experiment with the API in the Livepeer AI
   API Reference.
 </Card>
