@@ -4,9 +4,9 @@ title: Text-to-Image
 
 ## Overview
 
-The `text-to-image` pipeline of the AI Subnet allows you to generate
+The `text-to-image` pipeline of the Livepeer AI network allows you to generate
 **high-quality** images from text descriptions. This pipeline is powered by the
-latest diffusion models in the HugginFace
+latest diffusion models in the HuggingFace
 [text-to-image](https://huggingface.co/models?pipeline_tag=text-to-image)
 pipeline.
 
@@ -30,15 +30,15 @@ graph LR
 
 The current warm model requested for the `text-to-image` pipeline is:
 
-- [SG161222/RealVisXL_V4.0_Lightning](https://huggingface.co/SG161222/RealVisXL_V4.0_Lightning):
+- [SG161222/RealVisXL_V4.0_Lightning](https://huggingface.co/SG161222/RealVisXL_V4.0_Lightning):  
   A streamlined version of RealVisXL_V4.0, designed for faster inference while
   still aiming for photorealism.
 
 Furthermore, several Orchestrators are currently maintaining the following model
 in a ready state:
 
-- [ByteDance/SDXL-Lightning](https://huggingface.co/ByteDance/SDXL-Lightning): A
-  high-performance diffusion model developed by ByteDance.
+- [ByteDance/SDXL-Lightning](https://huggingface.co/ByteDance/SDXL-Lightning):  
+  A high-performance diffusion model developed by ByteDance.
 
 <Tip>
   For faster responses with different
@@ -61,23 +61,14 @@ pipeline:
 {/* prettier-ignore */}
 <Accordion title="Tested and Verified Diffusion Models">
 - [SG161222/Realistic_Vision_V6.0_B1_noVAE](https://huggingface.co/SG161222/Realistic_Vision_V6.0_B1_noVAE): Latest (experimental) release of the Realistic Vision model specialized in creating photorealistic portraits.
-- [stabilityai/stable-diffusion-xl-base-1.0](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0):
-  A base model for stable diffusion by Stability AI.
-- [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5):
-  A stable diffusion model by Runway ML.
-- [prompthero/openjourney-v4](https://huggingface.co/prompthero/openjourney-v4): A model by
-  Prompthero for open-ended journey generation.
-- [ByteDance/SDXL-Lightning](https://huggingface.co/ByteDance/SDXL-Lightning): A
-  lightning-fast diffusion model by ByteDance.
-- [SG161222/RealVisXL_V4.0](https://huggingface.co/SG161222/RealVisXL_V4.0): A
-  diffusion model that excels in generating high-quality, photorealistic images.
-- [SG161222/RealVisXL_V4.0_Lightning](https://huggingface.co/SG161222/RealVisXL_V4.0_Lightning):
-  A streamlined version of RealVisXL_V4.0, designed for faster inference while
-  still aiming for photorealism.
-- [stabilityai/sd-turbo](https://huggingface.co/stabilityai/sd-turbo): A high-performance
-  diffusion model by Stability AI ([limited-commercial use license](https://stability.ai/license)).
-- [stabilityai/sdxl-turbo](https://huggingface.co/stabilityai/sdxl-turbo): An extended
-  version of sd-turbo with enhanced capabilities ([limited-commercial use license](https://stability.ai/license)).
+- [stabilityai/stable-diffusion-xl-base-1.0](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0): A base model for stable diffusion by Stability AI.
+- [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5): A stable diffusion model by Runway ML.
+- [prompthero/openjourney-v4](https://huggingface.co/prompthero/openjourney-v4): A model by Prompthero for open-ended journey generation.
+- [ByteDance/SDXL-Lightning](https://huggingface.co/ByteDance/SDXL-Lightning): A lightning-fast diffusion model by ByteDance.
+- [SG161222/RealVisXL_V4.0](https://huggingface.co/SG161222/RealVisXL_V4.0): A diffusion model that excels in generating high-quality, photorealistic images.
+- [SG161222/RealVisXL_V4.0_Lightning](https://huggingface.co/SG161222/RealVisXL_V4.0_Lightning): A streamlined version of RealVisXL_V4.0, designed for faster inference while still aiming for photorealism.
+- [stabilityai/sd-turbo](https://huggingface.co/stabilityai/sd-turbo): A high-performance diffusion model by Stability AI ([limited-commercial use license](https://stability.ai/license)).
+- [stabilityai/sdxl-turbo](https://huggingface.co/stabilityai/sdxl-turbo): An extended version of sd-turbo with enhanced capabilities ([limited-commercial use license](https://stability.ai/license)).
 - [stabilityai/stable-diffusion-3-medium-diffusers](https://huggingface.co/stabilityai/stable-diffusion-3-medium-diffusers/): A Multimodal Diffusion Transformer (MMDiT) model with superior image quality, advanced typography, and enhanced prompt comprehension ([limited-commercial use license](https://stability.ai/license)).
 </Accordion>
 
@@ -85,7 +76,7 @@ pipeline:
 
 <Tip>
   For a detailed understanding of the `text-to-image` endpoint and to experiment
-  with the API, see the [AI Subnet API
+  with the API, see the [Livepeer AI API
   Reference](/ai/api-reference/text-to-image).
 </Tip>
 
@@ -93,7 +84,7 @@ To generate an image with the `text-to-image` pipeline, send a `POST` request to
 the Gateway's `text-to-image` API endpoint:
 
 ```bash
-curl -X POST "https://<gateway-ip>/text-to-image" \
+curl -X POST "https://<GATEWAY_IP>/text-to-image" \
     -H "Content-Type: application/json" \
     -d '{
         "model_id":"ByteDance/SDXL-Lightning",
@@ -105,12 +96,12 @@ curl -X POST "https://<gateway-ip>/text-to-image" \
 
 In this command:
 
-- `<gateway-ip>` should be replaced with your AI Gateway's IP address.
+- `<GATEWAY_IP>` should be replaced with your AI Gateway's IP address.
 - `model_id` is the diffusion model for image generation.
 - `prompt` is the text description for the image.
 
 For additional optional parameters, refer to the
-[AI Subnet API Reference](/ai/api-reference/text-to-image).
+[Livepeer AI API Reference](/ai/api-reference/text-to-image).
 
 After execution, the Orchestrator processes the request and returns the response
 to the Gateway:
@@ -121,7 +112,7 @@ to the Gateway:
     {
       "nsfw": false,
       "seed": 2562822894,
-      "url": "https://<gateway-ip>/stream/d0fc1fc6/8fdf5a94.png"
+      "url": "https://<GATEWAY_IP>/stream/d0fc1fc6/8fdf5a94.png"
     }
   ]
 }
@@ -131,8 +122,17 @@ The `url` in the response is the URL of the generated image. Download the image
 with:
 
 ```bash
-curl -O "https://<gateway-ip>/stream/d0fc1fc6/8fdf5a94.png"
+curl -O "https://<GATEWAY_IP>/stream/d0fc1fc6/8fdf5a94.png"
 ```
+
+## Orchestrator Configuration
+
+To configure your Orchestrator to serve the `text-to-image` pipeline, refer to
+the [Orchestrator Configuration](/ai/orchestrators/get-started) guide. The
+following system requirements are recommended for optimal performance:
+
+- [NVIDIA GPU](https://developer.nvidia.com/cuda-gpus) with **at least 24GB** of
+  VRAM.
 
 ## API Reference
 
@@ -141,6 +141,6 @@ curl -O "https://<gateway-ip>/stream/d0fc1fc6/8fdf5a94.png"
   icon="rectangle-terminal"
   href="/ai/api-reference/text-to-image"
 >
-  Explore the `text-to-image` endpoint and experiment with the API in the AI
-  Subnet API Reference.
+  Explore the `text-to-image` endpoint and experiment with the API in the
+  Livepeer AI API Reference.
 </Card>

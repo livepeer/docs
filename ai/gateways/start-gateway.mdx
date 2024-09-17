@@ -1,36 +1,31 @@
----
-title: Start your AI Gateway
----
+### Start your AI Gateway
 
-The AI Subnet is not yet integrated into the main
-[go-livepeer](https://github.com/livepeer/go-livepeer) software due to its
-**Beta** status. To enable AI inference capabilities on your Gateway node,
-please use the `ai-video` branch of
-[go-livepeer](https://github.com/livepeer/go-livepeer/tree/ai-video). This
-branch contains the necessary software for the AI Gateway node. Currently, there
-are two methods to run the AI Subnet software:
+The Livepeer AI network is currently in **Beta** and is not yet integrated into
+the main [go-livepeer](https://github.com/livepeer/go-livepeer) software. To
+enable AI inference capabilities on your Gateway node, use the `ai-video` branch
+of [go-livepeer](https://github.com/livepeer/go-livepeer/tree/ai-video), which
+includes the necessary software for running the AI Gateway. You can run the
+Livepeer AI software in two ways:
 
-- **Docker**: This is the most straightforward and recommended method to run the
-  AI Gateway node.
-- **Pre-built Binaries**: If you prefer not to use Docker, pre-built binaries
-  are available.
+- **Docker** (Recommended): The simplest and preferred method.
+- **Pre-built Binaries**: An alternative if you prefer not to use Docker.
 
 ## Start the AI Gateway
 
-Please follow the steps below to start your AI Subnet Gateway node:
+Follow the steps below to start your Livepeer AI Gateway node:
 
 <Tabs>
     <Tab title="Use Docker (Recommended)">
         <Steps>
-            <Step title="Retrieve the AI Subnet Docker Image">
-                Fetch the latest AI Subnet Docker image from the [Livepeer Docker Hub](https://hub.docker.com/r/livepeer/go-livepeer) with the following command:
+            <Step title="Retrieve the Livepeer AI Docker Image">
+                Fetch the latest [Livepeer AI Docker image](https://hub.docker.com/r/livepeer/go-livepeer) with the following command:
 
                 ```bash
                 docker pull livepeer/go-livepeer:ai-video
                 ```
             </Step>
-            <Step title="Launch an (Offchain) AI Gateway">
-                Execute the AI Subnet Docker image using the following command:
+            <Step title="Launch an Off-chain AI Gateway">
+                Run the Docker container for your AI Gateway node:
 
                 ```bash
                 docker run \
@@ -47,10 +42,10 @@ Please follow the steps below to start your AI Subnet Gateway node:
                     -httpIngest
                 ```
 
-                This launches an **offchain** AI Gateway node. The flags are similar to those used for a Mainnet Transcoding Network Gateway node. For more information, see the [go-livepeer CLI reference](/references/go-livepeer/cli-reference).
+                This command launches an **off-chain** AI Gateway node. The flags are similar to those used for a Mainnet Transcoding Network Gateway. See the [go-livepeer CLI reference](/references/go-livepeer/cli-reference) for details.
             </Step>
-            <Step title="Confirm Successful Startup of the AI Gateway">
-                If your AI Subnet Gateway node is functioning correctly, you should see the following output:
+            <Step title="Confirm Successful Startup">
+                Upon successful startup, you should see output similar to:
 
                 ```bash
                 I0501 11:07:47.609839       1 mediaserver.go:201] Transcode Job Type: [{P240p30fps16x9 600k 30 0 426x240 16:9 0 0 0s 0 0 0 0} {P360p30fps16x9 1200k 30 0 640x360 16:9 0 0 0s 0 0 0 0}]
@@ -59,35 +54,29 @@ Please follow the steps below to start your AI Subnet Gateway node:
                 ```
             </Step>
             <Step title="Check Port Availability">
-                To make your AI Subnet Gateway node accessible from the internet, you need to configure your network settings. Ensure that port `8937` is unblocked on your machine. Additionally, consider setting up port forwarding on your router, which will allow the Gateway node to be reachable from the internet.
+                Ensure that port `8937` is open and accessible, and configure your router for port forwarding if necessary to make the Gateway accessible from the internet.
             </Step>
         </Steps>
     </Tab>
+
     <Tab title="Use Binaries">
         <Steps>
-            {/* TODO: Simplify this step */}
-            <Step title="Download the Latest AI Subnet Binary">
-                Download the latest AI subnet binary for your system:
+            <Step title="Download the Latest Livepeer AI Binary">
+                Download the latest Livepeer AI binary for your system:
 
                 ```bash
                 wget https://build.livepeer.live/go-livepeer/ai-video/stable/livepeer-<OS>-<ARCH>.tar.gz
                 ```
 
-                Replace `<OS>` and `<ARCH>` with your system's operating system and architecture. For example, for a Linux system with an AMD64 architecture, the command would be:
+                Replace `<OS>` and `<ARCH>` with your operating system and architecture (e.g., `linux-amd64` for Linux AMD64). For more details, see the [go-livepeer installation guide](/orchestrators/guides/install-go-livepeer#install-using-a-binary-release).
 
-                ```bash
-                wget https://build.livepeer.live/go-livepeer/ai-video/stable/livepeer-linux-amd64.tar.gz
-                ```
-
-                See the [go-livepeer installation guide](/orchestrators/guides/install-go-livepeer#install-using-a-binary-release) for more information on the available binaries.
-
-                <Info>The windows and MacOS (amd64) binaries of the AI Subnet are not available yet.</Info>
+                <Info>The Windows and MacOS (amd64) binaries of Livepeer AI are not available yet.</Info>
             </Step>
             <Step title="Extract and Configure the Binary">
                 Once downloaded, extract the binary to a directory of your choice.
             </Step>
-            <Step title="Launch an (Offchain) AI Gateway">
-                Run the following command to start your AI Subnet Gateway node:
+            <Step title="Launch an Off-chain AI Gateway">
+                Start the AI Gateway node with the following command:
 
                 ```bash
                 ./livepeer \
@@ -99,10 +88,10 @@ Please follow the steps below to start your AI Subnet Gateway node:
                     -httpIngest
                 ```
 
-                This command launches an **offchain** AI Gateway node. These flags are similar to running a Mainnet Transcoding Network Gateway node. For more information see the [go-livepeer CLI reference](/references/go-livepeer/cli-reference).
+                This command launches an **off-chain** AI Gateway node. Refer to the [go-livepeer CLI reference](/references/go-livepeer/cli-reference) for more details on the flags.
             </Step>
-            <Step title="Confirm Successful Startup of the AI Gateway">
-                If your AI Subnet Gateway node is functioning correctly, you should see the following output:
+            <Step title="Confirm Successful Startup">
+                Check the terminal for the following output to confirm successful startup:
 
                 ```bash
                 I0501 11:07:47.609839       1 mediaserver.go:201] Transcode Job Type: [{P240p30fps16x9 600k 30 0 426x240 16:9 0 0 0s 0 0 0 0} {P360p30fps16x9 1200k 30 0 640x360 16:9 0 0 0s 0 0 0 0}]
@@ -111,11 +100,12 @@ Please follow the steps below to start your AI Subnet Gateway node:
                 ```
             </Step>
             <Step title="Check Port Availability">
-                To make your AI Subnet Gateway node accessible from the internet, you need to configure your network settings. Ensure that port `8937` is unblocked on your machine. Additionally, consider setting up port forwarding on your router, which will allow the Gateway node to be reachable from the internet.
+                Ensure that port `8937` is open and accessible, and configure port forwarding if needed.
             </Step>
         </Steps>
+
         <Note>
-            If no binaries are available for your system, you can build the [ai-video branch](https://github.com/livepeer/go-livepeer/tree/ai-video) of [go-livepeer](https://github.com/livepeer/go-livepeer) from source by following the instructions in the [Livepeer repository](/Gateways/guides/install-go-livepeer) or by reaching out to the Livepeer community on [Discord](https://discord.gg/livepeer).
+            If binaries are unavailable for your system, you can build the [ai-video branch](https://github.com/livepeer/go-livepeer/tree/ai-video) of [go-livepeer](https://github.com/livepeer/go-livepeer) from source. Refer to the [Livepeer installation guide](/gateways/guides/install-go-livepeer) or reach out to the Livepeer community on [Discord](https://discord.gg/livepeer) for assistance.
         </Note>
     </Tab>
 
@@ -123,24 +113,25 @@ Please follow the steps below to start your AI Subnet Gateway node:
 
 ## Confirm the AI Gateway is Operational
 
-After launching the AI Subnet Gateway node, verify its operation by sending an
-AI inference request directly to it. This requires an active **off-chain** AI
-Orchestrator node. For guidance on setting up an AI Orchestrator node, refer to
-the [AI Orchestrator Setup Guide](/ai/orchestrators/get-started).
+After launching your Livepeer AI Gateway node, verify its operation by sending
+an AI inference request. Ensure that the Gateway is connected to an active
+**off-chain** AI Orchestrator node. For instructions on setting up an AI
+Orchestrator, refer to the
+[AI Orchestrator Setup Guide](/ai/orchestrators/get-started).
 
 <Steps>
     <Step title="Launch an AI Orchestrator">
-        Start an AI Orchestrator node on port `8936` following the [AI Orchestrator Setup Guide](/ai/orchestrators/get-started). Ensure it has loaded the desired model for inference (e.g., "ByteDance/SDXL-Lightning").
+        Start an AI Orchestrator node on port `8936` by following the [AI Orchestrator Setup Guide](/ai/orchestrators/get-started). Ensure that the Orchestrator has loaded the necessary model (e.g., "ByteDance/SDXL-Lightning").
     </Step>
     <Step title="Link Gateway to AI Orchestrator">
-        To connect your Gateway node to the AI Orchestrator node, specify the Orchestrator's address when launching the Gateway node. Replace `<ORCH_LIST>` with the Orchestrator's address, like so:
+        Specify the Orchestrator's address when launching the Gateway. Replace `<ORCH_LIST>` with the Orchestrator's address:
 
         ```bash
         -orchAddr 0.0.0.0:8936
         ```
     </Step>
     <Step title="Submit an Inference Request">
-        Refer to the [AI API reference](/ai/api-reference/text-to-image) to understand how to submit an inference request to the Gateway node. For instance, to generate an image from text, use the following `curl` command:
+        To submit an AI inference request, refer to the [AI API reference](/ai/api-reference/text-to-image). For example, to generate an image from text, use the following `curl` command:
 
         ```bash
         curl -X POST "http://0.0.0.0:8937/text-to-image" \
@@ -154,20 +145,20 @@ the [AI Orchestrator Setup Guide](/ai/orchestrators/get-started).
         ```
     </Step>
     <Step title="Inspect the Response">
-        If the Gateway node is functioning correctly, you should receive a response similar to the following:
+        If the request is successful, you should see a response like this:
 
         ```json
         {
             "images": [
                 {
-                "seed": 2562822894,
-                "url": "https://0.0.0.0:8937/stream/d0fc1fc6/8fdf5a94.png"
+                    "seed": 2562822894,
+                    "url": "https://0.0.0.0:8937/stream/d0fc1fc6/8fdf5a94.png"
                 }
             ]
         }
         ```
 
-        Consult the [Text-to-image Pipeline Documentation](/ai/pipelines/text-to-image) for more details on interpreting the response.
+        Refer to the [Text-to-image Pipeline Documentation](/ai/pipelines/text-to-image) for more information.
     </Step>
 
 </Steps>
