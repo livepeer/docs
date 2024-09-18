@@ -1,0 +1,86 @@
+---
+title: Perform Benchmarking
+---
+
+To ensure your GPU(s) are performing optimally and to identify any bottlenecks,
+you can run a benchmark test. Optimal performance significantly increases your
+chances of being selected for jobs, as inference speed is a crucial factor in
+the selection process. This guide will show you how to run a benchmark test on
+your GPU(s) to determine the best [pipeline/model](/ai/pipelines/overview)
+combination to serve on your GPU(s), thereby maximizing your revenue.
+
+## Prerequisites
+
+Before running a benchmarking test, make sure you have met all the
+[prerequisites](/ai/orchestrators/get-started#prerequisites) for running an
+Orchestrator node.
+
+## Benchmarking Steps
+
+<Steps>
+  <Step title="Pull the AI Runner Docker Image">
+    First, pull the latest AI runner Docker image from [Docker Hub](https://hub.docker.com/r/livepeer/ai-runner). This image contains the necessary tools for benchmarking.
+
+    ```bash
+    docker pull livepeer/ai-runner:latest
+    ```
+
+  </Step>
+  <Step title="Pull Pipeline-Specific Images">
+    Next, pull any pipeline-specific images if needed. Check the [pipelines](/ai/pipelines/overview) documentation for more information. For example, to pull the image for the [segment-anything-2](/ai/pipelines/segment-anything-2) pipeline:
+
+    ```bash
+    docker pull livepeer/ai-runner:segment-anything-2
+    ```
+
+  </Step>
+  <Step title="Download AI Models">
+    Download the AI models you want to benchmark. For more information see the [Download AI Models](/ai/orchestrators/models-download) guide.
+  </Step>
+  <Step title="Execute the Benchmark Test">
+    Run the benchmark test using the following command. This will simulate the pipeline/model combination on your GPU(s) and measure performance.
+
+    ```bash
+    docker run --gpus <GPU_IDs> -v ./models:/models livepeer/ai-runner:latest python bench.py --pipeline <PIPELINE> --model_id <MODEL_ID> --runs <RUNS> --num_inference_steps <NUM_INFERENCE_STEPS> --batch_size <BATCH_SIZE>
+    ```
+
+    Example command:
+
+    ```bash
+    docker run --gpus 0 -v ./models:/models livepeer/ai-runner:latest python bench.py --pipeline text-to-image --model_id stabilityai/sd-turbo --runs 3 --batch_size 3
+    ```
+
+    In this command, the following parameters are used:
+
+    - `<GPU_IDs>`: Specify which GPU(s) to use. For example, `0` for GPU 0, `0,1` for GPU 0 and GPU 1, or `all` for all GPUs.
+    - `<PIPELINE>`: The pipeline to benchmark (e.g., `text-to-image`).
+    - `<MODEL_ID>`: The model ID to use for benchmarking (e.g., `stabilityai/sd-turbo`).
+    - `<RUNS>`: The number of benchmark runs to perform.
+    - `<NUM_INFERENCE_STEPS>`: The number of inference steps to perform (optional).
+
+    For benchmarking script usage information:
+
+    ```bash
+    docker run livepeer/ai-runner:latest python bench.py -h
+    ```
+
+  </Step>
+  <Step title="Analyze the Benchmark Results">
+    After running the benchmark, you should see output similar to the following:
+
+    ```bash
+    ----AGGREGATE METRICS----
+
+
+    pipeline load time: 5.199s
+    pipeline load max GPU memory allocated: 5.876GiB
+    pipeline load max GPU memory reserved: 6.043GiB
+    avg inference time: 7.538s
+    avg inference max GPU memory allocated: 6.407GiB
+    avg inference max GPU memory reserved: 6.729GiB
+    ```
+
+    This output shows the performance of your GPU(s) and helps you determine the best pipeline/model combination to serve on your GPU(s).
+
+  </Step>
+</Steps>
