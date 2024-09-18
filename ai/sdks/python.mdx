@@ -1,0 +1,74 @@
+---
+title: Python
+description:
+  "Learn how to run your first AI inference job using the Livepeer AI Python
+  SDK."
+icon: python
+---
+
+<Steps>
+  <Step title="Prerequisites">
+  To get the most out of this guide, you’ll need to:
+
+    - [Choose an AI Gateway](/ai/builders/gateways)
+    - **Optional**: Get an API key (required for some gateways).
+
+  </Step>
+
+  <Step title="Install the SDK">
+  Get the Livepeer AI Python SDK.
+
+```bash
+pip install livepeer-ai
+```
+
+  </Step>
+  
+  <Step title="Initialize the SDK">
+  The first step is to initialize the SDK (with your API key if required).
+
+```python
+from livepeer_ai import Livepeer
+
+s = Livepeer(
+    http_bearer="<YOUR_BEARER_TOKEN_HERE>",
+)
+```
+
+  </Step>
+  <Step title="Use the SDK">
+  Now that you have the SDK installed and initialized, you can use it to request one of the [available AI services](/ai/pipelines/overview).
+
+```python
+from livepeer_ai import Livepeer
+
+s = Livepeer(
+    http_bearer="<YOUR_BEARER_TOKEN_HERE>",
+)
+
+res = s.generate.text_to_image(request={
+    "prompt": "<value>",
+})
+
+if res.image_response is not None:
+    # handle response
+    pass
+```
+
+  </Step>
+  
+  <Step title="Try it yourself">
+    <Card
+      title="Python Examples"
+      href="https://github.com/livepeer/livepeer-ai-python/tree/main/docs/sdks/generate#generate"
+      icon="arrow-up-right-from-square"
+    >
+        See the examples on GitHub.
+    </Card>
+  </Step>
+</Steps>
+
+## Next steps
+
+Checkout Livepeer AI [API Reference](/ai/api-reference) to learn more about the
+Livepeer AI API and the Python SDK.
