@@ -114,6 +114,19 @@ with:
 curl -O "https://<STORAGE_ENDPOINT>/stream/dd5ad78d/7adde483.png"
 ```
 
+## LoRa models
+
+To apply LoRa filters to the image, you can include the `loras` field:
+```bash
+curl -X POST https://<GATEWAY_IP>/image-to-image \
+    -F model_id="ByteDance/SDXL-Lightning" \
+    -F image=@<PATH_TO_IMAGE>/cool-cat.png \
+    -F prompt="a hat" \
+    -F loras={ \"nerijs/pixel-art-xl\" : 1.2 }"
+```
+
+A list of available LoRas can be found in [lora-studio](https://huggingface.co/spaces/enzostvs/lora-studio)
+
 ## Orchestrator Configuration
 
 To configure your Orchestrator to serve the `image-to-image` pipeline, refer to

@@ -125,6 +125,23 @@ with:
 curl -O "https://<GATEWAY_IP>/stream/d0fc1fc6/8fdf5a94.png"
 ```
 
+## LoRa models
+
+To apply LoRa filters to the image, you can include the `loras` field:
+```bash
+curl -X POST "https://<GATEWAY_IP>/text-to-image" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "model_id":"ByteDance/SDXL-Lightning",
+        "prompt":"A cool cat on the beach",
+        "width": 1024,
+        "height": 1024,
+        "loras": "{ \"nerijs/pixel-art-xl\" : 1.2 }"
+    }'
+```
+
+A list of available LoRas can be found in [lora-studio](https://huggingface.co/spaces/enzostvs/lora-studio)
+
 ## Orchestrator Configuration
 
 To configure your Orchestrator to serve the `text-to-image` pipeline, refer to
