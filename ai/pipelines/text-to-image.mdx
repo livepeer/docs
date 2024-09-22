@@ -77,11 +77,12 @@ pipeline:
 <Tip>
   For a detailed understanding of the `text-to-image` endpoint and to experiment
   with the API, see the [Livepeer AI API
-  Reference](/ai/api-reference/text-to-image).
+  Reference](/ai/api-reference/text-to-image). For examples of effective
+  prompts, visit [PromptHero](https://prompthero.com/).
 </Tip>
 
-To generate an image with the `text-to-image` pipeline, send a `POST` request to
-the Gateway's `text-to-image` API endpoint:
+To generate an image with the `text-to-image` pipeline, send a `POST` request
+to\*\* \*\*the Gateway's `text-to-image` API endpoint:
 
 ```bash
 curl -X POST "https://<GATEWAY_IP>/text-to-image" \
@@ -99,6 +100,11 @@ In this command:
 - `<GATEWAY_IP>` should be replaced with your AI Gateway's IP address.
 - `model_id` is the diffusion model for image generation.
 - `prompt` is the text description for the image.
+
+<Tip>
+  For examples of effective prompts, visit
+  [PromptHero](https://prompthero.com/).
+</Tip>
 
 For additional optional parameters, refer to the
 [Livepeer AI API Reference](/ai/api-reference/text-to-image).
@@ -127,7 +133,8 @@ curl -O "https://<GATEWAY_IP>/stream/d0fc1fc6/8fdf5a94.png"
 
 ## LoRa models
 
-To apply LoRa filters to the image, you can include the `loras` field:
+To apply LoRa filters to an image, include the `loras` field in your request:
+
 ```bash
 curl -X POST "https://<GATEWAY_IP>/text-to-image" \
     -H "Content-Type: application/json" \
@@ -136,11 +143,12 @@ curl -X POST "https://<GATEWAY_IP>/text-to-image" \
         "prompt":"A cool cat on the beach",
         "width": 1024,
         "height": 1024,
-        "loras": "{ \"nerijs/pixel-art-xl\" : 1.2 }"
+        "loras": "{ \"latent-consistency/lcm-lora-sdxl\": 1.0, \"nerijs/pixel-art-xl\": 1.2}"
     }'
 ```
 
-A list of available LoRas can be found in [lora-studio](https://huggingface.co/spaces/enzostvs/lora-studio)
+You can find a list of available LoRa models for various models on
+[lora-studio](https://huggingface.co/spaces/enzostvs/lora-studio).
 
 ## Orchestrator Configuration
 
