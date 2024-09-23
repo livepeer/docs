@@ -77,7 +77,8 @@ pipeline:
 <Tip>
   For a detailed understanding of the `text-to-image` endpoint and to experiment
   with the API, see the [Livepeer AI API
-  Reference](/ai/api-reference/text-to-image).
+  Reference](/ai/api-reference/text-to-image). For examples of effective
+  prompts, visit [PromptHero](https://prompthero.com/).
 </Tip>
 
 To generate an image with the `text-to-image` pipeline, send a `POST` request to
@@ -124,6 +125,25 @@ with:
 ```bash
 curl -O "https://<GATEWAY_IP>/stream/d0fc1fc6/8fdf5a94.png"
 ```
+
+## Applying LoRa Models
+
+To apply LoRa filters to an image, include the `loras` field in your request:
+
+```bash
+curl -X POST "https://<GATEWAY_IP>/text-to-image" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "model_id":"ByteDance/SDXL-Lightning",
+        "prompt":"A cool cat on the beach",
+        "width": 1024,
+        "height": 1024,
+        "loras": "{ \"latent-consistency/lcm-lora-sdxl\": 1.0, \"nerijs/pixel-art-xl\": 1.2}"
+    }'
+```
+
+You can find a list of available LoRa models for various models on
+[lora-studio](https://huggingface.co/spaces/enzostvs/lora-studio).
 
 ## Orchestrator Configuration
 
