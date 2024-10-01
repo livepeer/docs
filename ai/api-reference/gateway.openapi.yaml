@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: Livepeer AI Runner
   description: An application to run AI pipelines
-  version: v0.5.0
+  version: ''
 servers:
   - url: https://dream-gateway.livepeer.cloud
     description: Livepeer Cloud Community Gateway
@@ -60,7 +60,23 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: genTextToImage
-          source: "import { Livepeer } from \"@livepeer/ai\";\n\nconst livepeer = new Livepeer({\n  httpBearer: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.generate.textToImage({\n    prompt: \"<value>\",\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "@livepeer/ai";
+
+            const livepeer = new Livepeer({
+              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.generate.textToImage({
+                prompt: "<value>",
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: genTextToImage
           source: |-
@@ -156,7 +172,25 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: genImageToImage
-          source: "import { Livepeer } from \"@livepeer/ai\";\nimport { openAsBlob } from \"node:fs\";\n\nconst livepeer = new Livepeer({\n  httpBearer: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.generate.imageToImage({\n    prompt: \"<value>\",\n    image: await openAsBlob(\"example.file\"),\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "@livepeer/ai";
+            import { openAsBlob } from "node:fs";
+
+            const livepeer = new Livepeer({
+              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.generate.imageToImage({
+                prompt: "<value>",
+                image: await openAsBlob("example.file"),
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: genImageToImage
           source: |-
@@ -266,7 +300,24 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: genImageToVideo
-          source: "import { Livepeer } from \"@livepeer/ai\";\nimport { openAsBlob } from \"node:fs\";\n\nconst livepeer = new Livepeer({\n  httpBearer: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.generate.imageToVideo({\n    image: await openAsBlob(\"example.file\"),\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "@livepeer/ai";
+            import { openAsBlob } from "node:fs";
+
+            const livepeer = new Livepeer({
+              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.generate.imageToVideo({
+                image: await openAsBlob("example.file"),
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: genImageToVideo
           source: |-
@@ -374,7 +425,25 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: genUpscale
-          source: "import { Livepeer } from \"@livepeer/ai\";\nimport { openAsBlob } from \"node:fs\";\n\nconst livepeer = new Livepeer({\n  httpBearer: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.generate.upscale({\n    prompt: \"<value>\",\n    image: await openAsBlob(\"example.file\"),\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "@livepeer/ai";
+            import { openAsBlob } from "node:fs";
+
+            const livepeer = new Livepeer({
+              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.generate.upscale({
+                prompt: "<value>",
+                image: await openAsBlob("example.file"),
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: genUpscale
           source: |-
@@ -490,7 +559,24 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: genAudioToText
-          source: "import { Livepeer } from \"@livepeer/ai\";\nimport { openAsBlob } from \"node:fs\";\n\nconst livepeer = new Livepeer({\n  httpBearer: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.generate.audioToText({\n    audio: await openAsBlob(\"example.file\"),\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "@livepeer/ai";
+            import { openAsBlob } from "node:fs";
+
+            const livepeer = new Livepeer({
+              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.generate.audioToText({
+                audio: await openAsBlob("example.file"),
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: genAudioToText
           source: |-
@@ -598,7 +684,24 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: genSegmentAnything2
-          source: "import { Livepeer } from \"@livepeer/ai\";\nimport { openAsBlob } from \"node:fs\";\n\nconst livepeer = new Livepeer({\n  httpBearer: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.generate.segmentAnything2({\n    image: await openAsBlob(\"example.file\"),\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "@livepeer/ai";
+            import { openAsBlob } from "node:fs";
+
+            const livepeer = new Livepeer({
+              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.generate.segmentAnything2({
+                image: await openAsBlob("example.file"),
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: genSegmentAnything2
           source: |-
@@ -655,6 +758,117 @@ paths:
             if res.masks_response is not None:
                 # handle response
                 pass
+  /llm:
+    post:
+      tags:
+        - generate
+      summary: LLM
+      description: Generate text using a language model.
+      operationId: genLLM
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_genLLM'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LLMResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+      x-speakeasy-name-override: llm
+      x-codeSamples:
+        - lang: typescript
+          label: genLLM
+          source: |-
+            import { Livepeer } from "@livepeer/ai";
+
+            const livepeer = new Livepeer({
+              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.generate.llm({
+                prompt: "<value>",
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+        - lang: go
+          label: genLLM
+          source: |-
+            package main
+
+            import(
+            	livepeeraigo "github.com/livepeer/livepeer-ai-go"
+            	"context"
+            	"github.com/livepeer/livepeer-ai-go/models/components"
+            	"log"
+            )
+
+            func main() {
+                s := livepeeraigo.New(
+                    livepeeraigo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
+                )
+
+                ctx := context.Background()
+                res, err := s.Generate.Llm(ctx, components.BodyGenLLM{
+                    Prompt: "<value>",
+                })
+                if err != nil {
+                    log.Fatal(err)
+                }
+                if res.LLMResponse != nil {
+                    // handle response
+                }
+            }
+        - lang: python
+          label: genLLM
+          source: |-
+            from livepeer_ai import Livepeer
+
+            s = Livepeer(
+                http_bearer="<YOUR_BEARER_TOKEN_HERE>",
+            )
+
+            res = s.generate.llm(request={
+                "prompt": "<value>",
+            })
+
+            if res.llm_response is not None:
+                # handle response
+                pass
 components:
   schemas:
     APIError:
@@ -704,9 +918,7 @@ components:
         loras:
           type: string
           title: Loras
-          description: 'A LoRA (Low-Rank Adaptation) model and its corresponding weight
-            for image generation. Example: { "latent-consistency/lcm-lora-sdxl": 1.0,
-            "nerijs/pixel-art-xl": 1.2}.'
+          description: 'A LoRA (Low-Rank Adaptation) model and its corresponding weight for image generation. Example: { "latent-consistency/lcm-lora-sdxl": 1.0, "nerijs/pixel-art-xl": 1.2}.'
           default: ''
         strength:
           type: number
@@ -809,6 +1021,40 @@ components:
         - image
         - model_id
       title: Body_genImageToVideo
+    Body_genLLM:
+      properties:
+        prompt:
+          type: string
+          title: Prompt
+        model_id:
+          type: string
+          title: Model Id
+          default: ''
+        system_msg:
+          type: string
+          title: System Msg
+          default: ''
+        temperature:
+          type: number
+          title: Temperature
+          default: 0.7
+        max_tokens:
+          type: integer
+          title: Max Tokens
+          default: 256
+        history:
+          type: string
+          title: History
+          default: '[]'
+        stream:
+          type: boolean
+          title: Stream
+          default: false
+      type: object
+      required:
+        - prompt
+        - model_id
+      title: Body_genLLM
     Body_genSegmentAnything2:
       properties:
         image:
@@ -926,6 +1172,19 @@ components:
         - images
       title: ImageResponse
       description: Response model for image generation.
+    LLMResponse:
+      properties:
+        response:
+          type: string
+          title: Response
+        tokens_used:
+          type: integer
+          title: Tokens Used
+      type: object
+      required:
+        - response
+        - tokens_used
+      title: LLMResponse
     MasksResponse:
       properties:
         masks:
@@ -996,9 +1255,7 @@ components:
         loras:
           type: string
           title: Loras
-          description: 'A LoRA (Low-Rank Adaptation) model and its corresponding weight
-            for image generation. Example: { "latent-consistency/lcm-lora-sdxl": 1.0,
-            "nerijs/pixel-art-xl": 1.2}.'
+          description: 'A LoRA (Low-Rank Adaptation) model and its corresponding weight for image generation. Example: { "latent-consistency/lcm-lora-sdxl": 1.0, "nerijs/pixel-art-xl": 1.2}.'
           default: ''
         prompt:
           type: string
