@@ -1,7 +1,24 @@
 ---
 openapi: post /llm
 ---
+<Warning>
+We are currently deploying the Large Language Model (LLM) pipeline to our gateway infrastructure. 
+This warning will be removed once all listed gateways have successfully transitioned to serving the LLM pipeline, ensuring a seamless and enhanced user experience.
+</Warning>
+<Note>
+The LLM pipeline supports streaming response by setting `stream=true` in the request.  The response is then streamed with Server Sent Events (SSE)
+in chunks as the tokens are generated.  
 
+Each streaming response chunk will have the following format:
+
+`data: {"chunk": "word "}`
+
+The final chunk of the response will be indicated by the following format:
+
+`data: {"chunk": "[DONE]", "tokens_used": 256, "done": true}`
+
+The Response type below is for non-streaming responses that will return all of the response in one
+</Note>
 <Info>
   The default Gateway used in this guide is the public
   [Livepeer.cloud](https://www.livepeer.cloud/) Gateway. It is free to use but
