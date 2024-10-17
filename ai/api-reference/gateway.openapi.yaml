@@ -5,15 +5,15 @@ info:
   description: An application to run AI pipelines
   version: 0.0.0
 servers:
-  - url: https://dream-gateway.livepeer.cloud
-    description: Livepeer Cloud Community Gateway
-  - url: https://livepeer.studio/api/beta/generate
-    description: Livepeer Studio Gateway
+- url: https://dream-gateway.livepeer.cloud
+  description: Livepeer Cloud Community Gateway
+- url: https://livepeer.studio/api/beta/generate
+  description: Livepeer Studio Gateway
 paths:
   /text-to-image:
     post:
       tags:
-        - generate
+      - generate
       summary: Text To Image
       description: Generate images from text prompts.
       operationId: genTextToImage
@@ -56,76 +56,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-        - HTTPBearer: []
+      - HTTPBearer: []
       x-speakeasy-name-override: textToImage
-      x-codeSamples:
-        - lang: typescript
-          label: genTextToImage
-          source: |-
-            import { Livepeer } from "@livepeer/ai";
-
-            const livepeer = new Livepeer({
-              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await livepeer.generate.textToImage({
-                prompt: "<value>",
-              });
-
-              // Handle the result
-              console.log(result);
-            }
-
-            run();
-        - lang: go
-          label: genTextToImage
-          source: |-
-            package main
-
-            import(
-            	livepeeraigo "github.com/livepeer/livepeer-ai-go"
-            	"context"
-            	"github.com/livepeer/livepeer-ai-go/models/components"
-            	"log"
-            )
-
-            func main() {
-                s := livepeeraigo.New(
-                    livepeeraigo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
-                )
-
-                ctx := context.Background()
-                res, err := s.Generate.TextToImage(ctx, components.TextToImageParams{
-                    Prompt: "<value>",
-                })
-                if err != nil {
-                    log.Fatal(err)
-                }
-                if res.ImageResponse != nil {
-                    // handle response
-                }
-            }
-        - lang: python
-          label: genTextToImage
-          source: |-
-            from livepeer_ai import Livepeer
-
-            s = Livepeer(
-                http_bearer="<YOUR_BEARER_TOKEN_HERE>",
-            )
-
-            res = s.generate.text_to_image(request={
-                "prompt": "<value>",
-            })
-
-            if res.image_response is not None:
-                # handle response
-                pass
   /image-to-image:
     post:
       tags:
-        - generate
+      - generate
       summary: Image To Image
       description: Apply image transformations to a provided image.
       operationId: genImageToImage
@@ -168,92 +104,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-        - HTTPBearer: []
+      - HTTPBearer: []
       x-speakeasy-name-override: imageToImage
-      x-codeSamples:
-        - lang: typescript
-          label: genImageToImage
-          source: |-
-            import { Livepeer } from "@livepeer/ai";
-            import { openAsBlob } from "node:fs";
-
-            const livepeer = new Livepeer({
-              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await livepeer.generate.imageToImage({
-                prompt: "<value>",
-                image: await openAsBlob("example.file"),
-              });
-
-              // Handle the result
-              console.log(result);
-            }
-
-            run();
-        - lang: go
-          label: genImageToImage
-          source: |-
-            package main
-
-            import(
-            	livepeeraigo "github.com/livepeer/livepeer-ai-go"
-            	"os"
-            	"context"
-            	"github.com/livepeer/livepeer-ai-go/models/components"
-            	"log"
-            )
-
-            func main() {
-                s := livepeeraigo.New(
-                    livepeeraigo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
-                )
-
-                content, fileErr := os.Open("example.file")
-                if fileErr != nil {
-                    panic(fileErr)
-                }
-
-                ctx := context.Background()
-                res, err := s.Generate.ImageToImage(ctx, components.BodyGenImageToImage{
-                    Prompt: "<value>",
-                    Image: components.Image{
-                        FileName: "example.file",
-                        Content: content,
-                    },
-                })
-                if err != nil {
-                    log.Fatal(err)
-                }
-                if res.ImageResponse != nil {
-                    // handle response
-                }
-            }
-        - lang: python
-          label: genImageToImage
-          source: |-
-            from livepeer_ai import Livepeer
-
-            s = Livepeer(
-                http_bearer="<YOUR_BEARER_TOKEN_HERE>",
-            )
-
-            res = s.generate.image_to_image(request={
-                "prompt": "<value>",
-                "image": {
-                    "file_name": "example.file",
-                    "content": open("example.file", "rb"),
-                },
-            })
-
-            if res.image_response is not None:
-                # handle response
-                pass
   /image-to-video:
     post:
       tags:
-        - generate
+      - generate
       summary: Image To Video
       description: Generate a video from a provided image.
       operationId: genImageToVideo
@@ -296,89 +152,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-        - HTTPBearer: []
+      - HTTPBearer: []
       x-speakeasy-name-override: imageToVideo
-      x-codeSamples:
-        - lang: typescript
-          label: genImageToVideo
-          source: |-
-            import { Livepeer } from "@livepeer/ai";
-            import { openAsBlob } from "node:fs";
-
-            const livepeer = new Livepeer({
-              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await livepeer.generate.imageToVideo({
-                image: await openAsBlob("example.file"),
-              });
-
-              // Handle the result
-              console.log(result);
-            }
-
-            run();
-        - lang: go
-          label: genImageToVideo
-          source: |-
-            package main
-
-            import(
-            	livepeeraigo "github.com/livepeer/livepeer-ai-go"
-            	"os"
-            	"context"
-            	"github.com/livepeer/livepeer-ai-go/models/components"
-            	"log"
-            )
-
-            func main() {
-                s := livepeeraigo.New(
-                    livepeeraigo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
-                )
-
-                content, fileErr := os.Open("example.file")
-                if fileErr != nil {
-                    panic(fileErr)
-                }
-
-                ctx := context.Background()
-                res, err := s.Generate.ImageToVideo(ctx, components.BodyGenImageToVideo{
-                    Image: components.BodyGenImageToVideoImage{
-                        FileName: "example.file",
-                        Content: content,
-                    },
-                })
-                if err != nil {
-                    log.Fatal(err)
-                }
-                if res.VideoResponse != nil {
-                    // handle response
-                }
-            }
-        - lang: python
-          label: genImageToVideo
-          source: |-
-            from livepeer_ai import Livepeer
-
-            s = Livepeer(
-                http_bearer="<YOUR_BEARER_TOKEN_HERE>",
-            )
-
-            res = s.generate.image_to_video(request={
-                "image": {
-                    "file_name": "example.file",
-                    "content": open("example.file", "rb"),
-                },
-            })
-
-            if res.video_response is not None:
-                # handle response
-                pass
   /upscale:
     post:
       tags:
-        - generate
+      - generate
       summary: Upscale
       description: Upscale an image by increasing its resolution.
       operationId: genUpscale
@@ -421,92 +200,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-        - HTTPBearer: []
+      - HTTPBearer: []
       x-speakeasy-name-override: upscale
-      x-codeSamples:
-        - lang: typescript
-          label: genUpscale
-          source: |-
-            import { Livepeer } from "@livepeer/ai";
-            import { openAsBlob } from "node:fs";
-
-            const livepeer = new Livepeer({
-              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await livepeer.generate.upscale({
-                prompt: "<value>",
-                image: await openAsBlob("example.file"),
-              });
-
-              // Handle the result
-              console.log(result);
-            }
-
-            run();
-        - lang: go
-          label: genUpscale
-          source: |-
-            package main
-
-            import(
-            	livepeeraigo "github.com/livepeer/livepeer-ai-go"
-            	"os"
-            	"context"
-            	"github.com/livepeer/livepeer-ai-go/models/components"
-            	"log"
-            )
-
-            func main() {
-                s := livepeeraigo.New(
-                    livepeeraigo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
-                )
-
-                content, fileErr := os.Open("example.file")
-                if fileErr != nil {
-                    panic(fileErr)
-                }
-
-                ctx := context.Background()
-                res, err := s.Generate.Upscale(ctx, components.BodyGenUpscale{
-                    Prompt: "<value>",
-                    Image: components.BodyGenUpscaleImage{
-                        FileName: "example.file",
-                        Content: content,
-                    },
-                })
-                if err != nil {
-                    log.Fatal(err)
-                }
-                if res.ImageResponse != nil {
-                    // handle response
-                }
-            }
-        - lang: python
-          label: genUpscale
-          source: |-
-            from livepeer_ai import Livepeer
-
-            s = Livepeer(
-                http_bearer="<YOUR_BEARER_TOKEN_HERE>",
-            )
-
-            res = s.generate.upscale(request={
-                "prompt": "<value>",
-                "image": {
-                    "file_name": "example.file",
-                    "content": open("example.file", "rb"),
-                },
-            })
-
-            if res.image_response is not None:
-                # handle response
-                pass
   /audio-to-text:
     post:
       tags:
-        - generate
+      - generate
       summary: Audio To Text
       description: Transcribe audio files to text.
       operationId: genAudioToText
@@ -561,89 +260,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-        - HTTPBearer: []
+      - HTTPBearer: []
       x-speakeasy-name-override: audioToText
-      x-codeSamples:
-        - lang: typescript
-          label: genAudioToText
-          source: |-
-            import { Livepeer } from "@livepeer/ai";
-            import { openAsBlob } from "node:fs";
-
-            const livepeer = new Livepeer({
-              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await livepeer.generate.audioToText({
-                audio: await openAsBlob("example.file"),
-              });
-
-              // Handle the result
-              console.log(result);
-            }
-
-            run();
-        - lang: go
-          label: genAudioToText
-          source: |-
-            package main
-
-            import(
-            	livepeeraigo "github.com/livepeer/livepeer-ai-go"
-            	"os"
-            	"context"
-            	"github.com/livepeer/livepeer-ai-go/models/components"
-            	"log"
-            )
-
-            func main() {
-                s := livepeeraigo.New(
-                    livepeeraigo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
-                )
-
-                content, fileErr := os.Open("example.file")
-                if fileErr != nil {
-                    panic(fileErr)
-                }
-
-                ctx := context.Background()
-                res, err := s.Generate.AudioToText(ctx, components.BodyGenAudioToText{
-                    Audio: components.Audio{
-                        FileName: "example.file",
-                        Content: content,
-                    },
-                })
-                if err != nil {
-                    log.Fatal(err)
-                }
-                if res.TextResponse != nil {
-                    // handle response
-                }
-            }
-        - lang: python
-          label: genAudioToText
-          source: |-
-            from livepeer_ai import Livepeer
-
-            s = Livepeer(
-                http_bearer="<YOUR_BEARER_TOKEN_HERE>",
-            )
-
-            res = s.generate.audio_to_text(request={
-                "audio": {
-                    "file_name": "example.file",
-                    "content": open("example.file", "rb"),
-                },
-            })
-
-            if res.text_response is not None:
-                # handle response
-                pass
   /segment-anything-2:
     post:
       tags:
-        - generate
+      - generate
       summary: Segment Anything 2
       description: Segment objects in an image.
       operationId: genSegmentAnything2
@@ -686,89 +308,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-        - HTTPBearer: []
+      - HTTPBearer: []
       x-speakeasy-name-override: segmentAnything2
-      x-codeSamples:
-        - lang: typescript
-          label: genSegmentAnything2
-          source: |-
-            import { Livepeer } from "@livepeer/ai";
-            import { openAsBlob } from "node:fs";
-
-            const livepeer = new Livepeer({
-              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await livepeer.generate.segmentAnything2({
-                image: await openAsBlob("example.file"),
-              });
-
-              // Handle the result
-              console.log(result);
-            }
-
-            run();
-        - lang: go
-          label: genSegmentAnything2
-          source: |-
-            package main
-
-            import(
-            	livepeeraigo "github.com/livepeer/livepeer-ai-go"
-            	"os"
-            	"context"
-            	"github.com/livepeer/livepeer-ai-go/models/components"
-            	"log"
-            )
-
-            func main() {
-                s := livepeeraigo.New(
-                    livepeeraigo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
-                )
-
-                content, fileErr := os.Open("example.file")
-                if fileErr != nil {
-                    panic(fileErr)
-                }
-
-                ctx := context.Background()
-                res, err := s.Generate.SegmentAnything2(ctx, components.BodyGenSegmentAnything2{
-                    Image: components.BodyGenSegmentAnything2Image{
-                        FileName: "example.file",
-                        Content: content,
-                    },
-                })
-                if err != nil {
-                    log.Fatal(err)
-                }
-                if res.MasksResponse != nil {
-                    // handle response
-                }
-            }
-        - lang: python
-          label: genSegmentAnything2
-          source: |-
-            from livepeer_ai import Livepeer
-
-            s = Livepeer(
-                http_bearer="<YOUR_BEARER_TOKEN_HERE>",
-            )
-
-            res = s.generate.segment_anything2(request={
-                "image": {
-                    "file_name": "example.file",
-                    "content": open("example.file", "rb"),
-                },
-            })
-
-            if res.masks_response is not None:
-                # handle response
-                pass
   /llm:
     post:
       tags:
-        - generate
+      - generate
       summary: LLM
       description: Generate text using a language model.
       operationId: genLLM
@@ -810,76 +355,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-        - HTTPBearer: []
+      - HTTPBearer: []
       x-speakeasy-name-override: llm
-      x-codeSamples:
-        - lang: typescript
-          label: genLLM
-          source: |-
-            import { Livepeer } from "@livepeer/ai";
-
-            const livepeer = new Livepeer({
-              httpBearer: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await livepeer.generate.llm({
-                prompt: "<value>",
-              });
-
-              // Handle the result
-              console.log(result);
-            }
-
-            run();
-        - lang: go
-          label: genLLM
-          source: |-
-            package main
-
-            import(
-            	livepeeraigo "github.com/livepeer/livepeer-ai-go"
-            	"context"
-            	"github.com/livepeer/livepeer-ai-go/models/components"
-            	"log"
-            )
-
-            func main() {
-                s := livepeeraigo.New(
-                    livepeeraigo.WithSecurity("<YOUR_BEARER_TOKEN_HERE>"),
-                )
-
-                ctx := context.Background()
-                res, err := s.Generate.Llm(ctx, components.BodyGenLLM{
-                    Prompt: "<value>",
-                })
-                if err != nil {
-                    log.Fatal(err)
-                }
-                if res.LLMResponse != nil {
-                    // handle response
-                }
-            }
-        - lang: python
-          label: genLLM
-          source: |-
-            from livepeer_ai import Livepeer
-
-            s = Livepeer(
-                http_bearer="<YOUR_BEARER_TOKEN_HERE>",
-            )
-
-            res = s.generate.llm(request={
-                "prompt": "<value>",
-            })
-
-            if res.llm_response is not None:
-                # handle response
-                pass
   /image-to-text:
     post:
       tags:
-        - generate
+      - generate
       summary: Image To Text
       description: Transform image files to text.
       operationId: genImageToText
@@ -928,8 +409,104 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
-        - HTTPBearer: []
+      - HTTPBearer: []
       x-speakeasy-name-override: imageToText
+  /live-video-to-video:
+    post:
+      tags:
+      - generate
+      summary: Video To Video
+      description: Apply video-like transformations to a provided image.
+      operationId: genLiveVideoToVideo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LiveVideoToVideoParams'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                x-speakeasy-name-override: data
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+      x-speakeasy-name-override: liveVideoToVideo
+  /text-to-speech:
+    post:
+      tags:
+      - generate
+      summary: Text To Speech
+      description: Generate a text-to-speech audio file based on the provided text
+        input and speaker description.
+      operationId: genTextToSpeech
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TextToSpeechParams'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioResponse'
+                x-speakeasy-name-override: data
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+      x-speakeasy-name-override: textToSpeech
 components:
   schemas:
     APIError:
@@ -940,9 +517,20 @@ components:
           description: The error message.
       type: object
       required:
-        - msg
+      - msg
       title: APIError
       description: API error response model.
+    AudioResponse:
+      properties:
+        audio:
+          allOf:
+          - $ref: '#/components/schemas/MediaURL'
+          description: The generated audio.
+      type: object
+      required:
+      - audio
+      title: AudioResponse
+      description: Response model for audio generation.
     Body_genAudioToText:
       properties:
         audio:
@@ -958,12 +546,15 @@ components:
         return_timestamps:
           type: string
           title: Return Timestamps
-          description: 'Return timestamps for the transcribed text. Supported values: ''sentence'', ''word'', or a string boolean (''true'' or ''false''). Default is ''true'' (''sentence''). ''false'' means no timestamps. ''word'' means word-based timestamps.'
+          description: 'Return timestamps for the transcribed text. Supported values:
+            ''sentence'', ''word'', or a string boolean (''true'' or ''false''). Default
+            is ''true'' (''sentence''). ''false'' means no timestamps. ''word'' means
+            word-based timestamps.'
           default: 'true'
       type: object
       required:
-        - audio
-        - model_id
+      - audio
+      - model_id
       title: Body_genAudioToText
     Body_genImageToImage:
       properties:
@@ -984,32 +575,39 @@ components:
         loras:
           type: string
           title: Loras
-          description: 'A LoRA (Low-Rank Adaptation) model and its corresponding weight for image generation. Example: { "latent-consistency/lcm-lora-sdxl": 1.0, "nerijs/pixel-art-xl": 1.2}.'
+          description: 'A LoRA (Low-Rank Adaptation) model and its corresponding weight
+            for image generation. Example: { "latent-consistency/lcm-lora-sdxl": 1.0,
+            "nerijs/pixel-art-xl": 1.2}.'
           default: ''
         strength:
           type: number
           title: Strength
-          description: Degree of transformation applied to the reference image (0 to 1).
+          description: Degree of transformation applied to the reference image (0
+            to 1).
           default: 0.8
         guidance_scale:
           type: number
           title: Guidance Scale
-          description: Encourages model to generate images closely linked to the text prompt (higher values may reduce image quality).
+          description: Encourages model to generate images closely linked to the text
+            prompt (higher values may reduce image quality).
           default: 7.5
         image_guidance_scale:
           type: number
           title: Image Guidance Scale
-          description: Degree to which the generated image is pushed towards the initial image.
+          description: Degree to which the generated image is pushed towards the initial
+            image.
           default: 1.5
         negative_prompt:
           type: string
           title: Negative Prompt
-          description: Text prompt(s) to guide what to exclude from image generation. Ignored if guidance_scale < 1.
+          description: Text prompt(s) to guide what to exclude from image generation.
+            Ignored if guidance_scale < 1.
           default: ''
         safety_check:
           type: boolean
           title: Safety Check
-          description: Perform a safety check to estimate if generated images could be offensive or harmful.
+          description: Perform a safety check to estimate if generated images could
+            be offensive or harmful.
           default: true
         seed:
           type: integer
@@ -1018,7 +616,8 @@ components:
         num_inference_steps:
           type: integer
           title: Num Inference Steps
-          description: Number of denoising steps. More steps usually lead to higher quality images but slower inference. Modulated by strength.
+          description: Number of denoising steps. More steps usually lead to higher
+            quality images but slower inference. Modulated by strength.
           default: 100
         num_images_per_prompt:
           type: integer
@@ -1027,9 +626,9 @@ components:
           default: 1
       type: object
       required:
-        - prompt
-        - image
-        - model_id
+      - prompt
+      - image
+      - model_id
       title: Body_genImageToImage
     Body_genImageToText:
       properties:
@@ -1050,8 +649,8 @@ components:
           default: ''
       type: object
       required:
-        - image
-        - model_id
+      - image
+      - model_id
       title: Body_genImageToText
     Body_genImageToVideo:
       properties:
@@ -1083,17 +682,20 @@ components:
         motion_bucket_id:
           type: integer
           title: Motion Bucket Id
-          description: Used for conditioning the amount of motion for the generation. The higher the number the more motion will be in the video.
+          description: Used for conditioning the amount of motion for the generation.
+            The higher the number the more motion will be in the video.
           default: 127
         noise_aug_strength:
           type: number
           title: Noise Aug Strength
-          description: Amount of noise added to the conditioning image. Higher values reduce resemblance to the conditioning image and increase motion.
+          description: Amount of noise added to the conditioning image. Higher values
+            reduce resemblance to the conditioning image and increase motion.
           default: 0.02
         safety_check:
           type: boolean
           title: Safety Check
-          description: Perform a safety check to estimate if generated images could be offensive or harmful.
+          description: Perform a safety check to estimate if generated images could
+            be offensive or harmful.
           default: true
         seed:
           type: integer
@@ -1102,12 +704,13 @@ components:
         num_inference_steps:
           type: integer
           title: Num Inference Steps
-          description: Number of denoising steps. More steps usually lead to higher quality images but slower inference. Modulated by strength.
+          description: Number of denoising steps. More steps usually lead to higher
+            quality images but slower inference. Modulated by strength.
           default: 25
       type: object
       required:
-        - image
-        - model_id
+      - image
+      - model_id
       title: Body_genImageToVideo
     Body_genLLM:
       properties:
@@ -1140,8 +743,8 @@ components:
           default: false
       type: object
       required:
-        - prompt
-        - model_id
+      - prompt
+      - model_id
       title: Body_genLLM
     Body_genSegmentAnything2:
       properties:
@@ -1158,38 +761,45 @@ components:
         point_coords:
           type: string
           title: Point Coords
-          description: Nx2 array of point prompts to the model, where each point is in (X,Y) in pixels.
+          description: Nx2 array of point prompts to the model, where each point is
+            in (X,Y) in pixels.
         point_labels:
           type: string
           title: Point Labels
-          description: Labels for the point prompts, where 1 indicates a foreground point and 0 indicates a background point.
+          description: Labels for the point prompts, where 1 indicates a foreground
+            point and 0 indicates a background point.
         box:
           type: string
           title: Box
-          description: A length 4 array given as a box prompt to the model, in XYXY format.
+          description: A length 4 array given as a box prompt to the model, in XYXY
+            format.
         mask_input:
           type: string
           title: Mask Input
-          description: A low-resolution mask input to the model, typically from a previous prediction iteration, with the form 1xHxW (H=W=256 for SAM).
+          description: A low-resolution mask input to the model, typically from a
+            previous prediction iteration, with the form 1xHxW (H=W=256 for SAM).
         multimask_output:
           type: boolean
           title: Multimask Output
-          description: If true, the model will return three masks for ambiguous input prompts, often producing better masks than a single prediction.
+          description: If true, the model will return three masks for ambiguous input
+            prompts, often producing better masks than a single prediction.
           default: true
         return_logits:
           type: boolean
           title: Return Logits
-          description: If true, returns un-thresholded mask logits instead of a binary mask.
+          description: If true, returns un-thresholded mask logits instead of a binary
+            mask.
           default: true
         normalize_coords:
           type: boolean
           title: Normalize Coords
-          description: If true, the point coordinates will be normalized to the range [0,1], with point_coords expected to be with respect to image dimensions.
+          description: If true, the point coordinates will be normalized to the range
+            [0,1], with point_coords expected to be with respect to image dimensions.
           default: true
       type: object
       required:
-        - image
-        - model_id
+      - image
+      - model_id
       title: Body_genSegmentAnything2
     Body_genUpscale:
       properties:
@@ -1210,7 +820,8 @@ components:
         safety_check:
           type: boolean
           title: Safety Check
-          description: Perform a safety check to estimate if generated images could be offensive or harmful.
+          description: Perform a safety check to estimate if generated images could
+            be offensive or harmful.
           default: true
         seed:
           type: integer
@@ -1219,23 +830,45 @@ components:
         num_inference_steps:
           type: integer
           title: Num Inference Steps
-          description: Number of denoising steps. More steps usually lead to higher quality images but slower inference. Modulated by strength.
+          description: Number of denoising steps. More steps usually lead to higher
+            quality images but slower inference. Modulated by strength.
           default: 75
       type: object
       required:
-        - prompt
-        - image
-        - model_id
+      - prompt
+      - image
+      - model_id
       title: Body_genUpscale
+    Chunk:
+      properties:
+        timestamp:
+          prefixItems:
+          - type: number
+          - type: number
+          type: array
+          maxItems: 2
+          minItems: 2
+          title: Timestamp
+          description: The timestamp of the chunk.
+        text:
+          type: string
+          title: Text
+          description: The text of the chunk.
+      type: object
+      required:
+      - timestamp
+      - text
+      title: Chunk
+      description: A chunk of text with a timestamp.
     HTTPError:
       properties:
         detail:
           allOf:
-            - $ref: '#/components/schemas/APIError'
+          - $ref: '#/components/schemas/APIError'
           description: Detailed error information.
       type: object
       required:
-        - detail
+      - detail
       title: HTTPError
       description: HTTP error response model.
     HTTPValidationError:
@@ -1257,7 +890,7 @@ components:
           description: The generated images.
       type: object
       required:
-        - images
+      - images
       title: ImageResponse
       description: Response model for image generation.
     ImageToTextResponse:
@@ -1268,7 +901,7 @@ components:
           description: The generated text.
       type: object
       required:
-        - text
+      - text
       title: ImageToTextResponse
       description: Response model for text generation.
     LLMResponse:
@@ -1281,9 +914,34 @@ components:
           title: Tokens Used
       type: object
       required:
-        - response
-        - tokens_used
+      - response
+      - tokens_used
       title: LLMResponse
+    LiveVideoToVideoParams:
+      properties:
+        subscribe_url:
+          type: string
+          title: Subscribe Url
+          description: Source URL of the incoming stream to subscribe to.
+        publish_url:
+          type: string
+          title: Publish Url
+          description: Destination URL of the outgoing stream to publish.
+        model_id:
+          type: string
+          title: Model Id
+          description: Hugging Face model ID used for image generation.
+          default: ''
+        params:
+          type: object
+          title: Params
+          description: Initial parameters for the model.
+      type: object
+      required:
+      - subscribe_url
+      - publish_url
+      - model_id
+      title: LiveVideoToVideoParams
     MasksResponse:
       properties:
         masks:
@@ -1300,9 +958,9 @@ components:
           description: The raw, unnormalized predictions (logits) for the masks.
       type: object
       required:
-        - masks
-        - scores
-        - logits
+      - masks
+      - scores
+      - logits
       title: MasksResponse
       description: Response model for object segmentation.
     Media:
@@ -1321,11 +979,22 @@ components:
           description: Whether the media was flagged as NSFW.
       type: object
       required:
-        - url
-        - seed
-        - nsfw
+      - url
+      - seed
+      - nsfw
       title: Media
       description: A media object containing information about the generated media.
+    MediaURL:
+      properties:
+        url:
+          type: string
+          title: Url
+          description: The URL where the media can be accessed.
+      type: object
+      required:
+      - url
+      title: MediaURL
+      description: A URL from which media can be accessed.
     TextResponse:
       properties:
         text:
@@ -1334,14 +1003,14 @@ components:
           description: The generated text.
         chunks:
           items:
-            $ref: '#/components/schemas/chunk'
+            $ref: '#/components/schemas/Chunk'
           type: array
           title: Chunks
           description: The generated text chunks.
       type: object
       required:
-        - text
-        - chunks
+      - text
+      - chunks
       title: TextResponse
       description: Response model for text generation.
     TextToImageParams:
@@ -1354,12 +1023,15 @@ components:
         loras:
           type: string
           title: Loras
-          description: 'A LoRA (Low-Rank Adaptation) model and its corresponding weight for image generation. Example: { "latent-consistency/lcm-lora-sdxl": 1.0, "nerijs/pixel-art-xl": 1.2}.'
+          description: 'A LoRA (Low-Rank Adaptation) model and its corresponding weight
+            for image generation. Example: { "latent-consistency/lcm-lora-sdxl": 1.0,
+            "nerijs/pixel-art-xl": 1.2}.'
           default: ''
         prompt:
           type: string
           title: Prompt
-          description: Text prompt(s) to guide image generation. Separate multiple prompts with '|' if supported by the model.
+          description: Text prompt(s) to guide image generation. Separate multiple
+            prompts with '|' if supported by the model.
         height:
           type: integer
           title: Height
@@ -1373,17 +1045,20 @@ components:
         guidance_scale:
           type: number
           title: Guidance Scale
-          description: Encourages model to generate images closely linked to the text prompt (higher values may reduce image quality).
+          description: Encourages model to generate images closely linked to the text
+            prompt (higher values may reduce image quality).
           default: 7.5
         negative_prompt:
           type: string
           title: Negative Prompt
-          description: Text prompt(s) to guide what to exclude from image generation. Ignored if guidance_scale < 1.
+          description: Text prompt(s) to guide what to exclude from image generation.
+            Ignored if guidance_scale < 1.
           default: ''
         safety_check:
           type: boolean
           title: Safety Check
-          description: Perform a safety check to estimate if generated images could be offensive or harmful.
+          description: Perform a safety check to estimate if generated images could
+            be offensive or harmful.
           default: true
         seed:
           type: integer
@@ -1392,7 +1067,8 @@ components:
         num_inference_steps:
           type: integer
           title: Num Inference Steps
-          description: Number of denoising steps. More steps usually lead to higher quality images but slower inference. Modulated by strength.
+          description: Number of denoising steps. More steps usually lead to higher
+            quality images but slower inference. Modulated by strength.
           default: 50
         num_images_per_prompt:
           type: integer
@@ -1401,16 +1077,38 @@ components:
           default: 1
       type: object
       required:
-        - prompt
-        - model_id
+      - prompt
+      - model_id
       title: TextToImageParams
+    TextToSpeechParams:
+      properties:
+        model_id:
+          type: string
+          title: Model Id
+          description: Hugging Face model ID used for text to speech generation.
+          default: ''
+        text:
+          type: string
+          title: Text
+          description: Text input for speech generation.
+          default: ''
+        description:
+          type: string
+          title: Description
+          description: Description of speaker to steer text to speech generation.
+          default: A male speaker delivers a slightly expressive and animated speech
+            with a moderate speed and pitch.
+      type: object
+      title: TextToSpeechParams
+      required:
+      - model_id
     ValidationError:
       properties:
         loc:
           items:
             anyOf:
-              - type: string
-              - type: integer
+            - type: string
+            - type: integer
           type: array
           title: Location
         msg:
@@ -1421,9 +1119,9 @@ components:
           title: Error Type
       type: object
       required:
-        - loc
-        - msg
-        - type
+      - loc
+      - msg
+      - type
       title: ValidationError
     VideoResponse:
       properties:
@@ -1435,26 +1133,9 @@ components:
           description: The generated images.
       type: object
       required:
-        - images
+      - images
       title: VideoResponse
       description: Response model for image generation.
-    chunk:
-      properties:
-        timestamp:
-          items: {}
-          type: array
-          title: Timestamp
-          description: The timestamp of the chunk.
-        text:
-          type: string
-          title: Text
-          description: The text of the chunk.
-      type: object
-      required:
-        - timestamp
-        - text
-      title: chunk
-      description: A chunk of text with a timestamp.
   securitySchemes:
     HTTPBearer:
       type: http

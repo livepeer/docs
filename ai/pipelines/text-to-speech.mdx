@@ -1,0 +1,76 @@
+---
+title: Text-to-Speech
+---
+
+## Overview
+
+The text-to-speech endpoint in Livepeer utilizes [Parler-TTS](https://github.com/huggingface/parler-tts), specifically `parler-tts/parler-tts-large-v1`. This model can generate speech with customizable characteristics such as voice type, speaking style, and audio quality.
+
+## Basic Usage Instructions
+
+<Tip>
+  For a detailed understanding of the `text-to-speech` endpoint and to experiment
+  with the API, see the [Livepeer AI API
+  Reference](/ai/api-reference/text-to-speech).
+</Tip>
+
+To use the text-to-speech feature, submit a POST request to the `/text-to-speech` endpoint. Here's an example of how to structure your request:
+
+```bash
+curl -X POST "http://<GATEWAY_IP>/text-to-speech" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "model_id": "parler-tts/parler-tts-large-v1",
+        "text_input": "A cool cat on the beach",
+        "description": "Jon's voice is monotone yet slightly fast in delivery, with a very close recording that almost has no background noise."
+    }'
+```
+
+### Request Parameters
+
+- `model_id`: The ID of the text-to-speech model to use. Currently, this should be set to `"parler-tts/parler-tts-large-v1"`.
+- `text_input`: The text you want to convert to speech.
+- `description`: A description of the desired voice characteristics. This can include details about the speaker's voice, speaking style, and audio quality.
+
+### Voice Customization
+
+You can customize the generated voice by adjusting the `description` parameter. Some aspects you can control include:
+
+- Speaker identity (e.g., "Jon's voice")
+- Speaking style (e.g., "monotone", "expressive")
+- Speaking speed (e.g., "slightly fast")
+- Audio quality (e.g., "very close recording", "no background noise")
+
+The checkpoint was trained on 34 speakers. The full list of available speakers includes: Laura, Gary, Jon, Lea, Karen, Rick, Brenda, David, Eileen, Jordan, Mike, Yann, Joy, James, Eric, Lauren, Rose, Will, Jason, Aaron, Naomie, Alisa, Patrick, Jerry, Tina, Jenna, Bill, Tom, Carol, Barbara, Rebecca, Anna, Bruce, and Emily.
+
+However, the models performed better with certain speakers.  A list of the top 20 speakers for each model variant, ranked by their average speaker similarity scores can be found [here](https://github.com/huggingface/parler-tts/blob/main/INFERENCE.md#speaker-consistency)
+
+## Limitations and Considerations
+
+- The maximum length of the input text may be limited. For long-form content, you will need to split your text into smaller chunks. The training default configuration in parler-tts is max 30sec, max text length 600 characters.
+https://github.com/huggingface/parler-tts/blob/main/training/README.md#3-training
+- While the model supports various voice characteristics, the exact replication of a specific speaker's voice is not guaranteed.
+- The quality of the generated speech can vary based on the complexity of the input text and the specificity of the voice description.
+
+## Orchestrator Configuration
+
+To configure your Orchestrator to serve the `text-to-speech` pipeline, refer to
+the [Orchestrator Configuration](/ai/orchestrators/get-started) guide.
+
+### System Requirements
+
+The following system requirements are recommended for optimal performance:
+
+- [NVIDIA GPU](https://developer.nvidia.com/cuda-gpus) with **at least 12GB** of
+  VRAM.
+
+## API Reference
+
+<Card
+  title="API Reference"
+  icon="rectangle-terminal"
+  href="/ai/api-reference/text-to-speech"
+>
+  Explore the `text-to-speech` endpoint and experiment with the API in the
+  Livepeer AI API Reference.
+</Card>
