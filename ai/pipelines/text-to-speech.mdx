@@ -41,9 +41,14 @@ You can customize the generated voice by adjusting the `description` parameter. 
 - Speaking speed (e.g., "slightly fast")
 - Audio quality (e.g., "very close recording", "no background noise")
 
+The checkpoint was trained on 34 speakers. The full list of available speakers includes: Laura, Gary, Jon, Lea, Karen, Rick, Brenda, David, Eileen, Jordan, Mike, Yann, Joy, James, Eric, Lauren, Rose, Will, Jason, Aaron, Naomie, Alisa, Patrick, Jerry, Tina, Jenna, Bill, Tom, Carol, Barbara, Rebecca, Anna, Bruce, and Emily.
+
+However, the models performed better with certain speakers.  A list of the top 20 speakers for each model variant, ranked by their average speaker similarity scores can be found [here](https://github.com/huggingface/parler-tts/blob/main/INFERENCE.md#speaker-consistency)
+
 ## Limitations and Considerations
 
-- The maximum length of the input text may be limited. For long-form content, you might need to split your text into smaller chunks.
+- The maximum length of the input text may be limited. For long-form content, you will need to split your text into smaller chunks. The training default configuration in parler-tts is max 30sec, max text length 600 characters.
+https://github.com/huggingface/parler-tts/blob/main/training/README.md#3-training
 - While the model supports various voice characteristics, the exact replication of a specific speaker's voice is not guaranteed.
 - The quality of the generated speech can vary based on the complexity of the input text and the specificity of the voice description.
 
