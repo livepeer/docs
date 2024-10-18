@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: Livepeer AI Runner
   description: An application to run AI pipelines
-  version: ''
+  version: v0.7.0
 servers:
   - url: https://dream-gateway.livepeer.cloud
     description: Livepeer Cloud Community Gateway
@@ -541,6 +541,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPError'
+        '415':
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
         '500':
           description: Internal Server Error
           content:
@@ -767,7 +773,7 @@ paths:
       operationId: genLLM
       requestBody:
         content:
-          multipart/form-data:
+          application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Body_genLLM'
         required: true
