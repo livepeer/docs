@@ -30,7 +30,7 @@ curl -G -s https://loki.livepeer.report/loki/api/v1/query \
 
 # logs from all regions between two timestamps (UNIX epoch nanoseconds)
 curl -G -s https://loki.livepeer.report/loki/api/v1/query_range \
-     --data-urlencode "query={region=~\".+\"}" --data 'start=1688043600000000000' --data 'end=1688132768695047984' | jq
+     --data-urlencode "query={region=~\".+\"}" --data 'start=1727335380000000000' --data 'end=1727635380000000000' | jq
 
 # logs from a specific region (e.g. NYC):
 curl -G -s https://loki.livepeer.report/loki/api/v1/query \
@@ -38,8 +38,8 @@ curl -G -s https://loki.livepeer.report/loki/api/v1/query \
 
 # logs related to a specific orchestrator IP-address:
 curl -G -s https://loki.livepeer.report/loki/api/v1/query \
-     --data-urlencode "query={region=~\".+\"} |= \"clientIP=37.228.130.23\"" | jq
+     --data-urlencode "query={region=~\".+\"} |= \"clientIP=121.127.46.156\"" | jq
 
 # list of all possible regions:
-curl -G -s https://loki.livepeer.report/api/prom/label/region/values | jq '.values'
+curl -G -s https://loki.livepeer.report/loki/api/v1/label/region/values | jq '.data'
 ```
