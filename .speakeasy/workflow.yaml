@@ -1,6 +1,16 @@
 workflowVersion: 1.0.0
 speakeasyVersion: latest
 sources:
+    livepeer-ai-api:
+        inputs:
+            - location: https://raw.githubusercontent.com/livepeer/ai-worker/main/runner/gateway.openapi.yaml
+        overlays:
+            - location: https://raw.githubusercontent.com/livepeer/livepeer-ai-js/main/codeSamples.yaml
+            - location: https://raw.githubusercontent.com/livepeer/livepeer-ai-go/main/codeSamples.yaml
+            - location: https://raw.githubusercontent.com/livepeer/livepeer-ai-python/main/codeSamples.yaml
+        output: ai/api-reference/gateway.openapi.yaml
+        registry:
+            location: registry.speakeasyapi.dev/livepeer/livepeer-ai/livepeer-ai-oas
     livepeer-studio-api:
         inputs:
             - location: https://raw.githubusercontent.com/livepeer/studio/master/packages/api/src/schema/api-schema.yaml
@@ -9,17 +19,7 @@ sources:
             - location: https://raw.githubusercontent.com/livepeer/livepeer-js/main/codeSamples.yaml
             - location: https://raw.githubusercontent.com/livepeer/livepeer-go/main/codeSamples.yaml
             - location: https://raw.githubusercontent.com/livepeer/livepeer-python/main/codeSamples.yaml
+        output: openapi.yaml
         registry:
             location: registry.speakeasyapi.dev/livepeer/livepeer-studio/livepeer-studio-api
-        output: openapi.yaml
-    livepeer-ai-api:
-        inputs:
-            - location: https://raw.githubusercontent.com/livepeer/ai-worker/main/runner/gateway.openapi.yaml
-        overlays:
-            - location: https://raw.githubusercontent.com/livepeer/livepeer-ai-js/main/codeSamples.yaml
-            - location: https://raw.githubusercontent.com/livepeer/livepeer-ai-go/main/codeSamples.yaml
-            - location: https://raw.githubusercontent.com/livepeer/livepeer-ai-python/main/codeSamples.yaml
-        registry:
-            location: registry.speakeasyapi.dev/livepeer/livepeer-ai/livepeer-ai-oas
-        output: ai/api-reference/gateway.openapi.yaml
 targets: {}
