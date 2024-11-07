@@ -16,13 +16,12 @@ to the Livepeer AI network and earn fees for processing AI inference jobs.
 
 ## Ensure you can Redeem Tickets
 
-Since the Livepeer AI network is in its **Beta** phase,
-[its software](https://github.com/livepeer/go-livepeer/tree/ai-video) isn't
-integrated with the Mainnet Transcoding Network
-[software stack](https://github.com/livepeer/go-livepeer) yet. This means that
+The Livepeer AI network is currently in **Beta** but is already integrated into
+the main [go-livepeer](https://github.com/livepeer/go-livepeer) software.
+However, it still uses a separate port for the AI Orchestrator. This means that
 your **Mainnet Transcoding Network Orchestrator** is currently unable to
-directly redeem AI-related tickets. However, there are two methods to enable
-your AI Orchestrator node to redeem tickets:
+directly redeem AI-related tickets. There are two methods to enable your AI
+Orchestrator node to redeem tickets:
 
 <Tabs>
   <Tab title="Set Ticket Recipient (recommended)">
@@ -158,6 +157,8 @@ network. The commands to start the AI Orchestrator are similar to those for the
 [off-chain Orchestrator](/ai/orchestrators/start-orchestrator), but with
 additional flags to enable on-chain functionality:
 
+- `-AIServiceRegistry`: Ensures that the Gateway is connected to the Livepeer AI
+  network.
 - `-network=arbitrum-one-mainnet`: Connects the AI Orchestrator node to the
   Arbitrum Mainnet network.
 - `-ethUrl=https://arb1.arbitrum.io/rpc`: Sets the Arbitrum Mainnet RPC URL. You

@@ -8,18 +8,12 @@ title: Start your AI Orchestrator
   or Gateway node may cause stability issues. Please proceed with caution.
 </Warning>
 
-The Livepeer AI network is not yet integrated into the main
-[go-livepeer](https://github.com/livepeer/go-livepeer) software due to its
-**Beta** status. To equip your Orchestrator node with AI inference capabilities,
-please use the `ai-video` branch of
-[go-livepeer](https://github.com/livepeer/go-livepeer/tree/ai-video). This
-branch contains the necessary software for the AI Orchestrator. Currently, there
-are two methods to run the Livepeer AI network software:
+The Livepeer AI network is currently in **Beta** but is already integrated into
+the main [go-livepeer](https://github.com/livepeer/go-livepeer) software. You
+can run the Livepeer AI software using one of the following methods:
 
-- **Docker**: This is the most straightforward and recommended method to run the
-  AI Orchestrator node.
-- **Pre-built Binaries**: Pre-built binaries are available if you prefer not to
-  use Docker.
+- **Docker** (Recommended): The simplest and preferred method.
+- **Pre-built Binaries**: An alternative if you prefer not to use Docker.
 
 ## Orchestrator Node Architecture
 
@@ -51,7 +45,7 @@ Please follow the steps below to start your **combined AI orchestrator** node.
                 Fetch the latest Livepeer AI Docker image from the [Livepeer Docker Hub](https://hub.docker.com/r/livepeer/go-livepeer) with the following command:
 
                 ```bash
-                docker pull livepeer/go-livepeer:ai-video
+                docker pull livepeer/go-livepeer:master
                 ```
             </Step>
             <Step title="Fetch the Latest AI Runner Docker Image">
@@ -95,7 +89,7 @@ Please follow the steps below to start your **combined AI orchestrator** node.
                     -v /var/run/docker.sock:/var/run/docker.sock \
                     --network host \
                     --gpus all \
-                    livepeer/go-livepeer:ai-video \
+                    livepeer/go-livepeer:master \
                     -orchestrator \
                     -transcoder \
                     -serviceAddr 0.0.0.0:8936 \
@@ -139,13 +133,13 @@ Please follow the steps below to start your **combined AI orchestrator** node.
                 Download the latest Livepeer AI binary for your system:
 
                 ```bash
-                wget https://build.livepeer.live/go-livepeer/ai-video/stable/livepeer-<OS>-gpu-<ARCH>.tar.gz
+                wget https://build.livepeer.live/go-livepeer/livepeer-<OS>-gpu-<ARCH>.tar.gz
                 ```
 
                 Replace `<OS>` and `<ARCH>` with your system's operating system and architecture. For example, for a Linux system with an AMD64 architecture, the command would be:
 
                 ```bash
-                wget https://build.livepeer.live/go-livepeer/ai-video/stable/livepeer-linux-gpu-amd64.tar.gz
+                wget https://build.livepeer.live/go-livepeer/livepeer-linux-gpu-amd64.tar.gz
                 ```
 
                 See the [go-livepeer installation guide](/orchestrators/guides/install-go-livepeer#install-using-a-binary-release) for more information on the available binaries.
@@ -225,7 +219,7 @@ Please follow the steps below to start your **combined AI orchestrator** node.
             </Step>
         </Steps>
         <Note>
-            If no binaries are available for your system, you can build the [ai-video branch](https://github.com/livepeer/go-livepeer/tree/ai-video) of [go-livepeer](https://github.com/livepeer/go-livepeer) from source by following the instructions in the [Livepeer repository](/orchestrators/guides/install-go-livepeer) or by reaching out to the Livepeer community on [Discord](https://discord.gg/livepeer).
+            If no binaries are available for your system, you can build the [master branch](https://github.com/livepeer/go-livepeer/tree/master) of [go-livepeer](https://github.com/livepeer/go-livepeer) from source by following the instructions in the [Livepeer repository](/orchestrators/guides/install-go-livepeer) or by reaching out to the Livepeer community on [Discord](https://discord.gg/livepeer).
         </Note>
     </Tab>
 
