@@ -3,10 +3,9 @@ title: Start your AI Orchestrator
 ---
 
 <Warning>
-  The Livepeer AI network is currently in its **Beta** stage and is
-  undergoing active development. Running it on the same machine as your main
-  Orchestrator or Gateway node may cause stability issues. Please proceed with
-  caution.
+  The Livepeer AI network is currently in its **Beta** stage and is undergoing
+  active development. Running it on the same machine as your main Orchestrator
+  or Gateway node may cause stability issues. Please proceed with caution.
 </Warning>
 
 The Livepeer AI network is not yet integrated into the main
@@ -22,9 +21,28 @@ are two methods to run the Livepeer AI network software:
 - **Pre-built Binaries**: Pre-built binaries are available if you prefer not to
   use Docker.
 
-## Start the AI Orchestrator
+## Orchestrator Node Architecture
 
-Please follow the steps below to start your Livepeer AI Orchestrator node:
+In the Livepeer AI network, orchestrator operations rely on two primary **node
+types**:
+
+- **Orchestrator**: Manages and routes incoming jobs to available compute
+  resources.
+- **Worker**: Performs the actual computation tasks.
+
+The simplest configuration combines both roles on a single machine, utilizing
+the machine's GPUs for AI inference tasks, where the orchestrator also functions
+as a worker (known as a **combined AI orchestrator**). In this setup, capacity
+is limited by the available GPUs and is set as
+`runner container count per pipeline/model_id = capacity per pipeline/model_id`.
+For expanded scalability, operators can deploy dedicated (remote) worker nodes
+that connect to the orchestrator, increasing overall compute capacity.
+Instructions for setting up remote workers are available on the
+[next page](/ai/orchestrators/ai-worker).
+
+## Start a Combined AI Orchestrator
+
+Please follow the steps below to start your **combined AI orchestrator** node.
 
 <Tabs>
     <Tab title="Use Docker (Recommended)">
@@ -49,7 +67,6 @@ Please follow the steps below to start your Livepeer AI Orchestrator node:
                 ```bash
                 docker pull livepeer/ai-runner:segment-anything-2
                 ```
-
             </Step>
             <Step title="Verify the AI Models are Available">
                 The Livepeer AI network leverages pre-trained AI models for inference tasks. Before launching the AI Orchestrator node, verify that the weights of these models are accessible on your machine. For more information, visit the [Download AI Models](/ai/orchestrators/models-download) page.
@@ -86,7 +103,8 @@ Please follow the steps below to start your Livepeer AI Orchestrator node:
                     -nvidia "all" \
                     -aiWorker \
                     -aiModels /root/.lpData/aiModels.json \
-                    -aiModelsDir ~/.lpData/models
+                    -aiModelsDir ~/.lpData/models \
+                    -aiRunnerImage livepeer/ai-runner:latest # OPTIONAL
                 ```
 
                 This command launches an **off-chain** AI Orchestrator node. While most of the commands are similar to those used when operating a Mainnet Transcoding Network Orchestrator node (explained in the [go-livepeer CLI reference](/references/go-livepeer/cli-reference)), there are a few **Livepeer AI** specific flags:
@@ -180,12 +198,11 @@ Please follow the steps below to start your Livepeer AI Orchestrator node:
                     -nvidia "all" \
                     -aiWorker \
                     -aiModels ~/.lpData/aiModels.json \
-                    -aiModelsDir ~/.lpData/models
+                    -aiModelsDir ~/.lpData/models \
+                    -aiRunnerImage livepeer/ai-runner:latest # OPTIONAL
                 ```
 
-                This command launches an **off-chain** AI Orchestrator node. While most of the commands are similar to those used when operating a Mainnet Transcoding Network Orchestrator node (explained in the [go-livepeer CLI reference](/references/go-livepeer/cli-reference)), there
-
-are a few **Livepeer AI** specific flags:
+                This command launches an **off-chain** AI Orchestrator node. While most of the commands are similar to those used when operating a Mainnet Transcoding Network Orchestrator node (explained in the [go-livepeer CLI reference](/references/go-livepeer/cli-reference)), there are a few **Livepeer AI** specific flags:
 
                 - `-aiWorker`: This flag enables the AI Worker functionality.
                 - `-aiModels`: This flag sets the path to the JSON file that contains the AI models.
@@ -214,48 +231,77 @@ are a few **Livepeer AI** specific flags:
 
 </Tabs>
 
-## Confirm the AI Orchestrator is Operational
+## Verify Combined AI Orchestrator Operation
 
-Once the Livepeer AI Orchestrator node is up and running, validate its
-operation by sending an AI inference request directly to the
-[ai-runner](https://hub.docker.com/r/livepeer/ai-runner) container. The most
-straightforward way to do this is through the
-[Swagger UI](https://fastapi.tiangolo.com/features/) interface, accessible at
-`http://localhost:8000/docs` if you have loaded the `text-to-image` pipeline.
-Note that other pipelines will have different endpoints.
+Once your **combined Livepeer AI Orchestrator** node is running, verify that the
+worker is operational by sending an AI inference request directly to the
+[ai-runner](https://hub.docker.com/r/livepeer/ai-runner) container. You can
+either use the [Swagger UI](https://fastapi.tiangolo.com/features/) interface or
+a `curl` command for this check.
 
-![Swagger UI interface](/images/ai/swagger_ui.png)
+<Tabs>
+    <Tab title="Use Swagger UI">
+        <Steps>
+            <Step title="Access the Swagger UI">
+                Open your web browser and navigate to `http://localhost:8000/docs` to access the Swagger UI interface.
+            </Step>
+            <Step title="Initiate an Inference Request">
+                In the Swagger UI, locate the `POST /text-to-image` endpoint and click the `Try it out` button. Use the following example JSON payload:
 
-<Steps>
-    <Step title="Access the Swagger UI">
-        Navigate to `http://localhost:8000/docs` in your web browser to open the Swagger UI interface.
-    </Step>
-    <Step title="Initiate an Inference Request">
-        Initiate an inference request to the `POST /text-to-image` endpoint by clicking the `Try it out` button. Use the following example JSON payload:
-
-        ```json
-        {
-            "prompt": "A cool cat on the beach."
-        }
-        ```
-
-        This request will instruct the AI model to generate an image based on the text in the `prompt` field.
-    </Step>
-    <Step title="Inspect the Inference Response">
-        If the AI Orchestrator node is functioning correctly, you should receive a response similar to the following:
-
-        ```json
-        {
-            "images": [
+                ```json
                 {
-                    "url": "data:image/png;base64,iVBORw0KGgoAA...",
-                    "seed": 2724904334
+                    "prompt": "A cool cat on the beach."
                 }
-            ]
-        }
-        ```
+                ```
 
-        The `url` field contains the base64 encoded image generated by the AI model. To convert this image to a png, use a base64 decoder such as [Base64.guru](https://base64.guru/converter/decode/image/png).
-    </Step>
+                This request will instruct the AI model to generate an image based on the text in the `prompt` field.
+            </Step>
+            <Step title="Inspect the Inference Response">
+                If the AI Orchestrator node is functioning correctly, you should receive a response similar to the following:
 
-</Steps>
+                ```json
+                {
+                    "images": [
+                        {
+                            "url": "data:image/png;base64,iVBORw0KGgoAA...",
+                            "seed": 2724904334
+                        }
+                    ]
+                }
+                ```
+
+                The `url` field contains the base64 encoded image generated by the AI model. To convert this image to PNG, use a base64 decoder such as [Base64.guru](https://base64.guru/converter/decode/image/png).
+            </Step>
+        </Steps>
+    </Tab>
+    <Tab title="Use curl Command">
+        <Steps>
+            <Step title="Send an Inference Request with curl">
+                Alternatively, you can use the `curl` command to test the AI inference capabilities directly. Run the following command, replacing `<WORKER_NODE_IP>` with the IP address of your worker node:
+
+                ```bash
+                curl -X POST "http://localost:8000/text-to-image" -H "Content-Type: application/json" -d '{"prompt": "A cool cat on the beach."}'
+                ```
+
+                This sends a POST request to the `text-to-image` endpoint on the worker node with the specified JSON payload.
+            </Step>
+            <Step title="Inspect the Response">
+                If the AI Worker node is functioning correctly, you should receive a response similar to this:
+
+                ```json
+                {
+                    "images": [
+                        {
+                            "url": "data:image/png;base64,iVBORw0KGgoAA...",
+                            "seed": 2724904334
+                        }
+                    ]
+                }
+                ```
+
+                As with the Swagger UI response, the `url` field contains a base64 encoded image that can be decoded into PNG format using a tool like [Base64.guru](https://base64.guru/converter/decode/image/png).
+            </Step>
+        </Steps>
+    </Tab>
+
+</Tabs>

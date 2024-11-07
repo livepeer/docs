@@ -1,0 +1,140 @@
+---
+title: Attach Remote AI Workers
+---
+
+## Introduction
+
+The **AI Worker** is a crucial component of the Livepeer AI network, responsible
+for performing AI inference tasks. It can be run as a separate process on
+compute machines distinct from the Orchestrator or combined with the
+Orchestrator on the same machine.
+
+## Key Setup Considerations
+
+- **Startup Configuration**: If you decide to use separate AI Workers, this
+  **must** be selected at the Orchestrator's startup. A combined Orchestrator
+  **cannot** simultaneously support remote AI Workers.
+- **Shared Configuration File**: Both the Orchestrator and AI Workers use the
+  `aiModels.json` file (see
+  [Configuring AI Models](/ai/orchestrators/models-config)).
+  - The **Orchestrator** uses `aiModels.json` to set model pricing.
+  - The **AI Worker** uses it to manage the runner containers for each model.
+
+## Remote AI Worker Setup
+
+<Warning>
+  When using experimental external runner containers, ensure they connect to the
+  AI Worker and not directly to the Orchestrator.
+</Warning>
+
+In a split configuration, the Orchestrator manages multiple AI Workers and
+allocates tasks based on the connected workers' capacity. Worker **capacity** is
+determined by the following formula:
+
+```
+runner container count per pipeline/model_id = capacity per pipeline/model_id
+```
+
+The **Orchestrator's capacity** is the sum of the capacities of all connected AI
+Workers. This setup enables flexible scaling of compute resources by adding or
+removing AI Workers as needed.
+
+### Launch Commands for Remote AI Worker
+
+Below are the launch commands for both the Orchestrator and AI Worker nodes.
+
+<Info>
+  For the full Orchestrator launch command, see [Start Your AI
+  Orchestrator](/ai/orchestrators/start-orchestrator).
+</Info>
+
+<Accordion title="Show Launch Commands">
+
+#### Orchestrator Command
+
+```bash
+docker run \
+    --name livepeer_ai_orchestrator \
+    ...
+    -orchestrator \
+    ...
+    -aiModels /root/.lpData/aiModels.json
+```
+
+#### AI Worker Command
+
+```bash
+docker run \
+    --name livepeer_ai_worker \
+    -aiWorker \
+    -orchAddr [Orchestrator service address] \
+    -orchSecret [Orchestrator secret key] \
+    -nvidia "all" \
+    -v 6 \
+    -aiModels /root/.lpData/aiModels.json \
+    -aiModelsDir /root/.lpData/models \
+    -testTranscoder=false \
+    -aiRunnerImage livepeer/ai-runner:latest # Optional
+```
+
+<Info>
+  **Pricing**: Prices in this example may vary and should be adjusted based on
+  market research and the operational costs of providing compute.
+</Info>
+
+</Accordion>
+
+### Configuration Files (`aiModels.json`)
+
+The `aiModels.json` file configures AI model parameters separately for the
+Orchestrator and the AI Worker, with each configuration tailored to the specific
+needs of that node.
+
+<Info>
+  For detailed guidance on configuring `aiModels.json` with advanced model
+  settings, see [Configuring AI Models](/ai/orchestrators/models-config).
+</Info>
+
+<Accordion title="Show Configuration Examples">
+
+#### Orchestrator Configuration
+
+```json
+[
+  {
+    "pipeline": "text-to-image",
+    "model_id": "SG161222/RealVisXL_V4.0_Lightning",
+    "price_per_unit": 4768371,
+    "pixels_per_unit": 1
+  }
+]
+```
+
+#### AI Worker Configuration
+
+```json
+[
+  {
+    "pipeline": "text-to-image",
+    "model_id": "SG161222/RealVisXL_V4.0_Lightning",
+    "warm": true,
+    "optimization_flags": {
+      "SFAST": true
+    }
+  }
+]
+```
+
+</Accordion>
+
+## Verifying Remote AI Worker Operation
+
+After starting your **remote AI Worker** node, you can verify it is operational
+by following the same inference test instructions used for the Orchestrator, as
+described in the
+[Orchestrator Confirmation Section](/ai/orchestrators/start-orchestrator#confirm-combined-ai-orchestrator-operation).
+
+<Note>
+  When accessing the AI Runner from a separate machine, replace `localhost` with
+  the **Worker Node's IP address** in the inference test instructions.
+</Note>
