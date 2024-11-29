@@ -74,16 +74,17 @@ currently **recommended** models and their respective prices.
   Optional flags to enhance performance (details below).
 </ParamField>
 <ParamField path="url" type="string" optional="true">
-  Optional URL and port where the model container or custom container manager software is running.  
-  [See External Containers](#external-containers)
+  Optional URL and port where the model container or custom container manager
+  software is running. [See External Containers](#external-containers)
 </ParamField>
 <ParamField path="token" type="string">
-  Optional token required to interact with the model container or custom container manager software.  
-  [See External Containers](#external-containers)
+  Optional token required to interact with the model container or custom
+  container manager software. [See External Containers](#external-containers)
 </ParamField>
 <ParamField path="capacity" type="integer">
-  Optional capacity of the model. This is the number of inference tasks the model can handle at the same time. This defaults to 1.  
-  [See External Containers](#external-containers)
+  Optional capacity of the model. This is the number of inference tasks the
+  model can handle at the same time. This defaults to 1. [See External
+  Containers](#external-containers)
 </ParamField>
 
 ### Optimization Flags
@@ -130,33 +131,43 @@ are available:
 ### External Containers
 
 <Warning>
-  This feature is intended for advanced users. Incorrect setup can lead to a
-  lower orchestrator score and reduced fees. If external containers are used, 
-  it is the Orchestrator's responsibility to ensure the correct container with 
-  the correct endpoints is running behind the specified `url`. 
+  This feature is intended for **advanced** users. Misconfiguration can reduce
+  orchestrator scores and earnings. Orchestrators are responsible for ensuring
+  the specified `url` points to a properly configured and operational container
+  with the correct endpoints.
 </Warning>
 
-External containers can be for one model to stack on top of managed model containers, 
-an auto-scaling GPU cluster behind a load balancer or anything in between. Orchestrators
-can use external containers to extend the models served or fully replace the AI Worker managed model containers
-using the [Docker client Go library](https://pkg.go.dev/github.com/docker/docker/client)
-to start and stop containers specified at startup of the AI Worker. 
-  
-External containers can be used by specifying the `url`, `capacity` and `token` fields in the
-model configuration. The only requirement is that the `url` specified responds as expected to the AI Worker same
-as the managed containers would respond (including http error codes). As long as the container management software
-acts as a pass through to the model container you can use any container management software to implement the custom 
-management of the runner containers including [Kubernetes](https://kubernetes.io/), [Podman](https://podman.io/), 
-[Docker Swarm](https://docs.docker.com/engine/swarm/), [Nomad](https://www.nomadproject.io/), or custom scripts to 
-manage container lifecycles based on request volume
+The
+[AI Worker](/ai/orchestrators/start-orchestrator#orchestrator-node-architecture)
+typically manages model containers automatically using a
+[Docker client](https://pkg.go.dev/github.com/docker/docker/client) to start and
+stop containers at startup. However, orchestrators with unique infrastructure
+needs can use external containers to extend or replace managed containers. These
+setups can range from individual models to more complex configurations, such as
+an auto-scaling GPU cluster behind a load balancer.
 
+To configure external containers, include the `url`, `capacity`, and optionally
+the `token` fields in the model configuration.
 
-- The `url` set will be used to confirm a model container is running at startup of the AI Worker using the `/health` endpoint. 
-  Inference requests will be forwarded to the `url` same as they are to the managed containers after startup.
-- The `capacity` should be set to the maximum amount of requests that can be processed concurrently for the pipeline/model id (default is 1).
-  If auto scaling containers, take care that the startup time is fast if setting `warm: true` because slow response time will 
-  negatively impact your selection by Gateways for future requests.
-- The `token` field is used to secure the model container `url` from unauthorized access and is strongly
-  suggested to use if the containers are exposed to external networks.
+- The `url` is used to confirm that the model container is running during AI
+  Worker startup via the `/health` endpoint. After validation, inference
+  requests are forwarded to the `url` for processing, just like with managed
+  containers.
+- The `capacity` determines the maximum number of concurrent requests the
+  container can handle, with a default value of 1. For auto-scaling setups, it
+  is essential to ensure containers start quickly by setting `warm: true`
+  because slow startups can negatively impact Gateway selection for future
+  requests.
+- The `token` is an optional field used to secure the `url`. It is strongly
+  recommended for protecting endpoints exposed to external networks from
+  unauthorized access.
 
-We welcome feedback to improve this feature, so please reach out to us if you have suggestions to enable better experience running external containers.
+As long as the custom container management logic acts as a pass-through to the
+model container, orchestrators can use container management software like
+[Kubernetes](https://kubernetes.io/), [Podman](https://podman.io/),
+[Docker Swarm](https://docs.docker.com/engine/swarm/),
+[Nomad](https://www.nomadproject.io/), or custom scripts designed to manage
+container lifecycles based on request volume.
+
+We welcome feedback to improve this feature, so please reach out to us if you
+have suggestions to enable better experience running external containers.
