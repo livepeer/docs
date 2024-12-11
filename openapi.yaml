@@ -2792,6 +2792,12 @@ components:
           title: Model Id
           description: Hugging Face model ID used for transcription.
           default: openai/whisper-large-v3
+        return_timestamps:
+          type: string
+          title: Return Timestamps
+          description: >-
+            Return timestamps for the transcribed text. Supported values: 'sentence', 'word', or a string boolean ('true' or 'false'). Default is 'true' ('sentence'). 'false' means no timestamps. 'word' means word-based timestamps.
+          default: 'true'
       type: object
       required:
         - audio
@@ -3055,6 +3061,23 @@ components:
         - image
       title: Body_genUpscale
       additionalProperties: false
+    Chunk:
+      properties:
+        timestamp:
+          items: {}
+          type: array
+          title: Timestamp
+          description: The timestamp of the chunk.
+        text:
+          type: string
+          title: Text
+          description: The text of the chunk.
+      type: object
+      required:
+        - timestamp
+        - text
+      title: Chunk
+      description: A chunk of text with a timestamp.
     HTTPError:
       properties:
         detail:
@@ -3151,7 +3174,7 @@ components:
           description: The generated text.
         chunks:
           items:
-            $ref: '#/components/schemas/chunk'
+            $ref: '#/components/schemas/Chunk'
           type: array
           title: Chunks
           description: The generated text chunks.
@@ -3261,23 +3284,6 @@ components:
         - images
       title: VideoResponse
       description: Response model for image generation.
-    chunk:
-      properties:
-        timestamp:
-          items: {}
-          type: array
-          title: Timestamp
-          description: The timestamp of the chunk.
-        text:
-          type: string
-          title: Text
-          description: The text of the chunk.
-      type: object
-      required:
-        - timestamp
-        - text
-      title: chunk
-      description: A chunk of text with a timestamp.
     studio-api-error:
       type: object
       properties:
@@ -3332,7 +3338,97 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: createStream
-          source: "import { Livepeer } from \"livepeer\";\nimport { Profile, TranscodeProfileEncoder, TranscodeProfileProfile, Type } from \"livepeer/models/components\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.stream.create({\n    name: \"test_stream\",\n    pull: {\n      source: \"https://myservice.com/live/stream.flv\",\n      headers: {\n        \"Authorization\": \"Bearer 123\",\n      },\n      location: {\n        lat: 39.739,\n        lon: -104.988,\n      },\n    },\n    playbackPolicy: {\n      type: Type.Webhook,\n      webhookId: \"1bde4o2i6xycudoy\",\n      webhookContext: {\n        \"streamerId\": \"my-custom-id\",\n      },\n      refreshInterval: 600,\n    },\n    profiles: [\n      {\n        width: 1280,\n        name: \"720p\",\n        height: 720,\n        bitrate: 3000000,\n        fps: 30,\n        fpsDen: 1,\n        quality: 23,\n        gop: \"2\",\n        profile: Profile.H264Baseline,\n      },\n    ],\n    record: false,\n    recordingSpec: {\n      profiles: [\n        {\n          width: 1280,\n          name: \"720p\",\n          height: 720,\n          bitrate: 3000000,\n          quality: 23,\n          fps: 30,\n          fpsDen: 1,\n          gop: \"2\",\n          profile: TranscodeProfileProfile.H264Baseline,\n          encoder: TranscodeProfileEncoder.H264,\n        },\n      ],\n    },\n    multistream: {\n      targets: [\n        {\n          profile: \"720p\",\n          videoOnly: false,\n          id: \"PUSH123\",\n          spec: {\n            name: \"My target\",\n            url: \"rtmps://live.my-service.tv/channel/secretKey\",\n          },\n        },\n      ],\n    },\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+            import { Profile, TranscodeProfileEncoder, TranscodeProfileProfile, Type } from "livepeer/models/components";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.stream.create({
+                name: "test_stream",
+                pull: {
+                  source: "https://myservice.com/live/stream.flv",
+                  headers: {
+                    "Authorization": "Bearer 123",
+                  },
+                  location: {
+                    lat: 39.739,
+                    lon: -104.988,
+                  },
+                },
+                playbackPolicy: {
+                  type: Type.Webhook,
+                  webhookId: "1bde4o2i6xycudoy",
+                  webhookContext: {
+                    "streamerId": "my-custom-id",
+                  },
+                  refreshInterval: 600,
+                },
+                profiles: [
+                  {
+                    width: 1280,
+                    name: "720p",
+                    height: 720,
+                    bitrate: 3000000,
+                    fps: 30,
+                    fpsDen: 1,
+                    quality: 23,
+                    gop: "2",
+                    profile: Profile.H264Baseline,
+                  },
+                ],
+                record: false,
+                recordingSpec: {
+                  profiles: [
+                    {
+                      width: 1280,
+                      name: "720p",
+                      height: 720,
+                      bitrate: 3000000,
+                      quality: 23,
+                      fps: 30,
+                      fpsDen: 1,
+                      gop: "2",
+                      profile: TranscodeProfileProfile.H264Baseline,
+                      encoder: TranscodeProfileEncoder.H264,
+                    },
+                    {
+                      width: 1280,
+                      name: "720p",
+                      height: 720,
+                      bitrate: 3000000,
+                      quality: 23,
+                      fps: 30,
+                      fpsDen: 1,
+                      gop: "2",
+                      profile: TranscodeProfileProfile.H264Baseline,
+                      encoder: TranscodeProfileEncoder.H264,
+                    },
+                  ],
+                },
+                multistream: {
+                  targets: [
+                    {
+                      profile: "720p0",
+                      videoOnly: false,
+                      id: "PUSH123",
+                      spec: {
+                        name: "My target",
+                        url: "rtmps://live.my-service.tv/channel/secretKey",
+                      },
+                    },
+                  ],
+                },
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: createStream
           source: |-
@@ -3530,7 +3626,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getStreams
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.stream.getAll();\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.stream.getAll();
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getStreams
           source: |-
@@ -3601,7 +3711,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getStream
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.stream.get(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.stream.get("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getStream
           source: |-
@@ -3665,7 +3789,109 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: updateStream
-          source: "import { Livepeer } from \"livepeer\";\nimport { Profile, TranscodeProfileEncoder, TranscodeProfileProfile, Type } from \"livepeer/models/components\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.stream.update(\"<id>\", {\n    record: false,\n    multistream: {\n      targets: [\n        {\n          profile: \"720p\",\n          videoOnly: false,\n          id: \"PUSH123\",\n          spec: {\n            name: \"My target\",\n            url: \"rtmps://live.my-service.tv/channel/secretKey\",\n          },\n        },\n      ],\n    },\n    playbackPolicy: {\n      type: Type.Webhook,\n      webhookId: \"1bde4o2i6xycudoy\",\n      webhookContext: {\n        \"streamerId\": \"my-custom-id\",\n      },\n      refreshInterval: 600,\n    },\n    profiles: [\n      {\n        width: 1280,\n        name: \"720p\",\n        height: 720,\n        bitrate: 3000000,\n        fps: 30,\n        fpsDen: 1,\n        quality: 23,\n        gop: \"2\",\n        profile: Profile.H264Baseline,\n      },\n    ],\n    recordingSpec: {\n      profiles: [\n        {\n          width: 1280,\n          name: \"720p\",\n          height: 720,\n          bitrate: 3000000,\n          quality: 23,\n          fps: 30,\n          fpsDen: 1,\n          gop: \"2\",\n          profile: TranscodeProfileProfile.H264Baseline,\n          encoder: TranscodeProfileEncoder.H264,\n        },\n      ],\n    },\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+            import { Profile, TranscodeProfileEncoder, TranscodeProfileProfile, Type } from "livepeer/models/components";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.stream.update({
+                record: false,
+                multistream: {
+                  targets: [
+                    {
+                      profile: "720p0",
+                      videoOnly: false,
+                      id: "PUSH123",
+                      spec: {
+                        name: "My target",
+                        url: "rtmps://live.my-service.tv/channel/secretKey",
+                      },
+                    },
+                  ],
+                },
+                playbackPolicy: {
+                  type: Type.Webhook,
+                  webhookId: "1bde4o2i6xycudoy",
+                  webhookContext: {
+                    "streamerId": "my-custom-id",
+                  },
+                  refreshInterval: 600,
+                },
+                profiles: [
+                  {
+                    width: 1280,
+                    name: "720p",
+                    height: 720,
+                    bitrate: 3000000,
+                    fps: 30,
+                    fpsDen: 1,
+                    quality: 23,
+                    gop: "2",
+                    profile: Profile.H264Baseline,
+                  },
+                  {
+                    width: 1280,
+                    name: "720p",
+                    height: 720,
+                    bitrate: 3000000,
+                    fps: 30,
+                    fpsDen: 1,
+                    quality: 23,
+                    gop: "2",
+                    profile: Profile.H264Baseline,
+                  },
+                  {
+                    width: 1280,
+                    name: "720p",
+                    height: 720,
+                    bitrate: 3000000,
+                    fps: 30,
+                    fpsDen: 1,
+                    quality: 23,
+                    gop: "2",
+                    profile: Profile.H264Baseline,
+                  },
+                ],
+                recordingSpec: {
+                  profiles: [
+                    {
+                      width: 1280,
+                      name: "720p",
+                      height: 720,
+                      bitrate: 3000000,
+                      quality: 23,
+                      fps: 30,
+                      fpsDen: 1,
+                      gop: "2",
+                      profile: TranscodeProfileProfile.H264Baseline,
+                      encoder: TranscodeProfileEncoder.H264,
+                    },
+                    {
+                      width: 1280,
+                      name: "720p",
+                      height: 720,
+                      bitrate: 3000000,
+                      quality: 23,
+                      fps: 30,
+                      fpsDen: 1,
+                      gop: "2",
+                      profile: TranscodeProfileProfile.H264Baseline,
+                      encoder: TranscodeProfileEncoder.H264,
+                    },
+                  ],
+                },
+                name: "test_stream",
+              }, "<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: updateStream
           source: |-
@@ -3841,7 +4067,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: deleteStream
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.stream.delete(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.stream.delete("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: deleteStream
           source: |-
@@ -3916,7 +4156,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: terminateStream
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.stream.terminate(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.stream.terminate("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: terminateStream
           source: |-
@@ -3990,7 +4244,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: startPullStream
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.stream.startPull(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.stream.startPull("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: startPullStream
           source: |-
@@ -4056,7 +4324,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getMultistreamTargets
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.multistream.getAll();\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.multistream.getAll();
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getMultistreamTargets
           source: |-
@@ -4125,7 +4407,23 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: createMultistreamTarget
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.multistream.create({\n    url: \"rtmps://live.my-service.tv/channel/secretKey\",\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.multistream.create({
+                url: "rtmps://live.my-service.tv/channel/secretKey",
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: createMultistreamTarget
           source: |-
@@ -4201,7 +4499,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getMultistreamTarget
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.multistream.get(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.multistream.get("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getMultistreamTarget
           source: |-
@@ -4265,7 +4577,23 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: updateMultistreamTarget
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.multistream.update(\"<id>\", {\n    url: \"rtmps://live.my-service.tv/channel/secretKey\",\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.multistream.update({
+                url: "rtmps://live.my-service.tv/channel/secretKey",
+              }, "<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: updateMultistreamTarget
           source: |-
@@ -4331,7 +4659,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: deleteMultistreamTarget
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.multistream.delete(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.multistream.delete("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: deleteMultistreamTarget
           source: |-
@@ -4397,7 +4739,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getWebhooks
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.webhook.getAll();\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.webhook.getAll();
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getWebhooks
           source: |-
@@ -4469,7 +4825,32 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: createWebhook
-          source: "import { Livepeer } from \"livepeer\";\nimport { Events } from \"livepeer/models/components\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.webhook.create({\n    name: \"test_webhook\",\n    projectId: \"aac12556-4d65-4d34-9fb6-d1f0985eb0a9\",\n    events: [\n      Events.StreamStarted,\n      Events.StreamIdle,\n    ],\n    url: \"https://my-service.com/webhook\",\n    sharedSecret: \"my-secret\",\n    streamId: \"de7818e7-610a-4057-8f6f-b785dc1e6f88\",\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+            import { Events } from "livepeer/models/components";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.webhook.create({
+                name: "test_webhook",
+                projectId: "aac12556-4d65-4d34-9fb6-d1f0985eb0a9",
+                events: [
+                  Events.StreamStarted,
+                  Events.StreamIdle,
+                ],
+                url: "https://my-service.com/webhook",
+                sharedSecret: "my-secret",
+                streamId: "de7818e7-610a-4057-8f6f-b785dc1e6f88",
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: createWebhook
           source: |-
@@ -4561,7 +4942,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getWebhook
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.webhook.get(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.webhook.get("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getWebhook
           source: |-
@@ -4636,7 +5031,32 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: updateWebhook
-          source: "import { Livepeer } from \"livepeer\";\nimport { Events } from \"livepeer/models/components\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.webhook.update(\"<id>\", {\n    name: \"test_webhook\",\n    projectId: \"aac12556-4d65-4d34-9fb6-d1f0985eb0a9\",\n    events: [\n      Events.StreamStarted,\n      Events.StreamIdle,\n    ],\n    url: \"https://my-service.com/webhook\",\n    sharedSecret: \"my-secret\",\n    streamId: \"de7818e7-610a-4057-8f6f-b785dc1e6f88\",\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+            import { Events } from "livepeer/models/components";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.webhook.update({
+                name: "test_webhook",
+                projectId: "aac12556-4d65-4d34-9fb6-d1f0985eb0a9",
+                events: [
+                  Events.StreamStarted,
+                  Events.StreamIdle,
+                ],
+                url: "https://my-service.com/webhook",
+                sharedSecret: "my-secret",
+                streamId: "de7818e7-610a-4057-8f6f-b785dc1e6f88",
+              }, "<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: updateWebhook
           source: |-
@@ -4727,7 +5147,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: deleteWebhook
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.webhook.delete(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.webhook.delete("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: deleteWebhook
           source: |-
@@ -4799,7 +5233,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getWebhookLogs
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.webhook.getLogs(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.webhook.getLogs("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getWebhookLogs
           source: |-
@@ -4874,7 +5322,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getWebhookLog
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.webhook.getLog(\"<id>\", \"<value>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.webhook.getLog("<id>", "<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getWebhookLog
           source: |-
@@ -4953,7 +5415,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: resendWebhook
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.webhook.resendLog(\"<id>\", \"<value>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.webhook.resendLog("<id>", "<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: resendWebhook
           source: |-
@@ -5019,7 +5495,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getAssets
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.asset.getAll();\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.asset.getAll();
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getAssets
           source: |-
@@ -5191,7 +5681,47 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: requestUpload
-          source: "import { Livepeer } from \"livepeer\";\nimport { TranscodeProfileEncoder, TranscodeProfileProfile, Type } from \"livepeer/models/components\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.asset.create({\n    name: \"filename.mp4\",\n    staticMp4: true,\n    playbackPolicy: {\n      type: Type.Webhook,\n      webhookId: \"1bde4o2i6xycudoy\",\n      webhookContext: {\n        \"streamerId\": \"my-custom-id\",\n      },\n      refreshInterval: 600,\n    },\n    profiles: [\n      {\n        width: 1280,\n        name: \"720p\",\n        height: 720,\n        bitrate: 3000000,\n        quality: 23,\n        fps: 30,\n        fpsDen: 1,\n        gop: \"2\",\n        profile: TranscodeProfileProfile.H264Baseline,\n        encoder: TranscodeProfileEncoder.H264,\n      },\n    ],\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+            import { TranscodeProfileEncoder, TranscodeProfileProfile, Type } from "livepeer/models/components";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.asset.create({
+                name: "filename.mp4",
+                staticMp4: true,
+                playbackPolicy: {
+                  type: Type.Webhook,
+                  webhookId: "1bde4o2i6xycudoy",
+                  webhookContext: {
+                    "streamerId": "my-custom-id",
+                  },
+                  refreshInterval: 600,
+                },
+                profiles: [
+                  {
+                    width: 1280,
+                    name: "720p",
+                    height: 720,
+                    bitrate: 3000000,
+                    quality: 23,
+                    fps: 30,
+                    fpsDen: 1,
+                    gop: "2",
+                    profile: TranscodeProfileProfile.H264Baseline,
+                    encoder: TranscodeProfileEncoder.H264,
+                  },
+                ],
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: requestUpload
           source: |-
@@ -5352,7 +5882,60 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: uploadAsset
-          source: "import { Livepeer } from \"livepeer\";\nimport { TranscodeProfileEncoder, TranscodeProfileProfile, Type } from \"livepeer/models/components\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.asset.createViaUrl({\n    name: \"filename.mp4\",\n    staticMp4: true,\n    playbackPolicy: {\n      type: Type.Webhook,\n      webhookId: \"1bde4o2i6xycudoy\",\n      webhookContext: {\n        \"streamerId\": \"my-custom-id\",\n      },\n      refreshInterval: 600,\n    },\n    url: \"https://s3.amazonaws.com/my-bucket/path/filename.mp4\",\n    profiles: [\n      {\n        width: 1280,\n        name: \"720p\",\n        height: 720,\n        bitrate: 3000000,\n        quality: 23,\n        fps: 30,\n        fpsDen: 1,\n        gop: \"2\",\n        profile: TranscodeProfileProfile.H264Baseline,\n        encoder: TranscodeProfileEncoder.H264,\n      },\n    ],\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+            import { TranscodeProfileEncoder, TranscodeProfileProfile, Type } from "livepeer/models/components";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.asset.createViaUrl({
+                name: "filename.mp4",
+                staticMp4: true,
+                playbackPolicy: {
+                  type: Type.Webhook,
+                  webhookId: "1bde4o2i6xycudoy",
+                  webhookContext: {
+                    "streamerId": "my-custom-id",
+                  },
+                  refreshInterval: 600,
+                },
+                url: "https://s3.amazonaws.com/my-bucket/path/filename.mp4",
+                profiles: [
+                  {
+                    width: 1280,
+                    name: "720p",
+                    height: 720,
+                    bitrate: 3000000,
+                    quality: 23,
+                    fps: 30,
+                    fpsDen: 1,
+                    gop: "2",
+                    profile: TranscodeProfileProfile.H264Baseline,
+                    encoder: TranscodeProfileEncoder.H264,
+                  },
+                  {
+                    width: 1280,
+                    name: "720p",
+                    height: 720,
+                    bitrate: 3000000,
+                    quality: 23,
+                    fps: 30,
+                    fpsDen: 1,
+                    gop: "2",
+                    profile: TranscodeProfileProfile.H264Baseline,
+                    encoder: TranscodeProfileEncoder.H264,
+                  },
+                ],
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: uploadAsset
           source: |-
@@ -5477,7 +6060,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getAsset
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.asset.get(\"<value>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.asset.get("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getAsset
           source: |-
@@ -5553,7 +6150,32 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: updateAsset
-          source: "import { Livepeer } from \"livepeer\";\nimport { Type } from \"livepeer/models/components\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.asset.update(\"<value>\", {\n    name: \"filename.mp4\",\n    playbackPolicy: {\n      type: Type.Webhook,\n      webhookId: \"1bde4o2i6xycudoy\",\n      webhookContext: {\n        \"streamerId\": \"my-custom-id\",\n      },\n      refreshInterval: 600,\n    },\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+            import { Type } from "livepeer/models/components";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.asset.update({
+                name: "filename.mp4",
+                playbackPolicy: {
+                  type: Type.Webhook,
+                  webhookId: "1bde4o2i6xycudoy",
+                  webhookContext: {
+                    "streamerId": "my-custom-id",
+                  },
+                  refreshInterval: 600,
+                },
+              }, "<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: updateAsset
           source: |-
@@ -5640,7 +6262,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: deleteAsset
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.asset.delete(\"<value>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.asset.delete("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: deleteAsset
           source: |-
@@ -5723,7 +6359,27 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: createClip
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.stream.createClip({\n    playbackId: \"eaw4nk06ts2d0mzb\",\n    startTime: 1587667174725,\n    endTime: 1587667174725,\n    name: \"My Clip\",\n    sessionId: \"de7818e7-610a-4057-8f6f-b785dc1e6f88\",\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.stream.createClip({
+                playbackId: "eaw4nk06ts2d0mzb",
+                startTime: 1587667174725,
+                endTime: 1587667174725,
+                name: "My Clip",
+                sessionId: "de7818e7-610a-4057-8f6f-b785dc1e6f88",
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: createClip
           source: |-
@@ -5809,7 +6465,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getClips
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.stream.getClips(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.stream.getClips("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getClips
           source: |-
@@ -5881,7 +6551,29 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: addMultistreamTarget
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.stream.addMultistreamTarget(\"<id>\", {\n    profile: \"720p0\",\n    videoOnly: false,\n    id: \"PUSH123\",\n    spec: {\n      name: \"My target\",\n      url: \"rtmps://live.my-service.tv/channel/secretKey\",\n    },\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.stream.addMultistreamTarget({
+                profile: "720p0",
+                videoOnly: false,
+                id: "PUSH123",
+                spec: {
+                  name: "My target",
+                  url: "rtmps://live.my-service.tv/channel/secretKey",
+                },
+              }, "<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: addMultistreamTarget
           source: |-
@@ -5970,7 +6662,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: removeMultistreamTarget
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.stream.removeMultistreamTarget(\"<id>\", \"<value>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.stream.removeMultistreamTarget("<id>", "<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: removeMultistreamTarget
           source: |-
@@ -6043,7 +6749,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getSessionClips
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.session.getClips(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.session.getClips("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getSessionClips
           source: |-
@@ -6108,9 +6828,6 @@ paths:
                 $ref: "#/components/schemas/create-room-response"
                 x-speakeasy-name-override: data
       x-codeSamples:
-        - lang: typescript
-          label: createRoom
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.room.create();\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
         - lang: go
           label: createRoom
           source: |-
@@ -6179,9 +6896,6 @@ paths:
                 $ref: "#/components/schemas/room"
                 x-speakeasy-name-override: data
       x-codeSamples:
-        - lang: typescript
-          label: getRoom
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.room.get(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
         - lang: go
           label: getRoom
           source: |-
@@ -6244,9 +6958,6 @@ paths:
         "204":
           description: Success
       x-codeSamples:
-        - lang: typescript
-          label: deleteRoom
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.room.delete(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
         - lang: go
           label: deleteRoom
           source: |-
@@ -6321,9 +7032,6 @@ paths:
         "204":
           description: Success
       x-codeSamples:
-        - lang: typescript
-          label: startRoomEgress
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.room.startEgress(\"<id>\", {\n    streamId: \"aac12556-4d65-4d34-9fb6-d1f0985eb0a9\",\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
         - lang: go
           label: startRoomEgress
           source: |-
@@ -6391,9 +7099,6 @@ paths:
         "204":
           description: Success
       x-codeSamples:
-        - lang: typescript
-          label: stopRoomEgress
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.room.stopEgress(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
         - lang: go
           label: stopRoomEgress
           source: |-
@@ -6475,9 +7180,6 @@ paths:
                 $ref: "#/components/schemas/room-user-response"
                 x-speakeasy-name-override: data
       x-codeSamples:
-        - lang: typescript
-          label: createRoomUser
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.room.createUser(\"<id>\", {\n    name: \"name\",\n    canPublish: true,\n    canPublishData: true,\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
         - lang: go
           label: createRoomUser
           source: |-
@@ -6560,9 +7262,6 @@ paths:
                 $ref: "#/components/schemas/get-room-user-response"
                 x-speakeasy-name-override: data
       x-codeSamples:
-        - lang: typescript
-          label: getRoomUser
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.room.getUser(\"<id>\", \"<value>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
         - lang: go
           label: getRoomUser
           source: |-
@@ -6637,9 +7336,6 @@ paths:
         "204":
           description: Success
       x-codeSamples:
-        - lang: typescript
-          label: updateRoomUser
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.room.updateUser(\"<id>\", \"<value>\", {\n    canPublish: true,\n    canPublishData: true,\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
         - lang: go
           label: updateRoomUser
           source: |-
@@ -6714,9 +7410,6 @@ paths:
         "204":
           description: Success
       x-codeSamples:
-        - lang: typescript
-          label: deleteRoomUser
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.room.deleteUser(\"<id>\", \"<value>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
         - lang: go
           label: deleteRoomUser
           source: |-
@@ -6812,7 +7505,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getRealtimeViewershipNow
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.metrics.getRealtimeViewership();\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.metrics.getRealtimeViewership();
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getRealtimeViewershipNow
           source: |-
@@ -6955,7 +7662,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getViewershipMetrics
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.metrics.getViewership({});\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.metrics.getViewership({});
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getViewershipMetrics
           source: |-
@@ -7089,7 +7810,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getCreatorViewershipMetrics
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.metrics.getCreatorViewership({});\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.metrics.getCreatorViewership({});
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getCreatorViewershipMetrics
           source: |-
@@ -7184,7 +7919,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getPublicViewershipMetrics
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.metrics.getPublicViewership(\"<value>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.metrics.getPublicViewership("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getPublicViewershipMetrics
           source: |-
@@ -7287,7 +8036,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getUsageMetrics
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.metrics.getUsage({});\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.metrics.getUsage({});
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getUsageMetrics
           source: |-
@@ -7354,7 +8117,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getSessions
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.session.getAll();\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.session.getAll();
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getSessions
           source: |-
@@ -7425,7 +8202,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getSession
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.session.get(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.session.get("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getSession
           source: |-
@@ -7508,7 +8299,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getRecordedSessions
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.session.getRecorded(\"<value>\", true);\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.session.getRecorded("<id>", true);
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getRecordedSessions
           source: |-
@@ -7579,7 +8384,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: createSigningKey
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.accessControl.create();\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.accessControl.create();
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: createSigningKey
           source: |-
@@ -7644,7 +8463,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getSigningKeys
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.accessControl.getAll();\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.accessControl.getAll();
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getSigningKeys
           source: |-
@@ -7710,7 +8543,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: deleteSigningKey
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.accessControl.delete(\"<value>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.accessControl.delete("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: deleteSigningKey
           source: |-
@@ -7780,7 +8627,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getSigningKey
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.accessControl.get(\"<value>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.accessControl.get("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getSigningKey
           source: |-
@@ -7857,7 +8718,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: updateSigningKey
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.accessControl.update(\"<value>\", {});\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.accessControl.update({}, "<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: updateSigningKey
           source: |-
@@ -7924,7 +8799,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getTasks
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.task.getAll();\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.task.getAll();
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getTasks
           source: |-
@@ -7991,7 +8880,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getTask
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.task.get(\"<value>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.task.get("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getTask
           source: |-
@@ -8183,7 +9086,61 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: transcodeVideo
-          source: "import { Livepeer } from \"livepeer\";\nimport { TranscodePayloadSchemasType, TranscodeProfileEncoder, TranscodeProfileProfile } from \"livepeer/models/components\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.transcode.create({\n    input: {\n      url: \"https://s3.amazonaws.com/bucket/file.mp4\",\n    },\n    storage: {\n      type: TranscodePayloadSchemasType.S3,\n      endpoint: \"https://gateway.storjshare.io\",\n      bucket: \"outputbucket\",\n      credentials: {\n        accessKeyId: \"AKIAIOSFODNN7EXAMPLE\",\n        secretAccessKey: \"wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY\",\n      },\n    },\n    outputs: {\n      hls: {\n        path: \"/samplevideo/hls\",\n      },\n      mp4: {\n        path: \"/samplevideo/mp4\",\n      },\n      fmp4: {\n        path: \"/samplevideo/fmp4\",\n      },\n    },\n    profiles: [\n      {\n        width: 1280,\n        name: \"720p\",\n        height: 720,\n        bitrate: 3000000,\n        quality: 23,\n        fps: 30,\n        fpsDen: 1,\n        gop: \"2\",\n        profile: TranscodeProfileProfile.H264Baseline,\n        encoder: TranscodeProfileEncoder.H264,\n      },\n    ],\n  });\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+            import {
+              TranscodePayloadSchemasStorageType,
+              TranscodeProfileEncoder,
+              TranscodeProfileProfile,
+            } from "livepeer/models/components";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.transcode.create({
+                input: {
+                  url: "https://s3.amazonaws.com/bucket/file.mp4",
+                },
+                storage: {
+                  type: TranscodePayloadSchemasStorageType.Web3Storage,
+                  credentials: {
+                    proof: "EaJlcm9vdHOAZ3ZlcnNpb24BmgIBcRIg2uxHpcPYSWNtifMKFkPC7IEDvFDCxCd3ADViv0coV7SnYXNYRO2hA0AnblHEW38s3lSlcwaDjPn",
+                  },
+                },
+                outputs: {
+                  hls: {
+                    path: "/samplevideo/hls",
+                  },
+                  mp4: {
+                    path: "/samplevideo/mp4",
+                  },
+                  fmp4: {
+                    path: "/samplevideo/fmp4",
+                  },
+                },
+                profiles: [
+                  {
+                    width: 1280,
+                    name: "720p",
+                    height: 720,
+                    bitrate: 3000000,
+                    quality: 23,
+                    fps: 30,
+                    fpsDen: 1,
+                    gop: "2",
+                    profile: TranscodeProfileProfile.H264Baseline,
+                    encoder: TranscodeProfileEncoder.H264,
+                  },
+                ],
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: transcodeVideo
           source: |-
@@ -8343,7 +9300,21 @@ paths:
       x-codeSamples:
         - lang: typescript
           label: getPlaybackInfo
-          source: "import { Livepeer } from \"livepeer\";\n\nconst livepeer = new Livepeer({\n  apiKey: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await livepeer.playback.get(\"<id>\");\n  \n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.playback.get("<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
         - lang: go
           label: getPlaybackInfo
           source: |-
@@ -8443,6 +9414,26 @@ paths:
                   - $ref: '#/components/schemas/HTTPError'
                   - $ref: '#/components/schemas/studio-api-error'
       x-speakeasy-name-override: textToImage
+      x-codeSamples:
+        - lang: typescript
+          label: genTextToImage
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.generate.textToImage({
+                prompt: "<value>",
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
   /api/generate/image-to-image:
     post:
       tags:
@@ -8503,6 +9494,28 @@ paths:
                   - $ref: '#/components/schemas/HTTPError'
                   - $ref: '#/components/schemas/studio-api-error'
       x-speakeasy-name-override: imageToImage
+      x-codeSamples:
+        - lang: typescript
+          label: genImageToImage
+          source: |-
+            import { Livepeer } from "livepeer";
+            import { openAsBlob } from "node:fs";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.generate.imageToImage({
+                prompt: "<value>",
+                image: await openAsBlob("example.file"),
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
   /api/generate/image-to-video:
     post:
       tags:
@@ -8563,6 +9576,27 @@ paths:
                   - $ref: '#/components/schemas/HTTPError'
                   - $ref: '#/components/schemas/studio-api-error'
       x-speakeasy-name-override: imageToVideo
+      x-codeSamples:
+        - lang: typescript
+          label: genImageToVideo
+          source: |-
+            import { Livepeer } from "livepeer";
+            import { openAsBlob } from "node:fs";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.generate.imageToVideo({
+                image: await openAsBlob("example.file"),
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
   /api/generate/upscale:
     post:
       tags:
@@ -8623,6 +9657,28 @@ paths:
                   - $ref: '#/components/schemas/HTTPError'
                   - $ref: '#/components/schemas/studio-api-error'
       x-speakeasy-name-override: upscale
+      x-codeSamples:
+        - lang: typescript
+          label: genUpscale
+          source: |-
+            import { Livepeer } from "livepeer";
+            import { openAsBlob } from "node:fs";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.generate.upscale({
+                prompt: "<value>",
+                image: await openAsBlob("example.file"),
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
   /api/generate/audio-to-text:
     post:
       tags:
@@ -8674,6 +9730,14 @@ paths:
                 oneOf:
                   - $ref: '#/components/schemas/HTTPError'
                   - $ref: '#/components/schemas/studio-api-error'
+        '415':
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/HTTPError'
+                  - $ref: '#/components/schemas/studio-api-error'
         '422':
           description: Validation Error
           content:
@@ -8691,6 +9755,27 @@ paths:
                   - $ref: '#/components/schemas/HTTPError'
                   - $ref: '#/components/schemas/studio-api-error'
       x-speakeasy-name-override: audioToText
+      x-codeSamples:
+        - lang: typescript
+          label: genAudioToText
+          source: |-
+            import { Livepeer } from "livepeer";
+            import { openAsBlob } from "node:fs";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.generate.audioToText({
+                audio: await openAsBlob("example.file"),
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
   /api/generate/segment-anything-2:
     post:
       tags:
@@ -8751,6 +9836,27 @@ paths:
                   - $ref: '#/components/schemas/HTTPError'
                   - $ref: '#/components/schemas/studio-api-error'
       x-speakeasy-name-override: segmentAnything2
+      x-codeSamples:
+        - lang: typescript
+          label: genSegmentAnything2
+          source: |-
+            import { Livepeer } from "livepeer";
+            import { openAsBlob } from "node:fs";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.generate.segmentAnything2({
+                image: await openAsBlob("example.file"),
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
   /api/generate/llm:
     post:
       tags:
@@ -8810,3 +9916,23 @@ paths:
                   - $ref: '#/components/schemas/HTTPError'
                   - $ref: '#/components/schemas/studio-api-error'
       x-speakeasy-name-override: llm
+      x-codeSamples:
+        - lang: typescript
+          label: genLLM
+          source: |-
+            import { Livepeer } from "livepeer";
+
+            const livepeer = new Livepeer({
+              apiKey: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await livepeer.generate.llm({
+                prompt: "<value>",
+              });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
