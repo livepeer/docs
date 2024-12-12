@@ -1,0 +1,112 @@
+---
+title: Image-to-Text
+---
+
+## Overview
+
+The `image-to-text` pipeline converts images into text captions. This pipeline
+is powered by the latest models in the HuggingFace
+[text-to-image](https://huggingface.co/models?pipeline_tag=text-to-image)
+pipeline.
+
+<div align="center">
+
+</div>
+
+## Models
+
+### Warm Models
+
+The current warm model requested for the `image-to-text` pipeline is:
+
+- [Salesforce/blip-image-captioning-large](https://huggingface.co/Salesforce/blip-image-captioning-large)
+
+<Tip>
+  For faster responses with different
+  [image-to-text](https://huggingface.co/models?pipeline_tag=text-to-image)
+  diffusion models, ask Orchestrators to load it on their GPU via the `ai-video`
+  channel in [Discord Server](https://discord.gg/livepeer).
+</Tip>
+
+### On-Demand Models
+
+The following models have been tested and verified for the `image-to-text`
+pipeline:
+
+<Note>
+  If a specific model you wish to use is not listed, please submit a [feature
+  request](https://github.com/livepeer/ai-worker/issues/new?assignees=&labels=enhancement%2Cmodel&projects=&template=model_request.yml)
+  on GitHub to get the model verified and added to the list.
+</Note>
+
+{/* prettier-ignore */}
+<Accordion title="Tested and Verified Diffusion Models">
+    - [Salesforce/blip-image-captioning-large](https://huggingface.co/Salesforce/blip-image-captioning-large)
+</Accordion>
+
+## Basic Usage Instructions
+
+<Tip>
+  For a detailed understanding of the `image-to-text` endpoint and to experiment
+  with the API, see the [Livepeer AI API
+  Reference](/ai/api-reference/image-to-text).
+</Tip>
+
+To create an image caption using the `image-to-text` pipeline, submit a `POST`
+request to the Gateway's `image-to-text` API endpoint:
+
+```bash
+curl -X POST "https://<GATEWAY_IP>/image-to-text" \
+    -F model_id=Salesforce/blip-image-captioning-large \
+    -F image=@<PATH_TO_FILE>
+```
+
+In this command:
+
+- `<GATEWAY_IP>` should be replaced with your AI Gateway's IP address.
+- `model_id` is the diffusion model to use.
+- `image` is the path to the image file to be captioned.
+
+<Note>Maximum request size: 50 MB</Note>
+
+For additional optional parameters, refer to the
+[Livepeer AI API Reference](/ai/api-reference/image-to-text).
+
+## Orchestrator Configuration
+
+To configure your Orchestrator to serve the `image-to-text` pipeline, refer to
+the [Orchestrator Configuration](/ai/orchestrators/get-started) guide.
+
+### System Requirements
+
+The following system requirements are recommended for optimal performance:
+
+- [NVIDIA GPU](https://developer.nvidia.com/cuda-gpus) with **at least 4GB** of
+  VRAM.
+
+
+## Recommended Pipeline Pricing
+
+<Note>
+  We are planning to simplify the pricing in the future so orchestrators can set
+  one AI price per compute unit and have the system automatically scale based on
+  the model's compute requirements.
+</Note>
+
+The pricing for the `image-to-text` pipeline is based on competitor pricing.
+However, we strongly encourage orchestrators to set their own pricing based on
+their costs and requirements. Setting a competitive price will help attract more
+jobs, as Gateways can set their maximum price for a job. The current recommended
+pricing for this pipeline is `2.5e-10 USD` per **input pixel**
+(`height * width`).
+
+## API Reference
+
+<Card
+  title="API Reference"
+  icon="rectangle-terminal"
+  href="/ai/api-reference/image-to-text"
+>
+  Explore the `image-to-text` endpoint and experiment with the API in the
+  Livepeer AI API Reference.
+</Card>
