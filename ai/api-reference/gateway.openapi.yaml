@@ -1011,8 +1011,8 @@ paths:
     post:
       tags:
         - generate
-      summary: Video To Video
-      description: Apply video-like transformations to a provided image.
+      summary: Live Video To Video
+      description: Apply transformations to a live video streamed to the returned endpoints.
       operationId: genLiveVideoToVideo
       requestBody:
         content:
@@ -1620,15 +1620,25 @@ components:
           type: string
           title: Publish Url
           description: Destination URL of the outgoing stream to publish.
+        control_url:
+          type: string
+          title: Control Url
+          description: URL for subscribing via Trickle protocol for updates in the live video-to-video generation params.
+          default: ''
+        events_url:
+          type: string
+          title: Events Url
+          description: URL for publishing events via Trickle protocol for pipeline status and logs.
+          default: ''
         model_id:
           type: string
           title: Model Id
-          description: Hugging Face model ID used for image generation.
+          description: Name of the pipeline to run in the live video to video job. Notice that this is named model_id for consistency with other routes, but it does not refer to a Hugging Face model ID. The exact model(s) depends on the pipeline implementation and might be configurable via the `params` argument.
           default: ''
         params:
           type: object
           title: Params
-          description: Initial parameters for the model.
+          description: Initial parameters for the pipeline.
           default: {}
       type: object
       required:
@@ -1646,6 +1656,16 @@ components:
           type: string
           title: Publish Url
           description: Destination URL of the outgoing stream to publish to
+        control_url:
+          type: string
+          title: Control Url
+          description: URL for updating the live video-to-video generation
+          default: ''
+        events_url:
+          type: string
+          title: Events Url
+          description: URL for subscribing to events for pipeline status and logs
+          default: ''
       type: object
       required:
         - subscribe_url
