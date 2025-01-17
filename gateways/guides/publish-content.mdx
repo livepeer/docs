@@ -39,10 +39,10 @@ ffmpeg -re -f lavfi -i \
 
 ```
 ffmpeg \
-        -re \
-        -i video.mov \
-        -codec copy \
-        -f flv rtmp://<YOUR IP ADDRESS>:1935/video_file
+    -re \
+    -i video.mov \
+    -codec copy \
+    -f flv rtmp://<YOUR IP ADDRESS>:1935/video_file
 ```
 
 - `video_file` is the "stream key" for this stream.
@@ -56,14 +56,16 @@ graphical user interface (GUI).
 
 OBS Studio can be used to publish streaming media to the Livepeer Gateway:
 
-Download and install [OBS Studio](https://obsproject.com/)
+1. Install [OBS Studio](https://obsproject.com/).
+2. Open OBS Studio and go to **File > Settings > Stream**.
+3. Enter the following details:
 
-In the **Stream** section of OBS Studio enter the following:
+    ```txt
+    Service: Custom
+    Server: rtmp://<YOUR IP ADDRESS>:1935
+    Stream Key: stream-key
+    ```
 
-```
-Service: Custom
-Server: rtmp://<YOUR IP ADDRESS>:1935
-Stream Key: stream-key
-```
-
-In the main window choose **Start Streaming**
+4. Go to the **Output** tab and set **Output Mode** to **Advanced**.
+5. Set the **Keyframe Interval** to `1`.
+6. Click **OK** and then **Start Streaming** in the main window.
