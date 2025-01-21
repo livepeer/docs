@@ -41,7 +41,7 @@ Orchestrator node to redeem tickets:
 
         ```bash
         ./livepeer \
-          -ethOrchAddr <MAIN_ORCH_ADDRESS> \
+          -ethOrchAddr <main orch address> \
           ... \
         ```
       </Step>
@@ -85,7 +85,7 @@ contract on the [Arbitrum Mainnet](https://arbitrum.io).
         Set your Service URI, ensuring it starts with `https://`, using the `SetServiceURI` function on the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract. Use the KeyStore file and password from your **Mainnet Transcoding Network Orchestrator** wallet:
 
         ```bash
-        cast send --keystore '<PATH_TO_KEYSTORE_FILE>' --password '<PASSWORD>' --rpc-url <ARBITRUM_RPC_URI> 0x04C0b249740175999E5BF5c9ac1dA92431EF34C5 "setServiceURI(string)" https://<PUBLIC_ORCH_IP_OR_URL>:<PUBLIC_ORCH_PORT>
+        cast send --keystore '<path to keystore>' --password '<password>' --rpc-url <arbitrum RPC URI> 0x04C0b249740175999E5BF5c9ac1dA92431EF34C5 "setServiceURI(string)" https://<public orch URI>:<public orch port>
         ```
 
         After successful execution, the output should look like this:
@@ -99,13 +99,13 @@ contract on the [Arbitrum Mainnet](https://arbitrum.io).
         Verify your Service URI by invoking the `getServiceURI` function on the [AIServiceRegistry](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract:
 
         ```bash
-        cast call --rpc-url <ARBITRUM_RPC_URI> 0x04C0b249740175999E5BF5c9ac1dA92431EF34C5 "getServiceURI(address)" <PUBLIC_WALLET_KEY> | xxd -r -p
+        cast call --rpc-url <arbitrum RPC URI> 0x04C0b249740175999E5BF5c9ac1dA92431EF34C5 "getServiceURI(address)" <public wallet key> | xxd -r -p
         ```
 
         If successful, the output should be:
 
         ```bash
-        https://<PUBLIC_ORCH_IP_OR_URL>:<PUBLIC_ORCH_PORT>
+        https://<public orch URI>:<public orch port>
         ```
       </Step>
     </Steps>
@@ -157,8 +157,7 @@ network. The commands to start the AI Orchestrator are similar to those for the
 [off-chain Orchestrator](/ai/orchestrators/start-orchestrator), but with
 additional flags to enable on-chain functionality:
 
-- `-AIServiceRegistry`: Ensures that the Gateway is connected to the Livepeer AI
-  network.
+- `-AIServiceRegistry`: Ensures that the Orchestrator is connected to the Livepeer AI network.
 - `-network=arbitrum-one-mainnet`: Connects the AI Orchestrator node to the
   Arbitrum Mainnet network.
 - `-ethUrl=https://arb1.arbitrum.io/rpc`: Sets the Arbitrum Mainnet RPC URL. You

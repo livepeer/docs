@@ -56,9 +56,11 @@ Below are the launch commands for both the Orchestrator and AI Worker nodes.
 docker run \
     --name livepeer_ai_orchestrator \
     ...
+    livepeer/go-livepeer:master \
     -orchestrator \
     ...
-    -aiModels /root/.lpData/aiModels.json
+    -orchSecret <orchestrator secret>
+    -serviceAddr <orchestrator service address>
 ```
 
 #### AI Worker Command
@@ -66,15 +68,12 @@ docker run \
 ```bash
 docker run \
     --name livepeer_ai_worker \
+    ...
+    livepeer/go-livepeer:master \
     -aiWorker \
-    -orchAddr [Orchestrator service address] \
-    -orchSecret [Orchestrator secret key] \
-    -nvidia "all" \
-    -v 6 \
-    -aiModels /root/.lpData/aiModels.json \
-    -aiModelsDir /root/.lpData/models \
-    -testTranscoder=false \
-    -aiRunnerImage livepeer/ai-runner:latest # Optional
+    ...
+    -orchSecret <orchestrator secret> \
+    -orchAddr <orchestrator service address>
 ```
 
 <Info>
