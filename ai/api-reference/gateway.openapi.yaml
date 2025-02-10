@@ -70,7 +70,16 @@ paths:
 
             async function run() {
               const result = await livepeer.generate.textToImage({
+                modelId: "",
+                loras: "",
                 prompt: "<value>",
+                height: 576,
+                width: 1024,
+                guidanceScale: 7.5,
+                negativePrompt: "",
+                safetyCheck: true,
+                numInferenceSteps: 50,
+                numImagesPerPrompt: 1,
               });
 
               // Handle the result
@@ -80,7 +89,7 @@ paths:
             run();
         - lang: go
           label: genTextToImage
-          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    res, err := s.Generate.TextToImage(ctx, components.TextToImageParams{\n        Prompt: \"<value>\",\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.ImageResponse != nil {\n        // handle response\n    }\n}"
+          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    res, err := s.Generate.TextToImage(ctx, components.TextToImageParams{\n        ModelID: livepeeraigo.String(\"\"),\n        Loras: livepeeraigo.String(\"\"),\n        Prompt: \"<value>\",\n        Height: livepeeraigo.Int64(576),\n        Width: livepeeraigo.Int64(1024),\n        GuidanceScale: livepeeraigo.Float64(7.5),\n        NegativePrompt: livepeeraigo.String(\"\"),\n        SafetyCheck: livepeeraigo.Bool(true),\n        NumInferenceSteps: livepeeraigo.Int64(50),\n        NumImagesPerPrompt: livepeeraigo.Int64(1),\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.ImageResponse != nil {\n        // handle response\n    }\n}"
         - lang: python
           label: genTextToImage
           source: |-
@@ -91,7 +100,16 @@ paths:
             ) as livepeer:
 
                 res = livepeer.generate.text_to_image(request={
+                    "model_id": "",
+                    "loras": "",
                     "prompt": "<value>",
+                    "height": 576,
+                    "width": 1024,
+                    "guidance_scale": 7.5,
+                    "negative_prompt": "",
+                    "safety_check": True,
+                    "num_inference_steps": 50,
+                    "num_images_per_prompt": 1,
                 })
 
                 assert res.image_response is not None
@@ -161,6 +179,15 @@ paths:
               const result = await livepeer.generate.imageToImage({
                 prompt: "<value>",
                 image: await openAsBlob("example.file"),
+                modelId: "",
+                loras: "",
+                strength: 0.8,
+                guidanceScale: 7.5,
+                imageGuidanceScale: 1.5,
+                negativePrompt: "",
+                safetyCheck: true,
+                numInferenceSteps: 100,
+                numImagesPerPrompt: 1,
               });
 
               // Handle the result
@@ -170,7 +197,7 @@ paths:
             run();
         - lang: go
           label: genImageToImage
-          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"os\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    content, fileErr := os.Open(\"example.file\")\n    if fileErr != nil {\n        panic(fileErr)\n    }\n\n\n    res, err := s.Generate.ImageToImage(ctx, components.BodyGenImageToImage{\n        Prompt: \"<value>\",\n        Image: components.Image{\n            FileName: \"example.file\",\n            Content: content,\n        },\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.ImageResponse != nil {\n        // handle response\n    }\n}"
+          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"os\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    content, fileErr := os.Open(\"example.file\")\n    if fileErr != nil {\n        panic(fileErr)\n    }\n\n\n    res, err := s.Generate.ImageToImage(ctx, components.BodyGenImageToImage{\n        Prompt: \"<value>\",\n        Image: components.Image{\n            FileName: \"example.file\",\n            Content: content,\n        },\n        ModelID: livepeeraigo.String(\"\"),\n        Loras: livepeeraigo.String(\"\"),\n        Strength: livepeeraigo.Float64(0.8),\n        GuidanceScale: livepeeraigo.Float64(7.5),\n        ImageGuidanceScale: livepeeraigo.Float64(1.5),\n        NegativePrompt: livepeeraigo.String(\"\"),\n        SafetyCheck: livepeeraigo.Bool(true),\n        NumInferenceSteps: livepeeraigo.Int64(100),\n        NumImagesPerPrompt: livepeeraigo.Int64(1),\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.ImageResponse != nil {\n        // handle response\n    }\n}"
         - lang: python
           label: genImageToImage
           source: |-
@@ -186,6 +213,15 @@ paths:
                         "file_name": "example.file",
                         "content": open("example.file", "rb"),
                     },
+                    "model_id": "",
+                    "loras": "",
+                    "strength": 0.8,
+                    "guidance_scale": 7.5,
+                    "image_guidance_scale": 1.5,
+                    "negative_prompt": "",
+                    "safety_check": True,
+                    "num_inference_steps": 100,
+                    "num_images_per_prompt": 1,
                 })
 
                 assert res.image_response is not None
@@ -254,6 +290,14 @@ paths:
             async function run() {
               const result = await livepeer.generate.imageToVideo({
                 image: await openAsBlob("example.file"),
+                modelId: "",
+                height: 576,
+                width: 1024,
+                fps: 6,
+                motionBucketId: 127,
+                noiseAugStrength: 0.02,
+                safetyCheck: true,
+                numInferenceSteps: 25,
               });
 
               // Handle the result
@@ -263,7 +307,7 @@ paths:
             run();
         - lang: go
           label: genImageToVideo
-          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"os\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    content, fileErr := os.Open(\"example.file\")\n    if fileErr != nil {\n        panic(fileErr)\n    }\n\n\n    res, err := s.Generate.ImageToVideo(ctx, components.BodyGenImageToVideo{\n        Image: components.BodyGenImageToVideoImage{\n            FileName: \"example.file\",\n            Content: content,\n        },\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.VideoResponse != nil {\n        // handle response\n    }\n}"
+          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"os\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    content, fileErr := os.Open(\"example.file\")\n    if fileErr != nil {\n        panic(fileErr)\n    }\n\n\n    res, err := s.Generate.ImageToVideo(ctx, components.BodyGenImageToVideo{\n        Image: components.BodyGenImageToVideoImage{\n            FileName: \"example.file\",\n            Content: content,\n        },\n        ModelID: livepeeraigo.String(\"\"),\n        Height: livepeeraigo.Int64(576),\n        Width: livepeeraigo.Int64(1024),\n        Fps: livepeeraigo.Int64(6),\n        MotionBucketID: livepeeraigo.Int64(127),\n        NoiseAugStrength: livepeeraigo.Float64(0.02),\n        SafetyCheck: livepeeraigo.Bool(true),\n        NumInferenceSteps: livepeeraigo.Int64(25),\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.VideoResponse != nil {\n        // handle response\n    }\n}"
         - lang: python
           label: genImageToVideo
           source: |-
@@ -278,6 +322,14 @@ paths:
                         "file_name": "example.file",
                         "content": open("example.file", "rb"),
                     },
+                    "model_id": "",
+                    "height": 576,
+                    "width": 1024,
+                    "fps": 6,
+                    "motion_bucket_id": 127,
+                    "noise_aug_strength": 0.02,
+                    "safety_check": True,
+                    "num_inference_steps": 25,
                 })
 
                 assert res.video_response is not None
@@ -347,6 +399,9 @@ paths:
               const result = await livepeer.generate.upscale({
                 prompt: "<value>",
                 image: await openAsBlob("example.file"),
+                modelId: "",
+                safetyCheck: true,
+                numInferenceSteps: 75,
               });
 
               // Handle the result
@@ -356,7 +411,7 @@ paths:
             run();
         - lang: go
           label: genUpscale
-          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"os\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    content, fileErr := os.Open(\"example.file\")\n    if fileErr != nil {\n        panic(fileErr)\n    }\n\n\n    res, err := s.Generate.Upscale(ctx, components.BodyGenUpscale{\n        Prompt: \"<value>\",\n        Image: components.BodyGenUpscaleImage{\n            FileName: \"example.file\",\n            Content: content,\n        },\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.ImageResponse != nil {\n        // handle response\n    }\n}"
+          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"os\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    content, fileErr := os.Open(\"example.file\")\n    if fileErr != nil {\n        panic(fileErr)\n    }\n\n\n    res, err := s.Generate.Upscale(ctx, components.BodyGenUpscale{\n        Prompt: \"<value>\",\n        Image: components.BodyGenUpscaleImage{\n            FileName: \"example.file\",\n            Content: content,\n        },\n        ModelID: livepeeraigo.String(\"\"),\n        SafetyCheck: livepeeraigo.Bool(true),\n        NumInferenceSteps: livepeeraigo.Int64(75),\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.ImageResponse != nil {\n        // handle response\n    }\n}"
         - lang: python
           label: genUpscale
           source: |-
@@ -372,6 +427,9 @@ paths:
                         "file_name": "example.file",
                         "content": open("example.file", "rb"),
                     },
+                    "model_id": "",
+                    "safety_check": True,
+                    "num_inference_steps": 75,
                 })
 
                 assert res.image_response is not None
@@ -452,6 +510,8 @@ paths:
             async function run() {
               const result = await livepeer.generate.audioToText({
                 audio: await openAsBlob("example.file"),
+                modelId: "",
+                returnTimestamps: "true",
               });
 
               // Handle the result
@@ -461,7 +521,7 @@ paths:
             run();
         - lang: go
           label: genAudioToText
-          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"os\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    content, fileErr := os.Open(\"example.file\")\n    if fileErr != nil {\n        panic(fileErr)\n    }\n\n\n    res, err := s.Generate.AudioToText(ctx, components.BodyGenAudioToText{\n        Audio: components.Audio{\n            FileName: \"example.file\",\n            Content: content,\n        },\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.TextResponse != nil {\n        // handle response\n    }\n}"
+          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"os\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    content, fileErr := os.Open(\"example.file\")\n    if fileErr != nil {\n        panic(fileErr)\n    }\n\n\n    res, err := s.Generate.AudioToText(ctx, components.BodyGenAudioToText{\n        Audio: components.Audio{\n            FileName: \"example.file\",\n            Content: content,\n        },\n        ModelID: livepeeraigo.String(\"\"),\n        ReturnTimestamps: livepeeraigo.String(\"true\"),\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.TextResponse != nil {\n        // handle response\n    }\n}"
         - lang: python
           label: genAudioToText
           source: |-
@@ -476,6 +536,8 @@ paths:
                         "file_name": "example.file",
                         "content": open("example.file", "rb"),
                     },
+                    "model_id": "",
+                    "return_timestamps": "true",
                 })
 
                 assert res.text_response is not None
@@ -544,6 +606,10 @@ paths:
             async function run() {
               const result = await livepeer.generate.segmentAnything2({
                 image: await openAsBlob("example.file"),
+                modelId: "",
+                multimaskOutput: true,
+                returnLogits: true,
+                normalizeCoords: true,
               });
 
               // Handle the result
@@ -553,7 +619,7 @@ paths:
             run();
         - lang: go
           label: genSegmentAnything2
-          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"os\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    content, fileErr := os.Open(\"example.file\")\n    if fileErr != nil {\n        panic(fileErr)\n    }\n\n\n    res, err := s.Generate.SegmentAnything2(ctx, components.BodyGenSegmentAnything2{\n        Image: components.BodyGenSegmentAnything2Image{\n            FileName: \"example.file\",\n            Content: content,\n        },\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.MasksResponse != nil {\n        // handle response\n    }\n}"
+          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"os\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    content, fileErr := os.Open(\"example.file\")\n    if fileErr != nil {\n        panic(fileErr)\n    }\n\n\n    res, err := s.Generate.SegmentAnything2(ctx, components.BodyGenSegmentAnything2{\n        Image: components.BodyGenSegmentAnything2Image{\n            FileName: \"example.file\",\n            Content: content,\n        },\n        ModelID: livepeeraigo.String(\"\"),\n        MultimaskOutput: livepeeraigo.Bool(true),\n        ReturnLogits: livepeeraigo.Bool(true),\n        NormalizeCoords: livepeeraigo.Bool(true),\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.MasksResponse != nil {\n        // handle response\n    }\n}"
         - lang: python
           label: genSegmentAnything2
           source: |-
@@ -568,6 +634,10 @@ paths:
                         "file_name": "example.file",
                         "content": open("example.file", "rb"),
                     },
+                    "model_id": "",
+                    "multimask_output": True,
+                    "return_logits": True,
+                    "normalize_coords": True,
                 })
 
                 assert res.masks_response is not None
@@ -634,11 +704,14 @@ paths:
             async function run() {
               const result = await livepeer.generate.llm({
                 messages: [
-                  {
-                    role: "<value>",
-                    content: "<value>",
-                  },
+
                 ],
+                model: "",
+                temperature: 0.7,
+                maxTokens: 256,
+                topP: 1,
+                topK: -1,
+                stream: false,
               });
 
               // Handle the result
@@ -648,7 +721,7 @@ paths:
             run();
         - lang: go
           label: genLLM
-          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    res, err := s.Generate.Llm(ctx, components.LLMRequest{\n        Messages: []components.LLMMessage{\n            components.LLMMessage{\n                Role: \"<value>\",\n                Content: \"<value>\",\n            },\n        },\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.LLMResponse != nil {\n        // handle response\n    }\n}"
+          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    res, err := s.Generate.Llm(ctx, components.LLMRequest{\n        Messages: []components.LLMMessage{\n\n        },\n        Model: livepeeraigo.String(\"\"),\n        Temperature: livepeeraigo.Float64(0.7),\n        MaxTokens: livepeeraigo.Int64(256),\n        TopP: livepeeraigo.Float64(1),\n        TopK: livepeeraigo.Int64(-1),\n        Stream: livepeeraigo.Bool(false),\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.LLMResponse != nil {\n        // handle response\n    }\n}"
         - lang: python
           label: genLLM
           source: |-
@@ -660,11 +733,14 @@ paths:
 
                 res = livepeer.generate.llm(request={
                     "messages": [
-                        {
-                            "role": "<value>",
-                            "content": "<value>",
-                        },
+
                     ],
+                    "model": "",
+                    "temperature": 0.7,
+                    "max_tokens": 256,
+                    "top_p": 1,
+                    "top_k": -1,
+                    "stream": False,
                 })
 
                 assert res.llm_response is not None
@@ -739,6 +815,8 @@ paths:
             async function run() {
               const result = await livepeer.generate.imageToText({
                 image: await openAsBlob("example.file"),
+                prompt: "",
+                modelId: "",
               });
 
               // Handle the result
@@ -748,7 +826,7 @@ paths:
             run();
         - lang: go
           label: genImageToText
-          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"os\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    content, fileErr := os.Open(\"example.file\")\n    if fileErr != nil {\n        panic(fileErr)\n    }\n\n\n    res, err := s.Generate.ImageToText(ctx, components.BodyGenImageToText{\n        Image: components.BodyGenImageToTextImage{\n            FileName: \"example.file\",\n            Content: content,\n        },\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.ImageToTextResponse != nil {\n        // handle response\n    }\n}"
+          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"os\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    content, fileErr := os.Open(\"example.file\")\n    if fileErr != nil {\n        panic(fileErr)\n    }\n\n\n    res, err := s.Generate.ImageToText(ctx, components.BodyGenImageToText{\n        Image: components.BodyGenImageToTextImage{\n            FileName: \"example.file\",\n            Content: content,\n        },\n        Prompt: livepeeraigo.String(\"\"),\n        ModelID: livepeeraigo.String(\"\"),\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.ImageToTextResponse != nil {\n        // handle response\n    }\n}"
         - lang: python
           label: genImageToText
           source: |-
@@ -763,6 +841,8 @@ paths:
                         "file_name": "example.file",
                         "content": open("example.file", "rb"),
                     },
+                    "prompt": "",
+                    "model_id": "",
                 })
 
                 assert res.image_to_text_response is not None
@@ -831,6 +911,9 @@ paths:
               const result = await livepeer.generate.liveVideoToVideo({
                 subscribeUrl: "https://soulful-lava.org/",
                 publishUrl: "https://vain-tabletop.biz",
+                controlUrl: "",
+                eventsUrl: "",
+                modelId: "",
               });
 
               // Handle the result
@@ -840,7 +923,7 @@ paths:
             run();
         - lang: go
           label: genLiveVideoToVideo
-          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    res, err := s.Generate.LiveVideoToVideo(ctx, components.LiveVideoToVideoParams{\n        SubscribeURL: \"https://soulful-lava.org/\",\n        PublishURL: \"https://vain-tabletop.biz\",\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.LiveVideoToVideoResponse != nil {\n        // handle response\n    }\n}"
+          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    res, err := s.Generate.LiveVideoToVideo(ctx, components.LiveVideoToVideoParams{\n        SubscribeURL: \"https://soulful-lava.org/\",\n        PublishURL: \"https://vain-tabletop.biz\",\n        ControlURL: livepeeraigo.String(\"\"),\n        EventsURL: livepeeraigo.String(\"\"),\n        ModelID: livepeeraigo.String(\"\"),\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.LiveVideoToVideoResponse != nil {\n        // handle response\n    }\n}"
         - lang: python
           label: genLiveVideoToVideo
           source: |-
@@ -853,6 +936,9 @@ paths:
                 res = livepeer.generate.live_video_to_video(request={
                     "subscribe_url": "https://soulful-lava.org/",
                     "publish_url": "https://vain-tabletop.biz",
+                    "control_url": "",
+                    "events_url": "",
+                    "model_id": "",
                 })
 
                 assert res.live_video_to_video_response is not None
@@ -918,7 +1004,11 @@ paths:
             });
 
             async function run() {
-              const result = await livepeer.generate.textToSpeech({});
+              const result = await livepeer.generate.textToSpeech({
+                modelId: "",
+                text: "",
+                description: "A male speaker delivers a slightly expressive and animated speech with a moderate speed and pitch.",
+              });
 
               // Handle the result
               console.log(result);
@@ -927,7 +1017,7 @@ paths:
             run();
         - lang: go
           label: genTextToSpeech
-          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    res, err := s.Generate.TextToSpeech(ctx, components.TextToSpeechParams{})\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.AudioResponse != nil {\n        // handle response\n    }\n}"
+          source: "package main\n\nimport(\n\t\"context\"\n\tlivepeeraigo \"github.com/livepeer/livepeer-ai-go\"\n\t\"github.com/livepeer/livepeer-ai-go/models/components\"\n\t\"log\"\n)\n\nfunc main() {\n    ctx := context.Background()\n    \n    s := livepeeraigo.New(\n        livepeeraigo.WithSecurity(\"<YOUR_BEARER_TOKEN_HERE>\"),\n    )\n\n    res, err := s.Generate.TextToSpeech(ctx, components.TextToSpeechParams{\n        ModelID: livepeeraigo.String(\"\"),\n        Text: livepeeraigo.String(\"\"),\n        Description: livepeeraigo.String(\"A male speaker delivers a slightly expressive and animated speech with a moderate speed and pitch.\"),\n    })\n    if err != nil {\n        log.Fatal(err)\n    }\n    if res.AudioResponse != nil {\n        // handle response\n    }\n}"
         - lang: python
           label: genTextToSpeech
           source: |-
@@ -937,7 +1027,11 @@ paths:
                 http_bearer="<YOUR_BEARER_TOKEN_HERE>",
             ) as livepeer:
 
-                res = livepeer.generate.text_to_speech(request={})
+                res = livepeer.generate.text_to_speech(request={
+                    "model_id": "",
+                    "text": "",
+                    "description": "A male speaker delivers a slightly expressive and animated speech with a moderate speed and pitch.",
+                })
 
                 assert res.audio_response is not None
 
