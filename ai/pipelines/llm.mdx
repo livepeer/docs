@@ -1,0 +1,102 @@
+---
+title: LLM
+---
+
+## Overview
+
+The Livepeer AI network's `llm` pipeline provides an Open AI API compatible pipeline to use in media workflows.
+
+## Models
+
+LLM models are continously improving, please come to Livepeer Discord to discuss new models and ask Orchestrators to load them.
+
+
+## Basic Usage Instructions
+
+<Tip>
+  For a detailed understanding of the `llm` endpoint and to experiment with
+  the API, see the [Livepeer AI API Reference](/ai/api-reference/llm).
+</Tip>
+
+To generate text from llm request, send a `POST` request to the
+Gateway's `llm` API endpoint:
+
+```bash
+curl -X POST https://<GATEWAY_IP>/llm \
+    -d @llm.json
+```
+
+Example llm.json:
+
+```
+{
+    "model": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+    "messages": [
+        {
+            "role": "system",
+            "content": "You're a robot"
+        },
+        {
+            "role": "user",
+            "content": "tell a robot story"
+        }
+    ],
+    "max_tokens": 256,
+    "stream": false
+}
+```
+
+In this command:
+
+- `<GATEWAY_IP>` should be replaced with your AI Gateway's IP address.
+- `model` is the LLM model.
+- The json file should be valid json with layout and fields available provided in [Livepeer AI API Reference](/ai/api-reference/llm)
+
+After execution, the Orchestrator processes the request and returns the response
+to the Gateway:
+
+```json
+{
+  "images": [
+    {
+      "nsfw": false,
+      "seed": 3197613440,
+      "url": "https://<GATEWAY_IP>/stream/dd5ad78d/7adde483.png"
+    }
+  ]
+}
+```
+
+The `url` in the response is the URL of the generated image. Download the image
+with:
+
+```bash
+curl -O "https://<GATEWAY_IP>/stream/dd5ad78d/7adde483.png"
+```
+
+## Orchestrator Configuration
+
+To configure your Orchestrator to serve the `upscale` pipeline, refer to the
+[Orchestrator Configuration](/ai/orchestrators/get-started) guide.
+
+### System Requirements
+
+The following system requirements are recommended for optimal performance:
+
+- [NVIDIA GPU](https://developer.nvidia.com/cuda-gpus) with **at least 16GB** of
+  VRAM.
+
+## Recommended Pipeline Pricing
+
+Refer to pricing for other LLM services and set acceptable price that is competitive.
+
+## API Reference
+
+<Card
+  title="API Reference"
+  icon="rectangle-terminal"
+  href="/ai/api-reference/llm"
+>
+  Explore the `llm` endpoint and experiment with the API in the Livepeer AI
+  API Reference.
+</Card>

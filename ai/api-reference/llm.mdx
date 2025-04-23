@@ -1,21 +1,20 @@
 ---
 openapi: post /llm
 ---
-<Warning>
-We are currently deploying the Large Language Model (LLM) pipeline to our gateway infrastructure. 
-This warning will be removed once all listed gateways have successfully transitioned to serving the LLM pipeline, ensuring a seamless and enhanced user experience.
-</Warning>
+
 <Note>
-The LLM pipeline supports streaming response by setting `stream=true` in the request.  The response is then streamed with Server Sent Events (SSE)
+The LLM pipeline is Open AI API compatible but does not implement all features of the Open AI API.
+
+To stream responses set `stream: true` in the request json.  The response is then streamed with Server Sent Events (SSE)
 in chunks as the tokens are generated.  
 
 Each streaming response chunk will have the following format:
 
-`data: {"chunk": "word "}`
+`data: {"choices": [{"delta":{"content": "...token...", "role":"[user/assisant]"}, "finish_reason":""...."`
 
-The final chunk of the response will be indicated by the following format:
+The final chunk of the response will be indicated by blank content and finish_reason: "stop":
 
-`data: {"chunk": "[DONE]", "tokens_used": 256, "done": true}`
+`data: {"choices": [{"delta":{"content": "", "role":"assisant"}, "finish_reason":"stop"`
 
 The Response type below is for non-streaming responses that will return all of the response in one
 </Note>
