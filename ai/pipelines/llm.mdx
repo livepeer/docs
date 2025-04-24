@@ -1,0 +1,156 @@
+---
+title: LLM
+---
+
+## Overview
+
+The `llm` pipeline provides an OpenAI-compatible interface for text generation,
+designed to integrate seamlessly into media workflows.
+
+## Models
+
+The `llm` pipeline supports **any Hugging Face-compatible LLM model**. Since
+models evolve quickly, the set of warm (preloaded) models on Orchestrators
+changes regularly.
+
+To see which models are currently available, check the
+[Network Capabilities dashboard](https://tools.livepeer.cloud/ai/network-capabilities).  
+At the time of writing, the most commonly available model is
+[meta-llama/Meta-Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct).
+
+<Tip>
+  For faster responses with different
+  [LLM](https://huggingface.co/models?pipeline_tag=text-generation) 
+  models, ask Orchestrators to load it on their GPU via the `ai-research` channel
+  in [Discord Server](https://discord.gg/livepeer).
+</Tip>
+
+## Basic Usage Instructions
+
+<Tip>
+  For a detailed understanding of the `llm` endpoint and to experiment with the
+  API, see the [Livepeer AI API Reference](/ai/api-reference/llm).
+</Tip>
+
+To generate text with the `llm` pipeline, send a `POST` request to the Gateway's
+`llm` API endpoint:
+
+```bash
+curl -X POST "https://<GATEWAY_IP>/llm" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+    "messages": [
+      { "role": "user", "content": "Tell a robot story." }
+    ]
+  }'
+```
+
+In this command:
+
+- `<GATEWAY_IP>` should be replaced with your AI Gateway's IP address.
+- `<TOKEN>` should be replaced with your API token if required by the AI Gateway.
+- `model` is the LLM model to use for generation.
+- `messages` is the conversation or prompt input for the model.
+
+For additional optional parameters such as `temperature`, `max_tokens`, or
+`stream`, refer to the [Livepeer AI API Reference](/ai/api-reference/llm).
+
+After execution, the Orchestrator processes the request and returns the response
+to the Gateway which forwards the response in response to the request.
+
+Example partial non-streaming response below:
+```json
+{
+  "id": "chatcmpl-abc123",
+  "model": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+  "choices": [
+    {
+      "message": {
+        "role": "assistant",
+        "content": "Once upon a time, in a gleaming city of circuits..."
+      }
+    }
+  ]
+}
+```
+
+By default, responses are returned as a single JSON object. To stream output
+token-by-token using **Server-Sent Events (SSE)**, set `"stream": true` in the
+request body.
+
+## Orchestrator Configuration
+
+To configure your Orchestrator to serve the `llm` pipeline, refer to the
+[Orchestrator Configuration](/ai/orchestrators/get-started) guide.
+
+### Tuning Environment Variables
+
+The `llm` pipeline supports several environment variables that can be adjusted
+to optimize performance based on your hardware and workload. These are
+particularly helpful for managing memory usage and parallelism when running
+large models.
+
+<ParamField path="USE_8BIT" type="boolean">
+  Enables 8-bit quantization using `bitsandbytes` for lower memory usage. Set to
+  `true` to enable. Defaults to `false`.
+</ParamField>
+<ParamField path="PIPELINE_PARALLEL_SIZE" type="integer">
+  Number of pipeline parallel stages. Defaults to `1`.
+</ParamField>
+<ParamField path="TENSOR_PARALLEL_SIZE" type="integer">
+  Number of tensor parallel units. Must divide evenly into the number of
+  attention heads in the model. Defaults to `1`.
+</ParamField>
+<ParamField path="MAX_MODEL_LEN" type="integer">
+  Maximum number of tokens per input sequence. Defaults to `8192`.
+</ParamField>
+<ParamField path="MAX_NUM_BATCHED_TOKENS" type="integer">
+  Maximum number of tokens processed in a single batch. Should be greater than
+  or equal to `MAX_MODEL_LEN`. Defaults to `8192`.
+</ParamField>
+<ParamField path="MAX_NUM_SEQS" type="integer">
+  Maximum number of sequences processed per batch. Defaults to `128`.
+</ParamField>
+<ParamField path="GPU_MEMORY_UTILIZATION" type="float">
+  Target GPU memory utilization as a float between `0` and `1`. Higher values
+  make fuller use of GPU memory. Defaults to `0.85`.
+</ParamField>
+
+### System Requirements
+
+The following system requirements are recommended for optimal performance:
+
+- [NVIDIA GPU](https://developer.nvidia.com/cuda-gpus) with **at least 16GB** of
+  VRAM.
+
+## Recommended Pipeline Pricing
+
+<Note>
+  We are planning to simplify the pricing in the future so orchestrators can set
+  one AI price per compute unit and have the system automatically scale based on
+  the model's compute requirements.
+</Note>
+
+The `/llm` pipeline is currently priced based on the **maximum output tokens**
+specified in the request — not actual usage — due to current payment system
+limitations. We're actively working to support usage-based pricing to better
+align with industry standards.
+
+The LLM pricing landscape is highly competitive and rapidly evolving.
+Orchestrators should set prices based on their infrastructure costs and
+[market positioning](https://llmpricecheck.com/). As a reference, inference on
+`llama-3-8b-instruct` is currently around `0.08 USD` per 1 million **output
+tokens**.
+
+## API Reference
+
+<Card
+  title="API Reference"
+  icon="rectangle-terminal"
+  href="/ai/api-reference/llm"
+>
+  Explore the `llm` endpoint and experiment with the API in the Livepeer AI API
+  Reference.
+</Card>
