@@ -20,8 +20,8 @@ At the time of writing, the most commonly available model is
 
 <Tip>
   For faster responses with different
-  [LLM](https://huggingface.co/models?pipeline_tag=text-generation) diffusion
-  models, ask Orchestrators to load it on their GPU via the `ai-video` channel
+  [LLM](https://huggingface.co/models?pipeline_tag=text-generation) 
+  models, ask Orchestrators to load it on their GPU via the `ai-research` channel
   in [Discord Server](https://discord.gg/livepeer).
 </Tip>
 
@@ -50,7 +50,7 @@ curl -X POST "https://<GATEWAY_IP>/llm" \
 In this command:
 
 - `<GATEWAY_IP>` should be replaced with your AI Gateway's IP address.
-- `<TOKEN>` should be replaced with your API token.
+- `<TOKEN>` should be replaced with your API token if required by the AI Gateway.
 - `model` is the LLM model to use for generation.
 - `messages` is the conversation or prompt input for the model.
 
@@ -58,8 +58,9 @@ For additional optional parameters such as `temperature`, `max_tokens`, or
 `stream`, refer to the [Livepeer AI API Reference](/ai/api-reference/llm).
 
 After execution, the Orchestrator processes the request and returns the response
-to the Gateway:
+to the Gateway which forwards the response in response to the request.
 
+Example partial non-streaming response below:
 ```json
 {
   "id": "chatcmpl-abc123",
@@ -96,8 +97,7 @@ large models.
   `true` to enable. Defaults to `false`.
 </ParamField>
 <ParamField path="PIPELINE_PARALLEL_SIZE" type="integer">
-  Number of pipeline parallel stages. Should not exceed the number of model
-  layers. Defaults to `1`.
+  Number of pipeline parallel stages. Defaults to `1`.
 </ParamField>
 <ParamField path="TENSOR_PARALLEL_SIZE" type="integer">
   Number of tensor parallel units. Must divide evenly into the number of
@@ -115,7 +115,7 @@ large models.
 </ParamField>
 <ParamField path="GPU_MEMORY_UTILIZATION" type="float">
   Target GPU memory utilization as a float between `0` and `1`. Higher values
-  make fuller use of GPU memory. Defaults to `0.97`.
+  make fuller use of GPU memory. Defaults to `0.85`.
 </ParamField>
 
 ### System Requirements
