@@ -3,21 +3,9 @@ openapi: post /llm
 ---
 
 <Note>
-The LLM pipeline is Open AI API compatible but does not implement all features of the Open AI API.
-
-To stream responses set `stream: true` in the request json.  The response is then streamed with Server Sent Events (SSE)
-in chunks as the tokens are generated.  
-
-Each streaming response chunk will have the following format:
-
-`data: {"choices": [{"delta":{"content": "...token...", "role":"[user/assisant]"}, "finish_reason":""...."`
-
-The final chunk of the response will be indicated by blank content and finish_reason: "stop":
-
-`data: {"choices": [{"delta":{"content": "", "role":"assisant"}, "finish_reason":"stop"`
-
-The Response type below is for non-streaming responses that will return all of the response in one
+  The LLM pipeline is OpenAI API-compatible but does **not** implement all features of the OpenAI API.
 </Note>
+
 <Info>
   The default Gateway used in this guide is the public
   [Livepeer.cloud](https://www.livepeer.cloud/) Gateway. It is free to use but
@@ -27,3 +15,48 @@ The Response type below is for non-streaming responses that will return all of t
   Gateway node or partner with one via the `ai-video` channel on
   [Discord](https://discord.gg/livepeer).
 </Info>
+
+### Streaming Responses
+
+<Note>
+  Ensure your client supports SSE and processes each `data:` line as it arrives.
+</Note>
+
+By default, the `/llm` endpoint returns a single JSON response in the OpenAI
+[chat/completions](https://platform.openai.com/docs/api-reference/chat/object)
+format, as shown in the sidebar.
+
+To receive responses token-by-token, set `"stream": true` in the request body. The server will then use **Server-Sent Events (SSE)** to stream output in real time.
+
+
+Each streamed chunk will look like:
+
+```json
+data: {
+  "choices": [
+    {
+      "delta": {
+        "content": "...token...",
+        "role": "assistant"
+      },
+      "finish_reason": null
+    }
+  ]
+}
+```
+
+The final chunk will have empty content and `"finish_reason": "stop"`:
+
+```json
+data: {
+  "choices": [
+    {
+      "delta": {
+        "content": "",
+        "role": "assistant"
+      },
+      "finish_reason": "stop"
+    }
+  ]
+}
+```
