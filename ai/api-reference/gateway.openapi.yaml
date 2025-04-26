@@ -3,7 +3,7 @@ openapi: 3.1.0
 info:
   title: Livepeer AI Runner
   description: An application to run AI pipelines
-  version: 0.0.0
+  version: 0.1.0
 servers:
   - url: https://dream-gateway.livepeer.cloud
     description: Livepeer Cloud Community Gateway
@@ -1512,6 +1512,16 @@ components:
           title: Params
           description: Initial parameters for the pipeline.
           default: {}
+        gateway_request_id:
+          type: string
+          title: Gateway Request Id
+          description: The ID of the Gateway request (for logging purposes).
+          default: ''
+        stream_id:
+          type: string
+          title: Stream Id
+          description: The Stream ID (for logging purposes).
+          default: ''
       type: object
       required:
         - subscribe_url
@@ -1537,6 +1547,11 @@ components:
           type: string
           title: Events Url
           description: URL for subscribing to events for pipeline status and logs
+          default: ''
+        request_id:
+          type: string
+          title: Request Id
+          description: The ID generated for this request
           default: ''
       type: object
       required:
