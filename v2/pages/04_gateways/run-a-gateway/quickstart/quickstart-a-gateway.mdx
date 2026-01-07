@@ -22,11 +22,13 @@ import { CustomCodeBlock } from '/snippets/components/code.jsx';
 import { TipWithArrow, DoubleIconLink } from '/snippets/components/links.jsx';
 import { DownloadButton } from '/snippets/components/buttons.jsx';
 
+{/* PAGE LAYOUT HELPERS */}
+{/* UNUSED CURRENTLY */}
+
 {/* PAGE LAYOUT */}
 
 {/* # TEST
 
-<CustomCodeBlock language="yaml" codeString={DOCKER_YML.offChain.videoMin} /> */}
 <CustomCodeBlock language="yaml" codeString={DOCKER_YML.offChain.videoMin} /> */}
 
 
@@ -87,12 +89,11 @@ This guide will install and configure a Gateway to run video & AI workloads.
         Pull the docker image from <Icon icon="arrow-up-right" color="#2d9a67" /> [Livepeer Docker Hub]("https://hub.docker.com/r/livepeer/go-livepeer")
         <CustomCodeBlock
           {...DOCKER_CODE.install}
-          {...DOCKER_CODE.install}
           wrap
         />
       </Step>
       <Step title="Configure Gateway">
-
+        <Badge color="blue">Video</Badge> {" "} <Badge color="purple">AI</Badge>
 
         Create the `docker-compose.yml` file that defines the <Badge color="green">dual</Badge> gateway service.
 
@@ -102,12 +103,11 @@ This guide will install and configure a Gateway to run video & AI workloads.
           codeString={DOCKER_YML.offChain.dual}
           language="yaml"
           icon="docker"
-          icon="docker"
           filename="docker-compose.yml"
           highlight="[18]"
           expandable={true}
           wrap={false}
-
+        />
 
 
        *See flag details below:*
@@ -138,7 +138,6 @@ This guide will install and configure a Gateway to run video & AI workloads.
       <Step title="Run Gateway">
           <CustomCodeBlock
           {...DOCKER_CODE.create}
-          {...DOCKER_CODE.create}
         />
           <CustomCodeBlock
           {...DOCKER_CODE.run}
@@ -151,7 +150,8 @@ This guide will install and configure a Gateway to run video & AI workloads.
       <Step title="Test Gateway">
         <Tabs>
           <Tab title="Video" icon="camera-movie">
-
+            {/* You need a test video file (test-video.mp4) in your current directory to use the command */}
+            Send a video stream to the gateway:
             <TestVideoDownload>
               <DownloadButton
                 label="test-video.mp4"
@@ -233,12 +233,9 @@ This guide will install and configure a Gateway to run video & AI workloads.
       <Step title="Gateway Tips">
       {/* FFmpeg is a prerequisite for Livepeer development and is included in the Livepeer Docker images Dockerfile:44-47
       The box scripts in the repository show examples of using FFmpeg for streaming to Livepeer gateways stream.sh:28-34 */}
-      {/* FFmpeg is a prerequisite for Livepeer development and is included in the Livepeer Docker images Dockerfile:44-47
-      The box scripts in the repository show examples of using FFmpeg for streaming to Livepeer gateways stream.sh:28-34 */}
         See all available config flags:
         <CustomCodeBlock
           {...DOCKER_CODE.flags}
-          wrap
         />
             {/* The gateway will automatically create the data directory structure on first run
             {/* All configuration can be updated dynamically via the CLI API without restarting */}
