@@ -5,16 +5,12 @@ sidebarTitle: 'Run a Gateway Quickstart'
 ---
 
 {/* DATA & CODE */}
-import { DOCKER_YML, CONFIG_FILES } from '/snippets/data/gateways.jsx';
-import { DOCKER_CODE, BASH_CODE } from '/snippets/data/gateways/code.jsx';
+import { DOCKER_CODE, DOCKER_YML, BASH_CODE, AI_TEST_COMMANDS, CONFIG_FILES } from '/snippets/data/gateways/code.jsx';
 import { CONFIG_FLAGS } from '/snippets/data/gateways/flags.jsx';
 import { LatestRelease, LatestReleaseUrl } from '/snippets/components/release.jsx';
 
-{/* CODE STRINGS */}
-import { devDockerComposeYmlDual, prodDockerComposeYmlDual } from '/snippets/data/gateways/index.jsx';
-
 {/* BANNERS, CALLOUTS, VALUE STRINGS */}
-import { GatewayOffChainWarning, GatewayOnChainWarning, OrchAddrNote } from "/snippets/components/gateways/callouts.jsx";
+import { GatewayOffChainWarning, GatewayOnChainWarning, OrchAddrNote, TestVideoDownload } from "/snippets/components/gateways/callouts.jsx";
 
 {/* LAYOUTS */}
 import { createQuickstart } from '/snippets/data/gateways/quickstart.jsx';
@@ -24,8 +20,8 @@ import { QuickStartTabs, QuickStartSteps } from '/snippets/components/gateways/q
 import { ResponseFieldExpandable, CustomResponseField } from '/snippets/data/gateways/code.jsx';
 import { ValueResponseField } from '/snippets/components/response-field.jsx';
 import { CustomCodeBlock } from '/snippets/components/code.jsx';
-import { TipWithArrow } from '/snippets/components/links.jsx';
-import { DoubleIconLink } from '/snippets/components/links.jsx';
+import { TipWithArrow, DoubleIconLink } from '/snippets/components/links.jsx';
+import { DownloadButton } from '/snippets/components/buttons.jsx';
 
 {/* PAGE LAYOUT HELPERS */}
 {/* UNUSED CURRENTLY */}
@@ -34,7 +30,7 @@ import { DoubleIconLink } from '/snippets/components/links.jsx';
 
 {/* # TEST
 
-<CustomCodeBlock language="yaml" codeString={DOCKER_YML.offChain.videoMin} /> */} 
+<CustomCodeBlock language="yaml" codeString={DOCKER_YML.offChain.videoMin} /> */}
 
 
 {/* <QuickStartTabs
@@ -75,10 +71,7 @@ This guide will install and configure a Gateway to run video & AI workloads.
       <Step title="Install Gateway Software">
         Pull the docker image from [Livepeer Docker Hub]("https://hub.docker.com/r/livepeer/go-livepeer")
         <CustomCodeBlock
-          codeString={DOCKER_CODE.install}
-          language="bash"
-          icon="terminal"
-          filename="Install go-livepeer"
+          {...DOCKER_CODE.install}
           wrap
         />
       </Step>
@@ -92,7 +85,7 @@ This guide will install and configure a Gateway to run video & AI workloads.
         <CustomCodeBlock
           codeString={DOCKER_YML.offChain.dual}
           language="yaml"
-          icon="brackets-curly"
+          icon="docker"
           filename="docker-compose.yml"
           highlight="[18]"
           expandable={true}
@@ -105,52 +98,119 @@ This guide will install and configure a Gateway to run video & AI workloads.
 
         <ResponseFieldExpandable fields={CONFIG_FLAGS.offchain.required} title="Required Flags" />
         <ResponseFieldExpandable fields={CONFIG_FLAGS.offchain.optional} title="Optional (Recommended) Flags" />
+        <Expandable title="transcodingOptions.JSON Example"> 
+            <CustomCodeBlock
+                  codeString={CONFIG_FILES.video.transcodingOptionsJson}
+                  language="json"
+                  icon="brackets-curly"
+                  filename="Example transcodingOptions.json"
+              />
+        </Expandable>
 
 
       </Step>
       <Step title="Run Gateway">
           <CustomCodeBlock
-          codeString={DOCKER_CODE.create}
-          language="bash"
-                icon="terminal"
-          filename="Create the Gateway Volume"
+          {...DOCKER_CODE.create}
         />
           <CustomCodeBlock
-          codeString={DOCKER_CODE.run}
-          language="bash"
-                icon="terminal"
-          filename="Run the Gateway"
+          {...DOCKER_CODE.run}
         />
-                  <CustomCodeBlock
-          codeString={DOCKER_CODE.verify}
-          language="bash"
-                icon="terminal"
-          filename="Verify its running"
+          <CustomCodeBlock
+          {...DOCKER_CODE.verify}
         />
       </Step>
 
       <Step title="Test Gateway">
-      Send a video stream to the gateway:
+        <Tabs>
+          <Tab title="Video" icon="camera-movie">
+            {/* You need a test video file (test-video.mp4) in your current directory to use the command */}
+            Send a video stream to the gateway:
+            <TestVideoDownload>
+              <DownloadButton
+                label="test-video.mp4"
+                downloadLink="/v2/assets/gateways/test-video.mp4"
+              />
+            </TestVideoDownload>
 
-      <Note> You need a video file called `test-video.mp4` on your machine! </Note>
-      From a host terminal (not in Docker or Volume), run this command:
-          <CustomCodeBlock
-          codeString={BASH_CODE.sendVideo}
-          language="bash"
-                icon="terminal"
+            From a host terminal (not in Docker or Volume), run this command:
+                <CustomCodeBlock
+                {...BASH_CODE.testRTMPingest}
+              />
 
-          filename="Run the Gateway"
-        />
+            After streaming, check the HLS playback output:
+            <CustomCodeBlock
+              {...BASH_CODE.testHLS}
+              wrap
+              />
+              Tips:
+                - Replace localhost with your gateway's IP if running remotely
+                - The stream name (test) becomes part of the HLS playback URL
+          </Tab>
+          <Tab title="AI" icon="user-robot">
+            To test AI functionality in Livepeer, you can make HTTP requests to the AI endpoints exposed by your gateway. 
+            The gateway routes these requests to orchestrators with AI workers for processing.
+
+            Test your HTTP Ingest Stream:
+            <CustomCodeBlock
+              {...BASH_CODE.testHTTPingest}
+              wrap
+            />
+
+            Check if your Gateway AI worker is running:
+            <CustomCodeBlock
+              {...BASH_CODE.checkStatus}
+              wrap
+            />
+
+            Check Orchestrator's available Capabilities
+            <CustomCodeBlock
+              {...BASH_CODE.aiCapabilities}
+              wrap
+            />
+
+            Use the AI API to test functionality of available models
+            <Card
+              title="AI API"
+              href="/v2/pages/04_gateways/references/api-reference/AI-API"
+              icon="books"
+              arrow
+              horizontal
+            >
+              View AI API Reference here
+            </Card>
+
+            <Expandable title="AI API Example Commands">
+              <br/>
+              <CustomCodeBlock
+                {...AI_TEST_COMMANDS.textToImage}
+                wrap
+              />
+              <CustomCodeBlock
+                {...AI_TEST_COMMANDS.textToImage}
+                wrap
+              />
+              <CustomCodeBlock
+                {...AI_TEST_COMMANDS.liveVideoAI}
+                wrap
+              />
+            </Expandable>
 
 
+            {/* Pre-req's for testing
+            - AI Worker Running: Your orchestrator must have an AI worker with models loaded
+          - Gateway Connected: Gateway must be connected to the orchestrator with -orchAddr
+          - Models Available: The AI worker must have the requested models available */}
+
+          </Tab>
+        </Tabs>
       </Step>
       <Step title="Gateway Tips">
+      {/* FFmpeg is a prerequisite for Livepeer development and is included in the Livepeer Docker images Dockerfile:44-47
+      The box scripts in the repository show examples of using FFmpeg for streaming to Livepeer gateways stream.sh:28-34 */}
         See all available config flags:
-                          <CustomCodeBlock
-          codeString={DOCKER_CODE.flags}
-          language="bash"
-                icon="terminal"
-          filename="Complete list of available flags"
+        <CustomCodeBlock
+          {...DOCKER_CODE.flags}
         />
             {/* The gateway will automatically create the data directory structure on first run
             {/* All configuration can be updated dynamically via the CLI API without restarting */}
@@ -158,10 +218,13 @@ This guide will install and configure a Gateway to run video & AI workloads.
             {/* For production use, consider adding authentication via -authWebhookUrl flags.go:136  */}
 
         CLI
+        <CustomCodeBlock
+          {...BASH_CODE.cli}
+        />
       </Step>
-      <Step title="Troubleshooting">
+      {/* <Step title="Troubleshooting">
       .
-      </Step>
+      </Step> */}
     </Steps>
 
   </Tab>

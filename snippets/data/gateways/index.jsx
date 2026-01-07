@@ -4,7 +4,7 @@ export {
   CONFIG_FILES,
   DOCKER_YML,
   randomNotes,
-} from "./gateways.jsx";
+} from "../gateways.jsx";
 
 export {
   GatewayOffChainWarning,

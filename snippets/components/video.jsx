@@ -1,4 +1,4 @@
-import { DownloadLink } from "./links";
+import { DownloadButton } from "./buttons";
 
 // TODO: Deconstruct to change icon props. Only render icon if passed in.
 export const YouTubeVideo = ({ embedUrl, title = "", hint = "", caption }) => {
@@ -51,7 +51,7 @@ export const YouTubeVideoDownload = ({
           marginRight: 8,
         }}
       >
-        <DownloadLink rightIcon={true} />
+        <DownloadButton rightIcon={true} />
       </div>
       <Frame
         {...(hint ? { hint } : {})}

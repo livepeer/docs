@@ -27,6 +27,7 @@ export const CustomResponseField = ({ children, ...props }) => {
 
 export const ValueResponseField = ({ description, post = null, ...props }) => {
   const uniqueId = `custom-rf-${Math.random().toString(36).substring(2, 11)}`;
+
   const value = post
     ? [
         <span>
@@ -39,7 +40,7 @@ export const ValueResponseField = ({ description, post = null, ...props }) => {
   return (
     <div className={uniqueId}>
       <ResponseField {...props} post={value}>
-        {description}
+        {typeof description === "function" ? description() : description}
       </ResponseField>
     </div>
   );

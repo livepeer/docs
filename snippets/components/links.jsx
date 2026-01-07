@@ -125,32 +125,6 @@ export const GotoCard = ({ label, relativePath, icon, text, cta = "" }) => {
   );
 };
 
-export const DownloadLink = ({
-  label = "Download Transcript",
-  icon = "download",
-  downloadLink,
-  rightIcon = false,
-}) => {
-  console.log("dllink", downloadLink);
-  downloadLink = downloadLink ? downloadLink : "https://Livepeer.org";
-  console.log("dllink2", downloadLink);
-  return (
-    <span>
-      {!rightIcon && <Icon icon={icon} />}
-      <a
-        href={downloadLink}
-        style={{
-          marginRight: rightIcon ? 8 : 0,
-          marginLeft: rightIcon ? 0 : 8,
-        }}
-      >
-        {label}
-      </a>
-      {rightIcon && <Icon icon={icon} style={{ marginLeft: 8 }} />}
-    </span>
-  );
-};
-
 export const TipWithArrow = ({
   children,
   icon = "lightbulb",
