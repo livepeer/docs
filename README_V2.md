@@ -801,3 +801,394 @@ Wiki pages you might want to explore:
 Wiki pages you might want to explore:
 
 - [Architecture (livepeer/go-livepeer)](/wiki/livepeer/go-livepeer#1.1)
+
+Yes, it's possible to test on testnets, and there are orchestrators running on
+them. The Livepeer codebase explicitly supports testnet deployments with
+dedicated network configurations.
+
+## Quick Answer
+
+- **Testnets are supported**: Livepeer supports `arbitrum-one-goerli` and other
+  testnets
+- **Orchestrators exist**: The code assumes orchestrators are available on
+  testnets
+- **Deprecated testnets**: Rinkeby and arbitrum-one-rinkeby are deprecated but
+  still functional
+
+---
+
+## Testnet Support in Codebase
+
+### Network Configurations
+
+The starter code includes specific configurations for testnets [1](#50-0) :
+
+```go
+configOptions := map[string]*NetworkConfig{
+    "rinkeby": {
+        ethController: "0x9a9827455911a858E55f07911904fACC0D66027E",
+        redeemGas:     redeemGasL1,
+    },
+    "arbitrum-one-rinkeby": {
+        ethController: "0x9ceC649179e2C7Ab91688271bcD09fb707b3E574",
+        redeemGas:     redeemGasL2,
+    },
+    // ... other networks
+}
+```
+
+### Test Scripts
+
+The test suite includes testnet-specific tests [2](#50-1) :
+
+```bash
+# Run Rinkeby tests
+if [ -z ${RINKEBY_ETH_URL+x} ]; then
+  echo "RINKEBY_ETH_URL is not set - skipping Rinkeby tests"
+else
+  run_lp -gateway -network rinkeby $ETH_ARGS
+  [ -d "$DEFAULT_DATADIR"/rinkeby ]
+  kill $pid
+fi
+```
+
+### Development Configurations
+
+VS Code launch configurations show testnet setups [3](#50-2) :
+
+```go
+if *cfg.Network == "rinkeby" || *cfg.Network == "arbitrum-one-rinkeby" {
+    glog.Warning("The Rinkeby/ArbRinkeby networks are deprecated in favor of the Goerli/ArbGoerli networks which will be launched in January 2023.")
+}
+```
+
+## Testing on Testnets
+
+### Configuration
+
+Use the testnet configuration:
+
+```yaml
+command:
+  "-gateway -network arbitrum-one-goerli -ethUrl=https://goerli.arbitrum.io/rpc
+  -ethUrl=https://eth-goerli.g.alchemy.com/v2/YOUR_API_KEY"
+```
+
+### Finding Orchestrators
+
+Testnets have fewer orchestrators than mainnet, but they exist:
+
+1. Check the Livepeer explorer for testnet orchestrators
+2. Use the CLI to discover available orchestrators:
+   ```bash
+   curl http://localhost:5935/getOrchestrators
+   ```
+
+### Benefits of Testnet Testing
+
+- No real ETH costs (use testnet faucets)
+- Safe environment for experimentation
+- Test new features before mainnet deployment
+
+## Notes
+
+- Testnet orchestrators are run by community members and the Livepeer team
+- Some testnets may have limited capacity compared to mainnet
+- Always check the network status before deploying to testnet
+- The codebase is designed to work identically across testnet and mainnet, just
+  with different network parameters
+
+## On-Chain Gateway Orchestrator Discovery and Connection
+
+This codemap traces how on-chain Livepeer gateways discover and connect to
+orchestrators. The system supports both direct orchestrator specification via
+-orchAddr flag [1b] and automatic blockchain-based discovery when no addresses
+are provided [1d]. The discovery process queries the BondingManager smart
+contract to get all registered orchestrators [2c-2e], with different validation
+rules for different node types - transcoders require explicit orchestrator
+addresses [3a] while gateways can operate with or without them [3b].
+
+### 1. Orchestrator Discovery Initialization
+
+How a gateway sets up orchestrator discovery when starting in on-chain mode
+
+### 1a. Discovery Setup Start (`starter.go:1576`)
+
+Entry point for configuring orchestrator discovery
+
+```text
+// Set up orchestrator discovery
+```
+
+### 1b. Direct Orchestrator Pool (`starter.go:1584`)
+
+Uses specific orchestrator addresses when provided
+
+```text
+if len(orchURLs) > 0 {
+		n.OrchestratorPool = discovery.NewOrchestratorPool(bcast, orchURLs, common.Score_Trusted, orchBlacklist, *cfg.DiscoveryTimeout)
+```
+
+### 1c. On-Chain DB Cache (`starter.go:1591`)
+
+Creates blockchain-based orchestrator cache for on-chain mode
+
+```text
+if *cfg.Network != "offchain" {
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+		dbOrchPoolCache, err := discovery.NewDBOrchestratorPoolCache(ctx, n, timeWatcher, orchBlacklist, *cfg.DiscoveryTimeout)
+```
+
+### 1d. Auto-Discovery Fallback (`starter.go:1600`)
+
+Uses blockchain discovery when no specific orchestrators provided
+
+```text
+if *cfg.OrchWebhookURL == "" && len(orchURLs) == 0 {
+			n.OrchestratorPool = dbOrchPoolCache
+```
+
+### 2. Blockchain Orchestrator Pool Query
+
+How the gateway discovers orchestrators from smart contracts when no addresses
+are specified
+
+### 2a. HTTP Discovery Handler (`handlers.go:1077`)
+
+Gateway endpoint for discovering available orchestrators
+
+```text
+func registeredOrchestratorsHandler(client eth.LivepeerEthClient, db *common.DB) http.Handler {
+```
+
+### 2b. Query Transcoder Pool (`handlers.go:1079`)
+
+Calls Ethereum client to get registered orchestrators
+
+```text
+orchestrators, err := client.TranscoderPool()
+```
+
+### 2c. Ethereum Client Implementation (`client.go:980`)
+
+Retrieves all transcoders from the bonding manager contract
+
+```text
+func (c *client) TranscoderPool() ([]*lpTypes.Transcoder, error) {
+```
+
+### 2d. Get First Orchestrator (`client.go:983`)
+
+Smart contract call to get first registered orchestrator
+
+```text
+tAddr, err := c.GetFirstTranscoderInPool()
+```
+
+### 2e. Iterate Through Pool (`client.go:996`)
+
+Loops through all registered orchestrators
+
+```text
+tAddr, err = c.GetNextTranscoderInPool(tAddr)
+```
+
+### 3. Error Handling and Validation
+
+How the gateway validates orchestrator configuration and handles missing
+connections
+
+### 3a. Transcoder Validation (`starter.go:1827`)
+
+Transcoders and AI workers require orchestrator addresses
+
+```text
+if n.NodeType == core.TranscoderNode || n.NodeType == core.AIWorkerNode {
+		if len(orchURLs) <= 0 {
+			glog.Exit("Missing -orchAddr")
+```
+
+### 3b. Gateway Pool Validation (`starter.go:1605`)
+
+Gateways can run without orchestrators but won't transcode
+
+```text
+if n.OrchestratorPool == nil {
+		// Not a fatal error; may continue operating in segment-only mode
+		glog.Error("No orchestrator specified; transcoding will not happen")
+```
+
+### 3c. Flag Definition (`flags.go:23`)
+
+Command line flag for specifying orchestrator addresses
+
+```text
+cfg.OrchAddr = fs.String("orchAddr", *cfg.OrchAddr, "Comma-separated list of orchestrators to connect to")
+```
+
+# BYOC (Bring Your Own Container) Summary
+
+BYOC is Livepeer's Generic Processing Pipeline that allows you to run custom
+Docker containers for media processing on the Livepeer network while integrating
+with Livepeer's infrastructure for job distribution and payments. [1](#53-0)
+
+## Key Points
+
+- **BYOC is NOT just any Docker container** - it must implement Livepeer's
+  processing API
+- **Runs on Orchestrators with AI Workers** - containers execute on orchestrator
+  nodes, not directly on-chain
+- **Gateway routes jobs** - gateways accept requests and forward to
+  orchestrators with BYOC capabilities
+- **Payment model** - uses 1 ticket per second of compute (updated in v0.8.7)
+  [2](#53-1)
+
+## Architecture
+
+```mermaid
+graph LR
+    Gateway[BYOC Gateway] --> Orchestrator[BYOC Orchestrator]
+    Orchestrator --> Container[Custom Container]
+
+    Gateway -.->|/process/request| Orchestrator
+    Orchestrator -.->|Register Capability| Container
+```
+
+The system consists of:
+
+- **BYOCGatewayServer** - Handles job submission from clients [3](#53-2)
+- **BYOCOrchestratorServer** - Manages job processing and capability
+  registration [4](#53-3)
+
+## Requirements
+
+1. **Orchestrator with AI Worker** - Needed to run containers
+2. **Custom Container** - Must implement Livepeer's API
+3. **Off-chain or On-chain** - Works in both modes
+4. **Payment Setup** - Tickets for compute time
+
+## Notes
+
+- BYOC was introduced as the "Generic Processing Pipeline" in v0.8.5
+- Containers are managed similarly to AI worker containers
+- Your container must expose the required HTTP endpoints for job processing
+
+Wiki pages you might want to explore:
+
+- [Architecture (livepeer/go-livepeer)](/wiki/livepeer/go-livepeer#1.1)
+- [AI Workers (livepeer/go-livepeer)](/wiki/livepeer/go-livepeer#2.6)
+
+Wiki pages you might want to explore:
+
+- [Overview (livepeer/go-livepeer)](/wiki/livepeer/go-livepeer#1)
+- [AI Workers (livepeer/go-livepeer)](/wiki/livepeer/go-livepeer#2.6)
+
+# On-Chain Gateway Setup
+
+For an on-chain dual gateway, you don't need to manually connect to
+orchestrators - the system discovers them automatically from the blockchain.
+
+## Quick Answer
+
+**No special setup needed** - just run the gateway with on-chain flags. The
+gateway will:
+
+- Automatically discover all public orchestrators from the protocol
+- Filter by capabilities (video transcoding, AI models)
+- Select the best ones based on price and performance
+
+---
+
+## How On-Chain Discovery Works
+
+### Automatic Orchestrator Discovery
+
+When you start an on-chain gateway (`-network arbitrum-one-mainnet`), it
+automatically creates a `DBOrchestratorPoolCache` that polls the blockchain for
+registered orchestrators [1](#55-0) :
+
+```go
+if *cfg.Network != "offchain" {
+    dbOrchPoolCache, err := discovery.NewDBOrchestratorPoolCache(ctx, n, timeWatcher, orchBlacklist, *cfg.DiscoveryTimeout)
+    if err != nil {
+        exit("Could not create orchestrator pool with DB cache: %v", err)
+    }
+
+    // Use DB cache as orchestrator pool if no specific orchestrators provided
+    if *cfg.OrchWebhookURL == "" && len(orchURLs) == 0 {
+        n.OrchestratorPool = dbOrchPoolCache
+    }
+}
+```
+
+### What Gets Discovered
+
+The discovery system fetches:
+
+- **All registered orchestrators** from the BondingManager contract
+- **Their capabilities** (video transcoding profiles, AI models)
+- **Pricing information** for each capability
+- **Performance metrics** and capacity
+
+### Capability Matching
+
+When processing requests, the gateway:
+
+1. Queries discovered orchestrators for required capabilities [2](#55-1)
+2. Filters by price limits (`-maxPricePerUnit` for video,
+   `-maxPricePerCapability` for AI)
+3. Selects based on performance and availability
+
+## Recommended On-Chain Settings
+
+### Minimal Required Flags
+
+```yaml
+command:
+  "-gateway -network arbitrum-one-mainnet -ethUrl=https://arb1.arbitrum.io/rpc
+  -aiServiceRegistry  # Required for AI capabilities"
+```
+
+### Recommended Additions
+
+```yaml
+command:
+  "-gateway -network arbitrum-one-mainnet -ethUrl=https://arb1.arbitrum.io/rpc
+  -aiServiceRegistry -maxPricePerUnit=1000000000  # Video price limit
+  -maxPricePerCapability=/path/to/ai-pricing.json  # AI price limits
+  -monitor=true  # Enable metrics"
+```
+
+## No Manual Orchestrator List Needed
+
+Unlike off-chain mode where you specify `-orchAddr`, on-chain gateways:
+
+- **Discover all public orchestrators** automatically
+- **Update the list periodically** (every 25 minutes)
+- **Handle failures** by trying alternative orchestrators
+
+You can verify discovery worked:
+
+```bash
+curl http://localhost:5935/getOrchestrators
+```
+
+This will show all discovered orchestrators with their capabilities and pricing.
+
+## Notes
+
+- On-chain discovery requires ETH in your gateway account for transactions
+  [3](#55-2)
+- The gateway will show "No orchestrator specified; transcoding will not happen"
+  if discovery fails [4](#55-3)
+- Test on testnet first to avoid gas costs while verifying setup [5](#55-4)
+
+Wiki pages you might want to explore:
+
+- [Discovery and Selection (livepeer/go-livepeer)](/wiki/livepeer/go-livepeer#3.5)
+- [Architecture (livepeer/go-livepeer)](/wiki/livepeer/go-livepeer#1.1)
+
+Wiki pages you might want to explore:
+
+- [Discovery and Selection (livepeer/go-livepeer)](/wiki/livepeer/go-livepeer#3.5)
