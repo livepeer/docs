@@ -1,19 +1,8 @@
 ---
-title: 'Test Response'
+title: 'Docker Off-Chain Gateway Quickstart TAB VIEW'
 ---
-{/* TEST render mdx in mdx */ }
-
-
-
-{/* This is the Docker View.
-
-Install
-<ComplexCodeBlock
-  codeString="docker pull livepeer/go-livepeer:stable"
-  language="bash"
-  icon="terminal"
-  filename="Install go-livepeer"
-/> */}
+{/* Needs to be further destructured */}
+{/* Imports only used in this file should be here */}
 
   <Tab title="Off-Chain Gateway" icon="floppy-disk">
     <GatewayOffChainWarning />
@@ -161,6 +150,112 @@ Install
           </Tab>
         </Tabs>
 
+      </Step>
+      <Step title="Monitor Gateway">
+        <Danger> Needs Review </Danger>
+          The `-monitor=true` flag in the docker-compose.yml already has basic monitoring enabled which exposes metrics in Prometheus format at `http://localhost:8935/metrics`.
+          
+          Metrics collected include:
+          - Stream metrics (created, started, ended)
+          - Transcoding metrics (success rate, latency)
+          - Payment metrics (tickets sent, deposits)
+          - AI-specific metrics (attempts, orchestrators available)
+
+          *See More Metrics Options Below:*
+          <Accordion title="Prometheus Metrics" icon="monitor-waveform">
+
+          Access Prometheus metrics at:
+          ```bash
+          curl http://localhost:8935/metrics
+          ```
+
+          Key metrics include:
+          - `livepeer_stream_created_total` - Total streams created
+          - `livepeer_current_sessions_total` - Active transcoding sessions
+          - `livepeer_success_rate` - Transcoding success rate
+          - `livepeer_ai_live_attempts` - AI processing attempts
+          - `livepeer_gateway_deposit` - Current ETH deposit
+
+          </Accordion>
+          <Accordion title="CLI Monitoring Commands" icon="terminal">
+          *CLI Monitoring Commands*
+
+          Check gateway status:
+          ```bash 
+          curl http://localhost:5935/status
+          ```
+
+          Monitor available orchestrators:
+          ```bash
+          curl http://localhost:5935/getOrchestrators
+          ```
+
+          See all CLI options:
+          <CustomCodeBlock
+            {...DOCKER_CODE.flags}
+          />
+
+          ```bash Run Livepeer CLI
+            livepeer_cli # livepeer_cli --host=localhost --http=5935
+          ```
+          ```bash Livepeer CLI Output
+          +-----------------------------------------------------------+  
+          | Welcome to livepeer-cli, your Livepeer command line tool  |  
+          +-----------------------------------------------------------+  
+            
+          What would you like to do? (default = stats)  
+          1. Get node status  
+          2. View protocol parameters  
+          3. List registered orchestrators  
+          4. Invoke "initialize round"  
+          5. Invoke "bond"    
+          ...  
+          ```
+          </Accordion>
+          <Accordion title="AI-Specific Monitoring" icon="user-robot">
+          *AI-Specific Monitoring*
+
+          For AI workflows, the gateway sends detailed events including:
+          - Stream request events
+          - Orchestrator selection info
+          - Ingest metrics
+          - Error events
+
+          </Accordion>
+          <Accordion title="Enhanced Monitoring Options" icon="chart-line">    
+          *Enhanced Monitoring Options*
+
+          Add to your Docker Compose for more monitoring:
+
+          ```yaml
+          # Enable per-stream metrics
+          - -metricsPerStream=true
+
+          # Expose client IPs in metrics
+          - -metricsClientIP=true
+
+          # Kafka integration (requires setup)
+          - -kafkaBootstrapServers=kafka:9092
+          - -kafkaUser=username
+          - -kafkaPassword=password
+          - -kafkaGatewayTopic=livepeer-gateway
+          ```
+          </Accordion>
+          <Accordion title="Log Monitoring" icon="file-lines">
+          *Log Monitoring*
+
+          Monitor logs in real-time:
+          ```bash
+          docker logs -f dual-gateway
+          ```
+
+          Look for key events:
+          - "Received live video AI request"
+          - "Orchestrator selected"
+          - "Transcoding completed"
+          - Payment processing events
+
+          </Accordion>
       </Step>
       <Step title="Gateway Tips">
       {/* FFmpeg is a prerequisite for Livepeer development and is included in the Livepeer Docker images Dockerfile:44-47

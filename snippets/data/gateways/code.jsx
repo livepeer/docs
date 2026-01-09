@@ -2,6 +2,7 @@
 // DOCKER
 // preNote is STRING ONLY. Cannot accept mintlify components.
 // Will move this to a different view instead.
+// THIS IS SO MESSY - MUST BE REORGANIZED BY SECTION
 export const DOCKER_CODE = {
   install: {
     filename: "Install go-livepeer",

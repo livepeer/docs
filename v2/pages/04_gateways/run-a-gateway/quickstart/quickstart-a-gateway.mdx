@@ -1,6 +1,6 @@
 ---
 title: 'Run a Gateway: Quickstart Guide'
-description: 'Quickstart a Livepeer Gateway'
+description: 'Quickstart a Livepeer Gateway.'
 sidebarTitle: 'Run a Gateway Quickstart'
 ---
 {/* DATA & CODE */}
@@ -22,6 +22,12 @@ import { DownloadButton } from '/snippets/components/buttons.jsx';
 
 {/* LAYOUTS & VIEWS */}
 import DockerOffChainTab from '/snippets/pages/gateways/run/quickstart/views/docker/dockerOffChainTab.mdx';
+import DockerOnChainTab from '/snippets/pages/gateways/run/quickstart/views/docker/dockerOnChainTab.mdx';
+import LinuxOffChainTab from '/snippets/pages/gateways/run/quickstart/views/linux/linuxOffChainTab.mdx';
+import LinuxOnChainTab from '/snippets/pages/gateways/run/quickstart/views/linux/linuxOnChainTab.mdx';
+import WindowsOffChainTab from '/snippets/pages/gateways/run/quickstart/views/windows/windowsOffChainTab.mdx';
+import WindowsOnChainTab from '/snippets/pages/gateways/run/quickstart/views/windows/windowsOnChainTab.mdx';
+
 
 {/* 
 <Panel>
@@ -31,479 +37,143 @@ import DockerOffChainTab from '/snippets/pages/gateways/run/quickstart/views/doc
       <h4>{" "}<a href="#on-chain-gateway">On-Chain Gateway</a></h4>
   </div>
 </Panel> */}
-
+<Icon icon="github" size={20} /> Github: [go-livepeer codebase](https://github.com/livepeer/go-livepeer) <Icon icon="arrow-up-right" color="#2d9a67" size={10}/>
 <TipWithArrow>
-  Use the Dropdown at the top-right of this page to view the Quickstart Guide
+  Use the <Icon icon="circle-chevron-down" /> **Dropdown** at the top-right of this page to view the Quickstart Guide
   for your preferred OS.
+  <br />
+  <br />
+  <Icon icon="docker" /> [Docker]("#docker") is the recommended way to install and run a Livepeer Gateway Node.
 </TipWithArrow>
 
+---
+# Let's Go(-Livepeer) ! <Icon icon="face-grin-wink" size={26} />
 This page will have you running a Livepeer Gateway for <Badge color="blue">Video</Badge> & <Badge color="purple">AI</Badge> services in 10 minutes on Linux, Mac or Windows.
+<Card title="go-livepeer Codebase" href="https://github.com/livepeer/go-livepeer" icon="github" arrow horizontal/>
 
 This guide includes both on-chain (production) and off-chain (local) Gateway setup.
 
-{/* #### Quick Summary: Off-Chain vs On-Chain Gateway Differences
 
-| Aspect | Off-Chain Gateway | On-Chain Gateway |
-|--------|------------------|------------------|
-| **Ethereum** | No RPC needed | Requires `-ethUrl` and wallet |
-| **Network** | Default: offchain | Specify network (e.g., arbitrum-one-mainnet) |
-| **Payments** | No blockchain payments | Ticket-based micropayments |
-| **Verification** | Disabled by default | Enabled by default |
- */}
+{/* Installing a Gateway means installing the <DoubleIconLink label="go-livepeer" href="https://github.com/livepeer/go-livepeer"/> Gateway code. */}
 
-{/* #### Assumed (On-chain setup) */}
-{/* - You have ETH on Arbitrum L2 Network (or can get it from a faucet) */}
-
-{/* - You have an Arbitrum RPC URL (or can use a public one) */}
+{/* <Note>
+  You can install & run a [Livepeer Gateway Node](https://github.com/livepeer/go-livepeer) using
+  1. <Icon icon="docker" size={20} /> **Docker** (recommended)
+  2. Building from <Icon icon="code" size={20} /> **source (binary)**
+</Note> */}
 
 <br />
 
 <View title=" Docker" icon="docker" iconType="solid">
+  ## <Icon icon="docker" iconType="solid" size={32} /> Docker Quickstart Guide
+  <Icon icon="linux" color="#ff9a0e" /><Badge > Linux </Badge>{" "} <Icon icon="windows" color="#14bbf7"/><Badge> Windows </Badge>
 
+  <Expandable title="Docker Supported Hosts Information">
+    <br />
+    Docker is not supported on MacOS at this time.
+    <br />
+    Docker supported hosts:
 
-## <Icon icon="docker" iconType="solid" size={32} /> Docker Quickstart Guide
+      Linux (x86_64 — amd64; possibly other arches if images exist for them — verified only linux/amd64 for latest image) 
+      Docker Hub
 
-This guide will install and configure a Gateway to run video & AI workloads.
+      macOS (Docker Desktop)
 
-<Tabs>
-  <DockerOffChainTab />
-  <Tab title="On-Chain Gateway" icon="link">
-    This guide will set up a Livepeer Gateway on the [Arbitrum One Mainnet](https://arbitrum.io/).
-    
-    <Accordion title="Looking for a 'testnet'?" icon="info-circle">
-        While Livepeer contracts are deployed to Arbitrum Testnet, there is currently no reliable Orchestrator services on this chain.
-        
-        <Note>
-        If you would like to use the [Aribtum Testnet](#arbitrum-testnet) for testing, you will need to run your own Orchestrator node there to connect to.
-        </Note>
+      Windows (Docker Desktop / WSL2)
+  </Expandable>
 
-        There are conversations underway to enable a public "testnet" in the future. 
-        
-        Follow & contribute to the discussion on the
-        <Icon icon="arrow-up-right" color="#2d9a67" /> [Discord](https://discord.gg/livepeer) and
-        <Icon icon="arrow-up-right" color="#2d9a67" /> [Forum](https://forum.livepeer.org)
+  This guide will install and configure a Gateway to run video & AI workloads.
 
-    </Accordion>
-    <GatewayOnChainWarning />
-    <Steps titleSize="h3">
-      <Step title="Install Gateway Software">
-        Pull the docker image from <Icon icon="arrow-up-right" color="#2d9a67" /> [Livepeer Docker Hub]("https://hub.docker.com/r/livepeer/go-livepeer")
-        <CustomCodeBlock
-          {...DOCKER_CODE.install}
-          wrap
-        />
+  <Tabs>
+    <DockerOffChainTab />
+    <DockerOnChainTab />
+  </Tabs>
 
-      </Step>
-      <Step title="Configure Gateway">
-        <Badge color="blue">Video</Badge> {" "} <Badge color="purple">AI</Badge>
-
-        Create the `docker-compose.yml` file that defines the <Badge color="green">dual</Badge> gateway service.
-
-        <CustomCodeBlock
-          codeString={DOCKER_YML.onChain.dual}
-          language="yaml"
-          icon="docker"
-          filename="docker-compose.yml"
-          expandable={true}
-          wrap={false}
-        />
-
-        <Danger> Needs edit, better explanation & format </Danger>
-        *See flag details below:*
-        <AccordionGroup>
-          <ResponseFieldAccordion
-            title="Required Flags"
-            icon="file-circle-exclamation"
-            fields={CONFIG_FLAGS.onchain.required}
-          />
-          <ResponseFieldAccordion
-            title="Recommended Flags"
-            icon="file-circle-info"
-            fields={CONFIG_FLAGS.onchain.optional}
-          />
-          <ResponseFieldAccordion
-            title="Wallet, Pricing & Auth Flag Options"
-            icon="file-circle-info"
-            fields={CONFIG_FLAGS.onchain.optionalAdvanced}
-          />
-        </AccordionGroup>
-
-        *See Configuration File Examples below:*
-        <AccordionGroup>          
-          <Accordion title="Transcoding Options Example" icon="brackets-curly">
-            <CustomCodeBlock
-                codeString={CONFIG_FILES.video.transcodingOptionsJson}
-                language="json"
-                icon="brackets-curly"
-                filename="Example transcodingOptions.json"
-            />
-          </Accordion>
-          <Accordion title="AI Capability Pricing Example" icon="brackets-curly">
-            <CustomCodeBlock
-                codeString={CONFIG_FILES.ai.aiPricingJson}
-                language="json"
-                icon="brackets-curly"
-                filename="Example aiPricing.json"
-            />
-          </Accordion>
-        </AccordionGroup>
-
-      </Step>
-      <Step title="Run Gateway">
-        <CustomCodeBlock
-          {...DOCKER_CODE.create}
-        />
-        <CustomCodeBlock
-          {...DOCKER_CODE.run}
-        />
-        <CustomCodeBlock
-          {...DOCKER_CODE.verify}
-        />
-        <CustomCodeBlock
-          {...DOCKER_CODE.verifyOnChainConfig}
-        />
-      </Step>
-      <Step title="Connect Gateway">
-        For on-chain mode, Orchestrator discovery happens automatically.
-
-        <CustomCodeBlock
-          {...BASH_CODE.checkAvailableOrchestrators}
-          preNote="Verify Orchestrator discovery:"
-        />
-
-        <Note> 
-          - On-chain discovery requires ETH in your gateway account for transactions
-          - The gateway will show "No orchestrator specified; transcoding will not happen" if discovery fails
-        </Note>
-
-        The [Livepeer Explorer Orchestrator Performance Leaderboard](https://explorer.livepeer.org/leaderboard) can also show you a list of all available Orchestrators & their capabilities & services.
-      </Step>
-      <Step title="Test Gateway">
-      <Accordion title="Verify Configuration" icon="tools">
-        # Verify Ethereum connection  
-      docker logs dual-gateway | grep -i "ethereum\|eth\|blockchain"  
-        
-      # Check account address  
-      curl http://localhost:5935/status | jq '.eth.accountAddr'
-      </Accordion>
-      <Accordion title="Basic Connectivity Tests" icon="wifi">
-          *Basic Connectivity Tests:*
-
-          <CustomCodeBlock
-            {...DOCKER_CODE.verifyEthConnection}
-          />
-
-          These tests verify the gateway is running and can discover orchestrators:
-            <CustomCodeBlock
-              {...BASH_CODE.checkStatus}
-            />
-            <CustomCodeBlock
-              {...BASH_CODE.checkAvailableOrchestrators}
-            />
-        </Accordion>
-      <Accordion title="On-Chain Specific Tests" icon="chain">
-          *On-Chain Specific Tests:*
-
-          Before testing, ensure your on-chain gateway is properly configured.
-          The gateway must have an active Ethereum connection and valid account:
-            <CustomCodeBlock
-              {...BASH_CODE.onchain.checkAccountAddress}
-            />
-            <CustomCodeBlock
-              {...DOCKER_CODE.verifyEthConnection}
-            />
-          </Accordion>
-      <Accordion title="Payment Tests" icon="hand-holding-dollar">
-          *Payment Tests:*
-
-          For on-chain gateways, test the payment system: 
-          {/* The payment system uses probabilistic micropayments with tickets. */}
-          <CustomCodeBlock
-              {...BASH_CODE.onchain.checkCurrentRound}
-            />
-            <CustomCodeBlock
-              {...BASH_CODE.onchain.depositFunds}
-            />
-            <CustomCodeBlock
-              {...BASH_CODE.onchain.checkDeposit}
-            />
-          </Accordion>
-      <Accordion title="Advanced On-Chain Tests" icon="ethereum">
-          *Advanced On-Chain Tests*
-
-          Test smart contract interactions:
-          <CustomCodeBlock
-            {...BASH_CODE.onchain.checkTicketParams}
-          />
-          <CustomCodeBlock
-            {...BASH_CODE.onchain.checkPriceInfo}
-          />
-          <CustomCodeBlock
-            {...BASH_CODE.onchain.checkWithdrawal}
-          />
-          </Accordion>
-      <Accordion title="Video Ingest Tests" icon="camera-movie">
-          *Video Tests:*
-            {/* 
-            Video Transcoding Tests
-            Test both RTMP and HTTP ingest methods:
-            # RTMP stream (requires FFmpeg)  
-            ffmpeg -re -i test-video.mp4 -c copy -f flv rtmp://localhost:1935/stream/test-key  
-              
-            # HTTP segment push  
-            curl -X PUT http://localhost:8935/live/test/0.ts --data-binary @test-segment.ts  
-              
-            # Verify HLS output  
-            curl http://localhost:8935/hls/test-key/index.m3u8 */}
-            <TestVideoDownload />
-            <CustomCodeBlock
-              {...BASH_CODE.testRTMPingest}
-            />
-            <CustomCodeBlock
-              {...BASH_CODE.testHLS}
-              wrap
-            />
-            <CustomCodeBlock
-              {...BASH_CODE.testHTTPingest}
-            />
-
-            {/* 7. 
-            Test Stream Verification
-            Use the built-in test pattern for verification:
-
-            # Generate test pattern  
-            ffmpeg -re -f lavfi -i testsrc=size=1280x720:rate=30,format=yuv420p \  
-              -c:v libx264 -b:v 1000k -f flv rtmp://localhost:1935/stream/test-key  
-              
-            # Monitor transcoding  
-            curl http://localhost:8935/hls/test-key/index.m3u8 */}
-
-
-          </Accordion>
-      <Accordion title="AI Tests" icon="user-robot">
-          *AI Tests:*
-            <CustomCodeBlock
-              {...BASH_CODE.testHTTPingest}
-            />
-          *AI Capability Tests:*
-            <CustomCodeBlock
-              {...BASH_CODE.test.ai.textToImage}
-            />
-            <CustomCodeBlock
-              {...BASH_CODE.test.ai.LLM}
-            />
-          </Accordion>
-      <Accordion title="Expected Results" icon="check-circle">
-            **Expected Results**
-
-            Successful Test Indicators
-            - Status endpoint returns valid Ethereum address
-            - Orchestrators list shows pricing and ticket parameters
-            - Video streams generate HLS playlists
-            - AI endpoints return processed results
-            - Payment operations complete without errors
-
-            **Common Issues**
-
-            - No orchestrators found: Check `-orchAddr` configuration
-            - Payment errors: Verify ETH balance and gas settings
-            - AI failures: Ensure `-aiServiceRegistry` is set for on-chain AI
-            - Connection timeouts: Check firewall and network settings
-            
-            **Notes**
-            
-            - On-chain tests require ETH in the gateway account for transactions
-            - Test on a testnet first (e.g., arbitrum-one-goerli) before using mainnet
-            - Monitor gas costs during testing
-            - The test suite includes on-chain validation tests [test_args.sh](https://github.com/livepeer/go-livepeer/blob/master/test_args.sh)
-            - Use `-localVerify=false` to skip local verification if needed
-          </Accordion>
-      </Step>
-      <Step title="Gateway Tips">
-        <Expandable title="Connecting to Orchestrators">
-          The Gateway needs to connect to at least one orchestrator for services.
-
-          If you're running your own Orchestrator, you can use this by setting the `-orchAddr` flag. 
-          For on-chain mode, orchestrator discovery happens automatically but you need to ensure your gateway has ETH for transactions.
-        </Expandable>
-
-        <Expandable title="See More Explorer Information">
-          The [Livepeer Explorer Orchestrator Performance Leaderboard](https://explorer.livepeer.org/leaderboard) can also show you a list of all available Orchestrators & their capabilities & services.
-          The Performance Leaderboard is provides real-time operational metrics that directly impact gateway performance, while the main Orchestrators page helps with understanding the economic landscape and potential delegation opportunities.
-        </Expandable>
-
-        <Expandable title="Automatic Orchestrator Discovery System">
-          When you start an on-chain gateway (`-network arbitrum-one-mainnet`), it automatically creates a `DBOrchestratorPoolCache` that polls the blockchain for registered Orchestrators.
-          
-          Unlike off-chain mode where you specify `-orchAddr`, on-chain gateways:
-
-          - Discover all public orchestrators automatically
-          - Update the list periodically (every 25 minutes)
-          - Handle failures by trying alternative orchestrators
-          
-
-          *Orchestrator Discovery Initialisation*
-          The discovery process queries the BondingManager smart contract to get all registered orchestrators with different validation rules 
-          for different node types - transcoders require explicit orchestrator addresses while gateways can operate with or without them.
-
-
-          *The discovery system fetches:*
-
-          - All registered orchestrators from the BondingManager contract
-          - Their capabilities (video transcoding profiles, AI models)
-          - Pricing information for each capability
-          - Performance metrics and capacity
-
-          *Capability Matching*
-
-          When processing requests, the gateway:
-
-          - Queries discovered orchestrators for required capabilities discovery.go:160-174
-          - Filters by price limits (-maxPricePerUnit for video, -maxPricePerCapability for AI)
-          - Selects based on performance and availability
-
-                  {/* 2. Blockchain Orchestrator Pool Query   
-
-                   3. Error Handling and Validation */}
-
-        </Expandable>
-
-        <CustomCodeBlock
-          {...DOCKER_CODE.connect}
-        />
-      </Step>
-    </Steps>
-  </Tab>
-</Tabs>
-
-## Reference Pages
-
-<Columns cols={2}>
-  <Card
-    title="Docker Installation Guide"
-    href="../install/docker-install"
-    arrow
-    horizontal
-  >
-    View Full Installation Guide
-  </Card>
-  <Card
-    title="Configuration Flags Reference"
-    href="../../references/configuration-flags.mdx"
-    arrow
-    horizontal
-  >
-    Gateway Configuration Flag Guide
-  </Card>
-</Columns>
+  ## Reference Pages
+  {/* MOVE TO OWN PAGE*/}
+  <Columns cols={2}>
+    <Card
+      title="Docker Installation Guide"
+      href="../install/docker-install"
+      arrow
+      horizontal
+    >
+      View Full Installation Guide
+    </Card>
+    <Card
+      title="Configuration Flags Reference"
+      href="../../references/configuration-flags.mdx"
+      arrow
+      horizontal
+    >
+      Gateway Configuration Flag Guide
+    </Card>
+  </Columns>
 
 </View>
 
 <View title="Linux/Mac" icon="linux" iconType="solid">
-## <Icon icon="linux" iconType="solid" size={32} /> Linux/Mac Quickstart Guide
+  ## <Icon icon="linux" iconType="solid" size={32} /> Linux/Mac Quickstart Guide
+
+  Docker is the recommended way to install and use a Gateway on Linux. 
+  
+  If you prefer to build from source, you can follow the instructions below.
 
   <Tabs>
-    <Tab title="Off-Chain Gateway" icon="floppy-disk">
-    <Warning> 
-    <span style={{fontSize: '1.0rem' }}>You will need to <span style={{ color: 'white' }}>run your own Orchestrator node</span> to test an off-chain Gateway:  [<Icon icon="arrow-up-right" color="#2d9a67"/> Orchestrator Quickstart](/v2/pages/05_orchestrators/setting-up-an-orchestrator/setting-up-an-orchestrator/quickstart-add-your-gpu-to-livepeer)</span>
-
-    <p>Note: You can use [<Icon icon="arrow-up-right" color="#2d9a67"/> BYOC pipelines](/v2/pages/03_developers/ai-inference-on-livepeer/byoc) for local testing without needing a GPU. </p>
-    </Warning>
-    <Steps titleSize="h3">
-      <Step title="Install Gateway Software">
-        hi
-        {/* <LatestReleaseUrl asset="livepeer-linux-amd64.tar.gz">
-          <CustomCodeBlock
-            codeString="sudo wget https://github.com/livepeer/go-livepeer/releases/download/{PLACEHOLDER}/livepeer-linux-amd64.tar.gz"
-            placeholderValue={LatestRelease}
-            language="bash"
-            icon="terminal"
-          />
-        </LatestReleaseUrl> */}
-        bye
-      </Step>
-      <Step title="Configure Gateway">
-      .
-      </Step>
-      <Step title="Run Gateway">
-      .
-      </Step>
-      <Step title="Test Gateway">
-      .
-      </Step>
-    </Steps>
-    </Tab>
-    <Tab title="On-Chain Gateway" icon="link">
-    .
-    </Tab>
-
+    <LinuxOffChainTab />
+    <LinuxOnChainTab />
   </Tabs>
 
-## Reference Pages
-
-<Columns cols={2}>
-  <Card
-    title="Linux Installation Guide"
-    href="../install/windows-install"
-    arrow
-    horizontal
-  >
-    View Full Installation Guide
-  </Card>
-  <Card
-    title="Configuration Flags Reference"
-    href="../../references/configuration-flags.mdx"
-    arrow
-    horizontal
-  >
-    Gateway Configuration Flag Guide
-  </Card>
-</Columns>
+  ## Reference Pages
+  {/* MOVE TO OWN PAGE*/}
+  <Columns cols={2}>
+    <Card
+      title="Linux Installation Guide"
+      href="../install/windows-install"
+      arrow
+      horizontal
+    >
+      View Full Installation Guide
+    </Card>
+    <Card
+      title="Configuration Flags Reference"
+      href="../../references/configuration-flags.mdx"
+      arrow
+      horizontal
+    >
+      Gateway Configuration Flag Guide
+    </Card>
+  </Columns>
 
 </View>
 
 <View title="Windows" icon="windows" iconType="solid">
-## <Icon icon="windows" iconType="solid" size={32} /> Windows Quickstart Guide
+  ## <Icon icon="windows" iconType="solid" size={32} /> Windows Quickstart Guide
   <Tabs>
-    <Tab title="Off-Chain Gateway" icon="floppy-disk">
-      <OffChainWarning />
-      <Steps>
-        <Step title="Configure Gateway">
-        .
-        </Step>
-        <Step title="Run Gateway">
-        .
-        </Step>
-        <Step title="Test Gateway">
-        .
-        </Step>
-      </Steps>
-    </Tab>
-    <Tab title="On-Chain Gateway" icon="link">
-    .
-    </Tab>
+    <WindowsOffChainTab />
+    <WindowsOnChainTab />
   </Tabs>
 
-## Reference Pages
+  ## Reference Pages
 
-<Columns cols={2}>
-  <Card
-    title="Windows Installation Guide"
-    href="../install/windows-install"
-    arrow
-    horizontal
-  >
-    View Full Installation Guide
-  </Card>
-  <Card
-    title="Configuration Flags Reference"
-    href="../../references/configuration-flags.mdx"
-    arrow
-    horizontal
-  >
-    Gateway Configuration Flag Guide
-  </Card>
-</Columns>
+  <Columns cols={2}>
+    <Card
+      title="Windows Installation Guide"
+      href="../install/windows-install"
+      arrow
+      horizontal
+    >
+      View Full Installation Guide
+    </Card>
+    <Card
+      title="Configuration Flags Reference"
+      href="../../references/configuration-flags.mdx"
+      arrow
+      horizontal
+    >
+      Gateway Configuration Flag Guide
+    </Card>
+  </Columns>
 
 </View>
 
@@ -552,64 +222,3 @@ It shows both off-chain (local) and on-chain (production) modes.
 -
 
 It uses defaults for all optional parameters. See the [full setup guide](/v2/pages/04_gateways/run-a-gateway/run-a-gateway) for more details on customising your Gateway. \*/}
-
-<Expandable title="TO DELETE">
-<Tabs>
-
-  <Tab title="On-Chain Gateway">
-    This mode connects your Gateway to the Livepeer network on Arbitrum.
-
-    The guide uses a public RPC URL (rate-limited) & creates your account (wallet) for you.
-
-## Install
-
-    Install the latest version of the Livepeer Gateway software: [go-livepeer](https://github.com/livepeer/go-livepeer)
-    {/* <Badge color="green"> Latest Release: <LatestReleaseUrl asset="livepeer-linux-amd64.tar.gz"/> </Badge> */}
-    <Tabs>
-    <Tab title="Linux/Mac">
-    <LatestReleaseUrl asset="livepeer-linux-amd64.tar.gz">
-    <CustomCodeBlock
-      codeString="sudo wget https://github.com/livepeer/go-livepeer/releases/download/{PLACEHOLDER}/livepeer-linux-amd64.tar.gz"
-      placeholderValue={LatestRelease}
-      language="bash"
-      icon="terminal"
-    />
-    </LatestReleaseUrl>
-    </Tab>
-    <Tab title="Windows">
-    <LatestReleaseUrl asset="livepeer-windows-amd64.zip">
-    <CustomCodeBlock
-      codeString="https://github.com/livepeer/go-livepeer/releases/download/{PLACEHOLDER}/livepeer-windows-amd64.zip"
-      placeholderValue={LatestRelease}
-      language="bash"
-      icon="terminal"
-    />
-    </LatestReleaseUrl>
-    </Tab>
-    <Tab title="Docker">
-    <CustomCodeBlock
-      codeString="docker pull livepeer/go-livepeer:master"
-      language="bash"
-      icon="terminal"
-    />
-    </Tab>
-    </Tabs>
-
-## Configure
-
-  </Tab>
-  <Tab title="Off-Chain Gateway">
-    ## Install
-
-    ## Configure
-
-  </Tab>
-</Tabs>
-
-When you run with empty ETH parameters, Livepeer:
-
-- Detects no existing account in the keystore
-- Creates a new Ethereum account automatically
-- Prompts for password to encrypt the keystore file \*/} */}
-
-</Expandable>
