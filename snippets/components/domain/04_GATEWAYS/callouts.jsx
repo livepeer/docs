@@ -13,7 +13,7 @@ const GatewayOffChainWarning = () => {
           See{" "}
           <DoubleIconLink
             label="BYOC Guide"
-            href="/v2/pages/03_developers/ai-inference-on-livepeer/byoc"
+            href="/developers/ai-inference-on-livepeer/byoc"
             iconLeft="link"
           />{" "}
           to test a local Gateway without a GPU.
@@ -22,7 +22,7 @@ const GatewayOffChainWarning = () => {
           See{" "}
           <DoubleIconLink
             label="Orchestrator Guide"
-            href="/v1/orchestrators/guides/get-started"
+            href="/orchestrators/guides/get-started"
             iconLeft="link"
           />{" "}
           to setup and run an Orchestrator.
@@ -42,7 +42,7 @@ const GatewayOnChainWarning = () => {
         </span>{" "}
         account on Arbitrum One to run an on-chain Gateway.
         <br /> <br /> See{" "}
-        <a href="/v2/pages/04_gateways/run-a-gateway/requirements/on-chain setup/fund-gateway">
+        <a href="/gateways/run-a-gateway/requirements/on-chain-setup/fund-gateway">
           <Icon icon="arrow-up-right" color="#2d9a67" /> Fund Your Gateway{" "}
         </a>
       </span>

@@ -8,6 +8,7 @@
 //   windowsOffChainQuickstart,
 //   windowsOnChainQuickstart,
 // } from "/snippets/data/gateways.jsx";
+import { GatewayOffChainWarning, GatewayOnChainWarning } from "./callouts.jsx";
 
 export const QuickStartTabs = ({ offchainSteps, onchainSteps }) => {
   return (

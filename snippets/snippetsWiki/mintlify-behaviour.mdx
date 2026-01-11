@@ -1,0 +1,179 @@
+# Mintlify Behaviour Guide
+
+A reference for Mintlify-specific patterns and idiosyncrasies discovered while building this documentation.
+
+---
+
+## React in Mintlify
+
+### Global React Hooks
+
+Mintlify provides React hooks **globally** - no imports needed:
+
+```jsx
+// ✅ Works in Mintlify - hooks available without import
+export function MyComponent() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    // fetch data, run effects, etc.
+  }, []);
+
+  return <div>{count}</div>;
+}
+```
+
+```jsx
+// ❌ Not needed - will cause errors
+import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+```
+
+**Available hooks without import:** `useState`, `useEffect`, `useMemo`, `useCallback`, `useRef`, etc.
+
+### Two Ways to Use React
+
+**Option 1: Inline in MDX files**
+
+You can write React code directly in `.mdx` files:
+
+```mdx
+export function Counter() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>Count: {count}</button>;
+}
+
+# My Page
+
+<Counter />
+```
+
+**Option 2: Separate component files (recommended)**
+
+Create a `.jsx` file in `snippets/`:
+
+```jsx
+// snippets/components/MyComponent.jsx
+export function MyComponent() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetch('https://api.example.com/data')
+      .then(res => res.json())
+      .then(setData);
+  }, []);
+
+  return <div>{data ? JSON.stringify(data) : 'Loading...'}</div>;
+}
+```
+
+Then import in your MDX:
+
+```mdx
+import { MyComponent } from '/snippets/components/MyComponent.jsx';
+
+<MyComponent />
+```
+
+### Data Fetching in MDX
+
+Yes, you can fetch data directly in MDX pages using React hooks! The component renders client-side and can make API calls:
+
+```jsx
+export function LiveData() {
+  const [price, setPrice] = useState(null);
+
+  useEffect(() => {
+    fetch('https://api.coingecko.com/api/v3/simple/price?ids=livepeer&vs_currencies=usd')
+      .then(res => res.json())
+      .then(data => setPrice(data.livepeer.usd));
+  }, []);
+
+  return <span>${price ?? '...'}</span>;
+}
+```
+
+**Considerations:**
+- Components render **client-side** (not server-side)
+- SEO: Search engines may not index dynamic content
+- Initial load: Users may see loading states briefly
+- Error handling: Always handle fetch failures gracefully
+
+---
+
+## Import Paths
+
+### Absolute Paths from Root
+
+Import paths in Mintlify are **relative to the repository root**, not the current file:
+
+```jsx
+// ✅ Correct - absolute path from repo root
+import { MyComponent } from '/snippets/components/MyComponent.jsx';
+import data from '/snippets/data/mydata.json';
+
+// ❌ Wrong - relative paths don't work as expected
+import { MyComponent } from '../components/MyComponent.jsx';
+import { MyComponent } from './MyComponent.jsx';
+```
+
+### File Extensions
+
+Always include the file extension:
+
+```jsx
+// ✅ Include extension
+import { Component } from '/snippets/Component.jsx';
+
+// ❌ May not resolve
+import { Component } from '/snippets/Component';
+```
+
+---
+
+## Component Patterns
+
+### Exporting Components
+
+Use named exports for components:
+
+```jsx
+// ✅ Named export
+export function MyComponent() { ... }
+
+// Then import as:
+import { MyComponent } from '/snippets/MyComponent.jsx';
+```
+
+### Children Prop Handling
+
+When creating wrapper components, handle children explicitly:
+
+```jsx
+export function Wrapper({ children }) {
+  // ✅ Ensure children is always an array for mapping
+  const childArray = Array.isArray(children) ? children : [children];
+
+  return childArray.map((child, i) => (
+    <div key={i}>{child}</div>
+  ));
+}
+```
+
+---
+
+## Known Limitations
+
+1. **No `import React from 'react'`** - Will cause build errors
+2. **Client-side only** - No SSR for custom components
+3. **No Node.js APIs** - Can't use `fs`, `path`, etc. in components
+4. **External packages** - Limited to what Mintlify bundles (React, basic utilities)
+
+---
+
+## Debugging Tips
+
+1. **Check the browser console** - Client-side errors show there
+2. **Verify import paths** - Must be absolute from root with extension
+3. **Test components in isolation** - Create a test page to verify components work
+4. **Check Mintlify build output** - Some errors only appear at build time

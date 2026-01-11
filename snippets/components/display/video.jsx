@@ -1,4 +1,4 @@
-import { DownloadButton } from "./buttons";
+import { DownloadButton } from "/snippets/components/primitives/buttons.jsx";
 
 // TODO: Deconstruct to change icon props. Only render icon if passed in.
 export const YouTubeVideo = ({ embedUrl, title = "", hint = "", caption }) => {

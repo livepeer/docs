@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-
 /**
  * CoinGeckoExchanges - Dynamically fetches and displays exchanges that support a coin from CoinGecko
  *
@@ -18,7 +16,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
       try {
         // Fetch first page of tickers from CoinGecko API
         const response = await fetch(
-          `https://api.coingecko.com/api/v3/coins/${coinId}/tickers?depth=true`
+          `https://api.coingecko.com/api/v3/coins/${coinId}/tickers?depth=true`,
         );
 
         if (response.ok) {
