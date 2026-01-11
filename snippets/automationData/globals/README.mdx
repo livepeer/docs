@@ -40,11 +40,15 @@ All files include the setup guide with detailed instructions for each approach.
 
 ### 2. Code for yml
 
-on: schedule: # Run every 30 minutes - cron: '_/30 _ \* \* \*'
-workflow_dispatch:
+```yaml
+on:
+  schedule: # Run every 30 minutes
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
 
-jobs: check-and-update: runs-on: ubuntu-latest
-
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout docs repository
         uses: actions/checkout@v3
@@ -62,7 +66,7 @@ jobs: check-and-update: runs-on: ubuntu-latest
       - name: Read current version from globals.jsx
         id: current_version
         run: |
-          CURRENT=$(grep -oP 'LatestRelease:\s*["'\'']?\K[^"'\'']+' snippets/automationData/globals/globals.jsx || echo "")
+          CURRENT=$(grep -oP 'LatestRelease:\s*["'\''\"]?\K[^"'\'']+' snippets/automationData/globals/globals.jsx || echo "")
           echo "current=${CURRENT}" >> $GITHUB_OUTPUT
           echo "Current version: ${CURRENT}"
 
@@ -87,3 +91,4 @@ jobs: check-and-update: runs-on: ubuntu-latest
           git add snippets/automationData/globals/globals.jsx
           git commit -m "chore: update latest release to ${{ steps.get_release.outputs.release }}"
           git push origin docs-v2
+```
