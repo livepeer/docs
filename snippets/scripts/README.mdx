@@ -1,51 +1,6 @@
-# Automations
-
-This folder contains all automations or desired automations in the Livepeer docs. Status will say [Live] if it is live, [WIP] if it is in progress, and [Future] if it is a future automation.
-
-The following automations are available:
-
-### Trending & Data Fetching
-
-- Fetch recent YouTube Videos & Display
-- Fetch recent Forum Posts & Display
-- Fetch recent Discord Announcements & Display
-- Fetch recent Blog Posts & Display
-- Fetch RFPs & Display
-  ~Maybe~
-- Fetch recent Twitter Tweets & Display
-- Fetch recent GitHub Issues & Display
-- Fetch recent GitHub Pull Requests & Display
-
-### HUBs & Contact
-
-- Ecosystem Projects HUB
-- Resources HUB
-- Partner HUB
-- Sales/Data Center Contact Form (?) -> should direct to appropriate email
--
-
-### Changelog
-
-- Automated Changelog from Github Releases
-
-### AI Functions
-
-- Transcribe a Youtube Video for download
-- Translate pages into other languages
-- Create a hero image
-- Check All Documentation Links (periodically)
-- Create a video?
-
-### AI Optimisations
-
-- RAG (?) -> enable access to github repo's & external docs for better assistant capabilities
-- MCP ()
-
----
-
 ## Scripts
 
-Scripts are located in `v2/scripts/`. These are command-line tools for generating and fetching documentation assets.
+Scripts are located in `snippets/scripts/`. These are command-line tools for generating and fetching documentation assets.
 
 ### generate-api-docs.sh [Live]
 
@@ -61,13 +16,13 @@ Generates Mintlify API documentation from an OpenAPI specification file.
 **Usage:**
 
 ```bash
-./v2/scripts/generate-api-docs.sh <openapi-spec> <output-dir> <api-name>
+./snippets/scripts/generate-api-docs.sh <openapi-spec> <output-dir> <api-name>
 ```
 
 **Example:**
 
 ```bash
-./v2/scripts/generate-api-docs.sh ai/worker/api/openapi.yaml v2/pages/04_gateways/guides-references/api-reference/AI-API "AI API"
+./snippets/scripts/generate-api-docs.sh ai/worker/api/openapi.yaml v2/pages/04_gateways/guides-references/api-reference/AI-API "AI API"
 ```
 
 **Output structure:**
@@ -100,7 +55,7 @@ Fetches OpenAPI specification files from the livepeer/ai-runner repository.
 **Usage:**
 
 ```bash
-./v2/scripts/fetch-openapi-specs.sh
+./snippets/scripts/fetch-openapi-specs.sh
 ```
 
 **Downloads:**
@@ -117,5 +72,33 @@ Fetches external documentation files from other Livepeer repositories.
 **Usage:**
 
 ```bash
-./v2/scripts/fetch-external-docs.sh
+./snippets/scripts/fetch-external-docs.sh
 ```
+
+---
+
+### update-component-library.sh
+
+Auto-generates the component library index page from the current `snippets/components/` folder structure.
+
+**What it does:**
+
+1. Scans `snippets/components/` directory structure
+2. Generates a `<Tree>` component with all folders and files
+3. Updates `snippets/snippetsWiki/componentLibrary/index.mdx`
+
+**Usage:**
+
+```bash
+./snippets/scripts/update-component-library.sh
+```
+
+**When to run:**
+
+- After adding new components to `snippets/components/`
+- After reorganizing the components folder structure
+- After renaming or deleting component files
+
+**Output:**
+
+Updates the auto-generated section in `snippets/snippetsWiki/componentLibrary/index.mdx` between the `AUTO-GENERATED` comments.

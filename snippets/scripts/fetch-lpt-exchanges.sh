@@ -1,6 +1,6 @@
 #!/bin/bash
 # Fetch LPT exchange listings from CoinGecko API and append to lpt-exchanges.mdx
-# Usage: ./v2/scripts/fetch-lpt-exchanges.sh
+# Usage: ./snippets/scripts/fetch-lpt-exchanges.sh
 
 set -e
 

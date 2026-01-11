@@ -21,17 +21,17 @@ npm i -g mintlify
 From the repo root:
 
 ```bash
-./v2/scripts/generate-api-docs.sh ai/worker/api/openapi.yaml v2/pages/04_gateways/guides-references/api-reference/CLI-HTTP "CLI HTTP"
+./snippets/scripts/generate-api-docs.sh ai/worker/api/openapi.yaml v2/pages/04_gateways/guides-references/api-reference/CLI-HTTP "CLI HTTP"
 ```
 
 Examples:
 
 ```bash
 # AI API example
-./v2/scripts/generate-api-docs.sh ai/worker/api/openapi.yaml v2/pages/04_gateways/guides-references/api-reference/AI-API "AI API"
+./snippets/scripts/generate-api-docs.sh ai/worker/api/openapi.yaml v2/pages/04_gateways/guides-references/api-reference/AI-API "AI API"
 
 # CLI HTTP example
-./v2/scripts/generate-api-docs.sh ai/worker/api/openapi.yaml v2/pages/04_gateways/guides-references/api-reference/CLI-HTTP "CLI HTTP"
+./snippets/scripts/generate-api-docs.sh ai/worker/api/openapi.yaml v2/pages/04_gateways/guides-references/api-reference/CLI-HTTP "CLI HTTP"
 ```
 
 ## 4) What gets created

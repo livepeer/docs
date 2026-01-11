@@ -1,7 +1,7 @@
 /**
  * ExternalContent - A reusable component for displaying external GitHub content
  * Usage:
- *   import { ExternalContent } from '/snippets/components/external-content.jsx'
+ *   import { ExternalContent } from '/snippets/components/content/external-content.jsx'
  *   import MyContent from '/snippets/external/my-content.mdx'
  *   <ExternalContent
  *     repoName="livepeer/awesome-livepeer"

@@ -19,14 +19,20 @@ export const LivepeerSVG = ({ size = 24, ...props }) => {
 
 export const LivepeerIconOld = ({ ...props }) => {
   return (
-    <Icon icon="/snippets/assets/Livepeer-Logo-Symbol-Light.svg" {...props} />
+    <Icon
+      icon="/snippets/assets/logos/Livepeer-Logo-Symbol-Light.svg"
+      {...props}
+    />
   );
 };
 
 export const LivepeerIconFlipped = ({ ...props }) => {
   return (
     <span style={{ display: "inline-block", transform: "scaleX(-1)" }}>
-      <Icon icon="/snippets/assets/Livepeer-Logo-Symbol-Light.svg" {...props} />
+      <Icon
+        icon="/snippets/assets/logos/Livepeer-Logo-Symbol-Light.svg"
+        {...props}
+      />
     </span>
   );
 };
@@ -41,7 +47,7 @@ export const LivepeerIcon = ({ size = 16, color, ...props }) => {
       className="livepeer-icon"
     >
       <Icon
-        icon="/snippets/assets/Livepeer-Logo-Symbol.svg"
+        icon="/snippets/assets/logos/Livepeer-Logo-Symbol.svg"
         size={size}
         {...props}
       />

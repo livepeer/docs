@@ -1,13 +1,19 @@
 const LivepeerIcon = ({ ...props }) => {
   return (
-    <Icon icon="/snippets/assets/Livepeer-Logo-Symbol-Light.svg" {...props} />
+    <Icon
+      icon="/snippets/assets/logos/Livepeer-Logo-Symbol-Light.svg"
+      {...props}
+    />
   );
 };
 
 const LivepeerIconFlipped = ({ ...props }) => {
   return (
     <span style={{ display: "inline-block", transform: "scaleX(-1)" }}>
-      <Icon icon="/snippets/assets/Livepeer-Logo-Symbol-Light.svg" {...props} />
+      <Icon
+        icon="/snippets/assets/logos/Livepeer-Logo-Symbol-Light.svg"
+        {...props}
+      />
     </span>
   );
 };
@@ -31,7 +37,7 @@ export const CustomDivider = ({ color, middleText }) => {
           color: `${dividerColor} !important`,
         }}
       >
-        <Icon icon="/snippets/assets/Livepeer-Logo-Symbol-Light.svg" />
+        <Icon icon="/snippets/assets/logos/Livepeer-Logo-Symbol-Light.svg" />
       </span>
       <div
         style={{
@@ -71,7 +77,7 @@ export const CustomDivider = ({ color, middleText }) => {
       ></div>
       <span style={{ marginLeft: "8px", opacity: 0.2 }}>
         <span style={{ display: "inline-block", transform: "scaleX(-1)" }}>
-          <Icon icon="/snippets/assets/Livepeer-Logo-Symbol-Light.svg" />
+          <Icon icon="/snippets/assets/logos/Livepeer-Logo-Symbol-Light.svg" />
         </span>
       </span>
     </div>

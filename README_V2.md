@@ -1240,7 +1240,7 @@ export PATH=$ROOT/compiled/bin/:$PATH
 
 If you wanted to build a go-livepeer docker image, you can do so from the root
 of the repository using this go-livepeer from source. See
-[eliteproxy_launch.json](./v2/assets/gateways/code_examples/eliteproxy_launch.json)
+[eliteproxy_launch.json](./snippets/assets/domain/04_GATEWAYS/code_examples/eliteproxy_launch.json)
 for an example VS Code launch configuration used to build and debug go-livepeer
 from source. The launch config shows the same paths being used to ensure
 libraries are loaded using Livepeer's ffmpeg
