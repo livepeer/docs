@@ -1,5 +1,3 @@
-import { DownloadButton } from "/snippets/components/primitives/buttons.jsx";
-
 // TODO: Deconstruct to change icon props. Only render icon if passed in.
 export const YouTubeVideo = ({ embedUrl, title = "", hint = "", caption }) => {
   return (
@@ -43,37 +41,28 @@ export const YouTubeVideoDownload = ({
         width: "100%",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginBottom: 8,
-          marginRight: 8,
-        }}
-      >
-        <DownloadButton rightIcon={true} />
-      </div>
-      <Frame
-        {...(hint ? { hint } : {})}
-        {...(caption
-          ? {
-              caption: (
-                <span style={{ display: "flex", alignItems: "center" }}>
-                  <Icon icon="microphone" color="grey" />
-                  <span style={{ marginLeft: 8 }}>{caption}</span>
-                </span>
-              ),
-            }
-          : {})}
-      >
-        <iframe
-          className="w-full aspect-video rounded-xl"
-          src={embedUrl}
-          title={title}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-      </Frame>
+      {/* DownloadButton removed for Mintlify compatibility */}
+      {/* <Frame
+          {...(hint ? { hint } : {})}
+          {...(caption
+            ? {
+                caption: (
+                  <span style={{ display: "flex", alignItems: "center" }}>
+                    <Icon icon="microphone" color="grey" />
+                    <span style={{ marginLeft: 8 }}>{caption}</span>
+                  </span>
+                ),
+              }
+            : {})}
+        >
+          <iframe
+            className="w-full aspect-video rounded-xl"
+            src={embedUrl}
+            title={title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </Frame> */}
     </div>
   );
 };
