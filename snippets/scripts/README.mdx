@@ -1,79 +1,98 @@
-## Scripts
+# Scripts
 
 Scripts are located in `snippets/scripts/`. These are command-line tools for generating and fetching documentation assets.
 
-### generate-api-docs.sh [Live]
+<Info>
+All scripts use **git-based repo root detection** with fallback to `paths.config.json`. They can be run from any directory within the repository.
+</Info>
+
+---
+
+## Configuration
+
+### paths.config.json
+
+Central configuration file containing all path definitions used by scripts.
+
+**Purpose:** Fallback when `git rev-parse --show-toplevel` fails (e.g., when not in a git repo).
+
+**Structure:**
+```json
+{
+  "paths": {
+    "snippets": "snippets",
+    "snippetsExternal": "snippets/external",
+    "snippetsGenerated": "snippets/generated",
+    "snippetsComponents": "snippets/components",
+    "snippetsWikiComponentLibrary": "snippets/snippetsWiki/componentLibrary/index.mdx",
+    "docsJson": "docs.json",
+    "docsStatusData": "snippets/docs-status-data.json",
+    "v2Pages": "v2/pages",
+    "lptExchanges": "v2/pages/06_delegators/token-resources/lpt-exchanges.mdx",
+    "aiWorkerApi": "ai/worker/api"
+  }
+}
+```
+
+---
+
+## API & Content Generation
+
+### generate-api-docs.sh
 
 Generates Mintlify API documentation from an OpenAPI specification file.
 
 **What it does:**
-
 1. Reads an OpenAPI spec (YAML or JSON)
 2. Creates a **landing page** with CardGroups linking to each endpoint (grouped by tags)
 3. Creates **individual MDX pages** for each endpoint with `openapi: METHOD /path` frontmatter
 4. Outputs a **docs.json navigation snippet** ready to copy-paste
 
 **Usage:**
-
 ```bash
-./snippets/scripts/generate-api-docs.sh <openapi-spec> <output-dir> <api-name>
+./snippets/scripts/generate-api-docs.sh <openapi-spec> <output-dir> <api-name> [github-repo-url]
 ```
 
 **Example:**
-
 ```bash
-./snippets/scripts/generate-api-docs.sh ai/worker/api/openapi.yaml v2/pages/04_gateways/guides-references/api-reference/AI-API "AI API"
+./snippets/scripts/generate-api-docs.sh ai/worker/api/openapi.yaml v2/pages/04_gateways/api-reference/AI-API "AI API" "https://github.com/livepeer/ai-worker"
 ```
 
 **Output structure:**
-
 ```
 output-dir/
 ├── ai-api.mdx           # Landing page with Base URLs + CardGroups
 ├── text-to-image.mdx    # openapi: post /text-to-image
 ├── image-to-image.mdx   # openapi: post /image-to-image
-├── llm.mdx              # openapi: post /llm
-├── health.mdx           # openapi: get /health
 └── ...
 ```
-
-**Landing page features:**
-
-- Title & description from API name
-- Base URLs table (pulled from OpenAPI `servers` field)
-- Endpoints grouped by OpenAPI tags (e.g., "generate", "system")
-- Auto-assigned icons based on endpoint name (image, video, audio, etc.)
 
 **After running:** Copy the outputted JSON snippet into your `docs.json` navigation.
 
 ---
 
-### fetch-openapi-specs.sh [Live]
+### generate-docs-status.js
 
-Fetches OpenAPI specification files from the livepeer/ai-runner repository.
+Generates documentation status tables and structure diagrams from `docs.json`.
 
-**Usage:**
-
-```bash
-./snippets/scripts/fetch-openapi-specs.sh
-```
-
-**Downloads:**
-
-- `ai/worker/api/openapi.yaml` - AI Runner API spec
-- `ai/worker/api/gateway.openapi.yaml` - AI Gateway API spec
-
----
-
-### fetch-external-docs.sh [Live]
-
-Fetches external documentation files from other Livepeer repositories.
+**What it does:**
+1. Reads `docs.json` navigation structure
+2. Merges with `snippets/docs-status-data.json` for status/priority/notes
+3. Outputs a status table MDX file
+4. Outputs a Mermaid structure diagram MDX file
 
 **Usage:**
-
 ```bash
-./snippets/scripts/fetch-external-docs.sh
+node snippets/scripts/generate-docs-status.js
 ```
+
+**Output:**
+- `snippets/generated/docs-status-table.mdx` - Table of all pages with status
+- `snippets/generated/docs-structure-diagram.mdx` - Mermaid diagram of docs structure
+
+**When to run:**
+- After modifying `docs.json` navigation
+- After updating page status in `snippets/docs-status-data.json`
 
 ---
 
@@ -82,23 +101,100 @@ Fetches external documentation files from other Livepeer repositories.
 Auto-generates the component library index page from the current `snippets/components/` folder structure.
 
 **What it does:**
-
 1. Scans `snippets/components/` directory structure
 2. Generates a `<Tree>` component with all folders and files
 3. Updates `snippets/snippetsWiki/componentLibrary/index.mdx`
 
 **Usage:**
-
 ```bash
 ./snippets/scripts/update-component-library.sh
 ```
 
 **When to run:**
-
 - After adding new components to `snippets/components/`
 - After reorganizing the components folder structure
 - After renaming or deleting component files
 
 **Output:**
-
 Updates the auto-generated section in `snippets/snippetsWiki/componentLibrary/index.mdx` between the `AUTO-GENERATED` comments.
+
+---
+
+## Data Fetching
+
+### fetch-openapi-specs.sh
+
+Fetches OpenAPI specification files from the livepeer/ai-runner repository.
+
+**Usage:**
+```bash
+./snippets/scripts/fetch-openapi-specs.sh
+```
+
+**Downloads to `ai/worker/api/`:**
+- `openapi.yaml` - AI Runner API spec
+- `gateway.openapi.yaml` - AI Gateway API spec
+
+---
+
+### fetch-external-docs.sh
+
+Fetches external documentation files from other Livepeer repositories and sanitizes them for MDX compatibility.
+
+**Usage:**
+```bash
+./snippets/scripts/fetch-external-docs.sh
+```
+
+**Downloads to `snippets/external/`:**
+- `wiki-readme.mdx` - livepeer/wiki README
+- `awesome-livepeer-readme.mdx` - livepeer/awesome-livepeer README
+- `whitepaper.mdx` - Livepeer Whitepaper
+- `gwid-readme.mdx` - videoDAC/livepeer-gateway README
+- `box-additional-config.mdx` - go-livepeer box configuration
+
+**Sanitization includes:**
+- Escaping curly braces for MDX
+- Removing HTML comments
+- Converting HTML tags to Markdown equivalents
+
+---
+
+### fetch-lpt-exchanges.sh
+
+Fetches LPT exchange listings from CoinGecko API and updates the exchanges page.
+
+**Usage:**
+```bash
+./snippets/scripts/fetch-lpt-exchanges.sh
+```
+
+**What it does:**
+1. Fetches live data from CoinGecko API for Livepeer token
+2. Generates a styled table of CEX exchanges with volume and trust scores
+3. Appends DEX information and contract addresses
+4. Updates `v2/pages/06_delegators/token-resources/lpt-exchanges.mdx`
+
+**When to run:**
+- Periodically to update exchange listings
+- Before major releases to ensure current data
+
+---
+
+## Folder Structure
+
+```
+scripts/
+├── README.mdx                    # This file
+├── paths.config.json             # Central path configuration
+├── generate-api-docs.sh          # Generate API docs from OpenAPI
+├── generate-docs-status.js       # Generate docs status tables
+├── update-component-library.sh   # Update component library index
+├── fetch-openapi-specs.sh        # Fetch OpenAPI specs
+├── fetch-external-docs.sh        # Fetch external documentation
+├── fetch-lpt-exchanges.sh        # Fetch exchange data
+├── data-fetching/                # (Reserved for future data fetching scripts)
+├── github-actions/               # (Reserved for GitHub Actions workflows)
+├── n8n-workflows/                # (Reserved for n8n automation workflows)
+└── repo-docs/                    # (Reserved for repo documentation generators)
+```

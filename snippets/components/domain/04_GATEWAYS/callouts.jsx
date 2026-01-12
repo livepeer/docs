@@ -1,3 +1,15 @@
+/**
+ * GatewayOffChainWarning - Warning callout for off-chain Gateway setup
+ *
+ * @description
+ * Displays a warning message informing users they need to run their own Orchestrator
+ * node to test an off-chain (local) Gateway. Includes links to relevant guides.
+ *
+ * @example
+ * <GatewayOffChainWarning />
+ *
+ * @author Livepeer Documentation Team
+ */
 const GatewayOffChainWarning = () => {
   return (
     <Warning>
@@ -32,6 +44,18 @@ const GatewayOffChainWarning = () => {
   );
 };
 
+/**
+ * GatewayOnChainWarning - Warning callout for on-chain Gateway setup
+ *
+ * @description
+ * Displays a warning message about funding requirements for running an on-chain Gateway.
+ * Includes a link to the funding guide.
+ *
+ * @example
+ * <GatewayOnChainWarning />
+ *
+ * @author Livepeer Documentation Team
+ */
 const GatewayOnChainWarning = () => {
   return (
     <Warning>
@@ -50,6 +74,18 @@ const GatewayOnChainWarning = () => {
   );
 };
 
+/**
+ * GatewayOnChainTTestnetNote - Note about Arbitrum Testnet limitations
+ *
+ * @description
+ * Informs users about the current limitations of using Arbitrum Testnet for Gateways.
+ * Includes links to community discussions.
+ *
+ * @example
+ * <GatewayOnChainTTestnetNote />
+ *
+ * @author Livepeer Documentation Team
+ */
 const GatewayOnChainTTestnetNote = () => {
   return (
     <Note>
@@ -75,6 +111,18 @@ const GatewayOnChainTTestnetNote = () => {
   );
 };
 
+/**
+ * OrchAddrNote - Note about replacing orchestrator address placeholder
+ *
+ * @description
+ * Displays a note reminding users to replace the orchestrator IP:PORT placeholder
+ * with their actual orchestrator address.
+ *
+ * @example
+ * <OrchAddrNote />
+ *
+ * @author Livepeer Documentation Team
+ */
 const OrchAddrNote = () => {
   return (
     <Note>
@@ -84,6 +132,22 @@ const OrchAddrNote = () => {
   );
 };
 
+/**
+ * TestVideoDownload - Note about test video file requirement
+ *
+ * @description
+ * Displays a note informing users they need a test video file.
+ * Accepts children for additional instructions.
+ *
+ * @param {React.ReactNode} children - Additional content or instructions
+ *
+ * @example
+ * <TestVideoDownload>
+ *   Download a sample video from <a href="/samples">here</a>
+ * </TestVideoDownload>
+ *
+ * @author Livepeer Documentation Team
+ */
 const TestVideoDownload = ({ children }) => {
   return (
     <Note>
@@ -96,6 +160,18 @@ const TestVideoDownload = ({ children }) => {
   );
 };
 
+/**
+ * FfmpegWarning - Critical warning about FFmpeg installation
+ *
+ * @description
+ * Displays a danger alert warning users not to install FFmpeg with sudo.
+ * Explains that Livepeer uses a custom FFmpeg build.
+ *
+ * @example
+ * <FfmpegWarning />
+ *
+ * @author Livepeer Documentation Team
+ */
 const FfmpegWarning = () => {
   return (
     <Danger>

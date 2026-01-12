@@ -1,0 +1,186 @@
+---
+title: "Code Components Examples"
+description: "Examples of using code-related components from code.jsx"
+---
+
+import { CustomCodeBlock, CodeComponent, ComplexCodeBlock, CodeSection } from "/snippets/components/content/code.jsx";
+
+## CustomCodeBlock
+
+### Basic Usage
+
+<CustomCodeBlock
+  filename="example.js"
+  icon="javascript"
+  language="javascript"
+  codeString={`
+function hello() {
+  console.log("Hello, World!");
+}
+`}
+/>
+
+### With Placeholder Replacement
+
+<CustomCodeBlock
+  filename="config.yaml"
+  icon="file"
+  language="yaml"
+  codeString={`
+api_key: {PLACEHOLDER}
+endpoint: https://api.example.com
+`}
+  placeholderValue="your-api-key-here"
+/>
+
+### With Pre and Post Notes
+
+<CustomCodeBlock
+  filename="install.sh"
+  icon="terminal"
+  language="bash"
+  preNote="Run this command to install dependencies:"
+  postNote="This may take a few minutes to complete."
+  codeString={`npm install @livepeer/react`}
+/>
+
+### With Expected Output
+
+<CustomCodeBlock
+  filename="test.js"
+  icon="javascript"
+  language="javascript"
+  codeString={`console.log("Testing output");`}
+  output={{
+    codeString: "Testing output",
+    filename: "Console Output",
+    icon: "terminal",
+    language: "bash"
+  }}
+/>
+
+## CodeComponent
+
+### Simple Code Display
+
+<CodeComponent
+  filename="simple.js"
+  icon="code"
+  language="javascript"
+  codeString={`const greeting = "Hello!";`}
+/>
+
+### With Placeholder
+
+<CodeComponent
+  filename="api-call.js"
+  language="javascript"
+  codeString={`
+const apiKey = "{PLACEHOLDER}";
+fetch("https://api.livepeer.org", {
+  headers: { "Authorization": apiKey }
+});
+`}
+  placeholderValue="lp_your_api_key"
+/>
+
+### With Line Numbers Disabled
+
+<CodeComponent
+  filename="minimal.txt"
+  language="text"
+  lines={false}
+  wrap={false}
+  codeString={`Simple text without line numbers`}
+/>
+
+## ComplexCodeBlock
+
+### With Pre Note
+
+<ComplexCodeBlock
+  filename="deploy.sh"
+  icon="rocket"
+  language="bash"
+  preNote="⚠️ Make sure you have proper permissions before running this script."
+  codeString={`
+#!/bin/bash
+npm run build
+npm run deploy
+`}
+/>
+
+### With Post Note
+
+<ComplexCodeBlock
+  filename="result.json"
+  icon="file-code"
+  language="json"
+  postNote="The response will be cached for 5 minutes."
+  codeString={`
+{
+  "status": "success",
+  "data": {}
+}
+`}
+/>
+
+### With Both Notes and Highlighting
+
+<ComplexCodeBlock
+  filename="important.js"
+  icon="exclamation-triangle"
+  language="javascript"
+  highlight="2,3"
+  preNote="Pay attention to the highlighted lines:"
+  postNote="These lines are critical for proper functionality."
+  codeString={`
+function process() {
+  const result = calculate();
+  return validate(result);
+}
+`}
+/>
+
+## CodeSection
+
+### Using CodeSection Wrapper
+
+<CodeSection
+  fields={{
+    filename: "wrapper-example.py",
+    icon: "python",
+    language: "python",
+    codeString: `
+def main():
+    print("Using CodeSection wrapper")
+    
+if __name__ == "__main__":
+    main()
+`
+  }}
+/>
+
+### CodeSection with All Options
+
+<CodeSection
+  fields={{
+    filename: "full-example.ts",
+    icon: "typescript",
+    language: "typescript",
+    highlight: "1,5",
+    wrap: true,
+    lines: true,
+    preNote: "TypeScript example with all options:",
+    postNote: "Remember to compile before running!",
+    codeString: `
+interface User {
+  name: string;
+  email: string;
+}
+
+const user: User = { name: "Alice", email: "alice@example.com" };
+`
+  }}
+/>
+

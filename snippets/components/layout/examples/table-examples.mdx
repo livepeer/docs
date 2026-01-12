@@ -1,0 +1,165 @@
+---
+title: "DynamicTable Component Examples"
+description: "Examples of using the DynamicTable component"
+---
+
+import { DynamicTable } from "/snippets/components/layout/table.jsx";
+
+## Basic Usage
+
+<DynamicTable
+  headerList={["Name", "Type", "Description"]}
+  itemsList={[
+    { Name: "streamId", Type: "string", Description: "Unique stream identifier" },
+    { Name: "playbackUrl", Type: "string", Description: "HLS playback URL" },
+    { Name: "isActive", Type: "boolean", Description: "Stream active status" }
+  ]}
+/>
+
+## API Endpoints Table
+
+<DynamicTable
+  headerList={["Endpoint", "Method", "Description"]}
+  itemsList={[
+    { Endpoint: "/api/stream", Method: "POST", Description: "Create a new stream" },
+    { Endpoint: "/api/stream/:id", Method: "GET", Description: "Get stream details" },
+    { Endpoint: "/api/stream/:id", Method: "DELETE", Description: "Delete a stream" },
+    { Endpoint: "/api/asset", Method: "POST", Description: "Upload a video asset" },
+    { Endpoint: "/api/asset/:id", Method: "GET", Description: "Get asset details" }
+  ]}
+/>
+
+## With Monospace Columns
+
+<DynamicTable
+  headerList={["Parameter", "Type", "Example"]}
+  itemsList={[
+    { Parameter: "apiKey", Type: "string", Example: "lp_1234567890abcdef" },
+    { Parameter: "streamKey", Type: "string", Example: "abc123-xyz789-def456" },
+    { Parameter: "playbackId", Type: "string", Example: "play_abc123xyz" }
+  ]}
+  monospaceColumns={[2]}
+/>
+
+## Pricing Table
+
+<DynamicTable
+  headerList={["Plan", "Price", "Features", "Limits"]}
+  itemsList={[
+    { Plan: "Free", Price: "$0/month", Features: "Basic streaming", Limits: "100 hours/month" },
+    { Plan: "Starter", Price: "$49/month", Features: "HD streaming, Analytics", Limits: "500 hours/month" },
+    { Plan: "Pro", Price: "$199/month", Features: "4K streaming, Advanced analytics", Limits: "2000 hours/month" },
+    { Plan: "Enterprise", Price: "Custom", Features: "Everything + Custom features", Limits: "Unlimited" }
+  ]}
+/>
+
+## Configuration Options
+
+<DynamicTable
+  headerList={["Option", "Type", "Default", "Description"]}
+  itemsList={[
+    { Option: "record", Type: "boolean", Default: "false", Description: "Enable stream recording" },
+    { Option: "profiles", Type: "array", Default: "[]", Description: "Transcoding profiles" },
+    { Option: "multistream", Type: "object", Default: "{}", Description: "Multistream configuration" },
+    { Option: "playbackPolicy", Type: "string", Default: "public", Description: "Playback access policy" }
+  ]}
+  monospaceColumns={[0, 2]}
+/>
+
+## Response Codes
+
+<DynamicTable
+  headerList={["Code", "Status", "Description"]}
+  itemsList={[
+    { Code: "200", Status: "OK", Description: "Request successful" },
+    { Code: "201", Status: "Created", Description: "Resource created successfully" },
+    { Code: "400", Status: "Bad Request", Description: "Invalid request parameters" },
+    { Code: "401", Status: "Unauthorized", Description: "Invalid or missing API key" },
+    { Code: "404", Status: "Not Found", Description: "Resource not found" },
+    { Code: "429", Status: "Too Many Requests", Description: "Rate limit exceeded" },
+    { Code: "500", Status: "Internal Server Error", Description: "Server error occurred" }
+  ]}
+  monospaceColumns={[0]}
+/>
+
+## Transcoding Profiles
+
+<DynamicTable
+  headerList={["Profile", "Resolution", "Bitrate", "FPS"]}
+  itemsList={[
+    { Profile: "1080p", Resolution: "1920x1080", Bitrate: "6000 kbps", FPS: "30" },
+    { Profile: "720p", Resolution: "1280x720", Bitrate: "4000 kbps", FPS: "30" },
+    { Profile: "480p", Resolution: "854x480", Bitrate: "2000 kbps", FPS: "30" },
+    { Profile: "360p", Resolution: "640x360", Bitrate: "1000 kbps", FPS: "30" },
+    { Profile: "240p", Resolution: "426x240", Bitrate: "500 kbps", FPS: "30" }
+  ]}
+/>
+
+## Webhook Events
+
+<DynamicTable
+  headerList={["Event", "Trigger", "Payload"]}
+  itemsList={[
+    { Event: "stream.started", Trigger: "Stream goes live", Payload: "{ streamId, timestamp }" },
+    { Event: "stream.idle", Trigger: "Stream becomes inactive", Payload: "{ streamId, timestamp }" },
+    { Event: "recording.ready", Trigger: "Recording is processed", Payload: "{ streamId, assetId, downloadUrl }" },
+    { Event: "asset.ready", Trigger: "Asset is ready for playback", Payload: "{ assetId, playbackId, status }" },
+    { Event: "asset.failed", Trigger: "Asset processing failed", Payload: "{ assetId, error }" }
+  ]}
+  monospaceColumns={[0]}
+/>
+
+## SDK Comparison
+
+<DynamicTable
+  headerList={["SDK", "Language", "Version", "Status"]}
+  itemsList={[
+    { SDK: "@livepeer/react", Language: "JavaScript/React", Version: "3.2.0", Status: "Stable" },
+    { SDK: "livepeer-js", Language: "JavaScript", Version: "2.5.1", Status: "Stable" },
+    { SDK: "go-livepeer", Language: "Go", Version: "0.7.10", Status: "Stable" },
+    { SDK: "livepeer-python", Language: "Python", Version: "1.0.0", Status: "Beta" }
+  ]}
+  monospaceColumns={[0, 2]}
+/>
+
+## Feature Comparison
+
+<DynamicTable
+  headerList={["Feature", "Free", "Starter", "Pro", "Enterprise"]}
+  itemsList={[
+    { Feature: "Live Streaming", Free: "✓", Starter: "✓", Pro: "✓", Enterprise: "✓" },
+    { Feature: "VOD", Free: "✓", Starter: "✓", Pro: "✓", Enterprise: "✓" },
+    { Feature: "Transcoding", Free: "Basic", Starter: "HD", Pro: "4K", Enterprise: "Custom" },
+    { Feature: "Analytics", Free: "✗", Starter: "Basic", Pro: "Advanced", Enterprise: "Custom" },
+    { Feature: "Multistreaming", Free: "✗", Starter: "✗", Pro: "✓", Enterprise: "✓" },
+    { Feature: "Custom Branding", Free: "✗", Starter: "✗", Pro: "✓", Enterprise: "✓" },
+    { Feature: "SLA", Free: "✗", Starter: "✗", Pro: "99.9%", Enterprise: "99.99%" },
+    { Feature: "Support", Free: "Community", Starter: "Email", Pro: "Priority", Enterprise: "Dedicated" }
+  ]}
+/>
+
+## Environment Variables
+
+<DynamicTable
+  headerList={["Variable", "Required", "Description", "Example"]}
+  itemsList={[
+    { Variable: "LIVEPEER_API_KEY", Required: "Yes", Description: "Your Livepeer API key", Example: "lp_xxxxx" },
+    { Variable: "NEXT_PUBLIC_STUDIO_URL", Required: "No", Description: "Studio API URL", Example: "https://livepeer.studio/api" },
+    { Variable: "WEBHOOK_SECRET", Required: "No", Description: "Webhook signature secret", Example: "whsec_xxxxx" }
+  ]}
+  monospaceColumns={[0, 3]}
+/>
+
+## Rate Limits
+
+<DynamicTable
+  headerList={["Endpoint", "Limit", "Window", "Burst"]}
+  itemsList={[
+    { Endpoint: "/api/stream", Limit: "100 requests", Window: "1 minute", Burst: "10" },
+    { Endpoint: "/api/asset", Limit: "50 requests", Window: "1 minute", Burst: "5" },
+    { Endpoint: "/api/webhook", Limit: "200 requests", Window: "1 minute", Burst: "20" },
+    { Endpoint: "/api/playback", Limit: "1000 requests", Window: "1 minute", Burst: "100" }
+  ]}
+  monospaceColumns={[0]}
+/>
+

@@ -4,7 +4,26 @@
 
 set -e
 
-OUTPUT_FILE="v2/pages/06_delegators/token-resources/lpt-exchanges.mdx"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="$SCRIPT_DIR/paths.config.json"
+
+# Try to detect repo root via git, fallback to config file
+if git rev-parse --show-toplevel &>/dev/null; then
+  REPO_ROOT="$(git rev-parse --show-toplevel)"
+elif [ -f "$CONFIG_FILE" ]; then
+  echo "Warning: Not in a git repo, using paths.config.json"
+  REPO_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
+else
+  echo "Error: Cannot determine repo root. Run from git repo or ensure paths.config.json exists."
+  exit 1
+fi
+
+# Read path from config or use default
+if [ -f "$CONFIG_FILE" ] && command -v node &>/dev/null; then
+  OUTPUT_FILE="$REPO_ROOT/$(node -pe "require('$CONFIG_FILE').paths.lptExchanges")"
+else
+  OUTPUT_FILE="$REPO_ROOT/v2/pages/06_delegators/token-resources/lpt-exchanges.mdx"
+fi
 
 # Fetch data from CoinGecko
 echo "Fetching LPT exchange data from CoinGecko..."

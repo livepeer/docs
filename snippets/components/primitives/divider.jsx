@@ -1,3 +1,13 @@
+/**
+ * LivepeerIcon - Internal helper for Livepeer logo icon
+ *
+ * @description
+ * Helper component that displays the Livepeer logo icon.
+ * Used internally by CustomDivider.
+ *
+ * @param {Object} props - Icon component props
+ * @private
+ */
 const LivepeerIcon = ({ ...props }) => {
   return (
     <Icon
@@ -7,6 +17,16 @@ const LivepeerIcon = ({ ...props }) => {
   );
 };
 
+/**
+ * LivepeerIconFlipped - Internal helper for flipped Livepeer logo
+ *
+ * @description
+ * Helper component that displays a horizontally flipped Livepeer logo.
+ * Used internally by CustomDivider.
+ *
+ * @param {Object} props - Icon component props
+ * @private
+ */
 const LivepeerIconFlipped = ({ ...props }) => {
   return (
     <span style={{ display: "inline-block", transform: "scaleX(-1)" }}>
@@ -18,6 +38,23 @@ const LivepeerIconFlipped = ({ ...props }) => {
   );
 };
 
+/**
+ * CustomDivider - Decorative divider with Livepeer branding
+ *
+ * @description
+ * Displays a horizontal divider line with Livepeer logo icons on both ends.
+ * Optionally includes centered text between the divider lines.
+ *
+ * @param {string} [color] - Color for the middle text (currently unused in implementation)
+ * @param {string} [middleText] - Optional text to display in the center of the divider
+ *
+ * @example
+ * <CustomDivider />
+ * <CustomDivider middleText="OR" />
+ * <CustomDivider middleText="Section Break" color="#2d9a67" />
+ *
+ * @author Livepeer Documentation Team
+ */
 export const CustomDivider = ({ color, middleText }) => {
   const dividerColor = "#e5e7eb";
 

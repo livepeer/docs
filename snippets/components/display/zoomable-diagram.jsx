@@ -1,3 +1,22 @@
+/**
+ * ScrollableDiagram - Interactive diagram viewer with zoom and pan controls
+ *
+ * @description
+ * Displays diagrams or large content with zoom controls (25%-200%) and scrollable pan.
+ * Includes zoom in/out buttons, reset button, and displays current zoom level.
+ *
+ * @param {React.ReactNode} children - Diagram or content to display
+ * @param {string} [title=""] - Optional title to display above the diagram
+ * @param {string} [maxHeight="500px"] - Maximum height of the scrollable container
+ * @param {string} [minWidth="100%"] - Minimum width of the content area
+ *
+ * @example
+ * <ScrollableDiagram title="System Architecture" maxHeight="600px">
+ *   <img src="/diagrams/architecture.png" alt="Architecture" />
+ * </ScrollableDiagram>
+ *
+ * @author Livepeer Documentation Team
+ */
 export const ScrollableDiagram = ({
   children,
   title = "",

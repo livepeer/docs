@@ -1,3 +1,27 @@
+/**
+ * Image - Image component with Frame wrapper
+ *
+ * @description
+ * Displays an image within a Frame component with optional caption and hint.
+ * Supports full-width or auto-width display.
+ *
+ * @param {string} src - Image source URL
+ * @param {string} alt - Alt text for accessibility
+ * @param {string} [caption] - Optional caption to display below the image
+ * @param {string} [icon] - Icon name (currently unused in implementation)
+ * @param {string} [hint] - Optional hint text
+ * @param {boolean} [fullwidth=true] - Whether to display image at full width
+ *
+ * @example
+ * <Image
+ *   src="/images/diagram.png"
+ *   alt="System Diagram"
+ *   caption="Figure 1: System Architecture"
+ *   hint="Click to enlarge"
+ * />
+ *
+ * @author Livepeer Documentation Team
+ */
 export const Image = ({ src, alt, caption, icon, hint, fullwidth = true }) => {
   icon = icon ? icon : "arrow-turn-down-right";
   return (
@@ -11,6 +35,30 @@ export const Image = ({ src, alt, caption, icon, hint, fullwidth = true }) => {
   );
 };
 
+/**
+ * LinkImage - Clickable image that opens in a new tab
+ *
+ * @description
+ * Displays an image within a Frame component that links to a URL.
+ * Opens the link in a new tab when clicked.
+ *
+ * @param {string} src - Image source URL
+ * @param {string} alt - Alt text for accessibility
+ * @param {string} [caption] - Optional caption to display below the image
+ * @param {string} [icon] - Icon name (currently unused in implementation)
+ * @param {string} [hint] - Optional hint text
+ * @param {string} href - URL to navigate to when image is clicked
+ *
+ * @example
+ * <LinkImage
+ *   src="/images/preview.png"
+ *   alt="Full diagram"
+ *   href="/images/full-diagram.png"
+ *   caption="Click to view full size"
+ * />
+ *
+ * @author Livepeer Documentation Team
+ */
 export const LinkImage = ({ src, alt, caption, icon, hint, href }) => {
   icon = icon ? icon : "arrow-turn-down-right";
   return (

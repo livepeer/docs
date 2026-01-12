@@ -5,10 +5,25 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
+CONFIG_FILE="$SCRIPT_DIR/paths.config.json"
 
-# OpenAPI specs directory (relative to project root)
-OPENAPI_DIR="$PROJECT_ROOT/ai/worker/api"
+# Try to detect repo root via git, fallback to config file
+if git rev-parse --show-toplevel &>/dev/null; then
+  REPO_ROOT="$(git rev-parse --show-toplevel)"
+elif [ -f "$CONFIG_FILE" ]; then
+  echo "Warning: Not in a git repo, using paths.config.json"
+  REPO_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
+else
+  echo "Error: Cannot determine repo root. Run from git repo or ensure paths.config.json exists."
+  exit 1
+fi
+
+# Read path from config or use default
+if [ -f "$CONFIG_FILE" ] && command -v node &>/dev/null; then
+  OPENAPI_DIR="$REPO_ROOT/$(node -pe "require('$CONFIG_FILE').paths.aiWorkerApi")"
+else
+  OPENAPI_DIR="$REPO_ROOT/ai/worker/api"
+fi
 
 # Create directory if it doesn't exist
 mkdir -p "$OPENAPI_DIR"

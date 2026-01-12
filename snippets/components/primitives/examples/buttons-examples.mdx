@@ -1,0 +1,229 @@
+---
+title: "Button Components Examples"
+description: "Examples of using DownloadButton component"
+---
+
+import { DownloadButton } from "/snippets/components/primitives/buttons.jsx";
+
+## Basic Usage
+
+<DownloadButton
+  label="Download"
+  downloadLink="https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-linux-amd64.tar.gz"
+/>
+
+## Custom Label
+
+<DownloadButton
+  label="Download SDK"
+  downloadLink="https://example.com/livepeer-sdk.zip"
+/>
+
+<DownloadButton
+  label="Get Binary"
+  downloadLink="https://example.com/livepeer-binary.tar.gz"
+/>
+
+## Custom Icons
+
+### Different Left Icon
+
+<DownloadButton
+  label="Download Documentation"
+  icon="file-pdf"
+  downloadLink="https://example.com/docs.pdf"
+/>
+
+<DownloadButton
+  label="Download Video"
+  icon="video"
+  downloadLink="https://example.com/tutorial.mp4"
+/>
+
+<DownloadButton
+  label="Download Archive"
+  icon="file-zipper"
+  downloadLink="https://example.com/archive.zip"
+/>
+
+### With Right Icon
+
+<DownloadButton
+  label="Download Now"
+  icon="download"
+  rightIcon="arrow-right"
+  downloadLink="https://example.com/file.zip"
+/>
+
+<DownloadButton
+  label="Get Latest Release"
+  icon="download"
+  rightIcon="external-link"
+  downloadLink="https://github.com/livepeer/go-livepeer/releases/latest"
+/>
+
+## With Border
+
+<DownloadButton
+  label="Download with Border"
+  downloadLink="https://example.com/file.zip"
+  border={true}
+/>
+
+<DownloadButton
+  label="Bordered Button"
+  icon="file-arrow-down"
+  rightIcon="check"
+  downloadLink="https://example.com/file.zip"
+  border={true}
+/>
+
+## Use Cases
+
+### Download Release Binaries
+
+<Card title="Latest Release" icon="rocket">
+  <p>Download the latest version of go-livepeer for your platform:</p>
+  
+  <DownloadButton
+    label="Linux (amd64)"
+    icon="linux"
+    downloadLink="https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-linux-amd64.tar.gz"
+    border={true}
+  />
+  
+  <DownloadButton
+    label="macOS (arm64)"
+    icon="apple"
+    downloadLink="https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-darwin-arm64.tar.gz"
+    border={true}
+  />
+  
+  <DownloadButton
+    label="Windows (amd64)"
+    icon="windows"
+    downloadLink="https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-windows-amd64.zip"
+    border={true}
+  />
+</Card>
+
+### Download Documentation
+
+<Accordion title="Download Resources">
+  <p>Get all the documentation you need:</p>
+  
+  <DownloadButton
+    label="API Reference (PDF)"
+    icon="file-pdf"
+    downloadLink="https://example.com/api-reference.pdf"
+  />
+  
+  <DownloadButton
+    label="User Guide (PDF)"
+    icon="book"
+    downloadLink="https://example.com/user-guide.pdf"
+  />
+  
+  <DownloadButton
+    label="Code Examples (ZIP)"
+    icon="file-zipper"
+    downloadLink="https://example.com/examples.zip"
+  />
+</Accordion>
+
+### Download in Steps
+
+<Steps>
+  <Step title="Choose Your Platform" icon="desktop">
+    Select the appropriate binary for your operating system.
+  </Step>
+  <Step title="Download Binary" icon="download">
+    <DownloadButton
+      label="Download for Linux"
+      icon="linux"
+      downloadLink="https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-linux-amd64.tar.gz"
+      border={true}
+    />
+  </Step>
+  <Step title="Extract and Install" icon="box-open">
+    Extract the downloaded archive and follow the installation instructions.
+  </Step>
+</Steps>
+
+### Multiple Download Options
+
+<CardGroup cols={2}>
+  <Card title="Source Code" icon="code">
+    <DownloadButton
+      label="Download Source"
+      icon="code-branch"
+      downloadLink="https://github.com/livepeer/go-livepeer/archive/refs/heads/master.zip"
+      border={true}
+    />
+  </Card>
+  
+  <Card title="Compiled Binary" icon="file-binary">
+    <DownloadButton
+      label="Download Binary"
+      icon="download"
+      downloadLink="https://github.com/livepeer/go-livepeer/releases/latest"
+      border={true}
+    />
+  </Card>
+</CardGroup>
+
+### Download with Instructions
+
+<Note>
+  **Before downloading:** Make sure you have the required dependencies installed.
+</Note>
+
+<DownloadButton
+  label="Download Livepeer Node"
+  icon="server"
+  rightIcon="arrow-right"
+  downloadLink="https://github.com/livepeer/go-livepeer/releases/latest"
+  border={true}
+/>
+
+<Warning>
+  **After downloading:** Verify the checksum before running the binary.
+</Warning>
+
+### Inline Download Links
+
+Download the latest release <DownloadButton label="here" downloadLink="https://example.com/latest.zip" /> to get started.
+
+You can also download the <DownloadButton label="documentation" icon="book" downloadLink="https://example.com/docs.pdf" /> for offline reading.
+
+### Download Table
+
+| Resource | Description | Download |
+|----------|-------------|----------|
+| Binary | Latest compiled binary | <DownloadButton label="Download" downloadLink="https://example.com/binary.tar.gz" border={true} /> |
+| Source | Source code archive | <DownloadButton label="Download" icon="code" downloadLink="https://example.com/source.zip" border={true} /> |
+| Docs | PDF documentation | <DownloadButton label="Download" icon="file-pdf" downloadLink="https://example.com/docs.pdf" border={true} /> |
+
+## Styled Examples
+
+<div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginTop: "1rem" }}>
+  <DownloadButton
+    label="Primary Download"
+    downloadLink="https://example.com/file1.zip"
+    border={true}
+  />
+  <DownloadButton
+    label="Secondary Download"
+    icon="file-arrow-down"
+    downloadLink="https://example.com/file2.zip"
+    border={true}
+  />
+  <DownloadButton
+    label="Tertiary Download"
+    icon="download"
+    rightIcon="external-link"
+    downloadLink="https://example.com/file3.zip"
+    border={true}
+  />
+</div>
+
