@@ -61,6 +61,33 @@ Developer
 
 Gateways
 
+## Components Organisation Options
+
+**Atomic Design (Brad Frost)** atoms/ → Smallest units (Button, Icon, Input)
+molecules/ → Combinations of atoms (SearchBar = Input + Button) organisms/ →
+Complex sections (Header, Footer, Card) templates/ → Page layouts pages/ →
+Specific instances
+
+**2. By Function/Purpose**
+
+primitives/ → Base UI (Button, Text, Box) forms/ → Inputs, Select, Checkbox,
+Validation layout/ → Grid, Stack, Container, Spacer navigation/ → Tabs,
+Breadcrumb, Menu, Sidebar feedback/ → Alert, Toast, Modal, Spinner data-display/
+→ Table, List, Card, Badge media/ → Image, Video, Avatar, Icon
+
+**3. By Complexity/Abstraction** base/ → Unstyled primitives core/ → Styled
+basics with no logic composite/ → Composed from multiple core smart/ → Stateful,
+connected to data
+
+**4. Shadcn/Radix Style** (flat + registry) ui/ button.jsx card.jsx dialog.jsx
+...
+
+**5. Domain-First** (feature folders) components/ auth/ → LoginForm, SignupForm
+dashboard/ → Charts, Stats checkout/ → Cart, Payment shared/ → Reusable across
+domains
+
+======
+
 #### Direct Usage & Platform Integration
 
 | Category           | Reason                 | Business Explanation                                                                                                                      |
@@ -1213,7 +1240,7 @@ export PATH=$ROOT/compiled/bin/:$PATH
 
 If you wanted to build a go-livepeer docker image, you can do so from the root
 of the repository using this go-livepeer from source. See
-[eliteproxy_launch.json](./v2/assets/gateways/code_examples/eliteproxy_launch.json)
+[eliteproxy_launch.json](./snippets/assets/domain/04_GATEWAYS/code_examples/eliteproxy_launch.json)
 for an example VS Code launch configuration used to build and debug go-livepeer
 from source. The launch config shows the same paths being used to ensure
 libraries are loaded using Livepeer's ffmpeg

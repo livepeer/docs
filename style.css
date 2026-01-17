@@ -1,3 +1,39 @@
+/* Colors Used
+3CB540 - Jade Green
+2b9a66 - Light Green
+18794E - Dark Green
+
+Complementary Greens
+See https://coolors.co/004225-1a794e-08a045-3cb540-62ba4f 
+004225 - Deep Forrest 
+1A794E - Turf Green
+08A045 - Medium Jungle
+3CB540 - Jade Green
+6BBF59 - Moss Green
+
+See https://coolors.co/0c0c0c-073b3a-1a794e-08a045-6bbf59
+0C0C0C - Onyx Black
+073B3A - Dark Teal
+1A794E - Turf Green
+08A045 - Medium Jungle
+6BBF59 - Moss Green
+
+See https://coolors.co/fffffa-073b3a-1a794e-08a045-6bbf59
+FFFFFA - Porcelain
+073B3A - Dark Teal
+1A794E - Turf Green
+08A045 - Medium Jungle
+6BBF59 - Moss Green
+
+Pink Offset Colour
+See https://coolors.co/073b3a-1a794e-f61067-08a045-6bbf59
+F61067 - Razzmatazz Pink
+073B3A - Dark Teal
+1A794E - Turf Green
+08A045 - Medium Jungle
+6BBF59 - Moss Green
+*/
+
 /* Code block themes
 hiki codeblock themes:
 
@@ -39,8 +75,6 @@ a.nav-tabs-item[href="/pages/08_help/README"] {
   justify-content: flex-start;
 }
 
-.nav-tabs
-
 /* Make the nav-tabs container full width */
 .nav-tabs {
   width: 100%;
@@ -60,7 +94,7 @@ a.nav-tabs-item[href="/pages/08_help/README"] {
 } */
 
 /* Push Reference HUB to the right and style as outlined button */
-a.nav-tabs-item[href="/v2/pages/07_resources/resources_hub"] {
+a.nav-tabs-item[href="/v2/pages/07_resources/resources-portal"] {
   margin-left: auto;
   background-color: transparent;
   border: 1px solid #2b9a66 !important;
@@ -209,3 +243,115 @@ body
   background-color: transparent !important;
   background: none !important;
 }
+
+/* Sidebar collapse button - bigger and easier to click */
+/* #sidebar button.absolute {
+  min-width: 2.5rem !important;
+  min-height: 2.5rem !important;
+  padding: 0.75rem !important;
+  z-index: 100 !important;
+} */
+
+/* Override US flag with UK flag in language selector */
+/* Hide the original img and use background-image instead */
+/* #localization-select-trigger img[alt="US"],
+#localization-select-item-en img[alt="US"],
+img[alt="US"][src*="flags/US.svg"] {
+  opacity: 0 !important;
+  position: relative !important;
+}
+
+#localization-select-trigger img[alt="US"]::before,
+#localization-select-item-en img[alt="US"]::before,
+img[alt="US"][src*="flags/US.svg"]::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-image: url("/snippets/assets/united-kingdom-flag-icon.svg") !important;
+  background-size: cover !important;
+  background-position: center !important;
+  border-radius: 50% !important;
+  opacity: 1 !important;
+} */
+
+/* Hide the panel on frame mode pages (MINTLIFY SUCKS) */
+/* Hide empty table of contents layout only when it's empty */
+#table-of-contents-layout:empty,
+#content-side-layout:has(#table-of-contents-layout:empty) {
+  display: none;
+}
+
+/* Frame mode container - 80% of #content-container width, centered */
+/* Breaks out of #content padding to center in full #content-container */
+.frame-mode-container {
+  width: calc(100% + 96px + 20px);  /* 976px */
+  margin-left: -96px;
+  margin-right: -20px;
+  margin-bottom: 2rem;
+  padding-left: 15%;   /* Adjust this for desired content width */
+  padding-right: 15%;  /* Adjust this for desired content width */
+  box-sizing: border-box;
+}
+
+/* Frame mode container inside hero - already broken out, so reset */
+.frame-mode-hero-full .frame-mode-container {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0%;
+  padding-right: 0%;
+}
+
+/* Pagination on frame mode pages ONLY - match container padding */
+[data-page-mode="frame"] #pagination {
+  width: calc(100% + 96px + 20px);
+  margin-left: -96px;
+  margin-right: -20px;
+  padding-left: calc((100% + 96px + 20px) * 0.1 + 96px);
+  padding-right: calc((100% + 96px + 20px) * 0.1 + 20px);
+  box-sizing: border-box;
+}
+
+/* Hero full width - breaks out of #content padding to fill #content-container */
+.frame-mode-hero-full {
+  width: calc(100% + 96px + 20px);
+  margin-left: -96px;
+  margin-right: -20px;
+  position: relative;
+}
+
+#starfield {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Target the card content container */
+.frame-mode-hero-full [data-component-part="card-content-container"] {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 2.5rem; /* Space for arrow icon (0.75rem right + icon width ~1rem + margin) */
+}
+
+/* Target the arrow icon */
+.frame-mode-hero-full #card-link-arrow-icon {
+  top: 0.75rem;
+  right: 0.75rem;
+}
+
+/* #content > div.frame-mode-hero-full > div.frame-mode-container > div > div:nth-child(2) > div > div > div:nth-child(4) > a > div {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+#content > div.frame-mode-hero-full > div.frame-mode-container > div > div:nth-child(2) > div > div > div:nth-child(4) > a > div > #card-link-arrow-icon {
+  top: 0.75rem;
+  right: 0.75rem;
+} */

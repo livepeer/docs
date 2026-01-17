@@ -4,9 +4,9 @@
  * It CANNOT be imported into a snippet file. (WTF Mintlify)
  */
 
-import { latestVersion } from "../automationData/globals/globals.mdx";
+// import { latestVersion } from "/snippets/automationData/globals/globals.mdx";
 
-// import { CustomCodeBlock } from "/snippets/components/code.jsx";
+// import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
 // import { latestVersion } from "/snippets/automationData/globals/globals.mdx";
 
 /**

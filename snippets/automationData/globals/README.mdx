@@ -1,0 +1,94 @@
+# Livepeer Release Updater
+
+Three different solutions for updating the Livepeer release version:
+
+## 1. **n8n Workflow** (livepeer-release-updater.json) CURRENT
+
+This is the recommended approach for your setup. It:
+
+- Polls the go-livepeer releases API every 30 minutes
+- Uses Redis to track the last known version (prevents duplicate updates)
+- Only updates the `LatestVersion` value without touching anything else
+- Commits directly to the docs-v2 branch
+
+## 2. **GitHub Action** (update-livepeer-release.yml) RECOMMENDED
+
+If someone with admin access can add this to the docs repo's
+`.github/workflows/` folder, it will run automatically without needing external
+infrastructure like n8n
+
+## 3. **Node.js Script** (update-livepeer-release.js)
+
+Can be run manually or via cron job from any server with Node.js installed.
+
+Since you mentioned you can't get a GitHub token for the livepeer org but can
+use the GUI, the n8n workflow is your best bet. You'll need to:
+
+1. Create a Personal Access Token from your own GitHub account (Settings →
+   Developer settings → Personal access tokens)
+2. Ensure you have write access to the docs repository
+3. Import the n8n workflow and configure it with your token
+
+The workflow specifically:
+
+- Uses regex to update ONLY the `LatestRelease` value
+- Preserves all other content and formatting
+- Includes error handling and validation
+- Can send notifications when updates occur
+
+All files include the setup guide with detailed instructions for each approach.
+
+### 2. Code for yml
+
+```yaml
+on:
+  schedule: # Run every 30 minutes
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout docs repository
+        uses: actions/checkout@v3
+        with:
+          ref: docs-v2
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get latest go-livepeer release
+        id: get_release
+        run: |
+          LATEST_RELEASE=$(curl -s https://api.github.com/repos/livepeer/go-livepeer/releases/latest | jq -r .tag_name)
+          echo "release=${LATEST_RELEASE}" >> $GITHUB_OUTPUT
+          echo "Latest release: ${LATEST_RELEASE}"
+
+      - name: Read current version from globals.jsx
+        id: current_version
+        run: |
+          CURRENT=$(grep -oP 'LatestRelease:\s*["'\''\"]?\K[^"'\'']+' snippets/automationData/globals/globals.jsx || echo "")
+          echo "current=${CURRENT}" >> $GITHUB_OUTPUT
+          echo "Current version: ${CURRENT}"
+
+      - name: Update globals.jsx if needed
+        if: steps.get_release.outputs.release != steps.current_version.outputs.current
+        run: |
+          # Create backup
+          cp snippets/automationData/globals/globals.jsx snippets/automationData/globals/globals.jsx.bak
+
+          # Update the LatestRelease value
+          sed -i "s/LatestRelease:[[:space:]]*[\"'][^\"']*[\"']/LatestRelease: \"${{ steps.get_release.outputs.release }}\"/" snippets/automationData/globals/globals.jsx
+
+          # Verify the change
+          echo "Updated content:"
+          grep "LatestRelease" snippets/automationData/globals/globals.jsx
+
+      - name: Commit and push if changed
+        if: steps.get_release.outputs.release != steps.current_version.outputs.current
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add snippets/automationData/globals/globals.jsx
+          git commit -m "chore: update latest release to ${{ steps.get_release.outputs.release }}"
+          git push origin docs-v2
+```

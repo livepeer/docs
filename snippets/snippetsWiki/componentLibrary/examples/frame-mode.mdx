@@ -1,0 +1,257 @@
+# Frame Mode Guide
+
+Complete guide to using Mintlify's frame mode for custom page layouts.
+
+---
+
+## What is Frame Mode?
+
+Frame mode is a Mintlify feature that **removes all default page styling**, giving you complete control over the page layout. It's ideal for:
+
+- Landing pages
+- Custom hero sections
+- Marketing pages
+- Unique layouts that don't fit the standard documentation template
+
+---
+
+## Enabling Frame Mode
+
+Add `mode: frame` to your MDX frontmatter:
+
+```yaml
+---
+mode: frame
+title: My Custom Page
+description: A custom landing page
+sidebarTitle: Custom Page
+---
+```
+
+**What changes:**
+- ✅ No default page wrapper
+- ✅ No automatic heading styles
+- ✅ Full control over layout
+- ❌ Standard markdown headings don't render
+- ❌ Default spacing removed
+
+---
+
+## The Problem: Headings Don't Work
+
+In frame mode, standard markdown headings are invisible:
+
+```mdx
+---
+mode: frame
+---
+
+# This Won't Show Up
+## Neither Will This
+```
+
+**Why?** Frame mode removes Mintlify's default heading styles, so you need custom components.
+
+---
+
+## Solution: Frame Mode Components
+
+Use the custom heading components from `frameMode.jsx`:
+
+```jsx
+import { PageHeader, H1, H2, H3, H4, H5, H6 } from '/snippets/components/display/frameMode.jsx';
+```
+
+### Available Components
+
+| Component | Purpose | Theme-Aware |
+|-----------|---------|-------------|
+| `PageHeader` | Hero section with title, subtitle, description | ✅ Yes |
+| `H1` - `H6` | Styled headings (h1 through h6) | ❌ No |
+| `P` | Styled paragraph | ❌ No |
+
+---
+
+## PageHeader Component
+
+The main hero component for frame mode pages.
+
+### Basic Usage
+
+```jsx
+<PageHeader
+  title="Welcome to Livepeer"
+  subtitle="Open AI-Infrastructure for Real-Time Video"
+  description="Build the future of interactive media with decentralized video infrastructure"
+/>
+```
+
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `title` | string | ✅ Yes | Main heading text |
+| `subtitle` | string | No | Subtitle below title |
+| `description` | string | No | Description paragraph |
+| `titleColor` | string | No | Override title color (hex) |
+| `subtitleColor` | string | No | Override subtitle color (hex) |
+| `descriptionColor` | string | No | Override description color (hex) |
+
+### Default Theme Colors
+
+**Light Mode:**
+- Title: `#0C0C0C` (Onyx Black)
+- Subtitle: `#3CB540` (Jade Green)
+- Description: `#6b7280` (Gray)
+
+**Dark Mode:**
+- Title: `#ffffff` (White)
+- Subtitle: `#2b9a66` (Darker Jade Green)
+- Description: `#9ca3af` (Light Gray)
+
+### Custom Colors
+
+Override default colors when needed:
+
+```jsx
+<PageHeader
+  title="Special Section"
+  subtitle="With Custom Colors"
+  titleColor="#ff0000"
+  subtitleColor="#00ff00"
+/>
+```
+
+---
+
+## Heading Components (H1-H6)
+
+Simple styled headings for content sections.
+
+### Basic Usage
+
+```jsx
+<H1>Main Section</H1>
+<H2>Subsection</H2>
+<H3>Sub-subsection</H3>
+```
+
+### With Icons
+
+All heading components support Mintlify icons:
+
+```jsx
+<H1 icon="rocket">Getting Started</H1>
+<H2 icon="code">API Reference</H2>
+<H3 icon="book">Documentation</H3>
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | ReactNode | - | Heading text |
+| `icon` | string | - | Mintlify icon name |
+| `iconSize` | number | varies | Icon size in pixels |
+| `iconColor` | string | `#3CB540` | Icon color (hex) |
+| `align` | string | `"left"` | Text alignment: `"left"`, `"center"`, `"right"` |
+| `color` | string | - | Text color (hex) |
+
+### Alignment
+
+```jsx
+<H1 align="center">Centered Heading</H1>
+<H2 align="right">Right-Aligned</H2>
+```
+
+### Custom Styling
+
+```jsx
+<H1 color="#ff0000" iconColor="#0000ff" icon="star">
+  Custom Styled Heading
+</H1>
+```
+
+---
+
+## Complete Example
+
+```mdx
+---
+mode: frame
+title: Welcome to Livepeer
+description: Decentralized video infrastructure
+---
+
+import { PageHeader, H1, H2, H3 } from '/snippets/components/display/frameMode.jsx';
+
+<PageHeader
+  title="Livepeer Mission Control"
+  subtitle="Open AI-Infrastructure for Real-Time Interactive Video"
+  description="Livepeer powers the future of creative media with full-stack on-demand AI-infrastructure"
+/>
+
+<Frame caption="Real-time AI Built on Livepeer">
+  <img src="/assets/demo.gif" alt="Demo" />
+</Frame>
+
+<H1 icon="rocket" align="center">Getting Started</H1>
+
+<H2>Quick Start</H2>
+
+Regular markdown content works here...
+
+<H2>Features</H2>
+
+More content...
+
+<H3 icon="code">API Integration</H3>
+
+Code examples and documentation...
+```
+
+---
+
+## Best Practices
+
+1. **Always use PageHeader at the top** - Provides consistent hero section
+2. **Use H1-H6 for structure** - Maintains semantic HTML hierarchy
+3. **Test both themes** - Verify colors in light and dark mode
+4. **Keep titles concise** - Long titles may wrap awkwardly
+5. **Use icons sparingly** - Too many icons create visual clutter
+
+---
+
+## Troubleshooting
+
+### Headings Not Showing
+
+**Problem:** Text is invisible in frame mode
+
+**Solution:** Use `PageHeader` or `H1`-`H6` components instead of markdown headings
+
+### Colors Not Changing in Dark Mode
+
+**Problem:** Colors stay the same in both themes
+
+**Solution:** Don't override colors with props unless necessary. Default colors are theme-aware.
+
+### Import Errors
+
+**Problem:** `Cannot find module` error
+
+**Solution:** Use absolute path from repo root:
+```jsx
+// ✅ Correct
+import { PageHeader } from '/snippets/components/display/frameMode.jsx';
+
+// ❌ Wrong
+import { PageHeader } from '../components/display/frameMode.jsx';
+```
+
+---
+
+## Author
+
+Alison Haire
+

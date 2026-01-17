@@ -1,0 +1,203 @@
+# Theme Colors & Dark Mode
+
+Guide for implementing theme-aware colors in Livepeer documentation components.
+
+---
+
+## Color System
+
+### Theme Color Palette
+
+The Livepeer documentation uses a consistent color palette defined in `snippets/styles/colours.jsx`:
+
+```jsx
+export const themeColor = {
+  light: {
+    accent: "#3CB540",      // Jade Green
+    text: "#6b7280",        // Gray
+    heroText: "#0C0C0C",    // Onyx Black
+  },
+  dark: {
+    accent: "#2b9a66",      // Darker Jade Green
+    text: "#9ca3af",        // Light Gray
+    heroText: "#ffffff",    // White
+  },
+};
+```
+
+### Color Usage
+
+- **`heroText`**: Main headings and titles
+- **`accent`**: Subtitles, highlights, and brand elements
+- **`text`**: Body text and descriptions
+
+---
+
+## Implementing Dark Mode
+
+### Method 1: CSS Variables (Recommended)
+
+Use CSS variables with the `.dark` class selector for automatic theme switching:
+
+```jsx
+export const MyComponent = ({ title }) => {
+  return (
+    <div>
+      <h1 style={{ color: "var(--my-title-color, #0C0C0C)" }}>
+        {title}
+      </h1>
+      <style>{`
+        :root {
+          --my-title-color: #0C0C0C;
+        }
+        .dark {
+          --my-title-color: #ffffff;
+        }
+      `}</style>
+    </div>
+  );
+};
+```
+
+**How it works:**
+- Mintlify adds a `.dark` class to the `<html>` element when dark mode is active
+- CSS variables automatically update based on the theme
+- No JavaScript state management needed
+
+### Method 2: Tailwind Classes
+
+For simple color changes, use Tailwind's `dark:` modifier:
+
+```jsx
+<div className="text-gray-900 dark:text-white">
+  This text changes color automatically
+</div>
+```
+
+**Note:** Only works with standard Tailwind colors. Custom hex colors require Method 1.
+
+---
+
+## Frame Mode Components
+
+Frame mode is a Mintlify feature that removes default page styling for custom layouts.
+
+### Enabling Frame Mode
+
+Add to your MDX frontmatter:
+
+```yaml
+---
+mode: frame
+title: My Custom Page
+---
+```
+
+### Frame Mode Headings
+
+Standard markdown headings don't render in frame mode. Use custom heading components from `frameMode.jsx`:
+
+```jsx
+import { PageHeader, H1, H2, H3 } from '/snippets/components/display/frameMode.jsx';
+
+<PageHeader
+  title="Main Title"
+  subtitle="Subtitle Text"
+  description="Optional description"
+/>
+
+<H1>Section Heading</H1>
+<H2>Subsection</H2>
+```
+
+### PageHeader Component
+
+The `PageHeader` component provides a theme-aware hero section:
+
+**Props:**
+- `title` (string): Main heading
+- `subtitle` (string, optional): Subtitle text
+- `description` (string, optional): Description paragraph
+- `titleColor` (string, optional): Override title color
+- `subtitleColor` (string, optional): Override subtitle color
+- `descriptionColor` (string, optional): Override description color
+
+**Example:**
+
+```jsx
+<PageHeader
+  title="Welcome to Livepeer"
+  subtitle="Open AI-Infrastructure for Real-Time Video"
+  description="Build the future of interactive media"
+/>
+```
+
+**Theme Colors:**
+- Light mode: Onyx title (#0C0C0C), Jade subtitle (#3CB540)
+- Dark mode: White title (#ffffff), Dark Jade subtitle (#2b9a66)
+
+---
+
+## Best Practices
+
+1. **Use CSS variables for theme-aware colors** - Avoids JavaScript complexity
+2. **Define colors in one place** - Keep `themeColor` object as single source of truth
+3. **Test both themes** - Always verify components in light and dark mode
+4. **Provide fallbacks** - Use `var(--color, #fallback)` syntax
+5. **Avoid hardcoded colors** - Use theme colors for consistency
+
+---
+
+## Common Patterns
+
+### Theme-Aware Icon
+
+```jsx
+export const ThemedIcon = ({ size = 24 }) => {
+  return (
+    <span style={{ color: "var(--icon-color, #6b7280)" }}>
+      <Icon icon="my-icon" size={size} />
+      <style>{`
+        :root { --icon-color: #6b7280; }
+        .dark { --icon-color: #a1a1aa; }
+      `}</style>
+    </span>
+  );
+};
+```
+
+### Conditional Styling
+
+```jsx
+export const Card = ({ children, highlighted }) => {
+  return (
+    <div className={highlighted ? "card-highlight" : "card-normal"}>
+      {children}
+      <style>{`
+        .card-normal {
+          background: #f9fafb;
+          border: 1px solid #e5e7eb;
+        }
+        .dark .card-normal {
+          background: #1f2937;
+          border: 1px solid #374151;
+        }
+        .card-highlight {
+          background: #3CB540;
+          color: white;
+        }
+        .dark .card-highlight {
+          background: #2b9a66;
+        }
+      `}</style>
+    </div>
+  );
+};
+```
+
+---
+
+## Author
+
+Alison Haire
+

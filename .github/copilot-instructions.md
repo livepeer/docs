@@ -13,7 +13,7 @@ containerized with Docker.
   - Use `.tsx` for new components; `.jsx` is legacy but supported.
 - **Automations & Scripts:**
   - All dynamic, AI, and data-fetching logic in `automations/` and `ai-tools/`.
-  - Scripts for API doc generation and external data in `v2/scripts/` (see
+  - Scripts for API doc generation and external data in `snippets/scripts/` (see
     generate-api-docs.sh, fetch-openapi-specs.sh).
 - **API Reference:**
   - OpenAPI spec in `openapi.yaml` (AI API: see ai/worker/api/openapi.yaml). Use
@@ -32,10 +32,10 @@ containerized with Docker.
     `docker buildx build --platform linux/amd64 --load -t livepeer/docs .`
   - Makefile: `make all`
 - **API Docs Generation:**
-  - Use `v2/scripts/generate-api-docs.sh` to convert OpenAPI specs to MDX/API
-    docs and navigation JSON. Example:
+  - Use `snippets/scripts/generate-api-docs.sh` to convert OpenAPI specs to
+    MDX/API docs and navigation JSON. Example:
     ```bash
-    ./v2/scripts/generate-api-docs.sh ai/worker/api/openapi.yaml v2/pages/04_gateways/guides-references/api-reference/AI-API "AI API"
+    ./snippets/scripts/generate-api-docs.sh ai/worker/api/openapi.yaml v2/pages/04_gateways/guides-references/api-reference/AI-API "AI API"
     ```
   - Output: MDX files + navigation snippet for `docs.json`.
 - **External Data Fetching:**
@@ -72,8 +72,8 @@ containerized with Docker.
 - **OpenAPI:** API docs generated from `openapi.yaml` (see also
   `ai/worker/api/openapi.yaml`).
 - **Docker:** Containerized builds for CI/CD and local dev.
-- **Automations:** Scripts in `v2/scripts/` automate API doc generation and
-  external data sync.
+- **Automations:** Scripts in `snippets/scripts/` automate API doc generation
+  and external data sync.
 
 ## Key Files & Directories
 
@@ -83,7 +83,7 @@ containerized with Docker.
 - `openapi.yaml`, `ai/worker/api/openapi.yaml` — API reference
 - `Dockerfile`, `Makefile` — Build/deploy
 - `README.md`, `README_V2.md` — Developer notes, protocol/architecture
-- `v2/scripts/` — Automation scripts (API docs, data fetching)
+- `snippets/scripts/` — Automation scripts (API docs, data fetching)
 
 ---
 

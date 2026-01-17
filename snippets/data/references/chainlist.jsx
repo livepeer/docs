@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-
 /**
  * ChainlistRPCs - Dynamically fetches and displays RPC endpoints from Chainlist
  *
@@ -16,7 +14,7 @@ export const ChainlistRPCs = ({ chainId = 42161 }) => {
       try {
         // Fetch from DefiLlama chainlist extraRpcs.js (has all RPCs)
         const response = await fetch(
-          "https://raw.githubusercontent.com/DefiLlama/chainlist/main/constants/extraRpcs.js"
+          "https://raw.githubusercontent.com/DefiLlama/chainlist/main/constants/extraRpcs.js",
         );
 
         if (response.ok) {
@@ -25,7 +23,7 @@ export const ChainlistRPCs = ({ chainId = 42161 }) => {
           // Extract the chain's RPC block using regex
           const chainPattern = new RegExp(
             `${chainId}:\\s*\\{[\\s\\S]*?rpcs:\\s*\\[([\\s\\S]*?)\\]\\s*,?\\s*\\}`,
-            "m"
+            "m",
           );
           const match = jsContent.match(chainPattern);
 

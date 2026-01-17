@@ -9,4 +9,4 @@ export {
 export {
   GatewayOffChainWarning,
   GatewayOnChainWarning,
-} from "/snippets/components/gateways/warnings.jsx";
+} from "/snippets/components/domain/04_GATEWAYS/callouts.jsx";
