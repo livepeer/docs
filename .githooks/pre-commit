@@ -118,6 +118,25 @@ else
 fi
 echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
+# Run test suite (fast mode for pre-commit)
+echo ""
+echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${YELLOW}Running test suite (staged files only)...${NC}"
+if [ -f "tests/run-all.js" ] && command -v node &>/dev/null; then
+    if node tests/run-all.js --staged --skip-browser 2>&1; then
+        echo -e "${GREEN}✓ Test suite passed${NC}"
+    else
+        TEST_EXIT=$?
+        if [ $TEST_EXIT -ne 0 ]; then
+            VIOLATIONS=$((VIOLATIONS + 1))
+            WARNINGS+=("❌ Test suite failed - see output above")
+        fi
+    fi
+else
+    echo -e "${YELLOW}⚠️  Test suite not available, skipping...${NC}"
+fi
+echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+
 # Report results
 echo ""
 if [ $VIOLATIONS -eq 0 ]; then

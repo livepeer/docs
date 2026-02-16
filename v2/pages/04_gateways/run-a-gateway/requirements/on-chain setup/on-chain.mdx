@@ -8,19 +8,18 @@ keywords: ["livepeer", "gateways", "run a gateway", "requirements", "on chain se
 ---
 
 import { PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
-
-<PreviewCallout />
-
-
 import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
 import { DoubleIconLink } from '/snippets/components/primitives/links.jsx'
 import { BlinkingIcon } from '/snippets/components/primitives/links.jsx'
 import { ChainlistRPCs } from '/snippets/data/references/chainlist.jsx'
 import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { BorderedBox } from '/snippets/components/primitives/containers.jsx'
+
+<PreviewCallout />
 
 <Warning> Complete: needs review </Warning>
 {/* ## Quick Links
-<div style={{border: '1px solid #2b9a66', borderRadius: '8px', padding: '16px' }}>
+<BorderedBox variant="accent" padding="16px">
 <Columns cols={3}>
     <div>
         General
@@ -89,16 +88,14 @@ If you plan to run your Gateway in **On-Chain** mode, you will need:
 
 ## Security Notes
 
-<div
-  style={{ border: '1px solid red', borderRadius: '8px', padding: '0 16px' }}
->
+<Warning>
   - Never share your `keystore` files - they contain your encrypted private keys
   - Use strong passwords for `keystore` encryption - Back up your `keystore`
   securely - The `ethPassword` only protects the `keystore` file - your actual
   private key is stored encrypted within the keystore - Never share your wallet
-  private key. In c ase of accidental public exposure - remove any funds &
+  private key. In case of accidental public exposure - remove any funds &
   change your wallet immediately
-</div>
+</Warning>
 
 <CustomDivider middleText="EASY SETUP" />
 
@@ -196,21 +193,21 @@ Full Guide with alternative options for setting up an on-chain Gateway
 
 <StyledSteps>
 <StyledStep title="Network `-network`" titleSize="h2">
-    <div style={{border: '1px solid #2b9a66', borderRadius: '8px', padding: '0 16px' }}>
+    <BorderedBox variant="accent" padding="0 16px">
         <ResponseField name="-network" type="string" default="offchain">
         Set to the blockchain network <Badge color="green">`arbitrum-one-mainnet`</Badge>
         </ResponseField>
-    </div>
+    </BorderedBox>
 
 </StyledStep>
 <StyledStep title="RPC URL `-ethUrl` flag" titleSize="h2">
-    <div style={{border: '1px solid #2b9a66', borderRadius: '8px', padding: '0 16px' }}>
+    <BorderedBox variant="accent" padding="0 16px">
         <ResponseField name="-ethUrl" type="string" default="none">
         Ethereum JSON-RPC URL
 
         Example: https://arb1.arbitrum.io/rpc
         </ResponseField>
-    </div>
+    </BorderedBox>
 
     You can use any Arbitrum One [RPC](https://en.wikipedia.org/wiki/Remote_procedure_call) URL.
     - Public RPCs
@@ -282,7 +279,7 @@ Full Guide with alternative options for setting up an on-chain Gateway
 
         <Icon icon="info-circle" size={20}/> A public address is akin to your bank account number, a private key is like your bank PIN or password.
     </Danger>
-    <div style={{border: '1px solid #2b9a66', borderRadius: '8px', padding: '0 16px' }}>
+    <BorderedBox variant="accent" padding="0 16px">
         <ResponseField name="-ethAcctAddr" type="string" default="none">
             <Tip>
             Livepeer automatically creates a wallet for you if this field is empty.
@@ -295,7 +292,7 @@ Full Guide with alternative options for setting up an on-chain Gateway
             Example: 0xc7653d426f2ec8bc33cdde08b15f535e2eb2f523
 
         </ResponseField>
-    </div>
+    </BorderedBox>
     <br/>
     <Accordion title="See All Account Setup Options" icon="wallet">
         You can
@@ -343,7 +340,7 @@ Full Guide with alternative options for setting up an on-chain Gateway
     Think of this flag as `-keystorePassword` - it is the path to a password.txt file containing a (strong) password chosen by you.
 
     This password is used to decrypt the `keystore` file and access the (encrypted) private key.
-    <div style={{border: '1px solid #2b9a66', borderRadius: '8px', padding: '0 16px' }}>
+    <BorderedBox variant="accent" padding="0 16px">
         <ResponseField name="-ethPassword" type="string" default="none">
             Path to a password.txt file containing a (strong) password chosen by you.
 
@@ -353,7 +350,7 @@ Full Guide with alternative options for setting up an on-chain Gateway
             ```
             <Tip>Livepeer will prompt you for a password and create this automatically on running the Gateway if you leave this flag empty: `-ethPassword=""`</Tip>
         </ResponseField>
-    </div>
+    </BorderedBox>
     <br/>
     <Accordion title="See All Password Setup Options" icon="lock">
     <Tabs >
@@ -393,7 +390,7 @@ Full Guide with alternative options for setting up an on-chain Gateway
 
 </StyledStep>
 <StyledStep title="ETH Keystore `-ethKeystorePath`" titleSize="h2">
-    <div style={{border: '1px solid #2b9a66', borderRadius: '8px', padding: '0 16px' }}>
+    <BorderedBox variant="accent" padding="0 16px">
         <ResponseField name="-ethKeystorePath" type="string" default="none">
             This is the path to your keystore directory or keyfile.
 
@@ -403,7 +400,7 @@ Full Guide with alternative options for setting up an on-chain Gateway
             ```
             <Tip>Livepeer will create the keystore automatically on running the Gateway if you leave this flag empty: `-ethKeystorePath=""`</Tip>
         </ResponseField>
-    </div>
+    </BorderedBox>
 
     To bring your existing Ethereum account to Livepeer, you need to create a keystore file
     with your private key and place it in the correct directory structure.

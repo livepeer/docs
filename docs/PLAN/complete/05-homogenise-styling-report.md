@@ -10,6 +10,19 @@ The styling system is already well-structured. This task involved auditing, docu
 
 ---
 
+## Related Work: Styling Framework Homogenization
+
+**Note:** Additional work was done on a related branch (`docs-plan/styling-framework-homogenization`) that established a comprehensive three-layer styling framework. This work complements the homogenization task by:
+
+- Creating component primitives library (Layout, Table, Container primitives)
+- Establishing framework rules for MDX files (zero inline styles)
+- Documenting Mintlify overrides and best practices
+- Creating comprehensive component library documentation
+
+See `docs/PLAN/reports/styling-framework-homogenization-report.md` for full details of the framework work.
+
+---
+
 ## Audit Findings
 
 ### Current Architecture (Already Excellent)

@@ -34,6 +34,17 @@ The pre-commit hook runs automatically when you run `git commit`. It checks:
 - ✅ **Import paths** - Ensures snippets imports use absolute paths
 - ✅ **Browser validation** - Tests MDX files in headless browser (if `mint dev` is running)
 
+#### Test Suite (New)
+
+The pre-commit hook now runs the comprehensive test suite on staged files:
+
+- ✅ **Style Guide Tests** - Comprehensive style guide rule validation
+- ✅ **MDX Validation** - Advanced MDX syntax and structure checks
+- ✅ **Spelling Tests** - UK English spelling validation using cspell
+- ✅ **Quality Checks** - Image alt text, frontmatter completeness, link validation
+
+The test suite runs in fast mode for pre-commit (staged files only, browser tests skipped). For full testing, run `npm test` manually or check CI results.
+
 ### Installation
 
 #### Automatic Installation (Recommended)

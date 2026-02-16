@@ -27,6 +27,7 @@ import { ResponseFieldAccordion, ResponseFieldExpandable, CustomResponseField, V
 import { CustomCodeBlock, CodeSection, ComplexCodeBlock, } from '/snippets/components/content/code.jsx';
 import { TipWithArrow, DoubleIconLink } from '/snippets/components/primitives/links.jsx';
 import { DownloadButton } from '/snippets/components/primitives/buttons.jsx';
+import { FlexContainer } from '/snippets/components/primitives/layout.jsx';
 import { LatestVersion } from '/snippets/components/content/release.jsx';
 
 {/* LAYOUTS & VIEWS */}
@@ -96,11 +97,20 @@ Debug issues
 
 <View title=" Docker" icon="docker" iconType="solid">
   ## <Icon icon="docker" iconType="solid" size={32} /> Docker Quickstart Guide
-  <span style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-  <span style={{display: 'inline-flex', alignItems: 'flex-start', gap: "0.2rem"}}><Icon icon="linux" color="#ff9a0e" size={22}/><Badge> Linux </Badge>{" "} </span>
-  <span style={{display: 'inline-flex', alignItems: 'flex-start', gap: "0.2rem"}}><Icon icon="windows" color="#14bbf7" size={22} /><Badge> Windows <Icon icon="warning" size={12} /></Badge> {" "}</span>
-  <span style={{display: 'inline-flex', alignItems: 'flex-start'}}><Icon icon="apple" color="#60ba47" size={22} /><Badge> MacOS <Icon icon="warning" size={12}/></Badge></span>
-  </span>
+  <FlexContainer gap="1rem" wrap>
+    <FlexContainer direction="row" gap="0.2rem" align="flex-start">
+      <Icon icon="linux" color="#ff9a0e" size={22}/>
+      <Badge> Linux </Badge>
+    </FlexContainer>
+    <FlexContainer direction="row" gap="0.2rem" align="flex-start">
+      <Icon icon="windows" color="#14bbf7" size={22} />
+      <Badge> Windows <Icon icon="warning" size={12} /></Badge>
+    </FlexContainer>
+    <FlexContainer direction="row" align="flex-start">
+      <Icon icon="apple" color="#60ba47" size={22} />
+      <Badge> MacOS <Icon icon="warning" size={12}/></Badge>
+    </FlexContainer>
+  </FlexContainer>
   
   <br />
 

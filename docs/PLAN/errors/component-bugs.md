@@ -1,8 +1,32 @@
 # Component Bugs Report
 
-Generated: 2026-02-16
+Generated: 2026-02-16  
+Last Updated: 2026-02-16
 
 This report documents verified component bugs that prevent pages from rendering correctly. These bugs are in immutable component files and require user approval to fix.
+
+## Status Update (2026-02-16)
+
+**Important:** Many components previously marked as broken have been verified as **WORKING** in production pages. The initial testing methodology had false positives due to component library documentation context issues.
+
+**Verified Working Components:**
+- ✅ **Starfield** - Confirmed working by user
+- ✅ **All Portal Components** (HeroSectionContainer, etc.) - Working in production pages
+- ✅ **PreviewCallout/ComingSoonCallout/ReviewCallout** - Working in 100+ production pages
+- ✅ **BlinkingIcon** - Working in production pages
+- ✅ **DoubleIconLink** - Working in Gateway documentation pages
+- ✅ **QuickStartTabs/QuickStartSteps** - Working correctly
+- ✅ **ListSteps** - Working correctly
+- ✅ **ResponseFieldGroup** - Working correctly
+- ✅ **ApiBaseUrlsTable** - Working correctly
+- ✅ **P Component (with icon prop)** - Working correctly
+- ✅ **BlinkingTerminal** - Working correctly
+- ✅ **OrchAddrNote/TestVideoDownload** - Working correctly
+
+**Still Under Investigation:**
+Components that showed errors in component library context but work in production may have import/context issues specific to documentation pages, not actual bugs.
+
+See `component-verification-report.md` for detailed verification results.
 
 ## ResponseFieldGroup
 
@@ -317,11 +341,25 @@ Used in component library documentation. Used in Portal pages.
 
 ## Summary
 
-Total component bugs verified: 11
+**Total component bugs verified: 2**
 
-All bugs have been verified by:
-1. Commenting out component usage in MDX files
-2. Confirming pages render correctly without the components
-3. Confirming errors disappear when components are commented out
+**Status:**
+- ✅ All component library pages now render correctly in browser
+- ✅ Most components previously marked as broken have been verified as **WORKING** in production pages
+- ✅ Initial testing methodology had false positives - now corrected
+- ✅ Only 2 components have verified bugs that prevent usage in component library documentation
 
-All fixes require modifying immutable component files and need user approval before implementation.
+**Verified Bugs:**
+1. **YouTubeVideo / CardVideo** - `convertToPrivacyEnhancedUrl is not defined` (commented out in display.mdx)
+2. **StyledSteps with StyledStep** - React Error #418 text node issue (live example commented out in layout.mdx)
+
+**Verification Process:**
+1. ✅ Tested ALL pages in headless browser (Puppeteer)
+2. ✅ Filtered out false positives (Mintlify build artifacts, test script errors)
+3. ✅ Verified pages render correctly with no console errors
+4. ✅ Identified and isolated actual component bugs
+5. ✅ Commented out broken components in MDX files
+
+**All fixes require modifying immutable component files and need user approval before implementation.**
+
+**See `testing-methodology.md` for proper testing procedures to prevent future false positives.**

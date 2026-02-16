@@ -1,0 +1,112 @@
+name: Test Suite
+
+on:
+  push:
+    branches:
+      - main
+      - docs-v2-preview
+  pull_request:
+    branches:
+      - main
+      - docs-v2-preview
+
+jobs:
+  test-suite:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Style Guide Tests
+        continue-on-error: true
+        run: npm run test:style
+        id: style-test
+
+      - name: Run MDX Validation Tests
+        continue-on-error: true
+        run: npm run test:mdx
+        id: mdx-test
+
+      - name: Run Spelling Tests
+        continue-on-error: true
+        run: npm run test:spell
+        id: spell-test
+
+      - name: Run Quality Tests
+        continue-on-error: true
+        run: npm run test:quality
+        id: quality-test
+
+      - name: Install Mintlify globally
+        run: npm install -g mintlify
+
+      - name: Start Mintlify dev server
+        run: |
+          mint dev > /tmp/mint-dev.log 2>&1 &
+          echo $! > /tmp/mint-dev.pid
+          echo "Mint dev server starting (PID: $(cat /tmp/mint-dev.pid))"
+        continue-on-error: false
+
+      - name: Wait for server to be ready
+        run: |
+          echo "Waiting for mint dev server to start..."
+          for i in {1..60}; do
+            if curl -f -s http://localhost:3000 > /dev/null 2>&1; then
+              echo "✅ Server is ready!"
+              exit 0
+            fi
+            echo "Waiting... ($i/60)"
+            sleep 2
+          done
+          echo "❌ Server failed to start within 2 minutes"
+          tail -50 /tmp/mint-dev.log || true
+          exit 1
+
+      - name: Run Browser Tests (All Pages)
+        continue-on-error: true
+        run: |
+          # Force test ALL pages from docs.json (ensures complete coverage)
+          echo "Testing ALL pages from docs.json navigation..."
+          node tests/integration/browser.test.js
+        id: browser-test
+
+      - name: Stop Mintlify dev server
+        if: always()
+        run: |
+          if [ -f /tmp/mint-dev.pid ]; then
+            PID=$(cat /tmp/mint-dev.pid)
+            kill $PID 2>/dev/null || true
+          fi
+
+      - name: Test Summary
+        if: always()
+        run: |
+          echo "## Test Suite Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Test | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Style Guide | ${{ steps.style-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| MDX Validation | ${{ steps.mdx-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Spelling | ${{ steps.spell-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Quality | ${{ steps.quality-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Browser | ${{ steps.browser-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Fail if any test failed
+        if: steps.style-test.outcome == 'failure' || steps.mdx-test.outcome == 'failure' || steps.spell-test.outcome == 'failure' || steps.quality-test.outcome == 'failure' || steps.browser-test.outcome == 'failure'
+        run: |
+          echo "❌ One or more tests failed"
+          exit 1

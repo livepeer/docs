@@ -52,11 +52,33 @@ function checkUnclosedTags(content) {
   const jsxTagRegex = /<\/?([A-Z][a-zA-Z0-9]*)\s*[^>]*>/g;
   const selfClosingRegex = /<[A-Z][a-zA-Z0-9]*\s+[^>]*\/>/;
   
+  // Remove code blocks to avoid false positives
+  let contentToCheck = content;
+  const codeBlockRegex = /```[\s\S]*?```/g;
+  const codeBlockRanges = [];
+  let codeMatch;
+  
+  while ((codeMatch = codeBlockRegex.exec(content)) !== null) {
+    codeBlockRanges.push({
+      start: codeMatch.index,
+      end: codeMatch.index + codeMatch[0].length
+    });
+  }
+  
+  // Check if position is in a code block
+  function isInCodeBlock(pos) {
+    return codeBlockRanges.some(range => pos >= range.start && pos < range.end);
+  }
+  
   let match;
   let lineNumber = 1;
   let lastIndex = 0;
   
   while ((match = jsxTagRegex.exec(content)) !== null) {
+    // Skip if in code block
+    if (isInCodeBlock(match.index)) {
+      continue;
+    }
     // Update line number
     const beforeMatch = content.substring(lastIndex, match.index);
     lineNumber += (beforeMatch.match(/\n/g) || []).length;

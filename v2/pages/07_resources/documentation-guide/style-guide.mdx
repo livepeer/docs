@@ -599,6 +599,26 @@ if (component === "expandable") {
 return <Accordion {...props}>{content}</Accordion>;
 ```
 
+#### 9. JSX Comments Don't Prevent MDX Parsing
+
+**CRITICAL:** JSX comments (`{/* */}`) in MDX files do **NOT** prevent MDX from parsing the content inside them. MDX will still try to evaluate JSX components and expressions within comments.
+
+```mdx
+{/* ❌ WRONG - MDX will still try to parse CustomCodeBlock */}
+{/* 
+<CustomCodeBlock codeString="test" />
+*/}
+
+{/* ✅ CORRECT - Remove the entire section, don't comment it */}
+{/* Code components temporarily unavailable - see component-bugs.md */}
+```
+
+**If you need to temporarily disable a component section:**
+1. **Remove the entire section** from the MDX file
+2. **Add a comment explaining why** it was removed
+3. **Document in `docs/PLAN/errors/component-bugs.md`** if it's a component bug
+4. **Do NOT use JSX comments** to "comment out" component usage
+
 #### 9. Frame Mode Limitations
 
 Frame mode (`mode: frame` in frontmatter) removes all default Mintlify styling. When using frame mode:
@@ -678,7 +698,7 @@ git checkout -b docs-plan/XX-task-name
 
 1. **Use CSS Custom Properties ONLY** - Never use ThemeData or hardcode colors
 2. **Reference Variables from style.css** - All theme colors are in `style.css` as CSS variables
-3. **Test Responsive Design** - Ensure components work on mobile, tablet, and desktop
+3. **Test Components** - Ensure components render correctly
 4. **Handle Children Properly** - Always handle children as arrays when mapping
 5. **Document Props** - Include JSDoc comments for component props
 6. **Provide Examples** - Add examples in the `examples/` folder for each component
@@ -733,7 +753,7 @@ Before submitting documentation:
 - [ ] Images load and have appropriate alt text
 - [ ] Components use theme-aware colors
 - [ ] No hardcoded colors that should adapt to theme
-- [ ] Responsive design works on mobile devices
+- [ ] Components render correctly
 - [ ] No console errors in browser dev tools
 - [ ] MDX syntax errors checked and fixed
 - [ ] All pages verified in headless browser (see Verification Requirements below)
@@ -859,6 +879,59 @@ The hooks include headless browser validation that tests MDX files actually rend
 - Render failures
 
 **Note**: Browser validation requires `mint dev` to be running. If it's not running, the check is skipped (doesn't block commit).
+
+### Comprehensive Test Suite
+
+The repository includes a comprehensive test suite that validates all style guide rules and more:
+
+#### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run specific test suites
+npm run test:style      # Style guide validation
+npm run test:mdx        # MDX syntax validation
+npm run test:spell      # UK English spelling
+npm run test:quality    # Quality checks (alt text, links, frontmatter)
+npm run test:browser    # Browser rendering tests
+```
+
+#### What Gets Tested
+
+**Style Guide Tests** (`test:style`):
+- CSS Custom Properties usage (no ThemeData, no hardcoded colors)
+- No inline styles in MDX files
+- No Tailwind classes
+- Absolute import paths
+- File naming conventions
+- Component immutability warnings
+
+**MDX Validation** (`test:mdx`):
+- Frontmatter validation
+- Unclosed JSX tags
+- Invalid import syntax
+- MDX scope inheritance issues
+
+**Spelling Tests** (`test:spell`):
+- UK English spelling validation
+- Custom dictionary for technical terms (Livepeer, Arbitrum, etc.)
+- Excludes code blocks and frontmatter
+
+**Quality Checks** (`test:quality`):
+- Image alt text presence
+- Frontmatter completeness
+- Internal link validation
+- SEO metadata validation
+
+**Browser Tests** (`test:browser`):
+- Page rendering in headless browser
+- Console error detection
+- Theme testing (light/dark)
+- Content validation (H1, content length)
+
+The test suite runs automatically in pre-commit hooks (fast mode) and in CI/CD (full suite).
 
 For full details on the hooks, see the [Git Hooks Documentation](/docs/CONTRIBUTING/GIT-HOOKS.md).
 
