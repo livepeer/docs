@@ -28,8 +28,21 @@ The V2 documentation has significantly restructured content from V1, with a shif
 
 **Existing Livepeer Studio pages in V2:**
 - `v2/pages/010_products/products/livepeer-studio/livepeer-studio.mdx` (empty placeholder)
-- `v2/pages/010_products/products/livepeer-studio/client-use-cases.mdx` (has content)
+- `v2/pages/010_products/products/livepeer-studio/client-use-cases.mdx` (✅ has content)
 - `v2/pages/03_developers/developer-platforms/livepeer-studio/livepeer-studio.mdx` (empty placeholder)
+
+**Existing placeholder pages that reference Studio content:**
+- `v2/pages/03_developers/technical-references/sdks.mdx` (empty - just "# SDKs")
+- `v2/pages/03_developers/technical-references/apis.mdx` (empty - just "# APIs")
+- `v2/pages/04_gateways/using-gateways/gateway-providers/livepeer-studio-gateway.mdx` (empty)
+- `v2/pages/01_about/livepeer-network/interfaces.mdx` (has brief Studio API mention pointing to livepeer.studio/docs)
+
+**Recommendation for placeholders:**
+- **Option A**: Fill placeholders with content pointing to Studio section (e.g., "For Livepeer Studio SDKs, see [Studio SDKs](/products/livepeer-studio/sdks)")
+- **Option B**: Move/redirect placeholders to Studio section
+- **Option C**: Delete placeholders if Studio section will be comprehensive
+
+**Recommended**: Option A - Keep placeholders as redirects/summaries pointing to Studio section for discoverability.
 
 ### Recommended Structure for Livepeer Studio Section
 
@@ -342,16 +355,19 @@ v2/pages/010_products/products/livepeer-studio/
 
 ## Estimated File Counts
 
-| Category | Files to Add | Source |
-|----------|--------------|--------|
-| **API Reference** | 60 | v1/api-reference/ |
-| **SDKs** | 63 | v1/sdks/ |
-| **Developer Guides** | 24 | v1/developers/guides/ |
-| **Tutorials** | 5 | v1/developers/tutorials/ |
-| **Core Concepts** | 7 | v1/developers/core-concepts/ |
-| **Self-hosting** | 4 | v1/self-hosting/ |
-| **Getting Started** | 3 | v1/developers/ |
-| **Total** | **166 files** | |
+| Category | Files to Add | Source | Notes |
+|----------|--------------|--------|-------|
+| **API Reference** | 60 | v1/api-reference/ | Placeholder exists: `technical-references/apis.mdx` |
+| **SDKs** | 63 | v1/sdks/ | Placeholder exists: `technical-references/sdks.mdx` |
+| **Developer Guides** | 24 | v1/developers/guides/ | |
+| **Tutorials** | 5 | v1/developers/tutorials/ | |
+| **Core Concepts** | 7 | v1/developers/core-concepts/ | |
+| **Self-hosting** | 4 | v1/self-hosting/ | |
+| **Getting Started** | 3 | v1/developers/ | |
+| **Total New Files** | **166 files** | | |
+| **Existing Placeholders to Update** | **4 files** | Already in v2 | Update with redirects/pointers to Studio section |
+
+**Note**: The 4 existing placeholder pages should be updated to point to the Studio section rather than creating duplicate content.
 
 ---
 
@@ -392,7 +408,31 @@ Update `docs.json` to include:
 }
 ```
 
-### 4. Quick Wins
+### 4. Handle Existing Placeholders
+
+**Existing placeholder pages to update:**
+1. `v2/pages/03_developers/technical-references/sdks.mdx` - Add content pointing to Studio SDKs section
+2. `v2/pages/03_developers/technical-references/apis.mdx` - Add content pointing to Studio API section
+3. `v2/pages/04_gateways/using-gateways/gateway-providers/livepeer-studio-gateway.mdx` - Add Studio gateway info or redirect
+4. `v2/pages/03_developers/developer-platforms/livepeer-studio/livepeer-studio.mdx` - Redirect to products section or add summary
+
+**Example placeholder content:**
+```mdx
+# SDKs
+
+Livepeer SDKs are available for different platforms:
+
+<CardGroup cols={2}>
+  <Card title="Livepeer Studio SDKs" href="/products/livepeer-studio/sdks">
+    JavaScript, Python, Go, and React SDKs for Livepeer Studio
+  </Card>
+  <Card title="Network SDKs" href="/developers/technical-references/sdks">
+    SDKs for direct network interaction
+  </Card>
+</CardGroup>
+```
+
+### 5. Quick Wins
 
 Start with these high-impact pages:
 1. `livepeer-studio.mdx` - Overview page (currently empty)
