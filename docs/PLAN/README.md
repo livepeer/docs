@@ -1,6 +1,8 @@
 # Docs PLAN — Master index and parallel-agent execution
 
-This folder contains agent briefs for finishing the Livepeer docs. **8 tasks completed**, **10 tasks remaining**. Each brief is a self-contained task. Run them with **parallel Cursor agents**: one agent per task, one branch per task, report + PR on completion.
+This folder contains agent briefs for finishing the Livepeer docs. **8 tasks completed**, **17 tasks remaining** (10 original + 7 from gap analysis). Each brief is a self-contained task. Run them with **parallel Cursor agents**: one agent per task, one branch per task, report + PR on completion.
+
+**Gap analysis:** For a comparison of the full AI Task List vs PLAN and a plan for **missing or incomplete items** (imports script, UK spelling, glossary, References section, internal tab link, pre-commit full browser verification, platform ownership, etc.), see **[AI-TASK-LIST-GAP-ANALYSIS-AND-PLAN.md](AI-TASK-LIST-GAP-ANALYSIS-AND-PLAN.md)**.
 
 ---
 
@@ -64,3 +66,19 @@ This folder contains agent briefs for finishing the Livepeer docs. **8 tasks com
 | 16 | [16-rfp-goals-assessment.md](complete/16-rfp-goals-assessment.md) | `docs-plan/16-rfp-goals-assessment` | [complete/16-rfp-goals-assessment-report.md](complete/16-rfp-goals-assessment-report.md) | ✅ Complete |
 
 **Note:** Task 14 includes additional supplementary reports in the `complete/` folder.
+
+---
+
+## New tasks (22–28, from gap analysis)
+
+Task briefs created from [AI-TASK-LIST-GAP-ANALYSIS-AND-PLAN.md](AI-TASK-LIST-GAP-ANALYSIS-AND-PLAN.md). Run from `docs-v2-preview`; one branch per task, report + PR on completion.
+
+| # | Task brief | Branch | Report |
+|---|------------|--------|--------|
+| 22 | [22-page-imports-check-script.md](22-page-imports-check-script.md) | `docs-plan/22-page-imports-check-script` | [reports/22-page-imports-check-script-report.md](reports/22-page-imports-check-script-report.md) |
+| 23 | [23-glossary-maintenance.md](23-glossary-maintenance.md) | `docs-plan/23-glossary-maintenance` | [reports/23-glossary-maintenance-report.md](reports/23-glossary-maintenance-report.md) |
+| 24 | [24-audit-repo-files-removal.md](24-audit-repo-files-removal.md) | `docs-plan/24-audit-repo-files-removal` | [reports/24-audit-repo-files-removal-report.md](reports/24-audit-repo-files-removal-report.md) |
+| 25 | [25-fill-references-section.md](25-fill-references-section.md) | `docs-plan/25-fill-references-section` | [reports/25-fill-references-section-report.md](reports/25-fill-references-section-report.md) |
+| 26 | [26-internal-tab-link.md](26-internal-tab-link.md) | `docs-plan/26-internal-tab-link` | [reports/26-internal-tab-link-report.md](reports/26-internal-tab-link-report.md) |
+| 27 | [27-pre-commit-full-browser-verification.md](27-pre-commit-full-browser-verification.md) | `docs-plan/27-pre-commit-full-browser-verification` | [reports/27-pre-commit-full-browser-verification-report.md](reports/27-pre-commit-full-browser-verification-report.md) |
+| 28 | [28-platform-ownership-and-studio-fill.md](28-platform-ownership-and-studio-fill.md) | `docs-plan/28-platform-ownership-and-studio-fill` | [reports/28-platform-ownership-and-studio-fill-report.md](reports/28-platform-ownership-and-studio-fill-report.md) |
