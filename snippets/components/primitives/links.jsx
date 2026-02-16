@@ -90,7 +90,7 @@ const CustomCallout = ({
  * @author Livepeer Documentation Team
  */
 const BlinkingIcon = ({ icon = "terminal", size = 16, color }) => {
-  const resolvedColor = color || "var(--blinking-icon-color)";
+  const resolvedColor = color || "var(--accent)";
   return (
     <>
       <style>{`
@@ -169,7 +169,7 @@ const DoubleIconLink = ({
         <Icon
           icon={iconRight}
           size={12}
-          color="var(--double-icon-link-color)"
+          color="var(--accent)"
         />
       </span>
     </>
@@ -277,7 +277,7 @@ const TipWithArrow = ({
   arrowSize = 16,
 }) => {
   // Use theme accent if no color specified
-  const resolvedColor = color || "var(--tip-with-arrow-color)";
+  const resolvedColor = color || "var(--accent)";
 
   // Convert hex to rgba for proper opacity
   const hexToRgba = (hex, alpha) => {

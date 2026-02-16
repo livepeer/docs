@@ -27,9 +27,9 @@ export const StyledSteps = ({
   iconSize = "24px",
 }) => {
   const stepsId = `styled-steps-${Math.random().toString(36).substr(2, 9)}`;
-  const resolvedIconColor = iconColor || "#18794E";
-  const resolvedTitleColor = titleColor || "#3CB540";
-  const resolvedLineColor = lineColor || "#3CB540";
+  const resolvedIconColor = iconColor || "var(--accent-dark, #18794E)";
+  const resolvedTitleColor = titleColor || "var(--accent)";
+  const resolvedLineColor = lineColor || "var(--accent)";
 
   return (
     <>
