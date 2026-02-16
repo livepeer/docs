@@ -2,9 +2,13 @@
 /**
  * SEO Generator for Livepeer Documentation
  *
- * Automatically generates and updates SEO metadata for MDX documentation pages:
+ * Automatically generates and updates SEO and AEO (Answer Engine Optimization)
+ * metadata for MDX documentation pages:
  * - keywords: Generated from file path, title, and content
+ * - description: Generated from first paragraph when missing (AEO: helps LLMs/snippets)
  * - og:image / twitter:image: Uses default or domain-specific images
+ *
+ * AEO = optimizing for AI/answer engines (structured metadata, clear summaries).
  *
  * Usage: node snippets/scripts/generate-seo.js [--dry-run] [--file=path/to/file.mdx]
  */
@@ -176,6 +180,33 @@ function generateKeywords(filePath, frontmatter, content) {
 }
 
 /**
+ * Generate AEO-friendly description from content when missing.
+ * Uses first paragraph or first heading + following text; keeps to 50–160 chars for SEO/AEO.
+ */
+function generateDescription(content) {
+  if (!content || typeof content !== "string") return null;
+  // Strip frontmatter
+  const withoutFrontmatter = content.replace(/^---\n[\s\S]*?\n---\n?/, "");
+  // First block of text: lines that are not empty and not starting with # or < or import
+  const lines = withoutFrontmatter.split("\n");
+  const textParts = [];
+  for (const line of lines) {
+    const t = line.trim();
+    if (!t) continue;
+    if (t.startsWith("import ") || t.startsWith("#") || t.startsWith("<")) break;
+    textParts.push(t.replace(/\s+/g, " "));
+    if (textParts.join(" ").length >= 100) break;
+  }
+  let desc = textParts.join(" ").trim();
+  if (!desc) return null;
+  // Strip markdown links but keep text: [text](url) -> text
+  desc = desc.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+  // Target 50–160 chars for SEO/AEO
+  if (desc.length > 157) desc = desc.slice(0, 154).trim() + "...";
+  return desc.length >= 30 ? desc : null;
+}
+
+/**
  * Get appropriate social image for a file
  */
 function getSocialImage(filePath) {
@@ -210,6 +241,23 @@ function updateFrontmatter(frontmatter, filePath, content) {
   if (!updated["og:image"] && !updated["twitter:image"]) {
     updated["og:image"] = getSocialImage(filePath);
     hasChanges = true;
+  }
+
+  // AEO: add description when missing (helps AI/answer engines and snippets)
+  const rawDescription = updated.description;
+  const hasDescription =
+    rawDescription &&
+    (typeof rawDescription === "string"
+      ? rawDescription.trim().length > 0
+      : Array.isArray(rawDescription)
+        ? rawDescription.some((v) => v && String(v).trim())
+        : false);
+  if (!hasDescription) {
+    const generated = generateDescription(content);
+    if (generated) {
+      updated.description = generated;
+      hasChanges = true;
+    }
   }
 
   return { updated, hasChanges };
@@ -289,6 +337,8 @@ function processFile(filePath) {
         !frontmatter["og:image"] &&
         !frontmatter["twitter:image"] &&
         updated["og:image"],
+      addedDescription:
+        !frontmatter.description && updated.description,
     },
   };
 }
@@ -365,6 +415,9 @@ function main() {
         if (result.changes.addedImage) {
           console.log(`   + Added og:image: ${result.changes.addedImage}`);
         }
+        if (result.changes.addedDescription) {
+          console.log(`   + Added description (AEO): ${result.changes.addedDescription}`);
+        }
 
         results.changes.push(result);
 
@@ -400,4 +453,9 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { processFile, generateKeywords, getSocialImage };
+module.exports = {
+  processFile,
+  generateKeywords,
+  generateDescription,
+  getSocialImage,
+};
