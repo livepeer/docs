@@ -5,9 +5,9 @@
 | Item | Value |
 |------|--------|
 | **Branch** | `docs-plan/04-ai-setup-guides-network-nodes` |
-| **First step** | Create the branch: `git checkout -b docs-plan/04-ai-setup-guides-network-nodes` (run from repo default branch) |
+| **First step** | Create the branch: `git checkout -b docs-plan/04-ai-setup-guides-network-nodes` (run from docs-v2-preview — main branch in this fork) |
 | **Report path** | `docs/PLAN/reports/04-ai-setup-guides-network-nodes-report.md` (create on completion) |
-| **PR target** | Base branch (e.g. `main` or current feature branch) |
+| **PR target** | `docs-v2-preview` (main branch in this fork) |
 
 Before starting: run the first step (create branch), then perform the task.  
 On completion: write report (work + testing + follow-ups), then open PR.
