@@ -1,0 +1,105 @@
+---
+title: "Text Components Examples"
+description: "Examples of using Subtitle, CopyText, CardTitleTextWithArrow, and AccordionTitleWithArrow"
+---
+
+import { Subtitle, CopyText, CardTitleTextWithArrow, AccordionTitleWithArrow } from "/snippets/components/primitives/text.jsx";
+
+## Subtitle
+
+The `Subtitle` component displays styled subtitle text with customizable appearance.
+
+### Basic Usage
+
+<Subtitle text="Build the future of video" />
+
+### With Custom Styling
+
+<Subtitle 
+  text="Decentralized Video Infrastructure" 
+  style={{ fontSize: "1.25rem", color: "#2b9a66" }} 
+/>
+
+### With Children
+
+<Subtitle>
+  <strong>Livepeer</strong> - The world's open video infrastructure
+</Subtitle>
+
+---
+
+## CopyText
+
+The `CopyText` component displays inline code with a copy button.
+
+### Basic Usage
+
+<CopyText text="npm install livepeer" />
+
+### With Label
+
+<CopyText label="Install:" text="npm install @livepeer/react" />
+
+### API Keys
+
+<CopyText label="API Endpoint:" text="https://livepeer.studio/api" />
+
+### Multiple Copy Texts
+
+<div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+  <CopyText label="Gateway URL:" text="http://localhost:8935" />
+  <CopyText label="Orchestrator:" text="127.0.0.1:8936" />
+  <CopyText label="Network:" text="arbitrum-one" />
+</div>
+
+---
+
+## CardTitleTextWithArrow
+
+A card title component with an arrow icon, useful for clickable card headers.
+
+### Basic Usage
+
+<CardTitleTextWithArrow href="/developers">
+  Get Started
+</CardTitleTextWithArrow>
+
+### Multiple Cards
+
+<div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+  <CardTitleTextWithArrow href="/developers/quickstart">
+    Quickstart Guide
+  </CardTitleTextWithArrow>
+  
+  <CardTitleTextWithArrow href="/api-reference">
+    API Reference
+  </CardTitleTextWithArrow>
+  
+  <CardTitleTextWithArrow href="/tutorials">
+    Tutorials
+  </CardTitleTextWithArrow>
+</div>
+
+---
+
+## AccordionTitleWithArrow
+
+A styled accordion title with an external link arrow.
+
+### Basic Usage
+
+<AccordionTitleWithArrow text="Learn More" href="/guides" />
+
+### Custom Color
+
+<AccordionTitleWithArrow 
+  text="View Documentation" 
+  href="/docs" 
+  color="var(--accent)" 
+/>
+
+### In Context
+
+<Accordion title={<AccordionTitleWithArrow text="External Resources" href="https://livepeer.org" />}>
+  Find more information on the official Livepeer website.
+</Accordion>

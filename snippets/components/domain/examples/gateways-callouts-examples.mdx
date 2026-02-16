@@ -1,0 +1,97 @@
+---
+title: "Gateway Callouts Examples"
+description: "Examples of using Gateway-specific callout components"
+---
+
+import {
+  GatewayOffChainWarning,
+  GatewayOnChainWarning,
+  GatewayOnChainTTestnetNote,
+  OrchAddrNote,
+  TestVideoDownload,
+  FfmpegWarning,
+} from "/snippets/components/domain/04_GATEWAYS/callouts.jsx";
+
+## Gateway Callouts
+
+Domain-specific callout components for Gateway documentation.
+
+---
+
+## GatewayOffChainWarning
+
+Warning for off-chain (local) Gateway setup requirements.
+
+<GatewayOffChainWarning />
+
+---
+
+## GatewayOnChainWarning
+
+Warning about funding requirements for on-chain Gateway setup.
+
+<GatewayOnChainWarning />
+
+---
+
+## GatewayOnChainTTestnetNote
+
+Note about Arbitrum Testnet limitations for Gateways.
+
+<GatewayOnChainTTestnetNote />
+
+---
+
+## OrchAddrNote
+
+Reminder to replace the orchestrator address placeholder.
+
+<OrchAddrNote />
+
+---
+
+## TestVideoDownload
+
+Note about needing a test video file.
+
+### Basic Usage
+
+<TestVideoDownload />
+
+### With Custom Instructions
+
+<TestVideoDownload>
+  <p>Download a sample video from the <a href="/samples">samples page</a> or use your own MP4 file.</p>
+</TestVideoDownload>
+
+---
+
+## FfmpegWarning
+
+Critical warning about FFmpeg installation.
+
+<FfmpegWarning />
+
+---
+
+## Combined Usage
+
+A typical Gateway setup section might look like:
+
+<Steps>
+  <Step title="Prerequisites">
+    <GatewayOffChainWarning />
+    <FfmpegWarning />
+  </Step>
+  
+  <Step title="Configure">
+    <OrchAddrNote />
+    <p>Update your configuration file with the orchestrator address.</p>
+  </Step>
+  
+  <Step title="Test">
+    <TestVideoDownload>
+      <p>Make sure you have a video file ready for testing.</p>
+    </TestVideoDownload>
+  </Step>
+</Steps>
