@@ -1,0 +1,362 @@
+---
+title: 'Domain Components'
+sidebarTitle: 'Domain'
+description: 'Domain-specific components: Gateway, Portal, Shared components'
+keywords: ["livepeer", "components", "domain", "gateway", "portal", "shared"]
+---
+
+import { GatewayOffChainWarning, GatewayOnChainWarning, GatewayOnChainTTestnetNote, OrchAddrNote, TestVideoDownload, FfmpegWarning } from '/snippets/components/domain/04_GATEWAYS/callouts.jsx'
+import { QuickStartTabs, QuickStartSteps } from '/snippets/components/domain/04_GATEWAYS/quickstartTabs.jsx'
+import { PreviewCallout, ComingSoonCallout, ReviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import { Starfield } from '/snippets/components/domain/SHARED/HeroGif.jsx'
+import { HeroSectionContainer, HeroImageBackgroundComponent, HeroContentContainer, PortalContentContainer, PortalHeroContent, LogoHeroContainer, RefCardContainer, HeroOverviewContent } from '/snippets/components/domain/SHARED/Portals.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+# Domain Components
+
+Components specific to Livepeer documentation domains: Gateway, Portal, and Shared components.
+
+<Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
+  Return to the main component library index
+</Card>
+
+<CustomDivider middleText="Gateway Components" />
+
+## Gateway Components
+
+### GatewayOffChainWarning
+
+Warning callout for off-chain Gateway setup. Informs users they need to run their own Orchestrator node to test an off-chain (local) Gateway.
+
+**Import:**
+```jsx
+import { GatewayOffChainWarning } from "/snippets/components/domain/04_GATEWAYS/callouts.jsx";
+```
+
+**Props:** None
+
+---
+
+### GatewayOnChainWarning
+
+Warning callout for on-chain Gateway setup. Displays a warning about funding requirements for running an on-chain Gateway.
+
+**Import:**
+```jsx
+import { GatewayOnChainWarning } from "/snippets/components/domain/04_GATEWAYS/callouts.jsx";
+```
+
+**Props:** None
+
+---
+
+### GatewayOnChainTTestnetNote
+
+Note about Arbitrum Testnet limitations. Informs users about current limitations of using Arbitrum Testnet for Gateways.
+
+**Import:**
+```jsx
+import { GatewayOnChainTTestnetNote } from "/snippets/components/domain/04_GATEWAYS/callouts.jsx";
+```
+
+**Props:** None
+
+---
+
+### OrchAddrNote
+
+Note about replacing orchestrator address placeholder. Reminds users to replace the orchestrator IP:PORT placeholder with their actual orchestrator address.
+
+**Import:**
+```jsx
+import { OrchAddrNote } from "/snippets/components/domain/04_GATEWAYS/callouts.jsx";
+```
+
+**Props:** None
+
+---
+
+### TestVideoDownload
+
+Note about test video file requirement. Informs users they need a test video file.
+
+**Import:**
+```jsx
+import { TestVideoDownload } from "/snippets/components/domain/04_GATEWAYS/callouts.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | No | Additional content or instructions |
+
+---
+
+### FfmpegWarning
+
+Critical warning about FFmpeg installation. Warns users not to install FFmpeg with sudo, as Livepeer uses a custom FFmpeg build.
+
+**Import:**
+```jsx
+import { FfmpegWarning } from "/snippets/components/domain/04_GATEWAYS/callouts.jsx";
+```
+
+**Props:** None
+
+---
+
+### QuickStartTabs
+
+Tabbed interface for Gateway quickstart guides. Displays two tabs: one for off-chain Gateway setup and one for on-chain Gateway setup.
+
+**Import:**
+```jsx
+import { QuickStartTabs } from "/snippets/components/domain/04_GATEWAYS/quickstartTabs.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `offchainSteps` | `ReactNode` | - | **Yes** | Content for the off-chain Gateway tab |
+| `onchainSteps` | `ReactNode` | - | **Yes** | Content for the on-chain Gateway tab |
+
+---
+
+### QuickStartSteps
+
+Standardized steps for Gateway setup. Displays a consistent 5-step process: Install, Configure, Run, Connect, Test.
+
+**Import:**
+```jsx
+import { QuickStartSteps } from "/snippets/components/domain/04_GATEWAYS/quickstartTabs.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `dataSource` | `Object` | - | **Yes** | Object containing step content |
+| `dataSource.installStep` | `ReactNode` | - | **Yes** | Content for installation step |
+| `dataSource.configureStep` | `ReactNode` | - | **Yes** | Content for configuration step |
+| `dataSource.runStep` | `ReactNode` | - | **Yes** | Content for running the Gateway |
+| `dataSource.connectStep` | `ReactNode` | - | **Yes** | Content for connecting to the Gateway |
+| `dataSource.testStep` | `ReactNode` | - | **Yes** | Content for testing the Gateway |
+
+<CustomDivider middleText="Portal Components" />
+
+## Portal Components
+
+Portal components are used on Portal pages which use `mode: frame` to remove frontmatter metadata and customize layout. These components work properly in frame mode where standard Mintlify styling is stripped.
+
+### HeroSectionContainer
+
+Full page header container for portal pages with background image support.
+
+**Import:**
+```jsx
+import { HeroSectionContainer } from "/snippets/components/domain/SHARED/Portals.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Yes** | Should be: ImageComponent, HeroContainer, IntroContent |
+| `minHeight` | `string` | `"fit-content"` | No | Minimum height of the container |
+
+**Note:** Requires imports on the MDX page. Uses `className="frame-mode-hero-full"` for full-width styling.
+
+---
+
+### HeroImageBackgroundComponent
+
+Container component for the background of a portal page hero section. Background sits behind the hero header and is fixed.
+
+**Import:**
+```jsx
+import { HeroImageBackgroundComponent } from "/snippets/components/domain/SHARED/Portals.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | No | Background image component (defaults to Starfield) |
+
+---
+
+### HeroContentContainer
+
+Container component for the hero content of a portal page. Uses `className="frame-mode-container"` for centering and margins.
+
+**Import:**
+```jsx
+import { HeroContentContainer } from "/snippets/components/domain/SHARED/Portals.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Yes** | Should be: PortalHeroHeader, IntroContent |
+
+---
+
+### PortalContentContainer
+
+Main content container for portal pages with proper spacing and layout.
+
+**Import:**
+```jsx
+import { PortalContentContainer } from "/snippets/components/domain/SHARED/Portals.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Yes** | Portal page content |
+
+---
+
+### PortalHeroContent
+
+Hero content component with title, subtitle, description, and optional CTA buttons.
+
+**Import:**
+```jsx
+import { PortalHeroContent } from "/snippets/components/domain/SHARED/Portals.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `title` | `string` | - | **Yes** | Main hero title |
+| `subtitle` | `string` | - | No | Subtitle text |
+| `description` | `string` | - | No | Description text |
+| `ctaButtons` | `Array` | - | No | Array of CTA button objects |
+| `children` | `ReactNode` | - | No | Additional content |
+
+**Note:** Requires `CustomDivider` import on the MDX page.
+
+---
+
+### LogoHeroContainer
+
+Hero container with logo display.
+
+**Import:**
+```jsx
+import { LogoHeroContainer } from "/snippets/components/domain/SHARED/Portals.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Yes** | Logo and hero content |
+
+---
+
+### RefCardContainer
+
+Container for reference cards in portal pages.
+
+**Import:**
+```jsx
+import { RefCardContainer } from "/snippets/components/domain/SHARED/Portals.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Yes** | Reference card components |
+
+---
+
+### HeroOverviewContent
+
+Overview content component for hero sections.
+
+**Import:**
+```jsx
+import { HeroOverviewContent } from "/snippets/components/domain/SHARED/Portals.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Yes** | Overview content |
+
+<CustomDivider middleText="Shared Components" />
+
+## Shared Components
+
+### Starfield
+
+Animated starfield background component. Creates a canvas-based animated starfield effect that adapts to light/dark theme.
+
+**Import:**
+```jsx
+import { Starfield } from "/snippets/components/domain/SHARED/HeroGif.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `density` | `number` | `1.1` | No | Density of stars (higher = more stars) |
+
+---
+
+### PreviewCallout
+
+Callout indicating a page is under construction/preview. Displays a purple callout with tools icon and links to GitHub issues and feedback form.
+
+**Import:**
+```jsx
+import { PreviewCallout } from "/snippets/components/domain/SHARED/previewCallouts.jsx";
+```
+
+**Props:** None
+
+---
+
+### ComingSoonCallout
+
+Callout indicating content is coming soon. Displays a pink callout with cauldron icon.
+
+**Import:**
+```jsx
+import { ComingSoonCallout } from "/snippets/components/domain/SHARED/previewCallouts.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `type` | `string` | `"page"` | No | Type of content: "page" or "tab" |
+
+---
+
+### ReviewCallout
+
+Callout indicating technical review is needed. Displays a purple callout with help icon.
+
+**Import:**
+```jsx
+import { ReviewCallout } from "/snippets/components/domain/SHARED/previewCallouts.jsx";
+```
+
+**Props:** None
+
+---
+
+<Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
+  Return to the main component library index
+</Card>
