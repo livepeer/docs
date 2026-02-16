@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react";
  * CardCarousel
  *
  * Renders a simple carousel that paginates through a fixed number of cards.
+ * Uses theme-aware colors for buttons and indicators.
  *
  * @param {React.ReactNode} children - Card elements to display.
  * @param {number} visibleCount - Number of cards to show per view.
@@ -72,11 +73,12 @@ export const CardCarousel = ({
             onClick={goPrev}
             aria-label="Previous"
             style={{
-              border: "1px solid var(--accent, #eaeaea)",
-              background: "var(--card-bg, #fff)",
+              border: "1px solid var(--accent)",
+              background: "var(--card-background)",
               borderRadius: 8,
               padding: "6px 10px",
               cursor: "pointer",
+              color: "var(--text)",
             }}
           >
             ←
@@ -93,8 +95,8 @@ export const CardCarousel = ({
                     borderRadius: 999,
                     background:
                       index === pageIndex
-                        ? "var(--text, #333)"
-                        : "var(--accent, #eaeaea)",
+                        ? "var(--accent)"
+                        : "var(--border)",
                   }}
                 />
               ))}
@@ -106,11 +108,12 @@ export const CardCarousel = ({
             onClick={goNext}
             aria-label="Next"
             style={{
-              border: "1px solid var(--accent, #eaeaea)",
-              background: "var(--card-bg, #fff)",
+              border: "1px solid var(--accent)",
+              background: "var(--card-background)",
               borderRadius: 8,
               padding: "6px 10px",
               cursor: "pointer",
+              color: "var(--text)",
             }}
           >
             →
