@@ -1,0 +1,41 @@
+---
+title: "Listen to events"
+description: "Use webhooks to react to stream and asset events (started, ready, failed, etc.)."
+---
+
+Use **webhooks** to get notified when streams or assets change state, so your app can update the UI, start processing, or handle errors.
+
+## Asset events
+
+| Event | When it fires |
+|-------|----------------|
+| `asset.created` | On-demand asset created |
+| `asset.updated` | Asset updated (e.g. playback URL available) |
+| `asset.ready` | Asset ready with all transcoded renditions |
+| `asset.failed` | Upload or processing failed |
+| `asset.deleted` | Asset deleted |
+
+Set up a webhook endpoint, then in [Developers → Webhooks](https://livepeer.studio/dashboard/developers/webhooks) create a webhook with your URL and select the asset events you need. See [Webhooks](webhooks) for signature verification and payload format.
+
+## Stream events
+
+| Event | When it fires |
+|-------|----------------|
+| `stream.started` | Stream is active; HLS URL works |
+| `stream.idle` | Stream no longer active |
+| `recording.started` | Recording started on active stream |
+| `recording.ready` | Recording ready to download |
+| `recording.waiting` | Stream ended with recording; processing (often ~5 min) |
+| `multistream.connected` | Connected to multistream target |
+| `multistream.error` | Error connecting or streaming to target |
+| `multistream.disconnected` | Multistream to target ended |
+
+Create a webhook and select the stream/recording/multistream events. Your endpoint receives the event type and the related object (stream, session, etc.) in the payload.
+
+## Setup steps
+
+1. Implement a POST endpoint that returns 2XX and verifies the `Livepeer-Signature` header.
+2. In Studio, add the webhook URL and choose events.
+3. Handle the `event` and `event_object` in your code (e.g. update DB, notify user, retry on failure).
+
+See [Webhooks](webhooks) and [Set up and listen for webhooks](https://livepeer.studio/docs) for full setup and signature verification.

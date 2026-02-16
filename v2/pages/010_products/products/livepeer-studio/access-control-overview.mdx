@@ -1,0 +1,16 @@
+---
+title: Access control overview
+description: Restrict playback for streams and assets with webhooks or JWTs.
+---
+
+Livepeer Studio lets you restrict who can watch streams and assets. Two options:
+
+## Webhook-based
+
+Set a webhook playback policy. When someone tries to play, Studio calls your URL with an access key and context. Return 2XX to allow, non-2XX to deny. See [Access control with webhooks](access-control-webhooks).
+
+## JWT-based
+
+Set a JWT playback policy. Viewers must send a JWT signed with a key you create in Studio. You issue JWTs from your backend after validating the user. See [Access control with JWTs](access-control-jwt).
+
+Both enforce at playback: without a valid key or JWT, playback is denied.

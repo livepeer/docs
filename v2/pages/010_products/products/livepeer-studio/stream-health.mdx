@@ -1,0 +1,37 @@
+---
+title: "Stream health"
+description: "Monitor livestream health: transcoding, real-time status, multistream targets, ingest rate, and logs."
+---
+
+Stream health in Livepeer Studio gives you a quick view of whether a stream is working correctly and where issues might be.
+
+## Global health status
+
+- **Healthy** — All health checks are in a good state.
+- **Unhealthy** — One or more checks indicate a problem.
+- **Idle** — The stream is not currently active.
+
+## Health checks
+
+- **Transcoding** — Healthy means multiple transcoded profiles are available for playback. Unhealthy means only the source may be available; check logs and your encoder settings (e.g. OBS).
+- **Real-time** — Indicates whether transcoding is faster than real time (low latency). Unusual settings can make this unhealthy.
+- **Multistreaming** — Status of multistream targets: **Idle** (stream or multistream not active), **Pending** (connecting), **Online** (connected), **Offline** (error). Fix the target’s ingest URL/stream key or the destination service if a target stays Offline.
+
+## Logs
+
+The Health tab (or API) shows logs for the stream: e.g. stream started/stopped, multistream connected/disconnected, and **transcode errors** (e.g. unsupported pixel format). Use these to fix encoder or ingest configuration.
+
+## Session ingest rate
+
+The **session ingest rate** is the bitrate of the video received by Livepeer, updated about every 10 seconds. A stable, reasonable bitrate suggests good encoder and network; low or unstable bitrate may indicate encoder settings or connection issues.
+
+## Where to see health
+
+- **Dashboard** — Open the stream in the [Livepeer Studio dashboard](https://livepeer.studio/dashboard/streams) and use the **Health** tab. You’ll see status, checks, logs, and an ingest-rate chart for the active session.
+- **API** — Use [Get stream](https://livepeer.studio/docs/api-reference/stream/get) and [Get session](https://livepeer.studio/docs/api-reference/session/get) for stream and session data (e.g. `sourceSegmentsDuration`, session length). Detailed health conditions and metrics may be exposed via the API; check the latest [API reference](https://livepeer.studio/docs) for current fields.
+
+## Troubleshooting
+
+- **Unhealthy transcoding** — Check the event log for errors (e.g. unsupported input format). Adjust OBS or your encoder (resolution, codec, keyframe interval) and restart the stream.
+- **Multistream Offline** — Verify the destination’s ingest URL and stream key; fix the multistream target and start a new session.
+- **Low or fluctuating ingest rate** — Check the broadcaster’s upload speed and encoder bitrate/keyframe settings. See [Stream via OBS](stream-via-obs) and [Optimize latency](optimize-latency).
