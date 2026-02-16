@@ -1,0 +1,54 @@
+# Docs PLAN — Master index and parallel-agent execution
+
+This folder contains **18 agent briefs** for finishing the Livepeer docs. Each brief is a self-contained task. Run them with **parallel Cursor agents**: one agent per task, one branch per task, report + PR on completion.
+
+---
+
+## How to run (parallel agents)
+
+1. **Pick one task** — Open the task file (e.g. [01-components-consolidate.md](01-components-consolidate.md)). Only one agent per task.
+2. **Create the branch** — The agent creates it. From repo default (e.g. `main` or your feature branch), run: `git checkout -b <branch>` with the branch from the table below (e.g. `git checkout -b docs-plan/01-components-consolidate`). Do not use a branch that another agent is using.
+3. **Do the work** — Follow the task’s Objective, Scope, and Deliverables in that brief.
+4. **Write the report** — In the same branch, create the report file under [reports/](reports/) (e.g. `reports/01-components-consolidate-report.md`). Include: **Work done**, **Testing**, **Limitations / follow-ups**.
+5. **Open a PR** — Open a pull request from your branch. In the PR description, link to this task brief and to the report (or paste a short summary).
+
+**Parallelism:** Multiple agents can run at once (different tasks = different branches). Avoid running 01, 02, 03 in parallel (all touch components). Audits (13–16) and writing tasks (09–12, 18) are ideal for parallel runs.
+
+---
+
+## Task → branch → report
+
+| # | Task brief | Branch | Report |
+|---|------------|--------|--------|
+| 01 | [01-components-consolidate.md](01-components-consolidate.md) | `docs-plan/01-components-consolidate` | [reports/01-components-consolidate-report.md](reports/01-components-consolidate-report.md) |
+| 02 | [02-components-audit-unused.md](02-components-audit-unused.md) | `docs-plan/02-components-audit-unused` | [reports/02-components-audit-unused-report.md](reports/02-components-audit-unused-report.md) |
+| 03 | [03-component-library-wiki.md](03-component-library-wiki.md) | `docs-plan/03-component-library-wiki` | [reports/03-component-library-wiki-report.md](reports/03-component-library-wiki-report.md) |
+| 04 | [04-ai-setup-guides-network-nodes.md](04-ai-setup-guides-network-nodes.md) | `docs-plan/04-ai-setup-guides-network-nodes` | [reports/04-ai-setup-guides-network-nodes-report.md](reports/04-ai-setup-guides-network-nodes-report.md) |
+| 05 | [05-homogenise-styling.md](05-homogenise-styling.md) | `docs-plan/05-homogenise-styling` | [reports/05-homogenise-styling-report.md](reports/05-homogenise-styling-report.md) |
+| 06 | [06-separate-data-and-components-mdx.md](06-separate-data-and-components-mdx.md) | `docs-plan/06-separate-data-and-components-mdx` | [reports/06-separate-data-and-components-mdx-report.md](reports/06-separate-data-and-components-mdx-report.md) |
+| 07 | [07-break-long-pages-into-sections.md](07-break-long-pages-into-sections.md) | `docs-plan/07-break-long-pages-into-sections` | [reports/07-break-long-pages-into-sections-report.md](reports/07-break-long-pages-into-sections-report.md) |
+| 08 | [08-automation-and-scripts.md](08-automation-and-scripts.md) | `docs-plan/08-automation-and-scripts` | [reports/08-automation-and-scripts-report.md](reports/08-automation-and-scripts-report.md) |
+| 09 | [09-ai-guides-in-repo.md](09-ai-guides-in-repo.md) | `docs-plan/09-ai-guides-in-repo` | [reports/09-ai-guides-in-repo-report.md](reports/09-ai-guides-in-repo-report.md) |
+| 10 | [10-documentation-guide-resources.md](10-documentation-guide-resources.md) | `docs-plan/10-documentation-guide-resources` | [reports/10-documentation-guide-resources-report.md](reports/10-documentation-guide-resources-report.md) |
+| 11 | [11-mintlify-ai-investigation.md](11-mintlify-ai-investigation.md) | `docs-plan/11-mintlify-ai-investigation` | [reports/11-mintlify-ai-investigation-report.md](reports/11-mintlify-ai-investigation-report.md) |
+| 12 | [12-contribution-guide-full-and-stretch.md](12-contribution-guide-full-and-stretch.md) | `docs-plan/12-contribution-guide-full-and-stretch` | [reports/12-contribution-guide-full-and-stretch-report.md](reports/12-contribution-guide-full-and-stretch-report.md) |
+| 13 | [13-audit-repeated-content.md](13-audit-repeated-content.md) | `docs-plan/13-audit-repeated-content` | [reports/13-audit-repeated-content-report.md](reports/13-audit-repeated-content-report.md) |
+| 14 | [14-audit-v1-to-v2-coverage.md](14-audit-v1-to-v2-coverage.md) | `docs-plan/14-audit-v1-to-v2-coverage` | [reports/14-audit-v1-to-v2-coverage-report.md](reports/14-audit-v1-to-v2-coverage-report.md) |
+| 15 | [15-audit-v2-missing-incomplete.md](15-audit-v2-missing-incomplete.md) | `docs-plan/15-audit-v2-missing-incomplete` | [reports/15-audit-v2-missing-incomplete-report.md](reports/15-audit-v2-missing-incomplete-report.md) |
+| 16 | [16-rfp-goals-assessment.md](16-rfp-goals-assessment.md) | `docs-plan/16-rfp-goals-assessment` | [reports/16-rfp-goals-assessment-report.md](reports/16-rfp-goals-assessment-report.md) |
+| 17 | [17-per-page-resources-and-media.md](17-per-page-resources-and-media.md) | `docs-plan/17-per-page-resources-and-media` | [reports/17-per-page-resources-and-media-report.md](reports/17-per-page-resources-and-media-report.md) |
+| 18 | [18-other-suggestions.md](18-other-suggestions.md) | `docs-plan/18-other-suggestions` | [reports/18-other-suggestions-report.md](reports/18-other-suggestions-report.md) |
+
+---
+
+## Optional priority (for ordering when not all run in parallel)
+
+- **P0 (audits / RFP):** 13, 14, 15, 16 — Inform what’s missing and what’s done.
+- **P1 (content & structure):** 01, 02, 03, 10, 12 — Component library and contribution/docs guide.
+- **P2 (automation & polish):** 05, 06, 07, 08, 09, 11, 17, 18 — Styling, data separation, automation, AI, media, suggestions.
+
+---
+
+## Completed
+
+*(When a task is merged, move its row here and link the PR.)*
