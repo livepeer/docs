@@ -92,7 +92,7 @@ data/
 └── globals.jsx
 ```
 
-We also have Gateway specific components in the snippets/components/gateways
+We also have Gateway specific components in the snippets/components/domain/04_GATEWAYS
 folder. (example: the callout components used in the quickstart page for
 offchain and onchain warnings.
 
