@@ -10,28 +10,37 @@ This audit examined all automation scripts, GitHub Actions workflows, n8n automa
 
 ### Key Findings
 
-- **Duplications:** Multiple workflows and scripts perform similar functions (Ghost blog, Forum, YouTube data fetching)
+- **Intentional Duplications:** Multiple workflows and scripts perform similar functions (Ghost blog, Forum, YouTube data fetching) - **This is intentional to provide flexibility for future maintainers**
 - **Configuration Issues:** Several workflows reference wrong branches, paths, or have placeholder API keys
 - **Active vs Inactive:** Many n8n workflows are marked as `"active": false` but GitHub Actions note they're being used as alternatives
-- **Dangerous Scripts:** `auto-commit.sh` in `v2/scripts/dev/` automatically commits changes without review
+- **Dangerous Scripts:** `auto-commit.sh` in `v2/scripts/dev/` automatically commits changes without review - **REMOVED**
 - **Path Mismatches:** Some workflows reference `snippets/automationData/` but actual path is `snippets/automations/`
 - **Missing Documentation:** Several scripts lack usage documentation
 
+### Automation Strategy
+
+**Intentional Duplication Policy:**
+- Both GitHub Actions and n8n workflows are maintained for the same functionality to provide flexibility
+- **Preference:** Use GitHub Actions where possible (simpler, repository-native)
+- **Use n8n for:** Complex workflows requiring external services (Discord, Google Sheets, multi-step approvals, etc.)
+- Future maintainers can choose their preferred platform
+
 ### Critical Issues
 
-1. **`update-blog-data.yml`** has placeholder API key (`YOUR_CONTENT_API_KEY`)
-2. **`update-livepeer-release.yml`** references wrong path (`snippets/automationData/globals/globals.mdx` should be `snippets/automations/globals/globals.mdx`)
-3. **`auto-commit.sh`** is dangerous and should be removed or heavily restricted
+1. **`update-blog-data.yml`** has placeholder API key (`YOUR_CONTENT_API_KEY`) - **REMOVE**
+2. **`update-livepeer-release.yml`** references wrong path (`snippets/automationData/globals/globals.mdx` should be `snippets/automations/globals/globals.mdx`) - **FIX**
+3. **`auto-commit.sh`** - **REMOVED** ✅
 4. **Multiple SEO generators** exist - need to identify canonical version
-5. **Branch mismatches** - some workflows target `main` when they should target `docs-v2-preview`
+5. **Branch mismatches** - some workflows target `main` when they should target `docs-v2-preview` - **FIX**
+6. **n8n workflows write to wrong repository** - Some write to `DeveloperAlly/livepeer-automations` instead of `livepeer/docs` - **FIX**
 
 ### Recommendations
 
-1. **Consolidate duplications** - Choose either GitHub Actions OR n8n for each data source
-2. **Fix configuration issues** - Update paths, branches, and API keys
-3. **Remove dangerous scripts** - Delete or restrict `auto-commit.sh`
-4. **Document all automations** - Create comprehensive usage guide
-5. **Standardize on one SEO generator** - Remove duplicates
+1. **Fix configuration issues** - Update paths, branches, API keys, and repository targets
+2. **Document automation strategy** - Clarify when to use GitHub Actions vs n8n
+3. **Standardize on one SEO generator** - Remove duplicates
+4. **Fix n8n repository targets** - Ensure all workflows write to correct repository
+5. **Update workflow comments** - Clarify that duplication is intentional for flexibility
 
 ---
 
@@ -381,16 +390,36 @@ This audit examined all automation scripts, GitHub Actions workflows, n8n automa
 
 ---
 
-## 5. Duplications Matrix
+## 5. Duplications Matrix & Strategy
+
+**Note:** Duplication between GitHub Actions and n8n is **intentional** to provide flexibility for future maintainers.
+
+### When to Use GitHub Actions vs n8n
+
+**Use GitHub Actions for:**
+- ✅ Simple data fetching (API calls, file updates)
+- ✅ Repository-native operations (commits, PRs, checks)
+- ✅ CI/CD workflows (testing, validation)
+- ✅ Scheduled tasks that only need GitHub access
+- ✅ When you want everything in the repository
+
+**Use n8n for:**
+- ✅ Complex multi-step workflows
+- ✅ External service integrations (Discord, Google Sheets, Google Forms)
+- ✅ Approval workflows with notifications
+- ✅ Workflows requiring user interaction
+- ✅ When you need more visual workflow management
+
+### Duplications Matrix
 
 | Functionality | GitHub Action | n8n Workflow | Script | Status | Recommendation |
 |--------------|---------------|--------------|--------|--------|----------------|
-| Ghost Blog Data | `update-ghost-blog-data.yml` | `Ghost-to-Mintlify.json` | `.github/scripts/fetch-ghost-blog-data.js` | Both inactive/noted as alternative | **Choose one** - Recommend n8n if active, else fix GitHub Action |
-| Forum Data | `update-forum-data.yml` | `Forum-To-Mintlify-Latest-Topics.json` | `.github/scripts/fetch-forum-data.js` | Both inactive/noted as alternative | **Choose one** - Recommend n8n if active, else fix GitHub Action |
-| YouTube Data | `update-youtube-data.yml` | `YouTube-To-Mintlify.json` | `.github/scripts/fetch-youtube-data.js` | Both inactive/noted as alternative | **Choose one** - Recommend n8n if active, else fix GitHub Action |
-| SEO Generation | N/A | N/A | `generate-seo.js` + `seo-generator-safe.js` | Two scripts | **Consolidate** - Use `generate-seo.js` as canonical |
-| OG Image Updates | N/A | N/A | 4 different scripts | Multiple scripts | **Consolidate** - Choose one tool |
-| Combined Blog+Forum | `update-blog-data.yml` | N/A | N/A | Has placeholder API key | **REMOVE** - Use individual workflows |
+| Ghost Blog Data | `update-ghost-blog-data.yml` | `Ghost-to-Mintlify.json` | `.github/scripts/fetch-ghost-blog-data.js` | Both available | **Keep both** - Fix GitHub Action for docs-v2-preview, fix n8n repository target |
+| Forum Data | `update-forum-data.yml` | `Forum-To-Mintlify-Latest-Topics.json` | `.github/scripts/fetch-forum-data.js` | Both available | **Keep both** - Fix GitHub Action for docs-v2-preview, fix n8n repository target |
+| YouTube Data | `update-youtube-data.yml` | `YouTube-To-Mintlify.json` | `.github/scripts/fetch-youtube-data.js` | Both available | **Keep both** - Fix GitHub Action branch, use script instead of inline code |
+| SEO Generation | N/A | N/A | `generate-seo.js` + `seo-generator-safe.js` | Two scripts | **Consolidate** - Use `generate-seo.js` as canonical, remove duplicate |
+| OG Image Updates | N/A | N/A | 4 different scripts | Multiple scripts | **Consolidate** - Document which one to use, remove others |
+| Combined Blog+Forum | `update-blog-data.yml` | N/A | N/A | Has placeholder API key | **REMOVE** - Use individual workflows instead |
 
 ---
 
@@ -492,13 +521,133 @@ Based on `snippets/automations/README.mdx`, the following are listed but not fou
 
 ---
 
-## 10. Next Steps
+## 10. Next Steps & Task Recommendations
 
-1. **Create usage documentation** - Comprehensive guide for all automations
-2. **Fix critical issues** - Paths, branches, dangerous scripts
-3. **Consolidate duplications** - Choose one method per functionality
-4. **Remove unused/inactive** - Clean up repository
-5. **Document gaps** - List what's missing vs. what's planned
+### ✅ Completed
+
+1. ✅ **Removed `auto-commit.sh`** - Dangerous script deleted
+2. ✅ **Created usage documentation** - Comprehensive guide in `v2/pages/07_resources/documentation-guide/automations-workflows.mdx`
+3. ✅ **Created audit report** - This document
+
+### 🔴 High Priority (Critical Fixes)
+
+#### Task 1: Fix Path in Release Workflow
+**File:** `.github/workflows/update-livepeer-release.yml`
+- **Issue:** References `snippets/automationData/globals/globals.mdx` (wrong path)
+- **Fix:** Change to `snippets/automations/globals/globals.mdx`
+- **Also:** Update `actions/checkout@v3` to `@v4`
+- **Impact:** Workflow currently fails or writes to wrong location
+
+#### Task 2: Remove Broken Combined Workflow
+**File:** `.github/workflows/update-blog-data.yml`
+- **Issue:** Has placeholder API key `YOUR_CONTENT_API_KEY`, duplicates individual workflows
+- **Fix:** Delete this file - use individual `update-ghost-blog-data.yml` and `update-forum-data.yml` instead
+- **Impact:** Prevents confusion and broken workflow runs
+
+#### Task 3: Fix GitHub Actions Branch Targets
+**Files:** 
+- `.github/workflows/update-youtube-data.yml` (targets `main`, should be `docs-v2-preview`)
+- `.github/workflows/update-forum-data.yml` (comment says main only, but code uses docs-v2-preview - clarify)
+- `.github/workflows/update-ghost-blog-data.yml` (same issue)
+
+**Fix:** 
+- Update `update-youtube-data.yml` to target `docs-v2-preview` branch
+- Update comments in forum/ghost workflows to reflect actual behavior OR fix code to match comments
+- **Impact:** Ensures workflows run on correct branch
+
+#### Task 4: Fix n8n Repository Targets
+**Files:**
+- `snippets/automations/scripts/n8n/Ghost-to-Mintlify.json` - Writes to `DeveloperAlly/livepeer-automations`
+- `snippets/automations/scripts/n8n/Forum-To-Mintlify-Latest-Topics.json` - Writes to `DeveloperAlly/livepeer-automations`
+
+**Fix:** Update GitHub node configuration to write to `livepeer/docs` repository on `docs-v2-preview` branch
+- **Impact:** Ensures n8n workflows update correct repository
+
+### 🟡 Medium Priority (Important Improvements)
+
+#### Task 5: Consolidate SEO Generators
+**Files:**
+- `snippets/scripts/generate-seo.js` (keep - canonical)
+- `v2/scripts/dev/seo-generator-safe.js` (remove - duplicate)
+
+**Fix:** Remove `seo-generator-safe.js`, update any references to use `generate-seo.js`
+- **Impact:** Reduces confusion, maintains single source of truth
+
+#### Task 6: Use Existing YouTube Script in Workflow
+**File:** `.github/workflows/update-youtube-data.yml`
+- **Issue:** Has inline Node.js script instead of using `.github/scripts/fetch-youtube-data.js`
+- **Fix:** Replace inline script with call to existing script file
+- **Impact:** Better maintainability, DRY principle
+
+#### Task 7: Fix n8n Workflow Comments
+**Files:** All n8n workflow JSON files
+- **Issue:** Comments reference wrong paths (e.g., `/snippets/automations/n8n-workflows/` should be `/snippets/automations/scripts/n8n/`)
+- **Fix:** Update comments in workflow files (if any) or README references
+- **Impact:** Prevents confusion when importing workflows
+
+#### Task 8: Consolidate OG Image Updaters
+**Files:**
+- `v2/scripts/dev/update-og-image.js`
+- `v2/scripts/dev/update-all-og-images.js`
+- `v2/scripts/dev/batch-update-og-image.sh`
+- `v2/scripts/dev/replace-og-image.py`
+
+**Fix:** 
+1. Test which one works best
+2. Document the canonical version
+3. Remove or archive the others
+- **Impact:** Reduces confusion, maintains single tool
+
+### 🟢 Low Priority (Quality of Life)
+
+#### Task 9: Document Undocumented Scripts
+**Files:**
+- `scripts/download-linkedin-video.sh`
+- `scripts/download-linkedin-with-cookies.sh`
+
+**Fix:** Add usage documentation or remove if unused
+- **Impact:** Better maintainability
+
+#### Task 10: Update Workflow Comments
+**Files:** All GitHub Actions workflows with "alternative" comments
+- **Fix:** Update comments to clarify intentional duplication strategy
+- **Example:** Change "N8N IS BEING USING AS AN ALTERNATIVE" to "Both GitHub Actions and n8n workflows are maintained for flexibility. Use whichever you prefer."
+- **Impact:** Clarifies strategy for future maintainers
+
+#### Task 11: Add Periodic Link Checking
+**File:** New workflow `.github/workflows/check-links-periodic.yml`
+- **Fix:** Create scheduled workflow (daily/weekly) to check all links, not just on PRs
+- **Impact:** Proactive link monitoring
+
+### 📋 Recommended Task Order
+
+1. **Task 1** - Fix release workflow path (critical, blocks functionality)
+2. **Task 2** - Remove broken workflow (prevents errors)
+3. **Task 3** - Fix branch targets (ensures workflows run correctly)
+4. **Task 4** - Fix n8n repository targets (ensures n8n updates correct repo)
+5. **Task 5** - Consolidate SEO generators (cleanup)
+6. **Task 6** - Use existing YouTube script (code quality)
+7. **Task 10** - Update workflow comments (documentation)
+8. **Task 8** - Consolidate OG image updaters (cleanup)
+9. **Task 9** - Document or remove scripts (cleanup)
+10. **Task 11** - Add periodic link checking (enhancement)
+
+### 🎯 Quick Wins (Can Do Immediately)
+
+These can be done quickly with minimal risk:
+
+1. ✅ **Remove `auto-commit.sh`** - DONE
+2. **Task 2** - Remove `update-blog-data.yml` (5 minutes)
+3. **Task 10** - Update workflow comments (15 minutes)
+4. **Task 5** - Remove duplicate SEO generator (5 minutes)
+
+### 📝 Notes for Future Maintainers
+
+- **Both GitHub Actions and n8n are maintained intentionally** - Choose based on your needs
+- **GitHub Actions preferred for:** Simple tasks, repository-native operations
+- **n8n preferred for:** Complex workflows, external integrations, approval processes
+- **All workflows should target `docs-v2-preview` branch** (unless specifically for main)
+- **All n8n workflows should write to `livepeer/docs` repository** (not `DeveloperAlly/livepeer-automations`)
 
 ---
 

@@ -1,0 +1,834 @@
+---
+sidebarTitle: 'Automations & Workflows'
+title: 'Automations & Workflows Guide'
+description: 'Complete guide to all automation scripts, GitHub Actions workflows, n8n automations, and pre-commit hooks in the Livepeer documentation repository'
+keywords: ["livepeer", "resources", "documentation guide", "automations", "workflows", "scripts", "github actions", "n8n", "pre-commit", "hooks"]
+og:image: "/snippets/assets/domain/07_RESOURCES/social-preview-resources.jpg"
+---
+
+import { PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+
+<PreviewCallout />
+
+# Automations & Workflows Guide
+
+This guide documents all automation scripts, GitHub Actions workflows, n8n automations, and pre-commit hooks used in the Livepeer documentation repository.
+
+<Info>
+For a detailed audit of all automations, see the [Automations & Workflows Audit Report](/docs/PLAN/reports/20-automations-workflows-audit-report.md).
+</Info>
+
+## Overview
+
+The documentation repository uses multiple automation systems to keep content up-to-date, validate quality, and streamline workflows:
+
+- **GitHub Actions** - CI/CD workflows for testing, validation, and automated updates
+- **n8n Workflows** - External automation platform for data fetching and content updates
+- **Scripts** - Command-line tools for content generation, data fetching, and maintenance
+- **Pre-commit Hooks** - Local validation to enforce style guide compliance
+
+<Info>
+**Intentional Duplication:** Both GitHub Actions and n8n workflows exist for the same functionality (Ghost blog, Forum, YouTube data). This is intentional to provide flexibility for future maintainers. Use whichever platform you prefer based on your needs.
+</Info>
+
+## GitHub Actions Workflows
+
+GitHub Actions workflows are located in `.github/workflows/` and run automatically on pushes, pull requests, or scheduled intervals.
+
+### Active Workflows
+
+#### Broken Links Check
+
+**File:** `.github/workflows/broken-links.yml`
+
+**Purpose:** Validates that all links in the documentation are working
+
+**Triggers:**
+- Pull requests to `main` branch
+
+**What it does:**
+1. Installs Mintlify CLI
+2. Runs `mintlify broken-links` to check all links
+3. Fails the PR if broken links are found
+
+**Manual execution:** Not available (PR-only)
+
+**Required secrets:** None
+
+---
+
+#### SDK Generation
+
+**File:** `.github/workflows/sdk_generation.yaml`
+
+**Purpose:** Automatically generates SDKs from OpenAPI specifications using Speakeasy
+
+**Triggers:**
+- Daily at midnight UTC (scheduled)
+- Manual dispatch from GitHub Actions UI
+
+**What it does:**
+1. Uses Speakeasy SDK generation action
+2. Generates SDKs for all configured APIs
+3. Creates pull requests with generated code
+
+**Manual execution:** 
+1. Go to Actions → SDK Generation
+2. Click "Run workflow"
+3. Optionally set `force: true` to regenerate even if no changes
+
+**Required secrets:**
+- `SPEAKEASY_API_KEY` - Speakeasy API key for SDK generation
+
+---
+
+#### Test V2 Pages
+
+**File:** `.github/workflows/test-v2-pages.yml`
+
+**Purpose:** Tests all v2 documentation pages for console errors and rendering issues
+
+**Triggers:**
+- Push to `main` or `docs-v2-preview` branches
+- Pull requests to `main` or `docs-v2-preview` branches
+
+**What it does:**
+1. Starts Mintlify dev server
+2. Runs Puppeteer tests on all pages
+3. Posts results as PR comments
+4. Uploads detailed test report as artifact
+
+**Manual execution:** Automatically runs on push/PR
+
+**Required secrets:** None
+
+**Output:** 
+- PR comments with test results
+- Artifact: `v2-page-test-report.json`
+
+---
+
+#### Update Livepeer Release Version
+
+**File:** `.github/workflows/update-livepeer-release.yml`
+
+**Purpose:** Automatically updates the latest Livepeer release version in globals file
+
+**Triggers:**
+- Every 30 minutes (scheduled)
+- Manual dispatch from GitHub Actions UI
+
+**What it does:**
+1. Fetches latest release from `livepeer/go-livepeer` GitHub repository
+2. Compares with current version in `snippets/automations/globals/globals.mdx`
+3. Updates file if new version is available
+4. Commits and pushes changes
+
+**Manual execution:**
+1. Go to Actions → Update Livepeer Release Version
+2. Click "Run workflow"
+
+**Required secrets:** None (uses `GITHUB_TOKEN`)
+
+**Output file:** `snippets/automations/globals/globals.mdx`
+
+---
+
+### Data Fetching Workflows (GitHub Actions & n8n Available)
+
+The following workflows have both GitHub Actions and n8n versions available. Both are maintained to provide flexibility - use whichever you prefer. GitHub Actions are simpler and repository-native, while n8n provides more robust workflows for complex integrations.
+
+#### Update Forum Data
+
+**File:** `.github/workflows/update-forum-data.yml`
+
+**Status:** ⚠️ **Alternative to n8n** - See note in workflow file
+
+**Purpose:** Fetches latest forum topics from Livepeer forum
+
+**Triggers:**
+- Daily at midnight UTC (scheduled)
+- Manual dispatch
+
+**What it does:**
+1. Runs `.github/scripts/fetch-forum-data.js`
+2. Updates `snippets/automations/forum/forumData.jsx`
+3. Commits and pushes if changes detected
+
+**Required secrets:**
+- `DOCS_V2` - GitHub token for docs repository access
+
+**Note:** Both GitHub Actions and n8n workflows are available for this functionality. Use whichever you prefer.
+
+---
+
+#### Update Ghost Blog Data
+
+**File:** `.github/workflows/update-ghost-blog-data.yml`
+
+**Status:** ⚠️ **Alternative to n8n** - See note in workflow file
+
+**Purpose:** Fetches latest blog posts from Ghost CMS
+
+**Triggers:**
+- Daily at midnight UTC (scheduled)
+- Manual dispatch
+
+**What it does:**
+1. Runs `.github/scripts/fetch-ghost-blog-data.js`
+2. Updates `snippets/automations/blog/ghostBlogData.jsx`
+3. Commits and pushes if changes detected
+
+**Required secrets:**
+- `DOCS_V2` - GitHub token for docs repository access
+
+**Note:** Both GitHub Actions and n8n workflows are available for this functionality. Use whichever you prefer.
+
+---
+
+#### Update YouTube Data
+
+**File:** `.github/workflows/update-youtube-data.yml`
+
+**Status:** ⚠️ **Alternative to n8n** - See note in workflow file
+
+**Purpose:** Fetches latest YouTube videos from Livepeer channel
+
+**Triggers:**
+- Weekly on Sunday at midnight UTC (scheduled)
+- Manual dispatch
+
+**What it does:**
+1. Fetches recent videos from YouTube API
+2. Filters out Shorts (≤60 seconds)
+3. Updates `snippets/automations/youtube/youtubeData.jsx`
+4. Commits and pushes if changes detected
+
+**Required secrets:**
+- `YOUTUBE_API_KEY` - YouTube Data API v3 key
+
+**Note:** Both GitHub Actions and n8n workflows are available for this functionality. Use whichever you prefer.
+
+---
+
+## n8n Automation Workflows
+
+n8n workflows are JSON files located in `snippets/automations/scripts/n8n/`. These workflows run on an external n8n instance and can be imported/configured there.
+
+<Warning>
+Most n8n workflows are currently **inactive** (`"active": false`). Only active workflows are documented below. See audit report for full status.
+</Warning>
+
+### Active n8n Workflows
+
+#### Luma Events to Mintlify
+
+**File:** `snippets/automations/scripts/n8n/Luma-To-Mintlify.json`
+
+**Status:** ✅ **Active**
+
+**Purpose:** Fetches Luma calendar events and updates documentation
+
+**Schedule:** Weekly
+
+**What it does:**
+1. Fetches iCal data from Luma API
+2. Parses events (upcoming and past)
+3. Generates JSX data file
+4. Commits to GitHub on `docs-v2-preview` branch
+
+**Output:** `snippets/automations/luma/lumaEventsData.jsx`
+
+**How to use:**
+1. Import JSON file into n8n instance
+2. Configure GitHub credentials
+3. Set Luma calendar ID
+4. Activate workflow
+
+**Required credentials:**
+- GitHub API token with write access
+- Luma calendar ID: `cal-X93qV3PuUH0wq0f`
+
+---
+
+#### Showcase Project Pipeline
+
+**File:** `snippets/automations/scripts/n8n/Showcase_To_Mintlify_Pipeline.json`
+
+**Status:** ✅ **Active**
+
+**Purpose:** Handles showcase project submissions, approvals, and updates
+
+**Trigger:** Google Sheets trigger (hourly polling)
+
+**What it does:**
+1. Monitors Google Sheets for new project submissions
+2. Validates submission data
+3. Sends Discord notifications for approval
+4. Downloads media files from Google Drive
+5. Updates `snippets/automations/showcase/showcaseData.jsx` when approved
+6. Sends notifications to submitters
+
+**Output:** `snippets/automations/showcase/showcaseData.jsx`
+
+**How to use:**
+1. Import JSON file into n8n instance
+2. Configure Google Sheets, Discord, and GitHub credentials
+3. Set up Google Form for submissions
+4. Activate workflow
+
+**Required credentials:**
+- Google Sheets OAuth2
+- Discord Bot API
+- GitHub API token
+- Google Drive OAuth2
+
+**Dependencies:**
+- Google Form for project submissions
+- Google Sheet for tracking submissions
+- Discord server for approval workflow
+
+---
+
+### Additional n8n Workflows (Alternative to GitHub Actions)
+
+The following n8n workflows provide alternative implementations to GitHub Actions. Both are maintained for flexibility:
+
+- **Ghost-to-Mintlify.json** - Fetches Ghost blog posts (alternative to `update-ghost-blog-data.yml`)
+- **Forum-To-Mintlify-Latest-Topics.json** - Fetches forum topics (alternative to `update-forum-data.yml`)
+- **YouTube-To-Mintlify.json** - Fetches YouTube videos (alternative to `update-youtube-data.yml`)
+- **Discord_Announce_to_Mintlify.json** - Fetches Discord announcements (n8n only - no GitHub Action equivalent)
+
+<Warning>
+**Repository Configuration:** Some n8n workflows may be configured to write to `DeveloperAlly/livepeer-automations` instead of `livepeer/docs`. Before activating, verify the GitHub node is configured to write to the correct repository (`livepeer/docs`) and branch (`docs-v2-preview`).
+</Warning>
+
+---
+
+### Utility Workflows
+
+#### MP4 to GIF Converter
+
+**File:** `snippets/automations/scripts/n8n/mp4-to-gif.json`
+
+**Purpose:** Converts MP4 videos to GIF format via webhook
+
+**Trigger:** Webhook (POST request)
+
+**What it does:**
+1. Accepts video URL or local path
+2. Downloads video (if URL provided)
+3. Converts to GIF using FFmpeg
+4. Returns GIF file or file path
+
+**How to use:**
+1. Import JSON file into n8n instance
+2. Configure webhook URL
+3. Send POST request with video URL or local path
+4. Receive GIF in response
+
+**Parameters:**
+- `video_url` (optional) - URL to video file
+- `local_path` (optional) - Local file path
+- `fps` (default: 10) - Frames per second
+- `width` (default: 480) - Output width
+- `start_time` (default: "0") - Start time in video
+- `duration` (optional) - Duration to convert
+- `optimize` (default: true) - Use palette optimization
+- `output_path` (optional) - Output file path
+
+---
+
+## Scripts
+
+Scripts are organized into several directories based on their purpose. All scripts use git-based repo root detection with fallback to `paths.config.json`.
+
+### Content Generation Scripts
+
+#### Generate SEO Metadata
+
+**File:** `snippets/scripts/generate-seo.js`
+
+**Purpose:** Automatically generates and updates SEO metadata for MDX documentation pages
+
+**Usage:**
+```bash
+# Dry run (preview changes)
+node snippets/scripts/generate-seo.js --dry-run
+
+# Process all files
+node snippets/scripts/generate-seo.js
+
+# Process single file
+node snippets/scripts/generate-seo.js --file=v2/pages/00_home/mission-control.mdx
+```
+
+**What it does:**
+1. Scans all MDX files in `v2/pages/`
+2. Generates `keywords` from file path, title, and description
+3. Adds `og:image` using domain-specific or default social preview images
+4. Preserves existing SEO metadata (won't overwrite if already present)
+
+**Output:** Updates frontmatter in MDX files
+
+**When to run:**
+- After creating new documentation pages
+- When updating page titles or descriptions
+- Before deploying to improve SEO
+
+---
+
+#### Generate Documentation Status
+
+**File:** `snippets/scripts/generate-docs-status.js`
+
+**Purpose:** Generates documentation status tables and structure diagrams from `docs.json`
+
+**Usage:**
+```bash
+node snippets/scripts/generate-docs-status.js
+```
+
+**What it does:**
+1. Reads `docs.json` navigation structure
+2. Merges with `snippets/docs-status-data.json` for status/priority/notes
+3. Outputs a status table MDX file
+4. Outputs a Mermaid structure diagram MDX file
+
+**Output:**
+- `snippets/generated/docs-status-table.mdx` - Table of all pages with status
+- `snippets/generated/docs-structure-diagram.mdx` - Mermaid diagram of docs structure
+
+**When to run:**
+- After modifying `docs.json` navigation
+- After updating page status in `snippets/docs-status-data.json`
+
+---
+
+#### Generate API Documentation
+
+**File:** `snippets/scripts/generate-api-docs.sh`
+
+**Purpose:** Generates Mintlify API documentation from an OpenAPI specification file
+
+**Usage:**
+```bash
+./snippets/scripts/generate-api-docs.sh <openapi-spec> <output-dir> <api-name> [github-repo-url]
+```
+
+**Example:**
+```bash
+./snippets/scripts/generate-api-docs.sh \
+  ai/worker/api/openapi.yaml \
+  v2/pages/04_gateways/api-reference/AI-API \
+  "AI API" \
+  "https://github.com/livepeer/ai-worker"
+```
+
+**What it does:**
+1. Reads an OpenAPI spec (YAML or JSON)
+2. Creates a **landing page** with CardGroups linking to each endpoint (grouped by tags)
+3. Creates **individual MDX pages** for each endpoint with `openapi: METHOD /path` frontmatter
+4. Outputs a **docs.json navigation snippet** ready to copy-paste
+
+**Output structure:**
+```
+output-dir/
+├── ai-api.mdx           # Landing page with Base URLs + CardGroups
+├── text-to-image.mdx    # openapi: post /text-to-image
+├── image-to-image.mdx   # openapi: post /image-to-image
+└── ...
+```
+
+**After running:** Copy the outputted JSON snippet into your `docs.json` navigation.
+
+---
+
+#### Update Component Library
+
+**File:** `snippets/scripts/update-component-library.sh`
+
+**Purpose:** Auto-generates the component library index page from the current `snippets/components/` folder structure
+
+**Usage:**
+```bash
+./snippets/scripts/update-component-library.sh
+```
+
+**What it does:**
+1. Scans `snippets/components/` directory structure
+2. Generates a `<Tree>` component with all folders and files
+3. Updates `snippets/snippetsWiki/componentLibrary/index.mdx`
+
+**Output:** Updates the auto-generated section in `snippets/snippetsWiki/componentLibrary/index.mdx` between the `AUTO-GENERATED` comments.
+
+**When to run:**
+- After adding new components to `snippets/components/`
+- After reorganizing the components folder structure
+- After renaming or deleting component files
+
+---
+
+### Data Fetching Scripts
+
+#### Fetch OpenAPI Specs
+
+**File:** `snippets/scripts/fetch-openapi-specs.sh`
+
+**Purpose:** Fetches OpenAPI specification files from the livepeer/ai-runner repository
+
+**Usage:**
+```bash
+./snippets/scripts/fetch-openapi-specs.sh
+```
+
+**What it does:**
+1. Downloads OpenAPI specs from external repositories
+2. Saves to `ai/worker/api/`
+
+**Downloads to `ai/worker/api/`:**
+- `openapi.yaml` - AI Runner API spec
+- `gateway.openapi.yaml` - AI Gateway API spec
+
+---
+
+#### Fetch External Documentation
+
+**File:** `snippets/scripts/fetch-external-docs.sh`
+
+**Purpose:** Fetches external documentation files from other Livepeer repositories and sanitizes them for MDX compatibility
+
+**Usage:**
+```bash
+./snippets/scripts/fetch-external-docs.sh
+```
+
+**What it does:**
+1. Downloads documentation from external repositories
+2. Sanitizes content for MDX compatibility
+3. Saves to `snippets/external/`
+
+**Downloads to `snippets/external/`:**
+- `wiki-readme.mdx` - livepeer/wiki README
+- `awesome-livepeer-readme.mdx` - livepeer/awesome-livepeer README
+- `whitepaper.mdx` - Livepeer Whitepaper
+- `gwid-readme.mdx` - videoDAC/livepeer-gateway README
+- `box-additional-config.mdx` - go-livepeer box configuration
+
+**Sanitization includes:**
+- Escaping curly braces for MDX
+- Removing HTML comments
+- Converting HTML tags to Markdown equivalents
+
+---
+
+#### Fetch LPT Exchanges
+
+**File:** `snippets/scripts/fetch-lpt-exchanges.sh`
+
+**Purpose:** Fetches LPT exchange listings from CoinGecko API and updates the exchanges page
+
+**Usage:**
+```bash
+./snippets/scripts/fetch-lpt-exchanges.sh
+```
+
+**What it does:**
+1. Fetches live data from CoinGecko API for Livepeer token
+2. Generates a styled table of CEX exchanges with volume and trust scores
+3. Appends DEX information and contract addresses
+4. Updates `v2/pages/06_delegators/token-resources/lpt-exchanges.mdx`
+
+**When to run:**
+- Periodically to update exchange listings
+- Before major releases to ensure current data
+
+---
+
+### Testing Scripts
+
+#### Test V2 Pages
+
+**File:** `scripts/test-v2-pages.js`
+
+**Purpose:** Tests all v2 pages for console errors and rendering issues
+
+**Usage:**
+```bash
+npm run test:v2-pages
+# or
+node scripts/test-v2-pages.js
+```
+
+**What it does:**
+1. Extracts all v2 pages from `docs.json`
+2. Starts Mintlify dev server (if not running)
+3. Tests each page with Puppeteer
+4. Reports console errors, page errors, and request failures
+5. Generates detailed JSON report
+
+**Prerequisites:**
+- `mint dev` must be running (or set `MINT_BASE_URL` environment variable)
+- Puppeteer installed (`npm install`)
+
+**Output:**
+- Console output with pass/fail status
+- `v2-page-test-report.json` - Detailed test results
+
+**Environment variables:**
+- `MINT_BASE_URL` - Base URL for Mintlify dev server (default: `http://localhost:3000`)
+
+---
+
+### GitHub Scripts (Used by Workflows)
+
+These scripts are used by GitHub Actions workflows and typically shouldn't be run manually:
+
+- **`.github/scripts/fetch-forum-data.js`** - Fetches forum data (used by `update-forum-data.yml`)
+- **`.github/scripts/fetch-ghost-blog-data.js`** - Fetches Ghost blog data (used by `update-ghost-blog-data.yml`)
+- **`.github/scripts/fetch-youtube-data.js`** - Fetches YouTube data (not currently used by workflow)
+
+---
+
+## Pre-commit Hooks
+
+Pre-commit hooks automatically run when you attempt to commit code. They enforce style guide compliance and validate code quality.
+
+### Installation
+
+**MANDATORY:** You must install the hooks before making any commits:
+
+```bash
+./.githooks/install.sh
+```
+
+Or manually:
+```bash
+cp .githooks/pre-commit .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+```
+
+### What Gets Checked
+
+#### Style Guide Compliance
+
+The pre-commit hook checks for:
+
+- ❌ **ThemeData usage** - Blocks deprecated `ThemeData` imports from `themeStyles.jsx`
+- ❌ **Hardcoded colors** - Warns about hex colors that should use CSS Custom Properties
+- ⚠️ **Relative imports** - Warns about relative paths (should use absolute paths from root)
+- ⚠️ **@mintlify/components imports** - Warns about unnecessary imports (components are global)
+- ⚠️ **React hook imports** - Warns about unnecessary React imports (hooks are global)
+
+#### Verification Scripts
+
+The hook also runs `.githooks/verify.sh` which checks:
+
+- ✅ **MDX syntax** - Validates frontmatter and basic MDX structure
+- ✅ **JSON syntax** - Validates JSON files are parseable
+- ✅ **Shell script syntax** - Validates shell scripts with `bash -n`
+- ✅ **JavaScript syntax** - Validates JS files with `node --check`
+- ✅ **Mintlify config** - Validates `docs.json`/`mint.json` syntax
+- ✅ **Import paths** - Ensures snippets imports use absolute paths
+- ✅ **Browser validation** - Tests MDX files in headless browser (if `mint dev` is running)
+
+### What Happens on Violation
+
+If you attempt to commit code that violates the style guide:
+
+1. The commit is **blocked**
+2. You receive a detailed error message listing all violations
+3. You must fix the violations before committing again
+
+### Browser Validation
+
+The hooks include headless browser validation that tests MDX files actually render in the browser. This catches:
+
+- Runtime errors in components
+- Failed imports
+- Console errors
+- Render failures
+
+**Note:** Browser validation requires `mint dev` to be running. If it's not running, the check is skipped (doesn't block commit).
+
+### Bypassing Hooks (Not Recommended)
+
+**⚠️ WARNING:** Only bypass hooks if you have a legitimate reason and understand the consequences.
+
+```bash
+# Bypass pre-commit hook
+git commit --no-verify -m "message"
+```
+
+**Why this is discouraged:**
+- Violates style guide compliance
+- May introduce errors that break the build
+- Makes code review harder
+- Can cause issues for other developers
+
+For full details on the hooks, see the [Git Hooks Documentation](/docs/CONTRIBUTING/GIT-HOOKS.md).
+
+---
+
+## Running Automations
+
+### Manual Execution
+
+#### GitHub Actions
+
+1. Go to **Actions** tab in GitHub repository
+2. Select the workflow you want to run
+3. Click **"Run workflow"** button
+4. Select branch and any required inputs
+5. Click **"Run workflow"** to start
+
+#### Scripts
+
+Most scripts can be run directly from the command line:
+
+```bash
+# From repository root
+node snippets/scripts/generate-seo.js
+./snippets/scripts/fetch-lpt-exchanges.sh
+npm run test:v2-pages
+```
+
+#### n8n Workflows
+
+1. Import JSON file into n8n instance
+2. Configure credentials and settings
+3. Activate workflow
+4. Monitor executions in n8n dashboard
+
+### Scheduled Execution
+
+- **GitHub Actions** - Use `schedule` trigger with cron syntax
+- **n8n Workflows** - Use Schedule Trigger node with interval or cron
+
+### Monitoring
+
+- **GitHub Actions** - Check Actions tab for workflow runs and logs
+- **n8n** - Check n8n dashboard for execution history
+- **Scripts** - Check console output and generated files
+
+---
+
+## Troubleshooting
+
+### GitHub Actions Not Running
+
+**Issue:** Workflow doesn't trigger on push/PR
+
+**Solutions:**
+1. Check workflow file syntax (YAML must be valid)
+2. Verify trigger conditions match your branch/event
+3. Check Actions tab for error messages
+4. Ensure workflow file is in `.github/workflows/` directory
+
+### Scripts Failing
+
+**Issue:** Script errors or doesn't produce expected output
+
+**Solutions:**
+1. Check script has execute permissions: `chmod +x script.sh`
+2. Verify Node.js version matches script requirements
+3. Check for missing dependencies: `npm install`
+4. Review script documentation for prerequisites
+5. Run with verbose output if available
+
+### Pre-commit Hook Not Running
+
+**Issue:** Hook doesn't execute on commit
+
+**Solutions:**
+1. Verify hook is installed: `ls -la .git/hooks/pre-commit`
+2. Check hook is executable: `chmod +x .git/hooks/pre-commit`
+3. Reinstall: `./.githooks/install.sh`
+4. Check for `.git/hooks/pre-commit` file exists
+
+### n8n Workflow Issues
+
+**Issue:** Workflow fails or doesn't update files
+
+**Solutions:**
+1. Check workflow is active in n8n dashboard
+2. Verify credentials are configured correctly
+3. Check execution logs in n8n
+4. Verify GitHub token has write permissions
+5. Check branch name matches workflow configuration
+
+### Missing Secrets/Keys
+
+**Issue:** Workflow fails with authentication errors
+
+**Solutions:**
+1. Go to repository **Settings → Secrets and variables → Actions**
+2. Add required secrets (e.g., `YOUTUBE_API_KEY`, `SPEAKEASY_API_KEY`)
+3. Verify secret names match workflow file exactly
+4. For n8n, configure credentials in n8n dashboard
+
+---
+
+## Best Practices
+
+### When to Use What
+
+**GitHub Actions** - Use for:
+- ✅ Simple data fetching (API calls, file updates)
+- ✅ Repository-native operations (commits, PRs, checks)
+- ✅ CI/CD workflows (testing, validation)
+- ✅ Scheduled tasks that only need GitHub access
+- ✅ When you want everything in the repository
+
+**n8n** - Use for:
+- ✅ Complex multi-step workflows
+- ✅ External service integrations (Discord, Google Sheets, Google Forms)
+- ✅ Approval workflows with notifications
+- ✅ Workflows requiring user interaction
+- ✅ When you need more visual workflow management
+
+**Scripts** - Use for:
+- ✅ One-off tasks and content generation
+- ✅ Local development and testing
+- ✅ Manual data updates
+
+**Pre-commit Hooks** - Use for:
+- ✅ Enforcing code quality and style guide compliance
+- ✅ Catching errors before commit
+
+### Keeping Automations Updated
+
+1. **Review audit reports** - Check `docs/PLAN/reports/` for automation status
+2. **Test before deploying** - Run scripts locally before committing
+3. **Monitor workflow runs** - Check GitHub Actions and n8n dashboards regularly
+4. **Update documentation** - Keep this guide current as automations change
+
+### Security Considerations
+
+- **Never commit secrets** - Use GitHub Secrets or n8n credentials
+- **Review auto-commits** - Be cautious with scripts that automatically commit
+- **Limit token permissions** - Use least-privilege access for API tokens
+- **Audit regularly** - Review automation access and permissions periodically
+
+---
+
+## Related Documentation
+
+- [Style Guide](./style-guide) - Styling conventions and Mintlify gotchas
+- [Component Library](./component-library) - Available components and usage
+- [Git Hooks Documentation](/docs/CONTRIBUTING/GIT-HOOKS.md) - Complete pre-commit hook documentation
+- [Scripts README](/snippets/scripts/README.mdx) - Detailed scripts documentation
+- [Automations README](/snippets/automations/README.mdx) - Automation overview
+- [Audit Report](/docs/PLAN/reports/20-automations-workflows-audit-report.md) - Comprehensive automation audit
+
+---
+
+## Getting Help
+
+If you encounter issues with automations:
+
+1. Check this guide for troubleshooting steps
+2. Review the audit report for known issues
+3. Check workflow/script documentation
+4. Review execution logs (GitHub Actions or n8n)
+5. Ask in the repository or community channels

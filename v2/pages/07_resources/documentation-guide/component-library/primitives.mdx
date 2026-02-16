@@ -11,6 +11,9 @@ import { CustomCallout, GotoLink, GotoCard, TipWithArrow, LinkArrow } from '/sni
 // BlinkingIcon, BlinkingTerminal, DoubleIconLink commented out - component bugs
 import { DownloadButton, BasicBtn } from '/snippets/components/primitives/buttons.jsx'
 import { Subtitle, CopyText, CardTitleTextWithArrow, AccordionTitleWithArrow } from '/snippets/components/primitives/text.jsx'
+import { FlexContainer, GridContainer, Spacer } from '/snippets/components/primitives/layout.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/primitives/tables.jsx'
+import { BorderedBox, CenteredContainer, FullWidthContainer } from '/snippets/components/primitives/containers.jsx'
 
 # Primitives
 
@@ -655,6 +658,354 @@ import { CustomDivider } from "/snippets/components/primitives/divider.jsx";
 <CustomDivider />
 <CustomDivider middleText="Section Break" />
 <CustomDivider middleText="OR" color="#2d9a67" />
+```
+  </Tab>
+</Tabs>
+
+---
+
+<CustomDivider middleText="Layout" />
+
+## Layout Primitives
+
+Layout components for organizing content without inline styles in MDX files.
+
+### FlexContainer
+
+Flexbox container component for arranging items in rows or columns.
+
+**Import:**
+```jsx
+import { FlexContainer } from "/snippets/components/primitives/layout.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Yes** | Content to display |
+| `direction` | `string` | `"row"` | No | Flex direction: "row" \| "column" \| "row-reverse" \| "column-reverse" |
+| `gap` | `string` | `"1rem"` | No | Gap between items (CSS value) |
+| `align` | `string` | `"flex-start"` | No | Align items: "flex-start" \| "center" \| "flex-end" \| "stretch" |
+| `justify` | `string` | `"flex-start"` | No | Justify content: "flex-start" \| "center" \| "flex-end" \| "space-between" \| "space-around" \| "space-evenly" |
+| `wrap` | `boolean` | `false` | No | Allow wrapping |
+| `style` | `object` | `{}` | No | Additional inline styles |
+
+**Examples:**
+
+<Tabs>
+  <Tab title="Row Layout">
+    <FlexContainer gap="1rem">
+      <Card title="Card 1">Content 1</Card>
+      <Card title="Card 2">Content 2</Card>
+      <Card title="Card 3">Content 3</Card>
+    </FlexContainer>
+  </Tab>
+  <Tab title="Column Layout">
+    <FlexContainer direction="column" gap="0.5rem">
+      <Card title="Item 1">First item</Card>
+      <Card title="Item 2">Second item</Card>
+    </FlexContainer>
+  </Tab>
+  <Tab title="Centered">
+    <FlexContainer justify="center" align="center" gap="2rem">
+      <Card title="Centered">Item 1</Card>
+      <Card title="Centered">Item 2</Card>
+    </FlexContainer>
+  </Tab>
+  <Tab title="Code">
+```jsx
+<FlexContainer gap="1rem">
+  <Card>Item 1</Card>
+  <Card>Item 2</Card>
+</FlexContainer>
+
+<FlexContainer direction="column" gap="0.5rem" align="center">
+  <Card>Item 1</Card>
+  <Card>Item 2</Card>
+</FlexContainer>
+```
+  </Tab>
+</Tabs>
+
+---
+
+### GridContainer
+
+CSS Grid container component for grid layouts.
+
+**Import:**
+```jsx
+import { GridContainer } from "/snippets/components/primitives/layout.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Yes** | Content to display |
+| `columns` | `string\|number` | - | No | Number of columns or CSS grid-template-columns value |
+| `gap` | `string` | `"1rem"` | No | Gap between items (CSS value) |
+| `style` | `object` | `{}` | No | Additional inline styles |
+
+**Examples:**
+
+<Tabs>
+  <Tab title="3 Columns">
+    <GridContainer columns={3} gap="1rem">
+      <Card title="Card 1">Content</Card>
+      <Card title="Card 2">Content</Card>
+      <Card title="Card 3">Content</Card>
+    </GridContainer>
+  </Tab>
+  <Tab title="Code">
+```jsx
+<GridContainer columns={3} gap="2rem">
+  <Card>Item 1</Card>
+  <Card>Item 2</Card>
+  <Card>Item 3</Card>
+</GridContainer>
+```
+  </Tab>
+</Tabs>
+
+---
+
+### Spacer
+
+Vertical or horizontal spacing component.
+
+**Import:**
+```jsx
+import { Spacer } from "/snippets/components/primitives/layout.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `size` | `string` | `"1rem"` | No | Spacing size (CSS value) |
+| `direction` | `string` | `"vertical"` | No | Spacing direction: "vertical" \| "horizontal" |
+
+**Examples:**
+
+<Tabs>
+  <Tab title="Vertical Spacing">
+    <Card title="Card 1">Content</Card>
+    <Spacer size="2rem" />
+    <Card title="Card 2">Content</Card>
+  </Tab>
+  <Tab title="Code">
+```jsx
+<Card>Content 1</Card>
+<Spacer size="2rem" />
+<Card>Content 2</Card>
+```
+  </Tab>
+</Tabs>
+
+<CustomDivider middleText="Tables" />
+
+## Table Primitives
+
+Table components for structured data display without inline styles.
+
+### StyledTable
+
+Theme-aware table component with variant support.
+
+**Import:**
+```jsx
+import { StyledTable, TableRow, TableCell } from "/snippets/components/primitives/tables.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Yes** | Table content (thead, tbody, etc.) |
+| `variant` | `string` | `"default"` | No | Table variant: "default" \| "bordered" \| "minimal" |
+| `style` | `object` | `{}` | No | Additional inline styles |
+
+**Examples:**
+
+<Tabs>
+  <Tab title="Default Table">
+    <StyledTable>
+      <thead>
+        <TableRow header>
+          <TableCell header>Name</TableCell>
+          <TableCell header align="center">Status</TableCell>
+        </TableRow>
+      </thead>
+      <tbody>
+        <TableRow>
+          <TableCell>Item 1</TableCell>
+          <TableCell align="center">Active</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>Item 2</TableCell>
+          <TableCell align="center">Pending</TableCell>
+        </TableRow>
+      </tbody>
+    </StyledTable>
+  </Tab>
+  <Tab title="Code">
+```jsx
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Header 1</TableCell>
+      <TableCell header align="center">Header 2</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Data 1</TableCell>
+      <TableCell align="center">Data 2</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+```
+  </Tab>
+</Tabs>
+
+**TableRow Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Yes** | Table cells |
+| `header` | `boolean` | `false` | No | Is this a header row? |
+| `hover` | `boolean` | `false` | No | Enable hover effect |
+| `style` | `object` | `{}` | No | Additional inline styles |
+
+**TableCell Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Yes** | Cell content |
+| `align` | `string` | `"left"` | No | Text alignment: "left" \| "center" \| "right" |
+| `header` | `boolean` | `false` | No | Is this a header cell? |
+| `style` | `object` | `{}` | No | Additional inline styles |
+
+<CustomDivider middleText="Containers" />
+
+## Container Primitives
+
+Container components for grouping and organizing content.
+
+### BorderedBox
+
+Theme-aware bordered container component.
+
+**Import:**
+```jsx
+import { BorderedBox } from "/snippets/components/primitives/containers.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Yes** | Content to display |
+| `variant` | `string` | `"default"` | No | Border variant: "default" \| "accent" \| "muted" |
+| `padding` | `string` | `"1rem"` | No | Internal padding (CSS value) |
+| `borderRadius` | `string` | `"8px"` | No | Border radius (CSS value) |
+| `style` | `object` | `{}` | No | Additional inline styles |
+
+**Examples:**
+
+<Tabs>
+  <Tab title="Default">
+    <BorderedBox>
+      This is a bordered box with default styling.
+    </BorderedBox>
+  </Tab>
+  <Tab title="Accent Variant">
+    <BorderedBox variant="accent" padding="1.5rem">
+      This box has an accent-colored border.
+    </BorderedBox>
+  </Tab>
+  <Tab title="Code">
+```jsx
+<BorderedBox variant="accent" padding="1.5rem">
+  Important content here
+</BorderedBox>
+```
+  </Tab>
+</Tabs>
+
+---
+
+### CenteredContainer
+
+Centered content container component.
+
+**Import:**
+```jsx
+import { CenteredContainer } from "/snippets/components/primitives/containers.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Yes** | Content to display |
+| `maxWidth` | `string` | `"800px"` | No | Maximum width (CSS value) |
+| `padding` | `string` | `"0"` | No | Internal padding (CSS value) |
+| `style` | `object` | `{}` | No | Additional inline styles |
+
+**Examples:**
+
+<Tabs>
+  <Tab title="Centered Content">
+    <CenteredContainer maxWidth="600px">
+      <Card title="Centered Card">This card is centered with a max width of 600px.</Card>
+    </CenteredContainer>
+  </Tab>
+  <Tab title="Code">
+```jsx
+<CenteredContainer maxWidth="600px">
+  Centered content here
+</CenteredContainer>
+```
+  </Tab>
+</Tabs>
+
+---
+
+### FullWidthContainer
+
+Full-width breakout container component for hero sections and full-width content.
+
+**Import:**
+```jsx
+import { FullWidthContainer } from "/snippets/components/primitives/containers.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Yes** | Content to display |
+| `backgroundColor` | `string` | - | No | Background color (CSS value or CSS variable) |
+| `style` | `object` | `{}` | No | Additional inline styles |
+
+**Examples:**
+
+<Tabs>
+  <Tab title="Full Width">
+    <FullWidthContainer backgroundColor="var(--card-background)">
+      <div style={{ padding: "2rem", textAlign: "center" }}>
+        Full-width hero content
+      </div>
+    </FullWidthContainer>
+  </Tab>
+  <Tab title="Code">
+```jsx
+<FullWidthContainer backgroundColor="var(--accent)">
+  Full-width hero content
+</FullWidthContainer>
 ```
   </Tab>
 </Tabs>

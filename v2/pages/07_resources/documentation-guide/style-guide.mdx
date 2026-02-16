@@ -152,6 +152,166 @@ Mintlify automatically adds a `.dark` class to the `<html>` element when dark mo
 - ❌ Don't override white text on intentionally colored backgrounds
 - ❌ Don't create custom JavaScript theme objects
 
+## Styling Framework Architecture
+
+The Livepeer documentation uses a **three-layer styling framework** designed to work within Mintlify's constraints while maintaining consistency and maintainability.
+
+### Framework Layers
+
+#### Layer 1: Global CSS (`style.css`)
+
+**Purpose**: Theme variables and framework-level overrides only
+
+**What belongs here:**
+- ✅ CSS Custom Properties (theme variables)
+- ✅ Mintlify component overrides (navigation, footer, etc.)
+- ✅ Frame mode container classes
+- ✅ Utility classes for patterns used 5+ times across pages
+
+**What does NOT belong here:**
+- ❌ Page-specific styles
+- ❌ Component-specific styles (belong in JSX)
+- ❌ One-off styling needs
+
+**Structure:**
+```css
+/* ============================================
+   THEME VARIABLES (CSS Custom Properties)
+   ============================================ */
+:root { /* Light mode */ }
+.dark { /* Dark mode */ }
+
+/* ============================================
+   FRAMEWORK OVERRIDES (Mintlify-specific)
+   ============================================ */
+/* Navigation, footer, frame mode containers */
+
+/* ============================================
+   UTILITY CLASSES (Reusable patterns)
+   ============================================ */
+/* Only for patterns used 5+ times across pages */
+```
+
+#### Layer 2: JSX Components (`snippets/components/**/*.jsx`)
+
+**Purpose**: Self-contained components with internal styling
+
+**Rules:**
+- ✅ Use CSS Custom Properties (`var(--accent)`, `var(--text)`, etc.)
+- ✅ Styles must be within the component file
+- ✅ Use `<style>` tags for complex styling (pseudo-classes, media queries)
+- ✅ Use inline style objects for simple styling
+- ❌ Import external CSS files
+- ❌ Hardcode theme colors (use CSS variables)
+- ❌ Use `className` without corresponding `<style>` tag
+
+**Pattern A: Inline Style Objects (Simple components)**
+```jsx
+export const MyComponent = () => {
+  return (
+    <div style={{
+      color: "var(--text)",
+      backgroundColor: "var(--card-background)",
+      border: "1px solid var(--border)",
+      padding: "1rem"
+    }}>
+      Content
+    </div>
+  );
+};
+```
+
+**Pattern B: Style Tag (Complex components)**
+```jsx
+export const MyComponent = () => {
+  return (
+    <>
+      <div className="my-component">
+        Content
+      </div>
+      <style>{`
+        .my-component {
+          color: var(--text);
+          background: var(--card-background);
+        }
+        .my-component:hover {
+          border-color: var(--accent);
+        }
+      `}</style>
+    </>
+  );
+};
+```
+
+**Pattern C: Style Constants (Reusable within component)**
+```jsx
+export const MyComponent = ({ variant = "default" }) => {
+  const baseStyle = {
+    color: "var(--text)",
+    padding: "1rem"
+  };
+  
+  const variantStyles = {
+    default: { border: "1px solid var(--border)" },
+    accent: { border: "1px solid var(--accent)" }
+  };
+  
+  return (
+    <div style={{ ...baseStyle, ...variantStyles[variant] }}>
+      Content
+    </div>
+  );
+};
+```
+
+#### Layer 3: MDX Files (`v2/pages/**/*.mdx`)
+
+**Purpose**: Content only - **ZERO inline styles**
+
+**Rules:**
+- ✅ Use component primitives for all styling needs
+- ✅ Use Mintlify global components (`Card`, `Tabs`, `Steps`, etc.)
+- ✅ Import custom components from `/snippets/components/`
+- ❌ **NO inline `style={{}}` attributes**
+- ❌ **NO hardcoded colors**
+- ❌ **NO custom `className` attributes**
+
+**Before (❌ WRONG):**
+```mdx
+<div style={{ display: "flex", gap: "1rem" }}>
+  <Card>Content 1</Card>
+  <Card>Content 2</Card>
+</div>
+```
+
+**After (✅ CORRECT):**
+```mdx
+import { FlexContainer } from '/snippets/components/primitives/layout.jsx';
+
+<FlexContainer gap="1rem">
+  <Card>Content 1</Card>
+  <Card>Content 2</Card>
+</FlexContainer>
+```
+
+### Decision Tree: Where Does This Style Go?
+
+1. **Is it a theme color?** → Add to `style.css` as CSS Custom Property
+2. **Is it used in a component?** → Put in JSX component file (inline or `<style>` tag)
+3. **Is it needed in MDX?** → Create/use a component primitive
+4. **Is it used 5+ times globally?** → Add utility class to `style.css`
+5. **Is it page-specific?** → Create a component primitive (don't put in `style.css`)
+
+### Component Primitives Library
+
+For common styling needs in MDX files, use component primitives from `/snippets/components/primitives/`:
+
+- **Layout**: `FlexContainer`, `GridContainer`, `Spacer`
+- **Tables**: `StyledTable`, `TableRow`, `TableCell`
+- **Containers**: `BorderedBox`, `CenteredContainer`, `FullWidthContainer`
+
+See the [Component Library](./component-library/primitives) for complete reference.
+
 ## Typography
 
 ### Headings
@@ -210,6 +370,88 @@ import { H1, H2, PageHeader } from "/snippets/components/display/frameMode.jsx";
 - `<Warning>` - Important cautions
 - `<Danger>` - Critical warnings
 - `<Note>` - Additional context
+
+## Mintlify Overrides & Best Practices
+
+Our styling framework intentionally overrides some Mintlify default recommendations to work better within Mintlify's constraints and maintain consistency.
+
+### Override: "Use Tailwind classes"
+
+**Mintlify suggests**: Use Tailwind utility classes  
+**Our approach**: ❌ Don't use Tailwind - use component primitives  
+**Reason**: Tailwind classes in MDX create maintenance burden and reduce semantic meaning. Component primitives are more maintainable and self-documenting.
+
+**Example:**
+```mdx
+{/* ❌ Don't use Tailwind */}
+<div className="flex gap-4 items-center">
+  <Card>Content</Card>
+</div>
+
+{/* ✅ Use component primitives */}
+<FlexContainer gap="1rem" align="center">
+  <Card>Content</Card>
+</FlexContainer>
+```
+
+### Override: "Inline styles are fine for quick fixes"
+
+**Mintlify suggests**: Inline styles acceptable in MDX  
+**Our approach**: ❌ No inline styles in MDX, only in JSX components  
+**Reason**: Consistency and maintainability. Inline styles in MDX make it harder to maintain theme consistency and create visual inconsistencies.
+
+**Example:**
+```mdx
+{/* ❌ Don't use inline styles in MDX */}
+<div style={{ display: "flex", gap: "1rem" }}>
+  <Card>Content</Card>
+</div>
+
+{/* ✅ Use component primitives */}
+<FlexContainer gap="1rem">
+  <Card>Content</Card>
+</FlexContainer>
+```
+
+### Override: "Use global CSS for everything"
+
+**Mintlify suggests**: Put all styles in `style.css`  
+**Our approach**: ✅ Only theme variables and framework overrides in `style.css`  
+**Reason**: Mintlify only allows one global CSS file. Putting everything there makes it unmaintainable. Component-specific styles belong in JSX components.
+
+**What goes in `style.css`:**
+- ✅ Theme variables (CSS Custom Properties)
+- ✅ Mintlify component overrides (nav, footer)
+- ✅ Frame mode container classes
+- ✅ Utility classes used 5+ times globally
+
+**What does NOT go in `style.css`:**
+- ❌ Component-specific styles (put in JSX)
+- ❌ Page-specific styles (create component primitives)
+- ❌ One-off styling needs (create component primitives)
+
+### Override: "Component styles can be external"
+
+**Mintlify suggests**: External CSS files for components  
+**Our approach**: ❌ Styles must be within JSX component files  
+**Reason**: Mintlify doesn't support CSS imports in components reliably. Inline styles and `<style>` tags within components work consistently.
+
+**Pattern:**
+```jsx
+{/* ✅ Styles within component */}
+export const MyComponent = () => {
+  return (
+    <>
+      <div className="my-component">Content</div>
+      <style>{`
+        .my-component {
+          color: var(--text);
+        }
+      `}</style>
+    </>
+  );
+};
+```
 
 ## Mintlify Gotchas & Limitations
 

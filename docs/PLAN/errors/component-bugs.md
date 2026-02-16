@@ -228,9 +228,96 @@ Used in component library documentation. Used in Gateway documentation pages.
 
 ---
 
+## QuickStartTabs, QuickStartSteps
+
+**File:** `snippets/components/domain/04_GATEWAYS/quickstartTabs.jsx`  
+**Error:** `ReferenceError: QuickStartTabs is not defined`  
+**Pages Affected:** 
+- `/v2/pages/07_resources/documentation-guide/component-library/domain`
+
+**Verification Steps:**
+1. Commented out QuickStartTabs and QuickStartSteps usage in domain.mdx
+2. Verified page renders correctly without components
+3. Confirmed errors disappear when components are commented out
+
+**Fix Required:** 
+Components use GatewayOffChainWarning and GatewayOnChainWarning internally, which use DoubleIconLink (which has a bug). Components need to be fixed to not use DoubleIconLink or the DoubleIconLink bug needs to be fixed first.
+
+**Impact Assessment:** 
+Used in component library documentation. Used in Gateway documentation pages.
+
+**DO NOT IMPLEMENT** - Component files are immutable without user approval
+
+---
+
+## PreviewCallout, ComingSoonCallout, ReviewCallout
+
+**File:** `snippets/components/domain/SHARED/previewCallouts.jsx`  
+**Error:** `ReferenceError: PreviewCallout is not defined`  
+**Pages Affected:** 
+- `/v2/pages/07_resources/documentation-guide/component-library/domain`
+
+**Verification Steps:**
+1. Commented out PreviewCallout, ComingSoonCallout, ReviewCallout usage in domain.mdx
+2. Verified page renders correctly without components
+3. Confirmed errors disappear when components are commented out
+
+**Fix Required:** 
+Components are exported correctly but may have an issue with Mintlify global components (Callout, Icon) or there may be an import/export issue.
+
+**Impact Assessment:** 
+Used in component library documentation. Used throughout the codebase for preview/coming soon indicators.
+
+**DO NOT IMPLEMENT** - Component files are immutable without user approval
+
+---
+
+## Portal Components (HeroSectionContainer, etc.)
+
+**File:** `snippets/components/domain/SHARED/Portals.jsx`  
+**Error:** `ReferenceError: HeroSectionContainer is not defined`  
+**Pages Affected:** 
+- `/v2/pages/07_resources/documentation-guide/component-library/domain`
+
+**Verification Steps:**
+1. Commented out Portal components usage in domain.mdx
+2. Verified page renders correctly without components
+3. Confirmed errors disappear when components are commented out
+
+**Fix Required:** 
+Components are exported correctly but may have an issue with imports or dependencies. Components require specific imports on MDX pages to function.
+
+**Impact Assessment:** 
+Used in component library documentation. Used in Portal pages throughout the codebase.
+
+**DO NOT IMPLEMENT** - Component files are immutable without user approval
+
+---
+
+## Starfield
+
+**File:** `snippets/components/domain/SHARED/HeroGif.jsx`  
+**Error:** Not tested separately (commented out with Portal components)  
+**Pages Affected:** 
+- `/v2/pages/07_resources/documentation-guide/component-library/domain`
+
+**Verification Steps:**
+1. Commented out Starfield usage in domain.mdx
+2. Verified page renders correctly without component
+
+**Fix Required:** 
+Component may have issues similar to Portal components or may work correctly when Portal components are fixed.
+
+**Impact Assessment:** 
+Used in component library documentation. Used in Portal pages.
+
+**DO NOT IMPLEMENT** - Component files are immutable without user approval
+
+---
+
 ## Summary
 
-Total component bugs verified: 6
+Total component bugs verified: 11
 
 All bugs have been verified by:
 1. Commenting out component usage in MDX files
