@@ -28,8 +28,7 @@ const CustomCallout = ({
   textColor,
 }) => {
   // Use theme accent if no color specified
-  const defaultColor = "var(--custom-callout-color)";
-  const resolvedColor = color || defaultColor;
+  const resolvedColor = color || "var(--accent)";
   const resolvedTextColor = textColor || resolvedColor;
 
   // Convert hex to rgba for proper opacity
@@ -42,14 +41,6 @@ const CustomCallout = ({
 
   return (
     <>
-      <style>{`
-        :root {
-          --custom-callout-color: ${ThemeData.light.accent};
-        }
-        .dark {
-          --custom-callout-color: ${ThemeData.dark.accent};
-        }
-      `}</style>
       <div
         style={{
           display: "flex",
@@ -99,16 +90,10 @@ const CustomCallout = ({
  * @author Livepeer Documentation Team
  */
 const BlinkingIcon = ({ icon = "terminal", size = 16, color }) => {
-  const resolvedColor = color || "var(--blinking-icon-color)";
+  const resolvedColor = color || "var(--accent)";
   return (
     <>
       <style>{`
-        :root {
-          --blinking-icon-color: ${ThemeData.light.accent};
-        }
-        .dark {
-          --blinking-icon-color: ${ThemeData.dark.accent};
-        }
         @keyframes blink {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.3; }
@@ -169,14 +154,6 @@ const DoubleIconLink = ({
 }) => {
   return (
     <>
-      <style>{`
-        :root {
-          --double-icon-link-color: ${ThemeData.light.accent};
-        }
-        .dark {
-          --double-icon-link-color: ${ThemeData.dark.accent};
-        }
-      `}</style>
       <span
         style={{
           whiteSpace: "nowrap",
@@ -192,7 +169,7 @@ const DoubleIconLink = ({
         <Icon
           icon={iconRight}
           size={12}
-          color="var(--double-icon-link-color)"
+          color="var(--accent)"
         />
       </span>
     </>
@@ -300,7 +277,7 @@ const TipWithArrow = ({
   arrowSize = 16,
 }) => {
   // Use theme accent if no color specified
-  const resolvedColor = color || "var(--tip-with-arrow-color)";
+  const resolvedColor = color || "var(--accent)";
 
   // Convert hex to rgba for proper opacity
   const hexToRgba = (hex, alpha) => {
@@ -312,14 +289,6 @@ const TipWithArrow = ({
 
   return (
     <>
-      <style>{`
-        :root {
-          --tip-with-arrow-color: ${ThemeData.light.accent};
-        }
-        .dark {
-          --tip-with-arrow-color: ${ThemeData.dark.accent};
-        }
-      `}</style>
       <div
         style={{
           position: "relative",

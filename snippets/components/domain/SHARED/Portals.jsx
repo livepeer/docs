@@ -10,8 +10,7 @@
  *
  * @imports: REQUIRED - These components require imports on the MDX page to function.
  *
- * MUST import ThemeData in the MDX file:
- * import { ThemeData } from "/snippets/styles/themeStyles.jsx";
+ * Note: Components use CSS globals defined in style.css - no imports needed.
  *
  * PortalHeroContent uses CustomDivider which needs to be imported on the MDX page:
  * import { CustomDivider } from "/snippets/components/primitives/divider.jsx";
@@ -231,7 +230,7 @@ const PortalHeroContent = ({
                 fontSize: "1.5rem",
                 fontWeight: "500",
                 opacity: 1,
-                color: subtitleColor || "var(--page-header-subtitle-color)",
+                color: subtitleColor || "var(--accent)",
               }}
             >
               {subtitle} {/* flipped icon */}
@@ -260,7 +259,7 @@ const PortalHeroContent = ({
               width: "80%",
               margin: "0 auto",
               fontSize: "1.1rem",
-              color: "var(--page-header-description-color)",
+              color: "var(--text)",
               paddingTop: "3rem",
             }}
           >
@@ -281,18 +280,6 @@ const PortalHeroContent = ({
             {refCardLink}
           </div>
               )}
-        <style>{`
-            :root {
-            --page-header-title-color: ${ThemeData.light.heroText};
-            --page-header-subtitle-color: ${ThemeData.light.accent};
-            --page-header-description-color: ${ThemeData.light.text};
-            }
-            .dark {
-            --page-header-title-color: ${ThemeData.dark.heroText};
-            --page-header-subtitle-color: ${ThemeData.dark.accent};
-            --page-header-description-color: ${ThemeData.dark.text};
-            }
-        `}</style>
          <div style={{ width: "80%", margin: "0 auto", paddingBottom: "1rem" }}>
           {callout && callout}
           {divider ? <CustomDivider /> : null }
@@ -309,7 +296,7 @@ const PortalHeroContent = ({
               width: "80%",
               margin: "0 auto",
               fontSize: "1.1rem",
-              color: "var(--page-header-description-color)",
+              color: "var(--text)",
             }}
           >
             {overview}
@@ -405,7 +392,7 @@ const LogoHeroContainer = ({
             top: "100%",
             right: "0",
             fontSize: "2rem",
-            color: "var(--page-header-subtitle-color)",
+            color: "var(--accent)",
             fontWeight: "500",
             lineHeight: "1",
             paddingTop:"0.5rem"
