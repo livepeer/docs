@@ -1,0 +1,408 @@
+---
+title: 'Component Library'
+sidebarTitle: 'Component Library'
+description: 'Complete reference of custom components with live examples'
+keywords: ["livepeer", "documentation", "components", "library", "reference"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LivepeerIcon, LivepeerIconFlipped } from '/snippets/components/primitives/icons.jsx'
+import { CustomCallout, BlinkingIcon, DoubleIconLink, GotoLink, GotoCard, TipWithArrow } from '/snippets/components/primitives/links.jsx'
+import { DownloadButton } from '/snippets/components/primitives/buttons.jsx'
+import { Subtitle, CopyText } from '/snippets/components/primitives/text.jsx'
+
+import { YouTubeVideo, Video } from '/snippets/components/display/video.jsx'
+import { Image, LinkImage } from '/snippets/components/display/image.jsx'
+import { ScrollableDiagram } from '/snippets/components/display/zoomable-diagram.jsx'
+import { ExternalContent } from '/snippets/components/content/external-content.jsx'
+import { CustomCodeBlock } from '/snippets/components/content/code.jsx'
+
+import { ScrollBox } from '/snippets/components/layout/cards.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+import { DynamicTable } from '/snippets/components/layout/table.jsx'
+
+import { CoinGeckoExchanges } from '/snippets/components/integrations/coingecko.jsx'
+import { ComingSoonCallout, PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+
+# Component Library
+
+Complete reference for all custom components in the Livepeer documentation.
+
+<Note>
+**Mintlify Global Components** are available without import: `Card`, `Icon`, `Steps`, `Tabs`, `Note`, `Warning`, `Accordion`, `Columns`, `CodeBlock`, `Badge`, `Tooltip`, and more.
+</Note>
+
+---
+
+## How to Use
+
+```jsx
+import { YouTubeVideo } from "/snippets/components/display/video.jsx";
+import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
+```
+
+<CustomDivider middleText="Primitives" />
+
+## Primitives
+
+### CustomDivider
+
+<Tabs>
+  <Tab title="Example">
+    <CustomDivider />
+    <CustomDivider middleText="Section" />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx";
+
+<CustomDivider />
+<CustomDivider middleText="Section" />
+```
+  </Tab>
+</Tabs>
+
+### LivepeerIcon
+
+<Tabs>
+  <Tab title="Example">
+    <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+      <LivepeerIcon size={16} /> <LivepeerIcon size={24} color="#00cc88" /> <LivepeerIconFlipped size={24} />
+    </div>
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { LivepeerIcon } from "/snippets/components/primitives/icons.jsx";
+
+<LivepeerIcon size={24} color="#00cc88" />
+```
+  </Tab>
+</Tabs>
+
+### CustomCallout
+
+<Tabs>
+  <Tab title="Example">
+    <CustomCallout icon="lightbulb" color="#3b82f6">Important message!</CustomCallout>
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { CustomCallout } from "/snippets/components/primitives/links.jsx";
+
+<CustomCallout icon="lightbulb" color="#3b82f6">Message</CustomCallout>
+```
+  </Tab>
+</Tabs>
+
+### BlinkingIcon
+
+<Tabs>
+  <Tab title="Example">
+    <BlinkingIcon icon="circle" color="#00cc88" size={12} /> Live
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { BlinkingIcon } from "/snippets/components/primitives/links.jsx";
+
+<BlinkingIcon icon="circle" color="#00cc88" size={12} />
+```
+  </Tab>
+</Tabs>
+
+### DoubleIconLink
+
+<Tabs>
+  <Tab title="Example">
+    <DoubleIconLink label="View on GitHub" href="https://github.com/livepeer/go-livepeer" />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { DoubleIconLink } from "/snippets/components/primitives/links.jsx";
+
+<DoubleIconLink label="GitHub" href="https://github.com/..." />
+```
+  </Tab>
+</Tabs>
+
+### GotoLink & GotoCard
+
+<Tabs>
+  <Tab title="Example">
+    <GotoLink label="Getting Started" relativePath="/get-started" />
+    <GotoCard label="API" relativePath="/api" text="API docs" />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { GotoLink, GotoCard } from "/snippets/components/primitives/links.jsx";
+
+<GotoLink label="Start" relativePath="/start" />
+<GotoCard label="API" relativePath="/api" text="Docs" />
+```
+  </Tab>
+</Tabs>
+
+### DownloadButton
+
+<Tabs>
+  <Tab title="Example">
+    <DownloadButton label="Download" downloadLink="https://example.com/file.pdf" border={true} />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { DownloadButton } from "/snippets/components/primitives/buttons.jsx";
+
+<DownloadButton label="Download" downloadLink="https://..." border={true} />
+```
+  </Tab>
+</Tabs>
+
+### Text Components
+
+<Tabs>
+  <Tab title="Example">
+    <Subtitle text="Subtitle text" />
+    <CopyText text="0x123..." label="Address:" />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { Subtitle, CopyText } from "/snippets/components/primitives/text.jsx";
+
+<Subtitle text="Subtitle" />
+<CopyText text="value" label="Label:" />
+```
+  </Tab>
+</Tabs>
+
+<CustomDivider middleText="Display" />
+
+## Display
+
+### YouTubeVideo
+
+<Tabs>
+  <Tab title="Example">
+    <YouTubeVideo embedUrl="https://www.youtube.com/embed/DKAChLmC0uk" author="Livepeer" title="What is Livepeer?" />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { YouTubeVideo } from "/snippets/components/display/video.jsx";
+
+<YouTubeVideo embedUrl="https://www.youtube.com/embed/ID" author="Author" title="Title" />
+```
+  </Tab>
+</Tabs>
+
+### Image
+
+<Tabs>
+  <Tab title="Example">
+    <Image src="/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg" alt="Logo" caption="Livepeer Logo" />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { Image } from "/snippets/components/display/image.jsx";
+
+<Image src="/images/img.png" alt="Alt" caption="Caption" />
+```
+  </Tab>
+</Tabs>
+
+### ScrollableDiagram
+
+<Tabs>
+  <Tab title="Example">
+    <ScrollableDiagram title="Diagram" maxHeight="150px">
+      <div style={{ width: "500px", height: "100px", background: "linear-gradient(135deg, #00cc88 0%, #0066ff 100%)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", borderRadius: "8px" }}>Scroll & Zoom</div>
+    </ScrollableDiagram>
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { ScrollableDiagram } from "/snippets/components/display/zoomable-diagram.jsx";
+
+<ScrollableDiagram title="Title" maxHeight="500px">
+  <img src="/diagram.png" alt="Diagram" />
+</ScrollableDiagram>
+```
+  </Tab>
+</Tabs>
+
+<CustomDivider middleText="Content" />
+
+## Content
+
+### CustomCodeBlock
+
+<Tabs>
+  <Tab title="Example">
+    <CustomCodeBlock filename="config.js" language="javascript" codeString={`const key = "{PLACEHOLDER}";`} placeholderValue="YOUR_KEY" preNote="Add to config:" />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
+
+<CustomCodeBlock filename="file.js" language="javascript" codeString={`code`} placeholderValue="value" />
+```
+  </Tab>
+</Tabs>
+
+### ExternalContent
+
+<Tabs>
+  <Tab title="Example">
+    <ExternalContent repoName="livepeer/docs" githubUrl="https://github.com/livepeer/docs" maxHeight="100px">
+      <p>External content with GitHub link.</p>
+    </ExternalContent>
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { ExternalContent } from "/snippets/components/content/external-content.jsx";
+
+<ExternalContent repoName="repo/name" githubUrl="https://github.com/...">
+  Content
+</ExternalContent>
+```
+  </Tab>
+</Tabs>
+
+<CustomDivider middleText="Layout" />
+
+## Layout
+
+### DynamicTable
+
+<Tabs>
+  <Tab title="Example">
+    <DynamicTable headerList={["Name", "Value"]} itemsList={[{ Name: "Key", Value: "123" }]} />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { DynamicTable } from "/snippets/components/layout/table.jsx";
+
+<DynamicTable headerList={["Col1", "Col2"]} itemsList={[{ Col1: "A", Col2: "B" }]} />
+```
+  </Tab>
+</Tabs>
+
+### StyledSteps
+
+<Tabs>
+  <Tab title="Example">
+    <StyledSteps iconColor="#00cc88">
+      <StyledStep title="Step 1" icon="download">Content</StyledStep>
+      <StyledStep title="Step 2" icon="gear">Content</StyledStep>
+    </StyledSteps>
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { StyledSteps, StyledStep } from "/snippets/components/layout/steps.jsx";
+
+<StyledSteps iconColor="#00cc88">
+  <StyledStep title="Title" icon="icon">Content</StyledStep>
+</StyledSteps>
+```
+  </Tab>
+</Tabs>
+
+### ScrollBox
+
+<Tabs>
+  <Tab title="Example">
+    <Card title="Scrollable">
+      <ScrollBox maxHeight={80}><p>Line 1</p><p>Line 2</p><p>Line 3</p><p>Line 4</p></ScrollBox>
+    </Card>
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { ScrollBox } from "/snippets/components/layout/cards.jsx";
+
+<Card><ScrollBox maxHeight={200}>Long content</ScrollBox></Card>
+```
+  </Tab>
+</Tabs>
+
+<CustomDivider middleText="Integrations" />
+
+## Integrations
+
+### CoinGeckoExchanges
+
+<Tabs>
+  <Tab title="Example">
+    <CoinGeckoExchanges coinId="livepeer" />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { CoinGeckoExchanges } from "/snippets/components/integrations/coingecko.jsx";
+
+<CoinGeckoExchanges coinId="livepeer" />
+```
+  </Tab>
+</Tabs>
+
+<CustomDivider middleText="Domain" />
+
+## Domain
+
+### Preview Callouts
+
+<Tabs>
+  <Tab title="Example">
+    <PreviewCallout />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { PreviewCallout, ComingSoonCallout } from "/snippets/components/domain/SHARED/previewCallouts.jsx";
+
+<PreviewCallout />
+<ComingSoonCallout />
+```
+  </Tab>
+</Tabs>
+
+<CustomDivider middleText="Mintlify" />
+
+## Mintlify Built-ins
+
+<Note>Note</Note>
+<Warning>Warning</Warning>
+<Info>Info</Info>
+<Tip>Tip</Tip>
+
+<Columns cols={3}>
+  <Card title="Card 1">Content</Card>
+  <Card title="Card 2">Content</Card>
+  <Card title="Card 3">Content</Card>
+</Columns>
+
+<Steps>
+  <Step title="First" icon="1">Content</Step>
+  <Step title="Second" icon="2">Content</Step>
+</Steps>
+
+<Accordion title="Accordion">Hidden content</Accordion>
+
+<div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+  <Icon icon="rocket" size={24} />
+  <Badge color="green">Active</Badge>
+  <Badge color="yellow">Pending</Badge>
+</div>
+
+---
+
+## Quick Reference
+
+| Category | Path |
+|----------|------|
+| Primitives | `/snippets/components/primitives/` |
+| Display | `/snippets/components/display/` |
+| Content | `/snippets/components/content/` |
+| Layout | `/snippets/components/layout/` |
+| Integrations | `/snippets/components/integrations/` |
+| Domain | `/snippets/components/domain/` |
+
+**Global:** `Card`, `Columns`, `Steps`, `Tabs`, `Accordion`, `Note`, `Warning`, `Info`, `Tip`, `Frame`, `Icon`, `Badge`, `Tooltip`, `CodeBlock`
+
+<Card title="Contribute" icon="github" href="https://github.com/livepeer/docs/tree/main/snippets/components" arrow>
+  Add components on GitHub
+</Card>

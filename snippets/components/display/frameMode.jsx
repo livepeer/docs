@@ -8,10 +8,8 @@
  * All components support optional icons at the beginning of the heading.
  * Icons use theme-aware colors that adapt to light/dark mode.
  *
- * @requires ThemeData must be imported in the MDX file where these components are used:
- * import { ThemeData } from "/snippets/styles/themeStyles.jsx";
- *
  * @note Icon is a Mintlify global component - no import needed
+ * @note Uses global CSS variables (--accent, --hero-text, --text, --border) for theming
  *
  * @author Alison Haire
  */
@@ -56,9 +54,7 @@ const PageHeader = ({
           lineHeight: "1.2",
           margin: "2rem 0 1rem 0",
           opacity: 1,
-          color:
-            titleColor ||
-            `var(--page-header-title-color, ${ThemeData.light.heroText})`,
+          color: titleColor || "var(--hero-text)",
         }}
       >
         {title}
@@ -69,9 +65,7 @@ const PageHeader = ({
             fontSize: "1.5rem",
             fontWeight: "500",
             opacity: 1,
-            color:
-              subtitleColor ||
-              `var(--page-header-subtitle-color, ${ThemeData.light.accent})`,
+          color: subtitleColor || "var(--accent)",
           }}
         >
           {subtitle}
@@ -91,18 +85,6 @@ const PageHeader = ({
           {description}
         </h5>
       )}
-      <style>{`
-        :root {
-          --page-header-title-color: ${ThemeData.light.heroText};
-          --page-header-subtitle-color: ${ThemeData.light.accent};
-          --page-header-description-color: ${ThemeData.light.text};
-        }
-        .dark {
-          --page-header-title-color: ${ThemeData.dark.heroText};
-          --page-header-subtitle-color: ${ThemeData.dark.accent};
-          --page-header-description-color: ${ThemeData.dark.text};
-        }
-      `}</style>
       {children}
       <div style={{ width: "80%", margin: "0 auto" }}>
         <CustomDivider />
@@ -190,8 +172,7 @@ const H1 = ({
   align = "left",
   gap = "0.75rem",
 }) => {
-  // Use theme-aware color if not specified
-  const defaultIconColor = iconColor || "var(--h1-icon-color)";
+  const resolvedIconColor = iconColor || "var(--accent)";
 
   const containerStyle = {
     display: icon ? "flex" : "block",
@@ -211,25 +192,15 @@ const H1 = ({
     fontSize: "2.5rem",
     fontWeight: "bold",
     lineHeight: "1.2",
-    color: "var(--page-header-title-color)",
+    color: "var(--hero-text)",
     opacity: 1,
   };
 
   return (
-    <>
-      <style>{`
-        :root {
-          --h1-icon-color: ${ThemeData.light.accent};
-        }
-        .dark {
-          --h1-icon-color: ${ThemeData.dark.accent};
-        }
-      `}</style>
-      <div style={containerStyle}>
-        {icon && <Icon icon={icon} size={iconSize} color={defaultIconColor} />}
-        <h1 style={headingStyle}>{children}</h1>
-      </div>
-    </>
+    <div style={containerStyle}>
+      {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
+      <h1 style={headingStyle}>{children}</h1>
+    </div>
   );
 };
 
@@ -251,7 +222,7 @@ const H2 = ({
   align = "left",
   gap = "0.75rem",
 }) => {
-  const defaultIconColor = iconColor || "var(--h2-icon-color)";
+  const resolvedIconColor = iconColor || "var(--accent)";
 
   const containerStyle = {
     display: icon ? "flex" : "block",
@@ -271,24 +242,14 @@ const H2 = ({
     margin: 0,
     fontSize: "1.875rem",
     fontWeight: "bold",
-    color: "var(--h2-text-color)",
+    color: "var(--hero-text)",
     opacity: 1,
   };
 
   return (
     <>
-      <style>{`
-        :root {
-          --h2-icon-color: ${ThemeData.light.accent};
-          --h2-text-color: ${ThemeData.light.heroText};
-        }
-        .dark {
-          --h2-icon-color: ${ThemeData.dark.accent};
-          --h2-text-color: ${ThemeData.dark.heroText};
-        }
-      `}</style>
       <div style={containerStyle}>
-        {icon && <Icon icon={icon} size={iconSize} color={defaultIconColor} />}
+        {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
         <h2 style={headingStyle}>{children}</h2>
       </div>
     </>
@@ -313,7 +274,7 @@ const H3 = ({
   align = "left",
   gap = "0.5rem",
 }) => {
-  const defaultIconColor = iconColor || "var(--h3-icon-color)";
+  const resolvedIconColor = iconColor || "var(--accent)";
 
   const containerStyle = {
     display: icon ? "flex" : "block",
@@ -333,24 +294,14 @@ const H3 = ({
     margin: 0,
     fontSize: "1.5rem",
     fontWeight: "bold",
-    color: "var(--h3-text-color)",
+    color: "var(--hero-text)",
     opacity: 1,
   };
 
   return (
     <>
-      <style>{`
-        :root {
-          --h3-icon-color: ${ThemeData.light.accent};
-          --h3-text-color: ${ThemeData.light.heroText};
-        }
-        .dark {
-          --h3-icon-color: ${ThemeData.dark.accent};
-          --h3-text-color: ${ThemeData.dark.heroText};
-        }
-      `}</style>
       <div style={containerStyle}>
-        {icon && <Icon icon={icon} size={iconSize} color={defaultIconColor} />}
+        {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
         <h3 style={headingStyle}>{children}</h3>
       </div>
     </>
@@ -375,7 +326,7 @@ const H4 = ({
   align = "left",
   gap = "0.5rem",
 }) => {
-  const defaultIconColor = iconColor || "var(--h4-icon-color)";
+  const resolvedIconColor = iconColor || "var(--accent)";
 
   const containerStyle = {
     display: icon ? "flex" : "block",
@@ -395,24 +346,14 @@ const H4 = ({
     margin: 0,
     fontSize: "1.25rem",
     fontWeight: "bold",
-    color: "var(--h4-text-color)",
+    color: "var(--hero-text)",
     opacity: 1,
   };
 
   return (
     <>
-      <style>{`
-        :root {
-          --h4-icon-color: ${ThemeData.light.accent};
-          --h4-text-color: ${ThemeData.light.heroText};
-        }
-        .dark {
-          --h4-icon-color: ${ThemeData.dark.accent};
-          --h4-text-color: ${ThemeData.dark.heroText};
-        }
-      `}</style>
       <div style={containerStyle}>
-        {icon && <Icon icon={icon} size={iconSize} color={defaultIconColor} />}
+        {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
         <h4 style={headingStyle}>{children}</h4>
       </div>
     </>
@@ -437,7 +378,7 @@ const H5 = ({
   align = "left",
   gap = "0.5rem",
 }) => {
-  const defaultIconColor = iconColor || "var(--h5-icon-color)";
+  const resolvedIconColor = iconColor || "var(--accent)";
 
   const containerStyle = {
     display: icon ? "flex" : "block",
@@ -457,24 +398,14 @@ const H5 = ({
     margin: 0,
     fontSize: "1.125rem",
     fontWeight: "bold",
-    color: "var(--h5-text-color)",
+    color: "var(--hero-text)",
     opacity: 1,
   };
 
   return (
     <>
-      <style>{`
-        :root {
-          --h5-icon-color: ${ThemeData.light.accent};
-          --h5-text-color: ${ThemeData.light.heroText};
-        }
-        .dark {
-          --h5-icon-color: ${ThemeData.dark.accent};
-          --h5-text-color: ${ThemeData.dark.heroText};
-        }
-      `}</style>
       <div style={containerStyle}>
-        {icon && <Icon icon={icon} size={iconSize} color={defaultIconColor} />}
+        {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
         <h5 style={headingStyle}>{children}</h5>
       </div>
     </>
@@ -499,7 +430,7 @@ const H6 = ({
   align = "left",
   gap = "0.5rem",
 }) => {
-  const defaultIconColor = iconColor || "var(--h6-icon-color)";
+  const resolvedIconColor = iconColor || "var(--accent)";
 
   const containerStyle = {
     display: icon ? "flex" : "block",
@@ -519,24 +450,14 @@ const H6 = ({
     margin: 0,
     fontSize: "1rem",
     fontWeight: "bold",
-    color: "var(--h6-text-color)",
+    color: "var(--hero-text)",
     opacity: 1,
   };
 
   return (
     <>
-      <style>{`
-        :root {
-          --h6-icon-color: ${ThemeData.light.accent};
-          --h6-text-color: ${ThemeData.light.heroText};
-        }
-        .dark {
-          --h6-icon-color: ${ThemeData.dark.accent};
-          --h6-text-color: ${ThemeData.dark.heroText};
-        }
-      `}</style>
       <div style={containerStyle}>
-        {icon && <Icon icon={icon} size={iconSize} color={defaultIconColor} />}
+        {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
         <h6 style={headingStyle}>{children}</h6>
       </div>
     </>
@@ -589,18 +510,8 @@ const P = ({
 
   return (
     <>
-      <style>{`
-        :root {
-          --p-icon-color: ${ThemeData.light.accent};
-          --p-text-color: ${ThemeData.light.text};
-        }
-        .dark {
-          --p-icon-color: ${ThemeData.dark.accent};
-          --p-text-color: ${ThemeData.dark.text};
-        }
-      `}</style>
       <div style={containerStyle}>
-        {icon && <Icon icon={icon} size={iconSize} color={defaultIconColor} />}
+        {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
         <p style={paragraphStyle}>{children}</p>
       </div>
     </>
@@ -625,14 +536,6 @@ const P = ({
 const Divider = ({ color, margin = "1.5rem 0", opacity = 0.2 }) => {
   return (
     <>
-      <style>{`
-        :root {
-          --divider-color: ${ThemeData.light.border};
-        }
-        .dark {
-          --divider-color: ${ThemeData.dark.border};
-        }
-      `}</style>
       <hr
         style={{
           border: "none",

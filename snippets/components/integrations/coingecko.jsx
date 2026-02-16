@@ -1,4 +1,3 @@
-import { ThemeData } from "/snippets/styles/themeStyles.jsx";
 
 /**
  * CoinGeckoExchanges - Dynamically fetches and displays exchanges that support a coin from CoinGecko
@@ -117,22 +116,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
   };
 
   return (
-    <>
-      <style>{`
-        :root {
-          --coingecko-header-bg: ${ThemeData.light.accent};
-          --coingecko-header-border: ${ThemeData.light.accent};
-          --coingecko-row-border: ${ThemeData.light.border};
-          --coingecko-link: ${ThemeData.light.accent};
-        }
-        .dark {
-          --coingecko-header-bg: ${ThemeData.dark.accent};
-          --coingecko-header-border: ${ThemeData.dark.accent};
-          --coingecko-row-border: ${ThemeData.dark.border};
-          --coingecko-link: ${ThemeData.dark.accent};
-        }
-      `}</style>
-      <div style={{ overflowX: "auto" }}>
+    <div style={{ overflowX: "auto" }}>
         <table
           style={{
             width: "100%",
@@ -143,7 +127,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
           <thead>
             <tr
               style={{
-                backgroundColor: "var(--coingecko-header-bg)",
+                backgroundColor: "var(--accent)",
                 color: "#fff",
               }}
             >
@@ -152,7 +136,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
                   padding: "12px 16px",
                   textAlign: "left",
                   fontWeight: "600",
-                  borderBottom: "2px solid var(--coingecko-header-border)",
+                  borderBottom: "2px solid var(--accent)",
                   cursor: "pointer",
                   width: "220px",
                   maxWidth: "220px",
@@ -169,7 +153,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
                   padding: "12px 16px",
                   textAlign: "center",
                   fontWeight: "600",
-                  borderBottom: "2px solid var(--coingecko-header-border)",
+                  borderBottom: "2px solid var(--accent)",
                   width: "80px",
                   cursor: "pointer",
                   color: "#fff",
@@ -184,7 +168,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
                   padding: "12px 16px",
                   textAlign: "center",
                   fontWeight: "600",
-                  borderBottom: "2px solid var(--coingecko-header-border)",
+                  borderBottom: "2px solid var(--accent)",
                   width: "110px",
                   color: "#fff",
                 }}
@@ -196,7 +180,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
                   padding: "12px 16px",
                   textAlign: "center",
                   fontWeight: "600",
-                  borderBottom: "2px solid var(--coingecko-header-border)",
+                  borderBottom: "2px solid var(--accent)",
                   width: "100px",
                   color: "#fff",
                 }}
@@ -208,7 +192,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
                   padding: "12px 16px",
                   textAlign: "center",
                   fontWeight: "600",
-                  borderBottom: "2px solid var(--coingecko-header-border)",
+                  borderBottom: "2px solid var(--accent)",
                   width: "100px",
                   color: "#fff",
                 }}
@@ -222,7 +206,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
               <tr
                 key={index}
                 style={{
-                  borderBottom: "1px solid var(--coingecko-row-border)",
+                  borderBottom: "1px solid var(--border)",
                 }}
               >
                 <td
@@ -269,7 +253,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
-                      color: "var(--coingecko-link)",
+                      color: "var(--accent)",
                       textDecoration: "none",
                     }}
                   >
@@ -281,6 +265,5 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
           </tbody>
         </table>
       </div>
-    </>
   );
 };
