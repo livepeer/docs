@@ -34,6 +34,28 @@
 7. **Easily reversible code changes** - OK to make without asking
 8. **Never make irreversible changes** - always ensure changes can be undone
 
+## MANDATORY: Style Guide and Documentation Standards
+
+**BEFORE making any styling, component, or documentation changes, you MUST read:**
+
+1. **Style Guide** - `v2/pages/07_resources/documentation-guide/style-guide.mdx`
+   - Production-grade styling guidelines
+   - CSS Custom Properties usage (ONLY approach - no ThemeData)
+   - Mintlify gotchas and limitations
+   - Component usage patterns
+
+2. **Component Library** - `v2/pages/07_resources/documentation-guide/component-library.mdx`
+   - Available components and their usage
+   - Props and examples
+
+**Critical Rules:**
+- ✅ Use CSS Custom Properties: `var(--accent)`, `var(--text)`, etc.
+- ❌ NEVER use `ThemeData` from `themeStyles.jsx` (deprecated)
+- ❌ NEVER hardcode hex colors that should adapt to theme
+- ✅ Follow Mintlify import patterns (absolute paths from root)
+- ✅ Test in both light and dark modes
+- ❌ No suggestions/recommendations in production docs (factual only)
+
 ## Repository Structure
 
 ### Multi-Version Docs
@@ -49,6 +71,7 @@
 - `automations/` - Dynamic/AI/data-fetching logic
 - `ai-tools/` - AI-related tooling
 - `v2/scripts/` - API doc generation, data fetching scripts
+- `style.css` - Global CSS Custom Properties for theming (production-grade styling)
 - `images/`, `logo/`, `assets/` - Static assets
 
 ### Important Files

@@ -1,0 +1,184 @@
+name: Test V2 Pages
+
+on:
+  push:
+    branches:
+      - main
+      - docs-v2-preview
+  pull_request:
+    branches:
+      - main
+      - docs-v2-preview
+
+jobs:
+  test-pages:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      pull-requests: write # For commenting on PRs
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: 'npm'
+
+      - name: Install Mintlify globally
+        run: npm install -g mintlify
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install jq (for JSON parsing)
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Start Mintlify dev server
+        run: |
+          mint dev > /tmp/mint-dev.log 2>&1 &
+          echo $! > /tmp/mint-dev.pid
+          echo "Mint dev server starting (PID: $(cat /tmp/mint-dev.pid))"
+        continue-on-error: false
+
+      - name: Wait for server to be ready
+        run: |
+          echo "Waiting for mint dev server to start..."
+          for i in {1..60}; do
+            if curl -f -s http://localhost:3000 > /dev/null 2>&1; then
+              echo "✅ Server is ready!"
+              exit 0
+            fi
+            echo "Waiting... ($i/60)"
+            sleep 2
+          done
+          echo "❌ Server failed to start within 2 minutes"
+          echo "Last 50 lines of mint dev log:"
+          tail -50 /tmp/mint-dev.log || true
+          exit 1
+
+      - name: Run V2 pages test
+        id: test-pages
+        continue-on-error: true
+        run: |
+          npm run test:v2-pages
+          TEST_EXIT_CODE=$?
+          echo "exit_code=$TEST_EXIT_CODE" >> $GITHUB_OUTPUT
+          echo "test_exit_code=$TEST_EXIT_CODE" >> $GITHUB_OUTPUT
+          exit $TEST_EXIT_CODE
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-pages-test-report
+          path: v2-page-test-report.json
+          retention-days: 7
+
+      - name: Parse test results
+        if: always()
+        id: test-results
+        run: |
+          if [ -f v2-page-test-report.json ]; then
+            TOTAL=$(jq -r '.totalPages' v2-page-test-report.json)
+            PASSED=$(jq -r '.passed' v2-page-test-report.json)
+            FAILED=$(jq -r '.failed' v2-page-test-report.json)
+            
+            echo "total=$TOTAL" >> $GITHUB_OUTPUT
+            echo "passed=$PASSED" >> $GITHUB_OUTPUT
+            echo "failed=$FAILED" >> $GITHUB_OUTPUT
+            
+            # Get failed pages summary
+            FAILED_PAGES=$(jq -r '.results[] | select(.success == false) | .pagePath' v2-page-test-report.json | head -10)
+            echo "failed_pages<<EOF" >> $GITHUB_OUTPUT
+            echo "$FAILED_PAGES" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "total=0" >> $GITHUB_OUTPUT
+            echo "passed=0" >> $GITHUB_OUTPUT
+            echo "failed=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let comment = '## 📊 V2 Pages Test Results\n\n';
+            
+            const total = '${{ steps.test-results.outputs.total }}';
+            const passed = '${{ steps.test-results.outputs.passed }}';
+            const failed = '${{ steps.test-results.outputs.failed }}';
+            
+            if (total === '0') {
+              comment += '❌ Test report not found. The test may have failed to run.\n';
+            } else {
+              const passRate = ((parseInt(passed) / parseInt(total)) * 100).toFixed(1);
+              comment += `- **Total pages tested:** ${total}\n`;
+              comment += `- **✅ Passed:** ${passed}\n`;
+              comment += `- **❌ Failed:** ${failed}\n`;
+              comment += `- **Pass rate:** ${passRate}%\n\n`;
+              
+              if (parseInt(failed) > 0) {
+                comment += '### Failed Pages\n\n';
+                const failedPages = `${{ steps.test-results.outputs.failed_pages }}`.split('\n').filter(p => p);
+                if (failedPages.length > 0) {
+                  failedPages.slice(0, 10).forEach(page => {
+                    comment += `- \`${page}\`\n`;
+                  });
+                  if (failedPages.length > 10) {
+                    comment += `\n_... and ${failedPages.length - 10} more. See full report in artifacts._\n`;
+                  }
+                }
+                comment += '\n📥 Download the full test report from the workflow artifacts.\n';
+              } else {
+                comment += '🎉 All pages passed!\n';
+              }
+            }
+            
+            // Find existing comment
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.data.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('## 📊 V2 Pages Test Results')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }
+
+      - name: Stop Mintlify dev server
+        if: always()
+        run: |
+          if [ -f /tmp/mint-dev.pid ]; then
+            PID=$(cat /tmp/mint-dev.pid)
+            kill $PID 2>/dev/null || true
+            echo "Stopped mint dev server (PID: $PID)"
+          fi
+
+      - name: Fail job if tests failed
+        if: steps.test-pages.outputs.test_exit_code != '0' && steps.test-pages.outputs.test_exit_code != ''
+        run: |
+          echo "❌ Test failed with exit code ${{ steps.test-pages.outputs.test_exit_code }}"
+          exit ${{ steps.test-pages.outputs.test_exit_code }}

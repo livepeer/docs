@@ -6,11 +6,16 @@ This folder contains **18 agent briefs** for finishing the Livepeer docs. Each b
 
 ## How to run (parallel agents)
 
-1. **Pick one task** — Open the task file (e.g. [01-components-consolidate.md](01-components-consolidate.md)). Only one agent per task.
-2. **Create the branch** — The agent creates it. From **`docs-v2-preview`** (the main branch in this fork), run: `git checkout docs-v2-preview && git pull && git checkout -b <branch>` with the branch from the table below (e.g. `git checkout -b docs-plan/01-components-consolidate`). Do not use a branch that another agent is using.
-3. **Do the work** — Follow the task’s Objective, Scope, and Deliverables in that brief.
-4. **Write the report** — In the same branch, create the report file under [reports/](reports/) (e.g. `reports/01-components-consolidate-report.md`). Include: **Work done**, **Testing**, **Limitations / follow-ups**.
-5. **Open a PR** — Open a pull request from your branch **into `docs-v2-preview`**. In the PR description, link to this task brief and to the report (or paste a short summary).
+1. **MANDATORY: Read Style Guide First** — Before starting any task, read:
+   - `v2/pages/07_resources/documentation-guide/style-guide.mdx` - Production-grade styling guidelines and Mintlify gotchas
+   - `v2/pages/07_resources/documentation-guide/component-library.mdx` - Component reference
+   - **Critical:** Use CSS Custom Properties (`var(--accent)`) only. Never use `ThemeData` or hardcode colors.
+
+2. **Pick one task** — Open the task file (e.g. [01-components-consolidate.md](01-components-consolidate.md)). Only one agent per task.
+3. **Create the branch** — The agent creates it. From **`docs-v2-preview`** (the main branch in this fork), run: `git checkout docs-v2-preview && git pull && git checkout -b <branch>` with the branch from the table below (e.g. `git checkout -b docs-plan/01-components-consolidate`). Do not use a branch that another agent is using.
+4. **Do the work** — Follow the task's Objective, Scope, and Deliverables in that brief. **Follow style guide rules.**
+5. **Write the report** — In the same branch, create the report file under [reports/](reports/) (e.g. `reports/01-components-consolidate-report.md`). Include: **Work done**, **Testing**, **Limitations / follow-ups**.
+6. **Open a PR** — Open a pull request from your branch **into `docs-v2-preview`**. In the PR description, link to this task brief and to the report (or paste a short summary).
 
 **Parallelism:** Multiple agents can run at once (different tasks = different branches). Avoid running 01, 02, 03 in parallel (all touch components). Audits (13–16) and writing tasks (09–12, 18) are ideal for parallel runs.
 

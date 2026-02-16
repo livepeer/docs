@@ -7,10 +7,10 @@ keywords: ["livepeer", "components", "layout", "cards", "lists", "steps", "table
 
 import { ScrollBox } from '/snippets/components/layout/cards.jsx'
 import { BasicList, IconList, StepList, StepLinkList, UpdateList, UpdateLinkList } from '/snippets/components/layout/lists.jsx'
-import { ListSteps } from '/snippets/components/layout/ListSteps.jsx'
+// ListSteps commented out - component bug: Cannot read properties of undefined (reading 'map')
 import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
 import { DynamicTable } from '/snippets/components/layout/table.jsx'
-import { ApiBaseUrlsTable } from '/snippets/components/layout/api-base-urls-table.mdx'
+// ApiBaseUrlsTable commented out - component bug: url is not defined
 import { AccordionLayout } from '/snippets/components/layout/text.jsx'
 import { QuadGrid } from '/snippets/components/layout/quadGrid.jsx'
 import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
@@ -45,6 +45,31 @@ import { ScrollBox } from "/snippets/components/layout/cards.jsx";
 | `showHint` | `boolean` | `true` | No | Whether to show "Scroll for more" hint |
 | `style` | `object` | - | No | Additional styles |
 
+**Examples:**
+
+<Tabs>
+  <Tab title="Live Example">
+    <Card title="Scrollable Content">
+      <ScrollBox maxHeight={120} showHint={true}>
+        <p>Scrollable content inside a card.</p>
+        <p>Line 2 of content...</p>
+        <p>Line 3 of content...</p>
+        <p>Line 4 of content...</p>
+        <p>Line 5 of content...</p>
+      </ScrollBox>
+    </Card>
+  </Tab>
+  <Tab title="Code">
+```jsx
+<Card title="Gaming">
+  <ScrollBox maxHeight={200} showHint={true}>
+    <p>Long content here...</p>
+  </ScrollBox>
+</Card>
+```
+  </Tab>
+</Tabs>
+
 <CustomDivider middleText="List Components" />
 
 ## List Components
@@ -66,6 +91,47 @@ import { StepList } from "/snippets/components/layout/lists.jsx";
 | `listItems[].title` | `string` | - | **Yes** | Step title |
 | `listItems[].icon` | `string` | - | No | Optional icon name |
 | `listItems[].content` | `ReactNode` | - | **Yes** | Step content |
+
+**Examples:**
+
+{/* StepList commented out temporarily - may have similar issue to ListSteps */}
+{/*
+<Tabs>
+  <Tab title="Live Example">
+    <StepList
+      listItems={[
+        { title: "Install", icon: "download", content: "Run npm install" },
+        { title: "Configure", icon: "gear", content: "Set up your config" },
+        { title: "Run", icon: "play", content: "Start the application" }
+      ]}
+    />
+  </Tab>
+  <Tab title="Code">
+```jsx
+const steps = [
+  { title: "Install", icon: "download", content: "Run npm install" },
+  { title: "Configure", icon: "gear", content: "Set up your config" }
+];
+<StepList listItems={steps} />
+```
+  </Tab>
+</Tabs>
+*/}
+<Tabs>
+  <Tab title="Code">
+```jsx
+// StepList - use Steps/Step directly for now
+<Steps>
+  <Step title="Install" icon="download">
+    Run npm install
+  </Step>
+  <Step title="Configure" icon="gear">
+    Set up your config
+  </Step>
+</Steps>
+```
+  </Tab>
+</Tabs>
 
 ---
 
@@ -90,24 +156,14 @@ import { StepLinkList } from "/snippets/components/layout/lists.jsx";
 
 ---
 
+{/* ListSteps commented out - component bug: Cannot read properties of undefined (reading 'map') */}
+{/*
 ### ListSteps
 
 Renders a list of items as Steps components. Takes an array of step items and renders them using Steps/Step.
 
-**Import:**
-```jsx
-import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";
-```
-
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `listItems` | `Array` | - | **Yes** | Array of objects with Step props and children |
-| `listItems[].title` | `string` | - | **Yes** | The title of the step |
-| `listItems[].icon` | `string` | - | No | Optional icon for the step |
-| `listItems[].children` | `ReactNode` | - | **Yes** | Content to display in the step |
-| `stepsConfig` | `Object` | - | No | Configuration object with Steps component props |
+**Note:** Currently unavailable due to component bug. See component-bugs.md for details.
+*/}
 
 ---
 
@@ -127,7 +183,7 @@ A customizable Steps component with color and styling support. Wraps the standar
 
 **Import:**
 ```jsx
-import { StyledSteps } from "/snippets/components/layout/steps.jsx";
+import { StyledSteps, StyledStep } from "/snippets/components/layout/steps.jsx";
 ```
 
 **Props:**
@@ -139,6 +195,30 @@ import { StyledSteps } from "/snippets/components/layout/steps.jsx";
 | `titleColor` | `string` | theme-aware | No | Color for step titles |
 | `lineColor` | `string` | theme-aware | No | Color for the connecting line between steps |
 | `iconSize` | `string` | `"24px"` | No | Size of the step icons (currently unused) |
+
+**Examples:**
+
+<Tabs>
+  <Tab title="Live Example">
+    <StyledSteps iconColor="#00cc88" titleColor="#00cc88" lineColor="#00cc88">
+      <StyledStep title="Install" icon="download">
+        Run `npm install livepeer` to get started.
+      </StyledStep>
+      <StyledStep title="Configure" icon="gear">
+        Set up your API key.
+      </StyledStep>
+    </StyledSteps>
+  </Tab>
+  <Tab title="Code">
+```jsx
+<StyledSteps iconColor="#00cc88" titleColor="#00cc88">
+  <StyledStep title="Install" icon="download">
+    Run npm install.
+  </StyledStep>
+</StyledSteps>
+```
+  </Tab>
+</Tabs>
 
 ---
 
@@ -183,22 +263,44 @@ import { DynamicTable } from "/snippets/components/layout/table.jsx";
 | `monospaceColumns` | `Array<number>` | `[]` | No | Array of column indices (0-based) to render in monospace |
 | `margin` | `string` | - | No | Optional CSS margin override (e.g., "0", "1rem 0") |
 
+**Examples:**
+
+<Tabs>
+  <Tab title="Live Example">
+    <DynamicTable
+      tableTitle="Network Endpoints"
+      headerList={["Network", "Endpoint", "Status"]}
+      itemsList={[
+        { Network: "Mainnet", Endpoint: "https://livepeer.network", Status: "Active" },
+        { Network: "Testnet", Endpoint: "https://testnet.livepeer.network", Status: "Active" }
+      ]}
+      monospaceColumns={[1]}
+    />
+  </Tab>
+  <Tab title="Code">
+```jsx
+<DynamicTable
+  headerList={["Network", "Endpoint", "Status"]}
+  itemsList={[
+    { Network: "Mainnet", Endpoint: "https://livepeer.network", Status: "Active" }
+  ]}
+  monospaceColumns={[1]}
+  margin="1rem 0"
+/>
+```
+  </Tab>
+</Tabs>
+
 ---
 
+{/* ApiBaseUrlsTable commented out - component bug: url is not defined */}
+{/*
 ### ApiBaseUrlsTable
 
 Styled table for displaying API base URLs with environment names. Includes custom styling with Livepeer green header.
 
-**Import:**
-```jsx
-import { ApiBaseUrlsTable } from "/snippets/components/layout/api-base-urls-table.mdx";
-```
-
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `urls` | `Array` | - | **Yes** | Array of {name, url} objects |
+**Note:** Currently unavailable due to component bug. See component-bugs.md for details.
+*/}
 
 <CustomDivider middleText="Grid Components" />
 
@@ -222,6 +324,29 @@ import { QuadGrid } from "/snippets/components/layout/quadGrid.jsx";
 | `iconSize` | `number` | `50` | No | Size of the center icon |
 | `iconColor` | `string` | `"var(--accent)"` | No | Color of the center icon |
 | `spinDuration` | `string` | `"10s"` | No | Animation duration for spinning icon |
+
+**Examples:**
+
+<Tabs>
+  <Tab title="Live Example">
+    <QuadGrid icon="arrows-spin" iconSize={50}>
+      <Card title="Item 1">Content 1</Card>
+      <Card title="Item 2">Content 2</Card>
+      <Card title="Item 3">Content 3</Card>
+      <Card title="Item 4">Content 4</Card>
+    </QuadGrid>
+  </Tab>
+  <Tab title="Code">
+```jsx
+<QuadGrid icon="arrows-spin" iconSize={50}>
+  <Card title="Item 1">Content 1</Card>
+  <Card title="Item 2">Content 2</Card>
+  <Card title="Item 3">Content 3</Card>
+  <Card title="Item 4">Content 4</Card>
+</QuadGrid>
+```
+  </Tab>
+</Tabs>
 
 <CustomDivider middleText="Text Layout Components" />
 

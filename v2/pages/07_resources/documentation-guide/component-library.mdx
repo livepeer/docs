@@ -20,7 +20,8 @@ import { MarkdownEmbed, EmbedMarkdown, TwitterTimeline } from '/snippets/compone
 import { CustomCodeBlock, CodeComponent, ComplexCodeBlock, CodeSection } from '/snippets/components/content/code.jsx'
 import { ExternalContent } from '/snippets/components/content/external-content.jsx'
 import { LatestVersion } from '/snippets/components/content/release.jsx'
-import { ValueResponseField, CustomResponseField, ResponseFieldExpandable, ResponseFieldAccordion, ResponseFieldGroup } from '/snippets/components/content/responseField.jsx'
+import { ValueResponseField, CustomResponseField, ResponseFieldExpandable, ResponseFieldAccordion } from '/snippets/components/content/responseField.jsx'
+// ResponseFieldGroup commented out - component bug: Expandable is not defined
 
 import { ScrollBox, PostCard, CardColumnsPostLayout, BlogCard, CardBlogDataLayout } from '/snippets/components/layout/cards.jsx'
 import { StepList, StepLinkList, UpdateLinkList } from '/snippets/components/layout/lists.jsx'
@@ -709,6 +710,8 @@ import { ExternalContent } from "/snippets/components/content/external-content.j
 
 Components for displaying API response fields and parameters.
 
+{/* ResponseFieldGroup commented out - component bug: Expandable is not defined */}
+{/*
 <Tabs>
   <Tab title="Live Example">
     <ResponseFieldGroup title="API Response Fields" component="accordion">
@@ -729,6 +732,12 @@ import { ResponseFieldGroup, ValueResponseField } from "/snippets/components/con
     { name: "status", type: "enum", description: "Status value" }
   ]}
 </ResponseFieldGroup>
+*/}
+<Tabs>
+  <Tab title="Code">
+```jsx
+// ResponseFieldGroup is currently unavailable due to component bug
+// Use ResponseFieldExpandable or ResponseFieldAccordion instead
 
 <ValueResponseField 
   name="apiKey" 
@@ -739,12 +748,9 @@ import { ResponseFieldGroup, ValueResponseField } from "/snippets/components/con
 ```
   </Tab>
   <Tab title="Props">
-    **ResponseFieldGroup:**
-    | Prop | Type | Default | Description |
-    |------|------|---------|-------------|
-    | `component` | `"accordion" \| "expandable"` | `"accordion"` | Layout type |
-    | `fields` | `array` | `{}` | Array of field objects |
-    | `title` | `string` | - | Group title |
+    **Note:** ResponseFieldGroup is currently unavailable due to component bug. Use ResponseFieldExpandable or ResponseFieldAccordion instead.
+    
+    **ResponseFieldExpandable / ResponseFieldAccordion:**
     
     **ValueResponseField:**
     | Prop | Type | Default | Description |
