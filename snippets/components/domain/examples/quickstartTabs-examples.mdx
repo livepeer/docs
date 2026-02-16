@@ -1,0 +1,109 @@
+---
+title: "QuickStartTabs Examples"
+description: "Examples of using QuickStartTabs and QuickStartSteps components"
+---
+
+import {
+  QuickStartTabs,
+  QuickStartSteps,
+} from "/snippets/components/domain/04_GATEWAYS/quickstartTabs.jsx";
+
+## QuickStartTabs
+
+A tabbed interface for displaying off-chain and on-chain Gateway setup options.
+
+### Basic Usage
+
+<QuickStartTabs
+  offchainSteps={
+    <QuickStartSteps
+      dataSource={{
+        installStep: <p>Install the Gateway software using the provided binary.</p>,
+        configureStep: <p>Configure your local Gateway settings.</p>,
+        runStep: <p>Run the Gateway process.</p>,
+        connectStep: <p>Connect to your local orchestrator.</p>,
+        testStep: <p>Test the Gateway with a sample request.</p>,
+      }}
+    />
+  }
+  onchainSteps={
+    <QuickStartSteps
+      dataSource={{
+        installStep: <p>Install the Gateway software using the provided binary.</p>,
+        configureStep: <p>Configure your Gateway with Arbitrum settings.</p>,
+        runStep: <p>Run the Gateway process.</p>,
+        connectStep: <p>Connect to the Livepeer network.</p>,
+        testStep: <p>Test the Gateway with a sample request.</p>,
+      }}
+    />
+  }
+/>
+
+---
+
+## QuickStartSteps
+
+Standardized 5-step process for Gateway setup.
+
+### Standalone Usage
+
+<QuickStartSteps
+  dataSource={{
+    installStep: (
+      <div>
+        <p>Download and install the Gateway binary:</p>
+        <CodeBlock language="bash">
+          {`curl -L https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-linux-amd64.tar.gz | tar xz`}
+        </CodeBlock>
+      </div>
+    ),
+    configureStep: (
+      <div>
+        <p>Create your configuration file:</p>
+        <CodeBlock language="yaml" filename="gateway.yaml">
+          {`network: arbitrum-one
+ethUrl: YOUR_ETH_RPC_URL`}
+        </CodeBlock>
+      </div>
+    ),
+    runStep: (
+      <div>
+        <p>Start the Gateway:</p>
+        <CodeBlock language="bash">
+          {`./livepeer -gateway -network arbitrum-one`}
+        </CodeBlock>
+      </div>
+    ),
+    connectStep: (
+      <p>The Gateway will automatically connect to available orchestrators on the network.</p>
+    ),
+    testStep: (
+      <div>
+        <p>Send a test request:</p>
+        <CodeBlock language="bash">
+          {`curl -X POST http://localhost:8935/text-to-image -d '{"prompt": "a test image"}'`}
+        </CodeBlock>
+      </div>
+    ),
+  }}
+/>
+
+---
+
+## Usage Notes
+
+<Note>
+The `QuickStartTabs` component automatically includes the appropriate warning callouts (`GatewayOffChainWarning` and `GatewayOnChainWarning`) for each tab.
+</Note>
+
+### Step Structure
+
+Each step in `QuickStartSteps` follows a consistent pattern:
+
+| Step | Title | Purpose |
+|------|-------|---------|
+| 1 | Install Gateway Software | Download and installation instructions |
+| 2 | Configure Gateway | Configuration file setup |
+| 3 | Run Gateway | Starting the Gateway process |
+| 4 | Connect Gateway | Network connection details |
+| 5 | Test Gateway | Verification and testing |
