@@ -1,0 +1,46 @@
+---
+title: 'Connect to Arbitrum'
+sidebarTitle: 'Connect to Arbitrum'
+description: 'Connect go-livepeer to Arbitrum: hosted RPC or self-hosted node.'
+keywords: ["livepeer", "orchestrators", "arbitrum", "rpc", "ethUrl"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+import { CustomCodeBlock } from '/snippets/components/content/code.jsx'
+
+**go-livepeer** needs access to the [Arbitrum](https://arbitrum.io/) network. You can use a **hosted API** (e.g. [Infura](https://infura.io/), [Alchemy](https://www.alchemy.com/)) or a **self-hosted** node.
+
+## Hosted RPC (recommended to start)
+
+<CustomCodeBlock
+  codeString={`livepeer -network arbitrum-one-mainnet -ethUrl https://arbitrum-mainnet.infura.io/v3/<PROJECT_ID>`}
+  language="bash"
+  icon="terminal"
+/>
+
+Replace `<PROJECT_ID>` with your Infura project ID.
+
+## Self-hosted node
+
+See [Offchain Labs docs](https://developer.offchainlabs.com/docs/running_node). Then:
+
+<CustomCodeBlock
+  codeString={`livepeer -network mainnet -ethUrl http://localhost:8545`}
+  language="bash"
+  icon="terminal"
+/>
+
+## Supported networks
+
+- **Arbitrum One** (production): `-network arbitrum-one-mainnet -ethUrl <RPC_URL>`
+- **Private / offchain:** See [CLI flags](../references/cli-flags) for `-network` and `-ethController`.
+
+<Note> Use a stable RPC; flaky endpoints can cause missed reward calls.</Note>
+
+## See also
+
+<Columns cols={2}>
+  <Card title="Install go-livepeer" icon="download" href="./install-go-livepeer" arrow />
+  <Card title="Quickstart" icon="rocket" href="../quickstart/orchestrator-setup" arrow />
+  <Card title="CLI flags" icon="terminal" href="../references/cli-flags" arrow />
+</Columns>
