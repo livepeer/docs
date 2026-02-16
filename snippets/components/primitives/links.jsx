@@ -28,8 +28,7 @@ const CustomCallout = ({
   textColor,
 }) => {
   // Use theme accent if no color specified
-  const defaultColor = "var(--custom-callout-color)";
-  const resolvedColor = color || defaultColor;
+  const resolvedColor = color || "var(--accent)";
   const resolvedTextColor = textColor || resolvedColor;
 
   // Convert hex to rgba for proper opacity
@@ -42,14 +41,6 @@ const CustomCallout = ({
 
   return (
     <>
-      <style>{`
-        :root {
-          --custom-callout-color: ${ThemeData.light.accent};
-        }
-        .dark {
-          --custom-callout-color: ${ThemeData.dark.accent};
-        }
-      `}</style>
       <div
         style={{
           display: "flex",
@@ -103,12 +94,6 @@ const BlinkingIcon = ({ icon = "terminal", size = 16, color }) => {
   return (
     <>
       <style>{`
-        :root {
-          --blinking-icon-color: ${ThemeData.light.accent};
-        }
-        .dark {
-          --blinking-icon-color: ${ThemeData.dark.accent};
-        }
         @keyframes blink {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.3; }
@@ -169,14 +154,6 @@ const DoubleIconLink = ({
 }) => {
   return (
     <>
-      <style>{`
-        :root {
-          --double-icon-link-color: ${ThemeData.light.accent};
-        }
-        .dark {
-          --double-icon-link-color: ${ThemeData.dark.accent};
-        }
-      `}</style>
       <span
         style={{
           whiteSpace: "nowrap",
@@ -312,14 +289,6 @@ const TipWithArrow = ({
 
   return (
     <>
-      <style>{`
-        :root {
-          --tip-with-arrow-color: ${ThemeData.light.accent};
-        }
-        .dark {
-          --tip-with-arrow-color: ${ThemeData.dark.accent};
-        }
-      `}</style>
       <div
         style={{
           position: "relative",

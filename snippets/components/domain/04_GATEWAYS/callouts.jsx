@@ -1,5 +1,3 @@
-import { ThemeData } from "/snippets/styles/themeStyles.jsx";
-
 /**
  * GatewayOffChainWarning - Warning callout for off-chain Gateway setup
  *
@@ -60,30 +58,20 @@ const GatewayOffChainWarning = () => {
  */
 const GatewayOnChainWarning = () => {
   return (
-    <>
-      <style>{`
-        :root {
-          --gateway-icon-color: ${ThemeData.light.accent};
-        }
-        .dark {
-          --gateway-icon-color: ${ThemeData.dark.accent};
-        }
-      `}</style>
-      <Warning>
-        <span style={{ fontSize: "1.0rem" }}>
-          You will need to{" "}
-          <span style={{ fontWeight: "bold", fontStyle: "italic" }}>
-            fund an Ethereum wallet
-          </span>{" "}
-          account on Arbitrum One to run an on-chain Gateway.
-          <br /> <br /> See{" "}
-          <a href="/gateways/run-a-gateway/requirements/on-chain-setup/fund-gateway">
-            <Icon icon="arrow-up-right" color="var(--gateway-icon-color)" />{" "}
-            Fund Your Gateway{" "}
-          </a>
-        </span>
-      </Warning>
-    </>
+    <Warning>
+      <span style={{ fontSize: "1.0rem" }}>
+        You will need to{" "}
+        <span style={{ fontWeight: "bold", fontStyle: "italic" }}>
+          fund an Ethereum wallet
+        </span>{" "}
+        account on Arbitrum One to run an on-chain Gateway.
+        <br /> <br /> See{" "}
+        <a href="/gateways/run-a-gateway/requirements/on-chain-setup/fund-gateway">
+          <Icon icon="arrow-up-right" color="var(--accent)" />{" "}
+          Fund Your Gateway{" "}
+        </a>
+      </span>
+    </Warning>
   );
 };
 

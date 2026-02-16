@@ -1,5 +1,3 @@
-import { ThemeData } from "/snippets/styles/themeStyles.jsx";
-
 /**
  * ExternalContent - A reusable component for displaying external GitHub content
  * Usage:
@@ -21,22 +19,9 @@ export const ExternalContent = ({
   children,
 }) => {
   return (
-    <>
-      <style>{`
-        :root {
-          --external-border: ${ThemeData.light.accent};
-          --external-bg: ${ThemeData.light.cardBackground};
-          --external-link: ${ThemeData.light.accent};
-        }
-        .dark {
-          --external-border: ${ThemeData.dark.accent};
-          --external-bg: ${ThemeData.dark.cardBackground};
-          --external-link: ${ThemeData.dark.accent};
-        }
-      `}</style>
-      <div
-        style={{
-          border: "1px solid var(--external-border)",
+    <div
+      style={{
+        border: "1px solid var(--accent)",
           borderRadius: "8px",
           overflow: "hidden",
           marginTop: "1rem",
@@ -44,9 +29,9 @@ export const ExternalContent = ({
       >
         <div
           style={{
-            backgroundColor: "var(--external-bg)",
+            backgroundColor: "var(--card-background)",
             padding: "0.75rem 1rem",
-            borderBottom: "1px solid var(--external-border)",
+            borderBottom: "1px solid var(--accent)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -62,7 +47,7 @@ export const ExternalContent = ({
             href={githubUrl}
             target="_blank"
             style={{
-              color: "var(--external-link)",
+              color: "var(--accent)",
               fontSize: "0.875rem",
               display: "flex",
               alignItems: "center",
@@ -82,6 +67,5 @@ export const ExternalContent = ({
           {children}
         </div>
       </div>
-    </>
   );
 };
