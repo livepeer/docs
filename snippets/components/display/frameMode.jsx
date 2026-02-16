@@ -247,12 +247,10 @@ const H2 = ({
   };
 
   return (
-    <>
-      <div style={containerStyle}>
-        {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
-        <h2 style={headingStyle}>{children}</h2>
-      </div>
-    </>
+    <div style={containerStyle}>
+      {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
+      <h2 style={headingStyle}>{children}</h2>
+    </div>
   );
 };
 
@@ -299,12 +297,10 @@ const H3 = ({
   };
 
   return (
-    <>
-      <div style={containerStyle}>
-        {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
-        <h3 style={headingStyle}>{children}</h3>
-      </div>
-    </>
+    <div style={containerStyle}>
+      {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
+      <h3 style={headingStyle}>{children}</h3>
+    </div>
   );
 };
 
@@ -351,12 +347,10 @@ const H4 = ({
   };
 
   return (
-    <>
-      <div style={containerStyle}>
-        {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
-        <h4 style={headingStyle}>{children}</h4>
-      </div>
-    </>
+    <div style={containerStyle}>
+      {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
+      <h4 style={headingStyle}>{children}</h4>
+    </div>
   );
 };
 
@@ -403,12 +397,10 @@ const H5 = ({
   };
 
   return (
-    <>
-      <div style={containerStyle}>
-        {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
-        <h5 style={headingStyle}>{children}</h5>
-      </div>
-    </>
+    <div style={containerStyle}>
+      {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
+      <h5 style={headingStyle}>{children}</h5>
+    </div>
   );
 };
 
@@ -455,12 +447,10 @@ const H6 = ({
   };
 
   return (
-    <>
-      <div style={containerStyle}>
-        {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
-        <h6 style={headingStyle}>{children}</h6>
-      </div>
-    </>
+    <div style={containerStyle}>
+      {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
+      <h6 style={headingStyle}>{children}</h6>
+    </div>
   );
 };
 
@@ -504,17 +494,15 @@ const P = ({
 
   const paragraphStyle = {
     margin: 0,
-    color: "var(--p-text-color)",
+    color: "var(--text)",
     opacity: 1,
   };
 
   return (
-    <>
-      <div style={containerStyle}>
-        {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
-        <p style={paragraphStyle}>{children}</p>
-      </div>
-    </>
+    <div style={containerStyle}>
+      {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
+      <p style={paragraphStyle}>{children}</p>
+    </div>
   );
 };
 
@@ -535,16 +523,14 @@ const P = ({
  */
 const Divider = ({ color, margin = "1.5rem 0", opacity = 0.2 }) => {
   return (
-    <>
-      <hr
-        style={{
-          border: "none",
-          borderTop: `1px solid ${color || "var(--divider-color)"}`,
-          margin: margin,
-          opacity: opacity,
-        }}
-      />
-    </>
+    <hr
+      style={{
+        border: "none",
+        borderTop: `1px solid ${color || "var(--border)"}`,
+        margin: margin,
+        opacity: opacity,
+      }}
+    />
   );
 };
 

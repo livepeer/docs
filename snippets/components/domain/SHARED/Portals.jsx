@@ -10,6 +10,8 @@
  *
  * @imports: REQUIRED - These components require imports on the MDX page to function.
  *
+ * Note: Components use CSS globals defined in style.css - no imports needed.
+ *
  * PortalHeroContent uses CustomDivider which needs to be imported on the MDX page:
  * import { CustomDivider } from "/snippets/components/primitives/divider.jsx";
  *
