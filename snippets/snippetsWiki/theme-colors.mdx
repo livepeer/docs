@@ -8,19 +8,34 @@ Guide for implementing theme-aware colors in Livepeer documentation components.
 
 ### Theme Color Palette
 
-The Livepeer documentation uses a consistent color palette defined in `snippets/styles/colours.jsx`:
+The Livepeer documentation uses a consistent color palette defined in `snippets/styles/themeStyles.jsx`:
 
 ```jsx
-export const themeColor = {
+export const ThemeData = {
+  font: {
+    inter: "Inter, 'Inter Fallback', -apple-system, system-ui",
+  },
   light: {
-    accent: "#3CB540",      // Jade Green
-    text: "#6b7280",        // Gray
-    heroText: "#0C0C0C",    // Onyx Black
+    accent: "#3CB540",          // Jade Green
+    accentDark: "#18794E",      // Dark Green
+    heroText: "#181C18",        // Near Black
+    text: "#717571",            // Gray
+    mutedText: "#9ca3af",       // Light Gray
+    background: "#ffffff",      // White
+    cardBackground: "#f9fafb",  // Light Gray
+    border: "#e5e7eb",          // Border Gray
+    buttonText: "#ffffff",      // White
   },
   dark: {
-    accent: "#2b9a66",      // Darker Jade Green
-    text: "#9ca3af",        // Light Gray
-    heroText: "#ffffff",    // White
+    accent: "#2b9a66",          // Darker Jade Green
+    accentDark: "#18794E",      // Dark Green
+    heroText: "#E0E4E0",        // Near White
+    text: "#A0A4A0",            // Light Gray
+    mutedText: "#6b7280",       // Muted Gray
+    background: "#0d0d0d",      // Near Black
+    cardBackground: "#1a1a1a",  // Dark Gray
+    border: "#333333",          // Dark Border
+    buttonText: "#ffffff",      // White
   },
 };
 ```
@@ -28,8 +43,55 @@ export const themeColor = {
 ### Color Usage
 
 - **`heroText`**: Main headings and titles
-- **`accent`**: Subtitles, highlights, and brand elements
+- **`accent`**: Subtitles, highlights, brand elements, and icons
+- **`accentDark`**: Darker accent for step icons and emphasis
 - **`text`**: Body text and descriptions
+- **`mutedText`**: Secondary text and code notes
+- **`background`**: Page background
+- **`cardBackground`**: Card and container backgrounds
+- **`border`**: Borders and dividers
+- **`buttonText`**: Text on buttons (typically white)
+
+### Global CSS Variables
+
+The theme colors are also exposed as global CSS variables in `style.css`. These can be used directly without importing ThemeData:
+
+```css
+:root {
+  --accent: #3cb540;
+  --accent-dark: #18794e;
+  --hero-text: #181c18;
+  --text: #717571;
+  --muted-text: #9ca3af;
+  --background: #ffffff;
+  --card-background: #f9fafb;
+  --border: #e5e7eb;
+  --button-text: #ffffff;
+}
+
+.dark {
+  --accent: #2b9a66;
+  --accent-dark: #18794e;
+  --hero-text: #e0e4e0;
+  --text: #a0a4a0;
+  --muted-text: #6b7280;
+  --background: #0d0d0d;
+  --card-background: #1a1a1a;
+  --border: #333333;
+  --button-text: #ffffff;
+}
+```
+
+**Usage in components:**
+```jsx
+<div style={{ 
+  background: "var(--card-background)", 
+  border: "1px solid var(--border)",
+  color: "var(--text)"
+}}>
+  Theme-aware content
+</div>
+```
 
 ---
 
@@ -133,18 +195,19 @@ The `PageHeader` component provides a theme-aware hero section:
 ```
 
 **Theme Colors:**
-- Light mode: Onyx title (#0C0C0C), Jade subtitle (#3CB540)
-- Dark mode: White title (#ffffff), Dark Jade subtitle (#2b9a66)
+- Light mode: Near black title (#181C18), Jade subtitle (#3CB540)
+- Dark mode: Near white title (#E0E4E0), Dark Jade subtitle (#2b9a66)
 
 ---
 
 ## Best Practices
 
-1. **Use CSS variables for theme-aware colors** - Avoids JavaScript complexity
-2. **Define colors in one place** - Keep `themeColor` object as single source of truth
+1. **Use global CSS variables** - Prefer `var(--accent)` over hardcoded hex colors
+2. **Import ThemeData for component-level styles** - Use `ThemeData.light.accent` or `ThemeData.dark.accent` when defining CSS-in-JS variables
 3. **Test both themes** - Always verify components in light and dark mode
-4. **Provide fallbacks** - Use `var(--color, #fallback)` syntax
+4. **Provide fallbacks** - Use `var(--color, #fallback)` syntax for safety
 5. **Avoid hardcoded colors** - Use theme colors for consistency
+6. **Keep semantic colors fixed** - Trust scores (red/yellow/green), syntax highlighting, and preview callouts should NOT be theme-dependent
 
 ---
 
