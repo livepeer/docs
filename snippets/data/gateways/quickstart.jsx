@@ -120,11 +120,7 @@ export const createQuickstart = ({
 //   installStep: (
 //     <CustomCodeBlock
 //       codeString="sudo wget https://github.com/livepeer/go-livepeer/releases/download/{PLACEHOLDER}/livepeer-linux-amd64.tar.gz"
-<<<<<<< Updated upstream
 //       placeholderValue={latestVersion}
-=======
-//       placeholderValue={LatestRelease}
->>>>>>> Stashed changes
 //       language="bash"
 //       icon="terminal"
 //     />
@@ -163,11 +159,7 @@ export const createQuickstart = ({
 //   installStep: (
 //     <CustomCodeBlock
 //       codeString="sudo wget https://github.com/livepeer/go-livepeer/releases/download/{PLACEHOLDER}/livepeer-linux-amd64.tar.gz"
-<<<<<<< Updated upstream
 //       placeholderValue={latestVersion}
-=======
-//       placeholderValue={LatestRelease}
->>>>>>> Stashed changes
 //       language="bash"
 //       icon="terminal"
 //     />
@@ -206,11 +198,7 @@ export const createQuickstart = ({
 //   installStep: (
 //     <CustomCodeBlock
 //       codeString="https://github.com/livepeer/go-livepeer/releases/download/{PLACEHOLDER}/livepeer-windows-amd64.zip"
-<<<<<<< Updated upstream
 //       placeholderValue={latestVersion}
-=======
-//       placeholderValue={LatestRelease}
->>>>>>> Stashed changes
 //       language="bash"
 //       icon="terminal"
 //     />
@@ -249,11 +237,7 @@ export const createQuickstart = ({
 //   installStep: (
 //     <CustomCodeBlock
 //       codeString="https://github.com/livepeer/go-livepeer/releases/download/{PLACEHOLDER}/livepeer-windows-amd64.zip"
-<<<<<<< Updated upstream
 //       placeholderValue={latestVersion}
-=======
-//       placeholderValue={LatestRelease}
->>>>>>> Stashed changes
 //       language="bash"
 //       icon="terminal"
 //     />

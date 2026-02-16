@@ -1,0 +1,130 @@
+---
+title: 'BYOC (Bring Your Own Compute)'
+sidebarTitle: 'BYOC'
+description: 'Run your own AI models or GPU infrastructure on the Livepeer AI inference network: setup, configuration, and registration.'
+keywords: ["livepeer", "developers", "ai pipelines", "byoc", "bring your own compute", "comfystream", "workers"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+import { PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import { DynamicTable } from '/snippets/components/layout/table.jsx'
+
+<PreviewCallout />
+
+This guide details how to integrate your own AI models or GPU infrastructure into the Livepeer AI inference network. BYOC lets you run inference tasks with custom models (e.g. ControlNet, Whisper, SegFormer), deploy nodes across cloud, edge, or on-prem environments, and serve Livepeer inference workloads with economic incentives.
+
+<Note>
+For full BYOC architecture, Gateway/Orchestrator roles, container lifecycle, and Protocol vs AI BYOC concepts, see the [BYOC full guide](../byoc).
+</Note>
+
+## Requirements
+
+- Linux or Docker-capable machine with GPU (CUDA 11+)
+- Internet-accessible IP or NAT hole-punching
+- Git, Python 3.9+; optional ComfyUI fork for modular tasks
+- Livepeer Gateway credentials or API key for worker registration
+
+## Step 1 — Clone and setup
+
+```bash
+git clone https://github.com/livepeer/comfystream
+cd comfystream
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+Install your desired inference model(s):
+
+```bash
+python scripts/download.py --model whisper-large
+python scripts/download.py --model sdxl
+```
+
+## Step 2 — Configure node
+
+Edit your `config.yaml`:
+
+```yaml
+publicKey: "0xYourEthereumAddress"
+gatewayURL: "wss://gateway.livepeer.org"
+models:
+  - whisper-large
+  - sdxl
+heartbeat: true
+```
+
+Optional: run as Docker; add plugin adapters (e.g. segment-anything, blip2).
+
+## Step 3 — Start gateway node
+
+```bash
+python run.py --adapter grpc --gpu --model whisper-large
+```
+
+You should see logs for heartbeats to the Livepeer Gateway, job claims and model execution, and result uploads or webhooks.
+
+## Step 4 — Register (optional)
+
+Register your node on-chain (Arbitrum) so Gateways can discover and route work to you:
+
+```bash
+livepeer-cli gateway register \
+  --addr=1.2.3.4:5040 \
+  --models=whisper-large,sdxl \
+  --bond=100LPT \
+  --region=NA1
+```
+
+Contract and ABI references are in the Blockchain contracts docs under About / Resources.
+
+## Pipeline examples
+
+**Whisper + caption overlay:**
+
+```yaml
+pipeline:
+  - task: whisper-transcribe
+  - task: overlay
+    type: caption
+```
+
+**Blur faces + YOLO:**
+
+```yaml
+pipeline:
+  - task: object-detection
+    model: yolov8
+  - task: segment-blur
+    target: faces
+```
+
+## Troubleshooting
+
+<DynamicTable
+  headerList={["Issue", "Fix"]}
+  itemsList={[
+    { "Issue": "Node not receiving tasks", "Fix": "Check gatewayURL and firewall rules" },
+    { "Issue": "Models not loading", "Fix": "Confirm model paths and weights are present" },
+    { "Issue": "No GPU visible", "Fix": "Use nvidia-smi and check CUDA drivers" }
+  ]}
+/>
+
+## Developer notes
+
+- BYOC workers use the same Gateway Protocol as the rest of the Livepeer network. See Network technical architecture under About.
+- You can serve from multiple geographic regions.
+- Contribution rewards may be offered in LPT or credits; check the Forum and Builder opportunities.
+
+## See also
+
+- [AI Pipelines overview](./overview)
+- [ComfyStream](./comfystream)
+- [BYOC full guide](../byoc) — Architecture, Gateway/Orchestrator, container lifecycle
+- [Network interfaces](/about/network/interfaces)
+
+## Resources
+
+- [ComfyStream GitHub](https://github.com/livepeer/comfystream)
+- [Model registry (Forum)](https://forum.livepeer.org/t/model-registry)
+- [Livepeer Studio AI docs](https://livepeer.studio/docs/ai)

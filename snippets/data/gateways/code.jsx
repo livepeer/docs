@@ -1,5 +1,4 @@
 // Segmented Code Blocks
-<<<<<<< Updated upstream
 // DOCKER
 // preNote is STRING ONLY. Cannot accept mintlify components.
 // Will move this to a different view instead.
@@ -1140,30 +1139,11 @@ export const CONFIG_FILES = {
   },
 };
 
-=======
-
-import { ValueResponseField } from "/snippets/components/response-field";
-
-// DOCKER
-
-export const DOCKER_CODE = {
-  install: `docker pull livepeer/go-livepeer:master`,
-  create: `docker volume create dual-gateway-lpData`,
-  run: `docker-compose up -d`,
-  verify: `docker logs dual-gateway`,
-  flags: `docker run --rm livepeer/go-livepeer:master -help`,
-};
-
-export const BASH_CODE = {
-  sendVideo: `ffmpeg -re -i test-video.mp4 -c copy -f flv rtmp://localhost:1935/stream/test-key`,
-};
->>>>>>> Stashed changes
 // The FFmpeg command:
 // Reads test-video.mp4 from your local filesystem
 // Streams it to the gateway's RTMP endpoint at localhost:1935
 // Uses the stream key test-key ingest.md:21-33
 
-<<<<<<< Updated upstream
 export const FFMPEG_CODE = {
   install: {
     macOS: {
@@ -1185,55 +1165,6 @@ export const FFMPEG_CODE = {
       codeString: `choco install ffmpeg`,
     },
   },
-=======
-export const createCodeBlock = (codeString, language, icon, ...props) => {
-  const code = `docker pull livepeer/go-livepeer:master`;
-  return (
-    <CustomCodeBlock
-      codeString={code}
-      language="bash"
-      icon="terminal"
-      {...props}
-    />
-  );
-};
-
-export const expandableCode = () => {
-  return (
-    <Expandable title="Required Flags">
-      <ResponseField name="flag" type="type" default="hi">
-        Description
-      </ResponseField>
-    </Expandable>
-  );
-};
-
-export const CustomResponseField = ({ description, ...props }) => {
-  const uniqueId = `custom-rf-${Math.random().toString(36).substring(2, 11)}`;
-
-  return (
-    <div className={uniqueId}>
-      <style>{`
-        .${uniqueId} > .field {
-          border-bottom: none !important;
-          margin-bottom: -20px !important;
-        }
-      `}</style>
-      <ResponseField {...props}>{description}</ResponseField>
-    </div>
-  );
-};
-
-export const ResponseFieldExpandable = ({ fields = {}, ...props }) => {
-  const fieldsArray = Array.isArray(fields) ? fields : Object.values(fields);
-  return (
-    <Expandable {...props}>
-      {fieldsArray.map((field, index) => (
-        <ValueResponseField key={index} {...field} />
-      ))}
-    </Expandable>
-  );
->>>>>>> Stashed changes
 };
 
 // old stuff
