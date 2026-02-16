@@ -1,37 +1,30 @@
 # Audit Report: v2 Missing or Incomplete Pages
 
-**Date:** 2024-12-19  
-**Branch:** `docs-plan/15-audit-v2-missing-incomplete`  
-**Scope:** All v2 pages referenced in docs.json
+## Summary
 
-## Executive Summary
-
-This audit examined all 254 pages referenced in `docs.json` that point to v2 MDX files. The audit identified:
-
-- **22 missing files** — Referenced in navigation but files don't exist
-- **22 placeholder files** — Contain placeholder text (Coming soon, TODO, TBD, WIP, etc.)
-- **172 incomplete files** — Have minimal content, empty sections, or appear incomplete
-- **37 complete files** — Appear to have substantial, complete content
-
-**Total issues identified:** 216 pages (85% of all v2 pages)
+- **Total pages in docs.json:** 254
+- **Missing files:** 22
+- **Placeholder files:** 22
+- **Incomplete files:** 172
+- **Complete files:** 37
 
 ---
 
-## Missing Files (22)
+## Missing Files
 
 These pages are referenced in docs.json but the files do not exist:
 
 | Page Path | Issue | Suggested Action |
 |-----------|-------|-----------------|
-| `v2/pages/00_home/changelog/changelog` | File not found | File exists in `07_resources/changelog/changelog.mdx` - update docs.json path |
-| `v2/pages/00_home/changelog/migration-guide` | File not found | File exists in `07_resources/changelog/migration-guide.mdx` - update docs.json path |
+| `v2/pages/00_home/changelog/changelog` | File not found | File may exist in 07_resources/changelog - verify and update docs.json path |
+| `v2/pages/00_home/changelog/migration-guide` | File not found | File may exist in 07_resources/changelog - verify and update docs.json path |
 | `v2/pages/010_products/products/streamplace/streamplace-funding` | File not found | Create file or remove from docs.json |
 | `v2/pages/02_community/livepeer-community/latest-topics` | File not found | Create file or remove from docs.json |
 | `v2/pages/02_community/livepeer-community/media-kit` | File not found | Create file or remove from docs.json |
 | `v2/pages/02_community/livepeer-community/trending-test` | File not found | Create file or remove from docs.json |
 | `v2/pages/04_gateways/references/video-flags` | File not found | Create file or remove from docs.json |
-| `v2/pages/04_gateways/run-a-gateway/get-AI-to-setup-the-gateway` | File not found | May exist as `.mdx` in `quickstart/` subdirectory - verify |
-| `v2/pages/04_gateways/run-a-gateway/quickstart-a-gateway` | File not found | May exist as `.mdx` in `quickstart/` subdirectory - verify |
+| `v2/pages/04_gateways/run-a-gateway/get-AI-to-setup-the-gateway` | File not found | Create file or remove from docs.json |
+| `v2/pages/04_gateways/run-a-gateway/quickstart-a-gateway` | File not found | Create file or remove from docs.json |
 | `v2/pages/04_gateways/run-a-gateway/test/playback-content` | File not found | Create file or remove from docs.json |
 | `v2/pages/04_gateways/run-a-gateway/test/publish-content` | File not found | Create file or remove from docs.json |
 | `v2/pages/04_gateways/run-a-gateway/test/test-gateway` | File not found | Create file or remove from docs.json |
@@ -39,18 +32,18 @@ These pages are referenced in docs.json but the files do not exist:
 | `v2/pages/04_gateways/using-gateways/gateway-providers/streamplace` | File not found | Create file or remove from docs.json |
 | `v2/pages/05_orchestrators/setting-up-an-orchestrator/setting-up-an-orchestrator/data-centres-and-large-scale-hardware-providers` | File not found | Create file or remove from docs.json |
 | `v2/pages/07_resources/ai-inference-on-livepeer/livepeer-ai/livepeer-ai-content-directory` | File not found | Create file or remove from docs.json |
-| `v2/pages/07_resources/changelog/migration-guides` | File not found | May be `migration-guide.mdx` (singular) - verify |
+| `v2/pages/07_resources/changelog/migration-guides` | File not found | Create file or remove from docs.json |
 | `v2/pages/07_resources/concepts/livepeer-actors` | File not found | Create file or remove from docs.json |
 | `v2/pages/07_resources/concepts/livepeer-core-concepts` | File not found | Create file or remove from docs.json |
 | `v2/pages/07_resources/documentation-guide/component-library` | File not found | Create file or remove from docs.json |
-| `v2/pages/07_resources/redirect` | File not found | Create redirect file or remove from docs.json |
-| `v2/pages/08_help/redirect` | File not found | Create redirect file or remove from docs.json |
+| `v2/pages/07_resources/redirect` | File not found | Create file or remove from docs.json |
+| `v2/pages/08_help/redirect` | File not found | Create file or remove from docs.json |
 
 ---
 
-## Placeholder Files (22)
+## Placeholder Files
 
-These pages contain placeholder text (Coming soon, TODO, TBD, WIP, etc.):
+These pages contain placeholder text (Coming soon, TODO, TBD, etc.):
 
 | Page Path | Placeholder Text | Suggested Action |
 |-----------|------------------|------------------|
@@ -79,9 +72,9 @@ These pages contain placeholder text (Coming soon, TODO, TBD, WIP, etc.):
 
 ---
 
-## Incomplete Files (172)
+## Incomplete Files
 
-These pages exist but have minimal content, empty sections, or appear incomplete. Showing first 50:
+These pages exist but have minimal content, empty sections, or appear incomplete:
 
 | Page Path | Issue | Suggested Action |
 |-----------|-------|------------------|
@@ -136,121 +129,14 @@ These pages exist but have minimal content, empty sections, or appear incomplete
 | `v2/pages/01_about/core-concepts/livepeer-overview` | Contains empty sections (heading with no content) | Add content to complete the page |
 | `v2/pages/01_about/core-concepts/mental-model` | Contains empty sections (heading with no content) | Add content to complete the page |
 
-*... and 122 more incomplete files. See full list in audit_results.json*
+*... and 122 more incomplete files*
 
-**Note:** Many files flagged as "incomplete" may have substantial content overall but contain empty sections or minimal content in certain areas. These should be reviewed individually to determine if they need completion.
-
----
-
-## Key Findings
-
-### High Priority Issues
-
-1. **Missing Files (22)**
-   - Several files are referenced in docs.json but don't exist
-   - Some may exist in different locations (e.g., changelog files)
-   - Some may need to be created or removed from navigation
-
-2. **Placeholder Files (22)**
-   - Files with explicit placeholder text should be prioritized
-   - Many gateway-related pages contain TODOs
-   - Developer tools section has multiple WIP pages
-
-3. **Incomplete Files (172)**
-   - Large number of pages with empty sections or minimal content
-   - Many Livepeer Studio product pages appear to have structure but lack content
-   - Introduction and showcase pages need content completion
-
-### Patterns Observed
-
-- **Livepeer Studio pages:** Many guide pages have structure but empty content sections
-- **Gateway pages:** Multiple placeholder and missing files in gateway documentation
-- **Product pages:** Several product overview pages are incomplete
-- **Changelog:** Files exist but in different location than referenced in docs.json
 
 ---
 
-## Recommendations
+## Notes
 
-### Immediate Actions
-
-1. **Fix path mismatches:**
-   - Update docs.json to point to correct changelog file locations
-   - Verify and fix any other path discrepancies
-
-2. **Prioritize placeholder files:**
-   - Replace all "Coming soon", "TODO", "TBD", "WIP" placeholders
-   - Focus on high-traffic pages first (developer tools, gateway quickstarts)
-
-3. **Complete missing files:**
-   - Create missing files or remove from docs.json if not needed
-   - Pay special attention to gateway test pages and redirect files
-
-### Medium-Term Actions
-
-1. **Content completion:**
-   - Review and complete incomplete files, starting with high-priority sections
-   - Focus on Livepeer Studio guides and product pages
-   - Complete introduction and showcase pages
-
-2. **Quality review:**
-   - Manually review files flagged as "incomplete" to verify they actually need content
-   - Some may be intentionally minimal or have content in components
-
-### Long-Term Actions
-
-1. **Process improvements:**
-   - Establish process to prevent placeholder content from being committed
-   - Add pre-commit checks for placeholder text
-   - Regular audits to catch incomplete pages early
-
-2. **Documentation standards:**
-   - Define minimum content requirements for pages
-   - Create templates for common page types
-   - Establish review process for new pages
-
----
-
-## Methodology
-
-This audit was performed by:
-
-1. Extracting all v2 page paths from `docs.json` (254 unique paths)
-2. Checking file existence (with `.mdx` and `.md` extensions)
-3. Scanning file contents for:
-   - Placeholder text patterns (Coming soon, TODO, TBD, WIP, etc.)
-   - Minimal content (less than 50 chars after frontmatter)
-   - Empty sections (headings with no following content)
-   - Very short content (less than 20 words)
-
-**Limitations:**
-- Some files flagged as "incomplete" may have substantial content but contain empty sections
-- Detection of empty sections may flag files that are intentionally structured differently
-- Manual review recommended for files flagged as incomplete
-
----
-
-## Testing
-
-The audit script was tested on a sample of files to verify accuracy:
-- Verified missing files don't exist
-- Confirmed placeholder text detection
-- Validated incomplete file detection logic
-
----
-
-## Follow-up Actions
-
-1. Review this report with documentation team
-2. Prioritize fixes based on user impact
-3. Create tickets for missing and placeholder files
-4. Schedule content completion sprints for incomplete files
-5. Update docs.json to fix path mismatches
-6. Consider automated checks to prevent future issues
-
----
-
-## Files Generated
-
-- `/tmp/audit_results.json` - Full JSON results with all findings
-- `/tmp/v2_pages.txt` - List of all v2 page paths from docs.json
+- Some files flagged as 'incomplete' may have substantial content but contain empty sections or minimal content in certain areas.
+- Files with placeholder text should be prioritized for content creation.
+- Missing files should either be created or removed from docs.json navigation.
+- Some paths in docs.json may point to incorrect locations (e.g., changelog files).
