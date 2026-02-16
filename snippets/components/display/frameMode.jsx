@@ -172,8 +172,7 @@ const H1 = ({
   align = "left",
   gap = "0.75rem",
 }) => {
-  // Use theme-aware color if not specified
-  const defaultIconColor = iconColor || "var(--h1-icon-color)";
+  const resolvedIconColor = iconColor || "var(--accent)";
 
   const containerStyle = {
     display: icon ? "flex" : "block",
@@ -196,8 +195,6 @@ const H1 = ({
     color: "var(--hero-text)",
     opacity: 1,
   };
-
-  const resolvedIconColor = iconColor || "var(--accent)";
 
   return (
     <div style={containerStyle}>
