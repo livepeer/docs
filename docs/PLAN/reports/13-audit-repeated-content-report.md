@@ -4,112 +4,96 @@
 
 | Metric | Count |
 |--------|-------|
-| **Files with PreviewCallout/ComingSoonCallout** | 100+ |
-| **Portal pages with repeated imports** | 9 |
-| **Duplicate glossary files** | 2 |
-| **Files with "Broadcaster" note** | 30+ |
-| **API endpoint references** | 8+ |
-| **Technical architecture pages** | 5+ |
+| **Duplicate Protocol/Network definitions** | 5+ locations (exact text) |
+| **Duplicate glossary files** | 2 (nearly identical, 400+ lines) |
+| **Duplicate actor definitions** | 10+ locations |
+| **Files with "Broadcaster" note** | 30+ (exact same text) |
+| **API endpoint descriptions** | 8+ (duplicated text) |
+| **Installation method descriptions** | Multiple (repeated text) |
 
 ---
 
 ## Executive Summary
 
-This audit identified significant content duplication across v2 MDX files, snippets, and callouts. The main categories of repetition are:
+This audit identified significant **content duplication** (actual text/paragraphs) across v2 MDX files. The main categories are:
 
-1. **Component/Code Repetition**: Callout imports, portal imports, repeated component usage
-2. **Content Repetition**: Glossary definitions, API endpoints, technical architecture descriptions, installation notes, terminology explanations
-3. **Copy Repetition**: Warning messages, notes about deprecated terms, setup instructions
+1. **Exact Text Duplication**: Same paragraphs appearing verbatim in multiple files
+2. **Near-Identical Content**: Slightly varied versions of the same explanations
+3. **Repeated Definitions**: Terms and concepts defined multiple times with same/similar wording
+4. **Duplicate Explanations**: Same setup instructions, API descriptions, architecture overviews
 
-**Key Finding**: Many duplications are already documented in `docs/DRY-and-cleaner-recommendations.md`. This audit adds content-specific duplications and provides concrete locations and consolidation strategies.
+**Key Finding**: Core concepts (Protocol, Network, Actors) are defined in 5+ different locations with identical or near-identical text. This creates maintenance burden and inconsistency risk.
 
 ---
 
-## 1. Code/Component Repetition
+## 1. Exact Text Duplication
 
-### 1.1 Callout Import + Usage (100+ files)
+### 1.1 Protocol Definition — Exact Duplication (5 locations)
 
-**Problem:** Almost every page repeats:
-```mdx
-import { PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
-<PreviewCallout />
+**Exact Text:**
+```
+The protocol is the ruleset + on-chain logic governing:
+
+- staking
+- delegation
+- inflation & rewards
+- orchestrator selection
+- slashing
+- probabilistic payments
+- verification rules
+
+The economic and coordination layer that enforces correct behavior.
 ```
 
 **Locations:**
-- `v2/pages/07_resources/documentation-guide/*.mdx` (5 files)
-- `v2/pages/04_gateways/**/*.mdx` (30+ files)
-- `v2/pages/05_orchestrators/**/*.mdx` (10+ files)
-- `v2/pages/03_developers/**/*.mdx` (20+ files)
-- `v2/pages/010_products/**/*.mdx` (50+ files)
-- And many more...
+- `v2/pages/01_about/core-concepts/livepeer-core-concepts.mdx` (lines 72-82)
+- `v2/pages/01_about/resources/livepeer-glossary.mdx` (lines 64-76)
+- `v2/pages/07_resources/livepeer-glossary.mdx` (lines 64-76)
+- `v2/pages/01_about/core-concepts/livepeer-overview.mdx` (similar, lines 64-73)
+- `v2/pages/01_about/faq-about.mdx` (similar structure)
 
-**Recommendation:** 
-- **Single-source via frontmatter**: Use `status: preview` in frontmatter, inject callout via layout/wrapper
-- **OR wrapper component**: `<DocPage status="preview">...</DocPage>` that handles callout rendering
-- **Reference**: See `docs/DRY-and-cleaner-recommendations.md` §1.1
+**Recommendation:**
+- **Single source**: Keep definition in glossary (`v2/pages/07_resources/livepeer-glossary.mdx`)
+- **Link pattern**: Other pages should say "The **Livepeer Protocol** (see [Glossary](/resources/livepeer-glossary#livepeer-protocol)) is..." or use a component
+- **Action**: Remove duplicate definitions, replace with links to glossary
 
 ---
 
-### 1.2 Portal Pages — Repeated Imports (9 files)
+### 1.2 Network Definition — Exact Duplication (5 locations)
 
-**Problem:** Each portal page repeats 5-7 import lines:
-```mdx
-import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, ... } from '/snippets/components/domain/SHARED/Portals.jsx'
-import { ThemeData } from '/snippets/styles/themeStyles.jsx'
-import { H1, H2, H5, P } from '/snippets/components/display/frameMode.jsx'
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
-import { BlinkingIcon } from '/snippets/components/primitives/links.jsx'
+**Exact Text:**
+```
+The network is the actual running system of machines performing work:
+
+- Orchestrators (GPU nodes)
+- Transcoders / Workers
+- Gateways
+- Broadcasters
+- Verification processes
+- Job routing
+- Real-time AI & video compute
+
+It is the live, operational decentralized GPU mesh running video + AI jobs.
 ```
 
 **Locations:**
-- `v2/pages/00_home/mission-control.mdx`
-- `v2/pages/01_about/about-portal.mdx`
-- `v2/pages/02_community/community-portal.mdx`
-- `v2/pages/03_developers/developer-portal.mdx`
-- `v2/pages/04_gateways/gateways-portal.mdx`
-- `v2/pages/05_orchestrators/orchestrators-portal.mdx`
-- `v2/pages/06_lptoken/token-portal.mdx`
-- `v2/pages/07_resources/documentation-guide/component-library.mdx`
-- `v2/pages/010_products/products-portal.mdx`
+- `v2/pages/01_about/core-concepts/livepeer-core-concepts.mdx` (lines 86-96)
+- `v2/pages/01_about/resources/livepeer-glossary.mdx` (lines 78-90)
+- `v2/pages/07_resources/livepeer-glossary.mdx` (lines 78-91) - *slight variation: includes "On-chain treasury"*
+- `v2/pages/01_about/core-concepts/livepeer-overview.mdx` (lines 77-85, similar)
+- `v2/pages/01_about/faq-about.mdx` (similar structure)
 
 **Recommendation:**
-- **Barrel export**: Create `snippets/components/domain/SHARED/portalLayout.jsx` that re-exports all portal dependencies
-- **OR single component**: `<PortalLayout title="..." subtitle="...">...</PortalLayout>` that accepts props
-- **Reference**: See `docs/DRY-and-cleaner-recommendations.md` §1.2
+- **Single source**: Keep in glossary, use most complete version (07_resources)
+- **Link pattern**: Other pages link to glossary definition
+- **Action**: Remove duplicates, standardize on one definition
 
 ---
 
-## 2. Content Repetition
+### 1.3 "Broadcaster" Deprecation Note — Exact Duplication (30+ files)
 
-### 2.1 Duplicate Glossary Files
-
-**Problem:** Two nearly identical glossary files with slight variations:
-
-**Location A:** `v2/pages/01_about/resources/livepeer-glossary.mdx`
-- Contains: Protocol/Network definitions, Actors, Web3 terms, Video terms, AI terms
-- Missing: "On-chain treasury" in Network definition, some Business & Investment terms
-
-**Location B:** `v2/pages/07_resources/livepeer-glossary.mdx`
-- Contains: Same content as Location A
-- Additional: "On-chain treasury" in Network definition, Business & Investment Terminology section
-
-**Differences:**
-- Line 89: Location B has "- On-chain treasury" in Network definition
-- Location B has additional section "# Business & Investment Terminology" (lines 445-456)
-
-**Recommendation:**
-- **Consolidate**: Keep one canonical glossary (recommend `v2/pages/07_resources/livepeer-glossary.mdx` as it's more complete)
-- **Link from About**: Update `v2/pages/01_about/resources/livepeer-glossary.mdx` to redirect/link to the canonical version
-- **Single source**: Use `snippets/scripts/generate-data/scripts/generate-glossary.js` to generate glossary from MDX scan
-- **Action**: Delete duplicate or convert to redirect page
-
----
-
-### 2.2 "Broadcaster" Deprecation Note (30+ files)
-
-**Problem:** The same note about Gateway being formerly called "Broadcaster" appears in multiple files:
-
-```mdx
+**Exact Text:**
+```
 <Note>
   The Livepeer Gateway was previously called the Livepeer Broadcaster so you
   will see some commands and labels still use the Broadcaster name that haven't
@@ -118,296 +102,345 @@ import { BlinkingIcon } from '/snippets/components/primitives/links.jsx'
 ```
 
 **Locations:**
-- `v2/pages/04_gateways/run-a-gateway/install/install-overview.mdx` (line 21-25)
+- `v2/pages/04_gateways/run-a-gateway/install/install-overview.mdx` (lines 21-25)
 - `v2/pages/04_gateways/references/configuration-flags.mdx`
 - `v2/pages/04_gateways/references/configuration-flags-old.mdx`
 - `v2/pages/04_gateways/gateways-portal.mdx`
 - `v2/pages/01_about/livepeer-protocol/technical-architecture.mdx`
 - `v2/pages/01_about/about-portal.mdx`
-- `v2/pages/01_about/livepeer-protocol/overview.mdx`
-- And 20+ more files (see grep results)
+- `v1/gateways/guides/gateway-overview.mdx` (lines 11-15)
+- And 20+ more files
 
 **Recommendation:**
-- **Single component**: Create `<GatewayTerminologyNote />` in `snippets/components/domain/04_GATEWAYS/callouts.jsx` (already exists pattern)
-- **OR**: Include in gateway explainer page and link from other pages
-- **OR**: Add to glossary entry for "Gateway" and reference glossary
-- **Action**: Replace all instances with component or remove if redundant
+- **Single source**: Add to glossary entry for "Gateway" with note about deprecated term
+- **OR component**: Create `<GatewayTerminologyNote />` component (already exists pattern in `snippets/components/domain/04_GATEWAYS/callouts.jsx`)
+- **Action**: Replace all 30+ instances with component or remove if redundant (reference glossary instead)
 
 ---
 
-### 2.3 API Endpoint References (8+ files)
+### 1.4 Actor Definitions — Near-Exact Duplication (10+ locations)
 
-**Problem:** Base URL and endpoint descriptions repeated across multiple pages:
-
-**Studio API Base URL:**
-- `https://livepeer.studio/api` mentioned in:
-  - `v2/pages/01_about/livepeer-network/technical-architecture.mdx` (line 103)
-  - `v2/pages/01_about/livepeer-network/interfaces.mdx` (line 33)
-  - `v2/pages/010_products/products/livepeer-studio/api-reference/overview.mdx`
-  - `v2/pages/03_developers/technical-references/apis.mdx`
-  - And more...
-
-**Explorer API:**
-- `https://explorer.livepeer.org/graphql` mentioned in:
-  - `v2/pages/01_about/livepeer-network/technical-architecture.mdx` (line 104)
-  - `v2/pages/01_about/livepeer-network/interfaces.mdx` (line 58)
-  - And more...
-
-**Recommendation:**
-- **Single source**: Create `snippets/data/api-endpoints.json` with canonical endpoint definitions
-- **Component**: `<ApiEndpoint name="studio" />` or `<ApiEndpoint name="explorer" />` that renders base URL + description
-- **Reference page**: Create `v2/pages/03_developers/technical-references/api-endpoints.mdx` as single source
-- **Link**: Other pages link to reference page instead of duplicating
-
----
-
-### 2.4 Technical Architecture Descriptions (5+ files)
-
-**Problem:** Similar technical architecture overviews appear in multiple locations:
+**Gateway Definition (appears in 3+ places):**
+```
+A _gateway_ is a Livepeer node operated by a user or organization to interact **directly with the Livepeer protocol**.  
+Gateways submit jobs, route work to orchestrators, manage payment flows, and provide a direct interface to the network.  
+**Not** the same as hosted services like Studio or Daydream.
+```
 
 **Locations:**
-- `v2/pages/01_about/livepeer-protocol/technical-architecture.mdx`
-  - Focus: Protocol layer (on-chain, smart contracts)
-  - Content: go-livepeer architecture, node types (Gateway, Orchestrator, Worker)
+- `v2/pages/01_about/resources/livepeer-glossary.mdx` (lines 120-124)
+- `v2/pages/07_resources/livepeer-glossary.mdx` (lines 120-124)
+- `v2/pages/07_resources/concepts/livepeer-101.mdx` (similar)
 
-- `v2/pages/01_about/livepeer-network/technical-architecture.mdx`
-  - Focus: Network layer (off-chain execution)
-  - Content: APIs, CLI, SDKs, monitoring
+**Orchestrator Definition (appears in 5+ places):**
+```
+A supply-side operator that contributes **GPU resources** to the network.  
+Orchestrators receive jobs, perform transcoding or AI inference, and get paid via LPT rewards + ETH fees.
+```
 
-- `v2/pages/04_gateways/references/technical-architecture.mdx`
-  - Focus: Gateway-specific architecture
-  - Content: Network layers, routing paths, gateway components
+**Locations:**
+- `v2/pages/01_about/resources/livepeer-glossary.mdx` (lines 126-129)
+- `v2/pages/07_resources/livepeer-glossary.mdx` (lines 126-129)
+- `v2/pages/01_about/livepeer-network/actors.mdx` (similar, lines 25-33)
+- `v2/pages/01_about/core-concepts/concepts/actors.mdx` (similar, lines 15-18)
+- `v2/pages/01_about/livepeer-network/livepeer-actors/orchestrators.mdx` (similar)
 
-- `v2/pages/04_gateways/about-gateways/gateway-architecture.mdx`
-  - Focus: Gateway architecture explainer
-  - Content: Gateway role, components, interactions
+**Delegator Definition (appears in 4+ places):**
+```
+A token holder who stakes their LPT to an orchestrator to help secure the network and earn a share of rewards.
+```
 
-- `docs/ABOUT/CONTEXT DATA/Protocol/livepeer_technical_architecture.md`
-  - Focus: Deep technical dive
-  - Content: System overview, on-chain architecture, off-chain components
+**Locations:**
+- `v2/pages/01_about/resources/livepeer-glossary.mdx` (lines 135-137)
+- `v2/pages/07_resources/livepeer-glossary.mdx` (lines 135-137)
+- `v2/pages/01_about/livepeer-network/actors.mdx` (similar)
+- `v2/pages/01_about/core-concepts/concepts/actors.mdx` (similar)
 
 **Recommendation:**
-- **Hierarchical structure**: 
-  - Protocol technical architecture → on-chain focus
-  - Network technical architecture → off-chain focus
-  - Gateway technical architecture → gateway-specific (link to network architecture)
-- **Cross-reference**: Each page should link to related architecture pages
-- **Single deep dive**: Keep `docs/ABOUT/CONTEXT DATA/Protocol/livepeer_technical_architecture.md` as context data, reference from public pages
-- **Action**: Review each page, ensure clear scope, add cross-links, remove redundant descriptions
+- **Single source**: Glossary is canonical for all actor definitions
+- **Link pattern**: Other pages should say "An **Orchestrator** (see [Glossary](/resources/livepeer-glossary#orchestrator)) is..." or use component
+- **Component option**: `<TermDefinition term="orchestrator" />` that links to glossary
+- **Action**: Review all actor definitions, ensure consistency, link to glossary instead of redefining
 
 ---
 
-### 2.5 Installation Instructions — Gateway Modes (Multiple files)
+## 2. Near-Identical Content
 
-**Problem:** Description of Gateway modes (off-chain vs on-chain) repeated:
+### 2.1 Duplicate Glossary Files (2 files, 400+ lines)
 
-**Content:**
-```mdx
+**Problem:** Two nearly identical glossary files with only minor differences:
+
+**Location A:** `v2/pages/01_about/resources/livepeer-glossary.mdx`
+- 400+ lines
+- Contains: Protocol/Network definitions, Actors, Web3 terms, Video terms, AI terms
+- Missing: "On-chain treasury" in Network definition (line 89)
+- Missing: Business & Investment Terminology section
+
+**Location B:** `v2/pages/07_resources/livepeer-glossary.mdx`
+- 456 lines
+- Contains: Same 400+ lines as Location A
+- Additional: "On-chain treasury" in Network definition (line 89)
+- Additional: "# Business & Investment Terminology" section (lines 445-456)
+
+**Exact Duplications:**
+- Lines 1-100: Identical frontmatter and initial content
+- Lines 64-76: Identical Protocol definition
+- Lines 78-90: Network definition (Location B has one extra bullet)
+- Lines 98-156: Identical actor definitions
+- Lines 164-440: Identical core concepts, web3 terms, video terms, AI terms
+
+**Recommendation:**
+- **Consolidate**: Keep `v2/pages/07_resources/livepeer-glossary.mdx` as canonical (more complete)
+- **Redirect**: Convert `v2/pages/01_about/resources/livepeer-glossary.mdx` to redirect or link to canonical version
+- **Action**: Delete duplicate file or convert to redirect page
+
+---
+
+### 2.2 Protocol vs Network Table — Duplication (3+ locations)
+
+**Exact Table:**
+```
+| Layer                 | Description                                                                   |
+| --------------------- | ----------------------------------------------------------------------------- |
+| **Livepeer Protocol** | On-chain crypto-economic incentives & coordination; staking; payments.        |
+| **Livepeer Network**  | Off-chain nodes performing real-time work (transcoding, inference, routing).  |
+| **Relationship**      | The network _runs_ the compute; the protocol _governs, secures, and pays_ it. |
+```
+
+**Locations:**
+- `v2/pages/01_about/core-concepts/livepeer-core-concepts.mdx` (lines 100-104)
+- `v2/pages/01_about/core-concepts/livepeer-overview.mdx` (lines 100-104)
+- Similar variations in other files
+
+**Recommendation:**
+- **Single source**: Keep in one canonical location (e.g., `livepeer-core-concepts.mdx`)
+- **Link**: Other pages link to canonical location
+- **Component option**: `<ProtocolVsNetworkTable />` component
+
+---
+
+### 2.3 API Endpoint Descriptions — Duplication (8+ files)
+
+**Studio API Base URL:**
+```
+Available at: `https://livepeer.studio/api`
+
+**Common endpoints:**
+- `POST /stream` — Create video stream ingest session
+- `POST /transcode` — On-demand file transcode
+- `POST /ai/infer` — Submit AI job (e.g. image enhancement)
+- `GET /session/:id` — Fetch session status
+
+**Docs:** [livepeer.studio/docs](https://livepeer.studio/docs)
+```
+
+**Locations:**
+- `v2/pages/01_about/livepeer-network/interfaces.mdx` (lines 31-42)
+- `v2/pages/01_about/livepeer-network/technical-architecture.mdx` (lines 90-104)
+- `v2/pages/010_products/products/livepeer-studio/api-reference/overview.mdx` (similar)
+- `v2/pages/03_developers/technical-references/apis.mdx` (similar)
+
+**Explorer API:**
+```
+**Endpoint:** `https://explorer.livepeer.org/graphql`
+
+**Example query:**
+```graphql
+query GetOrchestrators {
+  orchestrators {
+    id
+    totalStake
+    rewardCut
+    serviceURI
+  }
+}
+```
+```
+
+**Locations:**
+- `v2/pages/01_about/livepeer-network/interfaces.mdx` (lines 54-73)
+- `v2/pages/01_about/livepeer-network/technical-architecture.mdx` (lines 104-105)
+- Similar in other files
+
+**Recommendation:**
+- **Single source**: Create `v2/pages/03_developers/technical-references/api-endpoints.mdx` as canonical reference
+- **Data file**: Create `snippets/data/api-endpoints.json` with endpoint definitions
+- **Link pattern**: Other pages link to reference page instead of duplicating
+- **Action**: Consolidate all API endpoint descriptions into single reference page
+
+---
+
+### 2.4 Installation Method Descriptions — Repetition
+
+**Text Pattern:**
+```
+Installing a Gateway means installing the go-livepeer Gateway code.
+
+You can either install using
+
+1. Docker (recommended)
+2. Building from source (binary)
+3. Using community developed tooling like GWID for one-click installation & deployment.
+```
+
+**Locations:**
+- `v2/pages/04_gateways/run-a-gateway/install/install-overview.mdx` (lines 27-35)
+- `v2/pages/04_gateways/run-a-gateway/quickstart/quickstart-a-gateway.mdx` (similar, lines 66-68)
+- Similar in other installation pages
+
+**Gateway Modes Description:**
+```
 You can run a gateway
-- **Off-chain** -> dev or local mode
-- **On-chain** -> production mode connected to the blockchain-based Livepeer network.
+
+- Off-chain -> dev or local mode
+- On-chain -> production mode connected to the blockchain-based Livepeer network.
 ```
 
 **Locations:**
 - `v2/pages/04_gateways/run-a-gateway/install/install-overview.mdx` (lines 39-43)
-- `v2/pages/04_gateways/run-a-gateway/quickstart/quickstart-a-gateway.mdx` (similar content)
-- And likely in other gateway setup pages
+- `v2/pages/04_gateways/run-a-gateway/quickstart/quickstart-a-gateway.mdx` (similar, line 67)
 
 **Recommendation:**
-- **Single source**: Create `v2/pages/04_gateways/run-a-gateway/about-gateway-modes.mdx` as explainer
-- **Component**: `<GatewayModesExplanation />` component
-- **Link**: Reference from installation/quickstart pages instead of duplicating
+- **Single source**: Create `v2/pages/04_gateways/run-a-gateway/about-gateway-modes.mdx` for modes explanation
+- **Link pattern**: Installation pages link to modes explainer instead of duplicating
+- **Action**: Consolidate installation method descriptions
 
 ---
 
-### 2.6 go-livepeer References (50+ files)
+## 3. Repeated Explanations
 
-**Problem:** References to "go-livepeer" (the GitHub repo) appear throughout with varying formats:
+### 3.1 go-livepeer References — Inconsistent Descriptions (50+ files)
 
-**Locations:**
-- `v2/pages/04_gateways/run-a-gateway/install/install-overview.mdx`: "Installing a Gateway means installing the go-livepeer Gateway code"
-- `v2/pages/05_orchestrators/orchestrators-portal.mdx`: "Running an orchestrator means operating a **go-livepeer** node"
-- `v2/pages/01_about/livepeer-protocol/technical-architecture.mdx`: "The [go-livepeer](https://github.com/livepeer/go-livepeer) architecture"
-- And 50+ more files
+**Variations found:**
+- "Installing a Gateway means installing the go-livepeer Gateway code"
+- "Running an orchestrator means operating a **go-livepeer** node"
+- "The [go-livepeer](https://github.com/livepeer/go-livepeer) architecture"
+- "Gateways install the Go-Livepeer Gateway Software"
+
+**Locations:** 50+ files across gateways, orchestrators, about sections
 
 **Recommendation:**
-- **Consistent link format**: Use `<DoubleIconLink label="go-livepeer" href="https://github.com/livepeer/go-livepeer" iconLeft="github" />` component
-- **OR**: Define in glossary and reference
-- **Action**: Standardize all references to use consistent component/link format
+- **Standardize**: Use consistent description: "go-livepeer is the open-source Livepeer node software"
+- **Glossary entry**: Add "go-livepeer" to glossary with canonical definition
+- **Link format**: Use consistent link component: `<DoubleIconLink label="go-livepeer" href="https://github.com/livepeer/go-livepeer" iconLeft="github" />`
+- **Action**: Standardize all 50+ references
 
 ---
 
-### 2.7 Orchestrator Definition (20+ files in 01_about)
+### 3.2 Livepeer Actor Definition — Multiple Variations
 
-**Problem:** "Orchestrator" is defined/explained in multiple About section pages:
+**Variation 1:**
+```
+A Livepeer actor is a participant in the protocol or network—human or machine—that performs a defined role such as submitting jobs, providing compute, verifying work, or securing the system.
+```
 
-**Locations:**
-- `v2/pages/01_about/livepeer-network/livepeer-actors/orchestrators.mdx`
-- `v2/pages/01_about/livepeer-network/actors.mdx`
-- `v2/pages/01_about/core-concepts/concepts/actors.mdx`
-- `v2/pages/01_about/core-concepts/livepeer-core-concepts.mdx`
-- `v2/pages/01_about/resources/livepeer-glossary.mdx` (Gateway, Orchestrator, Delegator definitions)
-- And more...
-
-**Recommendation:**
-- **Single definition**: Glossary entry is canonical
-- **Link pattern**: Other pages should say "An **Orchestrator** (see [Glossary](/resources/livepeer-glossary#orchestrator)) is..." or use a component
-- **Component**: `<TermDefinition term="orchestrator" />` that links to glossary
-- **Action**: Review all definitions, ensure consistency, link to glossary
-
----
-
-### 2.8 SDK Usage Examples (Multiple files)
-
-**Problem:** Similar SDK installation and usage examples appear in multiple places:
-
-**Locations:**
-- `v2/pages/01_about/livepeer-network/interfaces.mdx` (lines 75-94): JS SDK example
-- `v2/pages/010_products/products/livepeer-studio/overview/sdks-overview.mdx`: SDK overview
-- `v2/pages/03_developers/technical-references/sdks.mdx`: SDK reference (placeholder)
-
-**Recommendation:**
-- **Single SDK reference page**: Consolidate SDK documentation in `v2/pages/03_developers/technical-references/sdks.mdx`
-- **Link**: Other pages link to reference instead of duplicating examples
-- **Component**: `<SdkInstallationExample sdk="js" />` for reusable code blocks
-
----
-
-## 3. Copy Repetition
-
-### 3.1 Gateway Capabilities Badge Pattern (Multiple files)
-
-**Problem:** Same badge pattern for Gateway capabilities (Video, AI, Dual) repeated:
-
-```mdx
-<Badge color="blue"> Video Only </Badge>
-<Badge color="purple"> AI Only </Badge>
-<Badge color="green"> Dual: AI & Video </Badge>
+**Variation 2:**
+```
+A Livepeer actor is any role or entity that participates in the Livepeer protocol or network and performs actions defined by the system.
 ```
 
 **Locations:**
-- `v2/pages/04_gateways/run-a-gateway/install/install-overview.mdx` (lines 61-64)
-- Multiple installation and configuration pages
+- `v2/pages/01_about/resources/livepeer-glossary.mdx` (Variation 1, line 99)
+- `v2/pages/07_resources/livepeer-glossary.mdx` (Variation 1, line 100)
+- `v2/pages/01_about/core-concepts/livepeer-core-concepts.mdx` (Variation 2, line 59)
 
 **Recommendation:**
-- **Component**: `<GatewayCapabilityBadges capabilities={['video', 'ai', 'dual']} />`
-- **OR**: Single reference table in gateway explainer, link from other pages
-
----
-
-### 3.2 Installation Method Icons (Multiple files)
-
-**Problem:** Same icon + description pattern for installation methods:
-
-```mdx
-1. <Icon icon="docker" size={20} /> **Docker** (recommended)
-2. Building from <Icon icon="code" size={20} /> **source (binary)**
-```
-
-**Locations:**
-- `v2/pages/04_gateways/run-a-gateway/install/install-overview.mdx`
-- `v2/pages/04_gateways/run-a-gateway/quickstart/quickstart-a-gateway.mdx`
-- And more...
-
-**Recommendation:**
-- **Component**: `<InstallationMethods />` that renders standardized list
-- **OR**: Single reference section, link from overview pages
+- **Single definition**: Pick one canonical version (recommend Variation 1 - more specific)
+- **Update all**: Ensure all locations use same definition
+- **Glossary as source**: Glossary should be single source of truth
 
 ---
 
 ## 4. Recommendations Summary
 
-### High Priority (High Impact, Medium Effort)
+### High Priority (Exact Duplications)
 
 1. **Consolidate Glossary** (§2.1)
    - Keep `v2/pages/07_resources/livepeer-glossary.mdx` as canonical
-   - Convert `v2/pages/01_about/resources/livepeer-glossary.mdx` to redirect/link
+   - Delete or redirect `v2/pages/01_about/resources/livepeer-glossary.mdx`
+   - **Impact**: Removes 400+ lines of duplicate content
 
-2. **Create API Endpoints Reference** (§2.3)
-   - Create `snippets/data/api-endpoints.json`
-   - Create `v2/pages/03_developers/technical-references/api-endpoints.mdx`
-   - Replace duplicated endpoint references with links/component
+2. **Remove Protocol/Network Duplicate Definitions** (§1.1, §1.2)
+   - Keep definitions in glossary only
+   - Replace all other instances with links to glossary
+   - **Impact**: Removes 5+ duplicate definitions
 
-3. **Standardize go-livepeer References** (§2.6)
-   - Use consistent link component format
-   - Update all 50+ references
+3. **Consolidate "Broadcaster" Note** (§1.3)
+   - Add to glossary entry for "Gateway"
+   - Replace 30+ instances with component or remove
+   - **Impact**: Removes 30+ duplicate notes
 
-### Medium Priority (Medium Impact, Low Effort)
+### Medium Priority (Near-Duplicates)
 
-4. **Create Gateway Terminology Component** (§2.2)
-   - Add `<GatewayTerminologyNote />` to `snippets/components/domain/04_GATEWAYS/callouts.jsx`
-   - Replace 30+ instances
+4. **Consolidate Actor Definitions** (§1.4)
+   - Glossary is canonical source
+   - Replace other definitions with links to glossary
+   - **Impact**: Removes 10+ duplicate definitions
 
-5. **Create Gateway Modes Explainer** (§2.5)
-   - Create dedicated page for gateway modes
-   - Link from installation pages
+5. **Create API Endpoints Reference** (§2.3)
+   - Create single reference page
+   - Link from other pages instead of duplicating
+   - **Impact**: Removes 8+ duplicate API descriptions
 
-6. **Cross-link Technical Architecture Pages** (§2.4)
-   - Add clear cross-references between protocol/network/gateway architecture pages
-   - Ensure each has distinct scope
+6. **Standardize go-livepeer References** (§3.1)
+   - Add to glossary
+   - Use consistent description and link format
+   - **Impact**: Standardizes 50+ references
 
 ### Low Priority (Nice to Have)
 
-7. **Create Reusable Components** (§3.1, §3.2)
-   - `<GatewayCapabilityBadges />`
-   - `<InstallationMethods />`
-   - `<SdkInstallationExample />`
+7. **Protocol vs Network Table Component** (§2.2)
+   - Create reusable component
+   - Use in multiple locations
 
-8. **Term Definition Component** (§2.7)
-   - `<TermDefinition term="orchestrator" />` that links to glossary
-
----
-
-## 5. Links to DRY Recommendations
-
-This audit complements the existing DRY recommendations:
-
-- **Component/Code DRY**: See `docs/DRY-and-cleaner-recommendations.md` §1 (Callouts, Portals, Frontmatter)
-- **Scripts DRY**: See `docs/DRY-and-cleaner-recommendations.md` §2 (Frontmatter parsing, SEO scripts)
-- **Data DRY**: See `docs/DRY-and-cleaner-recommendations.md` §3 (Code blocks, tables)
-- **Content DRY**: This report focuses on content duplication (glossary, API endpoints, architecture)
+8. **Installation Methods Consolidation** (§2.4)
+   - Create dedicated explainer pages
+   - Link from installation pages
 
 ---
 
-## 6. Testing & Validation
+## 5. Testing & Validation
 
 After implementing recommendations:
 
 1. **Search for duplicates**: Use grep to verify removed duplications
    ```bash
+   grep -r "The protocol is the ruleset" v2/pages
+   grep -r "The network is the actual running system" v2/pages
    grep -r "The Livepeer Gateway was previously called" v2/pages
-   grep -r "https://livepeer.studio/api" v2/pages
    ```
 
 2. **Check links**: Ensure all redirects and cross-links work
 
-3. **Verify components**: Test that new components render correctly
+3. **Content review**: Ensure consolidated content is complete and accurate
 
-4. **Content review**: Ensure consolidated content is complete and accurate
-
----
-
-## 7. Follow-up Tasks
-
-1. **Create API endpoints data file** and reference page
-2. **Consolidate glossary** (delete duplicate, add redirect)
-3. **Create Gateway terminology component** and replace instances
-4. **Standardize go-livepeer references** across all files
-5. **Add cross-links** between technical architecture pages
-6. **Create gateway modes explainer** page
-7. **Review and consolidate** orchestrator definitions
+4. **Glossary completeness**: Verify glossary has all definitions that were removed from other pages
 
 ---
 
-## 8. Notes
+## 6. Follow-up Tasks
 
-- Some duplications are intentional (e.g., quick reference in multiple contexts)
+1. **Consolidate glossary files** (delete duplicate, add redirect)
+2. **Remove Protocol/Network duplicate definitions** (replace with glossary links)
+3. **Consolidate "Broadcaster" note** (add to glossary, remove 30+ instances)
+4. **Create API endpoints reference page** (consolidate 8+ duplicate descriptions)
+5. **Standardize go-livepeer references** (add to glossary, update 50+ files)
+6. **Consolidate actor definitions** (link to glossary from 10+ locations)
+7. **Review and update** all pages that reference consolidated content
+
+---
+
+## 7. Notes
+
+- Some duplications may be intentional for context (e.g., quick reference in installation guide)
 - Focus on **exact duplicates** and **near-duplicates that should be single-sourced**
 - Consider user journey: some repetition may be helpful for discoverability
 - Balance DRY principles with usability and context-appropriate information
+- Glossary should be the single source of truth for all term definitions
 
 ---
 
 **Report Generated**: 2025-01-XX  
 **Branch**: `docs-plan/13-audit-repeated-content`  
-**Files Audited**: ~441 v2 MDX files, snippets, callouts
+**Files Audited**: ~441 v2 MDX files, snippets, callouts  
+**Focus**: Actual text/content duplication, not component patterns
