@@ -27,20 +27,13 @@ jobs:
         with:
           node-version: "22"
           cache: 'npm'
-<<<<<<< HEAD
-          cache-dependency-path: tooling/package-lock.json
-=======
->>>>>>> upstream/docs-v2-preview
+          cache-dependency-path: tools/package-lock.json
 
       - name: Install Mintlify globally
         run: npm install -g mintlify
 
       - name: Install dependencies
-<<<<<<< HEAD
-        run: cd tooling && npm install
-=======
-        run: npm install
->>>>>>> upstream/docs-v2-preview
+        run: cd tools && npm install
 
       - name: Install jq (for JSON parsing)
         run: sudo apt-get update && sudo apt-get install -y jq
@@ -72,11 +65,7 @@ jobs:
         id: test-pages
         continue-on-error: true
         run: |
-<<<<<<< HEAD
-          cd tooling && npm run test:v2-pages
-=======
-          npm run test:v2-pages
->>>>>>> upstream/docs-v2-preview
+          cd tools && npm run test:v2-pages
           TEST_EXIT_CODE=$?
           echo "exit_code=$TEST_EXIT_CODE" >> $GITHUB_OUTPUT
           echo "test_exit_code=$TEST_EXIT_CODE" >> $GITHUB_OUTPUT

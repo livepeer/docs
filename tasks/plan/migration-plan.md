@@ -118,7 +118,7 @@
 ├── Dockerfile
 ├── LICENSE
 ├── Makefile
-├── package.json           # Root package.json only (dev tooling)
+├── tools/package.json     # Development tooling dependencies and scripts
 ├── README.md
 └── style.css              # Mintlify global styles (or symlink to styles/theme.css)
 ```
@@ -333,7 +333,7 @@ exit 0
 
 **Allowed Files:**
 - `docs.json` - Mintlify navigation configuration
-- `package.json` - Root package.json (dev tooling only)
+- `tools/package.json` - Development tooling dependencies and scripts
 - `package-lock.json` - Lock file
 - `README.md` - Project documentation
 - `LICENSE` - License file
@@ -657,7 +657,7 @@ docs/
 3. Move `v2/pages/` → `docs/v2/pages/` (temporary - see stretch goal below)
 4. Move `v2/assets/` → `snippets/assets/` (consolidate)
 5. Remove `v2/style.css` (use root)
-6. Remove `v2/package.json` (use root)
+6. Remove `v2/package.json` (use tools/package.json)
 7. Move `v2/scripts/` → `tools/scripts/`
 8. Update `docs.json` paths
 
@@ -986,7 +986,7 @@ docs/
 
 #### Task 5.5: Remove V2 Duplicates
 - [ ] Remove `v2/style.css` (use root `style.css`)
-- [ ] Remove `v2/package.json` (use root `package.json`)
+- [ ] Remove `v2/package.json` (use tools/package.json)
 - [ ] Move `v2/tests/` → `tests/` (if actual tests) or delete (if docs)
 - [ ] Update any references
 - [ ] Test that nothing breaks

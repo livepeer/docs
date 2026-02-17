@@ -362,8 +362,8 @@ This repository includes a comprehensive test suite to ensure code quality, styl
 - **When:** You run them manually
 - **Commands:**
   ```bash
-  # From tooling/ directory
-  cd tooling && npm install
+  # From tools/ directory
+  cd tools && npm install
   npm run test:style      # Style guide tests
   npm run test:mdx        # MDX validation
   npm run test:spell      # Spelling checks
@@ -541,10 +541,6 @@ When working with this repository, AI agents should:
 │   │   └── fetch/         # Data fetching scripts
 │   └── wiki/              # Internal wiki/docs
 │
-├── tooling/               # Test and formatting tooling
-│   ├── package.json       # Test dependencies and scripts
-│   └── [test files]       # Test configuration and utilities
-│
 ├── tests/                 # Test suite
 │   ├── config/
 │   ├── fixtures/
@@ -565,8 +561,7 @@ When working with this repository, AI agents should:
 │   └── pages/
 │
 ├── docs.json              # Mintlify navigation config
-├── package.json           # Root package.json (dev tooling only)
-├── package-lock.json      # Lock file
+├── package-lock.json      # Lock file (if exists)
 ├── README.md              # This file
 ├── LICENSE                # License file
 ├── Dockerfile             # Docker build configuration
@@ -706,7 +701,7 @@ rm -rf ~/.mintlify ~/.mintlify-last
 mint dev
 ```
 
-Tests and formatting run from the `tooling/` directory: `cd tooling && npm install`, then `npm run test:style`, `npm run format-mdx`, etc. See `tooling/package.json` for all scripts.
+Tests and formatting run from the `tools/` directory: `cd tools && npm install`, then `npm run test:style`, `npm run format-mdx`, etc. See `tools/package.json` for all scripts.
 
 ### 🔧 Git Hooks (Required)
 

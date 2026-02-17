@@ -133,22 +133,22 @@ fi
 
 # Check 7: Browser validation (if Node.js and Puppeteer available)
 if command -v node &>/dev/null; then
-    # Check if puppeteer is available (tests/ first, then tooling/, then legacy root node_modules)
+    # Check if puppeteer is available (tests/ first, then tools/, then legacy root node_modules)
     PUPPETEER_AVAILABLE=false
     if [ -f "tests/node_modules/puppeteer/package.json" ]; then
         PUPPETEER_AVAILABLE=true
         export NODE_PATH="$(pwd)/tests/node_modules:${NODE_PATH:-}"
-    elif [ -f "tooling/node_modules/puppeteer/package.json" ]; then
+    elif [ -f "tools/node_modules/puppeteer/package.json" ]; then
         PUPPETEER_AVAILABLE=true
-        export NODE_PATH="$(pwd)/tooling/node_modules:${NODE_PATH:-}"
+        export NODE_PATH="$(pwd)/tools/node_modules:${NODE_PATH:-}"
     elif [ -f "node_modules/puppeteer/package.json" ]; then
         PUPPETEER_AVAILABLE=true
     elif [ -f "tests/package.json" ] && grep -q "puppeteer" tests/package.json; then
         PUPPETEER_AVAILABLE=true
         export NODE_PATH="$(pwd)/tests/node_modules:${NODE_PATH:-}"
-    elif [ -f "tooling/package.json" ] && grep -q "puppeteer" tooling/package.json; then
+    elif [ -f "tools/package.json" ] && grep -q "puppeteer" tools/package.json; then
         PUPPETEER_AVAILABLE=true
-        export NODE_PATH="$(pwd)/tooling/node_modules:${NODE_PATH:-}"
+        export NODE_PATH="$(pwd)/tools/node_modules:${NODE_PATH:-}"
     elif [ -f "package.json" ] && grep -q "puppeteer" package.json; then
         PUPPETEER_AVAILABLE=true
     fi
