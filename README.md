@@ -10,10 +10,12 @@ Built with [Mintlify](https://mintlify.com) and deployed at [docs.livepeer.org](
 
 ### Prerequisites
 
-- **Mintlify CLI** - Install globally via npm (requires Node.js)
-  - Node.js is only needed to install Mintlify CLI
-  - Once installed, `mint dev` runs independently
-  - For running tests: Node.js 22+ (matches CI/CD)
+**⚠️ VERIFY WITH MINTLIFY DOCS:** Always check [Mintlify's official documentation](https://mintlify.com/docs/installation) for current requirements before making assumptions.
+
+- **Mintlify CLI** - Required for local development
+  - Install via npm: `npm i -g mintlify`
+  - Requires Node.js (check Mintlify docs for minimum version)
+  - For running tests in this repo: Node.js 22+ (matches CI/CD configuration)
 
 ### Setup
 
@@ -28,7 +30,7 @@ Built with [Mintlify](https://mintlify.com) and deployed at [docs.livepeer.org](
    npm i -g mintlify
    ```
 
-3. **Install pre-commit hooks (REQUIRED):**
+3. **Install pre-commit hooks (Will run valuable tests - especially):**
    ```bash
    ./.githooks/install.sh
    ```
