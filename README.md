@@ -8,7 +8,7 @@ livepeer.org).
 
 ## IMPORTANT
 - THIS REPOSITORY IS mostly COMMUNITY MAINTAINED. 
-- THE LIVEPEER FOUNDATION HELPS GUIDE IT, HOWEVER, GENERALLY IF YOU THINK IMPROVEMENTS ARE NEEDED YOU SHOULD SUBMIT THEM (via PR) OR CREATE AN ISSUE ASKING FOR THE FEATURE/BUG FIX ETC.
+- THE LIVEPEER FOUNDATION HELPS GUIDE IT, HOWEVER, GENERALLY IF YOU THINK IMPROVEMENTS ARE NEEDED YOU SHOULD SUBMIT THEM (via PR) OR CREATE AN ISSUE ASKING FOR THE FEATURE/BUG FIX ETC. See the [Contributing section](#-contributing) for details.
 - **Issue templates:** When creating issues, use the GitHub issue templates which will automatically apply the `docs-v2` and `help wanted` labels. See [GitHub Issues section](#-github-issues) below for details.
 
 ---
