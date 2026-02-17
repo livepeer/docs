@@ -10,20 +10,90 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-const BASE_URL = process.env.MINT_BASE_URL || 'http://localhost:3000';
-const PORT = new URL(BASE_URL).port || 3000;
+// Use a dedicated port for browser validation tests (unlikely to be in use)
+const TEST_PORT = 3145;
+const BASE_URL = process.env.MINT_BASE_URL || `http://localhost:${TEST_PORT}`;
+const PORT = new URL(BASE_URL).port || TEST_PORT;
 const PID_FILE = path.join(os.tmpdir(), 'mint-dev-test.pid');
 const LOG_FILE = path.join(os.tmpdir(), 'mint-dev-test.log');
 
 let serverProcess = null;
 let serverStartedByUs = false;
+let actualServerUrl = BASE_URL; // Will be updated if port is detected from log
+let detectedServerPort = null; // Port where server was actually found
 
 /**
- * Check if server is already running
+ * Check if server is already running (on expected port, detected port, or common ports)
  */
 async function isServerRunning() {
+  // Check expected port first (3145)
+  if (await isServerRunningOnPort(PORT)) {
+    return true;
+  }
+  
+  // Check common mint dev ports (3000, 3001, 3002, etc.)
+  // Mint dev often uses these ports if 3000 is in use
+  for (let commonPort = 3000; commonPort <= 3010; commonPort++) {
+    if (await isServerRunningOnPort(commonPort)) {
+      // Found server on common port - store it for getServerUrl()
+      detectedServerPort = commonPort;
+      console.log(`   Found existing server on port ${commonPort}, using it`);
+      return true;
+    }
+  }
+  
+  // Check if log shows server on different port
+  const detectedPort = detectPortFromLog();
+  if (detectedPort && detectedPort !== PORT) {
+    return await isServerRunningOnPort(detectedPort);
+  }
+  
+  return false;
+}
+
+/**
+ * Parse log file to detect actual port mint dev is using
+ * Looks for patterns like "local → http://localhost:3001" or "port 3000 is already in use. trying 3001 instead"
+ */
+function detectPortFromLog() {
+  if (!fs.existsSync(LOG_FILE)) {
+    return null;
+  }
+  
+  try {
+    const logContent = fs.readFileSync(LOG_FILE, 'utf8');
+    
+    // Pattern 1: "local → http://localhost:XXXX"
+    const localMatch = logContent.match(/local\s*→\s*http:\/\/localhost:(\d+)/i);
+    if (localMatch) {
+      return parseInt(localMatch[1]);
+    }
+    
+    // Pattern 2: "port XXXX is already in use. trying YYYY instead"
+    const portMatch = logContent.match(/port\s+\d+\s+is\s+already\s+in\s+use\.\s+trying\s+(\d+)\s+instead/i);
+    if (portMatch) {
+      return parseInt(portMatch[1]);
+    }
+    
+    // Pattern 3: "preview ready" followed by port info
+    const previewMatch = logContent.match(/preview\s+ready[^\n]*localhost:(\d+)/i);
+    if (previewMatch) {
+      return parseInt(previewMatch[1]);
+    }
+  } catch (e) {
+    // Ignore errors reading log
+  }
+  
+  return null;
+}
+
+/**
+ * Check if server is running on a specific port
+ */
+async function isServerRunningOnPort(port) {
+  const url = `http://localhost:${port}`;
   return new Promise((resolve) => {
-    const req = http.get(BASE_URL, { timeout: 2000 }, (res) => {
+    const req = http.get(url, { timeout: 2000 }, (res) => {
       resolve(res.statusCode === 200 || res.statusCode === 404); // 404 means server is up but page doesn't exist
     });
     
@@ -36,13 +106,31 @@ async function isServerRunning() {
 }
 
 /**
- * Wait for server to be ready
+ * Wait for server to be ready, checking both expected port and detected port from log
  */
 async function waitForServer(maxAttempts = 60, interval = 2000) {
+  let detectedPort = null;
+  
   for (let i = 0; i < maxAttempts; i++) {
-    if (await isServerRunning()) {
+    // First check expected port
+    if (await isServerRunningOnPort(PORT)) {
       return true;
     }
+    
+    // If not on expected port, try to detect from log (after a few attempts to let log populate)
+    if (i >= 3) {
+      detectedPort = detectPortFromLog();
+      if (detectedPort && detectedPort !== PORT) {
+        // Check detected port
+        if (await isServerRunningOnPort(detectedPort)) {
+          // Update actual server URL to use detected port
+          actualServerUrl = `http://localhost:${detectedPort}`;
+          console.log(`   Detected server running on port ${detectedPort} (expected ${PORT})`);
+          return true;
+        }
+      }
+    }
+    
     if (i < maxAttempts - 1) {
       await new Promise(resolve => setTimeout(resolve, interval));
     }
@@ -73,16 +161,28 @@ function startServer() {
     }
   }
 
-  console.log('🚀 Starting mint dev server...');
+  console.log(`🚀 Starting mint dev server on port ${PORT}...`);
   
-  // Start mint dev in background
-  const logStream = fs.createWriteStream(LOG_FILE, { flags: 'a' });
-  
+  // Start mint dev in background with specific port via environment variable
+  // Use 'pipe' instead of WriteStream directly to avoid stdio issues
   serverProcess = spawn('mint', ['dev'], {
-    stdio: ['ignore', logStream, logStream],
+    stdio: ['ignore', 'pipe', 'pipe'],
     detached: true,
-    shell: true
+    shell: true,
+    env: {
+      ...process.env,
+      PORT: PORT.toString()
+    }
   });
+  
+  // Redirect output to log file
+  const logStream = fs.createWriteStream(LOG_FILE, { flags: 'a' });
+  if (serverProcess.stdout) {
+    serverProcess.stdout.pipe(logStream);
+  }
+  if (serverProcess.stderr) {
+    serverProcess.stderr.pipe(logStream);
+  }
   
   serverProcess.unref(); // Allow parent process to exit independently
   
@@ -182,10 +282,30 @@ process.on('SIGTERM', () => {
   process.exit(0);
 });
 
+/**
+ * Get the actual server URL (may differ from BASE_URL if port was auto-selected)
+ */
+function getServerUrl() {
+  // Use detected server port if we found one from isServerRunning()
+  if (detectedServerPort) {
+    return `http://localhost:${detectedServerPort}`;
+  }
+  
+  // Check if we detected a different port from log
+  const detectedPort = detectPortFromLog();
+  if (detectedPort && detectedPort !== PORT) {
+    return `http://localhost:${detectedPort}`;
+  }
+  
+  // Default to expected port
+  return BASE_URL;
+}
+
 module.exports = {
   ensureServerRunning,
   isServerRunning,
   waitForServer,
   startServer,
-  stopServer
+  stopServer,
+  getServerUrl
 };

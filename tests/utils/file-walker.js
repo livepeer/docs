@@ -53,15 +53,19 @@ function getJsxFiles(rootDir = process.cwd()) {
 
 /**
  * Get staged files from git
+ * Returns absolute paths relative to repo root (not cwd)
  */
 function getStagedFiles() {
   const { execSync } = require('child_process');
   try {
+    // Get repo root directory (where .git is)
+    const repoRoot = execSync('git rev-parse --show-toplevel', { encoding: 'utf8' }).trim();
+    
     const output = execSync('git diff --cached --name-only --diff-filter=ACM', { encoding: 'utf8' });
     return output
       .split('\n')
       .filter(line => line.trim())
-      .map(line => path.resolve(line));
+      .map(line => path.resolve(repoRoot, line));
   } catch (error) {
     return [];
   }

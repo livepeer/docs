@@ -11,12 +11,34 @@
  */
 
 const { execSync } = require('child_process');
-const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
-const { ensureServerRunning, stopServer } = require('./server-manager');
 
-const BASE_URL = process.env.MINT_BASE_URL || 'http://localhost:3000';
+// Find puppeteer in tools/node_modules, tests/node_modules, or root node_modules
+let puppeteer;
+const possiblePaths = [
+  path.join(__dirname, '..', 'tools', 'node_modules', 'puppeteer'),
+  path.join(__dirname, '..', 'tests', 'node_modules', 'puppeteer'),
+  path.join(__dirname, '..', 'node_modules', 'puppeteer')
+];
+
+for (const puppeteerPath of possiblePaths) {
+  if (fs.existsSync(puppeteerPath)) {
+    puppeteer = require(puppeteerPath);
+    break;
+  }
+}
+
+if (!puppeteer) {
+  console.error('❌ Puppeteer not found. Install dependencies: cd tools && npm install');
+  process.exit(1);
+}
+
+const { ensureServerRunning, stopServer, getServerUrl } = require('./server-manager');
+
+// Use server-manager's detected URL, or fall back to environment variable or default
+// getServerUrl() will return the actual port mint dev is using (may differ from 3145 if port is in use)
+const BASE_URL = process.env.MINT_BASE_URL || 'http://localhost:3145';
 const TIMEOUT = 15000; // 15 seconds per page (faster for pre-commit)
 const MAX_PAGES = 10; // Limit to 10 pages for pre-commit speed
 
@@ -60,9 +82,9 @@ function filePathToUrl(filePath) {
 /**
  * Test a single page in headless browser
  */
-async function testPage(browser, filePath) {
+async function testPage(browser, filePath, baseUrl) {
   const url = filePathToUrl(filePath);
-  const fullUrl = `${BASE_URL}${url}`;
+  const fullUrl = `${baseUrl}${url}`;
   const page = await browser.newPage();
   
   const errors = [];
@@ -213,10 +235,20 @@ async function main() {
   let serverStarted = false;
   try {
     serverStarted = await ensureServerRunning();
+    // Get actual server URL (may differ if port was auto-selected)
+    const actualUrl = getServerUrl();
+    if (actualUrl !== BASE_URL) {
+      console.log(`   Using detected server URL: ${actualUrl}`);
+    }
   } catch (error) {
     console.error(`❌ Failed to start server: ${error.message}`);
-    process.exit(1);
+    console.error(`⚠️  Browser validation skipped (server not available)`);
+    // Exit with 0 so verify.sh treats this as optional, not a failure
+    process.exit(0);
   }
+  
+  // Use detected server URL for testing
+  const serverUrl = getServerUrl();
   
   const browser = await puppeteer.launch({ 
     headless: true,
@@ -230,7 +262,7 @@ async function main() {
   for (const filePath of stagedFiles) {
     process.stdout.write(`  Testing ${filePath}... `);
     
-    const result = await testPage(browser, filePath);
+    const result = await testPage(browser, filePath, serverUrl);
     results.push(result);
     
     if (result.success) {

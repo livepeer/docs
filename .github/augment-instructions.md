@@ -110,7 +110,6 @@
 
 - `snippets/components/` - Custom React/JSX/TSX components
 - `snippets/data/` - Data files (gateways.jsx, etc.)
-<<<<<<< HEAD
 - `snippets/pages/` - REQUIRED for MDX sub-views (MDX-in-MDX pattern)
 - `snippets/assets/` - Static assets for docs content
 - `snippets/automations/` - Dynamic/AI/data-fetching logic

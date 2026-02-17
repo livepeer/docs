@@ -153,25 +153,164 @@ if command -v node &>/dev/null; then
         PUPPETEER_AVAILABLE=true
     fi
     
+    # If Puppeteer not available but package.json exists, try to install it
+    if [ "$PUPPETEER_AVAILABLE" = false ]; then
+        if [ -f "tools/package.json" ] && grep -q "puppeteer" tools/package.json; then
+            echo -e "${YELLOW}⚠️  Puppeteer not found, attempting to install dependencies...${NC}"
+            if cd tools && npm install --silent 2>&1; then
+                cd "$REPO_ROOT"
+                # Check again after install
+                if [ -f "tools/node_modules/puppeteer/package.json" ]; then
+                    PUPPETEER_AVAILABLE=true
+                    export NODE_PATH="$(pwd)/tools/node_modules:${NODE_PATH:-}"
+                    echo -e "${GREEN}✓ Puppeteer installed successfully${NC}"
+                else
+                    echo -e "${RED}❌ Puppeteer installation failed or incomplete${NC}"
+                fi
+            else
+                cd "$REPO_ROOT"
+                echo -e "${RED}❌ Failed to install dependencies${NC}"
+            fi
+        elif [ -f "tests/package.json" ] && grep -q "puppeteer" tests/package.json; then
+            echo -e "${YELLOW}⚠️  Puppeteer not found, attempting to install dependencies...${NC}"
+            if cd tests && npm install --silent 2>&1; then
+                cd "$REPO_ROOT"
+                # Check again after install
+                if [ -f "tests/node_modules/puppeteer/package.json" ]; then
+                    PUPPETEER_AVAILABLE=true
+                    export NODE_PATH="$(pwd)/tests/node_modules:${NODE_PATH:-}"
+                    echo -e "${GREEN}✓ Puppeteer installed successfully${NC}"
+                else
+                    echo -e "${RED}❌ Puppeteer installation failed or incomplete${NC}"
+                fi
+            else
+                cd "$REPO_ROOT"
+                echo -e "${RED}❌ Failed to install dependencies${NC}"
+            fi
+        fi
+    fi
+    
     if [ "$PUPPETEER_AVAILABLE" = true ] && [ -f ".githooks/verify-browser.js" ]; then
         echo "Running browser validation..."
-        if node .githooks/verify-browser.js 2>&1; then
-            echo -e "${GREEN}✓ Browser validation passed${NC}"
-        else
-            EXIT_CODE=$?
-            if [ $EXIT_CODE -eq 0 ]; then
-                # Server not running - skip (optional check)
-                echo -e "${YELLOW}⚠️  Browser validation skipped (mint dev not running)${NC}"
+        # Set NODE_PATH for verify-browser.js to find puppeteer
+        if [ -d "tools/node_modules" ]; then
+            export NODE_PATH="$(pwd)/tools/node_modules:${NODE_PATH:-}"
+        elif [ -d "tests/node_modules" ]; then
+            export NODE_PATH="$(pwd)/tests/node_modules:${NODE_PATH:-}"
+        fi
+        
+        # Cross-platform timeout function (30 seconds max)
+        # Uses 'timeout' on Linux, 'gtimeout' on macOS (if coreutils installed), or implements timeout in pure bash
+        run_with_timeout() {
+            local timeout_sec=30
+            local cmd="$1"
+            
+            if command -v timeout &>/dev/null; then
+                # Linux: use timeout command
+                timeout "$timeout_sec" $cmd
+            elif command -v gtimeout &>/dev/null; then
+                # macOS with coreutils: use gtimeout
+                gtimeout "$timeout_sec" $cmd
             else
+                # Pure bash timeout implementation for macOS
+                (
+                    $cmd &
+                    local cmd_pid=$!
+                    (
+                        sleep "$timeout_sec"
+                        kill "$cmd_pid" 2>/dev/null && echo "Browser validation timed out after ${timeout_sec}s" >&2
+                    ) &
+                    local timeout_pid=$!
+                    wait "$cmd_pid" 2>/dev/null
+                    local exit_code=$?
+                    kill "$timeout_pid" 2>/dev/null
+                    exit $exit_code
+                )
+            fi
+        }
+        
+        # Run browser validation with retries on timeout (2 retries max = 3 total attempts)
+        MAX_RETRIES=2
+        RETRY_COUNT=0
+        EXIT_CODE=1
+        BROWSER_OUTPUT=""
+        
+        set +e
+        while [ $RETRY_COUNT -le $MAX_RETRIES ]; do
+            if [ $RETRY_COUNT -eq 0 ]; then
+                echo -e "${YELLOW}   Attempt 1/$(($MAX_RETRIES + 1)) (30s timeout)...${NC}"
+            else
+                echo -e "${YELLOW}   Retry attempt $(($RETRY_COUNT + 1))/$(($MAX_RETRIES + 1)) (30s timeout)...${NC}"
+            fi
+            
+            BROWSER_OUTPUT=$(run_with_timeout "node .githooks/verify-browser.js" 2>&1)
+            EXIT_CODE=$?
+            
+            # If not a timeout, break out of retry loop
+            if [ $EXIT_CODE -ne 124 ] && [ $EXIT_CODE -ne 143 ] && ! echo "$BROWSER_OUTPUT" | grep -q "timed out\|Command timed out"; then
+                break
+            fi
+            
+            # If timeout, show message
+            if [ $EXIT_CODE -eq 124 ] || [ $EXIT_CODE -eq 143 ] || echo "$BROWSER_OUTPUT" | grep -q "timed out\|Command timed out"; then
+                if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                    echo -e "${YELLOW}   ⚠️  Attempt $(($RETRY_COUNT + 1)) timed out, retrying...${NC}"
+                fi
+            fi
+            
+            # If timeout and we've reached max retries, break
+            if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
+                break
+            fi
+            
+            RETRY_COUNT=$((RETRY_COUNT + 1))
+            # Small delay before retry
+            sleep 1
+        done
+        set -e
+        
+        if [ $EXIT_CODE -eq 0 ]; then
+            # Check if it was a skip (server not available) - treat as failure
+            if echo "$BROWSER_OUTPUT" | grep -q "Browser validation skipped\|server not available\|Failed to start server"; then
+                echo -e "${RED}❌ Browser validation failed: Server not available${NC}"
+                echo "$BROWSER_OUTPUT" | head -10
+                WARNINGS+=("❌ Browser validation failed - server not available. Start mint dev or check server status")
+                VIOLATIONS=$((VIOLATIONS + 1))
+            else
+                echo -e "${GREEN}✓ Browser validation passed${NC}"
+            fi
+        elif [ $EXIT_CODE -eq 124 ] || [ $EXIT_CODE -eq 143 ] || echo "$BROWSER_OUTPUT" | grep -q "timed out\|Command timed out"; then
+            # Timeout after all retries (124 = Linux timeout, 143 = SIGTERM from bash timeout, or "timed out" in output)
+            echo -e "${RED}❌ Browser validation timed out after ${MAX_RETRIES} retries (30 seconds each)${NC}"
+            echo "$BROWSER_OUTPUT" | tail -10
+            WARNINGS+=("❌ Browser validation timed out after ${MAX_RETRIES} retries - server may be slow or hung")
+            VIOLATIONS=$((VIOLATIONS + 1))
+        else
+            # Non-zero exit means actual failure
+            # Check if it was a script error vs validation failure
+            if echo "$BROWSER_OUTPUT" | grep -q "SyntaxError\|ReferenceError\|Cannot find module\|ENOENT.*verify-browser"; then
+                echo -e "${RED}❌ Browser validation script error:${NC}"
+                echo "$BROWSER_OUTPUT" | head -10
+                echo -e "${YELLOW}   Fix: cd tools && npm install${NC}"
+                WARNINGS+=("❌ Browser validation script error - install dependencies: cd tools && npm install")
+                VIOLATIONS=$((VIOLATIONS + 1))
+            else
+                # Actual validation failure
+                echo "$BROWSER_OUTPUT" | head -20
                 WARNINGS+=("❌ Browser validation failed - pages don't render correctly")
                 VIOLATIONS=$((VIOLATIONS + 1))
             fi
         fi
     else
-        echo -e "${YELLOW}⚠️  Browser validation skipped (Puppeteer not available)${NC}"
+        echo -e "${RED}❌ Browser validation failed: Puppeteer not available${NC}"
+        echo -e "${YELLOW}   Fix: cd tools && npm install${NC}"
+        WARNINGS+=("❌ Browser validation failed - Puppeteer not available. Install dependencies: cd tools && npm install")
+        VIOLATIONS=$((VIOLATIONS + 1))
     fi
 else
-    echo -e "${YELLOW}⚠️  Browser validation skipped (Node.js not available)${NC}"
+    echo -e "${RED}❌ Browser validation failed: Node.js not available${NC}"
+    WARNINGS+=("❌ Browser validation failed - Node.js not available")
+    VIOLATIONS=$((VIOLATIONS + 1))
 fi
 
 # Report results

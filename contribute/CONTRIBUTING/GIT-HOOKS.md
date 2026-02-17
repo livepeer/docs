@@ -47,12 +47,22 @@ The test suite runs in fast mode for pre-commit (staged files only, browser test
 
 ### Installation
 
+**Prerequisites:**
+Before installing git hooks, you must install the test dependencies:
+
+```bash
+# Install dependencies (required for hooks to run tests)
+cd tools && npm install
+```
+
 #### Automatic Installation (Recommended)
 
 ```bash
 # From repository root
 ./.githooks/install.sh
 ```
+
+**Note:** If dependencies are not installed, the hooks will still run but tests will be skipped with a warning. Install dependencies in `tools/` for full test coverage.
 
 #### Manual Installation
 

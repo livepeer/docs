@@ -707,7 +707,15 @@ Tests and formatting run from the `tools/` directory: `cd tools && npm install`,
 
 This repository uses git hooks to enforce style guide compliance and code quality. **You must install them:**
 
+**Prerequisites:**
+1. Install dependencies: `cd tools && npm install`
+2. Install hooks: `./.githooks/install.sh`
+
 ```bash
+# Step 1: Install dependencies (required for tests to run)
+cd tools && npm install
+
+# Step 2: Install git hooks
 ./.githooks/install.sh
 ```
 

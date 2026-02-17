@@ -66,6 +66,15 @@ function linkToFilePath(linkPath, currentFile) {
     return null;
   }
   
+  // Get repo root directory (where .git is) - same fix as getStagedFiles
+  const { execSync } = require('child_process');
+  let repoRoot;
+  try {
+    repoRoot = execSync('git rev-parse --show-toplevel', { encoding: 'utf8' }).trim();
+  } catch (e) {
+    repoRoot = rootDir; // Fallback to rootDir if not in git repo
+  }
+  
   // Absolute path from root (starts with /)
   if (linkPath.startsWith('/')) {
     // Remove leading slash and convert to file path
@@ -73,7 +82,7 @@ function linkToFilePath(linkPath, currentFile) {
     
     // If it looks like a v2/pages path, use it directly
     if (filePath.startsWith('v2/pages/')) {
-      return path.join(rootDir, filePath);
+      return path.join(repoRoot, filePath);
     }
     
     // Otherwise, assume it's a v2/pages path
@@ -81,7 +90,7 @@ function linkToFilePath(linkPath, currentFile) {
       filePath = `v2/pages/${filePath}`;
     }
     
-    return path.join(rootDir, filePath);
+    return path.join(repoRoot, filePath);
   }
   
   // Relative path
@@ -164,14 +173,26 @@ function checkBrokenImports(files) {
       }
       
       // Resolve import path
+      // Get repo root directory (where .git is) - same fix as getStagedFiles
+      const { execSync } = require('child_process');
+      let rootDir;
+      try {
+        rootDir = execSync('git rev-parse --show-toplevel', { encoding: 'utf8' }).trim();
+      } catch (e) {
+        rootDir = process.cwd(); // Fallback to cwd if not in git repo
+      }
+      
       let filePath;
       if (importPath.startsWith('/')) {
         // Absolute path from root
-        filePath = path.join(process.cwd(), importPath);
+        filePath = path.join(rootDir, importPath);
       } else {
         // Relative path
         const currentDir = path.dirname(file);
         filePath = path.resolve(currentDir, importPath);
+        // Normalize to relative from root
+        const relativePath = path.relative(rootDir, filePath);
+        filePath = path.join(rootDir, relativePath);
       }
       
       // Try with .jsx extension if not present
