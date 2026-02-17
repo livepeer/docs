@@ -1,6 +1,6 @@
 # Livepeer Documentation
 
-The official documentation repository for [Livepeer](https://livepeer.org), a decentralized video infrastructure network. This repository contains documentation for Livepeer Studio, the Livepeer Protocol, AI Pipelines, and developer resources.
+The official documentation repository for [Livepeer](https://livepeer.org), a decentralised realtime AI infrastructure network. This repository contains documentation for Livepeer Studio, the Livepeer Protocol, AI Pipelines, Orchestrators, Gateways, Delegators, Community, Help and developer resources.
 
 Built with [Mintlify](https://mintlify.com) and deployed at [docs.livepeer.org](https://docs.livepeer.org).
 
@@ -10,8 +10,10 @@ Built with [Mintlify](https://mintlify.com) and deployed at [docs.livepeer.org](
 
 ### Prerequisites
 
-- **Node.js** 18+ and npm
-- **Mintlify CLI** (install globally)
+- **Mintlify CLI** - Install globally via npm (requires Node.js)
+  - Node.js is only needed to install Mintlify CLI
+  - Once installed, `mint dev` runs independently
+  - For running tests: Node.js 22+ (matches CI/CD)
 
 ### Setup
 
