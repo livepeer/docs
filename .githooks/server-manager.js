@@ -106,26 +106,32 @@ async function isServerRunningOnPort(port) {
 }
 
 /**
- * Wait for server to be ready, checking both expected port and detected port from log
+ * Wait for server to be ready, checking expected port, common ports, and detected port from log
  */
 async function waitForServer(maxAttempts = 60, interval = 2000) {
-  let detectedPort = null;
-  
   for (let i = 0; i < maxAttempts; i++) {
-    // First check expected port
+    // First check expected port (3145)
     if (await isServerRunningOnPort(PORT)) {
       return true;
     }
     
-    // If not on expected port, try to detect from log (after a few attempts to let log populate)
+    // Check common ports (3000-3010) - mint dev often uses these if 3145 is unavailable
+    for (let commonPort = 3000; commonPort <= 3010; commonPort++) {
+      if (await isServerRunningOnPort(commonPort)) {
+        detectedServerPort = commonPort;
+        console.log(`   Server started on port ${commonPort} (expected ${PORT})`);
+        return true;
+      }
+    }
+    
+    // If not on expected or common ports, try to detect from log (after a few attempts to let log populate)
     if (i >= 3) {
-      detectedPort = detectPortFromLog();
+      const detectedPort = detectPortFromLog();
       if (detectedPort && detectedPort !== PORT) {
         // Check detected port
         if (await isServerRunningOnPort(detectedPort)) {
-          // Update actual server URL to use detected port
-          actualServerUrl = `http://localhost:${detectedPort}`;
-          console.log(`   Detected server running on port ${detectedPort} (expected ${PORT})`);
+          detectedServerPort = detectedPort;
+          console.log(`   Server detected on port ${detectedPort} from log (expected ${PORT})`);
           return true;
         }
       }
@@ -256,7 +262,7 @@ async function ensureServerRunning() {
   // Start it
   startServer();
   
-  // Wait for it to be ready
+  // Wait for it to be ready (checks common ports 3000-3010, not just 3145)
   console.log(`⏳ Waiting for server to be ready (max 2 minutes)...`);
   const ready = await waitForServer(60, 2000);
   
@@ -267,7 +273,9 @@ async function ensureServerRunning() {
     throw new Error('Server failed to start');
   }
   
-  console.log(`✅ Server is ready at ${BASE_URL}`);
+  // Get the actual port where server is running (waitForServer already set detectedServerPort)
+  const actualUrl = getServerUrl();
+  console.log(`✅ Server is ready at ${actualUrl}`);
   return true; // We started it
 }
 
