@@ -136,7 +136,14 @@ We welcome contributions! Please read the following before making changes:
 4. **Follow style guide:** All changes must pass pre-commit hooks
 5. **Update related docs:** If structure changes, update this README
 
-See [CONTRIBUTING.md](contribute/CONTRIBUTING.md) for detailed contribution guidelines.
+### Review Process
+
+- **Review SLAs:** Critical fixes (24h), Content updates (48h), New content (72h)
+- **Review criteria:** Clarity, technical accuracy, completeness, style consistency, UX
+- **Section owners:** Review PRs in their assigned sections (see [CODEOWNERS](.github/CODEOWNERS))
+- **Automated checks:** Broken links, formatting, build verification run automatically
+
+See [CONTRIBUTING.md](contribute/CONTRIBUTING.md) for detailed contribution guidelines and [Documentation Governance](v2/pages/09_internal/governance.mdx) for complete review process, ownership, and SLAs.
 
 ---
 
