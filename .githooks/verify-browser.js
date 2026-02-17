@@ -14,6 +14,7 @@ const { execSync } = require('child_process');
 const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
+const { ensureServerRunning, stopServer } = require('./server-manager');
 
 const BASE_URL = process.env.MINT_BASE_URL || 'http://localhost:3000';
 const TIMEOUT = 15000; // 15 seconds per page (faster for pre-commit)
@@ -193,21 +194,7 @@ async function testPage(browser, filePath) {
   }
 }
 
-/**
- * Check if Mintlify server is running
- */
-async function checkServer() {
-  try {
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
-    await page.goto(BASE_URL, { waitUntil: 'networkidle2', timeout: 5000 });
-    await page.close();
-    await browser.close();
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
+// Server management is now handled by server-manager.js
 
 /**
  * Main function
@@ -222,17 +209,14 @@ async function main() {
   
   console.log(`\n🌐 Browser validation: Testing ${stagedFiles.length} staged MDX file(s)...`);
   
-  // Check if server is running
-  const serverRunning = await checkServer();
-  if (!serverRunning) {
-    console.log(`⚠️  Mintlify server not running at ${BASE_URL}`);
-    console.log('   Browser validation skipped. Start with: mint dev');
-    console.log('   Or set MINT_BASE_URL environment variable');
-    // Don't fail pre-commit if server isn't running (optional check)
-    process.exit(0);
+  // Ensure server is running (start if needed)
+  let serverStarted = false;
+  try {
+    serverStarted = await ensureServerRunning();
+  } catch (error) {
+    console.error(`❌ Failed to start server: ${error.message}`);
+    process.exit(1);
   }
-  
-  console.log(`✅ Server accessible at ${BASE_URL}\n`);
   
   const browser = await puppeteer.launch({ 
     headless: true,
@@ -271,6 +255,11 @@ async function main() {
   }
   
   await browser.close();
+  
+  // Stop server if we started it (only for pre-commit, keep it running for full tests)
+  if (serverStarted) {
+    stopServer();
+  }
   
   // Report results
   const allWarnings = results.filter(r => r.warnings.length > 0);

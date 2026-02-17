@@ -8,8 +8,9 @@
 const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
+const { ensureServerRunning, stopServer } = require('../../.githooks/server-manager');
 
-const DOCS_JSON_PATH = path.join(__dirname, '..', 'docs.json');
+const DOCS_JSON_PATH = path.join(__dirname, '..', '..', 'docs.json');
 const BASE_URL = process.env.MINT_BASE_URL || 'http://localhost:3000';
 const TIMEOUT = 30000; // 30 seconds per page
 
@@ -160,18 +161,12 @@ async function main() {
   console.log(`🌐 Testing against: ${BASE_URL}`);
   console.log(`⏱️  Timeout per page: ${TIMEOUT}ms\n`);
   
-  // Check if server is running
+  // Ensure server is running (start if needed)
+  let serverStarted = false;
   try {
-    const testPage = await puppeteer.launch({ headless: true });
-    const testBrowserPage = await testPage.newPage();
-    await testBrowserPage.goto(BASE_URL, { waitUntil: 'networkidle2', timeout: 5000 });
-    await testBrowserPage.close();
-    await testPage.close();
-    console.log('✅ Server is accessible\n');
+    serverStarted = await ensureServerRunning();
   } catch (error) {
-    console.error(`❌ Cannot connect to ${BASE_URL}`);
-    console.error('   Make sure mint dev is running!');
-    console.error(`   Start it with: mint dev`);
+    console.error(`❌ Failed to start server: ${error.message}`);
     process.exit(1);
   }
   
@@ -205,6 +200,11 @@ async function main() {
   }
   
   await browser.close();
+  
+  // Stop server if we started it
+  if (serverStarted) {
+    stopServer();
+  }
   
   // Print summary
   console.log('\n' + '='.repeat(60));

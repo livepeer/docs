@@ -9,6 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const { getMdxFiles, getStagedFiles } = require('../utils/file-walker');
 const { getV2Pages } = require('../../tools/scripts/test-v2-pages');
+const { ensureServerRunning, stopServer } = require('../../.githooks/server-manager');
 
 const BASE_URL = process.env.MINT_BASE_URL || 'http://localhost:3000';
 const TIMEOUT = 30000;
@@ -211,18 +212,15 @@ async function runTests(options = {}) {
     }
   }
   
-  // Check server
+  // Ensure server is running (start if needed)
+  let serverStarted = false;
   try {
-    const testBrowser = await puppeteer.launch({ headless: true });
-    const testPage = await testBrowser.newPage();
-    await testPage.goto(BASE_URL, { waitUntil: 'networkidle2', timeout: 5000 });
-    await testPage.close();
-    await testBrowser.close();
+    serverStarted = await ensureServerRunning();
   } catch (error) {
     return {
-      errors: [],
-      warnings: [`Server not accessible at ${BASE_URL}. Start with: mint dev`],
-      passed: true,
+      errors: [`Failed to start server: ${error.message}`],
+      warnings: [],
+      passed: false,
       total: testFiles.length
     };
   }
@@ -250,6 +248,11 @@ async function runTests(options = {}) {
   }
   
   await browser.close();
+  
+  // Stop server if we started it
+  if (serverStarted) {
+    stopServer();
+  }
   
   return {
     results,
