@@ -27,6 +27,7 @@ jobs:
         with:
           node-version: "22"
           cache: 'npm'
+<<<<<<< HEAD
           cache-dependency-path: v2/package.json
 
       - name: Install dependencies (v2)
@@ -36,23 +37,38 @@ jobs:
       - name: Run Style Guide Tests
         continue-on-error: true
         working-directory: v2
+=======
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Style Guide Tests
+        continue-on-error: true
+>>>>>>> upstream/docs-v2-preview
         run: npm run test:style
         id: style-test
 
       - name: Run MDX Validation Tests
         continue-on-error: true
+<<<<<<< HEAD
         working-directory: v2
+=======
+>>>>>>> upstream/docs-v2-preview
         run: npm run test:mdx
         id: mdx-test
 
       - name: Run Spelling Tests
         continue-on-error: true
+<<<<<<< HEAD
         working-directory: v2
+=======
+>>>>>>> upstream/docs-v2-preview
         run: npm run test:spell
         id: spell-test
 
       - name: Run Quality Tests
         continue-on-error: true
+<<<<<<< HEAD
         working-directory: v2
         run: npm run test:quality
         id: quality-test
@@ -63,6 +79,11 @@ jobs:
         run: npm run test:links
         id: links-test
 
+=======
+        run: npm run test:quality
+        id: quality-test
+
+>>>>>>> upstream/docs-v2-preview
       - name: Install Mintlify globally
         run: npm install -g mintlify
 
@@ -90,6 +111,7 @@ jobs:
 
       - name: Run Browser Tests (All Pages)
         continue-on-error: true
+<<<<<<< HEAD
         working-directory: v2
         run: |
           # Force test ALL pages from docs.json (ensures complete coverage)
@@ -98,6 +120,13 @@ jobs:
         id: browser-test
         env:
           MINT_BASE_URL: http://localhost:3000
+=======
+        run: |
+          # Force test ALL pages from docs.json (ensures complete coverage)
+          echo "Testing ALL pages from docs.json navigation..."
+          node tests/integration/browser.test.js
+        id: browser-test
+>>>>>>> upstream/docs-v2-preview
 
       - name: Stop Mintlify dev server
         if: always()
@@ -118,11 +147,18 @@ jobs:
           echo "| MDX Validation | ${{ steps.mdx-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Spelling | ${{ steps.spell-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Quality | ${{ steps.quality-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+<<<<<<< HEAD
           echo "| Links & Imports | ${{ steps.links-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Browser | ${{ steps.browser-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
 
       - name: Fail if any test failed
         if: steps.style-test.outcome == 'failure' || steps.mdx-test.outcome == 'failure' || steps.spell-test.outcome == 'failure' || steps.quality-test.outcome == 'failure' || steps.links-test.outcome == 'failure' || steps.browser-test.outcome == 'failure'
+=======
+          echo "| Browser | ${{ steps.browser-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Fail if any test failed
+        if: steps.style-test.outcome == 'failure' || steps.mdx-test.outcome == 'failure' || steps.spell-test.outcome == 'failure' || steps.quality-test.outcome == 'failure' || steps.browser-test.outcome == 'failure'
+>>>>>>> upstream/docs-v2-preview
         run: |
           echo "❌ One or more tests failed"
           exit 1

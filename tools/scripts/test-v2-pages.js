@@ -9,7 +9,11 @@ const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
 
+<<<<<<< HEAD:tools/scripts/test-v2-pages.js
 const DOCS_JSON_PATH = path.join(__dirname, '../../', 'docs.json');
+=======
+const DOCS_JSON_PATH = path.join(__dirname, '..', 'docs.json');
+>>>>>>> upstream/docs-v2-preview:scripts/test-v2-pages.js
 const BASE_URL = process.env.MINT_BASE_URL || 'http://localhost:3000';
 const TIMEOUT = 30000; // 30 seconds per page
 

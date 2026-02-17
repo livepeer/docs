@@ -599,12 +599,17 @@ tasks/
 ├── plan/          # Planning documents & task specifications
 ├── reports/       # Task outputs & audit reports
 ├── scripts/      # Task execution scripts
-└── errors/       # Error documentation & troubleshooting
+├── errors/       # Error documentation & troubleshooting
+└── context_data/ # Context data and research materials
+    ├── ABOUT/     # About section context data
+    ├── DEVELOPERS/ # Developers section context data
+    └── ORCHESTRATORS/ # Orchestrators section context data
 ```
 
 **Rules:**
 - `plan/` - Planning (not outputs!)
 - `reports/` - Outputs (not planning!)
+- `context_data/` - Research materials and context data for section planning
 - Clear separation of concerns
 
 **Migration:**
@@ -613,6 +618,7 @@ tasks/
   - Reports → `tasks/reports/`
   - Scripts → `tasks/scripts/`
   - Errors → `tasks/errors/`
+- Context data folders (ABOUT, DEVELOPERS, ORCHESTRATORS) → `tasks/context_data/`
 
 ---
 

@@ -114,6 +114,7 @@ fi
 
 # Check 6: Import path validation (absolute paths for snippets)
 echo "Checking import paths..."
+<<<<<<< HEAD
 JSX_MDX_FILES=$(echo "$STAGED_FILES" | grep -E '\.(jsx|tsx|mdx)$' | grep -v "style-guide" || true)
 if [ -n "$JSX_MDX_FILES" ]; then
     for file in $JSX_MDX_FILES; do
@@ -122,6 +123,12 @@ if [ -n "$JSX_MDX_FILES" ]; then
             if [[ "$file" == *"style-guide"* ]]; then
                 continue
             fi
+=======
+JSX_MDX_FILES=$(echo "$STAGED_FILES" | grep -E '\.(jsx|tsx|mdx)$' || true)
+if [ -n "$JSX_MDX_FILES" ]; then
+    for file in $JSX_MDX_FILES; do
+        if [ -f "$file" ]; then
+>>>>>>> upstream/docs-v2-preview
             # Check for snippets imports that aren't absolute
             if grep -E "from ['\"].*snippets" "$file" 2>/dev/null | grep -v "from ['\"]/snippets" > /dev/null; then
                 WARNINGS+=("⚠️  $file: Snippets imports should be absolute (/snippets/...)")
@@ -133,6 +140,7 @@ fi
 
 # Check 7: Browser validation (if Node.js and Puppeteer available)
 if command -v node &>/dev/null; then
+<<<<<<< HEAD
     # Check if puppeteer is available (tests/ first, then tooling/, then legacy root node_modules)
     PUPPETEER_AVAILABLE=false
     if [ -f "tests/node_modules/puppeteer/package.json" ]; then
@@ -151,6 +159,19 @@ if command -v node &>/dev/null; then
         export NODE_PATH="$(pwd)/tooling/node_modules:${NODE_PATH:-}"
     elif [ -f "package.json" ] && grep -q "puppeteer" package.json; then
         PUPPETEER_AVAILABLE=true
+=======
+    # Check if puppeteer is available (installed or in node_modules)
+    PUPPETEER_AVAILABLE=false
+    if [ -f "node_modules/puppeteer/package.json" ]; then
+        PUPPETEER_AVAILABLE=true
+    elif npm list puppeteer &>/dev/null 2>&1; then
+        PUPPETEER_AVAILABLE=true
+    elif [ -f "package.json" ] && grep -q "puppeteer" package.json; then
+        # Check if it's in devDependencies
+        if grep -A 10 '"devDependencies"' package.json | grep -q "puppeteer"; then
+            PUPPETEER_AVAILABLE=true
+        fi
+>>>>>>> upstream/docs-v2-preview
     fi
     
     if [ "$PUPPETEER_AVAILABLE" = true ] && [ -f ".githooks/verify-browser.js" ]; then

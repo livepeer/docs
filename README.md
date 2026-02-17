@@ -697,6 +697,7 @@ Run the following command at the root of your documentation (where `docs.json` i
 mint dev
 ```
 
+<<<<<<< HEAD
 Then open **http://localhost:3000** in your browser. To test the AI assistant: open **Home → Test** in the sidebar and use the chat button.
 
 **If you see** `MODULE_NOT_FOUND` for `_document.js`, **"No docs config"**, or **ENOENT** in `~/.mintlify/`, the Mintlify cache is corrupt. Clear it and run again:
@@ -708,6 +709,8 @@ mint dev
 
 Tests and formatting run from the `tooling/` directory: `cd tooling && npm install`, then `npm run test:style`, `npm run format-mdx`, etc. See `tooling/package.json` for all scripts.
 
+=======
+>>>>>>> upstream/docs-v2-preview
 ### 🔧 Git Hooks (Required)
 
 This repository uses git hooks to enforce style guide compliance and code quality. **You must install them:**
@@ -718,11 +721,18 @@ This repository uses git hooks to enforce style guide compliance and code qualit
 
 The pre-commit hook will:
 - ✅ Check for style guide violations (ThemeData, hardcoded colors, etc.)
+<<<<<<< HEAD
 - ✅ Enforce repository structure rules (root whitelist, snippets structure, v1/ frozen)
 - ✅ Run verification scripts (syntax checks, validation)
 - ✅ Block commits with violations
 
 See [Git Hooks Documentation](contribute/CONTRIBUTING/GIT-HOOKS.md) for details.
+=======
+- ✅ Run verification scripts (syntax checks, validation)
+- ❌ Block commits with violations
+
+See [Git Hooks Documentation](docs/CONTRIBUTING/GIT-HOOKS.md) for details.
+>>>>>>> upstream/docs-v2-preview
 
 ### 📖 Before Contributing
 
@@ -730,6 +740,11 @@ See [Git Hooks Documentation](contribute/CONTRIBUTING/GIT-HOOKS.md) for details.
 
 1. **[Style Guide](v2/pages/07_resources/documentation-guide/style-guide.mdx)** - Production-grade styling guidelines
 2. **[Component Library](v2/pages/07_resources/documentation-guide/component-library.mdx)** - Available components
+<<<<<<< HEAD
 3. **[Contribution Guide](contribute/CONTRIBUTING.md)** - How to contribute
 4. **[Git Hooks](contribute/CONTRIBUTING/GIT-HOOKS.md)** - Pre-commit hook documentation
 5. **This README** - Repository structure (source of truth)
+=======
+3. **[Contribution Guide](docs/CONTRIBUTING/README.md)** - How to contribute
+4. **[Git Hooks](docs/CONTRIBUTING/GIT-HOOKS.md)** - Pre-commit hook documentation
+>>>>>>> upstream/docs-v2-preview

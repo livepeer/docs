@@ -406,7 +406,11 @@ Based on Mintlify documentation and best practices:
 │   ├── plan/              # Planning documents & specifications
 │   ├── reports/           # Task outputs & audit reports
 │   ├── scripts/           # Task scripts
-│   └── errors/            # Error documentation
+│   ├── errors/            # Error documentation
+│   └── context_data/      # Context data and research materials
+│       ├── ABOUT/         # About section context data
+│       ├── DEVELOPERS/     # Developers section context data
+│       └── ORCHESTRATORS/  # Orchestrators section context data
 │
 ├── versions/              # Versioned documentation
 │   ├── v1/                # IMMUTABLE/FROZEN version (DO NOT CHANGE, REMOVE, OR ARCHIVE)

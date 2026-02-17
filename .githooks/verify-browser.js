@@ -14,7 +14,10 @@ const { execSync } = require('child_process');
 const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
+<<<<<<< HEAD
 const { ensureServerRunning, stopServer } = require('./server-manager');
+=======
+>>>>>>> upstream/docs-v2-preview
 
 const BASE_URL = process.env.MINT_BASE_URL || 'http://localhost:3000';
 const TIMEOUT = 15000; // 15 seconds per page (faster for pre-commit)
@@ -68,6 +71,7 @@ async function testPage(browser, filePath) {
   const errors = [];
   const warnings = [];
   
+<<<<<<< HEAD
   // Known false positives from test scripts and Mintlify build artifacts
   const isTestScriptArtifact = (message) => {
     const testArtifacts = [
@@ -87,6 +91,8 @@ async function testPage(browser, filePath) {
     return testArtifacts.some(artifact => message.toLowerCase().includes(artifact.toLowerCase()));
   };
   
+=======
+>>>>>>> upstream/docs-v2-preview
   // Listen for console errors
   page.on('console', msg => {
     const type = msg.type();
@@ -101,6 +107,7 @@ async function testPage(browser, filePath) {
     ];
     
     if (type === 'error') {
+<<<<<<< HEAD
       // Check if this is a known test script artifact
       if (isTestScriptArtifact(text)) {
         if (text.includes('require is not defined')) {
@@ -109,6 +116,10 @@ async function testPage(browser, filePath) {
           warnings.push(`⚠️  ${text} (Likely cause: Test script artifact - does not affect page functionality)`);
         }
       } else if (!text.includes('favicon') && !text.includes('sourcemap')) {
+=======
+      // Filter out known non-critical errors
+      if (!text.includes('favicon') && !text.includes('sourcemap')) {
+>>>>>>> upstream/docs-v2-preview
         errors.push(text);
       }
     } else if (type === 'warning' && !ignoredWarnings.some(ignored => text.toLowerCase().includes(ignored))) {
@@ -118,6 +129,7 @@ async function testPage(browser, filePath) {
   
   // Listen for page errors
   page.on('pageerror', error => {
+<<<<<<< HEAD
     const errorMessage = error.message;
     
     // Check if this is a known test script artifact
@@ -130,6 +142,9 @@ async function testPage(browser, filePath) {
     } else {
       errors.push(`Page Error: ${errorMessage}`);
     }
+=======
+    errors.push(`Page Error: ${error.message}`);
+>>>>>>> upstream/docs-v2-preview
   });
   
   // Listen for request failures (but ignore some)
@@ -153,8 +168,13 @@ async function testPage(browser, filePath) {
       timeout: TIMEOUT 
     });
     
+<<<<<<< HEAD
     // Wait for content to render (using Promise instead of deprecated waitForTimeout)
     await new Promise(resolve => setTimeout(resolve, 1000));
+=======
+    // Wait for content to render
+    await page.waitForTimeout(1000);
+>>>>>>> upstream/docs-v2-preview
     
     // Check if page actually rendered content
     const bodyText = await page.evaluate(() => document.body.innerText);
@@ -194,7 +214,25 @@ async function testPage(browser, filePath) {
   }
 }
 
+<<<<<<< HEAD
 // Server management is now handled by server-manager.js
+=======
+/**
+ * Check if Mintlify server is running
+ */
+async function checkServer() {
+  try {
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.goto(BASE_URL, { waitUntil: 'networkidle2', timeout: 5000 });
+    await page.close();
+    await browser.close();
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+>>>>>>> upstream/docs-v2-preview
 
 /**
  * Main function
@@ -209,6 +247,7 @@ async function main() {
   
   console.log(`\n🌐 Browser validation: Testing ${stagedFiles.length} staged MDX file(s)...`);
   
+<<<<<<< HEAD
   // Ensure server is running (start if needed)
   let serverStarted = false;
   try {
@@ -218,6 +257,20 @@ async function main() {
     process.exit(1);
   }
   
+=======
+  // Check if server is running
+  const serverRunning = await checkServer();
+  if (!serverRunning) {
+    console.log(`⚠️  Mintlify server not running at ${BASE_URL}`);
+    console.log('   Browser validation skipped. Start with: mint dev');
+    console.log('   Or set MINT_BASE_URL environment variable');
+    // Don't fail pre-commit if server isn't running (optional check)
+    process.exit(0);
+  }
+  
+  console.log(`✅ Server accessible at ${BASE_URL}\n`);
+  
+>>>>>>> upstream/docs-v2-preview
   const browser = await puppeteer.launch({ 
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
@@ -236,10 +289,13 @@ async function main() {
     if (result.success) {
       console.log('✅');
       passed++;
+<<<<<<< HEAD
       // Show warnings if present (even for successful pages)
       if (result.warnings.length > 0) {
         console.log(`     ⚠️  ${result.warnings.length} warning(s) (non-blocking)`);
       }
+=======
+>>>>>>> upstream/docs-v2-preview
     } else {
       console.log('❌');
       failed++;
@@ -247,15 +303,19 @@ async function main() {
       if (result.errors.length > 0) {
         console.log(`     Error: ${result.errors[0]}`);
       }
+<<<<<<< HEAD
       // Show warnings if present
       if (result.warnings.length > 0) {
         console.log(`     ⚠️  ${result.warnings.length} warning(s) (non-blocking)`);
       }
+=======
+>>>>>>> upstream/docs-v2-preview
     }
   }
   
   await browser.close();
   
+<<<<<<< HEAD
   // Stop server if we started it (only for pre-commit, keep it running for full tests)
   if (serverStarted) {
     stopServer();
@@ -276,6 +336,11 @@ async function main() {
       });
     }
     console.log('');
+=======
+  // Report results
+  if (failed === 0) {
+    console.log(`\n✅ All ${passed} page(s) rendered successfully in browser\n`);
+>>>>>>> upstream/docs-v2-preview
     process.exit(0);
   } else {
     console.log(`\n❌ ${failed} of ${stagedFiles.length} page(s) failed browser validation:\n`);
@@ -285,6 +350,7 @@ async function main() {
       result.errors.forEach(error => {
         console.log(`    - ${error}`);
       });
+<<<<<<< HEAD
       // Show warnings for failed pages too
       if (result.warnings.length > 0) {
         console.log(`\n    Warnings (non-blocking):`);
@@ -292,6 +358,8 @@ async function main() {
           console.log(`    - ${warning}`);
         });
       }
+=======
+>>>>>>> upstream/docs-v2-preview
     });
     
     console.log('\n💡 Fix errors and try committing again.');

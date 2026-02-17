@@ -1,0 +1,45 @@
+# Cursor Rules for Livepeer Documentation
+
+## MANDATORY: Read Style Guide Before Making Changes
+
+**BEFORE making any code, styling, or component changes, you MUST read:**
+- `v2/pages/07_resources/documentation-guide/style-guide.mdx` - Production-grade styling guidelines
+- `v2/pages/07_resources/documentation-guide/component-library.mdx` - Component reference
+
+## Critical Styling Rules
+
+1. **USE CSS Custom Properties ONLY** - Never use ThemeData or hardcode colors
+   - ✅ Use: `var(--accent)`, `var(--text)`, `var(--card-background)`
+   - ❌ Never use: `ThemeData.light.accent` or hardcoded hex colors
+
+2. **Mintlify Gotchas** - Read the style guide for all Mintlify limitations:
+   - Import paths must be absolute from root
+   - Cannot import into component files
+   - JSX files cannot import other JSX files
+   - React hooks are global (no imports needed)
+
+3. **Component Usage** - Always check component library before creating new components
+
+## Repository Structure
+
+- `v2/pages/` - Current documentation pages (MDX)
+- `snippets/components/` - Custom React/JSX components
+- `snippets/data/` - Reusable data files
+- `style.css` - Global CSS Custom Properties for theming
+- `docs.json` - Mintlify navigation configuration
+
+## Before Making Changes
+
+1. Read the style guide: `v2/pages/07_resources/documentation-guide/style-guide.mdx`
+2. Check component library: `v2/pages/07_resources/documentation-guide/component-library.mdx`
+3. Review Mintlify gotchas in style guide
+4. Use existing components when possible
+5. Follow CSS Custom Properties for all styling
+
+## Documentation Standards
+
+- Use CSS Custom Properties for all theme-aware colors
+- Follow Mintlify import patterns (absolute paths from root)
+- Test in both light and dark modes
+- No suggestions or recommendations in production docs
+- Keep production docs factual only
