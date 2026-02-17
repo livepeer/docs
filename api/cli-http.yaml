@@ -1,0 +1,432 @@
+openapi: 3.0.3
+info:
+  title: Livepeer CLI Local HTTP API
+  description: |
+    Local control-plane HTTP endpoints exposed by the Livepeer node.
+
+    The CLI HTTP API provides programmatic access to node management functions
+    including status monitoring, staking operations, orchestrator configuration,
+    and broadcast settings.
+
+    **Default Ports:**
+    - Gateway: http://localhost:5935
+    - Orchestrator: http://localhost:7935
+  version: "1.0.0"
+  contact:
+    name: Livepeer Documentation
+    url: https://docs.livepeer.org
+
+servers:
+  - url: http://localhost:5935
+    description: Gateway CLI API (default)
+  - url: http://localhost:7935
+    description: Orchestrator CLI API
+
+tags:
+  - name: Status
+    description: Node status and information
+  - name: Staking
+    description: Token bonding and delegation operations
+  - name: Orchestrator
+    description: Orchestrator configuration and management
+  - name: Gateway
+    description: Gateway/broadcaster configuration
+  - name: Ethereum
+    description: Ethereum operations and token transfers
+
+paths:
+  /status:
+    get:
+      tags:
+        - Status
+      summary: Get node status
+      description: Display node information, balances, and configuration
+      operationId: getStatus
+      responses:
+        "200":
+          description: Node status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NodeStatus"
+
+  /protocolParameters:
+    get:
+      tags:
+        - Status
+      summary: View protocol parameters
+      description: Show protocol state and parameters
+      operationId: getProtocolParameters
+      responses:
+        "200":
+          description: Protocol parameters retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProtocolParameters"
+
+  /registeredOrchestrators:
+    get:
+      tags:
+        - Status
+      summary: List registered orchestrators
+      description: Display available orchestrators on the network
+      operationId: getRegisteredOrchestrators
+      responses:
+        "200":
+          description: Orchestrator list retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Orchestrator"
+
+  /bond:
+    post:
+      tags:
+        - Staking
+      summary: Bond tokens to an orchestrator
+      description: Delegate LPT tokens to an orchestrator
+      operationId: bondTokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+                - to
+              properties:
+                amount:
+                  type: string
+                  description: Amount of LPT to bond (in wei)
+                  example: "1000000000000000000"
+                to:
+                  type: string
+                  description: Orchestrator address to bond to
+                  example: "0x1234567890abcdef1234567890abcdef12345678"
+      responses:
+        "200":
+          description: Bond successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionResponse"
+
+  /unbond:
+    post:
+      tags:
+        - Staking
+      summary: Unbond tokens
+      description: Remove delegated tokens (starts unbonding period)
+      operationId: unbondTokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+              properties:
+                amount:
+                  type: string
+                  description: Amount of LPT to unbond (in wei)
+                  example: "1000000000000000000"
+      responses:
+        "200":
+          description: Unbond initiated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionResponse"
+
+  /rebond:
+    post:
+      tags:
+        - Staking
+
+      summary: Rebond tokens
+      description: Rebond tokens in unbonding state
+      operationId: rebondTokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                unbondingLockId:
+                  type: integer
+                  description: ID of the unbonding lock to rebond
+                  example: 0
+      responses:
+        "200":
+          description: Rebond successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionResponse"
+
+  /activateOrchestrator:
+    post:
+      tags:
+        - Orchestrator
+      summary: Activate orchestrator
+      description: Multi-step process to become an orchestrator
+      operationId: activateOrchestrator
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - blockRewardCut
+                - feeShare
+                - pricePerUnit
+                - serviceURI
+              properties:
+                blockRewardCut:
+                  type: string
+                  description: Percentage of block rewards to keep (0-100)
+                  example: "10"
+                feeShare:
+                  type: string
+                  description:
+                    Percentage of fees to share with delegators (0-100)
+                  example: "5"
+                pricePerUnit:
+                  type: string
+                  description: Price per pixel in wei
+                  example: "1000"
+                serviceURI:
+                  type: string
+                  description: Service URI for the orchestrator
+                  example: "https://orchestrator.example.com:8935"
+      responses:
+        "200":
+          description: Orchestrator activated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionResponse"
+
+  /setBroadcastConfig:
+    post:
+      tags:
+        - Gateway
+      summary: Set broadcast configuration
+      description: Configure transcoding options and max price
+      operationId: setBroadcastConfig
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                maxPricePerUnit:
+                  type: string
+                  description: Maximum price per pixel in wei
+                  example: "1000"
+                pixelsPerUnit:
+                  type: integer
+                  description: Number of pixels per unit
+                  example: 1
+      responses:
+        "200":
+          description: Broadcast config updated successfully
+
+  /setMaxPriceForCapability:
+    post:
+      tags:
+        - Gateway
+      summary: Set max price per AI capability
+      description: Set pricing for specific AI pipelines and models
+      operationId: setMaxPriceForCapability
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - capabilities_prices
+              properties:
+                capabilities_prices:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - pipeline
+                      - price_per_unit
+                    properties:
+                      pipeline:
+                        type: string
+                        description: AI pipeline name
+                        example: "text-to-image"
+                      model_id:
+                        type: string
+                        description: Specific model ID or "default"
+                        example: "stabilityai/sd-turbo"
+                      price_per_unit:
+                        type: integer
+                        description: Maximum price per unit
+                        example: 1000
+                      pixels_per_unit:
+                        type: integer
+                        description: Pixels per unit
+                        example: 1
+      responses:
+        "200":
+          description: AI pricing updated successfully
+
+  /reward:
+    post:
+      tags:
+        - Orchestrator
+      summary: Claim orchestrator rewards
+      description: Claim orchestrator rewards for current round
+      operationId: claimReward
+      responses:
+        "200":
+          description: Reward claimed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionResponse"
+
+  /transferTokens:
+    post:
+      tags:
+        - Ethereum
+      summary: Transfer LPT tokens
+      description: Transfer LPT to another address
+      operationId: transferTokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - to
+                - amount
+              properties:
+                to:
+                  type: string
+                  description: Recipient address
+                  example: "0x1234567890abcdef1234567890abcdef12345678"
+                amount:
+                  type: string
+                  description: Amount of LPT to transfer (in wei)
+                  example: "1000000000000000000"
+      responses:
+        "200":
+          description: Transfer successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionResponse"
+
+  /signMessage:
+    post:
+      tags:
+        - Ethereum
+      summary: Sign message
+      description: Sign message with node's private key
+      operationId: signMessage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  description: Message to sign
+                  example: "Hello Livepeer"
+      responses:
+        "200":
+          description: Message signed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  signature:
+                    type: string
+                    description: Hex-encoded signature
+                    example: "0x..."
+
+components:
+  schemas:
+    NodeStatus:
+      type: object
+      properties:
+        node:
+          type: object
+          properties:
+            version:
+              type: string
+              example: "0.7.0"
+            chainId:
+              type: integer
+              example: 42161
+        account:
+          type: object
+          properties:
+            address:
+              type: string
+              example: "0x..."
+            ethBalance:
+              type: string
+              example: "1000000000000000000"
+            lptBalance:
+              type: string
+              example: "1000000000000000000"
+
+    ProtocolParameters:
+      type: object
+      properties:
+        totalBondedToken:
+          type: string
+        totalSupply:
+          type: string
+        paused:
+          type: boolean
+        currentRound:
+          type: string
+
+    Orchestrator:
+      type: object
+      properties:
+        address:
+          type: string
+          example: "0x..."
+        serviceURI:
+          type: string
+          example: "https://orchestrator.example.com:8935"
+        pricePerPixel:
+          type: string
+          example: "1000"
+        activationRound:
+          type: string
+
+    TransactionResponse:
+      type: object
+      properties:
+        txHash:
+          type: string
+          description: Transaction hash
+          example: "0x..."
+        status:
+          type: string
+          description: Transaction status
+          example: "success"

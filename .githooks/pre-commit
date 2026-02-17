@@ -66,13 +66,72 @@ else
             echo -e "${YELLOW}Allowed root files/directories are listed in .whitelist${NC}"
             echo -e "${YELLOW}See contribute/STRUCTURE.md for repository structure rules${NC}"
             echo ""
-            echo -e "${RED}Commit blocked. Fix violations and try again.${NC}"
-            echo ""
-            exit 1
         else
             echo -e "${GREEN}✓ Root directory structure check passed${NC}"
         fi
     fi
+fi
+
+# Check snippets directory structure
+echo ""
+echo -e "${YELLOW}🔍 Checking snippets directory structure...${NC}"
+
+STAGED_SNIPPETS=$(git diff --cached --name-only --diff-filter=A | grep '^snippets/')
+
+if [ -n "$STAGED_SNIPPETS" ]; then
+    # Check for scripts in snippets/
+    SNIPPETS_SCRIPTS=$(echo "$STAGED_SNIPPETS" | grep '^snippets/scripts/')
+    if [ -n "$SNIPPETS_SCRIPTS" ]; then
+        VIOLATIONS=$((VIOLATIONS + 1))
+        echo -e "${RED}❌ Scripts cannot be in snippets/. Move to tools/scripts/${NC}"
+        echo "$SNIPPETS_SCRIPTS" | while read -r file; do
+            WARNINGS+=("❌ $file: Scripts must be in tools/scripts/, not snippets/")
+        done
+    fi
+    
+    # Check for wiki/docs in snippets/
+    SNIPPETS_WIKI=$(echo "$STAGED_SNIPPETS" | grep '^snippets/snippetsWiki/')
+    if [ -n "$SNIPPETS_WIKI" ]; then
+        VIOLATIONS=$((VIOLATIONS + 1))
+        echo -e "${RED}❌ Wiki/docs cannot be in snippets/. Move to tools/wiki/${NC}"
+        echo "$SNIPPETS_WIKI" | while read -r file; do
+            WARNINGS+=("❌ $file: Wiki must be in tools/wiki/, not snippets/")
+        done
+    fi
+    
+    # Check for styles in snippets/
+    SNIPPETS_STYLES=$(echo "$STAGED_SNIPPETS" | grep '^snippets/styles/')
+    if [ -n "$SNIPPETS_STYLES" ]; then
+        VIOLATIONS=$((VIOLATIONS + 1))
+        echo -e "${RED}❌ Styles cannot be in snippets/. Use root style.css only${NC}"
+        echo "$SNIPPETS_STYLES" | while read -r file; do
+            WARNINGS+=("❌ $file: Styles must use root style.css, not snippets/styles/")
+        done
+    fi
+fi
+
+# Check for changes to v1/ (frozen)
+echo ""
+echo -e "${YELLOW}🔍 Checking v1/ directory (frozen)...${NC}"
+
+V1_CHANGES=$(git diff --cached --name-only | grep '^v1/')
+if [ -n "$V1_CHANGES" ]; then
+    VIOLATIONS=$((VIOLATIONS + 1))
+    echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${RED}║  v1/ IS FROZEN - NO CHANGES ALLOWED                        ║${NC}"
+    echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    echo -e "${RED}Attempted changes to v1/:${NC}"
+    echo "$V1_CHANGES" | while read -r file; do
+        echo -e "${RED}  ❌ $file${NC}"
+        WARNINGS+=("❌ $file: v1/ is FROZEN - no changes allowed")
+    done
+    echo ""
+    echo -e "${RED}Commit blocked. v1/ is immutable and cannot be modified.${NC}"
+    echo ""
+    exit 1
+else
+    echo -e "${GREEN}✓ v1/ directory check passed (no changes detected)${NC}"
 fi
 
 echo ""
