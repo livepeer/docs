@@ -128,6 +128,30 @@ We welcome contributions! Please read the following before making changes:
 - **Static assets:** `snippets/assets/`
 - **API specifications:** `api/`
 
+### Component Development
+
+**Creating New Components:**
+1. **Location:** Create components in `snippets/components/`
+2. **File naming:** Use kebab-case (e.g., `my-component.jsx`)
+3. **Component naming:** Use PascalCase (e.g., `MyComponent`)
+4. **Import path:** Use absolute imports: `/snippets/components/my-component`
+5. **Styling:** Use CSS Custom Properties only (`var(--accent)`, `var(--text)`)
+6. **Check component library first:** Review existing components before creating new ones
+
+**Component Immutability Rules:**
+- ⚠️ **CRITICAL:** Components in `snippets/components/` are **IMMUTABLE**
+- **NEVER modify existing component files** - They're used across many pages
+- **Allowed:** Creating new components, modifying MDX files that use components
+- **Forbidden:** Modifying existing component files, changing function signatures
+- **Exception:** Only if explicitly requested AND after confirming impact assessment
+
+**Component Organization:**
+- Organize by domain/feature (e.g., `components/domain/SHARED/`, `components/domain/GATEWAYS/`)
+- Use descriptive names that indicate purpose
+- Document component props and usage
+
+See [Component Library](v2/pages/07_resources/documentation-guide/component-library.mdx) for available components and [Style Guide](v2/pages/07_resources/documentation-guide/style-guide.mdx) for component development guidelines.
+
 ### Pull Request Process
 
 1. **Branch naming:** Use `docs/` prefix (e.g., `docs/fix-typo-quickstart`)
@@ -297,6 +321,117 @@ ls -la .git/hooks/pre-commit
 - Don't bypass unless it's a true emergency
 - See [contribute/CONTRIBUTING/GIT-HOOKS.md](contribute/CONTRIBUTING/GIT-HOOKS.md) for help
 
+**Common errors:**
+- **MDX syntax errors:** Check for unclosed tags, incorrect JSX syntax
+- **Import path errors:** Use absolute paths (`/snippets/components/...`)
+- **Structure violations:** Check `.whitelist` for allowed root files
+- **Style violations:** Replace hardcoded colors with CSS Custom Properties
+
+---
+
+## 🧪 Testing
+
+This repository includes a comprehensive test suite to ensure code quality, style compliance, and functionality.
+
+### When Tests Run
+
+**1. Pre-Commit Hooks (Local - Automatic)**
+- **When:** Every time you run `git commit`
+- **Speed:** Fast (~10-30 seconds) - only tests staged files
+- **What Runs:**
+  - Style guide checks (ThemeData, hardcoded colors, imports)
+  - MDX syntax validation
+  - JSON/JS/Shell syntax checks
+  - Test suite (fast mode) - browser tests skipped
+- **Blocks Commit:** YES - if violations found
+
+**2. CI/CD Workflow (GitHub Actions - Automatic)**
+- **When:** On push to `main` or `docs-v2-preview`, or on pull requests
+- **Speed:** Slower (~5-10 minutes) - tests entire codebase
+- **What Runs:**
+  - Style guide tests (all files)
+  - MDX validation (all files)
+  - Spelling tests (all files)
+  - Quality checks (all files)
+  - Broken links & imports validation (all files)
+  - **Browser tests (ALL pages from docs.json)**
+- **Blocks PR:** YES - if any test fails
+- **Location:** `.github/workflows/test-suite.yml`
+
+**3. Manual Execution (On-Demand)**
+- **When:** You run them manually
+- **Commands:**
+  ```bash
+  # From tooling/ directory
+  cd tooling && npm install
+  npm run test:style      # Style guide tests
+  npm run test:mdx        # MDX validation
+  npm run test:spell      # Spelling checks
+  npm run test:quality   # Quality checks
+  npm run format-mdx     # Format MDX files
+  
+  # Or from root directory
+  node tests/run-all.js                    # All tests
+  node tests/unit/style-guide.test.js     # Style guide only
+  node tests/integration/browser.test.js  # Browser tests only
+  ```
+
+### Test Coverage
+
+- ✅ **Style Guide:** ThemeData usage, hardcoded colors, import paths
+- ✅ **MDX Validation:** Syntax errors, broken imports, component usage
+- ✅ **Spelling:** Spell checks across all documentation
+- ✅ **Quality:** Code quality, formatting, best practices
+- ✅ **Links & Imports:** Broken links and import validation
+- ✅ **Browser Tests:** Full page rendering tests (CI only)
+
+See [tests/WHEN-TESTS-RUN.md](tests/WHEN-TESTS-RUN.md) for complete test documentation.
+
+---
+
+## 🚀 CI/CD & Deployment
+
+### Deployment Process
+
+**Mintlify Auto-Deployment:**
+- Changes merged to `main` or `docs-v2-preview` are automatically deployed by Mintlify
+- Deployment typically takes 2-5 minutes after merge
+- Live site: [docs.livepeer.org](https://docs.livepeer.org)
+- No manual deployment steps required
+
+### GitHub Actions Workflows
+
+This repository uses several GitHub Actions workflows:
+
+**1. Test Suite** (`.github/workflows/test-suite.yml`)
+- Runs on: Push to `main`/`docs-v2-preview`, Pull requests
+- Tests: Style guide, MDX, spelling, quality, browser tests
+- Blocks PR if tests fail
+
+**2. Broken Links Check** (`.github/workflows/broken-links.yml`)
+- Validates all links in documentation
+- Runs on pull requests
+
+**3. Auto-Update Workflows:**
+- **Update Livepeer Release** (`.github/workflows/update-livepeer-release.yml`)
+  - Runs every 30 minutes
+  - Updates latest Livepeer version from GitHub releases
+- **Update Blog Data** (`.github/workflows/update-blog-data.yml`)
+  - Updates blog content from external sources
+- **Update Forum Data** (`.github/workflows/update-forum-data.yml`)
+  - Updates forum content
+- **Update YouTube Data** (`.github/workflows/update-youtube-data.yml`)
+  - Updates YouTube video content
+
+**4. SDK Generation** (`.github/workflows/sdk_generation.yaml`)
+- Generates SDK documentation from API specs
+
+### Build Process
+
+- **Local Development:** `mint dev` - Starts local server at `http://localhost:3000`
+- **Production Build:** Handled automatically by Mintlify
+- **Docker Build:** `docker build -t livepeer/docs .` (see `Dockerfile`)
+
 ---
 
 ## 🤖 AI Agent Rules & Guidelines
@@ -406,6 +541,10 @@ When working with this repository, AI agents should:
 │   │   └── fetch/         # Data fetching scripts
 │   └── wiki/              # Internal wiki/docs
 │
+├── tooling/               # Test and formatting tooling
+│   ├── package.json       # Test dependencies and scripts
+│   └── [test files]       # Test configuration and utilities
+│
 ├── tests/                 # Test suite
 │   ├── config/
 │   ├── fixtures/
@@ -471,10 +610,76 @@ See [`.githooks/BYPASS.md`](.githooks/BYPASS.md) for details.
 
 ### Related Documentation
 
+- **[Documentation Governance](v2/pages/09_internal/governance.mdx)** - Review process, ownership, SLAs, and ticketing system
 - **[Migration Plan](tasks/plan/migration-plan.md)** - Detailed migration strategy and task list
 - **[Repository Structure Audit](tasks/PLAN/reports/repository-structure-audit.md)** - Full audit report
 - **[Structure Rules](contribute/STRUCTURE.md)** - Detailed structure rules (when created)
 - **[`.whitelist`](.whitelist)** - Allowed root files/directories
+- **[CODEOWNERS](.github/CODEOWNERS)** - Section ownership and review assignments
+
+---
+
+## 📦 Versioning
+
+### v1 vs v2 Documentation
+
+**v1/ Directory:**
+- **Status:** IMMUTABLE/FROZEN - DO NOT CHANGE, REMOVE, OR ARCHIVE
+- **Purpose:** Legacy documentation preserved for historical reference
+- **Location:** `v1/pages/`
+- **Enforcement:** Pre-commit hook blocks all changes to `v1/`
+
+**v2/ Directory:**
+- **Status:** ACTIVE - Current documentation version
+- **Purpose:** Active documentation being maintained and updated
+- **Location:** `v2/pages/`
+- **Deployment:** Deployed to [docs.livepeer.org](https://docs.livepeer.org)
+
+### Migration Strategy
+
+- v1 documentation remains accessible but is no longer maintained
+- All new content and updates go to v2
+- v1 serves as reference for historical context
+- No migration from v1 to v2 is planned - v1 is frozen
+
+---
+
+## 🔄 Automation & Workflows
+
+This repository uses automated workflows to keep content up-to-date:
+
+### Auto-Update Workflows
+
+**1. Livepeer Release Version** (`.github/workflows/update-livepeer-release.yml`)
+- **Frequency:** Every 30 minutes
+- **Purpose:** Updates latest Livepeer version from GitHub releases
+- **Updates:** `snippets/automationData/globals/globals.mdx`
+- **Manual trigger:** Available via `workflow_dispatch`
+
+**2. Blog Data** (`.github/workflows/update-blog-data.yml`)
+- **Purpose:** Updates blog content from external sources
+- **Updates:** Blog-related data files
+
+**3. Forum Data** (`.github/workflows/update-forum-data.yml`)
+- **Purpose:** Updates forum content
+- **Updates:** Forum-related data files
+
+**4. YouTube Data** (`.github/workflows/update-youtube-data.yml`)
+- **Purpose:** Updates YouTube video content
+- **Updates:** YouTube-related data files
+
+**5. Ghost Blog Data** (`.github/workflows/update-ghost-blog-data.yml`)
+- **Purpose:** Updates Ghost blog content
+- **Updates:** Ghost blog-related data files
+
+### Workflow Management
+
+- All workflows run automatically on schedule
+- Workflows can be manually triggered via GitHub Actions UI
+- Workflow logs are available in the Actions tab
+- Failed workflows send notifications to maintainers
+
+See [Automations & Workflows Guide](v2/pages/07_resources/documentation-guide/automations-workflows.mdx) for detailed information.
 
 ---
 
