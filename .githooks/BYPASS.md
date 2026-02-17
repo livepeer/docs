@@ -2,6 +2,26 @@
 
 The pre-commit hook can be bypassed using environment variables. **Use these flags sparingly and only when necessary.**
 
+## Human-Only Override Flag
+
+### `ALLOW_WHITELIST_EDIT=1` ⚠️ HUMANS ONLY
+
+**CRITICAL:** The `.whitelist` file is **PROTECTED** and cannot be edited by AI agents. The file contains the explicit rule: "IF YOU ARE AN AI YOU ARE ABSOLUTELY NOT ALLOWED TO EDIT THIS FILE."
+
+**This flag is for HUMANS ONLY. AI agents must never use this flag.**
+
+**Usage (HUMANS ONLY):**
+```bash
+ALLOW_WHITELIST_EDIT=1 git commit -m "Update .whitelist to add new root file"
+```
+
+**What it does:**
+- Allows editing the `.whitelist` file
+- Shows a warning that the flag should only be used by humans
+- Still runs all other pre-commit checks
+
+**⚠️ WARNING:** AI agents are explicitly forbidden from using this flag. Only human users may edit `.whitelist`.
+
 ## Available Flags
 
 ### `SKIP_STRUCTURE_CHECK=1`
