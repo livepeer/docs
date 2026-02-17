@@ -5,21 +5,59 @@ containerized with Docker.
 
 ## Big Picture & Architecture
 
+**⚠️ MANDATORY: Read Structure Rules Before Creating/Moving Files**
+
+**BEFORE creating, moving, or organizing files, you MUST read:**
+- `contribute/STRUCTURE.md` - Complete repository structure rules (if exists)
+- `tasks/plan/migration-plan.md` - Detailed structure documentation (Section 4)
+
+### Critical Structure Rules
+
+1. **Root Directory** - Only essential files allowed:
+   - ✅ Allowed: `docs.json`, `package.json`, `README.md`, `LICENSE`, `Dockerfile`, `Makefile`, `style.css`, `.gitignore`, `.mintignore`, `.whitelist`
+   - ❌ Forbidden: Scripts, config files, documentation files, temporary files, OpenAPI specs
+   - **CRITICAL:** Mintlify only allows ONE CSS file (`style.css`) at root - NO `styles/` folder
+
+2. **File Locations** - Files must be in correct directories:
+   - Scripts → `tools/scripts/` (organized by purpose: audit/, generate/, test/, verify/, fetch/)
+   - Config files → `tools/config/`
+   - AI guidelines → `tools/ai-rules/`
+   - Public assets → `public/` (favicon.png, logo/)
+   - OpenAPI specs → `api/` (consolidated)
+   - Contribution docs → `contribute/`
+   - Documentation → `docs/v1/` (FROZEN) or `docs/v2/pages/` (active)
+
+3. **Snippets Directory** - MUST follow Mintlify conventions:
+   - ✅ Required: `snippets/pages/` (for MDX-in-MDX pattern)
+   - ✅ Allowed: `components/`, `data/`, `assets/`, `automations/`, `generated/`
+   - ❌ Forbidden: Scripts (→ `tools/scripts/`), wiki/docs (→ `tools/wiki/`), styles (→ root `style.css` only)
+   - ✅ All imports must be absolute paths from root: `/snippets/components/...`
+   - ❌ Components cannot import other components
+
+4. **Enforcement** - Structure is enforced:
+   - `.whitelist` file lists allowed root files/directories
+   - Pre-commit hook blocks unauthorized root files/directories
+   - Always check structure rules before creating new files
+
 - **Multi-version Docs:**
-  - `v1/` = legacy, `v2/` = current. Navigation in `docs.json`/`docs_v2.json`.
+  - `docs/v1/` = IMMUTABLE/FROZEN (never modify), `docs/v2/pages/` = current. Navigation in `docs.json`.
 - **Component System:**
   - Custom React/TSX/JSX components in `snippets/components/` (see
     README-custom-view.md for advanced usage).
   - Use `.tsx` for new components; `.jsx` is legacy but supported.
+  - All imports must be absolute paths from root: `/snippets/components/...`
 - **Automations & Scripts:**
-  - All dynamic, AI, and data-fetching logic in `automations/` and `ai-tools/`.
-  - Scripts for API doc generation and external data in `snippets/scripts/` (see
-    generate-api-docs.sh, fetch-openapi-specs.sh).
+  - All dynamic, AI, and data-fetching logic in `snippets/automations/` and `ai-tools/`.
+  - Scripts for API doc generation and external data in `tools/scripts/` (organized by purpose).
 - **API Reference:**
-  - OpenAPI spec in `openapi.yaml` (AI API: see ai/worker/api/openapi.yaml). Use
-    scripts to generate MDX/API docs.
+  - OpenAPI specs consolidated in `api/` directory:
+    - `api/studio.yaml` - Main API (moved from root `openapi.yaml`)
+    - `api/ai-worker.yaml` - AI API (moved from `ai/worker/api/openapi.yaml`)
+    - `api/cli-http.yaml` - CLI HTTP API
+  - Use scripts to generate MDX/API docs.
 - **Assets:**
-  - Images/logos in `images/`, `logo/`, and static assets in `assets/`.
+  - Public assets in `public/` (favicon.png, logo/)
+  - Docs content assets in `snippets/assets/`
 
 ## Developer Workflows
 
@@ -77,13 +115,23 @@ containerized with Docker.
 
 ## Key Files & Directories
 
-- `docs.json`, `docs_v2.json` — Navigation/config
+- `docs.json` — Navigation/config
+- `docs/v1/` — IMMUTABLE/FROZEN documentation (never modify)
+- `docs/v2/pages/` — Current documentation pages
 - `snippets/components/` — Custom components (see README-custom-view.md)
-- `automations/`, `ai-tools/` — Scripts, AI, dynamic content
-- `openapi.yaml`, `ai/worker/api/openapi.yaml` — API reference
+- `snippets/pages/` — REQUIRED for MDX sub-views (MDX-in-MDX pattern)
+- `snippets/automations/` — Dynamic/AI/data-fetching logic
+- `tools/scripts/` — All scripts (organized by purpose: audit/, generate/, test/, verify/, fetch/)
+- `tools/config/` — Tool configurations
+- `tools/ai-rules/` — AI guidelines and rules
+- `api/` — Consolidated OpenAPI specifications (studio.yaml, ai-worker.yaml, cli-http.yaml)
+- `contribute/` — Contribution documentation
+- `public/` — Public assets (favicon.png, logo/)
+- `ai-tools/` — AI tool setup guides
+- `tasks/` — AI working directory (plan/, reports/, scripts/, errors/, experiments/, notes/)
+- `style.css` — Global CSS Custom Properties (ONLY CSS file at root)
 - `Dockerfile`, `Makefile` — Build/deploy
-- `README.md`, `README_V2.md` — Developer notes, protocol/architecture
-- `snippets/scripts/` — Automation scripts (API docs, data fetching)
+- `README.md` — Developer notes, protocol/architecture
 
 ---
 

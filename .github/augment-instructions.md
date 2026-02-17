@@ -38,13 +38,18 @@
 
 **BEFORE making any styling, component, or documentation changes, you MUST read:**
 
-1. **Style Guide** - `v2/pages/07_resources/documentation-guide/style-guide.mdx`
+1. **Structure Rules** - `contribute/STRUCTURE.md` (if exists) or `tasks/plan/migration-plan.md` Section 4
+   - Repository structure and file organization rules
+   - Directory purposes and file placement guidelines
+   - Enforcement mechanisms
+
+2. **Style Guide** - `v2/pages/07_resources/documentation-guide/style-guide.mdx`
    - Production-grade styling guidelines
    - CSS Custom Properties usage (ONLY approach - no ThemeData)
    - Mintlify gotchas and limitations
    - Component usage patterns
 
-2. **Component Library** - `v2/pages/07_resources/documentation-guide/component-library.mdx`
+3. **Component Library** - `v2/pages/07_resources/documentation-guide/component-library.mdx`
    - Available components and their usage
    - Props and examples
 
@@ -55,32 +60,75 @@
 - ✅ Follow Mintlify import patterns (absolute paths from root)
 - ✅ Test in both light and dark modes
 - ❌ No suggestions/recommendations in production docs (factual only)
+- ✅ Verify file location matches structure rules before creating files
 
 ## Repository Structure
 
+**⚠️ MANDATORY: Read Structure Rules Before Creating/Moving Files**
+
+**BEFORE creating, moving, or organizing files, you MUST read:**
+- `contribute/STRUCTURE.md` - Complete repository structure rules (if exists)
+- `tasks/plan/migration-plan.md` - Detailed structure documentation (Section 4)
+
+### Critical Structure Rules
+
+1. **Root Directory** - Only essential files allowed:
+   - ✅ Allowed: `docs.json`, `package.json`, `README.md`, `LICENSE`, `Dockerfile`, `Makefile`, `style.css`, `.gitignore`, `.mintignore`, `.whitelist`
+   - ❌ Forbidden: Scripts, config files, documentation files, temporary files, OpenAPI specs
+   - **CRITICAL:** Mintlify only allows ONE CSS file (`style.css`) at root - NO `styles/` folder
+
+2. **File Locations** - Files must be in correct directories:
+   - Scripts → `tools/scripts/` (organized by purpose: audit/, generate/, test/, verify/, fetch/)
+   - Config files → `tools/config/`
+   - AI guidelines → `tools/ai-rules/`
+   - Public assets → `public/` (favicon.png, logo/)
+   - OpenAPI specs → `api/` (consolidated)
+   - Contribution docs → `contribute/`
+   - Documentation → `docs/v1/` (FROZEN) or `docs/v2/pages/` (active)
+
+3. **Snippets Directory** - MUST follow Mintlify conventions:
+   - ✅ Required: `snippets/pages/` (for MDX-in-MDX pattern)
+   - ✅ Allowed: `components/`, `data/`, `assets/`, `automations/`, `generated/`
+   - ❌ Forbidden: Scripts (→ `tools/scripts/`), wiki/docs (→ `tools/wiki/`), styles (→ root `style.css` only)
+   - ✅ All imports must be absolute paths from root: `/snippets/components/...`
+   - ❌ Components cannot import other components
+
+4. **Enforcement** - Structure is enforced:
+   - `.whitelist` file lists allowed root files/directories
+   - Pre-commit hook blocks unauthorized root files/directories
+   - Always check structure rules before creating new files
+
 ### Multi-Version Docs
 
-- `v1/` - Legacy documentation
-- `v2/` - Current documentation
-- Navigation configs: `docs.json` (v1), `docs_v2.json` (v2)
+- `docs/v1/` - IMMUTABLE/FROZEN (never modify, remove, or archive)
+- `docs/v2/pages/` - Current documentation (will be flattened to `docs/pages/` in stretch goal)
+- Navigation configs: `docs.json`
 
 ### Key Directories
 
 - `snippets/components/` - Custom React/JSX/TSX components
 - `snippets/data/` - Data files (gateways.jsx, etc.)
-- `automations/` - Dynamic/AI/data-fetching logic
-- `ai-tools/` - AI-related tooling
-- `v2/scripts/` - API doc generation, data fetching scripts
-- `style.css` - Global CSS Custom Properties for theming (production-grade styling)
-- `images/`, `logo/`, `assets/` - Static assets
+- `snippets/pages/` - REQUIRED for MDX sub-views (MDX-in-MDX pattern)
+- `snippets/assets/` - Static assets for docs content
+- `snippets/automations/` - Dynamic/AI/data-fetching logic
+- `tools/scripts/` - All scripts (organized by purpose)
+- `tools/config/` - Tool configurations
+- `tools/ai-rules/` - AI guidelines and rules
+- `api/` - Consolidated OpenAPI specifications
+- `contribute/` - Contribution documentation
+- `public/` - Public assets (favicon.png, logo/)
+- `ai-tools/` - AI tool setup guides
+- `tasks/` - AI working directory (plan/, reports/, scripts/, errors/, experiments/, notes/)
+- `style.css` - Global CSS Custom Properties (ONLY CSS file at root)
 
 ### Important Files
 
-- `mint.json`, `docs.json` - Mintlify config/navigation
-- `openapi.yaml` - API reference spec
-- `ai/worker/api/openapi.yaml` - AI API spec
+- `docs.json` - Mintlify config/navigation
+- `api/studio.yaml` - Main API reference spec (moved from root `openapi.yaml`)
+- `api/ai-worker.yaml` - AI API spec (moved from `ai/worker/api/openapi.yaml`)
+- `api/cli-http.yaml` - CLI HTTP API spec
 - `Dockerfile`, `Makefile` - Build/deploy
-- `README.md`, `README_V2.md` - Developer documentation
+- `README.md` - Developer documentation
 
 ## Development Workflows
 
