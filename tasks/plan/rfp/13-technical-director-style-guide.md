@@ -32,4 +32,4 @@ Evidence that the unified voice and style guide was **established with** the Liv
 - [16-rfp-notion-gaps-and-incomplete.md](../reports/16-rfp-notion-gaps-and-incomplete.md) — M13
 - [Forum RFP 3071](https://forum.livepeer.org/t/rfp-documentation-restructure/3071)
 - [Notion Planning Overview](https://www.notion.so/2cc660222d0881268132e732f0686fc9) — Rick listed as Technical Director
-- Existing style guides: `docs/ABOUT/ABOUT-SECTION-STYLE-GUIDE.md`, `docs/DEVELOPERS/DEVELOPERS-SECTION-STYLE-GUIDE.md`, `docs/ORCHESTRATORS/ORCHESTRATORS-SECTION-STYLE-GUIDE.md`
+- Existing style guides: `tasks/ABOUT/ABOUT-SECTION-STYLE-GUIDE.md`, `tasks/DEVELOPERS/DEVELOPERS-SECTION-STYLE-GUIDE.md`, `tasks/ORCHESTRATORS/ORCHESTRATORS-SECTION-STYLE-GUIDE.md`

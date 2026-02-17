@@ -6,7 +6,7 @@
 |------|--------|
 | **Branch** | `docs-plan/14-audit-v1-to-v2-coverage` |
 | **First step** | Create the branch: `git checkout -b docs-plan/14-audit-v1-to-v2-coverage` (run from docs-v2-preview — main branch in this fork) |
-| **Report path** | `docs/PLAN/reports/14-audit-v1-to-v2-coverage-report.md` (create on completion) |
+| **Report path** | `tasks/reports/14-audit-v1-to-v2-coverage-report.md` (create on completion) |
 | **PR target** | `docs-v2-preview` (main branch in this fork) |
 
 Before starting: run the first step (create branch), then perform the task.  
@@ -29,6 +29,6 @@ Verify whether all information from v1 docs that is still relevant exists in v2;
 
 ## References
 
-- docs/ORCHESTRATORS/00-V1-TO-V2-IA-MAPPING-AND-RECOMMENDATIONS.md
-- docs/DEVELOPERS/00-NAV-AND-PAGE-INDEX.md
+- tasks/ORCHESTRATORS/00-V1-TO-V2-IA-MAPPING-AND-RECOMMENDATIONS.md
+- tasks/DEVELOPERS/00-NAV-AND-PAGE-INDEX.md
 - v1 and v2 page lists

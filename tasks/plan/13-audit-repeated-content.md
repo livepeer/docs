@@ -6,7 +6,7 @@
 |------|--------|
 | **Branch** | `docs-plan/13-audit-repeated-content` |
 | **First step** | Create the branch: `git checkout -b docs-plan/13-audit-repeated-content` (run from docs-v2-preview — main branch in this fork) |
-| **Report path** | `docs/PLAN/reports/13-audit-repeated-content-report.md` (create on completion) |
+| **Report path** | `tasks/reports/13-audit-repeated-content-report.md` (create on completion) |
 | **PR target** | `docs-v2-preview` (main branch in this fork) |
 
 Before starting: run the first step (create branch), then perform the task.  

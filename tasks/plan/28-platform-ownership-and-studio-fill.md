@@ -6,7 +6,7 @@
 |------|--------|
 | **Branch** | `docs-plan/28-platform-ownership-and-studio-fill` |
 | **First step** | Create the branch: `git checkout -b docs-plan/28-platform-ownership-and-studio-fill` (run from docs-v2-preview — main branch in this fork) |
-| **Report path** | `docs/PLAN/reports/28-platform-ownership-and-studio-fill-report.md` (create on completion) |
+| **Report path** | `tasks/reports/28-platform-ownership-and-studio-fill-report.md` (create on completion) |
 | **PR target** | `docs-v2-preview` (main branch in this fork) |
 
 **MANDATORY: Before starting:** Read [style-guide.mdx](/v2/pages/07_resources/documentation-guide/style-guide.mdx) and [component-library.mdx](/v2/pages/07_resources/documentation-guide/component-library.mdx). Run the first step (create branch), then perform the task.
@@ -29,7 +29,7 @@ On completion: write report (work + testing + follow-ups), then open PR.
 
 - Ownership table or document (e.g. in docs or CONTRIBUTING) listing section/platform and the pages they own.
 - Updated or new Studio content in v2, drawn from v1 where appropriate.
-- Report at `docs/PLAN/reports/28-platform-ownership-and-studio-fill-report.md` summarising ownership decisions and what Studio content was added or changed.
+- Report at `tasks/reports/28-platform-ownership-and-studio-fill-report.md` summarising ownership decisions and what Studio content was added or changed.
 
 ## References
 

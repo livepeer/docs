@@ -6,7 +6,7 @@
 |------|--------|
 | **Branch** | `docs-plan/24-audit-repo-files-removal` |
 | **First step** | Create the branch: `git checkout -b docs-plan/24-audit-repo-files-removal` (run from docs-v2-preview — main branch in this fork) |
-| **Report path** | `docs/PLAN/reports/24-audit-repo-files-removal-report.md` (create on completion) |
+| **Report path** | `tasks/reports/24-audit-repo-files-removal-report.md` (create on completion) |
 | **PR target** | `docs-v2-preview` (main branch in this fork) |
 
 **MANDATORY: Before starting:** Read style-guide.mdx and component-library.mdx. Run the first step (create branch), then perform the task.
@@ -27,7 +27,7 @@ Perform a repo-wide file audit to identify dead code, duplicate assets, obsolete
 
 ## Deliverables
 
-- Report at docs/PLAN/reports/24-audit-repo-files-removal-report.md with: summary of findings; tables or lists (path, type, recommendation, rationale); suggested follow-up PRs.
+- Report at tasks/reports/24-audit-repo-files-removal-report.md with: summary of findings; tables or lists (path, type, recommendation, rationale); suggested follow-up PRs.
 - Optional: small PRs that perform agreed removals, linked from the report.
 
 ## References

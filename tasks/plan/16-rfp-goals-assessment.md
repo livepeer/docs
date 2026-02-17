@@ -6,7 +6,7 @@
 |------|--------|
 | **Branch** | `docs-plan/16-rfp-goals-assessment` |
 | **First step** | Create the branch: `git checkout -b docs-plan/16-rfp-goals-assessment` (run from docs-v2-preview — main branch in this fork) |
-| **Report path** | `docs/PLAN/reports/16-rfp-goals-assessment-report.md` (create on completion) |
+| **Report path** | `tasks/reports/16-rfp-goals-assessment-report.md` (create on completion) |
 | **PR target** | `docs-v2-preview` (main branch in this fork) |
 
 Before starting: run the first step (create branch), then perform the task.  
@@ -27,7 +27,7 @@ Read the RFP and Notion sources closely; determine whether the goals of the orig
 ## Deliverables
 
 - Checklist or table: RFP goal, met (Y/N), evidence or gap; suggestions for each unmet goal
-- **Notion-connected gaps report:** ALL missing ideas + ALL incomplete items from forum + Notion RFP → `docs/PLAN/reports/16-rfp-notion-gaps-and-incomplete.md`
+- **Notion-connected gaps report:** ALL missing ideas + ALL incomplete items from forum + Notion RFP → `tasks/reports/16-rfp-notion-gaps-and-incomplete.md`
 
 ## References
 
@@ -35,5 +35,5 @@ Read the RFP and Notion sources closely; determine whether the goals of the orig
 - **Forum RFP:** https://forum.livepeer.org/t/rfp-documentation-restructure/3071
 - **Notion RFP:** https://www.notion.so/2bf660222d0881a2942bd77ca7be3d27
 - **Notion Planning Overview:** https://www.notion.so/2cc660222d0881268132e732f0686fc9
-- **Gaps & incomplete (this task):** docs/PLAN/reports/16-rfp-notion-gaps-and-incomplete.md
-- **Goals assessment report:** docs/PLAN/complete/16-rfp-goals-assessment-report.md
+- **Gaps & incomplete (this task):** tasks/reports/16-rfp-notion-gaps-and-incomplete.md
+- **Goals assessment report:** tasks/reports/16-rfp-goals-assessment-report.md

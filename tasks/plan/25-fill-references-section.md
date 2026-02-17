@@ -6,7 +6,7 @@
 |------|--------|
 | **Branch** | `docs-plan/25-fill-references-section` |
 | **First step** | Create the branch: `git checkout -b docs-plan/25-fill-references-section` (run from docs-v2-preview — main branch in this fork) |
-| **Report path** | `docs/PLAN/reports/25-fill-references-section-report.md` (create on completion) |
+| **Report path** | `tasks/reports/25-fill-references-section-report.md` (create on completion) |
 | **PR target** | `docs-v2-preview` (main branch in this fork) |
 
 **MANDATORY: Before starting:** Read style-guide.mdx and component-library.mdx. Run the first step (create branch), then perform the task.
@@ -30,7 +30,7 @@ Populate the References section (e.g. v2/pages/09_internal/references.mdx) with 
 
 - Updated References page(s) with real content (links, short descriptions, structure).
 - Brief note in the documentation guide or IA doc on what lives in References and how to maintain it.
-- Report at docs/PLAN/reports/25-fill-references-section-report.md describing what was added and where.
+- Report at tasks/reports/25-fill-references-section-report.md describing what was added and where.
 
 ## References
 

@@ -19,7 +19,7 @@ Complete **persona journey mapping** for the doc’s core personas so that the N
 ## Deliverables
 
 - Persona journey maps (or a single doc with one section per persona): for Developers, Delegators, Gateway Operators, Orchestrators — entry points, main goals, key pages, and optional “exit” (e.g. to Discord, to product)
-- Format: Miro, Notion, or markdown in repo (e.g. `docs/PLAN/rfp/persona-journeys.md` or link to Miro/Notion)
+- Format: Miro, Notion, or markdown in repo (e.g. `tasks/plan/rfp/persona-journeys.md` or link to Miro/Notion)
 - Update Notion Planning so “Still need to map persona journeys!” is removed or marked done; add to task list as completed
 - Update gaps report so M18 is marked complete
 

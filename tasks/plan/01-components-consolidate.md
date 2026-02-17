@@ -6,7 +6,7 @@
 |------|--------|
 | **Branch** | `docs-plan/01-components-consolidate` |
 | **First step** | Create the branch: `git checkout -b docs-plan/01-components-consolidate` (run from docs-v2-preview — main branch in this fork) |
-| **Report path** | `docs/PLAN/reports/01-components-consolidate-report.md` (create on completion) |
+| **Report path** | `tasks/reports/01-components-consolidate-report.md` (create on completion) |
 | **PR target** | `docs-v2-preview` (main branch in this fork) |
 
 Before starting: run the first step (create branch), then perform the task.  

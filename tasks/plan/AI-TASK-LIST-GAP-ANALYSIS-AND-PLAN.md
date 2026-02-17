@@ -1,6 +1,6 @@
 # AI Task List vs PLAN — Gap Analysis and Comprehensive Plan
 
-This document compares the **AI Task List** (user-provided checklist) with the **docs/PLAN** task set, identifies items **not in PLAN** or **incomplete**, and provides a comprehensive plan for addressing them.
+This document compares the **AI Task List** (user-provided checklist) with the **tasks/plan** task set, identifies items **not in PLAN** or **incomplete**, and provides a comprehensive plan for addressing them.
 
 ---
 
@@ -75,7 +75,7 @@ Below are concrete plans for each gap: either a **new PLAN task** or an **extens
   - Define rules: which components require which Mintlify (or other) imports.
   - Implement a script (e.g. in `v2/scripts/` or `snippets/scripts/`) that parses MDX and component usage and checks imports.
   - Integrate into CI and/or pre-commit (optional).
-- **Deliverables:** Script, short doc in style-guide or component-library, and optionally a report under `docs/PLAN/reports/`.
+- **Deliverables:** Script, short doc in style-guide or component-library, and optionally a report under `tasks/reports/`.
 - **Suggested PLAN number:** 22 (e.g. `22-page-imports-check-script.md`).
 
 ---
@@ -113,7 +113,7 @@ Below are concrete plans for each gap: either a **new PLAN task** or an **extens
 
 - **Goal:** Repo-wide file audit: identify dead code, duplicate assets, obsolete scripts, old v1 leftovers, and suggest removals or consolidation.
 - **Scope:** Whole repo (excluding only standard tooling folders if agreed). Output: list of files/dirs with recommendation (keep / remove / merge).
-- **Deliverables:** Report in `docs/PLAN/reports/` (e.g. `22-repo-files-audit-report.md` or similar) with tables and optional follow-up PRs.
+- **Deliverables:** Report in `tasks/reports/` (e.g. `22-repo-files-audit-report.md` or similar) with tables and optional follow-up PRs.
 - **Suggested PLAN number:** 24 (e.g. `24-audit-repo-files-removal.md`).
 
 ---
@@ -145,7 +145,7 @@ Below are concrete plans for each gap: either a **new PLAN task** or an **extens
   - Current state: pre-commit runs tests with `--skip-browser` (see `.githooks/pre-commit` and test runner).
   - Change: run full browser test suite on commit (or a defined “critical path” of pages) and remove/bypass any “skip browser” option for pre-commit.
   - Performance: if full suite is too slow, define a smaller “smoke” set of pages that must load; document in GIT-HOOKS.md.
-- **Deliverables:** Updated pre-commit (and possibly test runner), updated `docs/CONTRIBUTING/GIT-HOOKS.md`, and a note in PLAN or automation report.
+- **Deliverables:** Updated pre-commit (and possibly test runner), updated `contribute/CONTRIBUTING/GIT-HOOKS.md`, and a note in PLAN or automation report.
 - **Suggested PLAN number:** 27 (e.g. `27-pre-commit-full-browser-verification.md`).
 
 ---
@@ -194,8 +194,8 @@ Below are concrete plans for each gap: either a **new PLAN task** or an **extens
 ## 6. Next Steps
 
 1. **Prioritise** which of the new tasks (22–28) and extensions to do first (e.g. 27 and 25 for reliability and completeness).
-2. **Add task briefs** under `docs/PLAN/` for each chosen new task (use `TASK-TEMPLATE.md`).
-3. **Update** `docs/PLAN/README.md` with the new task table and optional priority.
+2. **Add task briefs** under `tasks/plan/` for each chosen new task (use `TASK-TEMPLATE.md`).
+3. **Update** `tasks/plan/README.md` with the new task table and optional priority (if it exists).
 4. **Run** existing remaining PLAN tasks (03, 04, 06–09, 11, 12, 17, 18, 19, 21) in parallel where possible; then execute the new plan items in order of priority.
 
 ---

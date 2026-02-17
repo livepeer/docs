@@ -12,6 +12,9 @@
 #   SKIP_VERIFICATION=1    - Skip verification scripts
 #   SKIP_TESTS=1           - Skip test suite
 #   SKIP_ALL=1             - Skip all checks (use with extreme caution)
+#
+# Human-only override flag:
+#   ALLOW_WHITELIST_EDIT=1 - Allow editing .whitelist file (HUMANS ONLY - AIs must never use this)
 
 STYLE_GUIDE_PATH="v2/pages/07_resources/documentation-guide/style-guide.mdx"
 VIOLATIONS=0
@@ -34,6 +37,35 @@ if [ "$SKIP_ALL" = "1" ]; then
     echo -e "${YELLOW}⚠️  WARNING: All pre-commit checks bypassed (SKIP_ALL=1)${NC}"
     echo -e "${YELLOW}   This should only be used in emergencies.${NC}"
     exit 0
+fi
+
+# Check for .whitelist file changes (BLOCKED for AIs, requires human override)
+WHITELIST_CHANGES=$(git diff --cached --name-only | grep -E '^\.whitelist$|^\.whitelist ' || true)
+if [ -n "$WHITELIST_CHANGES" ]; then
+    ALLOW_WHITELIST_EDIT=${ALLOW_WHITELIST_EDIT:-0}
+    if [ "$ALLOW_WHITELIST_EDIT" != "1" ]; then
+        VIOLATIONS=$((VIOLATIONS + 1))
+        echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
+        echo -e "${RED}║  .whitelist FILE CHANGES BLOCKED                              ║${NC}"
+        echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
+        echo ""
+        echo -e "${RED}Attempted changes to .whitelist:${NC}"
+        echo -e "${RED}  ❌ .whitelist${NC}"
+        echo ""
+        echo -e "${YELLOW}⚠️  CRITICAL: .whitelist file is protected.${NC}"
+        echo -e "${YELLOW}   The .whitelist file contains the rule:${NC}"
+        echo -e "${YELLOW}   'IF YOU ARE AN AI YOU ARE ABSOLUTELY NOT ALLOWED TO EDIT THIS FILE.'${NC}"
+        echo ""
+        echo -e "${YELLOW}To allow editing .whitelist (HUMANS ONLY):${NC}"
+        echo -e "${YELLOW}  ALLOW_WHITELIST_EDIT=1 git commit -m \"your message\"${NC}"
+        echo ""
+        echo -e "${RED}Commit blocked. Only humans may edit .whitelist with explicit override.${NC}"
+        echo ""
+        exit 1
+    else
+        echo -e "${YELLOW}⚠️  WARNING: .whitelist edit allowed (ALLOW_WHITELIST_EDIT=1)${NC}"
+        echo -e "${YELLOW}   This flag should ONLY be used by humans, never by AI agents.${NC}"
+    fi
 fi
 
 # Check root directory structure against whitelist

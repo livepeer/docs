@@ -6,7 +6,7 @@
 |------|--------|
 | **Branch** | `docs-plan/26-internal-tab-link` |
 | **First step** | Create the branch: `git checkout -b docs-plan/26-internal-tab-link` (run from docs-v2-preview — main branch in this fork) |
-| **Report path** | `docs/PLAN/reports/26-internal-tab-link-report.md` (create on completion) |
+| **Report path** | `tasks/reports/26-internal-tab-link-report.md` (create on completion) |
 | **PR target** | `docs-v2-preview` (main branch in this fork) |
 
 **MANDATORY: Before starting:** Read [style-guide.mdx](/v2/pages/07_resources/documentation-guide/style-guide.mdx) and [component-library.mdx](/v2/pages/07_resources/documentation-guide/component-library.mdx). Run the first step (create branch), then perform the task.
@@ -29,7 +29,7 @@ Add a link (e.g. on a reference page or another agreed location) that allows use
 
 - Link added to the chosen page(s) with clear label.
 - Short note in internal overview or references (or report) describing where and how the internal tab is exposed.
-- Report at `docs/PLAN/reports/26-internal-tab-link-report.md`.
+- Report at `tasks/reports/26-internal-tab-link-report.md`.
 
 ## References
 

@@ -6,7 +6,7 @@
 |------|--------|
 | **Branch** | `docs-plan/11-mintlify-ai-investigation` |
 | **First step** | Create the branch: `git checkout -b docs-plan/11-mintlify-ai-investigation` (run from docs-v2-preview — main branch in this fork) |
-| **Report path** | `docs/PLAN/reports/11-mintlify-ai-investigation-report.md` (create on completion) |
+| **Report path** | `tasks/reports/11-mintlify-ai-investigation-report.md` (create on completion) |
 | **PR target** | `docs-v2-preview` (main branch in this fork) |
 
 Before starting: run the first step (create branch), then perform the task.  
@@ -24,7 +24,7 @@ Investigate and document: (1) Whether the Mintlify AI assistant can use addition
 
 ## Deliverables
 
-- Short report (in docs/PLAN or docs/) with findings, links to Mintlify docs, and recommendations (e.g. Search sites for extra RAG; workaround for issue creation if not native)
+- Short report (in tasks/plan/ or tasks/reports/) with findings, links to Mintlify docs, and recommendations (e.g. Search sites for extra RAG; workaround for issue creation if not native)
 
 ## References
 

@@ -6,7 +6,7 @@
 |------|--------|
 | **Branch** | `docs-plan/02-components-audit-unused` |
 | **First step** | Create the branch: `git checkout -b docs-plan/02-components-audit-unused` (run from docs-v2-preview — main branch in this fork) |
-| **Report path** | `docs/PLAN/reports/02-components-audit-unused-report.md` (create on completion) |
+| **Report path** | `tasks/reports/02-components-audit-unused-report.md` (create on completion) |
 | **PR target** | `docs-v2-preview` (main branch in this fork) |
 
 Before starting: run the first step (create branch), then perform the task.  
@@ -26,7 +26,7 @@ Determine which components in `snippets/components/` are never imported or refer
 ## Deliverables
 
 - Report (table or list): component name, file, used (Y/N), where used; recommendation (keep / remove / consolidate)
-- Save report in repo (e.g. in `docs/PLAN/reports/` or `docs/`) and link from PR
+- Save report in repo (e.g. in `tasks/reports/`) and link from PR
 
 ## References
 
