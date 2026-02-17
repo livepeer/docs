@@ -1,4 +1,40 @@
 /**
+ * ──────────────────────────────────────────────────────────────
+ * MERMAID STYLE GUIDE
+ * ──────────────────────────────────────────────────────────────
+ *
+ * Paste the following init line as the FIRST line inside every
+ * ```mermaid block to keep diagrams consistent across the repo:
+ *
+ * %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui', 'clusterBkg': 'rgba(255,255,255,0.05)', 'clusterBorder': '#2d9a67' }}}%%
+ *
+ * For thicker node borders, add after the flowchart/graph line:
+ *     classDef default stroke-width:2px
+ *
+ * Rules:
+ * - No parentheses in node labels — breaks the mermaid parser.
+ *     Bad:  A["Smart Contracts (L2)"]
+ *     Good: A["Smart Contracts - L2"]
+ * - No leading indentation on mermaid lines inside JSX components.
+ * - Blank line required between <ScrollableDiagram> tag and ```mermaid fence.
+ *
+ * Full usage example:
+ *
+ * <ScrollableDiagram title="My Diagram" maxHeight="600px">
+ *
+ * ```mermaid
+ * %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui', 'clusterBkg': 'rgba(255,255,255,0.05)', 'clusterBorder': '#2d9a67' }}}%%
+ * flowchart TD
+ *     classDef default stroke-width:2px
+ *     A[Node A] --> B[Node B]
+ * ```
+ *
+ * </ScrollableDiagram>
+ *
+ * ──────────────────────────────────────────────────────────────
+ */
+
+/**
  * ScrollableDiagram - Interactive diagram viewer with zoom and pan controls
  *
  * @description
@@ -9,6 +45,7 @@
  * @param {string} [title=""] - Optional title to display above the diagram
  * @param {string} [maxHeight="500px"] - Maximum height of the scrollable container
  * @param {string} [minWidth="100%"] - Minimum width of the content area
+ * @param {boolean} [showControls=false] - Whether to show zoom controls
  *
  * @example
  * <ScrollableDiagram title="System Architecture" maxHeight="600px">
@@ -22,6 +59,7 @@ export const ScrollableDiagram = ({
   title = "",
   maxHeight = "500px",
   minWidth = "100%",
+  showControls = false,
 }) => {
   const [zoom, setZoom] = useState(100);
 
@@ -78,48 +116,50 @@ export const ScrollableDiagram = ({
             {children}
           </div>
         </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            gap: "0.5rem",
-            marginTop: "0.5rem",
-          }}
-        >
-          <span
+        {showControls && (
+          <div
             style={{
-              fontSize: "0.75rem",
-              color: "var(--muted-text)",
-              marginRight: "auto",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              gap: "0.5rem",
+              marginTop: "0.5rem",
             }}
           >
-            Scroll to pan
-          </span>
-          <button style={buttonStyle} onClick={zoomOut} title="Zoom out">
-            −
-          </button>
-          <span
-            style={{
-              fontSize: "0.75rem",
-              color: "var(--muted-text)",
-              minWidth: "40px",
-              textAlign: "center",
-            }}
-          >
-            {zoom}%
-          </span>
-          <button style={buttonStyle} onClick={zoomIn} title="Zoom in">
-            +
-          </button>
-          <button
-            style={{ ...buttonStyle, background: "var(--border)" }}
-            onClick={resetZoom}
-            title="Reset zoom"
-          >
-            100%
-          </button>
-        </div>
+            <span
+              style={{
+                fontSize: "0.75rem",
+                color: "var(--muted-text)",
+                marginRight: "auto",
+              }}
+            >
+              Scroll to pan
+            </span>
+            <button style={buttonStyle} onClick={zoomOut} title="Zoom out">
+              −
+            </button>
+            <span
+              style={{
+                fontSize: "0.75rem",
+                color: "var(--muted-text)",
+                minWidth: "40px",
+                textAlign: "center",
+              }}
+            >
+              {zoom}%
+            </span>
+            <button style={buttonStyle} onClick={zoomIn} title="Zoom in">
+              +
+            </button>
+            <button
+              style={{ ...buttonStyle, background: "var(--border)" }}
+              onClick={resetZoom}
+              title="Reset zoom"
+            >
+              100%
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

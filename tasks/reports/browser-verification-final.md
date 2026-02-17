@@ -55,7 +55,7 @@ All 6 modified pages tested in headless browser (Puppeteer) against `http://loca
 
 ## React 418 Error
 
-React error #418 ("Cannot render text as a child of <table>") occurs on pages with tables due to whitespace text nodes between table elements. This is a **non-blocking warning** - the pages render correctly and are fully functional.
+React error #418 ("Cannot render text as a child of `<table>`") occurs on pages with tables due to whitespace text nodes between table elements. This is a **non-blocking warning** - the pages render correctly and are fully functional.
 
 **Status**: Pages are functional. The React 418 warnings can be addressed in a future update by improving the table component's whitespace handling.
 
