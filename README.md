@@ -97,11 +97,12 @@ We welcome contributions! Please read the following before making changes:
 ### Before You Start
 
 **MANDATORY Reading:**
-1. **[Style Guide](v2/pages/07_resources/documentation-guide/style-guide.mdx)** - Production-grade styling guidelines
-2. **[Component Library](v2/pages/07_resources/documentation-guide/component-library.mdx)** - Available components
-3. **[Contribution Guide](contribute/CONTRIBUTING.md)** - How to contribute
-4. **[Git Hooks Documentation](contribute/CONTRIBUTING/GIT-HOOKS.md)** - Pre-commit hook details
-5. **This README** - Repository structure (source of truth)
+1. **[Style Guide](v2/pages/07_resources/documentation-guide/style-guide.mdx)** - Production-grade styling guidelines, CSS Custom Properties, Mintlify limitations, and best practices
+2. **[Documentation Guide](v2/pages/07_resources/documentation-guide/documentation-guide.mdx)** - Complete guide to writing and organizing documentation
+3. **[Component Library](v2/pages/07_resources/documentation-guide/component-library.mdx)** - Available components and how to use them
+4. **[Contribution Guide](contribute/CONTRIBUTING.md)** - How to contribute
+5. **[Git Hooks Documentation](contribute/CONTRIBUTING/GIT-HOOKS.md)** - Pre-commit hook details
+6. **This README** - Repository structure (source of truth)
 
 ### Key Contribution Rules
 
