@@ -202,8 +202,7 @@ async function runTests(options = {}) {
     } else {
       // Full test: get ALL pages from docs.json (ensures all pages are tested)
       try {
-        // testFiles = getV2Pages(); // Function not available
-        testFiles = getMdxFiles(); // Fallback
+        testFiles = getV2Pages();
       } catch (error) {
         // Fallback to file system if docs.json parsing fails
         console.warn(`⚠️  Could not parse docs.json, falling back to file system: ${error.message}`);
