@@ -38,26 +38,18 @@
 
 **BEFORE making any styling, component, or documentation changes, you MUST read:**
 
-<<<<<<< HEAD
 1. **Structure Rules** - `contribute/STRUCTURE.md` (if exists) or `tasks/plan/migration-plan.md` Section 4
    - Repository structure and file organization rules
    - Directory purposes and file placement guidelines
    - Enforcement mechanisms
 
 2. **Style Guide** - `v2/pages/07_resources/documentation-guide/style-guide.mdx`
-=======
-1. **Style Guide** - `v2/pages/07_resources/documentation-guide/style-guide.mdx`
->>>>>>> upstream/docs-v2-preview
    - Production-grade styling guidelines
    - CSS Custom Properties usage (ONLY approach - no ThemeData)
    - Mintlify gotchas and limitations
    - Component usage patterns
 
-<<<<<<< HEAD
 3. **Component Library** - `v2/pages/07_resources/documentation-guide/component-library.mdx`
-=======
-2. **Component Library** - `v2/pages/07_resources/documentation-guide/component-library.mdx`
->>>>>>> upstream/docs-v2-preview
    - Available components and their usage
    - Props and examples
 
@@ -68,10 +60,7 @@
 - ✅ Follow Mintlify import patterns (absolute paths from root)
 - ✅ Test in both light and dark modes
 - ❌ No suggestions/recommendations in production docs (factual only)
-<<<<<<< HEAD
 - ✅ Verify file location matches structure rules before creating files
-=======
->>>>>>> upstream/docs-v2-preview
 
 ## Repository Structure
 
@@ -134,13 +123,6 @@
 - `ai-tools/` - AI tool setup guides
 - `tasks/` - AI working directory (plan/, reports/, scripts/, errors/, experiments/, notes/)
 - `style.css` - Global CSS Custom Properties (ONLY CSS file at root)
-=======
-- `automations/` - Dynamic/AI/data-fetching logic
-- `ai-tools/` - AI-related tooling
-- `v2/scripts/` - API doc generation, data fetching scripts
-- `style.css` - Global CSS Custom Properties for theming (production-grade styling)
-- `images/`, `logo/`, `assets/` - Static assets
->>>>>>> upstream/docs-v2-preview
 
 ### Important Files
 
