@@ -7,15 +7,20 @@ og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
 ---
 
 import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
-import { LivepeerIcon, LivepeerIconFlipped } from '/snippets/components/primitives/icons.jsx'
-import { CustomCallout, BlinkingIcon, DoubleIconLink, GotoLink, GotoCard, TipWithArrow, LinkArrow } from '/snippets/components/primitives/links.jsx'
-import { DownloadButton } from '/snippets/components/primitives/buttons.jsx'
+import { LivepeerIcon, LivepeerIconFlipped, LivepeerSVG, LivepeerIconOld } from '/snippets/components/primitives/icons.jsx'
+import { CustomCallout, BlinkingIcon, DoubleIconLink, GotoLink, GotoCard, TipWithArrow } from '/snippets/components/primitives/links.jsx'
+import { DownloadButton, BasicBtn } from '/snippets/components/primitives/buttons.jsx'
 import { Subtitle, CopyText, CardTitleTextWithArrow, AccordionTitleWithArrow } from '/snippets/components/primitives/text.jsx'
 
 import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'
 import { Image, LinkImage } from '/snippets/components/display/image.jsx'
 import { ScrollableDiagram } from '/snippets/components/display/zoomable-diagram.jsx'
 import { MarkdownEmbed, EmbedMarkdown, TwitterTimeline } from '/snippets/components/display/embed.jsx'
+import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/display/frameMode.jsx'
+import { Quote, FrameQuote } from '/snippets/components/display/quote.jsx'
+import { SocialLinks } from '/snippets/components/display/socialLinks.jsx'
+import { CardCarousel } from '/snippets/components/display/CardCarousel.jsx'
+import { ShowcaseCards } from '/snippets/components/display/showcaseCards.jsx'
 
 import { CustomCodeBlock, CodeComponent, ComplexCodeBlock, CodeSection } from '/snippets/components/content/code.jsx'
 import { ExternalContent } from '/snippets/components/content/external-content.jsx'
@@ -24,13 +29,18 @@ import { ValueResponseField, CustomResponseField, ResponseFieldExpandable, Respo
 // ResponseFieldGroup commented out - component bug: Expandable is not defined
 
 import { ScrollBox, PostCard, CardColumnsPostLayout, BlogCard, CardBlogDataLayout } from '/snippets/components/layout/cards.jsx'
-import { StepList, StepLinkList, UpdateLinkList } from '/snippets/components/layout/lists.jsx'
+import { BasicList, IconList, StepList, StepLinkList, UpdateList, UpdateLinkList } from '/snippets/components/layout/lists.jsx'
+import { ListSteps } from '/snippets/components/layout/ListSteps.jsx'
+import { QuadGrid } from '/snippets/components/layout/quadGrid.jsx'
 import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
 import { DynamicTable } from '/snippets/components/layout/table.jsx'
+import { AccordionLayout } from '/snippets/components/layout/text.jsx'
 
 import { CoinGeckoExchanges } from '/snippets/components/integrations/coingecko.jsx'
 import { ComingSoonCallout, PreviewCallout, ReviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
-import { ShowcaseCards } from '/snippets/components/display/showcaseCards.jsx'
+import { GatewayOffChainWarning, GatewayOnChainWarning, GatewayOnChainTTestnetNote, OrchAddrNote, TestVideoDownload, FfmpegWarning } from '/snippets/components/domain/04_GATEWAYS/callouts.jsx'
+import { QuickStartTabs, QuickStartSteps } from '/snippets/components/domain/04_GATEWAYS/quickstartTabs.jsx'
+import { Starfield } from '/snippets/components/domain/SHARED/HeroGif.jsx'
 
 <Note>
 **Mintlify Global Components** - `React`, `Frame`, `Card`, `Icon`, `Steps`, `Step`, `Tabs`, `Tab`, `Note`, `Warning`, `Info`, `Tip`, `Accordion`, `Columns`, `CardGroup`, `CodeBlock`, `Expandable`, `Badge`, `Tooltip` and more are available globally. See the [Mintlify Cheat Sheet](#mintlify-built-ins-cheat-sheet) at the end.
@@ -374,13 +384,18 @@ Text helpers including `Subtitle`, `CopyText`, and link components.
     <Subtitle text="This is a subtitle" />
     <br />
     <CopyText text="0x123...abc" label="Address:" />
+    <br />
+    <CardTitleTextWithArrow>Card Title with Arrow</CardTitleTextWithArrow>
+    <AccordionTitleWithArrow>Accordion Title with Arrow</AccordionTitleWithArrow>
   </Tab>
   <Tab title="Code">
 ```jsx
-import { Subtitle, CopyText } from "/snippets/components/primitives/text.jsx";
+import { Subtitle, CopyText, CardTitleTextWithArrow, AccordionTitleWithArrow } from "/snippets/components/primitives/text.jsx";
 
 <Subtitle text="This is a subtitle" />
 <CopyText text="0x123...abc" label="Address:" />
+<CardTitleTextWithArrow>Card Title</CardTitleTextWithArrow>
+<AccordionTitleWithArrow>Accordion Title</AccordionTitleWithArrow>
 ```
   </Tab>
   <Tab title="Props">
@@ -396,8 +411,78 @@ import { Subtitle, CopyText } from "/snippets/components/primitives/text.jsx";
     |------|------|---------|-------------|
     | `text` | `string` | required | Text to display and copy |
     | `label` | `string` | - | Optional label |
+    
+    **CardTitleTextWithArrow:**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `children` | `ReactNode` | required | Title text |
+    | All Card props | - | - | Accepts all Card component props |
+    
+    **AccordionTitleWithArrow:**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `children` | `ReactNode` | required | Title text |
   </Tab>
 </Tabs>
+
+---
+
+### BasicBtn
+
+A basic button component (placeholder).
+
+<Tabs>
+  <Tab title="Code">
+```jsx
+import { BasicBtn } from "/snippets/components/primitives/buttons.jsx";
+
+<BasicBtn />
+```
+  </Tab>
+  <Tab title="Props">
+    | Prop | Type | Description |
+    |------|------|-------------|
+    | No props | - | Placeholder component |
+  </Tab>
+</Tabs>
+
+---
+
+### LivepeerSVG & LivepeerIconOld
+
+Additional Livepeer icon components.
+
+<Tabs>
+  <Tab title="Live Example">
+    <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+      <LivepeerSVG size={32} />
+      <LivepeerIconOld />
+    </div>
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { LivepeerSVG, LivepeerIconOld } from "/snippets/components/primitives/icons.jsx";
+
+<LivepeerSVG size={32} />
+<LivepeerIconOld />
+```
+  </Tab>
+  <Tab title="Props">
+    **LivepeerSVG:**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `size` | `number` | `24` | Icon size in pixels |
+    | All SVG props | - | - | Accepts standard SVG props |
+    
+    **LivepeerIconOld:**
+    | Prop | Type | Description |
+    |------|------|-------------|
+    | All Icon props | - | Accepts standard Icon props |
+  </Tab>
+</Tabs>
+
+---
+
 
 <CustomDivider middleText="Display" />
 
@@ -592,6 +677,286 @@ import { LinkedInEmbed } from "/snippets/components/display/video.jsx";
   </Tab>
 </Tabs>
 
+---
+
+### Frame Mode Components (PageHeader, H1-H6, P, Divider)
+
+Custom heading and text components for Mintlify frame mode. These components provide styled headings that work properly in frame mode where default markdown headings may not render correctly.
+
+<Tabs>
+  <Tab title="Live Example">
+    <PageHeader 
+      title="Page Title" 
+      subtitle="Page Subtitle"
+      description="This is a description of the page content"
+    />
+    <H1 icon="rocket">Main Heading</H1>
+    <H2 icon="star">Section Heading</H2>
+    <H3>Subsection</H3>
+    <P icon="info-circle">This is a paragraph with an icon.</P>
+    <Divider />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/display/frameMode.jsx";
+
+<PageHeader 
+  title="Page Title" 
+  subtitle="Page Subtitle"
+  description="Page description"
+/>
+
+<H1 icon="rocket" iconSize={32}>Main Heading</H1>
+<H2 icon="star" align="center">Centered Heading</H2>
+<H3>Subsection</H3>
+<P icon="info-circle">Paragraph with icon</P>
+<Divider margin="2rem 0" />
+```
+  </Tab>
+  <Tab title="Props">
+    **PageHeader:**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `title` | `string` | required | Main page title |
+    | `subtitle` | `string` | - | Subtitle text |
+    | `description` | `string` | - | Description text |
+    | `titleColor` | `string` | `"var(--hero-text)"` | Title color |
+    | `subtitleColor` | `string` | `"var(--accent)"` | Subtitle color |
+    | `descriptionColor` | `string` | - | Description color |
+    | `children` | `ReactNode` | - | Additional content |
+    
+    **H1-H6 (all heading components):**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `children` | `string` | required | Heading text |
+    | `icon` | `string` | - | Icon name or SVG path |
+    | `iconSize` | `number` | varies by level | Icon size in pixels |
+    | `iconColor` | `string` | `"var(--accent)"` | Icon color |
+    | `align` | `"left" \| "center" \| "right"` | `"left"` | Text alignment |
+    | `gap` | `string` | `"0.5rem"` | Gap between icon and text |
+    
+    **P (Paragraph):**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `children` | `ReactNode` | required | Paragraph content |
+    | `icon` | `string` | - | Optional icon |
+    | `iconSize` | `number` | `16` | Icon size |
+    | `iconColor` | `string` | `"var(--p-icon-color)"` | Icon color |
+    | `align` | `string` | `"left"` | Text alignment |
+    | `gap` | `string` | `"0.5rem"` | Gap between icon and text |
+    
+    **Divider:**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `color` | `string` | `"var(--border)"` | Divider color |
+    | `margin` | `string` | `"1.5rem 0"` | Vertical margin |
+    | `opacity` | `number` | `0.2` | Divider opacity |
+  </Tab>
+</Tabs>
+
+---
+
+### Quote & FrameQuote
+
+Quote components for displaying testimonials, citations, and highlighted text.
+
+<Tabs>
+  <Tab title="Live Example">
+    <Quote>
+      This is a simple quote without attribution.
+    </Quote>
+    
+    <FrameQuote 
+      author="John Doe"
+      source="Livepeer Blog"
+      href="https://livepeer.org/blog"
+      align="right"
+    >
+      This is a framed quote with author attribution and source link.
+    </FrameQuote>
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { Quote, FrameQuote } from "/snippets/components/display/quote.jsx";
+
+<Quote>
+  Simple quote text here.
+</Quote>
+
+<FrameQuote 
+  author="Author Name"
+  source="Source Name"
+  href="https://example.com"
+  align="right"
+  frame={true}
+>
+  Quote text with attribution.
+</FrameQuote>
+```
+  </Tab>
+  <Tab title="Props">
+    **Quote:**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `children` | `ReactNode` | required | Quote content |
+    
+    **FrameQuote:**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `children` | `ReactNode` | required | Quote content |
+    | `author` | `string` | - | Author name |
+    | `source` | `string` | - | Source name |
+    | `href` | `string` | - | Source URL |
+    | `frame` | `boolean` | `true` | Wrap in Frame component |
+    | `align` | `"left" \| "center" \| "right"` | `"right"` | Attribution alignment |
+    | `borderColor` | `string` | - | Custom border color |
+    | `img` | `object` | - | Optional image object with src/alt |
+  </Tab>
+</Tabs>
+
+---
+
+### SocialLinks
+
+Displays a row of social media icon links for Livepeer with official brand colors.
+
+<Tabs>
+  <Tab title="Live Example">
+    <SocialLinks />
+    <br />
+    <SocialLinks size={24} justify="flex-start" />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";
+
+<SocialLinks />
+<SocialLinks size={24} justify="flex-start" gap="1rem" />
+```
+  </Tab>
+  <Tab title="Props">
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `size` | `number` | `20` | Icon size in pixels |
+    | `gap` | `string` | `"0.75rem"` | Gap between icons |
+    | `justify` | `"center" \| "flex-start" \| "flex-end"` | `"center"` | Justify content |
+    | `color` | `string` | - | Override all icon colors |
+  </Tab>
+</Tabs>
+
+---
+
+### CardCarousel
+
+A simple carousel component that paginates through a fixed number of cards with navigation controls.
+
+<Tabs>
+  <Tab title="Live Example">
+    <CardCarousel visibleCount={2} showDots={true}>
+      <Card title="Card 1">Content for card 1</Card>
+      <Card title="Card 2">Content for card 2</Card>
+      <Card title="Card 3">Content for card 3</Card>
+      <Card title="Card 4">Content for card 4</Card>
+    </CardCarousel>
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";
+
+<CardCarousel visibleCount={3} showDots={true} gap="2rem">
+  <Card title="Card 1">Content</Card>
+  <Card title="Card 2">Content</Card>
+  <Card title="Card 3">Content</Card>
+  <Card title="Card 4">Content</Card>
+</CardCarousel>
+```
+  </Tab>
+  <Tab title="Props">
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `children` | `ReactNode` | required | Card elements to display |
+    | `visibleCount` | `number` | `3` | Number of cards per view |
+    | `gap` | `string \| number` | `"1.5rem"` | Gap between cards |
+    | `showDots` | `boolean` | `true` | Show page indicator dots |
+    | `style` | `object` | - | Container style overrides |
+  </Tab>
+</Tabs>
+
+---
+
+### ShowcaseCards
+
+A sophisticated card showcase component with search, filtering, and pagination for displaying project showcases.
+
+<Tabs>
+  <Tab title="Code">
+```jsx
+import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";
+
+const showcaseItems = [
+  {
+    title: "Project Name",
+    subtitle: "Project Subtitle",
+    description: "Project description",
+    mediaSrc: "/path/to/image.png",
+    mediaType: "image",
+    href: "/project-link",
+    categoryTags: ["Social Media"],
+    productTags: ["Livepeer"],
+    links: [{ github: "https://github.com/example" }]
+  }
+];
+
+<ShowcaseCards items={showcaseItems} limit={10} pageSize={6} />
+```
+  </Tab>
+  <Tab title="Props">
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `items` | `Array<Object>` | `[]` | Array of showcase item objects |
+    | `limit` | `number \| null` | `null` | Maximum items to display |
+    | `pageSize` | `number` | `10` | Items per page |
+    
+    **Item Object Properties:**
+    | Property | Type | Description |
+    |----------|------|-------------|
+    | `title` | `string` | Project title |
+    | `subtitle` | `string` | Project subtitle |
+    | `description` | `string` | Project description |
+    | `mediaSrc` | `string` | Image or video source |
+    | `mediaType` | `"image" \| "video"` | Media type |
+    | `logo` | `string` | Logo image URL |
+    | `href` | `string` | Project link |
+    | `categoryTags` | `string[]` | Category tags |
+    | `productTags` | `string[]` | Product tags |
+    | `links` | `Array<Object>` | Social/other links |
+  </Tab>
+</Tabs>
+
+---
+
+### TwitterTimeline
+
+Embeds a Twitter/X timeline feed using an iframe.
+
+<Tabs>
+  <Tab title="Live Example">
+    <TwitterTimeline />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { TwitterTimeline } from "/snippets/components/display/embed.jsx";
+
+<TwitterTimeline />
+```
+  </Tab>
+  <Tab title="Props">
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | No props | - | - | Component uses hardcoded iframe configuration |
+  </Tab>
+</Tabs>
+
 <CustomDivider middleText="Content" />
 
 ## Content Components
@@ -728,7 +1093,13 @@ import { ResponseFieldGroup, ValueResponseField } from "/snippets/components/con
     { name: "status", type: "enum", description: "Status value" }
   ]}
 </ResponseFieldGroup>
-*/}
+```
+  </Tab>
+  <Tab title="Props">
+    **Note:** ResponseFieldGroup is currently unavailable due to component bug. Use ResponseFieldExpandable or ResponseFieldAccordion instead.
+  </Tab>
+</Tabs>
+
 <Tabs>
   <Tab title="Code">
 ```jsx
@@ -756,6 +1127,91 @@ import { ResponseFieldGroup, ValueResponseField } from "/snippets/components/con
     | `description` | `string` | required | Field description |
     | `required` | `boolean` | `false` | Is required |
     | `default` | `string` | - | Default value |
+  </Tab>
+</Tabs>
+
+---
+
+### CodeComponent, ComplexCodeBlock & CodeSection
+
+Additional code block components with placeholder replacement and note support.
+
+<Tabs>
+  <Tab title="Live Example">
+    <CodeComponent
+      filename="config.js"
+      language="javascript"
+      codeString="const API_KEY = '{PLACEHOLDER}';"
+      placeholderValue="your-api-key-here"
+    />
+    
+    <ComplexCodeBlock
+      filename="setup.sh"
+      language="bash"
+      codeString="export API_KEY={PLACEHOLDER}"
+      placeholderValue="abc123"
+      preNote="Run this command in your terminal:"
+    />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { CodeComponent, ComplexCodeBlock, CodeSection } from "/snippets/components/content/code.jsx";
+
+<CodeComponent
+  filename="config.js"
+  language="javascript"
+  codeString="const API_KEY = '{PLACEHOLDER}';"
+  placeholderValue="your-api-key-here"
+/>
+
+<ComplexCodeBlock
+  filename="setup.sh"
+  language="bash"
+  codeString="export API_KEY={PLACEHOLDER}"
+  placeholderValue="abc123"
+  preNote="Run this command:"
+  postNote="Then restart your server."
+/>
+
+<CodeSection fields={{
+  filename: "app.js",
+  language: "javascript",
+  codeString: "console.log('Hello');"
+}} />
+```
+  </Tab>
+  <Tab title="Props">
+    **CodeComponent:**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `filename` | `string` | `""` | File name |
+    | `icon` | `string` | `"terminal"` | Icon name |
+    | `language` | `string` | `""` | Syntax highlighting |
+    | `highlight` | `string` | `""` | Lines to highlight |
+    | `expandable` | `boolean` | `false` | Make expandable |
+    | `wrap` | `boolean` | `true` | Wrap long lines |
+    | `lines` | `boolean` | `true` | Show line numbers |
+    | `codeString` | `string` | `""` | Code content |
+    | `placeholderValue` | `string` | `""` | Replace {PLACEHOLDER} |
+    
+    **ComplexCodeBlock:**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `filename` | `string` | - | File name |
+    | `icon` | `string` | - | Icon name |
+    | `language` | `string` | - | Syntax highlighting |
+    | `highlight` | `string` | - | Lines to highlight |
+    | `codeString` | `string` | `""` | Code content |
+    | `placeholderValue` | `string` | `""` | Replace {PLACEHOLDER} |
+    | `wrap` | `boolean` | `true` | Wrap long lines |
+    | `lines` | `boolean` | `true` | Show line numbers |
+    | `preNote` | `ReactNode` | `null` | Note before code |
+    | `postNote` | `ReactNode` | `null` | Note after code |
+    
+    **CodeSection:**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `fields` | `object` | `{}` | Object with all ComplexCodeBlock props |
   </Tab>
 </Tabs>
 
@@ -904,6 +1360,181 @@ import { ScrollBox } from "/snippets/components/layout/cards.jsx";
   </Tab>
 </Tabs>
 
+---
+
+### List Components (BasicList, IconList, StepList, StepLinkList, UpdateList, UpdateLinkList)
+
+Various list components for displaying structured content.
+
+<Tabs>
+  <Tab title="Live Example">
+    <StepList listItems={[
+      { title: "Install", icon: "download", content: "Run npm install" },
+      { title: "Configure", icon: "gear", content: "Set up your config" }
+    ]} />
+    
+    <UpdateLinkList listItems={[
+      { title: "New Feature", icon: "star", content: "Check out our new feature", link: "/features/new" }
+    ]} />
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { StepList, StepLinkList, UpdateLinkList } from "/snippets/components/layout/lists.jsx";
+
+<StepList listItems={[
+  { title: "Step 1", icon: "download", content: "Install dependencies" },
+  { title: "Step 2", icon: "gear", content: "Configure settings" }
+]} />
+
+<StepLinkList listItems={[
+  { title: "Getting Started", icon: "rocket", content: "Start Here", link: "/guides/start" }
+]} />
+
+<UpdateLinkList listItems={[
+  { title: "New Feature", icon: "star", content: "Description", link: "/features/new" }
+]} />
+```
+  </Tab>
+  <Tab title="Props">
+    **StepList:**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `listItems` | `Array<Object>` | required | Array of step objects |
+    | `listItems[].title` | `string` | required | Step title |
+    | `listItems[].icon` | `string` | - | Step icon |
+    | `listItems[].content` | `ReactNode` | required | Step content |
+    
+    **StepLinkList:**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `listItems` | `Array<Object>` | required | Array of step objects with links |
+    | `listItems[].title` | `string` | required | Step title |
+    | `listItems[].icon` | `string` | - | Step icon |
+    | `listItems[].content` | `string` | required | Link label text |
+    | `listItems[].link` | `string` | required | Relative path for link |
+    
+    **UpdateLinkList:**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `listItems` | `Array<Object>` | required | Array of update objects |
+    | `listItems[].title` | `string` | required | Update title/label |
+    | `listItems[].icon` | `string` | - | Optional icon |
+    | `listItems[].content` | `ReactNode` | required | Update content |
+    | `listItems[].link` | `string` | required | Relative path for link |
+    
+    **Note:** BasicList and IconList are placeholder components that currently return empty fragments.
+  </Tab>
+</Tabs>
+
+---
+
+### ListSteps
+
+Renders a list of items as Steps using a function call pattern.
+
+<Tabs>
+  <Tab title="Code">
+```jsx
+import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";
+
+const steps = [
+  { title: "Step 1", icon: "1", content: "First step" },
+  { title: "Step 2", icon: "2", content: "Second step" }
+];
+
+{ListSteps(steps, { iconColor: "#00cc88" })}
+```
+  </Tab>
+  <Tab title="Props">
+    | Parameter | Type | Description |
+    |-----------|------|-------------|
+    | `listItems` | `Array<Object>` | Array of step objects |
+    | `stepsConfig` | `object` | Optional configuration for StyledSteps |
+  </Tab>
+</Tabs>
+
+---
+
+### QuadGrid
+
+A four-column grid layout component.
+
+<Tabs>
+  <Tab title="Live Example">
+    <QuadGrid>
+      <Card title="Card 1">Content 1</Card>
+      <Card title="Card 2">Content 2</Card>
+      <Card title="Card 3">Content 3</Card>
+      <Card title="Card 4">Content 4</Card>
+    </QuadGrid>
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { QuadGrid } from "/snippets/components/layout/quadGrid.jsx";
+
+<QuadGrid>
+  <Card title="Card 1">Content</Card>
+  <Card title="Card 2">Content</Card>
+  <Card title="Card 3">Content</Card>
+  <Card title="Card 4">Content</Card>
+</QuadGrid>
+```
+  </Tab>
+  <Tab title="Props">
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `children` | `ReactNode` | required | Content to display in grid |
+  </Tab>
+</Tabs>
+
+---
+
+### AccordionLayout
+
+A layout wrapper component for accordion content.
+
+<Tabs>
+  <Tab title="Code">
+```jsx
+import { AccordionLayout } from "/snippets/components/layout/text.jsx";
+
+<AccordionLayout>
+  <Accordion title="Section 1">Content 1</Accordion>
+  <Accordion title="Section 2">Content 2</Accordion>
+</AccordionLayout>
+```
+  </Tab>
+  <Tab title="Props">
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `children` | `ReactNode` | required | Accordion components |
+  </Tab>
+</Tabs>
+
+---
+
+### ApiBaseUrlsTable
+
+A table component for displaying API base URLs (MDX component).
+
+<Tabs>
+  <Tab title="Code">
+```jsx
+import { ApiBaseUrlsTable } from "/snippets/components/layout/api-base-urls-table.mdx";
+
+<ApiBaseUrlsTable urls={[
+  { name: "Mainnet", url: "https://livepeer.network" },
+  { name: "Testnet", url: "https://testnet.livepeer.network" }
+]} />
+```
+  </Tab>
+  <Tab title="Props">
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `urls` | `Array<Object>` | required | Array of URL objects with name and url |
+  </Tab>
+</Tabs>
+
 <CustomDivider middleText="Integrations" />
 
 ## Integration Components
@@ -965,6 +1596,115 @@ import { PreviewCallout, ComingSoonCallout, ReviewCallout } from "/snippets/comp
     | `type` | `"page" \| "tab"` | `"page"` | Callout type |
     
     **PreviewCallout & ReviewCallout:** No props
+  </Tab>
+</Tabs>
+
+---
+
+### Gateway Callouts
+
+Specialized callout components for Gateway documentation.
+
+<Tabs>
+  <Tab title="Live Example">
+    <GatewayOffChainWarning />
+    <GatewayOnChainWarning />
+    <OrchAddrNote />
+    <TestVideoDownload>
+      Download a sample video from <a href="/samples">here</a>
+    </TestVideoDownload>
+  </Tab>
+  <Tab title="Code">
+```jsx
+import { 
+  GatewayOffChainWarning,
+  GatewayOnChainWarning,
+  GatewayOnChainTTestnetNote,
+  OrchAddrNote,
+  TestVideoDownload,
+  FfmpegWarning
+} from "/snippets/components/domain/04_GATEWAYS/callouts.jsx";
+
+<GatewayOffChainWarning />
+<GatewayOnChainWarning />
+<GatewayOnChainTTestnetNote />
+<OrchAddrNote />
+<TestVideoDownload>
+  Additional instructions here
+</TestVideoDownload>
+<FfmpegWarning />
+```
+  </Tab>
+  <Tab title="Props">
+    **GatewayOffChainWarning, GatewayOnChainWarning, GatewayOnChainTTestnetNote, OrchAddrNote, FfmpegWarning:**
+    | Prop | Type | Description |
+    |------|------|-------------|
+    | No props | - | These components have no props |
+    
+    **TestVideoDownload:**
+    | Prop | Type | Description |
+    |------|------|-------------|
+    | `children` | `ReactNode` | Additional instructions or content |
+  </Tab>
+</Tabs>
+
+---
+
+### QuickStartTabs & QuickStartSteps
+
+Components for Gateway quickstart documentation with tabbed and stepped layouts.
+
+<Tabs>
+  <Tab title="Code">
+```jsx
+import { QuickStartTabs, QuickStartSteps } from "/snippets/components/domain/04_GATEWAYS/quickstartTabs.jsx";
+
+<QuickStartTabs 
+  offchainSteps={[
+    { title: "Step 1", content: "Off-chain step content" }
+  ]}
+  onchainSteps={[
+    { title: "Step 1", content: "On-chain step content" }
+  ]}
+/>
+
+<QuickStartSteps dataSource={[
+  { title: "Step 1", icon: "download", content: "Install" }
+]} />
+```
+  </Tab>
+  <Tab title="Props">
+    **QuickStartTabs:**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `offchainSteps` | `Array<Object>` | required | Steps for off-chain setup |
+    | `onchainSteps` | `Array<Object>` | required | Steps for on-chain setup |
+    
+    **QuickStartSteps:**
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `dataSource` | `Array<Object>` | required | Array of step objects |
+  </Tab>
+</Tabs>
+
+---
+
+### Starfield
+
+An animated starfield background component for hero sections.
+
+<Tabs>
+  <Tab title="Code">
+```jsx
+import { Starfield } from "/snippets/components/domain/SHARED/HeroGif.jsx";
+
+<Starfield density={1.1} />
+```
+  </Tab>
+  <Tab title="Props">
+    | Prop | Type | Default | Description |
+    |------|------|---------|-------------|
+    | `density` | `number` | `1.1` | Star density multiplier |
   </Tab>
 </Tabs>
 
