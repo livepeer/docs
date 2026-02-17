@@ -289,12 +289,24 @@ else
     echo ""
     echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${YELLOW}Running test suite (staged files only)...${NC}"
-    if [ -f "testing/run-all.js" ] && command -v node &>/dev/null; then
-        # Check if dependencies are installed in v2/node_modules
-        if [ -d "v2/node_modules" ]; then
-            # Set NODE_PATH to include v2/node_modules for module resolution
-            export NODE_PATH="$(pwd)/v2/node_modules:${NODE_PATH:-}"
-            if node testing/run-all.js --staged --skip-browser 2>&1; then
+    if [ -f "tests/run-all.js" ] && command -v node &>/dev/null; then
+        # Check if dependencies are installed in tooling/node_modules or tests/node_modules
+        if [ -d "tooling/node_modules" ]; then
+            # Set NODE_PATH to include tooling/node_modules for module resolution
+            export NODE_PATH="$(pwd)/tooling/node_modules:${NODE_PATH:-}"
+            if node tests/run-all.js --staged --skip-browser 2>&1; then
+                echo -e "${GREEN}✓ Test suite passed${NC}"
+            else
+                TEST_EXIT=$?
+                if [ $TEST_EXIT -ne 0 ]; then
+                    VIOLATIONS=$((VIOLATIONS + 1))
+                    WARNINGS+=("❌ Test suite failed - see output above")
+                fi
+            fi
+        elif [ -d "tests/node_modules" ]; then
+            # Fallback to tests/node_modules if tooling doesn't exist
+            export NODE_PATH="$(pwd)/tests/node_modules:${NODE_PATH:-}"
+            if node tests/run-all.js --staged --skip-browser 2>&1; then
                 echo -e "${GREEN}✓ Test suite passed${NC}"
             else
                 TEST_EXIT=$?
@@ -304,7 +316,7 @@ else
                 fi
             fi
         else
-            echo -e "${YELLOW}⚠️  Dependencies not installed (v2/node_modules missing). Run 'cd v2 && npm install' to enable tests${NC}"
+            echo -e "${YELLOW}⚠️  Dependencies not installed. Run 'cd tooling && npm install' or 'cd tests && npm install' to enable tests${NC}"
         fi
     else
         echo -e "${YELLOW}⚠️  Test suite not available, skipping...${NC}"
