@@ -1,8 +1,12 @@
 # Repository Structure Audit - Executive Summary
 
 **Date:** 2026  
-**Status:** Complete  
+**Status:** Historical Summary  
 **Reports Generated:** 3
+
+## 📖 Source of Truth
+
+**⚠️ IMPORTANT:** The **source of truth** for repository structure is **[README.md](../../../README.md)**. This summary is a historical document. For current structure rules, always refer to README.md.
 
 ---
 
@@ -10,7 +14,8 @@
 
 1. **[Full Audit Report](./repository-structure-audit.md)** - Comprehensive analysis
 2. **[Repository Ruleset](./repository-ruleset.md)** - Detailed rules and conventions
-3. **This Summary** - High-level overview
+3. **[README.md](../../../README.md)** - **SOURCE OF TRUTH** - Current repository structure
+4. **This Summary** - High-level overview
 
 ---
 

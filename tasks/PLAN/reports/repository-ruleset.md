@@ -2,8 +2,12 @@
 ## Livepeer Documentation Repository
 
 **Version:** 1.0  
-**Status:** Proposed  
-**Purpose:** Enforce consistent repository structure and development practices
+**Status:** Historical Reference  
+**Purpose:** Historical ruleset that informed current structure
+
+## 📖 Source of Truth
+
+**⚠️ IMPORTANT:** The **source of truth** for repository structure is **[README.md](../../../README.md)**. This ruleset is a historical document. For current structure rules, always refer to README.md.
 
 ---
 
@@ -132,14 +136,19 @@
   - ✅ `errors/` - Error documentation
 - ✅ Feature-specific task folders (ABOUT/, DEVELOPERS/, etc.)
 
-### Public Directory (`/public/`)
+### Public Assets (Root Level)
 
-**Purpose:** Static public assets
+**Purpose:** Static public assets served by Mintlify (favicon and logo)
 
-**Allowed Files:**
-- ✅ `favicon.png`
-- ✅ `logo/` - Logo files
-- ✅ Other public static files
+**CRITICAL:** Mintlify expects these at ROOT level, NOT in a `public/` folder
+
+**Allowed Files at Root:**
+- ✅ `favicon.png` - MUST be at root (docs.json: `"favicon": "/favicon.png"`)
+- ✅ `logo/` - MUST be at root (docs.json: `"logo": { "light": "/logo/light.svg" }`)
+
+**Rules:**
+- **NO `public/` folder** - Mintlify doesn't use it
+- These are special Mintlify config assets, different from content assets in `snippets/assets/`
 
 ### API Directory (`/api/`)
 

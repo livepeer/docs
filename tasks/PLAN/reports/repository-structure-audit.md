@@ -2,8 +2,12 @@
 ## Livepeer Documentation Repository
 
 **Date:** 2026  
-**Status:** Comprehensive Audit & Recommendations  
+**Status:** Historical Audit Report  
 **Scope:** Full repository structure, Mintlify best practices, frontend architecture
+
+## 📖 Source of Truth
+
+**⚠️ IMPORTANT:** The **source of truth** for repository structure is **[README.md](../../../README.md)**. This audit report is a historical document that informed the migration. For current structure rules, always refer to README.md.
 
 ---
 
@@ -345,10 +349,8 @@ Based on Mintlify documentation and best practices:
 │   │   └── README.md
 │   └── PLAN/               # Planning docs
 │
-├── public/                 # Static public assets
-│   ├── favicon.png
-│   ├── logo/
-│   └── [other public files]
+# NO public/ folder - Mintlify expects favicon.png and logo/ at ROOT level
+# favicon.png and logo/ must be at root (docs.json references: "/favicon.png", "/logo/...")
 │
 ├── snippets/               # Mintlify snippets (✅ keep as-is, clean up)
 │   ├── assets/             # Static assets for docs
@@ -461,8 +463,9 @@ Based on Mintlify documentation and best practices:
 - Move `diff-report-*.txt` → Delete (temporary files)
 - Move `DIFF-REPORT-SUMMARY.md` → `tasks/reports/`
 - Move `llms.txt.information.md` → `tools/ai-rules/`
-- Move `favicon.png` → `snippets/assets/` (ensure updating path of any file that uses it)
-- Move `logo/` → `snippets/assets/logo/` (ensure updating path of any file that uses it)
+- **DO NOT MOVE** `favicon.png` - MUST stay at root (docs.json: `"favicon": "/favicon.png"`)
+- **DO NOT MOVE** `logo/` - MUST stay at root (docs.json: `"logo": { "light": "/logo/light.svg" }`)
+- If files are in `public/`, move them BACK to root
 - Move `v2/ai-tools/` → `ai-tools/` (root level folder)
 - Move `openapi.yaml` → `api/studio.yaml` (or keep as `api/openapi.yaml`)
 - Move `ai/worker/api/openapi.yaml` → `api/ai-worker.yaml`

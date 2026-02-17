@@ -1,5 +1,39 @@
 # Repository Structure Migration Plan
 
+## 📖 Source of Truth
+
+**⚠️ IMPORTANT:** The **source of truth** for repository structure is **[README.md](../../README.md)**. This migration plan is a historical document that guided the migration. For current structure rules, always refer to README.md.
+
+---
+
+## ⚠️ CRITICAL RULE #1: CHECK MINTLIFY RULES FIRST ⚠️
+
+**BEFORE making ANY changes, additions, or "improvements":**
+
+1. **CHECK MINTLIFY DOCUMENTATION FIRST** - Verify what Mintlify actually supports
+2. **DO NOT** assume standard web practices apply to Mintlify
+3. **DO NOT** make things "pretty" if it breaks Mintlify functionality
+4. **DO NOT** add folders/files that Mintlify doesn't support
+5. **VERIFY** with actual Mintlify documentation before creating new structure
+6. **VERIFY AND FULLY TEST** CHANGES ON EVERY TASK CHANGE. NOT AT THE END. TEST TEST TEST
+
+**Examples (NOT COMPREHENSIVE) of what BREAKS Mintlify (learned the hard way):**
+- ❌ `styles/` folder - Mintlify only allows ONE CSS file at root (`style.css`)
+- ❌ `public/` folder - NOT SUPPORTED by Mintlify (must be deleted, assets can go in `snippets/assets/` or root - TEST FIRST)
+- ❌ Multiple CSS files - NOT SUPPORTED by Mintlify
+- ❌ Moving `style.css` - MUST stay at root, cannot be moved
+- ❌ Renaming `style.css` to `theme.css` - BREAKS MINTLIFY (must be `style.css`)
+
+**When in doubt: CHECK MINTLIFY DOCS FIRST AND TEST. Do not make assumptions. Do not make it "pretty".**
+
+**CRITICAL COMMIT RULE:**
+- **COMMIT AFTER EACH TODO TASK** - Don't batch multiple todo items into one commit
+- **Pre-commit hooks run on each commit** - This catches structure violations, style issues, and import problems early
+- **Fix hook failures immediately** - Don't proceed to next task until hooks pass
+- **Example:** After moving one file, commit. After updating references, commit. After testing, commit.
+
+---
+
 **Date:** 2026  
 **Status:** Planning Phase  
 **Target Structure:** Mintlify-First Architecture
@@ -50,9 +84,10 @@
 │   │   └── README.md
 │   └── PLAN/               # Planning docs (if needed)
 │
-├── public/                 # Static public assets
-│   ├── favicon.png
-│   └── logo/
+# NO public/ folder - Mintlify does NOT support it
+# Favicon/logo can be in snippets/assets/ (TEST FIRST) or at root
+│   ├── favicon.png (or in snippets/assets/site/favicon/)
+│   └── logo/ (or in snippets/assets/logos/)
 │
 ├── snippets/               # Mintlify snippets (MUST follow Mintlify conventions)
 │   ├── assets/             # Static assets for docs
@@ -64,7 +99,7 @@
 │   │   ├── layout/
 │   │   └── primitives/
 │   ├── data/               # Data files (used in components/pages)
-│   │   ├── gateways/
+│   │   ├── domain/         # Domain-specific data (organized by tab/section)
 │   │   ├── references/
 │   │   ├── status/
 │   │   └── variables/
@@ -78,9 +113,6 @@
 │   │   └── youtube/
 │   ├── generated/          # Generated content
 │   └── pages/              # REQUIRED: MDX sub-views (Mintlify limitation)
-│
-├── styles/                 # Global styles
-│   └── theme.css           # Renamed from style.css (clearer)
 │
 ├── tools/                  # Development tooling
 │   ├── ai-rules/          # AI context rules
@@ -124,7 +156,7 @@
 ├── Makefile
 ├── package.json           # Root package.json only (dev tooling)
 ├── README.md
-└── style.css              # Mintlify global styles (or symlink to styles/theme.css)
+└── style.css              # Mintlify global styles (MUST be at root - Mintlify only allows ONE CSS file)
 ```
 
 ### Key Principles
@@ -132,7 +164,7 @@
 1. **Root Directory**: Only essential files (configs, build files, README)
 2. **Snippets**: Strictly Mintlify-compliant (components, data, assets, automations, pages)
 3. **Tools**: All development tooling consolidated
-4. **Docs**: Clear separation of v1 (frozen) and current active documentation (initially `docs/v2/pages/`, stretch goal: `docs/pages/`)
+4. **Docs**: v1 and v2 stay at root (may move to docs/ later, but NOT in this migration)
 5. **Tasks**: Organized by purpose (plan, reports, scripts, errors)
 
 ---
@@ -157,9 +189,9 @@
    - ❌ Block `snippets/styles/` (deprecated, use root `style.css`)
 
 3. **Documentation Directory Protection**
-   - ❌ Block any changes to `docs/v1/` (frozen)
-   - ❌ Block scripts, assets, styles in `docs/v2/` or `docs/pages/` (must be in root-level folders)
-   - ✅ Allow only `docs/v2/pages/` or `docs/pages/` content (depending on structure - initial vs stretch goal)
+   - ❌ Block any changes to `v1/` (frozen, stays at root)
+   - ❌ Block scripts, assets, styles in `v2/` (must be in root-level folders)
+   - ✅ Allow only `v1/pages/` and `v2/pages/` content (stays at root in this migration)
 
 4. **Style Guide Enforcement**
    - ❌ Block `ThemeData` imports
@@ -195,9 +227,9 @@ if [ ! -z "$SNIPPETS_SCRIPTS" ]; then
 fi
 
 # Check for changes to v1/
-V1_CHANGES=$(git diff --cached --name-only | grep '^docs/v1/')
+V1_CHANGES=$(git diff --cached --name-only | grep '^v1/')
 if [ ! -z "$V1_CHANGES" ]; then
-    echo "❌ ERROR: docs/v1/ is FROZEN. No changes allowed."
+    echo "❌ ERROR: v1/ is FROZEN. No changes allowed."
     exit 1
 fi
 
@@ -258,6 +290,7 @@ exit 0
 2. **Tested**: Verify after each batch
 3. **Reversible**: Keep migration branch for easy rollback
 4. **Documented**: Update paths as we go
+5. **Committed per task**: Create a commit after each individual todo task to ensure pre-commit hooks run and catch problems early
 
 ### 3.2 Migration Order (Priority)
 
@@ -282,7 +315,7 @@ exit 0
 - Update script references
 
 **Phase 5: Version Organization (Week 3)**
-- Move v1/ and v2/ to docs/
+- v1/ and v2/ stay at root (may move to docs/ later, but NOT in this migration)
 - Consolidate duplicate assets
 - Update docs.json paths
 
@@ -315,6 +348,12 @@ exit 0
 
 ### 3.4 Testing Strategy
 
+**After Each Todo Task:**
+1. **COMMIT** - Create a commit after completing each individual todo item
+2. **Pre-commit hooks run automatically** - Catches problems early (structure violations, style issues, import problems)
+3. **Fix any hook failures** - Don't proceed until hooks pass
+4. **Test functionality** - Verify the change works (scripts run, pages render, etc.)
+
 **After Each Phase:**
 1. Run `npm run build` (if applicable)
 2. Test Mintlify locally
@@ -343,7 +382,7 @@ exit 0
 - `LICENSE` - License file
 - `Dockerfile` - Docker build configuration
 - `Makefile` - Build automation
-- `style.css` - Mintlify global styles (or symlink to `styles/theme.css`)
+- `style.css` - Mintlify global styles (MUST be at root - Mintlify only allows ONE CSS file, NO styles/ folder)
 - `.gitignore` - Git ignore rules
 - `.mintignore` - Mintlify ignore rules
 
@@ -429,22 +468,35 @@ exit 0
 
 ---
 
-### 4.5 Public Assets (`/public/`)
+### 4.5 Favicon & Logo Assets
 
-**Purpose:** Static public assets served by Mintlify
+**Purpose:** Site favicon and logo assets for Mintlify configuration
 
-**Contents:**
-- `favicon.png` - Site favicon
-- `logo/` - Logo assets
+**Current State:**
+- `public/favicon.png` exists (WRONG - `public/` folder not supported by Mintlify)
+- `public/logo/` exists (WRONG - `public/` folder not supported by Mintlify)
+- `snippets/assets/site/favicon/` exists (contains favicon files)
+- `snippets/assets/logos/` exists (contains logo files)
+
+**VERIFICATION NEEDED:**
+- **TEST:** Can `docs.json` use `/snippets/assets/site/favicon/favicon.png` for favicon?
+- **TEST:** Can `docs.json` use `/snippets/assets/logos/...` for logo?
+- **EVIDENCE:** Navigation icons already use `/snippets/assets/logos/...` paths in `docs.json`
+- **CONCLUSION:** Likely CAN be in `snippets/assets/` - needs testing
 
 **Rules:**
-- Public-facing assets only
-- Not in `snippets/assets/` (those are for docs content)
+- ❌ **NO `public/` folder** - Mintlify does NOT support it (must be deleted)
+- ✅ **CAN be in `snippets/assets/`** - Navigation icons already use this pattern
+- ✅ **CAN be at root** - Current `docs.json` uses `/favicon.png` and `/logo/...`
+- **Mintlify serves files from ANY folder structure** - paths in `docs.json` are absolute from root
 
 **Migration:**
-- Move `favicon.png` → `public/favicon.png`
-- Move `logo/` → `public/logo/`
-- Update any references
+1. **TEST FIRST:** Update `docs.json` to use `/snippets/assets/site/favicon/favicon.png` and test
+2. **IF WORKS:** Move `public/favicon.png` → `snippets/assets/site/favicon/favicon.png` (or keep existing)
+3. **IF WORKS:** Move `public/logo/` → `snippets/assets/logos/` (or keep existing)
+4. **DELETE `public/` folder** entirely (not supported by Mintlify)
+5. **UPDATE `docs.json`** with new paths if moved to `snippets/assets/`
+6. **VERIFY:** Test that favicon and logo still load in Mintlify
 
 ---
 
@@ -485,7 +537,7 @@ snippets/
 **Pages (`snippets/pages/`):**
 - **REQUIRED** for MDX-in-MDX pattern
 - Mintlify limitation: can only import from `/snippets`
-- Sub-views imported into main pages in `docs/v2/pages/` (or `docs/pages/` after stretch goal)
+- Sub-views imported into main pages in `v2/pages/` (stays at root in this migration)
 
 **Migration:**
 1. **KEEP** `snippets/pages/` - Do not remove!
@@ -497,22 +549,25 @@ snippets/
 
 ---
 
-### 4.7 Styles (`/styles/`)
+### 4.7 Styles (Root Level)
 
 **Purpose:** Global styles and theme
 
+**CRITICAL:** Mintlify only allows ONE CSS file at root - NO `styles/` folder
+
 **Contents:**
-- `theme.css` - Global theme CSS (renamed from `style.css`)
+- `style.css` - Global theme CSS (MUST be at root, MUST be named `style.css`)
 
 **Rules:**
 - CSS Custom Properties only
 - No hardcoded colors
 - No ThemeData objects
-- Root `style.css` can be symlink to `styles/theme.css`
+- **MUST be at root** - Mintlify requirement
+- **NO `styles/` folder** - Mintlify doesn't support it
 
 **Migration:**
-- Rename `style.css` → `styles/theme.css`
-- Create symlink: `style.css` → `styles/theme.css` (or keep at root)
+- **DO NOT** create `styles/` folder
+- **DO NOT** move `style.css` - it MUST stay at root
 - Remove `snippets/styles/` (deprecated)
 
 ---
@@ -613,55 +668,93 @@ tasks/
 
 ---
 
-### 4.11 Documentation (`/docs/`)
+### 4.11 Documentation (`/v1/` and `/v2/`)
 
-**Purpose:** Versioned documentation
+**Purpose:** Versioned documentation (stays at root for this migration)
 
-**Structure (Initial - Required):**
+**Current Structure (NOT CHANGING IN THIS MIGRATION):**
 ```
-docs/
-├── v1/            # IMMUTABLE/FROZEN
-│   └── pages/
-└── v2/             # Active version (temporary structure)
-    └── pages/
-```
+v1/            # IMMUTABLE/FROZEN - stays at root
+└── pages/
 
-**Structure (Stretch Goal - Final, OPTIONAL):**
-```
-docs/
-├── v1/            # IMMUTABLE/FROZEN
-│   └── pages/
-└── pages/         # Current active version (flattened from v2/)
+v2/            # Active version - stays at root
+└── pages/
 ```
 
 **Rules:**
 - **v1/ is FROZEN** - Never modify, remove, or archive
-- Initially: `docs/v2/pages/` (temporary structure - works fine)
-- Stretch goal: `docs/pages/` (flattened to avoid `/v2/` in URLs)
+- **v1/ and v2/ stay at ROOT** - NOT moving to `docs/` in this migration
+- **May move later** - This is a future consideration, not part of current migration
 - Only `pages/` in version directories
-- No scripts, assets, or styles in version dirs
-- **Note:** Using `docs/pages/` instead of `docs/v2/pages/` avoids Mintlify creating `/v2/` in URLs, but this is OPTIONAL and can be done later
+- No scripts, assets, or styles in version dirs (move to appropriate locations)
+- **Note:** Moving to `docs/` would change URLs, so keeping at root maintains current URL structure
 
-**Migration (Initial):**
-1. Create `docs/` directory
-2. Move `v1/` → `docs/v1/` (DO NOT MODIFY CONTENTS)
-3. Move `v2/pages/` → `docs/v2/pages/` (temporary - see stretch goal below)
+**URL Naming Rules (CRITICAL - How Mintlify Generates URLs):**
+
+Mintlify generates URLs **directly from file structure** - no transforms:
+
+**File Path → URL Mapping:**
+- File: `v2/pages/07_resources/documentation-guide/style-guide.mdx`
+- URL: `/v2/pages/07_resources/documentation-guide/style-guide` (removes `.mdx` extension)
+
+**Directory Structure = URL Structure:**
+- Moving `v2/pages/` → `docs/v2/pages/` changes URL to `/docs/v2/pages/...`
+- Moving `docs/v2/pages/` → `docs/pages/` changes URL to `/docs/pages/...` (removes `/v2/`)
+
+**Index Files:**
+- File: `v2/pages/00_home/index.mdx`
+- URL: `/v2/pages/00_home` (no `/index` in URL - index files are implicit)
+
+**Rules:**
+1. **File path = URL path** (minus file extension)
+2. **Directory structure directly maps to URL structure**
+3. **No special transforms** - what you name folders/files becomes the URL
+4. **Always test URLs** after moving files - don't assume patterns
+5. **Moving files changes URLs** - update all internal links accordingly
+
+**Examples (Current Structure - v1/v2 at root):**
+```
+File: v2/pages/01_about/faq.mdx
+URL:  /v2/pages/01_about/faq
+
+File: v2/pages/01_about/index.mdx
+URL:  /v2/pages/01_about (no /index)
+
+File: v1/api-reference/endpoints.mdx
+URL:  /v1/api-reference/endpoints
+```
+
+**Migration (This Migration - v1/v2 Stay at Root):**
+1. **DO NOT** create `docs/` directory (not needed - v1/v2 stay at root)
+2. **DO NOT** move `v1/` - stays at root
+3. **DO NOT** move `v2/pages/` - stays at root
 4. Move `v2/assets/` → `snippets/assets/` (consolidate)
 5. Remove `v2/style.css` (use root)
 6. Remove `v2/package.json` (use root)
 7. Move `v2/scripts/` → `tools/scripts/`
-8. Update `docs.json` paths
+8. **NO `docs.json` path updates needed** - paths stay as `v1/` and `v2/`
 
-**Migration (Stretch Goal - NOT REQUIRED IMMEDIATELY):**
-- **This is optional and can be done later**
-- Move `docs/v2/pages/` → `docs/pages/` (flatten structure)
-- Update `docs.json` paths to remove `/v2/` from URLs
-- Test that all URLs work correctly
-- **Reason:** Mintlify uses directory name in URL, so `docs/v2/pages/` creates `/v2/` in URLs, but we want current docs at root level
+**Future Consideration (NOT IN THIS MIGRATION):**
+- **May move v1/v2 to docs/ later** - This is a future decision, not part of current migration
+- If moved later, would need to update `docs.json` paths
+- Would change URLs (Mintlify uses directory structure for URLs)
 
 ---
 
 ## 5. Detailed Task List
+
+**⚠️ CRITICAL: COMMIT AFTER EACH TODO TASK**
+
+For each individual todo item in the task lists below:
+1. Complete the todo item
+2. **COMMIT immediately** - `git commit -m "Description of change"`
+3. **Pre-commit hooks run automatically** - They will catch structure violations, style issues, and import problems
+4. **Fix any hook failures** - Don't proceed to the next todo until hooks pass
+5. **Test functionality** - Verify the change works before moving to next todo
+
+**DO NOT** batch multiple todo items into one commit. Each todo should have its own commit to ensure hooks catch problems early.
+
+---
 
 ### Phase 1: Foundation Setup
 
@@ -676,16 +769,18 @@ docs/
     - [ ] `tools/scripts/verify/`
     - [ ] `tools/scripts/fetch/`
   - [ ] Create `tools/wiki/`
+- [ ] **COMMIT:** `git commit -m "Create tools/ directory structure"` (pre-commit hooks will run)
 - [ ] Create `api/` directory
 - [ ] Create `contribute/` directory
-- [ ] Create `public/` directory
-- [ ] Create `styles/` directory
-- [ ] Create `docs/` directory
+- [ ] **DO NOT** create `public/` directory (Mintlify doesn't use it - favicon/logo stay at root)
+- [ ] **DO NOT** create `styles/` directory (Mintlify only allows ONE CSS file at root - style.css)
+- [ ] **DO NOT** create `docs/` directory (v1/v2 stay at root - may move later, but NOT in this migration)
 - [ ] Create `tasks/plan/` directory
 - [ ] Create `tasks/reports/` directory
 - [ ] Create `tasks/scripts/` directory
 - [ ] Create `tasks/errors/` directory
 - [ ] Create `ai-tools/` directory
+- [ ] **COMMIT:** `git commit -m "Create remaining directory structure (api/, contribute/, tasks/, ai-tools/)"` (pre-commit hooks will run)
 
 **Estimated Time:** 30 minutes  
 **Risk Level:** Low  
@@ -717,11 +812,14 @@ docs/
 
 #### Task 2.1: Move AI Guidelines
 - [ ] Move `AI_GUIDELINES.md` → `tools/ai-rules/AI_GUIDELINES.md`
+- [ ] **COMMIT:** `git commit -m "Move AI_GUIDELINES.md to tools/ai-rules/"` (pre-commit hooks will run)
 - [ ] Move `llms.txt.information.md` → `tools/ai-rules/llms.txt.information.md`
+- [ ] **COMMIT:** `git commit -m "Move llms.txt.information.md to tools/ai-rules/"` (pre-commit hooks will run)
 - [ ] Move `.cursorrules` → `tools/ai-rules/.cursorrules` (if not already there)
+- [ ] **COMMIT:** `git commit -m "Move .cursorrules to tools/ai-rules/"` (pre-commit hooks will run)
 - [ ] Update any references to these files
 - [ ] Test that nothing breaks
-- [ ] Commit changes
+- [ ] **COMMIT:** `git commit -m "Update references to moved AI guidelines files"` (pre-commit hooks will run)
 
 **Estimated Time:** 15 minutes  
 **Risk Level:** Low  
@@ -731,9 +829,11 @@ docs/
 
 #### Task 2.2: Move Config Files
 - [ ] Move `cspell.json` → `tools/config/cspell.json`
+- [ ] **COMMIT:** `git commit -m "Move cspell.json to tools/config/"` (pre-commit hooks will run)
 - [ ] Update any scripts that reference `cspell.json`
+- [ ] **COMMIT:** `git commit -m "Update references to cspell.json"` (pre-commit hooks will run)
 - [ ] Test spell checking still works
-- [ ] Commit changes
+- [ ] **COMMIT:** `git commit -m "Verify spell checking works after move"` (pre-commit hooks will run)
 
 **Estimated Time:** 15 minutes  
 **Risk Level:** Low  
@@ -743,10 +843,13 @@ docs/
 
 #### Task 2.3: Move Contribution Docs
 - [ ] Move `CONTRIBUTING.md` → `contribute/CONTRIBUTING.md`
+- [ ] **COMMIT:** `git commit -m "Move CONTRIBUTING.md to contribute/"` (pre-commit hooks will run)
 - [ ] Update any references in README.md
+- [ ] **COMMIT:** `git commit -m "Update README.md references to CONTRIBUTING.md"` (pre-commit hooks will run)
 - [ ] Update any links in documentation
+- [ ] **COMMIT:** `git commit -m "Update documentation links to CONTRIBUTING.md"` (pre-commit hooks will run)
 - [ ] Test that links still work
-- [ ] Commit changes
+- [ ] **COMMIT:** `git commit -m "Verify CONTRIBUTING.md links work"` (pre-commit hooks will run)
 
 **Estimated Time:** 15 minutes  
 **Risk Level:** Low  
@@ -754,16 +857,44 @@ docs/
 
 ---
 
-#### Task 2.4: Move Public Assets
-- [ ] Move `favicon.png` → `public/favicon.png`
-- [ ] Move `logo/` → `public/logo/`
-- [ ] Update any references to these assets
-- [ ] Test that assets still load
-- [ ] Commit changes
+#### Task 2.4: Move Favicon & Logo from `public/` Folder
 
-**Estimated Time:** 15 minutes  
-**Risk Level:** Low  
-**Dependencies:** Task 1.1
+**⚠️ CRITICAL: `public/` folder is NOT supported by Mintlify - must be deleted**
+
+**Current State:**
+- `public/favicon.png` exists (WRONG location)
+- `public/logo/` exists (WRONG location)
+- `snippets/assets/site/favicon/` exists (may contain favicon files)
+- `snippets/assets/logos/` exists (contains logo files)
+
+**VERIFICATION STEPS (DO THESE FIRST):**
+1. [ ] **TEST:** Update `docs.json` temporarily to use `/snippets/assets/site/favicon/favicon.png` for favicon
+2. [ ] **TEST:** Run `mint dev` and verify favicon loads
+3. [ ] **TEST:** Update `docs.json` temporarily to use `/snippets/assets/logos/...` for logo
+4. [ ] **TEST:** Run `mint dev` and verify logo loads
+5. [ ] **IF TESTS PASS:** Favicon/logo CAN be in `snippets/assets/`
+6. [ ] **IF TESTS FAIL:** Keep at root (current `docs.json` paths)
+
+**Migration Steps (After Verification):**
+- [ ] **IF `snippets/assets/` works:**
+  - [ ] Move `public/favicon.png` → `snippets/assets/site/favicon/favicon.png` (or use existing)
+  - [ ] Move `public/logo/` → `snippets/assets/logos/` (or use existing)
+  - [ ] Update `docs.json`: `"favicon": "/snippets/assets/site/favicon/favicon.png"`
+  - [ ] Update `docs.json`: `"logo": { "light": "/snippets/assets/logos/light.svg", "dark": "/snippets/assets/logos/dark.svg" }`
+- [ ] **IF root required:**
+  - [ ] Move `public/favicon.png` → `favicon.png` (root)
+  - [ ] Move `public/logo/` → `logo/` (root)
+  - [ ] Keep `docs.json` paths as `/favicon.png` and `/logo/...`
+- [ ] **DELETE `public/` folder entirely** (not supported by Mintlify)
+- [ ] **TEST:** Run `mint dev` and verify favicon and logo load correctly
+- [ ] **VERIFY:** Check browser console for 404 errors
+- [ ] Commit changes only after confirming assets load
+
+**Estimated Time:** 30 minutes (includes testing)  
+**Risk Level:** Medium (requires testing)  
+**Dependencies:** None
+
+**Note:** `public/` folder is NOT a Mintlify concept - it must be deleted. Favicon/logo can likely be in `snippets/assets/` (navigation icons already use this pattern), but MUST be tested first.
 
 ---
 
@@ -920,47 +1051,11 @@ docs/
 
 ---
 
-### Phase 5: Version Organization
+### Phase 5: V2 Cleanup (v1/v2 Stay at Root)
 
-#### Task 5.1: Create Docs Directory
-- [ ] Create `docs/` directory
-- [ ] **DO NOT MODIFY** `v1/` contents (frozen)
-- [ ] Plan v2 migration
+**NOTE: v1/ and v2/ stay at ROOT level in this migration. They may be moved to docs/ later, but that's NOT part of this migration.**
 
-**Estimated Time:** 10 minutes  
-**Risk Level:** Low  
-**Dependencies:** Task 1.1
-
----
-
-#### Task 5.2: Move V1 (Frozen)
-- [ ] Move `v1/` → `docs/v1/`
-- [ ] **VERIFY** no changes to contents
-- [ ] Update `docs.json` paths if needed
-- [ ] Test that v1 docs still work
-- [ ] Commit changes
-
-**Estimated Time:** 15 minutes  
-**Risk Level:** Low  
-**Dependencies:** Task 5.1
-
----
-
-#### Task 5.3: Move V2 Pages (Initial - Temporary Structure)
-- [ ] Move `v2/pages/` → `docs/v2/pages/` (temporary - will be flattened in Phase 10 stretch goal)
-- [ ] Update `docs.json` paths
-- [ ] Test that v2 docs still render
-- [ ] Commit changes
-
-**Estimated Time:** 30 minutes  
-**Risk Level:** Medium  
-**Dependencies:** Task 5.1
-
-**Note:** This creates a temporary structure `docs/v2/pages/`. Phase 10 (stretch goal) will flatten this to `docs/pages/` to avoid `/v2/` in URLs, but that's NOT required immediately and can be done weeks/months later.
-
----
-
-#### Task 5.4: Consolidate V2 Assets
+#### Task 5.1: Consolidate V2 Assets
 - [ ] Move `v2/assets/` → `snippets/assets/` (merge with existing)
 - [ ] Resolve any duplicate files
 - [ ] Update any references
@@ -969,11 +1064,11 @@ docs/
 
 **Estimated Time:** 1 hour  
 **Risk Level:** Medium  
-**Dependencies:** Task 5.1
+**Dependencies:** Task 1.1
 
 ---
 
-#### Task 5.5: Remove V2 Duplicates
+#### Task 5.2: Remove V2 Duplicates
 - [ ] Remove `v2/style.css` (use root `style.css`)
 - [ ] Remove `v2/package.json` (use root `package.json`)
 - [ ] Move `v2/tests/` → `tests/` (if actual tests) or delete (if docs)
@@ -983,22 +1078,27 @@ docs/
 
 **Estimated Time:** 30 minutes  
 **Risk Level:** Low  
-**Dependencies:** Task 5.1
+**Dependencies:** Task 1.1
 
 ---
 
-### Phase 6: Styles Reorganization
+### Phase 6: Verify Styles at Root
 
-#### Task 6.1: Reorganize Styles
-- [ ] Rename `style.css` → `styles/theme.css` (or keep at root)
-- [ ] Create symlink if keeping at root: `style.css` → `styles/theme.css`
-- [ ] Update any references
+**⚠️ CRITICAL: Mintlify only allows ONE CSS file at root - NO styles/ folder**
+
+#### Task 6.1: Verify style.css at Root
+- [ ] **VERIFY** `style.css` is at root (not in `styles/` folder)
+- [ ] **DO NOT** create `styles/` folder
+- [ ] **DO NOT** move `style.css` - it MUST stay at root
+- [ ] Remove `snippets/styles/` directory (deprecated, contains only themeStyles.jsx)
 - [ ] Test that styles still apply
 - [ ] Commit changes
 
-**Estimated Time:** 15 minutes  
+**Estimated Time:** 5 minutes  
 **Risk Level:** Low  
 **Dependencies:** None
+
+**Note:** Mintlify only allows ONE CSS file at root. There is NO `styles/` folder.
 
 ---
 
@@ -1098,30 +1198,26 @@ docs/
 
 ---
 
-### Phase 10: Stretch Goal - Flatten Docs Structure (OPTIONAL - NOT REQUIRED IMMEDIATELY)
+### Phase 10: Future Consideration - Move v1/v2 to docs/ (NOT IN THIS MIGRATION)
 
-**⚠️ IMPORTANT: This phase is OPTIONAL and should only be done AFTER all other migration tasks are complete. It is NOT required for the initial migration.**
+**⚠️ IMPORTANT: This is a FUTURE consideration, NOT part of the current migration. v1/ and v2/ stay at root for now.**
 
-**Purpose:** Flatten the docs structure to avoid `/v2/` in Mintlify URLs by moving `docs/v2/pages/` → `docs/pages/`
+**Purpose:** Optionally move v1/ and v2/ to docs/ structure in the future
 
-**Why:** Mintlify uses directory names in URLs. Having `docs/v2/pages/` creates URLs like `/v2/...`, but we want the current active documentation at the root level (`/...`).
+**Why:** This would organize documentation under a `docs/` folder, but would change URLs. This is a future decision, not part of current migration.
 
-#### Task 10.1: Flatten Docs Structure (STRETCH GOAL)
-- [ ] **OPTIONAL:** Move `docs/v2/pages/` → `docs/pages/` (flatten structure)
-- [ ] Update `docs.json` paths to remove all `/v2/` references
-- [ ] Update any internal links that reference `/v2/`
-- [ ] Test that all URLs work correctly
-- [ ] Verify Mintlify URLs are clean (no `/v2/` prefix)
-- [ ] Test that all pages render correctly
-- [ ] Update documentation to reflect new structure
-- [ ] Commit changes
+**NOT IN THIS MIGRATION:**
+- v1/ and v2/ stay at root
+- No `docs/` directory created
+- No URL changes
+- Current structure works fine
 
-**Estimated Time:** 1 hour  
-**Risk Level:** Medium  
-**Dependencies:** Phase 9 (Final Validation)  
-**Priority:** Low (Stretch Goal)
-
-**Note:** This can be done weeks or months after the initial migration. The temporary structure `docs/v2/pages/` will work fine until this is done.
+**If done in future:**
+- Would need to move `v1/` → `docs/v1/`
+- Would need to move `v2/pages/` → `docs/v2/pages/` or `docs/pages/`
+- Would need to update `docs.json` paths
+- Would change URLs (Mintlify uses directory structure for URLs)
+- Would need to update all internal links
 
 ---
 
@@ -1137,17 +1233,17 @@ docs/
 **Week 2:**
 - Phase 4: Scripts Consolidation (4 hours)
 - Phase 5: Version Organization (3 hours)
-- Phase 6: Styles Reorganization (1 hour)
+- Phase 6: Verify Styles at Root (5 minutes)
 
 **Week 3:**
 - Phase 7: Tasks Reorganization (1 hour)
 - Phase 8: Data Separation (ongoing, 4+ hours)
 - Phase 9: Final Validation (5 hours)
 
-**Stretch Goal (Optional - After All Other Tasks):**
-- Flatten docs structure: `docs/v2/pages/` → `docs/pages/` (1 hour)
-  - **NOT REQUIRED IMMEDIATELY** - Can be done after all migration is complete
-  - Reason: Avoids `/v2/` in Mintlify URLs by using `docs/pages/` instead of `docs/v2/pages/`
+**Future Consideration (NOT IN THIS MIGRATION):**
+- Move v1/ and v2/ to docs/ structure (future decision)
+  - **NOT PART OF THIS MIGRATION** - v1/ and v2/ stay at root
+  - May be considered later, but current structure works fine
 
 ---
 
@@ -1156,8 +1252,10 @@ docs/
 1. **Create Migration Branch:** `git checkout -b repo-structure-migration`
 2. **Tag Each Phase:** Tag completion of each phase for easy rollback
 3. **Test After Each Task:** Don't batch commits without testing
-4. **Keep Backup:** Consider creating a backup branch before starting
-5. **Document Issues:** Document any problems encountered during migration
+4. **Commit After Each Todo:** Create a commit after each individual todo item to ensure pre-commit hooks run
+5. **Fix Hook Failures Immediately:** Don't proceed to next task until pre-commit hooks pass
+6. **Keep Backup:** Consider creating a backup branch before starting
+7. **Document Issues:** Document any problems encountered during migration
 
 ---
 
