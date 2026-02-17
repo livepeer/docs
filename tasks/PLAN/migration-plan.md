@@ -1184,13 +1184,19 @@ For each individual todo item in the task lists below:
 ---
 
 #### Task 9.4: Update Documentation
-- [ ] Update `README.md` with new structure
+- [ ] Update `README.md` with comprehensive content:
+  - [ ] Add repository purpose and overview
+  - [ ] Add detailed setup instructions
+  - [ ] Add development workflow guide
+  - [ ] Add contribution guidelines summary
+  - [ ] Add pre-commit hooks documentation
+  - [ ] Keep repository structure as source of truth
 - [ ] Update style guide with new paths
 - [ ] Update component library with new paths
 - [ ] Create `contribute/STRUCTURE.md` with detailed guidance
 - [ ] Update contribution guide
 - [ ] Update AI guidelines
-- [ ] Commit documentation
+- [ ] **COMMIT:** `git commit -m "Update README.md with comprehensive setup and contribution guide"` (pre-commit hooks will run)
 
 **Estimated Time:** 3 hours  
 **Risk Level:** Low  

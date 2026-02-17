@@ -1,5 +1,9 @@
 # Task: Data & Content Separation - Phase 8
 
+## 📖 Source of Truth
+
+**⚠️ IMPORTANT:** The **source of truth** for repository structure is **[README.md](../../../README.md)**. This task document is a historical record. For current structure rules, always refer to README.md.
+
 ## Overview
 
 This task creates the structure for separating data and content from components to enable easy translation and copy updates.

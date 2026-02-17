@@ -1,5 +1,9 @@
 # Task: V2 Cleanup - Phase 5
 
+## 📖 Source of Truth
+
+**⚠️ IMPORTANT:** The **source of truth** for repository structure is **[README.md](../../../README.md)**. This task document is a historical record. For current structure rules, always refer to README.md.
+
 ## Overview
 
 This task cleans up the `v2/` directory by:

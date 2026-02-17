@@ -1,5 +1,11 @@
 # Migration Task Files
 
+## 📖 Source of Truth
+
+**⚠️ IMPORTANT:** The **source of truth** for repository structure is **[README.md](../../../README.md)**. These migration task files are historical documents that guided the migration. For current structure rules, always refer to README.md.
+
+---
+
 This folder contains detailed task files for each phase of the repository structure migration.
 
 ## Overview
@@ -23,8 +29,11 @@ Each task file provides:
 
 ## Before Starting Any Task
 
-**MANDATORY:** Read the main migration plan first:
-- `tasks/plan/migration-plan.md` - Complete migration plan with structure rules
+**MANDATORY:** Read the source of truth first:
+- **[README.md](../../../README.md)** - **SOURCE OF TRUTH** - Current repository structure and rules
+
+**MANDATORY:** Read the main migration plan (historical reference):
+- `tasks/plan/migration-plan.md` - Historical migration plan
 
 **MANDATORY:** Read Mintlify rules:
 - `v2/pages/07_resources/documentation-guide/style-guide.mdx` - Style guide and Mintlify gotchas

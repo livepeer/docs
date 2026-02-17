@@ -11,7 +11,7 @@ const fs = require('fs');
  * Check spelling in a file
  */
 function checkSpelling(filePath, configPath = null) {
-  const cspellConfig = configPath || path.join(process.cwd(), 'cspell.json');
+  const cspellConfig = configPath || path.join(process.cwd(), 'tools/config/cspell.json');
   
   try {
     // Run cspell check
