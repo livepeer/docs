@@ -5,6 +5,16 @@
 # To install this hook, run:
 #   cp .githooks/pre-commit .git/hooks/pre-commit
 #   chmod +x .git/hooks/pre-commit
+#
+# Bypass flags (use sparingly):
+#   SKIP_STRUCTURE_CHECK=1 - Skip root directory and snippets structure checks
+#   SKIP_STYLE_CHECK=1     - Skip style guide compliance checks
+#   SKIP_VERIFICATION=1    - Skip verification scripts
+#   SKIP_TESTS=1           - Skip test suite
+#   SKIP_ALL=1             - Skip all checks (use with extreme caution)
+#
+# Human-only override flag:
+#   ALLOW_WHITELIST_EDIT=1 - Allow editing .whitelist file (HUMANS ONLY - AIs must never use this)
 
 STYLE_GUIDE_PATH="v2/pages/07_resources/documentation-guide/style-guide.mdx"
 VIOLATIONS=0
@@ -16,19 +26,195 @@ YELLOW='\033[1;33m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-echo -e "${YELLOW}🔍 Checking style guide compliance...${NC}"
+# Check for bypass flags
+SKIP_STRUCTURE_CHECK=${SKIP_STRUCTURE_CHECK:-0}
+SKIP_STYLE_CHECK=${SKIP_STYLE_CHECK:-0}
+SKIP_VERIFICATION=${SKIP_VERIFICATION:-0}
+SKIP_TESTS=${SKIP_TESTS:-0}
+SKIP_ALL=${SKIP_ALL:-0}
 
-# Get list of staged files (excluding style-guide.mdx which documents examples of what NOT to do)
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(jsx|tsx|js|mdx)$' | grep -v "style-guide")
-
-if [ -z "$STAGED_FILES" ]; then
-    echo -e "${GREEN}✓ No JSX/TSX/MDX files staged, skipping style checks${NC}"
+if [ "$SKIP_ALL" = "1" ]; then
+    echo -e "${YELLOW}⚠️  WARNING: All pre-commit checks bypassed (SKIP_ALL=1)${NC}"
+    echo -e "${YELLOW}   This should only be used in emergencies.${NC}"
     exit 0
 fi
 
-# Check 1: ThemeData import/usage (DEPRECATED)
-echo "Checking for ThemeData usage (deprecated)..."
-for file in $STAGED_FILES; do
+# Check for .whitelist file changes (BLOCKED for AIs, requires human override)
+WHITELIST_CHANGES=$(git diff --cached --name-only | grep -E '^\.whitelist$|^\.whitelist ' || true)
+if [ -n "$WHITELIST_CHANGES" ]; then
+    ALLOW_WHITELIST_EDIT=${ALLOW_WHITELIST_EDIT:-0}
+    if [ "$ALLOW_WHITELIST_EDIT" != "1" ]; then
+        VIOLATIONS=$((VIOLATIONS + 1))
+        echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
+        echo -e "${RED}║  .whitelist FILE CHANGES BLOCKED                              ║${NC}"
+        echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
+        echo ""
+        echo -e "${RED}Attempted changes to .whitelist:${NC}"
+        echo -e "${RED}  ❌ .whitelist${NC}"
+        echo ""
+        echo -e "${YELLOW}⚠️  CRITICAL: .whitelist file is protected.${NC}"
+        echo -e "${YELLOW}   The .whitelist file contains the rule:${NC}"
+        echo -e "${YELLOW}   'IF YOU ARE AN AI YOU ARE ABSOLUTELY NOT ALLOWED TO EDIT THIS FILE.'${NC}"
+        echo ""
+        echo -e "${YELLOW}To allow editing .whitelist (HUMANS ONLY):${NC}"
+        echo -e "${YELLOW}  ALLOW_WHITELIST_EDIT=1 git commit -m \"your message\"${NC}"
+        echo ""
+        echo -e "${RED}Commit blocked. Only humans may edit .whitelist with explicit override.${NC}"
+        echo ""
+        exit 1
+    else
+        echo -e "${YELLOW}⚠️  WARNING: .whitelist edit allowed (ALLOW_WHITELIST_EDIT=1)${NC}"
+        echo -e "${YELLOW}   This flag should ONLY be used by humans, never by AI agents.${NC}"
+    fi
+fi
+
+# Check root directory structure against whitelist
+if [ "$SKIP_STRUCTURE_CHECK" = "1" ]; then
+    echo -e "${YELLOW}⚠️  Structure checks bypassed (SKIP_STRUCTURE_CHECK=1)${NC}"
+else
+    echo -e "${YELLOW}🔍 Checking root directory structure...${NC}"
+
+    if [ ! -f ".whitelist" ]; then
+        echo -e "${YELLOW}⚠️  .whitelist file not found, skipping root structure check${NC}"
+    else
+    # Read whitelist (skip comments and empty lines)
+    WHITELIST=$(grep -v '^#' .whitelist | grep -v '^$' | tr '\n' '|' | sed 's/|$//')
+    
+    if [ -z "$WHITELIST" ]; then
+        echo -e "${YELLOW}⚠️  .whitelist is empty, skipping root structure check${NC}"
+    else
+        # Check for new root files (not in whitelist)
+        NEW_ROOT_FILES=$(git diff --cached --name-only --diff-filter=A | grep -E '^[^/]+$' | grep -vE "^($WHITELIST)$" || true)
+        
+        # Check for new root directories (not in whitelist)
+        NEW_ROOT_DIRS=$(git diff --cached --name-only --diff-filter=A | grep -E '^[^/]+/' | cut -d'/' -f1 | sort -u | grep -vE "^($WHITELIST)$" || true)
+        
+        if [ -n "$NEW_ROOT_FILES" ] || [ -n "$NEW_ROOT_DIRS" ]; then
+            VIOLATIONS=$((VIOLATIONS + 1))
+            echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
+            echo -e "${RED}║  UNAUTHORIZED ROOT FILES/DIRECTORIES DETECTED               ║${NC}"
+            echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
+            echo ""
+            
+            if [ -n "$NEW_ROOT_FILES" ]; then
+                echo -e "${RED}Unauthorized root files:${NC}"
+                while IFS= read -r file; do
+                    if [ -n "$file" ]; then
+                        echo -e "${RED}  ❌ $file${NC}"
+                        WARNINGS+=("❌ Unauthorized root file: $file")
+                    fi
+                done < <(echo "$NEW_ROOT_FILES")
+                echo ""
+            fi
+            
+            if [ -n "$NEW_ROOT_DIRS" ]; then
+                echo -e "${RED}Unauthorized root directories:${NC}"
+                while IFS= read -r dir; do
+                    if [ -n "$dir" ]; then
+                        echo -e "${RED}  ❌ $dir/${NC}"
+                        WARNINGS+=("❌ Unauthorized root directory: $dir/")
+                    fi
+                done < <(echo "$NEW_ROOT_DIRS")
+                echo ""
+            fi
+            
+            echo -e "${YELLOW}Allowed root files/directories are listed in .whitelist${NC}"
+            echo -e "${YELLOW}See contribute/STRUCTURE.md for repository structure rules${NC}"
+            echo ""
+        else
+            echo -e "${GREEN}✓ Root directory structure check passed${NC}"
+        fi
+    fi
+    fi
+fi
+
+# Check snippets directory structure
+if [ "$SKIP_STRUCTURE_CHECK" = "1" ]; then
+    echo -e "${YELLOW}⚠️  Snippets structure checks bypassed${NC}"
+else
+    echo ""
+    echo -e "${YELLOW}🔍 Checking snippets directory structure...${NC}"
+
+    STAGED_SNIPPETS=$(git diff --cached --name-only --diff-filter=A | grep '^snippets/')
+
+    if [ -n "$STAGED_SNIPPETS" ]; then
+    # Check for scripts in snippets/
+    SNIPPETS_SCRIPTS=$(echo "$STAGED_SNIPPETS" | grep '^snippets/scripts/')
+    if [ -n "$SNIPPETS_SCRIPTS" ]; then
+        VIOLATIONS=$((VIOLATIONS + 1))
+        echo -e "${RED}❌ Scripts cannot be in snippets/. Move to tools/scripts/${NC}"
+        echo "$SNIPPETS_SCRIPTS" | while read -r file; do
+            WARNINGS+=("❌ $file: Scripts must be in tools/scripts/, not snippets/")
+        done
+    fi
+    
+    # Check for wiki/docs in snippets/
+    SNIPPETS_WIKI=$(echo "$STAGED_SNIPPETS" | grep '^snippets/snippetsWiki/')
+    if [ -n "$SNIPPETS_WIKI" ]; then
+        VIOLATIONS=$((VIOLATIONS + 1))
+        echo -e "${RED}❌ Wiki/docs cannot be in snippets/. Move to tools/wiki/${NC}"
+        echo "$SNIPPETS_WIKI" | while read -r file; do
+            WARNINGS+=("❌ $file: Wiki must be in tools/wiki/, not snippets/")
+        done
+    fi
+    
+    # Check for styles in snippets/
+    SNIPPETS_STYLES=$(echo "$STAGED_SNIPPETS" | grep '^snippets/styles/')
+    if [ -n "$SNIPPETS_STYLES" ]; then
+        VIOLATIONS=$((VIOLATIONS + 1))
+        echo -e "${RED}❌ Styles cannot be in snippets/. Use root style.css only${NC}"
+        echo "$SNIPPETS_STYLES" | while read -r file; do
+            WARNINGS+=("❌ $file: Styles must use root style.css, not snippets/styles/")
+        done
+    fi
+    fi
+fi
+
+# Check for changes to v1/ (frozen)
+if [ "$SKIP_STRUCTURE_CHECK" = "1" ]; then
+    echo -e "${YELLOW}⚠️  v1/ frozen check bypassed${NC}"
+else
+    echo ""
+    echo -e "${YELLOW}🔍 Checking v1/ directory (frozen)...${NC}"
+
+    V1_CHANGES=$(git diff --cached --name-only | grep '^v1/')
+    if [ -n "$V1_CHANGES" ]; then
+        VIOLATIONS=$((VIOLATIONS + 1))
+        echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
+        echo -e "${RED}║  v1/ IS FROZEN - NO CHANGES ALLOWED                        ║${NC}"
+        echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
+        echo ""
+        echo -e "${RED}Attempted changes to v1/:${NC}"
+        echo "$V1_CHANGES" | while read -r file; do
+            echo -e "${RED}  ❌ $file${NC}"
+            WARNINGS+=("❌ $file: v1/ is FROZEN - no changes allowed")
+        done
+        echo ""
+        echo -e "${RED}Commit blocked. v1/ is immutable and cannot be modified.${NC}"
+        echo ""
+        exit 1
+    else
+        echo -e "${GREEN}✓ v1/ directory check passed (no changes detected)${NC}"
+    fi
+fi
+
+# Check style guide compliance
+if [ "$SKIP_STYLE_CHECK" = "1" ]; then
+    echo -e "${YELLOW}⚠️  Style guide checks bypassed (SKIP_STYLE_CHECK=1)${NC}"
+else
+    echo ""
+    echo -e "${YELLOW}🔍 Checking style guide compliance...${NC}"
+
+    # Get list of staged files (excluding style-guide.mdx which documents examples of what NOT to do)
+    STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(jsx|tsx|js|mdx)$' | grep -v "style-guide")
+
+    if [ -z "$STAGED_FILES" ]; then
+        echo -e "${GREEN}✓ No JSX/TSX/MDX files staged, skipping style checks${NC}"
+    else
+
+        # Check 1: ThemeData import/usage (DEPRECATED)
+        echo "Checking for ThemeData usage (deprecated)..."
+        for file in $STAGED_FILES; do
     if [ -f "$file" ]; then
         # Skip if it's the style guide itself (it documents ThemeData as deprecated)
         if [[ "$file" == *"style-guide.mdx" ]]; then
@@ -38,12 +224,12 @@ for file in $STAGED_FILES; do
             WARNINGS+=("❌ $file: Uses deprecated ThemeData - use CSS Custom Properties instead")
             VIOLATIONS=$((VIOLATIONS + 1))
         fi
-    fi
-done
+        fi
+    done
 
-# Check 2: Hardcoded hex colors that should use CSS variables
-echo "Checking for hardcoded colors..."
-for file in $STAGED_FILES; do
+    # Check 2: Hardcoded hex colors that should use CSS variables
+    echo "Checking for hardcoded colors..."
+    for file in $STAGED_FILES; do
     if [ -f "$file" ]; then
         # Skip style guide (it documents colors in tables)
         if echo "$file" | grep -q "style-guide.mdx"; then
@@ -55,12 +241,12 @@ for file in $STAGED_FILES; do
             WARNINGS+=("⚠️  $file: Contains hardcoded theme colors - use CSS Custom Properties (var(--accent), etc.)")
             VIOLATIONS=$((VIOLATIONS + 1))
         fi
-    fi
-done
+        fi
+    done
 
-# Check 3: Relative imports (should be absolute from root)
-echo "Checking for relative imports..."
-for file in $STAGED_FILES; do
+    # Check 3: Relative imports (should be absolute from root)
+    echo "Checking for relative imports..."
+    for file in $STAGED_FILES; do
     if [ -f "$file" ]; then
         # Skip style guide (it documents relative imports as examples of what NOT to do)
         if [[ "$file" == *"style-guide"* ]]; then
@@ -70,12 +256,12 @@ for file in $STAGED_FILES; do
             WARNINGS+=("⚠️  $file: Uses relative imports - use absolute paths from root (/snippets/...)")
             VIOLATIONS=$((VIOLATIONS + 1))
         fi
-    fi
-done
+        fi
+    done
 
-# Check 4: Import from @mintlify/components (should not import, they're global)
-echo "Checking for @mintlify/components imports..."
-for file in $STAGED_FILES; do
+    # Check 4: Import from @mintlify/components (should not import, they're global)
+    echo "Checking for @mintlify/components imports..."
+    for file in $STAGED_FILES; do
     if [ -f "$file" ]; then
         # Skip style guide (it documents this as a "don't do this" example)
         if [[ "$file" == *"style-guide.mdx" ]]; then
@@ -85,12 +271,12 @@ for file in $STAGED_FILES; do
             WARNINGS+=("⚠️  $file: Imports from @mintlify/components - these are global, no import needed")
             VIOLATIONS=$((VIOLATIONS + 1))
         fi
-    fi
-done
+        fi
+    done
 
-# Check 5: React imports (hooks are global in Mintlify)
-echo "Checking for unnecessary React imports..."
-for file in $STAGED_FILES; do
+    # Check 5: React imports (hooks are global in Mintlify)
+    echo "Checking for unnecessary React imports..."
+    for file in $STAGED_FILES; do
     if [ -f "$file" ]; then
         # Skip style guide (it documents this as a "don't do this" example)
         if [[ "$file" == *"style-guide.mdx" ]]; then
@@ -101,52 +287,74 @@ for file in $STAGED_FILES; do
             VIOLATIONS=$((VIOLATIONS + 1))
         fi
     fi
-done
+    done
+    fi
+fi
 
 # Run verification scripts
-echo ""
-echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${YELLOW}Running verification scripts...${NC}"
-if [ -f ".githooks/verify.sh" ]; then
-    if bash .githooks/verify.sh; then
-        echo -e "${GREEN}✓ Verification scripts passed${NC}"
-    else
-        VERIFY_EXIT=$?
-        if [ $VERIFY_EXIT -ne 0 ]; then
-            VIOLATIONS=$((VIOLATIONS + 1))
-            WARNINGS+=("❌ Verification scripts failed - see output above")
-        fi
-    fi
+if [ "$SKIP_VERIFICATION" = "1" ]; then
+    echo -e "${YELLOW}⚠️  Verification scripts bypassed (SKIP_VERIFICATION=1)${NC}"
 else
-    echo -e "${YELLOW}⚠️  Verification script not found, skipping...${NC}"
-fi
-echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-
-# Run test suite (fast mode for pre-commit)
-echo ""
-echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${YELLOW}Running test suite (staged files only)...${NC}"
-if [ -f "testing/run-all.js" ] && command -v node &>/dev/null; then
-    # Check if dependencies are installed in v2/node_modules
-    if [ -d "v2/node_modules" ]; then
-        # Set NODE_PATH to include v2/node_modules for module resolution
-        export NODE_PATH="$(pwd)/v2/node_modules:${NODE_PATH:-}"
-        if node testing/run-all.js --staged --skip-browser 2>&1; then
-            echo -e "${GREEN}✓ Test suite passed${NC}"
+    echo ""
+    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${YELLOW}Running verification scripts...${NC}"
+    if [ -f ".githooks/verify.sh" ]; then
+        if bash .githooks/verify.sh; then
+            echo -e "${GREEN}✓ Verification scripts passed${NC}"
         else
-            TEST_EXIT=$?
-            if [ $TEST_EXIT -ne 0 ]; then
+            VERIFY_EXIT=$?
+            if [ $VERIFY_EXIT -ne 0 ]; then
                 VIOLATIONS=$((VIOLATIONS + 1))
-                WARNINGS+=("❌ Test suite failed - see output above")
+                WARNINGS+=("❌ Verification scripts failed - see output above")
             fi
         fi
     else
-        echo -e "${YELLOW}⚠️  Dependencies not installed (v2/node_modules missing). Run 'cd v2 && npm install' to enable tests${NC}"
+        echo -e "${YELLOW}⚠️  Verification script not found, skipping...${NC}"
     fi
-else
-    echo -e "${YELLOW}⚠️  Test suite not available, skipping...${NC}"
+    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 fi
-echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+
+# Run test suite (fast mode for pre-commit)
+if [ "$SKIP_TESTS" = "1" ]; then
+    echo -e "${YELLOW}⚠️  Test suite bypassed (SKIP_TESTS=1)${NC}"
+else
+    echo ""
+    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${YELLOW}Running test suite (staged files only)...${NC}"
+    if [ -f "tests/run-all.js" ] && command -v node &>/dev/null; then
+        # Check if dependencies are installed in tooling/node_modules or tests/node_modules
+        if [ -d "tooling/node_modules" ]; then
+            # Set NODE_PATH to include tooling/node_modules for module resolution
+            export NODE_PATH="$(pwd)/tooling/node_modules:${NODE_PATH:-}"
+            if node tests/run-all.js --staged --skip-browser 2>&1; then
+                echo -e "${GREEN}✓ Test suite passed${NC}"
+            else
+                TEST_EXIT=$?
+                if [ $TEST_EXIT -ne 0 ]; then
+                    VIOLATIONS=$((VIOLATIONS + 1))
+                    WARNINGS+=("❌ Test suite failed - see output above")
+                fi
+            fi
+        elif [ -d "tests/node_modules" ]; then
+            # Fallback to tests/node_modules if tooling doesn't exist
+            export NODE_PATH="$(pwd)/tests/node_modules:${NODE_PATH:-}"
+            if node tests/run-all.js --staged --skip-browser 2>&1; then
+                echo -e "${GREEN}✓ Test suite passed${NC}"
+            else
+                TEST_EXIT=$?
+                if [ $TEST_EXIT -ne 0 ]; then
+                    VIOLATIONS=$((VIOLATIONS + 1))
+                    WARNINGS+=("❌ Test suite failed - see output above")
+                fi
+            fi
+        else
+            echo -e "${YELLOW}⚠️  Dependencies not installed. Run 'cd tooling && npm install' or 'cd tests && npm install' to enable tests${NC}"
+        fi
+    else
+        echo -e "${YELLOW}⚠️  Test suite not available, skipping...${NC}"
+    fi
+    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+fi
 
 # Report results
 echo ""

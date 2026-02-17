@@ -8,6 +8,7 @@
 
 **What Runs:**
 - Style guide checks (ThemeData, hardcoded colors, imports)
+- Broken links and imports validation
 - MDX syntax validation
 - JSON/JS/Shell syntax checks
 - **Test suite (fast mode)** - Only on staged files, browser tests skipped
@@ -15,6 +16,7 @@
   - MDX validation
   - Spelling checks
   - Quality checks
+  - Broken links & imports validation
 
 **Speed:** Fast (~10-30 seconds) - only tests staged files
 
@@ -40,6 +42,7 @@
 - MDX validation (all files)
 - Spelling tests (all files)
 - Quality checks (all files)
+- Broken links & imports validation (all files)
 - **Browser tests (ALL 264 pages from docs.json)**
 
 **Speed:** Slower (~5-10 minutes) - tests entire codebase
@@ -66,6 +69,7 @@ node tests/unit/style-guide.test.js     # Style guide only
 node tests/unit/mdx.test.js             # MDX validation only
 node tests/unit/spelling.test.js        # Spelling only
 node tests/unit/quality.test.js         # Quality checks only
+node tests/unit/links-imports.test.js   # Broken links & imports only
 node tests/integration/browser.test.js  # Browser tests only
 
 # Or from v2/ directory (if dependencies installed there)
@@ -76,6 +80,7 @@ npm run test:mdx                        # MDX
 npm run test:spell                      # Spelling
 npm run test:browser                    # Browser
 npm run test:quality                    # Quality
+npm run test:links                      # Broken links & imports
 npm run test:all-pages                  # All pages browser test
 ```
 

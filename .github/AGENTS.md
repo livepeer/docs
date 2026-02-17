@@ -43,7 +43,7 @@ destructive or history-altering actions.
    - Scripts → `tools/scripts/` (organized by purpose: audit/, generate/, test/, verify/, fetch/)
    - Config files → `tools/config/`
    - AI guidelines → `tools/ai-rules/`
-   - Public assets → `public/` (favicon.png, logo/)
+   - Public assets → root level (favicon.png, logo/ at root - Mintlify requirement)
    - OpenAPI specs → `api/` (consolidated)
    - Contribution docs → `contribute/`
    - Documentation → `docs/v1/` (FROZEN) or `docs/v2/pages/` (active)
