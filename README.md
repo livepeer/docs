@@ -22,7 +22,7 @@ Built with [Mintlify](https://mintlify.com) and deployed at [docs.livepeer.org](
 
 ### Setup
 
-1. **Fork and clone the repository:**
+1. **Fork or clone the repository:**
    - **Fork the repository** on GitHub: [github.com/livepeer/docs](https://github.com/livepeer/docs)
    - **Clone your fork** (or clone directly if you have write access):
    ```bash
@@ -40,7 +40,7 @@ Built with [Mintlify](https://mintlify.com) and deployed at [docs.livepeer.org](
    npm i -g mintlify
    ```
 
-3. **Install pre-commit hooks (Will run valuable tests - especially if you will be using AI agents to do work - HIGHLY RECOM):**
+3. **Install pre-commit hooks (Will run valuable tests - especially if you will be using AI agents to do work - HIGHLY RECOMMENDED):**
    ```bash
    ./.githooks/install.sh
    ```
@@ -129,6 +129,86 @@ We welcome contributions! Please read the following before making changes:
 5. **Update related docs:** If structure changes, update this README
 
 See [CONTRIBUTING.md](contribute/CONTRIBUTING.md) for detailed contribution guidelines.
+
+---
+
+## 🐛 GitHub Issues
+
+### Creating Issues
+
+When creating GitHub issues for this repository:
+
+1. **Use the `docs-v2` label** - All issues related to v2 documentation must include this label
+2. **Choose appropriate issue templates** (if available):
+   - Bug Report - For broken links, incorrect information, formatting issues
+   - Feature Request - For new content, improvements, enhancements
+   - Question - For clarifications, how-to questions
+   - Documentation Request - For missing documentation, unclear explanations
+
+3. **Include relevant labels** from the categories below
+
+### Required Labels
+
+**Version Tag (REQUIRED):**
+- `docs-v2` - **MUST be included** for all v2 documentation issues
+- `v1` - For legacy v1 documentation issues (rare, v1 is frozen)
+
+### Standard GitHub Labels
+
+**Priority:**
+- `priority: critical` - Security issues, broken critical paths
+- `priority: high` - Important content gaps, user blockers
+- `priority: medium` - Standard improvements
+- `priority: low` - Nice-to-have enhancements
+
+**Type:**
+- `type: bug` - Something is broken
+- `type: enhancement` - Improvement or new feature
+- `type: documentation` - Documentation-related
+- `type: question` - Question or clarification needed
+
+**Area (Documentation Sections):**
+- `area: ai` - AI/Gateway documentation
+- `area: developers` - Developer documentation
+- `area: orchestrators` - Orchestrator documentation
+- `area: gateways` - Gateway documentation
+- `area: about` - About section
+- `area: resources` - Resources section
+- `area: structure` - Repository structure issues
+- `area: style-guide` - Style guide violations or questions
+
+**Status:**
+- `status: needs-triage` - Needs initial review
+- `status: in-progress` - Work in progress
+- `status: blocked` - Blocked on something
+- `status: needs-info` - Needs more information from reporter
+- `good first issue` - Good for new contributors
+
+**Other Common Labels:**
+- `help wanted` - Community help requested
+- `wontfix` - Issue won't be fixed
+- `duplicate` - Duplicate of another issue
+- `invalid` - Issue is invalid or incorrect
+
+### Issue Workflow
+
+1. **Create Issue** - Use appropriate template and include `docs-v2` label
+2. **Triage** - Maintainers review and add additional labels
+3. **Assignment** - Issue assigned to section owner or contributor
+4. **Work** - Contributor works on the issue
+5. **PR** - Pull request linked to issue (use "Fixes #123" or "Closes #123")
+6. **Review** - PR reviewed and merged
+7. **Close** - Issue automatically closed when PR is merged
+
+### Issue Templates
+
+When creating issues, include:
+- **Clear title** describing the problem or request
+- **Description** with context and details
+- **Steps to reproduce** (for bugs)
+- **Expected vs actual behavior** (for bugs)
+- **Screenshots** (if applicable)
+- **Relevant labels** including `docs-v2`
 
 ---
 
