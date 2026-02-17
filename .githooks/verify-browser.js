@@ -116,8 +116,8 @@ async function testPage(browser, filePath) {
       timeout: TIMEOUT 
     });
     
-    // Wait for content to render
-    await page.waitForTimeout(1000);
+    // Wait for content to render (using Promise instead of deprecated waitForTimeout)
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Check if page actually rendered content
     const bodyText = await page.evaluate(() => document.body.innerText);

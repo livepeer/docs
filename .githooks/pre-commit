@@ -46,12 +46,12 @@ echo "Checking for hardcoded colors..."
 for file in $STAGED_FILES; do
     if [ -f "$file" ]; then
         # Skip style guide (it documents colors in tables)
-        if [[ "$file" == *"style-guide.mdx" ]]; then
+        if echo "$file" | grep -q "style-guide.mdx"; then
             continue
         fi
         # Check for common Livepeer colors hardcoded (should use CSS vars)
         # Exclude markdown tables and code examples
-        if grep -E "(#3CB540|#2b9a66|#18794E|#181C18|#E0E4E0|#717571|#A0A4A0)" "$file" 2>/dev/null | grep -v "var(--" | grep -v "CSS Custom Properties" | grep -v "style-guide" | grep -v "Color System" | grep -v "Light Mode\|Dark Mode" | grep -v "^\|" | grep -v "^```" > /dev/null; then
+        if grep -E "(#3CB540|#2b9a66|#18794E|#181C18|#E0E4E0|#717571|#A0A4A0)" "$file" 2>/dev/null | grep -v "var(--" | grep -v "CSS Custom Properties" | grep -v "style-guide" | grep -v "Color System" | grep -v "Light Mode\|Dark Mode" | grep -v '^|' | grep -v '^```' > /dev/null; then
             WARNINGS+=("⚠️  $file: Contains hardcoded theme colors - use CSS Custom Properties (var(--accent), etc.)")
             VIOLATIONS=$((VIOLATIONS + 1))
         fi
