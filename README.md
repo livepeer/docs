@@ -2,10 +2,13 @@
 
 The official documentation repository for [Livepeer](https://livepeer.org), a decentralised realtime AI infrastructure network. This repository contains documentation for Livepeer Studio, the Livepeer Protocol, AI Pipelines, Orchestrators, Gateways, Delegators, Community, Help and developer resources.
 
+Built with [Mintlify](https://mintlify.com) and deployed at [docs.livepeer.org](https://docs.
+livepeer.org).
+
 
 ## IMPORTANT
-- THIS REPOSITORY IS GENERALLY COMMUNITY MAINTAINED. 
-- THE LIVEPEER FOUNDATION HELPS GUIDE IT, HOWEVER, GENERALLY IF YOU THINK IMPROVEMENTS ARE NEEDED YOU SHOULD SUBMIT THEM OR CREATE AN ISSUE ASKING FOR THE FEATURE/BUG FIX ETC.
+- THIS REPOSITORY IS mostly COMMUNITY MAINTAINED. 
+- THE LIVEPEER FOUNDATION HELPS GUIDE IT, HOWEVER, GENERALLY IF YOU THINK IMPROVEMENTS ARE NEEDED YOU SHOULD SUBMIT THEM (via PR) OR CREATE AN ISSUE ASKING FOR THE FEATURE/BUG FIX ETC.
 - **Issue templates:** When creating issues, use the GitHub issue templates which will automatically apply the `docs-v2` and `help wanted` labels. See [GitHub Issues section](#-github-issues) below for details.
 
 ---
