@@ -136,19 +136,20 @@
   - ✅ `errors/` - Error documentation
 - ✅ Feature-specific task folders (ABOUT/, DEVELOPERS/, etc.)
 
-### Public Assets (Root Level)
+### Public Assets (`snippets/assets/`)
 
 **Purpose:** Static public assets served by Mintlify (favicon and logo)
 
-**CRITICAL:** Mintlify expects these at ROOT level, NOT in a `public/` folder
+**CRITICAL:** Favicon and logo are in `snippets/assets/`, NOT at root
 
-**Allowed Files at Root:**
-- ✅ `favicon.png` - MUST be at root (docs.json: `"favicon": "/favicon.png"`)
-- ✅ `logo/` - MUST be at root (docs.json: `"logo": { "light": "/logo/light.svg" }`)
+**Location:**
+- ✅ `favicon.png` - In `snippets/assets/` (docs.json: `"favicon": "/snippets/assets/favicon.png"`)
+- ✅ `logo/` - In `snippets/assets/logo/` (docs.json: `"logo": { "light": "/snippets/assets/logo/light.svg" }`)
 
 **Rules:**
-- **NO `public/` folder** - Mintlify doesn't use it
-- These are special Mintlify config assets, different from content assets in `snippets/assets/`
+- **NOT at root** - They belong in `snippets/assets/`
+- Referenced in `docs.json` from `snippets/assets/`
+- These are public assets, different from content assets but still in `snippets/assets/`
 
 ### API Directory (`/api/`)
 

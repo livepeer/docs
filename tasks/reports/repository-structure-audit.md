@@ -349,8 +349,8 @@ Based on Mintlify documentation and best practices:
 │   │   └── README.md
 │   └── PLAN/               # Planning docs
 │
-# NO public/ folder - Mintlify expects favicon.png and logo/ at ROOT level
-# favicon.png and logo/ must be at root (docs.json references: "/favicon.png", "/logo/...")
+# NO public/ folder - favicon.png and logo/ are in snippets/assets/
+# favicon.png and logo/ are in snippets/assets/ (docs.json references: "/snippets/assets/favicon.png", "/snippets/assets/logo/...")
 │
 ├── snippets/               # Mintlify snippets (✅ keep as-is, clean up)
 │   ├── assets/             # Static assets for docs
@@ -463,8 +463,8 @@ Based on Mintlify documentation and best practices:
 - Move `diff-report-*.txt` → Delete (temporary files)
 - Move `DIFF-REPORT-SUMMARY.md` → `tasks/reports/`
 - Move `llms.txt.information.md` → `tools/ai-rules/`
-- **DO NOT MOVE** `favicon.png` - MUST stay at root (docs.json: `"favicon": "/favicon.png"`)
-- **DO NOT MOVE** `logo/` - MUST stay at root (docs.json: `"logo": { "light": "/logo/light.svg" }`)
+- **DO NOT MOVE** `favicon.png` - MUST stay in `snippets/assets/` (docs.json: `"favicon": "/snippets/assets/favicon.png"`)
+- **DO NOT MOVE** `logo/` - MUST stay in `snippets/assets/logo/` (docs.json: `"logo": { "light": "/snippets/assets/logo/light.svg" }`)
 - If files are in `public/`, move them BACK to root
 - Move `v2/ai-tools/` → `ai-tools/` (root level folder)
 - Move `openapi.yaml` → `api/studio.yaml` (or keep as `api/openapi.yaml`)

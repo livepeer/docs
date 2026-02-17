@@ -41,9 +41,11 @@ destructive or history-altering actions.
 
 2. **File Locations** - Files must be in correct directories:
    - Scripts → `tools/scripts/` (organized by purpose: audit/, generate/, test/, verify/, fetch/)
-   - Config files → `tools/config/`
+   - Config files → `tools/config/` **EXCEPT**:
+     - `.prettierrc.yaml` → **ROOT** (Prettier convention)
+   - `.speakeasy/` → `tools/config/.speakeasy/` (Speakeasy API docs tool config)
    - AI guidelines → `tools/ai-rules/`
-   - Public assets → root level (favicon.png, logo/ at root - Mintlify requirement)
+   - Public assets → `snippets/assets/` (favicon.png, logo/ in snippets/assets/ - referenced in docs.json)
    - OpenAPI specs → `api/` (consolidated)
    - Contribution docs → `contribute/`
    - Documentation → `docs/v1/` (FROZEN) or `docs/v2/pages/` (active)

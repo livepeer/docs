@@ -22,7 +22,7 @@ containerized with Docker.
    - Scripts → `tools/scripts/` (organized by purpose: audit/, generate/, test/, verify/, fetch/)
    - Config files → `tools/config/`
    - AI guidelines → `tools/ai-rules/`
-   - Public assets → root level (favicon.png, logo/ at root - Mintlify requirement)
+   - Public assets → `snippets/assets/` (favicon.png, logo/ in snippets/assets/ - referenced in docs.json)
    - OpenAPI specs → `api/` (consolidated)
    - Contribution docs → `contribute/`
    - Documentation → `docs/v1/` (FROZEN) or `docs/v2/pages/` (active)
@@ -56,7 +56,7 @@ containerized with Docker.
     - `api/cli-http.yaml` - CLI HTTP API
   - Use scripts to generate MDX/API docs.
 - **Assets:**
-  - Public assets at ROOT (favicon.png, logo/ at root - Mintlify requirement, NO public/ folder)
+  - Public assets in `snippets/assets/` (favicon.png, logo/ in snippets/assets/ - referenced in docs.json)
   - Docs content assets in `snippets/assets/`
 
 ## Developer Workflows
@@ -126,7 +126,7 @@ containerized with Docker.
 - `tools/ai-rules/` — AI guidelines and rules
 - `api/` — Consolidated OpenAPI specifications (studio.yaml, ai-worker.yaml, cli-http.yaml)
 - `contribute/` — Contribution documentation
-- `favicon.png` and `logo/` — Public assets at ROOT (Mintlify requirement - NO public/ folder)
+- `favicon.png` and `logo/` — Public assets in `snippets/assets/` (referenced in docs.json)
 - `ai-tools/` — AI tool setup guides
 - `tasks/` — AI working directory (plan/, reports/, scripts/, errors/, experiments/, notes/)
 - `style.css` — Global CSS Custom Properties (ONLY CSS file at root)

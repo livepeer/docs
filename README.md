@@ -572,8 +572,6 @@ When working with this repository, AI agents should:
 ├── Dockerfile             # Docker build configuration
 ├── Makefile               # Build automation
 ├── style.css              # Mintlify global styles (MUST be at root)
-├── favicon.png            # Site favicon (at root per Mintlify)
-├── logo/                  # Logo assets (at root per Mintlify)
 ├── .gitignore             # Git ignore rules
 ├── .mintignore            # Mintlify ignore rules
 └── .whitelist             # Allowed root files/directories (enforced by pre-commit)
@@ -584,10 +582,11 @@ When working with this repository, AI agents should:
 1. **Root Directory**: Only files listed in `.whitelist` are allowed at root
 2. **Snippets**: Must follow Mintlify conventions (components, data, assets, automations, pages)
 3. **v1/ is FROZEN**: Never modify, remove, or archive files in `v1/`
-4. **No `public/` folder**: Mintlify doesn't support it - favicon/logo stay at root
+4. **No `public/` folder**: Mintlify doesn't support it - favicon/logo are in `snippets/assets/`
 5. **No `styles/` folder**: Mintlify only allows ONE CSS file at root (`style.css`)
 6. **Scripts**: All scripts go in `tools/scripts/` organized by purpose
-7. **Configs**: All config files go in `tools/config/`
+7. **Configs**: All config files go in `tools/config/`, **EXCEPT**:
+   - `.prettierrc.yaml` → **ROOT** (Prettier convention)
 8. **OpenAPI specs**: All API specs go in `api/`
 
 ### Enforcement

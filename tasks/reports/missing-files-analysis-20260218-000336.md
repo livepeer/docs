@@ -1,0 +1,244 @@
+# Missing Files Analysis: MOVED vs DELETED
+
+**Date:** Wed Feb 18 00:03:36 AEDT 2026
+**Current Branch:** docs-v2-test
+
+## Summary
+
+## Files Analysis
+
+### MOVED FILES
+
+- **.cursorrules** → tools/ai-rules/.cursorrules
+- **.prettierrc.yaml** → tools/config/.prettierrc.yaml
+- **CONTRIBUTING.md** → contribute/CONTRIBUTING.md
+- **cspell.json** → tools/config/cspell.json
+- **docs/.augment/.augment-guidelines** → tools/ai-rules/.augment-guidelines
+- **docs/.augment/rules/git-safety.md** → tools/ai-rules/.augment/rules/git-safety.md
+- **docs/.augment/rules/imported/AI_GUIDELINES.md** → tools/ai-rules/.augment/rules/imported/AI_GUIDELINES.md
+- **docs/.augment/rules/imported/copilot-instructions.md** → .github/copilot-instructions.md
+- **docs/.speakeasy/workflow.lock** → tools/config/.speakeasy/workflow.lock
+- **docs/.speakeasy/workflow.yaml** → tools/config/.speakeasy/workflow.yaml
+- **docs/ABOUT/00-NAV-AND-PAGE-INDEX.md** → tasks/ABOUT/00-NAV-AND-PAGE-INDEX.md
+- **docs/ABOUT/ABOUT-SECTION-COPY-REVIEW.md** → tasks/ABOUT/ABOUT-SECTION-COPY-REVIEW.md
+- **docs/ABOUT/ABOUT-SECTION-STYLE-GUIDE.md** → tasks/ABOUT/ABOUT-SECTION-STYLE-GUIDE.md
+- **docs/ABOUT/CONTEXT DATA/Network/livepeer_interfaces.md** → tasks/ABOUT/CONTEXT DATA/Network/livepeer_interfaces.md
+- **docs/ABOUT/CONTEXT DATA/Network/livepeer_job_lifecycle.md** → tasks/ABOUT/CONTEXT DATA/Network/livepeer_job_lifecycle.md
+- **docs/ABOUT/CONTEXT DATA/Network/livepeer_marketplace.md** → tasks/ABOUT/CONTEXT DATA/Network/livepeer_marketplace.md
+- **docs/ABOUT/CONTEXT DATA/Network/livepeer_network_actors.md** → tasks/ABOUT/CONTEXT DATA/Network/livepeer_network_actors.md
+- **docs/ABOUT/CONTEXT DATA/Network/livepeer_network_overview.md** → tasks/ABOUT/CONTEXT DATA/Network/livepeer_network_overview.md
+- **docs/ABOUT/CONTEXT DATA/Network/livepeer_technical_stack.md** → tasks/ABOUT/CONTEXT DATA/Network/livepeer_technical_stack.md
+- **docs/ABOUT/CONTEXT DATA/Protocol/Core Mechanisms.pdf** → tasks/ABOUT/CONTEXT DATA/Protocol/Core Mechanisms.pdf
+- **docs/ABOUT/CONTEXT DATA/Protocol/Livepeer Protocol Core Mechanisms (2026).pdf** → tasks/ABOUT/CONTEXT DATA/Protocol/Livepeer Protocol Core Mechanisms (2026).pdf
+- **docs/ABOUT/CONTEXT DATA/Protocol/OverviewReport.pdf** → tasks/ABOUT/CONTEXT DATA/Protocol/OverviewReport.pdf
+- **docs/ABOUT/CONTEXT DATA/Protocol/deep-research-report (1).md** → tasks/ABOUT/CONTEXT DATA/Protocol/deep-research-report (1).md
+- **docs/ABOUT/CONTEXT DATA/Protocol/deep-research-report (2).md** → tasks/ABOUT/CONTEXT DATA/Protocol/deep-research-report (2).md
+- **docs/ABOUT/CONTEXT DATA/Protocol/deep-research-report.md** → tasks/ABOUT/CONTEXT DATA/Protocol/deep-research-report.md
+- **docs/ABOUT/CONTEXT DATA/Protocol/livepeer_core_mechanisms.md** → tasks/ABOUT/CONTEXT DATA/Protocol/livepeer_core_mechanisms.md
+- **docs/ABOUT/CONTEXT DATA/Protocol/livepeer_governance_model.md** → tasks/ABOUT/CONTEXT DATA/Protocol/livepeer_governance_model.md
+- **docs/ABOUT/CONTEXT DATA/Protocol/livepeer_protocol_economics.md** → tasks/ABOUT/CONTEXT DATA/Protocol/livepeer_protocol_economics.md
+- **docs/ABOUT/CONTEXT DATA/Protocol/livepeer_technical_architecture.md** → tasks/ABOUT/CONTEXT DATA/Protocol/livepeer_technical_architecture.md
+- **docs/ABOUT/CONTEXT DATA/Protocol/livepeer_token.md** → tasks/ABOUT/CONTEXT DATA/Protocol/livepeer_token.md
+- **docs/ABOUT/CONTEXT DATA/Protocol/livepeer_treasury.md** → tasks/ABOUT/CONTEXT DATA/Protocol/livepeer_treasury.md
+- **docs/ABOUT/CONTEXT DATA/Resources_References/livepeer_about_section_references.md** → tasks/ABOUT/CONTEXT DATA/Resources_References/livepeer_about_section_references.md
+- **docs/ABOUT/CONTEXT DATA/livepeer_docs_rebuild.md** → tasks/ABOUT/CONTEXT DATA/livepeer_docs_rebuild.md
+- **docs/ABOUT/CONTEXT DATA/livepeer_ia_protocol_report.md** → tasks/ABOUT/CONTEXT DATA/livepeer_ia_protocol_report.md
+- **docs/AI_GUIDELINES.md** → tools/ai-rules/.augment/rules/imported/AI_GUIDELINES.md
+- **docs/CONTRIBUTING/AGENT-INSTRUCTIONS.md** → contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md
+- **docs/CONTRIBUTING/GIT-HOOKS.md** → contribute/CONTRIBUTING/GIT-HOOKS.md
+- **docs/CONTRIBUTING/README.md** → .githooks/README.md
+- **docs/DEVELOPERS/00-NAV-AND-PAGE-INDEX.md** → tasks/ABOUT/00-NAV-AND-PAGE-INDEX.md
+- **docs/DEVELOPERS/CONTEXT DATA/ai_pipelines_overview.md** → tasks/DEVELOPERS/CONTEXT DATA/ai_pipelines_overview.md
+- **docs/DEVELOPERS/CONTEXT DATA/byoc_pipeline_guide.md** → tasks/DEVELOPERS/CONTEXT DATA/byoc_pipeline_guide.md
+- **docs/DEVELOPERS/CONTEXT DATA/comfy_stream_integration.md** → tasks/DEVELOPERS/CONTEXT DATA/comfy_stream_integration.md
+- **docs/DEVELOPERS/CONTEXT DATA/contribution_guide.md** → tasks/DEVELOPERS/CONTEXT DATA/contribution_guide.md
+- **docs/DEVELOPERS/CONTEXT DATA/developer_guides_index.md** → tasks/DEVELOPERS/CONTEXT DATA/developer_guides_index.md
+- **docs/DEVELOPERS/CONTEXT DATA/developer_help.md** → tasks/DEVELOPERS/CONTEXT DATA/developer_help.md
+- **docs/DEVELOPERS/CONTEXT DATA/developer_programs.md** → tasks/DEVELOPERS/CONTEXT DATA/developer_programs.md
+- **docs/DEVELOPERS/CONTEXT DATA/developer_resources.md** → tasks/DEVELOPERS/CONTEXT DATA/developer_resources.md
+- **docs/DEVELOPERS/CONTEXT DATA/livepeer_ai_quickstart.md** → tasks/DEVELOPERS/CONTEXT DATA/livepeer_ai_quickstart.md
+- **docs/DEVELOPERS/CONTEXT DATA/livepeer_developer_guide.md** → tasks/DEVELOPERS/CONTEXT DATA/livepeer_developer_guide.md
+- **docs/DEVELOPERS/CONTEXT DATA/livepeer_developer_journey.md** → tasks/DEVELOPERS/CONTEXT DATA/livepeer_developer_journey.md
+- **docs/DEVELOPERS/CONTEXT DATA/livepeer_developer_partners.md** → tasks/DEVELOPERS/CONTEXT DATA/livepeer_developer_partners.md
+- **docs/DEVELOPERS/CONTEXT DATA/livepeer_developer_section_planning.md** → tasks/DEVELOPERS/CONTEXT DATA/livepeer_developer_section_planning.md
+- **docs/DEVELOPERS/CONTEXT DATA/livepeer_rfps.md** → tasks/DEVELOPERS/CONTEXT DATA/livepeer_rfps.md
+- **docs/DEVELOPERS/CONTEXT DATA/livepeer_video_streaming_quickstart.md** → tasks/DEVELOPERS/CONTEXT DATA/livepeer_video_streaming_quickstart.md
+- **docs/DEVELOPERS/DEVELOPERS-SECTION-COPY-REVIEW.md** → tasks/DEVELOPERS/DEVELOPERS-SECTION-COPY-REVIEW.md
+- **docs/DEVELOPERS/DEVELOPERS-SECTION-STYLE-GUIDE.md** → tasks/DEVELOPERS/DEVELOPERS-SECTION-STYLE-GUIDE.md
+- **docs/DRY-and-cleaner-recommendations.md** → tasks/DRY-and-cleaner-recommendations.md
+- **docs/DRY-tasks-feasibility-report.md** → tasks/DRY-tasks-feasibility-report.md
+- **docs/Dockerfile** → Dockerfile
+- **docs/LIVEPEER-STUDIO-GAPS-AND-VERACITY.md** → tasks/LIVEPEER-STUDIO-GAPS-AND-VERACITY.md
+- **docs/LIVEPEER-STUDIO-V1-INVENTORY-AND-IA.md** → tasks/LIVEPEER-STUDIO-V1-INVENTORY-AND-IA.md
+- **docs/MDX-ERRORS-AND-FIXES-REPORT.md** → tasks/MDX-ERRORS-AND-FIXES-REPORT.md
+- **docs/Makefile** → Makefile
+- **docs/ORCHESTRATORS/00-V1-TO-V2-IA-MAPPING-AND-RECOMMENDATIONS.md** → tasks/ORCHESTRATORS/00-V1-TO-V2-IA-MAPPING-AND-RECOMMENDATIONS.md
+- **docs/ORCHESTRATORS/01-ORCHESTRATORS-COPY-REVIEW-AND-RECOMMENDATIONS.md** → tasks/ORCHESTRATORS/01-ORCHESTRATORS-COPY-REVIEW-AND-RECOMMENDATIONS.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_about_orchestrators_economics.md** → tasks/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_about_orchestrators_economics.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_advanced_setup_ai_pipelines.md** → tasks/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_advanced_setup_ai_pipelines.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_advanced_setup_delegation.md** → tasks/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_advanced_setup_delegation.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_advanced_setup_run_a_pool.md** → tasks/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_advanced_setup_run_a_pool.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_advanced_setup_staking_lpt (1).md** → tasks/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_advanced_setup_staking_lpt (1).md
+- **docs/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_advanced_setup_staking_lpt.md** → tasks/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_advanced_setup_staking_lpt.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_quickstart_orchestrator_setup.md** → tasks/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_quickstart_orchestrator_setup.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_references_faq.md** → tasks/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_references_faq.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/join_a_pool.md** → tasks/ORCHESTRATORS/CONTEXT DATA/join_a_pool.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrator_architecture_draft_mdx (1).md** → tasks/ORCHESTRATORS/CONTEXT DATA/orchestrator_architecture_draft_mdx (1).md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrator_architecture_draft_mdx.md** → tasks/ORCHESTRATORS/CONTEXT DATA/orchestrator_architecture_draft_mdx.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrator_configuration.md** → tasks/ORCHESTRATORS/CONTEXT DATA/orchestrator_configuration.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrator_economics.md** → tasks/ORCHESTRATORS/CONTEXT DATA/orchestrator_economics.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrator_functions (1).md** → tasks/ORCHESTRATORS/CONTEXT DATA/orchestrator_functions (1).md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrator_functions.md** → tasks/ORCHESTRATORS/CONTEXT DATA/orchestrator_functions.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrator_hardware_requirements.md** → tasks/ORCHESTRATORS/CONTEXT DATA/orchestrator_hardware_requirements.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrator_ia_setup.md** → tasks/ORCHESTRATORS/CONTEXT DATA/orchestrator_ia_setup.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrator_installation.md** → tasks/ORCHESTRATORS/CONTEXT DATA/orchestrator_installation.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrator_network_integration.md** → tasks/ORCHESTRATORS/CONTEXT DATA/orchestrator_network_integration.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrator_overview.md** → tasks/ORCHESTRATORS/CONTEXT DATA/orchestrator_overview.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrator_stats_monitoring.md** → tasks/ORCHESTRATORS/CONTEXT DATA/orchestrator_stats_monitoring.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrator_testing_validation.md** → tasks/ORCHESTRATORS/CONTEXT DATA/orchestrator_testing_validation.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrators_advanced_setup_ai_pipelines.md** → tasks/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_advanced_setup_ai_pipelines.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrators_advanced_setup_delegation.md** → tasks/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_advanced_setup_delegation.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrators_advanced_setup_rewards_and_fees.md** → tasks/ORCHESTRATORS/CONTEXT DATA/orchestrators_advanced_setup_rewards_and_fees.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrators_advanced_setup_staking_lpt.md** → tasks/ORCHESTRATORS/CONTEXT DATA/05_orchestrators_advanced_setup_staking_lpt.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/orchestrators_inline.md** → tasks/ORCHESTRATORS/CONTEXT DATA/orchestrators_inline.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/rewards_and_fees_advanced_orchestrator_guide.md** → tasks/ORCHESTRATORS/CONTEXT DATA/rewards_and_fees_advanced_orchestrator_guide.md
+- **docs/ORCHESTRATORS/CONTEXT DATA/run_an_orchestrator_overview.md** → tasks/ORCHESTRATORS/CONTEXT DATA/run_an_orchestrator_overview.md
+- **docs/ORCHESTRATORS/ORCHESTRATORS-SECTION-STYLE-GUIDE.md** → tasks/ORCHESTRATORS/ORCHESTRATORS-SECTION-STYLE-GUIDE.md
+- **docs/ORCHESTRATORS/README.md** → .githooks/README.md
+- **docs/PLAN/01-components-consolidate.md** → tasks/plan/01-components-consolidate.md
+- **docs/PLAN/02-components-audit-unused.md** → tasks/plan/02-components-audit-unused.md
+- **docs/PLAN/03-component-library-wiki.md** → tasks/plan/03-component-library-wiki.md
+- **docs/PLAN/04-ai-setup-guides-network-nodes.md** → tasks/plan/04-ai-setup-guides-network-nodes.md
+- **docs/PLAN/05-homogenise-styling.md** → tasks/plan/05-homogenise-styling.md
+- **docs/PLAN/06-separate-data-and-components-mdx.md** → tasks/plan/06-separate-data-and-components-mdx.md
+- **docs/PLAN/07-break-long-pages-into-sections.md** → tasks/plan/07-break-long-pages-into-sections.md
+- **docs/PLAN/08-automation-and-scripts.md** → tasks/plan/08-automation-and-scripts.md
+- **docs/PLAN/09-ai-guides-in-repo.md** → tasks/plan/09-ai-guides-in-repo.md
+- **docs/PLAN/10-documentation-guide-resources.md** → tasks/plan/10-documentation-guide-resources.md
+- **docs/PLAN/11-mintlify-ai-investigation.md** → tasks/plan/11-mintlify-ai-investigation.md
+- **docs/PLAN/12-contribution-guide-full-and-stretch.md** → tasks/plan/12-contribution-guide-full-and-stretch.md
+- **docs/PLAN/13-audit-repeated-content.md** → tasks/plan/13-audit-repeated-content.md
+- **docs/PLAN/14-audit-v1-to-v2-coverage.md** → tasks/plan/14-audit-v1-to-v2-coverage.md
+- **docs/PLAN/15-audit-v2-missing-incomplete.md** → tasks/plan/15-audit-v2-missing-incomplete.md
+- **docs/PLAN/16-rfp-goals-assessment.md** → tasks/plan/16-rfp-goals-assessment.md
+- **docs/PLAN/17-per-page-resources-and-media.md** → tasks/plan/17-per-page-resources-and-media.md
+- **docs/PLAN/18-other-suggestions.md** → tasks/plan/18-other-suggestions.md
+- **docs/PLAN/19-automate-snippets-inventory.md** → tasks/plan/19-automate-snippets-inventory.md
+- **docs/PLAN/21-fix-automations-workflows.md** → tasks/plan/21-fix-automations-workflows.md
+- **docs/PLAN/22-page-imports-check-script.md** → tasks/plan/22-page-imports-check-script.md
+- **docs/PLAN/23-glossary-maintenance.md** → tasks/plan/23-glossary-maintenance.md
+- **docs/PLAN/24-audit-repo-files-removal.md** → tasks/plan/24-audit-repo-files-removal.md
+- **docs/PLAN/25-fill-references-section.md** → tasks/plan/25-fill-references-section.md
+- **docs/PLAN/26-internal-tab-link.md** → tasks/plan/26-internal-tab-link.md
+- **docs/PLAN/27-pre-commit-full-browser-verification.md** → tasks/plan/27-pre-commit-full-browser-verification.md
+- **docs/PLAN/28-platform-ownership-and-studio-fill.md** → tasks/plan/28-platform-ownership-and-studio-fill.md
+- **docs/PLAN/AGENT-PREREQUISITES.md** → tasks/plan/AGENT-PREREQUISITES.md
+- **docs/PLAN/AI-TASK-LIST-GAP-ANALYSIS-AND-PLAN.md** → tasks/plan/AI-TASK-LIST-GAP-ANALYSIS-AND-PLAN.md
+- **docs/PLAN/COMPLETED-WORK-NOT-IN-UPSTREAM.md** → tasks/plan/COMPLETED-WORK-NOT-IN-UPSTREAM.md
+- **docs/PLAN/README.md** → .githooks/README.md
+- **docs/PLAN/TASK-TEMPLATE.md** → tasks/plan/TASK-TEMPLATE.md
+- **docs/PLAN/complete/01-components-consolidate-report.md** → tasks/plan/complete/01-components-consolidate-report.md
+- **docs/PLAN/complete/01-components-consolidate.md** → tasks/plan/01-components-consolidate.md
+- **docs/PLAN/complete/02-components-audit-unused-report.md** → tasks/plan/complete/02-components-audit-unused-report.md
+- **docs/PLAN/complete/02-components-audit-unused.md** → tasks/plan/02-components-audit-unused.md
+- **docs/PLAN/complete/05-homogenise-styling-report.md** → tasks/plan/complete/05-homogenise-styling-report.md
+- **docs/PLAN/complete/05-homogenise-styling.md** → tasks/plan/05-homogenise-styling.md
+- **docs/PLAN/complete/10-documentation-guide-resources-report.md** → tasks/plan/complete/10-documentation-guide-resources-report.md
+- **docs/PLAN/complete/10-documentation-guide-resources.md** → tasks/plan/10-documentation-guide-resources.md
+- **docs/PLAN/complete/13-audit-repeated-content-report.md** → tasks/plan/complete/13-audit-repeated-content-report.md
+- **docs/PLAN/complete/13-audit-repeated-content.md** → tasks/plan/13-audit-repeated-content.md
+- **docs/PLAN/complete/14-audit-v1-to-v2-coverage-report.md** → tasks/plan/complete/14-audit-v1-to-v2-coverage-report.md
+- **docs/PLAN/complete/14-audit-v1-to-v2-coverage.md** → tasks/plan/14-audit-v1-to-v2-coverage.md
+- **docs/PLAN/complete/14-consolidate-livepeer-studio-summary.md** → tasks/plan/complete/14-consolidate-livepeer-studio-summary.md
+- **docs/PLAN/complete/14-file-organization-summary.md** → tasks/plan/complete/14-file-organization-summary.md
+- **docs/PLAN/complete/14-final-review-report.md** → tasks/plan/complete/14-final-review-report.md
+- **docs/PLAN/complete/15-audit-v2-missing-incomplete-report.md** → tasks/plan/complete/15-audit-v2-missing-incomplete-report.md
+- **docs/PLAN/complete/15-audit-v2-missing-incomplete.md** → tasks/plan/15-audit-v2-missing-incomplete.md
+- **docs/PLAN/complete/16-rfp-goals-assessment-report.md** → tasks/plan/complete/16-rfp-goals-assessment-report.md
+- **docs/PLAN/complete/16-rfp-goals-assessment.md** → tasks/plan/16-rfp-goals-assessment.md
+- **docs/PLAN/complete/README.md** → .githooks/README.md
+- **docs/PLAN/complete/styling-framework-homogenization-report.md** → tasks/plan/complete/styling-framework-homogenization-report.md
+- **docs/PLAN/errors/component-bugs.md** → tasks/errors/component-bugs.md
+- **docs/PLAN/errors/component-recommendations.md** → tasks/errors/component-recommendations.md
+- **docs/PLAN/errors/component-verification-report.md** → tasks/errors/component-verification-report.md
+- **docs/PLAN/errors/testing-methodology.md** → tasks/errors/testing-methodology.md
+- **docs/PLAN/reports/.gitkeep** → tasks/plan/reports/.gitkeep
+- **docs/PLAN/reports/16-rfp-notion-gaps-and-incomplete.md** → tasks/plan/reports/16-rfp-notion-gaps-and-incomplete.md
+- **docs/PLAN/reports/20-automations-workflows-audit-report.md** → tasks/plan/reports/20-automations-workflows-audit-report.md
+- **docs/PLAN/reports/COMPONENT_LIBRARY_STATUS_REPORT.md** → tasks/plan/reports/COMPONENT_LIBRARY_STATUS_REPORT.md
+- **docs/PLAN/reports/COMPREHENSIVE-V2-PAGES-AUDIT-REPORT.md** → tasks/plan/reports/COMPREHENSIVE-V2-PAGES-AUDIT-REPORT.md
+- **docs/PLAN/reports/COMPREHENSIVE_CHANGE_REPORT.md** → tasks/plan/reports/COMPREHENSIVE_CHANGE_REPORT.md
+- **docs/PLAN/reports/browser-verification-final.md** → tasks/plan/reports/browser-verification-final.md
+- **docs/PLAN/reports/comprehensive-v2-pages-browser-audit.json** → tasks/plan/reports/comprehensive-v2-pages-browser-audit.json
+- **docs/PLAN/reports/mdx-inline-styles-audit.md** → tasks/plan/reports/mdx-inline-styles-audit.md
+- **docs/PLAN/reports/non-technical-contribution-proposal.md** → tasks/plan/reports/non-technical-contribution-proposal.md
+- **docs/PLAN/reports/styling-framework-verification.md** → tasks/plan/reports/styling-framework-verification.md
+- **docs/PLAN/rfp/01-stakeholder-groups.md** → tasks/plan/rfp/01-stakeholder-groups.md
+- **docs/PLAN/rfp/02-onboard-stakeholders-pm.md** → tasks/plan/rfp/02-onboard-stakeholders-pm.md
+- **docs/PLAN/rfp/03-orchestrator-discord-support.md** → tasks/plan/rfp/03-orchestrator-discord-support.md
+- **docs/PLAN/rfp/04-delegator-video-content.md** → tasks/plan/rfp/04-delegator-video-content.md
+- **docs/PLAN/rfp/05-gateways-foundation-support.md** → tasks/plan/rfp/05-gateways-foundation-support.md
+- **docs/PLAN/rfp/06-forum-post-rfc.md** → tasks/plan/rfp/06-forum-post-rfc.md
+- **docs/PLAN/rfp/07-starter-repos.md** → tasks/plan/rfp/07-starter-repos.md
+- **docs/PLAN/rfp/08-realtime-api-coverage.md** → tasks/plan/rfp/08-realtime-api-coverage.md
+- **docs/PLAN/rfp/09-stakeholder-rewrite-process.md** → tasks/plan/rfp/09-stakeholder-rewrite-process.md
+- **docs/PLAN/rfp/10-aeo-optimization.md** → tasks/plan/rfp/10-aeo-optimization.md
+- **docs/PLAN/rfp/11-docs-website-integration.md** → tasks/plan/rfp/11-docs-website-integration.md
+- **docs/PLAN/rfp/12-measurable-engagement.md** → tasks/plan/rfp/12-measurable-engagement.md
+- **docs/PLAN/rfp/13-technical-director-style-guide.md** → tasks/plan/rfp/13-technical-director-style-guide.md
+- **docs/PLAN/rfp/14-handover-ownership.md** → tasks/plan/rfp/14-handover-ownership.md
+- **docs/PLAN/rfp/15-ticketing-system.md** → tasks/plan/rfp/15-ticketing-system.md
+- **docs/PLAN/rfp/16-ecosystem-integration.md** → tasks/plan/rfp/16-ecosystem-integration.md
+- **docs/PLAN/rfp/17-single-canonical-changelog.md** → tasks/plan/rfp/17-single-canonical-changelog.md
+- **docs/PLAN/rfp/18-persona-journey-mapping.md** → tasks/plan/rfp/18-persona-journey-mapping.md
+- **docs/PLAN/rfp/README.md** → .githooks/README.md
+- **docs/PLAN/testing-suite-future-tasks.md** → tasks/plan/testing-suite-future-tasks.md
+- **docs/ai/worker/api/gateway.openapi.yaml** → api/gateway.openapi.yaml
+- **docs/ai/worker/api/openapi.json** → api/openapi.json
+- **docs/ai/worker/api/openapi.yaml** → api/gateway.openapi.yaml
+- **docs/ai/worker/api/openapi.yaml.backup** → api/openapi.yaml.backup
+- **docs/docs-v2-rfp-task-list-and-plan.md** → tasks/docs-v2-rfp-task-list-and-plan.md
+- **docs/experiment/.gitignore** → .gitignore
+- **docs/experiment/README.md** → .githooks/README.md
+- **docs/llms.txt.information.md** → tools/ai-rules/llms.txt.information.md
+- **docs/non-essential-tasks-audit-for-ai-and-community.md** → tasks/non-essential-tasks-audit-for-ai-and-community.md
+- **favicon.png** → snippets/assets/favicon.png
+- **logo/dark.svg** → snippets/assets/logo/dark.svg
+- **logo/light.svg** → snippets/assets/logo/light.svg
+- **openapi.yaml** → api/gateway.openapi.yaml
+- **scripts/README-test-v2-pages.md** → .github/workflows/README-test-v2-pages.md
+- **scripts/audit-all-v2-pages.js** → tools/scripts/audit-all-v2-pages.js
+- **scripts/check-component-errors.js** → tools/scripts/check-component-errors.js
+- **scripts/debug-mint-dev.js** → tools/scripts/debug-mint-dev.js
+- **scripts/download-linkedin-video.sh** → tools/scripts/download-linkedin-video.sh
+- **scripts/download-linkedin-with-cookies.sh** → tools/scripts/download-linkedin-with-cookies.sh
+- **scripts/final-verification.js** → tools/scripts/final-verification.js
+- **scripts/find-correct-url.js** → tools/scripts/find-correct-url.js
+- **scripts/inspect-page.js** → tools/scripts/inspect-page.js
+- **scripts/inspect-video-page.js** → tools/scripts/inspect-video-page.js
+- **scripts/test-hook-hardcoded-color.jsx** → tools/scripts/test/test-hook-hardcoded-color.jsx
+- **scripts/test-hook-violation.jsx** → tools/scripts/test/test-hook-violation.jsx
+- **scripts/test-v2-pages.js** → tools/scripts/test-v2-pages.js
+- **scripts/test-youtube-pages.js** → tools/scripts/test-youtube-pages.js
+- **scripts/verify-all-pages.js** → tools/scripts/test/verify-all-pages.js
+- **scripts/verify-pages.js** → tools/scripts/test/verify-pages.js
+- **v2/ai-tools/claude-code.mdx** → ai-tools/claude-code.mdx
+- **v2/ai-tools/cursor.mdx** → ai-tools/cursor.mdx
+- **v2/ai-tools/windsurf.mdx** → ai-tools/windsurf.mdx
+- **v2/tests/README.mdx** → snippets/assets/README.mdx
+- **v2/tests/reports/diffs/themeAwareCommit.md** → tests/reports/diffs/themeAwareCommit.md
+- **v2/tests/reports/errors/20260112-145047-mdx-errors.md** → tests/reports/errors/20260112-145047-mdx-errors.md
+- **v2/tests/reports/errors/timeline** → tests/reports/errors/timeline
+
+**Total MOVED: 220**
+
+### DELETED FILES (Not Found Anywhere)
+
+
+**Total DELETED: 0**
+
+---
+**Report Generated:** Wed Feb 18 00:03:42 AEDT 2026
+
+### DELETED FILES (Not Found Anywhere)
+
