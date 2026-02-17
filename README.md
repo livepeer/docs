@@ -10,12 +10,15 @@ Built with [Mintlify](https://mintlify.com) and deployed at [docs.livepeer.org](
 
 ### Prerequisites
 
-**⚠️ VERIFY WITH MINTLIFY DOCS:** Always check [Mintlify's official documentation](https://mintlify.com/docs/installation) for current requirements before making assumptions.
+**⚠️ CRITICAL:** Always verify requirements with [Mintlify's official documentation](https://mintlify.com/docs/installation) before making changes.
 
+- **Node.js v20.17.0+ (LTS recommended)** - Required by Mintlify CLI
+  - Install from [nodejs.org](https://nodejs.org/)
+  - Mintlify CLI requires Node.js to run
 - **Mintlify CLI** - Required for local development
   - Install via npm: `npm i -g mintlify`
-  - Requires Node.js (check Mintlify docs for minimum version)
-  - For running tests in this repo: Node.js 22+ (matches CI/CD configuration)
+  - Verify installation: `mintlify --version`
+- **For running tests in this repo:** Node.js 22+ (matches CI/CD configuration)
 
 ### Setup
 
@@ -30,7 +33,7 @@ Built with [Mintlify](https://mintlify.com) and deployed at [docs.livepeer.org](
    npm i -g mintlify
    ```
 
-3. **Install pre-commit hooks (Will run valuable tests - especially):**
+3. **Install pre-commit hooks (Will run valuable tests - especially if you will be using AI agents to ):**
    ```bash
    ./.githooks/install.sh
    ```
