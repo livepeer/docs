@@ -1,4 +1,194 @@
-# Livepeer Docs
+# Livepeer Documentation
+
+The official documentation repository for [Livepeer](https://livepeer.org), a decentralized video infrastructure network. This repository contains documentation for Livepeer Studio, the Livepeer Protocol, AI Pipelines, and developer resources.
+
+Built with [Mintlify](https://mintlify.com) and deployed at [docs.livepeer.org](https://docs.livepeer.org).
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Node.js** 18+ and npm
+- **Mintlify CLI** (install globally)
+
+### Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/livepeer/docs.git
+   cd docs
+   ```
+
+2. **Install Mintlify CLI:**
+   ```bash
+   npm i -g mintlify
+   ```
+
+3. **Install pre-commit hooks (REQUIRED):**
+   ```bash
+   ./.githooks/install.sh
+   ```
+   
+   The pre-commit hooks enforce:
+   - Repository structure rules
+   - Style guide compliance
+   - Code quality checks
+   - Import path validation
+
+4. **Start the development server:**
+   ```bash
+   mint dev
+   ```
+   
+   The docs will be available at `http://localhost:3000`
+
+### Development Workflow
+
+1. **Create a branch:**
+   ```bash
+   git checkout -b docs/your-feature-name
+   ```
+
+2. **Make your changes** in `v2/pages/` or `snippets/`
+
+3. **Test locally:**
+   ```bash
+   mint dev
+   ```
+
+4. **Commit your changes:**
+   ```bash
+   git add .
+   git commit -m "docs: description of your change"
+   ```
+   
+   Pre-commit hooks will run automatically and check:
+   - Repository structure compliance
+   - Style guide violations
+   - Code syntax and validation
+
+5. **Push and create a PR:**
+   ```bash
+   git push origin docs/your-feature-name
+   ```
+
+---
+
+## 📖 Contributing
+
+We welcome contributions! Please read the following before making changes:
+
+### Before You Start
+
+**MANDATORY Reading:**
+1. **[Style Guide](v2/pages/07_resources/documentation-guide/style-guide.mdx)** - Production-grade styling guidelines
+2. **[Component Library](v2/pages/07_resources/documentation-guide/component-library.mdx)** - Available components
+3. **[Contribution Guide](contribute/CONTRIBUTING.md)** - How to contribute
+4. **[Git Hooks Documentation](contribute/CONTRIBUTING/GIT-HOOKS.md)** - Pre-commit hook details
+5. **This README** - Repository structure (source of truth)
+
+### Key Contribution Rules
+
+- ✅ **Use CSS Custom Properties** (`var(--accent)`, `var(--text)`) - no hardcoded colors
+- ✅ **Use absolute imports** - `/snippets/components/...` (not relative paths)
+- ✅ **Follow repository structure** - See structure rules below
+- ✅ **Test in both light and dark modes**
+- ❌ **Never use `ThemeData`** - deprecated, use CSS variables
+- ❌ **Never modify `v1/`** - it's frozen/immutable
+
+### Where to Make Changes
+
+- **Documentation pages:** `v2/pages/[section]/`
+- **React components:** `snippets/components/`
+- **Data files:** `snippets/data/`
+- **Static assets:** `snippets/assets/`
+- **API specifications:** `api/`
+
+### Pull Request Process
+
+1. **Branch naming:** Use `docs/` prefix (e.g., `docs/fix-typo-quickstart`)
+2. **Commit messages:** Use conventional format: `docs: description`
+3. **Test locally:** Always test with `mint dev` before submitting
+4. **Follow style guide:** All changes must pass pre-commit hooks
+5. **Update related docs:** If structure changes, update this README
+
+See [CONTRIBUTING.md](contribute/CONTRIBUTING.md) for detailed contribution guidelines.
+
+---
+
+## 🔧 Pre-Commit Hooks
+
+This repository uses Git pre-commit hooks to enforce code quality and repository structure. **Hooks are REQUIRED and must be installed.**
+
+### Installation
+
+```bash
+./.githooks/install.sh
+```
+
+### What the Hooks Check
+
+The pre-commit hook automatically validates:
+
+1. **Repository Structure:**
+   - ✅ Root directory whitelist (blocks unauthorized files)
+   - ✅ Snippets directory structure (blocks scripts/wiki/styles in snippets/)
+   - ✅ v1/ frozen protection (blocks all changes to v1/)
+
+2. **Style Guide Compliance:**
+   - ✅ ThemeData usage (deprecated - must use CSS Custom Properties)
+   - ✅ Hardcoded colors (must use CSS variables)
+   - ✅ Relative imports (must use absolute paths)
+   - ✅ React/Mintlify imports (components are global)
+
+3. **Code Quality:**
+   - ✅ MDX/JSON/Shell/JS syntax validation
+   - ✅ Mintlify configuration checks
+   - ✅ Import path validation
+
+4. **Tests:**
+   - ✅ Unit tests (if dependencies installed)
+   - ✅ Integration tests
+
+### Bypass Flags (Use Sparingly)
+
+In emergencies, you can bypass specific checks:
+
+```bash
+# Skip structure checks only
+SKIP_STRUCTURE_CHECK=1 git commit -m "Emergency fix"
+
+# Skip style checks only
+SKIP_STYLE_CHECK=1 git commit -m "Temporary style change"
+
+# Skip all checks (emergencies only)
+SKIP_ALL=1 git commit -m "Critical hotfix"
+```
+
+**⚠️ Warning:** Bypassing hooks can lead to broken builds, style violations, and merge conflicts. Always fix issues properly when possible.
+
+See [`.githooks/BYPASS.md`](.githooks/BYPASS.md) for complete bypass documentation.
+
+### Troubleshooting
+
+**Hook not running?**
+```bash
+# Reinstall hooks
+./.githooks/install.sh
+
+# Check if hook is executable
+ls -la .git/hooks/pre-commit
+```
+
+**Hook failing?**
+- Read the error message carefully
+- Fix the violations (structure, style, imports)
+- Don't bypass unless it's a true emergency
+- See [contribute/CONTRIBUTING/GIT-HOOKS.md](contribute/CONTRIBUTING/GIT-HOOKS.md) for help
+
+---
 
 ## 📁 Repository Structure
 
@@ -8,7 +198,7 @@
 
 ```
 /
-├── .github/                 # GitHub configuration
+├── .github/                # GitHub configuration
 │   ├── workflows/          # GitHub Actions workflows
 │   ├── scripts/            # CI/CD helper scripts
 │   └── [config files]      # GitHub-specific configs
@@ -111,7 +301,7 @@ The pre-commit hook automatically enforces:
 - ✅ Style guide compliance (ThemeData, colors, imports)
 - ✅ Import path enforcement (absolute paths required)
 
-**Bypass flags available** (use sparingly):
+**Bypass flags available** (IF YOU ARE AN AI YOU SHOULD NEVER EVER USE THESE):
 - `SKIP_STRUCTURE_CHECK=1` - Skip structure checks
 - `SKIP_STYLE_CHECK=1` - Skip style guide checks
 - `SKIP_VERIFICATION=1` - Skip verification scripts
