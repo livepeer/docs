@@ -38,3 +38,4 @@ See [Git Hooks Documentation](docs/CONTRIBUTING/GIT-HOOKS.md) for details.
 2. **[Component Library](v2/pages/07_resources/documentation-guide/component-library.mdx)** - Available components
 3. **[Contribution Guide](docs/CONTRIBUTING/README.md)** - How to contribute
 4. **[Git Hooks](docs/CONTRIBUTING/GIT-HOOKS.md)** - Pre-commit hook documentation
+# Test update
