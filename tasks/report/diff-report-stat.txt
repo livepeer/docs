@@ -1,0 +1,402 @@
+ .cursorrules                                       |     45 +
+ .githooks/README.md                                |     95 +
+ .githooks/install.sh                               |     32 +
+ .githooks/pre-commit                               |    172 +
+ .githooks/verify-browser-README.md                 |    138 +
+ .githooks/verify-browser.js                        |    259 +
+ .githooks/verify.sh                                |    181 +
+ .github/CODEOWNERS                                 |     70 +-
+ .github/augment-instructions.md                    |     23 +
+ .github/pull_request_template.md                   |     59 +
+ .github/workflows/README-test-v2-pages.md          |    152 +
+ .github/workflows/test-suite.yml                   |    112 +
+ .github/workflows/test-v2-pages.yml                |    184 +
+ CONTRIBUTING.md                                    |     72 +
+ README.md                                          |     24 +
+ cspell.json                                        |     80 +
+ docs.json                                          |     91 +-
+ docs/PLAN/03-component-library-wiki.md             |     35 -
+ docs/PLAN/README.md                                |     54 -
+ package.json                                       |     17 +-
+ scripts/README-test-v2-pages.md                    |     79 +
+ scripts/audit-all-v2-pages.js                      |    332 +
+ scripts/audit-component-usage.js                   |    248 +
+ scripts/check-component-errors.js                  |     67 +
+ scripts/final-verification.js                      |     80 +
+ scripts/find-correct-url.js                        |     45 +
+ scripts/inspect-page.js                            |     33 +
+ scripts/inspect-video-page.js                      |     53 +
+ scripts/test-all-pages-browser.js                  |    116 +
+ scripts/test-all-pages-comprehensive.js            |    519 +
+ scripts/test-v2-pages.js                           |    265 +
+ scripts/test-youtube-pages.js                      |    245 +
+ scripts/verify-all-pages.js                        |    145 +
+ scripts/verify-pages.js                            |      8 +
+ snippets/assets/domain/00_HOME/industries.png      |    Bin 1277891 -> 0 bytes
+ .../domain/00_HOME/livepeer_usage_messari.png      |    Bin 589921 -> 0 bytes
+ snippets/components/Report.md                      |    267 +
+ snippets/components/content/README.md              |     43 +
+ snippets/components/content/code.jsx               |     25 +-
+ snippets/components/content/external-content.jsx   |     28 +-
+ snippets/components/display/CardCarousel.jsx       |     15 +-
+ snippets/components/display/README.md              |     49 +
+ .../display/examples/CardCarousel-examples.mdx     |     87 +
+ .../display/examples/frameMode-examples.mdx        |    146 +
+ .../components/display/examples/quote-examples.mdx |     95 +
+ .../display/examples/showcaseCards-examples.mdx    |    152 +
+ .../display/examples/socialLinks-examples.mdx      |     64 +
+ snippets/components/display/frameMode.jsx          |    215 +-
+ snippets/components/display/zoomable-diagram.jsx   |    118 +-
+ .../components/domain/04_GATEWAYS/callouts.jsx     |     40 +-
+ snippets/components/domain/README.md               |     73 +
+ snippets/components/domain/SHARED/Portals.jsx      |     24 +-
+ .../domain/examples/Portals-examples.mdx           |    174 +
+ .../domain/examples/gateways-callouts-examples.mdx |     97 +
+ .../domain/examples/previewCallouts-examples.mdx   |     89 +
+ .../domain/examples/quickstartTabs-examples.mdx    |    109 +
+ snippets/components/gateways/callouts.jsx          |     79 -
+ snippets/components/gateways/warnings.jsx          |     44 -
+ snippets/components/integrations/README.md         |     51 +
+ snippets/components/integrations/coingecko.jsx     |     35 +-
+ .../integrations/examples/coingecko-examples.mdx   |     68 +
+ snippets/components/layout/cards.jsx               |    332 +-
+ .../components/layout/examples/cards-examples.mdx  |      2 +-
+ .../layout/examples/quadGrid-examples.mdx          |    121 +
+ snippets/components/layout/steps.jsx               |      6 +-
+ snippets/components/primitives/containers.jsx      |    134 +
+ .../primitives/examples/links-examples.mdx         |      1 -
+ .../primitives/examples/text-examples.mdx          |    105 +
+ snippets/components/primitives/layout.jsx          |    123 +
+ snippets/components/primitives/links.jsx           |     39 +-
+ snippets/components/primitives/tables.jsx          |    142 +
+ snippets/data/gateways/code.jsx                    |     69 -
+ snippets/data/gateways/flags.jsx                   |     47 -
+ snippets/data/gateways/index.jsx                   |      4 -
+ snippets/data/gateways/quickstart.jsx              |     16 -
+ snippets/pages/08_SHARED/FrameModePageHeader.mdx   |      1 -
+ snippets/snippetsWiki/README.md                    |      2 +-
+ snippets/snippetsWiki/theme-colors.mdx             |     91 +-
+ {docs => tasks}/ABOUT/00-NAV-AND-PAGE-INDEX.md     |      0
+ {docs => tasks}/ABOUT/ABOUT-SECTION-COPY-REVIEW.md |      0
+ {docs => tasks}/ABOUT/ABOUT-SECTION-STYLE-GUIDE.md |      0
+ .../CONTEXT DATA/Network/livepeer_interfaces.md    |      0
+ .../CONTEXT DATA/Network/livepeer_job_lifecycle.md |      0
+ .../CONTEXT DATA/Network/livepeer_marketplace.md   |      0
+ .../Network/livepeer_network_actors.md             |      0
+ .../Network/livepeer_network_overview.md           |      0
+ .../Network/livepeer_technical_stack.md            |      0
+ .../CONTEXT DATA/Protocol/Core Mechanisms.pdf      |    Bin
+ .../Livepeer Protocol Core Mechanisms (2026).pdf   |    Bin
+ .../ABOUT/CONTEXT DATA/Protocol/OverviewReport.pdf |    Bin
+ .../Protocol/deep-research-report (1).md           |      0
+ .../Protocol/deep-research-report (2).md           |      0
+ .../CONTEXT DATA/Protocol/deep-research-report.md  |      0
+ .../Protocol/livepeer_core_mechanisms.md           |      0
+ .../Protocol/livepeer_governance_model.md          |      0
+ .../Protocol/livepeer_protocol_economics.md        |      0
+ .../Protocol/livepeer_technical_architecture.md    |      0
+ .../ABOUT/CONTEXT DATA/Protocol/livepeer_token.md  |      0
+ .../CONTEXT DATA/Protocol/livepeer_treasury.md     |      0
+ .../livepeer_about_section_references.md           |      0
+ .../ABOUT/CONTEXT DATA/livepeer_docs_rebuild.md    |      0
+ .../CONTEXT DATA/livepeer_ia_protocol_report.md    |      0
+ tasks/CONTRIBUTING/AGENT-INSTRUCTIONS.md           |    222 +
+ tasks/CONTRIBUTING/GIT-HOOKS.md                    |    370 +
+ tasks/CONTRIBUTING/README.md                       |     68 +
+ tasks/DEVELOPERS/00-NAV-AND-PAGE-INDEX.md          |     79 +
+ .../CONTEXT DATA/ai_pipelines_overview.md          |    110 +
+ .../DEVELOPERS/CONTEXT DATA/byoc_pipeline_guide.md |    145 +
+ .../CONTEXT DATA/comfy_stream_integration.md       |    120 +
+ .../DEVELOPERS/CONTEXT DATA/contribution_guide.md  |    105 +
+ .../CONTEXT DATA/developer_guides_index.md         |     63 +
+ tasks/DEVELOPERS/CONTEXT DATA/developer_help.md    |     65 +
+ .../DEVELOPERS/CONTEXT DATA/developer_programs.md  |     80 +
+ .../DEVELOPERS/CONTEXT DATA/developer_resources.md |     63 +
+ .../CONTEXT DATA/livepeer_ai_quickstart.md         |    131 +
+ .../CONTEXT DATA/livepeer_developer_guide.md       |    135 +
+ .../CONTEXT DATA/livepeer_developer_journey.md     |    125 +
+ .../CONTEXT DATA/livepeer_developer_partners.md    |     82 +
+ .../livepeer_developer_section_planning.md         |     70 +
+ tasks/DEVELOPERS/CONTEXT DATA/livepeer_rfps.md     |     70 +
+ .../livepeer_video_streaming_quickstart.md         |    118 +
+ tasks/DEVELOPERS/DEVELOPERS-SECTION-COPY-REVIEW.md |    104 +
+ tasks/DEVELOPERS/DEVELOPERS-SECTION-STYLE-GUIDE.md |     68 +
+ tasks/DRY-and-cleaner-recommendations.md           |    219 +
+ tasks/DRY-tasks-feasibility-report.md              |    266 +
+ tasks/LIVEPEER-STUDIO-GAPS-AND-VERACITY.md         |     68 +
+ tasks/LIVEPEER-STUDIO-V1-INVENTORY-AND-IA.md       |    313 +
+ tasks/MDX-ERRORS-AND-FIXES-REPORT.md               |    164 +
+ .../00-V1-TO-V2-IA-MAPPING-AND-RECOMMENDATIONS.md  |      0
+ ...RCHESTRATORS-COPY-REVIEW-AND-RECOMMENDATIONS.md |      0
+ ..._orchestrators_about_orchestrators_economics.md |      0
+ ...05_orchestrators_advanced_setup_ai_pipelines.md |      0
+ .../05_orchestrators_advanced_setup_delegation.md  |      0
+ .../05_orchestrators_advanced_setup_run_a_pool.md  |      0
+ ...orchestrators_advanced_setup_staking_lpt (1).md |      0
+ .../05_orchestrators_advanced_setup_staking_lpt.md |      0
+ ..._orchestrators_quickstart_orchestrator_setup.md |      0
+ .../05_orchestrators_references_faq.md             |      0
+ .../ORCHESTRATORS/CONTEXT DATA/join_a_pool.md      |      0
+ .../orchestrator_architecture_draft_mdx (1).md     |      0
+ .../orchestrator_architecture_draft_mdx.md         |      0
+ .../CONTEXT DATA/orchestrator_configuration.md     |      0
+ .../CONTEXT DATA/orchestrator_economics.md         |      0
+ .../CONTEXT DATA/orchestrator_functions (1).md     |      0
+ .../CONTEXT DATA/orchestrator_functions.md         |      0
+ .../orchestrator_hardware_requirements.md          |      0
+ .../CONTEXT DATA/orchestrator_ia_setup.md          |      0
+ .../CONTEXT DATA/orchestrator_installation.md      |      0
+ .../orchestrator_network_integration.md            |      0
+ .../CONTEXT DATA/orchestrator_overview.md          |      0
+ .../CONTEXT DATA/orchestrator_stats_monitoring.md  |      0
+ .../orchestrator_testing_validation.md             |      0
+ .../orchestrators_advanced_setup_ai_pipelines.md   |      0
+ .../orchestrators_advanced_setup_delegation.md     |      0
+ ...rchestrators_advanced_setup_rewards_and_fees.md |      0
+ .../orchestrators_advanced_setup_staking_lpt.md    |      0
+ .../CONTEXT DATA/orchestrators_inline.md           |      0
+ ...rewards_and_fees_advanced_orchestrator_guide.md |      0
+ .../CONTEXT DATA/run_an_orchestrator_overview.md   |      0
+ .../ORCHESTRATORS-SECTION-STYLE-GUIDE.md           |      0
+ {docs => tasks}/ORCHESTRATORS/README.md            |      0
+ tasks/PLAN/03-component-library-wiki.md            |    356 +
+ .../PLAN/04-ai-setup-guides-network-nodes.md       |      0
+ .../PLAN/06-separate-data-and-components-mdx.md    |      0
+ .../PLAN/07-break-long-pages-into-sections.md      |      0
+ {docs => tasks}/PLAN/08-automation-and-scripts.md  |      0
+ {docs => tasks}/PLAN/09-ai-guides-in-repo.md       |      0
+ .../PLAN/11-mintlify-ai-investigation.md           |      0
+ .../PLAN/12-contribution-guide-full-and-stretch.md |      0
+ .../PLAN/17-per-page-resources-and-media.md        |      0
+ {docs => tasks}/PLAN/18-other-suggestions.md       |      0
+ tasks/PLAN/19-automate-snippets-inventory.md       |    204 +
+ tasks/PLAN/21-fix-automations-workflows.md         |    340 +
+ tasks/PLAN/AGENT-PREREQUISITES.md                  |     89 +
+ tasks/PLAN/COMPLETED-WORK-NOT-IN-UPSTREAM.md       |    367 +
+ tasks/PLAN/COMPLETION-STATUS-REPORT.md             |    428 +
+ tasks/PLAN/NEW LIST                                |      0
+ tasks/PLAN/README.md                               |     66 +
+ tasks/PLAN/TASK-TEMPLATE.md                        |     39 +
+ .../complete/01-components-consolidate-report.md   |    177 +
+ .../PLAN/complete}/01-components-consolidate.md    |      0
+ .../complete/02-components-audit-unused-report.md  |    410 +
+ .../PLAN/complete}/02-components-audit-unused.md   |      0
+ .../PLAN/complete/05-homogenise-styling-report.md  |    200 +
+ .../PLAN/complete}/05-homogenise-styling.md        |      0
+ .../10-documentation-guide-resources-report.md     |    260 +
+ .../complete}/10-documentation-guide-resources.md  |      0
+ .../complete/13-audit-repeated-content-report.md   |    446 +
+ .../PLAN/complete}/13-audit-repeated-content.md    |      0
+ .../complete/14-audit-v1-to-v2-coverage-report.md  |    550 +
+ .../PLAN/complete}/14-audit-v1-to-v2-coverage.md   |      0
+ .../14-consolidate-livepeer-studio-summary.md      |    101 +
+ .../PLAN/complete/14-file-organization-summary.md  |     84 +
+ tasks/PLAN/complete/14-final-review-report.md      |    144 +
+ .../15-audit-v2-missing-incomplete-report.md       |    142 +
+ .../complete}/15-audit-v2-missing-incomplete.md    |      0
+ .../complete/16-rfp-goals-assessment-report.md     |    349 +
+ .../PLAN/complete}/16-rfp-goals-assessment.md      |      0
+ tasks/PLAN/complete/README.md                      |     32 +
+ .../styling-framework-homogenization-report.md     |    180 +
+ tasks/PLAN/errors/component-bugs.md                |    365 +
+ tasks/PLAN/errors/component-recommendations.md     |    154 +
+ tasks/PLAN/errors/component-verification-report.md |    149 +
+ tasks/PLAN/errors/testing-methodology.md           |    196 +
+ .../PLAN/report/COMPONENT_LIBRARY_STATUS_REPORT.md |    108 +
+ tasks/PLAN/report/COMPONENT_USAGE_AUDIT_REPORT.md  |    192 +
+ tasks/PLAN/report/COMPREHENSIVE_CHANGE_REPORT.md   |    226 +
+ tasks/PLAN/report/browser-test-report.json         |      5 +
+ tasks/PLAN/report/component-usage-audit.json       |    154 +
+ tasks/PLAN/report/component-usage-audit.txt        |    154 +
+ tasks/PLAN/report/pages-to-test.json               |   1058 +
+ {docs => tasks}/PLAN/reports/.gitkeep              |      0
+ .../20-automations-workflows-audit-report.md       |    717 +
+ .../reports/COMPREHENSIVE-V2-PAGES-AUDIT-REPORT.md |    233 +
+ tasks/PLAN/reports/browser-verification-final.md   |     80 +
+ .../comprehensive-v2-pages-browser-audit.json      | 131601 ++++++++++++++++++
+ tasks/PLAN/reports/mdx-inline-styles-audit.md      |     96 +
+ .../reports/non-technical-contribution-proposal.md |    286 +
+ .../PLAN/reports/styling-framework-verification.md |    147 +
+ tasks/PLAN/scripts/audit-component-usage.js        |    248 +
+ tasks/PLAN/testing-suite-future-tasks.md           |     57 +
+ tasks/docs-v2-rfp-task-list-and-plan.md            |    247 +
+ ...n-essential-tasks-audit-for-ai-and-community.md |    163 +
+ tests/config/spell-dict.json                       |     54 +
+ tests/fixtures/test-hook-hardcoded-color.jsx       |      8 +
+ tests/fixtures/test-hook-violation.jsx             |     10 +
+ tests/integration/browser.test.js                  |    287 +
+ tests/run-all.js                                   |     94 +
+ tests/unit/mdx.test.js                             |     84 +
+ tests/unit/quality.test.js                         |    192 +
+ tests/unit/spelling.test.js                        |    105 +
+ tests/unit/style-guide.test.js                     |    271 +
+ tests/utils/file-walker.js                         |     87 +
+ tests/utils/mdx-parser.js                          |    171 +
+ tests/utils/spell-checker.js                       |     77 +
+ v2/pages/00_home/home/primer.mdx                   |      1 -
+ v2/pages/00_home/home/trending-layout-tests.mdx    |      2 +-
+ v2/pages/00_home/introduction/vision.mdx           |      1 -
+ .../products/all-ecosystem/product-hub.mdx         |      1 -
+ .../api-reference/assets/delete.mdx                |     15 +
+ .../api-reference/assets/get-all.mdx               |     15 +
+ .../livepeer-studio/api-reference/assets/get.mdx   |     15 +
+ .../api-reference/assets/overview.mdx              |     93 +
+ .../api-reference/assets/update.mdx                |     15 +
+ .../api-reference/assets/upload-via-url.mdx        |     15 +
+ .../api-reference/assets/upload.mdx                |     15 +
+ .../api-reference/multistream/create.mdx           |     15 +
+ .../api-reference/multistream/delete.mdx           |     15 +
+ .../api-reference/multistream/get-all.mdx          |     15 +
+ .../api-reference/multistream/get.mdx              |     15 +
+ .../api-reference/multistream/overview.mdx         |     14 +
+ .../api-reference/multistream/update.mdx           |     15 +
+ .../livepeer-studio/api-reference/overview.mdx     |     84 +
+ .../livepeer-studio/api-reference/playback/get.mdx |     15 +
+ .../api-reference/playback/overview.mdx            |     40 +
+ .../api-reference/rooms/create-user.mdx            |     15 +
+ .../livepeer-studio/api-reference/rooms/create.mdx |     15 +
+ .../livepeer-studio/api-reference/rooms/delete.mdx |     15 +
+ .../api-reference/rooms/get-user.mdx               |     15 +
+ .../livepeer-studio/api-reference/rooms/get.mdx    |     15 +
+ .../api-reference/rooms/overview.mdx               |     14 +
+ .../api-reference/rooms/remove-user.mdx            |     15 +
+ .../api-reference/rooms/start-egress.mdx           |     15 +
+ .../api-reference/rooms/stop-egress.mdx            |     15 +
+ .../api-reference/rooms/update-user.mdx            |     15 +
+ .../livepeer-studio/api-reference/rooms/update.mdx |     15 +
+ .../api-reference/sessions/get-all.mdx             |     15 +
+ .../api-reference/sessions/get-clip.mdx            |     15 +
+ .../api-reference/sessions/get-recording.mdx       |     15 +
+ .../livepeer-studio/api-reference/sessions/get.mdx |     15 +
+ .../api-reference/sessions/overview.mdx            |     14 +
+ .../api-reference/signing-keys/create.mdx          |     15 +
+ .../api-reference/signing-keys/delete.mdx          |     15 +
+ .../api-reference/signing-keys/get-all.mdx         |     15 +
+ .../api-reference/signing-keys/get.mdx             |     15 +
+ .../api-reference/signing-keys/overview.mdx        |     14 +
+ .../api-reference/signing-keys/update.mdx          |     15 +
+ .../streams/add-multistream-target.mdx             |     15 +
+ .../api-reference/streams/create-clip.mdx          |     15 +
+ .../api-reference/streams/create.mdx               |     15 +
+ .../streams/delete-multistream-target.mdx          |     15 +
+ .../api-reference/streams/delete.mdx               |     15 +
+ .../api-reference/streams/get-all.mdx              |     15 +
+ .../api-reference/streams/get-clip.mdx             |     15 +
+ .../livepeer-studio/api-reference/streams/get.mdx  |     15 +
+ .../api-reference/streams/overview.mdx             |    129 +
+ .../api-reference/streams/terminate.mdx            |     15 +
+ .../api-reference/streams/update.mdx               |     15 +
+ .../api-reference/tasks/get-all.mdx                |     15 +
+ .../livepeer-studio/api-reference/tasks/get.mdx    |     15 +
+ .../api-reference/tasks/overview.mdx               |     14 +
+ .../api-reference/transcode/create.mdx             |     15 +
+ .../api-reference/transcode/overview.mdx           |     14 +
+ .../viewership/get-creators-metrics.mdx            |     15 +
+ .../viewership/get-public-total-views.mdx          |     15 +
+ .../viewership/get-realtime-viewership.mdx         |     15 +
+ .../api-reference/viewership/get-usage-metrics.mdx |     15 +
+ .../viewership/get-viewership-metrics.mdx          |     15 +
+ .../api-reference/viewership/overview.mdx          |     14 +
+ .../api-reference/webhooks/create.mdx              |     15 +
+ .../api-reference/webhooks/delete.mdx              |     15 +
+ .../api-reference/webhooks/get-all.mdx             |     15 +
+ .../livepeer-studio/api-reference/webhooks/get.mdx |     15 +
+ .../api-reference/webhooks/overview.mdx            |     14 +
+ .../api-reference/webhooks/update.mdx              |     15 +
+ .../getting-started/authentication.mdx             |     44 +
+ .../livepeer-studio/getting-started/overview.mdx   |     41 +
+ .../livepeer-studio/getting-started/studio-cli.mdx |     34 +
+ .../livepeer-studio/guides/access-control/jwt.mdx  |     33 +
+ .../guides/access-control/overview.mdx             |     16 +
+ .../guides/access-control/webhooks.mdx             |     43 +
+ .../livepeer-studio/guides/analytics/overview.mdx  |     27 +
+ .../livepeer-studio/guides/clip-livestream.mdx     |     55 +
+ .../livepeer-studio/guides/create-livestream.mdx   |     74 +
+ .../livepeer-studio/guides/encrypted-assets.mdx    |     19 +
+ .../livepeer-studio/guides/listen-to-events.mdx    |     41 +
+ .../guides/livestream-from-browser.mdx             |     62 +
+ .../livepeer-studio/guides/managing-projects.mdx   |     29 +
+ .../livepeer-studio/guides/multistream.mdx         |     29 +
+ .../livepeer-studio/guides/optimize-latency.mdx    |     45 +
+ .../livepeer-studio/guides/playback-asset.mdx      |     47 +
+ .../livepeer-studio/guides/playback-livestream.mdx |     69 +
+ .../livepeer-studio/guides/player-and-embed.mdx    |     37 +
+ .../livepeer-studio/guides/stream-health.mdx       |     37 +
+ .../livepeer-studio/guides/stream-via-obs.mdx      |     34 +
+ .../livepeer-studio/guides/thumbnails-vod.mdx      |     45 +
+ .../livepeer-studio/guides/transcode-video.mdx     |     32 +
+ .../livepeer-studio/guides/upload-asset.mdx        |     28 +
+ .../products/livepeer-studio/guides/webhooks.mdx   |     31 +
+ .../products/livepeer-studio/livepeer-studio.mdx   |      1 -
+ .../livepeer-studio/overview/api-overview.mdx      |     31 +
+ .../{ => overview}/client-use-cases.mdx            |      0
+ .../livepeer-studio/overview/livepeer-studio.mdx   |      8 +
+ .../overview/livestream-overview.mdx               |     58 +
+ .../products/livepeer-studio/overview/overview.mdx |     61 +
+ .../livepeer-studio/overview/quickstart.mdx        |     93 +
+ .../livepeer-studio/overview/sdks-overview.mdx     |     38 +
+ .../livepeer-studio/overview/vod-overview.mdx      |     31 +
+ .../about-livepeer/moved/livepeer-overview.mdx     |      1 -
+ v2/pages/01_about/livepeer-protocol/overview.mdx   |      2 +-
+ .../livepeer-protocol/technical-architecture.mdx   |    112 +-
+ v2/pages/01_about/livepeer-protocol/treasury.mdx   |     13 +-
+ .../01_about/resources/livepeer-whitepaper.mdx     |      1 -
+ .../ai-inference-on-livepeer/ai-pipelines/byoc.mdx |    130 +
+ .../ai-pipelines/comfystream.mdx                   |    112 +
+ .../ai-pipelines/overview.mdx                      |    112 +
+ .../builder-opportunities/dev-programs.mdx         |      4 +-
+ .../building-on-livepeer/developer-guide.mdx       |      2 +-
+ .../developer-platforms/builder-hub.mdx            |      1 -
+ .../03_developers/technical-references/apis.mdx    |     39 +
+ .../technical-references/awesome-livepeer.mdx      |      1 -
+ .../03_developers/technical-references/sdks.mdx    |     38 +
+ .../about-gateways/gateway-architecture.mdx        |      1 -
+ .../about-gateways/gateway-explainer.mdx           |      1 -
+ v2/pages/04_gateways/gateway-tools/explorer.mdx    |      1 -
+ .../04_gateways/gateway-tools/livepeer-tools.mdx   |      1 -
+ v2/pages/04_gateways/quickstart-home.mdx           |      1 -
+ .../04_gateways/references/artibtrum-exchanges.mdx |      1 -
+ .../references/configuration-flags-old.mdx         |      1 -
+ .../04_gateways/references/configuration-flags.mdx |      1 -
+ .../04_gateways/references/livepeer-exchanges.mdx  |      1 -
+ .../references/technical-architecture.mdx          |      1 -
+ .../run-a-gateway/configure/ai-configuration.mdx   |      1 -
+ .../run-a-gateway/configure/dual-configuration.mdx |      1 -
+ .../configure/pricing-configuration.mdx            |      1 -
+ .../configure/video-configuration-view.mdx         |      1 -
+ .../configure/video-configuration.mdx              |      1 -
+ .../connect/connect-with-offerings.mdx             |      1 -
+ .../run-a-gateway/connect/discover-offerings.mdx   |      1 -
+ .../run-a-gateway/connect/lp-marketplace.mdx       |      1 -
+ .../run-a-gateway/install/community-projects.mdx   |      1 -
+ .../run-a-gateway/install/docker-install.mdx       |      1 -
+ .../run-a-gateway/install/install-overview.mdx     |      1 -
+ .../run-a-gateway/install/linux-install.mdx        |      1 -
+ .../run-a-gateway/install/windows-install.mdx      |      1 -
+ .../run-a-gateway/monitor/monitor-and-optimise.mdx |      1 -
+ .../publish/connect-with-offerings.mdx             |      1 -
+ .../quickstart/quickstart-a-gateway.mdx            |     21 +-
+ .../requirements/on-chain setup/fund-gateway.mdx   |      1 -
+ .../requirements/on-chain setup/on-chain.mdx       |     38 +-
+ .../run-a-gateway/requirements/setup.mdx           |    153 +-
+ .../04_gateways/run-a-gateway/run-a-gateway.mdx    |     10 +-
+ .../using-gateways/gateway-providers.mdx           |      1 -
+ v2/pages/07_resources/changelog/changelog.mdx      |   1335 +-
+ .../documentation-guide/automations-workflows.mdx  |    834 +
+ .../documentation-guide/component-library.mdx      |   1995 +
+ .../component-library/content.mdx                  |    452 +
+ .../component-library/display.mdx                  |    909 +
+ .../component-library/domain.mdx                   |    147 +
+ .../component-library/integrations.mdx             |     66 +
+ .../component-library/layout.mdx                   |    381 +
+ .../component-library/primitives.mdx               |   1013 +
+ .../documentation-guide/contribute-to-the-docs.mdx |    628 +-
+ .../docs-features-and-ai-integrations.mdx          |    201 +-
+ .../documentation-guide/documentation-guide.mdx    |    161 +-
+ .../documentation-guide/documentation-overview.mdx |     75 +-
+ .../documentation-guide/snippets-inventory.mdx     |    224 +
+ .../documentation-guide/style-guide.mdx            |    952 +
+ v2/pages/09_internal/governance.mdx                |    302 +
+ .../components.mdx                                 |      6 +-
+ v2/scripts/dev/auto-commit.sh                      |      9 -
+ 401 files changed, 164320 insertions(+), 2748 deletions(-)

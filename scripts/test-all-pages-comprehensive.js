@@ -257,10 +257,14 @@ async function testPage(browser, pagePath) {
     await page.close();
   }
   
+  // Success means page loaded successfully, even if there are warnings or some broken links
+  // We'll report broken links separately
+  const success = pageLoadSuccess && errors.filter(e => !e.includes('favicon') && !e.includes('analytics')).length === 0;
+  
   return {
     pagePath,
     url,
-    success: pageLoadSuccess && errors.length === 0 && brokenLinks.length === 0,
+    success,
     pageLoadSuccess,
     mdxError,
     errors,

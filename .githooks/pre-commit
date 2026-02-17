@@ -18,8 +18,8 @@ NC='\033[0m' # No Color
 
 echo -e "${YELLOW}🔍 Checking style guide compliance...${NC}"
 
-# Get list of staged files
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(jsx|tsx|js|mdx)$')
+# Get list of staged files (excluding style-guide.mdx which documents examples of what NOT to do)
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(jsx|tsx|js|mdx)$' | grep -v "style-guide")
 
 if [ -z "$STAGED_FILES" ]; then
     echo -e "${GREEN}✓ No JSX/TSX/MDX files staged, skipping style checks${NC}"
@@ -62,6 +62,10 @@ done
 echo "Checking for relative imports..."
 for file in $STAGED_FILES; do
     if [ -f "$file" ]; then
+        # Skip style guide (it documents relative imports as examples of what NOT to do)
+        if [[ "$file" == *"style-guide"* ]]; then
+            continue
+        fi
         if grep -E "from ['\"].*\.\./.*['\"]" "$file" 2>/dev/null | grep -v "node_modules" | grep -v "\.\./\.\./\.\." | grep -v "examples/" > /dev/null; then
             WARNINGS+=("⚠️  $file: Uses relative imports - use absolute paths from root (/snippets/...)")
             VIOLATIONS=$((VIOLATIONS + 1))
@@ -122,15 +126,22 @@ echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━�
 echo ""
 echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${YELLOW}Running test suite (staged files only)...${NC}"
-if [ -f "tests/run-all.js" ] && command -v node &>/dev/null; then
-    if node tests/run-all.js --staged --skip-browser 2>&1; then
-        echo -e "${GREEN}✓ Test suite passed${NC}"
-    else
-        TEST_EXIT=$?
-        if [ $TEST_EXIT -ne 0 ]; then
-            VIOLATIONS=$((VIOLATIONS + 1))
-            WARNINGS+=("❌ Test suite failed - see output above")
+if [ -f "testing/run-all.js" ] && command -v node &>/dev/null; then
+    # Check if dependencies are installed in v2/node_modules
+    if [ -d "v2/node_modules" ]; then
+        # Set NODE_PATH to include v2/node_modules for module resolution
+        export NODE_PATH="$(pwd)/v2/node_modules:${NODE_PATH:-}"
+        if node testing/run-all.js --staged --skip-browser 2>&1; then
+            echo -e "${GREEN}✓ Test suite passed${NC}"
+        else
+            TEST_EXIT=$?
+            if [ $TEST_EXIT -ne 0 ]; then
+                VIOLATIONS=$((VIOLATIONS + 1))
+                WARNINGS+=("❌ Test suite failed - see output above")
+            fi
         fi
+    else
+        echo -e "${YELLOW}⚠️  Dependencies not installed (v2/node_modules missing). Run 'cd v2 && npm install' to enable tests${NC}"
     fi
 else
     echo -e "${YELLOW}⚠️  Test suite not available, skipping...${NC}"

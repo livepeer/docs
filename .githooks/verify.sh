@@ -114,10 +114,14 @@ fi
 
 # Check 6: Import path validation (absolute paths for snippets)
 echo "Checking import paths..."
-JSX_MDX_FILES=$(echo "$STAGED_FILES" | grep -E '\.(jsx|tsx|mdx)$' || true)
+JSX_MDX_FILES=$(echo "$STAGED_FILES" | grep -E '\.(jsx|tsx|mdx)$' | grep -v "style-guide" || true)
 if [ -n "$JSX_MDX_FILES" ]; then
     for file in $JSX_MDX_FILES; do
         if [ -f "$file" ]; then
+            # Skip style guide (it documents relative imports as examples of what NOT to do)
+            if [[ "$file" == *"style-guide"* ]]; then
+                continue
+            fi
             # Check for snippets imports that aren't absolute
             if grep -E "from ['\"].*snippets" "$file" 2>/dev/null | grep -v "from ['\"]/snippets" > /dev/null; then
                 WARNINGS+=("⚠️  $file: Snippets imports should be absolute (/snippets/...)")

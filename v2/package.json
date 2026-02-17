@@ -1,6 +1,10 @@
 {
   "devDependencies": {
-    "prettier": "^3.7.3"
+    "prettier": "^3.7.3",
+    "puppeteer": "^24.37.3",
+    "@cspell/dict-en-gb": "^5.0.0",
+    "cspell": "^8.0.0",
+    "js-yaml": "^4.1.0"
   },
   "name": "docs",
   "version": "1.0.0",
@@ -14,7 +18,14 @@
     "generate-seo": "node ../snippets/scripts/generate-seo.js",
     "generate-seo:dry-run": "node ../snippets/scripts/generate-seo.js --dry-run",
     "prebuild": "bash scripts/fetch-external-docs.sh && node scripts/generate-docs-status.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../testing/run-all.js",
+    "test:style": "node ../testing/unit/style-guide.test.js",
+    "test:mdx": "node ../testing/unit/mdx.test.js",
+    "test:spell": "node ../testing/unit/spelling.test.js",
+    "test:browser": "node ../testing/integration/browser.test.js",
+    "test:quality": "node ../testing/unit/quality.test.js",
+    "test:links": "node ../testing/unit/links-imports.test.js",
+    "test:all-pages": "node scripts/test-all-pages-browser.js"
   },
   "keywords": [],
   "author": "",

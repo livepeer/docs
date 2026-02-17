@@ -371,6 +371,67 @@ import { H1, H2, PageHeader } from "/snippets/components/display/frameMode.jsx";
 - `<Danger>` - Critical warnings
 - `<Note>` - Additional context
 
+### Prefer Custom Components for Links and Navigation
+
+**Preference**: Use custom components for links, cards, quotes, and other visually appealing elements instead of plain Mintlify links.
+
+**Why**: Custom components provide better visual design, consistent theming, enhanced user experience, and better integration with the Livepeer documentation design system.
+
+**Custom Components to Use:**
+
+- **Links**: Use `<GotoLink>` and `<GotoCard>` instead of plain markdown links or Mintlify `<Card>` with `href`
+- **Quotes**: Use `<Quote>` and `<FrameQuote>` instead of plain blockquotes
+- **Cards**: Use `<GotoCard>` for navigation cards with better styling
+- **Callouts**: Use `<CustomCallout>` and `<TipWithArrow>` for enhanced visual callouts
+- **External Links**: Use `<DoubleIconLink>` for external links (GitHub, etc.)
+
+**Examples:**
+
+```mdx
+{/* ❌ Plain markdown link */}
+[Getting Started](/get-started)
+
+{/* ✅ Custom component with better styling */}
+import { GotoLink } from '/snippets/components/primitives/links.jsx';
+<GotoLink label="Getting Started" relativePath="/get-started" icon="arrow-right" />
+```
+
+```mdx
+{/* ❌ Plain blockquote */}
+> This is a quote
+
+{/* ✅ Custom quote component with attribution */}
+import { FrameQuote } from '/snippets/components/display/quote.jsx';
+<FrameQuote author="John Doe" source="Livepeer Blog" href="https://livepeer.org/blog">
+  This is a quote with better visual design.
+</FrameQuote>
+```
+
+```mdx
+{/* ❌ Basic Mintlify Card with href */}
+<Card title="API Reference" href="/api/reference">
+  API documentation
+</Card>
+
+{/* ✅ Custom GotoCard with enhanced styling */}
+import { GotoCard } from '/snippets/components/primitives/links.jsx';
+<GotoCard
+  label="API Reference"
+  relativePath="/api/reference"
+  icon="book"
+  text="Complete API documentation with examples"
+  cta="View Docs"
+/>
+```
+
+**When to Use Plain Links:**
+
+- Inline links within paragraphs (markdown links are fine)
+- Links in code examples or technical references
+- Links that don't need visual emphasis
+
+**See the [Component Library](./component-library) for all available custom components.**
+
 ## Mintlify Overrides & Best Practices
 
 Our styling framework intentionally overrides some Mintlify default recommendations to work better within Mintlify's constraints and maintain consistency.

@@ -27,29 +27,41 @@ jobs:
         with:
           node-version: "22"
           cache: 'npm'
+          cache-dependency-path: v2/package.json
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install dependencies (v2)
+        working-directory: v2
+        run: npm ci
 
       - name: Run Style Guide Tests
         continue-on-error: true
+        working-directory: v2
         run: npm run test:style
         id: style-test
 
       - name: Run MDX Validation Tests
         continue-on-error: true
+        working-directory: v2
         run: npm run test:mdx
         id: mdx-test
 
       - name: Run Spelling Tests
         continue-on-error: true
+        working-directory: v2
         run: npm run test:spell
         id: spell-test
 
       - name: Run Quality Tests
         continue-on-error: true
+        working-directory: v2
         run: npm run test:quality
         id: quality-test
+
+      - name: Run Links & Imports Tests
+        continue-on-error: true
+        working-directory: v2
+        run: npm run test:links
+        id: links-test
 
       - name: Install Mintlify globally
         run: npm install -g mintlify
@@ -78,11 +90,14 @@ jobs:
 
       - name: Run Browser Tests (All Pages)
         continue-on-error: true
+        working-directory: v2
         run: |
           # Force test ALL pages from docs.json (ensures complete coverage)
           echo "Testing ALL pages from docs.json navigation..."
-          node tests/integration/browser.test.js
+          npm run test:browser
         id: browser-test
+        env:
+          MINT_BASE_URL: http://localhost:3000
 
       - name: Stop Mintlify dev server
         if: always()
@@ -103,10 +118,11 @@ jobs:
           echo "| MDX Validation | ${{ steps.mdx-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Spelling | ${{ steps.spell-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Quality | ${{ steps.quality-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Links & Imports | ${{ steps.links-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Browser | ${{ steps.browser-test.outcome == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
 
       - name: Fail if any test failed
-        if: steps.style-test.outcome == 'failure' || steps.mdx-test.outcome == 'failure' || steps.spell-test.outcome == 'failure' || steps.quality-test.outcome == 'failure' || steps.browser-test.outcome == 'failure'
+        if: steps.style-test.outcome == 'failure' || steps.mdx-test.outcome == 'failure' || steps.spell-test.outcome == 'failure' || steps.quality-test.outcome == 'failure' || steps.links-test.outcome == 'failure' || steps.browser-test.outcome == 'failure'
         run: |
           echo "❌ One or more tests failed"
           exit 1

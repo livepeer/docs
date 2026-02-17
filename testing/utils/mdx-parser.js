@@ -149,16 +149,19 @@ function validateMdx(content, filePath) {
   
   // Check imports
   const imports = extractImports(content);
-  imports.forEach(imp => {
-    // Check for relative imports to snippets
-    if (imp.path.includes('snippets') && !imp.path.startsWith('/snippets')) {
-      errors.push({
-        line: imp.line,
-        message: `Relative import path for snippets: ${imp.path}. Use absolute path: /snippets/...`,
-        import: imp.path
-      });
-    }
-  });
+  // Skip style guide (it documents relative imports as examples of what NOT to do)
+  if (!filePath || !filePath.includes('style-guide.mdx')) {
+    imports.forEach(imp => {
+      // Check for relative imports to snippets
+      if (imp.path.includes('snippets') && !imp.path.startsWith('/snippets')) {
+        errors.push({
+          line: imp.line,
+          message: `Relative import path for snippets: ${imp.path}. Use absolute path: /snippets/...`,
+          import: imp.path
+        });
+      }
+    });
+  }
   
   return { errors, warnings, frontmatter, imports };
 }
