@@ -42,7 +42,10 @@ if [ "$SKIP_ALL" = "1" ]; then
 fi
 
 # Check for file deletions (BLOCKED - requires human override)
-DELETED_FILES=$(git diff --cached --name-only --diff-filter=D || true)
+# NOTE: Deletions in tasks/ are allowed (AI-only working directory)
+ALL_DELETED_FILES=$(git diff --cached --name-only --diff-filter=D || true)
+DELETED_FILES=$(echo "$ALL_DELETED_FILES" | grep -v '^tasks/' || true)
+
 if [ -n "$DELETED_FILES" ]; then
     if [ "$ALLOW_DELETIONS" != "1" ]; then
         VIOLATIONS=$((VIOLATIONS + 1))
@@ -55,6 +58,10 @@ if [ -n "$DELETED_FILES" ]; then
         echo "The following files are being deleted:"
         echo "$DELETED_FILES" | sed 's/^/  ❌ /'
         echo ""
+        if [ -n "$(echo "$ALL_DELETED_FILES" | grep '^tasks/')" ]; then
+            echo -e "${GREEN}ℹ️  Note: Deletions in tasks/ are allowed (AI-only working directory)${NC}"
+            echo ""
+        fi
         echo -e "${YELLOW}📋 INSTRUCTIONS FOR AI AGENTS:${NC}"
         echo ""
         echo -e "${YELLOW}  ⚠️  DO NOT DELETE FILES - DETERMINE CORRECT LOCATION INSTEAD${NC}"
