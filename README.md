@@ -9,11 +9,22 @@ the documentation changes locally. To install, use the following command
 npm i -g mintlify
 ```
 
-Run the following command at the root of your documentation (where mint.json is)
+Run the following command at the root of your documentation (where `docs.json` is):
 
 ```bash
 mint dev
 ```
+
+Then open **http://localhost:3000** in your browser. To test the AI assistant: open **Home → Test** in the sidebar and use the chat button.
+
+**If you see** `MODULE_NOT_FOUND` for `_document.js`, **"No docs config"**, or **ENOENT** in `~/.mintlify/`, the Mintlify cache is corrupt. Clear it and run again:
+
+```bash
+rm -rf ~/.mintlify ~/.mintlify-last
+mint dev
+```
+
+Tests and formatting run from the `tooling/` directory: `cd tooling && npm install`, then `npm run test:style`, `npm run format-mdx`, etc. See `tooling/package.json` for all scripts.
 
 ### 🔧 Git Hooks (Required)
 

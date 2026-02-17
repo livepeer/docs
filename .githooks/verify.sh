@@ -129,17 +129,16 @@ fi
 
 # Check 7: Browser validation (if Node.js and Puppeteer available)
 if command -v node &>/dev/null; then
-    # Check if puppeteer is available (installed or in node_modules)
+    # Check if puppeteer is available (tooling/ or legacy root node_modules)
     PUPPETEER_AVAILABLE=false
-    if [ -f "node_modules/puppeteer/package.json" ]; then
+    if [ -f "tooling/node_modules/puppeteer/package.json" ]; then
         PUPPETEER_AVAILABLE=true
-    elif npm list puppeteer &>/dev/null 2>&1; then
+    elif [ -f "node_modules/puppeteer/package.json" ]; then
+        PUPPETEER_AVAILABLE=true
+    elif [ -f "tooling/package.json" ] && grep -q "puppeteer" tooling/package.json; then
         PUPPETEER_AVAILABLE=true
     elif [ -f "package.json" ] && grep -q "puppeteer" package.json; then
-        # Check if it's in devDependencies
-        if grep -A 10 '"devDependencies"' package.json | grep -q "puppeteer"; then
-            PUPPETEER_AVAILABLE=true
-        fi
+        PUPPETEER_AVAILABLE=true
     fi
     
     if [ "$PUPPETEER_AVAILABLE" = true ] && [ -f ".githooks/verify-browser.js" ]; then

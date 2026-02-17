@@ -28,14 +28,13 @@ containerized with Docker.
   2. Run: `mint dev` (from repo root, where `mint.json` or `mint_v1.json`
      exists)
 - **Build/Deploy:**
-  - Docker:
-    `docker buildx build --platform linux/amd64 --load -t livepeer/docs .`
-  - Makefile: `make all`
+  - Docker: `docker build -f docs/Dockerfile -t livepeer/docs .` (context: repo root)
+  - Makefile: `make -C docs all` (from repo root)
 - **API Docs Generation:**
   - Use `snippets/scripts/generate-api-docs.sh` to convert OpenAPI specs to
     MDX/API docs and navigation JSON. Example:
     ```bash
-    ./snippets/scripts/generate-api-docs.sh ai/worker/api/openapi.yaml v2/pages/04_gateways/guides-references/api-reference/AI-API "AI API"
+    ./snippets/scripts/generate-api-docs.sh docs/ai/worker/api/openapi.yaml v2/pages/04_gateways/guides-references/api-reference/AI-API "AI API"
     ```
   - Output: MDX files + navigation snippet for `docs.json`.
 - **External Data Fetching:**
@@ -70,7 +69,7 @@ containerized with Docker.
 - **Mintlify:** All build/preview flows use Mintlify CLI and config files
   (`mint.json`, `docs.json`).
 - **OpenAPI:** API docs generated from `openapi.yaml` (see also
-  `ai/worker/api/openapi.yaml`).
+  `docs/ai/worker/api/openapi.yaml`).
 - **Docker:** Containerized builds for CI/CD and local dev.
 - **Automations:** Scripts in `snippets/scripts/` automate API doc generation
   and external data sync.
@@ -80,8 +79,8 @@ containerized with Docker.
 - `docs.json`, `docs_v2.json` — Navigation/config
 - `snippets/components/` — Custom components (see README-custom-view.md)
 - `automations/`, `ai-tools/` — Scripts, AI, dynamic content
-- `openapi.yaml`, `ai/worker/api/openapi.yaml` — API reference
-- `Dockerfile`, `Makefile` — Build/deploy
+- `openapi.yaml`, `docs/ai/worker/api/openapi.yaml` — API reference
+- `docs/Dockerfile`, `docs/Makefile` — Build/deploy
 - `README.md`, `README_V2.md` — Developer notes, protocol/architecture
 - `snippets/scripts/` — Automation scripts (API docs, data fetching)
 

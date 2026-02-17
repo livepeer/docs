@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POC: Ask name → save to file</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 420px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .chat {
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .message {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid #eee;
+    }
+    .message.bot {
+      background: #f8f9fa;
+      color: #333;
+    }
+    .message.user {
+      background: #fff;
+    }
+    .message .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #888;
+      margin-bottom: 0.25rem;
+    }
+    .input-row {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: #fff;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      padding: 0.6rem 1rem;
+      background: #3CB540;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.9; }
+    .status {
+      margin-top: 1rem;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      color: #666;
+      min-height: 1.5rem;
+    }
+    .status.success { color: #2e7d32; }
+    .status.error { color: #c62828; }
+  </style>
+</head>
+<body>
+  <h1>POC: Name → file</h1>
+  <p>Simulates one step of the “chat asks a question, you answer, we save it” flow. Name is written to <code>docs/experiment/names.txt</code>.</p>
+
+  <div class="chat">
+    <div class="message bot">
+      <div class="label">Assistant</div>
+      What's your name?
+    </div>
+    <div class="message user">
+      <div class="label">You</div>
+      <div class="input-row">
+        <input type="text" id="name" placeholder="Your name" autocomplete="name" />
+        <button type="button" id="send">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <script>
+    const nameInput = document.getElementById('name');
+    const sendBtn = document.getElementById('send');
+    const status = document.getElementById('status');
+
+    function setStatus(msg, type) {
+      status.textContent = msg;
+      status.className = 'status ' + (type || '');
+    }
+
+    function submit() {
+      const name = nameInput.value.trim();
+      if (!name) {
+        setStatus('Please enter a name.', 'error');
+        return;
+      }
+      setStatus('Saving…');
+      fetch('/api/save-name', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.ok) {
+            setStatus('Saved to docs/experiment/names.txt', 'success');
+            nameInput.value = '';
+          } else {
+            setStatus('Error: ' + (data.error || 'Unknown'), 'error');
+          }
+        })
+        .catch((err) => {
+          setStatus('Error: ' + err.message, 'error');
+        });
+    }
+
+    sendBtn.addEventListener('click', submit);
+    nameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(); });
+  </script>
+</body>
+</html>

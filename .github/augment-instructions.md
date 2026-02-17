@@ -78,8 +78,8 @@
 
 - `mint.json`, `docs.json` - Mintlify config/navigation
 - `openapi.yaml` - API reference spec
-- `ai/worker/api/openapi.yaml` - AI API spec
-- `Dockerfile`, `Makefile` - Build/deploy
+- `docs/ai/worker/api/openapi.yaml` - AI API spec
+- `docs/Dockerfile`, `docs/Makefile` - Build/deploy (run from repo root: `make -C docs all` or `docker build -f docs/Dockerfile -t livepeer/docs .`)
 - `README.md`, `README_V2.md` - Developer documentation
 
 ## Development Workflows

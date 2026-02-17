@@ -27,28 +27,29 @@ jobs:
         with:
           node-version: "22"
           cache: 'npm'
+          cache-dependency-path: tooling/package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        run: cd tooling && npm install
 
       - name: Run Style Guide Tests
         continue-on-error: true
-        run: npm run test:style
+        run: cd tooling && npm run test:style
         id: style-test
 
       - name: Run MDX Validation Tests
         continue-on-error: true
-        run: npm run test:mdx
+        run: cd tooling && npm run test:mdx
         id: mdx-test
 
       - name: Run Spelling Tests
         continue-on-error: true
-        run: npm run test:spell
+        run: cd tooling && npm run test:spell
         id: spell-test
 
       - name: Run Quality Tests
         continue-on-error: true
-        run: npm run test:quality
+        run: cd tooling && npm run test:quality
         id: quality-test
 
       - name: Install Mintlify globally
@@ -81,7 +82,7 @@ jobs:
         run: |
           # Force test ALL pages from docs.json (ensures complete coverage)
           echo "Testing ALL pages from docs.json navigation..."
-          node tests/integration/browser.test.js
+          cd tooling && npm run test:browser
         id: browser-test
 
       - name: Stop Mintlify dev server
