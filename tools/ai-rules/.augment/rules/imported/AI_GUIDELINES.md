@@ -1,3 +1,7 @@
+---
+type: "always_apply"
+---
+
 # 🛡️ AI SAFETY PROTOCOL: GIT WRITE OPERATIONS
 
 ## 1. MANDATORY SAFETY HOOKS

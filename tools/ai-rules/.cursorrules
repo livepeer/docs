@@ -22,101 +22,19 @@
 
 ## Repository Structure
 
-### 📖 Source of Truth
-
-**⚠️ IMPORTANT:** The **source of truth** for repository structure is **[README.md](../../README.md)**. Always refer to README.md for current structure rules. Other documents (like `contribute/STRUCTURE.md` or `tasks/plan/migration-plan.md`) are supplementary but README.md is canonical.
-
-**MANDATORY: Read Structure Rules Before Making Changes**
-
-**BEFORE creating, moving, or organizing files, you MUST read:**
-- **[README.md](../../README.md)** - **SOURCE OF TRUTH** for repository structure
-- `contribute/STRUCTURE.md` - Complete repository structure rules and guidelines (if exists)
-- `tasks/plan/migration-plan.md` - Detailed structure documentation (Section 4) - historical reference
-
-### Critical Structure Rules
-
-1. **Root Directory** - Only essential files allowed:
-   - ✅ Allowed: `docs.json`, `package.json`, `README.md`, `LICENSE`, `Dockerfile`, `Makefile`, `style.css`, `.gitignore`, `.mintignore`, `.whitelist`
-   - ❌ Forbidden: Scripts, config files, documentation files, temporary files, OpenAPI specs
-   - **CRITICAL:** Mintlify only allows ONE CSS file (`style.css`) at root - NO `styles/` folder
-
-2. **File Locations** - Files must be in correct directories:
-   - Scripts → `tools/scripts/` (organized by purpose: audit/, generate/, test/, verify/, fetch/)
-   - Config files → `tools/config/`
-   - AI guidelines → `tools/ai-rules/`
-   - Public assets → `public/` (favicon.png, logo/)
-   - OpenAPI specs → `api/` (consolidated)
-   - Contribution docs → `contribute/`
-   - Documentation → `docs/v1/` (frozen) or `docs/v2/pages/` (active)
-
-3. **Snippets Directory** - MUST follow Mintlify conventions:
-   - ✅ Required: `snippets/pages/` (for MDX-in-MDX pattern)
-   - ✅ Allowed: `components/`, `data/`, `assets/`, `automations/`, `generated/`
-   - ❌ Forbidden: Scripts (→ `tools/scripts/`), wiki/docs (→ `tools/wiki/`), styles (→ root `style.css` only)
-   - ✅ All imports must be absolute paths from root: `/snippets/components/...`
-   - ❌ Components cannot import other components
-
-4. **Enforcement** - Structure is enforced:
-   - `.whitelist` file lists allowed root files/directories
-   - Pre-commit hook blocks unauthorized root files/directories
-   - Always check structure rules before creating new files
-
-### Current Structure
-
-- `docs/v1/` - IMMUTABLE/FROZEN (never modify)
-- `docs/v2/pages/` - Current documentation pages (MDX)
+- `v2/pages/` - Current documentation pages (MDX)
 - `snippets/components/` - Custom React/JSX components
 - `snippets/data/` - Reusable data files
-- `snippets/pages/` - REQUIRED for MDX sub-views
-- `style.css` - Global CSS Custom Properties (ONLY CSS file at root)
+- `style.css` - Global CSS Custom Properties for theming
 - `docs.json` - Mintlify navigation configuration
-- `tools/` - All development tooling (scripts, configs, AI rules)
-- `api/` - Consolidated OpenAPI specifications
-- `contribute/` - Contribution documentation
-- `public/` - Public assets (favicon, logos)
-- `tasks/` - AI working directory (plan/, reports/, scripts/, errors/, experiments/, notes/)
 
 ## Before Making Changes
 
-1. **Read structure rules:** **[README.md](../../README.md)** - **SOURCE OF TRUTH** (then `contribute/STRUCTURE.md` if exists, or `tasks/plan/migration-plan.md` Section 4 for historical reference)
-2. **Read style guide:** `v2/pages/07_resources/documentation-guide/style-guide.mdx`
-3. **Check component library:** `v2/pages/07_resources/documentation-guide/component-library.mdx`
-4. **Review Mintlify gotchas** in style guide
-5. **Verify file location** - Ensure files are in correct directories per structure rules
-6. **Use existing components** when possible
-7. **Follow CSS Custom Properties** for all styling
-
-## ⚠️ MANDATORY: Commit Enforcement
-
-**CRITICAL RULE:** After making ANY change, you MUST create a commit to trigger pre-commit hooks.
-
-### Commit Requirements
-
-1. **COMMIT AFTER EACH CHANGE** - Do not batch multiple unrelated changes into one commit
-2. **Pre-commit hooks run automatically** - They will:
-   - ✅ Check repository structure compliance (README.md rules - **SOURCE OF TRUTH**)
-   - ✅ Verify style guide compliance (ThemeData, colors, imports)
-   - ✅ Run verification scripts (syntax checks, validation)
-   - ✅ Block commits with violations
-3. **Fix hook failures immediately** - Do not proceed to next task until hooks pass
-4. **Test functionality** - Verify the change works before moving to next task
-
-### Why This Matters
-
-- Pre-commit hooks enforce README.md repository structure rules (**SOURCE OF TRUTH**)
-- Hooks catch structure violations, style issues, and import problems early
-- Prevents breaking changes from being committed
-- Ensures all changes match repository standards
-
-### Example Workflow
-
-1. Make a change (move file, update code, etc.)
-2. **COMMIT immediately:** `git commit -m "Description of change"`
-3. Pre-commit hooks run automatically
-4. If hooks fail → Fix issues → Commit again
-5. If hooks pass → Proceed to next task
-
-**DO NOT** skip commits or bypass hooks. Every change must be validated.
+1. Read the style guide: `v2/pages/07_resources/documentation-guide/style-guide.mdx`
+2. Check component library: `v2/pages/07_resources/documentation-guide/component-library.mdx`
+3. Review Mintlify gotchas in style guide
+4. Use existing components when possible
+5. Follow CSS Custom Properties for all styling
 
 ## Documentation Standards
 

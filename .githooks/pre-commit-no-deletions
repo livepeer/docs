@@ -1,0 +1,33 @@
+#!/bin/bash
+# Pre-commit hook: PREVENT DELETIONS
+# This hook blocks any file deletions to prevent accidental data loss
+
+# Get list of deleted files
+DELETED_FILES=$(git diff --cached --name-only --diff-filter=D)
+
+if [ ! -z "$DELETED_FILES" ]; then
+    echo ""
+    echo "╔═══════════════════════════════════════════════════════════════╗"
+    echo "║  ❌ FILE DELETIONS DETECTED - COMMIT BLOCKED                 ║"
+    echo "╚═══════════════════════════════════════════════════════════════╝"
+    echo ""
+    echo "🚫 DELETIONS ARE NOT ALLOWED"
+    echo ""
+    echo "The following files are being deleted:"
+    echo "$DELETED_FILES" | sed 's/^/  ❌ /'
+    echo ""
+    echo "📋 INSTRUCTIONS:"
+    echo "  1. If you need to move files, use 'git mv' instead of delete+add"
+    echo "  2. If files should be removed, use 'git rm --cached' to unstage"
+    echo "  3. If this is intentional, use: git commit --no-verify"
+    echo "     (But this should be VERY rare - deletions are dangerous!)"
+    echo ""
+    echo "⚠️  If you really need to delete files, you must:"
+    echo "  1. Document WHY in the commit message"
+    echo "  2. Verify files are backed up"
+    echo "  3. Use: git commit --no-verify"
+    echo ""
+    exit 1
+fi
+
+exit 0
