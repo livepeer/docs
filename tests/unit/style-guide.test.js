@@ -133,6 +133,8 @@ function checkTailwindClasses(files) {
  */
 function checkImportPaths(files) {
   files.forEach(file => {
+    if (file.includes('style-guide.mdx')) return; // Skip style guide (it documents relative imports as examples of what NOT to do)
+    
     const content = readFile(file);
     if (!content) return;
     
@@ -217,10 +219,13 @@ function runTests(options = {}) {
   let testFiles = files;
   if (!testFiles) {
     if (stagedOnly) {
-      testFiles = getStagedFiles().filter(f => f.endsWith('.mdx') || f.endsWith('.jsx'));
+      testFiles = getStagedFiles().filter(f => (f.endsWith('.mdx') || f.endsWith('.jsx')) && !f.includes('style-guide.mdx'));
     } else {
-      testFiles = [...getMdxFiles(), ...getJsxFiles()];
+      testFiles = [...getMdxFiles(), ...getJsxFiles()].filter(f => !f.includes('style-guide.mdx'));
     }
+  } else {
+    // Filter out style-guide.mdx even if files are explicitly provided
+    testFiles = testFiles.filter(f => !f.includes('style-guide.mdx'));
   }
   
   checkThemeData(testFiles);

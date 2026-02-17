@@ -53,7 +53,7 @@ async function runTests(options = {}) {
     return { errors: [], warnings: ['cspell not available'], passed: true, total: testFiles.length };
   }
   
-  const cspellConfig = path.join(process.cwd(), 'cspell.json');
+  const cspellConfig = path.join(process.cwd(), 'tools/config/cspell.json');
   const results = checkMultipleFiles(testFiles, cspellConfig);
   
   results.forEach(result => {

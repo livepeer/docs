@@ -7,6 +7,7 @@ const styleGuideTests = require('./unit/style-guide.test');
 const mdxTests = require('./unit/mdx.test');
 const spellingTests = require('./unit/spelling.test');
 const qualityTests = require('./unit/quality.test');
+const linksImportsTests = require('./unit/links-imports.test');
 const browserTests = require('./integration/browser.test');
 
 const args = process.argv.slice(2);
@@ -51,6 +52,13 @@ async function runAllTests() {
   totalErrors += qualityResult.errors.length;
   totalWarnings += qualityResult.warnings.length;
   console.log(`   ${qualityResult.errors.length} errors, ${qualityResult.warnings.length} warnings`);
+  
+  // Links & Imports Tests
+  console.log('\n🔗 Running Links & Imports Validation...');
+  const linksResult = linksImportsTests.runTests({ stagedOnly });
+  totalErrors += linksResult.errors.length;
+  totalWarnings += linksResult.warnings.length;
+  console.log(`   ${linksResult.errors.length} errors, ${linksResult.warnings.length} warnings`);
   
   // Browser Tests (optional)
   if (!skipBrowser) {

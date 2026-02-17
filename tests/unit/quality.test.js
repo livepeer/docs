@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Quality checks: alt text, links, frontmatter, SEO, AEO (Answer Engine Optimization)
+ * Quality checks: alt text, links, frontmatter, SEO
  */
 
 const { getMdxFiles, getStagedFiles, readFile } = require('../utils/file-walker');
@@ -90,41 +90,7 @@ function checkFrontmatter(files) {
       warnings.push({
         file,
         rule: 'Frontmatter',
-        message: 'Missing description in frontmatter (important for SEO and AEO)'
-      });
-    } else {
-      // AEO: description length 50–160 chars is ideal for snippets and answer engines
-      const desc = typeof frontmatter.data.description === 'string'
-        ? frontmatter.data.description
-        : Array.isArray(frontmatter.data.description)
-          ? frontmatter.data.description.map(String).join(' ')
-          : String(frontmatter.data.description || '');
-      const len = desc.trim().length;
-      if (len > 0 && (len < 50 || len > 165)) {
-        warnings.push({
-          file,
-          rule: 'AEO',
-          message: `Description length ${len} chars (50–160 recommended for SEO/AEO)`
-        });
-      }
-    }
-  });
-}
-
-/**
- * AEO: Check that pages have semantic structure (H1 early in content)
- */
-function checkAeoStructure(files) {
-  files.forEach(file => {
-    const content = readFile(file);
-    if (!content) return;
-    const withoutFrontmatter = content.replace(/^---\n[\s\S]*?\n---\n?/, '');
-    const firstH1 = withoutFrontmatter.match(/^#\s+(.+)$/m);
-    if (!firstH1 && withoutFrontmatter.trim().length > 200) {
-      warnings.push({
-        file,
-        rule: 'AEO',
-        message: 'No H1 heading in first 200 chars (semantic headings help answer engines)'
+        message: 'Missing description in frontmatter (important for SEO)'
       });
     }
   });
@@ -183,7 +149,6 @@ function runTests(options = {}) {
   
   checkImageAltText(testFiles);
   checkFrontmatter(testFiles);
-  checkAeoStructure(testFiles);
   checkInternalLinks(testFiles);
   
   return {

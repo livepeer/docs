@@ -8,7 +8,7 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
 const { getMdxFiles, getStagedFiles } = require('../utils/file-walker');
-const { getV2Pages } = require('../../scripts/test-v2-pages');
+const { getV2Pages } = require('../../tools/scripts/test/test-v2-pages');
 
 const BASE_URL = process.env.MINT_BASE_URL || 'http://localhost:3000';
 const TIMEOUT = 30000;
