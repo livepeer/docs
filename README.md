@@ -2,6 +2,8 @@
 
 The official documentation repository for [Livepeer](https://livepeer.org), a decentralised realtime AI infrastructure network. This repository contains documentation for Livepeer Studio, the Livepeer Protocol, AI Pipelines, Orchestrators, Gateways, Delegators, Community, Help and developer resources.
 
+**
+
 Built with [Mintlify](https://mintlify.com) and deployed at [docs.livepeer.org](https://docs.livepeer.org).
 
 ---
@@ -282,6 +284,56 @@ ls -la .git/hooks/pre-commit
 - Fix the violations (structure, style, imports)
 - Don't bypass unless it's a true emergency
 - See [contribute/CONTRIBUTING/GIT-HOOKS.md](contribute/CONTRIBUTING/GIT-HOOKS.md) for help
+
+---
+
+## 🤖 AI Agent Rules & Guidelines
+
+This repository includes AI agent rule files to help AI assistants understand the codebase structure, styling requirements, and contribution guidelines.
+
+### AI Rule Files Location
+
+All AI agent rules are located in `tools/ai-rules/`:
+
+- **`AI_GUIDELINES.md`** - Comprehensive AI safety protocol and guidelines
+  - Git write operation safety rules
+  - Commit enforcement for structure & style validation
+  - Source of truth references
+  - Mandatory testing requirements
+
+- **`.cursorrules`** - Cursor IDE specific rules
+  - Style guide requirements
+  - Repository structure rules
+  - Mintlify limitations and gotchas
+  - Component usage guidelines
+
+- **`llms.txt.information.md`** - LLM information file
+  - Repository context for AI agents
+  - Key architectural decisions
+  - Important patterns and conventions
+
+### Suggested Rules for AI Agents
+
+When working with this repository, AI agents should:
+
+1. **Always check Mintlify documentation first** before making structural changes
+2. **Read the Style Guide** (`v2/pages/07_resources/documentation-guide/style-guide.mdx`) before styling changes
+3. **Follow repository structure** as defined in README.md (source of truth)
+4. **Use CSS Custom Properties only** - never ThemeData or hardcoded colors
+5. **Test after every change** - don't batch multiple changes without testing
+6. **Commit incrementally** - create commits after each logical change to trigger pre-commit hooks
+7. **Never modify `v1/`** - it's frozen and immutable
+8. **Use absolute imports** - `/snippets/components/...` not relative paths
+9. **Check component library** before creating new components
+10. **Verify with Mintlify docs** before adding new folders or files
+
+### Key Files for AI Agents
+
+- **Structure Rules:** `README.md` (source of truth), `tools/ai-rules/.cursorrules`
+- **Styling Rules:** `v2/pages/07_resources/documentation-guide/style-guide.mdx`
+- **Component Reference:** `v2/pages/07_resources/documentation-guide/component-library.mdx`
+- **Documentation Guide:** `v2/pages/07_resources/documentation-guide/documentation-guide.mdx`
+- **AI Guidelines:** `tools/ai-rules/AI_GUIDELINES.md`
 
 ---
 
