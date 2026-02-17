@@ -22,8 +22,15 @@ Built with [Mintlify](https://mintlify.com) and deployed at [docs.livepeer.org](
 
 ### Setup
 
-1. **Clone the repository:**
+1. **Fork and clone the repository:**
+   - **Fork the repository** on GitHub: [github.com/livepeer/docs](https://github.com/livepeer/docs)
+   - **Clone your fork** (or clone directly if you have write access):
    ```bash
+   # If you forked the repo:
+   git clone https://github.com/YOUR_USERNAME/docs.git
+   cd docs
+   
+   # Or if you have direct access:
    git clone https://github.com/livepeer/docs.git
    cd docs
    ```
@@ -33,7 +40,7 @@ Built with [Mintlify](https://mintlify.com) and deployed at [docs.livepeer.org](
    npm i -g mintlify
    ```
 
-3. **Install pre-commit hooks (Will run valuable tests - especially if you will be using AI agents to ):**
+3. **Install pre-commit hooks (Will run valuable tests - especially if you will be using AI agents to do work - HIGHLY RECOM):**
    ```bash
    ./.githooks/install.sh
    ```
