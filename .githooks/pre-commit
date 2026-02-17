@@ -13,8 +13,9 @@
 #   SKIP_TESTS=1           - Skip test suite
 #   SKIP_ALL=1             - Skip all checks (use with extreme caution)
 #
-# Human-only override flag:
+# Human-only override flags:
 #   ALLOW_WHITELIST_EDIT=1 - Allow editing .whitelist file (HUMANS ONLY - AIs must never use this)
+#   ALLOW_DELETIONS=1      - Allow file deletions (HUMANS ONLY - AIs must never use this)
 
 STYLE_GUIDE_PATH="v2/pages/07_resources/documentation-guide/style-guide.mdx"
 VIOLATIONS=0
@@ -32,11 +33,43 @@ SKIP_STYLE_CHECK=${SKIP_STYLE_CHECK:-0}
 SKIP_VERIFICATION=${SKIP_VERIFICATION:-0}
 SKIP_TESTS=${SKIP_TESTS:-0}
 SKIP_ALL=${SKIP_ALL:-0}
+ALLOW_DELETIONS=${ALLOW_DELETIONS:-0}
 
 if [ "$SKIP_ALL" = "1" ]; then
     echo -e "${YELLOW}⚠️  WARNING: All pre-commit checks bypassed (SKIP_ALL=1)${NC}"
     echo -e "${YELLOW}   This should only be used in emergencies.${NC}"
     exit 0
+fi
+
+# Check for file deletions (BLOCKED - requires human override)
+DELETED_FILES=$(git diff --cached --name-only --diff-filter=D || true)
+if [ -n "$DELETED_FILES" ]; then
+    if [ "$ALLOW_DELETIONS" != "1" ]; then
+        VIOLATIONS=$((VIOLATIONS + 1))
+        echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
+        echo -e "${RED}║  ❌ FILE DELETIONS DETECTED - COMMIT BLOCKED                 ║${NC}"
+        echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
+        echo ""
+        echo -e "${RED}🚫 DELETIONS ARE NOT ALLOWED${NC}"
+        echo ""
+        echo "The following files are being deleted:"
+        echo "$DELETED_FILES" | sed 's/^/  ❌ /'
+        echo ""
+        echo -e "${YELLOW}📋 INSTRUCTIONS:${NC}"
+        echo "  1. If you need to move files, use 'git mv' instead of delete+add"
+        echo "  2. If files should be removed, unstage them: 'git restore --staged <file>'"
+        echo "  3. If this deletion is intentional and necessary:"
+        echo "     - Document WHY in the commit message"
+        echo "     - Verify files are backed up"
+        echo "     - Use: ALLOW_DELETIONS=1 git commit"
+        echo ""
+        echo -e "${RED}⚠️  HUMAN OVERRIDE: Set ALLOW_DELETIONS=1 to allow deletions${NC}"
+        echo -e "${RED}   (AIs must NEVER use this flag - deletions are dangerous!)${NC}"
+        echo ""
+    else
+        echo -e "${YELLOW}⚠️  WARNING: File deletions allowed (ALLOW_DELETIONS=1)${NC}"
+        echo -e "${YELLOW}   Make sure deletions are intentional and files are backed up!${NC}"
+    fi
 fi
 
 # Check for .whitelist file changes (BLOCKED for AIs, requires human override)
