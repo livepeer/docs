@@ -2,14 +2,12 @@
 
 The official documentation repository for [Livepeer](https://livepeer.org), a decentralised realtime AI infrastructure network. This repository contains documentation for Livepeer Studio, the Livepeer Protocol, AI Pipelines, Orchestrators, Gateways, Delegators, Community, Help and developer resources.
 
-Built with [Mintlify](https://mintlify.com) and deployed at [docs.livepeer.org](https://docs.
-livepeer.org).
-
+Built with [Mintlify](https://mintlify.com) and deployed at [docs.livepeer.org](https://docs.livepeer.org).
 
 ## IMPORTANT
-- THIS REPOSITORY IS mostly COMMUNITY MAINTAINED. 
-- THE LIVEPEER FOUNDATION HELPS GUIDE IT, HOWEVER, GENERALLY IF YOU THINK IMPROVEMENTS ARE NEEDED YOU SHOULD SUBMIT THEM (via PR) OR CREATE AN ISSUE ASKING FOR THE FEATURE/BUG FIX ETC. See the [Contributing section](#-contributing) for details.
-- **Issue templates:** When creating issues, use the GitHub issue templates which will automatically apply the `docs-v2` and `help wanted` labels. See [GitHub Issues section](#-github-issues) below for details.
+
+- **THIS REPOSITORY IS mostly COMMUNITY MAINTAINED.** The Livepeer Foundation helps guide it, however, generally if you think improvements are needed you should submit them (via PR) or create an issue asking for the feature/bug fix etc. See the [Contributing section](#-contributing) for details.
+- **Issue templates:** When creating issues, use the GitHub issue templates which will automatically apply the `docs-v2` and `help wanted` labels. See [Creating Issues](#creating-issues) in the Contributing section for details.
 
 ---
 
@@ -21,7 +19,6 @@ livepeer.org).
 
 - **Node.js v20.17.0+ (LTS recommended)** - Required by Mintlify CLI
   - Install from [nodejs.org](https://nodejs.org/)
-  - Mintlify CLI requires Node.js to run
 - **Mintlify CLI** - Required for local development
   - Install via npm: `npm i -g mintlify`
   - Verify installation: `mintlify --version`
@@ -30,8 +27,6 @@ livepeer.org).
 ### Setup
 
 1. **Fork or clone the repository:**
-   - **Fork the repository** on GitHub: [github.com/livepeer/docs](https://github.com/livepeer/docs)
-   - **Clone your fork** (or clone directly if you have write access):
    ```bash
    # If you forked the repo:
    git clone https://github.com/YOUR_USERNAME/docs.git
@@ -46,54 +41,32 @@ livepeer.org).
    ```bash
    npm i -g mintlify
    ```
+   See [Development](#-development) section for troubleshooting and detailed usage.
 
-3. **Install pre-commit hooks (Will run valuable tests - especially if you will be using AI agents to do work - HIGHLY RECOMMENDED):**
+3. **Install pre-commit hooks** (HIGHLY RECOMMENDED - especially if using AI agents):
    ```bash
-   ./.githooks/install.sh
-   ```
+   # First, install dependencies (required for tests to run)
+   cd tools && npm install
    
-   The pre-commit hooks enforce:
-   - Repository structure rules
-   - Style guide compliance
-   - Code quality checks
-   - Import path validation
+   # Then install hooks
+   cd .. && ./.githooks/install.sh
+   ```
+   See [Pre-Commit Hooks](#-pre-commit-hooks) section for details on what the hooks check.
 
 4. **Start the development server:**
    ```bash
    mint dev
    ```
-   
-   The docs will be available at `http://localhost:3000`
+   The docs will be available at `http://localhost:3000`. See [Development](#-development) section for troubleshooting.
 
 ### Development Workflow
 
-1. **Create a branch:**
-   ```bash
-   git checkout -b docs/your-feature-name
-   ```
-
+1. **Create a branch:** `git checkout -b docs/your-feature-name`
 2. **Make your changes** in `v2/pages/` or `snippets/`
-
-3. **Test locally:**
-   ```bash
-   mint dev
-   ```
-
-4. **Commit your changes:**
-   ```bash
-   git add .
-   git commit -m "docs: description of your change"
-   ```
-   
-   Pre-commit hooks will run automatically and check:
-   - Repository structure compliance
-   - Style guide violations
-   - Code syntax and validation
-
-5. **Push and create a PR:**
-   ```bash
-   git push origin docs/your-feature-name
-   ```
+3. **Test locally:** `mint dev`
+4. **Commit your changes:** `git commit -m "docs: description of your change"`
+   - Pre-commit hooks will run automatically (see [Pre-Commit Hooks](#-pre-commit-hooks))
+5. **Push and create a PR:** `git push origin docs/your-feature-name`
 
 ---
 
@@ -115,10 +88,10 @@ We welcome contributions! Please read the following before making changes:
 
 - ✅ **Use CSS Custom Properties** (`var(--accent)`, `var(--text)`) - no hardcoded colors
 - ✅ **Use absolute imports** - `/snippets/components/...` (not relative paths)
-- ✅ **Follow repository structure** - See structure rules below
+- ✅ **Follow repository structure** - See [Repository Structure](#-repository-structure) section
 - ✅ **Test in both light and dark modes**
 - ❌ **Never use `ThemeData`** - deprecated, use CSS variables
-- ❌ **Never modify `v1/`** - it's frozen/immutable
+- ❌ **Never modify `v1/`** - it's frozen/immutable (see [Versioning](#-versioning))
 
 ### Where to Make Changes
 
@@ -152,45 +125,18 @@ We welcome contributions! Please read the following before making changes:
 
 See [Component Library](v2/pages/07_resources/documentation-guide/component-library.mdx) for available components and [Style Guide](v2/pages/07_resources/documentation-guide/style-guide.mdx) for component development guidelines.
 
-### Pull Request Process
-
-1. **Branch naming:** Use `docs/` prefix (e.g., `docs/fix-typo-quickstart`)
-2. **Commit messages:** Use conventional format: `docs: description`
-3. **Test locally:** Always test with `mint dev` before submitting
-4. **Follow style guide:** All changes must pass pre-commit hooks
-5. **Update related docs:** If structure changes, update this README
-
-### Review Process
-
-- **Review SLAs:** Critical fixes (24h), Content updates (48h), New content (72h)
-- **Review criteria:** Clarity, technical accuracy, completeness, style consistency, UX
-- **Section owners:** Review PRs in their assigned sections (see [CODEOWNERS](.github/CODEOWNERS))
-- **Automated checks:** Broken links, formatting, build verification run automatically
-
-See [CONTRIBUTING.md](contribute/CONTRIBUTING.md) for detailed contribution guidelines and [Documentation Governance](v2/pages/09_internal/governance.mdx) for complete review process, ownership, and SLAs.
-
----
-
-## 🐛 GitHub Issues
-
 ### Creating Issues
 
-When creating GitHub issues for this repository:
+**⚠️ IMPORTANT:** When creating issues, **always use the GitHub issue templates**. The templates automatically apply the `docs-v2` and `help wanted` labels, so you don't need to add them manually.
 
-1. **Use the `docs-v2` label** - All issues related to v2 documentation must include this label
-2. **Choose appropriate issue templates** (if available):
-   - Bug Report - For broken links, incorrect information, formatting issues
-   - Feature Request - For new content, improvements, enhancements
-   - Question - For clarifications, how-to questions
-   - Documentation Request - For missing documentation, unclear explanations
+**Available Templates:**
+- **Docs Review** - For reviewing multiple documentation pages
+- **Request Feature (Internal Team)** - For internal team feature requests
 
-3. **Include relevant labels** from the categories below
-
-### Required Labels
-
-**Version Tag (REQUIRED):**
-- `docs-v2` - **MUST be included** for all v2 documentation issues
-- `v1` - For legacy v1 documentation issues (rare, v1 is frozen)
+**If no template fits:**
+- Manually add the `docs-v2` label (REQUIRED for all v2 documentation issues)
+- Add `help wanted` label if you want community help
+- Include relevant labels from the [label categories](#standard-github-labels) below
 
 ### Standard GitHub Labels
 
@@ -224,14 +170,14 @@ When creating GitHub issues for this repository:
 - `good first issue` - Good for new contributors
 
 **Other Common Labels:**
-- `help wanted` - Community help requested
+- `help wanted` - Community help requested (automatically applied by templates)
 - `wontfix` - Issue won't be fixed
 - `duplicate` - Duplicate of another issue
 - `invalid` - Issue is invalid or incorrect
 
 ### Issue Workflow
 
-1. **Create Issue** - Use appropriate template and include `docs-v2` label
+1. **Create Issue** - Use appropriate template (automatically applies `docs-v2` and `help wanted` labels)
 2. **Triage** - Maintainers review and add additional labels
 3. **Assignment** - Issue assigned to section owner or contributor
 4. **Work** - Contributor works on the issue
@@ -239,29 +185,89 @@ When creating GitHub issues for this repository:
 6. **Review** - PR reviewed and merged
 7. **Close** - Issue automatically closed when PR is merged
 
-### Issue Templates
+### Pull Request Process
 
-When creating issues, include:
-- **Clear title** describing the problem or request
-- **Description** with context and details
-- **Steps to reproduce** (for bugs)
-- **Expected vs actual behavior** (for bugs)
-- **Screenshots** (if applicable)
-- **Relevant labels** including `docs-v2`
+1. **Branch naming:** Use `docs/` prefix (e.g., `docs/fix-typo-quickstart`)
+2. **Commit messages:** Use conventional format: `docs: description`
+3. **Test locally:** Always test with `mint dev` before submitting
+4. **Follow style guide:** All changes must pass pre-commit hooks
+5. **Update related docs:** If structure changes, update this README
+
+### Review Process
+
+- **Review SLAs:** Critical fixes (24h), Content updates (48h), New content (72h)
+- **Review criteria:** Clarity, technical accuracy, completeness, style consistency, UX
+- **Section owners:** Review PRs in their assigned sections (see [CODEOWNERS](.github/CODEOWNERS))
+- **Automated checks:** Broken links, formatting, build verification run automatically
+
+See [CONTRIBUTING.md](contribute/CONTRIBUTING.md) for detailed contribution guidelines and [Documentation Governance](v2/pages/09_internal/governance.mdx) for complete review process, ownership, and SLAs.
 
 ---
 
-## 🔧 Pre-Commit Hooks
+## 👩‍💻 Development
 
-This repository uses Git pre-commit hooks to enforce code quality and repository structure. **Hooks are REQUIRED and must be installed.**
+### Local Development Setup
 
-### Installation
-
+**Install Mintlify CLI:**
 ```bash
-./.githooks/install.sh
+npm i -g mintlify
 ```
 
-### What the Hooks Check
+**Start the development server:**
+```bash
+mint dev
+```
+
+Then open **http://localhost:3000** in your browser. To test the AI assistant: open **Home → Test** in the sidebar and use the chat button.
+
+**Troubleshooting Mintlify:**
+
+If you see `MODULE_NOT_FOUND` for `_document.js`, **"No docs config"**, or **ENOENT** in `~/.mintlify/`, the Mintlify cache is corrupt. Clear it and run again:
+
+```bash
+rm -rf ~/.mintlify ~/.mintlify-last
+mint dev
+```
+
+**Running Tests:**
+
+Tests and formatting run from the `tools/` directory:
+
+```bash
+cd tools && npm install
+npm run test:style      # Style guide tests
+npm run test:mdx        # MDX validation
+npm run test:spell      # Spelling checks
+npm run test:quality   # Quality checks
+npm run format-mdx     # Format MDX files
+```
+
+Or from root directory:
+```bash
+node tests/run-all.js                    # All tests
+node tests/unit/style-guide.test.js     # Style guide only
+node tests/integration/browser.test.js  # Browser tests only
+```
+
+See `tools/package.json` for all available scripts. See [Testing](#-testing) section for complete test documentation.
+
+### 🔧 Pre-Commit Hooks (Required)
+
+This repository uses git hooks to enforce style guide compliance and code quality. **Hooks are REQUIRED and must be installed.**
+
+**Prerequisites:**
+1. Install dependencies: `cd tools && npm install`
+2. Install hooks: `./.githooks/install.sh`
+
+```bash
+# Step 1: Install dependencies (required for tests to run)
+cd tools && npm install
+
+# Step 2: Install git hooks
+cd .. && ./.githooks/install.sh
+```
+
+**What the Hooks Check:**
 
 The pre-commit hook automatically validates:
 
@@ -285,7 +291,7 @@ The pre-commit hook automatically validates:
    - ✅ Unit tests (if dependencies installed)
    - ✅ Integration tests
 
-### Bypass Flags (Use Sparingly)
+**Bypass Flags (Use Sparingly):**
 
 In emergencies, you can bypass specific checks:
 
@@ -302,9 +308,7 @@ SKIP_ALL=1 git commit -m "Critical hotfix"
 
 **⚠️ Warning:** Bypassing hooks can lead to broken builds, style violations, and merge conflicts. Always fix issues properly when possible.
 
-See [`.githooks/BYPASS.md`](.githooks/BYPASS.md) for complete bypass documentation.
-
-### Troubleshooting
+**Troubleshooting:**
 
 **Hook not running?**
 ```bash
@@ -326,6 +330,8 @@ ls -la .git/hooks/pre-commit
 - **Import path errors:** Use absolute paths (`/snippets/components/...`)
 - **Structure violations:** Check `.whitelist` for allowed root files
 - **Style violations:** Replace hardcoded colors with CSS Custom Properties
+
+See [`.githooks/BYPASS.md`](.githooks/BYPASS.md) for complete bypass documentation and [Git Hooks Documentation](contribute/CONTRIBUTING/GIT-HOOKS.md) for details.
 
 ---
 
@@ -360,21 +366,7 @@ This repository includes a comprehensive test suite to ensure code quality, styl
 
 **3. Manual Execution (On-Demand)**
 - **When:** You run them manually
-- **Commands:**
-  ```bash
-  # From tools/ directory
-  cd tools && npm install
-  npm run test:style      # Style guide tests
-  npm run test:mdx        # MDX validation
-  npm run test:spell      # Spelling checks
-  npm run test:quality   # Quality checks
-  npm run format-mdx     # Format MDX files
-  
-  # Or from root directory
-  node tests/run-all.js                    # All tests
-  node tests/unit/style-guide.test.js     # Style guide only
-  node tests/integration/browser.test.js  # Browser tests only
-  ```
+- **Commands:** See [Development](#-development) section for test commands
 
 ### Test Coverage
 
@@ -389,101 +381,6 @@ See [tests/WHEN-TESTS-RUN.md](tests/WHEN-TESTS-RUN.md) for complete test documen
 
 ---
 
-## 🚀 CI/CD & Deployment
-
-### Deployment Process
-
-**Mintlify Auto-Deployment:**
-- Changes merged to `main` or `docs-v2-preview` are automatically deployed by Mintlify
-- Deployment typically takes 2-5 minutes after merge
-- Live site: [docs.livepeer.org](https://docs.livepeer.org)
-- No manual deployment steps required
-
-### GitHub Actions Workflows
-
-This repository uses several GitHub Actions workflows:
-
-**1. Test Suite** (`.github/workflows/test-suite.yml`)
-- Runs on: Push to `main`/`docs-v2-preview`, Pull requests
-- Tests: Style guide, MDX, spelling, quality, browser tests
-- Blocks PR if tests fail
-
-**2. Broken Links Check** (`.github/workflows/broken-links.yml`)
-- Validates all links in documentation
-- Runs on pull requests
-
-**3. Auto-Update Workflows:**
-- **Update Livepeer Release** (`.github/workflows/update-livepeer-release.yml`)
-  - Runs every 30 minutes
-  - Updates latest Livepeer version from GitHub releases
-- **Update Blog Data** (`.github/workflows/update-blog-data.yml`)
-  - Updates blog content from external sources
-- **Update Forum Data** (`.github/workflows/update-forum-data.yml`)
-  - Updates forum content
-- **Update YouTube Data** (`.github/workflows/update-youtube-data.yml`)
-  - Updates YouTube video content
-
-**4. SDK Generation** (`.github/workflows/sdk_generation.yaml`)
-- Generates SDK documentation from API specs
-
-### Build Process
-
-- **Local Development:** `mint dev` - Starts local server at `http://localhost:3000`
-- **Production Build:** Handled automatically by Mintlify
-- **Docker Build:** `docker build -t livepeer/docs .` (see `Dockerfile`)
-
----
-
-## 🤖 AI Agent Rules & Guidelines
-
-This repository includes AI agent rule files to help AI assistants understand the codebase structure, styling requirements, and contribution guidelines.
-
-### AI Rule Files Location
-
-All AI agent rules are located in `tools/ai-rules/`:
-
-- **`AI_GUIDELINES.md`** - Comprehensive AI safety protocol and guidelines
-  - Git write operation safety rules
-  - Commit enforcement for structure & style validation
-  - Source of truth references
-  - Mandatory testing requirements
-
-- **`.cursorrules`** - Cursor IDE specific rules
-  - Style guide requirements
-  - Repository structure rules
-  - Mintlify limitations and gotchas
-  - Component usage guidelines
-
-- **`llms.txt.information.md`** - LLM information file
-  - Repository context for AI agents
-  - Key architectural decisions
-  - Important patterns and conventions
-
-### Suggested Rules for AI Agents
-
-When working with this repository, AI agents should:
-
-1. **Always check Mintlify documentation first** before making structural changes
-2. **Read the Style Guide** (`v2/pages/07_resources/documentation-guide/style-guide.mdx`) before styling changes
-3. **Follow repository structure** as defined in README.md (source of truth)
-4. **Use CSS Custom Properties only** - never ThemeData or hardcoded colors
-5. **Test after every change** - don't batch multiple changes without testing
-6. **Commit incrementally** - create commits after each logical change to trigger pre-commit hooks
-7. **Never modify `v1/`** - it's frozen and immutable
-8. **Use absolute imports** - `/snippets/components/...` not relative paths
-9. **Check component library** before creating new components
-10. **Verify with Mintlify docs** before adding new folders or files
-
-### Key Files for AI Agents
-
-- **Structure Rules:** `README.md` (source of truth), `tools/ai-rules/.cursorrules`
-- **Styling Rules:** `v2/pages/07_resources/documentation-guide/style-guide.mdx`
-- **Component Reference:** `v2/pages/07_resources/documentation-guide/component-library.mdx`
-- **Documentation Guide:** `v2/pages/07_resources/documentation-guide/documentation-guide.mdx`
-- **AI Guidelines:** `tools/ai-rules/AI_GUIDELINES.md`
-
----
-
 ## 📁 Repository Structure
 
 **This is the source of truth for repository structure.** All file placements must follow this structure. The pre-commit hook enforces these rules automatically.
@@ -494,74 +391,219 @@ When working with this repository, AI agents should:
 /
 ├── .github/                # GitHub configuration
 │   ├── workflows/          # GitHub Actions workflows
+│   │   ├── test-suite.yml           # Main test suite workflow
+│   │   ├── test-v2-pages.yml        # V2 pages testing workflow
+│   │   ├── broken-links.yml         # Link validation workflow
+│   │   ├── update-*.yml             # Auto-update workflows (blog, forum, YouTube, etc.)
+│   │   ├── sdk_generation.yaml      # SDK documentation generation
+│   │   ├── auto-assign-docs-reviewers.yml  # Auto-assign reviewers
+│   │   ├── build-review-assets.yml  # Build review assets
+│   │   ├── generate-review-table.yml # Generate review tables
+│   │   └── update-review-template.yml # Update review templates
 │   ├── scripts/            # CI/CD helper scripts
-│   └── [config files]      # GitHub-specific configs
+│   │   ├── fetch-forum-data.js       # Fetch forum data
+│   │   ├── fetch-ghost-blog-data.js  # Fetch Ghost blog data
+│   │   ├── fetch-youtube-data.js     # Fetch YouTube data
+│   │   ├── embed-table.js            # Embed review tables
+│   │   ├── gen-table.js              # Generate review tables
+│   │   └── gen-textareas.js          # Generate textarea elements
+│   ├── ISSUE_TEMPLATE/     # GitHub issue templates
+│   │   ├── docs-review.yml           # Docs review template (auto-applies docs-v2, help wanted)
+│   │   └── feature_internal.yml      # Internal feature request template
+│   ├── CODEOWNERS          # Section ownership and review assignments
+│   ├── AGENTS.md           # AI agent guidelines
+│   ├── augment-instructions.md  # Augment AI instructions
+│   ├── copilot-instructions.md  # GitHub Copilot instructions
+│   ├── docs-reviewers.txt  # Documentation reviewers list
+│   └── pull_request_template.md  # PR template
 │
 ├── .githooks/              # Git hooks
 │   ├── install.sh          # Hook installation script
 │   ├── pre-commit          # Pre-commit hook (enforces structure)
+│   ├── pre-commit-no-deletions  # Pre-commit hook variant (no deletions)
 │   ├── verify.sh           # Verification script
-│   └── BYPASS.md           # Bypass flag documentation
+│   ├── verify-browser.js   # Browser validation script
+│   ├── server-manager.js   # Mintlify dev server manager
+│   ├── BYPASS.md           # Bypass flag documentation
+│   └── README.md           # Git hooks documentation
 │
 ├── ai-tools/               # AI tool setup guides (root level)
-│   ├── claude-code.mdx
-│   ├── cursor.mdx
-│   └── windsurf.mdx
+│   ├── claude-code.mdx     # Claude Code setup guide
+│   ├── cursor.mdx          # Cursor IDE setup guide
+│   └── windsurf.mdx        # Windsurf IDE setup guide
 │
 ├── api/                    # API specifications (consolidated)
 │   ├── studio.yaml         # Main Livepeer Studio API
 │   ├── ai-worker.yaml      # AI Worker API
-│   └── cli-http.yaml       # CLI HTTP API
+│   ├── cli-http.yaml       # CLI HTTP API
+│   └── worker/             # Worker API subdirectory
+│       └── [API files]      # Worker-specific API files
 │
 ├── contribute/             # Contribution documentation
-│   ├── CONTRIBUTING.md
+│   ├── CONTRIBUTING.md     # Main contribution guide
 │   ├── CONTRIBUTING/       # Contribution sub-docs
-│   └── STRUCTURE.md       # Repository structure rules (detailed)
+│   │   ├── README.md       # Contributing overview
+│   │   ├── AGENT-INSTRUCTIONS.md  # AI agent instructions
+│   │   └── GIT-HOOKS.md    # Git hooks documentation
+│   └── STRUCTURE.md        # Repository structure rules (detailed)
 │
 ├── snippets/               # Mintlify snippets (MUST follow Mintlify conventions)
 │   ├── assets/             # Static assets for docs
+│   │   ├── favicon.png     # Site favicon
+│   │   ├── logo/           # Logo files (light/dark variants)
+│   │   ├── logos/          # Additional logo assets
+│   │   ├── domain/         # Domain-specific assets (HOME, ABOUT, COMMUNITY, etc.)
+│   │   ├── media/          # Media files (images, videos, gifs)
+│   │   ├── site/           # Site-wide assets
+│   │   └── data/           # Asset-related data files
 │   ├── components/         # React/JSX components
+│   │   ├── content/        # Content display components
+│   │   ├── display/        # Display/UI components
+│   │   ├── domain/         # Domain-specific components
+│   │   ├── integrations/  # Integration components
+│   │   ├── layout/         # Layout components
+│   │   └── primitives/     # Primitive/base components
 │   ├── data/               # Data files (JSON, YAML - not OpenAPI specs)
+│   │   ├── gateways.jsx    # Gateway data
+│   │   ├── gateways/       # Gateway-specific data files
+│   │   ├── references/     # Reference data
+│   │   └── variables/      # Variable definitions
 │   ├── automations/        # Dynamic content components
+│   │   ├── blog/           # Blog automation components
+│   │   ├── discord/        # Discord automation components
+│   │   ├── forum/          # Forum automation components
+│   │   ├── globals/        # Global automation data
+│   │   ├── luma/           # Luma calendar automation
+│   │   ├── showcase/       # Showcase automation
+│   │   ├── youtube/        # YouTube automation
+│   │   └── scripts/        # Automation scripts (JSON configs)
+│   ├── pages/              # REQUIRED: MDX sub-views (Mintlify limitation)
+│   │   ├── 00_HOME/        # Home page sub-views
+│   │   ├── 01_ABOUT/       # About section sub-views
+│   │   ├── 04_GATEWAYS/    # Gateway section sub-views
+│   │   ├── 05_GPUS/        # GPU section sub-views
+│   │   ├── 08_SHARED/      # Shared sub-views
+│   │   └── gateways/       # Gateway-specific sub-views
 │   ├── generated/          # Generated content
-│   └── pages/              # REQUIRED: MDX sub-views (Mintlify limitation)
+│   │   ├── docs-status-table.mdx    # Auto-generated status table
+│   │   └── docs-structure-diagram.mdx  # Auto-generated structure diagram
+│   ├── external/           # External documentation references
+│   │   ├── awesome-livepeer-readme.mdx
+│   │   ├── box-additional-config.mdx
+│   │   ├── gwid-readme.mdx
+│   │   ├── whitepaper.mdx
+│   │   └── wiki-readme.mdx
+│   ├── scripts/            # Snippet-related scripts (NOT development scripts)
+│   │   ├── generate-data/  # Data generation scripts
+│   │   ├── generate-docs-status.js
+│   │   ├── generate-seo.js
+│   │   ├── fetch-*.sh      # External content fetching scripts
+│   │   └── update-component-library.sh
+│   ├── snippetsWiki/       # Internal wiki for snippets
+│   │   ├── componentLibrary/  # Component library wiki
+│   │   ├── index.mdx
+│   │   ├── mintlify-behaviour.mdx
+│   │   └── theme-colors.mdx
+│   ├── styles/             # Snippet-specific styles (NOT global styles)
+│   │   └── themeStyles.jsx
+│   └── docs-status-data.json  # Documentation status data
 │
 ├── tools/                  # Development tooling
-│   ├── ai-rules/          # AI context rules
-│   │   ├── AI_GUIDELINES.md
-│   │   ├── llms.txt.information.md
-│   │   └── .cursorrules
+│   ├── ai-rules/          # AI context rules and guidelines
+│   │   ├── AI_GUIDELINES.md         # Comprehensive AI safety protocol
+│   │   ├── AI-ACCOUNTABILITY-CHECKLIST.md  # AI accountability checklist
+│   │   ├── llms.txt.information.md  # LLM information file
+│   │   ├── REVIEW_TABLE.md          # Review table guidelines
+│   │   ├── ROLLBACK-GUIDE.md        # Rollback procedures
+│   │   ├── UNIVERSAL-AI-PROTOCOL.md # Universal AI protocol
+│   │   ├── tasks-directory-structure.mdc  # Tasks directory structure
+│   │   └── rules/         # Additional AI rules
+│   │       ├── git-safety.md
+│   │       └── imported/  # Imported rule files
 │   ├── config/            # Tool configurations
-│   │   └── cspell.json
+│   │   ├── cspell.json     # Spell checker configuration
+│   │   ├── workflow.lock   # Workflow lock file
+│   │   └── workflow.yaml  # Workflow configuration
 │   ├── scripts/           # Development scripts
-│   │   ├── audit/         # Audit scripts
-│   │   ├── generate/      # Generation scripts
 │   │   ├── test/          # Test scripts
-│   │   ├── verify/        # Verification scripts
-│   │   └── fetch/         # Data fetching scripts
-│   └── wiki/              # Internal wiki/docs
+│   │   │   ├── test-v2-pages.js
+│   │   │   ├── verify-all-pages.js
+│   │   │   ├── verify-pages.js
+│   │   │   └── [other test scripts]
+│   │   ├── verify/        # Verification scripts (empty or legacy)
+│   │   ├── audit-all-v2-pages.js
+│   │   ├── audit-component-usage.js
+│   │   ├── check-component-errors.js
+│   │   ├── debug-mint-dev.js
+│   │   ├── final-verification.js
+│   │   ├── find-correct-url.js
+│   │   ├── inspect-page.js
+│   │   ├── inspect-video-page.js
+│   │   ├── test-all-pages-browser.js
+│   │   ├── test-all-pages-comprehensive.js
+│   │   ├── test-v2-pages.js
+│   │   └── test-youtube-pages.js
+│   ├── package.json       # Tooling dependencies
+│   └── package-lock.json  # Dependency lock file
 │
 ├── tests/                 # Test suite
-│   ├── config/
-│   ├── fixtures/
-│   ├── integration/
-│   ├── unit/
-│   └── utils/
+│   ├── config/            # Test configuration
+│   ├── fixtures/          # Test fixtures
+│   ├── integration/       # Integration tests
+│   │   └── browser.test.js  # Browser integration tests
+│   ├── unit/              # Unit tests
+│   │   ├── style-guide.test.js  # Style guide tests
+│   │   ├── mdx.test.js    # MDX validation tests
+│   │   ├── spelling.test.js  # Spelling tests
+│   │   └── quality.test.js  # Quality tests
+│   ├── utils/             # Test utilities
+│   ├── reports/           # Test reports
+│   └── run-all.js         # Run all tests script
 │
-├── tasks/                 # AI working directory
+├── tasks/                 # AI working directory (NOT for production content)
 │   ├── plan/              # Planning documents & task specifications
+│   │   ├── complete/      # Completed plans
+│   │   └── [plan files]   # Planning documents
 │   ├── reports/           # Task outputs & audit reports
+│   │   ├── upstream-merge-plan.md
+│   │   ├── readme-refactor-plan.md
+│   │   └── [other reports]
+│   ├── context_data/      # Context data for AI agents
+│   │   └── ABOUT/         # About section context data
+│   │       └── CONTEXT DATA/  # Network and Protocol context
 │   ├── scripts/           # Task execution scripts
 │   └── errors/            # Error documentation & troubleshooting
 │
 ├── v1/                    # IMMUTABLE/FROZEN (DO NOT CHANGE, REMOVE, OR ARCHIVE)
-│   └── pages/
+│   ├── pages/             # Legacy documentation pages
+│   ├── ai/                # Legacy AI documentation
+│   ├── api-reference/     # Legacy API reference
+│   ├── delegators/        # Legacy delegator docs
+│   ├── developers/        # Legacy developer docs
+│   ├── gateways/          # Legacy gateway docs
+│   ├── images/            # Legacy images
+│   ├── orchestrators/     # Legacy orchestrator docs
+│   ├── references/        # Legacy references
+│   ├── sdks/              # Legacy SDK docs
+│   └── self-hosting/      # Legacy self-hosting docs
 │
-├── v2/                    # Active version (stays at root in this migration)
-│   └── pages/
+├── v2/                    # Active version (current documentation)
+│   ├── pages/             # Active documentation pages
+│   │   ├── 00_home/       # Home section
+│   │   ├── 01_about/      # About section
+│   │   ├── 02_developers/ # Developer section
+│   │   ├── 03_orchestrators/  # Orchestrator section
+│   │   ├── 04_gateways/   # Gateway section
+│   │   ├── 05_gpus/       # GPU section
+│   │   ├── 06_community/ # Community section
+│   │   ├── 07_resources/  # Resources section
+│   │   ├── 08_products/   # Products section
+│   │   └── 09_internal/   # Internal documentation
+│   ├── assets/            # V2-specific assets
+│   ├── scripts/           # V2-specific scripts
+│   └── deprecated/        # Deprecated V2 content
 │
 ├── docs.json              # Mintlify navigation config
-├── package-lock.json      # Lock file (if exists)
 ├── README.md              # This file
 ├── LICENSE                # License file
 ├── Dockerfile             # Docker build configuration
@@ -572,17 +614,105 @@ When working with this repository, AI agents should:
 └── .whitelist             # Allowed root files/directories (enforced by pre-commit)
 ```
 
+### Directory Descriptions
+
+**`.github/`** - GitHub configuration and automation
+- **workflows/**: GitHub Actions workflows for CI/CD, testing, and auto-updates
+- **scripts/**: Helper scripts for CI/CD processes (data fetching, table generation)
+- **ISSUE_TEMPLATE/**: Issue templates that automatically apply `docs-v2` and `help wanted` labels
+- **CODEOWNERS**: Defines section ownership for automatic PR reviewer assignment
+- **AGENTS.md, augment-instructions.md, copilot-instructions.md**: AI agent guidelines
+
+**`.githooks/`** - Git pre-commit hooks
+- **pre-commit**: Main hook that enforces structure, style, and quality checks
+- **verify.sh**: Verification script called by pre-commit hook
+- **verify-browser.js**: Browser validation for MDX pages
+- **server-manager.js**: Manages Mintlify dev server for browser tests
+- **BYPASS.md**: Documentation for bypass flags (emergency use only)
+
+**`ai-tools/`** - AI development tool setup guides
+- Setup instructions for Claude Code, Cursor, and Windsurf IDEs
+- These files are at root level (whitelisted)
+
+**`api/`** - API specifications (OpenAPI/Swagger)
+- Consolidated location for all API specs
+- **studio.yaml**: Main Livepeer Studio API
+- **ai-worker.yaml**: AI Worker API
+- **cli-http.yaml**: CLI HTTP API
+- **worker/**: Worker-specific API files
+
+**`contribute/`** - Contribution documentation
+- **CONTRIBUTING.md**: Main contribution guide
+- **CONTRIBUTING/**: Detailed contribution sub-docs (Git hooks, agent instructions)
+- **STRUCTURE.md**: Detailed repository structure rules
+
+**`snippets/`** - Mintlify snippets directory (MUST follow Mintlify conventions)
+- **assets/**: Static assets (images, videos, logos, favicon) organized by domain
+- **components/**: React/JSX components organized by type (content, display, domain, layout, primitives)
+- **data/**: Data files (gateways, references, variables) - NOT OpenAPI specs
+- **automations/**: Dynamic content components (blog, forum, YouTube, etc.)
+- **pages/**: REQUIRED for MDX sub-views (Mintlify limitation - MDX-in-MDX pattern)
+- **generated/**: Auto-generated content (status tables, structure diagrams)
+- **external/**: External documentation references (whitepaper, wiki, etc.)
+- **scripts/**: Snippet-related scripts (NOT development scripts - those go in `tools/scripts/`)
+- **snippetsWiki/**: Internal wiki for snippets documentation
+- **styles/**: Snippet-specific styles (NOT global styles - global styles in root `style.css`)
+
+**`tools/`** - Development tooling and scripts
+- **ai-rules/**: AI agent rules, guidelines, and protocols
+- **config/**: Tool configurations (cspell, workflows)
+- **scripts/**: Development scripts organized by purpose:
+  - **test/**: Test scripts (v2 pages, verification, browser tests)
+  - **verify/**: Verification scripts (legacy/empty)
+  - Other scripts: audit, inspection, debugging tools
+- **package.json**: Tooling dependencies
+
+**`tests/`** - Test suite
+- **config/**: Test configuration files
+- **fixtures/**: Test fixtures and sample data
+- **integration/**: Integration tests (browser tests)
+- **unit/**: Unit tests (style guide, MDX, spelling, quality)
+- **utils/**: Test utility functions
+- **reports/**: Test execution reports
+- **run-all.js**: Script to run all tests
+
+**`tasks/`** - AI working directory (NOT for production content)
+- **plan/**: Planning documents and task specifications
+  - **complete/**: Completed plans archive
+- **reports/**: Task outputs and audit reports
+- **context_data/**: Context data for AI agents (Network, Protocol info)
+- **scripts/**: Task execution scripts
+- **errors/**: Error documentation and troubleshooting guides
+
+**`v1/`** - IMMUTABLE/FROZEN legacy documentation
+- **pages/**: Legacy documentation pages
+- **ai/, api-reference/, delegators/, developers/, gateways/, orchestrators/**: Legacy section docs
+- **images/, references/, sdks/, self-hosting/**: Legacy assets and references
+- ⚠️ **DO NOT MODIFY** - Pre-commit hook blocks all changes
+
+**`v2/`** - Active documentation version
+- **pages/**: Active documentation organized by section (home, about, developers, etc.)
+- **assets/**: V2-specific assets
+- **scripts/**: V2-specific scripts
+- **deprecated/**: Deprecated V2 content (being phased out)
+
 ### Key Rules
 
 1. **Root Directory**: Only files listed in `.whitelist` are allowed at root
 2. **Snippets**: Must follow Mintlify conventions (components, data, assets, automations, pages)
-3. **v1/ is FROZEN**: Never modify, remove, or archive files in `v1/`
+   - ❌ **Forbidden in snippets/**: Development scripts (→ `tools/scripts/`), wiki/docs (→ `tools/wiki/`), global styles (→ root `style.css`)
+3. **v1/ is FROZEN**: Never modify, remove, or archive files in `v1/` (see [Versioning](#-versioning))
 4. **No `public/` folder**: Mintlify doesn't support it - favicon/logo are in `snippets/assets/`
 5. **No `styles/` folder**: Mintlify only allows ONE CSS file at root (`style.css`)
-6. **Scripts**: All scripts go in `tools/scripts/` organized by purpose
+   - Snippet-specific styles can go in `snippets/styles/` but global styles must be in root
+6. **Scripts**: 
+   - Development scripts → `tools/scripts/` organized by purpose
+   - Snippet-related scripts → `snippets/scripts/` (data generation, fetching)
+   - Task scripts → `tasks/scripts/`
 7. **Configs**: All config files go in `tools/config/`, **EXCEPT**:
    - `.prettierrc.yaml` → **ROOT** (Prettier convention)
-8. **OpenAPI specs**: All API specs go in `api/`
+8. **OpenAPI specs**: All API specs go in `api/` (consolidated location)
+9. **Tasks directory**: For AI working files only - NOT production content
 
 ### Enforcement
 
@@ -677,62 +807,95 @@ See [Automations & Workflows Guide](v2/pages/07_resources/documentation-guide/au
 
 ---
 
-## 👩‍💻 Development
+## 🚀 CI/CD & Deployment
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview
-the documentation changes locally. To install, use the following command
+### Deployment Process
 
-```bash
-npm i -g mintlify
-```
+**Mintlify Auto-Deployment:**
+- Changes merged to `main` or `docs-v2-preview` are automatically deployed by Mintlify
+- Deployment typically takes 2-5 minutes after merge
+- Live site: [docs.livepeer.org](https://docs.livepeer.org)
+- No manual deployment steps required
 
-Run the following command at the root of your documentation (where `docs.json` is):
+### GitHub Actions Workflows
 
-```bash
-mint dev
-```
+This repository uses several GitHub Actions workflows:
 
-Then open **http://localhost:3000** in your browser. To test the AI assistant: open **Home → Test** in the sidebar and use the chat button.
+**1. Test Suite** (`.github/workflows/test-suite.yml`)
+- Runs on: Push to `main`/`docs-v2-preview`, Pull requests
+- Tests: Style guide, MDX, spelling, quality, browser tests
+- Blocks PR if tests fail
 
-**If you see** `MODULE_NOT_FOUND` for `_document.js`, **"No docs config"**, or **ENOENT** in `~/.mintlify/`, the Mintlify cache is corrupt. Clear it and run again:
+**2. Broken Links Check** (`.github/workflows/broken-links.yml`)
+- Validates all links in documentation
+- Runs on pull requests
 
-```bash
-rm -rf ~/.mintlify ~/.mintlify-last
-mint dev
-```
+**3. Auto-Update Workflows:**
+- **Update Livepeer Release** (`.github/workflows/update-livepeer-release.yml`)
+  - Runs every 30 minutes
+  - Updates latest Livepeer version from GitHub releases
+- **Update Blog Data** (`.github/workflows/update-blog-data.yml`)
+  - Updates blog content from external sources
+- **Update Forum Data** (`.github/workflows/update-forum-data.yml`)
+  - Updates forum content
+- **Update YouTube Data** (`.github/workflows/update-youtube-data.yml`)
+  - Updates YouTube video content
 
-Tests and formatting run from the `tools/` directory: `cd tools && npm install`, then `npm run test:style`, `npm run format-mdx`, etc. See `tools/package.json` for all scripts.
+**4. SDK Generation** (`.github/workflows/sdk_generation.yaml`)
+- Generates SDK documentation from API specs
 
-### 🔧 Git Hooks (Required)
+### Build Process
 
-This repository uses git hooks to enforce style guide compliance and code quality. **You must install them:**
+- **Local Development:** `mint dev` - Starts local server at `http://localhost:3000`
+- **Production Build:** Handled automatically by Mintlify
+- **Docker Build:** `docker build -t livepeer/docs .` (see `Dockerfile`)
 
-**Prerequisites:**
-1. Install dependencies: `cd tools && npm install`
-2. Install hooks: `./.githooks/install.sh`
+---
 
-```bash
-# Step 1: Install dependencies (required for tests to run)
-cd tools && npm install
+## 🤖 AI Agent Rules & Guidelines
 
-# Step 2: Install git hooks
-./.githooks/install.sh
-```
+This repository includes AI agent rule files to help AI assistants understand the codebase structure, styling requirements, and contribution guidelines.
 
-The pre-commit hook will:
-- ✅ Check for style guide violations (ThemeData, hardcoded colors, etc.)
-- ✅ Enforce repository structure rules (root whitelist, snippets structure, v1/ frozen)
-- ✅ Run verification scripts (syntax checks, validation)
-- ✅ Block commits with violations
+### AI Rule Files Location
 
-See [Git Hooks Documentation](contribute/CONTRIBUTING/GIT-HOOKS.md) for details.
+All AI agent rules are located in `tools/ai-rules/`:
 
-### 📖 Before Contributing
+- **`AI_GUIDELINES.md`** - Comprehensive AI safety protocol and guidelines
+  - Git write operation safety rules
+  - Commit enforcement for structure & style validation
+  - Source of truth references
+  - Mandatory testing requirements
 
-**MANDATORY:** Read these before making changes:
+- **`.cursorrules`** - Cursor IDE specific rules
+  - Style guide requirements
+  - Repository structure rules
+  - Mintlify limitations and gotchas
+  - Component usage guidelines
 
-1. **[Style Guide](v2/pages/07_resources/documentation-guide/style-guide.mdx)** - Production-grade styling guidelines
-2. **[Component Library](v2/pages/07_resources/documentation-guide/component-library.mdx)** - Available components
-3. **[Contribution Guide](contribute/CONTRIBUTING.md)** - How to contribute
-4. **[Git Hooks](contribute/CONTRIBUTING/GIT-HOOKS.md)** - Pre-commit hook documentation
-5. **This README** - Repository structure (source of truth)
+- **`llms.txt.information.md`** - LLM information file
+  - Repository context for AI agents
+  - Key architectural decisions
+  - Important patterns and conventions
+
+### Suggested Rules for AI Agents
+
+When working with this repository, AI agents should:
+
+1. **Always check Mintlify documentation first** before making structural changes
+2. **Read the Style Guide** (`v2/pages/07_resources/documentation-guide/style-guide.mdx`) before styling changes
+3. **Follow repository structure** as defined in [Repository Structure](#-repository-structure) section
+4. **Use CSS Custom Properties only** - never ThemeData or hardcoded colors (see [Key Contribution Rules](#key-contribution-rules))
+5. **Test after every change** - don't batch multiple changes without testing
+6. **Commit incrementally** - create commits after each logical change to trigger pre-commit hooks
+7. **Never modify `v1/`** - it's frozen and immutable (see [Versioning](#-versioning))
+8. **Use absolute imports** - `/snippets/components/...` not relative paths (see [Key Contribution Rules](#key-contribution-rules))
+9. **Check component library** before creating new components
+10. **Verify with Mintlify docs** before adding new folders or files
+
+### Key Files for AI Agents
+
+- **Structure Rules:** `README.md` (source of truth), `tools/ai-rules/.cursorrules`
+- **Styling Rules:** `v2/pages/07_resources/documentation-guide/style-guide.mdx`
+- **Component Reference:** `v2/pages/07_resources/documentation-guide/component-library.mdx`
+- **Documentation Guide:** `v2/pages/07_resources/documentation-guide/documentation-guide.mdx`
+- **AI Guidelines:** `tools/ai-rules/AI_GUIDELINES.md`
