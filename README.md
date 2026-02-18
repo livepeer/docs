@@ -561,7 +561,6 @@ When working with this repository, AI agents should:
 │   └── pages/
 │
 ├── docs.json              # Mintlify navigation config
-├── package-lock.json      # Lock file (if exists)
 ├── README.md              # This file
 ├── LICENSE                # License file
 ├── Dockerfile             # Docker build configuration
