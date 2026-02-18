@@ -17,6 +17,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write # For commenting on PRs
+      issues: write # Required for github.rest.issues.createComment API
 
     steps:
       - name: Checkout repository
@@ -76,24 +77,24 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: v2-pages-test-report
-          path: v2-page-test-report.json
+          path: tools/v2-page-test-report.json
           retention-days: 7
 
       - name: Parse test results
         if: always()
         id: test-results
         run: |
-          if [ -f v2-page-test-report.json ]; then
-            TOTAL=$(jq -r '.totalPages' v2-page-test-report.json)
-            PASSED=$(jq -r '.passed' v2-page-test-report.json)
-            FAILED=$(jq -r '.failed' v2-page-test-report.json)
+          if [ -f tools/v2-page-test-report.json ]; then
+            TOTAL=$(jq -r '.totalPages' tools/v2-page-test-report.json)
+            PASSED=$(jq -r '.passed' tools/v2-page-test-report.json)
+            FAILED=$(jq -r '.failed' tools/v2-page-test-report.json)
             
             echo "total=$TOTAL" >> $GITHUB_OUTPUT
             echo "passed=$PASSED" >> $GITHUB_OUTPUT
             echo "failed=$FAILED" >> $GITHUB_OUTPUT
             
             # Get failed pages summary
-            FAILED_PAGES=$(jq -r '.results[] | select(.success == false) | .pagePath' v2-page-test-report.json | head -10)
+            FAILED_PAGES=$(jq -r '.results[] | select(.success == false) | .pagePath' tools/v2-page-test-report.json | head -10)
             echo "failed_pages<<EOF" >> $GITHUB_OUTPUT
             echo "$FAILED_PAGES" >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT
