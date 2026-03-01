@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 const { normalizeRepoRel, readJson, toPosix } = require('./common');
-const { normalizeRouteKey, resolveLocalizedPathStyle, resolveRouteToFile } = require('./path-utils');
+const { fileToRouteKey, normalizeRouteKey, resolveLocalizedPathStyle, resolveRouteToFile } = require('./path-utils');
 const { parseProvenanceComment, classifyLocalizedArtifactProvenance } = require('./provenance');
 
 function collectPageStrings(node, out = []) {
@@ -103,6 +103,26 @@ function loadPathsFile(repoRoot, filePath) {
     .map((line) => normalizeRepoRel(line));
 }
 
+function toInventoryItemFromFile(repoRoot, fileRel) {
+  const normalizedFile = normalizeRepoRel(fileRel);
+  const fileAbs = path.join(repoRoot, normalizedFile);
+  if (!fs.existsSync(fileAbs)) return null;
+  const stat = fs.statSync(fileAbs);
+  if (!stat.isFile()) return null;
+  if (!/\.(md|mdx)$/i.test(normalizedFile)) return null;
+
+  let route = fileToRouteKey(repoRoot, fileAbs);
+  route = route.replace(/\/README$/i, '');
+  route = normalizeRouteKey(route);
+  if (!route) return null;
+
+  return {
+    route,
+    fileRel: normalizedFile,
+    fileAbs
+  };
+}
+
 function selectScopeItems(options) {
   const {
     repoRoot,
@@ -128,7 +148,27 @@ function selectScopeItems(options) {
     const entries = loadPathsFile(repoRoot, pathsFile);
     const routeSet = new Set(entries.map((entry) => normalizeRouteKey(entry)));
     const fileSet = new Set(entries.map((entry) => normalizeRepoRel(entry)));
+    const selectedByFile = new Map();
     selected = items.filter((item) => routeSet.has(item.route) || fileSet.has(item.fileRel));
+    for (const item of selected) selectedByFile.set(item.fileRel, item);
+
+    for (const entry of entries) {
+      if (!entry) continue;
+
+      // Explicit file path, including non-v2 docs such as docs-guide/* or contribute/*.
+      let candidate = toInventoryItemFromFile(repoRoot, entry);
+
+      // Route entry outside the existing v2 inventory.
+      if (!candidate) {
+        const resolvedFile = resolveRouteToFile(repoRoot, entry);
+        if (resolvedFile) candidate = toInventoryItemFromFile(repoRoot, resolvedFile);
+      }
+
+      if (!candidate) continue;
+      if (selectedByFile.has(candidate.fileRel)) continue;
+      selectedByFile.set(candidate.fileRel, candidate);
+      selected.push(candidate);
+    }
   } else {
     const changedFiles = new Set(getChangedFilesSinceRef(repoRoot, baseRef));
     selected = items.filter((item) => changedFiles.has(item.fileRel));

@@ -491,6 +491,30 @@ else
                 fi
             fi
 
+            # Keep docs-index.json synced and staged when docs routes/content change
+            if [ -f "tools/scripts/generate-docs-index.js" ]; then
+                if git diff --cached --name-only | grep -Eq '^(docs\.json|v1/|v2/|snippets/)'; then
+                    echo -e "${YELLOW}Checking docs-index sync...${NC}"
+                    if node tools/scripts/generate-docs-index.js --check >/dev/null 2>&1; then
+                        echo -e "${GREEN}✓ docs-index.json is up to date${NC}"
+                    else
+                        echo -e "${YELLOW}docs-index.json out of date, regenerating...${NC}"
+                        if node tools/scripts/generate-docs-index.js --write 2>&1; then
+                            git add docs-index.json
+                            echo -e "${GREEN}✓ docs-index.json regenerated and staged${NC}"
+                        else
+                            DOCS_INDEX_EXIT=$?
+                            if [ $DOCS_INDEX_EXIT -ne 0 ]; then
+                                VIOLATIONS=$((VIOLATIONS + 1))
+                                WARNINGS+=("❌ docs-index generation failed - run node tools/scripts/generate-docs-index.js --write")
+                            fi
+                        fi
+                    fi
+                else
+                    echo -e "${GREEN}✓ No docs/nav changes staged, skipping docs-index sync${NC}"
+                fi
+            fi
+
             # Staged WCAG accessibility audit (conservative autofix enabled by default)
             if [ -f "tests/integration/v2-wcag-audit.js" ]; then
                 echo -e "${YELLOW}Running staged V2 WCAG accessibility audit...${NC}"
@@ -583,6 +607,30 @@ else
                         VIOLATIONS=$((VIOLATIONS + 1))
                         WARNINGS+=("❌ v2/pages index generation failed - fix index sync issues")
                     fi
+                fi
+            fi
+
+            # Keep docs-index.json synced and staged when docs routes/content change
+            if [ -f "tools/scripts/generate-docs-index.js" ]; then
+                if git diff --cached --name-only | grep -Eq '^(docs\.json|v1/|v2/|snippets/)'; then
+                    echo -e "${YELLOW}Checking docs-index sync...${NC}"
+                    if node tools/scripts/generate-docs-index.js --check >/dev/null 2>&1; then
+                        echo -e "${GREEN}✓ docs-index.json is up to date${NC}"
+                    else
+                        echo -e "${YELLOW}docs-index.json out of date, regenerating...${NC}"
+                        if node tools/scripts/generate-docs-index.js --write 2>&1; then
+                            git add docs-index.json
+                            echo -e "${GREEN}✓ docs-index.json regenerated and staged${NC}"
+                        else
+                            DOCS_INDEX_EXIT=$?
+                            if [ $DOCS_INDEX_EXIT -ne 0 ]; then
+                                VIOLATIONS=$((VIOLATIONS + 1))
+                                WARNINGS+=("❌ docs-index generation failed - run node tools/scripts/generate-docs-index.js --write")
+                            fi
+                        fi
+                    fi
+                else
+                    echo -e "${GREEN}✓ No docs/nav changes staged, skipping docs-index sync${NC}"
                 fi
             fi
 

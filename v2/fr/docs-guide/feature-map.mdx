@@ -1,0 +1,115 @@
+---
+title: Carte des fonctionnalités
+sidebarTitle: Carte des fonctionnalités
+description: >-
+  Cette carte capture les capacités du dépôt en tant qu'indice interne pour les
+  mainteneurs.
+keywords:
+  - livepeer
+  - feature map
+  - internal
+  - map
+  - repository
+  - capabilities
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJkb2NzLWd1aWRlL2ZlYXR1cmUtbWFwLm1keCIsInNvdXJjZVJvdXRlIjoiZG9jcy1ndWlkZS9mZWF0dXJlLW1hcCIsInNvdXJjZUhhc2giOiIwZDM0YjU0ZDYyYmI1NWEzNDg1NzAwYjMyNWI1Yzg5Mzk0YzM3YzY5ZmUyYTQwYWY3NzVjYjEzYjFlMDA2ODhjIiwibGFuZ3VhZ2UiOiJmciIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAzLTAxVDE3OjE4OjAxLjM3NVoifQ== */}
+## 1) Expérience des documents frontend
+
+- Mintlify-site de documentation avec une navigation orientée vers le rôle dans `docs.json`.
+- Système de composants partagés dans `snippets/components/`.
+- Enforcement structurel/style via des tests de guide de style et des vérifications de hook.
+- Synchronisation de l'index des routes et des pages via `tools/scripts/generate-pages-index.js`.
+
+Références principales :
+
+- `v2/resources/documentation-guide/style-guide.mdx`
+- `v2/resources/documentation-guide/component-library.mdx`
+- `tools/scripts/generate-pages-index.js`
+
+## 2) Couche opérationnelle similaire à un backend (Docs Ops)
+
+- Point d'entrée CLI unifié : `lpd`.
+- Scripts de validation et d'application de règles sur `tests/`, `.githooks/`, et `tools/scripts/`.
+- Audits WCAG en phase et complets pour les documents `v2/` avec un support d'autocorrection conservateur pour les problèmes courants liés aux balises brutes.
+- Outils d'entrée et de gouvernance :
+  - modèles d'incident dans `.github/ISSUE_TEMPLATE/`
+  - modèles de PR dans `.github/pull-request-template-v2.md` et `.github/pull_request_template.md`
+- Vérifications en pré-validation incluant le style, le MDX, les liens/importations, les scripts de documentation et les audits en phase.
+
+Références principales :
+
+- [`lpd.md`](./lpd.mdx)
+- [`quality-gates.md`](./quality-gates.mdx)
+- [`templates-index.mdx`](./templates-index.mdx)
+
+## 3) IA + Automatisation + Pipelines
+
+- Flux d'ingestion/mise à jour automatisés pour les forums, les blogs, YouTube, les versions, les données de présentation.
+- Les actifs JSON des workflows n8n et les alternatives GitHub Actions coexistent.
+- Fonctionnalités de pipeline de la communauté, y compris la présentation et les modèles d'aggrégation/de suivi du contenu.
+
+Références principales :
+
+- [`automation-pipelines.md`](./automation-pipelines.mdx)
+- `v2/resources/documentation-guide/automations-workflows.mdx`
+- `snippets/automations/`
+
+## 4) Système produit + contenu
+
+- Texte et architecture d'information des documents orientés produit sous `v2/pages/`.
+- Progression « de zéro à héros » à travers les portails, les démarrages rapides et les références approfondies.
+- Normes éditoriales et de gouvernance dans le guide de documentation + documents de contribution.
+
+Références principales :
+
+- [`content-system.md`](./content-system.mdx)
+- `v2/resources/documentation-guide/documentation-guide.mdx`
+- `contribute/CONTRIBUTING/README.md`
+
+## 5) Guides techniques + couverture de domaine
+
+- Guides opérationnels pour les passerelles, les orchestrateurs, les délégués, les développeurs, les ressources.
+- Chemins de référence et de dépannage longue forme dans les sections spécifiques aux rôles.
+
+Références principales :
+
+- `v2/pages/04_gateways/`
+- `v2/orchestrators/`
+- `v2/pages/06_delegators/`
+- `v2/pages/03_developers/`
+
+## 6) Automatisation de maintenance à long terme
+
+- Modèles de script qui imposent des en-têtes auto-documentés.
+- L'inventaire et la génération d'audit de script sont automatisés.
+- Les scripts de génération d'index et de soutien SEO/AEO/glossaire vivent sous `tools/scripts/`.
+
+Références principales :
+
+- `tools/scripts/new-script.js`
+- `tools/scripts/audit-scripts.js`
+- `tools/scripts/snippets/generate-seo.js`
+- `tools/scripts/snippets/generate-data/scripts/generate-glossary.js`
+
+## 7) Intégrations de données et API
+
+- Spécifications OpenAPI et autres spécifications API dans `api/`.
+- Ensembles de données et extraits de données intégrés dans `snippets/data/`.
+- L'ingestion de flux externe soutient la fraîcheur des documents et le croisement des liens.
+
+Références principales :
+
+- [`data-integrations.md`](./data-integrations.mdx)
+- `api/`
+- `snippets/data/`
+
+## 8) Automatisation de la documentation À propos de la documentation
+
+- Index des scripts/workflows/modèles générés dans`docs-guide/`.
+- Vérifications de sécurité pour la couverture des guides de documentation et les références README.
+
+Références principales :
+
+- [`source-of-truth-policy.md`](./source-of-truth-policy.mdx)
+- `tests/unit/docs-guide-sot.test.js`
+- `tools/scripts/generate-docs-guide-indexes.js`

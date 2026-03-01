@@ -1,0 +1,99 @@
+---
+title: 质量门禁地图
+sidebarTitle: 质量门禁
+description: 本文档映射本地和CI强制行为以及检查是阻塞还是建议性的。
+keywords:
+  - livepeer
+  - quality gates
+  - internal
+  - map
+  - quality
+  - gates
+  - enforcement
+  - behavior
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJkb2NzLWd1aWRlL3F1YWxpdHktZ2F0ZXMubWR4Iiwic291cmNlUm91dGUiOiJkb2NzLWd1aWRlL3F1YWxpdHktZ2F0ZXMiLCJzb3VyY2VIYXNoIjoiODRhNmM5ZmI3ZTA2NTlkNTMyY2I1ZTY1MDliZDMzNjBmZmI2ZDdhMTVkMTU5MDM0YTExZDllYWY1OTcwNjhjNCIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxNzoyODoyOS41NjNaIn0= */}
+## 门层
+
+### 1) 预提交（本地）
+
+入口:
+
+- `.githooks/pre-commit`
+
+关键检查:
+
+- 仓库结构规则
+- 风格指南检查
+- 语法/验证检查 (`.githooks/verify.sh`)
+- 已暂存的测试套件 (`tests/run-all.js --staged --skip-browser`)
+- 已暂存的链接/域名/WCAG 审计
+- 已暂存的 WCAG 审计运行`tests/integration/v2-wcag-audit.js --staged --fix --stage --max-pages 10 --fail-impact serious ...`
+- 脚本文档强制执行
+- 页面索引同步
+
+阻塞策略:
+
+- 因结构/样式/测试失败而阻塞
+- 因已暂存的 WCAG 运行时失败和剩余`serious`/`critical` 可访问性发现，在保守自动修复后
+- `color-contrast` 发现是建议性的（非阻塞）在 WCAG 审计中，直到颜色更新获得批准
+- docs-guide SoT 检查目前是建议性的
+
+### 2) PR 已更改文件检查
+
+入口:
+
+- `tests/run-pr-checks.js`
+- `.github/workflows/test-suite.yml` (PR 模式)
+
+关键检查:
+
+- 样式、MDX、拼写、质量、链接/导入（已更改范围）
+- MDX 保障措施 + 文档导航检查
+- 对已更改脚本的脚本文档检查
+- 对已更改文档页面的严格链接审计
+- docs-guide SoT 检查目前是建议性的
+
+阻塞策略:
+
+- 因失败的必需检查而阻塞
+- 对集成 PR 例外和 docs-guide SoT 检查的建议行为
+
+### 3) 浏览器验证 / 检查
+
+入口:
+
+- `tests/integration/browser.test.js`
+- `tools/scripts/test-v2-pages.js`
+- `.github/workflows/test-v2-pages.yml`
+
+阻塞策略:
+
+- 浏览器失败在主 CI 流程中被视为阻塞
+
+## 源文件
+
+- `.githooks/pre-commit`
+- `.githooks/verify.sh`
+- `tests/run-all.js`
+- `tests/run-pr-checks.js`
+- `tests/integration/v2-wcag-audit.js`
+- `.github/workflows/test-suite.yml`
+- `.github/workflows/test-v2-pages.yml`
+- `tests/WHEN-TESTS-RUN.md`
+- `tests/PR-CI-TESTS-AND-SCRIPT-RUN-MATRIX.md`
+
+## 文档 SoT 保障措施
+
+保障措施检查在以下位置实现:
+
+- `tests/unit/docs-guide-sot.test.js`
+
+生成的索引新鲜度通过以下方式检查:
+
+- `tools/scripts/generate-docs-guide-indexes.js --check`
+
+建议性推出意图:
+
+1. 在预提交 + CI 摘要中建议性
+2. 一旦 docs-guide 结构稳定且漂移率低，就切换为阻塞

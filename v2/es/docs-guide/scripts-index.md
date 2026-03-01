@@ -1,0 +1,151 @@
+---
+title: Índice de scripts
+sidebarTitle: Índice de scripts
+description: >-
+  Esta página proporciona un catálogo agregado del inventario de scripts del
+  repositorio generados desde índices de scripts de grupo.
+keywords:
+  - livepeer
+  - scripts index
+  - aggregate inventory
+  - repository
+  - scripts
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJkb2NzLWd1aWRlL3NjcmlwdHMtaW5kZXgubWQiLCJzb3VyY2VSb3V0ZSI6ImRvY3MtZ3VpZGUvc2NyaXB0cy1pbmRleCIsInNvdXJjZUhhc2giOiIxNmZhYWQ1ZmUxNTI5ODkwZGQxMTQwOTg3N2E2MTVhNTE2N2UzZjgxNTBjOTIzYzdiNjUzNzY2NmJmNDA2M2MwIiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAzLTAxVDE3OjExOjU5LjczMloifQ== */}
+<Note>
+**Generation Script**: This file is generated from script(s): `tests/unit/script-docs.test.js`. <br/>
+**Purpose**: Enforce script header schema, keep group script indexes in sync, and build aggregate script index. <br/>
+**Run when**: Scripts are added, removed, renamed, or script metadata changes in scoped roots. <br/>
+**Important**: Do not manually edit this file; run `node tests/unit/script-docs.test.js --write --rebuild-indexes`. <br/>
+</Note>
+
+## githooks
+
+| Script | Resumen | Uso | Propietario |
+|---|---|---|---|
+| `.githooks/install.sh` | Script de utilidad para .githooks/install.sh. | `bash .githooks/install.sh` | docs |
+| `.githooks/pre-commit` | Hook de pre-commit para validación del repositorio | `./.githooks/pre-commit (or invoked automatically by git)` | docs |
+| `.githooks/pre-commit-no-deletions` | Script de utilidad para .githooks/pre-commit-no-deletions. | `node .githooks/pre-commit-no-deletions` | docs |
+| `.githooks/server-manager.js` | Script de utilidad para .githooks/server-manager.js. | `node .githooks/server-manager.js` | docs |
+| `.githooks/verify-browser.js` | Script de utilidad para .githooks/verify-browser.js. | `node .githooks/verify-browser.js` | docs |
+| `.githooks/verify.sh` | Script de utilidad para .githooks/verify.sh. | `bash .githooks/verify.sh` | docs |
+
+## .github/scripts
+
+| Script | Resumen | Uso | Propietario |
+|---|---|---|---|
+| `.github/scripts/embed-table.js` | Espacio reservado para scripts de utilidad de CI para tareas de incrustación de tablas de markdown. | `node .github/scripts/embed-table.js` | docs |
+| `.github/scripts/fetch-forum-data.js` | Script de utilidad para .github/scripts/fetch-forum-data.js. | `node .github/scripts/fetch-forum-data.js` | docs |
+| `.github/scripts/fetch-ghost-blog-data.js` | Script de utilidad para .github/scripts/fetch-ghost-blog-data.js. | `node .github/scripts/fetch-ghost-blog-data.js` | docs |
+| `.github/scripts/fetch-youtube-data.js` | Script de utilidad para .github/scripts/fetch-youtube-data.js. | `node .github/scripts/fetch-youtube-data.js` | docs |
+| `.github/scripts/gen-table.js` | Espacio reservado para scripts de utilidad de CI para salida de tablas generadas. | `node .github/scripts/gen-table.js` | docs |
+| `.github/scripts/gen-textareas.js` | Espacio reservado para scripts de utilidad de CI para tareas de generación de área de texto. | `node .github/scripts/gen-textareas.js` | docs |
+| `.github/scripts/project-showcase-sync.js` | Script de utilidad para .github/scripts/project-showcase-sync.js. | `node .github/scripts/project-showcase-sync.js` | docs |
+
+## pruebas
+
+| Script | Resumen | Uso | Propietario |
+|---|---|---|---|
+| `tests/integration/browser.test.js` | Script de utilidad para tests/integration/browser.test.js. | `node tests/integration/browser.test.js` | docs |
+| `tests/integration/domain-pages-audit.js` | Auditoría del estado de carga de la página de documentación desplegada y emisión de un informe JSON estable. | `node tests/integration/domain-pages-audit.js --version both` | docs |
+| `tests/integration/v2-link-audit.js` | Auditoría completa de enlaces MDX V2 con comprobaciones estrictas internas y validación opcional de URL externa. | `node tests/integration/v2-link-audit.js --full --write-links --strict` | docs |
+| `tests/integration/v2-link-audit.selftest.js` | Pruebas autónomas a nivel de script para la validación externa de enlaces V2 utilizando un fixture HTTP local y un archivo MDX temporal. | `node tests/integration/v2-link-audit.selftest.js` | docs |
+| `tests/integration/v2-wcag-audit.js` | Auditoría de páginas de navegación docs.json V2 para accesibilidad (WCAG 2.2 AA) con informes deterministas y correcciones automáticas conservadoras de origen. | `node tests/integration/v2-wcag-audit.js --full` | docs |
+| `tests/integration/v2-wcag-audit.selftest.js` | Pruebas de autoevaluación a nivel de script para la auditoría WCAG v2 (ejecución local HTTP + axe de Puppeteer, y comportamiento de corrección/archivo temporal sin Mintlify). | `node tests/integration/v2-wcag-audit.selftest.js` | docs |
+| `tests/run-all.js` | Script de utilidad para tests/run-all.js. | `node tests/run-all.js` | docs |
+| `tests/run-pr-checks.js` | Comprobaciones de validación con alcance de archivos modificados para CI de solicitud de extracción. | `node tests/run-pr-checks.js --base-ref main` | docs |
+| `tests/unit/docs-guide-sot.test.js` | Validar la cobertura de la fuente de verdad de docs-guide, los punteros de README y la actualidad del índice generado. | `node tests/unit/docs-guide-sot.test.js` | docs |
+| `tests/unit/docs-navigation.test.js` | Validar la sintaxis de las entradas de página de docs.json, informar sobre rutas faltantes, sugerir reasignaciones y aplicar opcionalmente reasignaciones aprobadas. | `./lpd tests unit docs-navigation.test` | docs |
+| `tests/unit/docs-usefulness-accuracy-verifier.test.js` | Validar las reglas de verificación de precisión ponderada por fuente para 2026 (precedencia de GitHub vs DeepWiki, actualidad, retroalimentación y reutilización de caché). | `node tests/unit/docs-usefulness-accuracy-verifier.test.js` | docs |
+| `tests/unit/links-imports.test.js` | Script de utilidad para tests/unit/links-imports.test.js. | `node tests/unit/links-imports.test.js` | docs |
+| `tests/unit/mdx-guards.test.js` | Imponer normas de MDX para importaciones globales, delimitadores de matemáticas y saltos de línea en tablas de markdown. | `node tests/unit/mdx-guards.test.js` | docs |
+| `tests/unit/mdx.test.js` | Script de utilidad para tests/unit/mdx.test.js. | `node tests/unit/mdx.test.js` | docs |
+| `tests/unit/quality.test.js` | Script de utilidad para tests/unit/quality.test.js. | `node tests/unit/quality.test.js` | docs |
+| `tests/unit/script-docs.test.js` | Imponer el esquema de encabezado de script, mantener los índices de scripts de grupo sincronizados y construir el índice de script agregado. | `node tests/unit/script-docs.test.js --staged --write --stage --autofill` | docs |
+| `tests/unit/spelling.test.js` | Script de utilidad para tests/unit/spelling.test.js. | `node tests/unit/spelling.test.js` | docs |
+| `tests/unit/style-guide.test.js` | Script de utilidad para tests/unit/style-guide.test.js. | `node tests/unit/style-guide.test.js` | docs |
+| `tests/unit/v2-link-audit.test.js` | Pruebas unitarias para argumentos de auditoría de enlaces v2, ayudantes de validación externa y comportamiento de exclusión de alcance x-*.  | `node tests/unit/v2-link-audit.test.js` | docs |
+| `tests/unit/v2-wcag-audit.test.js` | Pruebas unitarias para la lógica del ayudante de auditoría WCAG v2 (argumentos, umbrales, asignación de rutas, clasificación de informes y correcciones automáticas conservadoras). | `node tests/unit/v2-wcag-audit.test.js` | docs |
+| `tests/utils/file-walker.js` | Script de utilidad para tasks/scripts/audit-all-pages-simple.js. | `node tests/utils/file-walker.js` | docs |
+| `tests/utils/mdx-parser.js` | Script de utilidad para tasks/scripts/audit-all-pages.js. | `node tests/utils/mdx-parser.js` | docs |
+| `tests/utils/spell-checker.js` | Script de utilidad para tools/scripts/audit-all-v2-pages.js. | `node tests/utils/spell-checker.js` | docs |
+
+## tools/scripts
+
+| Script | Resumen | Uso | Propietario |
+|---|---|---|---|
+| `tools/scripts/audit-all-pages-simple.js` | Script de utilidad para tasks/scripts/audit-all-pages-simple.js. | `node tasks/scripts/audit-all-pages-simple.js` | docs |
+| `tools/scripts/audit-all-pages.js` | Script de utilidad para tasks/scripts/audit-all-pages.js. | `node tasks/scripts/audit-all-pages.js` | docs |
+| `tools/scripts/audit-all-v2-pages.js` | Script de utilidad para tools/scripts/audit-all-v2-pages.js. | `node tools/scripts/audit-all-v2-pages.js` | docs |
+| `tools/scripts/audit-component-usage.js` | Script de utilidad para tools/scripts/audit-component-usage.js. | `node tools/scripts/audit-component-usage.js` | docs |
+| `tools/scripts/audit-scripts.js` | Auditar scripts ejecutables de todo el repositorio, categorizar su uso/overlap y sobrescribir informes SCRIPT_AUDIT. | `node tools/scripts/audit-scripts.js` | docs |
+| `tools/scripts/audit-tasks-folders.js` | Auditar carpetas de tareas, normalizar opcionalmente las ubicaciones de informes y aplicar opcionalmente las recomendaciones de auditoría con movimientos seguros de conflictos. | `node tools/scripts/audit-tasks-folders.js` | docs |
+| `tools/scripts/audit-v2-usefulness.js` | Auditar páginas MDX v2 (excluyendo directorios x-*) y emitir filas de matriz de utilidad a nivel de página con campos de verificación de precisión de 2026 ponderada por fuente. | `node tools/scripts/audit-v2-usefulness.js --mode full --accuracy-mode tiered` | docs |
+| `tools/scripts/check-component-errors.js` | Script de utilidad para tools/scripts/check-component-errors.js. | `node tools/scripts/check-component-errors.js` | docs |
+| `tools/scripts/convert-rss-to-mdx.js` | Convertir un archivo XML de feed RSS en un documento MDX estructurado. | `node tools/scripts/convert-rss-to-mdx.js --input v2/internal/assets/transcripts/ycomb.rss --output v2/internal/assets/transcripts/ycomb.mdx` | docs |
+| `tools/scripts/debug-mint-dev.js` | Script de utilidad para tools/scripts/debug-mint-dev.js. | `node tools/scripts/debug-mint-dev.js` | docs |
+| `tools/scripts/deprecated/project-management-output-script.js` | Script de salida de gestión de proyectos heredado obsoleto conservado como modelo de referencia. | `node tools/scripts/deprecated/project-management-output-script.js` | docs |
+| `tools/scripts/dev/add-callouts.js` | Script de utilidad para tools/scripts/dev/add-callouts.js. | `node tools/scripts/dev/add-callouts.js` | docs |
+| `tools/scripts/dev/batch-update-og-image.sh` | Script de utilidad para tools/scripts/dev/batch-update-og-image.sh. | `bash tools/scripts/dev/batch-update-og-image.sh` | docs |
+| `tools/scripts/dev/ensure-mint-watcher-patch.sh` | Asegurar que el observador de vista previa local de Mint desactive la expansión de glob en rutas de repositorio. | `bash tools/scripts/dev/ensure-mint-watcher-patch.sh --check` | docs |
+| `tools/scripts/dev/replace-og-image.py` | Script de utilidad para tools/scripts/dev/replace-og-image.py. | `python3 tools/scripts/dev/replace-og-image.py` | docs |
+| `tools/scripts/dev/seo-generator-safe.js` | Script de utilidad para tools/scripts/dev/seo-generator-safe.js. | `node tools/scripts/dev/seo-generator-safe.js` | docs |
+| `tools/scripts/dev/test-add-callouts.js` | Script de utilidad para tools/scripts/dev/test-add-callouts.js. | `node tools/scripts/dev/test-add-callouts.js` | docs |
+| `tools/scripts/dev/test-seo-generator.js` | Script de utilidad para tools/scripts/dev/test-seo-generator.js. | `node tools/scripts/dev/test-seo-generator.js` | docs |
+| `tools/scripts/dev/update-all-og-images.js` | Script de utilidad para tools/scripts/dev/update-all-og-images.js. | `node tools/scripts/dev/update-all-og-images.js` | docs |
+| `tools/scripts/dev/update-og-image.js` | Script de utilidad para tools/scripts/dev/update-og-image.js. | `node tools/scripts/dev/update-og-image.js` | docs |
+| `tools/scripts/download-linkedin-video.sh` | Script de utilidad para tools/scripts/download-linkedin-video.sh. | `bash tools/scripts/download-linkedin-video.sh` | docs |
+| `tools/scripts/download-linkedin-with-cookies.sh` | Script de utilidad para tools/scripts/download-linkedin-with-cookies.sh. | `bash tools/scripts/download-linkedin-with-cookies.sh` | docs |
+| `tools/scripts/final-verification.js` | Script de utilidad para tools/scripts/final-verification.js. | `node tools/scripts/final-verification.js` | docs |
+| `tools/scripts/find-correct-url.js` | Script de utilidad para tools/scripts/find-correct-url.js. | `node tools/scripts/find-correct-url.js` | docs |
+| `tools/scripts/generate-ai-sitemap.js` | Generar un mapa del sitio enfocado en IA a partir de la navegación de documentos v2. | `node tools/scripts/generate-ai-sitemap.js --write` | docs |
+| `tools/scripts/generate-docs-guide-components-index.js` | Generar docs-guide/components-index.mdx a partir de exportaciones de snippets/components y verificar opcionalmente su frescura. | `node tools/scripts/generate-docs-guide-components-index.js --write` | docs |
+| `tools/scripts/generate-docs-guide-indexes.js` | Generar índices de flujo de trabajo/plantilla de docs-guide y verificar opcionalmente que estén actualizados. | `node tools/scripts/generate-docs-guide-indexes.js --write` | docs |
+| `tools/scripts/generate-docs-guide-pages-index.js` | Generar docs-guide/pages-index.mdx a partir de entradas v2/index.mdx filtradas para páginas de navegación de docs.json. | `node tools/scripts/generate-docs-guide-pages-index.js --write` | docs |
+| `tools/scripts/generate-docs-index.js` | Generar docs-index.json y, opcionalmente, completar con metadatos de frontmatter v2. | `node tools/scripts/generate-docs-index.js --write` | docs |
+| `tools/scripts/generate-llms-files.js` | Generar llms.txt y llms-full.txt desde la navegación de los documentos v2. | `node tools/scripts/generate-llms-files.js --write` | docs |
+| `tools/scripts/generate-pages-index.js` | Generar y verificar archivos index.mdx con estilo de sección para las carpetas de documentos v2, así como el índice principal agregado. | `node tools/scripts/generate-pages-index.js --write` | docs |
+| `tools/scripts/i18n/test-mintlify-version-language-toggle.js` | Validar el comportamiento del cambio de versión/idiooma Mintlify en las rutas v2 localizadas. | `node tools/scripts/i18n/test-mintlify-version-language-toggle.js --base-url http://localhost:3012` | docs |
+| `tools/scripts/inspect-page.js` | Script de utilidad para tools/scripts/inspect-page.js. | `node tools/scripts/inspect-page.js` | docs |
+| `tools/scripts/inspect-video-page.js` | Script de utilidad para tools/scripts/inspect-video-page.js. | `node tools/scripts/inspect-video-page.js` | docs |
+| `tools/scripts/mint-dev.sh` | Script de utilidad para tools/scripts/mint-dev.sh. | `bash tools/scripts/mint-dev.sh` | docs |
+| `tools/scripts/new-script.js` | Crear un nuevo archivo de script prellenado con la plantilla de encabezado de documentos requerida. | `node tools/scripts/new-script.js --path tests/integration/my-script.js` | docs |
+| `tools/scripts/publish-v2-internal-reports.js` | Duplicar informes de markdown aprobados en páginas v2/internal/reports con metadatos y actualizar docs.json. | `node tools/scripts/publish-v2-internal-reports.js --check` | docs |
+| `tools/scripts/snippets/fetch-external-docs.sh` | Script de utilidad para tools/scripts/snippets/fetch-external-docs.sh. | `bash tools/scripts/snippets/fetch-external-docs.sh` | docs |
+| `tools/scripts/snippets/fetch-lpt-exchanges.sh` | Script de utilidad para tools/scripts/snippets/fetch-lpt-exchanges.sh. | `bash tools/scripts/snippets/fetch-lpt-exchanges.sh` | docs |
+| `tools/scripts/snippets/fetch-openapi-specs.sh` | Script de utilidad para tools/scripts/snippets/fetch-openapi-specs.sh. | `bash tools/scripts/snippets/fetch-openapi-specs.sh` | docs |
+| `tools/scripts/snippets/generate-api-docs.sh` | Script de utilidad para tools/scripts/snippets/generate-api-docs.sh. | `bash tools/scripts/snippets/generate-api-docs.sh` | docs |
+| `tools/scripts/snippets/generate-data/scripts/generate-glossary.js` | Script de utilidad para tools/scripts/snippets/generate-data/scripts/generate-glossary.js. | `node tools/scripts/snippets/generate-data/scripts/generate-glossary.js` | docs |
+| `tools/scripts/snippets/generate-data/scripts/terminology-search.js` | Script de utilidad para tools/scripts/snippets/generate-data/scripts/terminology-search.js. | `node tools/scripts/snippets/generate-data/scripts/terminology-search.js` | docs |
+| `tools/scripts/snippets/generate-seo.js` | Script de utilidad para tools/scripts/snippets/generate-seo.js. | `node tools/scripts/snippets/generate-seo.js` | docs |
+| `tools/scripts/snippets/test-scripts.sh` | Script de utilidad para tools/scripts/snippets/test-scripts.sh. | `bash tools/scripts/snippets/test-scripts.sh` | docs |
+| `tools/scripts/snippets/update-component-library.sh` | Script de utilidad para tools/scripts/snippets/update-component-library.sh. | `bash tools/scripts/snippets/update-component-library.sh` | docs |
+| `tools/scripts/test-all-pages-browser.js` | Script de utilidad para tools/scripts/test-all-pages-browser.js. | `node tools/scripts/test-all-pages-browser.js` | docs |
+| `tools/scripts/test-all-pages-comprehensive.js` | Script de utilidad para tools/scripts/test-all-pages-comprehensive.js. | `node tools/scripts/test-all-pages-comprehensive.js` | docs |
+| `tools/scripts/test-v2-pages.js` | Script de utilidad para tools/scripts/test-v2-pages.js. | `node tools/scripts/test-v2-pages.js` | docs |
+| `tools/scripts/test-youtube-pages.js` | Script de utilidad para tools/scripts/test-youtube-pages.js. | `node tools/scripts/test-youtube-pages.js` | docs |
+| `tools/scripts/test/allowed-script.js` | Script de utilidad para tools/scripts/test/allowed-script.js. | `node tools/scripts/test/allowed-script.js` | docs |
+| `tools/scripts/test/allowed-test.js` | Script de utilidad para tools/scripts/test/allowed-test.js. | `node tools/scripts/test/allowed-test.js` | docs |
+| `tools/scripts/test/allowed.js` | Script de utilidad para tools/scripts/test/allowed.js. | `node tools/scripts/test/allowed.js` | docs |
+| `tools/scripts/test/check-component-errors.js` | Script de utilidad para tools/scripts/test/check-component-errors.js. | `node tools/scripts/test/check-component-errors.js` | docs |
+| `tools/scripts/test/final-verification.js` | Script de utilidad para tools/scripts/test/final-verification.js. | `node tools/scripts/test/final-verification.js` | docs |
+| `tools/scripts/test/find-correct-url.js` | Script de utilidad para tools/scripts/test/find-correct-url.js. | `node tools/scripts/test/find-correct-url.js` | docs |
+| `tools/scripts/test/inspect-page.js` | Script de utilidad para tools/scripts/test/inspect-page.js. | `node tools/scripts/test/inspect-page.js` | docs |
+| `tools/scripts/test/inspect-video-page.js` | Script de utilidad para tools/scripts/test/inspect-video-page.js. | `node tools/scripts/test/inspect-video-page.js` | docs |
+| `tools/scripts/test/test-youtube-pages.js` | Script de utilidad para tools/scripts/test/test-youtube-pages.js. | `node tools/scripts/test/test-youtube-pages.js` | docs |
+| `tools/scripts/test/verify-all-pages.js` | Script de utilidad para tools/scripts/verify-all-pages.js. | `node tools/scripts/verify-all-pages.js` | docs |
+| `tools/scripts/test/verify-pages.js` | Script de utilidad para tools/scripts/verify-pages.js. | `node tools/scripts/verify-pages.js` | docs |
+| `tools/scripts/transcribe-audio-to-mdx.js` | Descargar audio desde una URL, segmentar con ffmpeg, transcribir mediante OpenRouter y escribir una página de transcripción en MDX. | `OPENROUTER_API_KEY=... node tools/scripts/transcribe-audio-to-mdx.js --audio-url "<url>" --title "<episode title>" --show "<show name>" --published-at YYYY-MM-DD` | docs |
+| `tools/scripts/verify-all-pages.js` | Script de utilidad para tools/scripts/verify-all-pages.js. | `node tools/scripts/verify-all-pages.js` | docs |
+| `tools/scripts/verify-pages.js` | Script de utilidad para tools/scripts/verify-pages.js. | `node tools/scripts/verify-pages.js` | docs |
+| `tools/scripts/verify/.verify-large-change.sh` | Espacio reservado para un gancho de verificación para comprobaciones de cambios grandes. | `bash tools/scripts/verify/.verify-large-change.sh` | docs |
+| `tools/scripts/wcag-repair-common.js` | Aplicar correcciones conservadoras relacionadas con WCAG en las documentaciones de v2 (problemas comunes con etiquetas sin procesar) y escribir informes de reparación deterministas. | `node tools/scripts/wcag-repair-common.js --full` | docs |
+
+## tasks/scripts
+
+| Script | Resumen | Uso | Propietario |
+|---|---|---|---|
+| `tasks/scripts/audit-minimal.js` | Script de utilidad para tasks/scripts/audit-minimal.js. | `node tasks/scripts/audit-minimal.js` | docs |
+| `tasks/scripts/audit-python.py` | Script de utilidad para tasks/scripts/audit-python.py. | `python3 tasks/scripts/audit-python.py` | docs |
+| `tasks/scripts/run-audit-now.js` | Script de utilidad para tasks/scripts/run-audit-now.js. | `node tasks/scripts/run-audit-now.js` | docs |
+| `tasks/scripts/test-audit.js` | Script de utilidad para tasks/scripts/test-audit.js. | `node tasks/scripts/test-audit.js` | docs |

@@ -1,0 +1,74 @@
+---
+title: 数据集成
+sidebarTitle: 数据集成
+description: 本文档映射了文档内容和自动化使用的主API/数据集成。
+keywords:
+  - livepeer
+  - data integrations
+  - primary
+  - api
+  - data
+  - integrations
+  - docs content
+  - automation
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJkb2NzLWd1aWRlL2RhdGEtaW50ZWdyYXRpb25zLm1keCIsInNvdXJjZVJvdXRlIjoiZG9jcy1ndWlkZS9kYXRhLWludGVncmF0aW9ucyIsInNvdXJjZUhhc2giOiI0MTEwYTAzYjM0N2MxMWY3ODAzNDliYmI3MmI0NzU4MzI5NzI3ZmVmMDgzNmQ5ZjJhODE1MGYyYWFjZGQ3OTI5IiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAzLTAxVDE3OjI3OjEwLjY5OVoifQ== */}
+## API 规范
+
+规范的 API/规格文件在 `api/`:
+
+- `api/openapi.yaml`
+- `api/openapi.json`
+- `api/studio.yaml`
+- `api/gateway.openapi.yaml`
+- `api/ai-worker.yaml`
+- `api/cli-http.yaml`
+
+相关生成辅助工具:
+
+- `tools/scripts/snippets/fetch-openapi-specs.sh`
+- `tools/scripts/snippets/generate-api-docs.sh`
+
+## 自动化外部数据源
+
+核心外部数据源输出:
+
+- 论坛 -> `snippets/automations/forum/forumData.jsx`
+- Ghost 博客 -> `snippets/automations/blog/ghostBlogData.jsx`
+- YouTube -> `snippets/automations/youtube/youtubeData.jsx`
+- 发布/全局状态 -> `snippets/automations/globals/globals.mdx`
+- 展示 -> `snippets/automations/showcase/showcaseData.jsx`
+
+流程定义:
+
+- GitHub 工作流在 `.github/workflows/update-*.yml`
+- n8n 资产在 `snippets/automations/scripts/n8n/`
+
+## 内部数据层
+
+- 路由/链接地图: `snippets/data/*/hrefs.jsx`
+- 域名数据模块: `snippets/data/**/*.jsx`
+- 变量/元文档片段: `snippets/data/variables*.mdx`
+- AI 站点地图: `sitemap-ai.xml` (由 `tools/scripts/generate-ai-sitemap.js`生成, 通过 `.github/workflows/generate-ai-sitemap.yml`刷新)
+
+## 产品文档中提到的集成
+
+该仓库包含面向集成的文档:
+
+- LPT 及相关交易所/参考数据界面
+- 探索者和协议/资源集成
+- GitHub 和通过自动化输出的生态系统摘要
+
+使用公共文档页面提供面向用户详细信息，此文件用于维护者位置映射。
+
+## 操作注意事项
+
+- 将生成的数据工件视为派生状态。
+- 更新流程脚本/工作流，然后重新生成工件和索引。
+- 优先使用确定性输出和稳定的写入路径以提高 CI 的可预测性。
+
+## 相关
+
+- 工作流清单: [workflows-index.mdx](./workflows-index.mdx)
+- 脚本清单: [scripts-index.md](./scripts-index.md)
+- 流程图: [automation-pipelines.md](./automation-pipelines.mdx)

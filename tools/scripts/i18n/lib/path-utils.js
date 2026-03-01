@@ -45,10 +45,7 @@ function resolveLocalizedPathStyle(generatedRoot, generatedPathStyle) {
 
 function repoFileRelToLocalizedFileRel(sourceRepoFileRel, language, generatedRoot = 'v2/i18n', generatedPathStyle = '') {
   const normalized = normalizeRepoRel(sourceRepoFileRel);
-  if (!normalized.startsWith('v2/')) {
-    throw new Error(`Expected v2 source file path, received: ${sourceRepoFileRel}`);
-  }
-  const suffix = normalized.slice('v2/'.length);
+  const suffix = normalized.startsWith('v2/') ? normalized.slice('v2/'.length) : normalized;
   const style = resolveLocalizedPathStyle(generatedRoot, generatedPathStyle);
   if (style === 'v2_language_prefix') {
     return normalizeRepoRel(path.posix.join('v2', language, suffix));

@@ -152,6 +152,10 @@ jobs:
             --route-map "$I18N_ARTIFACT_DIR/route-map.json" \
             --report-json "$I18N_ARTIFACT_DIR/docs-json-report.json"
 
+      - name: Regenerate docs-index.json
+        if: ${{ !inputs.dry_run }}
+        run: node tools/scripts/generate-docs-index.js --write
+
       - name: Validate generated localized MDX
         if: ${{ !inputs.dry_run }}
         run: |
@@ -169,7 +173,7 @@ jobs:
         id: diff
         if: ${{ !inputs.dry_run }}
         run: |
-          if git diff --quiet -- docs.json v2/i18n; then
+          if git diff --quiet -- docs.json docs-index.json v2/es v2/fr v2/cn; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -274,7 +278,10 @@ jobs:
           commit-message: "chore(i18n): update translated docs and docs.json [skip ci]"
           add-paths: |
             docs.json
-            v2/i18n
+            docs-index.json
+            v2/es
+            v2/fr
+            v2/cn
           body: |
             Automated docs translation update.
 
@@ -294,4 +301,4 @@ jobs:
 
       - name: No generated diff summary
         if: ${{ !inputs.dry_run && steps.diff.outputs.changed == 'false' }}
-        run: echo "No docs.json or v2/i18n changes detected after translation run."
+        run: echo "No docs.json/docs-index/v2 localized changes detected after translation run."
