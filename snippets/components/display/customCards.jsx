@@ -81,7 +81,7 @@ export const WidthCard = ({ width = '80%', children, ...cardProps }) => {
       style={{
         display: 'flex',
         justifyContent: 'center',
-        minWidth: '350px',
+        minWidth: 'fit-content',
       }}
     >
       <div style={{ width: width }}>
@@ -105,10 +105,10 @@ export const InlineImageCard = ({
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
-          gap: '1rem',
-          maxHeight: 'fit-content',
-          backgroundColor: 'var(--background)',
+          justifyContent: 'space-between',
+          height: '100%',
+          marginRight: '-1rem',
+          width: 'calc(100% + 1rem)',
           ...style,
         }}
       >
