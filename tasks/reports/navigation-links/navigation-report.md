@@ -1,14 +1,15 @@
 # Docs Navigation Route Report
 
-- Generated at (UTC): 2026-03-01T10:48:43.962Z
-- Entries scanned: 1165
-- Syntax errors: 0
+- Generated at (UTC): 2026-03-01T16:17:27.021Z
+- Entries scanned: 1159
+- Syntax errors: 1
 - Missing routes: 3
 - Missing routes with suggestions: 0
 
 ## Syntax Errors
 
-- None
+- MDX suffix entry: `/contribute/CONTRIBUTING.mdx`
+  - Pointer: `navigation.versions[1].languages[0].tabs[7].anchors[0].groups[0].pages[1]`
 
 ## Missing Routes
 

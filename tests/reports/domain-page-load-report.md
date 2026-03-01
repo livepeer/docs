@@ -1,75 +1,15 @@
 # Domain Page Load Report
 
-- Timestamp: 2026-03-01T04:57:41.421Z
-- Completed: 2026-03-01T04:57:57.479Z
+- Timestamp: 2026-03-01T16:17:27.462Z
+- Completed: 2026-03-01T16:17:34.739Z
 - Base URL: https://docs.livepeer.org
 - Mode: staged
 - Version Scope: both
-- Total: 17
-- Passed: 8
-- Failed: 9
-- Duration: 16s
+- Total: 1
+- Passed: 1
+- Failed: 0
+- Duration: 7s
 
 ## Failures
 
-- `v2/internal/reports/navigation-links/v2-link-audit`
-  - URL: https://docs.livepeer.org/v2/internal/reports/navigation-links/v2-link-audit
-  - Status: 200
-  - Title: V2 Link Audit Report - Livepeer Docs
-  - Content Length: 314021
-  - Error: 404 content
-- `v2/internal/reports/page-audits/audit-all-pages`
-  - URL: https://docs.livepeer.org/v2/internal/reports/page-audits/audit-all-pages
-  - Status: 404
-  - Title: Page Not Found
-  - Content Length: 219
-  - Error: HTTP 404
-  - Error: 404 content
-- `v2/internal/reports/page-audits/test-all-pages-comprehensive`
-  - URL: https://docs.livepeer.org/v2/internal/reports/page-audits/test-all-pages-comprehensive
-  - Status: 404
-  - Title: Page Not Found
-  - Content Length: 219
-  - Error: HTTP 404
-  - Error: 404 content
-- `v2/internal/reports/repo-ops/errors-audit`
-  - URL: https://docs.livepeer.org/v2/internal/reports/repo-ops/errors-audit
-  - Status: 404
-  - Title: (none)
-  - Content Length: 0
-  - Error: HTTP 404
-- `v2/internal/reports/repo-ops/reports-navigation-links-audit`
-  - URL: https://docs.livepeer.org/v2/internal/reports/repo-ops/reports-navigation-links-audit
-  - Status: 404
-  - Title: Page Not Found
-  - Content Length: 206
-  - Error: HTTP 404
-  - Error: 404 content
-- `v2/internal/reports/repo-ops/reports-page-audits-audit`
-  - URL: https://docs.livepeer.org/v2/internal/reports/repo-ops/reports-page-audits-audit
-  - Status: 404
-  - Title: Page Not Found
-  - Content Length: 219
-  - Error: HTTP 404
-  - Error: 404 content
-- `v2/internal/reports/repo-ops/reports-quality-accessibility-audit`
-  - URL: https://docs.livepeer.org/v2/internal/reports/repo-ops/reports-quality-accessibility-audit
-  - Status: 404
-  - Title: Page Not Found
-  - Content Length: 186
-  - Error: HTTP 404
-  - Error: 404 content
-- `v2/internal/reports/repo-ops/reports-quality-accessibility-docs-usefulness-audit`
-  - URL: https://docs.livepeer.org/v2/internal/reports/repo-ops/reports-quality-accessibility-docs-usefulness-audit
-  - Status: 404
-  - Title: Page Not Found
-  - Content Length: 219
-  - Error: HTTP 404
-  - Error: 404 content
-- `v2/internal/reports/repo-ops/scripts-audit`
-  - URL: https://docs.livepeer.org/v2/internal/reports/repo-ops/scripts-audit
-  - Status: 404
-  - Title: Page Not Found
-  - Content Length: 206
-  - Error: HTTP 404
-  - Error: 404 content
+_No failures_
