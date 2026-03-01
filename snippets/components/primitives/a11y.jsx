@@ -11,14 +11,16 @@
  * @example
  * <FocusableScrollRegions />
  */
-const DEFAULT_SELECTORS = [
-  '[data-component-part="tab-content"]',
-  '.katex'
-];
-
-export const FocusableScrollRegions = ({ selectors = DEFAULT_SELECTORS }) => {
+export const FocusableScrollRegions = ({ selectors }) => {
   useEffect(() => {
-    const list = Array.isArray(selectors) ? selectors : DEFAULT_SELECTORS;
+    const fallbackSelectors = [
+      '[data-component-part="tab-content"]',
+      '.katex',
+    ];
+    const list =
+      Array.isArray(selectors) && selectors.length > 0
+        ? selectors
+        : fallbackSelectors;
     list.forEach((selector) => {
       document.querySelectorAll(selector).forEach((el) => {
         if (!el.hasAttribute('tabindex')) {
@@ -26,7 +28,7 @@ export const FocusableScrollRegions = ({ selectors = DEFAULT_SELECTORS }) => {
         }
       });
     });
-  }, []);
+  }, [selectors]);
 
   return null;
 };

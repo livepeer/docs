@@ -21,7 +21,7 @@
 import {
   GatewayOffChainWarning,
   GatewayOnChainWarning,
-} from "/snippets/components/domain/04_GATEWAYS/callouts.jsx";
+} from "/v2/gateways/quickstart/components/callouts.jsx";
 
 /**
  * QuickStartTabs - Tabbed interface for Gateway quickstart guides

@@ -477,7 +477,7 @@ const P = ({
   align = "left",
   gap = "0.5rem",
 }) => {
-  const defaultIconColor = iconColor || "var(--p-icon-color)";
+  const resolvedIconColor = iconColor || "var(--p-icon-color)";
 
   const containerStyle = {
     display: icon ? "flex" : "block",
