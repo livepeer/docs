@@ -763,8 +763,8 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "internal-rooted",
-      "rawPath": "/v2/gateways/run-a-gateway/quickstart/quickstart-a-gateway",
-      "resolvedPath": "v2/gateways/run-a-gateway/quickstart/quickstart-a-gateway.mdx",
+      "rawPath": "/v2/gateways/quickstart/gateway-setup",
+      "resolvedPath": "v2/gateways/quickstart/gateway-setup.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []

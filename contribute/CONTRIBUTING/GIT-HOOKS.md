@@ -429,7 +429,7 @@ The hooks enforce rules from:
 
 - [Style Guide](../v2/resources/documentation-guide/style-guide.mdx)
 - [Component Library](../v2/resources/documentation-guide/component-library.mdx)
-- [Contribution Guide](./CONTRIBUTING.md) (if exists)
+- [Contribution Guide](../CONTRIBUTING.mdx)
 - [Agent Prerequisites](../PLAN/AGENT-PREREQUISITES.md)
 
 ## Support

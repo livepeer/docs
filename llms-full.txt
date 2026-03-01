@@ -8471,14 +8471,12 @@ Daydream's profit margin is the difference between what creators pay and what it
 ---
 
 # Run a Gateway: Quickstart Guide
-URL: https://docs.livepeer.org/v2/gateways/run-a-gateway/quickstart/quickstart-a-gateway
+URL: https://docs.livepeer.org/v2/gateways/quickstart/gateway-setup
 
 &#x20;Use the  **Dropdown** at the top-right of this page to view the Quickstart Guide
 for your preferred OS.&#x20;
 
 &#x20;*Latest Version:* &#x20;
-
-***
 
 # Let's Go(-Livepeer) !&#x20;
 
@@ -8553,183 +8551,412 @@ Setup an Orchestrator.
 ---
 
 # Get AI to Setup the Gateway
-URL: https://docs.livepeer.org/v2/gateways/run-a-gateway/quickstart/get-AI-to-setup-the-gateway
+URL: https://docs.livepeer.org/v2/gateways/quickstart/AI-prompt
 
-&#x20;Experimental (Idea Stage)
+Review every command the agent suggests before running it. Never share your ETH private key or keystore password with any AI agent or paste it into a prompt.
 
-This page is a downloadable task list for cursor or other AI coding agents to follow to set up your Livepeer Gateway for you - because who's got time for all that manual work?!
+**Usage**
 
-Prompt Instructions for AI Agent:
+1. Copy the full prompt from the block below.
+2. Paste it into your AI coding agent (Cursor, Claude Code, GitHub Copilot Workspace, etc.).
+3. Answer any clarifying questions the agent asks (OS, gateway mode, wallet address, etc.).
+4. Let the agent do the work — it will run commands, create config files, and verify each step.
 
-1. Read the instructions on the page
-2. Perform the tasks on the page
-3. Verify the tasks are completed correctly
-4. Update the page with the results of the tasks
-5. Repeat for all pages in the "Run a Gateway" section
-   * Install
-   * Configure & Fund
-   * Test
-   * Connect
-   * Monitor
+```markdown lines icon="robot" livepeer-gateway-setup-prompt.txt
+# LIVEPEER GATEWAY SETUP
+
+You are setting up a Livepeer Gateway node for me. Work through each stage in order,
+verify success before continuing, and fix errors before moving on.
 
 ---
 
-# Daydream Gateway
-URL: https://docs.livepeer.org/v2/gateways/using-gateways/gateway-providers/daydream-gateway
+## STAGE 0 — ASK ME FIRST
+
+Before doing anything, ask me:
+1. OS: Linux, macOS, or Windows?
+2. Gateway mode: off-chain (dev/test, no wallet needed) or on-chain (production, Arbitrum ETH required)?
+3. Gateway type: Video Only, AI Only, or Dual (AI + Video)?
+4. On-chain only: do you have an Arbitrum One wallet address? If not, I'll create one.
+5. On-chain only: do you have an Arbitrum RPC URL? If not, use https://arb1.arbitrum.io/rpc (free, rate-limited).
+
+Then follow the correct path below based on the answers.
 
 ---
 
-# Livepeer Studio Gateway
-URL: https://docs.livepeer.org/v2/gateways/using-gateways/gateway-providers/livepeer-studio-gateway
+## STAGE 1 — OS-SPECIFIC INSTALL
+
+### Linux (recommended for production — supports all gateway types)
+
+Download and install the pre-built binary:
+  curl -LO https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-linux-amd64.tar.gz
+  sudo tar -zxvf livepeer-linux-amd64.tar.gz
+  sudo mv livepeer-linux-amd64/* /usr/local/bin/
+  livepeer -version
+
+Or use Docker (also fully supported on Linux):
+  docker pull livepeer/go-livepeer:master
+  docker volume create gateway-lpData
+
+### macOS (dev/local only — Video Only or off-chain only; Docker often fails on macOS)
+
+Use the binary instead of Docker:
+  # Intel:
+  curl -LO https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-darwin-amd64.tar.gz
+  # Apple Silicon:
+  curl -LO https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-darwin-arm64.tar.gz
+
+  tar -zxvf livepeer-darwin-*.tar.gz
+  sudo mv livepeer-darwin-*/* /usr/local/bin/
+
+Warn the user: macOS cannot run AI or Dual gateway types in production.
+AI and Dual modes require Linux. macOS is suitable for off-chain Video Only only.
+
+### Windows (run via WSL2 — Video Only or Docker-based)
+
+Native Windows binaries are not supported for production. Use WSL2:
+  # In PowerShell (Admin):
+  wsl --install
+  # Reboot, then enter WSL:
+  wsl
+
+Inside WSL2, follow the Linux binary steps above.
+
+For a Windows-native .bat launcher (Video Only, off-chain):
+  Create gateway.bat in the same directory as livepeer.exe:
+
+  Off-chain:
+    livepeer.exe -network=offchain -gateway -cliAddr=127.0.0.1:5935
+      -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -monitor=true -v=6
+    PAUSE
+
+  On-chain:
+    livepeer.exe -network=arbitrum-one-mainnet -ethUrl=<RPC_URL>
+      -ethAcctAddr=<WALLET_ADDRESS> -ethPassword=<PASSWORD>
+      -ethKeystorePath=<KEYSTORE_PATH> -gateway -cliAddr=127.0.0.1:5935
+      -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -maxPricePerUnit=300
+      -monitor=true -v=6
+    PAUSE
+
+  Store the ETH password in: C:\Users\<USERNAME>\.lpData\ethsecret.txt
+  Then use -ethPassword=C:\Users\<USERNAME>\.lpData\ethsecret.txt
+
+> The binary was previously called "Broadcaster". Always use -gateway, never -broadcaster.
 
 ---
 
-# Cloud Spe Gateway
-URL: https://docs.livepeer.org/v2/gateways/using-gateways/gateway-providers/cloud-spe-gateway
+## STAGE 2 — GATEWAY TYPE CONFIGURATION
+
+Use the correct config for the type chosen in Stage 0.
+For Docker, create a docker-compose.yml. For binary, run the equivalent flags directly.
+
+### VIDEO ONLY
+
+  Off-chain docker-compose.yml:
+    command: >
+      -gateway -network offchain
+      -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -cliAddr=0.0.0.0:5935
+      -orchAddr=<ORCHESTRATOR_ADDRESS>
+      -transcodingOptions=P240p30fps16x9,P360p30fps16x9,P720p30fps16x9
+      -maxPricePerUnit=0 -pixelsPerUnit=1 -monitor=true -v=6
+
+  On-chain adds:
+      -network arbitrum-one-mainnet -ethUrl=<RPC_URL>
+      -ethAcctAddr=<WALLET> -ethKeystorePath=/root/.lpData/keystore
+      -ethPassword=<PASSWORD> -maxPricePerUnit=300 -blockPollingInterval=20
+
+  Data dir: /root/.lpData/offchain/ (off-chain) or /root/.lpData/arbitrum-one-mainnet/ (on-chain)
+
+### AI ONLY
+
+  Requires Linux. Create an aiModels.json:
+    [
+      { "pipeline": "text-to-image", "model_id": "stabilityai/sd-turbo", "warm": true },
+      { "pipeline": "image-to-image", "model_id": "stabilityai/sd-turbo", "warm": false }
+    ]
+
+  Create a models/ directory: mkdir -p models
+
+  Off-chain docker-compose.yml:
+    volumes:
+      - gateway-lpData:/root/.lpData
+      - ./models:/root/.lpData/models
+      - ./aiModels.json:/root/.lpData/aiModels.json
+    command: >
+      -gateway -network offchain
+      -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -cliAddr=0.0.0.0:5935
+      -orchAddr=<AI_ORCHESTRATOR_ADDRESS>
+      -aiModels=/root/.lpData/aiModels.json
+      -aiModelsDir=/root/.lpData/models
+      -httpIngest -aiServiceRegistry
+      -maxPricePerUnit=0 -monitor=true -v=6
+
+  On-chain adds the same ETH flags as Video Only above.
+
+### DUAL (AI + VIDEO) — Linux only
+
+  Combines both. Needs aiModels.json and models/ directory (same as AI Only above).
+
+  Off-chain docker-compose.yml:
+    volumes:
+      - gateway-lpData:/root/.lpData
+      - ./models:/root/.lpData/models
+      - ./aiModels.json:/root/.lpData/aiModels.json
+    command: >
+      -gateway -network offchain
+      -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -cliAddr=0.0.0.0:5935
+      -orchAddr=<ORCHESTRATOR_ADDRESS>
+      -transcodingOptions=P240p30fps16x9,P360p30fps16x9,P720p30fps16x9
+      -aiModels=/root/.lpData/aiModels.json
+      -aiModelsDir=/root/.lpData/models
+      -httpIngest -aiServiceRegistry
+      -maxPricePerUnit=0 -pixelsPerUnit=1 -livePaymentInterval=5s
+      -monitor=true -v=6
+
+  On-chain adds the same ETH flags as above.
+
+For all types, expose ports: 1935, 8935, 5935.
+SECURITY: never commit keystore files, aiModels.json with tokens, or password files to version control.
 
 ---
 
-# Streamplace Overview
-URL: https://docs.livepeer.org/v2/platforms/streamplace/overview
+## STAGE 3 — WALLET SETUP (on-chain only)
 
-Streamplace is a **Special Purpose Entity (SPE)** in the Livepeer ecosystem responsible for building a **public-goods, open-source decentralized video layer** for social networks, livestreaming platforms, and Web3-native apps.
+If no wallet exists, generate one by starting the gateway interactively:
+  docker run -it --rm -v gateway-lpData:/root/.lpData livepeer/go-livepeer:master \
+    -gateway -network arbitrum-one-mainnet -ethUrl=<RPC_URL>
 
-It provides:
-
-* A **livestream ingest + VOD pipeline**
-* **C2PA + Ethereum-based provenance** for every video segment
-* A **metadata schema** for rights, content warnings, and distribution policies
-* A **node + SDK** for easy integration into decentralized apps
-* A bridge into **Livepeer’s decentralized GPU network**
-
-***
-
-## ✨ Why Streamplace Exists
-
-Centralized video platforms own:
-
-* Identity
-* Audience
-* Distribution
-* Monetization
-
-Streamplace inverts that model with open, verifiable, permissionless infrastructure built for:
-
-* AT Protocol clients
-* Fediverse social apps
-* Web3 creators
-* Community-run video platforms
-
-***
-
-## 🎥 Videos
-
-No Streamplace-dedicated YouTube channel was found. For Livepeer ecosystem and SPE coverage:
-
-* [Livepeer YouTube](https://www.youtube.com/@livepeer) — Protocol and ecosystem updates.
-
-***
-
-## 📰 Blog & media
-
-Livepeer Onchain Builders post on Streamplace and decentralized social video.
-
-Ecosystem news, SPEs, and protocol updates.
-
-***
-
-## 🔗 Socials & resources
-
-* [Stream.place](https://stream.place/) — Home and live streams.
-* [What's Streamplace?](https://stream.place/about) — About and Discord (join link on page).
-* [Documentation](https://stream.place/docs/) — Guides, API, and reference.
-* [Download](https://stream.place/download) — Node and apps.
-* [Live Dashboard](https://stream.place/live) — Live stream directory.
-* [GitHub](https://github.com/streamplace/overview) — Open-source repo.
-
-***
-
-## 📚 Related Pages
-
-* [How Streamplace Works](/platforms/streamplace/introduction/streamplace-guide)
-* [Architecture](/platforms/streamplace/introduction/streamplace-architecture)
-* [Provenance & Metadata](/platforms/streamplace/introduction/streamplace-provenance)
-* [SPE Funding Model](/platforms/streamplace/introduction/streamplace-funding-model)
-* [Developer Integration Guide](/platforms/streamplace/introduction/streamplace-integration)
+When prompted, set a strong password. Note the ETH address shown. CTRL+C to exit.
+Keystore location: /root/.lpData/arbitrum-one-mainnet/keystore/
 
 ---
 
-# Gateway Services
+## STAGE 4 — FUND (on-chain only)
+
+Send ETH on Arbitrum One to the gateway wallet.
+Minimum for testing: 0.1 ETH. Production: 0.5+ ETH.
+
+Set deposit and reserve via the Livepeer CLI:
+  docker run -it --network host livepeer/go-livepeer:master \
+    livepeer_cli --host=localhost --http=5935
+
+  Choose Option 11 — "deposit broadcasting funds":
+    Deposit: 0.065 ETH (testing minimum)
+    Reserve: 0.03 ETH (use 0.36 ETH for production)
+
+  Verify with Option 1 — "get node status".
+
+---
+
+## STAGE 5 — START & VERIFY
+
+  docker compose up -d
+  docker compose logs --tail=50
+
+Healthy log lines:
+  "LPMS Server listening on rtmp://0.0.0.0:1935"
+  "HTTP Server listening on http://0.0.0.0:8935"
+  "Unlocked ETH account" (on-chain only)
+
+Verify:
+  curl http://localhost:8935/status
+  curl http://localhost:8935/metrics | head
+  curl http://localhost:8935/getNetworkCapabilities  (on-chain)
+
+Video test: push RTMP with FFmpeg, confirm HLS at http://localhost:8935/stream/test.m3u8
+AI test: POST to http://localhost:8935/ai/text-to-image, confirm a response.
+
+---
+
+## DONE — REPORT BACK
+
+  - OS, gateway type, and mode used
+  - Wallet address (public key only — never the private key)
+  - Start/stop commands
+  - Any steps needing manual follow-up (funding, DNS, SSL)
+```
+
+---
+
+# Choosing a Gateway Service
 URL: https://docs.livepeer.org/v2/gateways/using-gateways/choosing-a-gateway
 
-# Choosing a gateway
+A Livepeer Gateway is the entry point for your application into the Livepeer decentralized compute network.
+It handles job routing, orchestrator selection, payment, and service-level logic - so your app doesn't have to.
 
-This page is a work in progress. Mostly gathering notes on this page atm.
+There are two ways to access a gateway:
 
-Rick -> feature coming soon
-https://explorer-arbitrum-one-git-feat-add-g-10dba1-livepeer-foundation.vercel.app/
+* **Use a hosted gateway** - connect to an existing provider's gateway via API or endpoint. No infrastructure to run.
+* **Run your own gateway** - self-host a `go-livepeer` gateway node for full control, custom pricing, and direct network access.
 
-Explorer Showcases all gateways
+Gateways support three capability modes. Know which you need before comparing providers.
 
-End-user friendly gateways: Based on user friendliness...
+**Transcoding & streaming**
 
-* Daydream (1)
-* Livepeer Studio
-* Cloud SPE
+RTMP ingest, HLS output, multi-bitrate transcoding. For live streaming platforms, broadcast infrastructure, and VOD workflows.
 
-User friendly Gateways:
+**AI inference**
 
-Based on performance: expolorer (don't use total fees)
+Text-to-image, image-to-video, style transfer, upscaling, ControlNet pipelines. For generative apps and real-time AI video.
 
-The Livepeer Studio Gateway is a production-ready solution for interacting with the Livepeer AI network, offering advanced tools and resources for developers. Building on Livepeer AIShowcase. (docs)
+**Both simultaneously**
 
-https://github.com/videoDAC/livepeer-gateway
+Route video transcoding and AI inference through a single gateway. For platforms that need both pipelines together.
 
-How to self-host a gateway: https://www.livepeer.cloud/self-hosted-livepeer-gateway/
+Hosted Gateway
+Self-Hosted Gateway
 
-X: https://x.com/Livepeer/status/1805654248203731175?s=20
+**Setup time**
+Minutes - API key or endpoint
+Hours - install, configure, fund
 
--> AI Gateway Nodes
+**Infrastructure**
+None - provider manages it
+You manage the node
 
-The Livepeer AI Cloud Gateway is a hosted access point, making it easy for developers to leverage AI capabilities without running their own infratructure.
+**Pricing control**
+Provider sets rates
+You set max prices per orchestrator
 
-Anyone can run a gateway to expand the network's reach.
+**Orchestrator selection**
+Provider chooses
+You control routing logic
+
+**Protocol fees**
+Included in provider pricing
+Pay orchestrators directly in ETH
+
+**Best for**
+Getting started, managed apps, no-ops teams
+Production platforms, cost optimisation, compliance
+
+Gateways do not earn protocol-level fees - they sit at the demand layer of the network.
+Running your own gateway means you avoid paying a margin to a hosted provider, and you own
+the customer relationship, traffic, and routing decisions.
+
+Read more: [Gateway Economics](../about-gateways/gateway-economics)
+
+Provider
+Video
+AI
+Best for
+Access
+
+**Livepeer Studio**
+✅
+⚠️ Via API
+Developers building video apps - REST API, SDKs, dashboard
+[livepeer.studio](https://livepeer.studio)
+
+**Daydream**
+❌
+✅
+Real-time AI video, style transfer, world model experiments
+[daydream.live](https://daydream.live)
+
+**Cloud SPE**
+✅
+✅
+Community-operated, self-hosted gateway access
+[livepeer.cloud](https://www.livepeer.cloud)
+
+**Self-hosted**
+✅
+✅
+Full control, custom routing, production SLAs
+[Run a Gateway](../run-a-gateway/quickstart-a-gateway)
+
+The Livepeer Explorer is adding a Gateway view - you'll be able to compare active gateways
+by throughput, reliability, and orchestrator relationships directly. Coming soon.
+
+A preview is available at: https://explorer-arbitrum-one-git-feat-add-g-10dba1-livepeer-foundation.vercel.app/gateways
+
+Until the [Explorer](https://explorer.livepeer.org/gateways) gateway view is live, evaluate providers on:
+
+**Latency** - For real-time AI (Daydream-style pipelines), end-to-end frame latency matters more than throughput. Ask about p50/p95 inference times.
+
+**Orchestrator pool quality** - A gateway is only as good as the orchestrators it routes to. Ask which orchestrators a provider uses, or check `/getNetworkCapabilities` on a self-hosted node to inspect the pool directly.
+
+**Model availability** - Not all gateways support all AI models. Verify that the pipelines you need (e.g. `text-to-image`, `image-to-video`, ControlNet, ComfyStream) are available before committing.
+
+**Pricing transparency** - Hosted providers bundle gateway margin into their pricing. Self-hosting lets you pay orchestrators directly and inspect pricing per-model with `maxPricePerCapability`.
+
+**Reliability** - Look for uptime history, failover behaviour, and whether the provider publishes SLA commitments.
+
+## Not sure? Start here.
+
+See all hosted gateways available today: Daydream, Livepeer Studio, Cloud SPE, and community options.
+
+Self-host a Livepeer Gateway node for full control. Docker quickstart available for Linux, macOS, and Windows.
+
+Understand what a gateway is, what it does, and how it fits into the Livepeer network architecture.
+
+How gateways make money, how payment flows to orchestrators, and the business case for self-hosting.
 
 ---
 
 # Gateway Providers
 URL: https://docs.livepeer.org/v2/gateways/using-gateways/gateway-providers
 
-&#x20;WIP Section&#x20;
+Gateways are the entry point for your application into the Livepeer decentralized compute network.
+You can connect to an existing hosted gateway, or [run your own](../run-a-gateway/quickstart-a-gateway).
 
-This index should potentially be dynamic. This would require some scripting,
-but could become an automated gateways HUB.
+Not sure which gateway fits your use case? See &#x20;
 
-## Major Gateway Providers
+## Hosted Gateways
 
-Guide to Using the Daydream Gateway
+AI
 
-Guide to Using the Livepeer Studio Gateway
+**Real-time AI video & style transfer.** Daydream is an open-source toolkit for world models and real-time AI video built on Livepeer. Transform livestreams with text prompts - style transfer, image-to-video, and StreamDiffusion pipelines - in real time.
 
-Guide to Using the Cloud SPE Gateway
+Best for: generative video apps, live remixing, AI creative tools.
 
-Other Gateway Services From The Livepeer Community
+[daydream.live](https://daydream.live) · [docs.daydream.live](https://docs.daydream.live)
 
-## All Gateway Providers
+Video
 
-Embed a list from somewhere
+**Developer-friendly REST API for video streaming and VOD.** Livepeer Studio provides live streaming (RTMP/WebRTC ingest, HLS/WebRTC playback), video-on-demand (upload, transcode, playback), access control, webhooks, and analytics - all via a clean REST API with TypeScript, Go, and Python SDKs.
+
+Best for: video platforms, streaming apps, developers wanting a hosted API.
+
+[livepeer.studio](https://livepeer.studio) · [API docs](https://livepeer.studio/docs)
+
+Video AI
+
+**Community-operated gateway infrastructure.** The Cloud SPE (Special Purpose Entity) is a community-run gateway providing access to the Livepeer network, including self-hosted gateway resources and operator support.
+
+Best for: community builders, operators exploring self-hosting, dual video and AI workloads.
+
+[livepeer.cloud](https://www.livepeer.cloud)
+
+Various
+
+**Gateways and tools built by the Livepeer community.** Includes projects like the videoDAC gateway, open-source self-hosted options, and experimental integrations from ecosystem contributors.
+
+[github.com/videoDAC](https://github.com/videoDAC/livepeer-gateway)
+
+## Run Your Own Gateway
+
+Any developer or operator can run a `go-livepeer` gateway node - connecting directly to the Livepeer network without going through a hosted provider.
+
+Docker, Linux binary, or Windows WSL2. Off-chain (dev) or on-chain (production). Supports Video, AI, and Dual modes.
+
+Own your traffic, control routing, avoid provider margins, and build differentiated products at the service layer.
+
+## All Gateways on the Network
+
+The Livepeer Explorer is adding a Gateway view - browse and compare all active on-chain gateways by throughput, orchestrator relationships, and reliability. Coming soon.
+
+Preview of the upcoming gateway explorer - active gateways on the Livepeer network.
 
 ---
 
 # Run a Gateway: Quickstart Guide
-URL: https://docs.livepeer.org/v2/gateways/run-a-gateway/quickstart/quickstart-a-gateway
+URL: https://docs.livepeer.org/v2/gateways/quickstart/gateway-setup
 
 &#x20;Use the  **Dropdown** at the top-right of this page to view the Quickstart Guide
 for your preferred OS.&#x20;
 
 &#x20;*Latest Version:* &#x20;
-
-***
 
 # Let's Go(-Livepeer) !&#x20;
 
@@ -8804,24 +9031,229 @@ Setup an Orchestrator.
 ---
 
 # Get AI to Setup the Gateway
-URL: https://docs.livepeer.org/v2/gateways/run-a-gateway/quickstart/get-AI-to-setup-the-gateway
+URL: https://docs.livepeer.org/v2/gateways/quickstart/AI-prompt
 
-&#x20;Experimental (Idea Stage)
+Review every command the agent suggests before running it. Never share your ETH private key or keystore password with any AI agent or paste it into a prompt.
 
-This page is a downloadable task list for cursor or other AI coding agents to follow to set up your Livepeer Gateway for you - because who's got time for all that manual work?!
+**Usage**
 
-Prompt Instructions for AI Agent:
+1. Copy the full prompt from the block below.
+2. Paste it into your AI coding agent (Cursor, Claude Code, GitHub Copilot Workspace, etc.).
+3. Answer any clarifying questions the agent asks (OS, gateway mode, wallet address, etc.).
+4. Let the agent do the work — it will run commands, create config files, and verify each step.
 
-1. Read the instructions on the page
-2. Perform the tasks on the page
-3. Verify the tasks are completed correctly
-4. Update the page with the results of the tasks
-5. Repeat for all pages in the "Run a Gateway" section
-   * Install
-   * Configure & Fund
-   * Test
-   * Connect
-   * Monitor
+```markdown lines icon="robot" livepeer-gateway-setup-prompt.txt
+# LIVEPEER GATEWAY SETUP
+
+You are setting up a Livepeer Gateway node for me. Work through each stage in order,
+verify success before continuing, and fix errors before moving on.
+
+---
+
+## STAGE 0 — ASK ME FIRST
+
+Before doing anything, ask me:
+1. OS: Linux, macOS, or Windows?
+2. Gateway mode: off-chain (dev/test, no wallet needed) or on-chain (production, Arbitrum ETH required)?
+3. Gateway type: Video Only, AI Only, or Dual (AI + Video)?
+4. On-chain only: do you have an Arbitrum One wallet address? If not, I'll create one.
+5. On-chain only: do you have an Arbitrum RPC URL? If not, use https://arb1.arbitrum.io/rpc (free, rate-limited).
+
+Then follow the correct path below based on the answers.
+
+---
+
+## STAGE 1 — OS-SPECIFIC INSTALL
+
+### Linux (recommended for production — supports all gateway types)
+
+Download and install the pre-built binary:
+  curl -LO https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-linux-amd64.tar.gz
+  sudo tar -zxvf livepeer-linux-amd64.tar.gz
+  sudo mv livepeer-linux-amd64/* /usr/local/bin/
+  livepeer -version
+
+Or use Docker (also fully supported on Linux):
+  docker pull livepeer/go-livepeer:master
+  docker volume create gateway-lpData
+
+### macOS (dev/local only — Video Only or off-chain only; Docker often fails on macOS)
+
+Use the binary instead of Docker:
+  # Intel:
+  curl -LO https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-darwin-amd64.tar.gz
+  # Apple Silicon:
+  curl -LO https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-darwin-arm64.tar.gz
+
+  tar -zxvf livepeer-darwin-*.tar.gz
+  sudo mv livepeer-darwin-*/* /usr/local/bin/
+
+Warn the user: macOS cannot run AI or Dual gateway types in production.
+AI and Dual modes require Linux. macOS is suitable for off-chain Video Only only.
+
+### Windows (run via WSL2 — Video Only or Docker-based)
+
+Native Windows binaries are not supported for production. Use WSL2:
+  # In PowerShell (Admin):
+  wsl --install
+  # Reboot, then enter WSL:
+  wsl
+
+Inside WSL2, follow the Linux binary steps above.
+
+For a Windows-native .bat launcher (Video Only, off-chain):
+  Create gateway.bat in the same directory as livepeer.exe:
+
+  Off-chain:
+    livepeer.exe -network=offchain -gateway -cliAddr=127.0.0.1:5935
+      -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -monitor=true -v=6
+    PAUSE
+
+  On-chain:
+    livepeer.exe -network=arbitrum-one-mainnet -ethUrl=<RPC_URL>
+      -ethAcctAddr=<WALLET_ADDRESS> -ethPassword=<PASSWORD>
+      -ethKeystorePath=<KEYSTORE_PATH> -gateway -cliAddr=127.0.0.1:5935
+      -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -maxPricePerUnit=300
+      -monitor=true -v=6
+    PAUSE
+
+  Store the ETH password in: C:\Users\<USERNAME>\.lpData\ethsecret.txt
+  Then use -ethPassword=C:\Users\<USERNAME>\.lpData\ethsecret.txt
+
+> The binary was previously called "Broadcaster". Always use -gateway, never -broadcaster.
+
+---
+
+## STAGE 2 — GATEWAY TYPE CONFIGURATION
+
+Use the correct config for the type chosen in Stage 0.
+For Docker, create a docker-compose.yml. For binary, run the equivalent flags directly.
+
+### VIDEO ONLY
+
+  Off-chain docker-compose.yml:
+    command: >
+      -gateway -network offchain
+      -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -cliAddr=0.0.0.0:5935
+      -orchAddr=<ORCHESTRATOR_ADDRESS>
+      -transcodingOptions=P240p30fps16x9,P360p30fps16x9,P720p30fps16x9
+      -maxPricePerUnit=0 -pixelsPerUnit=1 -monitor=true -v=6
+
+  On-chain adds:
+      -network arbitrum-one-mainnet -ethUrl=<RPC_URL>
+      -ethAcctAddr=<WALLET> -ethKeystorePath=/root/.lpData/keystore
+      -ethPassword=<PASSWORD> -maxPricePerUnit=300 -blockPollingInterval=20
+
+  Data dir: /root/.lpData/offchain/ (off-chain) or /root/.lpData/arbitrum-one-mainnet/ (on-chain)
+
+### AI ONLY
+
+  Requires Linux. Create an aiModels.json:
+    [
+      { "pipeline": "text-to-image", "model_id": "stabilityai/sd-turbo", "warm": true },
+      { "pipeline": "image-to-image", "model_id": "stabilityai/sd-turbo", "warm": false }
+    ]
+
+  Create a models/ directory: mkdir -p models
+
+  Off-chain docker-compose.yml:
+    volumes:
+      - gateway-lpData:/root/.lpData
+      - ./models:/root/.lpData/models
+      - ./aiModels.json:/root/.lpData/aiModels.json
+    command: >
+      -gateway -network offchain
+      -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -cliAddr=0.0.0.0:5935
+      -orchAddr=<AI_ORCHESTRATOR_ADDRESS>
+      -aiModels=/root/.lpData/aiModels.json
+      -aiModelsDir=/root/.lpData/models
+      -httpIngest -aiServiceRegistry
+      -maxPricePerUnit=0 -monitor=true -v=6
+
+  On-chain adds the same ETH flags as Video Only above.
+
+### DUAL (AI + VIDEO) — Linux only
+
+  Combines both. Needs aiModels.json and models/ directory (same as AI Only above).
+
+  Off-chain docker-compose.yml:
+    volumes:
+      - gateway-lpData:/root/.lpData
+      - ./models:/root/.lpData/models
+      - ./aiModels.json:/root/.lpData/aiModels.json
+    command: >
+      -gateway -network offchain
+      -rtmpAddr=0.0.0.0:1935 -httpAddr=0.0.0.0:8935 -cliAddr=0.0.0.0:5935
+      -orchAddr=<ORCHESTRATOR_ADDRESS>
+      -transcodingOptions=P240p30fps16x9,P360p30fps16x9,P720p30fps16x9
+      -aiModels=/root/.lpData/aiModels.json
+      -aiModelsDir=/root/.lpData/models
+      -httpIngest -aiServiceRegistry
+      -maxPricePerUnit=0 -pixelsPerUnit=1 -livePaymentInterval=5s
+      -monitor=true -v=6
+
+  On-chain adds the same ETH flags as above.
+
+For all types, expose ports: 1935, 8935, 5935.
+SECURITY: never commit keystore files, aiModels.json with tokens, or password files to version control.
+
+---
+
+## STAGE 3 — WALLET SETUP (on-chain only)
+
+If no wallet exists, generate one by starting the gateway interactively:
+  docker run -it --rm -v gateway-lpData:/root/.lpData livepeer/go-livepeer:master \
+    -gateway -network arbitrum-one-mainnet -ethUrl=<RPC_URL>
+
+When prompted, set a strong password. Note the ETH address shown. CTRL+C to exit.
+Keystore location: /root/.lpData/arbitrum-one-mainnet/keystore/
+
+---
+
+## STAGE 4 — FUND (on-chain only)
+
+Send ETH on Arbitrum One to the gateway wallet.
+Minimum for testing: 0.1 ETH. Production: 0.5+ ETH.
+
+Set deposit and reserve via the Livepeer CLI:
+  docker run -it --network host livepeer/go-livepeer:master \
+    livepeer_cli --host=localhost --http=5935
+
+  Choose Option 11 — "deposit broadcasting funds":
+    Deposit: 0.065 ETH (testing minimum)
+    Reserve: 0.03 ETH (use 0.36 ETH for production)
+
+  Verify with Option 1 — "get node status".
+
+---
+
+## STAGE 5 — START & VERIFY
+
+  docker compose up -d
+  docker compose logs --tail=50
+
+Healthy log lines:
+  "LPMS Server listening on rtmp://0.0.0.0:1935"
+  "HTTP Server listening on http://0.0.0.0:8935"
+  "Unlocked ETH account" (on-chain only)
+
+Verify:
+  curl http://localhost:8935/status
+  curl http://localhost:8935/metrics | head
+  curl http://localhost:8935/getNetworkCapabilities  (on-chain)
+
+Video test: push RTMP with FFmpeg, confirm HLS at http://localhost:8935/stream/test.m3u8
+AI test: POST to http://localhost:8935/ai/text-to-image, confirm a response.
+
+---
+
+## DONE — REPORT BACK
+
+  - OS, gateway type, and mode used
+  - Wallet address (public key only — never the private key)
+  - Start/stop commands
+  - Any steps needing manual follow-up (funding, DNS, SSL)
+```
 
 ---
 
@@ -11592,14 +12024,12 @@ with different pricing models but unified payment infrastructure.
 ---
 
 # Run a Gateway: Quickstart Guide
-URL: https://docs.livepeer.org/v2/gateways/run-a-gateway/quickstart/quickstart-a-gateway
+URL: https://docs.livepeer.org/v2/gateways/quickstart/gateway-setup
 
 &#x20;Use the  **Dropdown** at the top-right of this page to view the Quickstart Guide
 for your preferred OS.&#x20;
 
 &#x20;*Latest Version:* &#x20;
-
-***
 
 # Let's Go(-Livepeer) !&#x20;
 
@@ -11674,14 +12104,12 @@ Setup an Orchestrator.
 ---
 
 # Run a Gateway: Quickstart Guide
-URL: https://docs.livepeer.org/v2/gateways/run-a-gateway/quickstart/quickstart-a-gateway
+URL: https://docs.livepeer.org/v2/gateways/quickstart/gateway-setup
 
 &#x20;Use the  **Dropdown** at the top-right of this page to view the Quickstart Guide
 for your preferred OS.&#x20;
 
 &#x20;*Latest Version:* &#x20;
-
-***
 
 # Let's Go(-Livepeer) !&#x20;
 
@@ -11756,14 +12184,12 @@ Setup an Orchestrator.
 ---
 
 # Run a Gateway: Quickstart Guide
-URL: https://docs.livepeer.org/v2/gateways/run-a-gateway/quickstart/quickstart-a-gateway
+URL: https://docs.livepeer.org/v2/gateways/quickstart/gateway-setup
 
 &#x20;Use the  **Dropdown** at the top-right of this page to view the Quickstart Guide
 for your preferred OS.&#x20;
 
 &#x20;*Latest Version:* &#x20;
-
-***
 
 # Let's Go(-Livepeer) !&#x20;
 
@@ -12617,16 +13043,6 @@ TODO
 
 Livepeer is committed to open-source development. If you want to dig deep into the code or you're interested in
 contributing to the Explorer, you can find the codebase on GitHub.
-
----
-
-# Community Guides
-URL: https://docs.livepeer.org/v2/gateways/guides-and-resources/community-guides
-
----
-
-# Community Projects
-URL: https://docs.livepeer.org/v2/gateways/guides-and-resources/community-projects
 
 ---
 
@@ -18064,6 +18480,125 @@ All resources and references in one place!
 
 ---
 
+# Contributing to the Livepeer Docs
+URL: https://docs.livepeer.org/contribute/CONTRIBUTING
+
+This is the canonical contributor entrypoint for this repository. For hook details, see [`contribute/CONTRIBUTING/GIT-HOOKS.md`](./CONTRIBUTING/GIT-HOOKS.md).
+
+## 1) Start Here
+
+```bash Quickstart
+# 1) Bootstrap tools/tests/hooks
+bash lpd setup --yes
+
+# 2) Run docs locally
+lpd dev
+
+# 3) Run staged checks before opening a PR
+lpd test --staged
+```
+
+If `lpd` is not on your PATH yet, use `bash lpd <command>`.
+
+## 2) What You Can Contribute
+
+Update guides, references, quickstarts, and troubleshooting pages in `v2/`.
+
+Improve reusable components and examples under `snippets/components/`.
+
+Improve `lpd`, local checks, generators, and operational scripts.
+
+Improve issue/PR intake, workflows, and content freshness automation.
+
+## 3) Repo Map for Contributors
+
+## 4) Issue Templates (What to File, When)
+
+## 5) PR Workflow
+
+Fork or branch from the active docs branch, keep PRs focused, and avoid mixing unrelated changes.
+
+Make changes, run `lpd dev` to preview, then run `lpd test --staged`.
+
+PR templates in this repo:
+
+* `.github/pull-request-template-v2.md`
+* `.github/pull_request_template.md`
+
+Fill in scope, testing evidence, and linked issues.
+
+Push fixes to the same branch, re-run staged checks, and resolve reviewer comments.
+
+Ensure required blocking checks pass. Advisory workflows can still surface follow-up work.
+
+## 6) Required Quality Gates
+
+## 7) `lpd` CLI Contributor Commands
+
+## 8) Component Library and Authoring Rules
+
+Follow these rules strictly:
+
+* Use CSS custom properties (for example `var(--accent)`), not legacy JS theme objects.
+* Do not hardcode theme colors when a CSS variable should be used.
+* Use absolute snippet imports (`/snippets/...`), not relative snippet paths.
+* Do not import Mintlify global components or React hooks unnecessarily.
+
+See canonical docs:
+
+* [`v2/resources/documentation-guide/style-guide.mdx`](../v2/resources/documentation-guide/style-guide.mdx)
+* [`v2/resources/documentation-guide/component-library/overview.mdx`](../v2/resources/documentation-guide/component-library/overview.mdx)
+
+## 9) Scripts and Generated Indexes
+
+```bash Regenerate Indexes
+node tools/scripts/generate-docs-guide-indexes.js --write
+node tools/scripts/generate-docs-guide-pages-index.js --write
+node tools/scripts/generate-docs-guide-components-index.js --write
+node tests/unit/script-docs.test.js --write --rebuild-indexes
+```
+
+Generated indexes are read-only outputs. Regenerate them instead of hand-editing.
+
+## 10) Human-Only Overrides and Safety
+
+Do not use `--no-verify` in normal contribution flow.
+
+Human-only overrides:
+
+* `.allowlist` edits: `--trailer "allowlist-edit=true"`
+* file deletions outside allowed scope: `--trailer "allow-deletions=true"`
+
+## 11) Pre-PR Checklist
+
+* \[ ] Changes are scoped and clearly described.
+* \[ ] `lpd dev` preview looks correct for affected pages/components.
+* \[ ] `lpd test --staged` passes.
+* \[ ] Related links and references were verified.
+* \[ ] PR template is fully completed with testing notes.
+* \[ ] Any generated indexes affected by this change were regenerated.
+
+## 12) Where to Ask for Help
+
+Report bugs, page issues, feature/content requests, and tooling problems.
+
+Ask broader questions and start proposal threads.
+
+Get real-time community support.
+
+Report security issues privately.
+
+## Canonical References
+
+* [`docs-guide/lpd.mdx`](../docs-guide/lpd.mdx)
+* [`docs-guide/templates-index.mdx`](../docs-guide/templates-index.mdx)
+* [`docs-guide/workflows-index.mdx`](../docs-guide/workflows-index.mdx)
+* [`docs-guide/scripts-index.md`](../docs-guide/scripts-index.md)
+* [`docs-guide/quality-gates.mdx`](../docs-guide/quality-gates.mdx)
+* [`contribute/CONTRIBUTING/GIT-HOOKS.md`](./CONTRIBUTING/GIT-HOOKS.md)
+
+---
+
 # Components Index
 URL: https://docs.livepeer.org/v2/resources/documentation-guide/component-library/overview
 
@@ -19677,7 +20212,7 @@ Search by category, page path, or component name.
 ---
 
 # Component Library
-URL: https://docs.livepeer.org/v2/resources/documentation-guide//component-library/component-library
+URL: https://docs.livepeer.org/v2/resources/documentation-guide/component-library/component-library
 
 // ResponseFieldGroup commented out - component bug: Expandable is not defined
 
@@ -20827,7 +21362,7 @@ Download a sample video from here
   OrchAddrNote,
   TestVideoDownload,
   FfmpegWarning
-} from "/snippets/components/domain/04_GATEWAYS/callouts.jsx";
+} from "/v2/gateways/quickstart/components/callouts.jsx";
 
 <GatewayOffChainWarning />
 <GatewayOnChainWarning />

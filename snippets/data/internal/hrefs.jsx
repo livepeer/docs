@@ -222,8 +222,8 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "internal-rooted",
-      "rawPath": "/v2/gateways/run-a-gateway/quickstart/get-AI-to-setup-the-gateway",
-      "resolvedPath": "v2/gateways/run-a-gateway/quickstart/get-AI-to-setup-the-gateway.mdx",
+      "rawPath": "/v2/gateways/quickstart/AI-prompt",
+      "resolvedPath": "v2/gateways/quickstart/AI-prompt.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []

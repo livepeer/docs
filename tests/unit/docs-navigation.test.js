@@ -275,22 +275,22 @@ function getCanonicalMap(normalizedRoute) {
     ],
     'v2/resources/changelog/migration-guides': ['v2/resources/changelog/migration-guide'],
     'v2/pages/04_gateways/run-a-gateway/quickstart-a-gateway': [
-      'v2/pages/04_gateways/run-a-gateway/quickstart/quickstart-a-gateway'
+      'v2/pages/04_gateways/quickstart/gateway-setup'
     ],
     'v2/pages/04_gateways/run-a-gateway/get-AI-to-setup-the-gateway': [
-      'v2/pages/04_gateways/run-a-gateway/quickstart/get-AI-to-setup-the-gateway'
+      'v2/pages/04_gateways/quickstart/AI-prompt'
     ],
     'v2/pages/04_gateways/using-gateways/gateway-providers/streamplace': [
       'v2/pages/010_streamplace/overview'
     ],
     'v2/pages/04_gateways/run-a-gateway/test/test-gateway': [
-      'v2/pages/04_gateways/run-a-gateway/quickstart/quickstart-a-gateway'
+      'v2/pages/04_gateways/quickstart/gateway-setup'
     ],
     'v2/pages/04_gateways/run-a-gateway/test/publish-content': [
-      'v2/pages/04_gateways/run-a-gateway/quickstart/quickstart-a-gateway'
+      'v2/pages/04_gateways/quickstart/gateway-setup'
     ],
     'v2/pages/04_gateways/run-a-gateway/test/playback-content': [
-      'v2/pages/04_gateways/run-a-gateway/quickstart/quickstart-a-gateway'
+      'v2/pages/04_gateways/quickstart/gateway-setup'
     ],
     'v2/pages/04_gateways/references/video-flags': ['v2/pages/04_gateways/references/configuration-flags'],
     'v2/orchestrators/setting-up-an-orchestrator/setting-up-an-orchestrator/data-centres-and-large-scale-hardware-providers': [
@@ -346,11 +346,19 @@ function suggestRemaps(missingRoute, knownRoutes) {
   const quickstartRewrite = normalized
     .replace(
       '/run-a-gateway/quickstart-a-gateway',
-      '/run-a-gateway/quickstart/quickstart-a-gateway'
+      '/quickstart/gateway-setup'
     )
     .replace(
       '/run-a-gateway/get-AI-to-setup-the-gateway',
-      '/run-a-gateway/quickstart/get-AI-to-setup-the-gateway'
+      '/quickstart/AI-prompt'
+    )
+    .replace(
+      '/run-a-gateway/quickstart/quickstart-a-gateway',
+      '/quickstart/gateway-setup'
+    )
+    .replace(
+      '/run-a-gateway/quickstart/get-AI-to-setup-the-gateway',
+      '/quickstart/AI-prompt'
     )
     .replace('/changelog/migration-guides', '/changelog/migration-guide')
     .replace('/streamplace-funding', '/streamplace-funding-model')

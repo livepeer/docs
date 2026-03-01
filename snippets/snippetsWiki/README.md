@@ -55,7 +55,7 @@ orchestrators and delegators in the Livepeer ecosystem.)
 # EXAMPLE GATEWAY QUICKSTART LAYOUT PAGES
 
 To achieve this the main quickstart page
-(v2/gateways/run-a-gateway/quickstart/quickstart-a-gateway.mdx) imports
+(v2/gateways/quickstart/gateway-setup.mdx) imports
 mdx files from the /snippets/pages/04_GATEWAYS/run/quickstart folder to keep the
 top level page readable and the views modular:
 
@@ -63,7 +63,7 @@ top level page readable and the views modular:
 04_GATEWAYS/
 ├── run/
 │   ├── quickstart/
-│   │   ├── quickstart-a-gateway.mdx
+│   │   ├── gateway-setup.mdx
 │   │   ├── views/
 │   │   │   ├── docker/
 │   │   │   │   ├── dockerOffChainTab.mdx

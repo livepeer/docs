@@ -543,8 +543,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/04_GATEWAYS/callouts.jsx",
-      "resolvedPath": "snippets/components/domain/04_GATEWAYS/callouts.jsx",
+      "rawPath": "/v2/gateways/quickstart/components/callouts.jsx",
+      "resolvedPath": "v2/gateways/quickstart/components/callouts.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -552,8 +552,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/04_GATEWAYS/quickstartTabs.jsx",
-      "resolvedPath": "snippets/components/domain/04_GATEWAYS/quickstartTabs.jsx",
+      "rawPath": "/v2/gateways/quickstart/components/quickstartTabs.jsx",
+      "resolvedPath": "v2/gateways/quickstart/components/quickstartTabs.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -839,9 +839,13 @@ export const LINK_MAP = {
       "linkType": "import-path",
       "rawPath": "/snippets/components/domain/04_GATEWAYS/callouts.jsx",
       "resolvedPath": "snippets/components/domain/04_GATEWAYS/callouts.jsx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
+      "exists": false,
+      "status": "missing",
+      "movedCandidates": [
+        "v2/gateways/quickstart/components/callouts.jsx",
+        "tools/scripts/dev/README-add-callouts.md",
+        "tools/scripts/dev/add-callouts.js"
+      ]
     },
     {
       "sourceType": "import-path",
@@ -2647,36 +2651,7 @@ export const LINK_MAP = {
   ],
   "snippets/components/display/embed.mdx": [],
   "snippets/components/display/containers.mdx": [],
-  "snippets/components/layout/api-base-urls-table.mdx": [],
-  "snippets/pages/04_GATEWAYS/run/quickstart/views/docker/dockerOffChainTab.mdx": [
-    {
-      "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "\"https://hub.docker.com/r/livepeer/go-livepeer\"",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "internal-rooted",
-      "rawPath": "/v2/gateways/references/cli-commands",
-      "resolvedPath": "v2/gateways/references/cli-commands.mdx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "jsx-attr",
-      "linkType": "internal-rooted",
-      "rawPath": "/v2/gateways/references/api-reference/AI-API/ai",
-      "resolvedPath": "v2/gateways/references/api-reference/AI-API/ai.mdx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    }
-  ]
+  "snippets/components/layout/api-base-urls-table.mdx": []
 };
 
 export default LINK_MAP;

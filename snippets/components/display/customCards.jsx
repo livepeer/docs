@@ -90,3 +90,41 @@ export const WidthCard = ({ width = '80%', children, ...cardProps }) => {
     </div>
   )
 }
+
+export const InlineImageCard = ({
+  children,
+  imgProps,
+  imgStyle,
+  cardProps,
+  style,
+}) => {
+  return (
+    <Card {...cardProps}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '1rem',
+          maxHeight: 'fit-content',
+          backgroundColor: 'var(--background)',
+          ...style,
+        }}
+      >
+        <img
+          {...imgProps}
+          style={
+            imgStyle
+              ? imgStyle
+              : {
+                  maxHeight: '120px',
+                  width: 'auto',
+                }
+          }
+        />
+        {children}
+      </div>
+    </Card>
+  )
+}

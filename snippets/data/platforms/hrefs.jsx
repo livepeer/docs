@@ -1871,9 +1871,9 @@ export const LINK_MAP = {
       "sourceType": "markdown-link",
       "linkType": "internal-rooted",
       "rawPath": "/gateways/using-gateways/gateway-providers/livepeer-studio-gateway",
-      "resolvedPath": "v2/gateways/using-gateways/gateway-providers/livepeer-studio-gateway.mdx",
-      "exists": true,
-      "status": "ok",
+      "resolvedPath": "v2/gateways/using-gateways/gateway-providers/livepeer-studio-gateway",
+      "exists": false,
+      "status": "missing",
       "movedCandidates": []
     },
     {
