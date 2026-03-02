@@ -31,6 +31,7 @@ Runs unit + integration suite.
 - `node tests/unit/links-imports.test.js`
 - `node tests/unit/docs-guide-sot.test.js`
 - `node tools/scripts/generate-pages-index.js`
+- `node tools/scripts/enforce-generated-file-banners.js --check`
 
 ### Integration Suites
 - `node tests/integration/browser.test.js`
@@ -139,6 +140,7 @@ npm --prefix tests run test:docs-guide
 npm --prefix tests run test:pages-index
 npm --prefix tests run test:pages-index:write
 npm --prefix tests run test:pages-index:rebuild
+npm --prefix tests run test:generated-banners
 npm --prefix tests run test:browser
 npm --prefix tests run test:link-audit
 npm --prefix tests run test:link-audit:staged

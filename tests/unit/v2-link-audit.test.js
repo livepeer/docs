@@ -65,6 +65,7 @@ async function runTests() {
   await runCase('Parses default args with classify policy', async () => {
     const parsed = audit.parseArgs([]);
     assert.strictEqual(parsed.mode, 'full');
+    assert.strictEqual(parsed.respectMintIgnore, true);
     assert.strictEqual(parsed.externalPolicy, 'classify');
     assert.strictEqual(parsed.externalLinkTypes, 'navigational');
     assert.strictEqual(parsed.externalTimeoutMs, 10000);
@@ -83,6 +84,7 @@ async function runTests() {
       '--external-concurrency', '7',
       '--external-per-host-concurrency', '3',
       '--external-retries', '4',
+      '--no-mintignore',
       '--no-write-links',
       '--report-json', '/tmp/v2-link-audit-unit.json'
     ]);
@@ -94,6 +96,7 @@ async function runTests() {
     assert.strictEqual(parsed.externalConcurrency, 7);
     assert.strictEqual(parsed.externalPerHostConcurrency, 3);
     assert.strictEqual(parsed.externalRetries, 4);
+    assert.strictEqual(parsed.respectMintIgnore, false);
     assert.strictEqual(parsed.writeLinks, false);
     assert.ok(parsed.reportJson.endsWith('/tmp/v2-link-audit-unit.json'));
   });

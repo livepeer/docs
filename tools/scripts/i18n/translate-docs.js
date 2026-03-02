@@ -44,6 +44,7 @@ const {
   parseProvenanceComment,
   sha256
 } = require('./lib/provenance');
+const { hasGeneratedNote, removeGeneratedNotes } = require('../../lib/generated-file-banners');
 const { createTranslator } = require('./lib/providers');
 const { getRepoRoot, writeJson, writeTextIfChanged } = require('./lib/common');
 
@@ -232,7 +233,10 @@ async function processOneTranslation({
     }
   });
 
-  const rendered = parsed.stringify(bodyResult.body, frontmatterResult.data);
+  let rendered = parsed.stringify(bodyResult.body, frontmatterResult.data);
+  if (!hasGeneratedNote(sourceContent)) {
+    rendered = removeGeneratedNotes(rendered);
+  }
   const provenanceComment = buildProvenanceComment({
     sourcePath: item.fileRel,
     sourceRoute: item.route,

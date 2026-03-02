@@ -32,18 +32,23 @@ See [source-of-truth-policy.md](./source-of-truth-policy.mdx) for full boundarie
 | If you need to understand...                  | Canonical file                                           |
 | --------------------------------------------- | -------------------------------------------------------- |
 | Governance and canonical ownership            | [source-of-truth-policy.md](./source-of-truth-policy.mdx) |
-| Complete repo capability map                  | [feature-map.md](./feature-map.mdx)                       |
-| Data + control flow across systems            | [architecture-map.md](./architecture-map.mdx)             |
+| Complete repo capability map                  | [feature-map.md](./feature-guides/feature-map.mdx)                       |
+| Data + control flow across systems            | [architecture-map.md](./feature-guides/architecture-map.mdx)             |
 | CLI behavior and operator runbooks            | [lpd.md](./lpd.mdx)                                       |
-| Validation and enforcement gates              | [quality-gates.md](./quality-gates.mdx)                   |
-| GitHub Actions, n8n, and automation pipelines | [automation-pipelines.md](./automation-pipelines.mdx)     |
-| Information architecture and content strategy | [content-system.md](./content-system.mdx)                 |
-| APIs and external data integrations           | [data-integrations.md](./data-integrations.mdx)           |
-| Pages tree catalog (generated)                | [pages-index.mdx](./pages-index.mdx)                     |
-| Components catalog (generated)                | [components-index.mdx](./components-index.mdx)           |
-| Script catalog (generated)                    | [scripts-index.md](./scripts-index.md)                   |
-| Workflow catalog (generated)                  | [workflows-index.mdx](./workflows-index.mdx)             |
-| Issue/PR template catalog (generated)         | [templates-index.mdx](./templates-index.mdx)             |
+| Validation and enforcement gates              | [quality-gates.md](./quality-testing/quality-gates.mdx)                   |
+| Audit system and scorecard workflow           | [audit-system-overview.mdx](./quality-testing/audit-system-overview.mdx) |
+| Skill pipeline run order and contracts        | [skill-pipeline-map.mdx](./quality-testing/skill-pipeline-map.mdx) |
+| Cleanup and quarantine policy                 | [cleanup-quarantine-policy.mdx](./quality-testing/cleanup-quarantine-policy.mdx) |
+| Component layout decision matrix              | [component-layout-decision-matrix.mdx](./quality-testing/component-layout-decision-matrix.mdx) |
+| GitHub Actions, n8n, and automation pipelines | [automation-pipelines.md](./feature-guides/automation-pipelines.mdx)     |
+| Information architecture and content strategy | [content-system.md](./feature-guides/content-system.mdx)                 |
+| APIs and external data integrations           | [data-integrations.md](./feature-guides/data-integrations.mdx)           |
+| AI tools and skill inventory                  | [ai-tools.mdx](./indexes/ai-tools.mdx) |
+| Pages tree catalog (generated)                | [pages-index.mdx](./indexes/pages-index.mdx)                     |
+| Components catalog (generated)                | [components-index.mdx](./indexes/components-index.mdx)           |
+| Script catalog (generated)                    | [scripts-index.mdx](./indexes/scripts-index.mdx)                 |
+| Workflow catalog (generated)                  | [workflows-index.mdx](./indexes/workflows-index.mdx)             |
+| Issue/PR template catalog (generated)         | [templates-index.mdx](./indexes/templates-index.mdx)             |
 
 ## Update Rules
 
@@ -53,8 +58,12 @@ See [source-of-truth-policy.md](./source-of-truth-policy.mdx) for full boundarie
    - `node tools/scripts/generate-docs-guide-pages-index.js --write`
    - `node tools/scripts/generate-docs-guide-components-index.js --write`
    - `node tests/unit/script-docs.test.js --write --rebuild-indexes`
-3. Keep `README.md` high-level and link to canonical docs-guide files for deep detail.
-4. Do not duplicate long procedural guidance across README, tests docs, and docs-guide. Link to canonical pages instead.
+   - `node tools/scripts/enforce-generated-file-banners.js --check`
+3. Re-run the docs audit pipeline when docs, scripts, reports, or routing paths change:
+   - `node tools/scripts/repo-audit-orchestrator.js --mode static --scope full`
+   - `node tools/scripts/cross-agent-packager.js --agent-pack all`
+4. Keep `README.md` high-level and link to canonical docs-guide files for deep detail.
+5. Do not duplicate long procedural guidance across README, tests docs, and docs-guide. Link to canonical pages instead.
 
 ## Related Areas
 

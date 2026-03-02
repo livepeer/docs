@@ -12,6 +12,7 @@
  *   --full (default)
  *   --staged
  *   --files <path[,path...]> (repeatable; explicit files mode)
+ *   --no-mintignore (include files ignored by .mintignore)
  *   --fix | --no-fix (default: --fix)
  *   --stage (git add only content files changed by autofix)
  *   --max-pages <n> (limit browser-audited pages)
@@ -45,9 +46,9 @@ const { execSync, spawnSync } = require('child_process');
 const { URL } = require('url');
 const {
   getV2DocsFiles,
-  getStagedFiles,
   toDocsRouteKeyFromFileV2Aware,
-  isExcludedV2ExperimentalPath
+  isExcludedV2ExperimentalPath,
+  filterPathsByMintIgnore
 } = require('../utils/file-walker');
 
 const REPO_ROOT = getRepoRoot();
@@ -93,6 +94,7 @@ function parseArgs(argv) {
   const args = {
     mode: 'full',
     files: [],
+    respectMintIgnore: true,
     fix: true,
     stage: false,
     maxPages: null,
@@ -123,6 +125,10 @@ function parseArgs(argv) {
           .forEach((part) => args.files.push(part));
       }
       i += 1;
+      continue;
+    }
+    if (token === '--no-mintignore') {
+      args.respectMintIgnore = false;
       continue;
     }
     if (token === '--fix') {
@@ -194,7 +200,7 @@ function normalizeInputPath(input) {
 }
 
 function printHelp() {
-  console.log(`Usage: node tests/integration/v2-wcag-audit.js [--full|--staged|--files <path[,path...]>] [--fix|--no-fix] [--stage] [--max-pages <n>] [--base-url <url>] [--fail-impact <level>] [--report <path>] [--report-json <path>]`);
+  console.log(`Usage: node tests/integration/v2-wcag-audit.js [--full|--staged|--files <path[,path...]>] [--no-mintignore] [--fix|--no-fix] [--stage] [--max-pages <n>] [--base-url <url>] [--fail-impact <level>] [--report <path>] [--report-json <path>]`);
 }
 
 function ensureDir(dirPath) {
@@ -666,11 +672,31 @@ function resolveFilesForArgs(args) {
   let files = [];
 
   if (args.mode === 'files') {
-    files = args.files.map((p) => path.resolve(REPO_ROOT, p));
+    const rawFiles = args.files.map((p) => path.resolve(REPO_ROOT, p));
+    files = filterPathsByMintIgnore(rawFiles, {
+      rootDir: REPO_ROOT,
+      respectMintIgnore: args.respectMintIgnore
+    });
+
+    const kept = new Set(files.map((filePath) => path.resolve(filePath)));
+    rawFiles.forEach((filePath) => {
+      const abs = path.resolve(filePath);
+      if (!kept.has(abs)) {
+        excludedInputs.push(relFromRoot(abs));
+      }
+    });
   } else if (args.mode === 'staged') {
-    files = getV2DocsFiles({ rootDir: REPO_ROOT, stagedOnly: true });
+    files = getV2DocsFiles({
+      rootDir: REPO_ROOT,
+      stagedOnly: true,
+      respectMintIgnore: args.respectMintIgnore
+    });
   } else {
-    files = getV2DocsFiles({ rootDir: REPO_ROOT, stagedOnly: false });
+    files = getV2DocsFiles({
+      rootDir: REPO_ROOT,
+      stagedOnly: false,
+      respectMintIgnore: args.respectMintIgnore
+    });
   }
 
   const seen = new Set();
@@ -986,7 +1012,8 @@ function buildJsonReport({
       fixEnabled: args.fix,
       maxPages: args.maxPages,
       reportMarkdown: relFromRoot(args.report),
-      reportJson: relFromRoot(args.reportJson)
+      reportJson: relFromRoot(args.reportJson),
+      respectMintIgnore: args.respectMintIgnore
     },
     scope: {
       filesScanned: files.map(relFromRoot),

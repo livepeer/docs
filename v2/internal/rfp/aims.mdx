@@ -75,7 +75,7 @@ import { PdfEmbed } from "/snippets/components/display/embed.mdx";
 
         - **Repository AI Guidance** — .github/AGENTS.md and .cursorrules ensure AI coding tools operate within repository conventions.
 
-        - **Machine-Readable Architecture Maps** — docs-guide/feature-map.mdx and docs-guide/architecture-map.mdx provide Mermaid diagrams for AI understanding of system structure.
+        - **Machine-Readable Architecture Maps** — docs-guide/feature-guides/feature-map.mdx and docs-guide/feature-guides/architecture-map.mdx provide Mermaid diagrams for AI understanding of system structure.
 
         - **Diátaxis Structure** — Content separated into tutorials, how-to guides, explanations, and references—intrinsically machine-legible for LLM classification and retrieval.
 
@@ -163,11 +163,11 @@ import { PdfEmbed } from "/snippets/components/display/embed.mdx";
 
         - **[DX]** lpd CLI: a unified maintainer command centre (lpd setup, dev, test, ci, hooks, scripts) with .lpdignore pattern system. Any future maintainer can run lpd dev to get a full local environment; lpd test to validate all quality gates. The barrier to entry for new contributors is dramatically lower.
 
-        - **[Internal docs]** docs-guide/ internal operating system: README.md (source-of-truth model, update rules), feature-map.md (8 feature areas), architecture-map.md (data/control flow with Mermaid diagram), lpd.md (CLI operator runbooks), quality-gates.md (local/CI enforcement matrix), automation-pipelines.md (all automation surfaces), content-system.md (IA model, copy principles), data-integrations.md (API specs, external feeds). Three generated indexes: scripts-index.md, workflows-index.md, templates-index.md — all auto-updated when contents change.
+        - **[Internal docs]** docs-guide/ internal operating system: README.md (source-of-truth model, update rules), feature-map.md (8 feature areas), architecture-map.md (data/control flow with Mermaid diagram), lpd.md (CLI operator runbooks), quality-gates.md (local/CI enforcement matrix), automation-pipelines.md (all automation surfaces), content-system.md (IA model, copy principles), data-integrations.md (API specs, external feeds). Three generated indexes: scripts-index.mdx, workflows-index.md, templates-index.md — all auto-updated when contents change.
 
         - **[Governance]** 8 GitHub issue templates + 2 PR templates. .github/CODEOWNERS defining content ownership. CONTRIBUTING/ directory with Git hooks, PR workflow, and style requirements. Discord issue intake workflow (discord-issue-intake.yml). Quarterly docs review process defined in Maintenance Playbook (Notion).
 
-        - **[Scripts]** Script self-documentation enforcement: every script must have a header (summary, usage, owner). Script index (scripts-index.md) is auto-generated. New scripts created via new-script.js template are pre-filled with the required schema. The documentation system documents itself.
+        - **[Scripts]** Script self-documentation enforcement: every script must have a header (summary, usage, owner). Script index (scripts-index.mdx) is auto-generated. New scripts created via new-script.js template are pre-filled with the required schema. The documentation system documents itself.
 
         - **[Automations]** Five live automation pipelines: forum integration (live posts, reply counts, rich previews), Ghost blog integration (reading time, author attribution), YouTube integration (Shorts filtered), project showcase (searchable, sortable ecosystem projects), release tracking (global version auto-update). Parallel n8n workflow layer for platform independence.
 
@@ -191,13 +191,13 @@ import { PdfEmbed } from "/snippets/components/display/embed.mdx";
         
         ### Auto-Documenting Infrastructure
         A documentation system that requires humans to manually document its own components will inevitably fall out of sync. v2 eliminates this category of drift by making the infrastructure self-documenting.
-        - **[Scripts]** Script self-documentation enforcement (tests/unit/script-docs.test.js): every script in the repository must carry a structured header (summary, usage, owner). The test enforces this schema on commit and CI. new-script.js scaffolds new scripts with the required header pre-filled. The result: the 58-script library documents itself. Any maintainer — human or AI — can read scripts-index.md (auto-generated from the headers) to understand every automation in the system.
+        - **[Scripts]** Script self-documentation enforcement (tests/unit/script-docs.test.js): every script in the repository must carry a structured header (summary, usage, owner). The test enforces this schema on commit and CI. new-script.js scaffolds new scripts with the required header pre-filled. The result: the 58-script library documents itself. Any maintainer — human or AI — can read scripts-index.mdx (auto-generated from the headers) to understand every automation in the system.
 
         - **[Scripts]** generate-docs-guide-indexes.js auto-generates the scripts catalog, workflow catalog, and template catalog in docs-guide/ whenever underlying files change. The internal maintainer knowledge system cannot drift from the actual repository contents because it is generated from them.
 
         - **[Scripts]** update-component-library.sh automatically creates and updates component library documentation in the Resource HUB whenever components change. Component documentation is generated from the component source — not maintained separately.
 
-        - **[Technical]** The Mermaid data/control flow diagram in docs-guide/architecture-map.mdx is maintained manually but provides a machine-readable (and AI-parseable) system overview. Any AI tool querying the repository can read this diagram to understand the full execution architecture without human explanation.
+        - **[Technical]** The Mermaid data/control flow diagram in docs-guide/feature-guides/architecture-map.mdx is maintained manually but provides a machine-readable (and AI-parseable) system overview. Any AI tool querying the repository can read this diagram to understand the full execution architecture without human explanation.
         
         ### In-Built Translation Pipeline (i18n)
         Multilingual readiness was an explicit RFP requirement. The v2 system delivered the full i18n infrastructure layer:
@@ -261,7 +261,7 @@ import { PdfEmbed } from "/snippets/components/display/embed.mdx";
         - **[Content]** Content inventory of all v1 pages with deprecation/migration matrix mapping each to: keep, rewrite, move, merge, or deprecate. Recommendations were persona-coded so each stakeholder's section received targeted treatment.
         - **[DX]** Developer portal with AI Jobs and Transcoding Jobs separated into distinct, labelled paths. Cross-cutting SDK, API, and CLI references consolidated into single canonical hubs rather than duplicated across sections.
         - **[Technical]** 14-platform evaluation across 11 criteria — OSS vs SaaS, AI compatibility, contribution model, i18n, versioning, analytics, SEO, cost, speed — selected Mintlify for its componentised MDX system and built-in AI assistant. A working GitBook draft was produced to validate IA assumptions before platform finalisation.
-        - **[Internal docs]** docs-guide/content-system.mdx codifies the IA model, content layers, and copy principles so any future maintainer can understand the stakeholder-driven design rationale.
+        - **[Internal docs]** docs-guide/feature-guides/content-system.mdx codifies the IA model, content layers, and copy principles so any future maintainer can understand the stakeholder-driven design rationale.
         - **[Automations]** Ecosystem project showcase automation (project-showcase-sync.yml) surfaces community projects, making the documentation itself a stakeholder engagement surface. Forum and YouTube automation integrations keep community content current.
         - **[Stakeholder Engagement]** Weekly Docs Stakeholder Working Group (Mondays 8pm AEST, ~20 sessions, Fireflies.ai transcription) with Rich, Rick, Mehrdad, Nick. Weekly Website & Docs PM coordination meeting. Ad hoc calls with 8–12 ecosystem contacts. Water Cooler community presentation (November 25, 2024).
        

@@ -31,6 +31,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { filterPathsByMintIgnore } = require('./mintignore');
 
 function toPosix(filePath) {
   return String(filePath || '').split(path.sep).join('/');
@@ -153,51 +154,60 @@ function toDocsRouteKeyFromFileV2Aware(filePath, rootDir = null) {
   return normalizeDocsRouteKey(relPath);
 }
 
-/**
- * Recursively get all files matching a pattern
- */
-function getFiles(dir, pattern, fileList = []) {
+function collectFiles(dir, pattern, fileList = []) {
   const files = fs.readdirSync(dir);
-  
-  files.forEach(file => {
+
+  files.forEach((file) => {
     const filePath = path.join(dir, file);
     const stat = fs.statSync(filePath);
-    
+
     if (stat.isDirectory()) {
       // Skip node_modules and .git
       if (!file.startsWith('.') && file !== 'node_modules') {
-        getFiles(filePath, pattern, fileList);
+        collectFiles(filePath, pattern, fileList);
       }
     } else if (pattern.test(file)) {
       fileList.push(filePath);
     }
   });
-  
+
   return fileList;
+}
+
+/**
+ * Recursively get all files matching a pattern
+ */
+function getFiles(dir, pattern, options = {}) {
+  const { rootDir = null, respectMintIgnore = true } = options;
+  const repoRoot = resolveRepoRoot(rootDir || dir);
+  const files = collectFiles(dir, pattern, []);
+  return filterPathsByMintIgnore(files, { rootDir: repoRoot, respectMintIgnore });
 }
 
 /**
  * Get all MDX files in v2/pages
  */
-function getMdxFiles(rootDir = null) {
+function getMdxFiles(rootDir = null, options = {}) {
+  const { respectMintIgnore = true } = options;
   const repoRoot = resolveRepoRoot(rootDir);
   const pagesDir = path.join(repoRoot, 'v2', 'pages');
   if (!fs.existsSync(pagesDir)) {
     return [];
   }
-  return getFiles(pagesDir, /\.mdx$/);
+  return getFiles(pagesDir, /\.mdx$/, { rootDir: repoRoot, respectMintIgnore });
 }
 
 /**
  * Get all JSX files in snippets/components
  */
-function getJsxFiles(rootDir = null) {
+function getJsxFiles(rootDir = null, options = {}) {
+  const { respectMintIgnore = true } = options;
   const repoRoot = resolveRepoRoot(rootDir);
   const componentsDir = path.join(repoRoot, 'snippets', 'components');
   if (!fs.existsSync(componentsDir)) {
     return [];
   }
-  return getFiles(componentsDir, /\.jsx$/);
+  return getFiles(componentsDir, /\.jsx$/, { rootDir: repoRoot, respectMintIgnore });
 }
 
 /**
@@ -222,14 +232,18 @@ function getStagedFiles(rootDir = null) {
   }
 }
 
-function getStagedDocsPageFiles(rootDir = null) {
+function getStagedDocsPageFiles(rootDir = null, options = {}) {
+  const { respectMintIgnore = true } = options;
   const repoRoot = resolveRepoRoot(rootDir);
   const docsRouteKeys = getDocsJsonRouteKeys(repoRoot);
   if (docsRouteKeys.size === 0) {
     return [];
   }
 
-  const stagedFiles = getStagedFiles(repoRoot);
+  const stagedFiles = filterPathsByMintIgnore(getStagedFiles(repoRoot), {
+    rootDir: repoRoot,
+    respectMintIgnore
+  });
   return stagedFiles.filter((filePath) => {
     const key = toDocsRouteKeyFromFile(filePath, repoRoot);
     return key && docsRouteKeys.has(key);
@@ -252,14 +266,14 @@ function walkDocsContentFiles(dir, out = []) {
 }
 
 function getV2DocsFiles(options = {}) {
-  const { rootDir = null, stagedOnly = false } = options;
+  const { rootDir = null, stagedOnly = false, respectMintIgnore = true } = options;
   const repoRoot = resolveRepoRoot(rootDir);
 
   const files = stagedOnly
     ? getStagedFiles(repoRoot)
     : walkDocsContentFiles(path.join(repoRoot, 'v2'));
 
-  return files
+  return filterPathsByMintIgnore(files, { rootDir: repoRoot, respectMintIgnore })
     .filter((filePath) => /\.(md|mdx)$/i.test(filePath))
     .filter((filePath) => {
       const rel = toPosix(path.relative(repoRoot, filePath));
@@ -290,5 +304,6 @@ module.exports = {
   toDocsRouteKeyFromFile,
   toDocsRouteKeyFromFileV2Aware,
   isExcludedV2ExperimentalPath,
+  filterPathsByMintIgnore,
   readFile
 };

@@ -1,0 +1,44 @@
+---
+title: 'Skill Pipeline Map'
+sidebarTitle: 'Skill Pipeline'
+description: 'Run order, purpose, inputs and outputs for the docs audit skill pipeline.'
+keywords: ['livepeer', 'skills', 'pipeline', 'audit', 'run order']
+---
+
+## Run Order
+
+1. `script-footprint-and-usage-audit`
+2. `docs-coverage-and-route-integrity-audit`
+3. `docs-quality-and-freshness-audit`
+4. `style-and-language-homogenizer-en-gb`
+5. `component-layout-governance`
+6. `cleanup-quarantine-manager`
+7. `cross-agent-packager` (only when `--agent-pack` is requested)
+
+## Pipeline Contract Files
+
+- `ai-tools/ai-skills/catalog/skill-catalog.schema.json`
+- `ai-tools/ai-skills/catalog/skill-catalog.json`
+- `ai-tools/ai-skills/catalog/execution-manifest.json`
+
+## Stage Behaviour
+
+| Stage | Primary Goal | Canonical Output |
+|---|---|---|
+| script-footprint-and-usage-audit | Detect script sprawl, backups, placeholders, report bloat | `tasks/reports/repo-ops/script-footprint-and-usage-audit.json` |
+| docs-coverage-and-route-integrity-audit | Surface missing routes, legacy `/v2/pages/` references, non-nav doc candidates | `tasks/reports/repo-ops/docs-coverage-and-route-integrity-audit.json` |
+| docs-quality-and-freshness-audit | Inventory TODO/TBD/Coming Soon/PreviewCallout and thin content | `tasks/reports/repo-ops/docs-quality-and-freshness-audit.json` |
+| style-and-language-homogenizer-en-gb | Enforce UK English/style profile in EN `v2` scope | `tasks/reports/repo-ops/style-and-language-homogenizer-en-gb.json` |
+| component-layout-governance | Validate required sections and allowed component usage by page type | `tasks/reports/repo-ops/component-layout-governance.json` |
+| cleanup-quarantine-manager | Produce reversible cleanup manifest and optional quarantine moves | `tasks/reports/repo-ops/cleanup-quarantine-manifest.json` |
+| cross-agent-packager | Export aligned packs for Codex/Cursor/Claude/Windsurf | `ai-tools/agent-packs/` |
+
+## Orchestrator CLI
+
+```bash
+node tools/scripts/repo-audit-orchestrator.js \
+  --mode static \
+  --scope full \
+  --output-dir tasks/reports/repo-ops \
+  --agent-pack all
+```

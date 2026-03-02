@@ -13,8 +13,8 @@
  *   --check Verify generated index files are current without writing.
  *
  * @outputs
- *   - docs-guide/workflows-index.mdx
- *   - docs-guide/templates-index.mdx
+ *   - docs-guide/indexes/workflows-index.mdx
+ *   - docs-guide/indexes/templates-index.mdx
  *
  * @exit-codes
  *   0 = generation/check succeeded
@@ -30,6 +30,11 @@
 
 const fs = require('fs');
 const path = require('path');
+const {
+  buildGeneratedFrontmatterLines,
+  buildGeneratedHiddenBannerLines,
+  buildGeneratedNoteLines
+} = require('../lib/generated-file-banners');
 
 let yaml = null;
 try {
@@ -44,47 +49,30 @@ const ISSUE_TEMPLATE_DIR = '.github/ISSUE_TEMPLATE';
 const PR_TEMPLATE_FILES = ['.github/pull-request-template-v2.md', '.github/pull_request_template.md'];
 
 const OUTPUT_FILES = {
-  workflows: 'docs-guide/workflows-index.mdx',
-  templates: 'docs-guide/templates-index.mdx'
+  workflows: 'docs-guide/indexes/workflows-index.mdx',
+  templates: 'docs-guide/indexes/templates-index.mdx'
 };
 
 const LEGACY_OUTPUT_FILES = {
-  workflows: 'docs-guide/workflows-index.md',
-  templates: 'docs-guide/templates-index.md'
+  workflows: 'docs-guide/indexes/workflows-index.md',
+  templates: 'docs-guide/indexes/templates-index.md'
 };
 
-const WORKFLOWS_INDEX_FRONTMATTER_LINES = [
-  '---',
-  "title: 'Workflows Index'",
-  "sidebarTitle: 'Workflows Index'",
-  "description: 'Aggregate inventory of repository GitHub workflows'",
-  'keywords:',
-  '  [',
-  "    'livepeer',",
-  "    'workflows index',",
-  "    'aggregate inventory',",
-  "    'repository',",
-  "    'github',",
-  "    'workflows',",
-  '  ]',
-  '---'
-];
+const WORKFLOWS_INDEX_FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
+  title: 'Workflows Index',
+  sidebarTitle: 'Workflows Index',
+  description: 'Aggregate inventory of repository GitHub workflows',
+  keywords: ['livepeer', 'workflows index', 'aggregate inventory', 'repository', 'github', 'workflows'],
+  keywordsStyle: 'multiline'
+});
 
-const TEMPLATES_INDEX_FRONTMATTER_LINES = [
-  '---',
-  "title: 'Templates Index'",
-  "sidebarTitle: 'Templates Index'",
-  "description: 'Aggregate inventory of repository templates'",
-  'keywords:',
-  '  [',
-  "    'livepeer',",
-  "    'templates index',",
-  "    'aggregate inventory',",
-  "    'repository',",
-  "    'templates',",
-  '  ]',
-  '---'
-];
+const TEMPLATES_INDEX_FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
+  title: 'Templates Index',
+  sidebarTitle: 'Templates Index',
+  description: 'Aggregate inventory of repository templates',
+  keywords: ['livepeer', 'templates index', 'aggregate inventory', 'repository', 'templates'],
+  keywordsStyle: 'multiline'
+});
 
 function normalizeRepoPath(value) {
   return String(value || '').split(path.sep).join('/');
@@ -125,17 +113,6 @@ function parseYaml(content) {
 
 function mdEscape(value) {
   return String(value || '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
-}
-
-function buildGeneratedNoteLines({ script, purpose, runWhen, runCommand }) {
-  return [
-    '<Note>',
-    `**Generation Script**: This file is generated from script(s): \`${script}\`. <br/>`,
-    `**Purpose**: ${purpose} <br/>`,
-    `**Run when**: ${runWhen} <br/>`,
-    `**Important**: Do not manually edit this file; run \`${runCommand}\`. <br/>`,
-    '</Note>'
-  ];
 }
 
 function inferWorkflowTriggers(doc, content) {
@@ -231,14 +208,17 @@ function buildWorkflowsIndex() {
   });
 
   const lines = [];
-  WORKFLOWS_INDEX_FRONTMATTER_LINES.forEach((line) => lines.push(line));
-  lines.push('');
-  buildGeneratedNoteLines({
+  const bannerDetails = {
     script: 'tools/scripts/generate-docs-guide-indexes.js',
     purpose: 'Workflow inventory for docs-guide maintenance.',
     runWhen: 'GitHub workflows are added, removed, or changed.',
     runCommand: 'node tools/scripts/generate-docs-guide-indexes.js --write'
-  }).forEach((line) => lines.push(line));
+  };
+  WORKFLOWS_INDEX_FRONTMATTER_LINES.forEach((line) => lines.push(line));
+  lines.push('');
+  buildGeneratedHiddenBannerLines(bannerDetails).forEach((line) => lines.push(line));
+  lines.push('');
+  buildGeneratedNoteLines(bannerDetails).forEach((line) => lines.push(line));
   lines.push('');
   lines.push('| Workflow | File | Triggers | Purpose | Blocking Policy | Outputs | Owner |');
   lines.push('|---|---|---|---|---|---|---|');
@@ -326,14 +306,17 @@ function buildTemplatesIndex() {
     .sort((a, b) => a.file.localeCompare(b.file));
 
   const lines = [];
-  TEMPLATES_INDEX_FRONTMATTER_LINES.forEach((line) => lines.push(line));
-  lines.push('');
-  buildGeneratedNoteLines({
+  const bannerDetails = {
     script: 'tools/scripts/generate-docs-guide-indexes.js',
     purpose: 'Issue and PR template inventory for docs-guide maintenance.',
     runWhen: 'Issue templates or PR templates are added, removed, or changed.',
     runCommand: 'node tools/scripts/generate-docs-guide-indexes.js --write'
-  }).forEach((line) => lines.push(line));
+  };
+  TEMPLATES_INDEX_FRONTMATTER_LINES.forEach((line) => lines.push(line));
+  lines.push('');
+  buildGeneratedHiddenBannerLines(bannerDetails).forEach((line) => lines.push(line));
+  lines.push('');
+  buildGeneratedNoteLines(bannerDetails).forEach((line) => lines.push(line));
   lines.push('');
   lines.push('| Template | Type | File | Purpose | When To Use | Labels/Automation | Owner |');
   lines.push('|---|---|---|---|---|---|---|');

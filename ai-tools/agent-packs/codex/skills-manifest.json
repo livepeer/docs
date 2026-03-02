@@ -1,0 +1,166 @@
+{
+  "generated_at": "2026-03-02T02:32:06.100Z",
+  "source_catalog": "ai-tools/ai-skills/catalog/skill-catalog.json",
+  "source_manifest": "ai-tools/ai-skills/catalog/execution-manifest.json",
+  "pipeline": [
+    {
+      "run_order": 1,
+      "id": "script-footprint-and-usage-audit",
+      "goal": "Detect script sprawl, duplicates, placeholders, and backup artifacts.",
+      "commands": [
+        {
+          "name": "audit",
+          "run": "node tools/scripts/script-footprint-and-usage-audit.js --scope full",
+          "modes": [
+            "static",
+            "full"
+          ]
+        }
+      ],
+      "outputs": [
+        "tasks/reports/repo-ops/script-footprint-and-usage-audit.md",
+        "tasks/reports/repo-ops/script-footprint-and-usage-audit.json"
+      ],
+      "severity_model": "critical-high-medium-low",
+      "autofix_mode": "advisory"
+    },
+    {
+      "run_order": 2,
+      "id": "docs-coverage-and-route-integrity-audit",
+      "goal": "Identify route mismatches, legacy path drift, and orphaned docs candidates.",
+      "commands": [
+        {
+          "name": "audit",
+          "run": "node tools/scripts/docs-coverage-and-route-integrity-audit.js --scope full",
+          "modes": [
+            "static",
+            "full"
+          ]
+        }
+      ],
+      "outputs": [
+        "tasks/reports/repo-ops/docs-coverage-and-route-integrity-audit.md",
+        "tasks/reports/repo-ops/docs-coverage-and-route-integrity-audit.json"
+      ],
+      "severity_model": "critical-high-medium-low",
+      "autofix_mode": "advisory"
+    },
+    {
+      "run_order": 3,
+      "id": "docs-quality-and-freshness-audit",
+      "goal": "Surface TODO/TBD/Coming Soon markers, thin content, and freshness risk.",
+      "commands": [
+        {
+          "name": "audit",
+          "run": "node tools/scripts/docs-quality-and-freshness-audit.js --scope full",
+          "modes": [
+            "static",
+            "full"
+          ]
+        }
+      ],
+      "outputs": [
+        "tasks/reports/repo-ops/docs-quality-and-freshness-audit.md",
+        "tasks/reports/repo-ops/docs-quality-and-freshness-audit.json"
+      ],
+      "severity_model": "critical-high-medium-low",
+      "autofix_mode": "advisory"
+    },
+    {
+      "run_order": 4,
+      "id": "style-and-language-homogenizer-en-gb",
+      "goal": "Enforce UK English and style consistency on English v2 docs in phase 1.",
+      "commands": [
+        {
+          "name": "audit",
+          "run": "node tools/scripts/style-and-language-homogenizer-en-gb.js --scope full",
+          "modes": [
+            "static",
+            "full"
+          ]
+        }
+      ],
+      "outputs": [
+        "tasks/reports/repo-ops/style-and-language-homogenizer-en-gb.md",
+        "tasks/reports/repo-ops/style-and-language-homogenizer-en-gb.json"
+      ],
+      "severity_model": "critical-high-medium-low",
+      "autofix_mode": "advisory"
+    },
+    {
+      "run_order": 5,
+      "id": "component-layout-governance",
+      "goal": "Validate page composition against component layout contracts by page type.",
+      "commands": [
+        {
+          "name": "audit",
+          "run": "node tools/scripts/component-layout-governance.js --scope full",
+          "modes": [
+            "static",
+            "full"
+          ]
+        }
+      ],
+      "outputs": [
+        "tasks/reports/repo-ops/component-layout-governance.md",
+        "tasks/reports/repo-ops/component-layout-governance.json"
+      ],
+      "severity_model": "critical-high-medium-low",
+      "autofix_mode": "advisory"
+    },
+    {
+      "run_order": 6,
+      "id": "cleanup-quarantine-manager",
+      "goal": "Classify cleanup candidates and apply conservative quarantine only when requested.",
+      "commands": [
+        {
+          "name": "classify",
+          "run": "node tools/scripts/cleanup-quarantine-manager.js",
+          "modes": [
+            "static",
+            "full"
+          ]
+        },
+        {
+          "name": "apply",
+          "run": "node tools/scripts/cleanup-quarantine-manager.js --apply",
+          "modes": [
+            "full"
+          ]
+        }
+      ],
+      "outputs": [
+        "tasks/reports/repo-ops/cleanup-quarantine-manifest.json",
+        "tasks/reports/repo-ops/cleanup-quarantine-manifest.md"
+      ],
+      "severity_model": "critical-high-medium-low",
+      "autofix_mode": "requires-approval"
+    },
+    {
+      "run_order": 7,
+      "id": "cross-agent-packager",
+      "goal": "Generate consistent skill packs for Codex, Cursor, Claude Code, and Windsurf.",
+      "commands": [
+        {
+          "name": "package",
+          "run": "node tools/scripts/cross-agent-packager.js --agent-pack all",
+          "modes": [
+            "static",
+            "runtime",
+            "full"
+          ]
+        }
+      ],
+      "outputs": [
+        "ai-tools/agent-packs/codex/skills-manifest.json",
+        "ai-tools/agent-packs/cursor/rules.md",
+        "ai-tools/agent-packs/claude/CLAUDE.md",
+        "ai-tools/agent-packs/windsurf/rules.md"
+      ],
+      "severity_model": "info-only",
+      "autofix_mode": "safe"
+    }
+  ],
+  "catalog_version": "1.0.0",
+  "manifest_version": "1.0.0"
+}

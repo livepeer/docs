@@ -12,6 +12,7 @@
  *   --full (default)
  *   --staged
  *   --files <path[,path...]> (repeatable; explicit files mode)
+ *   --no-mintignore (include files ignored by .mintignore)
  *   --report <path> (default: tasks/reports/navigation-links/LINK_TEST_REPORT.md)
  *   --report-json <path> (default: tasks/reports/navigation-links/LINK_TEST_REPORT.json)
  *   --write-links | --no-write-links (default true for --full, false for --staged/--files)
@@ -45,7 +46,11 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 const { extractImports } = require('../utils/mdx-parser');
-const { getStagedFiles, isExcludedV2ExperimentalPath } = require('../utils/file-walker');
+const {
+  getStagedFiles,
+  isExcludedV2ExperimentalPath,
+  filterPathsByMintIgnore
+} = require('../utils/file-walker');
 
 const REPO_ROOT = getRepoRoot();
 const LEGACY_V2_PAGES_DIR = path.join(REPO_ROOT, 'v2', 'pages');
@@ -154,6 +159,7 @@ function parseArgs(argv) {
     mode: 'full',
     report: DEFAULT_REPORT,
     reportJson: DEFAULT_REPORT_JSON,
+    respectMintIgnore: true,
     strict: false,
     writeLinks: undefined,
     externalPolicy: 'classify',
@@ -181,6 +187,7 @@ function parseArgs(argv) {
       i += 1;
     }
     else if (token === '--strict') args.strict = true;
+    else if (token === '--no-mintignore') args.respectMintIgnore = false;
     else if (token === '--write-links') args.writeLinks = true;
     else if (token === '--no-write-links') args.writeLinks = false;
     else if (token === '--report') {
@@ -365,7 +372,8 @@ function isWithinV2Roots(absPath) {
   return EXTRA_V2_DIRS.some((dir) => absPath.startsWith(dir));
 }
 
-function getExplicitTargets(files) {
+function getExplicitTargets(files, options = {}) {
+  const { respectMintIgnore = true } = options;
   const isIndexMdx = (abs) => path.basename(abs).toLowerCase() === 'index.mdx';
   const out = [];
   const seen = new Set();
@@ -389,24 +397,35 @@ function getExplicitTargets(files) {
     out.push(candidate);
   }
 
-  return out;
+  return filterPathsByMintIgnore(out, {
+    rootDir: REPO_ROOT,
+    respectMintIgnore
+  });
 }
 
-function getInitialTargets(mode, explicitFiles = []) {
+function getInitialTargets(mode, explicitFiles = [], options = {}) {
+  const { respectMintIgnore = true } = options;
   const isIndexMdx = (abs) => path.basename(abs).toLowerCase() === 'index.mdx';
   if (mode === 'files') {
-    return getExplicitTargets(explicitFiles);
+    return getExplicitTargets(explicitFiles, { respectMintIgnore });
   }
 
   if (mode === 'staged') {
-    return getStagedFiles()
+    const stagedTargets = getStagedFiles()
       .filter((abs) => isWithinV2Roots(abs) && abs.endsWith('.mdx') && fs.existsSync(abs) && !isIndexMdx(abs));
+    return filterPathsByMintIgnore(stagedTargets, {
+      rootDir: REPO_ROOT,
+      respectMintIgnore
+    });
   }
 
   const results = [];
   const roots = [V2_PAGES_DIR, ...EXTRA_V2_DIRS];
   roots.forEach((root) => walkFiles(root, (abs) => abs.endsWith('.mdx') && !isIndexMdx(abs), results));
-  return [...new Set(results)];
+  return filterPathsByMintIgnore([...new Set(results)], {
+    rootDir: REPO_ROOT,
+    respectMintIgnore
+  });
 }
 
 function stripQueryHash(p) {
@@ -1711,6 +1730,7 @@ function buildJsonReport({ args, summary, fileResults, externalValidation }) {
       strict: args.strict,
       report: relFromRoot(args.report),
       reportJson: relFromRoot(args.reportJson),
+      respectMintIgnore: args.respectMintIgnore,
       writeLinks: args.writeLinks,
       externalPolicy: args.externalPolicy,
       externalLinkTypes: args.externalLinkTypes,
@@ -1783,7 +1803,9 @@ async function runAudit(options = {}) {
   const structure = parseIndexStructure(indexContent);
   const { folderToDomain } = buildDomainMaps(structure);
 
-  const rootTargets = getInitialTargets(args.mode, args.files);
+  const rootTargets = getInitialTargets(args.mode, args.files, {
+    respectMintIgnore: args.respectMintIgnore
+  });
   if (!rootTargets.length) {
     console.log('No target MDX files found for selected mode.');
     return {

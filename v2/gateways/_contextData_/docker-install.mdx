@@ -1,0 +1,267 @@
+---
+title: Docker Install
+description: Install and run a Livepeer transcoding gateway using Docker
+sidebarTitle: Docker Install
+icon: docker
+keywords: ["livepeer", "gateways", "run a gateway", "install", "docker install", "docker", "gateway", "transcoding", "rtmp"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+import { DoubleIconLink } from '/snippets/components/primitives/links.jsx'
+
+<Note>
+  The Livepeer Gateway was previously called the Livepeer Broadcaster. Some CLI
+  flags and log output still reference the Broadcaster name.
+</Note>
+
+## Prerequisites
+
+Docker Engine 20.10 or later is required. If Docker is not installed or needs updating, follow the official [Docker Engine installation guide](https://docs.docker.com/engine/install/) for your platform.
+
+Verify your installed version:
+
+```bash
+docker --version
+```
+
+## Pull the Livepeer Docker Image
+
+Fetch the latest <DoubleIconLink label="Livepeer Docker image" href="https://hub.docker.com/r/livepeer/go-livepeer" iconLeft="docker" /> from Docker Hub:
+
+```bash
+docker pull livepeer/go-livepeer:master
+```
+
+## Configure the Gateway
+
+Create a working directory and a `docker-compose.yml` file. Choose the configuration that matches your deployment target:
+
+<Tabs>
+  <Tab title="On-Chain (Production)">
+    On-chain mode connects the gateway to the Livepeer network on Arbitrum. An
+    Ethereum wallet and Arbitrum One RPC endpoint are required before starting.
+    See [On-Chain Setup Requirements](/v2/gateways/run-a-gateway/requirements/on-chain%20setup/on-chain)
+    for prerequisites.
+
+    ```yaml docker-compose.yml
+    services:
+      gateway:
+        image: livepeer/go-livepeer:master
+        container_name: "gateway"
+        restart: unless-stopped
+        ports:
+          - 1935:1935   # RTMP ingest
+          - 8935:8935   # HTTP API / HLS output
+          - 5935:5935   # CLI
+        volumes:
+          - ./data/gateway:/root/.lpData
+        command:
+          - "-gateway"
+          - "-network=arbitrum-one-mainnet"
+          - "-ethUrl=<YOUR_ARB_RPC_URL>"
+          - "-ethKeystorePath=/root/.lpData/keystore"
+          - "-ethPassword=/root/.lpData/eth-secret.txt"
+          - "-rtmpAddr=0.0.0.0:1935"
+          - "-httpAddr=0.0.0.0:8935"
+          - "-cliAddr=0.0.0.0:5935"
+          - "-httpIngest=true"
+          - "-blockPollingInterval=10"
+          - "-transcodingOptions=P240p30fps16x9,P360p30fps16x9"
+          - "-monitor"
+          - "-v=6"
+    ```
+
+    Replace `<YOUR_ARB_RPC_URL>` with your Arbitrum One RPC endpoint (e.g.
+    from Alchemy or Infura).
+
+    After creating this file, complete the [Create Livepeer Gateway ETH Account](#create-livepeer-gateway-eth-account)
+    step below before starting the gateway.
+  </Tab>
+  <Tab title="Development (Off-Chain)">
+    Off-chain mode runs without blockchain connectivity and is intended for
+    local development. You must supply the address of a running orchestrator
+    node via `-orchAddr`.
+
+    <Warning>
+      You need access to a running orchestrator node. For local testing, run
+      your own orchestrator or point to a known development node.
+    </Warning>
+
+    ```yaml docker-compose.yml
+    services:
+      gateway:
+        image: livepeer/go-livepeer:master
+        container_name: "gateway"
+        restart: unless-stopped
+        ports:
+          - 1935:1935   # RTMP ingest
+          - 8935:8935   # HTTP API / HLS output
+          - 5935:5935   # CLI
+        volumes:
+          - ./data/gateway:/root/.lpData
+        command:
+          - "-gateway"
+          - "-network=offchain"
+          - "-orchAddr=<YOUR_ORCHESTRATOR_ADDRESS>"
+          - "-rtmpAddr=0.0.0.0:1935"
+          - "-httpAddr=0.0.0.0:8935"
+          - "-cliAddr=0.0.0.0:5935"
+          - "-httpIngest=true"
+          - "-transcodingOptions=P240p30fps16x9,P360p30fps16x9"
+          - "-v=6"
+    ```
+
+    Replace `<YOUR_ORCHESTRATOR_ADDRESS>` with the service address of your
+    orchestrator (e.g. `https://my-orch:8935`).
+  </Tab>
+</Tabs>
+
+## Create Livepeer Gateway ETH Account
+
+<Note>
+  This section applies to the **On-Chain** configuration only. Skip this step
+  if using development (off-chain) mode.
+</Note>
+
+Before the gateway can sign transactions on-chain, it needs an Ethereum account.
+Run the gateway interactively once to generate one:
+
+<Steps>
+  <Step title="Generate the ETH account">
+    Create the data directory, then start the container interactively:
+
+    ```bash
+    mkdir -p ./data/gateway
+    docker compose run -it gateway
+    ```
+
+    When prompted, enter a strong password to protect your Ethereum private key.
+
+    <Warning>
+      Never share or lose your keystore file or password. Both are required to
+      recover your ETH account.
+    </Warning>
+
+    After the log output confirms the Ethereum account has been unlocked, press
+    `Ctrl+C` to exit.
+  </Step>
+  <Step title="Create the password file">
+    Write your password to the file that the gateway reads on startup:
+
+    ```bash
+    echo "your_password" > ./data/gateway/eth-secret.txt
+    ```
+
+    <Tip>
+      This must match the password you entered in the previous step.
+    </Tip>
+  </Step>
+  <Step title="Back up the keystore">
+    Your keystore file is stored at `./data/gateway/keystore/`. Back it up
+    securely before going to production. Losing this file means losing access
+    to any ETH held in the account.
+  </Step>
+</Steps>
+
+## Start the Gateway
+
+Start the gateway container in the background:
+
+```bash
+docker compose up -d
+```
+
+Verify the gateway is running:
+
+```bash
+docker logs gateway
+```
+
+The gateway is ready when logs show it binding to the configured ports and
+connecting to orchestrators on the network.
+
+## Stream Live Video
+
+The gateway accepts RTMP ingest on port `1935`. Transcoded HLS output is
+available on port `8935` at `/stream/<manifest-id>.m3u8`.
+
+<Tabs>
+  <Tab title="FFmpeg">
+    Push a file or live source to the gateway using FFmpeg:
+
+    ```bash
+    ffmpeg -re -i input.mp4 -c:v libx264 -c:a aac -f flv rtmp://localhost:1935/live/stream
+    ```
+
+    Replace `input.mp4` with a local file or a live source URL. The path
+    segment after `/live/` (`stream` in the example above) becomes the manifest
+    ID used to retrieve the HLS output.
+
+    The transcoded HLS output will be available at:
+
+    ```
+    http://localhost:8935/stream/stream.m3u8
+    ```
+  </Tab>
+  <Tab title="OBS Studio">
+    [OBS Studio](https://obsproject.com/) is a common choice for RTMP
+    broadcasting.
+
+    1. Open OBS and go to **Settings > Stream**
+    2. Set **Service** to **Custom...**
+    3. Set **Server** to `rtmp://localhost:1935/live`
+    4. Set **Stream Key** to `stream` (or any identifier you choose)
+    5. Go to **Settings > Output** and set **Output Mode** to **Advanced**
+    6. Set **Keyframe Interval** to `2` seconds
+    7. Click **OK** and press **Start Streaming**
+
+    The transcoded HLS output will be available at:
+
+    ```
+    http://localhost:8935/stream/stream.m3u8
+    ```
+  </Tab>
+</Tabs>
+
+## Stream Authentication
+
+By default, the gateway accepts any incoming RTMP stream. To restrict access,
+use the `-authWebhookUrl` flag to point the gateway at an authentication
+endpoint you control.
+
+When an incoming stream arrives, the gateway sends a `POST` request to the
+webhook URL with the stream URL as a JSON payload:
+
+```json
+{
+  "url": "rtmp://localhost:1935/live/stream"
+}
+```
+
+Your server responds with HTTP `200` to allow the stream, or any other status
+code to reject it.
+
+Add the flag to your `docker-compose.yml` command block:
+
+```yaml
+- "-authWebhookUrl=https://your-auth-server.com/auth"
+```
+
+The stream key in the RTMP path (e.g. `stream` in `rtmp://localhost/live/stream`)
+is included in the webhook payload URL. Your webhook implementation can use this
+value to authenticate incoming callers — for example, by checking it against a
+list of valid stream keys.
+
+For full webhook response options including custom `manifestID`, `streamKey`
+override, and per-stream transcoding profiles, see the
+[RTMP Webhook Authentication reference](https://github.com/livepeer/go-livepeer/blob/master/doc/rtmpwebhookauth.md).
+
+<Card
+  title="Next Step: Configure the Gateway"
+  icon="gear"
+  href="/v2/gateways/run-a-gateway/configure/configuration-overview"
+  horizontal
+  arrow
+>
+  View all available configuration options for the gateway
+</Card>

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://docs.livepeer.org/schemas/component-layout-profile.schema.json",
+  "title": "Component Layout Profile",
+  "type": "object",
+  "required": ["version", "page_types"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "page_types": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/pageType"
+      }
+    }
+  },
+  "$defs": {
+    "pageType": {
+      "type": "object",
+      "required": ["page_type", "match", "required_sections", "allowed_components", "forbidden_patterns"],
+      "properties": {
+        "page_type": {
+          "type": "string",
+          "pattern": "^[a-z0-9_-]+$"
+        },
+        "match": {
+          "type": "object",
+          "required": ["path_contains"],
+          "properties": {
+            "path_contains": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string", "minLength": 1 }
+            }
+          },
+          "additionalProperties": false
+        },
+        "required_sections": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "allowed_components": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "forbidden_patterns": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

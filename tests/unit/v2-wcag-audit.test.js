@@ -64,7 +64,14 @@ function runTests() {
     assert.strictEqual(parsed.mode, 'staged');
     assert.strictEqual(parsed.fix, false);
     assert.strictEqual(parsed.failImpact, 'moderate');
+    assert.strictEqual(parsed.respectMintIgnore, true);
     assert.strictEqual(parsed.maxPages, 10);
+  });
+
+  runCase('Parses --no-mintignore override', () => {
+    const parsed = wcag.parseArgs(['--full', '--no-mintignore']);
+    assert.strictEqual(parsed.mode, 'full');
+    assert.strictEqual(parsed.respectMintIgnore, false);
   });
 
   runCase('Files mode does not default-cap browser pages', () => {
@@ -210,7 +217,7 @@ function runTests() {
     errors,
     warnings,
     passed: errors.length === 0,
-    total: 11
+    total: 12
   };
 }
 

@@ -27,6 +27,8 @@
 /**
  * Main test runner - orchestrates all test suites
  */
+const { spawnSync } = require('child_process');
+const path = require('path');
 
 const styleGuideTests = require('./unit/style-guide.test');
 const mdxTests = require('./unit/mdx.test');
@@ -38,6 +40,7 @@ const docsNavigationTests = require('./unit/docs-navigation.test');
 const scriptDocsTests = require('./unit/script-docs.test');
 const pagesIndexGenerator = require('../tools/scripts/generate-pages-index');
 const browserTests = require('./integration/browser.test');
+const REPO_ROOT = path.resolve(__dirname, '..');
 
 const args = process.argv.slice(2);
 const stagedOnly = args.includes('--staged');
@@ -121,6 +124,22 @@ async function runAllTests() {
     console.log('   skipped (no staged v2/pages changes)');
   } else {
     console.log(`   ${pagesIndexResult.errors.length} errors, ${pagesIndexResult.warnings.length} warnings`);
+  }
+
+  // Generated Banner Enforcement
+  console.log('\n🏷️  Running Generated Banner Enforcement...');
+  const generatedBannerCheck = spawnSync(
+    'node',
+    ['tools/scripts/enforce-generated-file-banners.js', '--check'],
+    { cwd: REPO_ROOT, encoding: 'utf8' }
+  );
+  if (generatedBannerCheck.stdout) process.stdout.write(generatedBannerCheck.stdout);
+  if (generatedBannerCheck.stderr) process.stderr.write(generatedBannerCheck.stderr);
+  if (generatedBannerCheck.status !== 0) {
+    totalErrors += 1;
+    console.log('   1 error, 0 warnings');
+  } else {
+    console.log('   0 errors, 0 warnings');
   }
   
   // Browser Tests (optional)

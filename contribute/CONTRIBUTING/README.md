@@ -2,6 +2,8 @@
 
 Welcome! This guide will help you contribute to the Livepeer documentation.
 
+For optional maintainer pilot workflows using visual-explainer, see the canonical docs-guide section: [Optional Visual-Explainer Workflows (Pilot)](../../docs-guide/contributing/contributing.mdx#optional-visual-explainer-workflows-pilot).
+
 ## Quick Start
 
 1. **Read the Style Guide** - `v2/resources/documentation-guide/style-guide.mdx`

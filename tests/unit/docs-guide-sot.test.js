@@ -35,35 +35,44 @@ const REPO_ROOT = process.cwd();
 const REQUIRED_MANUAL_FILES = [
   'docs-guide/README.mdx',
   'docs-guide/source-of-truth-policy.mdx',
-  'docs-guide/feature-map.mdx',
-  'docs-guide/architecture-map.mdx',
+  'docs-guide/feature-guides/feature-map.mdx',
+  'docs-guide/feature-guides/architecture-map.mdx',
   'docs-guide/lpd.mdx',
-  'docs-guide/quality-gates.mdx',
-  'docs-guide/automation-pipelines.mdx',
-  'docs-guide/content-system.mdx',
-  'docs-guide/data-integrations.mdx'
+  'docs-guide/quality-testing/quality-gates.mdx',
+  'docs-guide/quality-testing/audit-system-overview.mdx',
+  'docs-guide/quality-testing/skill-pipeline-map.mdx',
+  'docs-guide/quality-testing/cleanup-quarantine-policy.mdx',
+  'docs-guide/quality-testing/component-layout-decision-matrix.mdx',
+  'docs-guide/feature-guides/automation-pipelines.mdx',
+  'docs-guide/feature-guides/content-system.mdx',
+  'docs-guide/feature-guides/data-integrations.mdx'
 ];
 
 const REQUIRED_GENERATED_FILES = [
-  'docs-guide/scripts-index.md',
-  'docs-guide/workflows-index.mdx',
-  'docs-guide/templates-index.mdx',
-  'docs-guide/pages-index.mdx',
-  'docs-guide/components-index.mdx'
+  'docs-guide/indexes/scripts-index.mdx',
+  'docs-guide/indexes/workflows-index.mdx',
+  'docs-guide/indexes/templates-index.mdx',
+  'docs-guide/indexes/pages-index.mdx',
+  'docs-guide/indexes/components-index.mdx'
 ];
 
 const REQUIRED_README_REFERENCES = [
   'docs-guide/README.mdx',
-  'docs-guide/feature-map.mdx',
+  'docs-guide/feature-guides/feature-map.mdx',
   'docs-guide/source-of-truth-policy.mdx',
   'docs-guide/lpd.mdx',
-  'docs-guide/quality-gates.mdx',
-  'docs-guide/automation-pipelines.mdx',
-  'docs-guide/pages-index.mdx',
-  'docs-guide/components-index.mdx',
-  'docs-guide/scripts-index.md',
-  'docs-guide/workflows-index.mdx',
-  'docs-guide/templates-index.mdx'
+  'docs-guide/quality-testing/quality-gates.mdx',
+  'docs-guide/quality-testing/audit-system-overview.mdx',
+  'docs-guide/quality-testing/skill-pipeline-map.mdx',
+  'docs-guide/quality-testing/cleanup-quarantine-policy.mdx',
+  'docs-guide/quality-testing/component-layout-decision-matrix.mdx',
+  'docs-guide/feature-guides/automation-pipelines.mdx',
+  'docs-guide/indexes/ai-tools.mdx',
+  'docs-guide/indexes/pages-index.mdx',
+  'docs-guide/indexes/components-index.mdx',
+  'docs-guide/indexes/scripts-index.mdx',
+  'docs-guide/indexes/workflows-index.mdx',
+  'docs-guide/indexes/templates-index.mdx'
 ];
 
 function readFileSafe(repoPath) {
@@ -132,18 +141,28 @@ function checkGeneratedIndexFreshness(errors) {
   const checks = [
     {
       args: ['tools/scripts/generate-docs-guide-indexes.js', '--check'],
-      file: 'docs-guide/workflows-index.mdx',
+      file: 'docs-guide/indexes/workflows-index.mdx',
       message: 'Generated docs-guide template/workflow indexes are out of date. Run generator script.'
     },
     {
       args: ['tools/scripts/generate-docs-guide-pages-index.js', '--check'],
-      file: 'docs-guide/pages-index.mdx',
+      file: 'docs-guide/indexes/pages-index.mdx',
       message: 'Generated docs-guide pages index is out of date. Run pages index generator script.'
     },
     {
       args: ['tools/scripts/generate-docs-guide-components-index.js', '--check'],
-      file: 'docs-guide/components-index.mdx',
+      file: 'docs-guide/indexes/components-index.mdx',
       message: 'Generated docs-guide components index is out of date. Run components index generator script.'
+    },
+    {
+      args: ['tests/unit/script-docs.test.js', '--check-indexes'],
+      file: 'docs-guide/indexes/scripts-index.mdx',
+      message: 'Generated docs-guide scripts index is out of date. Run script docs generator script.'
+    },
+    {
+      args: ['tools/scripts/enforce-generated-file-banners.js', '--check'],
+      file: 'tools/scripts/enforce-generated-file-banners.js',
+      message: 'Generated banner enforcement failed. Run generated banner enforcer or relevant generators.'
     }
   ];
 

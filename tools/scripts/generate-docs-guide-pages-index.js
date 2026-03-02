@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script generate-docs-guide-pages-index
- * @summary Generate docs-guide/pages-index.mdx from v2/index.mdx entries filtered to docs.json navigation pages.
+ * @summary Generate docs-guide/indexes/pages-index.mdx from v2/index.mdx entries filtered to docs.json navigation pages.
  * @owner docs
- * @scope tools/scripts, docs-guide/pages-index.mdx, v2/index.mdx, docs.json
+ * @scope tools/scripts, docs-guide/indexes/pages-index.mdx, v2/index.mdx, docs.json
  *
  * @usage
  *   node tools/scripts/generate-docs-guide-pages-index.js --write
@@ -13,7 +13,7 @@
  *   --check Verify generated pages index file is current without writing.
  *
  * @outputs
- *   - docs-guide/pages-index.mdx
+ *   - docs-guide/indexes/pages-index.mdx
  *
  * @exit-codes
  *   0 = generation/check succeeded
@@ -29,20 +29,30 @@
 
 const fs = require('fs');
 const path = require('path');
+const {
+  buildGeneratedFrontmatterLines,
+  buildGeneratedHiddenBannerLines,
+  buildGeneratedNoteLines
+} = require('../lib/generated-file-banners');
 
 const REPO_ROOT = process.cwd();
 const SOURCE_INDEX_PATH = 'v2/index.mdx';
 const DOCS_JSON_PATH = 'docs.json';
-const OUTPUT_PATH = 'docs-guide/pages-index.mdx';
+const OUTPUT_PATH = 'docs-guide/indexes/pages-index.mdx';
 
-const FRONTMATTER_LINES = [
-  '---',
-  "title: 'Pages Index'",
-  "sidebarTitle: 'Pages Index'",
-  "description: 'Tree inventory of docs pages included in docs.json navigation, generated from v2 index data.'",
-  "keywords: ['livepeer', 'pages index', 'tree', 'docs.json', 'v2']",
-  '---'
-];
+const FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
+  title: 'Pages Index',
+  sidebarTitle: 'Pages Index',
+  description: 'Tree inventory of docs pages included in docs.json navigation, generated from v2 index data.',
+  keywords: ['livepeer', 'pages index', 'tree', 'docs.json', 'v2']
+});
+
+const GENERATED_DETAILS = {
+  script: 'tools/scripts/generate-docs-guide-pages-index.js',
+  purpose: 'Tree inventory of docs pages included in docs.json navigation, generated from v2 index data.',
+  runWhen: '`v2/index.mdx` links or docs.json navigation entries change.',
+  runCommand: 'node tools/scripts/generate-docs-guide-pages-index.js --write'
+};
 
 function normalizeRepoPath(value) {
   return String(value || '').split(path.sep).join('/').replace(/^\.?\//, '');
@@ -223,17 +233,6 @@ function renderTree(paths) {
   return lines;
 }
 
-function buildNoteLines() {
-  return [
-    '<Note>',
-    '**Generation Script**: This file is generated from script(s): `tools/scripts/generate-docs-guide-pages-index.js`. <br/>',
-    '**Purpose**: Tree inventory of docs pages included in docs.json navigation, generated from v2 index data. <br/>',
-    '**Run when**: `v2/index.mdx` links or docs.json navigation entries change. <br/>',
-    '**Important**: Do not manually edit this file; run `node tools/scripts/generate-docs-guide-pages-index.js --write`. <br/>',
-    '</Note>'
-  ];
-}
-
 function buildContent() {
   const docsRouteKeys = getDocsJsonRouteKeys();
   const sourceLinks = parseV2IndexLinks();
@@ -248,7 +247,15 @@ function buildContent() {
   });
 
   const uniqueIncluded = [...new Set(includedFiles)];
-  const lines = [...FRONTMATTER_LINES, '', ...buildNoteLines(), '', ...renderTree(uniqueIncluded)];
+  const lines = [
+    ...FRONTMATTER_LINES,
+    '',
+    ...buildGeneratedHiddenBannerLines(GENERATED_DETAILS),
+    '',
+    ...buildGeneratedNoteLines(GENERATED_DETAILS),
+    '',
+    ...renderTree(uniqueIncluded)
+  ];
   return `${lines.join('\n').trimEnd()}\n`;
 }
 
@@ -305,4 +312,3 @@ if (require.main === module) {
 module.exports = {
   buildContent
 };
-

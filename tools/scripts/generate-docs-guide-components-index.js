@@ -3,7 +3,7 @@
  * @script generate-docs-guide-components-index
  * @summary Generate component inventory indexes from snippets/components exports and optionally verify freshness.
  * @owner docs
- * @scope tools/scripts, docs-guide/components-index.mdx, v2/resources/documentation-guide/component-library/overview.mdx, snippets/components
+ * @scope tools/scripts, docs-guide/indexes/components-index.mdx, v2/resources/documentation-guide/component-library/overview.mdx, snippets/components
  *
  * @usage
  *   node tools/scripts/generate-docs-guide-components-index.js --write
@@ -13,7 +13,7 @@
  *   --check Verify generated components index file is current without writing.
  *
  * @outputs
- *   - docs-guide/components-index.mdx
+ *   - docs-guide/indexes/components-index.mdx
  *   - v2/resources/documentation-guide/component-library/overview.mdx
  *
  * @exit-codes
@@ -30,11 +30,16 @@
 
 const fs = require('fs');
 const path = require('path');
+const {
+  buildGeneratedFrontmatterLines,
+  buildGeneratedHiddenBannerLines,
+  buildGeneratedNoteLines
+} = require('../lib/generated-file-banners');
 
 const REPO_ROOT = process.cwd();
 const SOURCE_ROOT = 'snippets/components';
 const OUTPUT_PATHS = [
-  'docs-guide/components-index.mdx',
+  'docs-guide/indexes/components-index.mdx',
   'v2/resources/documentation-guide/component-library/overview.mdx'
 ];
 
@@ -71,14 +76,19 @@ const CATEGORIES = [
   }
 ];
 
-const FRONTMATTER_LINES = [
-  '---',
-  "title: 'Components Index'",
-  "sidebarTitle: 'Components Index'",
-  "description: 'Aggregate inventory of repository components from snippets/components, generated for docs-guide maintenance.'",
-  "keywords: ['livepeer', 'components index', 'aggregate inventory', 'repository', 'snippets']",
-  '---'
-];
+const FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
+  title: 'Components Index',
+  sidebarTitle: 'Components Index',
+  description: 'Aggregate inventory of repository components from snippets/components, generated for docs-guide maintenance.',
+  keywords: ['livepeer', 'components index', 'aggregate inventory', 'repository', 'snippets']
+});
+
+const GENERATED_DETAILS = {
+  script: 'tools/scripts/generate-docs-guide-components-index.js',
+  purpose: 'Aggregate inventory of repository components from snippets/components for docs-guide maintenance.',
+  runWhen: 'Components are added, removed, renamed, or their exported signatures change under `snippets/components`.',
+  runCommand: 'node tools/scripts/generate-docs-guide-components-index.js --write'
+};
 
 function normalizeRepoPath(value) {
   return String(value || '').split(path.sep).join('/').replace(/^\.?\//, '');
@@ -483,17 +493,6 @@ function indentLines(lines, spaces) {
   return lines.map((line) => `${pad}${line}`);
 }
 
-function buildGeneratedNoteLines() {
-  return [
-    '<Note>',
-    '**Generation Script**: This file is generated from script(s): `tools/scripts/generate-docs-guide-components-index.js`. <br/>',
-    '**Purpose**: Aggregate inventory of repository components from snippets/components for docs-guide maintenance. <br/>',
-    '**Run when**: Components are added, removed, renamed, or their exported signatures change under `snippets/components`. <br/>',
-    '**Important**: Do not manually edit this file; run `node tools/scripts/generate-docs-guide-components-index.js --write`. <br/>',
-    '</Note>'
-  ];
-}
-
 function serializeLookupRows(rows) {
   if (!rows.length) return '[]';
   const lines = ['['];
@@ -533,7 +532,9 @@ function buildContent() {
   lines.push('import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";');
   lines.push('import { DynamicTable } from "/snippets/components/layout/table.jsx";');
   lines.push('');
-  buildGeneratedNoteLines().forEach((line) => lines.push(line));
+  buildGeneratedHiddenBannerLines(GENERATED_DETAILS).forEach((line) => lines.push(line));
+  lines.push('');
+  buildGeneratedNoteLines(GENERATED_DETAILS).forEach((line) => lines.push(line));
   lines.push('');
 
   inventory.forEach((category) => {

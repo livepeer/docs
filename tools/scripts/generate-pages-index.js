@@ -32,6 +32,11 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync, spawnSync } = require('child_process');
+const {
+  buildGeneratedFrontmatterLines,
+  buildGeneratedHiddenBannerLines,
+  buildGeneratedNoteLines
+} = require('../lib/generated-file-banners');
 
 const LEGACY_PAGES_ROOT = 'v2/pages';
 const MODERN_PAGES_ROOT = 'v2';
@@ -58,6 +63,13 @@ const DOMAIN_RENAME_MAP = {
 const DOMAIN_REVERSE_MAP = Object.fromEntries(
   Object.entries(DOMAIN_RENAME_MAP).map(([legacy, modern]) => [modern, legacy])
 );
+
+const GENERATED_DETAILS = {
+  script: 'tools/scripts/generate-pages-index.js',
+  purpose: 'Table-of-contents index for v2 docs folders.',
+  runWhen: 'v2 docs pages are added, removed, or renamed.',
+  runCommand: 'node tools/scripts/generate-pages-index.js --write'
+};
 
 function getRepoRoot() {
   try {
@@ -370,20 +382,37 @@ function renderLinkTitle(link) {
   return link.missingFromDocsJson ? `⚠️ ${safeTitle}` : safeTitle;
 }
 
-function buildGeneratedIndexBannerLines() {
-  return [
-    '{/*',
-    'This file is generated from script(s): tools/scripts/generate-pages-index.js.',
-    'Purpose: Table-of-contents index for v2 docs folders.',
-    'Run when: v2 docs pages are added, removed, or renamed.',
-    'Do not manually edit this file; run its generator instead.',
-    '*/}',
-    ''
-  ];
+function buildIndexMeta(outputDirRel) {
+  const normalized = normalizeRel(outputDirRel);
+  const sectionName = prettifyName(path.basename(normalized));
+  return {
+    title: `${sectionName} Index`,
+    sidebarTitle: `${sectionName} Index`,
+    description: `Generated table of contents for docs pages under ${normalized}.`,
+    keywords: ['livepeer', 'generated index', 'table of contents', normalized]
+  };
 }
 
-function renderIndexContent(data) {
-  const lines = [...buildGeneratedIndexBannerLines(), '# Table of contents', ''];
+function buildRootMeta() {
+  return {
+    title: 'Pages Index',
+    sidebarTitle: 'Pages Index',
+    description: 'Generated table of contents for v2 docs folders.',
+    keywords: ['livepeer', 'generated index', 'table of contents', 'v2']
+  };
+}
+
+function renderIndexContent(data, meta) {
+  const lines = [
+    ...buildGeneratedFrontmatterLines(meta),
+    '',
+    ...buildGeneratedHiddenBannerLines(GENERATED_DETAILS),
+    '',
+    ...buildGeneratedNoteLines(GENERATED_DETAILS),
+    '',
+    '# Table of contents',
+    ''
+  ];
 
   if (data.rootLinks.length > 0) {
     for (const link of data.rootLinks) {
@@ -485,8 +514,17 @@ function buildAggregateData(topLevelDirs, sourceByDirRel, rootIndexAbs) {
   return groups;
 }
 
-function renderAggregateContent(groups) {
-  const lines = [...buildGeneratedIndexBannerLines(), '# Table of contents', ''];
+function renderAggregateContent(groups, meta) {
+  const lines = [
+    ...buildGeneratedFrontmatterLines(meta),
+    '',
+    ...buildGeneratedHiddenBannerLines(GENERATED_DETAILS),
+    '',
+    ...buildGeneratedNoteLines(GENERATED_DETAILS),
+    '',
+    '# Table of contents',
+    ''
+  ];
 
   for (const group of groups) {
     lines.push(`## ${group.title}`);
@@ -644,7 +682,7 @@ function run(options = {}) {
   for (const dirRel of topLevelDirs) {
     const sourceDirRel = resolveSourceDirRel(dirRel);
     const data = buildFolderIndexData(dirRel, sourceDirRel, docsRouteKeys);
-    const content = renderIndexContent(data);
+    const content = renderIndexContent(data, buildIndexMeta(dirRel));
     expectedByTopDir.set(dirRel, content);
 
     const indexAbs = path.join(REPO_ROOT, dirRel, INDEX_FILENAME);
@@ -692,7 +730,7 @@ function run(options = {}) {
   topLevelDirs.forEach((dirRel) => contentByTopDir.set(dirRel, expectedByTopDir.get(dirRel) || ''));
 
   const rootIndexAbs = path.join(PAGES_ROOT_ABS, INDEX_FILENAME);
-  const aggregate = renderAggregateContent(buildAggregateData(topLevelDirs, contentByTopDir, rootIndexAbs));
+  const aggregate = renderAggregateContent(buildAggregateData(topLevelDirs, contentByTopDir, rootIndexAbs), buildRootMeta());
   const rootLegacyAbs = path.join(PAGES_ROOT_ABS, LEGACY_INDEX_FILENAME);
 
   if (write) {

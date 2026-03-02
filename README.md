@@ -105,18 +105,18 @@ Recovery:
 |---|---|
 | Start here + update rules | [`docs-guide/README.mdx`](docs-guide/README.mdx) |
 | Source-of-truth boundaries | [`docs-guide/source-of-truth-policy.mdx`](docs-guide/source-of-truth-policy.mdx) |
-| Full feature inventory | [`docs-guide/feature-map.mdx`](docs-guide/feature-map.mdx) |
-| System/data/control flow | [`docs-guide/architecture-map.mdx`](docs-guide/architecture-map.mdx) |
+| Full feature inventory | [`docs-guide/feature-guides/feature-map.mdx`](docs-guide/feature-guides/feature-map.mdx) |
+| System/data/control flow | [`docs-guide/feature-guides/architecture-map.mdx`](docs-guide/feature-guides/architecture-map.mdx) |
 | CLI commands and runbooks | [`docs-guide/lpd.mdx`](docs-guide/lpd.mdx) |
-| Validation + enforcement gates | [`docs-guide/quality-gates.mdx`](docs-guide/quality-gates.mdx) |
-| Automation pipelines map | [`docs-guide/automation-pipelines.mdx`](docs-guide/automation-pipelines.mdx) |
-| Content system and IA model | [`docs-guide/content-system.mdx`](docs-guide/content-system.mdx) |
-| APIs and data integrations | [`docs-guide/data-integrations.mdx`](docs-guide/data-integrations.mdx) |
-| Generated pages tree inventory | [`docs-guide/pages-index.mdx`](docs-guide/pages-index.mdx) |
-| Generated components inventory | [`docs-guide/components-index.mdx`](docs-guide/components-index.mdx) |
-| Generated script inventory | [`docs-guide/scripts-index.md`](docs-guide/scripts-index.md) |
-| Generated workflow inventory | [`docs-guide/workflows-index.mdx`](docs-guide/workflows-index.mdx) |
-| Generated issue/PR template inventory | [`docs-guide/templates-index.mdx`](docs-guide/templates-index.mdx) |
+| Validation + enforcement gates | [`docs-guide/quality-testing/quality-gates.mdx`](docs-guide/quality-testing/quality-gates.mdx) |
+| Automation pipelines map | [`docs-guide/feature-guides/automation-pipelines.mdx`](docs-guide/feature-guides/automation-pipelines.mdx) |
+| Content system and IA model | [`docs-guide/feature-guides/content-system.mdx`](docs-guide/feature-guides/content-system.mdx) |
+| APIs and data integrations | [`docs-guide/feature-guides/data-integrations.mdx`](docs-guide/feature-guides/data-integrations.mdx) |
+| Generated pages tree inventory | [`docs-guide/indexes/pages-index.mdx`](docs-guide/indexes/pages-index.mdx) |
+| Generated components inventory | [`docs-guide/indexes/components-index.mdx`](docs-guide/indexes/components-index.mdx) |
+| Generated script inventory | [`docs-guide/indexes/scripts-index.mdx`](docs-guide/indexes/scripts-index.mdx) |
+| Generated workflow inventory | [`docs-guide/indexes/workflows-index.mdx`](docs-guide/indexes/workflows-index.mdx) |
+| Generated issue/PR template inventory | [`docs-guide/indexes/templates-index.mdx`](docs-guide/indexes/templates-index.mdx) |
 
 ## Contributing (Quick Path)
 
@@ -181,7 +181,7 @@ Key automation categories:
 
 Automation deep docs:
 
-- [`docs-guide/automation-pipelines.mdx`](docs-guide/automation-pipelines.mdx)
+- [`docs-guide/feature-guides/automation-pipelines.mdx`](docs-guide/feature-guides/automation-pipelines.mdx)
 - [`v2/resources/documentation-guide/automations-workflows.mdx`](v2/resources/documentation-guide/automations-workflows.mdx)
 
 ## AI and Maintainer Guidance

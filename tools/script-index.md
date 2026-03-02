@@ -13,7 +13,10 @@
 | `tools/scripts/audit-tasks-folders.js` | Audit tasks folders, optionally normalize report locations, and optionally apply audit recommendations with conflict-safe moves. | `node tools/scripts/audit-tasks-folders.js` | docs |
 | `tools/scripts/audit-v2-usefulness.js` | Audit v2 MDX pages (excluding x-* directories) and emit page-level usefulness matrix rows with source-weighted 2026 accuracy verification fields. | `node tools/scripts/audit-v2-usefulness.js --mode full --accuracy-mode tiered` | docs |
 | `tools/scripts/check-component-errors.js` | Utility script for tools/scripts/check-component-errors.js. | `node tools/scripts/check-component-errors.js` | docs |
+| `tools/scripts/cleanup-quarantine-manager.js` | Classify cleanup candidates and optionally quarantine files with a reversible manifest. | `node tools/scripts/cleanup-quarantine-manager.js` | docs |
+| `tools/scripts/component-layout-governance.js` | Validate v2 English docs against component-layout contracts by page type. | `node tools/scripts/component-layout-governance.js --scope full` | docs |
 | `tools/scripts/convert-rss-to-mdx.js` | Convert an RSS feed XML file into a structured MDX document. | `node tools/scripts/convert-rss-to-mdx.js --input v2/internal/assets/transcripts/ycomb.rss --output v2/internal/assets/transcripts/ycomb.mdx` | docs |
+| `tools/scripts/cross-agent-packager.js` | Generate consistent audit skill packs for Codex, Cursor, Claude Code, and Windsurf from one catalog. | `node tools/scripts/cross-agent-packager.js --agent-pack all` | docs |
 | `tools/scripts/debug-mint-dev.js` | Utility script for tools/scripts/debug-mint-dev.js. | `node tools/scripts/debug-mint-dev.js` | docs |
 | `tools/scripts/deprecated/project-management-output-script.js` | Deprecated legacy project-management output script retained as a reference stub. | `node tools/scripts/deprecated/project-management-output-script.js` | docs |
 | `tools/scripts/dev/add-callouts.js` | Utility script for tools/scripts/dev/add-callouts.js. | `node tools/scripts/dev/add-callouts.js` | docs |
@@ -25,14 +28,17 @@
 | `tools/scripts/dev/test-seo-generator.js` | Utility script for tools/scripts/dev/test-seo-generator.js. | `node tools/scripts/dev/test-seo-generator.js` | docs |
 | `tools/scripts/dev/update-all-og-images.js` | Utility script for tools/scripts/dev/update-all-og-images.js. | `node tools/scripts/dev/update-all-og-images.js` | docs |
 | `tools/scripts/dev/update-og-image.js` | Utility script for tools/scripts/dev/update-og-image.js. | `node tools/scripts/dev/update-og-image.js` | docs |
+| `tools/scripts/docs-coverage-and-route-integrity-audit.js` | Audit docs coverage integrity, missing routes, legacy /v2/pages references, and orphan candidate files. | `node tools/scripts/docs-coverage-and-route-integrity-audit.js --scope full` | docs |
+| `tools/scripts/docs-quality-and-freshness-audit.js` | Audit v2 English docs for freshness and quality markers (TODO/TBD/Coming Soon, placeholders, and thin content). | `node tools/scripts/docs-quality-and-freshness-audit.js --scope full` | docs |
 | `tools/scripts/download-linkedin-video.sh` | Utility script for tools/scripts/download-linkedin-video.sh. | `bash tools/scripts/download-linkedin-video.sh` | docs |
 | `tools/scripts/download-linkedin-with-cookies.sh` | Utility script for tools/scripts/download-linkedin-with-cookies.sh. | `bash tools/scripts/download-linkedin-with-cookies.sh` | docs |
+| `tools/scripts/enforce-generated-file-banners.js` | Enforce standardized hidden/visible generated banners and frontmatter across generated MDX outputs. | `node tools/scripts/enforce-generated-file-banners.js --check` | docs |
 | `tools/scripts/final-verification.js` | Utility script for tools/scripts/final-verification.js. | `node tools/scripts/final-verification.js` | docs |
 | `tools/scripts/find-correct-url.js` | Utility script for tools/scripts/find-correct-url.js. | `node tools/scripts/find-correct-url.js` | docs |
 | `tools/scripts/generate-ai-sitemap.js` | Generate an AI-focused sitemap from v2 docs navigation. | `node tools/scripts/generate-ai-sitemap.js --write` | docs |
 | `tools/scripts/generate-docs-guide-components-index.js` | Generate component inventory indexes from snippets/components exports and optionally verify freshness. | `node tools/scripts/generate-docs-guide-components-index.js --write` | docs |
 | `tools/scripts/generate-docs-guide-indexes.js` | Generate docs-guide workflow/template indexes and optionally verify they are up to date. | `node tools/scripts/generate-docs-guide-indexes.js --write` | docs |
-| `tools/scripts/generate-docs-guide-pages-index.js` | Generate docs-guide/pages-index.mdx from v2/index.mdx entries filtered to docs.json navigation pages. | `node tools/scripts/generate-docs-guide-pages-index.js --write` | docs |
+| `tools/scripts/generate-docs-guide-pages-index.js` | Generate docs-guide/indexes/pages-index.mdx from v2/index.mdx entries filtered to docs.json navigation pages. | `node tools/scripts/generate-docs-guide-pages-index.js --write` | docs |
 | `tools/scripts/generate-docs-index.js` | Generate docs-index.json and optionally backfill v2 frontmatter metadata. | `node tools/scripts/generate-docs-index.js --write` | docs |
 | `tools/scripts/generate-llms-files.js` | Generate llms.txt and llms-full.txt from v2 docs navigation. | `node tools/scripts/generate-llms-files.js --write` | docs |
 | `tools/scripts/generate-pages-index.js` | Generate and verify section-style index.mdx files for v2 docs folders, plus the root aggregate index. | `node tools/scripts/generate-pages-index.js --write` | docs |
@@ -60,6 +66,8 @@
 | `tools/scripts/mint-dev.sh` | Utility script for tools/scripts/mint-dev.sh. | `bash tools/scripts/mint-dev.sh` | docs |
 | `tools/scripts/new-script.js` | Create a new script file prefilled with the required docs header template. | `node tools/scripts/new-script.js --path tests/integration/my-script.js` | docs |
 | `tools/scripts/publish-v2-internal-reports.js` | Duplicate approved markdown reports into v2/internal/reports pages with metadata and update docs.json. | `node tools/scripts/publish-v2-internal-reports.js --check` | docs |
+| `tools/scripts/repo-audit-orchestrator.js` | Run the docs infrastructure audit pipeline and emit a unified prioritized scorecard. | `node tools/scripts/repo-audit-orchestrator.js --mode static --scope full` | docs |
+| `tools/scripts/script-footprint-and-usage-audit.js` | Audit script sprawl, duplicate fixtures, backup artifacts, and report-size hotspots. | `node tools/scripts/script-footprint-and-usage-audit.js --scope full` | docs |
 | `tools/scripts/snippets/fetch-external-docs.sh` | Utility script for tools/scripts/snippets/fetch-external-docs.sh. | `bash tools/scripts/snippets/fetch-external-docs.sh` | docs |
 | `tools/scripts/snippets/fetch-lpt-exchanges.sh` | Utility script for tools/scripts/snippets/fetch-lpt-exchanges.sh. | `bash tools/scripts/snippets/fetch-lpt-exchanges.sh` | docs |
 | `tools/scripts/snippets/fetch-openapi-specs.sh` | Utility script for tools/scripts/snippets/fetch-openapi-specs.sh. | `bash tools/scripts/snippets/fetch-openapi-specs.sh` | docs |
@@ -69,6 +77,7 @@
 | `tools/scripts/snippets/generate-seo.js` | Utility script for tools/scripts/snippets/generate-seo.js. | `node tools/scripts/snippets/generate-seo.js` | docs |
 | `tools/scripts/snippets/test-scripts.sh` | Utility script for tools/scripts/snippets/test-scripts.sh. | `bash tools/scripts/snippets/test-scripts.sh` | docs |
 | `tools/scripts/snippets/update-component-library.sh` | Utility script for tools/scripts/snippets/update-component-library.sh. | `bash tools/scripts/snippets/update-component-library.sh` | docs |
+| `tools/scripts/style-and-language-homogenizer-en-gb.js` | Enforce EN-GB style and terminology profile for English v2 docs in phase 1. | `node tools/scripts/style-and-language-homogenizer-en-gb.js --scope full` | docs |
 | `tools/scripts/test-all-pages-browser.js` | Utility script for tools/scripts/test-all-pages-browser.js. | `node tools/scripts/test-all-pages-browser.js` | docs |
 | `tools/scripts/test-all-pages-comprehensive.js` | Utility script for tools/scripts/test-all-pages-comprehensive.js. | `node tools/scripts/test-all-pages-comprehensive.js` | docs |
 | `tools/scripts/test-v2-pages.js` | Utility script for tools/scripts/test-v2-pages.js. | `node tools/scripts/test-v2-pages.js` | docs |

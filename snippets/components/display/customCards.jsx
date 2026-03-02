@@ -19,10 +19,11 @@ export const DisplayCard = ({
   const cardStyle = {
     display: 'flex',
     flexDirection: 'column',
-    height: '100%',
+    height: 'calc(100% - 1rem)',
     border: '1px solid var(--accent)',
     borderRadius: '8px',
     padding: '1rem',
+    marginBottom: '1rem',
     backgroundColor: 'var(--background)',
     gap: '1rem',
   }
@@ -30,7 +31,7 @@ export const DisplayCard = ({
     display: 'flex',
     alignItems: 'center',
     gap: '0.5rem',
-    marginBottom: '0.75rem',
+    marginBottom: '0',
     color: 'var(--hero-text)',
     fontSize: '1rem',
     fontWeight: 600,

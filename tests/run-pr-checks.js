@@ -204,6 +204,22 @@ function runGlobalCheck(label, fn) {
   };
 }
 
+function runGeneratedBannerCheck() {
+  const cmd = spawnSync('node', ['tools/scripts/enforce-generated-file-banners.js', '--check'], {
+    cwd: REPO_ROOT,
+    encoding: 'utf8'
+  });
+  if (cmd.stdout) process.stdout.write(cmd.stdout);
+  if (cmd.stderr) process.stderr.write(cmd.stderr);
+  return {
+    label: 'Generated Banners',
+    status: cmd.status === 0 ? 'passed' : 'failed',
+    files: 1,
+    errors: cmd.status === 0 ? 0 : 1,
+    warnings: 0
+  };
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const changedFiles = getChangedFiles(args.baseRef);
@@ -224,6 +240,7 @@ async function main() {
   checks.push(await runUnitCheck('Links & Imports', groups.docsMdxAbs, linksImportsTests.runTests));
   checks.push(runGlobalCheck('MDX Guardrails', mdxGuardsTests.runTests));
   checks.push(runGlobalCheck('Docs Navigation', docsNavigationTests.runTests));
+  checks.push(runGeneratedBannerCheck());
   checks.push(runScriptDocsCheck(groups.scriptFiles));
   checks.push(runLinkAuditCheck(groups.docsMdx));
 

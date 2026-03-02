@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "default_action": "keep_latest",
+  "rules": [
+    {
+      "pattern": "tasks/reports/_legacy-unmanaged/**",
+      "action": "quarantine",
+      "reason": "legacy unmanaged report artifacts",
+      "retention_days": 30
+    },
+    {
+      "pattern": "tasks/reports/**",
+      "action": "keep_latest",
+      "reason": "active report area",
+      "retention_days": 30
+    },
+    {
+      "pattern": "tests/reports/**",
+      "action": "keep_latest",
+      "reason": "test output snapshots",
+      "retention_days": 14
+    }
+  ],
+  "size_thresholds": {
+    "warn_bytes": 524288,
+    "high_bytes": 2097152,
+    "critical_bytes": 10485760
+  }
+}

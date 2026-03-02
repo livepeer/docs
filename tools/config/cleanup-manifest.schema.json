@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://docs.livepeer.org/schemas/cleanup-manifest.schema.json",
+  "title": "Cleanup Quarantine Manifest",
+  "type": "object",
+  "required": ["stage_id", "generated_at", "mode", "entries", "summary"],
+  "properties": {
+    "stage_id": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["classify", "apply"]
+    },
+    "output_dir": {
+      "type": "string"
+    },
+    "quarantine_session_root": {
+      "type": "string"
+    },
+    "moved_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["keep", "quarantine", "delete-later", "total"],
+      "properties": {
+        "keep": { "type": "integer", "minimum": 0 },
+        "quarantine": { "type": "integer", "minimum": 0 },
+        "delete-later": { "type": "integer", "minimum": 0 },
+        "total": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": ["path", "reason", "confidence", "action", "restore_hint", "review_owner"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "action": {
+          "type": "string",
+          "enum": ["keep", "quarantine", "delete-later"]
+        },
+        "restore_hint": {
+          "type": "string"
+        },
+        "review_owner": {
+          "type": "string"
+        },
+        "source_stage": {
+          "type": "string"
+        },
+        "applied": {
+          "type": "boolean"
+        },
+        "applied_path": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
