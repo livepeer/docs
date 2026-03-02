@@ -39,6 +39,44 @@ export const LINK_MAP = {
       "movedCandidates": []
     }
   ],
+  "v2/orchestrators/about-orchestrators/job-types.mdx": [
+    {
+      "sourceType": "markdown-link",
+      "linkType": "external-https",
+      "rawPath": "https://github.com/livepeer/go-livepeer/blob/master/box/box.md",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "../quickstart/orchestrator-setup",
+      "resolvedPath": "v2/orchestrators/quickstart/orchestrator-setup.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "../quickstart/realtime-ai-quickstart",
+      "resolvedPath": "v2/orchestrators/quickstart/realtime-ai-quickstart.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "../quickstart/batch-ai-quickstart",
+      "resolvedPath": "v2/orchestrators/quickstart/batch-ai-quickstart.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    }
+  ],
   "v2/orchestrators/about-orchestrators/orchestrator-functions.mdx": [
     {
       "sourceType": "import-path",
@@ -63,8 +101,8 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "internal-rooted",
-      "rawPath": "/developers/ai-inference-on-livepeer/byoc",
-      "resolvedPath": "v2/developers/ai-inference-on-livepeer/byoc.mdx",
+      "rawPath": "/developers/ai-pipelines/byoc",
+      "resolvedPath": "v2/developers/ai-pipelines/byoc.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -189,6 +227,107 @@ export const LINK_MAP = {
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
+      "movedCandidates": []
+    }
+  ],
+  "v2/orchestrators/advanced-setup/hosting-models.mdx": [
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/developers/ai-pipelines/model-support",
+      "resolvedPath": "v2/developers/ai-pipelines/model-support.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/gateways/using-gateways/gateway-providers",
+      "resolvedPath": "v2/gateways/using-gateways/gateway-providers.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/developers/ai-pipelines/byoc",
+      "resolvedPath": "v2/developers/ai-pipelines/byoc.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/developers/ai-pipelines/model-support",
+      "resolvedPath": "v2/developers/ai-pipelines/model-support.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/developers/ai-pipelines/comfystream",
+      "resolvedPath": "v2/developers/ai-pipelines/comfystream.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "../quickstart/overview",
+      "resolvedPath": "v2/orchestrators/quickstart/overview.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
+      "resolvedPath": "snippets/components/domain/SHARED/previewCallouts.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/layout/table.jsx",
+      "resolvedPath": "snippets/components/layout/table.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/links.jsx",
+      "resolvedPath": "snippets/components/primitives/links.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/layout/steps.jsx",
+      "resolvedPath": "snippets/components/layout/steps.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/containers.jsx",
+      "resolvedPath": "snippets/components/primitives/containers.jsx",
+      "exists": true,
+      "status": "ok",
       "movedCandidates": []
     }
   ],
@@ -363,6 +502,80 @@ export const LINK_MAP = {
       "sourceType": "jsx-attr",
       "linkType": "external-https",
       "rawPath": "https://explorer.livepeer.org",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    }
+  ],
+  "v2/orchestrators/orchestrator-journey.mdx": [
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/orchestrators/quickstart/join-a-pool",
+      "resolvedPath": "v2/orchestrators/quickstart/join-a-pool.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/orchestrators/quickstart/overview",
+      "resolvedPath": "v2/orchestrators/quickstart/overview.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "empty",
+      "rawPath": "#option-a-full-go-livepeer-setup",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "skipped",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "empty",
+      "rawPath": "#option-b-split-setup-orchestratorsiphon--go-livepeer",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "skipped",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://github.com/livepeer/go-livepeer",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://github.com/livepeer/go-livepeer/tree/master/doc",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://github.com/Stronk-Tech/OrchestratorSiphon",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://github.com/livepeer/go-livepeer",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -566,6 +779,35 @@ export const LINK_MAP = {
       "movedCandidates": []
     }
   ],
+  "v2/orchestrators/quickstart/batch-ai-quickstart.mdx": [
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "../about-orchestrators/job-types",
+      "resolvedPath": "v2/orchestrators/about-orchestrators/job-types.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://github.com/livepeer/go-livepeer/blob/master/box/box.md",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
+      "resolvedPath": "snippets/components/domain/SHARED/previewCallouts.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    }
+  ],
   "v2/orchestrators/quickstart/join-a-pool.mdx": [
     {
       "sourceType": "markdown-link",
@@ -634,108 +876,36 @@ export const LINK_MAP = {
   "v2/orchestrators/quickstart/orchestrator-setup.mdx": [
     {
       "sourceType": "markdown-link",
-      "linkType": "internal-relative",
-      "rawPath": "../setting-up-an-orchestrator/install-go-livepeer",
-      "resolvedPath": "v2/orchestrators/setting-up-an-orchestrator/install-go-livepeer.mdx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "internal-relative",
-      "rawPath": "../setting-up-an-orchestrator/connect-to-arbitrum",
-      "resolvedPath": "v2/orchestrators/setting-up-an-orchestrator/connect-to-arbitrum.mdx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
       "linkType": "external-https",
-      "rawPath": "https://github.com/fullstorydev/grpcurl",
+      "rawPath": "https://explorer.livepeer.org/orchestrators",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
       "movedCandidates": []
     },
     {
-      "sourceType": "markdown-link",
+      "sourceType": "jsx-attr",
       "linkType": "external-https",
-      "rawPath": "https://www.nvidia.com/Download/index.aspx",
+      "rawPath": "https://docs.docker.com/engine/install/",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
       "movedCandidates": []
     },
     {
-      "sourceType": "markdown-link",
-      "linkType": "internal-relative",
-      "rawPath": "../setting-up-an-orchestrator/connect-to-arbitrum",
-      "resolvedPath": "v2/orchestrators/setting-up-an-orchestrator/connect-to-arbitrum.mdx",
+      "sourceType": "jsx-attr",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/gateways/quickstart/gateway-setup",
+      "resolvedPath": "v2/gateways/quickstart/gateway-setup.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
     },
     {
-      "sourceType": "markdown-link",
+      "sourceType": "jsx-attr",
       "linkType": "internal-relative",
-      "rawPath": "../setting-up-an-orchestrator/install-go-livepeer",
-      "resolvedPath": "v2/orchestrators/setting-up-an-orchestrator/install-go-livepeer.mdx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "internal-relative",
-      "rawPath": "../setting-up-an-orchestrator/connect-to-arbitrum",
-      "resolvedPath": "v2/orchestrators/setting-up-an-orchestrator/connect-to-arbitrum.mdx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://explorer.livepeer.org/",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://explorer.livepeer.org/",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "internal-relative",
-      "rawPath": "../advanced-setup/staking-LPT",
-      "resolvedPath": "v2/orchestrators/advanced-setup/staking-LPT.mdx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "internal-relative",
-      "rawPath": "../advanced-setup/rewards-and-fees",
-      "resolvedPath": "v2/orchestrators/advanced-setup/rewards-and-fees.mdx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "internal-relative",
-      "rawPath": "../setting-up-an-orchestrator/install-go-livepeer#activate",
-      "resolvedPath": "v2/orchestrators/setting-up-an-orchestrator/install-go-livepeer.mdx",
+      "rawPath": "../about-orchestrators/job-types",
+      "resolvedPath": "v2/orchestrators/about-orchestrators/job-types.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -768,15 +938,6 @@ export const LINK_MAP = {
       "movedCandidates": []
     },
     {
-      "sourceType": "jsx-attr",
-      "linkType": "internal-relative",
-      "rawPath": "../references/faq",
-      "resolvedPath": "v2/orchestrators/references/faq.mdx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
       "sourceType": "import-path",
       "linkType": "import-path",
       "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
@@ -802,14 +963,32 @@ export const LINK_MAP = {
       "exists": true,
       "status": "ok",
       "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/tables.jsx",
+      "resolvedPath": "snippets/components/primitives/tables.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/pages/08_SHARED/eth-account-setup.mdx",
+      "resolvedPath": "snippets/pages/08_SHARED/eth-account-setup.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
     }
   ],
   "v2/orchestrators/quickstart/overview.mdx": [
     {
       "sourceType": "jsx-attr",
       "linkType": "internal-relative",
-      "rawPath": "./join-a-pool",
-      "resolvedPath": "v2/orchestrators/quickstart/join-a-pool.mdx",
+      "rawPath": "./orchestrator-setup",
+      "resolvedPath": "v2/orchestrators/quickstart/orchestrator-setup.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -817,10 +996,57 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "internal-relative",
-      "rawPath": "../setting-up-an-orchestrator/data-centre-setup",
-      "resolvedPath": "v2/orchestrators/setting-up-an-orchestrator/data-centre-setup.mdx",
+      "rawPath": "./realtime-ai-quickstart",
+      "resolvedPath": "v2/orchestrators/quickstart/realtime-ai-quickstart.mdx",
       "exists": true,
       "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "./batch-ai-quickstart",
+      "resolvedPath": "v2/orchestrators/quickstart/batch-ai-quickstart.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "../about-orchestrators/job-types",
+      "resolvedPath": "v2/orchestrators/about-orchestrators/job-types.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
+      "resolvedPath": "snippets/components/domain/SHARED/previewCallouts.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    }
+  ],
+  "v2/orchestrators/quickstart/realtime-ai-quickstart.mdx": [
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "../about-orchestrators/job-types",
+      "resolvedPath": "v2/orchestrators/about-orchestrators/job-types.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://github.com/livepeer/go-livepeer/blob/master/box/box.md",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
       "movedCandidates": []
     },
     {
@@ -1497,8 +1723,8 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "internal-rooted",
-      "rawPath": "/developers/ai-inference-on-livepeer/byoc",
-      "resolvedPath": "v2/developers/ai-inference-on-livepeer/byoc.mdx",
+      "rawPath": "/developers/ai-pipelines/byoc",
+      "resolvedPath": "v2/developers/ai-pipelines/byoc.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1582,6 +1808,44 @@ export const LINK_MAP = {
       "linkType": "import-path",
       "rawPath": "/snippets/components/primitives/links.jsx",
       "resolvedPath": "snippets/components/primitives/links.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    }
+  ],
+  "snippets/pages/08_SHARED/eth-account-setup.mdx": [
+    {
+      "sourceType": "markdown-link",
+      "linkType": "external-https",
+      "rawPath": "https://bridge.arbitrum.io/",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/gateways/references/artibtrum-exchanges",
+      "resolvedPath": "v2/gateways/references/artibtrum-exchanges.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/layout/steps.jsx",
+      "resolvedPath": "snippets/components/layout/steps.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/content/code.jsx",
+      "resolvedPath": "snippets/components/content/code.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []

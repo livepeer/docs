@@ -3,11 +3,11 @@
 Operator note: external HTTP/HTTPS links are classified only and marked as `🟡 untested-external` in this phase.
 
 ## Run Metadata
-- Timestamp: 2026-03-02T02:43:42.377Z
+- Timestamp: 2026-03-02T05:33:15.224Z
 - Mode: files
 - Strict: true (internal refs only)
-- Files analyzed: 3
-- Total extracted references: 31
+- Files analyzed: 2
+- Total extracted references: 6
 - Report JSON: tasks/reports/navigation-links/LINK_TEST_REPORT.json
 
 ## Summary Counts
@@ -15,17 +15,14 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### By Link Type
 | linkType | count |
 |---|---:|
-| external-https | 12 |
-| import-path | 3 |
-| internal-relative | 13 |
-| internal-rooted | 3 |
+| external-https | 4 |
+| import-path | 2 |
 
 ### By Status
 | status | count |
 |---|---:|
-| 🟡 untested-external | 12 |
-| missing | 5 |
-| ok | 14 |
+| 🟡 untested-external | 4 |
+| ok | 2 |
 
 ## External Validation
 
@@ -518,24 +515,12 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 - ⚠️ Journey Mapping (developers/journey-mapping.mdx)
 - Livepeer Developer Portal (developers/portal.mdx)
 - ### Ai Inference On Livepeer
-  - ⚠️ Bring Your Own Container (BYOC) (developers/ai-inference-on-livepeer/byoc.mdx)
-  - ⚠️ ComfyStream (developers/ai-inference-on-livepeer/comfystream.mdx)
-  - ⚠️ ComfyUI – Full Global Model Support (Not Livepeer-Specific) (developers/ai-inference-on-livepeer/comfyui.mdx)
-  - #### Livepeer Ai
-    - ⚠️ Ai 101 (developers/ai-inference-on-livepeer/livepeer-ai/ai-101.mdx)
-    - ⚠️ Custom AI Pipelines on Livepeer with BYOC (developers/ai-inference-on-livepeer/livepeer-ai/custom-ai-pipelines.mdx)
-    - ⚠️ Daydream Generative Ai Video Platform (developers/ai-inference-on-livepeer/livepeer-ai/daydream-generative-ai-video-platform.mdx)
-    - ⚠️ Livepeer Ai Content Directory (developers/ai-inference-on-livepeer/livepeer-ai/livepeer-ai-content-directory.mdx)
-    - ⚠️ Overview: AI on Livepeer (developers/ai-inference-on-livepeer/livepeer-ai/overview-ai-on-livepeer.mdx)
-    - ⚠️ README (developers/ai-inference-on-livepeer/livepeer-ai/README.mdx)
-    - ⚠️ Realtime Ai (developers/ai-inference-on-livepeer/livepeer-ai/realtime-ai.mdx)
-    - ⚠️ Using Ai On Livepeer (developers/ai-inference-on-livepeer/livepeer-ai/using-ai-on-livepeer.mdx)
-    - ##### Ai Apis Move To Tech Section
-      - ⚠️ Api Reference (developers/ai-inference-on-livepeer/livepeer-ai/ai-apis-move-to-tech-section/api-reference.mdx)
-      - ⚠️ README (developers/ai-inference-on-livepeer/livepeer-ai/ai-apis-move-to-tech-section/README.mdx)
+  - AI Inference on Livepeer (developers/ai-inference-on-livepeer/overview.mdx)
+  - Is My AI Workload a Good Fit for Livepeer? (developers/ai-inference-on-livepeer/workload-fit.mdx)
 - ### Ai Pipelines
-  - BYOC (Bring Your Own Compute) (developers/ai-pipelines/byoc.mdx)
+  - BYOC — Bring Your Own Container (developers/ai-pipelines/byoc.mdx)
   - ComfyStream (developers/ai-pipelines/comfystream.mdx)
+  - AI Model Support on Livepeer (developers/ai-pipelines/model-support.mdx)
   - AI Pipelines Overview (developers/ai-pipelines/overview.mdx)
 - ### Builder Opportunities
   - Dev Programs (developers/builder-opportunities/dev-programs.mdx)
@@ -1404,6 +1389,9 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 
 ### Gateways
 - Gateway Home Portal (gateways/gateways-portal.mdx)
+- ### Contextdata
+  - ⚠️ Docker Install Page — Implementation Checklist (gateways/_contextData_/docker-install-implementation.mdx)
+  - ⚠️ Docker Install (gateways/_contextData_/docker-install.mdx)
 - ### About
   - Gateway Architecture (gateways/about/architecture.mdx)
   - Gateway Economics (gateways/about/economics.mdx)
@@ -1419,9 +1407,9 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
   - ⚠️ Community Guides (gateways/guides-and-resources/community-guides.mdx)
   - ⚠️ Community Projects (gateways/guides-and-resources/community-projects.mdx)
   - Gateway FAQ (gateways/guides-and-resources/faq.mdx)
-  - ⚠️ Page 2 (gateways/guides-and-resources/page-2.mdx)
   - #### Gateway Job Pipelines
-    - ⚠️ Bring Your Own Container (BYOC) (gateways/guides-and-resources/gateway-job-pipelines/byoc.mdx)
+    - BYOC for Gateway Operators (gateways/guides-and-resources/gateway-job-pipelines/byoc.mdx)
+    - Gateway Job Pipelines Overview (gateways/guides-and-resources/gateway-job-pipelines/overview.mdx)
 - ### Quickstart
   - Get AI to Setup the Gateway (gateways/quickstart/AI-prompt.mdx)
   - Run a Gateway: Quickstart Guide (gateways/quickstart/gateway-setup.mdx)
@@ -1656,6 +1644,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 - ### Treasury
   - Treasury Allocations (lpt/treasury/allocations.mdx)
   - Treasury Overview (lpt/treasury/overview.mdx)
+    - Imported MDX: snippets/components/display/embed.mdx
   - Treasury Proposals (lpt/treasury/proposals.mdx)
 - Unindexed Pages
   - (none)
@@ -1663,6 +1652,8 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### Orchestrators
 - ⚠️ Orchestrator Journey (orchestrators/orchestrator-journey.mdx)
 - Orchestrator Home Portal (orchestrators/orchestrators-portal.mdx)
+- ### Context Data
+  - ⚠️ Orchestrators & Gateways Docs — Implementation Plan (orchestrators/_context_data_/orchestrators-gateways-implementation-plan.mdx)
 - ### About Orchestrators
   - Orchestrator Architecture (orchestrators/about-orchestrators/architecture.mdx)
   - Orchestrator Economics (orchestrators/about-orchestrators/economics.mdx)
@@ -1672,6 +1663,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 - ### Advanced Setup
   - AI Pipelines (orchestrators/advanced-setup/ai-pipelines.mdx)
   - Delegation (orchestrators/advanced-setup/delegation.mdx)
+  - Hosting AI Models on an Orchestrator (orchestrators/advanced-setup/hosting-models.mdx)
   - Rewards and Fees (orchestrators/advanced-setup/rewards-and-fees.mdx)
   - Run a Pool (orchestrators/advanced-setup/run-a-pool.mdx)
   - Staking LPT (orchestrators/advanced-setup/staking-LPT.mdx)
@@ -1921,6 +1913,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 - ⚠️ Trending Topics (x-experimental/copy-trending-at-livepeer.mdx)
 - ⚠️ Test (x-experimental/test.mdx)
 - ⚠️ Test Automations (x-experimental/trending-layout-tests.mdx)
+- ⚠️ Visual Explainer Livepeer Guide (x-experimental/visual-explainer-livepeer-guide.md)
 - Unindexed Pages
   - (none)
 
@@ -1933,45 +1926,17 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 
 ## Per-Page Full Link Lists
 
-### v2/es/developers/ai-pipelines/byoc.mdx
+### snippets/components/display/embed.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-relative | ../ai-inference-on-livepeer/byoc | v2/es/developers/ai-inference-on-livepeer/byoc | false | missing | v2/developers/ai-inference-on-livepeer/byoc.mdx | v2/developers/ai-pipelines/byoc.mdx | v2/gateways/guides-and-resources/gateway-job-pipelines/byoc.mdx |
-| internal-relative | ./overview | v2/es/developers/ai-pipelines/overview.mdx | true | ok |  |  |  |
-| internal-relative | ./comfystream | v2/es/developers/ai-pipelines/comfystream.mdx | true | ok |  |  |  |
-| internal-relative | ../ai-inference-on-livepeer/byoc | v2/es/developers/ai-inference-on-livepeer/byoc | false | missing | v2/developers/ai-inference-on-livepeer/byoc.mdx | v2/developers/ai-pipelines/byoc.mdx | v2/gateways/guides-and-resources/gateway-job-pipelines/byoc.mdx |
-| internal-rooted | /v2/es/about/livepeer-network/interfaces | v2/es/about/livepeer-network/interfaces.mdx | true | ok |  |  |  |
-| external-https | https://github.com/livepeer/comfystream |  | null | 🟡 untested-external |  |  |  |
-| external-https | https://forum.livepeer.org/t/model-registry |  | null | 🟡 untested-external |  |  |  |
-| external-https | https://livepeer.studio/docs/ai |  | null | 🟡 untested-external |  |  |  |
-| import-path | /snippets/components/layout/table.jsx | snippets/components/layout/table.jsx | true | ok |  |  |  |
+| (none) |  |  |  |  |  |  |  |
 
-### v2/es/developers/ai-pipelines/comfystream.mdx
+### v2/lpt/treasury/overview.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| external-https | https://github.com/comfyanonymous/ComfyUI |  | null | 🟡 untested-external |  |  |  |
-| internal-relative | ../ai-inference-on-livepeer/comfystream | v2/es/developers/ai-inference-on-livepeer/comfystream | false | missing | v2/developers/ai-inference-on-livepeer/comfystream.mdx | v2/developers/ai-pipelines/comfystream.mdx | v2/cn/developers/ai-pipelines/comfystream.mdx |
-| internal-relative | ./overview | v2/es/developers/ai-pipelines/overview.mdx | true | ok |  |  |  |
-| internal-relative | ./byoc | v2/es/developers/ai-pipelines/byoc.mdx | true | ok |  |  |  |
-| internal-relative | ../ai-inference-on-livepeer/comfystream | v2/es/developers/ai-inference-on-livepeer/comfystream | false | missing | v2/developers/ai-inference-on-livepeer/comfystream.mdx | v2/developers/ai-pipelines/comfystream.mdx | v2/cn/developers/ai-pipelines/comfystream.mdx |
-| internal-rooted | /v2/es/about/livepeer-network/technical-architecture | v2/es/about/livepeer-network/technical-architecture.mdx | true | ok |  |  |  |
-| external-https | https://github.com/livepeer/comfystream |  | null | 🟡 untested-external |  |  |  |
-| internal-relative | ./byoc | v2/es/developers/ai-pipelines/byoc.mdx | true | ok |  |  |  |
-| external-https | https://forum.livepeer.org/t/comfystream-nodes |  | null | 🟡 untested-external |  |  |  |
-| external-https | https://livepeer.studio/docs/ai |  | null | 🟡 untested-external |  |  |  |
-| import-path | /snippets/components/layout/table.jsx | snippets/components/layout/table.jsx | true | ok |  |  |  |
-
-### v2/es/developers/ai-pipelines/overview.mdx
-| linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
-|---|---|---|---|---|---|---|---|
-| external-https | https://github.com/livepeer/comfystream |  | null | 🟡 untested-external |  |  |  |
-| internal-relative | ./byoc | v2/es/developers/ai-pipelines/byoc.mdx | true | ok |  |  |  |
-| internal-relative | ./byoc | v2/es/developers/ai-pipelines/byoc.mdx | true | ok |  |  |  |
-| internal-relative | ./comfystream | v2/es/developers/ai-pipelines/comfystream.mdx | true | ok |  |  |  |
-| internal-relative | ../ai-inference-on-livepeer/livepeer-ai/overview-ai-on-livepeer | v2/es/developers/ai-inference-on-livepeer/livepeer-ai/overview-ai-on-livepeer | false | missing | v2/developers/ai-inference-on-livepeer/livepeer-ai/overview-ai-on-livepeer.mdx |  |  |
-| internal-rooted | /v2/es/about/livepeer-network/technical-architecture | v2/es/about/livepeer-network/technical-architecture.mdx | true | ok |  |  |  |
-| external-https | https://github.com/livepeer/comfystream |  | null | 🟡 untested-external |  |  |  |
-| external-https | https://livepeer.studio/docs/ai |  | null | 🟡 untested-external |  |  |  |
-| external-https | https://forum.livepeer.org/t/example-pipelines |  | null | 🟡 untested-external |  |  |  |
-| external-https | https://explorer.livepeer.org |  | null | 🟡 untested-external |  |  |  |
-| import-path | /snippets/components/layout/table.jsx | snippets/components/layout/table.jsx | true | ok |  |  |  |
+| external-https | https://docs.livepeer.org/references/contract-addresses |  | null | 🟡 untested-external |  |  |  |
+| external-https | https://github.com/livepeer/protocol |  | null | 🟡 untested-external |  |  |  |
+| external-https | https://docs.livepeer.org/references/contract-addresses |  | null | 🟡 untested-external |  |  |  |
+| external-https | https://paragraph.com/@livepeer-2/using-the-livepeer-community-treasury |  | null | 🟡 untested-external |  |  |  |
+| import-path | /snippets/components/content/math.jsx | snippets/components/content/math.jsx | true | ok |  |  |  |
+| import-path | /snippets/components/display/embed.mdx | snippets/components/display/embed.mdx | true | ok |  |  |  |

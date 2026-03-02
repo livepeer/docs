@@ -81,6 +81,7 @@
 | `tools/scripts/snippets/test-scripts.sh` | Utility script for tools/scripts/snippets/test-scripts.sh. | `bash tools/scripts/snippets/test-scripts.sh` | docs |
 | `tools/scripts/snippets/update-component-library.sh` | Utility script for tools/scripts/snippets/update-component-library.sh. | `bash tools/scripts/snippets/update-component-library.sh` | docs |
 | `tools/scripts/style-and-language-homogenizer-en-gb.js` | Enforce EN-GB style and terminology profile for English v2 docs in phase 1. | `node tools/scripts/style-and-language-homogenizer-en-gb.js --scope full` | docs |
+| `tools/scripts/sync-codex-skills.js` | Sync canonical skill templates into local Codex skills using safe upsert and deterministic openai.yaml generation. | `node tools/scripts/sync-codex-skills.js` | docs |
 | `tools/scripts/test-all-pages-browser.js` | Utility script for tools/scripts/test-all-pages-browser.js. | `node tools/scripts/test-all-pages-browser.js` | docs |
 | `tools/scripts/test-all-pages-comprehensive.js` | Utility script for tools/scripts/test-all-pages-comprehensive.js. | `node tools/scripts/test-all-pages-comprehensive.js` | docs |
 | `tools/scripts/test-v2-pages.js` | Utility script for tools/scripts/test-v2-pages.js. | `node tools/scripts/test-v2-pages.js` | docs |

@@ -4407,6 +4407,267 @@ The same auth/base URL pattern also applies to other AI job endpoints such as:
 
 ---
 
+# AI Inference on Livepeer
+URL: https://docs.livepeer.org/v2/developers/ai-inference-on-livepeer/overview
+
+Livepeer is a decentralised network of GPU nodes that run AI inference on video and streaming workloads. It is not a generic cloud GPU service and not a model marketplace — it is a real-time, streaming-first AI compute layer optimised for low-latency inference at the frame and segment level.
+
+This section is for **developers** who want to build applications that consume AI inference via Livepeer: style transfer, depth estimation, object detection, speech-to-text, image-to-image pipelines, and more.
+
+***
+
+## How it works
+
+```mermaid
+flowchart LR
+    A["Your App"] --> B["Gateway\n(routing, auth, pricing)"]
+    B --> C["Orchestrator(s)\n(GPU + model + runtime)"]
+    C --> B
+    B --> A
+
+    style A fill:#1a1a1a,stroke:#2d9a67,color:#fff
+    style B fill:#1a1a1a,stroke:#2d9a67,color:#fff
+    style C fill:#1a1a1a,stroke:#2d9a67,color:#fff
+```
+
+Your application sends inference requests to a **Gateway**. The gateway discovers available **Orchestrators**, routes your job based on capability, price, and latency, handles retries and auth, and returns results. You never communicate with an orchestrator directly — the gateway handles all of that.
+
+***
+
+## What you can build
+
+Livepeer AI is designed for streaming and real-time workloads. Strong fits include:
+
+Style transfer, background replacement, depth overlays, and image-to-image pipelines running frame-by-frame on live video.
+
+Live ASR, real-time translation, and caption generation from audio chunks ingested via WebRTC.
+
+Object detection, pose estimation, face parsing, segmentation — per-frame GPU inference for live streams.
+
+Composable multi-step inference workflows via ComfyStream or BYOC: vision → conditioning → generation in sequence.
+
+***
+
+## AI on Livepeer vs other infrastructure
+
+***
+
+## How models get on the network
+
+Models run inside **Orchestrator nodes**. Orchestrators can use:
+
+* **ComfyUI** — the most common approach; load `.safetensors` weights, build inference DAGs, serve via ComfyStream
+* **Custom inference servers** — any Torch / TensorRT / ONNX model wrapped in a Docker container (BYOC)
+
+Orchestrators advertise capabilities — `image-to-image`, `depth`, `style-transfer` — not model names. Gateways route by capability and performance, not by which specific model weights are loaded. This means models can be swapped or improved without breaking your application.
+
+***
+
+## Start here
+
+Before building: understand what runs well on Livepeer and what doesn't.
+
+ComfyStream, BYOC, and how to compose multi-step inference workflows.
+
+Full model family compatibility matrix — which models run on Livepeer and why.
+
+***
+
+## Related sections
+
+---
+
+# Is My AI Workload a Good Fit for Livepeer?
+URL: https://docs.livepeer.org/v2/developers/ai-inference-on-livepeer/workload-fit
+
+Livepeer is optimised for **streaming, GPU-bound, low-latency inference**. It is not a general-purpose batch compute or file-processing network. Use this page to determine whether your workload is a good fit before you start building.
+
+***
+
+## Decision tree
+
+```
+Start
+ │
+ ├── Is the workload STREAMING (frames / chunks / segments)?
+ │    └── No  →  ✗ Not a good Livepeer fit
+ │
+ └── Yes
+      │
+      ├── Does the workload require GPU-accelerated INFERENCE?
+      │    └── No  →  ✗ Use a gateway or standard compute
+      │
+      └── Yes
+           │
+           ├── Is LOW LATENCY (< ~500ms) important to the UX?
+           │    └── No  →  ⚠ Possible, but not differentiated
+           │
+           └── Yes
+                │
+                ├── Does it produce INCREMENTAL output?
+                │    └── No  →  ⚠ Marginal fit
+                │
+                └── Yes  →  ✓ Excellent Livepeer workload
+```
+
+**Summary:** Livepeer works best for streaming, GPU-bound inference with low latency and incremental output. If your workload fails the first two gates, don't build it on Livepeer.
+
+***
+
+## Capability matrix
+
+***
+
+## Gateway vs orchestrator responsibilities by workload
+
+Understanding the split between gateway and orchestrator helps you know where to direct integration effort for each workload type.
+
+### Audio workloads (ASR, translation, intent)
+
+**Gateway** handles: audio ingestion via WebRTC, chunking and buffering, authentication and retries, output aggregation and fan-out.
+
+**Orchestrator** handles: GPU-resident ASR / translation models, streaming inference execution, incremental token emission, language or model specialisation.
+
+### Vision workloads (depth, pose, segmentation)
+
+**Gateway** handles: frame routing, capability selection, latency monitoring, cost-aware routing.
+
+**Orchestrator** handles: vision model execution, GPU memory optimisation, per-frame inference, optional batching.
+
+### Video workloads (generation, effects, diffusion)
+
+**Gateway** handles: stream orchestration, QoS and failover, output delivery, session lifecycle management.
+
+**Orchestrator** handles: persistent GPU pipelines, multi-model composition, frame-by-frame generation, real-time conditioning.
+
+### Text workloads (real-time only)
+
+**Gateway** handles: request multiplexing, rate limiting, stable API surface.
+
+**Orchestrator** handles: lightweight LLMs or classifiers, prompt routing and control logic, real-time response generation.
+
+***
+
+## ASR pipeline examples
+
+These are some of the best-fit workloads on Livepeer today.
+
+### Live captions for video streams
+
+```
+Mic / Video Audio
+      ↓
+Gateway (WebRTC audio chunks)
+      ↓
+Orchestrator (GPU ASR model)
+      ↓
+Incremental text tokens
+      ↓
+Gateway → captions / overlays / APIs
+```
+
+**Why it fits:** continuous audio stream, warm GPU state, incremental output, latency-critical UX.
+
+### Multilingual live translation
+
+```
+Live Audio
+      ↓
+ASR
+      ↓
+Translation model
+      ↓
+Translated captions (real-time)
+```
+
+**Why it fits:** chained streaming inference, strong latency requirements, high differentiation vs batch pipelines.
+
+### Voice-driven avatars or agents
+
+```
+Live Audio
+      ↓
+ASR
+      ↓
+Intent / command extraction
+      ↓
+Video or avatar pipeline conditioning
+```
+
+**Why it fits:** multimodal real-time control loop, audio conditions downstream video.
+
+### Live moderation and safety
+
+```
+Live Audio
+      ↓
+ASR
+      ↓
+Keyword / sentiment / policy model
+      ↓
+Flags, triggers, overlays
+```
+
+**Why it fits:** streaming classification, immediate downstream actions.
+
+***
+
+## What about batch and file-based workloads?
+
+Livepeer will not block file-based or batch workloads. The protocol is general at the container level — anything that can run in a container can run on a Livepeer orchestrator. But Livepeer's economics, routing, and reliability are tuned for streaming inference, not batch conversion.
+
+**The precise rule:**
+
+> File-to-file is usually a bad fit — unless the conversion is actually streaming inference in disguise. Livepeer cares about **execution shape**, not inputs.
+
+**Your examples, explicitly:**
+
+**YouTube video → MP3**
+Doable. Bad idea. CPU-bound, no inference, long-running batch job, wastes GPU slots, will be deprioritised by gateways. Technically works. Economically irrational.
+
+**English → other language (translation)**
+
+* File-to-file (text in → text out): batch job, latency-tolerant — weak Livepeer fit.
+* Live translation (speech or captions): audio arrives incrementally, translation emitted incrementally, latency matters — excellent Livepeer fit.
+  Same model, different execution shape.
+
+**MP3 → text transcription**
+
+* Upload MP3 → wait → download transcript: marginal. Works, but batch infra is cheaper and gateways gain little from routing it.
+* Streamed transcription (even from an MP3): chunk audio, emit tokens continuously, treat it like live audio — strong fit.
+
+**Reframe your mental model:**
+
+Stop thinking: "file → file = bad."
+Start thinking: "batch execution vs stream execution."
+
+| Task | Batch | Streaming |
+|---|---|---|
+| MP3 → text | ⚠ weak | ✓ strong |
+| Translation | ⚠ weak | ✓ strong |
+| Video → audio | ✗ weak | ✗ still weak |
+| ASR | ⚠ okay | ✓ excellent |
+
+**The real constraint:**
+
+Livepeer's bottleneck is GPU opportunity cost, not capability. If a job occupies a GPU for a long time without benefiting from low latency, it will lose out to workloads that do. This is by design — gateways will naturally route away from poor-fit workloads.
+
+**Safe summary:**
+
+Many batch and file-based AI workloads are technically runnable on Livepeer. However, Livepeer is economically and operationally optimised for streaming, low-latency inference, and such workloads will be routed and priced accordingly.
+
+***
+
+## Next steps
+
+ComfyStream and BYOC — how to build and deploy inference pipelines.
+
+Bring your own container: run custom models on the network.
+
+Full compatibility matrix — which model families run on Livepeer.
+
+---
+
 # AI Pipelines Overview
 URL: https://docs.livepeer.org/v2/developers/ai-pipelines/overview
 
@@ -4490,7 +4751,7 @@ See [BYOC](./byoc) for a full setup guide.
 
 * [BYOC](./byoc) — Run your own AI workers and register with the network
 * [ComfyStream](./comfystream) — ComfyUI-based pipelines and Gateway integration
-* [Livepeer AI (overview)](../ai-inference-on-livepeer/livepeer-ai/overview-ai-on-livepeer) — Product overview and use cases
+* [Livepeer AI (overview)](../ai-inference-on-livepeer/overview) — Product overview and use cases
 * [Network technical architecture](/v2/about/livepeer-network/technical-architecture) — Gateway, Orchestrator, and protocol
 
 ## Resources
@@ -4502,124 +4763,12 @@ See [BYOC](./byoc) for a full setup guide.
 
 ---
 
-# BYOC (Bring Your Own Compute)
-URL: https://docs.livepeer.org/v2/developers/ai-pipelines/byoc
-
-This guide details how to integrate your own AI models or GPU infrastructure into the Livepeer AI inference network. BYOC lets you run inference tasks with custom models (e.g. ControlNet, Whisper, SegFormer), deploy nodes across cloud, edge, or on-prem environments, and serve Livepeer inference workloads with economic incentives.
-
-For full BYOC architecture, Gateway/Orchestrator roles, container lifecycle, and Protocol vs AI BYOC concepts, see the [BYOC full guide](../ai-inference-on-livepeer/byoc).
-
-## Requirements
-
-* Linux or Docker-capable machine with GPU (CUDA 11+)
-* Internet-accessible IP or NAT hole-punching
-* Git, Python 3.9+; optional ComfyUI fork for modular tasks
-* Livepeer Gateway credentials or API key for worker registration
-
-## Step 1 — Clone and setup
-
-```bash
-git clone https://github.com/livepeer/comfystream
-cd comfystream
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-Install your desired inference model(s):
-
-```bash
-python scripts/download.py --model whisper-large
-python scripts/download.py --model sdxl
-```
-
-## Step 2 — Configure node
-
-Edit your `config.yaml`:
-
-```yaml
-publicKey: "0xYourEthereumAddress"
-gatewayURL: "wss://gateway.livepeer.org"
-models:
-  - whisper-large
-  - sdxl
-heartbeat: true
-```
-
-Optional: run as Docker; add plugin adapters (e.g. segment-anything, blip2).
-
-## Step 3 — Start gateway node
-
-```bash
-python run.py --adapter grpc --gpu --model whisper-large
-```
-
-You should see logs for heartbeats to the Livepeer Gateway, job claims and model execution, and result uploads or webhooks.
-
-## Step 4 — Register (optional)
-
-Register your node on-chain (Arbitrum) so Gateways can discover and route work to you:
-
-```bash
-livepeer-cli gateway register \
-  --addr=1.2.3.4:5040 \
-  --models=whisper-large,sdxl \
-  --bond=100LPT \
-  --region=NA1
-```
-
-Contract and ABI references are in the Blockchain contracts docs under About / Resources.
-
-## Pipeline examples
-
-**Whisper + caption overlay:**
-
-```yaml
-pipeline:
-  - task: whisper-transcribe
-  - task: overlay
-    type: caption
-```
-
-**Blur faces + YOLO:**
-
-```yaml
-pipeline:
-  - task: object-detection
-    model: yolov8
-  - task: segment-blur
-    target: faces
-```
-
-## Troubleshooting
-
-## Developer notes
-
-* BYOC workers use the same Gateway Protocol as the rest of the Livepeer network. See Network technical architecture under About.
-* You can serve from multiple geographic regions.
-* Contribution rewards may be offered in LPT or credits; check the Forum and Builder opportunities.
-
-## See also
-
-* [AI Pipelines overview](./overview)
-* [ComfyStream](./comfystream)
-* [BYOC full guide](../ai-inference-on-livepeer/byoc) — Architecture, Gateway/Orchestrator, container lifecycle
-* [Network interfaces](/v2/about/livepeer-network/interfaces)
-
-## Resources
-
-* [ComfyStream GitHub](https://github.com/livepeer/comfystream)
-* [Model registry (Forum)](https://forum.livepeer.org/t/model-registry)
-* [Livepeer Studio AI docs](https://livepeer.studio/docs/ai)
-
----
-
 # ComfyStream
 URL: https://docs.livepeer.org/v2/developers/ai-pipelines/comfystream
 
 ComfyStream is a modular AI inference engine that integrates with Livepeer’s Gateway Protocol to execute video frame pipelines on GPU-powered worker nodes. It extends [ComfyUI](https://github.com/comfyanonymous/ComfyUI) with Livepeer-compatible gateway binding, real-time stream I/O, dynamic node graphs and plugin chaining, and overlay rendering and metadata export.
 
-For a high-level overview and DeepWiki, see the [ComfyStream full guide](../ai-inference-on-livepeer/comfystream).
+For a high-level overview and DeepWiki, see the [ComfyStream full guide](../ai-inference-on-livepeer/overview).
 
 ## Architecture overview
 
@@ -4697,7 +4846,7 @@ python run.py --debug
 
 * [AI Pipelines overview](./overview) — Pipeline concepts and worker types
 * [BYOC](./byoc) — Bring your own compute setup
-* [ComfyStream full guide](../ai-inference-on-livepeer/comfystream) — Architecture layers, components, and DeepWiki
+* [ComfyStream full guide](../ai-inference-on-livepeer/overview) — Architecture layers, components, and DeepWiki
 * [Network technical architecture](/v2/about/livepeer-network/technical-architecture) — Gateway and Orchestrator stack
 
 ## Resources
@@ -4706,6 +4855,303 @@ python run.py --debug
 * [BYOC setup](./byoc)
 * [Plugin examples (Forum)](https://forum.livepeer.org/t/comfystream-nodes)
 * [Livepeer Studio AI](https://livepeer.studio/docs/ai)
+
+---
+
+# BYOC — Bring Your Own Container
+URL: https://docs.livepeer.org/v2/developers/ai-pipelines/byoc
+
+BYOC (Bring Your Own Container) lets you run your own AI inference server inside a Docker container on a Livepeer orchestrator, and the network treats it as a callable AI capability. Livepeer does not restrict you to a fixed model catalogue or pre-approved models.
+
+**This is not model hosting in the Hugging Face sense.** You are hosting an **inference service**, not a model artefact. The distinction matters — see [How Livepeer routes by capability, not model](#how-livepeer-routes-by-capability-not-model) below.
+
+***
+
+## What BYOC is (and isn't)
+
+Technically, any Hugging Face model can be containerised and run via BYOC. But Livepeer is optimised for low-latency, GPU-bound, real-time inference — especially for video and vision workloads. Models that violate these assumptions will be inefficient, poorly routed, or uneconomic.
+
+**Rule of thumb:** If the workload is frame-based or stream-based, it fits Livepeer well.
+
+***
+
+## How Livepeer routes by capability, not model
+
+Livepeer intentionally avoids model marketplaces, model-branded APIs, and centralised catalogues. Instead, it routes by **capability descriptors**:
+
+* `image-to-image`
+* `video-to-video`
+* `depth`
+* `segmentation`
+* `style-transfer`
+
+Your orchestrator advertises capabilities, not model names. Gateways route on capability, price, and performance — not on which Hugging Face weights you load internally. This means:
+
+* Models can be swapped or updated without breaking downstream apps
+* No vendor lock-in at the model layer
+* Performance-based competition between orchestrators
+* Apps never need direct knowledge of which model runs their job
+
+***
+
+## Implementation patterns
+
+### Pattern A — Real-time diffusion
+
+Best for style transfer, image-to-image, live video effects.
+
+* Hugging Face SD / SDXL weights
+* StreamDiffusion or ComfyUI-style pipelines
+* Frame-in → frame-out processing
+* Persistent GPU residency
+
+### Pattern B — Vision utility node
+
+Best for sub-tasks inside larger video pipelines.
+
+* Depth, segmentation, or pose models
+* Extremely fast per-frame inference
+* Used as conditioning steps feeding into diffusion
+
+### Pattern C — Hybrid pipeline
+
+Best for differentiated orchestrator offerings.
+
+* Vision model output feeds conditioning into diffusion
+* Vision → condition → generation chain
+* Strong competitive differentiation in the marketplace
+
+***
+
+## Hard constraints
+
+Ignoring these will degrade routing priority and reduce job assignment:
+
+* **Cold starts reduce job assignment.** Keep models warm. Containers that take >10s to serve first inference will be deprioritised.
+* **Excess VRAM usage limits parallelism.** Efficient memory management means more concurrent jobs per GPU.
+* **Slow endpoints are deprioritised.** Gateways track latency per orchestrator and route accordingly.
+* **Stateful jobs break retry and failover semantics.** The network assumes short, repeatable units of work. Long-lived state breaks this.
+
+***
+
+## Setup
+
+You are packaging a **server**, not just a model.
+
+Typical stack:
+
+```
+Python + FastAPI / Flask  (or gRPC)
+Torch / TensorRT / ONNX Runtime
+CUDA + cuDNN
+Model pulled from Hugging Face at build time or startup
+```
+
+Your server is responsible for:
+
+* `/infer` (or equivalent) endpoint
+* Input validation
+* GPU memory management
+* Optional batching
+* Warm start behaviour
+
+You control: precision (fp16, int8), VRAM limits, model loading strategy, fallback and error handling.
+
+Build a Docker image that:
+
+* Boots quickly
+* Loads models deterministically
+* Exposes a stable internal endpoint
+
+This container is the BYOC artefact that runs on the orchestrator.
+
+```dockerfile
+FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
+
+RUN pip install torch torchvision fastapi uvicorn diffusers transformers
+
+COPY ./server /app
+WORKDIR /app
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+```bash
+git clone https://github.com/livepeer/comfystream
+cd comfystream
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+Install your desired model(s):
+
+```bash
+python scripts/download.py --model whisper-large
+python scripts/download.py --model sdxl
+```
+
+Edit `config.yaml`:
+
+```yaml
+publicKey: "0xYourEthereumAddress"
+gatewayURL: "wss://gateway.livepeer.org"
+models:
+  - whisper-large
+  - sdxl
+heartbeat: true
+```
+
+For a custom inference server, set the endpoint the orchestrator will proxy:
+
+```yaml
+byoc:
+  endpoint: "http://localhost:8000/infer"
+  capabilities:
+    - image-to-image
+    - depth
+```
+
+```bash
+python run.py --adapter grpc --gpu --model whisper-large
+```
+
+You should see heartbeat logs to the gateway, job claims, model execution, and result upload confirmations.
+
+Register your node on Arbitrum so gateways can discover you and route work automatically:
+
+```bash
+livepeer-cli gateway register \
+  --addr=1.2.3.4:5040 \
+  --models=whisper-large,sdxl \
+  --bond=100LPT \
+  --region=NA1
+```
+
+Contract and ABI references: [Contract Addresses](/v2/gateways/references/contract-addresses)
+
+***
+
+## Pricing and discovery
+
+* Set pricing per request, frame, or second
+* Pricing is advertised off-chain
+* Settlement occurs via Livepeer tickets
+* Gateways discover and route to you automatically
+* Applications never interact with Hugging Face or your orchestrator directly
+
+***
+
+## See also
+
+ComfyUI-based pipelines for real-time video AI — node graphs, plugins, and gateway binding.
+
+Decide whether your model or use case belongs on Livepeer before you build.
+
+Full model family compatibility matrix for ComfyUI on Livepeer.
+
+The operator-side view: how GPU node operators host and advertise models.
+
+---
+
+# AI Model Support on Livepeer
+URL: https://docs.livepeer.org/v2/developers/ai-pipelines/model-support
+
+This page answers one question:
+
+> **What models can run on Livepeer, and why might some not?**
+
+It lists all known model families commonly used via ComfyUI, with compatibility ratings for Livepeer's real-time, GPU-worker constraints. Nothing here implies that a listed model is officially supported or pre-loaded on the network — it reflects whether a model's execution shape fits Livepeer well.
+
+***
+
+## Legend
+
+* ✓ Likely runnable — fits real-time / GPU-worker constraints
+* ⚠ Conditional — depends on latency, VRAM, orchestration, or batching
+* ✗ Not suitable — design mismatch: stateful, CPU-bound, or non-deterministic
+
+***
+
+## 1. Diffusion Models (Image / Video)
+
+### Stable Diffusion family
+
+**Why blocked (DeepFloyd):** VRAM pressure, multi-stage graphs, inference latency.
+
+### Video diffusion models
+
+**Why blocked (batch video):** temporal state, batch-only execution, non-real-time.
+
+***
+
+## 2. Control & Conditioning Models
+
+### ControlNet
+
+### T2I / I2I Adapters
+
+***
+
+## 3. Encoders, VAEs, and Latents
+
+***
+
+## 4. Vision Models (Non-Diffusion)
+
+### Detection / Segmentation
+
+### Depth / Geometry
+
+***
+
+## 5. Face, Pose & Human Models
+
+***
+
+## 6. Audio & Music Models
+
+**Why blocked:** long context windows, non-frame-based execution.
+
+For real-time audio workloads (live ASR, live translation, streaming transcription), see [Workload Fit → ASR pipeline examples](../ai-inference-on-livepeer/workload-fit#asr-pipeline-examples). These use Whisper or similar and are excellent fits.
+
+***
+
+## 7. Multimodal & VLMs
+
+***
+
+## 8. LLMs (Text-Centric)
+
+**Why blocked:** token streaming, memory residency, orchestration mismatch.
+
+***
+
+## 9. 3D / NeRF / World Models
+
+***
+
+## 10. Utility / Pre/Post Models
+
+***
+
+## Core takeaway
+
+ComfyUI can orchestrate almost any PyTorch model. But:
+
+* Livepeer favours **stateless, frame-based, deterministic inference**
+* Long-running, stateful, or batch-only models are **fundamentally incompatible**
+* Real-time video imposes **hard physics limits**, not software ones
+
+This matrix is intentionally conservative. If your model doesn't appear here, apply the [Workload Fit](../ai-inference-on-livepeer/workload-fit) decision tree to evaluate it.
+
+***
+
+## See also
+
+Decision tree for evaluating whether your use case belongs on Livepeer.
+
+Bring your own container — run custom models via ComfyUI or a custom server.
 
 ---
 
@@ -6511,13 +6957,6 @@ URL: https://docs.livepeer.org/v2/platforms/livepeer-studio/api-reference/sessio
 
 ---
 
-# Get Session Recording
-URL: https://docs.livepeer.org/v2/platforms/livepeer-studio/api-reference/sessions/get-recording
-
-# Get Session Recording
-
----
-
 # Tasks API
 URL: https://docs.livepeer.org/v2/platforms/livepeer-studio/api-reference/tasks/overview
 
@@ -6665,13 +7104,6 @@ URL: https://docs.livepeer.org/v2/platforms/livepeer-studio/api-reference/rooms/
 URL: https://docs.livepeer.org/v2/platforms/livepeer-studio/api-reference/rooms/get
 
 # Get Room
-
----
-
-# Update Room
-URL: https://docs.livepeer.org/v2/platforms/livepeer-studio/api-reference/rooms/update
-
-# Update Room
 
 ---
 
@@ -8501,6 +8933,8 @@ This page will get you up & running with a Livepeer Gateway Node for Video Trans
 
 This guide will install and configure a Gateway to run video & AI workloads.
 
+Docker is the recommended install method for most users.
+
 ***Choose your Gateway Mode:***
 
 &#x20;Verify these&#x20;
@@ -8533,6 +8967,27 @@ Gateway Configuration Flag Guide
 View Full Installation Guide
 
 Gateway Configuration Flag Guide
+
+## End-to-end test loop with an orchestrator
+
+Use this loop after both your gateway and orchestrator are online.
+
+Verify your orchestrator is reachable on `:8935` and advertises transcoding
+support.
+
+In off-chain mode, point the gateway directly with:
+
+```bash
+-orchAddr=https://your-orchestrator.example.com:8935
+```
+
+Use the quickstart ingest flow (FFmpeg or OBS), then fetch the generated HLS
+manifest from the gateway.
+
+Confirm the gateway logs show route selection and the orchestrator logs show
+session creation/completion for the same stream.
+
+Use this guide for orchestrator-side setup, registration, and verification.
 
 ## Troubleshooting
 
@@ -8863,7 +9318,7 @@ Community-operated, self-hosted gateway access
 ✅
 ✅
 Full control, custom routing, production SLAs
-[Run a Gateway](../run-a-gateway/quickstart-a-gateway)
+[Run a Gateway](../quickstart/gateway-setup)
 
 The Livepeer Explorer is adding a Gateway view - you'll be able to compare active gateways
 by throughput, reliability, and orchestrator relationships directly. Coming soon.
@@ -8898,7 +9353,7 @@ How gateways make money, how payment flows to orchestrators, and the business ca
 URL: https://docs.livepeer.org/v2/gateways/using-gateways/gateway-providers
 
 Gateways are the entry point for your application into the Livepeer decentralized compute network.
-You can connect to an existing hosted gateway, or [run your own](../run-a-gateway/quickstart-a-gateway).
+You can connect to an existing hosted gateway, or [run your own](../quickstart/gateway-setup).
 
 Not sure which gateway fits your use case? See &#x20;
 
@@ -8950,6 +9405,22 @@ Preview of the upcoming gateway explorer - active gateways on the Livepeer netwo
 
 ---
 
+# Gateway Payments
+URL: https://docs.livepeer.org/v2/gateways/payments/index
+
+This section is being expanded. Use the current payment setup references below.
+
+Configure and verify gateway clearinghouse settings.
+
+Fiat and token on-ramp options for funding gateway wallets.
+
+---
+
+# Payment Clearinghouse
+URL: https://docs.livepeer.org/v2/gateways/run-a-gateway/payments/payment-clearinghouse
+
+---
+
 # Run a Gateway: Quickstart Guide
 URL: https://docs.livepeer.org/v2/gateways/quickstart/gateway-setup
 
@@ -8980,6 +9451,8 @@ This page will get you up & running with a Livepeer Gateway Node for Video Trans
 &#x20;MacOS&#x20;
 
 This guide will install and configure a Gateway to run video & AI workloads.
+
+Docker is the recommended install method for most users.
 
 ***Choose your Gateway Mode:***
 
@@ -9013,6 +9486,27 @@ Gateway Configuration Flag Guide
 View Full Installation Guide
 
 Gateway Configuration Flag Guide
+
+## End-to-end test loop with an orchestrator
+
+Use this loop after both your gateway and orchestrator are online.
+
+Verify your orchestrator is reachable on `:8935` and advertises transcoding
+support.
+
+In off-chain mode, point the gateway directly with:
+
+```bash
+-orchAddr=https://your-orchestrator.example.com:8935
+```
+
+Use the quickstart ingest flow (FFmpeg or OBS), then fetch the generated HLS
+manifest from the gateway.
+
+Confirm the gateway logs show route selection and the orchestrator logs show
+session creation/completion for the same stream.
+
+Use this guide for orchestrator-side setup, registration, and verification.
 
 ## Troubleshooting
 
@@ -9262,6 +9756,10 @@ URL: https://docs.livepeer.org/v2/gateways/run-a-gateway/requirements/setup
 
 &#x20;Complete: needs review&#x20;
 
+Gateway nodes do not require NVIDIA GPU drivers by default. Driver setup is
+only required on systems running GPU workloads (for example orchestrators or
+GPU-accelerated AI workers).
+
 ## Gateway Modes
 
 You can run a gateway
@@ -9281,7 +9779,7 @@ You can run a Gateway for:
 
 ## Quick OS Table
 
-OSInstall MethodGatewayOrchestrator / AI WorkerNotesmacOS (Intel / Apple)Build from source (Go)✅ Yes❌ NoBest for local dev & routing. Docker often fails on macOS.Windows (Native)Not supported❌ No❌ NoNo native Windows binaries intended for production.Windows (WSL2 + Docker)Docker (Linux via WSL2)✅ Yes⚠️ Limited / fragileEffectively Linux-in-WSL. GPU needs NVIDIA + CUDA for WSL.Linux (Ubuntu recommended)Docker or source build✅ Yes✅ Yes (NVIDIA GPU)Only OS suitable for production Orchestrators & AI workers.
+OSInstall MethodGatewayOrchestrator / AI WorkerNotesmacOS (Intel / Apple)Build from source (Go)✅ Yes❌ NoBest for local dev & routing. Docker often fails on macOS.Windows (Native)Not supported❌ No❌ NoNo native Windows binaries intended for production.Windows (WSL2 + Docker)Docker (Linux via WSL2)✅ Yes⚠️ Limited / fragileEffectively Linux-in-WSL. NVIDIA + CUDA only needed for GPU workloads.Linux (Ubuntu recommended)Docker or source build✅ Yes✅ Yes (with NVIDIA GPU for compute nodes)Only OS suitable for production Orchestrators & AI workers.
 
 ## Gateway Set Up Requirements
 
@@ -9385,6 +9883,8 @@ If you plan to run your Gateway in **On-Chain** mode, you will need:
 
 * An Ethereum account with funds to pay for transaction fees
 * An Ethereum RPC URL to connect to the Arbitrum network where Livepeer is deployed
+
+## ETH Account Setup
 
 #### Required On-Chain Flags
 
@@ -10274,275 +10774,242 @@ One-Click Deployment Options from the Livepeer Community
 # Docker Install
 URL: https://docs.livepeer.org/v2/gateways/run-a-gateway/install/docker-install
 
-&#x20;Complete: needs review&#x20;
+The Livepeer Gateway was previously called the Livepeer Broadcaster. Some CLI
+flags and log output still reference the Broadcaster name.
 
-&#x20;Dual AI & Video&#x20;
+## Prerequisites
 
-&#x20;If docker is already installed at or above version 20.10.x, you can **skip this step**.
+Docker Engine 20.10 or later is required. If Docker is not installed or needs updating, follow the official [Docker Engine installation guide](https://docs.docker.com/engine/install/) for your platform.
 
-You can check your version by running
+Gateway nodes do not require NVIDIA GPU drivers as a baseline prerequisite.
+NVIDIA drivers apply to orchestrator or other GPU compute workloads.
 
-```bash
-docker --version
-```
+Windows hosts should run Docker with WSL2 for best compatibility:
+[Docker Desktop WSL2 backend](https://docs.docker.com/desktop/windows/wsl/).
 
-If you have an older version of Docker installed - you will need to update the Docker Engine and CLI.
-
-Follow the instructions for your OS and Docker type in the [Docker Docs](https://docs.docker.com/) to install the latest version of Docker or follow the terminal command guide below:
-
-**Linux**
-
-1. Update package lists
-
-```bash
-sudo apt-get update
-```
-
-2. Install the latest version of Docker
-
-```bash
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-```
-
-3. Verify the installation
+Verify your installed version:
 
 ```bash
 docker --version
 ```
 
-**Docker Desktop (Windows & MacOS)**
+## Pull the Livepeer Docker Image
 
-1. Use the GUI
-
-Open Application and go to `Settings > Software Updates` menu
-
-2. Use the CLI
-
-```bash
-docker desktop update
-```
-
-If docker is not installed, follow the instructions for your OS in the [Docker installation guide](https://app.docker.com/) to install Docker Engine & CLI or follow the (non-canonical) quick guide below:
-
-**Linux**
-
-1. Update package lists & install dependencies
-
-```bash
-sudo apt-get update
-sudo apt-get install ca-certificates curl apt-transport-https lsb-release
-```
-
-2. Add Docker's official GPG key
-
-```bash
-  sudo mkdir -m 0755 -p /etc/apt/keyrings
-  sudo curl -fsSL download.docker.com -o /etc/apt/keyrings/docker.asc
-  sudo chmod a+r /etc/apt/keyrings/docker.asc
-```
-
-3. Setup the Repo
-   (Replace ubuntu with debian if you are using Debian).
-
-```bash
-  echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] download.docker.com \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-```
-
-2. Install Docker Packages
-
-```bash
-  sudo apt-get update
-  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-```
-
-3. Verify the installation
-
-```bash
-  docker --version
-```
-
-```bash
-  sudo docker run hello-world
-```
-
-**Windows & MacOS**
-
-1. Download Docker Desktop for [Mac](https://docs.docker.com/desktop/install/mac-install/)
-   or [Windows](https://docs.docker.com/desktop/install/windows-install/)
-2. Follow the instructions in the installer
-
-Fetch the latest  with the following command
+Fetch the latest  from Docker Hub:
 
 ```bash
 docker pull livepeer/go-livepeer:master
 ```
 
-Start the Base Docker volume
+## Configure the Gateway
+
+Create a working directory and a `docker-compose.yml` file. Choose the configuration that matches your deployment target:
+
+On-chain mode connects the gateway to the Livepeer network on Arbitrum. An
+Ethereum wallet and Arbitrum One RPC endpoint are required before starting.
+See [On-Chain Setup Requirements](/v2/gateways/run-a-gateway/requirements/on-chain%20setup/on-chain)
+for prerequisites.
+
+```yaml docker-compose.yml
+services:
+  gateway:
+    image: livepeer/go-livepeer:master
+    container_name: "gateway"
+    restart: unless-stopped
+    ports:
+      - 1935:1935   # RTMP ingest
+      - 8935:8935   # HTTP API / HLS output
+      - 5935:5935   # CLI
+    volumes:
+      - ./data/gateway:/root/.lpData
+    command:
+      - "-gateway"
+      - "-network=arbitrum-one-mainnet"
+      - "-ethUrl=<YOUR_ARB_RPC_URL>"
+      - "-ethKeystorePath=/root/.lpData/keystore"
+      - "-ethPassword=/root/.lpData/eth-secret.txt"
+      - "-rtmpAddr=0.0.0.0:1935"
+      - "-httpAddr=0.0.0.0:8935"
+      - "-cliAddr=0.0.0.0:5935"
+      - "-httpIngest=true"
+      - "-blockPollingInterval=10"
+      - "-transcodingOptions=P240p30fps16x9,P360p30fps16x9"
+      - "-monitor"
+      - "-v=6"
+```
+
+Replace `<YOUR_ARB_RPC_URL>` with your Arbitrum One RPC endpoint (e.g.
+from Alchemy or Infura).
+
+After creating this file, complete the [Create Livepeer Gateway ETH Account](#create-livepeer-gateway-eth-account)
+step below before starting the gateway.
+
+Off-chain mode runs without blockchain connectivity and is intended for
+local development. You must supply the address of a running orchestrator
+node via `-orchAddr`.
+
+You need access to a running orchestrator node. For local testing, run
+your own orchestrator or point to a known development node.
+
+```yaml docker-compose.yml
+services:
+  gateway:
+    image: livepeer/go-livepeer:master
+    container_name: "gateway"
+    restart: unless-stopped
+    ports:
+      - 1935:1935   # RTMP ingest
+      - 8935:8935   # HTTP API / HLS output
+      - 5935:5935   # CLI
+    volumes:
+      - ./data/gateway:/root/.lpData
+    command:
+      - "-gateway"
+      - "-network=offchain"
+      - "-orchAddr=<YOUR_ORCHESTRATOR_ADDRESS>"
+      - "-rtmpAddr=0.0.0.0:1935"
+      - "-httpAddr=0.0.0.0:8935"
+      - "-cliAddr=0.0.0.0:5935"
+      - "-httpIngest=true"
+      - "-transcodingOptions=P240p30fps16x9,P360p30fps16x9"
+      - "-v=6"
+```
+
+Replace `<YOUR_ORCHESTRATOR_ADDRESS>` with the service address of your
+orchestrator (e.g. `https://my-orch:8935`).
+
+## Create Livepeer Gateway ETH Account
+
+This section applies to the **On-Chain** configuration only. Skip this step
+if using development (off-chain) mode.
+
+Before the gateway can sign transactions on-chain, it needs an Ethereum account.
+Run the gateway interactively once to generate one:
+
+Create the data directory, then start the container interactively:
 
 ```bash
-  docker-compose up -d
-```
-
-* **On-chain** files: `~/.lpData/arbitrum-one-mainnet`
-* **Off-chain** files: `~/.lpData/offchain`
-* **AI** files: `~/.ai-gateway-lpData`
-
-Configuration
-Directory Structure
-Additional Requirements
-
-Video Off-Chain
-/root/.lpData/offchain/
-Basic setup only
-
-AI Off-Chain
-/root/.lpData/offchain/ + models dir
-AI models directory
-
-Dual Off-Chain
-/root/.lpData/offchain/ + models dir
-Both video and AI files
-
-Video On-Chain
-/root/.lpData/arbitrum-one-mainnet/ + keystore
-ETH keystore files
-
-AI On-Chain
-/root/.lpData/arbitrum-one-mainnet/ + keystore + models
-ETH + AI files
-
-Dual On-Chain
-/root/.lpData/arbitrum-one-mainnet/ + keystore + models
-All components
-
-Volume names can be customised as desired to avoid conflicts between different setups or Gateway instances (e.g., `ai-gateway-lpData`, `dual-gateway-lpData`)
-
-Jump to the configuration guide to see configuration options for the Gateway
-
-I think the volumes section belongs in configuration not installation
-
-Pull from Docker Hub (recommended) or build from source
-
-You can also build locally instead of pulling from Docker Hub:
-
-**Clone and build**
-git clone https://github.com/livepeer/go-livepeer.git
-cd go-livepeer
-make livepeer
-The Makefile shows the build process Makefile:110-112 and includes all dependencies including FFmpeg and CUDA support.
-For development, the source build gives you more flexibility to modify and test changes.
-
-Installation vs Configuration
-Installation refers to obtaining the software:
-
-Pulling the Docker image: docker pull livepeer/go-livepeer:master
-Or building from source: make livepeer
-Configuration refers to setting up runtime parameters:
-
-Creating docker-compose.yml with command-line flags livepeer.go:112-197
-Specifying network settings, transcoding options, AI models, etc.
-More Accurate Installation Steps
-Install: Pull Docker image or build from source
-Configure: Create docker-compose.yml with your specific flags and settings
-Deploy: Run docker-compose up -d
-The docker-compose file is where you define all the configuration flags like -gateway, -network, -transcodingOptions, -aiModels, etc. starter.go:80-178 . This makes it fundamentally a configuration step that customizes how the installed software runs.
-
-Notes
-This distinction matters because:
-
-You can install the same software multiple ways (Docker, source build, binary)
-Each installation method requires different configuration approaches
-The configuration contains your business logic and operational parameters
-Installation is a one-time setup, configuration evolves with your needs
-The Livepeer repository provides examples in the box/ directory that demonstrate different configuration patterns box.md:1-119 .
-
-# Create Livepeer Gateway ETH account
-
-In this step we need to start the Gateway in order to create an Ethereum
-account.
-
-```
+mkdir -p ./data/gateway
 docker compose run -it gateway
 ```
 
-When prompted for the ETH password, enter a strong password to secure your
-Ethereum account. This password is used to decrypt and access the ETH private
-key. Make sure to never share or lose access to either the password or
-the keystore file.
+When prompted, enter a strong password to protect your Ethereum private key.
 
-Keep this password handy, we will use it in the following steps.
+Never share or lose your keystore file or password. Both are required to
+recover your ETH account.
 
-After you see the message that the Ethereum account has been unlocked, CTRL+C to
-exit the Livepeer docker instance.
+After the log output confirms the Ethereum account has been unlocked, press
+`Ctrl+C` to exit.
 
-Using the previously created ETH password, create the eth-secret file
+Write your password to the file that the gateway reads on startup:
 
-```
-nano -p /var/lib/docker/volumes/gateway-lpData/_data/eth-secret.txt
+```bash
+echo "your_password" > ./data/gateway/eth-secret.txt
 ```
 
-# Modify Docker compose file to include eth-secret.txt
+This must match the password you entered in the previous step.
 
-```
-nano docker-compose.yml
-```
+Your keystore file is stored at `./data/gateway/keystore/`. Back it up
+securely before going to production. Losing this file means losing access
+to any ETH held in the account.
 
-Add the following line below the `-ethKeystorePath` and save
+## Start the Gateway
 
-```
--ethPassword=/root/.lpData/eth-secret.txt
-```
+Start the gateway container in the background:
 
-Here is the full modified version of the docker-compose.yml file
-
-```
-version: '3.9'
-
-services:
-  gateway:
-    image: livepeer/go-livepeer:<RELEASE_VERSION>
-    container_name: "gateway"
-    hostname: "gateway"
-    ports:
-      - 1935:1935
-      - 8935:8935
-    volumes:
-      - gateway-lpData:/root/.lpData
-    command: '-ethUrl=<YOUR ARB APC>
-              -ethKeystorePath=/root/.lpData
-              -ethPassword=/root/.lpData/eth-secret.txt
-              -network=arbitrum-one-mainnet
-              -cliAddr=gateway:5935
-              -broadcaster=true
-              -monitor=true
-              -v=99
-              -blockPollingInterval=20
-              -maxPricePerUnit=300
-              -pixelsPerUnit=1
-              -rtmpAddr=0.0.0.0:1935
-              -httpAddr=0.0.0.0:8935
-              '
-volumes:
-  gateway-lpData:
-    external: true
-```
-
-Start Livepeer in the background
-
-```
+```bash
 docker compose up -d
 ```
 
-Launch the livepeer\_cli
+Verify the gateway is running:
+
+```bash
+docker logs gateway
+```
+
+The gateway is ready when logs show it binding to the configured ports and
+connecting to orchestrators on the network.
+
+**On-chain mode only:** The gateway must be funded with ETH before
+orchestrators will accept transcoding jobs. If streams produce no output,
+check that your gateway account has sufficient ETH. See
+[Fund your gateway](/v2/gateways/run-a-gateway/requirements/on-chain%20setup/fund-gateway).
+
+## Stream Live Video
+
+The gateway accepts RTMP ingest on port `1935`. Transcoded HLS output is
+available on port `8935` at `/stream/<manifest-id>.m3u8`.
+
+Push a file or live source to the gateway using FFmpeg:
+
+```bash
+ffmpeg -re -i input.mp4 -c:v libx264 -c:a aac -f flv rtmp://localhost:1935/live/stream
+```
+
+Replace `input.mp4` with a local file or a live source URL. The path
+segment after `/live/` (`stream` in the example above) becomes the manifest
+ID used to retrieve the HLS output.
+
+The transcoded HLS output will be available at:
 
 ```
-docker exec -it gateway /bin/bash
-livepeer_cli -host gateway -http 5935
+http://localhost:8935/stream/stream.m3u8
 ```
 
-&#x20;Broken Link&#x20;
+[OBS Studio](https://obsproject.com/) is a common choice for RTMP
+broadcasting.
+
+1. Open OBS and go to **Settings > Stream**
+2. Set **Service** to **Custom...**
+3. Set **Server** to `rtmp://localhost:1935/live`
+4. Set **Stream Key** to `stream` (or any identifier you choose)
+5. Go to **Settings > Output** and set **Output Mode** to **Advanced**
+6. Set **Keyframe Interval** to `2` seconds
+7. Click **OK** and press **Start Streaming**
+
+The transcoded HLS output will be available at:
+
+```
+http://localhost:8935/stream/stream.m3u8
+```
+
+If running on a cloud server, ensure ports `1935` (RTMP ingest) and `8935`
+(HLS output) are open in your firewall or security group rules.
+
+## Stream Authentication
+
+By default, the gateway accepts any incoming RTMP stream. To restrict access,
+use the `-authWebhookUrl` flag to point the gateway at an authentication
+endpoint you control.
+
+When an incoming stream arrives, the gateway sends a `POST` request to the
+webhook URL with the stream URL as a JSON payload:
+
+```json
+{
+  "url": "rtmp://localhost:1935/live/stream"
+}
+```
+
+Your server responds with HTTP `200` to allow the stream, or any other status
+code to reject it.
+
+Add the flag to your `docker-compose.yml` command block:
+
+```yaml
+- "-authWebhookUrl=https://your-auth-server.com/auth"
+```
+
+The stream key in the RTMP path (e.g. `stream` in `rtmp://localhost/live/stream`)
+is included in the webhook payload URL. Your webhook implementation can use this
+value to authenticate incoming callers — for example, by checking it against a
+list of valid stream keys.
+
+For full webhook response options including custom `manifestID`, `streamKey`
+override, and per-stream transcoding profiles, see the
+[RTMP Webhook Authentication reference](https://github.com/livepeer/go-livepeer/blob/master/doc/rtmpwebhookauth.md).
+
+View all available configuration options for the gateway
 
 ---
 
@@ -11723,6 +12190,9 @@ Note, if the `transcodingOptions.json` file is not provided, the gateway will us
 -nvidia=all  # or specific GPU IDs
 ```
 
+`-nvidia` and NVIDIA drivers are only required for GPU transcoding hosts. A
+gateway-only routing setup does not require NVIDIA drivers.
+
 ## Deployment
 
 For local development and testing purposes, there is no need to connect to the blockchain payments layer.
@@ -11795,7 +12265,7 @@ For nodes that handle both orchestration and AI processing
 **Common Issues**
 
 * **AI models not loading:** Check `-aiModelsDir` and model file permissions
-* **Transcoding failures:** Verify GPU drivers and `-nvidia` configuration
+* **GPU transcoding failures:** Verify NVIDIA drivers and `-nvidia` configuration (only required for GPU transcoding hosts)
 * **Port conflicts:** Ensure `-rtmpAddr`, `-httpAddr`, and `-cliAddr` are available
 * **Memory pressure:** Monitor AI model memory usage, adjust `-aiRunnerContainersPerGPU`
 
@@ -12054,6 +12524,8 @@ This page will get you up & running with a Livepeer Gateway Node for Video Trans
 
 This guide will install and configure a Gateway to run video & AI workloads.
 
+Docker is the recommended install method for most users.
+
 ***Choose your Gateway Mode:***
 
 &#x20;Verify these&#x20;
@@ -12086,6 +12558,27 @@ Gateway Configuration Flag Guide
 View Full Installation Guide
 
 Gateway Configuration Flag Guide
+
+## End-to-end test loop with an orchestrator
+
+Use this loop after both your gateway and orchestrator are online.
+
+Verify your orchestrator is reachable on `:8935` and advertises transcoding
+support.
+
+In off-chain mode, point the gateway directly with:
+
+```bash
+-orchAddr=https://your-orchestrator.example.com:8935
+```
+
+Use the quickstart ingest flow (FFmpeg or OBS), then fetch the generated HLS
+manifest from the gateway.
+
+Confirm the gateway logs show route selection and the orchestrator logs show
+session creation/completion for the same stream.
+
+Use this guide for orchestrator-side setup, registration, and verification.
 
 ## Troubleshooting
 
@@ -12134,6 +12627,8 @@ This page will get you up & running with a Livepeer Gateway Node for Video Trans
 
 This guide will install and configure a Gateway to run video & AI workloads.
 
+Docker is the recommended install method for most users.
+
 ***Choose your Gateway Mode:***
 
 &#x20;Verify these&#x20;
@@ -12166,6 +12661,27 @@ Gateway Configuration Flag Guide
 View Full Installation Guide
 
 Gateway Configuration Flag Guide
+
+## End-to-end test loop with an orchestrator
+
+Use this loop after both your gateway and orchestrator are online.
+
+Verify your orchestrator is reachable on `:8935` and advertises transcoding
+support.
+
+In off-chain mode, point the gateway directly with:
+
+```bash
+-orchAddr=https://your-orchestrator.example.com:8935
+```
+
+Use the quickstart ingest flow (FFmpeg or OBS), then fetch the generated HLS
+manifest from the gateway.
+
+Confirm the gateway logs show route selection and the orchestrator logs show
+session creation/completion for the same stream.
+
+Use this guide for orchestrator-side setup, registration, and verification.
 
 ## Troubleshooting
 
@@ -12214,6 +12730,8 @@ This page will get you up & running with a Livepeer Gateway Node for Video Trans
 
 This guide will install and configure a Gateway to run video & AI workloads.
 
+Docker is the recommended install method for most users.
+
 ***Choose your Gateway Mode:***
 
 &#x20;Verify these&#x20;
@@ -12246,6 +12764,27 @@ Gateway Configuration Flag Guide
 View Full Installation Guide
 
 Gateway Configuration Flag Guide
+
+## End-to-end test loop with an orchestrator
+
+Use this loop after both your gateway and orchestrator are online.
+
+Verify your orchestrator is reachable on `:8935` and advertises transcoding
+support.
+
+In off-chain mode, point the gateway directly with:
+
+```bash
+-orchAddr=https://your-orchestrator.example.com:8935
+```
+
+Use the quickstart ingest flow (FFmpeg or OBS), then fetch the generated HLS
+manifest from the gateway.
+
+Confirm the gateway logs show route selection and the orchestrator logs show
+session creation/completion for the same stream.
+
+Use this guide for orchestrator-side setup, registration, and verification.
 
 ## Troubleshooting
 
@@ -13009,6 +13548,25 @@ Just want to get started?
 
 ---
 
+# Gateway Transcoding Guide
+URL: https://docs.livepeer.org/v2/gateways/run-a-gateway/transcoding
+
+This page is reserved for the go-livepeer native transcoding gateway implementation guide.
+
+## Planned Structure
+
+Validate host prerequisites, ingress, and outbound connectivity.
+
+Provide canonical `go-livepeer` and Docker examples for transcoding workloads.
+
+Document `-orchAddr` direct tests and marketplace routing options.
+
+Include ingest, playback, and log-level verification checks.
+
+Use the quickstart while this dedicated guide is being completed.
+
+---
+
 # Gateway Explorer
 URL: https://docs.livepeer.org/v2/gateways/gateway-tools/explorer
 
@@ -13140,6 +13698,94 @@ No official centralized marketplace exists in Livepeer docs. Third-party portals
 **Verified:**
 
 * For the Livepeer AI network, **AI orchestrators must advertise their AI service URI on-chain** so that AI gateways can discover and route i
+
+---
+
+# Gateway Job Pipelines Overview
+URL: https://docs.livepeer.org/v2/gateways/guides-and-resources/gateway-job-pipelines/overview
+
+Gateway job pipelines are the control-plane path between app requests and orchestrator execution. A gateway does not run model inference; it accepts requests, applies routing policy, selects compatible orchestrators, and returns results.
+
+## What a gateway pipeline does
+
+* Accepts AI requests from apps and clients
+* Matches request requirements to advertised orchestrator capabilities
+* Applies policy: price ceilings, latency expectations, retries, failover
+* Dispatches work to orchestrators and returns outputs
+
+## Gateway vs orchestrator responsibilities
+
+## Pipeline types
+
+* Real-time frame pipelines (video-to-video, overlays, style transfer)
+* Streaming audio pipelines (ASR and translation)
+* Capability-composed pipelines (for example, depth -> conditioning -> generation)
+
+## BYOC in gateway pipelines
+
+Gateway operators can route to orchestrators that expose BYOC capabilities. BYOC extends what workloads a gateway can serve by allowing operators to run custom inference containers behind orchestrator capabilities.
+
+Gateway-side operating guidance for BYOC-capable routing.
+
+Implementation guide for teams building BYOC services consumed by gateways.
+
+## See also
+
+* [Gateway setup](/v2/gateways/quickstart/gateway-setup)
+* [Discover offerings](/v2/gateways/run-a-gateway/connect/discover-offerings)
+* [Gateway providers](/v2/gateways/using-gateways/gateway-providers)
+
+---
+
+# BYOC for Gateway Operators
+URL: https://docs.livepeer.org/v2/gateways/guides-and-resources/gateway-job-pipelines/byoc
+
+BYOC (Bring Your Own Container) from a gateway perspective is about **routing** and **service policy**, not model execution. Gateways route AI requests to orchestrators advertising compatible BYOC capabilities.
+
+## What gateway operators need to do
+
+* Route requests by capability and policy (price, latency, reliability)
+* Prefer orchestrators with stable warm-start behavior
+* Monitor p95 latency and error rates by capability
+* Configure retries and failover so requests remain serviceable during node churn
+
+## What gateway operators do not do
+
+* Run model containers directly
+* Host model weights as the primary inference service
+* Expose orchestrator-internal model identifiers as public API contracts
+
+## Routing best practices
+
+* Treat capabilities as the API contract (`image-to-image`, `depth`, `segmentation`, etc.)
+* Avoid coupling routing to specific model names
+* Maintain per-capability health and route around degraded nodes
+* Keep clear max-price settings to avoid uneconomic job assignment
+
+BYOC enables custom workloads, but poor-fit batch workloads can degrade routing quality and increase latency. Prioritize real-time, streaming, GPU-bound capabilities.
+
+## Operational flow
+
+```mermaid
+flowchart LR
+  A[Client App] --> B[Gateway]
+  B --> C[Capability Match + Policy]
+  C --> D[Orchestrator with BYOC Capability]
+  D --> B
+  B --> A
+```
+
+## Developer handoff
+
+For BYOC implementation and container design details, use the developer guide:
+
+Full architecture and setup for teams deploying BYOC containers.
+
+## Related pages
+
+* [Gateway Job Pipelines Overview](./overview)
+* [Gateway providers](/v2/gateways/using-gateways/gateway-providers)
+* [Run a gateway](/v2/gateways/run-a-gateway/run-a-gateway)
 
 ---
 
@@ -13989,10 +14635,17 @@ URL: https://docs.livepeer.org/v2/gateways/references/api-reference/AI-API/ai
 
 Source code and OpenAPI specification
 
+This reference supports both deployment models:
+
+* **Livepeer Studio**: managed gateway endpoint
+* **go-livepeer / AI worker**: self-hosted gateway endpoint
+
+Endpoint paths are consistent, but auth, operations, and SLOs depend on your
+selected platform.
+
 ## Base URLs
 
 Environment
-
 URL
 
 Livepeer Cloud Community Gateway
@@ -14296,7 +14949,7 @@ There are two main types of orchestrators on the Livepeer Network:
 * AI nodes that perform AI inference
 * Custom workloads ie. BYOC pipelines or application-specific workloads
 
-&#x20;[BYOC](/developers/ai-inference-on-livepeer/byoc) pipelines are a recent addition to the AI node type that allows AI nodes to run arbitrary containers for processing tasks on the Livepeer network.&#x20;
+&#x20;[BYOC](/developers/ai-pipelines/byoc) pipelines are a recent addition to the AI node type that allows AI nodes to run arbitrary containers for processing tasks on the Livepeer network.&#x20;
 
 ### Orchestrator Setup Options
 
@@ -14457,42 +15110,63 @@ The Livepeer network distributes staking rewards in LPT to node operators and de
 
 ---
 
+# Types of Orchestrator Jobs
+URL: https://docs.livepeer.org/v2/orchestrators/about-orchestrators/job-types
+
+Livepeer orchestrators can serve three compute job categories, each with different requirements and operational expectations.
+
+## Transcoding
+
+Video transcoding converts streams between formats, bitrates, and resolutions.
+
+* GPU: Optional (CPU mode is available, GPU is recommended for throughput)
+* Additional software: None beyond `go-livepeer`
+* Typical workloads: Live streaming and VOD transcoding
+
+## Realtime AI
+
+Realtime AI pipelines process live video through models with strict latency targets.
+
+* GPU: Required
+* Additional software: Stream handling components such as `mediamtx`
+* Typical workloads: Live video effects and interactive AI video
+
+Realtime AI setup is more involved than transcoding. Review
+[box.md](https://github.com/livepeer/go-livepeer/blob/master/box/box.md)
+before planning deployment.
+
+## Batch AI
+
+Batch AI handles asynchronous inference jobs without realtime latency constraints.
+
+* GPU: Required
+* Additional software: Pipeline-dependent runtimes
+* Typical workloads: Offline processing, analysis, and post-production AI
+
+Canonical setup path available now.
+
+Coming soon.
+
+Coming soon.
+
+---
+
 # Orchestrator Quickstart
 URL: https://docs.livepeer.org/v2/orchestrators/quickstart/overview
 
-If you're a hobbyist, the best place to start is by contributing your GPU to an Orchestrator pool.
-If you're a data center or want to have full control over your node, you can setup your own Orchestrator node.
+Use this quickstart to choose the orchestrator workload you want to run.
 
-See how to add your GPU to an Orchestrator pool.  Best for hobbyists or those with limited technical expertise.
+## What do you want to run?
 
-Quick Setup
+Encode and transcode video streams. GPU optional.
 
-See how to run your own Orchestrator GPU node on the Livepeer Network.  Best for data centers or those who want full control over their node.
+Realtime video-to-video AI pipelines. GPU required.
 
-Advanced Setup
+Asynchronous AI inference jobs. GPU required.
 
-#### Decision Tree
+## Need help deciding?
 
-Join a GPU Pool vs. Run your own Orchestrator
-
-Add your GPU to a pool if:
-
-* You want easy, low-touch earnings (this is a hobby)
-* You don't want to handle uptime, routing, monitoring, and upgrades
-* You don't want to worry about staking, delegation or pricing configuration
-* You’re testing Livepeer for the first time
-* You don't want to deal with staking LPT or worry about slashing
-* You have 1–5 GPUs
-
-Run an orchestrator if:
-
-* You want full operational control of your GPU(s)
-* You want to build a business
-* You’re comfortable with ops, on-chain actions and staking (or willing to put in the time to learn)
-* You want maximum upside and you're willing to stake LPT
-* You plan to aggregate many GPUs
-* You want full say on governance, pricing, and delegation
-* You have long-term plans
+Compare transcoding, realtime AI, and batch AI requirements before setup.
 
 ---
 
@@ -14726,57 +15400,106 @@ Payouts are defined by the pool’s terms and may include:
 
 ---
 
-# Add your GPU to Livepeer
+# Transcoding Orchestrator Quickstart
 URL: https://docs.livepeer.org/v2/orchestrators/quickstart/orchestrator-setup
 
-This quickstart gets your GPU on the Livepeer network by running the **go-livepeer** client in orchestrator mode. You will install (or use Docker), connect to Arbitrum, set pricing, and activate. For a full install guide (binary, Docker, source), see [Install go-livepeer](../setting-up-an-orchestrator/install-go-livepeer). For connecting to Arbitrum (RPC, hosted vs self-hosted), see [Connect to Arbitrum](../setting-up-an-orchestrator/connect-to-arbitrum).
+This is the canonical quickstart for running a transcoding orchestrator.
 
-## Prerequisites
+## Step 2: Prerequisites
 
-* Command-line familiarity; `wget` or `curl`; [grpcurl](https://github.com/fullstorydev/grpcurl) optional for testing.
-* [NVIDIA driver](https://www.nvidia.com/Download/index.aspx) installed if using GPU transcoding.
-* Access to an [Arbitrum RPC endpoint](../setting-up-an-orchestrator/connect-to-arbitrum) (hosted or self-hosted).
-* **go-livepeer** [installed](../setting-up-an-orchestrator/install-go-livepeer) (binary or Docker).
+Requirement
+Notes
 
-&#x20;Non-NVIDIA GPU support may be added in the future. This guide assumes NVIDIA GPUs for transcoding.
+Docker Engine installed
 
-Before starting the node, confirm your GPUs are visible. With the NVIDIA driver installed, run:
+Install Docker
 
-Example output (5 GPUs, IDs 0–4):
+Docker Compose v2
+Verify with `docker compose version`
 
-Start the node with the required flags. Replace placeholders with your values.
+ETH account funded
+Complete Step 1
 
-* **-ethUrl** — Arbitrum RPC URL. See [Connect to Arbitrum](../setting-up-an-orchestrator/connect-to-arbitrum).
-* **-ethAcctAddr** — (Optional) ETH account address if you already have a keystore.
-* **-orchestrator** / **-transcoder** — Run as orchestrator with GPU transcoding.
-* **-nvidia** — Comma-separated GPU IDs (e.g. `0,1,2`). Omit for CPU-only.
-* **-pricePerUnit** — Price in wei per pixel. Required at startup; can be changed later.
-* **-serviceAddr** — Public address for incoming requests (hostname:port preferred over IP).
+Open ports
+`8935` (orchestrator), `7935` (metrics optional)
 
-&#x20;Keystore default: `~/.lpData/arbitrum-one-mainnet/keystore`. If no account exists, you will be prompted to create one and set a passphrase. Guard the private key and passphrase; they control your wallet and funds.
+NVIDIA drivers
+Required only if enabling GPU transcoding
 
-When the node is ready, logs should show:
+## Step 3: Configure and run
 
-To activate on Livepeer you need:
+Use this compose template as a baseline and replace placeholders.
 
-* **ETH** (Arbitrum) — for transaction fees. Start with a small amount; the CLI will warn if balance is low.
-* **LPT** — to stake and join the active set. Check the [Explorer](https://explorer.livepeer.org/) for the 100th orchestrator’s stake; you need at least that much to enter the top 100.
+If you are running CPU-only transcoding, remove GPU-specific runtime settings.
 
-&#x20;If your orchestrator leaves the active set (top 100 by stake), it will not be reactivated automatically unless you re-register or your stake changes so you re-enter the top 100.
+Start the node:
 
-Use **livepeer\_cli** or the [Explorer](https://explorer.livepeer.org/) to bond LPT to yourself, set reward cut, fee share, price, and service address. Once transactions confirm, your orchestrator joins the active set in the next round.
+## Step 4: Register as an orchestrator
 
-See [Staking LPT](../advanced-setup/staking-LPT) and [Rewards and fees](../advanced-setup/rewards-and-fees) for economics. Full activation steps are in the [Install guide](../setting-up-an-orchestrator/install-go-livepeer#activate).
+Use `Invoke multistep wizard` in CLI, or run flags directly:
 
-## Reference pages
+## Step 5: Verify your node
 
-Binary, Docker, and build from source.
+Your orchestrator should appear in the [Livepeer Explorer](https://explorer.livepeer.org/orchestrators).
 
-Hosted RPC vs self-hosted node.
+## Testing end-to-end with a Gateway
 
-Full flag list and gRPC mapping.
+Once both services are running, verify an end-to-end transcoding session.
 
-Common questions and troubleshooting.
+Configure gateway routing to your orchestrator service URI:
+
+```bash
+-orchAddr=https://your-orchestrator.example.com:8935
+```
+
+Use the gateway quickstart ingest flow.
+
+Check orchestrator logs for active session creation and completion.
+
+Use this to run gateway-side setup and stream validation.
+
+## Related pages
+
+Compare transcoding, realtime AI, and batch AI paths.
+
+Full install options and advanced flags.
+
+RPC selection and network connection guidance.
+
+Full orchestrator flag reference.
+
+---
+
+# Realtime AI Orchestrator Quickstart
+URL: https://docs.livepeer.org/v2/orchestrators/quickstart/realtime-ai-quickstart
+
+Realtime AI setup requires additional runtime and streaming components beyond baseline transcoding.
+
+Understand how realtime AI differs from transcoding and batch AI.
+
+Current upstream reference while this quickstart is being finalized.
+
+---
+
+# Batch AI Orchestrator Quickstart
+URL: https://docs.livepeer.org/v2/orchestrators/quickstart/batch-ai-quickstart
+
+Batch AI setup is pipeline-dependent and will document supported deployment patterns as they stabilize.
+
+Understand how batch AI differs from transcoding and realtime AI.
+
+Current upstream reference while this quickstart is being finalized.
+
+---
+
+# Orchestrator Payments
+URL: https://docs.livepeer.org/v2/orchestrators/payments/index
+
+This section is being finalized for orchestrator-focused payment operations.
+
+Current clearinghouse workflow while orchestrator-specific guidance is in progress.
+
+Funding options for on-chain orchestration and service operations.
 
 ---
 
@@ -14893,7 +15616,7 @@ You can define transcoding profiles in a JSON file and reference them. Example s
 
 If you run AI inference, create an **aiModels.json** to specify pipelines and models:
 
-See [AI pipelines](../../advanced-setup/ai-pipelines) and [Developers BYOC](/developers/ai-inference-on-livepeer/byoc) for full AI setup.
+See [AI pipelines](../../advanced-setup/ai-pipelines) and [Developers BYOC](/developers/ai-pipelines/byoc) for full AI setup.
 
 ## Verification
 
@@ -15034,6 +15757,304 @@ Start go-livepeer with `-enableAI` and set your Arbitrum RPC and other flags. Co
 Stake does **not** decide AI job assignment. Revenue is from **per-job payments**. Optimise reliability and latency to maximise AI earnings.
 
 ## See also
+
+---
+
+# Hosting AI Models on an Orchestrator
+URL: https://docs.livepeer.org/v2/orchestrators/advanced-setup/hosting-models
+
+<PreviewCallout />
+
+Hosting AI models on a Livepeer orchestrator means running inference workloads on GPU-backed nodes and making those models available for consumption via Livepeer Gateways. This is not training and not a generic GPU cloud — it is decentralised, real-time AI inference optimised for video and streaming workloads.
+
+<Note>
+  **Consumers never talk to orchestrators directly.** All traffic flows through gateways, which handle routing, auth, pricing, and QoS.
+
+```
+App / User
+     ↓
+Gateway (routing, auth, pricing, QoS)
+     ↓
+Orchestrator(s) (GPU + model + runtime)
+```
+
+</Note>
+
+***
+
+## Models best suited for orchestrators
+
+Livepeer orchestrators are best for low-latency, real-time inference — especially:
+
+* Diffusion models (Stable Diffusion, StreamDiffusion)
+* Image-to-image and video-to-video models
+* ControlNet pipelines
+* Vision models (depth, pose, segmentation)
+* ComfyUI-based DAG workflows
+* Real-time video AI effects
+
+**Not ideal:** large batch LLM inference, long-running training jobs, stateful fine-tuning loops.
+
+For a full compatibility matrix by model family, see [Model Support](/v2/developers/ai-pipelines/model-support).
+
+***
+
+## What you do and don't need to build
+
+As an orchestrator operator, you focus on running excellent inference infrastructure. You do **not** need to build:
+
+* A marketplace
+* Authentication systems
+* Billing infrastructure
+* Service discovery
+* Brand or user trust
+
+These are handled by Gateways and the protocol layer. Orchestrators compete on performance — lower latency, better GPUs, higher uptime, better-optimised pipelines, specialised or niche models.
+
+***
+
+## Setup steps
+
+<StyledSteps>
+
+  <StyledStep title="Run an orchestrator node">
+
+Install go-livepeer with AI enabled.
+
+**Requirements:**
+
+* GPU (RTX 3090 / 4090 / A100 / L4 or equivalent)
+* CUDA + NVIDIA drivers
+* Docker strongly recommended
+
+```bash
+# Pull the latest go-livepeer image with AI support
+docker pull livepeer/go-livepeer:master
+
+# Start with AI flags enabled
+docker run -d \
+  --gpus all \
+  --name livepeer-orchestrator \
+  livepeer/go-livepeer:master \
+  -orchestrator \
+  -network arbitrum-one-mainnet \
+  -aiWorker \
+  -aiModels /root/.lpData/cfg/aiModels.json \
+  -aiModelsDir /root/.lpData/models \
+  -v 6
+```
+
+The orchestrator advertises: hardware specs, supported capabilities, pricing, service endpoints.
+
+<GotoLink
+label="Full orchestrator setup guide"
+relativePath="../quickstart/overview"
+/>
+
+  </StyledStep>
+
+  <StyledStep title="Install an AI runtime">
+
+Livepeer does not mandate a single runtime. The two common approaches:
+
+**Option A — ComfyUI (most common)**
+
+* Load models via `.safetensors`
+* Build inference pipelines as DAGs
+* Serve real-time inference via ComfyStream
+
+```bash
+git clone https://github.com/livepeer/comfystream
+cd comfystream
+pip install -r requirements.txt
+
+# Download your models
+python scripts/download.py --model sdxl
+python scripts/download.py --model depth-anything
+```
+
+**Option B — Custom inference server**
+
+* Torch / TensorRT / ONNX
+* HTTP or gRPC interface
+* Wrapped by Livepeer's AI Worker interface
+
+```python
+# Example: minimal FastAPI inference server
+from fastapi import FastAPI
+from PIL import Image
+
+
+app = FastAPI()
+
+@app.post("/infer")
+async def infer(request: InferRequest):
+    # Run your model here
+    result = model(request.image)
+    return {"output": result}
+```
+
+You control: which models are loaded, VRAM usage and batching, precision (fp16 / int8), warm starts and caching.
+
+  </StyledStep>
+
+  <StyledStep title="Advertise AI capabilities">
+
+Your orchestrator declares machine-readable capability descriptors. These are not marketing labels — gateways use them to route jobs.
+
+Edit your `aiModels.json`:
+
+```json
+{
+  "capabilities": [
+    "image-to-image",
+    "video-to-video",
+    "depth",
+    "segmentation",
+    "style-transfer"
+  ],
+  "models": [
+    {
+      "name": "sdxl-turbo",
+      "capability": "image-to-image",
+      "warmStart": true
+    },
+    {
+      "name": "depth-anything",
+      "capability": "depth",
+      "warmStart": true
+    }
+  ]
+}
+```
+
+\<DynamicTable
+headerList={\["Capability", "Description", "Example models"]}
+itemsList={\[
+{ "Capability": "image-to-image", "Description": "Transform input frames using a diffusion model", "Example models": "SDXL, SD 1.5, SD-Turbo" },
+{ "Capability": "video-to-video", "Description": "Frame-by-frame video transformation", "Example models": "StreamDiffusion, AnimateDiff" },
+{ "Capability": "depth", "Description": "Depth map estimation from video frames", "Example models": "DepthAnything, MiDaS" },
+{ "Capability": "segmentation", "Description": "Pixel-level object or region masks", "Example models": "SAM, SAM2" },
+{ "Capability": "style-transfer", "Description": "Apply artistic style to video frames", "Example models": "ControlNet + IP-Adapter" }
+]}
+/>
+
+  </StyledStep>
+
+  <StyledStep title="Set pricing">
+
+Configure pricing for your AI capabilities. Pricing is advertised off-chain and settled via Livepeer tickets.
+
+```json
+{
+  "pricing": {
+    "image-to-image": {
+      "pricePerFrame": 0.004,
+      "currency": "USD"
+    },
+    "depth": {
+      "pricePerFrame": 0.001,
+      "currency": "USD"
+    },
+    "video-to-video": {
+      "pricePerSecond": 0.06,
+      "currency": "USD"
+    }
+  }
+}
+```
+
+You can configure:
+
+* Per-request, per-frame, or per-second pricing
+* Optional surge or priority pricing
+* Model-specific pricing
+
+  </StyledStep>
+
+  <StyledStep title="Expose capabilities via gateways">
+
+Once running, gateways automatically:
+
+* Discover your orchestrator
+* Route jobs based on cost, performance, and capability match
+* Handle retries, auth, and aggregation
+* Expose stable APIs to developers
+
+Apps never need direct knowledge of your node. Your job is to keep the service fast, reliable, and warm.
+
+To verify your orchestrator is discoverable, query the `/getNetworkCapabilities` endpoint on a gateway:
+
+```bash
+curl https://your-gateway.example.com/getNetworkCapabilities | jq .
+```
+
+You should see your orchestrator's address, capabilities, and pricing in the response.
+
+  </StyledStep>
+
+</StyledSteps>
+
+***
+
+## Hosting multiple models on one orchestrator
+
+A single GPU node can host multiple models, but VRAM is finite. Common patterns:
+
+**Model multiplexing (cold swap):** Load one model at a time, swap on request. Higher latency per swap, lower VRAM pressure. Suitable for less frequently requested models.
+
+**Warm multi-model (concurrent):** Keep multiple small models resident simultaneously. Works well for depth + segmentation + ControlNet combinations where each is lightweight.
+
+**Dedicated GPU per model:** For high-throughput production, assign one GPU per capability. Eliminates swap overhead entirely.
+
+<Warning>
+  Cold starts significantly reduce job assignment. Gateways track orchestrator latency and avoid nodes with slow first-inference times. Keep your most-requested models warm.
+</Warning>
+
+***
+
+## How developers consume models you host
+
+From a developer's perspective, consumption looks like:
+
+* HTTP API calls (image/video in → output out)
+* WebRTC streams for real-time video
+
+Examples already running on Livepeer that consume orchestrator-hosted models:
+
+* **Daydream** — generative AI video platform
+* **StreamDiffusionTD** — real-time diffusion via TouchDesigner
+* **ComfyStream** — browser-based ComfyUI pipelines
+* **OBS plugins** — live stream AI effects
+
+Developers target capability types, not your specific node. If you advertise `image-to-image` with competitive latency and pricing, you'll receive their jobs.
+
+***
+
+## Partnering with gateways
+
+Instead of competing with gateways, orchestrators can partner with them for guaranteed routing and exclusive pipeline access. This is a commercial arrangement outside the protocol.
+
+Relevant contacts: Cloud SPE operators, Daydream gateway team. See [Gateway Providers](/v2/gateways/using-gateways/gateway-providers).
+
+***
+
+## See also
+
+<CardGroup cols={2}>
+  <Card title="BYOC" icon="box" href="/v2/developers/ai-pipelines/byoc">
+    Developer guide to building BYOC containers — how to structure your inference server.
+  </Card>
+  <Card title="Model Support" icon="microchip-ai" href="/v2/developers/ai-pipelines/model-support">
+    Full model family compatibility matrix — which models work on Livepeer and why.
+  </Card>
+  <Card title="ComfyStream" icon="diagram-project" href="/v2/developers/ai-pipelines/comfystream">
+    How ComfyStream works as the AI pipeline runtime for orchestrator nodes.
+  </Card>
+  <Card title="Orchestrator quickstart" icon="rocket" href="../quickstart/overview">
+    Start here if you haven't run a Livepeer orchestrator node yet.
+  </Card>
+</CardGroup>
 
 ---
 
@@ -17108,6 +18129,8 @@ Treasury control is enforced at the **protocol layer (on-chain)** through govern
 
 ***
 
+## Using the Treasury
+
 ## 1. Formal Definition
 
 Let:
@@ -18284,11 +19307,191 @@ Affordable. Performant. Dynamically Scalable.
 
 ---
 
-# Livepeer Community Guidelines
+# Community Guidelines
 URL: https://docs.livepeer.org/v2/community/livepeer-community/community-guidelines
 
-This page outlines the guidelines for the Livepeer Community. Possibly will
-just be in the community hub.
+Livepeer is an open, decentralised network - and the community that runs it is one of its most important infrastructure layers.
+These guidelines apply everywhere we gather: Discord, the Forum, GitHub, Telegram, in-person events, and any other Livepeer-adjacent spaces.
+They exist to help everyone - newcomers and long-time contributors alike - feel safe, respected, and able to do their best work.
+
+**TL;DR** - Be constructive. Be kind. Assume good faith. Engage with ideas, not people. Contribute to the conversation even when you disagree.
+All community spaces are governed by these guidelines, and violations may result in removal.
+
+## Our Values
+
+The Livepeer network is built on the belief that open infrastructure should benefit everyone - governed by the public, for the public.
+The same spirit extends to our community culture.
+
+We welcome contributors of all backgrounds - developers, operators, delegators, researchers, and curious newcomers. The barrier to participation should be low, and the culture should make it lower.
+
+Decisions, proposals, and processes should be visible to all stakeholders. We discuss things in the open, document outcomes, and make our reasoning legible.
+
+Disagreement is healthy. We distinguish between criticising ideas (encouraged) and criticising people (not acceptable). Push back on proposals with reasoning, not dismissal.
+
+When a message is ambiguous, interpret it charitably. Most community members are trying to help, learn, or solve a problem - meet them there before assuming bad intent.
+
+The network belongs to its participants. That means community members share responsibility for keeping spaces healthy - not just moderators.
+
+Whether it's a protocol upgrade or a contribution workflow, we look for ways to improve. If something isn't working, say so - and ideally bring a suggestion.
+
+## Code of Conduct
+
+These standards apply to all Livepeer community spaces - online and in-person.
+They are adapted from the [Contributor Covenant](https://www.contributor-covenant.org/) and the Livepeer Forum community guidelines.
+
+### ✅ What We Expect
+
+* **Be respectful** - Treat community members with the same respect you would want in return, even when disagreeing.
+* **Be inclusive** - Welcome people regardless of background, experience level, technical expertise, nationality, gender, sexual orientation, disability, or personal appearance.
+* **Be constructive** - Frame criticism around ideas, implementations, and proposals - not the people behind them.
+* **Stay on topic** - Keep conversations relevant to their context. Avoid derailing threads or cross-posting the same topic in multiple channels.
+* **Credit others** - Acknowledge the work and ideas of others. Don't post content that belongs to someone else without permission.
+* **Assume good intent** - Especially in written communication, tone is easily misread. Give people the benefit of the doubt before escalating.
+* **Help newcomers** - Everyone was new once. A welcoming response to a basic question costs little and means a lot.
+
+### ❌ What Is Not Acceptable
+
+The following behaviours are unacceptable in all Livepeer community spaces:
+
+* **Harassment** - Including targeted comments, threats, intimidation, unwanted contact, or any form of stalking.
+* **Discrimination** - Offensive or derogatory comments based on race, ethnicity, gender, sexual orientation, religion, disability, nationality, or similar characteristics.
+* **Personal attacks** - Ad hominem responses, name-calling, or responding to tone rather than content.
+* **Sexual content** - Gratuitous, explicit, or off-topic sexual language or imagery.
+* **Spam and vandalism** - Posting irrelevant links, promotional content, or deliberately disrupting discussions.
+* **Doxxing** - Exposing or threatening to expose someone's private personal information without consent.
+* **Impersonation** - Pretending to be another community member, team member, or Livepeer Foundation staff.
+* **Bad faith use of moderation** - Filing reports as retaliation rather than to address genuine violations.
+
+Technical skill, seniority, or contribution history do not entitle anyone to lower standards of behaviour.
+All community members - including maintainers and Foundation staff - are held to the same conduct standards.
+
+## Community Spaces
+
+Livepeer's community is distributed across several platforms. Each has its own norms and purpose - these guidelines apply to all of them.
+
+**Primary real-time hub.** General chat, technical support, governance discussion, and ecosystem announcements.
+Use the right channel for your topic. Keep #general friendly and accessible. Long technical threads belong in dedicated channels.
+
+**For longer-form discussion.** Governance proposals, RFPs, ecosystem updates, and structured debates live here.
+Topics should be well-formed. Don't start a topic in the wrong category, and don't cross-post.
+
+**For code, issues, and PRs.** Bug reports, feature proposals, documentation contributions, and protocol development.
+Keep issues clear and reproducible. Treat reviewers and maintainers with respect - their time is limited.
+
+**Quick updates and announcements.** The official Livepeer Telegram is a good place to stay informed and ask quick questions.
+
+**Unofficial community forum.** Run by community members, not the Foundation. Great for general discussion and sharing ecosystem projects.
+
+**Ecosystem overview.** Governance proposals, network updates, bounties, and community tools - all in one place.
+
+### Channel-Specific Norms
+
+Keep it light and welcoming. It's often the first place newcomers land. Avoid technical rabbit holes - point people to the right channel instead.
+
+Lead with what you've already tried. Include relevant specs (OS, version, config). Don't expect instant responses - community members help in their own time.
+
+Proposals should be well-researched and clearly structured. Share drafts early for feedback. Engage with dissenting views before moving to a vote.
+
+Fill out issue templates fully. A good bug report includes: what you expected, what happened, and how to reproduce it. Incomplete issues may be closed without action.
+
+Keep PRs focused. One logical change per PR. Respond to review feedback promptly. Don't force-push to a branch under active review.
+
+## Contributing to Livepeer
+
+Livepeer thrives on community contributions. You don't need to write code to make an impact.
+
+Open a discussion or issue before building large features. Follow repo-specific contributing guides - each repo has a `CONTRIBUTING.md`.
+
+Found something outdated, missing, or confusing? Docs contributions are always welcome. See the Documentation Contribution Guide.
+
+Participate in governance by voting on proposals, commenting on RFPs, or drafting improvement proposals on the forum.
+
+Help answer questions in Discord or the Forum. Helping others onboard is one of the highest-value contributions you can make.
+
+Found a bug? Open an issue on the relevant GitHub repository with full reproduction steps.
+
+Share ideas on the Forum. Even if your idea doesn't ship, it feeds into community thinking about what the network needs.
+
+### Contribution Principles
+
+These apply across all Livepeer repositories and contribution types:
+
+* **Read before you build** - Check existing issues and discussions before starting work on something large. A quick "is anyone working on this?" can save everyone time.
+* **Keep PRs focused** - One logical change per pull request. Smaller, well-scoped PRs are easier to review and merge.
+* **Write readable commit messages** - Use the [Conventional Commits](https://www.conventionalcommits.org/) format where repos require it (e.g. `fix:`, `feat:`, `docs:`).
+* **Document your changes** - If your change affects behaviour, update the relevant docs. New features without documentation are incomplete features.
+* **Be patient with reviews** - Maintainers are often working across multiple repositories. Expect responses within 7 days; ping the thread if you haven't heard back.
+* **Accept that PRs can be declined** - Maintainers may decline contributions that don't fit the project's direction. This isn't personal - they'll explain why and suggest alternatives where possible.
+* **Rebase, don't merge** - Most Livepeer repos prefer a linear commit history. Use `git rebase` rather than merge commits when updating your branch.
+
+Not sure where to start? Check out open issues labelled `good first issue` or `help wanted` across the [Livepeer GitHub organisation](https://github.com/livepeer).
+You can also ask in the `#contributors` channel on Discord.
+
+## Participating in Governance
+
+Livepeer is a community-governed network. Every LPT holder - whether delegating or operating directly - has a voice in how it evolves.
+
+**Core governance principles from the Livepeer founding statement:**
+
+* **Transparency** - Governance processes should be visible and documented. Every stakeholder should understand how decisions get made.
+* **Consensus pathways** - There should always be a clear path for the community to reach consensus on proposals.
+* **Right to dissent** - If you disagree with a decision, you have the right to voice it - and ultimately the right to exit the network (fork, liquidate, or transition).
+* **Incentivised participation** - Active participation by the full stakeholder set is what makes the network work. Governance is part of that.
+
+Vote on live governance proposals using the Livepeer Explorer.
+
+Read, comment on, and draft proposals on the Forum before they go to a vote.
+
+## Reporting a Problem
+
+If you experience or witness behaviour that violates these guidelines, here's what to do:
+
+### Step 1 - If It's Safe To Do So
+
+Ask the person to stop. Sometimes people don't realise their behaviour is affecting others. A calm, direct response can resolve things without escalation.
+
+### Step 2 - Flag or Report
+
+Use Discord's built-in **Flag** or **Report** function on any message. Moderators are notified and will review.
+
+Use the **Flag** button on any post. If enough flags accrue, action is taken automatically or by a moderator.
+
+Use GitHub's **Report Content** function or reach out to repo maintainers directly via a private message.
+
+### Step 3 - Escalation
+
+For urgent issues or situations that can't be resolved through platform tools, contact the Livepeer Foundation directly via the [community hub](https://www.livepeer.org/community-hub).
+
+### What Happens Next
+
+Moderators and maintainers reserve the right to take the following actions based on severity and context:
+
+| Severity | Action |
+|----------|--------|
+| Minor / First offence | Private warning with explanation |
+| Repeated or moderate | Temporary mute, suspension, or PR/issue closure |
+| Severe or sustained | Permanent removal from community spaces |
+
+All reports are taken seriously. Retaliation against someone for filing a report is itself a violation of these guidelines.
+
+Moderators do not preview new posts. They rely on the community to flag problems. **If you see something, flag it.**
+
+## Related Pages & External Links
+
+All the ways to contribute - code, docs, community, governance, and more.
+
+Where to ask questions and connect with the community.
+
+The official contributing guide for the Livepeer wiki repository.
+
+Governance proposals, bounties, events, and ecosystem tools in one place.
+
+The Livepeer Forum community standards and discussion norms.
+
+The open-source code of conduct standard these guidelines draw from.
+
+These guidelines are a living document. If you have suggestions for improving them, open a discussion on the [Livepeer Forum](https://forum.livepeer.org) or submit a PR to the docs repository.
+Last reviewed: March 2026.
 
 ---
 
@@ -18391,7 +19594,34 @@ Read recent news from the&#x20;
 # Media Kit
 URL: https://docs.livepeer.org/v2/resources/media-kit
 
-# Media Kit
+***
+
+title: Media Kit
+sidebarTitle: Media Kit
+description: This page contains the official Livepeer media kit, including logos, colours, and brand guidelines with download links.
+keywords: \["livepeer", "resources", "media kit", "media", "kit"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---------------------------------------------------------------
+
+## Logos
+
+### Platform Logos
+
+## Brand Guidelines
+
+## Colours
+
+&#x20;Click to Copy to Clipboard&#x20;
+
+### Light Theme
+
+### Dark Theme
+
+### Complementary Colors
+
+##### Greens
+
+##### Neutrals & Accent
 
 ---
 
@@ -18591,10 +19821,10 @@ Report security issues privately.
 ## Canonical References
 
 * [`docs-guide/lpd.mdx`](../docs-guide/lpd.mdx)
-* [`docs-guide/templates-index.mdx`](../docs-guide/templates-index.mdx)
-* [`docs-guide/workflows-index.mdx`](../docs-guide/workflows-index.mdx)
-* [`docs-guide/scripts-index.md`](../docs-guide/scripts-index.md)
-* [`docs-guide/quality-gates.mdx`](../docs-guide/quality-gates.mdx)
+* [`docs-guide/indexes/templates-index.mdx`](../docs-guide/indexes/templates-index.mdx)
+* [`docs-guide/indexes/workflows-index.mdx`](../docs-guide/indexes/workflows-index.mdx)
+* [`docs-guide/indexes/scripts-index.mdx`](../docs-guide/indexes/scripts-index.mdx)
+* [`docs-guide/quality-testing/quality-gates.mdx`](../docs-guide/quality-testing/quality-gates.mdx)
 * [`contribute/CONTRIBUTING/GIT-HOOKS.md`](./CONTRIBUTING/GIT-HOOKS.md)
 
 ---
@@ -18951,6 +20181,31 @@ Display components handle media, embeds, quotes, and visual presentation pattern
 />
 ```
 
+**Props**: `children`, `width`, `align`&#x20;
+**Defaults**: `width="fit-content"`, `align="center"`
+
+```jsx lines Example
+
+
+<CalloutContainer
+  width={"fit-content"}
+  align={"center"}
+/>
+```
+
+**Props**: `children`, `align`, `justify`, `gap`&#x20;
+**Defaults**: `gap="1rem"`
+
+```jsx lines Example
+
+
+<CardContentContainer
+  align={"<value>"}
+  justify={"<value>"}
+  gap={"1rem"}
+/>
+```
+
 **Props**: `children`&#x20;
 **Defaults**: None
 
@@ -18984,6 +20239,20 @@ Display components handle media, embeds, quotes, and visual presentation pattern
   title={"<value>"}
   style={{}}
   background={'var(--card-background)'}
+/>
+```
+
+**Props**: `children`, `imgProps`, `imgStyle`, `cardProps`, `style`&#x20;
+**Defaults**: None
+
+```jsx lines Example
+
+
+<InlineImageCard
+  imgProps={{}}
+  imgStyle={{}}
+  cardProps={{}}
+  style={{}}
 />
 ```
 
@@ -19399,83 +20668,6 @@ Display components handle media, embeds, quotes, and visual presentation pattern
 
 Domain components package feature-specific UI blocks used by dedicated documentation domains.
 
-**Props**: No explicit props detected from signature.&#x20;
-**Defaults**: No explicit defaults detected.
-
-```jsx lines Example
-
-
-<FfmpegWarning />
-```
-
-**Props**: No explicit props detected from signature.&#x20;
-**Defaults**: No explicit defaults detected.
-
-```jsx lines Example
-
-
-<GatewayOffChainWarning />
-```
-
-**Props**: No explicit props detected from signature.&#x20;
-**Defaults**: No explicit defaults detected.
-
-```jsx lines Example
-
-
-<GatewayOnChainTTestnetNote />
-```
-
-**Props**: No explicit props detected from signature.&#x20;
-**Defaults**: No explicit defaults detected.
-
-```jsx lines Example
-
-
-<GatewayOnChainWarning />
-```
-
-**Props**: No explicit props detected from signature.&#x20;
-**Defaults**: No explicit defaults detected.
-
-```jsx lines Example
-
-
-<OrchAddrNote />
-```
-
-**Props**: `children`&#x20;
-**Defaults**: None
-
-```jsx lines Example
-
-
-<TestVideoDownload />
-```
-
-**Props**: `dataSource`&#x20;
-**Defaults**: None
-
-```jsx lines Example
-
-
-<QuickStartSteps
-  dataSource={{}}
-/>
-```
-
-**Props**: `offchainSteps`, `onchainSteps`&#x20;
-**Defaults**: None
-
-```jsx lines Example
-
-
-<QuickStartTabs
-  offchainSteps={"<value>"}
-  onchainSteps={"<value>"}
-/>
-```
-
 **Props**: `density`&#x20;
 **Defaults**: `density=1.1`
 
@@ -19843,13 +21035,13 @@ Layout components provide reusable structure primitives for organizing page cont
 Primitive components are foundational UI building blocks reused across the docs system.
 
 **Props**: `selectors`&#x20;
-**Defaults**: `selectors=DEFAULT_SELECTORS`
+**Defaults**: None
 
 ```jsx lines Example
 
 
 <FocusableScrollRegions
-  selectors={DEFAULT_SELECTORS}
+  selectors={"<value>"}
 />
 ```
 
@@ -28392,36 +29584,39 @@ The size of the market opportunity for a product or service. Not specific to Liv
 
 ---
 
-# Livepeer AI Content Directory
-URL: https://docs.livepeer.org/v2/pages/03_developers/ai-inference-on-livepeer/livepeer-ai/livepeer-ai-content-directory
+# Gateway Job Pipelines Overview
+URL: https://docs.livepeer.org/v2/gateways/guides-and-resources/gateway-job-pipelines/overview
 
-# Livepeer AI Content Directory
+Gateway job pipelines are the control-plane path between app requests and orchestrator execution. A gateway does not run model inference; it accepts requests, applies routing policy, selects compatible orchestrators, and returns results.
 
-Cover image
+## What a gateway pipeline does
 
-Building the Decentralized Generative AI Tech Stack
+* Accepts AI requests from apps and clients
+* Matches request requirements to advertised orchestrator capabilities
+* Applies policy: price ceilings, latency expectations, retries, failover
+* Dispatches work to orchestrators and returns outputs
 
-Blog
+## Gateway vs orchestrator responsibilities
 
-Sept 26, 2025
+## Pipeline types
 
-https://mirror.xyz/livepeer.eth/7G0T99UIVXbFffvGoDqDnsMq4vJTpDSPtrBZj5xFKwo
+* Real-time frame pipelines (video-to-video, overlays, style transfer)
+* Streaming audio pipelines (ASR and translation)
+* Capability-composed pipelines (for example, depth -> conditioning -> generation)
 
-https://mirror.xyz/livepeer.eth/7G0T99UIVXbFffvGoDqDnsMq4vJTpDSPtrBZj5xFKwo
+## BYOC in gateway pipelines
 
-Building the Decentralized Generative AI Tech Stack.png
+Gateway operators can route to orchestrators that expose BYOC capabilities. BYOC extends what workloads a gateway can serve by allowing operators to run custom inference containers behind orchestrator capabilities.
 
-Building the Decentralized Generative AI Tech Stack.png
+Gateway-side operating guidance for BYOC-capable routing.
 
-Introducing Livepeer Cascade - A Vision For Livepeer’s Future in the Age
-of Real-Time AI Video
+Implementation guide for teams building BYOC services consumed by gateways.
 
-Nov 2, 2024
+## See also
 
-https://mirror.xyz/livepeer.eth/bCruUtv0PJWWlFxfbCMATGM\_h15hUncwvyFW1A3z7Ag
-
-Introducing Livepeer Cascade - A Vision For Livepeer’s Future in the
-Age of Real-Time AI Video.png
+* [Gateway setup](/v2/gateways/quickstart/gateway-setup)
+* [Discover offerings](/v2/gateways/run-a-gateway/connect/discover-offerings)
+* [Gateway providers](/v2/gateways/using-gateways/gateway-providers)
 
 ---
 

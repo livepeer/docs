@@ -1417,10 +1417,28 @@ export const LINK_MAP = {
       "movedCandidates": []
     },
     {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://paragraph.com/@livepeer-2/using-the-livepeer-community-treasury",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
       "sourceType": "import-path",
       "linkType": "import-path",
       "rawPath": "/snippets/components/content/math.jsx",
       "resolvedPath": "snippets/components/content/math.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/display/embed.mdx",
+      "resolvedPath": "snippets/components/display/embed.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1454,7 +1472,8 @@ export const LINK_MAP = {
       "status": "ok",
       "movedCandidates": []
     }
-  ]
+  ],
+  "snippets/components/display/embed.mdx": []
 };
 
 export default LINK_MAP;

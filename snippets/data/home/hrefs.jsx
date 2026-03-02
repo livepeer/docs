@@ -1325,10 +1325,14 @@ export const LINK_MAP = {
       "sourceType": "jsx-attr",
       "linkType": "internal-rooted",
       "rawPath": "/v2/pages/05_orchestrators/orchestrators-portal",
-      "resolvedPath": "v2/x-pages/05_orchestrators/orchestrators-portal.mdx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
+      "resolvedPath": "v2/pages/05_orchestrators/orchestrators-portal",
+      "exists": false,
+      "status": "missing",
+      "movedCandidates": [
+        "v2/orchestrators/orchestrators-portal.mdx",
+        "v2/cn/orchestrators/orchestrators-portal.mdx",
+        "v2/es/orchestrators/orchestrators-portal.mdx"
+      ]
     },
     {
       "sourceType": "jsx-attr",

@@ -28,6 +28,7 @@ This document defines canonical ownership boundaries to prevent drift across REA
 | Script/runtime behavior         | Code + tests                                          | Behavioral truth always lives in executable code and validation tests. |
 | Script metadata and inventory   | Script headers + generated indexes                    | Script headers feed script index generation.                           |
 | Repo feature navigation map     | `docs-guide/*.mdx` (manual canonical files)           | Internal maintainer source of truth.                                   |
+| Codex skill portability         | `ai-tools/ai-skills/templates/*.template.md`          | Local installs are synced from templates via `sync-codex-skills.js`.  |
 | Public user-facing docs content | `v2/pages/**`                                         | Mintlify docs in `docs.json` navigation.                               |
 | CI/test execution behavior      | Workflow files + test runner scripts                  | Narrative summaries must link to these files.                          |
 | Issue/PR intake behavior        | `.github/ISSUE_TEMPLATE/*` + PR templates + workflows | Generated templates index summarizes usage.                            |
@@ -110,3 +111,4 @@ It should not duplicate deep procedures that already exist in:
 1. Any meaningful process change must update the relevant docs-guide canonical file in the same PR.
 2. Any script/workflow/template change must regenerate indexes in the same PR.
 3. If README and docs-guide disagree, docs-guide canonical files are considered authoritative for operational navigation.
+4. Codex skill installs must be generated from templates using `node tools/scripts/sync-codex-skills.js` (manual edits in local skill folders are non-canonical).

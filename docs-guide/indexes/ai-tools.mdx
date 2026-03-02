@@ -50,3 +50,21 @@ Produced assets:
 2. Pick the target pack from `ai-tools/agent-packs/<agent>/`.
 3. Add the pack file to the agent's local rules/skills location.
 4. Run `node tools/scripts/repo-audit-orchestrator.js --mode static --scope full` as the first verification run.
+
+## Codex Skill Portability
+
+- Canonical source: `ai-tools/ai-skills/templates/*.template.md`
+- Local install target: `$CODEX_HOME/skills` (fallback: `~/.codex/skills`)
+- Sync behavior: safe upsert only (creates/updates managed skills; no deletion)
+
+Runbook:
+
+```bash
+node tools/scripts/sync-codex-skills.js --check
+node tools/scripts/sync-codex-skills.js
+node tools/scripts/sync-codex-skills.js --skills lpd-bootstrap-and-doctor,staged-test-suite-runner --dry-run
+```
+
+Generated metadata:
+
+- `agents/openai.yaml` is generated deterministically for each synced skill.

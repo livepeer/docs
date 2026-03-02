@@ -1,357 +1,173 @@
 export const LINK_MAP = {
-  "v2/developers/ai-inference-on-livepeer/byoc.mdx": [
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-0",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-1",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-2",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-3",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-4",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-5",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-6",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-7",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-8",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-9",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-10",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-11",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-12",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-13",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-14",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-15",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#0-16",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "internal-rooted",
-      "rawPath": "/v2/gateways/references/go-livepeer/cli-reference",
-      "resolvedPath": "v2/gateways/references/go-livepeer/cli-reference.mdx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "internal-rooted",
-      "rawPath": "/v2/gateways/references/go-livepeer/cli-reference",
-      "resolvedPath": "v2/gateways/references/go-livepeer/cli-reference.mdx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://github.com/livepeer/ai-runner",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://github.com/livepeer/go-livepeer",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://github.com/livepeer/go-livepeer",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://github.com/Roaring30s/livepeer-byoc",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://github.com/livepeer/ai-runner",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://github.com/livepeer/pytrickle",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    }
-  ],
-  "v2/developers/ai-inference-on-livepeer/comfystream.mdx": [
-    {
-      "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://deepwiki.com/livepeer/comfystream",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
+  "v2/developers/ai-inference-on-livepeer/overview.mdx": [
     {
       "sourceType": "jsx-attr",
-      "linkType": "external-https",
-      "rawPath": "https://deepwiki.com/livepeer/comfystream",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    }
-  ],
-  "v2/developers/ai-inference-on-livepeer/comfyui.mdx": [],
-  "v2/developers/ai-inference-on-livepeer/livepeer-ai/README.mdx": [],
-  "v2/developers/ai-inference-on-livepeer/livepeer-ai/ai-101.mdx": [],
-  "v2/developers/ai-inference-on-livepeer/livepeer-ai/ai-apis-move-to-tech-section/README.mdx": [],
-  "v2/developers/ai-inference-on-livepeer/livepeer-ai/ai-apis-move-to-tech-section/api-reference.mdx": [],
-  "v2/developers/ai-inference-on-livepeer/livepeer-ai/custom-ai-pipelines.mdx": [],
-  "v2/developers/ai-inference-on-livepeer/livepeer-ai/daydream-generative-ai-video-platform.mdx": [],
-  "v2/developers/ai-inference-on-livepeer/livepeer-ai/livepeer-ai-content-directory.mdx": [
-    {
-      "sourceType": "jsx-attr",
-      "linkType": "external-https",
-      "rawPath": "https://mirror.xyz/livepeer.eth/7G0T99UIVXbFffvGoDqDnsMq4vJTpDSPtrBZj5xFKwo",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "jsx-attr",
-      "linkType": "external-https",
-      "rawPath": "https://mirror.xyz/livepeer.eth/7G0T99UIVXbFffvGoDqDnsMq4vJTpDSPtrBZj5xFKwo",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "jsx-attr",
-      "linkType": "internal-rooted",
-      "rawPath": "/snippets/assets/domain/00_HOME/Building the Decentralized Generative AI Tech Stack.png",
-      "resolvedPath": "snippets/assets/domain/00_HOME/Building the Decentralized Generative AI Tech Stack.png",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "jsx-attr",
-      "linkType": "internal-rooted",
-      "rawPath": "/snippets/assets/domain/00_HOME/Building the Decentralized Generative AI Tech Stack.png",
-      "resolvedPath": "snippets/assets/domain/00_HOME/Building the Decentralized Generative AI Tech Stack.png",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "jsx-attr",
-      "linkType": "external-https",
-      "rawPath": "https://mirror.xyz/livepeer.eth/bCruUtv0PJWWlFxfbCMATGM_h15hUncwvyFW1A3z7Ag",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "jsx-attr",
-      "linkType": "internal-rooted",
-      "rawPath": "/snippets/assets/domain/00_HOME/Introducing Livepeer Cascade - A Vision For Livepeer’s Future in the Age of Real-Time AI Video.png",
-      "resolvedPath": "snippets/assets/domain/00_HOME/Introducing Livepeer Cascade - A Vision For Livepeer’s Future in the Age of Real-Time AI Video.png",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    }
-  ],
-  "v2/developers/ai-inference-on-livepeer/livepeer-ai/overview-ai-on-livepeer.mdx": [
-    {
-      "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://mirror.xyz/livepeer.eth/bCruUtv0PJWWlFxfbCMATGM_h15hUncwvyFW1A3z7Ag",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "jsx-attr",
-      "linkType": "internal-rooted",
-      "rawPath": "/snippets/assets/domain/00_HOME/Eric Shreck Gif.gif",
-      "resolvedPath": "snippets/assets/domain/00_HOME/Eric Shreck Gif.gif",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    }
-  ],
-  "v2/developers/ai-inference-on-livepeer/livepeer-ai/realtime-ai.mdx": [],
-  "v2/developers/ai-inference-on-livepeer/livepeer-ai/using-ai-on-livepeer.mdx": [],
-  "v2/developers/ai-pipelines/byoc.mdx": [
-    {
-      "sourceType": "markdown-link",
       "linkType": "internal-relative",
-      "rawPath": "../ai-inference-on-livepeer/byoc",
-      "resolvedPath": "v2/developers/ai-inference-on-livepeer/byoc.mdx",
+      "rawPath": "./workload-fit",
+      "resolvedPath": "v2/developers/ai-inference-on-livepeer/workload-fit.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
     },
     {
-      "sourceType": "markdown-link",
+      "sourceType": "jsx-attr",
       "linkType": "internal-relative",
-      "rawPath": "./overview",
+      "rawPath": "../ai-pipelines/overview",
       "resolvedPath": "v2/developers/ai-pipelines/overview.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
     },
     {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "../ai-pipelines/model-support",
+      "resolvedPath": "v2/developers/ai-pipelines/model-support.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
+      "resolvedPath": "snippets/components/domain/SHARED/previewCallouts.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/links.jsx",
+      "resolvedPath": "snippets/components/primitives/links.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/layout/table.jsx",
+      "resolvedPath": "snippets/components/layout/table.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/layout.jsx",
+      "resolvedPath": "snippets/components/primitives/layout.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/containers.jsx",
+      "resolvedPath": "snippets/components/primitives/containers.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    }
+  ],
+  "v2/developers/ai-inference-on-livepeer/workload-fit.mdx": [
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "../ai-pipelines/overview",
+      "resolvedPath": "v2/developers/ai-pipelines/overview.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "../ai-pipelines/byoc",
+      "resolvedPath": "v2/developers/ai-pipelines/byoc.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "../ai-pipelines/model-support",
+      "resolvedPath": "v2/developers/ai-pipelines/model-support.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
+      "resolvedPath": "snippets/components/domain/SHARED/previewCallouts.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/layout/table.jsx",
+      "resolvedPath": "snippets/components/layout/table.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/links.jsx",
+      "resolvedPath": "snippets/components/primitives/links.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/containers.jsx",
+      "resolvedPath": "snippets/components/primitives/containers.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/layout.jsx",
+      "resolvedPath": "snippets/components/primitives/layout.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    }
+  ],
+  "v2/developers/ai-pipelines/byoc.mdx": [
+    {
       "sourceType": "markdown-link",
+      "linkType": "empty",
+      "rawPath": "#how-livepeer-routes-by-capability-not-model",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "skipped",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/gateways/references/contract-addresses",
+      "resolvedPath": "v2/gateways/references/contract-addresses.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
       "linkType": "internal-relative",
       "rawPath": "./comfystream",
       "resolvedPath": "v2/developers/ai-pipelines/comfystream.mdx",
@@ -360,48 +176,39 @@ export const LINK_MAP = {
       "movedCandidates": []
     },
     {
-      "sourceType": "markdown-link",
+      "sourceType": "jsx-attr",
       "linkType": "internal-relative",
-      "rawPath": "../ai-inference-on-livepeer/byoc",
-      "resolvedPath": "v2/developers/ai-inference-on-livepeer/byoc.mdx",
+      "rawPath": "../ai-inference-on-livepeer/workload-fit",
+      "resolvedPath": "v2/developers/ai-inference-on-livepeer/workload-fit.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
     },
     {
-      "sourceType": "markdown-link",
-      "linkType": "internal-rooted",
-      "rawPath": "/v2/about/livepeer-network/interfaces",
-      "resolvedPath": "v2/about/livepeer-network/interfaces.mdx",
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "./model-support",
+      "resolvedPath": "v2/developers/ai-pipelines/model-support.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
     },
     {
-      "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://github.com/livepeer/comfystream",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "../../orchestrators/advanced-setup/hosting-models",
+      "resolvedPath": "v2/orchestrators/advanced-setup/hosting-models.mdx",
+      "exists": true,
+      "status": "ok",
       "movedCandidates": []
     },
     {
-      "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://forum.livepeer.org/t/model-registry",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://livepeer.studio/docs/ai",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
+      "resolvedPath": "snippets/components/domain/SHARED/previewCallouts.jsx",
+      "exists": true,
+      "status": "ok",
       "movedCandidates": []
     },
     {
@@ -409,6 +216,33 @@ export const LINK_MAP = {
       "linkType": "import-path",
       "rawPath": "/snippets/components/layout/table.jsx",
       "resolvedPath": "snippets/components/layout/table.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/links.jsx",
+      "resolvedPath": "snippets/components/primitives/links.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/layout/steps.jsx",
+      "resolvedPath": "snippets/components/layout/steps.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/containers.jsx",
+      "resolvedPath": "snippets/components/primitives/containers.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -427,8 +261,8 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "internal-relative",
-      "rawPath": "../ai-inference-on-livepeer/comfystream",
-      "resolvedPath": "v2/developers/ai-inference-on-livepeer/comfystream.mdx",
+      "rawPath": "../ai-inference-on-livepeer/overview",
+      "resolvedPath": "v2/developers/ai-inference-on-livepeer/overview.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -454,8 +288,8 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "internal-relative",
-      "rawPath": "../ai-inference-on-livepeer/comfystream",
-      "resolvedPath": "v2/developers/ai-inference-on-livepeer/comfystream.mdx",
+      "rawPath": "../ai-inference-on-livepeer/overview",
+      "resolvedPath": "v2/developers/ai-inference-on-livepeer/overview.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -515,6 +349,71 @@ export const LINK_MAP = {
       "movedCandidates": []
     }
   ],
+  "v2/developers/ai-pipelines/model-support.mdx": [
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-relative",
+      "rawPath": "../ai-inference-on-livepeer/workload-fit#asr-pipeline-examples",
+      "resolvedPath": "v2/developers/ai-inference-on-livepeer/workload-fit.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-relative",
+      "rawPath": "../ai-inference-on-livepeer/workload-fit",
+      "resolvedPath": "v2/developers/ai-inference-on-livepeer/workload-fit.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "../ai-inference-on-livepeer/workload-fit",
+      "resolvedPath": "v2/developers/ai-inference-on-livepeer/workload-fit.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "./byoc",
+      "resolvedPath": "v2/developers/ai-pipelines/byoc.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
+      "resolvedPath": "snippets/components/domain/SHARED/previewCallouts.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/layout/table.jsx",
+      "resolvedPath": "snippets/components/layout/table.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/links.jsx",
+      "resolvedPath": "snippets/components/primitives/links.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    }
+  ],
   "v2/developers/ai-pipelines/overview.mdx": [
     {
       "sourceType": "markdown-link",
@@ -555,8 +454,8 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "internal-relative",
-      "rawPath": "../ai-inference-on-livepeer/livepeer-ai/overview-ai-on-livepeer",
-      "resolvedPath": "v2/developers/ai-inference-on-livepeer/livepeer-ai/overview-ai-on-livepeer.mdx",
+      "rawPath": "../ai-inference-on-livepeer/overview",
+      "resolvedPath": "v2/developers/ai-inference-on-livepeer/overview.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -731,7 +630,134 @@ export const LINK_MAP = {
       "movedCandidates": []
     }
   ],
-  "v2/developers/developer-journey.mdx": [],
+  "v2/developers/developer-journey.mdx": [
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/orchestrators/quickstart/overview",
+      "resolvedPath": "v2/orchestrators/quickstart/overview.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "empty",
+      "rawPath": "#path-1-workload-provider",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "skipped",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "empty",
+      "rawPath": "#path-2-workload-consumer",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "skipped",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "empty",
+      "rawPath": "#path-3-core-contributor",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "skipped",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/developers/ai-pipelines/byoc",
+      "resolvedPath": "v2/developers/ai-pipelines/byoc.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://github.com/ad-astra-video/livepeer-app-pipelines",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/gateways/quickstart/gateway-setup",
+      "resolvedPath": "v2/gateways/quickstart/gateway-setup.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/developers/ai-pipelines/overview",
+      "resolvedPath": "v2/developers/ai-pipelines/overview.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://github.com/its-DeFine/livepeer-ops",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://github.com/its-DeFine/Unreal_Vtuber",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "empty",
+      "rawPath": "#",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "skipped",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "empty",
+      "rawPath": "#",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "skipped",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://github.com/livepeer/go-livepeer",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/developers/guides-and-resources/contribution-guide",
+      "resolvedPath": "v2/developers/guides-and-resources/contribution-guide.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    }
+  ],
   "v2/developers/developer-path.mdx": [
     {
       "sourceType": "jsx-attr",

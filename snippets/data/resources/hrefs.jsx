@@ -837,15 +837,11 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/04_GATEWAYS/callouts.jsx",
-      "resolvedPath": "snippets/components/domain/04_GATEWAYS/callouts.jsx",
-      "exists": false,
-      "status": "missing",
-      "movedCandidates": [
-        "v2/gateways/quickstart/components/callouts.jsx",
-        "tools/scripts/dev/README-add-callouts.md",
-        "tools/scripts/dev/add-callouts.js"
-      ]
+      "rawPath": "/v2/gateways/quickstart/components/callouts.jsx",
+      "resolvedPath": "v2/gateways/quickstart/components/callouts.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
     },
     {
       "sourceType": "import-path",
@@ -1806,7 +1802,100 @@ export const LINK_MAP = {
       "movedCandidates": []
     }
   ],
-  "v2/resources/media-kit.mdx": [],
+  "v2/resources/lpt/delegator-dashboard.mdx": [
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://paulieb14.github.io/livepeer-delegator-dashboard/",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://delegator.livepeer.org",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://explorer.livepeer.org",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://paulieb14.github.io/livepeer-delegator-dashboard/",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    }
+  ],
+  "v2/resources/media-kit.mdx": [
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://www.livepeer.org/media-kit",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://www.dropbox.com/scl/fi/tblvrdl3chfklvujhri19/Livepeer-Brand-Guidelines.pdf?rlkey=mfp3zj8kbp8aw3z0kqhez8wn9&st=or62duey&raw=1",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/display/embed.mdx",
+      "resolvedPath": "snippets/components/display/embed.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/buttons.jsx",
+      "resolvedPath": "snippets/components/primitives/buttons.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/display/customCards.jsx",
+      "resolvedPath": "snippets/components/display/customCards.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/display/containers.mdx",
+      "resolvedPath": "snippets/components/display/containers.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    }
+  ],
   "v2/resources/references/contract-addresses.mdx": [
     {
       "sourceType": "markdown-link",
@@ -2649,8 +2738,8 @@ export const LINK_MAP = {
       "movedCandidates": []
     }
   ],
-  "snippets/components/display/embed.mdx": [],
   "snippets/components/display/containers.mdx": [],
+  "snippets/components/display/embed.mdx": [],
   "snippets/components/layout/api-base-urls-table.mdx": []
 };
 

@@ -1,16 +1,25 @@
 # Docs Navigation Route Report
 
-- Generated at (UTC): 2026-03-02T05:01:06.411Z
-- Entries scanned: 2285
+- Generated at (UTC): 2026-03-02T05:42:19.514Z
+- Entries scanned: 2279
 - Syntax errors: 0
-- Missing routes: 16
-- Missing routes with suggestions: 16
+- Missing routes: 17
+- Missing routes with suggestions: 17
 
 ## Syntax Errors
 
 - None
 
 ## Missing Routes
+
+- `v2/orchestrators/orchestrators-journey` (normalized: `v2/orchestrators/orchestrators-journey`)
+  - Pointer: `navigation.versions[1].languages[0].tabs[4].anchors[0].groups[0].pages[1]`
+  - Suggested remaps:
+    - `v2/orchestrators/index` (high path similarity [score=0.6667])
+    - `v2/orchestrators` (high path similarity [score=0.6667])
+    - `v2/orchestrators/orchestrator-journey` (high path similarity [score=0.6667])
+    - `v2/orchestrators/orchestrators-portal` (high path similarity [score=0.6667])
+    - `v2/orchestrators/_context_data_/orchestrators-gateways-implementation-plan` (high path similarity [score=0.5])
 
 - `v2/internal/personas` (normalized: `v2/internal/personas`)
   - Pointer: `navigation.versions[1].languages[0].tabs[8].anchors[0].groups[0].pages[3]`

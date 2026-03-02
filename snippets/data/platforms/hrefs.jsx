@@ -980,10 +980,8 @@ export const LINK_MAP = {
   "v2/platforms/livepeer-studio/api-reference/rooms/start-egress.mdx": [],
   "v2/platforms/livepeer-studio/api-reference/rooms/stop-egress.mdx": [],
   "v2/platforms/livepeer-studio/api-reference/rooms/update-user.mdx": [],
-  "v2/platforms/livepeer-studio/api-reference/rooms/update.mdx": [],
   "v2/platforms/livepeer-studio/api-reference/sessions/get-all.mdx": [],
   "v2/platforms/livepeer-studio/api-reference/sessions/get-clip.mdx": [],
-  "v2/platforms/livepeer-studio/api-reference/sessions/get-recording.mdx": [],
   "v2/platforms/livepeer-studio/api-reference/sessions/get.mdx": [],
   "v2/platforms/livepeer-studio/api-reference/sessions/overview.mdx": [],
   "v2/platforms/livepeer-studio/api-reference/signing-keys/create.mdx": [],
@@ -1874,7 +1872,11 @@ export const LINK_MAP = {
       "resolvedPath": "v2/gateways/using-gateways/gateway-providers/livepeer-studio-gateway",
       "exists": false,
       "status": "missing",
-      "movedCandidates": []
+      "movedCandidates": [
+        "v2/cn/gateways/using-gateways/gateway-providers/livepeer-studio-gateway.mdx",
+        "v2/es/gateways/using-gateways/gateway-providers/livepeer-studio-gateway.mdx",
+        "v2/fr/gateways/using-gateways/gateway-providers/livepeer-studio-gateway.mdx"
+      ]
     },
     {
       "sourceType": "markdown-link",

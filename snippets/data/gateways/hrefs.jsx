@@ -453,8 +453,100 @@ export const LINK_MAP = {
       "movedCandidates": []
     }
   ],
-  "v2/gateways/guides-and-resources/gateway-job-pipelines/byoc.mdx": [],
-  "v2/gateways/guides-and-resources/page-2.mdx": [],
+  "v2/gateways/guides-and-resources/gateway-job-pipelines/byoc.mdx": [
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-relative",
+      "rawPath": "./overview",
+      "resolvedPath": "v2/gateways/guides-and-resources/gateway-job-pipelines/overview.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/gateways/using-gateways/gateway-providers",
+      "resolvedPath": "v2/gateways/using-gateways/gateway-providers.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/gateways/run-a-gateway/run-a-gateway",
+      "resolvedPath": "v2/gateways/run-a-gateway/run-a-gateway.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/developers/ai-pipelines/byoc",
+      "resolvedPath": "v2/developers/ai-pipelines/byoc.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    }
+  ],
+  "v2/gateways/guides-and-resources/gateway-job-pipelines/overview.mdx": [
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/gateways/quickstart/gateway-setup",
+      "resolvedPath": "v2/gateways/quickstart/gateway-setup.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/gateways/run-a-gateway/connect/discover-offerings",
+      "resolvedPath": "v2/gateways/run-a-gateway/connect/discover-offerings.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/gateways/using-gateways/gateway-providers",
+      "resolvedPath": "v2/gateways/using-gateways/gateway-providers.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "./byoc",
+      "resolvedPath": "v2/gateways/guides-and-resources/gateway-job-pipelines/byoc.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/developers/ai-pipelines/byoc",
+      "resolvedPath": "v2/developers/ai-pipelines/byoc.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/layout/table.jsx",
+      "resolvedPath": "snippets/components/layout/table.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    }
+  ],
   "v2/gateways/quickstart/AI-prompt.mdx": [],
   "v2/gateways/quickstart/gateway-setup.mdx": [
     {
@@ -549,6 +641,15 @@ export const LINK_MAP = {
     },
     {
       "sourceType": "jsx-attr",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/orchestrators/quickstart/orchestrator-setup",
+      "resolvedPath": "v2/orchestrators/quickstart/orchestrator-setup.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
       "linkType": "internal-relative",
       "rawPath": "../run-a-gateway/requirements/setup",
       "resolvedPath": "v2/gateways/run-a-gateway/requirements/setup.mdx",
@@ -577,8 +678,8 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "internal-rooted",
-      "rawPath": "/v2/pages/05_orchestrators/orchestrators-portal",
-      "resolvedPath": "v2/x-pages/05_orchestrators/orchestrators-portal.mdx",
+      "rawPath": "/v2/orchestrators/orchestrators-portal",
+      "resolvedPath": "v2/orchestrators/orchestrators-portal.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1026,6 +1127,15 @@ export const LINK_MAP = {
       "linkType": "internal-relative",
       "rawPath": "hardware-stats",
       "resolvedPath": "v2/gateways/references/api-reference/AI-API/hardware-stats.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/tables.jsx",
+      "resolvedPath": "snippets/components/primitives/tables.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2550,7 +2660,7 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "external-https",
-      "rawPath": "https://docs.docker.com/",
+      "rawPath": "https://docs.docker.com/engine/install/",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -2559,7 +2669,7 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "external-https",
-      "rawPath": "https://app.docker.com/",
+      "rawPath": "https://docs.docker.com/desktop/windows/wsl/",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -2567,29 +2677,20 @@ export const LINK_MAP = {
     },
     {
       "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://docs.docker.com/desktop/install/mac-install/",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/gateways/run-a-gateway/requirements/on-chain%20setup/on-chain",
+      "resolvedPath": "v2/gateways/run-a-gateway/requirements/on-chain setup/on-chain.mdx",
+      "exists": true,
+      "status": "ok",
       "movedCandidates": []
     },
     {
       "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://docs.docker.com/desktop/install/windows-install/",
+      "linkType": "empty",
+      "rawPath": "#create-livepeer-gateway-eth-account",
       "resolvedPath": null,
       "exists": null,
-      "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "external-https",
-      "rawPath": "https://hub.docker.com/r/livepeer/go-livepeer",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "🟡 untested-external",
+      "status": "skipped",
       "movedCandidates": []
     },
     {
@@ -2602,9 +2703,18 @@ export const LINK_MAP = {
       "movedCandidates": []
     },
     {
-      "sourceType": "jsx-attr",
+      "sourceType": "markdown-link",
       "linkType": "external-https",
-      "rawPath": "https://hub.docker.com/r/livepeer/go-livepeer",
+      "rawPath": "https://obsproject.com/",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "external-https",
+      "rawPath": "https://github.com/livepeer/go-livepeer/blob/master/doc/rtmpwebhookauth.md",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -2631,8 +2741,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/steps.jsx",
-      "resolvedPath": "snippets/components/layout/steps.jsx",
+      "rawPath": "/snippets/components/primitives/links.jsx",
+      "resolvedPath": "snippets/components/primitives/links.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2640,8 +2750,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/primitives/links.jsx",
-      "resolvedPath": "snippets/components/primitives/links.jsx",
+      "rawPath": "/snippets/components/layout/steps.jsx",
+      "resolvedPath": "snippets/components/layout/steps.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2920,6 +3030,26 @@ export const LINK_MAP = {
       "linkType": "import-path",
       "rawPath": "/snippets/components/display/zoomable-diagram.jsx",
       "resolvedPath": "snippets/components/display/zoomable-diagram.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    }
+  ],
+  "v2/gateways/run-a-gateway/payments/payment-clearinghouse.mdx": [
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://paragraph.com/@livepeer-2/livepeer-payment-clearinghouse",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/display/embed.mdx",
+      "resolvedPath": "snippets/components/display/embed.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -3669,6 +3799,15 @@ export const LINK_MAP = {
       "exists": true,
       "status": "ok",
       "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/pages/08_SHARED/eth-account-setup.mdx",
+      "resolvedPath": "snippets/pages/08_SHARED/eth-account-setup.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
     }
   ],
   "v2/gateways/run-a-gateway/requirements/setup.mdx": [
@@ -3855,6 +3994,26 @@ export const LINK_MAP = {
       "movedCandidates": []
     }
   ],
+  "v2/gateways/run-a-gateway/transcoding.mdx": [
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-relative",
+      "rawPath": "../quickstart/gateway-setup",
+      "resolvedPath": "v2/gateways/quickstart/gateway-setup.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
+      "resolvedPath": "snippets/components/domain/SHARED/previewCallouts.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    }
+  ],
   "v2/gateways/run-a-gateway/v1/transcoding-options.mdx": [],
   "v2/gateways/run-a-gateway/why-run-a-gateway.mdx": [
     {
@@ -3875,7 +4034,11 @@ export const LINK_MAP = {
       "resolvedPath": "v2/gateways/about-gateways/gateway-economics",
       "exists": false,
       "status": "missing",
-      "movedCandidates": []
+      "movedCandidates": [
+        "v2/cn/gateways/about-gateways/gateway-economics.mdx",
+        "v2/es/gateways/about-gateways/gateway-economics.mdx",
+        "v2/fr/gateways/about-gateways/gateway-economics.mdx"
+      ]
     },
     {
       "sourceType": "markdown-link",
@@ -3947,7 +4110,11 @@ export const LINK_MAP = {
       "resolvedPath": "v2/gateways/about-gateways/gateway-explainer",
       "exists": false,
       "status": "missing",
-      "movedCandidates": []
+      "movedCandidates": [
+        "v2/cn/gateways/about-gateways/gateway-explainer.mdx",
+        "v2/es/gateways/about-gateways/gateway-explainer.mdx",
+        "v2/fr/gateways/about-gateways/gateway-explainer.mdx"
+      ]
     },
     {
       "sourceType": "jsx-attr",
@@ -3956,7 +4123,11 @@ export const LINK_MAP = {
       "resolvedPath": "v2/gateways/about-gateways/gateway-economics",
       "exists": false,
       "status": "missing",
-      "movedCandidates": []
+      "movedCandidates": [
+        "v2/cn/gateways/about-gateways/gateway-economics.mdx",
+        "v2/es/gateways/about-gateways/gateway-economics.mdx",
+        "v2/fr/gateways/about-gateways/gateway-economics.mdx"
+      ]
     },
     {
       "sourceType": "import-path",
@@ -4057,7 +4228,11 @@ export const LINK_MAP = {
       "resolvedPath": "v2/gateways/using-gateways/gateway-providers/daydream-gateway",
       "exists": false,
       "status": "missing",
-      "movedCandidates": []
+      "movedCandidates": [
+        "v2/cn/gateways/using-gateways/gateway-providers/daydream-gateway.mdx",
+        "v2/es/gateways/using-gateways/gateway-providers/daydream-gateway.mdx",
+        "v2/fr/gateways/using-gateways/gateway-providers/daydream-gateway.mdx"
+      ]
     },
     {
       "sourceType": "jsx-attr",
@@ -4066,7 +4241,11 @@ export const LINK_MAP = {
       "resolvedPath": "v2/gateways/using-gateways/gateway-providers/livepeer-studio-gateway",
       "exists": false,
       "status": "missing",
-      "movedCandidates": []
+      "movedCandidates": [
+        "v2/cn/gateways/using-gateways/gateway-providers/livepeer-studio-gateway.mdx",
+        "v2/es/gateways/using-gateways/gateway-providers/livepeer-studio-gateway.mdx",
+        "v2/fr/gateways/using-gateways/gateway-providers/livepeer-studio-gateway.mdx"
+      ]
     },
     {
       "sourceType": "jsx-attr",
@@ -4075,7 +4254,11 @@ export const LINK_MAP = {
       "resolvedPath": "v2/gateways/using-gateways/gateway-providers/cloud-spe-gateway",
       "exists": false,
       "status": "missing",
-      "movedCandidates": []
+      "movedCandidates": [
+        "v2/cn/gateways/using-gateways/gateway-providers/cloud-spe-gateway.mdx",
+        "v2/es/gateways/using-gateways/gateway-providers/cloud-spe-gateway.mdx",
+        "v2/fr/gateways/using-gateways/gateway-providers/cloud-spe-gateway.mdx"
+      ]
     },
     {
       "sourceType": "jsx-attr",
@@ -4094,7 +4277,9 @@ export const LINK_MAP = {
       "exists": false,
       "status": "missing",
       "movedCandidates": [
-        "v2/gateways/using-gateways/choosing-a-gateway.mdx"
+        "v2/gateways/using-gateways/choosing-a-gateway.mdx",
+        "v2/cn/gateways/using-gateways/choosing-a-gateway.mdx",
+        "v2/es/gateways/using-gateways/choosing-a-gateway.mdx"
       ]
     },
     {
@@ -4104,7 +4289,11 @@ export const LINK_MAP = {
       "resolvedPath": "v2/gateways/using-gateways/gateway-providers/daydream-gateway",
       "exists": false,
       "status": "missing",
-      "movedCandidates": []
+      "movedCandidates": [
+        "v2/cn/gateways/using-gateways/gateway-providers/daydream-gateway.mdx",
+        "v2/es/gateways/using-gateways/gateway-providers/daydream-gateway.mdx",
+        "v2/fr/gateways/using-gateways/gateway-providers/daydream-gateway.mdx"
+      ]
     },
     {
       "sourceType": "jsx-attr",
@@ -4113,7 +4302,11 @@ export const LINK_MAP = {
       "resolvedPath": "v2/gateways/using-gateways/gateway-providers/livepeer-studio-gateway",
       "exists": false,
       "status": "missing",
-      "movedCandidates": []
+      "movedCandidates": [
+        "v2/cn/gateways/using-gateways/gateway-providers/livepeer-studio-gateway.mdx",
+        "v2/es/gateways/using-gateways/gateway-providers/livepeer-studio-gateway.mdx",
+        "v2/fr/gateways/using-gateways/gateway-providers/livepeer-studio-gateway.mdx"
+      ]
     },
     {
       "sourceType": "jsx-attr",
@@ -4122,7 +4315,11 @@ export const LINK_MAP = {
       "resolvedPath": "v2/gateways/using-gateways/gateway-providers/cloud-spe-gateway",
       "exists": false,
       "status": "missing",
-      "movedCandidates": []
+      "movedCandidates": [
+        "v2/cn/gateways/using-gateways/gateway-providers/cloud-spe-gateway.mdx",
+        "v2/es/gateways/using-gateways/gateway-providers/cloud-spe-gateway.mdx",
+        "v2/fr/gateways/using-gateways/gateway-providers/cloud-spe-gateway.mdx"
+      ]
     },
     {
       "sourceType": "jsx-attr",
@@ -4179,6 +4376,7 @@ export const LINK_MAP = {
       "movedCandidates": []
     }
   ],
+  "snippets/components/display/embed.mdx": [],
   "snippets/automations/globals/globals.mdx": [],
   "snippets/external/box-additional-config.mdx": [
     {
@@ -4318,8 +4516,8 @@ export const LINK_MAP = {
       "status": "missing",
       "movedCandidates": [
         "v2/developers/quickstart/video/transcoding-jobs.mdx",
-        "v2/gateways/run-a-gateway/v1/transcoding-options.mdx",
-        "v1/gateways/guides/transcoding-options.mdx"
+        "v2/gateways/run-a-gateway/transcoding.mdx",
+        "v2/gateways/run-a-gateway/v1/transcoding-options.mdx"
       ]
     },
     {
@@ -4356,6 +4554,44 @@ export const LINK_MAP = {
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
+      "movedCandidates": []
+    }
+  ],
+  "snippets/pages/08_SHARED/eth-account-setup.mdx": [
+    {
+      "sourceType": "markdown-link",
+      "linkType": "external-https",
+      "rawPath": "https://bridge.arbitrum.io/",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/gateways/references/artibtrum-exchanges",
+      "resolvedPath": "v2/gateways/references/artibtrum-exchanges.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/layout/steps.jsx",
+      "resolvedPath": "snippets/components/layout/steps.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/content/code.jsx",
+      "resolvedPath": "snippets/components/content/code.jsx",
+      "exists": true,
+      "status": "ok",
       "movedCandidates": []
     }
   ]
