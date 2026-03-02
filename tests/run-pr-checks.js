@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script run-pr-checks
- * @summary Run changed-file scoped validation checks for pull request CI.
+ * @summary Run changed-file scoped validation checks for pull request CI, including Codex skill sync and codex task-contract enforcement.
  * @owner docs
- * @scope tests, .github/workflows
+ * @scope tests, .github/workflows, tools/scripts
  *
  * @usage
  *   node tests/run-pr-checks.js --base-ref main
@@ -27,6 +27,7 @@
  */
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const { execSync, spawnSync } = require('child_process');
 const { getDocsJsonRouteKeys, toDocsRouteKeyFromFileV2Aware } = require('./utils/file-walker');
@@ -44,6 +45,7 @@ const REPO_ROOT = getRepoRoot();
 const SCRIPT_EXTENSIONS = new Set(['.js', '.cjs', '.mjs', '.ts', '.tsx', '.sh', '.bash', '.py']);
 const SCRIPT_SCOPES = ['.githooks', '.github/scripts', 'tests', 'tools/scripts', 'tasks/scripts'];
 const LINK_AUDIT_REPORT = '/tmp/livepeer-link-audit-pr.md';
+const CODEX_BRANCH_RE = /^codex\//;
 
 function getRepoRoot() {
   try {
@@ -83,6 +85,17 @@ function ensureBaseRef(baseRef) {
     throw new Error(
       `Could not resolve origin/${baseRef}. Ensure checkout uses fetch-depth: 0 and base ref is fetched.`
     );
+  }
+}
+
+function detectCurrentBranch() {
+  const headRef = String(process.env.GITHUB_HEAD_REF || '').trim();
+  if (headRef) return headRef;
+
+  try {
+    return runGit('rev-parse --abbrev-ref HEAD');
+  } catch (_error) {
+    return '';
   }
 }
 
@@ -237,13 +250,83 @@ function runGeneratedBannerCheck() {
   };
 }
 
+function runCodexSkillSyncCheck() {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-skill-sync-check-'));
+  const syncArgs = ['tools/scripts/sync-codex-skills.js', '--dest', tmpDir];
+  const checkArgs = ['tools/scripts/sync-codex-skills.js', '--dest', tmpDir, '--check'];
+
+  const syncCmd = spawnSync('node', syncArgs, { cwd: REPO_ROOT, encoding: 'utf8' });
+  if (syncCmd.status !== 0) {
+    if (syncCmd.stdout) process.stdout.write(syncCmd.stdout);
+    if (syncCmd.stderr) process.stderr.write(syncCmd.stderr);
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+    return {
+      label: 'Codex Skill Sync (--check)',
+      status: 'failed',
+      files: 1,
+      errors: 1,
+      warnings: 0
+    };
+  }
+
+  const checkCmd = spawnSync('node', checkArgs, { cwd: REPO_ROOT, encoding: 'utf8' });
+  if (checkCmd.stdout) process.stdout.write(checkCmd.stdout);
+  if (checkCmd.stderr) process.stderr.write(checkCmd.stderr);
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+
+  return {
+    label: 'Codex Skill Sync (--check)',
+    status: checkCmd.status === 0 ? 'passed' : 'failed',
+    files: 1,
+    errors: checkCmd.status === 0 ? 0 : 1,
+    warnings: 0
+  };
+}
+
+function runCodexTaskContractCheck(branch, changedFiles, baseRef) {
+  if (!CODEX_BRANCH_RE.test(branch)) {
+    return {
+      label: 'Codex Task Contract',
+      status: 'skipped',
+      files: 0,
+      errors: 0,
+      warnings: 0
+    };
+  }
+
+  const args = ['tools/scripts/validate-codex-task-contract.js', '--branch', branch];
+  if (baseRef) {
+    args.push('--base-ref', baseRef);
+  }
+  if (changedFiles.length > 0) {
+    args.push('--files', changedFiles.join(','));
+  }
+  if (process.env.GITHUB_EVENT_PATH || process.env.PULL_REQUEST_BODY) {
+    args.push('--require-pr-body');
+  }
+
+  const cmd = spawnSync('node', args, { cwd: REPO_ROOT, encoding: 'utf8' });
+  if (cmd.stdout) process.stdout.write(cmd.stdout);
+  if (cmd.stderr) process.stderr.write(cmd.stderr);
+
+  return {
+    label: 'Codex Task Contract',
+    status: cmd.status === 0 ? 'passed' : 'failed',
+    files: 1,
+    errors: cmd.status === 0 ? 0 : 1,
+    warnings: 0
+  };
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const changedFiles = getChangedFiles(args.baseRef);
   const groups = partitionFiles(changedFiles);
+  const currentBranch = detectCurrentBranch();
 
   console.log('🧪 Running PR changed-file checks');
   console.log(`Base ref: ${args.baseRef}`);
+  console.log(`Branch: ${currentBranch || 'unknown'}`);
   console.log(`Changed files: ${changedFiles.length}`);
   console.log(`Changed docs pages: ${groups.docsMdx.length}`);
   console.log(`Changed components: ${groups.componentJsx.length}`);
@@ -258,6 +341,8 @@ async function main() {
   checks.push(runGlobalCheck('MDX Guardrails', mdxGuardsTests.runTests));
   checks.push(runDocsNavigationCheck());
   checks.push(runGeneratedBannerCheck());
+  checks.push(runCodexTaskContractCheck(currentBranch, changedFiles, args.baseRef));
+  checks.push(runCodexSkillSyncCheck());
   checks.push(runScriptDocsCheck(groups.scriptFiles));
   checks.push(runLinkAuditCheck(groups.docsMdx));
 

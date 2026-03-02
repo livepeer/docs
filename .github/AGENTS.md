@@ -10,6 +10,8 @@
   explicit, multi-turn plan confirmed by the user.
 - **NEVER** perform a `git reset --hard` or `git push --force` without a saved
   branch to revert to in case of failure.
+- For any implementation task, apply the `codex-task-isolation-standard` skill
+  first (task contract + scoped branch enforcement).
 
 ## 📦 GIT WORKFLOW & CHECKPOINTS
 

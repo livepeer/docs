@@ -104,6 +104,35 @@ If `lpd` is not on your PATH yet, use `bash lpd <command>`.
   </Accordion>
 </AccordionGroup>
 
+### 5a) Codex Branch Contract (`codex/*`)
+
+For implementation tasks run by agents, use:
+
+- branch format: `codex/<issue-id>-<slug>`
+- task contract: `.codex/task-contract.yaml`
+- PR required sections: `Scope`, `Validation`, `Follow-up Tasks`
+
+These checks are enforced only on `codex/*` branches by local hooks and PR CI.
+
+```yaml Task Contract Example
+task_id: 1234
+base_branch: docs-v2
+branch: codex/1234-community-fix
+scope_in:
+  - v2/community/
+  - docs.json
+scope_out:
+  - v1/
+allowed_generated:
+  - docs-index.json
+acceptance_checks:
+  - node tests/run-pr-checks.js --base-ref docs-v2
+risk_flags:
+  - navigation
+follow_up_issues:
+  - 1250
+```
+
 ## 6) Required Quality Gates
 
 <DynamicTable

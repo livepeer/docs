@@ -10,6 +10,33 @@ Before making any changes, agents MUST ensure git hooks are installed:
 ./.githooks/install.sh
 ```
 
+## Codex Task Isolation Standard (Implementation Tasks)
+
+For implementation work on agent branches, use:
+
+1. Branch name: `codex/<issue-id>-<slug>`
+2. Contract file: `.codex/task-contract.yaml`
+3. PR sections: `Scope`, `Validation`, `Follow-up Tasks`
+
+Enforcement behavior:
+
+- `pre-commit` validates contract presence/schema on `codex/*`.
+- `pre-push` validates contract scope and blocks non-fast-forward pushes by default on `codex/*`.
+- CI (`tests/run-pr-checks.js`) validates contract and required PR body sections on `codex/*`.
+
+Minimal contract example:
+
+```yaml
+task_id: 1234
+base_branch: docs-v2
+branch: codex/1234-fix-scope
+scope_in:
+  - tests/
+  - .githooks/
+acceptance_checks:
+  - node tests/run-pr-checks.js --base-ref docs-v2
+```
+
 ## How Hooks Work
 
 The pre-commit hook runs automatically when you attempt to commit. It:

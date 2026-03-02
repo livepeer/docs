@@ -96,13 +96,29 @@ Example:
 DOMAIN_AUDIT_VERSION=v2 git commit -m "docs update"
 ```
 
+## Pre-push Hook (`codex/*` branches only)
+
+The pre-push hook enforces Codex branch safety on `codex/*`:
+
+- requires `.codex/task-contract.yaml`
+- validates branch/issue binding and changed-file scope
+- blocks non-fast-forward pushes by default
+
+Human override for explicit exception:
+
+```bash
+ALLOW_CODEX_FORCE_PUSH=1 git push --force-with-lease origin codex/<issue-id>-<slug>
+```
+
 ## Installation
 
-To install the pre-commit hook:
+To install hooks manually:
 
 ```bash
 cp .githooks/pre-commit .git/hooks/pre-commit
 chmod +x .git/hooks/pre-commit
+cp .githooks/pre-push .git/hooks/pre-push
+chmod +x .git/hooks/pre-push
 ```
 
 Or use the install script:

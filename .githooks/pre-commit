@@ -59,6 +59,7 @@ SKIP_VERIFICATION=${SKIP_VERIFICATION:-0}
 SKIP_TESTS=${SKIP_TESTS:-0}
 SKIP_ALL=${SKIP_ALL:-0}
 ALLOW_DELETIONS=${ALLOW_DELETIONS:-0}
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
 
 get_staged_docs_pages() {
     if ! command -v node &>/dev/null || [ ! -f "tests/utils/file-walker.js" ]; then
@@ -84,11 +85,30 @@ has_human_override_trailer() {
     return 1
 }
 
+run_codex_task_contract_check() {
+    if [[ "$CURRENT_BRANCH" != codex/* ]]; then
+        return 0
+    fi
+
+    echo -e "${YELLOW}🔍 Validating codex task contract...${NC}"
+    if node tools/scripts/validate-codex-task-contract.js --branch "$CURRENT_BRANCH" --validate-contract-only --quiet; then
+        echo -e "${GREEN}✓ Codex task contract check passed${NC}"
+        return 0
+    fi
+
+    VIOLATIONS=$((VIOLATIONS + 1))
+    WARNINGS+=("❌ Codex task contract validation failed")
+    echo -e "${RED}❌ Codex task contract validation failed${NC}"
+    return 1
+}
+
 if [ "$SKIP_ALL" = "1" ]; then
     echo -e "${YELLOW}⚠️  WARNING: All pre-commit checks bypassed (SKIP_ALL=1)${NC}"
     echo -e "${YELLOW}   This should only be used in emergencies.${NC}"
     exit 0
 fi
+
+run_codex_task_contract_check
 
 # Check for file deletions (BLOCKED - requires human override)
 # NOTE: Deletions in tasks/ are allowed (AI-only working directory)
@@ -204,6 +224,9 @@ else
     else
     # Read allowlist (skip comments and empty lines)
     ALLOWLIST=$(grep -v '^#' .allowlist | grep -v '^$' | tr '\n' '|' | sed 's/|$//')
+    if [[ "$CURRENT_BRANCH" == codex/* ]]; then
+        ALLOWLIST="${ALLOWLIST}|.codex"
+    fi
     
     if [ -z "$ALLOWLIST" ]; then
         echo -e "${YELLOW}⚠️  .allowlist is empty, skipping root structure check${NC}"

@@ -4,11 +4,19 @@ This document explains the git hooks used in this repository to enforce code qua
 
 ## Overview
 
-Git hooks are scripts that run automatically at certain points in the git workflow. This repository uses a **pre-commit hook** to:
+Git hooks are scripts that run automatically at certain points in the git workflow. This repository uses:
+
+- a **pre-commit hook** to:
 
 1. **Enforce style guide compliance** - Blocks commits with style violations
 2. **Run verification scripts** - Validates syntax and structure
 3. **Prevent common mistakes** - Catches errors before they reach the repository
+
+- a **pre-push hook** on `codex/*` branches to:
+
+1. **Require a task contract** - `.codex/task-contract.yaml`
+2. **Enforce scoped changes** - blocks pushes with out-of-scope files
+3. **Block force push by default** - allows override only with explicit env flag
 
 ## Pre-commit Hook
 

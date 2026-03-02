@@ -131,6 +131,19 @@ Recovery:
 
 3. Create a branch, make changes, run `lpd dev`, commit, and open a PR.
 
+### Codex Branch Contract (`codex/*`)
+
+For agent implementation branches, use:
+
+- branch name: `codex/<issue-id>-<slug>`
+- task contract file: `.codex/task-contract.yaml`
+- required PR sections: `Scope`, `Validation`, `Follow-up Tasks`
+
+Enforcement runs on `codex/*` only via:
+
+- `.githooks/pre-push` (contract + scope + non-fast-forward block by default)
+- `tests/run-pr-checks.js` (CI contract + PR body checks)
+
 Contributor deep docs:
 
 - [`contribute/CONTRIBUTING/README.md`](contribute/CONTRIBUTING/README.md)

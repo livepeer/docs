@@ -53,8 +53,18 @@ else
     echo "✗ pre-commit hook not found in $SOURCE_DIR"
 fi
 
+# Install pre-push hook
+if [ -f "$SOURCE_DIR/pre-push" ]; then
+    cp "$SOURCE_DIR/pre-push" "$HOOKS_DIR/pre-push"
+    chmod +x "$HOOKS_DIR/pre-push"
+    echo "✓ Installed pre-push hook"
+else
+    echo "✗ pre-push hook not found in $SOURCE_DIR"
+fi
+
 echo ""
 echo "Git hooks installed successfully!"
 echo ""
 echo "The pre-commit hook will now check for style guide violations."
+echo "The pre-push hook will enforce codex task contracts on codex/* branches."
 echo "See .githooks/README.md for details."

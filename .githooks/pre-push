@@ -1,0 +1,92 @@
+#!/bin/bash
+# @script pre-push
+# @summary Enforce codex branch task-contract scope checks and block non-fast-forward pushes by default.
+# @owner docs
+# @scope .githooks, tools/scripts/validate-codex-task-contract.js, .codex/task-contract.yaml
+#
+# @usage
+#   ./.githooks/pre-push <remote-name> <remote-url>
+#
+# @inputs
+#   Reads push refs from stdin in the format:
+#     <local-ref> <local-sha> <remote-ref> <remote-sha>
+#   Optional env:
+#     ALLOW_CODEX_FORCE_PUSH=1 (human override; allows non-fast-forward on codex/*)
+#
+# @outputs
+#   - Console validation summary
+#
+# @exit-codes
+#   0 = push allowed
+#   1 = codex enforcement violation
+#
+# @examples
+#   ALLOW_CODEX_FORCE_PUSH=1 git push --force-with-lease origin codex/123-task
+#
+# @notes
+#   Enforcement is scoped to codex/* branches so non-codex workflows remain unchanged.
+
+set -u
+
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
+ALLOW_CODEX_FORCE_PUSH="${ALLOW_CODEX_FORCE_PUSH:-0}"
+
+# Read stdin first so we can inspect all pushed refs while still validating branch scope.
+PUSH_LINES=$(cat)
+
+if [[ "$CURRENT_BRANCH" != codex/* ]]; then
+  exit 0
+fi
+
+echo -e "${YELLOW}🔍 Running codex pre-push enforcement for ${CURRENT_BRANCH}${NC}"
+
+if ! node tools/scripts/validate-codex-task-contract.js --branch "$CURRENT_BRANCH" --quiet; then
+  echo -e "${RED}❌ Codex task contract validation failed. Push blocked.${NC}"
+  exit 1
+fi
+
+BLOCKED=0
+
+while IFS=' ' read -r local_ref local_sha remote_ref remote_sha; do
+  if [[ -z "${local_ref:-}" ]]; then
+    continue
+  fi
+
+  if [[ "${remote_ref:-}" != "refs/heads/${CURRENT_BRANCH}" ]]; then
+    continue
+  fi
+
+  if [[ "${local_sha:-}" =~ ^0+$ ]]; then
+    echo -e "${RED}❌ Deleting codex branches by push is blocked: ${remote_ref}${NC}"
+    BLOCKED=1
+    continue
+  fi
+
+  # New remote branch creation is always a fast-forward push.
+  if [[ "${remote_sha:-}" =~ ^0+$ ]]; then
+    continue
+  fi
+
+  if ! git merge-base --is-ancestor "$remote_sha" "$local_sha" >/dev/null 2>&1; then
+    echo -e "${RED}❌ Non-fast-forward push detected for ${remote_ref}${NC}"
+    BLOCKED=1
+  fi
+done <<< "$PUSH_LINES"
+
+if [[ "$BLOCKED" -eq 1 ]]; then
+  if [[ "$ALLOW_CODEX_FORCE_PUSH" == "1" ]]; then
+    echo -e "${YELLOW}⚠️ ALLOW_CODEX_FORCE_PUSH=1 set; overriding codex non-fast-forward block.${NC}"
+    exit 0
+  fi
+  echo -e "${RED}Push blocked. Use a fast-forward push on codex/* branches.${NC}"
+  echo -e "${YELLOW}If an override is explicitly approved, set ALLOW_CODEX_FORCE_PUSH=1 for that push.${NC}"
+  exit 1
+fi
+
+echo -e "${GREEN}✓ Codex pre-push checks passed${NC}"
+exit 0

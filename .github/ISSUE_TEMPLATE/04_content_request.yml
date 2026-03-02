@@ -88,6 +88,50 @@ body:
     validations:
       required: true
 
+  - type: textarea
+    id: scope_in
+    attributes:
+      label: Scope in (required for Codex implementation)
+      description: List allowed file paths/prefixes to change.
+      placeholder: |
+        v2/community/
+        docs.json
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope_out
+    attributes:
+      label: Scope out (required for Codex implementation)
+      description: List forbidden paths/prefixes, or write "none".
+      placeholder: |
+        v1/
+        snippets/components/
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_checks
+    attributes:
+      label: Acceptance commands (required for Codex implementation)
+      description: List commands expected to pass before merge.
+      placeholder: |
+        node tests/run-pr-checks.js --base-ref docs-v2
+        node tests/integration/v2-link-audit.js --files v2/community/foo.mdx --strict
+    validations:
+      required: true
+
+  - type: textarea
+    id: risk_flags
+    attributes:
+      label: Risk flags (required for Codex implementation)
+      description: Add zero or more from this set: new-route, navigation, generated-files, ci-impact, force-push-risk.
+      placeholder: |
+        new-route
+        navigation
+    validations:
+      required: true
+
   - type: dropdown
     id: classification
     attributes:

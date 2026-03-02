@@ -27,6 +27,7 @@ Run command: node tests/unit/script-docs.test.js --write --rebuild-indexes
 | `.githooks/install.sh` | Utility script for .githooks/install.sh. | `bash .githooks/install.sh` | docs |
 | `.githooks/pre-commit` | Pre-commit hook for repository validation | `./.githooks/pre-commit (or invoked automatically by git)` | docs |
 | `.githooks/pre-commit-no-deletions` | Utility script for .githooks/pre-commit-no-deletions. | `node .githooks/pre-commit-no-deletions` | docs |
+| `.githooks/pre-push` | Enforce codex branch task-contract scope checks and block non-fast-forward pushes by default. | `./.githooks/pre-push <remote-name> <remote-url>` | docs |
 | `.githooks/server-manager.js` | Utility script for .githooks/server-manager.js. | `node .githooks/server-manager.js` | docs |
 | `.githooks/verify-browser.js` | Utility script for .githooks/verify-browser.js. | `node .githooks/verify-browser.js` | docs |
 | `.githooks/verify.sh` | Utility script for .githooks/verify.sh. | `bash .githooks/verify.sh` | docs |
@@ -55,7 +56,7 @@ Run command: node tests/unit/script-docs.test.js --write --rebuild-indexes
 | `tests/integration/v2-wcag-audit.js` | Audit v2 docs.json navigation pages for accessibility (WCAG 2.2 AA) with deterministic reports and conservative source autofixes. | `node tests/integration/v2-wcag-audit.js --full` | docs |
 | `tests/integration/v2-wcag-audit.selftest.js` | Script-level self-tests for the v2 WCAG audit (local HTTP + Puppeteer axe run, and temp-file fix/stage behavior without Mintlify). | `node tests/integration/v2-wcag-audit.selftest.js` | docs |
 | `tests/run-all.js` | Utility script for tests/run-all.js. | `node tests/run-all.js` | docs |
-| `tests/run-pr-checks.js` | Run changed-file scoped validation checks for pull request CI. | `node tests/run-pr-checks.js --base-ref main` | docs |
+| `tests/run-pr-checks.js` | Run changed-file scoped validation checks for pull request CI, including Codex skill sync and codex task-contract enforcement. | `node tests/run-pr-checks.js --base-ref main` | docs |
 | `tests/unit/codex-skill-sync.test.js` | Validate template-driven Codex skill sync behavior including check drift, safe upsert, subset sync, and openai.yaml generation. | `node tests/unit/codex-skill-sync.test.js` | docs |
 | `tests/unit/docs-guide-sot.test.js` | Validate docs-guide source-of-truth coverage, README pointers, and generated index freshness. | `node tests/unit/docs-guide-sot.test.js` | docs |
 | `tests/unit/docs-navigation.test.js` | Validate docs.json page-entry syntax in check-only mode by default, with optional report writing and approved remaps. | `./lpd tests unit docs-navigation.test` | docs |
@@ -174,6 +175,7 @@ Run command: node tests/unit/script-docs.test.js --write --rebuild-indexes
 | `tools/scripts/test/verify-all-pages.js` | Utility script for tools/scripts/verify-all-pages.js. | `node tools/scripts/verify-all-pages.js` | docs |
 | `tools/scripts/test/verify-pages.js` | Utility script for tools/scripts/verify-pages.js. | `node tools/scripts/verify-pages.js` | docs |
 | `tools/scripts/transcribe-audio-to-mdx.js` | Download audio from URL, chunk with ffmpeg, transcribe via OpenRouter, and write an MDX transcript page. | `OPENROUTER_API_KEY=... node tools/scripts/transcribe-audio-to-mdx.js --audio-url "<url>" --title "<episode title>" --show "<show name>" --published-at YYYY-MM-DD` | docs |
+| `tools/scripts/validate-codex-task-contract.js` | Validate codex branch task contract schema, branch binding, changed-file scope, and PR body sections. | `node tools/scripts/validate-codex-task-contract.js` | docs |
 | `tools/scripts/verify-all-pages.js` | Utility script for tools/scripts/verify-all-pages.js. | `node tools/scripts/verify-all-pages.js` | docs |
 | `tools/scripts/verify-pages.js` | Utility script for tools/scripts/verify-pages.js. | `node tools/scripts/verify-pages.js` | docs |
 | `tools/scripts/verify/.verify-large-change.sh` | Reserved verifier hook placeholder for large-change checks. | `bash tools/scripts/verify/.verify-large-change.sh` | docs |

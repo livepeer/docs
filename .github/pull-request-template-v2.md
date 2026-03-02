@@ -1,5 +1,17 @@
 # Livepeer Docs PR
 
+## Scope
+
+<!-- Required for codex/* PRs: list in-scope files/prefixes and explicit out-of-scope exclusions -->
+
+## Validation
+
+<!-- Required for codex/* PRs: list exact validation commands and outcomes -->
+
+## Follow-up Tasks
+
+<!-- Required for codex/* PRs: link follow-up issues, or write "none" -->
+
 ## 📌 Page Classification (Required)
 
 - [ ] Tutorial
