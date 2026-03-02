@@ -228,8 +228,9 @@ function countWords(text) {
 
 function buildGitLastModifiedMap(repoRoot) {
   const root = repoRoot || getRepoRoot();
+  const trackedRoots = ['v2/', 'docs-guide/', 'contribute/'];
   try {
-    const output = execSync('git log --name-only --format=%cI -- v2', {
+    const output = execSync('git log --name-only --format=%cI -- v2 docs-guide contribute', {
       cwd: root,
       encoding: 'utf8',
       maxBuffer: 1024 * 1024 * 10
@@ -245,7 +246,7 @@ function buildGitLastModifiedMap(repoRoot) {
       }
       if (!currentDate) return;
       const normalized = toPosix(trimmed);
-      if (!normalized.startsWith('v2/')) return;
+      if (!trackedRoots.some((prefix) => normalized.startsWith(prefix))) return;
       if (!/\.(md|mdx)$/i.test(normalized)) return;
       if (!map.has(normalized)) {
         map.set(normalized, currentDate);
