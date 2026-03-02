@@ -207,11 +207,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git checkout -- v1/images/ai/cool-cat-hat-moving.gif || true
+          # Revert any runner-introduced non-V2 dirty files (e.g. LFS pointer noise).
+          git diff --name-only -z -- . ':(exclude)v2/**' | xargs -0 -r git checkout --
 
           git checkout -B automation/openapi-autofix
 
-          git add -A -- . ':(exclude)v1/images/ai/cool-cat-hat-moving.gif'
+          # Audit scope for phase 1 is v2 only.
+          git add -A -- v2
           if git diff --cached --quiet; then
             echo "pushed=false" >> "$GITHUB_OUTPUT"
             exit 0
