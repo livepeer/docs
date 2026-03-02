@@ -37,7 +37,12 @@ jobs:
           node-version: '22'
 
       - name: Install test dependencies
-        run: npm --prefix tests ci
+        run: |
+          if [ -f tests/package-lock.json ]; then
+            npm --prefix tests ci
+          else
+            npm --prefix tests install
+          fi
 
       - name: Run strict OpenAPI audit (initial)
         id: initial_audit
