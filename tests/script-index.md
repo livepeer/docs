@@ -7,6 +7,7 @@
 |---|---|---|---|
 | `tests/integration/browser.test.js` | Utility script for tests/integration/browser.test.js. | `node tests/integration/browser.test.js` | docs |
 | `tests/integration/domain-pages-audit.js` | Audit deployed docs page load status and emit a stable JSON report. | `node tests/integration/domain-pages-audit.js --version both` | docs |
+| `tests/integration/openapi-reference-audit.js` | Audit V2 OpenAPI references against canonical specs with optional conservative autofix. | `node tests/integration/openapi-reference-audit.js --full --strict --report /tmp/openapi-audit.md --report-json /tmp/openapi-audit.json` | docs |
 | `tests/integration/v2-link-audit.js` | Comprehensive V2 MDX link audit with internal strict checks and optional external URL validation. | `node tests/integration/v2-link-audit.js --full --write-links --strict` | docs |
 | `tests/integration/v2-link-audit.selftest.js` | Script-level self-tests for v2 link audit external validation using a local HTTP fixture and temporary MDX file. | `node tests/integration/v2-link-audit.selftest.js` | docs |
 | `tests/integration/v2-wcag-audit.js` | Audit v2 docs.json navigation pages for accessibility (WCAG 2.2 AA) with deterministic reports and conservative source autofixes. | `node tests/integration/v2-wcag-audit.js --full` | docs |
@@ -19,7 +20,9 @@
 | `tests/unit/links-imports.test.js` | Utility script for tests/unit/links-imports.test.js. | `node tests/unit/links-imports.test.js` | docs |
 | `tests/unit/mdx-guards.test.js` | Enforce MDX guardrails for globals imports, math delimiters, and markdown table line breaks. | `node tests/unit/mdx-guards.test.js` | docs |
 | `tests/unit/mdx.test.js` | Utility script for tests/unit/mdx.test.js. | `node tests/unit/mdx.test.js` | docs |
+| `tests/unit/openapi-reference-audit.test.js` | Unit tests for OpenAPI reference audit parsing, mapping, validation findings, and conservative autofix behavior. | `node tests/unit/openapi-reference-audit.test.js` | docs |
 | `tests/unit/quality.test.js` | Utility script for tests/unit/quality.test.js. | `node tests/unit/quality.test.js` | docs |
+| `tests/unit/repo-audit-pipeline.test.js` | Validate audit skill discovery, orchestrator dry-run output, cleanup manifest safety, and cross-agent packaging outputs. | `node tests/unit/repo-audit-pipeline.test.js` | docs |
 | `tests/unit/script-docs.test.js` | Enforce script header schema, keep group script indexes in sync, and build aggregate script index. | `node tests/unit/script-docs.test.js --staged --write --stage --autofill` | docs |
 | `tests/unit/spelling.test.js` | Utility script for tests/unit/spelling.test.js. | `node tests/unit/spelling.test.js` | docs |
 | `tests/unit/style-guide.test.js` | Utility script for tests/unit/style-guide.test.js. | `node tests/unit/style-guide.test.js` | docs |

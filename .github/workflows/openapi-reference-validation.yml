@@ -1,0 +1,339 @@
+name: OpenAPI Reference Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+      - docs-v2
+  push:
+    branches:
+      - main
+      - docs-v2
+  schedule:
+    - cron: '35 4 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  audit:
+    name: openapi-reference-audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install test dependencies
+        run: npm --prefix tests ci
+
+      - name: Run strict OpenAPI audit (initial)
+        id: initial_audit
+        run: |
+          set +e
+          node tests/integration/openapi-reference-audit.js \
+            --full \
+            --strict \
+            --report /tmp/openapi-audit-initial.md \
+            --report-json /tmp/openapi-audit-initial.json
+          EXIT_CODE=$?
+          echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Apply safe autofix (non-PR)
+        id: autofix
+        if: github.event_name != 'pull_request'
+        run: |
+          set +e
+          node tests/integration/openapi-reference-audit.js \
+            --full \
+            --fix \
+            --write \
+            --report /tmp/openapi-audit-fix.md \
+            --report-json /tmp/openapi-audit-fix.json
+          FIX_EXIT_CODE=$?
+          echo "exit_code=$FIX_EXIT_CODE" >> "$GITHUB_OUTPUT"
+
+          if [ "$FIX_EXIT_CODE" -eq 0 ] && ! git diff --quiet; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          exit 0
+
+      - name: Run strict OpenAPI audit (final)
+        id: final_audit
+        run: |
+          set +e
+          node tests/integration/openapi-reference-audit.js \
+            --full \
+            --strict \
+            --report /tmp/openapi-audit-final.md \
+            --report-json /tmp/openapi-audit-final.json
+          EXIT_CODE=$?
+          echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Summarize audit results
+        id: summary
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+
+          const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+          const outputPath = process.env.GITHUB_OUTPUT;
+          const reportPath = '/tmp/openapi-audit-final.json';
+
+          const runUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+
+          let report = null;
+          if (fs.existsSync(reportPath)) {
+            report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+          }
+
+          const totalFailures = report?.summary?.totalFailures ?? 0;
+          const totalReferences = report?.summary?.totalReferences ?? 0;
+          const totalFiles = report?.summary?.totalFiles ?? 0;
+          const findings = Array.isArray(report?.findings) ? report.findings : [];
+
+          const topFindings = findings
+            .slice(0, 20)
+            .map((finding) => {
+              const ref = finding.reference ? ` (${finding.reference})` : '';
+              return `- ${finding.type}: ${finding.file}:${finding.line}${ref}`;
+            })
+            .join('\n') || '- none';
+
+          fs.appendFileSync(outputPath, `total_failures=${totalFailures}\n`);
+          fs.appendFileSync(outputPath, `total_references=${totalReferences}\n`);
+          fs.appendFileSync(outputPath, `total_files=${totalFiles}\n`);
+          fs.appendFileSync(outputPath, `run_url=${runUrl}\n`);
+          fs.appendFileSync(outputPath, `top_findings<<EOF\n${topFindings}\nEOF\n`);
+
+          const lines = [
+            '## OpenAPI Reference Validation',
+            '',
+            `- Run: ${runUrl}`,
+            `- Files analyzed: ${totalFiles}`,
+            `- References analyzed: ${totalReferences}`,
+            `- Findings: ${totalFailures}`,
+            '',
+            '### Top findings',
+            '',
+            topFindings,
+            ''
+          ];
+
+          fs.appendFileSync(summaryPath, `${lines.join('\n')}\n`);
+          NODE
+
+      - name: Upload OpenAPI audit artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-reference-audit-report
+          path: |
+            /tmp/openapi-audit-initial.md
+            /tmp/openapi-audit-initial.json
+            /tmp/openapi-audit-fix.md
+            /tmp/openapi-audit-fix.json
+            /tmp/openapi-audit-final.md
+            /tmp/openapi-audit-final.json
+          retention-days: 7
+
+      - name: Determine autofix PR base branch
+        id: pr_base
+        if: github.event_name != 'pull_request'
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "base=${{ github.event.repository.default_branch }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "base=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create or update autofix PR
+        if: github.event_name != 'pull_request' && steps.autofix.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: automation/openapi-autofix
+          base: ${{ steps.pr_base.outputs.base }}
+          title: "chore(ci): safe OpenAPI reference autofixes"
+          commit-message: "chore(ci): apply safe OpenAPI reference autofixes"
+          body: |
+            This PR contains safe, deterministic OpenAPI reference normalization fixes.
+
+            - Run URL: ${{ steps.summary.outputs.run_url }}
+            - Files analyzed: ${{ steps.summary.outputs.total_files }}
+            - References analyzed: ${{ steps.summary.outputs.total_references }}
+            - Findings after fix: ${{ steps.summary.outputs.total_failures }}
+
+            Top findings (if any):
+            ${{ steps.summary.outputs.top_findings }}
+
+            Reproduce locally:
+            `node tests/integration/openapi-reference-audit.js --full --strict --report /tmp/openapi-audit.md --report-json /tmp/openapi-audit.json`
+          labels: |
+            docs-v2
+            type: bug
+            area: ci-cd
+
+      - name: Sync rolling OpenAPI failure issue
+        if: github.event_name != 'pull_request'
+        uses: actions/github-script@v7
+        env:
+          OPENAPI_AUDIT_JSON: /tmp/openapi-audit-final.json
+          RUN_URL: ${{ steps.summary.outputs.run_url }}
+        with:
+          script: |
+            const fs = require('fs');
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const marker = '<!-- openapi-reference-audit -->';
+            const title = '[tooling]: OpenAPI reference validation failures';
+            const labels = ['docs-v2', 'help wanted', 'status: needs-triage', 'type: bug', 'area: ci-cd'];
+            const reportPath = process.env.OPENAPI_AUDIT_JSON;
+            const runUrl = process.env.RUN_URL || `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+
+            if (!fs.existsSync(reportPath)) {
+              core.warning(`Audit report not found at ${reportPath}; skipping issue sync.`);
+              return;
+            }
+
+            const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+            const findings = Array.isArray(report.findings) ? report.findings : [];
+            const totalFailures = report.summary?.totalFailures || 0;
+
+            const topFindings = findings
+              .slice(0, 30)
+              .map((finding) => {
+                const ref = finding.reference ? ` (${finding.reference})` : '';
+                const spec = finding.resolvedSpec ? ` [${finding.resolvedSpec}]` : '';
+                return `- ${finding.type}: ${finding.file}:${finding.line}${ref}${spec}`;
+              })
+              .join('\n') || '- none';
+
+            async function findExistingIssue() {
+              const query = `repo:${owner}/${repo} is:issue in:body "openapi-reference-audit"`;
+              const result = await github.rest.search.issuesAndPullRequests({ q: query, per_page: 20 });
+              const issue = (result.data.items || []).find((item) => (item.body || '').includes(marker));
+              if (!issue) return null;
+              const issueResp = await github.rest.issues.get({ owner, repo, issue_number: issue.number });
+              return issueResp.data;
+            }
+
+            const existing = await findExistingIssue();
+
+            if (totalFailures === 0) {
+              if (existing && existing.state === 'open') {
+                const commentBody = [
+                  'OpenAPI reference validation is passing again.',
+                  '',
+                  `Resolved in run: ${runUrl}`
+                ].join('\n');
+
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: existing.number,
+                  body: commentBody
+                });
+
+                await github.rest.issues.update({
+                  owner,
+                  repo,
+                  issue_number: existing.number,
+                  state: 'closed'
+                });
+
+                core.info(`Closed resolved rolling issue #${existing.number}`);
+              } else {
+                core.info('No unresolved failures and no open rolling issue to close.');
+              }
+              return;
+            }
+
+            const body = [
+              marker,
+              '',
+              '### Area',
+              'area: ci-cd',
+              '',
+              '### Failing command or workflow',
+              '.github/workflows/openapi-reference-validation.yml',
+              '',
+              '### Script or workflow path',
+              'tests/integration/openapi-reference-audit.js and .github/workflows/openapi-reference-validation.yml',
+              '',
+              '### Full error output',
+              '```text',
+              topFindings,
+              '```',
+              '',
+              '### Reproduction conditions',
+              [
+                '- Triggered by CI OpenAPI Reference Validation workflow.',
+                '- Scope: v2 + locales (`v2/es`, `v2/fr`, `v2/cn`).',
+                `- Workflow run: ${runUrl}`
+              ].join('\n'),
+              '',
+              '### Expected behavior',
+              'All OpenAPI endpoint references should resolve to the canonical mapped spec and pass strict validation.',
+              '',
+              '### Action requested from maintainers',
+              'Review reported references, apply required content corrections, and re-run the OpenAPI reference audit workflow.',
+              '',
+              '### Classification',
+              'classification: high',
+              '',
+              '### Priority',
+              'priority: high',
+              '',
+              '### Additional context',
+              [
+                `- Total failures: ${totalFailures}`,
+                `- Files analyzed: ${report.summary?.totalFiles || 0}`,
+                `- References analyzed: ${report.summary?.totalReferences || 0}`
+              ].join('\n')
+            ].join('\n');
+
+            if (existing) {
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: existing.number,
+                title,
+                body,
+                labels,
+                state: 'open'
+              });
+              core.info(`Updated rolling issue #${existing.number}`);
+            } else {
+              const created = await github.rest.issues.create({
+                owner,
+                repo,
+                title,
+                body,
+                labels
+              });
+              core.info(`Created rolling issue #${created.data.number}`);
+            }
+
+      - name: Fail workflow when unresolved findings remain
+        if: steps.final_audit.outputs.exit_code != '0'
+        run: |
+          echo "OpenAPI reference validation failed with unresolved findings."
+          exit 1
