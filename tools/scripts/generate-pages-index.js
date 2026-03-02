@@ -385,9 +385,11 @@ function renderLinkTitle(link) {
 function buildIndexMeta(outputDirRel) {
   const normalized = normalizeRel(outputDirRel);
   const sectionName = prettifyName(path.basename(normalized));
+  const isLptIndex = normalized === 'v2/lpt';
+  const displayName = isLptIndex ? 'LPT' : `${sectionName} Index`;
   return {
-    title: `${sectionName} Index`,
-    sidebarTitle: `${sectionName} Index`,
+    title: displayName,
+    sidebarTitle: displayName,
     description: `Generated table of contents for docs pages under ${normalized}.`,
     keywords: ['livepeer', 'generated index', 'table of contents', normalized]
   };
