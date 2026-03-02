@@ -190,6 +190,49 @@ jobs:
             type: bug
             area: ci-cd
 
+      - name: Ensure OpenAPI audit labels exist
+        if: github.event_name != 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const labels = [
+              { name: 'docs-v2', color: '0e8a16', description: 'Docs V2 maintenance and tooling' },
+              { name: 'help wanted', color: '008672', description: 'Extra attention is needed' },
+              { name: 'status: needs-triage', color: 'f9d0c4', description: 'Awaiting maintainer triage' },
+              { name: 'type: bug', color: 'd73a4a', description: 'Behavior is incorrect' },
+              { name: 'area: ci-cd', color: '5319e7', description: 'CI/CD automation and workflows' }
+            ];
+
+            for (const label of labels) {
+              try {
+                await github.rest.issues.getLabel({ owner, repo, name: label.name });
+                core.info(`Label exists: ${label.name}`);
+              } catch (error) {
+                if (error.status !== 404) {
+                  throw error;
+                }
+
+                try {
+                  await github.rest.issues.createLabel({
+                    owner,
+                    repo,
+                    name: label.name,
+                    color: label.color,
+                    description: label.description
+                  });
+                  core.info(`Created label: ${label.name}`);
+                } catch (createError) {
+                  if (createError.status === 422) {
+                    core.info(`Label already exists (race-safe): ${label.name}`);
+                  } else {
+                    throw createError;
+                  }
+                }
+              }
+            }
+
       - name: Sync rolling OpenAPI failure issue
         if: github.event_name != 'pull_request'
         uses: actions/github-script@v7
@@ -199,12 +242,14 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+            const path = require('path');
+            const helpers = require(path.join(
+              process.env.GITHUB_WORKSPACE || process.cwd(),
+              'tests/utils/openapi-rolling-issue.js'
+            ));
 
             const owner = context.repo.owner;
             const repo = context.repo.repo;
-            const marker = '<!-- openapi-reference-audit -->';
-            const title = '[tooling]: OpenAPI reference validation failures';
-            const labels = ['docs-v2', 'help wanted', 'status: needs-triage', 'type: bug', 'area: ci-cd'];
             const reportPath = process.env.OPENAPI_AUDIT_JSON;
             const runUrl = process.env.RUN_URL || `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
 
@@ -216,121 +261,80 @@ jobs:
             const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
             const findings = Array.isArray(report.findings) ? report.findings : [];
             const totalFailures = report.summary?.totalFailures || 0;
-
-            const topFindings = findings
-              .slice(0, 30)
-              .map((finding) => {
-                const ref = finding.reference ? ` (${finding.reference})` : '';
-                const spec = finding.resolvedSpec ? ` [${finding.resolvedSpec}]` : '';
-                return `- ${finding.type}: ${finding.file}:${finding.line}${ref}${spec}`;
-              })
-              .join('\n') || '- none';
+            const topFindings = helpers.buildTopFindings(findings, 30);
 
             async function findExistingIssue() {
               const query = `repo:${owner}/${repo} is:issue in:body "openapi-reference-audit"`;
               const result = await github.rest.search.issuesAndPullRequests({ q: query, per_page: 20 });
-              const issue = (result.data.items || []).find((item) => (item.body || '').includes(marker));
+              const issue = helpers.findMarkerIssue(
+                result.data.items || [],
+                helpers.ROLLING_ISSUE_MARKER
+              );
               if (!issue) return null;
               const issueResp = await github.rest.issues.get({ owner, repo, issue_number: issue.number });
               return issueResp.data;
             }
 
             const existing = await findExistingIssue();
+            const issueAction = helpers.getIssueAction({
+              existingIssue: existing,
+              totalFailures
+            });
 
-            if (totalFailures === 0) {
-              if (existing && existing.state === 'open') {
-                const commentBody = [
-                  'OpenAPI reference validation is passing again.',
-                  '',
-                  `Resolved in run: ${runUrl}`
-                ].join('\n');
+            if (issueAction === 'close') {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: existing.number,
+                body: helpers.buildResolutionComment(runUrl)
+              });
 
-                await github.rest.issues.createComment({
-                  owner,
-                  repo,
-                  issue_number: existing.number,
-                  body: commentBody
-                });
-
-                await github.rest.issues.update({
-                  owner,
-                  repo,
-                  issue_number: existing.number,
-                  state: 'closed'
-                });
-
-                core.info(`Closed resolved rolling issue #${existing.number}`);
-              } else {
-                core.info('No unresolved failures and no open rolling issue to close.');
-              }
-              return;
-            }
-
-            const body = [
-              marker,
-              '',
-              '### Area',
-              'area: ci-cd',
-              '',
-              '### Failing command or workflow',
-              '.github/workflows/openapi-reference-validation.yml',
-              '',
-              '### Script or workflow path',
-              'tests/integration/openapi-reference-audit.js and .github/workflows/openapi-reference-validation.yml',
-              '',
-              '### Full error output',
-              '```text',
-              topFindings,
-              '```',
-              '',
-              '### Reproduction conditions',
-              [
-                '- Triggered by CI OpenAPI Reference Validation workflow.',
-                '- Scope: v2 + locales (`v2/es`, `v2/fr`, `v2/cn`).',
-                `- Workflow run: ${runUrl}`
-              ].join('\n'),
-              '',
-              '### Expected behavior',
-              'All OpenAPI endpoint references should resolve to the canonical mapped spec and pass strict validation.',
-              '',
-              '### Action requested from maintainers',
-              'Review reported references, apply required content corrections, and re-run the OpenAPI reference audit workflow.',
-              '',
-              '### Classification',
-              'classification: high',
-              '',
-              '### Priority',
-              'priority: high',
-              '',
-              '### Additional context',
-              [
-                `- Total failures: ${totalFailures}`,
-                `- Files analyzed: ${report.summary?.totalFiles || 0}`,
-                `- References analyzed: ${report.summary?.totalReferences || 0}`
-              ].join('\n')
-            ].join('\n');
-
-            if (existing) {
               await github.rest.issues.update({
                 owner,
                 repo,
                 issue_number: existing.number,
-                title,
-                body,
-                labels,
-                state: 'open'
+                state: 'closed'
               });
-              core.info(`Updated rolling issue #${existing.number}`);
-            } else {
+
+              core.info(`Closed resolved rolling issue #${existing.number}`);
+              return;
+            }
+
+            if (issueAction === 'noop') {
+              core.info('No unresolved failures and no rolling issue updates required.');
+              return;
+            }
+
+            const body = helpers.buildIssueBody({
+              runUrl,
+              topFindings,
+              totalFailures,
+              totalFiles: report.summary?.totalFiles || 0,
+              totalReferences: report.summary?.totalReferences || 0
+            });
+
+            if (issueAction === 'create') {
               const created = await github.rest.issues.create({
                 owner,
                 repo,
-                title,
+                title: helpers.ROLLING_ISSUE_TITLE,
                 body,
-                labels
+                labels: helpers.ROLLING_ISSUE_LABELS
               });
               core.info(`Created rolling issue #${created.data.number}`);
+              return;
             }
+
+            await github.rest.issues.update({
+              owner,
+              repo,
+              issue_number: existing.number,
+              title: helpers.ROLLING_ISSUE_TITLE,
+              body,
+              labels: helpers.ROLLING_ISSUE_LABELS,
+              state: 'open'
+            });
+            core.info(`Updated rolling issue #${existing.number}`);
 
       - name: Fail workflow when unresolved findings remain
         if: steps.final_audit.outputs.exit_code != '0'
