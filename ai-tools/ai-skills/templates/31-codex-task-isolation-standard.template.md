@@ -8,7 +8,9 @@ triggers:
   - "validate codex scope and pr contract"
 primary_paths:
   - ".codex/task-contract.yaml"
+  - ".codex/pr-body.generated.md"
   - ".githooks/pre-push"
+  - "tools/scripts/create-codex-pr.js"
   - "tools/scripts/validate-codex-task-contract.js"
   - "tests/run-pr-checks.js"
   - ".github/pull_request_template.md"
@@ -16,6 +18,7 @@ primary_paths:
 primary_commands:
   - "git worktree add ../livepeer-docs-codex-<issue> -b codex/<issue>-<slug> docs-v2"
   - "node tools/scripts/validate-codex-task-contract.js --branch codex/<issue>-<slug> --require-pr-body"
+  - "node tools/scripts/create-codex-pr.js --create"
 ---
 
 SKILL: Codex Task Isolation Standard
@@ -34,7 +37,7 @@ Workflow
 2. Create `.codex/task-contract.yaml` first and bind `task_id`, `branch`, `scope_in`, and acceptance checks.
 3. Implement only scoped changes, then run targeted checks listed in `acceptance_checks`.
 4. Run `node tools/scripts/validate-codex-task-contract.js` before push/PR.
-5. Open PR with required `Scope`, `Validation`, and `Follow-up Tasks` sections.
+5. Generate and open PR using `node tools/scripts/create-codex-pr.js --create` so required sections are prefilled from contract metadata.
 
 Deliverable Format
 - Contract file updated with explicit scope and risk flags.

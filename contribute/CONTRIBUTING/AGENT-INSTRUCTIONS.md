@@ -24,6 +24,14 @@ Enforcement behavior:
 - `pre-push` validates contract scope and blocks non-fast-forward pushes by default on `codex/*`.
 - CI (`tests/run-pr-checks.js`) validates contract and required PR body sections on `codex/*`.
 
+PR autofill command:
+
+```bash
+node tools/scripts/create-codex-pr.js --create
+```
+
+The command generates `.codex/pr-body.generated.md` from task-contract fields and uses it as `gh pr create --body-file`.
+
 Minimal contract example:
 
 ```yaml

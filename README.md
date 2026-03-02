@@ -144,6 +144,14 @@ Enforcement runs on `codex/*` only via:
 - `.githooks/pre-push` (contract + scope + non-fast-forward block by default)
 - `tests/run-pr-checks.js` (CI contract + PR body checks)
 
+To auto-fill PR sections from task contract metadata:
+
+```bash
+node tools/scripts/create-codex-pr.js --create
+```
+
+This generates `.codex/pr-body.generated.md` and calls `gh pr create --body-file ...`.
+
 Contributor deep docs:
 
 - [`contribute/CONTRIBUTING/README.md`](contribute/CONTRIBUTING/README.md)

@@ -15,6 +15,7 @@
 | `tests/run-all.js` | Utility script for tests/run-all.js. | `node tests/run-all.js` | docs |
 | `tests/run-pr-checks.js` | Run changed-file scoped validation checks for pull request CI, including Codex skill sync and codex task-contract enforcement. | `node tests/run-pr-checks.js --base-ref main` | docs |
 | `tests/unit/codex-skill-sync.test.js` | Validate template-driven Codex skill sync behavior including check drift, safe upsert, subset sync, and openai.yaml generation. | `node tests/unit/codex-skill-sync.test.js` | docs |
+| `tests/unit/create-codex-pr.test.js` | Validate codex PR body generation and dry-run create behavior from task-contract input. | `node tests/unit/create-codex-pr.test.js` | docs |
 | `tests/unit/docs-guide-sot.test.js` | Validate docs-guide source-of-truth coverage, README pointers, and generated index freshness. | `node tests/unit/docs-guide-sot.test.js` | docs |
 | `tests/unit/docs-navigation.test.js` | Validate docs.json page-entry syntax in check-only mode by default, with optional report writing and approved remaps. | `./lpd tests unit docs-navigation.test` | docs |
 | `tests/unit/docs-usefulness-accuracy-verifier.test.js` | Validate source-weighted 2026 accuracy verification rules (GitHub vs DeepWiki precedence, freshness, fallback, and cache reuse). | `node tests/unit/docs-usefulness-accuracy-verifier.test.js` | docs |
