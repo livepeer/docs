@@ -31,6 +31,7 @@ node tools/scripts/create-codex-pr.js --create
 ```
 
 The command generates `.codex/pr-body.generated.md` from task-contract fields and uses it as `gh pr create --body-file`.
+For `codex/*` PRs, CI requires the generated marker in the PR body; this command is the supported path to satisfy that gate.
 
 Minimal contract example:
 

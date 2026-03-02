@@ -48,6 +48,7 @@ Failure Modes / Fallback
 - If branch naming/task id mismatch appears, fix contract + branch before continuing.
 - If changed-file scope violations occur, split unrelated changes into separate branches.
 - If PR body is missing required sections, update template-compliant headings before requesting review.
+- If PR body marker is missing, regenerate via `create-codex-pr.js` before requesting review.
 
 Validation Checklist
 - [ ] Branch matches `codex/<issue-id>-<slug>`.

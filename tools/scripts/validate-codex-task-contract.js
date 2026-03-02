@@ -15,7 +15,7 @@
  *   --files <comma-separated paths> (override changed-file discovery)
  *   --staged (use staged files instead of branch diff)
  *   --validate-contract-only (skip changed-file and PR body checks)
- *   --require-pr-body (enforce PR sections from --pr-body-file or GITHUB_EVENT_PATH)
+ *   --require-pr-body (enforce PR sections and generated marker from --pr-body-file or GITHUB_EVENT_PATH)
  *   --pr-body-file <path> (explicit PR body source)
  *   --quiet (suppress success/skip logs)
  *   --json (emit machine-readable result object)
@@ -44,6 +44,7 @@ const DEFAULT_CONTRACT_PATH = '.codex/task-contract.yaml';
 const DEFAULT_BASE_BRANCH = 'docs-v2';
 const CODEX_BRANCH_RE = /^codex\/(\d+)-[a-z0-9][a-z0-9-]*$/;
 const REQUIRED_PR_SECTIONS = ['Scope', 'Validation', 'Follow-up Tasks'];
+const PR_GENERATOR_MARKER_PREFIX = 'codex-pr-body-generated';
 
 const REPO_ROOT = getRepoRoot();
 
@@ -412,6 +413,21 @@ function missingPrSections(prBody) {
   });
 }
 
+function parsePrGeneratorMarker(prBody) {
+  const markerMatch = prBody.match(
+    /<!--\s*codex-pr-body-generated:\s*task_id=(\d+);\s*branch=([^;]+);\s*contract=([^>]+)\s*-->/i
+  );
+  if (!markerMatch) return null;
+  const taskId = Number(markerMatch[1]);
+  const branch = String(markerMatch[2] || '').trim();
+  const contract = String(markerMatch[3] || '').trim();
+  return {
+    taskId,
+    branch,
+    contract
+  };
+}
+
 function validateScope(contract, changedFiles, contractPathRel) {
   const violations = [];
   const implicitAllowed = [contractPathRel];
@@ -512,6 +528,22 @@ function main() {
         missing.forEach((section) => {
           errors.push(`PR body missing required section heading: ${section}`);
         });
+
+        const marker = parsePrGeneratorMarker(prBody);
+        if (!marker) {
+          errors.push(
+            `PR body missing required generated marker: <!-- ${PR_GENERATOR_MARKER_PREFIX}: task_id=...; branch=...; contract=... -->`
+          );
+        } else {
+          if (!Number.isInteger(marker.taskId) || marker.taskId !== contract.taskId) {
+            errors.push(
+              `PR body generated marker task_id mismatch: expected ${contract.taskId}, received ${marker.taskId}`
+            );
+          }
+          if (marker.branch !== branch) {
+            errors.push(`PR body generated marker branch mismatch: expected ${branch}, received ${marker.branch}`);
+          }
+        }
       }
     }
 

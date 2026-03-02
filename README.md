@@ -151,6 +151,7 @@ node tools/scripts/create-codex-pr.js --create
 ```
 
 This generates `.codex/pr-body.generated.md` and calls `gh pr create --body-file ...`.
+Codex PR CI also requires the generated marker in the PR body, so manual bodies without the marker fail contract validation.
 
 Contributor deep docs:
 

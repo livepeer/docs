@@ -34,7 +34,7 @@
  *   node tools/scripts/create-codex-pr.js --dry-run --create
  *
  * @notes
- *   Designed for codex/* branches to keep PR sections aligned with task-contract scope and checks.
+ *   Designed for codex/* branches to keep PR sections aligned with task-contract scope and checks, including CI marker requirements.
  */
 
 const fs = require('fs');
@@ -46,6 +46,7 @@ const DEFAULT_CONTRACT_PATH = '.codex/task-contract.yaml';
 const DEFAULT_OUTPUT_PATH = '.codex/pr-body.generated.md';
 const DEFAULT_BASE_BRANCH = 'docs-v2';
 const CODEX_BRANCH_RE = /^codex\/(\d+)-([a-z0-9][a-z0-9-]*)$/;
+const PR_GENERATOR_MARKER_PREFIX = 'codex-pr-body-generated';
 
 const REPO_ROOT = getRepoRoot();
 
@@ -338,6 +339,10 @@ function withIssueList(values, fallback = 'none') {
 
 function buildBody(contract, context) {
   const lines = [];
+  lines.push(
+    `<!-- ${PR_GENERATOR_MARKER_PREFIX}: task_id=${contract.taskId}; branch=${context.headBranch}; contract=${context.contractPathRel} -->`
+  );
+  lines.push('');
   lines.push('## Scope');
   lines.push('');
   lines.push(`- Task: #${contract.taskId}`);
@@ -422,7 +427,8 @@ function main() {
     const body = buildBody(contract, {
       headBranch,
       baseBranch,
-      changedFiles
+      changedFiles,
+      contractPathRel: toPosix(path.relative(REPO_ROOT, contractPathAbs))
     });
 
     const outputPathAbs = path.resolve(REPO_ROOT, args.outputPath);
