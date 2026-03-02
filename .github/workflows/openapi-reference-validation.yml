@@ -207,6 +207,7 @@ jobs:
       - name: Fallback publish autofix branch
         id: fallback_autofix_branch
         if: github.event_name != 'pull_request' && steps.autofix.outputs.changed == 'true' && steps.create_autofix_pr.outcome == 'failure'
+        continue-on-error: true
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
@@ -217,7 +218,11 @@ jobs:
 
           # Reapply captured OpenAPI autofix edits that may have been reset by create-pull-request.
           if [ -s /tmp/openapi-autofix-v2.patch ]; then
-            git apply --whitespace=nowarn /tmp/openapi-autofix-v2.patch
+            if git apply --check /tmp/openapi-autofix-v2.patch; then
+              git apply --whitespace=nowarn /tmp/openapi-autofix-v2.patch
+            else
+              echo "Autofix patch not applicable as-is; continuing with current workspace state."
+            fi
           fi
 
           git checkout -B automation/openapi-autofix
@@ -235,6 +240,7 @@ jobs:
 
       - name: Fallback create or update autofix PR
         if: github.event_name != 'pull_request' && steps.autofix.outputs.changed == 'true' && steps.create_autofix_pr.outcome == 'failure' && steps.fallback_autofix_branch.outputs.pushed == 'true'
+        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
