@@ -1,249 +1,166 @@
 ---
-title: 'Choosing a Gateway Service'
-sidebarTitle: 'Choosing a Gateway'
-description: 'Understand gateway types, compare hosted providers, and decide whether to use a managed service or run your own.'
-keywords: ["livepeer", "gateways", "using gateways", "choosing a gateway", "gateway", "services", "learn", "choose", "right"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+title: 'Find Gateway Services'
+sidebarTitle: 'Find Gateway Services'
+description: 'How to choose the right Livepeer gateway for your use case — whether you need a hosted service, a community gateway, or want to run your own.'
+keywords: ["livepeer", "gateways", "using gateways", "choose gateway", "gateway providers", "livepeer studio", "daydream", "cloud spe", "self-hosted gateway"]
+og:image: "/snippets/assets/domain/04_GATEWAYS/social-preview-gateways.jpg"
+pageType: guide
+audience: developer, gateway-operator
+status: current
 ---
 
-{/* 
-
-# Choosing a gateway
-
-<Danger>
-  This page is a work in progress. Mostly gathering notes on this page atm.
-</Danger>
-
-Rick -> feature coming soon
-https://explorer-arbitrum-one-git-feat-add-g-10dba1-livepeer-foundation.vercel.app/
-
-Explorer Showcases all gateways
-
-End-user friendly gateways: Based on user friendliness...
-
-- Daydream (1)
-- Livepeer Studio
-- Cloud SPE
-
-User friendly Gateways:
-
-Based on performance: expolorer (don't use total fees)
-
-The Livepeer Studio Gateway is a production-ready solution for interacting with the Livepeer AI network, offering advanced tools and resources for developers. Building on Livepeer AIShowcase. (docs)
-
-https://github.com/videoDAC/livepeer-gateway
-
-How to self-host a gateway: https://www.livepeer.cloud/self-hosted-livepeer-gateway/
-
-X: https://x.com/Livepeer/status/1805654248203731175?s=20
-
--> AI Gateway Nodes
-
-The Livepeer AI Cloud Gateway is a hosted access point, making it easy for developers to leverage AI capabilities without running their own infratructure.
-
-Anyone can run a gateway to expand the network's reach. */}
-
-import { GotoLink, GotoCard } from '/snippets/components/primitives/links.jsx'
+import { PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
 import { StyledTable, TableRow, TableCell } from '/snippets/components/primitives/tables.jsx'
-import { CustomDivider} from "snippets/components/primitives/divider.jsx"
+import { BorderedBox } from '/snippets/components/primitives/containers.jsx'
+import { DoubleIconLink } from '/snippets/components/primitives/links.jsx'
 
-<CustomDivider style={{marginBottom: "-1rem"}} />
-A Livepeer Gateway is the entry point for your application into the Livepeer decentralized compute network.
-It handles job routing, orchestrator selection, payment, and service-level logic - so your app doesn't have to.
+<PreviewCallout />
 
-There are two ways to access a gateway:
+A Livepeer Gateway is the access point your application uses to route video and AI jobs to the network. The gateway handles authentication, routing, payment, and job coordination — your app talks to the gateway, and the gateway talks to the GPU network.
 
-- **Use a hosted gateway** - connect to an existing provider's gateway via API or endpoint. No infrastructure to run.
-- **Run your own gateway** - self-host a `go-livepeer` gateway node for full control, custom pricing, and direct network access.
+You have three options:
 
-<GotoCard
-  relativePath="./gateway-providers"
-  label="Gateway Providers"
-  text="Browse hosted gateways you can use today"
-  icon="wand-magic-sparkles"
-/>
+1. **Use a hosted gateway** (Livepeer Studio, Daydream, Cloud SPE) — lowest barrier to entry, managed for you
+2. **Use a community-run gateway** — often free or low-cost, community-maintained
+3. **Run your own gateway** — maximum control, required for production-grade custom deployments
 
-<Steps titleSize="h2">
-  <Step title="What kind of workload?">
+---
 
-  Gateways support three capability modes. Know which you need before comparing providers.
+## Quick Decision Guide
 
-  <CardGroup cols={3}>
-    <Card title="Video Only" icon="video" color="#2563eb">
-      **Transcoding & streaming**
+<BorderedBox variant="accent" padding="16px">
 
-      RTMP ingest, HLS output, multi-bitrate transcoding. For live streaming platforms, broadcast infrastructure, and VOD workflows.
-    </Card>
-    <Card title="AI Only" icon="microchip-ai" color="#7c3aed">
-      **AI inference**
+**Use a hosted gateway if:**
+- You want to be live quickly (minutes, not days)
+- You need a managed API with SLA, dashboards, and support
+- You're building on standard video streaming or common AI pipelines
+- You don't want to manage infrastructure
 
-      Text-to-image, image-to-video, style transfer, upscaling, ControlNet pipelines. For generative apps and real-time AI video.
-    </Card>
-    <Card title="Dual: AI & Video" icon="layer-group" color="#059669">
-      **Both simultaneously**
+**Run your own gateway if:**
+- You need custom SLAs, routing control, or compliance requirements
+- You're building a product that routes Livepeer jobs as part of its core offering
+- You want to avoid per-request margin paid to another gateway operator
+- You need BYOC pipelines or custom AI models at scale
 
-      Route video transcoding and AI inference through a single gateway. For platforms that need both pipelines together.
-    </Card>
-  </CardGroup>
+</BorderedBox>
 
-  </Step>
+---
 
-  <Step title="Hosted or self-hosted?">
-
-  <StyledTable variant="bordered" style={{ fontSize: '0.9rem' }}>
-    <thead>
-      <TableRow header>
-        <TableCell header> </TableCell>
-        <TableCell header>Hosted Gateway</TableCell>
-        <TableCell header>Self-Hosted Gateway</TableCell>
-      </TableRow>
-    </thead>
-    <tbody>
-      <TableRow>
-        <TableCell>**Setup time**</TableCell>
-        <TableCell>Minutes - API key or endpoint</TableCell>
-        <TableCell>Hours - install, configure, fund</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>**Infrastructure**</TableCell>
-        <TableCell>None - provider manages it</TableCell>
-        <TableCell>You manage the node</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>**Pricing control**</TableCell>
-        <TableCell>Provider sets rates</TableCell>
-        <TableCell>You set max prices per orchestrator</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>**Orchestrator selection**</TableCell>
-        <TableCell>Provider chooses</TableCell>
-        <TableCell>You control routing logic</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>**Protocol fees**</TableCell>
-        <TableCell>Included in provider pricing</TableCell>
-        <TableCell>Pay orchestrators directly in ETH</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>**Best for**</TableCell>
-        <TableCell>Getting started, managed apps, no-ops teams</TableCell>
-        <TableCell>Production platforms, cost optimisation, compliance</TableCell>
-      </TableRow>
-    </tbody>
-  </StyledTable>
-
-  <br />
-
-  <Note>
-    Gateways do not earn protocol-level fees - they sit at the demand layer of the network.
-    Running your own gateway means you avoid paying a margin to a hosted provider, and you own
-    the customer relationship, traffic, and routing decisions.
-    <br /><br />
-    Read more: [Gateway Economics](../about-gateways/gateway-economics)
-  </Note>
-
-  </Step>
-  <Step title="Compare hosted providers">
-
-  <StyledTable variant="bordered" style={{ fontSize: '0.9rem' }}>
-    <thead>
-      <TableRow header>
-        <TableCell header>Provider</TableCell>
-        <TableCell header>Video</TableCell>
-        <TableCell header>AI</TableCell>
-        <TableCell header>Best for</TableCell>
-        <TableCell header>Access</TableCell>
-      </TableRow>
-    </thead>
-    <tbody>
-      <TableRow>
-        <TableCell>**Livepeer Studio**</TableCell>
-        <TableCell>✅</TableCell>
-        <TableCell>⚠️ Via API</TableCell>
-        <TableCell>Developers building video apps - REST API, SDKs, dashboard</TableCell>
-        <TableCell>[livepeer.studio](https://livepeer.studio)</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>**Daydream**</TableCell>
-        <TableCell>❌</TableCell>
-        <TableCell>✅</TableCell>
-        <TableCell>Real-time AI video, style transfer, world model experiments</TableCell>
-        <TableCell>[daydream.live](https://daydream.live)</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>**Cloud SPE**</TableCell>
-        <TableCell>✅</TableCell>
-        <TableCell>✅</TableCell>
-        <TableCell>Community-operated, self-hosted gateway access</TableCell>
-        <TableCell>[livepeer.cloud](https://www.livepeer.cloud)</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>**Self-hosted**</TableCell>
-        <TableCell>✅</TableCell>
-        <TableCell>✅</TableCell>
-        <TableCell>Full control, custom routing, production SLAs</TableCell>
-        <TableCell>[Run a Gateway](../quickstart/gateway-setup)</TableCell>
-      </TableRow>
-    </tbody>
-  </StyledTable>
-
-  </Step>
-  <Step title="How to evaluate performance">
-  <Tip>
-    The Livepeer Explorer is adding a Gateway view - you'll be able to compare active gateways
-    by throughput, reliability, and orchestrator relationships directly. Coming soon.
-    <br />
-    A preview is available at: https://explorer-arbitrum-one-git-feat-add-g-10dba1-livepeer-foundation.vercel.app/gateways
-  </Tip>
-
-  Until the [Explorer](https://explorer.livepeer.org/gateways) gateway view is live, evaluate providers on:
-
-  **Latency** - For real-time AI (Daydream-style pipelines), end-to-end frame latency matters more than throughput. Ask about p50/p95 inference times.
-
-  **Orchestrator pool quality** - A gateway is only as good as the orchestrators it routes to. Ask which orchestrators a provider uses, or check `/getNetworkCapabilities` on a self-hosted node to inspect the pool directly.
-
-  **Model availability** - Not all gateways support all AI models. Verify that the pipelines you need (e.g. `text-to-image`, `image-to-video`, ControlNet, ComfyStream) are available before committing.
-
-  **Pricing transparency** - Hosted providers bundle gateway margin into their pricing. Self-hosting lets you pay orchestrators directly and inspect pricing per-model with `maxPricePerCapability`.
-
-  **Reliability** - Look for uptime history, failover behaviour, and whether the provider publishes SLA commitments.
-
-  </Step>
-</Steps>
-
-## Not sure? Start here.
+## Hosted Gateways
 
 <CardGroup cols={2}>
   <Card
-    title="Browse Gateway Providers"
+    title="Livepeer Studio"
+    icon="video-arrow-up-right"
+    href="./gateway-providers/livepeer-studio-gateway"
+    arrow
+  >
+    Production-grade hosted gateway for live streaming and video-on-demand. REST API + SDKs. Best for developers building video applications.
+  </Card>
+  <Card
+    title="Daydream"
     icon="wand-magic-sparkles"
-    href="./gateway-providers"
+    href="./gateway-providers/daydream-gateway"
     arrow
   >
-    See all hosted gateways available today: Daydream, Livepeer Studio, Cloud SPE, and community options.
+    Real-time AI video gateway. StreamDiffusion-powered style transfer, image-to-video, and custom AI pipelines on live video. Best for AI video products and creators.
   </Card>
   <Card
-    title="Run Your Own Gateway"
-    icon="server"
-    href="../quickstart/gateway-setup"
+    title="Cloud SPE Gateway"
+    icon="cloud-binary"
+    href="./gateway-providers/cloud-spe-gateway"
     arrow
   >
-    Self-host a Livepeer Gateway node for full control. Docker quickstart available for Linux, macOS, and Windows.
+    Community-run, free-to-use RTMP and AI gateways. Operated by Livepeer.Cloud, a treasury-funded Special Purpose Entity. Best for experimentation and open-source projects.
   </Card>
   <Card
-    title="Gateway Explainer"
-    icon="circle-info"
-    href="../about-gateways/gateway-explainer"
+    title="Other Providers"
+    icon="webhook"
+    href="../guides-and-resources/community-projects"
     arrow
   >
-    Understand what a gateway is, what it does, and how it fits into the Livepeer network architecture.
+    Community-run gateways and integrations. Discover projects built by the Livepeer ecosystem.
   </Card>
-  <Card
-    title="Gateway Economics"
-    icon="hand-holding-dollar"
-    href="../about-gateways/gateway-economics"
-    arrow
-  >
-    How gateways make money, how payment flows to orchestrators, and the business case for self-hosting.
+</CardGroup>
+
+---
+
+## Provider Comparison
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Provider</TableCell>
+      <TableCell header>Best For</TableCell>
+      <TableCell header>Video</TableCell>
+      <TableCell header>AI Inference</TableCell>
+      <TableCell header>Cost</TableCell>
+      <TableCell header>Self-Hosted</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>[**Livepeer Studio**](/v2/gateways/using-gateways/gateway-providers/livepeer-studio-gateway)</TableCell>
+      <TableCell>App developers</TableCell>
+      <TableCell>✅ Live + VOD</TableCell>
+      <TableCell>✅ AI generate endpoints</TableCell>
+      <TableCell>Paid (usage-based)</TableCell>
+      <TableCell>❌ (managed)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>[**Daydream**](/v2/gateways/using-gateways/gateway-providers/daydream-gateway)</TableCell>
+      <TableCell>AI video creators & builders</TableCell>
+      <TableCell>⚠️ Video as input</TableCell>
+      <TableCell>✅ Real-time AI video</TableCell>
+      <TableCell>Paid / Free tier</TableCell>
+      <TableCell>❌ (managed)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>[**Cloud SPE**](/v2/gateways/using-gateways/gateway-providers/cloud-spe-gateway)</TableCell>
+      <TableCell>Experimentation, OSS projects</TableCell>
+      <TableCell>✅ RTMP</TableCell>
+      <TableCell>✅ AI community gateway</TableCell>
+      <TableCell>Free</TableCell>
+      <TableCell>❌ (managed)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>[**Self-hosted**](/v2/gateways/run-a-gateway/run-a-gateway)</TableCell>
+      <TableCell>Products, enterprises, operators</TableCell>
+      <TableCell>✅ Full control</TableCell>
+      <TableCell>✅ Full control</TableCell>
+      <TableCell>Infrastructure cost</TableCell>
+      <TableCell>✅</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+---
+
+## The Livepeer Explorer
+
+The [Livepeer Explorer](https://explorer.livepeer.org) lists active gateways on the network. You can discover operator performance, available capabilities, and pricing for on-chain gateways.
+
+<Card title="Livepeer Explorer" icon="compass" href="https://explorer.livepeer.org" arrow horizontal>
+  Browse active gateways and network statistics on-chain.
+</Card>
+
+---
+
+## Running Your Own Gateway
+
+Operators who want direct protocol access, custom pricing, or enterprise-grade control run their own go-livepeer gateway node. This is the path taken by products like Daydream and Livepeer Studio themselves.
+
+<CardGroup cols={2}>
+  <Card title="Why Run a Gateway" href="../run-a-gateway/why-run-a-gateway" icon="lightbulb" arrow>
+    Business and technical reasons to operate your own gateway node.
+  </Card>
+  <Card title="Gateway Quickstart" href="/v2/gateways/quickstart/gateway-setup" icon="bolt-lightning" arrow>
+    Get a gateway running in under 10 minutes.
+  </Card>
+  <Card title="Requirements" href="../run-a-gateway/requirements/setup" icon="clipboard-check" arrow>
+    Hardware, network, and software requirements.
+  </Card>
+  <Card title="Gateway Operator Opportunities" href="../run-a-gateway/gateway-operator-opportunities" icon="briefcase" arrow>
+    Business models and opportunities for gateway operators.
   </Card>
 </CardGroup>

@@ -1,0 +1,192 @@
+---
+title: 'Gateway Operator Opportunities'
+sidebarTitle: 'Operator Opportunities'
+description: 'The business case for running a Livepeer Gateway — revenue models, use cases, and where gateway operators create and capture value in the Livepeer ecosystem.'
+keywords: ["livepeer", "gateway operator", "opportunities", "business model", "gateway revenue", "run a gateway", "gateway economics"]
+og:image: "/snippets/assets/domain/04_GATEWAYS/social-preview-gateways.jpg"
+pageType: guide
+audience: gateway-operator
+status: current
+---
+
+import { PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import { BorderedBox } from '/snippets/components/primitives/containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/primitives/tables.jsx'
+
+<PreviewCallout />
+
+Gateways occupy the demand side of the Livepeer network. They are the control point between applications and the GPU compute network — handling routing, payments, service-level logic, and customer relationships.
+
+This page is for anyone evaluating whether running a gateway is the right strategic or business decision.
+
+<Card
+  title="Gateway Economics"
+  icon="hand-holding-dollar"
+  href="/v2/gateways/about/economics"
+  horizontal
+  arrow
+>
+  Understanding how gateways earn money at the business layer, not the protocol layer.
+</Card>
+
+---
+
+## The Core Business Model
+
+Gateways in Livepeer do not earn fees at the protocol level. Orchestrators earn protocol fees; gateways earn at the **business layer** — the margin between what you charge customers and what you pay orchestrators.
+
+```
+Customer pays Gateway → Gateway pays Orchestrator → Gateway keeps the margin
+```
+
+This model is similar to how cloud providers, CDNs, and API intermediaries work: the compute is commoditised and distributed; the value is in reliability, customer relationships, product surface, and trust.
+
+---
+
+## Why Operate a Gateway
+
+<AccordionGroup>
+  <Accordion title="1. Direct Usage & Product Integration">
+    Run your own workloads through your own gateway for full control over ingestion, routing, retries, and delivery. No third-party gateway fees, no policy constraints.
+
+    - Process your own video or AI content end-to-end
+    - Enforce SLAs on orchestrators: latency, availability, failover
+    - Use the gateway as internal infrastructure powering a larger product
+
+    **Example:** A live streaming platform routes all encoder traffic through its own gateway, giving it full control over which orchestrators handle its streams and at what quality targets.
+  </Accordion>
+
+  <Accordion title="2. Service Monetization">
+    Charge customers above orchestrator cost — for reliability, compliance, custom features, or convenience.
+
+    - Set your own pricing independent of protocol economics
+    - Bundle gateway access with value-added services (dashboards, analytics, support)
+    - Avoid paying third-party gateway margins on your own traffic
+
+    **Example:** A video API product charges $0.005/min for transcoding, pays $0.003/min to orchestrators, and keeps $0.002/min as service margin.
+  </Accordion>
+
+  <Accordion title="3. Demand Ownership & Traffic Control">
+    Own ingress, customer relationships, usage data, and traffic predictability.
+
+    - Aggregate demand from multiple apps or customers through one routing layer
+    - Normalize bursty demand into predictable, orchestrator-friendly workloads
+    - Maintain complete visibility into usage patterns and failure modes
+
+    **Example:** An AI studio routes 50+ client applications through its gateway, maintaining a unified view of GPU usage, costs, and quality across all customers.
+  </Accordion>
+
+  <Accordion title="4. Reliability & Performance Control">
+    Define and enforce your own quality of service, independent of protocol defaults.
+
+    - Control routing, retries, failover, and latency/cost tradeoffs
+    - Route users to geographically optimal orchestrators
+    - Build custom health-check logic for your SLA requirements
+
+    **Example:** A real-time AI video product needs sub-500ms inference latency. It routes exclusively to orchestrators in specific regions and maintains a warm pool to avoid cold-start penalties.
+  </Accordion>
+
+  <Accordion title="5. Enterprise & Compliance Requirements">
+    Large customers require policy controls that only exist at the gateway layer.
+
+    - IP allowlists, audit logs, authentication, and rate limits
+    - Data residency and geographic routing constraints
+    - Cost-explosion protection against buggy or malicious clients
+
+    **Example:** An enterprise media company requires all video processing to route through EU-hosted orchestrators only. This policy is enforced at the gateway, not the protocol.
+  </Accordion>
+
+  <Accordion title="6. Product Differentiation">
+    Build differentiated products above the protocol — stable APIs, custom AI workflow presets, SDKs, dashboards, and billing abstractions.
+
+    - Shield customers from protocol or orchestrator churn with versioning
+    - Build features that differentiate your offering from other gateways
+    - Create proprietary AI pipeline configurations available only through your gateway
+
+    **Example:** Livepeer Studio and Daydream are both gateway products — each differentiated by its unique feature set and target market, built on the same underlying network.
+  </Accordion>
+
+  <Accordion title="7. Ecosystem Influence & Optionality">
+    Gateways shape real-world usage patterns, surface protocol gaps, and influence the direction of the network.
+
+    - Position early as protocol economics and gateway incentives evolve
+    - Operate at the layer where business logic, pricing, and customer trust live
+    - Contribute to ecosystem standards and best practices
+
+    **Example:** Cloud SPE operates as a public-good gateway, funded by the Livepeer treasury, improving ecosystem adoption and tooling for all operators.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Who Is Running Gateways Today
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Operator</TableCell>
+      <TableCell header>Type</TableCell>
+      <TableCell header>Focus</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Livepeer Studio**</TableCell>
+      <TableCell>Commercial product</TableCell>
+      <TableCell>Video streaming + VOD API for developers</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Daydream**</TableCell>
+      <TableCell>Commercial product</TableCell>
+      <TableCell>Real-time AI video platform for creators and builders</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Cloud SPE**</TableCell>
+      <TableCell>Treasury-funded public good</TableCell>
+      <TableCell>Free RTMP + AI gateways, ecosystem adoption</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Self-hosted operators**</TableCell>
+      <TableCell>Internal / private</TableCell>
+      <TableCell>Platforms routing their own video and AI workloads</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+---
+
+## The Gateway Opportunity Space
+
+As Livepeer's AI inference network grows, gateway operators are positioned at the layer where:
+
+- **Demand aggregation** happens — applications connect to gateways, not directly to orchestrators
+- **Service differentiation** is built — feature sets, pricing models, and SLAs are gateway-layer decisions
+- **Business relationships** live — customers buy from gateway operators, not from the protocol
+
+The underlying GPU supply is decentralized and competitive. The opportunity is in building the product, service, and customer layer on top of it.
+
+<BorderedBox variant="accent" padding="16px">
+
+**Think of it this way:**
+Orchestrators are factories. Gateways are the logistics companies, distributors, and branded products built on top. In mature infrastructure markets, the branded, customer-facing layer captures durable value even when the underlying execution is commoditised.
+
+</BorderedBox>
+
+---
+
+## Get Started
+
+<CardGroup cols={2}>
+  <Card title="Run a Gateway: Quickstart" href="../quickstart/gateway-setup" icon="bolt-lightning" arrow>
+    Get a gateway running in under 10 minutes.
+  </Card>
+  <Card title="Why Run a Gateway" href="/v2/gateways/run-a-gateway/why-run-a-gateway" icon="lightbulb" arrow>
+    More detail on technical and business motivations.
+  </Card>
+  <Card title="Gateway Requirements" href="/v2/gateways/run-a-gateway/requirements/setup" icon="clipboard-check" arrow>
+    Hardware, network, and software requirements.
+  </Card>
+  <Card title="Gateway Economics" href="/v2/gateways/about/economics" icon="hand-holding-dollar" arrow>
+    How gateway payments and business pricing work.
+  </Card>
+</CardGroup>
