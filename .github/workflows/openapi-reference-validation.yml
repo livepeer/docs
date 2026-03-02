@@ -37,6 +37,8 @@ jobs:
           node-version: '22'
 
       - name: Install test dependencies
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: "true"
         run: |
           if [ -f tests/package-lock.json ]; then
             npm --prefix tests ci
