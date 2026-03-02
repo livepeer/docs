@@ -172,7 +172,9 @@ jobs:
           fi
 
       - name: Create or update autofix PR
+        id: create_autofix_pr
         if: github.event_name != 'pull_request' && steps.autofix.outputs.changed == 'true'
+        continue-on-error: true
         uses: peter-evans/create-pull-request@v6
         with:
           branch: automation/openapi-autofix
@@ -196,6 +198,97 @@ jobs:
             docs-v2
             type: bug
             area: ci-cd
+
+      - name: Fallback publish autofix branch
+        id: fallback_autofix_branch
+        if: github.event_name != 'pull_request' && steps.autofix.outputs.changed == 'true' && steps.create_autofix_pr.outcome == 'failure'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git checkout -- v1/images/ai/cool-cat-hat-moving.gif || true
+
+          git checkout -B automation/openapi-autofix
+
+          git add -A -- . ':(exclude)v1/images/ai/cool-cat-hat-moving.gif'
+          if git diff --cached --quiet; then
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git commit -m "chore(ci): apply safe OpenAPI reference autofixes"
+          git push --force-with-lease origin automation/openapi-autofix
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Fallback create or update autofix PR
+        if: github.event_name != 'pull_request' && steps.autofix.outputs.changed == 'true' && steps.create_autofix_pr.outcome == 'failure' && steps.fallback_autofix_branch.outputs.pushed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const head = `${owner}:automation/openapi-autofix`;
+            const base = `${{ steps.pr_base.outputs.base }}`;
+            const title = 'chore(ci): safe OpenAPI reference autofixes';
+            const body = `This PR contains safe, deterministic OpenAPI reference normalization fixes.
+
+            - Run URL: ${{ steps.summary.outputs.run_url }}
+            - Files analyzed: ${{ steps.summary.outputs.total_files }}
+            - References analyzed: ${{ steps.summary.outputs.total_references }}
+            - Findings after fix: ${{ steps.summary.outputs.total_failures }}
+
+            Top findings (if any):
+            ${{ steps.summary.outputs.top_findings }}
+
+            Reproduce locally:
+            \`node tests/integration/openapi-reference-audit.js --full --strict --report /tmp/openapi-audit.md --report-json /tmp/openapi-audit.json\``;
+
+            const labels = ['docs-v2', 'type: bug', 'area: ci-cd'];
+            const existing = await github.rest.pulls.list({
+              owner,
+              repo,
+              state: 'open',
+              head,
+              base,
+              per_page: 20
+            });
+
+            if (existing.data.length > 0) {
+              const pr = existing.data[0];
+              await github.rest.pulls.update({
+                owner,
+                repo,
+                pull_number: pr.number,
+                title,
+                body,
+                base
+              });
+              await github.rest.issues.setLabels({
+                owner,
+                repo,
+                issue_number: pr.number,
+                labels
+              });
+              core.info(`Updated autofix PR #${pr.number}`);
+              return;
+            }
+
+            const created = await github.rest.pulls.create({
+              owner,
+              repo,
+              title,
+              body,
+              head: 'automation/openapi-autofix',
+              base
+            });
+            await github.rest.issues.setLabels({
+              owner,
+              repo,
+              issue_number: created.data.number,
+              labels
+            });
+            core.info(`Created autofix PR #${created.data.number}`);
 
       - name: Ensure OpenAPI audit labels exist
         if: github.event_name != 'pull_request'
