@@ -171,6 +171,11 @@ jobs:
             echo "base=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Snapshot autofix patch (v2 scope)
+        if: github.event_name != 'pull_request' && steps.autofix.outputs.changed == 'true'
+        run: |
+          git diff --binary -- v2 > /tmp/openapi-autofix-v2.patch
+
       - name: Create or update autofix PR
         id: create_autofix_pr
         if: github.event_name != 'pull_request' && steps.autofix.outputs.changed == 'true'
@@ -209,6 +214,11 @@ jobs:
 
           # Revert any runner-introduced non-V2 dirty files (e.g. LFS pointer noise).
           git diff --name-only -z -- . ':(exclude)v2/**' | xargs -0 -r git checkout --
+
+          # Reapply captured OpenAPI autofix edits that may have been reset by create-pull-request.
+          if [ -s /tmp/openapi-autofix-v2.patch ]; then
+            git apply --whitespace=nowarn /tmp/openapi-autofix-v2.patch
+          fi
 
           git checkout -B automation/openapi-autofix
 
