@@ -127,7 +127,7 @@ Standard pipelines are available via any Livepeer gateway that supports AI infer
 import { Livepeer } from "@livepeer/ai";
 
 const livepeer = new Livepeer({
-  httpBearer: process.env.GATEWAY_API_KEY,
+  httpBearer: process.env.LIVEPEER_GATEWAY_API_KEY,
 });
 
 const result = await livepeer.generate.textToImage({
@@ -150,9 +150,11 @@ const result = await livepeer.generate.textToImage({
 
 | Gateway | Endpoint | Auth | Best For |
 |---|---|---|---|
-| Livepeer Studio | `https://livepeer.studio/api/beta/generate/` | Studio API key | Production apps |
-| Cloud SPE | `https://dream-gateway.livepeer.cloud` | None (dev/free) | Development and experimentation |
-| Self-hosted | Your gateway URL | Bearer token | Custom routing, private models |
+| Livepeer Studio | `https://livepeer.studio/api/beta/generate` | `Authorization: Bearer <LIVEPEER_STUDIO_API_KEY>` | Production apps |
+| Cloud SPE | [tools.livepeer.cloud](https://tools.livepeer.cloud) | Provider-defined | Development and experimentation |
+| Self-hosted | Your gateway URL | `Authorization: Bearer <LIVEPEER_GATEWAY_API_KEY>` | Custom routing, private models |
+
+As of 02-March-2026, Studio AI uses `https://livepeer.studio/api/beta/generate`; for Cloud SPE-managed access, check [tools.livepeer.cloud](https://tools.livepeer.cloud) for current direct API endpoint and auth requirements.
 
 ---
 

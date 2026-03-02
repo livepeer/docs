@@ -12,7 +12,7 @@ Submit your first AI inference job through a Livepeer gateway, verify the respon
 ## AI-ready summary (for humans and assistants)
 
 - Use the AI gateway base URL: `https://livepeer.studio/api/beta/generate`
-- Authenticate with `Authorization: Bearer <LIVEPEER_API_KEY>`
+- Authenticate with `Authorization: Bearer <LIVEPEER_STUDIO_API_KEY>`
 - Start with `POST /text-to-image` for a simple request/response pattern
 - Other AI job endpoints follow the same auth/base URL pattern
 - Final default pipeline flow still requires stakeholder approval
@@ -23,7 +23,7 @@ This quickstart is structurally complete and source-backed, but **stakeholder si
 
 ## 1. Prerequisites
 
-- A Livepeer API key (backend use only)
+- A Livepeer Studio API key (backend use only)
 - `curl` (and optionally `jq`)
 - A known-good `model_id` approved by stakeholders for user-facing docs
 
@@ -32,13 +32,15 @@ This quickstart is structurally complete and source-backed, but **stakeholder si
 Use the Livepeer AI gateway base URL and Bearer auth:
 
 - Base URL: `https://livepeer.studio/api/beta/generate`
-- Auth header: `Authorization: Bearer <LIVEPEER_API_KEY>`
+- Auth header: `Authorization: Bearer <LIVEPEER_STUDIO_API_KEY>`
+
+As of 02-March-2026, Studio-managed AI requests use this beta base URL.
 
 Minimal connectivity check:
 
 ```bash
 curl -sS \
-  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  -H "Authorization: Bearer $LIVEPEER_STUDIO_API_KEY" \
   https://livepeer.studio/api/beta/generate/health
 ```
 
@@ -67,7 +69,7 @@ If auth and routing are working, you should receive a JSON response from the hea
 ```bash
 curl -sS \
   -X POST "https://livepeer.studio/api/beta/generate/text-to-image" \
-  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  -H "Authorization: Bearer $LIVEPEER_STUDIO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "model_id": "<MODEL_ID>",

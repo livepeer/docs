@@ -12,7 +12,7 @@ LPT is the native asset of the Livepeer protocol and serves three distinct funct
 
 - **Security collateral** – Orchestrators must bond LPT to participate in the active set. The stake acts as collateral against misbehaviour and determines how much work an orchestrator can perform. Delegators bond LPT to orchestrators and share in rewards. Although slashing is currently disabled, the existence of a bondable token allows the network to enforce economic penalties in the future.
 
-- **Reward distribution** – New LPT minted through inflation is distributed proportionally to bonded stake. This makes LPT a “work token”: the more stake an orchestrator has, the more inflationary rewards it receives. Delegators share in these rewards based on the orchestrator’s configured reward cut. Fees paid in ETH are also split according to bonded stake, aligning incentives across both revenue streams.
+- **Reward distribution** – New LPT minted through inflation is distributed proportionally to bonded stake. This makes LPT a “work token”: the more stake an orchestrator has, the more inflationary rewards it receives. Delegators share in these rewards based on the orchestrator’s configured `rewardCut`. Fees paid in ETH are also split according to bonded stake, aligning incentives across both revenue streams.
 
 - **Governance power** – Voting weight in Livepeer Improvement Proposals (LIPs) is proportional to bonded LPT. Tokenholders can propose protocol changes, vote on treasury allocations and direct network upgrades. Delegators indirectly influence governance by choosing orchestrators who represent their preferences.
 
@@ -43,20 +43,20 @@ To ensure that treasury spending aligns with protocol objectives, the Livepeer c
 
 There are two revenue streams in Livepeer:
 
-1. ETH fees – When broadcasters or AI builders redeem winning tickets, ETH is transferred from their deposit to the orchestrator. The orchestrator shares a configurable percentage of these fees with its delegators (feeShare). High fee share attracts delegators but reduces the orchestrator’s margin.
+1. ETH fees – When broadcasters or AI builders redeem winning tickets, ETH is transferred from their deposit to the orchestrator. The orchestrator shares a configurable percentage of these fees with its delegators (`feeShare`). High `feeShare` attracts delegators but reduces the orchestrator’s margin.
 
-2. LPT inflation – In each round, the BondingManager calls reward() for every active orchestrator. The contract mints new LPT proportional to the orchestrator’s total stake (bonded LPT + delegations) and transfers it to the orchestrator. The orchestrator then splits the reward with delegators according to its rewardCut (percentage it keeps). Delegators call claimEarnings() to collect accumulated LPT and ETH.
+2. LPT inflation – In each round, the BondingManager calls `reward()` for every active orchestrator. The contract mints new LPT proportional to the orchestrator’s total stake (bonded LPT + delegations) and transfers it to the orchestrator. The orchestrator then splits the reward with delegators according to its `rewardCut` (percentage it keeps). Delegators call `claimEarnings()` to collect accumulated LPT and ETH.
 
 Bonding is non‑custodial: delegators’ LPT remains within the BondingManager. To withdraw, a delegator initiates an unbond. After a thawing period of one round (currently ~21 hours), they can withdraw their principal and any unclaimed rewards. This unbonding period prevents rapid stake flipping and provides time for slashing (when enabled) to be enforced.
 
-The configurability of reward cuts and fee shares creates a pricing market. Orchestrators must decide how much of the reward to retain versus share to attract delegators. Delegators, in turn, evaluate orchestrators based on uptime, transcoding quality, fee share, reward cut and governance alignment. The resulting competition drives better service quality and decentralises power.
+The configurability of `rewardCut` and `feeShare` creates a pricing market. Orchestrators must decide how much of the reward to retain versus share to attract delegators. Delegators, in turn, evaluate orchestrators based on uptime, transcoding quality, `feeShare`, `rewardCut`, and governance alignment. The resulting competition drives better service quality and decentralises power.
 
 Reward compounding and inflation capture
 
-Because inflation is distributed continuously, delegators benefit from regularly compounding their earnings by calling claimEarnings() or by bonding additional LPT. Failure to claim for many rounds does not forfeit rewards, but it can delay compounding and reduce effective yield due to dilution. Some operators run bots to automate claimEarnings() for their delegators, smoothing compounding and saving gas by batching calls.
+Because inflation is distributed continuously, delegators benefit from regularly compounding their earnings by calling `claimEarnings()` or by bonding additional LPT. Failure to claim for many rounds does not forfeit rewards, but it can delay compounding and reduce effective yield due to dilution. Some operators run bots to automate `claimEarnings()` for their delegators, smoothing compounding and saving gas by batching calls.
 
 _**Reward leakage and “fee switch”**_
 
-Historically Livepeer distributed all inflationary rewards to orchestrators and their delegators, while a fixed share of fees went to orchestrators’ delegators via feeShare. Recent discussions have explored introducing a “fee switch” that would route a portion of fees to the community treasury or burn a portion of fees to reduce supply. Such a change would require a LIP and economic analysis. Proponents argue that aligning fee flows with public goods funding could decouple network growth from inflation; opponents caution that reducing orchestrator income could shrink service capacity. As of early 2026, no fee switch has been enacted, but the conversation highlights that reward distribution is an evolving design space.
+Historically Livepeer distributed all inflationary rewards to orchestrators and their delegators, while a fixed share of fees went to orchestrators’ delegators via `feeShare`. Recent discussions have explored introducing a “fee switch” that would route a portion of fees to the community treasury or burn a portion of fees to reduce supply. Such a change would require a LIP and economic analysis. Proponents argue that aligning fee flows with public goods funding could decouple network growth from inflation; opponents caution that reducing orchestrator income could shrink service capacity. As of 02-March-2026, no fee switch has been enacted, but the conversation highlights that reward distribution is an evolving design space.
 
 ### 
