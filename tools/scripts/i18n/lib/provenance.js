@@ -1,3 +1,28 @@
+/**
+ * @script provenance
+ * @summary Utility script for tools/scripts/i18n/lib/provenance.js.
+ * @owner docs
+ * @scope tools/scripts
+ *
+ * @usage
+ *   node tools/scripts/i18n/lib/provenance.js
+ *
+ * @inputs
+ *   No required CLI flags; optional flags are documented inline.
+ *
+ * @outputs
+ *   - Console output and/or file updates based on script purpose.
+ *
+ * @exit-codes
+ *   0 = success
+ *   1 = runtime or validation failure
+ *
+ * @examples
+ *   node tools/scripts/i18n/lib/provenance.js
+ *
+ * @notes
+ *   Keep script behavior deterministic and update script indexes after changes.
+ */
 const crypto = require('crypto');
 
 const PROVENANCE_PREFIX = 'codex-i18n';

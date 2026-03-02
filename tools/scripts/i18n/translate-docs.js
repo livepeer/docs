@@ -8,6 +8,26 @@
  * @usage
  *   node tools/scripts/i18n/translate-docs.js --languages es,fr,de --scope-mode prefixes --prefixes v2/about/livepeer-network --max-pages 10
  *   node tools/scripts/i18n/translate-docs.js --provider mock --dry-run --scope-mode full_v2_nav --max-pages 5
+ *
+ * @inputs
+ *   --languages <csv>, --scope-mode <mode>, --base-ref <ref>, --prefixes <csv>, --paths-file <path>, --max-pages <n>, --provider <name>, --dry-run, --force, --allow-mock-write, --route-map <path>, --report-json <path>, --config <path>
+ *
+ * @outputs
+ *   - Localized MD/MDX files under v2/<lang>/...
+ *   - Route map JSON artifact when --route-map is provided
+ *   - Run report JSON artifact when --report-json is provided
+ *
+ * @exit-codes
+ *   0 = success
+ *   1 = runtime or validation failure
+ *
+ * @examples
+ *   node tools/scripts/i18n/translate-docs.js --languages es --scope-mode paths_file --paths-file /tmp/paths.txt --route-map /tmp/route-map.json --report-json /tmp/report.json
+ *   node tools/scripts/i18n/translate-docs.js --languages es,fr,zh-CN --scope-mode full_v2_nav --max-pages 1000
+ *
+ * @notes
+ *   Mock provider writes are blocked by default; use --dry-run for mock smoke tests.
+ *   Chinese input zh-CN is normalized to cn for generated route/file paths.
  */
 
 const fs = require('fs');
