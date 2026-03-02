@@ -42,6 +42,7 @@
 | `tools/scripts/generate-docs-index.js` | Generate docs-index.json and optionally backfill v2 frontmatter metadata. | `node tools/scripts/generate-docs-index.js --write` | docs |
 | `tools/scripts/generate-llms-files.js` | Generate llms.txt and llms-full.txt from v2 docs navigation. | `node tools/scripts/generate-llms-files.js --write` | docs |
 | `tools/scripts/generate-pages-index.js` | Generate and verify section-style index.mdx files for v2 docs folders, plus the root aggregate index. | `node tools/scripts/generate-pages-index.js --write` | docs |
+| `tools/scripts/i18n/generate-localized-docs-json.js` | Add/update v2 language nodes in docs.json using English v2 as template plus route-map-driven route rewrites. | `node tools/scripts/i18n/generate-localized-docs-json.js --write --languages es,fr,zh-CN --route-map /tmp/route-map.json --report-json /tmp/docsjson-report.json` | docs |
 | `tools/scripts/i18n/lib/common.js` | Utility script for tools/scripts/i18n/lib/common.js. | `node tools/scripts/i18n/lib/common.js` | docs |
 | `tools/scripts/i18n/lib/config.js` | Utility script for tools/scripts/i18n/lib/config.js. | `node tools/scripts/i18n/lib/config.js` | docs |
 | `tools/scripts/i18n/lib/docs-json-localizer.js` | Utility script for tools/scripts/i18n/lib/docs-json-localizer.js. | `node tools/scripts/i18n/lib/docs-json-localizer.js` | docs |
@@ -61,6 +62,8 @@
 | `tools/scripts/i18n/test/mdx-translate.test.js` | Utility script for tools/scripts/i18n/test/mdx-translate.test.js. | `node tools/scripts/i18n/test/mdx-translate.test.js` | docs |
 | `tools/scripts/i18n/test/provenance.test.js` | Utility script for tools/scripts/i18n/test/provenance.test.js. | `node tools/scripts/i18n/test/provenance.test.js` | docs |
 | `tools/scripts/i18n/test/provider-openrouter.test.js` | Utility script for tools/scripts/i18n/test/provider-openrouter.test.js. | `node tools/scripts/i18n/test/provider-openrouter.test.js` | docs |
+| `tools/scripts/i18n/translate-docs.js` | Translate selected v2 docs pages into configured languages and emit localized MDX files plus route-map/report artifacts. | `node tools/scripts/i18n/translate-docs.js --languages es,fr,de --scope-mode prefixes --prefixes v2/about/livepeer-network --max-pages 10` | docs |
+| `tools/scripts/i18n/validate-generated.js` | Validate generated localized MDX files parse cleanly and exist for successful route-map entries. | `node tools/scripts/i18n/validate-generated.js --languages es,fr,zh-CN --route-map /tmp/route-map.json --report-json /tmp/validate-report.json` | docs |
 | `tools/scripts/inspect-page.js` | Utility script for tools/scripts/inspect-page.js. | `node tools/scripts/inspect-page.js` | docs |
 | `tools/scripts/inspect-video-page.js` | Utility script for tools/scripts/inspect-video-page.js. | `node tools/scripts/inspect-video-page.js` | docs |
 | `tools/scripts/mint-dev.sh` | Utility script for tools/scripts/mint-dev.sh. | `bash tools/scripts/mint-dev.sh` | docs |

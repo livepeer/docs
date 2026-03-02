@@ -73,6 +73,52 @@ Blocking policy:
 
 - browser failures are treated as blocking in primary CI flows
 
+### 4) OpenAPI Reference Integrity (V2 + Locales)
+
+Entries:
+
+- `tests/integration/openapi-reference-audit.js`
+- `.github/workflows/openapi-reference-validation.yml`
+
+What it validates:
+
+- endpoint-form OpenAPI references in frontmatter and `<OpenAPI ...>` components
+- canonical file-path to spec mapping
+- exact method+path presence in mapped local spec
+- `intra-file-openapi-mismatch` between frontmatter and component in the same page
+
+Run triggers:
+
+- pull requests to `main` and `docs-v2`
+- pushes to `main` and `docs-v2`
+- daily schedule at `04:35 UTC`
+- manual `workflow_dispatch`
+
+Autofix boundaries:
+
+- only method casing normalization
+- only single-space `METHOD /path` normalization
+- only missing leading slash normalization
+- no semantic endpoint-path rewrites
+
+Rolling issue behavior:
+
+- single marker issue `<!-- openapi-reference-audit -->`
+- open/update on unresolved failures
+- add resolution comment + close when run is clean
+
+Blocking policy:
+
+- unresolved findings are blocking for PR/push workflow outcomes
+
+Triage for `endpoint-not-found-in-spec`:
+
+1. verify `resolvedSpec` from report
+2. verify endpoint presence in mapped spec
+3. update both frontmatter `openapi` and `<OpenAPI path=...>` together
+4. retire endpoint pages and locale variants when endpoint is intentionally removed
+5. rerun strict audit until clean
+
 ## Source Files
 
 - `.githooks/pre-commit`
@@ -82,6 +128,7 @@ Blocking policy:
 - `tests/integration/v2-wcag-audit.js`
 - `.github/workflows/test-suite.yml`
 - `.github/workflows/test-v2-pages.yml`
+- `.github/workflows/openapi-reference-validation.yml`
 - `tests/WHEN-TESTS-RUN.md`
 - `tests/PR-CI-TESTS-AND-SCRIPT-RUN-MATRIX.md`
 

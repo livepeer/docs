@@ -110,6 +110,46 @@
 
 **Policy:** Advisory only (non-blocking)
 
+### E) OpenAPI Reference Validation (Blocking)
+
+**Location:** `.github/workflows/openapi-reference-validation.yml`
+
+**When:**
+- On pull requests to `main` and `docs-v2`
+- On push to `main` and `docs-v2`
+- Daily schedule at `04:35 UTC`
+- Manual trigger (`workflow_dispatch`)
+
+**What Runs:**
+- Strict OpenAPI endpoint reference audit:
+  `node tests/integration/openapi-reference-audit.js --full --strict --report /tmp/openapi-audit-final.md --report-json /tmp/openapi-audit-final.json`
+- On non-PR events, conservative autofix attempt:
+  `node tests/integration/openapi-reference-audit.js --full --fix --write ...`
+
+**Autofix Boundaries:**
+- Method casing normalization only
+- Canonical spacing normalization for `METHOD /path`
+- Leading slash normalization where missing
+- No semantic path rewrites
+
+**Rolling Issue Behavior:**
+- Single marker issue: `<!-- openapi-reference-audit -->`
+- Opens/updates when unresolved failures remain
+- Closes with resolution comment when a run is clean
+- Labels ensured idempotently: `docs-v2`, `help wanted`, `status: needs-triage`, `type: bug`, `area: ci-cd`
+
+**Output:**
+- Artifacts:
+  - `/tmp/openapi-audit-initial.md`
+  - `/tmp/openapi-audit-initial.json`
+  - `/tmp/openapi-audit-fix.md`
+  - `/tmp/openapi-audit-fix.json`
+  - `/tmp/openapi-audit-final.md`
+  - `/tmp/openapi-audit-final.json`
+- GitHub Step Summary counts and top findings
+
+**Blocks PR:** YES when unresolved findings remain
+
 ---
 
 ## 3. Manual Execution (On-Demand)
@@ -140,7 +180,18 @@ node tests/run-pr-checks.js --base-ref main
 # Strict link audit on explicit files
 node tests/integration/v2-link-audit.js --files v2/community/livepeer-community/trending-topics.mdx --strict
 node tests/integration/v2-link-audit.js --full --external-policy validate --external-link-types navigational --no-write-links --report /tmp/v2-link-audit-external.md --report-json /tmp/v2-link-audit-external.json
+node tests/integration/openapi-reference-audit.js --full --strict --report /tmp/openapi-audit.md --report-json /tmp/openapi-audit.json
+node tests/integration/openapi-reference-audit.js --full --fix --write --report /tmp/openapi-audit-fix.md --report-json /tmp/openapi-audit-fix.json
+node tests/integration/openapi-reference-audit.js --files v2/platforms/livepeer-studio/api-reference/streams/create.mdx --strict
 ```
+
+## OpenAPI Triage (`endpoint-not-found-in-spec`)
+
+1. Confirm file-to-spec mapping from the audit report (`resolvedSpec` field).
+2. Verify method/path exact match inside the mapped spec (`api/studio.yaml`, `api/openapi.yaml`, or `api/cli-http.yaml`).
+3. Update both frontmatter `openapi:` and `<OpenAPI path=...>` to the canonical endpoint.
+4. If endpoint is intentionally removed, retire page + locale variants and remove navigation references in `docs.json`.
+5. Re-run strict audit until findings are zero.
 
 ---
 
