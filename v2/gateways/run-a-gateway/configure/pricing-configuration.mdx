@@ -12,8 +12,6 @@ og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
 
 import { DynamicTable } from '/snippets/components/layout/table.jsx'
 
-<Danger> OK / complete - but needs edit & format </Danger>
-
 Gateways in Livepeer configure pricing to control costs and margins.
 As consumers of video transcoding and AI services, gateways set maximum prices
 they're willing to pay Orchestrators for processing work.
@@ -25,8 +23,6 @@ they're willing to pay Orchestrators for processing work.
 All payments are made in <Badge color="green">ETH(wei)</Badge> - **not** Livepeer tokens (LPT).
 
 #### Pricing Models
-
-<Warning> Format me.</Warning>
 
 1. <Badge color="blue">Video Transcoding</Badge>: Per video segment processed
 
@@ -117,8 +113,6 @@ The actual price calculation happens in the orchestrator's `priceInfo` function,
 
 ## Fee Payment Calculation & Process
 
-<Warning> Format me. Add diagram </Warning>
-
 Gateways pay fees through different mechanisms depending on workload type:
 
 _Video Transcoding_
@@ -139,7 +133,6 @@ _Payment Processing Flow_
 
 ## Configuration Methods
 
-<Warning> Format me. </Warning>
 Gateways set maximum prices they're willing to pay through configuration flags in
 the `transcodingConfig.json` or directly in the CLI.
 
@@ -182,8 +175,6 @@ Orchestrators can set specific prices for individual gateways using
 ```
 
 #### Price Calculation
-
-<Warning> Repeated </Warning>
 
 The actual price calculation happens in the orchestrator's `priceInfo` function [<Icon icon="github" /> orchestrator.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/orchestrator.go)
 
@@ -369,15 +360,3 @@ if basePrice.Num().Cmp(big.NewInt(0)) > 0 {
       How to fund your gateway.
   </Card>
 </Columns>
-
-<Expandable title="old content">  
-OLD
-
-Gateways in Livepeer set prices and pay fees through a multi-layered system that includes
-price limits, per-gateway pricing, and payment processing for both video transcoding and AI workloads.
-
-Gateways use a probabilistic micropayment system where they generate payment tickets for work done.
-The system supports both traditional video transcoding (per segment) and AI processing (per pixel)
-with different pricing models but unified payment infrastructure.
-
-</Expandable>
