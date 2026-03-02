@@ -15,12 +15,13 @@
 | `tests/run-all.js` | Utility script for tests/run-all.js. | `node tests/run-all.js` | docs |
 | `tests/run-pr-checks.js` | Run changed-file scoped validation checks for pull request CI. | `node tests/run-pr-checks.js --base-ref main` | docs |
 | `tests/unit/docs-guide-sot.test.js` | Validate docs-guide source-of-truth coverage, README pointers, and generated index freshness. | `node tests/unit/docs-guide-sot.test.js` | docs |
-| `tests/unit/docs-navigation.test.js` | Validate docs.json page-entry syntax, report missing routes, suggest remaps, and optionally apply approved remaps. | `./lpd tests unit docs-navigation.test` | docs |
+| `tests/unit/docs-navigation.test.js` | Validate docs.json page-entry syntax in check-only mode by default, with optional report writing and approved remaps. | `./lpd tests unit docs-navigation.test` | docs |
 | `tests/unit/docs-usefulness-accuracy-verifier.test.js` | Validate source-weighted 2026 accuracy verification rules (GitHub vs DeepWiki precedence, freshness, fallback, and cache reuse). | `node tests/unit/docs-usefulness-accuracy-verifier.test.js` | docs |
 | `tests/unit/links-imports.test.js` | Utility script for tests/unit/links-imports.test.js. | `node tests/unit/links-imports.test.js` | docs |
 | `tests/unit/mdx-guards.test.js` | Enforce MDX guardrails for globals imports, math delimiters, and markdown table line breaks. | `node tests/unit/mdx-guards.test.js` | docs |
 | `tests/unit/mdx.test.js` | Utility script for tests/unit/mdx.test.js. | `node tests/unit/mdx.test.js` | docs |
 | `tests/unit/openapi-reference-audit.test.js` | Unit tests for OpenAPI reference audit parsing, mapping, validation findings, and conservative autofix behavior. | `node tests/unit/openapi-reference-audit.test.js` | docs |
+| `tests/unit/openapi-rolling-issue.test.js` | Unit tests for OpenAPI rolling issue dedupe, action selection, body formatting, and top-findings limits. | `node tests/unit/openapi-rolling-issue.test.js` | docs |
 | `tests/unit/quality.test.js` | Utility script for tests/unit/quality.test.js. | `node tests/unit/quality.test.js` | docs |
 | `tests/unit/repo-audit-pipeline.test.js` | Validate audit skill discovery, orchestrator dry-run output, cleanup manifest safety, and cross-agent packaging outputs. | `node tests/unit/repo-audit-pipeline.test.js` | docs |
 | `tests/unit/script-docs.test.js` | Enforce script header schema, keep group script indexes in sync, and build aggregate script index. | `node tests/unit/script-docs.test.js --staged --write --stage --autofill` | docs |
@@ -30,5 +31,6 @@
 | `tests/unit/v2-wcag-audit.test.js` | Unit tests for v2 WCAG audit helper logic (args, thresholds, route mapping, report sorting, and conservative autofixes). | `node tests/unit/v2-wcag-audit.test.js` | docs |
 | `tests/utils/file-walker.js` | Utility script for tests/utils/file-walker.js. | `node tests/utils/file-walker.js` | docs |
 | `tests/utils/mdx-parser.js` | Utility script for tests/utils/mdx-parser.js. | `node tests/utils/mdx-parser.js` | docs |
+| `tests/utils/openapi-rolling-issue.js` | Shared helpers for OpenAPI rolling issue formatting, dedupe, and action selection. | `const helpers = require('./tests/utils/openapi-rolling-issue');` | docs |
 | `tests/utils/spell-checker.js` | Utility script for tests/utils/spell-checker.js. | `node tests/utils/spell-checker.js` | docs |
 {/* SCRIPT-INDEX:END */}

@@ -103,7 +103,7 @@ async function runAllTests() {
 
   // Docs Navigation Validation
   console.log('\n🧭 Running Docs Navigation Validation...');
-  const docsNavigationResult = docsNavigationTests.runTests();
+  const docsNavigationResult = docsNavigationTests.runTests({ writeReport: false });
   totalErrors += docsNavigationResult.errors.length;
   totalWarnings += docsNavigationResult.warnings.length;
   console.log(`   ${docsNavigationResult.errors.length} errors, ${docsNavigationResult.warnings.length} warnings`);

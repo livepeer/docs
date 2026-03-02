@@ -1,23 +1,26 @@
 #!/usr/bin/env node
 /**
  * @script docs-navigation.test
- * @summary Validate docs.json page-entry syntax, report missing routes, suggest remaps, and optionally apply approved remaps.
+ * @summary Validate docs.json page-entry syntax in check-only mode by default, with optional report writing and approved remaps.
  * @owner docs
  * @scope tests, docs.json
  *
  * @usage
  *   ./lpd tests unit docs-navigation.test
+ *   ./lpd tests unit docs-navigation.test -- --write-report
  *   ./lpd tests unit docs-navigation.test -- --strict-missing
  *   ./lpd tests unit docs-navigation.test -- --write-remaps
  *
  * @inputs
  *   --strict-missing Treat unresolved routes as test errors instead of warnings.
+ *   --write-report Write navigation report artifacts to tasks/reports/navigation-links.
+ *   --no-write-report Force check-only mode without writing report artifacts.
  *   --write-remaps Prompt for per-route approval and write accepted remaps to docs.json.
  *   --remap-threshold <0-1> Minimum score for non-canonical remap suggestions (default: 0.85).
  *
  * @outputs
- *   - tasks/reports/navigation-links/navigation-report.md
- *   - tasks/reports/navigation-links/navigation-report.json
+ *   - tasks/reports/navigation-links/navigation-report.md (when --write-report or --write-remaps is used)
+ *   - tasks/reports/navigation-links/navigation-report.json (when --write-report or --write-remaps is used)
  *   - docs.json (only when --write-remaps is used and user approves entries)
  *   - Console summary of syntax and route-resolution status.
  *
@@ -27,11 +30,12 @@
  *
  * @examples
  *   ./lpd tests unit docs-navigation.test
+ *   ./lpd tests unit docs-navigation.test -- --write-report
  *   ./lpd tests unit docs-navigation.test -- --strict-missing
  *   ./lpd tests unit docs-navigation.test -- --write-remaps
  *
  * @notes
- *   Report files are overwritten at a fixed location each run to avoid repo bloat; remaps require explicit per-entry approval.
+ *   Report files are check-only by default; write them explicitly with --write-report. Remaps require explicit per-entry approval.
  */
 
 const fs = require('fs');
@@ -65,6 +69,7 @@ function parseArgs(argv) {
   const args = {
     strictMissing: false,
     writeRemaps: false,
+    writeReport: false,
     remapThreshold: DEFAULT_REMAP_THRESHOLD
   };
 
@@ -76,6 +81,14 @@ function parseArgs(argv) {
     }
     if (token === '--write-remaps') {
       args.writeRemaps = true;
+      continue;
+    }
+    if (token === '--write-report') {
+      args.writeReport = true;
+      continue;
+    }
+    if (token === '--no-write-report') {
+      args.writeReport = false;
       continue;
     }
     if (token === '--remap-threshold') {
@@ -530,31 +543,22 @@ async function applyApprovedRemaps(baseResult, options = {}) {
   };
 }
 
-function writeReport(repoRoot, reportData) {
-  const reportMdAbs = path.join(repoRoot, REPORT_MD_REL);
-  const reportJsonAbs = path.join(repoRoot, REPORT_JSON_REL);
-
-  ensureDir(path.dirname(reportMdAbs));
-  ensureDir(path.dirname(reportJsonAbs));
-
-  fs.writeFileSync(reportJsonAbs, `${JSON.stringify(reportData, null, 2)}\n`, 'utf8');
-
+function buildReportData({ generatedAt, totalEntries, syntaxErrors, missingRoutes, missingWithSuggestions }) {
   const lines = [];
   lines.push('# Docs Navigation Route Report');
   lines.push('');
-  lines.push(`- Generated at (UTC): ${reportData.generatedAt}`);
-  lines.push(`- Entries scanned: ${reportData.totalEntries}`);
-  lines.push(`- Syntax errors: ${reportData.syntaxErrors.length}`);
-  lines.push(`- Missing routes: ${reportData.missingRoutes.length}`);
-  lines.push(`- Missing routes with suggestions: ${reportData.missingWithSuggestions}`);
+  lines.push(`- Generated at (UTC): ${generatedAt}`);
+  lines.push(`- Entries scanned: ${totalEntries}`);
+  lines.push(`- Syntax errors: ${syntaxErrors.length}`);
+  lines.push(`- Missing routes: ${missingRoutes.length}`);
+  lines.push(`- Missing routes with suggestions: ${missingWithSuggestions}`);
   lines.push('');
-
   lines.push('## Syntax Errors');
-  if (reportData.syntaxErrors.length === 0) {
+  if (syntaxErrors.length === 0) {
     lines.push('');
     lines.push('- None');
   } else {
-    reportData.syntaxErrors.forEach((issue) => {
+    syntaxErrors.forEach((issue) => {
       lines.push('');
       lines.push(`- ${issue.rule}: \`${issue.value}\``);
       lines.push(`  - Pointer: \`${issue.pointer}\``);
@@ -563,11 +567,11 @@ function writeReport(repoRoot, reportData) {
 
   lines.push('');
   lines.push('## Missing Routes');
-  if (reportData.missingRoutes.length === 0) {
+  if (missingRoutes.length === 0) {
     lines.push('');
     lines.push('- None');
   } else {
-    reportData.missingRoutes.forEach((issue) => {
+    missingRoutes.forEach((issue) => {
       lines.push('');
       lines.push(`- \`${issue.value}\` (normalized: \`${issue.normalized}\`)`);
       lines.push(`  - Pointer: \`${issue.pointer}\``);
@@ -583,11 +587,39 @@ function writeReport(repoRoot, reportData) {
     });
   }
 
-  fs.writeFileSync(reportMdAbs, `${lines.join('\n')}\n`, 'utf8');
+  return {
+    generatedAt,
+    totalEntries,
+    syntaxErrors,
+    missingRoutes,
+    missingWithSuggestions,
+    markdown: `${lines.join('\n')}\n`
+  };
+}
+
+function writeReport(repoRoot, reportData, shouldWrite = false) {
+  const reportMdAbs = path.join(repoRoot, REPORT_MD_REL);
+  const reportJsonAbs = path.join(repoRoot, REPORT_JSON_REL);
+  let reportWritten = false;
+  if (shouldWrite) {
+    const jsonReport = {
+      generatedAt: reportData.generatedAt,
+      totalEntries: reportData.totalEntries,
+      syntaxErrors: reportData.syntaxErrors,
+      missingRoutes: reportData.missingRoutes,
+      missingWithSuggestions: reportData.missingWithSuggestions
+    };
+    ensureDir(path.dirname(reportMdAbs));
+    ensureDir(path.dirname(reportJsonAbs));
+    fs.writeFileSync(reportJsonAbs, `${JSON.stringify(jsonReport, null, 2)}\n`, 'utf8');
+    fs.writeFileSync(reportMdAbs, reportData.markdown, 'utf8');
+    reportWritten = true;
+  }
 
   return {
     reportMdAbs,
-    reportJsonAbs
+    reportJsonAbs,
+    reportWritten
   };
 }
 
@@ -596,6 +628,7 @@ function runTests(options = {}) {
   warnings = [];
 
   const strictMissing = Boolean(options.strictMissing);
+  const shouldWriteReport = Boolean(options.writeReport);
   const repoRoot = getRepoRoot();
   const docsJsonPath = path.join(repoRoot, 'docs.json');
   const knownRoutes = collectExistingRoutes(repoRoot);
@@ -612,6 +645,7 @@ function runTests(options = {}) {
       passed: false,
       total: 0,
       docsJsonPath,
+      reportWritten: false,
       reportPathMd: path.join(repoRoot, REPORT_MD_REL),
       reportPathJson: path.join(repoRoot, REPORT_JSON_REL)
     };
@@ -632,6 +666,7 @@ function runTests(options = {}) {
       passed: false,
       total: 0,
       docsJsonPath,
+      reportWritten: false,
       reportPathMd: path.join(repoRoot, REPORT_MD_REL),
       reportPathJson: path.join(repoRoot, REPORT_JSON_REL)
     };
@@ -756,13 +791,14 @@ function runTests(options = {}) {
   });
 
   const missingWithSuggestions = missingRoutes.filter((item) => item.suggestions.length > 0).length;
-  const report = writeReport(repoRoot, {
+  const reportData = buildReportData({
     generatedAt: new Date().toISOString(),
     totalEntries: entries.length,
     syntaxErrors,
     missingRoutes,
     missingWithSuggestions
   });
+  const report = writeReport(repoRoot, reportData, shouldWriteReport);
 
   if (strictMissing) {
     missingRoutes.forEach((issue) => {
@@ -784,6 +820,7 @@ function runTests(options = {}) {
     docsJson,
     missingRoutes,
     syntaxErrors,
+    reportWritten: report.reportWritten,
     reportPathMd: report.reportMdAbs,
     reportPathJson: report.reportJsonAbs
   };
@@ -792,7 +829,8 @@ function runTests(options = {}) {
 if (require.main === module) {
   (async () => {
     const args = parseArgs(process.argv.slice(2));
-    let result = runTests({ strictMissing: args.strictMissing });
+    const writeReport = args.writeRemaps ? true : args.writeReport;
+    let result = runTests({ strictMissing: args.strictMissing, writeReport });
 
     if (args.writeRemaps) {
       const remapResult = await applyApprovedRemaps(result, { remapThreshold: args.remapThreshold });
@@ -803,7 +841,7 @@ if (require.main === module) {
         console.log(`\n✍️ Applied remaps: 0/${remapResult.considered}`);
       }
       console.log(`⏭️  Skipped remaps: ${remapResult.skipped.length}`);
-      result = runTests({ strictMissing: args.strictMissing });
+      result = runTests({ strictMissing: args.strictMissing, writeReport: true });
     }
 
     if (result.errors.length > 0) {
@@ -825,6 +863,7 @@ if (require.main === module) {
     console.log(`\n📝 Navigation reports:`);
     console.log(`  - ${result.reportPathMd}`);
     console.log(`  - ${result.reportPathJson}`);
+    console.log(`  - write mode: ${result.reportWritten ? 'enabled' : 'disabled (check-only)'}`);
 
     if (result.passed) {
       console.log(`✅ Docs navigation checks passed (${result.total} entries scanned)`);

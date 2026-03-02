@@ -29,6 +29,14 @@ Runs unit + integration suite.
 - `node tests/unit/spelling.test.js`
 - `node tests/unit/quality.test.js`
 - `node tests/unit/links-imports.test.js`
+- `node tests/unit/docs-navigation.test.js`
+Checks docs.json route integrity in non-writing mode by default.
+
+- `node tests/unit/docs-navigation.test.js --write-report`
+Explicitly refreshes:
+  - `tasks/reports/navigation-links/navigation-report.md`
+  - `tasks/reports/navigation-links/navigation-report.json`
+
 - `node tests/unit/docs-guide-sot.test.js`
 - `node tools/scripts/generate-pages-index.js`
 - `node tools/scripts/enforce-generated-file-banners.js --check`
@@ -54,6 +62,29 @@ Runs conservative static checks/autofix on all selected files and browser-render
 Generates deterministic reports (overwritten each run) at:
   - `tasks/reports/quality-accessibility/v2-wcag-audit-report.md`
   - `tasks/reports/quality-accessibility/v2-wcag-audit-report.json`
+
+- `node tests/integration/openapi-reference-audit.js`
+OpenAPI endpoint integrity audit for `v2/**` including locales (`v2/es`, `v2/fr`, `v2/cn`).
+Validates frontmatter `openapi: METHOD /path` and `<OpenAPI ...>` references against canonical local specs (`api/studio.yaml`, `api/openapi.yaml`, `api/cli-http.yaml`).
+Workflow trigger surface:
+  - PRs to `main` and `docs-v2` (blocking)
+  - pushes to `main` and `docs-v2` (blocking after autofix attempt)
+  - scheduled daily run at `04:35 UTC`
+  - manual `workflow_dispatch`
+Autofix boundaries:
+  - only deterministic normalization (`METHOD` casing, spacing, leading slash)
+  - no semantic endpoint guess/rewrites
+Rolling issue behavior:
+  - single marker issue `<!-- openapi-reference-audit -->`
+  - opens/updates on unresolved failures
+  - comments and closes automatically when resolved
+
+Triage flow for `endpoint-not-found-in-spec`:
+1. Confirm mapped spec using file path scope (Studio/AI/CLI-HTTP map).
+2. Search spec path+method in mapped spec.
+3. If endpoint moved/renamed, update page `openapi` and `<OpenAPI path=...>` together.
+4. If endpoint is intentionally removed, remove/retire the docs page from navigation (`docs.json`) and locale variants.
+5. Re-run strict audit and confirm zero unresolved findings.
 
 Flags:
 - `--staged` only checks staged docs pages
@@ -85,6 +116,12 @@ Flags:
   - `--max-pages <n>` (cap browser-audited pages)
   - `--base-url <url>` (otherwise local server manager is used)
   - `--fail-impact <critical|serious|moderate|minor|none>` (default: `serious`)
+  - `--report <path>` / `--report-json <path>`
+- OpenAPI audit flags:
+  - `--full` (default)
+  - `--files <path[,path...]>` (repeatable)
+  - `--strict` (exit non-zero on findings)
+  - `--fix --write` (conservative normalization only)
   - `--report <path>` / `--report-json <path>`
 
 Report output (same file each run, overwritten):
@@ -118,6 +155,9 @@ node tests/integration/v2-link-audit.js --full --external-policy validate --exte
 node tests/integration/v2-wcag-audit.js --full
 node tests/integration/v2-wcag-audit.js --full --no-fix
 node tests/integration/v2-wcag-audit.js --staged --fix --stage --max-pages 10 --fail-impact serious --report /tmp/livepeer-wcag-audit-precommit.md --report-json /tmp/livepeer-wcag-audit-precommit.json
+node tests/integration/openapi-reference-audit.js --full --strict --report /tmp/openapi-audit.md --report-json /tmp/openapi-audit.json
+node tests/integration/openapi-reference-audit.js --full --fix --write --report /tmp/openapi-audit-fix.md --report-json /tmp/openapi-audit-fix.json
+node tests/integration/openapi-reference-audit.js --files v2/platforms/livepeer-studio/api-reference/streams/create.mdx --strict
 bash lpd test --staged --wcag
 bash lpd test --staged --link-audit-external
 bash lpd test --full --wcag
@@ -135,6 +175,8 @@ npm --prefix tests run test:mdx
 npm --prefix tests run test:spell
 npm --prefix tests run test:quality
 npm --prefix tests run test:links
+npm --prefix tests run test:docs-nav
+npm --prefix tests run test:docs-nav:write
 npm --prefix tests run test:pr
 npm --prefix tests run test:docs-guide
 npm --prefix tests run test:pages-index
@@ -142,6 +184,8 @@ npm --prefix tests run test:pages-index:write
 npm --prefix tests run test:pages-index:rebuild
 npm --prefix tests run test:generated-banners
 npm --prefix tests run test:browser
+npm --prefix tests run test:openapi:audit
+npm --prefix tests run test:openapi:issue
 npm --prefix tests run test:link-audit
 npm --prefix tests run test:link-audit:staged
 npm --prefix tests run test:link-audit:external
@@ -172,6 +216,7 @@ npm --prefix tests run test:wcag:selftest
 
 ## Pre-commit Interaction
 - Pre-commit runs `tests/run-all.js --staged --skip-browser` in fast mode.
+- Docs navigation checks in this flow are check-only and do not rewrite `tasks/reports/navigation-links/navigation-report.*`.
 - Pre-commit also runs domain audit on staged docs pages:
   `node tests/integration/domain-pages-audit.js --staged --base-url https://docs.livepeer.org --version "$DOMAIN_AUDIT_VERSION"`
 - Pre-commit runs staged WCAG accessibility audit (conservative autofix enabled by default, blocks on remaining `serious`/`critical` issues):

@@ -29,6 +29,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync, spawnSync } = require('child_process');
+const { getDocsJsonRouteKeys, toDocsRouteKeyFromFileV2Aware } = require('./utils/file-walker');
 
 const styleGuideTests = require('./unit/style-guide.test');
 const mdxTests = require('./unit/mdx.test');
@@ -109,7 +110,12 @@ function dedupe(values) {
 }
 
 function partitionFiles(changedFiles) {
-  const docsMdx = changedFiles.filter((file) => file.startsWith('v2/pages/') && file.endsWith('.mdx'));
+  const docsRouteKeys = getDocsJsonRouteKeys(REPO_ROOT);
+  const docsMdx = changedFiles.filter((file) => {
+    if (!file.endsWith('.mdx')) return false;
+    const routeKey = toDocsRouteKeyFromFileV2Aware(file, REPO_ROOT);
+    return Boolean(routeKey) && docsRouteKeys.has(routeKey);
+  });
   const componentJsx = changedFiles.filter(
     (file) => file.startsWith('snippets/components/') && file.endsWith('.jsx')
   );
@@ -204,6 +210,17 @@ function runGlobalCheck(label, fn) {
   };
 }
 
+function runDocsNavigationCheck() {
+  const result = docsNavigationTests.runTests({ writeReport: false });
+  return {
+    label: 'Docs Navigation',
+    status: result.passed ? 'passed' : 'failed',
+    files: result.total || 1,
+    errors: Array.isArray(result.errors) ? result.errors.length : 0,
+    warnings: Array.isArray(result.warnings) ? result.warnings.length : 0
+  };
+}
+
 function runGeneratedBannerCheck() {
   const cmd = spawnSync('node', ['tools/scripts/enforce-generated-file-banners.js', '--check'], {
     cwd: REPO_ROOT,
@@ -239,7 +256,7 @@ async function main() {
   checks.push(await runUnitCheck('Quality', groups.docsMdxAbs, qualityTests.runTests));
   checks.push(await runUnitCheck('Links & Imports', groups.docsMdxAbs, linksImportsTests.runTests));
   checks.push(runGlobalCheck('MDX Guardrails', mdxGuardsTests.runTests));
-  checks.push(runGlobalCheck('Docs Navigation', docsNavigationTests.runTests));
+  checks.push(runDocsNavigationCheck());
   checks.push(runGeneratedBannerCheck());
   checks.push(runScriptDocsCheck(groups.scriptFiles));
   checks.push(runLinkAuditCheck(groups.docsMdx));
