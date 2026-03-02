@@ -24,10 +24,10 @@ Livepeer.Cloud is a **community-run, free-to-use gateway service** for the Livep
 
 <BorderedBox variant="accent" padding="16px">
 
-- **Prereqs:** A backend runtime for API calls and a Cloud SPE-compatible API key if required by the current provider policy
+- **Prereqs:** A backend runtime for API calls (as of 02-March-2026, the default Cloud SPE AI gateway path works without an API key)
 - **Time:** 5 minutes
-- **Outcome:** AI gateway endpoint discovered and first authenticated request scaffolded
-- **First action:** Open [tools.livepeer.cloud](https://tools.livepeer.cloud), copy the current AI base URL/auth requirements, then run a test request
+- **Outcome:** AI gateway endpoint discovered and first request scaffolded
+- **First action:** Open [tools.livepeer.cloud](https://tools.livepeer.cloud), confirm the active gateway URL, then run a test request
 
 </BorderedBox>
 
@@ -58,16 +58,17 @@ The Cloud SPE AI gateway is available at [tools.livepeer.cloud](https://tools.li
 Use the tools portal as the source of truth for the active endpoint and required auth mode:
 
 ```bash
-CLOUD_SPE_AI_BASE="<copy from tools.livepeer.cloud>"
+CLOUD_SPE_AI_BASE="https://dream-gateway.livepeer.cloud"
 
 curl -X POST "$CLOUD_SPE_AI_BASE/text-to-image" \
-  -H "Authorization: Bearer <LIVEPEER_GATEWAY_API_KEY>" \
   -H "Content-Type: application/json" \
   -d '{
     "prompt": "glass greenhouse in a misty forest, cinematic lighting",
     "model_id": "ByteDance/SDXL-Lightning"
   }'
 ```
+
+As of 02-March-2026, Cloud SPE tools default to `https://dream-gateway.livepeer.cloud`, and unauthenticated `POST /text-to-image` requests succeed. If Cloud SPE changes auth policy, use the current requirement shown in [tools.livepeer.cloud](https://tools.livepeer.cloud).
 
 Expected success signal: HTTP `200` response with an output object (for example, an image URL, base64 payload, or job/result handle depending on the active route).
 

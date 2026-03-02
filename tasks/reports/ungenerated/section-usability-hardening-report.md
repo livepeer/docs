@@ -94,9 +94,11 @@ Per file:
 - `v2/lpt/delegation/getting-started.mdx` — human `72`, agent `65`
 - `v2/orchestrators/earnings.mdx` — human `65`, agent `58`
 
-## Remaining SME Follow-Ups
+## SME Verification Status
 
-- Confirm Cloud SPE public direct AI endpoint and auth contract beyond portal-discovery fallback.
-- Confirm Studio `/api/beta/generate` graduation status (beta prefix retained vs promoted path).
-- Confirm `livepeercdn.studio` remains the production HLS host.
+- Cloud SPE endpoint/auth: verified; default tools gateway is `https://dream-gateway.livepeer.cloud`, and unauthenticated `POST /text-to-image` succeeded at verification time.
+- Studio AI base path: verified as `https://livepeer.studio/api/beta/generate` at verification time.
+- `livepeercdn.studio` host status: verified active (redirecting to `playback.livepeer.studio` on HLS path checks).
 
+Detailed evidence log:
+- `tasks/reports/ungenerated/section-hardening-sme-verification-2026-03-02.md`
