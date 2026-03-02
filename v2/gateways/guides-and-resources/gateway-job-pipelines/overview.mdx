@@ -1,0 +1,53 @@
+---
+title: 'Gateway Job Pipelines Overview'
+sidebarTitle: 'Job Pipelines Overview'
+description: 'How gateway operators handle AI job pipelines, capability routing, and BYOC-backed workloads on Livepeer.'
+keywords: ["livepeer", "gateway", "job pipelines", "ai", "byoc", "routing", "capabilities"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+import { DynamicTable } from '/snippets/components/layout/table.jsx'
+
+Gateway job pipelines are the control-plane path between app requests and orchestrator execution. A gateway does not run model inference; it accepts requests, applies routing policy, selects compatible orchestrators, and returns results.
+
+## What a gateway pipeline does
+
+- Accepts AI requests from apps and clients
+- Matches request requirements to advertised orchestrator capabilities
+- Applies policy: price ceilings, latency expectations, retries, failover
+- Dispatches work to orchestrators and returns outputs
+
+## Gateway vs orchestrator responsibilities
+
+<DynamicTable
+  headerList={["Layer", "Primary responsibility"]}
+  itemsList={[
+    { "Layer": "Gateway", "Primary responsibility": "Routing, auth, pricing policy, QoS, retries, failover" },
+    { "Layer": "Orchestrator", "Primary responsibility": "GPU model execution and inference output generation" }
+  ]}
+/>
+
+## Pipeline types
+
+- Real-time frame pipelines (video-to-video, overlays, style transfer)
+- Streaming audio pipelines (ASR and translation)
+- Capability-composed pipelines (for example, depth -> conditioning -> generation)
+
+## BYOC in gateway pipelines
+
+Gateway operators can route to orchestrators that expose BYOC capabilities. BYOC extends what workloads a gateway can serve by allowing operators to run custom inference containers behind orchestrator capabilities.
+
+<CardGroup cols={2}>
+  <Card title="Gateway BYOC Guide" icon="box" href="./byoc">
+    Gateway-side operating guidance for BYOC-capable routing.
+  </Card>
+  <Card title="Developer BYOC Guide" icon="display-code" href="/v2/developers/ai-pipelines/byoc">
+    Implementation guide for teams building BYOC services consumed by gateways.
+  </Card>
+</CardGroup>
+
+## See also
+
+- [Gateway setup](/v2/gateways/quickstart/gateway-setup)
+- [Discover offerings](/v2/gateways/run-a-gateway/connect/discover-offerings)
+- [Gateway providers](/v2/gateways/using-gateways/gateway-providers)

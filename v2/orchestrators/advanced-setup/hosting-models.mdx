@@ -1,0 +1,305 @@
+---
+title: 'Hosting AI Models on an Orchestrator'
+sidebarTitle: 'Hosting AI Models'
+description: 'How to host AI models on a Livepeer orchestrator node: runtime setup, capability advertisement, pricing, and gateway integration. GPU operator guide.'
+keywords: ["livepeer", "orchestrator", "ai models", "comfyui", "comfystream", "byoc", "inference", "gpu", "capability", "pricing"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+import { PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import { DynamicTable } from '/snippets/components/layout/table.jsx'
+import { GotoCard, GotoLink } from '/snippets/components/primitives/links.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+import { BorderedBox } from '/snippets/components/primitives/containers.jsx'
+
+<PreviewCallout />
+
+Hosting AI models on a Livepeer orchestrator means running inference workloads on GPU-backed nodes and making those models available for consumption via Livepeer Gateways. This is not training and not a generic GPU cloud — it is decentralised, real-time AI inference optimised for video and streaming workloads.
+
+<Note>
+  **Consumers never talk to orchestrators directly.** All traffic flows through gateways, which handle routing, auth, pricing, and QoS.
+
+  ```
+  App / User
+       ↓
+  Gateway (routing, auth, pricing, QoS)
+       ↓
+  Orchestrator(s) (GPU + model + runtime)
+  ```
+</Note>
+
+---
+
+## Models best suited for orchestrators
+
+Livepeer orchestrators are best for low-latency, real-time inference — especially:
+
+- Diffusion models (Stable Diffusion, StreamDiffusion)
+- Image-to-image and video-to-video models
+- ControlNet pipelines
+- Vision models (depth, pose, segmentation)
+- ComfyUI-based DAG workflows
+- Real-time video AI effects
+
+**Not ideal:** large batch LLM inference, long-running training jobs, stateful fine-tuning loops.
+
+For a full compatibility matrix by model family, see [Model Support](/v2/developers/ai-pipelines/model-support).
+
+---
+
+## What you do and don't need to build
+
+As an orchestrator operator, you focus on running excellent inference infrastructure. You do **not** need to build:
+
+- A marketplace
+- Authentication systems
+- Billing infrastructure
+- Service discovery
+- Brand or user trust
+
+These are handled by Gateways and the protocol layer. Orchestrators compete on performance — lower latency, better GPUs, higher uptime, better-optimised pipelines, specialised or niche models.
+
+---
+
+## Setup steps
+
+<StyledSteps>
+
+  <StyledStep title="Run an orchestrator node">
+
+Install go-livepeer with AI enabled.
+
+**Requirements:**
+
+- GPU (RTX 3090 / 4090 / A100 / L4 or equivalent)
+- CUDA + NVIDIA drivers
+- Docker strongly recommended
+
+```bash
+# Pull the latest go-livepeer image with AI support
+docker pull livepeer/go-livepeer:master
+
+# Start with AI flags enabled
+docker run -d \
+  --gpus all \
+  --name livepeer-orchestrator \
+  livepeer/go-livepeer:master \
+  -orchestrator \
+  -network arbitrum-one-mainnet \
+  -aiWorker \
+  -aiModels /root/.lpData/cfg/aiModels.json \
+  -aiModelsDir /root/.lpData/models \
+  -v 6
+```
+
+The orchestrator advertises: hardware specs, supported capabilities, pricing, service endpoints.
+
+<GotoLink
+  label="Full orchestrator setup guide"
+  relativePath="../quickstart/overview"
+/>
+
+  </StyledStep>
+
+  <StyledStep title="Install an AI runtime">
+
+Livepeer does not mandate a single runtime. The two common approaches:
+
+**Option A — ComfyUI (most common)**
+
+- Load models via `.safetensors`
+- Build inference pipelines as DAGs
+- Serve real-time inference via ComfyStream
+
+```bash
+git clone https://github.com/livepeer/comfystream
+cd comfystream
+pip install -r requirements.txt
+
+# Download your models
+python scripts/download.py --model sdxl
+python scripts/download.py --model depth-anything
+```
+
+**Option B — Custom inference server**
+
+- Torch / TensorRT / ONNX
+- HTTP or gRPC interface
+- Wrapped by Livepeer's AI Worker interface
+
+```python
+# Example: minimal FastAPI inference server
+from fastapi import FastAPI
+from PIL import Image
+import torch
+
+app = FastAPI()
+
+@app.post("/infer")
+async def infer(request: InferRequest):
+    # Run your model here
+    result = model(request.image)
+    return {"output": result}
+```
+
+You control: which models are loaded, VRAM usage and batching, precision (fp16 / int8), warm starts and caching.
+
+  </StyledStep>
+
+  <StyledStep title="Advertise AI capabilities">
+
+Your orchestrator declares machine-readable capability descriptors. These are not marketing labels — gateways use them to route jobs.
+
+Edit your `aiModels.json`:
+
+```json
+{
+  "capabilities": [
+    "image-to-image",
+    "video-to-video",
+    "depth",
+    "segmentation",
+    "style-transfer"
+  ],
+  "models": [
+    {
+      "name": "sdxl-turbo",
+      "capability": "image-to-image",
+      "warmStart": true
+    },
+    {
+      "name": "depth-anything",
+      "capability": "depth",
+      "warmStart": true
+    }
+  ]
+}
+```
+
+<DynamicTable
+  headerList={["Capability", "Description", "Example models"]}
+  itemsList={[
+    { "Capability": "image-to-image", "Description": "Transform input frames using a diffusion model", "Example models": "SDXL, SD 1.5, SD-Turbo" },
+    { "Capability": "video-to-video", "Description": "Frame-by-frame video transformation", "Example models": "StreamDiffusion, AnimateDiff" },
+    { "Capability": "depth", "Description": "Depth map estimation from video frames", "Example models": "DepthAnything, MiDaS" },
+    { "Capability": "segmentation", "Description": "Pixel-level object or region masks", "Example models": "SAM, SAM2" },
+    { "Capability": "style-transfer", "Description": "Apply artistic style to video frames", "Example models": "ControlNet + IP-Adapter" }
+  ]}
+/>
+
+  </StyledStep>
+
+  <StyledStep title="Set pricing">
+
+Configure pricing for your AI capabilities. Pricing is advertised off-chain and settled via Livepeer tickets.
+
+```json
+{
+  "pricing": {
+    "image-to-image": {
+      "pricePerFrame": 0.004,
+      "currency": "USD"
+    },
+    "depth": {
+      "pricePerFrame": 0.001,
+      "currency": "USD"
+    },
+    "video-to-video": {
+      "pricePerSecond": 0.06,
+      "currency": "USD"
+    }
+  }
+}
+```
+
+You can configure:
+
+- Per-request, per-frame, or per-second pricing
+- Optional surge or priority pricing
+- Model-specific pricing
+
+  </StyledStep>
+
+  <StyledStep title="Expose capabilities via gateways">
+
+Once running, gateways automatically:
+
+- Discover your orchestrator
+- Route jobs based on cost, performance, and capability match
+- Handle retries, auth, and aggregation
+- Expose stable APIs to developers
+
+Apps never need direct knowledge of your node. Your job is to keep the service fast, reliable, and warm.
+
+To verify your orchestrator is discoverable, query the `/getNetworkCapabilities` endpoint on a gateway:
+
+```bash
+curl https://your-gateway.example.com/getNetworkCapabilities | jq .
+```
+
+You should see your orchestrator's address, capabilities, and pricing in the response.
+
+  </StyledStep>
+
+</StyledSteps>
+
+---
+
+## Hosting multiple models on one orchestrator
+
+A single GPU node can host multiple models, but VRAM is finite. Common patterns:
+
+**Model multiplexing (cold swap):** Load one model at a time, swap on request. Higher latency per swap, lower VRAM pressure. Suitable for less frequently requested models.
+
+**Warm multi-model (concurrent):** Keep multiple small models resident simultaneously. Works well for depth + segmentation + ControlNet combinations where each is lightweight.
+
+**Dedicated GPU per model:** For high-throughput production, assign one GPU per capability. Eliminates swap overhead entirely.
+
+<Warning>
+  Cold starts significantly reduce job assignment. Gateways track orchestrator latency and avoid nodes with slow first-inference times. Keep your most-requested models warm.
+</Warning>
+
+---
+
+## How developers consume models you host
+
+From a developer's perspective, consumption looks like:
+
+- HTTP API calls (image/video in → output out)
+- WebRTC streams for real-time video
+
+Examples already running on Livepeer that consume orchestrator-hosted models:
+
+- **Daydream** — generative AI video platform
+- **StreamDiffusionTD** — real-time diffusion via TouchDesigner
+- **ComfyStream** — browser-based ComfyUI pipelines
+- **OBS plugins** — live stream AI effects
+
+Developers target capability types, not your specific node. If you advertise `image-to-image` with competitive latency and pricing, you'll receive their jobs.
+
+---
+
+## Partnering with gateways
+
+Instead of competing with gateways, orchestrators can partner with them for guaranteed routing and exclusive pipeline access. This is a commercial arrangement outside the protocol.
+
+Relevant contacts: Cloud SPE operators, Daydream gateway team. See [Gateway Providers](/v2/gateways/using-gateways/gateway-providers).
+
+---
+
+## See also
+
+<CardGroup cols={2}>
+  <Card title="BYOC" icon="box" href="/v2/developers/ai-pipelines/byoc">
+    Developer guide to building BYOC containers — how to structure your inference server.
+  </Card>
+  <Card title="Model Support" icon="microchip-ai" href="/v2/developers/ai-pipelines/model-support">
+    Full model family compatibility matrix — which models work on Livepeer and why.
+  </Card>
+  <Card title="ComfyStream" icon="diagram-project" href="/v2/developers/ai-pipelines/comfystream">
+    How ComfyStream works as the AI pipeline runtime for orchestrator nodes.
+  </Card>
+  <Card title="Orchestrator quickstart" icon="rocket" href="../quickstart/overview">
+    Start here if you haven't run a Livepeer orchestrator node yet.
+  </Card>
+</CardGroup>
