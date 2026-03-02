@@ -80,7 +80,7 @@ function getStagedMdxFiles() {
     const repoRoot = execSync('git rev-parse --show-toplevel', { encoding: 'utf8' }).trim();
     const files = getStagedDocsPageFiles(repoRoot)
       .map((filePath) => toPosix(path.relative(repoRoot, filePath)))
-      .filter((filePath) => filePath.endsWith('.mdx') && filePath.startsWith('v2/pages/'))
+      .filter((filePath) => filePath.endsWith('.mdx') && filePath.startsWith('v2/'))
       .slice(0, MAX_PAGES); // Limit for speed
     
     return files;
@@ -96,12 +96,15 @@ function getStagedMdxFiles() {
  */
 function filePathToUrls(filePath) {
   const withoutExt = filePath.replace(/\.mdx$/, '');
-  const routeWithoutPrefix = withoutExt.replace(/^v2\/pages\//, '');
+  const routeWithoutPrefix = withoutExt
+    .replace(/^v2\/pages\//, '')
+    .replace(/^v2\//, '');
   const normalizedRoute = routeWithoutPrefix.replace(/\/index$/, '');
 
   const candidates = [
     `/${normalizedRoute}`,
-    `/${withoutExt.replace(/\/index$/, '')}`,
+    `/${withoutExt.replace(/^v2\//, '').replace(/\/index$/, '')}`,
+    `/v2/${normalizedRoute}`,
     `/v2/pages/${normalizedRoute}`
   ];
 
@@ -190,7 +193,7 @@ async function testPage(browser, filePath, baseUrl) {
     // Ignore favicon and other non-critical failures
     if (failure && !url.includes('favicon') && !url.includes('sourcemap')) {
       // Only report if it's a critical resource
-      if (url.includes('/snippets/') || url.includes('/v2/pages/')) {
+      if (url.includes('/snippets/') || url.includes('/v2/')) {
         errors.push(`Request Failed: ${url} - ${failure.errorText}`);
       }
     }

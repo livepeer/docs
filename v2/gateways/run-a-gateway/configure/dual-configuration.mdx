@@ -311,6 +311,11 @@ Note, if the `transcodingOptions.json` file is not provided, the gateway will us
 -nvidia=all  # or specific GPU IDs
 ```
 
+<Note>
+  `-nvidia` and NVIDIA drivers are only required for GPU transcoding hosts. A
+  gateway-only routing setup does not require NVIDIA drivers.
+</Note>
+
 ## Deployment
 
 <Tabs>
@@ -390,7 +395,7 @@ For nodes that handle both orchestration and AI processing
 **Common Issues**
 
 - **AI models not loading:** Check `-aiModelsDir` and model file permissions
-- **Transcoding failures:** Verify GPU drivers and `-nvidia` configuration
+- **GPU transcoding failures:** Verify NVIDIA drivers and `-nvidia` configuration (only required for GPU transcoding hosts)
 - **Port conflicts:** Ensure `-rtmpAddr`, `-httpAddr`, and `-cliAddr` are available
 - **Memory pressure:** Monitor AI model memory usage, adjust `-aiRunnerContainersPerGPU`
 

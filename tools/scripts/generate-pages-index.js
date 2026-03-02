@@ -611,7 +611,7 @@ function stagePaths(repoRelativePaths) {
   return null;
 }
 
-function findNestedIndexFiles(topLevelDirRel) {
+function findNestedIndexFiles(topLevelDirRel, docsRouteKeys = new Set()) {
   const topLevelAbs = path.join(REPO_ROOT, topLevelDirRel);
   if (!fileExists(topLevelAbs)) return [];
 
@@ -634,7 +634,10 @@ function findNestedIndexFiles(topLevelDirRel) {
         continue;
       }
       const relPath = normalizeRel(path.relative(REPO_ROOT, fullPath));
+      const routeKey = normalizeDocsRouteKey(relPath);
+      const isRoutableIndex = routeKey && docsRouteKeys.has(routeKey);
       if (!allowedTopLevelIndexes.has(relPath)) {
+        if (isRoutableIndex) continue;
         nested.push(relPath);
       }
     }
@@ -687,7 +690,7 @@ function run(options = {}) {
 
     const indexAbs = path.join(REPO_ROOT, dirRel, INDEX_FILENAME);
     const legacyAbs = path.join(REPO_ROOT, dirRel, LEGACY_INDEX_FILENAME);
-    const nestedIndexFiles = findNestedIndexFiles(dirRel);
+    const nestedIndexFiles = findNestedIndexFiles(dirRel, docsRouteKeys);
 
     if (write) {
       const didWrite = writeIfChanged(indexAbs, content);

@@ -19,6 +19,16 @@ import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
 
 Docker Engine 20.10 or later is required. If Docker is not installed or needs updating, follow the official [Docker Engine installation guide](https://docs.docker.com/engine/install/) for your platform.
 
+<Note>
+  Gateway nodes do not require NVIDIA GPU drivers as a baseline prerequisite.
+  NVIDIA drivers apply to orchestrator or other GPU compute workloads.
+</Note>
+
+<Tip>
+  Windows hosts should run Docker with WSL2 for best compatibility:
+  [Docker Desktop WSL2 backend](https://docs.docker.com/desktop/windows/wsl/).
+</Tip>
+
 Verify your installed version:
 
 ```bash
@@ -41,7 +51,7 @@ Create a working directory and a `docker-compose.yml` file. Choose the configura
   <Tab title="On-Chain (Production)">
     On-chain mode connects the gateway to the Livepeer network on Arbitrum. An
     Ethereum wallet and Arbitrum One RPC endpoint are required before starting.
-    See [On-Chain Setup Requirements](/v2/gateways/run-a-gateway/requirements/on-chain%20setup/on-chain)
+    See [On-Chain Setup Requirements](/v2/gateways/run-a-gateway/requirements/on-chain setup/on-chain)
     for prerequisites.
 
     ```yaml docker-compose.yml
@@ -185,7 +195,7 @@ connecting to orchestrators on the network.
   **On-chain mode only:** The gateway must be funded with ETH before
   orchestrators will accept transcoding jobs. If streams produce no output,
   check that your gateway account has sufficient ETH. See
-  [Fund your gateway](/v2/gateways/run-a-gateway/requirements/on-chain%20setup/fund-gateway).
+  [Fund your gateway](/v2/gateways/run-a-gateway/requirements/on-chain setup/fund-gateway).
 </Note>
 
 ## Stream Live Video

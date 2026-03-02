@@ -185,16 +185,23 @@ function getFiles(dir, pattern, options = {}) {
 }
 
 /**
- * Get all MDX files in v2/pages
+ * Get all routable MDX files in v2
  */
 function getMdxFiles(rootDir = null, options = {}) {
   const { respectMintIgnore = true } = options;
   const repoRoot = resolveRepoRoot(rootDir);
-  const pagesDir = path.join(repoRoot, 'v2', 'pages');
-  if (!fs.existsSync(pagesDir)) {
-    return [];
+  const docsRouteKeys = getDocsJsonRouteKeys(repoRoot);
+  const v2DocsFiles = getV2DocsFiles({ rootDir: repoRoot, respectMintIgnore });
+  const mdxFiles = v2DocsFiles.filter((filePath) => filePath.endsWith('.mdx'));
+
+  if (docsRouteKeys.size === 0) {
+    return mdxFiles;
   }
-  return getFiles(pagesDir, /\.mdx$/, { rootDir: repoRoot, respectMintIgnore });
+
+  return mdxFiles.filter((filePath) => {
+    const key = toDocsRouteKeyFromFileV2Aware(filePath, repoRoot);
+    return key && docsRouteKeys.has(key);
+  });
 }
 
 /**
