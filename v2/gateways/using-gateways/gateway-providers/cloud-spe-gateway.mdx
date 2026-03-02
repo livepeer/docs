@@ -20,6 +20,17 @@ Livepeer.Cloud is a **community-run, free-to-use gateway service** for the Livep
   Cloud SPE operates free gateways as a public good for the Livepeer ecosystem. These gateways are ideal for experimentation, development, and open-source projects. For production applications with SLA requirements, consider [Livepeer Studio](/v2/gateways/using-gateways/gateway-providers/livepeer-studio-gateway). As of 02-March-2026, Cloud SPE publishes AI gateway access through [tools.livepeer.cloud](https://tools.livepeer.cloud); check provider docs for the current direct API base URL and auth requirements.
 </Info>
 
+## Start here in 5 minutes
+
+<BorderedBox variant="accent" padding="16px">
+
+- **Prereqs:** A backend runtime for API calls and a Cloud SPE-compatible API key if required by the current provider policy
+- **Time:** 5 minutes
+- **Outcome:** AI gateway endpoint discovered and first authenticated request scaffolded
+- **First action:** Open [tools.livepeer.cloud](https://tools.livepeer.cloud), copy the current AI base URL/auth requirements, then run a test request
+
+</BorderedBox>
+
 ---
 
 ## What Cloud SPE Provides
@@ -41,6 +52,24 @@ The Cloud SPE AI gateway is available at [tools.livepeer.cloud](https://tools.li
 <Card title="Cloud SPE Tools" icon="wrench" href="https://tools.livepeer.cloud" arrow horizontal>
   Browse AI pipelines, check network capabilities, and access the AI gateway.
 </Card>
+
+### First Request Example (Portal-Guided API)
+
+Use the tools portal as the source of truth for the active endpoint and required auth mode:
+
+```bash
+CLOUD_SPE_AI_BASE="<copy from tools.livepeer.cloud>"
+
+curl -X POST "$CLOUD_SPE_AI_BASE/text-to-image" \
+  -H "Authorization: Bearer <LIVEPEER_GATEWAY_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "glass greenhouse in a misty forest, cinematic lighting",
+    "model_id": "ByteDance/SDXL-Lightning"
+  }'
+```
+
+Expected success signal: HTTP `200` response with an output object (for example, an image URL, base64 payload, or job/result handle depending on the active route).
 
 ### Access the RTMP Gateway
 
