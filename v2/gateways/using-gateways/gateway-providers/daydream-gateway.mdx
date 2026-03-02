@@ -21,6 +21,17 @@ Daydream is an **open-source toolkit for world models and real-time AI video** b
   Daydream is a full product with its own documentation. This page covers the gateway aspect relevant to Livepeer developers. For the complete product documentation, visit [docs.daydream.live](https://docs.daydream.live).
 </Info>
 
+## Start here in 5 minutes
+
+<BorderedBox variant="accent" padding="16px">
+
+- **Prereqs:** Browser with camera access (hosted path) or a backend with a Daydream API key
+- **Time:** 5 minutes
+- **Outcome:** A working Daydream session or your first API call scaffolded
+- **First action:** Open [daydream.live](https://daydream.live) for no-code testing, then use [docs.daydream.live](https://docs.daydream.live) to copy the current API endpoint and auth settings
+
+</BorderedBox>
+
 ---
 
 ## What the Daydream Gateway Does
@@ -66,6 +77,23 @@ Use the Daydream gateway to:
   </Tab>
 </Tabs>
 
+## First Request Example (Portal-Guided API)
+
+Use the Daydream docs as the source of truth for the current API base URL and route, then run a minimal authenticated request:
+
+```bash
+DAYDREAM_API_URL="<copy from docs.daydream.live quickstart>"
+
+curl -X POST "$DAYDREAM_API_URL" \
+  -H "Authorization: Bearer <DAYDREAM_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "cinematic watercolor skyline at dusk"
+  }'
+```
+
+Expected success signal: HTTP `200` response with generated output metadata (for example, an asset URL, stream URL, or job/result payload depending on the selected route).
+
 ---
 
 ## What Daydream Supports
@@ -99,14 +127,11 @@ Daydream runs on Livepeer's GPU network. When you send a job through the Daydrea
 This means inference is distributed, low-latency, and scales with network GPU supply — without Daydream needing to own or provision GPUs directly.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
 flowchart LR
     A[Your App / Browser] -->|AI job request| B[Daydream Gateway]
     B -->|Route to best GPU| C[Livepeer Orchestrator Network]
     C -->|Inference result| B
     B -->|Stylized video / output| A
-
-    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
 ```
 
 ---

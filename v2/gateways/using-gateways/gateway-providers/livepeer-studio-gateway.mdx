@@ -21,13 +21,24 @@ Livepeer Studio is a **developer-friendly hosted gateway** for the Livepeer netw
   Livepeer Studio has its own full product documentation. This page covers Studio as a gateway provider in the context of the Livepeer network. For complete product guides, visit the [Livepeer Studio product section](/v2/platforms/livepeer-studio/overview) or [livepeer.studio](https://livepeer.studio).
 </Info>
 
+## Start here in 5 minutes
+
+<BorderedBox variant="accent" padding="16px">
+
+- **Prereqs:** Livepeer Studio account and backend environment for secure API key usage
+- **Time:** 5 minutes
+- **Outcome:** API key created and first API call authenticated
+- **First action:** Create an API key in Studio, set `LIVEPEER_STUDIO_API_KEY`, then call `GET https://livepeer.studio/api/stream`
+
+</BorderedBox>
+
 ---
 
 ## What Studio Gives You
 
 - **Livestreaming** — Create streams, ingest via RTMP or WebRTC WHIP, play back via low-latency WebRTC or HLS, record sessions, and multistream to other platforms
 - **Video on demand** — Upload video assets (TUS resumable or URL), transcode, play back with the Livepeer Player or any HLS/MP4 player
-- **AI inference** — Access the Livepeer AI network via Studio's `/api/beta/generate/` endpoints (text-to-image, image-to-image, image-to-video, and more)
+- **AI inference** — Access the Livepeer AI network via Studio's `/api/beta/generate` endpoints (text-to-image, image-to-image, image-to-video, and more). As of 02-March-2026, this remains the managed Studio AI base path.
 - **Access control** — Gate playback with webhooks or JWTs for subscriptions and token-gating
 - **Analytics** — Viewership and engagement metrics via the viewership API
 - **Webhooks** — Event-driven notifications for stream and asset lifecycle events
@@ -57,7 +68,7 @@ Livepeer Studio is a **developer-friendly hosted gateway** for the Livepeer netw
     import Livepeer from "livepeer";
 
     const livepeer = new Livepeer({
-      apiKey: process.env.LIVEPEER_API_KEY,
+      apiKey: process.env.LIVEPEER_STUDIO_API_KEY,
     });
     ```
   </Tab>
@@ -68,7 +79,7 @@ Livepeer Studio is a **developer-friendly hosted gateway** for the Livepeer netw
     ```python
     from livepeer import Livepeer
 
-    livepeer = Livepeer(api_key=os.environ["LIVEPEER_API_KEY"])
+    livepeer = Livepeer(api_key=os.environ["LIVEPEER_STUDIO_API_KEY"])
     ```
   </Tab>
   <Tab title="Go">
@@ -76,13 +87,13 @@ Livepeer Studio is a **developer-friendly hosted gateway** for the Livepeer netw
     go get github.com/livepeer/livepeer-go
     ```
     ```go
-    client := livepeer.New(livepeer.WithAPIKey(os.Getenv("LIVEPEER_API_KEY")))
+    client := livepeer.New(livepeer.WithAPIKey(os.Getenv("LIVEPEER_STUDIO_API_KEY")))
     ```
   </Tab>
   <Tab title="REST">
     ```bash
     curl -X GET "https://livepeer.studio/api/stream" \
-      -H "Authorization: Bearer YOUR_API_KEY"
+      -H "Authorization: Bearer <LIVEPEER_STUDIO_API_KEY>"
     ```
   </Tab>
 </Tabs>
@@ -99,7 +110,7 @@ console.log("Stream key:", data.streamKey);       // Give to broadcaster
 console.log("Playback ID:", data.playbackId);     // Use in your app
 ```
 
-Broadcast via RTMP to `rtmp://rtmp.livepeer.com/live` using the stream key. Play back via HLS at `https://livepeercdn.studio/hls/{playbackId}/index.m3u8` or with the Livepeer React Player.
+Broadcast via RTMP to `rtmp://rtmp.livepeer.com/live` using the stream key. Play back via HLS at `https://livepeercdn.studio/hls/{playbackId}/index.m3u8` or with the Livepeer React Player. As of 02-March-2026, `livepeercdn.studio` is the documented Studio HLS playback host.
 
 ### Upload a video asset
 
@@ -114,14 +125,14 @@ console.log("Playback ID:", asset.playbackId);
 
 ### Run an AI inference job
 
-Studio exposes Livepeer's AI network via the `/api/beta/generate/` endpoint family:
+Studio exposes Livepeer's AI network via the `/api/beta/generate` endpoint family:
 
 ```typescript
 // Text-to-image (example using the AI SDK)
 import { Livepeer } from "@livepeer/ai";
 
 const livepeer = new Livepeer({
-  httpBearer: process.env.GATEWAY_API_KEY,
+  httpBearer: process.env.LIVEPEER_STUDIO_API_KEY,
 });
 
 const result = await livepeer.generate.textToImage({
@@ -131,7 +142,7 @@ const result = await livepeer.generate.textToImage({
 ```
 
 <Note>
-  For AI inference via Livepeer Studio, use `livepeer.studio/api/beta/generate/` as your base URL with your Studio API key as the bearer token.
+  As of 02-March-2026, use `https://livepeer.studio/api/beta/generate` with `Authorization: Bearer <LIVEPEER_STUDIO_API_KEY>` for Studio-managed AI inference.
 </Note>
 
 ---
@@ -152,7 +163,7 @@ const result = await livepeer.generate.textToImage({
     </TableRow>
     <TableRow>
       <TableCell>AI inference endpoint</TableCell>
-      <TableCell>`https://livepeer.studio/api/beta/generate/`</TableCell>
+      <TableCell>`https://livepeer.studio/api/beta/generate`</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>TypeScript SDK</TableCell>

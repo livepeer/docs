@@ -23,6 +23,17 @@ Three integration patterns are available depending on what you need:
 2. **ComfyStream** — run ComfyUI-based workflows on live video frames in real time.
 3. **BYOC (Bring Your Own Compute)** — bring your own model container; Livepeer routes jobs to it.
 
+## Start here in 5 minutes
+
+<BorderedBox variant="accent" padding="16px">
+
+- **Prereqs:** A backend environment and an API key from your selected gateway provider
+- **Time:** 5 minutes
+- **Outcome:** Integration pattern selected and one pipeline request executed
+- **First action:** Start with **Standard API Pipelines**, run one text-to-image request, then decide if ComfyStream or BYOC is needed
+
+</BorderedBox>
+
 ---
 
 ## Choosing Your Integration Pattern
@@ -127,7 +138,7 @@ Standard pipelines are available via any Livepeer gateway that supports AI infer
 import { Livepeer } from "@livepeer/ai";
 
 const livepeer = new Livepeer({
-  httpBearer: process.env.GATEWAY_API_KEY,
+  httpBearer: process.env.LIVEPEER_GATEWAY_API_KEY,
 });
 
 const result = await livepeer.generate.textToImage({
@@ -150,9 +161,11 @@ const result = await livepeer.generate.textToImage({
 
 | Gateway | Endpoint | Auth | Best For |
 |---|---|---|---|
-| Livepeer Studio | `https://livepeer.studio/api/beta/generate/` | Studio API key | Production apps |
-| Cloud SPE | `https://dream-gateway.livepeer.cloud` | None (dev/free) | Development and experimentation |
-| Self-hosted | Your gateway URL | Bearer token | Custom routing, private models |
+| Livepeer Studio | `https://livepeer.studio/api/beta/generate` | `Authorization: Bearer <LIVEPEER_STUDIO_API_KEY>` | Production apps |
+| Cloud SPE | [tools.livepeer.cloud](https://tools.livepeer.cloud) | Provider-defined | Development and experimentation |
+| Self-hosted | Your gateway URL | `Authorization: Bearer <LIVEPEER_GATEWAY_API_KEY>` | Custom routing, private models |
+
+As of 02-March-2026, Studio AI uses `https://livepeer.studio/api/beta/generate`; for Cloud SPE-managed access, check [tools.livepeer.cloud](https://tools.livepeer.cloud) for current direct API endpoint and auth requirements.
 
 ---
 
@@ -203,7 +216,6 @@ BYOC lets you bring a custom model container into the Livepeer AI network. Your 
 ## How the Network Routes AI Jobs
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
 flowchart LR
     A["Your App\n@livepeer/ai SDK"] -->|API request + model ID| B["Gateway\nLivepeer Studio / Self-hosted"]
     B -->|Match capability + route| C["Orchestrator\nGPU Node"]
@@ -211,8 +223,6 @@ flowchart LR
     D -->|Result| C
     C -->|Return result| B
     B -->|Response| A
-
-    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
 ```
 
 The gateway selects the best orchestrator based on capability (does it have the requested model warm?), performance history, pricing, and latency. **Warm models** — models already loaded in GPU memory — return results significantly faster than cold models that need to load first.

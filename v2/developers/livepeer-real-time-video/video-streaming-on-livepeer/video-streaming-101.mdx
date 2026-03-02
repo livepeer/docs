@@ -11,10 +11,22 @@ status: current
 
 import { PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
 import { StyledTable, TableRow, TableCell } from '/snippets/components/primitives/tables.jsx'
+import { BorderedBox } from '/snippets/components/primitives/containers.jsx'
 
 <PreviewCallout />
 
 If you're new to live video, this page covers the core concepts you need before writing any code. If you already know RTMP, HLS, and how transcoding pipelines work, skip to the [Video Streaming Quickstart](./README).
+
+## Start here in 5 minutes
+
+<BorderedBox variant="accent" padding="16px">
+
+- **Prereqs:** Basic familiarity with web APIs and one broadcaster tool (OBS or browser encoder)
+- **Time:** 5 minutes
+- **Outcome:** You understand stream key/playback ID, ingest, and playback flow well enough to start the quickstart
+- **First action:** Read **Stream Key vs. Playback ID**, then continue to [Video Streaming Quickstart](./README)
+
+</BorderedBox>
 
 ---
 
@@ -23,14 +35,11 @@ If you're new to live video, this page covers the core concepts you need before 
 A live stream travels through four stages:
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
 flowchart LR
     A["Broadcaster\nOBS / Browser / Camera"] -->|Ingest| B["Gateway\nLivepeer Network"]
     B -->|Transcode| C["Orchestrators\nGPU Network"]
     C -->|Deliver| B
     B -->|Playback| D["Viewers\nHLS / WebRTC"]
-
-    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
 ```
 
 1. **Ingest** — Your broadcaster sends a raw video signal to a server
@@ -74,6 +83,8 @@ HLS is the standard delivery format for live and on-demand video. It splits vide
 ```
 https://livepeercdn.studio/hls/{playbackId}/index.m3u8
 ```
+
+As of 02-March-2026, `livepeercdn.studio` is the documented Studio HLS playback host.
 
 HLS introduces latency (typically 5-30 seconds) because viewers are buffering ahead. This is acceptable for most streaming use cases.
 
