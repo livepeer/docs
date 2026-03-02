@@ -216,7 +216,6 @@ BYOC lets you bring a custom model container into the Livepeer AI network. Your 
 ## How the Network Routes AI Jobs
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
 flowchart LR
     A["Your App\n@livepeer/ai SDK"] -->|API request + model ID| B["Gateway\nLivepeer Studio / Self-hosted"]
     B -->|Match capability + route| C["Orchestrator\nGPU Node"]
@@ -224,8 +223,6 @@ flowchart LR
     D -->|Result| C
     C -->|Return result| B
     B -->|Response| A
-
-    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
 ```
 
 The gateway selects the best orchestrator based on capability (does it have the requested model warm?), performance history, pricing, and latency. **Warm models** — models already loaded in GPU memory — return results significantly faster than cold models that need to load first.

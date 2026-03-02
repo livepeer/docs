@@ -35,14 +35,11 @@ If you're new to live video, this page covers the core concepts you need before 
 A live stream travels through four stages:
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
 flowchart LR
     A["Broadcaster\nOBS / Browser / Camera"] -->|Ingest| B["Gateway\nLivepeer Network"]
     B -->|Transcode| C["Orchestrators\nGPU Network"]
     C -->|Deliver| B
     B -->|Playback| D["Viewers\nHLS / WebRTC"]
-
-    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
 ```
 
 1. **Ingest** — Your broadcaster sends a raw video signal to a server
