@@ -1,0 +1,26 @@
+task_id: 774
+branch: codex/774-guides-and-tools-i18n
+base_branch: docs-v2
+scope_in:
+  - docs.json
+  - docs-index.json
+  - docs-guide/indexes/pages-index.mdx
+  - tools/script-index.md
+  - v2/index.mdx
+  - v2/about/index.mdx
+  - v2/developers/index.mdx
+  - v2/cn/index.mdx
+  - v2/es/index.mdx
+  - v2/fr/index.mdx
+  - v2/internal/index.mdx
+  - v2/orchestrators/index.mdx
+  - v2/solutions/index.mdx
+  - v2/es/developers/guides-and-tools/**
+  - v2/fr/developers/guides-and-tools/**
+  - v2/cn/developers/guides-and-tools/**
+  - v2/es/developers/livepeer-real-time-video/**
+allowed_generated:
+  - .codex/pr-body.generated.md
+acceptance_checks:
+  - node tools/scripts/generate-docs-guide-pages-index.js --write
+  - node tests/unit/script-docs.test.js --write --rebuild-indexes

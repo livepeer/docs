@@ -1,0 +1,260 @@
+---
+title: Guía de Contribución
+sidebarTitle: Guía de Contribución
+description: >-
+  Cómo contribuir a Livepeer — código, documentación, gobernanza, soporte
+  comunitario y reportes de errores en todos los repositorios.
+keywords:
+  - livepeer
+  - developers
+  - contribution guide
+  - contribute
+  - open source
+  - pull request
+  - github
+  - documentation
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9kZXZlbG9wZXJzL2d1aWRlcy1hbmQtdG9vbHMvY29udHJpYnV0aW9uLWd1aWRlLm1keCIsInNvdXJjZVJvdXRlIjoidjIvZGV2ZWxvcGVycy9ndWlkZXMtYW5kLXRvb2xzL2NvbnRyaWJ1dGlvbi1ndWlkZSIsInNvdXJjZUhhc2giOiJhZDQxMjc0NmY1NzkzZGE1YjRiZjU5YjgwNjZiNzIwYmM4ZjM3ZmMzZTE1YjUzNjJlNjgxNmFkNWZlNWQ0ZWY3IiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoib3BlbmFpL2dwdC00by1taW5pIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAzLTAzVDE1OjA4OjMyLjg3NVoifQ== */}
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+
+Livepeer es un proyecto de código abierto y las contribuciones de la comunidad son esenciales para su crecimiento. No necesitas escribir código para tener un impacto significativo: las mejoras en la documentación, la participación en la gobernanza, el apoyo a la comunidad y los informes de errores son todas contribuciones valoradas.
+
+---
+
+## Contribuyentes Destacados
+
+<Frame hint="Get highlighted for your contributions to Livepeer!" caption={<LinkArrow label="View Contributors Spotlight" href="https://contributors-spotlight.rickstaa.dev/" target="_blank"/>}>
+  <iframe
+    src="https://contributors-spotlight.rickstaa.dev/"
+    width="100%"
+    height="700px"
+    frameBorder="0"
+    title="Livepeer Contributors Spotlight"
+  />
+</Frame>
+
+---
+
+## Formas de Contribuir
+
+<CardGroup cols={3}>
+
+<Card title="Code" icon="code" href="https://github.com/livepeer">
+  Fix bugs, build features, and improve tooling. Open a discussion before starting large features. Each repo has a `CONTRIBUTING.md`.
+</Card>
+
+<Card title="Documentation" icon="book" href="https://github.com/livepeer/docs">
+  Found something outdated, missing, or confusing? Docs contributions are always welcome. See the workflow below.
+</Card>
+
+<Card title="Governance" icon="ballot-check" href="https://explorer.livepeer.org/voting">
+  Participate by voting on proposals, commenting on LIPs on the forum, or drafting improvement proposals.
+</Card>
+
+<Card title="Community Support" icon="life-ring" href="https://discord.gg/livepeer">
+  Help answer questions in Discord or the Forum. Helping others onboard is one of the highest-value contributions you can make.
+</Card>
+
+<Card title="Bug Reports" icon="bug" href="https://github.com/livepeer">
+  Found a bug? Open an issue on the relevant GitHub repository with full reproduction steps.
+</Card>
+
+<Card title="Ideas and Feedback" icon="lightbulb" href="https://forum.livepeer.org">
+  Share ideas on the Forum. Even if your idea does not ship immediately, it feeds into community thinking about what the network needs.
+</Card>
+
+</CardGroup>
+
+---
+
+## Contribuyendo al Código
+
+### Antes de Comenzar
+
+- **Revisa los problemas y discusiones existentes** — busca en GitHub antes de abrir un nuevo problema o comenzar a trabajar en una función. Un rápido "¿alguien está trabajando en esto?" puede ahorrar tiempo a todos.
+- **Abre una discusión para cambios grandes** — para nuevas funciones significativas, abre primero una Discusión o Problema en GitHub. Esto evita invertir esfuerzo en un PR que puede no ser aceptado.
+- **Lee la guía de contribución del repositorio`CONTRIBUTING.md`** — cada repositorio tiene su propia guía de contribución que cubre la configuración, pruebas y convenciones de PR.
+
+### Repositorios Clave
+
+<CardGroup cols={2}>
+
+<Card title="go-livepeer" icon="golang" href="https://github.com/livepeer/go-livepeer/blob/master/CONTRIBUTING.md">
+  The Go implementation of the Livepeer protocol. Contributing guide covers commit structure, changelog requirements, and PR conventions. Contributions classified by mode: General, Broadcaster, Orchestrator, Transcoder.
+</Card>
+
+<Card title="Livepeer Studio" icon="sliders" href="https://github.com/livepeer/studio/blob/master/CONTRIBUTING.md">
+  The Studio monorepo (TypeScript). Covers code of conduct, yarn usage (not npm), and issue/PR templates. Code reviews happen weekly.
+</Card>
+
+<Card title="livepeer.js / React SDK" icon="react" href="https://github.com/livepeer/livepeer.js/blob/main/.github/CONTRIBUTING.md">
+  The JavaScript/React SDK. Guide covers setting up a real Studio API key for tests, running the test suite, and PR etiquette. Discuss significant API changes before building.
+</Card>
+
+<Card title="AI Runner" icon="microchip" href="https://github.com/livepeer/ai-runner">
+  The containerised AI inference runtime. Contributions include new pipeline types, model support, and infrastructure improvements. See the README for development setup.
+</Card>
+
+<Card title="Livepeer Protocol (Smart Contracts)" icon="ethereum" href="https://github.com/livepeer/protocol">
+  Solidity smart contracts. All contributions and bug fixes welcome as pull requests. Security vulnerabilities must go through Immunefi, not GitHub Issues.
+</Card>
+
+<Card title="Livepeer Docs" icon="book" href="https://github.com/livepeer/docs">
+  The documentation repository (this site). See the Documentation Contribution section below for the specific workflow.
+</Card>
+
+</CardGroup>
+
+### Principios Generales de Pull Request
+
+Estos se aplican a todos los repositorios de Livepeer:
+
+- **Mantén los PRs enfocados** — un cambio lógico por pull request. PRs más pequeños y bien definidos son más fáciles de revisar y fusionar.
+- **Escribe mensajes de commit legibles** — usa [Conventional Commits](https://www.conventionalcommits.org/) formato donde los repos lo requieran: `fix:`, `feat:`, `docs:`, y así sucesivamente.
+- **Agrega pruebas** — al agregar funciones o corregir errores, incluye casos de prueba que cubran el nuevo comportamiento o el comportamiento actualizado.
+- **Actualiza el changelog** — `go-livepeer` y otros repos requieren actualizaciones a `CHANGELOG_PENDING.md` con cada PR.
+- **Responde a los comentarios de revisión rápidamente** — no fuerces un push a una rama bajo revisión activa.
+- **Rebase y fusiona** — para conjuntos de cambios más grandes, los mantenedores pueden solicitar un rebase local para limpiar el historial de commits antes de fusionar.
+
+---
+
+## Contribuyendo a la Documentación
+
+La documentación de Livepeer es de código abierto y se encuentra en [github.com/livepeer/docs](https://github.com/livepeer/docs) en la rama `docs-v2`.
+
+### Ruta Rápida: Comentarios Sin Código
+
+No necesitas usar Git para contribuir a la documentación:
+
+- **Pulgar arriba/abajo** — en cualquier página de documentación para señalar si fue útil
+- **Problemas de GitHub** — [abre un problema](https://github.com/livepeer/docs/issues) describiendo qué está mal, falta o es confuso. Hay ocho plantillas de problemas disponibles.
+- **Discord** — comparte comentarios en el `#lounge` canal o etiqueta a un miembro del equipo de documentación
+
+### Flujo de Trabajo de Pull Request
+
+<Steps>
+
+<Step title="Fork the repository">
+Navigate to [github.com/livepeer/docs](https://github.com/livepeer/docs) and click **Fork**. This creates your own copy.
+</Step>
+
+<Step title="Clone and configure remotes">
+```bash
+git clone https://github.com/YOUR_USERNAME/docs.git
+cd docs
+git remote add upstream https://github.com/livepeer/docs.git
+```
+</Step>
+
+<Step title="Create a branch from docs-v2">
+```bash
+git checkout docs-v2
+git pull upstream docs-v2
+git checkout -b docs-plan/your-short-description
+```
+
+Always branch from `docs-v2`. Never commit directly to `docs-v2` or `main`.
+</Step>
+
+<Step title="Make your changes">
+Edit or create `.mdx` files in the relevant section. Follow the [Style Guide](/v2/es/resources/documentation-guide/style-guide) for formatting and component usage.
+
+Key rules:
+- Use UK English
+- No inline styles — use Mintlify global components or component primitives from `/snippets/components/`
+- No hardcoded colours — use CSS custom properties
+- Absolute imports only: `/snippets/components/...` (not relative paths)
+</Step>
+
+<Step title="Run pre-commit checks">
+The repository has pre-commit hooks that check structure, style, links, spelling, and MDX validity. Run them before pushing:
+```bash
+./lpd hooks run
+```
+Or run the full test suite:
+```bash
+node tests/run-pr-checks.js --base-ref docs-v2
+```
+</Step>
+
+<Step title="Open a pull request">
+Push your branch and open a PR against `docs-v2` on the upstream repository. Use the provided PR template and fill it out completely. PRs are reviewed within 48–72 hours on business days.
+</Step>
+
+</Steps>
+
+### Revisar Asignaciones
+
+Los cambios en la documentación son revisados por los propietarios de sección definidos en [`.github/CODEOWNERS`](https://github.com/livepeer/docs/blob/docs-v2/.github/CODEOWNERS). Generalmente:
+
+- **Sección de Desarrolladores** — equipo de relaciones con desarrolladores
+- **Sección de Gateways** — equipo de gateways
+- **Sección de Orquestadores** — equipo de orquestadores
+- **Recursos / transversales** — equipo de documentación
+
+---
+
+## Contribuyendo a la Gobernanza
+
+Los titulares de tokens pueden participar en Livepeer gobernanza sin escribir ningún código.
+
+<Steps>
+
+<Step title="Read active proposals">
+Visit the [Livepeer Forum governance category](https://forum.livepeer.org) and [Explorer voting page](https://explorer.livepeer.org/voting) to see what is currently open for input.
+</Step>
+
+<Step title="Comment on proposals">
+Add your perspective on active threads in the forum before proposals move to an on-chain vote. Well-reasoned feedback is valued from all participants.
+</Step>
+
+<Step title="Vote on-chain">
+If you hold staked LPT, you can cast votes on active proposals directly from the [Explorer](https://explorer.livepeer.org/voting).
+</Step>
+
+<Step title="Draft a Livepeer Improvement Proposal (LIP)">
+If you have a protocol improvement idea, draft it on the Forum under the Governance category and solicit community feedback before moving to a formal LIP.
+</Step>
+
+</Steps>
+
+---
+
+## Subvenciones y Recompensas
+
+Si deseas contribuir de manera más sustancial y recibir compensación:
+
+<CardGroup cols={2}>
+
+<Card title="Livepeer Grants" icon="hand-holding-dollar" href="https://livepeer.org/grants">
+  Two grant tracks: **Open Network Grants** (tools, educational content, node operations improvements) and **Video Disruptor Grants** (cutting-edge video research and novel applications). Grants are paid in LPT.
+</Card>
+
+<Card title="Software Bounties" icon="trophy" href="https://github.com/livepeer/bounties">
+  Scoped software tasks with defined acceptance criteria and compensation. A good entry point for contributors who prefer clearly-defined work.
+</Card>
+
+</CardGroup>
+
+<Note>
+Grant applications are reviewed bi-weekly by the Livepeer Grants committee. To discuss a potential grant application before submitting, ping the grants team in the `#governance` Discord channel.
+</Note>
+
+---
+
+## Principios de Contribución Comunitaria
+
+Estos se aplican en todos los repositorios y tipos de contribución de Livepeer:
+
+- **Lee antes de construir** — verifica problemas y discusiones existentes antes de comenzar un trabajo significativo
+- **Mantén los PRs enfocados** — un cambio lógico por solicitud de extracción
+- **Escribe mensajes de commit legibles** — usa el formato de Commits Convencionales
+- **Sé constructivo en las revisiones** — si una contribución no encaja, explica por qué y ofrece sugerencias para mejorar
+- **Enlaza a la documentación relevante** — al cerrar problemas o rechazar PRs, enlaza a recursos existentes cuando sea posible
+
+---
+
+<Tip>
+Not sure where to start? Search for issues labelled `good first issue` or `help wanted` across the [Livepeer GitHub organisation](https://github.com/livepeer). These are specifically tagged as appropriate entry points for new contributors.
+</Tip>
