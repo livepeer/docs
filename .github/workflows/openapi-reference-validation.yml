@@ -35,9 +35,42 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: tests/package-lock.json
+
+      - name: Restore Puppeteer browser cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/puppeteer
+          key: ${{ runner.os }}-puppeteer-${{ hashFiles('tests/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-puppeteer-
 
       - name: Install test dependencies
-        run: npm --prefix tests ci
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            echo "npm ci attempt ${attempt}/3"
+            if timeout 20m npm --prefix tests ci --no-audit --no-fund; then
+              exit 0
+            else
+              status=$?
+            fi
+
+            if [ "$status" -eq 124 ]; then
+              echo "::warning::npm ci timed out after 20 minutes (attempt ${attempt}/3)."
+            else
+              echo "::warning::npm ci failed with exit code ${status} (attempt ${attempt}/3)."
+            fi
+
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 20))
+            fi
+          done
+
+          echo "::error::Failed to install test dependencies after 3 attempts."
+          exit 1
 
       - name: Run strict OpenAPI audit (initial)
         id: initial_audit
