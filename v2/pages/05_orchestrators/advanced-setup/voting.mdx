@@ -1,0 +1,106 @@
+---
+title: 'Voting on Governance Proposals'
+sidebarTitle: 'Governance Voting'
+description: 'How orchestrators can vote on Livepeer governance proposals directly from the go-livepeer CLI, without importing keys into a browser wallet.'
+keywords: ["livepeer", "orchestrators", "governance", "voting", "go-livepeer", "livepeer_cli", "LIP", "on-chain"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+Orchestrators can participate in Livepeer on-chain governance **directly from the `go-livepeer` CLI** using `livepeer_cli`. This means you do **not** need to import your orchestrator wallet into a browser extension or third-party application—keeping your keys on the machine where they are already secured.
+
+<Info>
+  Voting support was added to `go-livepeer` in [PR #3275](https://github.com/livepeer/go-livepeer/pull/3275). Make sure you are running a version that includes this change.
+</Info>
+
+## Why vote from the CLI?
+
+- **Security** – Your private key never leaves the orchestrator node. No need to import it into a browser wallet (MetaMask, etc.) or a hot wallet on another machine.
+- **Convenience** – Vote from the same machine you use to manage your orchestrator without any additional tooling.
+- **Governance participation** – Orchestrators represent the stake delegated to them. Voting directly gives you and your delegators a voice in protocol upgrades, treasury proposals, and parameter changes.
+
+## Prerequisites
+
+- A running `go-livepeer` orchestrator node with `livepeer_cli` available.
+- Your orchestrator is bonded and active on Arbitrum mainnet (or the relevant testnet).
+- A live proposal on the [Livepeer Explorer](https://explorer.livepeer.org/voting) that is currently open for voting.
+
+## Steps to vote
+
+### 1. Get the poll contract address
+
+Open the [Livepeer Explorer voting page](https://explorer.livepeer.org/voting) and locate the active proposal you want to vote on. Copy the **poll contract address** displayed on the proposal detail page.
+
+<Tip>
+  The poll contract address looks like a standard Ethereum/Arbitrum address: `0x…`
+</Tip>
+
+### 2. Launch `livepeer_cli`
+
+On your orchestrator node, run:
+
+```bash
+livepeer_cli
+```
+
+### 3. Select "Vote on a poll"
+
+From the interactive menu, enter the number corresponding to **"Vote on a poll"**.
+
+### 4. Enter the poll contract address
+
+When prompted, paste the contract address you copied in step 1:
+
+```
+Enter the contract address for the poll you want to vote on - >
+```
+
+### 5. Choose your vote
+
+You will be shown the available options:
+
+```
+Identifier  Voting Options
+0           Yes
+1           No
+```
+
+Enter the identifier for your choice and confirm:
+
+```
+Enter the ID of the option you want to vote for - > 0
+Are you sure you want to vote "Yes" ? (y/n) - > y
+
+success
+```
+
+### 6. Wait for on-chain confirmation
+
+The node submits a vote transaction to Arbitrum. You can monitor the transaction in your node logs:
+
+```
+I0422 03:30:44.191809   43457 backend.go:96]
+******************************Eth Transaction******************************
+
+Invoking transaction: "vote". Inputs: "_choiceID: 0"  Hash: "0xf6957c190f1f16fc2ca4a93846903eb435c5e08fa7f6f40b6e159aab6d74905f".
+
+**************************************************************************
+```
+
+Once confirmed, your vote is visible on the Explorer poll page.
+
+## Voting power
+
+Your **voting power is proportional to your bonded stake** (self-stake + stake delegated to you). Delegators who have not voted separately will have their vote cast by you as their orchestrator. This is one reason it is important for orchestrators to participate actively in governance and communicate their positions to delegators.
+
+<Note>
+  Delegators can also vote independently via the [Livepeer Explorer](https://explorer.livepeer.org/voting), which will override the orchestrator's vote for their portion of stake.
+</Note>
+
+## See also
+
+<Columns cols={2}>
+  <Card title="Governance Overview" icon="box-ballot" href="/v2/pages/06_lptoken/governance/overview" arrow />
+  <Card title="Governance Processes" icon="vote-yea" href="/v2/pages/06_lptoken/governance/processes" arrow />
+  <Card title="Staking LPT" icon="coins" href="/v2/pages/05_orchestrators/advanced-setup/staking-LPT" arrow />
+  <Card title="Livepeer Explorer" icon="external-link" href="https://explorer.livepeer.org/voting" arrow />
+</Columns>
