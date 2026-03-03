@@ -53,6 +53,29 @@ fi
 # Create external docs directory if it doesn't exist
 mkdir -p "$EXTERNAL_DIR"
 
+if [ "${MINT_SKIP_EXTERNAL_FETCH:-0}" = "1" ]; then
+  echo "Skipping external documentation fetch (MINT_SKIP_EXTERNAL_FETCH=1)."
+  exit 0
+fi
+
+TTL_HOURS="${MINT_EXTERNAL_FETCH_TTL_HOURS:-24}"
+if ! [[ "$TTL_HOURS" =~ ^[0-9]+$ ]]; then
+  TTL_HOURS=24
+fi
+
+LAST_FETCH_FILE="$EXTERNAL_DIR/.last_fetch"
+if [ "${MINT_EXTERNAL_FETCH_FORCE:-0}" != "1" ] && [ -f "$LAST_FETCH_FILE" ]; then
+  LAST_FETCH_TS="$(cat "$LAST_FETCH_FILE" || echo "")"
+  if [[ "$LAST_FETCH_TS" =~ ^[0-9]+$ ]]; then
+    NOW_TS="$(date +%s)"
+    AGE_HOURS=$(( (NOW_TS - LAST_FETCH_TS) / 3600 ))
+    if [ "$AGE_HOURS" -lt "$TTL_HOURS" ]; then
+      echo "Skipping external documentation fetch (cached ${AGE_HOURS}h < ${TTL_HOURS}h)."
+      exit 0
+    fi
+  fi
+fi
+
 # Function to sanitize markdown for MDX compatibility
 sanitize_for_mdx() {
   perl -pe '
@@ -137,5 +160,7 @@ fetch_external_doc \
   "livepeer/go-livepeer box/box.md" \
   "https://raw.githubusercontent.com/livepeer/go-livepeer/master/box/box.md" \
   "$EXTERNAL_DIR/box-additional-config.mdx"
+
+date +%s > "$LAST_FETCH_FILE"
 
 echo "✓ External docs fetched successfully to $EXTERNAL_DIR"

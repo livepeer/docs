@@ -1,0 +1,38 @@
+task_id: 775
+base_branch: docs-v2
+branch: codex/775-mint-dev-optimizations
+scope_in:
+  - docs.json
+  - docs-index.json
+  - tools/scripts/snippets/fetch-external-docs.sh
+  - tests/utils/mintignore.js
+  - docs-guide/indexes/pages-index.mdx
+  - docs-guide/indexes/scripts-index.mdx
+  - tests/script-index.md
+  - tools/script-index.md
+  - v2/about/
+  - v2/developers/
+  - v2/orchestrators/
+  - v2/internal/
+  - v2/resources/
+  - v2/solutions/
+  - v2/es/
+  - v2/fr/
+  - v2/cn/
+  - v2/index.mdx
+scope_out: []
+allowed_generated:
+  - docs-index.json
+  - docs-guide/indexes/pages-index.mdx
+  - docs-guide/indexes/scripts-index.mdx
+  - tests/script-index.md
+  - tools/script-index.md
+  - v2/**/index.mdx
+acceptance_checks:
+  - node tests/unit/docs-navigation.test.js
+  - node tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged.md
+  - node tools/scripts/generate-pages-index.js --write
+  - node tools/scripts/generate-docs-guide-pages-index.js --write
+  - node tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes
+risk_flags: []
+follow_up_issues: []

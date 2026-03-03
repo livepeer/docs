@@ -34,6 +34,7 @@
 | `tests/unit/validate-codex-task-contract.test.js` | Validate codex task-contract PR-body marker enforcement behavior for codex branch checks. | `node tests/unit/validate-codex-task-contract.test.js` | docs |
 | `tests/utils/file-walker.js` | Utility script for tests/utils/file-walker.js. | `node tests/utils/file-walker.js` | docs |
 | `tests/utils/mdx-parser.js` | Utility script for tests/utils/mdx-parser.js. | `node tests/utils/mdx-parser.js` | docs |
+| `tests/utils/mintignore.js` | Helpers to evaluate .mintignore using gitignore semantics for test scanners. | `node tests/utils/mintignore.js` | docs |
 | `tests/utils/openapi-rolling-issue.js` | Shared helpers for OpenAPI rolling issue formatting, dedupe, and action selection. | `const helpers = require('./tests/utils/openapi-rolling-issue');` | docs |
 | `tests/utils/spell-checker.js` | Utility script for tests/utils/spell-checker.js. | `node tests/utils/spell-checker.js` | docs |
 {/* SCRIPT-INDEX:END */}
