@@ -1,26 +1,16 @@
-task_id: 774
-branch: codex/774-guides-and-tools-i18n
+task_id: 779
 base_branch: docs-v2
+branch: codex/779-auto-copilot-reviewer
 scope_in:
-  - docs.json
-  - docs-index.json
-  - docs-guide/indexes/pages-index.mdx
-  - tools/script-index.md
-  - v2/index.mdx
-  - v2/about/index.mdx
-  - v2/developers/index.mdx
-  - v2/cn/index.mdx
-  - v2/es/index.mdx
-  - v2/fr/index.mdx
-  - v2/internal/index.mdx
-  - v2/orchestrators/index.mdx
-  - v2/solutions/index.mdx
-  - v2/es/developers/guides-and-tools/
-  - v2/fr/developers/guides-and-tools/
-  - v2/cn/developers/guides-and-tools/
-  - v2/es/developers/livepeer-real-time-video/
+  - .github/workflows/auto-assign-docs-reviewers.yml
+scope_out: []
 allowed_generated:
   - .codex/pr-body.generated.md
+  - docs-guide/indexes/workflows-index.mdx
 acceptance_checks:
-  - node tools/scripts/generate-docs-guide-pages-index.js --write
-  - node tests/unit/script-docs.test.js --write --rebuild-indexes
+  - node tools/scripts/validate-codex-task-contract.js --branch codex/779-auto-copilot-reviewer --validate-contract-only
+  - node tools/scripts/validate-codex-task-contract.js --branch codex/779-auto-copilot-reviewer --files .github/workflows/auto-assign-docs-reviewers.yml
+  - node tests/run-pr-checks.js --base-ref docs-v2
+risk_flags:
+  - ci-impact
+follow_up_issues: []
