@@ -234,6 +234,38 @@ function runDocsNavigationCheck() {
   };
 }
 
+function runDocsJsonRedirectGuard(baseRef, changedFiles) {
+  if (!changedFiles.includes('docs.json')) {
+    return { label: 'docs.json /redirect Guard', status: 'skipped', files: 0, errors: 0, warnings: 0 };
+  }
+
+  try {
+    const mergeBase = runGit(`merge-base origin/${baseRef} HEAD`);
+    const diff = runGit(`diff --unified=0 ${mergeBase}..HEAD -- docs.json`);
+    const violations = diff
+      .split('\n')
+      .map((line) => line.trimEnd())
+      .filter((line) => /^[+-](?![+-])/.test(line) && line.includes('/redirect'));
+
+    if (violations.length > 0) {
+      console.error('\n❌ docs.json /redirect guard failed. Remove /redirect lines from docs.json changes.');
+      violations.forEach((line) => console.error(`  ${line}`));
+      return {
+        label: 'docs.json /redirect Guard',
+        status: 'failed',
+        files: 1,
+        errors: violations.length,
+        warnings: 0
+      };
+    }
+
+    return { label: 'docs.json /redirect Guard', status: 'passed', files: 1, errors: 0, warnings: 0 };
+  } catch (error) {
+    console.error(`\n❌ docs.json /redirect guard failed to run: ${error.message}`);
+    return { label: 'docs.json /redirect Guard', status: 'failed', files: 1, errors: 1, warnings: 0 };
+  }
+}
+
 function runGeneratedBannerCheck() {
   const cmd = spawnSync('node', ['tools/scripts/enforce-generated-file-banners.js', '--check'], {
     cwd: REPO_ROOT,
@@ -340,6 +372,7 @@ async function main() {
   checks.push(await runUnitCheck('Links & Imports', groups.docsMdxAbs, linksImportsTests.runTests));
   checks.push(runGlobalCheck('MDX Guardrails', mdxGuardsTests.runTests));
   checks.push(runDocsNavigationCheck());
+  checks.push(runDocsJsonRedirectGuard(args.baseRef, changedFiles));
   checks.push(runGeneratedBannerCheck());
   checks.push(runCodexTaskContractCheck(currentBranch, changedFiles, args.baseRef));
   checks.push(runCodexSkillSyncCheck());

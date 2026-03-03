@@ -27,6 +27,7 @@ The pre-commit hook enforces style guide compliance and runs verification script
 
 - ❌ **ThemeData usage** - Blocks deprecated ThemeData imports
 - ❌ **Hardcoded colors** - Warns about hardcoded hex colors that should use CSS variables
+- ❌ **`docs.json` `/redirect` diffs** - Blocks staged `docs.json` line changes that include `/redirect`
 - ⚠️ **Relative imports** - Warns about relative imports (should use absolute paths)
 - ⚠️ **@mintlify/components imports** - Warns about unnecessary imports (components are global)
 - ⚠️ **React hook imports** - Warns about unnecessary React imports (hooks are global)

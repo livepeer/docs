@@ -6,6 +6,7 @@ Notion database.
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
+- [Local Automation (No GitHub Secrets)](#local-automation-no-github-secrets)
 - [Core Workflow Scripts](#core-workflow-scripts)
 - [Data Files](#data-files)
 - [Reports](#reports)
@@ -63,6 +64,47 @@ npm install
 - `notion.pages.create({ parent, properties })` - Create new page in database
 - `notion.pages.update({ page_id, properties })` - Update existing page
   properties
+
+---
+
+## Local Automation (No GitHub Secrets)
+
+If you do not have repository secret access, use the local post-commit hook.
+This runs the canonical sync script on your machine only.
+
+### Install local hook
+
+```bash
+npm --prefix tools ci
+npm --prefix tools/notion ci
+npm --prefix tools/notion run sync:hook:install
+```
+
+### Default behavior
+
+- Trigger: after each local commit
+- Runs only when the last commit changed `docs.json` or `v2/*.md` / `v2/*.mdx`
+- Uses `tools/notion/.env` credentials
+- Mode default: `write`
+
+### Optional local controls
+
+```bash
+# run as analysis-only
+export NOTION_LOCAL_SYNC_MODE=dry-run
+
+# change stale tab value
+export NOTION_LOCAL_SYNC_STALE_TAB_NAME="Stale"
+
+# disable hook temporarily
+export NOTION_LOCAL_SYNC_DISABLE=1
+```
+
+### Remove local hook
+
+```bash
+npm --prefix tools/notion run sync:hook:remove
+```
 
 ---
 

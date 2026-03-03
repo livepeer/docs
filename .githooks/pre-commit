@@ -213,6 +213,22 @@ if [ -n "$WHITELIST_CHANGES" ]; then
     fi
 fi
 
+# Check for docs.json /redirect route changes (BLOCKED)
+DOCS_JSON_REDIRECT_DIFF=$(git diff --cached --unified=0 -- docs.json | grep -E '^[+-][^+-].*/redirect' || true)
+if [ -n "$DOCS_JSON_REDIRECT_DIFF" ]; then
+    VIOLATIONS=$((VIOLATIONS + 1))
+    echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${RED}║  docs.json /redirect CHANGES BLOCKED                         ║${NC}"
+    echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    echo -e "${RED}The staged docs.json diff includes '/redirect' entries:${NC}"
+    echo "$DOCS_JSON_REDIRECT_DIFF" | sed 's/^/  ❌ /'
+    echo ""
+    echo -e "${YELLOW}Remove '/redirect' lines from docs.json changes before committing.${NC}"
+    echo ""
+    WARNINGS+=("❌ docs.json includes blocked '/redirect' diff lines")
+fi
+
 # Check root directory structure against allowlist
 if [ "$SKIP_STRUCTURE_CHECK" = "1" ]; then
     echo -e "${YELLOW}⚠️  Structure checks bypassed (SKIP_STRUCTURE_CHECK=1)${NC}"
