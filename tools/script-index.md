@@ -11,6 +11,7 @@
 | `tools/scripts/audit-component-usage.js` | Utility script for tools/scripts/audit-component-usage.js. | `node tools/scripts/audit-component-usage.js` | docs |
 | `tools/scripts/audit-scripts.js` | Audit full-repo executable scripts, categorize usage/overlap, and overwrite SCRIPT_AUDIT reports. | `node tools/scripts/audit-scripts.js` | docs |
 | `tools/scripts/audit-tasks-folders.js` | Audit tasks folders, optionally normalize report locations, and optionally apply audit recommendations with conflict-safe moves. | `node tools/scripts/audit-tasks-folders.js` | docs |
+| `tools/scripts/audit-v1-to-v2-mapping.js` | Build a complete v1->v2 mapping audit (English IA canonical), including seed revalidation and adjudication queue. | `node tools/scripts/audit-v1-to-v2-mapping.js` | docs |
 | `tools/scripts/audit-v2-usefulness.js` | Audit v2 MDX pages (excluding x-* directories) and emit page-level usefulness matrix rows with source-weighted 2026 accuracy verification fields. | `node tools/scripts/audit-v2-usefulness.js --mode full --accuracy-mode tiered` | docs |
 | `tools/scripts/check-component-errors.js` | Utility script for tools/scripts/check-component-errors.js. | `node tools/scripts/check-component-errors.js` | docs |
 | `tools/scripts/cleanup-quarantine-manager.js` | Classify cleanup candidates and optionally quarantine files with a reversible manifest. | `node tools/scripts/cleanup-quarantine-manager.js` | docs |
@@ -34,6 +35,7 @@
 | `tools/scripts/download-linkedin-video.sh` | Utility script for tools/scripts/download-linkedin-video.sh. | `bash tools/scripts/download-linkedin-video.sh` | docs |
 | `tools/scripts/download-linkedin-with-cookies.sh` | Utility script for tools/scripts/download-linkedin-with-cookies.sh. | `bash tools/scripts/download-linkedin-with-cookies.sh` | docs |
 | `tools/scripts/enforce-generated-file-banners.js` | Enforce standardized hidden/visible generated banners and frontmatter across generated MDX outputs. | `node tools/scripts/enforce-generated-file-banners.js --check` | docs |
+| `tools/scripts/execute-phase1-worktree-plan.js` | Execute Phase 1 action-plan artifacts and route fixes inside the current docs-v2 worktree only. | `node tools/scripts/execute-phase1-worktree-plan.js` | docs |
 | `tools/scripts/final-verification.js` | Utility script for tools/scripts/final-verification.js. | `node tools/scripts/final-verification.js` | docs |
 | `tools/scripts/find-correct-url.js` | Utility script for tools/scripts/find-correct-url.js. | `node tools/scripts/find-correct-url.js` | docs |
 | `tools/scripts/generate-ai-sitemap.js` | Generate an AI-focused sitemap from v2 docs navigation. | `node tools/scripts/generate-ai-sitemap.js --write` | docs |
