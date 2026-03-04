@@ -46,12 +46,12 @@ Usage:
     - flags: `--strict` makes warnings fail.
     - info: Check local environment and repo readiness.
 
-  lpd dev [--test] [--test-mode fast|staged|full] [--script <path>] [-- ...mint args]
-    - flags: run advisory tests first, override launcher script, pass-through Mintlify args.
+  lpd dev [--test] [--test-mode fast|staged|full] [--script <path>] [--scoped] [--scope-...] [-- ...mint args]
+    - flags: run advisory tests first, optional scoped docs profile for large docs.json, override launcher script, pass-through Mintlify args.
     - info: Run local docs dev launcher.
 
-  lpd mint dev [-- ...mint args]
-    - flags: pass-through Mintlify args.
+  lpd mint dev [--scoped] [--scope-...] [-- ...mint args]
+    - flags: same as `lpd dev`, plus pass-through Mintlify args.
     - info: Compatibility alias to `lpd dev`.
 
   lpd test [--staged|--full] [--browser] [--domain v1|v2|both] [--wcag] [--wcag-no-fix] [--link-audit-external] [--base-url URL]
@@ -84,6 +84,9 @@ Examples:
 
   lpd dev --test --test-mode staged -- --port 3333
     - Runs staged checks, then launches docs server on port 3333.
+
+  lpd dev --scoped --scope-version v2 --scope-language en --scope-tab Developers
+    - Launches Mint with a reduced dev-only docs profile for faster startup and route transitions.
 
   lpd test --browser
     - Runs tests plus browser integration checks.
@@ -137,7 +140,7 @@ Command Groups:
   core
     lpd setup [--yes] [--no-tools] [--no-tests] [--no-hooks] [--with-mintlify] [--no-cli]
     lpd doctor [--strict] [--json]
-    lpd dev [--test] [--test-mode fast|staged|full] [-- ...mint args]
+    lpd dev [--test] [--test-mode fast|staged|full] [--scoped] [--scope-...] [-- ...mint args]
     lpd test [--staged|--full] [--browser] [--domain v1|v2|both] [--wcag] [--wcag-no-fix] [--link-audit-external] [--base-url URL]
     lpd ai-sitemap [--write|--check] [--json]
     lpd ci [--skip-browser] [--base-url URL]
@@ -918,6 +921,15 @@ cmd_dev() {
     local test_mode="fast"
     local script_path="$REPO_ROOT/tools/scripts/mint-dev.sh"
     local dry_run=0
+    local scoped_mode=0
+    local scope_interactive=0
+    local scope_file=""
+    local scope_versions=""
+    local scope_languages=""
+    local scope_tabs=""
+    local scope_prefixes=""
+    local skip_external_fetch=0
+    local disable_openapi=0
     local -a mint_args
     mint_args=()
 
@@ -948,12 +960,126 @@ cmd_dev() {
             --dry-run)
                 dry_run=1
                 ;;
+            --scoped)
+                scoped_mode=1
+                ;;
+            --scope-interactive)
+                scoped_mode=1
+                scope_interactive=1
+                ;;
+            --scope-file)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "dev" "--scope-file requires a path."
+                    return 1
+                fi
+                scoped_mode=1
+                scope_file="$2"
+                shift
+                ;;
+            --scope-file=*)
+                scoped_mode=1
+                scope_file="${1#--scope-file=}"
+                ;;
+            --scope-version)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "dev" "--scope-version requires a value."
+                    return 1
+                fi
+                scoped_mode=1
+                if [ -n "$scope_versions" ]; then
+                    scope_versions="$scope_versions,$2"
+                else
+                    scope_versions="$2"
+                fi
+                shift
+                ;;
+            --scope-version=*)
+                scoped_mode=1
+                if [ -n "$scope_versions" ]; then
+                    scope_versions="$scope_versions,${1#--scope-version=}"
+                else
+                    scope_versions="${1#--scope-version=}"
+                fi
+                ;;
+            --scope-language)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "dev" "--scope-language requires a value."
+                    return 1
+                fi
+                scoped_mode=1
+                if [ -n "$scope_languages" ]; then
+                    scope_languages="$scope_languages,$2"
+                else
+                    scope_languages="$2"
+                fi
+                shift
+                ;;
+            --scope-language=*)
+                scoped_mode=1
+                if [ -n "$scope_languages" ]; then
+                    scope_languages="$scope_languages,${1#--scope-language=}"
+                else
+                    scope_languages="${1#--scope-language=}"
+                fi
+                ;;
+            --scope-tab)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "dev" "--scope-tab requires a value."
+                    return 1
+                fi
+                scoped_mode=1
+                if [ -n "$scope_tabs" ]; then
+                    scope_tabs="$scope_tabs,$2"
+                else
+                    scope_tabs="$2"
+                fi
+                shift
+                ;;
+            --scope-tab=*)
+                scoped_mode=1
+                if [ -n "$scope_tabs" ]; then
+                    scope_tabs="$scope_tabs,${1#--scope-tab=}"
+                else
+                    scope_tabs="${1#--scope-tab=}"
+                fi
+                ;;
+            --scope-prefix)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "dev" "--scope-prefix requires a value."
+                    return 1
+                fi
+                scoped_mode=1
+                if [ -n "$scope_prefixes" ]; then
+                    scope_prefixes="$scope_prefixes,$2"
+                else
+                    scope_prefixes="$2"
+                fi
+                shift
+                ;;
+            --scope-prefix=*)
+                scoped_mode=1
+                if [ -n "$scope_prefixes" ]; then
+                    scope_prefixes="$scope_prefixes,${1#--scope-prefix=}"
+                else
+                    scope_prefixes="${1#--scope-prefix=}"
+                fi
+                ;;
+            --skip-external-fetch)
+                skip_external_fetch=1
+                ;;
+            --disable-openapi)
+                disable_openapi=1
+                ;;
+            --scope-*)
+                finish 1 "dev" "Unknown scoped option: $1"
+                return 1
+                ;;
             --json)
                 GLOBAL_JSON=1
                 ;;
             --help|-h)
                 cat <<'EOF'
-Usage: lpd dev [--test] [--test-mode fast|staged|full] [--script <path>] [--dry-run] [-- ...mint args]
+Usage: lpd dev [--test] [--test-mode fast|staged|full] [--script <path>] [--dry-run] [--scoped] [--scope-interactive] [--scope-file <path>] [--scope-version <csv>] [--scope-language <csv>] [--scope-tab <csv>] [--scope-prefix <csv>] [--skip-external-fetch] [--disable-openapi] [-- ...mint args]
 EOF
                 return 0
                 ;;
@@ -985,6 +1111,33 @@ EOF
     fi
 
     if [ "$dry_run" = "1" ]; then
+        if [ "$scoped_mode" = "1" ]; then
+            echo "Scoped mint profile: enabled"
+            if [ "$scope_interactive" = "1" ]; then
+                echo "  scope_interactive: true"
+            fi
+            if [ -n "$scope_file" ]; then
+                echo "  scope_file: $scope_file"
+            fi
+            if [ -n "$scope_versions" ]; then
+                echo "  scope_versions: $scope_versions"
+            fi
+            if [ -n "$scope_languages" ]; then
+                echo "  scope_languages: $scope_languages"
+            fi
+            if [ -n "$scope_tabs" ]; then
+                echo "  scope_tabs: $scope_tabs"
+            fi
+            if [ -n "$scope_prefixes" ]; then
+                echo "  scope_prefixes: $scope_prefixes"
+            fi
+        fi
+        if [ "$skip_external_fetch" = "1" ]; then
+            echo "External fetch: disabled"
+        fi
+        if [ "$disable_openapi" = "1" ]; then
+            echo "OpenAPI docs scope: disabled"
+        fi
         printf 'Dry run:'
         printf ' %q' "$script_path"
         if [ "${#mint_args[@]}" -gt 0 ]; then
@@ -992,6 +1145,45 @@ EOF
         fi
         printf '\n'
         return 0
+    fi
+
+    local -a env_vars
+    env_vars=()
+    if [ "$scoped_mode" = "1" ]; then
+        env_vars+=("LPD_SCOPED_MINT_DEV=1")
+    fi
+    if [ "$scope_interactive" = "1" ]; then
+        env_vars+=("LPD_MINT_SCOPE_INTERACTIVE=1")
+    fi
+    if [ -n "$scope_file" ]; then
+        env_vars+=("LPD_MINT_SCOPE_FILE=$scope_file")
+    fi
+    if [ -n "$scope_versions" ]; then
+        env_vars+=("LPD_MINT_SCOPE_VERSIONS=$scope_versions")
+    fi
+    if [ -n "$scope_languages" ]; then
+        env_vars+=("LPD_MINT_SCOPE_LANGUAGES=$scope_languages")
+    fi
+    if [ -n "$scope_tabs" ]; then
+        env_vars+=("LPD_MINT_SCOPE_TABS=$scope_tabs")
+    fi
+    if [ -n "$scope_prefixes" ]; then
+        env_vars+=("LPD_MINT_SCOPE_PREFIXES=$scope_prefixes")
+    fi
+    if [ "$skip_external_fetch" = "1" ]; then
+        env_vars+=("MINT_SKIP_EXTERNAL_FETCH=1")
+    fi
+    if [ "$disable_openapi" = "1" ]; then
+        env_vars+=("LPD_MINT_DISABLE_OPENAPI=1")
+    fi
+
+    if [ "${#env_vars[@]}" -gt 0 ]; then
+        if [ "${#mint_args[@]}" -gt 0 ]; then
+            env "${env_vars[@]}" "$script_path" "${mint_args[@]}"
+        else
+            env "${env_vars[@]}" "$script_path"
+        fi
+        return
     fi
 
     if [ "${#mint_args[@]}" -gt 0 ]; then

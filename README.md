@@ -38,6 +38,18 @@ bash lpd setup --yes
 lpd dev
 ```
 
+For very large `docs.json` runs (multi-version/language) use scoped dev profile mode:
+
+```bash
+lpd dev --scoped --scope-version v2 --scope-language en --scope-tab Developers
+```
+
+Interactive scoped picker:
+
+```bash
+lpd dev --scoped --scope-interactive
+```
+
 If `lpd` is not on PATH yet:
 
 ```bash
@@ -69,6 +81,11 @@ Recovery:
 
 1. Use `lpd dev` (or `bash tools/scripts/mint-dev.sh`) so the launcher applies the patch preflight and uses a watcher-safe path fallback.
 2. Re-run `bash tools/scripts/dev/ensure-mint-watcher-patch.sh --apply` after `mint update`.
+
+For very large docs trees with sluggish route transitions:
+
+1. Run `lpd dev --scoped ...` to load only the active version/language/tab/prefix.
+2. Add `--skip-external-fetch` during local iterations when external snippets do not need refresh.
 
 ## Core Capabilities (At a Glance)
 

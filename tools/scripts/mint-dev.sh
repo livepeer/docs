@@ -27,6 +27,16 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 MINT_WORKDIR="$REPO_ROOT"
+SCOPE_GENERATOR="$REPO_ROOT/tools/scripts/dev/generate-mint-dev-scope.js"
+SCOPED_MODE="${LPD_SCOPED_MINT_DEV:-0}"
+SCOPE_INTERACTIVE="${LPD_MINT_SCOPE_INTERACTIVE:-0}"
+SCOPE_FILE="${LPD_MINT_SCOPE_FILE:-}"
+SCOPE_VERSIONS="${LPD_MINT_SCOPE_VERSIONS:-}"
+SCOPE_LANGUAGES="${LPD_MINT_SCOPE_LANGUAGES:-}"
+SCOPE_TABS="${LPD_MINT_SCOPE_TABS:-}"
+SCOPE_PREFIXES="${LPD_MINT_SCOPE_PREFIXES:-}"
+DISABLE_OPENAPI="${LPD_MINT_DISABLE_OPENAPI:-0}"
+MINT_LOCK_FILE=""
 
 # chokidar treats glob metacharacters in watch paths as patterns. If the repo
 # path includes brackets (common in worktree names), change events can be lost.
@@ -49,6 +59,111 @@ if path_has_glob_meta "$REPO_ROOT"; then
     MINT_WORKDIR="$WATCH_SAFE_LINK"
     echo "Using watcher-safe path for mint dev: $MINT_WORKDIR"
 fi
+
+mint_lock_file_path() {
+    local repo_hash
+    repo_hash="$(printf '%s' "$REPO_ROOT" | cksum | awk '{print $1}')"
+    echo "/tmp/lpd-mint-dev-lock-${repo_hash}.pid"
+}
+
+ensure_no_active_mint_dev() {
+    local lock_file="$1"
+    if [ ! -f "$lock_file" ]; then
+        return 0
+    fi
+
+    local existing_pid existing_workdir
+    existing_pid="$(sed -n '1p' "$lock_file" 2>/dev/null || true)"
+    existing_workdir="$(sed -n '2p' "$lock_file" 2>/dev/null || true)"
+
+    if [ -n "$existing_pid" ] && kill -0 "$existing_pid" 2>/dev/null; then
+        echo "Error: mint dev is already running for this repository." >&2
+        echo "  pid: $existing_pid" >&2
+        if [ -n "$existing_workdir" ]; then
+            echo "  workspace: $existing_workdir" >&2
+        fi
+        echo "Stop the existing process before launching another dev session." >&2
+        exit 1
+    fi
+
+    rm -f "$lock_file"
+}
+
+cleanup_lock_file() {
+    if [ -n "$MINT_LOCK_FILE" ]; then
+        rm -f "$MINT_LOCK_FILE"
+    fi
+}
+
+build_scoped_workspace() {
+    if ! command -v node >/dev/null 2>&1; then
+        echo "Error: node is required for --scoped dev profile generation." >&2
+        exit 1
+    fi
+
+    if [ ! -f "$SCOPE_GENERATOR" ]; then
+        echo "Error: scoped profile generator not found: $SCOPE_GENERATOR" >&2
+        exit 1
+    fi
+
+    local -a scope_cmd
+    scope_cmd=(node "$SCOPE_GENERATOR" --repo-root "$REPO_ROOT")
+
+    if [ "$SCOPE_INTERACTIVE" = "1" ]; then
+        scope_cmd+=(--interactive)
+    fi
+    if [ -n "$SCOPE_FILE" ]; then
+        scope_cmd+=(--scope-file "$SCOPE_FILE")
+    fi
+    if [ -n "$SCOPE_VERSIONS" ]; then
+        scope_cmd+=(--versions "$SCOPE_VERSIONS")
+    fi
+    if [ -n "$SCOPE_LANGUAGES" ]; then
+        scope_cmd+=(--languages "$SCOPE_LANGUAGES")
+    fi
+    if [ -n "$SCOPE_TABS" ]; then
+        scope_cmd+=(--tabs "$SCOPE_TABS")
+    fi
+    if [ -n "$SCOPE_PREFIXES" ]; then
+        scope_cmd+=(--prefixes "$SCOPE_PREFIXES")
+    fi
+    if [ "$DISABLE_OPENAPI" = "1" ]; then
+        scope_cmd+=(--disable-openapi)
+    fi
+
+    local scope_json
+    if ! scope_json="$("${scope_cmd[@]}")"; then
+        echo "Error: failed to generate scoped Mint workspace." >&2
+        exit 1
+    fi
+
+    local parsed
+    if ! parsed="$(printf '%s' "$scope_json" | node -e '
+let input = "";
+process.stdin.on("data", (chunk) => { input += chunk; });
+process.stdin.on("end", () => {
+  const payload = JSON.parse(input);
+  const original = payload && payload.routeCounts ? Number(payload.routeCounts.original || 0) : 0;
+  const scoped = payload && payload.routeCounts ? Number(payload.routeCounts.scoped || 0) : 0;
+  const data = [payload.workspaceDir || "", payload.scopeHash || "", String(original), String(scoped)];
+  process.stdout.write(data.join("|"));
+});
+')"; then
+        echo "Error: invalid scoped profile output from generator." >&2
+        exit 1
+    fi
+
+    local scoped_workspace scope_hash original_routes scoped_routes
+    IFS='|' read -r scoped_workspace scope_hash original_routes scoped_routes <<< "$parsed"
+
+    if [ -z "$scoped_workspace" ] || [ ! -d "$scoped_workspace" ]; then
+        echo "Error: scoped workspace path is invalid: $scoped_workspace" >&2
+        exit 1
+    fi
+
+    MINT_WORKDIR="$scoped_workspace"
+    echo "Using scoped Mint workspace: $MINT_WORKDIR (routes ${scoped_routes}/${original_routes}, hash ${scope_hash})"
+}
 
 cd "$REPO_ROOT"
 
@@ -89,5 +204,19 @@ fi
 echo "Fetching external snippets..."
 bash tools/scripts/snippets/fetch-external-docs.sh
 
+if [ "$SCOPED_MODE" = "1" ]; then
+    build_scoped_workspace
+elif [ "$DISABLE_OPENAPI" = "1" ]; then
+    echo "Warning: --disable-openapi has no effect without --scoped."
+fi
+
+MINT_LOCK_FILE="$(mint_lock_file_path)"
+ensure_no_active_mint_dev "$MINT_LOCK_FILE"
+{
+    echo "$$"
+    echo "$MINT_WORKDIR"
+} > "$MINT_LOCK_FILE"
+trap cleanup_lock_file EXIT INT TERM
+
 cd "$MINT_WORKDIR"
-exec mint dev "$@"
+mint dev "$@"

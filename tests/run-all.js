@@ -37,6 +37,7 @@ const spellingTests = require('./unit/spelling.test');
 const qualityTests = require('./unit/quality.test');
 const linksImportsTests = require('./unit/links-imports.test');
 const docsNavigationTests = require('./unit/docs-navigation.test');
+const lpdScopedMintDevTests = require('./unit/lpd-scoped-mint-dev.test');
 const scriptDocsTests = require('./unit/script-docs.test');
 const pagesIndexGenerator = require('../tools/scripts/generate-pages-index');
 const browserTests = require('./integration/browser.test');
@@ -83,6 +84,18 @@ function hasMdxGuardsRelevance(stagedFiles) {
 function hasDocsNavigationRelevance(stagedFiles) {
   if (!stagedOnly) return true;
   return hasAnyPrefix(stagedFiles, ['docs.json', 'tests/unit/docs-navigation.test.js']);
+}
+
+function hasLpdScopedMintDevRelevance(stagedFiles) {
+  if (!stagedOnly) return true;
+  return hasAnyExact(stagedFiles, [
+    'lpd',
+    'docs.json',
+    '.mintignore',
+    'tools/scripts/mint-dev.sh',
+    'tools/scripts/dev/generate-mint-dev-scope.js',
+    'tests/unit/lpd-scoped-mint-dev.test.js'
+  ]);
 }
 
 function hasGeneratedBannerRelevance(stagedFiles) {
@@ -182,6 +195,16 @@ async function runAllTests() {
   } else {
     console.log('\n🧭 Running Docs Navigation Validation...');
     console.log('   skipped (no staged docs-navigation-owned paths)');
+  }
+
+  if (hasLpdScopedMintDevRelevance(stagedFiles)) {
+    console.log('\n🚀 Running LPD Scoped Mint Dev Tests...');
+    const scopedMintDevResult = await lpdScopedMintDevTests.runTests();
+    totalErrors += scopedMintDevResult.errors.length;
+    console.log(`   ${scopedMintDevResult.errors.length} errors, 0 warnings`);
+  } else {
+    console.log('\n🚀 Running LPD Scoped Mint Dev Tests...');
+    console.log('   skipped (no staged scoped-mint-owned paths)');
   }
 
   // Script Docs Enforcement

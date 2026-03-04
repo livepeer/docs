@@ -1,34 +1,28 @@
-task_id: 782
+task_id: 788
+branch: codex/788-scoped-lpd-mint-dev-profiles
 base_branch: docs-v2
-branch: codex/782-workflow-softening-overrides
 scope_in:
   - .codex/task-contract.yaml
-  - .github/AGENTS.md
-  - .github/augment-instructions.md
+  - lpd
+  - tools/scripts/mint-dev.sh
+  - tools/scripts/dev/
+  - tests/unit/
+  - tests/run-all.js
+  - docs-guide/lpd.mdx
   - README.md
-  - contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md
-  - contribute/CONTRIBUTING/GIT-HOOKS.md
-  - ai-tools/ai-rules/HUMAN-OVERRIDE-POLICY.md
-  - ai-tools/ai-rules/AI_GUIDELINES.md
-  - ai-tools/ai-rules/rules/git-safety.md
-  - ai-tools/ai-rules/rules/imported/AI_GUIDELINES.md
-  - ai-tools/ai-skills/templates/31-codex-task-isolation-standard.template.md
-  - tools/scripts/codex-safe-merge-with-stash.js
-  - tools/scripts/codex-commit.js
   - tools/script-index.md
-  - tests/unit/codex-safe-merge-with-stash.test.js
-  - tests/unit/codex-commit.test.js
   - tests/script-index.md
-scope_out:
-  - v1/
+  - docs-guide/indexes/scripts-index.mdx
+scope_out: []
 allowed_generated:
   - .codex/pr-body.generated.md
-  - docs-guide/indexes/scripts-index.mdx
 acceptance_checks:
-  - node tests/unit/script-docs.test.js
-  - node tests/unit/codex-safe-merge-with-stash.test.js
-  - node tests/unit/codex-commit.test.js
-  - node tests/run-pr-checks.js --base-ref docs-v2
+  - node tests/unit/lpd-scoped-mint-dev.test.js
+  - node tests/unit/script-docs.test.js --files tools/scripts/dev/generate-mint-dev-scope.js --files tests/unit/lpd-scoped-mint-dev.test.js --check-indexes
+  - node tools/scripts/dev/generate-mint-dev-scope.js --repo-root . --versions v2 --languages en --tabs Developers --disable-openapi --print-only
+  - bash lpd dev --dry-run --scoped --scope-version v2 --scope-language en --scope-tab Developers --scope-prefix v2/gateways --disable-openapi
 risk_flags:
-  - ci-impact
+  - performance
+  - cli-contract
+  - docs-navigation
 follow_up_issues: []

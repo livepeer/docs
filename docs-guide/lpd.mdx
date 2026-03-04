@@ -114,8 +114,8 @@ lpd tools dev test-add-callouts -- --help
     { Command: "lpd version", "Flags available": "--json (global prefix)", Purpose: "CLI version", "JSON-capable": "Yes" },
     { Command: "lpd setup", "Flags available": "--yes, --no-tools, --no-tests, --no-hooks, --with-mintlify, --no-cli, --json", Purpose: "Bootstrap dependencies, hooks, and PATH wiring", "JSON-capable": "Yes" },
     { Command: "lpd doctor", "Flags available": "--strict, --json", Purpose: "Environment and repo-readiness checks", "JSON-capable": "Yes" },
-    { Command: "lpd dev", "Flags available": "--test, --test-mode, --script, --script=, --dry-run, --json, --", Purpose: "Run local docs dev launcher", "JSON-capable": "Yes" },
-    { Command: "lpd mint dev", "Flags available": "-- (pass-through), --json (global prefix)", Purpose: "Alias to lpd dev", "JSON-capable": "Yes" },
+    { Command: "lpd dev", "Flags available": "--test, --test-mode, --script, --script=, --dry-run, --scoped, --scope-interactive, --scope-file, --scope-version, --scope-language, --scope-tab, --scope-prefix, --skip-external-fetch, --disable-openapi, --json, --", Purpose: "Run local docs dev launcher (optionally with scoped dev docs profile)", "JSON-capable": "Yes" },
+    { Command: "lpd mint dev", "Flags available": "same as lpd dev; --json (global prefix)", Purpose: "Alias to lpd dev", "JSON-capable": "Yes" },
     { Command: "lpd test", "Flags available": "--staged, --full, --browser, --domain, --wcag, --wcag-no-fix, --link-audit-external, --base-url, --json", Purpose: "Run tests and optional audits", "JSON-capable": "Yes" },
     { Command: "lpd ci", "Flags available": "--skip-browser, --base-url, --json", Purpose: "Run CI-like local validation", "JSON-capable": "Yes" },
     { Command: "lpd ai-sitemap", "Flags available": "--write, --check, --json", Purpose: "Generate/validate sitemap-ai.xml", "JSON-capable": "Yes" },
@@ -275,7 +275,7 @@ For deeper test/audit script behaviour and owning paths, see [`quality-gates`](.
 
     **Usage**
     ```bash
-    lpd dev [--test] [--test-mode fast|staged|full] [--script <path>] [--script=<path>] [--dry-run] [--json] [-- ...mint args]
+    lpd dev [--test] [--test-mode fast|staged|full] [--script <path>] [--script=<path>] [--dry-run] [--scoped] [--scope-interactive] [--scope-file <path>] [--scope-version <csv>] [--scope-language <csv>] [--scope-tab <csv>] [--scope-prefix <csv>] [--skip-external-fetch] [--disable-openapi] [--json] [-- ...mint args]
     ```
 
     **Examples**
@@ -284,6 +284,8 @@ For deeper test/audit script behaviour and owning paths, see [`quality-gates`](.
     lpd dev --test --test-mode staged
     lpd dev --dry-run -- --port 3333
     lpd dev --script tools/scripts/mint-dev.sh -- --port 3001
+    lpd dev --scoped --scope-version v2 --scope-language en --scope-tab Developers
+    lpd dev --scoped --scope-interactive
     ```
 
     **Flags**
@@ -299,6 +301,33 @@ For deeper test/audit script behaviour and owning paths, see [`quality-gates`](.
     <ResponseField name="--dry-run" type="boolean" default="false">
       Prints the resolved launcher command and exits.
     </ResponseField>
+    <ResponseField name="--scoped" type="boolean" default="false">
+      Enables scoped dev profile generation so Mint runs against a reduced dev-only `docs.json` and `.mintignore` in `/tmp/lpd-mint-dev/<hash>`.
+    </ResponseField>
+    <ResponseField name="--scope-interactive" type="boolean" default="false">
+      Prompts for versions, languages, tabs, and route prefixes before generating the scoped dev profile.
+    </ResponseField>
+    <ResponseField name="--scope-file <path>" type="string" default="">
+      Reads scoped profile selections from a JSON file (`versions`, `languages`, `tabs`, `prefixes`, optional `disableOpenapi`).
+    </ResponseField>
+    <ResponseField name="--scope-version <csv>" type="string" default="all">
+      Limits navigation versions included in the scoped profile (repeatable).
+    </ResponseField>
+    <ResponseField name="--scope-language <csv>" type="string" default="all">
+      Limits languages included in the scoped profile (repeatable).
+    </ResponseField>
+    <ResponseField name="--scope-tab <csv>" type="string" default="all">
+      Limits tabs included in the scoped profile (repeatable).
+    </ResponseField>
+    <ResponseField name="--scope-prefix <csv>" type="string" default="all">
+      Limits docs routes by prefix (for example: `v2/gateways`, `v2/about`), useful for very large nav trees.
+    </ResponseField>
+    <ResponseField name="--skip-external-fetch" type="boolean" default="false">
+      Sets `MINT_SKIP_EXTERNAL_FETCH=1` so external snippets fetch is skipped for this run.
+    </ResponseField>
+    <ResponseField name="--disable-openapi" type="boolean" default="false">
+      Excludes OpenAPI API-reference routes from the scoped profile (`--scoped` mode only).
+    </ResponseField>
     <ResponseField name="--json" type="boolean" default="false">
       Enables JSON status envelope output.
     </ResponseField>
@@ -313,12 +342,13 @@ For deeper test/audit script behaviour and owning paths, see [`quality-gates`](.
 
     **Usage**
     ```bash
-    lpd mint dev [-- ...mint args]
+    lpd mint dev [--scoped] [--scope-...] [-- ...mint args]
     ```
 
     **Examples**
     ```bash
     lpd mint dev
+    lpd mint dev --scoped --scope-version v2 --scope-language en --scope-tab Developers
     lpd mint dev -- --port 3333
     ```
   </ResponseField>
@@ -774,6 +804,20 @@ Pass a port through the launcher:
 
 ```bash
 lpd dev -- --port 3334
+```
+
+### Slow startup or slow route changes on very large `docs.json`
+
+Use scoped dev mode so Mint loads only the version/language/tab/prefix you are actively editing:
+
+```bash
+lpd dev --scoped --scope-version v2 --scope-language en --scope-tab Developers
+```
+
+Interactive picker:
+
+```bash
+lpd dev --scoped --scope-interactive
 ```
 
 ## JSON Output
