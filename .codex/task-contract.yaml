@@ -1,26 +1,34 @@
-task_id: 774
-branch: codex/774-guides-and-tools-i18n
+task_id: 782
 base_branch: docs-v2
+branch: codex/782-workflow-softening-overrides
 scope_in:
-  - docs.json
-  - docs-index.json
-  - docs-guide/indexes/pages-index.mdx
+  - .codex/task-contract.yaml
+  - .github/AGENTS.md
+  - .github/augment-instructions.md
+  - README.md
+  - contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md
+  - contribute/CONTRIBUTING/GIT-HOOKS.md
+  - ai-tools/ai-rules/HUMAN-OVERRIDE-POLICY.md
+  - ai-tools/ai-rules/AI_GUIDELINES.md
+  - ai-tools/ai-rules/rules/git-safety.md
+  - ai-tools/ai-rules/rules/imported/AI_GUIDELINES.md
+  - ai-tools/ai-skills/templates/31-codex-task-isolation-standard.template.md
+  - tools/scripts/codex-safe-merge-with-stash.js
+  - tools/scripts/codex-commit.js
   - tools/script-index.md
-  - v2/index.mdx
-  - v2/about/index.mdx
-  - v2/developers/index.mdx
-  - v2/cn/index.mdx
-  - v2/es/index.mdx
-  - v2/fr/index.mdx
-  - v2/internal/index.mdx
-  - v2/orchestrators/index.mdx
-  - v2/solutions/index.mdx
-  - v2/es/developers/guides-and-tools/
-  - v2/fr/developers/guides-and-tools/
-  - v2/cn/developers/guides-and-tools/
-  - v2/es/developers/livepeer-real-time-video/
+  - tests/unit/codex-safe-merge-with-stash.test.js
+  - tests/unit/codex-commit.test.js
+  - tests/script-index.md
+scope_out:
+  - v1/
 allowed_generated:
   - .codex/pr-body.generated.md
+  - docs-guide/indexes/scripts-index.mdx
 acceptance_checks:
-  - node tools/scripts/generate-docs-guide-pages-index.js --write
-  - node tests/unit/script-docs.test.js --write --rebuild-indexes
+  - node tests/unit/script-docs.test.js
+  - node tests/unit/codex-safe-merge-with-stash.test.js
+  - node tests/unit/codex-commit.test.js
+  - node tests/run-pr-checks.js --base-ref docs-v2
+risk_flags:
+  - ci-impact
+follow_up_issues: []

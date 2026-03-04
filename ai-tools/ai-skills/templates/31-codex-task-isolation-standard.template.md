@@ -27,7 +27,7 @@ Goal
 Execute implementation tasks in isolation with an explicit task contract, branch binding, and validation evidence that blocks scope drift.
 
 Constraints
-- Do not bypass hooks (`--no-verify` or `-n`).
+- Do not bypass hooks by default. `git commit --no-verify` is allowed only when explicitly instructed by a human in-thread and must follow `ai-tools/ai-rules/HUMAN-OVERRIDE-POLICY.md`.
 - Use dedicated `codex/<issue-id>-<slug>` branches for agent implementation tasks.
 - Keep `scope_in` minimal and explicit; do not include unrelated paths.
 - Do not force push codex branches unless explicit human approval is provided.

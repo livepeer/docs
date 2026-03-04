@@ -15,6 +15,8 @@
 | `tools/scripts/audit-v2-usefulness.js` | Audit v2 MDX pages (excluding x-* directories) and emit page-level usefulness matrix rows with source-weighted 2026 accuracy verification fields. | `node tools/scripts/audit-v2-usefulness.js --mode full --accuracy-mode tiered` | docs |
 | `tools/scripts/check-component-errors.js` | Utility script for tools/scripts/check-component-errors.js. | `node tools/scripts/check-component-errors.js` | docs |
 | `tools/scripts/cleanup-quarantine-manager.js` | Classify cleanup candidates and optionally quarantine files with a reversible manifest. | `node tools/scripts/cleanup-quarantine-manager.js` | docs |
+| `tools/scripts/codex-commit.js` | Create commits through a guarded interface that supports audited human-requested no-verify overrides. | `node tools/scripts/codex-commit.js --message "chore: update docs"` | docs |
+| `tools/scripts/codex-safe-merge-with-stash.js` | Safely execute an explicit merge request by stashing local changes, merging a target ref, and restoring the stash. | `node tools/scripts/codex-safe-merge-with-stash.js --target docs-v2` | docs |
 | `tools/scripts/component-layout-governance.js` | Validate v2 English docs against component-layout contracts by page type. | `node tools/scripts/component-layout-governance.js --scope full` | docs |
 | `tools/scripts/convert-rss-to-mdx.js` | Convert an RSS feed XML file into a structured MDX document. | `node tools/scripts/convert-rss-to-mdx.js --input v2/internal/assets/transcripts/ycomb.rss --output v2/internal/assets/transcripts/ycomb.mdx` | docs |
 | `tools/scripts/create-codex-pr.js` | Generate a codex PR body from task contract metadata and optionally open a prefilled GitHub pull request. | `node tools/scripts/create-codex-pr.js --create` | docs |

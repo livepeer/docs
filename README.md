@@ -138,6 +138,7 @@ For agent implementation branches, use:
 - branch name: `codex/<issue-id>-<slug>`
 - task contract file: `.codex/task-contract.yaml`
 - required PR sections: `Scope`, `Validation`, `Follow-up Tasks`
+- override policy (human-directed only): `ai-tools/ai-rules/HUMAN-OVERRIDE-POLICY.md`
 
 Enforcement runs on `codex/*` only via:
 
@@ -152,6 +153,11 @@ node tools/scripts/create-codex-pr.js --create
 
 This generates `.codex/pr-body.generated.md` and calls `gh pr create --body-file ...`.
 Codex PR CI also requires the generated marker in the PR body, so manual bodies without the marker fail contract validation.
+
+When a human explicitly requests merge or no-verify commit operations:
+
+- safe merge flow: `node tools/scripts/codex-safe-merge-with-stash.js --target <branch-or-ref>`
+- audited no-verify commit flow: `node tools/scripts/codex-commit.js --message "..." --no-verify --human-override true --override-note "..."`
 
 Contributor deep docs:
 

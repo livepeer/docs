@@ -7,7 +7,8 @@
 - **NEVER** run `git commit` without explicit user permission
 - **NEVER** run `git push` without explicit user permission
 - **NEVER** run `git reset` (soft/hard/mixed) without explicit user permission
-- **NEVER** use `--no-verify` flag to bypass hooks
+- **DEFAULT:** do not use `--no-verify` to bypass hooks
+- **EXCEPTION:** only when explicitly instructed by a human in-thread, `git commit --no-verify` is allowed with audit metadata per `ai-tools/ai-rules/HUMAN-OVERRIDE-POLICY.md`
 - **NEVER** modify git history or remote state
 - **ALWAYS** ask before ANY git operation that could lose work
 

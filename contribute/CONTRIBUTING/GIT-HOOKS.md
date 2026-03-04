@@ -18,6 +18,27 @@ Git hooks are scripts that run automatically at certain points in the git workfl
 2. **Enforce scoped changes** - blocks pushes with out-of-scope files
 3. **Block force push by default** - allows override only with explicit env flag
 
+## Agent Workflow Defaults (Multi-Agent Safe)
+
+- Default path for agents is PR-only: commit scoped changes and open a PR.
+- Merge operations are explicit-only and run only when a human asks to merge now.
+- Hook bypass is disallowed by default; `git commit --no-verify` is allowed only with explicit human instruction and audited metadata per `ai-tools/ai-rules/HUMAN-OVERRIDE-POLICY.md`.
+
+### Explicit Merge Flow (When Human Requests Merge)
+
+Use the helper script to run stash/merge/pop safely:
+
+```bash
+node tools/scripts/codex-safe-merge-with-stash.js --target <branch-or-ref>
+```
+
+Behavior:
+
+1. Stashes tracked + untracked local changes.
+2. Merges the requested target.
+3. Pops the stash after successful merge.
+4. Stops on merge conflicts or stash-pop conflicts and prints recovery guidance.
+
 ## Pre-commit Hook
 
 ### LPD Hook Commands
@@ -326,9 +347,13 @@ WARNINGS+=("❌ $file: Error message")
 VIOLATIONS=$((VIOLATIONS + 1))
 ```
 
-## Bypassing Hooks (Not Recommended)
+## Hook Overrides (Human-Directed Only)
 
-**⚠️ WARNING:** Only bypass hooks if you have a legitimate reason and understand the consequences.
+Default behavior is no hook bypass. Canonical policy:
+
+- `ai-tools/ai-rules/HUMAN-OVERRIDE-POLICY.md`
+
+`git commit --no-verify` is permitted only when explicitly requested by a human in-thread and must include override audit metadata.
 
 ### Protected `.allowlist` Edits (Human-Only)
 
@@ -354,9 +379,14 @@ git commit -m "Remove obsolete files" --trailer "allow-deletions=true"
 
 This override is scoped to deletions and still runs all other pre-commit checks.
 
+Use the audited helper for human-requested no-verify commits:
+
 ```bash
-# Bypass pre-commit hook
-git commit --no-verify -m "message"
+node tools/scripts/codex-commit.js \
+  --message "..." \
+  --no-verify \
+  --human-override true \
+  --override-note "..."
 ```
 
 **Why this is discouraged:**
@@ -399,7 +429,7 @@ If the hook takes too long:
 
 1. **Check verification scripts** - Some checks (like Mintlify build) can be slow
 2. **Make checks optional** - Comment out slow checks for local development
-3. **Use `--no-verify`** - Only if absolutely necessary (see warning above)
+3. **Do not bypass by default** - Use the audited override flow only when explicitly instructed by a human
 
 ## For CI/CD
 

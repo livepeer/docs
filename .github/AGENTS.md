@@ -4,8 +4,10 @@
 
 - **ALWAYS** check for the existence of local Git hooks in `.git/hooks/` before
   initiating a write command.
-- **NEVER** use `--no-verify` or `-n` flags to bypass safety checks. These are
-  hard project constraints.
+- **DEFAULT:** Do not use `--no-verify` or `-n` to bypass safety checks.
+- **EXCEPTION:** Only when explicitly instructed by a human in-thread, `git commit --no-verify`
+  is allowed with audit metadata per
+  `ai-tools/ai-rules/HUMAN-OVERRIDE-POLICY.md`.
 - **NEVER** perform a `git reset --hard` or `git push --force` without an
   explicit, multi-turn plan confirmed by the user.
 - **NEVER** perform a `git reset --hard` or `git push --force` without a saved

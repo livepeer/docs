@@ -151,16 +151,24 @@ import { Component } from "/snippets/components/Component.jsx";
 
 ## Bypassing Hooks
 
-**⚠️ CRITICAL:** Agents MUST NOT bypass hooks without explicit user permission.
+**⚠️ CRITICAL:** Agents MUST NOT bypass hooks by default.
 
-The `.github/augment-instructions.md` explicitly states:
-- **NEVER** use `--no-verify` flag to bypass hooks
-- This is a hard project constraint
+Canonical policy:
+- `ai-tools/ai-rules/HUMAN-OVERRIDE-POLICY.md`
+- Default is normal hook-enforced commits.
+- Exception is limited to `git commit --no-verify` when explicitly requested by a human in-thread.
+- Override usage must include audit metadata (`override_type`, `requested_by`, `request_context`, `reason`).
 
 If you encounter a false positive:
 1. Report it to the user
 2. Ask for guidance
-3. Do NOT bypass the hook
+3. Use normal commit flow unless the user explicitly requests no-verify
+
+If the user explicitly requests no-verify for a commit, use:
+
+```bash
+node tools/scripts/codex-commit.js --message "..." --no-verify --human-override true --override-note "..."
+```
 
 If a human explicitly needs to edit `.allowlist`, they must commit with:
 
