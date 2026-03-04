@@ -1,22 +1,17 @@
 ---
 title: GPU Support
-keywords: ["livepeer", "gateways", "references", "go livepeer", "gpu support", "support"]
+description: 'NVIDIA GPUs tested with Livepeer for video transcoding (including HEVC) and AI inference workloads.'
+keywords: ["livepeer", "gateways", "references", "go livepeer", "gpu support", "support", "HEVC", "H.265", "AI", "transcoding"]
 og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
 ---
 
+Livepeer enables node operators to transcode video on GPUs while performing
+other CUDA operations such as AI inference. As there is a very wide range of GPU
+hardware out there, this document aims to crowdsource a list of specific GPU
+models that have been tested and verified to work on Livepeer. If you've tested
+an additional model, please submit an update to this document.
 
-
-
-<Danger>  From v1 </Danger>
-
-Livepeer enables node operators to transcode video on GPUs while concurrently
-mining cryptocurrencies and performing other CUDA operations such as machine
-learning. As there is a very wide range of GPU hardware out there, this document
-aims to crowdsource a list of specific GPU models that have been tested and
-verified to work on Livepeer. If you've tested an additional model, please
-submit an update to this document.
-
-## Overview
+## Transcoding GPUs
 
 - Livepeer supports transcoding on NVIDIA GPUs with NVENC/NVDEC. Any GPU
   [listed here](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new)
@@ -26,21 +21,60 @@ submit an update to this document.
 - See
   [this document which lists tested driver versions](https://github.com/livepeer/go-livepeer/blob/master/doc/gpu.md)
   on the NVIDIA cards.
+- **HEVC (H.265)** hardware encode/decode support is available on Maxwell Gen 2
+  and later NVIDIA architectures. HEVC is increasingly important on the Livepeer
+  network as it delivers better compression efficiency than H.264.
 
-| GPU Model                     | Tested Transcoding | Tested Concurrent Ethash Mining | Notes                                                                                                  |     |
-| ----------------------------- | ------------------ | ------------------------------- | ------------------------------------------------------------------------------------------------------ | --- |
-| NVIDIA GeForce GTX 950        | ✅                 |                                 | [Benchmarks](https://forum.livepeer.org/t/gtx-950-quadro-p400-benchmarks/1497)                         |     |
-| NVIDIA GeForce GTX 1060       | ✅                 | ✅                              |                                                                                                        |
-| NVIDIA GeForce GTX 1070       | ✅                 |                                 |                                                                                                        |
-| NVIDIA GeForce GTX 1070 Ti    | ✅                 | ✅                              |                                                                                                        |
-| NVIDIA GeForce GTX 1080       | ✅                 |                                 |                                                                                                        |
-| NVIDIA GeForce GTX 1080 Ti    | ✅                 |                                 |                                                                                                        |
-| NVIDIA Tesla T4               | ✅                 |                                 |                                                                                                        |
-| NVIDIA GeForce GTX 1660 Ti    | ✅                 |                                 |                                                                                                        |
-| NVIDIA GeForce GTX 1660 SUPER | ✅                 |                                 |                                                                                                        |
-| NVIDIA GeForce GTX 2080 Ti    | ✅                 | ✅                              |
-| NVIDIA GeForce RTX 3080       | ✅                 | ✅                              | [Benchmarks](https://forum.livepeer.org/t/dual-ethash-mining-transcoding-w-rtx-3080-10g-cuda-mps/1161) |     |
-| NVIDIA GeForce GTX 3090       | ✅                 | ✅                              |
-| NVIDIA Titan V                | ✅                 | ✅                              |                                                                                                        |
-| NVIDIA Quadro P400            | ✅                 |                                 | [Benchmarks](https://forum.livepeer.org/t/gtx-950-quadro-p400-benchmarks/1497)                         |     |
-| NVIDIA Quadro T600            | ✅                 |                                 | [Benchmarks](https://forum.livepeer.org/t/nvidia-quadro-t600-benchmark/1650)                           |
+| GPU Model                     | Architecture | Tested Transcoding | HEVC Support | Notes                                                                                                  |
+| ----------------------------- | ------------ | ------------------ | ------------ | ------------------------------------------------------------------------------------------------------ |
+| NVIDIA GeForce GTX 950        | Maxwell Gen2 | ✅                 | ✅ (encode)  | [Benchmarks](https://forum.livepeer.org/t/gtx-950-quadro-p400-benchmarks/1497)                         |
+| NVIDIA GeForce GTX 1060       | Pascal       | ✅                 | ✅           |                                                                                                        |
+| NVIDIA GeForce GTX 1070       | Pascal       | ✅                 | ✅           |                                                                                                        |
+| NVIDIA GeForce GTX 1070 Ti    | Pascal       | ✅                 | ✅           |                                                                                                        |
+| NVIDIA GeForce GTX 1080       | Pascal       | ✅                 | ✅           |                                                                                                        |
+| NVIDIA GeForce GTX 1080 Ti    | Pascal       | ✅                 | ✅           |                                                                                                        |
+| NVIDIA Tesla T4               | Turing       | ✅                 | ✅           |                                                                                                        |
+| NVIDIA GeForce GTX 1660 Ti    | Turing       | ✅                 | ✅           |                                                                                                        |
+| NVIDIA GeForce GTX 1660 SUPER | Turing       | ✅                 | ✅           |                                                                                                        |
+| NVIDIA GeForce RTX 2080 Ti    | Turing       | ✅                 | ✅           |                                                                                                        |
+| NVIDIA GeForce RTX 3080       | Ampere       | ✅                 | ✅           | [Benchmarks](https://forum.livepeer.org/t/dual-ethash-mining-transcoding-w-rtx-3080-10g-cuda-mps/1161) |
+| NVIDIA GeForce RTX 3090       | Ampere       | ✅                 | ✅           |                                                                                                        |
+| NVIDIA GeForce RTX 4070       | Ada Lovelace | ✅                 | ✅           |                                                                                                        |
+| NVIDIA GeForce RTX 4080       | Ada Lovelace | ✅                 | ✅           |                                                                                                        |
+| NVIDIA GeForce RTX 4090       | Ada Lovelace | ✅                 | ✅           |                                                                                                        |
+| NVIDIA Titan V                | Volta        | ✅                 | ✅           |                                                                                                        |
+| NVIDIA Quadro P400            | Pascal       | ✅                 | ✅           | [Benchmarks](https://forum.livepeer.org/t/gtx-950-quadro-p400-benchmarks/1497)                         |
+| NVIDIA Quadro T600            | Turing       | ✅                 | ✅           | [Benchmarks](https://forum.livepeer.org/t/nvidia-quadro-t600-benchmark/1650)                           |
+| NVIDIA RTX A4000              | Ampere       | ✅                 | ✅           |                                                                                                        |
+| NVIDIA L4                     | Ada Lovelace | ✅                 | ✅           | Good price/performance for cloud deployments                                                            |
+
+<Note>
+  HEVC ✅ = hardware encode **and** decode supported via NVENC/NVDEC. GTX 950
+  (Maxwell Gen 2) supports HEVC encode only. All Pascal (GTX 10xx) and newer
+  architectures support both HEVC encode and decode. For full codec support
+  details see the [NVIDIA encode/decode support matrix](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new).
+</Note>
+
+## AI Inference GPUs
+
+AI workloads (Stable Diffusion, LLM inference, etc.) are primarily VRAM-bound.
+The following GPUs are well-suited for running Livepeer AI pipelines:
+
+| GPU Model                  | Architecture | VRAM   | Recommended Use Case                          |
+| -------------------------- | ------------ | ------ | --------------------------------------------- |
+| NVIDIA GeForce RTX 3090    | Ampere       | 24 GB  | Stable Diffusion, mid-size models             |
+| NVIDIA GeForce RTX 4080    | Ada Lovelace | 16 GB  | Fast inference, good throughput               |
+| NVIDIA GeForce RTX 4090    | Ada Lovelace | 24 GB  | Consumer best: Stable Diffusion, high batch   |
+| NVIDIA RTX A4000           | Ampere       | 16 GB  | Reliable workstation GPU                      |
+| NVIDIA RTX A6000           | Ampere       | 48 GB  | Large models, multi-modal inference           |
+| NVIDIA L4                  | Ada Lovelace | 24 GB  | Efficient cloud inference (good perf/watt)    |
+| NVIDIA L40S                | Ada Lovelace | 48 GB  | High-capacity cloud inference                 |
+| NVIDIA A100 40GB / 80GB    | Ampere       | 40/80 GB | Enterprise: large-batch inference, fine-tuning |
+| NVIDIA H100                | Hopper       | 80 GB  | Advanced model serving, highest throughput    |
+
+<Tip>
+  For AI workloads on Livepeer, ensure you have CUDA 12+, the NVIDIA Container
+  Toolkit installed, and sufficient fast storage for model weights. Stake does
+  **not** determine AI job routing — capability and price do. See the
+  [hardware requirements page](./hardware-requirements) for full setup guidance.
+</Tip>
