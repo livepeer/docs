@@ -172,13 +172,6 @@ function resolveQuarantineBasePath(localizedFile, language) {
   return resolveOrphanQuarantinePath(normalized, language);
 }
 
-function buildQuarantineCollisionPath(basePath, hash, counter) {
-  const ext = path.extname(basePath);
-  const stem = ext ? basePath.slice(0, -ext.length) : basePath;
-  const suffix = counter ? `-${counter}` : '';
-  return `${stem}.dup-${hash}${suffix}${ext}`;
-}
-
 function moveLocalizedToQuarantine({ repoRoot, localizedFile, language, reason }) {
   const normalized = normalizeFileKey(localizedFile);
   const absPath = path.join(repoRoot, normalized);
@@ -192,22 +185,15 @@ function moveLocalizedToQuarantine({ repoRoot, localizedFile, language, reason }
   const raw = fs.readFileSync(absPath, 'utf8');
   const hash = sha256(`${normalized}:${raw}`).slice(0, 8);
   let target = basePath;
-  let targetAbs = path.join(repoRoot, target);
-  if (fs.existsSync(targetAbs)) {
-    target = buildQuarantineCollisionPath(basePath, hash);
-    targetAbs = path.join(repoRoot, target);
-    let counter = 2;
-    while (fs.existsSync(targetAbs)) {
-      target = buildQuarantineCollisionPath(basePath, hash, counter);
-      targetAbs = path.join(repoRoot, target);
-      counter += 1;
-    }
-  }
+  const targetAbs = path.join(repoRoot, target);
+  const hadCollision = fs.existsSync(targetAbs);
   fs.mkdirSync(path.dirname(targetAbs), { recursive: true });
-  execSync(`git -C ${JSON.stringify(repoRoot)} mv ${JSON.stringify(normalized)} ${JSON.stringify(target)}`, {
+  const forceFlag = hadCollision ? '-f ' : '';
+  execSync(`git -C ${JSON.stringify(repoRoot)} mv ${forceFlag}${JSON.stringify(normalized)} ${JSON.stringify(target)}`, {
     stdio: 'ignore'
   });
-  return { movedTo: target, warning: `${reason}: ${localizedFile} -> ${target}` };
+  const collisionNote = hadCollision ? ` (replaced existing ${hash})` : '';
+  return { movedTo: target, warning: `${reason}: ${localizedFile} -> ${target}${collisionNote}` };
 }
 
 function findRenameTarget(repoRoot, sourcePath) {

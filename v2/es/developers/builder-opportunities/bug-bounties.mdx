@@ -1,0 +1,197 @@
+---
+title: Recompensas por errores
+sidebarTitle: Recompensas por errores
+description: >-
+  Reporta vulnerabilidades de contratos inteligentes en el protocolo Livepeer y
+  gana recompensas en USDC a través del programa oficial de recompensas por
+  errores Livepeer en Immunefi.
+keywords:
+  - livepeer
+  - bug bounty
+  - immunefi
+  - security
+  - smart contract
+  - vulnerability
+  - usdc
+  - developer
+  - builder opportunities
+pageType: reference
+audience:
+  - security-researchers
+  - protocol-contributors
+  - developers
+status: current
+lastVerified: 2026-03
+sourceOfTruth: 'https://immunefi.com/bug-bounty/livepeer/information/'
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9kZXZlbG9wZXJzL2J1aWxkZXItb3Bwb3J0dW5pdGllcy9idWctYm91bnRpZXMubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9kZXZlbG9wZXJzL2J1aWxkZXItb3Bwb3J0dW5pdGllcy9idWctYm91bnRpZXMiLCJzb3VyY2VIYXNoIjoiZDVlNGVjN2JjOWMyY2ViMDBiNWM1ZDA2YTc0ZmUxZGMzY2E0ZDRmM2NjODEwZDUxMDZiODE1NWZiMDdiYjhhZCIsImxhbmd1YWdlIjoiZXMiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6Im9wZW5haS9ncHQtb3NzLTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAzLTAzVDE0OjU5OjM0LjU0MFoifQ== */}
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { DisplayCard } from '/snippets/components/display/customCards.jsx'
+import { BorderedBox } from '/snippets/components/primitives/containers.jsx'
+
+{/* ============================================================
+    INTRO
+    ============================================================ */}
+
+<CustomDivider middleText="BUG BOUNTIES" />
+
+Livepeer ejecuta un programa de recompensas por errores activo en [Immunefi](https://immunefi.com/bug-bounty/livepeer/information/), la principal plataforma de recompensas por errores web3. El programa recompensa a los investigadores de seguridad que divulguen de manera responsable vulnerabilidades en los contratos inteligentes de Livepeer.
+
+Los pagos se realizan en USDC en Ethereum, y se requiere KYC para todas las reclamaciones de recompensas.
+
+<Card title="Livepeer Bug Bounty on Immunefi" icon="shield-halved" href="https://immunefi.com/bug-bounty/livepeer/information/" arrow>
+  The authoritative source for scope, reward tiers, rules, and submission instructions.
+</Card>
+
+<br />
+
+{/* ============================================================
+    SECTION 1 - PROGRAMME OVERVIEW
+    ============================================================ */}
+
+<CustomDivider middleText="PROGRAMME OVERVIEW" />
+
+## Resumen del Programa
+
+<BorderedBox variant="default" padding="16px 20px">
+
+- **Scope:** Smart contracts only. The programme does not currently cover websites, apps, or off-chain infrastructure.
+- **Rewards:** Paid in USDC on Ethereum, denominated in USD.
+- **KYC:** Required for all reporters claiming a reward. You will need to provide visual proof of identity.
+- **Proof of Concept:** Required for all severity levels. Submissions without a PoC will not be considered.
+- **Triage:** Since early 2025, the Immunefi triage pipeline has been operated by the Protocol R&D SPE (Sidestream), which processes incoming reports and ensures response-readiness.
+
+</BorderedBox>
+
+<br />
+
+{/* ============================================================
+    SECTION 2 - SEVERITY AND REWARDS
+    ============================================================ */}
+
+<CustomDivider middleText="SEVERITY & REWARDS" />
+
+## Niveles de Severidad y Recompensas
+
+Las recompensas se distribuyen según el Sistema de Clasificación de Severidad de Vulnerabilidades de Immunefi (V2.2), una escala de cinco niveles que cubre tanto la consecuencia de la explotación como la probabilidad de un ataque exitoso.
+
+<Columns cols={2}>
+
+<DisplayCard icon="circle-exclamation" title="Critical">
+  Rewards are capped at 10% of the economic damage caused, with the primary focus on possible loss of funds for Orchestrators, Delegators, and Broadcasters at the smart contract level.
+
+  If there is a repeatable attack, only the first attack is considered unless further attacks cannot be mitigated via an upgrade or pause.
+</DisplayCard>
+
+<DisplayCard icon="triangle-exclamation" title="High">
+  Rewards for High severity vulnerabilities depend on the amount of unclaimed yield at risk and how long funds could be frozen.
+</DisplayCard>
+
+</Columns>
+
+<br />
+
+### Áreas de Enfoque
+
+El programa se centra en prevenir:
+
+- Robo directo de fondos de usuarios (en reposo o en movimiento, excluyendo rendimiento no reclamado)
+- Llamadas inesperadas a funciones privilegiadas (por ejemplo, funciones que solo deberían ser llamadas por el contrato Governor)
+- Cualquier condición que resulte en el congelamiento permanente de fondos de usuarios
+
+<br />
+
+{/* ============================================================
+    SECTION 3 - WHAT'S IN SCOPE
+    ============================================================ */}
+
+<CustomDivider middleText="SCOPE" />
+
+## Alcance
+
+El programa cubre los contratos inteligentes desplegados de Livepeer en Ethereum y Arbitrum. Ver el [listado completo de alcance en Immunefi](https://immunefi.com/bug-bounty/livepeer/information/) para la lista definitiva de activos y direcciones de contrato dentro del alcance.
+
+### Fuera de Alcance
+
+Lo siguiente está explícitamente excluido:
+
+- Pruebas en código desplegado en mainnet o testnet público -- todas las pruebas deben realizarse en forks locales
+- Pruebas con oráculos de precios o contratos inteligentes de terceros
+- Ataques de phishing o ingeniería social contra empleados o clientes
+- Pruebas con sistemas de terceros, extensiones de navegador o proveedores de SSO
+- Ataques de denegación de servicio contra activos del proyecto
+- Pruebas automatizadas que generan tráfico significativo
+- Divulgación pública de una vulnerabilidad sin parchear antes de que se haya resuelto
+
+<br />
+
+{/* ============================================================
+    SECTION 4 - HOW TO SUBMIT
+    ============================================================ */}
+
+<CustomDivider middleText="SUBMITTING A REPORT" />
+
+## Cómo enviar un informe
+
+<Steps>
+  <Step title="Reproduce and document the vulnerability">
+    Ensure you have a working proof of concept on a local fork of mainnet or testnet. Document the attack vector, impact, and reproduction steps clearly.
+  </Step>
+  <Step title="Submit via Immunefi">
+    Submit your report through the [Livepeer programme page on Immunefi](https://immunefi.com/bug-bounty/livepeer/information/). Do not disclose the vulnerability publicly before it has been resolved.
+  </Step>
+  <Step title="Complete KYC">
+    On confirmation of a valid report, you will be asked to complete KYC verification via an external service before payment is released. You will need government-issued photo ID.
+  </Step>
+  <Step title="Receive your reward">
+    Valid rewards are paid in USDC on Ethereum. Payout amounts are handled directly by the Livepeer team and are denominated in USD.
+  </Step>
+</Steps>
+
+<br />
+
+<Warning>
+  Public disclosure of an unpatched vulnerability is a violation of the programme rules and will disqualify a submission from receiving a reward. Always report privately first.
+</Warning>
+
+<br />
+
+{/* ============================================================
+    SECTION 5 - RECENT ACTIVITY
+    ============================================================ */}
+
+<CustomDivider middleText="RECENT PROGRAMME ACTIVITY" />
+
+## Actividad Reciente del Programa
+
+El programa de recompensas por errores de Livepeer ha sido utilizado activamente. Los ejemplos recientes incluyen:
+
+- **Marzo 2024** -- Se corrigió un error de protocolo después de una divulgación responsable a través de Immunefi. La vulnerabilidad abordó un posible ataque de griefing que permitía a un actor malintencionado impedir que un titular de token delegante accediera a sus recompensas.
+- **Octubre 2024** -- Se pagó una recompensa de nivel crítico después de la divulgación de una vulnerabilidad que podría haber permitido a un actor malintencionado drenar ETH del contrato Minter a través de pasos sucesivos en múltiples rondas.
+- **Agosto 2025** -- Se pagó una recompensa de nivel crítico después de la divulgación de una vulnerabilidad que podría haber permitido a un actor malintencionado reclamar más tarifas de ETH de lo previsto a través de pasos sucesivos en múltiples rondas.
+
+En todos los casos, no hubo fondos de usuarios en riesgo en el momento de la corrección y no se observaron explotaciones en la red.
+
+<br />
+
+{/* ============================================================
+    SECTION 6 - RELATED
+    ============================================================ */}
+
+<CustomDivider middleText="RELATED" />
+
+<CardGroup cols={2}>
+  <Card title="Open Source Contributions" icon="code-branch" href="./oss-contributions" arrow>
+    Contribute code, documentation, or test coverage to Livepeer's core repositories.
+  </Card>
+  <Card title="Protocol R&D SPE (Sidestream)" icon="shield" href="https://forum.livepeer.org/t/proposal-protocol-r-d-special-purpose-entity/3160" arrow>
+    The SPE responsible for protocol security, vulnerability triage, and safe upgrades.
+  </Card>
+  <Card title="Immunefi Programme Page" icon="shield-halved" href="https://immunefi.com/bug-bounty/livepeer/information/" arrow>
+    Full scope, reward tiers, rules, and submission portal for the Livepeer bug bounty.
+  </Card>
+  <Card title="Livepeer GitHub" icon="github" href="https://github.com/livepeer" arrow>
+    The official Livepeer GitHub organisation. For non-security bugs, open an issue in the relevant repository.
+  </Card>
+</CardGroup>

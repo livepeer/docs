@@ -1,0 +1,194 @@
+---
+title: 漏洞赏金
+sidebarTitle: 漏洞赏金
+description: 在 Livepeer 协议中报告智能合约漏洞，并通过 Immunefi 官方的 Livepeer 漏洞赏金计划获得 USDC 奖励。
+keywords:
+  - livepeer
+  - bug bounty
+  - immunefi
+  - security
+  - smart contract
+  - vulnerability
+  - usdc
+  - developer
+  - builder opportunities
+pageType: reference
+audience:
+  - security-researchers
+  - protocol-contributors
+  - developers
+status: current
+lastVerified: 2026-03
+sourceOfTruth: 'https://immunefi.com/bug-bounty/livepeer/information/'
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9kZXZlbG9wZXJzL2J1aWxkZXItb3Bwb3J0dW5pdGllcy9idWctYm91bnRpZXMubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9kZXZlbG9wZXJzL2J1aWxkZXItb3Bwb3J0dW5pdGllcy9idWctYm91bnRpZXMiLCJzb3VyY2VIYXNoIjoiZDVlNGVjN2JjOWMyY2ViMDBiNWM1ZDA2YTc0ZmUxZGMzY2E0ZDRmM2NjODEwZDUxMDZiODE1NWZiMDdiYjhhZCIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6Im9wZW5haS9ncHQtb3NzLTIwYjpmcmVlIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAzLTAzVDE0OjU1OjE0LjUyMVoifQ== */}
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { DisplayCard } from '/snippets/components/display/customCards.jsx'
+import { BorderedBox } from '/snippets/components/primitives/containers.jsx'
+
+{/* ============================================================
+    INTRO
+    ============================================================ */}
+
+<CustomDivider middleText="BUG BOUNTIES" />
+
+Livepeer 在 ... 上运行一个活跃的漏洞赏金计划 [Immunefi](https://immunefi.com/bug-bounty/livepeer/information/), 领先的 web3 漏洞赏金平台。该计划奖励负责任披露 Livepeer 智能合约漏洞的安全研究员。
+
+奖励以 USDC 形式在以太坊上发放，所有奖励申领均需完成 KYC 验证。
+
+<Card title="Livepeer Bug Bounty on Immunefi" icon="shield-halved" href="https://immunefi.com/bug-bounty/livepeer/information/" arrow>
+  The authoritative source for scope, reward tiers, rules, and submission instructions.
+</Card>
+
+<br />
+
+{/* ============================================================
+    SECTION 1 - PROGRAMME OVERVIEW
+    ============================================================ */}
+
+<CustomDivider middleText="PROGRAMME OVERVIEW" />
+
+## 计划概览
+
+<BorderedBox variant="default" padding="16px 20px">
+
+- **Scope:** Smart contracts only. The programme does not currently cover websites, apps, or off-chain infrastructure.
+- **Rewards:** Paid in USDC on Ethereum, denominated in USD.
+- **KYC:** Required for all reporters claiming a reward. You will need to provide visual proof of identity.
+- **Proof of Concept:** Required for all severity levels. Submissions without a PoC will not be considered.
+- **Triage:** Since early 2025, the Immunefi triage pipeline has been operated by the Protocol R&D SPE (Sidestream), which processes incoming reports and ensures response-readiness.
+
+</BorderedBox>
+
+<br />
+
+{/* ============================================================
+    SECTION 2 - SEVERITY AND REWARDS
+    ============================================================ */}
+
+<CustomDivider middleText="SEVERITY & REWARDS" />
+
+## 严重程度等级与奖励
+
+奖励按 Immunefi 漏洞严重程度分类系统（V2.2）分配，该系统为五级尺度，涵盖利用后果与成功攻击可能性的两方面。
+
+<Columns cols={2}>
+
+<DisplayCard icon="circle-exclamation" title="Critical">
+  Rewards are capped at 10% of the economic damage caused, with the primary focus on possible loss of funds for Orchestrators, Delegators, and Broadcasters at the smart contract level.
+
+  If there is a repeatable attack, only the first attack is considered unless further attacks cannot be mitigated via an upgrade or pause.
+</DisplayCard>
+
+<DisplayCard icon="triangle-exclamation" title="High">
+  Rewards for High severity vulnerabilities depend on the amount of unclaimed yield at risk and how long funds could be frozen.
+</DisplayCard>
+
+</Columns>
+
+<br />
+
+### 关注领域
+
+该计划重点防止：
+
+- 直接窃取用户资金（静止或移动状态，未领取收益除外）
+- 对特权功能的意外调用（例如仅可由 Governor 合约调用的函数）
+- 任何导致用户资金永久冻结的情况
+
+<br />
+
+{/* ============================================================
+    SECTION 3 - WHAT'S IN SCOPE
+    ============================================================ */}
+
+<CustomDivider middleText="SCOPE" />
+
+## 范围
+
+该计划涵盖 Livepeer 在以太坊和 Arbitrum 上已部署的智能合约。请参阅 [Immunefi 上的完整范围列表](https://immunefi.com/bug-bounty/livepeer/information/)以获取最终的在范围资产与合约地址列表。
+
+### 不在范围内
+
+以下项目被明确排除：
+
+- 在主网或公共测试网部署的代码上进行测试——所有测试必须在本地分叉上完成
+- 使用定价预言机或第三方智能合约进行测试
+- 对员工或客户进行钓鱼或社交工程攻击
+- 使用第三方系统、浏览器扩展或 SSO 提供商进行测试
+- 针对项目资产的拒绝服务攻击
+- 产生大量流量的自动化测试
+- 在漏洞修复前公开披露未修补的漏洞
+
+<br />
+
+{/* ============================================================
+    SECTION 4 - HOW TO SUBMIT
+    ============================================================ */}
+
+<CustomDivider middleText="SUBMITTING A REPORT" />
+
+## 如何提交报告
+
+<Steps>
+  <Step title="Reproduce and document the vulnerability">
+    Ensure you have a working proof of concept on a local fork of mainnet or testnet. Document the attack vector, impact, and reproduction steps clearly.
+  </Step>
+  <Step title="Submit via Immunefi">
+    Submit your report through the [Livepeer programme page on Immunefi](https://immunefi.com/bug-bounty/livepeer/information/). Do not disclose the vulnerability publicly before it has been resolved.
+  </Step>
+  <Step title="Complete KYC">
+    On confirmation of a valid report, you will be asked to complete KYC verification via an external service before payment is released. You will need government-issued photo ID.
+  </Step>
+  <Step title="Receive your reward">
+    Valid rewards are paid in USDC on Ethereum. Payout amounts are handled directly by the Livepeer team and are denominated in USD.
+  </Step>
+</Steps>
+
+<br />
+
+<Warning>
+  Public disclosure of an unpatched vulnerability is a violation of the programme rules and will disqualify a submission from receiving a reward. Always report privately first.
+</Warning>
+
+<br />
+
+{/* ============================================================
+    SECTION 5 - RECENT ACTIVITY
+    ============================================================ */}
+
+<CustomDivider middleText="RECENT PROGRAMME ACTIVITY" />
+
+## 近期计划活动
+
+Livepeer 漏洞赏金计划一直在积极使用。近期示例包括：
+
+- **2024 年 3 月**——通过 Immunefi 的负责任披露修复了一个协议漏洞。该漏洞可能导致恶意行为者阻止委托代币持有人获取奖励的潜在 griefing 攻击。
+- **2024 年 10 月**——在披露可能允许恶意行为者通过多轮连续步骤从 Minter 合约中抽取 ETH 的漏洞后，支付了一个关键级别的赏金。
+- **2025 年 8 月**——在披露可能允许恶意行为者通过多轮连续步骤获取超过预期 ETH 费用的漏洞后，支付了一个关键级别的赏金。
+
+在所有案例中，补丁时未存在用户资金风险，也未在网络上观察到任何利用。
+
+<br />
+
+{/* ============================================================
+    SECTION 6 - RELATED
+    ============================================================ */}
+
+<CustomDivider middleText="RELATED" />
+
+<CardGroup cols={2}>
+  <Card title="Open Source Contributions" icon="code-branch" href="./oss-contributions" arrow>
+    Contribute code, documentation, or test coverage to Livepeer's core repositories.
+  </Card>
+  <Card title="Protocol R&D SPE (Sidestream)" icon="shield" href="https://forum.livepeer.org/t/proposal-protocol-r-d-special-purpose-entity/3160" arrow>
+    The SPE responsible for protocol security, vulnerability triage, and safe upgrades.
+  </Card>
+  <Card title="Immunefi Programme Page" icon="shield-halved" href="https://immunefi.com/bug-bounty/livepeer/information/" arrow>
+    Full scope, reward tiers, rules, and submission portal for the Livepeer bug bounty.
+  </Card>
+  <Card title="Livepeer GitHub" icon="github" href="https://github.com/livepeer" arrow>
+    The official Livepeer GitHub organisation. For non-security bugs, open an issue in the relevant repository.
+  </Card>
+</CardGroup>

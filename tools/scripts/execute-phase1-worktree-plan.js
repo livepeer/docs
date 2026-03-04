@@ -146,15 +146,15 @@ const DEPRECATION_DESTINATIONS = {
   'v1/developers/guides/playback-a-livestream': 'v2/solutions/livepeer-studio/livestream/playback-livestream',
   'v1/developers/guides/playback-an-asset': 'v2/solutions/livepeer-studio/video-on-demand/playback-asset',
   'v1/developers/quick-start': 'v2/solutions/livepeer-studio/quickstart',
-  'v1/developers/tutorials/decentralized-app-with-fvm': 'v2/developers/guides-and-resources/developer-guides',
-  'v1/developers/tutorials/token-gate-videos-with-lit': 'v2/developers/guides-and-resources/developer-guides',
-  'v1/developers/tutorials/upload-playback-videos-4everland': 'v2/developers/guides-and-resources/developer-guides',
-  'v1/developers/tutorials/upload-playback-videos-on-arweave': 'v2/developers/guides-and-resources/developer-guides',
-  'v1/developers/tutorials/upload-playback-videos-on-ipfs': 'v2/developers/guides-and-resources/developer-guides',
+  'v1/developers/tutorials/decentralized-app-with-fvm': 'v2/developers/guides-and-tools/developer-guides',
+  'v1/developers/tutorials/token-gate-videos-with-lit': 'v2/developers/guides-and-tools/developer-guides',
+  'v1/developers/tutorials/upload-playback-videos-4everland': 'v2/developers/guides-and-tools/developer-guides',
+  'v1/developers/tutorials/upload-playback-videos-on-arweave': 'v2/developers/guides-and-tools/developer-guides',
+  'v1/developers/tutorials/upload-playback-videos-on-ipfs': 'v2/developers/guides-and-tools/developer-guides',
   'v1/gateways/quick-start': 'v2/gateways/quickstart/gateway-setup',
   'v1/orchestrators/quick-start': 'v2/orchestrators/quickstart/overview',
   'v1/references/contract-addresses': 'v2/about/resources/blockchain-contracts',
-  'v1/references/knowledge-base/livestream': 'v2/developers/guides-and-resources/developer-help',
+  'v1/references/knowledge-base/livestream': 'v2/developers/guides-and-tools/developer-help',
   'v1/sdks/react/migration/migration-4.x': 'v2/developers/technical-references/sdks'
 };
 

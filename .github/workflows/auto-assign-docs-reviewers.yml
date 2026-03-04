@@ -1,0 +1,199 @@
+name: Auto Assign Docs Reviewers
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, edited, labeled]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  codex-copilot-reviewer:
+    if: ${{ github.event.pull_request.base.ref == 'docs-v2' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gate Codex PR eligibility
+        id: gate
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const labels = (pr.labels || []).map((label) => label.name);
+            const body = pr.body || '';
+            const headRef = pr.head?.ref || '';
+            const sourceRepo = pr.head?.repo?.full_name || '';
+            const targetRepo = `${context.repo.owner}/${context.repo.repo}`;
+            const sameRepo = sourceRepo === targetRepo;
+            const isCodexPr =
+              headRef.startsWith('codex/') ||
+              /codex-pr-body-generated:/i.test(body) ||
+              labels.includes('ai-opened:codex');
+            const isReady = !pr.draft || context.payload.action === 'ready_for_review';
+            const shouldRun = sameRepo && isCodexPr && isReady;
+
+            core.setOutput('should_run', shouldRun ? 'true' : 'false');
+            core.setOutput('same_repo', sameRepo ? 'true' : 'false');
+            core.setOutput('is_codex_pr', isCodexPr ? 'true' : 'false');
+            core.setOutput('is_ready', isReady ? 'true' : 'false');
+
+            core.info(`same_repo=${sameRepo} is_codex_pr=${isCodexPr} is_ready=${isReady}`);
+
+      - name: Request Copilot reviewer (best effort)
+        if: ${{ steps.gate.outputs.should_run == 'true' }}
+        id: request
+        uses: actions/github-script@v7
+        env:
+          REVIEWER_CANDIDATES: ${{ vars.CODEX_COPILOT_REVIEWER_LOGINS }}
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const pull_number = pr.number;
+
+            const unique = (items) => [...new Set(items.filter(Boolean))];
+            const parsed = (process.env.REVIEWER_CANDIDATES || '')
+              .split(',')
+              .map((value) => value.trim())
+              .filter(Boolean);
+            const candidates = unique(parsed.length > 0 ? parsed : ['copilot']);
+
+            const prFresh = await github.rest.pulls.get({ owner, repo, pull_number });
+            const existingRequested = (prFresh.data.requested_reviewers || []).map((u) => u.login);
+            const existingAssignees = (prFresh.data.assignees || []).map((u) => u.login);
+
+            if (candidates.some((login) => existingRequested.includes(login))) {
+              core.setOutput('requested', 'true');
+              core.setOutput(
+                'requested_reviewer',
+                candidates.find((login) => existingRequested.includes(login)) || ''
+              );
+              core.setOutput('fallback_needed', 'false');
+              core.setOutput('fallback_reason', 'reviewer-already-requested');
+              core.setOutput('attempted', JSON.stringify(candidates));
+              core.setOutput('errors', JSON.stringify([]));
+              return;
+            }
+
+            const errors = [];
+            let requestedReviewer = '';
+            for (const reviewer of candidates) {
+              try {
+                await github.rest.pulls.requestReviewers({
+                  owner,
+                  repo,
+                  pull_number,
+                  reviewers: [reviewer],
+                });
+                requestedReviewer = reviewer;
+                break;
+              } catch (error) {
+                const msg = `${reviewer}: ${error.status || 'error'} ${error.message || 'request failed'}`;
+                errors.push(msg);
+                core.warning(msg);
+              }
+            }
+
+            if (requestedReviewer) {
+              core.setOutput('requested', 'true');
+              core.setOutput('requested_reviewer', requestedReviewer);
+              core.setOutput('fallback_needed', 'false');
+              core.setOutput('fallback_reason', 'reviewer-requested');
+            } else {
+              const alreadyAssignedCopilot = existingAssignees.includes('copilot');
+              core.setOutput('requested', 'false');
+              core.setOutput('requested_reviewer', '');
+              core.setOutput('fallback_needed', alreadyAssignedCopilot ? 'false' : 'true');
+              core.setOutput(
+                'fallback_reason',
+                alreadyAssignedCopilot ? 'copilot-already-assigned' : 'reviewer-request-failed'
+              );
+            }
+
+            core.setOutput('attempted', JSON.stringify(candidates));
+            core.setOutput('errors', JSON.stringify(errors));
+
+      - name: Fallback assign Copilot
+        if: ${{ steps.gate.outputs.should_run == 'true' && steps.request.outputs.fallback_needed == 'true' }}
+        id: fallback
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          gh pr edit "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" \
+            --add-assignee "@copilot"
+          status=$?
+          if [ "$status" -eq 0 ]; then
+            echo "assigned=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "assigned=false" >> "$GITHUB_OUTPUT"
+          fi
+          exit 0
+
+      - name: Add fallback marker comment
+        if: ${{ steps.gate.outputs.should_run == 'true' && steps.request.outputs.fallback_reason == 'reviewer-request-failed' }}
+        uses: actions/github-script@v7
+        env:
+          FALLBACK_ASSIGNED: ${{ steps.fallback.outputs.assigned }}
+          REQUEST_ERRORS_JSON: ${{ steps.request.outputs.errors }}
+          ATTEMPTED_JSON: ${{ steps.request.outputs.attempted }}
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issue_number = context.payload.pull_request.number;
+            const marker = '<!-- codex-copilot-auto -->';
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number,
+              per_page: 100,
+            });
+
+            const alreadyCommented = comments.some(
+              (comment) => comment.user?.type === 'Bot' && typeof comment.body === 'string' && comment.body.includes(marker)
+            );
+            if (alreadyCommented) return;
+
+            let attempted = [];
+            let errors = [];
+            try {
+              attempted = JSON.parse(process.env.ATTEMPTED_JSON || '[]');
+            } catch (_error) {}
+            try {
+              errors = JSON.parse(process.env.REQUEST_ERRORS_JSON || '[]');
+            } catch (_error) {}
+
+            const lines = [
+              marker,
+              'Copilot reviewer request was attempted for this Codex PR but did not succeed.',
+              '',
+              `Fallback assignment to \`@copilot\`: ${process.env.FALLBACK_ASSIGNED === 'true' ? 'applied' : 'not applied'}.`,
+              attempted.length ? `Reviewer candidates tried: ${attempted.join(', ')}` : 'Reviewer candidates tried: copilot',
+            ];
+
+            if (errors.length > 0) {
+              lines.push('', 'Request errors:');
+              for (const entry of errors) {
+                lines.push(`- ${entry}`);
+              }
+            }
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body: lines.join('\n'),
+            });
+
+      - name: Skip reason
+        if: ${{ steps.gate.outputs.should_run != 'true' }}
+        run: |
+          echo "Skipping reviewer automation:"
+          echo "same_repo=${{ steps.gate.outputs.same_repo }}"
+          echo "is_codex_pr=${{ steps.gate.outputs.is_codex_pr }}"
+          echo "is_ready=${{ steps.gate.outputs.is_ready }}"

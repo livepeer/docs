@@ -319,7 +319,7 @@ function toPatternRegex(pattern) {
 
   if (normalized.includes('*')) {
     const escaped = normalized.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
-    const wildcard = escaped.replace(/\\\*\\\*/g, '.*').replace(/\\\*/g, '[^/]*');
+    const wildcard = escaped.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*');
     return new RegExp(`^${wildcard}$`);
   }
 

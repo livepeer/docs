@@ -18,6 +18,9 @@
  *   0 = success
  *   1 = runtime failure
  *
+ * @examples
+ *   node tests/utils/mintignore.js
+ *
  * @notes
  *   Uses `git check-ignore` in an isolated temporary git repo so results depend only on .mintignore.
  */
