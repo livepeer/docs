@@ -749,7 +749,7 @@ This section covers all software engineering, automation, and tooling work — t
 | S8  | `snippets/automations/youtube/youtubeData.jsx`                       | YouTube data component                               | 2       | 4        | \_\_    |
 | S9  | `snippets/automations/showcase/showcaseData.jsx`                     | Showcase data component (searchable, sortable)       | 4       | 8        | \_\_    |
 | S10 | `snippets/automations/globals/globals.mdx`                           | Global variables and release state                   | 2       | 4        | \_\_    |
-| S11 | `.github/scripts/embed-table.js`, `gen-table.js`, `gen-textareas.js` | CI utility scripts                                   | 2       | 4        | \_\_    |
+| S11 | `scripts/archive/placeholders/embed-table.js`, `scripts/archive/placeholders/gen-table.js`, `scripts/archive/placeholders/gen-textareas.js` | Archived CI placeholder scripts (no active workflow wiring) | 1       | 2        | \_\_    |
 |     |                                                                      | **AUTOMATION SCRIPTS SUBTOTAL**                      | **36**  | **68**   | \_\_    |
 
 #### 6.7f Maintenance and Generation Scripts

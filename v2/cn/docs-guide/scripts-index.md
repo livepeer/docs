@@ -32,12 +32,9 @@ keywords:
 
 | 脚本 | 摘要 | 用法 | 所有者 |
 |---|---|---|---|
-| `.github/scripts/embed-table.js` | 用于 Markdown 表格嵌入任务的保留 CI 实用脚本占位符。 | `node .github/scripts/embed-table.js` | 文档 |
 | `.github/scripts/fetch-forum-data.js` | 用于 .github/scripts/fetch-forum-data.js 的实用脚本。 | `node .github/scripts/fetch-forum-data.js` | 文档 |
 | `.github/scripts/fetch-ghost-blog-data.js` | 用于 .github/scripts/fetch-ghost-blog-data.js 的实用脚本。 | `node .github/scripts/fetch-ghost-blog-data.js` | 文档 |
 | `.github/scripts/fetch-youtube-data.js` | 用于 .github/scripts/fetch-youtube-data.js 的实用脚本。 | `node .github/scripts/fetch-youtube-data.js` | 文档 |
-| `.github/scripts/gen-table.js` | 用于生成表格输出的保留 CI 实用脚本占位符。 | `node .github/scripts/gen-table.js` | 文档 |
-| `.github/scripts/gen-textareas.js` | 用于文本区域生成任务的保留 CI 实用脚本占位符。 | `node .github/scripts/gen-textareas.js` | 文档 |
 | `.github/scripts/project-showcase-sync.js` | 用于 .github/scripts/project-showcase-sync.js 的实用脚本。 | `node .github/scripts/project-showcase-sync.js` | 文档 |
 
 ## 测试

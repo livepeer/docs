@@ -34,12 +34,9 @@ keywords:
 
 | Script | Résumé | Utilisation | Propriétaire |
 |---|---|---|---|
-| `.github/scripts/embed-table.js` | Emplacement de script utilitaire CI réservé pour les tâches d'intégration de tableaux markdown. | `node .github/scripts/embed-table.js` | docs |
 | `.github/scripts/fetch-forum-data.js` | Script utilitaire pour .github/scripts/fetch-forum-data.js. | `node .github/scripts/fetch-forum-data.js` | docs |
 | `.github/scripts/fetch-ghost-blog-data.js` | Script utilitaire pour .github/scripts/fetch-ghost-blog-data.js. | `node .github/scripts/fetch-ghost-blog-data.js` | docs |
 | `.github/scripts/fetch-youtube-data.js` | Script utilitaire pour .github/scripts/fetch-youtube-data.js. | `node .github/scripts/fetch-youtube-data.js` | docs |
-| `.github/scripts/gen-table.js` | Emplacement de script utilitaire CI réservé pour la sortie de tableau générée. | `node .github/scripts/gen-table.js` | docs |
-| `.github/scripts/gen-textareas.js` | Emplacement de script utilitaire CI réservé pour les tâches de génération de zone de texte. | `node .github/scripts/gen-textareas.js` | docs |
 | `.github/scripts/project-showcase-sync.js` | Script utilitaire pour .github/scripts/project-showcase-sync.js. | `node .github/scripts/project-showcase-sync.js` | docs |
 
 ## tests

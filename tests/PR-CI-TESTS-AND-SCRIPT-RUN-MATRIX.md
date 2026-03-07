@@ -24,12 +24,9 @@ This document captures the current pull-request CI checks and a full script inve
 | `.githooks/verify-browser.js` | Utility script for .githooks/verify-browser.js. | Manual/on-demand (no direct hook/workflow reference found) | `node .githooks/verify-browser.js` |
 | `.githooks/verify.sh` | Utility script for .githooks/verify.sh. | Pre-commit hook (`.githooks/pre-commit`) | `bash .githooks/verify.sh` |
 | **.github/scripts** |  |  |  |
-| `.github/scripts/embed-table.js` | Reserved CI utility script placeholder for markdown table embedding tasks. | Manual/on-demand (no direct hook/workflow reference found) | `node .github/scripts/embed-table.js` |
 | `.github/scripts/fetch-forum-data.js` | Utility script for .github/scripts/fetch-forum-data.js. | Workflow `Update Forum Data` (schedule, workflow_dispatch) | `node .github/scripts/fetch-forum-data.js` |
 | `.github/scripts/fetch-ghost-blog-data.js` | Utility script for .github/scripts/fetch-ghost-blog-data.js. | Workflow `Update Ghost Blog Data` (schedule, workflow_dispatch) | `node .github/scripts/fetch-ghost-blog-data.js` |
 | `.github/scripts/fetch-youtube-data.js` | Utility script for .github/scripts/fetch-youtube-data.js. | Workflow `Update YouTube Data` (schedule, workflow_dispatch) | `node .github/scripts/fetch-youtube-data.js` |
-| `.github/scripts/gen-table.js` | Reserved CI utility script placeholder for generated table output. | Manual/on-demand (no direct hook/workflow reference found) | `node .github/scripts/gen-table.js` |
-| `.github/scripts/gen-textareas.js` | Reserved CI utility script placeholder for textarea generation tasks. | Manual/on-demand (no direct hook/workflow reference found) | `node .github/scripts/gen-textareas.js` |
 | `.github/scripts/project-showcase-sync.js` | Utility script for .github/scripts/project-showcase-sync.js. | Workflow `Project Showcase Sync` (schedule, workflow_dispatch, repository_dispatch) | `node .github/scripts/project-showcase-sync.js` |
 | **tests** |  |  |  |
 | `tests/integration/browser.test.js` | Utility script for tests/integration/browser.test.js. | PR CI: `Docs CI - Content Quality Suite` browser test step<br />Via `tests/run-all.js` (local/manual and pre-commit fast mode)<br />npm script `tests:test:browser` (manual/local)<br />npm script `tools:test:browser:all` (manual/local)<br />npm script `tools:test:browser` (manual/local) | `node tests/integration/browser.test.js` |
