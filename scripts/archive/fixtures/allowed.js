@@ -1,11 +1,11 @@
 /**
  * @script allowed
- * @summary Utility script for tools/scripts/test/allowed.js.
+ * @summary Utility script for scripts/archive/fixtures/allowed.js.
  * @owner docs
  * @scope tools/scripts
  *
  * @usage
- *   node tools/scripts/test/allowed.js
+ *   node scripts/archive/fixtures/allowed.js
  *
  * @inputs
  *   No required CLI flags; optional flags are documented inline.
@@ -18,7 +18,7 @@
  *   1 = runtime or validation failure
  *
  * @examples
- *   node tools/scripts/test/allowed.js
+ *   node scripts/archive/fixtures/allowed.js
  *
  * @notes
  *   Keep script behavior deterministic and update script indexes after changes.
