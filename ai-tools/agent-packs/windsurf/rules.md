@@ -13,18 +13,7 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
   - `tasks/reports/repo-ops/script-footprint-and-usage-audit.md`
   - `tasks/reports/repo-ops/script-footprint-and-usage-audit.json`
 
-## 2. docs-coverage-and-route-integrity-audit
-
-- Goal: Identify route mismatches, legacy path drift, and orphaned docs candidates.
-- Severity Model: critical-high-medium-low
-- Autofix Mode: advisory
-- Commands:
-  - `node tools/scripts/docs-coverage-and-route-integrity-audit.js --scope full`
-- Outputs:
-  - `tasks/reports/repo-ops/docs-coverage-and-route-integrity-audit.md`
-  - `tasks/reports/repo-ops/docs-coverage-and-route-integrity-audit.json`
-
-## 3. docs-quality-and-freshness-audit
+## 2. docs-quality-and-freshness-audit
 
 - Goal: Surface TODO/TBD/Coming Soon markers, thin content, and freshness risk.
 - Severity Model: critical-high-medium-low
@@ -35,7 +24,7 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
   - `tasks/reports/repo-ops/docs-quality-and-freshness-audit.md`
   - `tasks/reports/repo-ops/docs-quality-and-freshness-audit.json`
 
-## 4. style-and-language-homogenizer-en-gb
+## 3. style-and-language-homogenizer-en-gb
 
 - Goal: Enforce UK English and style consistency on English v2 docs in phase 1.
 - Severity Model: critical-high-medium-low
@@ -46,7 +35,7 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
   - `tasks/reports/repo-ops/style-and-language-homogenizer-en-gb.md`
   - `tasks/reports/repo-ops/style-and-language-homogenizer-en-gb.json`
 
-## 5. component-layout-governance
+## 4. component-layout-governance
 
 - Goal: Validate page composition against component layout contracts by page type.
 - Severity Model: critical-high-medium-low
@@ -57,7 +46,7 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
   - `tasks/reports/repo-ops/component-layout-governance.md`
   - `tasks/reports/repo-ops/component-layout-governance.json`
 
-## 6. cleanup-quarantine-manager
+## 5. cleanup-quarantine-manager
 
 - Goal: Classify cleanup candidates and apply conservative quarantine only when requested.
 - Severity Model: critical-high-medium-low
@@ -69,7 +58,7 @@ Use these stages in order for a static-first docs infrastructure audit pipeline.
   - `tasks/reports/repo-ops/cleanup-quarantine-manifest.json`
   - `tasks/reports/repo-ops/cleanup-quarantine-manifest.md`
 
-## 7. cross-agent-packager
+## 6. cross-agent-packager
 
 - Goal: Generate consistent skill packs for Codex, Cursor, Claude Code, and Windsurf.
 - Severity Model: info-only

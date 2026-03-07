@@ -210,6 +210,7 @@ function readFileSafe(repoPath) {
 
 function shouldExclude(repoPath) {
   const p = normalizeRepoPath(repoPath)
+  if (p.startsWith('scripts/archive/')) return true
   const parts = p.split('/')
   if (parts.some((part) => IGNORED_DIR_SEGMENTS.has(part))) return true
   if (p.endsWith('.disabled')) return true

@@ -84,7 +84,6 @@ async function runTests() {
     [
       'repo-audit-orchestrator',
       'script-footprint-and-usage-audit',
-      'docs-coverage-and-route-integrity-audit',
       'docs-quality-and-freshness-audit',
       'style-and-language-homogenizer-en-gb',
       'component-layout-governance',

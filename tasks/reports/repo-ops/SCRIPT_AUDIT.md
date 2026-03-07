@@ -1,39 +1,38 @@
 # SCRIPT_AUDIT
 
-Generated: 2026-03-03T09:45:23.117Z
+Generated: 2026-03-07T07:42:53.760Z
 
 ## Rules Source
 - `tests/unit/script-docs.test.js`
 - `tests/README.md`
 
 ## Summary
-- Total scripts: 158
-- Template compliant: 151
-- Template non-compliant: 7
-- Exact overlap clusters: 9
-- Near overlap clusters: 0
+- Total scripts: 165
+- Template compliant: 159
+- Template non-compliant: 6
+- Exact overlap clusters: 8
+- Near overlap clusters: 1
 
 ## Category Counts
 
 | Category | Count |
 |---|---:|
-| `audit` | 33 |
-| `ci` | 16 |
-| `deprecated` | 2 |
-| `enforcement` | 47 |
-| `fixture` | 15 |
-| `generator` | 26 |
+| `audit` | 34 |
+| `ci` | 18 |
+| `enforcement` | 54 |
+| `fixture` | 12 |
+| `generator` | 29 |
 | `helper` | 37 |
-| `hook` | 17 |
-| `manual` | 146 |
-| `npm-script` | 43 |
-| `pr` | 7 |
-| `pre-commit` | 12 |
+| `hook` | 11 |
+| `manual` | 154 |
+| `npm-script` | 42 |
+| `pr` | 9 |
+| `pre-commit` | 5 |
 | `push` | 7 |
-| `runner` | 4 |
+| `runner` | 5 |
 | `scheduled` | 6 |
 | `sync` | 18 |
-| `test` | 38 |
+| `test` | 42 |
 | `workflow-dispatch` | 12 |
 
 ## Script Inventory
@@ -46,13 +45,10 @@ Generated: 2026-03-03T09:45:23.117Z
 | `.githooks/pre-push` | Enforce codex branch task-contract scope checks and block non-fast-forward pushes by default. | PASS | enforcement, hook | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `.githooks/server-manager.js` | Utility script for .githooks/server-manager.js. | PASS | hook | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `.githooks/verify-browser.js` | Utility script for .githooks/verify-browser.js. | PASS | enforcement, hook | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
-| `.githooks/verify.sh` | Utility script for .githooks/verify.sh. | PASS | enforcement, hook | pre-commit | hook:.githooks/pre-commit#line 545 [pre-commit] |
-| `.github/scripts/embed-table.js` | Reserved CI utility script placeholder for markdown table embedding tasks. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
+| `.githooks/verify.sh` | Utility script for .githooks/verify.sh. | PASS | enforcement, hook | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `.github/scripts/fetch-forum-data.js` | Utility script for .github/scripts/fetch-forum-data.js. | PASS | ci, sync | scheduled, workflow-dispatch | workflow:.github/workflows/update-forum-data.yml#Update Forum Data > update-forum-data > Fetch and process forum data [scheduled,workflow-dispatch] |
 | `.github/scripts/fetch-ghost-blog-data.js` | Utility script for .github/scripts/fetch-ghost-blog-data.js. | PASS | ci, sync | scheduled, workflow-dispatch | workflow:.github/workflows/update-ghost-blog-data.yml#Update Ghost Blog Data > update-ghost-data > Fetch and process Ghost blog data [scheduled,workflow-dispatch] |
 | `.github/scripts/fetch-youtube-data.js` | Utility script for .github/scripts/fetch-youtube-data.js. | PASS | ci, sync | scheduled, workflow-dispatch | workflow:.github/workflows/update-youtube-data.yml#Update YouTube Data > update-youtube > Fetch and process YouTube videos [scheduled,workflow-dispatch] |
-| `.github/scripts/gen-table.js` | Reserved CI utility script placeholder for generated table output. | PASS | generator | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
-| `.github/scripts/gen-textareas.js` | Reserved CI utility script placeholder for textarea generation tasks. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `.github/scripts/project-showcase-sync.js` | Utility script for .github/scripts/project-showcase-sync.js. | PASS | ci, sync | scheduled, workflow-dispatch | workflow:.github/workflows/project-showcase-sync.yml#Project Showcase Sync > sync-showcase > Run project showcase sync [scheduled,workflow-dispatch] |
 | `lpd` | Utility script for lpd. | FAIL (missing @script, @summary, @owner, @scope, @usage, @inputs, @outputs, @exit-codes, @examples, @notes) | runner | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `snippets/automations/youtube/filterVideos.js` | Utility script for filterVideos. | FAIL (missing @script, @summary, @owner, @scope, @usage, @inputs, @outputs, @exit-codes, @examples, @notes) | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
@@ -61,35 +57,39 @@ Generated: 2026-03-03T09:45:23.117Z
 | `tasks/scripts/run-audit-now.js` | Utility script for tasks/scripts/run-audit-now.js. | PASS | audit, runner | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tasks/scripts/test-audit.js` | Utility script for tasks/scripts/test-audit.js. | PASS | audit | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tests/integration/browser.test.js` | Utility script for tests/integration/browser.test.js. | PASS | ci, enforcement, test | manual, npm-script, pr, push | package-script:tests/package.json#scripts.test:browser [manual,npm-script] \| package-script:tools/package.json#scripts.test:browser [manual,npm-script] \| package-script:tools/package.json#scripts.test:browser:all [manual,npm-script] \| workflow:.github/workflows/test-suite.yml#Docs CI - Content Quality Suite > test-suite > Run Browser Tests (All Pages) [npm-script,pr,push] |
-| `tests/integration/domain-pages-audit.js` | Audit deployed docs page load status and emit a stable JSON report. | PASS | audit, enforcement, hook, test | manual, npm-script, pre-commit | hook:.githooks/pre-commit#line 678 [pre-commit] \| hook:.githooks/pre-commit#line 797 [pre-commit] \| package-script:tests/package.json#scripts.test:domain [manual,npm-script] \| package-script:tests/package.json#scripts.test:domain:both [manual,npm-script] \| package-script:tests/package.json#scripts.test:domain:v1 [manual,npm-script] \| package-script:tests/package.json#scripts.test:domain:v2 [manual,npm-script] |
+| `tests/integration/domain-pages-audit.js` | Audit deployed docs page load status and emit a stable JSON report. | PASS | audit, test | manual, npm-script | package-script:tests/package.json#scripts.test:domain [manual,npm-script] \| package-script:tests/package.json#scripts.test:domain:both [manual,npm-script] \| package-script:tests/package.json#scripts.test:domain:v1 [manual,npm-script] \| package-script:tests/package.json#scripts.test:domain:v2 [manual,npm-script] |
 | `tests/integration/openapi-reference-audit.js` | Audit V2 OpenAPI references against canonical specs with optional conservative autofix. | PASS | audit, ci, enforcement, test | manual, npm-script, pr, push, scheduled, workflow-dispatch | package-script:tests/package.json#scripts.test:openapi:audit [manual,npm-script] \| workflow:.github/workflows/openapi-reference-validation.yml#OpenAPI Reference Validation > audit > Apply safe autofix (non-PR) [pr,push,scheduled,workflow-dispatch] \| workflow:.github/workflows/openapi-reference-validation.yml#OpenAPI Reference Validation > audit > Run strict OpenAPI audit (final) [pr,push,scheduled,workflow-dispatch] \| workflow:.github/workflows/openapi-reference-validation.yml#OpenAPI Reference Validation > audit > Run strict OpenAPI audit (initial) [pr,push,scheduled,workflow-dispatch] |
-| `tests/integration/v2-link-audit.js` | Comprehensive V2 MDX link audit with internal strict checks and optional external URL validation. | PASS | audit, ci, enforcement, hook, test | manual, npm-script, pre-commit, scheduled, workflow-dispatch | hook:.githooks/pre-commit#line 663 [pre-commit] \| hook:.githooks/pre-commit#line 782 [pre-commit] \| package-script:tests/package.json#scripts.test:link-audit [manual,npm-script] \| package-script:tests/package.json#scripts.test:link-audit:external [manual,npm-script] \| package-script:tests/package.json#scripts.test:link-audit:staged [manual,npm-script] \| workflow:.github/workflows/v2-external-link-audit.yml#V2 External Link Audit (Advisory) > v2-external-link-audit > Run V2 external link audit (advisory) [scheduled,workflow-dispatch] |
+| `tests/integration/v2-link-audit.js` | Comprehensive V2 MDX link audit with internal strict checks and optional external URL validation. | PASS | audit, ci, enforcement, test | manual, npm-script, scheduled, workflow-dispatch | package-script:tests/package.json#scripts.test:link-audit [manual,npm-script] \| package-script:tests/package.json#scripts.test:link-audit:external [manual,npm-script] \| package-script:tests/package.json#scripts.test:link-audit:staged [manual,npm-script] \| workflow:.github/workflows/v2-external-link-audit.yml#V2 External Link Audit (Advisory) > v2-external-link-audit > Run V2 external link audit (advisory) [scheduled,workflow-dispatch] |
 | `tests/integration/v2-link-audit.selftest.js` | Script-level self-tests for v2 link audit external validation using a local HTTP fixture and temporary MDX file. | PASS | audit, enforcement, fixture, test | manual, npm-script | package-script:tests/package.json#scripts.test:link-audit:selftest [manual,npm-script] |
-| `tests/integration/v2-wcag-audit.js` | Audit v2 docs.json navigation pages for accessibility (WCAG 2.2 AA) with deterministic reports and conservative source autofixes. | PASS | audit, enforcement, hook, test | manual, npm-script, pre-commit | hook:.githooks/pre-commit#line 628 [pre-commit] \| hook:.githooks/pre-commit#line 747 [pre-commit] \| package-script:tests/package.json#scripts.test:wcag [manual,npm-script] \| package-script:tests/package.json#scripts.test:wcag:nofix [manual,npm-script] \| package-script:tests/package.json#scripts.test:wcag:staged [manual,npm-script] |
+| `tests/integration/v2-wcag-audit.js` | Audit v2 docs.json navigation pages for accessibility (WCAG 2.2 AA) with deterministic reports and conservative source autofixes. | PASS | audit, test | manual, npm-script | package-script:tests/package.json#scripts.test:wcag [manual,npm-script] \| package-script:tests/package.json#scripts.test:wcag:nofix [manual,npm-script] \| package-script:tests/package.json#scripts.test:wcag:staged [manual,npm-script] |
 | `tests/integration/v2-wcag-audit.selftest.js` | Script-level self-tests for the v2 WCAG audit (local HTTP + Puppeteer axe run, and temp-file fix/stage behavior without Mintlify). | PASS | audit, test | manual, npm-script | package-script:tests/package.json#scripts.test:wcag:selftest [manual,npm-script] |
-| `tests/run-all.js` | Utility script for tests/run-all.js. | PASS | enforcement, hook, runner, test | manual, npm-script, pre-commit | hook:.githooks/pre-commit#line 567 [pre-commit] \| hook:.githooks/pre-commit#line 639 [pre-commit] \| hook:.githooks/pre-commit#line 758 [pre-commit] \| package-script:tests/package.json#scripts.test [manual,npm-script] \| package-script:tools/package.json#scripts.test [manual,npm-script] |
+| `tests/run-all 2.js` | Utility script for tests/run-all.js. | PASS | runner, test | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
+| `tests/run-all.js` | Utility script for tests/run-all.js. | PASS | enforcement, hook, runner, test | manual, npm-script, pre-commit | hook:.githooks/pre-commit#line 643 [pre-commit] \| package-script:tests/package.json#scripts.test [manual,npm-script] \| package-script:tools/package.json#scripts.test [manual,npm-script] |
 | `tests/run-pr-checks.js` | Run changed-file scoped validation checks for pull request CI, including Codex skill sync and codex task-contract enforcement. | PASS | ci, enforcement, runner, sync, test | manual, npm-script, pr, push | package-script:tests/package.json#scripts.test:pr [manual,npm-script] \| workflow:.github/workflows/test-suite.yml#Docs CI - Content Quality Suite > test-suite > Run PR Changed-File Checks [npm-script,pr,push] |
+| `tests/unit/codex-commit.test.js` | Validate codex commit helper behavior for normal commits and explicit audited no-verify override handling. | PASS | audit, enforcement, test | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
+| `tests/unit/codex-safe-merge-with-stash.test.js` | Validate safe merge helper behavior for clean merges, dirty-tree stash/restore, and conflict handling. | PASS | enforcement, test | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tests/unit/codex-skill-sync.test.js` | Validate template-driven Codex skill sync behavior including check drift, safe upsert, subset sync, and openai.yaml generation. | PASS | enforcement, sync, test | manual, npm-script | package-script:tests/package.json#scripts.test:codex-skills-sync [manual,npm-script] |
 | `tests/unit/create-codex-pr.test.js` | Validate codex PR body generation and dry-run create behavior from task-contract input. | PASS | enforcement, generator, test | manual, npm-script | package-script:tests/package.json#scripts.test:codex-pr-create [manual,npm-script] |
-| `tests/unit/docs-guide-sot.test.js` | Validate docs-guide source-of-truth coverage, README pointers, and generated index freshness. | PASS | enforcement, generator, hook, test | pre-commit | hook:.githooks/pre-commit#line 652 [pre-commit] \| hook:.githooks/pre-commit#line 655 [pre-commit] \| hook:.githooks/pre-commit#line 771 [pre-commit] \| hook:.githooks/pre-commit#line 774 [pre-commit] |
+| `tests/unit/docs-guide-sot.test.js` | Validate docs-guide source-of-truth coverage, README pointers, and generated index freshness. | PASS | enforcement, generator, test | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tests/unit/docs-navigation.test.js` | Validate docs.json page-entry syntax in check-only mode by default, with optional report writing and approved remaps. | PASS | audit, ci, enforcement, test | manual, npm-script, workflow-dispatch | package-script:tests/package.json#scripts.test:docs-nav [manual,npm-script] \| package-script:tests/package.json#scripts.test:docs-nav:write [manual,npm-script] \| workflow:.github/workflows/translate-docs.yml#Docs Translation Pipeline > translate-docs > Validate docs.json navigation [workflow-dispatch] |
 | `tests/unit/docs-usefulness-accuracy-verifier.test.js` | Validate source-weighted 2026 accuracy verification rules (GitHub vs DeepWiki precedence, freshness, fallback, and cache reuse). | PASS | enforcement, test | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tests/unit/links-imports.test.js` | Utility script for tests/unit/links-imports.test.js. | PASS | test | manual, npm-script | package-script:tests/package.json#scripts.test:links [manual,npm-script] \| package-script:tools/package.json#scripts.test:links [manual,npm-script] |
+| `tests/unit/lpd-scoped-mint-dev.test.js` | Validate scoped lpd mint-dev profile filtering, generated .mintignore exclusions, and dry-run flag wiring. | PASS | enforcement, generator, test | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tests/unit/mdx-guards.test.js` | Enforce MDX guardrails for globals imports, math delimiters, and markdown table line breaks. | PASS | enforcement, test | manual, npm-script | package-script:tests/package.json#scripts.test:mdx:guards [manual,npm-script] |
 | `tests/unit/mdx.test.js` | Utility script for tests/unit/mdx.test.js. | PASS | test | manual, npm-script | package-script:tests/package.json#scripts.test:mdx [manual,npm-script] \| package-script:tools/package.json#scripts.test:mdx [manual,npm-script] |
 | `tests/unit/openapi-reference-audit.test.js` | Unit tests for OpenAPI reference audit parsing, mapping, validation findings, and conservative autofix behavior. | PASS | audit, enforcement, test | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tests/unit/openapi-rolling-issue.test.js` | Unit tests for OpenAPI rolling issue dedupe, action selection, body formatting, and top-findings limits. | PASS | test | manual, npm-script | package-script:tests/package.json#scripts.test:openapi:issue [manual,npm-script] |
 | `tests/unit/quality.test.js` | Utility script for tests/unit/quality.test.js. | PASS | test | manual, npm-script | package-script:tests/package.json#scripts.test:quality [manual,npm-script] \| package-script:tools/package.json#scripts.test:quality [manual,npm-script] |
 | `tests/unit/repo-audit-pipeline.test.js` | Validate audit skill discovery, orchestrator dry-run output, cleanup manifest safety, and cross-agent packaging outputs. | PASS | audit, enforcement, test | manual, npm-script | package-script:tests/package.json#scripts.test:repo-audit [manual,npm-script] |
-| `tests/unit/script-docs.test.js` | Enforce script header schema, keep group script indexes in sync, and build aggregate script index. | PASS | enforcement, generator, hook, sync, test | manual, npm-script, pre-commit | hook:.githooks/pre-commit#line 576 [pre-commit] \| hook:.githooks/pre-commit#line 695 [pre-commit] \| package-script:tests/package.json#scripts.test:scripts [manual,npm-script] |
+| `tests/unit/script-docs.test.js` | Enforce script header schema, keep group script indexes in sync, and build aggregate script index. | PASS | enforcement, generator, sync, test | manual, npm-script | package-script:tests/package.json#scripts.test:scripts [manual,npm-script] |
 | `tests/unit/spelling.test.js` | Utility script for tests/unit/spelling.test.js. | PASS | test | manual, npm-script | package-script:tests/package.json#scripts.test:spell [manual,npm-script] \| package-script:tools/package.json#scripts.test:spell [manual,npm-script] |
 | `tests/unit/style-guide.test.js` | Utility script for tests/unit/style-guide.test.js. | PASS | test | manual, npm-script | package-script:tests/package.json#scripts.test:style [manual,npm-script] \| package-script:tools/package.json#scripts.test:style [manual,npm-script] |
 | `tests/unit/v2-link-audit.test.js` | Unit tests for v2 link audit args, external validation helpers, and x-* scope exclusion behavior. | PASS | audit, enforcement, test | manual, npm-script | package-script:tests/package.json#scripts.test:link-audit:unit [manual,npm-script] |
 | `tests/unit/v2-wcag-audit.test.js` | Unit tests for v2 WCAG audit helper logic (args, thresholds, route mapping, report sorting, and conservative autofixes). | PASS | audit, test | manual, npm-script | package-script:tests/package.json#scripts.test:wcag:unit [manual,npm-script] |
-| `tests/unit/validate-codex-task-contract.test.js` | Validate codex task-contract PR-body marker enforcement behavior for codex branch checks. | PASS | enforcement, test | manual, npm-script | package-script:tests/package.json#scripts.test:codex-task-contract [manual,npm-script] |
-| `tests/utils/file-walker.js` | Utility script for tests/utils/file-walker.js. | PASS | enforcement, hook, test | pre-commit | hook:.githooks/pre-commit#line 65 [pre-commit] \| hook:.githooks/verify.sh#line 47 [manual] |
+| `tests/unit/validate-codex-task-contract.test.js` | Validate codex task-contract marker and issue-readiness enforcement behavior. | PASS | enforcement, test | manual, npm-script | package-script:tests/package.json#scripts.test:codex-task-contract [manual,npm-script] |
+| `tests/utils/file-walker.js` | Utility script for tests/utils/file-walker.js. | PASS | enforcement, hook, test | pre-commit | hook:.githooks/pre-commit#line 72 [pre-commit] \| hook:.githooks/verify.sh#line 47 [manual] |
 | `tests/utils/mdx-parser.js` | Utility script for tests/utils/mdx-parser.js. | PASS | test | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
-| `tests/utils/mintignore.js` | Helpers to evaluate .mintignore using gitignore semantics for test scanners. | FAIL (missing @examples) | audit, test | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
+| `tests/utils/mintignore.js` | Helpers to evaluate .mintignore using gitignore semantics for test scanners. | PASS | audit, test | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tests/utils/openapi-rolling-issue.js` | Shared helpers for OpenAPI rolling issue formatting, dedupe, and action selection. | PASS | test | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tests/utils/spell-checker.js` | Utility script for tests/utils/spell-checker.js. | PASS | enforcement, test | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/config/v2-internal-report-pages.js` | Utility script for v2 internal report pages. | FAIL (missing @script, @summary, @owner, @scope, @usage, @inputs, @outputs, @exit-codes, @examples, @notes) | audit | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
@@ -105,24 +105,31 @@ Generated: 2026-03-03T09:45:23.117Z
 | `tools/scripts/audit-tasks-folders.js` | Audit tasks folders, optionally normalize report locations, and optionally apply audit recommendations with conflict-safe moves. | PASS | audit | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/audit-v1-to-v2-mapping.js` | Build a complete v1->v2 mapping audit (English IA canonical), including seed revalidation and adjudication queue. | PASS | audit, enforcement, generator | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/audit-v2-usefulness.js` | Audit v2 MDX pages (excluding x-* directories) and emit page-level usefulness matrix rows with source-weighted 2026 accuracy verification fields. | PASS | audit | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
+| `tools/scripts/check-codex-pr-overlap.js` | Fail codex PR checks when changed files overlap another open codex PR without explicit handoff label. | PASS | ci, enforcement | pr | workflow:.github/workflows/codex-governance.yml#Codex Governance > codex-governance > Check codex PR overlap [pr] |
 | `tools/scripts/check-component-errors.js` | Utility script for tools/scripts/check-component-errors.js. | PASS | enforcement | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
+| `tools/scripts/check-no-ai-stash.sh` | Block commits when AI-tagged stash entries are present; enforce branch plus WIP checkpoint isolation. | PASS | enforcement | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/cleanup-quarantine-manager.js` | Classify cleanup candidates and optionally quarantine files with a reversible manifest. | PASS | helper | manual, npm-script | package-script:tools/package.json#scripts.cleanup:classify [manual,npm-script] \| package-script:tools/package.json#scripts.cleanup:quarantine [manual,npm-script] |
+| `tools/scripts/codex-commit.js` | Create git commits with explicit audited human override controls for --no-verify usage. | PASS | audit, enforcement, generator | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
+| `tools/scripts/codex-safe-merge-with-stash.js` | Safely execute an explicit merge request by stashing local changes, merging a target ref, and restoring the stash. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
+| `tools/scripts/codex/lock-release.js` | Release active local codex lock entries for a branch/task. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
+| `tools/scripts/codex/task-finalize.js` | Run finalize gates for a codex task: contract scope, lock ownership, and optional finalize profile checks. | PASS | enforcement | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
+| `tools/scripts/codex/task-preflight.js` | Create a codex task branch/worktree scaffold, task contract, and local lock for isolated agent execution. | PASS | generator | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
+| `tools/scripts/codex/validate-locks.js` | Validate codex local lock ownership and fail on overlapping active lock scopes. | PASS | enforcement | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/component-layout-governance.js` | Validate v2 English docs against component-layout contracts by page type. | PASS | enforcement | manual, npm-script | package-script:tools/package.json#scripts.audit:component-layout [manual,npm-script] |
 | `tools/scripts/convert-rss-to-mdx.js` | Convert an RSS feed XML file into a structured MDX document. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/create-codex-pr.js` | Generate a codex PR body from task contract metadata and optionally open a prefilled GitHub pull request. | PASS | generator, sync | manual, npm-script | package-script:tools/package.json#scripts.codex:pr [manual,npm-script] |
 | `tools/scripts/cross-agent-packager.js` | Generate consistent audit skill packs for Codex, Cursor, Claude Code, and Windsurf from one catalog. | PASS | audit, generator | manual, npm-script | package-script:tools/package.json#scripts.pack:agents [manual,npm-script] |
 | `tools/scripts/debug-mint-dev.js` | Utility script for tools/scripts/debug-mint-dev.js. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
-| `tools/scripts/deprecated/project-management-output-script.js` | Deprecated legacy project-management output script retained as a reference stub. | PASS | deprecated, fixture | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/dev/add-callouts.js` | Utility script for tools/scripts/dev/add-callouts.js. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/dev/batch-update-og-image.sh` | Utility script for tools/scripts/dev/batch-update-og-image.sh. | PASS | sync | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/dev/ensure-mint-watcher-patch.sh` | Ensure Mint local-preview watcher disables glob expansion in repo paths. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
+| `tools/scripts/dev/generate-mint-dev-scope.js` | Build deterministic Mint dev scoped profiles (docs.json + .mintignore) for large navigation trees. | PASS | generator | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/dev/replace-og-image.py` | Utility script for tools/scripts/dev/replace-og-image.py. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/dev/seo-generator-safe.js` | Utility script for tools/scripts/dev/seo-generator-safe.js. | PASS | generator | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/dev/test-add-callouts.js` | Utility script for tools/scripts/dev/test-add-callouts.js. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/dev/test-seo-generator.js` | Utility script for tools/scripts/dev/test-seo-generator.js. | PASS | generator | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/dev/update-all-og-images.js` | Utility script for tools/scripts/dev/update-all-og-images.js. | PASS | sync | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/dev/update-og-image.js` | Utility script for tools/scripts/dev/update-og-image.js. | PASS | sync | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
-| `tools/scripts/docs-coverage-and-route-integrity-audit.js` | Audit docs coverage integrity, missing routes, legacy /v2/pages references, and orphan candidate files. | PASS | audit, deprecated | manual, npm-script | package-script:tools/package.json#scripts.audit:docs-coverage [manual,npm-script] |
 | `tools/scripts/docs-quality-and-freshness-audit.js` | Audit v2 English docs for freshness and quality markers (TODO/TBD/Coming Soon, placeholders, and thin content). | PASS | audit | manual, npm-script | package-script:tools/package.json#scripts.audit:docs-quality [manual,npm-script] |
 | `tools/scripts/download-linkedin-video.sh` | Utility script for tools/scripts/download-linkedin-video.sh. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/download-linkedin-with-cookies.sh` | Utility script for tools/scripts/download-linkedin-with-cookies.sh. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
@@ -134,9 +141,9 @@ Generated: 2026-03-03T09:45:23.117Z
 | `tools/scripts/generate-docs-guide-components-index.js` | Generate component inventory indexes from snippets/components exports and optionally verify freshness. | PASS | enforcement, generator | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/generate-docs-guide-indexes.js` | Generate docs-guide workflow/template indexes and optionally verify they are up to date. | PASS | enforcement, generator | manual, npm-script | package-script:tools/package.json#scripts.docs-guide:indexes [manual,npm-script] |
 | `tools/scripts/generate-docs-guide-pages-index.js` | Generate docs-guide/indexes/pages-index.mdx from v2/index.mdx entries filtered to docs.json navigation pages. | PASS | generator | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
-| `tools/scripts/generate-docs-index.js` | Generate docs-index.json and optionally backfill v2 frontmatter metadata. | PASS | ci, enforcement, generator, hook | pr, pre-commit, push, workflow-dispatch | hook:.githooks/pre-commit#line 605 [pre-commit] \| hook:.githooks/pre-commit#line 609 [pre-commit] \| hook:.githooks/pre-commit#line 616 [pre-commit] \| hook:.githooks/pre-commit#line 724 [pre-commit] \| hook:.githooks/pre-commit#line 728 [pre-commit] \| hook:.githooks/pre-commit#line 735 [pre-commit] \| workflow:.github/workflows/check-docs-index.yml#Check Docs Index > docs-index-check > Verify docs-index.json is current [pr,push,workflow-dispatch] \| workflow:.github/workflows/generate-docs-index.yml#Generate Docs Index > generate-docs-index > Generate docs index [push,workflow-dispatch] \| workflow:.github/workflows/translate-docs.yml#Docs Translation Pipeline > translate-docs > Regenerate docs-index.json [workflow-dispatch] |
+| `tools/scripts/generate-docs-index.js` | Generate docs-index.json and optionally backfill v2 frontmatter metadata. | PASS | ci, enforcement, generator, hook | pr, pre-commit, push, workflow-dispatch | hook:.githooks/pre-commit#line 669 [pre-commit] \| hook:.githooks/pre-commit#line 673 [pre-commit] \| hook:.githooks/pre-commit#line 678 [pre-commit] \| workflow:.github/workflows/check-docs-index.yml#Check Docs Index > docs-index-check > Verify docs-index.json is current [pr,push,workflow-dispatch] \| workflow:.github/workflows/generate-docs-index.yml#Generate Docs Index > generate-docs-index > Generate docs index [push,workflow-dispatch] \| workflow:.github/workflows/translate-docs.yml#Docs Translation Pipeline > translate-docs > Regenerate docs-index.json [workflow-dispatch] |
 | `tools/scripts/generate-llms-files.js` | Generate llms.txt and llms-full.txt from v2 docs navigation. | PASS | ci, enforcement, generator | pr, push | workflow:.github/workflows/verify-llms-files.yml#Verify llms.txt Files > verify-llms-files > Verify llms outputs [pr,push] |
-| `tools/scripts/generate-pages-index.js` | Generate and verify section-style index.mdx files for v2 docs folders, plus the root aggregate index. | PASS | enforcement, generator, hook | manual, npm-script, pre-commit | hook:.githooks/pre-commit#line 590 [pre-commit] \| hook:.githooks/pre-commit#line 709 [pre-commit] \| package-script:tests/package.json#scripts.test:pages-index [manual,npm-script] \| package-script:tests/package.json#scripts.test:pages-index:rebuild [manual,npm-script] \| package-script:tests/package.json#scripts.test:pages-index:write [manual,npm-script] |
+| `tools/scripts/generate-pages-index.js` | Generate and verify section-style index.mdx files for v2 docs folders, plus the root aggregate index. | PASS | enforcement, generator | manual, npm-script | package-script:tests/package.json#scripts.test:pages-index [manual,npm-script] \| package-script:tests/package.json#scripts.test:pages-index:rebuild [manual,npm-script] \| package-script:tests/package.json#scripts.test:pages-index:write [manual,npm-script] |
 | `tools/scripts/i18n/generate-localized-docs-json.js` | Add/update v2 language nodes in docs.json using English v2 as template plus route-map-driven route rewrites. | PASS | ci, generator, sync | manual, npm-script, workflow-dispatch | package-script:tools/package.json#scripts.i18n:docs-json [manual,npm-script] \| workflow:.github/workflows/translate-docs.yml#Docs Translation Pipeline > translate-docs > Update docs.json localized language nodes [workflow-dispatch] |
 | `tools/scripts/i18n/lib/common.js` | Utility script for tools/scripts/i18n/lib/common.js. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/i18n/lib/config.js` | Utility script for tools/scripts/i18n/lib/config.js. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
@@ -181,21 +188,20 @@ Generated: 2026-03-03T09:45:23.117Z
 | `tools/scripts/test-all-pages-comprehensive.js` | Utility script for tools/scripts/test-all-pages-comprehensive.js. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/test-v2-pages.js` | Utility script for tools/scripts/test-v2-pages.js. | PASS | helper | manual, npm-script | package-script:tools/package.json#scripts.test:all-pages [manual,npm-script] \| package-script:tools/package.json#scripts.test:v2-pages [manual,npm-script] |
 | `tools/scripts/test-youtube-pages.js` | Utility script for tools/scripts/test-youtube-pages.js. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
-| `tools/scripts/test/allowed-script.js` | Utility script for tools/scripts/test/allowed-script.js. | PASS | fixture | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
-| `tools/scripts/test/allowed-test.js` | Utility script for tools/scripts/test/allowed-test.js. | PASS | fixture | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
-| `tools/scripts/test/allowed.js` | Utility script for tools/scripts/test/allowed.js. | PASS | fixture | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/test/check-component-errors.js` | Utility script for tools/scripts/test/check-component-errors.js. | PASS | enforcement, fixture | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/test/final-verification.js` | Utility script for tools/scripts/test/final-verification.js. | PASS | fixture | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/test/find-correct-url.js` | Utility script for tools/scripts/test/find-correct-url.js. | PASS | fixture | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/test/inspect-page.js` | Utility script for tools/scripts/test/inspect-page.js. | PASS | fixture | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/test/inspect-video-page.js` | Utility script for tools/scripts/test/inspect-video-page.js. | PASS | fixture | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
+| `tools/scripts/test/test-youtube-pages 2.js` | Utility script for tools/scripts/test/test-youtube-pages.js. | PASS | fixture | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/test/test-youtube-pages.js` | Utility script for tools/scripts/test/test-youtube-pages.js. | PASS | fixture | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/test/verify-all-pages.js` | Utility script for tools/scripts/verify-all-pages.js. | PASS | enforcement, fixture | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/test/verify-pages.js` | Utility script for tools/scripts/verify-pages.js. | PASS | enforcement, fixture | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/transcribe-audio-to-mdx.js` | Download audio from URL, chunk with ffmpeg, transcribe via OpenRouter, and write an MDX transcript page. | PASS | helper | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
-| `tools/scripts/validate-codex-task-contract.js` | Validate codex branch task contract schema, branch binding, changed-file scope, and PR body sections. | PASS | enforcement, hook | pre-commit | hook:.githooks/pre-commit#line 94 [pre-commit] |
+| `tools/scripts/validate-codex-task-contract.js` | Validate codex branch task contract schema, branch binding, changed-file scope, PR body sections, and optional linked-issue readiness policy. | PASS | ci, enforcement, hook | pr, pre-commit | hook:.githooks/pre-commit#line 163 [pre-commit] \| workflow:.github/workflows/codex-governance.yml#Codex Governance > codex-governance > Validate codex task contract + issue readiness + PR body [pr] |
 | `tools/scripts/verify-all-pages.js` | Utility script for tools/scripts/verify-all-pages.js. | PASS | enforcement | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/verify-pages.js` | Utility script for tools/scripts/verify-pages.js. | PASS | enforcement | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
+| `tools/scripts/verify-pay-orc-gate-finalize.sh` | Enforce the payments/orchestrators insertion deliverables and migration paths before commit. | PASS | enforcement | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/verify/.verify-large-change.sh` | Reserved verifier hook placeholder for large-change checks. | PASS | enforcement | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 | `tools/scripts/wcag-repair-common.js` | Apply conservative WCAG-related source autofixes across v2 docs (common raw-tag issues) and write deterministic repair reports. | PASS | audit | manual | Manual/on-demand (no direct hook/workflow/package reference found) |
 
@@ -207,10 +213,6 @@ Generated: 2026-03-03T09:45:23.117Z
 
 ### `snippets/automations/youtube/filterVideos.js`
 - Missing tags: @script, @summary, @owner, @scope, @usage, @inputs, @outputs, @exit-codes, @examples, @notes
-- Empty/placeholder tags: none
-
-### `tests/utils/mintignore.js`
-- Missing tags: @examples
 - Empty/placeholder tags: none
 
 ### `tools/config/v2-internal-report-pages.js`
@@ -278,14 +280,6 @@ Generated: 2026-03-03T09:45:23.117Z
 - Purpose: Utility script for .githooks/verify.sh.
 - Template compliance: PASS
 - Role tags: enforcement, hook
-- Run-context tags: pre-commit
-- Used by:
-  - hook: .githooks/pre-commit#line 545 (when: pre-commit)
-
-### `.github/scripts/embed-table.js`
-- Purpose: Reserved CI utility script placeholder for markdown table embedding tasks.
-- Template compliance: PASS
-- Role tags: helper
 - Run-context tags: manual
 - Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
@@ -312,20 +306,6 @@ Generated: 2026-03-03T09:45:23.117Z
 - Run-context tags: scheduled, workflow-dispatch
 - Used by:
   - workflow: .github/workflows/update-youtube-data.yml#Update YouTube Data > update-youtube > Fetch and process YouTube videos (when: scheduled, workflow-dispatch)
-
-### `.github/scripts/gen-table.js`
-- Purpose: Reserved CI utility script placeholder for generated table output.
-- Template compliance: PASS
-- Role tags: generator
-- Run-context tags: manual
-- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
-
-### `.github/scripts/gen-textareas.js`
-- Purpose: Reserved CI utility script placeholder for textarea generation tasks.
-- Template compliance: PASS
-- Role tags: helper
-- Run-context tags: manual
-- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
 ### `.github/scripts/project-showcase-sync.js`
 - Purpose: Utility script for .github/scripts/project-showcase-sync.js.
@@ -391,11 +371,9 @@ Generated: 2026-03-03T09:45:23.117Z
 ### `tests/integration/domain-pages-audit.js`
 - Purpose: Audit deployed docs page load status and emit a stable JSON report.
 - Template compliance: PASS
-- Role tags: audit, enforcement, hook, test
-- Run-context tags: manual, npm-script, pre-commit
+- Role tags: audit, test
+- Run-context tags: manual, npm-script
 - Used by:
-  - hook: .githooks/pre-commit#line 678 (when: pre-commit)
-  - hook: .githooks/pre-commit#line 797 (when: pre-commit)
   - package-script: tests/package.json#scripts.test:domain (when: manual, npm-script)
   - package-script: tests/package.json#scripts.test:domain:both (when: manual, npm-script)
   - package-script: tests/package.json#scripts.test:domain:v1 (when: manual, npm-script)
@@ -415,11 +393,9 @@ Generated: 2026-03-03T09:45:23.117Z
 ### `tests/integration/v2-link-audit.js`
 - Purpose: Comprehensive V2 MDX link audit with internal strict checks and optional external URL validation.
 - Template compliance: PASS
-- Role tags: audit, ci, enforcement, hook, test
-- Run-context tags: manual, npm-script, pre-commit, scheduled, workflow-dispatch
+- Role tags: audit, ci, enforcement, test
+- Run-context tags: manual, npm-script, scheduled, workflow-dispatch
 - Used by:
-  - hook: .githooks/pre-commit#line 663 (when: pre-commit)
-  - hook: .githooks/pre-commit#line 782 (when: pre-commit)
   - package-script: tests/package.json#scripts.test:link-audit (when: manual, npm-script)
   - package-script: tests/package.json#scripts.test:link-audit:external (when: manual, npm-script)
   - package-script: tests/package.json#scripts.test:link-audit:staged (when: manual, npm-script)
@@ -436,11 +412,9 @@ Generated: 2026-03-03T09:45:23.117Z
 ### `tests/integration/v2-wcag-audit.js`
 - Purpose: Audit v2 docs.json navigation pages for accessibility (WCAG 2.2 AA) with deterministic reports and conservative source autofixes.
 - Template compliance: PASS
-- Role tags: audit, enforcement, hook, test
-- Run-context tags: manual, npm-script, pre-commit
+- Role tags: audit, test
+- Run-context tags: manual, npm-script
 - Used by:
-  - hook: .githooks/pre-commit#line 628 (when: pre-commit)
-  - hook: .githooks/pre-commit#line 747 (when: pre-commit)
   - package-script: tests/package.json#scripts.test:wcag (when: manual, npm-script)
   - package-script: tests/package.json#scripts.test:wcag:nofix (when: manual, npm-script)
   - package-script: tests/package.json#scripts.test:wcag:staged (when: manual, npm-script)
@@ -453,15 +427,20 @@ Generated: 2026-03-03T09:45:23.117Z
 - Used by:
   - package-script: tests/package.json#scripts.test:wcag:selftest (when: manual, npm-script)
 
+### `tests/run-all 2.js`
+- Purpose: Utility script for tests/run-all.js.
+- Template compliance: PASS
+- Role tags: runner, test
+- Run-context tags: manual
+- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
+
 ### `tests/run-all.js`
 - Purpose: Utility script for tests/run-all.js.
 - Template compliance: PASS
 - Role tags: enforcement, hook, runner, test
 - Run-context tags: manual, npm-script, pre-commit
 - Used by:
-  - hook: .githooks/pre-commit#line 567 (when: pre-commit)
-  - hook: .githooks/pre-commit#line 639 (when: pre-commit)
-  - hook: .githooks/pre-commit#line 758 (when: pre-commit)
+  - hook: .githooks/pre-commit#line 643 (when: pre-commit)
   - package-script: tests/package.json#scripts.test (when: manual, npm-script)
   - package-script: tools/package.json#scripts.test (when: manual, npm-script)
 
@@ -473,6 +452,20 @@ Generated: 2026-03-03T09:45:23.117Z
 - Used by:
   - package-script: tests/package.json#scripts.test:pr (when: manual, npm-script)
   - workflow: .github/workflows/test-suite.yml#Docs CI - Content Quality Suite > test-suite > Run PR Changed-File Checks (when: npm-script, pr, push)
+
+### `tests/unit/codex-commit.test.js`
+- Purpose: Validate codex commit helper behavior for normal commits and explicit audited no-verify override handling.
+- Template compliance: PASS
+- Role tags: audit, enforcement, test
+- Run-context tags: manual
+- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
+
+### `tests/unit/codex-safe-merge-with-stash.test.js`
+- Purpose: Validate safe merge helper behavior for clean merges, dirty-tree stash/restore, and conflict handling.
+- Template compliance: PASS
+- Role tags: enforcement, test
+- Run-context tags: manual
+- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
 ### `tests/unit/codex-skill-sync.test.js`
 - Purpose: Validate template-driven Codex skill sync behavior including check drift, safe upsert, subset sync, and openai.yaml generation.
@@ -493,13 +486,9 @@ Generated: 2026-03-03T09:45:23.117Z
 ### `tests/unit/docs-guide-sot.test.js`
 - Purpose: Validate docs-guide source-of-truth coverage, README pointers, and generated index freshness.
 - Template compliance: PASS
-- Role tags: enforcement, generator, hook, test
-- Run-context tags: pre-commit
-- Used by:
-  - hook: .githooks/pre-commit#line 652 (when: pre-commit)
-  - hook: .githooks/pre-commit#line 655 (when: pre-commit)
-  - hook: .githooks/pre-commit#line 771 (when: pre-commit)
-  - hook: .githooks/pre-commit#line 774 (when: pre-commit)
+- Role tags: enforcement, generator, test
+- Run-context tags: manual
+- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
 ### `tests/unit/docs-navigation.test.js`
 - Purpose: Validate docs.json page-entry syntax in check-only mode by default, with optional report writing and approved remaps.
@@ -526,6 +515,13 @@ Generated: 2026-03-03T09:45:23.117Z
 - Used by:
   - package-script: tests/package.json#scripts.test:links (when: manual, npm-script)
   - package-script: tools/package.json#scripts.test:links (when: manual, npm-script)
+
+### `tests/unit/lpd-scoped-mint-dev.test.js`
+- Purpose: Validate scoped lpd mint-dev profile filtering, generated .mintignore exclusions, and dry-run flag wiring.
+- Template compliance: PASS
+- Role tags: enforcement, generator, test
+- Run-context tags: manual
+- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
 ### `tests/unit/mdx-guards.test.js`
 - Purpose: Enforce MDX guardrails for globals imports, math delimiters, and markdown table line breaks.
@@ -579,11 +575,9 @@ Generated: 2026-03-03T09:45:23.117Z
 ### `tests/unit/script-docs.test.js`
 - Purpose: Enforce script header schema, keep group script indexes in sync, and build aggregate script index.
 - Template compliance: PASS
-- Role tags: enforcement, generator, hook, sync, test
-- Run-context tags: manual, npm-script, pre-commit
+- Role tags: enforcement, generator, sync, test
+- Run-context tags: manual, npm-script
 - Used by:
-  - hook: .githooks/pre-commit#line 576 (when: pre-commit)
-  - hook: .githooks/pre-commit#line 695 (when: pre-commit)
   - package-script: tests/package.json#scripts.test:scripts (when: manual, npm-script)
 
 ### `tests/unit/spelling.test.js`
@@ -621,7 +615,7 @@ Generated: 2026-03-03T09:45:23.117Z
   - package-script: tests/package.json#scripts.test:wcag:unit (when: manual, npm-script)
 
 ### `tests/unit/validate-codex-task-contract.test.js`
-- Purpose: Validate codex task-contract PR-body marker enforcement behavior for codex branch checks.
+- Purpose: Validate codex task-contract marker and issue-readiness enforcement behavior.
 - Template compliance: PASS
 - Role tags: enforcement, test
 - Run-context tags: manual, npm-script
@@ -634,7 +628,7 @@ Generated: 2026-03-03T09:45:23.117Z
 - Role tags: enforcement, hook, test
 - Run-context tags: pre-commit
 - Used by:
-  - hook: .githooks/pre-commit#line 65 (when: pre-commit)
+  - hook: .githooks/pre-commit#line 72 (when: pre-commit)
   - hook: .githooks/verify.sh#line 47 (when: manual)
 
 ### `tests/utils/mdx-parser.js`
@@ -646,7 +640,7 @@ Generated: 2026-03-03T09:45:23.117Z
 
 ### `tests/utils/mintignore.js`
 - Purpose: Helpers to evaluate .mintignore using gitignore semantics for test scanners.
-- Template compliance: FAIL (missing @examples)
+- Template compliance: PASS
 - Role tags: audit, test
 - Run-context tags: manual
 - Used by: Manual/on-demand (no direct hook/workflow/package reference found)
@@ -757,8 +751,23 @@ Generated: 2026-03-03T09:45:23.117Z
 - Run-context tags: manual
 - Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
+### `tools/scripts/check-codex-pr-overlap.js`
+- Purpose: Fail codex PR checks when changed files overlap another open codex PR without explicit handoff label.
+- Template compliance: PASS
+- Role tags: ci, enforcement
+- Run-context tags: pr
+- Used by:
+  - workflow: .github/workflows/codex-governance.yml#Codex Governance > codex-governance > Check codex PR overlap (when: pr)
+
 ### `tools/scripts/check-component-errors.js`
 - Purpose: Utility script for tools/scripts/check-component-errors.js.
+- Template compliance: PASS
+- Role tags: enforcement
+- Run-context tags: manual
+- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
+
+### `tools/scripts/check-no-ai-stash.sh`
+- Purpose: Block commits when AI-tagged stash entries are present; enforce branch plus WIP checkpoint isolation.
 - Template compliance: PASS
 - Role tags: enforcement
 - Run-context tags: manual
@@ -772,6 +781,48 @@ Generated: 2026-03-03T09:45:23.117Z
 - Used by:
   - package-script: tools/package.json#scripts.cleanup:classify (when: manual, npm-script)
   - package-script: tools/package.json#scripts.cleanup:quarantine (when: manual, npm-script)
+
+### `tools/scripts/codex-commit.js`
+- Purpose: Create git commits with explicit audited human override controls for --no-verify usage.
+- Template compliance: PASS
+- Role tags: audit, enforcement, generator
+- Run-context tags: manual
+- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
+
+### `tools/scripts/codex-safe-merge-with-stash.js`
+- Purpose: Safely execute an explicit merge request by stashing local changes, merging a target ref, and restoring the stash.
+- Template compliance: PASS
+- Role tags: helper
+- Run-context tags: manual
+- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
+
+### `tools/scripts/codex/lock-release.js`
+- Purpose: Release active local codex lock entries for a branch/task.
+- Template compliance: PASS
+- Role tags: helper
+- Run-context tags: manual
+- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
+
+### `tools/scripts/codex/task-finalize.js`
+- Purpose: Run finalize gates for a codex task: contract scope, lock ownership, and optional finalize profile checks.
+- Template compliance: PASS
+- Role tags: enforcement
+- Run-context tags: manual
+- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
+
+### `tools/scripts/codex/task-preflight.js`
+- Purpose: Create a codex task branch/worktree scaffold, task contract, and local lock for isolated agent execution.
+- Template compliance: PASS
+- Role tags: generator
+- Run-context tags: manual
+- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
+
+### `tools/scripts/codex/validate-locks.js`
+- Purpose: Validate codex local lock ownership and fail on overlapping active lock scopes.
+- Template compliance: PASS
+- Role tags: enforcement
+- Run-context tags: manual
+- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
 ### `tools/scripts/component-layout-governance.js`
 - Purpose: Validate v2 English docs against component-layout contracts by page type.
@@ -811,13 +862,6 @@ Generated: 2026-03-03T09:45:23.117Z
 - Run-context tags: manual
 - Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
-### `tools/scripts/deprecated/project-management-output-script.js`
-- Purpose: Deprecated legacy project-management output script retained as a reference stub.
-- Template compliance: PASS
-- Role tags: deprecated, fixture
-- Run-context tags: manual
-- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
-
 ### `tools/scripts/dev/add-callouts.js`
 - Purpose: Utility script for tools/scripts/dev/add-callouts.js.
 - Template compliance: PASS
@@ -836,6 +880,13 @@ Generated: 2026-03-03T09:45:23.117Z
 - Purpose: Ensure Mint local-preview watcher disables glob expansion in repo paths.
 - Template compliance: PASS
 - Role tags: helper
+- Run-context tags: manual
+- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
+
+### `tools/scripts/dev/generate-mint-dev-scope.js`
+- Purpose: Build deterministic Mint dev scoped profiles (docs.json + .mintignore) for large navigation trees.
+- Template compliance: PASS
+- Role tags: generator
 - Run-context tags: manual
 - Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
@@ -880,14 +931,6 @@ Generated: 2026-03-03T09:45:23.117Z
 - Role tags: sync
 - Run-context tags: manual
 - Used by: Manual/on-demand (no direct hook/workflow/package reference found)
-
-### `tools/scripts/docs-coverage-and-route-integrity-audit.js`
-- Purpose: Audit docs coverage integrity, missing routes, legacy /v2/pages references, and orphan candidate files.
-- Template compliance: PASS
-- Role tags: audit, deprecated
-- Run-context tags: manual, npm-script
-- Used by:
-  - package-script: tools/package.json#scripts.audit:docs-coverage (when: manual, npm-script)
 
 ### `tools/scripts/docs-quality-and-freshness-audit.js`
 - Purpose: Audit v2 English docs for freshness and quality markers (TODO/TBD/Coming Soon, placeholders, and thin content).
@@ -977,12 +1020,9 @@ Generated: 2026-03-03T09:45:23.117Z
 - Role tags: ci, enforcement, generator, hook
 - Run-context tags: pr, pre-commit, push, workflow-dispatch
 - Used by:
-  - hook: .githooks/pre-commit#line 605 (when: pre-commit)
-  - hook: .githooks/pre-commit#line 609 (when: pre-commit)
-  - hook: .githooks/pre-commit#line 616 (when: pre-commit)
-  - hook: .githooks/pre-commit#line 724 (when: pre-commit)
-  - hook: .githooks/pre-commit#line 728 (when: pre-commit)
-  - hook: .githooks/pre-commit#line 735 (when: pre-commit)
+  - hook: .githooks/pre-commit#line 669 (when: pre-commit)
+  - hook: .githooks/pre-commit#line 673 (when: pre-commit)
+  - hook: .githooks/pre-commit#line 678 (when: pre-commit)
   - workflow: .github/workflows/check-docs-index.yml#Check Docs Index > docs-index-check > Verify docs-index.json is current (when: pr, push, workflow-dispatch)
   - workflow: .github/workflows/generate-docs-index.yml#Generate Docs Index > generate-docs-index > Generate docs index (when: push, workflow-dispatch)
   - workflow: .github/workflows/translate-docs.yml#Docs Translation Pipeline > translate-docs > Regenerate docs-index.json (when: workflow-dispatch)
@@ -998,11 +1038,9 @@ Generated: 2026-03-03T09:45:23.117Z
 ### `tools/scripts/generate-pages-index.js`
 - Purpose: Generate and verify section-style index.mdx files for v2 docs folders, plus the root aggregate index.
 - Template compliance: PASS
-- Role tags: enforcement, generator, hook
-- Run-context tags: manual, npm-script, pre-commit
+- Role tags: enforcement, generator
+- Run-context tags: manual, npm-script
 - Used by:
-  - hook: .githooks/pre-commit#line 590 (when: pre-commit)
-  - hook: .githooks/pre-commit#line 709 (when: pre-commit)
   - package-script: tests/package.json#scripts.test:pages-index (when: manual, npm-script)
   - package-script: tests/package.json#scripts.test:pages-index:rebuild (when: manual, npm-script)
   - package-script: tests/package.json#scripts.test:pages-index:write (when: manual, npm-script)
@@ -1338,27 +1376,6 @@ Generated: 2026-03-03T09:45:23.117Z
 - Run-context tags: manual
 - Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
-### `tools/scripts/test/allowed-script.js`
-- Purpose: Utility script for tools/scripts/test/allowed-script.js.
-- Template compliance: PASS
-- Role tags: fixture
-- Run-context tags: manual
-- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
-
-### `tools/scripts/test/allowed-test.js`
-- Purpose: Utility script for tools/scripts/test/allowed-test.js.
-- Template compliance: PASS
-- Role tags: fixture
-- Run-context tags: manual
-- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
-
-### `tools/scripts/test/allowed.js`
-- Purpose: Utility script for tools/scripts/test/allowed.js.
-- Template compliance: PASS
-- Role tags: fixture
-- Run-context tags: manual
-- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
-
 ### `tools/scripts/test/check-component-errors.js`
 - Purpose: Utility script for tools/scripts/test/check-component-errors.js.
 - Template compliance: PASS
@@ -1394,6 +1411,13 @@ Generated: 2026-03-03T09:45:23.117Z
 - Run-context tags: manual
 - Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
+### `tools/scripts/test/test-youtube-pages 2.js`
+- Purpose: Utility script for tools/scripts/test/test-youtube-pages.js.
+- Template compliance: PASS
+- Role tags: fixture
+- Run-context tags: manual
+- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
+
 ### `tools/scripts/test/test-youtube-pages.js`
 - Purpose: Utility script for tools/scripts/test/test-youtube-pages.js.
 - Template compliance: PASS
@@ -1423,12 +1447,13 @@ Generated: 2026-03-03T09:45:23.117Z
 - Used by: Manual/on-demand (no direct hook/workflow/package reference found)
 
 ### `tools/scripts/validate-codex-task-contract.js`
-- Purpose: Validate codex branch task contract schema, branch binding, changed-file scope, and PR body sections.
+- Purpose: Validate codex branch task contract schema, branch binding, changed-file scope, PR body sections, and optional linked-issue readiness policy.
 - Template compliance: PASS
-- Role tags: enforcement, hook
-- Run-context tags: pre-commit
+- Role tags: ci, enforcement, hook
+- Run-context tags: pr, pre-commit
 - Used by:
-  - hook: .githooks/pre-commit#line 94 (when: pre-commit)
+  - hook: .githooks/pre-commit#line 163 (when: pre-commit)
+  - workflow: .github/workflows/codex-governance.yml#Codex Governance > codex-governance > Validate codex task contract + issue readiness + PR body (when: pr)
 
 ### `tools/scripts/verify-all-pages.js`
 - Purpose: Utility script for tools/scripts/verify-all-pages.js.
@@ -1439,6 +1464,13 @@ Generated: 2026-03-03T09:45:23.117Z
 
 ### `tools/scripts/verify-pages.js`
 - Purpose: Utility script for tools/scripts/verify-pages.js.
+- Template compliance: PASS
+- Role tags: enforcement
+- Run-context tags: manual
+- Used by: Manual/on-demand (no direct hook/workflow/package reference found)
+
+### `tools/scripts/verify-pay-orc-gate-finalize.sh`
+- Purpose: Enforce the payments/orchestrators insertion deliverables and migration paths before commit.
 - Template compliance: PASS
 - Role tags: enforcement
 - Run-context tags: manual
@@ -1461,63 +1493,63 @@ Generated: 2026-03-03T09:45:23.117Z
 ## Overlap Clusters
 
 ### Cluster 1 (exact)
-- Scripts: `tools/scripts/test/allowed-script.js`, `tools/scripts/test/allowed-test.js`, `tools/scripts/test/allowed.js`
-- Canonical candidate: `tools/scripts/test/allowed.js`
-- Shared role tags: fixture
-- Recommendation: Consolidate to `tools/scripts/test/allowed.js`; replace duplicates with wrappers or remove after migrating references.
-
-### Cluster 2 (exact)
 - Scripts: `tools/scripts/check-component-errors.js`, `tools/scripts/test/check-component-errors.js`
 - Canonical candidate: `tools/scripts/check-component-errors.js`
 - Shared role tags: enforcement
 - Recommendation: Consolidate to `tools/scripts/check-component-errors.js`; replace duplicates with wrappers or remove after migrating references.
 
-### Cluster 3 (exact)
+### Cluster 2 (exact)
 - Scripts: `tools/scripts/final-verification.js`, `tools/scripts/test/final-verification.js`
 - Canonical candidate: `tools/scripts/final-verification.js`
 - Shared role tags: none
 - Recommendation: Consolidate to `tools/scripts/final-verification.js`; replace duplicates with wrappers or remove after migrating references.
 
-### Cluster 4 (exact)
+### Cluster 3 (exact)
 - Scripts: `tools/scripts/find-correct-url.js`, `tools/scripts/test/find-correct-url.js`
 - Canonical candidate: `tools/scripts/find-correct-url.js`
 - Shared role tags: none
 - Recommendation: Consolidate to `tools/scripts/find-correct-url.js`; replace duplicates with wrappers or remove after migrating references.
 
-### Cluster 5 (exact)
+### Cluster 4 (exact)
 - Scripts: `tools/scripts/inspect-page.js`, `tools/scripts/test/inspect-page.js`
 - Canonical candidate: `tools/scripts/inspect-page.js`
 - Shared role tags: none
 - Recommendation: Consolidate to `tools/scripts/inspect-page.js`; replace duplicates with wrappers or remove after migrating references.
 
-### Cluster 6 (exact)
+### Cluster 5 (exact)
 - Scripts: `tools/scripts/inspect-video-page.js`, `tools/scripts/test/inspect-video-page.js`
 - Canonical candidate: `tools/scripts/inspect-video-page.js`
 - Shared role tags: none
 - Recommendation: Consolidate to `tools/scripts/inspect-video-page.js`; replace duplicates with wrappers or remove after migrating references.
 
-### Cluster 7 (exact)
-- Scripts: `tools/scripts/test-youtube-pages.js`, `tools/scripts/test/test-youtube-pages.js`
+### Cluster 6 (exact)
+- Scripts: `tools/scripts/test-youtube-pages.js`, `tools/scripts/test/test-youtube-pages 2.js`
 - Canonical candidate: `tools/scripts/test-youtube-pages.js`
 - Shared role tags: none
 - Recommendation: Consolidate to `tools/scripts/test-youtube-pages.js`; replace duplicates with wrappers or remove after migrating references.
 
-### Cluster 8 (exact)
+### Cluster 7 (exact)
 - Scripts: `tools/scripts/test/verify-all-pages.js`, `tools/scripts/verify-all-pages.js`
 - Canonical candidate: `tools/scripts/verify-all-pages.js`
 - Shared role tags: enforcement
 - Recommendation: Consolidate to `tools/scripts/verify-all-pages.js`; replace duplicates with wrappers or remove after migrating references.
 
-### Cluster 9 (exact)
+### Cluster 8 (exact)
 - Scripts: `tools/scripts/test/verify-pages.js`, `tools/scripts/verify-pages.js`
 - Canonical candidate: `tools/scripts/verify-pages.js`
 - Shared role tags: enforcement
 - Recommendation: Consolidate to `tools/scripts/verify-pages.js`; replace duplicates with wrappers or remove after migrating references.
 
+### Cluster 9 (near)
+- Scripts: `tools/scripts/test-youtube-pages.js`, `tools/scripts/test/test-youtube-pages.js`
+- Canonical candidate: `tools/scripts/test-youtube-pages.js`
+- Similarity: 0.991
+- Shared role tags: none
+- Recommendation: Review `tools/scripts/test-youtube-pages.js` and `tools/scripts/test/test-youtube-pages.js` for shared implementation; likely consolidate around `tools/scripts/test-youtube-pages.js`.
+
 
 ## Consolidation Recommendations
 
-- Consolidate to `tools/scripts/test/allowed.js`; replace duplicates with wrappers or remove after migrating references.
 - Consolidate to `tools/scripts/check-component-errors.js`; replace duplicates with wrappers or remove after migrating references.
 - Consolidate to `tools/scripts/final-verification.js`; replace duplicates with wrappers or remove after migrating references.
 - Consolidate to `tools/scripts/find-correct-url.js`; replace duplicates with wrappers or remove after migrating references.
@@ -1526,3 +1558,4 @@ Generated: 2026-03-03T09:45:23.117Z
 - Consolidate to `tools/scripts/test-youtube-pages.js`; replace duplicates with wrappers or remove after migrating references.
 - Consolidate to `tools/scripts/verify-all-pages.js`; replace duplicates with wrappers or remove after migrating references.
 - Consolidate to `tools/scripts/verify-pages.js`; replace duplicates with wrappers or remove after migrating references.
+- Review `tools/scripts/test-youtube-pages.js` and `tools/scripts/test/test-youtube-pages.js` for shared implementation; likely consolidate around `tools/scripts/test-youtube-pages.js`.

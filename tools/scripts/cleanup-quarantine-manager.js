@@ -40,7 +40,6 @@ const DEFAULT_QUARANTINE_ROOT = 'tasks/quarantine/repo-audit';
 
 const STAGE_REPORT_FILES = [
   'script-footprint-and-usage-audit.json',
-  'docs-coverage-and-route-integrity-audit.json',
   'docs-quality-and-freshness-audit.json',
   'style-and-language-homogenizer-en-gb.json',
   'component-layout-governance.json'
@@ -208,20 +207,6 @@ function classifyFromScriptIssues(issues, entryBag) {
   });
 }
 
-function classifyFromCoverageIssues(issues, entryBag) {
-  issues.forEach((issue) => {
-    const issueId = String(issue.id || '');
-    const issuePath = toPosix(issue.path || '');
-
-    if (issueId === 'non-nav-doc-candidate') {
-      addEntry(
-        entryBag,
-        makeEntry(issuePath, 'Documentation file is not represented in docs navigation and needs intentional keep/remove decision.', 0.45, 'keep', STAGE_ID)
-      );
-    }
-  });
-}
-
 function classifyFromRetentionPolicy(entryBag, policy) {
   const rules = Array.isArray(policy.rules) ? policy.rules : [];
   const legacyRule = rules.find((rule) => String(rule.pattern || '').includes('_legacy-unmanaged'));
@@ -269,9 +254,6 @@ function buildManifestEntries(outputDirAbs, policy) {
       return;
     }
 
-    if (filename === 'docs-coverage-and-route-integrity-audit.json') {
-      classifyFromCoverageIssues(payload.issues, entryBag);
-    }
   });
 
   classifyBackupFiles(entryBag);
