@@ -4,6 +4,7 @@
  * @summary Audit tasks folders, optionally normalize report locations, and optionally apply audit recommendations with conflict-safe moves.
  * @owner docs
  * @scope tools/scripts, tasks
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tools/scripts/audit-tasks-folders.js

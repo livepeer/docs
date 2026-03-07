@@ -4,6 +4,7 @@
  * @summary Convert an RSS feed XML file into a structured MDX document.
  * @owner docs
  * @scope tools/scripts, v2/internal/assets/transcripts
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/convert-rss-to-mdx.js --input v2/internal/assets/transcripts/ycomb.rss --output v2/internal/assets/transcripts/ycomb.mdx

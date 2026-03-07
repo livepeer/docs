@@ -4,6 +4,7 @@
  * @summary Generate consistent audit skill packs for Codex, Cursor, Claude Code, and Windsurf from one catalog.
  * @owner docs
  * @scope tools/scripts, ai-tools/ai-skills/catalog, ai-tools/agent-packs
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/cross-agent-packager.js --agent-pack all

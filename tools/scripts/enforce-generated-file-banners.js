@@ -4,6 +4,7 @@
  * @summary Enforce standardized hidden/visible generated banners and frontmatter across generated MDX outputs.
  * @owner docs
  * @scope tools/scripts, tools/lib, docs-guide/indexes, v2, tests/unit/docs-guide-sot.test.js
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/enforce-generated-file-banners.js --check

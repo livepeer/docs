@@ -3,6 +3,7 @@
  * @summary Utility script for tools/scripts/audit-component-usage.js.
  * @owner docs
  * @scope tools/scripts
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tools/scripts/audit-component-usage.js

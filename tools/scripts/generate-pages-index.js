@@ -4,6 +4,7 @@
  * @summary Generate and verify section-style index.mdx files for v2 docs folders, plus the root aggregate index.
  * @owner docs
  * @scope tools/scripts, v2
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/generate-pages-index.js --write

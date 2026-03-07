@@ -8,7 +8,7 @@
  * @owner            docs
  * @needs            R-R14
  * @purpose-statement Inserts or extends framework headers on all repo scripts from classification data.
- * @pipeline         manual - migration tool, not part of ongoing pipelines
+ * @pipeline         manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/add-framework-headers.js --data script-classifications.json --dry-run

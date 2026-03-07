@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             R-R16, R-R17
  * @purpose-statement Generated file banner template — provides standard banner text for auto-generated files
- * @pipeline          indirect — library module
+ * @pipeline          indirect — library module imported by other scripts, not invoked directly
  * @usage             node tools/lib/generated-file-banners.js [flags]
  */
 const GENERATED_HIDDEN_MARKER = 'generated-file-banner:v1';

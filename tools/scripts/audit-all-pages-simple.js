@@ -4,6 +4,7 @@
  * @summary Utility script for tasks/scripts/audit-all-pages-simple.js.
  * @owner docs
  * @scope tasks/scripts
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tasks/scripts/audit-all-pages-simple.js

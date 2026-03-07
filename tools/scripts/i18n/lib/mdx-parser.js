@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement MDX parser for i18n — extracts translatable content blocks from MDX
- * @pipeline          indirect — library module
+ * @pipeline          indirect — library module imported by other scripts, not invoked directly
  * @usage             node tools/scripts/i18n/lib/mdx-parser.js [flags]
  */
 let parserPromise = null;

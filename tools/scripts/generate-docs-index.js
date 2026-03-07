@@ -4,6 +4,7 @@
  * @summary Generate docs-index.json and optionally backfill v2 frontmatter metadata.
  * @owner docs
  * @scope tools/scripts, tools/lib, v2, docs.json, root
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/generate-docs-index.js --write

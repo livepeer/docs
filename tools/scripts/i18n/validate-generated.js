@@ -4,6 +4,7 @@
  * @summary Validate generated localized MDX files parse cleanly and exist for successful route-map entries.
  * @owner docs
  * @scope tools/scripts/i18n, v2
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tools/scripts/i18n/validate-generated.js --languages es,fr,zh-CN --route-map /tmp/route-map.json --report-json /tmp/validate-report.json

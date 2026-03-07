@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement i18n configuration — language codes, locale paths, translation settings
- * @pipeline          indirect — library module
+ * @pipeline          indirect — library module imported by other scripts, not invoked directly
  * @usage             node tools/scripts/i18n/lib/config.js [flags]
  */
 const fs = require('fs');

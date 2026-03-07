@@ -3,6 +3,7 @@
 # @summary Utility script for tools/scripts/dev/replace-og-image.py.
 # @owner docs
 # @scope tools/scripts
+# @pipeline manual — interactive developer tool, not suited for automated pipelines
 #
 # @usage
 #   python3 tools/scripts/dev/replace-og-image.py

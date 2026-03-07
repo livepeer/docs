@@ -3,6 +3,7 @@
 # @summary Utility script for tools/scripts/snippets/fetch-lpt-exchanges.sh.
 # @owner docs
 # @scope tools/scripts
+# @pipeline manual — interactive developer tool, not suited for automated pipelines
 #
 # @usage
 #   bash tools/scripts/snippets/fetch-lpt-exchanges.sh

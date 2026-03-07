@@ -3,6 +3,7 @@
 # @summary Enforce the payments/orchestrators insertion deliverables and migration paths before commit.
 # @owner docs
 # @scope tools/scripts, .githooks/pre-commit, v2/gateways, v2/orchestrators
+# @pipeline manual — diagnostic/investigation tool, run on-demand only
 #
 # @usage
 #   bash tools/scripts/verify-pay-orc-gate-finalize.sh

@@ -4,6 +4,7 @@
  * @summary Build deterministic Mint dev scoped profiles (docs.json + .mintignore) for large navigation trees.
  * @owner docs
  * @scope tools/scripts/dev, docs.json, .mintignore
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/dev/generate-mint-dev-scope.js --versions v2 --languages en --tabs Developers

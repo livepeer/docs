@@ -4,6 +4,7 @@
  * @summary Audit v2 MDX pages (excluding x-* directories) and emit page-level usefulness matrix rows with source-weighted 2026 accuracy verification fields.
  * @owner docs
  * @scope tools/scripts, v2, tasks/reports, tools/config
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tools/scripts/audit-v2-usefulness.js --mode full --accuracy-mode tiered

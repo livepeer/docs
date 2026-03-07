@@ -4,6 +4,7 @@
  * @summary Utility script for tools/scripts/dev/test-add-callouts.js.
  * @owner docs
  * @scope tools/scripts
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tools/scripts/dev/test-add-callouts.js

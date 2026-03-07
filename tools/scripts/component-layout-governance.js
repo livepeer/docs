@@ -4,6 +4,7 @@
  * @summary Validate v2 English docs against component-layout contracts by page type.
  * @owner docs
  * @scope tools/scripts, v2, tools/config/component-layout-profile.json
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/component-layout-governance.js --scope full

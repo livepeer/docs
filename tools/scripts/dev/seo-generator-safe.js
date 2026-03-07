@@ -3,6 +3,7 @@
  * @summary Utility script for tools/scripts/dev/seo-generator-safe.js.
  * @owner docs
  * @scope tools/scripts
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/dev/seo-generator-safe.js

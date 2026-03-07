@@ -4,6 +4,7 @@
  * @summary Create a new script file prefilled with the required docs header template.
  * @owner docs
  * @scope tools/scripts, tests/unit/script-docs.test.js
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/new-script.js --path tests/integration/my-script.js

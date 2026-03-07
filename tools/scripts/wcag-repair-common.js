@@ -4,6 +4,7 @@
  * @summary Apply conservative WCAG-related source autofixes across v2 docs (common raw-tag issues) and write deterministic repair reports.
  * @owner docs
  * @scope tools/scripts, tests/integration, tasks/reports, v2
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/wcag-repair-common.js --full

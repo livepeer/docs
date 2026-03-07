@@ -3,6 +3,7 @@
 # @summary Block commits when AI-tagged stash entries are present; enforce branch plus WIP checkpoint isolation.
 # @owner docs
 # @scope tools/scripts, .githooks/pre-commit
+# @pipeline manual — diagnostic/investigation tool, run on-demand only
 #
 # @usage
 #   bash tools/scripts/check-no-ai-stash.sh

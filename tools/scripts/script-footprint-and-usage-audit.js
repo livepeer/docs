@@ -4,6 +4,7 @@
  * @summary Audit script sprawl, duplicate fixtures, backup artifacts, and report-size hotspots.
  * @owner docs
  * @scope tools/scripts, tests, tasks/reports, ai-tools/ai-skills
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tools/scripts/script-footprint-and-usage-audit.js --scope full

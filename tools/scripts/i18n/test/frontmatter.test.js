@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement Tests frontmatter parser — validates frontmatter read/write roundtrip
- * @pipeline          manual — not yet in pipeline
+ * @pipeline          manual — diagnostic/investigation tool, run on-demand only
  * @usage             node tools/scripts/i18n/test/frontmatter.test.js [flags]
  */
 const test = require('node:test');

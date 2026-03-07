@@ -4,6 +4,7 @@
  * @summary Create git commits with explicit audited human override controls for --no-verify usage.
  * @owner docs
  * @scope tools/scripts, .githooks, ai-tools/ai-rules
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/codex-commit.js --message "Update hooks"

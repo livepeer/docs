@@ -4,6 +4,7 @@
  * @summary Generate llms.txt and llms-full.txt from v2 docs navigation.
  * @owner docs
  * @scope tools/scripts, docs.json, v2
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/generate-llms-files.js --write

@@ -3,6 +3,7 @@
 # @summary Ensure Mint local-preview watcher disables glob expansion in repo paths.
 # @owner docs
 # @scope tools/scripts
+# @pipeline manual — interactive developer tool, not suited for automated pipelines
 #
 # @usage
 #   bash tools/scripts/dev/ensure-mint-watcher-patch.sh --check

@@ -4,6 +4,7 @@
  * @summary Generate IA reconciliation CSV and summary from blueprint and v2 MDX coverage.
  * @owner docs
  * @scope tools/scripts, tools/config, tools/lib, v2, tasks/reports/content-gap
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/generate-content-gap-reconciliation.js

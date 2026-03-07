@@ -4,6 +4,7 @@
  * @summary Safely execute an explicit merge request by stashing local changes, merging a target ref, and restoring the stash.
  * @owner docs
  * @scope tools/scripts
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/codex-safe-merge-with-stash.js --target docs-v2

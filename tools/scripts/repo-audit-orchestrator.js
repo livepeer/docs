@@ -4,6 +4,7 @@
  * @summary Run the docs infrastructure audit pipeline and emit a unified prioritized scorecard.
  * @owner docs
  * @scope tools/scripts, ai-tools/ai-skills/catalog, tasks/reports/repo-ops
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tools/scripts/repo-audit-orchestrator.js --mode static --scope full

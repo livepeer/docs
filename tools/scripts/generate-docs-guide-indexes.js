@@ -4,6 +4,7 @@
  * @summary Generate docs-guide workflow/template indexes and optionally verify they are up to date.
  * @owner docs
  * @scope tools/scripts, docs-guide, .github/workflows, .github/ISSUE_TEMPLATE
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/generate-docs-guide-indexes.js --write

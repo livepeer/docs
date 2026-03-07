@@ -4,6 +4,7 @@
  * @summary Utility script for tools/scripts/audit-all-v2-pages.js.
  * @owner docs
  * @scope tools/scripts
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tools/scripts/audit-all-v2-pages.js

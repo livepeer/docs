@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Accuracy verification engine — scores page accuracy against source-weighted 2026 rules
- * @pipeline          indirect — library module
+ * @pipeline          indirect — library module imported by other scripts, not invoked directly
  * @usage             node tools/lib/docs-usefulness/accuracy-verifier.js [flags]
  */
 const crypto = require('crypto');

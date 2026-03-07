@@ -3,6 +3,7 @@
  * @summary Utility script for tools/scripts/check-component-errors.js.
  * @owner docs
  * @scope tools/scripts
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tools/scripts/check-component-errors.js

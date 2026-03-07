@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement Path utilities for i18n — locale-aware path resolution and mapping
- * @pipeline          indirect — library module
+ * @pipeline          indirect — library module imported by other scripts, not invoked directly
  * @usage             node tools/scripts/i18n/lib/path-utils.js [flags]
  */
 const fs = require('fs');

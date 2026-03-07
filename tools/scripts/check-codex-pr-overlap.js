@@ -4,6 +4,7 @@
  * @summary Fail codex PR checks when changed files overlap another open codex PR without explicit handoff label.
  * @owner docs
  * @scope tools/scripts, .github/workflows, codex PR governance
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tools/scripts/check-codex-pr-overlap.js --base-ref docs-v2

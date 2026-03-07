@@ -4,6 +4,7 @@
  * @summary Generate docs-guide/indexes/pages-index.mdx from v2/index.mdx entries filtered to docs.json navigation pages.
  * @owner docs
  * @scope tools/scripts, docs-guide/indexes/pages-index.mdx, v2/index.mdx, docs.json
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/generate-docs-guide-pages-index.js --write

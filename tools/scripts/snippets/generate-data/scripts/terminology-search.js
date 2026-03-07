@@ -4,6 +4,7 @@
  * @summary Utility script for tools/scripts/snippets/generate-data/scripts/terminology-search.js.
  * @owner docs
  * @scope tools/scripts
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/snippets/generate-data/scripts/terminology-search.js

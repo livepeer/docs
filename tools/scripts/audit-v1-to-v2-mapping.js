@@ -4,6 +4,7 @@
  * @summary Build a complete v1->v2 mapping audit (English IA canonical), including seed revalidation and adjudication queue.
  * @owner docs
  * @scope tools/scripts, v1, v2, docs.json, tasks/reports
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tools/scripts/audit-v1-to-v2-mapping.js

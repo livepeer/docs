@@ -4,6 +4,7 @@
  * @summary Sync canonical skill templates into local Codex skills using safe upsert and deterministic openai.yaml generation.
  * @owner docs
  * @scope tools/scripts, ai-tools/ai-skills/templates, tests/unit/codex-skill-sync.test.js
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/sync-codex-skills.js

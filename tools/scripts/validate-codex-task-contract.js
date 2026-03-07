@@ -4,6 +4,7 @@
  * @summary Validate codex branch task contract schema, branch binding, changed-file scope, PR body sections, and optional linked-issue readiness policy.
  * @owner docs
  * @scope tools/scripts, .codex/task-contract.yaml, tests/config/codex-issue-policy.json, .github/pull_request_template.md, .github/pull-request-template-v2.md
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tools/scripts/validate-codex-task-contract.js

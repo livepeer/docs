@@ -4,6 +4,7 @@
  * @summary Enforce EN-GB style and terminology profile for English v2 docs in phase 1.
  * @owner docs
  * @scope tools/scripts, v2, tools/config/style-language-profile-en-gb.json
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/style-and-language-homogenizer-en-gb.js --scope full

@@ -4,6 +4,7 @@
  * @summary Audit v2 English docs for freshness and quality markers (TODO/TBD/Coming Soon, placeholders, and thin content).
  * @owner docs
  * @scope tools/scripts, v2, tasks/reports/quality-accessibility
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tools/scripts/docs-quality-and-freshness-audit.js --scope full

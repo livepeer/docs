@@ -4,6 +4,7 @@
  * @summary Generate component inventory indexes from snippets/components exports and optionally verify freshness.
  * @owner docs
  * @scope tools/scripts, docs-guide/indexes/components-index.mdx, v2/resources/documentation-guide/component-library/overview.mdx, snippets/components
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/generate-docs-guide-components-index.js --write

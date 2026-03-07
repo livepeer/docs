@@ -4,6 +4,7 @@
  * @summary Duplicate approved markdown reports into v2/internal/reports pages with metadata and update docs.json.
  * @owner docs
  * @scope tools/scripts, tools/config, v2/internal, docs.json, tasks/reports, tests/reports
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/publish-v2-internal-reports.js --check

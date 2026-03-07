@@ -4,6 +4,7 @@
  * @summary Audit full-repo executable scripts, categorize usage/overlap, and overwrite SCRIPT_AUDIT reports.
  * @owner docs
  * @scope tools/scripts, tasks/reports, tests/unit/script-docs.test.js, tests/README.md
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tools/scripts/audit-scripts.js

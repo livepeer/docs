@@ -4,6 +4,7 @@
  * @summary Generate a codex PR body from task contract metadata and optionally open a prefilled GitHub pull request.
  * @owner docs
  * @scope tools/scripts, .codex/task-contract.yaml
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/create-codex-pr.js --create

@@ -4,6 +4,7 @@
  * @summary Utility script for tools/scripts/test-all-pages-comprehensive.js.
  * @owner docs
  * @scope tools/scripts
+ * @pipeline manual — diagnostic/investigation tool, run on-demand only
  *
  * @usage
  *   node tools/scripts/test-all-pages-comprehensive.js

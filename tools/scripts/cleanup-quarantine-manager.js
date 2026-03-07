@@ -4,6 +4,7 @@
  * @summary Classify cleanup candidates and optionally quarantine files with a reversible manifest.
  * @owner docs
  * @scope tools/scripts, tasks/reports/repo-ops, tasks/quarantine
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/cleanup-quarantine-manager.js

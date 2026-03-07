@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement Tests i18n CLI guardrails — validates argument validation and safety checks
- * @pipeline          manual — not yet in pipeline
+ * @pipeline          manual — diagnostic/investigation tool, run on-demand only
  * @dualmode          dual-mode (document flags)
  * @usage             node tools/scripts/i18n/test/cli-guardrails.test.js [flags]
  */

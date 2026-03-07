@@ -3,6 +3,7 @@
 # @summary Utility script for tools/scripts/snippets/test-scripts.sh.
 # @owner docs
 # @scope tools/scripts
+# @pipeline manual — diagnostic/investigation tool, run on-demand only
 #
 # @usage
 #   bash tools/scripts/snippets/test-scripts.sh

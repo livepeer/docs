@@ -3,6 +3,7 @@
  * @summary Utility script for tools/scripts/dev/update-all-og-images.js.
  * @owner docs
  * @scope tools/scripts
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
  *
  * @usage
  *   node tools/scripts/dev/update-all-og-images.js
