@@ -1,0 +1,27 @@
+name: SEO Metadata Refresh
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (no changes)"
+        type: boolean
+        default: true
+
+jobs:
+  seo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd tools && npm ci
+
+      - name: Generate SEO metadata
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            node tools/scripts/snippets/generate-seo.js --dry-run
+          else
+            node tools/scripts/snippets/generate-seo.js
+          fi
