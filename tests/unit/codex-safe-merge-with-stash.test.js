@@ -1,28 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script codex-safe-merge-with-stash.test
- * @summary Validate safe merge helper behavior for clean merges, dirty-tree stash/restore, and conflict handling.
- * @owner docs
- * @scope tests/unit, tools/scripts/codex-safe-merge-with-stash.js
- *
- * @usage
- *   node tests/unit/codex-safe-merge-with-stash.test.js
- *
- * @inputs
- *   No required CLI flags.
- *
- * @outputs
- *   - Console test summary
- *
- * @exit-codes
- *   0 = all test cases passed
- *   1 = one or more test cases failed
- *
- * @examples
- *   node tests/unit/codex-safe-merge-with-stash.test.js
- *
- * @notes
- *   Uses temporary git repositories and does not modify tracked repository files.
+ * @script            codex-safe-merge-with-stash.test
+ * @category          utility
+ * @purpose           governance:agent-governance
+ * @scope             tests/unit, tools/scripts/codex-safe-merge-with-stash.js
+ * @owner             docs
+ * @needs             R-R27, R-R30
+ * @purpose-statement Tests codex-safe-merge-with-stash.js — validates safe merge logic with stash handling
+ * @pipeline          manual — developer tool
+ * @dualmode          dual-mode (document flags)
+ * @usage             node tests/unit/codex-safe-merge-with-stash.test.js [flags]
  */
 
 const assert = require('assert');

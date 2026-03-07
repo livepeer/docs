@@ -1,28 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script openapi-rolling-issue.test
- * @summary Unit tests for OpenAPI rolling issue dedupe, action selection, body formatting, and top-findings limits.
- * @owner docs
- * @scope tests/unit, tests/utils, .github/workflows/openapi-reference-validation.yml
- *
- * @usage
- *   node tests/unit/openapi-rolling-issue.test.js
- *
- * @inputs
- *   No required CLI flags.
- *
- * @outputs
- *   - Console test summary.
- *
- * @exit-codes
- *   0 = all cases passed
- *   1 = one or more cases failed
- *
- * @examples
- *   node tests/unit/openapi-rolling-issue.test.js
- *
- * @notes
- *   Verifies deterministic formatting so workflow issue updates remain stable across runs.
+ * @script            openapi-rolling-issue.test
+ * @category          validator
+ * @purpose           tooling:api-spec
+ * @scope             tests/unit, tests/utils, .github/workflows/openapi-reference-validation.yml
+ * @owner             docs
+ * @needs             F-R17
+ * @purpose-statement Tests OpenAPI rolling issue tracker — validates issue creation and dedup logic
+ * @pipeline          manual — not yet in pipeline
+ * @usage             node tests/unit/openapi-rolling-issue.test.js [flags]
  */
 
 const assert = require('assert');

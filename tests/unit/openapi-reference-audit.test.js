@@ -1,28 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script openapi-reference-audit.test
- * @summary Unit tests for OpenAPI reference audit parsing, mapping, validation findings, and conservative autofix behavior.
- * @owner docs
- * @scope tests/unit, tests/integration, v2, api
- *
- * @usage
- *   node tests/unit/openapi-reference-audit.test.js
- *
- * @inputs
- *   No required CLI flags.
- *
- * @outputs
- *   - Console test summary.
- *
- * @exit-codes
- *   0 = all unit cases passed
- *   1 = one or more unit cases failed
- *
- * @examples
- *   node tests/unit/openapi-reference-audit.test.js
- *
- * @notes
- *   Uses temporary fixture files under v2/** and removes them after each case.
+ * @script            openapi-reference-audit.test
+ * @category          validator
+ * @purpose           tooling:api-spec
+ * @scope             tests/unit, tests/integration, v2, api
+ * @owner             docs
+ * @needs             F-R17
+ * @purpose-statement Unit tests for openapi-reference-audit.js — tests individual audit rules and fix logic
+ * @pipeline          manual — not yet in pipeline
+ * @dualmode          --strict (enforcer) | --fix (remediator)
+ * @usage             node tests/unit/openapi-reference-audit.test.js [flags]
  */
 
 const assert = require('assert');

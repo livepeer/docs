@@ -1,28 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script create-codex-pr.test
- * @summary Validate codex PR body generation and dry-run create behavior from task-contract input.
- * @owner docs
- * @scope tests/unit, tools/scripts/create-codex-pr.js
- *
- * @usage
- *   node tests/unit/create-codex-pr.test.js
- *
- * @inputs
- *   No required CLI flags.
- *
- * @outputs
- *   - Console summary for script-level test assertions.
- *
- * @exit-codes
- *   0 = all test cases passed
- *   1 = one or more test cases failed
- *
- * @examples
- *   node tests/unit/create-codex-pr.test.js
- *
- * @notes
- *   Uses temporary contract/body files and does not mutate tracked repository paths.
+ * @script            create-codex-pr.test
+ * @category          generator
+ * @purpose           governance:agent-governance
+ * @scope             tests/unit, tools/scripts/create-codex-pr.js
+ * @owner             docs
+ * @needs             R-R27, R-R30
+ * @purpose-statement Tests create-codex-pr.js — validates PR creation logic and branch naming
+ * @pipeline          manual — not yet in pipeline
+ * @dualmode          dual-mode (document flags)
+ * @usage             node tests/unit/create-codex-pr.test.js [flags]
  */
 
 const assert = require('assert');

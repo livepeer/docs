@@ -1,28 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script v2-link-audit.test
- * @summary Unit tests for v2 link audit args, external validation helpers, and x-* scope exclusion behavior.
- * @owner docs
- * @scope tests/unit, tests/integration
- *
- * @usage
- *   node tests/unit/v2-link-audit.test.js
- *
- * @inputs
- *   No required CLI flags.
- *
- * @outputs
- *   - Console test summary.
- *
- * @exit-codes
- *   0 = all unit cases passed
- *   1 = one or more cases failed
- *
- * @examples
- *   node tests/unit/v2-link-audit.test.js
- *
- * @notes
- *   Uses exported helpers from tests/integration/v2-link-audit.js and a temporary x-* fixture file.
+ * @script            v2-link-audit.test
+ * @category          validator
+ * @purpose           qa:link-integrity
+ * @scope             tests/unit, tests/integration
+ * @owner             docs
+ * @needs             E-R12, E-R14
+ * @purpose-statement Unit tests for v2-link-audit.js — tests individual link checking rules
+ * @pipeline          manual — not yet in pipeline
+ * @dualmode          --full (validator) | --write-links (remediator)
+ * @usage             node tests/unit/v2-link-audit.test.js [flags]
  */
 
 const assert = require('assert');

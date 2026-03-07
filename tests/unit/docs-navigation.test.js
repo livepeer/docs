@@ -1,41 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script docs-navigation.test
- * @summary Validate docs.json page-entry syntax in check-only mode by default, with optional report writing and approved remaps.
- * @owner docs
- * @scope tests, docs.json
- *
- * @usage
- *   ./lpd tests unit docs-navigation.test
- *   ./lpd tests unit docs-navigation.test -- --write-report
- *   ./lpd tests unit docs-navigation.test -- --strict-missing
- *   ./lpd tests unit docs-navigation.test -- --write-remaps
- *
- * @inputs
- *   --strict-missing Treat unresolved routes as test errors instead of warnings.
- *   --write-report Write navigation report artifacts to tasks/reports/navigation-links.
- *   --no-write-report Force check-only mode without writing report artifacts.
- *   --write-remaps Prompt for per-route approval and write accepted remaps to docs.json.
- *   --remap-threshold <0-1> Minimum score for non-canonical remap suggestions (default: 0.85).
- *
- * @outputs
- *   - tasks/reports/navigation-links/navigation-report.md (when --write-report or --write-remaps is used)
- *   - tasks/reports/navigation-links/navigation-report.json (when --write-report or --write-remaps is used)
- *   - docs.json (only when --write-remaps is used and user approves entries)
- *   - Console summary of syntax and route-resolution status.
- *
- * @exit-codes
- *   0 = checks passed (or only missing-route warnings in non-strict mode)
-  *   1 = syntax violations found, docs.json parse failed, or strict missing-route failures
- *
- * @examples
- *   ./lpd tests unit docs-navigation.test
- *   ./lpd tests unit docs-navigation.test -- --write-report
- *   ./lpd tests unit docs-navigation.test -- --strict-missing
- *   ./lpd tests unit docs-navigation.test -- --write-remaps
- *
- * @notes
- *   Report files are check-only by default; write them explicitly with --write-report. Remaps require explicit per-entry approval.
+ * @script            docs-navigation.test
+ * @category          validator
+ * @purpose           qa:repo-health
+ * @scope             tests, docs.json
+ * @owner             docs
+ * @needs             E-C1, R-R14
+ * @purpose-statement Validates docs.json page-entry syntax, reports missing routes, suggests remaps, and optionally applies approved remaps
+ * @pipeline          P1 (commit, via run-all)
+ * @dualmode          dual-mode (document flags)
+ * @usage             node tests/unit/docs-navigation.test.js [flags]
  */
 
 const fs = require('fs');

@@ -1,28 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script docs-usefulness-accuracy-verifier.test
- * @summary Validate source-weighted 2026 accuracy verification rules (GitHub vs DeepWiki precedence, freshness, fallback, and cache reuse).
- * @owner docs
- * @scope tests, tools/lib/docs-usefulness, tools/config
- *
- * @usage
- *   node tests/unit/docs-usefulness-accuracy-verifier.test.js
- *
- * @inputs
- *   No required CLI flags.
- *
- * @outputs
- *   - Console pass/fail output for targeted source-weighting accuracy verifier scenarios.
- *
- * @exit-codes
- *   0 = all assertions passed
- *   1 = one or more assertions failed
- *
- * @examples
- *   node tests/unit/docs-usefulness-accuracy-verifier.test.js
- *
- * @notes
- *   Uses synthetic evidence records and a temp cache directory so no network access is required.
+ * @script            docs-usefulness-accuracy-verifier.test
+ * @category          validator
+ * @purpose           qa:content-quality
+ * @scope             tests, tools/lib/docs-usefulness, tools/config
+ * @owner             docs
+ * @needs             E-R1, R-R11
+ * @purpose-statement Tests accuracy verification rules — GitHub vs DeepWiki precedence, freshness, fallback, and cache reuse
+ * @pipeline          manual — not yet in pipeline
+ * @dualmode          dual-mode (document flags)
+ * @usage             node tests/unit/docs-usefulness-accuracy-verifier.test.js [flags]
  */
 
 const assert = require('assert');

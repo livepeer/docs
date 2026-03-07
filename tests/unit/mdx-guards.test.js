@@ -1,28 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script mdx-guards.test
- * @summary Enforce MDX guardrails for globals imports, math delimiters, and markdown table line breaks.
- * @owner docs
- * @scope tests, v2/pages, snippets/pages, snippets/snippetsWiki
- *
- * @usage
- *   node tests/unit/mdx-guards.test.js
- *
- * @inputs
- *   No required CLI flags; optional strict mode is documented inline.
- *
- * @outputs
- *   - Console output listing guardrail violations.
- *
- * @exit-codes
- *   0 = all guardrails passed
- *   1 = one or more guardrails failed
- *
- * @examples
- *   node tests/unit/mdx-guards.test.js
- *
- * @notes
- *   Keep guardrails deterministic and focused on known Mintlify MDX regression patterns.
+ * @script            mdx-guards.test
+ * @category          validator
+ * @purpose           qa:content-quality
+ * @scope             tests, v2/pages, snippets/pages, snippets/snippetsWiki
+ * @owner             docs
+ * @needs             E-R1, R-R11
+ * @purpose-statement Enforces MDX guardrails — globals imports, math delimiters, markdown table line breaks
+ * @pipeline          P1 (commit, via run-all)
+ * @dualmode          dual-mode (document flags)
+ * @usage             node tests/unit/mdx-guards.test.js [flags]
  */
 
 const fs = require('fs');

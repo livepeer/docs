@@ -1,28 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script validate-codex-task-contract.test
- * @summary Validate codex task-contract marker and issue-readiness enforcement behavior.
- * @owner docs
- * @scope tests/unit, tools/scripts/validate-codex-task-contract.js
- *
- * @usage
- *   node tests/unit/validate-codex-task-contract.test.js
- *
- * @inputs
- *   No required CLI flags.
- *
- * @outputs
- *   - Console summary with pass/fail status for validator enforcement cases.
- *
- * @exit-codes
- *   0 = all test cases passed
- *   1 = one or more test cases failed
- *
- * @examples
- *   node tests/unit/validate-codex-task-contract.test.js
- *
- * @notes
- *   Uses temporary files and local command mocks; does not modify tracked repository files.
+ * @script            validate-codex-task-contract.test
+ * @category          enforcer
+ * @purpose           governance:agent-governance
+ * @scope             tests/unit, tools/scripts/validate-codex-task-contract.js
+ * @owner             docs
+ * @needs             R-R27, R-R30
+ * @purpose-statement Tests validate-codex-task-contract.js — validates contract checking logic
+ * @pipeline          manual — not yet in pipeline
+ * @dualmode          dual-mode (document flags)
+ * @usage             node tests/unit/validate-codex-task-contract.test.js [flags]
  */
 
 const assert = require('assert');

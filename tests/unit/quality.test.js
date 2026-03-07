@@ -1,28 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script quality.test
- * @summary Utility script for tests/unit/quality.test.js.
- * @owner docs
- * @scope tests
- *
- * @usage
- *   node tests/unit/quality.test.js
- *
- * @inputs
- *   No required CLI flags; optional flags are documented inline.
- *
- * @outputs
- *   - Console output and/or file updates based on script purpose.
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node tests/unit/quality.test.js
- *
- * @notes
- *   Keep script behavior deterministic and update script indexes after changes.
+ * @script            quality.test
+ * @category          validator
+ * @purpose           qa:content-quality
+ * @scope             tests
+ * @owner             docs
+ * @needs             E-R1, R-R11
+ * @purpose-statement Content quality checks — validates frontmatter completeness, thin content detection, placeholder flagging
+ * @pipeline          P1 (commit, via run-all)
+ * @usage             node tests/unit/quality.test.js [flags]
  */
 /**
  * Quality checks: alt text, links, frontmatter, SEO

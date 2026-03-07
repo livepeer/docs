@@ -1,28 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script lpd-scoped-mint-dev.test
- * @summary Validate scoped lpd mint-dev profile filtering, generated .mintignore exclusions, and dry-run flag wiring.
- * @owner docs
- * @scope tests/unit, lpd, tools/scripts/mint-dev.sh, tools/scripts/dev/generate-mint-dev-scope.js
- *
- * @usage
- *   node tests/unit/lpd-scoped-mint-dev.test.js
- *
- * @inputs
- *   No required CLI flags.
- *
- * @outputs
- *   - Console summary of scoped-mint-dev test assertions.
- *
- * @exit-codes
- *   0 = all test cases passed
- *   1 = one or more test cases failed
- *
- * @examples
- *   node tests/unit/lpd-scoped-mint-dev.test.js
- *
- * @notes
- *   Uses fixture navigation and temporary directories; does not mutate tracked repository files.
+ * @script            lpd-scoped-mint-dev.test
+ * @category          utility
+ * @purpose           tooling:dev-tools
+ * @scope             tests/unit, lpd, tools/scripts/mint-dev.sh, tools/scripts/dev/generate-mint-dev-scope.js
+ * @owner             docs
+ * @needs             E-C6, F-C1
+ * @purpose-statement Tests lpd scoped mint-dev functionality — validates dev server scope filtering
+ * @pipeline          manual — developer tool
+ * @dualmode          dual-mode (document flags)
+ * @usage             node tests/unit/lpd-scoped-mint-dev.test.js [flags]
  */
 
 const assert = require('assert');

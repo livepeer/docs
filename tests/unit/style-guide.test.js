@@ -1,28 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script style-guide.test
- * @summary Utility script for tests/unit/style-guide.test.js.
- * @owner docs
- * @scope tests
- *
- * @usage
- *   node tests/unit/style-guide.test.js
- *
- * @inputs
- *   No required CLI flags; optional flags are documented inline.
- *
- * @outputs
- *   - Console output and/or file updates based on script purpose.
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node tests/unit/style-guide.test.js
- *
- * @notes
- *   Keep script behavior deterministic and update script indexes after changes.
+ * @script            style-guide.test
+ * @category          validator
+ * @purpose           qa:content-quality
+ * @scope             tests
+ * @owner             docs
+ * @needs             E-R1, R-R11
+ * @purpose-statement Style guide compliance — checks en-GB conventions, heading case, formatting rules
+ * @pipeline          P1 (commit, via run-all)
+ * @usage             node tests/unit/style-guide.test.js [flags]
  */
 /**
  * Style guide rule validation tests

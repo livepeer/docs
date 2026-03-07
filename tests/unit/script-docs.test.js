@@ -1,43 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script script-docs-test
- * @summary Enforce script header schema, keep group script indexes in sync, and build aggregate script index.
- * @owner docs
- * @scope .githooks, .github/scripts, tests, tools/scripts, tasks/scripts, docs-guide/indexes/scripts-index.mdx
- *
- * @usage
- *   node tests/unit/script-docs.test.js --staged --write --stage --autofill
- *   node tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes
- *
- * @inputs
- *   --staged Enforce only newly added staged scripts.
- *   --enforce-existing Enforce all scoped scripts.
- *   --files <path[,path...]> Enforce explicit script file list (repeatable).
- *   --autofill Inject placeholder header for brand-new scripts missing the template.
- *   --backfill-existing Inject non-placeholder headers for existing scripts missing the template.
- *   --write Update script-index files and aggregate index.
- *   --check-indexes Validate script index files without writing.
- *   --rebuild-indexes Rebuild all group indexes regardless of staged scope.
- *   --stage Stage any updated script/index files.
- *
- * @outputs
- *   - .githooks/script-index.md
- *   - .github/script-index.md
- *   - tests/script-index.md
- *   - tools/script-index.md
- *   - tasks/scripts/script-index.md
- *   - docs-guide/indexes/scripts-index.mdx
- *
- * @exit-codes
- *   0 = validation passed
- *   1 = template or index validation failed
- *
- * @examples
- *   node tests/unit/script-docs.test.js --staged --write --stage --autofill
- *   node tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes
- *
- * @notes
- *   Excludes node_modules, .venv, .git, tmp, notion, and backup files matching .bak*.
+ * @script            script-docs-test
+ * @category          validator
+ * @purpose           qa:repo-health
+ * @scope             .githooks, .github/scripts, tests, tools/scripts, tasks/scripts, docs-guide/indexes/scripts-index.mdx
+ * @owner             docs
+ * @needs             E-C1, R-R14
+ * @purpose-statement Enforces script header schema, keeps group script indexes in sync, and builds aggregate script index
+ * @pipeline          P1 (commit, via run-all)
+ * @dualmode          --check (validator) | --write --rebuild-indexes (generator)
+ * @usage             node tests/unit/script-docs.test.js [flags]
  */
 
 const fs = require('fs');

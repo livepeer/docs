@@ -1,28 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script v2-wcag-audit.test
- * @summary Unit tests for v2 WCAG audit helper logic (args, thresholds, route mapping, report sorting, and conservative autofixes).
- * @owner docs
- * @scope tests/unit, tests/integration
- *
- * @usage
- *   node tests/unit/v2-wcag-audit.test.js
- *
- * @inputs
- *   No required CLI flags.
- *
- * @outputs
- *   - Console test summary.
- *
- * @exit-codes
- *   0 = all unit cases passed
- *   1 = one or more cases failed
- *
- * @examples
- *   node tests/unit/v2-wcag-audit.test.js
- *
- * @notes
- *   Uses pure/helper exports from tests/integration/v2-wcag-audit.js to avoid browser/server dependencies.
+ * @script            v2-wcag-audit.test
+ * @category          validator
+ * @purpose           qa:content-quality
+ * @scope             tests/unit, tests/integration
+ * @owner             docs
+ * @needs             E-R1, R-R11
+ * @purpose-statement Unit tests for v2-wcag-audit.js — tests individual WCAG rules
+ * @pipeline          manual — not yet in pipeline
+ * @usage             node tests/unit/v2-wcag-audit.test.js [flags]
  */
 
 const assert = require('assert');

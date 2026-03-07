@@ -1,28 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script codex-skill-sync.test
- * @summary Validate template-driven Codex skill sync behavior including check drift, safe upsert, subset sync, and openai.yaml generation.
- * @owner docs
- * @scope tests/unit, tools/scripts/sync-codex-skills.js, ai-tools/ai-skills/templates
- *
- * @usage
- *   node tests/unit/codex-skill-sync.test.js
- *
- * @inputs
- *   No required CLI flags.
- *
- * @outputs
- *   - Console test summary.
- *
- * @exit-codes
- *   0 = all test cases passed
- *   1 = one or more test cases failed
- *
- * @examples
- *   node tests/unit/codex-skill-sync.test.js
- *
- * @notes
- *   Uses temporary fixture/source/destination folders and does not mutate tracked repository files.
+ * @script            codex-skill-sync.test
+ * @category          validator
+ * @purpose           governance:agent-governance
+ * @scope             tests/unit, tools/scripts/sync-codex-skills.js, ai-tools/ai-skills/templates
+ * @owner             docs
+ * @needs             R-R27, R-R30
+ * @purpose-statement Tests sync-codex-skills.js — validates skill file synchronisation between sources
+ * @pipeline          manual — not yet in pipeline
+ * @dualmode          dual-mode (document flags)
+ * @usage             node tests/unit/codex-skill-sync.test.js [flags]
  */
 
 const assert = require('assert');

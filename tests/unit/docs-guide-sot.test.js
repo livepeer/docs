@@ -1,29 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script docs-guide-sot.test
- * @summary Validate docs-guide source-of-truth coverage, README pointers, and generated index freshness.
- * @owner docs
- * @scope tests, docs-guide, README.md, tools/scripts/generate-docs-guide-indexes.js, tools/scripts/generate-docs-guide-pages-index.js, tools/scripts/generate-docs-guide-components-index.js
- *
- * @usage
- *   node tests/unit/docs-guide-sot.test.js
- *
- * @inputs
- *   --strict Fail when warnings are present (default: warnings are advisory).
- *
- * @outputs
- *   - Console summary
- *
- * @exit-codes
- *   0 = checks passed
- *   1 = required source-of-truth docs missing, stale generated indexes, or strict warning failure
- *
- * @examples
- *   node tests/unit/docs-guide-sot.test.js
- *   node tests/unit/docs-guide-sot.test.js --strict
- *
- * @notes
- *   Designed as an advisory guardrail until docs governance stabilizes.
+ * @script            docs-guide-sot.test
+ * @category          validator
+ * @purpose           qa:repo-health
+ * @scope             tests, docs-guide, README.md, tools/scripts/generate-docs-guide-indexes.js, tools/scripts/generate-docs-guide-pages-index.js, tools/scripts/generate-docs-guide-components-index.js
+ * @owner             docs
+ * @needs             E-C1, R-R14
+ * @purpose-statement Validates docs-guide source-of-truth coverage, README pointers, and generated index freshness
+ * @pipeline          manual — not yet in pipeline
+ * @dualmode          dual-mode (document flags)
+ * @usage             node tests/unit/docs-guide-sot.test.js [flags]
  */
 
 const fs = require('fs');

@@ -1,28 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script codex-commit.test
- * @summary Validate codex commit helper behavior for normal commits and explicit audited no-verify override handling.
- * @owner docs
- * @scope tests/unit, tools/scripts/codex-commit.js
- *
- * @usage
- *   node tests/unit/codex-commit.test.js
- *
- * @inputs
- *   No required CLI flags.
- *
- * @outputs
- *   - Console test summary
- *
- * @exit-codes
- *   0 = all test cases passed
- *   1 = one or more test cases failed
- *
- * @examples
- *   node tests/unit/codex-commit.test.js
- *
- * @notes
- *   Uses temporary git repositories and does not modify tracked repository files.
+ * @script            codex-commit.test
+ * @category          validator
+ * @purpose           governance:agent-governance
+ * @scope             tests/unit, tools/scripts/codex-commit.js
+ * @owner             docs
+ * @needs             R-R27, R-R30
+ * @purpose-statement Tests codex-commit.js — validates commit message generation and contract compliance
+ * @pipeline          manual — not yet in pipeline
+ * @dualmode          dual-mode (document flags)
+ * @usage             node tests/unit/codex-commit.test.js [flags]
  */
 
 const assert = require('assert');

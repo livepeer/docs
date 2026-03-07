@@ -1,28 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script repo-audit-pipeline.test
- * @summary Validate audit skill discovery, orchestrator dry-run output, cleanup manifest safety, and cross-agent packaging outputs.
- * @owner docs
- * @scope tests/unit, tools/scripts, ai-tools/ai-skills/catalog, ai-tools/agent-packs
- *
- * @usage
- *   node tests/unit/repo-audit-pipeline.test.js
- *
- * @inputs
- *   No required CLI flags.
- *
- * @outputs
- *   - Console test summary.
- *
- * @exit-codes
- *   0 = all unit cases passed
- *   1 = one or more cases failed
- *
- * @examples
- *   node tests/unit/repo-audit-pipeline.test.js
- *
- * @notes
- *   Uses temporary output directories under tests/reports and does not mutate tracked source files.
+ * @script            repo-audit-pipeline.test
+ * @category          validator
+ * @purpose           qa:repo-health
+ * @scope             tests/unit, tools/scripts, ai-tools/ai-skills/catalog, ai-tools/agent-packs
+ * @owner             docs
+ * @needs             E-C1, R-R14
+ * @purpose-statement Tests repo-audit-orchestrator.js pipeline — validates mode/scope combinations and report output
+ * @pipeline          manual — not yet in pipeline
+ * @dualmode          dual-mode (document flags)
+ * @usage             node tests/unit/repo-audit-pipeline.test.js [flags]
  */
 
 const assert = require('assert');
