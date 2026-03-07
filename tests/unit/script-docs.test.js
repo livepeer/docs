@@ -25,7 +25,7 @@ const REPO_ROOT = process.cwd();
 const INDEX_START = '{/* SCRIPT-INDEX:START */}';
 const INDEX_END = '{/* SCRIPT-INDEX:END */}';
 
-const REQUIRED_TAGS = [
+const LEGACY_REQUIRED_TAGS = [
   '@script',
   '@summary',
   '@owner',
@@ -38,8 +38,19 @@ const REQUIRED_TAGS = [
   '@notes'
 ];
 
-const INLINE_REQUIRED_TAGS = ['@script', '@summary', '@owner', '@scope'];
-const BLOCK_REQUIRED_TAGS = ['@usage', '@inputs', '@outputs', '@exit-codes', '@examples', '@notes'];
+const LEGACY_INLINE_REQUIRED_TAGS = ['@script', '@summary', '@owner', '@scope'];
+const LEGACY_BLOCK_REQUIRED_TAGS = ['@usage', '@inputs', '@outputs', '@exit-codes', '@examples', '@notes'];
+const FRAMEWORK_REQUIRED_TAGS = [
+  '@script',
+  '@category',
+  '@purpose',
+  '@scope',
+  '@owner',
+  '@needs',
+  '@purpose-statement',
+  '@pipeline'
+];
+const FRAMEWORK_INLINE_REQUIRED_TAGS = FRAMEWORK_REQUIRED_TAGS;
 const PLACEHOLDER_PATTERNS = [
   /^<.*>$/,
   /^todo\b/i,
@@ -165,6 +176,14 @@ function getHeaderChunk(content) {
   return content.split('\n').slice(0, 160).join('\n');
 }
 
+function hasFrameworkHeaderTags(header) {
+  return header.includes('@category') || header.includes('@purpose') || header.includes('@purpose-statement');
+}
+
+function detectHeaderMode(header) {
+  return hasFrameworkHeaderTags(header) ? 'framework' : 'legacy';
+}
+
 function getTagValue(header, tagName) {
   const re = new RegExp(`\\${tagName}\\s+(.+)`);
   const match = header.match(re);
@@ -203,6 +222,9 @@ function getSectionLines(header, tagName) {
 }
 
 function extractPrimaryUsage(header) {
+  const inlineUsage = getTagValue(header, '@usage');
+  if (inlineUsage && !isPlaceholderValue(inlineUsage)) return inlineUsage;
+
   const lines = getSectionLines(header, '@usage');
   for (const line of lines) {
     if (line && !line.startsWith('@')) return line;
@@ -213,21 +235,38 @@ function extractPrimaryUsage(header) {
 function validateTemplate(repoPath) {
   const content = readFileSafe(repoPath);
   const header = getHeaderChunk(content);
-  const missing = REQUIRED_TAGS.filter((tag) => !header.includes(tag));
+  const mode = detectHeaderMode(header);
+  const requiredTags = mode === 'framework' ? FRAMEWORK_REQUIRED_TAGS : LEGACY_REQUIRED_TAGS;
+  const inlineTags = mode === 'framework' ? FRAMEWORK_INLINE_REQUIRED_TAGS : LEGACY_INLINE_REQUIRED_TAGS;
+  const blockTags = mode === 'framework' ? [] : LEGACY_BLOCK_REQUIRED_TAGS;
+  const missing = requiredTags.filter((tag) => !header.includes(tag));
   const empty = [];
 
-  for (const tag of INLINE_REQUIRED_TAGS) {
+  for (const tag of inlineTags) {
     if (missing.includes(tag)) continue;
     const value = getTagValue(header, tag);
     if (isPlaceholderValue(value)) empty.push(tag);
   }
 
-  for (const tag of BLOCK_REQUIRED_TAGS) {
+  for (const tag of blockTags) {
     if (missing.includes(tag)) continue;
     const sectionLines = getSectionLines(header, tag);
     const meaningful = sectionLines.filter((line) => !isPlaceholderValue(line));
     if (meaningful.length === 0) empty.push(tag);
   }
+
+  // Framework headers encode usage inline; when present, enforce non-placeholder content.
+  if (mode === 'framework' && !missing.includes('@usage')) {
+    const usage = getTagValue(header, '@usage');
+    if (usage && isPlaceholderValue(usage)) empty.push('@usage');
+  }
+
+  const summary =
+    getTagValue(header, '@summary') ||
+    getTagValue(header, '@purpose-statement') ||
+    getTagValue(header, '@purpose') ||
+    '';
+  const usage = extractPrimaryUsage(header) || (mode === 'framework' ? buildUsageDefault(repoPath) : '');
 
   return {
     file: repoPath,
@@ -235,9 +274,9 @@ function validateTemplate(repoPath) {
     missing,
     empty,
     script: getTagValue(header, '@script') || path.basename(repoPath),
-    summary: getTagValue(header, '@summary') || '',
+    summary,
     owner: getTagValue(header, '@owner') || '',
-    usage: extractPrimaryUsage(header)
+    usage
   };
 }
 
@@ -370,7 +409,7 @@ function injectTemplate(repoPath, placeholderMode) {
   if (!existing) return false;
 
   const header = getHeaderChunk(existing);
-  const hasAnyTag = REQUIRED_TAGS.some((tag) => header.includes(tag));
+  const hasAnyTag = LEGACY_REQUIRED_TAGS.some((tag) => header.includes(tag)) || hasFrameworkHeaderTags(header);
   if (hasAnyTag) return false;
 
   const shebangMatch = existing.match(/^(#![^\n]*\n)/);
@@ -699,7 +738,8 @@ if (require.main === module) {
     });
     if (result.errors.some((err) => err.rule === 'Script header template')) {
       console.error('\nRequired template tags:');
-      console.error(`  ${REQUIRED_TAGS.join(', ')}`);
+      console.error(`  Legacy: ${LEGACY_REQUIRED_TAGS.join(', ')}`);
+      console.error(`  Framework: ${FRAMEWORK_REQUIRED_TAGS.join(', ')}`);
     }
   }
 

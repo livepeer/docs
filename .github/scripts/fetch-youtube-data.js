@@ -1,27 +1,13 @@
 /**
- * @script fetch-youtube-data
- * @summary Utility script for .github/scripts/fetch-youtube-data.js.
- * @owner docs
- * @scope .github/scripts
- *
- * @usage
- *   node .github/scripts/fetch-youtube-data.js
- *
- * @inputs
- *   No required CLI flags; optional flags are documented inline.
- *
- * @outputs
- *   - Console output and/or file updates based on script purpose.
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node .github/scripts/fetch-youtube-data.js
- *
- * @notes
- *   Keep script behavior deterministic and update script indexes after changes.
+ * @script            fetch-youtube-data
+ * @category          automation
+ * @purpose           infrastructure:data-feeds
+ * @scope             .github/scripts
+ * @owner             docs
+ * @needs             F-R1
+ * @purpose-statement Fetches video data from YouTube Data API, writes to snippets/automations/youtube/
+ * @pipeline          P5 (scheduled, daily)
+ * @usage             node .github/scripts/fetch-youtube-data.js [flags]
  */
 const https = require("https");
 const fs = require("fs");

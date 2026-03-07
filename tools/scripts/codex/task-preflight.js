@@ -1,39 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script codex/task-preflight
- * @summary Create a codex task branch/worktree scaffold, task contract, and local lock for isolated agent execution.
- * @owner docs
- * @scope tools/scripts/codex, .codex/task-contract.yaml, .codex/locks-local
- *
- * @usage
- *   node tools/scripts/codex/task-preflight.js --task 1234 --slug hook-hardening --scope "tests/,.githooks/"
- *
- * @inputs
- *   --task <id> Required issue/task id
- *   --slug <slug> Required branch slug
- *   --base <branch> Base branch (default: docs-v2)
- *   --scope <a,b,c> Comma-separated scope patterns (required unless --scope-file)
- *   --scope-file <path> Newline-delimited scope patterns
- *   --owner <id> Optional owner/session identifier
- *   --worktree <abs-path> Optional worktree path to create/use
- *   --expires-hours <n> Lock expiry hours (default: 8)
- *   --contract <path> Contract output path (default: .codex/task-contract.yaml)
- *   --dry-run Print actions without mutating git/files
- *
- * @outputs
- *   - Created/updated task contract
- *   - Created local lock file in .codex/locks-local
- *   - Optional branch/worktree creation
- *
- * @exit-codes
- *   0 = preflight completed
- *   1 = validation or git/file operation failure
- *
- * @examples
- *   node tools/scripts/codex/task-preflight.js --task 1234 --slug ci-hardening --scope ".github/workflows/,tools/scripts/"
- *
- * @notes
- *   Designed for one-agent-one-worktree flow. Lock artifacts are local and gitignored.
+ * @script            codex/task-preflight
+ * @category          generator
+ * @purpose           governance:agent-governance
+ * @scope             tools/scripts/codex, .codex/task-contract.yaml, .codex/locks-local
+ * @owner             docs
+ * @needs             R-R27, R-R30
+ * @purpose-statement Codex task preflight — generates task setup files and validates preconditions
+ * @pipeline          manual — not yet in pipeline
+ * @usage             node tools/scripts/codex/task-preflight.js [flags]
  */
 
 const fs = require('fs');

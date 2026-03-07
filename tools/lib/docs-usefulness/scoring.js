@@ -1,3 +1,14 @@
+/**
+ * @script            scoring
+ * @category          utility
+ * @purpose           qa:content-quality
+ * @scope             full-repo
+ * @owner             docs
+ * @needs             E-R1, R-R11
+ * @purpose-statement Usefulness scoring engine — computes human and agent usefulness scores from page metadata
+ * @pipeline          indirect — library module
+ * @usage             node tools/lib/docs-usefulness/scoring.js [flags]
+ */
 const yaml = require('js-yaml');
 
 const HUMAN_WEIGHTS = {

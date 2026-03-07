@@ -1,28 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script docs-index-utils
- * @summary Shared utilities for docs-index generation and metadata backfill.
- * @owner docs
- * @scope tools/lib, tools/scripts, v2
- *
- * @usage
- *   const utils = require('./tools/lib/docs-index-utils');
- *
- * @inputs
- *   Utility functions accept strings and parsed frontmatter objects.
- *
- * @outputs
- *   - Metadata extraction helpers for docs-index generation.
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime failure
- *
- * @examples
- *   const { extractFrontmatter, extractHeadings } = require('./tools/lib/docs-index-utils');
- *
- * @notes
- *   Keep script behavior deterministic and update script indexes after changes.
+ * @script            docs-index-utils
+ * @category          utility
+ * @purpose           governance:index-management
+ * @scope             tools/lib, tools/scripts, v2
+ * @owner             docs
+ * @needs             R-R16, R-R17
+ * @purpose-statement Shared utilities for docs-index.json generation — path resolution, frontmatter extraction, index merging
+ * @pipeline          indirect — library module
+ * @usage             node tools/lib/docs-index-utils.js [flags]
  */
 
 const fs = require('fs');

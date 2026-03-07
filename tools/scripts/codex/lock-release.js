@@ -1,30 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script codex/lock-release
- * @summary Release active local codex lock entries for a branch/task.
- * @owner docs
- * @scope tools/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
- *
- * @usage
- *   node tools/scripts/codex/lock-release.js --branch codex/123-task
- *
- * @inputs
- *   --branch <name> Branch whose active lock should be released (default: current branch)
- *   --lock-id <id> Optional specific lock id to release
- *   --contract <path> Optional task contract path for branch fallback
- *
- * @outputs
- *   - Updated lock JSON status to released
- *
- * @exit-codes
- *   0 = lock released (or already released)
- *   1 = lock not found or read/write failure
- *
- * @examples
- *   node tools/scripts/codex/lock-release.js --lock-id 1234-hook-hardening-2026-03-04T12-00-00-000Z
- *
- * @notes
- *   Locks are local operational files under .codex/locks-local and are gitignored.
+ * @script            codex/lock-release
+ * @category          utility
+ * @purpose           governance:agent-governance
+ * @scope             tools/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
+ * @owner             docs
+ * @needs             R-R27, R-R30
+ * @purpose-statement Codex lock release utility — releases stale codex lock files
+ * @pipeline          manual — developer tool
+ * @usage             node tools/scripts/codex/lock-release.js [flags]
  */
 
 const fs = require('fs');

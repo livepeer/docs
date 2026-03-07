@@ -1,8 +1,13 @@
 /**
- * Filter out videos with specific keywords in the title
- * @param {Array} videos - Array of video objects
- * @param {Array} excludeKeywords - Keywords to filter out (default: ['fireside', 'watercooler'])
- * @returns {Array} Filtered array of videos
+ * @script            filterVideos
+ * @category          automation
+ * @purpose           infrastructure:data-feeds
+ * @scope             external
+ * @owner             docs
+ * @needs             F-R1
+ * @purpose-statement YouTube video filter — post-processes fetched YouTube data to filter/sort videos for display
+ * @pipeline          manual — not yet in pipeline
+ * @usage             node snippets/automations/youtube/filterVideos.js [flags]
  */
 export const filterVideos = (
   videos,

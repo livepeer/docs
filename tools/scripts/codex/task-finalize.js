@@ -1,31 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script codex/task-finalize
- * @summary Run finalize gates for a codex task: contract scope, lock ownership, and optional finalize profile checks.
- * @owner docs
- * @scope tools/scripts/codex, tools/scripts/validate-codex-task-contract.js, tools/scripts/verify-pay-orc-gate-finalize.sh
- *
- * @usage
- *   node tools/scripts/codex/task-finalize.js --branch codex/123-task
- *
- * @inputs
- *   --branch <name> Branch to validate (default: current branch)
- *   --contract <path> Task contract path (default: .codex/task-contract.yaml)
- *   --base-ref <branch> Base ref override for contract diff checks
- *   --profile <name> Optional finalize profile (currently: pay-orc-gate)
- *
- * @outputs
- *   - Console summary of finalize checks
- *
- * @exit-codes
- *   0 = finalize checks passed
- *   1 = one or more finalize checks failed
- *
- * @examples
- *   node tools/scripts/codex/task-finalize.js --profile pay-orc-gate
- *
- * @notes
- *   Use before push/PR creation to catch scope and lock issues early.
+ * @script            codex/task-finalize
+ * @category          enforcer
+ * @purpose           governance:agent-governance
+ * @scope             tools/scripts/codex, tools/scripts/validate-codex-task-contract.js, tools/scripts/verify-pay-orc-gate-finalize.sh
+ * @owner             docs
+ * @needs             R-R27, R-R30
+ * @purpose-statement Codex task finaliser — enforces task completion requirements before closing
+ * @pipeline          manual — not yet in pipeline
+ * @usage             node tools/scripts/codex/task-finalize.js [flags]
  */
 
 const { spawnSync } = require('child_process');

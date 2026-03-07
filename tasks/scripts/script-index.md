@@ -5,8 +5,8 @@
 
 | Script | Summary | Usage | Owner |
 |---|---|---|---|
-| `tasks/scripts/audit-minimal.js` | Utility script for tasks/scripts/audit-minimal.js. | `node tasks/scripts/audit-minimal.js` | docs |
-| `tasks/scripts/audit-python.py` | Utility script for tasks/scripts/audit-python.py. | `python3 tasks/scripts/audit-python.py` | docs |
-| `tasks/scripts/run-audit-now.js` | Utility script for tasks/scripts/run-audit-now.js. | `node tasks/scripts/run-audit-now.js` | docs |
-| `tasks/scripts/test-audit.js` | Utility script for tasks/scripts/test-audit.js. | `node tasks/scripts/test-audit.js` | docs |
+| `tasks/scripts/audit-minimal.js` | Minimal audit runner — lightweight audit for quick checks during task execution | `node tasks/scripts/audit-minimal.js [flags]` | docs |
+| `tasks/scripts/audit-python.py` | Python audit utility — runs Python-based audit checks (alternative to Node auditors) | `python3 tasks/scripts/audit-python.py [flags]` | docs |
+| `tasks/scripts/run-audit-now.js` | Quick audit launcher — runs audit-orchestrator with default settings for immediate results | `node tasks/scripts/run-audit-now.js [flags]` | docs |
+| `tasks/scripts/test-audit.js` | Audit test — validates audit pipeline logic and report format | `node tasks/scripts/test-audit.js [flags]` | docs |
 {/* SCRIPT-INDEX:END */}

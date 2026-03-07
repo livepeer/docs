@@ -1,3 +1,14 @@
+/**
+ * @script            accuracy-verifier
+ * @category          utility
+ * @purpose           qa:content-quality
+ * @scope             full-repo
+ * @owner             docs
+ * @needs             E-R1, R-R11
+ * @purpose-statement Accuracy verification engine — scores page accuracy against source-weighted 2026 rules
+ * @pipeline          indirect — library module
+ * @usage             node tools/lib/docs-usefulness/accuracy-verifier.js [flags]
+ */
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');

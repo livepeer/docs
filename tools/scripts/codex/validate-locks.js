@@ -1,33 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script codex/validate-locks
- * @summary Validate codex local lock ownership and fail on overlapping active lock scopes.
- * @owner docs
- * @scope tools/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
- *
- * @usage
- *   node tools/scripts/codex/validate-locks.js --branch codex/123-task --staged
- *
- * @inputs
- *   --contract <path> Task contract path (default: .codex/task-contract.yaml)
- *   --branch <name> Branch to validate (default: current branch)
- *   --files <a,b,c> Explicit file list for overlap checks
- *   --staged Use staged files for overlap checks
- *   --quiet Suppress success/skip output
- *   --json Emit machine-readable output
- *
- * @outputs
- *   - Console validation summary and overlap violations
- *
- * @exit-codes
- *   0 = validation passed or non-codex branch skipped
- *   1 = lock missing, invalid lock schema, or overlap violation
- *
- * @examples
- *   node tools/scripts/codex/validate-locks.js --branch codex/123-task --staged
- *
- * @notes
- *   Lock files are local operational artifacts in .codex/locks-local and are intentionally gitignored.
+ * @script            codex/validate-locks
+ * @category          enforcer
+ * @purpose           governance:agent-governance
+ * @scope             tools/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
+ * @owner             docs
+ * @needs             R-R27, R-R30
+ * @purpose-statement Codex lock validator — checks for stale or conflicting lock files before push
+ * @pipeline          manual — not yet in pipeline
+ * @usage             node tools/scripts/codex/validate-locks.js [flags]
  */
 
 const fs = require('fs');

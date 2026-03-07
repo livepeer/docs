@@ -1,28 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script audit-minimal
- * @summary Utility script for tasks/scripts/audit-minimal.js.
- * @owner docs
- * @scope tasks/scripts
- *
- * @usage
- *   node tasks/scripts/audit-minimal.js
- *
- * @inputs
- *   No required CLI flags; optional flags are documented inline.
- *
- * @outputs
- *   - Console output and/or file updates based on script purpose.
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node tasks/scripts/audit-minimal.js
- *
- * @notes
- *   Keep script behavior deterministic and update script indexes after changes.
+ * @script            audit-minimal
+ * @category          validator
+ * @purpose           qa:repo-health
+ * @scope             tasks/scripts
+ * @owner             docs
+ * @needs             E-C1, R-R14
+ * @purpose-statement Minimal audit runner — lightweight audit for quick checks during task execution
+ * @pipeline          manual — not yet in pipeline
+ * @usage             node tasks/scripts/audit-minimal.js [flags]
  */
 
 const fs = require('fs');

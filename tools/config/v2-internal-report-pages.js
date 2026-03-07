@@ -1,3 +1,14 @@
+/**
+ * @script            v2-internal-report-pages
+ * @category          config
+ * @purpose           tooling:dev-tools
+ * @scope             full-repo
+ * @owner             docs
+ * @needs             E-C6, F-C1
+ * @purpose-statement Configuration data — list of internal report page paths for publish-v2-internal-reports.js
+ * @pipeline          manual — not yet in pipeline
+ * @usage             node tools/config/v2-internal-report-pages.js [flags]
+ */
 module.exports = {
   categories: [
     {
