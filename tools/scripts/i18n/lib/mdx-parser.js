@@ -1,27 +1,13 @@
 /**
- * @script mdx-parser
- * @summary Utility script for tools/scripts/i18n/lib/mdx-parser.js.
- * @owner docs
- * @scope tools/scripts
- *
- * @usage
- *   node tools/scripts/i18n/lib/mdx-parser.js
- *
- * @inputs
- *   No required CLI flags; optional flags are documented inline.
- *
- * @outputs
- *   - Console output and/or file updates based on script purpose.
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node tools/scripts/i18n/lib/mdx-parser.js
- *
- * @notes
- *   Keep script behavior deterministic and update script indexes after changes.
+ * @script            mdx-parser
+ * @category          utility
+ * @purpose           feature:translation
+ * @scope             tools/scripts
+ * @owner             docs
+ * @needs             F-R6, F-R7
+ * @purpose-statement MDX parser for i18n — extracts translatable content blocks from MDX
+ * @pipeline          indirect — library module
+ * @usage             node tools/scripts/i18n/lib/mdx-parser.js [flags]
  */
 let parserPromise = null;
 

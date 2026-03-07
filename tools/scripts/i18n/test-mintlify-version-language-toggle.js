@@ -1,30 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script test-mintlify-version-language-toggle
- * @summary Validate Mintlify version/language toggle behavior on localized v2 routes.
- * @owner docs
- * @scope tools/scripts/i18n, docs.json, v2
- *
- * @usage
- *   node tools/scripts/i18n/test-mintlify-version-language-toggle.js --base-url http://localhost:3012
- *
- * @inputs
- *   --base-url <url> (Mintlify preview base URL)
- *   --timeout-ms <n> (optional navigation timeout)
- *   --strict-menus (optional; fail on headless menu-confirmation misses)
- *
- * @outputs
- *   JSON summary printed to stdout with failures, warnings, and per-scenario results
- *
- * @exit-codes
- *   0 = route/version-context checks passed
- *   1 = one or more assertions failed or script runtime error
- *
- * @examples
- *   node tools/scripts/i18n/test-mintlify-version-language-toggle.js --base-url http://localhost:3014
- *
- * @notes
- *   Headless Mint preview runs may not expose interactive dropdown menus reliably when page-level client errors exist; the default mode treats menu confirmation as warnings and keeps route/version-context assertions strict.
+ * @script            test-mintlify-version-language-toggle
+ * @category          enforcer
+ * @purpose           feature:translation
+ * @scope             tools/scripts/i18n, docs.json, v2
+ * @owner             docs
+ * @needs             F-R6, F-R7
+ * @purpose-statement Mintlify language toggle checker — validates Mintlify version supports language toggle feature
+ * @pipeline          manual — not yet in pipeline
+ * @usage             node tools/scripts/i18n/test-mintlify-version-language-toggle.js [flags]
  */
 
 const puppeteer = require('puppeteer');

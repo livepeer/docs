@@ -1,33 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script translate-docs
- * @summary Translate selected v2 docs pages into configured languages and emit localized MDX files plus route-map/report artifacts.
- * @owner docs
- * @scope tools/scripts/i18n, docs.json, v2
- *
- * @usage
- *   node tools/scripts/i18n/translate-docs.js --languages es,fr,de --scope-mode prefixes --prefixes v2/about/livepeer-network --max-pages 10 --max-concurrency 5
- *   node tools/scripts/i18n/translate-docs.js --provider mock --dry-run --scope-mode full_v2_nav --max-pages 5 --max-concurrency 5
- *
- * @inputs
- *   --languages <csv>, --scope-mode <mode>, --base-ref <ref>, --prefixes <csv>, --paths-file <path>, --max-pages <n>, --max-concurrency <n>, --provider <name>, --dry-run, --force, --allow-mock-write, --route-map <path>, --report-json <path>, --config <path>, --cleanup-only, --rewrite-links, --rewrite-scope <mode>
- *
- * @outputs
- *   - Localized MD/MDX files under v2/<lang>/...
- *   - Route map JSON artifact when --route-map is provided
- *   - Run report JSON artifact when --report-json is provided
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node tools/scripts/i18n/translate-docs.js --languages es --scope-mode paths_file --paths-file /tmp/paths.txt --route-map /tmp/route-map.json --report-json /tmp/report.json --max-concurrency 5
- *   node tools/scripts/i18n/translate-docs.js --languages es,fr,zh-CN --scope-mode full_v2_nav --max-pages 1000 --max-concurrency 5
- *
- * @notes
- *   Mock provider writes are blocked by default; use --dry-run for mock smoke tests.
- *   Chinese input zh-CN is normalized to cn for generated route/file paths.
+ * @script            translate-docs
+ * @category          generator
+ * @purpose           feature:translation
+ * @scope             tools/scripts/i18n, docs.json, v2
+ * @owner             docs
+ * @needs             F-R6, F-R7
+ * @purpose-statement Translation generator — translates v2 MDX pages to target languages via OpenRouter API
+ * @pipeline          P6 (on-demand, translation pipeline)
+ * @usage             node tools/scripts/i18n/translate-docs.js [flags]
  */
 
 const fs = require('fs');

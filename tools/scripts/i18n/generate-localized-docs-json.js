@@ -1,32 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script generate-localized-docs-json
- * @summary Add/update v2 language nodes in docs.json using English v2 as template plus route-map-driven route rewrites.
- * @owner docs
- * @scope docs.json, tools/scripts/i18n
- *
- * @usage
- *   node tools/scripts/i18n/generate-localized-docs-json.js --write --languages es,fr,zh-CN --route-map /tmp/route-map.json --report-json /tmp/docsjson-report.json
- *   node tools/scripts/i18n/generate-localized-docs-json.js --dry-run --languages es
- *
- * @inputs
- *   --languages <csv>, --route-map <path>, --provider <name>, --write, --dry-run, --allow-mock-write, --report-json <path>, --config <path>
- *
- * @outputs
- *   - Updated docs.json when --write is used
- *   - docs.json generation report JSON when --report-json is provided
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node tools/scripts/i18n/generate-localized-docs-json.js --write --languages es --route-map /tmp/route-map-es.json
- *   node tools/scripts/i18n/generate-localized-docs-json.js --languages es,fr,zh-CN --dry-run --report-json /tmp/docsjson-report.json
- *
- * @notes
- *   This command mutates only v2 language nodes; v1 remains unchanged.
- *   Route-map entries using legacy v2/i18n/* style are reported as compatibility warnings.
+ * @script            generate-localized-docs-json
+ * @category          generator
+ * @purpose           feature:translation
+ * @scope             docs.json, tools/scripts/i18n
+ * @owner             docs
+ * @needs             F-R6, F-R7
+ * @purpose-statement Locale docs.json generator — produces localised docs.json variants from route-map and source docs.json
+ * @pipeline          P6 (on-demand, translation pipeline)
+ * @usage             node tools/scripts/i18n/generate-localized-docs-json.js [flags]
  */
 
 const fs = require('fs');
