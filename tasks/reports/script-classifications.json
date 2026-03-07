@@ -1,0 +1,1532 @@
+[
+  {
+    "path": ".githooks/install.sh",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": ".githooks",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Installs git hooks by setting core.hooksPath to .githooks/",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": ".githooks/pre-commit",
+    "category": "orchestrator",
+    "purpose": "infrastructure:pipeline-orchestration",
+    "scope": ".githooks",
+    "needs": "R-R29",
+    "purpose_statement": "Pre-commit hook orchestrator \u2014 runs structural checks, unit tests, codex validation, and docs-index freshness check before allowing commit",
+    "pipeline": "P1 (commit, hook entry point)",
+    "dualmode": ""
+  },
+  {
+    "path": ".githooks/pre-commit-no-deletions",
+    "category": "orchestrator",
+    "purpose": "infrastructure:pipeline-orchestration",
+    "scope": ".githooks",
+    "needs": "R-R29",
+    "purpose_statement": "Variant pre-commit hook that blocks file deletions (safety net for content preservation)",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": ".githooks/pre-push",
+    "category": "orchestrator",
+    "purpose": "infrastructure:pipeline-orchestration",
+    "scope": ".githooks, tools/scripts/validate-codex-task-contract.js, .codex/task-contract.yaml",
+    "needs": "R-R29",
+    "purpose_statement": "Pre-push hook \u2014 blocks push if AI stash files present, codex locks stale, or task contract invalid",
+    "pipeline": "P2 (push, hook entry point)",
+    "dualmode": ""
+  },
+  {
+    "path": ".githooks/server-manager.js",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": ".githooks",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Manages Mintlify dev server lifecycle for browser tests (start/stop/health-check)",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": ".githooks/verify-browser.js",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": ".githooks",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Verifies browser availability for Puppeteer-based integration tests",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": ".githooks/verify.sh",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": ".githooks",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Pre-commit sub-hook \u2014 verifies file-walker is available and runs structural checks on staged files",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": ".github/scripts/fetch-forum-data.js",
+    "category": "automation",
+    "purpose": "infrastructure:data-feeds",
+    "scope": ".github/scripts",
+    "needs": "F-R1",
+    "purpose_statement": "Fetches latest topics and posts from Livepeer Forum API, writes to snippets/automations/forum/",
+    "pipeline": "P5 (scheduled, daily)",
+    "dualmode": ""
+  },
+  {
+    "path": ".github/scripts/fetch-ghost-blog-data.js",
+    "category": "automation",
+    "purpose": "infrastructure:data-feeds",
+    "scope": ".github/scripts",
+    "needs": "F-R1",
+    "purpose_statement": "Fetches blog posts from Ghost CMS API, writes to snippets/automations/blog/",
+    "pipeline": "P5 (scheduled, daily)",
+    "dualmode": ""
+  },
+  {
+    "path": ".github/scripts/fetch-youtube-data.js",
+    "category": "automation",
+    "purpose": "infrastructure:data-feeds",
+    "scope": ".github/scripts",
+    "needs": "F-R1",
+    "purpose_statement": "Fetches video data from YouTube Data API, writes to snippets/automations/youtube/",
+    "pipeline": "P5 (scheduled, daily)",
+    "dualmode": ""
+  },
+  {
+    "path": ".github/scripts/project-showcase-sync.js",
+    "category": "automation",
+    "purpose": "infrastructure:data-feeds",
+    "scope": ".github/scripts",
+    "needs": "F-R1",
+    "purpose_statement": "Fetches project showcase data from external source, writes to snippets/automations/showcase/",
+    "pipeline": "P5 (scheduled, daily)",
+    "dualmode": ""
+  },
+  {
+    "path": "lpd",
+    "category": "orchestrator",
+    "purpose": "infrastructure:pipeline-orchestration",
+    "scope": "full-repo",
+    "needs": "R-R29",
+    "purpose_statement": "Developer CLI orchestrator \u2014 unified command surface for setup, dev server, testing, hooks, and script execution across all repo domains",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "snippets/automations/youtube/filterVideos.js",
+    "category": "automation",
+    "purpose": "infrastructure:data-feeds",
+    "scope": "external",
+    "needs": "F-R1",
+    "purpose_statement": "YouTube video filter \u2014 post-processes fetched YouTube data to filter/sort videos for display",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tasks/scripts/audit-minimal.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tasks/scripts",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Minimal audit runner \u2014 lightweight audit for quick checks during task execution",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tasks/scripts/audit-python.py",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tasks/scripts",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Python audit utility \u2014 runs Python-based audit checks (alternative to Node auditors)",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tasks/scripts/run-audit-now.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tasks/scripts",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Quick audit launcher \u2014 runs audit-orchestrator with default settings for immediate results",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tasks/scripts/test-audit.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tasks/scripts",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Audit test \u2014 validates audit pipeline logic and report format",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/integration/browser.test.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tests",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Puppeteer browser integration test \u2014 renders pages from docs.json and checks for console errors, load failures, and visual regressions",
+    "pipeline": "P3 (PR, Track A)",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tests/integration/domain-pages-audit.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tests/integration, tests/reports, docs.livepeer.org",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Audits deployed docs page HTTP status codes (v1, v2, or both) and emits a stable JSON report",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/integration/openapi-reference-audit.js",
+    "category": "validator",
+    "purpose": "tooling:api-spec",
+    "scope": "tests/integration, v2, api, .github/workflows",
+    "needs": "F-R17",
+    "purpose_statement": "Comprehensive OpenAPI spec validation \u2014 checks references, schemas, examples. Supports --strict (validate), --fix (repair), and report modes.",
+    "pipeline": "P3 (PR, Track C), P5 (scheduled)",
+    "dualmode": "--strict (enforcer) | --fix (remediator)"
+  },
+  {
+    "path": "tests/integration/v2-link-audit.js",
+    "category": "validator",
+    "purpose": "qa:link-integrity",
+    "scope": "tests",
+    "needs": "E-R12, E-R14",
+    "purpose_statement": "Comprehensive V2 MDX link audit \u2014 checks internal links, external links, anchor refs. Supports --staged, --full, --strict, --write-links modes.",
+    "pipeline": "P5 (scheduled, full audit)",
+    "dualmode": "--full (validator) | --write-links (remediator)"
+  },
+  {
+    "path": "tests/integration/v2-link-audit.selftest.js",
+    "category": "validator",
+    "purpose": "qa:link-integrity",
+    "scope": "tests/integration",
+    "needs": "E-R12, E-R14",
+    "purpose_statement": "Self-test suite for v2-link-audit.js \u2014 validates audit logic against known fixtures",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "--full (validator) | --write-links (remediator)"
+  },
+  {
+    "path": "tests/integration/v2-wcag-audit.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tests/integration, tests/utils, tasks/reports, v2",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "WCAG accessibility audit for v2 pages \u2014 checks heading hierarchy, alt text, ARIA. Supports --fix mode for auto-repair.",
+    "pipeline": "P6 (on-demand, WCAG audit/repair)",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/integration/v2-wcag-audit.selftest.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tests/integration, v2, git index",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Self-test suite for v2-wcag-audit.js \u2014 validates WCAG audit logic against known fixtures",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/run-all.js",
+    "category": "orchestrator",
+    "purpose": "infrastructure:pipeline-orchestration",
+    "scope": "tests",
+    "needs": "R-R29",
+    "purpose_statement": "Test orchestrator \u2014 dispatches all unit test suites. Called by pre-commit hook and npm test.",
+    "pipeline": "P1 (commit, orchestrator)",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/run-pr-checks.js",
+    "category": "orchestrator",
+    "purpose": "infrastructure:pipeline-orchestration",
+    "scope": "tests, .github/workflows, tools/scripts",
+    "needs": "R-R29",
+    "purpose_statement": "PR orchestrator \u2014 runs changed-file scoped validation checks for pull request CI. Dispatches per-file validators based on PR diff.",
+    "pipeline": "P3 (PR, orchestrator)",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/unit/codex-commit.test.js",
+    "category": "validator",
+    "purpose": "governance:agent-governance",
+    "scope": "tests/unit, tools/scripts/codex-commit.js",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Tests codex-commit.js \u2014 validates commit message generation and contract compliance",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tests/unit/codex-safe-merge-with-stash.test.js",
+    "category": "utility",
+    "purpose": "governance:agent-governance",
+    "scope": "tests/unit, tools/scripts/codex-safe-merge-with-stash.js",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Tests codex-safe-merge-with-stash.js \u2014 validates safe merge logic with stash handling",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tests/unit/codex-skill-sync.test.js",
+    "category": "validator",
+    "purpose": "governance:agent-governance",
+    "scope": "tests/unit, tools/scripts/sync-codex-skills.js, ai-tools/ai-skills/templates",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Tests sync-codex-skills.js \u2014 validates skill file synchronisation between sources",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tests/unit/create-codex-pr.test.js",
+    "category": "generator",
+    "purpose": "governance:agent-governance",
+    "scope": "tests/unit, tools/scripts/create-codex-pr.js",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Tests create-codex-pr.js \u2014 validates PR creation logic and branch naming",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tests/unit/docs-guide-sot.test.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tests, docs-guide, README.md, tools/scripts/generate-docs-guide-indexes.js, tools/scripts/generate-docs-guide-pages-index.js, tools/scripts/generate-docs-guide-components-index.js",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Validates docs-guide source-of-truth coverage, README pointers, and generated index freshness",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tests/unit/docs-navigation.test.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tests, docs.json",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Validates docs.json page-entry syntax, reports missing routes, suggests remaps, and optionally applies approved remaps",
+    "pipeline": "P1 (commit, via run-all)",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tests/unit/docs-usefulness-accuracy-verifier.test.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tests, tools/lib/docs-usefulness, tools/config",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Tests accuracy verification rules \u2014 GitHub vs DeepWiki precedence, freshness, fallback, and cache reuse",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tests/unit/links-imports.test.js",
+    "category": "validator",
+    "purpose": "qa:link-integrity",
+    "scope": "tests",
+    "needs": "E-R12, E-R14",
+    "purpose_statement": "Validates MDX internal links and snippet import paths are resolvable",
+    "pipeline": "P1 (commit, via run-all)",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/unit/lpd-scoped-mint-dev.test.js",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tests/unit, lpd, tools/scripts/mint-dev.sh, tools/scripts/dev/generate-mint-dev-scope.js",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Tests lpd scoped mint-dev functionality \u2014 validates dev server scope filtering",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tests/unit/mdx-guards.test.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tests, v2/pages, snippets/pages, snippets/snippetsWiki",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Enforces MDX guardrails \u2014 globals imports, math delimiters, markdown table line breaks",
+    "pipeline": "P1 (commit, via run-all)",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tests/unit/mdx.test.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tests",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Validates MDX syntax and structure \u2014 checks for parse errors, invalid JSX, broken components",
+    "pipeline": "P1 (commit, via run-all)",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/unit/openapi-reference-audit.test.js",
+    "category": "validator",
+    "purpose": "tooling:api-spec",
+    "scope": "tests/unit, tests/integration, v2, api",
+    "needs": "F-R17",
+    "purpose_statement": "Unit tests for openapi-reference-audit.js \u2014 tests individual audit rules and fix logic",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "--strict (enforcer) | --fix (remediator)"
+  },
+  {
+    "path": "tests/unit/openapi-rolling-issue.test.js",
+    "category": "validator",
+    "purpose": "tooling:api-spec",
+    "scope": "tests/unit, tests/utils, .github/workflows/openapi-reference-validation.yml",
+    "needs": "F-R17",
+    "purpose_statement": "Tests OpenAPI rolling issue tracker \u2014 validates issue creation and dedup logic",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/unit/quality.test.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tests",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Content quality checks \u2014 validates frontmatter completeness, thin content detection, placeholder flagging",
+    "pipeline": "P1 (commit, via run-all)",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/unit/repo-audit-pipeline.test.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tests/unit, tools/scripts, ai-tools/ai-skills/catalog, ai-tools/agent-packs",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Tests repo-audit-orchestrator.js pipeline \u2014 validates mode/scope combinations and report output",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tests/unit/script-docs.test.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": ".githooks, .github/scripts, tests, tools/scripts, tasks/scripts, docs-guide/indexes/scripts-index.mdx",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Enforces script header schema, keeps group script indexes in sync, and builds aggregate script index",
+    "pipeline": "P1 (commit, via run-all)",
+    "dualmode": "--check (validator) | --write --rebuild-indexes (generator)"
+  },
+  {
+    "path": "tests/unit/spelling.test.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tests",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Spelling check \u2014 validates content against custom dictionary with en-GB rules",
+    "pipeline": "P1 (commit, via run-all)",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/unit/style-guide.test.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tests",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Style guide compliance \u2014 checks en-GB conventions, heading case, formatting rules",
+    "pipeline": "P1 (commit, via run-all)",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/unit/v2-link-audit.test.js",
+    "category": "validator",
+    "purpose": "qa:link-integrity",
+    "scope": "tests/unit, tests/integration",
+    "needs": "E-R12, E-R14",
+    "purpose_statement": "Unit tests for v2-link-audit.js \u2014 tests individual link checking rules",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "--full (validator) | --write-links (remediator)"
+  },
+  {
+    "path": "tests/unit/v2-wcag-audit.test.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tests/unit, tests/integration",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Unit tests for v2-wcag-audit.js \u2014 tests individual WCAG rules",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/unit/validate-codex-task-contract.test.js",
+    "category": "enforcer",
+    "purpose": "governance:agent-governance",
+    "scope": "tests/unit, tools/scripts/validate-codex-task-contract.js",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Tests validate-codex-task-contract.js \u2014 validates contract checking logic",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tests/utils/file-walker.js",
+    "category": "validator",
+    "purpose": "tooling:dev-tools",
+    "scope": "tests",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "File tree walker \u2014 recursively finds files matching patterns. Used by pre-commit hook and validators.",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tests/utils/mdx-parser.js",
+    "category": "validator",
+    "purpose": "tooling:dev-tools",
+    "scope": "tests",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "MDX parser utility \u2014 extracts frontmatter, components, content blocks from MDX files",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/utils/mintignore.js",
+    "category": "validator",
+    "purpose": "tooling:dev-tools",
+    "scope": "tests",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Mintignore utility \u2014 reads .mintignore patterns and filters file lists",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/utils/openapi-rolling-issue.js",
+    "category": "validator",
+    "purpose": "tooling:api-spec",
+    "scope": "tests/utils, tests/unit, .github/workflows/openapi-reference-validation.yml",
+    "needs": "F-R17",
+    "purpose_statement": "OpenAPI rolling issue utility \u2014 creates/updates GitHub issues for persistent OpenAPI audit findings",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/utils/spell-checker.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tests",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Spell checker utility \u2014 checks text against custom dictionary with en-GB locale support",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tools/config/v2-internal-report-pages.js",
+    "category": "config",
+    "purpose": "tooling:dev-tools",
+    "scope": "full-repo",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Configuration data \u2014 list of internal report page paths for publish-v2-internal-reports.js",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/lib/docs-index-utils.js",
+    "category": "utility",
+    "purpose": "governance:index-management",
+    "scope": "tools/lib, tools/scripts, v2",
+    "needs": "R-R16, R-R17",
+    "purpose_statement": "Shared utilities for docs-index.json generation \u2014 path resolution, frontmatter extraction, index merging",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/lib/docs-usefulness/accuracy-verifier.js",
+    "category": "utility",
+    "purpose": "qa:content-quality",
+    "scope": "full-repo",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Accuracy verification engine \u2014 scores page accuracy against source-weighted 2026 rules",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/lib/docs-usefulness/scoring.js",
+    "category": "utility",
+    "purpose": "qa:content-quality",
+    "scope": "full-repo",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Usefulness scoring engine \u2014 computes human and agent usefulness scores from page metadata",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/lib/generated-file-banners.js",
+    "category": "utility",
+    "purpose": "governance:index-management",
+    "scope": "full-repo",
+    "needs": "R-R16, R-R17",
+    "purpose_statement": "Generated file banner template \u2014 provides standard banner text for auto-generated files",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/audit-all-pages-simple.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tasks/scripts",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Lightweight page auditor \u2014 quick pass over all pages checking basic frontmatter and structure",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/audit-all-pages.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tasks/scripts",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Full page auditor \u2014 comprehensive check of all pages including content quality metrics",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/audit-all-v2-pages.js",
+    "category": "validator",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "V2-specific page auditor \u2014 checks v2/** pages for v2-specific requirements (frontmatter, components)",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/audit-component-usage.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tools/scripts",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Component usage auditor \u2014 scans pages for component usage patterns and reports statistics",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/audit-scripts.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tools/scripts, tasks/reports, tests/unit/script-docs.test.js, tests/README.md",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Script auditor \u2014 analyses all repo scripts, categorises usage/overlap, generates SCRIPT_AUDIT reports",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/audit-tasks-folders.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tools/scripts, tasks",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Tasks folder auditor \u2014 checks tasks/ structure, normalises report locations, applies recommendations with conflict-safe moves",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/audit-v1-to-v2-mapping.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tools/scripts, v1, v2, docs.json, tasks/reports",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Diagnostic \u2014 maps v1 page URLs to v2 equivalents for migration tracking",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tools/scripts/audit-v2-usefulness.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tools/scripts, v2, tasks/reports, tools/config",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Usefulness auditor \u2014 scores v2 MDX pages on human and agent usefulness with source-weighted 2026 accuracy verification",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/check-codex-pr-overlap.js",
+    "category": "enforcer",
+    "purpose": "governance:agent-governance",
+    "scope": "tools/scripts, .github/workflows, codex PR governance",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "PR enforcer \u2014 checks for conflicting codex PRs targeting the same files/branches",
+    "pipeline": "P3 (PR, Track B)",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/check-component-errors.js",
+    "category": "enforcer",
+    "purpose": "qa:repo-health",
+    "scope": "tools/scripts",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Component error checker \u2014 scans pages for broken or misconfigured component usage",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/check-no-ai-stash.sh",
+    "category": "enforcer",
+    "purpose": "governance:agent-governance",
+    "scope": "tools/scripts, .githooks/pre-commit",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "AI stash enforcer \u2014 blocks push if AI temporary/stash files are present in working tree",
+    "pipeline": "P2 (push)",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/cleanup-quarantine-manager.js",
+    "category": "remediator",
+    "purpose": "qa:repo-health",
+    "scope": "tools/scripts, tasks/reports/repo-ops, tasks/quarantine",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Quarantine manager \u2014 classifies files for quarantine (default) or applies quarantine moves (--apply)",
+    "pipeline": "P6 (on-demand, quarantine)",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/codex-commit.js",
+    "category": "generator",
+    "purpose": "governance:agent-governance",
+    "scope": "tools/scripts, .githooks, ai-tools/ai-rules",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Codex commit helper \u2014 audits codex branch state and generates compliant commit messages",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tools/scripts/codex-safe-merge-with-stash.js",
+    "category": "utility",
+    "purpose": "governance:agent-governance",
+    "scope": "tools/scripts",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Codex merge utility \u2014 safely merges branches with stash handling to avoid codex conflicts",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/codex/lock-release.js",
+    "category": "utility",
+    "purpose": "governance:agent-governance",
+    "scope": "tools/scripts/codex, .codex/locks-local, .codex/task-contract.yaml",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Codex lock release utility \u2014 releases stale codex lock files",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/codex/task-finalize.js",
+    "category": "enforcer",
+    "purpose": "governance:agent-governance",
+    "scope": "tools/scripts/codex, tools/scripts/validate-codex-task-contract.js, tools/scripts/verify-pay-orc-gate-finalize.sh",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Codex task finaliser \u2014 enforces task completion requirements before closing",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/codex/task-preflight.js",
+    "category": "generator",
+    "purpose": "governance:agent-governance",
+    "scope": "tools/scripts/codex, .codex/task-contract.yaml, .codex/locks-local",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Codex task preflight \u2014 generates task setup files and validates preconditions",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/codex/validate-locks.js",
+    "category": "enforcer",
+    "purpose": "governance:agent-governance",
+    "scope": "tools/scripts/codex, .codex/locks-local, .codex/task-contract.yaml",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Codex lock validator \u2014 checks for stale or conflicting lock files before push",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/convert-rss-to-mdx.js",
+    "category": "automation",
+    "purpose": "infrastructure:data-feeds",
+    "scope": "tools/scripts, v2/internal/assets/transcripts",
+    "needs": "F-R1",
+    "purpose_statement": "RSS-to-MDX converter \u2014 imports RSS feed items and converts to MDX page format",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/create-codex-pr.js",
+    "category": "generator",
+    "purpose": "governance:agent-governance",
+    "scope": "tools/scripts, .codex/task-contract.yaml",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Codex PR creator \u2014 generates codex PR with correct branch naming, labels, and body template",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/cross-agent-packager.js",
+    "category": "generator",
+    "purpose": "governance:agent-governance",
+    "scope": "tools/scripts, ai-tools/ai-skills/catalog, ai-tools/agent-packs",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Cross-agent packager \u2014 bundles audit reports and repo state into agent-consumable packages",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/debug-mint-dev.js",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Mintlify dev debugger \u2014 diagnostic tool for troubleshooting mint dev server issues",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/dev/add-callouts.js",
+    "category": "remediator",
+    "purpose": "qa:content-quality",
+    "scope": "tools/scripts",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Callout inserter \u2014 adds Note/Tip/Warning callout components to MDX files based on content patterns",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/dev/batch-update-og-image.sh",
+    "category": "remediator",
+    "purpose": "feature:seo",
+    "scope": "tools/scripts",
+    "needs": "E-R19, F-R7",
+    "purpose_statement": "Batch OG image updater \u2014 updates og:image meta tags across multiple pages",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/dev/ensure-mint-watcher-patch.sh",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Mint watcher patcher \u2014 applies patch to fix Mintlify file watcher issues in dev mode",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/dev/generate-mint-dev-scope.js",
+    "category": "generator",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts/dev, docs.json, .mintignore",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Mint dev scope generator \u2014 creates a scoped docs.json for running mint dev on a subset of pages",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/dev/replace-og-image.py",
+    "category": "remediator",
+    "purpose": "feature:seo",
+    "scope": "tools/scripts",
+    "needs": "E-R19, F-R7",
+    "purpose_statement": "OG image replacer \u2014 replaces og:image path in a single page frontmatter",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/dev/seo-generator-safe.js",
+    "category": "generator",
+    "purpose": "feature:seo",
+    "scope": "tools/scripts",
+    "needs": "E-R19, F-R7",
+    "purpose_statement": "Safe SEO generator \u2014 generates SEO metadata with dry-run and rollback safety",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/dev/test-add-callouts.js",
+    "category": "remediator",
+    "purpose": "qa:content-quality",
+    "scope": "tools/scripts",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Test for add-callouts.js \u2014 validates callout insertion logic against fixtures",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/dev/test-seo-generator.js",
+    "category": "generator",
+    "purpose": "feature:seo",
+    "scope": "tools/scripts",
+    "needs": "E-R19, F-R7",
+    "purpose_statement": "Test for seo-generator \u2014 validates SEO generation logic",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/dev/update-all-og-images.js",
+    "category": "remediator",
+    "purpose": "feature:seo",
+    "scope": "tools/scripts",
+    "needs": "E-R19, F-R7",
+    "purpose_statement": "Bulk OG image updater \u2014 updates og:image across all v2 pages",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/dev/update-og-image.js",
+    "category": "remediator",
+    "purpose": "feature:seo",
+    "scope": "tools/scripts",
+    "needs": "E-R19, F-R7",
+    "purpose_statement": "Single OG image updater \u2014 updates og:image for one page",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/docs-quality-and-freshness-audit.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tools/scripts, v2, tasks/reports/quality-accessibility",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "Content freshness audit \u2014 checks for TODO/TBD/Coming Soon markers, thin pages, stale content",
+    "pipeline": "P5 (scheduled, weekly)",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/download-linkedin-video.sh",
+    "category": "utility",
+    "purpose": "tooling:personal",
+    "scope": "tools/scripts",
+    "needs": "",
+    "purpose_statement": "Personal utility \u2014 downloads LinkedIn video by URL",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/download-linkedin-with-cookies.sh",
+    "category": "utility",
+    "purpose": "tooling:personal",
+    "scope": "tools/scripts",
+    "needs": "",
+    "purpose_statement": "Personal utility \u2014 downloads LinkedIn video using browser cookies for auth",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/enforce-generated-file-banners.js",
+    "category": "remediator",
+    "purpose": "governance:index-management",
+    "scope": "tools/scripts, tools/lib, docs-guide/indexes, v2, tests/unit/docs-guide-sot.test.js",
+    "needs": "R-R16, R-R17",
+    "purpose_statement": "Generated file banner enforcer \u2014 checks (--check) or writes (default) \"do not edit\" banners on generated files",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "--check (enforcer) | default (remediator)"
+  },
+  {
+    "path": "tools/scripts/execute-phase1-worktree-plan.js",
+    "category": "utility",
+    "purpose": "tooling:personal",
+    "scope": "docs.json, tasks/reports/v1-v2-mapping-audit",
+    "needs": "",
+    "purpose_statement": "One-off migration tool \u2014 executed phase 1 worktree restructure plan (historical)",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/final-verification.js",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Diagnostic \u2014 runs final verification checks on page set (manual tool)",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/find-correct-url.js",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Diagnostic \u2014 given a broken URL, attempts to find the correct v2 equivalent",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/generate-ai-sitemap.js",
+    "category": "generator",
+    "purpose": "governance:index-management",
+    "scope": "tools/scripts, docs.json, v2",
+    "needs": "R-R16, R-R17",
+    "purpose_statement": "AI sitemap generator \u2014 produces AI-optimised sitemap files. Dual-mode: --check (enforcer) / --write (generator).",
+    "pipeline": "P3 (PR, Track E, --check), P4 (post-merge, --write)",
+    "dualmode": "--check (enforcer) | --write (generator)"
+  },
+  {
+    "path": "tools/scripts/generate-docs-guide-components-index.js",
+    "category": "generator",
+    "purpose": "governance:index-management",
+    "scope": "tools/scripts, docs-guide/indexes/components-index.mdx, v2/resources/documentation-guide/component-library/overview.mdx, snippets/components",
+    "needs": "R-R16, R-R17",
+    "purpose_statement": "Generates the docs-guide component library index page",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tools/scripts/generate-docs-guide-indexes.js",
+    "category": "generator",
+    "purpose": "governance:index-management",
+    "scope": "tools/scripts, docs-guide, .github/workflows, .github/ISSUE_TEMPLATE",
+    "needs": "R-R16, R-R17",
+    "purpose_statement": "Generates docs-guide workflow/template indexes and optionally verifies freshness",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tools/scripts/generate-docs-guide-pages-index.js",
+    "category": "generator",
+    "purpose": "governance:index-management",
+    "scope": "tools/scripts, docs-guide/indexes/pages-index.mdx, v2/index.mdx, docs.json",
+    "needs": "R-R16, R-R17",
+    "purpose_statement": "Generates the docs-guide pages index",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/generate-docs-index.js",
+    "category": "generator",
+    "purpose": "governance:index-management",
+    "scope": "tools/scripts, tools/lib, v2, docs.json, root",
+    "needs": "R-R16, R-R17",
+    "purpose_statement": "Docs index generator \u2014 produces docs-index.json from v2 frontmatter and docs.json. Dual-mode: --check (enforcer) / --write (generator). Most-called script in the repo.",
+    "pipeline": "P1 (commit, --check), P3 (PR, Track D, --check), P4 (post-merge, --write)",
+    "dualmode": "--check (enforcer) | --write (generator)"
+  },
+  {
+    "path": "tools/scripts/generate-llms-files.js",
+    "category": "generator",
+    "purpose": "governance:index-management",
+    "scope": "tools/scripts, docs.json, v2",
+    "needs": "R-R16, R-R17",
+    "purpose_statement": "LLMs file generator \u2014 produces llms.txt and llms-full.txt for AI consumption. Dual-mode: --check / --write.",
+    "pipeline": "P3 (PR, Track F, --check), P4 (post-merge, --write)",
+    "dualmode": "--check (enforcer) | --write (generator)"
+  },
+  {
+    "path": "tools/scripts/generate-pages-index.js",
+    "category": "generator",
+    "purpose": "governance:index-management",
+    "scope": "tools/scripts, v2",
+    "needs": "R-R16, R-R17",
+    "purpose_statement": "Pages index generator \u2014 generates and verifies section-style index.mdx files for v2 docs folders plus root aggregate index",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "--check (enforcer) | --write (generator)"
+  },
+  {
+    "path": "tools/scripts/i18n/generate-localized-docs-json.js",
+    "category": "generator",
+    "purpose": "feature:translation",
+    "scope": "docs.json, tools/scripts/i18n",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "Locale docs.json generator \u2014 produces localised docs.json variants from route-map and source docs.json",
+    "pipeline": "P6 (on-demand, translation pipeline)",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/lib/common.js",
+    "category": "utility",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "i18n shared utilities \u2014 common helper functions for translation pipeline",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/lib/config.js",
+    "category": "utility",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "i18n configuration \u2014 language codes, locale paths, translation settings",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/lib/docs-json-localizer.js",
+    "category": "utility",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "docs.json localiser engine \u2014 transforms docs.json navigation for locale variants",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/lib/docs-routes.js",
+    "category": "utility",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "docs route resolver \u2014 maps page paths to locale-aware routes",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/lib/frontmatter.js",
+    "category": "utility",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "Frontmatter parser/writer \u2014 reads and writes MDX frontmatter for translation",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/lib/mdx-parser.js",
+    "category": "utility",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "MDX parser for i18n \u2014 extracts translatable content blocks from MDX",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/lib/mdx-translate.js",
+    "category": "utility",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "MDX translation engine \u2014 applies translations to MDX content blocks",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/lib/path-utils.js",
+    "category": "utility",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "Path utilities for i18n \u2014 locale-aware path resolution and mapping",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/lib/provenance.js",
+    "category": "utility",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "Translation provenance tracker \u2014 records source, timestamp, and provider for each translated segment",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/lib/provider-mock.js",
+    "category": "utility",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "Mock translation provider \u2014 returns placeholder translations for testing without API calls",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/lib/provider-openrouter.js",
+    "category": "utility",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "OpenRouter translation provider \u2014 calls OpenRouter API for actual translations",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/lib/providers.js",
+    "category": "utility",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "Provider registry \u2014 selects translation provider (OpenRouter or mock) based on configuration",
+    "pipeline": "indirect \u2014 library module",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/test-mintlify-version-language-toggle.js",
+    "category": "enforcer",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts/i18n, docs.json, v2",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "Mintlify language toggle checker \u2014 validates Mintlify version supports language toggle feature",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/test/cli-guardrails.test.js",
+    "category": "validator",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "Tests i18n CLI guardrails \u2014 validates argument validation and safety checks",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tools/scripts/i18n/test/docs-json-localizer.test.js",
+    "category": "validator",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "Tests docs-json-localizer \u2014 validates locale docs.json transformation logic",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/test/frontmatter.test.js",
+    "category": "validator",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "Tests frontmatter parser \u2014 validates frontmatter read/write roundtrip",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/test/mdx-translate.test.js",
+    "category": "validator",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "Tests MDX translation \u2014 validates content block translation logic",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/test/provenance.test.js",
+    "category": "validator",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "Tests provenance tracker \u2014 validates translation provenance recording",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/test/provider-openrouter.test.js",
+    "category": "validator",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "Tests OpenRouter provider \u2014 validates API call logic and response parsing",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/i18n/translate-docs.js",
+    "category": "generator",
+    "purpose": "feature:translation",
+    "scope": "tools/scripts/i18n, docs.json, v2",
+    "needs": "F-R6, F-R7",
+    "purpose_statement": "Translation generator \u2014 translates v2 MDX pages to target languages via OpenRouter API",
+    "pipeline": "P6 (on-demand, translation pipeline)",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/inspect-page.js",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Page inspector \u2014 displays parsed metadata, frontmatter, components, and structure for a single page",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/inspect-video-page.js",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Video page inspector \u2014 displays video-specific metadata and embed configuration for a page",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/mint-dev.sh",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Mintlify dev server launcher \u2014 starts mint dev with correct configuration",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/new-script.js",
+    "category": "generator",
+    "purpose": "qa:repo-health",
+    "scope": "tools/scripts, tests/unit/script-docs.test.js",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Script scaffolder \u2014 creates a new script file prefilled with the required docs header template",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/publish-v2-internal-reports.js",
+    "category": "automation",
+    "purpose": "qa:repo-health",
+    "scope": "tools/scripts, tools/config, v2/internal, docs.json, tasks/reports, tests/reports",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Report publisher \u2014 publishes v2 internal audit reports to configured output locations",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/repo-audit-orchestrator.js",
+    "category": "orchestrator",
+    "purpose": "infrastructure:pipeline-orchestration",
+    "scope": "tools/scripts, ai-tools/ai-skills/catalog, tasks/reports/repo-ops",
+    "needs": "R-R29",
+    "purpose_statement": "Repo audit orchestrator \u2014 dispatches all static analysis validators in sequence. Supports --mode (static/full), --scope (full/changed), --quarantine, --agent-pack.",
+    "pipeline": "P6 (on-demand, health audit)",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/script-footprint-and-usage-audit.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tools/scripts, tests, tasks/reports, ai-tools/ai-skills",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Script footprint auditor \u2014 analyses script file sizes, dependencies, and usage patterns across the repo",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/snippets/fetch-external-docs.sh",
+    "category": "automation",
+    "purpose": "infrastructure:data-feeds",
+    "scope": "tools/scripts",
+    "needs": "F-R1",
+    "purpose_statement": "External docs fetcher \u2014 pulls doc fragments from external GitHub repos into snippets/data/ for inclusion in builds",
+    "pipeline": "P3 (PR, build dep)",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/snippets/fetch-lpt-exchanges.sh",
+    "category": "automation",
+    "purpose": "infrastructure:data-feeds",
+    "scope": "tools/scripts",
+    "needs": "F-R1",
+    "purpose_statement": "LPT exchange data fetcher \u2014 pulls exchange listing data for LPT token pages",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/snippets/fetch-openapi-specs.sh",
+    "category": "automation",
+    "purpose": "tooling:api-spec",
+    "scope": "tools/scripts",
+    "needs": "F-R17",
+    "purpose_statement": "OpenAPI spec fetcher \u2014 pulls latest OpenAPI specs from Livepeer services for reference pages",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/snippets/generate-api-docs.sh",
+    "category": "generator",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "API docs generator \u2014 generates API reference pages from OpenAPI specs",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/snippets/generate-data/scripts/generate-glossary.js",
+    "category": "generator",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Glossary generator \u2014 produces glossary data file from terminology sources",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/snippets/generate-data/scripts/terminology-search.js",
+    "category": "generator",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Terminology search \u2014 searches glossary/terminology data for definitions",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/snippets/generate-seo.js",
+    "category": "generator",
+    "purpose": "feature:seo",
+    "scope": "tools/scripts",
+    "needs": "E-R19, F-R7",
+    "purpose_statement": "SEO generator \u2014 generates SEO metadata (title, description, keywords) for v2 pages from content analysis",
+    "pipeline": "P6 (on-demand, SEO refresh)",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/snippets/test-scripts.sh",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Snippet test runner \u2014 runs basic validation on snippet scripts",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/snippets/update-component-library.sh",
+    "category": "automation",
+    "purpose": "infrastructure:data-feeds",
+    "scope": "tools/scripts",
+    "needs": "F-R1",
+    "purpose_statement": "Component library updater \u2014 syncs component library documentation from source",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/style-and-language-homogenizer-en-gb.js",
+    "category": "remediator",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts, v2, tools/config/style-language-profile-en-gb.json",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "EN-GB style homogeniser \u2014 finds and fixes American English spellings, style guide violations, and formatting inconsistencies across v2 content",
+    "pipeline": "P6 (on-demand, repair)",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/sync-codex-skills.js",
+    "category": "automation",
+    "purpose": "governance:agent-governance",
+    "scope": "tools/scripts, ai-tools/ai-skills/templates, tests/unit/codex-skill-sync.test.js",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Codex skills sync \u2014 synchronises skill definition files between local and remote sources. Supports --check mode.",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/test-all-pages-browser.js",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Manual browser test runner \u2014 opens all pages in Puppeteer for visual inspection",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/test-all-pages-comprehensive.js",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Manual comprehensive test \u2014 runs all page validators including slow/network checks",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/test-v2-pages.js",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "V2 page tester \u2014 validates v2 pages via Puppeteer browser rendering",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/test-youtube-pages.js",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "YouTube page tester \u2014 validates YouTube embed pages render correctly",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/transcribe-audio-to-mdx.js",
+    "category": "utility",
+    "purpose": "tooling:personal",
+    "scope": "tools/scripts, v2/internal/assets/transcripts",
+    "needs": "",
+    "purpose_statement": "Audio transcription tool \u2014 transcribes audio files to MDX format for docs content",
+    "pipeline": "manual \u2014 developer tool",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/validate-codex-task-contract.js",
+    "category": "enforcer",
+    "purpose": "governance:agent-governance",
+    "scope": "tools/scripts, .codex/task-contract.yaml, tests/config/codex-issue-policy.json, .github/pull_request_template.md, .github/pull-request-template-v2.md",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Codex task contract enforcer \u2014 validates branch naming, task files, PR body, and issue state for codex branches",
+    "pipeline": "P1 (commit), P2 (push), P3 (PR, Track B)",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/verify-all-pages.js",
+    "category": "enforcer",
+    "purpose": "qa:repo-health",
+    "scope": "tools/scripts",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Page verifier \u2014 checks all pages in docs.json resolve to valid files",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/verify-pages.js",
+    "category": "enforcer",
+    "purpose": "qa:repo-health",
+    "scope": "tools/scripts",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Page verifier \u2014 checks a subset of pages resolve to valid files",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/verify-pay-orc-gate-finalize.sh",
+    "category": "enforcer",
+    "purpose": "qa:repo-health",
+    "scope": "tools/scripts, .githooks/pre-commit, v2/gateways, v2/orchestrators",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Payment/orchestrator gate verifier \u2014 checks payment and orchestrator documentation gate conditions",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/verify/.verify-large-change.sh",
+    "category": "enforcer",
+    "purpose": "qa:repo-health",
+    "scope": "tools/scripts/verify",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Large change verifier \u2014 blocks or warns when a commit touches an unusually large number of files",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/wcag-repair-common.js",
+    "category": "remediator",
+    "purpose": "qa:content-quality",
+    "scope": "tools/scripts, tests/integration, tasks/reports, v2",
+    "needs": "E-R1, R-R11",
+    "purpose_statement": "WCAG repair shared logic \u2014 common repair functions used by WCAG audit fix mode",
+    "pipeline": "manual \u2014 not yet in pipeline",
+    "dualmode": ""
+  }
+]
