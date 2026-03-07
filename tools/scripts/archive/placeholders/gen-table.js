@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
- * @script gen-textareas
- * @summary Archived no-op placeholder for textarea generation utility tasks.
+ * @script gen-table
+ * @summary Archived no-op placeholder for generated table output utility tasks.
  * @owner docs
- * @scope scripts/archive/placeholders
+ * @scope tools/scripts/archive/placeholders
  *
  * @usage
- *   node scripts/archive/placeholders/gen-textareas.js
+ *   node tools/scripts/archive/placeholders/gen-table.js
  *
  * @inputs
  *   No CLI flags; archived placeholder retained for governance traceability.
@@ -19,10 +19,10 @@
  *   1 = runtime failure
  *
  * @examples
- *   node scripts/archive/placeholders/gen-textareas.js
+ *   node tools/scripts/archive/placeholders/gen-table.js
  *
  * @notes
  *   Archived from .github/scripts after confirming no workflow references.
  */
 
-console.log('gen-textareas.js placeholder: no-op');
+console.log('gen-table.js placeholder: no-op');

@@ -161,7 +161,7 @@ fi
 # Test 7: Deprecated generate-docs-status.js (moved out of snippets scope)
 echo ""
 echo "--- Test: generate-docs-status.js dry run (deprecated) ---"
-skip "generate-docs-status.js deprecated and moved to scripts/archive/deprecated/project-management-output-script.js"
+skip "generate-docs-status.js deprecated and moved to tools/scripts/archive/deprecated/project-management-output-script.js"
 
 
 # Summary

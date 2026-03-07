@@ -3,10 +3,10 @@
  * @script docs-coverage-and-route-integrity-audit
  * @summary Audit docs coverage integrity, missing routes, legacy /v2/pages references, and orphan candidate files.
  * @owner docs
- * @scope scripts/archive/deprecated, docs.json, v2, tasks/reports/navigation-links
+ * @scope tools/scripts/archive/deprecated, docs.json, v2, tasks/reports/navigation-links
  *
  * @usage
- *   node scripts/archive/deprecated/docs-coverage-and-route-integrity-audit.js --scope full
+ *   node tools/scripts/archive/deprecated/docs-coverage-and-route-integrity-audit.js --scope full
  *
  * @inputs
  *   --scope <changed|full> (default: full)
@@ -21,7 +21,7 @@
  *   1 = runtime error
  *
  * @examples
- *   node scripts/archive/deprecated/docs-coverage-and-route-integrity-audit.js --scope full
+ *   node tools/scripts/archive/deprecated/docs-coverage-and-route-integrity-audit.js --scope full
  *
  * @notes
  *   Static-only analysis. Uses existing navigation and link reports when available.

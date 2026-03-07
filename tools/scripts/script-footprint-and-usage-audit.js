@@ -183,9 +183,9 @@ function detectBackupArtifacts(issues, files) {
 
 function detectPlaceholderScripts(issues) {
   const targets = [
-    'scripts/archive/fixtures/allowed.js',
-    'scripts/archive/fixtures/allowed-script.js',
-    'scripts/archive/fixtures/allowed-test.js'
+    'tools/scripts/archive/fixtures/allowed.js',
+    'tools/scripts/archive/fixtures/allowed-script.js',
+    'tools/scripts/archive/fixtures/allowed-test.js'
   ];
 
   targets.forEach((target) => {
