@@ -42,7 +42,7 @@ const testPages = [
   '/home/trending',
   '/home/copy-trending-at-livepeer',
   '/about-livepeer/moved/livepeer-overview',
-  '/platforms/portal',
+  '/solutions/portal',
   '/livepeer-community/trending-topics',
 ];
 
