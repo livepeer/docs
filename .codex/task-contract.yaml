@@ -1,28 +1,23 @@
 task_id: 788
-branch: codex/788-scoped-lpd-mint-dev-profiles
+branch: codex/788-e-01-archive-duplicate-scripts
 base_branch: docs-v2
 scope_in:
   - .codex/task-contract.yaml
-  - lpd
-  - tools/scripts/mint-dev.sh
-  - tools/scripts/dev/
-  - tests/unit/
-  - tests/run-all.js
-  - docs-guide/lpd.mdx
-  - README.md
-  - tools/script-index.md
-  - tests/script-index.md
-  - docs-guide/indexes/scripts-index.mdx
+  - .github/scripts/
+  - ai-tools/
+  - docs-guide/
+  - scripts/archive/
+  - tasks/
+  - tests/
+  - tools/
+  - v2/
+  - docs-index.json
+  - docs.json
 scope_out: []
 allowed_generated:
   - .codex/pr-body.generated.md
 acceptance_checks:
-  - node tests/unit/lpd-scoped-mint-dev.test.js
-  - node tests/unit/script-docs.test.js --files tools/scripts/dev/generate-mint-dev-scope.js --files tests/unit/lpd-scoped-mint-dev.test.js --check-indexes
-  - node tools/scripts/dev/generate-mint-dev-scope.js --repo-root . --versions v2 --languages en --tabs Developers --disable-openapi --print-only
-  - bash lpd dev --dry-run --scoped --scope-version v2 --scope-language en --scope-tab Developers --scope-prefix v2/gateways --disable-openapi
+  - node tests/run-pr-checks.js --base-ref docs-v2
 risk_flags:
-  - performance
-  - cli-contract
-  - docs-navigation
+  - workflow-governance
 follow_up_issues: []
