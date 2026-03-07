@@ -123,6 +123,24 @@
 
 | Script | Summary | Usage | Owner |
 |---|---|---|---|
+| `tools/scripts/add-framework-headers.js` | Insert or verify governance framework metadata headers from classification JSON. | `node tools/scripts/add-framework-headers.js --data script-classifications.json --dry-run` | docs |
+| `tools/scripts/archive/deprecated/docs-coverage-and-route-integrity-audit.js` | Audit docs coverage integrity, missing routes, legacy /v2/pages references, and orphan candidate files. | `node tools/scripts/archive/deprecated/docs-coverage-and-route-integrity-audit.js --scope full` | docs |
+| `tools/scripts/archive/deprecated/project-management-output-script.js` | Deprecated legacy project-management output script retained as a reference stub. | `node tools/scripts/archive/deprecated/project-management-output-script.js` | docs |
+| `tools/scripts/archive/duplicates/check-component-errors.js` | Utility script for tools/scripts/test/check-component-errors.js. | `node tools/scripts/test/check-component-errors.js` | docs |
+| `tools/scripts/archive/duplicates/final-verification.js` | Utility script for tools/scripts/test/final-verification.js. | `node tools/scripts/test/final-verification.js` | docs |
+| `tools/scripts/archive/duplicates/find-correct-url.js` | Utility script for tools/scripts/test/find-correct-url.js. | `node tools/scripts/test/find-correct-url.js` | docs |
+| `tools/scripts/archive/duplicates/inspect-page.js` | Utility script for tools/scripts/test/inspect-page.js. | `node tools/scripts/test/inspect-page.js` | docs |
+| `tools/scripts/archive/duplicates/inspect-video-page.js` | Utility script for tools/scripts/test/inspect-video-page.js. | `node tools/scripts/test/inspect-video-page.js` | docs |
+| `tools/scripts/archive/duplicates/test-youtube-pages-v2.js` | Utility script for tools/scripts/test/test-youtube-pages.js. | `node tools/scripts/test/test-youtube-pages.js` | docs |
+| `tools/scripts/archive/duplicates/test-youtube-pages.js` | Utility script for tools/scripts/test/test-youtube-pages.js. | `node tools/scripts/test/test-youtube-pages.js` | docs |
+| `tools/scripts/archive/duplicates/verify-all-pages.js` | Utility script for tools/scripts/verify-all-pages.js. | `node tools/scripts/verify-all-pages.js` | docs |
+| `tools/scripts/archive/duplicates/verify-pages.js` | Utility script for tools/scripts/verify-pages.js. | `node tools/scripts/verify-pages.js` | docs |
+| `tools/scripts/archive/fixtures/allowed-script.js` | Utility script for tools/scripts/archive/fixtures/allowed-script.js. | `node tools/scripts/archive/fixtures/allowed-script.js` | docs |
+| `tools/scripts/archive/fixtures/allowed-test.js` | Utility script for tools/scripts/archive/fixtures/allowed-test.js. | `node tools/scripts/archive/fixtures/allowed-test.js` | docs |
+| `tools/scripts/archive/fixtures/allowed.js` | Utility script for tools/scripts/archive/fixtures/allowed.js. | `node tools/scripts/archive/fixtures/allowed.js` | docs |
+| `tools/scripts/archive/placeholders/embed-table.js` | Archived no-op placeholder for markdown table embedding utility tasks. | `node tools/scripts/archive/placeholders/embed-table.js` | docs |
+| `tools/scripts/archive/placeholders/gen-table.js` | Archived no-op placeholder for generated table output utility tasks. | `node tools/scripts/archive/placeholders/gen-table.js` | docs |
+| `tools/scripts/archive/placeholders/gen-textareas.js` | Archived no-op placeholder for textarea generation utility tasks. | `node tools/scripts/archive/placeholders/gen-textareas.js` | docs |
 | `tools/scripts/audit-all-pages-simple.js` | Utility script for tasks/scripts/audit-all-pages-simple.js. | `node tasks/scripts/audit-all-pages-simple.js` | docs |
 | `tools/scripts/audit-all-pages.js` | Utility script for tasks/scripts/audit-all-pages.js. | `node tasks/scripts/audit-all-pages.js` | docs |
 | `tools/scripts/audit-all-v2-pages.js` | Utility script for tools/scripts/audit-all-v2-pages.js. | `node tools/scripts/audit-all-v2-pages.js` | docs |
@@ -146,7 +164,6 @@
 | `tools/scripts/create-codex-pr.js` | Generate a codex PR body from task contract metadata and optionally open a prefilled GitHub pull request. | `node tools/scripts/create-codex-pr.js --create` | docs |
 | `tools/scripts/cross-agent-packager.js` | Generate consistent audit skill packs for Codex, Cursor, Claude Code, and Windsurf from one catalog. | `node tools/scripts/cross-agent-packager.js --agent-pack all` | docs |
 | `tools/scripts/debug-mint-dev.js` | Utility script for tools/scripts/debug-mint-dev.js. | `node tools/scripts/debug-mint-dev.js` | docs |
-| `tools/scripts/deprecated/project-management-output-script.js` | Deprecated legacy project-management output script retained as a reference stub. | `node tools/scripts/deprecated/project-management-output-script.js` | docs |
 | `tools/scripts/dev/add-callouts.js` | Utility script for tools/scripts/dev/add-callouts.js. | `node tools/scripts/dev/add-callouts.js` | docs |
 | `tools/scripts/dev/batch-update-og-image.sh` | Utility script for tools/scripts/dev/batch-update-og-image.sh. | `bash tools/scripts/dev/batch-update-og-image.sh` | docs |
 | `tools/scripts/dev/ensure-mint-watcher-patch.sh` | Ensure Mint local-preview watcher disables glob expansion in repo paths. | `bash tools/scripts/dev/ensure-mint-watcher-patch.sh --check` | docs |
@@ -157,15 +174,12 @@
 | `tools/scripts/dev/test-seo-generator.js` | Utility script for tools/scripts/dev/test-seo-generator.js. | `node tools/scripts/dev/test-seo-generator.js` | docs |
 | `tools/scripts/dev/update-all-og-images.js` | Utility script for tools/scripts/dev/update-all-og-images.js. | `node tools/scripts/dev/update-all-og-images.js` | docs |
 | `tools/scripts/dev/update-og-image.js` | Utility script for tools/scripts/dev/update-og-image.js. | `node tools/scripts/dev/update-og-image.js` | docs |
-| `tools/scripts/docs-coverage-and-route-integrity-audit.js` | Audit docs coverage integrity, missing routes, legacy /v2/pages references, and orphan candidate files. | `node tools/scripts/docs-coverage-and-route-integrity-audit.js --scope full` | docs |
 | `tools/scripts/docs-quality-and-freshness-audit.js` | Audit v2 English docs for freshness and quality markers (TODO/TBD/Coming Soon, placeholders, and thin content). | `node tools/scripts/docs-quality-and-freshness-audit.js --scope full` | docs |
-| `tools/scripts/download-linkedin-video.sh` | Utility script for tools/scripts/download-linkedin-video.sh. | `bash tools/scripts/download-linkedin-video.sh` | docs |
-| `tools/scripts/download-linkedin-with-cookies.sh` | Utility script for tools/scripts/download-linkedin-with-cookies.sh. | `bash tools/scripts/download-linkedin-with-cookies.sh` | docs |
 | `tools/scripts/enforce-generated-file-banners.js` | Enforce standardized hidden/visible generated banners and frontmatter across generated MDX outputs. | `node tools/scripts/enforce-generated-file-banners.js --check` | docs |
-| `tools/scripts/execute-phase1-worktree-plan.js` | Execute Phase 1 action-plan artifacts and route fixes inside the current docs-v2 worktree only. | `node tools/scripts/execute-phase1-worktree-plan.js` | docs |
 | `tools/scripts/final-verification.js` | Utility script for tools/scripts/final-verification.js. | `node tools/scripts/final-verification.js` | docs |
 | `tools/scripts/find-correct-url.js` | Utility script for tools/scripts/find-correct-url.js. | `node tools/scripts/find-correct-url.js` | docs |
 | `tools/scripts/generate-ai-sitemap.js` | Generate an AI-focused sitemap from v2 docs navigation. | `node tools/scripts/generate-ai-sitemap.js --write` | docs |
+| `tools/scripts/generate-content-gap-reconciliation.js` | Generate IA reconciliation CSV and summary from blueprint and v2 MDX coverage. | `node tools/scripts/generate-content-gap-reconciliation.js` | docs |
 | `tools/scripts/generate-docs-guide-components-index.js` | Generate component inventory indexes from snippets/components exports and optionally verify freshness. | `node tools/scripts/generate-docs-guide-components-index.js --write` | docs |
 | `tools/scripts/generate-docs-guide-indexes.js` | Generate docs-guide workflow/template indexes and optionally verify they are up to date. | `node tools/scripts/generate-docs-guide-indexes.js --write` | docs |
 | `tools/scripts/generate-docs-guide-pages-index.js` | Generate docs-guide/indexes/pages-index.mdx from v2/index.mdx entries filtered to docs.json navigation pages. | `node tools/scripts/generate-docs-guide-pages-index.js --write` | docs |
@@ -216,18 +230,6 @@
 | `tools/scripts/test-all-pages-comprehensive.js` | Utility script for tools/scripts/test-all-pages-comprehensive.js. | `node tools/scripts/test-all-pages-comprehensive.js` | docs |
 | `tools/scripts/test-v2-pages.js` | Utility script for tools/scripts/test-v2-pages.js. | `node tools/scripts/test-v2-pages.js` | docs |
 | `tools/scripts/test-youtube-pages.js` | Utility script for tools/scripts/test-youtube-pages.js. | `node tools/scripts/test-youtube-pages.js` | docs |
-| `tools/scripts/test/allowed-script.js` | Utility script for tools/scripts/test/allowed-script.js. | `node tools/scripts/test/allowed-script.js` | docs |
-| `tools/scripts/test/allowed-test.js` | Utility script for tools/scripts/test/allowed-test.js. | `node tools/scripts/test/allowed-test.js` | docs |
-| `tools/scripts/test/allowed.js` | Utility script for tools/scripts/test/allowed.js. | `node tools/scripts/test/allowed.js` | docs |
-| `tools/scripts/test/check-component-errors.js` | Utility script for tools/scripts/test/check-component-errors.js. | `node tools/scripts/test/check-component-errors.js` | docs |
-| `tools/scripts/test/final-verification.js` | Utility script for tools/scripts/test/final-verification.js. | `node tools/scripts/test/final-verification.js` | docs |
-| `tools/scripts/test/find-correct-url.js` | Utility script for tools/scripts/test/find-correct-url.js. | `node tools/scripts/test/find-correct-url.js` | docs |
-| `tools/scripts/test/inspect-page.js` | Utility script for tools/scripts/test/inspect-page.js. | `node tools/scripts/test/inspect-page.js` | docs |
-| `tools/scripts/test/inspect-video-page.js` | Utility script for tools/scripts/test/inspect-video-page.js. | `node tools/scripts/test/inspect-video-page.js` | docs |
-| `tools/scripts/test/test-youtube-pages.js` | Utility script for tools/scripts/test/test-youtube-pages.js. | `node tools/scripts/test/test-youtube-pages.js` | docs |
-| `tools/scripts/test/verify-all-pages.js` | Utility script for tools/scripts/verify-all-pages.js. | `node tools/scripts/verify-all-pages.js` | docs |
-| `tools/scripts/test/verify-pages.js` | Utility script for tools/scripts/verify-pages.js. | `node tools/scripts/verify-pages.js` | docs |
-| `tools/scripts/transcribe-audio-to-mdx.js` | Download audio from URL, chunk with ffmpeg, transcribe via OpenRouter, and write an MDX transcript page. | `OPENROUTER_API_KEY=... node tools/scripts/transcribe-audio-to-mdx.js --audio-url "<url>" --title "<episode title>" --show "<show name>" --published-at YYYY-MM-DD` | docs |
 | `tools/scripts/validate-codex-task-contract.js` | Validate codex branch task contract schema, branch binding, changed-file scope, PR body sections, and optional linked-issue readiness policy. | `node tools/scripts/validate-codex-task-contract.js` | docs |
 | `tools/scripts/verify-all-pages.js` | Utility script for tools/scripts/verify-all-pages.js. | `node tools/scripts/verify-all-pages.js` | docs |
 | `tools/scripts/verify-pages.js` | Utility script for tools/scripts/verify-pages.js. | `node tools/scripts/verify-pages.js` | docs |
