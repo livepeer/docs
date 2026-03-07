@@ -1,0 +1,27 @@
+name: Content Health Check
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Weekly Monday 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  content-health:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: cd tools && npm ci
+
+      - name: Content quality audit
+        run: node tools/scripts/docs-quality-and-freshness-audit.js --scope full
+        continue-on-error: true
+
+      - name: Component usage audit
+        run: node tools/scripts/audit-component-usage.js
+        continue-on-error: true
+
+      - name: Component layout governance
+        run: node tools/scripts/component-layout-governance.js
+        continue-on-error: true
