@@ -14,6 +14,7 @@
 const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');
+const { collectDocsJsonRouteKeys } = require('../../../lib/docs-navigation');
 
 const REPO_ROOT = path.resolve(__dirname, '../../../../');
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
@@ -77,15 +78,6 @@ function parseArgs(argv) {
   return options;
 }
 
-function normalizeRoutePath(routePath) {
-  return toPosix(routePath)
-    .trim()
-    .replace(/^\/+/, '')
-    .replace(/\.(md|mdx)$/i, '')
-    .replace(/\/index$/i, '')
-    .replace(/\/+$/, '');
-}
-
 function shouldExclude(repoPath) {
   const relPath = toPosix(repoPath).replace(/^\/+/, '');
   if (!relPath.startsWith('v2/')) return true;
@@ -104,28 +96,6 @@ function isSupportedDocFile(repoPath) {
   return SUPPORTED_EXTENSIONS.has(path.extname(repoPath).toLowerCase());
 }
 
-function collectDocsPageEntries(node, out = []) {
-  if (typeof node === 'string') {
-    const value = node.trim().replace(/^\/+/, '');
-    if (value.startsWith('v2/') && !shouldExclude(value)) {
-      out.push(value);
-    }
-    return out;
-  }
-
-  if (Array.isArray(node)) {
-    node.forEach((item) => collectDocsPageEntries(item, out));
-    return out;
-  }
-
-  if (!node || typeof node !== 'object') {
-    return out;
-  }
-
-  Object.values(node).forEach((value) => collectDocsPageEntries(value, out));
-  return out;
-}
-
 function fileEntryFromRepoPath(repoPath) {
   return {
     absPath: path.join(REPO_ROOT, repoPath),
@@ -138,37 +108,17 @@ function loadDefaultFiles() {
     throw new Error('docs.json not found at repository root');
   }
 
-  const docsJson = JSON.parse(fs.readFileSync(DOCS_JSON_PATH, 'utf8'));
-  const versions = docsJson?.navigation?.versions || [];
-  const routeEntries = [];
-
-  versions.forEach((versionNode) => {
-    const languages = versionNode?.languages;
-
-    if (Array.isArray(languages)) {
-      languages
-        .filter((item) => item && item.language === 'en')
-        .forEach((item) => collectDocsPageEntries(item, routeEntries));
-      return;
-    }
-
-    if (languages && typeof languages === 'object' && languages.en) {
-      collectDocsPageEntries(languages.en, routeEntries);
-      return;
-    }
-
-    collectDocsPageEntries(versionNode, routeEntries);
-  });
-
+  const routeEntries = [...collectDocsJsonRouteKeys(REPO_ROOT, {
+    version: 'v2',
+    language: 'en',
+    validatorName: 'check-description-quality'
+  })].filter((routePath) => !shouldExclude(routePath));
   const files = [];
   const seen = new Set();
 
   routeEntries.forEach((routePath) => {
-    const routeKey = normalizeRoutePath(routePath);
-    if (!routeKey) return;
-
     ['.mdx', '.md'].forEach((extension) => {
-      const repoPath = `${routeKey}${extension}`;
+      const repoPath = `${routePath}${extension}`;
       if (seen.has(repoPath) || shouldExclude(repoPath)) return;
       if (!fs.existsSync(path.join(REPO_ROOT, repoPath))) return;
 

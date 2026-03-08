@@ -25,6 +25,7 @@ const VALID_AUDIENCES = ['developer', 'orchestrator', 'gateway', 'delegator', 'c
 const VALID_STATUSES = ['draft', 'published', 'review', 'deprecated'];
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const TOOLS_REQUIRE = createRequire(path.resolve(REPO_ROOT, 'tools/package.json'));
+const NAVIGATION_VALIDATOR_NAME = 'quality.test.js';
 
 let errors = [];
 let warnings = [];
@@ -356,9 +357,9 @@ function runTests(options = {}) {
   let testFiles = files;
   if (!testFiles) {
     if (stagedOnly) {
-      testFiles = getStagedDocsPageFiles().filter(f => f.endsWith('.mdx'));
+      testFiles = getStagedDocsPageFiles(null, { validatorName: NAVIGATION_VALIDATOR_NAME }).filter(f => f.endsWith('.mdx'));
     } else {
-      testFiles = getMdxFiles();
+      testFiles = getMdxFiles(null, { validatorName: NAVIGATION_VALIDATOR_NAME });
     }
   }
   

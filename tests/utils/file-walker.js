@@ -19,6 +19,10 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 const { filterPathsByMintIgnore } = require('./mintignore');
+const {
+  collectDocsJsonRouteKeys: collectDocsJsonRouteKeysFromHelper,
+  normalizeDocsRouteKey
+} = require('../../tools/lib/docs-navigation');
 
 function toPosix(filePath) {
   return String(filePath || '').split(path.sep).join('/');
@@ -39,15 +43,6 @@ function resolveRepoRoot(rootDir = null) {
   return getRepoRoot(rootDir || process.cwd());
 }
 
-function normalizeDocsRouteKey(routePath) {
-  let normalized = toPosix(routePath).trim();
-  normalized = normalized.replace(/^\/+/, '');
-  normalized = normalized.replace(/\.(md|mdx)$/i, '');
-  normalized = normalized.replace(/\/index$/i, '');
-  normalized = normalized.replace(/\/+$/, '');
-  return normalized;
-}
-
 function isExcludedV2ExperimentalPath(relPath) {
   const rel = toPosix(relPath).replace(/^\/+/, '');
   if (!rel.startsWith('v2/')) return false;
@@ -55,64 +50,9 @@ function isExcludedV2ExperimentalPath(relPath) {
     .split('/')
     .some((segment) => segment.toLowerCase().startsWith('x-'));
 }
-
-function collectDocsPageEntries(node, out = []) {
-  if (typeof node === 'string') {
-    const value = node.trim();
-    const normalizedValue = value.replace(/^\/+/, '');
-    if (normalizedValue.startsWith('v1/')) {
-      out.push(normalizedValue);
-    } else if (
-      normalizedValue.startsWith('v2/') &&
-      !isExcludedV2ExperimentalPath(normalizedValue)
-    ) {
-      out.push(normalizedValue);
-    }
-    return out;
-  }
-
-  if (Array.isArray(node)) {
-    node.forEach((item) => collectDocsPageEntries(item, out));
-    return out;
-  }
-
-  if (!node || typeof node !== 'object') {
-    return out;
-  }
-
-  if (Array.isArray(node.pages)) {
-    node.pages.forEach((item) => collectDocsPageEntries(item, out));
-  }
-
-  Object.values(node).forEach((value) => collectDocsPageEntries(value, out));
-  return out;
-}
-
-function getDocsJsonRouteKeys(rootDir = null) {
+function getDocsJsonRouteKeys(rootDir = null, options = {}) {
   const repoRoot = resolveRepoRoot(rootDir);
-  const docsJsonPath = path.join(repoRoot, 'docs.json');
-  if (!fs.existsSync(docsJsonPath)) {
-    return new Set();
-  }
-
-  const docsJson = JSON.parse(fs.readFileSync(docsJsonPath, 'utf8'));
-  const versions = docsJson?.navigation?.versions || [];
-  const entries = [];
-
-  versions.forEach((versionNode) => {
-    if (versionNode?.languages) {
-      collectDocsPageEntries(versionNode.languages, entries);
-    }
-  });
-
-  const keys = new Set();
-  entries.forEach((entry) => {
-    const key = normalizeDocsRouteKey(entry);
-    if (key) {
-      keys.add(key);
-    }
-  });
-  return keys;
+  return collectDocsJsonRouteKeysFromHelper(repoRoot, options);
 }
 
 function toDocsRouteKeyFromFile(filePath, rootDir = null) {
@@ -175,9 +115,9 @@ function getFiles(dir, pattern, options = {}) {
  * Get all routable MDX files in v2
  */
 function getMdxFiles(rootDir = null, options = {}) {
-  const { respectMintIgnore = true } = options;
+  const { respectMintIgnore = true, validatorName = '' } = options;
   const repoRoot = resolveRepoRoot(rootDir);
-  const docsRouteKeys = getDocsJsonRouteKeys(repoRoot);
+  const docsRouteKeys = getDocsJsonRouteKeys(repoRoot, { validatorName });
   const v2DocsFiles = getV2DocsFiles({ rootDir: repoRoot, respectMintIgnore });
   const mdxFiles = v2DocsFiles.filter((filePath) => filePath.endsWith('.mdx'));
 
@@ -227,9 +167,9 @@ function getStagedFiles(rootDir = null) {
 }
 
 function getStagedDocsPageFiles(rootDir = null, options = {}) {
-  const { respectMintIgnore = true } = options;
+  const { respectMintIgnore = true, validatorName = '' } = options;
   const repoRoot = resolveRepoRoot(rootDir);
-  const docsRouteKeys = getDocsJsonRouteKeys(repoRoot);
+  const docsRouteKeys = getDocsJsonRouteKeys(repoRoot, { validatorName });
   if (docsRouteKeys.size === 0) {
     return [];
   }
