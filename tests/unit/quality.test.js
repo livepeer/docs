@@ -11,10 +11,11 @@
  * @usage             node tests/unit/quality.test.js [flags]
  */
 /**
- * Quality checks: alt text, links, frontmatter, SEO
+ * Quality checks: alt text, links, frontmatter, SEO, duplicate headings
  */
 
 const path = require('path');
+const { createRequire } = require('module');
 const { getMdxFiles, getStagedDocsPageFiles, readFile } = require('../utils/file-walker');
 const { extractFrontmatter } = require('../utils/mdx-parser');
 
@@ -22,9 +23,12 @@ const ENFORCE_OG_IMAGE = process.env.ENFORCE_OG_IMAGE === '1';
 const VALID_PAGE_TYPES = ['quickstart', 'tutorial', 'reference', 'conceptual', 'portal', 'api', 'guide', 'overview', 'index'];
 const VALID_AUDIENCES = ['developer', 'orchestrator', 'gateway', 'delegator', 'community', 'all'];
 const VALID_STATUSES = ['draft', 'published', 'review', 'deprecated'];
+const REPO_ROOT = path.resolve(__dirname, '..', '..');
+const TOOLS_REQUIRE = createRequire(path.resolve(REPO_ROOT, 'tools/package.json'));
 
 let errors = [];
 let warnings = [];
+let parserModules = null;
 
 function report(severity, file, message, rule = 'Frontmatter') {
   const issue = { file, rule, message };
@@ -56,6 +60,120 @@ function collectFilesFromArgs(args) {
   }
 
   return [...new Set(files)];
+}
+
+function loadParserModules() {
+  if (!parserModules) {
+    parserModules = {
+      unified: TOOLS_REQUIRE('unified').unified,
+      remarkParse: TOOLS_REQUIRE('remark-parse').default,
+      remarkGfm: TOOLS_REQUIRE('remark-gfm').default,
+      remarkMdx: TOOLS_REQUIRE('remark-mdx').default
+    };
+  }
+
+  return parserModules;
+}
+
+function normalizeWhitespace(value) {
+  return String(value || '').replace(/\s+/g, ' ').trim();
+}
+
+function countLineBreaks(value) {
+  const matches = String(value || '').match(/\r?\n/g);
+  return matches ? matches.length : 0;
+}
+
+function stripLeadingFrontmatter(content) {
+  const raw = String(content || '');
+  const withoutBom = raw.startsWith('\uFEFF') ? raw.slice(1) : raw;
+  const frontmatterMatch = withoutBom.match(/^---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(?:\r?\n|$)/);
+
+  if (!frontmatterMatch) {
+    return { body: withoutBom, lineOffset: 0 };
+  }
+
+  return {
+    body: withoutBom.slice(frontmatterMatch[0].length),
+    lineOffset: countLineBreaks(frontmatterMatch[0])
+  };
+}
+
+function collectNodeText(node, parts) {
+  if (!node || typeof node !== 'object') {
+    return;
+  }
+
+  if ((node.type === 'text' || node.type === 'inlineCode') && typeof node.value === 'string') {
+    parts.push(node.value);
+    return;
+  }
+
+  if (Array.isArray(node.children)) {
+    node.children.forEach((child) => collectNodeText(child, parts));
+  }
+}
+
+function extractHeadingText(node) {
+  const parts = [];
+  collectNodeText(node, parts);
+  return normalizeWhitespace(parts.join(' '));
+}
+
+function visitNodes(node, visitor) {
+  if (!node || typeof node !== 'object') {
+    return;
+  }
+
+  visitor(node);
+
+  if (Array.isArray(node.children)) {
+    node.children.forEach((child) => visitNodes(child, visitor));
+  }
+}
+
+function findDuplicateHeadingGroups(content, modules) {
+  const { unified, remarkParse, remarkGfm, remarkMdx } = modules;
+  const { body, lineOffset } = stripLeadingFrontmatter(content);
+  const tree = unified().use(remarkParse).use(remarkGfm).use(remarkMdx).parse(body);
+  const groups = new Map();
+
+  visitNodes(tree, (node) => {
+    if (node.type !== 'heading') {
+      return;
+    }
+
+    const depth = Number(node.depth);
+    if (![2, 3, 4].includes(depth)) {
+      return;
+    }
+
+    const text = extractHeadingText(node);
+    if (!text) {
+      return;
+    }
+
+    const line = Number(node.position?.start?.line || 1) + lineOffset;
+    const key = `${depth}::${text}`;
+    const group = groups.get(key) || {
+      depth,
+      text,
+      firstLine: line,
+      lines: []
+    };
+
+    group.lines.push(line);
+    group.firstLine = Math.min(group.firstLine, line);
+    groups.set(key, group);
+  });
+
+  return [...groups.values()]
+    .filter((group) => group.lines.length > 1)
+    .sort((left, right) => left.depth - right.depth || left.firstLine - right.firstLine || left.text.localeCompare(right.text));
+}
+
+function buildDuplicateHeadingMessage(group) {
+  return `Duplicate H${group.depth} heading "${group.text}" appears ${group.lines.length} times on this page (lines ${group.lines.join(', ')}).`;
 }
 
 /**
@@ -199,6 +317,32 @@ function checkInternalLinks(files) {
   });
 }
 
+function checkDuplicateHeadings(files, options = {}) {
+  const { blocking = false } = options;
+  const parser = loadParserModules();
+
+  files.forEach((file) => {
+    const content = readFile(file);
+    if (!content) return;
+
+    try {
+      const findings = findDuplicateHeadingGroups(content, parser);
+      const target = blocking ? errors : warnings;
+
+      findings.forEach((group) => {
+        target.push({
+          file,
+          rule: 'Duplicate headings',
+          line: group.firstLine,
+          message: buildDuplicateHeadingMessage(group)
+        });
+      });
+    } catch (_error) {
+      // Duplicate-heading enforcement is best-effort here; malformed MDX is handled by mdx.test.js.
+    }
+  });
+}
+
 /**
  * Run all quality tests
  */
@@ -207,6 +351,7 @@ function runTests(options = {}) {
   warnings = [];
   
   const { files = null, stagedOnly = false } = options;
+  const explicitlyScoped = Array.isArray(files) && files.length > 0;
   
   let testFiles = files;
   if (!testFiles) {
@@ -220,6 +365,7 @@ function runTests(options = {}) {
   checkImageAltText(testFiles);
   checkFrontmatter(testFiles);
   checkInternalLinks(testFiles);
+  checkDuplicateHeadings(testFiles, { blocking: stagedOnly || explicitlyScoped });
   
   return {
     errors,
