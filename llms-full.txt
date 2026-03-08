@@ -7,41 +7,6 @@ From interactive livestreaming to generative world models, build & deploy real-t
 
 ---
 
-# Get Started with Livepeer
-URL: https://docs.livepeer.org/v2/home/get-started
-
-Not sure where to start? We've got you covered. Here's a guide to help you find what you're looking for.
-
-### I'm new to Livepeer
-
-### I'm a developer
-
-### I'm a GPU provider
-
-### I'm a user/creator
-
-### I'm an LPT holder
-
-### I'm a company:
-
-### I'm a researcher
-
-### Journey Map
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui', 'clusterBkg': 'rgba(255,255,255,0.05)', 'clusterBorder': '#2d9a67' }}}%%
-graph TB
-    classDef default stroke-width:2px
-    A["Not sure where to start?"] --> B["Livepeer Showcase"]
-    A --> C["About Livepeer"]
-    A --> D["Trending at Livepeer"]
-    B --> E["Real-world projects and inspiration"]
-    C --> F["What Livepeer is and how it can benefit you"]
-    D --> G["What's hot in the Livepeer community"]
-```
-
----
-
 # Livepeer Primer
 URL: https://docs.livepeer.org/v2/home/primer
 
@@ -4207,73 +4172,6 @@ Roadmap:
 https://blog.livepeer.org/introducing-livepeer-cascade-a-vision-for-livepeers-future-in-the-age-of-real-time-ai-video/
 
 https://blog.livepeer.org/a-real-time-update-to-the-livepeer-network-vision/
-
----
-
-# Gateways Vs. Orchestrators: What’s the Difference?
-URL: https://docs.livepeer.org/v2/about/resources/gateways-vs-orchestrators
-
-***
-
-## Overview
-
-In brief:
-
-&#x20;**Gateways coordinate.**
-
-&#x20;**Orchestrators compute.**
-
-Together, they form the backbone of the Livepeer AI video pipeline.
-
-```mermaid
-sequenceDiagram
-    participant App as Application
-    participant GW as Gateway
-    participant ORC as Orchestrator
-
-    App->>GW: Submit job (model, parameters, video frames)
-    GW->>ORC: Route job to best GPU
-    ORC->>GW: Return processed frames/output
-    GW->>App: Send results back to user
-```
-
-| Role             | Function                                       | Performs GPU Work? | External-Facing? |
-| ---------------- | ---------------------------------------------- | ------------------ | ---------------- |
-| **Gateway**      | Job intake, pricing, routing, capability match | ❌ No              | ✅ Yes           |
-| **Orchestrator** | GPU compute, inference, transcoding, BYOC      | ✅ Yes             | ❌ No            |
-
-## Gateway Responsibilities
-
-Gateways act as the front door to the network:
-
-* Receive jobs from applications
-* Determine required model, pipeline, or GPU
-* Select the best orchestrator based on performance and pricing
-* Route the workload with low latency
-* Return results to the client
-* Publish marketplace offerings (models, pipelines, cost per frame, etc.)
-
-Gateways provide *service intelligence*, not compute.
-
-***
-
-## Orchestrator Responsibilities
-
-Orchestrators are GPU operators who run:
-
-* Real-time AI inference
-* Daydream / ComfyStream pipelines
-* BYOC containers
-* Traditional transcoding
-
-They provide:
-
-* GPU horsepower
-* Model execution
-* Deterministic and verifiable output
-* Performance guarantees
-
-They do not expose external APIs directly-Gateways handle that.
 
 ---
 
