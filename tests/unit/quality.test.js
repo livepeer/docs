@@ -14,11 +14,49 @@
  * Quality checks: alt text, links, frontmatter, SEO
  */
 
+const path = require('path');
 const { getMdxFiles, getStagedDocsPageFiles, readFile } = require('../utils/file-walker');
 const { extractFrontmatter } = require('../utils/mdx-parser');
 
+const ENFORCE_OG_IMAGE = process.env.ENFORCE_OG_IMAGE === '1';
+const VALID_PAGE_TYPES = ['quickstart', 'tutorial', 'reference', 'conceptual', 'portal', 'api', 'guide', 'overview', 'index'];
+const VALID_AUDIENCES = ['developer', 'orchestrator', 'gateway', 'delegator', 'community', 'all'];
+const VALID_STATUSES = ['draft', 'published', 'review', 'deprecated'];
+
 let errors = [];
 let warnings = [];
+
+function report(severity, file, message, rule = 'Frontmatter') {
+  const issue = { file, rule, message };
+  if (severity === 'error') {
+    errors.push(issue);
+    return;
+  }
+  warnings.push(issue);
+}
+
+function collectFilesFromArgs(args) {
+  const files = [];
+
+  for (let i = 0; i < args.length; i += 1) {
+    const token = args[i];
+    if (token === '--files' || token === '--file') {
+      const raw = String(args[i + 1] || '').trim();
+      if (raw) {
+        raw
+          .split(',')
+          .map((part) => part.trim())
+          .filter(Boolean)
+          .forEach((part) => {
+            files.push(path.isAbsolute(part) ? part : path.resolve(part));
+          });
+      }
+      i += 1;
+    }
+  }
+
+  return [...new Set(files)];
+}
 
 /**
  * Check for image alt text
@@ -71,38 +109,59 @@ function checkFrontmatter(files) {
     const frontmatter = extractFrontmatter(content);
     
     if (!frontmatter.exists) {
-      warnings.push({
-        file,
-        rule: 'Frontmatter',
-        message: 'Missing frontmatter (recommended: title, description)'
-      });
+      report('warning', file, 'Missing frontmatter (recommended: title, description)');
       return;
     }
     
     if (!frontmatter.data) {
-      errors.push({
-        file,
-        rule: 'Frontmatter',
-        message: `Invalid frontmatter: ${frontmatter.error || 'parse error'}`
-      });
+      report('error', file, `Invalid frontmatter: ${frontmatter.error || 'parse error'}`);
       return;
     }
-    
-    // Check for required fields
-    if (!frontmatter.data.title) {
-      warnings.push({
-        file,
-        rule: 'Frontmatter',
-        message: 'Missing title in frontmatter'
-      });
+
+    const data = frontmatter.data;
+
+    if (!data.title) {
+      report('warning', file, 'Missing title in frontmatter');
     }
-    
-    if (!frontmatter.data.description) {
-      warnings.push({
+
+    if (!data.description) {
+      report('warning', file, 'Missing description in frontmatter (important for SEO)');
+    }
+
+    if (ENFORCE_OG_IMAGE && !data['og:image'] && !data.ogImage) {
+      report('error', file, 'Missing og:image in frontmatter');
+    }
+
+    if (!data.pageType) {
+      report('advisory', file, 'Missing pageType field (recommended for audit framework)');
+    } else if (!VALID_PAGE_TYPES.includes(data.pageType)) {
+      report('advisory', file, `Invalid pageType: "${data.pageType}". Valid: ${VALID_PAGE_TYPES.join(', ')}`);
+    }
+
+    if (!data.audience) {
+      report('advisory', file, 'Missing audience field (recommended for audit framework)');
+    } else if (!VALID_AUDIENCES.includes(data.audience)) {
+      report('advisory', file, `Invalid audience: "${data.audience}". Valid: ${VALID_AUDIENCES.join(', ')}`);
+    }
+
+    if (!data.status) {
+      report('advisory', file, 'Missing status field (recommended for audit framework)');
+    } else if (!VALID_STATUSES.includes(data.status)) {
+      report('advisory', file, `Invalid status: "${data.status}". Valid: ${VALID_STATUSES.join(', ')}`);
+    }
+
+    if (!data.lastVerified) {
+      report('advisory', file, 'Missing lastVerified field (recommended for audit framework)');
+    } else if (Number.isNaN(Date.parse(data.lastVerified))) {
+      report('advisory', file, `Invalid lastVerified date: "${data.lastVerified}"`);
+    }
+
+    if (data.title && String(data.title).length > 60) {
+      report(
+        'warning',
         file,
-        rule: 'Frontmatter',
-        message: 'Missing description in frontmatter (important for SEO)'
-      });
+        `Title may be truncated in search: ${String(data.title).length} chars (recommended max 60)`
+      );
     }
   });
 }
@@ -174,8 +233,9 @@ function runTests(options = {}) {
 if (require.main === module) {
   const args = process.argv.slice(2);
   const stagedOnly = args.includes('--staged');
+  const files = collectFilesFromArgs(args);
   
-  const result = runTests({ stagedOnly });
+  const result = runTests({ stagedOnly, files: files.length > 0 ? files : null });
   
   if (result.errors.length > 0) {
     console.error('\n❌ Quality Check Errors:\n');
