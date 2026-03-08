@@ -27,6 +27,7 @@
  *
  * @notes
  *   Static-only analysis. Does not modify source files.
+ *   Em dash handling is advisory-only: report issues for follow-up repair, do not auto-fix content.
  */
 
 const fs = require('fs');
