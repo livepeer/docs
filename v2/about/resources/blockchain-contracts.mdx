@@ -13,9 +13,7 @@ import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
 import { LinkArrow } from '/snippets/components/primitives/links.jsx'
 import { Subtitle, CopyText } from '/snippets/components/primitives/text.jsx'
 
-# Livepeer Blockchain Contracts
-
-Livepeer uses a comprehensive system of Ethereum smart contracts to permissionlessly govern its decentralized network. 
+Livepeer uses a comprehensive system of Ethereum smart contracts to permissionlessly govern its decentralized network.
 
 The Livepeer Protocol is currently deployed on Arbitrum One and uses a collection of Ethereum smart contracts to govern:
 
@@ -30,7 +28,7 @@ There are 3 core functions of contracts in the Livepeer Protocol:
 2. Token System
 3. Governance
 
-That consist of **10 smart contracts** that work together to manage staking, payments, governance, and service discovery: 
+That consist of **10 smart contracts** that work together to manage staking, payments, governance, and service discovery:
 
 {/* 1. Controller [Core]
 2. BondingManager [Core]
@@ -111,8 +109,8 @@ graph TB
 
 ## Core Protocol Contracts
 
-The core protocol contracts are the backbone of the Livepeer Protocol. 
-They manage the staking, delegation, and reward distribution for orchestrators. 
+The core protocol contracts are the backbone of the Livepeer Protocol.
+They manage the staking, delegation, and reward distribution for orchestrators.
 They also manage the time-based progression of the protocol through rounds and the payment processing through a probabilistic micropayment system.
 The Controller serves as the central registry, enabling upgrades by updating implementation addresses
 
@@ -127,13 +125,13 @@ The Controller serves as the central registry, enabling upgrades by updating imp
 <Danger> Maybe put in tab view for better layout </Danger>
 #### **Controller**: <Subtitle text="Contract Registry" />
 
-The [Controller](https://github.com/livepeer/protocol/blob/e8b6243c/deploy/deploy_contracts.ts) is the central registry for all protocol contracts. 
+The [Controller](https://github.com/livepeer/protocol/blob/e8b6243c/deploy/deploy_contracts.ts) is the central registry for all protocol contracts.
 All protocol contracts check with the Controller for the addresses of other contracts they need to interact with.
 
 <Accordion title="Controller">
-	The Controller acts as the central registry for all other contract addresses in the protocol. 
+	The Controller acts as the central registry for all other contract addresses in the protocol.
 
-	It maintains a mapping of contract IDs to their addresses, enabling protocol upgrades by updating the registered implementation addresses. 
+	It maintains a mapping of contract IDs to their addresses, enabling protocol upgrades by updating the registered implementation addresses.
 	It uses [Keccak256](https://en.wikipedia.org/wiki/Keccak#Keccak-256) hashes of contract names as keys to store their addresses, enabling upgradeable architecture without changing the Controller address itself.
 
 	**Address**:
@@ -154,7 +152,7 @@ All protocol contracts check with the Controller for the addresses of other cont
 	- `setContract()` - Set address of a contract by name
 	- `pause()`/`unpause()` - Emergency pause for critical situations
 
-	<Image src="https://media1.tenor.com/m/_vT9Qzw03N4AAAAd/sir-topham-hatt-topham.gif" alt="Controller" />	
+	<Image src="https://media1.tenor.com/m/_vT9Qzw03N4AAAAd/sir-topham-hatt-topham.gif" alt="Controller" />
 	{/* <iframe href="https://tenor.com/view/sir-topham-hatt-the-fat-controller-sir-toping-hat-happy-bald-gif-6999538172963206619"/> */}
 
 </Accordion>
@@ -207,7 +205,7 @@ The [TicketBroker](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/
 	- `Withdraw()` - Complete withdrawal after unlock period
 </Accordion>
 
-#### **RoundsManager**: <Subtitle text="Protocol Time Management" /> 
+#### **RoundsManager**: <Subtitle text="Protocol Time Management" />
 
 The [RoundsManager](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/RoundsManager.sol) manages the protocol's time-based round system where each round has a fixed block length.
 
@@ -245,7 +243,7 @@ The [Minter](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/Minter
 
 </Accordion>
 
-#### **ServiceRegistry**: <Subtitle text="Orchestrator Discovery" /> 
+#### **ServiceRegistry**: <Subtitle text="Orchestrator Discovery" />
 
 The [ServiceRegistry](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/service/ServiceRegistry.sol) maps Ethereum addresses to service URIs for orchestrator discovery.
 
@@ -283,17 +281,17 @@ The [ServiceRegistry](https://github.com/livepeer/protocol/blob/e8b6243c/contrac
 
 ## Token & Utility Contracts
 
-<Tip> 
+<Tip>
 
-Livepeer moved from the Ethereum mainnet to the Arbitrum One network in 2022 to increase transaction throughput and reduce fees. <br/> 
+Livepeer moved from the Ethereum mainnet to the Arbitrum One network in 2022 to increase transaction throughput and reduce fees. <br/>
 
 On Ethereum mainnet, only the `LivepeerToken` and `BridgeMinter` contracts remain operational; all other contracts have migrated to Arbitrum One.
 
-This ensures the token has the higher security of the Ethereum mainnet while the network enjoys the higher throughput and lower fees of Arbitrum. 
+This ensures the token has the higher security of the Ethereum mainnet while the network enjoys the higher throughput and lower fees of Arbitrum.
 
 </Tip>
 
-#### **LivepeerToken (LPT)**: <Subtitle text="ERC20 Token" /> 
+#### **LivepeerToken (LPT)**: <Subtitle text="ERC20 Token" />
 <Badge color="green">Ethereum Mainnet Only </Badge>
 
 The [LivepeerToken](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/token/LivepeerToken.sol) is the native protocol token used for staking, payments, and governance based on the [ERC-20](https://eips.ethereum.org/EIPS/eip-20) standard.
@@ -327,7 +325,7 @@ The [BridgeMinter](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/
 #### **LivepeerTokenFaucet**: <Subtitle text="Test Token Distribution" />
 <Badge color="surface">Testnets Only </Badge>
 
-The [LivepeerTokenFaucet](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/token/LivepeerTokenFaucet.sol) is used on testnets for distributing test LPT tokens. 
+The [LivepeerTokenFaucet](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/token/LivepeerTokenFaucet.sol) is used on testnets for distributing test LPT tokens.
 
 <Accordion title="LivepeerTokenFaucet">
 	**Purpose**:

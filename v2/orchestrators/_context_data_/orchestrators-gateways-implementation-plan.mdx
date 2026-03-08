@@ -7,9 +7,9 @@ keywords: ["livepeer", "orchestrators", "gateways", "go-livepeer", "documentatio
 
 import { Note, Warning, Tip, Info } from 'mintlify/components'
 
-> **Context:** This plan implements feedback from eliteproxy (ecosystem builder / core contributor) 
-> covering the `v2/orchestrators` and `v2/gateways` sections. Docker compose and installation 
-> assets have already been provided and are in progress. This document focuses on what remains, 
+> **Context:** This plan implements feedback from eliteproxy (ecosystem builder / core contributor)
+> covering the `v2/orchestrators` and `v2/gateways` sections. Docker compose and installation
+> assets have already been provided and are in progress. This document focuses on what remains,
 > how to structure it, and editorial decisions to make along the way.
 
 ---
@@ -35,11 +35,11 @@ These require no new content from external contributors. They are corrections an
 
 ### 1.1 Fix the NVIDIA Driver Factual Error
 
-**File:** `v2/gateways/run-a-gateway/install/docker-install.mdx`  
+**File:** `v2/gateways/run-a-gateway/install/docker-install.mdx`
 **Also check:** Any install prerequisite pages under `v2/gateways/run-a-gateway/install/`
 
-**What to do:**  
-Search the entire gateways section for any mention of NVIDIA drivers as a gateway prerequisite. 
+**What to do:**
+Search the entire gateways section for any mention of NVIDIA drivers as a gateway prerequisite.
 Gateways do not require NVIDIA drivers. Remove or correct every instance.
 
 The correct rule is:
@@ -50,8 +50,8 @@ Add a callout in the gateway install prerequisites to make this explicit and pre
 
 ```mdx
 <Note>
-  Gateways do not require NVIDIA GPU drivers. GPU requirements apply to 
-  Orchestrators only. See the [Orchestrator setup guide](/v2/orchestrators) 
+  Gateways do not require NVIDIA GPU drivers. GPU requirements apply to
+  Orchestrators only. See the [Orchestrator setup guide](/v2/orchestrators)
   if you are running GPU compute.
 </Note>
 ```
@@ -64,43 +64,43 @@ Add a callout in the gateway install prerequisites to make this explicit and pre
 
 **File:** `v2/gateways/run-a-gateway/install/docker-install.mdx`
 
-**Current state:** The page walks through Docker installation steps inline.  
+**Current state:** The page walks through Docker installation steps inline.
 **Problem:** Docker's install process changes across platforms and package sources. Maintaining this in docs is a liability.
 
-**What to do:**  
+**What to do:**
 Replace the inline install steps with a reference out to the official Docker docs, plus a brief orientation callout:
 
 ```mdx
-<Card 
-  title="Install Docker Engine" 
-  href="https://docs.docker.com/engine/install/" 
-  icon="docker" 
-  arrow 
+<Card
+  title="Install Docker Engine"
+  href="https://docs.docker.com/engine/install/"
+  icon="docker"
+  arrow
   horizontal
 >
   Official Docker Engine installation guide - covers Linux, Windows, and macOS.
 </Card>
 
 <Tip>
-  **Windows users:** Install Docker via WSL2 for best compatibility with 
+  **Windows users:** Install Docker via WSL2 for best compatibility with
   go-livepeer. See Docker's [WSL2 backend guide](https://docs.docker.com/desktop/windows/wsl/).
 </Tip>
 ```
 
-Keep only any Livepeer-specific post-install steps (e.g., adding the user to the `docker` group, 
-verifying the install, or confirming Docker Compose v2 is available). Those are legitimate additions. 
+Keep only any Livepeer-specific post-install steps (e.g., adding the user to the `docker` group,
+verifying the install, or confirming Docker Compose v2 is available). Those are legitimate additions.
 Generic Docker install steps are not.
 
 ---
 
 ### 1.3 Add Payment / NaaP Placeholder Sections
 
-**Context:** eliteproxy and Qiang are building a NaaP (Network-as-a-Platform) single-click deployment 
+**Context:** eliteproxy and Qiang are building a NaaP (Network-as-a-Platform) single-click deployment
 experience. This needs a home in docs before the content exists, so the IA is correct when it arrives.
 
 **Files to create:**
 
-`v2/orchestrators/payments/index.mdx`  
+`v2/orchestrators/payments/index.mdx`
 `v2/gateways/payments/index.mdx`
 
 Use `<ComingSoonCallout />` on both. Title them "Network Payments & Clearinghouses" or similar.
@@ -134,15 +134,15 @@ Add both stubs to `docs.json` navigation so they appear in the sidebar.
 
 ## Phase 2 - Orchestrator Quickstart (Docker assets now available)
 
-Docker compose and installation assets have been provided by eliteproxy. This phase 
+Docker compose and installation assets have been provided by eliteproxy. This phase
 structures them into a working quickstart.
 
 ### 2.1 Introduce Use-Case Selection at Quickstart Entry
 
 **File:** `v2/orchestrators/quickstart/overview.mdx` (or current entry page)
 
-The single biggest IA change needed: orchestrator configurations are not interchangeable. 
-A user setting up a transcoding orchestrator has completely different prerequisites, 
+The single biggest IA change needed: orchestrator configurations are not interchangeable.
+A user setting up a transcoding orchestrator has completely different prerequisites,
 software, and configuration than one running real-time AI.
 
 Add a use-case selector at the start of the quickstart. This can be implemented as cards or tabs:
@@ -163,7 +163,7 @@ Add a use-case selector at the start of the quickstart. This can be implemented 
 </CardGroup>
 ```
 
-Only **Transcoding** gets full content now. Realtime AI and Batch AI get `<ComingSoonCallout />` 
+Only **Transcoding** gets full content now. Realtime AI and Batch AI get `<ComingSoonCallout />`
 with links to the `box.md` reference for readers who are ahead of the docs.
 
 ---
@@ -172,19 +172,19 @@ with links to the `box.md` reference for readers who are ahead of the docs.
 
 **File to create:** `v2/orchestrators/quickstart/transcoding-quickstart.mdx`
 
-Structure the steps as follows. eliteproxy's Docker compose slots into Step 3.
+Structure the steps as follows. Eliteproxy's Docker compose slots into Step 3.
 
 ---
 
 #### Step 1 - Create and fund your ETH account
 
-This is the actual first entrypoint. The ETH account creation is currently missing or buried. 
+This is the actual first entrypoint. The ETH account creation is currently missing or buried.
 It needs to be Step 1, not a reference page.
 
 ```mdx
 ## Step 1: Create your Ethereum account
 
-You need an Arbitrum One ETH account to operate a node on-chain. If you already have one, 
+You need an Arbitrum One ETH account to operate a node on-chain. If you already have one,
 skip to [funding it](#fund-your-account).
 
 ### Create a new keystore
@@ -194,11 +194,11 @@ skip to [funding it](#fund-your-account).
 ./livepeer -network arbitrum-one-mainnet -ethKeystorePath ~/.lpData/keystore
 ````
 
-Follow the prompts to set a password. Store your keystore and password securely - 
+Follow the prompts to set a password. Store your keystore and password securely -
 this controls your node's funds and identity.
 
 <Warning>
-  Never commit your keystore or password to version control. 
+  Never commit your keystore or password to version control.
   Add `~/.lpData/keystore` to your `.gitignore`.
 </Warning>
 
@@ -233,7 +233,7 @@ Before pulling the Docker image, confirm:
 
 #### Step 3 - Pull and configure
 
-Slot eliteproxy's Docker compose here. Add annotation comments to explain each environment variable. 
+Slot eliteproxy's Docker compose here. Add annotation comments to explain each environment variable.
 Do not leave compose variables unexplained - this is where first-time operators will get lost.
 
 Example annotation pattern:
@@ -244,9 +244,9 @@ Example annotation pattern:
 ```yaml
 # docker-compose.yml
 services:
-  orchestrator:
-    image: livepeer/go-livepeer:latest
-    environment:
+ orchestrator:
+ image: livepeer/go-livepeer:latest
+ environment:
       # Your funded Arbitrum ETH address
       - ETH_KEYSTORE_PATH=/keystore
       - ETH_PASSWORD_PATH=/password
@@ -256,7 +256,7 @@ services:
       - MAX_SESSIONS=10
       # Your publicly accessible service URI (must be reachable by gateways)
       - SERVICE_URI=https://your-orchestrator.example.com:8935
-    volumes:
+ volumes:
       - ~/.lpData/keystore:/keystore:ro
       - ~/.lpData/password:/password:ro
 ```
@@ -278,16 +278,16 @@ livepeer_cli
 # From the CLI menu, select: Invoke multistep wizard > Activate as an orchestrator
 # Or pass flags directly:
 ./livepeer \
-  -network arbitrum-one-mainnet \
-  -blockRewardCut 5.0 \
-  -feeShare 10.0 \
-  -pricePerUnit 1000 \
-  -pixelsPerUnit 1000000000000 \
-  -serviceURI https://your-orchestrator.example.com:8935
+ -network arbitrum-one-mainnet \
+ -blockRewardCut 5.0 \
+ -feeShare 10.0 \
+ -pricePerUnit 1000 \
+ -pixelsPerUnit 1000000000000 \
+ -serviceURI https://your-orchestrator.example.com:8935
 ```
 
 <Tip>
-  After activating, your orchestrator appears in the [Livepeer Explorer](https://explorer.livepeer.org) 
+  After activating, your orchestrator appears in the [Livepeer Explorer](https://explorer.livepeer.org)
   within 1-2 rounds (approximately 10 minutes).
 </Tip>
 ```
@@ -318,7 +318,7 @@ Your node should appear at:
 
 ### 2.3 Add ETH Account Creation as a Shared Prerequisite Snippet
 
-The ETH account creation step is relevant for both orchestrators and gateways running on-chain. 
+The ETH account creation step is relevant for both orchestrators and gateways running on-chain.
 Create it as a shared snippet rather than duplicating it:
 
 **File:** `snippets/pages/SHARED/eth-account-setup.mdx`
@@ -329,7 +329,7 @@ Import it into both the orchestrator quickstart and the gateway on-chain setup g
 
 ## Phase 3 - Orchestrator Section Review Pass
 
-eliteproxy has offered to review the full `v2/orchestrators` section and submit PRs. 
+eliteproxy has offered to review the full `v2/orchestrators` section and submit PRs.
 When those PRs arrive, your role is editorial review, not authoring.
 
 ### 3.1 What to validate in his PRs
@@ -358,7 +358,7 @@ These pages exist and need an accuracy pass regardless:
 
 **File to create:** `v2/orchestrators/about-orchestrators/job-types.mdx`
 
-This is the explanation page that feeds the three-path quickstart. It answers: why do the three 
+This is the explanation page that feeds the three-path quickstart. It answers: why do the three
 configuration paths exist? What's different between them?
 
 ```mdx
@@ -368,12 +368,12 @@ description: Understanding the difference between Transcoding, Realtime AI, and 
 sidebarTitle: Job Types
 ---
 
-Livepeer Orchestrators can serve three distinct types of compute jobs, each requiring 
+Livepeer Orchestrators can serve three distinct types of compute jobs, each requiring
 different configuration and (in some cases) different software.
 
 ## Transcoding
 
-Video transcoding converts streams between formats, bitrates, and resolutions. 
+Video transcoding converts streams between formats, bitrates, and resolutions.
 This is Livepeer's original use case.
 
 - **GPU:** Optional (CPU transcoding available, GPU strongly recommended for throughput)
@@ -382,7 +382,7 @@ This is Livepeer's original use case.
 
 ## Realtime AI
 
-Real-time video-to-video AI pipelines process live video streams through AI models 
+Real-time video-to-video AI pipelines process live video streams through AI models
 (e.g., depth estimation, style transfer, segmentation) with sub-second latency requirements.
 
 - **GPU:** Required
@@ -390,14 +390,14 @@ Real-time video-to-video AI pipelines process live video streams through AI mode
 - **Typical use:** Live AI video effects, interactive video
 
 <Note>
-  Realtime AI setup is more involved than transcoding. Review the 
-  [box documentation](https://github.com/livepeer/go-livepeer/blob/master/box/box.md) 
+  Realtime AI setup is more involved than transcoding. Review the
+  [box documentation](https://github.com/livepeer/go-livepeer/blob/master/box/box.md)
   before proceeding.
 </Note>
 
 ## Batch AI
 
-Asynchronous AI inference over video or image content. Jobs are queued and processed 
+Asynchronous AI inference over video or image content. Jobs are queued and processed
 without latency constraints.
 
 - **GPU:** Required
@@ -413,7 +413,7 @@ without latency constraints.
 
 ### 4.1 Slot the go-livepeer Transcoding Gateway Guide
 
-eliteproxy is contributing a go-livepeer native transcoding gateway guide. 
+eliteproxy is contributing a go-livepeer native transcoding gateway guide.
 This is the key content that makes the gateway section network-native rather than Studio-abstracted.
 
 **Target location:** `v2/gateways/run-a-gateway/transcoding.mdx`
@@ -425,8 +425,8 @@ When his guide arrives, ensure:
 
 ### 4.2 Establish the Orchestrator ↔ Gateway Test Loop
 
-Currently there is no documented user journey that says: "I have an orchestrator running, 
-now test it by sending it a job from a gateway." This is a critical gap - it's the end-to-end 
+Currently there is no documented user journey that says: "I have an orchestrator running,
+now test it by sending it a job from a gateway." This is a critical gap - it's the end-to-end
 verification path.
 
 **Add to:** Both the orchestrator quickstart conclusion and the gateway quickstart:
@@ -438,12 +438,12 @@ Once both an Orchestrator and Gateway are running, you can verify your setup by:
 
 1. Pointing a gateway at your orchestrator directly:
    ```bash
-   -orchAddr=https://your-orchestrator.example.com:8935
+ -orchAddr=https://your-orchestrator.example.com:8935
    ```
 2. Sending a test stream through the gateway
 3. Confirming the orchestrator logs show a transcoding session
 
-See the [Gateway Quickstart](/v2/gateways/quickstart/gateway-setup) 
+See the [Gateway Quickstart](/v2/gateways/quickstart/gateway-setup)
 for full gateway setup.
 ```
 
@@ -467,18 +467,18 @@ From the index, the following are marked `⚠️` (incomplete or placeholder):
 
 eliteproxy's most important systemic observation:
 
-> *"IMO the Livepeer Studio guides should be their own community of practice, for Studio's own API. 
+> *"IMO the Livepeer Studio guides should be their own community of practice, for Studio's own API.
 > They do not communicate network value to technically minded builders."*
 
 This isn't a Phase 1 change - it's a longer-term IA decision - but the groundwork should be laid now.
 
-**Immediate action:** Ensure every guide that is Studio-specific is clearly labelled as such. 
+**Immediate action:** Ensure every guide that is Studio-specific is clearly labelled as such.
 Add a callout at the top of Studio-specific pages:
 
 ```mdx
 <Info>
-  This guide uses the **Livepeer Studio API**, a managed service built on the Livepeer network. 
-  If you want to interact with the network directly using go-livepeer, 
+  This guide uses the **Livepeer Studio API**, a managed service built on the Livepeer network.
+  If you want to interact with the network directly using go-livepeer,
   see the [Gateway guide](/v2/gateways) or [Orchestrator guide](/v2/orchestrators).
 </Info>
 ```

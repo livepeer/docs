@@ -28,7 +28,7 @@ Same idea for `livepeer.asset.create` with `playbackPolicy`.
 
 ## 3. Configure the Player
 
-Pass an **access key** (e.g. session token or user id) to the Player. The Player sends it to Livepeer, which forwards it to your webhook:
+Pass an **access key** (e.g. Session token or user id) to the Player. The Player sends it to Livepeer, which forwards it to your webhook:
 
 ```tsx
 <Player.Root src={src} accessKey={getAccessKeyForUser()}>
@@ -38,6 +38,6 @@ Pass an **access key** (e.g. session token or user id) to the Player. The Player
 
 ## 4. Handle the webhook
 
-Your endpoint receives a POST with `accessKey` and `context`. Validate the key (e.g. check auth, subscription). Return **2XX** to allow playback, **non-2XX** to deny.
+Your endpoint receives a POST with `accessKey` and `context`. Validate the key (e.g. Check auth, subscription). Return **2XX** to allow playback, **non-2XX** to deny.
 
 **Custom player:** For WebRTC or HLS, send the access key in the `Livepeer-Access-Key` header or as query param `accessKey` on the playback URL.

@@ -30,7 +30,7 @@ All payments are made in <Badge color="green">ETH(wei)</Badge> - **not** Livepee
 - Calculation: pixels processed × price per pixel
 
 2. <Badge color="purple"> AI Processing</Badge>: Priced per capability /
-   model.{' '}
+ model.{' '}
 
 - Unit: Price per capability/model
 - Calculation:
@@ -45,29 +45,29 @@ All payments are made in <Badge color="green">ETH(wei)</Badge> - **not** Livepee
 #### Video Transcoding Core Flags
 
 <Card>
-  <Badge color="blue">Video</Badge>
+ <Badge color="blue">Video</Badge>
   <ResponseField name="-maxPricePerUnit" type="int" default="0 (wei)">
-    Maximum price per pixelsPerUnit (in wei `integer` or a custom currency
-    format like 0.50USD or 0.02USD) for transcoding work
+ Maximum price per pixelsPerUnit (in wei `integer` or a custom currency
+ format like 0.50USD or 0.02USD) for transcoding work
     <Note>
-      {' '}
-      All pricing is in `wei` unless currency conversion is configured{' '}
+ {' '}
+ All pricing is in `wei` unless currency conversion is configured{' '}
     </Note>
   </ResponseField>
   <ResponseField name="-pixelsPerUnit" type="int" default="1">
-    Number of pixels per pricing unit
+ Number of pixels per pricing unit
   </ResponseField>
   <ResponseField name="-ignoreMaxPriceIfNeeded" type="boolean" default="false">
-    Allow exceeding max price if no suitable Orchestrator exists
+ Allow exceeding max price if no suitable Orchestrator exists
   </ResponseField>
 </Card>
 
 #### AI Processing Core Flags
 
 <Card>
-  <Badge color="purple">AI</Badge> 
+ <Badge color="purple">AI</Badge>
   <ResponseField name="-maxPricePerCapability" type="string" default="none">
-  JSON list (or `path/to/ai-pricing.json` file) of maximum prices per AI capability/model
+ JSON list (or `path/to/ai-pricing.json` file) of maximum prices per AI capability/model
 
       ```json icon="file" ExampleFormat.json
       {
@@ -84,20 +84,20 @@ All payments are made in <Badge color="green">ETH(wei)</Badge> - **not** Livepee
 
   </ResponseField>
   <ResponseField name="-livePaymentInterval" type="duration" default="5s">
-    Payment processing frequency (e.g. 5s, 10s, 300ms)for Live AI Video workflows, where the gateway needs to send periodic payments to the orchestrator.
+ Payment processing frequency (e.g. 5s, 10s, 300ms)for Live AI Video workflows, where the gateway needs to send periodic payments to the orchestrator.
 
-    {/*
-    Live AI Video Processing: The interval is used when processing live video streams with AI models, where the gateway needs to send periodic payments to the orchestrator ai_live_video.go:95 ai_http.go:212
-    Payment Processor: It's passed to the LivePaymentProcessor which handles the timing of payment transactions live_payment_processor.go:33-42
-    Gateway-Orchestrator Communication: Specifically for "Gateway <> Orchestrator Payments for Live AI Video" as stated in the flag description.
-    You only need to configure this flag if:
+ {/*
+ Live AI Video Processing: The interval is used when processing live video streams with AI models, where the gateway needs to send periodic payments to the orchestrator ai_live_video.go:95 ai_http.go:212
+ Payment Processor: It's passed to the LivePaymentProcessor which handles the timing of payment transactions live_payment_processor.go:33-42
+ Gateway-Orchestrator Communication: Specifically for "Gateway <> Orchestrator Payments for Live AI Video" as stated in the flag description.
+ You only need to configure this flag if:
 
-    You're running a gateway that processes Live AI Video streams
-    You need to customize the payment frequency (default is 5 seconds)
-    You're working with orchestrators that require payment processing for AI workloads
+ You're running a gateway that processes Live AI Video streams
+ You need to customize the payment frequency (default is 5 seconds)
+ You're working with orchestrators that require payment processing for AI workloads
 
-    For standard offchain gateway operations without AI video processing, the default behavior is sufficient and you don't need to set this flag.
-    */}
+ For standard offchain gateway operations without AI video processing, the default behavior is sufficient and you don't need to set this flag.
+ */}
 
   </ResponseField>
 </Card>
@@ -143,14 +143,14 @@ the `transcodingConfig.json` or directly in the CLI.
    ```
 2. **JSON Configuration** file (plain text key value format)
 
-   For AI capabilities, use JSON files with model-specific pricing
+ For AI capabilities, use JSON files with model-specific pricing
 
 3. **HTTP API** - can be used at runtime to make adjustments without restart
    - /setBroadcastConfig: Set general pricing
    - /setMaxPriceForCapability: Set AI model pricing
 4. **CLI Tool**
 
-   Use livepeer_cli -> **Option 16**: "Set broadcast config"
+ Use livepeer_cli -> **Option 16**: "Set broadcast config"
 
 ## Orchestrator Configuration & Price Information (Gateway Reference)
 
@@ -348,15 +348,15 @@ if basePrice.Num().Cmp(big.NewInt(0)) > 0 {
       icon="hand-holding-dollar"
       arrow
       >
-      How gateways earn fees for services
+ How gateways earn fees for services
   </Card>
 
-  <Card 
+  <Card
         title="Funding Your Gateway"
         href="../requirements/on-chain%20setup/fund-gateway"
         icon="coins"
         arrow
         >
-      How to fund your gateway.
+ How to fund your gateway.
   </Card>
 </Columns>

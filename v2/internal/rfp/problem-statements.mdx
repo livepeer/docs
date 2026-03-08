@@ -1,7 +1,7 @@
 ---
 title: 'Problem Statements'
 sidebarTitle: 'Problem Statements'
-description: 'The RFP identified four specific problems with the existing Livepeer documentation. 
+description: 'The RFP identified four specific problems with the existing Livepeer documentation.
 This section documents how v2 addressed each one: the decision-making process, the pre-work required, the options considered, and the full implementation evidence - tagged by delivery layer.'
 keywords: ["livepeer", "internal", "rfp", "problem statements"]
 og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
@@ -32,12 +32,12 @@ import { DisplayCard } from "/snippets/components/display/custom-cards.jsx"
 <AccordionGroup>
     <Accordion title="Decision-Making Process">
         The v1 documentation's navigation relied on a toggle-based model where all user types entered the same homepage and were expected to self-select their path. In practice, this produced paralysis: new users did not have sufficient context to know which toggle applied to them. The decision point was which structural model would produce the most direct path from "I just heard about Livepeer" to "I am doing the thing I came to do."
-        
+
         Three architectural options were considered. First, a flat tag-based model where content is tagged by persona but lives in a unified hierarchy - rejected because it does not compress navigation decisions; users still had to scan and filter. Second, a job-type-first model (build/operate/stake/reference) - rejected because user interviews confirmed people identify with role identity, not task abstraction. Third, persona-first with Diátaxis typing - selected because it maps directly to how users self-describe ("I'm a developer building on Livepeer") and allows the documentation to answer the question "where do I start?" before the user has to ask it.
     </Accordion>
     <Accordion title="Pre-Work Required">
         Persona journey maps were produced for all four core types documenting the literal sequence of clicks and decisions a new user makes from landing on docs.livepeer.org through to their first successful action. These maps identified specific friction points: the v1 toggle required users to know the distinction between "developer" and "gateway operator" before they had any context. The v1 Delegator section had minimal content with no interactive delegation walkthrough. The v1 Orchestrator path assumed significant prior knowledge of GPU infrastructure.
-        
+
         Forum and Discord crawls identified the most common incoming questions per persona. Orchestrator questions concentrated on node setup and earnings calculation. Developer questions concentrated on SDK choice and API authentication. Delegator questions concentrated on where to go to stake and what the risk was. Gateway operator questions concentrated on when to run self-hosted versus use Studio. These patterns directly informed what content each "entry point" needed to answer immediately.
     </Accordion>
     <Accordion title="Implementation">
@@ -84,19 +84,19 @@ import { DisplayCard } from "/snippets/components/display/custom-cards.jsx"
 ## Brand & Duplication
 <AccordionGroup>
     <Accordion title="Decision-Making Process">
-        Brand confusion in v1 arose from a structural issue: Livepeer Studio, an opinionated product built on the Livepeer network, was documented inside the core protocol documentation. This created two problems. Users who wanted to use the network directly were routed through Studio-specific instructions that did not apply to them. And users who wanted to use Studio were not getting the full Studio product documentation, because much of it lived in livepeer.studio/docs.
-        
+        Brand confusion in v1 arose from a structural issue: Livepeer Studio, an opinionated product built on the Livepeer Network, was documented inside the core protocol documentation. This created two problems. Users who wanted to use the network directly were routed through Studio-specific instructions that did not apply to them. And users who wanted to use Studio were not getting the full Studio product documentation, because much of it lived in livepeer.studio/docs.
+
         The options considered were: keep Studio in core docs with clearer labelling (lowest disruption, perpetuates confusion); move all Studio content to livepeer.studio/docs and redirect (cleanest separation, requires Studio team coordination); or create a dedicated "Platforms" section in core docs that contextualises Studio alongside other gateway products without hosting Studio's full operational documentation. The Platforms section model was selected as it solves the brand confusion without requiring Studio to be completely rebuilt, and it positions Livepeer as a multi-product ecosystem rather than Studio-centric.
-        
+
         For SDK and API duplication, the decision was to consolidate into single canonical hubs in the Developers section with cross-references from Gateway and AI sections - rather than attempting to maintain parallel copies with eventual synchronisation.
     </Accordion>
     <Accordion title="Pre-Work Required" >
-        Brand strategy analysis mapped the relationship between Livepeer protocol, Livepeer network, Livepeer Studio, and the gateway ecosystem. This analysis produced the 'layered system' framing: Protocol → Network → Product Platform → Ecosystem. 
-        This hierarchy resolved the brand confusion by making clear that Studio is a product built on the network, not the network itself. 
+        Brand strategy analysis mapped the relationship between Livepeer protocol, Livepeer Network, Livepeer Studio, and the gateway ecosystem. This analysis produced the 'layered system' framing: Protocol → Network → Product Platform → Ecosystem.
+        This hierarchy resolved the brand confusion by making clear that Studio is a product built on the network, not the network itself.
         The 'Using Livepeer Studio as a Gateway' page makes this relationship explicit and provides the correct entry point for Studio users who need gateway functionality.
     </Accordion>
     <Accordion title="Implementation">
-        [IA] Platforms section created as a dedicated home for all gateway products and ecosystem tools: Livepeer Studio, Daydream, Streamplace, Frameworks - each with its own orientation page that explains the product's role in the ecosystem, its relationship to the Livepeer network, and where to find full product documentation.
+        [IA] Platforms section created as a dedicated home for all gateway products and ecosystem tools: Livepeer Studio, Daydream, Streamplace, Frameworks - each with its own orientation page that explains the product's role in the ecosystem, its relationship to the Livepeer Network, and where to find full product documentation.
         [Product Positioning] "Open AI-Infrastructure for Real-Time Interactive Video" positioned as the core docs identity - protocol and network layer - with Studio and other gateway products as implementations. The confusion between "Livepeer the network" and "Livepeer the product" is resolved at the IA level.
         [Content] 12+ Studio-specific pages removed from core docs with 301 redirects to livepeer.studio/docs. Migration guide for Studio users provides before/after mapping for users who bookmarked Studio content in the old location.
         [Technical] SDK documentation consolidated into a single Developer SDK hub rather than maintained separately in Developer and AI sections. AI SDK documentation cross-references the canonical hub rather than duplicating content.
@@ -106,7 +106,7 @@ import { DisplayCard } from "/snippets/components/display/custom-cards.jsx"
         [UI/UX] Product HUB page (v2/pages/02_platforms/products/all-ecosystem/product-hub.mdx) provides a filterable, sortable ecosystem overview showing all products and their relationship to the network. Architecture for automation via Google Form → GitHub PR → merge is defined; currently in pre-automation state.
     </Accordion>
     <Accordion title="Constraints">
-        The Studio migration guide's narrative page - explaining the conceptual shift from Studio-as-docs to Studio-as-product - remains incomplete. Redirects are in place (users who click old Studio URLs are routed correctly), but the explanatory page that helps users understand *why* the documentation changed has not been written. 
+        The Studio migration guide's narrative page - explaining the conceptual shift from Studio-as-docs to Studio-as-product - remains incomplete. Redirects are in place (users who click old Studio URLs are routed correctly), but the explanatory page that helps users understand *why* the documentation changed has not been written.
         This is a content gap, not an infrastructure gap.
     </Accordion>
 </AccordionGroup>
@@ -115,18 +115,18 @@ import { DisplayCard } from "/snippets/components/display/custom-cards.jsx"
 ## Weak Site Integration
 <AccordionGroup>
     <Accordion title="Decision-Making Process">
-        Site integration in documentation can be approached at three levels of ambition. 
-        - The minimal approach embeds links to external tools at relevant points in the documentation. 
-        - The intermediate approach builds contextual integration: documentation pages that explain each tool's purpose and link out with context rather than just a raw URL. 
+        Site integration in documentation can be approached at three levels of ambition.
+        - The minimal approach embeds links to external tools at relevant points in the documentation.
+        - The intermediate approach builds contextual integration: documentation pages that explain each tool's purpose and link out with context rather than just a raw URL.
         - The maximal approach creates live data connections: documentation that renders current data from the explorer, governance portal, or dashboard rather than directing users to open a separate tab.
-        
+
         The v2 engagement targeted the intermediate approach as baseline and built toward the maximal approach for high-value surfaces. The Gateway Explorer page, for example, embeds an iframe of the live explorer interface. The LPT exchange data integration pulls live token data. The release tracking automation keeps the "current version" reference live. This is a systematic infrastructure for live data integration, not a documentation-only solution.
     </Accordion>
     <Accordion title="Pre-Work Required">
-        Forum and Discord crawl identified the specific tools users expected to find linked from the docs: the Livepeer Explorer (for staking and orchestrator selection), the governance portal (for LPT holders to vote), the Studio dashboard (for developers), and the gateway-specific explorer (for gateway operators). 
-        
+        Forum and Discord crawl identified the specific tools users expected to find linked from the docs: the Livepeer Explorer (for staking and orchestrator selection), the governance portal (for LPT holders to vote), the Studio dashboard (for developers), and the gateway-specific explorer (for gateway operators).
+
         Pain points surfaced: users would read about delegation in the docs and then not know where to actually go to delegate. Users would read about orchestrators but have no quick path to the explorer to evaluate one.
-    </Accordion>    
+    </Accordion>
     <Accordion title=" Implementation">
         - **[UI/UX]** Explorer integration: Livepeer Explorer (explorer.livepeer.org) linked and contextualised across Delegator and Orchestrator sections. Developer tools section includes dedicated Livepeer Explorer page (v2/pages/03_developers/developer-tools/livepeer-explorer.mdx) explaining key functions for each persona: staking and delegation, orchestrator insights, gateway insights, governance, transaction tracking.
         - **[UI/UX]** Gateway Explorer integration: dedicated page (v2/pages/04_gateways/gateway-tools/explorer.mdx) embedding the live Gateway Data Explorer iframe. Links directly to the gateway-specific explorer interface and the open-source explorer codebase on GitHub.
@@ -139,9 +139,9 @@ import { DisplayCard } from "/snippets/components/display/custom-cards.jsx"
     </Accordion>
     <Accordion title ="Constraints">
         Full verified integration with the governance portal has not been audited as a discrete deliverable. The governance portal is linked from the LP Token section, but whether the bidirectional connection (docs linked from governance portal) has been established is not confirmed. This is listed as an open item in the close-out task list.
-        
+
         Analytics tracking at anchor level - which would surface which integration links users are actually clicking - has not been implemented. Without this signal, the quality of site integration can only be assessed structurally, not behaviourally. This is a gap in the feedback loop rather than the integration itself.
-        
+
         An important nuance on the "duplication" constraint: in several cases where content appears duplicated across user-facing sections - for example, a gateway API reference card appearing in both the Developers section and the Gateways section - the underlying MDX content is served from a single canonical snippet file in snippets/components/ or snippets/data/. Both pages import from the same source. This means what appears as UI duplication is in fact single-source in the codebase: update the snippet once, and both surfaces reflect the change. This is a deliberate architecture decision that preserves user journey completeness (each persona sees the content they need in their section) without the maintenance burden of truly duplicated content. The source-of-truth-policy.md documents this pattern explicitly.
     </Accordion>
 

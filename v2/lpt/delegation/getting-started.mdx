@@ -14,7 +14,7 @@ import { BorderedBox } from '/snippets/components/primitives/containers.jsx'
 import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
 
 
-Delegating LPT means bonding your tokens to an orchestrator on the Livepeer network. In return, you share in the orchestrator's rewards - both inflationary LPT and usage-based ETH fees. Your tokens remain under your control throughout.
+Delegating LPT means bonding your tokens to an orchestrator on the Livepeer Network. In return, you share in the orchestrator's rewards - both inflationary LPT and usage-based ETH fees. Your tokens remain under your control throughout.
 
 This guide walks you through the full process: from understanding what you're doing to claiming your first rewards.
 
@@ -44,7 +44,7 @@ In exchange, delegators receive a share of the orchestrator's rewards - the perc
 - Not delegating means your LPT is being diluted by inflation earned by active delegators
 
 <Note>
-  If less than ~50% of LPT is bonded, inflation increases to incentivise more delegation. If more than ~50% is bonded, inflation decreases. Unbonded LPT holders miss out on this inflation - effectively being diluted by those who delegate.
+ If less than ~50% of LPT is bonded, inflation increases to incentivise more delegation. If more than ~50% is bonded, inflation decreases. Unbonded LPT holders miss out on this inflation - effectively being diluted by those who delegate.
 </Note>
 
 ---
@@ -69,7 +69,7 @@ You need:
 - LPT bridged to Arbitrum One (Livepeer operates on Arbitrum L2)
 
 <Card title="Bridge LPT to Arbitrum" icon="bridge" href="/v2/gateways/run-a-gateway/requirements/on-chain%20setup/bridge-lpt-to-arbitrum" arrow horizontal>
-  If your LPT is on Ethereum mainnet, bridge it to Arbitrum One first.
+ If your LPT is on Ethereum mainnet, bridge it to Arbitrum One first.
 </Card>
 
 ---
@@ -78,15 +78,15 @@ You need:
 
 <StyledSteps>
   <StyledStep title="Go to the Livepeer Explorer">
-    Navigate to [explorer.livepeer.org](https://explorer.livepeer.org) and connect your wallet. The Explorer is the primary interface for delegation and reward claiming.
+ Navigate to [explorer.livepeer.org](https://explorer.livepeer.org) and connect your wallet. The Explorer is the primary interface for delegation and reward claiming.
 
     <Card title="Livepeer Explorer" icon="compass" href="https://explorer.livepeer.org" arrow horizontal>
-      Connect your wallet and manage your stake.
+ Connect your wallet and manage your stake.
     </Card>
   </StyledStep>
 
   <StyledStep title="Choose an Orchestrator">
-    Browse the orchestrator list. Key metrics to evaluate:
+ Browse the orchestrator list. Key metrics to evaluate:
 
     - **Reward Cut** - The percentage of LPT rewards the orchestrator keeps. Lower means more for delegators.
     - **Fee Cut** - The percentage of ETH fees the orchestrator keeps. Lower means more ETH for delegators.
@@ -96,41 +96,41 @@ You need:
     - **Performance** - Uptime, transcoding success rate, and job completion history.
 
     <Tip>
-      A low reward cut sounds attractive, but only matters if the orchestrator is actively earning. Look for orchestrators with consistent uptime and a track record of calling `Reward()` each round - inactive orchestrators don't distribute any rewards.
+ A low reward cut sounds attractive, but only matters if the orchestrator is actively earning. Look for orchestrators with consistent uptime and a track record of calling `Reward()` each round - inactive orchestrators don't distribute any rewards.
     </Tip>
   </StyledStep>
 
   <StyledStep title="Approve and Bond LPT">
-    On the orchestrator's Explorer page, click **Delegate** and enter the amount of LPT to bond. You will sign two transactions:
+ On the orchestrator's Explorer page, click **Delegate** and enter the amount of LPT to bond. You will sign two transactions:
 
     1. **Approve** - Authorizes the BondingManager contract to transfer your LPT
     2. **Bond** - Locks your LPT and attributes your stake to the orchestrator
 
-    Both transactions require a small amount of ETH for Arbitrum gas fees.
+ Both transactions require a small amount of ETH for Arbitrum gas fees.
   </StyledStep>
 
   <StyledStep title="Monitor Your Position">
-    After bonding, the Explorer shows your delegated position, the orchestrator's current stats, and your accumulated (unclaimed) rewards.
+ After bonding, the Explorer shows your delegated position, the orchestrator's current stats, and your accumulated (unclaimed) rewards.
 
-    Your rewards accumulate each round automatically. You do not need to take any action for rewards to accrue - but you need to call `claimEarnings` to realize them.
+ Your rewards accumulate each round automatically. You do not need to take any action for rewards to accrue - but you need to call `claimEarnings` to realize them.
   </StyledStep>
 
   <StyledStep title="Claim Your Earnings">
-    Rewards accumulate in the BondingManager contract. To realize them (move them into your bonded balance), you must call `claimEarnings`. You can do this from the Explorer under your account page.
+ Rewards accumulate in the BondingManager contract. To realize them (move them into your bonded balance), you must call `claimEarnings`. You can do this from the Explorer under your account page.
 
     <Note>
-      Not claiming for many rounds does not forfeit rewards - but it can reduce effective yield due to missed compounding. Some orchestrators run automated bots that claim earnings for their delegators.
+ Not claiming for many rounds does not forfeit rewards - but it can reduce effective yield due to missed compounding. Some orchestrators run automated bots that claim earnings for their delegators.
     </Note>
   </StyledStep>
 
   <StyledStep title="Unbond (When You Want to Withdraw)">
-    To withdraw your LPT:
+ To withdraw your LPT:
 
     1. Click **Undelegate** on the Explorer - this initiates an unbonding lock
     2. Wait approximately 21 hours (one round thawing period)
     3. Click **Withdraw** to return LPT to your wallet
 
-    The unbonding period exists to allow the protocol time to enforce any slashing penalties before stake is withdrawn.
+ The unbonding period exists to allow the protocol time to enforce any slashing penalties before stake is withdrawn.
   </StyledStep>
 </StyledSteps>
 
@@ -174,15 +174,15 @@ The actual inflation reward each round depends on the current inflation rate and
 
 <CardGroup cols={2}>
   <Card title="LPT Token Purpose" icon="coins" href="/v2/lpt/about/purpose" arrow>
-    Why LPT exists: security, rewards, and governance.
+ Why LPT exists: security, rewards, and governance.
   </Card>
   <Card title="Protocol Economics" icon="chart-line" href="/v2/about/livepeer-protocol/economics" arrow>
-    How rewards and fees flow through the network.
+ How rewards and fees flow through the network.
   </Card>
   <Card title="Delegation Overview" icon="scroll" href="/v2/lpt/delegation/overview" arrow>
-    Technical protocol-level overview of delegation mechanics.
+ Technical protocol-level overview of delegation mechanics.
   </Card>
   <Card title="Livepeer Explorer" icon="compass" href="https://explorer.livepeer.org" arrow>
-    Browse orchestrators and manage your stake.
+ Browse orchestrators and manage your stake.
   </Card>
 </CardGroup>

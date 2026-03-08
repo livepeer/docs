@@ -10,8 +10,8 @@ og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
 import { DoubleIconLink } from '/snippets/components/primitives/links.jsx'
 
 <Note>
-  The Livepeer Gateway was previously called the Livepeer Broadcaster. Some CLI
-  flags and log output still reference the Broadcaster name.
+ The Livepeer Gateway was previously called the Livepeer Broadcaster. Some CLI
+ flags and log output still reference the Broadcaster name.
 </Note>
 
 ## Prerequisites
@@ -38,10 +38,10 @@ Create a working directory and a `docker-compose.yml` file. Choose the configura
 
 <Tabs>
   <Tab title="On-Chain (Production)">
-    On-chain mode connects the gateway to the Livepeer network on Arbitrum. An
-    Ethereum wallet and Arbitrum One RPC endpoint are required before starting.
-    See [On-Chain Setup Requirements](/v2/gateways/run-a-gateway/requirements/on-chain%20setup/on-chain)
-    for prerequisites.
+ On-chain mode connects the gateway to the Livepeer network on Arbitrum. An
+ Ethereum wallet and Arbitrum One RPC endpoint are required before starting.
+ See [On-Chain Setup Requirements](/v2/gateways/run-a-gateway/requirements/on-chain%20setup/on-chain)
+ for prerequisites.
 
     ```yaml docker-compose.yml
     services:
@@ -71,20 +71,20 @@ Create a working directory and a `docker-compose.yml` file. Choose the configura
           - "-v=6"
     ```
 
-    Replace `<YOUR_ARB_RPC_URL>` with your Arbitrum One RPC endpoint (e.g.
-    from Alchemy or Infura).
+ Replace `<YOUR_ARB_RPC_URL>` with your Arbitrum One RPC endpoint (e.g.
+ from Alchemy or Infura).
 
-    After creating this file, complete the [Create Livepeer Gateway ETH Account](#create-livepeer-gateway-eth-account)
-    step below before starting the gateway.
+ After creating this file, complete the [Create Livepeer Gateway ETH Account](#create-livepeer-gateway-eth-account)
+ step below before starting the gateway.
   </Tab>
   <Tab title="Development (Off-Chain)">
-    Off-chain mode runs without blockchain connectivity and is intended for
-    local development. You must supply the address of a running orchestrator
-    node via `-orchAddr`.
+ Off-chain mode runs without blockchain connectivity and is intended for
+ local development. You must supply the address of a running orchestrator
+ node via `-orchAddr`.
 
     <Warning>
-      You need access to a running orchestrator node. For local testing, run
-      your own orchestrator or point to a known development node.
+ You need access to a running orchestrator node. For local testing, run
+ your own orchestrator or point to a known development node.
     </Warning>
 
     ```yaml docker-compose.yml
@@ -111,16 +111,16 @@ Create a working directory and a `docker-compose.yml` file. Choose the configura
           - "-v=6"
     ```
 
-    Replace `<YOUR_ORCHESTRATOR_ADDRESS>` with the service address of your
-    orchestrator (e.g. `https://my-orch:8935`).
+ Replace `<YOUR_ORCHESTRATOR_ADDRESS>` with the service address of your
+ orchestrator (e.g. `https://my-orch:8935`).
   </Tab>
 </Tabs>
 
 ## Create Livepeer Gateway ETH Account
 
 <Note>
-  This section applies to the **On-Chain** configuration only. Skip this step
-  if using development (off-chain) mode.
+ This section applies to the **On-Chain** configuration only. Skip this step
+ if using development (off-chain) mode.
 </Note>
 
 Before the gateway can sign transactions on-chain, it needs an Ethereum account.
@@ -128,38 +128,38 @@ Run the gateway interactively once to generate one:
 
 <Steps>
   <Step title="Generate the ETH account">
-    Create the data directory, then start the container interactively:
+ Create the data directory, then start the container interactively:
 
     ```bash
     mkdir -p ./data/gateway
     docker compose run -it gateway
     ```
 
-    When prompted, enter a strong password to protect your Ethereum private key.
+ When prompted, enter a strong password to protect your Ethereum private key.
 
     <Warning>
-      Never share or lose your keystore file or password. Both are required to
-      recover your ETH account.
+ Never share or lose your keystore file or password. Both are required to
+ recover your ETH account.
     </Warning>
 
-    After the log output confirms the Ethereum account has been unlocked, press
-    `Ctrl+C` to exit.
+ After the log output confirms the Ethereum account has been unlocked, press
+ `Ctrl+C` to exit.
   </Step>
   <Step title="Create the password file">
-    Write your password to the file that the gateway reads on startup:
+ Write your password to the file that the gateway reads on startup:
 
     ```bash
     echo "your_password" > ./data/gateway/eth-secret.txt
     ```
 
     <Tip>
-      This must match the password you entered in the previous step.
+ This must match the password you entered in the previous step.
     </Tip>
   </Step>
   <Step title="Back up the keystore">
-    Your keystore file is stored at `./data/gateway/keystore/`. Back it up
-    securely before going to production. Losing this file means losing access
-    to any ETH held in the account.
+ Your keystore file is stored at `./data/gateway/keystore/`. Back it up
+ securely before going to production. Losing this file means losing access
+ to any ETH held in the account.
   </Step>
 </Steps>
 
@@ -187,25 +187,25 @@ available on port `8935` at `/stream/<manifest-id>.m3u8`.
 
 <Tabs>
   <Tab title="FFmpeg">
-    Push a file or live source to the gateway using FFmpeg:
+ Push a file or live source to the gateway using FFmpeg:
 
     ```bash
     ffmpeg -re -i input.mp4 -c:v libx264 -c:a aac -f flv rtmp://localhost:1935/live/stream
     ```
 
-    Replace `input.mp4` with a local file or a live source URL. The path
-    segment after `/live/` (`stream` in the example above) becomes the manifest
-    ID used to retrieve the HLS output.
+ Replace `input.mp4` with a local file or a live source URL. The path
+ segment after `/live/` (`stream` in the example above) becomes the manifest
+ ID used to retrieve the HLS output.
 
-    The transcoded HLS output will be available at:
+ The transcoded HLS output will be available at:
 
     ```
     http://localhost:8935/stream/stream.m3u8
     ```
   </Tab>
   <Tab title="OBS Studio">
-    [OBS Studio](https://obsproject.com/) is a common choice for RTMP
-    broadcasting.
+ [OBS Studio](https://obsproject.com/) is a common choice for RTMP
+ broadcasting.
 
     1. Open OBS and go to **Settings > Stream**
     2. Set **Service** to **Custom...**
@@ -215,7 +215,7 @@ available on port `8935` at `/stream/<manifest-id>.m3u8`.
     6. Set **Keyframe Interval** to `2` seconds
     7. Click **OK** and press **Start Streaming**
 
-    The transcoded HLS output will be available at:
+ The transcoded HLS output will be available at:
 
     ```
     http://localhost:8935/stream/stream.m3u8
@@ -263,5 +263,5 @@ override, and per-stream transcoding profiles, see the
   horizontal
   arrow
 >
-  View all available configuration options for the gateway
+ View all available configuration options for the gateway
 </Card>

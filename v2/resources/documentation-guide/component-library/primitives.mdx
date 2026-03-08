@@ -8,7 +8,7 @@ keywords: ["livepeer", "components", "primitives", "buttons", "icons", "links"]
 import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
 import { LivepeerIcon, LivepeerIconFlipped, LivepeerSVG, LivepeerIconOld } from '/snippets/components/primitives/icons.jsx'
 import { CustomCallout, GotoLink, GotoCard, TipWithArrow, LinkArrow } from '/snippets/components/primitives/links.jsx'
-// BlinkingIcon, BlinkingTerminal, DoubleIconLink commented out - require ThemeData (DEPRECATED per style guide - components are immutable)
+// BlinkingIcon, BlinkingTerminal, DoubleIconLink commented out - require a deprecated JS theme helper (components are immutable)
 import { DownloadButton, BasicBtn } from '/snippets/components/primitives/buttons.jsx'
 import { Subtitle, CopyText, CardTitleTextWithArrow, AccordionTitleWithArrow } from '/snippets/components/primitives/text.jsx'
 import { FlexContainer, GridContainer, Spacer } from '/snippets/components/primitives/layout.jsx'
@@ -19,7 +19,7 @@ import { FocusableScrollRegions } from '/snippets/components/primitives/a11y.jsx
 <FocusableScrollRegions />
 
 <Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
-  Return to the main component library index
+ Return to the main component library index
 </Card>
 
 <CustomDivider middleText="Buttons & Actions" />
@@ -28,7 +28,7 @@ import { FocusableScrollRegions } from '/snippets/components/primitives/a11y.jsx
 
 ### DownloadButton
 
-Interactive download button with lazy loading for performance optimization.
+Interactive download button with lazy loading for performance optimisation.
 
 **Import:**
 ```jsx
@@ -55,9 +55,9 @@ import { DownloadButton } from "/snippets/components/primitives/buttons.jsx";
     <DownloadButton label="Download SDK" downloadLink="https://example.com/sdk.zip" />
   </Tab>
   <Tab title="With Icons">
-    <DownloadButton 
-      label="Download PDF" 
-      downloadLink="https://example.com/file.pdf" 
+    <DownloadButton
+      label="Download PDF"
+      downloadLink="https://example.com/file.pdf"
       icon="file-pdf"
       rightIcon="arrow-right"
       border={true}
@@ -67,9 +67,9 @@ import { DownloadButton } from "/snippets/components/primitives/buttons.jsx";
 ```jsx
 <DownloadButton downloadLink="https://example.com/file.pdf" />
 
-<DownloadButton 
-  label="Download PDF" 
-  downloadLink="https://example.com/file.pdf" 
+<DownloadButton
+  label="Download PDF"
+  downloadLink="https://example.com/file.pdf"
   icon="file-pdf"
   rightIcon="arrow-right"
   border={true}
@@ -111,30 +111,30 @@ import { LivepeerIcon } from "/snippets/components/primitives/icons.jsx";
 | Prop | Type | Default | Required | Description |
 |------|------|---------|----------|-------------|
 | `size` | `number` | `16` | No | Icon size in pixels |
-| `color` | `string` | theme-aware | No | Custom color override (defaults to theme-aware color) |
+| `color` | `string` | theme-aware | No | Custom colour override (defaults to theme-aware colour) |
 
 **Examples:**
 
 <Tabs>
   <Tab title="Default">
     <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-      <LivepeerIcon /> Default size
-      <LivepeerIcon size={24} /> Size 24
-      <LivepeerIcon size={32} /> Size 32
+ <LivepeerIcon /> Default size
+ <LivepeerIcon size={24} /> Size 24
+ <LivepeerIcon size={32} /> Size 32
     </div>
   </Tab>
   <Tab title="Custom Color">
     <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-      <LivepeerIcon size={24} color="#00cc88" /> Custom green
-      <LivepeerIcon size={24} color="#ff6b6b" /> Custom red
-      <LivepeerIcon size={24} color="#3b82f6" /> Custom blue
+ <LivepeerIcon size={24} color="var(--accent)" /> Accent
+ <LivepeerIcon size={24} color="var(--hero-text)" /> Hero text
+ <LivepeerIcon size={24} color="var(--text-secondary)" /> Secondary text
     </div>
   </Tab>
   <Tab title="Code">
 ```jsx
 <LivepeerIcon />
 <LivepeerIcon size={24} />
-<LivepeerIcon size={32} color="#00cc88" />
+<LivepeerIcon size={32} color="var(--accent)" />
 ```
   </Tab>
 </Tabs>
@@ -157,8 +157,8 @@ import { LivepeerIconFlipped } from "/snippets/components/primitives/icons.jsx";
 <Tabs>
   <Tab title="Example">
     <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
-      <LivepeerIcon size={24} /> Normal
-      <LivepeerIconFlipped size={24} /> Flipped
+ <LivepeerIcon size={24} /> Normal
+ <LivepeerIconFlipped size={24} /> Flipped
     </div>
   </Tab>
   <Tab title="Code">
@@ -311,20 +311,20 @@ import { GotoCard } from "/snippets/components/primitives/links.jsx";
 
 ---
 
-{/* DoubleIconLink commented out - requires ThemeData (DEPRECATED per style guide - component is immutable) */}
+{/* DoubleIconLink commented out - requires a deprecated JS theme helper (component is immutable) */}
 {/*
 ### DoubleIconLink
 
 Link component with icons on both sides. Commonly used for external links like GitHub.
 
-**Note:** Currently unavailable - component requires ThemeData which is deprecated. See component-bugs.md for details.
+**Note:** Currently unavailable - component depends on a deprecated JS theme helper. See component-bugs.md for details.
 */}
 
 ---
 
 ### CustomCallout
 
-A stylized callout box with customizable icon and colors. Automatically converts hex colors to rgba for proper opacity handling.
+A stylized callout box with customizable icon and colours. Automatically converts hex colours to rgba for proper opacity handling.
 
 **Import:**
 ```jsx
@@ -346,27 +346,27 @@ import { CustomCallout } from "/snippets/components/primitives/links.jsx";
 
 <Tabs>
   <Tab title="Info">
-    <CustomCallout icon="info" color="#3b82f6">
-      This is an informational message with a blue info icon.
+    <CustomCallout icon="info" color="var(--accent)">
+ This is an informational message with a blue info icon.
     </CustomCallout>
   </Tab>
   <Tab title="Warning">
-    <CustomCallout icon="warning" color="#ef4444">
-      Warning: This action cannot be undone.
+    <CustomCallout icon="warning" color="var(--hero-text)">
+ Warning: This action cannot be undone.
     </CustomCallout>
   </Tab>
   <Tab title="Success">
-    <CustomCallout icon="check-circle" color="#22c55e">
-      Success! Your changes have been saved.
+    <CustomCallout icon="check-circle" color="var(--text-secondary)">
+ Success! Your changes have been saved.
     </CustomCallout>
   </Tab>
   <Tab title="Code">
 ```jsx
-<CustomCallout icon="info" color="#3b82f6">
+<CustomCallout icon="info" color="var(--accent)">
   Important information message
 </CustomCallout>
 
-<CustomCallout icon="warning" color="#ef4444">
+<CustomCallout icon="warning" color="var(--hero-text)">
   Warning message
 </CustomCallout>
 ```
@@ -399,18 +399,18 @@ import { TipWithArrow } from "/snippets/components/primitives/links.jsx";
 
 <Tabs>
   <Tab title="Basic">
-    <TipWithArrow icon="info" color="#3b82f6">
-      Check out the related documentation for more details!
+    <TipWithArrow icon="info" color="var(--accent)">
+ Check out the related documentation for more details!
     </TipWithArrow>
   </Tab>
   <Tab title="Custom Arrow">
-    <TipWithArrow icon="lightbulb" arrowIcon="arrow-right" color="#f59e0b">
-      Tip: Use this component to point users to related content.
+    <TipWithArrow icon="lightbulb" arrowIcon="arrow-right" color="var(--hero-text)">
+ Tip: Use this component to point users to related content.
     </TipWithArrow>
   </Tab>
   <Tab title="Code">
 ```jsx
-<TipWithArrow icon="info" color="#3b82f6">
+<TipWithArrow icon="info" color="var(--accent)">
   Check out the related documentation!
 </TipWithArrow>
 ```
@@ -419,19 +419,19 @@ import { TipWithArrow } from "/snippets/components/primitives/links.jsx";
 
 ---
 
-{/* BlinkingIcon and BlinkingTerminal commented out - require ThemeData (DEPRECATED per style guide - components are immutable) */}
+{/* BlinkingIcon and BlinkingTerminal commented out - require a deprecated JS theme helper (components are immutable) */}
 {/*
 ### BlinkingIcon
 
 An icon with a smooth blinking animation (fades between full and 30% opacity). Animation cycles every 3 seconds.
 
-**Note:** Currently unavailable - component requires ThemeData which is deprecated. See component-bugs.md for details.
+**Note:** Currently unavailable - component depends on a deprecated JS theme helper. See component-bugs.md for details.
 
 ### BlinkingTerminal
 
 Alias for `BlinkingIcon` (backwards compatibility). Use `BlinkingIcon` instead.
 
-**Note:** Currently unavailable - component requires ThemeData which is deprecated. See component-bugs.md for details.
+**Note:** Currently unavailable - component depends on a deprecated JS theme helper. See component-bugs.md for details.
 */}
 
 ---
@@ -500,15 +500,15 @@ import { Subtitle } from "/snippets/components/primitives/text.jsx";
     <Subtitle text="This is a subtitle" />
   </Tab>
   <Tab title="Custom Style">
-    <Subtitle 
-      text="Custom styled subtitle" 
-      style={{ fontSize: "1.2rem", color: "#00cc88", fontStyle: "normal" }}
+    <Subtitle
+      text="Custom styled subtitle"
+      style={{ fontSize: "1.2rem", color: "var(--accent)", fontStyle: "normal" }}
     />
   </Tab>
   <Tab title="Code">
 ```jsx
 <Subtitle text="This is a subtitle" />
-<Subtitle style={{ fontSize: "1.2rem", color: "#00cc88" }}>
+<Subtitle style={{ fontSize: "1.2rem", color: "var(--accent)" }}>
   Custom styled subtitle
 </Subtitle>
 ```
@@ -573,7 +573,7 @@ import { CardTitleTextWithArrow } from "/snippets/components/primitives/text.jsx
 <Tabs>
   <Tab title="Example">
     <CardTitleTextWithArrow>
-      Card Title with Arrow
+ Card Title with Arrow
     </CardTitleTextWithArrow>
   </Tab>
   <Tab title="Code">
@@ -635,7 +635,7 @@ import { CustomDivider } from "/snippets/components/primitives/divider.jsx";
 | Prop | Type | Default | Required | Description |
 |------|------|---------|----------|-------------|
 | `middleText` | `string` | `""` | No | Optional text to display in the center of the divider |
-| `color` | `string` | `"var(--border)"` | No | Color for the middle text |
+| `color` | `string` | `"var(--border)"` | No | Colour for the middle text |
 | `style` | `object` | `{}` | No | Additional CSS styles |
 | `style.margin` | `string` | `"24px 0"` | No | Vertical margin |
 | `style.fontSize` | `string` | `"16px"` | No | Font size for middle text |
@@ -650,13 +650,13 @@ import { CustomDivider } from "/snippets/components/primitives/divider.jsx";
     <CustomDivider middleText="Section Break" />
   </Tab>
   <Tab title="Custom Color">
-    <CustomDivider middleText="OR" color="#2d9a67" />
+    <CustomDivider middleText="OR" color="var(--accent)" />
   </Tab>
   <Tab title="Code">
 ```jsx
 <CustomDivider />
 <CustomDivider middleText="Section Break" />
-<CustomDivider middleText="OR" color="#2d9a67" />
+<CustomDivider middleText="OR" color="var(--accent)" />
 ```
   </Tab>
 </Tabs>
@@ -695,21 +695,21 @@ import { FlexContainer } from "/snippets/components/primitives/layout.jsx";
 <Tabs>
   <Tab title="Row Layout">
     <FlexContainer gap="1rem">
-      <Card title="Card 1">Content 1</Card>
-      <Card title="Card 2">Content 2</Card>
-      <Card title="Card 3">Content 3</Card>
+ <Card title="Card 1">Content 1</Card>
+ <Card title="Card 2">Content 2</Card>
+ <Card title="Card 3">Content 3</Card>
     </FlexContainer>
   </Tab>
   <Tab title="Column Layout">
     <FlexContainer direction="column" gap="0.5rem">
-      <Card title="Item 1">First item</Card>
-      <Card title="Item 2">Second item</Card>
+ <Card title="Item 1">First item</Card>
+ <Card title="Item 2">Second item</Card>
     </FlexContainer>
   </Tab>
   <Tab title="Centered">
     <FlexContainer justify="center" align="center" gap="2rem">
-      <Card title="Centered">Item 1</Card>
-      <Card title="Centered">Item 2</Card>
+ <Card title="Centered">Item 1</Card>
+ <Card title="Centered">Item 2</Card>
     </FlexContainer>
   </Tab>
   <Tab title="Code">
@@ -752,9 +752,9 @@ import { GridContainer } from "/snippets/components/primitives/layout.jsx";
 <Tabs>
   <Tab title="3 Columns">
     <GridContainer columns={3} gap="1rem">
-      <Card title="Card 1">Content</Card>
-      <Card title="Card 2">Content</Card>
-      <Card title="Card 3">Content</Card>
+ <Card title="Card 1">Content</Card>
+ <Card title="Card 2">Content</Card>
+ <Card title="Card 3">Content</Card>
     </GridContainer>
   </Tab>
   <Tab title="Code">
@@ -790,9 +790,9 @@ import { Spacer } from "/snippets/components/primitives/layout.jsx";
 
 <Tabs>
   <Tab title="Vertical Spacing">
-    <Card title="Card 1">Content</Card>
+ <Card title="Card 1">Content</Card>
     <Spacer size="2rem" />
-    <Card title="Card 2">Content</Card>
+ <Card title="Card 2">Content</Card>
   </Tab>
   <Tab title="Code">
 ```jsx
@@ -833,18 +833,18 @@ import { StyledTable, TableRow, TableCell } from "/snippets/components/primitive
     <StyledTable>
       <thead>
         <TableRow header>
-          <TableCell header>Name</TableCell>
-          <TableCell header align="center">Status</TableCell>
+ <TableCell header>Name</TableCell>
+ <TableCell header align="center">Status</TableCell>
         </TableRow>
       </thead>
       <tbody>
         <TableRow>
-          <TableCell>Item 1</TableCell>
-          <TableCell align="center">Active</TableCell>
+ <TableCell>Item 1</TableCell>
+ <TableCell align="center">Active</TableCell>
         </TableRow>
         <TableRow>
-          <TableCell>Item 2</TableCell>
-          <TableCell align="center">Pending</TableCell>
+ <TableCell>Item 2</TableCell>
+ <TableCell align="center">Pending</TableCell>
         </TableRow>
       </tbody>
     </StyledTable>
@@ -917,12 +917,12 @@ import { BorderedBox } from "/snippets/components/primitives/containers.jsx";
 <Tabs>
   <Tab title="Default">
     <BorderedBox>
-      This is a bordered box with default styling.
+ This is a bordered box with default styling.
     </BorderedBox>
   </Tab>
   <Tab title="Accent Variant">
     <BorderedBox variant="accent" padding="1.5rem">
-      This box has an accent-colored border.
+ This box has an accent-colored border.
     </BorderedBox>
   </Tab>
   <Tab title="Code">
@@ -959,7 +959,7 @@ import { CenteredContainer } from "/snippets/components/primitives/containers.js
 <Tabs>
   <Tab title="Centered Content">
     <CenteredContainer maxWidth="600px">
-      <Card title="Centered Card">This card is centered with a max width of 600px.</Card>
+ <Card title="Centered Card">This card is centered with a max width of 600px.</Card>
     </CenteredContainer>
   </Tab>
   <Tab title="Code">
@@ -996,7 +996,7 @@ import { FullWidthContainer } from "/snippets/components/primitives/containers.j
   <Tab title="Full Width">
     <FullWidthContainer backgroundColor="var(--card-background)">
       <div style={{ padding: "2rem", textAlign: "center" }}>
-        Full-width hero content
+ Full-width hero content
       </div>
     </FullWidthContainer>
   </Tab>
@@ -1012,5 +1012,5 @@ import { FullWidthContainer } from "/snippets/components/primitives/containers.j
 ---
 
 <Card title="Next: Display Components" icon="arrow-right" href="../component-library/display" arrow>
-  Continue to Display Components →
+ Continue to Display Components →
 </Card>

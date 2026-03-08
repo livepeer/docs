@@ -13,8 +13,8 @@ og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
    * Staking & delegation
    * Reward distribution
    * Slashing
-   * Rounds 
-   
+   * Rounds
+
 
 */}
 
@@ -34,8 +34,8 @@ Before bonding, delegators must approve the BondingManager to transfer their LPT
 Delegators call `Bond(amount, orchestratorAddress)` which:
 - Transfers LPT from delegator to BondingManager
 - Updates orchestrator's delegated stake
-- Calculates pool position hints for gas optimization
-- Updates the transcoder pool sorted by stake 
+- Calculates pool position hints for gas optimisation
+- Updates the transcoder pool sorted by stake
 
 **Step 3: Orchestrator Registration**
 To become an orchestrator, a node must:
@@ -89,7 +89,7 @@ When sufficient funds available:
 - Transfers `faceValue` from broadcaster's reserve to orchestrator
 - Updates `claimedReserve` in BondingManager
 
-This achieves ~99% cost reduction vs. per-segment on-chain payments while maintaining fair compensation through probabilistic expected value.
+This achieves ~99% cost reduction vs. Per-segment on-chain payments while maintaining fair compensation through probabilistic expected value.
 
 ### 4. **Fee Flow (Broadcasters → Orchestrators → Delegators)**
 
@@ -118,7 +118,7 @@ The go-livepeer client abstracts all contract interactions through the `Livepeer
 **Contract Address Resolution**:
 All contract addresses are dynamically discovered through the Controller registry using Keccak256 hashes of contract names. This enables contract upgrades without changing client code. [16](#0-15)
 
-## Gas Optimization Strategies
+## Gas Optimisation Strategies
 
 ### 1. **Pool Hints**
 When bonding or calling reward, the client calculates "hints" (previous/next positions in the sorted transcoder pool) to enable O(1) insertions instead of O(n) searches on-chain. [17](#0-16)
