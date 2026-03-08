@@ -37,7 +37,7 @@ components/
 | --------------- | ----------------------------------------------------------------------------------- | ----------------------- |
 | `cards.jsx`     | `PostCard`, `CardColumnsPostLayout`, `BlogCard`, `CardBlogDataLayout`               | Card layouts            |
 | `lists.jsx`     | `BasicList`, `IconList`, `StepList`, `StepLinkList`, `UpdateList`, `UpdateLinkList` | List layouts            |
-| `ListSteps.jsx` | `ListSteps`                                                                         | Step list component     |
+| `list-steps.jsx` | `ListSteps`                                                                         | Step list component     |
 | `steps.jsx`     | `StyledSteps`, `StyledStep`                                                         | Styled step components  |
 | `table.jsx`     | `DynamicTable`                                                                      | Dynamic table component |
 
@@ -57,7 +57,7 @@ components/
 | `code.jsx`             | `CustomCodeBlock`, `CodeComponent`, `ComplexCodeBlock`, `CodeSection`                                                  | Code display components       |
 | `external-content.jsx` | `ExternalContent`                                                                                                      | External content loader       |
 | `release.jsx`          | `LatestVersion`                                                                                                        | Version display component     |
-| `responseField.jsx`    | `ValueResponseField`, `CustomResponseField`, `ResponseFieldExpandable`, `ResponseFieldAccordion`, `ResponseFieldGroup` | API response field components |
+| `response-field.jsx`    | `ValueResponseField`, `CustomResponseField`, `ResponseFieldExpandable`, `ResponseFieldAccordion`, `ResponseFieldGroup` | API response field components |
 
 ### integrations/
 

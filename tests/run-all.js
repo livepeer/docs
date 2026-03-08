@@ -24,6 +24,7 @@ const qualityTests = require('./unit/quality.test');
 const linksImportsTests = require('./unit/links-imports.test');
 const docsNavigationTests = require('./unit/docs-navigation.test');
 const scriptDocsTests = require('./unit/script-docs.test');
+const componentNamingTests = require('../tools/scripts/validators/components/check-naming-conventions');
 const pagesIndexGenerator = require('../tools/scripts/generate-pages-index');
 const browserTests = require('./integration/browser.test');
 const REPO_ROOT = path.resolve(__dirname, '..');
@@ -51,6 +52,15 @@ async function runAllTests() {
   totalErrors += styleResult.errors.length;
   totalWarnings += styleResult.warnings.length;
   console.log(`   ${styleResult.errors.length} errors, ${styleResult.warnings.length} warnings`);
+
+  // Component Naming
+  console.log('\n🧩 Running Component Naming Checks...');
+  const componentNamingResult = componentNamingTests.run();
+  componentNamingResult.findings.forEach((finding) => {
+    console.error(`  ${componentNamingTests.formatFinding(finding)}`);
+  });
+  totalErrors += componentNamingResult.findings.length;
+  console.log(`   ${componentNamingResult.findings.length} errors, 0 warnings`);
   
   // MDX Tests
   console.log('\n📄 Running MDX Validation Tests...');

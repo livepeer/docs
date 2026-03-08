@@ -530,7 +530,7 @@ function buildContent() {
   const lookupRows = [];
 
   const lines = [...FRONTMATTER_LINES, ''];
-  lines.push('import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";');
+  lines.push('import { SearchTable } from "/snippets/components/layout/search-table.jsx";');
   lines.push('import { DynamicTable } from "/snippets/components/layout/table.jsx";');
   lines.push('');
   buildGeneratedHiddenBannerLines(GENERATED_DETAILS).forEach((line) => lines.push(line));
