@@ -1,0 +1,91 @@
+---
+title: "Orchestrator Job Types"
+sidebarTitle: "Job Types"
+description: "Compare the three orchestrator job types — Transcoding, Realtime AI, and Batch AI — across hardware requirements, latency expectations, payment mechanisms, and stake requirements."
+pageType: concept
+audience: [orchestrator]
+status: production
+lastVerified: "2026-02-01"
+sourceOfTruth: "https://github.com/livepeer/go-livepeer"
+---
+
+import { Callout } from '/snippets/components/Callout.mdx'
+
+# Orchestrator Job Types
+
+Livepeer orchestrators can accept three types of jobs, each with different hardware requirements, performance expectations, payment mechanisms, and maturity levels. Understanding the differences is essential before choosing which workloads to serve.
+
+## Overview
+
+| | Transcoding | Realtime AI | Batch AI |
+|---|-------------|-------------|----------|
+| **Primary use** | Video transcoding (HLS, WebRTC) | Live AI video-to-video, inference on streams | Async image gen, audio-to-text, LLM |
+| **Hardware** | CPU-primary, optional GPU | NVIDIA GPU required | NVIDIA GPU required |
+| **Latency target** | Near-realtime (stream-synchronised) | p95 latency < 500ms per frame | Async-tolerant, seconds to minutes |
+| **Payment** | Probabilistic micropayments (PM) on Arbitrum | PM on Arbitrum via gateway | TBD — likely PM, design in progress |
+| **Stake requirement** | Top 100 active orchestrators | Top 100 active orchestrators | TBD |
+| **Status** | Production / legacy trajectory | Production, active development | In development |
+
+## Transcoding
+
+Transcoding is the original Livepeer workload. Orchestrators receive video segments from gateways (broadcasters), transcode them to target profiles (bitrate, resolution, codec), and return the results.
+
+**Hardware:** Transcoding is primarily CPU-bound, though NVIDIA GPU acceleration is supported via NVENC/NVDEC. Consumer-grade CPUs perform competitively for many profiles.
+
+**Payment:** Per-pixel probabilistic micropayments. Tickets are signed per-segment (each segment hash is part of the ticket), placing signing in the hot path. This is a fundamental design difference from Realtime AI.
+
+**Trajectory:** Transcoding remains in production but is in a legacy maintenance trajectory. The protocol team is focused on AI workloads. Transcoding-specific code receives critical fixes only.
+
+**Stake requirement:** You must be in the active orchestrator set (currently top 100 by delegated stake) to receive jobs. Run `livepeer_cli` to check your current rank.
+
+<Callout type="info">
+New orchestrators typically begin with Realtime AI rather than transcoding, as GPU hardware is the primary differentiator for AI demand and transcoding faces declining fee pressure.
+</Callout>
+
+## Realtime AI
+
+Realtime AI covers **live inference workloads** — primarily `live-video-to-video` but also real-time audio and video AI pipelines. Jobs arrive as continuous streams (using the Trickle protocol internally) and require low-latency GPU inference per frame or per interval.
+
+**Hardware:** NVIDIA GPU with CUDA support is required. The more VRAM the better — larger models and warm multi-model setups require 24 GB+ for serious production deployments. Consumer RTX-class GPUs (RTX 3090, 4090) are widely used by community operators.
+
+**Pipeline configuration:** Orchestrators advertise capability via `aiModels.json`, specifying which pipelines and models they support, pricing, and whether models are pre-loaded ("warm"). The [AI Runner](/v2/orchestrators/quickstart/realtime-ai) Docker container handles inference.
+
+**Payment:** Probabilistic micropayments at regular time intervals (approximately every 60 seconds) rather than per-segment. This keeps signing out of the per-frame processing path. Remote Signer support is available for gateways wanting to run off-chain.
+
+**Status:** Production and actively developed. This is the primary growth workload for orchestrators in 2025–2026.
+
+**On-chain registration:** AI capabilities are advertised via the `AIServiceRegistry` contract on Arbitrum (`0x04C0b249740175999E5BF5c9ac1dA92431EF34C5`), which is separate from the main protocol registry.
+
+## Batch AI
+
+Batch AI covers **asynchronous inference workloads** — image generation from text, audio transcription, LLM completion, and similar request/response tasks that do not require stream-synchronised delivery.
+
+**Hardware:** NVIDIA GPU required. Specific VRAM requirements depend on the models configured.
+
+**Payment mechanism:** Under active design. Expected to be probabilistic micropayments similar to Realtime AI. Do not assume current Realtime AI flag configurations will transfer directly.
+
+**Stake requirement:** Not yet determined. May differ from the top-100 requirement used by Transcoding and Realtime AI.
+
+**Status:** In development. Some batch pipelines (`text-to-image`, `audio-to-text`, `image-to-image`) are already supported via the AI Runner for on-demand batch jobs. Formal protocol support for batch-native payment mechanics is in progress.
+
+<Callout type="warning">
+Batch AI documentation is incomplete. For current status, follow the [#ai-video Discord channel](https://discord.gg/livepeer) and the [go-livepeer releases page](https://github.com/livepeer/go-livepeer/releases).
+</Callout>
+
+## Choosing Your Workload
+
+- **Starting fresh with an NVIDIA GPU?** → Begin with [Realtime AI](/v2/orchestrators/quickstart/realtime-ai). Highest current demand, active development, clearest documentation.
+- **Have existing Livepeer transcoding infrastructure?** → [Transcoding quickstart](/v2/orchestrators/quickstart/transcoding) applies. Note the legacy trajectory.
+- **Want to serve image/audio/LLM workloads?** → [Batch AI](/v2/orchestrators/quickstart/batch-ai) is emerging. Participate in protocol design discussions on Discord.
+
+<CardGroup cols={3}>
+  <Card title="Realtime AI Quickstart" icon="bolt" href="/v2/orchestrators/quickstart/realtime-ai">
+    Set up a GPU orchestrator for live AI workloads.
+  </Card>
+  <Card title="Transcoding Quickstart" icon="film" href="/v2/orchestrators/quickstart/transcoding">
+    Run a CPU-primary transcoding orchestrator.
+  </Card>
+  <Card title="Batch AI" icon="layer-group" href="/v2/orchestrators/quickstart/batch-ai">
+    Async AI inference — documentation in progress.
+  </Card>
+</CardGroup>

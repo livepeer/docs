@@ -1,0 +1,85 @@
+---
+title: "Livepeer.Cloud SPE Gateway"
+sidebarTitle: "Livepeer.Cloud (SPE)"
+description: "Livepeer.Cloud is a community Special Purpose Entity operating public-good gateway infrastructure with observability tooling and hosted Loki log access."
+pageType: reference
+audience: [developer, gateway-operator]
+status: production
+lastVerified: "2026-02-01"
+sourceOfTruth: "https://livepeer.cloud"
+---
+
+import { Callout } from '/snippets/components/Callout.mdx'
+
+# Livepeer.Cloud SPE Gateway
+
+**Livepeer.Cloud** is a community-run Special Purpose Entity (SPE) providing public-good gateway infrastructure on the Livepeer network. It is funded through Livepeer Treasury proposals and operated transparently for the community's benefit.
+
+<Callout type="info">
+Livepeer.Cloud publishes regular financial and operational updates on the [Livepeer Forum](https://forum.livepeer.org). It is an independently operated community entity, not a Livepeer Inc or Foundation product.
+</Callout>
+
+## What Livepeer.Cloud Provides
+
+### Hosted Gateway Nodes
+
+Livepeer.Cloud operates gateway nodes on the Livepeer network accepting AI inference workloads from application developers. These nodes route jobs to the orchestrator network and handle payment settlement.
+
+Access details are shared in the **#cloud-spe** channel in the [Livepeer Discord](https://discord.gg/livepeer). Reach out there to request access credentials.
+
+### Network Observability Tooling
+
+Livepeer.Cloud operates observability infrastructure for the broader network, including:
+
+- An **AI Performance Job Tester** that submits test jobs to orchestrators and measures response quality, latency, and availability
+- An **AI Performance Leaderboard** integrated with the Livepeer Explorer, showing comparative orchestrator performance scores
+- Loki-based log aggregation for gateway introspection
+
+### Public Loki Gateway Introspection
+
+Gateway operators and developers can query Livepeer.Cloud's public Loki endpoint to inspect gateway activity, job logs, and error rates in near real-time. This is particularly useful for debugging throughput issues or understanding orchestrator selection patterns.
+
+```bash
+# Example: Query Loki for recent gateway errors (requires credentials from #cloud-spe)
+curl -G https://loki.livepeer.cloud/loki/api/v1/query_range \
+  --data-urlencode 'query={job="livepeer-gateway"} |= "error"' \
+  --data-urlencode 'start=1h' \
+  -H "Authorization: Bearer <TOKEN>"
+```
+
+## Supported Pipelines
+
+Livepeer.Cloud's gateway supports the standard Livepeer AI pipeline set, including:
+
+- `live-video-to-video` (real-time AI inference)
+- `text-to-image`
+- `image-to-image`
+- `image-to-video`
+- `audio-to-text`
+- `llm` (where orchestrator capacity exists)
+
+Supported models and capacity vary with network supply. Check the AI Performance Leaderboard at [explorer.livepeer.org](https://explorer.livepeer.org) for current availability.
+
+## Getting Access
+
+Livepeer.Cloud gateway access is available to the community. To get started:
+
+1. Join the [Livepeer Discord](https://discord.gg/livepeer)
+2. Navigate to the **#cloud-spe** channel
+3. Request API access credentials from the Livepeer.Cloud operators
+4. Use the provided endpoint and credentials with the Livepeer AI SDK or gateway API
+
+## Treasury Proposals
+
+Livepeer.Cloud's operations are funded transparently through the Livepeer Treasury governance process. Proposals, budgets, and spending reports are published on the [Livepeer Forum](https://forum.livepeer.org) and are subject to LPT holder governance votes.
+
+## Related Providers
+
+<CardGroup cols={2}>
+  <Card title="Daydream Gateway" icon="wand-magic-sparkles" href="/v2/gateways/using-gateways/gateway-providers/daydream-gateway">
+    Commercial hosted gateway with developer dashboard and managed ETH.
+  </Card>
+  <Card title="NaaP Platform" icon="gauge" href="/v2/gateways/about-gateways/naap-platform">
+    Foundation-operated network access platform (coming 2026).
+  </Card>
+</CardGroup>

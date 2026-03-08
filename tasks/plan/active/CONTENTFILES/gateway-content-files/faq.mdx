@@ -1,0 +1,239 @@
+---
+title: 'Gateway FAQ'
+sidebarTitle: 'FAQ'
+description: 'Frequently asked questions about Livepeer gateways — for operators running their own gateway and developers consuming gateway services.'
+pageType: 'reference'
+audience: ['gateway-operator', 'gateway-consumer']
+keywords: ["livepeer", "gateway", "faq", "frequently asked questions", "ETH deposit", "LPT", "off-chain", "on-chain", "AI inference", "orchestrator", "probabilistic payments"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+<Note>
+  Can't find your answer here? Ask in [Discord #gateways](https://discord.gg/livepeer) or search the [Livepeer Forum](https://forum.livepeer.org).
+</Note>
+
+---
+
+## Understanding gateways
+
+<AccordionGroup>
+  <Accordion title="What is a gateway and why does Livepeer need one?">
+    A gateway is the routing and payment layer between applications and the Livepeer compute network. When your application sends a video stream or an AI inference request, the gateway receives it, discovers which orchestrators can handle the job, dispatches it, and manages the payment relationship — all without doing the compute itself.
+
+    Without a gateway, there is no way to reach the orchestrators that do the actual transcoding and inference work. Gateways handle the off-chain coordination (job matching, session management, payment tickets) that would be too slow and expensive to do entirely on-chain.
+
+    See [Gateway Architecture](/v2/gateways/about-gateways/gateway-architecture) for the technical detail.
+  </Accordion>
+
+  <Accordion title="What's the difference between a gateway and an orchestrator?">
+    They do different jobs in the network:
+
+    - **Orchestrators** provide compute. They run go-livepeer in orchestrator mode, have GPUs (or CPU transcoders), and do the actual video encoding and AI inference work. They must stake LPT to activate on the network.
+
+    - **Gateways** route work to orchestrators. They accept jobs from applications, find matching orchestrators, dispatch the job, and manage the payment. They do not transcode or run inference. They need an ETH deposit, not LPT.
+
+    You do not need to be an orchestrator to run a gateway, and vice versa. They are separate roles that can be run independently.
+  </Accordion>
+
+  <Accordion title="Do I need to run a gateway to use Livepeer's network?">
+    No. You can use an existing hosted gateway — options include Livepeer Studio, Daydream, and Cloud SPE. These handle all the infrastructure on your behalf and expose APIs you can call directly.
+
+    Running your own gateway makes sense when you want: direct network access without a third party, the ability to set your own routing and pricing policy, or to build a product on top of the Livepeer network as an infrastructure layer.
+
+    See [Using Gateways](/v2/gateways/using-gateways/choosing-a-gateway) for hosted options, and [Why Run a Gateway](/v2/gateways/run-a-gateway/why-run-a-gateway) for the case for self-hosting.
+  </Accordion>
+
+  <Accordion title="What's the difference between AI mode and video mode?">
+    Both use the same go-livepeer binary and the same probabilistic payment system. The difference is in what kind of jobs they handle:
+
+    - **Video mode** handles RTMP ingest → segment → transcode → HLS output. The gateway receives a live stream, segments it, dispatches segments to orchestrators for encoding, and assembles the output.
+
+    - **AI mode** handles HTTP POST inference requests → orchestrator GPU → response. The gateway receives a structured API call (e.g. `POST /text-to-image`), routes it to an orchestrator with the requested model loaded, and returns the result.
+
+    **Dual mode** runs both simultaneously on the same binary. The `-httpIngest` flag enables AI inference while video transcoding continues on the RTMP port. See [Dual Configuration](/v2/gateways/run-a-gateway/configure/dual-configuration).
+  </Accordion>
+
+  <Accordion title="What was a 'broadcaster' in older Livepeer documentation?">
+    Broadcaster was the earlier name for the gateway role. The terminology changed as the network expanded beyond video transcoding into AI inference — "gateway" better describes the general-purpose routing and access layer that the software became. The underlying software and protocol mechanics are the same.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Running a gateway
+
+<AccordionGroup>
+  <Accordion title="Do I need LPT to run a gateway?">
+    No. LPT is required for **orchestrators** — they stake LPT to activate on the network and earn LPT inflation rewards. Gateways have no LPT requirement.
+
+    What you do need to run an on-chain gateway:
+    - **ETH** — for gas (on-chain transactions) and as a deposit to pay for compute
+    - **A go-livepeer binary or Docker image** — the gateway software
+
+    Off-chain mode requires neither ETH nor LPT — you just need the binary and a reachable orchestrator.
+  </Accordion>
+
+  <Accordion title="How much ETH do I need to start?">
+    It depends on your mode:
+
+    - **Off-chain mode:** Zero ETH required. No on-chain transactions, no deposit.
+    - **On-chain mode:** You need ETH for two things:
+      1. **Gas** — a small amount (typically under 0.01 ETH) for setup transactions like depositing funds
+      2. **Deposit** — held in the TicketBroker contract as collateral for payment tickets. Recommend starting with **0.5–1 ETH** on mainnet and adjusting based on job volume
+
+    The deposit is not spent immediately — it's drawn down as jobs complete and payment tickets are redeemed by orchestrators. Monitor `livepeer_gateway_deposit` and refund before it reaches zero.
+  </Accordion>
+
+  <Accordion title="What is off-chain mode and when should I use it?">
+    Off-chain mode runs the gateway without connecting to the Arbitrum blockchain. No ETH, no deposit, no on-chain transactions. Jobs route to an orchestrator you specify via `-orchAddr`.
+
+    Use off-chain mode for:
+    - Local development and testing
+    - Running against a specific orchestrator you control
+    - Private networks where you don't want public network exposure
+
+    Off-chain mode still requires a **reachable orchestrator**. The "off-chain" refers to skipping the blockchain payment layer — you still need an orchestrator process running somewhere for the gateway to route jobs to.
+
+    <Note>
+      Off-chain with a local orchestrator is the standard development setup. The gateway and orchestrator are separate processes even when running on the same machine.
+    </Note>
+  </Accordion>
+
+  <Accordion title="What is on-chain mode and when do I need it?">
+    On-chain mode connects your gateway to the Arbitrum network. It discovers real orchestrators from the blockchain registry, and payments are handled via the probabilistic ticket system settled on Arbitrum.
+
+    Use on-chain mode for:
+    - Production deployments serving real traffic
+    - Access to the full open network of orchestrators
+    - AI inference via the AI service registry (`-aiServiceRegistry`)
+
+    On-chain mode requires an ETH deposit and an Ethereum keystore. See [On-Chain Setup](/v2/gateways/run-a-gateway/requirements/on-chain%20setup/on-chain) for the full setup process.
+  </Accordion>
+
+  <Accordion title="Why is my gateway starting but receiving no jobs?">
+    Three most common causes:
+
+    1. **Off-chain mode with no local orchestrator:** Off-chain requires a reachable orchestrator at `-orchAddr`. If nothing is running there, no jobs can route.
+
+    2. **ETH deposit too low (on-chain mode):** Orchestrators silently reject gateways with insufficient deposits. Check `livepeer_gateway_deposit` or run the CLI deposit check.
+
+    3. **`maxPricePerUnit=0` with `ignoreMaxPriceIfNeeded=false`:** The default price ceiling of 0 means no orchestrators match (they all charge more than 0). Set a realistic ceiling or set `-ignoreMaxPriceIfNeeded=true`.
+
+    See the full [Troubleshooting guide](/v2/gateways/run-a-gateway/troubleshooting) for step-by-step diagnosis.
+  </Accordion>
+
+  <Accordion title="Can I run a gateway on Windows?">
+    Yes. See the [Windows installation guide](/v2/gateways/run-a-gateway/install/windows-install) for setup instructions.
+
+    For AI workloads requiring GPU passthrough, Linux is strongly recommended for production use. GPU Docker passthrough on Windows (WSL2) is more complex to configure and less stable than on Linux.
+  </Accordion>
+
+  <Accordion title="Can I run a video gateway and an AI gateway on the same machine?">
+    Yes. You have two options:
+
+    - **Dual mode:** A single gateway binary with `-httpIngest` handles both video (RTMP, port 1935 / 8935) and AI inference (HTTP, typically port 8937) simultaneously. See [Dual Configuration](/v2/gateways/run-a-gateway/configure/dual-configuration).
+
+    - **Two separate instances:** Run a video gateway and an AI gateway as separate processes with distinct data directories (`-datadir`) and port assignments.
+
+    Dual mode is simpler to operate. Two separate instances are useful when you want different pricing or orchestrator pools for video vs AI jobs.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Pricing and payments
+
+<AccordionGroup>
+  <Accordion title="How does gateway pricing work?">
+    Orchestrators advertise a price per unit (per pixel for video transcoding, varies by pipeline for AI inference) in wei, broadcast off-chain to gateways that connect to them.
+
+    Your gateway sets a ceiling: `-maxPricePerUnit` for all jobs, or `-maxPricePerCapability` for per-pipeline ceilings (AI). Jobs route to orchestrators whose price is at or below your ceiling.
+
+    The gateway does not set the actual price — it sets the maximum it will pay. Orchestrators set their own prices competitively.
+  </Accordion>
+
+  <Accordion title="What are probabilistic payment tickets?">
+    Instead of paying for every video segment on-chain (impractical given Ethereum gas costs), gateways issue **probabilistic payment tickets**. Each ticket has a small probability of being a winning ticket worth a larger amount.
+
+    From the orchestrator's perspective, they receive many tickets over time and redeem the winning ones — the expected value averages out to fair payment for the work done. From the gateway's perspective, the system behaves like paying per-segment without the gas cost of individual microtransactions.
+
+    The protocol handles ticket issuance (gateway side) and redemption (orchestrator side via the `TicketBroker` contract on Arbitrum). You don't need to implement any of this — it's built into go-livepeer.
+  </Accordion>
+
+  <Accordion title="Do gateways earn any rewards?">
+    Gateways do not earn LPT inflation rewards — those go to orchestrators and their delegators.
+
+    Gateway operators earn by adding a **margin** to the compute cost: charging applications more than the orchestrator price and keeping the difference. How you implement this depends on your product — it's not a built-in protocol feature. You set your own pricing to your customers, and the gateway pays orchestrators at their rate.
+
+    See [Gateway Economics](/v2/gateways/about-gateways/gateway-economics) for detail on the cost and revenue model.
+  </Accordion>
+
+  <Accordion title="How do I set different prices for different AI models?">
+    Use the `-maxPricePerCapability` flag pointing to a JSON file that specifies price ceilings per pipeline and model:
+
+    ```json
+    {
+      "capabilities_prices": [
+        {
+          "pipeline": "text-to-image",
+          "model_id": "ByteDance/SDXL-Lightning",
+          "price_per_unit": 5000000
+        },
+        {
+          "pipeline": "upscale",
+          "model_id": "stabilityai/stable-diffusion-x4-upscaler",
+          "price_per_unit": 2000000
+        }
+      ]
+    }
+    ```
+
+    You can update these ceilings at runtime without restarting via the CLI HTTP API. See [Pricing Configuration](/v2/gateways/run-a-gateway/configure/pricing-configuration) for the full reference.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## AI inference
+
+<AccordionGroup>
+  <Accordion title="What AI pipelines can a gateway support?">
+    A gateway can route to any pipeline that registered orchestrators advertise. Current pipelines available on the network include:
+
+    `text-to-image` · `image-to-image` · `image-to-video` · `audio-to-text` · `image-to-text` · `upscale` · `llm` · `segment-anything-2` · `text-to-speech` · `live-video-to-video`
+
+    Availability depends on which orchestrators you connect to and what models they have loaded. You can check what's available via the `/registeredOrchestrators` CLI endpoint.
+  </Accordion>
+
+  <Accordion title="Can I run AI and video on the same gateway?">
+    Yes — this is called dual mode. The same go-livepeer binary handles both. Add `-httpIngest` to your existing video gateway startup command to enable AI inference endpoints.
+
+    By default the AI HTTP endpoint runs on a different port (8937) to avoid conflicting with the video HTTP port (8935). You can configure both with the `-httpAddr` flag per instance.
+
+    See [Dual Configuration](/v2/gateways/run-a-gateway/configure/dual-configuration).
+  </Accordion>
+
+  <Accordion title="Do I need to specify which AI models I support?">
+    As a gateway operator, you do not configure which models are available — that's the **orchestrator's** job. Orchestrators specify which models they have loaded in their `aiModels.json` and advertise these capabilities to gateways.
+
+    As a gateway, you configure:
+    - Which orchestrators to connect to (`-orchAddr` or open network)
+    - What maximum price you'll pay per pipeline/model (`-maxPricePerCapability`)
+    - Whether to ignore the price ceiling if no match is found (`-ignoreMaxPriceIfNeeded`)
+
+    If you're running a gateway and need a specific model available, you either need to run your own orchestrator with that model configured, or ensure you're connected to orchestrators that advertise it.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Still have a question?
+
+<CardGroup cols={2}>
+  <Card title="Discord #gateways" icon="discord" href="https://discord.gg/livepeer">
+    Community help from gateway operators and the Livepeer team
+  </Card>
+  <Card title="Livepeer Forum" icon="comments" href="https://forum.livepeer.org">
+    Longer technical discussions and searchable Q&A
+  </Card>
+</CardGroup>

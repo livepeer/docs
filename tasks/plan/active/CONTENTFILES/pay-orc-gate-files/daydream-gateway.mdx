@@ -1,0 +1,99 @@
+---
+title: "Daydream Gateway"
+sidebarTitle: "Daydream"
+description: "Daydream is a commercial hosted gateway providing managed AI inference access to the Livepeer network, with developer API keys, a usage dashboard, and managed ETH and probabilistic micropayments."
+pageType: reference
+audience: [developer, gateway-operator]
+status: production
+lastVerified: "2026-02-01"
+sourceOfTruth: "https://daydream.live"
+---
+
+import { Callout } from '/snippets/components/Callout.mdx'
+
+# Daydream Gateway
+
+**Daydream** is a commercial gateway service built on the Livepeer network. It provides app developers and businesses with hosted access to Livepeer's AI inference capabilities without requiring any ETH management, orchestrator knowledge, or go-livepeer deployment.
+
+<Callout type="info">
+Daydream is a private commercial service independently operated on the Livepeer network. It is not operated by the Livepeer Foundation or Livepeer Inc. Pricing, availability, and features are set independently by Daydream.
+</Callout>
+
+## What Daydream Provides
+
+### Managed AI Gateway
+
+Daydream runs gateway nodes on the Livepeer network and exposes them via a developer-friendly HTTPS API. Developers submit AI inference jobs (live video-to-video, image generation, etc.) over standard HTTP — no Arbitrum, no PM protocol, no private keys.
+
+Daydream manages:
+- ETH deposits and reserve balances on Arbitrum
+- Probabilistic micropayment signing and session management
+- Orchestrator selection and routing
+- Payment settlement with the orchestrator network
+
+### Developer API Keys and Dashboard
+
+Daydream provides a dashboard at [daydream.live](https://daydream.live) where developers can:
+
+- Create and rotate API keys
+- Monitor usage by pipeline type and model
+- Set spending limits and usage alerts
+- View job history and error logs
+
+### Managed ETH and PM
+
+One of the most significant barriers to using the Livepeer network directly is managing ETH deposits and PM protocol state. Daydream eliminates this entirely — developers pay Daydream in their preferred currency, and Daydream handles all on-chain settlement with orchestrators.
+
+This mirrors a standard API provider model: submit a job, get a result, pay for usage.
+
+## Supported Pipelines
+
+Daydream's gateway supports the Livepeer AI pipeline suite including:
+
+- `live-video-to-video` (real-time AI video transformation)
+- `text-to-image`
+- `image-to-image`
+- `image-to-video`
+- `audio-to-text`
+- Custom pipelines (contact Daydream for enterprise arrangements)
+
+## Getting Started
+
+1. Visit [daydream.live](https://daydream.live) and create an account.
+2. Issue an API key from your developer dashboard.
+3. Point the Livepeer AI SDK at the Daydream gateway endpoint:
+
+```python
+# Python SDK example (livepeer-python-gateway)
+from livepeer_gateway import start_lv2v
+
+session = start_lv2v(
+    api_key="<YOUR_DAYDREAM_API_KEY>",
+    gateway_url="https://api.daydream.live"
+)
+```
+
+4. Submit jobs and receive results as with any AI API.
+
+## NaaP Integration
+
+Daydream is a priority **NaaP platform plugin partner**. As the [NaaP Platform](/v2/gateways/about-gateways/naap-platform) develops, Daydream's gateway capacity and performance metrics will be surfaced through the NaaP network dashboard, giving developers unified visibility across gateway providers.
+
+## Pricing
+
+Daydream sets its own pricing independently. Refer to [daydream.live](https://daydream.live) for current pricing plans. Pricing is generally denominated in USD per compute unit or per inference job, rather than in ETH or LPT.
+
+## Reliability and SLAs
+
+Daydream operates as a commercial service with uptime monitoring and support channels. For enterprise SLA requirements, contact Daydream directly. Note that underlying job reliability also depends on orchestrator network capacity, which Daydream manages through routing logic and provider selection.
+
+## Related Providers
+
+<CardGroup cols={2}>
+  <Card title="Livepeer.Cloud SPE" icon="cloud" href="/v2/gateways/using-gateways/gateway-providers/cloud-spe-gateway">
+    Community public-good gateway with Loki observability tooling.
+  </Card>
+  <Card title="Run Your Own Gateway" icon="server" href="/v2/gateways/run-a-gateway/how-payments-work">
+    Self-host a gateway and manage your own payments.
+  </Card>
+</CardGroup>

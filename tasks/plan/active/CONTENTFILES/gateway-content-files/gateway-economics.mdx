@@ -1,0 +1,261 @@
+---
+title: 'Gateway Economics'
+sidebarTitle: 'Economics'
+description: 'How gateway operators earn, what costs to expect, the deposit and reserve model, and how the margin business works in practice.'
+pageType: 'overview'
+audience: ['gateway-operator']
+keywords: ["livepeer", "gateway", "economics", "deposit", "reserve", "ETH", "payment tickets", "margin", "costs", "revenue", "probabilistic payments"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+import { DynamicTable } from '/snippets/components/layout/table.jsx'
+
+Understanding gateway economics starts with a key fact: **gateways are payers, not earners, at the protocol level.** The protocol routes ETH from gateways to orchestrators. There is no built-in protocol reward for gateways — that's not the model.
+
+Gateway operators earn by running a service business on top of the network: charging applications more for compute access than the underlying orchestrator cost. The margin is the business.
+
+---
+
+## Who earns what in the Livepeer network
+
+<DynamicTable
+  headerList={['Node type', 'How they earn']}
+  itemsList={[
+    {
+      'Node type': 'Orchestrator',
+      'How they earn': 'Receives ETH payment tickets from gateways for coordinating compute work. Also earns LPT inflation rewards proportional to stake.',
+    },
+    {
+      'Node type': 'Transcoder',
+      'How they earn': 'Gets paid by orchestrators for video transcoding work performed.',
+    },
+    {
+      'Node type': 'AI Worker',
+      'How they earn': 'Gets paid by orchestrators for AI model inference performed.',
+    },
+    {
+      'Node type': 'Delegator',
+      'How they earn': 'Earns a share of orchestrator LPT rewards in proportion to their delegated stake.',
+    },
+    {
+      'Node type': 'Redeemer',
+      'How they earn': 'Earns fees by submitting winning payment tickets on-chain for orchestrators.',
+    },
+    {
+      'Node type': 'Gateway',
+      'How they earn': 'Pays for services at the protocol level. Earns at the application level by charging customers more than orchestrator cost.',
+    },
+  ]}
+  monospaceColumns={[]}
+/>
+
+---
+
+## What currency gateways use
+
+<DynamicTable
+  headerList={['Currency', 'Purpose', 'Used by']}
+  itemsList={[
+    {
+      Currency: 'ETH / Wei',
+      Purpose: 'Service payments — what gateways pay orchestrators for transcoding and AI inference',
+      'Used by': 'Gateways → Orchestrators',
+    },
+    {
+      Currency: 'LPT',
+      Purpose: 'Staking, governance, and inflation rewards',
+      'Used by': 'Orchestrators, Delegators',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+ETH handles service payments. LPT handles protocol governance and staking. Gateways only deal in ETH — no LPT is required to run a gateway.
+
+---
+
+## The deposit and reserve model
+
+Before your gateway can pay orchestrators, you must fund two ETH balances in the `TicketBroker` contract on Arbitrum:
+
+<DynamicTable
+  headerList={['Balance', 'Purpose', 'Behaviour']}
+  itemsList={[
+    {
+      Balance: 'Deposit',
+      Purpose: 'Locked collateral — demonstrates to orchestrators that your gateway has funds',
+      Behaviour: 'Cannot be withdrawn immediately. Subject to an unlock period. Orchestrators check this before accepting sessions.',
+    },
+    {
+      Balance: 'Reserve',
+      Purpose: 'The pool from which winning payment tickets are actually redeemed',
+      Behaviour: 'Drawn down as tickets are redeemed by orchestrators. Needs topping up as it depletes.',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+Both are funded in a single transaction via `FundDepositAndReserve()`. See [Fund Your Gateway](/v2/gateways/run-a-gateway/requirements/on-chain%20setup/fund-gateway) for the process.
+
+---
+
+## How payment tickets work
+
+Gateways do not pay for every segment individually on-chain — that would make Arbitrum gas costs prohibitive. Instead they use a **probabilistic micropayment system**:
+
+1. For each video segment or AI inference job completed, the gateway creates a signed payment ticket with a face value and a win probability.
+2. The ticket is sent off-chain to the orchestrator alongside the job result.
+3. Most tickets don't win. A small percentage — determined by the win probability — are redeemable on-chain for the face value.
+4. The orchestrator redeems winning tickets by calling `RedeemWinningTicket()` on Arbitrum.
+5. Funds are transferred from the gateway's reserve to the orchestrator's account.
+
+The expected value of the ticket stream equals fair payment for the work done. The orchestrator's risk is spread across many tickets, and the gateway's cost is predictable at volume.
+
+<DynamicTable
+  headerList={['Ticket parameter', 'Flag', 'What it controls']}
+  itemsList={[
+    {
+      'Ticket parameter': 'Expected value (EV)',
+      Flag: '-ticketEV',
+      'What it controls': 'The average value of each ticket — higher EV means fewer but higher-value winning tickets',
+    },
+    {
+      'Ticket parameter': 'Max face value',
+      Flag: '-maxFaceValue',
+      'What it controls': 'Upper bound on any single ticket payout. Caps orchestrator redemption amounts.',
+    },
+    {
+      'Ticket parameter': 'Max ticket EV',
+      Flag: '-maxTicketEV',
+      'What it controls': 'Maximum acceptable expected value for a single payment ticket from an orchestrator',
+    },
+    {
+      'Ticket parameter': 'Max total EV',
+      Flag: '-maxTotalEV',
+      'What it controls': 'Maximum expected value for a full payment. Required for AI network compliance.',
+    },
+    {
+      'Ticket parameter': 'Deposit multiplier',
+      Flag: '-depositMultiplier',
+      'What it controls': 'Scales ticket face value relative to the gateway deposit. Prevents overpromising.',
+    },
+  ]}
+  monospaceColumns={[1]}
+/>
+
+---
+
+## Gateway costs
+
+<DynamicTable
+  headerList={['Cost category', 'What it is', 'Typical scale']}
+  itemsList={[
+    {
+      'Cost category': 'Compute payments',
+      'What it is': 'ETH paid to orchestrators per segment (video) or per unit (AI). The primary variable cost.',
+      'Typical scale': 'Scales directly with job volume and orchestrator pricing',
+    },
+    {
+      'Cost category': 'Gas',
+      'What it is': 'Arbitrum gas for on-chain transactions: deposit funding, ticket redemption (orchestrator-side), withdrawals.',
+      'Typical scale': 'Small relative to compute — Arbitrum fees are low',
+    },
+    {
+      'Cost category': 'Infrastructure',
+      'What it is': 'Server, bandwidth, and operational cost for running the gateway process itself.',
+      'Typical scale': 'Gateway is lightweight — a small VPS is sufficient for most deployments',
+    },
+    {
+      'Cost category': 'Deposit lock-up',
+      'What it is': 'ETH held in the TicketBroker as deposit collateral — not a cost, but capital tied up.',
+      'Typical scale': '0.5–2 ETH typical for mainnet deployments',
+    },
+  ]}
+  monospaceColumns={[]}
+/>
+
+---
+
+## How gateway operators monetise
+
+Gateways make money through **margin on compute**: charging applications more for access to Livepeer compute than the orchestrator rate, and keeping the difference.
+
+<DynamicTable
+  headerList={['Revenue approach', 'How it works', 'Example']}
+  itemsList={[
+    {
+      'Revenue approach': 'Direct margin',
+      'How it works': 'Charge API consumers a per-request or per-minute rate above orchestrator cost',
+      'Example': 'Orchestrator charges 0.01 USD/min → you charge 0.015 USD/min → keep 0.005 USD margin',
+    },
+    {
+      'Revenue approach': 'Self-service cost reduction',
+      'How it works': 'Run your own gateway to avoid paying another operator\'s margin on your own traffic',
+      'Example': 'Content platform processes its own video at raw orchestrator rates instead of through a hosted gateway',
+    },
+    {
+      'Revenue approach': 'Subscription / SLA packaging',
+      'How it works': 'Wrap gateway access in a fixed monthly product with SLAs, support, and feature guarantees',
+      'Example': 'Sell developers a "500 GPU-hours/month AI inference" plan at a fixed price',
+    },
+    {
+      'Revenue approach': 'Vertical integration',
+      'How it works': 'Use the gateway as the compute layer inside a broader product — the gateway revenue is the product margin',
+      'Example': 'AI video platform built on Livepeer where the gateway is internal infrastructure',
+    },
+  ]}
+  monospaceColumns={[]}
+/>
+
+The protocol does not enforce any particular business model. How you price access to your gateway is entirely up to you — the protocol only controls what you pay orchestrators.
+
+---
+
+## Withdrawal and exit
+
+To recover your ETH deposit and reserve:
+
+1. Call `Unlock()` on the TicketBroker contract to start the withdrawal countdown
+2. Wait for the unlock period to expire (prevents mid-session fund removal)
+3. Call `Withdraw()` to receive your remaining deposit and reserve
+
+During the unlock period, your gateway can still operate. Orchestrators may become more conservative about accepting sessions from an unlocking gateway.
+
+---
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card
+    title="Fund Your Gateway"
+    icon="coins"
+    href="/v2/gateways/run-a-gateway/requirements/on-chain%20setup/fund-gateway"
+    arrow
+  >
+    Step-by-step: deposit ETH to your gateway before going on-chain
+  </Card>
+  <Card
+    title="Pricing Configuration"
+    icon="sliders"
+    href="/v2/gateways/run-a-gateway/configure/pricing-configuration"
+    arrow
+  >
+    Set price ceilings, ticket parameters, and per-pipeline AI pricing
+  </Card>
+  <Card
+    title="Monitor & Optimise"
+    icon="chart-line"
+    href="/v2/gateways/run-a-gateway/monitor/monitor-and-optimise"
+    arrow
+  >
+    Track deposit balance and spend rate with Prometheus metrics
+  </Card>
+  <Card
+    title="Why Run a Gateway?"
+    icon="circle-question"
+    href="/v2/gateways/run-a-gateway/why-run-a-gateway"
+    arrow
+  >
+    The operator opportunity in full
+  </Card>
+</CardGroup>

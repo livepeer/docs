@@ -1,0 +1,212 @@
+---
+title: 'Gateway Configuration Flags'
+sidebarTitle: 'Configuration Flags'
+description: 'Full reference for go-livepeer gateway configuration flags, organised by category. Covers network, transcoding, AI, ETH/on-chain, pricing, ticket, and monitoring flags.'
+pageType: 'reference'
+audience: ['gateway-operator']
+keywords: ["livepeer", "gateway", "configuration flags", "go-livepeer", "flags", "cli", "reference", "-gateway", "-orchAddr", "-network", "-httpIngest", "aiServiceRegistry"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+import { DynamicTable } from '/snippets/components/layout/table.jsx'
+import { DoubleIconLink } from '/snippets/components/primitives/links.jsx'
+
+<Note>
+  This reference is manually maintained. For the canonical flag list, see the <DoubleIconLink label="go-livepeer source" href="https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer/livepeer.go" iconLeft="github" />. Flags marked ⚠️ are deprecated.
+</Note>
+
+**Legend:** Video = video transcoding only · AI = AI inference only · Both = applies to both modes
+
+---
+
+## Node type
+
+<DynamicTable
+  headerList={['Flag', 'Mode', 'Default', 'Description']}
+  itemsList={[
+    { Flag: '-gateway', Mode: 'Both', Default: 'false', Description: 'Enable gateway mode. Required — this is what makes the binary operate as a gateway.' },
+    { Flag: '-orchestrator', Mode: 'Both', Default: 'false', Description: 'Enable orchestrator mode. Set on orchestrator nodes, not gateways.' },
+    { Flag: '-transcoder', Mode: 'Video', Default: 'false', Description: 'Enable transcoder mode. Set on transcoder nodes, not gateways.' },
+    { Flag: '-aiWorker', Mode: 'AI', Default: 'false', Description: 'Enable AI worker mode. Set on AI worker nodes, not gateways.' },
+    { Flag: '-broadcaster ⚠️', Mode: 'Video', Default: 'false', Description: 'Deprecated alias for -gateway. Use -gateway instead.' },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+---
+
+## Network and addresses
+
+<DynamicTable
+  headerList={['Flag', 'Mode', 'Default', 'Description']}
+  itemsList={[
+    { Flag: '-network', Mode: 'Both', Default: 'offchain', Description: 'Network to connect to. offchain for local/dev, arbitrum-one-mainnet for production.' },
+    { Flag: '-rtmpAddr', Mode: 'Video', Default: '127.0.0.1:1935', Description: 'Address to bind for RTMP ingest. Set to 0.0.0.0:1935 to accept external streams.' },
+    { Flag: '-httpAddr', Mode: 'Both', Default: '127.0.0.1:8935', Description: 'Address to bind for HTTP and AI inference. Set to 0.0.0.0:8935 (video) or 0.0.0.0:8937 (AI) for external access.' },
+    { Flag: '-cliAddr', Mode: 'Both', Default: '127.0.0.1:7935', Description: 'Address to bind for CLI management API. Set to 0.0.0.0:5935 for external CLI access.' },
+    { Flag: '-serviceAddr', Mode: 'Both', Default: '""', Description: 'External service URI for orchestrators to contact this node. Set when running behind a reverse proxy.' },
+    { Flag: '-gatewayHost', Mode: 'Both', Default: '""', Description: 'External hostname where the gateway is running. Used in advertised service URIs.' },
+  ]}
+  monospaceColumns={[0, 2]}
+/>
+
+---
+
+## Orchestrator connection
+
+<DynamicTable
+  headerList={['Flag', 'Mode', 'Default', 'Description']}
+  itemsList={[
+    { Flag: '-orchAddr', Mode: 'Both', Default: '""', Description: 'Comma-separated list of orchestrator addresses to connect to. Required for off-chain mode. Example: https://orch1.example.com:8935,https://orch2.example.com:8935' },
+    { Flag: '-orchWebhookUrl', Mode: 'Both', Default: '""', Description: 'URL of a webhook for dynamic orchestrator discovery. The gateway calls this endpoint to get orchestrator lists.' },
+    { Flag: '-orchMinLivepeerVersion', Mode: 'Both', Default: '""', Description: 'Minimum go-livepeer version required for orchestrators. Orchestrators below this version are rejected.' },
+    { Flag: '-selectRandFreq', Mode: 'Both', Default: '0.3', Description: 'Frequency with which the gateway selects a random orchestrator rather than the top-ranked one. Prevents centralisation.' },
+    { Flag: '-selectStakeWeight', Mode: 'Both', Default: '0.0', Description: 'Weight given to orchestrator LPT stake in selection scoring. Higher values favour highly-staked orchestrators.' },
+    { Flag: '-selectPriceWeight', Mode: 'Both', Default: '0.0', Description: 'Weight given to orchestrator price in selection scoring. Higher values favour cheaper orchestrators.' },
+  ]}
+  monospaceColumns={[0, 2]}
+/>
+
+---
+
+## Video transcoding
+
+<DynamicTable
+  headerList={['Flag', 'Mode', 'Default', 'Description']}
+  itemsList={[
+    { Flag: '-transcodingOptions', Mode: 'Video', Default: 'P240p30fps16x9,P360p30fps16x9', Description: 'Video output profiles. Pass a comma-separated preset list or a path to a transcodingOptions.json file for full control.' },
+    { Flag: '-maxSessions', Mode: 'Both', Default: '10', Description: 'Maximum concurrent sessions (RTMP streams for gateway, jobs for orchestrator). Adjust based on server capacity.' },
+    { Flag: '-maxAttempts', Mode: 'Video', Default: '3', Description: 'Maximum transcode retry attempts before a segment is considered failed.' },
+    { Flag: '-currentManifest', Mode: 'Video', Default: 'false', Description: 'Expose the most recently used HLS manifest at a predictable URL. Simplifies HLS playback integration.' },
+    { Flag: '-authWebhookUrl', Mode: 'Video', Default: '""', Description: 'URL of an authentication webhook for stream authorisation. Called before each RTMP stream is accepted.' },
+    { Flag: '-nvidia', Mode: 'Both', Default: '""', Description: 'Comma-separated list of NVIDIA GPU IDs to use. Set to all to use all available GPUs.' },
+  ]}
+  monospaceColumns={[0, 2]}
+/>
+
+---
+
+## AI inference
+
+<DynamicTable
+  headerList={['Flag', 'Mode', 'Default', 'Description']}
+  itemsList={[
+    { Flag: '-httpIngest', Mode: 'AI', Default: 'false', Description: 'Enable HTTP ingest for AI inference requests. Required for all AI inference endpoints (/text-to-image, /image-to-image, etc.).' },
+    { Flag: '-aiServiceRegistry', Mode: 'AI', Default: 'false', Description: 'Connect to the Livepeer AI network registry instead of the transcoding registry. Required for on-chain AI gateway mode.' },
+    { Flag: '-aiModels', Mode: 'AI', Default: '""', Description: 'Path to aiModels.json file specifying which AI models are available. Used when running a combined gateway/orchestrator.' },
+    { Flag: '-aiModelsDir', Mode: 'AI', Default: '""', Description: 'Path to directory containing model weights. Used when running a combined gateway/orchestrator.' },
+    { Flag: '-aiRunnerContainersPerGPU', Mode: 'AI', Default: '1', Description: 'Number of ai-runner containers to spawn per GPU. Relevant for combined gateway/orchestrator nodes.' },
+    { Flag: '-liveAIAuthWebhookUrl', Mode: 'AI', Default: '""', Description: 'Authentication webhook URL called before each live AI video session is established.' },
+    { Flag: '-livePaymentInterval', Mode: 'AI', Default: '5s', Description: 'How often the gateway issues payment tickets during an active live AI session.' },
+    { Flag: '-liveOutSegmentTimeout', Mode: 'AI', Default: '0 (no timeout)', Description: 'Maximum time to wait for a live pipeline output segment before treating the session as failed.' },
+    { Flag: '-liveAICapRefreshModels', Mode: 'AI', Default: '""', Description: 'Comma-separated model IDs to periodically refresh capacity data for. Leave empty to disable.' },
+  ]}
+  monospaceColumns={[0, 2]}
+/>
+
+---
+
+## Ethereum / on-chain
+
+<DynamicTable
+  headerList={['Flag', 'Mode', 'Default', 'Description']}
+  itemsList={[
+    { Flag: '-ethUrl', Mode: 'Both', Default: '""', Description: 'Ethereum RPC endpoint. Required for on-chain mode. Use a dedicated Arbitrum RPC for production.' },
+    { Flag: '-ethKeystorePath', Mode: 'Both', Default: '""', Description: 'Path to directory containing the Ethereum keystore file.' },
+    { Flag: '-ethAcctAddr', Mode: 'Both', Default: '""', Description: 'Ethereum account address to use. Required when multiple accounts exist in the keystore directory.' },
+    { Flag: '-ethPassword', Mode: 'Both', Default: '""', Description: 'Path to a file containing the keystore password. Do not pass the password string directly.' },
+    { Flag: '-blockPollingInterval', Mode: 'Both', Default: '20', Description: 'Interval in seconds between Ethereum block polls. Increase on slow or rate-limited RPC connections.' },
+    { Flag: '-minGasPrice', Mode: 'Both', Default: '0', Description: 'Minimum gas price in wei for ETH transactions. 0 uses the network-suggested price.' },
+    { Flag: '-maxGasPrice', Mode: 'Both', Default: '0', Description: 'Maximum gas price in wei. 0 means no ceiling.' },
+    { Flag: '-gasLimit', Mode: 'Both', Default: '0', Description: 'Gas limit for transactions. 0 uses the estimated gas.' },
+    { Flag: '-txTimeout', Mode: 'Both', Default: '5m', Description: 'Timeout for ETH transactions before considering them dropped.' },
+    { Flag: '-maxTxReplacements', Mode: 'Both', Default: '1', Description: 'Maximum number of times a stuck transaction will be replaced with a higher gas price.' },
+  ]}
+  monospaceColumns={[0, 2]}
+/>
+
+---
+
+## Pricing
+
+<DynamicTable
+  headerList={['Flag', 'Mode', 'Default', 'Description']}
+  itemsList={[
+    { Flag: '-maxPricePerUnit', Mode: 'Both', Default: '0', Description: 'Maximum price per unit the gateway will pay orchestrators. 0 accepts any price. Accepts wei or USD suffix (e.g. 0.02USD). Set before going to production.' },
+    { Flag: '-pixelsPerUnit', Mode: 'Video', Default: '1', Description: 'Number of pixels in a price unit. Used with maxPricePerUnit to calculate effective per-pixel pricing.' },
+    { Flag: '-ignoreMaxPriceIfNeeded', Mode: 'Both', Default: 'false', Description: 'Route jobs even when no orchestrators are at or under maxPricePerUnit. Useful for testing or when starting out.' },
+    { Flag: '-maxPricePerCapability', Mode: 'AI', Default: '""', Description: 'Path to JSON file with per-pipeline/model price ceilings. See ai-configuration.mdx for JSON format.' },
+  ]}
+  monospaceColumns={[0, 2]}
+/>
+
+---
+
+## Payment tickets
+
+<DynamicTable
+  headerList={['Flag', 'Mode', 'Default', 'Description']}
+  itemsList={[
+    { Flag: '-ticketEV', Mode: 'Both', Default: '8000000000', Description: 'Expected value for payment tickets in wei. Controls the average value of each probabilistic payment.' },
+    { Flag: '-maxFaceValue', Mode: 'Both', Default: '0', Description: 'Maximum ticket face value in wei. 0 uses the protocol default. Caps individual ticket payout amounts.' },
+    { Flag: '-maxTicketEV', Mode: 'Both', Default: '3000000000000', Description: 'Maximum acceptable expected value for one payment ticket received from an orchestrator.' },
+    { Flag: '-maxTotalEV', Mode: 'Both', Default: '20000000000000', Description: 'Maximum acceptable expected value for one full payment. Required to be set for AI network compliance.' },
+    { Flag: '-depositMultiplier', Mode: 'Both', Default: '1', Description: 'Multiplier applied to deposit to calculate maximum acceptable ticket face value.' },
+  ]}
+  monospaceColumns={[0, 2]}
+/>
+
+---
+
+## Monitoring and logging
+
+<DynamicTable
+  headerList={['Flag', 'Mode', 'Default', 'Description']}
+  itemsList={[
+    { Flag: '-monitor', Mode: 'Both', Default: 'false', Description: 'Enable Prometheus metrics endpoint at http://localhost:7935/metrics.' },
+    { Flag: '-metricsPerStream', Mode: 'Both', Default: 'false', Description: 'Group Prometheus metrics by individual stream. Increases cardinality — use carefully on high-volume gateways.' },
+    { Flag: '-metricsClientIP', Mode: 'Both', Default: 'false', Description: 'Include client IP address in Prometheus metric labels.' },
+    { Flag: '-v', Mode: 'Both', Default: '3', Description: 'Verbosity level for logs. 3 is default, 6 is verbose (recommended for debugging).' },
+    { Flag: '-datadir', Mode: 'Both', Default: '~/.lpData', Description: 'Base directory for all gateway data: keystore, database, and configuration files.' },
+  ]}
+  monospaceColumns={[0, 2]}
+/>
+
+---
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card
+    title="Video Configuration"
+    icon="film"
+    href="/v2/gateways/run-a-gateway/configure/video-configuration"
+    arrow
+  >
+    Guide-format video transcoding setup with worked examples
+  </Card>
+  <Card
+    title="AI Configuration"
+    icon="microchip-ai"
+    href="/v2/gateways/run-a-gateway/configure/ai-configuration"
+    arrow
+  >
+    AI gateway startup commands and AI-specific flag details
+  </Card>
+  <Card
+    title="Pricing Configuration"
+    icon="sliders"
+    href="/v2/gateways/run-a-gateway/configure/pricing-configuration"
+    arrow
+  >
+    Pricing flags, ticket parameters, and per-capability JSON format
+  </Card>
+  <Card
+    title="go-livepeer source"
+    icon="github"
+    href="https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer/livepeer.go"
+    arrow
+  >
+    Authoritative flag definitions in the go-livepeer codebase
+  </Card>
+</CardGroup>

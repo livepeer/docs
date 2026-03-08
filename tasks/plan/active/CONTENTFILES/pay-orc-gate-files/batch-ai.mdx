@@ -1,0 +1,84 @@
+---
+title: "Batch AI Orchestrator"
+sidebarTitle: "Batch AI"
+description: "Batch AI orchestrator documentation — async inference workloads including image generation, audio-to-text, and LLM. Payment mechanics and formal protocol support are in active development."
+pageType: quickstart
+audience: [orchestrator]
+status: coming-soon
+lastVerified: "2026-02-01"
+sourceOfTruth: "https://github.com/livepeer/go-livepeer"
+---
+
+import { Callout } from '/snippets/components/Callout.mdx'
+
+# Batch AI Orchestrator
+
+<Callout type="warning">
+**Status: In development.** Formal Batch AI protocol support — including payment mechanics and stake routing — is not yet finalised. This page will be updated as the design stabilises. Follow [#ai-video on Discord](https://discord.gg/livepeer) for the latest.
+</Callout>
+
+**Batch AI** covers asynchronous high-throughput inference workloads:
+
+- Text-to-image (Stable Diffusion, SDXL, Flux, etc.)
+- Image-to-image
+- Audio-to-text (Whisper)
+- LLM completion (Llama, Mistral, etc.)
+- Image-to-video
+- Any pipeline in the AI Runner with a request/response interface
+
+Unlike [Realtime AI](/v2/orchestrators/quickstart/realtime-ai), Batch AI jobs are **not stream-synchronised**. A job arrives as a single HTTP request and returns a single response — there is no ongoing session state or frame-by-frame delivery.
+
+## Current Status
+
+Some batch pipelines already function via the AI Runner Docker container and can be served today:
+
+- `text-to-image`, `image-to-image`, `audio-to-text`, `image-to-video`, `llm` — these pipelines exist and can be configured in `aiModels.json`.
+- Jobs can be routed via gateways to orchestrators advertising these capabilities.
+
+What is **not yet finalised:**
+
+- **Payment mechanics:** The payment protocol for batch jobs is under design. Current implementations may use PM but with different fee calculation logic than Realtime AI. Do not assume Realtime AI flags transfer directly.
+- **Stake routing:** Whether top-100 stake requirement applies, and how batch capacity is weighted for routing, is TBD.
+- **Remote Signer support:** Batch AI is not included in the initial Remote Signer scope, though the design should be compatible in future.
+
+## What You Can Do Now
+
+If you are running a [Realtime AI orchestrator](/v2/orchestrators/quickstart/realtime-ai), you can already serve batch pipeline jobs by adding entries to your `aiModels.json`:
+
+```json
+[
+  {
+    "pipeline": "text-to-image",
+    "model_id": "ByteDance/SDXL-Lightning",
+    "price_per_unit": 4768371,
+    "warm": true
+  },
+  {
+    "pipeline": "audio-to-text",
+    "model_id": "openai/whisper-large-v3",
+    "price_per_unit": 100000,
+    "warm": false
+  }
+]
+```
+
+Restart your orchestrator after updating the configuration.
+
+## Participating in Protocol Design
+
+Batch AI payment mechanics and stake routing are actively being designed. To participate:
+
+- Follow discussions in [#ai-video on Discord](https://discord.gg/livepeer)
+- Watch the [go-livepeer issues](https://github.com/livepeer/go-livepeer/issues) tracker for batch AI topics
+- Contribute feedback on the Livepeer Forum at [forum.livepeer.org](https://forum.livepeer.org)
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Realtime AI Quickstart" icon="bolt" href="/v2/orchestrators/quickstart/realtime-ai">
+    Full setup guide for live AI workloads — start here if you have a GPU.
+  </Card>
+  <Card title="Job Types" icon="list" href="/v2/orchestrators/about-orchestrators/job-types">
+    Compare all orchestrator job types across hardware, payment, and status.
+  </Card>
+</CardGroup>

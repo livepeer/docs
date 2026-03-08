@@ -1,0 +1,367 @@
+---
+title: 'AI Gateway Configuration'
+sidebarTitle: 'AI Configuration'
+description: 'Configure a Livepeer gateway for AI inference workloads. Covers off-chain and on-chain startup, required flags, Live AI video options, and how to verify your setup.'
+pageType: 'guide'
+audience: ['gateway-operator']
+keywords: ["livepeer", "AI gateway", "ai configuration", "httpIngest", "aiServiceRegistry", "text-to-image", "inference", "go-livepeer", "gateway setup"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+import { DynamicTable } from '/snippets/components/layout/table.jsx'
+import { GotoCard, GotoLink } from '/snippets/components/primitives/links.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/display/steps.jsx'
+
+This page covers how to configure your gateway to handle AI inference workloads. For video-only configuration, see [Video Configuration](/v2/gateways/run-a-gateway/configure/video-configuration). For running both simultaneously, see [Dual Configuration](/v2/gateways/run-a-gateway/configure/dual-configuration).
+
+<Note>
+  An AI gateway does not run AI models itself. It routes inference requests to orchestrators that have the requested pipeline and model loaded on their GPU. Your job is to configure which requests you accept, what prices you'll pay, and which orchestrators you'll connect to.
+</Note>
+
+---
+
+## Prerequisites
+
+Before configuring AI, confirm your gateway installation is working:
+
+- [Docker installed](/v2/gateways/run-a-gateway/install/docker-install) or [binary installed](/v2/gateways/run-a-gateway/install/linux-install)
+- For off-chain mode: a reachable orchestrator address to point `-orchAddr` at
+- For on-chain mode: ETH account with deposit — see [Fund Your Gateway](/v2/gateways/run-a-gateway/requirements/on-chain%20setup/fund-gateway)
+
+---
+
+## Off-chain AI gateway
+
+Off-chain mode connects to a specific orchestrator you control or trust. No ETH deposit is required. Use this for development, testing, or private network deployments.
+
+<Tabs>
+  <Tab title="Docker (Recommended)">
+
+```bash
+docker run \
+  --name livepeer_ai_gateway \
+  -v ~/.lpData2/:/root/.lpData2 \
+  -p 8937:8937 \
+  --network host \
+  livepeer/go-livepeer:master \
+  -datadir ~/.lpData2 \
+  -gateway \
+  -orchAddr <orchestrator-address:port> \
+  -httpAddr 0.0.0.0:8937 \
+  -v 6 \
+  -httpIngest
+```
+
+<Note>
+  The AI gateway defaults to port **8937** to avoid conflicting with a video gateway on 8935. You can run both simultaneously — the ports are independent.
+</Note>
+
+  </Tab>
+  <Tab title="Binary">
+
+Download the latest binary for your platform from the [go-livepeer releases page](https://github.com/livepeer/go-livepeer/releases). Choose the `livepeer-*` asset matching your OS and architecture (e.g. `livepeer-linux-amd64`).
+
+```bash
+./livepeer \
+  -gateway \
+  -orchAddr <orchestrator-address:port> \
+  -httpAddr 0.0.0.0:8937 \
+  -v 6 \
+  -httpIngest
+```
+
+  </Tab>
+  <Tab title="Docker Compose">
+
+```yaml
+services:
+  ai-gateway:
+    image: livepeer/go-livepeer:master
+    container_name: "ai-gateway"
+    ports:
+      - 8937:8937
+      - 5935:5935
+    network_mode: host
+    command: >
+      -gateway
+      -orchAddr <orchestrator-address:port>
+      -httpAddr 0.0.0.0:8937
+      -cliAddr 0.0.0.0:5935
+      -httpIngest
+      -monitor=true
+      -v=6
+```
+
+  </Tab>
+</Tabs>
+
+### Successful startup output
+
+```
+I0501 11:07:47.609917   1 mediaserver.go:226] HTTP Server listening on http://0.0.0.0:8937
+I0501 11:07:47.609963   1 lpms.go:92] LPMS Server listening on rtmp://127.0.0.1:1935
+```
+
+The HTTP server line confirms AI inference endpoints are available. If you don't see it, verify `-httpIngest` is set.
+
+---
+
+## Verify your AI gateway is working
+
+Once started, send a test inference request:
+
+```bash
+curl -X POST "http://localhost:8937/text-to-image" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_id": "ByteDance/SDXL-Lightning",
+    "prompt": "A lighthouse on a rocky coast at sunset",
+    "width": 1024,
+    "height": 1024
+  }'
+```
+
+**Expected response:**
+
+```json
+{
+  "images": [
+    {
+      "seed": 2562822894,
+      "url": "https://localhost:8937/stream/d0fc1fc6/8fdf5a94.png"
+    }
+  ]
+}
+```
+
+If you receive a 404, check that `-httpIngest` is set. If you receive a 503, the gateway cannot reach the orchestrator — verify the `-orchAddr` value.
+
+For the full list of available AI endpoints, see the [AI API Reference](/v2/gateways/references/api-reference/AI-API/ai).
+
+---
+
+## On-chain AI gateway
+
+On-chain mode connects to the open Livepeer AI network on Arbitrum. Your gateway discovers and pays real orchestrators via probabilistic payment tickets. This is the mode for production deployments.
+
+Start with the off-chain flags, then add these:
+
+<DynamicTable
+  headerList={['Flag', 'Example value', 'Required', 'Purpose']}
+  itemsList={[
+    {
+      Flag: '-aiServiceRegistry',
+      'Example value': '(flag only — no value)',
+      Required: 'Yes',
+      Purpose: 'Connect to the Livepeer AI network registry instead of the transcoding registry',
+    },
+    {
+      Flag: '-network',
+      'Example value': 'arbitrum-one-mainnet',
+      Required: 'Yes',
+      Purpose: 'Target Arbitrum Mainnet',
+    },
+    {
+      Flag: '-ethUrl',
+      'Example value': 'https://arb1.arbitrum.io/rpc',
+      Required: 'Yes',
+      Purpose: 'Arbitrum RPC endpoint — replace with your own for production',
+    },
+    {
+      Flag: '-ethKeystorePath',
+      'Example value': '/root/.lpData/arbitrum-one-mainnet/keystore',
+      Required: 'Yes',
+      Purpose: 'Path to directory containing your Ethereum keystore file',
+    },
+    {
+      Flag: '-ethAcctAddr',
+      'Example value': '0xYourEthAddress',
+      Required: 'If multiple accounts in keystore',
+      Purpose: 'Specify which ETH account to use when multiple exist in the keystore directory',
+    },
+    {
+      Flag: '-ethPassword',
+      'Example value': '/root/.lpData/.eth_secret',
+      Required: 'Yes',
+      Purpose: 'Path to a file containing the keystore password — do not pass the password directly as a string',
+    },
+    {
+      Flag: '-maxTotalEV',
+      'Example value': '100000000000000',
+      Required: 'Yes for AI',
+      Purpose: 'Maximum expected value per payment — required to comply with AI network ticket value limits',
+    },
+    {
+      Flag: '-maxPricePerUnit',
+      'Example value': '0.02USD',
+      Required: 'No',
+      Purpose: 'Price ceiling across all orchestrators. Accepts wei or USD suffix. Defaults to 0 (match any price — see note below)',
+    },
+    {
+      Flag: '-ignoreMaxPriceIfNeeded',
+      'Example value': 'true',
+      Required: 'No',
+      Purpose: 'Route jobs even when no orchestrators are at or under maxPricePerUnit. Useful when starting out',
+    },
+    {
+      Flag: '-maxPricePerCapability',
+      'Example value': '/root/.lpData/ai-pricing.json',
+      Required: 'No',
+      Purpose: 'Per-pipeline and per-model price ceilings. See pricing configuration below',
+    },
+  ]}
+  monospaceColumns={[0, 1]}
+/>
+
+<Warning>
+  `maxPricePerUnit` defaults to `0`, which means the gateway will match orchestrators at any price. Set a realistic ceiling before going to production. See [Pricing Configuration](/v2/gateways/run-a-gateway/configure/pricing-configuration) for guidance on what prices to expect.
+</Warning>
+
+### Full on-chain Docker Compose example
+
+```yaml
+services:
+  ai-gateway:
+    image: livepeer/go-livepeer:master
+    container_name: "ai-gateway"
+    ports:
+      - 8937:8937
+      - 5935:5935
+    volumes:
+      - ~/.lpData/:/root/.lpData
+      - ./ai-pricing.json:/root/.lpData/ai-pricing.json
+    network_mode: host
+    command: >
+      -gateway
+      -network=arbitrum-one-mainnet
+      -ethUrl=https://arb1.arbitrum.io/rpc
+      -ethKeystorePath=/root/.lpData/arbitrum-one-mainnet/keystore
+      -ethPassword=/root/.lpData/.eth_secret
+      -httpAddr=0.0.0.0:8937
+      -cliAddr=0.0.0.0:5935
+      -httpIngest
+      -aiServiceRegistry
+      -monitor=true
+      -v=6
+      -maxTotalEV=100000000000000
+      -maxPricePerUnit=0.02USD
+      -maxPricePerCapability=/root/.lpData/ai-pricing.json
+```
+
+---
+
+## Per-pipeline price ceilings
+
+Use `-maxPricePerCapability` with a JSON file to set different price ceilings per AI pipeline and model:
+
+```json
+{
+  "capabilities_prices": [
+    {
+      "pipeline": "text-to-image",
+      "model_id": "ByteDance/SDXL-Lightning",
+      "price_per_unit": 5000000
+    },
+    {
+      "pipeline": "image-to-image",
+      "model_id": "timbrooks/instruct-pix2pix",
+      "price_per_unit": 4000000
+    },
+    {
+      "pipeline": "upscale",
+      "model_id": "stabilityai/stable-diffusion-x4-upscaler",
+      "price_per_unit": 2000000
+    }
+  ]
+}
+```
+
+Prices are in wei per unit. The unit varies by pipeline (per pixel for image pipelines, per token for LLM). See [Pricing Configuration](/v2/gateways/run-a-gateway/configure/pricing-configuration) for current market rate guidance.
+
+### Update price ceilings at runtime (no restart)
+
+```bash
+curl -X POST http://localhost:5935/setMaxPriceForCapability \
+  -H "Content-Type: application/json" \
+  -d '{
+    "capabilities_prices": [
+      {
+        "pipeline": "text-to-image",
+        "model_id": "ByteDance/SDXL-Lightning",
+        "price_per_unit": 6000000
+      }
+    ]
+  }'
+```
+
+---
+
+## Live AI video flags
+
+These flags apply specifically to live video AI pipelines (e.g. `live-video-to-video`), where the gateway maintains a continuous session rather than handling discrete requests.
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    {
+      Flag: '-liveAIAuthWebhookUrl',
+      Default: '(unset)',
+      Purpose: 'RTMP authentication webhook URL. Called before each live AI session is established',
+    },
+    {
+      Flag: '-livePaymentInterval',
+      Default: '5s',
+      Purpose: 'How often the gateway issues payment tickets to the orchestrator during an active live AI session',
+    },
+    {
+      Flag: '-liveOutSegmentTimeout',
+      Default: 'no timeout',
+      Purpose: 'Maximum time to wait for a live pipeline output segment before treating the session as failed',
+    },
+    {
+      Flag: '-liveAICapRefreshModels',
+      Default: '(unset)',
+      Purpose: 'Comma-separated list of model IDs to periodically poll for orchestrator capacity. Leave unset to disable periodic refresh',
+    },
+  ]}
+  monospaceColumns={[0, 1]}
+/>
+
+---
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card
+    title="Pricing Configuration"
+    icon="hand-holding-dollar"
+    href="/v2/gateways/run-a-gateway/configure/pricing-configuration"
+    arrow
+  >
+    Full pricing flag reference, ticket parameters, and market rate guidance
+  </Card>
+  <Card
+    title="Dual Configuration"
+    icon="layer-group"
+    href="/v2/gateways/run-a-gateway/configure/dual-configuration"
+    arrow
+  >
+    Run AI and video transcoding simultaneously on the same gateway
+  </Card>
+  <Card
+    title="Fund Your Gateway"
+    icon="coins"
+    href="/v2/gateways/run-a-gateway/requirements/on-chain%20setup/fund-gateway"
+    arrow
+  >
+    Deposit ETH to your gateway before going on-chain
+  </Card>
+  <Card
+    title="Monitor & Optimise"
+    icon="chart-line"
+    href="/v2/gateways/run-a-gateway/monitor/monitor-and-optimise"
+    arrow
+  >
+    Prometheus metrics, Grafana panels, and performance tuning
+  </Card>
+</CardGroup>

@@ -1,0 +1,419 @@
+---
+title: 'Gateways Plan 3 — Structural Restructures'
+description: 'File moves, renames, folder changes, and docs.json updates required to implement the target IA. Written for a coding agent to execute. Each operation is explicit, ordered, and reversible.'
+---
+
+## What this plan covers
+
+File system operations, `docs.json` navigation updates, and internal link fixes that change the structure of the section without requiring content writing. Written to be **directly executable by a coding agent** — every operation is explicit with source, destination, and any downstream link updates required.
+
+**Prerequisites:**
+- Plan 1 (low-hanging fruit) must be complete — particularly the dead file deletions and the `artibtrum` rename
+- Plan 2 (content tasks) for `about-gateways/overview.mdx` must be complete before the consolidation delete in Section 2
+
+**Do not run Section 6 (publish/ deletion) until confirming no external links point to those URLs.**
+
+---
+
+## 1. Create `future/` holding folder
+
+Some pages are not ready to ship but contain useful planning material. Rather than deleting them, move to a folder that is not surfaced in the sidebar navigation.
+
+### Operations
+
+```bash
+# Create the folder
+mkdir -p v2/gateways/future
+
+# Move files
+mv v2/gateways/run-a-gateway/build-options.mdx \
+   v2/gateways/future/build-options.mdx
+
+mv v2/gateways/run-a-gateway/gateway-operator-opportunities.mdx \
+   v2/gateways/future/gateway-operator-opportunities.mdx
+```
+
+### docs.json update
+
+Remove both pages from the navigation entirely. The `future/` folder should **not** appear in the sidebar. These files are retained for reference only.
+
+```json
+// REMOVE from docs.json navigation (wherever they currently appear):
+"run-a-gateway/build-options",
+"run-a-gateway/gateway-operator-opportunities"
+```
+
+### Internal link audit
+
+```bash
+# Check for any internal links to these pages
+grep -r "build-options" v2/ --include="*.mdx"
+grep -r "gateway-operator-opportunities" v2/ --include="*.mdx"
+```
+
+If any links are found, update them to point to `run-a-gateway/why-run-a-gateway` (the closest equivalent content that will remain in the live IA).
+
+---
+
+## 2. Consolidate `about-gateways/` from 6 pages to 4
+
+**Dependency:** Plan 2 Task 1.1 (writing the new `overview.mdx`) must be complete first.
+
+### Operations
+
+```bash
+# The new overview.mdx should already be written and saved in place.
+# After confirming content is merged:
+
+# Delete the old stub overview (it has been replaced by the new written version)
+# This is the SAME file being rewritten — no move needed, just confirm the new
+# content is in place before removing the now-redundant explainer:
+
+rm v2/gateways/about-gateways/gateway-explainer.mdx
+
+# Delete the 6-line quickstart-home jump page
+rm v2/gateways/about-gateways/quickstart-home.mdx
+```
+
+### docs.json update
+
+```json
+// about-gateways group — BEFORE:
+{
+  "group": "About Gateways",
+  "pages": [
+    "v2/gateways/about-gateways/overview",           // old stub
+    "v2/gateways/about-gateways/gateway-explainer",  // DELETE
+    "v2/gateways/about-gateways/gateway-architecture",
+    "v2/gateways/about-gateways/gateway-economics",
+    "v2/gateways/about-gateways/gateway-functions",
+    "v2/gateways/about-gateways/quickstart-home"     // DELETE
+  ]
+}
+
+// about-gateways group — AFTER:
+{
+  "group": "About Gateways",
+  "pages": [
+    "v2/gateways/about-gateways/overview",           // now the consolidated page
+    "v2/gateways/about-gateways/gateway-architecture",
+    "v2/gateways/about-gateways/gateway-economics",
+    "v2/gateways/about-gateways/gateway-functions"
+  ]
+}
+```
+
+### Internal link audit
+
+```bash
+grep -r "gateway-explainer" v2/ --include="*.mdx"
+grep -r "quickstart-home" v2/ --include="*.mdx"
+```
+
+Update any found links to point to `about-gateways/overview`.
+
+---
+
+## 3. Rename the typo'd references file
+
+**Dependency:** Plan 1 Section 7 (the rename task). Included here for docs.json completeness.
+
+### Operations
+
+```bash
+mv v2/gateways/references/artibtrum-exchanges.mdx \
+   v2/gateways/references/arbitrum-exchanges.mdx
+```
+
+### docs.json update
+
+```json
+// BEFORE:
+"v2/gateways/references/artibtrum-exchanges"
+
+// AFTER:
+"v2/gateways/references/arbitrum-exchanges"
+```
+
+### Internal link audit
+
+```bash
+grep -r "artibtrum-exchanges" v2/ --include="*.mdx"
+grep -r "artibtrum" v2/ --include="*.mdx"
+```
+
+Update all found references to the corrected filename.
+
+---
+
+## 4. Clean up `run-a-gateway/configure/`
+
+Remove duplicate and fragment pages. Consolidate dual-mode content into tabs within the main config pages rather than a standalone page.
+
+### Operations
+
+```bash
+# Delete duplicate video config page
+rm v2/gateways/run-a-gateway/configure/video-configuration-view.mdx
+
+# Delete Docker fragment (content belongs in docker-install.mdx, not configure)
+rm v2/gateways/run-a-gateway/configure/dual-docker.mdx
+
+# Delete stale config reference (superseded by references/configuration-flags.mdx)
+rm v2/gateways/run-a-gateway/configure/configuration-reference.mdx
+```
+
+**For `dual-configuration.mdx`:** Do not delete yet. Once Plan 2 content work merges dual-mode content into tabs within `ai-configuration.mdx` and `video-configuration.mdx`, then delete this file and update docs.json. Flag this operation as **pending Plan 2 completion.**
+
+### docs.json update
+
+```json
+// configure group — BEFORE:
+{
+  "group": "Configure",
+  "pages": [
+    "run-a-gateway/configure/configuration-overview",
+    "run-a-gateway/configure/video-configuration",
+    "run-a-gateway/configure/video-configuration-view",     // DELETE
+    "run-a-gateway/configure/ai-configuration",
+    "run-a-gateway/configure/dual-configuration",          // PENDING Plan 2
+    "run-a-gateway/configure/dual-docker",                 // DELETE
+    "run-a-gateway/configure/pricing-configuration",
+    "run-a-gateway/configure/configuration-reference"      // DELETE
+  ]
+}
+
+// configure group — AFTER (immediate):
+{
+  "group": "Configure",
+  "pages": [
+    "run-a-gateway/configure/configuration-overview",
+    "run-a-gateway/configure/video-configuration",
+    "run-a-gateway/configure/ai-configuration",
+    "run-a-gateway/configure/dual-configuration",          // remove after Plan 2
+    "run-a-gateway/configure/pricing-configuration"
+  ]
+}
+```
+
+### Internal link audit
+
+```bash
+grep -r "video-configuration-view" v2/ --include="*.mdx"
+grep -r "dual-docker" v2/ --include="*.mdx"
+grep -r "configuration-reference" v2/ --include="*.mdx"
+```
+
+---
+
+## 5. Delete `references/configuration-flags-old.mdx`
+
+**Dependency:** Confirm no external traffic to this URL. Check web analytics or ask the team if any external sites link to the old URL. If uncertain, set a 30-day delay.
+
+### Operations
+
+```bash
+rm v2/gateways/references/configuration-flags-old.mdx
+```
+
+### docs.json update
+
+```json
+// REMOVE from references group:
+"v2/gateways/references/configuration-flags-old"
+```
+
+### Notes
+
+No redirect is needed if the page has low/no external traffic (as assessed during audit). If it does have traffic, add a Mintlify redirect rule pointing to `configuration-flags.mdx`.
+
+---
+
+## 6. Delete the `publish/` folder
+
+**Dependency:** Confirm no external links to these URLs before deleting.
+
+### Audit first
+
+```bash
+# Check for internal links to publish/ pages
+grep -r "run-a-gateway/publish" v2/ --include="*.mdx"
+
+# The main operator journey page (run-a-gateway.mdx) should not reference publish/
+# Confirm: grep -r "publish" v2/gateways/run-a-gateway/run-a-gateway.mdx
+```
+
+### Operations
+
+```bash
+rm -rf v2/gateways/run-a-gateway/publish/
+```
+
+### docs.json update
+
+```json
+// REMOVE from Run A Gateway navigation group:
+"run-a-gateway/publish/connect-with-offerings"
+// (and any other publish/ entries if present)
+```
+
+---
+
+## 7. Move misplaced references to the right sections
+
+These files exist in the gateways `references/` folder but are orchestrator or shared-protocol concerns.
+
+### Operations
+
+```bash
+# Move to orchestrators section (create folder if needed)
+mkdir -p v2/orchestrators/references/api-reference/AI-Worker
+
+mv v2/gateways/references/api-reference/AI-Worker/ai-worker-api.mdx \
+   v2/orchestrators/references/api-reference/AI-Worker/ai-worker-api.mdx
+
+# Move go-livepeer references (flagged ⚠️, destination TBD based on orchestrators IA)
+mkdir -p v2/orchestrators/references/go-livepeer
+
+mv v2/gateways/references/go-livepeer/ \
+   v2/orchestrators/references/go-livepeer/
+```
+
+**Coordinate with the orchestrators section maintainer before executing this.** These pages need to be added to the orchestrators `docs.json` navigation in the same operation.
+
+### CLI-HTTP endpoint audit
+
+```bash
+# Audit which CLI-HTTP endpoints are gateway-specific vs orchestrator-specific
+# Gateway endpoints: setbroadcastconfig, setmaxpriceforcapability, 
+#                   depositbroadcastfunds, withdrawbroadcastfunds, 
+#                   unlockbroadcastfunds, status
+# Orchestrator endpoints: activateorchestrator, bond, unbond, rebond, reward,
+#                        registeredorchestrators, protocolparameters
+
+# Check current CLI-HTTP pages:
+ls v2/gateways/references/api-reference/CLI-HTTP/
+```
+
+**For orchestrator-only endpoints:** Either remove from the gateways CLI-HTTP section, or add a header note: "These operations apply to orchestrator nodes. Gateway operators typically do not use them."
+
+Add to the CLI-HTTP portal page (`cli-http-api.mdx`):
+```mdx
+<Note>
+  Some endpoints listed here apply to orchestrator nodes rather than gateway operators. 
+  Gateway-specific endpoints are: `setbroadcastconfig`, `setmaxpriceforcapability`, 
+  and the deposit/withdraw/unlock broadcasting funds endpoints.
+</Note>
+```
+
+---
+
+## 8. Add `troubleshooting.mdx` to navigation
+
+**Dependency:** Plan 2 Priority 7 (writing the troubleshooting page) must be complete first.
+
+### docs.json update
+
+Add after the `quickstart/` group and before `requirements/` in the `run-a-gateway` navigation:
+
+```json
+{
+  "group": "Run A Gateway",
+  "pages": [
+    "run-a-gateway/run-a-gateway",
+    "run-a-gateway/why-run-a-gateway",
+    {
+      "group": "Quickstart",
+      "pages": [
+        "run-a-gateway/quickstart/quickstart-a-gateway",
+        "run-a-gateway/quickstart/get-AI-to-setup-the-gateway"
+      ]
+    },
+    "run-a-gateway/troubleshooting",    // ADD after Plan 2 Task 7 is written
+    // ... rest of groups
+  ]
+}
+```
+
+---
+
+## 9. Suppress `explorer.mdx` from sidebar (if Option B from Plan 2)
+
+If the Gateway Explorer is not shipping soon, remove from sidebar navigation without deleting the file.
+
+### docs.json update
+
+```json
+// REMOVE from gateway-tools group:
+"v2/gateways/gateway-tools/explorer"
+
+// The file remains on disk for when the Explorer ships.
+// When it ships, add it back to docs.json.
+```
+
+---
+
+## 10. Verify `docs.json` navigation integrity after all operations
+
+After all structural changes are complete, run the existing validation tooling:
+
+```bash
+# If a navigation validator script exists:
+node tools/scripts/validate-navigation.js
+
+# Or manually verify:
+# 1. Every page listed in docs.json exists on disk
+# 2. Every important page on disk appears in docs.json
+# 3. No 404s in the sidebar
+
+# Check for pages on disk not in docs.json (orphans):
+node tools/scripts/generate-pages-index.js
+```
+
+---
+
+## Operation sequence (safe order)
+
+Execute in this order to minimise broken links at each stage:
+
+```
+Step 1:  Create future/ folder and move build-options, gateway-operator-opportunities
+Step 2:  Rename artibtrum-exchanges.mdx → arbitrum-exchanges.mdx + docs.json
+Step 3:  Delete: page-2.mdx, _delete-all-api.mdx, ai-worker-api.mdx (root level), 
+         quickstart-home.mdx, video-configuration-view.mdx, dual-docker.mdx,
+         configuration-reference.mdx
+Step 4:  Update docs.json to remove deleted pages (do this immediately after Step 3)
+Step 5:  Run link audit to catch any broken internal links
+Step 6:  [After Plan 2 Task 1.1] Delete gateway-explainer.mdx, update docs.json
+Step 7:  [After rollout check] Delete configuration-flags-old.mdx
+Step 8:  [After external link check] Delete publish/ folder
+Step 9:  [Coordinate with orchestrators] Move go-livepeer/ and AI-Worker/ references
+Step 10: [After Plan 2 Task 7] Add troubleshooting.mdx to docs.json
+Step 11: [After Plan 2 dual-config tabs] Delete dual-configuration.mdx
+Step 12: Final docs.json validation run
+```
+
+---
+
+## Completion checklist
+
+```
+[ ] future/ folder created
+[ ] build-options.mdx moved to future/
+[ ] gateway-operator-opportunities.mdx moved to future/
+[ ] Both removed from docs.json navigation
+[ ] artibtrum-exchanges.mdx renamed to arbitrum-exchanges.mdx
+[ ] docs.json updated for rename
+[ ] All dead files deleted (page-2, _delete-all-api, ai-worker-api root, quickstart-home)
+[ ] configure/ duplicates deleted (video-view, dual-docker, configuration-reference)
+[ ] docs.json updated for all deletions
+[ ] gateway-explainer.mdx deleted [after Plan 2 Task 1.1]
+[ ] configuration-flags-old.mdx deleted [after rollout check]
+[ ] publish/ folder deleted [after external link check]
+[ ] go-livepeer/ references moved [coordinated with orchestrators team]
+[ ] CLI-HTTP portal note added for orchestrator-only endpoints
+[ ] troubleshooting.mdx added to docs.json [after Plan 2 Task 7]
+[ ] explorer.mdx suppressed from sidebar if not shipping soon
+[ ] Full docs.json validation run complete
+[ ] grep audit for broken internal links complete
+```
