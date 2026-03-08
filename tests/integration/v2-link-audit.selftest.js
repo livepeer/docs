@@ -1,30 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script v2-link-audit.selftest
- * @summary Script-level self-tests for v2 link audit external validation using a local HTTP fixture and temporary MDX file.
- * @owner docs
- * @scope tests/integration
- *
- * @usage
- *   node tests/integration/v2-link-audit.selftest.js
- *
- * @inputs
- *   No required CLI flags.
- *
- * @outputs
- *   - /tmp/v2-link-audit-selftest.md
- *   - /tmp/v2-link-audit-selftest.json
- *   - Console summary
- *
- * @exit-codes
- *   0 = self-tests passed
- *   1 = one or more self-tests failed
- *
- * @examples
- *   node tests/integration/v2-link-audit.selftest.js
- *
- * @notes
- *   Creates and removes a temporary fixture file under v2/internal/reports/navigation-links.
+ * @script            v2-link-audit.selftest
+ * @category          validator
+ * @purpose           qa:link-integrity
+ * @scope             tests/integration
+ * @owner             docs
+ * @needs             E-R12, E-R14
+ * @purpose-statement Self-test suite for v2-link-audit.js — validates audit logic against known fixtures
+ * @pipeline          manual — not yet in pipeline
+ * @dualmode          --full (validator) | --write-links (remediator)
+ * @usage             node tests/integration/v2-link-audit.selftest.js [flags]
  */
 
 const assert = require('assert');

@@ -344,6 +344,8 @@ function buildBody(contract, context) {
     `<!-- ${PR_GENERATOR_MARKER_PREFIX}: task_id=${contract.taskId}; branch=${context.headBranch}; contract=${context.contractPathRel} -->`
   );
   lines.push('');
+  lines.push(`Fixes #${contract.taskId}`);
+  lines.push('');
   lines.push('## Scope');
   lines.push('');
   lines.push(`- Task: #${contract.taskId}`);

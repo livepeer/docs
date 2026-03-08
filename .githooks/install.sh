@@ -1,27 +1,13 @@
 #!/bin/bash
-# @script install
-# @summary Utility script for .githooks/install.sh.
-# @owner docs
-# @scope .githooks
-#
-# @usage
-#   bash .githooks/install.sh
-#
-# @inputs
-#   No required CLI flags; optional flags are documented inline.
-#
-# @outputs
-#   - Console output and/or file updates based on script purpose.
-#
-# @exit-codes
-#   0 = success
-#   1 = runtime or validation failure
-#
-# @examples
-#   bash .githooks/install.sh
-#
-# @notes
-#   Keep script behavior deterministic and update script indexes after changes.
+# @script            install
+# @category          utility
+# @purpose           tooling:dev-tools
+# @scope             .githooks
+# @owner             docs
+# @needs             E-C6, F-C1
+# @purpose-statement Installs git hooks by setting core.hooksPath to .githooks/
+# @pipeline          manual — developer tool
+# @usage             bash .githooks/install.sh [flags]
 # Install git hooks
 
 # Support both regular repos and worktrees

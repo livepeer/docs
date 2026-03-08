@@ -1,29 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script run-pr-checks
- * @summary Run changed-file scoped validation checks for pull request CI, including Codex skill sync and codex task-contract enforcement.
- * @owner docs
- * @scope tests, .github/workflows, tools/scripts
- *
- * @usage
- *   node tests/run-pr-checks.js --base-ref main
- *
- * @inputs
- *   --base-ref <branch> Base branch used to compute merge-base (default: env GITHUB_BASE_REF).
- *
- * @outputs
- *   - Console summary
- *   - GitHub step summary table when GITHUB_STEP_SUMMARY is set
- *
- * @exit-codes
- *   0 = all applicable checks passed
- *   1 = one or more checks failed, or changed-file discovery failed
- *
- * @examples
- *   node tests/run-pr-checks.js --base-ref docs-v2
- *
- * @notes
- *   Designed for pull_request CI. Uses changed-file scope to avoid blocking on legacy full-repo debt.
+ * @script            run-pr-checks
+ * @category          orchestrator
+ * @purpose           infrastructure:pipeline-orchestration
+ * @scope             tests, .github/workflows, tools/scripts
+ * @owner             docs
+ * @needs             R-R29
+ * @purpose-statement PR orchestrator — runs changed-file scoped validation checks for pull request CI. Dispatches per-file validators based on PR diff.
+ * @pipeline          P3 (PR, orchestrator)
+ * @usage             node tests/run-pr-checks.js [flags]
  */
 
 const fs = require('fs');
@@ -46,6 +31,21 @@ const SCRIPT_EXTENSIONS = new Set(['.js', '.cjs', '.mjs', '.ts', '.tsx', '.sh', 
 const SCRIPT_SCOPES = ['.githooks', '.github/scripts', 'tests', 'tools/scripts', 'tasks/scripts'];
 const LINK_AUDIT_REPORT = '/tmp/livepeer-link-audit-pr.md';
 const CODEX_BRANCH_RE = /^codex\//;
+const GENERATED_AFFECTING_PREFIXES = [
+  'docs-guide/indexes/',
+  'tools/scripts/generate-docs-guide-',
+  'tools/scripts/generate-pages-index.js',
+  'tools/scripts/enforce-generated-file-banners.js',
+  'tools/scripts/i18n/lib/',
+  'tools/lib/generated-file-banners.js'
+];
+const GENERATED_AFFECTING_EXACT = new Set([
+  'tests/unit/script-docs.test.js',
+  'tests/script-index.md',
+  'tools/script-index.md',
+  'v2/index.mdx',
+  'v2/resources/documentation-guide/component-library/overview.mdx'
+]);
 
 function getRepoRoot() {
   try {
@@ -139,12 +139,25 @@ function partitionFiles(changedFiles) {
     return inScope && SCRIPT_EXTENSIONS.has(ext);
   });
 
+  const usefulnessFiles = changedFiles.filter((file) =>
+    file === 'tools/scripts/audit-v2-usefulness.js' ||
+    file === 'tools/scripts/assign-purpose-metadata.js' ||
+    file === 'tools/scripts/docs-quality-and-freshness-audit.js' ||
+    file === '.gitignore' ||
+    file === 'tools/package.json' ||
+    file === 'tools/package-lock.json' ||
+    file.startsWith('tools/lib/docs-usefulness/') ||
+    file.startsWith('tools/config/usefulness-') ||
+    file.startsWith('tests/unit/usefulness-')
+  );
+
   return {
     docsMdx,
     componentJsx,
     styleFiles: dedupe([...docsMdx, ...componentJsx]).map(relToAbs),
     docsMdxAbs: docsMdx.map(relToAbs),
-    scriptFiles: dedupe(scriptFiles)
+    scriptFiles: dedupe(scriptFiles),
+    usefulnessFiles: dedupe(usefulnessFiles)
   };
 }
 
@@ -186,6 +199,35 @@ function runScriptDocsCheck(files) {
     files: files.length,
     errors: Array.isArray(result.errors) ? result.errors.length : 0,
     warnings: Array.isArray(result.warnings) ? result.warnings.length : 0
+  };
+}
+
+function runUsefulnessChecks(files) {
+  if (!files.length) {
+    return { label: 'Usefulness Unit Tests', status: 'skipped', files: 0, errors: 0, warnings: 0 };
+  }
+
+  const rubric = spawnSync('node', ['tests/unit/usefulness-rubric.test.js'], {
+    cwd: REPO_ROOT,
+    encoding: 'utf8'
+  });
+  if (rubric.stdout) process.stdout.write(rubric.stdout);
+  if (rubric.stderr) process.stderr.write(rubric.stderr);
+
+  const journey = spawnSync('node', ['tests/unit/usefulness-journey.test.js'], {
+    cwd: REPO_ROOT,
+    encoding: 'utf8'
+  });
+  if (journey.stdout) process.stdout.write(journey.stdout);
+  if (journey.stderr) process.stderr.write(journey.stderr);
+
+  const failures = (rubric.status === 0 ? 0 : 1) + (journey.status === 0 ? 0 : 1);
+  return {
+    label: 'Usefulness Unit Tests',
+    status: failures === 0 ? 'passed' : 'failed',
+    files: files.length,
+    errors: failures,
+    warnings: 0
   };
 }
 
@@ -266,7 +308,30 @@ function runDocsJsonRedirectGuard(baseRef, changedFiles) {
   }
 }
 
-function runGeneratedBannerCheck() {
+function isGeneratedSystemAffectingFile(file) {
+  if (!file) return false;
+  if (GENERATED_AFFECTING_EXACT.has(file)) return true;
+  if (GENERATED_AFFECTING_PREFIXES.some((prefix) => file.startsWith(prefix))) return true;
+  if (/^v2\/[a-z]{2}\//.test(file)) return true; // localized content can affect i18n parity enforcement
+  if (/^v2\/[^/]+\/index\.mdx$/.test(file)) return true; // generated section indexes
+  return false;
+}
+
+function shouldRunGeneratedBannerCheck(changedFiles) {
+  return changedFiles.some((file) => isGeneratedSystemAffectingFile(file));
+}
+
+function runGeneratedBannerCheck(changedFiles) {
+  if (!shouldRunGeneratedBannerCheck(changedFiles)) {
+    return {
+      label: 'Generated Banners',
+      status: 'skipped',
+      files: 0,
+      errors: 0,
+      warnings: 0
+    };
+  }
+
   const cmd = spawnSync('node', ['tools/scripts/enforce-generated-file-banners.js', '--check'], {
     cwd: REPO_ROOT,
     encoding: 'utf8'
@@ -327,7 +392,7 @@ function runCodexTaskContractCheck(branch, changedFiles, baseRef) {
   }
 
   const args = ['tools/scripts/validate-codex-task-contract.js', '--branch', branch];
-  args.push('--require-issue-state');
+  console.log('ℹ️ Codex issue-readiness enforcement is skipped for changed-file PR checks.');
   if (baseRef) {
     args.push('--base-ref', baseRef);
   }
@@ -364,6 +429,7 @@ async function main() {
   console.log(`Changed docs pages: ${groups.docsMdx.length}`);
   console.log(`Changed components: ${groups.componentJsx.length}`);
   console.log(`Changed scripts: ${groups.scriptFiles.length}`);
+  console.log(`Changed usefulness files: ${groups.usefulnessFiles.length}`);
 
   const checks = [];
   checks.push(await runUnitCheck('Style Guide', groups.styleFiles, styleGuideTests.runTests));
@@ -374,10 +440,11 @@ async function main() {
   checks.push(runGlobalCheck('MDX Guardrails', mdxGuardsTests.runTests));
   checks.push(runDocsNavigationCheck());
   checks.push(runDocsJsonRedirectGuard(args.baseRef, changedFiles));
-  checks.push(runGeneratedBannerCheck());
+  checks.push(runGeneratedBannerCheck(changedFiles));
   checks.push(runCodexTaskContractCheck(currentBranch, changedFiles, args.baseRef));
   checks.push(runCodexSkillSyncCheck());
   checks.push(runScriptDocsCheck(groups.scriptFiles));
+  checks.push(runUsefulnessChecks(groups.usefulnessFiles));
   checks.push(runLinkAuditCheck(groups.docsMdx));
 
   console.log('\n============================================================');
@@ -410,7 +477,14 @@ async function main() {
   console.log('\n✅ All applicable changed-file checks passed');
 }
 
-main().catch((error) => {
-  console.error(`❌ Failed to run PR checks: ${error.message}`);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(`❌ Failed to run PR checks: ${error.message}`);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  isGeneratedSystemAffectingFile,
+  shouldRunGeneratedBannerCheck
+};

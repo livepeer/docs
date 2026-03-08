@@ -1,28 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script verify-browser
- * @summary Utility script for .githooks/verify-browser.js.
- * @owner docs
- * @scope .githooks
- *
- * @usage
- *   node .githooks/verify-browser.js
- *
- * @inputs
- *   No required CLI flags; optional flags are documented inline.
- *
- * @outputs
- *   - Console output and/or file updates based on script purpose.
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node .githooks/verify-browser.js
- *
- * @notes
- *   Keep script behavior deterministic and update script indexes after changes.
+ * @script            verify-browser
+ * @category          utility
+ * @purpose           tooling:dev-tools
+ * @scope             .githooks
+ * @owner             docs
+ * @needs             E-C6, F-C1
+ * @purpose-statement Verifies browser availability for Puppeteer-based integration tests
+ * @pipeline          manual — developer tool
+ * @usage             node .githooks/verify-browser.js [flags]
  */
 /**
  * Headless browser validation for staged MDX files

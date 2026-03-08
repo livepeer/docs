@@ -1,0 +1,153 @@
+{
+  "landing": {
+    "tier1_rules": {
+      "has_value_prop_first_para": { "weight": 0.2, "type": "boolean", "check": "first_para_has_value_prop" },
+      "internal_links_min": { "weight": 0.3, "type": "threshold", "signal": "internal_link_count", "min": 2 },
+      "no_code_blocks": { "weight": 0.1, "type": "absence", "signal": "code_block_count" },
+      "no_dead_links": { "weight": 0.2, "type": "boolean", "check": "all_internal_links_resolve" },
+      "max_heading_depth": { "weight": 0.1, "type": "threshold", "signal": "max_heading_level", "max": 2 },
+      "has_navigation_component": { "weight": 0.1, "type": "presence", "components": ["Card", "CardGroup", "GotoCard", "DisplayCard"] }
+    },
+    "tier2_llm": {
+      "clarity_of_routing": { "weight": 0.4, "prompt_key": "landing_routing_clarity" },
+      "audience_signal_strength": { "weight": 0.3, "prompt_key": "audience_signal" },
+      "no_instructional_content": { "weight": 0.3, "prompt_key": "landing_no_teaching" }
+    }
+  },
+  "overview": {
+    "tier1_rules": {
+      "word_count_min": { "weight": 0.2, "type": "threshold", "signal": "word_count", "min": 150 },
+      "internal_links_min": { "weight": 0.25, "type": "threshold", "signal": "internal_link_count", "min": 1 },
+      "no_code_blocks_preferred": { "weight": 0.05, "type": "advisory" },
+      "plain_language_opening": { "weight": 0.25, "type": "content_check", "check": "first_200_words_no_jargon" },
+      "has_next_link": { "weight": 0.25, "type": "heading_keyword", "keywords": ["next", "learn more", "get started", "continue", "read more"] }
+    },
+    "tier2_llm": {
+      "reader_benefit_clear": { "weight": 0.4, "prompt_key": "overview_benefit" },
+      "context_for_next": { "weight": 0.3, "prompt_key": "overview_next_context" },
+      "no_exhaustive_detail": { "weight": 0.3, "prompt_key": "overview_no_detail" }
+    }
+  },
+  "concept": {
+    "tier1_rules": {
+      "word_count_min": { "weight": 0.15, "type": "threshold", "signal": "word_count", "min": 300 },
+      "heading_count_min": { "weight": 0.15, "type": "threshold", "signal": "heading_count", "min": 2 },
+      "internal_links_min": { "weight": 0.15, "type": "threshold", "signal": "internal_link_count", "min": 2 },
+      "no_steps_component": { "weight": 0.05, "type": "absence", "signal": "steps_component" },
+      "has_illustration": { "weight": 0.2, "type": "presence_any", "signals": ["mermaid", "image", "table"] },
+      "has_related_links_section": { "weight": 0.15, "type": "heading_keyword", "keywords": ["related", "see also", "further reading", "learn more"] },
+      "defines_terms": { "weight": 0.15, "type": "content_keyword", "keywords": ["is a", "refers to", "means", "defined as"] }
+    },
+    "tier2_llm": {
+      "single_concept_focus": { "weight": 0.3, "prompt_key": "concept_focus" },
+      "jargon_defined": { "weight": 0.3, "prompt_key": "concept_jargon" },
+      "practical_connection": { "weight": 0.2, "prompt_key": "concept_practical" },
+      "explanation_quality": { "weight": 0.2, "prompt_key": "concept_clarity" }
+    }
+  },
+  "how_to": {
+    "tier1_rules": {
+      "has_goal_statement": { "weight": 0.15, "type": "content_keyword", "keywords": ["this guide shows", "how to", "in this guide", "this page explains how"] },
+      "has_steps_component": { "weight": 0.2, "type": "presence", "components": ["Steps"] },
+      "has_code_blocks": { "weight": 0.15, "type": "threshold", "signal": "code_block_count", "min": 1 },
+      "has_prerequisites": { "weight": 0.1, "type": "heading_keyword", "keywords": ["prerequisites", "before you begin", "requirements", "what you need"] },
+      "word_count_min": { "weight": 0.1, "type": "threshold", "signal": "word_count", "min": 200 },
+      "has_next_steps": { "weight": 0.1, "type": "heading_keyword", "keywords": ["next", "what's next", "continue", "next steps"] },
+      "internal_links_min": { "weight": 0.1, "type": "threshold", "signal": "internal_link_count", "min": 1 },
+      "has_expected_result": { "weight": 0.1, "type": "content_keyword", "keywords": ["you should see", "expected output", "result", "verify", "confirm"] }
+    },
+    "tier2_llm": {
+      "action_result_pairing": { "weight": 0.4, "prompt_key": "howto_action_result" },
+      "audience_knowledge_fit": { "weight": 0.3, "prompt_key": "audience_knowledge" },
+      "troubleshooting_link": { "weight": 0.3, "prompt_key": "howto_troubleshooting" }
+    }
+  },
+  "tutorial": {
+    "tier1_rules": {
+      "has_steps_component": { "weight": 0.15, "type": "presence", "components": ["Steps"] },
+      "has_code_blocks": { "weight": 0.15, "type": "threshold", "signal": "code_block_count", "min": 1 },
+      "has_prerequisites": { "weight": 0.1, "type": "heading_keyword", "keywords": ["prerequisites", "before you begin", "requirements"] },
+      "word_count_min": { "weight": 0.1, "type": "threshold", "signal": "word_count", "min": 300 },
+      "has_verification": { "weight": 0.15, "type": "heading_keyword", "keywords": ["verify", "test", "confirm", "how to know", "check"] },
+      "has_next_steps": { "weight": 0.1, "type": "heading_keyword", "keywords": ["next", "what's next", "continue"] },
+      "internal_links_min": { "weight": 0.1, "type": "threshold", "signal": "internal_link_count", "min": 2 },
+      "has_time_estimate": { "weight": 0.1, "type": "content_keyword", "keywords": ["minutes", "takes about", "estimated time", "time:"] },
+      "has_contextual_explanation": { "weight": 0.05, "type": "content_keyword", "keywords": ["because", "this works by", "the reason", "this is important because"] }
+    },
+    "tier2_llm": {
+      "step_completeness": { "weight": 0.3, "prompt_key": "tutorial_steps_complete" },
+      "newcomer_accessibility": { "weight": 0.3, "prompt_key": "tutorial_newcomer" },
+      "error_recovery": { "weight": 0.2, "prompt_key": "tutorial_error_recovery" },
+      "contextual_explanation": { "weight": 0.2, "prompt_key": "tutorial_context" }
+    }
+  },
+  "reference": {
+    "tier1_rules": {
+      "has_structured_data": { "weight": 0.25, "type": "presence_any", "signals": ["table", "parameter_list", "openapi_marker"] },
+      "has_code_examples": { "weight": 0.2, "type": "threshold", "signal": "code_block_count", "min": 1 },
+      "has_type_info": { "weight": 0.15, "type": "content_keyword", "keywords": ["type:", "string", "integer", "boolean", "required", "optional", "default:"] },
+      "scannable_structure": { "weight": 0.15, "type": "threshold", "signal": "heading_count", "min": 3 },
+      "has_usage_link": { "weight": 0.1, "type": "threshold", "signal": "internal_link_count", "min": 1 },
+      "no_narrative_prose": { "weight": 0.15, "type": "threshold", "signal": "word_count", "max": 3000 }
+    },
+    "tier2_llm": {
+      "parameter_completeness": { "weight": 0.4, "prompt_key": "reference_params" },
+      "example_quality": { "weight": 0.3, "prompt_key": "reference_examples" },
+      "no_narrative_prose_llm": { "weight": 0.3, "prompt_key": "reference_no_prose" }
+    }
+  },
+  "faq": {
+    "tier1_rules": {
+      "question_headings": { "weight": 0.25, "type": "heading_pattern", "pattern": "question" },
+      "min_questions": { "weight": 0.2, "type": "threshold", "signal": "h2_or_accordion_count", "min": 5 },
+      "has_accordion_component": { "weight": 0.15, "type": "presence", "components": ["Accordion", "AccordionGroup"] },
+      "answer_length_reasonable": { "weight": 0.15, "type": "avg_section_words", "min": 30, "max": 300 },
+      "has_deeper_links": { "weight": 0.1, "type": "threshold", "signal": "internal_link_count", "min": 3 },
+      "organised_by_theme": { "weight": 0.15, "type": "threshold", "signal": "heading_count", "min": 2 }
+    },
+    "tier2_llm": {
+      "questions_real_not_invented": { "weight": 0.4, "prompt_key": "faq_real_questions" },
+      "answers_direct": { "weight": 0.3, "prompt_key": "faq_direct_answers" },
+      "thematic_organisation": { "weight": 0.3, "prompt_key": "faq_organised" }
+    }
+  },
+  "troubleshooting": {
+    "tier1_rules": {
+      "symptom_headings": { "weight": 0.25, "type": "heading_pattern", "pattern": "error_or_symptom" },
+      "has_error_messages": { "weight": 0.2, "type": "presence_any", "signals": ["code_inline_dense", "error_keyword"] },
+      "has_fix_per_symptom": { "weight": 0.2, "type": "content_keyword", "keywords": ["fix", "solution", "resolution", "workaround", "try", "run"] },
+      "has_links_to_guides": { "weight": 0.15, "type": "threshold", "signal": "internal_link_count", "min": 2 },
+      "min_entries": { "weight": 0.2, "type": "threshold", "signal": "heading_count", "min": 3 }
+    },
+    "tier2_llm": {
+      "symptom_first_not_cause": { "weight": 0.4, "prompt_key": "troubleshooting_symptom_first" },
+      "actionable_fixes": { "weight": 0.3, "prompt_key": "troubleshooting_actionable" },
+      "searchable_errors": { "weight": 0.3, "prompt_key": "troubleshooting_searchable" }
+    }
+  },
+  "glossary": {
+    "tier1_rules": {
+      "alphabetical_or_thematic": { "weight": 0.2, "type": "heading_pattern", "pattern": "alphabetical" },
+      "min_terms": { "weight": 0.2, "type": "threshold", "signal": "heading_count", "min": 10 },
+      "concise_definitions": { "weight": 0.2, "type": "avg_section_words", "min": 10, "max": 100 },
+      "has_links_to_concepts": { "weight": 0.2, "type": "threshold", "signal": "internal_link_count", "min": 5 },
+      "no_code_blocks": { "weight": 0.2, "type": "absence", "signal": "code_block_count" }
+    },
+    "tier2_llm": {
+      "no_marketing_language": { "weight": 0.5, "prompt_key": "glossary_no_marketing" },
+      "newcomer_coverage": { "weight": 0.5, "prompt_key": "glossary_newcomer" }
+    }
+  },
+  "changelog": {
+    "tier1_rules": {
+      "has_dates": { "weight": 0.25, "type": "content_keyword", "keywords": ["2024", "2025", "2026", "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"] },
+      "has_breaking_change_flags": { "weight": 0.25, "type": "presence", "components": ["Warning"] },
+      "has_links_to_features": { "weight": 0.25, "type": "threshold", "signal": "internal_link_count", "min": 2 },
+      "has_version_info": { "weight": 0.25, "type": "content_keyword", "keywords": ["v0.", "v1.", "version", "release"] }
+    },
+    "tier2_llm": {
+      "summary_clarity": { "weight": 0.5, "prompt_key": "changelog_clear" },
+      "actionable_for_developers": { "weight": 0.5, "prompt_key": "changelog_actionable" }
+    }
+  }
+}

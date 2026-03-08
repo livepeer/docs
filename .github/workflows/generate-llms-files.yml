@@ -1,0 +1,34 @@
+name: Generate llms.txt
+
+on:
+  push:
+    branches: [docs-v2]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: docs-v2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - run: cd tools && npm ci
+
+      - name: Generate llms files
+        run: node tools/scripts/generate-llms-files.js --write
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add llms.txt llms-full.txt
+          git diff --cached --quiet || git commit -m "chore: regenerate llms.txt [skip ci]"
+          git push origin HEAD:docs-v2

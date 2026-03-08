@@ -32,6 +32,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { collectVisibleMdxLines } = require('../lib/mdx-visible-text');
 
 const STAGE_ID = 'style-and-language-homogenizer-en-gb';
 const REPO_ROOT = process.cwd();
@@ -282,6 +283,27 @@ function scanForbiddenPatterns(issues, file, patterns) {
   });
 }
 
+function scanEmDashes(issues, file) {
+  const content = fs.readFileSync(file.absPath, 'utf8');
+  const visibleLines = collectVisibleMdxLines(content, {
+    frontmatterFields: ['title', 'description']
+  });
+
+  visibleLines.forEach((lineEntry) => {
+    if (!lineEntry.visibleText.includes('—')) return;
+
+    addIssue(issues, {
+      id: 'em-dash-usage',
+      title: 'Em dash detected in English docs prose',
+      severity: 'medium',
+      path: file.relPath,
+      line: lineEntry.line,
+      evidence: `Found em dash in line: ${lineEntry.rawText.trim().slice(0, 180)}`,
+      recommendation: 'Replace em dash with spaced en dash ( – ) or rewrite the sentence to avoid em dash punctuation.'
+    });
+  });
+}
+
 function markdownTableRows(issues, maxRows = 300) {
   return issues.slice(0, maxRows).map((issue) => {
     const safe = (value) => String(value || '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
@@ -331,6 +353,7 @@ function main() {
   files.forEach((file) => {
     scanForbiddenTerms(issues, file, profile.forbidden_terms || []);
     scanForbiddenPatterns(issues, file, profile.forbidden_patterns || []);
+    scanEmDashes(issues, file);
   });
 
   const report = {

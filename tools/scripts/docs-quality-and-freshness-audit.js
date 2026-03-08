@@ -186,7 +186,7 @@ function loadUsefulnessSignal(issues) {
       severity: 'low',
       path: 'tasks/reports/quality-accessibility/docs-usefulness/latest/run-metadata.json',
       evidence: 'No usefulness metadata snapshot found for cross-check.',
-      recommendation: 'Run `node tools/scripts/audit-v2-usefulness.js --mode full --accuracy-mode tiered` for a fresh baseline.'
+      recommendation: 'Run `node tools/scripts/audit-v2-usefulness.js --mode full` for a fresh baseline.'
     });
     return;
   }

@@ -3,10 +3,11 @@
  * @script execute-phase1-worktree-plan
  * @summary Execute Phase 1 action-plan artifacts and route fixes inside the current docs-v2 worktree only.
  * @owner docs
- * @scope docs.json, tasks/reports/v1-v2-mapping-audit
+ * @scope tools/utility/personal, docs.json, tasks/reports/v1-v2-mapping-audit
+ * @pipeline manual — personal utility, not for shared pipelines
  *
  * @usage
- *   node tools/scripts/execute-phase1-worktree-plan.js
+ *   node tools/utility/personal/execute-phase1-worktree-plan.js
  *
  * @inputs
  *   tasks/reports/v1-v2-mapping-audit/v1-v2-page-mapping-audit.{json,csv}
@@ -29,7 +30,7 @@
  *   1 = runtime or validation failure
  *
  * @examples
- *   node tools/scripts/execute-phase1-worktree-plan.js
+ *   node tools/utility/personal/execute-phase1-worktree-plan.js
  *
  * @notes
  *   Enforces execution in the docs-v2 worktree path and refuses to run elsewhere.

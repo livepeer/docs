@@ -1,11 +1,12 @@
 #!/bin/bash
 # @script download-linkedin-with-cookies
-# @summary Utility script for tools/scripts/download-linkedin-with-cookies.sh.
+# @summary Utility script for tools/utility/personal/download-linkedin-with-cookies.sh.
 # @owner docs
-# @scope tools/scripts
+# @scope tools/utility/personal, snippets/assets/media/videos
+# @pipeline manual — personal utility, not for shared pipelines
 #
 # @usage
-#   bash tools/scripts/download-linkedin-with-cookies.sh
+#   bash tools/utility/personal/download-linkedin-with-cookies.sh
 #
 # @inputs
 #   No required CLI flags; optional flags are documented inline.
@@ -18,7 +19,7 @@
 #   1 = runtime or validation failure
 #
 # @examples
-#   bash tools/scripts/download-linkedin-with-cookies.sh
+#   bash tools/utility/personal/download-linkedin-with-cookies.sh
 #
 # @notes
 #   Keep script behavior deterministic and update script indexes after changes.
@@ -74,4 +75,3 @@ else
     echo "2. Use a browser extension like Video DownloadHelper"
     echo "3. Use an online downloader (may not work for private posts)"
 fi
-

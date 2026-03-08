@@ -1,28 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script run-all
- * @summary Utility script for tests/run-all.js.
- * @owner docs
- * @scope tests
- *
- * @usage
- *   node tests/run-all.js
- *
- * @inputs
- *   No required CLI flags; optional flags are documented inline.
- *
- * @outputs
- *   - Console output and/or file updates based on script purpose.
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node tests/run-all.js
- *
- * @notes
- *   Keep script behavior deterministic and update script indexes after changes.
+ * @script            run-all
+ * @category          orchestrator
+ * @purpose           infrastructure:pipeline-orchestration
+ * @scope             tests
+ * @owner             docs
+ * @needs             R-R29
+ * @purpose-statement Test orchestrator — dispatches all unit test suites. Called by pre-commit hook and npm test.
+ * @pipeline          P1 (commit, orchestrator)
+ * @usage             node tests/run-all.js [flags]
  */
 /**
  * Main test runner - orchestrates all test suites
@@ -115,6 +101,28 @@ async function runAllTests() {
   totalWarnings += scriptDocsResult.warnings.length;
   console.log(`   ${scriptDocsResult.errors.length} errors, ${scriptDocsResult.warnings.length} warnings`);
 
+  // Usefulness Unit Tests
+  console.log('\n📈 Running Usefulness Unit Tests...');
+  const usefulnessRubricCheck = spawnSync(
+    'node',
+    ['tests/unit/usefulness-rubric.test.js'],
+    { cwd: REPO_ROOT, encoding: 'utf8' }
+  );
+  if (usefulnessRubricCheck.stdout) process.stdout.write(usefulnessRubricCheck.stdout);
+  if (usefulnessRubricCheck.stderr) process.stderr.write(usefulnessRubricCheck.stderr);
+  if (usefulnessRubricCheck.status !== 0) totalErrors += 1;
+
+  const usefulnessJourneyCheck = spawnSync(
+    'node',
+    ['tests/unit/usefulness-journey.test.js'],
+    { cwd: REPO_ROOT, encoding: 'utf8' }
+  );
+  if (usefulnessJourneyCheck.stdout) process.stdout.write(usefulnessJourneyCheck.stdout);
+  if (usefulnessJourneyCheck.stderr) process.stderr.write(usefulnessJourneyCheck.stderr);
+  if (usefulnessJourneyCheck.status !== 0) totalErrors += 1;
+  const usefulnessFailures = (usefulnessRubricCheck.status === 0 ? 0 : 1) + (usefulnessJourneyCheck.status === 0 ? 0 : 1);
+  console.log(`   ${usefulnessFailures} errors, 0 warnings`);
+
   // Pages Index Sync Validation
   console.log('\n🗂️  Running Pages Index Sync Validation...');
   const pagesIndexResult = pagesIndexGenerator.run({ stagedOnly });
@@ -128,18 +136,22 @@ async function runAllTests() {
 
   // Generated Banner Enforcement
   console.log('\n🏷️  Running Generated Banner Enforcement...');
-  const generatedBannerCheck = spawnSync(
-    'node',
-    ['tools/scripts/enforce-generated-file-banners.js', '--check'],
-    { cwd: REPO_ROOT, encoding: 'utf8' }
-  );
-  if (generatedBannerCheck.stdout) process.stdout.write(generatedBannerCheck.stdout);
-  if (generatedBannerCheck.stderr) process.stderr.write(generatedBannerCheck.stderr);
-  if (generatedBannerCheck.status !== 0) {
-    totalErrors += 1;
-    console.log('   1 error, 0 warnings');
+  if (stagedOnly) {
+    console.log('   skipped in --staged mode (covered by changed-file PR checks)');
   } else {
-    console.log('   0 errors, 0 warnings');
+    const generatedBannerCheck = spawnSync(
+      'node',
+      ['tools/scripts/enforce-generated-file-banners.js', '--check'],
+      { cwd: REPO_ROOT, encoding: 'utf8' }
+    );
+    if (generatedBannerCheck.stdout) process.stdout.write(generatedBannerCheck.stdout);
+    if (generatedBannerCheck.stderr) process.stderr.write(generatedBannerCheck.stderr);
+    if (generatedBannerCheck.status !== 0) {
+      totalErrors += 1;
+      console.log('   1 error, 0 warnings');
+    } else {
+      console.log('   0 errors, 0 warnings');
+    }
   }
   
   // Browser Tests (optional)

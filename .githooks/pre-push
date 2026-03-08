@@ -1,31 +1,13 @@
 #!/bin/bash
-# @script pre-push
-# @summary Enforce codex branch task-contract scope checks and block non-fast-forward pushes by default.
-# @owner docs
-# @scope .githooks, tools/scripts/validate-codex-task-contract.js, .codex/task-contract.yaml
-#
-# @usage
-#   ./.githooks/pre-push <remote-name> <remote-url>
-#
-# @inputs
-#   Reads push refs from stdin in the format:
-#     <local-ref> <local-sha> <remote-ref> <remote-sha>
-#   Optional env:
-#     ALLOW_CODEX_FORCE_PUSH=1 (human override; allows non-fast-forward on codex/*)
-#
-# @outputs
-#   - Console validation summary
-#
-# @exit-codes
-#   0 = push allowed
-#   1 = codex enforcement violation
-#
-# @examples
-#   ALLOW_CODEX_FORCE_PUSH=1 git push --force-with-lease origin codex/123-task
-#
-# @notes
-#   Enforcement is scoped to codex/* branches so non-codex workflows remain unchanged.
-
+# @script            pre-push
+# @category          orchestrator
+# @purpose           infrastructure:pipeline-orchestration
+# @scope             .githooks, tools/scripts/validate-codex-task-contract.js, .codex/task-contract.yaml
+# @owner             docs
+# @needs             R-R29
+# @purpose-statement Pre-push hook — blocks push if AI stash files present, codex locks stale, or task contract invalid
+# @pipeline          P2 (push, hook entry point)
+# @usage             bash .githooks/pre-push [flags]
 set -u
 
 RED='\033[0;31m'

@@ -85,8 +85,6 @@ keywords:
 | `tools/scripts/dev/test-seo-generator.js` | Utility script for tools/scripts/dev/test-seo-generator.js. | `node tools/scripts/dev/test-seo-generator.js` | docs |
 | `tools/scripts/dev/update-all-og-images.js` | Utility script for tools/scripts/dev/update-all-og-images.js. | `node tools/scripts/dev/update-all-og-images.js` | docs |
 | `tools/scripts/dev/update-og-image.js` | Utility script for tools/scripts/dev/update-og-image.js. | `node tools/scripts/dev/update-og-image.js` | docs |
-| `tools/scripts/download-linkedin-video.sh` | Utility script for tools/scripts/download-linkedin-video.sh. | `bash tools/scripts/download-linkedin-video.sh` | docs |
-| `tools/scripts/download-linkedin-with-cookies.sh` | Utility script for tools/scripts/download-linkedin-with-cookies.sh. | `bash tools/scripts/download-linkedin-with-cookies.sh` | docs |
 | `tools/scripts/final-verification.js` | Utility script for tools/scripts/final-verification.js. | `node tools/scripts/final-verification.js` | docs |
 | `tools/scripts/find-correct-url.js` | Utility script for tools/scripts/find-correct-url.js. | `node tools/scripts/find-correct-url.js` | docs |
 | `tools/scripts/generate-ai-sitemap.js` | Generate an AI-focused sitemap from v2 docs navigation. | `node tools/scripts/generate-ai-sitemap.js --write` | docs |
@@ -144,7 +142,6 @@ keywords:
 | `tools/scripts/test/test-youtube-pages.js` | Utility script for tools/scripts/test/test-youtube-pages.js. | `node tools/scripts/test/test-youtube-pages.js` | docs |
 | `tools/scripts/test/verify-all-pages.js` | Utility script for tools/scripts/verify-all-pages.js. | `node tools/scripts/verify-all-pages.js` | docs |
 | `tools/scripts/test/verify-pages.js` | Utility script for tools/scripts/verify-pages.js. | `node tools/scripts/verify-pages.js` | docs |
-| `tools/scripts/transcribe-audio-to-mdx.js` | Download audio from URL, chunk with ffmpeg, transcribe via OpenRouter, and write an MDX transcript page. | `OPENROUTER_API_KEY=... node tools/scripts/transcribe-audio-to-mdx.js --audio-url "<url>" --title "<episode title>" --show "<show name>" --published-at YYYY-MM-DD` | docs |
 | `tools/scripts/verify-all-pages.js` | Utility script for tools/scripts/verify-all-pages.js. | `node tools/scripts/verify-all-pages.js` | docs |
 | `tools/scripts/verify-pages.js` | Utility script for tools/scripts/verify-pages.js. | `node tools/scripts/verify-pages.js` | docs |
 | `tools/scripts/verify/.verify-large-change.sh` | Reserved verifier hook placeholder for large-change checks. | `bash tools/scripts/verify/.verify-large-change.sh` | docs |

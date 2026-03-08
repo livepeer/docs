@@ -16,9 +16,11 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 const { execSync } = require('child_process');
+const { listMintIgnoredRepoPaths } = require('../utils/mintignore');
 
 const REPORT_MD_REL = 'tasks/reports/navigation-links/navigation-report.md';
 const REPORT_JSON_REL = 'tasks/reports/navigation-links/navigation-report.json';
+const I18N_CONFIG_REL = 'tools/i18n/config.json';
 const DEFAULT_REMAP_THRESHOLD = 0.85;
 const RESOURCE_HUB_REDIRECT_ROUTE = 'v2/resources/redirect';
 const RESOURCE_HUB_PORTAL_ROUTE = 'v2/resources/resources-portal';
@@ -171,6 +173,116 @@ function normalizeRoute(rawValue) {
   return value;
 }
 
+function normalizeOrphanRouteKey(rawValue) {
+  let value = toPosix(String(rawValue || '').trim());
+  value = value.replace(/^\/+/, '');
+  value = value.replace(/\.(md|mdx)$/i, '');
+  value = value.replace(/\/index$/i, '');
+  value = value.replace(/\/README$/i, '');
+  value = value.replace(/\/+$/, '');
+  return value;
+}
+
+function loadI18nTargetLanguages(repoRoot) {
+  const configPath = path.join(repoRoot, I18N_CONFIG_REL);
+  if (!fs.existsSync(configPath)) return new Set();
+
+  try {
+    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    const languages = Array.isArray(config?.targetLanguages) ? config.targetLanguages : [];
+    return new Set(
+      languages
+        .map((language) => String(language || '').trim())
+        .filter(Boolean)
+    );
+  } catch (_error) {
+    return new Set();
+  }
+}
+
+function getV2EnglishNavigationRouteKeys(docsJson) {
+  const versions = Array.isArray(docsJson?.navigation?.versions) ? docsJson.navigation.versions : [];
+  const v2VersionIndex = versions.findIndex((versionNode) => versionNode?.version === 'v2');
+  if (v2VersionIndex === -1) return new Set();
+
+  const languages = Array.isArray(versions[v2VersionIndex]?.languages) ? versions[v2VersionIndex].languages : [];
+  const englishLanguageIndex = languages.findIndex((languageNode) => languageNode?.language === 'en');
+  if (englishLanguageIndex === -1) return new Set();
+
+  const pointer = `navigation.versions[${v2VersionIndex}].languages[${englishLanguageIndex}]`;
+  const entries = collectPageEntries(languages[englishLanguageIndex], pointer);
+  const routeKeys = new Set();
+
+  entries.forEach(({ value }) => {
+    const normalized = normalizeOrphanRouteKey(value);
+    if (normalized.startsWith('v2/')) {
+      routeKeys.add(normalized);
+    }
+  });
+
+  return routeKeys;
+}
+
+function toOrphanRouteKeyFromFile(repoRoot, filePath) {
+  const relPath = path.isAbsolute(filePath) ? path.relative(repoRoot, filePath) : filePath;
+  return normalizeOrphanRouteKey(relPath);
+}
+
+function shouldExcludeOrphanCandidate(relPath, localeSet) {
+  const normalized = toPosix(relPath).replace(/^\/+/, '');
+  if (!normalized.startsWith('v2/')) return true;
+
+  const segments = normalized.split('/');
+  const topLevelDir = segments[1] || '';
+  if (localeSet.has(topLevelDir)) return true;
+  if (topLevelDir === 'internal') return true;
+
+  if (segments.some((segment) => String(segment || '').toLowerCase().startsWith('x-'))) {
+    return true;
+  }
+
+  if (
+    normalized.includes('/views/') ||
+    normalized.includes('/groups/') ||
+    normalized.includes('/_contextData_/') ||
+    normalized.includes('/_context_data_/') ||
+    normalized.includes('/_move_me/') ||
+    normalized.includes('/_tests-to-delete/')
+  ) {
+    return true;
+  }
+
+  if (
+    normalized === 'v2/index.mdx' ||
+    normalized === 'v2/README.mdx' ||
+    normalized === 'v2/todo.mdx' ||
+    normalized === 'v2/NOTES_V2.md'
+  ) {
+    return true;
+  }
+
+  return /^v2\/pages\/.*template[^/]*\.(md|mdx)$/i.test(normalized);
+}
+
+function collectOrphanedV2Pages(repoRoot, docsJson) {
+  const localeSet = loadI18nTargetLanguages(repoRoot);
+  const navRouteKeys = getV2EnglishNavigationRouteKeys(docsJson);
+  if (navRouteKeys.size === 0) return [];
+
+  const v2Root = path.join(repoRoot, 'v2');
+  const allFiles = walkDocsFiles(v2Root)
+    .filter((filePath) => /\.mdx$/i.test(filePath))
+    .map((filePath) => toPosix(path.relative(repoRoot, filePath)));
+
+  return allFiles
+    .filter((relPath) => !shouldExcludeOrphanCandidate(relPath, localeSet))
+    .filter((relPath) => {
+      const routeKey = toOrphanRouteKeyFromFile(repoRoot, relPath);
+      return routeKey && !navRouteKeys.has(routeKey);
+    })
+    .sort((a, b) => a.localeCompare(b));
+}
+
 function resolveRouteToFile(repoRoot, route) {
   const normalized = normalizeRoute(route);
   if (!normalized) return null;
@@ -223,6 +335,46 @@ function resolveRouteWithAliases(repoRoot, docsJson, rawRoute) {
   if (viaRedirect) return viaRedirect;
 
   return resolveRouteViaCanonicalMap(repoRoot, rawRoute);
+}
+
+function collectIgnoredResolvedDocsPaths(repoRoot, docsJson, entries) {
+  const routeChecks = [];
+
+  entries.forEach(({ value, pointer }) => {
+    const resolved = resolveRouteWithAliases(repoRoot, docsJson, value);
+    if (!resolved) return;
+
+    routeChecks.push({
+      kind: 'navigation',
+      pointer,
+      route: String(value),
+      resolved
+    });
+  });
+
+  const redirects = Array.isArray(docsJson?.redirects) ? docsJson.redirects : [];
+  redirects.forEach((redirect, index) => {
+    if (!redirect || typeof redirect !== 'object') return;
+    const source = String(redirect.source || '').trim();
+    const destination = String(redirect.destination || '').trim();
+    const resolved = resolveRouteToFile(repoRoot, destination);
+    if (!resolved) return;
+
+    routeChecks.push({
+      kind: 'redirect',
+      pointer: `redirects[${index}]`,
+      route: source,
+      destination,
+      resolved
+    });
+  });
+
+  const ignoredResolvedPaths = listMintIgnoredRepoPaths(
+    routeChecks.map((entry) => entry.resolved),
+    { rootDir: repoRoot }
+  );
+
+  return routeChecks.filter((entry) => ignoredResolvedPaths.has(entry.resolved));
 }
 
 function countSharedPrefix(aSegments, bSegments) {
@@ -764,7 +916,29 @@ function runTests(options = {}) {
     }
   });
 
+  const orphanedPages = collectOrphanedV2Pages(repoRoot, docsJson);
+  orphanedPages.forEach((filePath) => {
+    warnings.push({
+      file: filePath,
+      rule: 'Orphaned page',
+      message: 'Canonical v2 page exists on disk but is not represented in docs.json v2/en navigation'
+    });
+  });
+
   const missingWithSuggestions = missingRoutes.filter((item) => item.suggestions.length > 0).length;
+  const ignoredResolvedRoutes = collectIgnoredResolvedDocsPaths(repoRoot, docsJson, entries);
+  ignoredResolvedRoutes.forEach((issue) => {
+    const routeLabel = issue.kind === 'redirect'
+      ? `"${issue.route}" -> "${issue.destination}"`
+      : `"${issue.route}"`;
+    errors.push({
+      file: '.mintignore',
+      rule: 'Routed page ignored',
+      message: `${issue.kind} route ${routeLabel} resolves to "${issue.resolved}", but that file is excluded by .mintignore`,
+      pointer: issue.pointer
+    });
+  });
+
   const reportData = buildReportData({
     generatedAt: new Date().toISOString(),
     totalEntries: entries.length,

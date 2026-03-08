@@ -1,43 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script v2-wcag-audit
- * @summary Audit v2 docs.json navigation pages for accessibility (WCAG 2.2 AA) with deterministic reports and conservative source autofixes.
- * @owner docs
- * @scope tests/integration, tests/utils, tasks/reports, v2
- *
- * @usage
- *   node tests/integration/v2-wcag-audit.js --full
- *
- * @inputs
- *   --full (default)
- *   --staged
- *   --files <path[,path...]> (repeatable; explicit files mode)
- *   --no-mintignore (include files ignored by .mintignore)
- *   --fix | --no-fix (default: --fix)
- *   --stage (git add only content files changed by autofix)
- *   --max-pages <n> (limit browser-audited pages)
- *   --base-url <url> (default: local server via .githooks/server-manager or MINT_BASE_URL)
- *   --fail-impact <critical|serious|moderate|minor|none> (default: serious)
- *   --report <path> (markdown report path)
- *   --report-json <path> (json report path)
- *
- * @outputs
- *   - tasks/reports/quality-accessibility/v2-wcag-audit-report.md (default full/manual report)
- *   - tasks/reports/quality-accessibility/v2-wcag-audit-report.json (default full/manual report)
- *   - Console summary
- *   - v2/*.mdx or v2/*.md changes only when --fix (default) applies conservative autofixes
- *
- * @exit-codes
- *   0 = no blocking WCAG/static issues at/above fail threshold
- *   1 = blocking WCAG/static issues remain, or invalid args/runtime script failure
- *
- * @examples
- *   node tests/integration/v2-wcag-audit.js --full
- *   node tests/integration/v2-wcag-audit.js --staged --fix --stage --max-pages 10 --fail-impact serious
- *   node tests/integration/v2-wcag-audit.js --files v2/home/primer.mdx --no-fix
- *
- * @notes
- *   Uses automated WCAG checks (axe-core) plus conservative static/autofix heuristics; this is partial coverage and does not replace manual accessibility review.
+ * @script            v2-wcag-audit
+ * @category          validator
+ * @purpose           qa:content-quality
+ * @scope             tests/integration, tests/utils, tasks/reports, v2
+ * @owner             docs
+ * @needs             E-R1, R-R11
+ * @purpose-statement WCAG accessibility audit for v2 pages — checks heading hierarchy, alt text, ARIA. Supports --fix mode for auto-repair.
+ * @pipeline          P6 (on-demand, WCAG audit/repair)
+ * @usage             node tests/integration/v2-wcag-audit.js [flags]
  */
 
 const fs = require('fs');

@@ -1,28 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script mdx-parser
- * @summary Utility script for tests/utils/mdx-parser.js.
- * @owner docs
- * @scope tests
- *
- * @usage
- *   node tests/utils/mdx-parser.js
- *
- * @inputs
- *   No required CLI flags; optional flags are documented inline.
- *
- * @outputs
- *   - Console output and/or file updates based on script purpose.
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node tests/utils/mdx-parser.js
- *
- * @notes
- *   Keep script behavior deterministic and update script indexes after changes.
+ * @script            mdx-parser
+ * @category          validator
+ * @purpose           tooling:dev-tools
+ * @scope             tests
+ * @owner             docs
+ * @needs             E-C6, F-C1
+ * @purpose-statement MDX parser utility — extracts frontmatter, components, content blocks from MDX files
+ * @pipeline          indirect — library module
+ * @usage             node tests/utils/mdx-parser.js [flags]
  */
 /**
  * MDX parsing utilities for validation

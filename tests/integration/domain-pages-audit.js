@@ -1,34 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script domain-pages-audit
- * @summary Audit deployed docs page load status and emit a stable JSON report.
- * @owner docs
- * @scope tests/integration, tests/reports, docs.livepeer.org
- *
- * @usage
- *   node tests/integration/domain-pages-audit.js --version both
- *
- * @inputs
- *   --version v1|v2|both (default: both)
- *   --staged (only staged docs pages)
- *   --base-url <url> (default: https://docs.livepeer.org)
- *   DOMAIN_AUDIT_VERSION (default: both)
- *   MINT_BASE_URL (fallback base URL)
- *
- * @outputs
- *   - tests/reports/domain-page-load-report.json
- *
- * @exit-codes
- *   0 = all checked pages passed
- *   1 = any checked page failed or invalid --version value
- *
- * @examples
- *   node tests/integration/domain-pages-audit.js --staged --version v2
- *   node tests/integration/domain-pages-audit.js --base-url https://docs.livepeer.org --version both
- *
- * @notes
- *   Overwrites the same report file each run to avoid report sprawl.
- *   In --staged mode with no matching pages, exits without rewriting reports to avoid timestamp churn.
+ * @script            domain-pages-audit
+ * @category          validator
+ * @purpose           qa:repo-health
+ * @scope             tests/integration, tests/reports, docs.livepeer.org
+ * @owner             docs
+ * @needs             E-C1, R-R14
+ * @purpose-statement Audits deployed docs page HTTP status codes (v1, v2, or both) and emits a stable JSON report
+ * @pipeline          manual — not yet in pipeline
+ * @usage             node tests/integration/domain-pages-audit.js [flags]
  */
 
 const fs = require('fs');

@@ -1,30 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script openapi-rolling-issue
- * @summary Shared helpers for OpenAPI rolling issue formatting, dedupe, and action selection.
- * @owner docs
- * @scope tests/utils, tests/unit, .github/workflows/openapi-reference-validation.yml
- *
- * @usage
- *   const helpers = require('./tests/utils/openapi-rolling-issue');
- *
- * @inputs
- *   - findings[] objects from openapi-reference-audit JSON report.
- *   - issue search result items from GitHub API.
- *
- * @outputs
- *   - Deterministic top-findings text.
- *   - Issue body text with required headings.
- *   - Action decision: create|update|close|noop.
- *
- * @exit-codes
- *   0 = helper module loaded and used by callers.
- *
- * @examples
- *   const top = helpers.buildTopFindings(report.findings, 30);
- *
- * @notes
- *   This module is intentionally pure and free of GitHub API side effects.
+ * @script            openapi-rolling-issue
+ * @category          validator
+ * @purpose           tooling:api-spec
+ * @scope             tests/utils, tests/unit, .github/workflows/openapi-reference-validation.yml
+ * @owner             docs
+ * @needs             F-R17
+ * @purpose-statement OpenAPI rolling issue utility — creates/updates GitHub issues for persistent OpenAPI audit findings
+ * @pipeline          indirect — library module
+ * @usage             node tests/utils/openapi-rolling-issue.js [flags]
  */
 
 const ROLLING_ISSUE_MARKER = '<!-- openapi-reference-audit -->';

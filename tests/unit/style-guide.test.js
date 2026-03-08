@@ -18,6 +18,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 const { getMdxFiles, getJsxFiles, getStagedDocsPageFiles, readFile } = require('../utils/file-walker');
+const { collectVisibleMdxLines, isEnglishV2DocPath } = require('../../tools/lib/mdx-visible-text');
 
 const REPO_ROOT = process.cwd();
 let errors = [];
@@ -72,6 +73,13 @@ function shouldCheckLine(file, line, stagedOnly) {
   }
 
   return changedLines.has(line);
+}
+
+function shouldCheckEmDashFile(file, explicitlyProvided = false) {
+  if (!String(file || '').endsWith('.mdx')) return false;
+  if (String(file).includes('style-guide.mdx')) return false;
+  if (explicitlyProvided) return true;
+  return isEnglishV2DocPath(file, REPO_ROOT);
 }
 
 /**
@@ -174,6 +182,34 @@ function checkInlineStylesInMdx(files, stagedOnly = false) {
       }
     });
   });
+}
+
+/**
+ * Check for em dash usage in English v2 docs prose.
+ */
+function checkEmDashes(files, stagedOnly = false, explicitlyProvided = false) {
+  files
+    .filter((file) => shouldCheckEmDashFile(file, explicitlyProvided))
+    .forEach((file) => {
+      const content = readFile(file);
+      if (!content) return;
+
+      const lines = collectVisibleMdxLines(content, {
+        frontmatterFields: ['title', 'description']
+      });
+
+      lines.forEach((lineEntry) => {
+        if (!lineEntry.visibleText.includes('—')) return;
+        if (!shouldCheckLine(file, lineEntry.line, stagedOnly)) return;
+
+        errors.push({
+          file,
+          rule: 'No em dashes',
+          message: 'Em dash detected - replace — with spaced en dash ( – ) or rewrite the sentence',
+          line: lineEntry.line
+        });
+      });
+    });
 }
 
 /**
@@ -303,6 +339,7 @@ function runTests(options = {}) {
   stagedLineMap = null;
   
   const { files = null, stagedOnly = false } = options;
+  const explicitlyProvided = Array.isArray(files);
   
   let testFiles = files;
   if (!testFiles) {
@@ -326,6 +363,7 @@ function runTests(options = {}) {
   checkThemeData(testFiles, stagedOnly);
   checkHardcodedColors(testFiles, stagedOnly);
   checkInlineStylesInMdx(testFiles, stagedOnly);
+  checkEmDashes(testFiles, stagedOnly, explicitlyProvided);
   checkTailwindClasses(testFiles, stagedOnly);
   checkImportPaths(testFiles, stagedOnly);
   checkFileNaming(testFiles);

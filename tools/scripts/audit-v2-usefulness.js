@@ -48,31 +48,47 @@
  *   Emits a deterministic usefulness matrix now (rules-only scoring) and supports live Tier 2 verification via GitHub + DeepWiki/official fetch strategies.
  */
 
+'use strict';
+
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { execSync } = require('child_process');
-
 const {
-  DEFAULT_AS_OF_DATE,
-  createLiveTier2Provider,
-  createTier2Provider,
-  createVerificationCache,
-  extractTier1Claims,
-  loadAccuracySourceRegistry,
-  loadAccuracySourceWeights,
-  parseBoolean,
-  parseCsvList,
-  parseVerifySourcesOption,
-  toPosix,
-  verifyPageAccuracy
-} = require('../lib/docs-usefulness/accuracy-verifier');
-const {
-  analyzeMdxPage,
-  buildUsefulnessMatrixFields
-} = require('../lib/docs-usefulness/scoring');
+  getDocsJsonRouteKeys,
+  toDocsRouteKeyFromFileV2Aware
+} = require('../../tests/utils/file-walker');
+const { analyzeMdxPage, scorePage, computeBand } = require('../lib/docs-usefulness/scoring');
+const { getRulesForPage } = require('../lib/docs-usefulness/rubric-loader');
+const { checkJourneys } = require('../lib/docs-usefulness/journey-check');
+const { LlmEvaluator } = require('../lib/docs-usefulness/llm-evaluator');
+const prompts = require('../lib/docs-usefulness/prompts');
+const { loadAndValidateUsefulnessConfig } = require('../lib/docs-usefulness/config-validator');
 
-const DEFAULT_VERIFY_TIMEOUT_MS = 10000;
-const DEFAULT_VERIFY_MAX_REQUESTS = 200;
+const REMOVED_FLAGS = new Set([
+  '--accuracy-mode',
+  '--as-of',
+  '--verify-sources',
+  '--github-repos',
+  '--deepwiki-enabled',
+  '--deepwiki-base-url',
+  '--official-docs-base-url',
+  '--github-results-per-repo',
+  '--verification-cache-dir',
+  '--verification-max-requests',
+  '--verification-timeout-ms',
+  '--verification-fixture',
+  '--scoring-engine'
+]);
+
+const BASELINE_DEFAULT_REL = path.join(
+  'tasks',
+  'reports',
+  'quality-accessibility',
+  'docs-usefulness 2',
+  'full-run-2026-02-23',
+  'page-matrix.csv'
+);
 
 function getRepoRoot() {
   try {
@@ -82,833 +98,764 @@ function getRepoRoot() {
   }
 }
 
+function toPosix(filePath) {
+  return String(filePath || '').split(path.sep).join('/');
+}
+
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
 }
 
-function parseArgs(argv) {
-  const registry = loadAccuracySourceRegistry();
+function parseCsv(raw, fallback = []) {
+  if (!raw) return [...fallback];
+  return String(raw)
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+
+function parseBoolean(raw, fallback) {
+  if (raw === undefined || raw === null) return fallback;
+  const value = String(raw).trim().toLowerCase();
+  if (['1', 'true', 'yes', 'on'].includes(value)) return true;
+  if (['0', 'false', 'no', 'off'].includes(value)) return false;
+  return fallback;
+}
+
+function parseArgs(argv, repoRoot) {
+  for (const token of argv) {
+    if (REMOVED_FLAGS.has(token)) {
+      throw new Error(`Deprecated flag ${token} is removed. Run without accuracy-verification options; usefulness audit is now purpose-aware by default.`);
+    }
+  }
+
   const args = {
     mode: 'full',
     files: [],
-    asOf: DEFAULT_AS_OF_DATE,
-    accuracyMode: 'tiered',
-    verifySources: registry.default_verify_sources || ['github', 'deepwiki', 'official'],
-    githubRepos: [
-      'livepeer/go-livepeer',
-      'livepeer/livepeerjs',
-      'livepeer/docs',
-      'livepeer/livepeer-protocol'
-    ],
-    deepwikiEnabled: true,
-    deepwikiBaseUrl: 'https://deepwiki.com',
-    officialDocsBaseUrl: 'https://docs.livepeer.org',
-    githubResultsPerRepo: 2,
-    verificationCacheDir: null,
-    verificationMaxRequests: DEFAULT_VERIFY_MAX_REQUESTS,
-    verificationTimeoutMs: DEFAULT_VERIFY_TIMEOUT_MS,
-    scoringEngine: 'rules-only',
-    outDir: null,
+    outDir: path.join(repoRoot, 'tasks', 'reports', 'quality-accessibility', 'docs-usefulness', 'latest'),
     format: ['jsonl', 'csv', 'json', 'md'],
     maxPages: null,
-    verificationFixture: null
+    llm: false,
+    llmTier: 'free',
+    llmBudget: null,
+    llmSample: 100,
+    llmResume: true,
+    journey: true,
+    purposeAware: true,
+    legacyRubric: false
   };
 
   for (let i = 0; i < argv.length; i += 1) {
     const token = argv[i];
     if (token === '--mode') {
-      args.mode = String(argv[i + 1] || args.mode);
+      args.mode = String(argv[i + 1] || args.mode).trim();
       i += 1;
       continue;
     }
     if (token === '--files' || token === '--file') {
-      const parts = parseCsvList(argv[i + 1], []);
-      args.files.push(...parts);
-      i += 1;
-      continue;
-    }
-    if (token === '--as-of') {
-      args.asOf = String(argv[i + 1] || args.asOf);
-      i += 1;
-      continue;
-    }
-    if (token === '--accuracy-mode') {
-      args.accuracyMode = String(argv[i + 1] || args.accuracyMode);
-      i += 1;
-      continue;
-    }
-    if (token === '--verify-sources') {
-      args.verifySources = parseVerifySourcesOption(argv[i + 1], registry);
-      i += 1;
-      continue;
-    }
-    if (token === '--github-repos') {
-      args.githubRepos = parseCsvList(argv[i + 1], args.githubRepos);
-      i += 1;
-      continue;
-    }
-    if (token === '--deepwiki-enabled') {
-      args.deepwikiEnabled = parseBoolean(argv[i + 1], args.deepwikiEnabled);
-      i += 1;
-      continue;
-    }
-    if (token === '--deepwiki-base-url') {
-      args.deepwikiBaseUrl = String(argv[i + 1] || args.deepwikiBaseUrl).trim() || args.deepwikiBaseUrl;
-      i += 1;
-      continue;
-    }
-    if (token === '--official-docs-base-url') {
-      args.officialDocsBaseUrl = String(argv[i + 1] || args.officialDocsBaseUrl).trim() || args.officialDocsBaseUrl;
-      i += 1;
-      continue;
-    }
-    if (token === '--github-results-per-repo') {
-      const parsed = Number(argv[i + 1]);
-      if (Number.isFinite(parsed) && parsed > 0) args.githubResultsPerRepo = parsed;
-      i += 1;
-      continue;
-    }
-    if (token === '--verification-cache-dir') {
-      args.verificationCacheDir = String(argv[i + 1] || '').trim() || null;
-      i += 1;
-      continue;
-    }
-    if (token === '--verification-max-requests') {
-      const parsed = Number(argv[i + 1]);
-      if (Number.isFinite(parsed) && parsed > 0) args.verificationMaxRequests = parsed;
-      i += 1;
-      continue;
-    }
-    if (token === '--verification-timeout-ms') {
-      const parsed = Number(argv[i + 1]);
-      if (Number.isFinite(parsed) && parsed > 0) args.verificationTimeoutMs = parsed;
-      i += 1;
-      continue;
-    }
-    if (token === '--scoring-engine') {
-      args.scoringEngine = String(argv[i + 1] || args.scoringEngine).trim() || args.scoringEngine;
+      args.files.push(...parseCsv(argv[i + 1], []));
       i += 1;
       continue;
     }
     if (token === '--out-dir') {
-      args.outDir = String(argv[i + 1] || '').trim() || null;
+      const raw = String(argv[i + 1] || '').trim();
+      if (raw) args.outDir = path.resolve(repoRoot, raw);
       i += 1;
       continue;
     }
     if (token === '--format') {
-      args.format = parseCsvList(argv[i + 1], args.format);
+      args.format = parseCsv(argv[i + 1], args.format);
       i += 1;
       continue;
     }
     if (token === '--max-pages') {
       const parsed = Number(argv[i + 1]);
-      if (Number.isFinite(parsed) && parsed > 0) args.maxPages = parsed;
+      if (Number.isFinite(parsed) && parsed > 0) {
+        args.maxPages = parsed;
+      }
       i += 1;
       continue;
     }
-    if (token === '--verification-fixture') {
-      args.verificationFixture = String(argv[i + 1] || '').trim() || null;
+    if (token === '--llm') {
+      args.llm = true;
+      continue;
+    }
+    if (token === '--llm-tier') {
+      args.llmTier = String(argv[i + 1] || args.llmTier).trim();
       i += 1;
+      continue;
+    }
+    if (token === '--llm-budget') {
+      const parsed = Number(argv[i + 1]);
+      if (Number.isFinite(parsed) && parsed >= 0) args.llmBudget = parsed;
+      i += 1;
+      continue;
+    }
+    if (token === '--llm-sample') {
+      const parsed = Number(argv[i + 1]);
+      if (Number.isFinite(parsed) && parsed >= 1 && parsed <= 100) args.llmSample = parsed;
+      i += 1;
+      continue;
+    }
+    if (token === '--llm-resume') {
+      const next = argv[i + 1];
+      if (next && !next.startsWith('--')) {
+        args.llmResume = parseBoolean(next, true);
+        i += 1;
+      } else {
+        args.llmResume = true;
+      }
+      continue;
+    }
+    if (token === '--journey') {
+      args.journey = true;
+      continue;
+    }
+    if (token === '--no-journey') {
+      args.journey = false;
+      continue;
+    }
+    if (token === '--purpose-aware') {
+      args.purposeAware = true;
+      continue;
+    }
+    if (token === '--legacy-rubric') {
+      args.legacyRubric = true;
       continue;
     }
   }
 
-  args.files = [...new Set(args.files.map((file) => String(file).trim()).filter(Boolean))];
-  if (args.files.length > 0) args.mode = 'files';
-  if (args.accuracyMode === 'local-only') {
-    args.deepwikiEnabled = false;
+  args.files = [...new Set(args.files)];
+  if (args.files.length > 0) {
+    args.mode = 'files';
   }
-  if (args.outDir === null) {
-    args.outDir = path.join(getRepoRoot(), 'tasks', 'reports', 'quality-accessibility', 'docs-usefulness', 'latest');
-  } else {
-    args.outDir = path.resolve(getRepoRoot(), args.outDir);
+  if (args.mode === 'files') {
+    args.journey = false;
   }
-  if (!args.verificationCacheDir) {
-    args.verificationCacheDir = path.join(args.outDir, 'verification-cache');
-  } else {
-    args.verificationCacheDir = path.resolve(getRepoRoot(), args.verificationCacheDir);
+  if (args.legacyRubric) {
+    args.purposeAware = false;
   }
 
   return args;
 }
 
-function walkMdxFiles(dirPath, out = []) {
-  if (!fs.existsSync(dirPath)) return out;
-  const entries = fs.readdirSync(dirPath, { withFileTypes: true });
-  for (const entry of entries) {
-    if (entry.name.startsWith('x-') && entry.isDirectory()) continue;
-    const fullPath = path.join(dirPath, entry.name);
-    if (entry.isDirectory()) {
-      walkMdxFiles(fullPath, out);
-      continue;
-    }
-    if (entry.name.endsWith('.mdx')) {
-      out.push(fullPath);
-    }
+function normalizeRouteKey(value) {
+  let route = toPosix(value || '').trim();
+  route = route.replace(/^\/+/, '');
+  route = route.replace(/\.(md|mdx)$/i, '');
+  route = route.replace(/\/index$/i, '');
+  route = route.replace(/\/+/g, '/');
+  route = route.replace(/\s+$/g, '');
+  return route;
+}
+
+function collectPagesFromNode(node, out = []) {
+  if (typeof node === 'string') {
+    const value = normalizeRouteKey(node);
+    if (value.startsWith('v2/')) out.push(value);
+    return out;
   }
+
+  if (Array.isArray(node)) {
+    node.forEach((item) => collectPagesFromNode(item, out));
+    return out;
+  }
+
+  if (!node || typeof node !== 'object') {
+    return out;
+  }
+
+  if (Array.isArray(node.pages)) {
+    node.pages.forEach((item) => collectPagesFromNode(item, out));
+  }
+
+  Object.values(node).forEach((value) => collectPagesFromNode(value, out));
   return out;
 }
 
-function collectChangedV2MdxFiles(repoRoot) {
+function loadEnV2Routes(repoRoot) {
+  const docsJson = JSON.parse(fs.readFileSync(path.join(repoRoot, 'docs.json'), 'utf8'));
+  const v2 = (docsJson.navigation?.versions || []).find((version) => version.version === 'v2');
+  if (!v2) return [];
+
+  const languages = v2.languages || {};
+  const languageEntries = Object.values(languages);
+  const english = languageEntries.find((entry) => String(entry?.language || '').toLowerCase() === 'en') || languageEntries[0] || {};
+
+  const entries = collectPagesFromNode(english, []);
+  const deduped = [...new Set(entries.map(normalizeRouteKey).filter(Boolean))];
+  return deduped.filter((route) => route.startsWith('v2/')).sort((a, b) => a.localeCompare(b));
+}
+
+function routeToCandidates(routeKey) {
+  const route = normalizeRouteKey(routeKey);
+  return [`${route}.mdx`, `${route}/index.mdx`, `${route}.md`];
+}
+
+function resolveRouteToFile(routeKey, repoRoot) {
+  const candidates = routeToCandidates(routeKey);
+  for (const rel of candidates) {
+    const abs = path.join(repoRoot, rel);
+    if (fs.existsSync(abs)) return toPosix(rel);
+  }
+  return null;
+}
+
+function collectChangedRouteKeys(repoRoot, allowedRoutes) {
   try {
     const output = execSync('git diff --name-only --diff-filter=ACMR HEAD', {
       cwd: repoRoot,
       encoding: 'utf8'
     });
-    return output
+    const changed = output
       .split('\n')
-      .map((line) => line.trim())
+      .map((line) => normalizeRouteKey(line.trim()))
       .filter(Boolean)
-      .filter((rel) => rel.startsWith('v2/') && rel.endsWith('.mdx'))
-      .filter((rel) => !rel.split('/').some((segment) => segment.startsWith('x-')))
-      .map((rel) => path.join(repoRoot, rel));
+      .filter((route) => route.startsWith('v2/'));
+
+    const allowed = new Set(allowedRoutes);
+    return [...new Set(changed)].filter((route) => {
+      if (allowed.has(route)) return true;
+      if (/\.mdx?$/.test(route)) {
+        return allowed.has(normalizeRouteKey(route));
+      }
+      return false;
+    });
   } catch (_error) {
     return [];
   }
 }
 
-function discoverTargetFiles(repoRoot, args) {
-  if (args.mode === 'files') {
-    return args.files
-      .map((file) => path.resolve(repoRoot, file))
-      .filter((file) => fs.existsSync(file))
-      .filter((file) => file.endsWith('.mdx'))
-      .filter((file) => {
-        const rel = toPosix(path.relative(repoRoot, file));
-        return rel.startsWith('v2/') && !rel.split('/').some((segment) => segment.startsWith('x-'));
-      })
-      .sort();
-  }
+function collectRequestedRouteKeys(rawFiles, allowedRoutes) {
+  const allowed = new Set(allowedRoutes);
+  const selected = [];
 
-  if (args.mode === 'changed') {
-    const changed = collectChangedV2MdxFiles(repoRoot).sort();
-    if (changed.length > 0) return changed;
-  }
+  rawFiles.forEach((value) => {
+    const normalized = normalizeRouteKey(value);
+    if (!normalized) return;
+    if (allowed.has(normalized)) {
+      selected.push(normalized);
+      return;
+    }
 
-  return walkMdxFiles(path.join(repoRoot, 'v2')).sort();
+    const asRoute = toDocsRouteKeyFromFileV2Aware(normalized, process.cwd());
+    if (asRoute && allowed.has(asRoute)) {
+      selected.push(asRoute);
+    }
+  });
+
+  return [...new Set(selected)].sort((a, b) => a.localeCompare(b));
 }
 
-function fileToRoutePath(repoRoot, absPath) {
-  const rel = toPosix(path.relative(repoRoot, absPath));
-  let route = rel.replace(/^v2\//, '/v2/').replace(/\.mdx$/i, '');
-  route = route.replace(/\/index$/i, '');
-  return route;
+function hashForSampling(seed, value) {
+  const hex = crypto.createHash('md5').update(`${seed}:${value}`).digest('hex').slice(0, 8);
+  return parseInt(hex, 16);
 }
 
-function loadFixtureMap(fixturePath, repoRoot) {
-  if (!fixturePath) return {};
-  const abs = path.resolve(repoRoot, fixturePath);
-  if (!fs.existsSync(abs)) return {};
-  try {
-    const data = JSON.parse(fs.readFileSync(abs, 'utf8'));
-    return data.claims || data.fixturesByClaimId || {};
-  } catch (_error) {
-    return {};
-  }
+function sampleRows(rows, pct) {
+  if (pct >= 100) return rows;
+  const keep = Math.max(1, Math.floor((rows.length * pct) / 100));
+  const seed = new Date().toISOString().slice(0, 10);
+  return [...rows]
+    .map((row) => ({ row, rank: hashForSampling(seed, row.path) }))
+    .sort((a, b) => a.rank - b.rank)
+    .slice(0, keep)
+    .map((entry) => entry.row);
 }
 
 function escapeCsv(value) {
-  const text = typeof value === 'string' ? value : JSON.stringify(value);
-  if (text === undefined) return '';
+  const text = value === undefined || value === null ? '' : String(value);
   if (/[",\n]/.test(text)) {
-    return `"${String(text).replace(/"/g, '""')}"`;
+    return `"${text.replace(/"/g, '""')}"`;
   }
-  return String(text);
+  return text;
 }
 
 function writeJsonl(filePath, rows) {
-  const content = rows.map((row) => JSON.stringify(row)).join('\n') + (rows.length ? '\n' : '');
-  fs.writeFileSync(filePath, content);
+  const output = rows.map((row) => JSON.stringify(row)).join('\n');
+  fs.writeFileSync(filePath, output ? `${output}\n` : '');
 }
 
 function writeCsv(filePath, rows) {
-  if (!rows.length) {
-    fs.writeFileSync(filePath, '');
+  const columns = [
+    'path',
+    'route_path',
+    'section',
+    'purpose',
+    'purpose_source',
+    'audience',
+    'audience_source',
+    'tier1_score',
+    'tier2_score',
+    'combined_score',
+    'quality_gate_status',
+    'quality_gate_errors',
+    'agent_score',
+    'band',
+    'flags'
+  ];
+
+  const lines = [columns.join(',')];
+  rows.forEach((row) => {
+    const values = columns.map((column) => {
+      const value = column === 'flags' ? (row.flags || []).join('|') : row[column];
+      return escapeCsv(value);
+    });
+    lines.push(values.join(','));
+  });
+  fs.writeFileSync(filePath, `${lines.join('\n')}\n`);
+}
+
+function parseCsvRows(raw) {
+  const rows = [];
+  const lines = String(raw || '').split('\n').filter(Boolean);
+  if (lines.length === 0) return rows;
+
+  function parseLine(line) {
+    const out = [];
+    let current = '';
+    let inQuote = false;
+    for (let i = 0; i < line.length; i += 1) {
+      const ch = line[i];
+      if (ch === '"') {
+        if (inQuote && line[i + 1] === '"') {
+          current += '"';
+          i += 1;
+        } else {
+          inQuote = !inQuote;
+        }
+      } else if (ch === ',' && !inQuote) {
+        out.push(current);
+        current = '';
+      } else {
+        current += ch;
+      }
+    }
+    out.push(current);
+    return out;
+  }
+
+  const headers = parseLine(lines[0]);
+  for (let i = 1; i < lines.length; i += 1) {
+    const values = parseLine(lines[i]);
+    const row = {};
+    headers.forEach((header, idx) => {
+      row[header] = values[idx] || '';
+    });
+    rows.push(row);
+  }
+  return rows;
+}
+
+function computeSectionSummary(rows) {
+  const stats = new Map();
+  rows.forEach((row) => {
+    const key = row.section || 'unknown';
+    if (!stats.has(key)) {
+      stats.set(key, {
+        section: key,
+        pages: 0,
+        combined: 0,
+        agent: 0,
+        qualityPass: 0,
+        purposeCovered: 0
+      });
+    }
+    const section = stats.get(key);
+    section.pages += 1;
+    section.combined += Number(row.combined_score || 0);
+    section.agent += Number(row.agent_score || 0);
+    if (row.quality_gate_status === 'pass') section.qualityPass += 1;
+    if (row.purpose) section.purposeCovered += 1;
+  });
+
+  return [...stats.values()]
+    .map((section) => ({
+      section: section.section,
+      pages: section.pages,
+      avgCombined: section.pages ? Math.round(section.combined / section.pages) : 0,
+      avgAgent: section.pages ? Math.round(section.agent / section.pages) : 0,
+      qualityPassPct: section.pages ? Math.round((section.qualityPass / section.pages) * 100) : 0,
+      purposeCoveragePct: section.pages ? Math.round((section.purposeCovered / section.pages) * 100) : 0
+    }))
+    .sort((a, b) => a.section.localeCompare(b.section));
+}
+
+function computeBaselineComparison(repoRoot, currentRows, journeyReports) {
+  const baselinePath = path.join(repoRoot, BASELINE_DEFAULT_REL);
+  if (!fs.existsSync(baselinePath)) {
+    return {
+      baselinePath,
+      baselineUnavailable: true,
+      note: 'baseline_unavailable'
+    };
+  }
+
+  const baselineRows = parseCsvRows(fs.readFileSync(baselinePath, 'utf8'));
+  const baselineScores = baselineRows
+    .map((row) => Number(row.combined_score || row.human_usefulness_score || 0))
+    .filter((value) => Number.isFinite(value));
+
+  const baselineAvg = baselineScores.length
+    ? Number((baselineScores.reduce((sum, value) => sum + value, 0) / baselineScores.length).toFixed(1))
+    : 0;
+
+  const currentAvg = currentRows.length
+    ? Number((currentRows.reduce((sum, row) => sum + Number(row.combined_score || 0), 0) / currentRows.length).toFixed(1))
+    : 0;
+
+  const baselinePurposeSet = baselineRows.filter((row) => String(row.purpose || '').trim()).length;
+  const currentPurposeSet = currentRows.filter((row) => String(row.purpose || '').trim()).length;
+
+  const currentJourneyComplete = journeyReports
+    ? journeyReports.reduce((sum, report) => sum + Number(report.steps_complete || 0), 0)
+    : 0;
+
+  return {
+    baselinePath,
+    baselineUnavailable: false,
+    avgCombined: {
+      baseline: baselineAvg,
+      current: currentAvg,
+      change: Number((currentAvg - baselineAvg).toFixed(1))
+    },
+    pagesWithPurpose: {
+      baseline: baselinePurposeSet,
+      current: currentPurposeSet,
+      change: currentPurposeSet - baselinePurposeSet
+    },
+    journeyStepsCompletable: {
+      baseline: null,
+      current: currentJourneyComplete,
+      change: null
+    }
+  };
+}
+
+function printSectionSummary(rows) {
+  const summary = computeSectionSummary(rows);
+  console.log('SECTION SUMMARY');
+  console.log('| Section | Pages | Avg Combined | Avg Agent | Quality Pass % | Purpose Coverage % |');
+  console.log('|---------|------:|-------------:|----------:|---------------:|-------------------:|');
+  summary.forEach((entry) => {
+    console.log(`| ${entry.section} | ${entry.pages} | ${entry.avgCombined} | ${entry.avgAgent} | ${entry.qualityPassPct}% | ${entry.purposeCoveragePct}% |`);
+  });
+  console.log('');
+}
+
+function printJourneyReport(journeyReports) {
+  console.log('PERSONA JOURNEY REPORT');
+  console.log('=====================');
+  console.log('');
+
+  journeyReports.forEach((report) => {
+    const criterion = report.maps_to ? ` [${report.maps_to}]` : '';
+    console.log(`${report.label}${criterion}: ${report.steps_complete}/${report.steps_total} COMPLETE | ${report.steps_weak} WEAK | ${report.steps_missing} MISSING -> ${report.verdict}`);
+    console.log(`  "${report.success_criteria}"`);
+    report.steps.forEach((step) => {
+      const marker = step.status === 'complete' ? 'OK' : step.status === 'weak' ? 'WARN' : 'MISS';
+      const purpose = Array.isArray(step.purpose) ? step.purpose.join('/') : step.purpose;
+      const detail = step.page
+        ? `${step.page} — score ${step.score}${step.reason ? ` (${step.reason})` : ''}${step.has_link_to_next ? '' : ' [no nav link to next]'}`
+        : 'NO PAGE FOUND';
+      console.log(`  [${marker}] Step ${step.position} (${purpose}): ${detail}`);
+    });
+    if (report.blockers.length > 0) {
+      console.log(`  BLOCKERS: ${report.blockers.join('; ')}`);
+    }
+    console.log('');
+  });
+
+  console.log('JOURNEY SUMMARY');
+  console.log('| Persona | Criterion | Complete | Weak | Missing | Verdict |');
+  console.log('|---------|-----------|----------|------|---------|---------|');
+  journeyReports.forEach((report) => {
+    console.log(`| ${report.label} | ${report.maps_to || '-'} | ${report.steps_complete}/${report.steps_total} | ${report.steps_weak} | ${report.steps_missing} | ${report.verdict} |`);
+  });
+  console.log('');
+}
+
+function printBaselineComparison(comparison) {
+  console.log('COMPARISON TO BASELINE');
+  if (comparison.baselineUnavailable) {
+    console.log(`baseline_unavailable: ${comparison.baselinePath}`);
+    console.log('');
     return;
   }
-  const columns = [
-    'as_of_date',
-    'file_path',
-    'route_path',
-    'cohort',
-    'page_kind',
-    'doc_type_primary',
-    'accuracy_2026_status',
-    'accuracy_2026_confidence',
-    'accuracy_2026_score',
-    'clarity_score',
-    'verifiability_score',
-    'docs_framework_fit_score',
-    'rfp_page_compliance_score',
-    'completeness_score',
-    'actionability_score',
-    'audience_fit_score',
-    'machine_readability_score',
-    'maintenance_quality_score',
-    'human_usefulness_score',
-    'agent_usefulness_score',
-    'human_band',
-    'agent_band',
-    'claims_extracted_count',
-    'verification_sources_count',
-    'source_types_used',
-    'source_freshness_oldest_date',
-    'source_freshness_latest_date',
-    'flags_human',
-    'verification_notes'
-  ];
-  const lines = [columns.join(',')];
-  for (const row of rows) {
-    const flat = {
-      ...row,
-      source_types_used: (row.source_types_used || []).join('|'),
-      flags_human: (row.flags_human || []).join('; '),
-      verification_sources_count: Array.isArray(row.verification_sources) ? row.verification_sources.length : 0
-    };
-    lines.push(columns.map((column) => escapeCsv(flat[column] ?? '')).join(','));
+
+  console.log('| Metric | Feb 2026 | Current | Change |');
+  console.log('|--------|----------|---------|--------|');
+  console.log(`| Avg combined score | ${comparison.avgCombined.baseline} | ${comparison.avgCombined.current} | ${comparison.avgCombined.change >= 0 ? '+' : ''}${comparison.avgCombined.change} |`);
+  console.log(`| Pages with purpose set | ${comparison.pagesWithPurpose.baseline} | ${comparison.pagesWithPurpose.current} | ${comparison.pagesWithPurpose.change >= 0 ? '+' : ''}${comparison.pagesWithPurpose.change} |`);
+  if (comparison.journeyStepsCompletable.change === null) {
+    console.log(`| Journey steps completable | - | ${comparison.journeyStepsCompletable.current} | - |`);
+  } else {
+    console.log(`| Journey steps completable | ${comparison.journeyStepsCompletable.baseline} | ${comparison.journeyStepsCompletable.current} | ${comparison.journeyStepsCompletable.change >= 0 ? '+' : ''}${comparison.journeyStepsCompletable.change} |`);
   }
-  fs.writeFileSync(filePath, `${lines.join('\n')}\n`);
+  console.log('');
 }
 
-function countBy(rows, key) {
-  return rows.reduce((acc, row) => {
-    const value = row[key] ?? 'unknown';
-    acc[value] = (acc[value] || 0) + 1;
-    return acc;
-  }, {});
-}
-
-function topCounts(items, limit = 10) {
-  return Object.entries(items || {})
-    .sort((a, b) => (b[1] - a[1]) || String(a[0]).localeCompare(String(b[0])))
-    .slice(0, limit);
-}
-
-function writeSummaryMarkdown(filePath, rows, context = {}) {
-  const total = rows.length;
-  const statusCounts = countBy(rows, 'accuracy_2026_status');
-  const humanBandCounts = countBy(rows, 'human_band');
-  const agentBandCounts = countBy(rows, 'agent_band');
-  const flagCounts = {};
-  const sourceTypeCounts = {};
-  let providerErrorPages = 0;
-
-  rows.forEach((row) => {
-    (row.flags || []).forEach((flag) => {
-      flagCounts[flag] = (flagCounts[flag] || 0) + 1;
-    });
-    (row.source_types_used || []).forEach((type) => {
-      sourceTypeCounts[type] = (sourceTypeCounts[type] || 0) + 1;
-    });
-    if (Array.isArray(row.provider_errors) && row.provider_errors.length > 0) {
-      providerErrorPages += 1;
-    }
-  });
-
-  const avgHuman = total ? (rows.reduce((sum, row) => sum + (row.human_usefulness_score || 0), 0) / total) : 0;
-  const avgAgent = total ? (rows.reduce((sum, row) => sum + (row.agent_usefulness_score || 0), 0) / total) : 0;
-  const lowestHuman = [...rows]
-    .sort((a, b) => ((a.human_usefulness_score || 0) - (b.human_usefulness_score || 0)) || a.file_path.localeCompare(b.file_path))
-    .slice(0, 10);
-  const highestHuman = [...rows]
-    .sort((a, b) => ((b.human_usefulness_score || 0) - (a.human_usefulness_score || 0)) || a.file_path.localeCompare(b.file_path))
-    .slice(0, 10);
-  const lowestAgent = [...rows]
-    .sort((a, b) => ((a.agent_usefulness_score || 0) - (b.agent_usefulness_score || 0)) || a.file_path.localeCompare(b.file_path))
-    .slice(0, 10);
-
-  function pct(count) {
-    if (!total) return '0.0%';
-    return `${((count / total) * 100).toFixed(1)}%`;
-  }
-
-  function sectionFromPath(filePath) {
-    const parts = String(filePath || '').split('/');
-    return parts[1] || 'unknown';
-  }
-
-  function summarizeProviderError(message) {
-    const text = String(message || '').replace(/\s+/g, ' ').trim();
-    if (!text) return 'unknown';
-    if (text === 'verification request limit reached') return 'verification request limit reached';
-    if (/API rate limit exceeded/i.test(text)) return 'github api rate limit exceeded';
-    if (/spawnSync gh ETIMEDOUT/i.test(text)) return 'gh api timeout';
-    if (/This operation was aborted/i.test(text)) return 'http fetch aborted/timeout';
-    if (/HTTP 4\d\d/i.test(text)) return text.replace(/https?:\/\/\S+/g, '<url>').slice(0, 120);
-    return text.slice(0, 140);
-  }
-
-  const cohortCounts = countBy(rows, 'cohort');
-  const verificationPriorityCounts = countBy(rows.filter((row) => row.verification_priority), 'verification_priority');
-  const contradictedRows = rows.filter((row) => row.accuracy_2026_status === 'contradicted');
-  const staleRows = rows.filter((row) => row.accuracy_2026_status === 'stale_risk');
-  const emptyRows = rows.filter((row) => (row.flags || []).includes('empty'));
-  const legacyLinkRows = rows.filter((row) => (row.flags || []).includes('legacy_v2_pages_link'));
-  const incompleteRows = rows.filter((row) => (row.flags || []).includes('incomplete'));
-  const missingFrontmatterRows = rows.filter((row) => (row.flags || []).includes('missing_frontmatter'));
-  const missingDescriptionRows = rows.filter((row) => (row.flags || []).includes('missing_description'));
-  const thinContentRows = rows.filter((row) => (row.flags || []).includes('thin_content'));
-  const highPriorityRows = rows
-    .filter((row) => row.verification_priority === 'high')
-    .sort((a, b) => ((a.human_usefulness_score || 0) - (b.human_usefulness_score || 0)) || a.file_path.localeCompare(b.file_path))
-    .slice(0, 25);
-  const providerErrorCounts = {};
-  rows.forEach((row) => {
-    (row.provider_errors || []).forEach((error) => {
-      const key = summarizeProviderError(error);
-      providerErrorCounts[key] = (providerErrorCounts[key] || 0) + 1;
-    });
-  });
-
-  const sectionStats = {};
-  rows.forEach((row) => {
-    const section = sectionFromPath(row.file_path);
-    if (!sectionStats[section]) {
-      sectionStats[section] = {
-        count: 0,
-        human: 0,
-        agent: 0,
-        provisional: 0,
-        verified: 0,
-        stale: 0,
-        contradicted: 0,
-        needsReview: 0,
-        empty: 0
-      };
-    }
-    const s = sectionStats[section];
-    s.count += 1;
-    s.human += Number(row.human_usefulness_score || 0);
-    s.agent += Number(row.agent_usefulness_score || 0);
-    if (row.accuracy_2026_status === 'provisional') s.provisional += 1;
-    if (row.accuracy_2026_status === 'verified_2026') s.verified += 1;
-    if (row.accuracy_2026_status === 'stale_risk') s.stale += 1;
-    if (row.accuracy_2026_status === 'contradicted') s.contradicted += 1;
-    if ((row.flags || []).includes('accuracy_needs_review')) s.needsReview += 1;
-    if ((row.flags || []).includes('empty')) s.empty += 1;
-  });
-  const sectionRows = Object.entries(sectionStats)
-    .map(([section, s]) => ({
-      section,
-      count: s.count,
-      avgHuman: s.count ? s.human / s.count : 0,
-      avgAgent: s.count ? s.agent / s.count : 0,
-      verified: s.verified,
-      provisional: s.provisional,
-      stale: s.stale,
-      contradicted: s.contradicted,
-      needsReview: s.needsReview,
-      empty: s.empty
-    }))
-    .sort((a, b) => b.count - a.count || a.section.localeCompare(b.section));
-  const weakSections = [...sectionRows]
-    .sort((a, b) => (a.avgHuman - b.avgHuman) || (b.count - a.count) || a.section.localeCompare(b.section))
-    .slice(0, 5);
-  const topMediumPriorityRows = rows
-    .filter((row) => row.verification_priority === 'medium')
-    .sort((a, b) => ((a.human_usefulness_score || 0) - (b.human_usefulness_score || 0)) || a.file_path.localeCompare(b.file_path))
-    .slice(0, 15);
-
+function buildSummaryMarkdown({ rows, sectionSummary, journeyReports, baselineComparison, metadata }) {
   const lines = [];
-  lines.push('# Docs Usefulness Audit Summary');
+  lines.push(`# Usefulness Audit Summary — ${metadata.generated_at.slice(0, 10)}`);
   lines.push('');
-  lines.push(`- Run date (as-of): \`${context.asOfDate || ''}\``);
-  if (context.generatedAt) lines.push(`- Generated at: \`${context.generatedAt}\``);
-  if (context.mode) lines.push(`- Mode: \`${context.mode}\``);
-  if (context.accuracyMode) lines.push(`- Accuracy mode: \`${context.accuracyMode}\``);
-  if (context.scoringEngine) lines.push(`- Scoring engine: \`${context.scoringEngine}\``);
-  lines.push(`- Pages audited: **${total}**`);
-  lines.push(`- Avg human usefulness: **${avgHuman.toFixed(1)}**`);
-  lines.push(`- Avg agent usefulness: **${avgAgent.toFixed(1)}**`);
-  lines.push(`- Pages with provider errors: **${providerErrorPages}**`);
+  lines.push(`- Mode: \`${metadata.mode}\``);
+  lines.push(`- Pages processed: **${rows.length}**`);
+  lines.push(`- Tier 2 LLM: **${metadata.llm.enabled ? `enabled (${metadata.llm.tier})` : 'disabled'}**`);
   lines.push('');
 
-  lines.push('## Key Takeaways');
+  lines.push('## Section Summary');
   lines.push('');
-  lines.push(`- **${statusCounts.verified_2026 || 0}** pages are \`verified_2026\` (${pct(statusCounts.verified_2026 || 0)}).`);
-  lines.push(`- **${statusCounts.provisional || 0}** pages remain \`provisional\` (${pct(statusCounts.provisional || 0)}), largely due to verification coverage/rate limits.`);
-  lines.push(`- **${staleRows.length}** pages are \`stale_risk\`; **${contradictedRows.length}** page is \`contradicted\`.`);
-  lines.push(`- **${emptyRows.length}** pages are flagged \`empty\`; **${legacyLinkRows.length}** pages still contain legacy \`/v2/pages\` links.`);
-  lines.push(`- Verification queue: high=${verificationPriorityCounts.high || 0}, medium=${verificationPriorityCounts.medium || 0}, low=${verificationPriorityCounts.low || 0}.`);
-  lines.push('');
-
-  lines.push('## Cohorts');
-  lines.push('');
-  Object.entries(cohortCounts)
-    .sort((a, b) => b[1] - a[1])
-    .forEach(([cohort, count]) => lines.push(`- \`${cohort}\`: ${count} (${pct(count)})`));
-  lines.push('');
-
-  lines.push('## Accuracy Status');
-  lines.push('');
-  Object.entries(statusCounts)
-    .sort((a, b) => b[1] - a[1])
-    .forEach(([k, v]) => lines.push(`- \`${k}\`: ${v}`));
-  lines.push('');
-
-  lines.push('## Human Bands');
-  lines.push('');
-  Object.entries(humanBandCounts)
-    .sort((a, b) => b[1] - a[1])
-    .forEach(([k, v]) => lines.push(`- \`${k}\`: ${v}`));
-  lines.push('');
-
-  lines.push('## Agent Bands');
-  lines.push('');
-  Object.entries(agentBandCounts)
-    .sort((a, b) => b[1] - a[1])
-    .forEach(([k, v]) => lines.push(`- \`${k}\`: ${v}`));
-  lines.push('');
-
-  lines.push('## Top Flags');
-  lines.push('');
-  topCounts(flagCounts, 15).forEach(([flag, count]) => {
-    lines.push(`- \`${flag}\`: ${count}`);
+  lines.push('| Section | Pages | Avg Combined | Avg Agent | Quality Pass % | Purpose Coverage % |');
+  lines.push('|---------|------:|-------------:|----------:|---------------:|-------------------:|');
+  sectionSummary.forEach((entry) => {
+    lines.push(`| ${entry.section} | ${entry.pages} | ${entry.avgCombined} | ${entry.avgAgent} | ${entry.qualityPassPct}% | ${entry.purposeCoveragePct}% |`);
   });
   lines.push('');
 
-  lines.push('## Source Types Used (Pages)');
-  lines.push('');
-  topCounts(sourceTypeCounts, 15).forEach(([type, count]) => {
-    lines.push(`- \`${type}\`: ${count}`);
-  });
-  lines.push('');
-
-  lines.push('## Section Breakdown');
-  lines.push('');
-  lines.push('| Section | Pages | Avg Human | Avg Agent | Verified | Provisional | Stale | Contradicted | Empty | Needs Review |');
-  lines.push('|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|');
-  sectionRows.forEach((s) => {
-    lines.push(`| \`${s.section}\` | ${s.count} | ${s.avgHuman.toFixed(1)} | ${s.avgAgent.toFixed(1)} | ${s.verified} | ${s.provisional} | ${s.stale} | ${s.contradicted} | ${s.empty} | ${s.needsReview} |`);
-  });
-  lines.push('');
-
-  lines.push('## Verification Queue (High Priority)');
-  lines.push('');
-  if (highPriorityRows.length === 0) {
-    lines.push('- None');
-  } else {
-    highPriorityRows.slice(0, 15).forEach((row) => {
-      lines.push(`- \`${row.file_path}\` (human=${row.human_usefulness_score}, agent=${row.agent_usefulness_score}, status=${row.accuracy_2026_status})`);
+  if (journeyReports && journeyReports.length > 0) {
+    lines.push('## Journey Summary');
+    lines.push('');
+    lines.push('| Persona | Criterion | Complete | Weak | Missing | Verdict |');
+    lines.push('|---------|-----------|----------|------|---------|---------|');
+    journeyReports.forEach((report) => {
+      lines.push(`| ${report.label} | ${report.maps_to || '-'} | ${report.steps_complete}/${report.steps_total} | ${report.steps_weak} | ${report.steps_missing} | ${report.verdict} |`);
     });
+    lines.push('');
   }
-  lines.push('');
 
-  lines.push('## Contradicted / Source Conflict Pages');
+  lines.push('## Baseline Comparison');
   lines.push('');
-  const conflictRows = rows.filter((row) => (row.flags || []).includes('source_conflict'));
-  if (conflictRows.length === 0) {
-    lines.push('- None');
+  if (baselineComparison.baselineUnavailable) {
+    lines.push(`- baseline_unavailable: \`${baselineComparison.baselinePath}\``);
   } else {
-    conflictRows.slice(0, 20).forEach((row) => {
-      lines.push(`- \`${row.file_path}\` (status=${row.accuracy_2026_status}, conflicts=${(row.source_conflicts || []).length})`);
-    });
+    lines.push('| Metric | Feb 2026 | Current | Change |');
+    lines.push('|--------|----------|---------|--------|');
+    lines.push(`| Avg combined score | ${baselineComparison.avgCombined.baseline} | ${baselineComparison.avgCombined.current} | ${baselineComparison.avgCombined.change >= 0 ? '+' : ''}${baselineComparison.avgCombined.change} |`);
+    lines.push(`| Pages with purpose set | ${baselineComparison.pagesWithPurpose.baseline} | ${baselineComparison.pagesWithPurpose.current} | ${baselineComparison.pagesWithPurpose.change >= 0 ? '+' : ''}${baselineComparison.pagesWithPurpose.change} |`);
+    if (baselineComparison.journeyStepsCompletable.change === null) {
+      lines.push(`| Journey steps completable | - | ${baselineComparison.journeyStepsCompletable.current} | - |`);
+    } else {
+      lines.push(`| Journey steps completable | ${baselineComparison.journeyStepsCompletable.baseline} | ${baselineComparison.journeyStepsCompletable.current} | ${baselineComparison.journeyStepsCompletable.change >= 0 ? '+' : ''}${baselineComparison.journeyStepsCompletable.change} |`);
+    }
   }
-  lines.push('');
 
-  lines.push('## Stale Risk Pages');
   lines.push('');
-  if (staleRows.length === 0) {
-    lines.push('- None');
-  } else {
-    staleRows
-      .sort((a, b) => ((a.human_usefulness_score || 0) - (b.human_usefulness_score || 0)) || a.file_path.localeCompare(b.file_path))
-      .slice(0, 20)
-      .forEach((row) => {
-        lines.push(`- \`${row.file_path}\` (human=${row.human_usefulness_score}, agent=${row.agent_usefulness_score})`);
-      });
-  }
-  lines.push('');
-
-  lines.push('## Lowest Human Usefulness (Top 10)');
-  lines.push('');
-  lowestHuman.forEach((row) => {
-    const flagsPreview = (row.flags || []).slice(0, 4).join(', ');
-    lines.push(`- \`${row.human_usefulness_score}\` \`${row.file_path}\` (${row.accuracy_2026_status})${flagsPreview ? ` — ${flagsPreview}` : ''}`);
-  });
-  lines.push('');
-
-  lines.push('## Lowest Agent Usefulness (Top 10)');
-  lines.push('');
-  lowestAgent.forEach((row) => {
-    const flagsPreview = (row.flags || []).slice(0, 4).join(', ');
-    lines.push(`- \`${row.agent_usefulness_score}\` \`${row.file_path}\` (${row.accuracy_2026_status})${flagsPreview ? ` — ${flagsPreview}` : ''}`);
-  });
-  lines.push('');
-
-  lines.push('## Highest Human Usefulness (Top 10)');
-  lines.push('');
-  highestHuman.forEach((row) => {
-    const flagsPreview = (row.flags || []).slice(0, 3).join(', ');
-    lines.push(`- \`${row.human_usefulness_score}\` \`${row.file_path}\` (${row.accuracy_2026_status})${flagsPreview ? ` — ${flagsPreview}` : ''}`);
-  });
-  lines.push('');
-
-  lines.push('## Provider Error Breakdown (Top Patterns)');
-  lines.push('');
-  if (providerErrorPages === 0) {
-    lines.push('- None');
-  } else {
-    topCounts(providerErrorCounts, 12).forEach(([msg, count]) => {
-      lines.push(`- \`${count}\` ${msg}`);
-    });
-  }
-  lines.push('');
-  lines.push('## Recommended Actions (Prioritized)');
-  lines.push('');
-  lines.push('### P0: Fix broken/empty placeholders first (high impact, low effort)');
-  lines.push('');
-  lines.push(`- Empty pages: **${emptyRows.length}**. Replace with content, redirect, or remove from navigation.`);
-  emptyRows.slice(0, 8).forEach((row) => {
-    lines.push(`- \`${row.file_path}\` (human=${row.human_usefulness_score}, agent=${row.agent_usefulness_score})`);
-  });
-  lines.push('');
-  lines.push(`- Incomplete/placeholder pages: **${incompleteRows.length}**. Prioritize public "Coming Soon"/TODO pages with low scores.`);
-  incompleteRows
-    .sort((a, b) => ((a.human_usefulness_score || 0) - (b.human_usefulness_score || 0)) || a.file_path.localeCompare(b.file_path))
-    .slice(0, 10)
-    .forEach((row) => {
-      lines.push(`- \`${row.file_path}\` (human=${row.human_usefulness_score}, status=${row.accuracy_2026_status})`);
-    });
-  lines.push('');
-
-  lines.push('### P1: Resolve high-priority verification issues');
-  lines.push('');
-  if (highPriorityRows.length === 0) {
-    lines.push('- No high-priority verification rows.');
-  } else {
-    lines.push(`- High-priority verification queue: **${highPriorityRows.length}** page(s) currently flagged.`);
-    highPriorityRows.slice(0, 15).forEach((row) => {
-      lines.push(`- \`${row.file_path}\` (status=${row.accuracy_2026_status}, human=${row.human_usefulness_score}, flags=${(row.flags || []).slice(0, 5).join(', ')})`);
-    });
-  }
-  if (contradictedRows.length > 0) {
-    lines.push(`- Contradicted page(s): **${contradictedRows.length}**. Start with \`${contradictedRows[0].file_path}\` and inspect \`source_conflicts\` in JSONL.`);
-  }
-  lines.push('');
-
-  lines.push('### P1: Remove legacy path leakage and metadata gaps');
-  lines.push('');
-  lines.push(`- Legacy \`/v2/pages\` links: **${legacyLinkRows.length}** page(s). Replace with current \`/v2/<section>/...\` routes.`);
-  legacyLinkRows
-    .sort((a, b) => a.file_path.localeCompare(b.file_path))
-    .slice(0, 10)
-    .forEach((row) => lines.push(`- \`${row.file_path}\``));
-  lines.push(`- Missing frontmatter: **${missingFrontmatterRows.length}** page(s). Add at minimum \`title\` + \`description\`.`);
-  missingFrontmatterRows
-    .sort((a, b) => ((a.human_usefulness_score || 0) - (b.human_usefulness_score || 0)) || a.file_path.localeCompare(b.file_path))
-    .slice(0, 10)
-    .forEach((row) => lines.push(`- \`${row.file_path}\``));
-  lines.push(`- Missing description: **${missingDescriptionRows.length}** page(s). Fill descriptions for SEO/AEO + machine readability.`);
-  missingDescriptionRows
-    .sort((a, b) => ((a.human_usefulness_score || 0) - (b.human_usefulness_score || 0)) || a.file_path.localeCompare(b.file_path))
-    .slice(0, 10)
-    .forEach((row) => lines.push(`- \`${row.file_path}\``));
-  lines.push('');
-
-  lines.push('### P2: Lift thin-content pages by section (rewrite batches)');
-  lines.push('');
-  lines.push(`- Thin-content pages: **${thinContentRows.length}**. Batch by section to reduce context switching.`);
-  weakSections.forEach((section) => {
-    lines.push(`- \`${section.section}\`: avgHuman=${section.avgHuman.toFixed(1)} across ${section.count} page(s), empty=${section.empty}, stale=${section.stale}, verified=${section.verified}`);
-  });
-  lines.push('- Suggested batch order: `home/get-started` placeholders -> `community` empties/FAQs -> `gateways` metadata cleanup -> `about` stale-risk pages.');
-  lines.push('');
-
-  lines.push('### P2: Improve verification coverage on medium-priority pages');
-  lines.push('');
-  lines.push(`- Medium-priority verification queue: **${verificationPriorityCounts.medium || 0}** page(s).`);
-  topMediumPriorityRows.forEach((row) => {
-    lines.push(`- \`${row.file_path}\` (human=${row.human_usefulness_score}, status=${row.accuracy_2026_status})`);
-  });
-  lines.push('');
-
-  lines.push('### Operator Notes (for reruns)');
-  lines.push('');
-  lines.push('- GitHub search/code was rate-limited in this run. Re-run after rate limit reset (or with higher quota) to increase `verified_2026` coverage.');
-  lines.push('- Consider increasing `--verification-max-requests` above the default if you want deeper source coverage.');
-  lines.push('- Keep `page-matrix.jsonl` open for exact `source_conflicts`, `provider_errors`, and per-claim evidence when fixing pages.');
-  lines.push('');
-
-  lines.push('## Notes');
-  lines.push('');
-  lines.push('- `accuracy_needs_review` may be high when GitHub search/code is rate-limited or the verification request budget is exhausted.');
-  lines.push('- Use `page-matrix.csv` for sorting/filtering and `page-matrix.jsonl` for full row details and evidence payloads.');
-  lines.push('');
-
-  fs.writeFileSync(filePath, `${lines.join('\n')}\n`);
-}
-
-function buildFlagsHuman(flags) {
-  return [...new Set((flags || []).map((flag) => String(flag).replace(/_/g, ' ')))];
-}
-
-function maybeAddEmptyFlag(content, flags) {
-  if (String(content || '').trim().length === 0) flags.push('empty');
+  return `${lines.join('\n')}\n`;
 }
 
 async function main() {
   const repoRoot = getRepoRoot();
-  const args = parseArgs(process.argv.slice(2));
-  const registry = loadAccuracySourceRegistry();
-  const weights = loadAccuracySourceWeights();
+  const args = parseArgs(process.argv.slice(2), repoRoot);
 
-  ensureDir(args.outDir);
-  ensureDir(args.verificationCacheDir);
+  const { rubric, audience, llmTiers } = loadAndValidateUsefulnessConfig(prompts);
+  const allRoutes = loadEnV2Routes(repoRoot);
 
-  const fixtureMap = loadFixtureMap(args.verificationFixture, repoRoot);
-  const cache = createVerificationCache(args.verificationCacheDir);
-  const useLiveTier2 = !args.verificationFixture && (args.accuracyMode === 'tiered' || args.accuracyMode === 'live');
-  const tier2Provider = useLiveTier2
-    ? createLiveTier2Provider({
-        cache,
-        maxRequests: args.verificationMaxRequests,
-        githubResultsPerRepo: args.githubResultsPerRepo,
-        deepwikiBaseUrl: args.deepwikiBaseUrl,
-        officialDocsBaseUrl: args.officialDocsBaseUrl
-      })
-    : createTier2Provider({
-        cache,
-        fixturesByClaimId: fixtureMap,
-        maxRequests: args.verificationMaxRequests
+  let selectedRoutes = [];
+  if (args.mode === 'files') {
+    selectedRoutes = collectRequestedRouteKeys(args.files, allRoutes);
+  } else if (args.mode === 'changed') {
+    const changed = collectChangedRouteKeys(repoRoot, allRoutes);
+    selectedRoutes = changed.length > 0 ? changed : allRoutes;
+  } else {
+    selectedRoutes = allRoutes;
+  }
+
+  if (Number.isFinite(args.maxPages) && args.maxPages > 0) {
+    selectedRoutes = selectedRoutes.slice(0, args.maxPages);
+  }
+
+  const missingRoutes = [];
+  const records = [];
+
+  for (const route of selectedRoutes) {
+    const relFile = resolveRouteToFile(route, repoRoot);
+    if (!relFile) {
+      missingRoutes.push(route);
+      continue;
+    }
+
+    const absPath = path.join(repoRoot, relFile);
+    const content = fs.readFileSync(absPath, 'utf8');
+    const page = analyzeMdxPage({
+      content,
+      filePath: relFile,
+      routePath: `/${route}`,
+      repoRoot
+    });
+
+    const score = scorePage(page, {
+      rubric: args.legacyRubric ? {} : rubric,
+      audience
+    });
+
+    const rules = getRulesForPage(rubric, page, audience);
+
+    records.push({
+      route,
+      page,
+      rules,
+      score,
+      path: relFile
+    });
+  }
+
+  if (args.llm) {
+    if (!process.env.OPENROUTER_API_KEY) {
+      throw new Error('--llm requires OPENROUTER_API_KEY');
+    }
+
+    const tierName = args.llmTier || llmTiers.default_tier || 'free';
+    const tierInfo = llmTiers.tiers?.[tierName];
+    if (!tierInfo) throw new Error(`Unknown llm tier: ${tierName}`);
+
+    const evaluator = new LlmEvaluator(process.env.OPENROUTER_API_KEY, {
+      tier: tierName,
+      budget: args.llmBudget
+    });
+
+    const eligible = records.filter((record) => record.rules?.tier2 && Object.keys(record.rules.tier2).length > 0);
+    const sample = args.llmSample < 100 ? sampleRows(eligible, args.llmSample) : eligible;
+
+    const capacity = evaluator._remainingCapacity ? evaluator._remainingCapacity() : null;
+    if (capacity !== null) {
+      const needed = sample.reduce((sum, record) => sum + Object.keys(record.rules.tier2 || {}).length, 0);
+      console.error(`Free tier: ${capacity} calls available today, ~${needed} needed.`);
+      if (needed > capacity) {
+        console.error('Daily free limit may be reached; rerun tomorrow with --llm-resume.');
+      }
+    }
+
+    for (const record of sample) {
+      const tier2 = await evaluator.evaluateAll(record.page, record.rules.tier2, prompts, {
+        audience: record.score.audience,
+        purpose: record.score.purpose,
+        resume: args.llmResume
       });
 
-  let files = discoverTargetFiles(repoRoot, args);
-  if (Number.isFinite(args.maxPages)) {
-    files = files.slice(0, args.maxPages);
-  }
+      const exhausted = Object.values(tier2.details || {}).some((detail) => detail.status === 'daily_limit_exhausted');
+      if (exhausted) {
+        console.error('Daily free limit reached. Run again tomorrow to continue.');
+        break;
+      }
 
-  const rows = [];
-  for (const absPath of files) {
-    const content = fs.readFileSync(absPath, 'utf8');
-    const relPath = toPosix(path.relative(repoRoot, absPath));
-    const routePath = fileToRoutePath(repoRoot, absPath);
-    const claims = extractTier1Claims({ content, pagePath: relPath });
-
-    const accuracy = await verifyPageAccuracy({
-      content,
-      claims,
-      pagePath: relPath,
-      routePath,
-      asOfDate: args.asOf,
-      accuracyMode: args.accuracyMode,
-      verifySources: args.verifySources,
-      githubRepos: args.githubRepos,
-      deepwikiEnabled: args.deepwikiEnabled,
-      verificationMaxRequests: args.verificationMaxRequests,
-      verificationTimeoutMs: args.verificationTimeoutMs,
-      tier2Provider,
-      cache,
-      registry,
-      weights
-    });
-
-    const analysis = analyzeMdxPage({
-      content,
-      filePath: relPath,
-      routePath,
-      accuracy
-    });
-    const matrix = buildUsefulnessMatrixFields({ analysis, accuracy });
-
-    const flags = [...new Set([...(accuracy.flags || []), ...(analysis.flags || [])])];
-    maybeAddEmptyFlag(content, flags);
-    if (matrix.manual_review_required) flags.push('manual_review_required');
-    if (matrix.verification_required) flags.push('verification_required');
-    if ((args.scoringEngine === 'hybrid' || args.scoringEngine === 'llm-only')) flags.push('llm_unavailable');
-    const row = {
-      schema_version: 'docs-usefulness-matrix.v1',
-      as_of_date: args.asOf,
-      file_path: relPath,
-      route_path: routePath,
-      accuracy_2026_status: accuracy.accuracy_2026_status,
-      accuracy_2026_confidence: accuracy.accuracy_2026_confidence,
-      verification_sources: accuracy.verification_sources,
-      source_conflicts: accuracy.source_conflicts,
-      source_types_used: accuracy.source_types_used,
-      source_freshness_latest_date: accuracy.source_freshness_latest_date,
-      source_freshness_oldest_date: accuracy.source_freshness_oldest_date,
-      verification_notes: accuracy.verification_notes,
-      claims_extracted_count: Array.isArray(accuracy.claims) ? accuracy.claims.length : claims.length,
-      claims: accuracy.claims || claims,
-      claim_results: accuracy.claim_results || [],
-      provider_errors: accuracy.provider_errors || [],
-      ...matrix,
-      flags: [...new Set(flags)],
-      flags_human: buildFlagsHuman(flags)
-    };
-    rows.push(row);
-  }
-
-  const formats = new Set(args.format);
-  if (formats.has('jsonl')) {
-    writeJsonl(path.join(args.outDir, 'page-matrix.jsonl'), rows);
-  }
-  if (formats.has('csv')) {
-    writeCsv(path.join(args.outDir, 'page-matrix.csv'), rows);
-  }
-  const metadata = {
-    run_started_at: new Date().toISOString(),
-    as_of_date: args.asOf,
-    repo_root: repoRoot,
-    files_processed: rows.length,
-    mode: args.mode,
-    accuracy_mode: args.accuracyMode,
-    scoring_engine: args.scoringEngine,
-    verify_sources: args.verifySources,
-    github_repos: args.githubRepos,
-    deepwiki_enabled: args.deepwikiEnabled,
-    deepwiki_base_url: args.deepwikiBaseUrl,
-    official_docs_base_url: args.officialDocsBaseUrl,
-    github_results_per_repo: args.githubResultsPerRepo,
-    verification_cache_dir: toPosix(path.relative(repoRoot, args.verificationCacheDir)),
-    verification_max_requests: args.verificationMaxRequests,
-    verification_timeout_ms: args.verificationTimeoutMs,
-    source_policy: {
-      registry_schema_version: registry.schema_version,
-      weights_schema_version: weights.schema_version,
-      decision_defaults: registry.decision_defaults
+      record.score.tier2_score = tier2.score;
+      record.score.tier2_details = tier2.details;
+      record.score.combined_score = tier2.score === null
+        ? record.score.tier1_score
+        : Math.round((record.score.tier1_score * 0.5) + (tier2.score * 0.5));
+      record.score.band = computeBand(record.score.combined_score, record.score.flags);
     }
-  };
-  if (formats.has('json')) {
-    fs.writeFileSync(path.join(args.outDir, 'run-metadata.json'), JSON.stringify(metadata, null, 2));
+
+    evaluator.printUsageSummary();
   }
 
-  const summary = {
-    total: rows.length,
-    status_counts: rows.reduce((acc, row) => {
-      acc[row.accuracy_2026_status] = (acc[row.accuracy_2026_status] || 0) + 1;
-      return acc;
-    }, {}),
-    avg_human_usefulness: rows.length ? Number((rows.reduce((sum, row) => sum + (row.human_usefulness_score || 0), 0) / rows.length).toFixed(1)) : 0,
-    avg_agent_usefulness: rows.length ? Number((rows.reduce((sum, row) => sum + (row.agent_usefulness_score || 0), 0) / rows.length).toFixed(1)) : 0,
-    flagged_source_conflict: rows.filter((row) => row.flags.includes('source_conflict')).length,
-    flagged_accuracy_needs_review: rows.filter((row) => row.flags.includes('accuracy_needs_review')).length
+  const rows = records.map((record) => ({
+    schema_version: 'docs-usefulness-matrix.v2',
+    path: record.path,
+    route_path: `/${record.route}`,
+    section: record.page.section,
+    purpose: record.score.purpose,
+    purpose_source: record.score.purpose_source,
+    audience: record.score.audience,
+    audience_source: record.score.audience_source,
+    tier1_score: record.score.tier1_score,
+    tier2_score: record.score.tier2_score,
+    combined_score: record.score.combined_score,
+    quality_gate_status: record.score.quality_gate_status,
+    quality_gate_errors: record.score.quality_gate_errors,
+    quality_gate_details: record.score.quality_gate_details,
+    agent_score: record.score.agent_score,
+    band: record.score.band,
+    flags: record.score.flags,
+    internalLinks: record.page.internalLinks
+  }));
+
+  const journeyReports = args.journey && args.mode === 'full'
+    ? checkJourneys(rows.map((row) => ({
+        path: row.path,
+        purpose: row.purpose,
+        combined_score: row.combined_score,
+        internalLinks: row.internalLinks
+      })))
+    : [];
+
+  const sectionSummary = computeSectionSummary(rows);
+  const baselineComparison = computeBaselineComparison(repoRoot, rows, journeyReports);
+
+  const metadata = {
+    generated_at: new Date().toISOString(),
+    mode: args.mode,
+    llm: {
+      enabled: args.llm,
+      tier: args.llmTier,
+      sample: args.llmSample,
+      resume: args.llmResume
+    },
+    purpose_aware: args.purposeAware,
+    legacy_rubric: args.legacyRubric,
+    files_processed: rows.length,
+    processed_pages: rows.length,
+    counts: {
+      processed_pages: rows.length,
+      missing_routes: missingRoutes.length
+    },
+    missing_routes: missingRoutes,
+    known_missing_routes: [
+      'v2/resources/redirect',
+      'v2/gateways/guides-and-tools/gateway-job-pipelines/overview'
+    ],
+    baseline: baselineComparison
   };
 
+  ensureDir(args.outDir);
+  const formats = new Set(args.format);
+  if (formats.has('jsonl')) writeJsonl(path.join(args.outDir, 'page-matrix.jsonl'), rows);
+  if (formats.has('csv')) writeCsv(path.join(args.outDir, 'page-matrix.csv'), rows);
+  if (formats.has('json')) fs.writeFileSync(path.join(args.outDir, 'run-metadata.json'), JSON.stringify(metadata, null, 2));
   if (formats.has('md')) {
-    writeSummaryMarkdown(path.join(args.outDir, 'summary.md'), rows, {
-      asOfDate: args.asOf,
-      generatedAt: metadata.run_started_at,
-      mode: args.mode,
-      accuracyMode: args.accuracyMode,
-      scoringEngine: args.scoringEngine
-    });
+    fs.writeFileSync(
+      path.join(args.outDir, 'summary.md'),
+      buildSummaryMarkdown({
+        rows,
+        sectionSummary,
+        journeyReports,
+        baselineComparison,
+        metadata
+      })
+    );
   }
 
-  console.log(`Audited ${summary.total} page(s) into ${args.outDir}`);
-  console.log(`Status counts: ${JSON.stringify(summary.status_counts)}`);
-  console.log(`avg_human=${summary.avg_human_usefulness} avg_agent=${summary.avg_agent_usefulness}`);
-  console.log(`source_conflict=${summary.flagged_source_conflict} accuracy_needs_review=${summary.flagged_accuracy_needs_review}`);
-}
+  console.log(`USEFULNESS AUDIT — ${new Date().toISOString().slice(0, 10)}`);
+  console.log(`Mode: ${args.mode} | Tier 2: ${args.llm ? `enabled (${args.llmTier})` : 'disabled'} | Pages: ${rows.length}`);
+  if (missingRoutes.length > 0) {
+    console.log(`Missing routes (non-fatal): ${missingRoutes.length}`);
+    missingRoutes.slice(0, 10).forEach((route) => console.log(`  - ${route}`));
+    if (missingRoutes.length > 10) console.log('  - ...');
+  }
+  console.log('');
 
-module.exports = {
-  writeSummaryMarkdown
-};
+  printSectionSummary(rows);
+  if (journeyReports.length > 0) {
+    printJourneyReport(journeyReports);
+  }
+  printBaselineComparison(baselineComparison);
+
+  console.log(`Outputs written to ${args.outDir}`);
+}
 
 if (require.main === module) {
   main().catch((error) => {
-    console.error('audit-v2-usefulness error:', error);
+    console.error(`audit-v2-usefulness error: ${error.message || error}`);
     process.exit(1);
   });
 }
+
+module.exports = {
+  parseArgs,
+  normalizeRouteKey,
+  routeToCandidates,
+  resolveRouteToFile,
+  computeSectionSummary,
+  computeBaselineComparison
+};

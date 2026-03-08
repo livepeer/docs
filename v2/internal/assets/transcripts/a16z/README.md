@@ -1,6 +1,6 @@
 # a16z transcript workflow
 
-This folder is the target for internally generated MDX transcripts produced by `tools/scripts/transcribe-audio-to-mdx.js`. The script handles the audio download, `ffmpeg` chunking, OpenRouter transcription, and markdown rendering; it writes files to `v2/internal/assets/transcripts/a16z/<published-at>-<slug>.mdx`.
+This folder is the target for internally generated MDX transcripts produced by `tools/utility/personal/transcribe-audio-to-mdx.js`. The script handles the audio download, `ffmpeg` chunking, OpenRouter transcription, and markdown rendering; it writes files to `v2/internal/assets/transcripts/a16z/<published-at>-<slug>.mdx`.
 
 ## First transcript
 
@@ -13,7 +13,7 @@ The transcript file now exists at the output path above. Re-run the command belo
 
 ```bash
 OPENROUTER_API_KEY=... \
-  node tools/scripts/transcribe-audio-to-mdx.js \
+  node tools/utility/personal/transcribe-audio-to-mdx.js \
     --audio-url "https://afp-848985-injected.calisto.simplecastaudio.com/112866f3-1a50-4d92-8517-8d84c18386af/episodes/f6d42d55-3e7d-4d92-8517-8d84c18386af/audio/128/default.mp3/default.mp3_ywr3ahjkcgo_f7861f0342eb814c39535221300c24b2_41873754.mp3?aid=rss_feed&awCollectionId=112866f3-1a50-4d92-8517-8d84c18386af&awEpisodeId=f6d42d55-3e7d-4d92-8517-8d84c18386af&feed=Hb_IuXOo&hash_redirect=1&x-total-bytes=41873754&x-ais-classified=streaming&listeningSessionID=0CD_382_57__96de380fcf4d43a6f78ba49d7726176a3cbea54b" \
     --title "Inferact: Building the Infrastructure That Runs Modern AI" \
     --show "AI + a16z" \

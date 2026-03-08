@@ -560,6 +560,23 @@ function parsePrGeneratorMarker(prBody) {
   };
 }
 
+function parseClosingIssueRefs(prBody) {
+  const refs = [];
+  const re = /\b(?:fixes|closes|resolves)\s+(?:([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+))?#(\d+)\b/gi;
+
+  let match;
+  while ((match = re.exec(prBody)) !== null) {
+    const issueNumber = Number(match[2]);
+    if (!Number.isInteger(issueNumber) || issueNumber <= 0) continue;
+    refs.push({
+      repo: String(match[1] || '').trim(),
+      issueNumber
+    });
+  }
+
+  return refs;
+}
+
 function validateScope(contract, changedFiles, contractPathRel) {
   const violations = [];
   const implicitAllowed = [contractPathRel];
@@ -878,6 +895,13 @@ function main() {
           if (marker.branch !== branch) {
             errors.push(`PR body generated marker branch mismatch: expected ${branch}, received ${marker.branch}`);
           }
+        }
+
+        const closingRefs = parseClosingIssueRefs(prBody);
+        if (!closingRefs.some((ref) => ref.issueNumber === contract.taskId)) {
+          errors.push(
+            `PR body must include a closing keyword for task issue #${contract.taskId} (Fixes|Closes|Resolves #${contract.taskId})`
+          );
         }
       }
     }

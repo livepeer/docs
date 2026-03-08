@@ -1,39 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script openapi-reference-audit
- * @summary Audit V2 OpenAPI references against canonical specs with optional conservative autofix.
- * @owner docs
- * @scope tests/integration, v2, api, .github/workflows
- *
- * @usage
- *   node tests/integration/openapi-reference-audit.js --full --strict --report /tmp/openapi-audit.md --report-json /tmp/openapi-audit.json
- *   node tests/integration/openapi-reference-audit.js --files v2/solutions/livepeer-studio/api-reference/streams/create.mdx --strict
- *   node tests/integration/openapi-reference-audit.js --full --fix --write
- *
- * @inputs
- *   --full (default) Scan all V2 docs pages.
- *   --files <path[,path...]> Explicit file list mode (repeatable).
- *   --strict Exit non-zero when findings exist.
- *   --fix Apply conservative normalization fixes in-memory.
- *   --write Persist fixes to disk (requires --fix).
- *   --report <path> Markdown report output path.
- *   --report-json <path> JSON report output path.
- *
- * @outputs
- *   - Markdown report (default: tasks/reports/openapi-reference/openapi-reference-audit.md)
- *   - JSON report (default: tasks/reports/openapi-reference/openapi-reference-audit.json)
- *   - Optional source edits when --fix --write is used.
- *
- * @exit-codes
- *   0 = success (or non-strict run with findings)
- *   1 = strict findings present or runtime failure
- *
- * @examples
- *   node tests/integration/openapi-reference-audit.js --full --strict
- *   node tests/integration/openapi-reference-audit.js --full --fix --write --strict
- *
- * @notes
- *   Conservative autofix only normalizes method casing, METHOD/path spacing, and missing leading slash.
+ * @script            openapi-reference-audit
+ * @category          validator
+ * @purpose           tooling:api-spec
+ * @scope             tests/integration, v2, api, .github/workflows
+ * @owner             docs
+ * @needs             F-R17
+ * @purpose-statement Comprehensive OpenAPI spec validation — checks references, schemas, examples. Supports --strict (validate), --fix (repair), and report modes.
+ * @pipeline          P3 (PR, Track C), P5 (scheduled)
+ * @dualmode          --strict (enforcer) | --fix (remediator)
+ * @usage             node tests/integration/openapi-reference-audit.js [flags]
  */
 
 const fs = require('fs');

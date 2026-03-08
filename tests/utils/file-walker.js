@@ -1,28 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script file-walker
- * @summary Utility script for tests/utils/file-walker.js.
- * @owner docs
- * @scope tests
- *
- * @usage
- *   node tests/utils/file-walker.js
- *
- * @inputs
- *   No required CLI flags; optional flags are documented inline.
- *
- * @outputs
- *   - Console output and/or file updates based on script purpose.
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node tests/utils/file-walker.js
- *
- * @notes
- *   Keep script behavior deterministic and update script indexes after changes.
+ * @script            file-walker
+ * @category          utility
+ * @purpose           tooling:dev-tools
+ * @scope             tests
+ * @owner             docs
+ * @needs             E-C6, F-C1
+ * @purpose-statement File tree walker — recursively finds files matching patterns. Used by pre-commit hook and validators.
+ * @pipeline          indirect — library module
+ * @dualmode          dual-mode (document flags)
+ * @usage             node tests/utils/file-walker.js [flags]
  */
 /**
  * File traversal utilities for testing

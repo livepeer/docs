@@ -1,28 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script spell-checker
- * @summary Utility script for tests/utils/spell-checker.js.
- * @owner docs
- * @scope tests
- *
- * @usage
- *   node tests/utils/spell-checker.js
- *
- * @inputs
- *   No required CLI flags; optional flags are documented inline.
- *
- * @outputs
- *   - Console output and/or file updates based on script purpose.
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node tests/utils/spell-checker.js
- *
- * @notes
- *   Keep script behavior deterministic and update script indexes after changes.
+ * @script            spell-checker
+ * @category          validator
+ * @purpose           qa:content-quality
+ * @scope             tests
+ * @owner             docs
+ * @needs             E-R1, R-R11
+ * @purpose-statement Spell checker utility — checks text against custom dictionary with en-GB locale support
+ * @pipeline          indirect — library module
+ * @dualmode          dual-mode (document flags)
+ * @usage             node tests/utils/spell-checker.js [flags]
  */
 /**
  * Spell checking utilities using cspell

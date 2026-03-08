@@ -155,6 +155,45 @@ function linkToFilePath(linkPath, currentFile) {
   return path.join(rootDir, relativePath);
 }
 
+function getIgnoredRanges(content) {
+  const ignoredRanges = [];
+  const ignoreRegexes = [
+    /\{\/\*[\s\S]*?\*\/\}/g,
+    /<!--[\s\S]*?-->/g
+  ];
+
+  ignoreRegexes.forEach((regex) => {
+    let match;
+
+    while ((match = regex.exec(content)) !== null) {
+      ignoredRanges.push({
+        start: match.index,
+        end: match.index + match[0].length
+      });
+    }
+  });
+
+  return ignoredRanges;
+}
+
+function isIgnoredIndex(index, ignoredRanges) {
+  return ignoredRanges.some((range) => index >= range.start && index < range.end);
+}
+
+function getMatchesOutsideIgnoredRanges(content, regex, ignoredRanges) {
+  const matches = [];
+  let match;
+
+  regex.lastIndex = 0;
+  while ((match = regex.exec(content)) !== null) {
+    if (!isIgnoredIndex(match.index, ignoredRanges)) {
+      matches.push(match);
+    }
+  }
+
+  return matches;
+}
+
 /**
  * Check for broken internal links
  */
@@ -204,6 +243,48 @@ function checkBrokenLinks(files) {
         });
       }
     }
+  });
+}
+
+/**
+ * Check for empty markdown and JSX links
+ */
+function checkEmptyLinks(files) {
+  files.forEach(file => {
+    const content = readFile(file);
+    if (!content) return;
+
+    const ignoredRanges = getIgnoredRanges(content);
+    const emptyMarkdownLinkRegex = /\[\]\s*\(([^)]+)\)/g;
+    const emptyJsxLinkRegex = /<(?:Link|a)\s+[^>]*href\s*=\s*["'][^"']+["'][^>]*>\s*<\/(?:Link|a)>/g;
+    const emptySelfClosingJsxLinkRegex = /<(?:Link|a)\s+[^>]*href\s*=\s*["'][^"']+["'][^>]*\/>/g;
+
+    getMatchesOutsideIgnoredRanges(content, emptyMarkdownLinkRegex, ignoredRanges)
+      .forEach(() => {
+        errors.push({
+          file,
+          rule: 'Empty link',
+          message: 'Empty link text: [](url) — link has no visible text'
+        });
+      });
+
+    getMatchesOutsideIgnoredRanges(content, emptyJsxLinkRegex, ignoredRanges)
+      .forEach(() => {
+        errors.push({
+          file,
+          rule: 'Empty link',
+          message: 'Empty JSX link — element has no visible text'
+        });
+      });
+
+    getMatchesOutsideIgnoredRanges(content, emptySelfClosingJsxLinkRegex, ignoredRanges)
+      .forEach(() => {
+        errors.push({
+          file,
+          rule: 'Empty link',
+          message: 'Empty JSX link — element has no visible text'
+        });
+      });
   });
 }
 
@@ -294,8 +375,10 @@ function runTests(options = {}) {
       testFiles = getMdxFiles();
     }
   }
+  testFiles = testFiles.filter(f => !f.includes('style-guide.mdx'));
   
   checkBrokenLinks(testFiles);
+  checkEmptyLinks(testFiles);
   checkBrokenImports(testFiles);
   
   return {

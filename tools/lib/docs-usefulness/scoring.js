@@ -11,94 +11,54 @@
  */
 const yaml = require('js-yaml');
 
-const HUMAN_WEIGHTS = {
-  clarity: 18,
-  accuracy_2026: 15,
-  verifiability: 10,
-  docs_framework_fit: 10,
-  rfp_page_compliance: 8,
-  completeness: 14,
-  actionability: 12,
-  audience_fit: 7,
-  machine_readability: 3,
-  maintenance_quality: 3
-};
+const fs = require('fs');
+const path = require('path');
+const {
+  extractFrontmatter,
+  extractImports,
+  validateMdx
+} = require('../../../tests/utils/mdx-parser');
+const {
+  loadRubric,
+  getRulesForPage
+} = require('./rubric-loader');
+const { EVALUATORS } = require('./rule-evaluators');
+const { runQualityGate } = require('./quality-gate');
 
-const AGENT_WEIGHTS = {
-  clarity: 12,
-  accuracy_2026: 18,
-  verifiability: 16,
-  docs_framework_fit: 10,
-  rfp_page_compliance: 8,
-  completeness: 8,
-  actionability: 6,
-  audience_fit: 5,
-  machine_readability: 12,
-  maintenance_quality: 5
-};
-
-function clamp(value, min, max) {
-  const n = Number(value);
-  if (!Number.isFinite(n)) return min;
-  return Math.min(max, Math.max(min, n));
+function toPosix(filePath) {
+  return String(filePath || '').split(path.sep).join('/');
 }
 
-function round1(value) {
-  return Number(clamp(value, 0, 5).toFixed(1));
-}
-
-function roundInt(value) {
-  return Math.round(Number.isFinite(Number(value)) ? Number(value) : 0);
-}
-
-function extractFrontmatter(content) {
-  const match = String(content || '').match(/^---\s*\n([\s\S]*?)\n---\s*\n/);
-  if (!match) return { exists: false, data: null, raw: null, body: String(content || '') };
-  try {
-    return {
-      exists: true,
-      data: yaml.load(match[1]) || {},
-      raw: match[1],
-      body: String(content || '').slice(match[0].length)
-    };
-  } catch (error) {
-    return {
-      exists: true,
-      data: null,
-      raw: match[1],
-      error: error.message,
-      body: String(content || '').slice(match[0].length)
-    };
+function firstOf(...values) {
+  for (const value of values) {
+    if (value !== undefined && value !== null) return value;
   }
+  return null;
 }
 
-function extractHeadings(body) {
-  return String(body || '')
-    .split('\n')
-    .map((line) => line.match(/^(#{1,6})\s+(.+)$/))
-    .filter(Boolean)
-    .map((match) => ({ level: match[1].length, text: match[2].trim() }));
-}
-
-function countCodeBlocks(content) {
-  return (String(content || '').match(/```/g) || []).length / 2;
-}
-
-function extractLinks(content) {
-  const links = [];
-  let match;
-  const markdown = /\[[^\]]+\]\(([^)]+)\)/g;
-  while ((match = markdown.exec(String(content || ''))) !== null) {
-    links.push(match[1]);
+function getFrontmatterValues(page) {
+  if (!page) return {};
+  if (page.frontmatter && page.frontmatter.data && typeof page.frontmatter.data === 'object') {
+    return page.frontmatter.data;
   }
-  return links;
+  if (page.frontmatter && typeof page.frontmatter === 'object') {
+    return page.frontmatter;
+  }
+  if (page.frontmatterData && typeof page.frontmatterData === 'object') {
+    return page.frontmatterData;
+  }
+  return {};
 }
 
-function stripForWordCount(body) {
-  return String(body || '')
-    .replace(/^import\s.+$/gm, ' ')
+function stripFrontmatter(content) {
+  return String(content || '').replace(/^---\s*\n[\s\S]*?\n---\s*\n?/, '');
+}
+
+function stripMdxToText(content) {
+  return String(content || '')
     .replace(/```[\s\S]*?```/g, ' ')
     .replace(/`[^`]+`/g, ' ')
+    .replace(/^import\s.+$/gm, ' ')
     .replace(/\{\/\*[\s\S]*?\*\/\}/g, ' ')
     .replace(/<[^>]+>/g, ' ')
     .replace(/\[[^\]]+\]\(([^)]+)\)/g, ' ')
@@ -106,374 +66,444 @@ function stripForWordCount(body) {
     .trim();
 }
 
-function countWords(text) {
-  const words = String(text || '').split(/\s+/).filter(Boolean);
-  return words.length;
+function parseHeadings(content) {
+  const headings = [];
+  String(content || '')
+    .split('\n')
+    .forEach((line) => {
+      const match = line.match(/^(#{1,6})\s+(.+)$/);
+      if (match) {
+        headings.push({ level: match[1].length, text: match[2].trim() });
+      }
+    });
+  return headings;
 }
 
-function inferPersonaFromPath(filePath) {
-  const p = String(filePath || '').toLowerCase();
-  if (p.includes('/developers/')) return 'developers';
-  if (p.includes('/gateways/')) return 'gateway_operators';
-  if (p.includes('/orchestrators/')) return 'orchestrator_operators';
-  if (p.includes('/lpt/')) return 'delegators_token_holders';
-  if (p.includes('/community/')) return 'community';
-  if (p.includes('/internal/')) return 'internal_maintainers';
-  if (p.includes('/solutions/')) return 'platform_builders';
-  if (p.includes('/about/')) return 'general_technical_audience';
-  if (p.includes('/home/')) return 'general_audience';
-  return 'unknown';
+function parseCodeBlocks(content) {
+  const blocks = [];
+  const regex = /```([A-Za-z0-9_-]+)?\n([\s\S]*?)```/g;
+  let match;
+  while ((match = regex.exec(String(content || ''))) !== null) {
+    blocks.push({
+      language: String(match[1] || '').toLowerCase(),
+      content: String(match[2] || '')
+    });
+  }
+  return blocks;
 }
 
-function inferDocTypeAndKind(filePath, body, frontmatter, headings) {
-  const p = String(filePath || '').toLowerCase();
-  const content = String(body || '');
-  const generatedIndex = /Do not manually edit this file; run its generator/i.test(content);
-  const hasOpenApi = /\bopenapi\s*:\s*['"]/i.test(String(frontmatter.raw || '')) || /<OpenAPI\b/.test(content);
-  const hasComingSoon = /Coming Soon/i.test(content);
-  const hasPreview = /<PreviewCallout\b/.test(content);
-
-  let docType = 'explanation';
-  let pageKind = 'content_explanation';
-
-  if (generatedIndex) {
-    docType = 'landing';
-    pageKind = 'generated_index';
-  } else if (hasOpenApi || p.includes('/api-reference/')) {
-    docType = 'reference';
-    pageKind = hasOpenApi && countWords(stripForWordCount(content)) < 80 ? 'api_reference_stub' : 'reference';
-  } else if (/quickstart|tutorial/.test(p) || headings.some((h) => /\bquickstart|tutorial\b/i.test(h.text))) {
-    docType = 'tutorial';
-    pageKind = 'tutorial';
-  } else if (/guide|how-to/.test(p) || headings.some((h) => /\bhow to|guide\b/i.test(h.text))) {
-    docType = 'how_to';
-    pageKind = 'how_to';
-  } else if (/index\.mdx$/i.test(p)) {
-    docType = 'landing';
-    pageKind = 'landing';
-  } else if (p.includes('/internal/')) {
-    docType = 'explanation';
-    pageKind = 'internal_process';
+function parseTables(content) {
+  const tables = [];
+  const lines = String(content || '').split('\n');
+  for (let i = 0; i < lines.length - 1; i += 1) {
+    const line = lines[i].trim();
+    const next = lines[i + 1].trim();
+    if (!line.includes('|') || !next.includes('|')) continue;
+    if (!/^\|?\s*:?-{3,}/.test(next)) continue;
+    tables.push({
+      startLine: i + 1,
+      header: line,
+      separator: next
+    });
   }
-
-  if (hasComingSoon && countWords(stripForWordCount(content)) < 80) {
-    pageKind = 'placeholder';
-  }
-  if (hasPreview && countWords(stripForWordCount(content)) < 120 && pageKind !== 'generated_index') {
-    pageKind = 'placeholder';
-  }
-
-  return { docType, pageKind };
+  return tables;
 }
 
-function analyzeMdxPage({ content, filePath, routePath, accuracy = null }) {
+function parseMarkdownLinks(content) {
+  const links = [];
+  const regex = /\[[^\]]+\]\(([^)]+)\)/g;
+  let match;
+  while ((match = regex.exec(String(content || ''))) !== null) {
+    links.push(match[1].trim());
+  }
+  return links;
+}
+
+function parseHrefLinks(content) {
+  const links = [];
+  const regex = /\bhref\s*=\s*["']([^"']+)["']/gi;
+  let match;
+  while ((match = regex.exec(String(content || ''))) !== null) {
+    links.push(match[1].trim());
+  }
+  return links;
+}
+
+function parseImages(content) {
+  const images = [];
+
+  const markdown = /!\[([^\]]*)\]\(([^)]+)\)/g;
+  let match;
+  while ((match = markdown.exec(String(content || ''))) !== null) {
+    images.push({ alt: String(match[1] || '').trim(), src: String(match[2] || '').trim() });
+  }
+
+  const jsxImg = /<(?:img|Image)\b[^>]*>/g;
+  while ((match = jsxImg.exec(String(content || ''))) !== null) {
+    const tag = match[0];
+    const src = (tag.match(/\bsrc\s*=\s*["']([^"']+)["']/i) || [])[1] || '';
+    const alt = (tag.match(/\balt\s*=\s*["']([^"']+)["']/i) || [])[1] || '';
+    if (src) {
+      images.push({ alt: String(alt || '').trim(), src: String(src || '').trim() });
+    }
+  }
+
+  return images;
+}
+
+function parseComponents(content) {
+  const components = new Set();
+  const regex = /<([A-Z][A-Za-z0-9]*)\b/g;
+  let match;
+  while ((match = regex.exec(String(content || ''))) !== null) {
+    components.add(match[1]);
+  }
+  return [...components];
+}
+
+function parseSectionFromPath(filePath) {
+  const rel = toPosix(filePath).replace(/^\/+/, '');
+  const parts = rel.split('/');
+  if (parts[0] === 'v2' && parts[1]) return parts[1];
+  return parts[0] || 'unknown';
+}
+
+function resolveImportPath(repoRoot, currentFile, importPath) {
+  const relImport = String(importPath || '');
+  if (!relImport) return null;
+
+  const candidates = [];
+  if (relImport.startsWith('/')) {
+    candidates.push(path.join(repoRoot, relImport));
+  } else {
+    const dir = path.dirname(path.join(repoRoot, currentFile));
+    candidates.push(path.join(dir, relImport));
+  }
+
+  return candidates.some((candidate) => {
+    const withExt = [candidate, `${candidate}.js`, `${candidate}.jsx`, `${candidate}.ts`, `${candidate}.tsx`, `${candidate}.mdx`, `${candidate}.md`, path.join(candidate, 'index.js'), path.join(candidate, 'index.mdx')];
+    return withExt.some((target) => fs.existsSync(target));
+  });
+}
+
+function analyzeMdxPage({ content, filePath, routePath, repoRoot = process.cwd() }) {
   const rawContent = String(content || '');
-  const frontmatter = extractFrontmatter(rawContent);
-  const body = frontmatter.body || rawContent;
-  const headings = extractHeadings(body);
-  const links = extractLinks(rawContent);
-  const textForWords = stripForWordCount(body);
-  const substantiveWordCount = countWords(textForWords);
-  const codeBlockCount = countCodeBlocks(rawContent);
-  const numberedStepCount = (body.match(/^\s*\d+\.\s+/gm) || []).length;
-  const externalLinks = links.filter((link) => /^https?:\/\//i.test(link));
-  const internalLinks = links.filter((link) => !/^https?:\/\//i.test(link) && !/^mailto:/i.test(link));
-  const legacyV2PagesLinks = links.filter((link) => /\/v2\/pages\//.test(link));
+  const frontmatterMeta = extractFrontmatter(rawContent);
+  const frontmatterValues = frontmatterMeta?.data && typeof frontmatterMeta.data === 'object' ? frontmatterMeta.data : {};
+  const body = stripFrontmatter(rawContent);
+  const textContent = stripMdxToText(body);
+  const headings = parseHeadings(body);
+  const codeBlocks = parseCodeBlocks(rawContent);
+  const tables = parseTables(rawContent);
+  const images = parseImages(rawContent);
+  const links = [...parseMarkdownLinks(rawContent), ...parseHrefLinks(rawContent)];
+  const internalLinks = [...new Set(links.filter((link) => !/^https?:\/\//i.test(link) && !/^mailto:/i.test(link)))];
+  const externalLinks = [...new Set(links.filter((link) => /^https?:\/\//i.test(link)))];
+  const components = parseComponents(rawContent);
+  const imports = extractImports(rawContent);
+  const parseValidation = validateMdx(rawContent, filePath);
+
   const flags = [];
-
-  if (rawContent.trim().length === 0) flags.push('empty');
-  if (/Do not manually edit this file; run its generator/i.test(rawContent)) flags.push('generated_index');
-  if (/<PreviewCallout\b/.test(rawContent)) flags.push('placeholder_preview');
-  if (/Coming Soon/i.test(rawContent)) flags.push('coming_soon');
+  if (!rawContent.trim()) flags.push('empty');
+  if (!frontmatterMeta.exists) flags.push('missing_frontmatter');
+  if (frontmatterMeta.exists && frontmatterMeta.data === null) flags.push('invalid_frontmatter');
+  if (frontmatterMeta.exists && frontmatterValues && !frontmatterValues.title) flags.push('missing_title');
+  if (frontmatterMeta.exists && frontmatterValues && !frontmatterValues.description) flags.push('missing_description');
   if (/\bTODO\b|\bTBD\b/i.test(rawContent)) flags.push('todo_marker');
-  if (legacyV2PagesLinks.length > 0) flags.push('legacy_v2_pages_link');
-  if (!frontmatter.exists) flags.push('missing_frontmatter');
-  if (frontmatter.exists && !frontmatter.data) flags.push('invalid_frontmatter');
-  if (frontmatter.exists && frontmatter.data && !frontmatter.data.title) flags.push('missing_title');
-  if (frontmatter.exists && frontmatter.data && !frontmatter.data.description) flags.push('missing_description');
-  if (substantiveWordCount > 0 && substantiveWordCount < 120) flags.push('thin_content');
+  if (/Coming Soon/i.test(rawContent)) flags.push('coming_soon');
+  if (/\/v2\/pages\//i.test(rawContent)) flags.push('legacy_v2_pages_link');
 
-  if (
-    flags.includes('coming_soon') ||
-    (flags.includes('placeholder_preview') && substantiveWordCount < 140) ||
-    flags.includes('todo_marker')
-  ) {
-    flags.push('incomplete');
+  const unresolvedImports = imports.filter((imp) => {
+    const impPath = String(imp.path || '');
+    if (impPath.startsWith('http')) return false;
+    if (/^(react|next|fs|path|os|crypto|assert|child_process|node:)/.test(impPath)) return false;
+    return !resolveImportPath(repoRoot, filePath, impPath);
+  });
+  if (unresolvedImports.length > 0) flags.push('broken_import');
+
+  if (Array.isArray(parseValidation.errors) && parseValidation.errors.length > 0) {
+    flags.push('mdx_parse_error');
   }
 
-  const { docType, pageKind } = inferDocTypeAndKind(filePath, body, frontmatter, headings);
-  if (pageKind === 'api_reference_stub') flags.push('api_reference_stub');
-  if (pageKind === 'placeholder') flags.push('incomplete');
+  if (textContent.split(/\s+/).filter(Boolean).length < 120 && textContent.length > 0) {
+    flags.push('thin_content');
+  }
 
-  const cohort = String(filePath || '').includes('/internal/') ? 'internal' : 'public';
-  const personaPrimary = inferPersonaFromPath(filePath);
-  const personaSecondary = cohort === 'internal' ? 'docs_maintainers' : null;
+  const uniqueFlags = [...new Set(flags)];
 
-  return {
-    file_path: filePath,
-    route_path: routePath,
-    cohort,
-    frontmatter,
+  const page = {
+    path: toPosix(filePath),
+    routePath: routePath || '',
+    frontmatter: {
+      ...frontmatterValues
+    },
+    frontmatterData: {
+      ...frontmatterValues
+    },
+    frontmatterMeta,
+    content: rawContent,
+    textContent,
     headings,
-    links,
-    code_block_count: codeBlockCount,
-    numbered_step_count: numberedStepCount,
-    substantive_word_count: substantiveWordCount,
-    line_count: rawContent.split('\n').length,
-    file_bytes: Buffer.byteLength(rawContent, 'utf8'),
-    external_link_count: externalLinks.length,
-    internal_link_count: internalLinks.length,
-    legacy_v2_pages_link_count: legacyV2PagesLinks.length,
-    openapi_marker: /\bopenapi\s*:\s*['"]/i.test(String(frontmatter.raw || '')) || /<OpenAPI\b/.test(body),
-    preview_callout_marker: /<PreviewCallout\b/.test(rawContent),
-    generated_index_marker: flags.includes('generated_index'),
-    persona_primary: personaPrimary,
-    persona_secondary: personaSecondary,
-    doc_type_primary: docType,
-    page_kind: pageKind,
-    flags: [...new Set(flags)],
-    claims_extracted_count: Array.isArray(accuracy?.claims) ? accuracy.claims.length : 0,
-    claim_results: Array.isArray(accuracy?.claim_results) ? accuracy.claim_results : [],
-    accuracy
+    codeBlocks,
+    tables,
+    images,
+    internalLinks,
+    externalLinks,
+    components,
+    imports,
+    wordCount: textContent ? textContent.split(/\s+/).filter(Boolean).length : 0,
+    section: parseSectionFromPath(filePath),
+    flags: uniqueFlags,
+    unresolvedImports: unresolvedImports.map((imp) => imp.path),
+    parseErrors: parseValidation.errors || [],
+    parseWarnings: parseValidation.warnings || []
   };
+
+  // Back-compat aliases for legacy callers.
+  page.file_path = page.path;
+  page.route_path = page.routePath;
+  page.substantive_word_count = page.wordCount;
+  page.code_block_count = page.codeBlocks.length;
+  page.internal_link_count = page.internalLinks.length;
+  page.external_link_count = page.externalLinks.length;
+  page.headings_count = page.headings.length;
+  page.frontmatter = {
+    exists: frontmatterMeta.exists,
+    data: { ...frontmatterValues },
+    raw: frontmatterMeta.raw,
+    error: frontmatterMeta.error
+  };
+  page.frontmatterData = { ...frontmatterValues };
+
+  return page;
 }
 
-function accuracyDimensionScore(accuracy) {
-  const status = String(accuracy?.accuracy_2026_status || 'provisional');
-  const conf = clamp(Number(accuracy?.accuracy_2026_confidence) || 0, 0, 1);
-  if (status === 'verified_2026') return round1(4 + conf);
-  if (status === 'provisional') return round1(1.5 + conf * 2.5);
-  if (status === 'stale_risk') return round1(0.8 + conf * 1.2);
-  if (status === 'contradicted') return 0;
-  return round1(conf * 2);
+function computeTier1Score(page, tier1Rules) {
+  const details = {};
+  let weightSum = 0;
+  let earnedWeight = 0;
+
+  Object.entries(tier1Rules || {}).forEach(([ruleName, ruleConfig]) => {
+    const evaluator = EVALUATORS[ruleConfig.type];
+    if (!evaluator) {
+      details[ruleName] = { passed: true, weight: ruleConfig.weight, error: 'unknown_type' };
+      weightSum += Number(ruleConfig.weight || 0);
+      return;
+    }
+
+    let passed = false;
+    try {
+      passed = Boolean(evaluator(page, ruleConfig));
+    } catch (_error) {
+      passed = false;
+    }
+
+    const weight = Number(ruleConfig.weight || 0);
+    details[ruleName] = { passed, weight };
+    weightSum += weight;
+    if (passed) earnedWeight += weight;
+  });
+
+  const score = weightSum > 0 ? Math.round((earnedWeight / weightSum) * 100) : 0;
+  return { score, details };
 }
 
-function scoreDimensions(analysis) {
-  const flags = new Set(analysis.flags || []);
-  const words = Number(analysis.substantive_word_count) || 0;
-  const headings = Array.isArray(analysis.headings) ? analysis.headings.length : 0;
-  const extLinks = Number(analysis.external_link_count) || 0;
-  const internalLinks = Number(analysis.internal_link_count) || 0;
-  const codeBlocks = Number(analysis.code_block_count) || 0;
-  const steps = Number(analysis.numbered_step_count) || 0;
-  const claims = Number(analysis.claims_extracted_count) || 0;
-  const verifiedSources = Array.isArray(analysis.accuracy?.verification_sources) ? analysis.accuracy.verification_sources.length : 0;
-  const sourceConflicts = Array.isArray(analysis.accuracy?.source_conflicts) ? analysis.accuracy.source_conflicts.length : 0;
-  const hasFrontmatter = analysis.frontmatter?.exists && analysis.frontmatter?.data;
-  const hasTitle = Boolean(analysis.frontmatter?.data?.title);
-  const hasDescription = Boolean(analysis.frontmatter?.data?.description);
-  const isEmpty = flags.has('empty');
-
-  if (isEmpty) {
-    return {
-      clarity: 0,
-      accuracy_2026: 0,
-      verifiability: 0,
-      docs_framework_fit: 0,
-      rfp_page_compliance: 0,
-      completeness: 0,
-      actionability: 0,
-      audience_fit: 0,
-      machine_readability: 0,
-      maintenance_quality: 0
-    };
+const AGENT_RULES = {
+  structured_data_density: {
+    weight: 0.2,
+    evaluate(page) {
+      const structured = (page.tables || []).length + (page.codeBlocks || []).length + (String(page.content || '').match(/\|\s*\w+\s*\|/g) || []).length;
+      const ratio = structured / Math.max(1, (page.wordCount || 1) / 100);
+      return Math.min(100, Math.round(ratio * 25));
+    }
+  },
+  frontmatter_completeness: {
+    weight: 0.15,
+    evaluate(page) {
+      const fm = getFrontmatterValues(page);
+      const fields = ['title', 'description', 'purpose', 'audience'];
+      const present = fields.filter((field) => Boolean(fm[field])).length;
+      return Math.round((present / fields.length) * 100);
+    }
+  },
+  heading_accuracy: {
+    weight: 0.2,
+    evaluate(page) {
+      const headings = (page.headings || []).map((heading) => String(heading.text || '').trim()).filter(Boolean);
+      if (headings.length === 0) return 0;
+      const unique = new Set(headings).size / headings.length;
+      const avgLen = headings.reduce((sum, heading) => sum + heading.split(/\s+/).filter(Boolean).length, 0) / headings.length;
+      const descriptive = avgLen >= 2 ? 1 : 0.5;
+      return Math.round(unique * descriptive * 100);
+    }
+  },
+  cross_reference_density: {
+    weight: 0.15,
+    evaluate(page) {
+      return Math.min(100, (page.internalLinks || []).length * 15);
+    }
+  },
+  answer_extractability: {
+    weight: 0.2,
+    evaluate(page) {
+      const text = String(page.textContent || '');
+      const hasDefinitions = /\b(is a|refers to|means|defined as)\b/i.test(text);
+      const hasLists = /(^|\n)\s*[-*]\s+/.test(String(page.content || '')) || /(^|\n)\s*\d+\.\s+/.test(String(page.content || ''));
+      const hasCodeExamples = (page.codeBlocks || []).length > 0;
+      let score = 30;
+      if (hasDefinitions) score += 25;
+      if (hasLists) score += 20;
+      if (hasCodeExamples) score += 25;
+      return Math.min(100, score);
+    }
+  },
+  structured_output_potential: {
+    weight: 0.1,
+    evaluate(page) {
+      const hasJson = (page.codeBlocks || []).some((block) => ['json', 'yaml', 'yml'].includes(String(block.language || '').toLowerCase()));
+      const hasParamTable = /\|\s*(parameter|field|flag|name)\s*\|/i.test(String(page.content || ''));
+      const hasSchema = /type:\s*(string|integer|boolean|array|object)/i.test(String(page.textContent || ''));
+      let score = 20;
+      if (hasJson) score += 30;
+      if (hasParamTable) score += 30;
+      if (hasSchema) score += 20;
+      return Math.min(100, score);
+    }
   }
+};
 
-  let clarity = 1;
-  clarity += words >= 120 ? 1.5 : words >= 50 ? 0.8 : 0;
-  clarity += headings >= 2 ? 1.2 : headings === 1 ? 0.5 : 0;
-  clarity += hasTitle ? 0.5 : 0;
-  if (flags.has('incomplete')) clarity -= 1;
-  if (flags.has('generated_index')) clarity += 0.6;
-  clarity = round1(clarity);
+function computeAgentScore(page) {
+  const details = {};
+  let weighted = 0;
+  let weightSum = 0;
 
-  let verifiability = 0.8;
-  verifiability += verifiedSources > 0 ? Math.min(2.5, verifiedSources * 0.4) : 0;
-  verifiability += extLinks > 0 ? Math.min(1.2, extLinks * 0.2) : 0;
-  verifiability += analysis.openapi_marker ? 0.8 : 0;
-  if (claims > 0 && verifiedSources === 0) verifiability -= 0.6;
-  if (sourceConflicts > 0) verifiability -= 0.5;
-  verifiability = round1(verifiability);
-
-  let docsFrameworkFit = 1.5;
-  if (analysis.page_kind === 'generated_index') docsFrameworkFit = 4.2;
-  else if (analysis.page_kind === 'api_reference_stub') docsFrameworkFit = analysis.openapi_marker ? 4.1 : 2.2;
-  else if (analysis.doc_type_primary === 'tutorial' || analysis.doc_type_primary === 'how_to') {
-    docsFrameworkFit += steps > 0 ? 1.4 : 0;
-    docsFrameworkFit += codeBlocks > 0 ? 1.0 : 0;
-    docsFrameworkFit += headings >= 2 ? 0.8 : 0;
-  } else if (analysis.doc_type_primary === 'reference') {
-    docsFrameworkFit += analysis.openapi_marker ? 1.6 : 0.8;
-    docsFrameworkFit += headings >= 1 ? 0.8 : 0;
-    docsFrameworkFit += extLinks > 0 ? 0.4 : 0;
-  } else {
-    docsFrameworkFit += headings >= 2 ? 1.0 : 0.5;
-    docsFrameworkFit += words >= 150 ? 1.0 : 0.4;
-  }
-  if (flags.has('incomplete')) docsFrameworkFit -= 1.0;
-  docsFrameworkFit = round1(docsFrameworkFit);
-
-  let completeness = 0.8;
-  if (analysis.page_kind === 'api_reference_stub') {
-    completeness += analysis.openapi_marker ? 2.2 : 0;
-    completeness += hasDescription ? 0.5 : 0;
-    completeness += hasTitle ? 0.5 : 0;
-  } else if (analysis.page_kind === 'generated_index') {
-    completeness += internalLinks + extLinks >= 5 ? 3 : internalLinks + extLinks >= 2 ? 2 : 1;
-  } else {
-    completeness += words >= 400 ? 4 : words >= 220 ? 3 : words >= 120 ? 2 : words >= 60 ? 1 : 0;
-    completeness += headings >= 3 ? 0.6 : headings >= 1 ? 0.2 : 0;
-  }
-  if (flags.has('incomplete')) completeness -= 1.5;
-  if (flags.has('thin_content')) completeness -= 0.8;
-  completeness = round1(completeness);
-
-  let actionability = 0.5;
-  actionability += codeBlocks > 0 ? Math.min(1.8, codeBlocks * 0.8) : 0;
-  actionability += steps > 0 ? Math.min(1.6, steps * 0.5) : 0;
-  actionability += analysis.openapi_marker ? 2.0 : 0;
-  actionability += internalLinks + extLinks >= 3 ? 0.7 : internalLinks + extLinks > 0 ? 0.3 : 0;
-  if (flags.has('coming_soon')) actionability -= 1.2;
-  actionability = round1(actionability);
-
-  let audienceFit = 1.5;
-  if (analysis.persona_primary !== 'unknown') audienceFit += 1.2;
-  if (analysis.cohort === 'internal' && analysis.page_kind === 'internal_process') audienceFit += 1.0;
-  if (analysis.cohort === 'public' && analysis.doc_type_primary) audienceFit += 0.8;
-  if (flags.has('incomplete')) audienceFit -= 0.8;
-  audienceFit = round1(audienceFit);
-
-  let machineReadability = 1.2;
-  machineReadability += hasFrontmatter ? 1.2 : 0;
-  machineReadability += hasTitle ? 0.6 : 0;
-  machineReadability += hasDescription ? 0.6 : 0;
-  machineReadability += headings >= 2 ? 0.8 : headings === 1 ? 0.4 : 0;
-  machineReadability += analysis.openapi_marker ? 0.8 : 0;
-  if (flags.has('invalid_frontmatter')) machineReadability -= 1.5;
-  machineReadability = round1(machineReadability);
-
-  let maintenanceQuality = 2.0;
-  if (flags.has('missing_frontmatter')) maintenanceQuality -= 1.0;
-  if (flags.has('invalid_frontmatter')) maintenanceQuality -= 2.0;
-  if (flags.has('missing_title')) maintenanceQuality -= 0.8;
-  if (flags.has('missing_description')) maintenanceQuality -= 0.6;
-  if (flags.has('legacy_v2_pages_link')) maintenanceQuality -= 0.8;
-  if (flags.has('source_conflict')) maintenanceQuality -= 0.5;
-  maintenanceQuality += analysis.generated_index_marker ? 0.5 : 0;
-  maintenanceQuality = round1(maintenanceQuality);
-
-  const accuracy_2026 = accuracyDimensionScore(analysis.accuracy);
-  const rfp_page_compliance = round1(
-    (clarity + completeness + actionability + audienceFit + machineReadability) / 5 - (flags.has('incomplete') ? 0.4 : 0)
-  );
+  Object.entries(AGENT_RULES).forEach(([name, rule]) => {
+    const score = Math.max(0, Math.min(100, Number(rule.evaluate(page) || 0)));
+    details[name] = { score, weight: rule.weight };
+    weighted += score * Number(rule.weight || 0);
+    weightSum += Number(rule.weight || 0);
+  });
 
   return {
-    clarity,
-    accuracy_2026,
-    verifiability,
-    docs_framework_fit: docsFrameworkFit,
-    rfp_page_compliance,
-    completeness,
-    actionability,
-    audience_fit: audienceFit,
-    machine_readability: machineReadability,
-    maintenance_quality: maintenanceQuality
+    score: weightSum > 0 ? Math.round(weighted / weightSum) : 0,
+    details
   };
 }
 
-function computeWeightedScore(dimensions, weights) {
-  let total = 0;
-  for (const [dimension, weight] of Object.entries(weights)) {
-    const dimScore = clamp(dimensions[dimension], 0, 5);
-    total += (dimScore / 5) * weight;
-  }
-  return roundInt(total);
+function computeBand(score, flags = []) {
+  const value = Number(score || 0);
+  const flagSet = new Set(flags || []);
+  if (flagSet.has('empty') || value <= 0) return 'empty';
+  if (flagSet.has('coming_soon') || flagSet.has('todo_marker') || value <= 24) return 'placeholder_or_broken';
+  if (value <= 49) return 'incomplete_risky';
+  if (value <= 69) return 'usable_needs_work';
+  return 'good';
 }
 
-function scoreBand(score) {
-  if (score <= 0) return 'empty';
-  if (score <= 24) return 'placeholder_or_broken';
-  if (score <= 49) return 'incomplete_risky';
-  if (score <= 69) return 'usable_needs_work';
-  if (score <= 84) return 'good';
-  return 'strong';
+function fallbackLegacyTier1(page) {
+  const checks = {
+    has_words: { passed: (page.wordCount || 0) >= 120, weight: 0.4 },
+    has_headings: { passed: (page.headings || []).length >= 2, weight: 0.2 },
+    has_links: { passed: (page.internalLinks || []).length >= 1, weight: 0.2 },
+    has_title: { passed: Boolean(getFrontmatterValues(page).title), weight: 0.2 }
+  };
+
+  const weightSum = Object.values(checks).reduce((sum, check) => sum + check.weight, 0);
+  const earned = Object.values(checks).reduce((sum, check) => sum + (check.passed ? check.weight : 0), 0);
+  return {
+    score: Math.round((earned / weightSum) * 100),
+    details: checks
+  };
 }
 
-function buildNotesShort(analysis, dimensions, accuracy) {
-  const notes = [];
-  if (analysis.flags.includes('empty')) notes.push('Empty page.');
-  if (analysis.flags.includes('incomplete')) notes.push('Contains placeholder/incomplete signals.');
-  if (analysis.flags.includes('legacy_v2_pages_link')) notes.push('Contains legacy /v2/pages links.');
-  if ((accuracy?.source_conflicts || []).length > 0) notes.push('Source conflict detected (GitHub/DeepWiki weighting applied).');
-  if ((accuracy?.verification_sources || []).length === 0 && analysis.claims_extracted_count > 0) notes.push('Claims extracted but no external verification evidence.');
-  if (notes.length === 0) {
-    notes.push(`Structured ${analysis.doc_type_primary} page with ${analysis.substantive_word_count} substantive words.`);
+function scorePage(page, options = {}) {
+  const rubric = options.rubric || loadRubric();
+  const rules = getRulesForPage(rubric, page);
+  const qualityGate = runQualityGate({
+    ...page,
+    frontmatter: getFrontmatterValues(page)
+  });
+
+  const output = {
+    path: page.path,
+    internalLinks: page.internalLinks || [],
+    purpose: null,
+    purpose_source: 'none',
+    audience: rules.audience,
+    audience_source: rules.audienceSource,
+    audience_raw: firstOf(rules.audienceRaw, getFrontmatterValues(page).audience),
+    tier1_score: 0,
+    tier1_details: {},
+    tier2_score: null,
+    tier2_details: null,
+    combined_score: 0,
+    quality_gate_status: qualityGate.status,
+    quality_gate_errors: qualityGate.errors,
+    quality_gate_details: qualityGate.details,
+    agent_score: 0,
+    agent_details: {},
+    band: 'empty',
+    flags: [...new Set(page.flags || [])]
+  };
+
+  let tier1;
+  if (!rules.purpose || !rules.tier1) {
+    tier1 = fallbackLegacyTier1(page);
+    if (rules.purposeInvalid) {
+      output.flags.push('invalid_purpose');
+    } else {
+      output.flags.push('purpose_unresolved');
+    }
+  } else {
+    tier1 = computeTier1Score(page, rules.tier1);
   }
-  return notes.slice(0, 2).join(' ');
+
+  const agent = computeAgentScore(page);
+
+  output.purpose = rules.purpose;
+  output.purpose_source = rules.purposeSource;
+  output.tier1_score = tier1.score;
+  output.tier1_details = tier1.details;
+  output.combined_score = tier1.score;
+  output.agent_score = agent.score;
+  output.agent_details = agent.details;
+  output.band = computeBand(output.combined_score, output.flags);
+
+  output.flags = [...new Set(output.flags)];
+  return output;
 }
 
 function buildUsefulnessMatrixFields(input = {}) {
-  const analysis = input.analysis || analyzeMdxPage(input);
-  const accuracy = analysis.accuracy || input.accuracy || null;
-  const dimensions = scoreDimensions(analysis);
-  const humanScore = analysis.flags.includes('empty') ? 0 : computeWeightedScore(dimensions, HUMAN_WEIGHTS);
-  const agentScore = analysis.flags.includes('empty') ? 0 : computeWeightedScore(dimensions, AGENT_WEIGHTS);
-  const verificationRequired = (analysis.claims_extracted_count || 0) > 0 && accuracy?.accuracy_2026_status !== 'verified_2026';
-  const manualReviewRequired = (
-    analysis.flags.includes('invalid_frontmatter') ||
-    analysis.flags.includes('source_conflict') ||
-    accuracy?.accuracy_2026_status === 'contradicted'
-  );
-  let verificationPriority = null;
-  if (verificationRequired) {
-    if (accuracy?.accuracy_2026_status === 'contradicted' || accuracy?.accuracy_2026_status === 'stale_risk') verificationPriority = 'high';
-    else if ((accuracy?.accuracy_2026_confidence || 0) < 0.5) verificationPriority = 'medium';
-    else verificationPriority = 'low';
-  }
-
-  const applicableCount = analysis.cohort === 'internal' ? 3 : 5;
-  const metCount = roundInt((dimensions.rfp_page_compliance / 5) * applicableCount);
+  const page = input.analysis || analyzeMdxPage(input);
+  const score = input.score || scorePage(page, input);
 
   return {
-    cohort: analysis.cohort,
-    page_kind: analysis.page_kind,
-    persona_primary: analysis.persona_primary,
-    persona_secondary: analysis.persona_secondary,
-    doc_type_primary: analysis.doc_type_primary,
-    substantive_word_count: analysis.substantive_word_count,
-    heading_count: analysis.headings.length,
-    code_block_count: analysis.code_block_count,
-    external_link_count: analysis.external_link_count,
-    internal_link_count: analysis.internal_link_count,
-    clarity_score: dimensions.clarity,
-    accuracy_2026_score: dimensions.accuracy_2026,
-    verifiability_score: dimensions.verifiability,
-    docs_framework_fit_score: dimensions.docs_framework_fit,
-    rfp_page_compliance_score: dimensions.rfp_page_compliance,
-    completeness_score: dimensions.completeness,
-    actionability_score: dimensions.actionability,
-    audience_fit_score: dimensions.audience_fit,
-    machine_readability_score: dimensions.machine_readability,
-    maintenance_quality_score: dimensions.maintenance_quality,
-    human_usefulness_score: humanScore,
-    agent_usefulness_score: agentScore,
-    human_band: scoreBand(humanScore),
-    agent_band: scoreBand(agentScore),
-    verification_required: verificationRequired,
-    verification_priority: verificationPriority,
-    manual_review_required: manualReviewRequired,
-    rfp_page_applicable_count: applicableCount,
-    rfp_page_met_count: metCount,
-    rfp_page_gap_tags: dimensions.rfp_page_compliance < 3 ? ['rfp_page_quality_gap'] : [],
-    notes_short: buildNotesShort(analysis, dimensions, accuracy)
+    purpose: score.purpose,
+    purpose_source: score.purpose_source,
+    audience: score.audience,
+    audience_source: score.audience_source,
+    tier1_score: score.tier1_score,
+    tier2_score: score.tier2_score,
+    combined_score: score.combined_score,
+    human_usefulness_score: score.combined_score,
+    agent_usefulness_score: score.agent_score,
+    human_band: score.band,
+    agent_band: computeBand(score.agent_score, score.flags),
+    quality_gate_status: score.quality_gate_status,
+    quality_gate_errors: score.quality_gate_errors,
+    verification_priority: score.combined_score < 50 ? 'high' : score.combined_score < 70 ? 'medium' : 'low',
+    notes_short: score.purpose
+      ? `Purpose=${score.purpose}; tier1=${score.tier1_score}; quality=${score.quality_gate_status}`
+      : `Purpose unresolved; tier1=${score.tier1_score}; quality=${score.quality_gate_status}`
   };
 }
 
 module.exports = {
-  HUMAN_WEIGHTS,
-  AGENT_WEIGHTS,
+  AGENT_RULES,
   analyzeMdxPage,
-  scoreDimensions,
   buildUsefulnessMatrixFields,
-  scoreBand
+  computeTier1Score,
+  computeAgentScore,
+  computeBand,
+  scorePage
 };

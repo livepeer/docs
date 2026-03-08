@@ -3,10 +3,11 @@
  * @script transcribe-audio-to-mdx
  * @summary Download audio from URL, chunk with ffmpeg, transcribe via OpenRouter, and write an MDX transcript page.
  * @owner docs
- * @scope tools/scripts, v2/internal/assets/transcripts
+ * @scope tools/utility/personal, v2/internal/assets/transcripts
+ * @pipeline manual — personal utility, not for shared pipelines
  *
  * @usage
- *   OPENROUTER_API_KEY=... node tools/scripts/transcribe-audio-to-mdx.js --audio-url "<url>" --title "<episode title>" --show "<show name>" --published-at YYYY-MM-DD
+ *   OPENROUTER_API_KEY=... node tools/utility/personal/transcribe-audio-to-mdx.js --audio-url "<url>" --title "<episode title>" --show "<show name>" --published-at YYYY-MM-DD
  *
  * @inputs
  *   --audio-url <url> (required)
@@ -27,7 +28,7 @@
  *   1 = invalid args, missing dependency/env, API failure, or write failure
  *
  * @examples
- *   OPENROUTER_API_KEY=... node tools/scripts/transcribe-audio-to-mdx.js --audio-url "https://example.com/episode.mp3" --title "My Episode" --show "My Show" --published-at 2026-01-01 --output-dir v2/internal/assets/transcripts/a16z --overwrite
+ *   OPENROUTER_API_KEY=... node tools/utility/personal/transcribe-audio-to-mdx.js --audio-url "https://example.com/episode.mp3" --title "My Episode" --show "My Show" --published-at 2026-01-01 --output-dir v2/internal/assets/transcripts/a16z --overwrite
  *
  * @notes
  *   Requires ffmpeg + ffprobe on PATH.
@@ -53,7 +54,7 @@ function usage() {
   console.log(
     [
       'Usage:',
-      '  OPENROUTER_API_KEY=... node tools/scripts/transcribe-audio-to-mdx.js \\',
+      '  OPENROUTER_API_KEY=... node tools/utility/personal/transcribe-audio-to-mdx.js \\',
       '    --audio-url "<url>" \\',
       '    --title "<episode title>" \\',
       '    --show "<show name>" \\',

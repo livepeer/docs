@@ -1,45 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script v2-link-audit
- * @summary Comprehensive V2 MDX link audit with internal strict checks and optional external URL validation.
- * @owner docs
- * @scope tests
- *
- * @usage
- *   node tests/integration/v2-link-audit.js --full --write-links --strict
- *
- * @inputs
- *   --full (default)
- *   --staged
- *   --files <path[,path...]> (repeatable; explicit files mode)
- *   --no-mintignore (include files ignored by .mintignore)
- *   --report <path> (default: tasks/reports/navigation-links/LINK_TEST_REPORT.md)
- *   --report-json <path> (default: tasks/reports/navigation-links/LINK_TEST_REPORT.json)
- *   --write-links | --no-write-links (default true for --full, false for --staged/--files)
- *   --strict (exit 1 if missing internal/import targets are found)
- *   --external-policy classify|validate (default: classify)
- *   --external-link-types navigational|media|all (default: navigational)
- *   --external-timeout-ms <int> (default: 10000)
- *   --external-concurrency <int> (default: 12)
- *   --external-per-host-concurrency <int> (default: 2)
- *   --external-retries <int> (default: 1)
- *
- * @outputs
- *   - Markdown report at tasks/reports/navigation-links/LINK_TEST_REPORT.md (or custom path)
- *   - JSON report at tasks/reports/navigation-links/LINK_TEST_REPORT.json (or custom path)
- *   - snippets/data/{domain}/hrefs.jsx files when write-links enabled
- *
- * @exit-codes
- *   0 = success
- *   1 = validation failure in strict mode (internal only) or runtime error
- *
- * @examples
- *   node tests/integration/v2-link-audit.js --full --write-links --strict
- *   node tests/integration/v2-link-audit.js --files v2/pages/04_gateways/index.mdx --strict
- *   node tests/integration/v2-link-audit.js --full --external-policy validate --external-link-types navigational --no-write-links
- *
- * @notes
- *   External URL validation is advisory-only: --strict still applies only to missing internal/import references.
+ * @script            v2-link-audit
+ * @category          validator
+ * @purpose           qa:link-integrity
+ * @scope             tests
+ * @owner             docs
+ * @needs             E-R12, E-R14
+ * @purpose-statement Comprehensive V2 MDX link audit — checks internal links, external links, anchor refs. Supports --staged, --full, --strict, --write-links modes.
+ * @pipeline          P5 (scheduled, full audit)
+ * @dualmode          --full (validator) | --write-links (remediator)
+ * @usage             node tests/integration/v2-link-audit.js [flags]
  */
 
 const fs = require('fs');

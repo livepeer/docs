@@ -1,28 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script browser.test
- * @summary Utility script for tests/integration/browser.test.js.
- * @owner docs
- * @scope tests
- *
- * @usage
- *   node tests/integration/browser.test.js
- *
- * @inputs
- *   No required CLI flags; optional flags are documented inline.
- *
- * @outputs
- *   - Console output and/or file updates based on script purpose.
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node tests/integration/browser.test.js
- *
- * @notes
- *   Keep script behavior deterministic and update script indexes after changes.
+ * @script            browser.test
+ * @category          validator
+ * @purpose           qa:content-quality
+ * @scope             tests
+ * @owner             docs
+ * @needs             E-R1, R-R11
+ * @purpose-statement Puppeteer browser integration test — renders pages from docs.json and checks for console errors, load failures, and visual regressions
+ * @pipeline          P3 (PR, Track A)
+ * @dualmode          dual-mode (document flags)
+ * @usage             node tests/integration/browser.test.js [flags]
  */
 /**
  * Browser rendering tests

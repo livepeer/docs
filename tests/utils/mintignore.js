@@ -1,28 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script mintignore
- * @summary Helpers to evaluate .mintignore using gitignore semantics for test scanners.
- * @owner docs
- * @scope tests
- *
- * @usage
- *   node tests/utils/mintignore.js
- *
- * @inputs
- *   No required CLI flags.
- *
- * @outputs
- *   Exports utility helpers consumed by test scanners.
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime failure
- *
- * @examples
- *   node tests/utils/mintignore.js
- *
- * @notes
- *   Uses `git check-ignore` in an isolated temporary git repo so results depend only on .mintignore.
+ * @script            mintignore
+ * @category          validator
+ * @purpose           tooling:dev-tools
+ * @scope             tests
+ * @owner             docs
+ * @needs             E-C6, F-C1
+ * @purpose-statement Mintignore utility — reads .mintignore patterns and filters file lists
+ * @pipeline          indirect — library module
+ * @usage             node tests/utils/mintignore.js [flags]
  */
 
 const fs = require('fs');

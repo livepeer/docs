@@ -1,30 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script v2-wcag-audit.selftest
- * @summary Script-level self-tests for the v2 WCAG audit (local HTTP + Puppeteer axe run, and temp-file fix/stage behavior without Mintlify).
- * @owner docs
- * @scope tests/integration, v2, git index
- *
- * @usage
- *   node tests/integration/v2-wcag-audit.selftest.js
- *
- * @inputs
- *   No required CLI flags.
- *
- * @outputs
- *   - Console test summary.
- *   - Temporary /tmp reports.
- *   - Temporary repo file under v2/internal/ during test (cleaned up before exit).
- *
- * @exit-codes
- *   0 = all self-tests passed
- *   1 = one or more self-tests failed
- *
- * @examples
- *   node tests/integration/v2-wcag-audit.selftest.js
- *
- * @notes
- *   Avoids Mintlify by using a local HTTP fixture page and a temporary non-routable v2/internal file.
+ * @script            v2-wcag-audit.selftest
+ * @category          validator
+ * @purpose           qa:content-quality
+ * @scope             tests/integration, v2, git index
+ * @owner             docs
+ * @needs             E-R1, R-R11
+ * @purpose-statement Self-test suite for v2-wcag-audit.js — validates WCAG audit logic against known fixtures
+ * @pipeline          manual — not yet in pipeline
+ * @usage             node tests/integration/v2-wcag-audit.selftest.js [flags]
  */
 
 const assert = require('assert');

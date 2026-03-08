@@ -85,6 +85,7 @@ async function runTests() {
     assert.strictEqual(run.status, 0, `generator failed: ${run.stderr || run.stdout}`);
     const body = fs.readFileSync(outputPath, 'utf8');
     assert.match(body, /codex-pr-body-generated:/, 'body should include generated marker');
+    assert.match(body, /^Fixes #3456$/m, 'body should include closing keyword for task issue');
     assert.match(body, /^## Scope/m, 'body should include Scope section');
     assert.match(body, /^## Validation/m, 'body should include Validation section');
     assert.match(body, /^## Follow-up Tasks/m, 'body should include Follow-up section');

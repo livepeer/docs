@@ -1,11 +1,12 @@
 #!/bin/bash
 # @script download-linkedin-video
-# @summary Utility script for tools/scripts/download-linkedin-video.sh.
+# @summary Utility script for tools/utility/personal/download-linkedin-video.sh.
 # @owner docs
-# @scope tools/scripts
+# @scope tools/utility/personal, snippets/assets/media/videos
+# @pipeline manual — personal utility, not for shared pipelines
 #
 # @usage
-#   bash tools/scripts/download-linkedin-video.sh
+#   bash tools/utility/personal/download-linkedin-video.sh
 #
 # @inputs
 #   No required CLI flags; optional flags are documented inline.
@@ -18,13 +19,13 @@
 #   1 = runtime or validation failure
 #
 # @examples
-#   bash tools/scripts/download-linkedin-video.sh
+#   bash tools/utility/personal/download-linkedin-video.sh
 #
 # @notes
 #   Keep script behavior deterministic and update script indexes after changes.
 
 # Download LinkedIn video using yt-dlp
-# Usage: ./scripts/download-linkedin-video.sh
+# Usage: ./tools/utility/personal/download-linkedin-video.sh
 
 LINKEDIN_URL="https://www.linkedin.com/feed/update/urn:li:ugcPost:7387171661868933120"
 OUTPUT_DIR="snippets/assets/media/videos"
@@ -51,4 +52,3 @@ else
     echo "2. Use browser DevTools Network tab"
     echo "3. Use a browser extension like Video DownloadHelper"
 fi
-
