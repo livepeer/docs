@@ -534,7 +534,10 @@ function buildAggregateMarkdown() {
     lines.push('| Script | Summary | Usage | Owner |');
     lines.push('|---|---|---|---|');
     rows.forEach((row) => {
-      lines.push(`| \`${row.script}\` | ${row.summary} | \`${row.usage}\` | ${row.owner} |`);
+      const summary = row.summary.replace(/\|/g, '\\|');
+      const usage = row.usage.replace(/\|/g, '\\|');
+      const owner = row.owner.replace(/\|/g, '\\|');
+      lines.push(`| \`${row.script}\` | ${summary} | \`${usage}\` | ${owner} |`);
     });
     lines.push('');
   }
