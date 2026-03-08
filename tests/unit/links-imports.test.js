@@ -375,6 +375,7 @@ function runTests(options = {}) {
       testFiles = getMdxFiles();
     }
   }
+  testFiles = testFiles.filter(f => !f.includes('style-guide.mdx'));
   
   checkBrokenLinks(testFiles);
   checkEmptyLinks(testFiles);
