@@ -184,12 +184,12 @@ Planned automations include:
 
 ### Automatic Page Index Generation
 
-The repository includes an internal docs feature that keeps `v2/pages` index files synchronized with the current folder and markdown file structure.
+The repository includes an internal docs feature that keeps `v2/` index files synchronized with the current folder and markdown file structure.
 
 What it generates:
 
-- `v2/pages/<top-level-section>/index.mdx` for each direct child folder under `v2/pages/`
-- `v2/pages/index.mdx` as the root aggregate index
+- `v2/<top-level-section>/index.mdx` for each direct child folder under `v2/`
+- `v2/index.mdx` as the root aggregate index
 
 Format rules:
 
@@ -208,7 +208,7 @@ Validation and cleanup rules:
 
 Automation behavior:
 
-- Runs in pre-commit when staged files include `v2/pages` changes:
+- Runs in pre-commit when staged files include `v2/` changes:
   `node tools/scripts/generate-pages-index.js --staged --write --stage`
 - Supports manual verification/rebuild:
   - `node tools/scripts/generate-pages-index.js`
