@@ -348,8 +348,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/customCards.jsx",
-      "resolvedPath": "snippets/components/display/customCards.jsx",
+      "rawPath": "/snippets/components/display/custom-cards.jsx",
+      "resolvedPath": "snippets/components/display/custom-cards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -522,8 +522,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/customCards.jsx",
-      "resolvedPath": "snippets/components/display/customCards.jsx",
+      "rawPath": "/snippets/components/display/custom-cards.jsx",
+      "resolvedPath": "snippets/components/display/custom-cards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -558,8 +558,8 @@ export const LINK_MAP = {
       "movedCandidates": []
     }
   ],
-  "snippets/components/display/containers.mdx": [],
-  "snippets/components/display/embed.mdx": []
+  "snippets/components/display/embed.mdx": [],
+  "snippets/components/display/containers.mdx": []
 };
 
 export default LINK_MAP;

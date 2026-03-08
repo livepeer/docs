@@ -3,7 +3,7 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "external-https",
-      "rawPath": "\"https://www.linkedin.com/in/shannon-wells/\"",
+      "rawPath": "https://www.linkedin.com/in/shannon-wells/",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -102,8 +102,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/customCards.jsx",
-      "resolvedPath": "snippets/components/display/customCards.jsx",
+      "rawPath": "/snippets/components/display/custom-cards.jsx",
+      "resolvedPath": "snippets/components/display/custom-cards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -111,8 +111,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/customCards.jsx",
-      "resolvedPath": "snippets/components/display/customCards.jsx",
+      "rawPath": "/snippets/components/display/custom-cards.jsx",
+      "resolvedPath": "snippets/components/display/custom-cards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -599,8 +599,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/quadGrid.jsx",
-      "resolvedPath": "snippets/components/layout/quadGrid.jsx",
+      "rawPath": "/snippets/components/layout/quad-grid.jsx",
+      "resolvedPath": "snippets/components/layout/quad-grid.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -828,8 +828,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/customCards.jsx",
-      "resolvedPath": "snippets/components/display/customCards.jsx",
+      "rawPath": "/snippets/components/display/custom-cards.jsx",
+      "resolvedPath": "snippets/components/display/custom-cards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -947,8 +947,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/quadGrid.jsx",
-      "resolvedPath": "snippets/components/layout/quadGrid.jsx",
+      "rawPath": "/snippets/components/layout/quad-grid.jsx",
+      "resolvedPath": "snippets/components/layout/quad-grid.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -956,8 +956,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/customCards.jsx",
-      "resolvedPath": "snippets/components/display/customCards.jsx",
+      "rawPath": "/snippets/components/display/custom-cards.jsx",
+      "resolvedPath": "snippets/components/display/custom-cards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -998,8 +998,8 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "internal-rooted",
-      "rawPath": "/v2/platforms/daydream/overview",
-      "resolvedPath": "v2/platforms/daydream/overview.mdx",
+      "rawPath": "/v2/solutions/daydream/overview",
+      "resolvedPath": "v2/solutions/daydream/overview.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1007,8 +1007,8 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "internal-relative",
-      "rawPath": "../platforms/portal",
-      "resolvedPath": "v2/platforms/portal.mdx",
+      "rawPath": "../solutions/portal",
+      "resolvedPath": "v2/solutions/portal.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1088,8 +1088,8 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "internal-rooted",
-      "rawPath": "/v2/platforms/daydream/overview",
-      "resolvedPath": "v2/platforms/daydream/overview.mdx",
+      "rawPath": "/v2/solutions/daydream/overview",
+      "resolvedPath": "v2/solutions/daydream/overview.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1097,8 +1097,8 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "internal-rooted",
-      "rawPath": "/v2/platforms/livepeer-studio/overview",
-      "resolvedPath": "v2/platforms/livepeer-studio/overview.mdx",
+      "rawPath": "/v2/solutions/livepeer-studio/overview",
+      "resolvedPath": "v2/solutions/livepeer-studio/overview.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1115,8 +1115,8 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "internal-relative",
-      "rawPath": "../platforms/daydream/overview",
-      "resolvedPath": "v2/platforms/daydream/overview.mdx",
+      "rawPath": "../solutions/daydream/overview",
+      "resolvedPath": "v2/solutions/daydream/overview.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1160,8 +1160,8 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "internal-relative",
-      "rawPath": "../developers/builder-opportunities/dev-programs",
-      "resolvedPath": "v2/developers/builder-opportunities/dev-programs.mdx",
+      "rawPath": "../developers/builder-opportunities/overview",
+      "resolvedPath": "v2/developers/builder-opportunities/overview.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1187,8 +1187,8 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "internal-relative",
-      "rawPath": "../platforms/daydream/overview",
-      "resolvedPath": "v2/platforms/daydream/overview.mdx",
+      "rawPath": "../solutions/daydream/overview",
+      "resolvedPath": "v2/solutions/daydream/overview.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1268,8 +1268,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/customCards.jsx",
-      "resolvedPath": "snippets/components/display/customCards.jsx",
+      "rawPath": "/snippets/components/display/custom-cards.jsx",
+      "resolvedPath": "snippets/components/display/custom-cards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1288,7 +1288,7 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "external-https",
-      "rawPath": "https://raw.githubusercontent.com/livepeer/docs/docs-v2/snippets/assets/domain/00_HOME/Eric%20Shreck%20Gif.gif",
+      "rawPath": "https://raw.githubusercontent.com/livepeer/docs/docs-v2-assets/snippets/assets/domain/00_HOME/Eric%20Shreck%20Gif.gif",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -1324,15 +1324,11 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "internal-rooted",
-      "rawPath": "/v2/pages/05_orchestrators/orchestrators-portal",
-      "resolvedPath": "v2/pages/05_orchestrators/orchestrators-portal",
-      "exists": false,
-      "status": "missing",
-      "movedCandidates": [
-        "v2/orchestrators/orchestrators-portal.mdx",
-        "v2/cn/orchestrators/orchestrators-portal.mdx",
-        "v2/es/orchestrators/orchestrators-portal.mdx"
-      ]
+      "rawPath": "/v2/orchestrators/orchestrators-portal",
+      "resolvedPath": "v2/orchestrators/orchestrators-portal.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
     },
     {
       "sourceType": "jsx-attr",
@@ -1373,8 +1369,8 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "internal-relative",
-      "rawPath": "../developers/builder-opportunities/dev-programs",
-      "resolvedPath": "v2/developers/builder-opportunities/dev-programs.mdx",
+      "rawPath": "../developers/builder-opportunities/overview",
+      "resolvedPath": "v2/developers/builder-opportunities/overview.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1400,8 +1396,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/frameMode.jsx",
-      "resolvedPath": "snippets/components/display/frameMode.jsx",
+      "rawPath": "/snippets/components/display/frame-mode.jsx",
+      "resolvedPath": "snippets/components/display/frame-mode.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1438,7 +1434,7 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "internal-rooted",
-      "rawPath": "/developers/portal",
+      "rawPath": "/v2/developers/portal",
       "resolvedPath": "v2/developers/portal.mdx",
       "exists": true,
       "status": "ok",
@@ -1582,8 +1578,8 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "internal-rooted",
-      "rawPath": "/platforms/portal",
-      "resolvedPath": "v2/platforms/portal.mdx",
+      "rawPath": "/solutions/portal",
+      "resolvedPath": "v2/solutions/portal.mdx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1679,24 +1675,6 @@ export const LINK_MAP = {
       "movedCandidates": []
     },
     {
-      "sourceType": "jsx-attr",
-      "linkType": "internal-relative",
-      "rawPath": "../community/community-portal",
-      "resolvedPath": "v2/community/community-portal.mdx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "import-path",
-      "linkType": "import-path",
-      "rawPath": "/snippets/components/display/socialLinks.jsx",
-      "resolvedPath": "snippets/components/display/socialLinks.jsx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
       "sourceType": "import-path",
       "linkType": "import-path",
       "rawPath": "/snippets/components/display/image.jsx",
@@ -1708,8 +1686,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/customCards.jsx",
-      "resolvedPath": "snippets/components/display/customCards.jsx",
+      "rawPath": "/snippets/components/display/custom-cards.jsx",
+      "resolvedPath": "snippets/components/display/custom-cards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1719,8 +1697,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/customCards.jsx",
-      "resolvedPath": "snippets/components/display/customCards.jsx",
+      "rawPath": "/snippets/components/display/custom-cards.jsx",
+      "resolvedPath": "snippets/components/display/custom-cards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1813,8 +1791,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/showcaseCards.jsx",
-      "resolvedPath": "snippets/components/display/showcaseCards.jsx",
+      "rawPath": "/snippets/components/display/showcase-cards.jsx",
+      "resolvedPath": "snippets/components/display/showcase-cards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []

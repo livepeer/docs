@@ -37,7 +37,7 @@ export const LINK_MAP = {
       "movedCandidates": [
         "v2/internal/overview/governance.mdx",
         "v2/about/livepeer-protocol/governance-model.mdx",
-        "v2/developers/moved-to-about-livepeer-protocol/livepeer-governance.mdx"
+        "v2/community/livepeer-community/governance-and-foundation.mdx"
       ]
     },
     {
@@ -77,7 +77,7 @@ export const LINK_MAP = {
       "movedCandidates": [
         "v2/internal/overview/governance.mdx",
         "v2/about/livepeer-protocol/governance-model.mdx",
-        "v2/developers/moved-to-about-livepeer-protocol/livepeer-governance.mdx"
+        "v2/community/livepeer-community/governance-and-foundation.mdx"
       ]
     },
     {
@@ -96,15 +96,6 @@ export const LINK_MAP = {
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "import-path",
-      "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
-      "resolvedPath": "snippets/components/domain/SHARED/previewCallouts.jsx",
-      "exists": true,
-      "status": "ok",
       "movedCandidates": []
     }
   ],
@@ -372,8 +363,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/frameMode.jsx",
-      "resolvedPath": "snippets/components/display/frameMode.jsx",
+      "rawPath": "/snippets/components/display/frame-mode.jsx",
+      "resolvedPath": "snippets/components/display/frame-mode.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -390,8 +381,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/socialLinks.jsx",
-      "resolvedPath": "snippets/components/display/socialLinks.jsx",
+      "rawPath": "/snippets/components/display/social-links.jsx",
+      "resolvedPath": "snippets/components/display/social-links.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -399,8 +390,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/CardCarousel.jsx",
-      "resolvedPath": "snippets/components/display/CardCarousel.jsx",
+      "rawPath": "/snippets/components/display/card-carousel.jsx",
+      "resolvedPath": "snippets/components/display/card-carousel.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -408,8 +399,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/showcaseCards.jsx",
-      "resolvedPath": "snippets/components/display/showcaseCards.jsx",
+      "rawPath": "/snippets/components/display/showcase-cards.jsx",
+      "resolvedPath": "snippets/components/display/showcase-cards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -444,8 +435,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/responseField.jsx",
-      "resolvedPath": "snippets/components/content/responseField.jsx",
+      "rawPath": "/snippets/components/content/response-field.jsx",
+      "resolvedPath": "snippets/components/content/response-field.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -480,8 +471,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/ListSteps.jsx",
-      "resolvedPath": "snippets/components/layout/ListSteps.jsx",
+      "rawPath": "/snippets/components/layout/list-steps.jsx",
+      "resolvedPath": "snippets/components/layout/list-steps.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -489,8 +480,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/quadGrid.jsx",
-      "resolvedPath": "snippets/components/layout/quadGrid.jsx",
+      "rawPath": "/snippets/components/layout/quad-grid.jsx",
+      "resolvedPath": "snippets/components/layout/quad-grid.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -608,8 +599,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/responseField.jsx",
-      "resolvedPath": "snippets/components/content/responseField.jsx",
+      "rawPath": "/snippets/components/content/response-field.jsx",
+      "resolvedPath": "snippets/components/content/response-field.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -781,8 +772,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/CardCarousel.jsx",
-      "resolvedPath": "snippets/components/display/CardCarousel.jsx",
+      "rawPath": "/snippets/components/display/card-carousel.jsx",
+      "resolvedPath": "snippets/components/display/card-carousel.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -790,8 +781,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/showcaseCards.jsx",
-      "resolvedPath": "snippets/components/display/showcaseCards.jsx",
+      "rawPath": "/snippets/components/display/showcase-cards.jsx",
+      "resolvedPath": "snippets/components/display/showcase-cards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -799,8 +790,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/socialLinks.jsx",
-      "resolvedPath": "snippets/components/display/socialLinks.jsx",
+      "rawPath": "/snippets/components/display/social-links.jsx",
+      "resolvedPath": "snippets/components/display/social-links.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -949,8 +940,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/quadGrid.jsx",
-      "resolvedPath": "snippets/components/layout/quadGrid.jsx",
+      "rawPath": "/snippets/components/layout/quad-grid.jsx",
+      "resolvedPath": "snippets/components/layout/quad-grid.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -987,8 +978,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/SearchTable.jsx",
-      "resolvedPath": "snippets/components/layout/SearchTable.jsx",
+      "rawPath": "/snippets/components/layout/search-table.jsx",
+      "resolvedPath": "snippets/components/layout/search-table.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1638,10 +1629,10 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "snippets/components/primitives/divider.jsx",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped-package-import",
+      "rawPath": "/snippets/components/primitives/divider.jsx",
+      "resolvedPath": "snippets/components/primitives/divider.jsx",
+      "exists": true,
+      "status": "ok",
       "movedCandidates": []
     }
   ],
@@ -1757,15 +1748,6 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped-style-guide-example",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "import-path",
-      "linkType": "import-path",
       "rawPath": "/snippets/components/primitives/a11y.jsx",
       "resolvedPath": null,
       "exists": null,
@@ -1790,15 +1772,6 @@ export const LINK_MAP = {
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "import-path",
-      "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
-      "resolvedPath": "snippets/components/domain/SHARED/previewCallouts.jsx",
-      "exists": true,
-      "status": "ok",
       "movedCandidates": []
     }
   ],
@@ -1880,8 +1853,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/customCards.jsx",
-      "resolvedPath": "snippets/components/display/customCards.jsx",
+      "rawPath": "/snippets/components/display/custom-cards.jsx",
+      "resolvedPath": "snippets/components/display/custom-cards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2727,20 +2700,76 @@ export const LINK_MAP = {
     }
   ],
   "v2/resources/resources/videos.mdx": [],
-  "v2/resources/resources-portal.mdx": [
+  "v2/resources/resources-portal.mdx": [],
+  "snippets/components/display/embed.mdx": [],
+  "snippets/components/display/containers.mdx": [],
+  "snippets/components/layout/api-base-urls-table.mdx": [],
+  "snippets/pages/01_ABOUT/concepts/overview.mdx": [],
+  "snippets/pages/00_HOME/project-showcase.mdx": [
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://docs.google.com/forms/d/e/1FAIpQLSeJ4uoxQ9LUSg89RDWcGiTsbePXsSkRXzGzrdyJ8RVrM1171Q/viewform?usp=sharing&ouid=103197690869380433914",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
-      "resolvedPath": "snippets/components/domain/SHARED/previewCallouts.jsx",
+      "rawPath": "/snippets/components/layout/cards.jsx",
+      "resolvedPath": "snippets/components/layout/cards.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/text.jsx",
+      "resolvedPath": "snippets/components/primitives/text.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/divider.jsx",
+      "resolvedPath": "snippets/components/primitives/divider.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/display/video.jsx",
+      "resolvedPath": "snippets/components/display/video.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/display/showcase-cards.jsx",
+      "resolvedPath": "snippets/components/display/showcase-cards.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/automations/showcase/showcaseData.jsx",
+      "resolvedPath": "snippets/automations/showcase/showcaseData.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
     }
-  ],
-  "snippets/components/display/containers.mdx": [],
-  "snippets/components/display/embed.mdx": [],
-  "snippets/components/layout/api-base-urls-table.mdx": []
+  ]
 };
 
 export default LINK_MAP;

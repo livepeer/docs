@@ -6,7 +6,7 @@
  * Portal pages use mode: frame which is not correctly supported by Mintlify
  * They do this to remove the frontmatter metadata from the page in order to customise the layout.
  * mode: frame also strips all styling except for Mintlify components.
- * Use display/frameMode.jsx components for headings in frame mode pages.
+ * Use display/frame-mode.jsx components for headings in frame mode pages.
  *
  * @imports: REQUIRED - These components require imports on the MDX page to function.
  *

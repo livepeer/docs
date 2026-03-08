@@ -1057,8 +1057,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/frameMode.jsx",
-      "resolvedPath": "snippets/components/display/frameMode.jsx",
+      "rawPath": "/snippets/components/display/frame-mode.jsx",
+      "resolvedPath": "snippets/components/display/frame-mode.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []

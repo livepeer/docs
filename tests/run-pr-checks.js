@@ -25,6 +25,7 @@ const qualityTests = require('./unit/quality.test');
 const linksImportsTests = require('./unit/links-imports.test');
 const docsNavigationTests = require('./unit/docs-navigation.test');
 const scriptDocsTests = require('./unit/script-docs.test');
+const componentNamingTests = require('../tools/scripts/validators/components/check-naming-conventions');
 
 const REPO_ROOT = getRepoRoot();
 const SCRIPT_EXTENSIONS = new Set(['.js', '.cjs', '.mjs', '.ts', '.tsx', '.sh', '.bash', '.py']);
@@ -199,6 +200,25 @@ function runScriptDocsCheck(files) {
     files: files.length,
     errors: Array.isArray(result.errors) ? result.errors.length : 0,
     warnings: Array.isArray(result.warnings) ? result.warnings.length : 0
+  };
+}
+
+function runComponentNamingCheck(files) {
+  if (!files.length) {
+    return { label: 'Component Naming', status: 'skipped', files: 0, errors: 0, warnings: 0 };
+  }
+
+  const result = componentNamingTests.run({ files });
+  result.findings.forEach((finding) => {
+    console.error(`  ${componentNamingTests.formatFinding(finding)}`);
+  });
+
+  return {
+    label: 'Component Naming',
+    status: result.exitCode === 0 ? 'passed' : 'failed',
+    files: files.length,
+    errors: result.findings.length,
+    warnings: 0
   };
 }
 
@@ -432,6 +452,7 @@ async function main() {
   console.log(`Changed usefulness files: ${groups.usefulnessFiles.length}`);
 
   const checks = [];
+  checks.push(runComponentNamingCheck(groups.componentJsx));
   checks.push(await runUnitCheck('Style Guide', groups.styleFiles, styleGuideTests.runTests));
   checks.push(await runUnitCheck('MDX Validation', groups.docsMdxAbs, mdxTests.runTests));
   checks.push(await runUnitCheck('Spelling', groups.docsMdxAbs, spellingTests.runTests));
