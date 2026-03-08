@@ -38,15 +38,18 @@ const path = require('path');
 const BASE_URL = process.env.MINT_BASE_URL || 'http://localhost:3333';
 const TIMEOUT = 30000;
 const CONCURRENT = 5; // Test 5 pages at a time
+const BROWSER_LAUNCH_OPTIONS = {
+  headless: true,
+  args: ['--no-sandbox', '--disable-setuid-sandbox']
+};
 
 /**
  * Convert page path to URL
  */
 function pageToUrl(pagePath) {
   let url = pagePath
-    .replace(/^v2\/pages\//, '')
-    .replace(/^v2\//, '')
-    .replace(/\.mdx$/, '');
+    .replace(/^v2\/pages\//, 'v2/')
+    .replace(/\.mdx?$/, '');
   if (url.endsWith('/index')) url = url.replace(/\/index$/, '');
   return `/${url}`;
 }
@@ -174,9 +177,9 @@ async function main() {
   
   // Check server
   try {
-    const testBrowser = await puppeteer.launch({ headless: true });
+    const testBrowser = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
     const testPage = await testBrowser.newPage();
-    await testPage.goto(BASE_URL, { waitUntil: 'networkidle2', timeout: 5000 });
+    await testPage.goto(BASE_URL, { waitUntil: 'domcontentloaded', timeout: 5000 });
     await testPage.close();
     await testBrowser.close();
     console.log('✅ Server is accessible\n');
@@ -188,10 +191,7 @@ async function main() {
   
   console.log('🚀 Starting browser tests...\n');
   
-  const browser = await puppeteer.launch({ 
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
+  const browser = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
   
   const startTime = Date.now();
   const results = await testPagesInBatches(browser, pages);
