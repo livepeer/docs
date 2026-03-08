@@ -17,6 +17,12 @@ const path = require('path');
 const readline = require('readline');
 const { execSync } = require('child_process');
 const { listMintIgnoredRepoPaths } = require('../utils/mintignore');
+const {
+  collectDocsJsonRouteKeysFromObject,
+  collectNavigationPageEntries,
+  isExemptNavigationEntry,
+  loadNavigationExclusions
+} = require('../../tools/lib/docs-navigation');
 
 const REPORT_MD_REL = 'tasks/reports/navigation-links/navigation-report.md';
 const REPORT_JSON_REL = 'tasks/reports/navigation-links/navigation-report.json';
@@ -25,6 +31,7 @@ const DEFAULT_REMAP_THRESHOLD = 0.85;
 const RESOURCE_HUB_REDIRECT_ROUTE = 'v2/resources/redirect';
 const RESOURCE_HUB_PORTAL_ROUTE = 'v2/resources/resources-portal';
 const LEGACY_RESOURCE_HUB_ROUTE = 'v2/pages/07_resources/redirect';
+const NAVIGATION_VALIDATOR_NAME = 'docs-navigation.test.js';
 
 let errors = [];
 let warnings = [];
@@ -120,35 +127,6 @@ function collectExistingRoutes(repoRoot) {
   return [...routeSet];
 }
 
-function collectPageEntries(node, pointer, out = []) {
-  if (Array.isArray(node)) {
-    node.forEach((item, index) => collectPageEntries(item, `${pointer}[${index}]`, out));
-    return out;
-  }
-
-  if (!node || typeof node !== 'object') {
-    return out;
-  }
-
-  if (Array.isArray(node.pages)) {
-    node.pages.forEach((entry, index) => {
-      const entryPointer = `${pointer}.pages[${index}]`;
-      if (typeof entry === 'string') {
-        out.push({ value: entry, pointer: entryPointer });
-        return;
-      }
-      collectPageEntries(entry, entryPointer, out);
-    });
-  }
-
-  Object.entries(node).forEach(([key, value]) => {
-    if (key === 'pages') return;
-    collectPageEntries(value, `${pointer}.${key}`, out);
-  });
-
-  return out;
-}
-
 function collectObjectNodes(node, pointer, out = []) {
   if (Array.isArray(node)) {
     node.forEach((item, index) => collectObjectNodes(item, `${pointer}[${index}]`, out));
@@ -200,27 +178,12 @@ function loadI18nTargetLanguages(repoRoot) {
   }
 }
 
-function getV2EnglishNavigationRouteKeys(docsJson) {
-  const versions = Array.isArray(docsJson?.navigation?.versions) ? docsJson.navigation.versions : [];
-  const v2VersionIndex = versions.findIndex((versionNode) => versionNode?.version === 'v2');
-  if (v2VersionIndex === -1) return new Set();
-
-  const languages = Array.isArray(versions[v2VersionIndex]?.languages) ? versions[v2VersionIndex].languages : [];
-  const englishLanguageIndex = languages.findIndex((languageNode) => languageNode?.language === 'en');
-  if (englishLanguageIndex === -1) return new Set();
-
-  const pointer = `navigation.versions[${v2VersionIndex}].languages[${englishLanguageIndex}]`;
-  const entries = collectPageEntries(languages[englishLanguageIndex], pointer);
-  const routeKeys = new Set();
-
-  entries.forEach(({ value }) => {
-    const normalized = normalizeOrphanRouteKey(value);
-    if (normalized.startsWith('v2/')) {
-      routeKeys.add(normalized);
-    }
+function isExemptNavEntry(value, node, repoRoot, exclusions) {
+  return isExemptNavigationEntry(value, node, {
+    repoRoot,
+    validatorName: NAVIGATION_VALIDATOR_NAME,
+    exclusions
   });
-
-  return routeKeys;
 }
 
 function toOrphanRouteKeyFromFile(repoRoot, filePath) {
@@ -266,7 +229,12 @@ function shouldExcludeOrphanCandidate(relPath, localeSet) {
 
 function collectOrphanedV2Pages(repoRoot, docsJson) {
   const localeSet = loadI18nTargetLanguages(repoRoot);
-  const navRouteKeys = getV2EnglishNavigationRouteKeys(docsJson);
+  const navRouteKeys = collectDocsJsonRouteKeysFromObject(docsJson, {
+    repoRoot,
+    version: 'v2',
+    language: 'en',
+    validatorName: NAVIGATION_VALIDATOR_NAME
+  });
   if (navRouteKeys.size === 0) return [];
 
   const v2Root = path.join(repoRoot, 'v2');
@@ -798,11 +766,12 @@ function runTests(options = {}) {
     };
   }
 
-  const entries = collectPageEntries(docsJson.navigation || docsJson, 'navigation');
+  const navigationExclusions = loadNavigationExclusions(repoRoot);
+  const entries = collectNavigationPageEntries(docsJson.navigation || docsJson, { pointer: 'navigation' });
   const syntaxErrors = [];
   const missingRoutes = [];
 
-  entries.forEach(({ value, pointer }) => {
+  entries.forEach(({ value, pointer, node }) => {
     const raw = String(value);
     const trimmed = raw.trim();
     const normalized = normalizeRoute(raw);
@@ -814,6 +783,10 @@ function runTests(options = {}) {
         message: `Legacy route "${LEGACY_RESOURCE_HUB_ROUTE}" is not allowed; use "${RESOURCE_HUB_REDIRECT_ROUTE}"`,
         pointer
       });
+    }
+
+    if (isExemptNavEntry(raw, node, repoRoot, navigationExclusions)) {
+      return;
     }
 
     if (!trimmed) {
