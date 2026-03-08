@@ -75,6 +75,7 @@ async function testPage(browser, filePath, options = {}) {
   }
   
   const errors = [];
+  const consoleErrors = [];
   const warnings = [];
   
   // Listen for console errors
@@ -99,7 +100,10 @@ async function testPage(browser, filePath, options = {}) {
       'await is only valid in async functions'  // Test script artifacts
     ];
     if (type === 'error' && !ignored.some(i => text.toLowerCase().includes(i.toLowerCase()))) {
-      errors.push(`Console: ${text}`);
+      consoleErrors.push({
+        url: page.url() || fullUrl,
+        message: text
+      });
     }
   });
   
@@ -133,6 +137,13 @@ async function testPage(browser, filePath, options = {}) {
     await page.goto(fullUrl, { waitUntil: 'networkidle2', timeout: TIMEOUT });
     // Wait for content to render
     await new Promise(resolve => setTimeout(resolve, 2000));
+
+    if (consoleErrors.length > 0) {
+      errors.push(`Console errors (${consoleErrors.length}) detected`);
+      consoleErrors.forEach(consoleError => {
+        errors.push(`Console (${consoleError.url}): ${consoleError.message}`);
+      });
+    }
     
     // Check content
     const bodyText = await page.evaluate(() => document.body.innerText);
@@ -188,12 +199,20 @@ async function testPage(browser, filePath, options = {}) {
       contentLength: bodyText ? bodyText.length : 0
     };
   } catch (error) {
+    const navigationErrors = [`Navigation Error: ${error.message}`];
+    if (consoleErrors.length > 0) {
+      navigationErrors.push(`Console errors (${consoleErrors.length}) detected`);
+      consoleErrors.forEach(consoleError => {
+        navigationErrors.push(`Console (${consoleError.url}): ${consoleError.message}`);
+      });
+    }
+
     return {
       filePath,
       url: fullUrl,
       theme,
       success: false,
-      errors: [`Navigation Error: ${error.message}`],
+      errors: navigationErrors,
       warnings
     };
   } finally {
