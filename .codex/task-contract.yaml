@@ -1,34 +1,24 @@
 task_id: 788
-branch: codex/788-e-05-silo-personal-utility-scripts
+branch: codex/788-performance-baseline
 base_branch: docs-v2
 scope_in:
   - .codex/task-contract.yaml
-  - .lpdignore
-  - tools/scripts/download-linkedin-video.sh
-  - tools/scripts/download-linkedin-with-cookies.sh
-  - tools/scripts/transcribe-audio-to-mdx.js
-  - tools/scripts/execute-phase1-worktree-plan.js
-  - tools/utility/personal/
-  - tools/script-index.md
-  - docs-guide/indexes/scripts-index.mdx
-  - docs-guide/lpd.mdx
-  - docs-guide/scripts-index.md
-  - tests/PR-CI-TESTS-AND-SCRIPT-RUN-MATRIX.md
-  - v2/index.mdx
-  - v2/cn/index.mdx
-  - v2/es/index.mdx
-  - v2/fr/index.mdx
-  - v2/internal/assets/transcripts/a16z/README.md
-  - docs-index.json
-  - .githooks/script-index.md
-  - .github/script-index.md
-  - tests/script-index.md
-  - tasks/scripts/script-index.md
+  - tools/scripts/measure-performance.js
 scope_out: []
 allowed_generated:
   - .codex/pr-body.generated.md
+  - tools/script-index.md
+  - docs-guide/indexes/scripts-index.mdx
+  - docs-guide/indexes/workflows-index.mdx
+  - docs-guide/indexes/pages-index.mdx
+  - tasks/reports/performance/
 acceptance_checks:
+  - node tests/unit/script-docs.test.js --files tools/scripts/measure-performance.js --enforce-existing
+  - node tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes
+  - node tools/scripts/measure-performance.js --domain all
   - node tests/run-pr-checks.js --base-ref docs-v2
+  - node tools/scripts/validate-codex-task-contract.js --branch codex/788-performance-baseline --require-pr-body --pr-body-file .codex/pr-body.generated.md
 risk_flags:
-  - workflow-governance
+  - external-network
+  - generated-artifacts
 follow_up_issues: []
