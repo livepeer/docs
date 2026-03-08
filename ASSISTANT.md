@@ -6,14 +6,14 @@ Provide accurate, repo-grounded help for users and contributors of Livepeer docu
 ## Primary Context
 - Documentation platform: Mintlify
 - Primary config: `docs.json`
-- Current docs: `v2/pages/**`
+- Current docs: `v2/**`
 - Legacy docs: `v1/**` (frozen unless explicitly requested)
 - Contribution/process docs: `README.md`, `contribute/**`, `tools/ai-rules/**`
 
 ## Source-Of-Truth Priority
 Use sources in this order:
 1. `docs.json` for navigation, tabs, groups, versions, and page routing.
-2. `v2/pages/**` for current content and user-facing guidance.
+2. `v2/**` for current content and user-facing guidance.
 3. `README.md` and `contribute/**` for workflow, testing, and contribution rules.
 4. `v1/**` only when user asks for legacy behavior or no `v2` equivalent exists.
 
@@ -39,30 +39,31 @@ If intent is ambiguous, ask one concise clarifying question before prescribing s
 ## v2 IA Routing Map
 Use this mapping to route users to the right section before deep answers:
 
-- `v2/pages/00_home/**` -> Home
-- `v2/pages/01_about/**` -> About
-- `v2/pages/010_products/**` -> Platforms
-- `v2/pages/02_community/**` -> Community
-- `v2/pages/03_developers/**` -> Developers
-- `v2/pages/04_gateways/**` -> Gateways
-- `v2/pages/05_orchestrators/**` -> GPU Nodes
-- `v2/pages/06_lptoken/**` -> LP Token
-- `v2/pages/08_help/**` -> Help Center
-- `v2/pages/09_internal/**` -> Internal Hub
+- `v2/home/**` -> Home
+- `v2/about/**` -> About
+- `v2/solutions/**` -> Solutions
+- `v2/community/**` -> Community
+- `v2/developers/**` -> Developers
+- `v2/gateways/**` -> Gateways
+- `v2/orchestrators/**` -> Orchestrators
+- `v2/lpt/**` -> LPT
+- `v2/resources/**` -> Resource HUB
+- `v2/community/faq` and `v2/resources/redirect` -> Help Center
+- `v2/internal/**` -> Internal Hub
 
 Shared resource behavior:
-- `v2/pages/07_resources/**` is cross-linked from many tabs (About, Community, Developers, Gateways, GPU Nodes, LP Token, Platforms, Home, Help Center, Resource HUB).
-- When a `07_resources` page is used, preserve the user's current domain context in the answer rather than force a tab switch.
+- `v2/resources/**` is cross-linked from many tabs (About, Community, Developers, Gateways, GPU Nodes, LP Token, Platforms, Home, Help Center, Resource HUB).
+- When a `v2/resources/**` page is used, preserve the user's current domain context in the answer rather than force a tab switch.
 
 If the user asks "where should this live?":
 1. Choose the page-prefix by domain first.
-2. Use `07_resources` only for shared docs standards, guides, and cross-domain references.
+2. Use `v2/resources/**` only for shared docs standards, guides, and cross-domain references.
 
 ## Answer Contract
 For factual statements about docs content, include repo file paths.
 
 When relevant:
-- Cite exact paths (for example: `v2/pages/...`, `docs.json`).
+- Cite exact paths (for example: `v2/...`, `docs.json`).
 - State assumptions if user context is incomplete.
 - Explicitly say "not documented in this repo" when applicable.
 

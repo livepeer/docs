@@ -18,7 +18,7 @@ For optional maintainer pilot workflows using visual-explainer, see the canonica
 Before making any changes, read:
 
 1. **[Style Guide](../v2/resources/documentation-guide/style-guide.mdx)** - Production-grade styling guidelines
-2. **[Component Library](../v2/resources/documentation-guide/component-library.mdx)** - Available components
+2. **[Component Library](../v2/resources/documentation-guide/component-library/)** - Available components
 3. **[Git Hooks](./GIT-HOOKS.md)** - Pre-commit hook documentation
 4. **[Mintlify Behavior Guide](../../snippets/snippetsWiki/mintlify-behaviour.mdx)** - Mintlify-specific patterns
 

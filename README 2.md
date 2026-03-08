@@ -14,7 +14,7 @@ Live site: [docs.livepeer.org](https://docs.livepeer.org)
 
 If you only have a few minutes, this is the model:
 
-1. `v2/pages/` + `snippets/` are the primary docs content system.
+1. `v2/` + `snippets/` are the primary docs content system.
 2. `docs.json` controls navigation/routes.
 3. `lpd` is the maintainer CLI for setup/dev/test/hooks/scripts.
 4. `.githooks/`, `tests/`, and CI workflows enforce quality gates.
@@ -139,7 +139,7 @@ For very large docs trees with sluggish route transitions:
 
 1. Read style and component standards:
    - [`v2/resources/documentation-guide/style-guide.mdx`](v2/resources/documentation-guide/style-guide.mdx)
-   - [`v2/resources/documentation-guide/component-library.mdx`](v2/resources/documentation-guide/component-library.mdx)
+   - [`v2/resources/documentation-guide/component-library/`](v2/resources/documentation-guide/component-library/)
 2. Install/update hooks:
 
 ```bash
@@ -205,7 +205,7 @@ Deep matrix:
 
 High-level directory map:
 
-- `v2/pages/` active docs pages
+- `v2/` active docs pages
 - `v1/` legacy/frozen docs
 - `snippets/` components, data, automations, shared assets
 - `tools/scripts/` operational/generation scripts
