@@ -337,10 +337,6 @@ import { H1, H2, PageHeader } from "/snippets/components/display/frameMode.jsx";
 - Use `code` (backticks) for inline code
 - Use code blocks for multi-line code
 
-### Punctuation
-
-- Do not use em dashes in English docs prose. Replace `—` with spaced en dash ` – ` or rewrite the sentence if a comma or colon reads more clearly.
-
 ### Mathematical Expressions
 
 Mintlify supports LaTeX for rendering mathematical expressions. Use proper syntax to ensure equations render correctly.
@@ -457,11 +453,11 @@ You can configure LaTeX rendering in `docs.json` under `styles.latex` to overrid
 
 ```mdx
 {/* ❌ Plain markdown link */}
-[Getting Started](/get-started)
+[Getting Started](/home/get-started)
 
 {/* ✅ Custom component with better styling */}
 import { GotoLink } from '/snippets/components/primitives/links.jsx';
-<GotoLink label="Getting Started" relativePath="/get-started" icon="arrow-right" />
+<GotoLink label="Getting Started" relativePath="/home/get-started" icon="arrow-right" />
 ```
 
 ```mdx
@@ -590,20 +586,20 @@ export const MyComponent = () => {
 
 ```jsx
 // ✅ Correct - absolute path from repo root
-import { MyComponent } from '/snippets/components/MyComponent.jsx';
+import { ScrollBox } from '/snippets/components/layout/cards.jsx';
 
 // ❌ Wrong - relative paths don't work
-import { MyComponent } from '../components/MyComponent.jsx';
+import { ScrollBox } from '../../../snippets/components/layout/cards.jsx';
 ```
 
 #### 2. File Extensions Required
 
 ```jsx
 // ✅ Include extension
-import { Component } from '/snippets/Component.jsx';
+import { GotoLink } from '/snippets/components/primitives/links.jsx';
 
 // ❌ May not resolve
-import { Component } from '/snippets/Component';
+import { GotoLink } from '/snippets/components/primitives/links';
 ```
 
 #### 3. Cannot Import into Component Files
@@ -613,7 +609,7 @@ import { Component } from '/snippets/Component';
 ```jsx
 // ❌ WRONG - This will fail
 // snippets/components/MyComponent.jsx
-import { themeColor } from '/snippets/styles/themeStyles.jsx';
+import { GotoLink } from '/snippets/components/primitives/links.jsx';
 
 export const MyComponent = () => {
   return <div style={{ color: themeColor.light.accent }}>Hello</div>;
@@ -625,11 +621,11 @@ export const MyComponent = () => {
 ```jsx
 // ✅ CORRECT
 // MyPage.mdx
-import { MyComponent } from '/snippets/components/MyComponent.jsx';
-import { ThemeData } from '/snippets/styles/themeStyles.jsx';
+import { ScrollBox } from '/snippets/components/layout/cards.jsx';
+import { GotoLink } from '/snippets/components/primitives/links.jsx';
 
-<MyComponent />
-// MyComponent can access ThemeData from parent scope
+<ScrollBox />
+// Child components can access imported values from parent scope
 ```
 
 #### 4. JSX Files Cannot Import Other JSX Files
@@ -648,8 +644,8 @@ When importing MDX files into other MDX files:
 
 ```mdx
 // Parent.mdx
-import { DOCKER_CODE } from '/snippets/data/gateways/code.jsx'
-import ChildView from '/snippets/pages/ChildView.mdx'
+import { DOCKER_CODE } from '/v2/gateways/quickstart/data/docker/code.jsx'
+import ChildView from '/snippets/pages/00_HOME/project-showcase.mdx'
 
 <ChildView />
 ```
@@ -767,10 +763,10 @@ Frame mode (`mode: frame` in frontmatter) removes all default Mintlify styling. 
 
 ```mdx
 // ✅ MyPage.mdx
-import { MyComponent } from '/snippets/components/MyComponent.jsx';
-import { DOCKER_CODE } from '/snippets/data/gateways/code.jsx';
+import { ScrollBox } from '/snippets/components/layout/cards.jsx';
+import { DOCKER_CODE } from '/v2/gateways/quickstart/data/docker/code.jsx';
 
-<MyComponent />
+<ScrollBox />
 ```
 
 ```jsx
@@ -1008,7 +1004,7 @@ This deletion override also runs all other pre-commit checks.
 
 ### Example Error Output
 
-```
+```text
 ╔═══════════════════════════════════════════════════════════════╗
 ║  STYLE GUIDE VIOLATIONS DETECTED - COMMIT BLOCKED           ║
 ╚═══════════════════════════════════════════════════════════════╝
@@ -1056,7 +1052,6 @@ npm run test:browser    # Browser rendering tests
 **Style Guide Tests** (`test:style`):
 - CSS Custom Properties usage (no ThemeData, no hardcoded colors)
 - No inline styles in MDX files
-- No em dashes in English `v2` docs prose (use ` – ` or rewrite the sentence)
 - No Tailwind classes
 - Absolute import paths
 - File naming conventions
