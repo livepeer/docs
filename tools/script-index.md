@@ -7,23 +7,6 @@
 |---|---|---|---|
 | `tools/scripts/add-framework-headers.js` | Insert or verify governance framework metadata headers from classification JSON. | `*   node tools/scripts/add-framework-headers.js --data script-classifications.json --dry-run` | docs |
 | `tools/scripts/apply-content-gap-reconciliation.js` | Apply content-gap reconciliation decisions by archiving selected files, syncing mapping state, and generating follow-up reports. | `*   node tools/scripts/apply-content-gap-reconciliation.js` | docs |
-| `tools/scripts/archive/deprecated/docs-coverage-and-route-integrity-audit.js` | Audit docs coverage integrity, missing routes, legacy /v2/pages references, and orphan candidate files. | `*   node tools/scripts/archive/deprecated/docs-coverage-and-route-integrity-audit.js --scope full` | docs |
-| `tools/scripts/archive/deprecated/project-management-output-script.js` | Deprecated legacy project-management output script retained as a reference stub. | `*   node tools/scripts/archive/deprecated/project-management-output-script.js` | docs |
-| `tools/scripts/archive/duplicates/check-component-errors.js` | Utility script for tools/scripts/test/check-component-errors.js. | `*   node tools/scripts/test/check-component-errors.js` | docs |
-| `tools/scripts/archive/duplicates/final-verification.js` | Utility script for tools/scripts/test/final-verification.js. | `*   node tools/scripts/test/final-verification.js` | docs |
-| `tools/scripts/archive/duplicates/find-correct-url.js` | Utility script for tools/scripts/test/find-correct-url.js. | `*   node tools/scripts/test/find-correct-url.js` | docs |
-| `tools/scripts/archive/duplicates/inspect-page.js` | Utility script for tools/scripts/test/inspect-page.js. | `*   node tools/scripts/test/inspect-page.js` | docs |
-| `tools/scripts/archive/duplicates/inspect-video-page.js` | Utility script for tools/scripts/test/inspect-video-page.js. | `*   node tools/scripts/test/inspect-video-page.js` | docs |
-| `tools/scripts/archive/duplicates/test-youtube-pages-v2.js` | Utility script for tools/scripts/test/test-youtube-pages.js. | `*   node tools/scripts/test/test-youtube-pages.js` | docs |
-| `tools/scripts/archive/duplicates/test-youtube-pages.js` | Utility script for tools/scripts/test/test-youtube-pages.js. | `*   node tools/scripts/test/test-youtube-pages.js` | docs |
-| `tools/scripts/archive/duplicates/verify-all-pages.js` | Utility script for tools/scripts/verify-all-pages.js. | `*   node tools/scripts/verify-all-pages.js` | docs |
-| `tools/scripts/archive/duplicates/verify-pages.js` | Utility script for tools/scripts/verify-pages.js. | `*   node tools/scripts/verify-pages.js` | docs |
-| `tools/scripts/archive/fixtures/allowed-script.js` | Utility script for tools/scripts/archive/fixtures/allowed-script.js. | `*   node tools/scripts/archive/fixtures/allowed-script.js` | docs |
-| `tools/scripts/archive/fixtures/allowed-test.js` | Utility script for tools/scripts/archive/fixtures/allowed-test.js. | `*   node tools/scripts/archive/fixtures/allowed-test.js` | docs |
-| `tools/scripts/archive/fixtures/allowed.js` | Utility script for tools/scripts/archive/fixtures/allowed.js. | `*   node tools/scripts/archive/fixtures/allowed.js` | docs |
-| `tools/scripts/archive/placeholders/embed-table.js` | Archived no-op placeholder for markdown table embedding utility tasks. | `*   node tools/scripts/archive/placeholders/embed-table.js` | docs |
-| `tools/scripts/archive/placeholders/gen-table.js` | Archived no-op placeholder for generated table output utility tasks. | `*   node tools/scripts/archive/placeholders/gen-table.js` | docs |
-| `tools/scripts/archive/placeholders/gen-textareas.js` | Archived no-op placeholder for textarea generation utility tasks. | `*   node tools/scripts/archive/placeholders/gen-textareas.js` | docs |
 | `tools/scripts/assign-purpose-metadata.js` | Assign purpose and audience frontmatter metadata for docs.json EN-routable v2 pages using deterministic rules with optional LLM classification for unclassified pages. | `*   node tools/scripts/assign-purpose-metadata.js --scope pilot --dry-run` | docs |
 | `tools/scripts/audit-all-pages-simple.js` | Utility script for tasks/scripts/audit-all-pages-simple.js. | `*   node tasks/scripts/audit-all-pages-simple.js` | docs |
 | `tools/scripts/audit-all-pages.js` | Utility script for tasks/scripts/audit-all-pages.js. | `*   node tasks/scripts/audit-all-pages.js` | docs |

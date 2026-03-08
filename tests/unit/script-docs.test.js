@@ -21,7 +21,7 @@ const {
   buildGeneratedNoteLines
 } = require('../../tools/lib/generated-file-banners');
 
-const REPO_ROOT = process.cwd();
+const REPO_ROOT = path.resolve(__dirname, '../..');
 const INDEX_START = '{/* SCRIPT-INDEX:START */}';
 const INDEX_END = '{/* SCRIPT-INDEX:END */}';
 
@@ -108,6 +108,8 @@ function escapeRegExp(value) {
 function shouldExclude(repoPath) {
   const p = normalizeRepoPath(repoPath);
   return (
+    p === 'tools/scripts/archive' ||
+    p.startsWith('tools/scripts/archive/') ||
     p.includes('/node_modules/') ||
     p.startsWith('node_modules/') ||
     p.includes('/.git/') ||
@@ -158,7 +160,7 @@ function getAllScopedScripts() {
 function getStagedAddedScripts() {
   let output = '';
   try {
-    output = execSync('git diff --cached --name-only --diff-filter=A', { encoding: 'utf8' });
+    output = execSync('git diff --cached --name-only --diff-filter=A', { cwd: REPO_ROOT, encoding: 'utf8' });
   } catch (_err) {
     return [];
   }
@@ -428,7 +430,7 @@ function injectTemplate(repoPath, placeholderMode) {
 function stageFiles(repoPaths) {
   if (!repoPaths.length) return;
   const args = repoPaths.map((p) => `"${p}"`).join(' ');
-  execSync(`git add ${args}`, { stdio: 'ignore' });
+  execSync(`git add ${args}`, { cwd: REPO_ROOT, stdio: 'ignore' });
 }
 
 function buildDefaultIndexContent(indexPath) {
