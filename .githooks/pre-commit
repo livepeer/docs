@@ -212,6 +212,48 @@ should_enforce_ai_stash_policy() {
     return 1
 }
 
+get_git_blob_ref() {
+    local object_ref="$1"
+    git rev-parse --verify "$object_ref" 2>/dev/null || true
+}
+
+get_archive_followup_target() {
+    local file_path="$1"
+
+    if [[ "$file_path" != v2/* ]]; then
+        return 1
+    fi
+
+    if [[ "$file_path" == v2/x-archived/* ]]; then
+        return 1
+    fi
+
+    printf 'v2/x-archived/%s\n' "${file_path#v2/}"
+}
+
+is_allowed_archive_followup_delete() {
+    local file_path="$1"
+    local archive_path=""
+    local source_blob=""
+    local archive_blob=""
+
+    archive_path=$(get_archive_followup_target "$file_path") || return 1
+    source_blob=$(get_git_blob_ref "HEAD:$file_path")
+    if [ -z "$source_blob" ]; then
+        return 1
+    fi
+
+    archive_blob=$(get_git_blob_ref ":$archive_path")
+    if [ -z "$archive_blob" ]; then
+        archive_blob=$(get_git_blob_ref "HEAD:$archive_path")
+    fi
+    if [ -z "$archive_blob" ]; then
+        return 1
+    fi
+
+    [ "$source_blob" = "$archive_blob" ]
+}
+
 if [ "$SKIP_ALL" = "1" ]; then
     echo -e "${YELLOW}⚠️  WARNING: All pre-commit checks bypassed (SKIP_ALL=1)${NC}"
     echo -e "${YELLOW}   This should only be used in emergencies.${NC}"
@@ -236,6 +278,24 @@ fi
 # NOTE: Deletions in tasks/ are allowed (AI-only working directory)
 ALL_DELETED_FILES=$(git diff --cached --name-only --diff-filter=D || true)
 DELETED_FILES=$(echo "$ALL_DELETED_FILES" | grep -v '^tasks/' || true)
+ALLOWED_ARCHIVE_DELETIONS=""
+
+if [ -n "$DELETED_FILES" ]; then
+    FILTERED_DELETED_FILES=""
+    while IFS= read -r deleted_file; do
+        if [ -z "$deleted_file" ]; then
+            continue
+        fi
+
+        if is_allowed_archive_followup_delete "$deleted_file"; then
+            ALLOWED_ARCHIVE_DELETIONS="${ALLOWED_ARCHIVE_DELETIONS}${deleted_file}"$'\n'
+            continue
+        fi
+
+        FILTERED_DELETED_FILES="${FILTERED_DELETED_FILES}${deleted_file}"$'\n'
+    done <<< "$DELETED_FILES"
+    DELETED_FILES=$(printf '%s' "$FILTERED_DELETED_FILES")
+fi
 
 if [ -n "$DELETED_FILES" ]; then
     if [ "$ALLOW_DELETIONS" != "1" ] && has_human_override_trailer "allow-deletions"; then
@@ -296,6 +356,11 @@ if [ -n "$DELETED_FILES" ]; then
         echo -e "${YELLOW}⚠️  WARNING: File deletions allowed (human override detected)${NC}"
         echo -e "${YELLOW}   Make sure deletions are intentional and files are backed up!${NC}"
     fi
+fi
+
+if [ -n "$ALLOWED_ARCHIVE_DELETIONS" ]; then
+    echo -e "${GREEN}ℹ️  Allowed archive follow-up deletions:${NC}"
+    echo "$ALLOWED_ARCHIVE_DELETIONS" | sed '/^$/d; s/^/  ↪ /'
 fi
 
 # Check for .allowlist file changes (BLOCKED for AIs, requires human override)
@@ -601,7 +666,7 @@ else
     echo -e "${YELLOW}Skipping legacy verify.sh in pre-commit (staged-only fast mode).${NC}"
     echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo "Checking generated file banners..."
-    if node tools/scripts/enforce-generated-file-banners.js --check; then
+    if node tools/scripts/enforce-generated-file-banners.js --check --staged; then
         echo -e "${GREEN}✓ Generated file banner check passed${NC}"
     else
         echo "Generated file banners missing or incorrect. Run: node tools/scripts/enforce-generated-file-banners.js --write"

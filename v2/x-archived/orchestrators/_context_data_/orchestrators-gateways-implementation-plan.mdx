@@ -172,7 +172,7 @@ with links to the `box.md` reference for readers who are ahead of the docs.
 
 **File to create:** `v2/orchestrators/quickstart/transcoding-quickstart.mdx`
 
-Structure the steps as follows. Eliteproxy's Docker compose slots into Step 3.
+Structure the steps as follows. eliteproxy's Docker compose slots into Step 3.
 
 ---
 
@@ -244,9 +244,9 @@ Example annotation pattern:
 ```yaml
 # docker-compose.yml
 services:
- orchestrator:
- image: livepeer/go-livepeer:latest
- environment:
+  orchestrator:
+    image: livepeer/go-livepeer:latest
+    environment:
       # Your funded Arbitrum ETH address
       - ETH_KEYSTORE_PATH=/keystore
       - ETH_PASSWORD_PATH=/password
@@ -256,7 +256,7 @@ services:
       - MAX_SESSIONS=10
       # Your publicly accessible service URI (must be reachable by gateways)
       - SERVICE_URI=https://your-orchestrator.example.com:8935
- volumes:
+    volumes:
       - ~/.lpData/keystore:/keystore:ro
       - ~/.lpData/password:/password:ro
 ```
@@ -278,12 +278,12 @@ livepeer_cli
 # From the CLI menu, select: Invoke multistep wizard > Activate as an orchestrator
 # Or pass flags directly:
 ./livepeer \
- -network arbitrum-one-mainnet \
- -blockRewardCut 5.0 \
- -feeShare 10.0 \
- -pricePerUnit 1000 \
- -pixelsPerUnit 1000000000000 \
- -serviceURI https://your-orchestrator.example.com:8935
+  -network arbitrum-one-mainnet \
+  -blockRewardCut 5.0 \
+  -feeShare 10.0 \
+  -pricePerUnit 1000 \
+  -pixelsPerUnit 1000000000000 \
+  -serviceURI https://your-orchestrator.example.com:8935
 ```
 
 <Tip>
@@ -438,7 +438,7 @@ Once both an Orchestrator and Gateway are running, you can verify your setup by:
 
 1. Pointing a gateway at your orchestrator directly:
    ```bash
- -orchAddr=https://your-orchestrator.example.com:8935
+   -orchAddr=https://your-orchestrator.example.com:8935
    ```
 2. Sending a test stream through the gateway
 3. Confirming the orchestrator logs show a transcoding session

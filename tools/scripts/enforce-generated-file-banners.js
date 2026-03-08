@@ -1,15 +1,35 @@
 #!/usr/bin/env node
 /**
- * @script            enforce-generated-file-banners
- * @category          remediator
- * @purpose           governance:index-management
- * @scope             tools/scripts, tools/lib, docs-guide/indexes, v2, tests/unit/docs-guide-sot.test.js
- * @owner             docs
- * @needs             R-R16, R-R17
- * @purpose-statement Generated file banner enforcer — checks (--check) or writes (default) "do not edit" banners on generated files
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
- * @dualmode          --check (enforcer) | default (remediator)
- * @usage             node tools/scripts/enforce-generated-file-banners.js [flags]
+ * @script enforce-generated-file-banners
+ * @summary Enforce standardized hidden/visible generated banners and frontmatter across generated MDX outputs.
+ * @owner docs
+ * @scope tools/scripts, tools/lib, docs-guide/indexes, v2, tests/unit/docs-guide-sot.test.js
+ * @pipeline manual — interactive developer tool, not suited for automated pipelines
+ *
+ * @usage
+ *   node tools/scripts/enforce-generated-file-banners.js --check
+ *   node tools/scripts/enforce-generated-file-banners.js --write
+ *   node tools/scripts/enforce-generated-file-banners.js --check --staged
+ *
+ * @inputs
+ *   --check Validate generated banner/frontmatter policy without writing files.
+ *   --write Run generators and normalize generated outputs before validation.
+ *   --staged Restrict validation to generated/banner-relevant staged files when available.
+ *
+ * @outputs
+ *   - Console validation summary
+ *
+ * @exit-codes
+ *   0 = policy checks passed
+ *   1 = one or more policy checks failed
+ *
+ * @examples
+ *   node tools/scripts/enforce-generated-file-banners.js --check
+ *   node tools/scripts/enforce-generated-file-banners.js --write
+ *   node tools/scripts/enforce-generated-file-banners.js --check --staged
+ *
+ * @notes
+ *   i18n localized files must keep codex-i18n provenance. Visible generation Note parity follows source English pages.
  */
 
 const fs = require('fs');
@@ -26,6 +46,7 @@ const {
 } = require('../lib/generated-file-banners');
 
 const REPO_ROOT = process.cwd();
+const STAGED_SNAPSHOT_ENV = 'LPD_STAGED_FILES_SNAPSHOT';
 
 const NON_I18N_GENERATED_STATIC = [
   'docs-guide/indexes/components-index.mdx',
@@ -51,6 +72,29 @@ const WRITE_COMMANDS = [
   ['tests/unit/script-docs.test.js', '--write', '--rebuild-indexes'],
   ['tools/scripts/generate-pages-index.js', '--write', '--rebuild-indexes']
 ];
+
+const GENERATED_COMMAND_TARGETS = new Map([
+  ['tools/scripts/generate-docs-guide-indexes.js', new Set([
+    'docs-guide/indexes/components-index.mdx',
+    'docs-guide/indexes/scripts-index.mdx',
+    'docs-guide/indexes/templates-index.mdx',
+    'docs-guide/indexes/workflows-index.mdx'
+  ])],
+  ['tools/scripts/generate-docs-guide-pages-index.js', new Set([
+    'docs-guide/indexes/pages-index.mdx'
+  ])],
+  ['tools/scripts/generate-docs-guide-components-index.js', new Set([
+    'docs-guide/indexes/components-index.mdx',
+    'v2/resources/documentation-guide/component-library/overview.mdx'
+  ])],
+  ['tests/unit/script-docs.test.js', new Set([
+    '.githooks/script-index.md',
+    'docs-guide/indexes/scripts-index.mdx',
+    'tests/script-index.md',
+    'tools/script-index.md'
+  ])],
+  ['tools/scripts/generate-pages-index.js', null]
+]);
 
 function normalizeRepoPath(value) {
   return String(value || '').split(path.sep).join('/');
@@ -92,8 +136,62 @@ function runNodeCommand(args) {
   return result.status === 0;
 }
 
-function runGeneratorSet(writeMode, violations) {
+function getStagedFiles() {
+  const snapshot = String(process.env[STAGED_SNAPSHOT_ENV] || '')
+    .split(/\r?\n/)
+    .map((entry) => normalizeRepoPath(entry.trim()))
+    .filter(Boolean);
+  if (snapshot.length > 0) {
+    return [...new Set(snapshot)].sort();
+  }
+
+  const result = spawnSync('git', ['diff', '--cached', '--name-only', '--diff-filter=ACMRD'], {
+    cwd: REPO_ROOT,
+    encoding: 'utf8'
+  });
+  if (result.status !== 0) {
+    return [];
+  }
+
+  return [...new Set(String(result.stdout || '')
+    .split(/\r?\n/)
+    .map((entry) => normalizeRepoPath(entry.trim()))
+    .filter(Boolean))].sort();
+}
+
+function getBannerRelevantStagedFiles(stagedFiles) {
+  if (!Array.isArray(stagedFiles) || stagedFiles.length === 0) {
+    return [];
+  }
+
+  const expectedGenerated = new Set(getExpectedNonI18nGeneratedFiles());
+
+  return stagedFiles.filter((repoPath) => {
+    if (expectedGenerated.has(repoPath)) return true;
+    return repoPath.startsWith('v2/cn/') || repoPath.startsWith('v2/es/') || repoPath.startsWith('v2/fr/');
+  });
+}
+
+function getGeneratorCommands(writeMode, stagedGeneratedFiles) {
   const commands = writeMode ? WRITE_COMMANDS : CHECK_COMMANDS;
+  if (!Array.isArray(stagedGeneratedFiles) || stagedGeneratedFiles.length === 0) {
+    return commands;
+  }
+
+  return commands.filter((args) => {
+    const targets = GENERATED_COMMAND_TARGETS.get(args[0]);
+    if (targets === null) {
+      return stagedGeneratedFiles.some((repoPath) => repoPath === 'v2/index.mdx' || /^v2\/[^/]+\/index\.mdx$/.test(repoPath));
+    }
+    if (!targets) {
+      return true;
+    }
+    return stagedGeneratedFiles.some((repoPath) => targets.has(repoPath));
+  });
+}
+
+function runGeneratorSet(writeMode, violations, stagedGeneratedFiles = null) {
+  const commands = getGeneratorCommands(writeMode, stagedGeneratedFiles);
   commands.forEach((args) => {
     const ok = runNodeCommand(args);
     if (!ok) {
@@ -114,9 +212,9 @@ function addViolation(violations, rule, file, message) {
   });
 }
 
-function validateNonI18nGeneratedFiles(violations) {
-  const files = getExpectedNonI18nGeneratedFiles();
-  files.forEach((repoPath) => {
+function validateNonI18nGeneratedFiles(violations, files = null) {
+  const filesToCheck = Array.isArray(files) && files.length > 0 ? files : getExpectedNonI18nGeneratedFiles();
+  filesToCheck.forEach((repoPath) => {
     const raw = readFileSafe(repoPath);
     if (!raw.trim()) {
       addViolation(violations, 'MISSING_FILE', repoPath, 'Generated file is missing or empty.');
@@ -266,9 +364,11 @@ function validateI18nParity(writeMode, violations, warnings) {
 function parseArgs(argv) {
   const write = argv.includes('--write');
   const check = argv.includes('--check') || !write;
+  const staged = argv.includes('--staged');
   return {
     write,
-    check
+    check,
+    staged
   };
 }
 
@@ -276,15 +376,23 @@ function main(argv = process.argv.slice(2)) {
   const args = parseArgs(argv);
   const violations = [];
   const warnings = [];
+  const stagedFiles = args.staged ? getStagedFiles() : [];
+  const bannerRelevantStagedFiles = args.staged ? getBannerRelevantStagedFiles(stagedFiles) : [];
+  const stagedGeneratedFiles = bannerRelevantStagedFiles.filter((repoPath) => !repoPath.startsWith('v2/cn/') && !repoPath.startsWith('v2/es/') && !repoPath.startsWith('v2/fr/'));
+
+  if (args.staged && bannerRelevantStagedFiles.length === 0) {
+    console.log('⏭️ Generated file banner enforcement skipped in staged mode (no relevant staged files).');
+    return;
+  }
 
   if (args.write) {
-    runGeneratorSet(true, violations);
+    runGeneratorSet(true, violations, args.staged ? stagedGeneratedFiles : null);
   }
   if (args.check || args.write) {
-    runGeneratorSet(false, violations);
+    runGeneratorSet(false, violations, args.staged ? stagedGeneratedFiles : null);
   }
 
-  validateNonI18nGeneratedFiles(violations);
+  validateNonI18nGeneratedFiles(violations, args.staged ? stagedGeneratedFiles : null);
   const normalizedCount = validateI18nParity(args.write, violations, warnings);
 
   if (args.write && normalizedCount > 0) {
