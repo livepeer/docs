@@ -72,6 +72,8 @@ const GENERATED_DETAILS = {
   runCommand: 'node tools/scripts/generate-pages-index.js --write'
 };
 
+const EXCLUDED_GENERATED_INDEX_DIRS = new Set(['x-archived']);
+
 function getRepoRoot() {
   try {
     return execSync('git rev-parse --show-toplevel', { encoding: 'utf8' }).trim();
@@ -161,10 +163,19 @@ function sortAlpha(values) {
   return [...values].sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
 }
 
+function shouldExcludeGeneratedIndexDir(dirName) {
+  return EXCLUDED_GENERATED_INDEX_DIRS.has(String(dirName || '').trim().toLowerCase());
+}
+
 function getDirectSubdirs(absDir) {
   if (!fs.existsSync(absDir)) return [];
   const entries = fs.readdirSync(absDir, { withFileTypes: true });
-  return sortAlpha(entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name));
+  return sortAlpha(
+    entries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)
+      .filter((name) => !shouldExcludeGeneratedIndexDir(name))
+  );
 }
 
 function getDirectMarkdownFiles(absDir) {

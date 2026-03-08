@@ -13,8 +13,8 @@
 | `tests/integration/v2-wcag-audit.js` | WCAG accessibility audit for v2 pages — checks heading hierarchy, alt text, ARIA. Supports --fix mode for auto-repair. | `node tests/integration/v2-wcag-audit.js [flags]` | docs |
 | `tests/integration/v2-wcag-audit.selftest.js` | Self-test suite for v2-wcag-audit.js — validates WCAG audit logic against known fixtures | `node tests/integration/v2-wcag-audit.selftest.js [flags]` | docs |
 | `tests/run-all 2.js` | Utility script for tests/run-all.js. | `*   node tests/run-all.js` | docs |
-| `tests/run-all.js` | Utility script for tests/run-all.js. | `*   node tests/run-all.js` | docs |
-| `tests/run-pr-checks.js` | Run changed-file scoped validation checks for pull request CI, including Codex skill sync and codex task-contract enforcement. | `*   node tests/run-pr-checks.js --base-ref main` | docs |
+| `tests/run-all.js` | Test orchestrator — dispatches all unit test suites. Called by pre-commit hook and npm test. | `node tests/run-all.js [flags]` | docs |
+| `tests/run-pr-checks.js` | PR orchestrator — runs changed-file scoped validation checks for pull request CI. Dispatches per-file validators based on PR diff. | `node tests/run-pr-checks.js [flags]` | docs |
 | `tests/unit/codex-commit.test.js` | Tests codex-commit.js — validates commit message generation and contract compliance | `node tests/unit/codex-commit.test.js [flags]` | docs |
 | `tests/unit/codex-safe-merge-with-stash.test.js` | Tests codex-safe-merge-with-stash.js — validates safe merge logic with stash handling | `node tests/unit/codex-safe-merge-with-stash.test.js [flags]` | docs |
 | `tests/unit/codex-skill-sync.test.js` | Tests sync-codex-skills.js — validates skill file synchronisation between sources | `node tests/unit/codex-skill-sync.test.js [flags]` | docs |
@@ -34,12 +34,14 @@
 | `tests/unit/script-docs.test.js` | Enforces script header schema, keeps group script indexes in sync, and builds aggregate script index | `node tests/unit/script-docs.test.js [flags]` | docs |
 | `tests/unit/spelling.test.js` | Spelling check — validates content against custom dictionary with en-GB rules | `node tests/unit/spelling.test.js [flags]` | docs |
 | `tests/unit/style-guide.test.js` | Style guide compliance — checks en-GB conventions, heading case, formatting rules | `node tests/unit/style-guide.test.js [flags]` | docs |
+| `tests/unit/usefulness-journey.test.js` | Validate journey completeness evaluation and journey-config guardrails for usefulness scoring. | `*   node tests/unit/usefulness-journey.test.js` | docs |
+| `tests/unit/usefulness-rubric.test.js` | Validate usefulness rubric loading, rule evaluator coverage, argument deprecations, route precedence, and score divergence behavior. | `*   node tests/unit/usefulness-rubric.test.js` | docs |
 | `tests/unit/v2-link-audit.test.js` | Unit tests for v2-link-audit.js — tests individual link checking rules | `node tests/unit/v2-link-audit.test.js [flags]` | docs |
 | `tests/unit/v2-wcag-audit.test.js` | Unit tests for v2-wcag-audit.js — tests individual WCAG rules | `node tests/unit/v2-wcag-audit.test.js [flags]` | docs |
 | `tests/unit/validate-codex-task-contract.test.js` | Tests validate-codex-task-contract.js — validates contract checking logic | `node tests/unit/validate-codex-task-contract.test.js [flags]` | docs |
-| `tests/utils/file-walker.js` | Utility script for tests/utils/file-walker.js. | `*   node tests/utils/file-walker.js` | docs |
-| `tests/utils/mdx-parser.js` | Utility script for tests/utils/mdx-parser.js. | `*   node tests/utils/mdx-parser.js` | docs |
-| `tests/utils/mintignore.js` | Helpers to evaluate .mintignore using gitignore semantics for test scanners. | `*   node tests/utils/mintignore.js` | docs |
-| `tests/utils/openapi-rolling-issue.js` | Shared helpers for OpenAPI rolling issue formatting, dedupe, and action selection. | `*   const helpers = require('./tests/utils/openapi-rolling-issue');` | docs |
-| `tests/utils/spell-checker.js` | Utility script for tests/utils/spell-checker.js. | `*   node tests/utils/spell-checker.js` | docs |
+| `tests/utils/file-walker.js` | File tree walker — recursively finds files matching patterns. Used by pre-commit hook and validators. | `node tests/utils/file-walker.js [flags]` | docs |
+| `tests/utils/mdx-parser.js` | MDX parser utility — extracts frontmatter, components, content blocks from MDX files | `node tests/utils/mdx-parser.js [flags]` | docs |
+| `tests/utils/mintignore.js` | Mintignore utility — reads .mintignore patterns and filters file lists | `node tests/utils/mintignore.js [flags]` | docs |
+| `tests/utils/openapi-rolling-issue.js` | OpenAPI rolling issue utility — creates/updates GitHub issues for persistent OpenAPI audit findings | `node tests/utils/openapi-rolling-issue.js [flags]` | docs |
+| `tests/utils/spell-checker.js` | Spell checker utility — checks text against custom dictionary with en-GB locale support | `node tests/utils/spell-checker.js [flags]` | docs |
 {/* SCRIPT-INDEX:END */}

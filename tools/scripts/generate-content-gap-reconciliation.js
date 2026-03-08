@@ -29,7 +29,7 @@
  *   node tools/scripts/generate-content-gap-reconciliation.js --out-dir tasks/reports/content-gap
  *
  * @notes
- *   Includes v2/internal pages in REPO_ONLY analysis and excludes cn/es/fr/x-deprecated/x-experimental/x-notes/views/groups.
+ *   Includes v2/internal pages in REPO_ONLY analysis and excludes cn/es/fr/x-archived/x-deprecated/x-experimental/x-notes/views/groups.
  */
 
 const fs = require('fs');
@@ -67,12 +67,13 @@ const CSV_COLUMNS = [
   'notes'
 ];
 
-const DECISION_OPTIONS_COMMENT = '# decision options: KEEP, CREATE, EXPAND, MERGE, RENAME, DELETE, ADD_TO_BLUEPRINT';
+const DECISION_OPTIONS_COMMENT = '# decision options: KEEP, CREATE, EXPAND, MERGE, RENAME, DELETE, ADD_TO_BLUEPRINT, ARCHIVE';
 
 const EXCLUDED_REPO_ONLY_SEGMENTS = new Set([
   'cn',
   'es',
   'fr',
+  'x-archived',
   'x-deprecated',
   'x-experimental',
   'x-notes',
