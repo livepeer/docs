@@ -600,6 +600,13 @@ else
     echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${YELLOW}Skipping legacy verify.sh in pre-commit (staged-only fast mode).${NC}"
     echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo "Checking generated file banners..."
+    if node tools/scripts/enforce-generated-file-banners.js --check; then
+        echo -e "${GREEN}✓ Generated file banner check passed${NC}"
+    else
+        echo "Generated file banners missing or incorrect. Run: node tools/scripts/enforce-generated-file-banners.js --write"
+        exit 1
+    fi
 fi
 
 run_node_check() {
