@@ -9,9 +9,6 @@ lastVerified: "2026-02-01"
 sourceOfTruth: "https://github.com/livepeer/go-livepeer"
 ---
 
-import { Callout } from '/snippets/components/Callout.mdx'
-import { Steps } from '/snippets/components/Steps.mdx'
-
 # How Payments Work
 
 Livepeer uses **probabilistic micropayments (PM)** to settle fees between gateways and orchestrators. Understanding this system is essential to operating a gateway responsibly — it determines your ETH obligations, your signing key security requirements, and whether you run fully on-chain or off-chain.
@@ -47,7 +44,7 @@ Your gateway must maintain a funded deposit in the `TicketBroker` contract. This
 Each ticket must be signed with your gateway's Ethereum private key. By default this key lives inside the same `go-livepeer` process handling untrusted media — a security risk if a malicious input were to exploit a vulnerability.
 
 <Callout type="warning">
-**Security concern:** A compromised gateway process could expose your signing key and drain your ETH deposit. For production deployments, consider using a [Remote Signer](/v2/gateways/run-a-gateway/remote-signers) to isolate signing from media handling.
+**Security concern:** A compromised gateway process could expose your signing key and drain your ETH deposit. For production deployments, consider using a [Remote Signer](/v2/gateways/payments/remote-signers) to isolate signing from media handling.
 </Callout>
 
 ### 3. Ticket Parameters and Session State
@@ -85,10 +82,10 @@ The Remote Signer handles this bookkeeping automatically when used.
 ## Next Steps
 
 <CardGroup cols={2}>
-  <Card title="Remote Signers" icon="shield-check" href="/v2/gateways/run-a-gateway/remote-signers">
+  <Card title="Remote Signers" icon="shield-check" href="/v2/gateways/payments/remote-signers">
     Separate your signing key from your gateway process for improved security.
   </Card>
-  <Card title="Payment Clearinghouses" icon="building-columns" href="/v2/gateways/about-gateways/payment-clearinghouse">
+  <Card title="Payment Clearinghouses" icon="building-columns" href="/v2/gateways/payments/payment-clearinghouse">
     Delegate all payment management to a third-party operator.
   </Card>
 </CardGroup>

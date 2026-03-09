@@ -403,6 +403,7 @@ function buildIndexMeta(outputDirRel) {
     title: displayName,
     sidebarTitle: displayName,
     description: `Generated table of contents for docs pages under ${normalized}.`,
+    pageType: 'overview',
     keywords: ['livepeer', 'generated index', 'table of contents', normalized]
   };
 }
@@ -412,6 +413,7 @@ function buildRootMeta() {
     title: 'Pages Index',
     sidebarTitle: 'Pages Index',
     description: 'Generated table of contents for v2 docs folders.',
+    pageType: 'overview',
     keywords: ['livepeer', 'generated index', 'table of contents', 'v2']
   };
 }

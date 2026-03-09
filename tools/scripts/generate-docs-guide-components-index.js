@@ -81,6 +81,7 @@ const FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
   title: 'Components Index',
   sidebarTitle: 'Components Index',
   description: 'Aggregate inventory of repository components from snippets/components, generated for docs-guide maintenance.',
+  pageType: 'overview',
   keywords: ['livepeer', 'components index', 'aggregate inventory', 'repository', 'snippets']
 });
 

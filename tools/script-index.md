@@ -6,6 +6,7 @@
 | Script | Summary | Usage | Owner |
 |---|---|---|---|
 | `tools/scripts/add-framework-headers.js` | Insert or verify governance framework metadata headers from classification JSON. | `*   node tools/scripts/add-framework-headers.js --data script-classifications.json --dry-run` | docs |
+| `tools/scripts/add-pagetype-mechanical.js` | Mechanically assign pageType frontmatter to eligible v2 MDX pages. | `*   node tools/scripts/add-pagetype-mechanical.js [--dry-run]` | docs |
 | `tools/scripts/apply-content-gap-reconciliation.js` | Apply content-gap reconciliation decisions by archiving selected files, syncing mapping state, and generating follow-up reports. | `*   node tools/scripts/apply-content-gap-reconciliation.js` | docs |
 | `tools/scripts/assign-purpose-metadata.js` | Assign purpose and audience frontmatter metadata for docs.json EN-routable v2 pages using deterministic rules with optional LLM classification for unclassified pages. | `*   node tools/scripts/assign-purpose-metadata.js --scope pilot --dry-run` | docs |
 | `tools/scripts/audit-all-pages-simple.js` | Utility script for tasks/scripts/audit-all-pages-simple.js. | `*   node tasks/scripts/audit-all-pages-simple.js` | docs |
