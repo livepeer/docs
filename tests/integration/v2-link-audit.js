@@ -1792,8 +1792,9 @@ function listExistingDomainLinkOutputs() {
   return outPaths;
 }
 
-function writeDomainLinks(domainLinks) {
-  const staleOutputs = new Set(listExistingDomainLinkOutputs());
+function writeDomainLinks(domainLinks, options = {}) {
+  const pruneStale = options.pruneStale !== false;
+  const staleOutputs = pruneStale ? new Set(listExistingDomainLinkOutputs()) : new Set();
   const outPaths = [];
   for (const [domain, map] of domainLinks.entries()) {
     const dir = path.join(REPO_ROOT, 'snippets', 'data', domain);
@@ -1805,8 +1806,10 @@ function writeDomainLinks(domainLinks) {
     outPaths.push(out);
   }
 
-  for (const stalePath of staleOutputs) {
-    fs.unlinkSync(stalePath);
+  if (pruneStale) {
+    for (const stalePath of staleOutputs) {
+      fs.unlinkSync(stalePath);
+    }
   }
 
   return outPaths;
@@ -1881,7 +1884,9 @@ async function runAudit(options = {}) {
 
   let writtenLinks = [];
   if (args.writeLinks) {
-    writtenLinks = writeDomainLinks(domainLinks);
+    writtenLinks = writeDomainLinks(domainLinks, {
+      pruneStale: args.mode === 'full'
+    });
   }
 
   console.log(`📝 Report written: ${relFromRoot(args.report)}`);

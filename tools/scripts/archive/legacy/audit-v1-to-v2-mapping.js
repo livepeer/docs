@@ -152,11 +152,75 @@ const CANONICAL_ROUTE_MAP = {
   ],
   'v2/pages/04_gateways/run-a-gateway/test/playback-content': [
     'v2/pages/04_gateways/quickstart/gateway-setup'
-  ],
-  'v2/pages/04_gateways/references/video-flags': ['v2/pages/04_gateways/references/configuration-flags'],
-  'v2/orchestrators/setting-up-an-orchestrator/setting-up-an-orchestrator/data-centres-and-large-scale-hardware-providers': [
-    'v2/orchestrators/setting-up-an-orchestrator/data-centres-and-large-scale-hardware-providers'
-  ],
+  ],    'v2/pages/04_gateways/references/video-flags': ['v2/pages/04_gateways/references/configuration-flags'],
+    'v2/orchestrators/about-orchestrators/overview': ['v2/orchestrators/concepts/overview'],
+    'v2/orchestrators/about-orchestrators/orchestrator-functions': ['v2/orchestrators/concepts/functions'],
+    'v2/orchestrators/about-orchestrators/architecture': ['v2/orchestrators/concepts/architecture'],
+    'v2/orchestrators/about-orchestrators/economics': ['v2/orchestrators/concepts/economics'],
+    'v2/orchestrators/about-orchestrators/job-types': ['v2/orchestrators/concepts/job-types'],
+    'v2/orchestrators/quickstart/overview': ['v2/orchestrators/get-started/setup-paths'],
+    'v2/orchestrators/quickstart/join-a-pool': ['v2/orchestrators/get-started/join-a-pool'],
+    'v2/orchestrators/quickstart/orchestrator-setup': ['v2/orchestrators/get-started/quickstart'],
+    'v2/orchestrators/quickstart/realtime-ai-quickstart': ['v2/orchestrators/get-started/realtime-ai-quickstart'],
+    'v2/orchestrators/quickstart/batch-ai-quickstart': ['v2/orchestrators/get-started/batch-ai-quickstart'],
+    'v2/orchestrators/setting-up-an-orchestrator/overview': ['v2/orchestrators/setup/overview'],
+    'v2/orchestrators/setting-up-an-orchestrator/hardware-requirements': [
+      'v2/orchestrators/setup/hardware-requirements'
+    ],
+    'v2/orchestrators/setting-up-an-orchestrator/install-go-livepeer': [
+      'v2/orchestrators/setup/install-go-livepeer'
+    ],
+    'v2/orchestrators/setting-up-an-orchestrator/connect-to-arbitrum': [
+      'v2/orchestrators/setup/connect-to-arbitrum'
+    ],
+    'v2/orchestrators/setting-up-an-orchestrator/orch-config': ['v2/orchestrators/setup/orch-config'],
+    'v2/orchestrators/setting-up-an-orchestrator/orchestrator-stats': [
+      'v2/orchestrators/setup/orchestrator-stats'
+    ],
+    'v2/orchestrators/setting-up-an-orchestrator/publish-offerings': [
+      'v2/orchestrators/setup/publish-offerings'
+    ],
+    'v2/orchestrators/setting-up-an-orchestrator/data-centre-setup': [
+      'v2/orchestrators/setup/data-centre-setup'
+    ],
+    'v2/orchestrators/setting-up-an-orchestrator/data-centres-and-large-scale-hardware-providers': [
+      'v2/orchestrators/setup/data-centres-and-large-scale-hardware-providers'
+    ],
+    'v2/orchestrators/setting-up-an-orchestrator/enterprise-and-data-centres': [
+      'v2/orchestrators/setup/enterprise-and-data-centres'
+    ],
+    'v2/orchestrators/setting-up-an-orchestrator/setting-up-an-orchestrator/quickstart-add-your-gpu-to-livepeer': [
+      'v2/orchestrators/setup/orch-config'
+    ],
+    'v2/orchestrators/setting-up-an-orchestrator/setting-up-an-orchestrator/data-centres-and-large-scale-hardware-providers': [
+      'v2/orchestrators/setup/data-centres-and-large-scale-hardware-providers'
+    ],
+    'v2/orchestrators/advanced-setup/ai-pipelines': ['v2/orchestrators/advanced/ai-pipelines'],
+    'v2/orchestrators/advanced-setup/delegation': ['v2/orchestrators/advanced/delegation'],
+    'v2/orchestrators/advanced-setup/hosting-models': ['v2/orchestrators/advanced/hosting-models'],
+    'v2/orchestrators/advanced-setup/rewards-and-fees': ['v2/orchestrators/advanced/rewards-and-fees'],
+    'v2/orchestrators/advanced-setup/run-a-pool': ['v2/orchestrators/advanced/run-a-pool'],
+    'v2/orchestrators/advanced-setup/staking-LPT': ['v2/orchestrators/advanced/staking-LPT'],
+    'v2/orchestrators/earnings': ['v2/orchestrators/advanced/earnings'],
+    'v2/orchestrators/payments': ['v2/orchestrators/advanced/payments'],
+    'v2/orchestrators/payments/index': ['v2/orchestrators/advanced/payments'],
+    'v2/orchestrators/orchestrator-tools-and-resources/orchestrator-guides': [
+      'v2/orchestrators/tools-and-guides/guides'
+    ],
+    'v2/orchestrators/orchestrator-tools-and-resources/orchestrator-tools': [
+      'v2/orchestrators/tools-and-guides/tooling'
+    ],
+    'v2/orchestrators/orchestrator-tools-and-resources/community-pools': [
+      'v2/orchestrators/resources/community-pools'
+    ],
+    'v2/orchestrators/orchestrator-tools-and-resources/orchestrator-resources': [
+      'v2/orchestrators/resources/faq'
+    ],
+    'v2/orchestrators/orchestrator-tools-and-resources/orchestrator-community-and-help': [
+      'v2/orchestrators/resources/faq'
+    ],
+    'v2/orchestrators/references/faq': ['v2/orchestrators/resources/faq'],
+    'v2/orchestrators/references/cli-flags': ['v2/orchestrators/resources/cli-flags'],
   'v2/pages/02_community/livepeer-community/media-kit': ['v2/resources/media-kit'],
   'v2/pages/01_about/livepeer-network/actors': ['v2/about/livepeer-network/actors'],
   'v2/pages/03_developers/ai-inference-on-livepeer/livepeer-ai/livepeer-ai-content-directory': [

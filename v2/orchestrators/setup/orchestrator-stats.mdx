@@ -1,0 +1,63 @@
+---
+title: Orchestrator Stats and Monitoring
+sidebarTitle: Orchestrator Stats
+description: 'Monitor node health, GPU performance, and earnings with Prometheus and the Livepeer Explorer.'
+audience: orchestrator
+keywords:
+  - livepeer
+  - orchestrators
+  - monitoring
+  - stats
+  - prometheus
+  - metrics
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+
+import { CustomCodeBlock } from '/snippets/components/content/code.jsx'
+
+Operating an orchestrator means keeping the node online, processing jobs correctly, calling rewards each round, and redeeming tickets. Monitoring helps you spot failures before they cost you income or reputation.
+
+## Built-in metrics
+
+With `-monitor=true`, go-livepeer exposes Prometheus-compatible metrics at:
+
+<CustomCodeBlock
+  codeString={`http://localhost:7935/metrics`}
+  language="text"
+  icon="gauge"
+/>
+
+## What to track
+
+| Layer | What to monitor |
+|--------|------------------|
+| **Hardware** | GPU utilisation, VRAM, temperature (`nvidia-smi`) |
+| **Application** | go-livepeer health, segment/job success rate |
+| **Network** | Latency, packet loss |
+| **On-chain** | Bonded stake, active set status, reward calls |
+| **Economics** | ETH fees, LPT rewards |
+
+Key metrics include: `livepeer_segment_processed_total`, `livepeer_segment_errors_total`, `livepeer_transcode_latency_seconds`, and (for AI) inference job counts and latency. High error rates reduce selection probability.
+
+<Warning> If you do not call **reward()** every round, you stop earning inflation rewards. Automate reward calls or use a service that does.</Warning>
+
+## Explorer
+
+Use the [Livepeer Explorer](https://explorer.livepeer.org) to check:
+
+- Active set status
+- Bonded and delegated LPT
+- Reward calls and fee earnings
+- Historical performance
+
+## Prometheus and Grafana
+
+For production, run Prometheus with a scrape config for your node(s), and use or build Grafana dashboards. Add **Node exporter** and **NVIDIA DCGM exporter** for host and GPU metrics.
+
+## See also
+
+<Columns cols={2}>
+  <Card title="Install go-livepeer" icon="download" href="./install-go-livepeer" arrow />
+  <Card title="Rewards and fees" icon="coins" href="../advanced/rewards-and-fees" arrow />
+  <Card title="FAQ" icon="circle-question" href="../resources/faq" arrow />
+</Columns>
