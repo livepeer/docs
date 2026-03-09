@@ -1,21 +1,37 @@
 task_id: 20260309
-branch: codex/20260309-n8n-space-path-mopup
+branch: codex/20260309-v1-cleanup-delete-accuracy-verifier-remnants
 base_branch: docs-v2
 scope_in:
   - .codex/task-contract.yaml
-  - snippets/automations/scripts/n8n/project-showcase-application-workflow.json
-  - snippets/assets/scripts/n8n/README-project-showcase-application-workflow.md
+  - docs-guide/indexes/scripts-index.mdx
+  - docs-guide/indexes/pages-index.mdx
+  - docs-guide/indexes/templates-index.mdx
+  - docs-guide/indexes/workflows-index.mdx
+  - docs-guide/lpd.mdx
+  - docs-guide/scripts-index.md
+  - docs-index.json
+  - tests/script-index.md
+  - tools/script-index.md
+  - v2/cn/docs-guide/lpd.mdx
+  - v2/cn/docs-guide/scripts-index.md
+  - v2/es/docs-guide/lpd.mdx
+  - v2/es/docs-guide/scripts-index.md
+  - v2/fr/docs-guide/lpd.mdx
+  - v2/fr/docs-guide/scripts-index.md
+  - v2/internal/rfp/aims.mdx
 scope_out: []
 allowed_generated:
   - .codex/pr-body.generated.md
 acceptance_checks:
-  - >-
-    node tools/scripts/validate-codex-task-contract.js --branch
-    codex/20260309-n8n-space-path-mopup --validate-contract-only
-  - rg -n --fixed-strings 'Project Showcase Application Workflow.json' .
-  - ls -1 snippets/automations/scripts/n8n
+  - node tools/scripts/validate-codex-task-contract.js --branch codex/20260309-v1-cleanup-delete-accuracy-verifier-remnants --validate-contract-only
+  - rg -n "accuracy-verifier" . --glob '*.js' --glob '*.ts' --glob '*.json' -g '!node_modules' -g '!.git'
+  - node tests/unit/script-docs.test.js --check-indexes
+  - node tests/unit/docs-guide-sot.test.js
+  - node tools/scripts/generate-docs-index.js --check
+  - node tests/unit/usefulness-rubric.test.js
+  - node tests/unit/usefulness-journey.test.js
   - git diff --check
   - node tests/run-pr-checks.js --base-ref docs-v2
 risk_flags:
-  - path-normalization
+  - stale-doc-remnants
 follow_up_issues: []

@@ -53,7 +53,6 @@ keywords:
 | `tests/run-pr-checks.js` | Vérifications de validation portées sur les fichiers modifiés pour le CI des demandes de tirage. | `node tests/run-pr-checks.js --base-ref main` | docs |
 | `tests/unit/docs-guide-sot.test.js` | Valider la couverture de la source de vérité du guide des documents, les références du README et la fraîcheur de l'index généré. | `node tests/unit/docs-guide-sot.test.js` | docs |
 | `tests/unit/docs-navigation.test.js` | Valider la syntaxe des entrées de page docs.json, signaler les routes manquantes, suggérer des remappages et appliquer éventuellement des remappages approuvés. | `./lpd tests unit docs-navigation.test` | docs |
-| `tests/unit/docs-usefulness-accuracy-verifier.test.js` | Valider les règles d'exactitude pondérée par la source pour 2026 (précédence GitHub vs DeepWiki, fraîcheur, fallback et réutilisation du cache). | `node tests/unit/docs-usefulness-accuracy-verifier.test.js` | docs |
 | `tests/unit/links-imports.test.js` | Script utilitaire pour tests/unit/links-imports.test.js. | `node tests/unit/links-imports.test.js` | docs |
 | `tests/unit/mdx-guards.test.js` | Appliquer les règles de sécurité pour les imports globaux, les délimiteurs mathématiques et les sauts de ligne des tableaux markdown. | `node tests/unit/mdx-guards.test.js` | docs |
 | `tests/unit/mdx.test.js` | Script utilitaire pour tests/unit/mdx.test.js. | `node tests/unit/mdx.test.js` | docs |

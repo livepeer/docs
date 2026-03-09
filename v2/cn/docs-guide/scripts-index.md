@@ -51,7 +51,6 @@ keywords:
 | `tests/run-pr-checks.js` | 为拉取请求 CI 运行更改文件范围的验证检查 | `node tests/run-pr-checks.js --base-ref main` | 文档 |
 | `tests/unit/docs-guide-sot.test.js` | 验证文档指南的源数据覆盖范围、README 指针以及生成的索引新鲜度 | `node tests/unit/docs-guide-sot.test.js` | 文档 |
 | `tests/unit/docs-navigation.test.js` | 验证 docs.json 页面条目语法，报告缺失的路由，建议重新映射，并可选择应用已批准的重新映射 | `./lpd tests unit docs-navigation.test` | 文档 |
-| `tests/unit/docs-usefulness-accuracy-verifier.test.js` | 验证源权重 2026 准确性验证规则（GitHub 与 DeepWiki 优先级、新鲜度、回退和缓存重用） | `node tests/unit/docs-usefulness-accuracy-verifier.test.js` | 文档 |
 | `tests/unit/links-imports.test.js` | 测试/unit/links-imports.test.js 的实用脚本 | `node tests/unit/links-imports.test.js` | 文档 |
 | `tests/unit/mdx-guards.test.js` | 强制实施 MDX 守则，包括全局导入、数学分隔符和 markdown 表格行换行 | `node tests/unit/mdx-guards.test.js` | 文档 |
 | `tests/unit/mdx.test.js` | 测试/unit/mdx.test.js 的实用脚本 | `node tests/unit/mdx.test.js` | 文档 |
