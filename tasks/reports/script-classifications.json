@@ -1600,6 +1600,26 @@
     "dualmode": ""
   },
   {
+    "path": "tools/scripts/validators/structure/check-page-local-mdx.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "v2-content",
+    "needs": "R-R14",
+    "purpose_statement": "Detects MDX fragment files in views/ and groups/ subdirectories that are not imported by any parent page.",
+    "pipeline": "manual, ci",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/validators/structure/check-portal-pages.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "v2-content",
+    "needs": "R-R14",
+    "purpose_statement": "Validates that pages with pageType: portal frontmatter follow the required portal structure.",
+    "pipeline": "manual, ci",
+    "dualmode": ""
+  },
+  {
     "path": "tools/scripts/validators/structure/check-stale-issues.js",
     "category": "validator",
     "purpose": "governance:repo-health",
@@ -1607,6 +1627,16 @@
     "needs": "R-R14",
     "purpose_statement": "Flags open GitHub issues with no activity for 60+ days as stale, 90+ days as abandoned.",
     "pipeline": "P5 (scheduled), manual",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/validators/structure/validate-framework-integrity.js",
+    "category": "validator",
+    "purpose": "governance:repo-health",
+    "scope": "full-repo",
+    "needs": "R-R14, R-R18, R-C6",
+    "purpose_statement": "Validates the script governance framework matches actual repo state. Checks headers, classifications, pipelines, and requirements traceability.",
+    "pipeline": "P5 (scheduled, weekly), P6 (on-demand)",
     "dualmode": ""
   },
   {
