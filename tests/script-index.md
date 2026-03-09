@@ -12,7 +12,7 @@
 | `tests/integration/v2-link-audit.selftest.js` | Self-test suite for v2-link-audit.js — validates audit logic against known fixtures | `node tests/integration/v2-link-audit.selftest.js [flags]` | docs |
 | `tests/integration/v2-wcag-audit.js` | WCAG accessibility audit for v2 pages — checks heading hierarchy, alt text, ARIA. Supports --fix mode for auto-repair. | `node tests/integration/v2-wcag-audit.js [flags]` | docs |
 | `tests/integration/v2-wcag-audit.selftest.js` | Self-test suite for v2-wcag-audit.js — validates WCAG audit logic against known fixtures | `node tests/integration/v2-wcag-audit.selftest.js [flags]` | docs |
-| `tests/run-all 2.js` | Utility script for tests/run-all.js. | `*   node tests/run-all.js` | docs |
+| `tests/run-all 2.js` | Utility script for tests/run-all.js. | `* node tests/run-all.js` | docs |
 | `tests/run-all.js` | Test orchestrator — dispatches all unit test suites. Called by pre-commit hook and npm test. | `node tests/run-all.js [flags]` | docs |
 | `tests/run-pr-checks.js` | PR orchestrator — runs changed-file scoped validation checks for pull request CI. Dispatches per-file validators based on PR diff. | `node tests/run-pr-checks.js [flags]` | docs |
 | `tests/unit/codex-commit.test.js` | Tests codex-commit.js — validates commit message generation and contract compliance | `node tests/unit/codex-commit.test.js [flags]` | docs |
@@ -34,8 +34,8 @@
 | `tests/unit/script-docs.test.js` | Enforces script header schema, keeps group script indexes in sync, and builds aggregate script index | `node tests/unit/script-docs.test.js [flags]` | docs |
 | `tests/unit/spelling.test.js` | Spelling check — validates content against custom dictionary with en-GB rules | `node tests/unit/spelling.test.js [flags]` | docs |
 | `tests/unit/style-guide.test.js` | Style guide compliance — checks en-GB conventions, heading case, formatting rules | `node tests/unit/style-guide.test.js [flags]` | docs |
-| `tests/unit/usefulness-journey.test.js` | Validate journey completeness evaluation and journey-config guardrails for usefulness scoring. | `*   node tests/unit/usefulness-journey.test.js` | docs |
-| `tests/unit/usefulness-rubric.test.js` | Validate usefulness rubric loading, rule evaluator coverage, argument deprecations, route precedence, and score divergence behavior. | `*   node tests/unit/usefulness-rubric.test.js` | docs |
+| `tests/unit/usefulness-journey.test.js` | Validate journey completeness evaluation and journey-config guardrails for usefulness scoring. | `* node tests/unit/usefulness-journey.test.js` | docs |
+| `tests/unit/usefulness-rubric.test.js` | Validate usefulness rubric loading, rule evaluator coverage, argument deprecations, route precedence, and score divergence behavior. | `* node tests/unit/usefulness-rubric.test.js` | docs |
 | `tests/unit/v2-link-audit.test.js` | Unit tests for v2-link-audit.js — tests individual link checking rules | `node tests/unit/v2-link-audit.test.js [flags]` | docs |
 | `tests/unit/v2-wcag-audit.test.js` | Unit tests for v2-wcag-audit.js — tests individual WCAG rules | `node tests/unit/v2-wcag-audit.test.js [flags]` | docs |
 | `tests/unit/validate-codex-task-contract.test.js` | Tests validate-codex-task-contract.js — validates contract checking logic | `node tests/unit/validate-codex-task-contract.test.js [flags]` | docs |

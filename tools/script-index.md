@@ -5,25 +5,25 @@
 
 | Script | Summary | Usage | Owner |
 |---|---|---|---|
-| `tools/scripts/add-framework-headers.js` | Insert or verify governance framework metadata headers from classification JSON. | `*   node tools/scripts/add-framework-headers.js --data script-classifications.json --dry-run` | docs |
-| `tools/scripts/archive/deprecated/docs-coverage-and-route-integrity-audit.js` | Audit docs coverage integrity, missing routes, legacy /v2/pages references, and orphan candidate files. | `*   node tools/scripts/archive/deprecated/docs-coverage-and-route-integrity-audit.js --scope full` | docs |
-| `tools/scripts/archive/deprecated/project-management-output-script.js` | Deprecated legacy project-management output script retained as a reference stub. | `*   node tools/scripts/archive/deprecated/project-management-output-script.js` | docs |
-| `tools/scripts/archive/duplicates/check-component-errors.js` | Utility script for tools/scripts/test/check-component-errors.js. | `*   node tools/scripts/test/check-component-errors.js` | docs |
-| `tools/scripts/archive/duplicates/final-verification.js` | Utility script for tools/scripts/test/final-verification.js. | `*   node tools/scripts/test/final-verification.js` | docs |
-| `tools/scripts/archive/duplicates/find-correct-url.js` | Utility script for tools/scripts/test/find-correct-url.js. | `*   node tools/scripts/test/find-correct-url.js` | docs |
-| `tools/scripts/archive/duplicates/inspect-page.js` | Utility script for tools/scripts/test/inspect-page.js. | `*   node tools/scripts/test/inspect-page.js` | docs |
-| `tools/scripts/archive/duplicates/inspect-video-page.js` | Utility script for tools/scripts/test/inspect-video-page.js. | `*   node tools/scripts/test/inspect-video-page.js` | docs |
-| `tools/scripts/archive/duplicates/test-youtube-pages-v2.js` | Utility script for tools/scripts/test/test-youtube-pages.js. | `*   node tools/scripts/test/test-youtube-pages.js` | docs |
-| `tools/scripts/archive/duplicates/test-youtube-pages.js` | Utility script for tools/scripts/test/test-youtube-pages.js. | `*   node tools/scripts/test/test-youtube-pages.js` | docs |
-| `tools/scripts/archive/duplicates/verify-all-pages.js` | Utility script for tools/scripts/verify-all-pages.js. | `*   node tools/scripts/verify-all-pages.js` | docs |
-| `tools/scripts/archive/duplicates/verify-pages.js` | Utility script for tools/scripts/verify-pages.js. | `*   node tools/scripts/verify-pages.js` | docs |
-| `tools/scripts/archive/fixtures/allowed-script.js` | Utility script for tools/scripts/archive/fixtures/allowed-script.js. | `*   node tools/scripts/archive/fixtures/allowed-script.js` | docs |
-| `tools/scripts/archive/fixtures/allowed-test.js` | Utility script for tools/scripts/archive/fixtures/allowed-test.js. | `*   node tools/scripts/archive/fixtures/allowed-test.js` | docs |
-| `tools/scripts/archive/fixtures/allowed.js` | Utility script for tools/scripts/archive/fixtures/allowed.js. | `*   node tools/scripts/archive/fixtures/allowed.js` | docs |
-| `tools/scripts/archive/placeholders/embed-table.js` | Archived no-op placeholder for markdown table embedding utility tasks. | `*   node tools/scripts/archive/placeholders/embed-table.js` | docs |
-| `tools/scripts/archive/placeholders/gen-table.js` | Archived no-op placeholder for generated table output utility tasks. | `*   node tools/scripts/archive/placeholders/gen-table.js` | docs |
-| `tools/scripts/archive/placeholders/gen-textareas.js` | Archived no-op placeholder for textarea generation utility tasks. | `*   node tools/scripts/archive/placeholders/gen-textareas.js` | docs |
-| `tools/scripts/assign-purpose-metadata.js` | Assign purpose and audience frontmatter metadata for docs.json EN-routable v2 pages using deterministic rules with optional LLM classification for unclassified pages. | `*   node tools/scripts/assign-purpose-metadata.js --scope pilot --dry-run` | docs |
+| `tools/scripts/add-framework-headers.js` | Insert or verify governance framework metadata headers from classification JSON. | `* node tools/scripts/add-framework-headers.js --data script-classifications.json --dry-run` | docs |
+| `tools/scripts/archive/deprecated/docs-coverage-and-route-integrity-audit.js` | Audit docs coverage integrity, missing routes, legacy /v2/pages references, and orphan candidate files. | `* node tools/scripts/archive/deprecated/docs-coverage-and-route-integrity-audit.js --scope full` | docs |
+| `tools/scripts/archive/deprecated/project-management-output-script.js` | Deprecated legacy project-management output script retained as a reference stub. | `* node tools/scripts/archive/deprecated/project-management-output-script.js` | docs |
+| `tools/scripts/archive/duplicates/check-component-errors.js` | Utility script for tools/scripts/test/check-component-errors.js. | `* node tools/scripts/test/check-component-errors.js` | docs |
+| `tools/scripts/archive/duplicates/final-verification.js` | Utility script for tools/scripts/test/final-verification.js. | `* node tools/scripts/test/final-verification.js` | docs |
+| `tools/scripts/archive/duplicates/find-correct-url.js` | Utility script for tools/scripts/test/find-correct-url.js. | `* node tools/scripts/test/find-correct-url.js` | docs |
+| `tools/scripts/archive/duplicates/inspect-page.js` | Utility script for tools/scripts/test/inspect-page.js. | `* node tools/scripts/test/inspect-page.js` | docs |
+| `tools/scripts/archive/duplicates/inspect-video-page.js` | Utility script for tools/scripts/test/inspect-video-page.js. | `* node tools/scripts/test/inspect-video-page.js` | docs |
+| `tools/scripts/archive/duplicates/test-youtube-pages-v2.js` | Utility script for tools/scripts/test/test-youtube-pages.js. | `* node tools/scripts/test/test-youtube-pages.js` | docs |
+| `tools/scripts/archive/duplicates/test-youtube-pages.js` | Utility script for tools/scripts/test/test-youtube-pages.js. | `* node tools/scripts/test/test-youtube-pages.js` | docs |
+| `tools/scripts/archive/duplicates/verify-all-pages.js` | Utility script for tools/scripts/verify-all-pages.js. | `* node tools/scripts/verify-all-pages.js` | docs |
+| `tools/scripts/archive/duplicates/verify-pages.js` | Utility script for tools/scripts/verify-pages.js. | `* node tools/scripts/verify-pages.js` | docs |
+| `tools/scripts/archive/fixtures/allowed-script.js` | Utility script for tools/scripts/archive/fixtures/allowed-script.js. | `* node tools/scripts/archive/fixtures/allowed-script.js` | docs |
+| `tools/scripts/archive/fixtures/allowed-test.js` | Utility script for tools/scripts/archive/fixtures/allowed-test.js. | `* node tools/scripts/archive/fixtures/allowed-test.js` | docs |
+| `tools/scripts/archive/fixtures/allowed.js` | Utility script for tools/scripts/archive/fixtures/allowed.js. | `* node tools/scripts/archive/fixtures/allowed.js` | docs |
+| `tools/scripts/archive/placeholders/embed-table.js` | Archived no-op placeholder for markdown table embedding utility tasks. | `* node tools/scripts/archive/placeholders/embed-table.js` | docs |
+| `tools/scripts/archive/placeholders/gen-table.js` | Archived no-op placeholder for generated table output utility tasks. | `* node tools/scripts/archive/placeholders/gen-table.js` | docs |
+| `tools/scripts/archive/placeholders/gen-textareas.js` | Archived no-op placeholder for textarea generation utility tasks. | `* node tools/scripts/archive/placeholders/gen-textareas.js` | docs |
+| `tools/scripts/assign-purpose-metadata.js` | Assign purpose and audience frontmatter metadata for docs.json EN-routable v2 pages using deterministic rules with optional LLM classification for unclassified pages. | `* node tools/scripts/assign-purpose-metadata.js --scope pilot --dry-run` | docs |
 | `tools/scripts/audit-all-pages-simple.js` | Lightweight page auditor — quick pass over all pages checking basic frontmatter and structure | `node tools/scripts/audit-all-pages-simple.js [flags]` | docs |
 | `tools/scripts/audit-all-pages.js` | Full page auditor — comprehensive check of all pages including content quality metrics | `node tools/scripts/audit-all-pages.js [flags]` | docs |
 | `tools/scripts/audit-all-v2-pages.js` | V2-specific page auditor — checks v2/** pages for v2-specific requirements (frontmatter, components) | `node tools/scripts/audit-all-v2-pages.js [flags]` | docs |
@@ -42,7 +42,7 @@
 | `tools/scripts/codex/task-finalize.js` | Codex task finaliser — enforces task completion requirements before closing | `node tools/scripts/codex/task-finalize.js [flags]` | docs |
 | `tools/scripts/codex/task-preflight.js` | Codex task preflight — generates task setup files and validates preconditions | `node tools/scripts/codex/task-preflight.js [flags]` | docs |
 | `tools/scripts/codex/validate-locks.js` | Codex lock validator — checks for stale or conflicting lock files before push | `node tools/scripts/codex/validate-locks.js [flags]` | docs |
-| `tools/scripts/component-layout-governance.js` | Validate v2 English docs against component-layout contracts by page type. | `*   node tools/scripts/component-layout-governance.js --scope full` | docs |
+| `tools/scripts/component-layout-governance.js` | Validate v2 English docs against component-layout contracts by page type. | `* node tools/scripts/component-layout-governance.js --scope full` | docs |
 | `tools/scripts/convert-rss-to-mdx.js` | RSS-to-MDX converter — imports RSS feed items and converts to MDX page format | `node tools/scripts/convert-rss-to-mdx.js [flags]` | docs |
 | `tools/scripts/create-codex-pr.js` | Codex PR creator — generates codex PR with correct branch naming, labels, and body template | `node tools/scripts/create-codex-pr.js [flags]` | docs |
 | `tools/scripts/cross-agent-packager.js` | Cross-agent packager — bundles audit reports and repo state into agent-consumable packages | `node tools/scripts/cross-agent-packager.js [flags]` | docs |
@@ -63,7 +63,7 @@
 | `tools/scripts/final-verification.js` | Diagnostic — runs final verification checks on page set (manual tool) | `node tools/scripts/final-verification.js [flags]` | docs |
 | `tools/scripts/find-correct-url.js` | Diagnostic — given a broken URL, attempts to find the correct v2 equivalent | `node tools/scripts/find-correct-url.js [flags]` | docs |
 | `tools/scripts/generate-ai-sitemap.js` | AI sitemap generator — produces AI-optimised sitemap files. Dual-mode: --check (enforcer) / --write (generator). | `node tools/scripts/generate-ai-sitemap.js [flags]` | docs |
-| `tools/scripts/generate-content-gap-reconciliation.js` | Generate IA reconciliation CSV and summary from blueprint and v2 MDX coverage. | `*   node tools/scripts/generate-content-gap-reconciliation.js` | docs |
+| `tools/scripts/generate-content-gap-reconciliation.js` | Generate IA reconciliation CSV and summary from blueprint and v2 MDX coverage. | `* node tools/scripts/generate-content-gap-reconciliation.js` | docs |
 | `tools/scripts/generate-docs-guide-components-index.js` | Generates the docs-guide component library index page | `node tools/scripts/generate-docs-guide-components-index.js [flags]` | docs |
 | `tools/scripts/generate-docs-guide-indexes.js` | Generates docs-guide workflow/template indexes and optionally verifies freshness | `node tools/scripts/generate-docs-guide-indexes.js [flags]` | docs |
 | `tools/scripts/generate-docs-guide-pages-index.js` | Generates the docs-guide pages index | `node tools/scripts/generate-docs-guide-pages-index.js [flags]` | docs |
@@ -91,7 +91,7 @@
 | `tools/scripts/i18n/test/provenance.test.js` | Tests provenance tracker — validates translation provenance recording | `node tools/scripts/i18n/test/provenance.test.js [flags]` | docs |
 | `tools/scripts/i18n/test/provider-openrouter.test.js` | Tests OpenRouter provider — validates API call logic and response parsing | `node tools/scripts/i18n/test/provider-openrouter.test.js [flags]` | docs |
 | `tools/scripts/i18n/translate-docs.js` | Translation generator — translates v2 MDX pages to target languages via OpenRouter API | `node tools/scripts/i18n/translate-docs.js [flags]` | docs |
-| `tools/scripts/i18n/validate-generated.js` | Validate generated localized MDX files parse cleanly and exist for successful route-map entries. | `*   node tools/scripts/i18n/validate-generated.js --languages es,fr,zh-CN --route-map /tmp/route-map.json --report-json /tmp/validate-report.json` | docs |
+| `tools/scripts/i18n/validate-generated.js` | Validate generated localized MDX files parse cleanly and exist for successful route-map entries. | `* node tools/scripts/i18n/validate-generated.js --languages es,fr,zh-CN --route-map /tmp/route-map.json --report-json /tmp/validate-report.json` | docs |
 | `tools/scripts/inspect-page.js` | Page inspector — displays parsed metadata, frontmatter, components, and structure for a single page | `node tools/scripts/inspect-page.js [flags]` | docs |
 | `tools/scripts/inspect-video-page.js` | Video page inspector — displays video-specific metadata and embed configuration for a page | `node tools/scripts/inspect-video-page.js [flags]` | docs |
 | `tools/scripts/mint-dev.sh` | Mintlify dev server launcher — starts mint dev with correct configuration | `bash tools/scripts/mint-dev.sh [flags]` | docs |
@@ -116,7 +116,7 @@
 | `tools/scripts/test-v2-pages.js` | V2 page tester — validates v2 pages via Puppeteer browser rendering | `node tools/scripts/test-v2-pages.js [flags]` | docs |
 | `tools/scripts/test-youtube-pages.js` | YouTube page tester — validates YouTube embed pages render correctly | `node tools/scripts/test-youtube-pages.js [flags]` | docs |
 | `tools/scripts/validate-codex-task-contract.js` | Codex task contract enforcer — validates branch naming, task files, PR body, and issue state for codex branches | `node tools/scripts/validate-codex-task-contract.js [flags]` | docs |
-| `tools/scripts/validators/components/check-component-css.js` | Validates component files use CSS custom properties only. No ThemeData, no hardcoded hex, no inline styles. | `node tools/scripts/validators/components/check-component-css.js [--path snippets/components/] [--fix]` | docs |
+| `tools/scripts/validators/components/check-component-css.js` | Validates component files use CSS custom properties only. No ThemeData, no hardcoded hex, no inline styles. | `* node tools/scripts/validators/components/check-component-css.js [--path snippets/components/] [--fix]` | docs |
 | `tools/scripts/validators/components/check-component-docs.js` | Validate component JSDoc coverage, prop documentation, and docs-entry coverage for snippets/components exports. | `node tools/scripts/validators/components/check-component-docs.js [--path snippets/components] [--base-ref docs-v2]` | docs |
 | `tools/scripts/validators/content/check-description-quality.js` | Validates English v2 frontmatter descriptions for SEO length, boilerplate openings, and duplicate reuse | `node tools/scripts/validators/content/check-description-quality.js [--path <repo-path>] [--strict]` | docs |
 | `tools/scripts/validators/content/check-double-headers.js` | Detects duplicate body H1 headings and opening paragraphs that repeat frontmatter title or description content. | `node tools/scripts/validators/content/check-double-headers.js [--file <path>] [--files <a,b>] [--fix]` | docs |

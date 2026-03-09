@@ -22,7 +22,8 @@ const {
   collectOptionsFromNavigation,
   buildScopedNavigation,
   buildScopedMetadata,
-  buildScopedMintignore
+  buildScopedMintignore,
+  createScopedProfile
 } = require('../../tools/scripts/dev/generate-mint-dev-scope');
 
 const REPO_ROOT = process.cwd();
@@ -224,6 +225,60 @@ async function runTests() {
     const payload = JSON.parse(String(run.stdout || '{}').trim());
     assert.ok(payload.routeCounts.original > payload.routeCounts.scoped, 'scoped profile should reduce route count');
     assert.strictEqual(payload.routeCounts.scoped, 1, 'expected Developers tab route count after OpenAPI filter');
+  });
+
+  cases.push(async () => {
+    const repoRoot = mkTmpDir('lpd-scope-workspace-');
+    const workspaceBase = mkTmpDir('lpd-scope-workspace-out-');
+    const docs = {
+      $schema: 'https://mintlify.com/docs.json',
+      theme: 'palm',
+      name: 'Workspace Fixture',
+      navigation: {
+        tabs: [
+          {
+            tab: 'Developers',
+            groups: [
+              {
+                group: 'Dev',
+                pages: ['v2/dev/get-started']
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    writeFile(path.join(repoRoot, 'docs.json'), `${JSON.stringify(docs, null, 2)}\n`);
+    writeFile(path.join(repoRoot, '.mintignore'), '# fixture\n');
+    writeFile(path.join(repoRoot, 'v2/dev/get-started.mdx'), '# Get started\n');
+    writeFile(path.join(repoRoot, 'snippets/components/demo.jsx'), 'export default function Demo() { return null; }\n');
+
+    const result = await createScopedProfile({
+      repoRoot,
+      workspaceBase,
+      scopeFile: '',
+      versions: [],
+      languages: [],
+      tabs: [],
+      prefixes: ['v2/dev'],
+      interactive: false,
+      disableOpenApi: false,
+      printOnly: false,
+      help: false
+    });
+
+    const v2Dir = path.join(result.workspaceDir, 'v2');
+    const snippetsDir = path.join(result.workspaceDir, 'snippets');
+    const pageFile = path.join(result.workspaceDir, 'v2/dev/get-started.mdx');
+    const snippetFile = path.join(result.workspaceDir, 'snippets/components/demo.jsx');
+
+    assert.ok(fs.lstatSync(v2Dir).isDirectory(), 'workspace v2 should be a real directory');
+    assert.ok(!fs.lstatSync(v2Dir).isSymbolicLink(), 'workspace v2 should not be a symlink');
+    assert.ok(fs.lstatSync(snippetsDir).isDirectory(), 'workspace snippets should be a real directory');
+    assert.ok(!fs.lstatSync(snippetsDir).isSymbolicLink(), 'workspace snippets should not be a symlink');
+    assert.ok(fs.lstatSync(pageFile).isSymbolicLink(), 'workspace page file should remain a symlink');
+    assert.ok(fs.lstatSync(snippetFile).isSymbolicLink(), 'workspace snippet file should remain a symlink');
   });
 
   for (let index = 0; index < cases.length; index += 1) {

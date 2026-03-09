@@ -496,25 +496,76 @@ function buildScopedMetadata(selection, optionData, allRoutes, scopedRoutes) {
 }
 
 function ensureWorkspaceScaffold(repoRoot, workspaceDir) {
-  fs.mkdirSync(workspaceDir, { recursive: true });
   const overrideNames = new Set(['docs.json', '.mintignore', '.lpd-scope.json']);
-  const repoEntries = fs.readdirSync(repoRoot, { withFileTypes: true });
-  const repoNames = new Set(repoEntries.map((entry) => entry.name));
+  syncWorkspaceTree(repoRoot, workspaceDir, { skipNames: overrideNames });
+}
 
-  for (const entry of repoEntries) {
-    const name = entry.name;
-    if (name === 'docs.json' || name === '.mintignore') continue;
-    const source = path.join(repoRoot, name);
-    const target = path.join(workspaceDir, name);
-    fs.rmSync(target, { recursive: true, force: true });
-    const symlinkType = entry.isDirectory() ? 'dir' : 'file';
-    fs.symlinkSync(source, target, symlinkType);
+function pathExists(pathname) {
+  try {
+    fs.lstatSync(pathname);
+    return true;
+  } catch (_error) {
+    return false;
+  }
+}
+
+function ensureRealDirectory(dirPath) {
+  if (pathExists(dirPath)) {
+    const stats = fs.lstatSync(dirPath);
+    if (!stats.isDirectory() || stats.isSymbolicLink()) {
+      fs.rmSync(dirPath, { recursive: true, force: true });
+    }
   }
 
-  for (const name of fs.readdirSync(workspaceDir)) {
-    if (overrideNames.has(name)) continue;
-    if (!repoNames.has(name)) {
-      fs.rmSync(path.join(workspaceDir, name), { recursive: true, force: true });
+  fs.mkdirSync(dirPath, { recursive: true });
+}
+
+function ensureLinkedFile(source, target) {
+  if (pathExists(target)) {
+    const stats = fs.lstatSync(target);
+    if (stats.isSymbolicLink()) {
+      const currentTarget = fs.readlinkSync(target);
+      if (currentTarget === source) {
+        return;
+      }
+    }
+
+    fs.rmSync(target, { recursive: true, force: true });
+  }
+
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.symlinkSync(source, target, 'file');
+}
+
+function syncWorkspaceTree(sourceDir, targetDir, options = {}) {
+  const { skipNames = new Set() } = options;
+
+  ensureRealDirectory(targetDir);
+
+  const sourceEntries = fs.readdirSync(sourceDir, { withFileTypes: true });
+  const sourceNames = new Set();
+
+  for (const entry of sourceEntries) {
+    const name = entry.name;
+    if (skipNames.has(name)) continue;
+
+    sourceNames.add(name);
+
+    const source = path.join(sourceDir, name);
+    const target = path.join(targetDir, name);
+
+    if (entry.isDirectory()) {
+      syncWorkspaceTree(source, target);
+      continue;
+    }
+
+    ensureLinkedFile(source, target);
+  }
+
+  for (const name of fs.readdirSync(targetDir)) {
+    if (skipNames.has(name)) continue;
+    if (!sourceNames.has(name)) {
+      fs.rmSync(path.join(targetDir, name), { recursive: true, force: true });
     }
   }
 }

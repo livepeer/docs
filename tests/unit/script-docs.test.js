@@ -470,6 +470,32 @@ function buildGroupRows(root) {
     }));
 }
 
+function normalizeTableCellValue(value) {
+  return String(value || '')
+    .replace(/\r?\n/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function escapeMarkdownTableCell(value) {
+  return normalizeTableCellValue(value).replace(/\|/g, '\\|');
+}
+
+function escapeMdxTableCell(value) {
+  return normalizeTableCellValue(value)
+    .replace(/&/g, '&amp;')
+    .replace(/\|/g, '&#124;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\{/g, '&#123;')
+    .replace(/\}/g, '&#125;');
+}
+
+function renderMdxCodeCell(value) {
+  const escaped = escapeMdxTableCell(value);
+  return escaped ? `<code>${escaped}</code>` : '';
+}
+
 function buildGroupIndexMarkdown(root) {
   const rows = buildGroupRows(root);
 
@@ -479,9 +505,9 @@ function buildGroupIndexMarkdown(root) {
 
   const lines = ['## Script Index', '', '| Script | Summary | Usage | Owner |', '|---|---|---|---|'];
   rows.forEach((row) => {
-    const summary = row.summary.replace(/\|/g, '\\|');
-    const usage = row.usage.replace(/\|/g, '\\|');
-    const owner = row.owner.replace(/\|/g, '\\|');
+    const summary = escapeMarkdownTableCell(row.summary);
+    const usage = escapeMarkdownTableCell(row.usage);
+    const owner = escapeMarkdownTableCell(row.owner);
     lines.push(`| \`${row.script}\` | ${summary} | \`${usage}\` | ${owner} |`);
   });
   return lines.join('\n');
@@ -534,7 +560,9 @@ function buildAggregateMarkdown() {
     lines.push('| Script | Summary | Usage | Owner |');
     lines.push('|---|---|---|---|');
     rows.forEach((row) => {
-      lines.push(`| \`${row.script}\` | ${row.summary} | \`${row.usage}\` | ${row.owner} |`);
+      lines.push(
+        `| ${renderMdxCodeCell(row.script)} | ${escapeMdxTableCell(row.summary)} | ${renderMdxCodeCell(row.usage)} | ${escapeMdxTableCell(row.owner)} |`
+      );
     });
     lines.push('');
   }
