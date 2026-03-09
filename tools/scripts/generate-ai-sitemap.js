@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R16, R-R17
  * @purpose-statement AI sitemap generator — produces AI-optimised sitemap files. Dual-mode: --check (enforcer) / --write (generator).
- * @pipeline          P3 (PR, Track E, --check), P4 (post-merge, --write)
+ * @pipeline          P2, P3, P6
  * @dualmode          --check (enforcer) | --write (generator)
  * @usage             node tools/scripts/generate-ai-sitemap.js [flags]
  */

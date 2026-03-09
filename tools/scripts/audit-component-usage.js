@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             E-C1, R-R14
  * @purpose-statement Component usage auditor — scans pages for component usage patterns and reports statistics
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
+ * @pipeline          P5, P6
  * @usage             node tools/scripts/audit-component-usage.js [flags]
  */
 const fs = require('fs');

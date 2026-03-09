@@ -1,39 +1,70 @@
-task_id: 20260309
-branch: codex/20260309-mdx-safety-guards
+task_id: 808
+branch: codex/808-governance-replay
 base_branch: docs-v2
 scope_in:
+  - .codex/locks-local/
   - .codex/task-contract.yaml
+  - .github/scripts
+  - docs-guide/indexes/scripts-index.mdx
+  - docs-guide/indexes/pages-index.mdx
+  - snippets/automations/script-index.md
+  - snippets/components/content/responseField.jsx
+  - snippets/components/layout/customCards.jsx
+  - snippets/components/layout/steps.jsx
+  - tasks/reports/script-classifications.json
+  - tasks/scripts/script-index.md
+  - tests
+  - tools/config
+  - tools/lib
+  - tools/notion
   - tools/package.json
-  - tools/package-lock.json
-  - tools/scripts/generate-component-governance-remediation-reports.js
-  - tools/scripts/validators/components
-  - tests/integration
-  - tests/run-all.js
-  - tests/run-pr-checks.js
-  - tests/unit
-  - tests/utils/mdx-parser.js
-  - docs-guide/governance-guides/component-governance.mdx
-  - ai-tools/ai-skills/templates/05-mdx-parent-child-scope-patterns.template.md
+  - tools/script-index.md
+  - tools/scripts
 scope_out:
-  - v2/internal/reports
+  - tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.json
+  - tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.md
 allowed_generated:
   - .codex/pr-body.generated.md
+  - .github/script-index.md
+  - docs-guide/component-registry.json
+  - docs-guide/component-registry-schema.json
+  - docs-guide/indexes/components-index.mdx
+  - docs-guide/indexes/pages-index.mdx
   - docs-guide/indexes/scripts-index.mdx
+  - docs-index.json
+  - snippets/automations/script-index.md
+  - tasks/scripts/script-index.md
   - tests/script-index.md
+  - tools/config/script-index.md
+  - tools/lib/script-index.md
+  - tools/notion/script-index.md
   - tools/script-index.md
-  - tasks/reports/script-classifications.json
+  - v2/about/index.mdx
+  - v2/cn/index.mdx
+  - v2/developers-new/index.mdx
+  - v2/es/index.mdx
+  - v2/fr/index.mdx
+  - v2/gateways/index.mdx
+  - v2/gateways-new/index.mdx
+  - v2/home/index.mdx
+  - v2/index.mdx
+  - v2/orchestrators/index.mdx
+  - v2/orchestrators-new/index.mdx
+  - v2/resources/documentation-guide/component-library/overview.mdx
+  - v2/x-archived/index.mdx
 acceptance_checks:
   - >-
     node tools/scripts/validate-codex-task-contract.js --branch
-    codex/20260309-mdx-safety-guards --validate-contract-only
-  - node tests/unit/mdx-component-scope.test.js
-  - node tests/unit/mdx-component-runtime-smoke.test.js
-  - node tests/run-all.js --staged
+    codex/808-governance-replay --validate-contract-only
+  - >-
+    node tools/scripts/validators/governance/audit-script-inventory.js --json --md
+    --output /tmp/pr808-script-audit
+  - node tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes
   - node tests/run-pr-checks.js --base-ref docs-v2
   - git diff --check
 risk_flags:
-  - runtime-components
-  - validator-enforcement
-  - docs-governance
-  - local-skill-sync
-follow_up_issues: []
+  - workflow-governance
+  - repo-governance
+  - generated-indexes
+follow_up_issues:
+  - 765

@@ -58,7 +58,7 @@ function runTests() {
   }
 
   try {
-    const exportsList = extractExports('snippets/components/content/response-field.jsx');
+    const exportsList = extractExports('snippets/components/content/responseField.jsx');
     const responseFieldGroup = exportsList.find((entry) => entry.name === 'ResponseFieldGroup');
     assert(responseFieldGroup, 'ResponseFieldGroup export should be discovered');
     assert(responseFieldGroup.jsDocBlock, 'ResponseFieldGroup should have an attached JSDoc block');

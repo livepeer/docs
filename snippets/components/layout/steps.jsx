@@ -1,23 +1,31 @@
 /**
- * StyledSteps - A customizable Steps component with color and styling support
+ * @component StyledSteps
+ * @category layout
+ * @tier composite
+ * @status stable
+ * @description Wraps Mintlify Steps with wrapper-scoped CSS variables for icon, title, and connector styling.
+ * @contentAffinity tutorial
+ * @owner @livepeer/docs-team
+ * @dependencies StyledStep
+ * @usedIn v2/developers/ai-pipelines/byoc.mdx, v2/lpt/delegation/getting-started.mdx
+ *   v2/resources/documentation-guide/component-library/overview.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  *
- * @description
- * Wraps the standard Steps component with wrapper-scoped CSS custom properties
- * for icons, titles, and connecting lines.
- *
- * @param {React.ReactNode} children - Step components to render
- * @param {string} [iconColor] - Background color for step icons (defaults to the accent-dark token)
- * @param {string} [titleColor] - Color for step titles (defaults to the accent token)
- * @param {string} [lineColor] - Color for the connecting line between steps (defaults to the accent token)
- * @param {string} [iconSize="24px"] - Size of the step icons (currently unused in implementation)
+ * @param {React.ReactNode} children - Step components to render.
+ * @param {string} [iconColor] - Background color for step icons.
+ * @param {string} [titleColor] - Color for step titles.
+ * @param {string} [lineColor] - Color for the connecting line between steps.
+ * @param {string} [iconSize="24px"] - Size token reserved for step icons.
  *
  * @example
  * <StyledSteps iconColor="#ff0000" titleColor="#00ff00" lineColor="#0000ff">
  *   <StyledStep title="First Step" icon="check">Content here</StyledStep>
  *   <StyledStep title="Second Step" icon="arrow-right">More content</StyledStep>
  * </StyledSteps>
- *
- * @author Livepeer Documentation Team
  */
 export const StyledSteps = ({
   children,
@@ -43,23 +51,31 @@ export const StyledSteps = ({
 };
 
 /**
- * StyledStep - A wrapper for the Step component with customizable title size
+ * @component StyledStep
+ * @category layout
+ * @tier composite
+ * @status stable
+ * @description Wraps Mintlify Step to keep title sizing consistent inside StyledSteps flows.
+ * @contentAffinity tutorial
+ * @owner @livepeer/docs-team
+ * @dependencies StyledSteps
+ * @usedIn v2/developers/ai-pipelines/byoc.mdx, v2/lpt/delegation/getting-started.mdx
+ *   v2/resources/documentation-guide/component-library/overview.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  *
- * @description
- * Wraps the standard Step component to provide consistent styling and title size control.
- * Designed to be used within StyledSteps.
- *
- * @param {string} title - The title of the step
- * @param {string} icon - Icon name to display
- * @param {string} [titleSize="h3"] - HTML heading size for the title (e.g., "h1", "h2", "h3")
- * @param {React.ReactNode} children - Content to display in the step
+ * @param {string} title - Title text rendered for the step.
+ * @param {string} icon - Icon name rendered for the step marker.
+ * @param {string} [titleSize="h3"] - Heading size passed through to Step.
+ * @param {React.ReactNode} children - Content rendered inside the step body.
  *
  * @example
  * <StyledStep title="Installation" icon="download" titleSize="h2">
  *   Run npm install to get started
  * </StyledStep>
- *
- * @author Livepeer Documentation Team
  */
 export const StyledStep = ({ title, icon, titleSize = "h3", children }) => {
   return (

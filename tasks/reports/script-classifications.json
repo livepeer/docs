@@ -76,7 +76,7 @@
     "scope": ".github/scripts",
     "needs": "F-R1",
     "purpose_statement": "Fetches latest topics and posts from Livepeer Forum API, writes to snippets/automations/forum/",
-    "pipeline": "P5 (scheduled, daily)",
+    "pipeline": "P5, P6",
     "dualmode": ""
   },
   {
@@ -86,7 +86,7 @@
     "scope": ".github/scripts",
     "needs": "F-R1",
     "purpose_statement": "Fetches blog posts from Ghost CMS API, writes to snippets/automations/blog/",
-    "pipeline": "P5 (scheduled, daily)",
+    "pipeline": "P5, P6",
     "dualmode": ""
   },
   {
@@ -96,7 +96,7 @@
     "scope": ".github/scripts",
     "needs": "F-R1",
     "purpose_statement": "Fetches video data from YouTube Data API, writes to snippets/automations/youtube/",
-    "pipeline": "P5 (scheduled, daily)",
+    "pipeline": "P5, P6",
     "dualmode": ""
   },
   {
@@ -106,7 +106,7 @@
     "scope": ".github/scripts",
     "needs": "F-R1",
     "purpose_statement": "Fetches project showcase data from external source, writes to snippets/automations/showcase/",
-    "pipeline": "P5 (scheduled, daily)",
+    "pipeline": "P5, P6",
     "dualmode": ""
   },
   {
@@ -146,7 +146,7 @@
     "scope": "tests",
     "needs": "E-R1, R-R11",
     "purpose_statement": "Puppeteer browser integration test — renders pages from docs.json and checks for console errors, load failures, and visual regressions",
-    "pipeline": "P3 (PR, Track A)",
+    "pipeline": "P1",
     "dualmode": "dual-mode (document flags)"
   },
   {
@@ -166,7 +166,7 @@
     "scope": "tests/integration, .githooks/server-manager.js, tests/run-pr-checks.js",
     "needs": "E-R1, R-R29",
     "purpose_statement": "Smoke-tests sentinel MDX routes for runtime component failures, focused on page-killing render errors from MDX-imported JSX modules.",
-    "pipeline": "P3 (PR changed-file scope) and manual local verification",
+    "pipeline": "manual",
     "dualmode": ""
   },
   {
@@ -176,7 +176,7 @@
     "scope": "tests/integration, v2, api, .github/workflows",
     "needs": "F-R17",
     "purpose_statement": "Comprehensive OpenAPI spec validation — checks references, schemas, examples. Supports --strict (validate), --fix (repair), and report modes.",
-    "pipeline": "P3 (PR, Track C), P5 (scheduled)",
+    "pipeline": "P2, P3, P5, P6",
     "dualmode": "--strict (enforcer) | --fix (remediator)"
   },
   {
@@ -186,7 +186,7 @@
     "scope": "tests",
     "needs": "E-R12, E-R14",
     "purpose_statement": "Comprehensive V2 MDX link audit — checks internal links, external links, anchor refs. Supports --staged, --full, --strict, --write-links modes.",
-    "pipeline": "P5 (scheduled, full audit)",
+    "pipeline": "P1, P5, P6",
     "dualmode": "--full (validator) | --write-links (remediator)"
   },
   {
@@ -206,7 +206,7 @@
     "scope": "tests/integration, tests/utils, tasks/reports, v2",
     "needs": "E-R1, R-R11",
     "purpose_statement": "WCAG accessibility audit for v2 pages — checks heading hierarchy, alt text, ARIA. Supports --fix mode for auto-repair.",
-    "pipeline": "P6 (on-demand, WCAG audit/repair)",
+    "pipeline": "P1",
     "dualmode": ""
   },
   {
@@ -226,7 +226,7 @@
     "scope": "tests",
     "needs": "R-R29",
     "purpose_statement": "Test orchestrator — dispatches all unit test suites. Called by pre-commit hook and npm test.",
-    "pipeline": "P1 (commit, orchestrator)",
+    "pipeline": "P1, P2, P3",
     "dualmode": ""
   },
   {
@@ -236,7 +236,7 @@
     "scope": "tests, .github/workflows, tools/scripts",
     "needs": "R-R29",
     "purpose_statement": "PR orchestrator — runs changed-file scoped validation checks for pull request CI. Dispatches per-file validators based on PR diff.",
-    "pipeline": "P3 (PR, orchestrator)",
+    "pipeline": "P2, P3",
     "dualmode": ""
   },
   {
@@ -296,7 +296,7 @@
     "scope": "tests",
     "needs": "R-R10",
     "purpose_statement": "Template for category-scoped component unit tests.",
-    "pipeline": "P1 (commit, via run-all when adopted)",
+    "pipeline": "manual",
     "dualmode": ""
   },
   {
@@ -326,7 +326,7 @@
     "scope": "tests, docs.json",
     "needs": "E-C1, R-R14",
     "purpose_statement": "Validates docs.json page-entry syntax, reports missing routes, suggests remaps, and optionally applies approved remaps",
-    "pipeline": "P1 (commit, via run-all)",
+    "pipeline": "P1, P3, P6",
     "dualmode": "dual-mode (document flags)"
   },
   {
@@ -336,7 +336,7 @@
     "scope": "tests",
     "needs": "E-R12, E-R14",
     "purpose_statement": "Validates MDX internal links and snippet import paths are resolvable",
-    "pipeline": "P1 (commit, via run-all)",
+    "pipeline": "P1, P3",
     "dualmode": ""
   },
   {
@@ -376,7 +376,7 @@
     "scope": "tests, v2/pages, snippets/pages, snippets/snippetsWiki",
     "needs": "E-R1, R-R11",
     "purpose_statement": "Enforces MDX guardrails — globals imports, math delimiters, markdown table line breaks",
-    "pipeline": "P1 (commit, via run-all)",
+    "pipeline": "P1, P3",
     "dualmode": "dual-mode (document flags)"
   },
   {
@@ -396,7 +396,7 @@
     "scope": "tests",
     "needs": "E-R1, R-R11",
     "purpose_statement": "Validates MDX syntax and structure — checks for parse errors, invalid JSX, broken components",
-    "pipeline": "P1 (commit, via run-all)",
+    "pipeline": "P1, P3",
     "dualmode": ""
   },
   {
@@ -436,7 +436,7 @@
     "scope": "tests",
     "needs": "E-R1, R-R11",
     "purpose_statement": "Content quality checks — validates frontmatter completeness, thin content detection, placeholder flagging",
-    "pipeline": "P1 (commit, via run-all)",
+    "pipeline": "P1, P3",
     "dualmode": ""
   },
   {
@@ -466,7 +466,7 @@
     "scope": ".githooks, .github/scripts, tests, tools/scripts, tasks/scripts, docs-guide/indexes/scripts-index.mdx",
     "needs": "E-C1, R-R14",
     "purpose_statement": "Enforces script header schema, keeps group script indexes in sync, and builds aggregate script index",
-    "pipeline": "P1 (commit, via run-all)",
+    "pipeline": "P1, P3",
     "dualmode": "--check (validator) | --write --rebuild-indexes (generator)"
   },
   {
@@ -476,7 +476,7 @@
     "scope": "tests",
     "needs": "E-R1, R-R11",
     "purpose_statement": "Spelling check — validates content against custom dictionary with en-GB rules",
-    "pipeline": "P1 (commit, via run-all)",
+    "pipeline": "P1, P3",
     "dualmode": ""
   },
   {
@@ -486,7 +486,7 @@
     "scope": "tests",
     "needs": "E-R1, R-R11",
     "purpose_statement": "Style guide compliance — checks en-GB conventions, heading case, formatting rules",
-    "pipeline": "P1 (commit, via run-all)",
+    "pipeline": "P1, P3",
     "dualmode": ""
   },
   {
@@ -496,7 +496,7 @@
     "scope": "tests/unit, tools/lib/docs-usefulness, tools/config",
     "needs": "E-R1, R-R11",
     "purpose_statement": "Usefulness journey tests — validate journey completeness evaluation and configuration guardrails",
-    "pipeline": "manual — not yet in pipeline",
+    "pipeline": "P3",
     "dualmode": ""
   },
   {
@@ -506,7 +506,7 @@
     "scope": "tests/unit, tools/lib/docs-usefulness, tools/scripts, tools/config",
     "needs": "E-R1, R-R11",
     "purpose_statement": "Usefulness rubric tests — validate rubric loading, evaluator coverage, route precedence, and score divergence behaviour",
-    "pipeline": "manual — not yet in pipeline",
+    "pipeline": "P3",
     "dualmode": ""
   },
   {
@@ -576,7 +576,7 @@
     "scope": "tests/utils, tests/unit, .github/workflows/openapi-reference-validation.yml",
     "needs": "F-R17",
     "purpose_statement": "OpenAPI rolling issue utility — creates/updates GitHub issues for persistent OpenAPI audit findings",
-    "pipeline": "indirect — library module",
+    "pipeline": "indirect -- library module",
     "dualmode": ""
   },
   {
@@ -666,7 +666,7 @@
     "scope": "tools/scripts",
     "needs": "E-C1, R-R14",
     "purpose_statement": "Component usage auditor — scans pages for component usage patterns and reports statistics",
-    "pipeline": "manual — not yet in pipeline",
+    "pipeline": "P5, P6",
     "dualmode": ""
   },
   {
@@ -726,7 +726,7 @@
     "scope": "tools/scripts, .githooks/pre-commit",
     "needs": "R-R27, R-R30",
     "purpose_statement": "AI stash enforcer — blocks push if AI temporary/stash files are present in working tree",
-    "pipeline": "P2 (push)",
+    "pipeline": "P1, P2",
     "dualmode": ""
   },
   {
@@ -736,7 +736,7 @@
     "scope": "tools/scripts, tasks/reports/repo-ops, tasks/quarantine",
     "needs": "E-C1, R-R14",
     "purpose_statement": "Quarantine manager — classifies files for quarantine (default) or applies quarantine moves (--apply)",
-    "pipeline": "P6 (on-demand, quarantine)",
+    "pipeline": "manual",
     "dualmode": ""
   },
   {
@@ -806,7 +806,7 @@
     "scope": "tools/scripts, v2, tools/config/component-layout-profile.json",
     "needs": "E-C1, R-R14",
     "purpose_statement": "Component layout governance validator — checks v2 page layouts against approved component contracts",
-    "pipeline": "manual — not yet in pipeline",
+    "pipeline": "P5, P6",
     "dualmode": ""
   },
   {
@@ -956,7 +956,7 @@
     "scope": "tools/scripts, v2, tasks/reports/quality-accessibility",
     "needs": "E-R1, R-R11",
     "purpose_statement": "Content freshness audit — checks for TODO/TBD/Coming Soon markers, thin pages, stale content",
-    "pipeline": "P5 (scheduled, weekly)",
+    "pipeline": "P5, P6",
     "dualmode": ""
   },
   {
@@ -966,7 +966,7 @@
     "scope": "tools/scripts, tools/lib, docs-guide/indexes, v2, tests/unit/docs-guide-sot.test.js",
     "needs": "R-R16, R-R17",
     "purpose_statement": "Generated file banner enforcer — checks (--check) or writes (default) \"do not edit\" banners on generated files",
-    "pipeline": "manual — not yet in pipeline",
+    "pipeline": "P1, P3",
     "dualmode": "--check (enforcer) | default (remediator)"
   },
   {
@@ -976,7 +976,7 @@
     "scope": "changed",
     "needs": "R-R10",
     "purpose_statement": "Flags modifications to existing component files in PR context. New files allowed. Modifications require approval label.",
-    "pipeline": "PR (snippets/components/** scope)",
+    "pipeline": "P2, P3",
     "dualmode": ""
   },
   {
@@ -996,7 +996,7 @@
     "scope": "tools/scripts, docs.json, v2",
     "needs": "R-R16, R-R17",
     "purpose_statement": "AI sitemap generator — produces AI-optimised sitemap files. Dual-mode: --check (enforcer) / --write (generator).",
-    "pipeline": "P3 (PR, Track E, --check), P4 (post-merge, --write)",
+    "pipeline": "P2, P3, P6",
     "dualmode": "--check (enforcer) | --write (generator)"
   },
   {
@@ -1006,7 +1006,7 @@
     "scope": "generated-output",
     "needs": "R-R10",
     "purpose_statement": "Generates published component library MDX pages from the registry.",
-    "pipeline": "P6 (on-demand)",
+    "pipeline": "manual",
     "dualmode": ""
   },
   {
@@ -1026,7 +1026,7 @@
     "scope": "single-domain",
     "needs": "R-R10",
     "purpose_statement": "Parses JSDoc from all component exports and produces component-registry.json.",
-    "pipeline": "P1 (commit — auto-regenerated when components are staged)",
+    "pipeline": "P1, P2, P3",
     "dualmode": ""
   },
   {
@@ -1076,7 +1076,7 @@
     "scope": "tools/scripts, tools/lib, v2, docs.json, root",
     "needs": "R-R16, R-R17",
     "purpose_statement": "Docs index generator — produces docs-index.json from v2 frontmatter and docs.json. Dual-mode: --check (enforcer) / --write (generator). Most-called script in the repo.",
-    "pipeline": "P1 (commit, --check), P3 (PR, Track D, --check), P4 (post-merge, --write)",
+    "pipeline": "P1, P2, P3, P6",
     "dualmode": "--check (enforcer) | --write (generator)"
   },
   {
@@ -1086,7 +1086,7 @@
     "scope": "tools/scripts, docs.json, v2",
     "needs": "R-R16, R-R17",
     "purpose_statement": "LLMs file generator — produces llms.txt and llms-full.txt for AI consumption. Dual-mode: --check / --write.",
-    "pipeline": "P3 (PR, Track F, --check), P4 (post-merge, --write)",
+    "pipeline": "P2, P3, P6",
     "dualmode": "--check (enforcer) | --write (generator)"
   },
   {
@@ -1096,7 +1096,7 @@
     "scope": "tools/scripts, v2",
     "needs": "R-R16, R-R17",
     "purpose_statement": "Pages index generator — generates and verifies section-style index.mdx files for v2 docs folders plus root aggregate index",
-    "pipeline": "manual — not yet in pipeline",
+    "pipeline": "P1",
     "dualmode": "--check (enforcer) | --write (generator)"
   },
   {
@@ -1316,7 +1316,7 @@
     "scope": "tools/scripts/i18n, v2",
     "needs": "F-R6, F-R7",
     "purpose_statement": "Generated localisation validator — checks generated translated MDX files and route-map outputs for integrity",
-    "pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+    "pipeline": "P6",
     "dualmode": ""
   },
   {
@@ -1356,7 +1356,7 @@
     "scope": "full-repo",
     "needs": "R-R14",
     "purpose_statement": "Reads the media-audit manifest, migrates flagged assets to docs-v2-assets, rewrites MDX/JSX references to raw GitHub URLs, and removes local files after successful repair steps.",
-    "pipeline": "P6 (on-demand)",
+    "pipeline": "manual",
     "dualmode": "--dry-run (show what would change) | --write (execute migration)"
   },
   {
@@ -1366,7 +1366,7 @@
     "scope": "tools/scripts/remediators/content, first-party markdown/mdx files",
     "needs": "E-R1, R-R11",
     "purpose_statement": "Auto-repairs deterministic MDX-unsafe markdown patterns across first-party markdown and MDX content.",
-    "pipeline": "P6 (on-demand, pre-commit autofix)",
+    "pipeline": "P1",
     "dualmode": "--dry-run (validator) | --write (remediator)"
   },
   {
@@ -1376,7 +1376,7 @@
     "scope": "v2-content",
     "needs": "R-R2",
     "purpose_statement": "Auto-corrects spelling errors using the shared cspell configuration. Safe, dictionary-based corrections only.",
-    "pipeline": "P6 (on-demand)",
+    "pipeline": "manual",
     "dualmode": "--dry-run (validator: show corrections) | --write (remediator: apply corrections)"
   },
   {
@@ -1386,7 +1386,7 @@
     "scope": "tools/scripts, ai-tools/ai-skills/catalog, tasks/reports/repo-ops",
     "needs": "R-R29",
     "purpose_statement": "Repo audit orchestrator — dispatches all static analysis validators in sequence. Supports --mode (static/full), --scope (full/changed), --quarantine, --agent-pack.",
-    "pipeline": "P6 (on-demand, health audit)",
+    "pipeline": "manual",
     "dualmode": ""
   },
   {
@@ -1396,7 +1396,7 @@
     "scope": "full-repo",
     "needs": "R-R10",
     "purpose_statement": "Scans MDX imports to produce component-usage-map.json and detect @usedIn drift.",
-    "pipeline": "P6 (on-demand)",
+    "pipeline": "manual",
     "dualmode": ""
   },
   {
@@ -1416,7 +1416,7 @@
     "scope": "tools/scripts",
     "needs": "F-R1",
     "purpose_statement": "External docs fetcher — pulls doc fragments from external GitHub repos into snippets/data/ for inclusion in builds",
-    "pipeline": "P3 (PR, build dep)",
+    "pipeline": "P2, P3",
     "dualmode": ""
   },
   {
@@ -1526,7 +1526,7 @@
     "scope": "tools/scripts",
     "needs": "E-C6, F-C1",
     "purpose_statement": "V2 page tester — validates v2 pages via Puppeteer browser rendering",
-    "pipeline": "manual — developer tool",
+    "pipeline": "P2, P3",
     "dualmode": ""
   },
   {
@@ -1546,7 +1546,7 @@
     "scope": "single-domain",
     "needs": "R-R10",
     "purpose_statement": "Validates component files use CSS custom properties only. No ThemeData, no hardcoded hex, no inline styles.",
-    "pipeline": "PR (snippets/components/** scope)",
+    "pipeline": "P1, P2, P3",
     "dualmode": ""
   },
   {
@@ -1556,7 +1556,7 @@
     "scope": "single-domain",
     "needs": "R-R10",
     "purpose_statement": "Validates component JSDoc coverage, prop documentation, and docs-entry coverage for exported components under snippets/components.",
-    "pipeline": "PR (snippets/components/** scope)",
+    "pipeline": "P1, P2, P3",
     "dualmode": ""
   },
   {
@@ -1566,7 +1566,7 @@
     "scope": "tools/scripts/validators/components, tests/run-all.js, tests/run-pr-checks.js, snippets/components, tests/utils",
     "needs": "R-R10, R-R29",
     "purpose_statement": "Validates MDX-facing component modules do not depend on private file-scope helper bindings from exported components.",
-    "pipeline": "P1/P3 (commit staged scope and PR changed-file scope)",
+    "pipeline": "manual",
     "dualmode": ""
   },
   {
@@ -1576,7 +1576,7 @@
     "scope": "tools/scripts/validators/components, tests/run-all.js, tests/run-pr-checks.js, snippets/components",
     "needs": "R-R10",
     "purpose_statement": "Validates active component filenames against strict camelCase file naming and PascalCase exports under snippets/components.",
-    "pipeline": "PR/manual validator for snippets/components/** scope",
+    "pipeline": "P1, P3",
     "dualmode": ""
   },
   {
@@ -1626,7 +1626,7 @@
     "scope": "tools/scripts/validators/content, first-party markdown/mdx files",
     "needs": "E-R1, R-R11",
     "purpose_statement": "Validates first-party markdown and MDX content for repo-wide MDX-safe syntax, including parse failures and deterministic unsafe patterns.",
-    "pipeline": "P1 (commit, PR, via run-all)",
+    "pipeline": "P1, P3",
     "dualmode": "--staged (changed-file scope) | --files (explicit scope) | default full-repo"
   },
   {
@@ -1646,7 +1646,7 @@
     "scope": "v2, tools/scripts/validators/content, tests/config/spell-dict.json",
     "needs": "E-R1, R-R11",
     "purpose_statement": "Detects and fixes incorrect proper noun capitalisation in prose while skipping code, frontmatter, URLs, and path-like tokens.",
-    "pipeline": "P6 (on-demand)",
+    "pipeline": "manual",
     "dualmode": "--check (default) | --fix"
   },
   {
@@ -1700,43 +1700,227 @@
     "dualmode": ""
   },
   {
-    "path": "tools/utility/personal/download-linkedin-video.sh",
-    "category": "utility",
-    "purpose": "tooling:personal",
-    "scope": "tools/utility/personal, snippets/assets/media/videos",
-    "needs": "",
-    "purpose_statement": "Personal utility — downloads LinkedIn video by URL",
-    "pipeline": "manual — developer tool",
-    "dualmode": ""
+    "path": "tools/scripts/validators/governance/audit-script-inventory.js",
+    "script": "audit-script-inventory",
+    "category": "validator",
+    "purpose": "governance:repo-health",
+    "scope": "full-repo"
   },
   {
-    "path": "tools/utility/personal/download-linkedin-with-cookies.sh",
+    "path": "tools/lib/component-governance-utils.js",
+    "script": "component-governance-utils",
     "category": "utility",
-    "purpose": "tooling:personal",
-    "scope": "tools/utility/personal, snippets/assets/media/videos",
-    "needs": "",
-    "purpose_statement": "Personal utility — downloads LinkedIn video using browser cookies for auth",
-    "pipeline": "manual — developer tool",
-    "dualmode": ""
+    "purpose": "governance:repo-health",
+    "scope": "single-domain"
   },
   {
-    "path": "tools/utility/personal/execute-phase1-worktree-plan.js",
+    "path": "tools/lib/docs-usefulness/config-validator.js",
+    "script": "config-validator",
     "category": "utility",
-    "purpose": "tooling:personal",
-    "scope": "tools/utility/personal, docs.json, tasks/reports/v1-v2-mapping-audit",
-    "needs": "",
-    "purpose_statement": "One-off migration tool — executed phase 1 worktree restructure plan (historical)",
-    "pipeline": "manual — developer tool",
-    "dualmode": ""
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
   },
   {
-    "path": "tools/utility/personal/transcribe-audio-to-mdx.js",
+    "path": "tools/lib/docs-usefulness/journey-check.js",
+    "script": "journey-check",
     "category": "utility",
-    "purpose": "tooling:personal",
-    "scope": "tools/utility/personal, v2/internal/assets/transcripts",
-    "needs": "",
-    "purpose_statement": "Audio transcription tool — transcribes audio files to MDX format for docs content",
-    "pipeline": "manual — developer tool",
-    "dualmode": ""
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/docs-usefulness/llm-evaluator.js",
+    "script": "llm-evaluator",
+    "category": "utility",
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/docs-usefulness/prompts/changelog.js",
+    "script": "prompts/changelog",
+    "category": "utility",
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/docs-usefulness/prompts/concept.js",
+    "script": "prompts/concept",
+    "category": "utility",
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/docs-usefulness/prompts/faq.js",
+    "script": "prompts/faq",
+    "category": "utility",
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/docs-usefulness/prompts/glossary.js",
+    "script": "prompts/glossary",
+    "category": "utility",
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/docs-usefulness/prompts/how_to.js",
+    "script": "prompts/how_to",
+    "category": "utility",
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/docs-usefulness/prompts/index.js",
+    "script": "prompts/index",
+    "category": "utility",
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/docs-usefulness/prompts/landing.js",
+    "script": "prompts/landing",
+    "category": "utility",
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/docs-usefulness/prompts/overview.js",
+    "script": "prompts/overview",
+    "category": "utility",
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/docs-usefulness/prompts/reference.js",
+    "script": "prompts/reference",
+    "category": "utility",
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/docs-usefulness/prompts/troubleshooting.js",
+    "script": "prompts/troubleshooting",
+    "category": "utility",
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/docs-usefulness/prompts/tutorial.js",
+    "script": "prompts/tutorial",
+    "category": "utility",
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/docs-usefulness/quality-gate.js",
+    "script": "quality-gate",
+    "category": "utility",
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/docs-usefulness/rubric-loader.js",
+    "script": "rubric-loader",
+    "category": "utility",
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/docs-usefulness/rule-evaluators.js",
+    "script": "rule-evaluators",
+    "category": "utility",
+    "purpose": "qa:repo-health",
+    "scope": "single-domain"
+  },
+  {
+    "path": "tools/lib/mdx-safe-markdown.js",
+    "script": "mdx-safe-markdown",
+    "category": "utility",
+    "purpose": "qa:content-quality",
+    "scope": "full-repo"
+  },
+  {
+    "path": "tools/lib/script-governance-config.js",
+    "script": "script-governance-config",
+    "category": "utility",
+    "purpose": "governance:repo-health",
+    "scope": "full-repo"
+  },
+  {
+    "path": "tools/lib/script-header-utils.js",
+    "script": "script-header-utils",
+    "category": "utility",
+    "purpose": "governance:repo-health",
+    "scope": "full-repo"
+  },
+  {
+    "path": "tools/notion/1-read-notion-to-csv.js",
+    "script": "1-read-notion-to-csv",
+    "category": "automation",
+    "purpose": "tooling:dev-tools",
+    "scope": "external"
+  },
+  {
+    "path": "tools/notion/2-read-docs-to-csv.js",
+    "script": "2-read-docs-to-csv",
+    "category": "generator",
+    "purpose": "tooling:dev-tools",
+    "scope": "external"
+  },
+  {
+    "path": "tools/notion/3-check-duplicates.js",
+    "script": "3-check-duplicates",
+    "category": "validator",
+    "purpose": "tooling:dev-tools",
+    "scope": "external"
+  },
+  {
+    "path": "tools/notion/4-remove-duplicates.js",
+    "script": "4-remove-duplicates",
+    "category": "remediator",
+    "purpose": "tooling:dev-tools",
+    "scope": "external"
+  },
+  {
+    "path": "tools/notion/5-export-to-notion.js",
+    "script": "5-export-to-notion",
+    "category": "automation",
+    "purpose": "tooling:dev-tools",
+    "scope": "external"
+  },
+  {
+    "path": "tools/notion/backup-notion-table.js",
+    "script": "backup-notion-table",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "external"
+  },
+  {
+    "path": "tools/notion/install-local-sync-hook.sh",
+    "script": "install-local-sync-hook",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "single-file"
+  },
+  {
+    "path": "tools/notion/local-post-commit-sync.sh",
+    "script": "local-post-commit-sync",
+    "category": "orchestrator",
+    "purpose": "tooling:dev-tools",
+    "scope": "external"
+  },
+  {
+    "path": "tools/notion/remove-local-sync-hook.sh",
+    "script": "remove-local-sync-hook",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "single-file"
+  },
+  {
+    "path": "tools/notion/sync-v2-en-canonical.js",
+    "script": "sync-v2-en-canonical",
+    "category": "orchestrator",
+    "purpose": "tooling:dev-tools",
+    "scope": "external"
   }
 ]

@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             F-R1
  * @purpose-statement Fetches blog posts from Ghost CMS API, writes to snippets/automations/blog/
- * @pipeline          P5 (scheduled, daily)
+ * @pipeline          P5, P6
  * @usage             node .github/scripts/fetch-ghost-blog-data.js [flags]
  */
 const https = require("https");

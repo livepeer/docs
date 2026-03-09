@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R14, R-C6
  * @purpose-statement Tests journey-check evaluation logic against fixture pages.
- * @pipeline          manual, ci
+ * @pipeline          P3
  * @usage             node tests/unit/usefulness-journey.test.js
  */
 

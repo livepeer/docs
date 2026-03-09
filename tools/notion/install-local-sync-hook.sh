@@ -1,12 +1,12 @@
 #!/bin/bash
 # @script            install-local-sync-hook
 # @category          utility
-# @purpose           helper
-# @scope             tools/notion, local git hooks
+# @purpose           tooling:dev-tools
+# @scope             single-file
 # @owner             docs
 # @needs             bash, git
 # @purpose-statement Installs the managed local post-commit hook that invokes the Notion sync runner and preserves any prior hook as a backup.
-# @pipeline          notion-sync-local-hook
+# @pipeline          manual
 # @usage             bash tools/notion/install-local-sync-hook.sh [flags]
 
 set -euo pipefail

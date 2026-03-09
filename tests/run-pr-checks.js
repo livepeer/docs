@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R29
  * @purpose-statement PR orchestrator — runs changed-file scoped validation checks for pull request CI. Dispatches per-file validators based on PR diff.
- * @pipeline          P3 (PR, orchestrator)
+ * @pipeline          P2, P3
  * @usage             node tests/run-pr-checks.js [flags]
  */
 
@@ -17,6 +17,13 @@ const path = require('path');
 const { execSync, spawnSync } = require('child_process');
 const { getDocsJsonRouteKeys, toDocsRouteKeyFromFileV2Aware } = require('./utils/file-walker');
 const { isEligibleRepoMarkdownPath } = require('../tools/lib/mdx-safe-markdown');
+const {
+  AGGREGATE_INDEX_PATH,
+  GOVERNED_ROOTS,
+  GROUP_INDEX_PATHS,
+  SCRIPT_EXTENSIONS: GOVERNED_SCRIPT_EXTENSIONS,
+  isWithinRoots
+} = require('../tools/lib/script-governance-config');
 
 const styleGuideTests = require('./unit/style-guide.test');
 const mdxTests = require('./unit/mdx.test');
@@ -30,8 +37,8 @@ const componentNamingTests = require('../tools/scripts/validators/components/che
 const mdxSafeMarkdownValidator = require('../tools/scripts/validators/content/check-mdx-safe-markdown');
 
 const REPO_ROOT = getRepoRoot();
-const SCRIPT_EXTENSIONS = new Set(['.js', '.cjs', '.mjs', '.ts', '.tsx', '.sh', '.bash', '.py']);
-const SCRIPT_SCOPES = ['.githooks', '.github/scripts', 'tests', 'tools/scripts', 'tasks/scripts'];
+const SCRIPT_EXTENSIONS = new Set(GOVERNED_SCRIPT_EXTENSIONS);
+const SCRIPT_SCOPES = GOVERNED_ROOTS;
 const LINK_AUDIT_REPORT = '/tmp/livepeer-link-audit-pr.md';
 const CODEX_BRANCH_RE = /^codex\//;
 const GENERATED_AFFECTING_PREFIXES = [
@@ -44,8 +51,8 @@ const GENERATED_AFFECTING_PREFIXES = [
 ];
 const GENERATED_AFFECTING_EXACT = new Set([
   'tests/unit/script-docs.test.js',
-  'tests/script-index.md',
-  'tools/script-index.md',
+  AGGREGATE_INDEX_PATH,
+  ...GROUP_INDEX_PATHS,
   'v2/index.mdx',
   'v2/resources/documentation-guide/component-library/overview.mdx'
 ]);
@@ -139,9 +146,8 @@ function partitionFiles(changedFiles) {
   const repoMarkdownFiles = existingChangedFiles.filter((file) => isEligibleRepoMarkdownPath(file));
 
   const scriptFiles = existingChangedFiles.filter((file) => {
-    const inScope = SCRIPT_SCOPES.some((scope) => file === scope || file.startsWith(`${scope}/`));
     const ext = path.extname(file).toLowerCase();
-    return inScope && SCRIPT_EXTENSIONS.has(ext);
+    return isWithinRoots(file, SCRIPT_SCOPES) && SCRIPT_EXTENSIONS.has(ext);
   });
 
   const usefulnessFiles = existingChangedFiles.filter((file) =>

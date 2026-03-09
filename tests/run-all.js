@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R29
  * @purpose-statement Test orchestrator — dispatches all unit test suites. Called by pre-commit hook and npm test.
- * @pipeline          P1 (commit, orchestrator)
+ * @pipeline          P1, P2, P3
  * @usage             node tests/run-all.js [flags]
  */
 /**
@@ -31,6 +31,7 @@ const componentNamingTests = require('../tools/scripts/validators/components/che
 const mdxSafeMarkdownValidator = require('../tools/scripts/validators/content/check-mdx-safe-markdown');
 const pagesIndexGenerator = require('../tools/scripts/generate-pages-index');
 const browserTests = require('./integration/browser.test');
+const { getStagedFiles } = require('./utils/file-walker');
 const REPO_ROOT = path.resolve(__dirname, '..');
 
 const args = process.argv.slice(2);
@@ -43,12 +44,32 @@ const wcagNoFix = args.includes('--wcag-no-fix');
 let totalErrors = 0;
 let totalWarnings = 0;
 
+function toPosix(filePath) {
+  return String(filePath || '').split(path.sep).join('/');
+}
+
+function getStagedRepoPaths() {
+  return getStagedFiles(REPO_ROOT)
+    .map((filePath) => toPosix(path.relative(REPO_ROOT, filePath)))
+    .filter(Boolean);
+}
+
 /**
  * Run all tests
  */
 async function runAllTests() {
   console.log('🧪 Running Livepeer Documentation Test Suite\n');
   console.log('='.repeat(60));
+
+  const stagedRepoPaths = stagedOnly ? getStagedRepoPaths() : [];
+  const stagedComponentFiles = stagedRepoPaths.filter(
+    (filePath) => filePath.startsWith('snippets/components/') && filePath.endsWith('.jsx')
+  );
+  const shouldRunComponentNaming = !stagedOnly || stagedComponentFiles.length > 0;
+  const shouldRunComponentGovernanceUtils = !stagedOnly || stagedRepoPaths.some((filePath) =>
+    filePath === 'tools/lib/component-governance-utils.js' ||
+    filePath === 'tests/unit/component-governance-utils.test.js'
+  );
   
   // Style Guide Tests
   console.log('\n📋 Running Style Guide Tests...');
@@ -59,12 +80,18 @@ async function runAllTests() {
 
   // Component Naming
   console.log('\n🧩 Running Component Naming Checks...');
-  const componentNamingResult = componentNamingTests.run();
-  componentNamingResult.findings.forEach((finding) => {
-    console.error(`  ${componentNamingTests.formatFinding(finding)}`);
-  });
-  totalErrors += componentNamingResult.findings.length;
-  console.log(`   ${componentNamingResult.findings.length} errors, 0 warnings`);
+  if (shouldRunComponentNaming) {
+    const componentNamingResult = componentNamingTests.run({
+      files: stagedOnly ? stagedComponentFiles : []
+    });
+    componentNamingResult.findings.forEach((finding) => {
+      console.error(`  ${componentNamingTests.formatFinding(finding)}`);
+    });
+    totalErrors += componentNamingResult.findings.length;
+    console.log(`   ${componentNamingResult.findings.length} errors, 0 warnings`);
+  } else {
+    console.log('   skipped in --staged mode (no staged component files)');
+  }
   
   // MDX Tests
   console.log('\n📄 Running MDX Validation Tests...');
@@ -137,21 +164,29 @@ async function runAllTests() {
 
   // Component Governance Utility Tests
   console.log('\n🧩 Running Component Governance Utility Tests...');
-  const componentGovernanceUtilsResult = componentGovernanceUtilsTests.runTests();
-  totalErrors += componentGovernanceUtilsResult.errors.length;
-  totalWarnings += componentGovernanceUtilsResult.warnings.length;
-  console.log(
-    `   ${componentGovernanceUtilsResult.errors.length} errors, ${componentGovernanceUtilsResult.warnings.length} warnings`
-  );
+  if (shouldRunComponentGovernanceUtils) {
+    const componentGovernanceUtilsResult = componentGovernanceUtilsTests.runTests();
+    totalErrors += componentGovernanceUtilsResult.errors.length;
+    totalWarnings += componentGovernanceUtilsResult.warnings.length;
+    console.log(
+      `   ${componentGovernanceUtilsResult.errors.length} errors, ${componentGovernanceUtilsResult.warnings.length} warnings`
+    );
+  } else {
+    console.log('   skipped in --staged mode (no staged component-governance utility changes)');
+  }
 
   // Component Governance Generator Tests
   console.log('\n🗂️  Running Component Governance Generator Tests...');
-  const componentGovernanceGeneratorResult = componentGovernanceGeneratorTests.runTests();
-  totalErrors += componentGovernanceGeneratorResult.errors.length;
-  totalWarnings += componentGovernanceGeneratorResult.warnings.length;
-  console.log(
-    `   ${componentGovernanceGeneratorResult.errors.length} errors, ${componentGovernanceGeneratorResult.warnings.length} warnings`
-  );
+  if (stagedOnly) {
+    console.log('   skipped in --staged mode (repo-wide component generator drift is enforced in PR/full runs)');
+  } else {
+    const componentGovernanceGeneratorResult = componentGovernanceGeneratorTests.runTests();
+    totalErrors += componentGovernanceGeneratorResult.errors.length;
+    totalWarnings += componentGovernanceGeneratorResult.warnings.length;
+    console.log(
+      `   ${componentGovernanceGeneratorResult.errors.length} errors, ${componentGovernanceGeneratorResult.warnings.length} warnings`
+    );
+  }
 
   // Usefulness Unit Tests
   console.log('\n📈 Running Usefulness Unit Tests...');

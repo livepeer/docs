@@ -5,7 +5,7 @@
 
 | Script | Summary | Usage | Owner |
 |---|---|---|---|
-| `tools/scripts/add-framework-headers.js` | Insert or verify governance framework metadata headers from classification JSON. | `node tools/scripts/add-framework-headers.js --data script-classifications.json --dry-run` | docs |
+| `tools/scripts/add-framework-headers.js` | Inserts or extends framework headers on all repo scripts from classification data. | `node tools/scripts/add-framework-headers.js --data script-classifications.json --dry-run` | docs |
 | `tools/scripts/add-pagetype-mechanical.js` | Mechanically assigns pageType frontmatter to eligible v2 MDX pages. | `node tools/scripts/add-pagetype-mechanical.js [flags]` | docs |
 | `tools/scripts/assign-purpose-metadata.js` | Purpose metadata assigner — fills purpose and audience frontmatter for routable v2 pages | `node tools/scripts/assign-purpose-metadata.js [flags]` | docs |
 | `tools/scripts/audit-component-usage.js` | Component usage auditor — scans pages for component usage patterns and reports statistics | `node tools/scripts/audit-component-usage.js [flags]` | docs |
@@ -43,7 +43,7 @@
 | `tools/scripts/enforcers/pr/check-pr-template.js` | Enforces that PR descriptions include required change and rationale sections before merge | `PR_BODY="..." node tools/scripts/enforcers/pr/check-pr-template.js` | docs |
 | `tools/scripts/generate-ai-sitemap.js` | AI sitemap generator — produces AI-optimised sitemap files. Dual-mode: --check (enforcer) / --write (generator). | `node tools/scripts/generate-ai-sitemap.js [flags]` | docs |
 | `tools/scripts/generate-component-docs.js` | Generates published component library MDX pages from the registry. | `node tools/scripts/generate-component-docs.js [--template-only] [--category <name>]` | docs |
-| `tools/scripts/generate-component-governance-remediation-reports.js` | Generate Phase 2a remediation reports from the approved component-governance audit and live repo state. | `node tools/scripts/generate-component-governance-remediation-reports.js [flags]` | docs |
+| `tools/scripts/generate-component-governance-remediation-reports.js` | Generates component-governance remediation reports from the approved audit and live repo state, including defensive-rendering guidance for MDX-facing components. | `node tools/scripts/generate-component-governance-remediation-reports.js [flags]` | docs |
 | `tools/scripts/generate-component-registry.js` | Parses JSDoc from all component exports and produces component-registry.json. | `node tools/scripts/generate-component-registry.js [--validate-only]` | docs |
 | `tools/scripts/generate-content-gap-reconciliation.js` | Content-gap reconciliation generator — compares blueprint coverage against v2 MDX and writes reconciliation artefacts | `node tools/scripts/generate-content-gap-reconciliation.js [flags]` | docs |
 | `tools/scripts/generate-docs-guide-components-index.js` | Generates docs-guide and published component overview indexes from the governed component registry. | `node tools/scripts/generate-docs-guide-components-index.js [--write\|--check]` | docs |
@@ -75,9 +75,9 @@
 | `tools/scripts/i18n/translate-docs.js` | Translation generator — translates v2 MDX pages to target languages via OpenRouter API | `node tools/scripts/i18n/translate-docs.js [flags]` | docs |
 | `tools/scripts/i18n/validate-generated.js` | Generated localisation validator — checks generated translated MDX files and route-map outputs for integrity | `node tools/scripts/i18n/validate-generated.js [flags]` | docs |
 | `tools/scripts/mint-dev.sh` | Mintlify dev server launcher — starts mint dev with correct configuration | `bash tools/scripts/mint-dev.sh [flags]` | docs |
-| `tools/scripts/new-script.js` | ' + params.summary, | `node tools/scripts/new-script.js [flags]` | docs |
+| `tools/scripts/new-script.js` | Script scaffolder — creates a new script file prefilled with the required docs header template | `node tools/scripts/new-script.js [flags]` | docs |
 | `tools/scripts/publish-v2-internal-reports.js` | Report publisher — publishes v2 internal audit reports to configured output locations | `node tools/scripts/publish-v2-internal-reports.js [flags]` | docs |
-| `tools/scripts/remediators/assets/migrate-assets-to-branch.js` | Reads the media-audit manifest and migrates flagged assets to the | `node tools/scripts/remediators/assets/migrate-assets-to-branch.js \` | docs |
+| `tools/scripts/remediators/assets/migrate-assets-to-branch.js` | Reads the media-audit manifest and migrates flagged assets to the | `node tools/scripts/remediators/assets/migrate-assets-to-branch.js --manifest tasks/reports/media-audit/media-audit-manifest.json --target migrate_r2,migrate_cloudinary --dry-run` | docs |
 | `tools/scripts/remediators/content/repair-mdx-safe-markdown.js` | Auto-repairs deterministic MDX-unsafe markdown patterns across first-party markdown and MDX content. | `node tools/scripts/remediators/content/repair-mdx-safe-markdown.js --dry-run [--staged\|--files a,b]` | docs |
 | `tools/scripts/remediators/content/repair-spelling.js` | Auto-corrects spelling errors using the shared cspell configuration. Safe, dictionary-based corrections only. | `node tools/scripts/remediators/content/repair-spelling.js --dry-run` | docs |
 | `tools/scripts/repo-audit-orchestrator.js` | Repo audit orchestrator — dispatches all static analysis validators in sequence. Supports --mode (static/full), --scope (full/changed), --quarantine, --agent-pack. | `node tools/scripts/repo-audit-orchestrator.js [flags]` | docs |
@@ -107,8 +107,9 @@
 | `tools/scripts/validators/content/check-mdx-safe-markdown.js` | Validates first-party markdown and MDX content for repo-wide MDX-safe syntax, including parse failures and deterministic unsafe patterns. | `node tools/scripts/validators/content/check-mdx-safe-markdown.js [--staged\|--files a,b] [--json]` | docs |
 | `tools/scripts/validators/content/check-page-endings.js` | Validates that English v2 MDX pages end with an approved navigational or closing element | `node tools/scripts/validators/content/check-page-endings.js [--fix] [--json]` | docs |
 | `tools/scripts/validators/content/check-proper-nouns.js` | Detects and fixes incorrect proper noun capitalisation in prose while skipping code, frontmatter, URLs, and path-like tokens. | `node tools/scripts/validators/content/check-proper-nouns.js [--file <path[,path...]>] [--fix]` | docs |
+| `tools/scripts/validators/governance/audit-script-inventory.js` | Deep inventory audit of every script in the repo. Traces triggers, outputs, downstream chains, and governance compliance. Produces reports grouped by trigger category. | `node tools/scripts/validators/governance/audit-script-inventory.js [--json] [--md] [--output <dir>] [--verbose]` | docs |
 | `tools/scripts/validators/governance/check-agent-docs-freshness.js` | Validates that required agent governance docs exist and have been touched within a freshness threshold | `node tools/scripts/validators/governance/check-agent-docs-freshness.js [--threshold <days>] [--json]` | docs |
-| `tools/scripts/verify-all-pages.js` | Utility script for tools/scripts/verify-all-pages.js. | `node tools/scripts/verify-all-pages.js` | docs |
+| `tools/scripts/verify-all-pages.js` | Loads component-library routes in a headless browser and fails on render, console, or 404 issues. | `node tools/scripts/verify-all-pages.js` | docs |
 | `tools/scripts/verify-pay-orc-gate-finalize.sh` | Payment/orchestrator gate verifier — checks payment and orchestrator documentation gate conditions | `bash tools/scripts/verify-pay-orc-gate-finalize.sh [flags]` | docs |
 | `tools/scripts/verify/.verify-large-change.sh` | Large change verifier — blocks or warns when a commit touches an unusually large number of files | `bash tools/scripts/verify/.verify-large-change.sh [flags]` | docs |
 | `tools/scripts/wcag-repair-common.js` | WCAG repair shared logic — common repair functions used by WCAG audit fix mode | `node tools/scripts/wcag-repair-common.js [flags]` | docs |

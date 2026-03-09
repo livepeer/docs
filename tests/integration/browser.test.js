@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Puppeteer browser integration test — renders pages from docs.json and checks for console errors, load failures, and visual regressions
- * @pipeline          P3 (PR, Track A)
+ * @pipeline          P1
  * @dualmode          dual-mode (document flags)
  * @usage             node tests/integration/browser.test.js [flags]
  */

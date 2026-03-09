@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R16, R-R17
  * @purpose-statement Docs index generator — produces docs-index.json from v2 frontmatter and docs.json. Dual-mode: --check (enforcer) / --write (generator). Most-called script in the repo.
- * @pipeline          P1 (commit, --check), P3 (PR, Track D, --check), P4 (post-merge, --write)
+ * @pipeline          P1, P2, P3, P6
  * @dualmode          --check (enforcer) | --write (generator)
  * @usage             node tools/scripts/generate-docs-index.js [flags]
  */

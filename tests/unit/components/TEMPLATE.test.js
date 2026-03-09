@@ -7,7 +7,7 @@
  * @owner            docs
  * @needs            R-R10
  * @purpose-statement Template for category-scoped component unit tests.
- * @pipeline         P1 (commit, via run-all when adopted)
+ * @pipeline         manual
  * @usage            node tests/unit/components/TEMPLATE.test.js
  */
 

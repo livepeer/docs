@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-C1, R-R14
  * @purpose-statement Quarantine manager — classifies files for quarantine (default) or applies quarantine moves (--apply)
- * @pipeline          P6 (on-demand, quarantine)
+ * @pipeline          manual
  * @usage             node tools/scripts/cleanup-quarantine-manager.js [flags]
  */
 

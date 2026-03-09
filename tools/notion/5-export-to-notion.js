@@ -1,12 +1,12 @@
 /**
  * @script            5-export-to-notion
  * @category          automation
- * @purpose           sync
- * @scope             tools/notion/data, tools/notion/reports, Notion database
+ * @purpose           tooling:dev-tools
+ * @scope             external
  * @owner             docs
  * @needs             node, @notionhq/client, dotenv, NOTION_API_KEY, NOTION_DATABASE_ID, NOTION_WRITABLE_DATABASE_ID(optional)
  * @purpose-statement Updates existing Notion page grouping fields from the exported docs navigation snapshot.
- * @pipeline          notion-sync
+ * @pipeline          manual
  * @usage             node tools/notion/5-export-to-notion.js [flags]
  */
 

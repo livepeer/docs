@@ -7,7 +7,7 @@
  * @owner            docs
  * @needs            R-R10
  * @purpose-statement Validates component files against component governance styling rules.
- * @pipeline         P1 (commit) / P3 (PR)
+ * @pipeline         P1, P2, P3
  * @usage            node tools/scripts/validators/components/check-component-css.js [--path snippets/components] [--staged] [--fix] [--help]
  */
 

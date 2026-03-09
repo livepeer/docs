@@ -6,7 +6,7 @@
  * @owner            docs
  * @needs            R-R10
  * @purpose-statement Shared parsing and validation utilities for component governance scripts.
- * @pipeline         indirect — library module
+ * @pipeline         indirect -- library module
  * @usage            const utils = require('../lib/component-governance-utils');
  */
 

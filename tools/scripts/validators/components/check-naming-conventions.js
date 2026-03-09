@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R10
  * @purpose-statement Validates active component filenames against directory-aware file naming and PascalCase exports under snippets/components.
- * @pipeline          PR/manual validator for snippets/components/** scope
+ * @pipeline          P1, P3
  * @usage             node tools/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel]
  */
 

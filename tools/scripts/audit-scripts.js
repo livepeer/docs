@@ -15,6 +15,12 @@ const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
 const { execSync } = require('child_process')
+const {
+  extractLeadingScriptHeader,
+  getSectionLines,
+  getTagValue,
+  hasFrameworkHeaderTags,
+} = require('../lib/script-header-utils')
 
 let yaml = null
 try {
@@ -247,55 +253,8 @@ function discoverScripts() {
   return [...out].sort()
 }
 
-function getHeaderChunk(content) {
-  return String(content || '')
-    .split('\n')
-    .slice(0, 180)
-    .join('\n')
-}
-
-function hasFrameworkHeaderTags(header) {
-  return (
-    header.includes('@category') ||
-    header.includes('@purpose') ||
-    header.includes('@purpose-statement')
-  )
-}
-
 function detectHeaderMode(header) {
   return hasFrameworkHeaderTags(header) ? 'framework' : 'legacy'
-}
-
-function getTagValue(header, tagName) {
-  const re = new RegExp(`\\${tagName}\\s+(.+)`)
-  const match = header.match(re)
-  return match ? String(match[1] || '').trim() : ''
-}
-
-function getSectionLines(header, tagName) {
-  const lines = String(header || '').split('\n')
-  const target = tagName.replace('@', '')
-  const idx = lines.findIndex((line) => line.includes(`@${target}`))
-  if (idx === -1) return []
-
-  const out = []
-  for (let i = idx + 1; i < lines.length; i += 1) {
-    const raw = lines[i]
-    const trimmed = String(raw || '').trim()
-    if (!trimmed) continue
-
-    const cleaned = trimmed
-      .replace(/^\*\s?/, '')
-      .replace(/^#\s?/, '')
-      .trim()
-
-    if (!cleaned) continue
-    if (cleaned.startsWith('@')) break
-    if (cleaned.startsWith('/**') || cleaned.startsWith('*/')) continue
-    out.push(cleaned)
-  }
-
-  return out
 }
 
 function isPlaceholderValue(value) {
@@ -306,18 +265,21 @@ function isPlaceholderValue(value) {
 
 function extractPrimaryUsage(header) {
   const inlineUsage = getTagValue(header, '@usage')
-  if (inlineUsage && !isPlaceholderValue(inlineUsage)) return inlineUsage
-
   const lines = getSectionLines(header, '@usage')
-  for (const line of lines) {
-    if (line && !line.startsWith('@')) return line
-  }
-  return ''
+  return [
+    inlineUsage && !isPlaceholderValue(inlineUsage) ? inlineUsage : '',
+    ...lines.filter((line) => line && !line.startsWith('@'))
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .replace(/\s*\\\s*/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 function validateTemplate(repoPath) {
   const content = readFileSafe(repoPath)
-  const header = getHeaderChunk(content)
+  const header = extractLeadingScriptHeader(content)
   const mode = detectHeaderMode(header)
   const requiredTags =
     mode === 'framework' ? FRAMEWORK_REQUIRED_TAGS : LEGACY_REQUIRED_TAGS
@@ -352,9 +314,13 @@ function validateTemplate(repoPath) {
     emptyTags,
     scriptTag: getTagValue(header, '@script') || path.basename(repoPath),
     summaryTag:
-      getTagValue(header, '@summary') ||
-      getTagValue(header, '@purpose-statement') ||
-      getTagValue(header, '@purpose') ||
+      (mode === 'framework'
+        ? getTagValue(header, '@purpose-statement') ||
+          getTagValue(header, '@purpose') ||
+          getTagValue(header, '@summary')
+        : getTagValue(header, '@summary') ||
+          getTagValue(header, '@purpose-statement') ||
+          getTagValue(header, '@purpose')) ||
       '',
     ownerTag: getTagValue(header, '@owner') || '',
     scopeTag: getTagValue(header, '@scope') || '',

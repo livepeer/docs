@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R1, R-R29
  * @purpose-statement Smoke-tests sentinel MDX routes for runtime component failures, focused on page-killing render errors from MDX-imported JSX modules.
- * @pipeline          P3 (PR changed-file scope) and manual local verification
+ * @pipeline          manual
  * @usage             node tests/integration/mdx-component-runtime-smoke.js [--routes route[,route...]] [--base-url http://localhost:3000]
  */
 

@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Content freshness audit — checks for TODO/TBD/Coming Soon markers, thin pages, stale content
- * @pipeline          P5 (scheduled, weekly)
+ * @pipeline          P5, P6
  * @usage             node tools/scripts/docs-quality-and-freshness-audit.js [flags]
  */
 

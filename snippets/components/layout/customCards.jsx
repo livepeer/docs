@@ -104,6 +104,7 @@ export const DisplayCard = ({
  *
  * @param {string} [width='80%'] - Width used by the component.
  * @param {React.ReactNode} children - Content rendered inside the component.
+ * @param {object} [cardProps] - Additional props forwarded to the inner Card.
  *
  * @example
  * <WidthCard>Example</WidthCard>

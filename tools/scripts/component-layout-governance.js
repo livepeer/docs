@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-C1, R-R14
  * @purpose-statement Component layout governance validator — checks v2 page layouts against approved component contracts
- * @pipeline          manual — not yet in pipeline
+ * @pipeline          P5, P6
  * @usage             node tools/scripts/component-layout-governance.js [flags]
  */
 
