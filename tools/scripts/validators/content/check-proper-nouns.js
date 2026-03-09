@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Detects and fixes incorrect proper noun capitalisation in prose while skipping code, frontmatter, URLs, and path-like tokens.
- * @pipeline          P6 (on-demand)
+ * @pipeline          manual
  * @dualmode          --check (default) | --fix
  * @usage             node tools/scripts/validators/content/check-proper-nouns.js [--file <path[,path...]>] [--fix]
  */

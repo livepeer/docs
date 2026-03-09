@@ -7,7 +7,7 @@
  * @owner            docs
  * @needs            R-R10
  * @purpose-statement Scans MDX imports to produce component-usage-map.json and detect @usedIn drift.
- * @pipeline         P6 (on-demand)
+ * @pipeline         manual
  * @usage            node tools/scripts/scan-component-imports.js [--verify]
  */
 

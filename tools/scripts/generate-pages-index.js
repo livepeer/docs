@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R16, R-R17
  * @purpose-statement Pages index generator — generates and verifies section-style index.mdx files for v2 docs folders plus root aggregate index
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
+ * @pipeline          P1
  * @dualmode          --check (enforcer) | --write (generator)
  * @usage             node tools/scripts/generate-pages-index.js [flags]
  */

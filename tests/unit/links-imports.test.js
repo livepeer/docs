@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R12, E-R14
  * @purpose-statement Validates MDX internal links and snippet import paths are resolvable
- * @pipeline          P1 (commit, via run-all)
+ * @pipeline          P1, P3
  * @usage             node tests/unit/links-imports.test.js [flags]
  */
 /**

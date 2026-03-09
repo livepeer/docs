@@ -7,7 +7,7 @@
  * @owner            docs
  * @needs            R-R10
  * @purpose-statement Generates published component library MDX pages from the registry.
- * @pipeline         P6 (on-demand)
+ * @pipeline         manual
  * @usage            node tools/scripts/generate-component-docs.js [--template-only] [--category <name>]
  */
 

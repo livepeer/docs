@@ -6,7 +6,7 @@
 # @owner             docs
 # @needs             R-R27, R-R30
 # @purpose-statement AI stash enforcer — blocks push if AI temporary/stash files are present in working tree
-# @pipeline          P2 (push)
+# @pipeline          P1, P2
 # @usage             bash tools/scripts/check-no-ai-stash.sh [flags]
 set -euo pipefail
 

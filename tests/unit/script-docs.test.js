@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-C1, R-R14
  * @purpose-statement Enforces script header schema, keeps group script indexes in sync, and builds aggregate script index
- * @pipeline          P1 (commit, via run-all)
+ * @pipeline          P1, P3
  * @dualmode          --check (validator) | --write --rebuild-indexes (generator)
  * @usage             node tests/unit/script-docs.test.js [flags]
  */

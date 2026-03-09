@@ -1,30 +1,23 @@
-task_id: 801
-branch: codex/801-gap-1-governance-coverage
+task_id: 802
+branch: codex/802-gap-2-pipeline-reconciliation
 base_branch: docs-v2
 scope_in:
   - .codex/task-contract.yaml
-  - tools/lib
-  - tools/notion
-  - tools/config
-  - snippets/automations
-  - tests/unit/script-docs.test.js
-  - tests/run-pr-checks.js
+  - .githooks/pre-commit
+  - .githooks/pre-push
+  - .github/scripts
+  - .github/workflows
+  - tests
+  - tools/scripts
   - tasks/reports/script-classifications.json
   - tasks/reports/repo-ops
-  - tools/script-index.md
   - docs-guide/indexes/scripts-index.mdx
+  - tools/script-index.md
 scope_out: []
 allowed_generated:
   - .codex/pr-body.generated.md
-  - docs-guide/indexes/scripts-index.mdx
   - tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.json
   - tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.md
-  - tasks/scripts/script-index.md
-  - snippets/automations/script-index.md
-  - tools/config/script-index.md
-  - tools/lib/script-index.md
-  - tools/notion/script-index.md
-  - tools/script-index.md
 acceptance_checks:
   - node tools/scripts/validators/governance/audit-script-inventory.js --json
   - node tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes

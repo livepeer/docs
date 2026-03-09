@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Validates first-party markdown and MDX content for repo-wide MDX-safe syntax, including parse failures and deterministic unsafe patterns.
- * @pipeline          P1 (commit, PR, via run-all)
+ * @pipeline          P1, P3
  * @dualmode          --staged (changed-file scope) | --files (explicit scope) | default full-repo
  * @usage             node tools/scripts/validators/content/check-mdx-safe-markdown.js [--staged|--files a,b] [--json]
  */

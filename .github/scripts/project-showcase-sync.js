@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             F-R1
  * @purpose-statement Fetches project showcase data from external source, writes to snippets/automations/showcase/
- * @pipeline          P5 (scheduled, daily)
+ * @pipeline          P5, P6
  * @usage             node .github/scripts/project-showcase-sync.js [flags]
  */
 /*

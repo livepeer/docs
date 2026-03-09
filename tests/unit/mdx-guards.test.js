@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Enforces MDX guardrails — globals imports, math delimiters, markdown table line breaks
- * @pipeline          P1 (commit, via run-all)
+ * @pipeline          P1, P3
  * @dualmode          dual-mode (document flags)
  * @usage             node tests/unit/mdx-guards.test.js [flags]
  */

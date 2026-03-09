@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             F-R1
  * @purpose-statement Fetches latest topics and posts from Livepeer Forum API, writes to snippets/automations/forum/
- * @pipeline          P5 (scheduled, daily)
+ * @pipeline          P5, P6
  * @usage             node .github/scripts/fetch-forum-data.js [flags]
  */
 const https = require("https");

@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R12, E-R14
  * @purpose-statement Comprehensive V2 MDX link audit — checks internal links, external links, anchor refs. Supports --staged, --full, --strict, --write-links modes.
- * @pipeline          P5 (scheduled, full audit)
+ * @pipeline          P1, P5, P6
  * @dualmode          --full (validator) | --write-links (remediator)
  * @usage             node tests/integration/v2-link-audit.js [flags]
  */

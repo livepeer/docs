@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-C6, F-C1
  * @purpose-statement V2 page tester — validates v2 pages via Puppeteer browser rendering
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
+ * @pipeline          P2, P3
  * @usage             node tools/scripts/test-v2-pages.js [flags]
  */
 

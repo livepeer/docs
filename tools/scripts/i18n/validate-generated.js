@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement Generated localisation validator — checks generated translated MDX files and route-map outputs for integrity
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
+ * @pipeline          P6
  * @usage             node tools/scripts/i18n/validate-generated.js [flags]
  */
 

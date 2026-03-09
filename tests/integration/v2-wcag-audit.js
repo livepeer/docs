@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement WCAG accessibility audit for v2 pages — checks heading hierarchy, alt text, ARIA. Supports --fix mode for auto-repair.
- * @pipeline          P6 (on-demand, WCAG audit/repair)
+ * @pipeline          P1
  * @usage             node tests/integration/v2-wcag-audit.js [flags]
  */
 

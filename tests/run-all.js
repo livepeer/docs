@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R29
  * @purpose-statement Test orchestrator — dispatches all unit test suites. Called by pre-commit hook and npm test.
- * @pipeline          P1 (commit, orchestrator)
+ * @pipeline          P1, P2, P3
  * @usage             node tests/run-all.js [flags]
  */
 /**

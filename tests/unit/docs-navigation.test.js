@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-C1, R-R14
  * @purpose-statement Validates docs.json page-entry syntax, reports missing routes, warns on orphaned canonical v2 pages, suggests remaps, and optionally applies approved remaps
- * @pipeline          P1 (commit, via run-all)
+ * @pipeline          P1, P3, P6
  * @dualmode          dual-mode (document flags)
  * @usage             node tests/unit/docs-navigation.test.js [flags]
  */

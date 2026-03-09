@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             F-R1
  * @purpose-statement Fetches video data from YouTube Data API, writes to snippets/automations/youtube/
- * @pipeline          P5 (scheduled, daily)
+ * @pipeline          P5, P6
  * @usage             node .github/scripts/fetch-youtube-data.js [flags]
  */
 const https = require("https");

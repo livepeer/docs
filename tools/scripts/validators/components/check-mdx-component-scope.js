@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R10, R-R29
  * @purpose-statement Validates MDX-facing component modules do not depend on private file-scope helper bindings from exported components.
- * @pipeline          P1/P3 (commit staged scope and PR changed-file scope)
+ * @pipeline          manual
  * @usage             node tools/scripts/validators/components/check-mdx-component-scope.js [--files path[,path...]] [--staged]
  */
 
