@@ -1,18 +1,18 @@
-task_id: 803
-branch: codex/803-pm-02-script-docs-framework-header-validation
+task_id: 804
+branch: codex/804-pm-03-post-migration-audit-runner
 base_branch: docs-v2
 scope_in:
   - .codex/task-contract.yaml
-  - docs-guide/indexes/scripts-index.mdx
-  - tests/script-index.md
+  - tasks/reports/script-classifications.json
   - tools/script-index.md
-  - tests/unit/script-docs.test.js
+  - docs-guide/indexes/scripts-index.mdx
+  - tools/scripts/orchestrators/run-migration-audit.js
 scope_out: []
 allowed_generated:
   - .codex/pr-body.generated.md
 acceptance_checks:
-  - node tests/unit/script-docs.test.js
-  - node tests/run-all.js --skip-browser 2>&1 | tail -10
+  - node tools/scripts/orchestrators/run-migration-audit.js --phase A 2>&1 | tail -20
+  - node tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes
 risk_flags:
   - script-governance
 follow_up_issues: []
