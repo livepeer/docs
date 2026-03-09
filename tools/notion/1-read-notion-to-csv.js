@@ -1,12 +1,12 @@
 /**
  * @script            1-read-notion-to-csv
  * @category          automation
- * @purpose           sync
- * @scope             tools/notion, Notion database, tools/notion/data
+ * @purpose           tooling:dev-tools
+ * @scope             external
  * @owner             docs
  * @needs             node, @notionhq/client, dotenv, NOTION_API_KEY, NOTION_DATABASE_ID
  * @purpose-statement Reads the Notion pages database, filters v2 rows, and writes CSV/JSON exports for downstream sync steps.
- * @pipeline          notion-sync
+ * @pipeline          manual
  * @usage             node tools/notion/1-read-notion-to-csv.js [flags]
  */
 

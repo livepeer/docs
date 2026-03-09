@@ -1,3 +1,15 @@
+/**
+ * @script           script-governance-config
+ * @category         utility
+ * @purpose          governance:repo-health
+ * @scope            full-repo
+ * @owner            docs
+ * @needs            R-R14, R-R18, R-C6
+ * @purpose-statement Shared governance constants for script discovery, indexing, classification, and pipeline normalisation across the repo.
+ * @pipeline         indirect -- library module
+ * @usage            const config = require('../lib/script-governance-config');
+ */
+
 const path = require('path');
 
 const DISCOVERY_ROOTS = [
@@ -50,6 +62,7 @@ const GROUP_INDEX_MAP = [
   { root: 'tasks/scripts', index: 'tasks/scripts/script-index.md' },
   { root: 'snippets/automations', index: 'snippets/automations/script-index.md' }
 ];
+const GROUP_INDEX_PATHS = GROUP_INDEX_MAP.map((entry) => entry.index);
 
 const AGGREGATE_INDEX_PATH = 'docs-guide/indexes/scripts-index.mdx';
 const LEGACY_AGGREGATE_INDEX_PATH = 'docs-guide/indexes/scripts-index.md';
@@ -182,6 +195,7 @@ module.exports = {
   FRAMEWORK_FIELDS,
   GOVERNED_ROOTS,
   GROUP_INDEX_MAP,
+  GROUP_INDEX_PATHS,
   GROUP_LABELS,
   GROUP_ORDER,
   INDEXED_ROOTS,

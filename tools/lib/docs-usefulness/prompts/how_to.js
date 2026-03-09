@@ -2,12 +2,12 @@
 /**
  * @script            prompts/how_to
  * @category          utility
- * @purpose           qa:content-quality
+ * @purpose           qa:repo-health
  * @scope             single-domain
  * @owner             docs
  * @needs             R-R14
  * @purpose-statement LLM prompt template for how_to page-type usefulness evaluation.
- * @pipeline          indirect — library module
+ * @pipeline          indirect -- library module
  * @usage             const { getPrompt } = require('../lib/docs-usefulness/prompts/how_to');
  */
 

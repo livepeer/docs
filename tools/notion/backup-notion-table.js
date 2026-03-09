@@ -2,12 +2,12 @@
 /**
  * @script            backup-notion-table
  * @category          utility
- * @purpose           helper
- * @scope             tools/notion/backups, Notion data source/database
+ * @purpose           tooling:dev-tools
+ * @scope             external
  * @owner             docs
  * @needs             node, @notionhq/client, dotenv, NOTION_API_KEY, NOTION_DATABASE_ID or NOTION_WRITABLE_DATABASE_ID
  * @purpose-statement Backs up the current Notion data source rows and metadata into timestamped JSON and CSV artifacts with a manifest.
- * @pipeline          notion-sync
+ * @pipeline          manual
  * @usage             node tools/notion/backup-notion-table.js [flags]
  */
 

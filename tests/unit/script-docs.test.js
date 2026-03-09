@@ -20,6 +20,18 @@ const {
   buildGeneratedHiddenBannerLines,
   buildGeneratedNoteLines
 } = require('../../tools/lib/generated-file-banners');
+const {
+  AGGREGATE_INDEX_PATH,
+  CLASSIFICATION_DATA_PATH,
+  GOVERNED_ROOTS,
+  GROUP_INDEX_MAP,
+  INDEXED_ROOTS,
+  LEGACY_AGGREGATE_INDEX_PATH,
+  SCRIPT_EXTENSIONS: GOVERNED_SCRIPT_EXTENSIONS,
+  isWithinRoots,
+  normalizeRepoPath,
+  shouldExcludeScriptPath
+} = require('../../tools/lib/script-governance-config');
 
 const REPO_ROOT = path.resolve(__dirname, '../..');
 const INDEX_START = '{/* SCRIPT-INDEX:START */}';
@@ -64,21 +76,9 @@ const PLACEHOLDER_PATTERNS = [
   /^placeholder$/i
 ];
 
-const SCRIPT_EXTENSIONS = new Set(['.js', '.cjs', '.mjs', '.ts', '.tsx', '.sh', '.bash', '.py']);
-const VALIDATION_ROOTS = ['.githooks', '.github/scripts', 'tests', 'tools/scripts', 'tasks/scripts', 'tools/lib/docs-usefulness'];
-const INDEXED_ROOTS = ['.githooks', '.github/scripts', 'tests', 'tools/scripts'];
-const CLASSIFICATION_ROOTS = ['.githooks', '.github/scripts', 'tests', 'tools/scripts', 'tasks/scripts'];
-
-const GROUP_INDEX_MAP = [
-  { root: '.githooks', index: '.githooks/script-index.md' },
-  { root: '.github/scripts', index: '.github/script-index.md' },
-  { root: 'tests', index: 'tests/script-index.md' },
-  { root: 'tools/scripts', index: 'tools/script-index.md' }
-];
-
-const AGGREGATE_INDEX_PATH = 'docs-guide/indexes/scripts-index.mdx';
-const LEGACY_AGGREGATE_INDEX_PATH = 'docs-guide/indexes/scripts-index.md';
-const CLASSIFICATION_DATA_PATH = 'tasks/reports/script-classifications.json';
+const SCRIPT_EXTENSIONS = new Set(GOVERNED_SCRIPT_EXTENSIONS);
+const VALIDATION_ROOTS = GOVERNED_ROOTS;
+const CLASSIFICATION_ROOTS = GOVERNED_ROOTS;
 const AGGREGATE_FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
   title: 'Scripts Index',
   sidebarTitle: 'Scripts Index',
@@ -91,10 +91,6 @@ const AGGREGATE_DETAILS = {
   runWhen: 'Script metadata changes in validation roots or script changes in indexed roots.',
   runCommand: 'node tests/unit/script-docs.test.js --write --rebuild-indexes'
 };
-
-function normalizeRepoPath(filePath) {
-  return filePath.split(path.sep).join('/');
-}
 
 function readFileSafe(repoPath) {
   try {
@@ -110,21 +106,7 @@ function escapeRegExp(value) {
 
 function shouldExclude(repoPath) {
   const p = normalizeRepoPath(repoPath);
-  return (
-    p === 'tools/scripts/archive' ||
-    p.startsWith('tools/scripts/archive/') ||
-    p.includes('/node_modules/') ||
-    p.startsWith('node_modules/') ||
-    p.includes('/.git/') ||
-    p.startsWith('.git/') ||
-    p.includes('/.venv/') ||
-    p.startsWith('.venv/') ||
-    p.includes('/tmp/') ||
-    p.startsWith('tmp/') ||
-    p.startsWith('notion/') ||
-    p.includes('.bak') ||
-    p.endsWith('.disabled')
-  );
+  return shouldExcludeScriptPath(p) || p.includes('/.venv/') || p.startsWith('.venv/') || p.includes('/tmp/') || p.startsWith('tmp/');
 }
 
 function isScriptFile(repoPath) {
@@ -150,10 +132,6 @@ function walkFiles(dirPath, out = []) {
     }
   }
   return out;
-}
-
-function isWithinRoots(filePath, roots) {
-  return roots.some((root) => filePath === root || filePath.startsWith(`${root}/`));
 }
 
 function getScriptsForRoots(roots) {

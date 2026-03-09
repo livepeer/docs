@@ -203,3 +203,64 @@ Run command: node tests/unit/script-docs.test.js --write --rebuild-indexes
 | <code>tools/scripts/verify-pay-orc-gate-finalize.sh</code> | Payment/orchestrator gate verifier — checks payment and orchestrator documentation gate conditions | <code>bash tools/scripts/verify-pay-orc-gate-finalize.sh [flags]</code> | docs |
 | <code>tools/scripts/verify/.verify-large-change.sh</code> | Large change verifier — blocks or warns when a commit touches an unusually large number of files | <code>bash tools/scripts/verify/.verify-large-change.sh [flags]</code> | docs |
 | <code>tools/scripts/wcag-repair-common.js</code> | WCAG repair shared logic — common repair functions used by WCAG audit fix mode | <code>node tools/scripts/wcag-repair-common.js [flags]</code> | docs |
+
+## tools/lib
+
+| Script | Summary | Usage | Owner |
+|---|---|---|---|
+| <code>tools/lib/component-governance-utils.js</code> | Shared parsing and validation utilities for component governance scripts. | <code>const utils = require('../lib/component-governance-utils');</code> | docs |
+| <code>tools/lib/docs-index-utils.js</code> | Shared utilities for docs-index.json generation — path resolution, frontmatter extraction, index merging | <code>node tools/lib/docs-index-utils.js [flags]</code> | docs |
+| <code>tools/lib/docs-usefulness/config-validator.js</code> | Validates docs-usefulness config structure and field completeness. | <code>const &#123; validateConfig &#125; = require('../lib/docs-usefulness/config-validator');</code> | docs |
+| <code>tools/lib/docs-usefulness/journey-check.js</code> | Evaluates docs pages against user journey completeness criteria. | <code>const &#123; checkJourney &#125; = require('../lib/docs-usefulness/journey-check');</code> | docs |
+| <code>tools/lib/docs-usefulness/llm-evaluator.js</code> | Wraps LLM API calls for rubric-based page quality evaluation. | <code>const &#123; evaluate &#125; = require('../lib/docs-usefulness/llm-evaluator');</code> | docs |
+| <code>tools/lib/docs-usefulness/prompts/changelog.js</code> | LLM prompt template for changelog page-type usefulness evaluation. | <code>const &#123; getPrompt &#125; = require('../lib/docs-usefulness/prompts/changelog');</code> | docs |
+| <code>tools/lib/docs-usefulness/prompts/concept.js</code> | LLM prompt template for concept page-type usefulness evaluation. | <code>const &#123; getPrompt &#125; = require('../lib/docs-usefulness/prompts/concept');</code> | docs |
+| <code>tools/lib/docs-usefulness/prompts/faq.js</code> | LLM prompt template for faq page-type usefulness evaluation. | <code>const &#123; getPrompt &#125; = require('../lib/docs-usefulness/prompts/faq');</code> | docs |
+| <code>tools/lib/docs-usefulness/prompts/glossary.js</code> | LLM prompt template for glossary page-type usefulness evaluation. | <code>const &#123; getPrompt &#125; = require('../lib/docs-usefulness/prompts/glossary');</code> | docs |
+| <code>tools/lib/docs-usefulness/prompts/how_to.js</code> | LLM prompt template for how_to page-type usefulness evaluation. | <code>const &#123; getPrompt &#125; = require('../lib/docs-usefulness/prompts/how_to');</code> | docs |
+| <code>tools/lib/docs-usefulness/prompts/index.js</code> | LLM prompt template for index page-type usefulness evaluation. | <code>const &#123; getPrompt &#125; = require('../lib/docs-usefulness/prompts/index');</code> | docs |
+| <code>tools/lib/docs-usefulness/prompts/landing.js</code> | LLM prompt template for landing page-type usefulness evaluation. | <code>const &#123; getPrompt &#125; = require('../lib/docs-usefulness/prompts/landing');</code> | docs |
+| <code>tools/lib/docs-usefulness/prompts/overview.js</code> | LLM prompt template for overview page-type usefulness evaluation. | <code>const &#123; getPrompt &#125; = require('../lib/docs-usefulness/prompts/overview');</code> | docs |
+| <code>tools/lib/docs-usefulness/prompts/reference.js</code> | LLM prompt template for reference page-type usefulness evaluation. | <code>const &#123; getPrompt &#125; = require('../lib/docs-usefulness/prompts/reference');</code> | docs |
+| <code>tools/lib/docs-usefulness/prompts/troubleshooting.js</code> | LLM prompt template for troubleshooting page-type usefulness evaluation. | <code>const &#123; getPrompt &#125; = require('../lib/docs-usefulness/prompts/troubleshooting');</code> | docs |
+| <code>tools/lib/docs-usefulness/prompts/tutorial.js</code> | LLM prompt template for tutorial page-type usefulness evaluation. | <code>const &#123; getPrompt &#125; = require('../lib/docs-usefulness/prompts/tutorial');</code> | docs |
+| <code>tools/lib/docs-usefulness/quality-gate.js</code> | Applies pass/fail thresholds to usefulness scores. | <code>const &#123; applyGate &#125; = require('../lib/docs-usefulness/quality-gate');</code> | docs |
+| <code>tools/lib/docs-usefulness/rubric-loader.js</code> | Loads and parses rubric YAML/JSON for page-type scoring rules. | <code>const &#123; loadRubric &#125; = require('../lib/docs-usefulness/rubric-loader');</code> | docs |
+| <code>tools/lib/docs-usefulness/rule-evaluators.js</code> | Evaluates individual rubric rules against page content. | <code>const &#123; evaluateRule &#125; = require('../lib/docs-usefulness/rule-evaluators');</code> | docs |
+| <code>tools/lib/docs-usefulness/scoring.js</code> | Aggregates rule scores into a final usefulness score per page. | <code>const &#123; score &#125; = require('../lib/docs-usefulness/scoring');</code> | docs |
+| <code>tools/lib/generated-file-banners.js</code> | Generated file banner template — provides standard banner text for auto-generated files | <code>node tools/lib/generated-file-banners.js [flags]</code> | docs |
+| <code>tools/lib/mdx-safe-markdown.js</code> | Shared MDX-safe markdown helpers that collect first-party markdown files, detect unsafe patterns, and apply deterministic repairs. | <code>node tools/lib/mdx-safe-markdown.js [flags]</code> | docs |
+| <code>tools/lib/script-governance-config.js</code> | Shared governance constants for script discovery, indexing, classification, and pipeline normalisation across the repo. | <code>const config = require('../lib/script-governance-config');</code> | docs |
+
+## tools/notion
+
+| Script | Summary | Usage | Owner |
+|---|---|---|---|
+| <code>tools/notion/1-read-notion-to-csv.js</code> | Reads the Notion pages database, filters v2 rows, and writes CSV/JSON exports for downstream sync steps. | <code>node tools/notion/1-read-notion-to-csv.js [flags]</code> | docs |
+| <code>tools/notion/2-read-docs-to-csv.js</code> | Parses docs.json v2 navigation and writes CSV/JSON exports with section-group metadata for Notion sync. | <code>node tools/notion/2-read-docs-to-csv.js [flags]</code> | docs |
+| <code>tools/notion/3-check-duplicates.js</code> | Analyzes the exported Notion snapshot for duplicate page keys and writes JSON and Markdown reports. | <code>node tools/notion/3-check-duplicates.js [flags]</code> | docs |
+| <code>tools/notion/4-remove-duplicates.js</code> | Archives duplicate Notion pages from the duplicate report while keeping the first record in each group. | <code>node tools/notion/4-remove-duplicates.js [flags]</code> | docs |
+| <code>tools/notion/5-export-to-notion.js</code> | Updates existing Notion page grouping fields from the exported docs navigation snapshot. | <code>node tools/notion/5-export-to-notion.js [flags]</code> | docs |
+| <code>tools/notion/backup-notion-table.js</code> | Backs up the current Notion data source rows and metadata into timestamped JSON and CSV artifacts with a manifest. | <code>node tools/notion/backup-notion-table.js [flags]</code> | docs |
+| <code>tools/notion/install-local-sync-hook.sh</code> | Installs the managed local post-commit hook that invokes the Notion sync runner and preserves any prior hook as a backup. | <code>bash tools/notion/install-local-sync-hook.sh [flags]</code> | docs |
+| <code>tools/notion/local-post-commit-sync.sh</code> | Detects docs.json or v2 content changes in the latest commit and runs the canonical Notion sync locally when enabled. | <code>bash tools/notion/local-post-commit-sync.sh [flags]</code> | docs |
+| <code>tools/notion/remove-local-sync-hook.sh</code> | Removes the managed local Notion post-commit hook when it is present. | <code>bash tools/notion/remove-local-sync-hook.sh [flags]</code> | docs |
+| <code>tools/notion/sync-v2-en-canonical.js</code> | Builds canonical v2 English page metadata and syncs Notion schema, row metadata, and optional page-body blocks to match docs. | <code>node tools/notion/sync-v2-en-canonical.js [flags]</code> | docs |
+
+## tools/config
+
+| Script | Summary | Usage | Owner |
+|---|---|---|---|
+| <code>tools/config/v2-internal-report-pages.js</code> | Configuration data — list of internal report page paths for publish-v2-internal-reports.js | <code>node tools/config/v2-internal-report-pages.js [flags]</code> | docs |
+
+## tasks/scripts
+
+| Script | Summary | Usage | Owner |
+|---|---|---|---|
+| <code>tasks/scripts/audit-python.py</code> | Python audit utility — runs Python-based audit checks (alternative to Node auditors) | <code>python3 tasks/scripts/audit-python.py [flags]</code> | docs |
+
+## snippets/automations
+
+| Script | Summary | Usage | Owner |
+|---|---|---|---|
+| <code>snippets/automations/youtube/filterVideos.js</code> | YouTube video filter — post-processes fetched YouTube data to filter/sort videos for display | <code>node snippets/automations/youtube/filterVideos.js [flags]</code> | docs |

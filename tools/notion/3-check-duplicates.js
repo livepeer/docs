@@ -1,12 +1,12 @@
 /**
  * @script            3-check-duplicates
  * @category          validator
- * @purpose           audit
- * @scope             tools/notion/data/notion-read.json, tools/notion/reports
+ * @purpose           tooling:dev-tools
+ * @scope             external
  * @owner             docs
  * @needs             node
  * @purpose-statement Analyzes the exported Notion snapshot for duplicate page keys and writes JSON and Markdown reports.
- * @pipeline          notion-sync
+ * @pipeline          manual
  * @usage             node tools/notion/3-check-duplicates.js [flags]
  */
 
