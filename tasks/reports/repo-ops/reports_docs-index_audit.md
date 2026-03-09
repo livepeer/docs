@@ -1,6 +1,6 @@
 # tasks/reports/docs-index Audit
 
-Generated: 2026-03-03T09:45:12.427Z
+Generated: 2026-03-09T04:26:18.413Z
 Scope: `tasks/reports/docs-index`
 Total files in scope: 1
 

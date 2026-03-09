@@ -5,14 +5,13 @@ description: 'Generated browser report from tools/scripts/test-all-pages-compreh
 keywords: ["livepeer","internal","reports","page-audits","test-all-pages-comprehensive"]
 og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
 ---
-Last Generated (UTC ISO): `2026-03-03T09:45:28.411Z`
-Last Generated (UTC Human): `March 03, 2026 09:45 UTC`
+Last Generated (UTC ISO): `2026-03-09T04:40:20.822Z`
+Last Generated (UTC Human): `March 09, 2026 04:40 UTC`
 Generator Script: `tools/scripts/test-all-pages-comprehensive.js`
 What It Does: Generated browser report from tools/scripts/test-all-pages-comprehensive.js.
 Audited Scope: `tools/scripts`
 Outputs:
-- tasks/reports/page-audits/browser-test-report.json
-- tasks/reports/page-audits/browser-test-report.md
+- _Not documented in script header._
 # Browser Test Report
 
 Generated: 2026-02-16T11:50:35.428Z

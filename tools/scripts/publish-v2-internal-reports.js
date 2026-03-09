@@ -240,6 +240,77 @@ function buildScriptContextBlock(record, body, scriptMetadata) {
   return lines.join('\n');
 }
 
+function stripMarkdownTableBlocks(body) {
+  const lines = String(body || '').split('\n');
+  const output = [];
+  let index = 0;
+
+  while (index < lines.length) {
+    const current = lines[index].trim();
+    const next = index + 1 < lines.length ? lines[index + 1].trim() : '';
+    const looksLikeTableHeader = current.startsWith('|') && next.startsWith('|');
+    const looksLikeTableDivider = /^\|(?:\s*:?-{3,}:?\s*\|)+\s*$/.test(next);
+
+    if (looksLikeTableHeader && looksLikeTableDivider) {
+      output.push('_Tabular data omitted in the published page. Use the repository report artifact for the full matrix._');
+      index += 2;
+      while (index < lines.length && lines[index].trim().startsWith('|')) {
+        index += 1;
+      }
+      continue;
+    }
+
+    output.push(lines[index]);
+    index += 1;
+  }
+
+  return output.join('\n');
+}
+
+function truncatePublishedBody(body, maxChars) {
+  if (!maxChars || body.length <= maxChars) return body;
+  const slice = body.slice(0, maxChars);
+  const safeSlice = slice.includes('\n') ? slice.slice(0, slice.lastIndexOf('\n')) : slice;
+  return `${safeSlice}\n\n_Published page truncated for site reliability. Use the repository report artifact for the full output._\n`;
+}
+
+function sanitizePublishedBody(record, body) {
+  let nextBody = String(body || '');
+  if (
+    record.categorySlug === 'navigation-links'
+    || record.categorySlug === 'page-audits'
+    || record.categorySlug === 'repo-ops'
+  ) {
+    nextBody = stripMarkdownTableBlocks(nextBody);
+  }
+  if (record.categorySlug === 'page-audits') {
+    nextBody = truncatePublishedBody(nextBody, 12000);
+  } else if (record.scriptId === 'v2-link-audit') {
+    nextBody = truncatePublishedBody(nextBody, 16000);
+  }
+  return nextBody;
+}
+
+function buildRetiredLegacyAliasContent(categorySlug, fileName) {
+  const slug = stripExtension(fileName);
+  const title = titleFromBasename(slug);
+  const record = {
+    title: `Legacy Alias: ${title}`,
+    sidebarTitle: 'Legacy Alias',
+    description: 'Retired internal report route preserved for link stability.',
+    categorySlug,
+    scriptId: 'publish-v2-internal-reports',
+  };
+  return `${buildFrontmatter(record)}# Legacy Internal Report Alias
+
+This route is retained for link stability.
+
+- Original legacy slug: \`${slug}\`
+- Status: retired from active publication
+- Current guidance: use the active generated report pages in this report category instead of this legacy alias.
+`;
+}
+
 function getDocsGroups() {
   if (Array.isArray(manifest.docsGroups) && manifest.docsGroups.length) {
     return manifest.docsGroups;
@@ -511,9 +582,44 @@ function makeRecord({
   };
 }
 
+function buildLegacyAliasAbsPaths(record) {
+  const legacyTargets = [];
+  const currentPrefix = record.entry.targetSlugPrefix || '';
+  const baseSlug =
+    currentPrefix && record.targetSlug.startsWith(currentPrefix)
+      ? record.targetSlug.slice(currentPrefix.length)
+      : record.targetSlug;
+  const legacyPrefixes = Array.isArray(record.entry.legacyTargetSlugPrefixes)
+    ? record.entry.legacyTargetSlugPrefixes
+    : [];
+  for (const legacyPrefix of legacyPrefixes) {
+    legacyTargets.push(
+      path.join(INTERNAL_REPORTS_ROOT, record.entry.categorySlug, `${legacyPrefix}${baseSlug}.md`)
+    );
+  }
+  const legacySlugs = Array.isArray(record.entry.legacyTargetSlugs)
+    ? record.entry.legacyTargetSlugs
+    : [];
+  for (const legacySlug of legacySlugs) {
+    legacyTargets.push(path.join(INTERNAL_REPORTS_ROOT, record.entry.categorySlug, `${legacySlug}.md`));
+  }
+  return [...new Set(legacyTargets)];
+}
+
+function writeIfChanged(targetAbsPath, nextContent, args) {
+  if (args.check) return true;
+  ensureDir(path.dirname(targetAbsPath));
+  const prev = fs.existsSync(targetAbsPath)
+    ? fs.readFileSync(targetAbsPath, 'utf8')
+    : null;
+  if (prev === nextContent) return false;
+  fs.writeFileSync(targetAbsPath, nextContent, 'utf8');
+  return true;
+}
+
 function writeManagedPage(record, generation, args, scriptMetadataCache) {
   const sourceRaw = fs.readFileSync(record.sourceAbsPath, 'utf8');
-  const body = stripFrontmatter(sourceRaw).replace(/^\uFEFF/, '');
+  const body = sanitizePublishedBody(record, stripFrontmatter(sourceRaw).replace(/^\uFEFF/, ''));
   let scriptMetadata = scriptMetadataCache.get(record.scriptRepoPath);
   if (!scriptMetadata) {
     scriptMetadata = parseScriptHeaderMetadata(record.scriptRepoPath);
@@ -524,14 +630,13 @@ function writeManagedPage(record, generation, args, scriptMetadataCache) {
     /^\n+/,
     ''
   )}`;
-  if (args.check) return { changed: true };
-  ensureDir(path.dirname(record.targetAbsPath));
-  const prev = fs.existsSync(record.targetAbsPath)
-    ? fs.readFileSync(record.targetAbsPath, 'utf8')
-    : null;
-  if (prev === nextContent) return { changed: false };
-  fs.writeFileSync(record.targetAbsPath, nextContent, 'utf8');
-  return { changed: true };
+  let changed = writeIfChanged(record.targetAbsPath, nextContent, args);
+  for (const legacyAliasAbsPath of buildLegacyAliasAbsPaths(record)) {
+    if (writeIfChanged(legacyAliasAbsPath, nextContent, args)) {
+      changed = true;
+    }
+  }
+  return { changed };
 }
 
 function buildManagedDynamicFileNames(entry) {
@@ -573,7 +678,10 @@ function cleanupDynamicPages(records, args) {
     const keep = new Set(
       records
         .filter((record) => record.entry === entry)
-        .map((record) => path.basename(record.targetAbsPath))
+        .flatMap((record) => [
+          path.basename(record.targetAbsPath),
+          ...buildLegacyAliasAbsPaths(record).map((legacyPath) => path.basename(legacyPath)),
+        ])
     );
     const managedFileNames = buildManagedDynamicFileNames(entry);
     const legacyPrefixes = Array.isArray(entry.legacyTargetSlugPrefixes)
@@ -586,6 +694,15 @@ function cleanupDynamicPages(records, args) {
       if (!managedFileNames.has(fileName) && !matchesLegacyPrefix) continue;
       if (keep.has(fileName)) continue;
       const fullPath = path.join(categoryDir, fileName);
+      if (matchesLegacyPrefix) {
+        if (!args.check) {
+          const placeholder = buildRetiredLegacyAliasContent(entry.categorySlug, fileName);
+          if (fs.readFileSync(fullPath, 'utf8') !== placeholder) {
+            fs.writeFileSync(fullPath, placeholder, 'utf8');
+          }
+        }
+        continue;
+      }
       if (!args.check) fs.unlinkSync(fullPath);
       removed += 1;
     }
@@ -594,20 +711,7 @@ function cleanupDynamicPages(records, args) {
 }
 
 function cleanupLegacyTargetPages(args) {
-  let removed = 0;
-  for (const entry of manifest.entries) {
-    if (entry.publish === false) continue;
-    if (args.categories && !args.categories.has(entry.categorySlug)) continue;
-    if (!Array.isArray(entry.legacyTargetSlugs) || !entry.legacyTargetSlugs.length) continue;
-    const categoryDir = path.join(INTERNAL_REPORTS_ROOT, entry.categorySlug);
-    for (const legacySlug of entry.legacyTargetSlugs) {
-      const legacyFile = path.join(categoryDir, `${legacySlug}.md`);
-      if (!fs.existsSync(legacyFile)) continue;
-      if (!args.check) fs.unlinkSync(legacyFile);
-      removed += 1;
-    }
-  }
-  return removed;
+  return 0;
 }
 
 function findInternalHubTab(node) {

@@ -3,7 +3,7 @@
  * @script execute-phase1-worktree-plan
  * @summary Execute Phase 1 action-plan artifacts and route fixes inside the current docs-v2 worktree only.
  * @owner docs
- * @scope tools/utility/personal, docs.json, tasks/reports/v1-v2-mapping-audit
+ * @scope tools/utility/personal, docs.json, tasks/reports/v1-v2-mapping-audit, tasks/reports/navigation-links
  * @pipeline manual — personal utility, not for shared pipelines
  *
  * @usage
@@ -17,13 +17,13 @@
  *
  * @outputs
  *   - docs.json (route pointer fixes)
- *   - tasks/reports/v1-v2-mapping-audit/phase1-preflight.json
- *   - tasks/reports/v1-v2-mapping-audit/impact-effort-backlog.csv
- *   - tasks/reports/v1-v2-mapping-audit/nav-missing-content-register.json
- *   - tasks/reports/v1-v2-mapping-audit/deprecation-decision-register.json
- *   - tasks/reports/v1-v2-mapping-audit/seed-reconciliation.json
- *   - tasks/reports/v1-v2-mapping-audit/phase-burnup.md
- *   - tasks/reports/v1-v2-mapping-audit/redirect-validation-report.json
+ *   - /tmp/livepeer-docs-v2/execute-phase1-worktree-plan/phase1-preflight.json
+ *   - /tmp/livepeer-docs-v2/execute-phase1-worktree-plan/impact-effort-backlog.csv
+ *   - /tmp/livepeer-docs-v2/execute-phase1-worktree-plan/nav-missing-content-register.json
+ *   - /tmp/livepeer-docs-v2/execute-phase1-worktree-plan/deprecation-decision-register.json
+ *   - /tmp/livepeer-docs-v2/execute-phase1-worktree-plan/seed-reconciliation.json
+ *   - /tmp/livepeer-docs-v2/execute-phase1-worktree-plan/phase-burnup.md
+ *   - /tmp/livepeer-docs-v2/execute-phase1-worktree-plan/redirect-validation-report.json
  *
  * @exit-codes
  *   0 = success
@@ -37,11 +37,13 @@
  */
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const { execSync } = require('child_process');
 
 const EXPECTED_ROOT = '/Users/alisonhaire/Documents/Livepeer/livepeer-docs-v2 [docs-v2-branch]';
 const AUDIT_DIR = 'tasks/reports/v1-v2-mapping-audit';
+const OUTPUT_DIR = path.join(os.tmpdir(), 'livepeer-docs-v2', 'execute-phase1-worktree-plan');
 
 const FILES = {
   auditJson: path.join(AUDIT_DIR, 'v1-v2-page-mapping-audit.json'),
@@ -49,13 +51,13 @@ const FILES = {
   auditReport: path.join(AUDIT_DIR, 'v1-v2-page-mapping-audit-report.md'),
   navReportJson: 'tasks/reports/navigation-links/navigation-report.json',
   docsJson: 'docs.json',
-  preflight: path.join(AUDIT_DIR, 'phase1-preflight.json'),
-  backlogCsv: path.join(AUDIT_DIR, 'impact-effort-backlog.csv'),
-  navMissingRegister: path.join(AUDIT_DIR, 'nav-missing-content-register.json'),
-  deprecationRegister: path.join(AUDIT_DIR, 'deprecation-decision-register.json'),
-  seedReconciliation: path.join(AUDIT_DIR, 'seed-reconciliation.json'),
-  burnup: path.join(AUDIT_DIR, 'phase-burnup.md'),
-  redirectValidation: path.join(AUDIT_DIR, 'redirect-validation-report.json')
+  preflight: path.join(OUTPUT_DIR, 'phase1-preflight.json'),
+  backlogCsv: path.join(OUTPUT_DIR, 'impact-effort-backlog.csv'),
+  navMissingRegister: path.join(OUTPUT_DIR, 'nav-missing-content-register.json'),
+  deprecationRegister: path.join(OUTPUT_DIR, 'deprecation-decision-register.json'),
+  seedReconciliation: path.join(OUTPUT_DIR, 'seed-reconciliation.json'),
+  burnup: path.join(OUTPUT_DIR, 'phase-burnup.md'),
+  redirectValidation: path.join(OUTPUT_DIR, 'redirect-validation-report.json')
 };
 
 const ROUTE_REMAPS = {
@@ -457,7 +459,7 @@ function writeBacklogCsv(filePath, metrics) {
       owner: 'Gateways + Localization Owner',
       definition_of_done: 'CN payment routes classified create/reroute/remove with owner, rationale, ETA.',
       validation_command: 'node tests/unit/docs-navigation.test.js --no-write-report',
-      artifacts: 'tasks/reports/v1-v2-mapping-audit/nav-missing-content-register.json'
+      artifacts: FILES.navMissingRegister
     },
     {
       work_package: 'WP-02',
@@ -485,7 +487,7 @@ function writeBacklogCsv(filePath, metrics) {
       owner: 'Docs IA Owner',
       definition_of_done: 'Every seed row finalized as accepted/replaced/rejected with rationale.',
       validation_command: 'deterministic seed status check from seed-reconciliation.json',
-      artifacts: 'tasks/reports/v1-v2-mapping-audit/seed-reconciliation.json'
+      artifacts: FILES.seedReconciliation
     },
     {
       work_package: 'WP-04',
@@ -499,7 +501,7 @@ function writeBacklogCsv(filePath, metrics) {
       owner: 'Docs IA Owner',
       definition_of_done: 'Deprecation register has route, owner, rationale, and test id for each row.',
       validation_command: 'deprecation register completeness check',
-      artifacts: 'tasks/reports/v1-v2-mapping-audit/deprecation-decision-register.json'
+      artifacts: FILES.deprecationRegister
     }
   ];
 
@@ -522,7 +524,7 @@ function writeBacklogCsv(filePath, metrics) {
 }
 
 function buildBurnupMarkdown(metrics, rootContext) {
-  return `# Phase 1 Burnup\n\nGenerated: ${nowIso()}\n\n## Worktree Context\n\n- pwd: \`${rootContext.pwd}\`\n- repo_root: \`${rootContext.repoRoot}\`\n- branch: \`${rootContext.branch}\`\n- head: \`${rootContext.head}\`\n\n## KPI Status\n\n| KPI | Target | Current | Status |\n|---|---:|---:|---|\n| quick_win_completed | 32 | ${metrics.quickWinsMandatory} | ${metrics.quickWinsMandatory === 32 ? 'PASS' : 'FAIL'} |\n| quick_win_stretch_tracked | 5 | ${metrics.quickWinsStretch} | ${metrics.quickWinsStretch === 5 ? 'PASS' : 'WARN'} |\n| seed_rows_finalized | 124 | ${metrics.seedFinalized} | ${metrics.seedFinalized === 124 ? 'PASS' : 'FAIL'} |\n| deprecated_superseded_gate_resolved | 14 | ${metrics.depGateResolved} | ${metrics.depGateResolved === 14 ? 'PASS' : 'FAIL'} |\n| unique_missing_routes | 0 (or policy-tracked residuals) | ${metrics.uniqueMissingRoutes} | ${metrics.uniqueMissingRoutes === 0 || metrics.policyTrackedResiduals === metrics.uniqueMissingRoutes ? 'PASS' : 'FAIL'} |\n| missing_route_instances | 0 (or policy-tracked residuals) | ${metrics.missingRouteInstances} | ${metrics.missingRouteInstances === 0 || metrics.policyTrackedResidualInstances === metrics.missingRouteInstances ? 'PASS' : 'FAIL'} |\n\n## Notes\n\n- Residual route issues are allowed only when explicitly policy-tracked with owner + ETA in \`nav-missing-content-register.json\`.\n- Redirect implementation is deferred; this phase resolves gate readiness only.\n`;
+  return `# Phase 1 Burnup\n\nGenerated: ${nowIso()}\n\n## Worktree Context\n\n- pwd: \`${rootContext.pwd}\`\n- repo_root: \`${rootContext.repoRoot}\`\n- branch: \`${rootContext.branch}\`\n- head: \`${rootContext.head}\`\n\n## KPI Status\n\n| KPI | Target | Current | Status |\n|---|---:|---:|---|\n| quick_win_completed | 32 | ${metrics.quickWinsMandatory} | ${metrics.quickWinsMandatory === 32 ? 'PASS' : 'FAIL'} |\n| quick_win_stretch_tracked | 5 | ${metrics.quickWinsStretch} | ${metrics.quickWinsStretch === 5 ? 'PASS' : 'WARN'} |\n| seed_rows_finalized | 124 | ${metrics.seedFinalized} | ${metrics.seedFinalized === 124 ? 'PASS' : 'FAIL'} |\n| deprecated_superseded_gate_resolved | 14 | ${metrics.depGateResolved} | ${metrics.depGateResolved === 14 ? 'PASS' : 'FAIL'} |\n| unique_missing_routes | 0 (or policy-tracked residuals) | ${metrics.uniqueMissingRoutes} | ${metrics.uniqueMissingRoutes === 0 || metrics.policyTrackedResiduals === metrics.uniqueMissingRoutes ? 'PASS' : 'FAIL'} |\n| missing_route_instances | 0 (or policy-tracked residuals) | ${metrics.missingRouteInstances} | ${metrics.missingRouteInstances === 0 || metrics.policyTrackedResidualInstances === metrics.missingRouteInstances ? 'PASS' : 'FAIL'} |\n\n## Notes\n\n- Residual route issues are allowed only when explicitly policy-tracked with owner + ETA in \`${FILES.navMissingRegister}\`.\n- Redirect implementation is deferred; this phase resolves gate readiness only.\n`;
 }
 
 function updateAuditReport(reportPath, phaseSection) {
@@ -546,6 +548,7 @@ function main() {
   }
 
   const rootContext = { pwd, repoRoot, branch, head };
+  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
   const navBefore = readJson(FILES.navReportJson);
   const auditPayload = readJson(FILES.auditJson);

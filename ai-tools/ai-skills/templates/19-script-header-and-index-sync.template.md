@@ -10,7 +10,7 @@ primary_paths:
   - "tests/unit/script-docs.test.js"
   - "tools/script-index.md"
   - "tests/script-index.md"
-  - "tasks/scripts/script-index.md"
+  - "docs-guide/indexes/scripts-index.mdx"
 primary_commands:
   - "node tests/unit/script-docs.test.js --staged --write --stage --autofill"
   - "node tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes"

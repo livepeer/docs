@@ -70,8 +70,7 @@ const GROUP_INDEX_MAP = [
   { root: '.githooks', index: '.githooks/script-index.md' },
   { root: '.github/scripts', index: '.github/script-index.md' },
   { root: 'tests', index: 'tests/script-index.md' },
-  { root: 'tools/scripts', index: 'tools/script-index.md' },
-  { root: 'tasks/scripts', index: 'tasks/scripts/script-index.md' }
+  { root: 'tools/scripts', index: 'tools/script-index.md' }
 ];
 
 const AGGREGATE_INDEX_PATH = 'docs-guide/indexes/scripts-index.mdx';

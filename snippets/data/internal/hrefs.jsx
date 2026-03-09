@@ -558,8 +558,8 @@ export const LINK_MAP = {
       "movedCandidates": []
     }
   ],
-  "snippets/components/display/containers.mdx": [],
-  "snippets/components/display/embed.mdx": []
+  "snippets/components/display/embed.mdx": [],
+  "snippets/components/display/containers.mdx": []
 };
 
 export default LINK_MAP;

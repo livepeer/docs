@@ -10,7 +10,6 @@ primary_paths:
   - "snippets/automations/scripts/n8n"
   - "v2/resources/documentation-guide/automations-workflows.mdx"
   - "snippets/automations"
-  - "tasks/reports/_legacy-unmanaged/20-automations-workflows-audit-report.md"
 primary_commands:
   - "find snippets/automations/scripts/n8n -maxdepth 1 -name \"*.json\" | sort"
   - "node -e \"JSON.parse(require(\"fs\").readFileSync(\"snippets/automations/scripts/n8n/Luma-To-Mintlify.json\",\"utf8\")); console.log(\"ok\")\""

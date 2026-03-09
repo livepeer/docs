@@ -5,13 +5,13 @@ description: 'Generated deployed page load audit report from tests/integration/d
 keywords: ["livepeer","internal","reports","page-audits","domain-pages-audit"]
 og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
 ---
-Last Generated (UTC ISO): `2026-03-03T09:45:28.411Z`
-Last Generated (UTC Human): `March 03, 2026 09:45 UTC`
+Last Generated (UTC ISO): `2026-03-09T04:40:20.822Z`
+Last Generated (UTC Human): `March 09, 2026 04:40 UTC`
 Generator Script: `tests/integration/domain-pages-audit.js`
-What It Does: Audit deployed docs page load status and emit a stable JSON report.
+What It Does: Generated deployed page load audit report from tests/integration/domain-pages-audit.js.
 Audited Scope: `tests/integration, tests/reports, docs.livepeer.org`
 Outputs:
-- tests/reports/domain-page-load-report.json
+- _Not documented in script header._
 # Domain Page Load Report
 
 - Timestamp: 2026-03-03T03:51:17.295Z

@@ -18,11 +18,13 @@
 
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 
 const BASE_URL = process.env.MINT_BASE_URL || 'http://localhost:3333';
 const TIMEOUT = 30000;
 const CONCURRENT = 5; // Test 5 pages at a time
+const REPORT_PATH = path.join(os.tmpdir(), 'livepeer-docs-v2', 'page-audits', 'comprehensive-v2-pages-browser-audit.json');
 
 // Get all v2 pages from docs.json
 function getAllV2Pages() {
@@ -312,9 +314,8 @@ async function main() {
   };
   
   // Save report
-  const reportPath = 'docs/PLAN/reports/comprehensive-v2-pages-browser-audit.json';
-  fs.mkdirSync(path.dirname(reportPath), { recursive: true });
-  fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
+  fs.mkdirSync(path.dirname(REPORT_PATH), { recursive: true });
+  fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2));
   
   // Print summary
   console.log('========================================');
@@ -331,7 +332,7 @@ async function main() {
   Object.entries(errorTypes).forEach(([type, errors]) => {
     console.log(`  ${type}: ${errors.length} occurrences`);
   });
-  console.log(`\n📄 Full report saved to: ${reportPath}`);
+  console.log(`\n📄 Full report saved to: ${REPORT_PATH}`);
   console.log('========================================\n');
   
   // Exit with error code if any pages failed

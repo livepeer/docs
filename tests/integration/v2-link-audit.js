@@ -140,6 +140,7 @@ function parseArgs(argv) {
     externalRetries: 1,
     files: []
   };
+  let reportJsonExplicit = false;
 
   for (let i = 0; i < argv.length; i += 1) {
     const token = argv[i];
@@ -165,6 +166,7 @@ function parseArgs(argv) {
       i += 1;
     } else if (token === '--report-json') {
       args.reportJson = path.resolve(REPO_ROOT, argv[i + 1] || '');
+      reportJsonExplicit = true;
       i += 1;
     } else if (token === '--external-policy') {
       args.externalPolicy = String(argv[i + 1] || '').trim().toLowerCase();
@@ -204,6 +206,13 @@ function parseArgs(argv) {
 
   if (typeof args.writeLinks === 'undefined') {
     args.writeLinks = args.mode === 'full';
+  }
+
+  if (!reportJsonExplicit && args.report !== DEFAULT_REPORT) {
+    const ext = path.extname(args.report);
+    args.reportJson = ext
+      ? `${args.report.slice(0, -ext.length)}.json`
+      : `${args.report}.json`;
   }
 
   return args;

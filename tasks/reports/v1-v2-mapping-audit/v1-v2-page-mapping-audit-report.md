@@ -1,8 +1,8 @@
 # v1 -> v2 Mapping Audit Report
 
-Generated: 2026-03-02T08:27:24.899Z
+Generated: 2026-03-09T04:15:16.830Z
 
-Commit: `fb0b0639`
+Commit: `1b1cdfc2`
 
 ## Methodology
 
@@ -22,18 +22,18 @@ Commit: `fb0b0639`
 ## Seed Carry-Forward Stats
 
 - seed rows considered: **124**
-- seed valid match: **16**
-- seed stale: **105**
-- seed non-resolvable: **3**
+- seed valid match: **12**
+- seed stale: **69**
+- seed non-resolvable: **43**
 
 ### Coverage Distribution
 
 | Value | Count |
 |---|---:|
-| minimally_covered | 120 |
-| not_covered | 64 |
-| partially_covered | 48 |
-| adequately_covered | 37 |
+| minimally_covered | 119 |
+| not_covered | 65 |
+| adequately_covered | 49 |
+| partially_covered | 36 |
 | superseded_obsolete | 10 |
 
 ### v1 State Distribution
@@ -50,9 +50,9 @@ Commit: `fb0b0639`
 
 | Value | Count |
 |---|---:|
-| needs_manual_review | 193 |
+| needs_manual_review | 194 |
 | not_required | 69 |
-| confirmed | 16 |
+| confirmed | 15 |
 | revised | 1 |
 
 ## Orphan v1 Pages (sample)
@@ -125,38 +125,38 @@ Commit: `fb0b0639`
 - `v1/ai/sdks/javascript` -> Developers > Developers > AI Pipelines
 - `v1/ai/sdks/python` -> Developers > Developers > AI Pipelines
 - `v1/ai/whats-new` -> Developers > Developers > AI Pipelines
-- `v1/api-reference/overview/authentication` -> Developers > Developer Platforms > Livepeer Studio > API Reference > Signing Keys
-- `v1/api-reference/overview/introduction` -> Developers > Developer Platforms > Livepeer Studio > API Reference > Assets
+- `v1/api-reference/overview/introduction` -> Solutions > Livepeer Studio Docs > API Reference > Assets
 - `v1/delegators/guides/bridge-lpt-to-arbitrum` -> LP Token > Delegators & LPT > Delegating LPT
 - `v1/delegators/guides/migrate-stake-to-arbitrum` -> LP Token > Delegators & LPT > Delegating LPT
 - `v1/delegators/guides/yield-calculation` -> LP Token > Delegators & LPT > Delegating LPT
 - `v1/delegators/introduction` -> LP Token > Delegators & LPT > Delegating LPT
 - `v1/delegators/livepeer-studio-cli` -> LP Token > Delegators & LPT > Delegating LPT
 - `v1/delegators/quick-start` -> LP Token > Delegators & LPT > Delegating LPT
-- `v1/developers/core-concepts/core-api/access-control` -> Developers > Developer Platforms > Livepeer Studio > API Reference > Webhooks
+- `v1/developers/core-concepts/core-api/access-control` -> Developers > Developers > AI Pipelines
 - `v1/developers/core-concepts/core-api/asset` -> Developers > Developers > AI Pipelines
-- `v1/developers/core-concepts/core-api/multistream` -> Developers > Developer Platforms > Livepeer Studio > Livestream
-- `v1/developers/core-concepts/core-api/stream` -> Developers > Developers > Quickstart > Video & Transcoding
+- `v1/developers/core-concepts/core-api/multistream` -> Solutions > Livepeer Studio Docs > Livestream
+- `v1/developers/core-concepts/core-api/stream` -> Developers > Developers > AI Pipelines
 - `v1/developers/core-concepts/livepeer-network/delegators` -> Developers > Developers > AI Pipelines
 - `v1/developers/core-concepts/livepeer-network/gateways` -> Developers > Developers > AI Pipelines
 - `v1/developers/core-concepts/livepeer-network/orchestrators` -> Developers > Developers > Quickstart > Video & Transcoding
 - `v1/developers/core-concepts/player/overview` -> Developers > Developers > AI Pipelines
-- `v1/developers/core-concepts/studio/in-browser-broadcast` -> Developers > Developers > Quickstart > Video & Transcoding
-- `v1/developers/core-concepts/studio/stream-health` -> Developers > Developer Platforms > Livepeer Studio > Livestream
-- `v1/developers/core-concepts/studio/webhooks` -> Developers > Developer Platforms > Livepeer Studio > Events & analytics
+- `v1/developers/core-concepts/studio/in-browser-broadcast` -> Developers > Developers > AI Pipelines
+- `v1/developers/core-concepts/studio/stream-health` -> Solutions > Livepeer Studio Docs > Livestream
+- `v1/developers/core-concepts/studio/webhooks` -> Solutions > Livepeer Studio Docs > Events & analytics
 - `v1/developers/guides/access-control-jwt` -> Developers > Developers > Guides & Tutorials
-- `v1/developers/guides/access-control-webhooks` -> Developers > Developer Platforms > Livepeer Studio > Access control & security
-- `v1/developers/guides/clip-a-livestream` -> Developers > Developer Platforms > Livepeer Studio > Livestream
-- `v1/developers/guides/encrypted-asset` -> Developers > Developer Platforms > Livepeer Studio > Video on demand
-- `v1/developers/guides/get-engagement-analytics-via-api` -> Developers > Developer Platforms > Livepeer Studio > API Reference > Viewership
+- `v1/developers/guides/access-control-webhooks` -> Developers > Developers > Guides & Tutorials
+- `v1/developers/guides/clip-a-livestream` -> Solutions > Livepeer Studio Docs > Livestream
+- `v1/developers/guides/create-livestream` -> Solutions > Livepeer Studio Docs > Livestream
+- `v1/developers/guides/encrypted-asset` -> Developers > Developers > Guides & Tutorials
+- `v1/developers/guides/get-engagement-analytics-via-api` -> Developers > Developers > Guides & Tutorials
 - `v1/developers/guides/get-engagement-analytics-via-grafana` -> Developers > Developers > Guides & Tutorials
-- `v1/developers/guides/get-engagement-analytics-via-timeplus` -> Developers > Developers > Quickstart > Video & Transcoding
-- `v1/developers/guides/listen-to-asset-events` -> Developers > Developer Platforms > Livepeer Studio > Events & analytics
-- `v1/developers/guides/listen-to-stream-events` -> Developers > Developer Platforms > Livepeer Studio > Events & analytics
-- `v1/developers/guides/livestream-from-browser` -> Developers > Developer Platforms > Livepeer Studio > Livestream
+- `v1/developers/guides/get-engagement-analytics-via-timeplus` -> Developers > Developers > Guides & Tutorials
+- `v1/developers/guides/listen-to-asset-events` -> Solutions > Livepeer Studio Docs > Events & analytics
+- `v1/developers/guides/listen-to-stream-events` -> Solutions > Livepeer Studio Docs > Events & analytics
+- `v1/developers/guides/livestream-from-browser` -> Solutions > Livepeer Studio Docs > Livestream
+- `v1/developers/guides/managing-projects` -> Solutions > Livepeer Studio Docs > Reference
 - `v1/developers/guides/monitor-stream-health` -> Developers > Developers > Guides & Tutorials
-- `v1/developers/guides/multistream` -> Developers > Developer Platforms > Livepeer Studio > Livestream
-- `v1/developers/guides/optimize-latency-of-a-livestream` -> Developers > Developer Platforms > Livepeer Studio > Livestream
+- `v1/developers/guides/multistream` -> Solutions > Livepeer Studio Docs > Livestream
 
 ## Deprecated / Superseded Recommendations
 
@@ -177,32 +177,4 @@ Commit: `fb0b0639`
 
 ## Residual Manual Queue
 
-- rows with `adjudication_status=needs_manual_review`: **193**
-
-## Phase 1 Addendum
-
-- Generated at: 2026-03-02T10:44:38.758Z
-- Worktree: `/Users/alisonhaire/Documents/Livepeer/livepeer-docs-v2 [docs-v2-branch]`
-- Branch: `codex/content-sprint-01-gateway-persona-b09-b17`
-- Head: `eecb64a2`
-
-### Phase 1 KPI Snapshot
-
-| KPI | Result |
-|---|---:|
-| quick_win_completed | 32/32 |
-| stretch_quick_win_tracked | 5/5 |
-| seed_rows_finalized | 124/124 |
-| deprecated_superseded_gate_resolved | 14/14 |
-| missing_route_unique (after) | 0 |
-| missing_route_instances (after) | 0 |
-
-### Phase 1 Artifacts
-
-- `tasks/reports/v1-v2-mapping-audit/phase1-preflight.json`
-- `tasks/reports/v1-v2-mapping-audit/impact-effort-backlog.csv`
-- `tasks/reports/v1-v2-mapping-audit/nav-missing-content-register.json`
-- `tasks/reports/v1-v2-mapping-audit/deprecation-decision-register.json`
-- `tasks/reports/v1-v2-mapping-audit/seed-reconciliation.json`
-- `tasks/reports/v1-v2-mapping-audit/phase-burnup.md`
-- `tasks/reports/v1-v2-mapping-audit/redirect-validation-report.json`
+- rows with `adjudication_status=needs_manual_review`: **194**

@@ -143,8 +143,45 @@ export const LINK_MAP = {
       "movedCandidates": []
     }
   ],
-  "v2/lpt/delegation/delegation-economics.mdx": [],
+  "v2/lpt/delegation/delegation-economics.mdx": [
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-relative",
+      "rawPath": "./overview",
+      "resolvedPath": "v2/lpt/delegation/overview.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-relative",
+      "rawPath": "../about/tokenomics",
+      "resolvedPath": "v2/lpt/about/tokenomics.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    }
+  ],
   "v2/lpt/delegation/delegation-guide.mdx": [
+    {
+      "sourceType": "markdown-link",
+      "linkType": "external-https",
+      "rawPath": "https://bridge.arbitrum.io",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "external-https",
+      "rawPath": "https://explorer.livepeer.org/migrate",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
     {
       "sourceType": "markdown-link",
       "linkType": "external-https",
@@ -177,6 +214,116 @@ export const LINK_MAP = {
       "linkType": "import-path",
       "rawPath": "/snippets/components/content/math.jsx",
       "resolvedPath": "snippets/components/content/math.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    }
+  ],
+  "v2/lpt/delegation/getting-started.mdx": [
+    {
+      "sourceType": "markdown-link",
+      "linkType": "external-https",
+      "rawPath": "https://explorer.livepeer.org",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "external-https",
+      "rawPath": "https://explorer.livepeer.org",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "external-https",
+      "rawPath": "https://explorer.livepeer.org",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/gateways/run-a-gateway/requirements/on-chain%20setup/bridge-lpt-to-arbitrum",
+      "resolvedPath": "v2/gateways/run-a-gateway/requirements/on-chain setup/bridge-lpt-to-arbitrum.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://explorer.livepeer.org",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/lpt/about/purpose",
+      "resolvedPath": "v2/lpt/about/purpose.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/about/livepeer-protocol/economics",
+      "resolvedPath": "v2/about/livepeer-protocol/economics.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/lpt/delegation/overview",
+      "resolvedPath": "v2/lpt/delegation/overview.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://explorer.livepeer.org",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/tables.jsx",
+      "resolvedPath": "snippets/components/primitives/tables.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/primitives/containers.jsx",
+      "resolvedPath": "snippets/components/primitives/containers.jsx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "import-path",
+      "linkType": "import-path",
+      "rawPath": "/snippets/components/layout/steps.jsx",
+      "resolvedPath": "snippets/components/layout/steps.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -261,6 +408,15 @@ export const LINK_MAP = {
   "v2/lpt/governance/overview.mdx": [
     {
       "sourceType": "markdown-link",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/community/livepeer-community/governance-and-foundation",
+      "resolvedPath": "v2/community/livepeer-community/governance-and-foundation.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
       "linkType": "external-https",
       "rawPath": "https://docs.livepeer.org/references/contract-addresses",
       "resolvedPath": null,
@@ -306,6 +462,24 @@ export const LINK_MAP = {
     }
   ],
   "v2/lpt/governance/processes.mdx": [
+    {
+      "sourceType": "markdown-link",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/lpt/delegation/delegation-guide",
+      "resolvedPath": "v2/lpt/delegation/delegation-guide.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "external-https",
+      "rawPath": "https://explorer.livepeer.org/voting",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
     {
       "sourceType": "markdown-link",
       "linkType": "external-https",
@@ -1215,51 +1389,6 @@ export const LINK_MAP = {
   ],
   "v2/lpt/token-portal.mdx": [
     {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#whats-a-gateway",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#gateway-services--providers",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#run-a-gateway",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#gateway-tools--dashboards",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "empty",
-      "rawPath": "#gateway-guides--resources",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped",
-      "movedCandidates": []
-    },
-    {
       "sourceType": "jsx-attr",
       "linkType": "external-https",
       "rawPath": "https://explorer.livepeer.org/voting",
@@ -1314,28 +1443,37 @@ export const LINK_MAP = {
       "movedCandidates": []
     },
     {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://explorer.livepeer.org",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://explorer.livepeer.org/treasury",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "jsx-attr",
+      "linkType": "external-https",
+      "rawPath": "https://explorer.livepeer.org/voting",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
       "sourceType": "import-path",
       "linkType": "import-path",
       "rawPath": "/snippets/components/domain/SHARED/Portals.jsx",
       "resolvedPath": "snippets/components/domain/SHARED/Portals.jsx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "import-path",
-      "linkType": "import-path",
-      "rawPath": "/snippets/components/display/frameMode.jsx",
-      "resolvedPath": "snippets/components/display/frameMode.jsx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "import-path",
-      "linkType": "import-path",
-      "rawPath": "/snippets/components/primitives/divider.jsx",
-      "resolvedPath": "snippets/components/primitives/divider.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1445,6 +1583,42 @@ export const LINK_MAP = {
     }
   ],
   "v2/lpt/treasury/proposals.mdx": [
+    {
+      "sourceType": "markdown-link",
+      "linkType": "external-https",
+      "rawPath": "https://forum.livepeer.org",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "external-https",
+      "rawPath": "https://github.com/livepeer/LIPs",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "external-https",
+      "rawPath": "https://explorer.livepeer.org",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
+    {
+      "sourceType": "markdown-link",
+      "linkType": "external-https",
+      "rawPath": "https://explorer.livepeer.org/treasury",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
+      "movedCandidates": []
+    },
     {
       "sourceType": "markdown-link",
       "linkType": "external-https",

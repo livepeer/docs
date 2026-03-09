@@ -3,7 +3,7 @@
  * @script            audit-scripts
  * @category          validator
  * @purpose           qa:repo-health
- * @scope             tools/scripts, tasks/reports, tests/unit/script-docs.test.js, tests/README.md
+ * @scope             tools/scripts, tasks/README.md, tasks/reports, tests/unit/script-docs.test.js, tests/README.md
  * @owner             docs
  * @needs             E-C1, R-R14
  * @purpose-statement Script auditor — analyses all repo scripts, categorises usage/overlap, generates SCRIPT_AUDIT reports
@@ -27,6 +27,7 @@ try {
 const REPO_ROOT = process.cwd()
 const DEFAULT_FORMAT = 'both'
 const DEFAULT_OUTPUT_DIR = 'tasks/reports/repo-ops'
+const REPORTS_INDEX_PATH = path.join('tasks', 'reports', 'INDEX.md')
 
 const RULES_SOURCE = ['tests/unit/script-docs.test.js', 'tests/README.md']
 
@@ -1291,6 +1292,72 @@ function buildMarkdownReport(report) {
   return `${lines.join('\n').trim()}\n`
 }
 
+function getCurrentBranch() {
+  try {
+    return execSync('git branch --show-current', {
+      cwd: REPO_ROOT,
+      encoding: 'utf8',
+    }).trim()
+  } catch (_err) {
+    return 'unknown'
+  }
+}
+
+function parseApprovedGeneratorRows() {
+  const readmePath = path.join(REPO_ROOT, 'tasks', 'README.md')
+  if (!fs.existsSync(readmePath)) return []
+
+  const lines = fs.readFileSync(readmePath, 'utf8').split('\n')
+  const sectionIndex = lines.findIndex(
+    (line) => line.trim() === '## Approved generators'
+  )
+  if (sectionIndex === -1) return []
+
+  const tableHeaderIndex = lines.findIndex(
+    (line, idx) =>
+      idx > sectionIndex &&
+      line.trim() === '| Generator script | Output path(s) |'
+  )
+  if (tableHeaderIndex === -1) return []
+
+  const rows = []
+  for (let i = tableHeaderIndex + 2; i < lines.length; i += 1) {
+    const line = lines[i].trim()
+    if (!line.startsWith('|')) break
+    const parts = line.split('|').map((part) => part.trim())
+    if (parts.length < 4) continue
+    rows.push({
+      generator: parts[1],
+      outputs: parts[2],
+    })
+  }
+  return rows
+}
+
+function buildReportsIndex() {
+  const rows = parseApprovedGeneratorRows()
+  const lines = [
+    '# tasks/reports Index',
+    '',
+    `Generated: ${new Date().toISOString()}`,
+    'Generator: `tools/scripts/audit-scripts.js`',
+    `Branch: ${getCurrentBranch()}`,
+    '',
+    '| Generator script | Output path(s) |',
+    '|---|---|',
+  ]
+
+  if (rows.length === 0) {
+    lines.push('| _No approved generators found_ | _Check `tasks/README.md`_ |')
+  } else {
+    for (const row of rows) {
+      lines.push(`| ${row.generator} | ${row.outputs} |`)
+    }
+  }
+
+  return `${lines.join('\n')}\n`
+}
+
 function writeReports(report, options) {
   const outputDir = path.isAbsolute(options.outputDir)
     ? options.outputDir
@@ -1299,6 +1366,7 @@ function writeReports(report, options) {
 
   const mdPath = path.join(outputDir, 'SCRIPT_AUDIT.md')
   const jsonPath = path.join(outputDir, 'SCRIPT_AUDIT.json')
+  const indexPath = path.join(REPO_ROOT, REPORTS_INDEX_PATH)
 
   if (options.format === 'both' || options.format === 'md') {
     fs.writeFileSync(mdPath, buildMarkdownReport(report), 'utf8')
@@ -1308,10 +1376,14 @@ function writeReports(report, options) {
     fs.writeFileSync(jsonPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8')
   }
 
+  fs.mkdirSync(path.dirname(indexPath), { recursive: true })
+  fs.writeFileSync(indexPath, buildReportsIndex(), 'utf8')
+
   return {
     outputDir,
     mdPath,
     jsonPath,
+    indexPath,
   }
 }
 

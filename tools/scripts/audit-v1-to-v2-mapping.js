@@ -21,7 +21,7 @@ const DEFAULT_OUT_DIR = 'tasks/reports/v1-v2-mapping-audit';
 const DEFAULT_CANDIDATE_COUNT = 8;
 const DEFAULT_ADJUDICATE_THRESHOLD = 0.8;
 const DEFAULT_SEED =
-  'tasks/reports/rfp-deliverable-i-r1-r15-2026-02-24-replan/v1-to-v2-gap-fill-matrix.csv';
+  'tools/config/v1-v2-mapping-seeds/v1-to-v2-gap-fill-matrix.csv';
 
 const TARGET_FILES = {
   csv: 'v1-v2-page-mapping-audit.csv',

@@ -1,22 +1,14 @@
 ---
-title: 'Tasks Folder Audit: Tasks Root Audit'
-sidebarTitle: 'Tasks Folder Audits'
-description: 'Generated tasks folder audit reports from tools/scripts/audit-tasks-folders.js.'
-keywords: ["livepeer","internal","reports","repo-ops","audit-tasks-folders"]
+title: 'Legacy Alias: Audit Tasks Folders Tasks Root Audit'
+sidebarTitle: 'Legacy Alias'
+description: 'Retired internal report route preserved for link stability.'
+keywords: ["livepeer","internal","reports","repo-ops","publish-v2-internal-reports"]
 og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
 ---
-Last Generated (UTC ISO): `2026-02-28T04:22:56.252Z`
-Last Generated (UTC Human): `February 28, 2026 04:22 UTC`
-# tasks Root Files Audit
+# Legacy Internal Report Alias
 
-Generated: 2026-02-28T04:22:42.987Z
-Scope: `tasks (root files only)`
-Total files in scope: 0
+This route is retained for link stability.
 
-## Summary
-
-- Rows: 0
-
-## File Recommendations
-
-_No files in scope._
+- Original legacy slug: `audit-tasks-folders--tasks-root-audit`
+- Status: retired from active publication
+- Current guidance: use the active generated report pages in this report category instead of this legacy alias.

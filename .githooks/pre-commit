@@ -63,6 +63,7 @@ get_staged_docs_pages() {
 }
 
 STAGED_DOCS_PAGES=$(get_staged_docs_pages)
+STAGED_DOCS_PAGES_CSV=$(printf "%s" "$STAGED_DOCS_PAGES" | paste -sd, -)
 # pre-commit hooks do not receive commit args directly. Detect trailer usage
 # from the parent git commit command.
 PARENT_GIT_CMD=$(ps -o command= -p "$PPID" 2>/dev/null || true)
@@ -687,7 +688,7 @@ else
                 run_node_check \
                   "Running staged V2 WCAG accessibility audit..." \
                   "❌ Staged V2 WCAG accessibility audit failed - see /tmp/livepeer-wcag-audit-precommit.md" \
-                  tests/integration/v2-wcag-audit.js --staged --fix --stage --max-pages 10 --fail-impact serious --report /tmp/livepeer-wcag-audit-precommit.md --report-json /tmp/livepeer-wcag-audit-precommit.json
+                  tests/integration/v2-wcag-audit.js --files "$STAGED_DOCS_PAGES_CSV" --fix --stage --max-pages 10 --fail-impact serious --report /tmp/livepeer-wcag-audit-precommit.md --report-json /tmp/livepeer-wcag-audit-precommit.json
             fi
         else
             echo -e "${GREEN}✓ No staged docs pages, skipping link audit and WCAG audit${NC}"

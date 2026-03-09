@@ -74,20 +74,17 @@ def is_intentional_redirect(page_path):
 
 def check_file_exists(page_path):
     """Check if file exists and return full path"""
-    # Try with .mdx extension
-    file_path = BASE_DIR / f"{page_path}.mdx"
-    if file_path.exists():
-        return {'exists': True, 'path': str(file_path)}
-    
-    # Try directory with index
-    file_path = BASE_DIR / page_path / 'index.mdx'
-    if file_path.exists():
-        return {'exists': True, 'path': str(file_path)}
-    
-    # Try README.mdx
-    file_path = BASE_DIR / page_path / 'README.mdx'
-    if file_path.exists():
-        return {'exists': True, 'path': str(file_path)}
+    candidates = [
+        BASE_DIR / f"{page_path}.mdx",
+        BASE_DIR / f"{page_path}.md",
+        BASE_DIR / page_path / 'index.mdx',
+        BASE_DIR / page_path / 'index.md',
+        BASE_DIR / page_path / 'README.mdx',
+        BASE_DIR / page_path / 'README.md'
+    ]
+    for file_path in candidates:
+        if file_path.exists():
+            return {'exists': True, 'path': str(file_path)}
     
     return {'exists': False, 'path': None}
 

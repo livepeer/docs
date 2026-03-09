@@ -45,12 +45,10 @@ const REMOVED_FLAGS = new Set([
 ]);
 
 const BASELINE_DEFAULT_REL = path.join(
-  'tasks',
-  'reports',
-  'quality-accessibility',
-  'docs-usefulness 2',
-  'full-run-2026-02-23',
-  'page-matrix.csv'
+  'tools',
+  'config',
+  'usefulness-baselines',
+  'full-run-2026-02-23-page-matrix.csv'
 );
 
 function getRepoRoot() {

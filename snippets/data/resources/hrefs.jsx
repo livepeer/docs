@@ -37,7 +37,7 @@ export const LINK_MAP = {
       "movedCandidates": [
         "v2/internal/overview/governance.mdx",
         "v2/about/livepeer-protocol/governance-model.mdx",
-        "v2/developers/moved-to-about-livepeer-protocol/livepeer-governance.mdx"
+        "v2/community/livepeer-community/governance-and-foundation.mdx"
       ]
     },
     {
@@ -77,7 +77,7 @@ export const LINK_MAP = {
       "movedCandidates": [
         "v2/internal/overview/governance.mdx",
         "v2/about/livepeer-protocol/governance-model.mdx",
-        "v2/developers/moved-to-about-livepeer-protocol/livepeer-governance.mdx"
+        "v2/community/livepeer-community/governance-and-foundation.mdx"
       ]
     },
     {
@@ -96,15 +96,6 @@ export const LINK_MAP = {
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "import-path",
-      "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
-      "resolvedPath": "snippets/components/domain/SHARED/previewCallouts.jsx",
-      "exists": true,
-      "status": "ok",
       "movedCandidates": []
     }
   ],
@@ -133,15 +124,6 @@ export const LINK_MAP = {
   "v2/resources/concepts/livepeer-101.mdx": [],
   "v2/resources/documentation-guide/authoring-standard.mdx": [],
   "v2/resources/documentation-guide/automations-workflows.mdx": [
-    {
-      "sourceType": "markdown-link",
-      "linkType": "internal-rooted",
-      "rawPath": "/tasks/reports/_legacy-unmanaged/ungenerated/20-automations-workflows-audit-report.md",
-      "resolvedPath": "tasks/reports/_legacy-unmanaged/ungenerated/20-automations-workflows-audit-report.md",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
     {
       "sourceType": "markdown-link",
       "linkType": "internal-rooted",
@@ -192,15 +174,6 @@ export const LINK_MAP = {
       "linkType": "internal-rooted",
       "rawPath": "/snippets/automations/README.mdx",
       "resolvedPath": "snippets/automations/README.mdx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "markdown-link",
-      "linkType": "internal-rooted",
-      "rawPath": "/tasks/reports/_legacy-unmanaged/ungenerated/20-automations-workflows-audit-report.md",
-      "resolvedPath": "tasks/reports/_legacy-unmanaged/ungenerated/20-automations-workflows-audit-report.md",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1757,15 +1730,6 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
-      "resolvedPath": null,
-      "exists": null,
-      "status": "skipped-style-guide-example",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "import-path",
-      "linkType": "import-path",
       "rawPath": "/snippets/components/primitives/a11y.jsx",
       "resolvedPath": null,
       "exists": null,
@@ -1790,15 +1754,6 @@ export const LINK_MAP = {
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "import-path",
-      "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
-      "resolvedPath": "snippets/components/domain/SHARED/previewCallouts.jsx",
-      "exists": true,
-      "status": "ok",
       "movedCandidates": []
     }
   ],
@@ -2727,19 +2682,9 @@ export const LINK_MAP = {
     }
   ],
   "v2/resources/resources/videos.mdx": [],
-  "v2/resources/resources-portal.mdx": [
-    {
-      "sourceType": "import-path",
-      "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/SHARED/previewCallouts.jsx",
-      "resolvedPath": "snippets/components/domain/SHARED/previewCallouts.jsx",
-      "exists": true,
-      "status": "ok",
-      "movedCandidates": []
-    }
-  ],
-  "snippets/components/display/containers.mdx": [],
+  "v2/resources/resources-portal.mdx": [],
   "snippets/components/display/embed.mdx": [],
+  "snippets/components/display/containers.mdx": [],
   "snippets/components/layout/api-base-urls-table.mdx": []
 };
 
