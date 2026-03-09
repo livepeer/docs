@@ -1,19 +1,18 @@
-task_id: 802
-branch: codex/802-pm-01-framework-integrity-validator
+task_id: 803
+branch: codex/803-pm-02-script-docs-framework-header-validation
 base_branch: docs-v2
 scope_in:
   - .codex/task-contract.yaml
-  - tasks/reports/script-classifications.json
-  - tools/script-index.md
   - docs-guide/indexes/scripts-index.mdx
-  - tools/scripts/validators/structure/validate-framework-integrity.js
+  - tests/script-index.md
+  - tools/script-index.md
+  - tests/unit/script-docs.test.js
 scope_out: []
 allowed_generated:
   - .codex/pr-body.generated.md
 acceptance_checks:
-  - node tools/scripts/validators/structure/validate-framework-integrity.js --verbose 2>&1 | tail -20
-  - node tools/scripts/validators/structure/validate-framework-integrity.js --json 2>&1 | python3 -c "import sys,json; json.load(sys.stdin); print('JSON valid')"
-  - node tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes
+  - node tests/unit/script-docs.test.js
+  - node tests/run-all.js --skip-browser 2>&1 | tail -10
 risk_flags:
   - script-governance
 follow_up_issues: []

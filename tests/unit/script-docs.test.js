@@ -46,12 +46,15 @@ const FRAMEWORK_REQUIRED_TAGS = [
   '@purpose',
   '@scope',
   '@owner',
-  '@needs',
-  '@purpose-statement',
-  '@pipeline',
   '@usage'
 ];
+const FRAMEWORK_WARNING_TAGS = [
+  '@needs',
+  '@purpose-statement',
+  '@pipeline'
+];
 const FRAMEWORK_INLINE_REQUIRED_TAGS = FRAMEWORK_REQUIRED_TAGS;
+const FRAMEWORK_INLINE_WARNING_TAGS = FRAMEWORK_WARNING_TAGS;
 const PLACEHOLDER_PATTERNS = [
   /^<.*>$/,
   /^todo\b/i,
@@ -63,6 +66,22 @@ const PLACEHOLDER_PATTERNS = [
   /^none$/i,
   /^placeholder$/i
 ];
+const VALID_CATEGORIES = ['validator', 'enforcer', 'remediator', 'generator', 'automation', 'utility', 'orchestrator'];
+const VALID_PURPOSES = [
+  'qa:content-quality',
+  'qa:link-integrity',
+  'qa:repo-health',
+  'governance:index-management',
+  'governance:agent-governance',
+  'governance:repo-health',
+  'feature:translation',
+  'feature:seo',
+  'infrastructure:data-feeds',
+  'infrastructure:pipeline-orchestration',
+  'tooling:api-spec',
+  'tooling:dev-tools'
+];
+const VALID_SCOPES = ['staged', 'changed', 'full-repo', 'v2-content', 'single-domain', 'single-file', 'external', 'generated-output'];
 
 const SCRIPT_EXTENSIONS = new Set(['.js', '.cjs', '.mjs', '.ts', '.tsx', '.sh', '.bash', '.py']);
 const VALIDATION_ROOTS = ['.githooks', '.github/scripts', 'tests', 'tools/scripts', 'tasks/scripts', 'tools/lib/docs-usefulness'];
@@ -341,23 +360,64 @@ function validateTemplate(repoPath) {
   const content = readFileSafe(repoPath);
   const header = getHeaderChunk(content);
   const mode = detectHeaderMode(header);
-  const requiredTags = mode === 'framework' ? FRAMEWORK_REQUIRED_TAGS : LEGACY_REQUIRED_TAGS;
-  const inlineTags = mode === 'framework' ? FRAMEWORK_INLINE_REQUIRED_TAGS : LEGACY_INLINE_REQUIRED_TAGS;
-  const blockTags = mode === 'framework' ? [] : LEGACY_BLOCK_REQUIRED_TAGS;
-  const missing = requiredTags.filter((tag) => !header.includes(tag));
-  const empty = [];
+  const errors = [];
+  const warnings = [];
+  const category = getTagValue(header, '@category') || '';
+  const purpose = getTagValue(header, '@purpose') || '';
+  const scope = getTagValue(header, '@scope') || '';
 
-  for (const tag of inlineTags) {
-    if (missing.includes(tag)) continue;
-    const value = getTagValue(header, tag);
-    if (isPlaceholderValue(value)) empty.push(tag);
-  }
+  if (mode === 'framework') {
+    const missingRequired = FRAMEWORK_REQUIRED_TAGS.filter((tag) => !header.includes(tag));
+    const emptyRequired = [];
+    const missingWarnings = FRAMEWORK_WARNING_TAGS.filter((tag) => !header.includes(tag));
+    const emptyWarnings = [];
 
-  for (const tag of blockTags) {
-    if (missing.includes(tag)) continue;
-    const sectionLines = getSectionLines(header, tag);
-    const meaningful = sectionLines.filter((line) => !isPlaceholderValue(line));
-    if (meaningful.length === 0) empty.push(tag);
+    for (const tag of FRAMEWORK_INLINE_REQUIRED_TAGS) {
+      if (missingRequired.includes(tag)) continue;
+      const value = getTagValue(header, tag);
+      if (isPlaceholderValue(value)) emptyRequired.push(tag);
+    }
+
+    for (const tag of FRAMEWORK_INLINE_WARNING_TAGS) {
+      if (missingWarnings.includes(tag)) continue;
+      const value = getTagValue(header, tag);
+      if (isPlaceholderValue(value)) emptyWarnings.push(tag);
+    }
+
+    if (missingRequired.length > 0) errors.push(`missing required tags: ${missingRequired.join(', ')}`);
+    if (emptyRequired.length > 0) errors.push(`empty/placeholder required values: ${emptyRequired.join(', ')}`);
+
+    if (category && !VALID_CATEGORIES.includes(category)) {
+      errors.push(`invalid @category value: ${category}`);
+    }
+    if (purpose && !VALID_PURPOSES.includes(purpose)) {
+      errors.push(`invalid @purpose value: ${purpose}`);
+    }
+    if (scope && !VALID_SCOPES.includes(scope)) {
+      errors.push(`invalid @scope value: ${scope}`);
+    }
+
+    if (missingWarnings.length > 0) warnings.push(`missing recommended tags: ${missingWarnings.join(', ')}`);
+    if (emptyWarnings.length > 0) warnings.push(`empty/placeholder recommended values: ${emptyWarnings.join(', ')}`);
+  } else {
+    const missingRequired = LEGACY_REQUIRED_TAGS.filter((tag) => !header.includes(tag));
+    const emptyRequired = [];
+
+    for (const tag of LEGACY_INLINE_REQUIRED_TAGS) {
+      if (missingRequired.includes(tag)) continue;
+      const value = getTagValue(header, tag);
+      if (isPlaceholderValue(value)) emptyRequired.push(tag);
+    }
+
+    for (const tag of LEGACY_BLOCK_REQUIRED_TAGS) {
+      if (missingRequired.includes(tag)) continue;
+      const sectionLines = getSectionLines(header, tag);
+      const meaningful = sectionLines.filter((line) => !isPlaceholderValue(line));
+      if (meaningful.length === 0) emptyRequired.push(tag);
+    }
+
+    if (missingRequired.length > 0) errors.push(`missing required tags: ${missingRequired.join(', ')}`);
+    if (emptyRequired.length > 0) errors.push(`empty/placeholder values: ${emptyRequired.join(', ')}`);
   }
 
   const summary =
@@ -369,13 +429,16 @@ function validateTemplate(repoPath) {
 
   return {
     file: repoPath,
-    valid: missing.length === 0 && empty.length === 0,
-    missing,
-    empty,
+    valid: errors.length === 0,
+    errors,
+    warnings,
     script: getTagValue(header, '@script') || path.basename(repoPath),
+    headerScript: getTagValue(header, '@script') || '',
     summary,
     owner: getTagValue(header, '@owner') || '',
-    usage
+    usage,
+    category,
+    purpose
   };
 }
 
@@ -556,31 +619,50 @@ function scriptsForGroup(root) {
   return getAllIndexedScripts().filter((file) => file === root || file.startsWith(`${root}/`));
 }
 
+function isIndexableEntry(entry) {
+  return Boolean(entry.headerScript && entry.owner && entry.usage);
+}
+
+function usesFrameworkColumns(root) {
+  return root === 'tests' || root === 'tools/scripts';
+}
+
 function buildGroupRows(root) {
   return scriptsForGroup(root)
     .map(validateTemplate)
-    .filter((x) => x.valid)
+    .filter(isIndexableEntry)
     .sort((a, b) => a.file.localeCompare(b.file))
     .map((entry) => ({
       script: entry.file,
       summary: entry.summary || '',
       usage: entry.usage || '',
-      owner: entry.owner || ''
+      owner: entry.owner || '',
+      category: entry.category || '-',
+      purpose: entry.purpose || '-'
     }));
 }
 
 function buildGroupIndexMarkdown(root) {
   const rows = buildGroupRows(root);
+  const includeFrameworkColumns = usesFrameworkColumns(root);
 
   if (rows.length === 0) {
     return ['## Script Index', '', '_No scripts indexed yet._'].join('\n');
   }
 
-  const lines = ['## Script Index', '', '| Script | Summary | Usage | Owner |', '|---|---|---|---|'];
+  const lines = includeFrameworkColumns
+    ? ['## Script Index', '', '| Script | Summary | Category | Purpose | Usage | Owner |', '|---|---|---|---|---|---|']
+    : ['## Script Index', '', '| Script | Summary | Usage | Owner |', '|---|---|---|---|'];
   rows.forEach((row) => {
     const summary = escapeTableCell(row.summary);
     const usage = escapeTableCell(row.usage);
     const owner = escapeTableCell(row.owner);
+    if (includeFrameworkColumns) {
+      lines.push(
+        `| \`${row.script}\` | ${summary} | ${escapeTableCell(row.category)} | ${escapeTableCell(row.purpose)} | \`${usage}\` | ${owner} |`
+      );
+      return;
+    }
     lines.push(`| \`${row.script}\` | ${summary} | \`${usage}\` | ${owner} |`);
   });
   return lines.join('\n');
@@ -623,6 +705,7 @@ function buildAggregateMarkdown() {
   ];
   for (const group of GROUP_INDEX_MAP) {
     const rows = buildGroupRows(group.root);
+    const includeFrameworkColumns = usesFrameworkColumns(group.root);
     lines.push(`## ${group.root}`);
     lines.push('');
     if (rows.length === 0) {
@@ -630,12 +713,21 @@ function buildAggregateMarkdown() {
       lines.push('');
       continue;
     }
-    lines.push('| Script | Summary | Usage | Owner |');
-    lines.push('|---|---|---|---|');
+    if (includeFrameworkColumns) {
+      lines.push('| Script | Summary | Category | Purpose | Usage | Owner |');
+      lines.push('|---|---|---|---|---|---|');
+    } else {
+      lines.push('| Script | Summary | Usage | Owner |');
+      lines.push('|---|---|---|---|');
+    }
     rows.forEach((row) => {
-      lines.push(
-        `| \`${row.script}\` | ${escapeTableCell(row.summary)} | \`${escapeTableCell(row.usage)}\` | ${escapeTableCell(row.owner)} |`
-      );
+      if (includeFrameworkColumns) {
+        lines.push(
+          `| \`${row.script}\` | ${escapeTableCell(row.summary)} | ${escapeTableCell(row.category)} | ${escapeTableCell(row.purpose)} | \`${escapeTableCell(row.usage)}\` | ${escapeTableCell(row.owner)} |`
+        );
+        return;
+      }
+      lines.push(`| \`${row.script}\` | ${escapeTableCell(row.summary)} | \`${escapeTableCell(row.usage)}\` | ${escapeTableCell(row.owner)} |`);
     });
     lines.push('');
   }
@@ -714,10 +806,14 @@ function runTests(options = {}) {
   for (const scriptPath of enforceTargets) {
     const result = validateTemplate(scriptPath);
     if (!result.valid) {
-      const parts = [];
-      if (result.missing.length > 0) parts.push(`missing required tags: ${result.missing.join(', ')}`);
-      if (result.empty.length > 0) parts.push(`empty/placeholder values: ${result.empty.join(', ')}`);
-      errors.push({ file: scriptPath, rule: 'Script header template', message: parts.join(' | '), line: 1 });
+      result.errors.forEach((message) => {
+        errors.push({ file: scriptPath, rule: 'Script header template', message, line: 1 });
+      });
+    }
+    if (result.warnings.length > 0) {
+      result.warnings.forEach((message) => {
+        warnings.push({ file: scriptPath, rule: 'Script header template', message, line: 1 });
+      });
     }
   }
 
@@ -859,8 +955,16 @@ if (require.main === module) {
     if (result.errors.some((err) => err.rule === 'Script header template')) {
       console.error('\nRequired template tags:');
       console.error(`  Legacy: ${LEGACY_REQUIRED_TAGS.join(', ')}`);
-      console.error(`  Framework: ${FRAMEWORK_REQUIRED_TAGS.join(', ')}`);
+      console.error(`  Framework required: ${FRAMEWORK_REQUIRED_TAGS.join(', ')}`);
+      console.error(`  Framework recommended: ${FRAMEWORK_WARNING_TAGS.join(', ')}`);
     }
+  }
+
+  if (result.warnings.length > 0) {
+    console.warn('\n⚠️  Script documentation warnings:\n');
+    result.warnings.forEach((warning) => {
+      console.warn(`  ${warning.file}:${warning.line} - ${warning.message}`);
+    });
   }
 
   if (result.autofilledScripts.length > 0) {
