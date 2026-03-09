@@ -36,6 +36,8 @@ const REPO_ROOT = path.resolve(__dirname, '../../../..');
 const DEFAULT_OUTPUT_DIR = 'tasks/reports/repo-ops';
 const DEFAULT_MD_PATH = 'SCRIPT_INVENTORY_FULL.md';
 const DEFAULT_JSON_PATH = 'SCRIPT_INVENTORY_FULL.json';
+const REPO_ROOT_POSIX = normalizeRepoPath(REPO_ROOT);
+const REPO_ROOT_LOOSE = REPO_ROOT_POSIX.replace(/^\/+/, '');
 const HEADER_SCAN_LINES = 220;
 const SPECIAL_CALLERS = new Set(['.githooks/pre-commit', '.githooks/pre-push', 'tests/run-all.js', 'tests/run-pr-checks.js']);
 const PACKAGE_JSON_PATHS = ['tools/package.json', 'tests/package.json'];
@@ -680,6 +682,31 @@ function classifyOutputType(outputPath) {
   return 'generated-output';
 }
 
+function normalizeOutputPath(outputPath) {
+  let normalized = normalizeRepoPath(String(outputPath || ''));
+  if (!normalized) return '';
+
+  let rootIndex = normalized.lastIndexOf(REPO_ROOT_POSIX);
+  let rootToken = REPO_ROOT_POSIX;
+  if (rootIndex === -1) {
+    rootIndex = normalized.lastIndexOf(REPO_ROOT_LOOSE);
+    rootToken = REPO_ROOT_LOOSE;
+  }
+
+  if (rootIndex !== -1) {
+    normalized = normalized.slice(rootIndex);
+    if (rootToken === REPO_ROOT_LOOSE && !normalized.startsWith('/')) {
+      normalized = `/${normalized}`;
+    }
+  }
+
+  if (normalized.startsWith(REPO_ROOT_POSIX)) {
+    normalized = normalizeRepoPath(path.relative(REPO_ROOT, normalized));
+  }
+
+  return normalized.replace(/^\.\//, '');
+}
+
 function extractOutputPaths(scriptPath, content) {
   const constantMap = buildConstantMap(scriptPath, content);
   const outputs = [];
@@ -693,10 +720,7 @@ function extractOutputPaths(scriptPath, content) {
       match = WRITE_CALL_RE.exec(content);
       continue;
     }
-    let outputPath = resolved;
-    if (outputPath.startsWith(normalizeRepoPath(REPO_ROOT))) {
-      outputPath = normalizeRepoPath(path.relative(REPO_ROOT, outputPath));
-    }
+    const outputPath = normalizeOutputPath(resolved);
     const key = `${match[1]}|${outputPath}`;
     if (!seen.has(key)) {
       seen.add(key);
