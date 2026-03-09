@@ -14,6 +14,10 @@ jobs:
           node-version: '20'
       - run: cd tools && npm ci
 
+      - name: Framework integrity check
+        run: node tools/scripts/validators/structure/validate-framework-integrity.js --check-only
+        continue-on-error: true
+
       - name: Content quality audit
         run: node tools/scripts/docs-quality-and-freshness-audit.js --scope full
         continue-on-error: true

@@ -1,18 +1,14 @@
-task_id: 804
-branch: codex/804-pm-03-post-migration-audit-runner
+task_id: 805
+branch: codex/805-pm-04-content-health-framework-integrity-check
 base_branch: docs-v2
 scope_in:
   - .codex/task-contract.yaml
-  - tasks/reports/script-classifications.json
-  - tools/script-index.md
-  - docs-guide/indexes/scripts-index.mdx
-  - tools/scripts/orchestrators/run-migration-audit.js
+  - .github/workflows/content-health.yml
 scope_out: []
 allowed_generated:
   - .codex/pr-body.generated.md
 acceptance_checks:
-  - node tools/scripts/orchestrators/run-migration-audit.js --phase A 2>&1 | tail -20
-  - node tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes
+  - cd tools && node -e "require('js-yaml').load(require('fs').readFileSync('../.github/workflows/content-health.yml','utf8')) && console.log('YAML valid')"
 risk_flags:
   - script-governance
 follow_up_issues: []
