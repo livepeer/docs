@@ -1,26 +1,18 @@
-task_id: 800
-branch: codex/800-audit-00-script-inventory
+task_id: 804
+branch: codex/804-gap-4-stale-classification-cleanup
 base_branch: docs-v2
 scope_in:
   - .codex/task-contract.yaml
-  - tools/lib/script-governance-config.js
-  - tools/scripts/validators/governance/audit-script-inventory.js
   - tasks/reports/script-classifications.json
   - tasks/reports/repo-ops
-  - tools/package.json
+  - tools/script-index.md
+  - docs-guide/indexes/scripts-index.mdx
 scope_out: []
 allowed_generated:
   - .codex/pr-body.generated.md
-  - .githooks/script-index.md
-  - .github/script-index.md
-  - docs-guide/indexes/scripts-index.mdx
   - tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.json
   - tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.md
-  - tasks/scripts/script-index.md
-  - tests/script-index.md
-  - tools/script-index.md
 acceptance_checks:
-  - node tools/scripts/validators/governance/audit-script-inventory.js --verbose
   - node tools/scripts/validators/governance/audit-script-inventory.js --json
   - node tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes
   - node tests/run-pr-checks.js --base-ref docs-v2
