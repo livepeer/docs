@@ -150,16 +150,6 @@
     "dualmode": "dual-mode (document flags)"
   },
   {
-    "path": "tests/integration/mdx-component-runtime-smoke.js",
-    "category": "validator",
-    "purpose": "qa:content-quality",
-    "scope": "tests/integration, .githooks/server-manager.js, tests/run-pr-checks.js",
-    "needs": "E-R1, R-R29",
-    "purpose_statement": "Smoke-tests sentinel MDX routes for runtime component failures, focused on page-killing render errors from MDX-imported JSX modules.",
-    "pipeline": "P3 (PR changed-file scope) and manual local verification",
-    "dualmode": ""
-  },
-  {
     "path": "tests/integration/domain-pages-audit.js",
     "category": "validator",
     "purpose": "qa:repo-health",
@@ -167,6 +157,16 @@
     "needs": "E-C1, R-R14",
     "purpose_statement": "Audits deployed docs page HTTP status codes (v1, v2, or both) and emits a stable JSON report",
     "pipeline": "manual — not yet in pipeline",
+    "dualmode": ""
+  },
+  {
+    "path": "tests/integration/mdx-component-runtime-smoke.js",
+    "category": "validator",
+    "purpose": "qa:content-quality",
+    "scope": "tests/integration, .githooks/server-manager.js, tests/run-pr-checks.js",
+    "needs": "E-R1, R-R29",
+    "purpose_statement": "Smoke-tests sentinel MDX routes for runtime component failures, focused on page-killing render errors from MDX-imported JSX modules.",
+    "pipeline": "P3 (PR changed-file scope) and manual local verification",
     "dualmode": ""
   },
   {
@@ -325,8 +325,8 @@
     "purpose": "qa:content-quality",
     "scope": "tests/unit, tests/integration",
     "needs": "E-R1, R-R29",
-    "purpose_statement": "Unit tests for the MDX runtime smoke helpers \u2014 covers arg parsing, sentinel route selection, trigger logic, and failure classification.",
-    "pipeline": "manual \u2014 targeted smoke helper coverage",
+    "purpose_statement": "Unit tests for the MDX runtime smoke helpers — covers arg parsing, sentinel route selection, trigger logic, and failure classification.",
+    "pipeline": "manual — targeted smoke helper coverage",
     "dualmode": ""
   },
   {
@@ -335,8 +335,8 @@
     "purpose": "qa:repo-health",
     "scope": "tests/unit, tools/scripts/validators/components",
     "needs": "R-R10, R-R29",
-    "purpose_statement": "Unit tests for the MDX-facing component scope validator \u2014 covers unsafe private helpers, safe inline logic, and imported helper patterns.",
-    "pipeline": "manual \u2014 targeted validator unit coverage",
+    "purpose_statement": "Unit tests for the MDX-facing component scope validator — covers unsafe private helpers, safe inline logic, and imported helper patterns.",
+    "pipeline": "manual — targeted validator unit coverage",
     "dualmode": ""
   },
   {
@@ -970,6 +970,16 @@
     "dualmode": ""
   },
   {
+    "path": "tools/scripts/generate-component-governance-remediation-reports.js",
+    "category": "generator",
+    "purpose": "qa:repo-health",
+    "scope": "tools/scripts, tasks/reports, snippets/components, v2, style.css",
+    "needs": "R-R10, R-R29",
+    "purpose_statement": "Generates component-governance remediation reports from the approved audit and live repo state, including defensive-rendering guidance for MDX-facing components.",
+    "pipeline": "manual — report generation",
+    "dualmode": ""
+  },
+  {
     "path": "tools/scripts/generate-content-gap-reconciliation.js",
     "category": "generator",
     "purpose": "governance:index-management",
@@ -977,16 +987,6 @@
     "needs": "R-R16, R-R17",
     "purpose_statement": "Content-gap reconciliation generator — compares blueprint coverage against v2 MDX and writes reconciliation artefacts",
     "pipeline": "manual — not yet in pipeline",
-    "dualmode": ""
-  },
-  {
-    "path": "tools/scripts/generate-component-governance-remediation-reports.js",
-    "category": "generator",
-    "purpose": "qa:repo-health",
-    "scope": "tools/scripts, tasks/reports, snippets/components, v2, style.css",
-    "needs": "R-R10, R-R29",
-    "purpose_statement": "Generates component-governance remediation reports from the approved audit and live repo state, including defensive-rendering guidance for MDX-facing components.",
-    "pipeline": "manual \u2014 report generation",
     "dualmode": ""
   },
   {
@@ -1490,16 +1490,6 @@
     "dualmode": ""
   },
   {
-    "path": "tools/scripts/validators/components/check-naming-conventions.js",
-    "category": "validator",
-    "purpose": "qa:repo-health",
-    "scope": "tools/scripts/validators/components, tests/run-all.js, tests/run-pr-checks.js, snippets/components",
-    "needs": "R-R10",
-    "purpose_statement": "Validates active component filenames against strict camelCase file naming and PascalCase exports under snippets/components.",
-    "pipeline": "PR/manual validator for snippets/components/** scope",
-    "dualmode": ""
-  },
-  {
     "path": "tools/scripts/validators/components/check-mdx-component-scope.js",
     "category": "validator",
     "purpose": "qa:repo-health",
@@ -1507,6 +1497,16 @@
     "needs": "R-R10, R-R29",
     "purpose_statement": "Validates MDX-facing component modules do not depend on private file-scope helper bindings from exported components.",
     "pipeline": "P1/P3 (commit staged scope and PR changed-file scope)",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/validators/components/check-naming-conventions.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tools/scripts/validators/components, tests/run-all.js, tests/run-pr-checks.js, snippets/components",
+    "needs": "R-R10",
+    "purpose_statement": "Validates active component filenames against strict camelCase file naming and PascalCase exports under snippets/components.",
+    "pipeline": "PR/manual validator for snippets/components/** scope",
     "dualmode": ""
   },
   {
@@ -1576,6 +1576,16 @@
     "scope": "tools/scripts/validators/governance, .github, ai-tools/ai-skills, contribute",
     "needs": "R-R14, R-R18",
     "purpose_statement": "Validates that required agent governance docs exist and have been touched within a freshness threshold",
+    "pipeline": "manual, ci",
+    "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/validators/structure/check-page-local-mdx.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "v2-content",
+    "needs": "R-R14",
+    "purpose_statement": "Detects MDX fragment files in views/ and groups/ subdirectories that are not imported by any parent page.",
     "pipeline": "manual, ci",
     "dualmode": ""
   },
