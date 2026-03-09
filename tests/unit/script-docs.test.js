@@ -3,7 +3,7 @@
  * @script            script-docs-test
  * @category          validator
  * @purpose           qa:repo-health
- * @scope             .githooks, .github/scripts, tests, tools/scripts, tasks/scripts, docs-guide/indexes/scripts-index.mdx
+ * @scope             full-repo
  * @owner             docs
  * @needs             E-C1, R-R14
  * @purpose-statement Enforces script header schema, keeps group script indexes in sync, and builds aggregate script index
