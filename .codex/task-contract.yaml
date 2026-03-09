@@ -1,39 +1,17 @@
-task_id: 20260309
-branch: codex/20260309-mdx-safety-guards
+task_id: 788
+branch: codex/788-showcase-cards-mint-parse-fix
 base_branch: docs-v2
 scope_in:
   - .codex/task-contract.yaml
-  - tools/package.json
-  - tools/package-lock.json
-  - tools/scripts/generate-component-governance-remediation-reports.js
-  - tools/scripts/validators/components
-  - tests/integration
-  - tests/run-all.js
-  - tests/run-pr-checks.js
-  - tests/unit
-  - tests/utils/mdx-parser.js
-  - docs-guide/governance-guides/component-governance.mdx
-  - ai-tools/ai-skills/templates/05-mdx-parent-child-scope-patterns.template.md
-scope_out:
-  - v2/internal/reports
+  - .codex/locks-local/
+  - snippets/components/layout/showcase-cards.jsx
+  - docs-guide/component-registry.json
+  - docs-guide/component-registry-schema.json
+scope_out: []
 allowed_generated:
   - .codex/pr-body.generated.md
-  - docs-guide/indexes/scripts-index.mdx
-  - tests/script-index.md
-  - tools/script-index.md
-  - tasks/reports/script-classifications.json
 acceptance_checks:
-  - >-
-    node tools/scripts/validate-codex-task-contract.js --branch
-    codex/20260309-mdx-safety-guards --validate-contract-only
-  - node tests/unit/mdx-component-scope.test.js
-  - node tests/unit/mdx-component-runtime-smoke.test.js
-  - node tests/run-all.js --staged
   - node tests/run-pr-checks.js --base-ref docs-v2
-  - git diff --check
 risk_flags:
-  - runtime-components
-  - validator-enforcement
-  - docs-governance
-  - local-skill-sync
+  - workflow-governance
 follow_up_issues: []
