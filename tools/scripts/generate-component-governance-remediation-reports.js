@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 /**
  * @script generate-component-governance-remediation-reports
+ * @category generator
+ * @purpose qa:repo-health
  * @summary Generate Phase 2a remediation reports from the approved component-governance audit and live repo state.
  * @owner docs
- * @scope tools/scripts, tasks/reports, snippets/components, v2, style.css
- *
- * @usage
- *   node tools/scripts/generate-component-governance-remediation-reports.js [flags]
+ * @scope generated-output
+ * @needs R-R10, R-R29
+ * @purpose-statement Generates component-governance remediation reports from the approved audit and live repo state, including defensive-rendering guidance for MDX-facing components.
+ * @pipeline manual
+ * @usage node tools/scripts/generate-component-governance-remediation-reports.js [flags]
  *
  * @inputs
  *   --audit-file <repo-relative-path> (default: tasks/reports/component-governance-audit.md)

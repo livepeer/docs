@@ -3,11 +3,11 @@
  * @script            mdx-safe-markdown
  * @category          utility
  * @purpose           qa:content-quality
- * @scope             tools/lib, full-repo markdown/mdx content
+ * @scope             full-repo
  * @owner             docs
  * @needs             E-R1, R-R11
- * @purpose-statement Shared MDX-safe markdown helpers — collects first-party markdown files, detects unsafe patterns, and applies deterministic repairs.
- * @pipeline          indirect — imported by validators, remediators, and report generators
+ * @purpose-statement Shared MDX-safe markdown helpers that collect first-party markdown files, detect unsafe patterns, and apply deterministic repairs.
+ * @pipeline          indirect -- library module
  * @usage             node tools/lib/mdx-safe-markdown.js [flags]
  */
 

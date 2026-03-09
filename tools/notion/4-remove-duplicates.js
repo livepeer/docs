@@ -1,12 +1,12 @@
 /**
  * @script            4-remove-duplicates
  * @category          remediator
- * @purpose           enforcement
- * @scope             tools/notion/reports/duplicates-report.json, Notion database
+ * @purpose           tooling:dev-tools
+ * @scope             external
  * @owner             docs
  * @needs             node, @notionhq/client, dotenv, NOTION_API_KEY
  * @purpose-statement Archives duplicate Notion pages from the duplicate report while keeping the first record in each group.
- * @pipeline          notion-sync
+ * @pipeline          manual
  * @usage             node tools/notion/4-remove-duplicates.js [flags]
  */
 

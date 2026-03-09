@@ -2,12 +2,12 @@
 /**
  * @script            sync-v2-en-canonical
  * @category          orchestrator
- * @purpose           sync
- * @scope             docs.json, v2/, Notion database, tools/notion/reports
+ * @purpose           tooling:dev-tools
+ * @scope             external
  * @owner             docs
  * @needs             node, @notionhq/client, dotenv, NOTION_API_KEY, NOTION_DATABASE_ID or NOTION_WRITABLE_DATABASE_ID
  * @purpose-statement Builds canonical v2 English page metadata and syncs Notion schema, row metadata, and optional page-body blocks to match docs.
- * @pipeline          notion-sync
+ * @pipeline          manual
  * @usage             node tools/notion/sync-v2-en-canonical.js [flags]
  */
 

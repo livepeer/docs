@@ -1,12 +1,14 @@
 /**
  * @script verify-all-pages
+ * @category enforcer
+ * @purpose qa:repo-health
  * @summary Utility script for tools/scripts/verify-all-pages.js.
  * @owner docs
- * @scope tools/scripts
- * @pipeline manual — diagnostic/investigation tool, run on-demand only
- *
- * @usage
- *   node tools/scripts/verify-all-pages.js
+ * @scope single-domain
+ * @needs E-C1, R-R14
+ * @purpose-statement Loads component-library routes in a headless browser and fails on render, console, or 404 issues.
+ * @pipeline manual
+ * @usage node tools/scripts/verify-all-pages.js
  *
  * @inputs
  *   No required CLI flags; optional flags are documented inline.

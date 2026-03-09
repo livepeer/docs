@@ -2,12 +2,12 @@
 /**
  * @script            rubric-loader
  * @category          utility
- * @purpose           qa:content-quality
+ * @purpose           qa:repo-health
  * @scope             single-domain
  * @owner             docs
  * @needs             R-R14
  * @purpose-statement Loads and parses rubric YAML/JSON for page-type scoring rules.
- * @pipeline          indirect — library module
+ * @pipeline          indirect -- library module
  * @usage             const { loadRubric } = require('../lib/docs-usefulness/rubric-loader');
  */
 
