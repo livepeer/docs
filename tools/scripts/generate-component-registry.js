@@ -7,7 +7,7 @@
  * @owner            docs
  * @needs            R-R10
  * @purpose-statement Parses JSDoc from all component exports and produces component-registry.json.
- * @pipeline         P1 (commit — auto-regenerated when components are staged)
+ * @pipeline         P1, P2, P3
  * @usage            node tools/scripts/generate-component-registry.js [--validate-only]
  */
 

@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Auto-repairs deterministic MDX-unsafe markdown patterns across first-party markdown and MDX content.
- * @pipeline          P6 (on-demand, pre-commit autofix)
+ * @pipeline          P1
  * @dualmode          --dry-run (validator) | --write (remediator)
  * @usage             node tools/scripts/remediators/content/repair-mdx-safe-markdown.js --dry-run [--staged|--files a,b]
  */

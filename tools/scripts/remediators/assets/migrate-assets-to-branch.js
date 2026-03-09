@@ -10,7 +10,7 @@
  *                   docs-v2-assets branch, then rewrites MDX/JSX references to raw
  *                   GitHub URLs. Repair-lifecycle script: run after audit-media-assets.js
  *                   flags violations.
- * @pipeline         P6 (on-demand)
+ * @pipeline         manual
  * @dualmode         --dry-run (show what would change) | --write (execute migration)
  * @usage            node tools/scripts/remediators/assets/migrate-assets-to-branch.js \
  *                     --manifest tasks/reports/media-audit/media-audit-manifest.json \

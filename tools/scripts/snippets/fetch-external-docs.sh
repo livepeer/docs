@@ -6,7 +6,7 @@
 # @owner             docs
 # @needs             F-R1
 # @purpose-statement External docs fetcher — pulls doc fragments from external GitHub repos into snippets/data/ for inclusion in builds
-# @pipeline          P3 (PR, build dep)
+# @pipeline          P2, P3
 # @usage             bash tools/scripts/snippets/fetch-external-docs.sh [flags]
 # Pre-build script to fetch external markdown files
 # Run this before building the docs to ensure external content is up-to-date

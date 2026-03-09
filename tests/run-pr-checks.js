@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R29
  * @purpose-statement PR orchestrator — runs changed-file scoped validation checks for pull request CI. Dispatches per-file validators based on PR diff.
- * @pipeline          P3 (PR, orchestrator)
+ * @pipeline          P2, P3
  * @usage             node tests/run-pr-checks.js [flags]
  */
 

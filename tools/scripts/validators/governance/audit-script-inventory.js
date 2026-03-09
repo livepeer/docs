@@ -7,7 +7,7 @@
  * @owner            docs
  * @needs            R-R14, R-R18, R-C6
  * @purpose-statement Deep inventory audit of every script in the repo. Traces triggers, outputs, downstream chains, and governance compliance. Produces reports grouped by trigger category.
- * @pipeline         manual, P6 (on-demand)
+ * @pipeline         manual
  * @usage            node tools/scripts/validators/governance/audit-script-inventory.js [--json] [--md] [--output <dir>] [--verbose]
  */
 
@@ -57,6 +57,7 @@ const HEADER_TABLE_COLUMNS = [
   'Grade',
   'Flags'
 ];
+const AUTOMATED_PIPELINES = new Set(['P1', 'P2', 'P3', 'P5', 'P6']);
 
 function usage() {
   console.log(
@@ -247,8 +248,27 @@ function loadWorkflowDocuments(workflowPaths, warnings) {
       warnings.push(`Could not parse workflow ${workflowPath}: ${error.message}`);
       parsed = {};
     }
-    return { path: workflowPath, raw, parsed };
+    return {
+      path: workflowPath,
+      raw,
+      parsed,
+      command_text: extractWorkflowCommandText(parsed)
+    };
   });
+}
+
+function extractWorkflowCommandText(parsedWorkflow) {
+  const lines = [];
+  const jobs = parsedWorkflow?.jobs || {};
+  Object.values(jobs).forEach((job) => {
+    const steps = Array.isArray(job?.steps) ? job.steps : [];
+    steps.forEach((step) => {
+      if (typeof step?.run === 'string' && step.run.trim()) {
+        lines.push(step.run);
+      }
+    });
+  });
+  return lines.join('\n');
 }
 
 function extractWorkflowTriggers(workflowDoc) {
@@ -304,7 +324,7 @@ function removeExtension(value) {
 function buildReferenceCandidates(callerPath, targetPath) {
   const callerDir = path.dirname(callerPath);
   const relative = normalizeRepoPath(path.relative(callerDir, targetPath));
-  const candidates = new Set([targetPath, path.basename(targetPath)]);
+  const candidates = new Set([targetPath]);
   if (relative) {
     candidates.add(relative);
     candidates.add(relative.startsWith('.') ? relative : `./${relative}`);
@@ -312,7 +332,6 @@ function buildReferenceCandidates(callerPath, targetPath) {
 
   if (targetPath.endsWith('.js')) {
     candidates.add(removeExtension(targetPath));
-    candidates.add(removeExtension(path.basename(targetPath)));
     if (relative) {
       const relativeWithoutExt = removeExtension(relative);
       candidates.add(relativeWithoutExt);
@@ -323,21 +342,54 @@ function buildReferenceCandidates(callerPath, targetPath) {
   return [...candidates].filter(Boolean);
 }
 
-function textReferencesPath(text, callerPath, targetPath) {
-  if (!text) return false;
-  const candidates = buildReferenceCandidates(callerPath, targetPath);
-  if (candidates.some((candidate) => text.includes(candidate))) return true;
+function buildExecutionPatterns(candidates, mode) {
+  const quotedCandidates = candidates.filter(Boolean).map((candidate) => `['"\`]${escapeRegExp(candidate)}['"\`]`);
+  const patterns = [];
 
-  const baseName = path.basename(targetPath);
-  const baseWithoutExt = removeExtension(baseName);
-  const patterns = [
-    new RegExp(`\\brequire\\([^\\n)]*${escapeRegExp(baseWithoutExt)}(?:\\.js)?['"\`]`),
-    new RegExp(`\\bimport\\s+[^\\n]+from\\s+['"\`][^'"\`]*${escapeRegExp(baseWithoutExt)}(?:\\.js)?['"\`]`),
-    new RegExp(`\\b(?:spawn|spawnSync|exec|execSync|fork)\\([^\\n]*${escapeRegExp(baseName)}`),
-    new RegExp(`\\b(?:node|bash|sh|python|python3)\\s+[^\\n]*${escapeRegExp(baseName)}`),
-    new RegExp(`['"\`]${escapeRegExp(baseName)}['"\`]`)
-  ];
-  return patterns.some((pattern) => pattern.test(text));
+  if (mode === 'module') {
+    quotedCandidates.forEach((candidate) => {
+      patterns.push(new RegExp(`\\brequire\\([^\\n)]*${candidate}`));
+      patterns.push(new RegExp(`\\bimport\\s+[^\\n]+from\\s+${candidate}`));
+    });
+  } else {
+    quotedCandidates.forEach((candidate) => {
+      patterns.push(new RegExp(candidate));
+    });
+  }
+
+  candidates
+    .filter(Boolean)
+    .forEach((candidate) => {
+      patterns.push(new RegExp(`\\b(?:spawn|spawnSync|exec|execSync|fork)\\([^\\n]*${escapeRegExp(candidate)}`));
+      patterns.push(new RegExp(`\\b(?:node|bash|sh|python|python3)\\s+[^\\n]*${escapeRegExp(candidate)}(?:\\s|$)`));
+      if (mode === 'command' && (candidate.includes('/') || candidate.startsWith('.'))) {
+        patterns.push(new RegExp(`(^|\\s)${escapeRegExp(candidate)}(?=\\s|$)`));
+      }
+    });
+
+  return patterns;
+}
+
+function stripCommentOnlyLines(text, callerPath, mode) {
+  if (mode !== 'command') return text;
+  if (!(callerPath.startsWith('.githooks/') || /\.(sh|ya?ml)$/i.test(callerPath))) return text;
+  return String(text || '')
+    .split('\n')
+    .filter((line) => {
+      const trimmed = line.trim();
+      if (!trimmed) return false;
+      if (trimmed.startsWith('#')) return false;
+      if (/^(echo|printf)\b/.test(trimmed)) return false;
+      return true;
+    })
+    .join('\n');
+}
+
+function textReferencesPath(text, callerPath, targetPath, mode = 'module') {
+  if (!text) return false;
+  const processedText = stripCommentOnlyLines(text, callerPath, mode);
+  const candidates = buildReferenceCandidates(callerPath, targetPath);
+  return buildExecutionPatterns(candidates, mode).some((pattern) => pattern.test(processedText));
 }
 
 function dedupeTriggers(triggers) {
@@ -363,30 +415,75 @@ function dedupeTriggers(triggers) {
   });
 }
 
+function isDirectHookTarget(targetPath) {
+  return (
+    targetPath.startsWith('.githooks/') ||
+    targetPath.startsWith('tests/unit/') ||
+    targetPath.startsWith('tests/integration/') ||
+    targetPath === 'tests/run-all.js' ||
+    targetPath === 'tests/run-pr-checks.js' ||
+    targetPath.startsWith('tools/scripts/') ||
+    targetPath.startsWith('tasks/scripts/')
+  );
+}
+
+function isDirectRunnerTarget(targetPath) {
+  return (
+    targetPath.startsWith('tests/unit/') ||
+    targetPath.startsWith('tests/integration/') ||
+    targetPath.startsWith('tools/scripts/')
+  );
+}
+
+function findPackageScriptWorkflowTriggers(packagePath, scriptName, workflowDocs) {
+  const packageDir = path.dirname(packagePath);
+  const matchers = [
+    new RegExp(`\\bnpm\\s+--prefix\\s+${escapeRegExp(packageDir)}\\s+run\\s+${escapeRegExp(scriptName)}\\b`),
+    new RegExp(`\\bcd\\s+${escapeRegExp(packageDir)}\\s*&&\\s*npm\\s+run\\s+${escapeRegExp(scriptName)}\\b`)
+  ];
+  const triggers = [];
+
+  workflowDocs.forEach((workflowDoc) => {
+    const workflowText = stripCommentOnlyLines(workflowDoc.command_text, workflowDoc.path, 'command');
+    if (!matchers.some((matcher) => matcher.test(workflowText))) return;
+    extractWorkflowTriggers(workflowDoc).forEach((trigger) => {
+      triggers.push({ ...trigger, via_script: scriptName });
+    });
+  });
+
+  return dedupeTriggers(triggers);
+}
+
 function findTriggers(targetPath, docs, workflowDocs) {
   const triggers = [];
+  if (targetPath === '.githooks/pre-commit') {
+    triggers.push({ type: 'pre-commit', caller: '.githooks/pre-commit', pipeline: 'P1' });
+  }
+  if (targetPath === '.githooks/pre-push') {
+    triggers.push({ type: 'pre-push', caller: '.githooks/pre-push', pipeline: 'P2' });
+  }
   const preCommit = docs.get('.githooks/pre-commit');
-  if (preCommit && textReferencesPath(preCommit, '.githooks/pre-commit', targetPath)) {
+  if (preCommit && isDirectHookTarget(targetPath) && textReferencesPath(preCommit, '.githooks/pre-commit', targetPath, 'command')) {
     triggers.push({ type: 'pre-commit', caller: '.githooks/pre-commit', pipeline: 'P1' });
   }
 
   const prePush = docs.get('.githooks/pre-push');
-  if (prePush && textReferencesPath(prePush, '.githooks/pre-push', targetPath)) {
+  if (prePush && isDirectHookTarget(targetPath) && textReferencesPath(prePush, '.githooks/pre-push', targetPath, 'command')) {
     triggers.push({ type: 'pre-push', caller: '.githooks/pre-push', pipeline: 'P2' });
   }
 
   const runAll = docs.get('tests/run-all.js');
-  if (runAll && textReferencesPath(runAll, 'tests/run-all.js', targetPath)) {
+  if (runAll && isDirectRunnerTarget(targetPath) && textReferencesPath(runAll, 'tests/run-all.js', targetPath, 'module')) {
     triggers.push({ type: 'runner', caller: 'tests/run-all.js', pipeline: 'P1' });
   }
 
   const runPrChecks = docs.get('tests/run-pr-checks.js');
-  if (runPrChecks && textReferencesPath(runPrChecks, 'tests/run-pr-checks.js', targetPath)) {
+  if (runPrChecks && isDirectRunnerTarget(targetPath) && textReferencesPath(runPrChecks, 'tests/run-pr-checks.js', targetPath, 'module')) {
     triggers.push({ type: 'runner', caller: 'tests/run-pr-checks.js', pipeline: 'P3' });
   }
 
   workflowDocs.forEach((workflowDoc) => {
-    if (!textReferencesPath(workflowDoc.raw, workflowDoc.path, targetPath)) return;
+    if (!textReferencesPath(workflowDoc.command_text, workflowDoc.path, targetPath, 'command')) return;
     extractWorkflowTriggers(workflowDoc).forEach((trigger) => triggers.push(trigger));
   });
 
@@ -397,13 +494,14 @@ function findTriggers(targetPath, docs, workflowDocs) {
       const parsed = JSON.parse(raw);
       const scripts = parsed?.scripts || {};
       Object.entries(scripts).forEach(([scriptName, command]) => {
-        if (textReferencesPath(String(command || ''), packagePath, targetPath)) {
+        if (textReferencesPath(String(command || ''), packagePath, targetPath, 'command')) {
           triggers.push({
             type: 'npm-script',
             caller: packagePath,
             pipeline: 'manual',
             script_name: scriptName
           });
+          findPackageScriptWorkflowTriggers(packagePath, scriptName, workflowDocs).forEach((trigger) => triggers.push(trigger));
         }
       });
     } catch (_error) {
@@ -413,9 +511,8 @@ function findTriggers(targetPath, docs, workflowDocs) {
 
   docs.forEach((content, callerPath) => {
     if (callerPath === targetPath) return;
-    if (SPECIAL_CALLERS.has(callerPath)) return;
     if (!isDiscoveredScriptPath(callerPath)) return;
-    if (!textReferencesPath(content, callerPath, targetPath)) return;
+    if (!textReferencesPath(content, callerPath, targetPath, 'module')) return;
     triggers.push({ type: 'script', caller: callerPath, pipeline: 'indirect' });
   });
 
@@ -426,13 +523,21 @@ function getVerificationPipelineSet(triggers) {
   const automated = new Set(
     triggers
       .map((trigger) => trigger.pipeline)
-      .filter((pipeline) => ['P1', 'P2', 'P3', 'P5', 'P6'].includes(pipeline))
+      .filter((pipeline) => AUTOMATED_PIPELINES.has(pipeline))
   );
   if (automated.size > 0) return automated;
   const pipelines = new Set();
   if (triggers.some((trigger) => trigger.pipeline === 'indirect')) pipelines.add('indirect');
   if (triggers.some((trigger) => trigger.pipeline === 'manual')) pipelines.add('manual');
   return pipelines;
+}
+
+function getAutomatedPipelineSet(triggers) {
+  return new Set(
+    triggers
+      .map((trigger) => trigger.pipeline)
+      .filter((pipeline) => AUTOMATED_PIPELINES.has(pipeline))
+  );
 }
 
 function describePipelineMismatch(declared, actual) {
@@ -455,14 +560,19 @@ function verifyPipelineClaim(declaredRaw, triggers) {
   }
 
   const actual = getVerificationPipelineSet(triggers);
-  if (declared.size === 0 && actual.size === 0) {
+  const declaredAutomated = new Set([...declared].filter((pipeline) => AUTOMATED_PIPELINES.has(pipeline)));
+  const actualAutomated = getAutomatedPipelineSet(triggers);
+
+  if (declaredAutomated.size === 0 && actualAutomated.size === 0) {
     return { pipeline_verified: 'MATCH', declared, actual };
   }
-  if (declared.size === actual.size && [...declared].every((value) => actual.has(value))) {
+
+  if (declaredAutomated.size === actualAutomated.size && [...declaredAutomated].every((value) => actualAutomated.has(value))) {
     return { pipeline_verified: 'MATCH', declared, actual };
   }
+
   return {
-    pipeline_verified: `MISMATCH:${describePipelineMismatch(declared, actual)}`,
+    pipeline_verified: `MISMATCH:${describePipelineMismatch(declaredAutomated, actualAutomated)}`,
     declared,
     actual
   };

@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Validates MDX syntax and structure — checks for parse errors, invalid JSX, broken components
- * @pipeline          P1 (commit, via run-all)
+ * @pipeline          P1, P3
  * @usage             node tests/unit/mdx.test.js [flags]
  */
 /**

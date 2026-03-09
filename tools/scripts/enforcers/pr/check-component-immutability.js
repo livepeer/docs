@@ -7,7 +7,7 @@
  * @owner     docs
  * @needs     R-R10
  * @purpose-statement  Flags modifications to existing component files in PR context. New files allowed. Modifications require approval label.
- * @pipeline  PR (snippets/components/** scope)
+ * @pipeline  P2, P3
  * @usage     node tools/scripts/enforcers/pr/check-component-immutability.js --base-ref main
  */
 

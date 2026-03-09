@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R16, R-R17
  * @purpose-statement LLMs file generator — produces llms.txt and llms-full.txt for AI consumption. Dual-mode: --check / --write.
- * @pipeline          P3 (PR, Track F, --check), P4 (post-merge, --write)
+ * @pipeline          P2, P3, P6
  * @dualmode          --check (enforcer) | --write (generator)
  * @usage             node tools/scripts/generate-llms-files.js [flags]
  */

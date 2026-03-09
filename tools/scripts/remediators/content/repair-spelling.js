@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R2
  * @purpose-statement Auto-corrects spelling errors using the shared cspell configuration. Safe, dictionary-based corrections only.
- * @pipeline          P6 (on-demand)
+ * @pipeline          manual
  * @dualmode          --dry-run (validator: show corrections) | --write (remediator: apply corrections)
  * @usage             node tools/scripts/remediators/content/repair-spelling.js --dry-run
  */

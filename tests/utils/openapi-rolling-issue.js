@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             F-R17
  * @purpose-statement OpenAPI rolling issue utility — creates/updates GitHub issues for persistent OpenAPI audit findings
- * @pipeline          indirect — library module
+ * @pipeline          indirect -- library module
  * @usage             node tests/utils/openapi-rolling-issue.js [flags]
  */
 

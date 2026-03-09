@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Content quality checks — validates frontmatter completeness, thin content detection, placeholder flagging
- * @pipeline          P1 (commit, via run-all)
+ * @pipeline          P1, P3
  * @usage             node tests/unit/quality.test.js [flags]
  */
 /**

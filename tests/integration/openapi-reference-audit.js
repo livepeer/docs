@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             F-R17
  * @purpose-statement Comprehensive OpenAPI spec validation — checks references, schemas, examples. Supports --strict (validate), --fix (repair), and report modes.
- * @pipeline          P3 (PR, Track C), P5 (scheduled)
+ * @pipeline          P2, P3, P5, P6
  * @dualmode          --strict (enforcer) | --fix (remediator)
  * @usage             node tests/integration/openapi-reference-audit.js [flags]
  */
