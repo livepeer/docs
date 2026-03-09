@@ -1,0 +1,263 @@
+---
+title: "Realtime AI Orchestrator Quickstart"
+sidebarTitle: "Realtime AI"
+description: "Set up a Livepeer AI Orchestrator to serve live-video-to-video and real-time AI inference workloads. Covers ai-runner installation, aiModels.json configuration, on-chain registration, and ticket redemption."
+pageType: quickstart
+audience: [orchestrator]
+status: production
+lastVerified: "2026-02-01"
+sourceOfTruth: "https://github.com/livepeer/go-livepeer"
+---
+
+import { Callout } from '/snippets/components/Callout.mdx'
+import { Steps } from '/snippets/components/Steps.mdx'
+
+# Realtime AI Orchestrator Quickstart
+
+This guide walks you through setting up a Livepeer AI Orchestrator to serve **realtime AI inference workloads** — primarily `live-video-to-video` and related live pipelines.
+
+At the end of this guide, your orchestrator will be:
+- Running the AI Runner Docker container with configured models
+- Registered on-chain via the `AIServiceRegistry` contract
+- Accepting jobs from gateways and receiving probabilistic micropayment tickets
+
+## Prerequisites
+
+Before starting, confirm you have:
+
+- **Stake requirement:** Your orchestrator address must be in the **active orchestrator set** (currently top 100 by delegated LPT stake). Check your rank at [explorer.livepeer.org](https://explorer.livepeer.org).
+- **NVIDIA GPU:** An NVIDIA GPU with CUDA support. RTX 3090 (24 GB VRAM) or better is recommended for production. Lower-VRAM cards (16 GB) can run smaller models.
+- **CUDA drivers:** NVIDIA drivers supporting CUDA 12.x installed on the host. Verify with `nvidia-smi`.
+- **Docker with NVIDIA support:** Docker Desktop or Docker Engine with `nvidia-container-toolkit` installed. Verify with `docker run --gpus all nvidia/cuda:12.0-base nvidia-smi`.
+- **Static IP / public endpoint:** Your orchestrator must be reachable by gateways over the public internet at a stable address.
+- **Arbitrum RPC endpoint:** An Infura, Alchemy, or self-hosted Arbitrum One node URL. Infura's free tier is sufficient for a single node.
+- **go-livepeer installed:** Download the latest release from [github.com/livepeer/go-livepeer/releases](https://github.com/livepeer/go-livepeer/releases) or pull the Docker image.
+
+<Callout type="info">
+The go-livepeer binary and Docker image now use a single unified build for both the Livepeer transcoding network and AI subnet — there is no separate AI-specific binary.
+</Callout>
+
+## Step 1: Pull the AI Runner Image
+
+The AI Runner is a Docker container that handles model loading and inference. Pull the latest stable release:
+
+```bash
+docker pull livepeer/ai-runner:latest
+```
+
+For production, pin to a specific release tag rather than `latest`:
+
+```bash
+docker pull livepeer/ai-runner:v0.14.0
+```
+
+Check [github.com/livepeer/ai-runner/releases](https://github.com/livepeer/ai-runner/releases) for the current stable version.
+
+## Step 2: Configure aiModels.json
+
+Create `~/.lpData/aiModels.json` to tell go-livepeer which pipelines and models your orchestrator will serve, along with pricing.
+
+```json
+[
+  {
+    "pipeline": "live-video-to-video",
+    "model_id": "streamdiffusion",
+    "price_per_unit": 4768371,
+    "warm": true
+  },
+  {
+    "pipeline": "text-to-image",
+    "model_id": "ByteDance/SDXL-Lightning",
+    "price_per_unit": 4768371,
+    "warm": true
+  }
+]
+```
+
+**Key fields:**
+
+| Field | Description |
+|-------|-------------|
+| `pipeline` | Livepeer pipeline name (e.g. `live-video-to-video`, `text-to-image`, `image-to-image`, `audio-to-text`, `llm`) |
+| `model_id` | HuggingFace model ID or custom pipeline name |
+| `price_per_unit` | Price in wei per pixel (for image pipelines) or per unit of time (for live pipelines) |
+| `warm` | Whether to pre-load the model on startup. Warm models respond faster but consume GPU memory continuously |
+
+For Live AI (`live-video-to-video`), the `model_id` corresponds to the pipeline name registered in go-livepeer's Docker image map (e.g. `streamdiffusion`, `comfyui`, `noop`).
+
+<Callout type="warning">
+**GPU memory planning:** Each warm model occupies GPU VRAM continuously. Plan your `warm` configuration against your GPU's total VRAM. A 24 GB card can typically warm 1–2 large models.
+</Callout>
+
+## Step 3: Pre-download Models (Recommended)
+
+Pre-download models before starting the orchestrator to avoid cold-load delays on first job:
+
+```bash
+docker run \
+  -v ~/.lpData/models:/models \
+  --gpus all \
+  livepeer/ai-runner:latest \
+  dl_checkpoints.sh --pipeline live-video-to-video
+```
+
+Run once per pipeline/model combination you plan to serve. Models are cached to `~/.lpData/models` and mounted into the runner container.
+
+## Step 4: Start in Off-Chain Mode (Test First)
+
+Before registering on-chain, start the orchestrator in off-chain mode to verify the AI Runner is functioning correctly:
+
+```bash
+docker run \
+  --name livepeer_ai_orchestrator \
+  -v ~/.lpData/:/root/.lpData/ \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --network host \
+  --gpus all \
+  livepeer/go-livepeer:latest \
+  -orchestrator \
+  -serviceAddr 0.0.0.0:8936 \
+  -v 6 \
+  -nvidia 0 \
+  -aiWorker \
+  -aiModels /root/.lpData/aiModels.json \
+  -aiModelsDir /root/.lpData/models
+```
+
+Verify the orchestrator is running by checking its health endpoint:
+
+```bash
+curl http://localhost:7935/status
+```
+
+And confirm the AI worker is ready:
+
+```bash
+curl http://localhost:7935/aiWorker/status
+```
+
+<Callout type="info">
+The `-aiModelsDir` path refers to the **host machine path** (not the container path) because the orchestrator uses docker-out-of-docker to launch AI Runner containers. `~/.lpData/models` must be accessible on the host.
+</Callout>
+
+## Step 5: Register On-Chain
+
+<Callout type="warning">
+**Stake required.** You must be an active orchestrator (top 100 by delegated stake) before gateway operators can route jobs to you. If you are not yet active, complete the standard orchestrator activation first and accumulate delegation before advertising AI capabilities.
+</Callout>
+
+### 5a. Activate as an Orchestrator (if not already active)
+
+If you are not already an active orchestrator:
+
+```bash
+# Start with Ethereum connection
+livepeer \
+  -network arbitrum-one-mainnet \
+  -ethUrl https://arbitrum-mainnet.infura.io/v3/<PROJECT_ID> \
+  -orchestrator \
+  -transcoder \
+  -serviceAddr <YOUR_PUBLIC_IP>:8936 \
+  -pricePerUnit 1000
+
+# In a second terminal, open the CLI
+livepeer_cli
+# Select option: Invoke multi-step "become an orchestrator"
+```
+
+### 5b. Register AI Capabilities via AIServiceRegistry
+
+AI capabilities are registered in the `AIServiceRegistry` contract, separate from the main service registry.
+
+**Contract address (Arbitrum One):** `0x04C0b249740175999E5BF5c9ac1dA92431EF34C5`
+
+The recommended approach is via `livepeer_cli`:
+
+```bash
+livepeer_cli
+# Select: Set AI service capabilities
+# Follow prompts to register your aiModels.json capabilities on-chain
+```
+
+Alternatively, register directly via the contract using the ABI at [Arbiscan](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5).
+
+## Step 6: Start in On-Chain Mode
+
+Once registered, restart the orchestrator with full Ethereum connectivity:
+
+```bash
+docker run \
+  --name livepeer_ai_orchestrator \
+  -v ~/.lpData/:/root/.lpData/ \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --network host \
+  --gpus all \
+  livepeer/go-livepeer:latest \
+  -orchestrator \
+  -network arbitrum-one-mainnet \
+  -ethUrl https://arbitrum-mainnet.infura.io/v3/<PROJECT_ID> \
+  -ethKeystorePath /root/.lpData/arbitrum-one-mainnet/keystore \
+  -ethPassword <PASSWORD> \
+  -serviceAddr <YOUR_PUBLIC_IP>:8936 \
+  -nvidia 0 \
+  -aiWorker \
+  -aiModels /root/.lpData/aiModels.json \
+  -aiModelsDir /root/.lpData/models \
+  -v 6
+```
+
+## Step 7: Enable Ticket Redemption
+
+To receive ETH from winning PM tickets, you can either handle redemption in your orchestrator process or use a separate redeemer:
+
+**Self-redemption (simplest):** The orchestrator redeems tickets itself. No additional flags needed beyond the Ethereum connection above.
+
+**Separate redeemer (recommended for production):** Run a dedicated redeemer process and pass `-redeemerAddr` to your orchestrator. This separates reward calling from ticket redemption:
+
+```bash
+# Redeemer process
+livepeer \
+  -redeemer \
+  -network arbitrum-one-mainnet \
+  -ethUrl <ETH_URL> \
+  -ethOrchAddr <ON_CHAIN_ORCH_ADDRESS> \
+  -httpAddr 0.0.0.0:7990
+
+# Orchestrator referencing the redeemer
+# Add to your orchestrator flags:
+-redeemerAddr localhost:7990
+```
+
+## Pricing Guidance
+
+Set pricing competitively to attract gateway routing. Too high and gateways skip you; too low and you undercut your running costs.
+
+Community reference prices (as of early 2026):
+- `live-video-to-video`: ~4,000,000–8,000,000 wei per unit
+- `text-to-image`: ~4,000,000–6,000,000 wei per pixel
+
+Monitor the [Livepeer Explorer AI leaderboard](https://explorer.livepeer.org) for network-wide pricing data as it becomes available.
+
+## Monitoring and Health Checks
+
+```bash
+# Orchestrator status
+curl http://localhost:7935/status
+
+# AI worker pipeline status
+curl http://localhost:7935/aiWorker/status
+
+# Check logs (Docker)
+docker logs livepeer_ai_orchestrator --tail 100 -f
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Job Types" icon="list" href="/v2/orchestrators/about-orchestrators/job-types">
+    Understand all orchestrator job types and how to position your hardware.
+  </Card>
+  <Card title="NaaP Platform" icon="gauge" href="/v2/orchestrators/about-orchestrators/naap-platform">
+    Track your orchestrator performance via the Foundation's network dashboard.
+  </Card>
+</CardGroup>

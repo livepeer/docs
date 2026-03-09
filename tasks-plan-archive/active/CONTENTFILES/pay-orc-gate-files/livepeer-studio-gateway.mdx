@@ -1,0 +1,75 @@
+---
+title: "Livepeer Studio Gateway"
+sidebarTitle: "Livepeer Studio"
+description: "Livepeer Studio is the legacy hosted video platform from Livepeer Inc. New projects should use current gateway providers. Existing Studio users should refer to migration guidance."
+pageType: reference
+audience: [developer]
+status: production
+lastVerified: "2026-02-01"
+sourceOfTruth: "https://livepeer.studio"
+---
+
+import { Callout } from '/snippets/components/Callout.mdx'
+
+# Livepeer Studio Gateway
+
+**Livepeer Studio** is a hosted video platform operated by Livepeer Inc. It provides managed video streaming infrastructure including transcoding, storage, and player tooling via a developer API.
+
+<Callout type="warning">
+**For new AI inference projects**, Livepeer Studio is not the recommended access point. Use [Daydream](/v2/gateways/using-gateways/gateway-providers/daydream-gateway) or [Livepeer.Cloud](/v2/gateways/using-gateways/gateway-providers/cloud-spe-gateway) for Livepeer AI workloads. If you are building a **video streaming** product, Studio remains the most straightforward managed solution.
+</Callout>
+
+## What Livepeer Studio Is
+
+Studio is a fully-managed video infrastructure platform with:
+
+- **Live streaming** — RTMP ingest, HLS and WebRTC delivery
+- **Video on demand** — upload, transcode, and serve video assets via CDN
+- **Access control** — signed playback URLs and gate mechanisms
+- **Analytics** — viewership data, error rates, and performance metrics
+- **Developer API** — REST API at `livepeer.studio/api`
+
+Studio abstracts Livepeer network complexity entirely. You pay Livepeer Inc in USD; transcoding is routed through the Livepeer network behind the scenes.
+
+## Relationship to the Livepeer Network
+
+Studio uses the Livepeer network for transcoding workloads. It is a large gateway operator on the transcoding network. However, Studio does **not** expose Livepeer AI inference pipelines (live-video-to-video, image generation, etc.) to developers directly.
+
+For AI inference workloads, use a dedicated AI gateway provider.
+
+## Getting Started with Studio
+
+Visit [livepeer.studio](https://livepeer.studio) and create an account. Studio offers a free tier suitable for development and small-scale use.
+
+```bash
+# Example: Create a livestream via Studio API
+curl -X POST https://livepeer.studio/api/stream \
+  -H "Authorization: Bearer <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "my-stream", "profiles": [{"name": "720p", "bitrate": 2000000, "fps": 30, "width": 1280, "height": 720}]}'
+```
+
+## When to Use Studio vs Other Gateways
+
+| Use Case | Recommended Gateway |
+|----------|-------------------|
+| Live video streaming (HLS/WebRTC) | Livepeer Studio |
+| Video on demand with CDN delivery | Livepeer Studio |
+| Live AI video-to-video transformation | [Daydream](/v2/gateways/using-gateways/gateway-providers/daydream-gateway) |
+| Image / audio AI inference | [Daydream](/v2/gateways/using-gateways/gateway-providers/daydream-gateway) or [Livepeer.Cloud](/v2/gateways/using-gateways/gateway-providers/cloud-spe-gateway) |
+| Community / public-good access | [Livepeer.Cloud SPE](/v2/gateways/using-gateways/gateway-providers/cloud-spe-gateway) |
+
+## Documentation
+
+Full Studio documentation is available at [docs.livepeer.studio](https://docs.livepeer.studio). The Studio API reference, SDKs (JavaScript, Go, Python), and player components are documented there.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Daydream Gateway" icon="wand-magic-sparkles" href="/v2/gateways/using-gateways/gateway-providers/daydream-gateway">
+    Commercial gateway for Livepeer AI inference.
+  </Card>
+  <Card title="Livepeer.Cloud SPE" icon="cloud" href="/v2/gateways/using-gateways/gateway-providers/cloud-spe-gateway">
+    Community-operated public-good gateway infrastructure.
+  </Card>
+</CardGroup>

@@ -1,0 +1,436 @@
+﻿woot! @Qiang.Han you might be interested in using this hosted remote signer ^
+
+
+@John | Elite Encoder You might have done more e2e tests against my own branch than I have at this point Pushing some docs and test fixes up to the PR shortly, then will run some local e2e tests this afternoon. I haven't checked the price reject / session selection behavior since that feature was added. If it all works well, then will merge the ticket stuff for the remote signer
+
+
+Yes, I have tested it e2e extensively. Btw the remote signer is hosted at https://signer.eiteencoder.net/ if anyone wants to use it, free eth
+
+
+wdyt about something simple like this for the offchain gateway to simply get a list of orchestrators to work with? https://github.com/eliteprox/go-livepeer/commit/bf6f151dde3508646439f993610899ac04ee3f42
+
+
+Maybe a registry contract address could be provided to swap out to different registries. Add a livepeer_cli option or something you could use to maybe create your own registry list. Just brainstorming. I'm eager to see how well this would work with more capacity behind it
+
+
+Yes it would had been great, we can integrate that in our next version. The ability to aggregate Orchestrators on chain and do transactions to change their job acceptance status.
+
+
+Different tiers of Orchestrators for different job types. Would be great to be accompanied with SLA performance data for the orchs.
+
+
+The question here is how much data we want to make available to be completely public(wouldn't be happy if my competition had such clear image of our infra nodes.).
+
+
+Does it have single setup command?
+
+
+The question here is how much data we want to make available to be completely public
+
+
+Depends on where your gateways are. If they are hosted on your servers, then you can keep the orchestrator list / endpoint internal.
+
+
+If the gateways are embedded in apps that users run (like the Python SDK), then the apps will need to see at least some subset of the orchs. The discovery endpoint doesn't have to return everything down to the SDK; it can limit how many orchs it sends down, maybe filtered by estimated proximity to the user, etc. Lots of things an operator can do there.
+
+
+I'll also try to publish docs soon. There are some good examples in https://github.com/j0sh/livepeer-python-gateway/tree/main/examples
+
+
+Here access tiers can be usefull
+
+
+Public - basic data, attestation hash for the rest tiersOrchestrator or (> 1,000 token holder for > 6 months) - gpu info and pricing info,not metrics datajob id participant - all info
+Not sure on the appetite for that but it solves a lot of problems with info visibility.
+
+
+Would recommend using this though, you would integrate using ⁨⁨OrchestratorSession⁩⁩ class https://github.com/eliteprox/livepeer-python-gateway/tree/pr/pricing-session-orchestrator-info/examples
+
+
+Looks like a good start. Is there a way to get the orchs that are specified as CLI args or the webhook so we can reuse all those existing mechanisms and flags around orch management? There's probably some stuff around the existing discovery code we can pull from.
+
+
+For the SDK, I imagine we'd want the ability to specify the discovery endpoint separately (although just bundling them up with the remote signer is a decent default). There are a ton of things folks might want to do around discovery ... making go-livepeer generic enough to support all those is a non-starter IMO. Folks should be able to spin up their own endpoints without too much trouble. BTW those discovery endpoints could in turn call this go-livepeer endpoint if they needed on-chain orch information, so this a good start.
+
+
+Yeah my thinking was to just return a list from an authoritative source. I think this method just takes advantage of the eth url the signer already has. The list can be sent to an offchain service or anywhere else to do selection and discovery. I think this bit still pings orchs though. I also noticed they get cached in database, not sure remote signer needs all that, but the official list of orchs on chain is a nice service it can offer
+
+
+Yeah we should add a parameter in orchestrator session (or somewhere) to have a url to get list of orchestrators from, we could even apply some overrides in the SDK for writing selection logic
+
+
+Official list -> Selection pools
+
+
+@John | Elite Encoder, @j0sh, saw the PRs merged. Its truly amazing to see everything come together. Great work! Looking forward to see the full E2E pipeline demo in the watercooler.
+
+
+yes. also would love to with you two, to bring this remote signer as a service/plugin for the NaaP. so every user can simply manage it using it, and develop as they need it in their clients.
+
+
+Sure! I'm excited to discuss more about how we can promote this from the network dashboard to provide a truly decentralized gateway experience. There are a few remaining features we need to productionize the SDK. This will definitely help diversify demand and meet developers needs for different types of AI applications
+
+
+Yeah that would basically be the clearinghouse (which is the remote signer + user management / auth + accounting + a bunch of other things, eg probably discovery etc)
+
+
+For the local gateway SDKs, the idea is all that happens under the hood and the developer doesn't have to think about low level details like what a remote signer is. Give the SDK an API key and go. Everything else happens under the hood within the SDK.
+
+
+I do think the "entry point" for app developers needs to be figured out, and how to present them with a clear and easy onboarding path, such as acquiring an API key. The NaaP dashboard is an interesting option.
+
+
+It'll be interesting once billing comes into the picture because then it becomes a commercial relationship, probably with different obligations around who owns that relationship, expectations around support etc. We don't have to cross that bridge right now but it's something to keep in mind as we work out the details of the user journey.
+
+
+FWIW, my primary interest right now is in local gateway SDKs; the work on remote signers etc has been towards making sure there is infrastructure support for those SDKs.
+
+
+As we're imporving support for the SDKs (auth etc), I expect we'll incrementally build out clearinghouse-like features to support those SDKs, but I just wanted to be clear a full-fledged clearinghouse is not an explicit goal at the moment (at least, not for me).
+
+
+With that, maybe this channel can be renamed to "Local Gateways" or something? I have been hearing some confusion about the role of the clearinghouse and how it fits in (which is understandable since there really has been little detailed planning done on it), and having a Discord channel named "Payment Clearinghouse" probably contributes to that confusion @Mehrdad
+
+
+I noticed the network dashboard has a login with wallet feature. I wonder if it would be worthwhile to approach the payment clearinghouse from a web3 wallet flow? It could be an interaction with the existing gateway contract where the user actually does a deposit and reserve transaction using metamask, or it could be a new smart contract that can auto-charge up to authorized amount.
+
+
+To realize the benefits of a shared payment clearinghouse, we need the network dashboard to provide a bearer token or other tokenized way for the offchain gateway to authenticate and accept funds. The actual fiat on-ramp implementation likely has several extra requirements.
+
+
+I agree, the high value right now for us is to continue exploring the SDK integration opportunities and productionizing the selection/discovery aspects of it
+
+
+Probably depends on the audience ... if we are aiming for general app developers then anything web3 is going to be unsettling for a lot of them.
+
+
+I've been sharing these notes around for a couple weeks now, this is basically what's on my mind as I'm looking at various things around the ecosystem: https://gist.github.com/j0sh/0ee58c48ac00739bd10babc44dc293da
+
+
+That being said, there's absolutely nothing stopping someone from building the flow you described @John | Elite Encoder
+
+
+I think the actual payment mechanic doesn't need to be coupled with the flow to handle auth, which is really about user management ("is this request allowed to go through?). Then later on you can add accounting (tracking what's been used, maybe add balances and credits ... think of a grants clearinghouse), and only lastly do you need to reconcile those credits and debits with actual currency, whether it's fiat, crypto, etc
+
+
+I think that's one of the cool things about this approach, because it really does allow the separation of paying for work on the network to how that work is paid for by the developer or end-user.
+
+
+Another area that would provide value I think is adding support for BYOC capabilities and maybe even transcoding via the SDK. The only thing missing I think is the data output trickle channel, which provides unique value. pytrickle ai workers are backward compatible with LV2V
+
+
+Yeah it definitely would be pretty easy to add a data channel. There was an old PR doing that here for LV2V https://github.com/livepeer/go-livepeer/pull/3706 but it never went anywhere since BYOC has its own endpoint now.
+
+
+I'd like to make adjustments to make things more BYOC-compatible and generally more forward-looking, but it just hasn't been a priority yet
+
+
+I did bump my comfyui custom node app to use a branch based on this PR https://github.com/j0sh/livepeer-python-gateway/pull/3, it seems to be very stable. I have just one modification I added for ComfyUI, but it can be a separate PR https://github.com/eliteprox/livepeer-python-gateway/commit/e80e539ee4336afe36543e1fa5380dd0d6c7c0f9
+
+
+Fair point. Unfortunately, I don't have access to rename the chat as Rick was the original creator.
+Lmk if I should create a new thread for us so we can move the conversation there.
+
+
+changed the post title: Local Gateways
+
+
+@j0sh I've been adding the BYOC external capabilities to the SDK and implementing the payments mechanisms for remote signer. I can probably have the PR up today
+
+
+Let me know if there's anything else you'd like me to help with this week
+
+
+Awesome - I am just now getting back into the SDK, lemme see
+
+
+Here's a spec for the ⁨⁨OrchestratorSession⁩⁩ class that ties all the payments refresh, publish and subscription together as one session https://gist.github.com/eliteprox/a018fc30ee3366220873469c496b8c75
+
+
+What a great set of docs! I'll probably end up tweaking the exact API a bit, but this is a fantastic walkthrough of how to use the SDK
+
+
+Thanks for the nudge on this ... I took the idea and filled it out to support the rest of the gateway's orchestrator management capabilities.
+
+
+It's around 80% done:
+
+
+I think we will want some optional query params to filter the returned orchs by capability / model ID. This saves the SDK from doing redundant queries to orchs that are not going to satisfy its needs.
+Probably need to refresh the orchs (via a ⁨GetOrchestrators⁩ call) every so often, maybe every 1 minute or so matching the webhook cadence
+Seems to work decently well with the SDK so far: https://github.com/j0sh/livepeer-python-gateway/blob/main/examples/select_orchestrator.py#L51-L55
+
+
+@John | Elite Encoder do you know how BYOC or Batch AI does orchestrator selection?
+
+
+For LV2V it's pretty much "first GetOrchestrator response wins" and I am not sure yet how much we should try to make selection generic vs having others re-implement it to support whatever they need.
+
+
+Nice! Taking a look at this now
+
+
+I believe the discovery involves either an HTTP or RPC call to the orchestrator specifically for capability prices, rather than returning it in OrchestratorInfo as we do in LV2V
+
+
+Oh interesting! In that case probably better to have BYOC do its own discovery / selection since that sounds pretty different
+
+
+I was beginning to think the same thing yesterday as I got it to stream to a byoc container successfully, but did so by modifying orchestratorinfo which I think went too far
+
+
+At some point for browser gateways we'll need to move away from gRPC so it would be interesting to see if we can reconcile the BYOC / LV2V approaches later
+
+
+Ah, good point! that could help with browser support
+
+
+Just realized I forgot to link the PR ... draft for now https://github.com/livepeer/go-livepeer/pull/3866
+
+
+thanks, I was wondering where the rest of it was
+
+
+BYOC does basically the same as LV2V except does not use gRPC to get the OrchestratorInfo. First to respond is first to get the work. One difference is the start stream request can explicitly set a list of Orchestrators to include so only those Orchestrators would be eligible for work or set a list of Orchestrators to exclude (e.g. suspend them from the request). BYOC would be a good candidate for a browser based gateway.
+
+
+Cool, an allow-list (or block-list) would be a pretty easy thing to add to the SDK.
+
+
+For robustness, I am thinking we probably should also enforce this on the discovery side as well, although I imagine such lists will be of limited interest to most app devs ... they are just gonna want something that works without the overhang of thinking about the fact they are on a decentralized network
+
+
+Actually allow-lists are basically in already, since it uses a list of orchs if you give it one
+
+
+Ya I think most are just going to want to hit the network and it provide the work they want. What does the SDK do for suspension right now?
+
+
+The discovery requests in BYOC are not sent to the Orchestrators in the exclude list. There is no background discovery either since I have always felt the information received from those when wanting to do a job is stale. I see the value when wanting to poll for capacity or GPUS available generally but it cannot be relied on after the moment its sent because another request could take the capacity.
+
+
+Nothing for suspension yet, there's no swapping or anything either. Eventually it'll probably look similar to what go-livepeer does.
+
+
+One larger issue is to figure out what happens between app invocations, eg whether some of the selection / reliability stuff should persist on disk (or even be reported somewhere) but that's for later on.
+
+
+Got it. Agree this in stages is much easier to get across the finish line. The exclude list can be achieved by just making it available to add Orchestrator URLs to so I think can be not too difficult to add that ability when it gets to that point.
+
+
+I guess could also only need to manage the include list though...
+
+
+Yeah exactly.
+
+
+Local SDKs are a little different from traditional gateways, because traditional Gs can amortize discovery costs across many requests and have all jobs be informed by the same "pool" of nodes.
+
+
+With local SDKs, you kind of have to bootstrap that every time a job is run, unless you build some kind of local persistence in. Especially with latency based selection, which is highly instance-specific (and can vary at different times)
+
+
+There are also things we can do at the discovery service level to facilitate this, like attempting to "geo-match" orchs to requests and return a subset that seem closer
+
+
+BYOC Streaming now works from the SDK for 1+ minutes with a price above 0. This means the remote signer live payments and job token refresh are working for External capabilities (BYOC Pipelines) I reverted the changes to OrchestratorInfo as well
+
+
+remote signer changes for byoc job types https://github.com/eliteprox/go-livepeer/compare/master...eliteprox:go-livepeer:feat/remote-signer-byoc?expand=1
+
+
+Incorporated your the pricing changes to the get_orchestrator_info example here thanks for that! Taking a look at the other changes too
+
+
+Bunch of new things in the SDK today:
+
+
+Discovery support. This can be done either 1) passing in orchestrator URIs explicitly, 2) passing in a discovery URL (expects the same webhook format as the gateway), or 3) using the remote signer (from this draft PR)
+Very basic selection: first GetOrchestratorInfo call wins
+Updated the main entry point API: it's now called ⁨start_lv2v⁩ and folds in discovery / selection so GetOrchestrator doesn't have to be explicitly called anymore. (example)
+Capabilities for proper pricing (thanks John for paving the way with this, your implementation was very helpful here)
+Fixed the payment request to match current remote signer
+Tomorrow will probably complete the payment implementation, keep tweaking APIs, etc - @John | Elite Encoder I will sync with you on this tomorrow
+
+
+I did finish byoc token refresh, but it is a lot of code. Planning to catch up with your commits tomorrow
+
+
+Quick question on abstracting Ethereum complexity: given improved wallet UX and crypto adoption, what's the strategic rationale for hiding the blockchain layer? My concern is this reintroduces username/password systems and indirect value extraction, when transparent peer-to-peer payments could be simpler and more user-centric.
+
+
+Practical context: Current orchestrator requirements (~0.095 ETH ≈ $200) buy significant compute. With modern onramps (Ramp, Transak embedded widgets; Coinbase/Binance direct Arbitrum withdrawals; Base → Arbitrum bridging), a $20-50 entry point is achievable today—comparable to AI subscription pricing. These tools have matured significantly and might offer paths we haven't fully explored yet.
+
+
+The PM protocol is brilliant and has served us well for 8 years, but the landscape has evolved. Users could own their wallet, control their funds, and pay for exactly what they use. Given Livepeer is crypto-native, is there a path where we embrace that rather than abstract it away? Or does the community see compelling reasons why traditional payment rails remain necessary long-term?
+
+
+Genuinely curious about different perspectives here, I may be missing important considerations.
+
+
+PM isn't going anywhere; the orchestrator settlement layer is not changing, and gateway operators can still manage their own wallets if that's what they really want, or build other types of abstractions that are more crypto-aligned.
+
+
+However, the vast majority of developers / apps do not want go anywhere near crypto, for a lot of good reasons. To have the network reach its full potential, we need to offer an end-to-end experience that is just as good or better than more traditional platforms. Payments is just one piece of the puzzle. There's still a lot of work to do, in many different areas, but we're chipping away at it.
+
+
+I've been researching x402 and JWT authentication options for remote signer and here's one option I'd recommend. I think x402 is high value for this project, but we need a solution that fits into the current PM tickets payment system. If we issue signed JWT tokens to off-chain gateway users via a "sign-in-with-ethereum" (SIWE) transaction flow, the remote signer can act as an escrow account and track usage of prepaid credit from multiple ethereum users. The Remote signer hot wallet would still be the one paying orchestrators.
+
+
+x402 uses ERC-3009 (transferWithAuthorization), which is already built into the deployed USDC contract on every major chain since 2020. The user signs an off-chain authorization message (same UX as SIWE -- a MetaMask popup), and the facilitator submits a single transaction to move USDC from the user to the signer. No new contracts, no deposits, no approvals.
+
+
+How funds flow: The remote signer becomes a payment bridge between two completely separate payment systems:
+User --> Signer: USDC via X402/ERC-3009 (per-request, stablecoin, no gas for the user)Signer --> Orchestrator: PM tickets from the signer's ETH deposit (unchanged from today)
+The user never interacts with Livepeer contracts. The signer uses incoming USDC revenue to keep its hot wallet funded for PM ticket generation. The two payment layers are fully independent.
+
+
+cc @Qiang.Han @j0sh Curious to get feedback on this because I know it's alot more scope than simple bearerToken authentication, however, authentication web hooks in go-livepeer are already available, this recommendation extends functionality to support a payment clearinghouse mechanism for both agents and developers
+
+
+You can definitely use x402 to prepay and integrate that as part of a larger clearinghouse system with accounting and balance tracking etc.
+
+
+It is exactly the right idea to distinguish and bridge between the two payment flows (users vs orchestrators).
+
+
+The underlying clearing mechanism will be very similar regardless of the user's currency, whether it's in fiat, crypto, etc. Not sure if x402 requires anything substantially different other than the clearinghouse's own x402 support in the "front of the house" outside the go-livepeer node.
+
+
+i would say 402 works great for one-off tasks, but if you're streaming you don't want to a settlement to potentially block your stream every segment...
+
+
+for frameworks we 'fixed' this by making every x402 payment more of a balance top-up which automatically creates a shadow account for your wallet (and then it's up for the account owner, viewer or streamer to keep the balance topped up - something similar could be achieved with an on-chain deposit)
+AFAIK the latest ideas for x402 for long-running jobs was to hold it in some kind of escrow that could be returned if not depleted?
+
+
+Anyway in order to tick the 402 box the implementation doesn't really matter, as long as any entity can get access to your compute via these payments... but agents are smart enough to deal with credentials and you could IE set a preflight in an MCP server that gates by balance so the agent knows to send a payment before it can use compute
+
+
+IDK if ERC-8004 is going anywhere but might be something to look at & be compatible with... that community might have an opinion about how x402 should work in conjunction
+
+
+Yeah exactly, x402 would have to be a pre-pay type of situation (or even invoice based settlement at the end of each billing cycle, whatever works for the clearinghouse operator) ... so basically the same as any fiat rail would work. The go-livepeer does not need any special handling for x402 one way or the other; all that lives outside, in the clearinghouse.
+
+
+An "agent clearinghouse" specialized to x402 could have its own API for things like escrow if that's necessary, but I'm not sure if I see that as being a fundamental Livepeer network construct.
+
+
+Quick update from my side. I built a JWT issuer service and added a flag to remote signers to use it for authentication.
+The JWT service accepts ERC-4361: Sign-In with Ethereum requests via the /auth/login endpoint and returns user-scoped JWT token in the response. The user's eth address (or other identifier) is used in the JWT token and can be used to track user's usage and it becomes their authentication token to the remote signer node.
+
+
+I've drafted the solution into the NAAP dashboard and implemented a demo in the Developer API Keys section. These can be used with offchain gateways. Tests are looking good
+
+
+man i am so outdated on the latest... that NaaP dashboard looks like the gateway dashboard we've never had
+
+
+This project has alot of potential to bring on demand and promote the network
+
+
+Here is the repo link @Qiang.Han is moving fast on it https://github.com/livepeer/naap
+
+
+@j0sh I opened a new PR to the SDK to add the OrchestratorSession class. This is needed so builders have a starting point to create apps from. This works with LV2V payments and remote signer from main, does not include BYOC payments.
+
+
+I'm several commits ahead of main, so figured it would be good to keep this moving.
+
+
+I am kind of confused what this adds on top of eg, the existing payments stuff from here
+
+
+The selection stuff could be helpful, I have been mid-refactor there to make it less of a kludge, will take a look
+
+
+Okay, I'd overlooked that. I'll consolidate to use your PaymentSession class. I think the OrchestratorSession is still important though and that's the main purpose of the PR, just to provide a single entrypoint class for starting and managing a stream
+
+
+I'm not totally opposed to it but would like to understand better first what that brings, since lv2v already has a session-like object
+
+
+Nothing is final either; the entry point API is still a little clunky with the StartJobRequest thing etc, I'd like th flatten that out a little more, open to ideas on how to improve that
+
+
+It would be nice to have a single class for all job types. The actual publishing and subscribing for the stream is the same, only payments are different per job type. Now that there is a capability id for LV2V and BYOC types, it should be relatively simple to use the correct payments flow for each.
+
+
+Yeah it sounds like BYOC etc has a pretty different job flow though. And that in turn is different from batch AI, should we support that. I'm a little hesitant about over-generalizing too early in the process. There are primitives that can be reused around media input / output. If you can see a clean way to squeeze BYOC into LV2V then we can look at that; I just want to avoid abstractions that end up being unwieldy
+
+
+@j0sh I went into this further and discovered an issue with the main branch of the SDK with LV2V streaming and payments. I have resolved it in this PR https://github.com/j0sh/livepeer-python-gateway/pull/4
+
+
+Heya thanks for looking into it. It might have been helpful to check in first. This is actually a known behavior. The orchestrator message is annoying but harmless. I have a TODO to support HEAD requests in the trickle server so these can go away, but it doesn't impact the functionality.
+
+
+There's a few reasons for doing it this way, and believe me, I looked really hard at how else to do it. The basic issue is that we want to avoid sending payments if the orchestrator is not sending anything back. (this problem). There's also a secondary issue where we don't want to rely on the app to always subscribe itself to outputs, but it should still be paying for work that it's sending on the network (eg, maybe someone else is pulling the output stream).
+
+
+With the setup in the PR you could be sending payments indefinitely, and there's still an explicit initialization step which the old approach avoids.
+
+
+Anyway all this could absolutely be explained better in the code; the comments in there are a little too in-the-weeds but don't describe the intent very well. I'd welcome improvements to the comments (and any other ideas, of course)
+
+
+BTW @John | Elite Encoder if BYOC wants to use another approach for payments, eg being purely time-based then that's is fine too. That does illustrate why I am reluctant about lumping everything into a single OrchestratorSession; different types of jobs will have different requirements.
+
+
+I did try to take an approach in this PR which avoids creating a background task for payments. It still pays from the streaming loop, but does so without leading to a disconnect. I think (well, we have to) send payments when work is being sent to the network. The output subscription shouldn't affect payments, if the Trickle Publisher ends, we stop sending payments anyway. There is no background payments loop in this PR
+
+
+Thanks for the clarification.
+
+
+avoids creating a background task for payments.
+
+
+How do payments get sent regularly otherwise?
+
+
+We really don't want to make apps payment-aware; preferably payments are an internal detail the SDK handles.
+
+
+send payments when work is being sent to the network.
+
+
+Sorry, I think I linked to the wrong issue earlier; it's this. Anyway we can't always rely on input either, eg Scope has text-to-video, and world models have sporadic input. So paying by output is more robust, but we also can't expect the app to always be downloading the output.
+
+
+Hope that helps explain why things are the way they are. Again, the code doesn't really do a great job of communicating intent; comment improvements are welcome.
+
+
+Yeah, of course the SDK should handle payments internally. Fair point on using output channels to control payments. In this case, the only channel that is guaranteed to be the would be always available would be the events output channel. We should use that instead of the media output channel, right?
+
+
+I never verified if that issue was really “only a warning”, but it looked like it was the media output channel that was terminating early
+
+
+I would keep it as media output for the time being, since it is quite possible to have events but still no output, and work output is the thing folks are paying towards.
+
+
+Swapping the channel to something else later on is easy, if that is needed.
+
+
+To that point, we may want to update trickle paths to allow dynamic content type on the output so that pipelines that produce text output only can work
+
+
+Yeah we have talked about that before ... we might need something soon enough, but we'll address that for LV2V when the time comes.
+
+
+@John | Elite Encoder Updated the SDK for LV2V to take a base64 encoded token as an option instead of a bunch of explicit URLs + headers / keys. Haven't tested much yet though
+
+
+Also opened up the remote discovery PR for review, I think it's' pretty much done now @John | Elite Encoder
+
+
+Thanks for the PR I will take a look this evening
+
+
+Updated SDK selection to properly fall back to another orch if starting a job fails.
+the discovery request is now parameterized by model ID / capabilities, if any
+no lv2v API changes
+
+
+Following up on this note : added JSON / JSONL output to the get_orchestrator_info example

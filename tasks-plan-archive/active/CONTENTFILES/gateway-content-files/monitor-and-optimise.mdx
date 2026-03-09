@@ -1,0 +1,294 @@
+---
+title: 'Monitor & Optimise Your Gateway'
+sidebarTitle: 'Monitor & Optimise'
+description: 'Enable Prometheus metrics, identify the key indicators for a healthy gateway, query gateway logs via the public Loki API, and tune performance with the levers available to you.'
+pageType: 'guide'
+audience: ['gateway-operator']
+keywords: ["livepeer", "gateway", "monitor", "prometheus", "grafana", "metrics", "loki", "observability", "performance", "optimise", "alerting"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+import { DynamicTable } from '/snippets/components/layout/table.jsx'
+
+A running gateway needs ongoing attention: deposit balances drain, orchestrator quality varies, and job routing can degrade silently. This page covers how to observe what's happening inside your gateway and how to act on what you see.
+
+---
+
+## Enable monitoring
+
+Add the `-monitor` flag to your gateway startup command:
+
+```bash
+-monitor              # Enable Prometheus metrics endpoint
+-metricsPerStream     # Group metrics by individual stream (increases cardinality)
+-metricsClientIP      # Include client IP in metric labels
+```
+
+Once enabled, metrics are exposed at:
+
+```
+http://localhost:7935/metrics
+```
+
+Verify with:
+
+```bash
+curl -s http://localhost:7935/metrics | grep livepeer_current_sessions
+```
+
+### Prometheus scrape config
+
+```yaml
+scrape_configs:
+  - job_name: 'livepeer_gateway'
+    static_configs:
+      - targets: ['localhost:7935']
+    metrics_path: /metrics
+    scrape_interval: 15s
+```
+
+### Docker Compose with Prometheus and Grafana
+
+```yaml
+services:
+  gateway:
+    image: livepeer/go-livepeer:master
+    network_mode: host
+    command: >
+      -gateway
+      -monitor=true
+      -metricsPerStream
+      ...
+
+  prometheus:
+    image: prom/prometheus:latest
+    network_mode: host
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+  grafana:
+    image: grafana/grafana:latest
+    network_mode: host
+    environment:
+      - GF_SERVER_HTTP_PORT=3000
+```
+
+---
+
+## Key metrics for gateway operators
+
+Not every metric needs attention every day. These are the ones that matter:
+
+<DynamicTable
+  headerList={['Metric', 'What it tells you', 'Alert when']}
+  itemsList={[
+    {
+      Metric: 'livepeer_current_sessions_total',
+      'What it tells you': 'Number of active concurrent jobs right now',
+      'Alert when': 'Approaches your -maxSessions limit',
+    },
+    {
+      Metric: 'livepeer_success_rate',
+      'What it tells you': 'Ratio of transcoded segments to source segments — the overall quality signal',
+      'Alert when': 'Drops below 0.95',
+    },
+    {
+      Metric: 'livepeer_transcode_score',
+      'What it tells you': 'Source segment duration divided by transcode time — above 1.0 is faster than realtime',
+      'Alert when': 'Consistently below 1.0 (transcoding slower than realtime)',
+    },
+    {
+      Metric: 'livepeer_orchestrator_swaps',
+      'What it tells you': 'Number of mid-stream orchestrator changes — a rising count signals instability',
+      'Alert when': 'Rising trend over a 15-minute window',
+    },
+    {
+      Metric: 'livepeer_gateway_deposit',
+      'What it tells you': 'Remaining ETH deposit balance in wei',
+      'Alert when': 'Below 100000000000000000 (0.1 ETH)',
+    },
+    {
+      Metric: 'livepeer_gateway_reserve',
+      'What it tells you': 'Remaining ETH reserve balance',
+      'Alert when': 'Below your configured minimum reserve',
+    },
+    {
+      Metric: 'livepeer_discovery_errors_total',
+      'What it tells you': 'Cumulative orchestrator discovery failures',
+      'Alert when': 'Non-zero and increasing',
+    },
+    {
+      Metric: 'livepeer_payment_create_errors',
+      'What it tells you': 'Payment ticket creation failures',
+      'Alert when': 'Any non-zero value',
+    },
+    {
+      Metric: 'livepeer_ticket_value_sent',
+      'What it tells you': 'Cumulative ETH value of payment tickets issued',
+      'Alert when': 'Use for spend rate forecasting, not alerting',
+    },
+    {
+      Metric: 'livepeer_transcode_retried',
+      'What it tells you': 'Number of segments that required a retry',
+      'Alert when': 'Rising — indicates orchestrator reliability issues',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+For the complete metrics reference, see [Prometheus Metrics](/v2/gateways/references/go-livepeer/prometheus-metrics).
+
+---
+
+## Grafana panel queries
+
+Add these PromQL queries to a Grafana dashboard for a gateway health overview.
+
+### Active sessions
+
+```promql
+livepeer_current_sessions_total
+```
+
+Set a threshold line at your `-maxSessions` value to see when you're near capacity.
+
+### 24-hour rolling success rate
+
+```promql
+rate(livepeer_segment_transcoded_total[24h]) 
+/ 
+rate(livepeer_segment_source_appeared_total[24h])
+```
+
+Values below 0.95 warrant investigation.
+
+### Deposit balance over time
+
+```promql
+livepeer_gateway_deposit / 1e18
+```
+
+This converts wei to ETH. Add a Grafana alert at 0.1 ETH to trigger a refill notification.
+
+### Discovery error rate
+
+```promql
+rate(livepeer_discovery_errors_total[5m])
+```
+
+Any sustained non-zero rate is worth investigating — it means your gateway is regularly failing to find orchestrators.
+
+### Transcode score distribution
+
+```promql
+histogram_quantile(0.95, rate(livepeer_transcode_time_seconds_bucket[5m]))
+```
+
+The 95th percentile transcode time. Compare against your source segment duration to spot latency problems.
+
+---
+
+## Gateway introspection via Loki
+
+Livepeer exposes a public API for reading logs from gateway nodes, giving visibility into the orchestrator selection algorithm. This is especially useful for understanding why your gateway routes to specific orchestrators.
+
+**Base URL:** `https://loki.livepeer.report`
+
+```bash
+# Latest logs across all regions
+curl -G -s https://loki.livepeer.report/loki/api/v1/query \
+  --data-urlencode 'query={region=~".+"}' | jq
+
+# Logs between two timestamps (nanosecond Unix timestamps)
+curl -G -s https://loki.livepeer.report/loki/api/v1/query_range \
+  --data-urlencode 'query={region=~".+"}' \
+  --data-urlencode 'start=1700000000000000000' \
+  --data-urlencode 'end=1700003600000000000' | jq
+
+# Filter to a specific region
+curl -G -s https://loki.livepeer.report/loki/api/v1/query \
+  --data-urlencode 'query={region="nyc"}' | jq
+```
+
+The logs expose:
+- Which orchestrators your gateway selected for each session
+- The selection score and ranking for each candidate
+- Rejection reasons (price too high, capability mismatch, health probe failed)
+- Routing decisions for mid-stream orchestrator swaps
+
+<Note>
+  The Loki API reflects logs from Livepeer's public gateway infrastructure, not your own gateway instance. It is useful for understanding how selection works on the open network. To log your own gateway's routing decisions, use the verbose flag `-v=6` and direct output to your preferred log aggregator.
+</Note>
+
+---
+
+## Common issues and tuning levers
+
+### Low success rate (`livepeer_success_rate` below 0.95)
+
+**What it means:** A significant portion of segments are not being successfully transcoded.
+
+**Likely causes and fixes:**
+
+1. **Orchestrator reliability:** Use the Loki API to check if the same orchestrator is failing repeatedly. If so, it may be worth blacklisting:
+   ```
+   # go-livepeer doesn't have an explicit blacklist flag, but you can control
+   # which orchestrators are in your -orchAddr pool directly
+   ```
+
+2. **Price ceiling too aggressive:** Orchestrators are accepting your sessions but failing under load. Slightly raising `-maxPricePerUnit` may route jobs to higher-quality orchestrators.
+
+3. **Network issues:** `livepeer_segment_source_upload_failed_total` rising alongside low success rate points to connectivity problems, not orchestrator quality.
+
+### High orchestrator swap count (`livepeer_orchestrator_swaps`)
+
+**What it means:** The gateway is frequently changing orchestrators mid-stream — a sign that initial selection quality is poor or orchestrators are dropping sessions.
+
+**Fixes:**
+- Raise your price ceiling slightly — very low prices route to overloaded orchestrators
+- Check orchestrator health via the Loki API for recent rejection patterns
+- For on-chain mode: consider adding high-performing orchestrators explicitly via `-orchAddr`
+
+### Deposit approaching zero
+
+**What it means:** `livepeer_gateway_deposit` is trending down and will eventually hit zero, at which point orchestrators will reject sessions silently.
+
+**Fix:** Refund the deposit. See [Fund Your Gateway](/v2/gateways/run-a-gateway/requirements/on-chain%20setup/fund-gateway).
+
+**Prevention:** Set a Grafana alert at 0.1 ETH and configure it to notify via Slack, PagerDuty, or email. This gives you time to refill before jobs are affected.
+
+### AI jobs routing poorly (low selection rate)
+
+**What it means:** The gateway can see AI-capable orchestrators but a low percentage of requests are successfully dispatched.
+
+**Fixes:**
+1. Check if the requested `model_id` exactly matches what orchestrators advertise — model ID strings are case-sensitive
+2. Review per-pipeline price ceilings via `registeredOrchestrators`:
+   ```bash
+   curl http://localhost:5935/registeredOrchestrators | jq '.[].capabilities_prices'
+   ```
+3. Use `-liveAICapRefreshModels` to periodically refresh capacity data for frequently-requested models
+
+### Discovery errors (`livepeer_discovery_errors_total` rising)
+
+**What it means:** The gateway is failing to fetch orchestrator info during the discovery phase.
+
+**Likely causes:**
+- Network connectivity to orchestrators (`-orchAddr` targets unreachable)
+- On-chain mode: RPC endpoint (`-ethUrl`) rate-limited or down — check with a fallback RPC
+- Firewall blocking outbound connections to port 8935
+
+---
+
+## Full Prometheus metrics reference
+
+<Card
+  title="Prometheus Metrics Reference"
+  icon="table"
+  href="/v2/gateways/references/go-livepeer/prometheus-metrics"
+  arrow
+>
+  Complete table of all metrics exposed by go-livepeer, with descriptions and node types (Gateway, Orchestrator, or both)
+</Card>

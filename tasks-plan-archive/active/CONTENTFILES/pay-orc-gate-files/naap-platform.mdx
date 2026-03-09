@@ -1,0 +1,100 @@
+---
+title: "NaaP Platform"
+sidebarTitle: "NaaP Platform"
+description: "The Livepeer Foundation's Network as a Platform — a managed access layer providing API keys, network observability, capacity planning, and a plugin marketplace for gateway operators."
+pageType: concept
+audience: [gateway-operator, developer]
+status: coming-soon
+lastVerified: "2026-02-01"
+sourceOfTruth: "https://www.notion.so/2f6660222d088009bd1ce4b74da10261"
+---
+
+import { Callout } from '/snippets/components/Callout.mdx'
+
+# NaaP Platform
+
+<Callout type="info">
+**Status: In development.** NaaP (Network as a Platform) is targeting an MVP launch in 2026. Features described here reflect the current design direction from Livepeer Foundation planning documents. Follow the [Livepeer Forum](https://forum.livepeer.org) and [Discord](https://discord.gg/livepeer) for launch announcements.
+</Callout>
+
+The **NaaP Platform** (Network as a Platform) is the Livepeer Foundation's managed access and coordination layer for the Livepeer network. For gateway operators and app developers, NaaP provides the operational infrastructure that sits above raw protocol access — removing the need to manage ETH, understand PM internals, or negotiate directly with orchestrators.
+
+## Who NaaP Serves
+
+NaaP is designed around three primary personas:
+
+| Persona | Role | What NaaP Provides |
+|---------|------|--------------------|
+| **App Developers (P1)** | Build products using Livepeer AI inference | API keys, simple gateway access, usage dashboards |
+| **Service Providers / Gateways (P2)** | Operate gateways or clearinghouses | Network observability, capacity planning, plugin marketplace |
+| **Orchestrators (P3)** | Provide GPU compute | Performance dashboards, discovery visibility, capacity commitment tooling |
+
+## Key Features
+
+### Network Observability
+
+NaaP provides a **network dashboard** surfacing real-time performance metrics across the orchestrator network:
+
+- Per-orchestrator latency, throughput, and reliability scores
+- Model availability and warm capacity by pipeline type
+- Geographic distribution of compute capacity
+
+This visibility is particularly valuable for gateway operators selecting orchestrators and for delegators evaluating performance when choosing where to stake.
+
+### Developer API Access
+
+For app developers, NaaP is the intended entry point for using the Livepeer network without managing Ethereum:
+
+- Issue and manage API keys
+- Usage tracking and quota management
+- Access to hosted gateway endpoints
+- Fiat-friendly billing (planned)
+
+NaaP is expected to expose a clearinghouse-style interface where developers submit jobs with an API key, and NaaP handles PM settlement with orchestrators transparently.
+
+### Capacity Planner
+
+Service providers and gateway operators can use the capacity planner to:
+
+- View available GPU capacity across the network by model and pipeline
+- Understand demand trends and supply gaps
+- Make soft-commitments to capacity for specific pipelines
+
+This helps balance supply and demand more efficiently than purely reactive job routing.
+
+### Plugin Marketplace
+
+NaaP includes a **plugin system** enabling orchestrators, gateway operators, and third-party developers to expose additional capabilities through the platform:
+
+- Custom pipeline plugins (new live-video-to-video effects, LLM models, etc.)
+- Discovery plugins for specialised orchestrator subsets
+- Analytics integrations
+
+Daydream is an early priority NaaP plugin partner.
+
+## For Gateway Operators
+
+As a gateway operator (P2), NaaP's primary value is in observability and routing intelligence. You gain:
+
+- Clear visibility into orchestrator network state without running your own discovery infrastructure
+- Performance leaderboards for orchestrator selection decisions
+- Capacity forecasting so you can plan for peak demand
+
+NaaP integrates with your existing gateway deployment — you do not need to route traffic through NaaP. The platform reads your gateway's capability announcements and surfaces them alongside the broader network view.
+
+## Relationship to Remote Signers and Clearinghouses
+
+NaaP is expected to integrate Remote Signer infrastructure, making it the natural home for a foundation-operated clearinghouse that provides API-key access to the network for developers who do not want to manage Ethereum directly.
+
+The longer-term vision from Discord discussions (j0sh, Mehrdad, eliteprox): NaaP becomes the place where a developer logs in with a wallet or email, issues an API key, and the SDK uses that key to route jobs transparently — with Remote Signers and PM settlement happening completely below the surface.
+
+## Related Concepts
+
+<CardGroup cols={2}>
+  <Card title="Payment Clearinghouses" icon="building-columns" href="/v2/gateways/about-gateways/payment-clearinghouse">
+    Third-party services managing ETH and PM on behalf of gateway operators.
+  </Card>
+  <Card title="Remote Signers" icon="shield-check" href="/v2/gateways/run-a-gateway/remote-signers">
+    The signing infrastructure underlying NaaP's gateway access layer.
+  </Card>
+</CardGroup>

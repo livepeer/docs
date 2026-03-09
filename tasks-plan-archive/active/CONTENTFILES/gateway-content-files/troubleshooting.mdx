@@ -1,0 +1,407 @@
+---
+title: 'Gateway Troubleshooting'
+sidebarTitle: 'Troubleshooting'
+description: 'Diagnose and fix common gateway issues, grouped by when they occur: startup, no jobs, stream failures, AI routing, payments, and Docker-specific problems.'
+pageType: 'reference'
+audience: ['gateway-operator']
+keywords: ["livepeer", "gateway", "troubleshooting", "debug", "error", "keystore", "ETH deposit", "orchestrator", "AI routing", "docker", "common issues"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+import { DynamicTable } from '/snippets/components/layout/table.jsx'
+
+Use this page to diagnose issues grouped by when they occur. If you're not sure which section applies, start with [Gateway won't start](#gateway-wont-start) and work down.
+
+<Tip>
+  Enable verbose logging with `-v=6` when troubleshooting. Most errors that are silent at the default log level become visible with verbose output.
+</Tip>
+
+---
+
+## Gateway won't start
+
+<AccordionGroup>
+  <Accordion title="Keystore not found or ETH account error">
+    **Error patterns:**
+    ```
+    Error: no keystore found
+    Error: failed to get ETH account: open ~/.lpData/<network>/keystore: no such file or directory
+    ```
+
+    **Cause:** The keystore directory doesn't exist at the expected path, or the `-network` flag is pointing to a different network than where your keystore was created.
+
+    The keystore path is: `<datadir>/<network>/keystore/`
+
+    With default settings: `~/.lpData/arbitrum-one-mainnet/keystore/`
+
+    **Fix:**
+    1. Confirm which network flag you're using (`-network=arbitrum-one-mainnet` for mainnet)
+    2. Confirm the keystore file exists at the expected path: `ls ~/.lpData/arbitrum-one-mainnet/keystore/`
+    3. If you created the keystore on a different network or with a custom `-datadir`, copy the keystore files to the correct location
+    4. Check file permissions: `chmod 600 ~/.lpData/arbitrum-one-mainnet/keystore/*`
+  </Accordion>
+
+  <Accordion title="Password file error">
+    **Error patterns:**
+    ```
+    Error: could not decrypt key with given password
+    Error: open /path/to/password: no such file or directory
+    ```
+
+    **Cause:** The `-ethPassword` flag expects a **path to a file** containing the password, not the password string itself. Passing the password directly is a common mistake.
+
+    **Fix:**
+    1. Create a file containing only your password (no newline): `printf 'yourpassword' > ~/.lpData/.eth_secret`
+    2. Set permissions: `chmod 600 ~/.lpData/.eth_secret`
+    3. Pass the file path: `-ethPassword ~/.lpData/.eth_secret`
+
+    **Also check:** If you recently changed your password, the file may contain an old value.
+  </Accordion>
+
+  <Accordion title="Port already in use">
+    **Error patterns:**
+    ```
+    Error: listen tcp 0.0.0.0:1935: bind: address already in use
+    Error: listen tcp 0.0.0.0:8935: bind: address already in use
+    ```
+
+    **Default gateway ports:**
+
+    <DynamicTable
+      headerList={['Port', 'Flag', 'Purpose']}
+      itemsList={[
+        { Port: '1935', Flag: '-rtmpAddr', Purpose: 'RTMP video ingest' },
+        { Port: '8935', Flag: '-httpAddr', Purpose: 'HTTP and AI inference (video gateway)' },
+        { Port: '8937', Flag: '-httpAddr', Purpose: 'HTTP and AI inference (AI gateway, to avoid collision with 8935)' },
+        { Port: '7935', Flag: '-cliAddr', Purpose: 'Gateway CLI / management API (default)' },
+        { Port: '5935', Flag: '-cliAddr', Purpose: 'Gateway CLI / management API (commonly used alternative)' },
+      ]}
+      monospaceColumns={[0, 1]}
+    />
+
+    **Fix:** Find what's using the port and either stop it or change your gateway port flag:
+    ```bash
+    # Identify what's using the port
+    lsof -i :8935
+
+    # Or change the gateway port
+    -httpAddr 0.0.0.0:8940
+    ```
+  </Accordion>
+
+  <Accordion title="Docker volume path issues">
+    **Symptoms:** Gateway starts but immediately fails to write config, keystore not persisted between restarts, or data directory errors on first run.
+
+    **Cause:** The host directory being mounted doesn't exist yet, or the Docker volume name conflicts with an existing volume.
+
+    **Fix:**
+    ```bash
+    # Create the host directory before starting Docker
+    mkdir -p ~/.lpData/arbitrum-one-mainnet/keystore
+
+    # Verify the volume mount syntax — host path must be absolute
+    -v ~/.lpData/:/root/.lpData   # correct
+    -v .lpData/:/root/.lpData     # incorrect (relative path)
+    ```
+
+    If using named volumes, check for conflicts:
+    ```bash
+    docker volume ls
+    docker volume inspect gateway-lpData
+    ```
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Gateway starts but receives no jobs
+
+<AccordionGroup>
+  <Accordion title="Off-chain mode: no orchestrator responding">
+    **Symptoms:** Gateway starts cleanly, logs show no errors, but no jobs route and no orchestrators appear in logs.
+
+    **Cause:** Off-chain mode does not auto-discover orchestrators from the network. You must explicitly provide an orchestrator address via `-orchAddr`. If that orchestrator is unreachable, no jobs can route.
+
+    This is expected behaviour — off-chain mode is for controlled environments, not open network discovery.
+
+    **Fix:**
+    1. Confirm an orchestrator is running and reachable: `curl http://<orchAddr>/status`
+    2. Verify the address format: `https://orch.example.com:8935` or `http://localhost:8935` for local
+    3. If running both gateway and orchestrator in Docker, ensure they share a network (use `--network host` or a shared Docker network)
+
+    <Note>
+      Off-chain mode with a local orchestrator is the standard setup for development. The orchestrator and gateway are separate processes — the gateway does not include an orchestrator.
+    </Note>
+  </Accordion>
+
+  <Accordion title="ETH deposit too low or zero (on-chain)">
+    **Symptoms:** Gateway starts and connects to the network, but orchestrators immediately reject sessions. Logs may show payment rejection errors.
+
+    **Cause:** On-chain orchestrators verify that gateways have a sufficient ETH deposit before accepting work. A zero or nearly-zero deposit results in silent rejection.
+
+    **Fix:**
+    1. Check your current deposit via the CLI: `curl http://localhost:5935/getBroadcastConfig`
+    2. Or check the metric: `curl http://localhost:7935/metrics | grep livepeer_gateway_deposit`
+    3. If low, fund your gateway: see [Fund Your Gateway](/v2/gateways/run-a-gateway/requirements/on-chain%20setup/fund-gateway)
+
+    Recommended starting deposit: **0.5–1 ETH** on mainnet, adjusted based on expected job volume.
+  </Accordion>
+
+  <Accordion title="maxPricePerUnit=0 with ignoreMaxPriceIfNeeded=false">
+    **Symptoms:** Gateway connects to the network and can see registered orchestrators, but no jobs are dispatched.
+
+    **Cause:** `maxPricePerUnit` defaults to `0`. With `ignoreMaxPriceIfNeeded=false` (the default), a ceiling of `0` means the gateway will only match orchestrators advertising a price of exactly `0` wei — which is effectively none of them.
+
+    **Fix (option 1):** Set a realistic price ceiling:
+    ```
+    -maxPricePerUnit=0.02USD
+    ```
+
+    **Fix (option 2):** Disable the ceiling entirely while testing:
+    ```
+    -ignoreMaxPriceIfNeeded=true
+    ```
+
+    <Warning>
+      Use `ignoreMaxPriceIfNeeded=true` carefully in production — it means you'll accept any orchestrator price regardless of cost.
+    </Warning>
+  </Accordion>
+
+  <Accordion title="-orchAddr pointing to an unreachable endpoint">
+    **Symptoms:** Gateway fails to start session with a connection refused or timeout error.
+
+    **Fix:**
+    ```bash
+    # Test connectivity to the orchestrator before starting the gateway
+    curl -v http://<orchAddr>/status
+
+    # Expected response indicates the orchestrator is running
+    # Connection refused means the orchestrator is down or the address is wrong
+    ```
+
+    Common mistakes: wrong port (8935 vs 8937), HTTP vs HTTPS mismatch, orchestrator behind NAT without port forwarding.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Streams fail or produce errors
+
+<AccordionGroup>
+  <Accordion title="SegmentUploadFailed">
+    **Error pattern:** `SegmentUploadFailed` in logs
+
+    **Cause:** The gateway successfully connected to the orchestrator but failed to upload the video segment. Usually a network issue between gateway and orchestrator.
+
+    **Fix:**
+    1. Check network connectivity between your gateway and the orchestrator
+    2. Verify port 8935 is open and not blocked by a firewall on the orchestrator side
+    3. Check for packet loss or high latency: `ping <orchAddr>`
+    4. If using Docker: ensure `--network host` is set or ports are correctly forwarded
+  </Accordion>
+
+  <Accordion title="TicketParamsExpired">
+    **Error pattern:** `Error: ticket params are expired`
+
+    **Cause:** Clock skew between your gateway and the Arbitrum chain. Payment ticket parameters include a block-based expiry. If your system clock is out of sync, tickets arrive at the orchestrator already expired.
+
+    **Fix:**
+    1. Sync your system clock: `sudo ntpdate -u pool.ntp.org` (Linux) or enable automatic time sync
+    2. Increase the block polling interval if operating on a slow connection: `-blockPollingInterval=30`
+    3. Confirm with: `timedatectl status` — look for `System clock synchronized: yes`
+  </Accordion>
+
+  <Accordion title="ETH account not found on startup">
+    **Error pattern:** `Error: failed to get Eth client: account not found`
+
+    **Cause:** The keystore directory doesn't contain the account specified by `-ethAcctAddr`, or the account was created under a different network's directory.
+
+    **Fix:**
+    ```bash
+    # List accounts in your keystore
+    ls ~/.lpData/arbitrum-one-mainnet/keystore/
+
+    # The filename contains the account address — verify it matches your -ethAcctAddr value
+    ```
+  </Accordion>
+
+  <Accordion title="Unsupported pixel format errors">
+    **Error pattern:** `unsupported pixel format` or `invalid source format`
+
+    **Cause:** The source video is using a pixel format that Livepeer's transcoder does not support (e.g. `yuva420p`, `rgb24`). This is a source encoding issue, not a gateway configuration issue.
+
+    **Fix:** Instruct the upstream encoder to output `yuv420p`. The gateway correctly rejects incompatible formats — there is no gateway-side configuration to override this.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## AI jobs not routing
+
+<AccordionGroup>
+  <Accordion title="-httpIngest flag not set">
+    **Symptoms:** AI inference endpoints return 404. Sending a POST to `/text-to-image` gets no response or a not-found error.
+
+    **Cause:** AI inference uses the HTTP ingest path, which is disabled by default.
+
+    **Fix:** Add `-httpIngest` to your startup command. This enables the AI inference HTTP endpoint alongside the standard RTMP listener.
+
+    ```bash
+    # Without this flag, AI endpoints do not exist
+    -httpIngest
+    ```
+  </Accordion>
+
+  <Accordion title="-aiServiceRegistry not set (on-chain AI)">
+    **Symptoms:** Gateway connects to on-chain network, discovers orchestrators, but none advertise AI capabilities.
+
+    **Cause:** Without `-aiServiceRegistry`, the gateway queries the **transcoding network** registry, not the **AI network** registry. These are separate registries with different orchestrator populations.
+
+    **Fix:** Add `-aiServiceRegistry` to your on-chain startup command. This flag takes no value — its presence switches the registry.
+  </Accordion>
+
+  <Accordion title="No orchestrators advertising the requested pipeline or model">
+    **Symptoms:** Jobs consistently fail with no matching orchestrators, even when the network is otherwise healthy.
+
+    **Diagnosis:**
+    ```bash
+    # List registered orchestrators and their capabilities
+    curl http://localhost:5935/registeredOrchestrators | jq '.[].capabilities'
+    ```
+
+    Look for the `pipeline` and `model_id` fields in the capabilities output. If your requested pipeline/model doesn't appear, no orchestrator can handle it.
+
+    **Fix:**
+    - Check available orchestrators on the [Livepeer Explorer](https://explorer.livepeer.org) (filter by AI capabilities)
+    - Use a pipeline/model combination that registered orchestrators actually support
+    - For private networks: ensure your orchestrator has the model configured in its `aiModels.json`
+  </Accordion>
+
+  <Accordion title="maxPricePerCapability ceiling too low">
+    **Symptoms:** Orchestrators exist and advertise the requested pipeline, but jobs still don't route.
+
+    **Diagnosis:** Compare your price ceiling to what orchestrators are charging:
+    ```bash
+    curl http://localhost:5935/registeredOrchestrators | jq '.[].capabilities_prices'
+    ```
+
+    **Fix (option 1):** Raise the price ceiling in your `ai-pricing.json` and restart, or update at runtime:
+    ```bash
+    curl -X POST http://localhost:5935/setMaxPriceForCapability \
+      -H "Content-Type: application/json" \
+      -d '{"capabilities_prices": [{"pipeline": "text-to-image", "model_id": "ByteDance/SDXL-Lightning", "price_per_unit": 8000000}]}'
+    ```
+
+    **Fix (option 2):** Temporarily set `ignoreMaxPriceIfNeeded=true` to confirm pricing is the issue, then set a realistic ceiling.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Payment and ETH issues
+
+<AccordionGroup>
+  <Accordion title="Deposit balance exhausted — jobs fail silently">
+    **Symptoms:** Jobs were routing successfully, then stopped without any obvious error. Logs show orchestrators declining sessions.
+
+    **Cause:** The gateway's ETH deposit reached zero. Orchestrators check deposit balance before accepting work and silently decline gateways that are unfunded.
+
+    **Diagnosis:**
+    ```bash
+    # Check deposit balance via Prometheus metric
+    curl -s http://localhost:7935/metrics | grep livepeer_gateway_deposit
+
+    # Or via CLI
+    curl http://localhost:5935/getBroadcastConfig
+    ```
+
+    **Fix:** Refund the deposit via the CLI. See [Fund Your Gateway](/v2/gateways/run-a-gateway/requirements/on-chain%20setup/fund-gateway).
+
+    **Prevention:** Set a Prometheus alert on `livepeer_gateway_deposit` — alert when below 0.1 ETH.
+  </Accordion>
+
+  <Accordion title="Not enough ETH for gas">
+    **Error pattern:** `failed to submit transaction: insufficient funds for gas`
+
+    **Cause:** Different from the deposit — this is your ETH account's balance for paying Arbitrum gas fees. The gateway needs gas for on-chain transactions (funding deposit, withdrawing funds, etc.). Running out of gas does not immediately stop job routing, but will prevent any on-chain management operations.
+
+    **Fix:** Send ETH directly to your gateway's ETH account address (not to the TicketBroker contract). Check current balance:
+    ```bash
+    # Via CLI
+    curl http://localhost:5935/status | jq '.EthAddr'
+    # Then check balance on Arbiscan
+    ```
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Docker-specific issues
+
+<AccordionGroup>
+  <Accordion title="GPU not available in container (AI dual mode)">
+    **Symptoms:** AI configuration loads but GPU-accelerated inference fails, or the container can't see the GPU.
+
+    **Fix:** Add GPU access flags to your `docker run` command:
+    ```bash
+    # All GPUs
+    docker run --gpus all livepeer/go-livepeer:master ...
+
+    # Specific GPU by index
+    docker run --device /dev/nvidia0 livepeer/go-livepeer:master ...
+    ```
+
+    **Verify NVIDIA access inside the container:**
+    ```bash
+    docker run --gpus all --rm nvidia/cuda:12.0-base nvidia-smi
+    ```
+
+    If `nvidia-smi` fails, the issue is with your host NVIDIA Docker runtime, not the gateway. Install `nvidia-container-toolkit` and restart the Docker daemon.
+  </Accordion>
+
+  <Accordion title="Gateway can't reach local orchestrator (--network host)">
+    **Symptoms:** Off-chain setup with gateway and orchestrator both running locally, but the gateway can't connect to the orchestrator at `localhost:8935`.
+
+    **Cause:** Docker containers by default cannot reach `localhost` on the host — `localhost` inside a container refers to the container itself.
+
+    **Fix:** Add `--network host` to your gateway `docker run` command. This removes Docker's network isolation and lets the container use the host's network directly:
+    ```bash
+    docker run --network host livepeer/go-livepeer:master -gateway ...
+    ```
+
+    <Note>
+      `--network host` is Linux-only. On macOS and Windows, use `host.docker.internal` instead of `localhost` for the `-orchAddr` value.
+    </Note>
+  </Accordion>
+
+  <Accordion title="Volume conflicts between multiple gateway instances">
+    **Symptoms:** Second gateway instance starts with corrupted or shared state from the first.
+
+    **Fix:** Use distinct data directories for each instance:
+    ```bash
+    # Instance 1 (video gateway)
+    -v ~/.lpData/:/root/.lpData -datadir /root/.lpData
+
+    # Instance 2 (AI gateway)  
+    -v ~/.lpData2/:/root/.lpData2 -datadir /root/.lpData2
+    ```
+
+    Each instance needs its own keystore, its own data directory, and distinct port mappings.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Still stuck?
+
+<CardGroup cols={3}>
+  <Card title="Discord #gateways" icon="discord" href="https://discord.gg/livepeer">
+    Live help from the operator community and the Livepeer team
+  </Card>
+  <Card title="Livepeer Forum" icon="comments" href="https://forum.livepeer.org">
+    Searchable Q&A and longer technical threads
+  </Card>
+  <Card title="GitHub Issues" icon="github" href="https://github.com/livepeer/go-livepeer/issues">
+    Bug reports and known issues in go-livepeer
+  </Card>
+</CardGroup>
