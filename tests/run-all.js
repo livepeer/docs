@@ -19,12 +19,16 @@ const path = require('path');
 const styleGuideTests = require('./unit/style-guide.test');
 const mdxTests = require('./unit/mdx.test');
 const mdxGuardsTests = require('./unit/mdx-guards.test');
+const mdxSafeMarkdownUnitTests = require('./unit/mdx-safe-markdown.test');
 const spellingTests = require('./unit/spelling.test');
 const qualityTests = require('./unit/quality.test');
 const linksImportsTests = require('./unit/links-imports.test');
 const docsNavigationTests = require('./unit/docs-navigation.test');
 const scriptDocsTests = require('./unit/script-docs.test');
+const componentGovernanceUtilsTests = require('./unit/component-governance-utils.test');
+const componentGovernanceGeneratorTests = require('./unit/component-governance-generators.test');
 const componentNamingTests = require('../tools/scripts/validators/components/check-naming-conventions');
+const mdxSafeMarkdownValidator = require('../tools/scripts/validators/content/check-mdx-safe-markdown');
 const pagesIndexGenerator = require('../tools/scripts/generate-pages-index');
 const browserTests = require('./integration/browser.test');
 const REPO_ROOT = path.resolve(__dirname, '..');
@@ -69,12 +73,32 @@ async function runAllTests() {
   totalWarnings += mdxResult.warnings.length;
   console.log(`   ${mdxResult.errors.length} errors, ${mdxResult.warnings.length} warnings`);
 
+  // Repo-wide MDX-safe Markdown Validation
+  console.log('\n🧱 Running Repo-wide MDX-safe Markdown Validation...');
+  const mdxSafeMarkdownResult = mdxSafeMarkdownValidator.run({
+    args: {
+      stagedOnly,
+      files: [],
+      json: false
+    }
+  });
+  totalErrors += mdxSafeMarkdownResult.errors.length;
+  totalWarnings += mdxSafeMarkdownResult.warnings.length;
+  console.log(`   ${mdxSafeMarkdownResult.errors.length} errors, ${mdxSafeMarkdownResult.warnings.length} warnings`);
+
   // MDX Guardrails
   console.log('\n🛡️  Running MDX Guardrail Tests...');
   const mdxGuardsResult = mdxGuardsTests.runTests();
   totalErrors += mdxGuardsResult.errors.length;
   totalWarnings += mdxGuardsResult.warnings.length;
   console.log(`   ${mdxGuardsResult.errors.length} errors, ${mdxGuardsResult.warnings.length} warnings`);
+
+  // MDX-safe Markdown Unit Tests
+  console.log('\n🧪 Running MDX-safe Markdown Unit Tests...');
+  const mdxSafeMarkdownUnitResult = mdxSafeMarkdownUnitTests.runTests();
+  totalErrors += mdxSafeMarkdownUnitResult.errors.length;
+  totalWarnings += mdxSafeMarkdownUnitResult.warnings.length;
+  console.log(`   ${mdxSafeMarkdownUnitResult.errors.length} errors, ${mdxSafeMarkdownUnitResult.warnings.length} warnings`);
   
   // Spelling Tests
   console.log('\n🔤 Running Spelling Tests...');
@@ -110,6 +134,24 @@ async function runAllTests() {
   totalErrors += scriptDocsResult.errors.length;
   totalWarnings += scriptDocsResult.warnings.length;
   console.log(`   ${scriptDocsResult.errors.length} errors, ${scriptDocsResult.warnings.length} warnings`);
+
+  // Component Governance Utility Tests
+  console.log('\n🧩 Running Component Governance Utility Tests...');
+  const componentGovernanceUtilsResult = componentGovernanceUtilsTests.runTests();
+  totalErrors += componentGovernanceUtilsResult.errors.length;
+  totalWarnings += componentGovernanceUtilsResult.warnings.length;
+  console.log(
+    `   ${componentGovernanceUtilsResult.errors.length} errors, ${componentGovernanceUtilsResult.warnings.length} warnings`
+  );
+
+  // Component Governance Generator Tests
+  console.log('\n🗂️  Running Component Governance Generator Tests...');
+  const componentGovernanceGeneratorResult = componentGovernanceGeneratorTests.runTests();
+  totalErrors += componentGovernanceGeneratorResult.errors.length;
+  totalWarnings += componentGovernanceGeneratorResult.warnings.length;
+  console.log(
+    `   ${componentGovernanceGeneratorResult.errors.length} errors, ${componentGovernanceGeneratorResult.warnings.length} warnings`
+  );
 
   // Usefulness Unit Tests
   console.log('\n📈 Running Usefulness Unit Tests...');

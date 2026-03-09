@@ -128,3 +128,39 @@ jobs:
         run: |
           echo "❌ One or more tests failed"
           exit 1
+
+  component-enforcement:
+    name: component-governance
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch base ref
+        run: git fetch --no-tags --depth=1 origin ${{ github.base_ref }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        working-directory: tools
+        run: npm install
+
+      - name: Component CSS standards
+        run: node tools/scripts/validators/components/check-component-css.js
+        continue-on-error: true
+
+      - name: Component documentation
+        run: node tools/scripts/validators/components/check-component-docs.js
+        continue-on-error: true
+
+      - name: Component immutability
+        run: node tools/scripts/enforcers/pr/check-component-immutability.js --base-ref origin/${{ github.base_ref }}
+
+      - name: Validate component registry
+        run: node tools/scripts/generate-component-registry.js --validate-only
+        continue-on-error: true

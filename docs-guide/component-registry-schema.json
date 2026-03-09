@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Livepeer Component Registry",
+  "type": "object",
+  "required": [
+    "_meta",
+    "categories",
+    "components",
+    "deprecated"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "_meta": {
+      "type": "object",
+      "required": [
+        "generated",
+        "generator",
+        "componentCount"
+      ],
+      "properties": {
+        "generated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "generator": {
+          "type": "string"
+        },
+        "componentCount": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "categories": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "count",
+          "purpose"
+        ],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "purpose": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "file",
+          "category",
+          "tier",
+          "status",
+          "description",
+          "contentAffinity",
+          "owner",
+          "dependencies",
+          "usedIn",
+          "breakingChangeRisk",
+          "decision",
+          "dataSource",
+          "duplicates",
+          "lastMeaningfulChange",
+          "params",
+          "examples"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "primitives",
+              "layout",
+              "content",
+              "data",
+              "page-structure"
+            ]
+          },
+          "tier": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "contentAffinity": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "owner": {
+            "type": "string"
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "usedIn": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "breakingChangeRisk": {
+            "type": "string"
+          },
+          "decision": {
+            "type": "string"
+          },
+          "dataSource": {
+            "type": "string"
+          },
+          "duplicates": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "lastMeaningfulChange": {
+            "type": "string"
+          },
+          "deprecated": {
+            "type": "string"
+          },
+          "see": {
+            "type": "string"
+          },
+          "params": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "type",
+                "required",
+                "defaultValue",
+                "description"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "defaultValue": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "examples": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "deprecated": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "file",
+          "category",
+          "see",
+          "deprecated"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "primitives",
+              "layout",
+              "content",
+              "data",
+              "page-structure"
+            ]
+          },
+          "see": {
+            "type": "string"
+          },
+          "deprecated": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

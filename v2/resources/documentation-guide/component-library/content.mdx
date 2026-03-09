@@ -1,452 +1,911 @@
 ---
-title: 'Content Components'
+title: 'Content'
 sidebarTitle: 'Content'
-description: 'Components for displaying code, data, external content, and API documentation: code blocks, external content loaders, API response fields, version displays, and data layouts for blogs, forums, and events'
-keywords: ["livepeer", "components", "content", "code", "api", "data"]
+description: 'Renderers for reader-facing media, code, quotations, and structured content.'
+pageType: reference
 ---
 
-import { CustomCodeBlock, CodeComponent, ComplexCodeBlock, CodeSection } from '/snippets/components/content/code.jsx'
-import { ExternalContent } from '/snippets/components/content/external-content.jsx'
-import { ValueResponseField, CustomResponseField, ResponseFieldExpandable, ResponseFieldAccordion, ResponseFieldGroup } from '/snippets/components/content/response-field.jsx'
-import { LatestVersion } from '/snippets/components/content/release.jsx'
-import { BlogCard, PostCard, CardBlogDataLayout, ColumnsBlogCardLayout, BlogDataLayout, CardColumnsPostLayout, ForumLatestLayout, DiscordAnnouncements, LumaEvents } from '/snippets/components/content/data.jsx'
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+{/*
+generated-file-banner: generated-file-banner:v1
+Generation Script: tools/scripts/generate-component-docs.js
+Purpose: Generated component-library MDX pages derived from docs-guide/component-registry.json.
+Run when: Component governance metadata, registry outputs, or published component-library templates change.
+Run command: node tools/scripts/generate-component-docs.js --template-only --category content
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `tools/scripts/generate-component-docs.js`. <br/>
+**Purpose**: Generated component-library MDX pages derived from docs-guide/component-registry.json. <br/>
+**Run when**: Component governance metadata, registry outputs, or published component-library templates change. <br/>
+**Important**: Do not manually edit this file; run `node tools/scripts/generate-component-docs.js --template-only --category content`. <br/>
+</Note>
 
 <Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
-  Return to the main component library index
+  Return to the generated component library landing page.
 </Card>
 
-<CustomDivider middleText="Code Components" />
+## Content
 
-## Code Components
+Renderers for reader-facing media, code, quotations, and structured content.
 
-### CustomCodeBlock
+This category currently contains **24** governed export(s).
 
-Advanced code block with placeholder replacement, pre/post notes, and optional expandable output section.
+### Summary Table
 
-**Import:**
+| Component | Status | Tier | Risk | Source file |
+| --- | --- | --- | --- | --- |
+| [CardVideo](#cardvideo) | `stable` | `composite` | `medium` | `/snippets/components/content/video.jsx` |
+| [CodeComponent](#codecomponent) | `stable` | `composite` | `medium` | `/snippets/components/content/code.jsx` |
+| [CodeSection](#codesection) | `stable` | `composite` | `medium` | `/snippets/components/content/code.jsx` |
+| [ComplexCodeBlock](#complexcodeblock) | `stable` | `composite` | `medium` | `/snippets/components/content/code.jsx` |
+| [CustomCodeBlock](#customcodeblock) | `stable` | `composite` | `medium` | `/snippets/components/content/code.jsx` |
+| [CustomResponseField](#customresponsefield) | `stable` | `composite` | `medium` | `/snippets/components/content/response-field.jsx` |
+| [EmbedMarkdown](#embedmarkdown) | `stable` | `composite` | `medium` | `/snippets/components/content/embed.jsx` |
+| [ExternalContent](#externalcontent) | `stable` | `composite` | `medium` | `/snippets/components/content/external-content.jsx` |
+| [FrameQuote](#framequote) | `stable` | `composite` | `medium` | `/snippets/components/content/quote.jsx` |
+| [LinkedInEmbed](#linkedinembed) | `stable` | `composite` | `medium` | `/snippets/components/content/video.jsx` |
+| [MarkdownEmbed](#markdownembed) | `stable` | `composite` | `medium` | `/snippets/components/content/embed.jsx` |
+| [Quote](#quote) | `stable` | `composite` | `medium` | `/snippets/components/content/quote.jsx` |
+| [ResponseFieldAccordion](#responsefieldaccordion) | `stable` | `composite` | `medium` | `/snippets/components/content/response-field.jsx` |
+| [ResponseFieldExpandable](#responsefieldexpandable) | `stable` | `composite` | `medium` | `/snippets/components/content/response-field.jsx` |
+| [ResponseFieldGroup](#responsefieldgroup) | `stable` | `composite` | `medium` | `/snippets/components/content/response-field.jsx` |
+| [ScrollableDiagram](#scrollablediagram) | `stable` | `composite` | `medium` | `/snippets/components/content/zoomable-diagram.jsx` |
+| [ShowcaseVideo](#showcasevideo) | `stable` | `composite` | `medium` | `/snippets/components/content/video.jsx` |
+| [TitledVideo](#titledvideo) | `stable` | `composite` | `medium` | `/snippets/components/content/video.jsx` |
+| [TwitterTimeline](#twittertimeline) | `stable` | `composite` | `medium` | `/snippets/components/content/embed.jsx` |
+| [ValueResponseField](#valueresponsefield) | `stable` | `composite` | `medium` | `/snippets/components/content/response-field.jsx` |
+| [Video](#video) | `stable` | `composite` | `medium` | `/snippets/components/content/video.jsx` |
+| [YouTubeVideo](#youtubevideo) | `stable` | `composite` | `medium` | `/snippets/components/content/video.jsx` |
+| [YouTubeVideoData](#youtubevideodata) | `stable` | `composite` | `medium` | `/snippets/components/content/video.jsx` |
+| [YouTubeVideoDownload](#youtubevideodownload) | `deprecated` | `composite` | `medium` | `/snippets/components/content/video.jsx` |
+
+### Component Entries
+
+### CardVideo
+Card Video content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/video.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `LinkedInEmbed`, `TitledVideo`, `Video`, `YouTubeVideo`, `YouTubeVideoData`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/cn/home/primer.mdx`, `v2/es/home/primer.mdx`, `v2/fr/home/primer.mdx`, `v2/home/primer.mdx`
+**Import**
 ```jsx
-import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
+import { CardVideo } from '/snippets/components/content/video.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `embedUrl` | `any` | Yes | `` | embed Url prop. |
+| `title` | `any` | Yes | `` | title prop. |
+| `style` | `any` | Yes | `` | style prop. |
+
+**Example**
+
+```jsx
+<CardVideo embedUrl="example" title="example" />
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `filename` | `string` | - | No | Name of the file to display in header |
-| `icon` | `string` | - | No | Icon to display in header |
-| `language` | `string` | - | No | Programming language for syntax highlighting |
-| `highlight` | `string` | - | No | Line numbers/ranges to highlight (e.g., "1-3,5") |
-| `codeString` | `string` | `""` | No | The code content to display |
-| `placeholderValue` | `string` | `""` | No | Value to replace {PLACEHOLDER} with |
-| `wrap` | `boolean` | `true` | No | Whether to wrap long lines |
-| `lines` | `boolean` | `true` | No | Whether to show line numbers |
-| `preNote` | `string` | `""` | No | Note to display before code block |
-| `postNote` | `string` | `""` | No | Note to display after code block |
-| `output` | `object` | - | No | Optional output configuration |
-| `output.codeString` | `string` | - | No | Output code content |
-| `output.filename` | `string` | - | No | Output filename |
-| `output.icon` | `string` | - | No | Output icon |
-| `output.language` | `string` | - | No | Output language |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Basic">
-    <CustomCodeBlock
-      filename="example.js"
-      language="javascript"
-      codeString="const apiKey = 'your-key-here';"
-    />
-  </Tab>
-  <Tab title="With Placeholder">
-    <CustomCodeBlock
-      filename="config.js"
-      language="javascript"
-      codeString="const API_KEY = '{PLACEHOLDER}';"
-      placeholderValue="your-api-key-here"
-      preNote="Add this to your configuration file"
-    />
-  </Tab>
-  <Tab title="Code">
-```jsx
-<CustomCodeBlock
-  filename="example.js"
-  language="javascript"
-  codeString="const apiKey = 'your-key';"
-  preNote="Configuration example"
-  postNote="Remember to keep your API key secure"
-/>
-```
-  </Tab>
-</Tabs>
 
 ---
 
 ### CodeComponent
-
-Simple code block wrapper component.
-
-**Import:**
+Code Component content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/code.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CodeSection`, `ComplexCodeBlock`, `CustomCodeBlock`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/cn/gateways/run-a-gateway/install/linux-install.mdx`, `v2/es/gateways/run-a-gateway/install/linux-install.mdx`, `v2/fr/gateways/run-a-gateway/install/linux-install.mdx`, `v2/gateways/run-a-gateway/install/linux-install.mdx`
+**Import**
 ```jsx
-import { CodeComponent } from "/snippets/components/content/code.jsx";
+import { CodeComponent } from '/snippets/components/content/code.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `filename` | `string` | No | `""` | filename prop. |
+| `icon` | `string` | No | `"terminal"` | icon prop. |
+| `language` | `string` | No | `""` | language prop. |
+| `highlight` | `string` | No | `""` | highlight prop. |
+| `expandable` | `boolean` | No | `false` | expandable prop. |
+| `wrap` | `boolean` | No | `true` | wrap prop. |
+| `lines` | `boolean` | No | `true` | lines prop. |
+| `codeString` | `string` | No | `""` | code String prop. |
+| `placeholderValue` | `string` | No | `""` | placeholder Value prop. |
+
+**Example**
+
+```jsx
+<CodeComponent />
 ```
 
-**Props:** Accepts standard CodeBlock props (language, filename, icon, etc.)
-
-**Note:** This is a wrapper around Mintlify's CodeBlock component.
-
----
-
-### ComplexCodeBlock
-
-Advanced code block with multiple features including placeholder replacement and output sections.
-
-**Import:**
-```jsx
-import { ComplexCodeBlock } from "/snippets/components/content/code.jsx";
-```
-
-**Props:** Similar to `CustomCodeBlock` with additional complexity handling.
 
 ---
 
 ### CodeSection
-
-Section wrapper for organizing multiple code blocks.
-
-**Import:**
+Thin wrapper that maps a `fields` object into the complex code block renderer.
+- File: `/snippets/components/content/code.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `ComplexCodeBlock`, `CustomCodeBlock`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/cn/gateways/quickstart/gateway-setup.mdx`, `v2/es/gateways/quickstart/gateway-setup.mdx`, `v2/fr/gateways/quickstart/gateway-setup.mdx`, `v2/gateways/quickstart/gateway-setup.mdx`
+**Import**
 ```jsx
-import { CodeSection } from "/snippets/components/content/code.jsx";
+import { CodeSection } from '/snippets/components/content/code.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `fields` | `object` | No | `{}` | fields prop. |
+
+**Example**
+
+```jsx
+<CodeSection />
 ```
 
-**Props:**
 
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Yes** | Code blocks to display |
+---
 
-<CustomDivider middleText="External Content" />
-
-## External Content
-
-### ExternalContent
-
-Reusable component for displaying external GitHub content with header and scrollable container.
-
-**Import:**
+### ComplexCodeBlock
+Complex Code Block content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/code.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CodeSection`, `CustomCodeBlock`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/cn/gateways/quickstart/gateway-setup.mdx`, `v2/es/gateways/quickstart/gateway-setup.mdx`, `v2/fr/gateways/quickstart/gateway-setup.mdx`, `v2/gateways/quickstart/gateway-setup.mdx`
+**Import**
 ```jsx
-import { ExternalContent } from "/snippets/components/content/external-content.jsx";
+import { ComplexCodeBlock } from '/snippets/components/content/code.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `filename` | `any` | Yes | `` | filename prop. |
+| `icon` | `any` | Yes | `` | icon prop. |
+| `language` | `any` | Yes | `` | language prop. |
+| `highlight` | `any` | Yes | `` | highlight prop. |
+| `codeString` | `string` | No | `""` | code String prop. |
+| `placeholderValue` | `string` | No | `""` | placeholder Value prop. |
+| `wrap` | `boolean` | No | `true` | wrap prop. |
+| `lines` | `boolean` | No | `true` | lines prop. |
+| `preNote` | `any` | No | `null` | pre Note prop. |
+| `postNote` | `any` | No | `null` | post Note prop. |
+
+**Example**
+
+```jsx
+<ComplexCodeBlock filename="example" icon="example" />
 ```
 
-**Props:**
 
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `repoName` | `string` | - | **Yes** | Repository name (e.g., "livepeer/awesome-livepeer") |
-| `githubUrl` | `string` | - | **Yes** | Full GitHub repository URL |
-| `maxHeight` | `string` | `"1000px"` | No | Maximum height of scrollable container |
-| `icon` | `string` | `"github"` | No | Icon to display in header |
-| `children` | `ReactNode` | - | **Yes** | Content to display (typically imported MDX) |
+---
 
-**Examples:**
-
-<Tabs>
-  <Tab title="Live Example">
-    <ExternalContent
-      repoName="livepeer/docs"
-      githubUrl="https://github.com/livepeer/docs"
-      maxHeight="150px"
-    >
-      <p>External content from the Livepeer documentation repository.</p>
-      <ul>
-        <li>Automatically styled container</li>
-        <li>Link to GitHub source</li>
-      </ul>
-    </ExternalContent>
-  </Tab>
-  <Tab title="Code">
+### CustomCodeBlock
+Custom Code Block content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/code.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CodeSection`, `ComplexCodeBlock`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/cn/gateways/quickstart/gateway-setup.mdx`, `v2/cn/gateways/run-a-gateway/install/linux-install.mdx`, `v2/cn/gateways/run-a-gateway/install/windows-install.mdx`, `v2/cn/orchestrators/orchestrators-portal.mdx`, `v2/cn/orchestrators/quickstart/orchestrator-setup.mdx`, `v2/cn/orchestrators/setting-up-an-orchestrator/orchestrator-stats.mdx`, and 25 more page(s)
+**Import**
 ```jsx
-import LivepeerOverview from '/snippets/pages/01_ABOUT/concepts/overview.mdx'
-
-<ExternalContent
-  repoName="livepeer/awesome-livepeer"
-  githubUrl="https://github.com/livepeer/awesome-livepeer"
-  maxHeight="800px"
->
-  <LivepeerOverview />
-</ExternalContent>
+import { CustomCodeBlock } from '/snippets/components/content/code.jsx'
 ```
-  </Tab>
-</Tabs>
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `filename` | `any` | Yes | `` | filename prop. |
+| `icon` | `any` | Yes | `` | icon prop. |
+| `language` | `any` | Yes | `` | language prop. |
+| `highlight` | `any` | Yes | `` | highlight prop. |
+| `codeString` | `string` | No | `""` | code String prop. |
+| `placeholderValue` | `string` | No | `""` | placeholder Value prop. |
+| `wrap` | `boolean` | No | `true` | wrap prop. |
+| `lines` | `boolean` | No | `true` | lines prop. |
+| `preNote` | `string` | No | `""` | pre Note prop. |
+| `postNote` | `string` | No | `""` | post Note prop. |
+| `output` | `string` | No | `""` | output prop. |
 
-<CustomDivider middleText="API Response Fields" />
+**Example**
 
-## API Response Fields
-
-### ValueResponseField
-
-ResponseField wrapper that displays a value with optional label and line styling.
-
-**Import:**
 ```jsx
-import { ValueResponseField } from "/snippets/components/content/response-field.jsx";
+<CustomCodeBlock filename="example" icon="example" />
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `description` | `string\|function` | - | No | Description text or function that returns description |
-| `post` | `any` | `null` | No | Value to display after description |
-| `label` | `string` | `"value"` | No | Label for the value |
-| `line` | `boolean` | `true` | No | Whether to show bottom border line |
-| `children` | `ReactNode` | - | No | Additional content |
-| `...props` | `object` | - | No | Additional ResponseField props (name, type, default, required, etc.) |
 
 ---
 
 ### CustomResponseField
-
-ResponseField wrapper that hides the bottom divider.
-
-**Import:**
+ResponseField wrapper that removes the default divider for tighter grouped layouts.
+- File: `/snippets/components/content/response-field.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `ResponseFieldAccordion`, `ResponseFieldExpandable`, `ResponseFieldGroup`, `ValueResponseField`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-08`
+- `@usedIn`: `v2/cn/gateways/quickstart/gateway-setup.mdx`, `v2/cn/gateways/run-a-gateway/configure/video-configuration.mdx`, `v2/es/gateways/quickstart/gateway-setup.mdx`, `v2/es/gateways/run-a-gateway/configure/video-configuration.mdx`, `v2/fr/gateways/quickstart/gateway-setup.mdx`, `v2/fr/gateways/run-a-gateway/configure/video-configuration.mdx`, and 2 more page(s)
+**Import**
 ```jsx
-import { CustomResponseField } from "/snippets/components/content/response-field.jsx";
+import { CustomResponseField } from '/snippets/components/content/response-field.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `description` | `any` | Yes | `` | description prop. |
+| `props` | `any` | Yes | `` | props prop. |
+
+**Example**
+
+```jsx
+<CustomResponseField description="example" props="example" />
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `description` | `string` | - | No | Description text |
-| `...props` | `object` | - | No | All ResponseField props (name, type, default, required, post, etc.) |
 
 ---
 
-### ResponseFieldExpandable
-
-Groups multiple response fields in an expandable section.
-
-**Import:**
+### EmbedMarkdown
+Embed Markdown content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/embed.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `MarkdownEmbed`
+- Data source: `none`
+- Duplicates: `MarkdownEmbed`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: none
+**Import**
 ```jsx
-import { ResponseFieldExpandable } from "/snippets/components/content/response-field.jsx";
+import { EmbedMarkdown } from '/snippets/components/content/embed.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `url` | `any` | Yes | `` | url prop. |
+
+**Example**
+
+```jsx
+<EmbedMarkdown url="example" />
 ```
 
-**Props:**
 
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `fields` | `Array\|Object` | `{}` | No | Array or object of field definitions |
-| `...props` | `object` | - | No | Expandable component props (title, etc.) |
+---
+
+### ExternalContent
+External Content content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/external-content.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `none`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/about/resources/livepeer-whitepaper.mdx`, `v2/cn/about/resources/livepeer-whitepaper.mdx`, `v2/cn/developers/technical-references/awesome-livepeer.mdx`, `v2/cn/gateways/run-a-gateway/configure/dual-configuration.mdx`, `v2/cn/gateways/run-a-gateway/install/community-projects.mdx`, `v2/developers/technical-references/awesome-livepeer.mdx`, and 10 more page(s)
+**Import**
+```jsx
+import { ExternalContent } from '/snippets/components/content/external-content.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `repoName` | `any` | Yes | `` | repo Name prop. |
+| `githubUrl` | `any` | Yes | `` | github Url prop. |
+| `maxHeight` | `string` | No | `"1000px"` | max Height prop. |
+| `icon` | `string` | No | `"github"` | icon prop. |
+| `children` | `any` | Yes | `` | children prop. |
+
+**Example**
+
+```jsx
+<ExternalContent repoName="example" githubUrl="example">Example content</ExternalContent>
+```
+
+
+---
+
+### FrameQuote
+Frame Quote content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/quote.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `none`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/about/livepeer-protocol/core-mechanisms.mdx`, `v2/about/livepeer-protocol/overview.mdx`, `v2/cn/about/livepeer-protocol/core-mechanisms.mdx`, `v2/cn/about/livepeer-protocol/overview.mdx`, `v2/cn/home/about-livepeer/benefits.mdx`, `v2/cn/home/about-livepeer/ecosystem.mdx`, and 15 more page(s)
+**Import**
+```jsx
+import { FrameQuote } from '/snippets/components/content/quote.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | Yes | `` | children prop. |
+| `author` | `any` | Yes | `` | author prop. |
+| `source` | `any` | Yes | `` | source prop. |
+| `href` | `any` | Yes | `` | href prop. |
+| `frame` | `boolean` | No | `true` | frame prop. |
+| `align` | `string` | No | `'right'` | align prop. |
+| `borderColor` | `any` | Yes | `` | border Color prop. |
+| `img` | `any` | Yes | `` | img prop. |
+| `spacing` | `boolean` | No | `true` | spacing prop. |
+| `props` | `any` | Yes | `` | props prop. |
+
+**Example**
+
+```jsx
+<FrameQuote author="example" source="example">Example content</FrameQuote>
+```
+
+
+---
+
+### LinkedInEmbed
+Linked In Embed content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/video.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CardVideo`, `TitledVideo`, `Video`, `YouTubeVideo`, `YouTubeVideoData`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: none
+**Import**
+```jsx
+import { LinkedInEmbed } from '/snippets/components/content/video.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `embedUrl` | `any` | Yes | `` | embed Url prop. |
+| `title` | `string` | No | `"Embedded post"` | title prop. |
+| `hint` | `string` | No | `""` | hint prop. |
+| `caption` | `any` | Yes | `` | caption prop. |
+| `height` | `string` | No | `"399"` | height prop. |
+
+**Example**
+
+```jsx
+<LinkedInEmbed embedUrl="example" caption="example" />
+```
+
+
+---
+
+### MarkdownEmbed
+Markdown Embed content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/embed.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `EmbedMarkdown`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: none
+**Import**
+```jsx
+import { MarkdownEmbed } from '/snippets/components/content/embed.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `url` | `any` | Yes | `` | url prop. |
+
+**Example**
+
+```jsx
+<MarkdownEmbed url="example" />
+```
+
+
+---
+
+### Quote
+Quote content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/quote.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `none`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/about/livepeer-protocol/core-mechanisms.mdx`, `v2/about/livepeer-protocol/governance-model.mdx`, `v2/about/livepeer-protocol/livepeer-token.mdx`, `v2/about/livepeer-protocol/overview.mdx`, `v2/about/livepeer-protocol/technical-architecture.mdx`, `v2/about/livepeer-protocol/treasury.mdx`, and 28 more page(s)
+**Import**
+```jsx
+import { Quote } from '/snippets/components/content/quote.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | Yes | `` | children prop. |
+
+**Example**
+
+```jsx
+<Quote>Example content</Quote>
+```
+
 
 ---
 
 ### ResponseFieldAccordion
-
-Groups multiple response fields in an accordion component.
-
-**Import:**
+Accordion wrapper that renders a collection of response fields inside Mintlify Accordion.
+- File: `/snippets/components/content/response-field.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CustomResponseField`, `ResponseFieldExpandable`, `ResponseFieldGroup`, `ValueResponseField`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-08`
+- `@usedIn`: `v2/cn/gateways/quickstart/gateway-setup.mdx`, `v2/es/gateways/quickstart/gateway-setup.mdx`, `v2/fr/gateways/quickstart/gateway-setup.mdx`, `v2/gateways/quickstart/gateway-setup.mdx`
+**Import**
 ```jsx
-import { ResponseFieldAccordion } from "/snippets/components/content/response-field.jsx";
+import { ResponseFieldAccordion } from '/snippets/components/content/response-field.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `fields` | `object` | No | `{}` | fields prop. |
+| `props` | `any` | Yes | `` | props prop. |
+
+**Example**
+
+```jsx
+<ResponseFieldAccordion props="example" />
 ```
 
-**Props:**
 
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `fields` | `Array\|Object` | `{}` | No | Array or object of field definitions |
-| `...props` | `object` | - | No | Accordion component props (title, etc.) |
+---
+
+### ResponseFieldExpandable
+Expandable wrapper that renders a collection of response fields inside Mintlify Expandable.
+- File: `/snippets/components/content/response-field.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CustomResponseField`, `ResponseFieldAccordion`, `ResponseFieldGroup`, `ValueResponseField`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-08`
+- `@usedIn`: `v2/cn/gateways/quickstart/gateway-setup.mdx`, `v2/es/gateways/quickstart/gateway-setup.mdx`, `v2/fr/gateways/quickstart/gateway-setup.mdx`, `v2/gateways/quickstart/gateway-setup.mdx`
+**Import**
+```jsx
+import { ResponseFieldExpandable } from '/snippets/components/content/response-field.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `fields` | `object` | No | `{}` | fields prop. |
+| `props` | `any` | Yes | `` | props prop. |
+
+**Example**
+
+```jsx
+<ResponseFieldExpandable props="example" />
+```
+
 
 ---
 
 ### ResponseFieldGroup
-
-Wrapper that chooses accordion or expandable layout at runtime.
-
-**Import:**
+Runtime wrapper that switches between accordion and expandable response field groupings.
+- File: `/snippets/components/content/response-field.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CustomResponseField`, `ResponseFieldAccordion`, `ResponseFieldExpandable`, `ValueResponseField`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-08`
+- `@usedIn`: none
+**Import**
 ```jsx
-import { ResponseFieldGroup } from "/snippets/components/content/response-field.jsx";
+import { ResponseFieldGroup } from '/snippets/components/content/response-field.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `component` | `string` | No | `"accordion"` | component prop. |
+| `fields` | `object` | No | `{}` | fields prop. |
+| `props` | `any` | Yes | `` | props prop. |
+
+**Example**
+
+```jsx
+<ResponseFieldGroup props="example" />
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `component` | `string` | `"accordion"` | No | Component type: "accordion" or "expandable" |
-| `fields` | `Array\|Object` | `{}` | No | Array or object of field definitions |
-| `...props` | `object` | - | No | Component props (title, etc.) |
-
-<CustomDivider middleText="Data Display Components" />
-
-## Data Display Components
-
-### BlogCard
-
-Card component specifically designed for blog posts with reading time and excerpt support.
-
-**Import:**
-```jsx
-import { BlogCard } from "/snippets/components/content/data.jsx";
-```
-
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `title` | `string` | - | **Yes** | The title of the blog post |
-| `content` | `string` | - | **Yes** | HTML content to display |
-| `href` | `string` | - | **Yes** | Link URL for the blog post |
-| `author` | `string` | `"Livepeer Team"` | No | Author name |
-| `datePosted` | `string` | `null` | No | Publication date |
-| `excerpt` | `string` | `null` | No | Short excerpt (use if linking to external blog) |
-| `readingTime` | `number` | `null` | No | Estimated reading time in minutes |
-| `icon` | `string` | `"book-open"` | No | Icon for the card |
-| `cta` | `string` | `"Read More"` | No | Call-to-action button text |
-| `img` | `string` | `null` | No | Optional image URL |
 
 ---
 
-### PostCard
-
-Card component for displaying forum posts or articles with author, date, and metadata.
-
-**Import:**
+### ScrollableDiagram
+Scrollable Diagram content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/zoomable-diagram.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `none`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/about/livepeer-protocol/livepeer-token.mdx`, `v2/about/livepeer-protocol/technical-architecture.mdx`, `v2/cn/about/livepeer-protocol/livepeer-token.mdx`, `v2/cn/about/livepeer-protocol/technical-architecture.mdx`, `v2/cn/gateways/about-gateways/gateway-architecture.mdx`, `v2/cn/gateways/about/architecture.mdx`, and 39 more page(s)
+**Import**
 ```jsx
-import { PostCard } from "/snippets/components/content/data.jsx";
+import { ScrollableDiagram } from '/snippets/components/content/zoomable-diagram.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | Yes | `` | children prop. |
+| `title` | `string` | No | `""` | title prop. |
+| `maxHeight` | `string` | No | `"500px"` | max Height prop. |
+| `minWidth` | `string` | No | `"100%"` | min Width prop. |
+| `showControls` | `boolean` | No | `false` | show Controls prop. |
+
+**Example**
+
+```jsx
+<ScrollableDiagram>Example content</ScrollableDiagram>
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `title` | `string` | - | **Yes** | The title of the post |
-| `content` | `string` | - | **Yes** | HTML content to display |
-| `href` | `string` | - | **Yes** | Link URL for the card |
-| `author` | `string` | `"Unknown"` | No | Author name |
-| `datePosted` | `string` | `null` | No | Date the post was published |
-| `icon` | `string` | `"book-open"` | No | Icon to display on the card |
-| `cta` | `string` | `"Read More"` | No | Call-to-action button text |
-| `img` | `string` | `null` | No | Optional image URL for the card |
 
 ---
 
-### CardBlogDataLayout
-
-Layout component for displaying multiple BlogCards in a vertical layout.
-
-**Import:**
+### ShowcaseVideo
+Showcase Video content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/video.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CardVideo`, `LinkedInEmbed`, `TitledVideo`, `Video`, `YouTubeVideo`, `YouTubeVideoData`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/cn/home/solutions/showcase.mdx`, `v2/es/home/solutions/showcase.mdx`, `v2/fr/home/solutions/showcase.mdx`, `v2/home/solutions/showcase.mdx`
+**Import**
 ```jsx
-import { CardBlogDataLayout } from "/snippets/components/content/data.jsx";
+import { ShowcaseVideo } from '/snippets/components/content/video.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `src` | `any` | Yes | `` | src prop. |
+| `title` | `any` | Yes | `` | title prop. |
+| `subtitle` | `any` | Yes | `` | subtitle prop. |
+
+**Example**
+
+```jsx
+<ShowcaseVideo src="example" title="example" />
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `items` | `Array` | `[]` | No | Array of BlogCard props objects |
-| `limit` | `number` | - | No | Optional limit on number of items |
 
 ---
 
-### ColumnsBlogCardLayout
-
-Layout component for displaying multiple BlogCards in columns.
-
-**Import:**
+### TitledVideo
+Titled Video content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/video.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CardVideo`, `LinkedInEmbed`, `Video`, `YouTubeVideo`, `YouTubeVideoData`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/cn/home/solutions/showcase.mdx`, `v2/es/home/solutions/showcase.mdx`, `v2/fr/home/solutions/showcase.mdx`, `v2/home/solutions/showcase.mdx`
+**Import**
 ```jsx
-import { ColumnsBlogCardLayout } from "/snippets/components/content/data.jsx";
+import { TitledVideo } from '/snippets/components/content/video.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `src` | `any` | Yes | `` | src prop. |
+| `title` | `any` | Yes | `` | title prop. |
+| `subtitle` | `any` | Yes | `` | subtitle prop. |
+| `arrow` | `boolean` | No | `false` | arrow prop. |
+| `borderRadius` | `string` | No | `"12px"` | border Radius prop. |
+| `style` | `object` | No | `{}` | style prop. |
+
+**Example**
+
+```jsx
+<TitledVideo src="example" title="example" />
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `items` | `Array` | `[]` | No | Array of BlogCard props objects |
-| `cols` | `number` | `2` | No | Number of columns |
-| `limit` | `number` | - | No | Optional limit on number of items |
 
 ---
 
-### CardColumnsPostLayout
-
-Layout component for displaying multiple PostCards in columns.
-
-**Import:**
+### TwitterTimeline
+Twitter Timeline content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/embed.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `EmbedMarkdown`, `MarkdownEmbed`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/cn/community/livepeer-community/livepeer-latest-topics.mdx`, `v2/cn/community/livepeer-community/trending-topics.mdx`, `v2/community/livepeer-community/trending-topics.mdx`, `v2/es/community/livepeer-community/livepeer-latest-topics.mdx`, `v2/es/community/livepeer-community/trending-topics.mdx`, `v2/fr/community/livepeer-community/livepeer-latest-topics.mdx`, and 2 more page(s)
+**Import**
 ```jsx
-import { CardColumnsPostLayout } from "/snippets/components/content/data.jsx";
+import { TwitterTimeline } from '/snippets/components/content/embed.jsx'
+```
+**Props**
+No documented props.
+
+**Example**
+
+```jsx
+<TwitterTimeline />
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `cols` | `number` | `2` | No | Number of columns to display |
-| `items` | `Array` | `[]` | No | Array of PostCard props objects |
-| `limit` | `number` | - | No | Optional limit on number of items |
 
 ---
 
-### DiscordAnnouncements
-
-Displays Discord announcements from discordAnnouncementsData.jsx.
-
-**Import:**
+### ValueResponseField
+ResponseField wrapper that renders a labelled post value alongside descriptive content.
+- File: `/snippets/components/content/response-field.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CustomResponseField`, `ResponseFieldAccordion`, `ResponseFieldExpandable`, `ResponseFieldGroup`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-08`
+- `@usedIn`: `v2/about/livepeer-protocol/core-mechanisms.mdx`, `v2/cn/about/livepeer-protocol/core-mechanisms.mdx`, `v2/cn/gateways/quickstart/gateway-setup.mdx`, `v2/es/about/livepeer-protocol/core-mechanisms.mdx`, `v2/es/gateways/quickstart/gateway-setup.mdx`, `v2/fr/about/livepeer-protocol/core-mechanisms.mdx`, and 2 more page(s)
+**Import**
 ```jsx
-import { DiscordAnnouncements } from "/snippets/components/content/data.jsx";
+import { ValueResponseField } from '/snippets/components/content/response-field.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `description` | `any` | Yes | `` | description prop. |
+| `post` | `any` | No | `null` | post prop. |
+| `label` | `string` | No | `"value"` | label prop. |
+| `line` | `boolean` | No | `true` | line prop. |
+| `children` | `any` | Yes | `` | children prop. |
+| `props` | `any` | Yes | `` | props prop. |
+
+**Example**
+
+```jsx
+<ValueResponseField description="example" props="example">Example content</ValueResponseField>
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `items` | `Array` | `[]` | No | Array of announcement objects |
-| `limit` | `number` | - | No | Optional limit on number of announcements |
-
-**Note:** Requires data from `snippets/automations/discord/discordAnnouncementsData.jsx`
 
 ---
 
-### LumaEvents
-
-Displays Luma events from lumaEventsData.jsx.
-
-**Import:**
+### Video
+Video content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/video.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CardVideo`, `LinkedInEmbed`, `TitledVideo`, `YouTubeVideo`, `YouTubeVideoData`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/cn/solutions/embody/overview.mdx`, `v2/es/solutions/embody/overview.mdx`, `v2/fr/solutions/embody/overview.mdx`, `v2/solutions/embody/overview.mdx`
+**Import**
 ```jsx
-import { LumaEvents } from "/snippets/components/content/data.jsx";
+import { Video } from '/snippets/components/content/video.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `src` | `any` | Yes | `` | src prop. |
+| `title` | `string` | No | `""` | title prop. |
+| `author` | `string` | No | `""` | author prop. |
+| `caption` | `any` | Yes | `` | caption prop. |
+| `href` | `string` | No | `""` | href prop. |
+| `controls` | `boolean` | No | `true` | controls prop. |
+| `autoPlay` | `boolean` | No | `false` | auto Play prop. |
+| `loop` | `boolean` | No | `false` | loop prop. |
+| `muted` | `boolean` | No | `false` | muted prop. |
+| `children` | `any` | Yes | `` | children prop. |
+
+**Example**
+
+```jsx
+<Video src="example" caption="example">Example content</Video>
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `data` | `Object` | - | **Yes** | Event data object with upcoming and past arrays |
-| `limit` | `number` | - | No | Optional limit on number of events |
-| `type` | `string` | `"upcoming"` | No | Type of events: "upcoming", "past", or "all" |
-
-**Note:** Requires data from `snippets/automations/luma/lumaEventsData.jsx`
-
-<CustomDivider middleText="Version Components" />
-
-## Version Components
-
-### LatestVersion
-
-Wrapper for GitHub action which fetches most recent release version of go-livepeer.
-
-**Import:**
-```jsx
-import { LatestVersion } from "/snippets/components/content/release.jsx";
-```
-
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `version` | `string` | - | **Yes** | Version string (typically from GitHub action) |
 
 ---
 
-<Card title="Next: Layout Components" icon="arrow-right" href="../component-library/layout" arrow>
-  Continue to Layout Components →
-</Card>
+### YouTubeVideo
+You Tube Video content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/video.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CardVideo`, `LinkedInEmbed`, `TitledVideo`, `Video`, `YouTubeVideoData`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/cn/community/community-portal.mdx`, `v2/cn/community/livepeer-community/livepeer-latest-topics.mdx`, `v2/cn/community/livepeer-community/trending-topics.mdx`, `v2/cn/gateways/run-a-gateway/install/community-projects.mdx`, `v2/cn/home/about-livepeer/benefits.mdx`, `v2/cn/home/about-livepeer/evolution.mdx`, and 42 more page(s)
+**Import**
+```jsx
+import { YouTubeVideo } from '/snippets/components/content/video.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `embedUrl` | `any` | Yes | `` | embed Url prop. |
+| `title` | `string` | No | `""` | title prop. |
+| `author` | `string` | No | `""` | author prop. |
+| `hint` | `string` | No | `""` | hint prop. |
+| `caption` | `any` | Yes | `` | caption prop. |
+
+**Example**
+
+```jsx
+<YouTubeVideo embedUrl="example" caption="example" />
+```
+
+
+---
+
+### YouTubeVideoData
+You Tube Video Data content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/video.jsx`
+- Tier: `composite`
+- Status: `stable`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CardVideo`, `LinkedInEmbed`, `TitledVideo`, `Video`, `YouTubeVideo`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/cn/community/livepeer-community/livepeer-latest-topics.mdx`, `v2/cn/community/livepeer-community/trending-topics.mdx`, `v2/community/livepeer-community/trending-topics.mdx`, `v2/es/community/livepeer-community/livepeer-latest-topics.mdx`, `v2/es/community/livepeer-community/trending-topics.mdx`, `v2/fr/community/livepeer-community/livepeer-latest-topics.mdx`, and 2 more page(s)
+**Import**
+```jsx
+import { YouTubeVideoData } from '/snippets/components/content/video.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | No | `[` | ] - items prop. |
+| `limit` | `any` | Yes | `` | limit prop. |
+| `cols` | `number` | No | `2` | cols prop. |
+
+**Example**
+
+```jsx
+<YouTubeVideoData limit={1} />
+```
+
+
+---
+
+### YouTubeVideoDownload
+You Tube Video Download content component for rendering reader-facing documentation content.
+- File: `/snippets/components/content/video.jsx`
+- Tier: `composite`
+- Status: `deprecated`
+- Risk: `medium`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CardVideo`, `LinkedInEmbed`, `TitledVideo`, `Video`, `YouTubeVideo`, `YouTubeVideoData`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/cn/home/primer.mdx`, `v2/es/home/primer.mdx`, `v2/fr/home/primer.mdx`, `v2/home/primer.mdx`
+- Deprecation note: YouTubeVideoDownload is deprecated and should not be used for new content. See `YouTubeVideo`.
+**Import**
+```jsx
+import { YouTubeVideoDownload } from '/snippets/components/content/video.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `embedUrl` | `any` | Yes | `` | embed Url prop. |
+| `title` | `any` | Yes | `` | title prop. |
+| `hint` | `any` | Yes | `` | hint prop. |
+| `caption` | `string` | No | `""` | caption prop. |
+
+**Example**
+
+```jsx
+<YouTubeVideoDownload embedUrl="example" title="example" />
+```

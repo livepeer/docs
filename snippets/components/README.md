@@ -1,88 +1,35 @@
 # Components Library
 
-These components are organised **By Function/Purpose**.
+`snippets/components/` is the governed JSX component library for the docs site.
 
-Additionally some items are organised by **Domain** where domain-specific
-components are extracted to their own folder (e.g., callouts, code strings used
-on multiple pages).
+## Active Categories
 
-## Folder Structure
-
-```
+```text
 components/
-├── primitives/      # Basic UI elements
-├── layout/          # Custom layouts for multiple items
-├── display/         # Display elements for media or embeds
-├── content/         # Content & Data Display Groups
-├── integrations/    # External service integrations
-└── domain/          # Domain-specific components
+├── primitives/       # standalone visual atoms
+├── layout/           # spacing, grouping, and arrangement wrappers
+├── content/          # code, quotes, embeds, media, and structured content renderers
+├── data/             # feed-driven and external-data components
+├── page-structure/   # portal and frame-mode scaffolding
+└── _archive/         # retired or historical component material
 ```
 
----
+Every active category keeps an `examples/` subdirectory for runnable MDX examples.
 
-## Component Reference
+## Naming Rules
 
-### primitives/
+- Files use kebab-case, for example `frame-mode.jsx` and `custom-cards.jsx`.
+- Exports use PascalCase named exports.
+- Example files use kebab-case with the `-examples.mdx` suffix.
 
-| File          | Exports                                                                                                       | Description                    |
-| ------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------ |
-| `buttons.jsx` | `BasicBtn`, `DownloadButton`                                                                                  | Button components              |
-| `divider.jsx` | `CustomDivider`                                                                                               | Divider/separator              |
-| `icons.jsx`   | `LivepeerSVG`, `LivepeerIconOld`, `LivepeerIconFlipped`, `LivepeerIcon`                                       | Livepeer brand icons           |
-| `links.jsx`   | `CustomCallout`, `BlinkingIcon`, `BlinkingTerminal`, `DoubleIconLink`, `GotoLink`, `GotoCard`, `TipWithArrow` | Link and navigation components |
+## Governance Rules
 
-### layout/
+- Every exported component must carry the full governance JSDoc block.
+- Colours must resolve through `var(--lp-*)` tokens or approved legacy aliases.
+- `_archive/` content is excluded from active governance tooling.
+- Use full import paths with file extensions, for example `/snippets/components/primitives/divider.jsx`.
 
-| File            | Exports                                                                             | Description             |
-| --------------- | ----------------------------------------------------------------------------------- | ----------------------- |
-| `cards.jsx`     | `PostCard`, `CardColumnsPostLayout`, `BlogCard`, `CardBlogDataLayout`               | Card layouts            |
-| `lists.jsx`     | `BasicList`, `IconList`, `StepList`, `StepLinkList`, `UpdateList`, `UpdateLinkList` | List layouts            |
-| `list-steps.jsx` | `ListSteps`                                                                         | Step list component     |
-| `steps.jsx`     | `StyledSteps`, `StyledStep`                                                         | Styled step components  |
-| `table.jsx`     | `DynamicTable`                                                                      | Dynamic table component |
+## Notes
 
-### display/
-
-| File                   | Exports                                             | Description                 |
-| ---------------------- | --------------------------------------------------- | --------------------------- |
-| `embed.jsx`            | `MarkdownEmbed`, `EmbedMarkdown`                    | Markdown embed components   |
-| `image.jsx`            | `Image`, `LinkImage`                                | Image display components    |
-| `video.jsx`            | `YouTubeVideo`, `YouTubeVideoDownload`, `CardVideo` | Video embed components      |
-| `zoomable-diagram.jsx` | `ScrollableDiagram`                                 | Zoomable/scrollable diagram |
-
-### content/
-
-| File                   | Exports                                                                                                                | Description                   |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| `code.jsx`             | `CustomCodeBlock`, `CodeComponent`, `ComplexCodeBlock`, `CodeSection`                                                  | Code display components       |
-| `external-content.jsx` | `ExternalContent`                                                                                                      | External content loader       |
-| `release.jsx`          | `LatestVersion`                                                                                                        | Version display component     |
-| `response-field.jsx`    | `ValueResponseField`, `CustomResponseField`, `ResponseFieldExpandable`, `ResponseFieldAccordion`, `ResponseFieldGroup` | API response field components |
-
-### integrations/
-
-| File            | Exports              | Description                     |
-| --------------- | -------------------- | ------------------------------- |
-| `coingecko.jsx` | `CoinGeckoExchanges` | CoinGecko exchange data display |
-
-### domain/04_GATEWAYS/
-
-| File                 | Exports                                                                                                                               | Description               |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
-| `callouts.jsx`       | `GatewayOffChainWarning`, `GatewayOnChainWarning`, `GatewayOnChainTTestnetNote`, `OrchAddrNote`, `TestVideoDownload`, `FfmpegWarning` | Gateway-specific callouts |
-| `quickstartTabs.jsx` | `QuickStartTabs`, `QuickStartSteps`                                                                                                   | Gateway quickstart UI     |
-
----
-
-## Usage
-
-Import components in MDX files using absolute paths from `/snippets/`:
-
-```jsx
-import { YouTubeVideo } from "/snippets/components/display/video.jsx";
-import { GotoCard, GotoLink } from "/snippets/components/primitives/links.jsx";
-import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
-```
-
-**Note:** Mintlify provides `React`, `Frame`, `Card`, `Icon`, and other
-primitives globally - do not import them.
+- Legacy `display/`, `domain/`, and `integrations/` categories were retired in Phase 3.
+- Gateway- or section-specific helpers that are not part of the governed library continue to live outside this folder.

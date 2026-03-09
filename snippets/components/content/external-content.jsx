@@ -1,14 +1,25 @@
 /**
- * ExternalContent - A reusable component for displaying external GitHub content
- * Usage:
- *   import { ExternalContent } from '/snippets/components/content/external-content.jsx'
- *   import MyContent from '/snippets/external/my-content.mdx'
- *   <ExternalContent
- *     repoName="livepeer/awesome-livepeer"
- *     githubUrl="https://github.com/livepeer/awesome-livepeer"
- *   >
- *     <MyContent />
- *   </ExternalContent>
+ * @component ExternalContent
+ * @category content
+ * @tier composite
+ * @status stable
+ * @description External Content content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/about/resources/livepeer-whitepaper.mdx, v2/cn/about/resources/livepeer-whitepaper.mdx, v2/cn/developers/technical-references/awesome-livepeer.mdx, v2/cn/gateways/run-a-gateway/configure/dual-configuration.mdx, v2/cn/gateways/run-a-gateway/install/community-projects.mdx, v2/developers/technical-references/awesome-livepeer.mdx, v2/es/about/resources/livepeer-whitepaper.mdx, v2/es/developers/technical-references/awesome-livepeer.mdx, v2/es/gateways/run-a-gateway/configure/dual-configuration.mdx, v2/es/gateways/run-a-gateway/install/community-projects.mdx, v2/fr/about/resources/livepeer-whitepaper.mdx, v2/fr/developers/technical-references/awesome-livepeer.mdx, v2/fr/gateways/run-a-gateway/configure/dual-configuration.mdx, v2/fr/gateways/run-a-gateway/install/community-projects.mdx, v2/gateways/run-a-gateway/configure/dual-configuration.mdx, v2/gateways/run-a-gateway/install/community-projects.mdx
+ * @breakingChangeRisk medium
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-03
+ * @param {any} repoName - repo Name prop.
+ * @param {any} githubUrl - github Url prop.
+ * @param {string} [maxHeight="1000px"] - max Height prop.
+ * @param {string} [icon="github"] - icon prop.
+ * @param {any} children - children prop.
+ * @example
+ * <ExternalContent repoName="example" githubUrl="example">Example content</ExternalContent>
  */
 
 export const ExternalContent = ({

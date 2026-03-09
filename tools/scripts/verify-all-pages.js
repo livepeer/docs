@@ -30,10 +30,10 @@ const BASE_URL = 'http://localhost:3333';
 const PAGES = [
   {
     paths: [
-      '/v2/resources/documentation-guide/component-library/display',
-      '/v2/resources/documentation-guide/component-library/display'
+      '/v2/resources/documentation-guide/component-library/component-library',
+      '/v2/resources/documentation-guide/component-library/overview'
     ],
-    name: 'Display'
+    name: 'Component Library'
   },
   {
     paths: [
@@ -58,17 +58,17 @@ const PAGES = [
   },
   {
     paths: [
-      '/v2/resources/documentation-guide/component-library/domain',
-      '/v2/resources/documentation-guide/component-library/domain'
+      '/v2/resources/documentation-guide/component-library/data',
+      '/v2/resources/documentation-guide/component-library/data'
     ],
-    name: 'Domain'
+    name: 'Data'
   },
   {
     paths: [
-      '/v2/resources/documentation-guide/component-library/integrations',
-      '/v2/resources/documentation-guide/component-library/integrations'
+      '/v2/resources/documentation-guide/component-library/page-structure',
+      '/v2/resources/documentation-guide/component-library/page-structure'
     ],
-    name: 'Integrations'
+    name: 'Page Structure'
   },
 ];
 

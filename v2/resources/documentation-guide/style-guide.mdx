@@ -286,7 +286,7 @@ export const MyComponent = ({ variant = "default" }) => {
 
 **After (✅ CORRECT):**
 ```mdx
-import { FlexContainer } from '/snippets/components/primitives/layout.jsx';
+import { FlexContainer } from '/snippets/components/layout/layout.jsx';
 
 <FlexContainer gap="1rem">
   <Card>Content 1</Card>
@@ -321,7 +321,7 @@ Use standard Markdown headings (`#`, `##`, `###`, etc.) for most content. Mintli
 For **frame mode pages**, use custom heading components:
 
 ```jsx
-import { H1, H2, PageHeader } from "/snippets/components/display/frame-mode.jsx";
+import { H1, H2, PageHeader } from "/snippets/components/page-structure/frame-mode.jsx";
 
 <PageHeader>Main Title</PageHeader>
 <H1>Section Title</H1>
@@ -469,7 +469,7 @@ import { GotoLink } from '/snippets/components/primitives/links.jsx';
 > This is a quote
 
 {/* ✅ Custom quote component with attribution */}
-import { FrameQuote } from '/snippets/components/display/quote.jsx';
+import { FrameQuote } from '/snippets/components/content/quote.jsx';
 <FrameQuote author="John Doe" source="Livepeer Blog" href="https://livepeer.org/blog">
   This is a quote with better visual design.
 </FrameQuote>
@@ -757,7 +757,7 @@ Frame mode (`mode: frame` in frontmatter) removes all default Mintlify styling. 
 - All styling must be custom
 - Mintlify components still work but lose default styles
 - Keep responsive layout primitives in `style.css` (`.frame-mode-container`, `.frame-mode-hero-full`, frame pagination)
-- Keep portal/page-specific structure in shared JSX components (for example `/snippets/components/domain/SHARED/Portals.jsx`)
+- Keep portal/page-specific structure in shared JSX components (for example `/snippets/components/page-structure/portals.jsx`)
 - Do not use fixed breakout constants directly in component styles (for example hardcoded `96px`, `20px`, or fixed `%` widths)
 - Prefer CSS variables + breakpoints for frame mode layout, and CSS custom properties (`var(--...)`) for theming
 
@@ -912,7 +912,7 @@ Before submitting documentation:
 1. Use Puppeteer or similar tool to load each page
 2. Wait for network idle
 3. Check for console errors (filtering out test script artifacts)
-4. Verify content length > 500 chars
+4. Verify content length &gt; 500 chars
 5. Verify H1 element exists
 6. Check for 404 errors
 

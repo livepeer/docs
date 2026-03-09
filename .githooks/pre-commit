@@ -691,6 +691,34 @@ run_node_check() {
     return 1
 }
 
+# Component governance checks
+if [ "$SKIP_TESTS" != "1" ]; then
+    STAGED_COMPONENTS=$(git diff --cached --name-only --diff-filter=ACM -- 'snippets/components/**/*.jsx' | grep -v '_archive/' || true)
+    if [ -n "$STAGED_COMPONENTS" ]; then
+        run_node_check \
+          "Running component JSDoc validation (staged)..." \
+          "❌ Component JSDoc validation failed" \
+          tools/scripts/validators/components/check-component-docs.js --staged
+
+        run_node_check \
+          "Running component styling validation (staged)..." \
+          "❌ Component styling validation failed" \
+          tools/scripts/validators/components/check-component-css.js --staged
+
+        if [ $VIOLATIONS -eq 0 ]; then
+            echo -e "${YELLOW}Regenerating component registry...${NC}"
+            if node tools/scripts/generate-component-registry.js 2>&1; then
+                git add docs-guide/component-registry.json docs-guide/component-registry-schema.json 2>/dev/null
+                echo -e "${GREEN}✓ Component registry regenerated${NC}"
+            else
+                VIOLATIONS=$((VIOLATIONS + 1))
+                WARNINGS+=("❌ Component registry generation failed")
+                echo -e "${RED}❌ Component registry generation failed${NC}"
+            fi
+        fi
+    fi
+fi
+
 # Run test suite (fast mode for pre-commit)
 if [ "$SKIP_TESTS" = "1" ]; then
     echo -e "${YELLOW}⚠️  Test suite bypassed (SKIP_TESTS=1)${NC}"
@@ -719,6 +747,20 @@ else
               "Running v2/pages index generation (staged changes)..." \
               "❌ v2/pages index generation failed - fix index sync issues" \
               tools/scripts/generate-pages-index.js --staged --write --stage
+        fi
+
+        if [ -f "tools/scripts/remediators/content/repair-mdx-safe-markdown.js" ]; then
+            run_node_check \
+              "Running staged MDX-safe markdown auto-repair..." \
+              "❌ MDX-safe markdown auto-repair failed - inspect repair-mdx-safe-markdown output" \
+              tools/scripts/remediators/content/repair-mdx-safe-markdown.js --write --staged --stage
+        fi
+
+        if [ -f "tools/scripts/validators/content/check-mdx-safe-markdown.js" ]; then
+            run_node_check \
+              "Running staged MDX-safe markdown validation..." \
+              "❌ MDX-safe markdown validation failed - inspect check-mdx-safe-markdown output" \
+              tools/scripts/validators/content/check-mdx-safe-markdown.js --staged
         fi
 
         if [ -f "tools/scripts/generate-docs-index.js" ]; then

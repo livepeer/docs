@@ -17,8 +17,8 @@ Content components handle code display, external content loading, and data prese
 ```jsx
 import { CustomCodeBlock, CodeComponent } from "/snippets/components/content/code.jsx";
 import { ExternalContent } from "/snippets/components/content/external-content.jsx";
-import { MathInline, MathBlock } from "/snippets/components/content/math.jsx";
-import { LatestVersion } from "/snippets/components/content/release.jsx";
+import { MathInline, MathBlock } from "/snippets/components/primitives/math.jsx";
+import { LatestVersion } from "/snippets/components/data/release.jsx";
 import { ResponseFieldExpandable } from "/snippets/components/content/response-field.jsx";
 ```
 
@@ -51,7 +51,7 @@ See the `examples/` folder for runnable MDX examples of each component.
 ### Math Example
 
 ```mdx
-import { MathInline, MathBlock } from "/snippets/components/content/math.jsx";
+import { MathInline, MathBlock } from "/snippets/components/primitives/math.jsx";
 
 Inline: <MathInline latex={String.raw`V_i = \frac{B_i}{B_T}`} />
 

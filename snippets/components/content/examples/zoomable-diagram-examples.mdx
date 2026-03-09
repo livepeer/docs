@@ -1,0 +1,260 @@
+---
+title: "ScrollableDiagram Component Examples"
+description: "Examples of using the ScrollableDiagram component for interactive diagrams"
+---
+
+import { ScrollableDiagram } from "/snippets/components/content/zoomable-diagram.jsx";
+
+## Basic Usage
+
+<ScrollableDiagram title="Basic Network Diagram">
+  <div style={{ minWidth: "800px" }}>
+    <pre>{`
+    ┌─────────────┐
+    │   Client    │
+    └──────┬──────┘
+           │
+           ▼
+    ┌─────────────┐
+    │   Gateway   │
+    └──────┬──────┘
+           │
+           ▼
+    ┌─────────────┐
+    │   Server    │
+    └─────────────┘
+    `}</pre>
+  </div>
+</ScrollableDiagram>
+
+## Custom Max Height
+
+<ScrollableDiagram 
+  title="Tall Diagram with Custom Height"
+  maxHeight="300px"
+>
+  <div style={{ minWidth: "600px" }}>
+    <pre>{`
+    Layer 1: Application
+    ├── Web Interface
+    ├── API Gateway
+    └── Authentication
+    
+    Layer 2: Business Logic
+    ├── Stream Processing
+    ├── Transcoding Engine
+    └── Storage Manager
+    
+    Layer 3: Data Layer
+    ├── Database
+    ├── Cache
+    └── Object Storage
+    
+    Layer 4: Infrastructure
+    ├── Load Balancer
+    ├── CDN
+    └── Monitoring
+    `}</pre>
+  </div>
+</ScrollableDiagram>
+
+## Wide Diagram
+
+<ScrollableDiagram 
+  title="Wide Architecture Diagram"
+  minWidth="1200px"
+>
+  <div style={{ minWidth: "1200px" }}>
+    <pre>{`
+    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+    │  Client  │───▶│  CDN     │───▶│ Gateway  │───▶│ Transcode│───▶│ Storage  │
+    └──────────┘    └──────────┘    └──────────┘    └──────────┘    └──────────┘
+         │               │                │               │               │
+         │               │                │               │               │
+         ▼               ▼                ▼               ▼               ▼
+    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+    │Analytics │    │  Cache   │    │   Auth   │    │  Queue   │    │ Database │
+    └──────────┘    └──────────┘    └──────────┘    └──────────┘    └──────────┘
+    `}</pre>
+  </div>
+</ScrollableDiagram>
+
+## With Mermaid Diagram
+
+<ScrollableDiagram 
+  title="Livepeer Video Processing Flow"
+  maxHeight="500px"
+  minWidth="900px"
+>
+  <div style={{ minWidth: "900px" }}>
+    <pre>{`
+    graph LR
+        A[Video Upload] --> B[Validation]
+        B --> C[Queue]
+        C --> D[Transcoding]
+        D --> E[Quality Check]
+        E --> F{Pass?}
+        F -->|Yes| G[Storage]
+        F -->|No| D
+        G --> H[CDN Distribution]
+        H --> I[Playback]
+    `}</pre>
+  </div>
+</ScrollableDiagram>
+
+## Complex System Diagram
+
+<ScrollableDiagram 
+  title="Complete Livepeer Ecosystem"
+  maxHeight="600px"
+  minWidth="1000px"
+>
+  <div style={{ minWidth: "1000px", padding: "20px" }}>
+    <pre>{`
+    ╔════════════════════════════════════════════════════════════════════╗
+    ║                        LIVEPEER ECOSYSTEM                          ║
+    ╚════════════════════════════════════════════════════════════════════╝
+    
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                         CLIENT LAYER                            │
+    ├─────────────────────────────────────────────────────────────────┤
+    │  Web App  │  Mobile App  │  Desktop App  │  Third-party Apps   │
+    └────┬──────┴──────┬───────┴───────┬───────┴──────────┬───────────┘
+         │             │               │                  │
+         └─────────────┴───────────────┴──────────────────┘
+                              │
+                              ▼
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                         API GATEWAY                             │
+    ├─────────────────────────────────────────────────────────────────┤
+    │  Authentication  │  Rate Limiting  │  Request Routing           │
+    └────┬─────────────┴─────────┬───────┴────────────────────────────┘
+         │                       │
+         ▼                       ▼
+    ┌─────────────┐      ┌─────────────────┐
+    │   Stream    │      │     Asset       │
+    │   Service   │      │    Service      │
+    └──────┬──────┘      └────────┬────────┘
+           │                      │
+           └──────────┬───────────┘
+                      ▼
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    TRANSCODING LAYER                            │
+    ├─────────────────────────────────────────────────────────────────┤
+    │  Orchestrator  │  Transcoder Nodes  │  Quality Verification    │
+    └────────────────┴────────────────────┴──────────────────────────┘
+                              │
+                              ▼
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                      STORAGE LAYER                              │
+    ├─────────────────────────────────────────────────────────────────┤
+    │  Object Storage  │  Database  │  Cache  │  CDN                  │
+    └─────────────────────────────────────────────────────────────────┘
+    `}</pre>
+  </div>
+</ScrollableDiagram>
+
+## Use Cases
+
+### 1. API Flow Diagram
+
+<ScrollableDiagram title="API Request Flow">
+  <div style={{ minWidth: "700px" }}>
+    <pre>{`
+    1. Client Request
+       │
+       ▼
+    2. API Gateway
+       ├─ Validate API Key
+       ├─ Check Rate Limit
+       └─ Route Request
+       │
+       ▼
+    3. Service Layer
+       ├─ Process Request
+       ├─ Business Logic
+       └─ Data Validation
+       │
+       ▼
+    4. Data Layer
+       ├─ Query Database
+       ├─ Update Cache
+       └─ Store Results
+       │
+       ▼
+    5. Response
+       └─ Return to Client
+    `}</pre>
+  </div>
+</ScrollableDiagram>
+
+### 2. Network Topology
+
+<ScrollableDiagram 
+  title="Livepeer Network Topology"
+  maxHeight="400px"
+>
+  <div style={{ minWidth: "800px" }}>
+    <pre>{`
+                    ┌─────────────┐
+                    │  Broadcaster│
+                    └──────┬──────┘
+                           │
+            ┌──────────────┼──────────────┐
+            │              │              │
+            ▼              ▼              ▼
+    ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+    │Orchestrator 1│ │Orchestrator 2│ │Orchestrator 3│
+    └──────┬───────┘ └──────┬───────┘ └──────┬───────┘
+           │                │                │
+    ┌──────┴────┐    ┌──────┴────┐    ┌──────┴────┐
+    │           │    │           │    │           │
+    ▼           ▼    ▼           ▼    ▼           ▼
+┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐
+│Trans 1 │ │Trans 2 │ │Trans 3 │ │Trans 4 │ │Trans 5 │
+└────────┘ └────────┘ └────────┘ └────────┘ └────────┘
+    `}</pre>
+  </div>
+</ScrollableDiagram>
+
+### 3. Data Flow
+
+<ScrollableDiagram title="Video Processing Pipeline">
+  <div style={{ minWidth: "900px" }}>
+    <pre>{`
+    Input Video ──▶ Validation ──▶ Segmentation ──▶ Transcoding ──▶ Output
+         │              │              │               │              │
+         │              │              │               │              │
+         ▼              ▼              ▼               ▼              ▼
+    Format Check   Size Check    HLS Segments    Multiple         Storage
+    Codec Check    Duration      DASH Segments   Renditions       CDN Push
+    Resolution     Metadata      Thumbnails      720p, 480p       Playback URLs
+    `}</pre>
+  </div>
+</ScrollableDiagram>
+
+## Advanced Examples
+
+### With HTML Content
+
+<ScrollableDiagram title="Interactive Component Diagram">
+  <div style={{ minWidth: "800px", padding: "20px" }}>
+    <div style={{ display: "flex", gap: "20px", flexDirection: "column" }}>
+      <div style={{ border: "2px solid #2d9a67", padding: "10px", borderRadius: "8px" }}>
+        <strong>Frontend Layer</strong>
+        <p>React Components, State Management, API Calls</p>
+      </div>
+      <div style={{ textAlign: "center" }}>↓</div>
+      <div style={{ border: "2px solid #2d9a67", padding: "10px", borderRadius: "8px" }}>
+        <strong>API Layer</strong>
+        <p>REST API, GraphQL, WebSocket</p>
+      </div>
+      <div style={{ textAlign: "center" }}>↓</div>
+      <div style={{ border: "2px solid #2d9a67", padding: "10px", borderRadius: "8px" }}>
+        <strong>Backend Layer</strong>
+        <p>Business Logic, Authentication, Processing</p>
+      </div>
+    </div>
+  </div>
+</ScrollableDiagram>
+

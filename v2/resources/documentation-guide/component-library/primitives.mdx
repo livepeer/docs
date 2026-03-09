@@ -1,1016 +1,1012 @@
 ---
 title: 'Primitives'
 sidebarTitle: 'Primitives'
-description: 'Basic UI building blocks used throughout the Livepeer documentation: buttons, icons, links, text, dividers, containers, tables, and layout utilities'
-keywords: ["livepeer", "components", "primitives", "buttons", "icons", "links"]
+description: 'Standalone visual atoms used across authored documentation.'
+pageType: reference
 ---
 
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
-import { LivepeerIcon, LivepeerIconFlipped, LivepeerSVG, LivepeerIconOld } from '/snippets/components/primitives/icons.jsx'
-import { CustomCallout, GotoLink, GotoCard, TipWithArrow, LinkArrow } from '/snippets/components/primitives/links.jsx'
-// BlinkingIcon, BlinkingTerminal, DoubleIconLink commented out - require ThemeData (DEPRECATED per style guide - components are immutable)
-import { DownloadButton, BasicBtn } from '/snippets/components/primitives/buttons.jsx'
-import { Subtitle, CopyText, CardTitleTextWithArrow, AccordionTitleWithArrow } from '/snippets/components/primitives/text.jsx'
-import { FlexContainer, GridContainer, Spacer } from '/snippets/components/primitives/layout.jsx'
-import { StyledTable, TableRow, TableCell } from '/snippets/components/primitives/tables.jsx'
-import { BorderedBox, CenteredContainer, FullWidthContainer } from '/snippets/components/primitives/containers.jsx'
-import { FocusableScrollRegions } from '/snippets/components/primitives/a11y.jsx'
+{/*
+generated-file-banner: generated-file-banner:v1
+Generation Script: tools/scripts/generate-component-docs.js
+Purpose: Generated component-library MDX pages derived from docs-guide/component-registry.json.
+Run when: Component governance metadata, registry outputs, or published component-library templates change.
+Run command: node tools/scripts/generate-component-docs.js --template-only --category primitives
+*/}
 
-<FocusableScrollRegions />
+<Note>
+**Generation Script**: This file is generated from script(s): `tools/scripts/generate-component-docs.js`. <br/>
+**Purpose**: Generated component-library MDX pages derived from docs-guide/component-registry.json. <br/>
+**Run when**: Component governance metadata, registry outputs, or published component-library templates change. <br/>
+**Important**: Do not manually edit this file; run `node tools/scripts/generate-component-docs.js --template-only --category primitives`. <br/>
+</Note>
 
 <Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
-  Return to the main component library index
+  Return to the generated component library landing page.
 </Card>
 
-<CustomDivider middleText="Buttons & Actions" />
+## Primitives
 
-## Buttons & Actions
+Standalone visual atoms used across authored documentation.
 
-### DownloadButton
+This category currently contains **28** governed export(s).
 
-Interactive download button with lazy loading for performance optimization.
+### Summary Table
 
-**Import:**
+| Component | Status | Tier | Risk | Source file |
+| --- | --- | --- | --- | --- |
+| [AccordionTitleWithArrow](#accordiontitlewitharrow) | `stable` | `primitive` | `low` | `/snippets/components/primitives/text.jsx` |
+| [BasicBtn](#basicbtn) | `stable` | `primitive` | `low` | `/snippets/components/primitives/buttons.jsx` |
+| [BlinkingIcon](#blinkingicon) | `stable` | `primitive` | `low` | `/snippets/components/primitives/links.jsx` |
+| [BlinkingTerminal](#blinkingterminal) | `deprecated` | `primitive` | `low` | `/snippets/components/primitives/links.jsx` |
+| [CardTitleTextWithArrow](#cardtitletextwitharrow) | `stable` | `primitive` | `low` | `/snippets/components/primitives/text.jsx` |
+| [ComingSoonCallout](#comingsooncallout) | `stable` | `primitive` | `low` | `/snippets/components/primitives/preview-callouts.jsx` |
+| [CopyText](#copytext) | `stable` | `primitive` | `low` | `/snippets/components/primitives/text.jsx` |
+| [CustomCallout](#customcallout) | `stable` | `primitive` | `low` | `/snippets/components/primitives/links.jsx` |
+| [CustomDivider](#customdivider) | `stable` | `primitive` | `low` | `/snippets/components/primitives/divider.jsx` |
+| [DoubleIconLink](#doubleiconlink) | `stable` | `primitive` | `low` | `/snippets/components/primitives/links.jsx` |
+| [DownloadButton](#downloadbutton) | `stable` | `primitive` | `low` | `/snippets/components/primitives/buttons.jsx` |
+| [FocusableScrollRegions](#focusablescrollregions) | `stable` | `primitive` | `low` | `/snippets/components/primitives/a11y.jsx` |
+| [GotoCard](#gotocard) | `stable` | `primitive` | `low` | `/snippets/components/primitives/links.jsx` |
+| [GotoLink](#gotolink) | `stable` | `primitive` | `low` | `/snippets/components/primitives/links.jsx` |
+| [Image](#image) | `stable` | `primitive` | `low` | `/snippets/components/primitives/image.jsx` |
+| [LinkArrow](#linkarrow) | `stable` | `primitive` | `low` | `/snippets/components/primitives/links.jsx` |
+| [LinkImage](#linkimage) | `stable` | `primitive` | `low` | `/snippets/components/primitives/image.jsx` |
+| [LivepeerIcon](#livepeericon) | `stable` | `primitive` | `low` | `/snippets/components/primitives/icons.jsx` |
+| [LivepeerIconFlipped](#livepeericonflipped) | `stable` | `primitive` | `low` | `/snippets/components/primitives/icons.jsx` |
+| [LivepeerIconOld](#livepeericonold) | `stable` | `primitive` | `low` | `/snippets/components/primitives/icons.jsx` |
+| [LivepeerSVG](#livepeersvg) | `stable` | `primitive` | `low` | `/snippets/components/primitives/icons.jsx` |
+| [MathBlock](#mathblock) | `stable` | `primitive` | `low` | `/snippets/components/primitives/math.jsx` |
+| [MathInline](#mathinline) | `stable` | `primitive` | `low` | `/snippets/components/primitives/math.jsx` |
+| [PreviewCallout](#previewcallout) | `stable` | `primitive` | `low` | `/snippets/components/primitives/preview-callouts.jsx` |
+| [ReviewCallout](#reviewcallout) | `stable` | `primitive` | `low` | `/snippets/components/primitives/preview-callouts.jsx` |
+| [SocialLinks](#sociallinks) | `stable` | `primitive` | `low` | `/snippets/components/primitives/social-links.jsx` |
+| [Subtitle](#subtitle) | `stable` | `primitive` | `low` | `/snippets/components/primitives/text.jsx` |
+| [TipWithArrow](#tipwitharrow) | `stable` | `primitive` | `low` | `/snippets/components/primitives/links.jsx` |
+
+### Component Entries
+
+### AccordionTitleWithArrow
+Accordion Title With Arrow primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/text.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `none`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/about/livepeer-protocol/core-mechanisms.mdx`, `v2/about/livepeer-protocol/governance-model.mdx`, `v2/about/livepeer-protocol/livepeer-token.mdx`, `v2/cn/about/livepeer-protocol/core-mechanisms.mdx`, `v2/cn/about/livepeer-protocol/governance-model.mdx`, `v2/cn/about/livepeer-protocol/livepeer-token.mdx`, and 9 more page(s)
+**Import**
 ```jsx
-import { DownloadButton } from "/snippets/components/primitives/buttons.jsx";
+import { AccordionTitleWithArrow } from '/snippets/components/primitives/text.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `text` | `any` | Yes | `` | text prop. |
+| `children` | `any` | Yes | `` | children prop. |
+| `color` | `string` | No | `"var(--text)"` | color prop. |
+
+**Example**
+
+```jsx
+<AccordionTitleWithArrow text="example">Example content</AccordionTitleWithArrow>
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `label` | `string` | `"Download"` | No | Button text label |
-| `icon` | `string` | `"download"` | No | Left icon name |
-| `downloadLink` | `string` | - | **Yes** | URL of the file to download |
-| `rightIcon` | `string` | `""` | No | Optional right icon name |
-| `border` | `boolean` | `false` | No | Whether to show a border around the button |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Basic">
-    <DownloadButton downloadLink="https://example.com/file.pdf" />
-  </Tab>
-  <Tab title="Custom Label">
-    <DownloadButton label="Download SDK" downloadLink="https://example.com/sdk.zip" />
-  </Tab>
-  <Tab title="With Icons">
-    <DownloadButton 
-      label="Download PDF" 
-      downloadLink="https://example.com/file.pdf" 
-      icon="file-pdf"
-      rightIcon="arrow-right"
-      border={true}
-    />
-  </Tab>
-  <Tab title="Code">
-```jsx
-<DownloadButton downloadLink="https://example.com/file.pdf" />
-
-<DownloadButton 
-  label="Download PDF" 
-  downloadLink="https://example.com/file.pdf" 
-  icon="file-pdf"
-  rightIcon="arrow-right"
-  border={true}
-/>
-```
-  </Tab>
-</Tabs>
 
 ---
 
 ### BasicBtn
-
-Placeholder component for basic button functionality. Currently returns empty div.
-
-**Import:**
+Basic Btn primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/buttons.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `DownloadButton`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: none
+**Import**
 ```jsx
-import { BasicBtn } from "/snippets/components/primitives/buttons.jsx";
+import { BasicBtn } from '/snippets/components/primitives/buttons.jsx'
+```
+**Props**
+No documented props.
+
+**Example**
+
+```jsx
+<BasicBtn />
 ```
 
-**Props:** None
-
-**Note:** This is a placeholder component and currently non-functional.
-
-<CustomDivider middleText="Icons & Branding" />
-
-## Icons & Branding
-
-### LivepeerIcon
-
-Theme-aware Livepeer logo icon that automatically adapts to light/dark mode.
-
-**Import:**
-```jsx
-import { LivepeerIcon } from "/snippets/components/primitives/icons.jsx";
-```
-
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `size` | `number` | `16` | No | Icon size in pixels |
-| `color` | `string` | theme-aware | No | Custom color override (defaults to theme-aware color) |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Default">
-    <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-      <LivepeerIcon /> Default size
-      <LivepeerIcon size={24} /> Size 24
-      <LivepeerIcon size={32} /> Size 32
-    </div>
-  </Tab>
-  <Tab title="Custom Color">
-    <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-      <LivepeerIcon size={24} color="#00cc88" /> Custom green
-      <LivepeerIcon size={24} color="#ff6b6b" /> Custom red
-      <LivepeerIcon size={24} color="#3b82f6" /> Custom blue
-    </div>
-  </Tab>
-  <Tab title="Code">
-```jsx
-<LivepeerIcon />
-<LivepeerIcon size={24} />
-<LivepeerIcon size={32} color="#00cc88" />
-```
-  </Tab>
-</Tabs>
 
 ---
 
-### LivepeerIconFlipped
-
-Horizontally flipped Livepeer icon. Useful for decorative purposes or directional indicators.
-
-**Import:**
-```jsx
-import { LivepeerIconFlipped } from "/snippets/components/primitives/icons.jsx";
-```
-
-**Props:** Same as `LivepeerIcon` (accepts all Icon component props)
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Example">
-    <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
-      <LivepeerIcon size={24} /> Normal
-      <LivepeerIconFlipped size={24} /> Flipped
-    </div>
-  </Tab>
-  <Tab title="Code">
-```jsx
-<LivepeerIconFlipped size={24} />
-```
-  </Tab>
-</Tabs>
-
----
-
-### LivepeerSVG
-
-Inline SVG version of the Livepeer logo. Uses em units for responsive sizing.
-
-**Import:**
-```jsx
-import { LivepeerSVG } from "/snippets/components/primitives/icons.jsx";
-```
-
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `size` | `number` | `24` | No | Size parameter (currently unused, uses 1em) |
-| `...props` | `object` | - | No | Additional SVG props |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Example">
-    <LivepeerSVG size={32} />
-  </Tab>
-  <Tab title="Code">
-```jsx
-<LivepeerSVG size={32} />
-```
-  </Tab>
-</Tabs>
-
----
-
-### LivepeerIconOld
-
-Legacy Livepeer icon component using the light symbol SVG file.
-
-**Import:**
-```jsx
-import { LivepeerIconOld } from "/snippets/components/primitives/icons.jsx";
-```
-
-**Props:** Accepts all Icon component props
-
-**Note:** This is the older version. Prefer `LivepeerIcon` for new code.
-
-<CustomDivider middleText="Links & Navigation" />
-
-## Links & Navigation
-
-### GotoLink
-
-Simple navigation link with icon for internal documentation pages.
-
-**Import:**
-```jsx
-import { GotoLink } from "/snippets/components/primitives/links.jsx";
-```
-
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `label` | `string` | - | **Yes** | Link text/label |
-| `relativePath` | `string` | - | **Yes** | Relative URL path |
-| `text` | `string` | `""` | No | Optional text to display before the link |
-| `icon` | `string` | `"arrow-turn-down-right"` | No | Icon to display |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Basic">
-    <GotoLink label="Getting Started" relativePath="/get-started" />
-  </Tab>
-  <Tab title="With Text">
-    <GotoLink label="API Reference" relativePath="/api" text="See the" />
-  </Tab>
-  <Tab title="Custom Icon">
-    <GotoLink label="Documentation" relativePath="/v2/home/mission-control" icon="book" />
-  </Tab>
-  <Tab title="Code">
-```jsx
-<GotoLink label="Getting Started" relativePath="/get-started" />
-<GotoLink label="API Reference" relativePath="/api" text="See the" icon="book" />
-```
-  </Tab>
-</Tabs>
-
----
-
-### GotoCard
-
-Card component for navigation with link, icon, and optional CTA.
-
-**Import:**
-```jsx
-import { GotoCard } from "/snippets/components/primitives/links.jsx";
-```
-
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `label` | `string` | - | **Yes** | Card title |
-| `relativePath` | `string` | - | **Yes** | Relative URL path |
-| `icon` | `string` | `"arrow-turn-down-right"` | No | Icon to display |
-| `text` | `ReactNode` | - | **Yes** | Card content |
-| `cta` | `string` | `""` | No | Call-to-action button text |
-| `...props` | `object` | - | No | Additional Card component props |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Basic">
-    <GotoCard
-      label="API Reference"
-      relativePath="/api/reference"
-      text="Complete API documentation with examples and code snippets"
-    />
-  </Tab>
-  <Tab title="With CTA">
-    <GotoCard
-      label="Getting Started"
-      relativePath="/get-started"
-      icon="rocket"
-      text="Learn how to build on Livepeer"
-      cta="Start Building"
-    />
-  </Tab>
-  <Tab title="Code">
-```jsx
-<GotoCard
-  label="API Reference"
-  relativePath="/api/reference"
-  text="Complete API documentation"
-  cta="View Docs"
-/>
-```
-  </Tab>
-</Tabs>
-
----
-
-{/* DoubleIconLink commented out - requires ThemeData (DEPRECATED per style guide - component is immutable) */}
-{/*
-### DoubleIconLink
-
-Link component with icons on both sides. Commonly used for external links like GitHub.
-
-**Note:** Currently unavailable - component requires ThemeData which is deprecated. See component-bugs.md for details.
-*/}
-
----
-
-### CustomCallout
-
-A stylized callout box with customizable icon and colors. Automatically converts hex colors to rgba for proper opacity handling.
-
-**Import:**
-```jsx
-import { CustomCallout } from "/snippets/components/primitives/links.jsx";
-```
-
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Yes** | Content to display in the callout |
-| `icon` | `string` | `"lightbulb"` | No | Icon name to display |
-| `color` | `string` | theme accent | No | Primary color for icon, border, and background |
-| `iconSize` | `number` | `16` | No | Size of the icon in pixels |
-| `textSize` | `string` | `"0.875rem"` | No | Font size for the text content |
-| `textColor` | `string` | matches `color` | No | Text color (defaults to match icon color) |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Info">
-    <CustomCallout icon="info" color="#3b82f6">
-      This is an informational message with a blue info icon.
-    </CustomCallout>
-  </Tab>
-  <Tab title="Warning">
-    <CustomCallout icon="warning" color="#ef4444">
-      Warning: This action cannot be undone.
-    </CustomCallout>
-  </Tab>
-  <Tab title="Success">
-    <CustomCallout icon="check-circle" color="#22c55e">
-      Success! Your changes have been saved.
-    </CustomCallout>
-  </Tab>
-  <Tab title="Code">
-```jsx
-<CustomCallout icon="info" color="#3b82f6">
-  Important information message
-</CustomCallout>
-
-<CustomCallout icon="warning" color="#ef4444">
-  Warning message
-</CustomCallout>
-```
-  </Tab>
-</Tabs>
-
----
-
-### TipWithArrow
-
-Callout box with an arrow indicator in the top-right corner. Similar to CustomCallout but includes an arrow icon.
-
-**Import:**
-```jsx
-import { TipWithArrow } from "/snippets/components/primitives/links.jsx";
-```
-
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Yes** | Content to display in the tip |
-| `icon` | `string` | `"lightbulb"` | No | Main icon to display on the left |
-| `arrowIcon` | `string` | `"arrow-up-right"` | No | Arrow icon to display in top-right |
-| `color` | `string` | theme accent | No | Primary color for icons, border, and background |
-| `iconSize` | `number` | `16` | No | Size of the main icon in pixels |
-| `arrowSize` | `number` | `16` | No | Size of the arrow icon in pixels |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Basic">
-    <TipWithArrow icon="info" color="#3b82f6">
-      Check out the related documentation for more details!
-    </TipWithArrow>
-  </Tab>
-  <Tab title="Custom Arrow">
-    <TipWithArrow icon="lightbulb" arrowIcon="arrow-right" color="#f59e0b">
-      Tip: Use this component to point users to related content.
-    </TipWithArrow>
-  </Tab>
-  <Tab title="Code">
-```jsx
-<TipWithArrow icon="info" color="#3b82f6">
-  Check out the related documentation!
-</TipWithArrow>
-```
-  </Tab>
-</Tabs>
-
----
-
-{/* BlinkingIcon and BlinkingTerminal commented out - require ThemeData (DEPRECATED per style guide - components are immutable) */}
-{/*
 ### BlinkingIcon
+Displays an icon with a smooth blinking animation (fades between full and 30% opacity).
+- File: `/snippets/components/primitives/links.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `BlinkingTerminal`, `CustomCallout`, `DoubleIconLink`, `GotoCard`, `GotoLink`, `LinkArrow`, `TipWithArrow`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/about/portal.mdx`, `v2/cn/about/portal.mdx`, `v2/cn/community/community-portal.mdx`, `v2/cn/developers/portal.mdx`, `v2/cn/gateways/gateways-portal.mdx`, `v2/cn/gateways/run-a-gateway/configure/ai-configuration.mdx`, and 34 more page(s)
+**Import**
+```jsx
+import { BlinkingIcon } from '/snippets/components/primitives/links.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `icon` | `string` | No | `"terminal"` | Icon name to display |
+| `size` | `number` | No | `16` | Size of the icon in pixels |
+| `color` | `string` | Yes | `` | Color of the icon (defaults to theme accent) |
 
-An icon with a smooth blinking animation (fades between full and 30% opacity). Animation cycles every 3 seconds.
+**Example**
 
-**Note:** Currently unavailable - component requires ThemeData which is deprecated. See component-bugs.md for details.
+```jsx
+<BlinkingIcon color="example" />
+```
+
+
+---
 
 ### BlinkingTerminal
-
-Alias for `BlinkingIcon` (backwards compatibility). Use `BlinkingIcon` instead.
-
-**Note:** Currently unavailable - component requires ThemeData which is deprecated. See component-bugs.md for details.
-*/}
-
----
-
-### LinkArrow
-
-Link component with arrow icon and optional newline.
-
-**Import:**
+Blinking Terminal primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/links.jsx`
+- Tier: `primitive`
+- Status: `deprecated`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `BlinkingIcon`, `CustomCallout`, `DoubleIconLink`, `GotoCard`, `GotoLink`, `LinkArrow`, `TipWithArrow`
+- Data source: `none`
+- Duplicates: `BlinkingIcon`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: none
+- Deprecation note: BlinkingTerminal is deprecated and should not be used for new content. See `BlinkingIcon`.
+**Import**
 ```jsx
-import { LinkArrow } from "/snippets/components/primitives/links.jsx";
+import { BlinkingTerminal } from '/snippets/components/primitives/links.jsx'
+```
+**Props**
+No documented props.
+
+**Example**
+
+```jsx
+<BlinkingTerminal />
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `href` | `string` | - | **Yes** | Link URL |
-| `label` | `string` | - | **Yes** | Link text |
-| `newline` | `boolean` | `true` | No | Whether to add a line break before the link |
-| `borderColor` | `string` | - | No | Optional border color |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Example">
-    <LinkArrow href="https://livepeer.org" label="Visit Livepeer" />
-  </Tab>
-  <Tab title="Code">
-```jsx
-<LinkArrow href="https://livepeer.org" label="Visit Livepeer" />
-<LinkArrow href="/v2/home/mission-control" label="Documentation" newline={false} />
-```
-  </Tab>
-</Tabs>
-
-<CustomDivider middleText="Text & Typography" />
-
-## Text & Typography
-
-### Subtitle
-
-Styled subtitle text component with customizable styling.
-
-**Import:**
-```jsx
-import { Subtitle } from "/snippets/components/primitives/text.jsx";
-```
-
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `text` | `string` | - | No | Subtitle text (alternative to children) |
-| `children` | `ReactNode` | - | No | Alternative content (alternative to text) |
-| `style` | `object` | `{}` | No | Custom styles object |
-| `style.fontSize` | `string` | `"1rem"` | No | Font size |
-| `style.fontStyle` | `string` | `"italic"` | No | Font style |
-| `style.color` | `string` | `"var(--accent)"` | No | Text color |
-| `style.marginBottom` | `string` | `0` | No | Bottom margin |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Basic">
-    <Subtitle text="This is a subtitle" />
-  </Tab>
-  <Tab title="Custom Style">
-    <Subtitle 
-      text="Custom styled subtitle" 
-      style={{ fontSize: "1.2rem", color: "#00cc88", fontStyle: "normal" }}
-    />
-  </Tab>
-  <Tab title="Code">
-```jsx
-<Subtitle text="This is a subtitle" />
-<Subtitle style={{ fontSize: "1.2rem", color: "#00cc88" }}>
-  Custom styled subtitle
-</Subtitle>
-```
-  </Tab>
-</Tabs>
-
----
-
-### CopyText
-
-Inline code with copy button. Displays text in a code block with a clickable copy button.
-
-**Import:**
-```jsx
-import { CopyText } from "/snippets/components/primitives/text.jsx";
-```
-
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `text` | `string` | - | **Yes** | The text to display and copy |
-| `label` | `string` | - | No | Optional label before the text |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Basic">
-    <CopyText text="0x1234567890abcdef" />
-  </Tab>
-  <Tab title="With Label">
-    <CopyText text="0x1234567890abcdef" label="Address:" />
-  </Tab>
-  <Tab title="Code">
-```jsx
-<CopyText text="0x1234567890abcdef" />
-<CopyText text="npm install livepeer" label="Command:" />
-```
-  </Tab>
-</Tabs>
 
 ---
 
 ### CardTitleTextWithArrow
-
-Card title component with arrow icon integrated into the title.
-
-**Import:**
+Card Title Text With Arrow primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/text.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `none`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/about/livepeer-protocol/core-mechanisms.mdx`, `v2/about/livepeer-protocol/governance-model.mdx`, `v2/about/livepeer-protocol/livepeer-token.mdx`, `v2/about/livepeer-protocol/overview.mdx`, `v2/about/livepeer-protocol/technical-architecture.mdx`, `v2/about/livepeer-protocol/treasury.mdx`, and 18 more page(s)
+**Import**
 ```jsx
-import { CardTitleTextWithArrow } from "/snippets/components/primitives/text.jsx";
+import { CardTitleTextWithArrow } from '/snippets/components/primitives/text.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | Yes | `` | children prop. |
+| `cardProps` | `any` | Yes | `` | card Props prop. |
+
+**Example**
+
+```jsx
+<CardTitleTextWithArrow cardProps="example">Example content</CardTitleTextWithArrow>
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Yes** | Title text content |
-| `...cardProps` | `object` | - | No | Additional Card component props |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Example">
-    <CardTitleTextWithArrow>
-      Card Title with Arrow
-    </CardTitleTextWithArrow>
-  </Tab>
-  <Tab title="Code">
-```jsx
-<CardTitleTextWithArrow>
-  My Card Title
-</CardTitleTextWithArrow>
-```
-  </Tab>
-</Tabs>
 
 ---
 
-### AccordionTitleWithArrow
-
-Accordion title component with arrow icon. Use links inside the accordion content, not the title, to avoid nested interactive elements.
-
-**Import:**
+### ComingSoonCallout
+Callout announcing work-in-progress content and contribution links.
+- File: `/snippets/components/primitives/preview-callouts.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `PreviewCallout`, `ReviewCallout`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/cn/orchestrators/about-orchestrators/architecture.mdx`, `v2/cn/orchestrators/about-orchestrators/economics.mdx`, `v2/cn/orchestrators/orchestrator-tools-and-resources/community-pools.mdx`, `v2/cn/resources/changelog/migration-guide.mdx`, `v2/cn/resources/resources-portal.mdx`, `v2/es/orchestrators/about-orchestrators/architecture.mdx`, and 11 more page(s)
+**Import**
 ```jsx
-import { AccordionTitleWithArrow } from "/snippets/components/primitives/text.jsx";
+import { ComingSoonCallout } from '/snippets/components/primitives/preview-callouts.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `type` | `string` | No | `"page"` | type prop. |
+
+**Example**
+
+```jsx
+<ComingSoonCallout />
 ```
 
-**Props:**
 
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `text` | `string` | - | No | Title text (optional if `children` provided) |
-| `children` | `ReactNode` | - | No | Alternative to `text` |
-| `color` | `string` | `"var(--text)"` | No | Text color |
+---
 
-**Examples:**
-
-<Tabs>
-  <Tab title="Example">
-    <AccordionTitleWithArrow text="Learn More" />
-  </Tab>
-  <Tab title="Code">
+### CopyText
+Copy Text primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/text.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `none`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/about/resources/blockchain-contracts.mdx`, `v2/cn/about/resources/blockchain-contracts.mdx`, `v2/es/about/resources/blockchain-contracts.mdx`, `v2/fr/about/resources/blockchain-contracts.mdx`
+**Import**
 ```jsx
-<AccordionTitleWithArrow text="Learn More" />
+import { CopyText } from '/snippets/components/primitives/text.jsx'
 ```
-  </Tab>
-</Tabs>
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `text` | `any` | Yes | `` | text prop. |
+| `label` | `any` | Yes | `` | label prop. |
 
-<CustomDivider middleText="Dividers" />
+**Example**
 
-## Dividers
+```jsx
+<CopyText text="example" label="example" />
+```
+
+
+---
+
+### CustomCallout
+Displays a styled callout box with an icon and custom colors.
+- File: `/snippets/components/primitives/links.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `BlinkingIcon`, `BlinkingTerminal`, `DoubleIconLink`, `GotoCard`, `GotoLink`, `LinkArrow`, `TipWithArrow`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/cn/gateways/run-a-gateway/connect/connect-with-offerings.mdx`, `v2/es/gateways/run-a-gateway/connect/connect-with-offerings.mdx`, `v2/fr/gateways/run-a-gateway/connect/connect-with-offerings.mdx`, `v2/gateways/run-a-gateway/connect/connect-with-offerings.mdx`, `v2/gateways/run-a-gateway/publish/connect-with-offerings.mdx`
+**Import**
+```jsx
+import { CustomCallout } from '/snippets/components/primitives/links.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `React.ReactNode` | Yes | `` | Content to display in the callout |
+| `icon` | `string` | No | `"lightbulb"` | Icon name to display |
+| `color` | `string` | Yes | `` | Primary color for icon, border, and background (defaults to theme accent) |
+| `iconSize` | `number` | No | `16` | Size of the icon in pixels |
+| `textSize` | `string` | No | `"0.875rem"` | Font size for the text content |
+| `textColor` | `string` | Yes | `` | Text color (defaults to match icon color) |
+
+**Example**
+
+```jsx
+<CustomCallout color="example" textColor="example">Example content</CustomCallout>
+```
+
+
+---
 
 ### CustomDivider
-
-Decorative horizontal divider with Livepeer branding icons on both ends. Optionally includes centered text between the divider lines. Icons automatically adapt to light/dark theme.
-
-**Import:**
+Custom Divider primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/divider.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `none`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/about/livepeer-protocol/core-mechanisms.mdx`, `v2/about/livepeer-protocol/governance-model.mdx`, `v2/about/livepeer-protocol/livepeer-token.mdx`, `v2/about/livepeer-protocol/overview.mdx`, `v2/about/livepeer-protocol/technical-architecture.mdx`, `v2/about/livepeer-protocol/treasury.mdx`, and 100 more page(s)
+**Import**
 ```jsx
-import { CustomDivider } from "/snippets/components/primitives/divider.jsx";
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
 ```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `color` | `string` | No | `"var(--border)"` | color prop. |
+| `middleText` | `string` | No | `""` | middle Text prop. |
+| `style` | `object` | No | `{}` | style prop. |
 
-**Props:**
+**Example**
 
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `middleText` | `string` | `""` | No | Optional text to display in the center of the divider |
-| `color` | `string` | `"var(--border)"` | No | Color for the middle text |
-| `style` | `object` | `{}` | No | Additional CSS styles |
-| `style.margin` | `string` | `"24px 0"` | No | Vertical margin |
-| `style.fontSize` | `string` | `"16px"` | No | Font size for middle text |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Basic">
-    <CustomDivider />
-  </Tab>
-  <Tab title="With Text">
-    <CustomDivider middleText="Section Break" />
-  </Tab>
-  <Tab title="Custom Color">
-    <CustomDivider middleText="OR" color="#2d9a67" />
-  </Tab>
-  <Tab title="Code">
 ```jsx
 <CustomDivider />
-<CustomDivider middleText="Section Break" />
-<CustomDivider middleText="OR" color="#2d9a67" />
 ```
-  </Tab>
-</Tabs>
+
 
 ---
 
-<CustomDivider middleText="Layout" />
-
-## Layout Primitives
-
-Layout components for organizing content without inline styles in MDX files.
-
-### FlexContainer
-
-Flexbox container component for arranging items in rows or columns.
-
-**Import:**
+### DoubleIconLink
+Displays a link with an icon on the left and right, plus optional text prefix.
+- File: `/snippets/components/primitives/links.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `BlinkingIcon`, `BlinkingTerminal`, `CustomCallout`, `GotoCard`, `GotoLink`, `LinkArrow`, `TipWithArrow`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/cn/gateways/about-gateways/gateway-architecture.mdx`, `v2/cn/gateways/about/architecture.mdx`, `v2/cn/gateways/quickstart/gateway-setup.mdx`, `v2/cn/gateways/references/configuration-flags.mdx`, `v2/cn/gateways/run-a-gateway/configure/ai-configuration.mdx`, `v2/cn/gateways/run-a-gateway/configure/dual-configuration.mdx`, and 46 more page(s)
+**Import**
 ```jsx
-import { FlexContainer } from "/snippets/components/primitives/layout.jsx";
+import { DoubleIconLink } from '/snippets/components/primitives/links.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `label` | `string` | No | `""` | Link text/label |
+| `href` | `string` | No | `"#"` | Link URL |
+| `text` | `string` | No | `""` | Optional text to display before the link |
+| `iconLeft` | `string` | No | `"github"` | Icon to display on the left |
+| `iconRight` | `string` | No | `"arrow-up-right"` | Icon to display on the right |
+
+**Example**
+
+```jsx
+<DoubleIconLink />
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Yes** | Content to display |
-| `direction` | `string` | `"row"` | No | Flex direction: "row" \| "column" \| "row-reverse" \| "column-reverse" |
-| `gap` | `string` | `"1rem"` | No | Gap between items (CSS value) |
-| `align` | `string` | `"flex-start"` | No | Align items: "flex-start" \| "center" \| "flex-end" \| "stretch" |
-| `justify` | `string` | `"flex-start"` | No | Justify content: "flex-start" \| "center" \| "flex-end" \| "space-between" \| "space-around" \| "space-evenly" |
-| `wrap` | `boolean` | `false` | No | Allow wrapping |
-| `style` | `object` | `{}` | No | Additional inline styles |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Row Layout">
-    <FlexContainer gap="1rem">
-      <Card title="Card 1">Content 1</Card>
-      <Card title="Card 2">Content 2</Card>
-      <Card title="Card 3">Content 3</Card>
-    </FlexContainer>
-  </Tab>
-  <Tab title="Column Layout">
-    <FlexContainer direction="column" gap="0.5rem">
-      <Card title="Item 1">First item</Card>
-      <Card title="Item 2">Second item</Card>
-    </FlexContainer>
-  </Tab>
-  <Tab title="Centered">
-    <FlexContainer justify="center" align="center" gap="2rem">
-      <Card title="Centered">Item 1</Card>
-      <Card title="Centered">Item 2</Card>
-    </FlexContainer>
-  </Tab>
-  <Tab title="Code">
-```jsx
-<FlexContainer gap="1rem">
-  <Card>Item 1</Card>
-  <Card>Item 2</Card>
-</FlexContainer>
-
-<FlexContainer direction="column" gap="0.5rem" align="center">
-  <Card>Item 1</Card>
-  <Card>Item 2</Card>
-</FlexContainer>
-```
-  </Tab>
-</Tabs>
 
 ---
 
-### GridContainer
-
-CSS Grid container component for grid layouts.
-
-**Import:**
+### DownloadButton
+Download Button primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/buttons.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `BasicBtn`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/cn/gateways/quickstart/gateway-setup.mdx`, `v2/cn/gateways/run-a-gateway/install/linux-install.mdx`, `v2/es/gateways/quickstart/gateway-setup.mdx`, `v2/es/gateways/run-a-gateway/install/linux-install.mdx`, `v2/fr/gateways/quickstart/gateway-setup.mdx`, `v2/fr/gateways/run-a-gateway/install/linux-install.mdx`, and 4 more page(s)
+**Import**
 ```jsx
-import { GridContainer } from "/snippets/components/primitives/layout.jsx";
+import { DownloadButton } from '/snippets/components/primitives/buttons.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `label` | `string` | No | `'Download'` | label prop. |
+| `icon` | `string` | No | `'download'` | icon prop. |
+| `downloadLink` | `any` | Yes | `` | download Link prop. |
+| `rightIcon` | `string` | No | `''` | right Icon prop. |
+| `border` | `boolean` | No | `false` | border prop. |
+
+**Example**
+
+```jsx
+<DownloadButton downloadLink="example" />
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Yes** | Content to display |
-| `columns` | `string\|number` | - | No | Number of columns or CSS grid-template-columns value |
-| `gap` | `string` | `"1rem"` | No | Gap between items (CSS value) |
-| `style` | `object` | `{}` | No | Additional inline styles |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="3 Columns">
-    <GridContainer columns={3} gap="1rem">
-      <Card title="Card 1">Content</Card>
-      <Card title="Card 2">Content</Card>
-      <Card title="Card 3">Content</Card>
-    </GridContainer>
-  </Tab>
-  <Tab title="Code">
-```jsx
-<GridContainer columns={3} gap="2rem">
-  <Card>Item 1</Card>
-  <Card>Item 2</Card>
-  <Card>Item 3</Card>
-</GridContainer>
-```
-  </Tab>
-</Tabs>
 
 ---
 
-### Spacer
-
-Vertical or horizontal spacing component.
-
-**Import:**
+### FocusableScrollRegions
+Focusable Scroll Regions primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/a11y.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `none`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/cn/resources/documentation-guide/style-guide.mdx`, `v2/es/resources/documentation-guide/style-guide.mdx`, `v2/fr/resources/documentation-guide/style-guide.mdx`, `v2/resources/documentation-guide/style-guide.mdx`
+**Import**
 ```jsx
-import { Spacer } from "/snippets/components/primitives/layout.jsx";
+import { FocusableScrollRegions } from '/snippets/components/primitives/a11y.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `selectors` | `any` | Yes | `` | selectors prop. |
+
+**Example**
+
+```jsx
+<FocusableScrollRegions selectors="example" />
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `size` | `string` | `"1rem"` | No | Spacing size (CSS value) |
-| `direction` | `string` | `"vertical"` | No | Spacing direction: "vertical" \| "horizontal" |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Vertical Spacing">
-    <Card title="Card 1">Content</Card>
-    <Spacer size="2rem" />
-    <Card title="Card 2">Content</Card>
-  </Tab>
-  <Tab title="Code">
-```jsx
-<Card>Content 1</Card>
-<Spacer size="2rem" />
-<Card>Content 2</Card>
-```
-  </Tab>
-</Tabs>
-
-<CustomDivider middleText="Tables" />
-
-## Table Primitives
-
-Table components for structured data display without inline styles.
-
-### StyledTable
-
-Theme-aware table component with variant support.
-
-**Import:**
-```jsx
-import { StyledTable, TableRow, TableCell } from "/snippets/components/primitives/tables.jsx";
-```
-
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Yes** | Table content (thead, tbody, etc.) |
-| `variant` | `string` | `"default"` | No | Table variant: "default" \| "bordered" \| "minimal" |
-| `style` | `object` | `{}` | No | Additional inline styles |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Default Table">
-    <StyledTable>
-      <thead>
-        <TableRow header>
-          <TableCell header>Name</TableCell>
-          <TableCell header align="center">Status</TableCell>
-        </TableRow>
-      </thead>
-      <tbody>
-        <TableRow>
-          <TableCell>Item 1</TableCell>
-          <TableCell align="center">Active</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell>Item 2</TableCell>
-          <TableCell align="center">Pending</TableCell>
-        </TableRow>
-      </tbody>
-    </StyledTable>
-  </Tab>
-  <Tab title="Code">
-```jsx
-<StyledTable variant="bordered">
-  <thead>
-    <TableRow header>
-      <TableCell header>Header 1</TableCell>
-      <TableCell header align="center">Header 2</TableCell>
-    </TableRow>
-  </thead>
-  <tbody>
-    <TableRow>
-      <TableCell>Data 1</TableCell>
-      <TableCell align="center">Data 2</TableCell>
-    </TableRow>
-  </tbody>
-</StyledTable>
-```
-  </Tab>
-</Tabs>
-
-**TableRow Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Yes** | Table cells |
-| `header` | `boolean` | `false` | No | Is this a header row? |
-| `hover` | `boolean` | `false` | No | Enable hover effect |
-| `style` | `object` | `{}` | No | Additional inline styles |
-
-**TableCell Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Yes** | Cell content |
-| `align` | `string` | `"left"` | No | Text alignment: "left" \| "center" \| "right" |
-| `header` | `boolean` | `false` | No | Is this a header cell? |
-| `style` | `object` | `{}` | No | Additional inline styles |
-
-<CustomDivider middleText="Containers" />
-
-## Container Primitives
-
-Container components for grouping and organizing content.
-
-### BorderedBox
-
-Theme-aware bordered container component.
-
-**Import:**
-```jsx
-import { BorderedBox } from "/snippets/components/primitives/containers.jsx";
-```
-
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Yes** | Content to display |
-| `variant` | `string` | `"default"` | No | Border variant: "default" \| "accent" \| "muted" |
-| `padding` | `string` | `"1rem"` | No | Internal padding (CSS value) |
-| `borderRadius` | `string` | `"8px"` | No | Border radius (CSS value) |
-| `style` | `object` | `{}` | No | Additional inline styles |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Default">
-    <BorderedBox>
-      This is a bordered box with default styling.
-    </BorderedBox>
-  </Tab>
-  <Tab title="Accent Variant">
-    <BorderedBox variant="accent" padding="1.5rem">
-      This box has an accent-colored border.
-    </BorderedBox>
-  </Tab>
-  <Tab title="Code">
-```jsx
-<BorderedBox variant="accent" padding="1.5rem">
-  Important content here
-</BorderedBox>
-```
-  </Tab>
-</Tabs>
 
 ---
 
-### CenteredContainer
-
-Centered content container component.
-
-**Import:**
+### GotoCard
+Wraps content in a Card component with a link, icon, and optional CTA.
+- File: `/snippets/components/primitives/links.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `BlinkingIcon`, `BlinkingTerminal`, `CustomCallout`, `DoubleIconLink`, `GotoLink`, `LinkArrow`, `TipWithArrow`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/about/livepeer-network/marketplace.mdx`, `v2/about/livepeer-network/technical-architecture.mdx`, `v2/about/livepeer-protocol/technical-architecture.mdx`, `v2/cn/about/livepeer-network/marketplace.mdx`, `v2/cn/about/livepeer-network/technical-architecture.mdx`, `v2/cn/about/livepeer-protocol/technical-architecture.mdx`, and 59 more page(s)
+**Import**
 ```jsx
-import { CenteredContainer } from "/snippets/components/primitives/containers.jsx";
+import { GotoCard } from '/snippets/components/primitives/links.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `label` | `string` | Yes | `` | Card title |
+| `relativePath` | `string` | Yes | `` | Relative URL path |
+| `icon` | `string` | Yes | `` | Icon to display (defaults to "arrow-turn-down-right") |
+| `text` | `React.ReactNode` | Yes | `` | Card content |
+| `cta` | `string` | No | `""` | Call-to-action button text |
+| `props` | `any` | Yes | `` | props prop. |
+
+**Example**
+
+```jsx
+<GotoCard label="example" relativePath="example" />
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Yes** | Content to display |
-| `maxWidth` | `string` | `"800px"` | No | Maximum width (CSS value) |
-| `padding` | `string` | `"0"` | No | Internal padding (CSS value) |
-| `style` | `object` | `{}` | No | Additional inline styles |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Centered Content">
-    <CenteredContainer maxWidth="600px">
-      <Card title="Centered Card">This card is centered with a max width of 600px.</Card>
-    </CenteredContainer>
-  </Tab>
-  <Tab title="Code">
-```jsx
-<CenteredContainer maxWidth="600px">
-  Centered content here
-</CenteredContainer>
-```
-  </Tab>
-</Tabs>
 
 ---
 
-### FullWidthContainer
-
-Full-width breakout container component for hero sections and full-width content.
-
-**Import:**
+### GotoLink
+Displays a link with an icon, typically used for internal navigation.
+- File: `/snippets/components/primitives/links.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `BlinkingIcon`, `BlinkingTerminal`, `CustomCallout`, `DoubleIconLink`, `GotoCard`, `LinkArrow`, `TipWithArrow`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/about/livepeer-network/interfaces.mdx`, `v2/about/livepeer-network/marketplace.mdx`, `v2/about/livepeer-network/technical-architecture.mdx`, `v2/about/livepeer-protocol/technical-architecture.mdx`, `v2/cn/about/livepeer-network/interfaces.mdx`, `v2/cn/about/livepeer-network/marketplace.mdx`, and 51 more page(s)
+**Import**
 ```jsx
-import { FullWidthContainer } from "/snippets/components/primitives/containers.jsx";
+import { GotoLink } from '/snippets/components/primitives/links.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `label` | `string` | Yes | `` | Link text/label |
+| `relativePath` | `string` | Yes | `` | Relative URL path |
+| `text` | `string` | No | `""` | Optional text to display before the link |
+| `icon` | `string` | No | `"arrow-turn-down-right"` | Icon to display |
+
+**Example**
+
+```jsx
+<GotoLink label="example" relativePath="example" />
 ```
 
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Yes** | Content to display |
-| `backgroundColor` | `string` | - | No | Background color (CSS value or CSS variable) |
-| `style` | `object` | `{}` | No | Additional inline styles |
-
-**Examples:**
-
-<Tabs>
-  <Tab title="Full Width">
-    <FullWidthContainer backgroundColor="var(--card-background)">
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        Full-width hero content
-      </div>
-    </FullWidthContainer>
-  </Tab>
-  <Tab title="Code">
-```jsx
-<FullWidthContainer backgroundColor="var(--accent)">
-  Full-width hero content
-</FullWidthContainer>
-```
-  </Tab>
-</Tabs>
 
 ---
 
-<Card title="Next: Display Components" icon="arrow-right" href="../component-library/display" arrow>
-  Continue to Display Components →
-</Card>
+### Image
+Image primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/image.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `LinkImage`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/about/livepeer-protocol/technical-architecture.mdx`, `v2/about/resources/blockchain-contracts.mdx`, `v2/cn/about/livepeer-protocol/technical-architecture.mdx`, `v2/cn/about/resources/blockchain-contracts.mdx`, `v2/cn/home/about-livepeer/benefits.mdx`, `v2/cn/home/about-livepeer/evolution.mdx`, and 20 more page(s)
+**Import**
+```jsx
+import { Image } from '/snippets/components/primitives/image.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `src` | `any` | Yes | `` | src prop. |
+| `alt` | `any` | Yes | `` | alt prop. |
+| `caption` | `any` | Yes | `` | caption prop. |
+| `icon` | `any` | Yes | `` | icon prop. |
+| `hint` | `any` | Yes | `` | hint prop. |
+| `fullwidth` | `boolean` | No | `true` | fullwidth prop. |
+
+**Example**
+
+```jsx
+<Image src="example" alt="example" />
+```
+
+
+---
+
+### LinkArrow
+Link Arrow primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/links.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `BlinkingIcon`, `BlinkingTerminal`, `CustomCallout`, `DoubleIconLink`, `GotoCard`, `GotoLink`, `TipWithArrow`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/about/livepeer-overview.mdx`, `v2/about/livepeer-protocol/governance-model.mdx`, `v2/about/livepeer-protocol/livepeer-token.mdx`, `v2/about/livepeer-protocol/overview.mdx`, `v2/about/resources/blockchain-contracts.mdx`, `v2/cn/about/livepeer-overview.mdx`, and 71 more page(s)
+**Import**
+```jsx
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `href` | `any` | Yes | `` | href prop. |
+| `label` | `any` | Yes | `` | label prop. |
+| `description` | `any` | Yes | `` | description prop. |
+| `newline` | `boolean` | No | `true` | newline prop. |
+| `borderColor` | `any` | Yes | `` | border Color prop. |
+
+**Example**
+
+```jsx
+<LinkArrow href="example" label="example" />
+```
+
+
+---
+
+### LinkImage
+Link Image primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/image.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `Image`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: none
+**Import**
+```jsx
+import { LinkImage } from '/snippets/components/primitives/image.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `src` | `any` | Yes | `` | src prop. |
+| `alt` | `any` | Yes | `` | alt prop. |
+| `caption` | `any` | Yes | `` | caption prop. |
+| `icon` | `any` | Yes | `` | icon prop. |
+| `hint` | `any` | Yes | `` | hint prop. |
+| `href` | `any` | Yes | `` | href prop. |
+
+**Example**
+
+```jsx
+<LinkImage src="example" alt="example" />
+```
+
+
+---
+
+### LivepeerIcon
+Livepeer Icon primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/icons.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `LivepeerIconFlipped`, `LivepeerIconOld`, `LivepeerSVG`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/cn/home/mission-control.mdx`, `v2/es/home/mission-control.mdx`, `v2/fr/home/mission-control.mdx`, `v2/home/mission-control.mdx`
+**Import**
+```jsx
+import { LivepeerIcon } from '/snippets/components/primitives/icons.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `size` | `number` | No | `16` | size prop. |
+| `color` | `any` | Yes | `` | color prop. |
+| `props` | `any` | Yes | `` | props prop. |
+
+**Example**
+
+```jsx
+<LivepeerIcon color="example" props="example" />
+```
+
+
+---
+
+### LivepeerIconFlipped
+Livepeer Icon Flipped primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/icons.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `LivepeerIcon`, `LivepeerIconOld`, `LivepeerSVG`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: none
+**Import**
+```jsx
+import { LivepeerIconFlipped } from '/snippets/components/primitives/icons.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `props` | `any` | Yes | `` | props prop. |
+
+**Example**
+
+```jsx
+<LivepeerIconFlipped props="example" />
+```
+
+
+---
+
+### LivepeerIconOld
+Livepeer Icon Old primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/icons.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `LivepeerIcon`, `LivepeerIconFlipped`, `LivepeerSVG`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: none
+**Import**
+```jsx
+import { LivepeerIconOld } from '/snippets/components/primitives/icons.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `props` | `any` | Yes | `` | props prop. |
+
+**Example**
+
+```jsx
+<LivepeerIconOld props="example" />
+```
+
+
+---
+
+### LivepeerSVG
+Livepeer SVG primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/icons.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `LivepeerIcon`, `LivepeerIconFlipped`, `LivepeerIconOld`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: none
+**Import**
+```jsx
+import { LivepeerSVG } from '/snippets/components/primitives/icons.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `size` | `number` | No | `24` | size prop. |
+| `props` | `any` | Yes | `` | props prop. |
+
+**Example**
+
+```jsx
+<LivepeerSVG props="example" />
+```
+
+
+---
+
+### MathBlock
+Math Block primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/math.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `none`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/cn/lpt/about/mechanics.mdx`, `v2/cn/lpt/about/overview.mdx`, `v2/cn/lpt/about/tokenomics.mdx`, `v2/cn/lpt/delegation/about-delegators.mdx`, `v2/cn/lpt/delegation/delegation-guide.mdx`, `v2/cn/lpt/delegation/overview.mdx`, and 42 more page(s)
+**Import**
+```jsx
+import { MathBlock } from '/snippets/components/primitives/math.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `latex` | `any` | Yes | `` | latex prop. |
+| `className` | `string` | No | `""` | class Name prop. |
+| `ariaLabel` | `any` | Yes | `` | aria Label prop. |
+
+**Example**
+
+```jsx
+<MathBlock latex="example" ariaLabel="example" />
+```
+
+
+---
+
+### MathInline
+Math Inline primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/math.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `none`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/cn/lpt/about/mechanics.mdx`, `v2/cn/lpt/about/overview.mdx`, `v2/cn/lpt/about/tokenomics.mdx`, `v2/cn/lpt/delegation/about-delegators.mdx`, `v2/cn/lpt/delegation/delegation-guide.mdx`, `v2/cn/lpt/delegation/overview.mdx`, and 42 more page(s)
+**Import**
+```jsx
+import { MathInline } from '/snippets/components/primitives/math.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `latex` | `any` | Yes | `` | latex prop. |
+| `className` | `string` | No | `""` | class Name prop. |
+| `ariaLabel` | `any` | Yes | `` | aria Label prop. |
+
+**Example**
+
+```jsx
+<MathInline latex="example" ariaLabel="example" />
+```
+
+
+---
+
+### PreviewCallout
+Callout highlighting preview-state content and feedback channels.
+- File: `/snippets/components/primitives/preview-callouts.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `ComingSoonCallout`, `ReviewCallout`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: `v2/cn/orchestrators/about-orchestrators/orchestrator-functions.mdx`, `v2/cn/orchestrators/about-orchestrators/overview.mdx`, `v2/cn/orchestrators/quickstart/orchestrator-setup.mdx`, `v2/cn/orchestrators/quickstart/overview.mdx`, `v2/cn/orchestrators/references/cli-flags.mdx`, `v2/cn/resources/changelog/changelog.mdx`, and 35 more page(s)
+**Import**
+```jsx
+import { PreviewCallout } from '/snippets/components/primitives/preview-callouts.jsx'
+```
+**Props**
+No documented props.
+
+**Example**
+
+```jsx
+<PreviewCallout />
+```
+
+
+---
+
+### ReviewCallout
+Callout requesting technical review support on incomplete content.
+- File: `/snippets/components/primitives/preview-callouts.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `ComingSoonCallout`, `PreviewCallout`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: none
+**Import**
+```jsx
+import { ReviewCallout } from '/snippets/components/primitives/preview-callouts.jsx'
+```
+**Props**
+No documented props.
+
+**Example**
+
+```jsx
+<ReviewCallout />
+```
+
+
+---
+
+### SocialLinks
+Social Links primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/social-links.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `none`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-09`
+- `@usedIn`: none
+**Import**
+```jsx
+import { SocialLinks } from '/snippets/components/primitives/social-links.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `size` | `number` | No | `20` | size prop. |
+| `gap` | `string` | No | `"0.75rem"` | gap prop. |
+| `justify` | `string` | No | `"center"` | justify prop. |
+| `color` | `any` | Yes | `` | color prop. |
+
+**Example**
+
+```jsx
+<SocialLinks color="example" />
+```
+
+
+---
+
+### Subtitle
+Subtitle primitive used in authored documentation and component-library examples.
+- File: `/snippets/components/primitives/text.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `none`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/about/mental-model.mdx`, `v2/about/resources/blockchain-contracts.mdx`, `v2/cn/about/mental-model.mdx`, `v2/cn/about/resources/blockchain-contracts.mdx`, `v2/cn/home/solutions/showcase.mdx`, `v2/cn/home/solutions/verticals.mdx`, and 10 more page(s)
+**Import**
+```jsx
+import { Subtitle } from '/snippets/components/primitives/text.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `style` | `object` | No | `{}` | style prop. |
+| `text` | `any` | Yes | `` | text prop. |
+| `children` | `any` | Yes | `` | children prop. |
+
+**Example**
+
+```jsx
+<Subtitle text="example">Example content</Subtitle>
+```
+
+
+---
+
+### TipWithArrow
+Similar to CustomCallout but includes an arrow icon in the top-right corner.
+- File: `/snippets/components/primitives/links.jsx`
+- Tier: `primitive`
+- Status: `stable`
+- Risk: `low`
+- Decision: `KEEP`
+- Owner: `docs`
+- Content affinity: `universal`
+- Dependencies: `BlinkingIcon`, `BlinkingTerminal`, `CustomCallout`, `DoubleIconLink`, `GotoCard`, `GotoLink`, `LinkArrow`
+- Data source: `none`
+- Duplicates: `none`
+- Last meaningful change: `2026-03-03`
+- `@usedIn`: `v2/cn/gateways/quickstart/gateway-setup.mdx`, `v2/es/gateways/quickstart/gateway-setup.mdx`, `v2/fr/gateways/quickstart/gateway-setup.mdx`, `v2/gateways/quickstart/gateway-setup.mdx`
+**Import**
+```jsx
+import { TipWithArrow } from '/snippets/components/primitives/links.jsx'
+```
+**Props**
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `React.ReactNode` | Yes | `` | Content to display in the tip |
+| `icon` | `string` | No | `"lightbulb"` | Main icon to display on the left |
+| `arrowIcon` | `string` | No | `"arrow-up-right"` | Arrow icon to display in top-right |
+| `color` | `string` | Yes | `` | Primary color for icons, border, and background (defaults to theme accent) |
+| `iconSize` | `number` | No | `16` | Size of the main icon in pixels |
+| `arrowSize` | `number` | No | `16` | Size of the arrow icon in pixels |
+
+**Example**
+
+```jsx
+<TipWithArrow color="example">Example content</TipWithArrow>
+```
