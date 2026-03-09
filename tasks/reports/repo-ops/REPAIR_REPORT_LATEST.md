@@ -1,0 +1,414 @@
+# Governance Repair Report
+
+- Date: 2026-03-09T19:26:11.833Z
+- Mode: dry-run
+- Verification: SKIPPED (dry-run)
+
+## Pre Repair
+
+- Total scripts: 214
+- Grade A/B/C/F: 0/7/105/102
+- Pipeline mismatches: 45
+- Not in JSON: 62
+- Phantom JSON: 4
+
+## Repairs Applied
+
+- Total fixes: 322
+- JSON phantoms removed: 4
+- JSON entries added: 12
+- JSON entries updated: 152
+- Header category added: 0
+- Header purpose added: 0
+- Header owner added: 27
+- Header script added: 27
+- Header usage added: 27
+- Header scope added: 0
+- Header needs added: 0
+- Header purpose-statement added: 0
+- Header pipeline corrected: 73
+- Indexes regenerated: true
+
+### Files Modified
+
+- .githooks/script-index.md
+- .github/script-index.md
+- docs-guide/indexes/scripts-index.md
+- docs-guide/indexes/scripts-index.mdx
+- snippets/automations/script-index.md
+- tasks/reports/script-classifications.json
+- tasks/scripts/script-index.md
+- tests/run-all 2.js
+- tests/script-index.md
+- tests/unit/audit-script-inventory-repair-rules.test.js
+- tests/unit/component-governance-generators.test.js
+- tests/unit/component-governance-utils.test.js
+- tests/unit/components/TEMPLATE.test.js
+- tests/unit/repair-governance.test.js
+- tests/unit/usefulness-journey.test.js
+- tests/unit/usefulness-rubric.test.js
+- tools/config/script-index.md
+- tools/lib/component-governance-utils.js
+- tools/lib/docs-index-utils.js
+- tools/lib/docs-usefulness/accuracy-verifier.js
+- tools/lib/docs-usefulness/config-validator.js
+- tools/lib/docs-usefulness/journey-check.js
+- tools/lib/docs-usefulness/llm-evaluator.js
+- tools/lib/docs-usefulness/prompts/changelog.js
+- tools/lib/docs-usefulness/prompts/concept.js
+- tools/lib/docs-usefulness/prompts/faq.js
+- tools/lib/docs-usefulness/prompts/glossary.js
+- tools/lib/docs-usefulness/prompts/how_to.js
+- tools/lib/docs-usefulness/prompts/index.js
+- tools/lib/docs-usefulness/prompts/landing.js
+- tools/lib/docs-usefulness/prompts/overview.js
+- tools/lib/docs-usefulness/prompts/reference.js
+- tools/lib/docs-usefulness/prompts/troubleshooting.js
+- tools/lib/docs-usefulness/prompts/tutorial.js
+- tools/lib/docs-usefulness/quality-gate.js
+- tools/lib/docs-usefulness/rubric-loader.js
+- tools/lib/docs-usefulness/rule-evaluators.js
+- tools/lib/docs-usefulness/scoring.js
+- tools/lib/generated-file-banners.js
+- tools/lib/script-governance-config.js
+- tools/lib/script-header-utils.js
+- tools/lib/script-index.md
+- tools/notion/1-read-notion-to-csv.js
+- tools/notion/2-read-docs-to-csv.js
+- tools/notion/3-check-duplicates.js
+- tools/notion/4-remove-duplicates.js
+- tools/notion/5-export-to-notion.js
+- tools/notion/backup-notion-table.js
+- tools/notion/install-local-sync-hook.sh
+- tools/notion/local-post-commit-sync.sh
+- tools/notion/remove-local-sync-hook.sh
+- tools/notion/script-index.md
+- tools/notion/sync-v2-en-canonical.js
+- tools/script-index.md
+- tools/scripts/add-framework-headers.js
+- tools/scripts/add-pagetype-mechanical.js
+- tools/scripts/apply-content-gap-reconciliation.js
+- tools/scripts/assign-purpose-metadata.js
+- tools/scripts/audit-all-pages-simple.js
+- tools/scripts/audit-all-pages.js
+- tools/scripts/audit-all-v2-pages.js
+- tools/scripts/audit-component-usage.js
+- tools/scripts/audit-scripts.js
+- tools/scripts/audit-tasks-folders.js
+- tools/scripts/audit-v1-to-v2-mapping.js
+- tools/scripts/audit-v2-usefulness.js
+- tools/scripts/check-codex-pr-overlap.js
+- tools/scripts/check-component-errors.js
+- tools/scripts/check-no-ai-stash.sh
+- tools/scripts/cleanup-quarantine-manager.js
+- tools/scripts/codex-commit.js
+- tools/scripts/codex-safe-merge-with-stash.js
+- tools/scripts/codex/lock-release.js
+- tools/scripts/codex/task-finalize.js
+- tools/scripts/component-layout-governance.js
+- tools/scripts/convert-rss-to-mdx.js
+- tools/scripts/create-codex-pr.js
+- tools/scripts/cross-agent-packager.js
+- tools/scripts/debug-mint-dev.js
+- tools/scripts/dev/add-callouts.js
+- tools/scripts/dev/batch-update-og-image.sh
+- tools/scripts/dev/ensure-mint-watcher-patch.sh
+- tools/scripts/dev/generate-mint-dev-scope.js
+- tools/scripts/dev/replace-og-image.py
+- tools/scripts/dev/seo-generator-safe.js
+- tools/scripts/dev/test-add-callouts.js
+- tools/scripts/dev/test-seo-generator.js
+- tools/scripts/dev/update-all-og-images.js
+- tools/scripts/dev/update-og-image.js
+- tools/scripts/docs-quality-and-freshness-audit.js
+- tools/scripts/enforce-generated-file-banners.js
+- tools/scripts/enforcers/pr/check-component-immutability.js
+- tools/scripts/final-verification.js
+- tools/scripts/find-correct-url.js
+- tools/scripts/generate-ai-sitemap.js
+- tools/scripts/generate-component-docs.js
+- tools/scripts/generate-component-governance-remediation-reports.js
+- tools/scripts/generate-component-registry.js
+- tools/scripts/generate-content-gap-reconciliation.js
+- tools/scripts/generate-docs-guide-components-index.js
+- tools/scripts/generate-docs-guide-indexes.js
+- tools/scripts/generate-docs-guide-pages-index.js
+- tools/scripts/generate-docs-index.js
+- tools/scripts/generate-llms-files.js
+- tools/scripts/generate-pages-index.js
+- tools/scripts/i18n/lib/common.js
+- tools/scripts/i18n/lib/config.js
+- tools/scripts/i18n/lib/docs-json-localizer.js
+- tools/scripts/i18n/lib/docs-routes.js
+- tools/scripts/i18n/lib/frontmatter.js
+- tools/scripts/i18n/lib/mdx-parser.js
+- tools/scripts/i18n/lib/mdx-translate.js
+- tools/scripts/i18n/lib/path-utils.js
+- tools/scripts/i18n/lib/provenance.js
+- tools/scripts/i18n/lib/provider-mock.js
+- tools/scripts/i18n/lib/provider-openrouter.js
+- tools/scripts/i18n/lib/providers.js
+- tools/scripts/i18n/test-mintlify-version-language-toggle.js
+- tools/scripts/i18n/test/cli-guardrails.test.js
+- tools/scripts/i18n/test/docs-json-localizer.test.js
+- tools/scripts/i18n/test/frontmatter.test.js
+- tools/scripts/i18n/test/mdx-translate.test.js
+- tools/scripts/i18n/test/provenance.test.js
+- tools/scripts/i18n/test/provider-openrouter.test.js
+- tools/scripts/i18n/validate-generated.js
+- tools/scripts/inspect-page.js
+- tools/scripts/inspect-video-page.js
+- tools/scripts/mint-dev.sh
+- tools/scripts/new-script.js
+- tools/scripts/orchestrators/repair-governance.js
+- tools/scripts/publish-v2-internal-reports.js
+- tools/scripts/repo-audit-orchestrator.js
+- tools/scripts/scan-component-imports.js
+- tools/scripts/script-footprint-and-usage-audit.js
+- tools/scripts/snippets/fetch-external-docs.sh
+- tools/scripts/snippets/fetch-lpt-exchanges.sh
+- tools/scripts/snippets/fetch-openapi-specs.sh
+- tools/scripts/snippets/generate-api-docs.sh
+- tools/scripts/snippets/generate-data/scripts/generate-glossary.js
+- tools/scripts/snippets/generate-data/scripts/terminology-search.js
+- tools/scripts/snippets/generate-seo.js
+- tools/scripts/snippets/test-scripts.sh
+- tools/scripts/snippets/update-component-library.sh
+- tools/scripts/style-and-language-homogenizer-en-gb.js
+- tools/scripts/sync-codex-skills.js
+- tools/scripts/test-all-pages-browser.js
+- tools/scripts/test-all-pages-comprehensive.js
+- tools/scripts/test-v2-pages.js
+- tools/scripts/test-youtube-pages.js
+- tools/scripts/validate-codex-task-contract.js
+- tools/scripts/validators/components/check-component-css.js
+- tools/scripts/validators/components/check-component-docs.js
+- tools/scripts/validators/content/check-grammar-en-gb.js
+- tools/scripts/validators/governance/audit-script-inventory.js
+- tools/scripts/validators/governance/review-governance-repair-checklist.js
+- tools/scripts/verify-all-pages.js
+- tools/scripts/verify-pages.js
+- tools/scripts/verify-pay-orc-gate-finalize.sh
+- tools/scripts/verify/.verify-large-change.sh
+- tools/scripts/wcag-repair-common.js
+
+## Post Repair
+
+- Total scripts: 214
+- Grade A/B/C/F: 0/19/93/102
+- Pipeline mismatches: 41
+- Not in JSON: 50
+- Phantom JSON: 0
+
+## Needs Human
+
+- .githooks/install.sh: @scope
+- .githooks/pre-commit: @scope
+- .githooks/pre-commit-no-deletions: @scope
+- .githooks/pre-push: @scope
+- .githooks/server-manager.js: @scope
+- .githooks/verify-browser.js: @scope
+- .githooks/verify.sh: @scope
+- .github/scripts/fetch-forum-data.js: @scope, @pipeline
+- .github/scripts/fetch-ghost-blog-data.js: @scope, @pipeline
+- .github/scripts/fetch-youtube-data.js: @scope, @pipeline
+- .github/scripts/project-showcase-sync.js: @scope, @pipeline
+- tasks/scripts/audit-minimal.js: @scope
+- tasks/scripts/audit-python.py: @scope
+- tasks/scripts/run-audit-now.js: @scope
+- tasks/scripts/test-audit.js: @scope
+- tests/integration/browser.test.js: @scope, @pipeline
+- tests/integration/domain-pages-audit.js: @scope
+- tests/integration/openapi-reference-audit.js: @scope, @pipeline
+- tests/integration/v2-link-audit.js: @scope, @pipeline
+- tests/integration/v2-link-audit.selftest.js: @scope
+- tests/integration/v2-wcag-audit.js: @scope, @pipeline
+- tests/integration/v2-wcag-audit.selftest.js: @scope
+- tests/run-all 2.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tests/run-all.js: @scope, @pipeline
+- tests/run-pr-checks.js: @scope, @pipeline
+- tests/unit/audit-script-inventory-repair-rules.test.js: @scope
+- tests/unit/codex-commit.test.js: @scope
+- tests/unit/codex-safe-merge-with-stash.test.js: @scope
+- tests/unit/codex-skill-sync.test.js: @scope
+- tests/unit/component-governance-generators.test.js: @scope, classification-row
+- tests/unit/component-governance-utils.test.js: @scope, classification-row
+- tests/unit/components/TEMPLATE.test.js: @scope, @pipeline, classification-row
+- tests/unit/create-codex-pr.test.js: @scope
+- tests/unit/docs-guide-sot.test.js: @scope
+- tests/unit/docs-navigation.test.js: @scope, @pipeline
+- tests/unit/docs-usefulness-accuracy-verifier.test.js: @scope
+- tests/unit/links-imports.test.js: @scope, @pipeline
+- tests/unit/lpd-scoped-mint-dev.test.js: @scope
+- tests/unit/mdx-guards.test.js: @scope, @pipeline
+- tests/unit/mdx.test.js: @scope, @pipeline
+- tests/unit/openapi-reference-audit.test.js: @scope
+- tests/unit/openapi-rolling-issue.test.js: @scope
+- tests/unit/quality.test.js: @scope, @pipeline
+- tests/unit/repair-governance.test.js: @scope
+- tests/unit/repair-spelling.test.js: @scope, classification-row
+- tests/unit/repo-audit-pipeline.test.js: @scope
+- tests/unit/script-docs.test.js: @scope, @pipeline
+- tests/unit/spelling.test.js: @scope, @pipeline
+- tests/unit/style-guide.test.js: @scope, @pipeline
+- tests/unit/usefulness-journey.test.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tests/unit/usefulness-rubric.test.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tests/unit/v2-link-audit.test.js: @scope
+- tests/unit/v2-wcag-audit.test.js: @scope
+- tests/unit/validate-codex-task-contract.test.js: @scope
+- tests/utils/file-walker.js: @scope
+- tests/utils/mdx-parser.js: @scope
+- tests/utils/mintignore.js: @scope
+- tests/utils/openapi-rolling-issue.js: @scope
+- tests/utils/spell-checker.js: @scope
+- tools/config/v2-internal-report-pages.js: @category
+- tools/lib/docs-index-utils.js: @scope
+- tools/lib/docs-usefulness/config-validator.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/journey-check.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/llm-evaluator.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/prompts/changelog.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/prompts/concept.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/prompts/faq.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/prompts/glossary.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/prompts/how_to.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/prompts/index.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/prompts/landing.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/prompts/overview.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/prompts/reference.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/prompts/troubleshooting.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/prompts/tutorial.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/quality-gate.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/rubric-loader.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/docs-usefulness/rule-evaluators.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/lib/mdx-visible-text.js: @scope, classification-row
+- tools/notion/1-read-notion-to-csv.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/notion/2-read-docs-to-csv.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/notion/3-check-duplicates.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/notion/4-remove-duplicates.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/notion/5-export-to-notion.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/notion/backup-notion-table.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/notion/install-local-sync-hook.sh: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/notion/local-post-commit-sync.sh: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/notion/remove-local-sync-hook.sh: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/notion/sync-v2-en-canonical.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/scripts/add-pagetype-mechanical.js: @category, @purpose, @scope, @needs, @purpose-statement, classification-row
+- tools/scripts/apply-content-gap-reconciliation.js: @category, @purpose, @scope, @needs, @purpose-statement, classification-row
+- tools/scripts/assign-purpose-metadata.js: @category, @purpose, @scope, @needs, @purpose-statement, classification-row
+- tools/scripts/audit-all-pages-simple.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/audit-all-pages.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/audit-all-v2-pages.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/audit-component-usage.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline
+- tools/scripts/audit-scripts.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/audit-tasks-folders.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/audit-v1-to-v2-mapping.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/audit-v2-usefulness.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/check-codex-pr-overlap.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/check-component-errors.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/check-no-ai-stash.sh: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline
+- tools/scripts/cleanup-quarantine-manager.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/codex-commit.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/codex-safe-merge-with-stash.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/codex/lock-release.js: @scope
+- tools/scripts/codex/task-finalize.js: @scope
+- tools/scripts/codex/task-preflight.js: @scope
+- tools/scripts/codex/validate-locks.js: @scope, @pipeline
+- tools/scripts/component-layout-governance.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/scripts/convert-rss-to-mdx.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/create-codex-pr.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/cross-agent-packager.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/debug-mint-dev.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/dev/add-callouts.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/dev/batch-update-og-image.sh: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/dev/ensure-mint-watcher-patch.sh: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/dev/generate-mint-dev-scope.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/dev/replace-og-image.py: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/dev/seo-generator-safe.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/dev/test-add-callouts.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/dev/test-seo-generator.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/dev/update-all-og-images.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/dev/update-og-image.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/docs-quality-and-freshness-audit.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline
+- tools/scripts/enforce-generated-file-banners.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline
+- tools/scripts/enforcers/pr/check-component-immutability.js: @pipeline
+- tools/scripts/final-verification.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/find-correct-url.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/generate-ai-sitemap.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline
+- tools/scripts/generate-component-docs.js: @pipeline
+- tools/scripts/generate-component-governance-remediation-reports.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/scripts/generate-component-registry.js: @pipeline
+- tools/scripts/generate-content-gap-reconciliation.js: @category, @purpose, @scope, @needs, @purpose-statement, classification-row
+- tools/scripts/generate-docs-guide-indexes.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/generate-docs-guide-pages-index.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/generate-docs-index.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline
+- tools/scripts/generate-llms-files.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline
+- tools/scripts/generate-pages-index.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline
+- tools/scripts/i18n/generate-localized-docs-json.js: @scope
+- tools/scripts/i18n/lib/common.js: @scope
+- tools/scripts/i18n/lib/config.js: @scope
+- tools/scripts/i18n/lib/docs-json-localizer.js: @scope
+- tools/scripts/i18n/lib/docs-routes.js: @scope
+- tools/scripts/i18n/lib/frontmatter.js: @scope
+- tools/scripts/i18n/lib/mdx-parser.js: @scope
+- tools/scripts/i18n/lib/mdx-translate.js: @scope
+- tools/scripts/i18n/lib/path-utils.js: @scope
+- tools/scripts/i18n/lib/provenance.js: @scope
+- tools/scripts/i18n/lib/provider-mock.js: @scope
+- tools/scripts/i18n/lib/provider-openrouter.js: @scope
+- tools/scripts/i18n/lib/providers.js: @scope
+- tools/scripts/i18n/test-mintlify-version-language-toggle.js: @scope
+- tools/scripts/i18n/test/cli-guardrails.test.js: @scope
+- tools/scripts/i18n/test/docs-json-localizer.test.js: @scope
+- tools/scripts/i18n/test/frontmatter.test.js: @scope
+- tools/scripts/i18n/test/mdx-translate.test.js: @scope
+- tools/scripts/i18n/test/provenance.test.js: @scope
+- tools/scripts/i18n/test/provider-openrouter.test.js: @scope
+- tools/scripts/i18n/translate-docs.js: @scope
+- tools/scripts/i18n/validate-generated.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline, classification-row
+- tools/scripts/inspect-page.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/inspect-video-page.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/mint-dev.sh: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/new-script.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/publish-v2-internal-reports.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/remediators/content/repair-spelling.js: @pipeline
+- tools/scripts/repo-audit-orchestrator.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/scan-component-imports.js: @pipeline
+- tools/scripts/script-footprint-and-usage-audit.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/snippets/fetch-external-docs.sh: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline
+- tools/scripts/snippets/fetch-lpt-exchanges.sh: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/snippets/fetch-openapi-specs.sh: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/snippets/generate-api-docs.sh: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/snippets/generate-data/scripts/generate-glossary.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/snippets/generate-data/scripts/terminology-search.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/snippets/generate-seo.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/snippets/test-scripts.sh: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/snippets/update-component-library.sh: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/style-and-language-homogenizer-en-gb.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/sync-codex-skills.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/test-all-pages-browser.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/test-all-pages-comprehensive.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/test-v2-pages.js: @category, @purpose, @scope, @needs, @purpose-statement, @pipeline
+- tools/scripts/test-youtube-pages.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/validate-codex-task-contract.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/validators/components/check-component-css.js: @pipeline
+- tools/scripts/validators/components/check-component-docs.js: @pipeline
+- tools/scripts/validators/components/check-naming-conventions.js: @scope, @pipeline, classification-row
+- tools/scripts/validators/content/check-alt-text-quality.js: @scope, classification-row
+- tools/scripts/validators/content/check-description-quality.js: @scope, classification-row
+- tools/scripts/validators/content/check-double-headers.js: @scope, classification-row
+- tools/scripts/validators/content/check-grammar-en-gb.js: @scope, classification-row
+- tools/scripts/validators/content/check-proper-nouns.js: @scope, @pipeline, classification-row
+- tools/scripts/validators/structure/check-github-labels.js: @purpose, @scope, classification-row
+- tools/scripts/validators/structure/check-page-archetype.js: @purpose, @scope, classification-row
+- tools/scripts/verify-all-pages.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/verify-pages.js: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/verify-pay-orc-gate-finalize.sh: @category, @purpose, @scope, @needs, @purpose-statement
+- tools/scripts/verify/.verify-large-change.sh: @scope
+- tools/scripts/wcag-repair-common.js: @category, @purpose, @scope, @needs, @purpose-statement
+
+## Improvement
+
+- Grade A delta: +0
+- Grade F delta: +0
+- Fixes applied: 322
+- Remaining human items: 202
+

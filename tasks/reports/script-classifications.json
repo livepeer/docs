@@ -260,6 +260,16 @@
     "dualmode": ""
   },
   {
+    "path": "tests/unit/audit-script-inventory-repair-rules.test.js",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tests/unit, tools/scripts/validators/governance",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Tests audit-script-inventory repair hardening rules for judgement-field backfill and pipeline safety.",
+    "pipeline": "manual (not yet in pipeline)",
+    "dualmode": ""
+  },
+  {
     "path": "tests/unit/codex-commit.test.js",
     "category": "validator",
     "purpose": "governance:agent-governance",
@@ -408,6 +418,16 @@
     "purpose_statement": "Tests repo-audit-orchestrator.js pipeline \u2014 validates mode/scope combinations and report output",
     "pipeline": "manual \u2014 not yet in pipeline",
     "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tests/unit/repair-governance.test.js",
+    "category": "validator",
+    "purpose": "governance:repo-health",
+    "scope": "tests/unit, tools/scripts/orchestrators/repair-governance.js, .github/workflows/repair-governance.yml",
+    "needs": "R-R14, R-R18, R-C6",
+    "purpose_statement": "Tests repair-governance.js for safe dry-run, fix, rollback, strict exit handling, and workflow contract coverage.",
+    "pipeline": "manual",
+    "dualmode": ""
   },
   {
     "path": "tests/unit/script-docs.test.js",
@@ -1280,6 +1300,16 @@
     "dualmode": ""
   },
   {
+    "path": "tools/scripts/orchestrators/repair-governance.js",
+    "category": "orchestrator",
+    "purpose": "governance:repo-health",
+    "scope": "full-repo",
+    "needs": "R-R14, R-R18, R-C6",
+    "purpose_statement": "Chains audit, safe repair, verification, and reporting into a single self-healing governance pipeline.",
+    "pipeline": "P5 (scheduled, weekly), P6 (on-demand), manual",
+    "dualmode": "--report-only | --dry-run | default fix mode"
+  },
+  {
     "path": "tools/scripts/publish-v2-internal-reports.js",
     "category": "automation",
     "purpose": "qa:repo-health",
@@ -1478,6 +1508,16 @@
     "purpose_statement": "Codex task contract enforcer \u2014 validates branch naming, task files, PR body, and issue state for codex branches",
     "pipeline": "P1 (commit), P2 (push), P3 (PR, Track B)",
     "dualmode": ""
+  },
+  {
+    "path": "tools/scripts/validators/governance/review-governance-repair-checklist.js",
+    "category": "validator",
+    "purpose": "governance:repo-health",
+    "scope": "full-repo",
+    "needs": "R-R14, R-R18",
+    "purpose_statement": "Generates a review checklist for dry-run governance repair proposals that require human approval before fix mode is applied.",
+    "pipeline": "manual",
+    "dualmode": "--json | --md | default both"
   },
   {
     "path": "tools/scripts/verify-all-pages.js",
