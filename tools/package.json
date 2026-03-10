@@ -58,6 +58,12 @@
     "i18n:translate": "node scripts/i18n/translate-docs.js",
     "i18n:docs-json": "node scripts/i18n/generate-localized-docs-json.js",
     "i18n:validate": "node scripts/i18n/validate-generated.js",
-    "test:i18n": "node --test scripts/i18n/test/*.test.js"
+    "test:i18n": "node --test scripts/i18n/test/*.test.js",
+    "test:script-docs": "cd .. && node tests/unit/script-docs.test.js",
+    "validate:framework": "cd .. && node tests/unit/script-docs.test.js --enforce-existing --check-indexes",
+    "validate:framework:indexes": "cd .. && node tests/unit/script-docs.test.js --check-indexes",
+    "validate:framework:write": "cd .. && node tests/unit/script-docs.test.js --write --rebuild-indexes",
+    "validate:framework:headers": "cd .. && node tools/scripts/add-framework-headers.js --data tasks/reports/script-classifications.json --verify",
+    "validate:framework:headers:dry-run": "cd .. && node tools/scripts/add-framework-headers.js --data tasks/reports/script-classifications.json --dry-run"
   }
 }
