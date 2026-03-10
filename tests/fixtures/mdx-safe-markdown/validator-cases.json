@@ -1,0 +1,57 @@
+[
+  {
+    "name": "Flags HTML comments",
+    "filePath": "fixtures/comment.md",
+    "contentLines": [
+      "# Example",
+      "<!-- hidden guidance -->"
+    ],
+    "expectedRules": ["html-comment", "parse-error"]
+  },
+  {
+    "name": "Flags raw table breaks",
+    "filePath": "fixtures/table-breaks.md",
+    "contentLines": [
+      "| Column | Notes |",
+      "| --- | --- |",
+      "| One | first<br>second |"
+    ],
+    "expectedRules": ["raw-br-in-table", "parse-error"]
+  },
+  {
+    "name": "Flags code-like table cells",
+    "filePath": "fixtures/table-code.md",
+    "contentLines": [
+      "| Column | Snippet |",
+      "| --- | --- |",
+      "| One | style={{ color: token }} |"
+    ],
+    "expectedRules": ["code-like-table-cell"]
+  },
+  {
+    "name": "Flags angle bracket placeholders",
+    "filePath": "fixtures/placeholders.md",
+    "contentLines": [
+      "Use branch codex/<issue-id>-<slug> for the task."
+    ],
+    "expectedRules": ["angle-placeholder", "parse-error"]
+  },
+  {
+    "name": "Flags raw comparison operators that break MDX parsing",
+    "filePath": "fixtures/comparison.md",
+    "contentLines": [
+      "Keep section paragraphs <= 4 lines where possible."
+    ],
+    "expectedRules": ["comparison-operator", "parse-error"]
+  },
+  {
+    "name": "Allows math blocks rendered with fraction syntax",
+    "filePath": "fixtures/math.mdx",
+    "contentLines": [
+      "$$",
+      "yield_{ETH} = (v_{daily} * 365) * s_{fees} * \\frac{p}{p + l_{orch}}",
+      "$$"
+    ],
+    "expectedRules": []
+  }
+]

@@ -427,10 +427,12 @@ function extractPropsFromParams(paramsText) {
 }
 
 function parseParamTag(value) {
-  const match = String(value || '').trim().match(/^\{([^}]+)\}\s+(\[[^\]]+\]|[^\s]+)\s*-?\s*(.*)$/);
-  if (!match) {
+  const input = String(value || '').trim();
+  const typeStart = input.indexOf('{');
+  const typeEnd = input.indexOf('}');
+  if (typeStart !== 0 || typeEnd <= typeStart) {
     return {
-      raw: String(value || '').trim(),
+      raw: input,
       type: 'any',
       name: '',
       required: true,
@@ -439,17 +441,52 @@ function parseParamTag(value) {
     };
   }
 
-  const rawName = match[2];
+  const type = compactWhitespace(input.slice(typeStart + 1, typeEnd));
+  const remainder = input.slice(typeEnd + 1).trim();
+  let rawName = '';
+  let description = '';
+
+  if (remainder.startsWith('[')) {
+    const nameEnd = findMatchingBracket(remainder, 0, '[', ']');
+    if (nameEnd === -1) {
+      return {
+        raw: input,
+        type: type || 'any',
+        name: '',
+        required: true,
+        defaultValue: '',
+        description: compactWhitespace(remainder)
+      };
+    }
+    rawName = remainder.slice(0, nameEnd + 1);
+    description = remainder.slice(nameEnd + 1).trim();
+  } else {
+    const firstSpace = remainder.search(/\s/);
+    rawName = firstSpace === -1 ? remainder : remainder.slice(0, firstSpace);
+    description = firstSpace === -1 ? '' : remainder.slice(firstSpace + 1).trim();
+  }
+
+  if (description.startsWith('-')) {
+    description = description.slice(1).trim();
+  }
+
+  const defaultValue = rawName.startsWith('[') && rawName.endsWith(']')
+    ? (() => {
+        const inner = rawName.slice(1, -1).trim();
+        const [namePart, valuePart] = splitTopLevelOnce(inner, '=');
+        return valuePart ? valuePart.trim() : '';
+      })()
+    : '';
+
   const normalizedName = normalizeDocPropName(rawName);
-  const defaultMatch = rawName.match(/\[.*=(.*)\]/);
 
   return {
-    raw: String(value || '').trim(),
-    type: compactWhitespace(match[1]),
+    raw: input,
+    type,
     name: normalizedName,
     required: !rawName.startsWith('['),
-    defaultValue: defaultMatch ? defaultMatch[1].trim() : '',
-    description: compactWhitespace(match[3])
+    defaultValue,
+    description: compactWhitespace(description)
   };
 }
 

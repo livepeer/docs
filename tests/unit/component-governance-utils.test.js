@@ -58,6 +58,37 @@ function runTests() {
   }
 
   try {
+    const parsed = parseJSDocBlock(`/**
+ * @component ArrayDefaults
+ * @category layout
+ * @tier composite
+ * @status stable
+ * @description Array default parsing example
+ * @contentAffinity overview
+ * @owner docs
+ * @dependencies none
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @param {Array} [items=[]] - items prop.
+ * @param {Array} [labels=["One", "Two"]] - labels prop.
+ * @param {object} [style={}] - style prop.
+ */`);
+
+    assert.equal(parsed.params.length, 3);
+    assert.equal(parsed.params[0].defaultValue, '[]');
+    assert.equal(parsed.params[0].description, 'items prop.');
+    assert.equal(parsed.params[1].defaultValue, '["One", "Two"]');
+    assert.equal(parsed.params[1].description, 'labels prop.');
+    assert.equal(parsed.params[2].defaultValue, '{}');
+  } catch (error) {
+    errors.push(`parseJSDocBlock array defaults failed: ${error.message}`);
+  }
+
+  try {
     const exportsList = extractExports('snippets/components/content/response-field.jsx');
     const responseFieldGroup = exportsList.find((entry) => entry.name === 'ResponseFieldGroup');
     assert(responseFieldGroup, 'ResponseFieldGroup export should be discovered');

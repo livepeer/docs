@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Converts HTML comments to Markdown reference comments",
+    "filePath": "fixtures/comment.md",
+    "inputLines": [
+      "# Example",
+      "<!-- hidden guidance -->"
+    ],
+    "expectedLines": [
+      "# Example",
+      "[//]: # (hidden guidance)"
+    ],
+    "expectedRules": ["html-comment"]
+  },
+  {
+    "name": "Normalizes raw line breaks in Markdown tables",
+    "filePath": "fixtures/table-breaks.md",
+    "inputLines": [
+      "| Column | Notes |",
+      "| --- | --- |",
+      "| One | first<br>second |"
+    ],
+    "expectedLines": [
+      "| Column | Notes |",
+      "| --- | --- |",
+      "| One | first<br />second |"
+    ],
+    "expectedRules": ["raw-br-in-table"]
+  },
+  {
+    "name": "Wraps code-like table cells in inline code",
+    "filePath": "fixtures/table-code.md",
+    "inputLines": [
+      "| Column | Snippet |",
+      "| --- | --- |",
+      "| One | style={{ color: token }} |"
+    ],
+    "expectedLines": [
+      "| Column | Snippet |",
+      "| --- | --- |",
+      "| One | `style={{ color: token }}` |"
+    ],
+    "expectedRules": ["code-like-table-cell"]
+  },
+  {
+    "name": "Replaces angle bracket placeholders with safe tokens",
+    "filePath": "fixtures/placeholders.md",
+    "inputLines": [
+      "Use branch codex/<issue-id>-<slug> for the task."
+    ],
+    "expectedLines": [
+      "Use branch codex/ISSUE_ID-TASK_SLUG for the task."
+    ],
+    "expectedRules": ["angle-placeholder"]
+  },
+  {
+    "name": "Escapes raw comparison operators in prose",
+    "filePath": "fixtures/comparison.md",
+    "inputLines": [
+      "Keep section paragraphs <= 4 lines where possible."
+    ],
+    "expectedLines": [
+      "Keep section paragraphs &lt;= 4 lines where possible."
+    ],
+    "expectedRules": ["comparison-operator"]
+  },
+  {
+    "name": "Leaves real tags and inline code unchanged",
+    "filePath": "fixtures/noop.mdx",
+    "inputLines": [
+      "<Note>Rendered content</Note>",
+      "",
+      "`codex/<issue-id>-<slug>`"
+    ],
+    "expectedLines": [
+      "<Note>Rendered content</Note>",
+      "",
+      "`codex/<issue-id>-<slug>`"
+    ],
+    "expectedRules": []
+  }
+]
