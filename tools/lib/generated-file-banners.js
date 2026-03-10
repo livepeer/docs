@@ -26,6 +26,18 @@ function asQuotedYaml(value) {
   return `'${escapeYamlSingle(value)}'`;
 }
 
+function formatYamlValue(value) {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return String(value);
+  }
+
+  if (typeof value === 'boolean') {
+    return value ? 'true' : 'false';
+  }
+
+  return asQuotedYaml(normalizeInline(value));
+}
+
 function parseFrontmatter(content) {
   const raw = String(content || '');
   if (!raw.startsWith('---')) {
@@ -63,6 +75,9 @@ function buildGeneratedFrontmatterLines(options = {}) {
   const sidebarTitle = normalizeInline(options.sidebarTitle);
   const description = normalizeInline(options.description);
   const pageType = normalizeInline(options.pageType);
+  const extraFields = options.extraFields && typeof options.extraFields === 'object'
+    ? Object.entries(options.extraFields).filter(([, value]) => value !== undefined && value !== null && String(value).trim() !== '')
+    : [];
   const keywords = Array.isArray(options.keywords) ? options.keywords.map((item) => normalizeInline(item)).filter(Boolean) : [];
   const keywordsStyle = options.keywordsStyle === 'multiline' ? 'multiline' : 'inline';
   const lines = ['---'];
@@ -71,6 +86,9 @@ function buildGeneratedFrontmatterLines(options = {}) {
   if (sidebarTitle) lines.push(`sidebarTitle: ${asQuotedYaml(sidebarTitle)}`);
   if (description) lines.push(`description: ${asQuotedYaml(description)}`);
   if (pageType) lines.push(`pageType: ${pageType}`);
+  extraFields.forEach(([key, value]) => {
+    lines.push(`${key}: ${formatYamlValue(value)}`);
+  });
 
   if (keywords.length > 0) {
     if (keywordsStyle === 'multiline') {

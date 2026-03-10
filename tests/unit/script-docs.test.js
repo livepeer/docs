@@ -20,6 +20,10 @@ const {
   buildGeneratedHiddenBannerLines,
   buildGeneratedNoteLines
 } = require('../../tools/lib/generated-file-banners');
+const {
+  createOgImagePolicyContext,
+  resolveOgImageForFile
+} = require('../../tools/scripts/snippets/lib/og-image-policy');
 
 const REPO_ROOT = path.resolve(__dirname, '../..');
 const INDEX_START = '{/* SCRIPT-INDEX:START */}';
@@ -80,6 +84,7 @@ const AGGREGATE_FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
   title: 'Scripts Index',
   sidebarTitle: 'Scripts Index',
   description: 'This page provides an aggregate catalog inventory of repository scripts generated from group script indexes.',
+  extraFields: resolveOgImageForFile(AGGREGATE_INDEX_PATH, createOgImagePolicyContext(REPO_ROOT)).fields,
   keywords: ['livepeer', 'scripts index', 'aggregate inventory', 'repository', 'scripts']
 });
 const AGGREGATE_DETAILS = {

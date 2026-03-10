@@ -38,6 +38,10 @@ const {
   buildGeneratedHiddenBannerLines,
   buildGeneratedNoteLines
 } = require('../lib/generated-file-banners');
+const {
+  createOgImagePolicyContext,
+  resolveOgImageForFile
+} = require('./snippets/lib/og-image-policy');
 
 const LEGACY_PAGES_ROOT = 'v2/pages';
 const MODERN_PAGES_ROOT = 'v2';
@@ -83,6 +87,7 @@ function getRepoRoot() {
 }
 
 const REPO_ROOT = getRepoRoot();
+const OG_CONTEXT = createOgImagePolicyContext(REPO_ROOT);
 const PAGES_ROOT = fileExists(path.join(REPO_ROOT, LEGACY_PAGES_ROOT))
   ? LEGACY_PAGES_ROOT
   : MODERN_PAGES_ROOT;
@@ -404,6 +409,7 @@ function buildIndexMeta(outputDirRel) {
     sidebarTitle: displayName,
     description: `Generated table of contents for docs pages under ${normalized}.`,
     pageType: 'overview',
+    repoPath: normalizeRel(path.posix.join(normalized, INDEX_FILENAME)),
     keywords: ['livepeer', 'generated index', 'table of contents', normalized]
   };
 }
@@ -414,13 +420,18 @@ function buildRootMeta() {
     sidebarTitle: 'Pages Index',
     description: 'Generated table of contents for v2 docs folders.',
     pageType: 'overview',
+    repoPath: normalizeRel(path.posix.join(PAGES_ROOT, INDEX_FILENAME)),
     keywords: ['livepeer', 'generated index', 'table of contents', 'v2']
   };
 }
 
 function renderIndexContent(data, meta) {
+  const { repoPath, ...frontmatterMeta } = meta;
   const lines = [
-    ...buildGeneratedFrontmatterLines(meta),
+    ...buildGeneratedFrontmatterLines({
+      ...frontmatterMeta,
+      extraFields: resolveOgImageForFile(repoPath, OG_CONTEXT).fields
+    }),
     '',
     ...buildGeneratedHiddenBannerLines(GENERATED_DETAILS),
     '',
@@ -531,8 +542,12 @@ function buildAggregateData(topLevelDirs, sourceByDirRel, rootIndexAbs) {
 }
 
 function renderAggregateContent(groups, meta) {
+  const { repoPath, ...frontmatterMeta } = meta;
   const lines = [
-    ...buildGeneratedFrontmatterLines(meta),
+    ...buildGeneratedFrontmatterLines({
+      ...frontmatterMeta,
+      extraFields: resolveOgImageForFile(repoPath, OG_CONTEXT).fields
+    }),
     '',
     ...buildGeneratedHiddenBannerLines(GENERATED_DETAILS),
     '',

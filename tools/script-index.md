@@ -33,15 +33,15 @@
 | `tools/scripts/cross-agent-packager.js` | Generate consistent audit skill packs for Codex, Cursor, Claude Code, and Windsurf from one catalog. | `*   node tools/scripts/cross-agent-packager.js --agent-pack all` | docs |
 | `tools/scripts/debug-mint-dev.js` | Utility script for tools/scripts/debug-mint-dev.js. | `*   node tools/scripts/debug-mint-dev.js` | docs |
 | `tools/scripts/dev/add-callouts.js` | Utility script for tools/scripts/dev/add-callouts.js. | `*   node tools/scripts/dev/add-callouts.js` | docs |
-| `tools/scripts/dev/batch-update-og-image.sh` | Utility script for tools/scripts/dev/batch-update-og-image.sh. | `#   bash tools/scripts/dev/batch-update-og-image.sh` | docs |
+| `tools/scripts/dev/batch-update-og-image.sh` | Deprecated wrapper for the legacy bulk OG image replacement helper. Use the canonical OG generator workflow instead. | `#   bash tools/scripts/dev/batch-update-og-image.sh` | docs |
 | `tools/scripts/dev/ensure-mint-watcher-patch.sh` | Ensure Mint local-preview watcher disables glob expansion in repo paths. | `#   bash tools/scripts/dev/ensure-mint-watcher-patch.sh --check` | docs |
 | `tools/scripts/dev/generate-mint-dev-scope.js` | Build deterministic Mint dev scoped profiles (docs.json + .mintignore) for large navigation trees. | `*   node tools/scripts/dev/generate-mint-dev-scope.js --versions v2 --languages en --tabs Developers` | docs |
-| `tools/scripts/dev/replace-og-image.py` | Utility script for tools/scripts/dev/replace-og-image.py. | `#   python3 tools/scripts/dev/replace-og-image.py` | docs |
-| `tools/scripts/dev/seo-generator-safe.js` | Utility script for tools/scripts/dev/seo-generator-safe.js. | `*   node tools/scripts/dev/seo-generator-safe.js` | docs |
+| `tools/scripts/dev/replace-og-image.py` | Deprecated wrapper for the legacy OG image replacement helper. Use the canonical OG generator workflow instead. | `#   python3 tools/scripts/dev/replace-og-image.py` | docs |
+| `tools/scripts/dev/seo-generator-safe.js` | Deprecated wrapper for the legacy safe SEO generator. Use the canonical OG generator workflow instead. | `*   node tools/scripts/dev/seo-generator-safe.js` | docs |
 | `tools/scripts/dev/test-add-callouts.js` | Utility script for tools/scripts/dev/test-add-callouts.js. | `*   node tools/scripts/dev/test-add-callouts.js` | docs |
 | `tools/scripts/dev/test-seo-generator.js` | Utility script for tools/scripts/dev/test-seo-generator.js. | `*   node tools/scripts/dev/test-seo-generator.js` | docs |
-| `tools/scripts/dev/update-all-og-images.js` | Utility script for tools/scripts/dev/update-all-og-images.js. | `*   node tools/scripts/dev/update-all-og-images.js` | docs |
-| `tools/scripts/dev/update-og-image.js` | Utility script for tools/scripts/dev/update-og-image.js. | `*   node tools/scripts/dev/update-og-image.js` | docs |
+| `tools/scripts/dev/update-all-og-images.js` | Deprecated wrapper for legacy bulk OG image replacement. Use the canonical OG generator workflow instead. | `*   node tools/scripts/dev/update-all-og-images.js` | docs |
+| `tools/scripts/dev/update-og-image.js` | Deprecated wrapper for legacy OG image replacement. Use the canonical OG generator workflow instead. | `*   node tools/scripts/dev/update-og-image.js` | docs |
 | `tools/scripts/docs-quality-and-freshness-audit.js` | Audit v2 English docs for freshness and quality markers (TODO/TBD/Coming Soon, placeholders, and thin content). | `*   node tools/scripts/docs-quality-and-freshness-audit.js --scope full` | docs |
 | `tools/scripts/enforce-generated-file-banners.js` | Enforce standardized hidden/visible generated banners and frontmatter across generated MDX outputs. | `*   node tools/scripts/enforce-generated-file-banners.js --check` | docs |
 | `tools/scripts/enforcers/pr/check-component-immutability.js` | Flags modifications to existing component files in PR context. New files allowed. Modifications require approval label. | `node tools/scripts/enforcers/pr/check-component-immutability.js --base-ref main` | docs |
@@ -96,7 +96,9 @@
 | `tools/scripts/snippets/generate-api-docs.sh` | Utility script for tools/scripts/snippets/generate-api-docs.sh. | `#   bash tools/scripts/snippets/generate-api-docs.sh` | docs |
 | `tools/scripts/snippets/generate-data/scripts/generate-glossary.js` | Utility script for tools/scripts/snippets/generate-data/scripts/generate-glossary.js. | `*   node tools/scripts/snippets/generate-data/scripts/generate-glossary.js` | docs |
 | `tools/scripts/snippets/generate-data/scripts/terminology-search.js` | Utility script for tools/scripts/snippets/generate-data/scripts/terminology-search.js. | `*   node tools/scripts/snippets/generate-data/scripts/terminology-search.js` | docs |
-| `tools/scripts/snippets/generate-seo.js` | Utility script for tools/scripts/snippets/generate-seo.js. | `*   node tools/scripts/snippets/generate-seo.js` | docs |
+| `tools/scripts/snippets/generate-og-images.js` | Generate canonical site-level Open Graph image assets and manifest for fallback and section-level social previews. | `node tools/scripts/snippets/generate-og-images.js [--dry-run] [--only <locale:section-id\|fallback>]` | docs |
+| `tools/scripts/snippets/generate-seo.js` | Normalize authored MDX frontmatter to canonical OG image assets and backfill lightweight SEO metadata when missing. | `node tools/scripts/snippets/generate-seo.js [--dry-run] [--file <repo-path>] [--file=<repo-path>]` | docs |
+| `tools/scripts/snippets/lib/og-image-policy.js` | OG image policy helper — resolves authored MDX pages to canonical section or fallback social images and metadata. | `node tools/scripts/snippets/lib/og-image-policy.js [flags]` | docs |
 | `tools/scripts/snippets/test-scripts.sh` | Utility script for tools/scripts/snippets/test-scripts.sh. | `#   bash tools/scripts/snippets/test-scripts.sh` | docs |
 | `tools/scripts/snippets/update-component-library.sh` | Utility script for tools/scripts/snippets/update-component-library.sh. | `#   bash tools/scripts/snippets/update-component-library.sh` | docs |
 | `tools/scripts/style-and-language-homogenizer-en-gb.js` | Enforce EN-GB style and terminology profile for English v2 docs in phase 1. | `*   node tools/scripts/style-and-language-homogenizer-en-gb.js --scope full` | docs |

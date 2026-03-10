@@ -36,6 +36,10 @@ const {
   buildGeneratedHiddenBannerLines,
   buildGeneratedNoteLines
 } = require('../lib/generated-file-banners');
+const {
+  createOgImagePolicyContext,
+  resolveOgImageForFile
+} = require('./snippets/lib/og-image-policy');
 
 let yaml = null;
 try {
@@ -63,6 +67,7 @@ const WORKFLOWS_INDEX_FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
   title: 'Workflows Index',
   sidebarTitle: 'Workflows Index',
   description: 'Aggregate inventory of repository GitHub workflows',
+  extraFields: resolveOgImageForFile(OUTPUT_FILES.workflows, createOgImagePolicyContext(REPO_ROOT)).fields,
   keywords: ['livepeer', 'workflows index', 'aggregate inventory', 'repository', 'github', 'workflows'],
   keywordsStyle: 'multiline'
 });
@@ -71,6 +76,7 @@ const TEMPLATES_INDEX_FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
   title: 'Templates Index',
   sidebarTitle: 'Templates Index',
   description: 'Aggregate inventory of repository templates',
+  extraFields: resolveOgImageForFile(OUTPUT_FILES.templates, createOgImagePolicyContext(REPO_ROOT)).fields,
   keywords: ['livepeer', 'templates index', 'aggregate inventory', 'repository', 'templates'],
   keywordsStyle: 'multiline'
 });

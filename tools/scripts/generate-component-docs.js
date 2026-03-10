@@ -15,11 +15,17 @@ const fs = require('fs');
 const path = require('path');
 const { VALID_CATEGORIES } = require('../lib/component-governance-utils');
 const {
+  buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
   buildGeneratedNoteLines
 } = require('../lib/generated-file-banners');
+const {
+  createOgImagePolicyContext,
+  resolveOgImageForFile
+} = require('./snippets/lib/og-image-policy');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
+const OG_CONTEXT = createOgImagePolicyContext(REPO_ROOT);
 const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-registry.json');
 const ENGLISH_OUTPUT_DIR = path.join(
   REPO_ROOT,
@@ -120,6 +126,13 @@ function renderGeneratedNote(scriptPath, runCommand) {
   };
 
   return [...buildGeneratedHiddenBannerLines(details), '', ...buildGeneratedNoteLines(details), ''].join('\n');
+}
+
+function renderGeneratedFrontmatter(repoPath, frontmatter) {
+  return buildGeneratedFrontmatterLines({
+    ...frontmatter,
+    extraFields: resolveOgImageForFile(repoPath, OG_CONTEXT).fields
+  }).join('\n');
 }
 
 function renderDecisionTree() {
@@ -231,12 +244,12 @@ function renderCategoryPage(category, components) {
   });
 
   return [
-    '---',
-    `title: '${label}'`,
-    `sidebarTitle: '${label}'`,
-    `description: '${description}'`,
-    "pageType: reference",
-    '---',
+    renderGeneratedFrontmatter(`v2/resources/documentation-guide/component-library/${category}.mdx`, {
+      title: label,
+      sidebarTitle: label,
+      description,
+      pageType: 'reference'
+    }),
     '',
     renderGeneratedNote(
       'tools/scripts/generate-component-docs.js',
@@ -278,12 +291,12 @@ function renderOverviewPage(registry) {
   });
 
   return [
-    '---',
-    "title: 'Component Library Overview'",
-    "sidebarTitle: 'Overview'",
-    "description: 'Generated overview for the governed snippets/components library.'",
-    "pageType: overview",
-    '---',
+    renderGeneratedFrontmatter('v2/resources/documentation-guide/component-library/overview.mdx', {
+      title: 'Component Library Overview',
+      sidebarTitle: 'Overview',
+      description: 'Generated overview for the governed snippets/components library.',
+      pageType: 'overview'
+    }),
     '',
     renderGeneratedNote(
       'tools/scripts/generate-component-docs.js',
@@ -312,12 +325,12 @@ function renderOverviewPage(registry) {
 
 function renderLandingPage(registry) {
   return [
-    '---',
-    "title: 'Component Library'",
-    "sidebarTitle: 'Component Library'",
-    "description: 'Generated component-library landing page backed by the component registry.'",
-    "pageType: overview",
-    '---',
+    renderGeneratedFrontmatter('v2/resources/documentation-guide/component-library/component-library.mdx', {
+      title: 'Component Library',
+      sidebarTitle: 'Component Library',
+      description: 'Generated component-library landing page backed by the component registry.',
+      pageType: 'overview'
+    }),
     '',
     renderGeneratedNote(
       'tools/scripts/generate-component-docs.js',
@@ -353,11 +366,11 @@ function renderLocaleScaffold(locale, fileSlug, title, description, registry) {
 
   if (fileSlug === 'component-library') {
     return [
-      '---',
-      `title: '${title}'`,
-      `sidebarTitle: '${title}'`,
-      `description: '${description}'`,
-      '---',
+      renderGeneratedFrontmatter(`v2/${locale}/resources/documentation-guide/component-library/component-library.mdx`, {
+        title,
+        sidebarTitle: title,
+        description
+      }),
       '',
       renderGeneratedNote(
         'tools/scripts/generate-component-docs.js',
@@ -374,11 +387,11 @@ function renderLocaleScaffold(locale, fileSlug, title, description, registry) {
 
   if (fileSlug === 'overview') {
     return [
-      '---',
-      `title: '${title}'`,
-      `sidebarTitle: '${title}'`,
-      `description: '${description}'`,
-      '---',
+      renderGeneratedFrontmatter(`v2/${locale}/resources/documentation-guide/component-library/overview.mdx`, {
+        title,
+        sidebarTitle: title,
+        description
+      }),
       '',
       renderGeneratedNote(
         'tools/scripts/generate-component-docs.js',
@@ -396,11 +409,11 @@ function renderLocaleScaffold(locale, fileSlug, title, description, registry) {
   const category = fileSlug;
   const components = registry.components.filter((component) => component.category === category);
   return [
-    '---',
-    `title: '${title}'`,
-    `sidebarTitle: '${title}'`,
-    `description: '${description}'`,
-    '---',
+    renderGeneratedFrontmatter(`v2/${locale}/resources/documentation-guide/component-library/${category}.mdx`, {
+      title,
+      sidebarTitle: title,
+      description
+    }),
     '',
     renderGeneratedNote(
       'tools/scripts/generate-component-docs.js',

@@ -1,9 +1,25 @@
 ---
-sidebarTitle: 'Automations & Workflows'
-title: 'Automations & Workflows Guide'
-description: 'Complete guide to all automation scripts, GitHub Actions workflows, n8n automations, and pre-commit hooks in the Livepeer documentation repository'
-keywords: ["livepeer", "resources", "documentation guide", "automations", "workflows", "scripts", "github actions", "n8n", "pre-commit", "hooks"]
-og:image: "/snippets/assets/domain/07_RESOURCES/social-preview-resources.jpg"
+title: Automations & Workflows Guide
+sidebarTitle: Automations & Workflows
+description: >-
+  Complete guide to all automation scripts, GitHub Actions workflows, n8n
+  automations, and pre-commit hooks in the Livepeer documentation repository
+keywords:
+  - livepeer
+  - resources
+  - documentation guide
+  - automations
+  - workflows
+  - scripts
+  - github actions
+  - n8n
+  - pre-commit
+  - hooks
+'og:image': /snippets/assets/site/og-image/en/resource-hub.png
+'og:image:alt': Livepeer Docs social preview image for Resource HUB
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
 ---
 
 <Tip>
@@ -526,10 +542,13 @@ Scripts are organized into several directories based on their purpose. All scrip
 
 **Usage:**
 ```bash
-# Dry run (preview changes)
+# Generate the site-level PNG assets and manifest first
+node tools/scripts/snippets/generate-og-images.js
+
+# Dry run the frontmatter rewrite
 node tools/scripts/snippets/generate-seo.js --dry-run
 
-# Process all files
+# Process all authored MDX files
 node tools/scripts/snippets/generate-seo.js
 
 # Process single file
@@ -537,17 +556,23 @@ node tools/scripts/snippets/generate-seo.js --file=v2/home/mission-control.mdx
 ```
 
 **What it does:**
-1. Scans all MDX files in `v2/`
-2. Generates `keywords` from file path, title, and description
-3. Adds `og:image` using domain-specific or default social preview images
-4. Preserves existing SEO metadata (won't overwrite if already present)
+1. Generates the canonical site-level OG image PNG set and manifest
+2. Scans authored MDX files in `v2/`, `docs-guide/`, `contribute/`, and `snippets/pages/`
+3. Generates `keywords` and `description` only when missing
+4. Writes canonical OG metadata:
+   - `og:image`
+   - `og:image:alt`
+   - `og:image:type`
+   - `og:image:width`
+   - `og:image:height`
+5. Uses top-level tab assets for docs.json-routable pages and the fallback asset for non-routable authored pages
 
 **Output:** Updates frontmatter in MDX files
 
 **When to run:**
 - After creating new documentation pages
-- When updating page titles or descriptions
-- Before deploying to improve SEO
+- After changing OG branding or localized tab labels
+- Before deploying to re-normalize canonical OG metadata
 
 ---
 

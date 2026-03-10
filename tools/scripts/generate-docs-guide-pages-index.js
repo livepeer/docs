@@ -35,6 +35,10 @@ const {
   buildGeneratedHiddenBannerLines,
   buildGeneratedNoteLines
 } = require('../lib/generated-file-banners');
+const {
+  createOgImagePolicyContext,
+  resolveOgImageForFile
+} = require('./snippets/lib/og-image-policy');
 
 const REPO_ROOT = process.cwd();
 const SOURCE_INDEX_PATH = 'v2/index.mdx';
@@ -45,6 +49,7 @@ const FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
   title: 'Pages Index',
   sidebarTitle: 'Pages Index',
   description: 'Tree inventory of docs pages included in docs.json navigation, generated from v2 index data.',
+  extraFields: resolveOgImageForFile(OUTPUT_PATH, createOgImagePolicyContext(REPO_ROOT)).fields,
   keywords: ['livepeer', 'pages index', 'tree', 'docs.json', 'v2']
 });
 

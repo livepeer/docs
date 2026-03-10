@@ -1,9 +1,21 @@
 ---
-sidebarTitle: 'Authoring Standard'
-title: 'Documentation Authoring Standard'
-description: 'Complete guide to the standards for authoring documentation in the Livepeer documentation repository'
-keywords: ["livepeer", "resources", "documentation guide", "authoring standard", "authoring", "standards"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+title: Documentation Authoring Standard
+sidebarTitle: Authoring Standard
+description: >-
+  Complete guide to the standards for authoring documentation in the Livepeer
+  documentation repository
+keywords:
+  - livepeer
+  - resources
+  - documentation guide
+  - authoring standard
+  - authoring
+  - standards
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
 ---
 
 
@@ -363,7 +375,36 @@ The following are not permitted:
 
 ---
 
-# 10. Publication Readiness Checklist
+# 10. Social Preview Metadata (Mandatory)
+
+All authored MDX pages must follow the Open Graph metadata policy.
+
+For docs.json-routable pages and their localized equivalents:
+
+* `og:image` is required
+* `og:image:alt` is required
+* `og:image` must point to a real local raster asset
+* SVG and GitHub `blob` URLs are prohibited
+* `og:image:type`, `og:image:width`, and `og:image:height` must be present
+
+Canonical asset rules:
+
+* Routable pages use the top-level tab image for their locale
+* Non-routable authored pages use the site fallback image
+* Shared OG assets live under `snippets/assets/site/og-image/`
+
+Accessibility rule:
+
+* `og:image:alt` must describe the social preview image content, not just repeat a filename or path
+
+Automation rule:
+
+* Use `tools/scripts/snippets/generate-og-images.js` to generate the canonical PNG assets and manifest
+* Use `tools/scripts/snippets/generate-seo.js` to normalize frontmatter to the canonical asset set
+
+---
+
+# 11. Publication Readiness Checklist
 
 Before publication confirm:
 
@@ -377,12 +418,11 @@ Before publication confirm:
 
 ---
 
-# 11. Source of Truth Requirement
+# 12. Source of Truth Requirement
 
 All documentation should:
 
 * Align with canonical terminology
 * Avoid regression
 * Explicitly justify structural changes
-
 

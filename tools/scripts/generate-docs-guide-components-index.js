@@ -21,8 +21,13 @@ const {
   buildGeneratedHiddenBannerLines,
   buildGeneratedNoteLines
 } = require('../lib/generated-file-banners');
+const {
+  createOgImagePolicyContext,
+  resolveOgImageForFile
+} = require('./snippets/lib/og-image-policy');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
+const OG_CONTEXT = createOgImagePolicyContext(REPO_ROOT);
 const OUTPUT_PATHS = [
   'docs-guide/indexes/components-index.mdx',
   'v2/resources/documentation-guide/component-library/overview.mdx'
@@ -139,6 +144,7 @@ function renderComponentsIndex(registry) {
         sidebarTitle: 'Components Index',
         description: 'Aggregate inventory of governed component exports from snippets/components.',
         pageType: 'overview',
+        extraFields: resolveOgImageForFile('docs-guide/indexes/components-index.mdx', OG_CONTEXT).fields,
         keywords: ['livepeer', 'components index', 'snippets', 'registry', 'inventory']
       }),
       '',

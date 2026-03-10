@@ -15,21 +15,41 @@
  */
 
 const path = require('path');
-const { getMdxFiles, getStagedDocsPageFiles, readFile } = require('../utils/file-walker');
+const fs = require('fs');
+const { getV2DocsFiles, readFile } = require('../utils/file-walker');
 const { extractFrontmatter } = require('../utils/mdx-parser');
+const {
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_WIDTH,
+  createOgImagePolicyContext,
+  getManifestAssetByPath,
+  hasRasterExtension,
+  isExternalUrl,
+  isGitHubBlobUrl,
+  isLocalAssetPath,
+  resolveOgImageForFile,
+  toAbsoluteAssetPath,
+} = require('../../tools/scripts/snippets/lib/og-image-policy');
 
 const ENFORCE_OG_IMAGE = process.env.ENFORCE_OG_IMAGE === '1';
 const VALID_PAGE_TYPES = ['quickstart', 'tutorial', 'reference', 'conceptual', 'portal', 'api', 'guide', 'overview', 'index'];
 const VALID_AUDIENCES = ['developer', 'orchestrator', 'gateway', 'delegator', 'community', 'all'];
 const VALID_STATUSES = ['draft', 'published', 'review', 'deprecated'];
+const ogContext = createOgImagePolicyContext(process.cwd());
+const assetValidationCache = new Map();
 
 let errors = [];
 let warnings = [];
+let advice = [];
 
 function report(severity, file, message, rule = 'Frontmatter') {
   const issue = { file, rule, message };
   if (severity === 'error') {
     errors.push(issue);
+    return;
+  }
+  if (severity === 'advice' || severity === 'advisory') {
+    advice.push(issue);
     return;
   }
   warnings.push(issue);
@@ -56,6 +76,134 @@ function collectFilesFromArgs(args) {
   }
 
   return [...new Set(files)];
+}
+
+function getDefaultStrictFiles(stagedOnly) {
+  return getV2DocsFiles({ stagedOnly }).filter((filePath) => {
+    if (!filePath.endsWith('.mdx')) {
+      return false;
+    }
+    try {
+      return resolveOgImageForFile(filePath, ogContext).strict;
+    } catch (_error) {
+      return false;
+    }
+  });
+}
+
+function ensureLocalAsset(assetPath) {
+  if (assetValidationCache.has(assetPath)) {
+    return assetValidationCache.get(assetPath);
+  }
+
+  const absolutePath = toAbsoluteAssetPath(ogContext.repoRoot, assetPath);
+  const result = {
+    exists: fs.existsSync(absolutePath),
+    absolutePath,
+  };
+  assetValidationCache.set(assetPath, result);
+  return result;
+}
+
+function normalizeFrontmatterValue(value) {
+  if (value === null || value === undefined) return '';
+  return String(value).trim();
+}
+
+function checkOgPolicy(files) {
+  files.forEach((file) => {
+    const content = readFile(file);
+    if (!content) return;
+
+    const frontmatter = extractFrontmatter(content);
+    if (!frontmatter.exists || !frontmatter.data) return;
+
+    const assignment = resolveOgImageForFile(file, ogContext);
+    const data = frontmatter.data;
+    const ogImage = normalizeFrontmatterValue(data['og:image'] || data.ogImage);
+    const ogAlt = normalizeFrontmatterValue(data['og:image:alt'] || data.ogImageAlt);
+    const ogType = normalizeFrontmatterValue(data['og:image:type'] || data.ogImageType);
+    const ogWidth = normalizeFrontmatterValue(data['og:image:width'] || data.ogImageWidth);
+    const ogHeight = normalizeFrontmatterValue(data['og:image:height'] || data.ogImageHeight);
+    const expected = assignment.fields;
+    const manifestAsset = getManifestAssetByPath(ogImage, ogContext);
+
+    if (assignment.strict || ENFORCE_OG_IMAGE) {
+      if (!ogImage) {
+        report('error', file, 'Missing og:image in frontmatter', 'OG image');
+        return;
+      }
+
+      if (isGitHubBlobUrl(ogImage)) {
+        report('error', file, 'GitHub blob URLs are not valid og:image assets', 'OG image');
+      }
+
+      if (isExternalUrl(ogImage)) {
+        report('error', file, 'External og:image URLs are not allowed; use a local repo asset', 'OG image');
+      }
+
+      if (!isLocalAssetPath(ogImage)) {
+        report('error', file, `og:image must point to a repo asset path. Received "${ogImage}"`, 'OG image');
+      }
+
+      if (!hasRasterExtension(ogImage)) {
+        report('error', file, `og:image must use a raster extension (.png/.jpg/.jpeg/.webp). Received "${ogImage}"`, 'OG image');
+      }
+
+      if (ogImage !== expected['og:image']) {
+        report('error', file, `Expected canonical og:image ${expected['og:image']} but found ${ogImage}`, 'OG image');
+      }
+
+      if (!ogAlt) {
+        report('error', file, 'Missing og:image:alt in frontmatter', 'OG image');
+      } else if (ogAlt !== expected['og:image:alt']) {
+        report('error', file, `Expected canonical og:image:alt "${expected['og:image:alt']}"`, 'OG image');
+      }
+
+      if (ogType !== String(expected['og:image:type'])) {
+        report('error', file, `Expected canonical og:image:type ${expected['og:image:type']}`, 'OG image');
+      }
+
+      if (ogWidth !== String(expected['og:image:width'])) {
+        report('error', file, `Expected canonical og:image:width ${expected['og:image:width']}`, 'OG image');
+      }
+
+      if (ogHeight !== String(expected['og:image:height'])) {
+        report('error', file, `Expected canonical og:image:height ${expected['og:image:height']}`, 'OG image');
+      }
+    }
+
+    if (ogImage && isLocalAssetPath(ogImage)) {
+      const localAsset = ensureLocalAsset(ogImage);
+      if (!localAsset.exists) {
+        report('error', file, `og:image asset does not exist: ${ogImage}`, 'OG image');
+      }
+    }
+
+    if (manifestAsset) {
+      if (ogWidth && Number(ogWidth) !== manifestAsset.width) {
+        report('advice', file, `Generated asset metadata recommends width ${manifestAsset.width}`, 'OG image');
+      }
+      if (ogHeight && Number(ogHeight) !== manifestAsset.height) {
+        report('advice', file, `Generated asset metadata recommends height ${manifestAsset.height}`, 'OG image');
+      }
+      return;
+    }
+
+    if (ogImage && hasRasterExtension(ogImage)) {
+      if (!ogType) {
+        report('advice', file, 'Prefer adding og:image:type for custom raster assets', 'OG image');
+      }
+      if (!ogWidth || !ogHeight) {
+        report('advice', file, `Prefer adding og:image:width and og:image:height (${OG_IMAGE_WIDTH}x${OG_IMAGE_HEIGHT} recommended)`, 'OG image');
+      } else if (
+        Number(ogWidth) !== OG_IMAGE_WIDTH ||
+        Number(ogHeight) !== OG_IMAGE_HEIGHT
+      ) {
+        report('advice', file, `Recommended social image size is ${OG_IMAGE_WIDTH}x${OG_IMAGE_HEIGHT}`, 'OG image');
+      }
+    }
+  });
 }
 
 /**
@@ -205,25 +353,24 @@ function checkInternalLinks(files) {
 function runTests(options = {}) {
   errors = [];
   warnings = [];
+  advice = [];
   
   const { files = null, stagedOnly = false } = options;
   
   let testFiles = files;
   if (!testFiles) {
-    if (stagedOnly) {
-      testFiles = getStagedDocsPageFiles().filter(f => f.endsWith('.mdx'));
-    } else {
-      testFiles = getMdxFiles();
-    }
+    testFiles = getDefaultStrictFiles(stagedOnly);
   }
   
   checkImageAltText(testFiles);
   checkFrontmatter(testFiles);
   checkInternalLinks(testFiles);
+  checkOgPolicy(testFiles);
   
   return {
     errors,
     warnings,
+    advice,
     passed: errors.length === 0,
     total: testFiles.length
   };
@@ -248,6 +395,13 @@ if (require.main === module) {
     console.warn('\n⚠️  Quality Check Warnings:\n');
     result.warnings.forEach(warn => {
       console.warn(`  ${warn.file} - ${warn.message}`);
+    });
+  }
+
+  if (result.advice.length > 0) {
+    console.log('\nℹ️  Quality Check Advice:\n');
+    result.advice.forEach((note) => {
+      console.log(`  ${note.file} - ${note.message}`);
     });
   }
   
