@@ -281,6 +281,46 @@ Los flujos de trabajo de GitHub Actions se encuentran en `.github/workflows/` y 
 
 ---
 
+#### Detector de incidencias obsoletas
+
+**Archivo:** `.github/workflows/stale-issue-detector.yml`
+
+**Propósito:** Marca y cierra automáticamente las incidencias de `docs-v2` que han estado inactivas durante un período prolongado.
+
+**Disparadores:**
+- Diariamente a las 03:00 UTC (programado)
+- Ejecución manual desde la interfaz de GitHub Actions
+
+**Lo que hace:**
+1. Analiza todas las incidencias abiertas de `docs-v2` en busca de inactividad
+2. Marca las incidencias con `status: stale` después de 60 días sin actividad
+3. Publica un comentario de advertencia explicando el estado obsoleto y cómo restablecerlo
+4. Cierra las incidencias obsoletas con `status: autoclosed` después de 14 días adicionales sin actividad
+5. Omite las incidencias protegidas por etiquetas de exención (ver más abajo)
+
+**Etiquetas de exención (las incidencias con alguna de estas nunca se marcan como obsoletas):**
+- `status: pinned`
+- `priority: critical` o `priority: high`
+- `classification: urgent` o `classification: high`
+- `status: in-progress`
+- `status: needs-triage`
+- `status: needs-info`
+
+**Ejecución manual:**
+1. Ir a Actions → Stale Issue Detector
+2. Hacer clic en "Run workflow"
+
+**Secretos necesarios:** Ninguno (usa `GITHUB_TOKEN`)
+
+**Notas para el mantenedor:**
+- Solo se procesan las incidencias con etiqueta `docs-v2`; las demás incidencias del repositorio no se ven afectadas
+- Eliminar la etiqueta `status: stale` de una incidencia restablece su temporizador de inactividad
+- Ajusta `days-before-issue-stale` y `days-before-issue-close` en el archivo de flujo para cambiar los umbrales
+- El límite de `operations-per-run` (30) evita superar los límites de la API de GitHub en acumulaciones grandes
+- Las solicitudes de extracción se excluyen intencionalmente (`days-before-pr-stale: -1`)
+
+---
+
 ### Flujos de obtención de datos (GitHub Actions y n8n disponibles)
 
 La implementación de GitHub Actions utiliza flujos dedicados divididos por fuente de datos (`update-forum-data.yml`, `update-ghost-blog-data.yml`, y `update-youtube-data.yml`). Las versiones de n8n de estos flujos también se mantienen para equipos que prefieren la orquestación de automatización externa.

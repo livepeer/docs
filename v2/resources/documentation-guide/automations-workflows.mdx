@@ -268,6 +268,46 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
 
 ---
 
+#### Stale Issue Detector
+
+**File:** `.github/workflows/stale-issue-detector.yml`
+
+**Purpose:** Automatically marks and closes `docs-v2` issues that have been inactive for an extended period.
+
+**Triggers:**
+- Daily at 03:00 UTC (scheduled)
+- Manual dispatch from GitHub Actions UI
+
+**What it does:**
+1. Scans all open `docs-v2` issues for inactivity
+2. Marks issues with `status: stale` after 60 days of no activity
+3. Posts a warning comment explaining the stale state and how to reset it
+4. Closes stale issues with `status: autoclosed` after a further 14 days of inactivity
+5. Skips issues protected by exempt labels (see below)
+
+**Exempt labels (issues with any of these are never marked stale):**
+- `status: pinned`
+- `priority: critical` or `priority: high`
+- `classification: urgent` or `classification: high`
+- `status: in-progress`
+- `status: needs-triage`
+- `status: needs-info`
+
+**Manual execution:**
+1. Go to Actions → Stale Issue Detector
+2. Click "Run workflow"
+
+**Required secrets:** None (uses `GITHUB_TOKEN`)
+
+**Maintainer notes:**
+- Only `docs-v2`-labeled issues are processed; other repo issues are unaffected
+- Removing the `status: stale` label from an issue resets its inactivity timer
+- Adjust `days-before-issue-stale` and `days-before-issue-close` in the workflow file to change the thresholds
+- The `operations-per-run` cap (30) prevents hitting GitHub API rate limits on large backlogs
+- Pull requests are intentionally excluded (`days-before-pr-stale: -1`)
+
+---
+
 ### Data Fetching Workflows (GitHub Actions & n8n Available)
 
 The GitHub Actions implementation uses dedicated workflows split by data source (`update-forum-data.yml`, `update-ghost-blog-data.yml`, and `update-youtube-data.yml`). N8n versions of these flows are also maintained for teams that prefer external automation orchestration.

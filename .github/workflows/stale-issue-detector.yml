@@ -1,0 +1,75 @@
+name: Stale Issue Detector
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # Daily at 03:00 UTC
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+concurrency:
+  group: stale-issue-detector
+  cancel-in-progress: true
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mark and close stale issues
+        uses: actions/stale@v9
+        with:
+          # Label applied when an issue becomes stale
+          stale-issue-label: 'status: stale'
+
+          # Label applied when a stale issue is closed
+          close-issue-label: 'status: autoclosed'
+
+          # Days of inactivity before an issue is marked stale
+          days-before-issue-stale: 60
+
+          # Days after being marked stale before the issue is closed
+          days-before-issue-close: 14
+
+          # Comment posted when an issue is marked stale
+          stale-issue-message: >
+            This issue has been automatically marked as stale because it has not had
+            activity in the last 60 days. It will be closed in 14 days unless updated
+            or a maintainer removes the `status: stale` label.
+
+
+            If this issue is still relevant, please:
+
+            - Add a comment with any new information or context
+
+            - Remove the `status: stale` label to reset the inactivity timer
+
+
+            Thank you for contributing to Livepeer Docs!
+
+          # Comment posted when a stale issue is closed
+          close-issue-message: >
+            This issue has been automatically closed because it remained stale for
+            14 days with no further activity. If the problem is still present, please
+            open a new issue with up-to-date details.
+
+          # Labels that prevent an issue from being marked stale
+          exempt-issue-labels: >
+            status: pinned,
+            priority: critical,
+            priority: high,
+            classification: urgent,
+            classification: high,
+            status: in-progress,
+            status: needs-triage,
+            status: needs-info
+
+          # Only operate on issues (not pull requests)
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+
+          # Limit to docs-v2 scoped issues
+          only-labels: 'docs-v2'
+
+          # Allow up to 30 issues to be processed per run to stay within API rate limits
+          operations-per-run: 30
