@@ -1,6 +1,6 @@
 # Governance Repair Report
 
-- Date: 2026-03-09T21:39:55.724Z
+- Date: 2026-03-10T10:30:25.786Z
 - Mode: dry-run
 - Verification: SKIPPED (dry-run)
 
@@ -14,8 +14,8 @@
 
 ## Repairs Applied
 
-- Total fixes: 265
-- JSON phantoms removed: 0
+- Total fixes: 281
+- JSON phantoms removed: 16
 - JSON entries added: 0
 - JSON entries updated: 210
 - Header category added: 0
@@ -325,6 +325,6 @@
 
 - Grade A delta: +0
 - Grade F delta: +0
-- Fixes applied: 265
+- Fixes applied: 281
 - Remaining human items: 168
 

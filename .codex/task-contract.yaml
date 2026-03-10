@@ -1,15 +1,24 @@
-task_id: 20260310
-branch: codex/20260310-step-02-governance-verify
+task_id: 811
+branch: codex/811-fix-governance-merge
 base_branch: docs-v2
 scope_in:
   - .codex/task-contract.yaml
-  - .codex/locks-local/
-  - tools/lib/docs-index-utils.js
+  - .github/workflows/governance-sync.yml
+  - tools/scripts/orchestrators/repair-governance.js
   - tools/scripts/validators/governance/audit-script-inventory.js
+  - tests/unit/repair-governance.test.js
+  - tests/unit/audit-script-inventory-repair-rules.test.js
 scope_out: []
 allowed_generated:
   - .codex/pr-body.generated.md
+  - tasks/reports/repo-ops/REPAIR_REPORT_LATEST.json
+  - tasks/reports/repo-ops/REPAIR_REPORT_LATEST.md
+  - tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.json
+  - tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.md
+  - tasks/reports/script-classifications.json
 acceptance_checks:
+  - node tests/unit/repair-governance.test.js
+  - node tools/scripts/orchestrators/repair-governance.js --dry-run
   - node tests/run-pr-checks.js --base-ref docs-v2
 risk_flags:
   - workflow-governance

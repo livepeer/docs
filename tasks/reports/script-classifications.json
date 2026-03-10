@@ -451,9 +451,10 @@
   },
   {
     "path": "tests/unit/audit-script-inventory-repair-rules.test.js",
+    "script": "audit-script-inventory-repair-rules.test",
     "category": "validator",
     "purpose": "qa:repo-health",
-    "scope": "tests/unit, tools/scripts/validators/governance",
+    "scope": "single-file",
     "needs": "E-C1, R-R14",
     "purpose_statement": "Tests audit-script-inventory repair hardening rules for judgement-field backfill and pipeline safety.",
     "pipeline": "manual (not yet in pipeline)",
@@ -481,9 +482,10 @@
   },
   {
     "path": "tests/unit/repair-governance.test.js",
+    "script": "repair-governance.test",
     "category": "validator",
     "purpose": "governance:repo-health",
-    "scope": "tests/unit, tools/scripts/orchestrators/repair-governance.js, .github/workflows/repair-governance.yml",
+    "scope": "single-file",
     "needs": "R-R14, R-R18, R-C6",
     "purpose_statement": "Tests repair-governance.js for safe dry-run, fix, rollback, strict exit handling, and workflow contract coverage.",
     "pipeline": "manual",
@@ -1552,12 +1554,13 @@
   },
   {
     "path": "tools/scripts/orchestrators/repair-governance.js",
+    "script": "repair-governance",
     "category": "orchestrator",
     "purpose": "governance:repo-health",
     "scope": "full-repo",
     "needs": "R-R14, R-R18, R-C6",
     "purpose_statement": "Chains audit, safe repair, verification, and reporting into a single self-healing governance pipeline.",
-    "pipeline": "P5 (scheduled, weekly), P6 (on-demand), manual",
+    "pipeline": "P2 (push), P5 (scheduled, weekly), P6 (on-demand), manual",
     "dualmode": "--report-only | --dry-run | default fix mode"
   },
   {
@@ -1925,7 +1928,10 @@
     "script": "audit-script-inventory",
     "category": "validator",
     "purpose": "governance:repo-health",
-    "scope": "full-repo"
+    "scope": "full-repo",
+    "needs": "R-R14, R-R18, R-C6",
+    "purpose_statement": "Deep inventory audit of every script in the repo. Traces triggers, outputs, downstream chains, and governance compliance. Produces reports grouped by trigger category.",
+    "pipeline": "P1 (pre-commit), indirect"
   },
   {
     "path": "tools/scripts/validators/governance/review-governance-repair-checklist.js",

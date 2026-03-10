@@ -1,20 +1,21 @@
 #!/usr/bin/env node
 /**
- * @script           audit-script-inventory-repair-rules.test
- * @category         validator
- * @purpose          qa:repo-health
- * @scope            tests/unit, tools/scripts/validators/governance
- * @owner            docs
- * @needs            E-C1, R-R14
+ * @script            audit-script-inventory-repair-rules.test
+ * @category          validator
+ * @purpose           qa:repo-health
+ * @scope             single-file
+ * @owner             docs
+ * @needs             E-C1, R-R14
  * @purpose-statement Tests audit-script-inventory repair hardening rules for judgement-field backfill and pipeline safety.
- * @pipeline         manual (not yet in pipeline)
- * @usage            node tests/unit/audit-script-inventory-repair-rules.test.js
+ * @pipeline          manual (not yet in pipeline)
+ * @usage             node tests/unit/audit-script-inventory-repair-rules.test.js
  */
 
 const assert = require('assert');
 const {
   buildNeedsHumanEntry,
   buildProjectedHeaderState,
+  parseArgs,
   selectSafePipelineProposal
 } = require('../../tools/scripts/validators/governance/audit-script-inventory.js');
 
@@ -124,6 +125,18 @@ function main() {
     assert.strictEqual(pipelineDecision.safe_to_apply, true);
     assert.strictEqual(pipelineDecision.value, candidate);
     assert.strictEqual(pipelineDecision.needs_human, false);
+  });
+
+  runCase('parses staged-only quiet governance audit flags', () => {
+    const args = parseArgs(['--fix', '--dry-run', '--staged-only', '--quiet', '--json', '--output', 'tmp/report']);
+
+    assert.strictEqual(args.fix, true);
+    assert.strictEqual(args.dryRun, true);
+    assert.strictEqual(args.stagedOnly, true);
+    assert.strictEqual(args.quiet, true);
+    assert.strictEqual(args.json, true);
+    assert.strictEqual(args.md, false);
+    assert.strictEqual(args.outputDir, 'tmp/report');
   });
 
   if (failures.length > 0) {

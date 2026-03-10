@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script           repair-governance.test
- * @category         validator
- * @purpose          governance:repo-health
- * @scope            tests/unit, tools/scripts/orchestrators/repair-governance.js, .github/workflows/repair-governance.yml
- * @owner            docs
- * @needs            R-R14, R-R18, R-C6
+ * @script            repair-governance.test
+ * @category          validator
+ * @purpose           governance:repo-health
+ * @scope             single-file
+ * @owner             docs
+ * @needs             R-R14, R-R18, R-C6
  * @purpose-statement Tests repair-governance.js for safe dry-run, fix, rollback, strict exit handling, and workflow contract coverage.
- * @pipeline         manual
- * @usage            node tests/unit/repair-governance.test.js
+ * @pipeline          manual
+ * @usage             node tests/unit/repair-governance.test.js
  */
 
 const assert = require('assert');
@@ -27,6 +27,7 @@ const INVENTORY_JSON_PATH = 'tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.json';
 const REPORT_JSON_PATH = 'tasks/reports/repo-ops/REPAIR_REPORT_LATEST.json';
 const REPORT_MD_PATH = 'tasks/reports/repo-ops/REPAIR_REPORT_LATEST.md';
 const WORKFLOW_PATH = path.join(REPO_ROOT, '.github/workflows/repair-governance.yml');
+const GOVERNANCE_SYNC_WORKFLOW_PATH = path.join(REPO_ROOT, '.github/workflows/governance-sync.yml');
 
 function writeFile(absPath, content) {
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
@@ -224,13 +225,85 @@ async function runTests() {
 
     assert.strictEqual(result.exitCode, 0);
     assert.strictEqual(result.report.verification, 'PASS');
-    assert.deepStrictEqual(runner.state.gitAddArgs, [['tasks/reports/script-classifications.json', targetPath]]);
+    assert.deepStrictEqual(runner.state.gitAddArgs, []);
     assert.deepStrictEqual(runner.state.gitCommitArgs, []);
     assert.strictEqual(fs.existsSync(path.join(repoRoot, REPORT_MD_PATH)), true);
 
     const report = readReport(repoRoot);
     assert.strictEqual(report.repairs_applied.total_fixes, 5);
     assert.deepStrictEqual(report.repairs_applied.files_modified, ['tasks/reports/script-classifications.json', targetPath]);
+  });
+
+  cases.push(async () => {
+    const repoRoot = mkRepo('repair-governance-auto-commit-');
+    const targetPath = 'tools/scripts/example.js';
+    writeFile(path.join(repoRoot, targetPath), '#!/usr/bin/env node\nconsole.log("before");\n');
+
+    const baseline = buildAuditReport({
+      summary: buildSummary()
+    });
+    const preview = buildAuditReport({
+      summary: buildSummary(),
+      repair: {
+        fixes: {
+          json_entries_updated: 2,
+          total_fixes: 2,
+          planned_files: [targetPath, 'tasks/reports/script-classifications.json']
+        },
+        projected_summary: buildSummary({
+          grade_distribution: { A: 6, B: 3, C: 2, F: 1 },
+          pipeline_verification: { MISMATCH: 0 },
+          classification_sync: { not_in_json: 0, phantom: 0 }
+        }),
+        needs_human: []
+      }
+    });
+    const applied = buildAuditReport({
+      summary: buildSummary(),
+      repair: {
+        fixes: {
+          json_entries_updated: 2,
+          total_fixes: 2,
+          files_modified: [targetPath, 'tasks/reports/script-classifications.json']
+        },
+        needs_human: []
+      }
+    });
+    const postAudit = buildAuditReport({
+      summary: buildSummary({
+        grade_distribution: { A: 6, B: 3, C: 2, F: 1 },
+        pipeline_verification: { MISMATCH: 0 },
+        classification_sync: { not_in_json: 0, phantom: 0 }
+      })
+    });
+    const runner = makeRunner(repoRoot, {
+      baselineReport: baseline,
+      previewReport: preview,
+      fixReport: applied,
+      postAuditReport: postAudit,
+      onApply() {
+        writeFile(path.join(repoRoot, targetPath), '#!/usr/bin/env node\nconsole.log("after");\n');
+      }
+    });
+
+    const result = runRepair(parseArgs(['--auto-commit']), {
+      repoRoot,
+      auditScriptPath: AUDIT_SCRIPT_PATH,
+      scriptDocsTestPath: SCRIPT_DOCS_TEST_PATH,
+      runCommand: runner.run
+    });
+
+    assert.strictEqual(result.exitCode, 0);
+    assert.deepStrictEqual(runner.state.gitAddArgs, [[
+      REPORT_JSON_PATH,
+      REPORT_MD_PATH,
+      'tasks/reports/script-classifications.json',
+      targetPath
+    ]]);
+    assert.deepStrictEqual(runner.state.gitCommitArgs, [[
+      '-m',
+      'chore(governance): automated repair -- 2 fixes applied'
+    ]]);
   });
 
   cases.push(async () => {
@@ -418,6 +491,16 @@ async function runTests() {
     assert.match(workflow, /node tools\/scripts\/orchestrators\/repair-governance\.js/);
     assert.match(workflow, /actions\/upload-artifact@v4/);
     assert.match(workflow, /peter-evans\/create-pull-request@v7/);
+  });
+
+  cases.push(async () => {
+    const workflow = fs.readFileSync(GOVERNANCE_SYNC_WORKFLOW_PATH, 'utf8');
+
+    assert.match(workflow, /actions\/checkout@v4/);
+    assert.match(workflow, /node tools\/scripts\/orchestrators\/repair-governance\.js/);
+    assert.match(workflow, /peter-evans\/create-pull-request@v7/);
+    assert.match(workflow, /branch:\s*automation\/governance-sync/);
+    assert.ok(!/branch:\s*chore\/governance-sync-\$\{\{\s*github\.run_id\s*\}\}/.test(workflow));
   });
 
   for (let index = 0; index < cases.length; index += 1) {

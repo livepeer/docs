@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script           repair-governance
- * @category         orchestrator
- * @purpose          governance:repo-health
- * @scope            full-repo
- * @owner            docs
- * @needs            R-R14, R-R18, R-C6
+ * @script            repair-governance
+ * @category          orchestrator
+ * @purpose           governance:repo-health
+ * @scope             full-repo
+ * @owner             docs
+ * @needs             R-R14, R-R18, R-C6
  * @purpose-statement Chains audit, safe repair, verification, and reporting into a single self-healing governance pipeline.
- * @pipeline         P5 (scheduled, weekly), P6 (on-demand), manual
- * @dualmode         --report-only | --dry-run | default fix mode
- * @usage            node tools/scripts/orchestrators/repair-governance.js [--dry-run] [--auto-commit] [--report-only] [--strict]
+ * @pipeline          P2 (push), P5 (scheduled, weekly), P6 (on-demand), manual
+ * @dualmode          --report-only | --dry-run | default fix mode
+ * @usage             node tools/scripts/orchestrators/repair-governance.js [--dry-run] [--auto-commit] [--report-only] [--strict]
  */
 
 const fs = require('fs');
@@ -447,7 +447,14 @@ function runRepair(args, overrides = {}) {
     context.inventoryJsonPath,
     context.inventoryMdPath
   ]);
-  const dirtyBeforeRepair = listDirtyPaths(context, plannedFiles);
+  const autoCommitTargets = [
+    ...new Set([
+      ...plannedFiles,
+      context.repairReportJsonPath,
+      context.repairReportMdPath
+    ])
+  ];
+  const dirtyBeforeRepair = args.autoCommit ? listDirtyPaths(context, autoCommitTargets) : [];
 
   let fixReport;
   try {
@@ -498,18 +505,22 @@ function runRepair(args, overrides = {}) {
   }
 
   const actualFixes = cloneFixCounts(fixRepair.fixes);
-  const dirtySet = new Set(dirtyBeforeRepair);
-  const stageableFiles = actualFixes.files_modified.filter((repoPath) => !dirtySet.has(repoPath));
-  const skippedDirtyFiles = actualFixes.files_modified.filter((repoPath) => dirtySet.has(repoPath));
+  let stageableFiles = [];
+  if (args.autoCommit) {
+    const commitCandidates = [
+      ...new Set([
+        ...actualFixes.files_modified,
+        context.repairReportJsonPath,
+        context.repairReportMdPath
+      ])
+    ].sort();
+    const dirtySet = new Set(dirtyBeforeRepair);
+    stageableFiles = commitCandidates.filter((repoPath) => !dirtySet.has(repoPath));
+    const skippedDirtyFiles = commitCandidates.filter((repoPath) => dirtySet.has(repoPath));
 
-  if (skippedDirtyFiles.length > 0) {
-    warnings.push(`Skipped staging pre-existing dirty repair targets: ${skippedDirtyFiles.join(', ')}`);
-  }
-
-  stageFiles(context, stageableFiles);
-
-  if (args.autoCommit && stageableFiles.length > 0) {
-    commitFiles(context, `chore(governance): automated repair -- ${actualFixes.total_fixes} fixes applied`);
+    if (skippedDirtyFiles.length > 0) {
+      warnings.push(`Skipped auto-commit for pre-existing dirty repair targets: ${skippedDirtyFiles.join(', ')}`);
+    }
   }
 
   const report = buildReportObject({
@@ -523,6 +534,11 @@ function runRepair(args, overrides = {}) {
     warnings
   });
   writeRepairReports(context.repoRoot, report);
+
+  if (args.autoCommit && stageableFiles.length > 0) {
+    stageFiles(context, stageableFiles);
+    commitFiles(context, `chore(governance): automated repair -- ${actualFixes.total_fixes} fixes applied`);
+  }
 
   return {
     exitCode: successExitCode(args, report.needs_human.length),

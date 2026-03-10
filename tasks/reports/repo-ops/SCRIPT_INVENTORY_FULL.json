@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-09T21:39:55.653Z",
+  "generated_at": "2026-03-10T10:30:25.722Z",
   "mode": "dry-run",
   "output_dir": "tasks/reports/repo-ops",
   "summary": {
@@ -23446,6 +23446,7 @@
     "tools/config/component-layout-profile.json",
     "tools/config/component-layout-profile.schema.json",
     "tools/config/cspell.json",
+    "tools/config/navigation-exclusions.json",
     "tools/config/report-retention-policy.json",
     "tools/config/script-index.md",
     "tools/config/style-language-profile-en-gb.json",
@@ -26493,6 +26494,167 @@
       "dualmode": ""
     },
     {
+      "path": "tools/scripts/archive/deprecated/project-management-output-script.js",
+      "category": "utility",
+      "purpose": "tooling:dev-tools",
+      "scope": "tools/scripts/archive/deprecated",
+      "needs": "",
+      "purpose_statement": "Deprecated legacy project-management output script retained as a no-op reference stub.",
+      "pipeline": "manual — deprecated reference stub",
+      "dualmode": "",
+      "status": "NEEDS_HEADERS"
+    },
+    {
+      "path": "tools/scripts/archive/deprecated/update-component-library.sh",
+      "category": "automation",
+      "purpose": "infrastructure:data-feeds",
+      "scope": "tools/scripts",
+      "needs": "F-R1",
+      "purpose_statement": "Component library updater — syncs component library documentation from source",
+      "pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+      "dualmode": ""
+    },
+    {
+      "path": "tools/scripts/archive/legacy/audit-all-pages-simple.js",
+      "category": "validator",
+      "purpose": "qa:content-quality",
+      "scope": "tasks/scripts",
+      "needs": "E-R1, R-R11",
+      "purpose_statement": "Lightweight page auditor — quick pass over all pages checking basic frontmatter and structure",
+      "pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+      "dualmode": ""
+    },
+    {
+      "path": "tools/scripts/archive/legacy/audit-all-pages.js",
+      "category": "validator",
+      "purpose": "qa:content-quality",
+      "scope": "tasks/scripts",
+      "needs": "E-R1, R-R11",
+      "purpose_statement": "Full page auditor — comprehensive check of all pages including content quality metrics",
+      "pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+      "dualmode": ""
+    },
+    {
+      "path": "tools/scripts/archive/legacy/audit-all-v2-pages.js",
+      "category": "validator",
+      "purpose": "tooling:dev-tools",
+      "scope": "tools/scripts",
+      "needs": "E-C6, F-C1",
+      "purpose_statement": "V2-specific page auditor — checks v2/** pages for v2-specific requirements (frontmatter, components)",
+      "pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+      "dualmode": ""
+    },
+    {
+      "path": "tools/scripts/archive/legacy/audit-v1-to-v2-mapping.js",
+      "category": "validator",
+      "purpose": "qa:repo-health",
+      "scope": "tools/scripts, v1, v2, docs.json, tasks/reports",
+      "needs": "E-C1, R-R14",
+      "purpose_statement": "Diagnostic — maps v1 page URLs to v2 equivalents for migration tracking",
+      "pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+      "dualmode": "dual-mode (document flags)"
+    },
+    {
+      "path": "tools/scripts/archive/legacy/check-component-errors.js",
+      "category": "enforcer",
+      "purpose": "qa:repo-health",
+      "scope": "tools/scripts",
+      "needs": "E-C1, R-R14",
+      "purpose_statement": "Component error checker — scans pages for broken or misconfigured component usage",
+      "pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+      "dualmode": ""
+    },
+    {
+      "path": "tools/scripts/archive/legacy/final-verification.js",
+      "category": "utility",
+      "purpose": "tooling:dev-tools",
+      "scope": "tools/scripts",
+      "needs": "E-C6, F-C1",
+      "purpose_statement": "Diagnostic — runs final verification checks on page set (manual tool)",
+      "pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+      "dualmode": ""
+    },
+    {
+      "path": "tools/scripts/archive/legacy/find-correct-url.js",
+      "category": "utility",
+      "purpose": "tooling:dev-tools",
+      "scope": "tools/scripts",
+      "needs": "E-C6, F-C1",
+      "purpose_statement": "Diagnostic — given a broken URL, attempts to find the correct v2 equivalent",
+      "pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+      "dualmode": ""
+    },
+    {
+      "path": "tools/scripts/archive/legacy/inspect-page.js",
+      "category": "utility",
+      "purpose": "tooling:dev-tools",
+      "scope": "tools/scripts",
+      "needs": "E-C6, F-C1",
+      "purpose_statement": "Page inspector — displays parsed metadata, frontmatter, components, and structure for a single page",
+      "pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+      "dualmode": ""
+    },
+    {
+      "path": "tools/scripts/archive/legacy/inspect-video-page.js",
+      "category": "utility",
+      "purpose": "tooling:dev-tools",
+      "scope": "tools/scripts",
+      "needs": "E-C6, F-C1",
+      "purpose_statement": "Video page inspector — displays video-specific metadata and embed configuration for a page",
+      "pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+      "dualmode": ""
+    },
+    {
+      "path": "tools/scripts/archive/legacy/test-all-pages-browser.js",
+      "category": "utility",
+      "purpose": "tooling:dev-tools",
+      "scope": "tools/scripts",
+      "needs": "E-C6, F-C1",
+      "purpose_statement": "Manual browser test runner — opens all pages in Puppeteer for visual inspection",
+      "pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+      "dualmode": ""
+    },
+    {
+      "path": "tools/scripts/archive/legacy/test-all-pages-comprehensive.js",
+      "category": "utility",
+      "purpose": "tooling:dev-tools",
+      "scope": "tools/scripts",
+      "needs": "E-C6, F-C1",
+      "purpose_statement": "Manual comprehensive test — runs all page validators including slow/network checks",
+      "pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+      "dualmode": ""
+    },
+    {
+      "path": "tools/scripts/archive/legacy/test-youtube-pages.js",
+      "category": "utility",
+      "purpose": "tooling:dev-tools",
+      "scope": "tools/scripts",
+      "needs": "E-C6, F-C1",
+      "purpose_statement": "YouTube page tester — validates YouTube embed pages render correctly",
+      "pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+      "dualmode": ""
+    },
+    {
+      "path": "tools/scripts/archive/legacy/verify-all-pages.js",
+      "category": "enforcer",
+      "purpose": "qa:repo-health",
+      "scope": "tools/scripts",
+      "needs": "E-C1, R-R14",
+      "purpose_statement": "Page verifier — checks all pages in docs.json resolve to valid files",
+      "pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+      "dualmode": ""
+    },
+    {
+      "path": "tools/scripts/archive/legacy/verify-pages.js",
+      "category": "enforcer",
+      "purpose": "qa:repo-health",
+      "scope": "tools/scripts",
+      "needs": "E-C1, R-R14",
+      "purpose_statement": "Page verifier — checks a subset of pages resolve to valid files",
+      "pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+      "dualmode": ""
+    },
+    {
       "path": "tools/scripts/assign-purpose-metadata.js",
       "category": "generator",
       "purpose": "qa:content-quality",
@@ -27821,7 +27983,7 @@
     "mode": "dry-run",
     "dry_run": true,
     "fixes": {
-      "json_phantoms_removed": 0,
+      "json_phantoms_removed": 16,
       "json_entries_added": 0,
       "json_entries_updated": 210,
       "headers_category_added": 0,
@@ -27834,7 +27996,7 @@
       "headers_purpose_statement_added": 0,
       "headers_pipeline_corrected": 55,
       "indexes_regenerated": true,
-      "total_fixes": 265,
+      "total_fixes": 281,
       "files_modified": [],
       "planned_files": [
         ".githooks/script-index.md",
