@@ -16,7 +16,7 @@ const path = require('path');
 const os = require('os');
 const { spawnSync } = require('child_process');
 
-const DEFAULT_BASE = 'docs-v2';
+const DEFAULT_BASE = 'docs-v2-dev';
 const DEFAULT_CONTRACT = '.codex/task-contract.yaml';
 const LOCK_DIR_REL = '.codex/locks-local';
 const DEFAULT_WORKTREE_ROOT = 'codex-worktrees';
@@ -188,7 +188,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-  console.log('Usage: node tools/scripts/codex/task-preflight.js --task <id> --slug <slug> (--scope <a,b,c> | --scope-file <path>) [--base docs-v2] [--worktree <path> | --in-place] [--dry-run]');
+  console.log('Usage: node tools/scripts/codex/task-preflight.js --task <id> --slug <slug> (--scope <a,b,c> | --scope-file <path>) [--base docs-v2-dev] [--worktree <path> | --in-place] [--dry-run]');
 }
 
 function readScopeFromFile(scopeFile) {

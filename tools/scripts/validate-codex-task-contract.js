@@ -18,7 +18,7 @@ const yaml = require('../lib/load-js-yaml');
 
 const DEFAULT_CONTRACT_PATH = '.codex/task-contract.yaml';
 const DEFAULT_ISSUE_POLICY_PATH = 'tests/config/codex-issue-policy.json';
-const DEFAULT_BASE_BRANCH = 'docs-v2';
+const DEFAULT_BASE_BRANCH = 'docs-v2-dev';
 const DEFAULT_ISSUE_SOURCE = 'auto';
 const DEFAULT_ISSUE_TOKEN_ENV = 'GITHUB_TOKEN';
 const CODEX_BRANCH_RE = /^codex\/(\d+)-[a-z0-9][a-z0-9-]*$/;

@@ -44,7 +44,7 @@ function runScript(args, env = {}) {
 function writeContract(absPath, taskId, branchName) {
   const content = [
     `task_id: ${taskId}`,
-    'base_branch: docs-v2',
+    'base_branch: docs-v2-dev',
     `branch: ${branchName}`,
     'scope_in:',
     '  - .codex/task-contract.yaml',
@@ -52,7 +52,7 @@ function writeContract(absPath, taskId, branchName) {
     '  - v1/',
     'allowed_generated: []',
     'acceptance_checks:',
-    '  - node tests/run-pr-checks.js --base-ref docs-v2',
+    '  - node tests/run-pr-checks.js --base-ref docs-v2-dev',
     'risk_flags: []',
     'follow_up_issues: []',
     ''

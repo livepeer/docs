@@ -15,6 +15,9 @@
   branch to revert to in case of failure.
 - For any implementation task, apply the `codex-task-isolation-standard` skill
   first (task contract + scoped branch enforcement).
+- **Docs-v2-dev main workspace is protected:** Codex must not implement directly
+  in this checkout. Start from a separate managed worktree off `docs-v2-dev`
+  and work on a `codex/<issue-id>-<slug>` branch there.
 
 ## 📦 GIT WORKFLOW & CHECKPOINTS
 
@@ -25,6 +28,9 @@ destructive or history-altering actions.
   safety hook that creates a branch named `checkpoint/YYYY-MM-DD_HHMMSS`.
 - **Isolation Rule:** Use branch-scoped WIP commits for checkpoints. Do not use
   stash as a checkpoint or isolation mechanism.
+- **Docs-v2-dev Worktree Rule:** The primary `Docs-v2-dev` checkout is for base
+  branch sync and review only. All Codex implementation work must happen in a
+  separate managed worktree created from `docs-v2-dev`.
 - **Pre-Write Announcement:** Before executing a write command, you MUST state:
   _"I am initiating [COMMAND]. A safety checkpoint will be created. Please
   switch to your terminal to type 'yes' when prompted."_

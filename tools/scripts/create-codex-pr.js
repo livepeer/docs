@@ -18,7 +18,7 @@ const yaml = require('../lib/load-js-yaml');
 
 const DEFAULT_CONTRACT_PATH = '.codex/task-contract.yaml';
 const DEFAULT_OUTPUT_PATH = '.codex/pr-body.generated.md';
-const DEFAULT_BASE_BRANCH = 'docs-v2';
+const DEFAULT_BASE_BRANCH = 'docs-v2-dev';
 const CODEX_BRANCH_RE = /^codex\/(\d+)-([a-z0-9][a-z0-9-]*)$/;
 const PR_GENERATOR_MARKER_PREFIX = 'codex-pr-body-generated';
 

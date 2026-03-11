@@ -21,6 +21,14 @@ lpd hooks install
 
 ## Hook Responsibilities
 
+Protected workspace policy:
+
+- The primary `Docs-v2-dev` checkout is protected for Codex sessions.
+- Codex implementation work must start from a separate managed worktree based on
+  `docs-v2-dev`, not from the main checkout path.
+- Direct commits or pushes from the protected main workspace require explicit
+  human override.
+
 ### `pre-commit`
 
 Owned concerns:

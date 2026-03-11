@@ -60,7 +60,7 @@ function realpathSafe(value) {
 
 function mkRepo(prefix) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
-  runGit(['init', '-b', 'docs-v2'], dir);
+  runGit(['init', '-b', 'docs-v2-dev'], dir);
   runGit(['config', 'user.email', 'tests@example.com'], dir);
   runGit(['config', 'user.name', 'test-runner'], dir);
   writeFile(path.join(dir, 'docs.json'), '{ "navigation": { "versions": [] } }\n');
@@ -84,7 +84,7 @@ async function runTests() {
 
     const worktreePath = path.join(path.dirname(repo), 'codex-worktrees', '321-cleanup');
     assert.ok(fs.existsSync(worktreePath), 'managed worktree should be created by default');
-    assert.strictEqual(runGit(['rev-parse', '--abbrev-ref', 'HEAD'], repo), 'docs-v2');
+    assert.strictEqual(runGit(['rev-parse', '--abbrev-ref', 'HEAD'], repo), 'docs-v2-dev');
     assert.strictEqual(runGit(['rev-parse', '--abbrev-ref', 'HEAD'], worktreePath), 'codex/321-cleanup');
     assert.ok(fs.existsSync(path.join(worktreePath, '.codex', 'task-contract.yaml')), 'contract should live in managed worktree');
     const contract = fs.readFileSync(path.join(worktreePath, '.codex', 'task-contract.yaml'), 'utf8');

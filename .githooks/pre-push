@@ -18,6 +18,7 @@ NC='\033[0m'
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
 ALLOW_CODEX_FORCE_PUSH="${ALLOW_CODEX_FORCE_PUSH:-0}"
 ALLOW_MAIN_PUSH="${ALLOW_MAIN_PUSH:-0}"
+PRIMARY_BASE_BRANCH="docs-v2-dev"
 
 # Read stdin first so we can inspect all pushed refs while still validating branch scope.
 PUSH_LINES=$(cat)
@@ -48,24 +49,45 @@ while IFS=' ' read -r local_ref local_sha remote_ref remote_sha; do
     continue
   fi
 
-  if [[ "${remote_ref:-}" == "refs/heads/docs-v2" ]]; then
+  if [[ "${remote_ref:-}" == "refs/heads/${PRIMARY_BASE_BRANCH}" ]]; then
     TARGETS_DOCS_V2=1
     break
   fi
 done <<< "$PUSH_LINES"
 
-if [[ "$TARGETS_DOCS_V2" -eq 1 ]] && is_codex_session; then
+is_primary_worktree() {
+  if [[ -d ".git" ]]; then
+    return 0
+  fi
+
+  return 1
+}
+
+if is_codex_session && is_primary_worktree; then
   if [[ "$ALLOW_MAIN_PUSH" != "1" ]]; then
-    echo -e "${RED}❌ Push blocked: Codex sessions must not push directly to docs-v2.${NC}"
-    echo -e "${YELLOW}Use codex/<issue-id>-<slug> branches and open a PR.${NC}"
-    echo -e "${YELLOW}Do not stash/reset to switch. Keep work in place with:${NC}"
-    echo "  git switch -c codex/<issue-id>-<slug>"
+    echo -e "${RED}❌ Push blocked: Codex sessions must not push from the protected primary Docs-v2-dev workspace.${NC}"
+    echo -e "${YELLOW}Start from a managed codex worktree created off ${PRIMARY_BASE_BRANCH}.${NC}"
+    echo "  node tools/scripts/codex/task-preflight.js --task <issue-id> --slug <slug> --base ${PRIMARY_BASE_BRANCH} --scope \"<path1,path2>\""
     echo -e "${YELLOW}Human override (explicit chat instruction required):${NC}"
-    echo "  ALLOW_MAIN_PUSH=1 git push origin <branch>:docs-v2"
+    echo "  ALLOW_MAIN_PUSH=1 git push origin <branch>"
     exit 1
   fi
 
-  echo -e "${YELLOW}⚠️ ALLOW_MAIN_PUSH=1 set; overriding docs-v2 push block for this push.${NC}"
+  echo -e "${YELLOW}⚠️ ALLOW_MAIN_PUSH=1 set; overriding primary-workspace push block for this push.${NC}"
+fi
+
+if [[ "$TARGETS_DOCS_V2" -eq 1 ]] && is_codex_session; then
+  if [[ "$ALLOW_MAIN_PUSH" != "1" ]]; then
+    echo -e "${RED}❌ Push blocked: Codex sessions must not push directly to ${PRIMARY_BASE_BRANCH}.${NC}"
+    echo -e "${YELLOW}Use codex/<issue-id>-<slug> branches and open a PR.${NC}"
+    echo -e "${YELLOW}Create a managed worktree instead:${NC}"
+    echo "  node tools/scripts/codex/task-preflight.js --task <issue-id> --slug <slug> --base ${PRIMARY_BASE_BRANCH} --scope \"<path1,path2>\""
+    echo -e "${YELLOW}Human override (explicit chat instruction required):${NC}"
+    echo "  ALLOW_MAIN_PUSH=1 git push origin <branch>:${PRIMARY_BASE_BRANCH}"
+    exit 1
+  fi
+
+  echo -e "${YELLOW}⚠️ ALLOW_MAIN_PUSH=1 set; overriding ${PRIMARY_BASE_BRANCH} push block for this push.${NC}"
 fi
 
 if [[ "$CURRENT_BRANCH" != codex/* ]]; then

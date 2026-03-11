@@ -46,6 +46,7 @@ SKIP_TESTS=${SKIP_TESTS:-0}
 SKIP_ALL=${SKIP_ALL:-0}
 ALLOW_DELETIONS=${ALLOW_DELETIONS:-0}
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
+PRIMARY_BASE_BRANCH="docs-v2-dev"
 
 # Freeze staged files snapshot to avoid hook-induced staging changes.
 STAGED_FILES_SNAPSHOT=$(git diff --cached --name-only --diff-filter=ACMR 2>/dev/null || true)
@@ -109,8 +110,45 @@ allow_docs_v2_commit_override() {
     return 1
 }
 
-enforce_docs_v2_codex_isolation() {
-    if [[ "$CURRENT_BRANCH" != "docs-v2" ]]; then
+is_primary_worktree() {
+    if [[ -d ".git" ]]; then
+        return 0
+    fi
+
+    return 1
+}
+
+enforce_primary_workspace_codex_isolation() {
+    if ! is_codex_session; then
+        return 0
+    fi
+
+    if ! is_primary_worktree; then
+        return 0
+    fi
+
+    if allow_docs_v2_commit_override; then
+        echo -e "${YELLOW}⚠️  primary-workspace commit override detected (human-authorized).${NC}"
+        return 0
+    fi
+
+    echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${RED}║  ❌ COMMIT BLOCKED: CODEX SESSION IN PRIMARY WORKSPACE       ║${NC}"
+    echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    echo -e "${YELLOW}The primary Docs-v2-dev checkout is protected. Start a managed worktree instead:${NC}"
+    echo "  node tools/scripts/codex/task-preflight.js --task <issue-id> --slug <slug> --base ${PRIMARY_BASE_BRANCH} --scope \"<path1,path2>\""
+    echo ""
+    echo -e "${YELLOW}This creates a separate codex worktree and task contract. Do not branch in-place here.${NC}"
+    echo ""
+    echo -e "${YELLOW}Human override (explicit chat instruction required):${NC}"
+    echo "  ALLOW_MAIN_COMMIT=1 git commit -m \"...\" --trailer \"allow-main-commit=true\""
+    echo ""
+    return 1
+}
+
+enforce_docs_v2_dev_codex_branch_isolation() {
+    if [[ "$CURRENT_BRANCH" != "$PRIMARY_BASE_BRANCH" ]]; then
         return 0
     fi
 
@@ -119,20 +157,17 @@ enforce_docs_v2_codex_isolation() {
     fi
 
     if allow_docs_v2_commit_override; then
-        echo -e "${YELLOW}⚠️  docs-v2 commit override detected (human-authorized).${NC}"
+        echo -e "${YELLOW}⚠️  ${PRIMARY_BASE_BRANCH} commit override detected (human-authorized).${NC}"
         return 0
     fi
 
     echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${RED}║  ❌ COMMIT BLOCKED: CODEX SESSION ON docs-v2                 ║${NC}"
+    echo -e "${RED}║  ❌ COMMIT BLOCKED: CODEX SESSION ON ${PRIMARY_BASE_BRANCH}             ║${NC}"
     echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
-    echo -e "${YELLOW}Do not stash/reset. Preserve current staged+unstaged edits by branching in-place:${NC}"
-    echo "  git switch -c codex/<issue-id>-<slug>"
-    echo "  # if branch exists already: git switch codex/<issue-id>-<slug>"
-    echo ""
-    echo -e "${YELLOW}Then initialize contract + lock:${NC}"
-    echo "  node tools/scripts/codex/task-preflight.js --task <issue-id> --slug <slug> --scope \"<path1,path2>\""
+    echo -e "${YELLOW}Codex implementation must not commit directly on ${PRIMARY_BASE_BRANCH}.${NC}"
+    echo -e "${YELLOW}Create a managed worktree + codex branch first:${NC}"
+    echo "  node tools/scripts/codex/task-preflight.js --task <issue-id> --slug <slug> --base ${PRIMARY_BASE_BRANCH} --scope \"<path1,path2>\""
     echo ""
     echo -e "${YELLOW}Human override (explicit chat instruction required):${NC}"
     echo "  ALLOW_MAIN_COMMIT=1 git commit -m \"...\" --trailer \"allow-main-commit=true\""
@@ -260,12 +295,16 @@ if [ "$SKIP_ALL" = "1" ]; then
     exit 0
 fi
 
-if ! enforce_docs_v2_codex_isolation; then
+if ! enforce_primary_workspace_codex_isolation; then
     exit 1
 fi
 
-if [[ "$CURRENT_BRANCH" == "docs-v2" ]]; then
-    echo -e "${YELLOW}⚠️  You are committing on docs-v2. Recommended path for agent tasks is an isolated codex/<issue-id>-<slug> branch/worktree.${NC}"
+if ! enforce_docs_v2_dev_codex_branch_isolation; then
+    exit 1
+fi
+
+if [[ "$CURRENT_BRANCH" == "$PRIMARY_BASE_BRANCH" ]]; then
+    echo -e "${YELLOW}⚠️  You are committing on ${PRIMARY_BASE_BRANCH}. Recommended path for agent tasks is an isolated codex/<issue-id>-<slug> branch/worktree.${NC}"
 fi
 
 run_codex_task_contract_check

@@ -40,7 +40,7 @@ function writeFile(absPath, content) {
 function makeContract(absPath, taskId = 3456) {
   const content = [
     `task_id: ${taskId}`,
-    'base_branch: docs-v2',
+    'base_branch: docs-v2-dev',
     `branch: codex/${taskId}-auto-pr-body`,
     'scope_in:',
     '  - v2/community/',
@@ -50,7 +50,7 @@ function makeContract(absPath, taskId = 3456) {
     'allowed_generated:',
     '  - docs-index.json',
     'acceptance_checks:',
-    '  - node tests/run-pr-checks.js --base-ref docs-v2',
+    '  - node tests/run-pr-checks.js --base-ref docs-v2-dev',
     '  - node tests/integration/v2-link-audit.js --files v2/community/faq.mdx --strict',
     'follow_up_issues:',
     `  - ${taskId + 1}`,
@@ -77,7 +77,7 @@ async function runTests() {
       '--head',
       'codex/3456-auto-pr-body',
       '--base',
-      'docs-v2',
+      'docs-v2-dev',
       '--changed-files',
       'v2/community/faq.mdx,docs.json'
     ]);
@@ -107,7 +107,7 @@ async function runTests() {
       '--head',
       'codex/4567-auto-pr-body',
       '--base',
-      'docs-v2',
+      'docs-v2-dev',
       '--changed-files',
       'docs.json',
       '--create',

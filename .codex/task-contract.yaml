@@ -1,19 +1,27 @@
-task_id: 20260310
-branch: codex/20260310-dev-setup-a-docs-v2-dev
-base_branch: docs-v2
+task_id: 20260311
+branch: codex/20260311-protect-docs-v2-dev-workspace
+base_branch: docs-v2-dev
 scope_in:
+  - .github/AGENTS.md
+  - .githooks/README.md
+  - .githooks/pre-commit
+  - .githooks/pre-push
+  - tools/scripts/codex/task-preflight.js
+  - tools/scripts/validate-codex-task-contract.js
+  - tools/scripts/create-codex-pr.js
+  - tests/unit/codex-task-preflight.test.js
+  - tests/unit/create-codex-pr.test.js
+  - tests/unit/validate-codex-task-contract.test.js
   - .codex/task-contract.yaml
-  - v2/developers/**
 scope_out: []
-allowed_generated: []
+allowed_generated:
+  - .codex/pr-body.generated.md
 acceptance_checks:
-  - find v2/developers -name "*.mdx" | sort
-  - git status --short | grep "^ D"
-  - ls v2/developers/get-started/
-  - ls v2/developers/build/
-  - ls v2/developers/guides/
-  - ls v2/developers/opportunities/
-  - ls v2/developers/resources/
-  - ls v2/developers/_archive/ | wc -l
-risk_flags: []
+  - node tests/unit/codex-task-preflight.test.js
+  - node tests/unit/create-codex-pr.test.js
+  - node tests/unit/validate-codex-task-contract.test.js
+  - bash -n .githooks/pre-commit
+  - bash -n .githooks/pre-push
+risk_flags:
+  - workflow-governance
 follow_up_issues: []
