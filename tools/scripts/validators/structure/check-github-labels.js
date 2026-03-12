@@ -16,7 +16,7 @@ const { spawnSync } = require('child_process');
 
 const REPO_ROOT = path.resolve(__dirname, '../../../../');
 const DEFAULT_REPO = 'livepeer/docs';
-const EXPECTED_TARGET_COUNT = 58;
+const EXPECTED_TARGET_COUNT = 77;
 const COLOR_RE = /^[0-9a-f]{6}$/i;
 const GROUP_ORDER = [
   'type',
@@ -24,6 +24,7 @@ const GROUP_ORDER = [
   'priority',
   'classification',
   'area',
+  'scope',
   'kind',
   'lifecycle',
   'size',
@@ -52,7 +53,12 @@ const TARGET_LABELS = [
   { name: 'classification: breaking-change', color: 'e67e22', group: 'classification' },
   { name: 'classification: regression', color: 'e67e22', group: 'classification' },
   { name: 'classification: security', color: 'e67e22', group: 'classification' },
+  { name: 'classification: urgent', color: 'b60205', group: 'classification' },
+  { name: 'classification: high', color: 'd93f0b', group: 'classification' },
+  { name: 'classification: moderate', color: 'fbca04', group: 'classification' },
+  { name: 'classification: minor', color: '0e8a16', group: 'classification' },
 
+  { name: 'area: home-about', color: '1d76db', group: 'area' },
   { name: 'area: developers', color: '1d76db', group: 'area' },
   { name: 'area: orchestrators', color: '1d76db', group: 'area' },
   { name: 'area: gateways', color: '1d76db', group: 'area' },
@@ -60,7 +66,19 @@ const TARGET_LABELS = [
   { name: 'area: lpt-governance', color: '1d76db', group: 'area' },
   { name: 'area: ai-inference', color: '1d76db', group: 'area' },
   { name: 'area: community', color: '1d76db', group: 'area' },
+  { name: 'area: resources', color: '1d76db', group: 'area' },
+  { name: 'area: ci-cd', color: '1d76db', group: 'area' },
+  { name: 'area: structure', color: '1d76db', group: 'area' },
+  { name: 'area: multiple', color: '1d76db', group: 'area' },
 
+  { name: 'scope: page', color: '1d76db', group: 'scope' },
+
+  { name: 'kind: factual-error', color: '0d7377', group: 'kind' },
+  { name: 'kind: unclear-instructions', color: '0d7377', group: 'kind' },
+  { name: 'kind: missing-context', color: '0d7377', group: 'kind' },
+  { name: 'kind: broken-media-link', color: '0d7377', group: 'kind' },
+  { name: 'kind: accessibility-ux', color: '0d7377', group: 'kind' },
+  { name: 'kind: navigation-structure', color: '0d7377', group: 'kind' },
   { name: 'kind: content-gap', color: '0d7377', group: 'kind' },
   { name: 'kind: content-fix', color: '0d7377', group: 'kind' },
   { name: 'kind: accessibility', color: '0d7377', group: 'kind' },
@@ -68,6 +86,9 @@ const TARGET_LABELS = [
   { name: 'kind: i18n', color: '0d7377', group: 'kind' },
   { name: 'kind: api-reference', color: '0d7377', group: 'kind' },
   { name: 'kind: ux-improvement', color: '0d7377', group: 'kind' },
+  { name: 'kind: spelling-copy', color: '0d7377', group: 'kind' },
+  { name: 'kind: formatting-markup', color: '0d7377', group: 'kind' },
+  { name: 'kind: minor-docs', color: '0d7377', group: 'kind' },
 
   { name: 'lifecycle: stale', color: '5a6271', group: 'lifecycle' },
   { name: 'lifecycle: frozen', color: '5a6271', group: 'lifecycle' },

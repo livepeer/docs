@@ -21,11 +21,16 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const issue_number = issue.number;
-            const body = issue.body || '';
-            // The docs-v2 index issue is bot-managed and intentionally excluded from triage labeling.
-            const indexMarker = '<!-- docs-v2-issue-indexer -->';
+            const originalBody = issue.body || '';
+            const originalTitle = issue.title || '';
 
-            if (body.includes(indexMarker)) {
+            const indexMarker = '<!-- docs-v2-issue-indexer -->';
+            const needsInfoMarker = '<!-- issue-intake-needs-info -->';
+            const copilotAssignmentMarker = '<!-- issue-intake-copilot-assignment -->';
+            const minorContractStart = '<!-- minor-docs-copilot-contract:start -->';
+            const minorContractEnd = '<!-- minor-docs-copilot-contract:end -->';
+
+            if (originalBody.includes(indexMarker)) {
               console.log(`Skipping auto-label for docs-v2 issue indexer (#${issue_number})`);
               return;
             }
@@ -36,6 +41,7 @@ jobs:
               'docs-v2': { color: '1d76db', description: 'Livepeer docs v2 issue scope' },
               'help wanted': { color: '008672', description: 'Community help requested' },
               'status: needs-triage': { color: 'fbca04', description: 'Needs initial maintainer triage' },
+              'status: needs-info': { color: 'd4c5f9', description: 'More detail needed from reporter' },
               'type: bug': { color: 'd73a4a', description: 'Broken behavior or incorrect result' },
               'type: enhancement': { color: 'a2eeef', description: 'Improvement or new capability request' },
               'type: documentation': { color: '0075ca', description: 'Documentation issue or request' },
@@ -61,26 +67,65 @@ jobs:
               'kind: factual-error': { color: '5319e7', description: 'Docs page issue subtype: factual error' },
               'kind: unclear-instructions': { color: '5319e7', description: 'Docs page issue subtype: unclear instructions' },
               'kind: missing-context': { color: '5319e7', description: 'Docs page issue subtype: missing prerequisite or context' },
-              'kind: broken-media-link': { color: '5319e7', description: 'Docs page issue subtype: broken link or media' },
-              'kind: accessibility-ux': { color: '5319e7', description: 'Docs page issue subtype: UX/readability/accessibility issue' },
-              'kind: navigation-structure': { color: '5319e7', description: 'Docs page issue subtype: structural/navigation issue' },
+              'kind: broken-media-link': { color: '5319e7', description: 'Broken link, asset, or media issue' },
+              'kind: accessibility-ux': { color: '5319e7', description: 'UX/readability/accessibility issue' },
+              'kind: navigation-structure': { color: '5319e7', description: 'Structural/navigation issue' },
+              'kind: spelling-copy': { color: '5319e7', description: 'Minor spelling, grammar, or copy issue' },
+              'kind: formatting-markup': { color: '5319e7', description: 'Minor formatting or markup issue' },
+              'kind: minor-docs': { color: '5319e7', description: 'Minor page-scoped docs issue' },
               'scope: page': { color: '1d76db', description: 'Issue scoped to a specific docs page' },
-              'status: needs-info': { color: 'd4c5f9', description: 'More detail needed from reporter' },
+            };
+
+            const subtypeToKind = {
+              'factual error': 'kind: factual-error',
+              'unclear instructions': 'kind: unclear-instructions',
+              'missing prerequisite or context': 'kind: missing-context',
+              'broken link or media': 'kind: broken-media-link',
+              'ux, readability, or accessibility issue': 'kind: accessibility-ux',
+              'structural or navigation issue': 'kind: navigation-structure',
             };
 
             const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+            const stripManagedBlock = (value, startMarker, endMarker) => {
+              const text = String(value || '');
+              const startIndex = text.indexOf(startMarker);
+              if (startIndex === -1) return text;
+
+              const endIndex = text.indexOf(endMarker, startIndex);
+              const sliceEnd = endIndex === -1 ? text.length : endIndex + endMarker.length;
+              const before = text.slice(0, startIndex).replace(/\s+$/, '');
+              const after = text.slice(sliceEnd).replace(/^\s+/, '');
+
+              if (!before) return after;
+              if (!after) return before;
+              return `${before}\n\n${after}`;
+            };
+
+            const sourceBody = stripManagedBlock(originalBody, minorContractStart, minorContractEnd);
+            const parsedBody = sourceBody.trim();
+
             const getSection = (heading) => {
               const regex = new RegExp(`###\\s+${escapeRegex(heading)}\\s*\\n([\\s\\S]*?)(?=\\n###\\s+|$)`, 'i');
-              const match = body.match(regex);
+              const match = parsedBody.match(regex);
               return match ? match[1].trim() : '';
             };
 
+            const hasSection = (heading) => new RegExp(`###\\s+${escapeRegex(heading)}\\s*\\n`, 'i').test(parsedBody);
+
             const normalize = (value) =>
-              (value || '')
+              String(value || '')
                 .replace(/\r/g, '')
                 .replace(/^[-*]\s+/gm, '')
                 .trim();
+
+            const collapseWhitespace = (value) => normalize(value).replace(/\s+/g, ' ');
+
+            const truncate = (value, max) => {
+              const text = String(value || '');
+              if (text.length <= max) return text;
+              return `${text.slice(0, Math.max(0, max - 3)).trim()}...`;
+            };
 
             const isPlaceholder = (value) => {
               const text = normalize(value).toLowerCase().replace(/[`*_]/g, '').trim();
@@ -107,26 +152,227 @@ jobs:
               }
             };
 
-            const subtypeToKind = {
-              'factual error': 'kind: factual-error',
-              'unclear instructions': 'kind: unclear-instructions',
-              'missing prerequisite or context': 'kind: missing-context',
-              'broken link or media': 'kind: broken-media-link',
-              'ux, readability, or accessibility issue': 'kind: accessibility-ux',
-              'structural or navigation issue': 'kind: navigation-structure',
+            let cachedComments = null;
+            const listComments = async () => {
+              if (cachedComments) return cachedComments;
+              cachedComments = await github.paginate(github.rest.issues.listComments, {
+                owner,
+                repo,
+                issue_number,
+                per_page: 100,
+              });
+              return cachedComments;
+            };
+
+            const upsertBotComment = async (marker, lines) => {
+              const body = lines.join('\n');
+              const comments = await listComments();
+              const existing = comments.find(
+                (comment) => comment.user?.type === 'Bot' && typeof comment.body === 'string' && comment.body.includes(marker)
+              );
+
+              if (existing) {
+                if (existing.body !== body) {
+                  await github.rest.issues.updateComment({
+                    owner,
+                    repo,
+                    comment_id: existing.id,
+                    body,
+                  });
+                }
+                return;
+              }
+
+              const created = await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body,
+              });
+              cachedComments = [...comments, created.data];
+            };
+
+            const normalizePageRef = (value) => {
+              let text = collapseWhitespace(value)
+                .replace(/^`+|`+$/g, '')
+                .replace(/[),.;:]+$/g, '');
+
+              if (!text) return '';
+              if (/^docs\.livepeer\.org\//i.test(text)) {
+                text = `https://${text}`;
+              }
+
+              if (/^https?:\/\//i.test(text)) {
+                try {
+                  const url = new URL(text);
+                  text = url.pathname;
+                } catch (_error) {
+                  text = text.replace(/^https?:\/\/[^/]+/i, '');
+                }
+              }
+
+              text = text.replace(/[?#].*$/, '');
+              text = text.replace(/^\/+/, '');
+              text = text.replace(/\/+$/, '');
+              return text;
+            };
+
+            const inferAreaFromPage = (value) => {
+              const page = normalizePageRef(value).toLowerCase();
+              if (!page) return 'area: multiple';
+
+              if (/^(v2\/)?home(\/|$)/.test(page) || page.includes('/about-livepeer/')) return 'area: home-about';
+              if (/^(v2\/)?community(\/|$)/.test(page)) return 'area: community';
+              if (/^(v2\/)?developers(\/|$)/.test(page)) return 'area: developers';
+              if (/^(v2\/)?gateways(\/|$)/.test(page)) return 'area: gateways';
+              if (/^(v2\/)?orchestrators(\/|$)/.test(page)) return 'area: orchestrators';
+              if (/^(v2\/)?resources(\/|$)/.test(page)) return 'area: resources';
+              if (/\b(lpt|governance|treasury|delegat(?:ion|or)?|bond|unbond)\b/.test(page)) return 'area: lpt-governance';
+              return 'area: multiple';
+            };
+
+            const inferMinorKind = (issueText, evidenceText) => {
+              const haystack = `${collapseWhitespace(issueText)}\n${collapseWhitespace(evidenceText)}`.toLowerCase();
+
+              if (
+                /\b(broken link|dead link|link returns|returns 404|404|href|anchor|missing image|broken image|missing asset|media|embed|image url|broken url)\b/.test(
+                  haystack
+                )
+              ) {
+                return 'kind: broken-media-link';
+              }
+
+              if (
+                /\b(spelling|typo|misspell|grammar|copy issue|copy edit|punctuation|capitali[sz]ation|wording|incorrect text)\b/.test(
+                  haystack
+                )
+              ) {
+                return 'kind: spelling-copy';
+              }
+
+              if (
+                /\b(format|formatting|markdown|mdx|markup|heading|table|bullet|list|code block|codeblock|whitespace|line break|render)\b/.test(
+                  haystack
+                )
+              ) {
+                return 'kind: formatting-markup';
+              }
+
+              return 'kind: minor-docs';
+            };
+
+            const makeTitle = (pageValue, issueValue) => {
+              const pageLabel = truncate(normalizePageRef(pageValue) || collapseWhitespace(pageValue) || 'page', 72);
+              const issueLabel = truncate(collapseWhitespace(issueValue), 110);
+              return `[minor-docs] ${pageLabel}: ${issueLabel}`;
+            };
+
+            const contentCache = new Map();
+            const repoPathExists = async (repoPath) => {
+              if (!repoPath) return false;
+              if (contentCache.has(repoPath)) return contentCache.get(repoPath);
+
+              try {
+                await github.rest.repos.getContent({ owner, repo, path: repoPath });
+                contentCache.set(repoPath, true);
+                return true;
+              } catch (error) {
+                if (error.status === 404) {
+                  contentCache.set(repoPath, false);
+                  return false;
+                }
+                throw error;
+              }
+            };
+
+            const resolvePageFile = async (value) => {
+              const page = normalizePageRef(value);
+              if (!page) return '';
+
+              const candidates = [];
+              const pushCandidate = (candidate) => {
+                const normalized = normalize(candidate);
+                if (normalized && !candidates.includes(normalized)) {
+                  candidates.push(normalized);
+                }
+              };
+
+              pushCandidate(page);
+              if (!page.endsWith('.mdx')) {
+                pushCandidate(`${page}.mdx`);
+              }
+              pushCandidate(`${page}/index.mdx`);
+
+              if (page.startsWith('v2/pages/')) {
+                const trimmed = page.replace(/^v2\/pages\//, 'v2/');
+                pushCandidate(trimmed);
+                pushCandidate(`${trimmed}.mdx`);
+                pushCandidate(`${trimmed}/index.mdx`);
+              } else if (!page.startsWith('v2/')) {
+                pushCandidate(`v2/${page}`);
+                pushCandidate(`v2/${page}.mdx`);
+                pushCandidate(`v2/${page}/index.mdx`);
+              }
+
+              for (const candidate of candidates) {
+                if (await repoPathExists(candidate)) return candidate;
+              }
+
+              return '';
+            };
+
+            const buildMinorContract = ({ pageValue, resolvedPagePath, kindLabel }) => {
+              const lines = [
+                minorContractStart,
+                '## Copilot execution contract (generated)',
+                '',
+                '- Base branch: `docs-v2`',
+                '- Branch format: `codex/<issue-id>-<slug>`',
+                '- Task contract: `.codex/task-contract.yaml`',
+                '- PR creation: `node tools/scripts/create-codex-pr.js --create`',
+                '- Required gate: `node tests/run-pr-checks.js --base-ref docs-v2`',
+                '- Active docs scope: `v2/` and supporting `snippets/`; do not modify `v1/`.',
+              ];
+
+              if (resolvedPagePath) {
+                lines.push(`- Resolved page file: \`${resolvedPagePath}\``);
+              } else if (!isPlaceholder(pageValue)) {
+                lines.push(`- Page reference: \`${collapseWhitespace(pageValue)}\``);
+              }
+
+              lines.push('', '### Suggested repair / validation commands');
+
+              const suggested = [];
+              if (kindLabel === 'kind: spelling-copy') {
+                suggested.push('`node tools/scripts/remediators/content/repair-spelling.js --dry-run`');
+              }
+              if (kindLabel === 'kind: broken-media-link') {
+                suggested.push(
+                  resolvedPagePath
+                    ? `\`node tests/integration/v2-link-audit.js --files ${resolvedPagePath} --strict\``
+                    : '`node tests/integration/v2-link-audit.js --files <resolved-page-path> --strict`'
+                );
+              }
+
+              if (suggested.length === 0) {
+                lines.push('- Use the required gate above; no extra targeted command was inferred.');
+              } else {
+                suggested.forEach((command) => lines.push(`- ${command}`));
+              }
+
+              lines.push(minorContractEnd);
+              return lines.join('\n');
             };
 
             const existingLabels = issue.labels.map((label) => (typeof label === 'string' ? label : label.name));
             const labelsSeen = new Set(existingLabels);
             const desiredManagedLabels = new Set();
-
-            const hasSection = (heading) => new RegExp(`###\\s+${escapeRegex(heading)}\\s*\\n`, 'i').test(body);
-
-            // Legacy issues may not have a Classification section; we only enforce it when present.
             const hasClassificationSection = hasSection('Classification');
 
             let templateType = 'unknown';
-            if (hasSection('Issue subtype')) {
+            if (hasSection('Minor issue')) {
+              templateType = 'minor_page_issue';
+            } else if (hasSection('Issue subtype')) {
               templateType = 'docs_page_issue';
             } else if (hasSection('Steps to reproduce')) {
               templateType = 'bug_report';
@@ -146,6 +392,7 @@ jobs:
             const templateBaseLabels = {
               bug_report: [...commonBase, 'type: bug'],
               docs_page_issue: [...commonBase, 'type: documentation', 'scope: page'],
+              minor_page_issue: [...commonBase, 'type: documentation', 'scope: page'],
               feature_request: [...commonBase, 'type: enhancement'],
               feature_internal: [...commonBase, 'type: enhancement'],
               content_request: [...commonBase, 'type: documentation'],
@@ -157,6 +404,7 @@ jobs:
             for (const label of baseLabels) {
               await ensureLabel(label);
             }
+
             const baseLabelsToAdd = baseLabels.filter((label) => !labelsSeen.has(label));
             if (baseLabelsToAdd.length > 0) {
               await github.rest.issues.addLabels({ owner, repo, issue_number, labels: baseLabelsToAdd });
@@ -167,6 +415,10 @@ jobs:
             const classification = normalize(getSection('Classification'));
             const priority = normalize(getSection('Priority'));
             const issueSubtype = normalize(getSection('Issue subtype'));
+            const pageInput =
+              normalize(getSection('Page URL or file path')) || normalize(getSection('Affected page URL or file path'));
+            const minorIssue = normalize(getSection('Minor issue'));
+            const evidence = normalize(getSection('Evidence / exact broken text or URL')) || normalize(getSection('Evidence'));
 
             if (area.startsWith('area:')) desiredManagedLabels.add(area);
             if (classification.startsWith('classification:')) desiredManagedLabels.add(classification);
@@ -176,21 +428,31 @@ jobs:
               desiredManagedLabels.add('scope: page');
             }
 
+            if (templateType === 'minor_page_issue') {
+              desiredManagedLabels.add('scope: page');
+              desiredManagedLabels.add('classification: minor');
+              desiredManagedLabels.add('priority: low');
+              desiredManagedLabels.add(inferAreaFromPage(pageInput));
+              desiredManagedLabels.add(inferMinorKind(minorIssue, evidence));
+            }
+
             const kindLabel = subtypeToKind[issueSubtype.toLowerCase()];
             if (kindLabel) {
               desiredManagedLabels.add(kindLabel);
             }
 
-            const staleManaged = [...labelsSeen].filter(
-              (name) => managedPrefixes.some((prefix) => name.startsWith(prefix)) && !desiredManagedLabels.has(name)
-            );
+            if (templateType !== 'unknown') {
+              const staleManaged = [...labelsSeen].filter(
+                (name) => managedPrefixes.some((prefix) => name.startsWith(prefix)) && !desiredManagedLabels.has(name)
+              );
 
-            for (const label of staleManaged) {
-              try {
-                await github.rest.issues.removeLabel({ owner, repo, issue_number, name: label });
-                labelsSeen.delete(label);
-              } catch (error) {
-                if (error.status !== 404) throw error;
+              for (const label of staleManaged) {
+                try {
+                  await github.rest.issues.removeLabel({ owner, repo, issue_number, name: label });
+                  labelsSeen.delete(label);
+                } catch (error) {
+                  if (error.status !== 404) throw error;
+                }
               }
             }
 
@@ -219,6 +481,8 @@ jobs:
                 'Done criteria / acceptance check',
                 'Priority',
               ];
+            } else if (templateType === 'minor_page_issue') {
+              requiredSections = ['Page URL or file path', 'Minor issue'];
             } else if (templateType === 'bug_report') {
               requiredSections = [
                 'Area',
@@ -274,10 +538,7 @@ jobs:
                 'Priority',
               ];
             } else if (templateType === 'feature_internal') {
-              requiredSections = [
-                'Description',
-                'Priority',
-              ];
+              requiredSections = ['Description', 'Priority'];
             }
 
             if (hasClassificationSection && requiredSections.length > 0 && !requiredSections.includes('Classification')) {
@@ -298,36 +559,15 @@ jobs:
                 labelsSeen.add('status: needs-info');
               }
 
-              const marker = '<!-- issue-intake-needs-info -->';
-              const comments = await github.paginate(github.rest.issues.listComments, {
-                owner,
-                repo,
-                issue_number,
-                per_page: 100,
-              });
-
-              const alreadyCommented = comments.some(
-                (comment) => comment.user?.type === 'Bot' && comment.body && comment.body.includes(marker)
-              );
-
-              if (!alreadyCommented) {
-                const missingList = missingSections.map((section) => `- ${section}`).join('\n');
-                const commentBody = [
-                  marker,
-                  'Thanks for opening this issue. A few required sections are missing or too vague for maintainers to act:',
-                  '',
-                  missingList,
-                  '',
-                  'Please edit the issue with concrete details (exact pages/paths, expected outcomes, and actionable requests). Once updated, maintainers can triage it quickly.',
-                ].join('\n');
-
-                await github.rest.issues.createComment({
-                  owner,
-                  repo,
-                  issue_number,
-                  body: commentBody,
-                });
-              }
+              const missingList = missingSections.map((section) => `- ${section}`).join('\n');
+              await upsertBotComment(needsInfoMarker, [
+                needsInfoMarker,
+                'Thanks for opening this issue. A few required sections are missing or too vague for maintainers to act:',
+                '',
+                missingList,
+                '',
+                'Please edit the issue with concrete details (exact pages/paths, expected outcomes, and actionable requests). Once updated, maintainers can triage it quickly.',
+              ]);
             } else if (labelsSeen.has('status: needs-info')) {
               try {
                 await github.rest.issues.removeLabel({ owner, repo, issue_number, name: 'status: needs-info' });
@@ -335,4 +575,60 @@ jobs:
               } catch (error) {
                 if (error.status !== 404) throw error;
               }
+            }
+
+            if (templateType === 'minor_page_issue') {
+              const desiredTitle =
+                !isPlaceholder(pageInput) && !isPlaceholder(minorIssue) ? makeTitle(pageInput, minorIssue) : '';
+              const resolvedPagePath = !isPlaceholder(pageInput) ? await resolvePageFile(pageInput) : '';
+              const minorKindLabel = [...desiredManagedLabels].find((label) => label.startsWith('kind:')) || 'kind: minor-docs';
+              const desiredBody = `${sourceBody.replace(/\s+$/, '')}\n\n${buildMinorContract({
+                pageValue: pageInput,
+                resolvedPagePath,
+                kindLabel: minorKindLabel,
+              })}`.trim();
+
+              const bodyChanged = desiredBody !== originalBody;
+              const titleChanged = Boolean(desiredTitle) && desiredTitle !== originalTitle;
+              if (bodyChanged || titleChanged) {
+                await github.rest.issues.update({
+                  owner,
+                  repo,
+                  issue_number,
+                  body: desiredBody,
+                  ...(titleChanged ? { title: desiredTitle } : {}),
+                });
+              }
+
+              const refreshedIssue = titleChanged || bodyChanged
+                ? (await github.rest.issues.get({ owner, repo, issue_number })).data
+                : issue;
+              const assignees = (refreshedIssue.assignees || []).map((user) => user.login);
+
+              if (!assignees.includes('copilot')) {
+                try {
+                  await github.rest.issues.addAssignees({
+                    owner,
+                    repo,
+                    issue_number,
+                    assignees: ['copilot'],
+                  });
+                } catch (error) {
+                  await upsertBotComment(copilotAssignmentMarker, [
+                    copilotAssignmentMarker,
+                    'Automatic assignment to `@copilot` was attempted for this fast-track minor docs issue but did not succeed.',
+                    '',
+                    `GitHub response: ${error.status || 'error'} ${error.message || 'assignment failed'}`,
+                    '',
+                    'The issue remains valid and actionable; assign `@copilot` manually if repository permissions allow it.',
+                  ]);
+                }
+              }
+            } else if (sourceBody !== originalBody) {
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number,
+                body: sourceBody.trim(),
+              });
             }

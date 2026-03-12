@@ -259,6 +259,7 @@ function inferTemplateUsage(repoPath) {
   if (base.includes('feature')) return 'Feature requests';
   if (base.includes('tooling')) return 'Tooling/CI issues';
   if (base.includes('question')) return 'Questions/clarifications';
+  if (base.includes('minor_page') || base.includes('minor-page')) return 'Minor page-scoped reviewer issues';
   if (base.includes('docs_page') || base.includes('docs-page')) return 'Page-scoped docs issues';
   if (base.includes('content')) return 'Content requests';
   if (base.includes('pull') || base.includes('pr')) return 'Pull requests';

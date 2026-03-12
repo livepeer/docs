@@ -1,0 +1,50 @@
+name: Minor Docs Page Issue (Fast Track)
+description: Report a small page-scoped reviewer finding such as spelling, broken links, minor copy defects, or lightweight formatting issues.
+title: "[minor-docs] <page + short issue summary>"
+labels: ["docs-v2", "help wanted", "status: needs-triage", "type: documentation", "scope: page"]
+assignees:
+  - copilot
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this fast-track form only for one small page issue at a time.
+
+        Use `02_docs_page_issue.yml` instead when the problem involves factual accuracy, missing context, IA, user journey, or larger structural fixes.
+
+  - type: input
+    id: page_or_path
+    attributes:
+      label: Page URL or file path
+      description: Include the exact docs URL or repository path for the affected page.
+      placeholder: https://docs.livepeer.org/v2/... or v2/...
+    validations:
+      required: true
+
+  - type: textarea
+    id: minor_issue
+    attributes:
+      label: Minor issue
+      description: Describe one small issue only.
+      placeholder: Broken link in the "Run a Gateway" section; the href returns 404.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence / exact broken text or URL
+      description: Optional quote, broken URL, anchor, or other exact evidence.
+      placeholder: https://docs.livepeer.org/v2/.../old-link or "orhcestrator" in heading text
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Submission checks
+      options:
+        - label: I am reporting one minor page issue only.
+          required: true
+        - label: I provided the exact page and issue so Copilot can action it directly.
+          required: true
