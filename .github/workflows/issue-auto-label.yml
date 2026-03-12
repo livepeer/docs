@@ -382,8 +382,6 @@ jobs:
               templateType = 'content_request';
             } else if (hasSection('Failing command or workflow')) {
               templateType = 'tooling_ci_issue';
-            } else if (hasSection('Question')) {
-              templateType = 'question_clarification';
             } else if (hasSection('Description') && hasClassificationSection && hasSection('Priority')) {
               templateType = 'feature_internal';
             }
@@ -397,7 +395,6 @@ jobs:
               feature_internal: [...commonBase, 'type: enhancement'],
               content_request: [...commonBase, 'type: documentation'],
               tooling_ci_issue: [...commonBase, 'type: bug', 'area: ci-cd'],
-              question_clarification: [...commonBase, 'type: question'],
             };
 
             const baseLabels = templateBaseLabels[templateType] || commonBase;
@@ -526,15 +523,6 @@ jobs:
                 'Reproduction conditions',
                 'Expected behavior',
                 'Action requested from maintainers',
-                'Priority',
-              ];
-            } else if (templateType === 'question_clarification') {
-              requiredSections = [
-                'Area',
-                'Relevant page URL or file path',
-                'Question',
-                'What you already checked',
-                'Blocking impact',
                 'Priority',
               ];
             } else if (templateType === 'feature_internal') {
