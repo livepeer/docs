@@ -3,7 +3,11 @@ title: 'Domain Page Load Audit Report'
 sidebarTitle: 'Domain Pages'
 description: 'Generated deployed page load audit report from tests/integration/domain-pages-audit.js.'
 keywords: ["livepeer","internal","reports","page-audits","domain-pages-audit"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+og:image: "/snippets/assets/site/og-image/fallback.png"
+og:image:alt: "Livepeer Docs social preview image"
+og:image:type: "image/png"
+og:image:width: 1200
+og:image:height: 630
 ---
 Last Generated (UTC ISO): `2026-03-09T04:40:20.822Z`
 Last Generated (UTC Human): `March 09, 2026 04:40 UTC`

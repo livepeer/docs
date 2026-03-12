@@ -20,12 +20,17 @@ const {
   buildGeneratedHiddenBannerLines,
   buildGeneratedNoteLines
 } = require('../lib/generated-file-banners');
+const {
+  createOgImagePolicyContext,
+  resolveOgImageForFile
+} = require('./snippets/lib/og-image-policy');
 
 const LEGACY_PAGES_ROOT = 'v2/pages';
 const MODERN_PAGES_ROOT = 'v2';
 const INDEX_FILENAME = 'index.mdx';
 const LEGACY_INDEX_FILENAME = 'index.md';
 const DOCS_JSON_FILENAME = 'docs.json';
+const EXCLUDED_INDEX_DIRS = new Set(['x-archived', '_contextData', '_contextData_']);
 
 const DOMAIN_RENAME_MAP = {
   '00_home': 'home',
@@ -63,6 +68,7 @@ function getRepoRoot() {
 }
 
 const REPO_ROOT = getRepoRoot();
+const OG_CONTEXT = createOgImagePolicyContext(REPO_ROOT);
 const PAGES_ROOT = fileExists(path.join(REPO_ROOT, LEGACY_PAGES_ROOT))
   ? LEGACY_PAGES_ROOT
   : MODERN_PAGES_ROOT;
@@ -170,7 +176,12 @@ function getDirectSubdirs(absDir) {
 
   if (trackedPaths.length === 0) {
     const entries = fs.readdirSync(absDir, { withFileTypes: true });
-    return sortAlpha(entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name));
+    return sortAlpha(
+      entries
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name)
+        .filter((name) => !EXCLUDED_INDEX_DIRS.has(name))
+    );
   }
 
   const directSubdirs = new Set();
@@ -179,7 +190,9 @@ function getDirectSubdirs(absDir) {
     if (!remainder || remainder === relPath) return;
     const [firstSegment, ...tail] = remainder.split('/').filter(Boolean);
     if (firstSegment && tail.length > 0) {
-      directSubdirs.add(firstSegment);
+      if (!EXCLUDED_INDEX_DIRS.has(firstSegment)) {
+        directSubdirs.add(firstSegment);
+      }
     }
   });
 
@@ -420,22 +433,29 @@ function buildIndexMeta(outputDirRel) {
   const sectionName = prettifyName(path.basename(normalized));
   const isLptIndex = normalized === 'v2/lpt';
   const displayName = isLptIndex ? 'LPT' : `${sectionName} Index`;
+  const ogFields = resolveOgImageForFile(
+    path.join(REPO_ROOT, normalized, INDEX_FILENAME),
+    OG_CONTEXT
+  ).fields;
   return {
     title: displayName,
     sidebarTitle: displayName,
     description: `Generated table of contents for docs pages under ${normalized}.`,
     pageType: 'overview',
-    keywords: ['livepeer', 'generated index', 'table of contents', normalized]
+    keywords: ['livepeer', 'generated index', 'table of contents', normalized],
+    ...ogFields
   };
 }
 
 function buildRootMeta() {
+  const ogFields = resolveOgImageForFile(path.join(REPO_ROOT, 'v2', INDEX_FILENAME), OG_CONTEXT).fields;
   return {
     title: 'Pages Index',
     sidebarTitle: 'Pages Index',
     description: 'Generated table of contents for v2 docs folders.',
     pageType: 'overview',
-    keywords: ['livepeer', 'generated index', 'table of contents', 'v2']
+    keywords: ['livepeer', 'generated index', 'table of contents', 'v2'],
+    ...ogFields
   };
 }
 

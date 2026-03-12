@@ -1,12 +1,28 @@
 ---
-title: 'Add AI to Your Node'
-description: 'Add AI inference pipelines to an existing go-livepeer transcoding node — hardware check, aiModels.json configuration, and startup command update.'
-sidebarTitle: 'Add AI Pipelines'
-keywords: ["livepeer", "orchestrator", "AI inference", "AI runner", "aiModels.json", "pipeline", "VRAM", "Cascade", "batch AI", "GPU"]
-pageType: 'tutorial'
-audience: 'orchestrator'
-status: 'review'
-'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+title: Add AI to Your Node
+sidebarTitle: Add AI Pipelines
+description: >-
+  Add AI inference pipelines to an existing go-livepeer transcoding node —
+  hardware check, aiModels.json configuration, and startup command update.
+keywords:
+  - livepeer
+  - orchestrator
+  - AI inference
+  - AI runner
+  - aiModels.json
+  - pipeline
+  - VRAM
+  - Cascade
+  - batch AI
+  - GPU
+'og:image': /snippets/assets/site/og-image/en/gpu-nodes.png
+'og:image:alt': Livepeer Docs social preview image for GPU Nodes
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: orchestrator
+status: review
 lastVerified: '2026-03-10'
 ---
 
@@ -16,14 +32,14 @@ By the end of this guide, your orchestrator will accept AI inference jobs alongs
 
 Before you begin:
 
-- go-livepeer is installed and running as a transcoding orchestrator on Arbitrum mainnet (see [Install go-livepeer](/v2/orchestrators/setup/install-go-livepeer) and [Get Started](/v2/orchestrators/get-started/quickstart)) {/* REVIEW: confirm target paths */}
+- go-livepeer is installed and running as a transcoding orchestrator on Arbitrum mainnet (see [Install go-livepeer](/v2/orchestrators/setup/rs-install) and [Get Started](/v2/orchestrators/setup/s-guide)) {/* REVIEW: confirm target paths */}
 - Your orchestrator is in the Top 100 active set on the Livepeer network
 - Docker is installed with `nvidia-container-toolkit` enabled (GPU passthrough required for the AI runner containers)
 - Your GPU has at least **4GB of VRAM** available to run at least one AI pipeline (see the hardware check below)
-- Model weights pre-downloaded for the pipeline(s) you want to serve (see [Download AI Models](/v2/orchestrators/advanced/hosting-models)) {/* REVIEW: confirm path */}
+- Model weights pre-downloaded for the pipeline(s) you want to serve (see [Download AI Models](/v2/orchestrators/operations/r-hosting-models)) {/* REVIEW: confirm path */}
 
 <Note>
-This guide adds AI inference to an existing transcoding node. If you are setting up from scratch, start with [Install go-livepeer](/v2/orchestrators/setup/install-go-livepeer).
+This guide adds AI inference to an existing transcoding node. If you are setting up from scratch, start with [Install go-livepeer](/v2/orchestrators/setup/rs-install).
 </Note>
 
 ---
@@ -59,7 +75,7 @@ Use the table below to see which pipelines you can run based on your available V
 | `upscale` | {/* REVIEW */} | Image upscaling |
 | `text-to-speech` | {/* REVIEW */} | Speech synthesis |
 
-For details on each pipeline, see [Job Types](/v2/orchestrators/concepts/job-types).
+For details on each pipeline, see [Job Types](/v2/orchestrators/concepts/rs-workloads).
 
 <Warning>
 If your GPU does not have enough free VRAM to run both transcoding and your chosen AI pipeline, AI runner containers will fail to start. Either select a lower-VRAM pipeline, dedicate a second GPU exclusively to AI, or stop transcoding on that GPU before enabling AI. {/* REVIEW: confirm safe VRAM headroom needed alongside transcoding from Discord/#orchestrating */}
@@ -81,7 +97,7 @@ If you plan to run the `segment-anything-2` pipeline, also pull its pipeline-spe
 docker pull livepeer/ai-runner:segment-anything-2
 ```
 
-Check the [AI Pipelines](/v2/orchestrators/advanced/ai-pipelines) documentation for any other pipeline-specific images.
+Check the [AI Pipelines](/v2/orchestrators/operations/rc-ai-pipelines) documentation for any other pipeline-specific images.
 
 ---
 
@@ -125,7 +141,7 @@ Add at least one pipeline entry. The example below configures a single `text-to-
 During Beta, only one warm model per GPU is supported. Set `"warm": true` for the model you want pre-loaded; additional models will load on demand when requested.
 </Note>
 
-For recommended pricing per pipeline, see [Job Types](/v2/orchestrators/concepts/job-types). For a full multi-pipeline example, see [AI Pipeline Configuration](/v2/orchestrators/advanced/ai-pipelines). {/* REVIEW: confirm path */}
+For recommended pricing per pipeline, see [Job Types](/v2/orchestrators/concepts/rs-workloads). For a full multi-pipeline example, see [AI Pipeline Configuration](/v2/orchestrators/operations/rc-ai-pipelines). {/* REVIEW: confirm path */}
 
 ---
 
@@ -227,7 +243,7 @@ A successful response returns a JSON object with an `images` array containing a 
 
 {/* REVIEW: confirm the exact livepeer_cli command to view advertised AI capabilities; not found in this research pass. Check go-livepeer CLI reference or ask in #orchestrating. */}
 
-Your AI pipelines will appear in the [Livepeer Explorer](https://explorer.livepeer.org) on your orchestrator's profile once on-chain capability advertisement is configured. See [Publish Offerings](/v2/orchestrators/setup/publish-offerings) for that step. {/* REVIEW: confirm path */}
+Your AI pipelines will appear in the [Livepeer Explorer](https://explorer.livepeer.org) on your orchestrator's profile once on-chain capability advertisement is configured. See [Publish Offerings](/v2/orchestrators/unclassified/rcs-connect-activate-publish) for that step. {/* REVIEW: confirm path */}
 
 ---
 
@@ -239,14 +255,14 @@ Your AI runner is active. The next step depends on which pipeline type you want 
   <Card
     title="Set up batch AI inference"
     icon="image"
-    href="/v2/orchestrators/get-started/batch-ai-quickstart"
+    href="/v2/orchestrators/quickstart/x-batch-ai"
   >
     Configure image, audio, and video generation pipelines. Covers model downloads, pricing, and on-chain registration for batch inference.
   </Card>
   <Card
     title="Set up real-time AI (Cascade)"
     icon="video"
-    href="/v2/orchestrators/get-started/realtime-ai-quickstart"
+    href="/v2/orchestrators/quickstart/x-realtime-ai"
   >
     Configure ComfyStream for persistent video stream processing. Covers ComfyUI workflow deployment and GPU allocation.
   </Card>
@@ -256,5 +272,5 @@ Your AI runner is active. The next step depends on which pipeline type you want 
 
 ## Related
 
-- [Job Types](/v2/orchestrators/concepts/job-types) — understand the difference between transcoding, batch AI, real-time AI, and LLM inference before choosing a path
-- [AI Pipeline Configuration](/v2/orchestrators/advanced/ai-pipelines) — advanced aiModels.json options, multi-GPU setup, external containers, and optimization flags {/* REVIEW: confirm path */}
+- [Job Types](/v2/orchestrators/concepts/rs-workloads) — understand the difference between transcoding, batch AI, real-time AI, and LLM inference before choosing a path
+- [AI Pipeline Configuration](/v2/orchestrators/operations/rc-ai-pipelines) — advanced aiModels.json options, multi-GPU setup, external containers, and optimization flags {/* REVIEW: confirm path */}

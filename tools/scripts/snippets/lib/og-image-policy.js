@@ -2,7 +2,7 @@
 /**
  * @script            og-image-policy
  * @category          utility
- * @purpose           seo:og-image-governance
+ * @purpose           feature:seo
  * @scope             tools/scripts, snippets/assets/site/og-image, docs.json
  * @owner             docs
  * @needs             E-R1, R-R14
@@ -28,6 +28,8 @@ const AUTHORED_MDX_ROOTS = [
   "contribute",
   "snippets/pages",
 ];
+const NON_PAGE_SEGMENT_PREFIXES = ["_", "x-"];
+const NON_PAGE_SEGMENT_NAMES = new Set(["groups", "views"]);
 const SUPPORTED_LOCALES = ["en", "es", "fr", "cn"];
 const RASTER_EXTENSIONS = new Set([".png", ".jpg", ".jpeg", ".webp"]);
 const LOCAL_ASSET_ROOTS = ["/snippets/assets/"];
@@ -83,6 +85,69 @@ const LOCALIZED_TAB_LABELS = {
   },
 };
 
+const CANONICAL_SECTION_DEFINITIONS = [
+  {
+    id: "home",
+    englishLabel: "Home",
+  },
+  {
+    id: "about",
+    englishLabel: "About",
+  },
+  {
+    id: "solutions",
+    englishLabel: "Solutions",
+  },
+  {
+    id: "developers",
+    englishLabel: "Developers",
+  },
+  {
+    id: "gateways",
+    englishLabel: "Gateways",
+  },
+  {
+    id: "gpu-nodes",
+    englishLabel: "GPU Nodes",
+  },
+  {
+    id: "lp-token",
+    englishLabel: "LP Token",
+  },
+  {
+    id: "community",
+    englishLabel: "Community",
+  },
+  {
+    id: "resource-hub",
+    englishLabel: "Resource HUB",
+  },
+  {
+    id: "internal-hub",
+    englishLabel: "Internal Hub",
+  },
+];
+
+const CANONICAL_SECTION_ALIAS_TO_ID = {
+  home: "home",
+  about: "about",
+  platforms: "solutions",
+  solutions: "solutions",
+  developers: "developers",
+  gateways: "gateways",
+  orchestrators: "gpu-nodes",
+  "orchestrators-final": "gpu-nodes",
+  "gpu-nodes": "gpu-nodes",
+  "gpu-nodes-final": "gpu-nodes",
+  lpt: "lp-token",
+  "lp-token": "lp-token",
+  community: "community",
+  resources: "resource-hub",
+  "resource-hub": "resource-hub",
+  internal: "internal-hub",
+  "internal-hub": "internal-hub",
+};
+
 function toPosix(value) {
   return String(value || "").split(path.sep).join("/");
 }
@@ -114,6 +179,11 @@ function slugifyLabel(value) {
     .replace(/&/g, "and")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+function canonicalizeSectionId(rawValue) {
+  const normalized = slugifyLabel(rawValue);
+  return CANONICAL_SECTION_ALIAS_TO_ID[normalized] || null;
 }
 
 function ensureLocale(locale) {
@@ -197,20 +267,31 @@ function buildEnglishTabDefinitions(repoRoot) {
     languages.find((node) => node?.language === "en") || languages[0] || null;
   const tabs = Array.isArray(languageNode?.tabs) ? languageNode.tabs : [];
 
-  return tabs.map((tabNode, index) => {
-    const englishLabel = String(tabNode?.tab || `Tab ${index + 1}`).trim();
-    const id = slugifyLabel(englishLabel);
+  const routeBuckets = new Map();
+
+  tabs.forEach((tabNode) => {
+    const englishLabel = String(tabNode?.tab || "").trim();
+    const canonicalId = canonicalizeSectionId(englishLabel);
+    if (!canonicalId) {
+      return;
+    }
+
     const routes = [...new Set(collectPageEntries(tabNode))]
       .map(normalizeRouteKey)
       .filter((route) => route.startsWith("v2/"));
 
-    return {
-      id,
-      order: index,
-      englishLabel,
-      routes,
-    };
+    if (!routeBuckets.has(canonicalId)) {
+      routeBuckets.set(canonicalId, []);
+    }
+    routeBuckets.get(canonicalId).push(...routes);
   });
+
+  return CANONICAL_SECTION_DEFINITIONS.map((section, index) => ({
+    id: section.id,
+    order: index,
+    englishLabel: section.englishLabel,
+    routes: [...new Set(routeBuckets.get(section.id) || [])],
+  }));
 }
 
 function buildDocsRouteMap(tabDefinitions) {
@@ -329,12 +410,92 @@ function getSectionAssetEntry(context, sectionId, locale) {
   );
 }
 
-function isAuthoredMdxPage(repoPath) {
+function hasDisallowedNonPageSegment(repoPath) {
+  const normalized = normalizeRouteKey(repoPath);
+  const segments = normalized.split("/").filter(Boolean);
+  return segments.some(
+    (segment) =>
+      NON_PAGE_SEGMENT_NAMES.has(segment) ||
+      NON_PAGE_SEGMENT_PREFIXES.some((prefix) => segment.startsWith(prefix)),
+  );
+}
+
+function inferSectionIdFromRepoPath(repoPath) {
+  const normalized = normalizeRouteKey(repoPath);
+  if (!normalized.startsWith("v2/")) {
+    return null;
+  }
+
+  const sourceRoute = toSourceRouteKey(normalized);
+  const parts = sourceRoute.split("/").filter(Boolean);
+  if (parts.length < 2 || parts[0] !== "v2") {
+    return null;
+  }
+
+  return canonicalizeSectionId(parts[1]);
+}
+
+function getSectionDefinitionById(context, sectionId) {
+  if (!sectionId) {
+    return null;
+  }
+  return context.tabDefinitions.find((tabDefinition) => tabDefinition.id === sectionId) || null;
+}
+
+function getSectionDefinitionForRepoPath(repoPath, context) {
+  const sourceRoute = toSourceRouteKey(repoPath);
+  const routeMatch = context.routeMap.get(sourceRoute);
+  if (routeMatch) {
+    return routeMatch;
+  }
+
+  const inferredSectionId = inferSectionIdFromRepoPath(repoPath);
+  if (!inferredSectionId) {
+    return null;
+  }
+
+  return getSectionDefinitionById(context, inferredSectionId);
+}
+
+function isAuthoredMdxPage(repoPath, context = null) {
   const normalized = toPosix(repoPath);
   if (!normalized.endsWith(".mdx")) return false;
+
+  if (isGeneratedInternalReportPath(normalized)) {
+    return true;
+  }
+
+  if (normalized.startsWith("v2/")) {
+    if (hasDisallowedNonPageSegment(normalized)) {
+      return false;
+    }
+    const policyContext = context || createOgImagePolicyContext(getRepoRoot());
+    return Boolean(getSectionDefinitionForRepoPath(normalized, policyContext));
+  }
+
+  if (normalized.startsWith("docs-guide/") || normalized.startsWith("contribute/")) {
+    return !hasDisallowedNonPageSegment(normalized);
+  }
+
+  if (normalized.startsWith("docs/")) {
+    return !normalized.startsWith("docs/internal/") && !hasDisallowedNonPageSegment(normalized);
+  }
+
+  if (normalized.startsWith("snippets/pages/")) {
+    return false;
+  }
+
   return AUTHORED_MDX_ROOTS.some(
     (rootPath) =>
       normalized === rootPath || normalized.startsWith(`${rootPath}/`),
+  );
+}
+
+function isGeneratedInternalReportPath(repoPath) {
+  const normalized = normalizeRouteKey(repoPath);
+  return (
+    normalized.startsWith("v2/internal/reports/") ||
+    normalized.startsWith("docs/internal/reports/")
   );
 }
 
@@ -355,13 +516,17 @@ function walkMdxFiles(dirPath, out = []) {
   return out;
 }
 
-function collectAuthoredMdxFiles(repoRoot = getRepoRoot()) {
+function collectAuthoredMdxFiles(repoRoot = getRepoRoot(), context = null) {
   const files = [];
   AUTHORED_MDX_ROOTS.forEach((rootPath) => {
     walkMdxFiles(path.join(repoRoot, rootPath), files);
   });
 
-  return files.sort((left, right) => toPosix(left).localeCompare(toPosix(right)));
+  return files
+    .filter((filePath) =>
+      isAuthoredMdxPage(toPosix(path.relative(repoRoot, filePath)), context),
+    )
+    .sort((left, right) => toPosix(left).localeCompare(toPosix(right)));
 }
 
 function resolveOgImageForFile(filePath, context = createOgImagePolicyContext()) {
@@ -371,9 +536,15 @@ function resolveOgImageForFile(filePath, context = createOgImagePolicyContext())
   const repoPath = toPosix(path.relative(context.repoRoot, absolutePath));
   const locale = getLocaleFromRepoPath(repoPath);
   const sourceRoute = toSourceRouteKey(repoPath);
-  const tabDefinition = context.routeMap.get(sourceRoute) || null;
+  const tabDefinition = getSectionDefinitionForRepoPath(repoPath, context);
+  const generatedInternalReport = isGeneratedInternalReportPath(repoPath);
+  const nonPagePath = hasDisallowedNonPageSegment(repoPath);
   const asset =
-    tabDefinition && repoPath.startsWith("v2/")
+    generatedInternalReport
+      ? context.manifest.fallback
+      : nonPagePath
+      ? context.manifest.fallback
+      : tabDefinition && repoPath.startsWith("v2/")
       ? getSectionAssetEntry(context, tabDefinition.id, locale)
       : context.manifest.fallback;
 
@@ -382,8 +553,11 @@ function resolveOgImageForFile(filePath, context = createOgImagePolicyContext())
     repoPath,
     locale,
     sourceRoute,
-    strict: Boolean(tabDefinition),
-    sectionId: tabDefinition?.id || "fallback",
+    strict: generatedInternalReport || (!nonPagePath && Boolean(tabDefinition)),
+    sectionId:
+      generatedInternalReport || nonPagePath
+        ? "fallback"
+        : tabDefinition?.id || "fallback",
     asset,
     fields: {
       "og:image": asset.path,
@@ -442,10 +616,14 @@ module.exports = {
   getLocalizedTabLabel,
   getManifestAssetByPath,
   getRepoRoot,
+  getSectionDefinitionForRepoPath,
   getSectionAssetEntry,
   hasRasterExtension,
+  hasDisallowedNonPageSegment,
+  inferSectionIdFromRepoPath,
   isAuthoredMdxPage,
   isExternalUrl,
+  isGeneratedInternalReportPath,
   isGitHubBlobUrl,
   isLocalAssetPath,
   normalizeRouteKey,

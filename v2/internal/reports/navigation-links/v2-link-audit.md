@@ -3,10 +3,14 @@ title: 'V2 Link Audit Report'
 sidebarTitle: 'Link Audit'
 description: 'Generated V2 MDX link audit report from tests/integration/v2-link-audit.js.'
 keywords: ["livepeer","internal","reports","navigation-links","v2-link-audit"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+og:image: "/snippets/assets/site/og-image/fallback.png"
+og:image:alt: "Livepeer Docs social preview image"
+og:image:type: "image/png"
+og:image:width: 1200
+og:image:height: 630
 ---
-Last Generated (UTC ISO): `2026-03-09T04:40:20.822Z`
-Last Generated (UTC Human): `March 09, 2026 04:40 UTC`
+Last Generated (UTC ISO): `2026-03-12T02:31:37.929Z`
+Last Generated (UTC Human): `March 12, 2026 02:31 UTC`
 Generator Script: `tests/integration/v2-link-audit.js`
 What It Does: Generated V2 MDX link audit report from tests/integration/v2-link-audit.js.
 Audited Scope: `tests`
@@ -17,10 +21,10 @@ Outputs:
 Operator note: external HTTP/HTTPS links are classified only and marked as `🟡 untested-external` in this phase.
 
 ## Run Metadata
-- Timestamp: 2026-03-09T04:39:25.120Z
+- Timestamp: 2026-03-08T19:00:13.437Z
 - Mode: full
-- Strict: false (internal refs only)
-- Files analyzed: 463
+- Strict: true (internal refs only)
+- Files analyzed: 462
 - Total extracted references: 2826
 - Report JSON: tasks/reports/navigation-links/LINK_TEST_REPORT.json
 

@@ -2,8 +2,12 @@
 title: 'Legacy Alias: Audit Tasks Folders Reports Quality Accessibility Docs Usefulness Smoke3 Audit'
 sidebarTitle: 'Legacy Alias'
 description: 'Retired internal report route preserved for link stability.'
-keywords: ["livepeer","internal","reports","repo-ops","publish-v2-internal-reports"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+keywords: ["livepeer","internal","reports","repo-ops","audit-tasks-folders-reports-quality-accessibility-docs-usefulness-smoke3-audit"]
+og:image: "/snippets/assets/site/og-image/fallback.png"
+og:image:alt: "Livepeer Docs social preview image"
+og:image:type: "image/png"
+og:image:width: 1200
+og:image:height: 630
 ---
 # Legacy Internal Report Alias
 

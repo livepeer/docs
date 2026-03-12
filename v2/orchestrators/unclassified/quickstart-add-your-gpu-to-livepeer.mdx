@@ -2,10 +2,8 @@
 title: Configure your Orchestrator
 sidebarTitle: Add your GPU to Livepeer
 description: >-
-  Configure go-livepeer after installation: Arbitrum connection, pricing, service address, and optional transcoding or
-  AI config.
-audience: orchestrator
-purpose: tutorial
+  Configure go-livepeer after installation: Arbitrum connection, pricing,
+  service address, and optional transcoding or AI config.
 keywords:
   - livepeer
   - orchestrators
@@ -14,35 +12,26 @@ keywords:
   - serviceAddr
   - transcoding
   - AI
-'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+'og:image': /snippets/assets/site/og-image/en/gpu-nodes.png
+'og:image:alt': Livepeer Docs social preview image for GPU Nodes
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: orchestrator
+purpose: tutorial
 ---
-
-{/* comparision to quickstart/quickstart 
-You have exceeded your premium request allowance. We have automatically switched you to GPT-4.1 which is included with your plan. [Enable additional paid premium requests](command:chat.enablePremiumOverages) to continue using premium models.
-
-Ran terminal command:  diff -u /Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/v2/orchestrators/quickstart/quickstart.mdx /Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/v2/orchestrators/old/setting-up-an-orchestrator/setting-up-an-orchestrator/quickstart-add-your-gpu-to-livepeer.mdx | head -60
-
-Here are the main differences between the two orchestrator quickstart files:
-
-- The new file (quickstart.mdx) is a step-by-step quickstart for running a transcoding orchestrator, including Docker Compose setup, registration, and verification.
-- The old file (quickstart-add-your-gpu-to-livepeer.mdx) is a configuration tutorial focused on adding a GPU to Livepeer, with detailed flag explanations, optional transcoding and AI config files, and verification steps.
-
-Key diff highlights:
-- The new file uses a step-based layout, includes Docker Compose, and covers wallet setup, registration, and gateway testing.
-- The old file focuses on flag-level configuration, GPU/AI options, and JSON config file examples.
-- The new file has more structured prerequisites and related links; the old file is more flag/config oriented. */}
 
 
 
 import { CustomCodeBlock } from '/snippets/components/content/code.jsx'
 
-After [installing go-livepeer](../install-go-livepeer), configure the node so gateways can discover you and send work. This page covers core flags and optional config files.
+After [installing go-livepeer](../setup/rs-install), configure the node so gateways can discover you and send work. This page covers core flags and optional config files.
 
 ## Core configuration
 
 ### Network and wallet
 
-- **-ethUrl** - Arbitrum RPC URL. See [Connect to Arbitrum](../connect-to-arbitrum).
+- **-ethUrl** - Arbitrum RPC URL. See [Connect to Arbitrum](./connect-to-arbitrum).
 - **-ethAcctAddr** - (Optional) ETH account address if you already have a keystore.
 - **-network** - Use `arbitrum-one-mainnet` for production.
 
@@ -118,7 +107,7 @@ If you run AI inference, create an **aiModels.json** to specify pipelines and mo
   filename="aiModels.json"
 />
 
-See [AI pipelines](../../advanced-setup/ai-pipelines) and [Developers BYOC](/developers/ai-pipelines/byoc) for full AI setup.
+See [AI pipelines](../operations/rc-ai-pipelines) and [Livepeer AI docs](https://docs.livepeer.org/ai/pipelines/overview) for full AI setup.
 
 ## Verification
 
@@ -131,8 +120,8 @@ After starting the node:
 ## See also
 
 <Columns cols={2}>
-  <Card title="Install go-livepeer" icon="download" href="../install-go-livepeer" arrow />
-  <Card title="Connect to Arbitrum" icon="plug" href="../connect-to-arbitrum" arrow />
-  <Card title="CLI flags reference" icon="terminal" href="../../references/cli-flags" arrow />
-  <Card title="Rewards and fees" icon="coins" href="../../advanced-setup/rewards-and-fees" arrow />
+  <Card title="Install go-livepeer" icon="download" href="../setup/rs-install" arrow />
+  <Card title="Connect to Arbitrum" icon="plug" href="./connect-to-arbitrum" arrow />
+  <Card title="CLI flags reference" icon="terminal" href="../resources/technical/cli-flags" arrow />
+  <Card title="Rewards and fees" icon="coins" href="../operations/rs-rewards-and-fees" arrow />
 </Columns>

@@ -3,7 +3,11 @@ title: 'Script Audit Report'
 sidebarTitle: 'Script Audit'
 description: 'Generated script inventory audit report from tools/scripts/audit-scripts.js.'
 keywords: ["livepeer","internal","reports","repo-ops","audit-scripts"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+og:image: "/snippets/assets/site/og-image/fallback.png"
+og:image:alt: "Livepeer Docs social preview image"
+og:image:type: "image/png"
+og:image:width: 1200
+og:image:height: 630
 ---
 Last Generated (UTC ISO): `2026-03-09T09:41:26.509Z`
 Last Generated (UTC Human): `March 09, 2026 09:41 UTC`

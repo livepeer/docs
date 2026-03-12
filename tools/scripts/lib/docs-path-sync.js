@@ -20,9 +20,28 @@ const DOC_TEXT_SCOPES = ['v2', 'tests', 'tools', 'snippets'];
 const DOC_TEXT_EXTENSIONS = new Set(['.md', '.mdx', '.js', '.jsx', '.ts', '.tsx', '.json']);
 const DEFAULT_REMAP_THRESHOLD = 0.85;
 
+function buildGitEnv() {
+  const env = { ...process.env };
+  delete env.GIT_DIR;
+  delete env.GIT_WORK_TREE;
+  delete env.GIT_INDEX_FILE;
+  delete env.GIT_OBJECT_DIRECTORY;
+  delete env.GIT_ALTERNATE_OBJECT_DIRECTORIES;
+  delete env.GIT_COMMON_DIR;
+  delete env.GIT_PREFIX;
+  delete env.GIT_AUTHOR_NAME;
+  delete env.GIT_AUTHOR_EMAIL;
+  delete env.GIT_COMMITTER_NAME;
+  delete env.GIT_COMMITTER_EMAIL;
+  return env;
+}
+
 function getRepoRoot() {
   try {
-    return execSync('git rev-parse --show-toplevel', { encoding: 'utf8' }).trim();
+    return execSync('git rev-parse --show-toplevel', {
+      encoding: 'utf8',
+      env: buildGitEnv()
+    }).trim();
   } catch (_error) {
     return process.cwd();
   }
@@ -274,7 +293,11 @@ function parseNameStatusOutput(output) {
 
 function getGitNameStatus(repoRoot) {
   try {
-    return execSync('git diff --cached --name-status -M', { cwd: repoRoot, encoding: 'utf8' });
+    return execSync('git diff --cached --name-status -M', {
+      cwd: repoRoot,
+      encoding: 'utf8',
+      env: buildGitEnv()
+    });
   } catch (_error) {
     return '';
   }
@@ -453,7 +476,11 @@ function applyMovePairsToTextFile(repoRoot, filePath, pairs) {
 function stageRepoFiles(repoRoot, repoPaths) {
   const uniquePaths = [...new Set(repoPaths.map((item) => normalizeRepoPath(item)).filter(Boolean))];
   if (uniquePaths.length === 0) return;
-  const result = spawnSync('git', ['add', '--', ...uniquePaths], { cwd: repoRoot, encoding: 'utf8' });
+  const result = spawnSync('git', ['add', '--', ...uniquePaths], {
+    cwd: repoRoot,
+    encoding: 'utf8',
+    env: buildGitEnv()
+  });
   if (result.status !== 0) throw new Error(result.stderr || result.stdout || 'Failed to stage docs path sync files');
 }
 

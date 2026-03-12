@@ -254,6 +254,26 @@ is_allowed_archive_followup_delete() {
     [ "$source_blob" = "$archive_blob" ]
 }
 
+is_allowed_generated_pages_index_delete() {
+    local file_path="$1"
+    local head_content=""
+
+    case "$file_path" in
+        v2/*/_contextData/*/index.mdx|v2/*/_contextData/*/index.md|v2/*/_contextData_/*/index.mdx|v2/*/_contextData_/*/index.md)
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+
+    head_content=$(git show "HEAD:$file_path" 2>/dev/null || true)
+    if [[ "$head_content" != *"Generation Script: tools/scripts/generate-pages-index.js"* ]]; then
+        return 1
+    fi
+
+    return 0
+}
+
 if [ "$SKIP_ALL" = "1" ]; then
     echo -e "${YELLOW}⚠️  WARNING: All pre-commit checks bypassed (SKIP_ALL=1)${NC}"
     echo -e "${YELLOW}   This should only be used in emergencies.${NC}"
@@ -279,6 +299,7 @@ fi
 ALL_DELETED_FILES=$(git diff --cached --name-only --diff-filter=D || true)
 DELETED_FILES=$(echo "$ALL_DELETED_FILES" | grep -v '^tasks/' || true)
 ALLOWED_ARCHIVE_DELETIONS=""
+ALLOWED_GENERATED_INDEX_DELETIONS=""
 
 if [ -n "$DELETED_FILES" ]; then
     FILTERED_DELETED_FILES=""
@@ -289,6 +310,11 @@ if [ -n "$DELETED_FILES" ]; then
 
         if is_allowed_archive_followup_delete "$deleted_file"; then
             ALLOWED_ARCHIVE_DELETIONS="${ALLOWED_ARCHIVE_DELETIONS}${deleted_file}"$'\n'
+            continue
+        fi
+
+        if is_allowed_generated_pages_index_delete "$deleted_file"; then
+            ALLOWED_GENERATED_INDEX_DELETIONS="${ALLOWED_GENERATED_INDEX_DELETIONS}${deleted_file}"$'\n'
             continue
         fi
 
@@ -361,6 +387,11 @@ fi
 if [ -n "$ALLOWED_ARCHIVE_DELETIONS" ]; then
     echo -e "${GREEN}ℹ️  Allowed archive follow-up deletions:${NC}"
     echo "$ALLOWED_ARCHIVE_DELETIONS" | sed '/^$/d; s/^/  ↪ /'
+fi
+
+if [ -n "$ALLOWED_GENERATED_INDEX_DELETIONS" ]; then
+    echo -e "${GREEN}ℹ️  Allowed generated index cleanup deletions:${NC}"
+    echo "$ALLOWED_GENERATED_INDEX_DELETIONS" | sed '/^$/d; s/^/  ↪ /'
 fi
 
 # Check for .allowlist file changes (BLOCKED for AIs, requires human override)

@@ -29,6 +29,10 @@ const {
   injectOrReplaceProvenanceComment,
   parseProvenanceComment
 } = require('./i18n/lib/provenance');
+const {
+  createOgImagePolicyContext,
+  resolveOgImageForFile
+} = require('./snippets/lib/og-image-policy');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-registry.json');
@@ -43,6 +47,7 @@ const LEGACY_COMPONENT_LIBRARY_FILES = ['display.mdx', 'domain.mdx', 'integratio
 const ARCHIVE_SOURCE_PATH = path.join(REPO_ROOT, 'tools', 'scripts', 'snippets', 'update-component-library.sh');
 const ARCHIVE_TARGET_PATH = path.join(REPO_ROOT, 'tools', 'scripts', 'archive', 'deprecated', 'update-component-library.sh');
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'qwen/qwen-turbo';
+const OG_CONTEXT = createOgImagePolicyContext(REPO_ROOT);
 
 const CATEGORY_LABELS = {
   primitives: 'Primitives',
@@ -197,6 +202,13 @@ function formatGeneratedPreamble(meta) {
     ...buildGeneratedNoteLines(meta.banner),
     ''
   ].join('\n');
+}
+
+function buildCanonicalFrontmatter(repoRelPath, frontmatter) {
+  return {
+    ...frontmatter,
+    ...resolveOgImageForFile(path.join(REPO_ROOT, repoRelPath), OG_CONTEXT).fields
+  };
 }
 
 function renderDecisionTree() {
@@ -397,10 +409,15 @@ async function renderCategoryPage(category, components, args, cache, warnings) {
 
   const meta = {
     frontmatter: {
-      title: label,
-      sidebarTitle: label,
-      description,
-      pageType: 'reference'
+      ...buildCanonicalFrontmatter(
+        normalizeRepoPath(path.relative(REPO_ROOT, path.join(ENGLISH_OUTPUT_DIR, `${category}.mdx`))),
+        {
+          title: label,
+          sidebarTitle: label,
+          description,
+          pageType: 'reference'
+        }
+      )
     },
     banner: {
       script: 'tools/scripts/generate-component-docs.js',
@@ -453,10 +470,15 @@ function renderOverviewPage(registry) {
 
   const meta = {
     frontmatter: {
-      title: 'Component Library Overview',
-      sidebarTitle: 'Overview',
-      description: 'Generated overview for the governed snippets/components library.',
-      pageType: 'overview'
+      ...buildCanonicalFrontmatter(
+        normalizeRepoPath(path.relative(REPO_ROOT, path.join(ENGLISH_OUTPUT_DIR, 'overview.mdx'))),
+        {
+          title: 'Component Library Overview',
+          sidebarTitle: 'Overview',
+          description: 'Generated overview for the governed snippets/components library.',
+          pageType: 'overview'
+        }
+      )
     },
     banner: {
       script: 'tools/scripts/generate-component-docs.js',
@@ -494,10 +516,15 @@ function renderOverviewPage(registry) {
 function renderLandingPage(registry) {
   const meta = {
     frontmatter: {
-      title: 'Component Library',
-      sidebarTitle: 'Component Library',
-      description: 'Generated component-library landing page backed by the component registry.',
-      pageType: 'overview'
+      ...buildCanonicalFrontmatter(
+        normalizeRepoPath(path.relative(REPO_ROOT, path.join(ENGLISH_OUTPUT_DIR, 'component-library.mdx'))),
+        {
+          title: 'Component Library',
+          sidebarTitle: 'Component Library',
+          description: 'Generated component-library landing page backed by the component registry.',
+          pageType: 'overview'
+        }
+      )
     },
     banner: {
       script: 'tools/scripts/generate-component-docs.js',
@@ -624,9 +651,16 @@ function renderLocaleScaffold(locale, slug, registry) {
 
   const meta = {
     frontmatter: {
-      title: titleMap[slug],
-      sidebarTitle: titleMap[slug],
-      description: descriptionMap[slug]
+      ...buildCanonicalFrontmatter(
+        normalizeRepoPath(
+          path.relative(REPO_ROOT, path.join(LOCALE_DIRS[locale], `${slug}.mdx`))
+        ),
+        {
+          title: titleMap[slug],
+          sidebarTitle: titleMap[slug],
+          description: descriptionMap[slug]
+        }
+      )
     },
     banner: {
       script: 'tools/scripts/generate-component-docs.js',

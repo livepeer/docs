@@ -1,19 +1,30 @@
-task_id: 20260310
-branch: codex/20260310-dev-setup-a-docs-v2-dev
-base_branch: docs-v2
+task_id: 20260312
+branch: codex/20260312-og-reconciliation-backport
+base_branch: docs-v2-dev
 scope_in:
   - .codex/task-contract.yaml
-  - v2/developers/**
+  - .githooks/pre-commit
+  - docs.json
+  - docs-index.json
+  - docs-guide/
+  - docs/internal/reports/
+  - snippets/assets/site/og-image/
+  - snippets/pages/
+  - tests/
+  - tools/script-index.md
+  - tools/lib/generated-file-banners.js
+  - tools/scripts/dev/
+  - tools/scripts/generate-component-docs.js
+  - tools/scripts/generate-pages-index.js
+  - tools/scripts/lib/docs-path-sync.js
+  - tools/scripts/publish-v2-internal-reports.js
+  - tools/scripts/snippets/
+  - v2/
 scope_out: []
-allowed_generated: []
+allowed_generated:
+  - .codex/pr-body.generated.md
 acceptance_checks:
-  - find v2/developers -name "*.mdx" | sort
-  - git status --short | grep "^ D"
-  - ls v2/developers/get-started/
-  - ls v2/developers/build/
-  - ls v2/developers/guides/
-  - ls v2/developers/opportunities/
-  - ls v2/developers/resources/
-  - ls v2/developers/_archive/ | wc -l
-risk_flags: []
+  - node tests/run-pr-checks.js --base-ref docs-v2-dev
+risk_flags:
+  - workflow-governance
 follow_up_issues: []

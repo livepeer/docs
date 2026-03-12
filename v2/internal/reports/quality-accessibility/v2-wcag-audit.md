@@ -3,7 +3,11 @@ title: 'V2 WCAG Audit Report'
 sidebarTitle: 'WCAG Audit'
 description: 'Generated WCAG audit report from tests/integration/v2-wcag-audit.js.'
 keywords: ["livepeer","internal","reports","quality-accessibility","v2-wcag-audit"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+og:image: "/snippets/assets/site/og-image/fallback.png"
+og:image:alt: "Livepeer Docs social preview image"
+og:image:type: "image/png"
+og:image:width: 1200
+og:image:height: 630
 ---
 Last Generated (UTC ISO): `2026-03-01T04:39:53.754Z`
 Last Generated (UTC Human): `March 01, 2026 04:39 UTC`

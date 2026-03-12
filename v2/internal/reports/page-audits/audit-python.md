@@ -3,10 +3,14 @@ title: 'All Pages Audit (Python)'
 sidebarTitle: 'Audit Python'
 description: 'Generated Python audit report from tasks/scripts/audit-python.py.'
 keywords: ["livepeer","internal","reports","page-audits","audit-python"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+og:image: "/snippets/assets/site/og-image/fallback.png"
+og:image:alt: "Livepeer Docs social preview image"
+og:image:type: "image/png"
+og:image:width: 1200
+og:image:height: 630
 ---
-Last Generated (UTC ISO): `2026-03-09T04:40:20.822Z`
-Last Generated (UTC Human): `March 09, 2026 04:40 UTC`
+Last Generated (UTC ISO): `2026-03-12T02:31:37.940Z`
+Last Generated (UTC Human): `March 12, 2026 02:31 UTC`
 Generator Script: `tasks/scripts/audit-python.py`
 What It Does: Generated Python audit report from tasks/scripts/audit-python.py.
 Audited Scope: `tasks/scripts`

@@ -15,10 +15,17 @@ const fs = require('fs');
 const path = require('path');
 
 const manifest = require('../config/v2-internal-report-pages');
+const {
+  FALLBACK_ALT,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_TYPE,
+  OG_IMAGE_WIDTH,
+} = require('./snippets/lib/og-image-policy');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
 const INTERNAL_REPORTS_ROOT = path.join(REPO_ROOT, 'v2', 'internal', 'reports');
+const LEGACY_INTERNAL_REPORTS_ROOT = path.join(REPO_ROOT, 'docs', 'internal', 'reports');
 const GENERATED_OG_IMAGE = '/snippets/assets/site/og-image/fallback.png';
 const UTC_MONTHS = [
   'January',
@@ -338,6 +345,14 @@ function buildGenerationStamp(generation) {
   ].join('\n');
 }
 
+function buildGenerationFromDate(value) {
+  const date = value instanceof Date ? value : new Date(value);
+  return {
+    isoUtc: date.toISOString(),
+    humanUtc: formatUtcHuman(date),
+  };
+}
+
 function buildFrontmatter(record) {
   const keywords = [
     'livepeer',
@@ -353,10 +368,38 @@ function buildFrontmatter(record) {
     `description: '${escapeSingleQuotedYaml(record.description)}'`,
     `keywords: ${JSON.stringify(keywords)}`,
     `og:image: "${GENERATED_OG_IMAGE}"`,
+    `og:image:alt: "${FALLBACK_ALT}"`,
+    `og:image:type: "${OG_IMAGE_TYPE}"`,
+    `og:image:width: ${OG_IMAGE_WIDTH}`,
+    `og:image:height: ${OG_IMAGE_HEIGHT}`,
     '---',
     '',
   ];
   return lines.join('\n');
+}
+
+function getFrontmatterBlock(content) {
+  if (!content.startsWith('---\n')) return '';
+  const end = content.indexOf('\n---\n', 4);
+  if (end === -1) return '';
+  return content.slice(4, end);
+}
+
+function readFrontmatterScalar(content, key) {
+  const block = getFrontmatterBlock(String(content || ''));
+  if (!block) return '';
+  const escapedKey = String(key || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const match = block.match(new RegExp(`^${escapedKey}:\\s*(.+)$`, 'm'));
+  if (!match) return '';
+
+  let value = String(match[1] || '').trim();
+  if (
+    (value.startsWith('"') && value.endsWith('"')) ||
+    (value.startsWith("'") && value.endsWith("'"))
+  ) {
+    value = value.slice(1, -1);
+  }
+  return value.replace(/''/g, "'");
 }
 
 function listFilesRecursive(absDir) {
@@ -607,19 +650,20 @@ function buildLegacyAliasAbsPaths(record) {
 }
 
 function writeIfChanged(targetAbsPath, nextContent, args) {
-  if (args.check) return true;
-  ensureDir(path.dirname(targetAbsPath));
   const prev = fs.existsSync(targetAbsPath)
     ? fs.readFileSync(targetAbsPath, 'utf8')
     : null;
   if (prev === nextContent) return false;
+  if (args.check) return true;
+  ensureDir(path.dirname(targetAbsPath));
   fs.writeFileSync(targetAbsPath, nextContent, 'utf8');
   return true;
 }
 
-function writeManagedPage(record, generation, args, scriptMetadataCache) {
+function writeManagedPage(record, args, scriptMetadataCache) {
   const sourceRaw = fs.readFileSync(record.sourceAbsPath, 'utf8');
   const body = sanitizePublishedBody(record, stripFrontmatter(sourceRaw).replace(/^\uFEFF/, ''));
+  const generation = buildGenerationFromDate(fs.statSync(record.sourceAbsPath).mtime);
   let scriptMetadata = scriptMetadataCache.get(record.scriptRepoPath);
   if (!scriptMetadata) {
     scriptMetadata = parseScriptHeaderMetadata(record.scriptRepoPath);
@@ -710,8 +754,36 @@ function cleanupDynamicPages(records, args) {
   return removed;
 }
 
-function cleanupLegacyTargetPages(args) {
-  return 0;
+function normalizeLegacyTargetPages(args) {
+  let changed = 0;
+
+  for (const fullPath of listFilesRecursive(LEGACY_INTERNAL_REPORTS_ROOT)) {
+    if (!/\.(md|mdx)$/i.test(fullPath)) continue;
+
+    const current = fs.readFileSync(fullPath, 'utf8');
+    const repoPath = toRepoPath(fullPath);
+    const relativePath = toPosix(path.relative(LEGACY_INTERNAL_REPORTS_ROOT, fullPath));
+    const categorySlug = relativePath.split('/')[0] || 'internal-reports';
+    const title = readFrontmatterScalar(current, 'title') || titleFromBasename(path.basename(fullPath));
+    const sidebarTitle = readFrontmatterScalar(current, 'sidebarTitle') || title;
+    const description =
+      readFrontmatterScalar(current, 'description') ||
+      `Legacy internal report mirrored from ${repoPath}.`;
+    const scriptId = slugify(path.basename(fullPath));
+    const next = `${buildFrontmatter({
+      categorySlug,
+      scriptId,
+      title,
+      sidebarTitle,
+      description,
+    })}${stripFrontmatter(current).replace(/^\uFEFF/, '')}`;
+
+    if (writeIfChanged(fullPath, next, args)) {
+      changed += 1;
+    }
+  }
+
+  return changed;
 }
 
 function findInternalHubTab(node) {
@@ -729,6 +801,83 @@ function findInternalHubTab(node) {
     if (found) return found;
   }
   return null;
+}
+
+function buildDefaultInternalHubTab() {
+  return {
+    tab: 'Internal Hub',
+    hidden: true,
+    icon: 'info-circle',
+    anchors: [
+      {
+        anchor: 'Internal Hub',
+        icon: 'info-circle',
+        groups: [
+          {
+            group: 'RFP',
+            pages: [
+              'v2/internal/rfp/aims',
+              'v2/internal/rfp/problem-statements',
+              'v2/internal/rfp/outcomes',
+              'v2/internal/rfp/deliverables',
+              'v2/internal/rfp/report',
+            ],
+          },
+          {
+            group: 'Internal Hub',
+            pages: [
+              'v2/internal/internal-overview',
+              'v2/internal/overview/about',
+              'v2/internal/overview/governance',
+              'v2/internal/overview/strategic-alignment',
+              'v2/internal/overview/personas',
+              'v2/internal/docs-philosophy',
+              'v2/internal/definitions',
+              'v2/internal/ecosystem',
+              'v2/internal/references',
+            ],
+          },
+          {
+            group: 'Generated Reports',
+            pages: [],
+          },
+        ],
+      },
+    ],
+  };
+}
+
+function getOrCreateInternalHubTab(docs) {
+  const existing = findInternalHubTab(docs);
+  if (existing) return existing;
+
+  const versions = Array.isArray(docs?.navigation?.versions) ? docs.navigation.versions : [];
+  const v2Version =
+    versions.find((entry) => entry && entry.version === 'v2') || versions[0] || null;
+  if (!v2Version) {
+    throw new Error('Unable to find v2 navigation in docs.json');
+  }
+
+  if (!Array.isArray(v2Version.languages)) {
+    v2Version.languages = [];
+  }
+
+  let englishLanguage =
+    v2Version.languages.find((entry) => entry && entry.language === 'en') ||
+    v2Version.languages[0] ||
+    null;
+  if (!englishLanguage) {
+    englishLanguage = { language: 'en', tabs: [] };
+    v2Version.languages.push(englishLanguage);
+  }
+
+  if (!Array.isArray(englishLanguage.tabs)) {
+    englishLanguage.tabs = [];
+  }
+
+  const created = buildDefaultInternalHubTab();
+  englishLanguage.tabs.push(created);
+  return created;
 }
 
 function getOrCreateGeneratedReportsGroup(internalAnchor) {
@@ -769,10 +918,7 @@ function updateDocsJson(records, args) {
     }
   }
   const docs = JSON.parse(fs.readFileSync(DOCS_JSON_PATH, 'utf8'));
-  const internalTab = findInternalHubTab(docs);
-  if (!internalTab) {
-    throw new Error('Unable to find hidden "Internal Hub" tab in docs.json');
-  }
+  const internalTab = getOrCreateInternalHubTab(docs);
   const internalAnchor = (internalTab.anchors || []).find(
     (anchor) => anchor && anchor.anchor === 'Internal Hub' && Array.isArray(anchor.groups)
   );
@@ -822,6 +968,43 @@ function updateDocsJson(records, args) {
   return { changed: true, groupsWritten: nextManagedGroups.length };
 }
 
+function refreshMissingManagedTargets(missing, args) {
+  let changed = 0;
+
+  for (const row of missing) {
+    const entry = row?.entry;
+    if (!entry || entry.sourceType !== 'file' || !entry.targetSlug) {
+      continue;
+    }
+
+    const targetAbsPath = path.join(
+      INTERNAL_REPORTS_ROOT,
+      entry.categorySlug,
+      `${entry.targetSlug}.md`
+    );
+    if (!fs.existsSync(targetAbsPath)) {
+      continue;
+    }
+
+    const current = fs.readFileSync(targetAbsPath, 'utf8');
+    const next = `${buildFrontmatter({
+      categorySlug: entry.categorySlug,
+      scriptId: entry.scriptId,
+      title: entry.title,
+      sidebarTitle: entry.sidebarTitle || entry.title,
+      description:
+        entry.description ||
+        `Generated report from ${entry.scriptId} (${entry.sourcePath}).`,
+    })}${stripFrontmatter(current).replace(/^\uFEFF/, '')}`;
+
+    if (writeIfChanged(targetAbsPath, next, args)) {
+      changed += 1;
+    }
+  }
+
+  return changed;
+}
+
 function main() {
   let args;
   try {
@@ -851,26 +1034,21 @@ function main() {
     console.log(`Optional source reports missing (skipped): ${skippedOptional.length}`);
   }
 
-  const generationDate = new Date();
-  const generation = {
-    isoUtc: generationDate.toISOString(),
-    humanUtc: formatUtcHuman(generationDate),
-  };
-
   let changedPages = 0;
   const scriptMetadataCache = new Map();
   for (const record of records) {
-    const result = writeManagedPage(record, generation, args, scriptMetadataCache);
+    const result = writeManagedPage(record, args, scriptMetadataCache);
     if (result.changed) changedPages += 1;
   }
+  changedPages += refreshMissingManagedTargets(missing, args);
   const removedDynamic = cleanupDynamicPages(records, args);
-  const removedLegacy = cleanupLegacyTargetPages(args);
+  const normalizedLegacy = normalizeLegacyTargetPages(args);
   const docsResult = updateDocsJson(records, args);
 
   console.log(`${args.check ? 'Previewed' : 'Processed'} report pages: ${records.length}`);
   console.log(`Page writes ${args.check ? '(planned)' : ''}: ${changedPages}`);
   console.log(`Dynamic stale pages ${args.check ? '(planned removals)' : 'removed'}: ${removedDynamic}`);
-  console.log(`Legacy alias pages ${args.check ? '(planned removals)' : 'removed'}: ${removedLegacy}`);
+  console.log(`Legacy report pages ${args.check ? '(planned normalizations)' : 'normalized'}: ${normalizedLegacy}`);
   console.log(`docs.json report groups ${args.check ? '(planned)' : ''}: ${docsResult.groupsWritten}`);
   if (records.length) {
     for (const record of records) {

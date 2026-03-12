@@ -19,8 +19,8 @@ keywords:
   - pipeline
   - ComfyStream
   - aiModels.json
-'og:image': /snippets/assets/site/og-image/en/orchestrators.png
-'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image': /snippets/assets/site/og-image/en/gpu-nodes.png
+'og:image:alt': Livepeer Docs social preview image for GPU Nodes
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
@@ -58,7 +58,7 @@ Transcoding is priced in **wei per pixel**. A pixel here is a single pixel of ou
 
 ### Configuration
 
-Configured via the `-pricePerUnit` (and optionally `-pixelsPerUnit`) flags at node start. See [Configure Your Orchestrator](/v2/orchestrators/setup/orch-config) for the full flag reference.
+Configured via the `-pricePerUnit` (and optionally `-pixelsPerUnit`) flags at node start. See [Configure Your Orchestrator](/v2/orchestrators/setup/r-configure) for the full flag reference.
 
 ---
 
@@ -86,7 +86,7 @@ The Livepeer AI Subnet launched in Q3 2024 and added this category to the networ
 <Note>
   The `upscale` and `text-to-speech` VRAM requirements are not confirmed in this
   draft — they will be filled before publication. Check [AI
-  Pipelines](/ai/pipelines) for current per-pipeline specs.
+  Pipelines](https://docs.livepeer.org/ai/pipelines/overview) for current per-pipeline specs.
 </Note>
 
 ### Hardware requirements
@@ -106,7 +106,7 @@ AI inference pipelines use a **per-unit pricing model** where the unit depends o
 
 ### Configuration
 
-Configured via the `aiModels.json` file. Each entry specifies the pipeline name, model ID, pricing, whether the model is kept warm, and the URL of the runner container. See [Configure AI Pipelines](/v2/orchestrators/setup/ai-config) {/* REVIEW: confirm correct target path */} for the configuration reference.
+Configured via the `aiModels.json` file. Each entry specifies the pipeline name, model ID, pricing, whether the model is kept warm, and the URL of the runner container. See [Configure AI Pipelines](/v2/orchestrators/operations/rc-ai-pipelines) {/* REVIEW: confirm correct target path */} for the configuration reference.
 
 ---
 
@@ -143,7 +143,7 @@ Requirements are model-dependent. The ComfyStream input nodes themselves use les
 
 ### Configuration
 
-Configured via `aiModels.json` and requires a running ComfyStream instance. See [Set Up Real-time AI Pipelines](/v2/orchestrators/setup/comfystream) {/* REVIEW: confirm target path */} for the setup guide.
+Configured via `aiModels.json` and requires a running ComfyStream instance. See [Set Up Real-time AI Pipelines](/v2/developers/get-started/comfystream-quickstart) {/* REVIEW: confirm target path */} for the setup guide.
 
 ---
 
@@ -223,14 +223,14 @@ The job types you can run depend on your hardware and what you want to optimise 
   <Card
     title="Choose your setup path"
     icon="map"
-    href="/v2/orchestrators/get-started/setup-paths"
+    href="/v2/orchestrators/quickstart/x-setup-paths"
   >
     Pick the right installation path for your hardware and goals.
   </Card>
   <Card
     title="Add AI to your node"
     icon="cpu"
-    href="/v2/orchestrators/get-started/AI-prompt-start"
+    href="/v2/orchestrators/quickstart/AI-prompt-start"
   >
     Configure AI pipelines on an existing orchestrator.
   </Card>
@@ -245,7 +245,7 @@ The job types you can run depend on your hardware and what you want to optimise 
 2. **Cascade/ComfyStream pricing unit** — ask Peter (AI SPE Lead) or post in `#orchestrating`; this cannot be sourced from existing documentation
 3. **LLM pricing unit clarification** — confirm whether `pixels_per_unit: 1000000` in aiModels.json means per-million-tokens or is a different unit
 4. **CardGroup link targets** — `setup-paths.mdx` and `AI-prompt-start.mdx` are both listed as to-be-created in the IA; confirm final paths before publication
-5. **`/v2/orchestrators/setup/ai-config` and `/v2/orchestrators/setup/llm-pipeline`** — these are target links from this page; confirm they are being created as part of Phase 1 content work
+5. **`/v2/orchestrators/operations/rc-ai-pipelines` and `/v2/orchestrators/setup/llm-pipeline`** — these are target links from this page; confirm they are being created as part of Phase 1 content work
 6. **YouTube demo search** — find an embeddable Cascade/ComfyStream demo video for the Real-time AI section; search `livepeer Cascade demo` and `livepeer comfystream demo` on YouTube
 7. **NVENC/NVDEC minimum driver version** — not confirmed in this research pass; check go-livepeer README before publishing the transcoding section
 ````

@@ -1,16 +1,36 @@
 ---
-title: 'AI Pipelines'
-description: 'Configure and optimise AI inference pipelines on your orchestrator — pipeline types, aiModels.json reference, custom models, Ollama LLM runner, and remote workers.'
-keywords: ["livepeer", "orchestrator", "AI pipelines", "aiModels.json", "AI runner", "Cascade", "LLM", "Ollama", "text-to-image", "VRAM", "custom models", "BYOC"]
-pageType: 'guide'
-audience: 'orchestrator'
-status: 'published'
+title: AI Pipelines
+description: >-
+  Configure and optimise AI inference pipelines on your orchestrator — pipeline
+  types, aiModels.json reference, custom models, Ollama LLM runner, and remote
+  workers.
+keywords:
+  - livepeer
+  - orchestrator
+  - AI pipelines
+  - aiModels.json
+  - AI runner
+  - Cascade
+  - LLM
+  - Ollama
+  - text-to-image
+  - VRAM
+  - custom models
+  - BYOC
+'og:image': /snippets/assets/site/og-image/en/gpu-nodes.png
+'og:image:alt': Livepeer Docs social preview image for GPU Nodes
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: orchestrator
+status: published
 lastVerified: '2026-03-10'
 ---
 
 This guide covers running AI inference pipelines as an orchestrator — which pipelines to run, how to configure your `aiModels.json`, how to add custom and external models, and how to diagnose pipeline-level issues. It assumes your AI runner is already active and handling at least one pipeline.
 
-If you haven't set up the AI runner yet, start with [Add AI to Your Node](/v2/orchestrators/get-started/AI-prompt-start). {/* REVIEW: confirm path */}
+If you haven't set up the AI runner yet, start with [Add AI to Your Node](/v2/orchestrators/quickstart/AI-prompt-start). {/* REVIEW: confirm path */}
 
 ---
 
@@ -30,7 +50,7 @@ Livepeer's AI worker dispatches jobs to pipeline-specific runners. Each pipeline
 - `live-video-to-video`: Real-time frame-by-frame video transformation (Cascade). Min VRAM: {/* REVIEW */} Pricing unit: per frame. Recommended warm model: ComfyUI/StreamDiffusion workflows.
 
 <Note>
-The warm model column shows the recommended warm model for early-phase network participation. Operators are free to serve any verified model. For an up-to-date list of verified models per pipeline, see each pipeline's page in the [Livepeer AI docs](https://docs.livepeer.org/ai/pipelines/overview).
+The warm model column shows the recommended warm model for early-phase network participation. Operators are free to serve any verified model. For an up-to-date list of verified models per pipeline, see each pipeline's page in the [Livepeer AI docs](https://docs.livepeer.orghttps://docs.livepeer.org/ai/pipelines/overview/overview).
 </Note>
 
 ---
@@ -254,7 +274,7 @@ This is used for:
 
 The only requirement is that the container responds to the same API contract as the managed `livepeer/ai-runner` containers. Specifically it must: (a) expose `/health`, and (b) handle inference requests in the format the AI worker sends.
 
-For a full guide on building and registering custom containers, see [Hosting Models (BYOC)](/v2/orchestrators/advanced/hosting-models). {/* REVIEW: confirm path */}
+For a full guide on building and registering custom containers, see [Hosting Models (BYOC)](/v2/orchestrators/operations/r-hosting-models). {/* REVIEW: confirm path */}
 
 For building custom pipelines and the full BYOC developer workflow, see [Bring Your Own Container](/v2/developers/build/byoc). {/* REVIEW: confirm path — Developers tab */}
 
@@ -274,7 +294,7 @@ Rule of thumb: warm your primary revenue pipeline, cold the rest.
 
 **Model selection and earnings**
 
-Different models vary in job win rate depending on what gateways and developers are requesting. The [Livepeer Explorer AI Leaderboard](https://explorer.livepeer.org) shows per-orchestrator performance metrics. For deeper guidance on earnings optimisation by pipeline, see [Earnings and Economics](/v2/orchestrators/advanced/earnings). {/* REVIEW: confirm path */}
+Different models vary in job win rate depending on what gateways and developers are requesting. The [Livepeer Explorer AI Leaderboard](https://explorer.livepeer.org) shows per-orchestrator performance metrics. For deeper guidance on earnings optimisation by pipeline, see [Earnings and Economics](/v2/orchestrators/operations/earnings). {/* REVIEW: confirm path */}
 
 **Monitoring pipeline health**
 
@@ -318,7 +338,7 @@ For external containers (`url` field), the model must already be downloaded insi
 
 <Accordion title="Pipeline receiving no jobs">
 
-1. **Not registered** — if you added a new pipeline after initial activation, you may need to re-register your capabilities with the network. Consult the [Activate on the Network](/v2/orchestrators/setup/publish-offerings) guide. {/* REVIEW: confirm path */}
+1. **Not registered** — if you added a new pipeline after initial activation, you may need to re-register your capabilities with the network. Consult the [Activate on the Network](/v2/orchestrators/unclassified/rcs-connect-activate-publish) guide. {/* REVIEW: confirm path */}
 2. **price_per_unit too high** — gateways will not route to orchestrators whose price exceeds their `maxPricePerUnit`. Check current competitive pricing on the Explorer AI Leaderboard.
 3. **Model is cold in a latency-competitive pipeline** — set `"warm": true` for your primary pipeline.
 4. **Not in active set** — check your stake status on Explorer. AI pipeline jobs require the orchestrator to be in the active set.
@@ -359,10 +379,10 @@ Mitigations:
 
 ## Related
 
-- [Add AI to Your Node](/v2/orchestrators/get-started/AI-prompt-start) — initial AI runner setup {/* REVIEW: confirm path */}
-- [Hosting Models (BYOC)](/v2/orchestrators/advanced/hosting-models) — custom model hosting and external containers {/* REVIEW: confirm path */}
-- [Hardware Requirements](/v2/orchestrators/setup/hardware-requirements) — VRAM requirements by pipeline {/* REVIEW: confirm path */}
-- [CLI Flags Reference](/v2/orchestrators/resources/cli-flags) — full AI worker flag reference {/* REVIEW: confirm path */}
+- [Add AI to Your Node](/v2/orchestrators/quickstart/AI-prompt-start) — initial AI runner setup {/* REVIEW: confirm path */}
+- [Hosting Models (BYOC)](/v2/orchestrators/operations/r-hosting-models) — custom model hosting and external containers {/* REVIEW: confirm path */}
+- [Hardware Requirements](/v2/orchestrators/setup/rcs-requirements) — VRAM requirements by pipeline {/* REVIEW: confirm path */}
+- [CLI Flags Reference](/v2/orchestrators/resources/technical/cli-flags) — full AI worker flag reference {/* REVIEW: confirm path */}
 
 {/* REVIEW: Previous version stated "Stake does **not** decide AI job assignment" — not present in new draft. Human to decide whether to include. */}
 {/* REVIEW: Previous version stated "BYOC and ComfyStream mentions" — not present in new draft. Human to decide whether to include. */}

@@ -3,7 +3,11 @@ title: 'V2 Link Audit Report'
 sidebarTitle: 'Link Audit'
 description: 'Generated V2 MDX link audit report from tests/integration/v2-link-audit.js.'
 keywords: ["livepeer","internal","reports","navigation-links","v2-link-audit"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+og:image: "/snippets/assets/site/og-image/fallback.png"
+og:image:alt: "Livepeer Docs social preview image"
+og:image:type: "image/png"
+og:image:width: 1200
+og:image:height: 630
 ---
 Last Generated (UTC ISO): `2026-03-09T04:40:20.822Z`
 Last Generated (UTC Human): `March 09, 2026 04:40 UTC`
