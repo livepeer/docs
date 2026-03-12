@@ -7,7 +7,11 @@ Add to all pages: [SEO](https://www.mintlify.com/docs/optimize/seo) eg
 
 ---
 
-## "twitter:image": "/images/social-preview.jpg"
+## "og:image": "/snippets/assets/site/og-image/fallback.png"
+## "og:image:alt": "Livepeer Docs social preview image"
+## "og:image:type": "image/png"
+## "og:image:width": 1200
+## "og:image:height": 630
 
 ## Search Keywords eg:
 

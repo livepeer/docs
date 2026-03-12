@@ -26,6 +26,37 @@ function asQuotedYaml(value) {
   return `'${escapeYamlSingle(value)}'`;
 }
 
+function formatYamlKey(key) {
+  const normalized = normalizeInline(key);
+  if (!normalized) return '';
+  return /^[A-Za-z0-9_-]+$/.test(normalized) ? normalized : asQuotedYaml(normalized);
+}
+
+function formatYamlScalar(value) {
+  if (typeof value === 'number' || typeof value === 'bigint') return String(value);
+  if (typeof value === 'boolean') return value ? 'true' : 'false';
+  const normalized = normalizeInline(value);
+  if (!normalized) return '';
+  return asQuotedYaml(normalized);
+}
+
+function buildYamlEntryLines(key, value) {
+  if (value === undefined || value === null) return [];
+
+  const yamlKey = formatYamlKey(key);
+  if (!yamlKey) return [];
+
+  if (Array.isArray(value)) {
+    const items = value.map((item) => normalizeInline(item)).filter(Boolean);
+    if (items.length === 0) return [];
+    return [`${yamlKey}: [${items.map((item) => asQuotedYaml(item)).join(', ')}]`];
+  }
+
+  const scalar = formatYamlScalar(value);
+  if (!scalar) return [];
+  return [`${yamlKey}: ${scalar}`];
+}
+
 function parseFrontmatter(content) {
   const raw = String(content || '');
   if (!raw.startsWith('---')) {
@@ -64,6 +95,7 @@ function buildGeneratedFrontmatterLines(options = {}) {
   const description = normalizeInline(options.description);
   const keywords = Array.isArray(options.keywords) ? options.keywords.map((item) => normalizeInline(item)).filter(Boolean) : [];
   const keywordsStyle = options.keywordsStyle === 'multiline' ? 'multiline' : 'inline';
+  const handledKeys = new Set(['title', 'sidebarTitle', 'description', 'keywords', 'keywordsStyle']);
   const lines = ['---'];
 
   if (title) lines.push(`title: ${asQuotedYaml(title)}`);
@@ -82,6 +114,11 @@ function buildGeneratedFrontmatterLines(options = {}) {
       lines.push(`keywords: [${keywords.map((keyword) => asQuotedYaml(keyword)).join(', ')}]`);
     }
   }
+
+  Object.entries(options).forEach(([key, value]) => {
+    if (handledKeys.has(key)) return;
+    lines.push(...buildYamlEntryLines(key, value));
+  });
 
   lines.push('---');
   return lines;

@@ -232,10 +232,48 @@ if should_enforce_ai_stash_policy; then
     run_ai_stash_policy_check
 fi
 
+is_allowed_generated_pages_index_delete() {
+    local file_path="$1"
+    local head_content=""
+
+    case "$file_path" in
+        v2/*/_contextData/*/index.mdx|v2/*/_contextData/*/index.md|v2/*/_contextData_/*/index.mdx|v2/*/_contextData_/*/index.md)
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+
+    head_content=$(git show "HEAD:$file_path" 2>/dev/null || true)
+    if [[ "$head_content" != *"Generation Script: tools/scripts/generate-pages-index.js"* ]]; then
+        return 1
+    fi
+
+    return 0
+}
+
 # Check for file deletions (BLOCKED - requires human override)
 # NOTE: Deletions in tasks/ are allowed (AI-only working directory)
 ALL_DELETED_FILES=$(git diff --cached --name-only --diff-filter=D || true)
 DELETED_FILES=$(echo "$ALL_DELETED_FILES" | grep -v '^tasks/' || true)
+ALLOWED_GENERATED_INDEX_DELETIONS=""
+
+if [ -n "$DELETED_FILES" ]; then
+    FILTERED_DELETED_FILES=""
+    while IFS= read -r deleted_file; do
+        if [ -z "$deleted_file" ]; then
+            continue
+        fi
+
+        if is_allowed_generated_pages_index_delete "$deleted_file"; then
+            ALLOWED_GENERATED_INDEX_DELETIONS="${ALLOWED_GENERATED_INDEX_DELETIONS}${deleted_file}"$'\n'
+            continue
+        fi
+
+        FILTERED_DELETED_FILES="${FILTERED_DELETED_FILES}${deleted_file}"$'\n'
+    done <<< "$DELETED_FILES"
+    DELETED_FILES=$(printf '%s' "$FILTERED_DELETED_FILES")
+fi
 
 if [ -n "$DELETED_FILES" ]; then
     if [ "$ALLOW_DELETIONS" != "1" ] && has_human_override_trailer "allow-deletions"; then
@@ -298,6 +336,11 @@ if [ -n "$DELETED_FILES" ]; then
     fi
 fi
 
+if [ -n "$ALLOWED_GENERATED_INDEX_DELETIONS" ]; then
+    echo -e "${GREEN}ℹ️  Allowed generated index cleanup deletions:${NC}"
+    echo "$ALLOWED_GENERATED_INDEX_DELETIONS" | sed '/^$/d; s/^/  ↪ /'
+fi
+
 # Check for .allowlist file changes (BLOCKED for AIs, requires human override)
 WHITELIST_CHANGES=$(git diff --cached --name-only | grep -E '^\.allowlist$|^\.allowlist ' || true)
 if [ -n "$WHITELIST_CHANGES" ]; then
@@ -335,8 +378,8 @@ if [ -n "$WHITELIST_CHANGES" ]; then
     fi
 fi
 
-# Check for docs.json /redirect route changes (BLOCKED)
-DOCS_JSON_REDIRECT_DIFF=$(git diff --cached --unified=0 -- docs.json | grep -E '^[+-][^+-].*/redirect' || true)
+# Check for docs.json redirect object changes (BLOCKED)
+DOCS_JSON_REDIRECT_DIFF=$(git diff --cached --unified=0 -- docs.json | grep -E '^[+-][^+-].*"(redirects|source|destination)"' | grep -E '/redirect|"redirects"' || true)
 if [ -n "$DOCS_JSON_REDIRECT_DIFF" ]; then
     VIOLATIONS=$((VIOLATIONS + 1))
     echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"

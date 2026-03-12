@@ -26,6 +26,7 @@ const MODERN_PAGES_ROOT = 'v2';
 const INDEX_FILENAME = 'index.mdx';
 const LEGACY_INDEX_FILENAME = 'index.md';
 const DOCS_JSON_FILENAME = 'docs.json';
+const EXCLUDED_INDEX_DIRS = new Set(['x-archived', '_contextData', '_contextData_']);
 
 const DOMAIN_RENAME_MAP = {
   '00_home': 'home',
@@ -146,7 +147,12 @@ function sortAlpha(values) {
 function getDirectSubdirs(absDir) {
   if (!fs.existsSync(absDir)) return [];
   const entries = fs.readdirSync(absDir, { withFileTypes: true });
-  return sortAlpha(entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name));
+  return sortAlpha(
+    entries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)
+      .filter((name) => !EXCLUDED_INDEX_DIRS.has(name))
+  );
 }
 
 function getDirectMarkdownFiles(absDir) {

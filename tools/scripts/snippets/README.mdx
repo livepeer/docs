@@ -75,10 +75,10 @@ output-dir/
 Automatically generates and updates SEO metadata for MDX documentation pages.
 
 **What it does:**
-1. Scans all MDX files in `v2/pages/`
-2. Generates `keywords` from file path, title, and description
-3. Adds `og:image` using domain-specific or default social preview images
-4. Preserves existing SEO metadata (won't overwrite if already present)
+1. Scans authored MDX content in `v2/`, `docs/`, `docs-guide/`, `contribute/`, and `snippets/pages/`
+2. Generates `keywords` from file path, title, and description when missing
+3. Adds canonical Open Graph metadata using the site-level asset manifest
+4. Normalizes legacy `og:image` values to section-level or fallback raster assets
 
 **Usage:**
 ```bash
@@ -92,6 +92,8 @@ npm run generate-seo
 node tools/scripts/snippets/generate-seo.js --file=v2/home/mission-control.mdx
 ```
 
+**Run before this script:** `node tools/scripts/snippets/generate-og-images.js`
+
 **What gets added:**
 
 **Keywords:**
@@ -100,29 +102,69 @@ node tools/scripts/snippets/generate-seo.js --file=v2/home/mission-control.mdx
 - Title-based: meaningful words from the page title
 - Description-based: top 3 meaningful words from the description
 
-**Social Images:**
-- Domain-specific images for main sections (e.g., `/snippets/assets/domain/00_HOME/social-preview-home.jpg`)
-- Default fallback: `/snippets/assets/social/livepeer-social-preview.jpg`
+**Open Graph metadata:**
+- `og:image`
+- `og:image:alt`
+- `og:image:type`
+- `og:image:width`
+- `og:image:height`
+
+**Asset assignment:**
+- docs.json-routable pages use a top-level tab image for their locale (for example, `/snippets/assets/site/og-image/en/orchestrators.png`)
+- non-routable authored pages use `/snippets/assets/site/og-image/fallback.png`
+- SVG, GitHub `blob` URLs, and external OG assets are not used by this workflow
 
 **Example output:**
 ```yaml
 ---
-title: 'Gateway Overview'
-description: 'Learn about Livepeer gateways and how they work'
-keywords: ['livepeer', 'gateways', 'gateway', 'overview', 'learn']
-'og:image': '/snippets/assets/domain/04_GATEWAYS/social-preview-gateways.jpg'
+title: Gateway Overview
+description: Learn about Livepeer gateways and how they work
+keywords:
+  - livepeer
+  - gateways
+  - gateway
+  - overview
+  - learn
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
 ---
 ```
 
 **When to run:**
 - After creating new documentation pages
-- When updating page titles or descriptions
-- Before deploying to improve SEO
+- After updating section labels or OG image branding
+- Before deploying to re-normalize canonical OG fields
 
 **Notes:**
-- Skips files without frontmatter
-- Won't overwrite existing keywords or og:image/twitter:image
+- Adds frontmatter to authored MDX files when needed
+- Rewrites stale `og:image` values to the canonical section or fallback asset
 - Generates up to 10 keywords per page
+
+---
+
+### generate-og-images.js
+
+Generates the site-level PNG asset set and manifest consumed by `generate-seo.js` and quality validation.
+
+**What it does:**
+1. Builds one fallback social image and one section image per top-level docs tab per locale
+2. Writes raster assets to `snippets/assets/site/og-image/`
+3. Writes `snippets/assets/site/og-image/manifest.json` for validators and generators
+
+**Usage:**
+```bash
+# Preview generated files
+node tools/scripts/snippets/generate-og-images.js --dry-run
+
+# Generate the full asset set
+node tools/scripts/snippets/generate-og-images.js
+
+# Generate one asset only
+node tools/scripts/snippets/generate-og-images.js --only=en:orchestrators
+```
 
 ---
 

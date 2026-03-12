@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-C1, R-R14
  * @purpose-statement Report publisher — publishes v2 internal audit reports to configured output locations
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
+ * @pipeline          manual — not yet in pipeline
  * @usage             node tools/scripts/publish-v2-internal-reports.js [flags]
  */
 
@@ -15,11 +15,18 @@ const fs = require('fs');
 const path = require('path');
 
 const manifest = require('../config/v2-internal-report-pages');
+const {
+  FALLBACK_ALT,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_TYPE,
+  OG_IMAGE_WIDTH,
+} = require('./snippets/lib/og-image-policy');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
 const INTERNAL_REPORTS_ROOT = path.join(REPO_ROOT, 'v2', 'internal', 'reports');
-const GENERATED_OG_IMAGE = '/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg';
+const LEGACY_INTERNAL_REPORTS_ROOT = path.join(REPO_ROOT, 'docs', 'internal', 'reports');
+const GENERATED_OG_IMAGE = '/snippets/assets/site/og-image/fallback.png';
 const UTC_MONTHS = [
   'January',
   'February',
@@ -240,6 +247,77 @@ function buildScriptContextBlock(record, body, scriptMetadata) {
   return lines.join('\n');
 }
 
+function stripMarkdownTableBlocks(body) {
+  const lines = String(body || '').split('\n');
+  const output = [];
+  let index = 0;
+
+  while (index < lines.length) {
+    const current = lines[index].trim();
+    const next = index + 1 < lines.length ? lines[index + 1].trim() : '';
+    const looksLikeTableHeader = current.startsWith('|') && next.startsWith('|');
+    const looksLikeTableDivider = /^\|(?:\s*:?-{3,}:?\s*\|)+\s*$/.test(next);
+
+    if (looksLikeTableHeader && looksLikeTableDivider) {
+      output.push('_Tabular data omitted in the published page. Use the repository report artifact for the full matrix._');
+      index += 2;
+      while (index < lines.length && lines[index].trim().startsWith('|')) {
+        index += 1;
+      }
+      continue;
+    }
+
+    output.push(lines[index]);
+    index += 1;
+  }
+
+  return output.join('\n');
+}
+
+function truncatePublishedBody(body, maxChars) {
+  if (!maxChars || body.length <= maxChars) return body;
+  const slice = body.slice(0, maxChars);
+  const safeSlice = slice.includes('\n') ? slice.slice(0, slice.lastIndexOf('\n')) : slice;
+  return `${safeSlice}\n\n_Published page truncated for site reliability. Use the repository report artifact for the full output._\n`;
+}
+
+function sanitizePublishedBody(record, body) {
+  let nextBody = String(body || '');
+  if (
+    record.categorySlug === 'navigation-links'
+    || record.categorySlug === 'page-audits'
+    || record.categorySlug === 'repo-ops'
+  ) {
+    nextBody = stripMarkdownTableBlocks(nextBody);
+  }
+  if (record.categorySlug === 'page-audits') {
+    nextBody = truncatePublishedBody(nextBody, 12000);
+  } else if (record.scriptId === 'v2-link-audit') {
+    nextBody = truncatePublishedBody(nextBody, 16000);
+  }
+  return nextBody;
+}
+
+function buildRetiredLegacyAliasContent(categorySlug, fileName) {
+  const slug = stripExtension(fileName);
+  const title = titleFromBasename(slug);
+  const record = {
+    title: `Legacy Alias: ${title}`,
+    sidebarTitle: 'Legacy Alias',
+    description: 'Retired internal report route preserved for link stability.',
+    categorySlug,
+    scriptId: 'publish-v2-internal-reports',
+  };
+  return `${buildFrontmatter(record)}# Legacy Internal Report Alias
+
+This route is retained for link stability.
+
+- Original legacy slug: \`${slug}\`
+- Status: retired from active publication
+- Current guidance: use the active generated report pages in this report category instead of this legacy alias.
+`;
+}
+
 function getDocsGroups() {
   if (Array.isArray(manifest.docsGroups) && manifest.docsGroups.length) {
     return manifest.docsGroups;
@@ -267,6 +345,14 @@ function buildGenerationStamp(generation) {
   ].join('\n');
 }
 
+function buildGenerationFromDate(value) {
+  const date = value instanceof Date ? value : new Date(value);
+  return {
+    isoUtc: date.toISOString(),
+    humanUtc: formatUtcHuman(date),
+  };
+}
+
 function buildFrontmatter(record) {
   const keywords = [
     'livepeer',
@@ -282,10 +368,38 @@ function buildFrontmatter(record) {
     `description: '${escapeSingleQuotedYaml(record.description)}'`,
     `keywords: ${JSON.stringify(keywords)}`,
     `og:image: "${GENERATED_OG_IMAGE}"`,
+    `og:image:alt: "${FALLBACK_ALT}"`,
+    `og:image:type: "${OG_IMAGE_TYPE}"`,
+    `og:image:width: ${OG_IMAGE_WIDTH}`,
+    `og:image:height: ${OG_IMAGE_HEIGHT}`,
     '---',
     '',
   ];
   return lines.join('\n');
+}
+
+function getFrontmatterBlock(content) {
+  if (!content.startsWith('---\n')) return '';
+  const end = content.indexOf('\n---\n', 4);
+  if (end === -1) return '';
+  return content.slice(4, end);
+}
+
+function readFrontmatterScalar(content, key) {
+  const block = getFrontmatterBlock(String(content || ''));
+  if (!block) return '';
+  const escapedKey = String(key || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const match = block.match(new RegExp(`^${escapedKey}:\\s*(.+)$`, 'm'));
+  if (!match) return '';
+
+  let value = String(match[1] || '').trim();
+  if (
+    (value.startsWith('"') && value.endsWith('"')) ||
+    (value.startsWith("'") && value.endsWith("'"))
+  ) {
+    value = value.slice(1, -1);
+  }
+  return value.replace(/''/g, "'");
 }
 
 function listFilesRecursive(absDir) {
@@ -511,9 +625,45 @@ function makeRecord({
   };
 }
 
-function writeManagedPage(record, generation, args, scriptMetadataCache) {
+function buildLegacyAliasAbsPaths(record) {
+  const legacyTargets = [];
+  const currentPrefix = record.entry.targetSlugPrefix || '';
+  const baseSlug =
+    currentPrefix && record.targetSlug.startsWith(currentPrefix)
+      ? record.targetSlug.slice(currentPrefix.length)
+      : record.targetSlug;
+  const legacyPrefixes = Array.isArray(record.entry.legacyTargetSlugPrefixes)
+    ? record.entry.legacyTargetSlugPrefixes
+    : [];
+  for (const legacyPrefix of legacyPrefixes) {
+    legacyTargets.push(
+      path.join(INTERNAL_REPORTS_ROOT, record.entry.categorySlug, `${legacyPrefix}${baseSlug}.md`)
+    );
+  }
+  const legacySlugs = Array.isArray(record.entry.legacyTargetSlugs)
+    ? record.entry.legacyTargetSlugs
+    : [];
+  for (const legacySlug of legacySlugs) {
+    legacyTargets.push(path.join(INTERNAL_REPORTS_ROOT, record.entry.categorySlug, `${legacySlug}.md`));
+  }
+  return [...new Set(legacyTargets)];
+}
+
+function writeIfChanged(targetAbsPath, nextContent, args) {
+  const prev = fs.existsSync(targetAbsPath)
+    ? fs.readFileSync(targetAbsPath, 'utf8')
+    : null;
+  if (prev === nextContent) return false;
+  if (args.check) return true;
+  ensureDir(path.dirname(targetAbsPath));
+  fs.writeFileSync(targetAbsPath, nextContent, 'utf8');
+  return true;
+}
+
+function writeManagedPage(record, args, scriptMetadataCache) {
   const sourceRaw = fs.readFileSync(record.sourceAbsPath, 'utf8');
-  const body = stripFrontmatter(sourceRaw).replace(/^\uFEFF/, '');
+  const body = sanitizePublishedBody(record, stripFrontmatter(sourceRaw).replace(/^\uFEFF/, ''));
+  const generation = buildGenerationFromDate(fs.statSync(record.sourceAbsPath).mtime);
   let scriptMetadata = scriptMetadataCache.get(record.scriptRepoPath);
   if (!scriptMetadata) {
     scriptMetadata = parseScriptHeaderMetadata(record.scriptRepoPath);
@@ -524,14 +674,13 @@ function writeManagedPage(record, generation, args, scriptMetadataCache) {
     /^\n+/,
     ''
   )}`;
-  if (args.check) return { changed: true };
-  ensureDir(path.dirname(record.targetAbsPath));
-  const prev = fs.existsSync(record.targetAbsPath)
-    ? fs.readFileSync(record.targetAbsPath, 'utf8')
-    : null;
-  if (prev === nextContent) return { changed: false };
-  fs.writeFileSync(record.targetAbsPath, nextContent, 'utf8');
-  return { changed: true };
+  let changed = writeIfChanged(record.targetAbsPath, nextContent, args);
+  for (const legacyAliasAbsPath of buildLegacyAliasAbsPaths(record)) {
+    if (writeIfChanged(legacyAliasAbsPath, nextContent, args)) {
+      changed = true;
+    }
+  }
+  return { changed };
 }
 
 function buildManagedDynamicFileNames(entry) {
@@ -573,7 +722,10 @@ function cleanupDynamicPages(records, args) {
     const keep = new Set(
       records
         .filter((record) => record.entry === entry)
-        .map((record) => path.basename(record.targetAbsPath))
+        .flatMap((record) => [
+          path.basename(record.targetAbsPath),
+          ...buildLegacyAliasAbsPaths(record).map((legacyPath) => path.basename(legacyPath)),
+        ])
     );
     const managedFileNames = buildManagedDynamicFileNames(entry);
     const legacyPrefixes = Array.isArray(entry.legacyTargetSlugPrefixes)
@@ -586,6 +738,15 @@ function cleanupDynamicPages(records, args) {
       if (!managedFileNames.has(fileName) && !matchesLegacyPrefix) continue;
       if (keep.has(fileName)) continue;
       const fullPath = path.join(categoryDir, fileName);
+      if (matchesLegacyPrefix) {
+        if (!args.check) {
+          const placeholder = buildRetiredLegacyAliasContent(entry.categorySlug, fileName);
+          if (fs.readFileSync(fullPath, 'utf8') !== placeholder) {
+            fs.writeFileSync(fullPath, placeholder, 'utf8');
+          }
+        }
+        continue;
+      }
       if (!args.check) fs.unlinkSync(fullPath);
       removed += 1;
     }
@@ -593,21 +754,36 @@ function cleanupDynamicPages(records, args) {
   return removed;
 }
 
-function cleanupLegacyTargetPages(args) {
-  let removed = 0;
-  for (const entry of manifest.entries) {
-    if (entry.publish === false) continue;
-    if (args.categories && !args.categories.has(entry.categorySlug)) continue;
-    if (!Array.isArray(entry.legacyTargetSlugs) || !entry.legacyTargetSlugs.length) continue;
-    const categoryDir = path.join(INTERNAL_REPORTS_ROOT, entry.categorySlug);
-    for (const legacySlug of entry.legacyTargetSlugs) {
-      const legacyFile = path.join(categoryDir, `${legacySlug}.md`);
-      if (!fs.existsSync(legacyFile)) continue;
-      if (!args.check) fs.unlinkSync(legacyFile);
-      removed += 1;
+function normalizeLegacyTargetPages(args) {
+  let changed = 0;
+
+  for (const fullPath of listFilesRecursive(LEGACY_INTERNAL_REPORTS_ROOT)) {
+    if (!/\.(md|mdx)$/i.test(fullPath)) continue;
+
+    const current = fs.readFileSync(fullPath, 'utf8');
+    const repoPath = toRepoPath(fullPath);
+    const relativePath = toPosix(path.relative(LEGACY_INTERNAL_REPORTS_ROOT, fullPath));
+    const categorySlug = relativePath.split('/')[0] || 'internal-reports';
+    const title = readFrontmatterScalar(current, 'title') || titleFromBasename(path.basename(fullPath));
+    const sidebarTitle = readFrontmatterScalar(current, 'sidebarTitle') || title;
+    const description =
+      readFrontmatterScalar(current, 'description') ||
+      `Legacy internal report mirrored from ${repoPath}.`;
+    const scriptId = slugify(path.basename(fullPath));
+    const next = `${buildFrontmatter({
+      categorySlug,
+      scriptId,
+      title,
+      sidebarTitle,
+      description,
+    })}${stripFrontmatter(current).replace(/^\uFEFF/, '')}`;
+
+    if (writeIfChanged(fullPath, next, args)) {
+      changed += 1;
     }
   }
-  return removed;
+
+  return changed;
 }
 
 function findInternalHubTab(node) {
@@ -625,6 +801,83 @@ function findInternalHubTab(node) {
     if (found) return found;
   }
   return null;
+}
+
+function buildDefaultInternalHubTab() {
+  return {
+    tab: 'Internal Hub',
+    hidden: true,
+    icon: 'info-circle',
+    anchors: [
+      {
+        anchor: 'Internal Hub',
+        icon: 'info-circle',
+        groups: [
+          {
+            group: 'RFP',
+            pages: [
+              'v2/internal/rfp/aims',
+              'v2/internal/rfp/problem-statements',
+              'v2/internal/rfp/outcomes',
+              'v2/internal/rfp/deliverables',
+              'v2/internal/rfp/report',
+            ],
+          },
+          {
+            group: 'Internal Hub',
+            pages: [
+              'v2/internal/internal-overview',
+              'v2/internal/overview/about',
+              'v2/internal/overview/governance',
+              'v2/internal/overview/strategic-alignment',
+              'v2/internal/overview/personas',
+              'v2/internal/docs-philosophy',
+              'v2/internal/definitions',
+              'v2/internal/ecosystem',
+              'v2/internal/references',
+            ],
+          },
+          {
+            group: 'Generated Reports',
+            pages: [],
+          },
+        ],
+      },
+    ],
+  };
+}
+
+function getOrCreateInternalHubTab(docs) {
+  const existing = findInternalHubTab(docs);
+  if (existing) return existing;
+
+  const versions = Array.isArray(docs?.navigation?.versions) ? docs.navigation.versions : [];
+  const v2Version =
+    versions.find((entry) => entry && entry.version === 'v2') || versions[0] || null;
+  if (!v2Version) {
+    throw new Error('Unable to find v2 navigation in docs.json');
+  }
+
+  if (!Array.isArray(v2Version.languages)) {
+    v2Version.languages = [];
+  }
+
+  let englishLanguage =
+    v2Version.languages.find((entry) => entry && entry.language === 'en') ||
+    v2Version.languages[0] ||
+    null;
+  if (!englishLanguage) {
+    englishLanguage = { language: 'en', tabs: [] };
+    v2Version.languages.push(englishLanguage);
+  }
+
+  if (!Array.isArray(englishLanguage.tabs)) {
+    englishLanguage.tabs = [];
+  }
+
+  const created = buildDefaultInternalHubTab();
+  englishLanguage.tabs.push(created);
+  return created;
 }
 
 function getOrCreateGeneratedReportsGroup(internalAnchor) {
@@ -665,10 +918,7 @@ function updateDocsJson(records, args) {
     }
   }
   const docs = JSON.parse(fs.readFileSync(DOCS_JSON_PATH, 'utf8'));
-  const internalTab = findInternalHubTab(docs);
-  if (!internalTab) {
-    throw new Error('Unable to find hidden "Internal Hub" tab in docs.json');
-  }
+  const internalTab = getOrCreateInternalHubTab(docs);
   const internalAnchor = (internalTab.anchors || []).find(
     (anchor) => anchor && anchor.anchor === 'Internal Hub' && Array.isArray(anchor.groups)
   );
@@ -718,6 +968,43 @@ function updateDocsJson(records, args) {
   return { changed: true, groupsWritten: nextManagedGroups.length };
 }
 
+function refreshMissingManagedTargets(missing, args) {
+  let changed = 0;
+
+  for (const row of missing) {
+    const entry = row?.entry;
+    if (!entry || entry.sourceType !== 'file' || !entry.targetSlug) {
+      continue;
+    }
+
+    const targetAbsPath = path.join(
+      INTERNAL_REPORTS_ROOT,
+      entry.categorySlug,
+      `${entry.targetSlug}.md`
+    );
+    if (!fs.existsSync(targetAbsPath)) {
+      continue;
+    }
+
+    const current = fs.readFileSync(targetAbsPath, 'utf8');
+    const next = `${buildFrontmatter({
+      categorySlug: entry.categorySlug,
+      scriptId: entry.scriptId,
+      title: entry.title,
+      sidebarTitle: entry.sidebarTitle || entry.title,
+      description:
+        entry.description ||
+        `Generated report from ${entry.scriptId} (${entry.sourcePath}).`,
+    })}${stripFrontmatter(current).replace(/^\uFEFF/, '')}`;
+
+    if (writeIfChanged(targetAbsPath, next, args)) {
+      changed += 1;
+    }
+  }
+
+  return changed;
+}
+
 function main() {
   let args;
   try {
@@ -747,26 +1034,21 @@ function main() {
     console.log(`Optional source reports missing (skipped): ${skippedOptional.length}`);
   }
 
-  const generationDate = new Date();
-  const generation = {
-    isoUtc: generationDate.toISOString(),
-    humanUtc: formatUtcHuman(generationDate),
-  };
-
   let changedPages = 0;
   const scriptMetadataCache = new Map();
   for (const record of records) {
-    const result = writeManagedPage(record, generation, args, scriptMetadataCache);
+    const result = writeManagedPage(record, args, scriptMetadataCache);
     if (result.changed) changedPages += 1;
   }
+  changedPages += refreshMissingManagedTargets(missing, args);
   const removedDynamic = cleanupDynamicPages(records, args);
-  const removedLegacy = cleanupLegacyTargetPages(args);
+  const normalizedLegacy = normalizeLegacyTargetPages(args);
   const docsResult = updateDocsJson(records, args);
 
   console.log(`${args.check ? 'Previewed' : 'Processed'} report pages: ${records.length}`);
   console.log(`Page writes ${args.check ? '(planned)' : ''}: ${changedPages}`);
   console.log(`Dynamic stale pages ${args.check ? '(planned removals)' : 'removed'}: ${removedDynamic}`);
-  console.log(`Legacy alias pages ${args.check ? '(planned removals)' : 'removed'}: ${removedLegacy}`);
+  console.log(`Legacy report pages ${args.check ? '(planned normalizations)' : 'normalized'}: ${normalizedLegacy}`);
   console.log(`docs.json report groups ${args.check ? '(planned)' : ''}: ${docsResult.groupsWritten}`);
   if (records.length) {
     for (const record of records) {

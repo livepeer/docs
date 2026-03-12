@@ -17,8 +17,9 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 const { getMdxFiles, getStagedDocsPageFiles, readFile } = require('../utils/file-walker');
-const { extractImports } = require('../utils/mdx-parser');
+const { extractFrontmatter, extractImports } = require('../utils/mdx-parser');
 
 let errors = [];
 let warnings = [];
@@ -37,6 +38,77 @@ const V2_DOMAIN_DIRS = new Set([
   'experimental',
   'notes'
 ]);
+
+function getFrontmatterEndLine(filePath) {
+  const content = readFile(filePath);
+  if (!content) return 0;
+  const frontmatter = extractFrontmatter(content);
+  if (!frontmatter.exists || !frontmatter.raw) return 0;
+  return frontmatter.raw.split(/\r?\n/).length + 2;
+}
+
+function getCachedDiffHunks(filePath) {
+  const repoRoot = process.cwd();
+  const relPath = path.relative(repoRoot, filePath);
+  try {
+    const output = execFileSync('git', ['diff', '--cached', '-U0', '--', relPath], {
+      cwd: repoRoot,
+      encoding: 'utf8'
+    });
+
+    return [...output.matchAll(/^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/gm)].map((match) => ({
+      start: Number(match[1] || 0),
+      count: Number(match[2] || 1)
+    }));
+  } catch (_error) {
+    return [];
+  }
+}
+
+function readGitBlob(filePath, revSpec) {
+  const repoRoot = process.cwd();
+  const relPath = path.relative(repoRoot, filePath);
+  try {
+    return execFileSync('git', ['show', `${revSpec}:${relPath}`], {
+      cwd: repoRoot,
+      encoding: 'utf8'
+    });
+  } catch (_error) {
+    return null;
+  }
+}
+
+function normalizeBodyForComparison(content) {
+  return String(content || '')
+    .replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '')
+    .replace(/\s+$/, '');
+}
+
+function hasOnlyTrailingBodyWhitespaceChanges(filePath) {
+  const stagedContent = readGitBlob(filePath, '');
+  const headContent = readGitBlob(filePath, 'HEAD');
+  if (stagedContent === null || headContent === null) return false;
+
+  return normalizeBodyForComparison(stagedContent) === normalizeBodyForComparison(headContent);
+}
+
+function hasStagedBodyChanges(filePath) {
+  const frontmatterEndLine = getFrontmatterEndLine(filePath);
+  if (frontmatterEndLine === 0) return true;
+
+  const hunks = getCachedDiffHunks(filePath);
+  if (hunks.length === 0) return true;
+
+  const changedBeyondFrontmatter = hunks.some(({ start, count }) => {
+    const effectiveEnd = count === 0 ? start : (start + count - 1);
+    return effectiveEnd > frontmatterEndLine;
+  });
+
+  if (!changedBeyondFrontmatter) return false;
+  if (hasOnlyTrailingBodyWhitespaceChanges(filePath)) return false;
+
+  return true;
+}
 
 /**
  * Resolve a file path relative to the repository root
@@ -370,7 +442,9 @@ function runTests(options = {}) {
   let testFiles = files;
   if (!testFiles) {
     if (stagedOnly) {
-      testFiles = getStagedDocsPageFiles().filter(f => f.endsWith('.mdx'));
+      testFiles = getStagedDocsPageFiles()
+        .filter(f => f.endsWith('.mdx'))
+        .filter((filePath) => hasStagedBodyChanges(filePath));
     } else {
       testFiles = getMdxFiles();
     }

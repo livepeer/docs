@@ -14,8 +14,8 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
-const { extractImports } = require('../utils/mdx-parser');
+const { execSync, execFileSync } = require('child_process');
+const { extractFrontmatter, extractImports } = require('../utils/mdx-parser');
 const {
   getStagedFiles,
   isExcludedV2ExperimentalPath,
@@ -93,6 +93,74 @@ function relFromRoot(absPath) {
 function relNoExt(absPath) {
   const rel = relFromRoot(absPath);
   return toPosix(rel.replace(/\.(mdx|md)$/i, ''));
+}
+
+function getFrontmatterEndLine(absPath) {
+  if (!fs.existsSync(absPath)) return 0;
+  const content = fs.readFileSync(absPath, 'utf8');
+  const frontmatter = extractFrontmatter(content);
+  if (!frontmatter.exists || !frontmatter.raw) return 0;
+  return frontmatter.raw.split(/\r?\n/).length + 2;
+}
+
+function getCachedDiffHunks(absPath) {
+  const relPath = relFromRoot(absPath);
+  try {
+    const output = execFileSync('git', ['diff', '--cached', '-U0', '--', relPath], {
+      cwd: REPO_ROOT,
+      encoding: 'utf8'
+    });
+
+    return [...output.matchAll(/^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/gm)].map((match) => ({
+      start: Number(match[1] || 0),
+      count: Number(match[2] || 1)
+    }));
+  } catch (_error) {
+    return [];
+  }
+}
+
+function readGitBlob(absPath, revSpec) {
+  const relPath = relFromRoot(absPath);
+  try {
+    return execFileSync('git', ['show', revSpec ? `${revSpec}:${relPath}` : `:${relPath}`], {
+      cwd: REPO_ROOT,
+      encoding: 'utf8'
+    });
+  } catch (_error) {
+    return null;
+  }
+}
+
+function normalizeBodyForComparison(content) {
+  return String(content || '')
+    .replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '')
+    .replace(/\s+$/, '');
+}
+
+function hasOnlyTrailingBodyWhitespaceChanges(absPath) {
+  const stagedContent = readGitBlob(absPath, '');
+  const headContent = readGitBlob(absPath, 'HEAD');
+  if (stagedContent === null || headContent === null) return false;
+  return normalizeBodyForComparison(stagedContent) === normalizeBodyForComparison(headContent);
+}
+
+function hasStagedBodyChanges(absPath) {
+  const frontmatterEndLine = getFrontmatterEndLine(absPath);
+  if (frontmatterEndLine === 0) return true;
+
+  const hunks = getCachedDiffHunks(absPath);
+  if (hunks.length === 0) return true;
+
+  const changedBeyondFrontmatter = hunks.some(({ start, count }) => {
+    const effectiveEnd = count === 0 ? start : (start + count - 1);
+    return effectiveEnd > frontmatterEndLine;
+  });
+
+  if (!changedBeyondFrontmatter) return false;
+  if (hasOnlyTrailingBodyWhitespaceChanges(absPath)) return false;
+
+  return true;
 }
 
 function isExcludedV2AbsPath(absPath) {
@@ -382,7 +450,8 @@ function getInitialTargets(mode, explicitFiles = [], options = {}) {
 
   if (mode === 'staged') {
     const stagedTargets = getStagedFiles()
-      .filter((abs) => isWithinV2Roots(abs) && abs.endsWith('.mdx') && fs.existsSync(abs) && !isIndexMdx(abs));
+      .filter((abs) => isWithinV2Roots(abs) && abs.endsWith('.mdx') && fs.existsSync(abs) && !isIndexMdx(abs))
+      .filter((abs) => hasStagedBodyChanges(abs));
     return filterPathsByMintIgnore(stagedTargets, {
       rootDir: REPO_ROOT,
       respectMintIgnore

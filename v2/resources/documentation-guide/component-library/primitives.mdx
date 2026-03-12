@@ -1,14 +1,27 @@
 ---
-title: 'Primitives'
-sidebarTitle: 'Primitives'
-description: 'Basic UI building blocks used throughout the Livepeer documentation: buttons, icons, links, text, dividers, containers, tables, and layout utilities'
-keywords: ["livepeer", "components", "primitives", "buttons", "icons", "links"]
+title: Primitives
+sidebarTitle: Primitives
+description: >-
+  Basic UI building blocks used throughout the Livepeer documentation: buttons,
+  icons, links, text, dividers, containers, tables, and layout utilities
+keywords:
+  - livepeer
+  - components
+  - primitives
+  - buttons
+  - icons
+  - links
+'og:image': /snippets/assets/site/og-image/en/resource-hub.png
+'og:image:alt': Livepeer Docs social preview image for Resource HUB
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
 ---
 
 import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
 import { LivepeerIcon, LivepeerIconFlipped, LivepeerSVG, LivepeerIconOld } from '/snippets/components/primitives/icons.jsx'
 import { CustomCallout, GotoLink, GotoCard, TipWithArrow, LinkArrow } from '/snippets/components/primitives/links.jsx'
-// BlinkingIcon, BlinkingTerminal, DoubleIconLink commented out - require ThemeData (DEPRECATED per style guide - components are immutable)
+// BlinkingIcon, BlinkingTerminal, DoubleIconLink commented out - require a legacy theme context (components are immutable)
 import { DownloadButton, BasicBtn } from '/snippets/components/primitives/buttons.jsx'
 import { Subtitle, CopyText, CardTitleTextWithArrow, AccordionTitleWithArrow } from '/snippets/components/primitives/text.jsx'
 import { FlexContainer, GridContainer, Spacer } from '/snippets/components/primitives/layout.jsx'
@@ -125,16 +138,16 @@ import { LivepeerIcon } from "/snippets/components/primitives/icons.jsx";
   </Tab>
   <Tab title="Custom Color">
     <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-      <LivepeerIcon size={24} color="#00cc88" /> Custom green
-      <LivepeerIcon size={24} color="#ff6b6b" /> Custom red
-      <LivepeerIcon size={24} color="#3b82f6" /> Custom blue
+      <LivepeerIcon size={24} color="var(--accent)" /> Accent color
+      <LivepeerIcon size={24} color="var(--text)" /> Text color
+      <LivepeerIcon size={24} color="var(--hero-text)" /> Hero text color
     </div>
   </Tab>
   <Tab title="Code">
 ```jsx
 <LivepeerIcon />
 <LivepeerIcon size={24} />
-<LivepeerIcon size={32} color="#00cc88" />
+<LivepeerIcon size={32} color="var(--accent)" />
 ```
   </Tab>
 </Tabs>
@@ -311,13 +324,13 @@ import { GotoCard } from "/snippets/components/primitives/links.jsx";
 
 ---
 
-{/* DoubleIconLink commented out - requires ThemeData (DEPRECATED per style guide - component is immutable) */}
+{/* DoubleIconLink commented out - requires a legacy theme context (component is immutable) */}
 {/*
 ### DoubleIconLink
 
 Link component with icons on both sides. Commonly used for external links like GitHub.
 
-**Note:** Currently unavailable - component requires ThemeData which is deprecated. See component-bugs.md for details.
+**Note:** Currently unavailable because the component still depends on a legacy theme context. See component-bugs.md for details.
 */}
 
 ---
@@ -346,27 +359,27 @@ import { CustomCallout } from "/snippets/components/primitives/links.jsx";
 
 <Tabs>
   <Tab title="Info">
-    <CustomCallout icon="info" color="#3b82f6">
-      This is an informational message with a blue info icon.
+    <CustomCallout icon="info" color="var(--hero-text)">
+      This is an informational message with a theme-aware info icon.
     </CustomCallout>
   </Tab>
   <Tab title="Warning">
-    <CustomCallout icon="warning" color="#ef4444">
+    <CustomCallout icon="warning" color="var(--text)">
       Warning: This action cannot be undone.
     </CustomCallout>
   </Tab>
   <Tab title="Success">
-    <CustomCallout icon="check-circle" color="#22c55e">
+    <CustomCallout icon="check-circle" color="var(--accent)">
       Success! Your changes have been saved.
     </CustomCallout>
   </Tab>
   <Tab title="Code">
 ```jsx
-<CustomCallout icon="info" color="#3b82f6">
+<CustomCallout icon="info" color="var(--hero-text)">
   Important information message
 </CustomCallout>
 
-<CustomCallout icon="warning" color="#ef4444">
+<CustomCallout icon="warning" color="var(--text)">
   Warning message
 </CustomCallout>
 ```
@@ -399,18 +412,18 @@ import { TipWithArrow } from "/snippets/components/primitives/links.jsx";
 
 <Tabs>
   <Tab title="Basic">
-    <TipWithArrow icon="info" color="#3b82f6">
+    <TipWithArrow icon="info" color="var(--hero-text)">
       Check out the related documentation for more details!
     </TipWithArrow>
   </Tab>
   <Tab title="Custom Arrow">
-    <TipWithArrow icon="lightbulb" arrowIcon="arrow-right" color="#f59e0b">
+    <TipWithArrow icon="lightbulb" arrowIcon="arrow-right" color="var(--accent)">
       Tip: Use this component to point users to related content.
     </TipWithArrow>
   </Tab>
   <Tab title="Code">
 ```jsx
-<TipWithArrow icon="info" color="#3b82f6">
+<TipWithArrow icon="info" color="var(--hero-text)">
   Check out the related documentation!
 </TipWithArrow>
 ```
@@ -419,19 +432,19 @@ import { TipWithArrow } from "/snippets/components/primitives/links.jsx";
 
 ---
 
-{/* BlinkingIcon and BlinkingTerminal commented out - require ThemeData (DEPRECATED per style guide - components are immutable) */}
+{/* BlinkingIcon and BlinkingTerminal commented out - require a legacy theme context (components are immutable) */}
 {/*
 ### BlinkingIcon
 
 An icon with a smooth blinking animation (fades between full and 30% opacity). Animation cycles every 3 seconds.
 
-**Note:** Currently unavailable - component requires ThemeData which is deprecated. See component-bugs.md for details.
+**Note:** Currently unavailable because the component still depends on a legacy theme context. See component-bugs.md for details.
 
 ### BlinkingTerminal
 
 Alias for `BlinkingIcon` (backwards compatibility). Use `BlinkingIcon` instead.
 
-**Note:** Currently unavailable - component requires ThemeData which is deprecated. See component-bugs.md for details.
+**Note:** Currently unavailable because the component still depends on a legacy theme context. See component-bugs.md for details.
 */}
 
 ---
@@ -502,13 +515,13 @@ import { Subtitle } from "/snippets/components/primitives/text.jsx";
   <Tab title="Custom Style">
     <Subtitle 
       text="Custom styled subtitle" 
-      style={{ fontSize: "1.2rem", color: "#00cc88", fontStyle: "normal" }}
+      style={{ fontSize: "1.2rem", color: "var(--accent)", fontStyle: "normal" }}
     />
   </Tab>
   <Tab title="Code">
 ```jsx
 <Subtitle text="This is a subtitle" />
-<Subtitle style={{ fontSize: "1.2rem", color: "#00cc88" }}>
+<Subtitle style={{ fontSize: "1.2rem", color: "var(--accent)" }}>
   Custom styled subtitle
 </Subtitle>
 ```
@@ -650,13 +663,13 @@ import { CustomDivider } from "/snippets/components/primitives/divider.jsx";
     <CustomDivider middleText="Section Break" />
   </Tab>
   <Tab title="Custom Color">
-    <CustomDivider middleText="OR" color="#2d9a67" />
+    <CustomDivider middleText="OR" color="var(--accent)" />
   </Tab>
   <Tab title="Code">
 ```jsx
 <CustomDivider />
 <CustomDivider middleText="Section Break" />
-<CustomDivider middleText="OR" color="#2d9a67" />
+<CustomDivider middleText="OR" color="var(--accent)" />
 ```
   </Tab>
 </Tabs>
