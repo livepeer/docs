@@ -1,39 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script generate-component-governance-remediation-reports
- * @category generator
- * @purpose qa:repo-health
- * @summary Generate Phase 2a remediation reports from the approved component-governance audit and live repo state.
- * @owner docs
- * @scope generated-output
- * @needs R-R10, R-R29
+ * @script            generate-component-governance-remediation-reports
+ * @category          generator
+ * @purpose           qa:repo-health
+ * @scope             generated-output
+ * @owner             docs
+ * @needs             R-R10, R-R29
  * @purpose-statement Generates component-governance remediation reports from the approved audit and live repo state, including defensive-rendering guidance for MDX-facing components.
- * @pipeline manual
- * @usage node tools/scripts/generate-component-governance-remediation-reports.js [flags]
- *
- * @inputs
- *   --audit-file <repo-relative-path> (default: tasks/reports/component-governance-audit.md)
- *   --output-dir <repo-relative-path> (default: tasks/reports)
- *   --reports <migration,colours,tokens,defensive> (default: all)
- *   --strict / --no-strict (default: strict)
- *
- * @outputs
- *   - tasks/reports/migration-impact-report.md
- *   - tasks/reports/colour-remediation-report.md
- *   - tasks/reports/style-css-token-audit.md
- *   - tasks/reports/defensive-rendering-remediation-report.md
- *
- * @exit-codes
- *   0 = reports generated successfully
- *   1 = invalid args, audit drift that blocks strict mode, or runtime failure
- *
- * @examples
- *   node tools/scripts/generate-component-governance-remediation-reports.js
- *   node tools/scripts/generate-component-governance-remediation-reports.js --reports migration,defensive
- *   node tools/scripts/generate-component-governance-remediation-reports.js --no-strict
- *
- * @notes
- *   Phase 2a is read-only for runtime docs/component source. This script only reads repo state and writes report artefacts.
+ * @pipeline          manual — report generation
+ * @usage             node tools/scripts/generate-component-governance-remediation-reports.js [flags]
  */
 
 const fs = require('fs');

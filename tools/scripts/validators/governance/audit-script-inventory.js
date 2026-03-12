@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R14, R-R18, R-C6
  * @purpose-statement Deep inventory audit of every script in the repo. Traces triggers, outputs, downstream chains, and governance compliance. Produces reports grouped by trigger category.
- * @pipeline          P1 (pre-commit), indirect
+ * @pipeline          P1 (commit), indirect
  * @usage             node tools/scripts/validators/governance/audit-script-inventory.js [--json] [--md] [--output <dir>] [--verbose]
  */
 

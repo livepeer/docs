@@ -1,32 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script           add-framework-headers
- * @summary          Insert or verify governance framework metadata headers from classification JSON.
- * @category         generator
- * @purpose          governance:repo-health
- * @scope            full-repo
- * @owner            docs
- * @needs            R-R14
+ * @script            add-framework-headers
+ * @category          generator
+ * @purpose           governance:repo-health
+ * @scope             full-repo
+ * @owner             docs
+ * @needs             R-R14
  * @purpose-statement Inserts or extends framework headers on all repo scripts from classification data.
- * @pipeline         manual — interactive developer tool, not suited for automated pipelines
- * @usage            node tools/scripts/add-framework-headers.js --data script-classifications.json --dry-run
- *
- * @inputs
- *   --data <path> --dry-run|--write|--verify [--filter <prefix>] [--exclude-subdirs] [--force]
- *
- * @outputs
- *   - Console summary with files processed, updated, skipped, and errors
- *
- * @exit-codes
- *   0 = success
- *   1 = argument, I/O, parse, or verification failure
- *
- * @examples
- *   node tools/scripts/add-framework-headers.js --data script-classifications.json --dry-run
- *   node tools/scripts/add-framework-headers.js --data script-classifications.json --filter tools/scripts --write
- *
- * @notes
- *   Tool-only migration utility; it does not execute repo-wide header rewrites unless explicitly run.
+ * @pipeline          manual — interactive developer tool, not suited for automated pipelines
+ * @usage             node tools/scripts/add-framework-headers.js --data script-classifications.json --dry-run
  */
 
 const fs = require('fs');

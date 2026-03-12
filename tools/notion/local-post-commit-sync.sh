@@ -8,7 +8,6 @@
 # @purpose-statement Detects docs.json or v2 content changes in the latest commit and runs the canonical Notion sync locally when enabled.
 # @pipeline          manual
 # @usage             bash tools/notion/local-post-commit-sync.sh [flags]
-
 set -u
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

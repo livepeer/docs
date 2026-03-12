@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script           component-template.test
- * @category         validator
- * @purpose          qa:repo-health
- * @scope            tests
- * @owner            docs
- * @needs            R-R10
+ * @script            component-template.test
+ * @category          validator
+ * @purpose           qa:repo-health
+ * @scope             tests
+ * @owner             docs
+ * @needs             R-R10
  * @purpose-statement Template for category-scoped component unit tests.
- * @pipeline         manual
- * @usage            node tests/unit/components/TEMPLATE.test.js
+ * @pipeline          manual
+ * @usage             node tests/unit/components/TEMPLATE.test.js
  */
 
 const assert = require('assert');

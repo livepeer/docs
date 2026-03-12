@@ -6,7 +6,7 @@
 # @owner             docs
 # @needs             E-C1, R-R14
 # @purpose-statement Payment/orchestrator gate verifier — checks payment and orchestrator documentation gate conditions
-# @pipeline          manual — diagnostic/investigation tool, run on-demand only
+# @pipeline          manual — not yet in pipeline
 # @usage             bash tools/scripts/verify-pay-orc-gate-finalize.sh [flags]
 set -euo pipefail
 

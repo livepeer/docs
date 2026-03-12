@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement docs route resolver — maps page paths to locale-aware routes
- * @pipeline          indirect — library module imported by other scripts, not invoked directly
+ * @pipeline          indirect — library module
  * @usage             node tools/scripts/i18n/lib/docs-routes.js [flags]
  */
 const fs = require('fs');

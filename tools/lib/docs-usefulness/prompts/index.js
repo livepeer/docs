@@ -10,6 +10,17 @@
  * @pipeline          indirect -- library module
  * @usage             const { getPrompt } = require('../lib/docs-usefulness/prompts/index');
  */
+/**
+ * @script            prompts/index
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement LLM prompt template for index page-type usefulness evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { getPrompt } = require('../lib/docs-usefulness/prompts/index');
+ */
 
 const landing = require('./landing');
 const overview = require('./overview');

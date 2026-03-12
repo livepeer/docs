@@ -6,7 +6,7 @@
 # @owner             docs
 # @needs             E-R19, F-R7
 # @purpose-statement OG image replacer — replaces og:image path in a single page frontmatter
-# @pipeline          manual — interactive developer tool, not suited for automated pipelines
+# @pipeline          manual — developer tool
 # @usage             python3 tools/scripts/dev/replace-og-image.py [flags]
 import os
 import sys

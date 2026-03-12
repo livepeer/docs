@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script           scan-component-imports
- * @category         generator
- * @purpose          governance:index-management
- * @scope            generated-output
- * @owner            docs
- * @needs            R-R10
+ * @script            scan-component-imports
+ * @category          generator
+ * @purpose           governance:index-management
+ * @scope             generated-output
+ * @owner             docs
+ * @needs             R-R10
  * @purpose-statement Scans MDX imports to produce component-usage-map.json and detect @usedIn drift.
- * @pipeline         P6
- * @usage            node tools/scripts/scan-component-imports.js [--verify]
+ * @pipeline          P6
+ * @usage             node tools/scripts/scan-component-imports.js [--verify]
  */
 
 const fs = require('fs');

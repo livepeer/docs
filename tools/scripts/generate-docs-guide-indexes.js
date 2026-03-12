@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R16, R-R17
  * @purpose-statement Generates docs-guide workflow/template indexes and optionally verifies freshness
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
+ * @pipeline          manual — not yet in pipeline
  * @dualmode          dual-mode (document flags)
  * @usage             node tools/scripts/generate-docs-guide-indexes.js [flags]
  */

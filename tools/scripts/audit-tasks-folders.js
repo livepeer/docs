@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-C1, R-R14
  * @purpose-statement Tasks folder auditor — checks tasks/ structure, normalises report locations, applies recommendations with conflict-safe moves
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
+ * @pipeline          manual — not yet in pipeline
  * @usage             node tools/scripts/audit-tasks-folders.js [flags]
  */
 

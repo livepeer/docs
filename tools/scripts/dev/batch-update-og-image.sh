@@ -6,7 +6,7 @@
 # @owner             docs
 # @needs             E-R19, F-R7
 # @purpose-statement Batch OG image updater — updates og:image meta tags across multiple pages
-# @pipeline          manual — interactive developer tool, not suited for automated pipelines
+# @pipeline          manual — developer tool
 # @usage             bash tools/scripts/dev/batch-update-og-image.sh [flags]
 OLD_IMAGE='og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"'
 NEW_IMAGE='og:image: "/snippets/assets/domain/SHARED/LivepeerDocsHero.svg"'

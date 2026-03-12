@@ -10,6 +10,17 @@
  * @pipeline          indirect -- library module
  * @usage             const { validateConfig } = require('../lib/docs-usefulness/config-validator');
  */
+/**
+ * @script            config-validator
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14, R-C6
+ * @purpose-statement Validates docs-usefulness config structure and field completeness.
+ * @pipeline          indirect -- library module
+ * @usage             const { validateConfig } = require('../lib/docs-usefulness/config-validator');
+ */
 
 const {
   PURPOSE_ENUM,

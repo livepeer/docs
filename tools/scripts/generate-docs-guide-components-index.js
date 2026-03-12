@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script           generate-docs-guide-components-index
- * @category         generator
- * @purpose          governance:index-management
- * @scope            generated-output
- * @owner            docs
- * @needs            R-R10, R-R16, R-R17
+ * @script            generate-docs-guide-components-index
+ * @category          generator
+ * @purpose           governance:index-management
+ * @scope             generated-output
+ * @owner             docs
+ * @needs             R-R10, R-R16, R-R17
  * @purpose-statement Generates components-index.mdx in docs-guide/indexes/ from component-registry.json and component-usage-map.json.
- * @pipeline         P1 (commit — auto-regenerated when components staged)
- * @usage            node tools/scripts/generate-docs-guide-components-index.js [--fix|--write|--check]
+ * @pipeline          P1 (commit — auto-regenerated when components staged)
+ * @usage             node tools/scripts/generate-docs-guide-components-index.js [--fix|--write|--check]
  */
 
 const fs = require('fs');

@@ -10,6 +10,17 @@
  * @pipeline          indirect — library module
  * @usage             const { score } = require('../lib/docs-usefulness/scoring');
  */
+/**
+ * @script            scoring
+ * @category          utility
+ * @purpose           qa:content-quality
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Aggregates rule scores into a final usefulness score per page.
+ * @pipeline          indirect — library module
+ * @usage             const { score } = require('../lib/docs-usefulness/scoring');
+ */
 
 const fs = require('fs');
 const path = require('path');

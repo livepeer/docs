@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             E-R19, F-R7
  * @purpose-statement Test for seo-generator — validates SEO generation logic
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
+ * @pipeline          manual — developer tool
  * @usage             node tools/scripts/dev/test-seo-generator.js [flags]
  */
 const fs = require('fs')

@@ -6,7 +6,7 @@
 # @owner             docs
 # @needs             F-R1
 # @purpose-statement LPT exchange data fetcher — pulls exchange listing data for LPT token pages
-# @pipeline          manual — interactive developer tool, not suited for automated pipelines
+# @pipeline          manual — not yet in pipeline
 # @usage             bash tools/scripts/snippets/fetch-lpt-exchanges.sh [flags]
 # Fetch LPT exchange listings from CoinGecko API and append to lpt-exchanges.mdx
 # Usage: ./tools/scripts/snippets/fetch-lpt-exchanges.sh

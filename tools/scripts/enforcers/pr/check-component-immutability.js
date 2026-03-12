@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script    check-component-immutability
- * @category  enforcer
- * @purpose   governance:repo-health
- * @scope     changed
- * @owner     docs
- * @needs     R-R10
- * @purpose-statement  Flags modifications to existing component files in PR context. New files allowed. Modifications require approval label.
- * @pipeline  P2, P3
- * @usage     node tools/scripts/enforcers/pr/check-component-immutability.js --base-ref main
+ * @script            check-component-immutability
+ * @category          enforcer
+ * @purpose           governance:repo-health
+ * @scope             changed
+ * @owner             docs
+ * @needs             R-R10
+ * @purpose-statement Flags modifications to existing component files in PR context. New files allowed. Modifications require approval label.
+ * @pipeline          P2, P3
+ * @usage             node tools/scripts/enforcers/pr/check-component-immutability.js --base-ref main
  */
 
 const fs = require('fs');

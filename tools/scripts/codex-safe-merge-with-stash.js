@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R27, R-R30
  * @purpose-statement Deprecated compatibility shim — blocks stash-based Codex merge flow and directs users to task-finalize, lock-release, and task-cleanup
- * @pipeline          manual — compatibility shim only
+ * @pipeline          manual — developer tool
  * @usage             node tools/scripts/codex-safe-merge-with-stash.js [flags]
  */
 

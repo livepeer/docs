@@ -8,7 +8,6 @@
 # @purpose-statement Removes the managed local Notion post-commit hook when it is present.
 # @pipeline          manual
 # @usage             bash tools/notion/remove-local-sync-hook.sh [flags]
-
 set -euo pipefail
 
 MARKER="LIVEPEER_NOTION_LOCAL_SYNC_HOOK"

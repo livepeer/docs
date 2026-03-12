@@ -1,13 +1,13 @@
 /**
- * @script           script-governance-config
- * @category         utility
- * @purpose          governance:repo-health
- * @scope            full-repo
- * @owner            docs
- * @needs            R-R14, R-R18, R-C6
+ * @script            script-governance-config
+ * @category          utility
+ * @purpose           governance:repo-health
+ * @scope             full-repo
+ * @owner             docs
+ * @needs             R-R14, R-R18, R-C6
  * @purpose-statement Shared governance constants for script discovery, indexing, classification, and pipeline normalisation across the repo.
- * @pipeline         indirect -- library module
- * @usage            const config = require('../lib/script-governance-config');
+ * @pipeline          indirect -- library module
+ * @usage             const config = require('../lib/script-governance-config');
  */
 
 const path = require('path');

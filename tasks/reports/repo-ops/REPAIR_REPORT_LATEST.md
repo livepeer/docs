@@ -1,23 +1,23 @@
 # Governance Repair Report
 
-- Date: 2026-03-10T10:30:25.786Z
-- Mode: dry-run
-- Verification: SKIPPED (dry-run)
+- Date: 2026-03-12T04:28:50.746Z
+- Mode: fix
+- Verification: PASS
 
 ## Pre Repair
 
-- Total scripts: 210
-- Grade A/B/C/F: 0/53/156/1
-- Pipeline mismatches: 34
+- Total scripts: 216
+- Grade A/B/C/F: 0/75/140/1
+- Pipeline mismatches: 9
 - Not in JSON: 0
 - Phantom JSON: 0
 
 ## Repairs Applied
 
-- Total fixes: 281
-- JSON phantoms removed: 16
+- Total fixes: 108
+- JSON phantoms removed: 0
 - JSON entries added: 0
-- JSON entries updated: 210
+- JSON entries updated: 0
 - Header category added: 0
 - Header purpose added: 0
 - Header owner added: 0
@@ -26,29 +26,16 @@
 - Header scope added: 0
 - Header needs added: 0
 - Header purpose-statement added: 0
-- Header pipeline corrected: 55
+- Header pipeline corrected: 54
 - Indexes regenerated: true
 
 ### Files Modified
 
-- .githooks/script-index.md
 - .githooks/verify-browser.js
 - .githooks/verify.sh
-- .github/script-index.md
-- docs-guide/indexes/scripts-index.md
 - docs-guide/indexes/scripts-index.mdx
-- snippets/automations/script-index.md
-- tasks/reports/script-classifications.json
-- tasks/scripts/script-index.md
-- tests/run-all.js
-- tests/script-index.md
-- tests/unit/audit-script-inventory-repair-rules.test.js
-- tests/unit/component-governance-generators.test.js
 - tests/unit/component-governance-utils.test.js
 - tests/unit/components/TEMPLATE.test.js
-- tests/unit/repair-governance.test.js
-- tools/config/script-index.md
-- tools/lib/component-governance-utils.js
 - tools/lib/docs-index-utils.js
 - tools/lib/docs-usefulness/config-validator.js
 - tools/lib/docs-usefulness/journey-check.js
@@ -71,11 +58,9 @@
 - tools/lib/generated-file-banners.js
 - tools/lib/script-governance-config.js
 - tools/lib/script-header-utils.js
-- tools/lib/script-index.md
 - tools/notion/install-local-sync-hook.sh
 - tools/notion/local-post-commit-sync.sh
 - tools/notion/remove-local-sync-hook.sh
-- tools/notion/script-index.md
 - tools/script-index.md
 - tools/scripts/add-framework-headers.js
 - tools/scripts/audit-tasks-folders.js
@@ -117,9 +102,7 @@
 - tools/scripts/i18n/test/mdx-translate.test.js
 - tools/scripts/i18n/test/provenance.test.js
 - tools/scripts/i18n/test/provider-openrouter.test.js
-- tools/scripts/mint-dev.sh
 - tools/scripts/new-script.js
-- tools/scripts/orchestrators/repair-governance.js
 - tools/scripts/publish-v2-internal-reports.js
 - tools/scripts/remediators/assets/migrate-assets-to-branch.js
 - tools/scripts/remediators/components/repair-component-metadata.js
@@ -144,9 +127,9 @@
 
 ## Post Repair
 
-- Total scripts: 210
-- Grade A/B/C/F: 0/53/156/1
-- Pipeline mismatches: 34
+- Total scripts: 216
+- Grade A/B/C/F: 0/75/140/1
+- Pipeline mismatches: 8
 - Not in JSON: 0
 - Phantom JSON: 0
 
@@ -159,35 +142,28 @@
 - .githooks/server-manager.js: @scope
 - .githooks/verify-browser.js: @scope
 - .githooks/verify.sh: @scope
-- .github/scripts/fetch-forum-data.js: @scope, @pipeline
-- .github/scripts/fetch-ghost-blog-data.js: @scope, @pipeline
-- .github/scripts/fetch-youtube-data.js: @scope, @pipeline
-- .github/scripts/project-showcase-sync.js: @scope, @pipeline
+- .github/scripts/fetch-forum-data.js: @scope
+- .github/scripts/fetch-ghost-blog-data.js: @scope
+- .github/scripts/fetch-youtube-data.js: @scope
+- .github/scripts/project-showcase-sync.js: @scope
 - tasks/scripts/audit-python.py: @scope
 - tests/integration/browser.test.js: @scope
 - tests/integration/domain-pages-audit.js: @scope
 - tests/integration/mdx-component-runtime-smoke.js: @scope
-- tests/integration/openapi-reference-audit.js: @scope, @pipeline
-- tests/integration/v2-link-audit.js: @scope, @pipeline
+- tests/integration/v2-link-audit.js: @scope
 - tests/integration/v2-link-audit.selftest.js: @scope
-- tests/integration/v2-wcag-audit.js: @scope
 - tests/integration/v2-wcag-audit.selftest.js: @scope
-- tests/run-all.js: @scope
-- tests/run-pr-checks.js: @pipeline
-- tests/unit/audit-script-inventory-repair-rules.test.js: @scope
 - tests/unit/codex-commit.test.js: @scope
 - tests/unit/codex-safe-merge-with-stash.test.js: @scope
 - tests/unit/codex-skill-sync.test.js: @scope
 - tests/unit/codex-task-cleanup.test.js: @scope
 - tests/unit/codex-task-preflight.test.js: @scope
-- tests/unit/component-governance-generators.test.js: @scope
 - tests/unit/component-governance-utils.test.js: @scope
 - tests/unit/components/TEMPLATE.test.js: @scope
 - tests/unit/create-codex-pr.test.js: @scope
 - tests/unit/docs-guide-sot.test.js: @scope
-- tests/unit/docs-navigation.test.js: @scope, @pipeline
+- tests/unit/docs-path-sync.test.js: @pipeline
 - tests/unit/links-imports.test.js: @scope
-- tests/unit/lpd-scoped-mint-dev.test.js: @scope
 - tests/unit/mdx-component-runtime-smoke.test.js: @scope
 - tests/unit/mdx-component-scope.test.js: @scope
 - tests/unit/mdx-guards.test.js: @scope
@@ -197,16 +173,12 @@
 - tests/unit/openapi-reference-audit.test.js: @scope
 - tests/unit/openapi-rolling-issue.test.js: @scope
 - tests/unit/quality.test.js: @scope
-- tests/unit/repair-governance.test.js: @scope
 - tests/unit/repair-spelling.test.js: @scope
 - tests/unit/repo-audit-pipeline.test.js: @scope
 - tests/unit/script-docs.test.js: @scope
 - tests/unit/spelling.test.js: @scope
 - tests/unit/style-guide.test.js: @scope
-- tests/unit/v2-link-audit.test.js: @scope
-- tests/unit/v2-wcag-audit.test.js: @scope
 - tests/unit/validate-codex-task-contract.test.js: @scope
-- tests/utils/file-walker.js: @scope
 - tests/utils/mdx-parser.js: @scope
 - tests/utils/mintignore.js: @scope
 - tests/utils/openapi-rolling-issue.js: @scope
@@ -217,12 +189,12 @@
 - tools/lib/load-minimatch.js: @scope
 - tools/scripts/add-pagetype-mechanical.js: @scope
 - tools/scripts/assign-purpose-metadata.js: @scope
-- tools/scripts/audit-component-usage.js: @scope, @pipeline
+- tools/scripts/audit-component-usage.js: @scope
 - tools/scripts/audit-media-assets.js: @scope
 - tools/scripts/audit-scripts.js: @scope
 - tools/scripts/audit-tasks-folders.js: @scope
 - tools/scripts/audit-v2-usefulness.js: @scope
-- tools/scripts/check-codex-pr-overlap.js: @scope, @pipeline
+- tools/scripts/check-codex-pr-overlap.js: @scope
 - tools/scripts/check-no-ai-stash.sh: @scope
 - tools/scripts/cleanup-quarantine-manager.js: @scope
 - tools/scripts/codex-commit.js: @scope
@@ -232,7 +204,7 @@
 - tools/scripts/codex/task-finalize.js: @scope
 - tools/scripts/codex/task-preflight.js: @scope
 - tools/scripts/codex/validate-locks.js: @scope
-- tools/scripts/component-layout-governance.js: @scope, @pipeline
+- tools/scripts/component-layout-governance.js: @scope
 - tools/scripts/convert-rss-to-mdx.js: @scope
 - tools/scripts/create-codex-pr.js: @scope
 - tools/scripts/cross-agent-packager.js: @scope
@@ -240,27 +212,25 @@
 - tools/scripts/dev/add-callouts.js: @scope
 - tools/scripts/dev/batch-update-og-image.sh: @scope
 - tools/scripts/dev/ensure-mint-watcher-patch.sh: @scope
-- tools/scripts/dev/generate-mint-dev-scope.js: @scope
 - tools/scripts/dev/replace-og-image.py: @scope
 - tools/scripts/dev/seo-generator-safe.js: @scope
 - tools/scripts/dev/test-add-callouts.js: @scope
 - tools/scripts/dev/test-seo-generator.js: @scope
 - tools/scripts/dev/update-all-og-images.js: @scope
 - tools/scripts/dev/update-og-image.js: @scope
-- tools/scripts/docs-quality-and-freshness-audit.js: @scope, @pipeline
+- tools/scripts/docs-quality-and-freshness-audit.js: @scope
 - tools/scripts/enforce-generated-file-banners.js: @category, @purpose, @scope, @needs, @purpose-statement
-- tools/scripts/enforcers/pr/check-component-immutability.js: @pipeline
 - tools/scripts/enforcers/pr/check-pr-template.js: @scope
-- tools/scripts/generate-ai-sitemap.js: @scope, @pipeline
+- tools/scripts/generate-ai-sitemap.js: @scope
 - tools/scripts/generate-component-docs.js: @pipeline
 - tools/scripts/generate-component-registry.js: @pipeline
 - tools/scripts/generate-content-gap-reconciliation.js: @scope
 - tools/scripts/generate-docs-guide-indexes.js: @scope
 - tools/scripts/generate-docs-guide-pages-index.js: @scope
-- tools/scripts/generate-docs-index.js: @scope, @pipeline
-- tools/scripts/generate-llms-files.js: @scope, @pipeline
+- tools/scripts/generate-docs-index.js: @scope
+- tools/scripts/generate-llms-files.js: @scope
 - tools/scripts/generate-pages-index.js: @scope
-- tools/scripts/i18n/generate-localized-docs-json.js: @scope, @pipeline
+- tools/scripts/i18n/generate-localized-docs-json.js: @scope
 - tools/scripts/i18n/lib/common.js: @scope
 - tools/scripts/i18n/lib/config.js: @scope
 - tools/scripts/i18n/lib/docs-json-localizer.js: @scope
@@ -280,42 +250,36 @@
 - tools/scripts/i18n/test/mdx-translate.test.js: @scope
 - tools/scripts/i18n/test/provenance.test.js: @scope
 - tools/scripts/i18n/test/provider-openrouter.test.js: @scope
-- tools/scripts/i18n/translate-docs.js: @scope, @pipeline
-- tools/scripts/i18n/validate-generated.js: @scope, @pipeline
-- tools/scripts/mint-dev.sh: @scope
+- tools/scripts/i18n/translate-docs.js: @scope
+- tools/scripts/i18n/validate-generated.js: @scope
 - tools/scripts/new-script.js: @scope
-- tools/scripts/orchestrators/repair-governance.js: @pipeline
 - tools/scripts/publish-v2-internal-reports.js: @scope
 - tools/scripts/remediators/assets/migrate-assets-to-branch.js: @pipeline
 - tools/scripts/remediators/components/repair-component-metadata.js: @pipeline
 - tools/scripts/remediators/content/repair-mdx-safe-markdown.js: @scope
+- tools/scripts/remediators/content/sync-docs-paths.js: @pipeline
 - tools/scripts/repo-audit-orchestrator.js: @scope
 - tools/scripts/scan-component-imports.js: @pipeline
 - tools/scripts/script-footprint-and-usage-audit.js: @scope
-- tools/scripts/snippets/fetch-external-docs.sh: @scope, @pipeline
+- tools/scripts/snippets/fetch-external-docs.sh: @scope
 - tools/scripts/snippets/fetch-lpt-exchanges.sh: @scope
 - tools/scripts/snippets/fetch-openapi-specs.sh: @scope
 - tools/scripts/snippets/generate-api-docs.sh: @scope
 - tools/scripts/snippets/generate-data/scripts/generate-glossary.js: @scope
 - tools/scripts/snippets/generate-data/scripts/terminology-search.js: @scope
-- tools/scripts/snippets/generate-seo.js: @scope, @pipeline
+- tools/scripts/snippets/generate-seo.js: @scope
 - tools/scripts/snippets/test-scripts.sh: @scope
-- tools/scripts/style-and-language-homogenizer-en-gb.js: @scope, @pipeline
+- tools/scripts/style-and-language-homogenizer-en-gb.js: @scope
 - tools/scripts/sync-codex-skills.js: @scope
-- tools/scripts/test-v2-pages.js: @scope, @pipeline
-- tools/scripts/validate-codex-task-contract.js: @scope, @pipeline
-- tools/scripts/validators/components/check-component-css.js: @pipeline
-- tools/scripts/validators/components/check-component-docs.js: @pipeline
+- tools/scripts/test-v2-pages.js: @scope
+- tools/scripts/validate-codex-task-contract.js: @scope
 - tools/scripts/validators/components/check-mdx-component-scope.js: @scope
 - tools/scripts/validators/components/check-naming-conventions.js: @scope
-- tools/scripts/validators/content/check-anchor-usage.js: @scope
-- tools/scripts/validators/content/check-description-quality.js: @scope
+- tools/scripts/validators/content/check-docs-path-sync.js: @pipeline
 - tools/scripts/validators/content/check-double-headers.js: @scope
 - tools/scripts/validators/content/check-grammar-en-gb.js: @scope
 - tools/scripts/validators/content/check-mdx-safe-markdown.js: @scope
-- tools/scripts/validators/content/check-page-endings.js: @scope
 - tools/scripts/validators/content/check-proper-nouns.js: @scope
-- tools/scripts/validators/governance/audit-script-inventory.js: @pipeline
 - tools/scripts/validators/governance/check-agent-docs-freshness.js: @scope
 - tools/scripts/verify-pay-orc-gate-finalize.sh: @scope
 - tools/scripts/verify/.verify-large-change.sh: @scope
@@ -325,6 +289,6 @@
 
 - Grade A delta: +0
 - Grade F delta: +0
-- Fixes applied: 281
-- Remaining human items: 168
+- Fixes applied: 108
+- Remaining human items: 149
 

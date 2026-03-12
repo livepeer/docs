@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script           repair-component-metadata
- * @category         remediator
- * @purpose          governance:repo-health
- * @scope            single-domain
- * @owner            docs
- * @needs            R-R10
+ * @script            repair-component-metadata
+ * @category          remediator
+ * @purpose           governance:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R10
  * @purpose-statement Auto-repairs derived JSDoc metadata fields from repo state. Safe fields only. Mirrors AUDIT-00 --fix pattern for components.
- * @pipeline         P1 (commit — runs when components staged), P6 (on-demand)
- * @usage            node tools/scripts/remediators/components/repair-component-metadata.js [--dry-run] [--fix] [--staged]
+ * @pipeline          P1 (commit — runs when components staged), P6 (on-demand)
+ * @usage             node tools/scripts/remediators/components/repair-component-metadata.js [--dry-run] [--fix] [--staged]
  */
 
 const fs = require('fs');

@@ -1,30 +1,13 @@
 /**
- * @script verify-all-pages
- * @category enforcer
- * @purpose qa:repo-health
- * @summary Utility script for tools/scripts/verify-all-pages.js.
- * @owner docs
- * @scope single-domain
- * @needs E-C1, R-R14
+ * @script            verify-all-pages
+ * @category          enforcer
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             E-C1, R-R14
  * @purpose-statement Loads component-library routes in a headless browser and fails on render, console, or 404 issues.
- * @pipeline manual
- * @usage node tools/scripts/verify-all-pages.js
- *
- * @inputs
- *   No required CLI flags; optional flags are documented inline.
- *
- * @outputs
- *   - Console output and/or file updates based on script purpose.
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node tools/scripts/verify-all-pages.js
- *
- * @notes
- *   Keep script behavior deterministic and update script indexes after changes.
+ * @pipeline          manual — not yet in pipeline
+ * @usage             node tools/scripts/verify-all-pages.js
  */
 const puppeteer = require('puppeteer');
 

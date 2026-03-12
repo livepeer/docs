@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-C6, F-C1
  * @purpose-statement Verifies browser availability for Puppeteer-based integration tests
- * @pipeline          manual — legacy browser validator invoked by .githooks/verify.sh when run directly
+ * @pipeline          manual — developer tool
  * @usage             node .githooks/verify-browser.js [flags]
  */
 /**

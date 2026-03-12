@@ -6,7 +6,7 @@
 # @owner             docs
 # @needs             E-C6, F-C1
 # @purpose-statement Pre-commit sub-hook — verifies file-walker is available and runs structural checks on staged files
-# @pipeline          manual — legacy pre-commit sub-hook retained for on-demand verification
+# @pipeline          manual — developer tool
 # @usage             bash .githooks/verify.sh [flags]
 # Verification script for pre-commit hook
 # Runs various validation checks on staged files

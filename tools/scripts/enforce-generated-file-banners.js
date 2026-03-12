@@ -1,5 +1,16 @@
 #!/usr/bin/env node
 /**
+ * @script            enforce-generated-file-banners
+ * @category          
+ * @purpose           
+ * @scope             tools/scripts, tools/lib, docs-guide/indexes, v2, tests/unit/docs-guide-sot.test.js
+ * @owner             docs
+ * @needs             
+ * @purpose-statement 
+ * @pipeline          P1, P3
+ * @usage             * node tools/scripts/enforce-generated-file-banners.js --check node tools/scripts/enforce-generated-file-banners.js --check node tools/scripts/enforce-generated-file-banners.js --write node tools/scripts/enforce-generated-file-banners.js --check --staged
+ */
+/**
  * @script enforce-generated-file-banners
  * @summary Enforce standardized hidden/visible generated banners and frontmatter across generated MDX outputs.
  * @owner docs

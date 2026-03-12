@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement Mintlify language toggle checker — validates Mintlify version supports language toggle feature
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
+ * @pipeline          manual — not yet in pipeline
  * @usage             node tools/scripts/i18n/test-mintlify-version-language-toggle.js [flags]
  */
 

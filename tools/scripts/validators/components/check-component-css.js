@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script           check-component-css
- * @category         validator
- * @purpose          qa:repo-health
- * @scope            single-domain
- * @owner            docs
- * @needs            R-R10
+ * @script            check-component-css
+ * @category          validator
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R10
  * @purpose-statement Validates component files against component governance styling rules.
- * @pipeline         P1, P2, P3
- * @usage            node tools/scripts/validators/components/check-component-css.js [--path snippets/components] [--staged] [--fix] [--help]
+ * @pipeline          P1, P2, P3
+ * @usage             node tools/scripts/validators/components/check-component-css.js [--path snippets/components] [--staged] [--fix] [--help]
  */
 
 const fs = require('fs');

@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement Tests docs-json-localizer — validates locale docs.json transformation logic
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
+ * @pipeline          manual — not yet in pipeline
  * @usage             node tools/scripts/i18n/test/docs-json-localizer.test.js [flags]
  */
 const test = require('node:test');

@@ -1,13 +1,13 @@
 /**
- * @script           script-header-utils
- * @category         utility
- * @purpose          governance:repo-health
- * @scope            full-repo
- * @owner            docs
- * @needs            R-R14, R-R18
+ * @script            script-header-utils
+ * @category          utility
+ * @purpose           governance:repo-health
+ * @scope             full-repo
+ * @owner             docs
+ * @needs             R-R14, R-R18
  * @purpose-statement Shared helpers for extracting and reading top-of-file script governance headers without scanning into executable source.
- * @pipeline         indirect - library module
- * @usage            const { extractLeadingScriptHeader } = require('../lib/script-header-utils');
+ * @pipeline          indirect - library module
+ * @usage             const { extractLeadingScriptHeader } = require('../lib/script-header-utils');
  */
 
 const HEADER_SCAN_LINES = 200;

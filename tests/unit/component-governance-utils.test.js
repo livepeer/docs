@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script           component-governance-utils.test
- * @category         validator
- * @purpose          qa:repo-health
- * @scope            tests
- * @owner            docs
- * @needs            R-R10
+ * @script            component-governance-utils.test
+ * @category          validator
+ * @purpose           qa:repo-health
+ * @scope             tests
+ * @owner             docs
+ * @needs             R-R10
  * @purpose-statement Verifies shared component governance utility parsing, scanning, and archive exclusion behavior.
- * @pipeline         P1 (commit, via run-all)
- * @usage            node tests/unit/component-governance-utils.test.js
+ * @pipeline          P1 (commit, via run-all)
+ * @usage             node tests/unit/component-governance-utils.test.js
  */
 
 const assert = require('assert');

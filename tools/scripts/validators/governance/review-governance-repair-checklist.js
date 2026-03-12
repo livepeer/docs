@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script           review-governance-repair-checklist
- * @category         validator
- * @purpose          governance:repo-health
- * @scope            full-repo
- * @owner            docs
- * @needs            R-R14, R-R18
+ * @script            review-governance-repair-checklist
+ * @category          validator
+ * @purpose           governance:repo-health
+ * @scope             full-repo
+ * @owner             docs
+ * @needs             R-R14, R-R18
  * @purpose-statement Generates a review checklist for dry-run governance repair proposals that require human approval before fix mode is applied.
- * @pipeline         manual
- * @dualmode         --json | --md | default both
- * @usage            node tools/scripts/validators/governance/review-governance-repair-checklist.js [--output <dir>] [--json] [--md]
+ * @pipeline          manual
+ * @dualmode          --json | --md | default both
+ * @usage             node tools/scripts/validators/governance/review-governance-repair-checklist.js [--output <dir>] [--json] [--md]
  */
 
 const fs = require('fs');
