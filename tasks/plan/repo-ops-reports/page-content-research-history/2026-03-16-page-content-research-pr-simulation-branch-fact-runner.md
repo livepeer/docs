@@ -1,0 +1,170 @@
+# Advisory Research PR Report
+
+- Status: experimental, non-blocking
+- Generated: 2026-03-15T19:07:15.947Z
+
+## Scope
+
+- Changed files:
+  - `.codex/task-contract.yaml`
+  - `.gitignore`
+  - `ai-tools/ai-skills/templates/32-page-content-research-review.references/report-template.md`
+  - `ai-tools/ai-skills/templates/32-page-content-research-review.references/workflow-router.md`
+  - `ai-tools/ai-skills/templates/32-page-content-research-review.template.md`
+  - `ai-tools/ai-skills/templates/33-docs-source-verification.references/claim-ledger.md`
+  - `ai-tools/ai-skills/templates/33-docs-source-verification.references/source-priority.md`
+  - `ai-tools/ai-skills/templates/33-docs-source-verification.template.md`
+  - `ai-tools/ai-skills/templates/34-docs-change-review.references/review-rubric.md`
+  - `ai-tools/ai-skills/templates/34-docs-change-review.references/severity-and-verdicts.md`
+  - `ai-tools/ai-skills/templates/34-docs-change-review.template.md`
+  - `ai-tools/ai-skills/templates/35-docs-impact-propagation.references/claim-map-method.md`
+  - `ai-tools/ai-skills/templates/35-docs-impact-propagation.references/propagation-checklist.md`
+  - `ai-tools/ai-skills/templates/35-docs-impact-propagation.template.md`
+  - `docs-guide/catalog/ai-tools.mdx`
+  - `docs-guide/catalog/scripts-catalog.mdx`
+  - `tasks/plan/future/page-content-research-trust-roadmap.md`
+  - `tasks/reports/repo-ops/2026-03-15-page-content-research-operationalization.md`
+  - `tasks/reports/repo-ops/2026-03-15-page-content-research-phase4-progress.md`
+  - `tasks/reports/repo-ops/2026-03-15-page-content-research-pilot-gateway-production-propagation.json`
+  - `tasks/reports/repo-ops/2026-03-15-page-content-research-pilot-gateway-production-propagation.md`
+  - `tasks/reports/repo-ops/2026-03-15-page-content-research-pilot-operator-support.md`
+  - `tasks/reports/repo-ops/2026-03-15-page-content-research-pilot-orchestrator-incentives.md`
+  - `tasks/reports/repo-ops/2026-03-15-page-content-research-pilot-orchestrator-propagation.json`
+  - `tasks/reports/repo-ops/2026-03-15-page-content-research-pilot-orchestrator-propagation.md`
+  - `tasks/reports/repo-ops/2026-03-15-page-content-research-pilot-production-gateways.md`
+  - `tasks/reports/repo-ops/2026-03-15-page-content-research-pilot-support-propagation.json`
+  - `tasks/reports/repo-ops/2026-03-15-page-content-research-pilot-support-propagation.md`
+  - `tasks/reports/repo-ops/2026-03-15-page-content-research-skill.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-phase10-progress.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-phase5-progress.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-phase6-progress.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-phase7-progress.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-phase8-progress.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-phase9-progress.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-discoverability-propagation.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-discoverability-propagation.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-discoverability.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-fact-check.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-gateway-fact-check.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-network-terminology-propagation.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-network-terminology-propagation.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-network-terminology.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-business-case-propagation.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-business-case-propagation.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-business-case.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-deployment-paths-propagation.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-deployment-paths-propagation.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-deployment-paths.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-fact-check.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-fact-check.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-monitoring-surface-propagation.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-monitoring-surface-propagation.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-monitoring-surface.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-operator-considerations-cluster-propagation.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-operator-considerations-cluster-propagation.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-operator-considerations-cluster.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-role-cluster-propagation.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-role-cluster-propagation.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-role-cluster.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-route-drift-propagation.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-route-drift-propagation.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-route-drift.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-router-overlap-propagation.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-router-overlap-propagation.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-router-overlap.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-routing-mechanics.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-routing-mechanics.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-setup-lifecycle-propagation.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-setup-lifecycle-propagation.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-setup-lifecycle.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-stake-threshold-guidance-propagation.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-stake-threshold-guidance-propagation.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pilot-orchestrator-stake-threshold-guidance.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pr-integration-contract.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pr-simulation-orchestrator-deployment-options.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pr-simulation-orchestrator-deployment-options.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pr-simulation-orchestrator-operator-considerations.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pr-simulation-orchestrator-operator-considerations.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pr-simulation-orchestrator-routing.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pr-simulation-orchestrator-routing.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pr-simulation-orchestrator-setup-flow.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pr-simulation-orchestrator-setup-flow.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pr-simulation.json`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-pr-simulation.md`
+  - `tasks/reports/repo-ops/2026-03-16-page-content-research-reset-phase1.md`
+  - `tasks/reports/repo-ops/REPAIR_REPORT_LATEST.json`
+  - `tasks/reports/repo-ops/REPAIR_REPORT_LATEST.md`
+  - `tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.json`
+  - `tasks/reports/repo-ops/page-content-claim-ledger.json`
+  - `tasks/reports/script-classifications.json`
+  - `tasks/research/claims/gateways.json`
+  - `tasks/research/claims/orchestrators.json`
+  - `tests/README.md`
+  - `tests/script-index.md`
+  - `tests/unit/codex-skill-sync.test.js`
+  - `tests/unit/create-codex-pr.test.js`
+  - `tests/unit/docs-claim-ledger-pr-report.test.js`
+  - `tests/unit/docs-claim-ledger.test.js`
+  - `tests/unit/docs-fact-registry.test.js`
+  - `tests/unit/docs-page-research-pr-report.test.js`
+  - `tests/unit/docs-page-research.test.js`
+  - `tools/lib/docs-authoring-rules.js`
+  - `tools/lib/docs-page-scope.js`
+  - `tools/lib/docs-usefulness/config-validator.js`
+  - `tools/lib/docs-usefulness/journey-check.js`
+  - `tools/lib/docs-usefulness/llm-evaluator.js`
+  - `tools/lib/docs-usefulness/prompts/changelog.js`
+  - `tools/lib/docs-usefulness/prompts/concept.js`
+  - `tools/lib/docs-usefulness/prompts/faq.js`
+  - `tools/lib/docs-usefulness/prompts/glossary.js`
+  - `tools/lib/docs-usefulness/prompts/how_to.js`
+  - `tools/lib/docs-usefulness/prompts/index.js`
+  - `tools/lib/docs-usefulness/prompts/landing.js`
+  - `tools/lib/docs-usefulness/prompts/overview.js`
+  - `tools/lib/docs-usefulness/prompts/reference.js`
+  - `tools/lib/docs-usefulness/prompts/troubleshooting.js`
+  - `tools/lib/docs-usefulness/prompts/tutorial.js`
+  - `tools/lib/docs-usefulness/quality-gate.js`
+  - `tools/lib/docs-usefulness/rubric-loader.js`
+  - `tools/lib/docs-usefulness/rule-evaluators.js`
+  - `tools/lib/docs-usefulness/scoring.js`
+  - `tools/lib/frontmatter-taxonomy.js`
+  - `tools/lib/script-index.md`
+  - `tools/package.json`
+  - `tools/script-index.md`
+  - `tools/scripts/create-codex-pr.js`
+  - `tools/scripts/dev/batch-update-og-image.sh`
+  - `tools/scripts/dev/replace-og-image.py`
+  - `tools/scripts/docs-claim-ledger-pr-report.js`
+  - `tools/scripts/docs-claim-ledger.js`
+  - `tools/scripts/docs-fact-registry.js`
+  - `tools/scripts/docs-page-research-pr-report.js`
+  - `tools/scripts/docs-page-research.js`
+  - `tools/scripts/sync-codex-skills.js`
+- Target docs pages:
+  - none
+
+## Summary
+
+- Matched claim families: 0
+- Verified claims: 0
+- Conflicted claims: 0
+- Time-sensitive claims: 0
+- Unresolved claims: 0
+- Contradiction groups: 0
+- Propagation queue items: 0
+- Evidence sources checked: 0
+- Note: No tracked docs pages were present in the changed-file set.
+
+## Claim Families
+
+- none
+
+## Unresolved Items
+
+- none
+
+## Propagation Queue
+
+- none
+

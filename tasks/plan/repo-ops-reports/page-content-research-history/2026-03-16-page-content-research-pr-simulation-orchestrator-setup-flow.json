@@ -1,0 +1,256 @@
+{
+  "generated_at": "2026-03-16",
+  "selection": {
+    "type": "files",
+    "value": "v2/orchestrators/setup/activate.mdx,v2/orchestrators/setup/test.mdx,v2/orchestrators/setup/r-monitor.mdx"
+  },
+  "changed_files": [
+    "v2/orchestrators/setup/activate.mdx",
+    "v2/orchestrators/setup/r-monitor.mdx",
+    "v2/orchestrators/setup/test.mdx"
+  ],
+  "matched_entities": [
+    {
+      "entity": "orchestrator-setup-lifecycle",
+      "matched_files": [
+        "v2/orchestrators/setup/activate.mdx",
+        "v2/orchestrators/setup/r-monitor.mdx",
+        "v2/orchestrators/setup/test.mdx"
+      ]
+    },
+    {
+      "entity": "orchestrator-monitoring-surface",
+      "matched_files": [
+        "v2/orchestrators/setup/r-monitor.mdx",
+        "v2/orchestrators/setup/test.mdx"
+      ]
+    }
+  ],
+  "unmatched_files": [],
+  "entity_reports": [
+    {
+      "entity": "orchestrator-setup-lifecycle",
+      "matched_files": [
+        "v2/orchestrators/setup/activate.mdx",
+        "v2/orchestrators/setup/r-monitor.mdx",
+        "v2/orchestrators/setup/test.mdx"
+      ],
+      "claims": [
+        {
+          "claim_id": "orch-activation-verification-monitoring-loop",
+          "entity": "orchestrator-setup-lifecycle",
+          "claim_summary": "Activation, verification, and monitoring pages together define the canonical post-install lifecycle: activate on-chain, verify active status and service URI, then confirm jobs and reward calls through logs, Explorer, and metrics.",
+          "canonical_owner": "v2/orchestrators/setup/activate.mdx",
+          "source_type": "repo-setup-flow",
+          "source_ref": "v2/orchestrators/setup/activate.mdx",
+          "last_verified": "2026-03-16",
+          "stale_alias_pages": [],
+          "status": "verified"
+        },
+        {
+          "claim_id": "orch-explorer-status-and-service-uri-crosscheck",
+          "entity": "orchestrator-setup-lifecycle",
+          "claim_summary": "Explorer status, active-set membership, and service URI matching are treated as the main on-chain verification surfaces across activate and verify pages.",
+          "canonical_owner": "v2/orchestrators/setup/test.mdx",
+          "source_type": "repo-verification-guide",
+          "source_ref": "v2/orchestrators/setup/test.mdx",
+          "last_verified": "2026-03-16",
+          "stale_alias_pages": [],
+          "status": "verified"
+        },
+        {
+          "claim_id": "orch-round-and-reward-timing-guidance",
+          "entity": "orchestrator-setup-lifecycle",
+          "claim_summary": "The setup flow repeatedly tells operators that activation, active-set status, and reward observation are round-bound and commonly framed as roughly 24-hour timing, but some of that language still depends on review-sensitive timing assumptions.",
+          "canonical_owner": "v2/orchestrators/setup/activate.mdx",
+          "source_type": "repo-setup-flow",
+          "source_ref": "v2/orchestrators/setup/activate.mdx",
+          "last_verified": "2026-03-16",
+          "stale_alias_pages": [],
+          "status": "needs-review"
+        }
+      ],
+      "page_queue": [
+        {
+          "file": "v2/orchestrators/setup/activate.mdx",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "page_class": "other",
+          "claim_ids": [
+            "orch-activation-verification-monitoring-loop",
+            "orch-explorer-status-and-service-uri-crosscheck",
+            "orch-round-and-reward-timing-guidance"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/setup/test.mdx",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "page_class": "other",
+          "claim_ids": [
+            "orch-activation-verification-monitoring-loop",
+            "orch-explorer-status-and-service-uri-crosscheck",
+            "orch-round-and-reward-timing-guidance"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/setup/guide.mdx",
+          "role": "dependent-page",
+          "action": "update-now",
+          "page_class": "other",
+          "claim_ids": [
+            "orch-activation-verification-monitoring-loop"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/setup/r-monitor.mdx",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "page_class": "other",
+          "claim_ids": [
+            "orch-activation-verification-monitoring-loop",
+            "orch-explorer-status-and-service-uri-crosscheck",
+            "orch-round-and-reward-timing-guidance"
+          ]
+        }
+      ],
+      "unresolved_items": [
+        {
+          "claim_id": "orch-round-and-reward-timing-guidance",
+          "status": "needs-review",
+          "canonical_owner": "v2/orchestrators/setup/activate.mdx"
+        }
+      ]
+    },
+    {
+      "entity": "orchestrator-monitoring-surface",
+      "matched_files": [
+        "v2/orchestrators/setup/r-monitor.mdx",
+        "v2/orchestrators/setup/test.mdx"
+      ],
+      "claims": [
+        {
+          "claim_id": "orch-prometheus-and-reward-observability-minimum",
+          "entity": "orchestrator-monitoring-surface",
+          "claim_summary": "The minimum monitoring surface currently assumes `-monitor`, Prometheus metrics on port 7935, Explorer checks, and reward-call visibility as the baseline observability contract for a new orchestrator.",
+          "canonical_owner": "v2/orchestrators/setup/r-monitor.mdx",
+          "source_type": "repo-monitoring-guide",
+          "source_ref": "v2/orchestrators/setup/r-monitor.mdx",
+          "last_verified": "2026-03-16",
+          "stale_alias_pages": [],
+          "status": "verified"
+        }
+      ],
+      "page_queue": [
+        {
+          "file": "v2/orchestrators/setup/r-monitor.mdx",
+          "role": "canonical-owner",
+          "action": "update-now",
+          "page_class": "other",
+          "claim_ids": [
+            "orch-prometheus-and-reward-observability-minimum"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/guides/monitoring-and-troubleshooting/metrics-monitoring.mdx",
+          "role": "dependent-page",
+          "action": "update-now",
+          "page_class": "guide",
+          "claim_ids": [
+            "orch-prometheus-and-reward-observability-minimum"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/setup/test.mdx",
+          "role": "dependent-page",
+          "action": "update-now",
+          "page_class": "other",
+          "claim_ids": [
+            "orch-prometheus-and-reward-observability-minimum"
+          ]
+        }
+      ],
+      "unresolved_items": []
+    }
+  ],
+  "combined_queue": [
+    {
+      "file": "v2/orchestrators/setup/activate.mdx",
+      "page_class": "other",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_ids": [
+        "orch-activation-verification-monitoring-loop",
+        "orch-explorer-status-and-service-uri-crosscheck",
+        "orch-round-and-reward-timing-guidance"
+      ],
+      "entities": [
+        "orchestrator-setup-lifecycle"
+      ]
+    },
+    {
+      "file": "v2/orchestrators/setup/r-monitor.mdx",
+      "page_class": "other",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_ids": [
+        "orch-activation-verification-monitoring-loop",
+        "orch-explorer-status-and-service-uri-crosscheck",
+        "orch-prometheus-and-reward-observability-minimum",
+        "orch-round-and-reward-timing-guidance"
+      ],
+      "entities": [
+        "orchestrator-monitoring-surface",
+        "orchestrator-setup-lifecycle"
+      ]
+    },
+    {
+      "file": "v2/orchestrators/setup/test.mdx",
+      "page_class": "other",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_ids": [
+        "orch-activation-verification-monitoring-loop",
+        "orch-explorer-status-and-service-uri-crosscheck",
+        "orch-prometheus-and-reward-observability-minimum",
+        "orch-round-and-reward-timing-guidance"
+      ],
+      "entities": [
+        "orchestrator-monitoring-surface",
+        "orchestrator-setup-lifecycle"
+      ]
+    },
+    {
+      "file": "v2/orchestrators/guides/monitoring-and-troubleshooting/metrics-monitoring.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "update-now",
+      "claim_ids": [
+        "orch-prometheus-and-reward-observability-minimum"
+      ],
+      "entities": [
+        "orchestrator-monitoring-surface"
+      ]
+    },
+    {
+      "file": "v2/orchestrators/setup/guide.mdx",
+      "page_class": "other",
+      "role": "dependent-page",
+      "action": "update-now",
+      "claim_ids": [
+        "orch-activation-verification-monitoring-loop"
+      ],
+      "entities": [
+        "orchestrator-setup-lifecycle"
+      ]
+    }
+  ],
+  "unresolved_items": [
+    {
+      "claim_id": "orch-round-and-reward-timing-guidance",
+      "status": "needs-review",
+      "canonical_owner": "v2/orchestrators/setup/activate.mdx",
+      "entity": "orchestrator-setup-lifecycle"
+    }
+  ]
+}
