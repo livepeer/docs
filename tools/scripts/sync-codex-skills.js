@@ -6,7 +6,7 @@
  * @scope             tools/scripts, ai-tools/ai-skills/templates, tests/unit/codex-skill-sync.test.js
  * @owner             docs
  * @needs             R-R27, R-R30
- * @purpose-statement Codex skills sync — synchronises skill definition files between local and remote sources. Supports --check mode.
+ * @purpose-statement Codex skills sync — synchronises skill definition files and managed companion resources between canonical templates and local Codex installs. Supports --check mode.
  * @pipeline          manual — not yet in pipeline
  * @usage             node tools/scripts/sync-codex-skills.js [flags]
  */
@@ -23,8 +23,44 @@ const {
 
 const REPO_ROOT = process.cwd();
 const DEFAULT_SOURCE_DIR = 'ai-tools/ai-skills/templates';
+const MANIFEST_FILE = '.codex-sync-manifest.json';
 
-const ACRONYMS = new Set(['GH', 'MCP', 'API', 'CI', 'CLI', 'LLM', 'PDF', 'PR', 'UI', 'URL', 'SQL', 'SEO', 'MDX', 'WCAG', 'LPD', 'N8N']);
+const RESOURCE_BUNDLES = [
+  {
+    key: 'references',
+    sourceSuffix: '.references',
+    destDir: 'references'
+  },
+  {
+    key: 'scripts',
+    sourceSuffix: '.scripts',
+    destDir: 'scripts'
+  },
+  {
+    key: 'assets',
+    sourceSuffix: '.assets',
+    destDir: 'assets'
+  }
+];
+
+const ACRONYMS = new Set([
+  'GH',
+  'MCP',
+  'API',
+  'CI',
+  'CLI',
+  'LLM',
+  'PDF',
+  'PR',
+  'UI',
+  'URL',
+  'SQL',
+  'SEO',
+  'MDX',
+  'WCAG',
+  'LPD',
+  'N8N'
+]);
 const BRANDS = new Map([
   ['openai', 'OpenAI'],
   ['openapi', 'OpenAPI'],
@@ -47,7 +83,12 @@ function usage() {
     '  --skills <a,b,c>        Optional subset by template frontmatter name',
     '  --openai-yaml           Generate/open update agents/openai.yaml (default)',
     '  --no-openai-yaml        Skip agents/openai.yaml generation',
-    '  --help                  Show this message'
+    '  --help                  Show this message',
+    '',
+    'Optional companion bundle directories:',
+    '  <template-stem>.references/  -> sync to skill references/',
+    '  <template-stem>.scripts/     -> sync to skill scripts/',
+    '  <template-stem>.assets/      -> sync to skill assets/'
   ];
   console.log(msg.join('\n'));
 }
@@ -186,14 +227,20 @@ function buildOpenAiYaml(skillName) {
   ].join('\n');
 }
 
+function toBuffer(value) {
+  if (Buffer.isBuffer(value)) return value;
+  return Buffer.from(String(value), 'utf8');
+}
+
 function readExisting(filePathAbs) {
   if (!fs.existsSync(filePathAbs)) return null;
-  return fs.readFileSync(filePathAbs, 'utf8');
+  return fs.readFileSync(filePathAbs);
 }
 
 function computeFileOp(expected, existing) {
+  const expectedBuffer = toBuffer(expected);
   if (existing === null) return 'create';
-  if (existing !== expected) return 'update';
+  if (!expectedBuffer.equals(existing)) return 'update';
   return 'unchanged';
 }
 
@@ -203,60 +250,214 @@ function formatPlannedFile(relPath, op) {
   return `keep   ${relPath}`;
 }
 
-function syncTemplate(template, options) {
-  const skillDir = path.join(options.dest, template.name);
-  const skillPath = path.join(skillDir, 'SKILL.md');
-  const skillRel = toPosix(path.relative(REPO_ROOT, skillPath));
-  const skillExisting = readExisting(skillPath);
-  const skillOp = computeFileOp(template.content, skillExisting);
+function listFilesRecursive(dirAbs, relativePrefix = '') {
+  const entries = fs.readdirSync(dirAbs, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name));
+  const files = [];
 
-  let openaiPath = '';
-  let openaiRel = '';
-  let openaiOp = 'skipped';
-  let openaiExpected = '';
+  entries.forEach((entry) => {
+    const entryAbs = path.join(dirAbs, entry.name);
+    const entryRel = relativePrefix ? path.posix.join(relativePrefix, entry.name) : entry.name;
+    if (entry.isDirectory()) {
+      files.push(...listFilesRecursive(entryAbs, entryRel));
+      return;
+    }
+    if (!entry.isFile()) {
+      throw new Error(`${toPosix(entryAbs)}: unsupported resource entry type`);
+    }
+    files.push(entryRel);
+  });
 
-  if (options.openaiYaml) {
-    openaiPath = path.join(skillDir, 'agents', 'openai.yaml');
-    openaiRel = toPosix(path.relative(REPO_ROOT, openaiPath));
-    openaiExpected = buildOpenAiYaml(template.name);
-    const openaiExisting = readExisting(openaiPath);
-    openaiOp = computeFileOp(openaiExpected, openaiExisting);
+  return files;
+}
+
+function collectReferenceFiles(sourceDirAbs) {
+  const entries = fs.readdirSync(sourceDirAbs, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name));
+  const files = [];
+
+  entries.forEach((entry) => {
+    const entryAbs = path.join(sourceDirAbs, entry.name);
+    if (entry.isDirectory()) {
+      throw new Error(`${toPosix(entryAbs)}: references bundle must be flat; nested directories are not allowed`);
+    }
+    if (!entry.isFile()) {
+      throw new Error(`${toPosix(entryAbs)}: unsupported reference bundle entry type`);
+    }
+    if (!entry.name.endsWith('.md')) {
+      throw new Error(`${toPosix(entryAbs)}: references bundle files must use .md`);
+    }
+    files.push(entry.name);
+  });
+
+  if (files.length === 0) {
+    throw new Error(`${toPosix(sourceDirAbs)}: references bundle must contain at least one markdown file`);
   }
 
-  const drift = skillOp !== 'unchanged' || (options.openaiYaml && openaiOp !== 'unchanged');
-  const status = skillOp === 'create' ? 'created' : drift ? 'updated' : 'unchanged';
+  return files;
+}
 
-  if (options.check) {
+function collectResourceEntries(template) {
+  const templateDir = path.dirname(template.templatePathAbs);
+  const resourceEntries = [];
+
+  RESOURCE_BUNDLES.forEach((bundle) => {
+    const sourceDir = path.join(templateDir, `${template.templateStem}${bundle.sourceSuffix}`);
+    if (!fs.existsSync(sourceDir)) return;
+    if (!fs.statSync(sourceDir).isDirectory()) {
+      throw new Error(`${toPosix(sourceDir)}: resource bundle must be a directory`);
+    }
+
+    const relativeFiles =
+      bundle.key === 'references' ? collectReferenceFiles(sourceDir) : listFilesRecursive(sourceDir);
+
+    if (relativeFiles.length === 0) {
+      throw new Error(`${toPosix(sourceDir)}: resource bundle must contain at least one file`);
+    }
+
+    relativeFiles.forEach((relativeFile) => {
+      const relPath = toPosix(path.posix.join(bundle.destDir, toPosix(relativeFile)));
+      resourceEntries.push({
+        relPath,
+        absPath: path.join(sourceDir, relativeFile),
+        expected: fs.readFileSync(path.join(sourceDir, relativeFile))
+      });
+    });
+  });
+
+  return resourceEntries.sort((a, b) => a.relPath.localeCompare(b.relPath));
+}
+
+function loadManifest(skillDir) {
+  const manifestPath = path.join(skillDir, MANIFEST_FILE);
+  if (!fs.existsSync(manifestPath)) {
     return {
-      name: template.name,
-      status,
-      drift,
-      skillOp,
-      skillRel,
-      openaiOp,
-      openaiRel
+      relPath: MANIFEST_FILE,
+      managedFiles: []
     };
   }
 
-  if (!options.dryRun) {
+  let parsed;
+  try {
+    parsed = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  } catch (error) {
+    throw new Error(`${toPosix(manifestPath)}: invalid managed manifest JSON (${error.message})`);
+  }
+
+  const managedFiles = Array.isArray(parsed.managed_files)
+    ? parsed.managed_files.map((entry) => toPosix(String(entry || '').trim())).filter(Boolean)
+    : [];
+
+  return {
+    relPath: MANIFEST_FILE,
+    managedFiles: [...new Set(managedFiles)].sort()
+  };
+}
+
+function buildManifestContent(template, managedFiles) {
+  return `${JSON.stringify(
+    {
+      version: 1,
+      skill: template.name,
+      template: template.templatePathRel,
+      managed_files: [...new Set(managedFiles)].sort()
+    },
+    null,
+    2
+  )}\n`;
+}
+
+function removeFileAndEmptyParents(filePathAbs, skillDir) {
+  if (fs.existsSync(filePathAbs)) {
+    fs.rmSync(filePathAbs, { force: true });
+  }
+
+  let currentDir = path.dirname(filePathAbs);
+  const root = path.resolve(skillDir);
+
+  while (currentDir.startsWith(root) && currentDir !== root) {
+    if (!fs.existsSync(currentDir)) {
+      currentDir = path.dirname(currentDir);
+      continue;
+    }
+    if (fs.readdirSync(currentDir).length > 0) break;
+    fs.rmdirSync(currentDir);
+    currentDir = path.dirname(currentDir);
+  }
+}
+
+function syncTemplate(template, options) {
+  const skillDir = path.join(options.dest, template.name);
+  const managedManifest = loadManifest(skillDir);
+  const fileEntries = [];
+
+  fileEntries.push({
+    relPath: 'SKILL.md',
+    expected: template.content
+  });
+
+  if (options.openaiYaml) {
+    fileEntries.push({
+      relPath: 'agents/openai.yaml',
+      expected: buildOpenAiYaml(template.name)
+    });
+  }
+
+  collectResourceEntries(template).forEach((entry) => {
+    fileEntries.push({
+      relPath: entry.relPath,
+      expected: entry.expected
+    });
+  });
+
+  const managedFiles = fileEntries.map((entry) => entry.relPath);
+  fileEntries.push({
+    relPath: MANIFEST_FILE,
+    expected: buildManifestContent(template, managedFiles)
+  });
+
+  const fileOps = fileEntries.map((entry) => {
+    const absPath = path.join(skillDir, entry.relPath);
+    const existing = readExisting(absPath);
+    return {
+      relPath: entry.relPath,
+      absPath,
+      expected: entry.expected,
+      op: computeFileOp(entry.expected, existing)
+    };
+  });
+
+  const managedSet = new Set(managedFiles);
+  const pruned = managedManifest.managedFiles
+    .filter((relPath) => !managedSet.has(relPath))
+    .filter((relPath) => fs.existsSync(path.join(skillDir, relPath)))
+    .sort();
+
+  const drift = fileOps.some((entry) => entry.op !== 'unchanged') || pruned.length > 0;
+  const created = fileOps.some((entry) => entry.op === 'create' && entry.relPath === 'SKILL.md');
+  const status = created ? 'created' : drift ? 'updated' : 'unchanged';
+
+  if (!options.check && !options.dryRun) {
     fs.mkdirSync(skillDir, { recursive: true });
-    if (skillOp === 'create' || skillOp === 'update') {
-      fs.writeFileSync(skillPath, template.content, 'utf8');
-    }
-    if (options.openaiYaml && (openaiOp === 'create' || openaiOp === 'update')) {
-      fs.mkdirSync(path.dirname(openaiPath), { recursive: true });
-      fs.writeFileSync(openaiPath, openaiExpected, 'utf8');
-    }
+
+    fileOps.forEach((entry) => {
+      if (entry.op === 'unchanged') return;
+      fs.mkdirSync(path.dirname(entry.absPath), { recursive: true });
+      fs.writeFileSync(entry.absPath, toBuffer(entry.expected));
+    });
+
+    pruned.forEach((relPath) => {
+      removeFileAndEmptyParents(path.join(skillDir, relPath), skillDir);
+    });
   }
 
   return {
     name: template.name,
     status,
     drift,
-    skillOp,
-    skillRel,
-    openaiOp,
-    openaiRel
+    fileOps: fileOps.map((entry) => ({
+      relPath: entry.relPath,
+      op: entry.op
+    })),
+    pruned
   };
 }
 
@@ -275,7 +476,8 @@ function summarize(results, options) {
     updated: 0,
     unchanged: 0,
     failed: 0,
-    drift: 0
+    drift: 0,
+    pruned: 0
   };
 
   for (const result of results) {
@@ -285,6 +487,7 @@ function summarize(results, options) {
     }
     summary[result.status] += 1;
     if (result.drift) summary.drift += 1;
+    summary.pruned += result.pruned.length;
   }
 
   console.log('---');
@@ -292,6 +495,7 @@ function summarize(results, options) {
   console.log(`updated=${summary.updated}`);
   console.log(`unchanged=${summary.unchanged}`);
   console.log(`failed=${summary.failed}`);
+  console.log(`pruned=${summary.pruned}`);
   if (options.check) {
     console.log(`drift=${summary.drift}`);
   }
@@ -309,10 +513,12 @@ function printResultLines(results, options) {
       ? 'plan'
       : 'sync';
     console.log(`${label}: ${result.name}`);
-    console.log(`  ${formatPlannedFile(result.skillRel, result.skillOp)}`);
-    if (options.openaiYaml) {
-      console.log(`  ${formatPlannedFile(result.openaiRel, result.openaiOp)}`);
-    }
+    result.fileOps.forEach((entry) => {
+      console.log(`  ${formatPlannedFile(entry.relPath, entry.op)}`);
+    });
+    result.pruned.forEach((relPath) => {
+      console.log(`  prune  ${relPath}`);
+    });
   }
 }
 
@@ -363,7 +569,10 @@ if (require.main === module) {
 }
 
 module.exports = {
+  MANIFEST_FILE,
   buildOpenAiYaml,
+  buildManifestContent,
+  collectResourceEntries,
   discoverTemplates,
   parseArgs,
   run,

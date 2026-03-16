@@ -1,43 +1,34 @@
 task_id: 20260316
-branch: codex/20260316-ownerless-rollout
+branch: codex/20260316-docs-v2-dev-merge-ready
 base_branch: docs-v2-dev
 scope_in:
+  - .gitignore
   - .codex/task-contract.yaml
-  - .github/
-  - README.md
-  - ai-tools/ai-skills/
-  - ai-tools/agent-packs/skills/
-  - contribute/CONTRIBUTING/
-  - docs-guide/catalog/scripts-catalog.mdx
-  - docs-guide/catalog/
-  - docs-guide/features/
-  - docs-guide/frameworks/
-  - docs-guide/policies/
-  - lpd
+  - ai-tools/ai-skills/templates
+  - docs-guide/catalog
+  - tasks/plan/future
+  - tasks/plan/repo-ops-reports
+  - tasks/research/claims
   - tasks/reports/script-classifications.json
+  - tests/README.md
   - tests/script-index.md
-  - tests/run-all.js
-  - tests/run-pr-checks.js
-  - tests/WHEN-TESTS-RUN.md
-  - tests/unit/
-  - tests/utils/
-  - tools/config/
-  - tools/lib/script-index.md
-  - tools/lib/
+  - tests/unit/codex-skill-sync.test.js
+  - tests/unit/create-codex-pr.test.js
+  - tests/unit/docs-fact-registry.test.js
+  - tests/unit/docs-page-research.test.js
+  - tests/unit/docs-page-research-pr-report.test.js
+  - tools/package.json
   - tools/script-index.md
-  - tools/scripts/
+  - tools/scripts/create-codex-pr.js
+  - tools/scripts/docs-fact-registry.js
+  - tools/scripts/docs-page-research.js
+  - tools/scripts/docs-page-research-pr-report.js
+  - tools/scripts/sync-codex-skills.js
 scope_out: []
 allowed_generated:
-  - ai-tools/agent-packs/skills/
-  - docs-guide/catalog/scripts-catalog.mdx
-  - tests/script-index.md
-  - tools/lib/script-index.md
-  - tools/script-index.md
+  - .codex/pr-body.generated.md
 acceptance_checks:
-  - node tests/unit/skill-docs.test.js
-  - node tests/unit/codex-skill-sync.test.js
-  - node tests/unit/export-portable-skills.test.js
-  - node tests/run-all.js --staged --skip-browser
   - node tests/run-pr-checks.js --base-ref docs-v2-dev
-risk_flags: []
+risk_flags:
+  - workflow-governance
 follow_up_issues: []

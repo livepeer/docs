@@ -135,6 +135,7 @@ function parseTemplateFile(filePathAbs, options = {}) {
   return {
     name,
     description,
+    templateStem: path.basename(filePathAbs, TEMPLATE_SUFFIX),
     templatePathAbs: filePathAbs,
     templatePathRel: toPosix(path.relative(repoRoot, filePathAbs)),
     content,
