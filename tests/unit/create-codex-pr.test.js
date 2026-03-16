@@ -119,6 +119,42 @@ async function runTests() {
     assert.match(output, /DRY RUN: gh pr create/, 'dry-run should print gh create command');
   });
 
+  cases.push(async () => {
+    const tmp = mkTmpDir('codex-pr-advisory-');
+    const contractPath = path.join(tmp, 'task-contract.yaml');
+    const outputPath = path.join(tmp, 'pr-body.md');
+    const researchMd = path.join(tmp, 'pr-research.md');
+    const researchJson = path.join(tmp, 'pr-research.json');
+    makeContract(contractPath, 5678);
+
+    const run = runScript([
+      '--contract',
+      contractPath,
+      '--output',
+      outputPath,
+      '--head',
+      'codex/5678-auto-pr-body',
+      '--base',
+      'docs-v2',
+      '--changed-files',
+      'v2/orchestrators/guides/deployment-options/find-your-path.mdx,v2/orchestrators/guides/deployment-options/setup-navigator.mdx,v2/orchestrators/setup/rcs-requirements.mdx',
+      '--advisory-research',
+      '--research-output-md',
+      researchMd,
+      '--research-output-json',
+      researchJson
+    ]);
+
+    assert.strictEqual(run.status, 0, `advisory generator failed: ${run.stderr || run.stdout}`);
+    const body = fs.readFileSync(outputPath, 'utf8');
+    const research = JSON.parse(fs.readFileSync(researchJson, 'utf8'));
+    assert.match(body, /^## Advisory Research/m, 'body should include advisory research section');
+    assert.match(body, /Status: experimental, non-blocking/, 'body should label advisory status');
+    assert.match(body, /Matched claim families: \d+/, 'body should summarize matched claim families');
+    assert.ok(research.summary.matched_claim_families > 0, 'research json should contain matched claim families');
+    assert.ok(research.summary.contradiction_groups >= 0, 'research json should contain contradiction summary');
+  });
+
   for (let index = 0; index < cases.length; index += 1) {
     const name = `case-${index + 1}`;
     try {

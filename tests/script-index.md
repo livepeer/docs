@@ -18,7 +18,7 @@
 | `tests/unit/audit-script-inventory-repair-rules.test.js` | Tests audit-script-inventory repair hardening rules for judgement-field backfill and pipeline safety. | `node tests/unit/audit-script-inventory-repair-rules.test.js` | docs |
 | `tests/unit/codex-commit.test.js` | Tests codex-commit.js — validates commit message generation and contract compliance | `node tests/unit/codex-commit.test.js [flags]` | docs |
 | `tests/unit/codex-safe-merge-with-stash.test.js` | Tests codex-safe-merge-with-stash.js — asserts the deprecated stash helper hard-fails and points callers to the supported Codex lifecycle | `node tests/unit/codex-safe-merge-with-stash.test.js [flags]` | docs |
-| `tests/unit/codex-skill-sync.test.js` | Tests sync-codex-skills.js — validates skill file synchronisation between sources | `node tests/unit/codex-skill-sync.test.js [flags]` | docs |
+| `tests/unit/codex-skill-sync.test.js` | Tests sync-codex-skills.js — validates skill file and companion bundle synchronisation between sources | `node tests/unit/codex-skill-sync.test.js [flags]` | docs |
 | `tests/unit/codex-task-cleanup.test.js` | Tests codex/task-cleanup.js — verifies safe worktree pruning, dirty-worktree preservation, branch pruning, and repo-root protection | `node tests/unit/codex-task-cleanup.test.js [flags]` | docs |
 | `tests/unit/codex-task-preflight.test.js` | Tests codex/task-preflight.js — verifies managed worktree default behavior and the explicit in-place override | `node tests/unit/codex-task-preflight.test.js [flags]` | docs |
 | `tests/unit/component-governance-generators.test.js` | Verifies component governance generators produce coherent registry, usage-map, and docs outputs. | `node tests/unit/component-governance-generators.test.js` | docs |
@@ -26,8 +26,11 @@
 | `tests/unit/components/TEMPLATE.test.js` | Template for category-scoped component unit tests. | `node tests/unit/components/TEMPLATE.test.js` | docs |
 | `tests/unit/create-codex-pr.test.js` | Tests create-codex-pr.js — validates PR creation logic and branch naming | `node tests/unit/create-codex-pr.test.js [flags]` | docs |
 | `tests/unit/docs-authoring-rules.test.js` | Verifies guide-layout warning rules and deterministic code-block icon repair for authored docs pages. | `node tests/unit/docs-authoring-rules.test.js` | docs |
+| `tests/unit/docs-fact-registry.test.js` | Tests docs-fact-registry.js — validates claim-family registry schema checks and normalized loading by domain. | `node tests/unit/docs-fact-registry.test.js [flags]` | docs |
 | `tests/unit/docs-guide-sot.test.js` | Validates docs-guide source-of-truth coverage, README pointers, and generated index freshness | `node tests/unit/docs-guide-sot.test.js [flags]` | docs |
 | `tests/unit/docs-navigation.test.js` | Validates docs.json page-entry syntax, reports missing routes, warns on orphaned canonical v2 pages, suggests remaps, and optionally applies approved remaps | `node tests/unit/docs-navigation.test.js [flags]` | docs |
+| `tests/unit/docs-page-research-pr-report.test.js` | Tests docs-page-research-pr-report.js — validates changed-file advisory reporting for the fact-check research runner. | `node tests/unit/docs-page-research-pr-report.test.js [flags]` | docs |
+| `tests/unit/docs-page-research.test.js` | Tests docs-page-research.js — validates claim extraction, contradiction detection, and evidence-source adapters for the experimental research runner. | `node tests/unit/docs-page-research.test.js [flags]` | docs |
 | `tests/unit/docs-page-scope.test.js` | Verifies generated authored-page scope helpers so warning-only validators skip generated docs pages while keeping authored pages in scope. | `node tests/unit/docs-page-scope.test.js` | docs |
 | `tests/unit/docs-path-sync.test.js` | Unit tests for docs path sync — validates staged move detection, deterministic docs.json/reference rewrites, validator behavior, and remediator write mode. | `node tests/unit/docs-path-sync.test.js` | docs |
 | `tests/unit/docs-route-scope.test.js` | Verifies docs.json-derived tab and group route scopes resolve to live files. | `node tests/unit/docs-route-scope.test.js` | docs |

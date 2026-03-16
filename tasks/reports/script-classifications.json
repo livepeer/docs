@@ -359,6 +359,16 @@
     "pipeline": "P1 (commit, via run-all)"
   },
   {
+    "path": "tests/unit/docs-fact-registry.test.js",
+    "script": "docs-fact-registry.test",
+    "category": "validator",
+    "purpose": "governance:agent-governance",
+    "scope": "tests/unit, tools/scripts/docs-fact-registry.js, tasks/research/claims",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Tests docs-fact-registry.js — validates claim-family registry schema checks and normalized loading by domain.",
+    "pipeline": "manual — experimental research system"
+  },
+  {
     "path": "tests/unit/docs-guide-sot.test.js",
     "script": "docs-guide-sot.test",
     "category": "validator",
@@ -379,6 +389,26 @@
     "purpose_statement": "Validates docs.json page-entry syntax, reports missing routes, suggests remaps, and optionally applies approved remaps",
     "pipeline": "P1, P3, P6",
     "dualmode": "dual-mode (document flags)"
+  },
+  {
+    "path": "tests/unit/docs-page-research-pr-report.test.js",
+    "script": "docs-page-research-pr-report.test",
+    "category": "orchestrator",
+    "purpose": "governance:agent-governance",
+    "scope": "tests/unit, tools/scripts/docs-page-research-pr-report.js, tools/scripts/docs-page-research.js, tasks/research/claims",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Tests docs-page-research-pr-report.js — validates changed-file advisory reporting for the fact-check research runner.",
+    "pipeline": "manual — experimental advisory PR integration, non-blocking"
+  },
+  {
+    "path": "tests/unit/docs-page-research.test.js",
+    "script": "docs-page-research.test",
+    "category": "validator",
+    "purpose": "governance:agent-governance",
+    "scope": "tests/unit, tools/scripts/docs-page-research.js, tools/scripts/docs-fact-registry.js, tasks/research/claims",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Tests docs-page-research.js — validates claim extraction, contradiction detection, and evidence-source adapters for the experimental research runner.",
+    "pipeline": "manual — experimental research system"
   },
   {
     "path": "tests/unit/docs-page-scope.test.js",
@@ -1504,6 +1534,36 @@
     "pipeline": "manual — developer tool"
   },
   {
+    "path": "tools/scripts/docs-fact-registry.js",
+    "script": "docs-fact-registry",
+    "category": "validator",
+    "purpose": "governance:agent-governance",
+    "scope": "tools/scripts, tasks/research/claims, tests/unit/docs-fact-registry.test.js",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Docs fact registry validator — validates repo-native research claim registries and provides normalized claim-family data for the manual research runner.",
+    "pipeline": "manual — experimental research system"
+  },
+  {
+    "path": "tools/scripts/docs-page-research-pr-report.js",
+    "script": "docs-page-research-pr-report",
+    "category": "orchestrator",
+    "purpose": "governance:agent-governance",
+    "scope": "tools/scripts, tasks/research/claims, tasks/reports/repo-ops, tests/unit/docs-page-research-pr-report.test.js",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Docs page research PR report — runs the fact-check research runner on changed docs pages and emits an advisory PR artifact summarizing claim families, contradictions, unresolved factual risk, and propagation follow-up.",
+    "pipeline": "manual — experimental advisory PR integration, non-blocking"
+  },
+  {
+    "path": "tools/scripts/docs-page-research.js",
+    "script": "docs-page-research",
+    "category": "validator",
+    "purpose": "governance:agent-governance",
+    "scope": "tools/scripts, tasks/research/claims, tests/unit/docs-page-research.test.js, tasks/reports/repo-ops",
+    "needs": "R-R27, R-R30",
+    "purpose_statement": "Docs page research runner — extracts factual claims from docs pages, checks evidence sources, detects contradictions across related pages, and emits manual-first research reports.",
+    "pipeline": "manual — experimental research system"
+  },
+  {
     "path": "tools/scripts/docs-quality-and-freshness-audit.js",
     "script": "docs-quality-and-freshness-audit",
     "category": "validator",
@@ -1996,6 +2056,16 @@
     "dualmode": "--dry-run (validator: show corrections) | --write (remediator: apply corrections)"
   },
   {
+    "path": "tools/scripts/repair-ownerless-language.js",
+    "script": "repair-ownerless-language",
+    "category": "remediator",
+    "purpose": "governance:agent-governance",
+    "scope": ".github, README.md, contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md, docs-guide",
+    "needs": "R-R14, R-R29",
+    "purpose_statement": "Applies deterministic wording repairs that remove human-owner dependency from governed GitHub and contributor surfaces.",
+    "pipeline": "manual"
+  },
+  {
     "path": "tools/scripts/remediators/content/sync-docs-paths.js",
     "script": "sync-docs-paths",
     "category": "remediator",
@@ -2005,16 +2075,6 @@
     "purpose_statement": "Docs path sync remediator — applies deterministic docs.json and governed reference rewrites for moved docs pages.",
     "pipeline": "P1, P6",
     "dualmode": "--dry-run (validator) | --write (remediator)"
-  },
-  {
-    "path": "tools/scripts/repair-ownerless-language.js",
-    "script": "repair-ownerless-language",
-    "category": "remediator",
-    "purpose": "governance:agent-governance",
-    "scope": ".github, README.md, contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md, docs-guide",
-    "needs": "R-R14, R-R29",
-    "purpose_statement": "Applies deterministic wording repairs that remove human-owner dependency from governed GitHub and contributor surfaces.",
-    "pipeline": "manual"
   },
   {
     "path": "tools/scripts/repo-audit-orchestrator.js",

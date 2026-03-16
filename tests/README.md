@@ -165,6 +165,8 @@ bash lpd test --full --link-audit-external
 bash lpd test --full --wcag --wcag-no-fix
 bash lpd tools wcag-repair-common -- --staged --stage
 node tests/run-pr-checks.js --base-ref main
+node tools/scripts/create-codex-pr.js --advisory-research --changed-files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx
+node tools/scripts/docs-page-research-pr-report.js --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx --report-md /tmp/page-content-research-pr.md --report-json /tmp/page-content-research-pr.json
 ```
 
 ### npm Scripts (`tests/package.json`)
@@ -207,6 +209,58 @@ npm --prefix tests run test:wcag:selftest
   - style guide, MDX, spelling, quality, links/imports
   - script docs enforcement on changed scripts (`tests/unit/script-docs.test.js --files ...`)
   - strict V2 link audit on changed docs pages (`tests/integration/v2-link-audit.js --files ... --strict`)
+- Advisory research pass for tracked claim families is available locally via:
+  `node tools/scripts/docs-page-research-pr-report.js --files <changed-file[,changed-file...]> --report-md /tmp/page-content-research-pr.md --report-json /tmp/page-content-research-pr.json`
+- Experimental advisory integration is also available in local/manual PR prep via:
+  `node tools/scripts/create-codex-pr.js --advisory-research --changed-files <changed-file[,changed-file...]>`
+- This helper is intentionally not wired into blocking PR CI yet. Use it after changed-file checks when a diff touches tracked gateway/orchestrator factual claim surfaces.
+- Legacy route-centric helper note:
+  `node tools/scripts/docs-claim-ledger-pr-report.js ...` is retained only for comparison while the fact-runner advisory path is adopted. It is no longer the active PR workflow.
+
+## Experimental Page Research Usage
+
+The fact-check research runner is manual-first and experimental. Use it when you need evidence-backed review for a real docs cluster rather than structural lint.
+
+Validate the registry first:
+
+```bash
+node tools/scripts/docs-fact-registry.js --validate --registry tasks/research/claims
+```
+
+Run a single-page research pass:
+
+```bash
+node tools/scripts/docs-page-research.js \
+  --page v2/orchestrators/guides/deployment-details/setup-options.mdx \
+  --report-md /tmp/docs-page-research.md \
+  --report-json /tmp/docs-page-research.json
+```
+
+Run a cluster review when the same factual claim appears across several pages:
+
+```bash
+node tools/scripts/docs-page-research.js \
+  --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx \
+  --report-md /tmp/docs-page-research-cluster.md \
+  --report-json /tmp/docs-page-research-cluster.json
+```
+
+Expected outputs:
+- `Claims Reviewed`
+- `Verified Claims`
+- `Conflicted Claims`
+- `Time-Sensitive Claims`
+- `Unverified / Historical Claims`
+- `Cross-Page Contradictions`
+- `Propagation Queue`
+- `Evidence Sources`
+
+Evidence sources currently supported:
+- repo files
+- official pages
+- GitHub repos/issues/PRs/releases
+- forum topics
+- repo-available Discord/community signals
 - Integration PR exception: for `docs-v2 -> main`, changed-file static failures are advisory while browser failures remain blocking.
 - The same workflow also runs full browser tests from `docs.json`.
 - `.github/workflows/test-v2-pages.yml` is responsible for PR comments and artifact uploads for V2 browser sweep results.
