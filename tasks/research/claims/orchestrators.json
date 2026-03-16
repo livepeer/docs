@@ -1,0 +1,558 @@
+{
+  "version": 1,
+  "domain": "orchestrators",
+  "claim_families": [
+    {
+      "claim_id": "orch-active-set-threshold",
+      "claim_family": "stake-threshold",
+      "entity": "orchestrator",
+      "claim_summary": "Solo transcoding guidance repeatedly states that operators need enough bonded LPT to enter the active set, often phrased as top 100, but that wording is time-sensitive and should not be treated as durable fact without current evidence.",
+      "canonical_owner": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+      "source_type": "official-product-page",
+      "source_ref": "https://explorer.livepeer.org/orchestrators",
+      "evidence_date": "2026-03-16",
+      "status": "time-sensitive",
+      "freshness_class": "volatile",
+      "dependent_pages": [
+        "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "v2/orchestrators/setup/rcs-requirements.mdx"
+      ],
+      "related_claims": [
+        "orch-pool-vs-solo-prerequisites",
+        "orch-reward-profitability-threshold"
+      ],
+      "last_reviewed_by": "codex",
+      "notes": "Use Explorer or protocol-facing sources for current state. Treat 'top 100' wording as volatile until rechecked.",
+      "match_terms": [
+        "active set",
+        "top 100",
+        "bonded lpt",
+        "stake threshold"
+      ],
+      "comparison_patterns": [
+        "\\btop\\s+100\\b",
+        "\\bactive set\\b"
+      ],
+      "evidence_refs": [
+        {
+          "type": "official-page",
+          "ref": "https://explorer.livepeer.org/orchestrators",
+          "match_any": [
+            "orchestrators"
+          ]
+        }
+      ]
+    },
+    {
+      "claim_id": "orch-batch-ai-vram-threshold",
+      "claim_family": "hardware-vram-minimums",
+      "entity": "orchestrator",
+      "claim_summary": "Docs disagree on the practical VRAM minimum for batch AI and real-time AI workloads. Hardware and setup pages should not present conflicting minimums as equally current.",
+      "canonical_owner": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+      "source_type": "repo-doc-reference",
+      "source_ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+      "evidence_date": "2026-03-16",
+      "status": "conflicted",
+      "freshness_class": "review-on-change",
+      "dependent_pages": [
+        "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "v2/orchestrators/setup/rcs-requirements.mdx",
+        "v2/orchestrators/guides/operator-considerations/business-case.mdx"
+      ],
+      "related_claims": [
+        "orch-pool-vs-solo-prerequisites"
+      ],
+      "last_reviewed_by": "codex",
+      "notes": "The current authored pages mention 8 GB, 16 GB, 24 GB, and 24 GB+ depending on context. The runner should surface those differences explicitly.",
+      "match_terms": [
+        "vram",
+        "batch ai",
+        "real-time ai",
+        "24 gb",
+        "8 gb",
+        "16 gb",
+        "rtx 3090"
+      ],
+      "comparison_patterns": [
+        "\\b(?:8|12|16|24)(?:\\s*[+–-]\\s*(?:12|16|24))?\\s*GB\\b",
+        "\\bRTX\\s+3090\\b",
+        "\\bA40\\b"
+      ],
+      "evidence_refs": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+          "match_any": [
+            "24 GB",
+            "competitive diffusion pipelines",
+            "real-time video ai"
+          ]
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/setup/rcs-requirements.mdx",
+          "match_any": [
+            "8 GB for LLM-only",
+            "16 GB for basic batch AI",
+            "24 GB+ for the full pipeline suite"
+          ]
+        }
+      ]
+    },
+    {
+      "claim_id": "orch-reward-profitability-threshold",
+      "claim_family": "reward-profitability",
+      "entity": "orchestrator",
+      "claim_summary": "Reward-call profitability guidance should remain explicitly time-sensitive because gas cost, ETH price, and LPT price move. Docs must not present rough thresholds as durable constants.",
+      "canonical_owner": "v2/orchestrators/guides/staking-and-rewards/rewards-and-fees.mdx",
+      "source_type": "repo-doc-reference",
+      "source_ref": "v2/orchestrators/guides/staking-and-rewards/rewards-and-fees.mdx",
+      "evidence_date": "2026-03-16",
+      "status": "time-sensitive",
+      "freshness_class": "volatile",
+      "dependent_pages": [
+        "v2/orchestrators/guides/operator-considerations/business-case.mdx"
+      ],
+      "related_claims": [
+        "orch-active-set-threshold"
+      ],
+      "last_reviewed_by": "codex",
+      "notes": "Surface rough thresholds as review-sensitive even when the docs provide a range.",
+      "match_terms": [
+        "reward()",
+        "0.00005 eth",
+        "gas cost",
+        "profitable",
+        "estimated reward this round"
+      ],
+      "comparison_patterns": [
+        "\\b0\\.0+\\d+\\s*ETH\\b",
+        "\\bapproximately every 22 hours\\b",
+        "\\b350,000\\s*(?:to|–|-)\\s*450,000\\s*gas\\b"
+      ],
+      "evidence_refs": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/staking-and-rewards/rewards-and-fees.mdx",
+          "match_any": [
+            "0.000005 – 0.00005 ETH",
+            "Arbitrum gas is low",
+            "approximately every 22 hours"
+          ]
+        }
+      ]
+    },
+    {
+      "claim_id": "orch-pool-vs-solo-prerequisites",
+      "claim_family": "setup-prerequisites",
+      "entity": "orchestrator",
+      "claim_summary": "Pool workers and solo operators have different prerequisites. Pages should not imply that LPT, ETH, or public service exposure are universal requirements for every orchestrator entry path.",
+      "canonical_owner": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+      "source_type": "repo-doc-reference",
+      "source_ref": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+      "evidence_date": "2026-03-16",
+      "status": "verified",
+      "freshness_class": "review-on-change",
+      "dependent_pages": [
+        "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "v2/orchestrators/setup/rcs-requirements.mdx",
+        "v2/orchestrators/guides/operator-considerations/business-case.mdx"
+      ],
+      "related_claims": [
+        "orch-active-set-threshold"
+      ],
+      "last_reviewed_by": "codex",
+      "notes": "This is a durable claim family but still needs contradiction checks against setup-facing pages.",
+      "match_terms": [
+        "pool worker",
+        "no lpt required",
+        "solo orchestrator",
+        "staking",
+        "on-chain ops"
+      ],
+      "comparison_patterns": [
+        "\\bNo LPT required\\b",
+        "\\bneed enough bonded LPT\\b",
+        "\\bpool worker\\b",
+        "\\bsolo orchestrator\\b"
+      ],
+      "evidence_refs": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+          "match_any": [
+            "No LPT, just a GPU",
+            "Pool worker",
+            "not an Orchestrator at all"
+          ]
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx",
+          "match_any": [
+            "LPT stake required",
+            "No",
+            "Pool worker"
+          ]
+        }
+      ]
+    },
+    {
+      "claim_id": "orch-ai-routing-capability-based",
+      "claim_family": "ai-routing-mechanics",
+      "entity": "orchestrator",
+      "claim_summary": "AI jobs are routed primarily by capability match and price ceilings rather than by stake weight. Docs should not collapse AI routing into the same rules as transcoding routing.",
+      "canonical_owner": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+      "source_type": "repo-doc-reference",
+      "source_ref": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+      "evidence_date": "2026-03-16",
+      "status": "verified",
+      "freshness_class": "review-on-change",
+      "dependent_pages": [
+        "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "v2/orchestrators/guides/deployment-details/setup-options.mdx"
+      ],
+      "related_claims": [
+        "orch-active-set-threshold",
+        "orch-price-ceiling-filtering"
+      ],
+      "last_reviewed_by": "codex",
+      "notes": "This family is high-value because setup pages frequently mix stake-sensitive transcoding guidance with AI inference guidance.",
+      "match_terms": [
+        "capability match",
+        "capability-based",
+        "price ceiling",
+        "maxpricepercapability",
+        "stake plays a much smaller role",
+        "ai jobs"
+      ],
+      "comparison_patterns": [
+        "\\bcapability(?:-based| match)\\b",
+        "\\bmaxPricePerCapability\\b",
+        "\\bstake(?: plays| is)?[^\\.]{0,40}(?:smaller role|irrelevant|less important)\\b"
+      ],
+      "evidence_refs": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+          "match_any": [
+            "capability match + price ceiling",
+            "stake plays a much smaller role",
+            "new orchestrator with 24 GB VRAM"
+          ]
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-details/dual-workload-setup.mdx",
+          "match_any": [
+            "8 GB is sufficient for LLM pipelines",
+            "For video transcoding",
+            "active set"
+          ]
+        }
+      ]
+    },
+    {
+      "claim_id": "orch-price-ceiling-filtering",
+      "claim_family": "gateway-price-filtering",
+      "entity": "orchestrator",
+      "claim_summary": "Gateways filter orchestrators by price ceilings before routing work. Competitive hardware alone is not enough if operator pricing exceeds gateway maxima.",
+      "canonical_owner": "v2/orchestrators/setup/configure.mdx",
+      "source_type": "repo-doc-reference",
+      "source_ref": "v2/orchestrators/setup/configure.mdx",
+      "evidence_date": "2026-03-16",
+      "status": "verified",
+      "freshness_class": "review-on-change",
+      "dependent_pages": [
+        "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx"
+      ],
+      "related_claims": [
+        "orch-ai-routing-capability-based"
+      ],
+      "last_reviewed_by": "codex",
+      "notes": "This family covers both transcoding `-pricePerUnit` and AI capability price ceilings because both are gateway-side filters on whether work reaches the node.",
+      "match_terms": [
+        "maxpriceperunit",
+        "maxpricepercapability",
+        "priceperunit",
+        "gateways filter orchestrators by price",
+        "prices are too high",
+        "will not receive work"
+      ],
+      "comparison_patterns": [
+        "\\bmaxPricePerUnit\\b",
+        "\\bmaxPricePerCapability\\b",
+        "\\bpricePerUnit\\b",
+        "\\bwill not receive work\\b"
+      ],
+      "evidence_refs": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/setup/configure.mdx",
+          "match_any": [
+            "gateways will route jobs to lower-priced orchestrators",
+            "pricePerUnit",
+            "too high"
+          ]
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx",
+          "match_any": [
+            "Price too high",
+            "maxPricePerCapability",
+            "receive no transcoding or AI jobs"
+          ]
+        }
+      ]
+    },
+    {
+      "claim_id": "orch-siphon-reward-isolation",
+      "claim_family": "split-setup-reward-safety",
+      "entity": "orchestrator",
+      "claim_summary": "A split setup with OrchestratorSiphon isolates the keystore from the GPU machine and keeps reward calling independent of GPU uptime. Docs should keep that claim aligned across setup-path pages.",
+      "canonical_owner": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+      "source_type": "github-repo",
+      "source_ref": "https://github.com/Stronk-Tech/OrchestratorSiphon",
+      "evidence_date": "2026-03-16",
+      "status": "verified",
+      "freshness_class": "review-periodic",
+      "dependent_pages": [
+        "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "v2/orchestrators/guides/deployment-details/setup-options.mdx"
+      ],
+      "related_claims": [
+        "orch-siphon-github-current",
+        "orch-pool-vs-solo-prerequisites"
+      ],
+      "last_reviewed_by": "codex",
+      "notes": "This family is partly repo-doc backed and partly GitHub backed because the live project status matters alongside the docs explanation.",
+      "match_terms": [
+        "reward safety",
+        "keystore isolated",
+        "split setup",
+        "reward calling",
+        "gpu machine can restart",
+        "missed rewards"
+      ],
+      "comparison_patterns": [
+        "\\breward(?: calling| safety)?\\b",
+        "\\bkeystore(?: stays)? (?:isolated|secure)\\b",
+        "\\bGPU machine can restart\\b"
+      ],
+      "evidence_refs": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+          "match_any": [
+            "keystore stays on a secure, isolated machine",
+            "GPU machine can restart",
+            "without you missing rewards"
+          ]
+        },
+        {
+          "type": "github-repo",
+          "ref": "https://github.com/Stronk-Tech/OrchestratorSiphon",
+          "match_any": [
+            "OrchestratorSiphon",
+            "Stronk-Tech"
+          ]
+        }
+      ]
+    },
+    {
+      "claim_id": "orch-siphon-github-current",
+      "claim_family": "community-tooling-status",
+      "entity": "orchestrator",
+      "claim_summary": "Split-setup guidance depends on OrchestratorSiphon still being an active community-maintained project. That claim should be checked against the current GitHub repository, not just repeated in docs.",
+      "canonical_owner": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+      "source_type": "github-repo",
+      "source_ref": "https://github.com/Stronk-Tech/OrchestratorSiphon",
+      "evidence_date": "2026-03-16",
+      "status": "verified",
+      "freshness_class": "review-periodic",
+      "dependent_pages": [
+        "v2/orchestrators/guides/deployment-details/setup-options.mdx"
+      ],
+      "related_claims": [],
+      "last_reviewed_by": "codex",
+      "notes": "Use GitHub repository metadata to confirm the project still exists and is publicly accessible.",
+      "match_terms": [
+        "siphon",
+        "OrchestratorSiphon",
+        "split setup"
+      ],
+      "comparison_patterns": [
+        "\\bSiphon\\b",
+        "\\bOrchestratorSiphon\\b"
+      ],
+      "evidence_refs": [
+        {
+          "type": "github-repo",
+          "ref": "https://github.com/Stronk-Tech/OrchestratorSiphon",
+          "match_any": [
+            "OrchestratorSiphon",
+            "Stronk-Tech"
+          ]
+        }
+      ]
+    },
+    {
+      "claim_id": "orch-bandwidth-per-stream-planning",
+      "claim_family": "transcoding-bandwidth-planning",
+      "entity": "orchestrator",
+      "claim_summary": "Bandwidth planning for transcoding is currently presented as an approximate planning rule rather than a single durable network constant. Pages should make the source-resolution assumption and rendition-set basis explicit when quoting per-stream bandwidth.",
+      "canonical_owner": "v2/orchestrators/setup/configure.mdx",
+      "source_type": "repo-doc-reference",
+      "source_ref": "v2/orchestrators/setup/configure.mdx",
+      "evidence_date": "2026-03-16",
+      "status": "time-sensitive",
+      "freshness_class": "review-periodic",
+      "dependent_pages": [
+        "v2/orchestrators/guides/deployment-details/requirements.mdx",
+        "v2/orchestrators/guides/operator-considerations/business-case.mdx"
+      ],
+      "related_claims": [
+        "orch-session-limit-default"
+      ],
+      "last_reviewed_by": "codex",
+      "notes": "Current docs mix four-rendition benchmark data with planning guidance that assumes higher source bandwidth. Keep this as approximation-first wording, not a hard constant.",
+      "match_terms": [
+        "6 mbps symmetric",
+        "bandwidth per stream",
+        "5.7 mbps",
+        "720p source",
+        "1080p source",
+        "burst margin"
+      ],
+      "comparison_patterns": [
+        "\\b(?:5\\.7|6)\\s*mbps\\b",
+        "\\b(?:100|500)\\s*mbps\\b",
+        "\\b1\\s*gbps\\b"
+      ],
+      "evidence_refs": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/setup/configure.mdx",
+          "match_any": [
+            "6 Mbps per stream",
+            "bandwidth limit",
+            "100 Mbps"
+          ]
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+          "match_any": [
+            "100 Mbps symmetric",
+            "1 Gbps symmetric",
+            "livepeer_bench"
+          ]
+        }
+      ]
+    },
+    {
+      "claim_id": "orch-session-limit-default",
+      "claim_family": "transcoding-session-cap",
+      "entity": "orchestrator",
+      "claim_summary": "The default session limit and overload behavior are operational facts that multiple setup and hardware pages depend on. When docs state the default cap or the error condition, they should stay aligned with current go-livepeer behavior.",
+      "canonical_owner": "v2/orchestrators/setup/configure.mdx",
+      "source_type": "repo-doc-reference",
+      "source_ref": "v2/orchestrators/setup/configure.mdx",
+      "evidence_date": "2026-03-16",
+      "status": "time-sensitive",
+      "freshness_class": "review-on-change",
+      "dependent_pages": [
+        "v2/orchestrators/guides/deployment-details/requirements.mdx",
+        "v2/orchestrators/guides/deployment-details/requirements.mdx"
+      ],
+      "related_claims": [
+        "orch-bandwidth-per-stream-planning"
+      ],
+      "last_reviewed_by": "codex",
+      "notes": "The current page still carries a REVIEW note on OrchestratorCapped. Treat both the default value and error-name wording as review-on-change operational claims.",
+      "match_terms": [
+        "maxsessions = 10",
+        "10 concurrent sessions",
+        "orchestratorcapped",
+        "session limit"
+      ],
+      "comparison_patterns": [
+        "\\b10\\s*concurrent\\s*sessions\\b",
+        "\\bmaxsessions\\b",
+        "\\borchestratorcapped\\b"
+      ],
+      "evidence_refs": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/setup/configure.mdx",
+          "match_any": [
+            "10 concurrent sessions",
+            "The default is 10",
+            "maxSessions"
+          ]
+        }
+      ]
+    },
+    {
+      "claim_id": "orch-business-case-cost-viability",
+      "claim_family": "business-case-viability",
+      "entity": "orchestrator",
+      "claim_summary": "Business-case guidance should explicitly stay approximate and local-context dependent. Payback, electricity cost, and 'worth it' framing are useful, but they should not be presented as portable constants across operators, geographies, or market conditions.",
+      "canonical_owner": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+      "source_type": "repo-doc-reference",
+      "source_ref": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+      "evidence_date": "2026-03-16",
+      "status": "time-sensitive",
+      "freshness_class": "volatile",
+      "dependent_pages": [
+        "v2/orchestrators/guides/deployment-details/requirements.mdx"
+      ],
+      "related_claims": [
+        "orch-reward-profitability-threshold",
+        "orch-active-set-threshold"
+      ],
+      "last_reviewed_by": "codex",
+      "notes": "This family is about keeping 'worth it' or break-even style guidance honest and local to the operator's hardware, energy, and stake context.",
+      "match_terms": [
+        "worth it",
+        "feasibility",
+        "break-even",
+        "payback period",
+        "electricity costs",
+        "amortisation cost",
+        "viability"
+      ],
+      "comparison_patterns": [
+        "\\b(?:\\$|£)\\d+(?:–|-|to)?\\d*\\/?month\\b",
+        "\\bpayback\\b",
+        "\\bbreak\\s*even\\b",
+        "\\b2\\s*years\\b"
+      ],
+      "evidence_refs": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+          "match_any": [
+            "worth it",
+            "payback period",
+            "electricity",
+            "amortisation cost"
+          ]
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+          "match_any": [
+            "100 Mbps symmetric",
+            "1 Gbps symmetric",
+            "24 GB"
+          ]
+        }
+      ]
+    }
+  ]
+}

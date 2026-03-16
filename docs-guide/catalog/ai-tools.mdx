@@ -37,7 +37,7 @@ keywords:
 
 ## One-Command Audit
 
-```bash
+```bash icon="terminal"
 node tools/scripts/repo-audit-orchestrator.js --mode static --scope full
 ```
 
@@ -45,7 +45,7 @@ node tools/scripts/repo-audit-orchestrator.js --mode static --scope full
 
 Generate packs:
 
-```bash
+```bash icon="terminal"
 node tools/scripts/cross-agent-packager.js --agent-pack all
 ```
 
@@ -71,7 +71,7 @@ Produced assets:
 
 Runbook:
 
-```bash
+```bash icon="terminal"
 node tools/scripts/sync-codex-skills.js --check
 node tools/scripts/sync-codex-skills.js
 node tools/scripts/sync-codex-skills.js --skills lpd-bootstrap-and-doctor,staged-test-suite-runner --dry-run
@@ -80,3 +80,11 @@ node tools/scripts/sync-codex-skills.js --skills lpd-bootstrap-and-doctor,staged
 Generated metadata:
 
 - `agents/openai.yaml` is generated deterministically for each synced skill.
+- Optional companion bundles are sourced from directories beside the template file:
+  - `<template-stem>.references/` syncs to `references/`
+  - `<template-stem>.scripts/` syncs to `scripts/`
+  - `<template-stem>.assets/` syncs to `assets/`
+- Sync is managed, not destructive:
+  - managed files inside an installed skill are created or updated from the canonical template bundle
+  - stale managed bundle files are pruned on resync
+  - unmanaged skills and unmanaged files inside a skill folder are preserved
