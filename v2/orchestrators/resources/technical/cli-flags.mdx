@@ -1,0 +1,270 @@
+---
+title: CLI Flags Reference
+sidebarTitle: CLI Flags
+description: CLI flags and gRPC field mapping for go-livepeer orchestrators.
+keywords:
+  - livepeer
+  - orchestrators
+  - references
+  - cli flags
+  - flags
+  - reference
+  - straight
+  - chatgpt
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: orchestrator
+lastVerified: 2026-03-17
+purpose: reference
+status: review
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+
+
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+## Mintlify-compatible OpenAPI (reference-only, derived from gRPC)
+
+> ⚠️ **Documentation reference only**
+> Generated from `go-livepeer` gRPC messages.
+> Not a supported public API. Fields may change with protocol upgrades.
+
+```yaml icon="terminal"
+openapi: 3.0.3
+info:
+  title: Livepeer Orchestrator Protocol (Reference)
+  description: >
+    Derived reference documentation for Gateway ↔ Orchestrator gRPC interfaces.
+    This spec mirrors protocol messages for operator understanding only.
+  version: v0-derived
+servers:
+  - url: https://{orchestrator-host}
+    variables:
+      orchestrator-host:
+        default: orchestrator.example.com:8935
+
+paths:
+  /orchestrator/info:
+    get:
+      summary: Get Orchestrator service metadata
+      description: >
+        Logical representation of the OrchestratorInfo gRPC message.
+        Gateways use this data to evaluate pricing, capabilities, and routing.
+      responses:
+        '200':
+          description: OrchestratorInfo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrchestratorInfo'
+
+components:
+  schemas:
+    OrchestratorInfo:
+      type: object
+      required: [transcoder, address, price_info, capabilities]
+      properties:
+        transcoder:
+          type: string
+          description: Public service URI reachable by Gateways
+        ticket_params:
+          $ref: '#/components/schemas/TicketParams'
+        price_info:
+          $ref: '#/components/schemas/PriceInfo'
+        address:
+          type: string
+          format: hex
+          description: ETH payout address
+        capabilities:
+          $ref: '#/components/schemas/Capabilities'
+        auth_token:
+          $ref: '#/components/schemas/AuthToken'
+        hardware:
+          type: array
+          items:
+            $ref: '#/components/schemas/HardwareInformation'
+        storage:
+          type: array
+          items:
+            $ref: '#/components/schemas/OSInfo'
+        capabilities_prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceInfo'
+
+    TicketParams:
+      type: object
+      description: Probabilistic payment ticket configuration
+
+    PriceInfo:
+      type: object
+      properties:
+        pricePerUnit:
+          type: integer
+          description: Cost per pricing unit (Wei)
+        pixelsPerUnit:
+          type: integer
+          description: Pricing granularity unit
+
+    Capabilities:
+      type: object
+      description: Supported job types and codecs
+
+    HardwareInformation:
+      type: object
+      description: GPU / CPU / RAM characteristics
+
+    OSInfo:
+      type: object
+      description: Storage and OS characteristics
+
+    AuthToken:
+      type: object
+      description: Optional gateway authentication metadata
+```
+
+<CustomDivider />
+
+## CLI flags ↔ proto field mapping
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>CLI flag</TableCell>
+    <TableCell header>Proto / Message Field</TableCell>
+    <TableCell header>Notes</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`-serviceURI`</TableCell>
+    <TableCell>`OrchestratorInfo.transcoder`</TableCell>
+    <TableCell>Public gRPC endpoint</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`-pricePerUnit`</TableCell>
+    <TableCell>`PriceInfo.pricePerUnit`</TableCell>
+    <TableCell>Base pricing</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`-pixelsPerUnit`</TableCell>
+    <TableCell>`PriceInfo.pixelsPerUnit`</TableCell>
+    <TableCell>Pricing granularity</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`-blockRewardCut`</TableCell>
+    <TableCell>On-chain Orchestrator params</TableCell>
+    <TableCell>Not part of gRPC</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`-feeShare`</TableCell>
+    <TableCell>On-chain Orchestrator params</TableCell>
+    <TableCell>Delegator economics</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>(implicit)</TableCell>
+    <TableCell>`OrchestratorInfo.address`</TableCell>
+    <TableCell>ETH signer / payout</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>(derived)</TableCell>
+    <TableCell>`capabilities_prices`</TableCell>
+    <TableCell>AI model pricing</TableCell>
+  </TableRow>
+</StyledTable>
+
+Key point: **not everything configurable is gRPC** - some is **purely on-chain economics**.
+
+<CustomDivider />
+
+## Capability matrix: Transcoding vs AI jobs
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Capability Area</TableCell>
+    <TableCell header>Transcoding Jobs</TableCell>
+    <TableCell header>AI Jobs</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Gateway routing</TableCell>
+    <TableCell>✅</TableCell>
+    <TableCell>✅</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`pricePerUnit`</TableCell>
+    <TableCell>✅ (pixels)</TableCell>
+    <TableCell>❌</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`capabilities_prices`</TableCell>
+    <TableCell>❌</TableCell>
+    <TableCell>✅ (per model)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Codec support</TableCell>
+    <TableCell>✅</TableCell>
+    <TableCell>❌</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Model selection</TableCell>
+    <TableCell>❌</TableCell>
+    <TableCell>✅</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>GPU specs</TableCell>
+    <TableCell>Optional</TableCell>
+    <TableCell>Required</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Storage (`OSInfo`)</TableCell>
+    <TableCell>Minimal</TableCell>
+    <TableCell>Important</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Deterministic pricing</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Often variable</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Session duration</TableCell>
+    <TableCell>Stream-based</TableCell>
+    <TableCell>Job / batch based</TableCell>
+  </TableRow>
+</StyledTable>
+
+{/*
+  PURPOSE:
+  Complete CLI flag reference for go-livepeer in orchestrator mode.
+  Maps flags to gRPC fields and documents allowed values.
+
+  SECTION HOME: Resources > Technical Reference
+  CROSS-REFS:
+  - Setup > Configure - common flag usage
+  - All guide sections referencing specific flags
+*/}

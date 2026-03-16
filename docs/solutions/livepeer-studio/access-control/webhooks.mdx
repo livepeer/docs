@@ -1,0 +1,62 @@
+---
+title: Access control with webhooks
+description: >-
+  Gate playback using a webhook that validates the viewer and returns allow or
+  deny.
+keywords:
+  - livepeer
+  - docs
+  - solutions
+  - livepeer studio
+  - access control
+  - webhooks
+  - access
+  - control
+  - with
+  - gate
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+---
+
+With **webhook** access control, when a viewer tries to play gated content, Livepeer Studio calls your endpoint. You return 2XX to allow, or non-2XX to deny.
+
+## 1. Create an access-control webhook
+
+In [Livepeer Studio → Developers → Webhooks](https://livepeer.studio/dashboard/developers/webhooks), create a webhook with type **playback.accessControl** and the URL of your endpoint (e.g. `https://yourdomain.com/api/check-access`).
+
+## 2. Create gated content
+
+When creating the stream or asset, set `playbackPolicy` to the webhook type and your webhook ID and context:
+
+```ts
+await livepeer.stream.create({
+  name: "Gated stream",
+  playbackPolicy: {
+    type: "webhook",
+    webhookId: "<webhook_id>",
+    webhookContext: { assetId: "...", userId: "..." },
+  },
+});
+```
+
+Same idea for `livepeer.asset.create` with `playbackPolicy`.
+
+## 3. Configure the Player
+
+Pass an **access key** (e.g. Session token or user id) to the Player. The Player sends it to Livepeer, which forwards it to your webhook:
+
+```tsx
+<Player.Root src={src} accessKey={getAccessKeyForUser()}>
+  <Player.Container><Player.Video /></Player.Container>
+</Player.Root>
+```
+
+## 4. Handle the webhook
+
+Your endpoint receives a POST with `accessKey` and `context`. Validate the key (e.g. Check auth, subscription). Return **2XX** to allow playback, **non-2XX** to deny.
+
+**Custom player:** For WebRTC or HLS, send the access key in the `Livepeer-Access-Key` header or as query param `accessKey` on the playback URL.

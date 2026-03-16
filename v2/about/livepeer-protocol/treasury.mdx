@@ -1,10 +1,28 @@
 ---
-title: 'Livepeer Treasury'
-sidebarTitle: 'Treasury'
-description: "This page outlines how the treasury accumulates funds, how disbursements are authorised, and how its role is evolving across the protocol’s roadmap."
-definition: "The Livepeer Treasury is an on-chain community fund designed to finance public goods and ecosystem development."
-keywords: ["livepeer", "about", "livepeer network", "livepeer treasury", "treasury", "learn"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+title: Livepeer Treasury
+sidebarTitle: Treasury
+description: >-
+  This page outlines how the treasury accumulates funds, how disbursements are
+  authorised, and how its role is evolving across the protocol’s roadmap.
+pageType: concept
+keywords:
+  - livepeer
+  - about
+  - livepeer network
+  - livepeer treasury
+  - treasury
+  - learn
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: general
+lastVerified: 2026-03-17
+purpose: concept
+definition: >-
+  The Livepeer Treasury is an on-chain community fund designed to finance public
+  goods and ecosystem development.
 ---
 {/*
 This page describes:
@@ -20,7 +38,7 @@ BUT - only briefly - it lives in token.
 */}
 import { CardTitleTextWithArrow } from '/snippets/components/primitives/text.jsx'
 import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
-import { Quote } from '/snippets/components/display/quote.jsx'
+import { Quote } from '/snippets/components/content/quote.jsx'
 import { DynamicTable } from '/snippets/components/layout/table.jsx'
 
 <div style={{ display: "flex", justifyContent: "center", padding: 0, margin: 0}}>
@@ -33,12 +51,12 @@ The Livepeer Treasury is a smart contract-controlled pool of LPT tokens funded t
 </Quote>
 
 ## Genesis
-In late 2023, the community passed several proposals creating the Livepeer Treasury.
+In late 2023, the community passed multiple proposals creating the Livepeer Treasury.
 
 - **Creation & Governance**:
    - [LIP‑89](https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0089.md) established the [Treasury](./treasury)
    - It deployed a custom OpenZeppelin Governor (with a 100 LPT proposal threshold and stake-weighted voting)
-{/* - [LIP-89](https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0089.md) introduced a treasury contract managed by Livepeer’s Governor framework. Any token holder can propose using treasury funds. Treasury proposals follow the standard governance rules: stake 100 LPT to propose, then voting requires ≥33% quorum and >50% “For” to pass (identical to protocol votes). Once passed, the treasury contract executes the transfer (of LPT or ETH) to the specified recipient. */}
+{/* - [LIP-89](https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0089.md) introduced a treasury contract managed by Livepeer’s Governor framework. Any token holder can propose using treasury funds. Treasury proposals follow the standard governance rules: stake 100 LPT to propose, then voting requires ≥33% quorum and &gt;50% “For” to pass (identical to protocol votes). Once passed, the treasury contract executes the transfer (of LPT or ETH) to the specified recipient. */}
 - **Funding**:
    - [LIP‑92](https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0092.md) set the on-chain revenue allocation: sending **10% of new LPT** emissions into the treasury.
  {/* - Initially, the treasury holds whatever funds were donated or allocated during genesis and via special proposals. There is no automatic tax today. [LIP-92](https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0092.md) has been discussed as a way to deduct a small percentage of protocol inflation each round and add it to the treasury. Other funding methods include grants, donations, or revenue-sharing agreements. Any change to treasury funding (like LIP-92) must be approved by token-holder vote. */}
@@ -132,7 +150,7 @@ This includes development, grants, security audits, research, operational initia
 
 > _See [LIP-73](https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0073.md) and [LIP-77](https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0077.md) for examples_
 
-<Card title="Livepeer Explorer - Treasury Dashboard" icon="globe" href="https://explorer.livepeer.org/treasury" arrow horizontal > Monitor on-chain staking, proposals, and treasury transactions in real time on the Livepeer Explorer </Card>
+<Card title="Livepeer Explorer - Treasury Dashboard" icon="globe" href="https://explorer.livepeer.org/treasury" arrow horizontal > Monitor on-chain staking, proposals, and treasury transactions live on the Livepeer Explorer </Card>
 {/* When the treasury balance reached a pre‑defined cap, contributions paused; future LIPs can adjust the rate or resume funding. */}
 
 ## Governance
@@ -150,7 +168,7 @@ Treasury balances, disbursements, and historical LIP outcomes are publicly visib
 - [Livepeer Explorer](https://explorer.livepeer.org/treasury): Track the treasury on-chain via the Livepeer Explorer – Treasury Page.
 - Governance History on [Arbiscan](https://arbiscan.io/address/0x363cdB9BaE210Ef182c60b5a496139E980330127#code): All proposals, votes, and payments are public
 - Disbursement Events in [ABI](https://arbiscan.io/address/0x363cdB9BaE210Ef182c60b5a496139E980330127#code)
-      ```javascript Example Query (using ethers.js)
+      ```javascript icon="terminal" Example Query (using ethers.js)
       const event = TreasuryContract.filters.TreasuryWithdrawal()
       provider.on(event, (log) => console.log(log.args))
       ```
@@ -174,60 +192,14 @@ While the on-chain treasury itself is wholly community-governed, the Livepeer Fo
 {/* <br/><br/> */}
 **Treasury mechanics remain on-chain and community governance-controlled**
 - The community controls the money
-- The Foundation ensures the money is effectively & accountably used.
+- The Foundation ensures the money is used accountably.
 </Info>
-It's role includes:
+Its role includes:
 - **Governance Orchestration**: Ensures treasury proposals move efficiently from idea to on-chain execution through structured processes and coordination.
- {/*
- The Foundation ensures that treasury proposals move from idea → draft → community review → on-chain execution.
- This includes:
-
-      - Structuring proposal frameworks (SPEs, budget formats, milestones)
-      - Coordinating review cycles and community calls
-      - Ensuring proposals are sufficiently specified before vote
-      - Facilitating execution after approval
- Without this layer, treasury funds stall in process friction.
- */}
 - **Accountability & Milestone Oversight**: Maintains transparency and tracks deliverables so approved funds translate into measurable outcomes.
- {/* <div>
- Once treasury funds are approved, the Foundation helps ensure:
-         - Deliverables are tracked
-         - Milestones are reported publicly
-         - Budget usage aligns with scope
-         - Underperforming initiatives are surfaced
- They do not “police” spending - they maintain transparency and continuity so governance decisions compound rather than fragment.
- </div> */}
 - **Strategic Capital Framing**: Helps define funding priorities and long-term allocation strategy aligned with network health.
- {/*
- The Foundation helps define:
-      - What categories of work treasury should fund (protocol R&D, ecosystem growth, infra, coordination)
-      - Multi-quarter budgeting horizons
-      - Tradeoffs between short-term impact and long-term network health
- They frame the strategy - the community votes on allocation.
- */}
 - **Execution Enablement**: Aligns contributors and removes blockers so treasury-funded initiatives actually ship.
- {/*
- Treasury funding is only valuable if someone can execute.
-
- The Foundation:
-      - Identifies capable contributors
-      - Aligns working groups
-      - Removes operational blockers
-      - Bridges Foundation resources with independent SPEs
-
- This converts governance intent into shipped outcomes.
- */}
 - **Long-Term Network Health**: Stewards treasury deployment to strengthen protocol security, decentralization, and ecosystem growth.
- {/*
- The treasury exists to strengthen:
-      - **Protocol security** - audits, formal verification, incentive design
-      - **Decentralization** - reducing validator/operator concentration, enabling new node types
-      - **Supply-side resilience** - transcoder infrastructure, redundancy, geographic distribution
-      - **Demand-side growth** - application integrations, developer tooling, use-case expansion
-      - **Tooling and ecosystem expansion** - SDKs, monitoring, indexing, public goods
-
- The Foundation’s role is to ensure treasury deployment reinforces these pillars rather than drifting into reactive or fragmented spending.
- */}
 
 {/* The community controls the money.
 The Foundation ensures the money gets used well.

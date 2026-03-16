@@ -1,0 +1,77 @@
+---
+title: Infrastructure First Principles
+sidebarTitle: Infra Principles
+description: >-
+  Canonical first-principles design for repository infrastructure, quality
+  gates, automation flows, and policy layering.
+keywords:
+  - livepeer
+  - infrastructure
+  - first principles
+  - quality gates
+  - hooks
+  - ci
+  - governance
+  - design
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+## Purpose
+
+This is the canonical architecture contract for repository infrastructure. It defines what each layer owns, what each layer must never do, and where enforcement belongs.
+
+## Design Tenets
+
+1. Single responsibility per layer. Each gate owns one class of risk.
+2. Fast local feedback. Pre-commit is local, offline, and bounded.
+3. Governance at branch and CI boundaries. Contract, issue-readiness, and policy checks run at pre-push/CI.
+4. One canonical policy source. Operational docs link here instead of copying rule text.
+5. Measurable SLOs. Runtime budgets are enforced, not aspirational.
+
+## Severity Model
+
+- `P0`: merge/deploy safety failure (broken routes, broken rendering, blocked docs delivery)
+- `P1`: correctness/governance failure (scope violations, invalid contract/issue readiness)
+- `P2`: quality drift (style, docs hygiene, generated index drift)
+- `P3`: advisory debt (non-blocking cleanup, optimization backlog)
+
+## Stack Architecture (End-to-End)
+
+| Layer | First Principle | Primary Risks | Enforcement Point | Max Severity Owned |
+| --- | --- | --- | --- | --- |
+| Repository topology | Folder boundaries are explicit and immutable. | Root sprawl, misplaced files, v1 mutation | `.githooks/pre-commit`, CI structure checks | `P1` |
+| Content contract | Docs pages, navigation, and imports must stay structurally valid. | Broken docs routes/imports/frontmatter | `tests/run-all.js`, `tests/run-pr-checks.js` | `P1` |
+| Generated artifacts | Generated files are rebuilt from source scripts, never hand-maintained. | index drift, stale docs-index, script catalog drift | pre-commit staged generators + CI checks | `P2` |
+| Local commit gate | Pre-commit runs only fast staged local checks. | slow commits, dependency coupling, local flakiness | `.githooks/pre-commit` | `P2` |
+| Branch governance | Codex branch contract and issue readiness are validated before push. | out-of-scope changes, missing readiness, unsafe force-push | `.githooks/pre-push` | `P1` |
+| PR changed-scope CI | CI blocks regressions in changed scope only. | silent regressions entering `docs-v2` | `.github/workflows/test-suite.yml` + `tests/run-pr-checks.js` | `P0` |
+| Full sweep CI | Browser/link/page sweeps catch system-level regressions. | route-level runtime failures, broad link failures | `test-v2-pages.yml`, browser and audit workflows | `P0` |
+| Scheduled ingestion | External data syncs are isolated and idempotent. | stale snippets data, secret drift, workflow collisions | dedicated update workflows + fetch scripts | `P2` |
+| Policy system | Rules are authored once, referenced everywhere else. | contradictory docs, operator confusion, policy drift | this file + `source-of-truth-policy.mdx` | `P1` |
+
+## Runtime and Scope Budgets
+
+- `pre-commit`: must complete in `<= 60s` by default. No browser sweep, no WCAG crawl, no external link/network dependency.
+- `pre-push` (`codex/*`): owns contract, lock, stash, issue-readiness, and push safety checks.
+- `CI changed-scope`: owns blocking quality checks for changed files in PR context.
+- `CI heavy sweeps`: owns browser/page/link/domain/WCAG full or broad scans.
+
+## Ownership Contracts
+
+1. Pre-commit must not implement codex governance policy.
+2. Pre-push must not duplicate style/authoring checks already in pre-commit and PR CI.
+3. CI must be source of truth for heavyweight, potentially flaky, or network-dependent checks.
+4. Any new rule must declare its primary gate layer before implementation.
+5. Any duplicated policy text outside this file is documentation debt and should be replaced by a link.
+
+## Migration Rules for New Changes
+
+1. Define risk class (`P0`..`P3`) before adding a new check.
+2. Place the check in exactly one primary layer.
+3. Add runtime budget impact if the check runs locally.
+4. Add CI mirror only when local feedback is insufficient.
+5. Update this document in the same PR when gate boundaries change.

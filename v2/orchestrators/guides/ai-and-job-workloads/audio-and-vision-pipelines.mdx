@@ -1,0 +1,277 @@
+---
+title: 'Audio and Vision Pipelines'
+sidebarTitle: 'Audio & Vision'
+description: >-
+  Set up audio-to-text (Whisper), text-to-speech, image-to-text, and segment-anything-2
+  pipelines on a Livepeer orchestrator. Covers VRAM requirements, aiModels.json entries,
+  pricing units, and testing commands for each pipeline.
+keywords:
+  - livepeer
+  - orchestrator
+  - audio-to-text
+  - Whisper
+  - text-to-speech
+  - image-to-text
+  - segment-anything-2
+  - SAM2
+  - VRAM
+  - aiModels.json
+  - AI pipeline
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: draft
+lastVerified: '2026-03-16'
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+<Tip>
+  Audio and vision pipelines have lower competition than diffusion pipelines. An operator who adds audio-to-text or image-to-text earns from a less saturated market while using GPU resources that would otherwise sit idle between diffusion jobs.
+</Tip>
+
+---
+
+Four non-diffusion, non-LLM pipelines are available on the Livepeer AI network: `audio-to-text`, `text-to-speech`, `image-to-text`, and `segment-anything-2`. All use the standard `livepeer/ai-runner` container — the same one diffusion pipelines use. go-livepeer manages the container lifecycle automatically.
+
+Each pipeline has a different VRAM footprint and a different pricing unit. The entry below each section is the complete `aiModels.json` configuration required to enable it.
+
+<CustomDivider middleText="Pipeline Summaries" />
+
+## Pipeline overview
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Pipeline</TableCell>
+      <TableCell header>VRAM</TableCell>
+      <TableCell header>Pricing unit</TableCell>
+      <TableCell header>Entry GPU</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`audio-to-text`</TableCell>
+      <TableCell>~3 GB (Whisper large-v3)</TableCell>
+      <TableCell>Per millisecond of audio</TableCell>
+      <TableCell>12 GB recommended; runs on 8 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`text-to-speech`</TableCell>
+      <TableCell>Varies by model</TableCell>
+      <TableCell>Per character or per ms of output audio</TableCell>
+      <TableCell>8 GB+</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-text`</TableCell>
+      <TableCell>~1–2 GB (BLIP)</TableCell>
+      <TableCell>Per input pixel</TableCell>
+      <TableCell>4 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`segment-anything-2`</TableCell>
+      <TableCell>12–24 GB (variant-dependent)</TableCell>
+      <TableCell>Per input pixel</TableCell>
+      <TableCell>12 GB+</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="audio-to-text" />
+
+## audio-to-text (Whisper)
+
+`audio-to-text` transcribes audio to text with timestamps. The network-standard model is `openai/whisper-large-v3`, which most gateway operators request by default. Running a non-standard model means fewer jobs routed your way.
+
+**VRAM:** ~3 GB warm  
+**Pricing unit:** Per millisecond of audio input  
+**Competitive note:** Whisper is VRAM-efficient. A 12 GB or 24 GB card supports a warm Whisper deployment alongside a diffusion model when those workloads are split across available GPU headroom.
+
+### aiModels.json entry
+
+```json icon="code" title="audio-to-text entry"
+{
+  "pipeline": "audio-to-text",
+  "model_id": "openai/whisper-large-v3",
+  "price_per_unit": 12882811,
+  "pixels_per_unit": 1,
+  "warm": true
+}
+```
+
+`price_per_unit` here is in wei per millisecond of audio. `12882811` wei is approximately $0.0000014 per second of audio at late-2025 ETH/USD rates.
+
+### Testing
+
+After restarting the AI worker, check container health:
+
+```bash icon="terminal" title="Check audio-to-text containers and logs"
+docker ps --filter name=livepeer-ai-runner
+docker logs <audio-to-text-container> --tail 50
+```
+
+Verify registration:
+
+```bash icon="terminal" title="Verify audio-to-text registration"
+# Your address should appear under audio-to-text at tools.livepeer.cloud
+```
+
+[tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)
+
+<CustomDivider middleText="text-to-speech" />
+
+## text-to-speech
+
+`text-to-speech` synthesises natural speech from text input. Growing demand as AI video narration use cases expand on the network.
+
+**VRAM:** Varies by model  
+**Pricing unit:** Per character, or per millisecond of output audio (model-dependent)  
+**Model:** `suno/bark` is the documented baseline model for this pipeline.
+
+### aiModels.json entry
+
+```json icon="code" title="text-to-speech entry"
+{
+  "pipeline": "text-to-speech",
+  "model_id": "suno/bark",
+  "price_per_unit": 5960465
+}
+```
+
+`price_per_unit` is in wei per pricing unit. Adjust based on the per-character or per-millisecond rate for your model.
+
+### Testing
+
+After startup, verify the container is running and the pipeline appears registered at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) under `text-to-speech`.
+
+<CustomDivider middleText="image-to-text" />
+
+## image-to-text
+
+`image-to-text` generates text descriptions from images using a vision-language model. The low VRAM requirement makes this the most accessible AI pipeline for operators without high-end GPUs.
+
+**VRAM:** ~1–2 GB (BLIP large)  
+**Pricing unit:** Per input pixel  
+**Entry point:** Runs on 4 GB GPUs. Operators below the 24 GB diffusion threshold still participate through `image-to-text` and `audio-to-text`.
+
+### aiModels.json entry
+
+```json icon="code" title="image-to-text entry"
+{
+  "pipeline": "image-to-text",
+  "model_id": "Salesforce/blip-image-captioning-large",
+  "price_per_unit": 1192093,
+  "warm": true
+}
+```
+
+`1192093` wei per input pixel is approximately $0.000125 per megapixel at late-2025 ETH/USD rates. Image-to-text pricing is lower than diffusion pipelines because the compute cost is lower.
+
+### Testing
+
+```bash icon="terminal" title="Inspect image-to-text container logs"
+docker logs image-to-text-container --tail 30
+```
+
+Check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) for registration status.
+
+<CustomDivider middleText="segment-anything-2" />
+
+## segment-anything-2
+
+`segment-anything-2` (SAM2) performs promptable segmentation — given an image or video frame and a point or bounding box prompt, it returns pixel masks for the identified object or region. The pipeline is compute-intensive and has lower competition than diffusion pipelines.
+
+**VRAM:** 12–24 GB depending on model variant  
+**Pricing unit:** Per input pixel  
+**Model variants:** SAM2 has multiple size variants. `facebook/sam2-hiera-large` is the standard choice.
+
+### aiModels.json entry
+
+```json icon="code" title="segment-anything-2 entry"
+{
+  "pipeline": "segment-anything-2",
+  "model_id": "facebook/sam2-hiera-large",
+  "price_per_unit": 4768371
+}
+```
+
+`segment-anything-2` usually stays cold until demand justifies the VRAM cost. The model then loads on the first request.
+
+### Testing
+
+After the AI worker starts, verify the pipeline container is running:
+
+```bash icon="terminal" title="Check segment-anything-2 containers"
+docker ps --filter name=livepeer-ai-runner
+```
+
+Check registration at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) under `segment-anything-2`.
+
+<CustomDivider middleText="Multi-Pipeline Configuration" />
+
+## Running multiple pipelines
+
+Audio and vision pipelines run alongside diffusion pipelines on the same node when the VRAM budget supports them. Example configuration for a 24 GB card with diffusion warm and Whisper also warm:
+
+```json icon="code" title="Multi-pipeline aiModels.json"
+[
+  {
+    "pipeline": "text-to-image",
+    "model_id": "SG161222/RealVisXL_V4.0_Lightning",
+    "price_per_unit": 4768371,
+    "warm": true
+  },
+  {
+    "pipeline": "audio-to-text",
+    "model_id": "openai/whisper-large-v3",
+    "price_per_unit": 12882811,
+    "pixels_per_unit": 1,
+    "warm": true
+  },
+  {
+    "pipeline": "image-to-text",
+    "model_id": "Salesforce/blip-image-captioning-large",
+    "price_per_unit": 1192093
+  }
+]
+```
+
+In this configuration, `text-to-image` and `audio-to-text` are warm (both fit within 24 GB across their respective VRAM budgets). `image-to-text` is cold and loads on first request.
+
+<Warning>
+  During the Beta phase, only one warm model per GPU is supported. A single physical GPU therefore keeps either `text-to-image` or `audio-to-text` warm. Split them across separate GPUs, or keep one cold. Check logs for `Error loading warm model` at startup.
+</Warning>
+
+<CustomDivider />
+
+## Related pages
+
+{/*
+  REVIEW:
+  - Verify the audio-to-text pricing unit implementation.
+  - Confirm the preferred text-to-speech model and its pricing unit.
+  - Confirm the SAM2 HuggingFace model ID format.
+  - Confirm whether the one-warm-model-per-GPU constraint applies per GPU or per container.
+*/}
+
+<CardGroup cols={2}>
+  <Card title="LLM Pipeline Setup" icon="message-bot" href="/v2/orchestrators/guides/ai-and-job-workloads/llm-pipeline-setup" arrow horizontal>
+    The Ollama-based runner for text generation on 8 GB VRAM GPUs.
+  </Card>
+  <Card title="Diffusion Pipeline Setup" icon="image" href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup" arrow horizontal>
+    text-to-image, image-to-image, image-to-video, and upscale pipeline configuration.
+  </Card>
+  <Card title="AI Model Management" icon="sliders" href="/v2/orchestrators/guides/config-and-optimisation/ai-model-management" arrow horizontal>
+    Warm vs cold strategy, VRAM allocation, and optimisation flags.
+  </Card>
+  <Card title="Pricing Strategy" icon="tag" href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy" arrow horizontal>
+    Per-pipeline pricing in aiModels.json, wei vs USD notation, and competitive positioning.
+  </Card>
+</CardGroup>

@@ -1,0 +1,50 @@
+---
+title: Rewards and Fees
+sidebarTitle: Rewards and Fees
+description: >-
+  How orchestrators earn: LPT inflation rewards and ETH job fees; reward cut and
+  fee share.
+keywords:
+  - livepeer
+  - orchestrators
+  - rewards
+  - fees
+  - inflation
+  - LPT
+  - ETH
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: orchestrator
+---
+
+Orchestrators earn from two distinct sources: **protocol rewards** (LPT inflation) and **job fees** (ETH). Do not conflate them.
+
+## Protocol rewards (LPT)
+
+- **Inflation** is minted each round and distributed to bonded stake. Your share is proportional to your stake in the total bonded LPT.
+- You must **call reward()** every round to claim; otherwise you miss that round’s inflation.
+- **Reward cut** is the percentage of LPT rewards you keep; the rest goes to delegators.
+
+## Job fees (ETH)
+
+- Gateways and broadcasters pay for compute via **probabilistic micropayments** (tickets). Winning tickets are redeemed on Arbitrum for ETH.
+- **Fee share** is the percentage of ETH fees you share with delegators; you keep the remainder.
+
+Reward cut and fee share are set when you activate or update your orchestrator (e.g. Via livepeer_cli or Explorer). They affect how attractive you are to delegators.
+
+## Video vs AI
+
+- **Video:** Revenue comes from ticket redemptions (ETH) and inflation (LPT). Selection is stake-weighted.
+- **AI:** Revenue is from per-job payments. Routing is by capability and price, not stake. AI does not depend on inflation for routing.
+
+## See also
+
+<Columns cols={2}>
+  <Card title="Staking LPT" icon="coins" href="./staking-LPT" arrow />
+  <Card title="Delegation" icon="users" href="./delegation" arrow />
+  <Card title="Economics (About)" icon="book" href="../about-orchestrators/economics" arrow />
+  <Card title="CLI flags (pricing)" icon="terminal" href="../references/cli-flags" arrow />
+</Columns>

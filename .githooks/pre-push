@@ -3,7 +3,7 @@
 # @category          orchestrator
 # @purpose           infrastructure:pipeline-orchestration
 # @scope             .githooks, tools/scripts/validate-codex-task-contract.js, .codex/task-contract.yaml
-# @owner             docs
+# @domain            docs
 # @needs             R-R29
 # @purpose-statement Pre-push hook — blocks push if AI stash files present, codex locks stale, or task contract invalid
 # @pipeline          P2 (push, hook entry point)
@@ -18,45 +18,9 @@ NC='\033[0m'
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
 ALLOW_CODEX_FORCE_PUSH="${ALLOW_CODEX_FORCE_PUSH:-0}"
 ALLOW_MAIN_PUSH="${ALLOW_MAIN_PUSH:-0}"
-ALLOWED_BRANCH_EXACT=("main" "docs-v2")
-ALLOWED_BRANCH_PREFIXES=("codex/" "feat/" "fix/" "chore/" "docs/" "refactor/" "hotfix/" "release/" "dependabot/")
 
 # Read stdin first so we can inspect all pushed refs while still validating branch scope.
 PUSH_LINES=$(cat)
-
-is_allowed_branch_name() {
-  local branch="${1:-}"
-  local allowed_branch
-
-  for allowed_branch in "${ALLOWED_BRANCH_EXACT[@]}"; do
-    if [[ "$branch" == "$allowed_branch" ]]; then
-      return 0
-    fi
-  done
-
-  for allowed_branch in "${ALLOWED_BRANCH_PREFIXES[@]}"; do
-    if [[ "$branch" == "$allowed_branch"* ]]; then
-      return 0
-    fi
-  done
-
-  return 1
-}
-
-validate_branch_name() {
-  local branch="${1:-}"
-  local context="${2:-branch}"
-  local display_branch="${branch:-<empty>}"
-
-  if is_allowed_branch_name "$branch"; then
-    return 0
-  fi
-
-  echo -e "${RED}❌ Invalid ${context} branch name: ${display_branch}${NC}"
-  echo -e "${YELLOW}Allowed exact branch names: main, docs-v2${NC}"
-  echo -e "${YELLOW}Allowed branch prefixes: codex/, feat/, fix/, chore/, docs/, refactor/, hotfix/, release/, dependabot/${NC}"
-  exit 1
-}
 
 is_codex_session() {
   if [[ "${CODEX_SHELL:-0}" == "1" ]]; then
@@ -79,18 +43,14 @@ is_codex_session() {
 }
 
 TARGETS_DOCS_V2=0
-validate_branch_name "$CURRENT_BRANCH" "local"
 while IFS=' ' read -r local_ref local_sha remote_ref remote_sha; do
   if [[ -z "${local_ref:-}" ]]; then
     continue
   fi
 
-  if [[ "${remote_ref:-}" == refs/heads/* ]]; then
-    validate_branch_name "${remote_ref#refs/heads/}" "remote (${remote_ref})"
-  fi
-
   if [[ "${remote_ref:-}" == "refs/heads/docs-v2" ]]; then
     TARGETS_DOCS_V2=1
+    break
   fi
 done <<< "$PUSH_LINES"
 
@@ -114,7 +74,7 @@ fi
 
 echo -e "${YELLOW}🔍 Running codex pre-push enforcement for ${CURRENT_BRANCH}${NC}"
 
-if ! node tools/scripts/validate-codex-task-contract.js --branch "$CURRENT_BRANCH" --quiet; then
+if ! node tools/scripts/validate-codex-task-contract.js --branch "$CURRENT_BRANCH" --require-committed-work --quiet; then
   echo -e "${RED}❌ Codex task contract validation failed. Push blocked.${NC}"
   exit 1
 fi

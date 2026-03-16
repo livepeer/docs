@@ -3,12 +3,56 @@
  * @script            scoring
  * @category          utility
  * @purpose           qa:content-quality
- * @scope             full-repo
+ * @scope             single-domain
  * @owner             docs
- * @needs             E-R1, R-R11
- * @purpose-statement Usefulness scoring engine — computes human and agent usefulness scores from page metadata
- * @pipeline          indirect — library module imported by other scripts, not invoked directly
- * @usage             node tools/lib/docs-usefulness/scoring.js [flags]
+ * @needs             R-R14
+ * @purpose-statement Aggregates rule scores into a final usefulness score per page.
+ * @pipeline          indirect — library module
+ * @usage             const { score } = require('../lib/docs-usefulness/scoring');
+ */
+/**
+ * @script            scoring
+ * @category          utility
+ * @purpose           qa:content-quality
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Aggregates rule scores into a final usefulness score per page.
+ * @pipeline          indirect — library module
+ * @usage             const { score } = require('../lib/docs-usefulness/scoring');
+ */
+/**
+ * @script            scoring
+ * @category          utility
+ * @purpose           qa:content-quality
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Aggregates rule scores into a final usefulness score per page.
+ * @pipeline          indirect — library module
+ * @usage             const { score } = require('../lib/docs-usefulness/scoring');
+ */
+/**
+ * @script            scoring
+ * @category          utility
+ * @purpose           qa:content-quality
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Aggregates rule scores into a final usefulness score per page.
+ * @pipeline          indirect — library module
+ * @usage             const { score } = require('../lib/docs-usefulness/scoring');
+ */
+/**
+ * @script            scoring
+ * @category          utility
+ * @purpose           qa:content-quality
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Aggregates rule scores into a final usefulness score per page.
+ * @pipeline          indirect — library module
+ * @usage             const { score } = require('../lib/docs-usefulness/scoring');
  */
 
 const fs = require('fs');

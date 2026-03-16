@@ -1,15 +1,21 @@
 /**
- * FocusableScrollRegions - Adds focusability to known scrollable regions on the page.
- *
- * @description
- * Some Mintlify-rendered containers (tab panels, KaTeX spans) use overflow scrolling
- * but are not keyboard-focusable by default. This helper adds tabindex=0 so the
- * scrollable region can be accessed via keyboard, satisfying WCAG expectations.
- *
- * @param {string[]} [selectors] - CSS selectors to target for focusability.
- *
+ * @component FocusableScrollRegions
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Focusable Scroll Regions primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/resources/documentation-guide/style-guide.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @param {any} selectors - selectors prop.
  * @example
- * <FocusableScrollRegions />
+ * <FocusableScrollRegions selectors="example" />
  */
 export const FocusableScrollRegions = ({ selectors }) => {
   useEffect(() => {

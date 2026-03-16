@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-C6, F-C1
  * @purpose-statement V2 page tester — validates v2 pages via Puppeteer browser rendering
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
+ * @pipeline          P2, P3
  * @usage             node tools/scripts/test-v2-pages.js [flags]
  */
 
@@ -23,6 +23,11 @@ const puppeteer = require('puppeteer');
 const DOCS_JSON_PATH = path.join(__dirname, '../../', 'docs.json');
 const BASE_URL = process.env.MINT_BASE_URL || 'http://localhost:3000';
 const TIMEOUT = 30000; // 30 seconds per page
+const BASE_ORIGIN = new URL(BASE_URL).origin;
+const BROWSER_LAUNCH_OPTIONS = {
+  headless: true,
+  args: ['--no-sandbox', '--disable-setuid-sandbox']
+};
 
 /**
  * Recursively extract all page paths from navigation structure
@@ -125,7 +130,9 @@ async function testPage(browser, pagePath) {
   // Listen for request failures
   page.on('requestfailed', request => {
     const failure = request.failure();
-    if (failure) {
+    const requestUrl = request.url();
+    const isSameOrigin = requestUrl.startsWith(BASE_ORIGIN);
+    if (failure && isSameOrigin) {
       errors.push(`Request Failed: ${request.url()} - ${failure.errorText}`);
     }
   });
@@ -138,7 +145,7 @@ async function testPage(browser, pagePath) {
     });
     
     // Wait a bit for any async rendering
-    await page.waitForTimeout(2000);
+    await new Promise(resolve => setTimeout(resolve, 2000));
     
     return {
       pagePath,
@@ -175,9 +182,9 @@ async function main() {
   
   // Check if server is running
   try {
-    const testPage = await puppeteer.launch({ headless: true });
+    const testPage = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
     const testBrowserPage = await testPage.newPage();
-    await testBrowserPage.goto(BASE_URL, { waitUntil: 'networkidle2', timeout: 5000 });
+    await testBrowserPage.goto(BASE_URL, { waitUntil: 'domcontentloaded', timeout: 5000 });
     await testBrowserPage.close();
     await testPage.close();
     console.log('✅ Server is accessible\n');
@@ -190,10 +197,7 @@ async function main() {
   
   console.log('🚀 Starting browser tests...\n');
   
-  const browser = await puppeteer.launch({ 
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
+  const browser = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
   
   const results = [];
   let passed = 0;

@@ -1,31 +1,31 @@
 # Content Gap Reconciliation Summary
 
-- Generated: 2026-03-08T04:32:23.086Z
+- Generated: 2026-03-07T10:35:56.447Z
 - CSV: tasks/reports/content-gap/reconciliation.csv
-- Total rows: 454
-- Total decision workload: 454
+- Total rows: 485
+- Total decision workload: 485
 
 ## Counts by source
 
 | source | count |
 |---|---:|
 | BLUEPRINT | 91 |
-| REPO_ONLY | 363 |
+| REPO_ONLY | 394 |
 
 ## Counts by tab
 
 | tab | count |
 |---|---:|
-| HOME | 13 |
-| DEVELOPERS | 68 |
+| HOME | 18 |
+| DEVELOPERS | 80 |
 | SOLUTIONS | 118 |
-| GATEWAYS | 98 |
-| GPU NODES | 41 |
+| GATEWAYS | 100 |
+| GPU NODES | 42 |
 | LP TOKEN | 21 |
-| COMMUNITY | 18 |
-| ABOUT | 33 |
+| COMMUNITY | 22 |
+| ABOUT | 34 |
 | RESOURCE HUB | 26 |
-| INTERNAL | 15 |
+| INTERNAL | 21 |
 | UNASSIGNED | 3 |
 
 ## Counts by status
@@ -33,7 +33,7 @@
 | status | count |
 |---|---:|
 | MISSING | 10 |
-| STUB | 159 |
-| PLACEHOLDER | 29 |
-| EXISTS | 256 |
+| STUB | 179 |
+| PLACEHOLDER | 31 |
+| EXISTS | 265 |
 

@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             R-R16, R-R17
  * @purpose-statement Generated file banner template — provides standard banner text for auto-generated files
- * @pipeline          indirect — library module imported by other scripts, not invoked directly
+ * @pipeline          indirect — library module
  * @usage             node tools/lib/generated-file-banners.js [flags]
  */
 const GENERATED_HIDDEN_MARKER = 'generated-file-banner:v1';
@@ -62,6 +62,7 @@ function buildGeneratedFrontmatterLines(options = {}) {
   const title = normalizeInline(options.title);
   const sidebarTitle = normalizeInline(options.sidebarTitle);
   const description = normalizeInline(options.description);
+  const pageType = normalizeInline(options.pageType);
   const keywords = Array.isArray(options.keywords) ? options.keywords.map((item) => normalizeInline(item)).filter(Boolean) : [];
   const keywordsStyle = options.keywordsStyle === 'multiline' ? 'multiline' : 'inline';
   const lines = ['---'];
@@ -69,6 +70,7 @@ function buildGeneratedFrontmatterLines(options = {}) {
   if (title) lines.push(`title: ${asQuotedYaml(title)}`);
   if (sidebarTitle) lines.push(`sidebarTitle: ${asQuotedYaml(sidebarTitle)}`);
   if (description) lines.push(`description: ${asQuotedYaml(description)}`);
+  if (pageType) lines.push(`pageType: ${pageType}`);
 
   if (keywords.length > 0) {
     if (keywordsStyle === 'multiline') {

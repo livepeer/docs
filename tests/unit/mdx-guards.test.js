@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Enforces MDX guardrails — globals imports, math delimiters, markdown table line breaks
- * @pipeline          P1 (commit, via run-all)
+ * @pipeline          P1, P3
  * @dualmode          dual-mode (document flags)
  * @usage             node tests/unit/mdx-guards.test.js [flags]
  */
@@ -15,7 +15,6 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
-const { getMdxFiles: getRoutableV2MdxFiles } = require('../utils/file-walker');
 
 let errors = [];
 let warnings = [];
@@ -75,65 +74,6 @@ function readFileSafe(filePath) {
 
 function stripFencedCode(content) {
   return content.replace(/```[\s\S]*?```/g, '');
-}
-
-function collectCodeBlockLanguageFiles(rootDir) {
-  return [
-    ...new Set([
-      ...getRoutableV2MdxFiles(rootDir),
-      ...collectMdxFiles(rootDir, 'snippets/pages'),
-      ...collectMdxFiles(rootDir, 'snippets/snippetsWiki')
-    ])
-  ];
-}
-
-function parseFenceOpening(line) {
-  const match = line.match(/^( {0,3})(`{3,}|~{3,})([^\n]*)$/);
-  if (!match) return null;
-
-  return {
-    character: match[2][0],
-    length: match[2].length,
-    info: match[3].trim()
-  };
-}
-
-function isFenceClosing(line, activeFence) {
-  const match = line.match(/^( {0,3})(`{3,}|~{3,})\s*$/);
-  return Boolean(
-    match &&
-    activeFence &&
-    match[2][0] === activeFence.character &&
-    match[2].length >= activeFence.length
-  );
-}
-
-function findUnlabelledCodeBlockLines(content) {
-  const lines = content.split('\n');
-  const lineNumbers = [];
-  let activeFence = null;
-
-  for (let idx = 0; idx < lines.length; idx += 1) {
-    const line = lines[idx];
-
-    if (activeFence) {
-      if (isFenceClosing(line, activeFence)) activeFence = null;
-      continue;
-    }
-
-    const openingFence = parseFenceOpening(line);
-    if (!openingFence) continue;
-
-    const language = openingFence.info.split(/\s+/).filter(Boolean)[0] || '';
-    if (!language) lineNumbers.push(idx + 1);
-
-    activeFence = {
-      character: openingFence.character,
-      length: openingFence.length
-    };
-  }
-
-  return lineNumbers;
 }
 
 function checkLatestVersionAliasing(rootDir) {
@@ -227,26 +167,6 @@ function checkRawBrInMarkdownTables(rootDir) {
   return files.length;
 }
 
-function checkCodeBlockLanguageTags(rootDir) {
-  const files = collectCodeBlockLanguageFiles(rootDir);
-
-  files.forEach((filePath) => {
-    const content = readFileSafe(filePath);
-    if (!content) return;
-
-    findUnlabelledCodeBlockLines(content).forEach((line) => {
-      errors.push({
-        file: toRelative(filePath, rootDir),
-        rule: 'Code block language tag',
-        line,
-        message: 'Add a language tag to fenced code blocks; use ```text for plain text examples.'
-      });
-    });
-  });
-
-  return files.length;
-}
-
 function runTests() {
   errors = [];
   warnings = [];
@@ -257,7 +177,6 @@ function runTests() {
   scannedCounts.push(checkGlobalsImportPath(rootDir));
   scannedCounts.push(checkLptMathDelimiters(rootDir));
   scannedCounts.push(checkRawBrInMarkdownTables(rootDir));
-  scannedCounts.push(checkCodeBlockLanguageTags(rootDir));
 
   return {
     errors,

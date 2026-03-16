@@ -1,3 +1,15 @@
+/**
+ * @script            2-read-docs-to-csv
+ * @category          generator
+ * @purpose           tooling:dev-tools
+ * @scope             external
+ * @owner             docs
+ * @needs             node
+ * @purpose-statement Parses docs.json v2 navigation and writes CSV/JSON exports with section-group metadata for Notion sync.
+ * @pipeline          manual
+ * @usage             node tools/notion/2-read-docs-to-csv.js [flags]
+ */
+
 const fs = require("fs");
 const path = require("path");
 

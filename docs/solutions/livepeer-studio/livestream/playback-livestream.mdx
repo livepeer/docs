@@ -1,0 +1,88 @@
+---
+title: Play a livestream
+description: >-
+  Play livestreams in your app with the Livepeer Player or a custom HLS/WebRTC
+  player.
+keywords:
+  - livepeer
+  - docs
+  - solutions
+  - livepeer studio
+  - livestream
+  - playback livestream
+  - play
+  - livestreams
+  - your
+  - with
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+---
+
+<Warning>
+ Prefer making API requests from your backend. Avoid CORS-enabled API keys; they are deprecated. Fetch playback info on the server and pass the source to the player.
+</Warning>
+
+## Using the Livepeer Player (recommended)
+
+The Livepeer Player handles WebRTC (low latency) and HLS fallback. Fetch playback info on the server, then pass the parsed source to the Player:
+
+```tsx
+import * as Player from "@livepeer/react/player";
+import { getSrc } from "@livepeer/react/external";
+
+const playbackId = "YOUR_PLAYBACK_ID";
+
+// On the server (e.g. React Server Component or API route):
+export async function getPlaybackSource() {
+  const playbackInfo = await livepeer.playback.get(playbackId);
+  return getSrc(playbackInfo.playbackInfo);
+}
+
+export function LiveStreamPlayer({ src }: { src: Src[] | null }) {
+  return (
+    <Player.Root src={src}>
+      <Player.Container>
+        <Player.Video title="Live stream" />
+        <Player.Controls>
+          <Player.PlayPauseTrigger />
+        </Player.Controls>
+      </Player.Container>
+    </Player.Root>
+  );
+}
+```
+
+## Using your own player
+
+1. **Fetch playback info** from the [Playback Info API](https://livepeer.studio/docs/api-reference/playback/get) with the `playbackId`.
+2. The response includes sources such as:
+   - **HLS** - `application/vnd.apple.mpegurl` URL (e.g. `https://livepeercdn.studio/hls/{playbackId}/index.m3u8`).
+   - **WebRTC** - For low latency; use a WebRTC/WHEP-capable player. The API may return a WebRTC source; STUN/TURN are provided in the SDP response.
+3. Pass the chosen URL (or SDP) to a player that supports HLS or WebRTC (e.g. Video.js, HLS.js, or a WHEP client).
+
+<Info>
+ If the stream contains **B-frames**, WebRTC playback may not be available; playback will fall back to HLS. Instruct OBS users to use keyframe interval 1 and disable B-frames. See [Stream via OBS](stream-via-obs).
+</Info>
+
+## Embeddable player
+
+You can embed the hosted player with an iframe:
+
+```html
+<iframe
+  src="https://lvpr.tv?v=PLAYBACK_ID"
+  allowfullscreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+  frameborder="0"
+></iframe>
+```
+
+- **Low latency** - Livestreams use WebRTC by default. Use `&lowLatency=false` to force HLS, or `&lowLatency=force` to force WebRTC.
+- **Clipping** - Add `&clipLength=60` (max 120 seconds) to allow viewers to clip.
+- **Other** - `&muted=false`, `&autoplay=false`, `&loop=true`, `constant=true` (for constant playback, e.g. music).
+
+See [Player and embed](../player) for more options.

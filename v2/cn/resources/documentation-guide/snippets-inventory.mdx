@@ -17,7 +17,7 @@ keywords:
 'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
 ---
 {/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9zbmlwcGV0cy1pbnZlbnRvcnkubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9zbmlwcGV0cy1pbnZlbnRvcnkiLCJzb3VyY2VIYXNoIjoiNjI0NDFjNTIxMTFmNDgxNTc5MzllZTU5NDM2Mzg1NTlhNGQyNGFkYTA5NzliYjg4YTU3ZjUwMzRhOTE1Y2MwNiIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxMjo1ODoxMS4xNDRaIn0= */}
-import { CustomDivider } from "snippets/components/primitives/divider.jsx"
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
 
 ## 概述
 
@@ -36,10 +36,10 @@ import { CustomDivider } from "snippets/components/primitives/divider.jsx"
 
 ### 组件 (`/snippets/components/`)
 
-按用途组织的自定义 React/JSX 组件:
+按用途组织的自定义 React/JSX 组件。当前活动组件库使用 5 个生产类别，外加 `_archive/` 用于保留待审查的旧版模块。
 
 #### 基础组件 (`/snippets/components/primitives/`)
-- `buttons.jsx` - 按钮组件 (BasicBtn, DownloadButton)
+- `buttons.jsx` - 按钮组件 (DownloadButton)
 - `divider.jsx` - 自定义分割线组件 (CustomDivider)
 - `icons.jsx` - Livepeer 品牌图标 (LivepeerIcon, LivepeerSVG, 等等)
 - `links.jsx` - 链接和导航组件 (GotoLink, GotoCard, CustomCallout, 等等)
@@ -48,42 +48,36 @@ import { CustomDivider } from "snippets/components/primitives/divider.jsx"
 #### 布局 (`/snippets/components/layout/`)
 - `cards.jsx` - 卡片布局组件 (PostCard, BlogCard, ScrollBox)
 - `lists.jsx` - 列表组件 (BasicList, IconList, StepList, 等等)
-- `list-steps.jsx` - 用于将列表渲染为步骤的 ListSteps 组件
+- `listSteps.jsx` - 用于将列表渲染为步骤的 ListSteps 组件
 - `steps.jsx` - 样式化步骤组件 (StyledSteps, StyledStep)
 - `table.jsx` - 动态表格组件
-- `quad-grid.jsx` - QuadGrid 布局组件
+- `quadGrid.jsx` - QuadGrid 布局组件
 - `text.jsx` - 文本布局组件 (AccordionLayout)
-
-#### 显示 (`/snippets/components/display/`)
-- `video.jsx` - 视频组件 (YouTubeVideo, CardVideo, LinkedInEmbed)
-- `image.jsx` - 图像组件 (Image, LinkImage)
-- `embed.jsx` - 嵌入组件 (MarkdownEmbed, EmbedMarkdown)
-- `zoomable-diagram.jsx` - 可滚动图表组件 (ScrollableDiagram)
-- `quote.jsx` - 引用组件 (Quote, FrameQuote)
-- `frame-mode.jsx` - 框架模式标题组件 (PageHeader, H1-H6, P, Divider)
-- `showcase-cards.jsx` - 展示卡片组件 (ShowcaseCards)
-- `social-links.jsx` - 社交链接组件 (SocialLinks)
-- `card-carousel.jsx` - CardCarousel 组件
 
 #### 内容 (`/snippets/components/content/`)
 - `code.jsx` - 代码显示组件 (CustomCodeBlock, CodeComponent, ComplexCodeBlock)
-- `external-content.jsx` - ExternalContent 组件用于加载外部文档
+- `externalContent.jsx` - ExternalContent 组件用于加载外部文档
+- `math.jsx` - MathInline 和 MathBlock 辅助组件
+- `quote.jsx` - Quote 和 FrameQuote 组件
 - `release.jsx` - LatestVersion 组件
-- `response-field.jsx` - API 响应字段组件 (ResponseFieldGroup, ValueResponseField 等)
+- `responseField.jsx` - API 响应字段组件 (ResponseFieldGroup, ValueResponseField 等)
+- `video.jsx` - 视频、嵌入和下载组件
+- `zoomableDiagram.jsx` - ScrollableDiagram 组件
 
-#### 集成 (`/snippets/components/integrations/`)
+#### 数据 (`/snippets/components/data/`)
 - `coingecko.jsx` - CoinGeckoExchanges 组件
+- `data.jsx` - 博客、论坛、活动和社交流布局组件
+- `embed.jsx` - MarkdownEmbed、TwitterTimeline 和 PdfEmbed 组件
+- `showcaseCards.jsx` - ShowcaseCards 组件
+- `videoData.jsx` - YouTubeVideoData 辅助组件
 
-#### 域名 (`/snippets/components/domain/`)
-按文档部分组织的特定于领域的组件：
+#### 页面结构 (`/snippets/components/page-structure/`)
+- `frameMode.jsx` - Frame 模式标题和排版组件
+- `heroGif.jsx` - 星场动画组件
+- `portals.jsx` - 门户页面布局组件
 
-- `04_GATEWAYS/` - 与网关相关的组件
-  - `callouts.jsx` - 网关警告/注意事项提示框
-  - `quickstartTabs.jsx` - 网关快速入门UI组件
-- `SHARED/` - 跨领域的共享组件
-  - `HeroGif.jsx` - 星场动画组件
-  - `Portals.jsx` - 门户页面布局组件
-  - `previewCallouts.jsx` - 预览/即将推出提示
+#### 归档 (`/snippets/components/_archive/`)
+- 仅用于迁移审查的保留旧版源码和退役目录
 
 ### 数据 (`/snippets/data/`)
 
@@ -154,7 +148,7 @@ import { CustomDivider } from "snippets/components/primitives/divider.jsx"
 
 ### 样式（`/snippets/styles/`)
 
-- `themeStyles.jsx` - 主题样式定义（已弃用 - 请使用 CSS 自定义属性在 `style.css` 中）
+- 旧版主题样式文件 - 已弃用，建议改用 `style.css` 中的 CSS 自定义属性
 
 ### SnippetsWiki (`/snippets/snippetsWiki/`)
 
@@ -169,7 +163,7 @@ import { CustomDivider } from "snippets/components/primitives/divider.jsx"
 
 ## 文件数量摘要
 
-- **组件**: ~50+ JSX/TSX 文件，分布在 6 个类别中
+- **组件**: ~50+ JSX/TSX 文件，分布在 5 个活动类别中，另有 `_archive/` 用于迁移审查
 - **数据文件**: ~20+ JSX/MDX 文件
 - **页面模块**: ~20+ MDX 文件
 - **脚本**: ~10+ shell/JS 脚本
@@ -183,7 +177,7 @@ import { CustomDivider } from "snippets/components/primitives/divider.jsx"
 
 ```jsx
 // Import from components
-import { YouTubeVideo } from "/snippets/components/display/video.jsx";
+import { YouTubeVideo } from "/snippets/components/content/video.jsx";
 import { GotoCard } from "/snippets/components/primitives/links.jsx";
 import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
 ```
@@ -192,7 +186,7 @@ import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
 
 ```jsx
 // Import data files
-import { DOCKER_CODE } from "/snippets/data/gateways/code.jsx";
+import { GatewaySteps } from "/snippets/data/gateways.jsx";
 import { latestVersion } from "/snippets/automations/globals/globals.jsx";
 ```
 
@@ -200,7 +194,7 @@ import { latestVersion } from "/snippets/automations/globals/globals.jsx";
 
 ```jsx
 // Import MDX page modules
-import DockerOffChainTab from "/snippets/pages/04_GATEWAYS/run/quickstart/views/docker/dockerOffChainTab.mdx";
+import ProjectShowcase from "/snippets/pages/00_HOME/project-showcase.mdx";
 ```
 
 ## 自动化
@@ -224,4 +218,3 @@ import DockerOffChainTab from "/snippets/pages/04_GATEWAYS/run/quickstart/views/
 - [样式指南](./style-guide) - 样式和 Mintlify 的注意事项
 - [代码片段维基](/snippets/snippetsWiki/index) - 内部代码片段文档
 - [Mintlify 行为指南](/snippets/snippetsWiki/mintlify-behaviour) - Mintlify 特定的模式
-

@@ -6,7 +6,7 @@
 # @owner             docs
 # @needs             F-R17
 # @purpose-statement OpenAPI spec fetcher — pulls latest OpenAPI specs from Livepeer services for reference pages
-# @pipeline          manual — interactive developer tool, not suited for automated pipelines
+# @pipeline          manual — not yet in pipeline
 # @usage             bash tools/scripts/snippets/fetch-openapi-specs.sh [flags]
 # Pre-build script to fetch external OpenAPI specification files
 # Run this before building the docs to ensure API specs are up-to-date

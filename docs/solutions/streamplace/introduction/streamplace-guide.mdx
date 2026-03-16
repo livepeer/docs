@@ -1,0 +1,130 @@
+---
+title: How Streamplace Works
+description: >-
+  A step-by-step explanation of ingest, segmentation, provenance, transcoding,
+  and delivery.
+keywords:
+  - livepeer
+  - developers
+  - developer platforms
+  - streamplace
+  - streamplace guide
+  - works
+  - explanation
+  - ingest
+  - segmentation
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+---
+
+
+
+
+---
+
+Streamplace transforms livestreams into **verifiable, rights-aware, decentralized video pipelines** that plug directly into the Livepeer Network.
+
+Below is the full end-to-end workflow.
+
+---
+
+## 🧩 End-to-End Flow Diagram
+
+```mermaid
+flowchart TD
+    A[User Livestreams / Social App] --> B[Streamplace Node]
+    B --> C[Segment MP4s (1s)]
+    C --> D[C2PA Manifest + Ethereum Signature]
+    D --> E[Send to Livepeer Broadcaster]
+    E --> F[Orchestrators Transcode GPU]
+    F --> G[Return ABR Streams]
+    G --> H[Streamplace Manifests + Metadata]
+    H --> I[Viewers Watch + Verify Provenance]
+```
+
+---
+
+## 🔍 Step-by-Step Breakdown
+
+### **1. Ingest**
+
+Streamplace supports multiple ingestion methods:
+
+- WHIP / WHEP
+- RTMP
+- Browser-native WebRTC
+
+These inputs feed directly into the Streamplace Node.
+
+---
+
+### **2. Segmentation**
+
+Streamplace splits incoming video into **1-second MP4 segments**, enabling:
+
+- per-segment authentication
+- fine-grained metadata control
+- efficient transcoding dispatch
+- modular VOD assembly
+
+---
+
+### **3. Provenance Layer**
+
+Every segment receives:
+
+- a **C2PA content authenticity manifest**, and
+- an **Ethereum signature** linked to creator identity.
+
+This ensures integrity, provability, and non-repudiation for every part of the video.
+
+---
+
+### **4. Transcoding via Livepeer**
+
+Streamplace dispatches segments to the **Livepeer decentralized GPU network**:
+
+- orchestrators transcode segments
+- multi-bitrate (ABR) outputs are generated
+- provenance is preserved end-to-end
+
+---
+
+### **5. Manifest Reconstruction**
+
+Streamplace rebuilds:
+
+- HLS manifests
+- WebRTC streams
+- metadata-rich playback structures
+
+Segments, signatures, metadata, and playback context are merged into a single coherent output.
+
+---
+
+### **6. Playback & Verification**
+
+Users receive:
+
+- HLS or WebRTC outputs
+- provenance-aware video streams
+- automatic rights, warnings, and attribution
+
+Players can independently verify:
+
+- C2PA manifests
+- Ethereum signatures
+- rights & distribution policies
+
+---
+
+## 📚 Related Pages
+
+- [Overview](/solutions/streamplace/overview)
+- [Architecture](/solutions/streamplace/introduction/streamplace-architecture)
+- [Provenance & Metadata](/solutions/streamplace/introduction/streamplace-provenance)
+- [Integration Guide](/solutions/streamplace/introduction/streamplace-integration)

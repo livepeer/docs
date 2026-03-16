@@ -1,0 +1,318 @@
+---
+title: 'Tools & Dashboards'
+description: 'Monitor a Livepeer gateway with Explorer, Livepeer Tools, livepeer_cli, and Arbiscan - what each tool shows, which to use when, and how to read the data.'
+sidebarTitle: 'Tools & Dashboards'
+keywords:
+  - livepeer
+  - gateway
+  - explorer
+  - livepeer tools
+  - livepeer_cli
+  - arbiscan
+  - dashboard
+  - monitoring
+  - tools
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: gateway-operator
+purpose: operations
+status: current
+lastVerified: '2026-03-15'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- ~~Mermaid diagrams use theme colours~~ (N/A)
+- ~~Fontawesome icons are used on accordions and tabs~~
+- ~~Tables use StyledTable component~~
+- ~~No em-dashes are used (instead use standard -)~~
+- UK spelling is used
+- ~~Headers are concise and technical~~
+- ~~CustomDivider is used~~
+- Placeholders for Media & Video Resources are in comments with a TODO for a human. (N/A)
+- ~~REVIEW flags are in JSX flags for a human.~~
+Human:
+- Restructured into 3 clear categories: Dashboards, On-chain, Tools
+- Arbiscan section trimmed to brief intro + cross-ref (on-chain-debugging has full detail)
+- "Which Tool When?" consolidated and moved above detailed sections as "Quick Reference"
+- Port 8937 → 8935
+- Voice converted to entity-led
+- Em dashes removed throughout
+*/}
+
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from "/snippets/components/layout/containers.jsx"
+import { GotoCard } from '/snippets/components/primitives/links.jsx'
+
+<Tip>
+  Gateway monitoring spans three categories: **Dashboards** (Explorer, Livepeer Tools), **On-chain** (Arbiscan), and **CLI Tools** (livepeer_cli, HTTP API).
+  <br/> Use the View Dropdown on the right side panel to toggle.
+</Tip>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+This is the second of five monitoring guides. Four tools form the Gateway operator's monitoring toolkit, each answering different questions. For time-series metrics and alerting, see <LinkArrow href="/v2/gateways/guides/monitoring-and-tooling/monitoring-setup" label="Monitoring Setup" newline={false} />.
+
+## Quick Reference
+
+<AccordionGroup>
+  <Accordion title="Funding and deposits" icon="coins">
+    **livepeer_cli** Option 1 (Get node status) for the current balance. **Arbiscan** for the full deposit history and on-chain confirmation. See <LinkArrow href="/v2/gateways/guides/monitoring-and-tooling/on-chain-metrics" label="On-Chain Metrics" newline={false} /> for detailed workflows.
+  </Accordion>
+
+  <Accordion title="Orchestrator availability and pricing" icon="server">
+    **Livepeer Explorer** for the registered set with pricing and capacity. **livepeer_cli** for what the node currently sees. For AI Orchestrators specifically, **Livepeer Tools** shows which pipelines are active network-wide.
+  </Accordion>
+
+  <Accordion title="Job routing and AI health" icon="brain">
+    **Livepeer Tools** for network-wide AI Orchestrator status. `curl http://localhost:8935/health` to confirm the Gateway is responding. Run a test job if routing seems stuck.
+  </Accordion>
+
+  <Accordion title="GPU and hardware" icon="microchip">
+    `curl http://localhost:8935/hardware/stats` for GPU utilisation, memory used/total, and temperature.
+  </Accordion>
+
+  <Accordion title="Historical metrics and alerting" icon="chart-line">
+    **Prometheus + Grafana** via the <LinkArrow href="/v2/gateways/guides/monitoring-and-tooling/monitoring-setup" label="Monitoring Setup" newline={false} /> guide. livepeer_cli and the HTTP API show current state only.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+## Overview
+
+<StyledTable>
+  <TableRow header>
+    <TableCell header>Tool</TableCell>
+    <TableCell header>What it shows</TableCell>
+    <TableCell header>Node types</TableCell>
+    <TableCell header>Access</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Livepeer Explorer**</TableCell>
+    <TableCell>On-chain data: Orchestrators, staking, Gateway registrations</TableCell>
+    <TableCell><Badge color="blue">Video</Badge> <Badge color="green">Dual</Badge></TableCell>
+    <TableCell>[explorer.livepeer.org](https://explorer.livepeer.org)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Livepeer Tools**</TableCell>
+    <TableCell>Gateway performance metrics, network-wide AI view</TableCell>
+    <TableCell><Badge color="blue">Video</Badge> <Badge color="purple">AI</Badge> <Badge color="green">Dual</Badge></TableCell>
+    <TableCell>[tools.livepeer.cloud](https://tools.livepeer.cloud)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Arbiscan**</TableCell>
+    <TableCell>Contract events: ticket redemptions, deposit changes, gas</TableCell>
+    <TableCell><Badge color="blue">Video</Badge> <Badge color="green">Dual</Badge></TableCell>
+    <TableCell>[arbiscan.io](https://arbiscan.io)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**livepeer_cli**</TableCell>
+    <TableCell>Local node status: deposit, reserve, sessions, config</TableCell>
+    <TableCell><Badge color="blue">Video</Badge> <Badge color="purple">AI</Badge> <Badge color="green">Dual</Badge></TableCell>
+    <TableCell>CLI on host or Docker</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**CLI HTTP API**</TableCell>
+    <TableCell>Programmatic node status and configuration</TableCell>
+    <TableCell><Badge color="blue">Video</Badge> <Badge color="purple">AI</Badge> <Badge color="green">Dual</Badge></TableCell>
+    <TableCell>`http://localhost:5935/*`</TableCell>
+  </TableRow>
+</StyledTable>
+
+[//]: # (REVIEW: Confirm the canonical Livepeer Tools URL and keep this page aligned with it.)
+
+<CustomDivider style={{marginBottom: "-2rem"}} />
+## Tools and Dashboards Detail
+<Tabs>
+    <Tab title="Livepeer Explorer" icon="gauge-high">
+        <BorderedBox variant="accent">
+            ## <Icon icon="computer" size={20} color="var(--accent)" />  Livepeer Explorer
+
+            The Livepeer Explorer is the primary tool for on-chain data about the network. It surfaces Orchestrator information, staking, and Gateway registrations from Arbitrum One.
+
+            <Tip>
+            Gateway-specific views in the Explorer are currently in development. Some Gateway metrics may not yet be visible.
+            {/* <LinkArrow label="View Experimental Gateway Explorer" href="https://explorer-arbitrum-one-git-feat-add-g-10dba1-livepeer-foundation.vercel.app/" /> */}
+            </Tip>
+
+            - **Orchestrator discovery:** Browse active Orchestrators, their capacity, advertised price per pixel, stake, and uptime. Useful for evaluating which Orchestrators to target.
+
+            - **Verify Gateway registration:** On-chain Gateways appear in the Explorer after the first successful deposit transaction. Search by Gateway address to see on-chain activity.
+
+            ### Gateway Explorer (Preview)
+            Status: <Badge color="red"> In Development </Badge> [PR #410]("https://github.com/livepeer/explorer/pull/410")
+
+            <LinkArrow label="Experimental Gateway Explorer Preview" href="https://explorer-arbitrum-one-git-feat-add-g-10dba1-livepeer-foundation.vercel.app/" />
+
+            <iframe src="https://explorer-arbitrum-one-git-feat-add-g-10dba1-livepeer-foundation.vercel.app/gateways" height="600px" width="100%" style={{marginTop: "1rem"}} title="Embedded content from explorer-arbitrum-one-git-feat-add-g-10dba1-livepeer-foundation.vercel.app" />
+
+            <br/>
+            <GotoCard
+            relativePath="https://explorer.livepeer.org"
+            icon="link"
+            label="Livepeer Explorer"
+            text="Browse Orchestrators, Gateways, and staking on Arbitrum One"
+            />
+
+            <GotoCard
+            relativePath="https://github.com/livepeer/explorer"
+            icon="github"
+            label="Explorer Repository"
+            text="Open source - contribute or self-host the Explorer"
+            />
+        </BorderedBox>
+    </Tab>
+    <Tab title="Cloud SPE Tools" icon="gauge-high">
+        <BorderedBox variant="accent">
+            ## <Icon icon="computer" size={20} color="var(--accent)" />  Cloud SPE Tools
+
+            A community-built dashboard providing a network-wide view of Gateway and Orchestrator performance metrics.
+
+            [//]: # (REVIEW: Confirm what Livepeer Tools currently exposes for gateway operators, especially AI metrics.)
+
+            - **Network-wide AI view:** See which AI Orchestrators are active, what pipelines they support, and approximate load. Useful for choosing Orchestrators to add to `-orchAddr`.
+
+            - **Gateway performance:** Compare Gateway performance against network averages. Identify whether problems (high latency, low success rates) are localised or network-wide.
+
+            - **Historical metrics:** Unlike livepeer_cli which shows current state only, Livepeer Tools provides time-series charts for trend analysis.
+
+            <iframe src="https://tools.livepeer.cloud/gateways" height="600px" width="100%" title="Embedded content from tools.livepeer.cloud" />
+            <br/>
+            <GotoCard
+            relativePath="https://tools.livepeer.cloud"
+            icon="link"
+            label="Livepeer Tools Dashboard"
+            text="Gateway and network performance metrics"
+            />
+        </BorderedBox>
+    </Tab>
+    <Tab title="CLI Tools" icon="terminal">
+        <BorderedBox variant="accent">
+            ## <Icon icon="tools" size={20} color="var(--accent)" /> livepeer_cli
+
+            The local command-line interface for a running Gateway node. It communicates with the node over HTTP on port 5935 (the CLI port, not the Gateway port).
+
+            #### Starting livepeer_cli
+
+            ```bash icon="terminal" Start livepeer_cli
+            # Binary installed on host
+            livepeer_cli -host 127.0.0.1 -http 5935
+
+            # Docker container
+            docker exec -it <container_name> livepeer_cli -host <container_hostname> -http 5935
+            ```
+
+            [//]: # (REVIEW: Confirm the current livepeer_cli default port and whether the -host flag remains required.)
+
+            ### Key Options
+
+            - **Option 1: Get node status** - the first thing to check. Output includes node version, network, ETH account address, current session count, and (for on-chain Gateways) deposit and reserve balance.
+
+            - **Option 11: Deposit broadcasting funds** - triggers a deposit and reserve transaction to the TicketBroker contract on Arbitrum. Enter amounts in ETH.
+
+            - **Option 16: Set max price per capability** - updates AI pipeline pricing (`-maxPricePerCapability`) at runtime.
+
+            - **Set broadcast config** - adjusts `-maxPricePerUnit` and transcoding profiles without restarting the node.
+
+            [//]: # (REVIEW: Confirm that the documented livepeer_cli options still match current builds.)
+
+            ### Docker usage
+
+            When running the Gateway inside Docker, use the container hostname (not `localhost`):
+
+            ```bash icon="terminal" Run livepeer_cli in Docker
+            docker exec -it livepeer_gateway livepeer_cli -host livepeer_gateway -http 5935
+            ```
+
+            Using `localhost` inside Docker fails because it refers to the container itself, not the running Gateway process.
+        </BorderedBox>
+    </Tab>
+    <Tab title="CLI Http API" icon="terminal">
+        <BorderedBox variant="accent">
+            ## <Icon icon="wifi" size={20} color="var(--accent)" /> CLI HTTP API
+
+            The livepeer_cli communicates with the node via an HTTP API on port 5935. Call this API directly for automation, scripting, or integration with external monitoring.
+
+            ```bash icon="terminal" Query the CLI HTTP API
+            # Get current node status
+            curl http://localhost:5935/status
+
+            # Get hardware stats
+            curl http://localhost:8935/hardware/stats
+            ```
+
+            Full API reference: <LinkArrow href="/v2/gateways/resources/technical/api-reference/CLI-HTTP/cli-http-api" label="CLI HTTP API Reference" newline={false} />
+        </BorderedBox>
+    </Tab>
+    <Tab title="On-Chain" icon="link">
+        <BorderedBox variant="accent">
+            ## <Icon icon="ethereum" size={20} color="var(--accent)" /> Arbiscan
+
+            Arbiscan is the block explorer for Arbitrum One - the authoritative source for what has happened on-chain.
+            It covers contract event logs, transaction history, and token transfers.
+            <br/>
+
+            Key use cases include
+            - monitoring deposit and reserve changes,
+            - tracking ticket redemptions,
+            - detecting unexpected drain, and
+            - setting up address watchlist notifications.
+            <br/>
+            Contract Addresses:
+            - TicketBroker (Target): 0xea1b0F6c8D158328a6e3D3F924B86A759F41465c
+            - All Contract Adresses <LinkArrow href="/v2/gateways/resources/technical/contract-addresses" label="Livepeer Contract Addresses" />
+
+            <br/>
+            For detailed on-chain monitoring workflows, see <LinkArrow href="/v2/gateways/guides/monitoring-and-tooling/on-chain-metrics" label="On-Chain Metrics" newline={false} />.
+            <br/>For Livepeer contract addresses, see <LinkArrow href="/v2/gateways/resources/technical/contract-addresses" label="Contract Addresses" newline={false} />.
+        </BorderedBox>
+    </Tab>
+</Tabs>
+
+
+## Related Pages
+
+<CardGroup cols={3}>
+  <Card title="Monitoring Setup" icon="chart-line" href="/v2/gateways/guides/monitoring-and-tooling/monitoring-setup">
+    Prometheus + Grafana for time-series observability.
+  </Card>
+  <Card title="On-Chain Metrics" icon="cube" href="/v2/gateways/guides/monitoring-and-tooling/on-chain-metrics">
+    TicketBroker events and Arbitrum contract inspection.
+  </Card>
+  <Card title="API Reference" icon="code" href="/v2/gateways/resources/technical/api-reference/CLI-HTTP/cli-http-api">
+    Full /health, /status, /hardware/stats endpoint docs.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  Journey step: "Where do I see what's happening?"
+  Consolidated guide to all gateway operator tools. Replaces/absorbs 3 WIP pages
+  (explorer.mdx, livepeer-tools.mdx, gateway-middleware.mdx) that were thin iframe
+  embeds with no guide content.
+
+  Covers what each tool shows, how to read the data, and which tool to use for which
+  gateway type and workload.
+
+  SECTION HOME: Guides > Monitoring & Tooling
+
+  JOURNEY POSITION:
+  1. Health Checks - "Is it alive?"
+  2. Tools & Dashboards (this page) - "Where do I see what's happening?"
+  3. Monitoring Setup - "How do I set up proper observability?"
+  4. On-Chain Debugging - "What's happening at the contract layer?"
+  5. Troubleshooting - "Something broke"
+
+  CROSS-REFS:
+  - Health Checks (this section) - tools used for health verification
+  - Monitoring Setup (this section) - Prometheus/Grafana for deeper observability
+  - Payments & Pricing > Funding Guide - livepeer_cli deposit/reserve check
+  - Resources > API Reference - full endpoint documentation
+*/}

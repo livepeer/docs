@@ -1,0 +1,707 @@
+---
+title: 'Detailed Requirements by Deployment Path'
+sidebarTitle: 'Path Requirements'
+description: 'Detailed prerequisites for each gateway setup path — what you need, what you do not need, and how to get started for AI off-chain, video on-chain, dual, and SDK-based gateways.'
+keywords:
+  - livepeer
+  - gateway requirements
+  - off-chain gateway requirements
+  - on-chain gateway requirements
+  - dual gateway setup
+  - SDK gateway requirements
+  - Python gateway
+  - remote signer setup
+  - Arbitrum ETH gateway
+  - livepeer-python-gateway
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: gateway-operator
+purpose: guides
+status: current
+lastVerified: '2026-03-13'
+---
+{/* TODO:
+Verify:
+- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)
+- Fontawesome icons are used on accordions and tabs
+- Tables use StyledTable component
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical - no long headers or questions (aim for max 3 words)
+- CustomDivider is used with <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} /> for all --- separator breaks
+- Placeholders for Media & Video Resources are in comments with a TODO for a human.
+- REVIEW flags are in JSX flags for a human.
+*/}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+import { DoubleIconLink } from '/snippets/components/primitives/links.jsx'
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
+
+
+## Hardware requirements (all paths)
+
+All gateway paths use the same underlying machine requirements. Gateways do not require a GPU. They route work; they do not perform compute.
+
+<BorderedBox variant="accent" padding="20px">
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+    <div>
+      **Minimum for testing:**
+      - 2–4 CPU cores
+      - 8 GB RAM
+      - Any SSD storage (10 GB free minimum)
+      - Stable internet connection
+    </div>
+    <div>
+      **Recommended for production:**
+      - 4–8 CPU cores
+      - 16–32 GB RAM
+      - NVMe SSD (optional but recommended for data dir)
+      - Static IP or domain name
+      - 100+ Mbps stable networking
+    </div>
+  </div>
+</BorderedBox>
+
+<Note>
+  Multi-region deployment or a load balancer in front of multiple gateway instances is recommended for production workloads where reliability matters.
+</Note>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## OS compatibility
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>OS</TableCell>
+      <TableCell header>Install method</TableCell>
+      <TableCell header>Video gateway</TableCell>
+      <TableCell header>AI gateway</TableCell>
+      <TableCell header>Dual gateway</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Linux (Ubuntu 20.04+)**</TableCell>
+      <TableCell>Docker or binary</TableCell>
+      <TableCell>✅ Full support</TableCell>
+      <TableCell>✅ Full support</TableCell>
+      <TableCell>✅ Full support</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Windows (native)**</TableCell>
+      <TableCell>Not supported</TableCell>
+      <TableCell>❌</TableCell>
+      <TableCell>❌</TableCell>
+      <TableCell>❌</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Windows (WSL2 + Docker)**</TableCell>
+      <TableCell>Docker via WSL2</TableCell>
+      <TableCell>✅ Supported</TableCell>
+      <TableCell>⚠️ Limited / fragile</TableCell>
+      <TableCell>⚠️ Limited</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**macOS (Intel or Apple Silicon)**</TableCell>
+      <TableCell>Build from source</TableCell>
+      <TableCell>✅ Dev/local only</TableCell>
+      <TableCell>⚠️ Dev/local only</TableCell>
+      <TableCell>❌ Not recommended</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<Warning>
+  **AI and dual gateways require Linux for production.** Windows and macOS binaries for the AI gateway are not yet available. If you are developing on macOS, build from the `master` branch of `go-livepeer`. For production deployment, use a Linux server.
+</Warning>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Requirements by path
+
+<Tabs>
+  {/* =================== TAB 1: AI OFF-CHAIN =================== */}
+  <Tab title="AI Gateway (off-chain)" icon="robot">
+
+    The lowest-friction gateway path. No Ethereum wallet. No Arbitrum bridging. No registration. You point the binary at an orchestrator and a remote signer and you are routing AI inference.
+
+    ### What you need
+
+    <StyledSteps iconColor="#18794e" titleColor="#fff" lineColor="#18794e" iconSize="24px">
+      <StyledStep title="Linux server" icon="server">
+        Ubuntu 20.04 or later recommended. The AI gateway binary is not yet available for Windows or macOS. For local development on macOS, build from source.
+
+        Minimum specs: 4 CPU cores, 16 GB RAM, stable networking, public IP or domain for production.
+      </StyledStep>
+
+      <StyledStep title="Docker or binary" icon="docker">
+        Install Docker Engine (recommended) or download the go-livepeer binary:
+
+        ```bash
+        # Docker (recommended)
+        docker pull livepeer/go-livepeer:master
+        ```
+
+        {/* REVIEW: Should this be `master` or a pinned release tag? Confirm with Rick. Current docs consistently use `master` but a pinned tag is safer for production. */}
+
+        For binary installation, download from [go-livepeer releases](https://github.com/livepeer/go-livepeer/releases).
+      </StyledStep>
+
+      <StyledStep title="Orchestrator address(es)" icon="network-wired">
+        Your gateway needs at least one orchestrator address to send work to. For the off-chain AI path, you have three options:
+
+        <AccordionGroup>
+          <Accordion title="Option 1: Explicit orchestrator address (simplest)">
+            Pass one or more orchestrator addresses directly using `-orchAddr`. This is the simplest approach and best for development or operators who have a trusted, curated set.
+
+            ```bash
+            -orchAddr="https://my-orch.example.com:8936"
+            ```
+
+            To find active orchestrators on the network, use [tools.livepeer.cloud](https://tools.livepeer.cloud) or the [Livepeer Explorer](https://explorer.livepeer.org). Filter by the pipeline type you need.
+          </Accordion>
+          <Accordion title="Option 2: Discovery URL">
+            Pass a discovery endpoint URL. Your gateway calls this endpoint and receives a list of available orchestrators in the same webhook format used by go-livepeer. Any operator or service that maintains an orchestrator list can provide this endpoint.
+
+            {/* REVIEW: Is there a publicly maintained discovery URL for AI orchestrators? Check with Elite Encoder or Cloud SPE. The GetOrchestrators endpoint on signer.eliteencoder.net may serve this role. */}
+          </Accordion>
+          <Accordion title="Option 3: Remote signer discovery (recommended for production)">
+            j0sh's remote signer implementation includes a `GetOrchestrators` endpoint parameterised by model ID and capability. Your gateway queries it and receives a filtered list of orchestrators that support the specific pipeline you need.
+
+            This is the most powerful option: the same service that handles your payments can also handle discovery, filtered to the exact AI models you use.
+
+            {/* REVIEW: Confirm the GetOrchestrators endpoint has merged to livepeer-python-gateway main and/or is available on signer.eliteencoder.net. Check github.com/j0sh/livepeer-python-gateway. */}
+          </Accordion>
+        </AccordionGroup>
+      </StyledStep>
+
+      <StyledStep title="Remote signer endpoint" icon="key">
+        The remote signer handles all Ethereum payment operations on behalf of your gateway. You do not need an Ethereum wallet; the signer holds the key and signs payment tickets.
+
+        **Community-hosted option (free):**
+        ```
+        https://signer.eliteencoder.net
+        ```
+
+        {/* REVIEW: Confirm signer.eliteencoder.net is still live, free, and production-suitable. Verify with Elite Encoder in #local-gateways Discord. If down or changed, update this URL. */}
+
+        This signer is operated by Elite Encoder, a community member and active contributor. It is free to use and suitable for development and early production. For high-volume production deployments you may want to operate your own signer.
+
+        <Card title="Remote signers — full documentation" icon="key" href="/v2/gateways/guides/payments-and-pricing/remote-signers" arrow horizontal>
+          How the remote signing protocol works, state management requirements, and how to operate your own signer.
+        </Card>
+      </StyledStep>
+    </StyledSteps>
+
+    ### What you do NOT need
+
+    <BorderedBox variant="accent" padding="16px">
+      | Not required | Why |
+      |-------------|-----|
+      | Ethereum wallet on this machine | The remote signer holds the ETH key |
+      | ETH on Arbitrum | Payment flows through the signer |
+      | Arbitrum RPC URL | Not needed for the gateway process itself |
+      | Your own orchestrator or GPU | You connect to on-chain orchestrators |
+      | LPT tokens | LPT is for staking/governance only |
+      | Protocol registration | Only orchestrators register on-chain |
+    </BorderedBox>
+
+    ### Ports to open
+
+    | Port | Protocol | Purpose |
+    |------|----------|---------|
+    | `8937` | HTTP | AI inference API — your application sends requests here |
+    | `8935` | HTTP | General gateway interface |
+
+    For production, place a reverse proxy (nginx, Caddy) in front of port `8937` for TLS termination and rate limiting.
+
+    ### Minimal startup command
+
+    ```bash
+    docker run -d \
+      --name livepeer-ai-gateway \
+      -p 8937:8937 \
+      -p 8935:8935 \
+      -v ~/.lpData2:/root/.lpData2 \
+      livepeer/go-livepeer:master \
+        -gateway \
+        -httpIngest \
+        -datadir /root/.lpData2 \
+        -orchAddr="YOUR_ORCH_ADDRESS" \
+        -httpAddr 0.0.0.0:8937 \
+        -v 6
+    ```
+
+    Expected startup log:
+    ```
+    HTTP Server listening on http://0.0.0.0:8937
+    ```
+
+    <Card title="AI gateway quickstart" icon="bolt" href="/v2/gateways/quickstart/gateway-setup" arrow horizontal>
+      Full step-by-step including test request and troubleshooting.
+    </Card>
+
+  </Tab>
+
+  {/* =================== TAB 2: VIDEO ON-CHAIN =================== */}
+  <Tab title="Video Gateway (on-chain)" icon="video">
+
+    The on-chain video gateway replaces cloud transcoding. Your encoder connects via RTMP; the gateway routes transcoding jobs to orchestrators on the Livepeer network and returns HLS output.
+
+    <Note>
+      The go-livepeer binary uses `-gateway`. If you find older community guides using `-broadcaster=true`, this is the pre-2023 flag name. Replace it with `-gateway` in any command you use.
+    </Note>
+
+    ### What you need
+
+    <StyledSteps iconColor="#18794e" titleColor="#fff" lineColor="#18794e" iconSize="24px">
+      <StyledStep title="Linux, Windows, or Docker" icon="computer">
+        Video-only gateways are the most widely supported:
+        - Linux: Docker or binary (recommended for production)
+        - Windows: Docker via WSL2 (functional but not recommended for production)
+        - macOS: Dev/local only (build from source)
+      </StyledStep>
+
+      <StyledStep title="Static IP or domain" icon="globe">
+        Orchestrators must be able to reach your gateway to send transcoded segments back. Your gateway must have a publicly accessible address.
+
+        Home internet connections with NAT are problematic — the gateway publishes its `-serviceAddr` to orchestrators and expects inbound connections. Use a VPS, cloud instance, or configure static port forwarding.
+      </StyledStep>
+
+      <StyledStep title="ETH on Arbitrum One" icon="ethereum">
+        Video transcoding payments run on-chain via Ethereum probabilistic micropayments on the Arbitrum L2 network.
+
+        <BorderedBox variant="accent" padding="16px">
+          **Minimum amounts:**
+          - **Deposit:** 0.065 ETH (the amount available for payments)
+          - **Reserve:** 0.03 ETH (held back as a float for ticket generation)
+          - **Testing minimum total:** ~0.1 ETH plus gas
+
+          **Production recommendation:**
+          - **Reserve:** 0.36 ETH to handle gas spikes without service interruption
+
+          {/* REVIEW: Confirm current amounts with Mehrdad/Rick. Issue #3744 in go-livepeer repo is open to reduce the reserve requirement. Check if merged. */}
+        </BorderedBox>
+
+        You do not buy ETH on Arbitrum directly — you buy ETH on Ethereum mainnet and bridge it to Arbitrum.
+
+        <Accordion title="Step-by-step: get ETH onto Arbitrum" icon="ethereum">
+          1. **Buy ETH** on a centralised exchange (Coinbase, Binance, Kraken). Any exchange that supports Ethereum will do.
+          2. **Transfer to a self-custody wallet** (MetaMask, Ledger). You need to own the private key — exchange wallets cannot be used directly.
+          3. **Bridge to Arbitrum** via the [official Arbitrum bridge](https://bridge.arbitrum.io). Connect your wallet, select Ethereum → Arbitrum One, and bridge ~0.15 ETH (0.1 ETH for gateway + buffer for gas on both chains).
+          4. **Wait for bridge confirmation** — typically 10–20 minutes.
+          5. After bridging, run the gateway binary and use the Livepeer CLI to allocate your deposit and reserve.
+
+          <Card title="Full fund gateway guide" icon="ethereum" href="/v2/gateways/guides/payments-and-pricing/fund-your-gateway" arrow horizontal>
+            Step-by-step CLI walkthrough for allocating your deposit and reserve.
+          </Card>
+        </Accordion>
+      </StyledStep>
+
+      <StyledStep title="Arbitrum RPC URL" icon="link">
+        Your gateway needs an RPC to connect to the Arbitrum One network. Free public options are sufficient for a single gateway:
+
+        | Provider | URL | Notes |
+        |----------|-----|-------|
+        | Arbitrum public RPC | `https://arb1.arbitrum.io/rpc` | Free, rate-limited |
+        | Alchemy | `https://arb-mainnet.g.alchemy.com/v2/YOUR_KEY` | Free tier available, more reliable |
+        | Infura | `https://arbitrum-mainnet.infura.io/v3/YOUR_KEY` | Free tier available |
+
+        For production with multiple gateways or high request volume, use a paid RPC provider or self-host an Arbitrum node.
+      </StyledStep>
+    </StyledSteps>
+
+    ### What you do NOT need
+
+    <BorderedBox variant="accent" padding="16px">
+      | Not required | Why |
+      |-------------|-----|
+      | GPU | Orchestrators provide compute; gateways route |
+      | LPT tokens | LPT is for staking/governance; payments are ETH-only |
+      | Protocol registration | Only orchestrators register on-chain |
+      | Your own orchestrator | You connect to the public orchestrator pool |
+      | NFTs or validator stake | Not part of the gateway system |
+    </BorderedBox>
+
+    ### Ports to open
+
+    | Port | Protocol | Purpose |
+    |------|----------|---------|
+    | `1935` | TCP | RTMP ingest from your encoder |
+    | `8935` | HTTP | Gateway HTTP interface |
+    | `7935` | HTTP | CLI interface (local only, do not expose externally) |
+
+    ### Connect OBS or FFmpeg
+
+    **OBS Studio:** Settings → Stream → Custom, set server to `rtmp://YOUR_GATEWAY_IP:1935/live`.
+
+    **FFmpeg:**
+    ```bash
+    ffmpeg -re -i input.mp4 \
+      -c:v libx264 -preset veryfast \
+      -f flv rtmp://YOUR_GATEWAY_IP:1935/live/stream-key
+    ```
+
+    <Card title="Video gateway setup" icon="play" href="/v2/gateways/quickstart/gateway-setup" arrow horizontal>
+      Full setup walkthrough: install, fund, connect, start streaming.
+    </Card>
+
+  </Tab>
+
+  {/* =================== TAB 3: DUAL AI + VIDEO =================== */}
+  <Tab title="Dual Gateway (AI + Video)" id="dual-ai-video" icon="circle-half-stroke">
+
+    A dual gateway handles both AI inference and video transcoding from a single binary. Use this path if your platform needs both, or if you want to add AI pipeline capabilities alongside an existing transcoding setup.
+
+    <Warning>
+      **Linux only.** The AI component of a dual gateway requires Linux. There is no Windows or macOS binary for the AI portion. All dual gateway setups must run on Linux.
+    </Warning>
+
+    ### Prerequisites
+
+    The dual gateway needs everything from the video on-chain path, plus the AI off-chain prerequisites:
+
+    <BorderedBox variant="accent" padding="20px">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <div>
+          **Shared requirements:**
+          - Linux server (Ubuntu 20.04+)
+          - 4–8 CPU cores, 16–32 GB RAM
+          - Static IP or domain
+          - Docker or go-livepeer binary
+        </div>
+        <div>
+          **Additional for dual mode:**
+          - ETH on Arbitrum (for video payment side)
+          - Arbitrum RPC URL
+          - Remote signer endpoint (for AI off-chain side)
+          - Orchestrator addresses for both AI and video pools
+        </div>
+      </div>
+    </BorderedBox>
+
+    ### Port assignments
+
+    Dual gateway runs both interfaces simultaneously. Ensure all ports are open and not in conflict:
+
+    <StyledTable variant="bordered">
+      <thead>
+        <TableRow header>
+          <TableCell header>Port</TableCell>
+          <TableCell header>Protocol</TableCell>
+          <TableCell header>Gateway type</TableCell>
+          <TableCell header>Purpose</TableCell>
+        </TableRow>
+      </thead>
+      <tbody>
+        <TableRow>
+          <TableCell>`1935`</TableCell>
+          <TableCell>TCP</TableCell>
+          <TableCell>Video</TableCell>
+          <TableCell>RTMP ingest from encoders</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>`8935`</TableCell>
+          <TableCell>HTTP</TableCell>
+          <TableCell>Both</TableCell>
+          <TableCell>Primary gateway HTTP interface</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>`8937`</TableCell>
+          <TableCell>HTTP</TableCell>
+          <TableCell>AI</TableCell>
+          <TableCell>AI inference API endpoint</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>`7935`</TableCell>
+          <TableCell>HTTP</TableCell>
+          <TableCell>Both</TableCell>
+          <TableCell>CLI interface (local only)</TableCell>
+        </TableRow>
+      </tbody>
+    </StyledTable>
+
+    ### Configuration: separate pricing per workload type
+
+    The dual gateway uses separate pricing flags for each workload type. These are independent — you can set different max prices for video transcoding and each AI pipeline/model:
+
+    ```bash
+    # Video transcoding pricing
+    -maxPricePerUnit 1000         # max wei per pixel for video
+    -pixelsPerUnit 1
+
+    # AI pipeline pricing (JSON file or inline JSON)
+    -maxPricePerCapability '{
+      "capabilities_prices": [
+        {
+          "pipeline": "text-to-image",
+          "model_id": "stabilityai/sd-turbo",
+          "price_per_unit": 1000,
+          "pixels_per_unit": 1
+        },
+        {
+          "pipeline": "live-video-to-video",
+          "model_id": "livepeer/streamdiffusion",
+          "price_per_unit": 500,
+          "pixels_per_unit": 1
+        }
+      ]
+    }'
+    ```
+
+    {/* REVIEW: Confirm exact -maxPricePerCapability JSON format with Peter (AI SPE Lead). The format above is based on pricing-configuration.mdx upload which shows the structure but does not include real model IDs. Confirm live model IDs on the network via tools.livepeer.cloud. */}
+
+    ### Docker Compose pattern for dual gateway
+
+    For production dual deployments, Docker Compose isolates the service and makes restart/update management easier:
+
+    ```yaml
+    # docker-compose.yml — dual AI + video gateway
+    version: '3.8'
+
+    services:
+      livepeer-gateway:
+        image: livepeer/go-livepeer:master
+        container_name: livepeer-dual-gateway
+        restart: unless-stopped
+        network_mode: host
+        volumes:
+          - ~/.lpData:/root/.lpData
+        command: >
+          -gateway
+          -httpIngest
+          -datadir /root/.lpData
+          -network arbitrum-one-mainnet
+          -ethUrl ${ARBITRUM_RPC_URL}
+          -ethKeystoreDir /root/.lpData/keystore
+          -orchAddr "${ORCH_ADDRESSES}"
+          -httpAddr 0.0.0.0:8935
+          -rtmpAddr 0.0.0.0:1935
+          -cliAddr 127.0.0.1:7935
+          -maxPricePerUnit 1000
+          -maxPricePerCapability '${AI_PRICING_JSON}'
+          -v 6
+        environment:
+          - ARBITRUM_RPC_URL=${ARBITRUM_RPC_URL}
+          - ORCH_ADDRESSES=${ORCH_ADDRESSES}
+          - AI_PRICING_JSON=${AI_PRICING_JSON}
+    ```
+
+    Store secrets in a `.env` file alongside the compose file. Never commit the `.env` to version control.
+
+    {/* REVIEW: Confirm the Docker Compose flag format above against a known working dual configuration. The flags `-network arbitrum-one-mainnet` and `-ethUrl` are based on existing docs but should be verified against current go-livepeer releases with Rick. */}
+
+    ### Orchestrator routing for dual mode
+
+    Video and AI workloads use separate orchestrator pools:
+
+    - **Video orchestrators:** Registered on-chain, discoverable via Arbitrum contract registry. Discovered automatically when you connect in on-chain mode.
+    - **AI orchestrators:** Discovered via `-orchAddr` explicit list, discovery URL, or remote signer endpoint. Must support the specific AI pipeline and model you request.
+
+    Tools for finding AI-capable orchestrators:
+    - [tools.livepeer.cloud](https://tools.livepeer.cloud) — filter by pipeline and model
+    - [Livepeer Explorer](https://explorer.livepeer.org) — general orchestrator registry
+
+    <Card title="Configure dual gateway" icon="gear" href="/v2/gateways/setup/configure/dual-configuration" arrow horizontal>
+      Full configuration reference for dual AI + video mode.
+    </Card>
+
+  </Tab>
+
+  {/* =================== TAB 4: SDK / ALTERNATIVE =================== */}
+  <Tab title="SDK / Alternative" id="sdk-alternative" icon="code">
+
+    The SDK path lets you embed Livepeer gateway functionality directly in your application without running the Go binary. Use it for Python ML pipelines, browser applications, mobile clients, or embedded edge deployments.
+
+    This is made possible by the remote signer architecture (PRs #3791 and #3822). Your implementation handles media routing; the remote signer handles all Ethereum payment operations. You do not need to understand probabilistic micropayments.
+
+    > "We only really need one remote signer implementation, but we need many gateway implementations in order to have direct integration with the Livepeer network natively on different platforms."
+    >
+    > — Remote Signers design doc (j0sh, Q4 2025)
+
+    ### Prerequisites
+
+    <BorderedBox variant="accent" padding="20px">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <div>
+          **You need:**
+          - Your language runtime (Python 3.9+, Node.js, etc.)
+          - An endpoint to the remote signer service
+          - Orchestrator addresses or a discovery mechanism
+          - Ability to make HTTP/gRPC calls from your runtime
+        </div>
+        <div>
+          **You do NOT need:**
+          - The go-livepeer binary
+          - An Ethereum wallet
+          - ETH on Arbitrum
+          - Linux specifically — any OS your runtime supports
+          - Deep knowledge of PM (probabilistic micropayments)
+        </div>
+      </div>
+    </BorderedBox>
+
+    ### The reference implementation: livepeer-python-gateway
+
+    <DoubleIconLink
+      label="livepeer-python-gateway"
+      href="https://github.com/j0sh/livepeer-python-gateway"
+      iconLeft="github"
+      text="Primary non-Go gateway implementation, by j0sh:"
+    />
+
+    Key classes:
+
+    | Class | Role |
+    |-------|------|
+    | `OrchestratorSession` | Manages connection to a single orchestrator including payment state |
+    | `PaymentSession` | Handles payment ticket lifecycle with the remote signer |
+    | `LiveVideoJob` | Manages a live-video-to-video inference session |
+
+    Working examples (including LV2V, orchestrator selection, payment integration):
+    `github.com/j0sh/livepeer-python-gateway/tree/main/examples`
+
+    {/* REVIEW: Confirm OrchestratorSession attribution (Elite Encoder PR). Confirm current class names against main branch — these may have changed. Check github.com/j0sh/livepeer-python-gateway. */}
+
+    ### Orchestrator discovery for off-chain clients
+
+    On-chain gateways use the Arbitrum contract registry. Off-chain SDK clients cannot use that registry without an Ethereum dependency. Three alternatives:
+
+    **1. Explicit URI list (simplest)**
+    Pass orchestrator URIs directly. Best for development and trusted operator sets.
+    ```python
+    session = OrchestratorSession(
+        orchestrators=["https://my-orch.example.com:8936"]
+    )
+    ```
+
+    **2. Discovery URL**
+    Pass an endpoint URL. The SDK calls it and receives a list of orchestrators in the same webhook format as go-livepeer. Any maintainer of an orchestrator list can provide this.
+
+    **3. Remote signer discovery endpoint**
+    The remote signer's `GetOrchestrators` endpoint returns a filtered list by model ID and capability. Your client queries once at startup and gets a list tuned to your exact pipeline needs.
+
+    {/* REVIEW: Confirm GetOrchestrators endpoint is available on signer.eliteencoder.net and merged to livepeer-python-gateway. This is the most powerful option but its merge status is unconfirmed. */}
+
+    ### Workload type compatibility
+
+    Not all workloads are equal for alternative implementations:
+
+    <StyledTable variant="bordered">
+      <thead>
+        <TableRow header>
+          <TableCell header>Workload</TableCell>
+          <TableCell header>Remote signer support</TableCell>
+          <TableCell header>Discovery</TableCell>
+          <TableCell header>Notes</TableCell>
+        </TableRow>
+      </thead>
+      <tbody>
+        <TableRow>
+          <TableCell>**Live AI (LV2V)**</TableCell>
+          <TableCell>✅ Fully supported — designed for this first</TableCell>
+          <TableCell>gRPC `GetOrchestratorInfo` + signer</TableCell>
+          <TableCell>Best SDK support. `start_lv2v` is the main SDK entry point.</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**Batch AI** (text-to-image, image-to-video, etc.)</TableCell>
+          <TableCell>⚠️ Same mechanism as LV2V, not initial target</TableCell>
+          <TableCell>HTTP capability query</TableCell>
+          <TableCell>Payment mechanism is similar. Full support not confirmed as shipped.</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**BYOC** (Bring Your Own Compute)</TableCell>
+          <TableCell>⚠️ Same mechanism as LV2V</TableCell>
+          <TableCell>HTTP only (not gRPC). First-responder selection.</TableCell>
+          <TableCell>Good candidate for browser-based gateway — uses HTTP, not gRPC. Allow/block list supported.</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**Video transcoding**</TableCell>
+          <TableCell>❌ Explicitly excluded</TableCell>
+          <TableCell>On-chain Arbitrum registry</TableCell>
+          <TableCell>Ticket signing is synchronous in the transcoding hot path. Remote signing would increase latency and risk. Not supported for alternative implementations.</TableCell>
+        </TableRow>
+      </tbody>
+    </StyledTable>
+
+    ### Critical implementation rules
+
+    These are confirmed failure modes from the remote signer protocol design. Get them wrong and you generate invalid payment tickets.
+
+    <Warning>
+      **Rule 1 — Carry state forward between signing calls.** The remote signer is stateless: it returns updated state with each response. Your client must store that state and send it with the next signing call. Failing to do this causes repeated nonces, which produces invalid tickets that orchestrators will reject.
+    </Warning>
+
+    <Warning>
+      **Rule 2 — No concurrent signing calls for the same session.** Concurrent calls with the same initial state will each succeed locally but produce duplicate nonces. This is not a supported pattern. Calls must be sequential per session.
+    </Warning>
+
+    <Note>
+      **Rule 3 — Forward updated ticket parameters from orchestrator.** After each payment call, the orchestrator returns updated ticket parameters. Forward these to the signer. Skipping this is not fatal (the signer regenerates from scratch) but it increases unnecessary ticket generation and wastes fees.
+    </Note>
+
+    ### Setting up the remote signer
+
+    **Option A: Use the community-hosted signer**
+
+    The simplest path. Point your SDK at `https://signer.eliteencoder.net`.
+
+    {/* REVIEW: Confirm signer.eliteencoder.net is still live and accepting connections. Verify with Elite Encoder in #local-gateways Discord. */}
+
+    **Option B: Run your own remote signer**
+
+    For production or high-volume deployments, run the signer process from go-livepeer:
+
+    ```bash
+    # Run the remote signer as a separate process
+    ./livepeer \
+      -remoteSigner \
+      -ethKeystoreDir ~/.lpData/keystore \
+      -ethUrl https://arb1.arbitrum.io/rpc \
+      -network arbitrum-one-mainnet \
+      -httpAddr 0.0.0.0:8936 \
+      -v 6
+    ```
+
+    {/* REVIEW: Confirm `-remoteSigner` flag name and exact startup command with j0sh or from go-livepeer source. This is inferred from the design doc — verify exact binary flags before publishing. */}
+
+    <Card title="Remote signers — full protocol documentation" icon="key" href="/v2/gateways/guides/payments-and-pricing/remote-signers" arrow horizontal>
+      The full remote signing protocol spec: signing sequence, state machine, bookkeeping, and running your own signer.
+    </Card>
+
+    ### Community resources for SDK builders
+
+    | Resource | What it provides |
+    |----------|-----------------|
+    | [`#local-gateways` Discord](https://discord.gg/livepeer) | j0sh, Elite Encoder, and SDK builders are active. Best channel for live debugging. |
+    | [livepeer-python-gateway](https://github.com/j0sh/livepeer-python-gateway) | Python reference implementation and working examples |
+    | [livepeer-python-gateway examples](https://github.com/j0sh/livepeer-python-gateway/tree/main/examples) | Concrete code for LV2V, orchestrator selection, payment integration |
+    | [Elite Encoder remote signer](https://signer.eliteencoder.net) | Community-hosted signer — free for testing and early production |
+
+  </Tab>
+</Tabs>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## What next?
+
+Once you have confirmed your requirements, move to install:
+
+<CardGroup cols={3}>
+  <Card title="Install overview" icon="download" href="/v2/gateways/setup/install/install-overview" arrow>
+    Docker, Linux binary, and community install methods.
+  </Card>
+  <Card title="Configuration" icon="gear" href="/v2/gateways/setup/configure/configuration-overview" arrow>
+    Configure your gateway for your chosen workload type.
+  </Card>
+  <Card title="Fund your gateway" icon="ethereum" href="/v2/gateways/guides/payments-and-pricing/fund-your-gateway" arrow>
+    On-chain path only: get ETH on Arbitrum and allocate deposit and reserve.
+  </Card>
+</CardGroup>

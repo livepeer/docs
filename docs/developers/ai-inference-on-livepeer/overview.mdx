@@ -1,0 +1,147 @@
+---
+title: AI Inference on Livepeer
+sidebarTitle: Overview
+description: >-
+  What AI inference on Livepeer is, how it works, who it is for, and where to
+  start.
+keywords:
+  - livepeer
+  - ai
+  - inference
+  - real-time
+  - video ai
+  - orchestrator
+  - gpu
+  - overview
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+---
+
+import { PreviewCallout } from '/snippets/components/primitives/previewCallouts.jsx'
+import { GotoCard, GotoLink } from '/snippets/components/primitives/links.jsx'
+import { DynamicTable } from '/snippets/components/layout/table.jsx'
+import { FlexContainer } from '/snippets/components/layout/layout.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+<PreviewCallout />
+
+Livepeer is a decentralised network of GPU nodes that run AI inference on video and streaming workloads. It is not a generic cloud GPU service and not a model marketplace — it is a real-time, streaming-first AI compute layer optimised for low-latency inference at the frame and segment level.
+
+This section is for **developers** who want to build applications that consume AI inference via Livepeer: style transfer, depth estimation, object detection, speech-to-text, image-to-image pipelines, and more.
+
+---
+
+## How it works
+
+```mermaid
+flowchart LR
+    A["Your App"] --> B["Gateway\n(routing, auth, pricing)"]
+    B --> C["Orchestrator(s)\n(GPU + model + runtime)"]
+    C --> B
+    B --> A
+
+    style A fill:#1a1a1a,stroke:#2d9a67,color:#fff
+    style B fill:#1a1a1a,stroke:#2d9a67,color:#fff
+    style C fill:#1a1a1a,stroke:#2d9a67,color:#fff
+```
+
+Your application sends inference requests to a **Gateway**. The gateway discovers available **Orchestrators**, routes your job based on capability, price, and latency, handles retries and auth, and returns results. You never communicate with an orchestrator directly — the gateway handles all of that.
+
+<DynamicTable
+  headerList={["Layer", "What it does", "Who runs it"]}
+  itemsList={[
+    { "Layer": "Your app", "What it does": "Sends inference requests (HTTP / WebRTC)", "Who runs it": "You" },
+    { "Layer": "Gateway", "What it does": "Routes jobs, manages auth + pricing + QoS", "Who runs it": "Hosted services or self-run" },
+    { "Layer": "Orchestrator", "What it does": "Executes AI model inference on GPU", "Who runs it": "Network operators" }
+  ]}
+/>
+
+---
+
+## What you can build
+
+Livepeer AI is designed for streaming and real-time workloads. Strong fits include:
+
+<Columns cols={2}>
+  <Card title="Real-time video effects" icon="wand-magic-sparkles">
+ Style transfer, background replacement, depth overlays, and image-to-image pipelines running frame-by-frame on live video.
+  </Card>
+  <Card title="Live speech & captions" icon="microphone">
+ Live ASR, real-time translation, and caption generation from audio chunks ingested via WebRTC.
+  </Card>
+  <Card title="Vision pipelines" icon="eye">
+ Object detection, pose estimation, face parsing, segmentation — per-frame GPU inference for live streams.
+  </Card>
+  <Card title="Custom AI pipelines" icon="diagram-project">
+ Composable multi-step inference workflows via ComfyStream or BYOC: vision → conditioning → generation in sequence.
+  </Card>
+</Columns>
+
+---
+
+## AI on Livepeer vs other infrastructure
+
+<DynamicTable
+  headerList={["", "Livepeer AI", "Generic GPU cloud", "Hosted AI APIs"]}
+  itemsList={[
+    { "": "Optimised for", "Livepeer AI": "Streaming, real-time, frame-based", "Generic GPU cloud": "Batch, training, long jobs", "Hosted AI APIs": "Text, image, batch requests" },
+    { "": "Pricing model", "Livepeer AI": "Per frame / second / request via protocol", "Generic GPU cloud": "Per GPU-hour", "Hosted AI APIs": "Per token / request" },
+    { "": "Bring your own model", "Livepeer AI": "Yes — via BYOC container", "Generic GPU cloud": "Yes", "Hosted AI APIs": "No" },
+    { "": "Decentralised", "Livepeer AI": "Yes — open GPU market", "Generic GPU cloud": "No", "Hosted AI APIs": "No" },
+    { "": "Best for", "Livepeer AI": "Video AI apps, real-time pipelines", "Generic GPU cloud": "Model training, heavy batch", "Hosted AI APIs": "Simple one-off inference" }
+  ]}
+/>
+
+---
+
+## How models get on the network
+
+Models run inside **Orchestrator nodes**. Orchestrators can use:
+
+- **ComfyUI** — the most common approach; load `.safetensors` weights, build inference DAGs, serve via ComfyStream
+- **Custom inference servers** — any Torch / TensorRT / ONNX model wrapped in a Docker container (BYOC)
+
+Orchestrators advertise capabilities — `image-to-image`, `depth`, `style-transfer` — not model names. Gateways route by capability and performance, not by which specific model weights are loaded. This means models can be swapped or improved without breaking your application.
+
+<GotoCard
+  label="How orchestrators host models"
+  text="Step-by-step guide to running AI models on an orchestrator node"
+  relativePath="../../orchestrators/advanced-setup/hosting-models"
+/>
+
+---
+
+## Start here
+
+<CardGroup cols={3}>
+  <Card title="Is my workload a good fit?" icon="circle-question" href="./workload-fit">
+ Before building: understand what runs well on Livepeer and what doesn't.
+  </Card>
+  <Card title="AI Pipelines" icon="diagram-project" href="../ai-pipelines/overview">
+ ComfyStream, BYOC, and how to compose multi-step inference workflows.
+  </Card>
+  <Card title="Model support" icon="microchip-ai" href="../ai-pipelines/model-support">
+ Full model family compatibility matrix — which models run on Livepeer and why.
+  </Card>
+</CardGroup>
+
+---
+
+## Related sections
+
+<Columns cols={2}>
+  <GotoCard
+    label="Gateway Services"
+    text="Find a hosted gateway or run your own"
+    relativePath="../../gateways/using-gateways/choosing-a-gateway"
+  />
+  <GotoCard
+    label="Run an Orchestrator"
+    text="Contribute GPU capacity to the AI network"
+    relativePath="../../orchestrators/quickstart/overview"
+  />
+</Columns>

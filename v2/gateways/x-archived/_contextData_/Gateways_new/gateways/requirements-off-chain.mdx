@@ -1,0 +1,88 @@
+---
+title: 'Off-Chain AI Gateway Requirements'
+description: 'Requirements for running a Livepeer off-chain AI gateway on Linux. No ETH, LPT, or Arbitrum setup required — only a Linux machine and orchestrator addresses.'
+sidebarTitle: 'Off-Chain Requirements'
+keywords: ["livepeer", "AI gateway", "off-chain", "requirements", "Linux", "orchAddr", "no ETH", "no LPT"]
+pageType: 'reference'
+audience: 'gateway'
+status: 'current'
+---
+
+Requirements for an off-chain AI gateway. This gateway type routes AI inference jobs directly to orchestrators without any on-chain setup.
+
+<Note>
+  **No ETH, LPT, or Arbitrum required.** The off-chain AI gateway does not interact with any smart contracts. It uses direct orchestrator connections via `-orchAddr`.
+</Note>
+
+<Warning>
+  The AI gateway binary is only available for Linux. Windows and macOS are not currently supported.
+</Warning>
+
+---
+
+## Requirements
+
+| Requirement | Details | Required? |
+|---|---|---|
+| **OS** | Linux — Ubuntu 20.04+ recommended, amd64 architecture | Required |
+| **CPU** | 2+ cores recommended | Required |
+| **RAM** | 4 GB minimum recommended | Required |
+| **Disk** | 1 GB free for `-datadir` | Required |
+| **Network** | Outbound access to orchestrator HTTPS endpoints | Required |
+| **Port 8937** | Open for inbound requests if your gateway is accessed externally | Situational |
+| **curl** | Used to verify the gateway after setup | Recommended |
+| **Docker** | If using the Docker install path (recommended) | Optional |
+| **Ethereum wallet** | Not required | **Not needed** |
+| **ETH** | Not required | **Not needed** |
+| **LPT** | Not required | **Not needed** |
+| **Arbitrum RPC** | Not required | **Not needed** |
+| **Orchestrator addresses** | One or more AI-capable orchestrator addresses for `-orchAddr` | Required |
+
+[//]: # (SME: CPU/RAM minimums are not formally documented. These are community estimates.)
+[//]: # (Rick / j0sh to confirm official minimums before publishing.)
+
+---
+
+## Orchestrator addresses
+
+The off-chain gateway does not query any on-chain registry. You supply orchestrator addresses directly via the `-orchAddr` flag as a comma-separated list:
+
+```
+-orchAddr https://orch1.example.com:8935,https://orch2.example.com:8935
+```
+
+### How to find AI-capable orchestrators
+
+There is currently no canonical public registry of AI-capable orchestrators for off-chain gateways. Options for finding addresses:
+
+- **Livepeer Explorer** — [explorer.livepeer.org](https://explorer.livepeer.org). Filter orchestrators and look for those advertising AI capabilities or `ai-runner` pipeline support.
+- **Discord `#local-gateways`** — Community members share orchestrator addresses for testing. This is the most reliable current source for addresses to test with.
+- **Your own orchestrator** — If you are also running an AI orchestrator node, use its address directly (default port `8935`).
+- **Livepeer Cloud** — The Livepeer Cloud SPE operates public AI orchestrators. Check [livepeer.cloud](https://livepeer.cloud) or Discord for current endpoints.
+
+[//]: # (SME: No documented discovery endpoint or registry exists for off-chain gateways as of March 2026.)
+[//]: # (j0sh noted in Discord: "I'll also try to publish docs soon.")
+[//]: # (When a discovery endpoint is documented, replace this section with a direct link.)
+
+<Note>
+  Orchestrators in your `-orchAddr` list must be running AI-capable `ai-runner` containers and advertising the pipelines you intend to route (e.g. `text-to-image`, `image-to-video`). Orchestrators that only support video transcoding will not serve AI inference requests.
+</Note>
+
+---
+
+## Compared to on-chain requirements
+
+| | Off-chain AI Gateway | On-chain Video Gateway |
+|---|---|---|
+| OS | Linux only | Linux, Windows, macOS |
+| ETH wallet | Not needed | Required |
+| ETH on Arbitrum | Not needed | Required |
+| Arbitrum RPC | Not needed | Required |
+| Orchestrator list | Manual (`-orchAddr`) | On-chain discovery + `-orchAddr` |
+| Setup time | ~10–20 minutes | ~30–60 minutes |
+
+---
+
+## Ready to install?
+
+[AI Gateway Quickstart →](/v2/gateways/get-started/ai-gateway-quickstart)

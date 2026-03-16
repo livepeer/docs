@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-C1, R-R14
  * @purpose-statement Quarantine manager — classifies files for quarantine (default) or applies quarantine moves (--apply)
- * @pipeline          P6 (on-demand, quarantine)
+ * @pipeline          manual
  * @usage             node tools/scripts/cleanup-quarantine-manager.js [flags]
  */
 
@@ -190,16 +190,18 @@ function classifyFromScriptIssues(issues, entryBag) {
 
 function classifyFromRetentionPolicy(entryBag, policy) {
   const rules = Array.isArray(policy.rules) ? policy.rules : [];
-  const legacyRule = rules.find((rule) => String(rule.pattern || '').includes('_legacy-unmanaged'));
-  if (!legacyRule) return;
+  const quarantineRule = rules.find((rule) =>
+    String(rule.pattern || '').includes('tasks/quarantine/repo-audit')
+  );
+  if (!quarantineRule) return;
 
-  const legacyRoot = path.join(REPO_ROOT, 'tasks/reports/_legacy-unmanaged');
-  if (!fs.existsSync(legacyRoot)) return;
+  const quarantineRoot = path.join(REPO_ROOT, 'tasks', 'quarantine', 'repo-audit');
+  if (!fs.existsSync(quarantineRoot)) return;
 
-  walkFiles(legacyRoot).forEach((file) => {
+  walkFiles(quarantineRoot).forEach((file) => {
     addEntry(
       entryBag,
-      makeEntry(file.relPath, 'Matched report-retention policy legacy unmanaged pattern.', 0.95, 'quarantine', STAGE_ID)
+      makeEntry(file.relPath, 'Matched report-retention policy quarantine pattern.', 0.95, 'quarantine', STAGE_ID)
     );
   });
 }

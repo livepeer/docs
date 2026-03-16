@@ -1,0 +1,227 @@
+---
+title: 'SPE Grant Model for Gateway Operators'
+description: 'How Gateway operators access Livepeer treasury funding through the Special Purpose Entity (SPE) grant model - what SPEs are, what has been funded, and how to propose one.'
+purpose: operations
+sidebarTitle: 'SPE & Grant Models'
+keywords:
+  - livepeer
+  - SPE
+  - treasury grant
+  - gateway funding
+  - Livepeer Cloud SPE
+  - LLM SPE
+  - treasury proposal
+  - gateway grant
+  - Livepeer governance
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: 'guide'
+audience: 'gateway-operator'
+status: 'current'
+lastVerified: '2026-03-13'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)
+- Fontawesome icons are used on accordions and tabs
+- Tables use StyledTable component
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical - no long headers or questions (aim for max 3 words)
+- CustomDivider is used with <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} /> for all --- separator breaks
+- Placeholders for Media & Video Resources are in comments with a TODO for a human.
+- REVIEW flags are in JSX flags for a human.
+*/}
+
+{/*
+  PURPOSE:
+  Journey step: "How do treasury-funded gateways work?"
+  Guide for operators interested in the SPE (Special Purpose Entity) grant model
+  for running public gateway infrastructure. Covers the grant programme, cloud SPE
+  gateway model, application process, and sustainability.
+
+  SECTION HOME: Guides → Opportunities
+
+  JOURNEY POSITION:
+  1. Operator Opportunities Overview  - "Why is this an opportunity?"
+  2. NaaP & Multi-Tenancy  - "The platform business model"
+  3. SPE & Grant Models (this page)  - "Treasury-funded gateways"
+  4. Community Projects & Ecosystem  - "What others have built"
+
+  RELATED FILES (draw from):
+  - all-resources/support-ops--spe-grant-model.mdx             - PRIMARY (90%): 175 lines. SPE grant program, cloud SPE gateway model, governance, application process.
+  - all-resources/old--spe-grant-model.mdx                     - SECONDARY (20%): 16 lines. Original stub.
+  - all-resources/v2-providers--cloud-spe-gateway.mdx          - SECONDARY (40%): Cloud SPE gateway provider page.
+  - all-resources/v2-providers--choosing-a-gateway.mdx         - SECONDARY (20%): Gateway provider comparison.
+  - all-resources/opportunities--research-sources.md           - REFERENCE: REVIEW flags for SPE governance quorum.
+
+  CROSS-REFS:
+  - Opportunities Overview (this section)  - business context for grant-funded operation
+  - Community Projects & Ecosystem (this section)  - projects funded via grants
+  - Payments & Pricing → Fund Your Gateway  - deposit mechanics for grant-funded gateways
+  - Resources → Gateway Providers  - cloud-spe-gateway as an example of SPE output
+*/}
+
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+Some Livepeer Gateway operators are funded by the Livepeer treasury through a Special Purpose Entity (SPE) grant. This model lets ecosystem contributors run Gateways that serve the broader network - public access, new capabilities, increased demand - without needing a commercial revenue stream to cover operating costs from day one.
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## What is an SPE?
+
+A Special Purpose Entity (SPE) is an organisation funded by the Livepeer treasury through a governance proposal. SPEs are purpose-built: each one has a defined mandate, a requested budget, and milestones it is accountable to deliver.
+
+The treasury is funded by LPT inflation. Token holders vote on SPE proposals. Approved SPEs receive LPT (or equivalent), which they use to fund operations  - including running infrastructure like gateways.
+
+<Note>
+SPE grants are not grants to individual developers. They fund organisations with a defined public benefit mandate. If you are an individual developer looking to experiment, the AI Video Startup Programme is the more appropriate route.
+</Note>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## SPEs operating gateways today
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>SPE</TableCell>
+      <TableCell header>Gateway mandate</TableCell>
+      <TableCell header>What it runs</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Livepeer Cloud SPE**</TableCell>
+      <TableCell>Public gateway access and ecosystem adoption</TableCell>
+      <TableCell>Free RTMP video gateway and AI inference gateway at `livepeer.cloud`. Gateway tutorials, operator support, community tooling (`tools.livepeer.cloud`).</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**LLM SPE**</TableCell>
+      <TableCell>LLM inference routing on the Livepeer network</TableCell>
+      <TableCell>A specialised AI gateway routing LLM workloads to GPU operators on the Livepeer network.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**NaaP SPE** *(in development)*</TableCell>
+      <TableCell>Network as a Platform  - multi-tenant gateway with auth and billing</TableCell>
+      <TableCell>The NaaP dashboard (`github.com/livepeer/naap`): JWT-based auth, Developer API Keys, usage metering. Building the clearinghouse reference implementation.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## What the SPE model enables for gateway operators
+
+Running a gateway as an SPE differs from commercial gateway operation in one key way: your revenue comes from the treasury, not from customers. This makes it viable to:
+
+- Run **public gateways at no cost to developers**  - lowering the barrier for new builders to try Livepeer
+- Operate **specialised gateways** (LLM-only, BYOC, specific model sets) that serve an ecosystem gap instead of a mass market
+- **Build gateway infrastructure** (tooling, dashboards, clearinghouse components) that the whole ecosystem benefits from, where a commercial return is indirect or long-term
+
+In exchange, the SPE is accountable to token holders via milestone reporting and periodic renewal proposals.
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## What makes a fundable SPE proposal
+
+Successful SPE proposals in the gateway space share a few characteristics:
+
+<AccordionGroup>
+ <Accordion title="Clear public benefit, beyond business benefit">
+    The treasury funds work that benefits the network as a whole. A proposal to run a private gateway for your own product will not receive funding. A proposal to run a free public gateway that lowers barriers for ecosystem adoption  - like Cloud SPE  - is fundable.
+
+    The question to answer in a proposal: "If this SPE did not exist, what would the Livepeer ecosystem lose?"
+  </Accordion>
+  <Accordion title="Defined, verifiable milestones">
+    Proposals include specific deliverables with timelines. For gateway SPEs this typically means: uptime commitments for public gateways, volume metrics (requests served, new developers onboarded), or specific infrastructure shipped (tooling, dashboards, documentation).
+
+    Vague commitments ("we will grow the ecosystem") do not pass scrutiny. Specific ones ("we will maintain 99.5% uptime on a public AI inference gateway for 6 months and serve N developers") do.
+  </Accordion>
+  <Accordion title="Realistic budget tied to operational costs">
+    Budgets are scrutinised against infrastructure costs. A proposal requesting 18 months of server costs for a public gateway, with engineering time for tooling built on top, is reasonable. A proposal with no cost breakdown will not build confidence.
+  </Accordion>
+  <Accordion title="A team with demonstrated capability">
+    The most successful SPEs come from teams that have already shipped something: a working gateway, a community tool, or documented contributions to the ecosystem. A first proposal from a team with no Livepeer track record faces a higher bar.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## How to propose an SPE
+
+<Steps>
+  <Step title="Engage the community first">
+    Before writing a formal proposal, discuss your idea in the `#governance` Discord channel and on the [Livepeer Forum](https://forum.livepeer.org). Temperature-checking with the community before spending time on a full proposal saves everyone time. Foundation BD is also a useful first contact for alignment.
+
+    Look at existing approved SPE proposals on the Forum to understand the expected format and level of detail.
+  </Step>
+  <Step title="Write the proposal">
+    A gateway SPE proposal typically includes:
+
+    - **Problem statement:** What gap in the ecosystem does this address?
+    - **Mandate:** What will the SPE do? What will it explicitly not do?
+    - **Deliverables and milestones:** Specific, measurable, time-bound
+    - **Budget:** Broken down by category (infrastructure, engineering, operations). Requested in LPT or USD-equivalent.
+    - **Team:** Who is running this? What have they built before?
+    - **Success metrics:** How will token holders know if this worked?
+    - **Reporting cadence:** How often will the SPE report progress?
+  </Step>
+  <Step title="Post to the Forum">
+    Proposals are posted as threads on the [Livepeer Forum](https://forum.livepeer.org) for community discussion. Allow at least two weeks for community feedback before moving to an on-chain vote. Respond to questions and revise based on feedback  - this is expected.
+  </Step>
+  <Step title="On-chain governance vote">
+    Once the Forum discussion has reached rough consensus, the proposal moves to an on-chain vote through the Livepeer governance contract on Arbitrum. LPT holders (and their delegates) vote. Threshold and quorum requirements apply.
+</Step>
+  <Step title="Execute and report">
+    Approved SPEs receive funding and begin execution. Most proposals include a reporting cadence  - typically monthly or quarterly updates posted to the Forum. Renewal proposals are submitted at the end of the initial period based on milestone completion.
+  </Step>
+</Steps>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## SPE vs AI Video Startup Programme
+
+These are two different things serving different purposes:
+
+| | **SPE grant** | **AI Video Startup Programme** |
+|---|---|---|
+| **For** | Organisations building public-benefit gateway infrastructure | Individual developers or startups building AI-powered products on Livepeer |
+| **Funding source** | LPT treasury | Foundation budget |
+| **Accountability** | On-chain governance + milestone reporting | Foundation programme management |
+| **Timeline** | Multi-month proposals with defined terms | Programme cohort |
+| **Suitable for** | Public gateways, ecosystem tooling, clearinghouse infrastructure | App development, using (not necessarily running) Livepeer |
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Further reading
+
+- Livepeer Forum (proposals and discussion): [forum.livepeer.org](https://forum.livepeer.org)
+- Livepeer governance overview: see the Community and Governance tab in these docs
+- Cloud SPE gateway and tutorials: [livepeer.cloud](https://livepeer.cloud)
+- NaaP dashboard reference implementation: [github.com/livepeer/naap](https://github.com/livepeer/naap)
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Opportunities Overview" icon="chart-line" href="/v2/gateways/guides/roadmap-and-funding/operator-support">
+    Commercial business models for gateway operators who do not need treasury funding.
+  </Card>
+  <Card title="Community & Ecosystem" icon="globe" href="/v2/gateways/guides/roadmap-and-funding/gateway-showcase">
+    Production projects and tools built by SPE-funded and independent gateway operators.
+  </Card>
+  <Card title="NaaP & Multi-Tenancy" icon="users" href="/v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy">
+    The NaaP SPE reference implementation  - multi-tenant gateway with auth and billing.
+  </Card>
+</CardGroup>

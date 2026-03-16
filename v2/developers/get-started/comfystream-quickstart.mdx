@@ -1,0 +1,245 @@
+---
+title: 'Quickstart: ComfyStream on Livepeer'
+sidebarTitle: ComfyStream
+description: >-
+  Get a ComfyStream instance running and connected to the Livepeer network in a
+  single session — covering Docker, RunPod, and local install paths.
+purpose: tutorial
+keywords:
+  - comfystream
+  - livepeer
+  - real-time AI
+  - live video
+  - quickstart
+  - ComfyUI
+  - vtuber
+  - cascade
+  - docker
+  - runpod
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: developer
+lastVerified: 2026-03-17
+status: draft
+---
+[//]: # (REVIEW: OQ-D1 unresolved. This draft treats ComfyStream as primarily a standalone tool (no Livepeer account required for the core tutorial\). The Livepeer connection is covered in a separate section as the next step. Confirm with Peter/Rick before publishing whether this framing is correct, or whether a specific Livepeer network onboarding flow should be mandatory.)
+
+By the end of this quickstart, you will have a ComfyStream instance running with a real-time AI effect applied to a live video feed. Once you have a working pipeline, the final section shows how to connect it to the Livepeer network.
+
+## Before You Start
+
+ComfyStream processes live video using ComfyUI workflows on a local or cloud GPU. Choose your deployment path based on what you have available:
+
+| Path | Best for | Requires |
+|------|----------|----------|
+| **RunPod** | Fastest start, no local GPU | RunPod account (~$0.50/hr for A40) |
+| **Docker** | Local GPU or cloud server | Docker + NVIDIA GPU, Linux |
+| **Local install** | Existing ComfyUI setup | Miniconda, NVIDIA GPU, Linux |
+
+<Warning>
+ComfyStream requires an NVIDIA GPU. Windows and macOS are not supported for the server component.
+[//]: # (REVIEW: Confirm Linux-only from docs.comfystream.org or Rick. The README does not explicitly state OS, but PyTorch + CUDA dependency strongly implies Linux/NVIDIA only.)
+</Warning>
+
+**Prerequisites across all paths:**
+- NVIDIA GPU with sufficient VRAM [//]: # (REVIEW: Verify minimum VRAM from docs.comfystream.org hardware section. Likely 12–16 GB for StreamDiffusion; 24 GB recommended for real-time performance.)
+- A modern browser (Chrome or Firefox) for the ComfyStream UI
+
+<CustomDivider />
+
+## Set Up ComfyStream
+
+<Tabs>
+  <Tab title="RunPod (fastest)">
+
+    <Steps>
+      <Step title="Deploy the RunPod template">
+        Open the [livepeer-comfystream RunPod template](https://runpod.io/console/deploy?template=w01m180vxx&ref=u8tlskew) and select a GPU pod.
+
+        For StreamDiffusion workflows, select a GPU with at least [//]: # (REVIEW: confirm VRAM) VRAM. An RTX A4000 or A40 is a reasonable starting point.
+
+        Click **Deploy**.
+      </Step>
+
+      <Step title="Wait for the pod to start">
+        Once the pod status shows **Running**, click **Connect** to open the pod's exposed ports.
+
+        ComfyStream exposes two ports:
+        - `8188` — ComfyUI interface
+        - `8889` — ComfyStream WebRTC server
+        [//]: # (REVIEW: Confirm exact ports from docs.comfystream.org or docker-compose.yml in the repo. These are based on standard ComfyUI port + common ComfyStream server port.)
+      </Step>
+
+      <Step title="Open the ComfyStream UI">
+        In the RunPod connect panel, open the HTTP service on port `8889`. This loads the ComfyStream browser UI.
+
+        You should see a camera input selector and a workflow panel.
+      </Step>
+    </Steps>
+
+  </Tab>
+  <Tab title="Docker (local or cloud server)">
+
+    <Steps>
+      <Step title="Pull the Docker image">
+        ```bash icon="terminal"
+        docker pull livepeer/comfystream
+        ```
+        [//]: # (REVIEW: Verify the current tag recommendation. If there is a pinned release tag, use that rather than latest.)
+      </Step>
+
+      <Step title="Run the container">
+        ```bash icon="terminal"
+        docker run --gpus all \
+          -p 8188:8188 \
+          -p 8889:8889 \
+          livepeer/comfystream
+        ```
+
+        For full installation options including volume mounts and workspace configuration, see the [ComfyStream install docs](https://docs.comfystream.org/technical/get-started/install).
+        [//]: # (REVIEW: Confirm exact docker run flags from docs.comfystream.org / docker-compose.yml. The above is a minimal illustration only — actual flags may differ (workspace path, model path mounts\).)
+      </Step>
+
+      <Step title="Open ports for WebRTC (remote server only)">
+        If running on a remote server, allow inbound and outbound UDP traffic on ports `1024–65535`. This is required for WebRTC peer connections.
+
+        If only a subset of ports is available, pass `--media-ports 1024,1025,...` to the server command.
+      </Step>
+
+      <Step title="Open the ComfyStream UI">
+        Open `http://localhost:8889` (local) or your server's public IP on port `8889`. The ComfyStream UI should load.
+      </Step>
+    </Steps>
+
+  </Tab>
+  <Tab title="Local install">
+
+    <Steps>
+      <Step title="Create a Conda environment">
+        ```bash icon="terminal"
+        conda create -n comfystream python=3.12
+        conda activate comfystream
+        ```
+      </Step>
+
+      <Step title="Install ComfyStream">
+        ```bash icon="terminal"
+        pip install git+https://github.com/livepeer/comfystream.git
+        ```
+      </Step>
+
+      <Step title="Install custom nodes">
+        If you are running ComfyStream as a standalone application (not inside ComfyUI), copy the auxiliary custom nodes into your ComfyUI `custom_nodes` folder. See the [ComfyStream README](https://github.com/livepeer/comfystream#custom-nodes) for the exact list.
+      </Step>
+
+      <Step title="Download models">
+        [//]: # (REVIEW: Confirm the recommended starter model and download command from the repo's scripts/README.md. The repo has a `setup_models.py` script that handles model downloads.)
+        ```bash icon="terminal"
+        python src/comfystream/scripts/setup_models.py --workspace /path/to/ComfyUI
+        ```
+      </Step>
+
+      <Step title="Start the server">
+        ```bash icon="terminal"
+        python server/app.py --workspace /path/to/ComfyUI
+        ```
+
+        The server starts on port `8889` by default. Open `http://localhost:8889` in your browser.
+      </Step>
+    </Steps>
+
+  </Tab>
+</Tabs>
+
+<CustomDivider />
+
+## Load a Workflow
+
+ComfyStream uses ComfyUI workflow JSON files. The repository includes multiple starter workflows under the `workflows/` directory.
+
+<Steps>
+  <Step title="Open the workflow panel">
+    In the ComfyStream UI, click the workflow selector and choose a workflow file.
+
+    For your first run, use the StreamDiffusion SD 1.5 workflow — it is the lightest and fastest to compile.
+    [//]: # (REVIEW: Confirm the recommended starter workflow filename from the repo's workflows/ directory. Likely something like `streamdiffusion_sd15.json`.)
+  </Step>
+
+  <Step title="Select your camera input">
+    Choose your webcam from the camera input dropdown. The UI will request camera permission.
+  </Step>
+
+  <Step title="Start the pipeline">
+    Click **Run**. The first run requires TensorRT compilation, which takes 2–5 minutes. Subsequent runs load immediately.
+
+    You will see progress logs in the terminal where the server is running.
+  </Step>
+</Steps>
+
+<CustomDivider />
+
+## Verify the Pipeline is Running
+
+Once compilation completes, the ComfyStream UI will show your webcam feed with the AI effect applied in near-real-time.
+
+**Expected result:** Your webcam input appears transformed by the workflow — style transfer, depth-mapped effects, or other visual processing depending on the workflow you loaded.
+
+If you see only the raw webcam feed without transformation, check:
+- GPU VRAM is not exhausted (check `nvidia-smi`)
+- The workflow compiled without error (check server logs)
+- The workflow nodes reference models that have been downloaded
+
+<Note>
+Want to see what a running pipeline looks like before setting up? The [Building Real-Time AI Video Effects with ComfyStream](https://blog.livepeer.org/building-real-time-ai-video-effects-with-comfystream/) post includes a 5-minute demo video.
+</Note>
+
+<CustomDivider />
+
+## Connect to the Livepeer Network
+
+Running ComfyStream locally gets you a working real-time AI pipeline. To deploy that pipeline on the Livepeer network — making it accessible to other applications or earning compute fees — there are two paths:
+
+| Path | What it does | When to use |
+|------|-------------|-------------|
+| **Daydream API** | Use Livepeer Inc's hosted ComfyStream infrastructure | You want to serve your pipeline without managing compute |
+| **BYOC worker** | Register your ComfyStream instance as a go-livepeer orchestrator | You want to earn fees and run production workloads on the network |
+
+For the Daydream API, request access at [daydream.live](https://daydream.live).
+
+For the BYOC path, the integration layer is [PyTrickle](https://github.com/livepeer/pytrickle) — a Python package that enables ComfyStream to register as a Livepeer AI worker. See the [BYOC documentation](/v2/developers/build/byoc) for setup steps.
+
+[//]: # (REVIEW: OQ-D1 — confirm whether this two-path framing is correct with Peter/Rick. Also confirm whether the Livepeer community gateway (free endpoint\) can serve as a simple test target for new developers before going full BYOC. If so, add a step here showing that connection.)
+
+<CustomDivider />
+
+## What You Can Build
+
+ComfyStream supports the following pipeline types in production (Phase 4, January 2026):
+
+- **StreamDiffusion** — real-time style transfer and image-to-image on live video
+- **StreamDiffusion V2** — second-generation diffusion pipeline, supports video-to-video and image-to-image
+- **SuperResolution** — real-time video upscaling
+- **AudioTranscription + SRT** — real-time captions embedded in video output
+- **Text data-channel output** — structured text output (e.g. transcription) alongside video
+
+<CustomDivider />
+
+## Next Steps
+
+<CardGroup cols={3}>
+  <Card title="Build with ComfyStream" icon="waveform" href="/v2/developers/build/comfystream">
+    Custom nodes, workflow design, and advanced ComfyStream configuration.
+  </Card>
+  <Card title="Bring Your Own Container" icon="cube" href="/v2/developers/build/byoc">
+    Package any Python workload as a Livepeer AI worker using the BYOC path.
+  </Card>
+  <Card title="ComfyStream documentation" icon="book" href="https://docs.comfystream.org">
+    Full ComfyStream node reference, troubleshooting, and hardware guides.
+  </Card>
+</CardGroup>
+
+[//]: # (REVIEW: build/comfystream and build/byoc hrefs — confirm these paths exist or will exist before publication.)

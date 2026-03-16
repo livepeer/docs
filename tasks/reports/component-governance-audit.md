@@ -13,26 +13,26 @@ Status policy: functional health only (documentation completeness excluded from 
 | snippets/components/content/external-content.jsx | ExternalContent (L1) | — | — | 1 |
 | snippets/components/content/math.jsx | MathInline (L1), MathBlock (L11) | — | — | 2 |
 | snippets/components/content/release.jsx | LatestVersion (L1) | — | — | 1 |
-| snippets/components/content/response-field.jsx | ValueResponseField (L115), CustomResponseField (L115), ResponseFieldExpandable (L115), ResponseFieldAccordion (L115), ResponseFieldGroup (L115) | — | Component (L106) | 5 |
-| snippets/components/display/card-carousel.jsx | CardCarousel (L1) | — | — | 1 |
-| snippets/components/display/custom-cards.jsx | DisplayCard (L1), CustomCardTitle (L59), WidthCard (L78), InlineImageCard (L94) | — | — | 4 |
+| snippets/components/content/responseField.jsx | ValueResponseField (L115), CustomResponseField (L115), ResponseFieldExpandable (L115), ResponseFieldAccordion (L115), ResponseFieldGroup (L115) | — | Component (L106) | 5 |
+| snippets/components/display/CardCarousel.jsx | CardCarousel (L1) | — | — | 1 |
+| snippets/components/display/customCards.jsx | DisplayCard (L1), CustomCardTitle (L59), WidthCard (L78), InlineImageCard (L94) | — | — | 4 |
 | snippets/components/display/embed.jsx | MarkdownEmbed (L1), EmbedMarkdown (L26), TwitterTimeline (L51) | TwitterTimeline (L80), MarkdownEmbed (L1) | — | 3 |
-| snippets/components/display/frame-mode.jsx | PageHeader (L536), H1 (L536), H2 (L536), H3 (L536), H4 (L536), H5 (L536), H6 (L536), P (L536), Divider (L536) | — | — | 9 |
+| snippets/components/display/frameMode.jsx | PageHeader (L536), H1 (L536), H2 (L536), H3 (L536), H4 (L536), H5 (L536), H6 (L536), P (L536), Divider (L536) | — | — | 9 |
 | snippets/components/display/image.jsx | Image (L1), LinkImage (L37) | Image (L1) | — | 2 |
 | snippets/components/display/quote.jsx | Quote (L1), FrameQuote (L15) | — | — | 2 |
-| snippets/components/display/showcase-cards.jsx | ShowcaseCards (L1) | InteractiveCard (L2), InteractiveCards (L462), InteractiveCards (L313) | ShowcaseCard (L525) | 1 |
-| snippets/components/display/social-links.jsx | SocialLinks (L27) | — | — | 1 |
+| snippets/components/display/showcaseCards.jsx | ShowcaseCards (L1) | InteractiveCard (L2), InteractiveCards (L462), InteractiveCards (L313) | ShowcaseCard (L525) | 1 |
+| snippets/components/display/socialLinks.jsx | SocialLinks (L27) | — | — | 1 |
 | snippets/components/display/video.jsx | TitledVideo (L1), ShowcaseVideo (L115), Video (L133), YouTubeVideo (L249), YouTubeVideoData (L335), LinkedInEmbed (L383), YouTubeVideoDownload (L442), CardVideo (L499) | TitledVideo (L1), YouTubeVideo (L250), LinkedInEmbed (L384) | — | 8 |
 | snippets/components/display/zoomable-diagram.jsx | ScrollableDiagram (L1) | — | — | 1 |
 | snippets/components/domain/SHARED/HeroGif.jsx | Starfield (L1) | Starfield1 (L2) | — | 1 |
 | snippets/components/domain/SHARED/Portals.jsx | HeroImageBackgroundComponent (L423), HeroContentContainer (L423), PortalContentContainer (L423), PortalHeroContent (L423), LogoHeroContainer (L423), RefCardContainer (L423), HeroOverviewContent (L423), HeroSectionContainer (L423), PortalCardsHeader (L423), PortalSectionHeader (L423) | — | — | 10 |
 | snippets/components/domain/SHARED/previewCallouts.jsx | ComingSoonCallout (L146), PreviewCallout (L146), ReviewCallout (L146) | — | — | 3 |
 | snippets/components/integrations/coingecko.jsx | CoinGeckoExchanges (L1) | — | — | 1 |
-| snippets/components/layout/list-steps.jsx | ListSteps (L1) | — | — | 1 |
-| snippets/components/layout/search-table.jsx | SearchTable (L1) | — | — | 1 |
+| snippets/components/layout/ListSteps.jsx | ListSteps (L1) | — | — | 1 |
+| snippets/components/layout/SearchTable.jsx | SearchTable (L1) | — | — | 1 |
 | snippets/components/layout/cards.jsx | ScrollBox (L1) | — | — | 1 |
 | snippets/components/layout/lists.jsx | BasicList (L2), IconList (L16), StepList (L30), StepLinkList (L64), UpdateList (L98), UpdateLinkList (L119) | BasicList (L3), StepList (L31), UpdateList (L99) | — | 6 |
-| snippets/components/layout/quad-grid.jsx | QuadGrid (L1) | — | — | 1 |
+| snippets/components/layout/quadGrid.jsx | QuadGrid (L1) | — | — | 1 |
 | snippets/components/layout/steps.jsx | StyledSteps (L1), StyledStep (L53) | StyledSteps (L1) | — | 2 |
 | snippets/components/layout/table.jsx | DynamicTable (L1) | — | — | 1 |
 | snippets/components/layout/text.jsx | AccordionLayout (L1) | — | — | 1 |
@@ -60,7 +60,7 @@ Status policy: functional health only (documentation completeness excluded from 
 | BlogDataLayout | snippets/components/content/data.jsx | content | data | data/ | YES | L235: Q1 data-array renderer in data pipeline module |
 | BorderedBox | snippets/components/primitives/containers.jsx | primitives | layout | layout/ | YES | L1: Q3 spatial arrangement/container behavior |
 | CardBlogDataLayout | snippets/components/content/data.jsx | content | data | data/ | YES | L185: Q1 data-array renderer in data pipeline module |
-| CardCarousel | snippets/components/display/card-carousel.jsx | display | layout | layout/ | YES | L1: Q3 spatial arrangement/container behavior |
+| CardCarousel | snippets/components/display/CardCarousel.jsx | display | layout | layout/ | YES | L1: Q3 spatial arrangement/container behavior |
 | CardColumnsPostLayout | snippets/components/content/data.jsx | content | data | data/ | YES | L386: Q1 data-array renderer in data pipeline module |
 | CardInCardLayout | snippets/components/content/data.jsx | content | data | data/ | YES | L419: Q1 data-composed layout tied to forum dataset |
 | CardTitleTextWithArrow | snippets/components/primitives/text.jsx | primitives | primitives | primitives/ | No | L75: Q5 standalone styled title primitive |
@@ -74,13 +74,13 @@ Status policy: functional health only (documentation completeness excluded from 
 | ComplexCodeBlock | snippets/components/content/code.jsx | content | content | content/ | No | L154: Q4 content folder placement |
 | CopyText | snippets/components/primitives/text.jsx | primitives | primitives | primitives/ | No | L19: Q5 copy-to-clipboard text primitive |
 | CustomCallout | snippets/components/primitives/links.jsx | primitives | primitives | primitives/ | No | L1: Q5 standalone callout primitive |
-| CustomCardTitle | snippets/components/display/custom-cards.jsx | display | primitives | primitives/ | YES | L59: Q5 standalone styled title primitive |
+| CustomCardTitle | snippets/components/display/customCards.jsx | display | primitives | primitives/ | YES | L59: Q5 standalone styled title primitive |
 | CustomCodeBlock | snippets/components/content/code.jsx | content | content | content/ | No | L1: Q4 content folder placement |
 | CustomDivider | snippets/components/primitives/divider.jsx | primitives | primitives | primitives/ | No | L1: Q5 default primitive |
-| CustomResponseField | snippets/components/content/response-field.jsx | content | content | content/ | No | L56: Q4 content folder placement |
+| CustomResponseField | snippets/components/content/responseField.jsx | content | content | content/ | No | L56: Q4 content folder placement |
 | DiscordAnnouncements | snippets/components/content/data.jsx | content | data | data/ | YES | L453: Q1 data-array renderer for Discord feed |
-| DisplayCard | snippets/components/display/custom-cards.jsx | display | layout | layout/ | YES | L1: Q3 spatial arrangement/container behavior |
-| Divider | snippets/components/display/frame-mode.jsx | display | page-structure | page-structure/ | YES | L508: Q2 frame/portal-only structure intent |
+| DisplayCard | snippets/components/display/customCards.jsx | display | layout | layout/ | YES | L1: Q3 spatial arrangement/container behavior |
+| Divider | snippets/components/display/frameMode.jsx | display | page-structure | page-structure/ | YES | L508: Q2 frame/portal-only structure intent |
 | DoubleIconLink | snippets/components/primitives/links.jsx | primitives | primitives | primitives/ | No | L124: Q5 default primitive |
 | DownloadButton | snippets/components/primitives/buttons.jsx | primitives | primitives | primitives/ | No | L15: Q5 default primitive |
 | DynamicTable | snippets/components/layout/table.jsx | layout | layout | layout/ | No | L1: Q3 layout folder placement |
@@ -94,24 +94,24 @@ Status policy: functional health only (documentation completeness excluded from 
 | GotoCard | snippets/components/primitives/links.jsx | primitives | primitives | primitives/ | No | L211: Q5 default primitive |
 | GotoLink | snippets/components/primitives/links.jsx | primitives | primitives | primitives/ | No | L174: Q5 standalone navigation link primitive |
 | GridContainer | snippets/components/primitives/layout.jsx | primitives | layout | layout/ | YES | L49: Q3 spatial arrangement/container behavior |
-| H1 | snippets/components/display/frame-mode.jsx | display | page-structure | page-structure/ | YES | L95: Q2 frame/portal-only structure intent |
-| H2 | snippets/components/display/frame-mode.jsx | display | page-structure | page-structure/ | YES | L206: Q2 frame/portal-only structure intent |
-| H3 | snippets/components/display/frame-mode.jsx | display | page-structure | page-structure/ | YES | L256: Q2 frame/portal-only structure intent |
-| H4 | snippets/components/display/frame-mode.jsx | display | page-structure | page-structure/ | YES | L306: Q2 frame/portal-only structure intent |
-| H5 | snippets/components/display/frame-mode.jsx | display | page-structure | page-structure/ | YES | L356: Q2 frame/portal-only structure intent |
-| H6 | snippets/components/display/frame-mode.jsx | display | page-structure | page-structure/ | YES | L406: Q2 frame/portal-only structure intent |
+| H1 | snippets/components/display/frameMode.jsx | display | page-structure | page-structure/ | YES | L95: Q2 frame/portal-only structure intent |
+| H2 | snippets/components/display/frameMode.jsx | display | page-structure | page-structure/ | YES | L206: Q2 frame/portal-only structure intent |
+| H3 | snippets/components/display/frameMode.jsx | display | page-structure | page-structure/ | YES | L256: Q2 frame/portal-only structure intent |
+| H4 | snippets/components/display/frameMode.jsx | display | page-structure | page-structure/ | YES | L306: Q2 frame/portal-only structure intent |
+| H5 | snippets/components/display/frameMode.jsx | display | page-structure | page-structure/ | YES | L356: Q2 frame/portal-only structure intent |
+| H6 | snippets/components/display/frameMode.jsx | display | page-structure | page-structure/ | YES | L406: Q2 frame/portal-only structure intent |
 | HeroContentContainer | snippets/components/domain/SHARED/Portals.jsx | domain | page-structure | page-structure/ | YES | L83: Q2 frame/portal-only structure intent |
 | HeroImageBackgroundComponent | snippets/components/domain/SHARED/Portals.jsx | domain | page-structure | page-structure/ | YES | L51: Q2 frame/portal-only structure intent |
 | HeroOverviewContent | snippets/components/domain/SHARED/Portals.jsx | domain | page-structure | page-structure/ | YES | L115: Q2 frame/portal-only structure intent |
 | HeroSectionContainer | snippets/components/domain/SHARED/Portals.jsx | domain | page-structure | page-structure/ | YES | L1: Q2 frame/portal-only structure intent |
 | IconList | snippets/components/layout/lists.jsx | layout | layout | layout/ | No | L16: Q3 layout folder placement |
 | Image | snippets/components/display/image.jsx | display | primitives | primitives/ | YES | L1: Q5 standalone image primitive |
-| InlineImageCard | snippets/components/display/custom-cards.jsx | display | layout | layout/ | YES | L94: Q3 spatial arrangement/container behavior |
+| InlineImageCard | snippets/components/display/customCards.jsx | display | layout | layout/ | YES | L94: Q3 spatial arrangement/container behavior |
 | LatestVersion | snippets/components/content/release.jsx | content | content | content/ | No | L1: Q4 content folder placement |
 | LinkArrow | snippets/components/primitives/links.jsx | primitives | primitives | primitives/ | No | L331: Q5 default primitive |
 | LinkedInEmbed | snippets/components/display/video.jsx | display | content | content/ | YES | L383: Q4 content/media rendering behavior |
 | LinkImage | snippets/components/display/image.jsx | display | primitives | primitives/ | YES | L37: Q5 standalone clickable image primitive |
-| ListSteps | snippets/components/layout/list-steps.jsx | layout | layout | layout/ | No | L1: Q3 layout folder placement |
+| ListSteps | snippets/components/layout/ListSteps.jsx | layout | layout | layout/ | No | L1: Q3 layout folder placement |
 | LivepeerIcon | snippets/components/primitives/icons.jsx | primitives | primitives | primitives/ | No | L82: Q5 default primitive |
 | LivepeerIconFlipped | snippets/components/primitives/icons.jsx | primitives | primitives | primitives/ | No | L57: Q5 default primitive |
 | LivepeerIconOld | snippets/components/primitives/icons.jsx | primitives | primitives | primitives/ | No | L34: Q5 default primitive |
@@ -121,27 +121,27 @@ Status policy: functional health only (documentation completeness excluded from 
 | MarkdownEmbed | snippets/components/display/embed.jsx | display | data | data/ | YES | L19: Q1 runtime fetch() present in source file |
 | MathBlock | snippets/components/content/math.jsx | content | content | content/ | No | L11: Q4 content folder placement |
 | MathInline | snippets/components/content/math.jsx | content | content | content/ | No | L1: Q4 content folder placement |
-| P | snippets/components/display/frame-mode.jsx | display | page-structure | page-structure/ | YES | L456: Q2 frame/portal-only structure intent |
-| PageHeader | snippets/components/display/frame-mode.jsx | display | page-structure | page-structure/ | YES | L1: Q2 frame/portal-only structure intent |
+| P | snippets/components/display/frameMode.jsx | display | page-structure | page-structure/ | YES | L456: Q2 frame/portal-only structure intent |
+| PageHeader | snippets/components/display/frameMode.jsx | display | page-structure | page-structure/ | YES | L1: Q2 frame/portal-only structure intent |
 | PortalCardsHeader | snippets/components/domain/SHARED/Portals.jsx | domain | page-structure | page-structure/ | YES | L313: Q2 frame/portal-only structure intent |
 | PortalContentContainer | snippets/components/domain/SHARED/Portals.jsx | domain | page-structure | page-structure/ | YES | L139: Q2 frame/portal-only structure intent |
 | PortalHeroContent | snippets/components/domain/SHARED/Portals.jsx | domain | page-structure | page-structure/ | YES | L161: Q2 frame/portal-only structure intent |
 | PortalSectionHeader | snippets/components/domain/SHARED/Portals.jsx | domain | page-structure | page-structure/ | YES | L330: Q2 frame/portal-only structure intent |
 | PostCard | snippets/components/content/data.jsx | content | data | data/ | YES | L247: Q1 data-card renderer in data pipeline module |
 | PreviewCallout | snippets/components/domain/SHARED/previewCallouts.jsx | domain | primitives | primitives/ | YES | L70: Q5 status callout reusable across page types |
-| QuadGrid | snippets/components/layout/quad-grid.jsx | layout | layout | layout/ | No | L1: Q3 layout folder placement |
+| QuadGrid | snippets/components/layout/quadGrid.jsx | layout | layout | layout/ | No | L1: Q3 layout folder placement |
 | Quote | snippets/components/display/quote.jsx | display | content | content/ | YES | L1: Q4 reader-facing quote formatting |
 | RefCardContainer | snippets/components/domain/SHARED/Portals.jsx | domain | page-structure | page-structure/ | YES | L407: Q2 frame/portal-only structure intent |
-| ResponseFieldAccordion | snippets/components/content/response-field.jsx | content | content | content/ | No | L83: Q4 content folder placement |
-| ResponseFieldExpandable | snippets/components/content/response-field.jsx | content | content | content/ | No | L72: Q4 content folder placement |
-| ResponseFieldGroup | snippets/components/content/response-field.jsx | content | content | content/ | No | L94: Q4 content folder placement |
+| ResponseFieldAccordion | snippets/components/content/responseField.jsx | content | content | content/ | No | L83: Q4 content folder placement |
+| ResponseFieldExpandable | snippets/components/content/responseField.jsx | content | content | content/ | No | L72: Q4 content folder placement |
+| ResponseFieldGroup | snippets/components/content/responseField.jsx | content | content | content/ | No | L94: Q4 content folder placement |
 | ReviewCallout | snippets/components/domain/SHARED/previewCallouts.jsx | domain | primitives | primitives/ | YES | L135: Q5 status callout reusable across page types |
 | ScrollableDiagram | snippets/components/display/zoomable-diagram.jsx | display | content | content/ | YES | L1: Q4 content/media rendering behavior |
 | ScrollBox | snippets/components/layout/cards.jsx | layout | layout | layout/ | No | L1: Q3 layout folder placement |
-| SearchTable | snippets/components/layout/search-table.jsx | layout | layout | layout/ | No | L1: Q3 layout folder placement |
-| ShowcaseCards | snippets/components/display/showcase-cards.jsx | display | data | data/ | YES | L1: Q1 data-driven filtering/pagination renderer |
+| SearchTable | snippets/components/layout/SearchTable.jsx | layout | layout | layout/ | No | L1: Q3 layout folder placement |
+| ShowcaseCards | snippets/components/display/showcaseCards.jsx | display | data | data/ | YES | L1: Q1 data-driven filtering/pagination renderer |
 | ShowcaseVideo | snippets/components/display/video.jsx | display | content | content/ | YES | L115: Q4 embedded video content rendering |
-| SocialLinks | snippets/components/display/social-links.jsx | display | primitives | primitives/ | YES | L27: Q5 standalone social-link primitive |
+| SocialLinks | snippets/components/display/socialLinks.jsx | display | primitives | primitives/ | YES | L27: Q5 standalone social-link primitive |
 | Spacer | snippets/components/primitives/layout.jsx | primitives | primitives | primitives/ | No | L96: Q5 whitespace primitive |
 | Starfield | snippets/components/domain/SHARED/HeroGif.jsx | domain | page-structure | page-structure/ | YES | L1: Q2 portal/frame usage pattern; docs-guide imports treated as showcase |
 | StepLinkList | snippets/components/layout/lists.jsx | layout | layout | layout/ | No | L64: Q3 layout folder placement |
@@ -157,9 +157,9 @@ Status policy: functional health only (documentation completeness excluded from 
 | TwitterTimeline | snippets/components/display/embed.jsx | display | data | data/ | YES | L19: Q1 file-level data classification (same file has runtime fetch) |
 | UpdateLinkList | snippets/components/layout/lists.jsx | layout | layout | layout/ | No | L119: Q3 layout folder placement |
 | UpdateList | snippets/components/layout/lists.jsx | layout | layout | layout/ | No | L98: Q3 layout folder placement |
-| ValueResponseField | snippets/components/content/response-field.jsx | content | content | content/ | No | L1: Q4 API field/value content formatting |
+| ValueResponseField | snippets/components/content/responseField.jsx | content | content | content/ | No | L1: Q4 API field/value content formatting |
 | Video | snippets/components/display/video.jsx | display | content | content/ | YES | L133: Q4 content/media rendering behavior |
-| WidthCard | snippets/components/display/custom-cards.jsx | display | layout | layout/ | YES | L78: Q3 spatial arrangement/container behavior |
+| WidthCard | snippets/components/display/customCards.jsx | display | layout | layout/ | YES | L78: Q3 spatial arrangement/container behavior |
 | YouTubeVideo | snippets/components/display/video.jsx | display | content | content/ | YES | L249: Q4 content/media rendering behavior |
 | YouTubeVideoData | snippets/components/display/video.jsx | display | data | data/ | YES | L335: Q1 data-array renderer for YouTube feed items |
 | YouTubeVideoDownload | snippets/components/display/video.jsx | display | content | content/ | YES | L442: Q4 content/media rendering behavior |
@@ -325,44 +325,44 @@ Status policy: functional health only (documentation completeness excluded from 
 | snippets/components/content/external-content.jsx | 31 | Inline static style object | ADVISORY |
 | snippets/components/content/external-content.jsx | 41 | Inline static style object | ADVISORY |
 | snippets/components/content/external-content.jsx | 49 | Inline static style object | ADVISORY |
-| snippets/components/content/response-field.jsx | 24 | Inline static style object | ADVISORY |
-| snippets/components/content/response-field.jsx | 25 | Hardcoded hex #3b82f6 | BANNED |
-| snippets/components/content/response-field.jsx | 25 | Inline static style object | ADVISORY |
-| snippets/components/content/response-field.jsx | 34 | !important usage | BANNED |
-| snippets/components/content/response-field.jsx | 35 | !important usage | BANNED |
-| snippets/components/content/response-field.jsx | 64 | !important usage | BANNED |
-| snippets/components/content/response-field.jsx | 65 | !important usage | BANNED |
-| snippets/components/display/card-carousel.jsx | 48 | Inline static style object | ADVISORY |
-| snippets/components/display/card-carousel.jsx | 68 | Inline static style object | ADVISORY |
-| snippets/components/display/card-carousel.jsx | 79 | Inline static style object | ADVISORY |
-| snippets/components/display/card-carousel.jsx | 92 | Inline static style object | ADVISORY |
-| snippets/components/display/card-carousel.jsx | 114 | Inline static style object | ADVISORY |
-| snippets/components/display/custom-cards.jsx | 82 | Inline static style object | ADVISORY |
-| snippets/components/display/custom-cards.jsx | 105 | Inline static style object | ADVISORY |
+| snippets/components/content/responseField.jsx | 24 | Inline static style object | ADVISORY |
+| snippets/components/content/responseField.jsx | 25 | Hardcoded hex #3b82f6 | BANNED |
+| snippets/components/content/responseField.jsx | 25 | Inline static style object | ADVISORY |
+| snippets/components/content/responseField.jsx | 34 | !important usage | BANNED |
+| snippets/components/content/responseField.jsx | 35 | !important usage | BANNED |
+| snippets/components/content/responseField.jsx | 64 | !important usage | BANNED |
+| snippets/components/content/responseField.jsx | 65 | !important usage | BANNED |
+| snippets/components/display/CardCarousel.jsx | 48 | Inline static style object | ADVISORY |
+| snippets/components/display/CardCarousel.jsx | 68 | Inline static style object | ADVISORY |
+| snippets/components/display/CardCarousel.jsx | 79 | Inline static style object | ADVISORY |
+| snippets/components/display/CardCarousel.jsx | 92 | Inline static style object | ADVISORY |
+| snippets/components/display/CardCarousel.jsx | 114 | Inline static style object | ADVISORY |
+| snippets/components/display/customCards.jsx | 82 | Inline static style object | ADVISORY |
+| snippets/components/display/customCards.jsx | 105 | Inline static style object | ADVISORY |
 | snippets/components/display/embed.jsx | 55 | Inline static style object | ADVISORY |
 | snippets/components/display/embed.jsx | 64 | Inline static style object | ADVISORY |
-| snippets/components/display/frame-mode.jsx | 44 | Inline static style object | ADVISORY |
-| snippets/components/display/frame-mode.jsx | 89 | Inline static style object | ADVISORY |
+| snippets/components/display/frameMode.jsx | 44 | Inline static style object | ADVISORY |
+| snippets/components/display/frameMode.jsx | 89 | Inline static style object | ADVISORY |
 | snippets/components/display/image.jsx | 67 | Inline static style object | ADVISORY |
 | snippets/components/display/quote.jsx | 36 | Inline static style object | ADVISORY |
 | snippets/components/display/quote.jsx | 44 | Inline static style object | ADVISORY |
 | snippets/components/display/quote.jsx | 74 | Inline static style object | ADVISORY |
 | snippets/components/display/quote.jsx | 87 | Inline static style object | ADVISORY |
 | snippets/components/display/quote.jsx | 110 | Inline static style object | ADVISORY |
-| snippets/components/display/showcase-cards.jsx | 636 | Hardcoded rgb()/rgba() value | BANNED |
-| snippets/components/display/showcase-cards.jsx | 642 | Hardcoded rgb()/rgba() value | BANNED |
-| snippets/components/display/showcase-cards.jsx | 750 | Inline static style object | ADVISORY |
-| snippets/components/display/showcase-cards.jsx | 789 | Inline static style object | ADVISORY |
-| snippets/components/display/showcase-cards.jsx | 790 | Hardcoded rgb()/rgba() value | BANNED |
-| snippets/components/display/showcase-cards.jsx | 796 | Inline static style object | ADVISORY |
-| snippets/components/display/showcase-cards.jsx | 874 | Inline static style object | ADVISORY |
-| snippets/components/display/showcase-cards.jsx | 977 | Inline static style object | ADVISORY |
-| snippets/components/display/showcase-cards.jsx | 1002 | Inline static style object | ADVISORY |
-| snippets/components/display/social-links.jsx | 42 | Hardcoded hex #5865F2 | BANNED |
-| snippets/components/display/social-links.jsx | 44 | Hardcoded hex #f0f0f0 | BANNED |
-| snippets/components/display/social-links.jsx | 45 | Hardcoded hex #00AEEF | BANNED |
-| snippets/components/display/social-links.jsx | 54 | !important usage | BANNED |
-| snippets/components/display/social-links.jsx | 55 | !important usage | BANNED |
+| snippets/components/display/showcaseCards.jsx | 636 | Hardcoded rgb()/rgba() value | BANNED |
+| snippets/components/display/showcaseCards.jsx | 642 | Hardcoded rgb()/rgba() value | BANNED |
+| snippets/components/display/showcaseCards.jsx | 750 | Inline static style object | ADVISORY |
+| snippets/components/display/showcaseCards.jsx | 789 | Inline static style object | ADVISORY |
+| snippets/components/display/showcaseCards.jsx | 790 | Hardcoded rgb()/rgba() value | BANNED |
+| snippets/components/display/showcaseCards.jsx | 796 | Inline static style object | ADVISORY |
+| snippets/components/display/showcaseCards.jsx | 874 | Inline static style object | ADVISORY |
+| snippets/components/display/showcaseCards.jsx | 977 | Inline static style object | ADVISORY |
+| snippets/components/display/showcaseCards.jsx | 1002 | Inline static style object | ADVISORY |
+| snippets/components/display/socialLinks.jsx | 42 | Hardcoded hex #5865F2 | BANNED |
+| snippets/components/display/socialLinks.jsx | 44 | Hardcoded hex #f0f0f0 | BANNED |
+| snippets/components/display/socialLinks.jsx | 45 | Hardcoded hex #00AEEF | BANNED |
+| snippets/components/display/socialLinks.jsx | 54 | !important usage | BANNED |
+| snippets/components/display/socialLinks.jsx | 55 | !important usage | BANNED |
 | snippets/components/display/video.jsx | 33 | Inline static style object | ADVISORY |
 | snippets/components/display/video.jsx | 49 | Inline static style object | ADVISORY |
 | snippets/components/display/video.jsx | 59 | Inline static style object | ADVISORY |
@@ -453,10 +453,10 @@ Status policy: functional health only (documentation completeness excluded from 
 | snippets/components/layout/cards.jsx | 77 | Hardcoded rgb()/rgba() value | BANNED |
 | snippets/components/layout/lists.jsx | 112 | Inline static style object | ADVISORY |
 | snippets/components/layout/lists.jsx | 146 | Inline static style object | ADVISORY |
-| snippets/components/layout/quad-grid.jsx | 12 | Inline static style object | ADVISORY |
-| snippets/components/layout/search-table.jsx | 48 | Inline static style object | ADVISORY |
-| snippets/components/layout/search-table.jsx | 62 | Inline static style object | ADVISORY |
-| snippets/components/layout/search-table.jsx | 77 | Inline static style object | ADVISORY |
+| snippets/components/layout/quadGrid.jsx | 12 | Inline static style object | ADVISORY |
+| snippets/components/layout/SearchTable.jsx | 48 | Inline static style object | ADVISORY |
+| snippets/components/layout/SearchTable.jsx | 62 | Inline static style object | ADVISORY |
+| snippets/components/layout/SearchTable.jsx | 77 | Inline static style object | ADVISORY |
 | snippets/components/layout/steps.jsx | 30 | Hardcoded hex #18794E | BANNED |
 | snippets/components/layout/steps.jsx | 38 | !important usage | BANNED |
 | snippets/components/layout/steps.jsx | 41 | !important usage | BANNED |
@@ -758,9 +758,9 @@ Status policy: functional health only (documentation completeness excluded from 
 | CustomCodeBlock | commented-out export | REMOVE (L2 in snippets/components/content/code.jsx) |
 | FlexContainer | commented-out export | REMOVE (L1 in snippets/components/primitives/layout.jsx) |
 | Image | commented-out export | REMOVE (L1 in snippets/components/display/image.jsx) |
-| InteractiveCard | commented-out export | REMOVE (L2 in snippets/components/display/showcase-cards.jsx) |
-| InteractiveCards | commented-out export | REMOVE (L462 in snippets/components/display/showcase-cards.jsx) |
-| InteractiveCards | commented-out export | REMOVE (L313 in snippets/components/display/showcase-cards.jsx) |
+| InteractiveCard | commented-out export | REMOVE (L2 in snippets/components/display/showcaseCards.jsx) |
+| InteractiveCards | commented-out export | REMOVE (L462 in snippets/components/display/showcaseCards.jsx) |
+| InteractiveCards | commented-out export | REMOVE (L313 in snippets/components/display/showcaseCards.jsx) |
 | LinkedInEmbed | commented-out export | REMOVE (L384 in snippets/components/display/video.jsx) |
 | LivepeerIconFlipped | commented-out export | REMOVE (L58 in snippets/components/primitives/icons.jsx) |
 | LivepeerSVG | commented-out export | REMOVE (L1 in snippets/components/primitives/icons.jsx) |
@@ -909,7 +909,7 @@ Status policy: functional health only (documentation completeness excluded from 
 | BlogDataLayout | snippets/components/content/data.jsx | snippets/components/data/data.jsx | MERGE | medium | L185: duplicate overlap with CardBlogDataLayout |
 | BorderedBox | snippets/components/primitives/containers.jsx | snippets/components/layout/containers.jsx | MOVE | low | L1: Q3 spatial arrangement/container behavior |
 | CardBlogDataLayout | snippets/components/content/data.jsx | snippets/components/data/data.jsx | MERGE | medium | L185: duplicate overlap with BlogDataLayout |
-| CardCarousel | snippets/components/display/card-carousel.jsx | snippets/components/layout/cardCarousel.jsx | MOVE | low | L1: Q3 spatial arrangement/container behavior |
+| CardCarousel | snippets/components/display/CardCarousel.jsx | snippets/components/layout/cardCarousel.jsx | MOVE | low | L1: Q3 spatial arrangement/container behavior |
 | CardColumnsPostLayout | snippets/components/content/data.jsx | snippets/components/data/data.jsx | MOVE | low | L386: Q1 data-array renderer in data pipeline module |
 | CardInCardLayout | snippets/components/content/data.jsx | snippets/components/data/data.jsx | MOVE | low | L419: Q1 data-composed layout tied to forum dataset |
 | CardTitleTextWithArrow | snippets/components/primitives/text.jsx | snippets/components/primitives/text.jsx | KEEP | low | L75: In place after corrected classification. |
@@ -923,13 +923,13 @@ Status policy: functional health only (documentation completeness excluded from 
 | ComplexCodeBlock | snippets/components/content/code.jsx | snippets/components/content/code.jsx | KEEP | low | L154: In place after corrected classification. |
 | CopyText | snippets/components/primitives/text.jsx | snippets/components/primitives/text.jsx | KEEP | low | L19: In place after corrected classification. |
 | CustomCallout | snippets/components/primitives/links.jsx | snippets/components/primitives/links.jsx | KEEP | low | L1: In place after corrected classification. |
-| CustomCardTitle | snippets/components/display/custom-cards.jsx | snippets/components/primitives/customCards.jsx | SPLIT | medium | L59: File mixes target categories (layout, primitives); split by category. |
+| CustomCardTitle | snippets/components/display/customCards.jsx | snippets/components/primitives/customCards.jsx | SPLIT | medium | L59: File mixes target categories (layout, primitives); split by category. |
 | CustomCodeBlock | snippets/components/content/code.jsx | snippets/components/content/code.jsx | KEEP | low | L1: In place after corrected classification. |
 | CustomDivider | snippets/components/primitives/divider.jsx | snippets/components/primitives/divider.jsx | KEEP | low | L1: In place after corrected classification. |
-| CustomResponseField | snippets/components/content/response-field.jsx | snippets/components/content/response-field.jsx | KEEP | low | L56: In place after corrected classification. |
+| CustomResponseField | snippets/components/content/responseField.jsx | snippets/components/content/responseField.jsx | KEEP | low | L56: In place after corrected classification. |
 | DiscordAnnouncements | snippets/components/content/data.jsx | snippets/components/data/data.jsx | MOVE | low | L453: Q1 data-array renderer for Discord feed |
-| DisplayCard | snippets/components/display/custom-cards.jsx | snippets/components/layout/customCards.jsx | SPLIT | medium | L1: File mixes target categories (layout, primitives); split by category. |
-| Divider | snippets/components/display/frame-mode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L508: Q2 frame/portal-only structure intent |
+| DisplayCard | snippets/components/display/customCards.jsx | snippets/components/layout/customCards.jsx | SPLIT | medium | L1: File mixes target categories (layout, primitives); split by category. |
+| Divider | snippets/components/display/frameMode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L508: Q2 frame/portal-only structure intent |
 | DoubleIconLink | snippets/components/primitives/links.jsx | snippets/components/primitives/links.jsx | KEEP | low | L124: In place after corrected classification. |
 | DownloadButton | snippets/components/primitives/buttons.jsx | snippets/components/primitives/buttons.jsx | KEEP | low | L15: In place after corrected classification. |
 | DynamicTable | snippets/components/layout/table.jsx | snippets/components/layout/table.jsx | FIX | medium | L1: Existing functional/styling/defensive defects (see Status/Styling/Defensive sections). |
@@ -943,24 +943,24 @@ Status policy: functional health only (documentation completeness excluded from 
 | GotoCard | snippets/components/primitives/links.jsx | snippets/components/primitives/links.jsx | KEEP | low | L211: In place after corrected classification. |
 | GotoLink | snippets/components/primitives/links.jsx | snippets/components/primitives/links.jsx | KEEP | low | L174: In place after corrected classification. |
 | GridContainer | snippets/components/primitives/layout.jsx | snippets/components/layout/layout.jsx | SPLIT | medium | L49: File mixes target categories (layout, primitives); split by category. |
-| H1 | snippets/components/display/frame-mode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L95: Q2 frame/portal-only structure intent |
-| H2 | snippets/components/display/frame-mode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L206: Q2 frame/portal-only structure intent |
-| H3 | snippets/components/display/frame-mode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L256: Q2 frame/portal-only structure intent |
-| H4 | snippets/components/display/frame-mode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L306: Q2 frame/portal-only structure intent |
-| H5 | snippets/components/display/frame-mode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L356: Q2 frame/portal-only structure intent |
-| H6 | snippets/components/display/frame-mode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L406: Q2 frame/portal-only structure intent |
+| H1 | snippets/components/display/frameMode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L95: Q2 frame/portal-only structure intent |
+| H2 | snippets/components/display/frameMode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L206: Q2 frame/portal-only structure intent |
+| H3 | snippets/components/display/frameMode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L256: Q2 frame/portal-only structure intent |
+| H4 | snippets/components/display/frameMode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L306: Q2 frame/portal-only structure intent |
+| H5 | snippets/components/display/frameMode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L356: Q2 frame/portal-only structure intent |
+| H6 | snippets/components/display/frameMode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L406: Q2 frame/portal-only structure intent |
 | HeroContentContainer | snippets/components/domain/SHARED/Portals.jsx | snippets/components/page-structure/portals.jsx | MOVE | low | L83: Q2 frame/portal-only structure intent |
 | HeroImageBackgroundComponent | snippets/components/domain/SHARED/Portals.jsx | snippets/components/page-structure/portals.jsx | MOVE | low | L51: Q2 frame/portal-only structure intent |
 | HeroOverviewContent | snippets/components/domain/SHARED/Portals.jsx | snippets/components/page-structure/portals.jsx | MOVE | low | L115: Q2 frame/portal-only structure intent |
 | HeroSectionContainer | snippets/components/domain/SHARED/Portals.jsx | snippets/components/page-structure/portals.jsx | MOVE | low | L1: Q2 frame/portal-only structure intent |
 | IconList | snippets/components/layout/lists.jsx | snippets/components/layout/lists.jsx | KEEP | low | L16: In place after corrected classification. |
 | Image | snippets/components/display/image.jsx | snippets/components/primitives/image.jsx | MOVE | low | L1: Q5 standalone image primitive |
-| InlineImageCard | snippets/components/display/custom-cards.jsx | snippets/components/layout/customCards.jsx | SPLIT | medium | L94: File mixes target categories (layout, primitives); split by category. |
+| InlineImageCard | snippets/components/display/customCards.jsx | snippets/components/layout/customCards.jsx | SPLIT | medium | L94: File mixes target categories (layout, primitives); split by category. |
 | LatestVersion | snippets/components/content/release.jsx | snippets/components/content/release.jsx | KEEP | low | L1: In place after corrected classification. |
 | LinkArrow | snippets/components/primitives/links.jsx | snippets/components/primitives/links.jsx | KEEP | low | L331: In place after corrected classification. |
 | LinkedInEmbed | snippets/components/display/video.jsx | snippets/components/content/video.jsx | SPLIT | medium | L383: File mixes target categories (content, data); split by category. |
 | LinkImage | snippets/components/display/image.jsx | snippets/components/primitives/image.jsx | MOVE | low | L37: Q5 standalone clickable image primitive |
-| ListSteps | snippets/components/layout/list-steps.jsx | snippets/components/layout/listSteps.jsx | RENAME | low | L1: File name violates camelCase .jsx: ListSteps.jsx |
+| ListSteps | snippets/components/layout/ListSteps.jsx | snippets/components/layout/listSteps.jsx | RENAME | low | L1: File name violates camelCase .jsx: ListSteps.jsx |
 | LivepeerIcon | snippets/components/primitives/icons.jsx | snippets/components/primitives/icons.jsx | FIX | medium | L82: Existing functional/styling/defensive defects (see Status/Styling/Defensive sections). |
 | LivepeerIconFlipped | snippets/components/primitives/icons.jsx | snippets/components/primitives/icons.jsx | FIX | medium | L57: Existing functional/styling/defensive defects (see Status/Styling/Defensive sections). |
 | LivepeerIconOld | snippets/components/primitives/icons.jsx | snippets/components/primitives/icons.jsx | FIX | medium | L34: Existing functional/styling/defensive defects (see Status/Styling/Defensive sections). |
@@ -970,27 +970,27 @@ Status policy: functional health only (documentation completeness excluded from 
 | MarkdownEmbed | snippets/components/display/embed.jsx | snippets/components/data/embed.jsx | MERGE | medium | L1: duplicate overlap with EmbedMarkdown |
 | MathBlock | snippets/components/content/math.jsx | — | REMOVE | low | L11: Returns null/empty stub output |
 | MathInline | snippets/components/content/math.jsx | — | REMOVE | low | L1: Returns null/empty stub output |
-| P | snippets/components/display/frame-mode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L456: Q2 frame/portal-only structure intent |
-| PageHeader | snippets/components/display/frame-mode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L1: Q2 frame/portal-only structure intent |
+| P | snippets/components/display/frameMode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L456: Q2 frame/portal-only structure intent |
+| PageHeader | snippets/components/display/frameMode.jsx | snippets/components/page-structure/frameMode.jsx | MOVE | low | L1: Q2 frame/portal-only structure intent |
 | PortalCardsHeader | snippets/components/domain/SHARED/Portals.jsx | snippets/components/page-structure/portals.jsx | MOVE | low | L313: Q2 frame/portal-only structure intent |
 | PortalContentContainer | snippets/components/domain/SHARED/Portals.jsx | snippets/components/page-structure/portals.jsx | MOVE | low | L139: Q2 frame/portal-only structure intent |
 | PortalHeroContent | snippets/components/domain/SHARED/Portals.jsx | snippets/components/page-structure/portals.jsx | MOVE | low | L161: Q2 frame/portal-only structure intent |
 | PortalSectionHeader | snippets/components/domain/SHARED/Portals.jsx | snippets/components/page-structure/portals.jsx | MOVE | low | L330: Q2 frame/portal-only structure intent |
 | PostCard | snippets/components/content/data.jsx | snippets/components/data/data.jsx | MOVE | low | L247: Q1 data-card renderer in data pipeline module |
 | PreviewCallout | snippets/components/domain/SHARED/previewCallouts.jsx | snippets/components/primitives/previewCallouts.jsx | MOVE | low | L70: Q5 status callout reusable across page types |
-| QuadGrid | snippets/components/layout/quad-grid.jsx | snippets/components/layout/quad-grid.jsx | KEEP | low | L1: In place after corrected classification. |
+| QuadGrid | snippets/components/layout/quadGrid.jsx | snippets/components/layout/quadGrid.jsx | KEEP | low | L1: In place after corrected classification. |
 | Quote | snippets/components/display/quote.jsx | snippets/components/content/quote.jsx | MOVE | low | L1: Q4 reader-facing quote formatting |
 | RefCardContainer | snippets/components/domain/SHARED/Portals.jsx | snippets/components/page-structure/portals.jsx | MOVE | low | L407: Q2 frame/portal-only structure intent |
-| ResponseFieldAccordion | snippets/components/content/response-field.jsx | snippets/components/content/response-field.jsx | KEEP | low | L83: In place after corrected classification. |
-| ResponseFieldExpandable | snippets/components/content/response-field.jsx | snippets/components/content/response-field.jsx | KEEP | low | L72: In place after corrected classification. |
-| ResponseFieldGroup | snippets/components/content/response-field.jsx | snippets/components/content/response-field.jsx | KEEP | low | L94: In place after corrected classification. |
+| ResponseFieldAccordion | snippets/components/content/responseField.jsx | snippets/components/content/responseField.jsx | KEEP | low | L83: In place after corrected classification. |
+| ResponseFieldExpandable | snippets/components/content/responseField.jsx | snippets/components/content/responseField.jsx | KEEP | low | L72: In place after corrected classification. |
+| ResponseFieldGroup | snippets/components/content/responseField.jsx | snippets/components/content/responseField.jsx | KEEP | low | L94: In place after corrected classification. |
 | ReviewCallout | snippets/components/domain/SHARED/previewCallouts.jsx | snippets/components/primitives/previewCallouts.jsx | MOVE | low | L135: Q5 status callout reusable across page types |
 | ScrollableDiagram | snippets/components/display/zoomable-diagram.jsx | snippets/components/content/zoomableDiagram.jsx | MOVE | low | L1: Q4 content/media rendering behavior |
 | ScrollBox | snippets/components/layout/cards.jsx | snippets/components/layout/cards.jsx | FIX | medium | L1: Existing functional/styling/defensive defects (see Status/Styling/Defensive sections). |
-| SearchTable | snippets/components/layout/search-table.jsx | snippets/components/layout/searchTable.jsx | RENAME | low | L1: File name violates camelCase .jsx: SearchTable.jsx |
-| ShowcaseCards | snippets/components/display/showcase-cards.jsx | snippets/components/data/showcaseCards.jsx | MOVE | low | L1: Q1 data-driven filtering/pagination renderer |
+| SearchTable | snippets/components/layout/SearchTable.jsx | snippets/components/layout/searchTable.jsx | RENAME | low | L1: File name violates camelCase .jsx: SearchTable.jsx |
+| ShowcaseCards | snippets/components/display/showcaseCards.jsx | snippets/components/data/showcaseCards.jsx | MOVE | low | L1: Q1 data-driven filtering/pagination renderer |
 | ShowcaseVideo | snippets/components/display/video.jsx | snippets/components/content/video.jsx | SPLIT | medium | L115: File mixes target categories (content, data); split by category. |
-| SocialLinks | snippets/components/display/social-links.jsx | snippets/components/primitives/socialLinks.jsx | MOVE | low | L27: Q5 standalone social-link primitive |
+| SocialLinks | snippets/components/display/socialLinks.jsx | snippets/components/primitives/socialLinks.jsx | MOVE | low | L27: Q5 standalone social-link primitive |
 | Spacer | snippets/components/primitives/layout.jsx | snippets/components/primitives/layout.jsx | SPLIT | medium | L96: File mixes target categories (layout, primitives); split by category. |
 | Starfield | snippets/components/domain/SHARED/HeroGif.jsx | snippets/components/page-structure/heroGif.jsx | MOVE | low | L1: Q2 portal/frame usage pattern; docs-guide imports treated as showcase |
 | StepLinkList | snippets/components/layout/lists.jsx | snippets/components/layout/lists.jsx | FIX | medium | L64: Existing functional/styling/defensive defects (see Status/Styling/Defensive sections). |
@@ -1006,9 +1006,9 @@ Status policy: functional health only (documentation completeness excluded from 
 | TwitterTimeline | snippets/components/display/embed.jsx | snippets/components/data/embed.jsx | MOVE | low | L19: Q1 file-level data classification (same file has runtime fetch) |
 | UpdateLinkList | snippets/components/layout/lists.jsx | snippets/components/layout/lists.jsx | KEEP | low | L119: In place after corrected classification. |
 | UpdateList | snippets/components/layout/lists.jsx | snippets/components/layout/lists.jsx | FIX | medium | L98: Existing functional/styling/defensive defects (see Status/Styling/Defensive sections). |
-| ValueResponseField | snippets/components/content/response-field.jsx | snippets/components/content/response-field.jsx | KEEP | low | L1: In place after corrected classification. |
+| ValueResponseField | snippets/components/content/responseField.jsx | snippets/components/content/responseField.jsx | KEEP | low | L1: In place after corrected classification. |
 | Video | snippets/components/display/video.jsx | snippets/components/content/video.jsx | SPLIT | medium | L133: File mixes target categories (content, data); split by category. |
-| WidthCard | snippets/components/display/custom-cards.jsx | snippets/components/layout/customCards.jsx | SPLIT | medium | L78: File mixes target categories (layout, primitives); split by category. |
+| WidthCard | snippets/components/display/customCards.jsx | snippets/components/layout/customCards.jsx | SPLIT | medium | L78: File mixes target categories (layout, primitives); split by category. |
 | YouTubeVideo | snippets/components/display/video.jsx | snippets/components/content/video.jsx | SPLIT | medium | L249: File mixes target categories (content, data); split by category. |
 | YouTubeVideoData | snippets/components/display/video.jsx | snippets/components/data/video.jsx | SPLIT | medium | L335: File mixes target categories (content, data); split by category. |
 | YouTubeVideoDownload | snippets/components/display/video.jsx | snippets/components/content/video.jsx | SPLIT | medium | L442: File mixes target categories (content, data); split by category. |
@@ -1045,6 +1045,6 @@ Status policy: functional health only (documentation completeness excluded from 
 ## Ambiguity Register
 - Duplicate ambiguity (medium) L1: MarkdownEmbed vs EmbedMarkdown in snippets/components/display/embed.jsx
 - Duplicate ambiguity (medium) L185: CardBlogDataLayout vs BlogDataLayout in snippets/components/content/data.jsx
-- ThemeData verification (2026-03-08): `grep -rn "ThemeData" snippets/components/` matched README/example files and commented lines in `snippets/components/display/frame-mode.jsx` (L127/L138/L150), with no active runtime ThemeData dependency in audited `.jsx` exports; Styling Violations section unchanged.
-- Hybrid Q1 interpretation: `snippets/components/content/data.jsx`, `snippets/components/display/showcase-cards.jsx`, and `YouTubeVideoData` were classified as DATA from data-bound interfaces (feed-shaped props, pagination/filtering, feed renderers) despite limited literal pipeline import/fetch signals in those files.
+- ThemeData verification (2026-03-08): `grep -rn "ThemeData" snippets/components/` matched README/example files and commented lines in `snippets/components/display/frameMode.jsx` (L127/L138/L150), with no active runtime ThemeData dependency in audited `.jsx` exports; Styling Violations section unchanged.
+- Hybrid Q1 interpretation: `snippets/components/content/data.jsx`, `snippets/components/display/showcaseCards.jsx`, and `YouTubeVideoData` were classified as DATA from data-bound interfaces (feed-shaped props, pagination/filtering, feed renderers) despite limited literal pipeline import/fetch signals in those files.
 - Starfield classification lock: treated as PAGE STRUCTURE because imports are portal/frame pages plus docs-guide showcase pages; docs-guide usage was not treated as general page reuse evidence.

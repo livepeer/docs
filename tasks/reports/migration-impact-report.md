@@ -1,6 +1,6 @@
 # Migration Impact Report
 
-Generated: 2026-03-08T04:17:17.994Z
+Generated: 2026-03-08T01:36:54.234Z
 Source: tasks/reports/component-governance-audit.md
 
 ## Risk Summary
@@ -9,7 +9,7 @@ Source: tasks/reports/component-governance-audit.md
 |-----------|-----------|----------------------------------|
 | HIGH (50+ import rewrites) | 14 | 1386 |
 | MEDIUM (10-49 rewrites) | 7 | 202 |
-| LOW (<10 rewrites) | 0 | 0 |
+| LOW (&lt;10 rewrites) | 0 | 0 |
 
 ## Per-File Impact (ordered by total import rewrite count, highest first)
 
@@ -26,8 +26,8 @@ Source: tasks/reports/component-governance-audit.md
 | snippets/components/display/examples/video-examples.mdx | `import { YouTubeVideo, CardVideo } from "/snippets/components/display/video.jsx";` | `import { YouTubeVideo, CardVideo } from "/snippets/components/content/video.jsx";` |
 | snippets/pages/00_HOME/project-showcase.mdx | `import { TitledVideo, ShowcaseVideo } from '/snippets/components/display/video.jsx'` | `import { TitledVideo, ShowcaseVideo } from '/snippets/components/content/video.jsx'` |
 | v2/cn/community/community-portal.mdx | `import { YouTubeVideo } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'` |
-| v2/cn/community/livepeer-community/livepeer-latest-topics.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
-| v2/cn/community/livepeer-community/trending-topics.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/cn/community/livepeer-community/livepeer-latest-topics.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/cn/community/livepeer-community/trending-topics.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
 | v2/cn/docs-guide/components-index.mdx | `import { CardVideo } from "/snippets/components/display/video.jsx";` | `import { CardVideo } from "/snippets/components/content/video.jsx";` |
 | v2/cn/docs-guide/components-index.mdx | `import { LinkedInEmbed } from "/snippets/components/display/video.jsx";` | `import { LinkedInEmbed } from "/snippets/components/content/video.jsx";` |
 | v2/cn/docs-guide/components-index.mdx | `import { ShowcaseVideo } from "/snippets/components/display/video.jsx";` | `import { ShowcaseVideo } from "/snippets/components/content/video.jsx";` |
@@ -50,12 +50,12 @@ Source: tasks/reports/component-governance-audit.md
 | v2/cn/home/about-livepeer/vision.mdx | `import { YouTubeVideo } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'` |
 | v2/cn/home/primer.mdx | `import { YouTubeVideo, YouTubeVideoDownload, CardVideo, } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, YouTubeVideoDownload, CardVideo } from '/snippets/components/content/video.jsx'` |
 | v2/cn/home/solutions/showcase.mdx | `import { TitledVideo, ShowcaseVideo } from '/snippets/components/display/video.jsx'` | `import { TitledVideo, ShowcaseVideo } from '/snippets/components/content/video.jsx'` |
-| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
 | v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo } from "/snippets/components/display/video.jsx";` | `import { YouTubeVideo } from "/snippets/components/content/video.jsx";` |
 | v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo } from "/snippets/components/display/video.jsx";` | `import { YouTubeVideo } from "/snippets/components/content/video.jsx";` |
 | v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { Video } from "/snippets/components/display/video.jsx";` | `import { Video } from "/snippets/components/content/video.jsx";` |
 | v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { LinkedInEmbed } from "/snippets/components/display/video.jsx";` | `import { LinkedInEmbed } from "/snippets/components/content/video.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoData, YouTubeVideoDownload } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoDownload } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoData, YouTubeVideoDownload } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoDownload } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
 | v2/cn/resources/documentation-guide/component-library/display.mdx | `import { YouTubeVideo } from "/snippets/components/display/video.jsx";` | `import { YouTubeVideo } from "/snippets/components/content/video.jsx";` |
 | v2/cn/resources/documentation-guide/component-library/display.mdx | `import { Video } from "/snippets/components/display/video.jsx";` | `import { Video } from "/snippets/components/content/video.jsx";` |
 | v2/cn/resources/documentation-guide/component-library/display.mdx | `import { TitledVideo } from "/snippets/components/display/video.jsx";` | `import { TitledVideo } from "/snippets/components/content/video.jsx";` |
@@ -77,10 +77,10 @@ Source: tasks/reports/component-governance-audit.md
 | v2/cn/solutions/frameworks/overview.mdx | `import { YouTubeVideo } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'` |
 | v2/cn/solutions/portal.mdx | `import { YouTubeVideo } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'` |
 | v2/community/community-portal.mdx | `import { YouTubeVideo } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'` |
-| v2/community/livepeer-community/trending-topics.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/community/livepeer-community/trending-topics.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
 | v2/es/community/community-portal.mdx | `import { YouTubeVideo } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'` |
-| v2/es/community/livepeer-community/livepeer-latest-topics.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
-| v2/es/community/livepeer-community/trending-topics.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/es/community/livepeer-community/livepeer-latest-topics.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/es/community/livepeer-community/trending-topics.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
 | v2/es/docs-guide/components-index.mdx | `import { CardVideo } from "/snippets/components/display/video.jsx";` | `import { CardVideo } from "/snippets/components/content/video.jsx";` |
 | v2/es/docs-guide/components-index.mdx | `import { LinkedInEmbed } from "/snippets/components/display/video.jsx";` | `import { LinkedInEmbed } from "/snippets/components/content/video.jsx";` |
 | v2/es/docs-guide/components-index.mdx | `import { ShowcaseVideo } from "/snippets/components/display/video.jsx";` | `import { ShowcaseVideo } from "/snippets/components/content/video.jsx";` |
@@ -103,12 +103,12 @@ Source: tasks/reports/component-governance-audit.md
 | v2/es/home/about-livepeer/vision.mdx | `import { YouTubeVideo } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'` |
 | v2/es/home/primer.mdx | `import { YouTubeVideo, YouTubeVideoDownload, CardVideo, } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, YouTubeVideoDownload, CardVideo } from '/snippets/components/content/video.jsx'` |
 | v2/es/home/solutions/showcase.mdx | `import { TitledVideo, ShowcaseVideo } from '/snippets/components/display/video.jsx'` | `import { TitledVideo, ShowcaseVideo } from '/snippets/components/content/video.jsx'` |
-| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
 | v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo } from "/snippets/components/display/video.jsx";` | `import { YouTubeVideo } from "/snippets/components/content/video.jsx";` |
 | v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo } from "/snippets/components/display/video.jsx";` | `import { YouTubeVideo } from "/snippets/components/content/video.jsx";` |
 | v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { Video } from "/snippets/components/display/video.jsx";` | `import { Video } from "/snippets/components/content/video.jsx";` |
 | v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { LinkedInEmbed } from "/snippets/components/display/video.jsx";` | `import { LinkedInEmbed } from "/snippets/components/content/video.jsx";` |
-| v2/es/resources/documentation-guide/component-library/display.mdx | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoData, YouTubeVideoDownload } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoDownload } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/es/resources/documentation-guide/component-library/display.mdx | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoData, YouTubeVideoDownload } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoDownload } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
 | v2/es/resources/documentation-guide/component-library/display.mdx | `import { YouTubeVideo } from "/snippets/components/display/video.jsx";` | `import { YouTubeVideo } from "/snippets/components/content/video.jsx";` |
 | v2/es/resources/documentation-guide/component-library/display.mdx | `import { Video } from "/snippets/components/display/video.jsx";` | `import { Video } from "/snippets/components/content/video.jsx";` |
 | v2/es/resources/documentation-guide/component-library/display.mdx | `import { TitledVideo } from "/snippets/components/display/video.jsx";` | `import { TitledVideo } from "/snippets/components/content/video.jsx";` |
@@ -130,8 +130,8 @@ Source: tasks/reports/component-governance-audit.md
 | v2/es/solutions/frameworks/overview.mdx | `import { YouTubeVideo } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'` |
 | v2/es/solutions/portal.mdx | `import { YouTubeVideo } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'` |
 | v2/fr/community/community-portal.mdx | `import { YouTubeVideo } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'` |
-| v2/fr/community/livepeer-community/livepeer-latest-topics.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
-| v2/fr/community/livepeer-community/trending-topics.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/fr/community/livepeer-community/livepeer-latest-topics.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/fr/community/livepeer-community/trending-topics.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
 | v2/fr/docs-guide/components-index.mdx | `import { CardVideo } from "/snippets/components/display/video.jsx";` | `import { CardVideo } from "/snippets/components/content/video.jsx";` |
 | v2/fr/docs-guide/components-index.mdx | `import { LinkedInEmbed } from "/snippets/components/display/video.jsx";` | `import { LinkedInEmbed } from "/snippets/components/content/video.jsx";` |
 | v2/fr/docs-guide/components-index.mdx | `import { ShowcaseVideo } from "/snippets/components/display/video.jsx";` | `import { ShowcaseVideo } from "/snippets/components/content/video.jsx";` |
@@ -154,12 +154,12 @@ Source: tasks/reports/component-governance-audit.md
 | v2/fr/home/about-livepeer/vision.mdx | `import { YouTubeVideo } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'` |
 | v2/fr/home/primer.mdx | `import { YouTubeVideo, YouTubeVideoDownload, CardVideo, } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, YouTubeVideoDownload, CardVideo } from '/snippets/components/content/video.jsx'` |
 | v2/fr/home/solutions/showcase.mdx | `import { TitledVideo, ShowcaseVideo } from '/snippets/components/display/video.jsx'` | `import { TitledVideo, ShowcaseVideo } from '/snippets/components/content/video.jsx'` |
-| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
 | v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo } from "/snippets/components/display/video.jsx";` | `import { YouTubeVideo } from "/snippets/components/content/video.jsx";` |
 | v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo } from "/snippets/components/display/video.jsx";` | `import { YouTubeVideo } from "/snippets/components/content/video.jsx";` |
 | v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { Video } from "/snippets/components/display/video.jsx";` | `import { Video } from "/snippets/components/content/video.jsx";` |
 | v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { LinkedInEmbed } from "/snippets/components/display/video.jsx";` | `import { LinkedInEmbed } from "/snippets/components/content/video.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoData, YouTubeVideoDownload } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoDownload } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoData, YouTubeVideoDownload } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoDownload } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
 | v2/fr/resources/documentation-guide/component-library/display.mdx | `import { YouTubeVideo } from "/snippets/components/display/video.jsx";` | `import { YouTubeVideo } from "/snippets/components/content/video.jsx";` |
 | v2/fr/resources/documentation-guide/component-library/display.mdx | `import { Video } from "/snippets/components/display/video.jsx";` | `import { Video } from "/snippets/components/content/video.jsx";` |
 | v2/fr/resources/documentation-guide/component-library/display.mdx | `import { TitledVideo } from "/snippets/components/display/video.jsx";` | `import { TitledVideo } from "/snippets/components/content/video.jsx";` |
@@ -186,14 +186,14 @@ Source: tasks/reports/component-governance-audit.md
 | v2/home/about-livepeer/vision.mdx | `import { YouTubeVideo } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'` |
 | v2/home/primer.mdx | `import { YouTubeVideo, YouTubeVideoDownload, CardVideo, } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, YouTubeVideoDownload, CardVideo } from '/snippets/components/content/video.jsx'` |
 | v2/home/solutions/showcase.mdx | `import { TitledVideo, ShowcaseVideo } from '/snippets/components/display/video.jsx'` | `import { TitledVideo, ShowcaseVideo } from '/snippets/components/content/video.jsx'` |
-| v2/home/trending.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/home/trending.mdx | `import { YouTubeVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
 | v2/internal/rfp/aims.mdx | `import { YouTubeVideo } from "/snippets/components/display/video.jsx";` | `import { YouTubeVideo } from "/snippets/components/content/video.jsx";` |
-| v2/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo, YouTubeVideoData } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, CardVideo, LinkedInEmbed, TitledVideo, ShowcaseVideo } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
 | v2/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo } from "/snippets/components/display/video.jsx";` | `import { YouTubeVideo } from "/snippets/components/content/video.jsx";` |
 | v2/resources/documentation-guide/component-library/component-library.mdx | `import { YouTubeVideo } from "/snippets/components/display/video.jsx";` | `import { YouTubeVideo } from "/snippets/components/content/video.jsx";` |
 | v2/resources/documentation-guide/component-library/component-library.mdx | `import { Video } from "/snippets/components/display/video.jsx";` | `import { Video } from "/snippets/components/content/video.jsx";` |
 | v2/resources/documentation-guide/component-library/component-library.mdx | `import { LinkedInEmbed } from "/snippets/components/display/video.jsx";` | `import { LinkedInEmbed } from "/snippets/components/content/video.jsx";` |
-| v2/resources/documentation-guide/component-library/display.mdx | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoData, YouTubeVideoDownload } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoDownload } from '/snippets/components/content/video.jsx'`<br>`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
+| v2/resources/documentation-guide/component-library/display.mdx | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoData, YouTubeVideoDownload } from '/snippets/components/display/video.jsx'` | `import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoDownload } from '/snippets/components/content/video.jsx'`<br />`import { YouTubeVideoData } from '/snippets/components/data/video.jsx'` |
 | v2/resources/documentation-guide/component-library/display.mdx | `import { YouTubeVideo } from "/snippets/components/display/video.jsx";` | `import { YouTubeVideo } from "/snippets/components/content/video.jsx";` |
 | v2/resources/documentation-guide/component-library/display.mdx | `import { Video } from "/snippets/components/display/video.jsx";` | `import { Video } from "/snippets/components/content/video.jsx";` |
 | v2/resources/documentation-guide/component-library/display.mdx | `import { TitledVideo } from "/snippets/components/display/video.jsx";` | `import { TitledVideo } from "/snippets/components/content/video.jsx";` |
@@ -228,7 +228,7 @@ Source: tasks/reports/component-governance-audit.md
 - Exports moving to `/snippets/components/data/video.jsx`: `YouTubeVideoData`
 - Pages that import BOTH staying and moving exports: `v2/cn/community/livepeer-community/livepeer-latest-topics.mdx`, `v2/cn/community/livepeer-community/trending-topics.mdx`, `v2/cn/resources/documentation-guide/component-library/component-library.mdx`, `v2/cn/resources/documentation-guide/component-library/display.mdx`, `v2/community/livepeer-community/trending-topics.mdx`, `v2/es/community/livepeer-community/livepeer-latest-topics.mdx`, `v2/es/community/livepeer-community/trending-topics.mdx`, `v2/es/resources/documentation-guide/component-library/component-library.mdx`, `v2/es/resources/documentation-guide/component-library/display.mdx`, `v2/fr/community/livepeer-community/livepeer-latest-topics.mdx`, `v2/fr/community/livepeer-community/trending-topics.mdx`, `v2/fr/resources/documentation-guide/component-library/component-library.mdx`, `v2/fr/resources/documentation-guide/component-library/display.mdx`, `v2/home/trending.mdx`, `v2/resources/documentation-guide/component-library/component-library.mdx`, `v2/resources/documentation-guide/component-library/display.mdx`
 
-### snippets/components/display/frame-mode.jsx -> snippets/components/page-structure/frameMode.jsx
+### snippets/components/display/frameMode.jsx -> snippets/components/page-structure/frameMode.jsx
 
 **Action:** MOVE
 **Exports affected:** `PageHeader`, `H1`, `H2`, `H3`, `H4`, `H5`, `H6`, `P`, `Divider`
@@ -238,160 +238,160 @@ Source: tasks/reports/component-governance-audit.md
 
 | Importing page | Current import statement | New import statement |
 |---------------|--------------------------|----------------------|
-| snippets/components/display/examples/frameMode-examples.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| snippets/snippetsWiki/componentLibrary/examples/frame-mode.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6 } from '/snippets/components/display/frame-mode.jsx';` | `import { PageHeader, H1, H2, H3, H4, H5, H6 } from '/snippets/components/page-structure/frameMode.jsx';` |
-| snippets/snippetsWiki/componentLibrary/examples/frame-mode.mdx | `import { PageHeader, H1, H2, H3 } from '/snippets/components/display/frame-mode.jsx';` | `import { PageHeader, H1, H2, H3 } from '/snippets/components/page-structure/frameMode.jsx';` |
-| snippets/snippetsWiki/componentLibrary/examples/frame-mode.mdx | `import { PageHeader } from '/snippets/components/display/frame-mode.jsx';` | `import { PageHeader } from '/snippets/components/page-structure/frameMode.jsx';` |
-| snippets/snippetsWiki/theme-colors.mdx | `import { PageHeader, H1, H2, H3 } from '/snippets/components/display/frame-mode.jsx';` | `import { PageHeader, H1, H2, H3 } from '/snippets/components/page-structure/frameMode.jsx';` |
-| v2/about/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/cn/about/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/cn/community/community-portal.mdx | `import { H1, H2, H3, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H3, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/cn/developers/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/cn/docs-guide/components-index.mdx | `import { Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/components-index.mdx | `import { H1 } from "/snippets/components/display/frame-mode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/components-index.mdx | `import { H2 } from "/snippets/components/display/frame-mode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/components-index.mdx | `import { H3 } from "/snippets/components/display/frame-mode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/components-index.mdx | `import { H4 } from "/snippets/components/display/frame-mode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/components-index.mdx | `import { H5 } from "/snippets/components/display/frame-mode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/components-index.mdx | `import { H6 } from "/snippets/components/display/frame-mode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/components-index.mdx | `import { P } from "/snippets/components/display/frame-mode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/components-index.mdx | `import { PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { H1 } from "/snippets/components/display/frame-mode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { H2 } from "/snippets/components/display/frame-mode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { H3 } from "/snippets/components/display/frame-mode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { H4 } from "/snippets/components/display/frame-mode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { H5 } from "/snippets/components/display/frame-mode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { H6 } from "/snippets/components/display/frame-mode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { P } from "/snippets/components/display/frame-mode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/gateways/gateways-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/cn/home/mission-control.mdx | `import { H1, H2, P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/cn/lpt/token-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/cn/orchestrators/orchestrators-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/display/frame-mode.jsx'` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/display/frame-mode.jsx";` | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { P } from "/snippets/components/display/frame-mode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { H1 } from "/snippets/components/display/frame-mode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { H2 } from "/snippets/components/display/frame-mode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { H3 } from "/snippets/components/display/frame-mode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { H4 } from "/snippets/components/display/frame-mode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { H5 } from "/snippets/components/display/frame-mode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { H6 } from "/snippets/components/display/frame-mode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { P } from "/snippets/components/display/frame-mode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/resources/documentation-guide/style-guide.mdx | `import { H1, H2, PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { H1, H2, PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/cn/solutions/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/community/community-portal.mdx | `import { H1, H2, H3, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H3, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/developers/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/es/about/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/es/community/community-portal.mdx | `import { H1, H2, H3, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H3, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/es/developers/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/es/docs-guide/components-index.mdx | `import { Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { H1 } from "/snippets/components/display/frame-mode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { H2 } from "/snippets/components/display/frame-mode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { H3 } from "/snippets/components/display/frame-mode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { H4 } from "/snippets/components/display/frame-mode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { H5 } from "/snippets/components/display/frame-mode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { H6 } from "/snippets/components/display/frame-mode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { P } from "/snippets/components/display/frame-mode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { H1 } from "/snippets/components/display/frame-mode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { H2 } from "/snippets/components/display/frame-mode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { H3 } from "/snippets/components/display/frame-mode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { H4 } from "/snippets/components/display/frame-mode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { H5 } from "/snippets/components/display/frame-mode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { H6 } from "/snippets/components/display/frame-mode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { P } from "/snippets/components/display/frame-mode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/gateways/gateways-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/es/home/mission-control.mdx | `import { H1, H2, P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/es/lpt/token-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/es/orchestrators/orchestrators-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/display/frame-mode.jsx'` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/resources/documentation-guide/component-library/display.mdx | `import { PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/resources/documentation-guide/component-library/display.mdx | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/display/frame-mode.jsx";` | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/resources/documentation-guide/component-library/display.mdx | `import { P } from "/snippets/components/display/frame-mode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/resources/documentation-guide/component-library/display.mdx | `import { Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { H1 } from "/snippets/components/display/frame-mode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { H2 } from "/snippets/components/display/frame-mode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { H3 } from "/snippets/components/display/frame-mode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { H4 } from "/snippets/components/display/frame-mode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { H5 } from "/snippets/components/display/frame-mode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { H6 } from "/snippets/components/display/frame-mode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { P } from "/snippets/components/display/frame-mode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/resources/documentation-guide/style-guide.mdx | `import { H1, H2, PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { H1, H2, PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/es/solutions/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/fr/about/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/fr/community/community-portal.mdx | `import { H1, H2, H3, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H3, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/fr/developers/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/fr/docs-guide/components-index.mdx | `import { Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { H1 } from "/snippets/components/display/frame-mode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { H2 } from "/snippets/components/display/frame-mode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { H3 } from "/snippets/components/display/frame-mode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { H4 } from "/snippets/components/display/frame-mode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { H5 } from "/snippets/components/display/frame-mode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { H6 } from "/snippets/components/display/frame-mode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { P } from "/snippets/components/display/frame-mode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { H1 } from "/snippets/components/display/frame-mode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { H2 } from "/snippets/components/display/frame-mode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { H3 } from "/snippets/components/display/frame-mode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { H4 } from "/snippets/components/display/frame-mode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { H5 } from "/snippets/components/display/frame-mode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { H6 } from "/snippets/components/display/frame-mode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { P } from "/snippets/components/display/frame-mode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/gateways/gateways-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/fr/home/mission-control.mdx | `import { H1, H2, P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/fr/lpt/token-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/fr/orchestrators/orchestrators-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/display/frame-mode.jsx'` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/display/frame-mode.jsx";` | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { P } from "/snippets/components/display/frame-mode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { H1 } from "/snippets/components/display/frame-mode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { H2 } from "/snippets/components/display/frame-mode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { H3 } from "/snippets/components/display/frame-mode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { H4 } from "/snippets/components/display/frame-mode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { H5 } from "/snippets/components/display/frame-mode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { H6 } from "/snippets/components/display/frame-mode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { P } from "/snippets/components/display/frame-mode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/resources/documentation-guide/style-guide.mdx | `import { H1, H2, PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { H1, H2, PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/fr/solutions/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/gateways/gateways-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/home/mission-control.mdx | `import { H1, H2, P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/orchestrators/orchestrators-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/display/frame-mode.jsx'` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/page-structure/frameMode.jsx'` |
-| v2/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/resources/documentation-guide/component-library/display.mdx | `import { PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/resources/documentation-guide/component-library/display.mdx | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/display/frame-mode.jsx";` | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/resources/documentation-guide/component-library/display.mdx | `import { P } from "/snippets/components/display/frame-mode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/resources/documentation-guide/component-library/display.mdx | `import { Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { Divider } from "/snippets/components/display/frame-mode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { H1 } from "/snippets/components/display/frame-mode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { H2 } from "/snippets/components/display/frame-mode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { H3 } from "/snippets/components/display/frame-mode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { H4 } from "/snippets/components/display/frame-mode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { H5 } from "/snippets/components/display/frame-mode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { H6 } from "/snippets/components/display/frame-mode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { P } from "/snippets/components/display/frame-mode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/resources/documentation-guide/style-guide.mdx | `import { H1, H2, PageHeader } from "/snippets/components/display/frame-mode.jsx";` | `import { H1, H2, PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
-| v2/solutions/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| snippets/components/display/examples/frameMode-examples.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| snippets/snippetsWiki/componentLibrary/examples/frame-mode.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6 } from '/snippets/components/display/frameMode.jsx';` | `import { PageHeader, H1, H2, H3, H4, H5, H6 } from '/snippets/components/page-structure/frameMode.jsx';` |
+| snippets/snippetsWiki/componentLibrary/examples/frame-mode.mdx | `import { PageHeader, H1, H2, H3 } from '/snippets/components/display/frameMode.jsx';` | `import { PageHeader, H1, H2, H3 } from '/snippets/components/page-structure/frameMode.jsx';` |
+| snippets/snippetsWiki/componentLibrary/examples/frame-mode.mdx | `import { PageHeader } from '/snippets/components/display/frameMode.jsx';` | `import { PageHeader } from '/snippets/components/page-structure/frameMode.jsx';` |
+| snippets/snippetsWiki/theme-colors.mdx | `import { PageHeader, H1, H2, H3 } from '/snippets/components/display/frameMode.jsx';` | `import { PageHeader, H1, H2, H3 } from '/snippets/components/page-structure/frameMode.jsx';` |
+| v2/about/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/cn/about/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/cn/community/community-portal.mdx | `import { H1, H2, H3, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H3, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/cn/developers/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/cn/docs-guide/components-index.mdx | `import { Divider } from "/snippets/components/display/frameMode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/components-index.mdx | `import { H1 } from "/snippets/components/display/frameMode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/components-index.mdx | `import { H2 } from "/snippets/components/display/frameMode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/components-index.mdx | `import { H3 } from "/snippets/components/display/frameMode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/components-index.mdx | `import { H4 } from "/snippets/components/display/frameMode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/components-index.mdx | `import { H5 } from "/snippets/components/display/frameMode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/components-index.mdx | `import { H6 } from "/snippets/components/display/frameMode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/components-index.mdx | `import { P } from "/snippets/components/display/frameMode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/components-index.mdx | `import { PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { Divider } from "/snippets/components/display/frameMode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { H1 } from "/snippets/components/display/frameMode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { H2 } from "/snippets/components/display/frameMode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { H3 } from "/snippets/components/display/frameMode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { H4 } from "/snippets/components/display/frameMode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { H5 } from "/snippets/components/display/frameMode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { H6 } from "/snippets/components/display/frameMode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { P } from "/snippets/components/display/frameMode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/gateways/gateways-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/cn/home/mission-control.mdx | `import { H1, H2, P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/cn/lpt/token-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/cn/orchestrators/orchestrators-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/display/frameMode.jsx'` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/display/frameMode.jsx";` | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { P } from "/snippets/components/display/frameMode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { Divider } from "/snippets/components/display/frameMode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { Divider } from "/snippets/components/display/frameMode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { H1 } from "/snippets/components/display/frameMode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { H2 } from "/snippets/components/display/frameMode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { H3 } from "/snippets/components/display/frameMode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { H4 } from "/snippets/components/display/frameMode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { H5 } from "/snippets/components/display/frameMode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { H6 } from "/snippets/components/display/frameMode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { P } from "/snippets/components/display/frameMode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/resources/documentation-guide/style-guide.mdx | `import { H1, H2, PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { H1, H2, PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/cn/solutions/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/community/community-portal.mdx | `import { H1, H2, H3, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H3, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/developers/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/es/about/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/es/community/community-portal.mdx | `import { H1, H2, H3, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H3, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/es/developers/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/es/docs-guide/components-index.mdx | `import { Divider } from "/snippets/components/display/frameMode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { H1 } from "/snippets/components/display/frameMode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { H2 } from "/snippets/components/display/frameMode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { H3 } from "/snippets/components/display/frameMode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { H4 } from "/snippets/components/display/frameMode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { H5 } from "/snippets/components/display/frameMode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { H6 } from "/snippets/components/display/frameMode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { P } from "/snippets/components/display/frameMode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { Divider } from "/snippets/components/display/frameMode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { H1 } from "/snippets/components/display/frameMode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { H2 } from "/snippets/components/display/frameMode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { H3 } from "/snippets/components/display/frameMode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { H4 } from "/snippets/components/display/frameMode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { H5 } from "/snippets/components/display/frameMode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { H6 } from "/snippets/components/display/frameMode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { P } from "/snippets/components/display/frameMode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/gateways/gateways-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/es/home/mission-control.mdx | `import { H1, H2, P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/es/lpt/token-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/es/orchestrators/orchestrators-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/display/frameMode.jsx'` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/resources/documentation-guide/component-library/display.mdx | `import { PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/resources/documentation-guide/component-library/display.mdx | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/display/frameMode.jsx";` | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/resources/documentation-guide/component-library/display.mdx | `import { P } from "/snippets/components/display/frameMode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/resources/documentation-guide/component-library/display.mdx | `import { Divider } from "/snippets/components/display/frameMode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { Divider } from "/snippets/components/display/frameMode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { H1 } from "/snippets/components/display/frameMode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { H2 } from "/snippets/components/display/frameMode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { H3 } from "/snippets/components/display/frameMode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { H4 } from "/snippets/components/display/frameMode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { H5 } from "/snippets/components/display/frameMode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { H6 } from "/snippets/components/display/frameMode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { P } from "/snippets/components/display/frameMode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/resources/documentation-guide/style-guide.mdx | `import { H1, H2, PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { H1, H2, PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/es/solutions/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/fr/about/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/fr/community/community-portal.mdx | `import { H1, H2, H3, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H3, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/fr/developers/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/fr/docs-guide/components-index.mdx | `import { Divider } from "/snippets/components/display/frameMode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { H1 } from "/snippets/components/display/frameMode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { H2 } from "/snippets/components/display/frameMode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { H3 } from "/snippets/components/display/frameMode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { H4 } from "/snippets/components/display/frameMode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { H5 } from "/snippets/components/display/frameMode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { H6 } from "/snippets/components/display/frameMode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { P } from "/snippets/components/display/frameMode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { Divider } from "/snippets/components/display/frameMode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { H1 } from "/snippets/components/display/frameMode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { H2 } from "/snippets/components/display/frameMode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { H3 } from "/snippets/components/display/frameMode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { H4 } from "/snippets/components/display/frameMode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { H5 } from "/snippets/components/display/frameMode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { H6 } from "/snippets/components/display/frameMode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { P } from "/snippets/components/display/frameMode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/gateways/gateways-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/fr/home/mission-control.mdx | `import { H1, H2, P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/fr/lpt/token-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/fr/orchestrators/orchestrators-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/display/frameMode.jsx'` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/display/frameMode.jsx";` | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { P } from "/snippets/components/display/frameMode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { Divider } from "/snippets/components/display/frameMode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { Divider } from "/snippets/components/display/frameMode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { H1 } from "/snippets/components/display/frameMode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { H2 } from "/snippets/components/display/frameMode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { H3 } from "/snippets/components/display/frameMode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { H4 } from "/snippets/components/display/frameMode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { H5 } from "/snippets/components/display/frameMode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { H6 } from "/snippets/components/display/frameMode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { P } from "/snippets/components/display/frameMode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/resources/documentation-guide/style-guide.mdx | `import { H1, H2, PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { H1, H2, PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/fr/solutions/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/gateways/gateways-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/home/mission-control.mdx | `import { H1, H2, P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/orchestrators/orchestrators-portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/display/frameMode.jsx'` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/page-structure/frameMode.jsx'` |
+| v2/resources/documentation-guide/component-library/component-library.mdx | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/resources/documentation-guide/component-library/display.mdx | `import { PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/resources/documentation-guide/component-library/display.mdx | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/display/frameMode.jsx";` | `import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/resources/documentation-guide/component-library/display.mdx | `import { P } from "/snippets/components/display/frameMode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/resources/documentation-guide/component-library/display.mdx | `import { Divider } from "/snippets/components/display/frameMode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { Divider } from "/snippets/components/display/frameMode.jsx";` | `import { Divider } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { H1 } from "/snippets/components/display/frameMode.jsx";` | `import { H1 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { H2 } from "/snippets/components/display/frameMode.jsx";` | `import { H2 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { H3 } from "/snippets/components/display/frameMode.jsx";` | `import { H3 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { H4 } from "/snippets/components/display/frameMode.jsx";` | `import { H4 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { H5 } from "/snippets/components/display/frameMode.jsx";` | `import { H5 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { H6 } from "/snippets/components/display/frameMode.jsx";` | `import { H6 } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { P } from "/snippets/components/display/frameMode.jsx";` | `import { P } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/resources/documentation-guide/style-guide.mdx | `import { H1, H2, PageHeader } from "/snippets/components/display/frameMode.jsx";` | `import { H1, H2, PageHeader } from "/snippets/components/page-structure/frameMode.jsx";` |
+| v2/solutions/portal.mdx | `import { H1, H2, H5,P } from '/snippets/components/display/frameMode.jsx'` | `import { H1, H2, H5, P } from '/snippets/components/page-structure/frameMode.jsx'` |
 
 **Total rewrites:** 154
 **Import sites:** 154
@@ -696,7 +696,7 @@ Source: tasks/reports/component-governance-audit.md
 | v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { PortalSectionHeader } from "/snippets/components/domain/SHARED/Portals.jsx";` | `import { PortalSectionHeader } from "/snippets/components/page-structure/portals.jsx";` |
 | v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { RefCardContainer } from "/snippets/components/domain/SHARED/Portals.jsx";` | `import { RefCardContainer } from "/snippets/components/page-structure/portals.jsx";` |
 | v2/fr/solutions/portal.mdx | `import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer } from '/snippets/components/domain/SHARED/Portals.jsx'` | `import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer } from '/snippets/components/page-structure/portals.jsx'` |
-| v2/gateways/gateways-portal.mdx | `import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader } from '/snippets/components/domain/SHARED/Portals.jsx'` | `import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader } from '/snippets/components/page-structure/portals.jsx'` |
+| v2/gateways/gateways-portal.mdx | `import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer } from '/snippets/components/domain/SHARED/Portals.jsx'` | `import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer } from '/snippets/components/page-structure/portals.jsx'` |
 | v2/home/mission-control.mdx | `import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer } from '/snippets/components/domain/SHARED/Portals.jsx'` | `import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer } from '/snippets/components/page-structure/portals.jsx'` |
 | v2/lpt/token-portal.mdx | `import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer, PortalSectionHeader } from '/snippets/components/domain/SHARED/Portals.jsx'` | `import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer, PortalSectionHeader } from '/snippets/components/page-structure/portals.jsx'` |
 | v2/orchestrators/orchestrators-portal.mdx | `import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer } from '/snippets/components/domain/SHARED/Portals.jsx'` | `import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer } from '/snippets/components/page-structure/portals.jsx'` |
@@ -1039,7 +1039,7 @@ Source: tasks/reports/component-governance-audit.md
 **Import sites:** 88
 **Locale breakdown:** en: 18, es: 22, fr: 22, cn: 22, other: 4
 
-### snippets/components/display/custom-cards.jsx -> snippets/components/primitives/customCards.jsx + snippets/components/layout/customCards.jsx
+### snippets/components/display/customCards.jsx -> snippets/components/primitives/customCards.jsx + snippets/components/layout/customCards.jsx
 
 **Action:** SPLIT
 **Exports affected:** `DisplayCard`, `CustomCardTitle`, `WidthCard`, `InlineImageCard`
@@ -1049,90 +1049,90 @@ Source: tasks/reports/component-governance-audit.md
 
 | Importing page | Current import statement | New import statement |
 |---------------|--------------------------|----------------------|
-| v2/cn/developers/builder-opportunities/bug-bounties.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/cn/developers/builder-opportunities/grants-and-programmes.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/cn/developers/builder-opportunities/oss-contributions.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/cn/developers/builder-opportunities/overview.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/cn/developers/builder-opportunities/rfps-and-proposals.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/cn/docs-guide/components-index.mdx | `import { CustomCardTitle } from "/snippets/components/display/custom-cards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
-| v2/cn/docs-guide/components-index.mdx | `import { DisplayCard } from "/snippets/components/display/custom-cards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/cn/docs-guide/components-index.mdx | `import { WidthCard } from "/snippets/components/display/custom-cards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { CustomCardTitle } from "/snippets/components/display/custom-cards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { DisplayCard } from "/snippets/components/display/custom-cards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { WidthCard } from "/snippets/components/display/custom-cards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/cn/home/about-livepeer/benefits.mdx | `import { CustomCardTitle } from '/snippets/components/display/custom-cards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
-| v2/cn/home/about-livepeer/benefits.mdx | `import { WidthCard } from '/snippets/components/display/custom-cards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/cn/home/about-livepeer/roadmap.mdx | `import { WidthCard } from '/snippets/components/display/custom-cards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/cn/home/about-livepeer/vision.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/cn/home/get-started.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/cn/home/primer.mdx | `import { CustomCardTitle } from '/snippets/components/display/custom-cards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
-| v2/cn/home/solutions/applications.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { CustomCardTitle } from "/snippets/components/display/custom-cards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { DisplayCard } from "/snippets/components/display/custom-cards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { WidthCard } from "/snippets/components/display/custom-cards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/community/livepeer-community/community-guidelines.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/developers/builder-opportunities/bug-bounties.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/developers/builder-opportunities/grants-and-programmes.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/developers/builder-opportunities/oss-contributions.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/developers/builder-opportunities/overview.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/developers/builder-opportunities/rfps-and-proposals.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/es/developers/builder-opportunities/bug-bounties.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/es/developers/builder-opportunities/grants-and-programmes.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/es/developers/builder-opportunities/oss-contributions.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/es/developers/builder-opportunities/overview.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/es/developers/builder-opportunities/rfps-and-proposals.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/es/docs-guide/components-index.mdx | `import { CustomCardTitle } from "/snippets/components/display/custom-cards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { DisplayCard } from "/snippets/components/display/custom-cards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { WidthCard } from "/snippets/components/display/custom-cards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { CustomCardTitle } from "/snippets/components/display/custom-cards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { DisplayCard } from "/snippets/components/display/custom-cards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { WidthCard } from "/snippets/components/display/custom-cards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/es/home/about-livepeer/benefits.mdx | `import { CustomCardTitle } from '/snippets/components/display/custom-cards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
-| v2/es/home/about-livepeer/benefits.mdx | `import { WidthCard } from '/snippets/components/display/custom-cards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/es/home/about-livepeer/roadmap.mdx | `import { WidthCard } from '/snippets/components/display/custom-cards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/es/home/about-livepeer/vision.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/es/home/get-started.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/es/home/primer.mdx | `import { CustomCardTitle } from '/snippets/components/display/custom-cards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
-| v2/es/home/solutions/applications.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { CustomCardTitle } from "/snippets/components/display/custom-cards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { DisplayCard } from "/snippets/components/display/custom-cards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { WidthCard } from "/snippets/components/display/custom-cards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/fr/developers/builder-opportunities/bug-bounties.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/fr/developers/builder-opportunities/grants-and-programmes.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/fr/developers/builder-opportunities/oss-contributions.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/fr/developers/builder-opportunities/overview.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/fr/developers/builder-opportunities/rfps-and-proposals.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/fr/docs-guide/components-index.mdx | `import { CustomCardTitle } from "/snippets/components/display/custom-cards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { DisplayCard } from "/snippets/components/display/custom-cards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { WidthCard } from "/snippets/components/display/custom-cards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { CustomCardTitle } from "/snippets/components/display/custom-cards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { DisplayCard } from "/snippets/components/display/custom-cards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { WidthCard } from "/snippets/components/display/custom-cards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/fr/home/about-livepeer/benefits.mdx | `import { CustomCardTitle } from '/snippets/components/display/custom-cards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
-| v2/fr/home/about-livepeer/benefits.mdx | `import { WidthCard } from '/snippets/components/display/custom-cards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/fr/home/about-livepeer/roadmap.mdx | `import { WidthCard } from '/snippets/components/display/custom-cards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/fr/home/about-livepeer/vision.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/fr/home/get-started.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/fr/home/primer.mdx | `import { CustomCardTitle } from '/snippets/components/display/custom-cards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
-| v2/fr/home/solutions/applications.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { CustomCardTitle } from "/snippets/components/display/custom-cards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { DisplayCard } from "/snippets/components/display/custom-cards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { WidthCard } from "/snippets/components/display/custom-cards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/gateways/quickstart/gateway-setup.mdx | `import { WidthCard } from '/snippets/components/display/custom-cards.jsx';` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx';` |
-| v2/home/about-livepeer/benefits.mdx | `import { CustomCardTitle } from '/snippets/components/display/custom-cards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
-| v2/home/about-livepeer/benefits.mdx | `import { WidthCard } from '/snippets/components/display/custom-cards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/home/about-livepeer/roadmap.mdx | `import { WidthCard } from '/snippets/components/display/custom-cards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/home/about-livepeer/vision.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/home/get-started.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/home/primer.mdx | `import { CustomCardTitle } from '/snippets/components/display/custom-cards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
-| v2/home/solutions/applications.mdx | `import { DisplayCard } from '/snippets/components/display/custom-cards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
-| v2/internal/overview/docs-philosophy.mdx | `import { CustomCardTitle } from "/snippets/components/display/custom-cards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
-| v2/internal/rfp/problem-statements.mdx | `import { DisplayCard } from "/snippets/components/display/custom-cards.jsx"` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx"` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { CustomCardTitle } from "/snippets/components/display/custom-cards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { DisplayCard } from "/snippets/components/display/custom-cards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { InlineImageCard } from "/snippets/components/display/custom-cards.jsx";` | `import { InlineImageCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { WidthCard } from "/snippets/components/display/custom-cards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
-| v2/resources/media-kit.mdx | `import { WidthCard, InlineImageCard } from '/snippets/components/display/custom-cards.jsx'` | `import { WidthCard, InlineImageCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/cn/developers/builder-opportunities/bug-bounties.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/cn/developers/builder-opportunities/grants-and-programmes.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/cn/developers/builder-opportunities/oss-contributions.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/cn/developers/builder-opportunities/overview.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/cn/developers/builder-opportunities/rfps-and-proposals.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/cn/docs-guide/components-index.mdx | `import { CustomCardTitle } from "/snippets/components/display/customCards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
+| v2/cn/docs-guide/components-index.mdx | `import { DisplayCard } from "/snippets/components/display/customCards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/cn/docs-guide/components-index.mdx | `import { WidthCard } from "/snippets/components/display/customCards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { CustomCardTitle } from "/snippets/components/display/customCards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { DisplayCard } from "/snippets/components/display/customCards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { WidthCard } from "/snippets/components/display/customCards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/cn/home/about-livepeer/benefits.mdx | `import { CustomCardTitle } from '/snippets/components/display/customCards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
+| v2/cn/home/about-livepeer/benefits.mdx | `import { WidthCard } from '/snippets/components/display/customCards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/cn/home/about-livepeer/roadmap.mdx | `import { WidthCard } from '/snippets/components/display/customCards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/cn/home/about-livepeer/vision.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/cn/home/get-started.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/cn/home/primer.mdx | `import { CustomCardTitle } from '/snippets/components/display/customCards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
+| v2/cn/home/solutions/applications.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { CustomCardTitle } from "/snippets/components/display/customCards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { DisplayCard } from "/snippets/components/display/customCards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { WidthCard } from "/snippets/components/display/customCards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/community/livepeer-community/community-guidelines.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/developers/builder-opportunities/bug-bounties.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/developers/builder-opportunities/grants-and-programmes.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/developers/builder-opportunities/oss-contributions.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/developers/builder-opportunities/overview.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/developers/builder-opportunities/rfps-and-proposals.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/es/developers/builder-opportunities/bug-bounties.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/es/developers/builder-opportunities/grants-and-programmes.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/es/developers/builder-opportunities/oss-contributions.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/es/developers/builder-opportunities/overview.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/es/developers/builder-opportunities/rfps-and-proposals.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/es/docs-guide/components-index.mdx | `import { CustomCardTitle } from "/snippets/components/display/customCards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { DisplayCard } from "/snippets/components/display/customCards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { WidthCard } from "/snippets/components/display/customCards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { CustomCardTitle } from "/snippets/components/display/customCards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { DisplayCard } from "/snippets/components/display/customCards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { WidthCard } from "/snippets/components/display/customCards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/es/home/about-livepeer/benefits.mdx | `import { CustomCardTitle } from '/snippets/components/display/customCards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
+| v2/es/home/about-livepeer/benefits.mdx | `import { WidthCard } from '/snippets/components/display/customCards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/es/home/about-livepeer/roadmap.mdx | `import { WidthCard } from '/snippets/components/display/customCards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/es/home/about-livepeer/vision.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/es/home/get-started.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/es/home/primer.mdx | `import { CustomCardTitle } from '/snippets/components/display/customCards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
+| v2/es/home/solutions/applications.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { CustomCardTitle } from "/snippets/components/display/customCards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { DisplayCard } from "/snippets/components/display/customCards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { WidthCard } from "/snippets/components/display/customCards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/fr/developers/builder-opportunities/bug-bounties.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/fr/developers/builder-opportunities/grants-and-programmes.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/fr/developers/builder-opportunities/oss-contributions.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/fr/developers/builder-opportunities/overview.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/fr/developers/builder-opportunities/rfps-and-proposals.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/fr/docs-guide/components-index.mdx | `import { CustomCardTitle } from "/snippets/components/display/customCards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { DisplayCard } from "/snippets/components/display/customCards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { WidthCard } from "/snippets/components/display/customCards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { CustomCardTitle } from "/snippets/components/display/customCards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { DisplayCard } from "/snippets/components/display/customCards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { WidthCard } from "/snippets/components/display/customCards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/fr/home/about-livepeer/benefits.mdx | `import { CustomCardTitle } from '/snippets/components/display/customCards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
+| v2/fr/home/about-livepeer/benefits.mdx | `import { WidthCard } from '/snippets/components/display/customCards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/fr/home/about-livepeer/roadmap.mdx | `import { WidthCard } from '/snippets/components/display/customCards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/fr/home/about-livepeer/vision.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/fr/home/get-started.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/fr/home/primer.mdx | `import { CustomCardTitle } from '/snippets/components/display/customCards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
+| v2/fr/home/solutions/applications.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { CustomCardTitle } from "/snippets/components/display/customCards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { DisplayCard } from "/snippets/components/display/customCards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { WidthCard } from "/snippets/components/display/customCards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/gateways/quickstart/gateway-setup.mdx | `import { WidthCard } from '/snippets/components/display/customCards.jsx';` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx';` |
+| v2/home/about-livepeer/benefits.mdx | `import { CustomCardTitle } from '/snippets/components/display/customCards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
+| v2/home/about-livepeer/benefits.mdx | `import { WidthCard } from '/snippets/components/display/customCards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/home/about-livepeer/roadmap.mdx | `import { WidthCard } from '/snippets/components/display/customCards.jsx'` | `import { WidthCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/home/about-livepeer/vision.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/home/get-started.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/home/primer.mdx | `import { CustomCardTitle } from '/snippets/components/display/customCards.jsx'` | `import { CustomCardTitle } from '/snippets/components/primitives/customCards.jsx'` |
+| v2/home/solutions/applications.mdx | `import { DisplayCard } from '/snippets/components/display/customCards.jsx'` | `import { DisplayCard } from '/snippets/components/layout/customCards.jsx'` |
+| v2/internal/overview/docs-philosophy.mdx | `import { CustomCardTitle } from "/snippets/components/display/customCards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
+| v2/internal/rfp/problem-statements.mdx | `import { DisplayCard } from "/snippets/components/display/customCards.jsx"` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx"` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { CustomCardTitle } from "/snippets/components/display/customCards.jsx";` | `import { CustomCardTitle } from "/snippets/components/primitives/customCards.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { DisplayCard } from "/snippets/components/display/customCards.jsx";` | `import { DisplayCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { InlineImageCard } from "/snippets/components/display/customCards.jsx";` | `import { InlineImageCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { WidthCard } from "/snippets/components/display/customCards.jsx";` | `import { WidthCard } from "/snippets/components/layout/customCards.jsx";` |
+| v2/resources/media-kit.mdx | `import { WidthCard, InlineImageCard } from '/snippets/components/display/customCards.jsx'` | `import { WidthCard, InlineImageCard } from '/snippets/components/layout/customCards.jsx'` |
 
 **Total rewrites:** 84
 **Import sites:** 84
@@ -1338,7 +1338,7 @@ Source: tasks/reports/component-governance-audit.md
 | v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { FlexContainer } from "/snippets/components/primitives/layout.jsx";` | `import { FlexContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { GridContainer } from "/snippets/components/primitives/layout.jsx";` | `import { GridContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/primitives.mdx | `import { FlexContainer, GridContainer, Spacer } from '/snippets/components/primitives/layout.jsx'` | `import { FlexContainer, GridContainer } from '/snippets/components/layout/layout.jsx'`<br>`import { Spacer } from '/snippets/components/primitives/layout.jsx'` |
+| v2/cn/resources/documentation-guide/component-library/primitives.mdx | `import { FlexContainer, GridContainer, Spacer } from '/snippets/components/primitives/layout.jsx'` | `import { FlexContainer, GridContainer } from '/snippets/components/layout/layout.jsx'`<br />`import { Spacer } from '/snippets/components/primitives/layout.jsx'` |
 | v2/cn/resources/documentation-guide/component-library/primitives.mdx | `import { FlexContainer } from "/snippets/components/primitives/layout.jsx";` | `import { FlexContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/cn/resources/documentation-guide/component-library/primitives.mdx | `import { GridContainer } from "/snippets/components/primitives/layout.jsx";` | `import { GridContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/cn/resources/documentation-guide/component-library/primitives.mdx | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` |
@@ -1358,7 +1358,7 @@ Source: tasks/reports/component-governance-audit.md
 | v2/es/resources/documentation-guide/component-library/overview.mdx | `import { FlexContainer } from "/snippets/components/primitives/layout.jsx";` | `import { FlexContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/es/resources/documentation-guide/component-library/overview.mdx | `import { GridContainer } from "/snippets/components/primitives/layout.jsx";` | `import { GridContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/es/resources/documentation-guide/component-library/overview.mdx | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` |
-| v2/es/resources/documentation-guide/component-library/primitives.mdx | `import { FlexContainer, GridContainer, Spacer } from '/snippets/components/primitives/layout.jsx'` | `import { FlexContainer, GridContainer } from '/snippets/components/layout/layout.jsx'`<br>`import { Spacer } from '/snippets/components/primitives/layout.jsx'` |
+| v2/es/resources/documentation-guide/component-library/primitives.mdx | `import { FlexContainer, GridContainer, Spacer } from '/snippets/components/primitives/layout.jsx'` | `import { FlexContainer, GridContainer } from '/snippets/components/layout/layout.jsx'`<br />`import { Spacer } from '/snippets/components/primitives/layout.jsx'` |
 | v2/es/resources/documentation-guide/component-library/primitives.mdx | `import { FlexContainer } from "/snippets/components/primitives/layout.jsx";` | `import { FlexContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/es/resources/documentation-guide/component-library/primitives.mdx | `import { GridContainer } from "/snippets/components/primitives/layout.jsx";` | `import { GridContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/es/resources/documentation-guide/component-library/primitives.mdx | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` |
@@ -1374,7 +1374,7 @@ Source: tasks/reports/component-governance-audit.md
 | v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { FlexContainer } from "/snippets/components/primitives/layout.jsx";` | `import { FlexContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { GridContainer } from "/snippets/components/primitives/layout.jsx";` | `import { GridContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/primitives.mdx | `import { FlexContainer, GridContainer, Spacer } from '/snippets/components/primitives/layout.jsx'` | `import { FlexContainer, GridContainer } from '/snippets/components/layout/layout.jsx'`<br>`import { Spacer } from '/snippets/components/primitives/layout.jsx'` |
+| v2/fr/resources/documentation-guide/component-library/primitives.mdx | `import { FlexContainer, GridContainer, Spacer } from '/snippets/components/primitives/layout.jsx'` | `import { FlexContainer, GridContainer } from '/snippets/components/layout/layout.jsx'`<br />`import { Spacer } from '/snippets/components/primitives/layout.jsx'` |
 | v2/fr/resources/documentation-guide/component-library/primitives.mdx | `import { FlexContainer } from "/snippets/components/primitives/layout.jsx";` | `import { FlexContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/fr/resources/documentation-guide/component-library/primitives.mdx | `import { GridContainer } from "/snippets/components/primitives/layout.jsx";` | `import { GridContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/fr/resources/documentation-guide/component-library/primitives.mdx | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` |
@@ -1384,7 +1384,7 @@ Source: tasks/reports/component-governance-audit.md
 | v2/resources/documentation-guide/component-library/overview.mdx | `import { FlexContainer } from "/snippets/components/primitives/layout.jsx";` | `import { FlexContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/resources/documentation-guide/component-library/overview.mdx | `import { GridContainer } from "/snippets/components/primitives/layout.jsx";` | `import { GridContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/resources/documentation-guide/component-library/overview.mdx | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` |
-| v2/resources/documentation-guide/component-library/primitives.mdx | `import { FlexContainer, GridContainer, Spacer } from '/snippets/components/primitives/layout.jsx'` | `import { FlexContainer, GridContainer } from '/snippets/components/layout/layout.jsx'`<br>`import { Spacer } from '/snippets/components/primitives/layout.jsx'` |
+| v2/resources/documentation-guide/component-library/primitives.mdx | `import { FlexContainer, GridContainer, Spacer } from '/snippets/components/primitives/layout.jsx'` | `import { FlexContainer, GridContainer } from '/snippets/components/layout/layout.jsx'`<br />`import { Spacer } from '/snippets/components/primitives/layout.jsx'` |
 | v2/resources/documentation-guide/component-library/primitives.mdx | `import { FlexContainer } from "/snippets/components/primitives/layout.jsx";` | `import { FlexContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/resources/documentation-guide/component-library/primitives.mdx | `import { GridContainer } from "/snippets/components/primitives/layout.jsx";` | `import { GridContainer } from "/snippets/components/layout/layout.jsx";` |
 | v2/resources/documentation-guide/component-library/primitives.mdx | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` | `import { Spacer } from "/snippets/components/primitives/layout.jsx";` |
@@ -1722,7 +1722,7 @@ Source: tasks/reports/component-governance-audit.md
 **Import sites:** 35
 **Locale breakdown:** en: 7, es: 9, fr: 9, cn: 9, other: 1
 
-### snippets/components/display/showcase-cards.jsx -> snippets/components/data/showcaseCards.jsx
+### snippets/components/display/showcaseCards.jsx -> snippets/components/data/showcaseCards.jsx
 
 **Action:** MOVE
 **Exports affected:** `ShowcaseCards`
@@ -1732,44 +1732,44 @@ Source: tasks/reports/component-governance-audit.md
 
 | Importing page | Current import statement | New import statement |
 |---------------|--------------------------|----------------------|
-| snippets/components/display/examples/showcaseCards-examples.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| snippets/pages/00_HOME/project-showcase.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx"` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx"` |
-| v2/cn/docs-guide/components-index.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/cn/home/solutions/showcase.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx"` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx"` |
-| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcase-cards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
-| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcase-cards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
-| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/es/home/solutions/showcase.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx"` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx"` |
-| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcase-cards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
-| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/es/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcase-cards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
-| v2/es/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/fr/home/solutions/showcase.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx"` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx"` |
-| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcase-cards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
-| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcase-cards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
-| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/home/solutions/showcase.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx"` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx"` |
-| v2/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcase-cards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
-| v2/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcase-cards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
-| v2/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcase-cards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| snippets/components/display/examples/showcaseCards-examples.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| snippets/pages/00_HOME/project-showcase.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx"` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx"` |
+| v2/cn/docs-guide/components-index.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/cn/home/solutions/showcase.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx"` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx"` |
+| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcaseCards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
+| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcaseCards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
+| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/es/home/solutions/showcase.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx"` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx"` |
+| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcaseCards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
+| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/es/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcaseCards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
+| v2/es/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/fr/home/solutions/showcase.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx"` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx"` |
+| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcaseCards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
+| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcaseCards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
+| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/home/solutions/showcase.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx"` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx"` |
+| v2/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcaseCards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
+| v2/resources/documentation-guide/component-library/component-library.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from '/snippets/components/display/showcaseCards.jsx'` | `import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'` |
+| v2/resources/documentation-guide/component-library/display.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { ShowcaseCards } from "/snippets/components/display/showcaseCards.jsx";` | `import { ShowcaseCards } from "/snippets/components/data/showcaseCards.jsx";` |
 
 **Total rewrites:** 32
 **Import sites:** 32
 **Locale breakdown:** en: 6, es: 8, fr: 8, cn: 8, other: 2
 
-### snippets/components/display/card-carousel.jsx -> snippets/components/layout/cardCarousel.jsx
+### snippets/components/display/CardCarousel.jsx -> snippets/components/layout/cardCarousel.jsx
 
 **Action:** MOVE
 **Exports affected:** `CardCarousel`
@@ -1779,39 +1779,39 @@ Source: tasks/reports/component-governance-audit.md
 
 | Importing page | Current import statement | New import statement |
 |---------------|--------------------------|----------------------|
-| snippets/components/display/examples/CardCarousel-examples.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/cn/docs-guide/components-index.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from '/snippets/components/display/card-carousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
-| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from '/snippets/components/display/card-carousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
-| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from '/snippets/components/display/card-carousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
-| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/es/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from '/snippets/components/display/card-carousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
-| v2/es/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from '/snippets/components/display/card-carousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
-| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from '/snippets/components/display/card-carousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
-| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from '/snippets/components/display/card-carousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
-| v2/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from '/snippets/components/display/card-carousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
-| v2/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { CardCarousel } from "/snippets/components/display/card-carousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| snippets/components/display/examples/CardCarousel-examples.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/cn/docs-guide/components-index.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from '/snippets/components/display/CardCarousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
+| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from '/snippets/components/display/CardCarousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
+| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from '/snippets/components/display/CardCarousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
+| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/es/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from '/snippets/components/display/CardCarousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
+| v2/es/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from '/snippets/components/display/CardCarousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
+| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from '/snippets/components/display/CardCarousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
+| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from '/snippets/components/display/CardCarousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
+| v2/resources/documentation-guide/component-library/component-library.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from '/snippets/components/display/CardCarousel.jsx'` | `import { CardCarousel } from '/snippets/components/layout/cardCarousel.jsx'` |
+| v2/resources/documentation-guide/component-library/display.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { CardCarousel } from "/snippets/components/display/CardCarousel.jsx";` | `import { CardCarousel } from "/snippets/components/layout/cardCarousel.jsx";` |
 
 **Total rewrites:** 27
 **Import sites:** 27
 **Locale breakdown:** en: 5, es: 7, fr: 7, cn: 7, other: 1
 
-### snippets/components/display/social-links.jsx -> snippets/components/primitives/socialLinks.jsx
+### snippets/components/display/socialLinks.jsx -> snippets/components/primitives/socialLinks.jsx
 
 **Action:** MOVE
 **Exports affected:** `SocialLinks`
@@ -1821,39 +1821,39 @@ Source: tasks/reports/component-governance-audit.md
 
 | Importing page | Current import statement | New import statement |
 |---------------|--------------------------|----------------------|
-| snippets/components/display/examples/socialLinks-examples.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/cn/docs-guide/components-index.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from '/snippets/components/display/social-links.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
-| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from '/snippets/components/display/social-links.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
-| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from '/snippets/components/display/social-links.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
-| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/es/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from '/snippets/components/display/social-links.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
-| v2/es/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from '/snippets/components/display/social-links.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
-| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from '/snippets/components/display/social-links.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
-| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from '/snippets/components/display/social-links.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
-| v2/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from '/snippets/components/display/social-links.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
-| v2/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { SocialLinks } from "/snippets/components/display/social-links.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| snippets/components/display/examples/socialLinks-examples.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/cn/docs-guide/components-index.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from '/snippets/components/display/socialLinks.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
+| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from '/snippets/components/display/socialLinks.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
+| v2/cn/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from '/snippets/components/display/socialLinks.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
+| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/es/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from '/snippets/components/display/socialLinks.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
+| v2/es/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from '/snippets/components/display/socialLinks.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
+| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from '/snippets/components/display/socialLinks.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
+| v2/fr/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from '/snippets/components/display/socialLinks.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
+| v2/resources/documentation-guide/component-library/component-library.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from '/snippets/components/display/socialLinks.jsx'` | `import { SocialLinks } from '/snippets/components/primitives/socialLinks.jsx'` |
+| v2/resources/documentation-guide/component-library/display.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { SocialLinks } from "/snippets/components/display/socialLinks.jsx";` | `import { SocialLinks } from "/snippets/components/primitives/socialLinks.jsx";` |
 
 **Total rewrites:** 27
 **Import sites:** 27
 **Locale breakdown:** en: 5, es: 7, fr: 7, cn: 7, other: 1
 
-### snippets/components/layout/search-table.jsx -> snippets/components/layout/searchTable.jsx
+### snippets/components/layout/SearchTable.jsx -> snippets/components/layout/searchTable.jsx
 
 **Action:** RENAME
 **Exports affected:** `SearchTable`
@@ -1863,32 +1863,32 @@ Source: tasks/reports/component-governance-audit.md
 
 | Importing page | Current import statement | New import statement |
 |---------------|--------------------------|----------------------|
-| v2/cn/docs-guide/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/cn/docs-guide/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/search-table.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/cn/docs-guide/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/cn/docs-guide/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { SearchTable } from "/snippets/components/layout/SearchTable.jsx";` | `import { SearchTable } from "/snippets/components/layout/searchTable.jsx";` |
 
 **Total rewrites:** 20
 **Import sites:** 20
 **Locale breakdown:** en: 2, es: 6, fr: 6, cn: 6, other: 0
 
-### snippets/components/layout/list-steps.jsx -> snippets/components/layout/listSteps.jsx
+### snippets/components/layout/ListSteps.jsx -> snippets/components/layout/listSteps.jsx
 
 **Action:** RENAME
 **Exports affected:** `ListSteps`
@@ -1898,24 +1898,24 @@ Source: tasks/reports/component-governance-audit.md
 
 | Importing page | Current import statement | New import statement |
 |---------------|--------------------------|----------------------|
-| v2/cn/docs-guide/components-index.mdx | `import { ListSteps } from "/snippets/components/layout/list-steps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
-| v2/cn/docs-guide/indexes/components-index.mdx | `import { ListSteps } from "/snippets/components/layout/list-steps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from '/snippets/components/layout/list-steps.jsx'` | `import { ListSteps } from '/snippets/components/layout/listSteps.jsx'` |
-| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from "/snippets/components/layout/list-steps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
-| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { ListSteps } from "/snippets/components/layout/list-steps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
-| v2/es/docs-guide/components-index.mdx | `import { ListSteps } from "/snippets/components/layout/list-steps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
-| v2/es/docs-guide/indexes/components-index.mdx | `import { ListSteps } from "/snippets/components/layout/list-steps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
-| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from '/snippets/components/layout/list-steps.jsx'` | `import { ListSteps } from '/snippets/components/layout/listSteps.jsx'` |
-| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from "/snippets/components/layout/list-steps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
-| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { ListSteps } from "/snippets/components/layout/list-steps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
-| v2/fr/docs-guide/components-index.mdx | `import { ListSteps } from "/snippets/components/layout/list-steps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
-| v2/fr/docs-guide/indexes/components-index.mdx | `import { ListSteps } from "/snippets/components/layout/list-steps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from '/snippets/components/layout/list-steps.jsx'` | `import { ListSteps } from '/snippets/components/layout/listSteps.jsx'` |
-| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from "/snippets/components/layout/list-steps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
-| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { ListSteps } from "/snippets/components/layout/list-steps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
-| v2/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from '/snippets/components/layout/list-steps.jsx'` | `import { ListSteps } from '/snippets/components/layout/listSteps.jsx'` |
-| v2/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from "/snippets/components/layout/list-steps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
-| v2/resources/documentation-guide/component-library/overview.mdx | `import { ListSteps } from "/snippets/components/layout/list-steps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
+| v2/cn/docs-guide/components-index.mdx | `import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
+| v2/cn/docs-guide/indexes/components-index.mdx | `import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from '/snippets/components/layout/ListSteps.jsx'` | `import { ListSteps } from '/snippets/components/layout/listSteps.jsx'` |
+| v2/cn/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
+| v2/cn/resources/documentation-guide/component-library/overview.mdx | `import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
+| v2/es/docs-guide/components-index.mdx | `import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
+| v2/es/docs-guide/indexes/components-index.mdx | `import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
+| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from '/snippets/components/layout/ListSteps.jsx'` | `import { ListSteps } from '/snippets/components/layout/listSteps.jsx'` |
+| v2/es/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
+| v2/es/resources/documentation-guide/component-library/overview.mdx | `import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
+| v2/fr/docs-guide/components-index.mdx | `import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
+| v2/fr/docs-guide/indexes/components-index.mdx | `import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from '/snippets/components/layout/ListSteps.jsx'` | `import { ListSteps } from '/snippets/components/layout/listSteps.jsx'` |
+| v2/fr/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
+| v2/fr/resources/documentation-guide/component-library/overview.mdx | `import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
+| v2/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from '/snippets/components/layout/ListSteps.jsx'` | `import { ListSteps } from '/snippets/components/layout/listSteps.jsx'` |
+| v2/resources/documentation-guide/component-library/component-library.mdx | `import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
+| v2/resources/documentation-guide/component-library/overview.mdx | `import { ListSteps } from "/snippets/components/layout/ListSteps.jsx";` | `import { ListSteps } from "/snippets/components/layout/listSteps.jsx";` |
 
 **Total rewrites:** 18
 **Import sites:** 18
@@ -1936,27 +1936,27 @@ Source: tasks/reports/component-governance-audit.md
 - Export line drift: snippets/components/content/data.jsx :: LumaEvents audit L559, live L572
 - Export line drift: snippets/components/content/external-content.jsx :: ExternalContent audit L1, live L13
 - Export line drift: snippets/components/content/release.jsx :: LatestVersion audit L1, live L4
-- Export line drift: snippets/components/content/response-field.jsx :: ValueResponseField audit L115, live L12
-- Export line drift: snippets/components/content/response-field.jsx :: CustomResponseField audit L115, live L56
-- Export line drift: snippets/components/content/response-field.jsx :: ResponseFieldExpandable audit L115, live L72
-- Export line drift: snippets/components/content/response-field.jsx :: ResponseFieldAccordion audit L115, live L83
-- Export line drift: snippets/components/content/response-field.jsx :: ResponseFieldGroup audit L115, live L96
-- Export line drift: snippets/components/display/card-carousel.jsx :: CardCarousel audit L1, live L20
-- Export line drift: snippets/components/display/custom-cards.jsx :: DisplayCard audit L1, live L12
+- Export line drift: snippets/components/content/responseField.jsx :: ValueResponseField audit L115, live L12
+- Export line drift: snippets/components/content/responseField.jsx :: CustomResponseField audit L115, live L56
+- Export line drift: snippets/components/content/responseField.jsx :: ResponseFieldExpandable audit L115, live L72
+- Export line drift: snippets/components/content/responseField.jsx :: ResponseFieldAccordion audit L115, live L83
+- Export line drift: snippets/components/content/responseField.jsx :: ResponseFieldGroup audit L115, live L96
+- Export line drift: snippets/components/display/CardCarousel.jsx :: CardCarousel audit L1, live L20
+- Export line drift: snippets/components/display/customCards.jsx :: DisplayCard audit L1, live L12
 - Export line drift: snippets/components/display/embed.jsx :: MarkdownEmbed audit L1, live L15
 - Export line drift: snippets/components/display/embed.jsx :: EmbedMarkdown audit L26, live L40
-- Export line drift: snippets/components/display/frame-mode.jsx :: PageHeader audit L536, live L32
-- Export line drift: snippets/components/display/frame-mode.jsx :: H1 audit L536, live L166
-- Export line drift: snippets/components/display/frame-mode.jsx :: H2 audit L536, live L217
-- Export line drift: snippets/components/display/frame-mode.jsx :: H3 audit L536, live L267
-- Export line drift: snippets/components/display/frame-mode.jsx :: H4 audit L536, live L317
-- Export line drift: snippets/components/display/frame-mode.jsx :: H5 audit L536, live L367
-- Export line drift: snippets/components/display/frame-mode.jsx :: H6 audit L536, live L417
-- Export line drift: snippets/components/display/frame-mode.jsx :: P audit L536, live L472
-- Export line drift: snippets/components/display/frame-mode.jsx :: Divider audit L536, live L524
+- Export line drift: snippets/components/display/frameMode.jsx :: PageHeader audit L536, live L32
+- Export line drift: snippets/components/display/frameMode.jsx :: H1 audit L536, live L166
+- Export line drift: snippets/components/display/frameMode.jsx :: H2 audit L536, live L217
+- Export line drift: snippets/components/display/frameMode.jsx :: H3 audit L536, live L267
+- Export line drift: snippets/components/display/frameMode.jsx :: H4 audit L536, live L317
+- Export line drift: snippets/components/display/frameMode.jsx :: H5 audit L536, live L367
+- Export line drift: snippets/components/display/frameMode.jsx :: H6 audit L536, live L417
+- Export line drift: snippets/components/display/frameMode.jsx :: P audit L536, live L472
+- Export line drift: snippets/components/display/frameMode.jsx :: Divider audit L536, live L524
 - Export line drift: snippets/components/display/image.jsx :: Image audit L1, live L25
 - Export line drift: snippets/components/display/image.jsx :: LinkImage audit L37, live L62
-- Export line drift: snippets/components/display/showcase-cards.jsx :: ShowcaseCards audit L1, live L470
+- Export line drift: snippets/components/display/showcaseCards.jsx :: ShowcaseCards audit L1, live L470
 - Export line drift: snippets/components/display/video.jsx :: TitledVideo audit L1, live L23
 - Export line drift: snippets/components/display/video.jsx :: Video audit L133, live L158
 - Export line drift: snippets/components/display/video.jsx :: YouTubeVideo audit L249, live L272
@@ -1980,7 +1980,7 @@ Source: tasks/reports/component-governance-audit.md
 - Export line drift: snippets/components/domain/SHARED/previewCallouts.jsx :: PreviewCallout audit L146, live L70
 - Export line drift: snippets/components/domain/SHARED/previewCallouts.jsx :: ReviewCallout audit L146, live L135
 - Export line drift: snippets/components/integrations/coingecko.jsx :: CoinGeckoExchanges audit L1, live L8
-- Export line drift: snippets/components/layout/list-steps.jsx :: ListSteps audit L1, live L23
+- Export line drift: snippets/components/layout/ListSteps.jsx :: ListSteps audit L1, live L23
 - Export line drift: snippets/components/layout/cards.jsx :: ScrollBox audit L1, live L22
 - Export line drift: snippets/components/layout/lists.jsx :: BasicList audit L2, live L13
 - Export line drift: snippets/components/layout/lists.jsx :: IconList audit L16, live L27

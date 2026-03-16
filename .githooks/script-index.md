@@ -3,7 +3,7 @@
 {/* SCRIPT-INDEX:START */}
 ## Script Index
 
-| Script | Summary | Usage | Owner |
+| Script | Summary | Usage | Domain |
 |---|---|---|---|
 | `.githooks/install.sh` | Installs git hooks by setting core.hooksPath to .githooks/ | `bash .githooks/install.sh [flags]` | docs |
 | `.githooks/pre-commit` | Pre-commit hook orchestrator — runs structural checks, unit tests, codex validation, and docs-index freshness check before allowing commit | `bash .githooks/pre-commit [flags]` | docs |

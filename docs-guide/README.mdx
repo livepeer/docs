@@ -1,73 +1,11 @@
 ---
-title: 'Docs Guide Overview'
-sidebarTitle: 'Docs Guide'
-description: 'Internal source of truth for repository features and functionality'
-keywords:
-  [
-    'livepeer',
-    'docs guide',
-    'internal',
-    'source of truth',
-    'repository',
-    'features',
-    'functionality',
-  ]
+title: 'Docs Guide Compatibility Note'
+sidebarTitle: 'README'
+description: 'Compatibility entry for the docs-guide landing route.'
 ---
 
-# Docs Guide (Internal Source of Truth)
+# Docs Guide Compatibility Note
 
-This folder is the internal maintainer navigation source of truth for repository features and functionality. It is not part of Mintlify navigation in `docs.json`; it exists to keep operational documentation discoverable, non-duplicative, and maintainable.
+The canonical docs-guide landing page is [overview.mdx](./overview.mdx).
 
-## Source-of-Truth Model
-
-- Runtime behavior: source of truth is code and tests.
-- Feature and operations navigation: source of truth is this `docs-guide/` folder.
-- Public docs UX/content: source of truth is Mintlify pages under `v2/pages/`.
-- Generated catalogs: source of truth is generator scripts; generated files are read-only.
-
-See [source-of-truth-policy.md](./source-of-truth-policy.mdx) for full boundaries.
-
-## Start Here
-
-| If you need to understand...                  | Canonical file                                           |
-| --------------------------------------------- | -------------------------------------------------------- |
-| Governance and canonical ownership            | [source-of-truth-policy.md](./source-of-truth-policy.mdx) |
-| Complete repo capability map                  | [feature-map.md](./feature-guides/feature-map.mdx)                       |
-| Data + control flow across systems            | [architecture-map.md](./feature-guides/architecture-map.mdx)             |
-| CLI behavior and operator runbooks            | [lpd.md](./lpd.mdx)                                       |
-| Validation and enforcement gates              | [quality-gates.md](./quality-testing/quality-gates.mdx)                   |
-| Audit system and scorecard workflow           | [audit-system-overview.mdx](./quality-testing/audit-system-overview.mdx) |
-| Skill pipeline run order and contracts        | [skill-pipeline-map.mdx](./quality-testing/skill-pipeline-map.mdx) |
-| Cleanup and quarantine policy                 | [cleanup-quarantine-policy.mdx](./quality-testing/cleanup-quarantine-policy.mdx) |
-| Component layout decision matrix              | [component-layout-decision-matrix.mdx](./quality-testing/component-layout-decision-matrix.mdx) |
-| GitHub Actions, n8n, and automation pipelines | [automation-pipelines.md](./feature-guides/automation-pipelines.mdx)     |
-| Information architecture and content strategy | [content-system.md](./feature-guides/content-system.mdx)                 |
-| APIs and external data integrations           | [data-integrations.md](./feature-guides/data-integrations.mdx)           |
-| AI tools and skill inventory                  | [ai-tools.mdx](./indexes/ai-tools.mdx) |
-| Pages tree catalog (generated)                | [pages-index.mdx](./indexes/pages-index.mdx)                     |
-| Components catalog (generated)                | [components-index.mdx](./indexes/components-index.mdx)           |
-| Script catalog (generated)                    | [scripts-index.mdx](./indexes/scripts-index.mdx)                 |
-| Workflow catalog (generated)                  | [workflows-index.mdx](./indexes/workflows-index.mdx)             |
-| Issue/PR template catalog (generated)         | [templates-index.mdx](./indexes/templates-index.mdx)             |
-
-## Update Rules
-
-1. Update manual docs when behavior, process, ownership, or architecture changes.
-2. Regenerate generated catalogs when scripts/workflows/templates change:
-   - `node tools/scripts/generate-docs-guide-indexes.js --write`
-   - `node tools/scripts/generate-docs-guide-pages-index.js --write`
-   - `node tools/scripts/generate-docs-guide-components-index.js --write`
-   - `node tests/unit/script-docs.test.js --write --rebuild-indexes`
-   - `node tools/scripts/enforce-generated-file-banners.js --check`
-3. Re-run the docs audit pipeline when docs, scripts, reports, or routing paths change:
-   - `node tools/scripts/repo-audit-orchestrator.js --mode static --scope full`
-   - `node tools/scripts/cross-agent-packager.js --agent-pack all`
-4. Keep `README.md` high-level and link to canonical docs-guide files for deep detail.
-5. Do not duplicate long procedural guidance across README, tests docs, and docs-guide. Link to canonical pages instead.
-
-## Related Areas
-
-- Root orientation: [`README.md`](../README.md)
-- Public docs guide: [`v2/resources/documentation-guide/`](../v2/resources/documentation-guide/)
-- Contributor procedures: [`contribute/CONTRIBUTING/`](../contribute/CONTRIBUTING/)
-- Test matrices and CI behavior: [`tests/`](../tests/)
+Use that page for the current information architecture, section routes, and update rules.

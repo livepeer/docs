@@ -1,0 +1,65 @@
+name: Governance sync (post-merge)
+
+on:
+  push:
+    branches: [docs-v2]
+    paths:
+      - 'tools/scripts/**'
+      - 'tools/lib/**'
+      - 'tools/notion/**'
+      - 'tools/config/**'
+      - 'tests/unit/**'
+      - 'tests/integration/**'
+      - 'tests/utils/**'
+      - 'tests/run-all.js'
+      - 'tests/run-pr-checks.js'
+      - '.githooks/**'
+      - '.github/scripts/**'
+      - '.github/workflows/**'
+      - 'tasks/scripts/**'
+      - 'snippets/automations/**'
+      - 'tasks/reports/script-classifications.json'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: docs-v2
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: cd tools && npm ci
+      - run: cd tests && npm ci
+
+      - name: Run governance repair
+        id: repair
+        run: |
+          node tools/scripts/orchestrators/repair-governance.js 2>&1 | tee /tmp/repair.log
+          FIXES=$(python3 -c "
+          import json
+          d = json.load(open('tasks/reports/repo-ops/REPAIR_REPORT_LATEST.json'))
+          print(d.get('repairs_applied', {}).get('total_fixes', 0))
+          " 2>/dev/null || echo "0")
+          echo "fixes=$FIXES" >> $GITHUB_OUTPUT
+
+      - name: Create PR if fixes applied
+        if: steps.repair.outputs.fixes != '0'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/governance-sync
+          title: 'chore(governance): post-merge sync -- ${{ steps.repair.outputs.fixes }} fixes'
+          body: |
+            Automated post-merge governance sync triggered by ${{ github.sha }}.
+            See `tasks/reports/repo-ops/REPAIR_REPORT_LATEST.md` for details.
+          base: docs-v2
+          delete-branch: true
+          labels: governance, automated

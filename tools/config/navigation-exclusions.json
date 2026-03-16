@@ -1,21 +1,17 @@
 {
-  "_comment": "Deliberate Mintlify navigation workarounds - excluded from validator-specific docs.json checks",
-  "exempt_page_values": [
-    " "
-  ],
-  "exempt_anchor_values": [
-    " "
-  ],
-  "exempt_pages": [
-    "/v2/resources/redirect"
-  ],
-  "exempt_from_validators": [
-    "docs-navigation.test.js",
-    "check-orphaned-pages",
-    "check-empty-links",
-    "check-description-quality",
-    "check-page-endings",
-    "check-page-archetype",
-    "quality.test.js"
-  ]
+  "_comment": "Intentional Mintlify navigation workarounds. Validators must not flag these patterns.",
+  "intentionalPatterns": {
+    "emptyAnchorSeparators": {
+      "description": "Sidebar visual separators. anchor: ' ' with pages: [' '] is deliberate.",
+      "anchorValue": " ",
+      "pagesValue": [" "]
+    },
+    "redirectRoutes": {
+      "description": "Intentional routing workaround. These pages exist to redirect users and must not be flagged as orphans or stubs.",
+      "paths": [
+        "v2/resources/redirect"
+      ]
+    }
+  },
+  "validatorGuidance": "When checking docs.json navigation: skip any anchor whose value is a single space. When checking for orphaned or stub pages: exclude all paths listed in redirectRoutes.paths."
 }

@@ -1,0 +1,214 @@
+---
+title: 'Quickstart: Verify Your Hardware'
+sidebarTitle: 'Verify Your Hardware'
+description: 'Run off-chain video transcoding and AI inference tests to verify Livepeer works on your GPU - no staking, no ETH, no Arbitrum required.'
+keywords:
+  - livepeer
+  - orchestrator
+  - quickstart
+  - smoke test
+  - video transcoding
+  - AI inference
+  - off-chain
+  - Docker
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: quickstart
+audience: orchestrator
+status: draft
+---
+{/* TODO:
+- Ensure authoring skill compliance: ai-tools/ai-skills/page-authoring/SKILL.md
+- Entity-led voice
+- Terminology per v2/orchestrators/resources/glossary.mdx
+- No em dashes, UK spelling
+- StyledSteps for all step sequences
+- Code blocks: icon="terminal" for bash, icon="code" for config, short filename
+- CustomDivider between major sections
+- BorderedBox variant="accent" around tab groups
+*/}
+
+{/* PAGE STRUCTURE:
+
+This is THE quickstart page. Both video AND AI smoke tests on one page.
+Off-chain only. No staking, no ETH, no Arbitrum. Pure hardware verification.
+
+## What This Page Covers
+2-3 sentences. Two smoke tests: video transcoding and AI inference.
+Both run locally, off-chain. Time: 20-30 min for video, 35-65 min for AI.
+No financial commitment required.
+
+<Note>
+This page verifies hardware. For production setup, see the Setup section.
+For understanding whether operating is worth it, see Operator Rationale.
+</Note>
+
+## Prerequisites
+Checklist with verification commands:
+- NVIDIA GPU: `nvidia-smi` (confirm detected, note VRAM)
+- Docker: `docker --version`
+- nvidia-container-toolkit: `docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi`
+- ffmpeg (for video test): `ffmpeg -version`
+- Linux (required for AI test; video test works on WSL2/macOS Docker)
+
+---
+
+## Video Transcoding Test
+
+<StyledSteps>
+
+### Step 1: Pull go-livepeer
+```bash
+docker pull livepeer/go-livepeer:stable
+```
+
+### Step 2: Start a local orchestrator (off-chain)
+```bash
+docker run --gpus all \
+  livepeer/go-livepeer:stable \
+  -orchestrator -transcoder \
+  -network offchain \
+  -nvidia 0 \
+  -serviceAddr 127.0.0.1:8936
+```
+Explain: -network offchain means no blockchain, no staking, local only.
+
+### Step 3: Start a local gateway (off-chain, same machine)
+In a second terminal:
+```bash
+docker run \
+  livepeer/go-livepeer:stable \
+  -gateway \
+  -network offchain \
+  -orchAddr 127.0.0.1:8936 \
+  -rtmpAddr 0.0.0.0:1935 \
+  -httpAddr 0.0.0.0:8935
+```
+
+### Step 4: Send a test stream
+```bash
+ffmpeg -re -f lavfi -i testsrc=size=1280x720:rate=30 \
+  -c:v libx264 -f flv rtmp://127.0.0.1:1935/test_stream
+```
+Or use the test video download link if available.
+
+### Step 5: Verify transcoded output
+```bash
+ffprobe http://127.0.0.1:8935/stream/test_stream.m3u8
+```
+Check orchestrator logs for: "Got segment" and "Transcode result"
+
+</StyledSteps>
+
+### What Just Happened
+Brief diagram: ffmpeg → gateway (RTMP) → orchestrator (GPU transcode) → gateway (HLS out)
+Confirm: GPU transcoding works on this machine.
+
+---
+
+## AI Inference Test
+
+<Note>
+Requires 24 GB+ VRAM for diffusion models. If VRAM is 8-16 GB, skip to the
+LLM alternative below.
+</Note>
+
+<StyledSteps>
+
+### Step 1: Pull AI runner container
+```bash
+docker pull livepeer/ai-runner:latest
+```
+
+### Step 2: Write minimal aiModels.json
+One warm model. Use ByteDance/SDXL-Lightning or equivalent fast model.
+```json
+[
+  {
+    "pipeline": "text-to-image",
+    "model_id": "ByteDance/SDXL-Lightning",
+    "warm": true,
+    "price_per_unit": 4768371
+  }
+]
+```
+
+### Step 3: Start orchestrator + AI runner (off-chain)
+Docker-compose with:
+- Orchestrator: -orchestrator -transcoder -aiWorker -aiModels -network offchain -nvidia 0
+- AI runner service: livepeer/ai-runner with GPU access
+
+### Step 4: Wait for model download
+First start downloads from HuggingFace. Watch logs for "Loaded model" message.
+Time: 5-30 min depending on model size and connection.
+
+### Step 5: Test inference locally
+```bash
+curl -X POST http://localhost:8935/text-to-image \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_id": "ByteDance/SDXL-Lightning",
+    "prompt": "a test image of a mountain",
+    "width": 512,
+    "height": 512,
+    "num_inference_steps": 4
+  }'
+```
+A JSON response with an `images` array confirms AI inference works.
+
+</StyledSteps>
+
+### LLM Alternative (8-16 GB VRAM)
+<Accordion title="LLM test for lower-VRAM GPUs" icon="microchip">
+Brief: Use Ollama runner instead of livepeer/ai-runner.
+Minimal docker-compose with Ollama + Ollama AI Runner.
+Test with curl to /llm endpoint.
+Cross-ref: llm-pipeline-setup for full details.
+</Accordion>
+
+### What Just Happened
+Brief: gateway received HTTP request → routed to orchestrator → AI runner loaded
+model and processed inference → result returned.
+Confirm: AI inference works on this machine.
+
+---
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Setup Guide" icon="gear" href="/v2/orchestrators/setup/guide">
+    Configure for production: on-chain, staking, reward calling.
+  </Card>
+  <Card title="Operator Rationale" icon="scale-balanced" href="/v2/orchestrators/guides/operator-considerations/operator-rationale">
+    Still evaluating? Review the cost/benefit analysis.
+  </Card>
+  <Card title="Join a Pool" icon="users" href="/v2/orchestrators/guides/deployment-details/join-a-pool">
+    Want to earn without full setup? Join an existing pool.
+  </Card>
+  <Card title="Workload Options" icon="list-check" href="/v2/orchestrators/guides/ai-and-job-workloads/workload-options">
+    See what workloads earn and which fit your hardware.
+  </Card>
+</CardGroup>
+
+*/}
+
+{/*
+  PURPOSE:
+  THE quickstart page. Both video transcoding AND AI inference smoke tests on one
+  page. Off-chain, no financial commitment, pure hardware verification. Video test
+  runs orchestrator + gateway on same machine with ffmpeg. AI test runs orchestrator
+  + AI runner with curl. Both prove the technology works before the operator commits
+  to the full Setup flow.
+
+  SECTION: Quickstart
+  JOB STORIES: J1 (verify hardware before committing)
+
+  CROSS-REFS:
+  - Setup > Guide - next step after quickstart
+  - Operator Considerations > Operator Rationale - if still evaluating
+  - Deployment Details > Join a Pool - alternative fast path
+  - Workloads and AI > Workload Options - what to run
+*/}

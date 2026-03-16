@@ -1,0 +1,234 @@
+---
+title: 'Build AI Products on Livepeer'
+sidebarTitle: 'AI Builder Opportunity'
+description: 'The opportunity for AI application developers building on Livepeer — what the off-chain AI gateway enables, Foundation programmes available, and how to get started with zero ETH.'
+keywords:
+  - livepeer
+  - AI gateway opportunity
+  - AI Video Startup Programme
+  - off-chain AI gateway
+  - AI inference
+  - build on Livepeer
+  - Livepeer Foundation
+  - AI application developer
+  - NaaP
+  - Daydream
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: gateway-operator
+purpose: guides
+status: current
+lastVerified: '2026-03-13'
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+The off-chain AI gateway (shipped Q4 2025) fundamentally changed who can build on Livepeer. You no longer need ETH, an Arbitrum wallet, or any crypto infrastructure to run an AI gateway. You need a Linux server, Docker, and an endpoint to route AI inference requests.
+
+This page is for AI application developers who are evaluating Livepeer as the compute layer for their product.
+
+---
+
+## What changed in Q4 2025
+
+The original Livepeer gateway architecture required every operator to manage Ethereum keys and an Arbitrum deposit. This was a meaningful barrier for application developers who wanted compute, not crypto.
+
+Remote signing (PRs #3791 and #3822) separated the gateway's media responsibilities from its Ethereum responsibilities. The gateway routes inference jobs. A remote signer handles all payment operations. Your gateway holds no ETH and has no Arbitrum dependency.
+
+The practical result for AI builders:
+
+| Before remote signing | After remote signing |
+|----------------------|---------------------|
+| Must hold ETH on Arbitrum | No ETH required at gateway layer |
+| Must manage wallet keystore | No key management |
+| Must bridge ETH from mainnet | No bridging |
+| Setup time: hours | Setup time: minutes |
+| ETH price volatility affects your costs | Abstracted by remote signer |
+
+A community-hosted remote signer (`signer.eliteencoder.net`) is publicly available and free. Point your gateway at it and you are routing AI inference with zero upfront crypto cost.
+
+{/* REVIEW: Confirm signer.eliteencoder.net is still live and free. Verify in #local-gateways Discord with Elite Encoder. */}
+
+---
+
+## What you can build
+
+<AccordionGroup>
+  <Accordion title="AI-powered product using Livepeer inference">
+    Use Livepeer as the compute layer for your AI product: image generation, video generation, live video AI, LLM inference, audio transcription. Your product makes HTTP API calls to your gateway; the gateway handles orchestrator selection, payment, and result delivery.
+
+    **Entry point:** An off-chain AI gateway as internal infrastructure, using the community remote signer for payments. No ETH required.
+
+    **Who is doing this:** Daydream (real-time AI video for creators), Embody Avatars, AI Video Startup Programme cohort participants.
+  </Accordion>
+  <Accordion title="Real-time AI video (Live AI / LV2V)">
+    Live video-to-video AI is the newest and fastest-growing workload on the Livepeer network. A live stream goes in; an AI-processed stream comes out — in real time. Use cases: style transfer, generative overlays, AI avatars, live effects.
+
+    Payments for Live AI are interval-based (every N seconds of processed stream), not per-pixel. The remote signer was designed specifically to support this workload first.
+
+    **Entry point:** Off-chain AI gateway with `-livePaymentInterval` configured. Use `livepeer-python-gateway` for Python-native integration.
+  </Accordion>
+  <Accordion title="Inference API on decentralised compute">
+    Build an AI inference API backed by Livepeer's decentralised GPU network. Offer image generation, video generation, or LLM endpoints to your users. You handle auth and billing at the application layer; the gateway handles routing and payments to the network.
+
+    **Why Livepeer vs Replicate/Fal/Runpod:** Decentralised supply (no single point of failure), competitive pricing at scale, and — for video generation specifically — a growing pool of specialised AI workers.
+  </Accordion>
+  <Accordion title="Platform with API keys and usage metering (NaaP model)">
+    The NaaP (Network as a Platform) pattern lets you build a multi-tenant AI service where your users never interact with crypto. They receive API keys; you route their requests through your gateway; you handle billing in fiat or standard crypto.
+
+    The NaaP dashboard (`github.com/livepeer/naap`) is the reference implementation: JWT-based auth via SIWE, Developer API Keys, per-user usage metering.
+
+    **Status:** NaaP demo is operational. Production API not yet stable.
+
+    {/* REVIEW: Confirm NaaP public URL and production readiness with Qiang Han. */}
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Foundation support for AI builders
+
+### AI Video Startup Programme
+
+The Livepeer Foundation runs a programme for startups and teams building AI-powered video products on Livepeer infrastructure. Accepted participants receive:
+
+- Access to Livepeer network resources
+- Technical support from Foundation engineers, including the teams behind go-livepeer and the remote signer architecture
+- Introductions to investors and partners
+- Visibility within the Livepeer ecosystem
+
+Running your own AI gateway is the natural operational model for programme participants — you route inference directly at network cost rather than through a hosted gateway.
+
+{/* REVIEW: Confirm current programme name, cohort timing, eligibility criteria, and application URL with Foundation BD team. This is a high-value link to add once confirmed. */}
+
+### Foundation BD engagement
+
+If you are building a significant AI product on Livepeer, direct engagement with Foundation BD is available. The Foundation is actively looking to support commercial builders in the AI space.
+
+Reach out through the Livepeer Discord (`#general` or `#developers`) or via the Foundation website to make initial contact.
+
+### `#local-gateways` Discord channel
+
+The primary technical channel for gateway operators. Foundation engineers — including j0sh (remote signer author) — are active and responsive to questions. This is the best channel for:
+
+- Off-chain gateway setup questions
+- Remote signer configuration
+- Python SDK (`livepeer-python-gateway`) integration
+- Discovery and orchestrator selection for AI workloads
+
+---
+
+## Supported AI pipelines
+
+The Livepeer AI network currently supports these inference pipelines via the gateway API:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Pipeline</TableCell>
+      <TableCell header>Description</TableCell>
+      <TableCell header>Payment model</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**text-to-image**</TableCell>
+      <TableCell>Generate images from text prompts</TableCell>
+      <TableCell>Per output pixel</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**image-to-image**</TableCell>
+      <TableCell>Transform images using a prompt or model</TableCell>
+      <TableCell>Per output pixel</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**image-to-video**</TableCell>
+      <TableCell>Animate an image into a short video clip</TableCell>
+      <TableCell>Per output pixel</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**live-video-to-video**</TableCell>
+      <TableCell>Apply AI processing to a live stream in real time</TableCell>
+      <TableCell>Interval-based (per second of processed stream)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**llm**</TableCell>
+      <TableCell>LLM text generation via open models</TableCell>
+      <TableCell>Per token (varies by model)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**audio-to-text**</TableCell>
+      <TableCell>Transcription from audio input</TableCell>
+      <TableCell>Per second of audio</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**upscale**</TableCell>
+      <TableCell>Increase image resolution</TableCell>
+      <TableCell>Per output pixel</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**segment-anything-2**</TableCell>
+      <TableCell>Object segmentation on images or video</TableCell>
+      <TableCell>Per output pixel</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**image-to-text**</TableCell>
+      <TableCell>Caption generation or OCR from images</TableCell>
+      <TableCell>Per output token</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**text-to-speech**</TableCell>
+      <TableCell>Speech synthesis from text</TableCell>
+      <TableCell>Per second of output audio</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+{/* REVIEW: Confirm per-pipeline payment model specifics with Peter (AI SPE Lead). The per-pixel model for batch inference is verified from research. LLM per-token and audio per-second are inferred from general model — need explicit confirmation. */}
+
+---
+
+## Getting started: the minimum viable AI gateway
+
+```bash
+# Pull the go-livepeer Docker image
+docker pull livepeer/go-livepeer:master
+
+# Run an off-chain AI gateway
+docker run -d \
+  --name livepeer-ai-gateway \
+  -p 8935:8935 \
+  -p 8937:8937 \
+  livepeer/go-livepeer:master \
+    -gateway \
+    -httpIngest \
+    -orchAddr="ORCHESTRATOR_ADDRESS_HERE" \
+    -remoteSignerAddr="https://signer.eliteencoder.net"
+```
+
+{/* REVIEW: Confirm correct Docker image tag (master vs pinned release) with Rick. Confirm -remoteSignerAddr flag name and format with j0sh. */}
+
+That is the entire off-chain AI gateway setup. No wallet, no bridging, no ETH. Send an inference request to `http://localhost:8935` and the gateway routes it to the orchestrator.
+
+See the [AI gateway quickstart](/v2/gateways/get-started/gateway-setup) for the full step-by-step, including how to find and connect to orchestrators.
+
+---
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="AI gateway quickstart" icon="bolt" href="/v2/gateways/get-started/gateway-setup">
+    Full step-by-step: Docker command, orchestrator selection, verify your first inference request.
+  </Card>
+  <Card title="Off-chain requirements" icon="clipboard-check" href="/v2/gateways/setup/requirements/off-chain">
+    What you need for an off-chain AI gateway — no ETH, no Arbitrum, Linux only.
+  </Card>
+  <Card title="Remote signers" icon="key" href="/v2/gateways/advanced/remote-signers">
+    How the remote signer architecture works and options for production signing.
+  </Card>
+</CardGroup>

@@ -1,0 +1,273 @@
+---
+title: 'Model Hosting'
+sidebarTitle: 'Model Hosting'
+description: >-
+  Source, download, and store AI models for Livepeer orchestrator pipelines.
+  Covers HuggingFace model IDs, automatic vs manual download, storage layout,
+  gated model access via tokens, and the Livepeer verified model list.
+keywords:
+  - livepeer
+  - orchestrator
+  - model hosting
+  - HuggingFace
+  - model download
+  - aiModels.json
+  - model storage
+  - gated models
+  - HuggingFace token
+  - BYOC
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: current
+lastVerified: '2026-03-16'
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+
+<Tip>
+  The model_id in aiModels.json must match the HuggingFace model ID exactly, including capitalisation and the organisation prefix. A single character mismatch causes the container to fail at model load time.
+</Tip>
+
+---
+
+Model hosting covers how AI models reach your GPU: where they come from, how they download, where they are stored, and how to verify they are loaded and serving correctly. Warm/cold strategy and runtime model selection are covered in <LinkArrow href="/v2/orchestrators/guides/config-and-optimisation/ai-model-management" label="AI Model Management" newline={false} />.
+
+<CustomDivider middleText="Model Sources" />
+
+## Model sources
+
+### HuggingFace (primary)
+
+The primary source for all standard Livepeer AI pipelines is [HuggingFace](https://huggingface.co/models). The `model_id` field in `aiModels.json` is a HuggingFace model identifier in the format `organisation/model-name`.
+
+Examples:
+- `SG161222/RealVisXL_V4.0_Lightning` — text-to-image diffusion model
+- `openai/whisper-large-v3` — audio-to-text transcription model
+- `Salesforce/blip-image-captioning-large` — image-to-text vision model
+- `meta-llama/Meta-Llama-3.1-8B-Instruct` — LLM (served via Ollama runner)
+
+The `model_id` is case-sensitive, including the organisation prefix. A typo here causes the container to fail silently at model load time with no user-facing warning beyond a startup error in the container logs.
+
+### External containers (BYOC)
+
+The `url` field in an `aiModels.json` entry points to an external container that handles inference independently of the standard `livepeer/ai-runner`. The AI worker passes jobs to the external container and polls its `/health` endpoint at startup.
+
+```json icon="code" title="External container entry"
+{
+  "pipeline": "audio-to-text",
+  "model_id": "openai/whisper-large-v3",
+  "price_per_unit": 12882811,
+  "url": "http://my-whisper-container:8000",
+  "capacity": 2
+}
+```
+
+Common use cases for external containers:
+- Ollama runner for LLM inference (see <LinkArrow href="/v2/orchestrators/guides/ai-and-job-workloads/llm-pipeline-setup" label="LLM Pipeline Setup" newline={false} />)
+- Custom PyTorch, TensorRT, or ONNX inference servers
+- GPU clusters or auto-scaling stacks behind a load balancer
+- Fine-tuned or proprietary model checkpoints not on HuggingFace
+
+External containers must expose a `/health` endpoint returning HTTP 200. The model must be fully loaded inside the container before the AI worker starts — if the health check fails at startup, the entry is skipped without an error.
+
+<CustomDivider middleText="Download Mechanics" />
+
+## Download mechanics
+
+### Automatic download on first start
+
+For standard pipelines, the `livepeer/ai-runner` container downloads model weights from HuggingFace automatically on first use. The download triggers when:
+
+- The container starts with a cold model configured (no `"warm": true`), and a job arrives for that model
+- The container starts with `"warm": true` set — download happens immediately at container startup
+
+Download time varies by model size and network speed. A large diffusion model (several GB) may take several minutes to download on the first run. The container waits until the model is ready before serving requests.
+
+### Manual pre-download
+
+Pre-download model weights before the container starts to avoid per-request download latency:
+
+```bash icon="terminal"
+# Pre-download into the model directory used by go-livepeer
+docker run --rm \
+  -v ~/.lpData/models:/root/.lpData/models \
+  livepeer/ai-runner \
+  python download_model.py \
+    --pipeline text-to-image \
+    --model_id SG161222/RealVisXL_V4.0_Lightning
+```
+
+{/* REVIEW: Confirm the correct download command syntax for the current ai-runner image. The script name (download_model.py) and flag names should be verified against the current livepeer/ai-runner release. Rick / ai-runner team to confirm. */}
+
+Pre-downloading is recommended for:
+- Large models (5 GB+) where per-request download creates unacceptable first-request latency
+- Environments with unreliable internet connectivity during inference
+- Production deployments where startup time predictability matters
+
+### Storage location
+
+Models are stored in the directory specified by `-aiModelsDir`. Default location:
+
+```text icon="terminal"
+~/.lpData/models/
+```
+
+Override with the `-aiModelsDir` flag at startup:
+
+```bash icon="terminal"
+livepeer \
+  -aiWorker \
+  -aiModelsDir /mnt/fast-nvme/ai-models \
+  ...
+```
+
+**Storage sizing guidance (per model):**
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Model</TableCell>
+      <TableCell header>Approximate disk size</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>SDXL-Lightning (text-to-image)</TableCell>
+      <TableCell>~6–7 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>SVD (image-to-video)</TableCell>
+      <TableCell>~10 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Whisper large-v3 (audio-to-text)</TableCell>
+      <TableCell>~3 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>BLIP large (image-to-text)</TableCell>
+      <TableCell>~1.5 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>SAM2 large (segment-anything-2)</TableCell>
+      <TableCell>~2.5 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Llama 3.1 8B Q4 (via Ollama)</TableCell>
+      <TableCell>~4.7 GB</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+{/* REVIEW: Disk size figures are approximate estimates. Confirm actual model sizes by checking HuggingFace model cards. Values should be verified before publication. */}
+
+Plan for NVMe storage on the model directory — loading weights from spinning disk into VRAM is significantly slower and affects warm model startup time and cold model first-request latency.
+
+<Note>
+  When using Docker-out-of-Docker, the `-aiModelsDir` path must be a path on the **host machine**, not inside the container. Docker uses this path to mount model files into AI Runner containers it spawns. A container-local path will not resolve correctly.
+</Note>
+
+<CustomDivider middleText="Gated Models" />
+
+## Gated model access
+
+Some HuggingFace models require authentication before download. These are called **gated models** — the model creator requires HuggingFace account acceptance before granting access.
+
+### Getting access
+
+1. Create a HuggingFace account at [huggingface.co](https://huggingface.co)
+2. Navigate to the model page (e.g. `meta-llama/Meta-Llama-3.1-8B-Instruct`)
+3. Accept the model's usage terms if prompted
+4. Generate an access token at [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens) with at least `Read` scope
+
+### Using the token in aiModels.json
+
+Add the `token` field to the relevant `aiModels.json` entry:
+
+```json icon="code" title="Gated model with HuggingFace token"
+{
+  "pipeline": "llm",
+  "model_id": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+  "price_per_unit": 0.18,
+  "currency": "USD",
+  "pixels_per_unit": 1000000,
+  "warm": true,
+  "url": "http://llm_runner:8000",
+  "token": "hf_your_token_here"
+}
+```
+
+The `token` field provides the bearer token for authenticating with HuggingFace during model download.
+
+{/* REVIEW: Confirm the token field in aiModels.json is used for HuggingFace authentication at download time (not only for external containers). The field description in diffusion-pipeline-setup.mdx says "Bearer token for authenticating with the external container" — clarify whether it also applies to HuggingFace gated model downloads. Rick / ai-runner team to verify. */}
+
+<Warning>
+  Do not commit `aiModels.json` files containing HuggingFace tokens to version control. Treat the token as a credential. Store `aiModels.json` outside public repositories or use environment variable substitution.
+</Warning>
+
+<CustomDivider middleText="Verified Models" />
+
+## Livepeer verified model list
+
+Only models on the Livepeer verified model list can receive routed jobs from gateways. Models not on the list will not appear in the network capability advertisement, and gateways will not route work to them.
+
+The verified model list is maintained by the Livepeer Foundation and updated as new models are tested for compatibility and demand. Check the current list at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) — models shown there are the ones currently eligible for routing.
+
+Configuring a model not on the verified list in `aiModels.json` is permitted but produces no job traffic.
+
+{/* REVIEW: Confirm the mechanism by which the verified model list is enforced — whether it is enforced at the protocol level (aiServiceRegistry), at the gateway level (maxPricePerCapability config), or informally via gateway routing preferences. Mehrdad / j0sh to clarify. */}
+
+<CustomDivider middleText="Verifying Load" />
+
+## Verifying model load
+
+### Container status
+
+```bash icon="terminal"
+docker ps --filter name=livepeer-ai-runner
+```
+
+All AI runner containers should show `Up` status. A container in a restart loop indicates a model load failure. Check logs:
+
+```bash icon="terminal"
+docker logs <container_name> --tail 100
+```
+
+Common error messages:
+- `OOM` or `CUDA out of memory` — the model exceeds available VRAM; reduce warm model count or switch to a smaller model variant
+- `Failed to load model` — model_id mismatch or network error during download
+- `model not found` — model_id does not exist on HuggingFace, or access is not granted for gated models
+
+### Network registration
+
+Verify your pipelines appear registered at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). Search by your orchestrator address. Each configured pipeline should show its status (**Warm** or **Cold**).
+
+Registration may take 2 to 5 minutes after the AI worker starts. If a pipeline does not appear after 10 minutes, check:
+- Container is running (`docker ps`)
+- Model loaded without errors (`docker logs`)
+- Your orchestrator is in the active set on [Livepeer Explorer](https://explorer.livepeer.org/orchestrators)
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="AI Model Management" icon="sliders" href="/v2/orchestrators/guides/config-and-optimisation/ai-model-management" arrow horizontal>
+    Warm vs cold strategy, VRAM allocation, model rotation, and optimisation flags.
+  </Card>
+  <Card title="AI Inference Operations" icon="microchip" href="/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations" arrow horizontal>
+    Full aiModels.json reference including all fields and pipeline configuration.
+  </Card>
+  <Card title="Diffusion Pipeline Setup" icon="image" href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup" arrow horizontal>
+    Recommended models, VRAM requirements, and configuration for diffusion pipelines.
+  </Card>
+  <Card title="LLM Pipeline Setup" icon="message-bot" href="/v2/orchestrators/guides/ai-and-job-workloads/llm-pipeline-setup" arrow horizontal>
+    Ollama-based LLM runner configuration and model download via Ollama tags.
+  </Card>
+</CardGroup>

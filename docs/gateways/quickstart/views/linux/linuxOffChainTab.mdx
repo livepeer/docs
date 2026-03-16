@@ -1,0 +1,101 @@
+---
+title: Linu/MacOS Off-Chain Gateway Quickstart TAB VIEW
+description: Off-chain Linux and macOS quickstart tab for running a Livepeer gateway.
+keywords:
+  - livepeer
+  - docs
+  - gateways
+  - quickstart
+  - views
+  - linux
+  - linuxoffchaintab
+  - linu
+  - macos
+  - chain
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+{/* Needs to be further destructured */}
+{/* Imports only used in this file should be here */}
+{/* STRIKE THAT - THEY MUST BE IMPORTED IN THE ROOT PAGE - BLOODY MINTLIFY */}
+import { latestVersion, latestVersionUrl } from '/snippets/automations/globals/globals.mdx';
+import { LINUX_CODE } from '../../data/linux/code.jsx';
+
+<Tab title="Off-Chain Gateway" icon="floppy-disk">
+    <GatewayOffChainWarning />
+    <Steps titleSize="h3">
+        <Step title="Install Gateway Software">
+ {/* <Badge color="green"><LatestVersion version={latestVersion} /></Badge> */}
+ <span style={{fontSize: '1.0rem'}}> *Latest* <a href={latestVersionUrl}>go-livepeer</a> *version:* <Badge color="green"><span>{latestVersion}</span></Badge> </span>
+         <br/>
+         <CustomCodeBlock
+          {...LINUX_CODE.downloadBinary}
+          placeholderValue={latestVersion}
+        />
+        <CustomCodeBlock
+          {...LINUX_CODE.extractBinary}
+        />
+ {/* <CustomCodeBlock
+            {...LINUX_CODE.ffmpeg}
+          /> */}
+
+        </Step>
+        <Step title="Configure Gateway">
+        </Step>
+        <Step title="Run Gateway">
+        </Step>
+        <Step title="Test Gateway">
+        </Step>
+        <Step title="Monitor Gateway">
+        </Step>
+        <Step title="Gateway Tips">
+        </Step>
+    </Steps>
+</Tab>
+
+{/* <Expandable title="TO DELETE">
+    <Tabs>
+
+      <Tab title="On-Chain Gateway">
+ This mode connects your Gateway to the Livepeer network on Arbitrum.
+
+ The guide uses a public RPC URL (rate-limited) & creates your account (wallet) for you.
+
+      ## Install
+
+ Install the latest version of the Livepeer Gateway software: [go-livepeer](https://github.com/livepeer/go-livepeer)
+ {/* <Badge color="green"> Latest Release: <latestVersionUrl asset="livepeer-linux-amd64.tar.gz"/> </Badge>
+        <Tabs>
+        <Tab title="Linux/Mac">
+        <latestVersionUrl asset="livepeer-linux-amd64.tar.gz">
+        <CustomCodeBlock
+          codeString="sudo wget https://github.com/livepeer/go-livepeer/releases/download/{PLACEHOLDER}/livepeer-linux-amd64.tar.gz"
+          placeholderValue={latestVersion}
+          language="bash"
+          icon="te  rminal"
+        />
+        </latestVersionUrl>
+        </Tab>
+        <Tab title="Windows">
+        <latestVersionUrl asset="livepeer-windows-amd64.zip">
+        <CustomCodeBlock
+          codeString="https://github.com/livepeer/go-livepeer/releases/download/{PLACEHOLDER}/livepeer-windows-amd64.zip"
+          placeholderValue={latestVersion}
+          language="bash"
+          icon="terminal"
+        />
+        </latestVersionUrl>
+        </Tab>
+        <Tab title="Docker">
+        <CustomCodeBlock
+          codeString="docker pull livepeer/go-livepeer:master"
+          language="bash"
+          icon="terminal"
+        />
+        </Tab>
+    </Tabs>
+
+</Expandable> */}

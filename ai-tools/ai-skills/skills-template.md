@@ -57,7 +57,7 @@ For each category, include:
 
 C) Cross-Cutting “Top Actions” Summary (end)
 - Top 5–10 actions across the whole repo, prioritized.
-- Identify quick wins (≤1 day), short projects (≤1 week), and strategic refactors (>1 week).
+- Identify quick wins (≤1 day), short projects (≤1 week), and strategic refactors (&gt;1 week).
 - Call out any “must-fix before ship” items.
 
 Tone & Rigor

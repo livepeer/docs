@@ -1,0 +1,217 @@
+---
+title: Agent Governance Framework
+sidebarTitle: Agent Governance Framework
+description: Canonical policy for repo-wide agent governance, native adapter files, rule taxonomy, and migration targets for legacy rule surfaces.
+keywords:
+  - livepeer
+  - agent governance
+  - AGENTS.md
+  - copilot instructions
+  - Claude Code
+  - Cursor
+  - Windsurf
+  - Codex
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+# Agent Governance Framework
+
+This document is the canonical governance policy for agent-facing instructions in this repository.
+
+It remains a `docs-guide/policies/` page, not a `docs-guide/frameworks/` page, because canonical agent-file locations, overlap boundaries, and retirement targets are enforced governance decisions rather than optional improvement guidance.
+
+The approved governance model is:
+
+- one cross-agent baseline
+- one native adapter per supported agent family
+- one shared repo knowledge set
+- no policy drift between overlapping instruction files
+
+Future governance changes must update the runtime files, validators, and this policy together.
+
+## Approved Canonical Layout
+
+Approved target locations:
+
+| Agent family | Approved canonical path | Notes |
+|---|---|---|
+| OpenAI Codex / repo-wide baseline | `AGENTS.md` | Cross-agent baseline and the primary repo-wide rules file. |
+| GitHub Copilot | `.github/copilot-instructions.md` | Native Copilot adapter. Path-scoped `.github/instructions/*.instructions.md` remains optional. |
+| Claude Code | `.claude/CLAUDE.md` | Native Claude adapter under a dedicated root directory. |
+| Cursor | `.cursor/rules/*.mdc` | Native Cursor rules location. |
+| Windsurf | `.windsurf/rules/*.md` | Native Windsurf rules location. |
+
+Current implementation state:
+
+| Target path | Current status |
+|---|---|
+| `AGENTS.md` | implemented canonical repo-wide baseline |
+| `.github/copilot-instructions.md` | implemented thin native adapter |
+| `.claude/CLAUDE.md` | implemented thin native adapter |
+| `.cursor/rules/*.mdc` | implemented thin native adapter |
+| `.windsurf/rules/*.md` | implemented thin native adapter |
+
+## Governance Taxonomy
+
+### Must-have canonical rules
+
+These rules must live in the canonical cross-agent baseline and must not drift by agent:
+
+- destructive git safety
+- hook and validation policy
+- root allowlist policy
+- source-of-truth order
+- `v1` freeze / legacy content boundary
+- branch and lock governance
+- path-migration discipline
+
+### Recommended shared rules
+
+These rules should be shared across agents unless a native adapter requires different syntax:
+
+- response and review hygiene
+- component and style conventions
+- route-placement heuristics
+- change-propagation expectations
+- generated-file handling
+- contributor workflow norms
+
+### Native adapter rules
+
+Native adapter files should contain only:
+
+- tool-specific file format or metadata requirements
+- minimal bootstrap instructions for that tool
+- a pointer back to the canonical repo baseline
+
+They should not become separate copies of the full repo policy.
+
+## Required Repo Knowledge for Every Agent
+
+Every supported agent must be grounded in the same repo knowledge set:
+
+| Knowledge domain | Canonical sources |
+|---|---|
+| Docs routing and navigation | `docs.json` |
+| Repo orientation and maintainer workflow | `README.md`, `contribute/**` |
+| Internal governance and architecture map | `docs-guide/**` |
+| Current user-facing docs | `v2/**` |
+| Hook and structure enforcement | `.githooks/pre-commit`, `.githooks/pre-push` |
+| Root governance | `docs-guide/policies/root-allowlist-governance.mdx` |
+| Agent governance | `docs-guide/policies/agent-governance-framework.mdx` |
+| Validator enforcement | `tools/scripts/validators/governance/*` |
+| Codex operational governance | `.codex/*`, `tools/scripts/codex/*` |
+
+## Current Active Rule Inventory and Overlap Map
+
+| Surface | Current role | Classification | Migration target |
+|---|---|---|---|
+| `AGENTS.md` | repo-wide baseline covering safety, source-of-truth order, structure, and validation expectations | must-have canonical | canonical source |
+| `.github/copilot-instructions.md` | GitHub Copilot adapter with only GitHub-specific path guidance | native adapter | keep thin |
+| `.claude/CLAUDE.md` | Claude Code adapter | native adapter | keep thin |
+| `.cursor/rules/repo-governance.mdc` | Cursor adapter | native adapter | keep thin |
+| `.windsurf/rules/repo-governance.md` | Windsurf adapter | native adapter | keep thin |
+| `contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md` | human-facing contributor workflow doc | recommended supplemental | keep as contributor-facing summary with links to canonical policies |
+| `ai-tools/agent-packs/*` | generated cross-agent adapter outputs | recommended supplemental | keep generated; never treat as canonical source |
+| `.codex/README.md` | Codex local lock guidance | recommended supplemental | keep as operational documentation |
+| `.codex/task-contract.yaml` | Codex task contract | recommended supplemental | keep as operational contract |
+| `.codex/locks-local/*` | Codex local lock state | recommended supplemental | keep as operational state, not rule docs |
+| `tools/scripts/validators/governance/check-agent-docs-freshness.js` | validator for canonical agent governance docs and adapters | recommended supplemental | keep aligned with the implemented canonical set |
+
+## Retired Legacy Surfaces
+
+These files were intentionally retired during the approved governance rollout and should not be recreated as active governance sources:
+
+| Legacy surface | Retirement status | Replacement |
+|---|---|---|
+| `.github/AGENTS.md` | retired | `AGENTS.md` |
+| `.cursorrules` | retired | `.cursor/rules/repo-governance.mdc` |
+| `ASSISTANT.md` | retired | `AGENTS.md` |
+| `.github/augment-instructions.md` | retired | none; Augment is not in the current supported matrix |
+
+### Overlap clusters
+
+Current duplication clusters:
+
+- `.github/AGENTS.md`, `.github/copilot-instructions.md`, `.github/augment-instructions.md`, `.cursorrules`, and `ASSISTANT.md` all duplicate repo structure and safety guidance
+- `contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md` duplicates contributor-facing parts of the same policy set
+- `ai-tools/agent-packs/*` are generated from separate sources and must remain outputs, not canonical rule inputs
+
+## Approved Migration Map
+
+The current governance contract maps legacy surfaces to the following destinations:
+
+| Legacy surface | Approved destination |
+|---|---|
+| `.github/AGENTS.md` | merged into root `AGENTS.md` |
+| `.cursorrules` | replaced by `.cursor/rules/repo-governance.mdc` |
+| `ASSISTANT.md` | merged into root `AGENTS.md`; no `.mintlify/ASSISTANT.md` adoption in the current contract |
+| `.github/augment-instructions.md` | retired from the supported matrix |
+| duplicated repo-policy blocks inside `.github/copilot-instructions.md` | reduced to a thin adapter that references `AGENTS.md` |
+
+## Prior Reports Incorporated
+
+This policy incorporates the following prior reports and decisions:
+
+### Prior report: Root entry re-review (`2026-03-16`)
+
+Relevant preserved findings:
+
+- not everything currently discussed in `.allowlist` is required at repo root
+- nested agent paths such as `.github/copilot-instructions.md` are not valid `.allowlist` entries because the root gate is root-only
+- the current repo still uses `ASSISTANT.md` and `.cursorrules`, but both were identified as move or retire candidates
+
+### Prior report: Agent root file decision set (`2026-03-16`)
+
+Approved decision set carried forward into this policy:
+
+```text icon="terminal"
+USE:
+AGENTS.md
+.github/copilot-instructions.md
+.claude/CLAUDE.md
+.cursor/rules/
+.windsurf/rules/
+```
+
+Supporting notes preserved from the prior report:
+
+- Codex should use `AGENTS.md` as the cross-repo baseline
+- GitHub Copilot should use `.github/copilot-instructions.md`
+- Claude Code should use `.claude/CLAUDE.md`
+- Cursor should use `.cursor/rules/*.mdc`
+- Windsurf should use `.windsurf/rules/*.md`
+
+## Report Sources
+
+### Repo evidence
+
+- `.github/AGENTS.md`
+- `.github/copilot-instructions.md`
+- `.github/augment-instructions.md`
+- `.cursorrules`
+- `ASSISTANT.md`
+- `contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md`
+- `ai-tools/agent-packs/README.md`
+- `ai-tools/agent-packs/claude/CLAUDE.md`
+- `ai-tools/agent-packs/cursor/rules.md`
+- `ai-tools/agent-packs/windsurf/rules.md`
+- `.codex/README.md`
+- `.codex/task-contract.yaml`
+- `tools/scripts/validators/governance/check-agent-docs-freshness.js`
+- `docs-guide/catalog/ai-tools.mdx`
+- `docs-guide/policies/root-allowlist-governance.mdx`
+
+### Official external sources
+
+- [OpenAI Codex: AGENTS.md](https://developers.openai.com/codex/guides/agents-md)
+- [Claude Code memory and project instructions](https://code.claude.com/docs/en/memory)
+- [Cursor rules for AI](https://docs.cursor.com/context/rules-for-ai)
+- [Windsurf memories](https://docs.windsurf.com/plugins/cascade/memories)
+- [Windsurf AGENTS.md](https://docs.windsurf.com/windsurf/cascade/agents-md)
+- [GitHub Copilot custom instructions](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions)
+- [Mintlify Assistant](https://www.mintlify.com/docs/guides/assistant)

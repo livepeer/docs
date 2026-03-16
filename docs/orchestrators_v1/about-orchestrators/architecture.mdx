@@ -1,0 +1,40 @@
+---
+title: Orchestrator Architecture
+sidebarTitle: Architecture
+description: >-
+  See how gateways, orchestrator controllers, and GPU workers interact to
+  process transcoding and AI jobs.
+keywords:
+  - livepeer
+  - orchestrators
+  - about orchestrators
+  - orchestrator architecture
+  - orchestrator
+  - architecture
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: orchestrator
+---
+
+
+
+
+Diagram: Orchestrator Architecture – the gateway assigns jobs to an orchestrator, which splits work to either a video transcoder process or an AI inference process running on its GPUs, then returns the result. Verification (for transcoding) and other coordination happen inside the orchestrator’s controller.
+```mermaid
+flowchart TD
+    A[**Source (App or Stream)**] -->|ingest video + job request| G((**Livepeer Gateway**))
+    G -->|find suitable node| O{{**Orchestrator Node**}}
+    subgraph Orchestrator Node
+        direction TB
+        OR[Orchestrator<br/>Controller] -->|video segment| TR[Transcoder<br/>GPU Worker]
+        OR[Orchestrator<br/>Controller] -->|AI task| AIW[AI Inference<br/>GPU Worker]
+        TR -->|encoded outputs| OR
+        AIW -->|inference outputs| OR
+        OR -->|verification & packaging| OR
+    end
+    O -->|transcoded video or AI result| G
+    G -->|deliver stream| V[**Viewer / Application**]
+```

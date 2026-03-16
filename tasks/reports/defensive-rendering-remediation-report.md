@@ -1,6 +1,6 @@
 # Defensive Rendering Remediation Report
 
-Generated: 2026-03-08T04:17:15.679Z
+Generated: 2026-03-08T01:36:50.294Z
 Source: tasks/reports/component-governance-audit.md (Defensive Rendering section)
 
 ## HIGH Crash Risk (11 components)
@@ -339,7 +339,7 @@ return (
 
 **Visual impact:** None expected when data is valid; the change only prevents page-killing render failures on invalid input.
 
-### SearchTable — snippets/components/layout/search-table.jsx
+### SearchTable — snippets/components/layout/SearchTable.jsx
 
 **Risk:** HIGH
 **Issue:** L27: Unguarded filter() on categoryFilteredItems may throw
@@ -557,11 +557,11 @@ return null;
 | LivepeerIconOld | snippets/components/primitives/icons.jsx | Component lacks defensive validation for runtime inputs and render branches. | 34 |
 | LogoHeroContainer | snippets/components/domain/SHARED/Portals.jsx | Component lacks defensive validation for runtime inputs and render branches. | 341 |
 | PortalContentContainer | snippets/components/domain/SHARED/Portals.jsx | Component lacks defensive validation for runtime inputs and render branches. | 139 |
-| QuadGrid | snippets/components/layout/quad-grid.jsx | Component lacks defensive validation for runtime inputs and render branches. | 1 |
+| QuadGrid | snippets/components/layout/quadGrid.jsx | Component lacks defensive validation for runtime inputs and render branches. | 1 |
 | Quote | snippets/components/display/quote.jsx | Component lacks defensive validation for runtime inputs and render branches. | 1 |
 | RefCardContainer | snippets/components/domain/SHARED/Portals.jsx | Component lacks defensive validation for runtime inputs and render branches. | 407 |
-| ResponseFieldAccordion | snippets/components/content/response-field.jsx | Component lacks defensive validation for runtime inputs and render branches. | 83 |
-| ResponseFieldGroup | snippets/components/content/response-field.jsx | Component lacks defensive validation for runtime inputs and render branches. | 94 |
+| ResponseFieldAccordion | snippets/components/content/responseField.jsx | Component lacks defensive validation for runtime inputs and render branches. | 83 |
+| ResponseFieldGroup | snippets/components/content/responseField.jsx | Component lacks defensive validation for runtime inputs and render branches. | 94 |
 | StyledTable | snippets/components/primitives/tables.jsx | Component lacks defensive validation for runtime inputs and render branches. | 1 |
 
 ### Common MEDIUM pattern: Missing prop null guard
@@ -576,18 +576,18 @@ if (!requiredProp) {
 | Component | File | Missing guard for | Line |
 |-----------|------|------------------|------|
 | AccordionTitleWithArrow | snippets/components/primitives/text.jsx | text | 124 |
-| CardCarousel | snippets/components/display/card-carousel.jsx | style | 1 |
+| CardCarousel | snippets/components/display/CardCarousel.jsx | style | 1 |
 | CardVideo | snippets/components/display/video.jsx | embedUrl, title, style | 499 |
 | CopyText | snippets/components/primitives/text.jsx | text, label | 19 |
 | CustomCallout | snippets/components/primitives/links.jsx | color, textColor | 1 |
-| DisplayCard | snippets/components/display/custom-cards.jsx | icon, title, style | 1 |
+| DisplayCard | snippets/components/display/customCards.jsx | icon, title, style | 1 |
 | FullWidthContainer | snippets/components/primitives/containers.jsx | backgroundColor | 94 |
 | GridContainer | snippets/components/primitives/layout.jsx | columns | 49 |
-| H1 | snippets/components/display/frame-mode.jsx | icon, iconColor | 95 |
-| InlineImageCard | snippets/components/display/custom-cards.jsx | imgProps, imgStyle, cardProps, style | 94 |
-| ListSteps | snippets/components/layout/list-steps.jsx | listItems, stepsConfig | 1 |
+| H1 | snippets/components/display/frameMode.jsx | icon, iconColor | 95 |
+| InlineImageCard | snippets/components/display/customCards.jsx | imgProps, imgStyle, cardProps, style | 94 |
+| ListSteps | snippets/components/layout/ListSteps.jsx | listItems, stepsConfig | 1 |
 | LivepeerIcon | snippets/components/primitives/icons.jsx | color | 82 |
-| PageHeader | snippets/components/display/frame-mode.jsx | title, subtitle, description, titleColor, subtitleColor, descriptionColor | 1 |
+| PageHeader | snippets/components/display/frameMode.jsx | title, subtitle, description, titleColor, subtitleColor, descriptionColor | 1 |
 | PortalCardsHeader | snippets/components/domain/SHARED/Portals.jsx | title | 313 |
 | PortalHeroContent | snippets/components/domain/SHARED/Portals.jsx | description, refCardLink, overview, titleColor, subtitleColor | 161 |
 | PortalSectionHeader | snippets/components/domain/SHARED/Portals.jsx | title, icon | 330 |
@@ -595,7 +595,7 @@ if (!requiredProp) {
 | StyledSteps | snippets/components/layout/steps.jsx | iconColor, titleColor, lineColor | 1 |
 | Subtitle | snippets/components/primitives/text.jsx | text | 1 |
 | TipWithArrow | snippets/components/primitives/links.jsx | color | 245 |
-| ValueResponseField | snippets/components/content/response-field.jsx | description | 1 |
+| ValueResponseField | snippets/components/content/responseField.jsx | description | 1 |
 
 ## Summary
 

@@ -1,0 +1,393 @@
+---
+title: 'Gateway Deployment & Node Type Setup Options'
+sidebarTitle: 'Setup Paths'
+description: 'Not sure which gateway to run? This page maps your use case to the right setup path — AI off-chain, video on-chain, dual, platform/GaaS, or SDK-based.'
+keywords:
+  - livepeer
+  - gateway setup paths
+  - on-chain vs off-chain gateway
+  - AI gateway
+  - video gateway
+  - dual gateway
+  - SDK gateway
+  - remote signer
+  - gateway decision
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: gateway-operator
+purpose: orientation
+status: current
+lastVerified: '2026-03-13'
+---
+{/* TODO:
+Verify:
+- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)
+- Fontawesome icons are used on accordions and tabs
+- Tables use StyledTable component
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical - no long headers or questions (aim for max 3 words)
+- CustomDivider is used with <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} /> for all --- separator breaks
+- Placeholders for Media & Video Resources are in comments with a TODO for a human.
+- REVIEW flags are in JSX flags for a human.
+*/}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+import { DoubleIconLink } from '/snippets/components/primitives/links.jsx'
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
+
+There are five distinct ways to run a Livepeer gateway, and they have very different requirements. Some need ETH and a blockchain wallet. Some need nothing except a Linux server and Docker. Some do not even require the Go binary.
+
+This page helps you choose the right path before you read a single setup guide.
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Quick comparison
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Path</TableCell>
+      <TableCell header>Best for</TableCell>
+      <TableCell header>OS</TableCell>
+      <TableCell header>ETH required?</TableCell>
+      <TableCell header>Time to start</TableCell>
+      <TableCell header>Complexity</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**AI Gateway (off-chain)**</TableCell>
+      <TableCell>Builders routing AI inference — image gen, video AI, LLMs</TableCell>
+      <TableCell>Linux only</TableCell>
+      <TableCell>❌ No</TableCell>
+      <TableCell>~15 minutes</TableCell>
+      <TableCell>🟢 Lowest</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Video Gateway (on-chain)**</TableCell>
+      <TableCell>Transcoding video streams — OBS, RTMP, HLS output</TableCell>
+      <TableCell>Linux / Windows / Docker</TableCell>
+      <TableCell>✅ Yes</TableCell>
+      <TableCell>1–3 hours (includes bridging ETH)</TableCell>
+      <TableCell>🟡 Medium</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Dual Gateway (AI + Video)**</TableCell>
+      <TableCell>Platforms needing both AI inference and transcoding</TableCell>
+      <TableCell>Linux only</TableCell>
+      <TableCell>✅ Yes (video side)</TableCell>
+      <TableCell>2–4 hours</TableCell>
+      <TableCell>🟡 Medium-High</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Gateway-as-Service (Platform)**</TableCell>
+      <TableCell>Running a public gateway with API keys, billing, multi-tenancy</TableCell>
+      <TableCell>Linux only</TableCell>
+      <TableCell>✅ Yes</TableCell>
+      <TableCell>Days (includes auth layer)</TableCell>
+      <TableCell>🔴 High</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**SDK / Alternative Gateway**</TableCell>
+      <TableCell>Python, browser, mobile or embedded implementations</TableCell>
+      <TableCell>Any (no Go binary)</TableCell>
+      <TableCell>❌ No (remote signer handles it)</TableCell>
+      <TableCell>Hours (depends on language)</TableCell>
+      <TableCell>🟡 Medium</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## On-chain vs off-chain: the key split
+
+Before you pick a path, you need to understand what "on-chain" and "off-chain" mean for you as an operator. This is the decision that most existing docs get wrong.
+
+<Tabs>
+  <Tab title="Off-chain (AI gateway)" icon="floppy-disk">
+    An off-chain gateway routes AI inference jobs to the Livepeer network without managing an Ethereum wallet itself. Payment is handled by a **remote signer** — a separate service that holds the ETH key and signs payment tickets on behalf of your gateway.
+
+    **What this means in practice:**
+
+    <BorderedBox variant="accent" padding="16px">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <div>
+          **You need:**
+          - Linux server
+          - Docker or go-livepeer binary
+          - An orchestrator address to connect to (or the remote signer's discovery endpoint)
+          - An endpoint to the remote signer service
+        </div>
+        <div>
+          **You do NOT need:**
+          - An Ethereum wallet on this machine
+          - ETH on Arbitrum
+          - Arbitrum RPC access
+          - Your own orchestrator or GPU
+        </div>
+      </div>
+    </BorderedBox>
+
+    A community-hosted remote signer at `signer.eliteencoder.net` is publicly available and free to use. You point your gateway at it and you are routing AI inference without any crypto setup.
+
+    {/* REVIEW: Confirm signer.eliteencoder.net is still live, free, and production-suitable. Verify with Elite Encoder in #local-gateways Discord. */}
+
+    <Warning>
+      **Correcting a common misconception:** Several older docs and community guides state that running an off-chain gateway requires your own orchestrator node (and therefore a GPU). This is incorrect. Off-chain gateways connect directly to the pool of on-chain orchestrators. You do not need a GPU. You do not need your own orchestrator. The community remote signer handles all Ethereum payment operations.
+    </Warning>
+
+    This path is production-ready for Live AI and AI inference workloads. It is not just for local development.
+  </Tab>
+  <Tab title="On-chain (video gateway)" icon="link">
+    An on-chain gateway manages its own Ethereum wallet, funds an Arbitrum deposit, and pays orchestrators directly using probabilistic micropayments (PM). This is the original gateway model and is required for video transcoding workloads.
+
+    **What this means in practice:**
+
+    <BorderedBox variant="accent" padding="16px">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <div>
+          **You need:**
+          - Linux, Windows, or Docker
+          - An Ethereum wallet (Arbitrum One)
+          - ETH on Arbitrum: ~0.065 ETH deposit + 0.03 ETH reserve (testing minimum). 0.36 ETH reserve recommended for production.
+          - An Arbitrum RPC URL (free public RPC is fine for a single gateway)
+          - A static IP or domain (orchestrators must reach your gateway)
+        </div>
+        <div>
+          **You do NOT need:**
+          - A GPU (orchestrators provide compute)
+          - LPT tokens (LPT is for staking/governance only; payments are in ETH)
+          - Registration on the Livepeer protocol (only orchestrators register)
+          - Your own orchestrator
+        </div>
+      </div>
+    </BorderedBox>
+
+    <Note>
+      The go-livepeer binary uses `-gateway` (not `-broadcaster`). If you find older community guides, forum posts, or YouTube tutorials using `-broadcaster=true`, this is the old flag name. The software is the same; only the flag changed. Replace `-broadcaster` with `-gateway` in any command you copy.
+    </Note>
+  </Tab>
+</Tabs>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## The five paths in detail
+
+<AccordionGroup>
+  <Accordion title="Path 1 — AI Gateway (off-chain): Lowest friction, no ETH" icon="robot">
+    **This is the right path if:** You are building an application that uses AI inference (image generation, video AI, LLMs, audio transcription) and want to route jobs through the Livepeer network without crypto infrastructure.
+
+    The off-chain AI gateway runs via Docker or Linux binary. You specify orchestrator addresses (or use the remote signer's discovery endpoint) and you are routing AI inference within minutes.
+
+    **Minimum viable setup:**
+
+    ```bash
+    docker run -d \
+      --name livepeer-ai-gateway \
+      -p 8935:8935 \
+      -p 8937:8937 \
+      livepeer/go-livepeer:master \
+        -gateway \
+        -httpIngest \
+        -orchAddr="ORCHESTRATOR_ADDRESS" \
+        -httpAddr 0.0.0.0:8937
+    ```
+
+    {/* REVIEW: Confirm -remoteSignerAddr flag name and exact format with j0sh. Confirm whether orchAddr is required when using remote signer discovery endpoint, or if signer handles discovery entirely. */}
+
+    **Startup confirmation** — you should see:
+    ```
+    HTTP Server listening on http://0.0.0.0:8937
+    ```
+
+    **Who uses this path:** App developers graduating from a hosted service (Daydream, Livepeer.Cloud), AI Video Startup Programme participants, teams building on the Livepeer AI network.
+
+    <Card title="AI gateway quickstart" icon="bolt" href="/v2/gateways/quickstart/gateway-setup" arrow horizontal>
+      Full step-by-step: Docker command, orchestrator selection, verify your first inference request.
+    </Card>
+  </Accordion>
+
+  <Accordion title="Path 2 — Video Gateway (on-chain): Transcoding with RTMP/HLS" icon="video">
+    **This is the right path if:** You want to replace a cloud transcoding service (Mux, AWS MediaLive, Wowza) with decentralised transcoding. Your encoder (OBS, FFmpeg) connects via RTMP; the gateway transcodes and returns HLS.
+
+    This path requires on-chain setup: buy ETH, bridge to Arbitrum, allocate a deposit and reserve.
+
+    **Key ports:**
+    - `1935` — RTMP ingest from your encoder
+    - `8935` — HTTP interface
+    - `7935` — CLI interface (used for the `livepeer_cli` funding steps)
+
+    **What your encoder sees:** The gateway is a standard RTMP server. OBS, FFmpeg, and hardware encoders require no configuration changes. Set your stream server to `rtmp://YOUR_GATEWAY_IP:1935/live`.
+
+    <Note>
+      If you are using an older community guide that references the Livepeer Explorer wallet top-up or the `livepeer_broadcaster` process, these are pre-2023 workflows. The gateway binary and CLI are the current interface.
+    </Note>
+
+    **Who uses this path:** Video operators replacing cloud transcoding, Owncast users looking for decentralised transcoding, production broadcast infrastructure.
+
+    <CardGroup cols={2}>
+      <Card title="Fund your gateway" icon="ethereum" href="/v2/gateways/guides/payments-and-pricing/fund-your-gateway" arrow>
+        Get ETH on Arbitrum and allocate deposit and reserve.
+      </Card>
+      <Card title="Video gateway setup" icon="play" href="/v2/gateways/quickstart/gateway-setup" arrow>
+        Step-by-step from install to live stream.
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="Path 3 — Dual Gateway (AI + Video): Both workloads on one node" icon="circle-half-stroke">
+    **This is the right path if:** You want to serve both AI inference requests and video transcoding from a single gateway instance, or you want to experiment with AI overlays alongside transcoding.
+
+    <Warning>
+      Dual gateway requires **Linux only**. Windows binaries are not available for the AI component of a dual setup. macOS is only suitable for local development and is not supported in production for this path.
+    </Warning>
+
+    The dual gateway runs a single go-livepeer binary with both `-gateway` and `-httpIngest` flags, configured for both transcoding profiles and AI pipeline pricing. The binary handles both workload types but they use separate port namespaces and orchestrator selection pools.
+
+    **Port summary for dual gateway:**
+    - `1935` — RTMP ingest (video)
+    - `8935` — HTTP interface
+    - `8937` — AI inference HTTP interface (when `-httpIngest` and AI config active)
+    - `7935` — CLI interface
+
+    **Orchestrator routing:** Video and AI workloads route to different orchestrator sets. Your max-price configuration uses `-maxPricePerUnit` for video and `-maxPricePerCapability` for AI pipelines. These are independent.
+
+    On-chain setup is required (for the video payment side). See full dual configuration in the requirements page.
+
+    <Card title="Dual gateway requirements" icon="clipboard-check" href="/v2/gateways/guides/setup-options/path-requirements#dual-ai-video" arrow horizontal>
+      Full requirements, port assignments, and Docker Compose pattern for dual mode.
+    </Card>
+  </Accordion>
+
+  <Accordion title="Path 4 — Gateway-as-Service (Platform): Public gateway with API keys and billing" icon="building">
+    **This is the right path if:** You are building a public gateway service that other developers or applications connect to. This is the NaaP (Network as a Platform) model: your users receive API keys; you route their requests; you handle billing.
+
+    This path builds on the AI or dual gateway with an authentication and billing layer:
+
+    1. **Gateway layer:** go-livepeer binary, on-chain or off-chain, Linux
+    2. **Auth layer:** JWT issuer service using SIWE (Sign-In with Ethereum) — the NaaP pattern
+    3. **API keys:** Developer API Keys section of the NaaP dashboard issues per-developer tokens
+    4. **Billing:** Your clearinghouse handles fiat or crypto billing with developers; PM tickets settle with orchestrators underneath
+
+    <Note>
+      The NaaP dashboard (`github.com/livepeer/naap`) has a working demo with JWT auth and Developer API Keys. It is not yet a stable production API.
+      {/* REVIEW: Confirm NaaP production readiness and public URL with Qiang Han. */}
+    </Note>
+
+    **Who uses this path:** Cloud SPE (Livepeer.Cloud), LLM SPE, operators building commercial gateway products, teams building the clearinghouse architecture.
+
+    <CardGroup cols={2}>
+      <Card title="SPE grant model" icon="vault" href="/v2/gateways/guides/opportunities/spe-grant-model" arrow>
+        How gateway-as-service operators get Treasury-funded.
+      </Card>
+      <Card title="Payment clearinghouse" icon="arrows-left-right" href="/v2/gateways/guides/payments-and-pricing/clearinghouse-guide" arrow>
+        Architecture for separating operator billing from PM settlement.
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="Path 5 — SDK / Alternative Gateway: Python, browser, mobile, embedded" icon="code">
+    **This is the right path if:** You want to embed Livepeer gateway functionality directly in an application — without shipping the Go binary — or you are building a gateway implementation in Python, JavaScript/TypeScript, Rust, or another language.
+
+    The remote signer architecture (PRs #3791 and #3822) makes this possible. Your implementation handles media routing; the remote signer handles all Ethereum payment operations. You do not need to understand probabilistic micropayments to build a working gateway client.
+
+    **The reference implementation:** `livepeer-python-gateway` by j0sh — [github.com/j0sh/livepeer-python-gateway](https://github.com/j0sh/livepeer-python-gateway)
+
+    ```python
+    # Minimal concept — see the repo examples for complete implementation
+    session = OrchestratorSession(
+        orchestrators=["https://my-orch.example.com:8936"],
+        remote_signer="https://signer.eliteencoder.net"
+    )
+    ```
+
+    **What workloads are supported without the Go binary:**
+    - ✅ Live AI (live-video-to-video) — fully supported, remote signer designed for this first
+    - ✅ BYOC (Bring Your Own Compute) — supported, uses HTTP not gRPC for discovery
+    - ⚠️ Batch AI — same payment mechanism; full remote signer support not confirmed as shipped
+    - ❌ Video transcoding — explicitly excluded by design (ticket signing is synchronous in hot path)
+
+    <Card title="SDK and alternative gateways" icon="code" href="/v2/gateways/guides/setup-options/path-requirements#sdk-alternative" arrow horizontal>
+      Full prerequisites, remote signer integration, discovery methods, and implementation rules.
+    </Card>
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Not sure which path?
+
+Answer these three questions:
+
+<AccordionGroup>
+  <Accordion title="Q1: Are you building an application or running infrastructure?" icon="question">
+    If you are building an app that **uses** AI inference or video transcoding — and you do not need to control the compute routing yourself — you may not need to run a gateway at all. The Developers tab covers hosted gateways and the Livepeer AI SDK for application developers.
+
+    If you want control over cost, latency, orchestrator selection, or custom routing logic, run your own gateway.
+
+    <Card title="Livepeer for Developers" icon="code" href="/v2/developers" arrow horizontal>
+      Application developers using the Livepeer network without running a node.
+    </Card>
+  </Accordion>
+
+  <Accordion title="Q2: Is your primary workload AI inference or video transcoding?" icon="question">
+    | I want to... | Path |
+    |-------------|------|
+    | Route AI inference (image gen, LLM, live video AI) | Path 1 — AI off-chain |
+    | Replace cloud transcoding (RTMP → HLS) | Path 2 — Video on-chain |
+    | Do both | Path 3 — Dual |
+    | Build a multi-tenant service for other devs | Path 4 — GaaS/Platform |
+    | Embed gateway logic in Python/browser/mobile | Path 5 — SDK |
+  </Accordion>
+
+  <Accordion title="Q3: How much crypto complexity can you handle?" icon="question">
+    | Crypto comfort level | Recommended path |
+    |---------------------|-----------------|
+    | None — no wallet, no ETH | Path 1 (AI off-chain via community remote signer) or Path 5 (SDK) |
+    | Comfortable with buying and bridging ETH once | Path 2 (Video on-chain) |
+    | Comfortable with ongoing ETH management | Path 3 (Dual) or Path 4 (GaaS) |
+    | Want to abstract crypto from your users entirely | Path 4 (GaaS/clearinghouse) |
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Video resources
+
+{/* REVIEW: Titan Node YouTube (@TitanNode) has gateway/broadcaster setup tutorials. Search for:
+- "livepeer gateway setup"
+- "livepeer broadcaster tutorial"
+- "how to run livepeer gateway"
+The most recent relevant video (2024 onward preferred) should be embedded here.
+Known channel: https://www.youtube.com/@TitanNode
+Assign this to Foundation content team to locate and embed a current video. */}
+
+{/* REVIEW: Livepeer Foundation YouTube channel — check for gateway overview or setup walkthroughs (2024 onward).
+Known channel: https://www.youtube.com/@Livepeer
+Relevant search terms: "livepeer gateway", "livepeer AI gateway", "livepeer broadcaster" */}
+
+<Note>
+  Video tutorials for gateway setup are available from community contributors. Check the `#local-gateways` Discord channel for the most current links, as URLs change when new versions are released.
+</Note>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Next step: requirements
+
+Once you have chosen your path, check what you need before you start.
+
+<CardGroup cols={2}>
+  <Card title="Requirements by path" icon="clipboard-list" href="/v2/gateways/guides/setup-options/path-requirements" arrow>
+    Tabbed requirements for AI off-chain, video on-chain, dual, and SDK paths — including what you do NOT need.
+  </Card>
+  <Card title="General requirements overview" icon="clipboard-check" href="/v2/gateways/setup/requirements/setup" arrow>
+    Hardware, OS, and network requirements applicable to all gateway types.
+  </Card>
+</CardGroup>

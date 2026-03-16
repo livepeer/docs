@@ -118,7 +118,7 @@ import { Component } from "/snippets/components/Component.jsx";
 
 **⚠️ 严重：**代理必须在获得用户明确许可的情况下才能绕过钩子。
 
-“`.github/augment-instructions.md`” 明确指出：
+`AGENTS.md` 和 `docs-guide/policies/agent-governance-framework.mdx` 中的规范明确指出：
 - **绝不要**使用 “`--no-verify`” 标志来绕过钩子
 - 这是一个硬性项目约束
 
@@ -232,4 +232,5 @@ chmod +x .git/hooks/pre-commit
 - [完整 Git 钩子文档](./GIT-HOOKS)
 - [风格指南](../../resources/documentation-guide/style-guide)
 - [代理前提条件](../../PLAN/AGENT-PREREQUISITES.md)
-- [增强指令](../../.github/augment-instructions.md)
+- [代理治理框架](../../../../docs-guide/policies/agent-governance-framework.mdx)
+- [根 allowlist 治理](../../../../docs-guide/policies/root-allowlist-governance.mdx)

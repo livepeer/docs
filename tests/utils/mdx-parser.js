@@ -14,7 +14,34 @@
  * MDX parsing utilities for validation
  */
 
-const yaml = require('js-yaml');
+const yaml = require('../../tools/lib/load-js-yaml');
+
+function getIgnoredRanges(content) {
+  const ignoredRanges = [];
+  const ignoreRegexes = [
+    /```[\s\S]*?```/g,
+    /~~~[\s\S]*?~~~/g,
+    /\{\/\*[\s\S]*?\*\/\}/g,
+    /<!--[\s\S]*?-->/g
+  ];
+
+  ignoreRegexes.forEach((regex) => {
+    let match;
+
+    while ((match = regex.exec(content)) !== null) {
+      ignoredRanges.push({
+        start: match.index,
+        end: match.index + match[0].length
+      });
+    }
+  });
+
+  return ignoredRanges;
+}
+
+function isIgnoredIndex(index, ignoredRanges) {
+  return ignoredRanges.some((range) => index >= range.start && index < range.end);
+}
 
 /**
  * Extract frontmatter from MDX file
@@ -41,9 +68,14 @@ function extractFrontmatter(content) {
 function extractImports(content) {
   const importRegex = /^import\s+(?:(?:\{[^}]*\}|\*\s+as\s+\w+|\w+)(?:\s*,\s*(?:\{[^}]*\}|\*\s+as\s+\w+|\w+))*\s+from\s+)?['"]([^'"]+)['"];?/gm;
   const imports = [];
+  const ignoredRanges = getIgnoredRanges(content);
   let match;
   
   while ((match = importRegex.exec(content)) !== null) {
+    if (isIgnoredIndex(match.index, ignoredRanges)) {
+      continue;
+    }
+
     imports.push({
       full: match[0],
       path: match[1],

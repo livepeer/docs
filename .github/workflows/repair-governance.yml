@@ -1,0 +1,174 @@
+name: Governance Repair
+
+on:
+  schedule:
+    - cron: '0 5 * * 1'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Execution mode'
+        type: choice
+        options:
+          - dry-run
+          - fix
+          - report-only
+        default: dry-run
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  repair-governance:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: docs-v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install tools dependencies
+        working-directory: tools
+        run: npm install
+
+      - name: Resolve run mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "mode=fix" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=${{ inputs.mode || 'dry-run' }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run governance repair orchestrator
+        id: repair
+        shell: bash
+        run: |
+          set +e
+          ARGS=()
+          case "${{ steps.mode.outputs.mode }}" in
+            dry-run)
+              ARGS+=(--dry-run)
+              ;;
+            report-only)
+              ARGS+=(--report-only)
+              ;;
+            fix)
+              ;;
+            *)
+              echo "::error::Unsupported mode: ${{ steps.mode.outputs.mode }}"
+              echo "exit_code=1" >> "$GITHUB_OUTPUT"
+              exit 0
+              ;;
+          esac
+
+          node tools/scripts/orchestrators/repair-governance.js "${ARGS[@]}"
+          EXIT_CODE=$?
+          echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Build repair summary
+        id: summary
+        if: always()
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const reportPath = 'tasks/reports/repo-ops/REPAIR_REPORT_LATEST.json';
+          const outputPath = process.env.GITHUB_OUTPUT;
+          const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+          const runUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+
+          const lines = [
+            '## Governance Repair',
+            '',
+            `- Mode: ${process.env.RUN_MODE}`,
+            `- Run: ${runUrl}`,
+            `- Exit code: ${process.env.RUN_EXIT_CODE}`
+          ];
+
+          if (!fs.existsSync(reportPath)) {
+            lines.push('- Repair report: missing');
+            fs.appendFileSync(summaryPath, `${lines.join('\n')}\n`);
+            fs.appendFileSync(outputPath, 'changed=false\n');
+            fs.appendFileSync(outputPath, 'files_modified_count=0\n');
+            fs.appendFileSync(outputPath, 'files_modified<<EOF\n\nEOF\n');
+            process.exit(0);
+          }
+
+          const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+          const filesModified = Array.isArray(report?.repairs_applied?.files_modified)
+            ? report.repairs_applied.files_modified
+            : [];
+          const changed = process.env.RUN_MODE === 'fix' && filesModified.length > 0;
+
+          lines.push(`- Verification: ${report.verification}`);
+          lines.push(`- Total fixes: ${report.repairs_applied?.total_fixes ?? 0}`);
+          lines.push(`- Needs human: ${(report.needs_human || []).length}`);
+          lines.push(`- Files modified: ${filesModified.length}`);
+
+          if (filesModified.length > 0) {
+            lines.push('');
+            lines.push('### Files Modified');
+            filesModified.forEach((repoPath) => lines.push(`- ${repoPath}`));
+          }
+
+          fs.appendFileSync(summaryPath, `${lines.join('\n')}\n`);
+          fs.appendFileSync(outputPath, `changed=${changed ? 'true' : 'false'}\n`);
+          fs.appendFileSync(outputPath, `files_modified_count=${filesModified.length}\n`);
+          fs.appendFileSync(outputPath, `run_url=${runUrl}\n`);
+          fs.appendFileSync(outputPath, `verification=${report.verification}\n`);
+          fs.appendFileSync(outputPath, `total_fixes=${report.repairs_applied?.total_fixes ?? 0}\n`);
+          fs.appendFileSync(outputPath, `needs_human=${(report.needs_human || []).length}\n`);
+          fs.appendFileSync(outputPath, `files_modified<<EOF\n${filesModified.join('\n')}\nEOF\n`);
+          NODE
+        env:
+          RUN_MODE: ${{ steps.mode.outputs.mode }}
+          RUN_EXIT_CODE: ${{ steps.repair.outputs.exit_code }}
+
+      - name: Upload governance repair artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: governance-repair-${{ github.run_id }}
+          path: |
+            tasks/reports/repo-ops/REPAIR_REPORT_LATEST.json
+            tasks/reports/repo-ops/REPAIR_REPORT_LATEST.md
+            tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.json
+            tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.md
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Create or update repair PR
+        if: steps.mode.outputs.mode == 'fix' && steps.summary.outputs.changed == 'true' && steps.repair.outputs.exit_code != '1'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/governance-repair
+          base: docs-v2
+          title: 'chore(governance): automated governance repair'
+          commit-message: 'chore(governance): automated governance repair'
+          add-paths: ${{ steps.summary.outputs.files_modified }}
+          body: |
+            Automated governance repair run.
+
+            - Run URL: ${{ steps.summary.outputs.run_url }}
+            - Verification: ${{ steps.summary.outputs.verification }}
+            - Total fixes: ${{ steps.summary.outputs.total_fixes }}
+            - Needs human items: ${{ steps.summary.outputs.needs_human }}
+            - Changed files: ${{ steps.summary.outputs.files_modified_count }}
+
+            Reports:
+            - `tasks/reports/repo-ops/REPAIR_REPORT_LATEST.json`
+            - `tasks/reports/repo-ops/REPAIR_REPORT_LATEST.md`
+
+      - name: Fail on blocking repair error
+        if: steps.repair.outputs.exit_code == '1'
+        run: |
+          echo "Governance repair verification failed."
+          exit 1

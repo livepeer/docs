@@ -1,8 +1,27 @@
 ---
-title: "Access control with JWTs"
-description: "Gate playback using signed JWTs so only viewers with a valid token can watch."
+title: Access control with JWTs
+description: Gate playback using signed JWTs so only viewers with a valid token can watch.
+purpose: operations
+pageType: guide
+keywords:
+  - livepeer
+  - solutions
+  - livepeer studio
+  - access control
+  - jwt
+  - access
+  - control
+  - with
+  - jwts
+  - gate
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+lastVerified: 2026-03-17
 ---
-
 With **JWT** access control, you mark a stream or asset as gated. Viewers must send a **JWT** signed with a Studio **signing key**. You issue JWTs from your backend after validating the user.
 
 ## 1. Create a signing key
@@ -13,7 +32,7 @@ In the dashboard or via the [Signing Key API](https://livepeer.studio/docs/api-r
 
 Set `playbackPolicy.type` to `"jwt"` when creating the stream or asset:
 
-```ts
+```ts icon="terminal"
 await livepeer.stream.create({ name: "Gated", playbackPolicy: { type: "jwt" } });
 await livepeer.asset.create({ name: "Gated", playbackPolicy: { type: "jwt" } });
 ```
@@ -24,7 +43,7 @@ In a backend route (e.g. `/api/sign-jwt`), validate the user, then sign a JWT wi
 
 ## 4. Pass the JWT to the Player
 
-```tsx
+```tsx icon="terminal"
 <Player.Root src={src} jwt={jwt}>
   <Player.Container><Player.Video /></Player.Container>
 </Player.Root>

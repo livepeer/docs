@@ -1,0 +1,132 @@
+---
+title: 'Contract Addresses'
+description: 'All Livepeer smart contract addresses on Arbitrum One (mainnet) and Ethereum mainnet — TicketBroker, BondingManager, LivepeerToken, and more, with Arbiscan links.'
+sidebarTitle: 'Contract Addresses'
+keywords:
+  - livepeer
+  - contract addresses
+  - arbitrum
+  - ethereum
+  - ticketbroker
+  - bondingmanager
+  - livepeertoken
+  - smart contracts
+  - on-chain
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: gateway-operator
+purpose: reference
+status: current
+lastVerified: '2026-03'
+---
+
+{/* REVIEW: Rick / Mehrdad (Protocol) — This page was rebuilt from protocol knowledge. All addresses MUST be cross-checked against the V1 contract-addresses.mdx (479 lines, authoritative) before this page merges to docs-v2. The V1 source has verified Arbiscan links for every contract. */}
+
+Livepeer's protocol contracts are deployed on Arbitrum One (primary chain for staking, payments, and governance) and Ethereum mainnet (LivepeerToken origin, bridging). The addresses below are read-only reference — use them for Arbiscan monitoring, contract calls, or integration.
+
+<Warning>
+  Always verify contract addresses against Arbiscan before using them in transactions. The Livepeer Foundation is the authoritative source — any discrepancy should be reported in [Discord](https://discord.gg/livepeer).
+</Warning>
+
+---
+
+## Arbitrum One (Chain ID: 42161)
+
+Arbitrum One is the primary operating chain for Livepeer's protocol. All gateway payment activity, orchestrator registration, and staking occurs here.
+
+### Core Protocol Contracts
+
+{/* REVIEW: Mehrdad — verify all addresses below against current deployments on Arbitrum One */}
+
+| Contract | Address | Arbiscan |
+|----------|---------|---------|
+| **Controller** | `0xD8E8328501E9645d16Cf49539efC04f734606ee4` | [View on Arbiscan](https://arbiscan.io/address/0xD8E8328501E9645d16Cf49539efC04f734606ee4) |
+| **LivepeerToken (LPT)** | `0x289ba1701C2F088cf0faf8B3705246331cB8A839` | [View on Arbiscan](https://arbiscan.io/address/0x289ba1701C2F088cf0faf8B3705246331cB8A839) |
+| **BondingManager** | `0x35Bcf3c30594191d53231E4FF333E8A770453e40` | [View on Arbiscan](https://arbiscan.io/address/0x35Bcf3c30594191d53231E4FF333E8A770453e40) |
+| **RoundsManager** | `0xdd6f56DcC28D3F5f27084381fE8Df634985cc39f` | [View on Arbiscan](https://arbiscan.io/address/0xdd6f56DcC28D3F5f27084381fE8Df634985cc39f) |
+| **TicketBroker** | `0xa8bB618B1520E284046F3dFc448851A1Ff26e41B` | [View on Arbiscan](https://arbiscan.io/address/0xa8bB618B1520E284046F3dFc448851A1Ff26e41B) |
+| **Minter** | `0xc20DE37170B45774e6CD3d2304017fc962f27252` | [View on Arbiscan](https://arbiscan.io/address/0xc20DE37170B45774e6CD3d2304017fc962f27252) |
+| **ServiceRegistry** | `0x351bd9b53C8f8b59E21e2895Fe7DC88Af0d92e89` | [View on Arbiscan](https://arbiscan.io/address/0x351bd9b53C8f8b59E21e2895Fe7DC88Af0d92e89) |
+| **Verifier** | `0x0B9591D35C0aB7E84Eb61E2e90c9Fa79Ac01e7C0` | [View on Arbiscan](https://arbiscan.io/address/0x0B9591D35C0aB7E84Eb61E2e90c9Fa79Ac01e7C0) |
+
+### Governance Contracts
+
+| Contract | Address | Arbiscan |
+|----------|---------|---------|
+| **Governor** | `0xD9dEd6f9959176F0A04dcf88a0d2306178A736a6` | [View on Arbiscan](https://arbiscan.io/address/0xD9dEd6f9959176F0A04dcf88a0d2306178A736a6) |
+| **Treasury** | `0xf82C1FF415F1b63Ea3D7ee96c4e69ef6b98df95e` | [View on Arbiscan](https://arbiscan.io/address/0xf82C1FF415F1b63Ea3D7ee96c4e69ef6b98df95e) |
+
+### L2 Bridge Contracts (Arbitrum side)
+
+| Contract | Address | Arbiscan |
+|----------|---------|---------|
+| **L2LPTGateway** | `0x6D2457a4ad276000A615295f7A80F79E48CcD318` | [View on Arbiscan](https://arbiscan.io/address/0x6D2457a4ad276000A615295f7A80F79E48CcD318) |
+| **L2Migrator** | `0x148D5b6B4df9530c7C76A810bd1Cd8560be7863a` | [View on Arbiscan](https://arbiscan.io/address/0x148D5b6B4df9530c7C76A810bd1Cd8560be7863a) |
+
+---
+
+## Ethereum Mainnet (Chain ID: 1)
+
+Ethereum mainnet hosts the original LPT token contract and the L1 bridge components. LPT must be bridged to Arbitrum One before it can be used in protocol operations.
+
+{/* REVIEW: Mehrdad — verify all L1 addresses below */}
+
+| Contract | Address | Etherscan |
+|----------|---------|---------|
+| **LivepeerToken (LPT)** | `0x58b6A8A3302369DAEc383334672404Ee733aB239` | [View on Etherscan](https://etherscan.io/address/0x58b6A8A3302369DAEc383334672404Ee733aB239) |
+| **L1LPTGateway** | `0x6142f1C8bBF02E6A6bd074E8d564c9A5420a0676` | [View on Etherscan](https://etherscan.io/address/0x6142f1C8bBF02E6A6bd074E8d564c9A5420a0676) |
+| **L1Migrator** | `0x21146B872D3A95d2cF9afeD03eE5a783DaE9A89` | [View on Etherscan](https://etherscan.io/address/0x21146B872D3A95d2cF9afeD03eE5a783DaE9A89) |
+| **LivepeerTokenFaucet** | `0x3996b5F7E14A0b8Dc1eb8D41D9Da7E59Db0e4fE` | [View on Etherscan](https://etherscan.io/address/0x3996b5F7E14A0b8Dc1eb8D41D9Da7E59Db0e4fE) |
+
+---
+
+## Key Contracts for Gateway Operators
+
+Most gateway operators only interact with two contracts directly:
+
+### TicketBroker — Gateway Payments
+
+The `TicketBroker` contract on Arbitrum One manages all gateway payment activity:
+
+- Gateway operators deposit ETH and set reserve via `livepeer_cli`
+- Orchestrators redeem winning tickets by calling `redeemWinningTicket()` on this contract
+- Unlock and withdrawal of deposited funds also goes through TicketBroker
+
+**For Arbiscan monitoring:** watch your gateway address for `RedeemWinningTicket` events emitted by the TicketBroker contract address. See [On-Chain Debugging](/v2/gateways/guides/monitoring-and-tooling/on-chain-metrics) for how to set up watchlists and interpret these events.
+
+### ServiceRegistry — Orchestrator Discovery
+
+The `ServiceRegistry` contract stores each orchestrator's service URI (the endpoint your gateway connects to for transcoding). When an orchestrator updates their endpoint, it emits an event in this contract.
+
+**For gateway operators:** you do not interact with ServiceRegistry directly. The go-livepeer node queries it automatically when discovering orchestrators via `-network`. If you are using a manual `-orchAddr` list, ServiceRegistry is not involved.
+
+---
+
+## Arbitrum Rinkeby / Testnet
+
+{/* REVIEW: Mehrdad / Rick — confirm current testnet status for Livepeer on Arbitrum. Rinkeby is deprecated; confirm if Sepolia or Arbitrum Sepolia has current test deployments */}
+
+Livepeer has operated on Arbitrum testnets for development. Check [Discord #dev](https://discord.gg/livepeer) for current testnet contract addresses if you are building integrations.
+
+---
+
+## Verifying Addresses
+
+Always verify contract addresses before use:
+
+1. Check [Livepeer Explorer](https://explorer.livepeer.org) — addresses are embedded in the Explorer's contract interactions
+2. Check the [go-livepeer repository](https://github.com/livepeer/go-livepeer) — contract addresses are hardcoded in the network configuration files
+3. Ask in [Discord #dev](https://discord.gg/livepeer) — protocol team can confirm current deployments
+
+<CardGroup cols={2}>
+  <Card title="On-Chain Debugging" icon="cube" href="/v2/gateways/guides/monitoring-and-tooling/on-chain-metrics">
+    How to use TicketBroker events and Arbiscan to monitor gateway payments
+  </Card>
+  <Card title="Fund Your Gateway" icon="wallet" href="/v2/gateways/guides/payments-and-pricing/funding-guide">
+    Deposit ETH to the TicketBroker via livepeer_cli
+  </Card>
+</CardGroup>

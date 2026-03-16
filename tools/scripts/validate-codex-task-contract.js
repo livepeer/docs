@@ -4,7 +4,7 @@
  * @category          enforcer
  * @purpose           governance:agent-governance
  * @scope             tools/scripts, .codex/task-contract.yaml, tests/config/codex-issue-policy.json, .github/pull_request_template.md, .github/pull-request-template-v2.md
- * @owner             docs
+ * @domain            docs
  * @needs             R-R27, R-R30
  * @purpose-statement Codex task contract enforcer — validates branch naming, task files, PR body, and issue state for codex branches
  * @pipeline          P1 (commit), P2 (push), P3 (PR, Track B)
@@ -14,11 +14,11 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const yaml = require('js-yaml');
+const yaml = require('../lib/load-js-yaml');
 
 const DEFAULT_CONTRACT_PATH = '.codex/task-contract.yaml';
 const DEFAULT_ISSUE_POLICY_PATH = 'tests/config/codex-issue-policy.json';
-const DEFAULT_BASE_BRANCH = 'docs-v2';
+const DEFAULT_BASE_BRANCH = 'docs-v2-dev';
 const DEFAULT_ISSUE_SOURCE = 'auto';
 const DEFAULT_ISSUE_TOKEN_ENV = 'GITHUB_TOKEN';
 const CODEX_BRANCH_RE = /^codex\/(\d+)-[a-z0-9][a-z0-9-]*$/;
@@ -70,6 +70,9 @@ function usage() {
       '  --files <a,b,c>              Explicit changed-file list (skip git diff)',
       '  --staged                     Validate staged files for scope checks',
       '  --validate-contract-only     Validate schema + branch binding only',
+      '  --require-committed-work     Require at least one commit and non-empty diff ahead of base',
+      '  --require-clean-tree         Require no staged/unstaged/untracked working tree changes',
+      '  --require-pr-ready           Shortcut for --require-committed-work + --require-clean-tree',
       '  --require-pr-body            Enforce PR body sections',
       '  --pr-body-file <path>        Read PR body from file',
       '  --require-issue-state        Enforce linked issue state + labels policy',
@@ -98,6 +101,9 @@ function parseArgs(argv) {
     files: null,
     staged: false,
     validateContractOnly: false,
+    requireCommittedWork: false,
+    requireCleanTree: false,
+    requirePrReady: false,
     requirePrBody: false,
     prBodyFile: '',
     requireIssueState: false,
@@ -159,6 +165,18 @@ function parseArgs(argv) {
     }
     if (token === '--validate-contract-only') {
       args.validateContractOnly = true;
+      continue;
+    }
+    if (token === '--require-committed-work') {
+      args.requireCommittedWork = true;
+      continue;
+    }
+    if (token === '--require-clean-tree') {
+      args.requireCleanTree = true;
+      continue;
+    }
+    if (token === '--require-pr-ready') {
+      args.requirePrReady = true;
       continue;
     }
     if (token === '--require-pr-body') {
@@ -243,6 +261,11 @@ function parseArgs(argv) {
 
   if (args.issueNumber != null && (!Number.isInteger(args.issueNumber) || args.issueNumber <= 0)) {
     throw new Error('--issue-number must be a positive integer');
+  }
+
+  if (args.requirePrReady) {
+    args.requireCommittedWork = true;
+    args.requireCleanTree = true;
   }
 
   return args;
@@ -433,6 +456,42 @@ function getChangedFiles({ explicitFiles, staged, baseRef }) {
   return [...new Set(output.split('\n').map((line) => toPosix(line.trim())).filter(Boolean))];
 }
 
+function getAheadCommitCount(baseRef) {
+  if (Object.prototype.hasOwnProperty.call(process.env, 'CODEX_MOCK_AHEAD_COUNT')) {
+    const mock = String(process.env.CODEX_MOCK_AHEAD_COUNT || '').trim();
+    const count = Number(mock);
+    if (!Number.isInteger(count) || count < 0) {
+      throw new Error(`Invalid CODEX_MOCK_AHEAD_COUNT value "${mock}"`);
+    }
+    return count;
+  }
+
+  const resolvedBaseRef = ensureBaseRefExists(baseRef);
+  const output = runGit(['rev-list', '--count', `${resolvedBaseRef}..HEAD`]);
+  const count = Number(output);
+  if (!Number.isInteger(count) || count < 0) {
+    throw new Error(`Unable to determine ahead commit count for ${resolvedBaseRef}`);
+  }
+  return count;
+}
+
+function getWorkingTreeStatusLines() {
+  if (Object.prototype.hasOwnProperty.call(process.env, 'CODEX_MOCK_WORKTREE_STATUS')) {
+    const mock = String(process.env.CODEX_MOCK_WORKTREE_STATUS || '');
+    return mock
+      .split(/\r?\n/)
+      .map((line) => line.trimEnd())
+      .filter(Boolean);
+  }
+
+  const output = runGit(['status', '--porcelain=v1', '--untracked-files=all']);
+  if (!output) return [];
+  return output
+    .split('\n')
+    .map((line) => line.trimEnd())
+    .filter(Boolean);
+}
+
 function loadTaskContract(contractPathAbs) {
   if (!fs.existsSync(contractPathAbs)) {
     throw new Error(`Missing required task contract: ${toPosix(path.relative(REPO_ROOT, contractPathAbs))}`);
@@ -561,6 +620,34 @@ function validateScope(contract, changedFiles, contractPathRel) {
   });
 
   return violations;
+}
+
+function validateCommittedWork({ branch, baseRef, changedFiles }) {
+  const violations = [];
+  const aheadCount = getAheadCommitCount(baseRef);
+
+  if (aheadCount <= 0) {
+    violations.push(
+      `Branch "${branch}" has no commits ahead of ${baseRef}. Codex task completion requires at least one committed change.`
+    );
+  }
+
+  if (changedFiles.length === 0) {
+    violations.push(
+      `Branch "${branch}" has no file changes relative to ${baseRef}. Empty codex branches/PRs are not allowed.`
+    );
+  }
+
+  return violations;
+}
+
+function validateCleanTree() {
+  const statusLines = getWorkingTreeStatusLines();
+  if (statusLines.length === 0) return [];
+
+  const preview = statusLines.slice(0, 10).join(', ');
+  const suffix = statusLines.length > 10 ? ` (+${statusLines.length - 10} more)` : '';
+  return [`Working tree is not clean. Commit or discard changes before finalizing/opening a PR: ${preview}${suffix}`];
 }
 
 function normalizeIssueRepo(value) {
@@ -825,16 +912,37 @@ function main() {
 
     const errors = [];
 
-    if (!args.validateContractOnly) {
-      const baseRef = args.baseRef || contract.baseBranch || DEFAULT_BASE_BRANCH;
-      const changedFiles = getChangedFiles({
+    const needsBaseDiff =
+      !args.validateContractOnly || args.requireCommittedWork || args.requirePrReady;
+    let baseRef = '';
+    let changedFiles = [];
+
+    if (needsBaseDiff) {
+      baseRef = args.baseRef || contract.baseBranch || DEFAULT_BASE_BRANCH;
+      changedFiles = getChangedFiles({
         explicitFiles: args.files,
         staged: args.staged,
         baseRef
       });
+    }
 
+    if (!args.validateContractOnly) {
       const scopeViolations = validateScope(contract, changedFiles, contractPathRel);
       errors.push(...scopeViolations);
+    }
+
+    if (args.requireCommittedWork) {
+      errors.push(
+        ...validateCommittedWork({
+          branch,
+          baseRef,
+          changedFiles
+        })
+      );
+    }
+
+    if (args.requireCleanTree) {
+      errors.push(...validateCleanTree());
     }
 
     if (!args.validateContractOnly && args.requirePrBody) {

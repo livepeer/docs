@@ -1,6 +1,12 @@
 ---
 name: docs-quality-and-freshness-audit
-description: Audit content freshness and quality markers such as TODO/TBD/Coming Soon and thin-content risks.
+version: "1.0"
+description: >-
+  Audit content freshness signals, thin-page risks, and placeholder markers so maintainers can prioritize incomplete or stale documentation before publication decisions.
+invoke_when:
+  - "audit docs freshness and todo markers"
+  - "find thin or stale docs pages"
+  - "review content quality readiness"
 ---
 
 SKILL: Docs Quality and Freshness Audit

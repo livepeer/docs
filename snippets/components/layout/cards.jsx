@@ -1,23 +1,25 @@
 /**
- * ScrollBox - A scrollable container for use inside Card components
- *
- * @description
- * Provides a scrollable area with optional max height and scroll hint.
- * Use as a child of Card to make long content scrollable.
- *
- * @param {React.ReactNode} children - Content to display inside the scroll area
- * @param {number|string} [maxHeight=300] - Maximum height before scrolling (px or CSS value)
- * @param {boolean} [showHint=true] - Whether to show "Scroll for more" hint
- * @param {string} [ariaLabel="Scrollable content"] - Accessible label for the scroll region
- *
+ * @component ScrollBox
+ * @category layout
+ * @tier composite
+ * @status stable
+ * @description Scroll Box layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/home/solutions/showcase.mdx, v2/home/solutions/verticals.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @param {any} children - children prop.
+ * @param {number} [maxHeight=300] - max Height prop.
+ * @param {boolean} [showHint=true] - show Hint prop.
+ * @param {string} [ariaLabel="Scrollable content"] - aria Label prop.
+ * @param {any} style - style prop.
  * @example
- * <Card title="Gaming">
- *   <ScrollBox maxHeight={200}>
- *     <p>Long content here...</p>
- *   </ScrollBox>
- * </Card>
- *
- * @author Livepeer Documentation Team
+ * <ScrollBox style="example">Example content</ScrollBox>
  */
 export const ScrollBox = ({
   children,
@@ -74,7 +76,7 @@ export const ScrollBox = ({
           data-scroll-hint
           style={{
             fontSize: 11,
-            color: "rgba(255,255,255,0.5)",
+            color: "var(--lp-color-text-muted)",
             textAlign: "center",
             marginTop: 8,
             transition: "opacity 0.2s",

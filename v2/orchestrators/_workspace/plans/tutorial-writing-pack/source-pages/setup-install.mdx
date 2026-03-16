@@ -1,0 +1,497 @@
+---
+title: 'Install go-livepeer'
+description: 'Install the go-livepeer binary on Linux, macOS, or via Docker. Covers prerequisites, GPU driver requirements, installation steps, and verification.'
+sidebarTitle: 'Install'
+keywords: ["go-livepeer", "install", "orchestrator", "GPU", "NVIDIA", "Docker", "binary", "CUDA", "Linux"]
+pageType: 'tutorial'
+audience: 'orchestrator'
+status: 'current'
+lastVerified: '2026-03-15'
+og:image: '/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+import { CustomCodeBlock } from '/snippets/components/content/code.jsx'
+
+By the end of this guide, you will have go-livepeer installed on your machine and your GPU detected and ready to configure.
+
+## Prerequisites
+
+- A supported host OS: Linux, macOS, or Windows. For production GPU transcoding, plan on Linux.
+- `curl` and `tar` for Linux or macOS binary installs, or PowerShell plus `Expand-Archive` for Windows.
+- Docker Engine if you want the container install path. GPU containers also need the NVIDIA Container Toolkit.
+- An NVIDIA driver that satisfies CUDA 12.0.0 if you will use the Linux GPU binary or Docker GPU runtime. The CUDA 12.0 release notes list Linux `525.60.13` and Windows `527.41` as the minimum supported driver versions.
+- CUDA 12.0.0 on the host if you will run the Linux GPU binary directly or build from source. The official Docker image already includes CUDA 12.0.0.
+- Go 1.25.0 if you will build from source.
+- Write access to a directory on your `PATH`, such as `/usr/local/bin`, if you want to run `livepeer` from anywhere.
+
+<Note>
+Pin your install to a release tag. If you want a community-maintained helper for upgrades, see [Bash script to update Livepeer](https://forum.livepeer.org/t/bash-script-to-update-livepeer/1513).
+</Note>
+
+<Note>
+macOS binaries are useful for local development and CLI access, but upstream GPU documentation only covers NVIDIA workflows on Linux and Windows, and the current Docker GPU path is Linux-first. Use Linux for production transcoding and AI workloads.
+</Note>
+
+## Install go-livepeer
+
+<View title="Linux" icon="linux" iconType="solid">
+  Use the standard Linux archive for CPU-only installs. Use the Linux GPU archive when this machine will transcode on NVIDIA hardware.
+
+  <Steps>
+    <Step title="Download the release you need">
+      <CustomCodeBlock
+        filename="linux-download.sh"
+        icon="terminal"
+        language="bash"
+        codeString={`# CPU build (amd64)
+curl -L -O https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/livepeer-linux-amd64.tar.gz
+
+# CPU build (arm64)
+curl -L -O https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/livepeer-linux-arm64.tar.gz
+
+# NVIDIA GPU build (amd64)
+curl -L -O https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/livepeer-linux-gpu-amd64.tar.gz
+
+# NVIDIA GPU build (arm64)
+curl -L -O https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/livepeer-linux-gpu-arm64.tar.gz
+
+# Release checksums
+curl -L -O https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/v0.8.9_checksums.txt`}
+      />
+
+      Choose the archive that matches your CPU architecture. Use the `livepeer-linux-gpu-*` archive only when the host has an NVIDIA GPU and the matching CUDA libraries available.
+    </Step>
+
+    <Step title="Verify the checksum">
+      <CustomCodeBlock
+        filename="linux-checksum.sh"
+        icon="terminal"
+        language="bash"
+        codeString={`grep '  livepeer-linux-amd64.tar.gz$' v0.8.9_checksums.txt | sha256sum --check`}
+        output={{
+          filename: 'Expected output',
+          icon: 'terminal',
+          language: 'text',
+          codeString: 'livepeer-linux-amd64.tar.gz: OK'
+        }}
+      />
+
+      Replace `ARCHIVE` with the filename you downloaded, such as `livepeer-linux-gpu-amd64.tar.gz`.
+    </Step>
+
+    <Step title="Extract the archive and install the binaries">
+      <CustomCodeBlock
+        filename="linux-install.sh"
+        icon="terminal"
+        language="bash"
+        codeString={`ARCHIVE=livepeer-linux-amd64.tar.gz
+DIR=$(echo "$ARCHIVE" | sed 's/\\.tar\\.gz$//')
+
+tar -xzf "$ARCHIVE"
+sudo install -m 0755 "$DIR/livepeer" /usr/local/bin/livepeer
+sudo install -m 0755 "$DIR/livepeer_cli" /usr/local/bin/livepeer_cli
+sudo install -m 0755 "$DIR/livepeer_router" /usr/local/bin/livepeer_router
+sudo install -m 0755 "$DIR/livepeer_bench" /usr/local/bin/livepeer_bench`}
+      />
+
+      <Note>
+      If you run the Linux GPU binary directly, upstream expects the CUDA shared libraries under `/usr/local/cuda`. If your CUDA install lives elsewhere, start the node with `LD_LIBRARY_PATH` pointing at that CUDA library directory.
+      </Note>
+    </Step>
+
+    <Step title="Check the installed version">
+      <CustomCodeBlock
+        filename="linux-version.sh"
+        icon="terminal"
+        language="bash"
+        codeString={`livepeer --version`}
+        output={{
+          filename: 'Expected output',
+          icon: 'terminal',
+          language: 'text',
+          codeString: `Livepeer Node Version: v0.8.9
+Golang runtime version: gc go1.25.0
+Architecture: amd64
+Operating system: linux`
+        }}
+      />
+    </Step>
+  </Steps>
+
+  <Accordion title="Build from source (advanced)" icon="hammer">
+    <Steps>
+      <Step title="Install Ubuntu build dependencies">
+        <CustomCodeBlock
+          filename="ubuntu-build-deps.sh"
+          icon="terminal"
+          language="bash"
+          codeString={`sudo apt-get update
+sudo apt-get install -y \
+  autoconf \
+  build-essential \
+  clang \
+  curl \
+  git \
+  golang-goprotobuf-dev \
+  libfdk-aac-dev \
+  libx264-dev \
+  pkg-config \
+  protobuf-compiler-grpc \
+  yasm \
+  zlib1g-dev`}
+        />
+
+        {/* REVIEW: Confirm whether v0.8.9 source builds need any additional native packages beyond this Ubuntu dependency set on non-Docker hosts. */}
+      </Step>
+
+      <Step title="Install Go 1.25.0">
+        <CustomCodeBlock
+          filename="install-go.sh"
+          icon="terminal"
+          language="bash"
+          codeString={`curl -L https://go.dev/dl/go1.25.0.linux-amd64.tar.gz | sudo tar -C /usr/local -xz
+export PATH=/usr/local/go/bin:$PATH
+go version`}
+          output={{
+            filename: 'Expected output',
+            icon: 'terminal',
+            language: 'text',
+            codeString: 'go version go1.25.0 linux/amd64'
+          }}
+        />
+      </Step>
+
+      <Step title="Clone the repo, build FFmpeg support, and compile">
+        <CustomCodeBlock
+          filename="build-go-livepeer.sh"
+          icon="terminal"
+          language="bash"
+          codeString={`git clone https://github.com/livepeer/go-livepeer.git
+cd go-livepeer
+./install_ffmpeg.sh
+export PKG_CONFIG_PATH="$HOME/compiled/lib/pkgconfig"
+make`}
+        />
+      </Step>
+
+      <Step title="Install the compiled binaries">
+        <CustomCodeBlock
+          filename="install-built-binaries.sh"
+          icon="terminal"
+          language="bash"
+          codeString={`sudo install -m 0755 livepeer /usr/local/bin/livepeer
+sudo install -m 0755 livepeer_cli /usr/local/bin/livepeer_cli
+sudo install -m 0755 livepeer_router /usr/local/bin/livepeer_router
+sudo install -m 0755 livepeer_bench /usr/local/bin/livepeer_bench
+./livepeer --version`}
+          output={{
+            filename: 'Expected output',
+            icon: 'terminal',
+            language: 'text',
+            codeString: `Livepeer Node Version: v0.8.9
+Golang runtime version: gc go1.25.0
+Architecture: amd64
+Operating system: linux`
+          }}
+        />
+      </Step>
+    </Steps>
+  </Accordion>
+</View>
+
+<View title="Docker" icon="docker" iconType="solid">
+  Use the release-tagged image for a repeatable install. The floating `latest` tag exists on Docker Hub, but it moves as new images are published.
+
+  <Steps>
+    <Step title="Install and configure the NVIDIA Container Toolkit">
+      <CustomCodeBlock
+        filename="nvidia-container-toolkit.sh"
+        icon="terminal"
+        language="bash"
+        codeString={`sudo apt-get update
+sudo apt-get install -y nvidia-container-toolkit
+sudo nvidia-ctk runtime configure --runtime=docker
+sudo systemctl restart docker`}
+      />
+
+      If the package is not available for your distribution, use the full [NVIDIA Container Toolkit install guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html).
+    </Step>
+
+    <Step title="Pull the release image">
+      <CustomCodeBlock
+        filename="docker-pull.sh"
+        icon="docker"
+        language="bash"
+        codeString={`docker pull livepeer/go-livepeer:v0.8.9`}
+        output={{
+          filename: 'Expected output',
+          icon: 'docker',
+          language: 'text',
+          codeString: 'v0.8.9: Pulling from livepeer/go-livepeer'
+        }}
+      />
+    </Step>
+
+    <Step title="Verify Docker can see your GPU">
+      <CustomCodeBlock
+        filename="docker-gpu-check.sh"
+        icon="docker"
+        language="bash"
+        codeString={`docker run --rm --gpus all nvidia/cuda:12.0.0-base-ubuntu20.04 nvidia-smi`}
+        output={{
+          filename: 'Expected output',
+          icon: 'terminal',
+          language: 'text',
+          codeString: `+-----------------------------------------------------------------------------+
+| NVIDIA-SMI ...    Driver Version: 525.60.13    CUDA Version: 12.0           |
++-----------------------------------------------------------------------------+`
+        }}
+      />
+    </Step>
+
+    <Step title="Start a named go-livepeer container and open the CLI">
+      <CustomCodeBlock
+        filename="docker-run-livepeer.sh"
+        icon="docker"
+        language="bash"
+        codeString={`docker run -d \\
+  --name go-livepeer-node \\
+  --gpus all \\
+  -p 8935:8935 \\
+  -p 7935:7935 \\
+  livepeer/go-livepeer:v0.8.9 \\
+  -orchestrator \\
+  -transcoder \\
+  -nvidia all \\
+  -network arbitrum-one-mainnet \\
+  -ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY \\
+  -serviceAddr YOUR_PUBLIC_HOSTNAME:8935
+
+docker exec -it go-livepeer-node livepeer_cli`}
+      />
+
+      Use [Configure your orchestrator](/v2/orchestrators/setup/r-configure) for the full flag breakdown before you run the node in production.
+    </Step>
+  </Steps>
+</View>
+
+<View title="macOS" icon="apple" iconType="solid">
+  macOS ships official binaries for Apple Silicon and Intel Macs. Pick the archive that matches your CPU.
+
+  <Steps>
+    <Step title="Download the macOS archive">
+      <CustomCodeBlock
+        filename="macos-download.sh"
+        icon="terminal"
+        language="bash"
+        codeString={`# Apple Silicon (arm64)
+curl -L -O https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/livepeer-darwin-arm64.tar.gz
+
+# Intel (amd64)
+curl -L -O https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/livepeer-darwin-amd64.tar.gz
+
+curl -L -O https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/v0.8.9_checksums.txt`}
+      />
+    </Step>
+
+    <Step title="Verify the archive and remove the quarantine attribute">
+      <CustomCodeBlock
+        filename="macos-verify.sh"
+        icon="terminal"
+        language="bash"
+        codeString={`shasum -a 256 livepeer-darwin-arm64.tar.gz
+tar -xzf livepeer-darwin-arm64.tar.gz
+xattr -dr com.apple.quarantine livepeer-darwin-arm64`}
+        output={{
+          filename: 'Expected output',
+          icon: 'terminal',
+          language: 'text',
+          codeString: 'e500a69b9136d70bf2f67bd3c93f130caa871f3fef103f96c54c0304eefd9f85  livepeer-darwin-arm64.tar.gz'
+        }}
+      />
+
+      Replace `livepeer-darwin-arm64.tar.gz` with the Intel archive if you are on an Intel Mac.
+    </Step>
+
+    <Step title="Install the binaries and check the version">
+      <CustomCodeBlock
+        filename="macos-install.sh"
+        icon="terminal"
+        language="bash"
+        codeString={`sudo install -m 0755 livepeer-darwin-arm64/livepeer /usr/local/bin/livepeer
+sudo install -m 0755 livepeer-darwin-arm64/livepeer_cli /usr/local/bin/livepeer_cli
+sudo install -m 0755 livepeer-darwin-arm64/livepeer_router /usr/local/bin/livepeer_router
+sudo install -m 0755 livepeer-darwin-arm64/livepeer_bench /usr/local/bin/livepeer_bench
+
+livepeer --version`}
+        output={{
+          filename: 'Expected output',
+          icon: 'terminal',
+          language: 'text',
+          codeString: `Livepeer Node Version: v0.8.9
+Golang runtime version: gc go1.25.0
+Architecture: arm64
+Operating system: darwin`
+        }}
+      />
+    </Step>
+  </Steps>
+
+  <Note>
+  macOS is not the path for NVIDIA GPU transcoding. Use Linux if you need the Linux GPU release, Docker GPU runtime, or AI worker containers.
+  </Note>
+</View>
+
+<View title="Windows" icon="windows" iconType="solid">
+  Windows has an official amd64 archive. Use it for local installs and CLI access.
+
+  <Steps>
+    <Step title="Download the release archive">
+      <CustomCodeBlock
+        filename="windows-download.ps1"
+        icon="terminal"
+        language="powershell"
+        codeString={`Invoke-WebRequest -Uri https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/livepeer-windows-amd64.zip -OutFile livepeer-windows-amd64.zip
+Invoke-WebRequest -Uri https://github.com/livepeer/go-livepeer/releases/download/v0.8.9/v0.8.9_checksums.txt -OutFile v0.8.9_checksums.txt`}
+      />
+    </Step>
+
+    <Step title="Verify the checksum and extract the archive">
+      <CustomCodeBlock
+        filename="windows-verify.ps1"
+        icon="terminal"
+        language="powershell"
+        codeString={`Get-FileHash .\\livepeer-windows-amd64.zip -Algorithm SHA256
+Expand-Archive -Path .\\livepeer-windows-amd64.zip -DestinationPath .`}
+        output={{
+          filename: 'Expected output',
+          icon: 'terminal',
+          language: 'text',
+          codeString: `Algorithm       Hash
+---------       ----
+SHA256          31F545D080E7E621DAA884AE22B781D6CF8E430F5E076AA88016902C586EB6A9`
+        }}
+      />
+    </Step>
+
+    <Step title="Run in place or add the folder to your session PATH">
+      <CustomCodeBlock
+        filename="windows-run.ps1"
+        icon="terminal"
+        language="powershell"
+        codeString={`$env:Path += ";$PWD\\livepeer-windows-amd64"
+livepeer.exe --version`}
+        output={{
+          filename: 'Expected output',
+          icon: 'terminal',
+          language: 'text',
+          codeString: `Livepeer Node Version: v0.8.9
+Golang runtime version: gc go1.25.0
+Architecture: amd64
+Operating system: windows`
+        }}
+      />
+    </Step>
+  </Steps>
+</View>
+
+## Verify your installation
+
+Run the version check first. The architecture and operating system lines vary by platform, but the release line should match the tag you installed.
+
+<CustomCodeBlock
+  filename="verify-version.sh"
+  icon="terminal"
+  language="bash"
+  codeString={`livepeer --version`}
+  output={{
+    filename: 'Expected output',
+    icon: 'terminal',
+    language: 'text',
+    codeString: `Livepeer Node Version: v0.8.9
+Golang runtime version: gc go1.25.0
+Architecture: amd64
+Operating system: linux`
+  }}
+/>
+
+For a go-livepeer GPU check on a native install, start the binary in transcoder mode with the NVIDIA device flag. The `-testTranscoder` startup check is enabled by default, so you can stop the process after the device lines appear.
+
+<CustomCodeBlock
+  filename="verify-gpu.sh"
+  icon="terminal"
+  language="bash"
+  preNote="Press Ctrl+C after the device list is printed."
+  codeString={`livepeer -transcoder -nvidia all -network offchain -v 4`}
+  output={{
+    filename: 'Expected output',
+    icon: 'terminal',
+    language: 'text',
+    codeString: `Nvidia devices: [0]
+Transcoding on these Nvidia devices: [0]`
+  }}
+/>
+
+If you are using Docker, the equivalent runtime check is:
+
+<CustomCodeBlock
+  filename="verify-docker-gpu.sh"
+  icon="docker"
+  language="bash"
+  codeString={`docker run --rm --gpus all nvidia/cuda:12.0.0-base-ubuntu20.04 nvidia-smi`}
+  output={{
+    filename: 'Expected output',
+    icon: 'terminal',
+    language: 'text',
+    codeString: `+-----------------------------------------------------------------------------+
+| NVIDIA-SMI ...    Driver Version: 525.60.13    CUDA Version: 12.0           |
++-----------------------------------------------------------------------------+`
+  }}
+/>
+
+<Warning>
+Do not move on to configuration until the version check succeeds and your GPU check shows at least one device. If `livepeer -transcoder -nvidia all` does not print the `Nvidia devices:` line, or if the Docker runtime cannot run `nvidia-smi`, stop here and work through the [FAQ and troubleshooting guide](/v2/orchestrators/resources/faq).
+</Warning>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Configure your orchestrator" icon="sliders" href="/v2/orchestrators/setup/r-configure" arrow>
+    Set the flags your node needs to connect, price jobs, and accept work.
+  </Card>
+  <Card title="Transcoding quickstart" icon="rocket" href="/v2/orchestrators/quickstart/guide" arrow>
+    Continue with the end-to-end orchestrator flow after the binary and GPU checks pass.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  Install go-livepeer - step-by-step installation instructions
+  for Docker, Linux binary, and building from source.
+
+  SECTION HOME: Setup
+  JOURNEY POSITION: 3 of 7 in Setup
+*/}

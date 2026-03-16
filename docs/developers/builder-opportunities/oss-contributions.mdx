@@ -1,0 +1,331 @@
+---
+title: Open Source Contributions
+sidebarTitle: OSS Contributions
+description: >-
+  How to contribute to Livepeer's open source repositories -- from documentation
+  fixes to protocol engineering -- including a guide to every core repo and its
+  contributing process.
+keywords:
+  - livepeer
+  - open source
+  - oss
+  - contribute
+  - github
+  - go-livepeer
+  - studio
+  - ai-runner
+  - comfystream
+  - pull request
+  - good first issue
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+purpose: how_to
+pageType: guide
+audience:
+  - developers
+  - protocol-contributors
+  - documentation-contributors
+  - security-researchers
+status: current
+lastVerified: 2026-03
+sourceOfTruth: 'https://github.com/livepeer'
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { DisplayCard } from '/snippets/components/layout/customCards.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+{/* ============================================================
+ INTRO
+ ============================================================ */}
+
+<CustomDivider middleText="OPEN SOURCE CONTRIBUTIONS" />
+
+Livepeer is fully open source. Every core component -- from the protocol node to the AI runner to the documentation -- is publicly maintained on GitHub and welcomes contributions from anyone.
+
+You do not need to write code to make a meaningful contribution. Documentation improvements, bug reports, test coverage, and community support are all valued.
+
+<Card title="github.com/livepeer" icon="github" href="https://github.com/livepeer" arrow>
+ The official Livepeer GitHub organisation hosting all core repositories.
+</Card>
+
+<br />
+
+{/* ============================================================
+ SECTION 1 - CONTRIBUTION TYPES
+ ============================================================ */}
+
+<CustomDivider middleText="CONTRIBUTION TYPES" />
+
+## Ways to Contribute
+
+<Columns cols={3}>
+
+<DisplayCard icon="book" title="Documentation">
+ Fix inaccurate or outdated content, add examples, improve clarity, or create new guides. Every repo has a `CONTRIBUTING.md` with docs-specific guidance.
+</DisplayCard>
+
+<DisplayCard icon="bug" title="Bug Reports">
+ Open an issue with full reproduction steps. Use the provided issue template where one exists. Incomplete reports may be closed until updated.
+</DisplayCard>
+
+<DisplayCard icon="code" title="Bug Fixes & Features">
+ Browse open issues labelled `help wanted` or `good first issue`. Open a discussion before starting large features to avoid duplicating effort.
+</DisplayCard>
+
+<DisplayCard icon="flask-vial" title="Testing">
+ Add unit or integration test coverage for untested code paths. Improving test coverage is a high-value contribution that doesn't require deep domain knowledge.
+</DisplayCard>
+
+<DisplayCard icon="file-lines" title="Code Review">
+ Leave constructive comments on open pull requests. Reviewing PRs is how maintainers learn about contributors and builds trust for future collaboration.
+</DisplayCard>
+
+<DisplayCard icon="lightbulb" title="Ideas & Discussions">
+ Open a GitHub Discussion or a Forum post. Community thinking about what the protocol needs is valuable even when it doesn't result in an immediate PR.
+</DisplayCard>
+
+</Columns>
+
+<br />
+
+{/* ============================================================
+ SECTION 2 - CONTRIBUTION PRINCIPLES
+ ============================================================ */}
+
+<CustomDivider middleText="PRINCIPLES" />
+
+## Contribution Principles
+
+These apply across all Livepeer repositories:
+
+<BorderedBox variant="default" padding="16px 20px">
+
+- **Read before you build.** Check existing issues and discussions before starting large work. A quick "is anyone working on this?" can save everyone time.
+- **Keep PRs focused.** One logical change per pull request. Smaller, well-scoped PRs are easier to review and merge.
+- **Write readable commit messages.** Use [Conventional Commits](https://www.conventionalcommits.org/) format where repos require it (`fix:`, `feat:`, `docs:`).
+- **Update the changelog.** For go-livepeer and similar repos, every change (feature, bug fix) should include an update to `CHANGELOG_PENDING.md`. Classify the change by node mode: General, Broadcaster, Orchestrator, or Transcoder.
+- **Don't force-push to a branch under active review.** Push additional commits to address feedback; don't rewrite history mid-review.
+- **Engage with review feedback promptly.** Stale PRs may be closed. If you need more time, leave a comment on the thread.
+- **Use Yarn, not npm, in Studio.** Livepeer Studio uses Yarn as its npm client. Using npm will cause dependency issues.
+
+</BorderedBox>
+
+<br />
+
+{/* ============================================================
+ SECTION 3 - CORE REPOSITORIES
+ ============================================================ */}
+
+<CustomDivider middleText="CORE REPOSITORIES" />
+
+## Core Repositories
+
+<Accordion title="go-livepeer -- Official Go Protocol Node">
+
+The reference implementation of the Livepeer protocol in Go. This is the core node software used by both Orchestrators and Broadcasters (Gateways).
+
+- **Language:** Go
+- **Difficulty:** Intermediate to advanced. The codebase spans multiple packages. New contributors are encouraged to start with documentation issues or small, well-scoped bug fixes before tackling multi-package changes.
+- **Contributing guide:** [github.com/livepeer/go-livepeer/blob/master/CONTRIBUTING.md](https://github.com/livepeer/go-livepeer/blob/master/CONTRIBUTING.md)
+- **Good first issues:** Labelled `help wanted` and `good first issues` on the Issues page.
+- **Changelog rule:** Every PR must include an update to `CHANGELOG_PENDING.md` in the format `\#xxx @contributor`.
+
+```text
+https://github.com/livepeer/go-livepeer
+```
+
+</Accordion>
+
+<Accordion title="Livepeer Studio -- Dashboard and API">
+
+The web-based studio and API for broadcasting, video management, and Livepeer network access. A TypeScript monorepo.
+
+- **Language:** TypeScript (monorepo with multiple packages)
+- **Shell requirement:** A Unix shell is required (Windows users should use WSL).
+- **Dependency manager:** Use Yarn -- not npm.
+- **Difficulty:** Intermediate. The monorepo structure adds cognitive load. First contributions are best directed at a single subpackage.
+- **Contributing guide:** [github.com/livepeer/studio/blob/master/CONTRIBUTING.md](https://github.com/livepeer/studio/blob/master/CONTRIBUTING.md)
+- **Discussions:** Open a Discussion in the repo if you're unsure about an approach before opening a PR.
+
+```text
+https://github.com/livepeer/studio
+```
+
+</Accordion>
+
+<Accordion title="ai-runner -- AI Inference Runtime">
+
+The AI runner processes inference jobs on the Livepeer network. It is a containerised Python application that loads models into GPU memory and exposes a REST API to the Livepeer node AI worker.
+
+- **Language:** Python (with Go bindings generated from OpenAPI spec)
+- **Key concepts:** Docker containerisation, GPU inference, pipeline architecture
+- **Contributing guide:** See `README.md` and the development documentation in the repo.
+- **Note:** The AI network is in its Beta phase. Report issues to the [Livepeer Discord](https://discord.gg/livepeer).
+
+```text
+https://github.com/livepeer/ai-runner
+```
+
+</Accordion>
+
+<Accordion title="ComfyStream -- Real-Time AI Video for ComfyUI">
+
+An open-source ComfyUI custom node for running real-time media workflows, enabling AI-powered video and audio processing using ComfyUI as a backend inference engine.
+
+- **Language:** Python
+- **Documentation:** [docs.comfystream.org](https://docs.comfystream.org)
+- **Key concepts:** ComfyUI node system, DAG-based pipelines, WebRTC streams, real-time video processing
+- **Contributing guide:** See `README.md` in the repository.
+- **Deployment options:** Docker image, RunPod template, Tensordock via Python script, Ansible playbook.
+
+```text
+https://github.com/livepeer/comfystream
+```
+
+</Accordion>
+
+<Accordion title="lpms -- Livepeer Media Server">
+
+The Livepeer media server library responsible for video transcoding operations.
+
+- **Language:** Go (with Nvidia GPU integration)
+- **Contributing guide:** See `README.md` in the repository.
+- **Note:** GPU-specific testing requires Nvidia hardware and tags (`--tags=nvidia`).
+
+```text
+https://github.com/livepeer/lpms
+```
+
+</Accordion>
+
+<Accordion title="ui-kit -- Video Primitives for React">
+
+A React component library providing video UI primitives for building Livepeer-powered video applications.
+
+- **Language:** TypeScript / React
+- **Contributing guide:** [Contributing docs](https://github.com/livepeer/ui-kit/blob/main/CONTRIBUTING.md) -- read before submitting a PR.
+
+```text
+https://github.com/livepeer/ui-kit
+```
+
+</Accordion>
+
+<Accordion title="livepeer-ai-js -- JavaScript/TypeScript AI SDK">
+
+The JavaScript and TypeScript client library for the Livepeer AI API, providing type-safe access to generative AI pipelines.
+
+- **Language:** TypeScript
+- **Use case:** Building AI-powered video applications with Livepeer's inference infrastructure.
+
+```text
+https://github.com/livepeer/livepeer-ai-js
+```
+
+</Accordion>
+
+<Accordion title="livepeer-ai-python -- Python AI SDK">
+
+The Python client library for the Livepeer AI API.
+
+- **Language:** Python
+- **Use case:** Integrating Livepeer AI inference into Python applications and workflows.
+
+```text
+https://github.com/livepeer/livepeer-ai-python
+```
+
+</Accordion>
+
+<Accordion title="docs -- This Documentation">
+
+The Livepeer documentation repository, built on Mintlify with MDX content.
+
+- **Language:** MDX, JSX, TypeScript (tooling/scripts)
+- **Contributing guide:** See [Contribute to the Docs](/v2/resources/documentation-guide/contribute-to-the-docs) for the full workflow including pull request steps, review timeline, and style guidance.
+- **Good for:** Non-code contributors comfortable with Markdown or Git.
+
+```text
+https://github.com/livepeer/docs
+```
+
+</Accordion>
+
+<br />
+
+{/* ============================================================
+ SECTION 4 - FIRST CONTRIBUTION WORKFLOW
+ ============================================================ */}
+
+<CustomDivider middleText="GETTING STARTED" />
+
+## First Contribution Workflow
+
+<Steps>
+  <Step title="Choose a repository">
+ Start with a repository in a language or area you're comfortable with. If you're new to Livepeer, the docs repo or the ui-kit are lower-friction starting points than go-livepeer or ai-runner.
+  </Step>
+  <Step title="Read the CONTRIBUTING.md">
+ Every Livepeer repository has a `CONTRIBUTING.md` file. Read it before opening issues or PRs. It covers code style, PR conventions, changelog requirements, and testing expectations.
+  </Step>
+  <Step title="Find an issue">
+ Browse the Issues tab and filter by `good first issue` or `help wanted`. These labels mean the maintainers have identified the issue as suitable for a new contributor and are willing to guide you through it.
+  </Step>
+  <Step title="Comment before you start">
+ Leave a comment on the issue saying you're planning to work on it. This prevents duplicate work and opens a conversation with maintainers if the scope is unclear.
+  </Step>
+  <Step title="Fork, branch, and work">
+ Fork the repository, create a dedicated branch for your change, and make your commits. Keep commits focused and messages descriptive.
+  </Step>
+  <Step title="Open a pull request">
+ Open a PR against the correct base branch (usually `master` or `main`). Fill out the PR template fully. Link the issue your PR addresses. Include changelog entries where required.
+  </Step>
+  <Step title="Engage with review">
+ Respond to reviewer comments promptly. Push new commits to address feedback rather than force-pushing. Mark conversations as resolved once addressed.
+  </Step>
+</Steps>
+
+<br />
+
+<Tip>
+ If you still have questions after reading a repo's contributing guide, open an issue or ask in the [Livepeer Discord](https://discord.gg/livepeer). The team is generally responsive to genuine first-time contributor questions.
+</Tip>
+
+<br />
+
+{/* ============================================================
+ SECTION 5 - CODE OF CONDUCT
+ ============================================================ */}
+
+<CustomDivider middleText="CODE OF CONDUCT" />
+
+## Code of Conduct
+
+All Livepeer repositories follow a community code of conduct based on the [Contributor Covenant](https://www.contributor-covenant.org/). Contributors are expected to be constructive, kind, and patient. Review the code of conduct linked in each repo before participating.
+
+<br />
+
+{/* ============================================================
+ SECTION 6 - RELATED
+ ============================================================ */}
+
+<CustomDivider middleText="RELATED" />
+
+<CardGroup cols={2}>
+  <Card title="Bug Bounties" icon="bug-slash" href="./bug-bounties" arrow>
+ For security researchers: report smart contract vulnerabilities and earn USDC rewards via Immunefi.
+  </Card>
+  <Card title="Grants & Programmes" icon="hand-holding-dollar" href="./grants-and-programmes" arrow>
+ Apply for a grant to fund your open source work on the Livepeer ecosystem.
+  </Card>
+  <Card title="Contribute to the Docs" icon="book" href="/v2/resources/documentation-guide/contribute-to-the-docs" arrow>
+ Full PR workflow, review process, and style guide for the documentation repository.
+  </Card>
+  <Card title="Community Guidelines" icon="handshake" href="/v2/community/livepeer-community/community-guidelines" arrow>
+ The values and conduct standards that apply across all Livepeer community spaces.
+  </Card>
+</CardGroup>

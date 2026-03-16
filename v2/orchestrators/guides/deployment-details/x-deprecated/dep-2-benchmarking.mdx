@@ -1,0 +1,410 @@
+---
+title: 'Benchmarking Your Setup'
+sidebarTitle: 'Benchmarking'
+description: >-
+  Use livepeer_bench to measure GPU transcoding capacity before going live -
+  download the test stream, run concurrent session tests, interpret the real-time
+  duration ratio, and find the hardware session ceiling.
+keywords:
+  - livepeer
+  - orchestrator
+  - livepeer_bench
+  - benchmark
+  - transcoding
+  - concurrent sessions
+  - real-time duration ratio
+  - gpu capacity
+  - nvenc
+  - session limit
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: orchestrator
+purpose: guide
+status: current
+lastVerified: '2026-03-15'
+---
+
+{/* TODO:
+Verify:
+- Tables use StyledTable with thead/tbody
+- No em-dashes
+- UK spelling throughout
+- StyledSteps/StyledStep used for ordered setup
+- REVIEW flags below for SME
+Human:
+- REVIEW: Test stream URL (storage.googleapis.com) - verify it is still live before publishing. Rick to check.
+- REVIEW: 0.8 duration ratio threshold - community convention, not a go-livepeer hard limit. Confirm still current convention in Discord #orchestrators.
+- REVIEW: CPU transcoding session limit rule of thumb - v1 docs said ~5 but based on 2021 hardware. Community to advise.
+- REVIEW: CSV frames column - verified from livepeer_bench.go source March 2026. Confirm stable and no downstream tooling breakage.
+*/}
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+Before setting a session limit and going live, run `livepeer_bench`. It simulates the real network
+workload - segments arriving in real time, multiple concurrent sessions - and reports how many
+streams a GPU can handle without falling behind.
+
+This page covers: downloading the benchmark assets, running the tool, reading the output, and using
+the session scaling script to find the hardware ceiling.
+
+<Note>
+Benchmarking measures local transcoding capacity only. It does not simulate network bandwidth,
+ticket redemption, or AI inference workloads. For session limit calculation that combines hardware
+and bandwidth, continue to <LinkArrow href="/v2/orchestrators/guides/deployment-details/session-limits" label="Session Limits" newline={false} /> after this guide.
+</Note>
+
+<CustomDivider middleText="What livepeer_bench Does" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Tool Overview
+
+`livepeer_bench` ships as part of go-livepeer. It:
+
+- Takes an HLS stream and a set of output rendition profiles as input
+- Simulates live mode by default - queuing segments one-by-one as they arrive, just as a real
+  Gateway would send them
+- Runs multiple concurrent transcoding sessions (configurable via `-concurrentSessions`)
+- Outputs per-segment metrics as CSV and a summary table
+
+The key output metric is the **Real-Time Duration Ratio**: total transcoding time divided by total
+source duration. A ratio below 1.0 means transcoding is completing faster than real time. A ratio
+above 1.0 means the GPU is falling behind.
+
+<CustomDivider middleText="Setup" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Setup Steps
+
+<StyledSteps>
+
+  <StyledStep title="Verify livepeer_bench is installed">
+
+    `livepeer_bench` is included in go-livepeer releases. Verify it is on PATH:
+
+    ```bash icon="terminal"
+    livepeer_bench -help
+    ```
+
+    If the command is not found, check the go-livepeer installation. The binary should be in the
+    same directory as `livepeer` and `livepeer_cli`. See <LinkArrow href="/v2/orchestrators/setup/rs-install" label="Install go-livepeer" newline={false} /> if needed.
+
+  </StyledStep>
+
+  <StyledStep title="Download the test stream">
+
+    Download and extract the 1-minute test stream:
+
+    ```bash icon="terminal"
+    wget -c https://storage.googleapis.com/lp_testharness_assets/bbb_1080p_30fps_1min_2sec_hls.tar.gz
+    tar -xvf bbb_1080p_30fps_1min_2sec_hls.tar.gz
+    ls bbb/
+    # Should print: source.m3u8 plus a set of .ts segment files
+    ```
+
+    {/* REVIEW: Verify this URL is still live before publishing. storage.googleapis.com URLs can be moved or expired. Rick to test. */}
+
+  </StyledStep>
+
+  <StyledStep title="Get the output rendition config">
+
+    Download the standard output rendition configuration:
+
+    ```bash icon="terminal"
+    wget -O transcodingOptions.json \
+      https://raw.githubusercontent.com/livepeer/go-livepeer/master/cmd/livepeer_bench/transcodingOptions.json
+    ```
+
+    This file defines the four standard output renditions currently in the go-livepeer repository:
+
+    <StyledTable variant="bordered">
+      <thead>
+        <TableRow header>
+          <TableCell header>Profile</TableCell>
+          <TableCell header>Resolution</TableCell>
+          <TableCell header>Bitrate</TableCell>
+        </TableRow>
+      </thead>
+      <tbody>
+        <TableRow>
+          <TableCell>`240p0`</TableCell>
+          <TableCell>426×240</TableCell>
+          <TableCell>250 kbps</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>`360p0`</TableCell>
+          <TableCell>640×360</TableCell>
+          <TableCell>800 kbps</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>`480p0`</TableCell>
+          <TableCell>854×480</TableCell>
+          <TableCell>1,600 kbps</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>`720p0`</TableCell>
+          <TableCell>1,280×720</TableCell>
+          <TableCell>3,000 kbps</TableCell>
+        </TableRow>
+      </tbody>
+    </StyledTable>
+
+    {/* REVIEW: The current transcodingOptions.json (verified March 2026) contains four profiles: 240p, 360p, 480p, 720p. The v1 documentation listed a fifth 1080p profile at 6000 kbps - this is no longer in the file. Confirm with Rick whether 1080p jobs still appear on the network from Gateways that use a different rendition set. */}
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Running the Benchmark" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Running the Benchmark
+
+### Basic run
+
+```bash icon="terminal"
+livepeer_bench \
+    -in bbb/source.m3u8 \
+    -transcodingOptions transcodingOptions.json \
+    -nvidia 0 \
+    -concurrentSessions 1
+```
+
+**Flag reference:**
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Flag</TableCell>
+      <TableCell header>Description</TableCell>
+      <TableCell header>Default</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`-in`</TableCell>
+      <TableCell>Path to the source `.m3u8` manifest</TableCell>
+      <TableCell>Required</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-transcodingOptions`</TableCell>
+      <TableCell>Path to JSON rendition config, or comma-separated profile string</TableCell>
+      <TableCell>`P240p30fps16x9,P360p30fps16x9,P720p30fps16x9`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-nvidia`</TableCell>
+      <TableCell>Comma-separated GPU IDs for NVIDIA hardware transcoding</TableCell>
+      <TableCell>Omit for CPU mode</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-concurrentSessions`</TableCell>
+      <TableCell>Number of simultaneous transcoding sessions to run</TableCell>
+      <TableCell>`1`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-live`</TableCell>
+      <TableCell>Simulate live stream (queue segments one-by-one at real-time pace)</TableCell>
+      <TableCell>`true`</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<Note>
+Omit `-nvidia` to test CPU transcoding. With NVIDIA hardware, provide the GPU ID (usually `0` for
+a single GPU, `0,1` for two GPUs).
+</Note>
+
+### Live mode vs VOD mode
+
+By default, `-live=true` queues segments as they would arrive in a live stream - one every 2 seconds.
+This is the relevant test for network workloads.
+
+VOD mode (all segments queued immediately) is set with `-live=false`:
+
+```bash icon="terminal"
+livepeer_bench -in bbb/source.m3u8 -live=false
+```
+
+For session limit planning, always use the default live mode.
+
+<CustomDivider middleText="Reading the Output" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Interpreting Results
+
+The first output block confirms configuration:
+
+```text icon="terminal"
+*---------------------*----------------------------------------------*
+| Source File         | .../bbb/source.m3u8                          |
+| Transcoding Options | 240p0,360p0,480p0,720p0                      |
+| Concurrent Sessions | 4                                            |
+| Live Mode           | true                                         |
+*---------------------*----------------------------------------------*
+```
+
+While transcoding runs, per-segment metrics stream as CSV:
+
+```text icon="terminal"
+timestamp,session,segment,seg_dur,transcode_time,frames
+2026-03-15 10:00:01.141,0,0,2,0.2545,60
+2026-03-15 10:00:03.001,0,1,2,0.1107,60
+2026-03-15 10:00:04.998,0,2,2,0.0938,60
+```
+
+{/* REVIEW: The CSV now includes a `frames` column not present in v1 docs. Verified from livepeer_bench.go source March 2026. Confirm with Rick that this is stable and whether any downstream tooling parses the old format without the frames column. */}
+
+When all sessions complete, the summary table appears:
+
+```text icon="terminal"
+*------------------------------*---------------------*
+| Concurrent Sessions          | 4                   |
+| Total Segs Transcoded        | 120                 |
+| Real-Time Segs Transcoded    | 120                 |
+| * Real-Time Segs Ratio *     | 1                   |
+| Total Source Duration        | 240s                |
+| Total Transcoding Duration   | 18.42s              |
+| * Real-Time Duration Ratio * | 0.0768              |
+*------------------------------*---------------------*
+```
+
+### Understanding the ratios
+
+**Real-Time Segs Ratio** - the fraction of segments transcoded before their real-time deadline. A
+ratio of `1` means every segment completed before the next arrived. A ratio below `1` means some
+segments fell behind.
+
+**Real-Time Duration Ratio** - total transcoding time divided by total source duration. This is
+the primary capacity metric:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Ratio</TableCell>
+      <TableCell header>Meaning</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**&lt; 1.0**</TableCell>
+      <TableCell>Transcoding faster than real time - GPU has headroom available</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**= 1.0**</TableCell>
+      <TableCell>Exactly real time - no headroom; any spike will cause lag</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**&gt; 1.0**</TableCell>
+      <TableCell>Slower than real time - GPU is overloaded at this session count</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+**Production threshold:** A ratio of ≤ 0.8 leaves approximately 20% headroom for upload/download
+overhead and transient load spikes. The last concurrent session count at which ratio ≤ 0.8 is the
+**hardware session limit**.
+
+{/* REVIEW: The 0.8 threshold is a community convention from v1 set-session-limits.mdx, not a go-livepeer hard limit. Confirm with Discord #orchestrators whether this threshold is still considered the right headroom target, or whether it has evolved. */}
+
+<CustomDivider middleText="Session Scaling Test" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Finding the Hardware Ceiling
+
+Run the benchmark across increasing concurrent session counts to find where ratio exceeds 0.8:
+
+```bash icon="code" title="session-scaling.sh"
+#!/bin/bash
+for i in {1..20}
+do
+    livepeer_bench \
+        -in bbb/source.m3u8 \
+        -transcodingOptions transcodingOptions.json \
+        -nvidia 0 \
+        -concurrentSessions $i |& grep "Duration Ratio" >> bench.log
+done
+```
+
+This appends one line per session count to `bench.log`:
+
+```text icon="terminal"
+| * Real-Time Duration Ratio * | 0.058  |    # 1 concurrent session
+| * Real-Time Duration Ratio * | 0.114  |    # 2 concurrent sessions
+| * Real-Time Duration Ratio * | 0.421  |    # 3 concurrent sessions
+| * Real-Time Duration Ratio * | 0.783  |    # 4 concurrent sessions
+| * Real-Time Duration Ratio * | 1.102  |    # 5 concurrent sessions <- exceeds threshold
+```
+
+In this example, the hardware session limit is **4** - the last count where ratio ≤ 0.8.
+
+If ratio is still below 1.0 at 20 sessions, increase the loop range to `{1..40}` or higher.
+
+### Multiple GPUs
+
+For identical GPUs: benchmark with a single GPU, then multiply by GPU count.
+
+For mixed GPUs: benchmark each GPU separately by passing its individual ID to `-nvidia`, then sum
+the limits.
+
+```bash icon="terminal"
+# Benchmark GPU 0 only
+livepeer_bench -in bbb/source.m3u8 -transcodingOptions transcodingOptions.json -nvidia 0 -concurrentSessions 4
+
+# Benchmark GPU 1 only
+livepeer_bench -in bbb/source.m3u8 -transcodingOptions transcodingOptions.json -nvidia 1 -concurrentSessions 4
+```
+
+### CPU-only transcoding
+
+Omit the `-nvidia` flag. Start at `-concurrentSessions 1` and increase. CPU transcoding is
+significantly slower per session than GPU; ratio will exceed 1.0 at much lower concurrent counts.
+
+{/* REVIEW: v1 docs suggest ~5 sessions as a CPU rule of thumb on 2021 hardware. Modern CPUs (Ryzen 9 7950X, Threadripper PRO) may handle more. Community to advise current convention. */}
+
+<CustomDivider middleText="Exporting Results" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Exporting for Analysis
+
+Pipe the full benchmark output to CSV for further analysis:
+
+```bash icon="terminal"
+livepeer_bench \
+    -in bbb/source.m3u8 \
+    -transcodingOptions transcodingOptions.json \
+    -nvidia 0 \
+    -concurrentSessions 4 > output.csv
+```
+
+The CSV includes per-segment rows plus the summary table. Strip the summary table rows if processing
+only segment data.
+
+<CustomDivider middleText="Next Steps" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## After Benchmarking
+
+The hardware session limit (the last concurrent count with ratio ≤ 0.8) is now known. The next
+step is calculating the **bandwidth limit** and deriving the final `-maxSessions` value.
+
+Continue to <LinkArrow href="/v2/orchestrators/guides/deployment-details/session-limits" label="Session Limits" newline={false} />.
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Session Limits" icon="gauge" href="/v2/orchestrators/guides/deployment-details/session-limits" arrow horizontal>
+    Calculate bandwidth ceiling and derive the correct `-maxSessions` value from the hardware limit above.
+  </Card>
+  <Card title="Hardware Requirements" icon="microchip" href="/v2/orchestrators/guides/deployment-details/requirements" arrow horizontal>
+    NVENC session caps by GPU tier, VRAM tiers by pipeline, and the pre-launch checklist.
+  </Card>
+  <Card title="Models and VRAM Reference" icon="memory" href="/v2/orchestrators/guides/workloads-and-ai/model-vram-reference" arrow horizontal>
+    AI inference capacity - VRAM tiers, warm model strategy, and the `capacity` field in `aiModels.json`.
+  </Card>
+  <Card title="Metrics and Monitoring" icon="chart-mixed" href="/v2/orchestrators/guides/monitoring-and-tools/metrics-monitoring" arrow horizontal>
+    Prometheus metrics to watch for transcoding throughput and session health after going live.
+  </Card>
+</CardGroup>

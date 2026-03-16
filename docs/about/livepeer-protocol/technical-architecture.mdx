@@ -1,0 +1,255 @@
+---
+title: Technical Overview
+sidebarTitle: Technical Architecture
+description: A technical overview of the Livepeer protocol.
+keywords:
+  - livepeer
+  - about
+  - livepeer protocol
+  - technical overview
+  - technical
+  - overview
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: general
+purpose: how_to
+---
+
+
+
+{/* This page describes:
+7. **Technical Architecture**
+
+   * Smart contracts
+   * On-chain components
+   * How protocol interacts with network
+
+How in depth though?
+*/}
+
+
+import { GotoCard, GotoLink } from '/snippets/components/primitives/links.jsx'
+import { Image } from '/snippets/components/primitives/image.jsx'
+import { ScrollableDiagram } from '/snippets/components/content/zoomableDiagram.jsx'
+import { DynamicTable } from '/snippets/components/layout/table.jsx'
+import { CardTitleTextWithArrow } from '/snippets/components/primitives/text.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { Quote } from '/snippets/components/content/quote.jsx'
+
+<div style={{ display: "flex", justifyContent: "center", padding: 0, margin: 0}}>
+ <CardTitleTextWithArrow icon="github" horizontal href="https://github.com/livepeer/protocol"> Livepeer Protocol </CardTitleTextWithArrow>
+</div>
+<CustomDivider style={{margin: 0, marginBottom: "-1rem"}} />
+
+<Quote>
+
+</Quote>
+
+Notes
+- The blockchain handles economic incentives and coordination, while `go-livepeer` network nodes handle the computationally intensive work of media processing and AI inference.
+- The on-chain contracts verify work and handle payments, but don't perform the actual transcoding/AI inference
+- `go-livepeer` nodes communicate with the blockchain to submit work proofs and claim rewards
+- This architecture allows the protocol to scale while maintaining economic security through on-chain verification
+
+---
+
+{/* <Warning> this is the NETWORK not the protocol </Warning>
+The [go-livepeer](https://github.com/livepeer/go-livepeer) architecture is organized around three node types that work together to form a decentralised media processing network:
+
+- Gateway: Accepts video streams and AI jobs, routes work to orchestrators
+- Orchestrator: Manages transcoding tasks, pays out rewards
+- Worker Nodes: (Transcoder & AI Worker) Performs video transcoding or AI inference work
+
+<Image src="/snippets/assets/domain/01_ABOUT/ProtocolNodeDiagram.png" alt="System Overview" caption="Livepeer System Overview" height="500px"/> */}
+
+{/* Livepeer is a decentralized infrastructure protocol that allows users to upload, transcode, and serve video content & run AI pipelines. It operates on a network with different node types including Gateways (formerly Broadcasters), Orchestrators, and Transcoders. The protocol uses smart contracts deployed on Ethereum Mainnet and Arbitrum Mainnet, with the native token LPT (Livepeer Token). Since the Confluence upgrade, the protocol primarily runs on Arbitrum Mainnet.
+
+The core components of the Livepeer node implementation work together to provide a distributed, scalable video transcoding platform. Each component has specific responsibilities:
+- LivepeerNode: The central structure representing a node in the network
+- LivepeerServer: Handles media operations and HTTP interfaces
+- Orchestrator: Manages transcoding tasks and payment processing
+- BroadcastSessionsManager: Coordinates with multiple orchestrators
+- RemoteTranscoderManager: Distributes work to transcoders
+- RPC System: Enables communication between different node types
+
+These components implement the Livepeer protocol, allowing video to be efficiently transcoded in a decentralized network. */}
+
+## Protocol Architecture
+
+<ScrollableDiagram title="Livepeer Protocol Contract Architecture" maxHeight="600px">
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui', 'clusterBkg': 'rgba(255,255,255,0.05)', 'clusterBorder': '#2d9a67' }}}%%
+flowchart TD
+    classDef default stroke-width:2px
+    subgraph Core["Core Protocol Contracts"]
+        Controller --> ServiceRegistry
+        Controller --> BondingManager
+        Controller --> RoundsManager
+        Controller --> TicketBroker
+        Controller --> Minter
+    end
+    subgraph Gov["Governance"]
+        BondingVotes --> LivepeerGovernor
+        LivepeerGovernor --> Governor
+        LivepeerGovernor --> Treasury
+    end
+    subgraph Token["Token System"]
+        LivepeerToken
+    end
+    BondingManager --> BondingVotes
+    Controller --> LivepeerGovernor
+    Minter --> LivepeerToken
+    BondingManager --> LivepeerToken
+```
+
+</ScrollableDiagram>
+
+## System Overview
+
+Livepeer can be modeled as a layered architecture:
+
+{/* <ScrollableDiagram title="Livepeer System Overview" maxHeight="500px">
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui', 'clusterBkg': 'rgba(255,255,255,0.05)', 'clusterBorder': '#2d9a67' }}}%%
+graph TD
+    classDef default stroke-width:2px
+    A[Clients / Apps] --> B[Gateways]
+    B --> C[Orchestrator Nodes]
+    C --> D[Transcode / AI Workers]
+    D --> E[Off-chain Managers]
+    E --> F[Smart Contracts - L2 Arbitrum]
+```
+
+</ScrollableDiagram> */}
+
+<DynamicTable
+  headerList={["Layer", "Role"]}
+  itemsList={[
+    { "Layer": "Client Layer", "Role": "Streams or submits jobs via Application Layer (eg. CLI, SDK, API)" },
+    { "Layer": "Gateway Layer", "Role": "Receives jobs, initiates session routing" },
+    { "Layer": "Orchestrator Layer", "Role": "Bids on sessions, runs compute nodes" },
+    { "Layer": "Worker Layer", "Role": "Performs transcoding / AI inference" },
+    { "Layer": "Off-chain Manager", "Role": "Handles bonding sync, ticket validation" },
+    { "Layer": "L2 Contracts (ARB)", "Role": "TicketBroker, BondingManager, Delegator claims, reward withdrawal" },
+    { "Layer": "L1 Contracts (ETH)", "Role": "LivepeerToken, BridgeMinter - token issuance & bridging only" },
+  ]}
+/>
+
+## System Diagram
+
+<ScrollableDiagram title="Livepeer Protocol System Diagram" maxHeight="600px">
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui', 'clusterBkg': 'rgba(255,255,255,0.05)', 'clusterBorder': '#2d9a67' }}}%%
+flowchart TD
+    classDef default stroke-width:2px
+    subgraph OffChain["Off-chain Network"]
+        B[Broadcaster] -->|Video/AI jobs| O[Orchestrator]
+        O -->|Results| B
+        B -->|Prob. tickets| O
+    end
+    subgraph OnChain["On-chain Protocol"]
+        BDeposit[[Broadcaster Deposit - ETH]]
+        OStake[[Orchestrator Stake - LPT]]
+        TicketBroker[TicketBroker Contract]
+        BondingManager[BondingManager Contract]
+        Treasury[Treasury]
+    end
+    B -.->|Deposit ETH| TicketBroker
+    OStake -.->|Stake/Delegate LPT| BondingManager
+    TicketBroker -.->|Redeem winning ticket| OStake
+    BondingManager -.->|Inflation rewards| OStake
+    BondingManager -.->|Treasury share| Treasury
+    O -.->|Redeem winning ticket| TicketBroker
+```
+
+</ScrollableDiagram>
+
+## Actor & Incentive Model
+
+
+## Trust & Verification Model
+
+
+## Job Lifecycle
+
+
+## Governance & Treasury
+
+
+
+## Protocol References
+
+<Note>Aggregate from internal Livepeer Notions, Prev site & deepwiki</Note>
+
+{/*
+### A/B/C TEST LAYOUTS
+
+**Expandable**
+
+  <Expandable title="All References" defaultOpen={true}>
+    <ResponseField name="Contract Addresses">
+        <GotoLink
+          label="Contract Addresses"
+          text="See all current contract addresses for the deployed protocol"
+          relativePath="../../../resources/references/contract-addresses.mdx"
+        />
+    </ResponseField>
+
+    <ResponseField name="is_over_21" type="boolean">
+ Whether the user is over 21 years old
+    </ResponseField>
+
+  </Expandable>
+
+**Steps**
+
+<Steps>
+  <Step title="Contract Addresses" icon="code">
+    <GotoLink
+      label="Contract Addresses"
+      text="See all current contract addresses for the deployed protocol"
+      relativePath="../../../resources/references/contract-addresses.mdx"
+    />
+  </Step>
+  <Step title="Contract Addresses" icon="home">
+ See all current contract addresses for the deployed protocol
+  </Step>
+  <Step title="Contract Addresses" icon="book">
+ See all current contract addresses for the deployed protocol
+  </Step>
+</Steps>
+
+**Basic Link**
+
+<GotoLink
+  label="Contract Addresses"
+  text="See all current contract addresses for the deployed protocol"
+  relativePath="../../../resources/references/contract-addresses.mdx"
+/>
+
+**Link Cards**
+
+<GotoCard
+  label="Contract Addresses"
+  text="See all current contract addresses for the deployed protocol"
+  relativePath="../../../resources/references/contract-addresses.mdx"
+/>
+
+### Links
+
+<Warning>To remove... Notes only</Warning>
+Internal
+
+- [Reward Calc](https://www.notion.so/livepeer/Livepeer-Protocol-Reward-Calculation-2320a34856878026adb0e7bcb7521661)
+- [Reward Accumulation](https://www.notion.so/livepeer/Livepeer-Rewards-Accumulation-Mechanism-23e0a348568780199f26f8cbc3c2d231)
+- [Migration Report](https://www.notion.so/livepeer/Livepeer-L1-L2-Migration-Report-Complete-Technical-Overview-2b10a348568780a28b59df9d8710bff9)
+
+Docs Current
+
+- */}

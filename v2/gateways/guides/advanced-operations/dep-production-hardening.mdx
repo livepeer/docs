@@ -1,0 +1,347 @@
+---
+title: 'Orchestrator Selection & Tiering'
+sidebarTitle: 'Orchestrator Selection'
+description: 'Choose the best orchestrators for your gateway workloads: selection criteria, performance scoring, capability-based routing, allow/deny lists, and failover strategies.'
+keywords: ['livepeer', 'gateway', 'orchestrator selection', 'tiering', 'performance score', 'blocklist', 'failover', 'capability routing', 'orchAddr', 'orchBlocklist']
+og:image: '/snippets/assets/site/og-image/fallback.png'
+pageType: 'guide'
+audience: 'gateway'
+purpose: 'guides'
+status: 'current'
+lastVerified: '2026-03-13'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)
+- Fontawesome icons are used on accordions and tabs
+- Tables use StyledTable component
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical - no long headers or questions (aim for max 3 words)
+- CustomDivider is used with <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} /> for all --- separator breaks
+- Placeholders for Media & Video Resources are in comments with a TODO for a human.
+- REVIEW flags are in JSX flags for a human.
+*/}
+
+The gateway's default orchestrator selection works out of the box: it discovers available orchestrators, filters by price, and routes jobs. For operators running production workloads, that is often not enough. This guide covers how to take manual control of selection, tier orchestrators by quality, and configure failover behaviour.
+
+## How the gateway selects orchestrators
+
+Before tuning selection, it helps to understand what the gateway does by default.
+
+<Mermaid
+  chart={`%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'actorBkg': '#1a1a1a', 'actorBorder': '#2d9a67', 'actorTextColor': '#fff', 'signalColor': '#2d9a67', 'signalTextColor': '#fff' }}}%%
+  sequenceDiagram
+    participant GW as Gateway
+    participant Pool as Orchestrator Pool
+    participant Scoring as Selection Algorithm
+    participant Orch as Selected Orchestrator
+
+    GW->>Pool: Query OrchestratorInfo (capabilities, price, hardware)
+    Pool-->>GW: Candidate list
+    GW->>GW: Filter: capabilities match + price ≤ maxPrice
+    GW->>GW: Apply blocklist
+    GW->>Scoring: Score candidates (stake × price × random × perf)
+    Scoring-->>GW: Ranked list
+    GW->>Orch: Dispatch job
+    Orch-->>GW: Result + payment acknowledgement`}
+/>
+
+The scoring algorithm is a weighted combination of four factors, each adjustable via flags:
+
+| Factor | Flag | Default behaviour |
+|--------|------|------------------|
+| Randomness | `-selectRandFreq` | Prevents all traffic concentrating on one orchestrator |
+| LPT stake | `-selectStakeWeight` | Favours orchestrators with more stake |
+| Price | `-selectPriceWeight` | Favours lower-priced orchestrators |
+| Price sensitivity | `-selectPriceExpFactor` | Controls how much small price differences matter |
+
+For AI gateways using an explicit orchestrator list (`-orchAddr`), the selection algorithm is simpler: the gateway round-robins across the listed orchestrators while respecting capability and price filters.
+
+---
+
+## Selection criteria by workload
+
+Different workloads have different priorities. Use this as a starting point for deciding which flags to tune.
+
+| Criterion | Video gateway | AI gateway | Dual gateway |
+|-----------|--------------|------------|-------------|
+| Latency | Critical for real-time | Important for UX | Both |
+| Price | Important | Important | Both |
+| Codec capability | Required | Not applicable | Video path |
+| AI model / pipeline | Not applicable | Required | AI path |
+| GPU type | Less critical | Critical (VRAM) | Critical |
+| Historical performance | High weight | Medium weight | Both |
+| Minimum version | `-orchMinLivepeerVersion` | Optional | Optional |
+
+---
+
+## Pinning orchestrators (AI gateways)
+
+For off-chain AI gateways, the most reliable approach is to maintain an explicit list of known-good orchestrators. The gateway round-robins across this list and does not discover others.
+
+```bash
+-orchAddr https://orch1.example.com:8935,https://orch2.example.com:8935,https://orch3.example.com:8935
+```
+
+This trades the flexibility of network-wide discovery for predictability: you know exactly which orchestrators your jobs go to, and you can vet each one before adding it. It is the recommended approach for production AI workloads.
+
+To find AI-capable orchestrators to add to your list, use:
+- The [Livepeer Explorer](https://explorer.livepeer.org) AI leaderboard {/* REVIEW: Confirm AI leaderboard is live on Explorer and what metrics it shows — Rick to verify */}
+- [tools.livepeer.cloud](https://tools.livepeer.cloud) — community tool suite with orchestrator performance data
+- The `/getNetworkCapabilities` endpoint on your own gateway, filtered by the pipeline and model you need
+
+---
+
+## Dynamic orchestrator discovery
+
+For video gateways and on-chain AI gateways that want to draw from the full network, use webhook-based discovery instead of a static list.
+
+```bash
+-orchWebhookUrl https://your-discovery-service.example.com/orchestrators
+```
+
+The webhook endpoint should return a JSON array of orchestrator URIs. The gateway calls this URL at session start to get a fresh candidate list, then applies its scoring algorithm. This lets you maintain your own curated orchestrator pool externally, with the gateway fetching updates dynamically.
+
+<Tip>
+A simple webhook can be a static JSON file served by your web server. Update it when you add or remove orchestrators from your preferred pool.
+</Tip>
+
+---
+
+## Performance scoring
+
+Beyond the built-in selection weights, the gateway can use an external performance scoring service to influence orchestrator selection.
+
+```bash
+-orchPerfStatsUrl https://leaderboard.livepeer.org/api/aggregated_stats
+-minPerfScore 0.8
+```
+
+`-orchPerfStatsUrl` points to a service that returns per-orchestrator performance statistics. The Livepeer community leaderboard provides this data. `-minPerfScore` sets a minimum acceptable score; orchestrators below this threshold are excluded from selection regardless of price.
+
+{/* REVIEW: Confirm the leaderboard API endpoint URL and response format — Rick to verify current URL is `https://leaderboard.livepeer.org/api/aggregated_stats` */}
+
+Performance scores are calculated from real transcoding tests run by the leaderboard against each registered orchestrator. Scores range from 0 to 1, where 1 represents consistently correct transcoding output within latency targets. For production video transcoding, a minimum score of 0.8 or higher is recommended.
+
+---
+
+## Blocklisting orchestrators
+
+If you identify an orchestrator that is producing incorrect results, charging unexpected prices, or behaving maliciously, exclude it immediately:
+
+```bash
+-orchBlocklist 0xAbCd1234...,0xEfGh5678...
+```
+
+Blocklisted orchestrators are excluded from all selection, regardless of price or capability. Pass Ethereum addresses as a comma-separated list. This flag takes effect at process start; to update it, restart the gateway.
+
+<Note>
+The blocklist is a last resort, not a tier management tool. For tiering, use the performance score threshold and price caps instead.
+</Note>
+
+---
+
+## Tiering strategy
+
+Operators running a gateway-as-service with SLA commitments need to route different customer tiers to different orchestrator quality levels. Since go-livepeer does not natively support named tiers, the pattern is to run separate gateway instances per tier, each with a different configuration.
+
+```
+Tier 1 (premium) → gateway instance A
+    -orchAddr <premium-orch-list>
+    -maxPricePerUnit 5000         # Higher price cap = access to better orchestrators
+    -minPerfScore 0.95
+
+Tier 2 (standard) → gateway instance B
+    -orchAddr <standard-orch-list>
+    -maxPricePerUnit 2000
+    -minPerfScore 0.8
+
+Tier 3 (budget) → gateway instance C
+    -maxPricePerUnit 500
+    # No minPerfScore — accepts wider range
+```
+
+Your middleware layer (see [Gateway Middleware](/v2/gateways/guides/advanced-operations/gateway-middleware)) routes incoming requests to the correct gateway instance based on the customer's tier.
+
+---
+
+## Failover behaviour
+
+<AccordionGroup>
+  <Accordion title="Automatic orchestrator swaps">
+    When an orchestrator fails mid-job, the gateway automatically swaps to the next candidate in its selection pool. For video transcoding, this means the stream continues on a new orchestrator; segments are re-attempted. For AI inference, the request is retried on a different orchestrator.
+
+    The number of retry attempts before the job fails is controlled by `-maxAttempts` (video transcoding). For AI jobs, the retry behaviour depends on the pipeline.
+
+    {/* REVIEW: Confirm `-maxAttempts` applies to gateway retry on orchestrator failure, not just transcoding attempts — Rick to verify. Also confirm AI inference retry count/flag */}
+  </Accordion>
+  <Accordion title="Reducing swap frequency">
+    High orchestrator swap rates indicate instability in your orchestrator pool, such as under-resourced machines or network issues. To reduce swaps:
+
+    - Increase `-minPerfScore` to exclude poorly-performing orchestrators proactively
+    - Add `-orchMinLivepeerVersion` to exclude outdated nodes
+    - Review your `-maxPricePerUnit` or `-maxPricePerCapability` ceiling: if it is too low, the gateway may be cycling through marginal orchestrators
+
+    Monitor the `livepeer_orchestrator_swaps` Prometheus counter to track swap frequency over time.
+
+    {/* REVIEW: Confirm Prometheus metric name is `livepeer_orchestrator_swaps` — Rick to verify */}
+  </Accordion>
+  <Accordion title="Discovery timeout">
+    If the gateway cannot find a suitable orchestrator within the discovery window, the job fails. The timeout is configurable:
+
+    ```bash
+    -discoveryTimeout 10s
+    ```
+
+    Increase this if you see jobs failing because no orchestrator was found, particularly at startup or after a blocklist change. Decrease it if you need faster failure detection for latency-sensitive applications.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## AI-specific: capability and model matching
+
+For AI gateways, orchestrator selection is driven by capability matching before any price or performance scoring applies. The gateway only considers orchestrators that declare support for the requested pipeline and model.
+
+Capability information is returned by `/getNetworkCapabilities`. To inspect which orchestrators in your pool support a specific model:
+
+```bash
+curl http://localhost:8935/getNetworkCapabilities | \
+  jq '.orchestrators[] | select(.capabilities_prices[].model_id == "black-forest-labs/FLUX.1-dev")'
+```
+
+Set per-capability price caps to control costs per pipeline:
+
+```bash
+-maxPricePerCapability '[{"pipeline":"text-to-image","model_id":"black-forest-labs/FLUX.1-dev","price_per_unit":100,"pixels_per_unit":1000000}]'
+```
+
+If no orchestrator in the pool meets both the capability requirement and the price cap, the job fails. If you want the gateway to relax the price cap rather than fail the job, use:
+
+```bash
+-ignoreMaxPriceIfNeeded
+```
+
+---
+
+## Monitoring orchestrator performance
+
+Track selection health in production using these metrics and endpoints.
+
+| Signal | Source | What to watch |
+|--------|--------|--------------|
+| Swap rate | Prometheus `livepeer_orchestrator_swaps` | Rising trend = instability |
+| Success rate | Prometheus `livepeer_success_rate` | Below 0.95 = investigate |
+| Connected orchestrators | `/getNetworkCapabilities` | Fewer than expected = discovery issue |
+| Orchestrator status | `livepeer_cli` status command | Active connection and pricing |
+| Performance scores | leaderboard.livepeer.org | Comparison vs network |
+
+{/* REVIEW: Confirm Prometheus metric names `livepeer_success_rate` — Rick to verify exact metric names in current go-livepeer */}
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Production Hardening" icon="arrow-left" href="/v2/gateways/guides/advanced-operations/production-hardening">
+    Security, TLS, and HA — covered before this guide.
+  </Card>
+  <Card title="Scaling & Resource Management" icon="arrow-right" href="/v2/gateways/guides/advanced-operations/scaling">
+    Session limits and when to scale horizontally.
+  </Card>
+  <Card title="Orchestrator Offerings Reference" icon="book" href="/v2/gateways/resources/technical/orchestrator-offerings">
+    Full OrchestratorInfo data structure and discovery API reference.
+  </Card>
+  <Card title="Configuration Flags" icon="sliders" href="/v2/gateways/resources/technical/configuration-flags">
+    All selection and scoring flags in one place.
+  </Card>
+</CardGroup>
+
+
+{/* ---
+title: 'Production Hardening'
+description: 'Make your gateway production-ready — multi-region deployment, load balancing, TLS, security hardening, high availability, and disaster recovery.'
+sidebarTitle: 'Production Hardening'
+pageType: 'guide'
+audience: 'gateway'
+status: 'stub'
+--- */}
+
+{/*
+  PURPOSE:
+  Journey step: "Make my gateway production-ready"
+  Post-setup guide for operators moving from dev/test to production. Covers
+  infrastructure-level concerns: multi-region, HA, security, DR.
+
+  SECTION HOME: Guides → Advanced Operations
+
+  JOURNEY POSITION:
+  1. Production Hardening (this page) — "Make it production-ready"
+  2. Orchestrator Selection — "Choose the best orchestrators"
+  3. Scaling & Resource Management — "When and how to scale"
+  4. Gateway Middleware — "Custom middleware and integrations"
+  5. Publishing Your Gateway — "Make your gateway discoverable"
+
+  RELATED FILES (draw from):
+  - all-resources/v2-advops--production-ops.mdx               — EXISTING STUB (5%): 17 lines. Topic list: multi-region, LB, security, HA, DR.
+  - all-resources/ctx-gwnew--content-brief-gwoq5-publish-gateway.md — SECONDARY (30%): 569 lines. Research on gateway discoverability — production infra aspects.
+  - all-resources/v2-setup--connect-with-offerings.mdx         — SECONDARY (20%): 351 lines. Marketplace connection — production deployment aspects.
+  - all-resources/v2-refs--configuration-flags.mdx             — REFERENCE: 525 lines. Production-relevant flags.
+  - all-resources/v2-refs--technical-architecture.mdx          — REFERENCE: 165 lines. Architecture diagrams for deployment context.
+
+  CROSS-REFS:
+  - Setup → Configuration — initial setup; this is post-setup hardening
+  - Monitoring → Monitoring Setup — production monitoring is a prerequisite
+  - Payments → Fund Your Gateway — deposit management across multi-region
+  - Resources → Configuration Flags — production flags reference
+*/}
+{/*
+# Production Hardening
+
+<Note>This page is a stub. Content to be developed from the sources listed above.</Note>
+
+## Proposed Structure
+
+### 1. Production Readiness Checklist
+Quick assessment: is your gateway production-ready?
+- [ ] TLS termination configured
+- [ ] Health endpoint monitored externally
+- [ ] Deposit/reserve funded (on-chain gateways)
+- [ ] Prometheus metrics enabled
+- [ ] Firewall rules in place
+- [ ] Logs persisted and rotated
+
+### 2. TLS & Security
+- TLS termination: reverse proxy (nginx/caddy) in front of gateway
+- Firewall: expose only necessary ports (8935/8937 HTTP, 1935 RTMP)
+- Authentication: application-layer auth before gateway
+- Rate limiting: protect against abuse
+- Key/password management: keystore security, password file permissions
+
+### 3. High Availability
+- Health endpoint monitoring: `/health` checks from load balancer
+- Process supervision: systemd unit or Docker restart policies
+- Graceful shutdown: drain active sessions before restart
+- Gateway type differences:
+  - On-chain: single ETH address, one active node per address
+  - Off-chain: stateless, can run multiple instances
+
+### 4. Multi-Region Deployment
+- When: latency-sensitive workloads, geographic distribution of clients
+- Architecture patterns: regional gateways → global orchestrator pool
+- On-chain consideration: deposit/reserve per region vs shared
+- DNS-based routing: GeoDNS or anycast
+
+### 5. Load Balancing
+- Off-chain AI gateways: standard HTTP load balancing (stateless)
+- Video gateways: sticky sessions needed for stream continuity
+- Port considerations: separate LB rules for 8935 (HTTP) vs 1935 (RTMP)
+
+### 6. Disaster Recovery
+- Backup: keystore, configuration files, transcoding profiles
+- Recovery: keystore restoration, deposit verification
+- Failover: standby node promotion
+
+### 7. Next Steps
+Cards: Monitoring Setup, Scaling & Resource Management, Configuration Flags (Resources) */}

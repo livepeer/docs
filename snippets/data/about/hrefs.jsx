@@ -69,10 +69,10 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "internal-relative",
-      "rawPath": "livepeer-protocol/protocol-economics",
-      "resolvedPath": "v2/about/livepeer-protocol/protocol-economics",
-      "exists": false,
-      "status": "missing",
+      "rawPath": "livepeer-protocol/economics",
+      "resolvedPath": "v2/about/livepeer-protocol/economics.mdx",
+      "exists": true,
+      "status": "ok",
       "movedCandidates": []
     },
     {
@@ -805,8 +805,8 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "internal-rooted",
-      "rawPath": "/snippets/assets/media/images/Livepeer%20Stats.png",
-      "resolvedPath": "snippets/assets/media/images/Livepeer Stats.png",
+      "rawPath": "/snippets/assets/media/images/livepeer-stats.png",
+      "resolvedPath": "snippets/assets/media/images/livepeer-stats.png",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -814,8 +814,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/quad-grid.jsx",
-      "resolvedPath": "snippets/components/layout/quad-grid.jsx",
+      "rawPath": "/snippets/components/layout/quadGrid.jsx",
+      "resolvedPath": "snippets/components/layout/quadGrid.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -888,8 +888,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/quote.jsx",
-      "resolvedPath": "snippets/components/display/quote.jsx",
+      "rawPath": "/snippets/components/content/quote.jsx",
+      "resolvedPath": "snippets/components/content/quote.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -906,8 +906,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/response-field.jsx",
-      "resolvedPath": "snippets/components/content/response-field.jsx",
+      "rawPath": "/snippets/components/content/responseField.jsx",
+      "resolvedPath": "snippets/components/content/responseField.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1495,8 +1495,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/quote.jsx",
-      "resolvedPath": "snippets/components/display/quote.jsx",
+      "rawPath": "/snippets/components/content/quote.jsx",
+      "resolvedPath": "snippets/components/content/quote.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1632,8 +1632,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/quote.jsx",
-      "resolvedPath": "snippets/components/display/quote.jsx",
+      "rawPath": "/snippets/components/content/quote.jsx",
+      "resolvedPath": "snippets/components/content/quote.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1668,8 +1668,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/zoomable-diagram.jsx",
-      "resolvedPath": "snippets/components/display/zoomable-diagram.jsx",
+      "rawPath": "/snippets/components/content/zoomableDiagram.jsx",
+      "resolvedPath": "snippets/components/content/zoomableDiagram.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1850,8 +1850,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/quote.jsx",
-      "resolvedPath": "snippets/components/display/quote.jsx",
+      "rawPath": "/snippets/components/content/quote.jsx",
+      "resolvedPath": "snippets/components/content/quote.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1906,7 +1906,7 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "external-https",
-      "rawPath": "\"https://www.notion.so/livepeer/Livepeer-Rewards-Accumulation-Mechanism-23e0a348568780199f26f8cbc3c2d231\"",
+      "rawPath": "https://www.notion.so/livepeer/Livepeer-Rewards-Accumulation-Mechanism-23e0a348568780199f26f8cbc3c2d231",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -1915,7 +1915,7 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "external-https",
-      "rawPath": "\"https://www.notion.so/livepeer/Livepeer-L1-L2-Migration-Report-Complete-Technical-Overview-2b10a348568780a28b59df9d8710bff9\"",
+      "rawPath": "https://www.notion.so/livepeer/Livepeer-L1-L2-Migration-Report-Complete-Technical-Overview-2b10a348568780a28b59df9d8710bff9",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -1951,8 +1951,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/image.jsx",
-      "resolvedPath": "snippets/components/display/image.jsx",
+      "rawPath": "/snippets/components/primitives/image.jsx",
+      "resolvedPath": "snippets/components/primitives/image.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1960,8 +1960,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/zoomable-diagram.jsx",
-      "resolvedPath": "snippets/components/display/zoomable-diagram.jsx",
+      "rawPath": "/snippets/components/content/zoomableDiagram.jsx",
+      "resolvedPath": "snippets/components/content/zoomableDiagram.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1996,8 +1996,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/quote.jsx",
-      "resolvedPath": "snippets/components/display/quote.jsx",
+      "rawPath": "/snippets/components/content/quote.jsx",
+      "resolvedPath": "snippets/components/content/quote.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2295,8 +2295,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/quote.jsx",
-      "resolvedPath": "snippets/components/display/quote.jsx",
+      "rawPath": "/snippets/components/content/quote.jsx",
+      "resolvedPath": "snippets/components/content/quote.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2434,8 +2434,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/SHARED/Portals.jsx",
-      "resolvedPath": "snippets/components/domain/SHARED/Portals.jsx",
+      "rawPath": "/snippets/components/page-structure/portals.jsx",
+      "resolvedPath": "snippets/components/page-structure/portals.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2470,8 +2470,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/SHARED/HeroGif.jsx",
-      "resolvedPath": "snippets/components/domain/SHARED/HeroGif.jsx",
+      "rawPath": "/snippets/components/page-structure/heroGif.jsx",
+      "resolvedPath": "snippets/components/page-structure/heroGif.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2652,8 +2652,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/image.jsx",
-      "resolvedPath": "snippets/components/display/image.jsx",
+      "rawPath": "/snippets/components/primitives/image.jsx",
+      "resolvedPath": "snippets/components/primitives/image.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2733,28 +2733,6 @@ export const LINK_MAP = {
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
-      "movedCandidates": []
-    },
-    {
-      "sourceType": "import-path",
-      "linkType": "import-path",
-      "rawPath": "/snippets/external/whitepaper.mdx",
-      "resolvedPath": "snippets/external/whitepaper.mdx",
-      "exists": false,
-      "status": "missing",
-      "movedCandidates": [
-        "v2/about/resources/livepeer-whitepaper.mdx",
-        "v2/developers/moved-to-about-livepeer-protocol/livepeer-protocol/livepeer-whitepaper.mdx",
-        "v2/cn/about/resources/livepeer-whitepaper.mdx"
-      ]
-    },
-    {
-      "sourceType": "import-path",
-      "linkType": "import-path",
-      "rawPath": "/snippets/components/content/external-content.jsx",
-      "resolvedPath": "snippets/components/content/external-content.jsx",
-      "exists": true,
-      "status": "ok",
       "movedCandidates": []
     }
   ],

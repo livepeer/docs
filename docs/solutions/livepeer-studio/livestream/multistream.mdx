@@ -1,0 +1,48 @@
+---
+title: Multistream
+description: >-
+  Send one livestream to multiple RTMP/RTMPS destinations (e.g. Twitch,
+  YouTube).
+keywords:
+  - livepeer
+  - docs
+  - solutions
+  - livepeer studio
+  - livestream
+  - multistream
+  - send
+  - multiple
+  - rtmp
+  - rtmps
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+---
+
+Multistreaming sends your Livepeer Studio stream to multiple **RTMP/RTMPS** destinations (e.g. Twitch, YouTube Live, Facebook Live). Configure **multistream targets** per stream in the dashboard or via the API.
+
+## Concepts
+
+- **Multistream target** = ingest URL + optional stream key + optional rendition. Create via [Multistream API](https://livepeer.studio/docs/api-reference/multistream/create) or inline in [stream create](https://livepeer.studio/docs/api-reference/stream/create) / [stream update](https://livepeer.studio/docs/api-reference/stream/update).
+- Targets are **per stream**; new streams do not inherit them.
+- **Changes apply to the next session.** If the stream is live, new/updated targets are used after the current session ends.
+
+## Dashboard
+
+1. Go to [Streams](https://livepeer.studio/dashboard/streams), open a stream.
+2. **Overview** tab → **Multistream targets** → **Create**.
+3. Enter name, **Ingest URL** (required), optional stream key, and rendition profile.
+4. Save. Toggle, edit, or delete targets from the same section.
+
+## API
+
+- Add target: [Add multistream target](https://livepeer.studio/docs/api-reference/stream/add-multistream-target) or in stream create/update.
+- Remove: [Delete multistream target](https://livepeer.studio/docs/api-reference/stream/delete-multistream-target).
+
+## Monitoring
+
+- **Health** tab: targets show **Active** or **Offline** (may lag slightly).
+- **Webhooks:** `multistream.connected`, `multistream.error`, `multistream.disconnected`. See [Listen to events](../analytics/listen-to-events).

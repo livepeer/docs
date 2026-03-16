@@ -1,0 +1,667 @@
+---
+title: Component Governance Framework
+description: >-
+  Canonical reference for how components are classified, built, documented, and
+  maintained in snippets/components/.
+keywords:
+  - livepeer
+  - docs guide
+  - governance guides
+  - component governance
+  - component
+  - governance
+  - framework
+  - canonical
+  - reference
+  - components
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+owner: '@livepeer/docs-team'
+status: active
+version: '1.0'
+created: 2026-03-07T00:00:00.000Z
+lastUpdated: 2026-03-07T00:00:00.000Z
+sourceDeliverables: 'D1, D2, D3, D4, D5, D6'
+decisions: 33
+scope: snippets/components/
+upstream:
+  - Page Taxonomy (SOT-00)
+  - Content Taxonomy
+  - Composable Content Structure (UX Framework)
+  - Mintlify Considerations
+consumers:
+  - Content authors (find and use components)
+  - Component maintainers (build and modify)
+  - AI agents (parse classification rules)
+  - 'Generation scripts (registry, published docs)'
+generatedArtefacts:
+  - docs-guide/component-registry.json
+  - Published component library MDX pages (Resource Hub)
+relatedDocs:
+  - docs-guide/policies/source-of-truth-policy.mdx
+  - docs-guide/features/architecture-map.mdx
+  - docs-guide/catalog/scripts-catalog.mdx
+---
+
+# Component Governance Framework
+
+**Repository:** `livepeer/docs`, `docs-v2` branch  
+**Scope:** `snippets/components/` — the governed component library  
+**Platform:** Mintlify (MDX-based)  
+**Version:** 1.0  
+**Date:** 7 March 2026  
+**Author:** Wonderland (Alison Haire) / Claude collaboration  
+**Source deliverables:** D1–D6 of the Component Governance Framework plan
+
+<CustomDivider />
+
+## Quick Start
+
+You're a contributor. You want to build, use, or modify a component. Here's everything you need in 60 seconds.
+
+### Find a component
+
+Use the [Component Registry](/docs-guide/component-registry.json) or the published [Component Library](/v2/resources/documentation-guide/component-library) pages. Every component has a status badge, props table, and copy-paste example.
+
+### Use a component
+
+Import with the full explicit path in your MDX page:
+
+```mdx icon="terminal"
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+<CustomDivider />
+```
+
+Mintlify requires full paths with file extensions. No barrel imports. If you need multiple components, import them all at the MDX page level. Components must not import other `.jsx` component files. Shared non-visual runtime logic may only be kept inline in the exported component or imported from a colocated non-component `.js` helper module.
+
+### Decide which category
+
+Follow the decision tree (first match wins):
+
+1. **Bound to an external data source or pipeline?** → `data/`
+2. **Only makes sense on frame-mode or portal pages?** → `page-structure/`
+3. **Accepts children and arranges them spatially?** → `layout/`
+4. **Formats or renders content for the reader?** → `content/`
+5. **Otherwise** → `primitives/`
+
+### Build a new component
+
+1. Create your `.jsx` file in the correct category folder.
+2. Use arrow function syntax (`export const X = () => ...`).
+3. Add the full JSDoc block (14 governance fields + `@param` per prop + `@example`).
+4. Use `var(--lp-*)` CSS tokens for all colours. No hardcoded hex. No ThemeData.
+5. Add defensive rendering — guard all props, never throw. A crash kills the entire page.
+6. Create an example in `{category}/examples/{file}-examples.mdx`.
+7. Write unit tests in `tests/unit/components/{category}/{file}.test.js`.
+8. Verify visually in both light and dark mode via `mintlify dev`.
+9. Commit. Pre-commit validates JSDoc, regenerates the registry, and checks styling rules.
+
+### Component checklist (full)
+
+``` icon="terminal"
+JSDoc
+  □ All 14 governance fields present
+  □ @param for every prop
+  □ @example with primary usage
+
+Props
+  □ camelCase names
+  □ Boolean props: is/has prefix
+  □ Handler props: on prefix
+  □ Defaults in destructuring
+  □ children for slot content, named props for data
+  □ Spread last (...rest)
+  □ Required props: no default. Optional: always have default.
+
+Composition
+  □ No cross-file imports from other `.jsx` component files
+  □ Shared runtime logic for MDX-facing components stays inline or comes from a colocated `.js` helper import
+  □ Renders correctly standalone and inside Mintlify globals
+
+Styling
+  □ Colours use var(--lp-*) tokens
+  □ No ThemeData, no hardcoded hex, no !important
+  □ Dark/light mode works (tokens + Tailwind dark:)
+
+Error Handling
+  □ Null-safe prop access throughout
+  □ Required props guarded — returns null if missing
+  □ Array operations guarded: (items ?? []).map()
+  □ Try-catch wraps complex logic
+  □ console.warn on degradation
+  □ Never throws
+
+Accessibility
+  □ Semantic HTML elements
+  □ Images have alt text
+  □ [If interactive] ARIA attributes present
+  □ [If interactive] Keyboard operable
+
+Testing
+  □ Visual verification: light and dark mode
+  □ Browser test coverage: page renders
+  □ Unit tests: valid props, no props, null data, missing required
+```
+
+<CustomDivider />
+
+## 1. Classification & Purpose Model
+
+### 1.1 Category Taxonomy
+
+Five categories. Every component belongs to exactly one.
+
+| Category | Folder | Count | Purpose |
+|----------|--------|-------|---------|
+| **Primitives** | `primitives/` | 29 | Standalone visual atoms — icons, text, callouts, links, images, math, dividers, a11y |
+| **Layout** | `layout/` | 23 | Spatial arrangement — containers, grids, steps, lists, tables, carousels |
+| **Content** | `content/` | 25 | Content formatting and media — code blocks, quotes, video, embeds, API fields, diagrams |
+| **Data** | `data/` | 13 | Pipeline/API-bound display — blog, forum, Discord, Luma, CoinGecko, showcase |
+| **Page Structure** | `page-structure/` | 23 | Frame-mode and portal scaffolding — headers, sections, enhanced cards |
+
+### 1.2 Decision Tree
+
+Classify by answering in order. First match wins.
+
+``` icon="terminal"
+Q1: Bound to an external data source or automation pipeline?
+    YES → DATA
+
+Q2: Only makes sense on frame-mode or portal pages?
+    YES → PAGE STRUCTURE
+
+Q3: Accepts children and arranges them spatially?
+    YES → LAYOUT
+
+Q4: Formats or renders content for the reader?
+    YES → CONTENT
+
+Q5: Default → PRIMITIVES
+```
+
+**Order rationale:** Data and Page Structure are checked first because they're the most constrained (fewest false positives). Layout's "accepts children spatially" test is concrete and binary. Content catches everything that formats reader-facing material. Primitives is the default.
+
+### 1.3 Compositional Tiers
+
+Every component carries a `@tier` tag. Tiers describe the component's role in MDX-level composition (not internal dependencies — Mintlify forbids cross-file imports between JSX files).
+
+| Tier | Meaning |
+|------|---------|
+| `primitive` | Standalone — used independently, solves one visual need |
+| `composite` | Designed to work alongside other components at the MDX page level |
+| `pattern` | Orchestrates a page section — backbone of a major page area |
+
+### 1.4 Library Boundary
+
+**Inside:** `snippets/components/` and its five category subdirectories. Every exported component here is governed.
+
+**Outside (not governed by this framework):**
+
+| Pattern | Governed by |
+|---------|-------------|
+| Mintlify globals (Card, Tabs, Accordion, etc.) | Mintlify platform |
+| Content snippets (`snippets/*.mdx` outside `components/`) | Composable Content Structure |
+| Data snippets (`snippets/data/`, `snippets/automations/`) | Data integration layer |
+
+Mintlify enforces that all importable JSX lives under `/snippets/`. No "section-local components" are possible outside this path.
+
+### 1.5 Content Affinity
+
+The `@contentAffinity` field connects components to page types from the Page Taxonomy: `landing`, `overview`, `tutorial`, `how_to`, `concept`, `reference`, `faq`, `troubleshooting`, `changelog`, `glossary`, `universal`.
+
+This is an affinity signal, not a hard restriction. `universal` means the component works on any page type.
+
+<CustomDivider />
+
+## 2. Repo Structure & Documentation Architecture
+
+### 2.1 Folder Layout
+
+``` icon="terminal"
+snippets/components/
+├── primitives/
+│   ├── divider.jsx
+│   ├── icons.jsx
+│   ├── ...
+│   └── examples/
+│       ├── divider-examples.mdx
+│       └── ...
+├── layout/
+│   ├── containers.jsx
+│   ├── ...
+│   └── examples/
+├── content/
+│   ├── code.jsx
+│   ├── video.jsx
+│   ├── ...
+│   └── examples/
+├── data/
+│   ├── data.jsx
+│   ├── ...
+│   └── examples/
+├── display/
+│   ├── frame-mode.jsx
+│   ├── ...
+│   └── examples/
+└── page-structure/
+    ├── heroGif.jsx
+    ├── portals.jsx
+    └── ...
+```
+
+Six category folders. Flat within each (no tier subfolders). One `examples/` subdirectory per category where the category uses runnable examples.
+
+### 2.2 Naming Conventions
+
+| Element | Convention | Example |
+|---------|-----------|---------|
+| Files | Canonical camelCase `.jsx` outside `display/`; `display/` keeps kebab-case | `frameMode.jsx`, `heroGif.jsx` |
+| Exports | PascalCase, named, arrow function | `export const PageHeader = () => ...` |
+| Example files | kebab-case `-examples.mdx` | `frame-mode-examples.mdx` |
+
+### 2.3 File Granularity
+
+Grouped files with per-export JSDoc. Related components share a file. Each export gets its own 14-field JSDoc block. Non-exported helpers are implementation details.
+
+### 2.4 Import Paths
+
+Full explicit paths. Mintlify requires file extensions. No barrel imports.
+
+```jsx icon="terminal"
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { StyledTable, TableRow } from '/snippets/components/layout/tables.jsx'
+```
+
+### 2.5 Documentation Architecture
+
+``` icon="terminal"
+JSDoc (SOT for metadata + props)
+    ↓
+docs-guide/component-registry.json (generated by pre-commit)
+    ↓
+Published MDX pages (generated, LLM editorial + template fallback)
+```
+
+Per-folder READMEs are deprecated. The registry and published pages are the two documentation surfaces.
+
+### 2.6 Registry
+
+Single JSON at `docs-guide/component-registry.json`. Generated by pre-commit hook when files in `snippets/components/` are staged. Contains all 14 governance fields per component plus derived fields (`file`, `importPath`).
+
+<CustomDivider />
+
+## 3. Styling Architecture & Standards
+
+### 3.1 Three-Layer Hierarchy
+
+``` icon="terminal"
+Layer 1: Mintlify Theme (docs.json) — platform colours, layout, dark mode toggle
+Layer 2: style.css (repo root) — --lp-* CSS custom properties, Mintlify overrides
+Layer 3: Component styles — consume tokens, scoped vars if documented
+```
+
+Components consume `var(--lp-*)` tokens. They rarely define new variables (only for computed/dynamic values, with documentation).
+
+### 3.2 Token Namespace
+
+All tokens use `--lp-` prefix: `--lp-color-*`, `--lp-spacing-*`, `--lp-font-*`, `--lp-radius-*`, `--lp-shadow-*`, `--lp-z-*`.
+
+Every `--lp-color-*` token has both light and dark values defined in `style.css`.
+
+### 3.3 Banned Patterns (Pre-commit Blocks)
+
+| Pattern | Why |
+|---------|-----|
+| **ThemeData** | Deprecated, causes bugs |
+| **Hardcoded hex/rgb** | Breaks dark mode, prevents centralised updates |
+| **`!important`** | If you need it, the hierarchy is wrong |
+
+### 3.4 Advisory Patterns (Code Review Flags)
+
+| Pattern | Guidance |
+|---------|----------|
+| **Static inline `style={}`** | "Could this be a `var(--)` token?" |
+| **Direct Mintlify class overrides** | Should go through `style.css`, not component JSX |
+
+### 3.5 Dark/Light Mode
+
+| Concern | Mechanism |
+|---------|-----------|
+| Colour values | `var(--lp-color-*)` tokens — automatic light/dark swap |
+| Visibility/layout toggles | Tailwind `dark:` classes (`dark:hidden`, `hidden dark:block`) |
+| JS theme detection | **Never.** No reading `document.documentElement` in components. |
+
+### 3.6 Mintlify Override Registry
+
+Overrides in `style.css` are documented technical debt. Each entry tracks: what's overridden, which Mintlify limitation necessitates it, introduction date, review date, owner, status. Reviewed quarterly against Mintlify release notes.
+
+<CustomDivider />
+
+## 4. Component Development Standards
+
+### 4.1 Props Conventions (7 Rules)
+
+1. **camelCase** prop names
+2. **`is`/`has` prefix** for booleans (`isCompact`, `hasIcon`)
+3. **`on` prefix** for handlers (`onClick`, `onToggle`)
+4. **Defaults in destructuring** (`({ variant = 'default' }) => ...`)
+5. **`children` for slot content, named props for data**
+6. **Spread last** (`<div className={...} {...rest}>`)
+7. **Required props: no default. Optional: always have default.**
+
+### 4.2 Composition
+
+**No inter-component composition.** Mintlify does not support nested imports between JSX files. Components are standalone. The MDX page is the composer.
+
+Same-file references are allowed (co-located components share scope). Cross-file composition happens only at the MDX page level.
+
+### 4.3 Accessibility
+
+**All components:** Semantic HTML, alt text on images, heading hierarchy, descriptive link text.
+
+**Interactive components** (SearchTable, CardCarousel, ShowcaseCards, CopyText, DownloadButton, ScrollBox): additionally require ARIA roles/attributes, keyboard operability (Tab, Enter/Space, Escape), and visible focus indicators.
+
+### 4.4 Error Handling (Mandatory)
+
+Mintlify has no error boundary per component. **A component crash kills the entire page.** Defensive rendering is non-negotiable.
+
+| Rule | Implementation |
+|------|---------------|
+| Null-safe prop access | Optional chaining, default values |
+| Guard required props | Return `null` + `console.warn` if missing |
+| Guard arrays | `(items ?? []).map(...)` |
+| Try-catch complex logic | Wrap computed values, data transforms |
+| Console.warn on degradation | `console.warn('[ComponentName] reason')` |
+| Never throw | Catch internally, degrade gracefully |
+
+**MDX-facing component rule:** if a `.jsx` file is imported directly by a routable MDX page, exported components in that file must not rely on private file-scope helpers. Keep defensive logic inline in the exported component or import it from a colocated non-component `.js` helper module. Do not hoist the logic into top-level private locals inside the `.jsx` file.
+
+### 4.5 Testing (Three Tiers)
+
+| Tier | What | How | Required for |
+|------|------|-----|-------------|
+| Visual verification | Light + dark mode rendering | Manual, `mintlify dev` | All components |
+| Browser tests | Page renders without error | CI, existing infrastructure | All used components |
+| Unit tests | Props, edge cases, defensive rendering | CI, `tests/unit/components/` | All components |
+
+**Core unit test cases (every component):** renders with valid props, renders with no props, handles null/undefined data, handles missing required props, handles invalid prop types.
+
+<CustomDivider />
+
+## 5. Documentation & Example Standards
+
+### 5.1 JSDoc Template
+
+Every exported component carries this block:
+
+```jsx icon="terminal"
+/**
+ * @component ComponentName
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description One-line purpose statement.
+ * @contentAffinity landing, overview, tutorial
+ * @owner @livepeer/docs-team
+ * @dependencies none
+ * @usedIn v2/developers/index.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-07
+ *
+ * @param {string} [variant='default'] - Visual variant. One of: 'default', 'compact'.
+ * @param {boolean} [isCompact=false] - Compact rendering mode.
+ *
+ * @example
+ * <ComponentName />
+ * <ComponentName variant="compact" />
+ */
+```
+
+### 5.2 Metadata Schema (14 Fields, All Required)
+
+| # | Tag | Type | Values |
+|---|-----|------|--------|
+| 1 | `@component` | string | PascalCase export name |
+| 2 | `@category` | enum | `primitives` · `layout` · `content` · `data` · `page-structure` |
+| 3 | `@tier` | enum | `primitive` · `composite` · `pattern` |
+| 4 | `@status` | enum | `stable` · `experimental` · `deprecated` · `broken` · `placeholder` |
+| 5 | `@description` | string | One-line purpose |
+| 6 | `@contentAffinity` | enum[] | Page types from taxonomy + `universal` |
+| 7 | `@owner` | string | GitHub handle or team |
+| 8 | `@dependencies` | string[] | Same-file co-dependencies or `none` |
+| 9 | `@usedIn` | string[] | MDX page paths |
+| 10 | `@breakingChangeRisk` | enum | `low` · `medium` · `high` |
+| 11 | `@decision` | enum | `KEEP` · `MOVE` · `SPLIT` · `MERGE` · `REMOVE` |
+| 12 | `@dataSource` | string | Pipeline/API source or `none` |
+| 13 | `@duplicates` | string[] | Overlapping components or `none` |
+| 14 | `@lastMeaningfulChange` | date | ISO 8601 |
+
+### 5.3 Props Table Format (Published Docs)
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `href` | `string` | — | Yes | Destination URL |
+| `icon` | `string` | `'livepeer'` | No | Brand icon |
+
+Generated from `@param` tags. Five columns.
+
+### 5.4 Examples
+
+One rendered MDX example per exported component in `{category}/examples/{file}-examples.mdx`. Copy-paste ready with import statement. Required for `stable` components only.
+
+### 5.5 Published Docs Generation
+
+Fully automated. Zero human maintenance.
+
+1. Registry generation (pre-commit): JSDoc → `component-registry.json`
+2. Docs generation (manual/chained): registry + `@param` + `@example` + OpenRouter LLM → published MDX pages
+3. LLM failure fallback: template-generated prose from metadata (deterministic)
+
+### 5.6 Deprecation
+
+```jsx icon="terminal"
+/**
+ * @status deprecated
+ * @deprecated Use GotoCard instead. Scheduled for removal Q3 2026.
+ * @see GotoCard
+ */
+```
+
+Published docs show deprecation banner. Component section moved to bottom of category page.
+
+<CustomDivider />
+
+## 6. Lifecycle & Governance
+
+### 6.1 Lifecycle States
+
+| State | Meaning | Badge |
+|-------|---------|-------|
+| `stable` | Production-ready, tested, documented | Green |
+| `experimental` | Usable, API may change | Yellow |
+| `deprecated` | Scheduled for removal, replacement identified | Red |
+| `broken` | Known defect, do not use | Red |
+| `placeholder` | Stub/empty, not functional | Grey |
+
+### 6.2 Transitions
+
+Free transitions — any state to any state. Update `@status` in JSDoc. Document reason in commit message. Registry captures the change automatically.
+
+### 6.3 Governance Taxonomy
+
+Category-level. One governance label per folder.
+
+The current metadata field is `owner`, but it is taxonomy, not reviewer assignment or gatekeeper authority. Historical GitHub review maps may remain archived for reference, but tests, generated registries, and repair commands are the active contract.
+
+### 6.4 Modification Rules
+
+No immutability rule. Automated validation and the existing test infrastructure (58-script suite, 17 CI workflows, pre-commit hooks, browser tests) are the gates. Human review is collaborative, not ownership-based.
+
+### 6.5 Deprecation & Removal
+
+Usage-gated. A deprecated component is removed only when `@usedIn` is empty — no pages reference it. The registry tracks consumers. Published docs surface remaining consumers as migration prompts.
+
+<CustomDivider />
+
+## 7. Enforcement Summary
+
+What's enforced, where, and how.
+
+| What | Enforced by | Blocks commit? |
+|------|------------|---------------|
+| 14 JSDoc governance fields present | Pre-commit validation | Yes |
+| `@param` coverage matches props | Pre-commit validation | Yes |
+| `@category` matches folder | Pre-commit validation | Yes |
+| `@status` is valid enum | Pre-commit validation | Yes |
+| `@deprecated` present when status=deprecated | Pre-commit validation | Yes |
+| No ThemeData | Pre-commit regex scan | Yes |
+| No hardcoded hex/rgb | Pre-commit regex scan | Yes |
+| No `!important` | Pre-commit regex scan | Yes |
+| Registry regeneration | Pre-commit auto-generation | Auto-staged |
+| Static inline styles | Copilot code review | No (advisory) |
+| Mintlify class overrides | Copilot code review | No (advisory) |
+| Props conventions | Code review (human + Copilot) | No |
+| Accessibility (ARIA) | Code review + unit tests | Partially |
+| Defensive rendering | Unit tests | Yes (CI) |
+| Page-level rendering | Browser tests | Yes (CI) |
+| Visual light/dark mode | Manual verification | No |
+
+<CustomDivider />
+
+## 8. Generation Pipeline
+
+### 8.1 Registry Generation
+
+``` icon="terminal"
+Trigger:  pre-commit (staged files in snippets/components/)
+Script:   tools/scripts/generate-component-registry.js
+Input:    all JSDoc blocks in snippets/components/**/*.jsx
+Output:   docs-guide/component-registry.json (auto-staged)
+Errors:   missing/invalid fields → commit blocked
+```
+
+### 8.2 Published Docs Generation
+
+``` icon="terminal"
+Trigger:  manual or chained after registry update
+Script:   tools/scripts/generate-component-docs.js
+Input:    registry + @param + @example + examples/ MDX files
+Process:  OpenRouter LLM for editorial prose, template fallback on failure
+Output:   6 published MDX pages (overview + per-category)
+Caching:  LLM output cached per component hash
+```
+
+<CustomDivider />
+
+## 9. Decision Register (All 33 Decisions)
+
+### D1: Classification & Purpose Model
+
+| # | Decision | Choice |
+|---|----------|--------|
+| 1 | Category taxonomy | Five: Primitives, Layout, Content (absorbs Media), Data, Page Structure |
+| 2 | Compositional model | Metadata only — flat files, tier as JSDoc tag |
+| 3a | Metadata location | JSDoc block in each JSX file |
+| 3b | Metadata schema | Full 14 fields, all required |
+| 4 | Decision mechanism | Decision tree — ordered yes/no, first match wins |
+| 5 | Library boundary | `snippets/components/` only |
+
+### D2: Repo Structure & Documentation Architecture
+
+| # | Decision | Choice |
+|---|----------|--------|
+| 1 | Naming conventions | camelCase files, PascalCase exports |
+| 2 | File granularity | Grouped files with per-export JSDoc |
+| 3 | Canonical docs home | Hybrid — JSDoc SOT for metadata, published MDX SOT for editorial |
+| 4 | Registry format | Single JSON at `docs-guide/component-registry.json` |
+| 5 | Generation pipeline | Pre-commit hook auto-regeneration |
+| 6 | Examples convention | Co-located `examples/` per category |
+| 7 | Import paths | Full explicit paths (Mintlify constraint) |
+
+### D3: Styling Architecture & Standards
+
+| # | Decision | Choice |
+|---|----------|--------|
+| 1 | Style system authority | Layered — components may define scoped vars if documented |
+| 2 | Forbidden patterns | Strict ban (3) + advisory (2) |
+| 3 | Dark/light mode | CSS tokens + Tailwind `dark:` utility |
+| 4 | Inline styles | Advisory flag sufficient |
+| 5 | Design tokens | Rationalise and document with `--lp-*` namespace |
+| 6 | Mintlify override policy | Override registry — documented, justified, review-dated |
+
+### D4: Component Development Standards
+
+| # | Decision | Choice |
+|---|----------|--------|
+| 1 | Props conventions | Standard 7 rules |
+| 2 | Composition | No inter-component composition (Mintlify constraint) |
+| 3 | Accessibility | Semantic HTML + ARIA for interactive components |
+| 4 | Error handling | Defensive rendering mandatory — page crash prevention |
+| 5 | Testing | Visual + browser + unit tests (three tiers) |
+
+### D5: Documentation & Example Standards
+
+| # | Decision | Choice |
+|---|----------|--------|
+| 1 | JSDoc scope | Governance + `@param` + `@example` |
+| 2 | Props table format | Standard 5-column |
+| 3 | Example requirements | Minimal — one per component, copy-paste ready |
+| 4 | Published docs | LLM-generated (OpenRouter) + template fallback, zero maintenance |
+| 5 | Deprecation docs | `@deprecated` + `@see` pointer |
+
+### D6: Lifecycle & Governance Model
+
+| # | Decision | Choice |
+|---|----------|--------|
+| 1 | Lifecycle states | Five: stable, experimental, deprecated, broken, placeholder |
+| 2 | Transitions | Free — any to any, documented in commit |
+| 3 | Governance taxonomy | Category-level metadata; reviewer routing is not the contract |
+| 4 | Immutability | No rule — code review + tests are the gate |
+| 5 | Deprecation process | Usage-gated removal — only when @usedIn is empty |
+
+<CustomDivider />
+
+## 10. Upstream Dependencies
+
+This framework consumes but does not redefine:
+
+| Document | What it provides |
+|----------|-----------------|
+| Page Taxonomy (SOT-00) | 10 page types — components map via `@contentAffinity` |
+| Content Taxonomy | Structural patterns per page type — components are the rendering layer |
+| Composable Content Structure | Four reuse patterns — this framework governs UI components only |
+| Mintlify Considerations | Platform constraints: `/snippets/` paths, no nested imports, arrow function syntax |
+
+<CustomDivider />
+
+## 11. Open Items (D8 Audit + D9 Migration)
+
+| Item | Deliverable |
+|------|-------------|
+| Classify every component (status, category, tier) | D8 |
+| Populate all 14 JSDoc fields on every export | D8 |
+| Add `@param` tags for every prop | D8 |
+| Add `@example` for every stable component | D8 |
+| Create example MDX files | D8/D9 |
+| Write unit tests for all components | D8/D9 |
+| Audit `style.css` tokens → rationalise to `--lp-*` | D8 |
+| Populate Mintlify override registry | D8 |
+| Visual verify all components in both themes | D8 |
+| Create `generate-component-registry.js` | D9 |
+| Create `generate-component-docs.js` + OpenRouter integration | D9 |
+| Extend pre-commit hook | D9 |
+| Create unit test infrastructure | D9 |
+| Retire legacy GitHub review mapping | D9 |
+| Update `components.instructions.md` | D9 |
+| Migrate file locations to target folder structure | D9 |
+| Rename tokens to `--lp-*` namespace | D9 |
+| Remove ThemeData from all components | D9 |
+| Update all import paths across MDX pages | D9 |
+| Create import scanner for `@usedIn` population | D9 |

@@ -1,0 +1,239 @@
+---
+description: >-
+  This codemap illustrates how Livepeer Gateways serve as unified entry points
+  for both traditional video transcoding and AI processing workflows. The traces
+  s...
+keywords:
+  - livepeer
+  - x archived
+  - x deprecated
+  - unmatched
+  - gateways
+  - _tests to delete
+  - codemap
+  - illustrates
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+## Gateway Roles in Video Transcoding vs AI Pipelines
+
+This codemap illustrates how Livepeer Gateways serve as unified entry points for both traditional video transcoding and AI processing workflows. The traces show the dual architecture where [1a-1d] demonstrates gateway initialization with both BroadcastSessionsManager and AISessionManager, [2a-2d] traces the traditional transcoding pipeline through RTMP ingest to HLS output, [3a-3d] shows AI request routing through specialized session managers, [4a-4d] details the real-time live video AI pipeline with MediaMTX integration, [5a-5d] highlights the different payment models (segment-based vs pixel-based), and [6a-6d] shows how a single gateway can operate in multiple modes simultaneously.
+
+### 1. Gateway Initialization - Dual Capability Setup
+
+Shows how a single Gateway node is initialized to handle both traditional transcoding and AI workloads simultaneously
+
+### 1a. AI Session Manager Field (`mediaserver.go:117`)
+
+Gateway server includes AI-specific session manager alongside traditional components
+
+```text
+AISessionManager *AISessionManager
+```
+
+### 1b. AI Manager Initialization (`mediaserver.go:196`)
+
+Creates AI session manager during server setup with TTL configuration
+
+```text
+AISessionManager:        NewAISessionManager(lpNode, AISessionManagerTTL),
+```
+
+### 1c. Broadcast Session Manager (`mediaserver.go:545`)
+
+Creates traditional transcoding session manager for video streams
+
+```text
+sessManager = NewSessionManager(ctx, s.LivepeerNode, params)
+```
+
+### 1d. AI Media Server Start (`mediaserver.go:204`)
+
+Starts AI-specific media server endpoints alongside traditional RTMP/HLS
+
+```text
+if err := startAIMediaServer(ctx, ls); err != nil {
+```
+
+### 2. Traditional Video Transcoding Pipeline
+
+Traces the flow of video transcoding from RTMP ingest through segment processing to HLS output
+
+### 2a. RTMP Publish Handler Setup (`mediaserver.go:223`)
+
+Registers RTMP stream ingestion handlers for transcoding
+
+```text
+s.LPMS.HandleRTMPPublish(createRTMPStreamIDHandler(ctx, s, nil), gotRTMPStreamHandler(s), endRTMPStreamHandler(s))
+```
+
+### 2b. Segment Processing Trigger (`mediaserver.go:432`)
+
+Kicks off transcoding process for each video segment
+
+```text
+go processSegment(context.Background(), cxn, seg, nil)
+```
+
+### 2c. Orchestrator Selection (`broadcast.go:610`)
+
+Selects transcoding orchestrators based on capabilities and verification needs
+
+```text
+sessions, calcPerceptualHash, verified := bsm.selectSessions(ctx)
+```
+
+### 2d. Segment Submission (`broadcast.go:52`)
+
+Submits segment to multiple orchestrators for transcoding and verification
+
+```text
+submitMultiSession(ctx, sess, seg, segPar, nonce, calcPerceptualHash, resc)
+```
+
+### 3. AI Request Processing Pipeline
+
+Shows how AI requests are routed through the AI session manager to specialized orchestrators
+
+### 3a. AI Endpoint Registration (`ai_mediaserver.go:80`)
+
+Registers AI-specific HTTP endpoints for various model types
+
+```text
+ls.HTTPMux.Handle("/text-to-image", oapiReqValidator(aiMediaServerHandle(ls, jsonDecoder[worker.GenTextToImageJSONRequestBody], processTextToImage)))
+```
+
+### 3b. AI Session Manager Usage (`ai_mediaserver.go:123`)
+
+AI requests use the dedicated AI session manager instead of broadcast manager
+
+```text
+sessManager: ls.AISessionManager,
+```
+
+### 3c. AI Orchestrator Selection (`ai_session.go:489`)
+
+Selects orchestrators based on AI model capabilities and warm/cold status
+
+```text
+sess := sel.Select(ctx)
+```
+
+### 3d. AI Request Processing (`ai_process.go:145`)
+
+Processes AI request through selected orchestrator with model-specific logic
+
+```text
+resp, err := processAIRequest(ctx, params, req)
+```
+
+### 4. Live Video AI Pipeline - Real-time Processing
+
+Demonstrates the specialized live video-to-video AI workflow with real-time streaming
+
+### 4a. Live Video AI Endpoint (`ai_mediaserver.go:92`)
+
+Specialized endpoint for real-time video-to-video AI processing
+
+```text
+ls.HTTPMux.Handle("POST /live/video-to-video/{stream}/start", ls.StartLiveVideo())
+```
+
+### 4b. MediaMTX Integration (`ai_mediaserver.go:601`)
+
+Uses MediaMTX for real-time video segmentation and streaming
+
+```text
+ms.RunSegmentation(ctx, mediaMTXInputURL, ssr.Read)
+```
+
+### 4c. Live AI Request Construction (`ai_mediaserver.go:618`)
+
+Builds live video AI request with pipeline parameters
+
+```text
+req := worker.GenLiveVideoToVideoJSONRequestBody{
+```
+
+### 4d. Live Video Special Handling (`ai_session.go:222`)
+
+Special session selection logic for real-time video AI with latency optimization
+
+```text
+if cap == core.Capability_LiveVideoToVideo {
+```
+
+### 5. Payment Processing Differences
+
+Highlights the different payment models between transcoding (per segment) and AI (per pixel)
+
+### 5a. Segment-based Payment (`broadcast.go:54`)
+
+Traditional transcoding uses per-segment payment tickets
+
+```text
+go submitSegment(ctx, sess, seg, segPar, nonce, calcPerceptualHash, resc)
+```
+
+### 5b. Pixel-based Calculation (`ai_process.go:218`)
+
+AI payments calculated based on output pixel count
+
+```text
+outPixels := int64(*req.Height) * int64(*req.Width) * int64(*req.NumImagesPerPrompt)
+```
+
+### 5c. AI Payment Preparation (`ai_process.go:220`)
+
+Prepares pixel-based payment headers for AI requests
+
+```text
+setHeaders, balUpdate, err := prepareAIPayment(ctx, sess, outPixels)
+```
+
+### 5d. Live AI Payment Interval (`ai_mediaserver.go:589`)
+
+Live video AI uses interval-based payment processing
+
+```text
+paymentProcessInterval: ls.livePaymentInterval,
+```
+
+### 6. Gateway Node Type Configuration
+
+Shows how the gateway supports multiple node types and capabilities
+
+### 6a. Broadcaster Node Type (`mediaserver.go:164`)
+
+Gateway operates as broadcaster for traditional transcoding
+
+```text
+case core.BroadcasterNode:
+```
+
+### 6b. AI Worker Field (`mediaserver.go:122`)
+
+Node includes AI worker capabilities alongside traditional components
+
+```text
+AIWorker                  AI
+```
+
+### 6c. Gateway Host Configuration (`mediaserver.go:164`)
+
+Gateway-specific host configuration for routing
+
+```text
+GatewayHost string
+```
+
+### 6d. Dual Mode Activation (`mediaserver.go:201`)
+
+Enables both transcoding and AI capabilities when conditions are met
+
+```text
+if lpNode.NodeType == core.BroadcasterNode && httpIngest {
+```

@@ -1,9 +1,27 @@
 ---
-title: 'LPT Mechanics'
-sidebarTitle: 'Mechanics'
-description: 'Detailed protocol-level mechanics governing bonding, unbonding, reward checkpointing, and round-based state transitions in the Livepeer Protocol.'
-keywords: ["livepeer", "lpt", "mechanics", "bonding", "unbonding", "staking", "rewards", "rounds"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+title: LPT Mechanics
+sidebarTitle: Mechanics
+description: >-
+  Detailed protocol-level mechanics governing bonding, unbonding, reward
+  checkpointing, and round-based state transitions in the Livepeer Protocol.
+pageType: concept
+keywords:
+  - livepeer
+  - lpt
+  - mechanics
+  - bonding
+  - unbonding
+  - staking
+  - rewards
+  - rounds
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: delegator
+lastVerified: 2026-03-17
+purpose: concept
 ---
 import { MathInline, MathBlock } from '/snippets/components/content/math.jsx'
 
@@ -14,7 +32,7 @@ This page describes the deterministic contract-level mechanics governing how LPT
 
 All mechanisms described here operate strictly at the **protocol layer (on-chain)**.
 
----
+<CustomDivider />
 
 ## 1. Core State Variables
 
@@ -27,7 +45,7 @@ Let:
 
 Rounds form the atomic accounting unit for issuance and reward distribution.
 
----
+<CustomDivider />
 
 ## 2. Bonding
 
@@ -47,7 +65,7 @@ Bonded stake contributes to:
 
 Bonding is recorded in the BondingManager contract.
 
----
+<CustomDivider />
 
 ## 3. Delegation Attribution
 
@@ -57,7 +75,7 @@ If delegator <MathInline latex={String.raw`D`} /> bonds to orchestrator <MathInl
 
 Delegators retain ownership but delegate reward rights and voting weight attribution.
 
----
+<CustomDivider />
 
 ## 4. Unbonding
 
@@ -78,7 +96,7 @@ During this period:
 
 This delay protects against rapid stake-based manipulation.
 
----
+<CustomDivider />
 
 ## 5. Round Lifecycle
 
@@ -98,7 +116,7 @@ Supply update:
 
 <MathBlock latex={String.raw`S_{t+1} = S_t + R_t`} />
 
----
+<CustomDivider />
 
 ## 6. Reward Checkpointing
 
@@ -116,7 +134,7 @@ Delegator share:
 
 Checkpointing updates internal accounting state before withdrawal or rebonding.
 
----
+<CustomDivider />
 
 ## 7. Claiming and Rebonding
 
@@ -127,7 +145,7 @@ Participants may:
 
 Rebonding increases <MathInline latex={String.raw`B_i`} /> and thus future economic weight.
 
----
+<CustomDivider />
 
 ## 8. State Transition Diagram
 
@@ -140,7 +158,7 @@ stateDiagram-v2
     Bonded --> Bonded : checkpoint() / rebond()
 ```
 
----
+<CustomDivider />
 
 ## 9. Security Implications
 
@@ -150,7 +168,7 @@ Mechanisms that protect protocol integrity:
 - **Round-based accounting** - deterministic reward cycles
 - **Stake-weighted allocation** - capital-backed security
 
----
+<CustomDivider />
 
 ## 10. Protocol vs Network Separation
 
@@ -167,7 +185,7 @@ Mechanisms that protect protocol integrity:
 
 Mechanics described here are entirely on-chain.
 
----
+<CustomDivider />
 
 ## References
 

@@ -16,7 +16,7 @@ Index of Layout Components
 
 A 2x2 grid layout with a centered spinning icon overlay.
 
-**Import:** `import { QuadGrid } from '/snippets/components/layout/quad-grid.jsx'`
+**Import:** `import { QuadGrid } from '/snippets/components/layout/quadGrid.jsx'`
 
 **Props:**
 | Prop | Type | Default | Description |
@@ -47,7 +47,7 @@ A 2x2 grid layout with a centered spinning icon overlay. Designed for displaying
 ### Import
 
 ```jsx
-import { QuadGrid } from '/snippets/components/layout/quad-grid.jsx'
+import { QuadGrid } from '/snippets/components/layout/quadGrid.jsx'
 ```
 
 ### Props

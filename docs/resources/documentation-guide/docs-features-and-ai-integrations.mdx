@@ -1,0 +1,256 @@
+---
+title: Features and AI Integrations
+sidebarTitle: Features & AI
+description: >-
+  The Livepeer documentation includes several powerful features designed to
+  enhance your experience and make information more accessible.
+keywords:
+  - livepeer
+  - resources
+  - documentation guide
+  - docs features and ai integrations
+  - features
+  - integrations
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: everyone
+purpose: concept
+---
+
+## Search
+
+### Built-in Search
+
+The search functionality is integrated into the header of every page:
+
+- **Semantic Search** - Understands context and meaning, not just exact keyword matches
+- **Instant Results** - See suggestions and results as you type
+- **Page Previews** - Quick preview of matching content before clicking
+- **Keyword Enhancement** - Pages include metadata keywords to improve discoverability
+
+### How to Use Search
+
+1. Click the search bar in the header (or press `/` to focus it)
+2. Type your question or search term
+3. Browse results or select a suggestion
+4. Use the AI Assistant option for conversational queries
+
+<Tip>
+Search results are ranked by relevance, with pages containing your keywords in metadata prioritised.
+</Tip>
+
+## AI Assistant
+
+The AI Assistant is integrated with the search functionality and provides intelligent answers to your questions.
+
+### Capabilities
+
+- **Answer Questions** - Get answers about Livepeer protocol, products, and ecosystem
+- **Explain Concepts** - Understand complex topics with clear explanations
+- **Find Documentation** - Discover relevant pages and guides
+- **Code Guidance** - Get help with code examples and implementation
+
+### How to Use the AI Assistant
+
+1. Click the search bar in the header
+2. Type your question in natural language
+3. Review the AI-generated response
+4. Follow links to relevant documentation for more details
+
+<Tip>
+The AI Assistant uses the documentation content as its knowledge base to provide accurate, up-to-date information. For the most current details, always refer to the official documentation pages.
+</Tip>
+
+### AI Integrations
+
+The documentation is designed to be AI-friendly and integrates with:
+
+- **OpenAI** - For AI Assistant functionality
+- **Claude** - Alternative AI integration support
+- **Other LLMs** - Structured content optimised for AI parsing
+
+### AI-Optimised Content
+
+The documentation is structured to be easily consumed by AI systems:
+
+- **Semantic Headings** - Clear, descriptive headings that convey meaning
+- **Structured Metadata** - Comprehensive metadata for better AI understanding
+- **Machine-Readable References** - OpenAPI specs, JSON examples, and structured data
+- **Clear Explanations** - Concise summaries and explanations optimised for LLM parsing
+
+## Navigation Features
+
+### Tab Navigation
+
+Content is organised into tabs based on user roles:
+
+- **Home** - Overview and getting started
+- **About** - Core concepts and protocol details
+- **Community** - Community resources
+- **Developers** - Building on Livepeer
+- **Gateways** - Gateway operations
+- **Orchestrators** - Orchestrator setup and management
+- **Delegators** - Staking and delegation
+- **Resources** - Reference hub
+
+### Sidebar Navigation
+
+- **Collapsible** - Maximise reading space by collapsing the sidebar
+- **Hierarchical** - Organised groups and sections
+- **Anchors** - Quick access to Quickstarts and Reference Hub
+- **Breadcrumbs** - Always know where you are
+
+### Version Switching
+
+Access both current (v2) and legacy (v1) documentation:
+
+- **Version Selector** - In the header, switch between versions
+- **Preserved Content** - All v1 content is maintained for reference
+- **Clear Indication** - Current version is clearly marked
+
+## Interactive Elements
+
+### Tabs
+
+Within pages, tabs separate content by context:
+
+- Different operating systems (Linux, macOS, Windows)
+- Different workflows (AI vs Video, on-chain vs off-chain)
+- Different user types or use cases
+
+### Views
+
+Custom views show different content based on:
+
+- Operating system
+- User path or journey
+- Configuration type
+
+### Steps
+
+Sequential instructions use the Steps component for:
+
+- Installation guides
+- Configuration processes
+- Setup workflows
+
+### Card Groups
+
+Visual groupings for:
+
+- Portal pages with key entry points
+- Resource hubs
+- Related content collections
+
+### Callouts
+
+Important information highlighted with:
+
+- **Info** - General information and tips
+- **Tip** - Helpful suggestions
+- **Warning** - Important cautions
+- **Danger** - Critical warnings
+- **Note** - Additional context
+
+## Feedback Mechanisms
+
+### Page Feedback
+
+Provide feedback on any page:
+
+- **Thumbs Up/Down** - Quick feedback on page helpfulness
+- **Comments** - Share specific feedback or suggestions
+- **Issue Reporting** - Report errors or outdated information
+
+<Tip>
+Feedback mechanisms may vary based on Mintlify features. Check the bottom of pages for available feedback options.
+</Tip>
+
+## Automations
+
+The documentation includes several automation pipelines to ensure accuracy and reduce manual overhead:
+
+### Data Fetching
+
+- **External Documentation** - Automatically fetch and embed specs from GitHub
+- **API Documentation** - Generate API docs from OpenAPI specifications
+- **Dynamic Data** - Fetch and display GitHub releases, forum posts, blog posts
+- **Code Information** - Automatically update version numbers and code examples
+
+### Content Generation
+
+- **SEO Metadata** - Automatically generate SEO tags for all pages
+- **API References** - Generate API documentation from OpenAPI specs
+- **Component Examples** - Maintain up-to-date component examples
+
+### Future Automations
+
+Planned automations include:
+
+- **Language Translation** - Automatic translation into multiple languages
+- **AI Prompt Pages** - Generate quickstart guides from prompts
+- **Feedback Loops** - Integration with Discord and GitHub for community feedback
+
+## Docs Structure Features
+
+### Automatic Page Index Generation
+
+The repository includes an internal docs feature that keeps `v2/` index files synchronized with the current folder and markdown file structure.
+
+What it generates:
+
+- `v2/<top-level-section>/index.mdx` for each direct child folder under `v2/`
+- `v2/index.mdx` as the root aggregate index
+
+Format rules:
+
+- Root-level markdown links appear first at the top of each top-level folder index.
+- Folder and subfolder names are rendered as headings.
+- Links are rendered in markdown link-list format (`- [Title](/v2/home/mission-control)`).
+- Links include a warning marker when a page is missing from `docs.json` navigation:
+ `- [⚠️ Title](/v2/home/mission-control)`.
+
+Validation and cleanup rules:
+
+- `docs.json` is treated as a read-only route allowlist for warning markers.
+- Matching is strict after normalization (remove `.md`/`.mdx`, remove trailing `/index`, trim trailing `/`).
+- Nested `index.mdx` / `index.md` files under top-level sections are automatically removed in `--write` mode.
+- In verify mode (no `--write`), nested indexes cause a failure until removed.
+
+Automation behavior:
+
+- Runs in pre-commit when staged files include `v2/` changes:
+  `node tools/scripts/generate-pages-index.js --staged --write --stage`
+- Supports manual verification/rebuild:
+  - `node tools/scripts/generate-pages-index.js`
+  - `node tools/scripts/generate-pages-index.js --write --rebuild-indexes`
+
+<Tip>
+This is a repository documentation feature (internal indexing), not an external automation workflow.
+</Tip>
+
+## Accessibility
+
+The documentation is designed with accessibility in mind:
+
+- **Keyboard Navigation** - Full keyboard support
+- **Screen Reader Support** - Semantic HTML and ARIA labels
+- **High Contrast** - Readable in both light and dark themes
+- **Responsive Design** - Works on all device sizes
+
+## Downloadable Documentation
+
+The documentation is structured to be:
+
+- **AI-Friendly** - Optimised for AI parsing and integration
+- **Machine-Readable** - Structured formats for programmatic access
+- **Exportable** - Content available in formats suitable for AI training and integration
+
+## Next Steps
+
+- Learn how to [Use the Documentation](./documentation-guide) effectively
+- Discover how to [Contribute](./contribute-to-the-docs) and provide feedback
+- Explore the [Component Library](./component-library) for developers

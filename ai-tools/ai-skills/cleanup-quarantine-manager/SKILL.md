@@ -1,6 +1,12 @@
 ---
 name: cleanup-quarantine-manager
-description: Classify cleanup candidates and apply conservative quarantine moves with reversible manifests.
+version: "1.0"
+description: >-
+  Classify likely obsolete repository artifacts, quarantine them with reversible manifests, and guide safe cleanup review before any deletion or irreversible repository pruning.
+invoke_when:
+  - "quarantine obsolete repo artifacts safely"
+  - "review cleanup candidates before deletion"
+  - "generate a reversible cleanup manifest"
 ---
 
 SKILL: Cleanup Quarantine Manager

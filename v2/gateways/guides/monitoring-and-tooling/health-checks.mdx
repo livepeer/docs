@@ -1,0 +1,351 @@
+---
+title: 'Gateway Health Checks'
+description: 'Verify a Livepeer gateway is alive and routing jobs - health endpoints, status commands, deposit checks, and orchestrator reachability for Video, AI, and Dual gateways.'
+sidebarTitle: 'Health Checks'
+keywords:
+  - livepeer
+  - gateway
+  - health check
+  - monitoring
+  - /health
+  - /status
+  - deposit
+  - reserve
+  - orchestrator reachability
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: gateway-operator
+purpose: operations
+status: current
+lastVerified: '2026-03-15'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- ~~Mermaid diagrams use theme colours~~ (N/A)
+- ~~Fontawesome icons are used on accordions and tabs~~
+- ~~Tables use StyledTable component~~
+- ~~No em-dashes are used (instead use standard -)~~
+- UK spelling is used
+- ~~Headers are concise and technical~~
+- ~~CustomDivider is used~~
+- Placeholders for Media & Video Resources are in comments with a TODO for a human. (N/A)
+- ~~REVIEW flags are in JSX flags for a human.~~
+Human:
+- Port 8937 → 8935 throughout (all endpoints share -httpAddr port)
+- Dual Gateway "check both ports" rewritten (single port, both workload types)
+- Node type and operational mode separated per glossary
+- Voice converted to entity-led throughout
+- On-chain checks extracted to separate tab (applies to all on-chain node types)
+- Video/AI/Dual checks in BorderedBox with Tabs layout
+*/}
+
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from "/snippets/components/layout/containers.jsx"
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+This is the first of five monitoring guides. Run these checks after starting a gateway, after any configuration change, or when something seems wrong. Health checks are quick - for full observability setup, see <LinkArrow href="/v2/gateways/guides/monitoring-and-tooling/monitoring-setup" label="Monitoring Setup" newline={false} />.
+
+## Universal Checks
+
+<Badge color="blue">Video</Badge> <Badge color="purple">AI</Badge> <Badge color="green">Dual</Badge>
+
+These checks run on all Gateway operational and node mode configurations.
+
+### HTTP health endpoint
+
+Confirms the gateway process is running and responding on the configured `-httpAddr` port (_default: 8935_).
+
+```bash icon="terminal" Check Command
+curl http://localhost:8935/health
+```
+
+A healthy gateway returns HTTP `200` with a JSON body. Any non-200 response or connection refused means the process is not running or the port is wrong.
+
+```json icon="terminal" Expected Response
+{
+  "status": "OK"
+}
+```
+
+### Node status via livepeer_cli
+
+Confirms the gateway's identity, network connection, active sessions, and (for on-chain gateways) deposit and reserve balances.
+- Select **Option 1: Get node status** from the interactive menu.
+
+```bash icon="terminal" CLI Command
+# Standard (binary on host)
+livepeer_cli -host 127.0.0.1 -http 5935
+
+# Docker container
+docker exec -it <container_name> livepeer_cli -host <container_hostname> -http 5935
+```
+
+The status output appears under **BROADCASTER STATS** (the CLI uses the legacy term "Broadcaster" for Gateway).
+
+### Hardware status
+
+Confirms GPU availability, memory usage, and temperature. Useful for AI and Dual gateways where GPU resources are shared.
+
+```bash icon="terminal" Check Command
+# GPU utilisation, memory, temperature
+curl http://localhost:8935/hardware/stats
+
+# GPU model and system info
+curl http://localhost:8935/hardware/info
+```
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Node Type Checks
+
+<BorderedBox variant="accent">
+<Tabs>
+  <Tab title="Video" icon="video">
+    <span><Icon icon="link" size={14} /> **On-chain** only</span>
+
+    A <Badge color="blue">Video</Badge> gateway is healthy when:
+    1. `/health` returns 200
+    2. ETH deposit is non-zero (see On-chain Checks below)
+    3. At least one Orchestrator is reachable
+    4. Arbitrum RPC is responding (see On-chain Checks below)
+
+    ### Check Orchestrator connectivity
+
+    On-chain video gateways discover Orchestrators automatically via the protocol. Verify connected Orchestrators via `livepeer_cli` (Option 1) or the HTTP API:
+
+    ```bash icon="terminal" Check Orchestrators
+    curl http://localhost:5935/getOrchestrators
+    ```
+
+    An empty array means no Orchestrators are connected. Check the Arbitrum RPC (see on-chain tab) and verify the gateway is registered on the network.
+
+    ### Test RTMP ingest
+
+    Push a test stream to the RTMP port (_default: 1935_):
+
+    ```bash icon="terminal" Check RTMP
+    ffmpeg -re -f lavfi -i testsrc=size=1280x720:rate=30 \
+      -c:v libx264 -preset ultrafast \
+      -f flv rtmp://localhost:1935/live/test
+    ```
+
+    If the gateway is healthy, transcoding activity appears in the logs (`-v 6` for verbose). If the stream immediately drops, check the deposit balance (see on-chain tab) and Orchestrator connectivity above.
+  </Tab>
+
+  <Tab title="AI" icon="user-robot">
+    <span><Icon icon="cloud" size={14} /> **Off-chain**</span> or <span><Icon icon="link" size={14} /> **On-chain**</span>
+
+    An <Badge color="purple">AI</Badge> gateway is healthy when:
+    1. `/health` returns 200
+    2. At least one Orchestrator in `-orchAddr` is reachable (off-chain) or discoverable via protocol (on-chain)
+    3. A test job succeeds end-to-end
+
+    ### Check Orchestrator Reachability
+
+    For off-chain gateways, verify each Orchestrator in the `-orchAddr` list is responding:
+
+    ```bash icon="terminal" Check Orchestrators
+    curl https://<orchestrator-address>:<port>/getOrchestratorInfo
+    ```
+If an Orchestrator is unreachable, jobs silently fail to route. Replace addresses in `-orchAddr` with known-active AI Orchestrators. Ask in [Discord #local-gateways](https://discord.gg/livepeer) for current addresses.
+
+    ### Run a test job
+
+    ```bash icon="terminal" Run Test Job
+    curl -X POST http://localhost:8935/text-to-image \
+      -H "Content-Type: application/json" \
+      -d '{
+        "model_id": "ByteDance/SDXL-Lightning",
+        "prompt": "a simple geometric test pattern",
+        "width": 512,
+        "height": 512,
+        "num_images_per_prompt": 1
+      }'
+    ```
+A successful response returns a base64-encoded image. An error typically means either the Orchestrator does not have this model loaded or `-orchAddr` is misconfigured.
+
+    <Note>
+      On-chain AI gateways using `-aiServiceRegistry` discover Orchestrators automatically and do not need `-orchAddr`. Run the on-chain checks below in addition to the test job.
+    </Note>
+  </Tab>
+
+  <Tab title="Dual" icon="clone">
+    <span><Icon icon="link" size={14} /> **On-chain**</span> (video component requires on-chain)
+
+    A <Badge color="green">Dual</Badge> gateway runs both video and AI workloads on the same port. It is healthy when all video checks AND all AI checks pass.
+
+    ### Verify both workload types
+
+    Both video and AI endpoints respond on the same port (8935):
+
+    ```bash icon="terminal" Check Response
+    # Health endpoint (covers both workloads)
+    curl http://localhost:8935/health
+
+    # Test video: push RTMP stream
+    ffmpeg -re -f lavfi -i testsrc=size=1280x720:rate=30 \
+      -c:v libx264 -preset ultrafast \
+      -f flv rtmp://localhost:1935/live/test
+
+    # Test AI: send inference request
+    curl -X POST http://localhost:8935/text-to-image \
+      -H "Content-Type: application/json" \
+      -d '{"model_id": "ByteDance/SDXL-Lightning", "prompt": "test", "width": 512, "height": 512}'
+    ```
+
+    ### Check hardware under load
+
+    ```bash icon="terminal" Check Hardware
+    curl http://localhost:8935/hardware/stats
+    ```
+
+    Watch for:
+    - `gpu_memory_used` approaching `gpu_memory_total` - model loading fails when GPU VRAM is full
+    - High GPU utilisation when no jobs are running - indicates a stuck process
+
+    <Tip>
+        When both video and AI workloads are active simultaneously, memory pressure is the most common cause of degraded performance.
+        <br/><br/>If GPU memory exhaustion is consistent, consider splitting video and AI onto separate nodes.
+        <br/>See <LinkArrow href="/v2/gateways/guides/advanced-operations/scaling" label="Scaling" newline={false} />.
+    </Tip>
+  </Tab>
+
+  <Tab title="On-chain" icon="link">
+    <span><Badge color="blue">Video</Badge> <Badge color="purple">AI</Badge> <Badge color="green">Dual</Badge></span>
+
+    These checks apply to any gateway running in <Icon icon="link" size={14} /> **on-chain** operational mode, regardless of node type.
+
+    ### Check ETH deposit and reserve
+
+    ```bash icon="terminal" Check ETH Balance
+    livepeer_cli -host 127.0.0.1 -http 5935
+    # Select Option 1: Get node status
+    ```
+
+    Look for the **BROADCASTER STATS** section (the CLI uses the legacy term "Broadcaster" for Gateway):
+    - `Deposit` - must be non-zero (the gateway cannot issue PM tickets without a deposit)
+    - `Reserve` - must be non-zero (required for ticket redemption)
+
+    <Warning>
+      Monitor the balance proactively.
+      When the deposit reaches zero, the gateway stops routing jobs with
+      <br/> <Icon icon="warning" /> **_no error_** shown to the client.
+      <br/><br/>Community-recommended minimum for testing: **0.1 ETH total** (approximately 0.07 ETH deposit + 0.03 ETH reserve).
+</Warning>
+
+    If the deposit shows zero after bridging ETH, see <LinkArrow href="/v2/gateways/guides/payments-and-pricing/funding-guide" label="Funding Guide" newline={false} /> - bridging does not automatically allocate funds to the TicketBroker contract.
+
+    ### Test Arbitrum RPC
+
+    ```bash icon="terminal" Test RPC
+    curl -X POST <YOUR_ETH_URL> \
+      -H "Content-Type: application/json" \
+      -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
+    ```
+
+    A working RPC returns a JSON response with a hex block number. If the request times out or returns an error, the RPC is rate-limited or unavailable. See <LinkArrow href="/v2/gateways/guides/monitoring-and-tooling/troubleshooting#arbitrum-rpc-connection-failing" label="Troubleshooting - Arbitrum RPC failures" newline={false} />.
+  </Tab>
+</Tabs>
+</BorderedBox>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Automation
+
+Health Checks can be automated and notify operators of issues.
+
+### Cron Script Automation
+
+```bash icon="terminal" Cron Script Automation
+#!/usr/bin/env bash
+# gateway-health.sh - run every 5 minutes via cron
+
+GATEWAY_PORT="${1:-8935}"
+ALERT_EMAIL="ops@example.com"
+
+if ! curl --silent --fail --max-time 5 http://localhost:${GATEWAY_PORT}/health > /dev/null 2>&1; then
+  echo "Gateway on port ${GATEWAY_PORT} is not responding" | \
+    mail -s "ALERT: Livepeer Gateway Down" "$ALERT_EMAIL"
+fi
+```
+
+```bash icon="terminal" Add to crontab
+# Add to crontab
+*/5 * * * * /path/to/gateway-health.sh 8935
+```
+
+### Docker HEALTHCHECK Automation
+
+```dockerfile icon="docker" HEALTHCHECK
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+  CMD curl --silent --fail http://localhost:8935/health || exit 1
+```
+
+For full observability with time-series metrics, alerting, and dashboards, see <LinkArrow href="/v2/gateways/guides/monitoring-and-tooling/monitoring-setup" label="Monitoring Setup" newline={false} />.
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Related Pages
+
+<CardGroup cols={3}>
+  <Card title="Tools & Dashboards" icon="gauge-high" href="/v2/gateways/guides/monitoring-and-tooling/tools-and-dashboards">
+    Explorer, Livepeer Tools, livepeer_cli for visual monitoring.
+  </Card>
+  <Card title="Monitoring Setup" icon="chart-line" href="/v2/gateways/guides/monitoring-and-tooling/monitoring-setup">
+    Prometheus + Grafana for production observability.
+  </Card>
+  <Card title="Troubleshooting" icon="triangle-exclamation" href="/v2/gateways/guides/monitoring-and-tooling/troubleshooting">
+    Fix common errors by symptom.
+  </Card>
+</CardGroup>
+
+{/* ---
+title: 'Gateway Health Checks'
+description: 'Verify your gateway is alive and routing jobs - health endpoints, status commands, deposit checks, and orchestrator reachability for video, AI, and dual gateways.'
+sidebarTitle: 'Health Checks'
+pageType: 'how-to'
+audience: 'gateway'
+status: 'stub'
+--- */}
+
+{/*
+  PURPOSE:
+  Journey step: "Is my gateway alive?"
+  Quick verification guide - the FIRST thing an operator checks after setup or when
+  something seems wrong. Covers all 3 gateway types with different checks per type.
+  This is not deep monitoring (that's monitoring-setup.mdx) - this is "can I confirm
+  it's working right now?"
+
+  SECTION HOME: Guides > Monitoring & Tooling
+
+  JOURNEY POSITION:
+  1. Gateway Health Checks (this page) - "Is it alive?"
+  2. Tools & Dashboards - "Where do I see what's happening?"
+  3. Monitoring Setup - "How do I set up proper observability?"
+  4. On-Chain Debugging - "What's happening at the contract layer?"
+  5. Troubleshooting - "Something broke"
+
+  RELATED FILES (draw from):
+  - all-resources/v2-refs--health-api.mdx                  - OpenAPI ref for GET /health
+  - all-resources/v2-refs--ai-health-api.mdx               - OpenAPI ref for AI GET /health
+  - all-resources/v2-refs--status-api.mdx                   - OpenAPI ref for GET /status
+  - all-resources/v2-refs--hardware-stats-api.mdx           - OpenAPI ref for GET /hardware/stats
+  - all-resources/v2-refs--hardware-info-api.mdx            - OpenAPI ref for GET /hardware/info
+  - all-resources/v2-monitor--monitor-and-optimise.mdx      - Brainstorm page with request flow diagram
+  - all-resources/v2-refs--cli-commands.mdx                 - CLI commands reference (livepeer_cli status)
+  - all-resources/ctx-gwnew--GW-03-faq-completed.md        - FAQ: "How do I check my ETH deposit and reserve balance?"
+  - all-resources/v1--troubleshoot.mdx                      - V1 troubleshoot: common verification patterns
+
+  CROSS-REFS:
+  - Payments & Pricing > Funding Guide (deposit/reserve check)
+  - Resources > API Reference (full endpoint docs)
+  - Troubleshooting (this section) - if health check fails, go here
+*/}

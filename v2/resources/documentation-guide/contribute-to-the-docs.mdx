@@ -1,9 +1,24 @@
 ---
-sidebarTitle: 'Contribute'
-title: 'Contribute To The Docs'
-description: 'Contribute to the Livepeer documentation and help us make it even better!'
-keywords: ["livepeer", "resources", "documentation guide", "contribute to the docs", "contribute", "docs"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+title: Contribute To The Docs
+sidebarTitle: Contribute
+description: Contribute to the Livepeer documentation and help us make it even better!
+keywords:
+  - livepeer
+  - resources
+  - documentation guide
+  - contribute to the docs
+  - contribute
+  - docs
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: everyone
+pageType: how_to
+purpose: how_to
+status: current
+lastVerified: 2026-03-12
 ---
 
 We love community feedback and contributions, and it's our mission to make it easy for everyone to contribute to these docs and provide feedback for us to make them even better!
@@ -71,14 +86,14 @@ If you're comfortable with Git and Markdown, you can contribute directly:
 
 #### 2. Clone Your Fork
 
-```bash
+```bash icon="terminal"
 git clone https://github.com/YOUR_USERNAME/docs.git
 cd docs
 ```
 
 #### 3. Set Up Remote Tracking
 
-```bash
+```bash icon="terminal"
 # Add the original repository as upstream
 git remote add upstream https://github.com/livepeer/docs.git
 
@@ -92,7 +107,7 @@ git remote -v
 **Important:** Always create a new branch for your changes. Never commit directly to `main` or `docs-v2-preview`.
 </Warning>
 
-```bash
+```bash icon="terminal"
 # Make sure you're on the latest version
 git checkout docs-v2-preview
 git pull upstream docs-v2-preview
@@ -116,13 +131,13 @@ git checkout -b docs/update-component-docs
 Pre-commit hooks automatically check your code for style guide violations and syntax errors before you commit.
 </Tip>
 
-```bash
+```bash icon="terminal"
 # Install the pre-commit hook
 ./.githooks/install.sh
 ```
 
 The pre-commit hook will:
-- Check for deprecated JS theme helper usage
+- Check for deprecated theme-helper usage
 - Warn about hardcoded hex colours
 - Validate MDX, JSON, and JavaScript syntax
 - Check for relative imports
@@ -133,21 +148,22 @@ The pre-commit hook will:
 Edit the relevant files:
 
 **Where to edit content:**
-- **Main documentation pages:** `v2/pages/` (organized by section)
+- **Main documentation pages:** `v2/` (organized by section)
 - **Components:** `snippets/components/`
 - **Data files:** `snippets/data/`
 - **Assets:** `snippets/assets/`
 
 **File structure:**
-```text
-v2/pages/
+```text icon="terminal"
+v2/
 ├── home/          # Home tab content
 ├── about/         # About tab content
+├── community/     # Community tab content
 ├── developers/    # Developers tab content
 ├── gateways/      # Gateways tab content
 ├── orchestrators/ # Orchestrators tab content
-├── delegators/    # Delegators tab content
-├── community/     # Community tab content
+├── lpt/           # LPT token and delegation content
+├── solutions/     # Solutions and product content
 ├── resources/     # Resources tab content
 └── internal/      # Internal documentation
 ```
@@ -163,7 +179,7 @@ v2/pages/
 **Always test your changes locally before submitting a PR!**
 </Warning>
 
-```bash
+```bash icon="terminal"
 # Install Mintlify CLI (if not already installed)
 npm i -g mintlify
 
@@ -183,7 +199,7 @@ This starts a local server (usually at `http://localhost:3000`) where you can pr
 
 #### 8. Commit Your Changes
 
-```bash
+```bash icon="terminal"
 # Stage your changes
 git add .
 
@@ -200,19 +216,19 @@ git commit -m "docs: fix typo in quickstart guide"
 
 If a human intentionally needs to edit `.allowlist`, use:
 
-```bash
+```bash icon="terminal"
 git commit -m "Update .allowlist" --trailer "allowlist-edit=true"
 ```
 
 If a human intentionally needs to allow file deletions, use:
 
-```bash
+```bash icon="terminal"
 git commit -m "Remove obsolete files" --trailer "allow-deletions=true"
 ```
 
 #### 9. Push to Your Fork
 
-```bash
+```bash icon="terminal"
 git push origin docs/your-branch-name
 ```
 
@@ -229,24 +245,24 @@ git push origin docs/your-branch-name
    - **Testing:** Describe how you tested
 
 **PR Template:**
-```markdown
+```markdown icon="terminal"
 ## Description
 Brief description of changes
 
 ## Type of Change
-- [ ] Bug fix (typo, broken link, incorrect information)
-- [ ] New content (guide, tutorial, example)
-- [ ] Content improvement (clarification, better examples)
-- [ ] Component or styling update
+- Bug fix (typo, broken link, incorrect information)
+- New content (guide, tutorial, example)
+- Content improvement (clarification, better examples)
+- Component or styling update
 
 ## Related Issues
 Fixes #123
 
 ## Testing
-- [ ] Tested locally with `mint dev`
-- [ ] Checked light and dark modes
-- [ ] Verified all links work
-- [ ] No console errors
+- Tested locally with `mint dev`
+- Checked light and dark modes
+- Verified all links work
+- No console errors
 ```
 
 #### 11. Address Review Feedback
@@ -277,7 +293,7 @@ Once your PR is approved and merged:
 
 ### Installation
 
-```bash
+```bash icon="terminal"
 # Clone the repository
 git clone https://github.com/livepeer/docs.git
 cd docs
@@ -291,7 +307,7 @@ npm i -g mintlify
 
 ### Running Locally
 
-```bash
+```bash icon="terminal"
 # Start development server
 mint dev
 
@@ -300,9 +316,9 @@ mint dev
 
 ### Project Structure
 
-```text
+```text icon="terminal"
 docs/
-├── v2/pages/              # Main documentation pages (MDX)
+├── v2/                    # Main documentation pages (MDX)
 ├── snippets/              # Reusable components and data
 │   ├── components/        # React/JSX components
 │   ├── data/             # Data files (JSX)
@@ -314,6 +330,108 @@ docs/
 └── style.css             # Global CSS variables
 ```
 
+## Authoring Helpers
+
+Use the checked-in templates and workspace snippets before hand-authoring new page shells. They keep frontmatter, OG metadata, and common page layouts consistent across contributors.
+
+### MDX Templates
+
+Checked-in templates live under `snippets/templates/` so they stay versioned, reviewable, and available to every contributor.
+
+<AccordionGroup>
+  <Accordion title="Page templates (3)" icon="file-lines">
+
+  | File | Use it for | Matching snippet |
+  |---|---|---|
+  | `snippets/templates/pages/faq-page.mdx` | FAQ pages with a standard `<AccordionGroup>` structure | `faqPage` |
+  | `snippets/templates/pages/troubleshooting-page.mdx` | Operational and debugging pages with `Symptom`, `Cause`, `Fix`, and `Verify` sections | `troubleshootingPage` |
+  | `snippets/templates/pages/openapi-endpoint-page.mdx` | API endpoint pages that use `openapi: METHOD /path` frontmatter | `openapiPage` |
+
+  All three page templates default to `status: draft`, use `/snippets/assets/site/og-image/fallback.png`, and intentionally omit `lastVerified` until the page is current.
+
+  </Accordion>
+  <Accordion title="Block templates (2)" icon="table-columns">
+
+  | File | Use it for | Matching snippet |
+  |---|---|---|
+  | `snippets/templates/blocks/related-pages-cta.mdx` | Related reading or next-step CTA blocks at the bottom of a page | `relatedPages` |
+  | `snippets/templates/blocks/comparison-matrix.mdx` | Product, workflow, or architecture comparison sections | `comparisonMatrix` |
+
+  The full template catalog lives in `snippets/templates/README.mdx`.
+
+  </Accordion>
+</AccordionGroup>
+
+### VS Code Snippets
+
+Workspace snippets in `.vscode/` load automatically when you open this repo in VS Code.
+
+JSX tag snippets accept both bare component names such as `Card` and opening-tag prefixes such as `<Card`, so you can expand them after typing the angle bracket without generating `<<`.
+
+| File | Snippets | Scope |
+|---|---:|---|
+| `.vscode/mdx.code-snippets` | 17 | Frontmatter, page scaffolds, and reusable MDX blocks |
+| `.vscode/mintlify.code-snippets` | 25 | Mintlify built-in components |
+| `.vscode/components.code-snippets` | 115 | Livepeer custom components |
+
+<AccordionGroup>
+  <Accordion title="Frontmatter and metadata (7)" icon="gear">
+
+  Source: `.vscode/mdx.code-snippets`
+
+  Use `frontmatter` for the full draft block, `fm` for the smaller version, and the single-field snippets when you need to patch one field in place.
+
+  ```yaml icon="terminal"
+  ---
+  title: "Page Title"
+  sidebarTitle: Page Title
+  description: "Describe the page."
+  audience: developer
+  pageType: reference
+  purpose: reference
+  status: draft
+  keywords:
+    - livepeer
+    - keyword
+  'og:image': /snippets/assets/site/og-image/fallback.png
+  'og:image:alt': Livepeer Docs social preview image
+  'og:image:type': image/png
+  'og:image:width': 1200
+  'og:image:height': 630
+  ---
+  ```
+
+  `lastVerified` is now a separate opt-in snippet. Add it only when the page status is `current`, `published`, `production`, or `verified_2026`.
+
+  </Accordion>
+  <Accordion title="Page scaffolds (8)" icon="file-lines">
+
+  | Prefix | Layout |
+  |---|---|
+  | `lp-overview` | Overview page with `Overview`, `Key Concepts`, and next-step cards |
+  | `lp-howto` | How-to page with `Prerequisites`, `Steps`, and `Verify` |
+  | `lp-tutorial` | Tutorial page with `Prerequisites`, guided `Steps`, and `Next Steps` |
+  | `lp-reference` | Reference page with sections for inputs, behavior, and examples |
+  | `lp-landing-frame` | Frame-mode landing scaffold using the existing portal components |
+  | `faqPage` | FAQ page scaffold with `<AccordionGroup>` |
+  | `troubleshootingPage` | Troubleshooting page scaffold with `Symptom`, `Cause`, `Fix`, and `Verify` |
+  | `openapiPage` | OpenAPI endpoint scaffold with `openapi: METHOD /path` frontmatter and `<OpenAPI />` |
+
+  All page scaffolds default to `status: draft`, include the fallback OG block, and omit `lastVerified`.
+
+  </Accordion>
+  <Accordion title="Block snippets (2)" icon="table-columns">
+
+  | Prefix | Inserts |
+  |---|---|
+  | `relatedPages` | `## Related Pages` plus a two-card `<CardGroup>` CTA block |
+  | `comparisonMatrix` | `## Compare Options` plus a decision table and recommendation note |
+
+  Use these when the surrounding page already exists and you only need a standard decision or navigation block.
+
+  </Accordion>
+</AccordionGroup>
+
 ## Contribution Guidelines
 
 ### Style Guide
@@ -324,14 +442,14 @@ docs/
 
 **Critical rules:**
 - ✅ Use CSS Custom Properties (`var(--accent)`) only
-- ❌ Never use deprecated JS theme helpers or hardcode colours
+- ❌ Never use legacy theme helpers or hardcode colours
 - ✅ Use absolute imports: `/snippets/components/...`
 - ❌ No relative imports for snippets
 - ✅ Test in both light and dark modes
 
 ### Component Usage
 
-- Use components from the [Component Library](./component-library)
+- Use components from the [Component Library](./component-library/overview)
 - Check component documentation before creating new components
 - Follow existing patterns and conventions
 
@@ -353,13 +471,13 @@ docs/
 ### Testing Requirements
 
 Before submitting a PR, ensure:
-- [ ] All pages render without errors
-- [ ] No console errors in browser
-- [ ] Links work correctly
-- [ ] Components display properly
-- [ ] Works in both light and dark modes
-- [ ] Mobile responsive
-- [ ] Pre-commit hooks pass
+- All pages render without errors
+- No console errors in browser
+- Links work correctly
+- Components display properly
+- Works in both light and dark modes
+- Mobile responsive
+- Pre-commit hooks pass
 
 ## Review Process
 
@@ -437,7 +555,7 @@ We welcome contributions in many areas:
 
 | Content Type | Location | Example |
 |-------------|----------|---------|
-| **Main pages** | `v2/pages/[section]/` | `v2/developers/guides-and-tools/` |
+| **Main pages** | `v2/[section]/` | `v2/developers/guides-and-tools/` |
 | **Components** | `snippets/components/` | `snippets/components/primitives/links.jsx` |
 | **Data files** | `snippets/data/` | `snippets/data/gateways/flags.jsx` |
 | **Assets** | `snippets/assets/` | `snippets/assets/logos/` |
@@ -446,7 +564,7 @@ We welcome contributions in many areas:
 
 ### Section Organisation
 
-```text
+```text icon="terminal"
 v2/
 ├── home/                 # Home tab
 │   ├── mission-control.mdx
@@ -479,7 +597,7 @@ v2/
   <Card title="Style Guide" icon="palette" href="./style-guide" arrow>
  Complete styling guidelines, Mintlify gotchas, and best practices.
   </Card>
-  <Card title="Component Library" icon="puzzle-piece" href="./component-library" arrow>
+  <Card title="Component Library" icon="puzzle-piece" href="./component-library/overview" arrow>
  Reference all custom components with live examples and usage instructions.
   </Card>
   <Card title="Mintlify Documentation" icon="book" href="https://mintlify.com/docs" arrow>
@@ -535,14 +653,14 @@ If you have questions about contributing:
 
 - Check the [Documentation Guide](./documentation-guide) for structure and conventions
 - Review the [Style Guide](./style-guide) for styling guidelines
-- Check the [Component Library](./component-library) for component usage
+- Check the [Component Library](./component-library/overview) for component usage
 - Review [CODEOWNERS](https://github.com/livepeer/docs/blob/docs-v2-preview/.github/CODEOWNERS) to see who reviews what
 - Open a GitHub issue or discussion
 - Ask in the Livepeer Discord community
 
 Thank you for helping improve the Livepeer documentation! 🎉
 
----
+<CustomDivider />
 
 ## Non-Technical Contribution Proposal
 
@@ -634,7 +752,7 @@ This section outlines proposed workflows for contributors who don't use Git, Mar
 - Content synchronization
 - Authentication and permissions
 
-**Status:** 📋 Long-term proposal - significant infrastructure required
+**Status:** 📋 Long-term proposal - substantial infrastructure required
 
 ### Recommended Implementation Order
 

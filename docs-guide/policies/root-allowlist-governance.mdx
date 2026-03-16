@@ -1,0 +1,277 @@
+---
+title: Root Allowlist Governance
+sidebarTitle: Root Allowlist Governance
+description: Canonical policy for what belongs at repo root, how .allowlist is authored, and how root changes are reviewed safely.
+keywords:
+  - livepeer
+  - root allowlist
+  - repository structure
+  - governance
+  - root files
+  - pre-commit
+  - cleanup
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+# Root Allowlist Governance
+
+This document is the canonical policy for repo-root governance and `.allowlist` authoring.
+
+`.allowlist` is not a notes file, a migration plan, or a report sink. It is machine-readable input to the root-structure gate in `.githooks/pre-commit`.
+
+The current governance contract uses the canonical agent root layout and keeps `.allowlist` machine-readable and root-only.
+
+## Canonical Policy
+
+`.allowlist` exists to answer one question only:
+
+- which root-level files and directories are intentionally allowed to exist in this repository
+
+Canonical enforcement source:
+
+- `.githooks/pre-commit`
+
+Canonical authoring rules:
+
+1. `.allowlist` must contain only root entries plus `#` comment lines.
+2. HTML comments, embedded reports, and prose paragraphs are not safe in `.allowlist`.
+3. Nested paths do not belong in `.allowlist`; the hook enforces root entries only.
+4. Future target paths should be documented in governance docs, not pre-allowed in `.allowlist` before they exist.
+5. Root clutter (`.DS_Store`, debug logs, caches, backups) should be cleaned or ignored, not allowlisted.
+
+## Historical Verification Snapshot
+
+Verification date:
+
+- `2026-03-16`
+
+Reviewed commits:
+
+- `9677f551` - `.allowlist`
+- `9befbcf4` - `clean up allowlist`
+- `8be19f17` - `fix config`
+
+Findings:
+
+- No currently existing root item that is clearly still needed was accidentally removed across the last 3 `.allowlist` commits.
+- Removed legacy entries `docs.json.jsx`, `docs-orch-work.json`, `todo.txt`, and `scripts` do not exist in the current worktree.
+- Current root items `SECURITY.md`, `docs-index.json`, `contribute/`, `tools/`, `docs-guide/`, `v1/`, and `v2/` were not removed from the allowlist history reviewed.
+- `ASSISTANT.md` exists at repo root but is still omitted from the current `.allowlist`.
+- The current `.allowlist` contains parser-visible report prose and HTML comment blocks, which the hook does not safely ignore.
+
+## Current Root Inventory
+
+Current root inventory observed during this review:
+
+### Governed root state
+
+- `.allowlist`
+- `.claude/`
+- `.codex/`
+- `.cursor/`
+- `.editorconfig`
+- `.gitattributes`
+- `.githooks/`
+- `.github/`
+- `.gitignore`
+- `.lpdignore`
+- `.mintignore`
+- `.prettierrc`
+- `.vscode/`
+- `.windsurf/`
+- `AGENTS.md`
+- `ai-tools/`
+- `api/`
+- `contribute/`
+- `Dockerfile`
+- `docs-guide/`
+- `docs-index.json`
+- `docs.json`
+- `LICENSE`
+- `llms-full.txt`
+- `llms.txt`
+- `lpd`
+- `Makefile`
+- `README.md`
+- `SECURITY.md`
+- `sitemap-ai.xml`
+- `snippets/`
+- `style.css`
+- `tasks/`
+- `tests/`
+- `tools/`
+- `v1/`
+- `v2/`
+
+### Root clutter or unresolved root state
+
+- `.DS_Store`
+- `.cache/`
+- `docs/`
+- `docs.json.bak`
+- `mint-debug.log`
+
+## Current `.allowlist` Mismatches
+
+### Remaining unresolved root items present outside the governed allowlist scope
+
+| Entry | Current state | Notes |
+|---|---|---|
+| `docs/` | present | Root directory not covered by current governance notes; requires separate cleanup decision. |
+| `docs.json.bak` | present | Backup artifact; should be cleaned or explicitly governed outside `.allowlist`. |
+| `mint-debug.log` | present | Runtime/debug artifact; should not be allowlisted. |
+| `.DS_Store` | present | OS noise; should not be allowlisted. |
+| `.cache/` | present | Local cache; should not be allowlisted. |
+
+### Retired invalid or legacy entries removed during governance rollout
+
+| Entry | Status | Why this is a problem |
+|---|---|---|
+| `.claude/CLAUDE.md` | removed from `.allowlist` | Nested path; `.allowlist` is root-only. |
+| `.cursor/rules/` | removed from `.allowlist` | Nested path; the valid root entry is `.cursor`. |
+| `.windsurf/rules/` | removed from `.allowlist` | Nested path; the valid root entry is `.windsurf`. |
+| `.github/copilot-instructions.md` | removed from `.allowlist` | `.github` is the governed root entry. |
+| `.mintlify` | removed from `.allowlist` | Not implemented in this repo. |
+| `.cursorrules` | retired | Replaced by `.cursor/rules/repo-governance.mdc`. |
+| `Assistant.md` | removed | Wrong casing and replaced by the canonical `AGENTS.md` baseline. |
+| embedded report prose / HTML comments | removed | Parser-visible junk that broke machine-readable enforcement. |
+
+## Why HTML Comments and Report Prose Are Unsafe
+
+Current parser behavior in `.githooks/pre-commit`:
+
+```bash icon="terminal"
+ALLOWLIST=$(grep -v '^#' .allowlist | grep -v '^$' | tr '\n' '|' | sed 's/|$//')
+```
+
+Root detection behavior in the same hook:
+
+- new root files are matched with `^[^/]+$`
+- new root directories are reduced to the first path segment via `cut -d'/' -f1`
+
+Implications:
+
+- only `#` comments are safely ignored
+- HTML comments are not ignored
+- nested file paths are not meaningful allowlist entries
+- pasted reports and free-form prose become parser-visible junk
+
+## Implemented Agent Path Decisions and Allowlist Impact
+
+Implemented target locations for agent governance:
+
+- `AGENTS.md`
+- `.github/copilot-instructions.md`
+- `.claude/CLAUDE.md`
+- `.cursor/rules/`
+- `.windsurf/rules/`
+
+Allowlist implications:
+
+| Approved path | Future allowlist behavior |
+|---|---|
+| `AGENTS.md` | Listed directly as a root file. |
+| `.github/copilot-instructions.md` | Not listed separately; `.github` covers it. |
+| `.claude/CLAUDE.md` | `.allowlist` lists `.claude` only. |
+| `.cursor/rules/` | `.allowlist` lists `.cursor` only. |
+| `.windsurf/rules/` | `.allowlist` lists `.windsurf` only. |
+
+## Prior Reports Incorporated
+
+This policy incorporates the following prior reports and decisions:
+
+### Prior report: Root entry re-review (`2026-03-16`)
+
+Preserved conclusions:
+
+- strong move candidates for a cleaner root were identified as `docs-index.json`, `tasks/`, `ai-tools/`, `contribute/`, and the custom `llms*.txt` plus root `ASSISTANT.md` setup
+- keep-at-root decisions were identified for `docs.json`, `.github/`, `.allowlist`, `.githooks/`, `.codex/`, `style.css`, `.mintignore`, `.lpdignore`, the main content trees, and `api/`
+- `SECURITY.md` was identified as movable in principle, even though it remains present at root today
+
+Preserved decision matrix:
+
+| Entry | Essential at root? | Could move? | Current recommendation |
+|---|---|---:|---|
+| `.allowlist` | yes | no | Keep at root. |
+| `.github/` | yes | no | Keep at root. |
+| `.githooks/` | no | yes | Keep at root until tooling changes. |
+| `docs.json` | yes | no | Keep at root. |
+| `style.css` | yes | possible | Keep at root. |
+| `.mintignore` | yes | no | Keep at root. |
+| `snippets/`, `v1/`, `v2/` | yes | yes | Keep at root. |
+| `tools/`, `tests/` | no | yes | Keep at root. |
+| `tasks/` | no | yes | Move candidate. |
+| `docs-guide/` | no | yes | Keep as the single top-level internal docs tree. |
+| `ai-tools/` | no | yes | Move candidate. |
+| `api/` | no | yes | Keep at root under current contracts. |
+| `lpd` | no | yes | Keep a root shim under current workflow. |
+| `.lpdignore` | yes | no | Keep at root. |
+| `docs-index.json` | no | yes | Move candidate. |
+| `sitemap-ai.xml` | conditional | conditional | Keep at root only if the public root URL is still required. |
+| `llms.txt`, `llms-full.txt` | no | not usefully | Delete custom overrides unless they are intentionally curated. |
+| `ASSISTANT.md` | no | yes | Legacy root file; move or retire under the current governance contract. |
+| `.codex/` | yes in current repo | yes | Keep at root under current Codex workflow. |
+| `contribute/` | no | yes | Move candidate with dependency mapping first. |
+
+### Prior report: Agent root file decision set (`2026-03-16`)
+
+Preserved decisions:
+
+- use `AGENTS.md` as the canonical repo-wide baseline
+- use `.github/copilot-instructions.md` for GitHub Copilot
+- use `.claude/CLAUDE.md` for Claude Code
+- use `.cursor/rules/` for Cursor
+- use `.windsurf/rules/` for Windsurf
+
+## Keep / Move / Remove Criteria
+
+Keep an entry at root only if at least one of the following is true:
+
+- the platform discovers it by fixed root path
+- the repo uses it as a root entrypoint or contract
+- the public URL contract depends on the root path
+- local tooling hardcodes the root path and the migration is not yet approved
+
+Mark an entry as a move candidate when all of the following are true:
+
+- it is an internal artifact, guide, report, or adapter
+- it is not platform-discovered by fixed root path
+- it can be namespaced under an existing governed subtree
+- migration dependencies can be mapped and updated safely
+
+Remove an entry from `.allowlist` when any of the following is true:
+
+- the file or directory does not currently exist
+- the entry is a nested path instead of a root path
+- the entry is a backup, debug artifact, cache, or OS noise
+- the entry exists only inside a pasted report or HTML comment block
+
+## Report Sources
+
+### Repo evidence
+
+- `.githooks/pre-commit`
+- `lpd`
+- `README.md`
+- `.github/AGENTS.md`
+- `docs.json`
+- `tools/scripts/generate-docs-index.js`
+- `tools/scripts/generate-llms-files.js`
+- `tools/scripts/generate-ai-sitemap.js`
+- `tools/lib/docs-index-utils.js`
+- `tools/scripts/i18n/translate-docs.js`
+- `contribute/CONTRIBUTING.mdx`
+- `contribute/CONTRIBUTING/GIT-HOOKS.md`
+- `contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md`
+
+### Official external sources
+
+- [Mintlify settings](https://mintlify.com/docs/settings)
+- [Mintlify files and root path behavior](https://www.mintlify.com/docs/create/files)
+- [Mintlify llms.txt](https://www.mintlify.com/docs/ai/llmstxt)
+- [Mintlify Assistant](https://www.mintlify.com/docs/guides/assistant)
+- [GitHub security policy locations](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository)

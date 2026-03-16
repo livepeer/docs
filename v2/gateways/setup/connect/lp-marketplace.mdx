@@ -1,0 +1,260 @@
+---
+title: Livepeer Marketplace Overview
+sidebarTitle: Livepeer Marketplace
+description: >-
+  This page provides an overview of the Livepeer Marketplace, including what
+  offerings Orchestrators publish, in order to provide Gateway operators the
+  context they need to discover & route application requests
+purpose: operations
+pageType: guide
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - connect
+  - lp marketplace
+  - marketplace
+  - overview
+  - provides
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: gateway-operator
+lastVerified: 2026-03-17
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Terminology is consistent with resources/glossary
+*/}
+
+
+
+
+
+import { ScrollableDiagram } from '/snippets/components/content/zoomableDiagram.jsx'
+
+# What is the Marketplace?
+
+The Livepeer Marketplace allows **_Orchestrators_** to advertise available compute,
+compute services (AI & Video), pricing, and performance characteristics.
+
+The Marketplace is **NOT** a public marketplace for end-users, rather, it is a programmatic
+interface for Gateways to discover and connect applications to available services.
+
+In the Livepeer Marketplace, **Gateways act like a search engine**
+
+They discover orchestrator offerings, apply selection and routing logic, and broker access to appropriate
+services for applications based on cost, performance, and policy requirements.
+
+<br />
+> - **Orchestrators** publish services to the Livepeer Marketplace; > - **Gateways**
+filter & connect application requests to those services.
+<br />
+<br />
+
+<ScrollableDiagram title="Livepeer Marketplace Offering Flow" maxHeight="700px">
+```mermaid
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1a1a1a',
+    'primaryTextColor': '#ffffffff',
+    'primaryBorderColor': '#ffffff',
+    'lineColor': '#2d9a67',
+    'secondaryColor': '#0d0d0d',
+    'titleColor': '#2d9a67',
+    'tertiaryColor': '#1a1a1a',
+    'background': '#0d0d0d',
+    'fontFamily': 'system-ui',
+    'clusterBkg': '#1a1a1a',
+    'clusterBorder': '#ffffff',
+    'nodeTextColor': '#ffffff',
+    'nodeBorder': '#ffffff',
+    'mainBkg': '#1a1a1a',
+    'edgeLabelBackground': 'transparent',
+    'textColor': '#2d9a67'
+  },
+  'flowchart': {
+    'useMaxWidth': true,
+    'htmlLabels': true
+  }
+}}%%
+flowchart TB
+
+    %% --- APPLICATION LAYER ---
+    subgraph App["<b>APPLICATIONS&nbsp;/&nbsp;CLIENTS</b>"]
+        A1["App / User<br/>Video or AI Request"]
+    end
+
+    %% --- GATEWAY LAYER ---
+    subgraph Gateway["<b>GATEWAY (BROKER)</b>"]
+        direction LR
+        G1["API Ingress"]
+        G2["Auth / Rate Limits"]
+        G3["Policy & Routing Logic"]
+        G4["SLA / Retry / Failover"]
+    end
+
+    %% --- LIVEPEER MARKETPLACE ---
+    subgraph Market["<b>LIVEPEER&nbsp;MARKETPLACE</b>"]
+        direction LR
+        M1["Capability Metadata"]
+        M2["Pricing Signals"]
+        M3["Performance Characteristics"]
+        M0[ ]
+    end
+
+    %% --- SUPPLY LAYER ---
+    subgraph Supply["<b>COMPUTE PROVIDERS</b>"]
+        direction LR
+        O1["Orchestrator A"]
+        O2["Orchestrator B"]
+        O3["Orchestrator C"]
+    end
+
+    %% --- FLOWS ---
+    A1 -->|API Request| G1
+    G1 --> G2
+    G2 --> G3
+    G3 --> G4
+
+    %% Marketplace lookup
+    G3 -.->|Query| Market
+
+    %% Brokered execution
+    G4 -->|Brokered Job| O1
+    G4 -->|Brokered Job| O2
+    G4 -->|Brokered Job| O3
+
+    %% Results
+    O1 -->|Results| G4
+    O2 -->|Results| G4
+    O3 -->|Results| G4
+
+    G4 -->|Response| A1
+
+    %% Compute Providers publish to Marketplace
+    O2 -.->|Publish Offerings| M0
+
+    %% Styling - white borders for main boxes, green borders for internal boxes
+    style App stroke:#ffffff,stroke-width:2px,rx:15,ry:15
+    style Gateway stroke:#ffffff,stroke-width:2px,rx:15,ry:15
+    style Market stroke:#ffffff,stroke-width:2px,rx:15,ry:15
+    style Supply stroke:#ffffff,stroke-width:2px,rx:15,ry:15
+    style A1 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style G1 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style G2 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style G3 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style G4 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style M1 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style M2 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style M3 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style O1 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style O2 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style O3 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style M0 fill:transparent,stroke:transparent,color:transparent
+
+````
+</ScrollableDiagram>
+<br />
+
+## Orchestrator Offering Details
+
+An offering is a structured declaration of:
+
+- Supported models (e.g., SDXL, ControlNet, depth models)
+- Supported pipelines (ComfyStream, Daydream, BYOC)
+- Pricing per frame / per second / per request
+- GPU tiers and performance metrics
+- Regional availability
+- SLAs and expected latency
+
+Orchestrators publish their offerings through the `OrchestratorInfo` data structure
+
+```protobuf
+message OrchestratorInfo {
+    string transcoder = 1;           // Service URI
+    TicketParams ticket_params = 2;   // Payment parameters
+    PriceInfo price_info = 3;         // Pricing information
+    bytes address = 4;               // ETH address
+    Capabilities capabilities = 5;    // Supported features
+    AuthToken auth_token = 6;         // Authentication
+    repeated HardwareInformation hardware = 7;  // Hardware specs
+    repeated OSInfo storage = 32;     // Storage options
+    repeated PriceInfo capabilities_prices = 33;  // AI model pricing
+}
+````
+
+Orchestrators publish compute-level offerings to the Marketplace for Gateways to discover & route jobs to.
+
+<ScrollableDiagram title="Offering Publication Flow" maxHeight="500px" >
+```mermaid
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1a1a1a',
+    'primaryTextColor': '#ffffff',
+    'primaryBorderColor': '#ffffff',
+    'lineColor': '#2d9a67',
+    'titleColor': '#2d9a67',
+    'background': '#0d0d0d',
+    'clusterBkg': '#1a1a1a',
+    'clusterBorder': '#ffffff',
+    'textColor': '#2d9a67'
+  },
+  'flowchart': {
+    'useMaxWidth': true,
+    'htmlLabels': true,
+    'subGraphTitleMargin': {
+      'top': 15,
+      'bottom': 30
+    }
+  }
+}}%%
+flowchart LR
+    subgraph Orchestrators["<b>⚡&nbsp;ORCHESTRATOR<br/>OFFERING&nbsp;DETAILS</b>"]
+        O1["🧠 Models"]
+        O2["⚙️ Pipelines"]
+        O3["💰 Pricing"]
+        O4["🖥️ GPU Tiers"]
+        O5["🌍 Regions"]
+        O6["📊 SLAs"]
+        O1 ~~~ O2 ~~~ O3 ~~~ O4 ~~~ O5 ~~~ O6
+    end
+
+    subgraph Marketplace["<b>🏪&nbsp;LIVEPEER&nbsp;MARKETPLACE</b>"]
+        MP1["Capability Metadata"]
+        MP2["Pricing Signals"]
+        MP3["Performance Data"]
+        MP1 ~~~ MP2 ~~~ MP3
+    end
+
+    subgraph Gateways["<b>🌐&nbsp;GATEWAYS&nbsp;DISCOVER&nbsp;OFFERS</b>"]
+        GW["Discovery & Selection<br/>Route to Best Provider"]
+    end
+
+    Orchestrators -->|Publish| Marketplace
+    Marketplace <-->|Discover| Gateways
+
+    style Orchestrators fill:#1a1a1a,stroke:#ffffff,stroke-width:2px,rx:15,ry:15
+    style Marketplace fill:#1a1a1a,stroke:#ffffff,stroke-width:2px,rx:15,ry:15
+    style Gateways fill:#1a1a1a,stroke:#ffffff,stroke-width:2px,rx:15,ry:15
+
+    style GW fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style MP1 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style MP2 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style MP3 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style O1 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style O2 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style O3 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style O4 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style O5 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+    style O6 fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px,rx:10,ry:10
+
+```
+</ScrollableDiagram>
+```text icon="terminal"

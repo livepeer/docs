@@ -1,458 +1,54 @@
 ---
-title: 内容组件
-sidebarTitle: 内容
-description: 用于显示代码、数据、外部内容和 API 文档的组件：代码块、外部内容加载器、API 响应字段、版本显示、以及用于博客、论坛和活动的数据布局
-keywords:
-  - livepeer
-  - components
-  - content
-  - code
-  - api
-  - data
+title: 'Content'
+sidebarTitle: 'Content'
+description: 'Renderers for reader-facing media, code, quotations, and structured content.'
 ---
-{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9jb21wb25lbnQtbGlicmFyeS9jb250ZW50Lm1keCIsInNvdXJjZVJvdXRlIjoidjIvcmVzb3VyY2VzL2RvY3VtZW50YXRpb24tZ3VpZGUvY29tcG9uZW50LWxpYnJhcnkvY29udGVudCIsInNvdXJjZUhhc2giOiI4ZTg1NTRmZTUwNzcwZDc5ZmZjYjc1Yzc2Y2IzMDNhZTQ0NWY0MGY0YzNlYjFhNzY5ZGJkMDExMjkzOTI4MzY1IiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAzLTAxVDEzOjUzOjU5LjQ0NFoifQ== */}
-import { CustomCodeBlock, CodeComponent, ComplexCodeBlock, CodeSection } from '/snippets/components/content/code.jsx'
-import { ExternalContent } from '/snippets/components/content/external-content.jsx'
-import { ValueResponseField, CustomResponseField, ResponseFieldExpandable, ResponseFieldAccordion, ResponseFieldGroup } from '/snippets/components/content/response-field.jsx'
-import { LatestVersion } from '/snippets/components/content/release.jsx'
-import { BlogCard, PostCard, CardBlogDataLayout, ColumnsBlogCardLayout, BlogDataLayout, CardColumnsPostLayout, ForumLatestLayout, DiscordAnnouncements, LumaEvents } from '/snippets/components/content/data.jsx'
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9jb21wb25lbnQtbGlicmFyeS9jb250ZW50Lm1keCIsInNvdXJjZVJvdXRlIjoidjIvcmVzb3VyY2VzL2RvY3VtZW50YXRpb24tZ3VpZGUvY29tcG9uZW50LWxpYnJhcnkvY29udGVudCIsInNvdXJjZUhhc2giOiIzMzA4ZDk3NGQ3OTQ0Yjc1MzQ1Y2E4M2Q1MmExYWQzY2UzZjcxYjhmYzBhMmRlYTlmMTE3NTU4YTFiMDMwMDkwIiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoic2NhZmZvbGQiLCJtb2RlbCI6IiIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0xNlQxNzowOToyNi4wMTBaIn0= */}
+{/* codex-i18n: scaffold — translation pending */}
+{/*
+generated-file-banner: generated-file-banner:v1
+Generation Script: tools/scripts/generate-component-docs.js
+Purpose: Generated localized component-library route scaffolds derived from docs-guide/component-registry.json.
+Run when: Component governance metadata, registry outputs, or component-library templates change.
+Run command: node tools/scripts/generate-component-docs.js --fix --template-only --category content
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `tools/scripts/generate-component-docs.js`. <br/>
+**Purpose**: Generated localized component-library route scaffolds derived from docs-guide/component-registry.json. <br/>
+**Run when**: Component governance metadata, registry outputs, or component-library templates change. <br/>
+**Important**: Do not manually edit this file; run `node tools/scripts/generate-component-docs.js --fix --template-only --category content`. <br/>
+</Note>
+
+<Note>Localized prose refresh for `cn` is pending. This page preserves the new route and mirrors the English category inventory at a summary level.</Note>
 
 <Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
-  Return to the main component library index
+  Return to the localized component-library landing page.
 </Card>
 
-<CustomDivider middleText="Code Components" />
-
-## 代码组件
-
-### 自定义代码块
-
-高级代码块，支持占位符替换、前后注释以及可选的展开输出部分。
-
-**导入：**
-```jsx
-import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
-```
-
-**属性：**
-
-| 属性 | 类型 | 默认值 | 必填 | 描述 |
-|------|------|---------|----------|-------------|
-| `filename` | `string` | - | 否 | 要在标题中显示的文件名称 |
-| `icon` | `string` | - | 否 | 要在标题中显示的图标 |
-| `language` | `string` | - | 否 | 编程语言用于语法高亮 |
-| `highlight` | `string` | - | 否 | 要高亮的行号/范围（例如，"1-3,5"） |
-| `codeString` | `string` | `""` | 否 | 要显示的代码内容 |
-| `placeholderValue` | `string` | `""` | 否 | 要替换的值 {PLACEHOLDER} 为 |
-| `wrap` | `boolean` | `true` | 否 | 是否换行长行 |
-| `lines` | `boolean` | `true` | 否 | 是否显示行号 |
-| `preNote` | `string` | `""` | 否 | 在代码块之前显示的注释 |
-| `postNote` | `string` | `""` | 否 | 在代码块之后显示的注释 |
-| `output` | `object` | - | 否 | 可选输出配置 |
-| `output.codeString` | `string` | - | 否 | 输出代码内容 |
-| `output.filename` | `string` | - | 否 | 输出文件名 |
-| `output.icon` | `string` | - | 否 | 输出图标 |
-| `output.language` | `string` | - | 否 | 输出语言 |
-
-**示例:**
-
-<Tabs>
-  <Tab title="Basic">
-    <CustomCodeBlock
-      filename="example.js"
-      language="javascript"
-      codeString="const apiKey = 'your-key-here';"
-    />
-  </Tab>
-  <Tab title="With Placeholder">
-    <CustomCodeBlock
-      filename="config.js"
-      language="javascript"
-      codeString="const API_KEY = '{PLACEHOLDER}';"
-      placeholderValue="your-api-key-here"
-      preNote="Add this to your configuration file"
-    />
-  </Tab>
-  <Tab title="Code">
-```jsx
-<CustomCodeBlock
-  filename="example.js"
-  language="javascript"
-  codeString="const apiKey = 'your-key';"
-  preNote="Configuration example"
-  postNote="Remember to keep your API key secure"
-/>
-```
-  </Tab>
-</Tabs>
-
----
-
-### CodeComponent
-
-简单的代码块包装组件。
-
-**导入:**
-```jsx
-import { CodeComponent } from "/snippets/components/content/code.jsx";
-```
-
-**属性:** 接受标准的 CodeBlock 属性（language, filename, icon 等）
-
-**注意:** 这是 Mintlify 的 CodeBlock 组件的包装器。
-
----
-
-### ComplexCodeBlock
-
-功能丰富的代码块，包括占位符替换和输出部分等多重功能。
-
-**导入:**
-```jsx
-import { ComplexCodeBlock } from "/snippets/components/content/code.jsx";
-```
-
-**属性:** 与 ... 类似`CustomCodeBlock` 但具有额外的复杂性处理。
-
----
-
-### CodeSection
-
- 用于组织多个代码块的章节包装器。
-
-**导入:**
-```jsx
-import { CodeSection } from "/snippets/components/content/code.jsx";
-```
-
-**属性:**
-
-| 属性 | 类型 | 默认 | 必需 | 描述 |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **是** | 代码块以显示 |
-
-<CustomDivider middleText="External Content" />
-
-## 外部内容
-
-### ExternalContent
-
-用于显示外部 GitHub 内容的可重用组件，包含标题和可滚动容器。
-
-**导入：**
-```jsx
-import { ExternalContent } from "/snippets/components/content/external-content.jsx";
-```
-
-**属性：**
-
-| 属性 | 类型 | 默认值 | 必需 | 描述 |
-|------|------|---------|----------|-------------|
-| `repoName` | `string` | - | **是** | 仓库名称（例如，"livepeer/awesome-livepeer"） |
-| `githubUrl` | `string` | - | **是** | 完整的 GitHub 仓库 URL |
-| `maxHeight` | `string` | `"1000px"` | 否 | 可滚动容器的最大高度 |
-| `icon` | `string` | `"github"` | 否 | 在标题中显示的图标 |
-| `children` | `ReactNode` | - | **是** | 要显示的内容（通常导入的MDX） |
-
-**示例：**
-
-<Tabs>
-  <Tab title="Live Example">
-    <ExternalContent
-      repoName="livepeer/docs"
-      githubUrl="https://github.com/livepeer/docs"
-      maxHeight="150px"
-    >
-      <p>External content from the Livepeer documentation repository.</p>
-      <ul>
-        <li>Automatically styled container</li>
-        <li>Link to GitHub source</li>
-      </ul>
-    </ExternalContent>
-  </Tab>
-  <Tab title="Code">
-```jsx
-import MyContent from '/snippets/external/my-content.mdx'
-
-<ExternalContent
-  repoName="livepeer/awesome-livepeer"
-  githubUrl="https://github.com/livepeer/awesome-livepeer"
-  maxHeight="800px"
->
-  <MyContent />
-</ExternalContent>
-```
-  </Tab>
-</Tabs>
-
-<CustomDivider middleText="API Response Fields" />
-
-## API 响应字段
-
-### ValueResponseField
-
-ResponseField 容器，用于显示带有可选标签和行样式的值。
-
-**导入：**
-```jsx
-import { ValueResponseField } from "/snippets/components/content/response-field.jsx";
-```
-
-**属性：**
-
-| 属性 | 类型 | 默认值 | 必需 | 描述 |
-|------|------|---------|----------|-------------|
-| `description` | `string\|function` | - | 否 | 描述文本或返回描述的函数 |
-| `post` | `any` | `null` | 否 | 描述后的显示值 |
-| `label` | `string` | `"value"` | 否 | 值的标签 |
-| `line` | `boolean` | `true` | 否 | 是否显示底部边框线 |
-| `children` | `ReactNode` | - | 否 | 附加内容 |
-| `...props` | `object` | - | 否 | CustomResponseField 的附加 ResponseField 属性（name、type、default、required 等） |
-
----
-
-### 自定义 ResponseField
-
-ResponseField 容器，隐藏底部分隔线。
-
-**导入：**
-```jsx
-import { CustomResponseField } from "/snippets/components/content/response-field.jsx";
-```
-
-**属性：**
-
-| 属性 | 类型 | 默认值 | 必需 | 描述 |
-|------|------|---------|----------|-------------|
-| `description` | `string` | - | 否 | 描述文本 |
-| `...props` | `object` | - | 否 | 所有 ResponseField 属性（name、type、default、required、post 等） |
-
----
-
-### ResponseFieldExpandable
-
-在可展开部分中分组多个响应字段。
-
-**导入：**
-```jsx
-import { ResponseFieldExpandable } from "/snippets/components/content/response-field.jsx";
-```
-
-**属性：**
-
-| 属性 | 类型 | 默认值 | 必需 | 描述 |
-|------|------|---------|----------|-------------|
-| `fields` | `Array\|Object` | `{}` | 否 | 字段定义的数组或对象 |
-| `...props` | `object` | - | 否 | 可展开组件的属性（标题等） |
-
----
-
-### ResponseFieldAccordion
-
-在可折叠组件中分组多个响应字段。
-
-**导入:**
-```jsx
-import { ResponseFieldAccordion } from "/snippets/components/content/response-field.jsx";
-```
-
-**属性:**
-
-| 属性 | 类型 | 默认 | 必需 | 描述 |
-|------|------|---------|----------|-------------|
-| `fields` | `Array\|Object` | `{}` | 否 | 字段定义的数组或对象 |
-| `...props` | `object` | - | 否 | 折叠面板组件属性（标题等） |
-
----
-
-### ResponseFieldGroup
-
-运行时选择 accordion 或 expandable 布局的包装器。
-
-**导入：**
-```jsx
-import { ResponseFieldGroup } from "/snippets/components/content/response-field.jsx";
-```
-
-**属性：**
-
-| 属性 | 类型 | 默认 | 必需 | 描述 |
-|------|------|---------|----------|-------------|
-| `component` | `string` | `"accordion"` | 否 | 组件类型："accordion" 或 "expandable" |
-| `fields` | `Array\|Object` | `{}` | 否 | 字段定义的数组或对象 |
-| `...props` | `object` | - | 否 | 组件属性（标题等） |
-
-<CustomDivider middleText="Data Display Components" />
-
-## 数据展示组件
-
-### 博客卡片
-
-专为博客文章设计的卡片组件，支持阅读时间和摘要。
-
-**导入：**
-```jsx
-import { BlogCard } from "/snippets/components/content/data.jsx";
-```
-
-**属性：**
-
-| 属性 | 类型 | 默认值 | 必需 | 描述 |
-|------|------|---------|----------|-------------|
-| `title` | `string` | - | **是** | 博客文章的标题 |
-| `content` | `string` | - | **是** | 要显示的HTML内容 |
-| `href` | `string` | - | **是** | 博客文章的链接URL |
-| `author` | `string` | `"Livepeer Team"` | 否 | 作者名称 |
-| `datePosted` | `string` | `null` | 否 | 发布日期 |
-| `excerpt` | `string` | `null` | 否 | 简短摘录（如果链接到外部博客使用） |
-| `readingTime` | `number` | `null` | 否 | 预计阅读时间（分钟） |
-| `icon` | `string` | `"book-open"` | 否 | 卡片的图标 |
-| `cta` | `string` | `"Read More"` | 否 | 行动呼吁按钮文本 |
-| `img` | `string` | `null` | 否 | 可选图片URL |
-
----
-
-### PostCard
-
-用于显示论坛帖子或文章的卡片组件，包含作者、日期和元数据。
-
-**导入：**
-```jsx
-import { PostCard } from "/snippets/components/content/data.jsx";
-```
-
-**属性：**
-
-| 属性 | 类型 | 默认值 | 必填 | 描述 |
-|------|------|---------|----------|-------------|
-| `title` | `string` | - | **是** | 文章标题 |
-| `content` | `string` | - | **是** | HTML 内容以显示 |
-| `href` | `string` | - | **是** | 卡片的链接网址 |
-| `author` | `string` | `"Unknown"` | 否 | 作者名称 |
-| `datePosted` | `string` | `null` | 否 | 帖子发布的日期 |
-| `icon` | `string` | `"book-open"` | 否 | 卡片上显示的图标 |
-| `cta` | `string` | `"Read More"` | 否 | 行动呼吁按钮文本 |
-| `img` | `string` | `null` | 否 | 卡片的可选图片 URL |
-
----
-
-### CardBlogDataLayout
-
-用于在垂直布局中显示多个 BlogCards 的布局组件。
-
-**导入：**
-```jsx
-import { CardBlogDataLayout } from "/snippets/components/content/data.jsx";
-```
-
-**属性：**
-
-| 属性 | 类型 | 默认值 | 必需 | 描述 |
-|------|------|---------|----------|-------------|
-| `items` | `Array` | `[]` | 否 | BlogCard 属性对象数组 |
-| `limit` | `number` | - | 否 | 可选的项目数量限制 |
-
----
-
-### ColumnsBlogCardLayout
-
-用于在列中显示多个 BlogCards 的布局组件。
-
-**导入：**
-```jsx
-import { ColumnsBlogCardLayout } from "/snippets/components/content/data.jsx";
-```
-
-**属性：**
-
-| 属性 | 类型 | 默认值 | 必填 | 描述 |
-|------|------|---------|----------|-------------|
-| `items` | `Array` | `[]` | 否 | BlogCard 属性对象数组 |
-| `cols` | `number` | `2` | 否 | 列数 |
-| `limit` | `number` | - | 否 | 可选的项目数量限制 |
-
----
-
-### CardColumnsPostLayout
-
-用于在列中显示多个 PostCards 的布局组件。
-
-**导入：**
-```jsx
-import { CardColumnsPostLayout } from "/snippets/components/content/data.jsx";
-```
-
-**属性：**
-
-| 属性 | 类型 | 默认值 | 必需 | 描述 |
-|------|------|---------|----------|-------------|
-| `cols` | `number` | `2` | 否 | 要显示的列数 |
-| `items` | `Array` | `[]` | 否 | PostCard 属性对象数组 |
-| `limit` | `number` | - | 无 | 对项目数量的可选限制 |
-
----
-
-### Discord公告
-
-从 discordAnnouncementsData.jsx 显示 Discord 公告。
-
-**导入：**
-```jsx
-import { DiscordAnnouncements } from "/snippets/components/content/data.jsx";
-```
-
-**属性:**
-
-| 属性 | 类型 | 默认值 | 必需 | 描述 |
-|------|------|---------|----------|-------------|
-| `items` | `Array` | `[]` | 否 | 公告对象数组 |
-| `limit` | `number` | - | 否 | 可选的公告数量限制 |
-
-**注意:**需要数据来自 `snippets/automations/discord/discordAnnouncementsData.jsx`
-
----
-
-### LumaEvents
-
-从 lumaEventsData.jsx 显示 Luma 事件。
-
-**导入:**
-```jsx
-import { LumaEvents } from "/snippets/components/content/data.jsx";
-```
-
-**属性:**
-
-| 属性 | 类型 | 默认值 | 必需 | 描述 |
-|------|------|---------|----------|-------------|
-| `data` | `Object` | - | **是** | 包含即将开始和过去的事件数据对象 |
-| `limit` | `number` | - | 无 | 事件数量的可选限制 |
-| `type` | `string` | `"upcoming"` | 无 | 事件类型："upcoming"、"past" 或 "all" |
-
-**注意：** 需要来自`snippets/automations/luma/lumaEventsData.jsx`
-
-<CustomDivider middleText="Version Components" />
-
-## 版本组件
-
-### 最新版本
-
-用于获取 go-livepeer 最新发布版本的 GitHub 操作封装。
-
-**导入：**
-```jsx
-import { LatestVersion } from "/snippets/components/content/release.jsx";
-```
-
-**属性:**
-
-| 属性 | 类型 | 默认值 | 必需 | 描述 |
-|------|------|---------|----------|-------------|
-| `version` | `string` | - | **是** | 版本字符串（通常来自 GitHub 操作） |
-
----
-
-<Card title="Next: Layout Components" icon="arrow-right" href="./layout" arrow>
-  Continue to Layout Components →
-</Card>
+| Component | Status | Tier | Source file |
+| --- | --- | --- | --- |
+| CardVideo | `stable` | `composite` | `/snippets/components/content/video.jsx` |
+| CodeComponent | `stable` | `composite` | `/snippets/components/content/code.jsx` |
+| CodeSection | `stable` | `composite` | `/snippets/components/content/code.jsx` |
+| ComplexCodeBlock | `stable` | `composite` | `/snippets/components/content/code.jsx` |
+| CustomCodeBlock | `stable` | `composite` | `/snippets/components/content/code.jsx` |
+| CustomResponseField | `stable` | `composite` | `/snippets/components/content/responseField.jsx` |
+| EmbedMarkdown | `stable` | `composite` | `/snippets/components/content/embed.jsx` |
+| ExternalContent | `stable` | `composite` | `/snippets/components/content/external-content.jsx` |
+| FrameQuote | `stable` | `composite` | `/snippets/components/content/quote.jsx` |
+| LinkedInEmbed | `stable` | `composite` | `/snippets/components/content/video.jsx` |
+| MarkdownEmbed | `stable` | `composite` | `/snippets/components/content/embed.jsx` |
+| Quote | `stable` | `composite` | `/snippets/components/content/quote.jsx` |
+| ResponseFieldAccordion | `stable` | `composite` | `/snippets/components/content/responseField.jsx` |
+| ResponseFieldExpandable | `stable` | `composite` | `/snippets/components/content/responseField.jsx` |
+| ResponseFieldGroup | `stable` | `composite` | `/snippets/components/content/responseField.jsx` |
+| ScrollableDiagram | `stable` | `composite` | `/snippets/components/content/zoomableDiagram.jsx` |
+| ShowcaseVideo | `stable` | `composite` | `/snippets/components/content/video.jsx` |
+| TitledVideo | `stable` | `composite` | `/snippets/components/content/video.jsx` |
+| TwitterTimeline | `stable` | `composite` | `/snippets/components/content/embed.jsx` |
+| ValueResponseField | `stable` | `composite` | `/snippets/components/content/responseField.jsx` |
+| Video | `stable` | `composite` | `/snippets/components/content/video.jsx` |
+| YouTubeVideo | `stable` | `composite` | `/snippets/components/content/video.jsx` |
+| YouTubeVideoData | `stable` | `composite` | `/snippets/components/content/video.jsx` |
+| YouTubeVideoDownload | `deprecated` | `composite` | `/snippets/components/content/video.jsx` |

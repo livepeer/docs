@@ -1,0 +1,74 @@
+---
+title: 'Orchestrator Quickstart'
+sidebarTitle: 'Overview'
+description: 'Verify Livepeer works on your hardware - off-chain video and AI smoke tests that run in under an hour with no financial commitment.'
+purpose: overview
+keywords:
+  - livepeer
+  - orchestrator
+  - quickstart
+  - smoke test
+  - verify
+  - GPU
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: orchestrator
+status: current
+lastVerified: '2026-03-16'
+---
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+<Tip>
+  The quickstart is an off-chain hardware verification pass. It ends before production setup, staking, or revenue configuration.
+</Tip>
+
+The quickstart runs two off-chain smoke tests: a video transcoding test and an AI inference test. Both run locally with Docker. No LPT, no ETH, and no Arbitrum. You only need your GPU and a few commands.
+
+<CustomDivider middleText="Choose Your Test" />
+
+## Choose your test
+
+<CardGroup cols={2}>
+  <Card title="Video Transcoding Test" icon="video" href="/v2/orchestrators/quickstart/video-transcoding">
+    **20-30 min.** Verify GPU transcoding works. Runs an orchestrator and gateway on the same machine, sends a test stream via ffmpeg, confirms HLS output.
+  </Card>
+  <Card title="AI Inference Test" icon="microchip" href="/v2/orchestrators/quickstart/video-transcoding#ai-inference-test">
+    **35-65 min.** Verify AI inference works. Runs an orchestrator and AI runner with one warm model, sends a test prompt, confirms an image is returned. Requires 24 GB VRAM for diffusion; 8 GB for LLM alternative.
+  </Card>
+</CardGroup>
+
+Both tests are on the same page. Complete the video test first - the prerequisites and Docker setup are shared.
+
+<CustomDivider middleText="What You Need" />
+
+## What you need
+
+- **NVIDIA GPU** — any model for the video test; 24 GB VRAM for AI diffusion (or 8-16 GB for the LLM alternative)
+- **Docker Engine** — with NVIDIA Container Toolkit for GPU passthrough
+- **ffmpeg** — for the video test only (`ffmpeg -version` to check)
+- **Linux** — required for the AI test (video test also works on WSL2 or macOS Docker)
+
+No Arbitrum wallet, no LPT, no ETH.
+
+<CustomDivider middleText="After the Quickstart" />
+
+## After the quickstart
+
+<CardGroup cols={2}>
+  <Card title="Setup Guide" icon="gear" href="/v2/orchestrators/setup/guide">
+    Configure for production: on-chain, staking, reward calling. The setup section takes a verified GPU to an earning node.
+  </Card>
+  <Card title="Operator Rationale" icon="scale-balanced" href="/v2/orchestrators/guides/operator-considerations/operator-rationale">
+    Still evaluating? Review the cost-benefit analysis before committing to the full setup.
+  </Card>
+  <Card title="Join a Pool" icon="users" href="/v2/orchestrators/guides/deployment-details/join-a-pool">
+    The fastest path to earning without full setup - contribute GPU capacity to an existing operator pool.
+  </Card>
+  <Card title="Workload Options" icon="list-check" href="/v2/orchestrators/guides/ai-and-job-workloads/workload-options">
+    See which workloads earn and which fit your hardware before committing.
+  </Card>
+</CardGroup>

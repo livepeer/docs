@@ -1,0 +1,312 @@
+---
+title: Video Transcoding Quickstart
+sidebarTitle: Video Transcoding
+description: >-
+  Run a Livepeer transcoding orchestrator with Docker — from install to first
+  job in under 30 minutes.
+keywords:
+  - livepeer
+  - orchestrator
+  - quickstart
+  - transcoding
+  - go-livepeer
+  - Docker
+  - GPU
+  - NVIDIA
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: current
+lastVerified: 2026-03-13
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+This quickstart gets a transcoding orchestrator running with Docker using opinionated defaults. By the end, your node will be registered on the Livepeer network and ready to receive video transcoding jobs.
+
+<Note>
+This guide uses Docker with GPU passthrough. For binary installs, macOS/Windows, or custom configurations, see the [full Setup Guide](/v2/orchestrators/setup/guide).
+</Note>
+
+<CustomDivider />
+
+## Prerequisites
+
+Before you start, confirm:
+
+- **NVIDIA GPU** visible via `nvidia-smi` (driver 525+)
+- **Docker Engine** installed ([docs.docker.com](https://docs.docker.com/engine/install/))
+- **NVIDIA Container Toolkit** installed — verify: `docker run --rm --gpus all nvidia/cuda:12.0.0-base-ubuntu22.04 nvidia-smi`
+- **Port 8935 TCP** open to the public internet
+- **Arbitrum RPC URL** from [Alchemy](https://www.alchemy.com) or [Infura](https://infura.io) (free tier is fine)
+- **ETH on Arbitrum** for gas (a few dollars)
+- **LPT on Arbitrum** for staking (check [Explorer](https://explorer.livepeer.org) for the current active set threshold)
+
+See [Setup Checklist](/v2/orchestrators/setup/rcs-requirements) for detailed requirements. See [Arbitrum Exchanges](/v2/orchestrators/resources/arbitrum-exchanges) for where to get ETH and LPT on Arbitrum.
+
+<CustomDivider />
+
+## Step 1 — Pull the Docker image
+
+```bash icon="terminal"
+docker pull livepeer/go-livepeer:0.8.9
+```
+
+Verify:
+
+```bash icon="terminal"
+docker run --rm livepeer/go-livepeer:0.8.9 livepeer -version
+```
+
+<CustomDivider />
+
+## Step 2 — Create your data directory
+
+```bash icon="terminal"
+mkdir -p ~/.lpData
+```
+
+This is where go-livepeer will store your keystore and node data.
+
+<CustomDivider />
+
+## Step 3 — Start the node
+
+Replace the three placeholders below with your values:
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Placeholder</TableCell>
+    <TableCell header>Value</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`<YOUR_RPC_URL>`</TableCell>
+    <TableCell>Your Alchemy or Infura Arbitrum endpoint</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`<YOUR_PUBLIC_IP>`</TableCell>
+    <TableCell>Your server's public IP address</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`<PRICE>`</TableCell>
+    <TableCell>Price per pixel in wei (e.g. `1200` — check [livepeer.tools](https://livepeer.tools) for current market rates)</TableCell>
+  </TableRow>
+</StyledTable>
+
+```bash icon="terminal"
+docker run -d \
+  --name livepeer \
+  --gpus all \
+  --network host \
+  -v ~/.lpData:/root/.lpData \
+  livepeer/go-livepeer:0.8.9 \
+  -network arbitrum-one-mainnet \
+  -ethUrl <YOUR_RPC_URL> \
+  -orchestrator \
+  -transcoder \
+  -nvidia 0 \
+  -serviceAddr <YOUR_PUBLIC_IP>:8935 \
+  -pricePerUnit <PRICE> \
+  -pixelsPerUnit 1000000000000 \
+  -monitor
+```
+
+Check the logs:
+
+```bash icon="terminal"
+docker logs -f livepeer
+```
+
+You should see:
+
+``` icon="terminal"
+Transcoding on Nvidia GPU 0
+```
+
+and:
+
+``` icon="terminal"
+Listening for RPC on :8935
+```
+
+<Warning>
+On first run, go-livepeer will create a new Ethereum account and prompt you for a passphrase. **Remember this passphrase** — you need it to restart the node. The keystore is saved in `~/.lpData/arbitrum-one-mainnet/keystore`.
+</Warning>
+
+If you already have an Ethereum account, add `-ethKeystorePath` and `-ethPassword` flags. See [Configure](/v2/orchestrators/setup/configure) for details.
+
+<CustomDivider />
+
+## Step 4 — Verify the connection
+
+Confirm you are connected to Arbitrum:
+
+```bash icon="terminal"
+curl -s -X POST -H "Content-Type: application/json" \
+  --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
+  <YOUR_RPC_URL>
+```
+
+Expected: `"result":"0xa4b1"` (Arbitrum One, chain ID 42161).
+
+Confirm your node is publicly reachable (run from a **different machine**):
+
+```bash icon="terminal"
+curl -k https://<YOUR_PUBLIC_IP>:8935/status
+```
+
+If this times out, check your firewall and port forwarding. See [Verify](/v2/orchestrators/setup/test) for troubleshooting.
+
+<CustomDivider />
+
+## Step 5 — Activate on the network
+
+Open `livepeer_cli` in a second terminal:
+
+```bash icon="terminal"
+docker exec -it livepeer livepeer_cli
+```
+
+Select **"Invoke multi-step 'become an orchestrator'"** and follow the prompts:
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Prompt</TableCell>
+    <TableCell header>Recommended value</TableCell>
+    <TableCell header>Notes</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Reward cut</TableCell>
+    <TableCell>`10`</TableCell>
+    <TableCell>You keep 10% of LPT rewards, delegators share 90%</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Fee cut</TableCell>
+    <TableCell>`95`</TableCell>
+    <TableCell>You keep 95% of ETH fees</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Pixels per unit</TableCell>
+    <TableCell>`1`</TableCell>
+    <TableCell>Accept the default</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Price per unit</TableCell>
+    <TableCell>Same as your `-pricePerUnit`</TableCell>
+    <TableCell>Must be consistent with your startup flag</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Service address</TableCell>
+    <TableCell>`<YOUR_PUBLIC_IP>:8935`</TableCell>
+    <TableCell>Must match your `-serviceAddr`</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Stake amount</TableCell>
+    <TableCell>Your LPT amount in LPTU</TableCell>
+    <TableCell>1 LPT = `1000000000000000000` LPTU. To stake 100 LPT, enter `100000000000000000000`</TableCell>
+  </TableRow>
+</StyledTable>
+
+<Note>
+Two transactions will be submitted: `approve` (authorises the staking contract) and `bond` (stakes your LPT). Wait for both to confirm on Arbitrum.
+</Note>
+
+<CustomDivider />
+
+## Step 6 — Verify activation
+
+Your node joins the active set at the start of the **next round** (~24 hours after activation).
+
+1. Go to [Livepeer Explorer](https://explorer.livepeer.org)
+2. Search for your Ethereum address
+3. Confirm status shows **Active**
+
+Check your logs for job activity:
+
+```bash icon="terminal"
+docker logs livepeer 2>&1 | grep -i "got segment"
+```
+
+<Accordion  title="Not receiving jobs?" icon="triangle-exclamation">
+
+**Service address not reachable** — the #1 cause. Re-test port 8935 from an external machine.
+
+**Price too high** — gateways filter by max price. Check current rates on [livepeer.tools](https://livepeer.tools).
+
+**Not in the active set** — you need top-100 stake. Check your rank on Explorer.
+
+**Just activated** — wait for the next round (~24 hours).
+
+For more, see [Verify Your Setup](/v2/orchestrators/setup/test) and the [FAQ](/v2/orchestrators/resources/faq).
+
+</Accordion>
+
+<CustomDivider />
+
+## What you just set up
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d' }}}%%
+flowchart LR
+    classDef default stroke-width:2px
+    GW["Gateways"] -->|"send video segments"| Node["Your Node\n(orchestrator + transcoder)"]
+    Node -->|"return transcoded video"| GW
+    Node -->|"stake, reward, redeem"| Arb["Arbitrum One"]
+```
+
+Your node is now:
+- **Registered** on the Livepeer protocol via Arbitrum One
+- **Staked** with LPT, making it eligible for job selection
+- **Transcoding** video segments on your GPU when gateways route work to you
+- **Earning** ETH fees per job + LPT rewards per round
+
+<CustomDivider />
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Set Up Monitoring" icon="chart-line" href="/v2/orchestrators/setup/r-monitor" arrow />
+  <Card title="Add AI Workloads" icon="microchip-ai" href="/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations" arrow />
+  <Card title="Earnings Explained" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earning-model" arrow />
+</CardGroup>
+
+{/*
+  PURPOSE:
+  Quickstart for getting a GPU transcoding node running on Livepeer.
+  Minimal steps to go from zero to processing video segments.
+  Should cover both video AND basic AI setup as a unified GPU quickstart.
+
+  SECTION HOME: Quickstart
+  JOURNEY POSITION: 2 of 3 in Quickstart
+  CROSS-REFS:
+  - Setup section - full detailed setup
+  - Workloads & AI > Video Transcoding - detailed video guide
+*/}

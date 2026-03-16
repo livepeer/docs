@@ -1,3 +1,24 @@
+/**
+ * @component Subtitle
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Subtitle primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/about/mental-model.mdx, v2/about/resources/blockchain-contracts.mdx, v2/home/solutions/showcase.mdx, v2/home/solutions/verticals.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @param {object} [style={}] - style prop.
+ * @param {any} text - text prop.
+ * @param {any} children - children prop.
+ * @example
+ * <Subtitle text="example">Example content</Subtitle>
+ */
 export const Subtitle = ({ style = {}, text, children }) => {
   return (
     <>
@@ -18,9 +39,24 @@ export const Subtitle = ({ style = {}, text, children }) => {
 };
 
 /**
- * CopyText - Inline code with copy button
- * @param {string} text - The text to display and copy
- * @param {string} [label] - Optional label before the text
+ * @component CopyText
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Copy Text primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/about/resources/blockchain-contracts.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @param {any} text - text prop.
+ * @param {any} label - label prop.
+ * @example
+ * <CopyText text="example" label="example" />
  */
 export const CopyText = ({ text, label }) => {
   const handleCopy = () => {
@@ -73,6 +109,26 @@ export const CopyText = ({ text, label }) => {
   );
 };
 
+/**
+ * @component CardTitleTextWithArrow
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Card Title Text With Arrow primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/about/livepeer-protocol/core-mechanisms.mdx, v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/livepeer-token.mdx, v2/about/livepeer-protocol/overview.mdx, v2/about/livepeer-protocol/technical-architecture.mdx, v2/about/livepeer-protocol/treasury.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @param {any} children - children prop.
+ * @param {any} cardProps - card Props prop.
+ * @example
+ * <CardTitleTextWithArrow cardProps="example">Example content</CardTitleTextWithArrow>
+ */
 export const CardTitleTextWithArrow = ({ children, ...cardProps }) => {
   return (
     <div
@@ -122,6 +178,27 @@ export const CardTitleTextWithArrow = ({ children, ...cardProps }) => {
   // );
 };
 
+/**
+ * @component AccordionTitleWithArrow
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Accordion Title With Arrow primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies none
+ * @usedIn v2/about/livepeer-protocol/core-mechanisms.mdx, v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/livepeer-token.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @param {any} text - text prop.
+ * @param {any} children - children prop.
+ * @param {string} [color="var(--text)"] - color prop.
+ * @example
+ * <AccordionTitleWithArrow text="example">Example content</AccordionTitleWithArrow>
+ */
 export const AccordionTitleWithArrow = ({
   text,
   children,

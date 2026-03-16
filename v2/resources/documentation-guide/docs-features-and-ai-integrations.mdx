@@ -1,18 +1,33 @@
 ---
-sidebarTitle: 'Features & AI'
-title: 'Features and AI Integrations'
-description: The Livepeer documentation includes several powerful features designed to enhance your experience and make information more accessible.
-keywords: ["livepeer", "resources", "documentation guide", "docs features and ai integrations", "features", "integrations"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+title: Features and AI Integrations
+sidebarTitle: Features & AI
+description: >-
+  The Livepeer documentation includes several powerful features designed to
+  enhance your experience and make information more accessible.
+pageType: concept
+keywords:
+  - livepeer
+  - resources
+  - documentation guide
+  - docs features and ai integrations
+  - features
+  - integrations
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: everyone
+lastVerified: 2026-03-17
+purpose: concept
 ---
-
 ## Search
 
 ### Built-in Search
 
 The search functionality is integrated into the header of every page:
 
-- **Semantic Search** - Understands context and meaning, not just exact keyword matches
+- **Semantic Search** - Understands context and meaning, beyond exact keyword matches
 - **Instant Results** - See suggestions and results as you type
 - **Page Previews** - Quick preview of matching content before clicking
 - **Keyword Enhancement** - Pages include metadata keywords to improve discoverability
@@ -58,6 +73,21 @@ The documentation is designed to be AI-friendly and integrates with:
 - **Claude** - Alternative AI integration support
 - **Other LLMs** - Structured content optimised for AI parsing
 
+### Contributor Research Workflow
+
+Docs maintainers also have an experimental research workflow for factual review.
+
+It is designed for situations where a page may contain:
+
+- stale thresholds or limits
+- contradictory setup guidance
+- time-sensitive business or support claims
+- repeated facts that appear across multiple related pages
+
+Use it when you need evidence-backed review instead of structural lint:
+
+- [Research and Fact Checking](./research-and-fact-checking)
+
 ### AI-Optimised Content
 
 The documentation is structured to be easily consumed by AI systems:
@@ -95,7 +125,7 @@ Access both current (v2) and legacy (v1) documentation:
 
 - **Version Selector** - In the header, switch between versions
 - **Preserved Content** - All v1 content is maintained for reference
-- **Clear Indication** - Current version is clearly marked
+- **Clear Indication** - Current version is marked
 
 ## Interactive Elements
 
@@ -157,7 +187,7 @@ Feedback mechanisms may vary based on Mintlify features. Check the bottom of pag
 
 ## Automations
 
-The documentation includes several automation pipelines to ensure accuracy and reduce manual overhead:
+The documentation includes multiple automation pipelines to ensure accuracy and reduce manual overhead:
 
 ### Data Fetching
 
@@ -180,16 +210,20 @@ Planned automations include:
 - **AI Prompt Pages** - Generate quickstart guides from prompts
 - **Feedback Loops** - Integration with Discord and GitHub for community feedback
 
+<Note>
+The research workflow is advisory-first. It complements the existing MDX, style, and link pipelines instead of replacing them.
+</Note>
+
 ## Docs Structure Features
 
 ### Automatic Page Index Generation
 
-The repository includes an internal docs feature that keeps `v2/pages` index files synchronized with the current folder and markdown file structure.
+The repository includes an internal docs feature that keeps `v2/` index files synchronized with the current folder and markdown file structure.
 
 What it generates:
 
-- `v2/pages/<top-level-section>/index.mdx` for each direct child folder under `v2/pages/`
-- `v2/pages/index.mdx` as the root aggregate index
+- `v2/<top-level-section>/index.mdx` for each direct child folder under `v2/`
+- `v2/index.mdx` as the root aggregate index
 
 Format rules:
 
@@ -208,7 +242,7 @@ Validation and cleanup rules:
 
 Automation behavior:
 
-- Runs in pre-commit when staged files include `v2/pages` changes:
+- Runs in pre-commit when staged files include `v2/` changes:
   `node tools/scripts/generate-pages-index.js --staged --write --stage`
 - Supports manual verification/rebuild:
   - `node tools/scripts/generate-pages-index.js`
@@ -237,6 +271,6 @@ The documentation is structured to be:
 
 ## Next Steps
 
-- Learn how to [Use the Documentation](./documentation-guide) effectively
+- Learn how to [Use the Documentation](./documentation-guide) well
 - Discover how to [Contribute](./contribute-to-the-docs) and provide feedback
 - Explore the [Component Library](./component-library) for developers

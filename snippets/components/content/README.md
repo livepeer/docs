@@ -10,16 +10,16 @@ Content components handle code display, external content loading, and data prese
 | `external-content.jsx` | `ExternalContent`                                                                                                      | External content loader (GitHub repos) |
 | `math.jsx`             | `MathInline`, `MathBlock`                                                                                              | Math wrapper components (no deps) |
 | `release.jsx`          | `LatestVersion`                                                                                                        | Version display component     |
-| `response-field.jsx`    | `ValueResponseField`, `CustomResponseField`, `ResponseFieldExpandable`, `ResponseFieldAccordion`, `ResponseFieldGroup` | API response field components |
+| `responseField.jsx`    | `ValueResponseField`, `CustomResponseField`, `ResponseFieldExpandable`, `ResponseFieldAccordion`, `ResponseFieldGroup` | API response field components |
 
 ## Usage
 
 ```jsx
 import { CustomCodeBlock, CodeComponent } from "/snippets/components/content/code.jsx";
-import { ExternalContent } from "/snippets/components/content/external-content.jsx";
+import { ExternalContent } from "/snippets/components/content/externalContent.jsx";
 import { MathInline, MathBlock } from "/snippets/components/content/math.jsx";
 import { LatestVersion } from "/snippets/components/content/release.jsx";
-import { ResponseFieldExpandable } from "/snippets/components/content/response-field.jsx";
+import { ResponseFieldExpandable } from "/snippets/components/content/responseField.jsx";
 ```
 
 ## Theme Support

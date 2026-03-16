@@ -52,6 +52,8 @@ async function runTests() {
   await runCase('Parses default args with classify policy', async () => {
     const parsed = audit.parseArgs([]);
     assert.strictEqual(parsed.mode, 'full');
+    assert.strictEqual(parsed.report, audit.DEFAULT_REPORT);
+    assert.strictEqual(parsed.reportJson, audit.DEFAULT_REPORT_JSON);
     assert.strictEqual(parsed.respectMintIgnore, true);
     assert.strictEqual(parsed.externalPolicy, 'classify');
     assert.strictEqual(parsed.externalLinkTypes, 'navigational');
@@ -86,6 +88,31 @@ async function runTests() {
     assert.strictEqual(parsed.respectMintIgnore, false);
     assert.strictEqual(parsed.writeLinks, false);
     assert.ok(parsed.reportJson.endsWith('/tmp/v2-link-audit-unit.json'));
+  });
+
+  await runCase('Parses docs.json tab scope flags and promotes mode to tab', async () => {
+    const parsed = audit.parseArgs([
+      '--tab', 'GPU Nodes',
+      '--anchor', 'GPU Nodes',
+      '--group', 'Tools and Guides',
+      '--no-write-links'
+    ]);
+
+    assert.strictEqual(parsed.mode, 'tab');
+    assert.strictEqual(parsed.tab, 'GPU Nodes');
+    assert.strictEqual(parsed.anchor, 'GPU Nodes');
+    assert.strictEqual(parsed.group, 'Tools and Guides');
+    assert.strictEqual(parsed.writeLinks, false);
+  });
+
+  await runCase('Derives JSON report path from custom markdown report when report-json is omitted', async () => {
+    const parsed = audit.parseArgs([
+      '--report', '/tmp/v2-link-audit-unit-report.md',
+      '--no-write-links'
+    ]);
+
+    assert.ok(parsed.report.endsWith('/tmp/v2-link-audit-unit-report.md'));
+    assert.ok(parsed.reportJson.endsWith('/tmp/v2-link-audit-unit-report.json'));
   });
 
   await runCase('Normalizes external URLs by removing hash and preserving query', async () => {
@@ -123,7 +150,7 @@ async function runTests() {
     assert.strictEqual(audit.classifyExternalStatus(503), audit.EXTERNAL_SOFT_FAIL);
   });
 
-  await runCase('Excludes x-* paths from explicit --files scope', async () => {
+  await runCase('Excludes explicit unpublished paths from explicit --files scope', async () => {
     const root = getRepoRoot();
     const tmpDir = path.join(root, 'v2', 'x-experimental', 'link-audit-unit-fixture');
     const tmpFile = path.join(tmpDir, `fixture-${Date.now()}.mdx`);
@@ -154,11 +181,41 @@ async function runTests() {
     }
   });
 
+  await runCase('Docs.json tab scope resolves current orchestrator quickstart files', async () => {
+    const result = await audit.runAudit({
+      argv: [
+        '--tab', 'Orchestrators',
+        '--anchor', 'Orchestrators',
+        '--group', 'Quickstart',
+        '--no-write-links',
+        '--report', '/tmp/v2-link-audit-unit-orchestrators.md',
+        '--report-json', '/tmp/v2-link-audit-unit-orchestrators.json'
+      ]
+    });
+
+    assert.strictEqual(result.fileCount, 2);
+    const analyzedFiles = (result.jsonReport?.files || []).map((file) => file.file || file.filePath || '');
+    assert(analyzedFiles.some((file) => file.endsWith('v2/orchestrators/quickstart/guide.mdx')));
+    assert(analyzedFiles.some((file) => file.endsWith('v2/orchestrators/quickstart/video-transcoding.mdx')));
+    assert(analyzedFiles.every((file) => !file.includes('v2/orchestrators/guides/')));
+  });
+
+  await runCase('Resolves rooted hidden v2 routes outside docs.json navigation', async () => {
+    const root = getRepoRoot();
+    const currentFile = path.join(root, 'snippets', 'templates', 'pages', 'landing-and-navigation', 'navigation-page.mdx');
+    const resolved = audit.resolveInternalPath('/templates/pages/overview-page-template', currentFile);
+
+    assert.strictEqual(
+      path.relative(root, resolved).split(path.sep).join('/'),
+      'v2/templates/pages/overview-page-template'
+    );
+  });
+
   return {
     errors,
     warnings,
     passed: errors.length === 0,
-    total: 6
+    total: 10
   };
 }
 

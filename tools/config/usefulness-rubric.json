@@ -20,7 +20,10 @@
       "internal_links_min": { "weight": 0.25, "type": "threshold", "signal": "internal_link_count", "min": 1 },
       "no_code_blocks_preferred": { "weight": 0.05, "type": "advisory" },
       "plain_language_opening": { "weight": 0.25, "type": "content_check", "check": "first_200_words_no_jargon" },
-      "has_next_link": { "weight": 0.25, "type": "heading_keyword", "keywords": ["next", "learn more", "get started", "continue", "read more"] }
+      "has_next_link": { "weight": 0.25, "type": "heading_keyword", "keywords": ["next", "learn more", "get started", "continue", "read more"] },
+      "opening_not_boilerplate": { "weight": 0.05, "type": "boolean", "check": "opening_not_boilerplate" },
+      "low_filler_marketing_language": { "weight": 0.05, "type": "boolean", "check": "low_filler_marketing_language" },
+      "limited_negation_definitions": { "weight": 0.05, "type": "boolean", "check": "limited_negation_definitions" }
     },
     "tier2_llm": {
       "reader_benefit_clear": { "weight": 0.4, "prompt_key": "overview_benefit" },
@@ -36,7 +39,10 @@
       "no_steps_component": { "weight": 0.05, "type": "absence", "signal": "steps_component" },
       "has_illustration": { "weight": 0.2, "type": "presence_any", "signals": ["mermaid", "image", "table"] },
       "has_related_links_section": { "weight": 0.15, "type": "heading_keyword", "keywords": ["related", "see also", "further reading", "learn more"] },
-      "defines_terms": { "weight": 0.15, "type": "content_keyword", "keywords": ["is a", "refers to", "means", "defined as"] }
+      "defines_terms": { "weight": 0.15, "type": "content_keyword", "keywords": ["is a", "refers to", "means", "defined as"] },
+      "opening_not_boilerplate": { "weight": 0.05, "type": "boolean", "check": "opening_not_boilerplate" },
+      "low_filler_marketing_language": { "weight": 0.05, "type": "boolean", "check": "low_filler_marketing_language" },
+      "limited_negation_definitions": { "weight": 0.05, "type": "boolean", "check": "limited_negation_definitions" }
     },
     "tier2_llm": {
       "single_concept_focus": { "weight": 0.3, "prompt_key": "concept_focus" },
@@ -54,7 +60,9 @@
       "word_count_min": { "weight": 0.1, "type": "threshold", "signal": "word_count", "min": 200 },
       "has_next_steps": { "weight": 0.1, "type": "heading_keyword", "keywords": ["next", "what's next", "continue", "next steps"] },
       "internal_links_min": { "weight": 0.1, "type": "threshold", "signal": "internal_link_count", "min": 1 },
-      "has_expected_result": { "weight": 0.1, "type": "content_keyword", "keywords": ["you should see", "expected output", "result", "verify", "confirm"] }
+      "has_expected_result": { "weight": 0.1, "type": "content_keyword", "keywords": ["you should see", "expected output", "result", "verify", "confirm"] },
+      "opening_not_boilerplate": { "weight": 0.05, "type": "boolean", "check": "opening_not_boilerplate" },
+      "low_filler_marketing_language": { "weight": 0.05, "type": "boolean", "check": "low_filler_marketing_language" }
     },
     "tier2_llm": {
       "action_result_pairing": { "weight": 0.4, "prompt_key": "howto_action_result" },
@@ -72,7 +80,9 @@
       "has_next_steps": { "weight": 0.1, "type": "heading_keyword", "keywords": ["next", "what's next", "continue"] },
       "internal_links_min": { "weight": 0.1, "type": "threshold", "signal": "internal_link_count", "min": 2 },
       "has_time_estimate": { "weight": 0.1, "type": "content_keyword", "keywords": ["minutes", "takes about", "estimated time", "time:"] },
-      "has_contextual_explanation": { "weight": 0.05, "type": "content_keyword", "keywords": ["because", "this works by", "the reason", "this is important because"] }
+      "has_contextual_explanation": { "weight": 0.05, "type": "content_keyword", "keywords": ["because", "this works by", "the reason", "this is important because"] },
+      "opening_not_boilerplate": { "weight": 0.05, "type": "boolean", "check": "opening_not_boilerplate" },
+      "low_filler_marketing_language": { "weight": 0.05, "type": "boolean", "check": "low_filler_marketing_language" }
     },
     "tier2_llm": {
       "step_completeness": { "weight": 0.3, "prompt_key": "tutorial_steps_complete" },
@@ -88,7 +98,9 @@
       "has_type_info": { "weight": 0.15, "type": "content_keyword", "keywords": ["type:", "string", "integer", "boolean", "required", "optional", "default:"] },
       "scannable_structure": { "weight": 0.15, "type": "threshold", "signal": "heading_count", "min": 3 },
       "has_usage_link": { "weight": 0.1, "type": "threshold", "signal": "internal_link_count", "min": 1 },
-      "no_narrative_prose": { "weight": 0.15, "type": "threshold", "signal": "word_count", "max": 3000 }
+      "no_narrative_prose": { "weight": 0.15, "type": "threshold", "signal": "word_count", "max": 3000 },
+      "opening_not_boilerplate": { "weight": 0.05, "type": "boolean", "check": "opening_not_boilerplate" },
+      "low_filler_marketing_language": { "weight": 0.05, "type": "boolean", "check": "low_filler_marketing_language" }
     },
     "tier2_llm": {
       "parameter_completeness": { "weight": 0.4, "prompt_key": "reference_params" },

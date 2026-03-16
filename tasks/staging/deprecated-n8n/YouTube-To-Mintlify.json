@@ -1,0 +1,364 @@
+{
+  "name": "Youtube to Mintlify",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "github_owner",
+              "name": "githubOwner",
+              "value": "livepeer",
+              "type": "string"
+            },
+            {
+              "id": "github_repo",
+              "name": "githubRepo",
+              "value": "docs",
+              "type": "string"
+            },
+            {
+              "id": "github_path",
+              "name": "githubFilePath",
+              "value": "snippets/automations/youtube/youtubeData.jsx",
+              "type": "string"
+            },
+            {
+              "id": "077c994c-4563-4210-8690-3b00fe4dba99",
+              "name": "githubBranch",
+              "value": "docs-v2-preview",
+              "type": "string"
+            },
+            {
+              "id": "293846b3-b346-4a17-96fc-880b2917db8d",
+              "name": "ytChannelID",
+              "value": "UCzfHtZnmUzMbJDxGCwIgY2g",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        -32,
+        560
+      ],
+      "id": "5b785321-23ff-4731-846b-b853812202d5"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.googleapis.com/youtube/v3/search?part=snippet&channelId={{ $json.ytChannelID }}&maxResults=50&order=date&type=video",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "youTubeOAuth2Api",
+        "options": {}
+      },
+      "name": "Get Recent Videos (50)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        160,
+        560
+      ],
+      "id": "52d7ac6a-f264-47e0-a070-1a4c24be401d",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "FFXIPg4ZitgZSoeg",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "items",
+        "options": {}
+      },
+      "name": "Split Into Items",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        368,
+        560
+      ],
+      "id": "d987dc0f-4b40-4a4d-afd6-95883a3065ed"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id={{ $json.id.videoId }}&key=YOUR_YOUTUBE_API_KEY_HERE",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "youTubeOAuth2Api",
+        "options": {}
+      },
+      "name": "Get Video Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        592,
+        560
+      ],
+      "id": "0b4519ff-49d0-40ea-baed-a7aab1a8138d",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "FFXIPg4ZitgZSoeg",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parse ISO 8601 duration format\nfunction parseDuration(duration) {\n  const match = duration.match(/PT(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+)S)?/);\n  if (!match) return 0;\n  \n  const hours = parseInt(match[1] || 0);\n  const minutes = parseInt(match[2] || 0);\n  const seconds = parseInt(match[3] || 0);\n  \n  return hours * 3600 + minutes * 60 + seconds;\n}\n\nconst item = $input.item.json;\nconst videoData = item.items[0];\n\nif (!videoData) {\n  return null;\n}\n\nconst duration = videoData.contentDetails.duration;\nconst durationSeconds = parseDuration(duration);\n\n// Shorts are ≤60 seconds AND not livestreams\n// Livestreams have PT0S duration but we want to KEEP them\nconst snippet = videoData.snippet;\nconst isLivestream = snippet.liveBroadcastContent === 'live' || \n                     snippet.liveBroadcastContent === 'upcoming' ||\n                     duration === 'PT0S' ||\n                     snippet.title.toLowerCase().includes('watercooler') ||\n                     snippet.title.toLowerCase().includes('fireside');\n\nconst isShort = durationSeconds <= 60 && durationSeconds > 0 && !isLivestream;\n\n// Get video ID from search result\nconst videoId = $('Split Into Items').item.json.id.videoId;\n\nreturn {\n  videoId: videoId,\n  title: videoData.snippet.title,\n  description: videoData.snippet.description,\n  publishedAt: videoData.snippet.publishedAt,\n  thumbnailUrl: videoData.snippet.thumbnails.high.url,\n  channelTitle: videoData.snippet.channelTitle,\n  url: `https://www.youtube.com/watch?v=${videoId}`,\n  duration: duration,\n  durationSeconds: durationSeconds,\n  isShort: isShort,\n  isLivestream: isLivestream\n};"
+      },
+      "name": "Parse Duration & Format",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        560
+      ],
+      "id": "df666955-ae71-42ac-8c02-0761d360e8a9"
+    },
+    {
+      "parameters": {
+        "jsCode": "const videos = $input.all().map(item => ({\n  title: item.json.title,\n  href: item.json.url,\n  author: `By ${item.json.channelTitle || 'Livepeer'}`,\n  content: item.json.description || '',\n  publishedDate: new Date(item.json.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),\n  duration: item.json.duration,\n  thumbnailUrl: item.json.thumbnailUrl\n}));\n\n// Properly escape strings for JSX\nfunction escapeForJSX(str) {\n  return str\n    .replace(/\\\\/g, '\\\\\\\\')\n    .replace(/'/g, \"\\\\'\") \n    .replace(/\"/g, '\\\\\"')\n    .replace(/\\n/g, ' ')\n    .replace(/\\r/g, '')\n    .replace(/\\t/g, ' ');\n}\n\nconst jsxContent = `export const youtubeData = [\n${videos.map(v => `  {\n    title: '${escapeForJSX(v.title)}',\n    href: '${v.href}',\n    author: '${v.author}',\n    content: '${escapeForJSX(v.content.substring(0, 500))}...',\n    publishedDate: '${v.publishedDate}',\n    duration: '${v.duration}',\n    thumbnailUrl: '${v.thumbnailUrl}'\n  }`).join(',\\n')}\n];\n`;\n\nreturn [{ json: { content: jsxContent } }];"
+      },
+      "name": "Format as JSX Array",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1328,
+        384
+      ],
+      "id": "4dfc1d0d-000b-4513-95c0-e10214a2267b"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "93ec0f66-fadc-4d05-849d-7b1f296b0591",
+              "leftValue": "={{ $json.isShort }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Filter Out Shorts1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1024,
+        560
+      ],
+      "id": "fb545780-0abc-488d-b0c5-25935677f307"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $json.githubOwner }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "name",
+          "value": "={{ $json.githubRepo }}"
+        },
+        "filePath": "={{ $json.githubFilePath }}",
+        "fileContent": "={{ $json.content }}",
+        "commitMessage": "=Update Livepeer YouTube videos - {{ new Date().toISOString() }}",
+        "additionalParameters": {
+          "branch": {
+            "branch": "={{ $json.githubBranch }}"
+          }
+        }
+      },
+      "name": "Update GitHub File1",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1856,
+        496
+      ],
+      "id": "a880eee6-c95e-4865-a40d-c4bdf1f1f492",
+      "webhookId": "eca37a41-ad34-4f08-b9a3-ea547386cbf3",
+      "executeOnce": false,
+      "credentials": {
+        "githubApi": {
+          "id": "vAAQD9gcQcGNKMOH",
+          "name": "Github Livepeer/docs Write Commit Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -256,
+        560
+      ],
+      "id": "4527eae0-f798-455b-8019-33d9541b7369",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1520,
+        688
+      ],
+      "id": "ae991009-3652-4d6d-b5a9-72c03308c033",
+      "name": "Merge",
+      "executeOnce": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Get Recent Videos (50)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get Recent Videos (50)": {
+      "main": [
+        [
+          {
+            "node": "Split Into Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Into Items": {
+      "main": [
+        [
+          {
+            "node": "Get Video Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Video Details": {
+      "main": [
+        [
+          {
+            "node": "Parse Duration & Format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Duration & Format": {
+      "main": [
+        [
+          {
+            "node": "Filter Out Shorts1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format as JSX Array": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Out Shorts1": {
+      "main": [
+        [
+          {
+            "node": "Format as JSX Array",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Update GitHub File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fb1e7efe-f763-43f1-9c25-c9dafc660553",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b77ce31e344450acd6ad20bd6cde79f46c1e07d55921483122bfba86e8350352"
+  },
+  "id": "inaWOwG1lzjyKFyC",
+  "tags": []
+}

@@ -18,20 +18,20 @@ jobs:
         run: node tools/scripts/docs-quality-and-freshness-audit.js --scope full
         continue-on-error: true
 
-      - name: Page archetype check
-        run: node tools/scripts/validators/structure/check-page-archetype.js
-        continue-on-error: true
-
-      - name: Page ending patterns
-        run: node tools/scripts/validators/content/check-page-endings.js
-        continue-on-error: true
-
-      - name: Agent docs freshness
-        run: node tools/scripts/validators/structure/check-agent-docs-freshness.js
-        continue-on-error: true
-
       - name: Component usage audit
         run: node tools/scripts/audit-component-usage.js
+        continue-on-error: true
+
+      - name: Component registry validation
+        run: node tools/scripts/generate-component-registry.js --validate-only
+        continue-on-error: true
+
+      - name: Component usage drift check
+        run: node tools/scripts/scan-component-imports.js --verify
+        continue-on-error: true
+
+      - name: Component metadata drift check
+        run: node tools/scripts/remediators/components/repair-component-metadata.js --dry-run
         continue-on-error: true
 
       - name: Component layout governance

@@ -1,0 +1,157 @@
+---
+title: AI Model Support
+sidebarTitle: Model Support
+description: >-
+  Reference tables for all AI pipeline types supported on the Livepeer network,
+  with supported model architectures, minimum GPU VRAM requirements, and current
+  status.
+purpose: reference
+keywords:
+  - livepeer
+  - AI
+  - models
+  - pipeline
+  - VRAM
+  - support
+  - LLM
+  - diffusion
+  - cascade
+  - comfystream
+  - BYOC
+  - reference
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: developer
+lastVerified: 2026-03-17
+status: draft
+---
+This page lists all AI pipeline types supported on the Livepeer network, the model architectures they accept, and the minimum GPU VRAM required to run them. Use it to confirm that your model type is supported before building.
+
+The [Cascade / live-video-to-video](#real-time-ai) pipeline and [BYOC](#byoc) support any ComfyUI-compatible model or custom Python model respectively — model support for those paths is not constrained by the network, and bounded only by the GPU capacity of the orchestrator running your workload.
+
+Status reflects the state of the network as published. For the latest pipeline additions and deprecations, see the [ai-runner releases](https://github.com/livepeer/ai-runner/releases).
+
+<CustomDivider />
+
+## Batch AI Pipelines
+
+These pipelines accept a request, process it, and return a result. They use the [AI Jobs API](/v2/developers/concepts/ai-on-livepeer) via a gateway endpoint.
+
+| Pipeline | API endpoint | Supported architectures | Warm model | Min VRAM | Status |
+|----------|-------------|------------------------|------------|----------|--------|
+| **Text to image** | `POST /text-to-image` | Stable Diffusion XL (SDXL), SD 1.5, Flux | `SG161222/RealVisXL_V4.0_Lightning` | 24 GB | <Badge>Beta</Badge> |
+| **Image to image** | `POST /image-to-image` | Instruct-Pix2Pix, SDXL img2img, SD 1.5 | `timbrooks/instruct-pix2pix` | 20 GB | <Badge>Beta</Badge> |
+| **Image to video** | `POST /image-to-video` | Stable Video Diffusion (SVD, SVD-XT) | `stabilityai/stable-video-diffusion-img2vid-xt` | [//]: # (REVIEW: VRAM not confirmed from Livepeer published source. SVD-XT runs on A100 80GB per HF model card; Livepeer-published minimum not retrieved. Confirm from docs.livepeer.org/ai/pipelines/image-to-video) | <Badge>Beta</Badge> |
+| **Image to text** | `POST /image-to-text` | BLIP, BLIP-2, vision-language models | `Salesforce/blip-image-captioning-large` | 4 GB | <Badge>Beta</Badge> |
+| **Audio to text** | `POST /audio-to-text` | Whisper (OpenAI) | `openai/whisper-large-v3` | 12 GB | <Badge>Beta</Badge> |
+| **Text to speech** | `POST /text-to-speech` | [//]: # (REVIEW: Warm model not confirmed — likely Bark or XTTS based on Diffusers TTS pipeline conventions. Verify from docs.livepeer.org/ai/pipelines/text-to-speech) | [//]: # (REVIEW) | 12 GB | <Badge>Beta</Badge> |
+| **Upscale** | `POST /upscale` | SD x4-Upscaler (4× super-resolution) | `stabilityai/stable-diffusion-x4-upscaler` | 24 GB | <Badge>Beta</Badge> |
+| **Segment Anything 2** | `POST /segment-anything-2` | SAM 2 (Meta AI) | `facebook/sam2-hiera-large` | 6 GB | <Badge>Beta</Badge> |
+| **LLM** | `POST /llm` | Any Ollama-compatible model (Llama, Mistral, Gemma, Qwen, …) | `meta-llama/Meta-Llama-3.1-8B-Instruct` | 8 GB | <Badge>Beta</Badge> |
+
+<Note>
+**On warm models:** During the Beta phase, orchestrators are asked to keep one model per pipeline in GPU memory at all times. A warm model processes your request immediately. Cold models incur a load time of 30 seconds to multiple minutes depending on model size and GPU. See [Model warm-up and cold start](#model-warm-up-and-cold-start) for details.
+</Note>
+
+### Notes per pipeline
+
+**Text to image / Image to image / Upscale** — Use any Hugging Face model ID in the `model_id` field of your request. Models not listed as verified on the [pipeline docs](https://docs.livepeer.org/ai/pipelines/text-to-image) may work but are unverified; submit a [feature request](https://github.com/livepeer/ai-runner/issues) to get a model added to the verified list.
+
+**Image to video** — Currently supports SVD-based models only. Video output is 14–25 frames at 576×1024 resolution. Does not accept text prompts — image conditioning only.
+
+**Image to text** — Returns a text caption. Accepts an optional prompt to guide the caption content.
+
+**Audio to text** — Returns a full transcript with per-chunk timestamps. Accepts audio files up to [//]: # (REVIEW: confirm max file size from api-runner or gateway docs). Uses Whisper-large-v3 as the default warm model.
+
+**Text to speech** — Requires a pipeline-specific AI Runner container. Standard ai-runner image does not include this pipeline; orchestrators must opt in.
+
+**Segment Anything 2** — Image segmentation only in the current version. Video segmentation (track objects across frames) is forthcoming. Returns masks, scores, and logits.
+
+**LLM** — Ollama-based. Exposes an OpenAI-compatible chat completions API. Designed for GPUs as small as 8 GB — the entry point for orchestrators with legacy transcoding hardware. The Cloud SPE runner image (`tztcloud/livepeer-ollama-runner`) is the current reference implementation. Request body follows OpenAI `/v1/chat/completions` format.
+
+<CustomDivider />
+
+## Real-Time AI Pipelines
+
+These pipelines process live video streams frame-by-frame. They use the trickle streaming protocol instead of the REST AI Jobs API.
+
+| Pipeline | Transport | Supported models | Min VRAM | Status |
+|----------|-----------|-----------------|----------|--------|
+| **live-video-to-video** (Cascade) | Trickle / WebRTC | Any ComfyUI-compatible model; StreamDiffusion, SDXL, ControlNets, LoRAs, SuperResolution, Whisper (audio), Gemma (video understanding) | [//]: # (REVIEW: Variable by workflow. StreamDiffusion + SD1.5 one-step: community-reported 8–12GB. SDXL + TensorRT: 16–24GB. Confirm minimum supported config from docs.comfystream.org or Rick.) | <Badge>Beta</Badge> |
+
+The live-video-to-video pipeline is served by [ComfyStream](/v2/developers/build/comfystream). The pipeline type in go-livepeer is `live-video-to-video`. It is not accessible via the standard AI Jobs API — it requires a real-time connection to a gateway that has this pipeline enabled.
+
+For a full list of supported ComfyStream nodes, pipeline modes, and performance tuning, see [Build with ComfyStream](/v2/developers/build/comfystream).
+
+<CustomDivider />
+
+## BYOC
+
+Bring Your Own Container (BYOC) is not a pipeline type — it is a container onboarding mechanism that allows any model to run on the Livepeer network.
+
+| Path | Model support | Transport | Min VRAM | Status |
+|------|--------------|-----------|----------|--------|
+| **BYOC via PyTrickle** | Any model you can run in Python | Trickle streaming | Determined by your model | <Badge>Beta</Badge> |
+
+With BYOC, model support is bounded by your container, not by the network. You implement a `FrameProcessor` in Python, wrap it with PyTrickle's `StreamServer`, and register it with an orchestrator. The network routes `live-video-to-video` jobs (or any capability you register) to your container.
+
+See [Bring Your Own Container](/v2/developers/build/byoc) for the full implementation guide.
+
+<CustomDivider />
+
+## Model Warm-Up and Cold Start
+
+**Warm model** — A model already loaded into GPU VRAM. Requests are processed immediately (no load delay).
+
+**Cold model** — A model not currently in VRAM. The orchestrator must download and load it before processing. Load times range from 30 seconds (small models on fast storage) to multiple minutes (large diffusion models on slower disks).
+
+**How to minimise cold-start latency:**
+
+- Use the published warm model for each pipeline if latency matters
+- Request a specific model via `model_id` and coordinate with your orchestrator to keep it warm
+- For production workloads requiring consistent latency, run your own gateway and orchestrator with your target model pre-loaded
+
+**Warm model signalling:** Orchestrators advertise their warm models to the gateway. When you request a specific `model_id`, the gateway routes your job to an orchestrator that has that model warm. If none does, the request is held until a cold-start load completes or times out.
+
+[//]: # (REVIEW: Confirm the timeout behaviour — does the gateway return an error immediately if no warm orchestrator exists, or does it wait? Verify from go-livepeer gateway source or Rick.)
+
+<CustomDivider />
+
+## Requesting a Specific Model
+
+All batch AI pipelines accept a `model_id` parameter in the request body. This value is the Hugging Face model repository path.
+
+```bash icon="terminal"
+curl -X POST "https://<GATEWAY_URL>/text-to-image" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_id": "ByteDance/SDXL-Lightning",
+    "prompt": "A mountain at golden hour",
+    "width": 1024,
+    "height": 1024
+  }'
+```
+
+If `model_id` is omitted, the gateway uses whatever warm model the selected orchestrator has loaded. If you need a specific model and it is not in the verified list for that pipeline, submit a [feature request](https://github.com/livepeer/ai-runner/issues).
+
+For the LLM pipeline, the `model_id` uses the Hugging Face model path (e.g. `meta-llama/Meta-Llama-3.1-8B-Instruct`). The Ollama runner internally maps this to the corresponding Ollama model name (e.g. `llama3.1:8b`) — this mapping is handled by the runner, not the developer.
+
+<CustomDivider />
+
+## Related
+
+<CardGroup cols={3}>
+  <Card title="AI on Livepeer" icon="sparkles" href="/v2/developers/concepts/ai-on-livepeer">
+    Understand batch, real-time, and LLM pipeline categories before choosing a model type.
+  </Card>
+  <Card title="AI Quickstart" icon="rocket" href="/v2/developers/get-started/ai-quickstart">
+    Make your first AI pipeline call with a working code example.
+  </Card>
+  <Card title="BYOC" icon="cube" href="/v2/developers/build/byoc">
+    Run any model on the network — including models not in this table — using Bring Your Own Container.
+  </Card>
+</CardGroup>

@@ -1,462 +1,54 @@
 ---
-title: Componentes de contenido
-sidebarTitle: Contenido
-description: >-
-  Componentes para mostrar código, datos, contenido externo y documentación de
-  API: bloques de código, cargadores de contenido externo, campos de respuestas
-  de API, visualizaciones de versiones y diseños de datos para blogs, foros y
-  eventos
-keywords:
-  - livepeer
-  - components
-  - content
-  - code
-  - api
-  - data
+title: 'Content'
+sidebarTitle: 'Content'
+description: 'Renderers for reader-facing media, code, quotations, and structured content.'
 ---
-{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9jb21wb25lbnQtbGlicmFyeS9jb250ZW50Lm1keCIsInNvdXJjZVJvdXRlIjoidjIvcmVzb3VyY2VzL2RvY3VtZW50YXRpb24tZ3VpZGUvY29tcG9uZW50LWxpYnJhcnkvY29udGVudCIsInNvdXJjZUhhc2giOiI4ZTg1NTRmZTUwNzcwZDc5ZmZjYjc1Yzc2Y2IzMDNhZTQ0NWY0MGY0YzNlYjFhNzY5ZGJkMDExMjkzOTI4MzY1IiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAzLTAxVDEzOjQ1OjI0LjgxMloifQ== */}
-import { CustomCodeBlock, CodeComponent, ComplexCodeBlock, CodeSection } from '/snippets/components/content/code.jsx'
-import { ExternalContent } from '/snippets/components/content/external-content.jsx'
-import { ValueResponseField, CustomResponseField, ResponseFieldExpandable, ResponseFieldAccordion, ResponseFieldGroup } from '/snippets/components/content/response-field.jsx'
-import { LatestVersion } from '/snippets/components/content/release.jsx'
-import { BlogCard, PostCard, CardBlogDataLayout, ColumnsBlogCardLayout, BlogDataLayout, CardColumnsPostLayout, ForumLatestLayout, DiscordAnnouncements, LumaEvents } from '/snippets/components/content/data.jsx'
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9jb21wb25lbnQtbGlicmFyeS9jb250ZW50Lm1keCIsInNvdXJjZVJvdXRlIjoidjIvcmVzb3VyY2VzL2RvY3VtZW50YXRpb24tZ3VpZGUvY29tcG9uZW50LWxpYnJhcnkvY29udGVudCIsInNvdXJjZUhhc2giOiIzMzA4ZDk3NGQ3OTQ0Yjc1MzQ1Y2E4M2Q1MmExYWQzY2UzZjcxYjhmYzBhMmRlYTlmMTE3NTU4YTFiMDMwMDkwIiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoic2NhZmZvbGQiLCJtb2RlbCI6IiIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0xNlQxNzowOToyNi4wMDhaIn0= */}
+{/* codex-i18n: scaffold — translation pending */}
+{/*
+generated-file-banner: generated-file-banner:v1
+Generation Script: tools/scripts/generate-component-docs.js
+Purpose: Generated localized component-library route scaffolds derived from docs-guide/component-registry.json.
+Run when: Component governance metadata, registry outputs, or component-library templates change.
+Run command: node tools/scripts/generate-component-docs.js --fix --template-only --category content
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `tools/scripts/generate-component-docs.js`. <br/>
+**Purpose**: Generated localized component-library route scaffolds derived from docs-guide/component-registry.json. <br/>
+**Run when**: Component governance metadata, registry outputs, or component-library templates change. <br/>
+**Important**: Do not manually edit this file; run `node tools/scripts/generate-component-docs.js --fix --template-only --category content`. <br/>
+</Note>
+
+<Note>Localized prose refresh for `es` is pending. This page preserves the new route and mirrors the English category inventory at a summary level.</Note>
 
 <Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
-  Return to the main component library index
+  Return to the localized component-library landing page.
 </Card>
 
-<CustomDivider middleText="Code Components" />
-
-## Componentes de código
-
-### CustomCodeBlock
-
-Bloque de código avanzado con reemplazo de marcadores de posición, notas pre/post y sección de salida opcional expansible.
-
-**Importar:**
-```jsx
-import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
-```
-
-**Propiedades:**
-
-| Propiedad | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `filename` | `string` | - | No | Nombre del archivo para mostrar en el encabezado |
-| `icon` | `string` | - | No | Icono a mostrar en el encabezado |
-| `language` | `string` | - | No | Lenguaje de programación para resaltado de sintaxis |
-| `highlight` | `string` | - | No | Números de línea/rangos para resaltar (por ejemplo, "1-3,5") |
-| `codeString` | `string` | `""` | No | El contenido del código a mostrar |
-| `placeholderValue` | `string` | `""` | No | Valor para reemplazar{PLACEHOLDER}con |
-| `wrap` | `boolean` | `true` | No | Si se debe envolver las líneas largas |
-| `lines` | `boolean` | `true` | No | Si mostrar números de línea |
-| `preNote` | `string` | `""` | No | Nota para mostrar antes del bloque de código |
-| `postNote` | `string` | `""` | No | Nota para mostrar después del bloque de código |
-| `output` | `object` | - | No | Configuración de salida opcional |
-| `output.codeString` | `string` | - | No | Contenido de código de salida |
-| `output.filename` | `string` | - | No | Nombre de archivo de salida |
-| `output.icon` | `string` | - | No | Icono de salida |
-| `output.language` | `string` | - | No | Idioma de salida |
-
-**Ejemplos:**
-
-<Tabs>
-  <Tab title="Basic">
-    <CustomCodeBlock
-      filename="example.js"
-      language="javascript"
-      codeString="const apiKey = 'your-key-here';"
-    />
-  </Tab>
-  <Tab title="With Placeholder">
-    <CustomCodeBlock
-      filename="config.js"
-      language="javascript"
-      codeString="const API_KEY = '{PLACEHOLDER}';"
-      placeholderValue="your-api-key-here"
-      preNote="Add this to your configuration file"
-    />
-  </Tab>
-  <Tab title="Code">
-```jsx
-<CustomCodeBlock
-  filename="example.js"
-  language="javascript"
-  codeString="const apiKey = 'your-key';"
-  preNote="Configuration example"
-  postNote="Remember to keep your API key secure"
-/>
-```
-  </Tab>
-</Tabs>
-
----
-
-### CodeComponent
-
-Componente de envoltura para bloques de código simples.
-
-**Importar:**
-```jsx
-import { CodeComponent } from "/snippets/components/content/code.jsx";
-```
-
-**Props:**Acepta props estándar de CodeBlock (language, filename, icon, etc.)
-
-**Nota:** Este es un envoltorio alrededor del componente CodeBlock de Mintlify.
-
----
-
-### ComplexCodeBlock
-
-Bloque de código avanzado con múltiples características, incluida la sustitución de marcadores de posición y secciones de salida.
-
-**Importar:**
-```jsx
-import { ComplexCodeBlock } from "/snippets/components/content/code.jsx";
-```
-
-**Props:** Similar a `CustomCodeBlock` con manejo adicional de complejidad.
-
----
-
-### CodeSection
-
-Envoltura de sección para organizar múltiples bloques de código.
-
-**Importar:**
-```jsx
-import { CodeSection } from "/snippets/components/content/code.jsx";
-```
-
-**Props:**
-
-| Prop | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Sí** | Bloques de código para mostrar |
-
-<CustomDivider middleText="External Content" />
-
-## Contenido externo
-
-### ContenidoExterno
-
-Componente reutilizable para mostrar contenido externo de GitHub con encabezado y contenedor desplazable.
-
-**Importar:**
-```jsx
-import { ExternalContent } from "/snippets/components/content/external-content.jsx";
-```
-
-**Props:**
-
-| Prop | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `repoName` | `string` | - | **Sí** | Nombre del repositorio (por ejemplo, "livepeer/awesome-livepeer") |
-| `githubUrl` | `string` | - | **Sí** | URL del repositorio de GitHub completo |
-| `maxHeight` | `string` | `"1000px"` | No | Altura máxima del contenedor desplazable |
-| `icon` | `string` | `"github"` | No | Icono a mostrar en el encabezado |
-| `children` | `ReactNode` | - | **Sí** | Contenido a mostrar (normalmente importado MDX) |
-
-**Ejemplos:**
-
-<Tabs>
-  <Tab title="Live Example">
-    <ExternalContent
-      repoName="livepeer/docs"
-      githubUrl="https://github.com/livepeer/docs"
-      maxHeight="150px"
-    >
-      <p>External content from the Livepeer documentation repository.</p>
-      <ul>
-        <li>Automatically styled container</li>
-        <li>Link to GitHub source</li>
-      </ul>
-    </ExternalContent>
-  </Tab>
-  <Tab title="Code">
-```jsx
-import MyContent from '/snippets/external/my-content.mdx'
-
-<ExternalContent
-  repoName="livepeer/awesome-livepeer"
-  githubUrl="https://github.com/livepeer/awesome-livepeer"
-  maxHeight="800px"
->
-  <MyContent />
-</ExternalContent>
-```
-  </Tab>
-</Tabs>
-
-<CustomDivider middleText="API Response Fields" />
-
-## Campos de respuesta de la API
-
-### CampoValorResponseField
-
-Envoltura ResponseField que muestra un valor con etiqueta y estilo de línea opcionales.
-
-**Importar:**
-```jsx
-import { ValueResponseField } from "/snippets/components/content/response-field.jsx";
-```
-
-**Props:**
-
-| Prop | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `description` | `string\|function` | - | No | Texto de descripción o función que devuelve la descripción |
-| `post` | `any` | `null` | No | Valor para mostrar después de la descripción |
-| `label` | `string` | `"value"` | No | Etiqueta para el valor |
-| `line` | `boolean` | `true` | No | Si mostrar la línea de borde inferior |
-| `children` | `ReactNode` | - | No | Contenido adicional |
-| `...props` | `object` | - | No | Propiedades adicionales de ResponseField (nombre, tipo, predeterminado, requerido, etc.) |
-
----
-
-### CustomResponseField
-
-Wrapper de ResponseField que oculta el divisor inferior.
-
-**Importar:**
-```jsx
-import { CustomResponseField } from "/snippets/components/content/response-field.jsx";
-```
-
-**Props:**
-
-| Prop | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `description` | `string` | - | No | Texto de descripción |
-| `...props` | `object` | - | No | Todos los props de ResponseField (nombre, tipo, predeterminado, requerido, post, etc.) |
-
----
-
-### ResponseFieldExpandable
-
-Agrupa múltiples campos de respuesta en una sección expandible.
-
-**Importar:**
-```jsx
-import { ResponseFieldExpandable } from "/snippets/components/content/response-field.jsx";
-```
-
-**Props:**
-
-| Prop | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `fields` | `Array\|Object` | `{}` | No | Matriz u objeto de definiciones de campo |
-| `...props` | `object` | - | No | Propiedades del componente expandible (título, etc.) |
-
----
-
-### ResponseFieldAccordion
-
-Agrupa varios campos de respuesta en un componente acordeón.
-
-**Importar:**
-```jsx
-import { ResponseFieldAccordion } from "/snippets/components/content/response-field.jsx";
-```
-
-**Props:**
-
-| Prop | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `fields` | `Array\|Object` | `{}` | No | Matriz o objeto de definiciones de campos |
-| `...props` | `object` | - | No | Propiedades del componente Accordion (título, etc.) |
-
----
-
-### ResponseFieldGroup
-
-Envoltorio que elige un diseño de acordeón o expandido en tiempo de ejecución.
-
-**Importar:**
-```jsx
-import { ResponseFieldGroup } from "/snippets/components/content/response-field.jsx";
-```
-
-**Props:**
-
-| Prop | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `component` | `string` | `"accordion"` | No | Tipo de componente: "accordion" o "expandible" |
-| `fields` | `Array\|Object` | `{}` | No | Matriz u objeto de definiciones de campo |
-| `...props` | `object` | - | No | Propiedades del componente (título, etc.) |
-
-<CustomDivider middleText="Data Display Components" />
-
-## Componentes de visualización de datos
-
-### BlogCard
-
-Componente de tarjeta especialmente diseñado para artículos de blog con soporte para tiempo de lectura y extracto.
-
-**Importar:**
-```jsx
-import { BlogCard } from "/snippets/components/content/data.jsx";
-```
-
-**Props:**
-
-| Prop | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `title` | `string` | - | **Sí** | El título del artículo de blog |
-| `content` | `string` | - | **Sí** | contenido HTML para mostrar |
-| `href` | `string` | - | **Sí** | Enlace URL para la entrada de blog |
-| `author` | `string` | `"Livepeer Team"` | No | Nombre del autor |
-| `datePosted` | `string` | `null` | No | Fecha de publicación |
-| `excerpt` | `string` | `null` | No | Excerpt corto (úselo si enlaza a un blog externo) |
-| `readingTime` | `number` | `null` | No | Tiempo estimado de lectura en minutos |
-| `icon` | `string` | `"book-open"` | No | Icono para la tarjeta |
-| `cta` | `string` | `"Read More"` | No | Texto del botón de acción |
-| `img` | `string` | `null` | No | URL de imagen opcional |
-
----
-
-### PostCard
-
-Componente de tarjeta para mostrar publicaciones de foros o artículos con autor, fecha y metadatos.
-
-**Importar:**
-```jsx
-import { PostCard } from "/snippets/components/content/data.jsx";
-```
-
-**Props:**
-
-| Prop | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `title` | `string` | - | **Sí** | El título de la publicación |
-| `content` | `string` | - | **Sí** | Contenido HTML para mostrar |
-| `href` | `string` | - | **Sí** | URL del enlace para la tarjeta |
-| `author` | `string` | `"Unknown"` | No | Nombre del autor |
-| `datePosted` | `string` | `null` | No | Fecha en que se publicó la entrada |
-| `icon` | `string` | `"book-open"` | No | Icono que se muestra en la tarjeta |
-| `cta` | `string` | `"Read More"` | No | Texto del botón de acción |
-| `img` | `string` | `null` | No | URL de imagen opcional para la tarjeta |
-
----
-
-### CardBlogDataLayout
-
-Componente de diseño para mostrar múltiples BlogCards en un diseño vertical.
-
-**Importar:**
-```jsx
-import { CardBlogDataLayout } from "/snippets/components/content/data.jsx";
-```
-
-**Props:**
-
-| Prop | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `items` | `Array` | `[]` | No | Matriz de objetos de props de BlogCard |
-| `limit` | `number` | - | No | Límite opcional en el número de elementos |
-
----
-
-### ColumnasBlogCardLayout
-
-Componente de diseño para mostrar múltiples BlogCards en columnas.
-
-**Importar:**
-```jsx
-import { ColumnsBlogCardLayout } from "/snippets/components/content/data.jsx";
-```
-
-**Props:**
-
-| Prop | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `items` | `Array` | `[]` | No | Matriz de objetos de propiedades de BlogCard |
-| `cols` | `number` | `2` | No | Número de columnas |
-| `limit` | `number` | - | No | Límite opcional en el número de elementos |
-
----
-
-### CardColumnsPostLayout
-
-Componente de diseño para mostrar múltiples PostCards en columnas.
-
-**Importar:**
-```jsx
-import { CardColumnsPostLayout } from "/snippets/components/content/data.jsx";
-```
-
-**Props:**
-
-| Prop | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `cols` | `number` | `2` | No | Número de columnas a mostrar |
-| `items` | `Array` | `[]` | No | Matriz de objetos de propiedades de PostCard |
-| `limit` | `number` | - | No | Límite opcional en el número de elementos |
-
----
-
-### DiscordAnnouncements
-
-Muestra anuncios de Discord desde discordAnnouncementsData.jsx.
-
-**Importar:**
-```jsx
-import { DiscordAnnouncements } from "/snippets/components/content/data.jsx";
-```
-
-**Props:**
-
-| Prop | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `items` | `Array` | `[]` | No | Matriz de objetos de anuncio |
-| `limit` | `number` | - | No | Límite opcional en el número de anuncios |
-
-**Nota:**Requiere datos de `snippets/automations/discord/discordAnnouncementsData.jsx`
-
----
-
-### LumaEvents
-
-Muestra eventos de Luma desde lumaEventsData.jsx.
-
-**Importar:**
-```jsx
-import { LumaEvents } from "/snippets/components/content/data.jsx";
-```
-
-**Props:**
-
-| Prop | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `data` | `Object` | - | **Sí** | objeto de datos del evento con matrices de próximos y pasados |
-| `limit` | `number` | - | No | Límite opcional en el número de eventos |
-| `type` | `string` | `"upcoming"` | No | Tipo de eventos: "upcoming", "past" o "all" |
-
-**Nota:** Requiere datos de `snippets/automations/luma/lumaEventsData.jsx`
-
-<CustomDivider middleText="Version Components" />
-
-## Componentes de versión
-
-### ÚltimaVersión
-
-Envoltorio para la acción de GitHub que obtiene la versión de lanzamiento más reciente de go-livepeer.
-
-**Importar:**
-```jsx
-import { LatestVersion } from "/snippets/components/content/release.jsx";
-```
-
-**Props:**
-
-| Prop | Tipo | Predeterminado | Requerido | Descripción |
-|------|------|---------|----------|-------------|
-| `version` | `string` | - | **Sí** | Cadena de versión (normalmente desde la acción de GitHub) |
-
----
-
-<Card title="Next: Layout Components" icon="arrow-right" href="./layout" arrow>
-  Continue to Layout Components →
-</Card>
+| Component | Status | Tier | Source file |
+| --- | --- | --- | --- |
+| CardVideo | `stable` | `composite` | `/snippets/components/content/video.jsx` |
+| CodeComponent | `stable` | `composite` | `/snippets/components/content/code.jsx` |
+| CodeSection | `stable` | `composite` | `/snippets/components/content/code.jsx` |
+| ComplexCodeBlock | `stable` | `composite` | `/snippets/components/content/code.jsx` |
+| CustomCodeBlock | `stable` | `composite` | `/snippets/components/content/code.jsx` |
+| CustomResponseField | `stable` | `composite` | `/snippets/components/content/responseField.jsx` |
+| EmbedMarkdown | `stable` | `composite` | `/snippets/components/content/embed.jsx` |
+| ExternalContent | `stable` | `composite` | `/snippets/components/content/external-content.jsx` |
+| FrameQuote | `stable` | `composite` | `/snippets/components/content/quote.jsx` |
+| LinkedInEmbed | `stable` | `composite` | `/snippets/components/content/video.jsx` |
+| MarkdownEmbed | `stable` | `composite` | `/snippets/components/content/embed.jsx` |
+| Quote | `stable` | `composite` | `/snippets/components/content/quote.jsx` |
+| ResponseFieldAccordion | `stable` | `composite` | `/snippets/components/content/responseField.jsx` |
+| ResponseFieldExpandable | `stable` | `composite` | `/snippets/components/content/responseField.jsx` |
+| ResponseFieldGroup | `stable` | `composite` | `/snippets/components/content/responseField.jsx` |
+| ScrollableDiagram | `stable` | `composite` | `/snippets/components/content/zoomableDiagram.jsx` |
+| ShowcaseVideo | `stable` | `composite` | `/snippets/components/content/video.jsx` |
+| TitledVideo | `stable` | `composite` | `/snippets/components/content/video.jsx` |
+| TwitterTimeline | `stable` | `composite` | `/snippets/components/content/embed.jsx` |
+| ValueResponseField | `stable` | `composite` | `/snippets/components/content/responseField.jsx` |
+| Video | `stable` | `composite` | `/snippets/components/content/video.jsx` |
+| YouTubeVideo | `stable` | `composite` | `/snippets/components/content/video.jsx` |
+| YouTubeVideoData | `stable` | `composite` | `/snippets/components/content/video.jsx` |
+| YouTubeVideoDownload | `deprecated` | `composite` | `/snippets/components/content/video.jsx` |

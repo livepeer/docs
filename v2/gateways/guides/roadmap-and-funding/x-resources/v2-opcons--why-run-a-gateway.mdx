@@ -1,0 +1,216 @@
+---
+title: 'Why Run a Livepeer Gateway?'
+sidebarTitle: 'Why Run a Gateway'
+description: 'The strategic, technical, and financial reasons to run your own Livepeer gateway — covering all gateway types and operator personas.'
+keywords:
+  - livepeer
+  - gateway
+  - why run a gateway
+  - gateway business case
+  - AI gateway
+  - video gateway
+  - self-hosted gateway
+  - gateway operator
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: gateway-operator
+purpose: guides
+status: current
+lastVerified: '2026-03-13'
+---
+
+A Livepeer gateway is the access point between your application and the Livepeer compute network. It receives jobs, selects an orchestrator (a GPU operator), handles payment, and returns results. The gateway holds no GPU — all compute happens on orchestrators.
+
+Running your own gateway is not a technical requirement for using Livepeer. You can point at a hosted gateway and start building in minutes. The question is whether the control, cost savings, and capabilities of owning that layer are worth it for your situation.
+
+This page helps you answer that question.
+
+---
+
+## Hosted gateway vs self-hosted: the core trade-off
+
+<Tabs>
+  <Tab title="Use a hosted gateway">
+    A hosted gateway (Daydream API, Livepeer Studio, Livepeer Cloud) handles all infrastructure for you. You send requests; they handle routing, payment, and uptime.
+
+    **Best when:**
+    - You are building and experimenting
+    - Volume is low to moderate
+    - You do not need custom orchestrator routing or SLA policies
+    - Crypto infrastructure is not something you want to manage
+
+    **Limitations at scale:**
+    - You pay a service margin on every request
+    - You depend on the provider's uptime, pricing, and feature roadmap
+    - You cannot customise routing, pricing caps, or access policies
+    - You have no visibility into orchestrator selection or failure patterns
+  </Tab>
+  <Tab title="Run your own gateway">
+    Running your own gateway gives you direct access to the Livepeer compute network. You set your own policies, connect directly to orchestrators, and capture the margin between what you charge customers and what you pay for compute.
+
+    **Best when:**
+    - You are processing significant volume and want to reduce per-request costs
+    - You need custom routing, SLA policies, or geographic preferences
+    - You want to build a product or service layer on top of Livepeer
+    - You are embedding AI or video capabilities directly in your infrastructure
+
+    **What it requires:**
+    - A Linux server (for AI gateway; video gateway also supports Windows)
+    - No ETH required for AI gateways in off-chain mode
+    - On-chain ETH deposit required for video gateways
+  </Tab>
+</Tabs>
+
+---
+
+## Which type of gateway are you running?
+
+Livepeer has two types of gateway, with meaningfully different requirements and motivations:
+
+<CardGroup cols={2}>
+  <Card title="AI gateway" icon="robot">
+    Routes AI inference jobs: text-to-image, image-to-video, live video AI, LLM, and more. Uses HTTP API (port 8937 by default). **No ETH required** in off-chain mode — recommended for almost all new AI gateway operators.
+  </Card>
+  <Card title="Video gateway" icon="film">
+    Routes live video transcoding jobs. Your application sends RTMP; transcoded HLS comes back. Requires on-chain setup with ETH on Arbitrum. The original Livepeer use case with the most mature tooling.
+  </Card>
+</CardGroup>
+
+The reasons to run each type differ. The sections below cover both.
+
+---
+
+## Reasons to run a gateway
+
+### Cost savings and margin
+
+<AccordionGroup>
+  <Accordion title="Avoid hosted gateway fees at scale">
+    Hosted gateways charge a service margin on every request. As your volume grows, that margin compounds significantly. Running your own gateway eliminates that third-party cost — you pay orchestrators directly at network rates.
+
+    For video transcoding, community estimates suggest Livepeer can be 10–50x cheaper than cloud providers like Mux or AWS MediaLive at comparable volumes. The exact saving depends on your transcoding profiles and orchestrator selection.
+
+    {/* REVIEW: Verified cost comparison figures needed. Check Livepeer blog/Mirror for published benchmarks. Source: community claim, not independently verified against current network rates. */}
+  </Accordion>
+  <Accordion title="Capture service margin">
+    If you serve other developers or end users, your gateway is the product layer. You set what you charge customers; you set your max price to orchestrators. The difference is your margin.
+
+    This is how Livepeer Studio, Daydream, and Livepeer Cloud all operate: they run gateways, route jobs to orchestrators, and earn on the spread between what customers pay them and what they pay the network.
+  </Accordion>
+  <Accordion title="Free to start with AI off-chain mode">
+    AI gateways in off-chain mode require no ETH deposit and no Arbitrum wallet. You point at a community-hosted remote signer (which handles the payment layer for you), connect to orchestrators, and start routing inference requests immediately with no upfront crypto cost.
+
+    This is a meaningful contrast to the traditional video gateway setup, which requires bridging ETH to Arbitrum before you can process a single job.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+### Control and reliability
+
+<AccordionGroup>
+  <Accordion title="Own your routing and SLA policy">
+    A hosted gateway selects orchestrators on your behalf, using its own policy. You have no visibility into that selection and no ability to change it.
+
+    Running your own gateway means you control which orchestrators receive your jobs, at what price caps, with what retry behaviour, and with what failover logic. For production workloads where quality and latency matter, this is significant.
+  </Accordion>
+  <Accordion title="Geographic request steering">
+    You can configure your gateway to prefer orchestrators in specific regions. This reduces latency for your users and can improve transcoding or inference quality by keeping traffic local.
+  </Accordion>
+  <Accordion title="No dependency on a third party's roadmap or uptime">
+    If a hosted gateway goes down, changes pricing, or drops support for a capability you rely on, your production service goes with it. Your own gateway removes that dependency.
+
+    The remote signer architecture (introduced Q4 2025) further reduces this risk for AI gateways: your gateway can point at multiple orchestrators and fall back automatically if one fails.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+### Product and business differentiation
+
+<AccordionGroup>
+  <Accordion title="Build a stable API surface above the protocol">
+    The Livepeer protocol evolves. Orchestrators come and go. Flag names change (the gateway was previously called "the broadcaster").
+
+    Your gateway is the abstraction layer that shields your customers from all of that. You version your API independently, handle protocol changes internally, and expose a stable interface to your users.
+  </Accordion>
+  <Accordion title="Add auth, billing, and enterprise controls">
+    The go-livepeer gateway binary does not include built-in auth, rate limiting, or billing. Running your own gateway means you can wrap it with middleware that handles API key management, per-user rate limits, cost allocation, and audit logging — standard requirements for any production service.
+
+    The NaaP (Network as a Platform) project is developing a reference implementation for exactly this: JWT-based auth, Developer API Keys, and per-user usage metering built on top of the go-livepeer gateway.
+  </Accordion>
+  <Accordion title="Embed gateway functionality directly in your product">
+    Some operators embed gateway logic directly in their application rather than running it as a separate service. This is the use case for the remote signer architecture: your application can route Livepeer jobs natively, delegating the payment complexity to a sidecar remote signer process.
+
+    The Python gateway SDK (`livepeer-python-gateway`) is the primary reference for this pattern.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+### Ecosystem opportunities
+
+<AccordionGroup>
+  <Accordion title="Foundation support: AI Video Startup Programme">
+    The Livepeer Foundation runs an AI Video Startup Programme for teams building AI-powered products on Livepeer infrastructure. This includes access to network resources, technical support, and introductions to the investor community.
+
+    If you are building a product that routes AI inference through Livepeer, running your own gateway is the natural operational model — and Foundation support is available to help you get there.
+
+    {/* REVIEW: Confirm current programme name and application URL with Foundation BD team. */}
+  </Accordion>
+  <Accordion title="SPE grants: funded gateway operations">
+    Several Livepeer gateway operators are funded through Special Purpose Entity (SPE) treasury grants. The Livepeer Cloud SPE operates public gateways with Livepeer treasury funding; the LLM SPE runs an LLM-focused gateway for the same reason.
+
+    If your gateway serves the broader ecosystem (public access, new capability, increased network demand), a treasury proposal is a concrete path to funding operational costs.
+  </Accordion>
+  <Accordion title="Influence protocol direction">
+    Gateway operators are on the demand side of the network. Their usage patterns, pain points, and capability requirements directly shape protocol priorities. Running a gateway puts you in the position of reporting real production issues to the Foundation and influencing what gets fixed.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Quick self-assessment
+
+Run through these questions before deciding.
+
+| Question | Lean towards self-hosting if... |
+|----------|--------------------------------|
+| How much volume are you processing? | Monthly spend on hosted API exceeds the effort of setup |
+| Do you need custom routing or SLA policies? | Yes, especially regional preferences or quality thresholds |
+| Are you building a product for other users? | Yes — you need a service layer to charge customers |
+| Do you have Linux server access? | Yes (required for AI gateway off-chain mode) |
+| Do you need AI inference specifically? | Yes — off-chain mode makes this low-friction |
+| Are you comfortable with Docker or Go binaries? | Yes — installation is straightforward on Linux |
+
+If most of your answers align with self-hosting, continue to the requirements and setup pages below.
+
+---
+
+## Video resources
+
+{/* REVIEW: Search Titan Node YouTube channel (https://www.youtube.com/@TitanNode) for gateway setup tutorials. As of research date, no confirmed gateway-specific video URLs were available. Add embed here when confirmed. */}
+
+{/* REVIEW: Search Livepeer Foundation YouTube channel (https://www.youtube.com/@LivepeerVideo) for gateway operator content, including any AI Video Startup Programme webinars. */}
+
+Community tutorials and walkthroughs are linked in the [Ecosystem Projects](/v2/gateways/guides/ecosystem-projects) page as they are identified.
+
+---
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Gateway requirements" icon="clipboard-check" href="/v2/gateways/guides/gateway-requirements">
+    What hardware, OS, and skills you need. On-chain vs off-chain requirements.
+  </Card>
+  <Card title="Operator opportunities" icon="chart-line" href="/v2/gateways/guides/operator-opportunities">
+    Revenue models, business patterns, and who is running gateways today.
+  </Card>
+  <Card title="Choose your setup path" icon="arrow-right" href="/v2/gateways/get-started/gateway-setup-paths">
+    Video gateway, AI gateway, dual, or SDK-based — find the right quickstart.
+  </Card>
+</CardGroup>

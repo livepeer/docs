@@ -1,4 +1,59 @@
 'use strict';
+/**
+ * @script            quality-gate
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14, R-C6
+ * @purpose-statement Applies pass/fail thresholds to usefulness scores.
+ * @pipeline          indirect -- library module
+ * @usage             const { applyGate } = require('../lib/docs-usefulness/quality-gate');
+ */
+/**
+ * @script            quality-gate
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14, R-C6
+ * @purpose-statement Applies pass/fail thresholds to usefulness scores.
+ * @pipeline          indirect -- library module
+ * @usage             const { applyGate } = require('../lib/docs-usefulness/quality-gate');
+ */
+/**
+ * @script            quality-gate
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14, R-C6
+ * @purpose-statement Applies pass/fail thresholds to usefulness scores.
+ * @pipeline          indirect -- library module
+ * @usage             const { applyGate } = require('../lib/docs-usefulness/quality-gate');
+ */
+/**
+ * @script            quality-gate
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14, R-C6
+ * @purpose-statement Applies pass/fail thresholds to usefulness scores.
+ * @pipeline          indirect -- library module
+ * @usage             const { applyGate } = require('../lib/docs-usefulness/quality-gate');
+ */
+/**
+ * @script            quality-gate
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14, R-C6
+ * @purpose-statement Applies pass/fail thresholds to usefulness scores.
+ * @pipeline          indirect -- library module
+ * @usage             const { applyGate } = require('../lib/docs-usefulness/quality-gate');
+ */
 
 function runQualityGate(page) {
   const details = {};

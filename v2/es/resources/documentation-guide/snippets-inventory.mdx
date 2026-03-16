@@ -19,7 +19,7 @@ keywords:
 'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
 ---
 {/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9zbmlwcGV0cy1pbnZlbnRvcnkubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9zbmlwcGV0cy1pbnZlbnRvcnkiLCJzb3VyY2VIYXNoIjoiNjI0NDFjNTIxMTFmNDgxNTc5MzllZTU5NDM2Mzg1NTlhNGQyNGFkYTA5NzliYjg4YTU3ZjUwMzRhOTE1Y2MwNiIsImxhbmd1YWdlIjoiZXMiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxMTo1Njo0NS4xODFaIn0= */}
-import { CustomDivider } from "snippets/components/primitives/divider.jsx"
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
 
 ## Visión general
 
@@ -38,10 +38,10 @@ La carpeta de fragmentos contiene:
 
 ### Componentes (`/snippets/components/`)
 
-Componentes personalizados de React/JSX organizados por propósito:
+Componentes personalizados de React/JSX organizados por propósito. La biblioteca activa ahora usa 5 categorías de producción y `_archive/` para los módulos heredados preservados durante la revisión de la migración.
 
 #### Primitivos (`/snippets/components/primitives/`)
-- `buttons.jsx` - Componentes de botón (BasicBtn, DownloadButton)
+- `buttons.jsx` - Componentes de botón (DownloadButton)
 - `divider.jsx` - Componente CustomDivider
 - `icons.jsx` - Iconos de marca Livepeer (LivepeerIcon, LivepeerSVG, etc.)
 - `links.jsx` - Componentes de enlace y navegación (GotoLink, GotoCard, CustomCallout, etc.)
@@ -50,42 +50,36 @@ Componentes personalizados de React/JSX organizados por propósito:
 #### Layout (`/snippets/components/layout/`)
 - `cards.jsx` - Componentes de diseño de tarjetas (PostCard, BlogCard, ScrollBox)
 - `lists.jsx` - Componentes de lista (BasicList, IconList, StepList, etc.)
-- `list-steps.jsx` - Componente ListSteps para renderizar listas como pasos
+- `listSteps.jsx` - Componente ListSteps para renderizar listas como pasos
 - `steps.jsx` - Componentes de paso con estilo (StyledSteps, StyledStep)
 - `table.jsx` - Componente DynamicTable
-- `quad-grid.jsx` - Componente de diseño QuadGrid
+- `quadGrid.jsx` - Componente de diseño QuadGrid
 - `text.jsx` - Componentes de diseño de texto (AccordionLayout)
-
-#### Mostrar (`/snippets/components/display/`)
-- `video.jsx` - Componentes de video (YouTubeVideo, CardVideo, LinkedInEmbed)
-- `image.jsx` - Componentes de imagen (Image, LinkImage)
-- `embed.jsx` - Componentes incrustados (MarkdownEmbed, EmbedMarkdown)
-- `zoomable-diagram.jsx` - Componente ScrollableDiagram
-- `quote.jsx` - Componentes de cita (Quote, FrameQuote)
-- `frame-mode.jsx` - Componentes de encabezado en modo Frame (PageHeader, H1-H6, P, Divider)
-- `showcase-cards.jsx` - Componente ShowcaseCards
-- `social-links.jsx` - Componente SocialLinks
-- `card-carousel.jsx` - Componente CardCarousel
 
 #### Contenido (`/snippets/components/content/`)
 - `code.jsx` - Componentes de visualización de código (CustomCodeBlock, CodeComponent, ComplexCodeBlock)
-- `external-content.jsx` - Componente ExternalContent para cargar documentos externos
+- `externalContent.jsx` - Componente ExternalContent para cargar documentos externos
+- `math.jsx` - Utilidades MathInline y MathBlock
+- `quote.jsx` - Componentes Quote y FrameQuote
 - `release.jsx` - Componente LatestVersion
-- `response-field.jsx` - Componentes de campos de respuesta de la API (ResponseFieldGroup, ValueResponseField, etc.)
+- `responseField.jsx` - Componentes de campos de respuesta de la API (ResponseFieldGroup, ValueResponseField, etc.)
+- `video.jsx` - Componentes de video, incrustación y descarga
+- `zoomableDiagram.jsx` - Componente ScrollableDiagram
 
-#### Integraciones (`/snippets/components/integrations/`)
+#### Datos (`/snippets/components/data/`)
 - `coingecko.jsx` - Componente CoinGeckoExchanges
+- `data.jsx` - Diseños para blogs, foro, eventos y feeds sociales
+- `embed.jsx` - Componentes MarkdownEmbed, TwitterTimeline y PdfEmbed
+- `showcaseCards.jsx` - Componente ShowcaseCards
+- `videoData.jsx` - Componente auxiliar YouTubeVideoData
 
-#### Dominio (`/snippets/components/domain/`)
-Componentes específicos del dominio organizados por sección de documentación:
+#### Estructura de página (`/snippets/components/page-structure/`)
+- `frameMode.jsx` - Componentes de encabezado y tipografía en modo Frame
+- `heroGif.jsx` - Componente de animación de estrellas
+- `portals.jsx` - Componentes de diseño para páginas de portal
 
-- `04_GATEWAYS/` - Componentes específicos de la puerta de enlace
-  - `callouts.jsx` - Llamadas de atención/advertencia de la puerta de enlace
-  - `quickstartTabs.jsx` - Componentes de interfaz de usuario de inicio rápido de la puerta de enlace
-- `SHARED/` - Componentes compartidos entre dominios
-  - `HeroGif.jsx` - Componente de animación de estrellas
-  - `Portals.jsx` - Componentes de diseño de la página de portal
-  - `previewCallouts.jsx` - Llamados a la acción de vista previa/pendiente
+#### Archivo (`/snippets/components/_archive/`)
+- Código heredado y carpetas retiradas conservadas solo para revisión de la migración
 
 ### Datos (`/snippets/data/`)
 
@@ -156,7 +150,7 @@ Activos estáticos que incluyen imágenes, logotipos y medios:
 
 ### Estilos (`/snippets/styles/`)
 
-- `themeStyles.jsx` - Definiciones de estilo de tema (obsoleto - usar Propiedades CSS personalizadas en `style.css` en su lugar)
+- Archivo heredado de estilos de tema - obsoleto; use las propiedades CSS personalizadas de `style.css`
 
 ### SnippetsWiki (`/snippets/snippetsWiki/`)
 
@@ -171,7 +165,7 @@ Documentación interna sobre el sistema de fragmentos:
 
 ## Resumen de la cantidad de archivos
 
-- **Componentes**: ~50+ archivos JSX/TSX en 6 categorías
+- **Componentes**: ~50+ archivos JSX/TSX en 5 categorías activas, más `_archive/` para revisión de la migración
 - **Archivos de datos**: ~20+ archivos JSX/MDX
 - **Módulos de página**: ~20+ archivos MDX
 - **Scripts**: ~10+ scripts de shell/JS
@@ -185,7 +179,7 @@ Documentación interna sobre el sistema de fragmentos:
 
 ```jsx
 // Import from components
-import { YouTubeVideo } from "/snippets/components/display/video.jsx";
+import { YouTubeVideo } from "/snippets/components/content/video.jsx";
 import { GotoCard } from "/snippets/components/primitives/links.jsx";
 import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
 ```
@@ -194,7 +188,7 @@ import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
 
 ```jsx
 // Import data files
-import { DOCKER_CODE } from "/snippets/data/gateways/code.jsx";
+import { GatewaySteps } from "/snippets/data/gateways.jsx";
 import { latestVersion } from "/snippets/automations/globals/globals.jsx";
 ```
 
@@ -202,7 +196,7 @@ import { latestVersion } from "/snippets/automations/globals/globals.jsx";
 
 ```jsx
 // Import MDX page modules
-import DockerOffChainTab from "/snippets/pages/04_GATEWAYS/run/quickstart/views/docker/dockerOffChainTab.mdx";
+import ProjectShowcase from "/snippets/pages/00_HOME/project-showcase.mdx";
 ```
 
 ## Automatización
@@ -226,4 +220,3 @@ Este script genera automáticamente una estructura de árbol que enumera todos l
 - [Guía de estilo](./style-guide) - Estilo y Mintlify consejos
 - [Wiki de fragmentos](/snippets/snippetsWiki/index) - Documentación de fragmentos internos
 - [Guía de comportamiento de Mintlify](/snippets/snippetsWiki/mintlify-behaviour) - Patrones específicos de Mintlify
-

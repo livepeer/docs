@@ -1,0 +1,113 @@
+---
+title: 功能图
+sidebarTitle: 功能图
+description: 此图将仓库功能作为内部维护者索引进行捕捉。
+keywords:
+  - livepeer
+  - feature map
+  - internal
+  - map
+  - repository
+  - capabilities
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJkb2NzLWd1aWRlL2ZlYXR1cmVzL2ZlYXR1cmUtbWFwLm1keCIsInNvdXJjZVJvdXRlIjoiZG9jcy1ndWlkZS9mZWF0dXJlcy9mZWF0dXJlLW1hcCIsInNvdXJjZUhhc2giOiIwZDM0YjU0ZDYyYmI1NWEzNDg1NzAwYjMyNWI1Yzg5Mzk0YzM3YzY5ZmUyYTQwYWY3NzVjYjEzYjFlMDA2ODhjIiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAzLTAxVDE3OjI3OjMyLjk3OVoifQ== */}
+## 1) 前端文档体验
+
+- Mintlify-基于的文档网站，具有面向角色的导航在`docs.json`.
+- 共享组件系统在`snippets/components/`.
+- 通过样式指南测试和钩子检查进行结构/样式强制执行。
+- 通过`tools/scripts/generate-pages-index.js`的路由和页面目录同步。
+
+主要参考资料：
+
+- `v2/resources/documentation-guide/style-guide.mdx`
+- `v2/resources/documentation-guide/component-library.mdx`
+- `tools/scripts/generate-pages-index.js`
+
+## 2) 后端式操作层（文档操作）
+
+- 统一的CLI入口点：`lpd`.
+- 在`tests/`, `.githooks/`, 和`tools/scripts/`上的验证和执行脚本。
+- 针对`v2/`文档的分阶段和完整WCAG可访问性审计，并提供保守的自动修复支持常见原始标签问题。
+- 接收和治理工件：
+  - 问题模板在`.github/ISSUE_TEMPLATE/`
+  - PR模板在`.github/pull-request-template-v2.md`和`.github/pull_request_template.md`
+- 预提交验证包括样式、MDX、链接/导入、脚本文档和分阶段审计。
+
+主要参考资料：
+
+- [`lpd.md`](../tooling/lpd-cli)
+- [`quality-gates.md`](../policies/quality-gates)
+- [`templates-catalog.mdx`](../catalog/templates-catalog)
+
+## 3) AI + 自动化 + 流水线
+
+- 论坛、博客、YouTube、发布和展示数据的自动化摄入/更新流程。
+- n8n工作流JSON资产和GitHub Actions替代方案共存。
+- 社区流水线功能包括展示和内容聚合/趋势模式。
+
+主要参考资料：
+
+- [`automation-pipelines.md`](./automations)
+- `v2/resources/documentation-guide/automations-workflows.mdx`
+- `snippets/automations/`
+
+## 4) 产品 + 内容系统
+
+- 产品导向的文档内容和信息架构在`v2/pages/`下。
+- 跨门户、快速入门和深度参考的“从零到英雄”进展。
+- 文档指南和贡献文档中的编辑和治理标准。
+
+主要参考资料：
+
+- [`content-system.md`](../frameworks/content-system.mdx)
+- `v2/resources/documentation-guide/documentation-guide.mdx`
+- `contribute/CONTRIBUTING/README.md`
+
+## 5) 技术指南 + 领域覆盖
+
+- 网关、编排者、委托者、开发者和资源的操作指南。
+- 在角色特定部分的长篇参考和故障排除路径。
+
+主要参考资料：
+
+- `v2/pages/04_gateways/`
+- `v2/orchestrators/`
+- `v2/pages/06_delegators/`
+- `v2/pages/03_developers/`
+
+## 6) 未来维护自动化
+
+- 脚本模板强制执行自文档化标题。
+- 脚本库存和审计生成是自动化的。
+- 索引生成和SEO/AEO/术语表支持脚本位于`tools/scripts/`下。
+
+主要参考资料：
+
+- `tools/scripts/new-script.js`
+- `tools/scripts/audit-scripts.js`
+- `tools/scripts/snippets/generate-seo.js`
+- `tools/scripts/snippets/generate-data/scripts/generate-glossary.js`
+
+## 7) 数据集成和API
+
+- OpenAPI和相关API规范在`api/`下。
+- 集成的参考数据集和片段数据在`snippets/data/`下。
+- 外部馈送摄取支持文档的新鲜度和交叉链接。
+
+主要参考文献:
+
+- [`data-integrations.md`](./data-integrations)
+- `api/`
+- `snippets/data/`
+
+## 8) 文档自动化 关于文档
+
+- 生成的脚本/工作流/模板目录在`docs-guide/`.
+- 文档指南覆盖和README指针的防护检查。
+
+主要参考文献:
+
+- [`source-of-truth-policy.md`](../policies/source-of-truth-policy)
+- `tests/unit/docs-guide-sot.test.js`
+- `tools/scripts/generate-docs-guide-indexes.js`

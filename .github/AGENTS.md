@@ -25,6 +25,12 @@ destructive or history-altering actions.
   safety hook that creates a branch named `checkpoint/YYYY-MM-DD_HHMMSS`.
 - **Isolation Rule:** Use branch-scoped WIP commits for checkpoints. Do not use
   stash as a checkpoint or isolation mechanism.
+- **Finish Rule:** A Codex task is not complete until its task commit is present
+  on `docs-v2-dev`. A codex branch/worktree commit is only a checkpoint until
+  that integration happens.
+- **Closure Rule:** Do not release locks or clean up codex task branches until
+  the task commit is committed to `docs-v2-dev`, unless a human gives an
+  explicit exceptional override with a very strong reason.
 - **Pre-Write Announcement:** Before executing a write command, you MUST state:
   _"I am initiating [COMMAND]. A safety checkpoint will be created. Please
   switch to your terminal to type 'yes' when prompted."_

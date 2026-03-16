@@ -304,8 +304,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/primitives/tables.jsx",
-      "resolvedPath": "snippets/components/primitives/tables.jsx",
+      "rawPath": "/snippets/components/layout/tables.jsx",
+      "resolvedPath": "snippets/components/layout/tables.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -313,8 +313,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/primitives/containers.jsx",
-      "resolvedPath": "snippets/components/primitives/containers.jsx",
+      "rawPath": "/snippets/components/layout/containers.jsx",
+      "resolvedPath": "snippets/components/layout/containers.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1472,8 +1472,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/SHARED/Portals.jsx",
-      "resolvedPath": "snippets/components/domain/SHARED/Portals.jsx",
+      "rawPath": "/snippets/components/page-structure/portals.jsx",
+      "resolvedPath": "snippets/components/page-structure/portals.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1490,8 +1490,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/SHARED/HeroGif.jsx",
-      "resolvedPath": "snippets/components/domain/SHARED/HeroGif.jsx",
+      "rawPath": "/snippets/components/page-structure/heroGif.jsx",
+      "resolvedPath": "snippets/components/page-structure/heroGif.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1575,8 +1575,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/embed.mdx",
-      "resolvedPath": "snippets/components/display/embed.mdx",
+      "rawPath": "/snippets/components/data/embed.jsx",
+      "resolvedPath": "snippets/components/data/embed.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1646,8 +1646,7 @@ export const LINK_MAP = {
       "status": "ok",
       "movedCandidates": []
     }
-  ],
-  "snippets/components/display/embed.mdx": []
+  ]
 };
 
 export default LINK_MAP;

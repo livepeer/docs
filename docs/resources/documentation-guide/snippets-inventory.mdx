@@ -1,0 +1,219 @@
+---
+title: Snippets Folder Inventory
+sidebarTitle: Snippets Inventory
+description: >-
+  This page provides a comprehensive inventory of all files and folders in the
+  `/snippets` directory. The snippets folder is the central location for all
+  custom components, data, scripts, and assets used in the Livepeer
+  documentation.
+keywords:
+  - livepeer
+  - resources
+  - documentation guide
+  - snippets
+  - inventory
+  - components
+  - data
+  - scripts
+  - automations
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx";
+
+## Overview
+
+The snippets folder contains:
+
+- **Components** - Custom React/JSX components organized by purpose
+- **Data** - Reusable data files (code strings, variables, API specs)
+- **Pages** - Modular MDX content imported into main documentation pages
+- **Scripts** - Automation and generation scripts
+- **Automations** - Data fetching and processing automation files
+- **Assets** - Images, logos, media files, and static assets
+- **Styles** - Theme and styling definitions
+- **SnippetsWiki** - Internal documentation about the snippets system
+
+## Directory Structure
+
+### Components (`/snippets/components/`)
+
+Custom React/JSX components organized by purpose:
+
+#### Primitives (`/snippets/components/primitives/`)
+- `buttons.jsx` - Button components (BasicBtn, DownloadButton)
+- `divider.jsx` - CustomDivider component
+- `icons.jsx` - Livepeer brand icons (LivepeerIcon, LivepeerSVG, etc.)
+- `links.jsx` - Link and navigation components (GotoLink, GotoCard, CustomCallout, etc.)
+- `text.jsx` - Text components (Subtitle, CopyText, etc.)
+
+#### Layout (`/snippets/components/layout/`)
+- `cards.jsx` - Card layout components (PostCard, BlogCard, ScrollBox)
+- `lists.jsx` - List components (BasicList, IconList, StepList, etc.)
+- `list-steps.jsx` - ListSteps component for rendering lists as steps
+- `steps.jsx` - Styled step components (StyledSteps, StyledStep)
+- `table.jsx` - DynamicTable component
+- `quad-grid.jsx` - QuadGrid layout component
+- `text.jsx` - Text layout components (AccordionLayout)
+
+#### Content (`/snippets/components/content/`)
+- `code.jsx` - Code display components (CustomCodeBlock, CodeComponent, ComplexCodeBlock)
+- `embed.jsx` - Embed components (MarkdownEmbed, EmbedMarkdown, TwitterTimeline)
+- `external-content.jsx` - ExternalContent component for loading external docs
+- `quote.jsx` - Quote components (Quote, FrameQuote)
+- `responseField.jsx` - API response field components (ResponseFieldGroup, ValueResponseField, etc.)
+
+#### Data (`/snippets/components/data/`)
+- `coingecko.jsx` - CoinGeckoExchanges component
+- `data.jsx` - Blog, Discord, Luma, and forum data layouts
+- `release.jsx` - LatestVersion component
+
+#### Page Structure (`/snippets/components/page-structure/`)
+- `customCards.jsx` - Custom card shells for portal pages
+- `frame-mode.jsx` - Frame mode heading components (PageHeader, H1-H6, P, Divider)
+- `heroGif.jsx` - Starfield animation component
+- `portals.jsx` - Portal page layout components
+
+### Data (`/snippets/data/`)
+
+Reusable data files for code strings, variables, and references:
+
+- `gateways/` - Gateway-related data files
+  - `code.jsx` - Docker and installation code strings
+  - `flags.jsx` - Configuration flags
+  - `quickstart.jsx` - Quickstart data
+  - `linux/` - Linux-specific code data
+- `references/` - Reference data
+  - `chainlist.jsx` - Chainlist RPC data
+- `variables/` - Variable definitions
+  - `home.mdx` - Home page variables
+  - `variables.mdx` - Global variables
+- `API/` - API-related data
+  - `README.md` - API documentation generation guide
+  - `openapi.yaml` - OpenAPI specifications
+
+### Pages (`/snippets/pages/`)
+
+Modular MDX content imported into main documentation pages:
+
+- `00_HOME/` - Home page content
+- `01_ABOUT/` - About section content
+- `04_GATEWAYS/` - Gateway documentation content
+  - `run/quickstart/` - Quickstart views by OS and mode
+- `05_GPUS/` - GPU-related content
+- `08_SHARED/` - Shared page content
+
+### Scripts (`/tools/scripts/snippets/`)
+
+Automation and generation scripts:
+
+- `generate-component-docs.js` - Generates the published component-library pages from governed component metadata
+- `generate-api-docs.sh` - Generates API documentation from OpenAPI specs
+- `generate-seo.js` - Generates SEO metadata
+- `fetch-external-docs.sh` - Fetches external documentation
+- `fetch-openapi-specs.sh` - Fetches OpenAPI specifications
+- `fetch-lpt-exchanges.sh` - Fetches LPT exchange data
+- `generate-data/` - Data generation scripts
+  - `scripts/terminology-search.js` - Discovers glossary terminology
+  - `scripts/generate-glossary.js` - Generates glossary terms
+- `paths.config.json` - Configuration for script paths
+
+### Automations (`/snippets/automations/`)
+
+Data fetching and processing automation files:
+
+- `blog/` - Blog data (Ghost blog integration)
+- `discord/` - Discord announcements data
+- `forum/` - Forum data integration
+- `globals/` - Global automation data (versions, etc.)
+- `luma/` - Luma calendar integration
+- `youtube/` - YouTube data integration
+- `showcase/` - Showcase project data
+- `scripts/` - n8n workflow scripts (JSON)
+
+### Assets (`/snippets/assets/`)
+
+Static assets including images, logos, and media:
+
+- `logos/` - Livepeer logos and brand assets
+- `domain/` - Domain-specific assets organized by section
+- `media/` - Media files (gifs, images, videos)
+- `site/` - Site-wide assets (favicon, images)
+- `data/` - Data files (HTML exports, etc.)
+
+### Styles (`/snippets/styles/`)
+
+- `themeStyles` `.jsx` - Theme styling definitions (deprecated - use CSS Custom Properties in `style.css` instead)
+
+### SnippetsWiki (`/snippets/snippetsWiki/`)
+
+Internal documentation about the snippets system:
+
+- `index.mdx` - Overview of snippets folder
+- `mintlify-behaviour.mdx` - Mintlify-specific patterns and gotchas
+- `theme-colors.mdx` - Theme color system documentation
+- `componentLibrary/` - Component library documentation
+  - `index.mdx` - Auto-generated component structure (updated by script)
+  - `examples/` - Component examples
+
+## File Count Summary
+
+- **Components**: 37 JSX files across 5 active categories
+- **Data Files**: ~20+ JSX/MDX files
+- **Page Modules**: ~20+ MDX files
+- **Scripts**: ~10+ shell/JS scripts
+- **Automations**: ~15+ JSX/JSON files
+- **Assets**: 100+ image/media files
+- **Total**: 200+ files in snippets folder
+
+## Usage Patterns
+
+### Importing Components
+
+```jsx
+// Import from components
+import { YouTubeVideo } from "/snippets/components/content/video.jsx";
+import { GotoCard } from "/snippets/components/primitives/links.jsx";
+import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
+```
+
+### Importing Data
+
+```jsx
+// Import data files
+import { GatewaySteps } from "/snippets/data/gateways.jsx";
+import { latestVersion } from "/snippets/automations/globals/globals.jsx";
+```
+
+### Importing Page Modules
+
+```jsx
+// Import MDX page modules
+import AboutOverview from "/snippets/pages/01_ABOUT/concepts/overview.mdx";
+```
+
+## Automation
+
+The component library listing is automated:
+
+**Script:** `tools/scripts/generate-component-docs.js`
+
+**Output:** `v2/resources/documentation-guide/component-library/*.mdx`
+
+**Usage:**
+```bash
+npm --prefix tools run components:docs
+```
+
+This script generates the published component-library pages from the governed component registry and localized scaffolds.
+
+## Related Resources
+
+- [Component Library](./component-library) - Detailed component reference
+- [Style Guide](./style-guide) - Styling and Mintlify gotchas
+- [Snippets Wiki](/snippets/snippetsWiki/index) - Internal snippets documentation
+- [Mintlify Behavior Guide](/snippets/snippetsWiki/mintlify-behaviour) - Mintlify-specific patterns

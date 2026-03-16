@@ -1,0 +1,53 @@
+---
+title: Stream via OBS
+description: >-
+  Configure OBS Studio to stream into Livepeer Studio using RTMP and the stream
+  key.
+keywords:
+  - livepeer
+  - docs
+  - solutions
+  - livepeer studio
+  - livestream
+  - stream via obs
+  - stream
+  - configure
+  - studio
+  - into
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+---
+
+[OBS Studio](https://obsproject.com/) is a common choice for broadcasting into Livepeer Studio. Configure OBS with your stream key from a [created stream](create-livestream).
+
+## Get a stream key
+
+[Create a livestream](create-livestream) and copy the **stream key**. The broadcaster enters this in OBS.
+
+## Configure OBS
+
+1. In OBS: **Settings → Stream**.
+2. Set **Service** to **Show all...** then **Livepeer Studio**, or **Custom**.
+3. For **Custom**: set **Server** to the ingest URL from the dashboard (e.g. `rtmp://livepeer.studio/live`) and **Stream key** to your stream key.
+4. **Output** tab: **Output Mode** = **Advanced**, **Keyframe Interval** = **1**.
+5. Save and **Start Streaming**.
+
+<Info>
+ Use **Keyframe Interval: 1** and disable **B-frames** (`bframes=0` in x264 options) for best compatibility with WebRTC playback. See [Optimise latency](optimize-latency).
+</Info>
+
+## Play back
+
+Viewers use the stream **playback ID** in the [Livepeer Player](./playback-livestream) or any HLS/WebRTC player.
+
+## Recommended OBS settings
+
+**Low latency:** Keyframe Interval 1, CRF 25 or CBR, Profile High, `bframes=0`, resolution 720p or 1080p.
+
+**Balanced:** Keyframe Interval 2, CRF 25, no B-frame override.
+
+See [Optimise latency](optimize-latency) for full profiles.

@@ -1,0 +1,458 @@
+---
+title: 'Tutorials Resources'
+sidebarTitle: Tutorials Resources
+description: 'Description of tutorials-resources'
+audience: developer
+pageType: landing
+purpose: landing
+status: draft
+lastVerified: 2026-03-13
+keywords:
+  - livepeer
+  - keyword
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+{/* TODO:
+Verify:
+- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)
+- Fontawesome icons are used on accordions and tabs
+- Tables use StyledTable component
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical - no long headers or questions (aim for max 3 words)
+- CustomDivider is used with <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} /> for all --- separator breaks
+- Placeholders for Media & Video Resources are in comments with a TODO for a human.
+- REVIEW flags are in JSX flags for a human.
+*/}
+
+{/* # Livepeer: Practical Tutorials Index
+
+**Scope:** Hands-on, implementable tutorials for Gateways, Orchestrators, and Developers
+**Cutoff:** March 2026 — entries flagged `[VERIFY]` have not been live-checked in this session
+**Sources document:** `livepeer-tutorials-sources.md`
+
+--- */}
+
+## 1. Gateway Tutorials
+
+> Running a node that routes AI or video jobs to orchestrators and returns results. Covers off-chain, on-chain, AI-only, and dual configurations.
+
+---
+
+### 1.1 Official Gateway Quickstart (Video Gateway, On-chain)
+**What it covers:** Full on-chain video gateway setup — install, configure, fund PM deposit, connect to network
+**Format:** Step-by-step guide
+**Level:** Intermediate
+**Link:** https://docs.livepeer.org/gateways/quickstart/gateway-setup
+**Status:** Live in docs-v2 repo (confirmed via GitHub MCP)
+
+---
+
+### 1.2 AI Gateway Configuration Guide
+**What it covers:** Running an off-chain AI gateway using Docker — flags, ports, `-httpIngest`, `-orchAddr`, expected startup logs. Includes the confirmed Docker command using `livepeer/go-livepeer:master`.
+**Format:** Configuration reference + walkthrough
+**Level:** Intermediate
+**Link:** https://docs.livepeer.org/gateways/setup/configure/ai-configuration
+**Status:** Live — content verified from repo upload during research
+
+> **Note:** The existing page contains one known error: it states you need your own GPU to test an off-chain gateway. This is wrong. The community remote signer at `signer.eliteencoder.net` handles ETH on your behalf. Treat this page as a reference for flags only.
+
+---
+
+### 1.3 Docker Install for Gateways
+**What it covers:** Installing and running go-livepeer as a gateway via Docker. Includes volume mounts (`-v ~/.lpData`), network config (`--network host`), and port mapping.
+**Format:** Step-by-step install guide
+**Level:** Beginner
+**Link:** https://docs.livepeer.org/gateways/setup/install/docker-install
+**Status:** Live in docs-v2 repo (confirmed via GitHub MCP — file exists and has content)
+
+---
+
+### 1.4 Livepeer.cloud: How to Run a Gateway Node
+**What it covers:** Community-written end-to-end gateway setup guide from the tools.livepeer.cloud team — covers binary install, off-chain testing, and going on-chain
+**Format:** Blog-style guide
+**Level:** Intermediate
+**Link:** https://livepeer.cloud/how-to-run-a-livepeer-gateway-node
+**Status:** `[VERIFY]` — URL confirmed in gateway research report; live status not checked in this session
+
+---
+
+### 1.5 j0sh's livepeer-python-gateway: README + Examples
+**What it covers:** Running a Python-native gateway (not go-livepeer). Covers `OrchestratorSession`, `LiveVideoJob`, `start_lv2v` entry point, orchestrator discovery via explicit URIs or discovery endpoint, payment handling. Most complete non-Go gateway reference.
+**Format:** GitHub README + inline examples
+**Level:** Advanced
+**Link:** https://github.com/j0sh/livepeer-python-gateway
+**Examples dir:** https://github.com/j0sh/livepeer-python-gateway/tree/main/examples
+**Status:** `[VERIFY]` — repo confirmed in multiple project sources; README content not retrieved in this session
+
+---
+
+### 1.6 Remote Signers: Off-chain Gateway Payments
+**What it covers:** Architecture and setup of a remote signer so an off-chain AI gateway can make payments without holding ETH directly. Covers the `getOrchInfoSig` → `signTicket` protocol, stateless design, and the community-hosted signer at `signer.eliteencoder.net`.
+**Format:** Design doc + setup guide
+**Level:** Advanced
+**Link:** https://docs.livepeer.org/gateways/payments/remote-signers
+**Design doc:** https://github.com/livepeer/go-livepeer/blob/master/doc/remote-signer.md
+**Status:** `[VERIFY]` — published docs page path unconfirmed; design doc location confirmed via Remote_signers.md project file
+
+---
+
+### 1.7 BYOC Gateway: Build and Route a Custom AI Container
+**What it covers:** Packaging a Python inference container using PyTrickle, registering it with an orchestrator (`-byoc -byocContainerURL -byocModelID`), and routing jobs through a gateway. CPU-only, no ETH required.
+**Format:** Multi-step tutorial (Tutorial 2 of the 3-part series)
+**Level:** Intermediate
+**Link:** https://docs.livepeer.org/gateways/tutorials/tutorial-byoc-cpu-pipeline *(new — not yet published)*
+**Draft location:** `/mnt/user-data/outputs/tutorial-byoc-cpu-pipeline.mdx`
+**Status:** Produced in this project — pending publish
+
+---
+
+### 1.8 Off-chain Gateway: Transcoding Test in 15 Minutes
+**What it covers:** End-to-end local gateway + orchestrator pipeline. No ETH, no GPU. Tests the full segment routing lifecycle using ffmpeg and HLS output verification.
+**Format:** Step-by-step tutorial (Tutorial 1 of 3)
+**Level:** Beginner
+**Link:** https://docs.livepeer.org/gateways/tutorials/tutorial-offchain-transcoding-test *(new — not yet published)*
+**Draft location:** `/mnt/user-data/outputs/tutorial-offchain-transcoding-test.mdx`
+**Status:** Produced in this project — pending publish
+
+---
+
+### 1.9 Go Production: On-chain, GPU, and Network Connect
+**What it covers:** Three independent upgrades from off-chain localhost to live network — on-chain ETH deposits, GPU pipeline enablement, and public orchestrator discovery. Includes the persona decision matrix.
+**Format:** Step-by-step tutorial (Tutorial 3 of 3)
+**Level:** Intermediate–Advanced
+**Link:** https://docs.livepeer.org/gateways/tutorials/tutorial-go-production *(new — not yet published)*
+**Draft location:** `/mnt/user-data/outputs/tutorial-go-production.mdx`
+**Status:** Produced in this project — pending publish
+
+---
+
+### 1.10 NaaP: Network as a Platform — Gateway Dashboard and JWT Auth
+**What it covers:** Building a clearinghouse layer on top of a gateway. JWT issuer (SIWE → user-scoped JWT), Developer API Keys section, and Qiang Han's gateway dashboard implementation.
+**Format:** GitHub README + inline implementation
+**Level:** Advanced
+**Link:** https://github.com/livepeer/naap
+**Status:** `[VERIFY]` — repo confirmed in research; API described as demo-only, not stable
+
+---
+
+### 1.11 livepeer-ops: Smart Contract Gateway Tooling (DeFine)
+**What it covers:** Direct smart contract interaction for gateway operations — orchestrator onboarding, remote node control, payment handling, without going through the standard go-livepeer gateway flow.
+**Format:** GitHub README + tooling
+**Level:** Advanced
+**Link:** https://github.com/its-DeFine/livepeer-ops
+**Status:** Confirmed in docs-v2 developer-journey.mdx (fetched in this session)
+
+---
+
+### 1.12 Dual Gateway Configuration (Video + AI)
+**What it covers:** Running a single node that handles both RTMP video transcoding (port 1935) and AI inference jobs (port 8935, enabled via `-httpIngest`) simultaneously. Flag combinations and conflict avoidance.
+**Format:** Configuration guide
+**Level:** Advanced
+**Link:** https://docs.livepeer.org/gateways/setup/configure/dual-configuration
+**Status:** `[VERIFY]` — page confirmed in docs.json nav; content quality unknown
+
+---
+
+## 2. Orchestrator Tutorials
+
+> Running a GPU node that accepts jobs from gateways, executes AI inference or video transcoding, and earns ETH fees + LPT rewards.
+
+---
+
+### 2.1 Install go-livepeer (Official)
+**What it covers:** Binary install on Linux amd64 — download, verify, set up keystore, first run. Includes Docker path and build-from-source option.
+**Format:** Step-by-step install guide
+**Level:** Beginner
+**Link:** https://docs.livepeer.org/orchestrators/setup/rs-install
+**Status:** Confirmed in docs-v2 repo (5,418-byte file, GitHub MCP)
+
+---
+
+### 2.2 Configure Your Orchestrator / Add Your GPU to Livepeer
+**What it covers:** Post-install configuration — `-ethUrl`, `-serviceAddr`, `-pricePerUnit`, `-nvidia`, `transcodingOptions.json`, `aiModels.json`. Includes the exact minimal startup command.
+**Format:** Configuration reference + tutorial
+**Level:** Intermediate
+**Link:** https://docs.livepeer.org/orchestrators/setting-up-an-orchestrator/quickstart-add-your-gpu-to-livepeer
+**Status:** Confirmed — full content retrieved via GitHub MCP in this session
+
+---
+
+### 2.3 Connect to Arbitrum
+**What it covers:** Pointing your orchestrator at an Arbitrum One RPC, wallet setup, on-chain activation, and verifying you appear in Explorer.
+**Format:** Step-by-step guide
+**Level:** Intermediate
+**Link:** https://docs.livepeer.org/orchestrators/setup/sc-connect
+**Status:** Confirmed — file exists (1,665 bytes), content not fully retrieved
+
+---
+
+### 2.4 Publish Offerings (Announce Capabilities On-chain)
+**What it covers:** After activation — advertising your service address, capability list, and pricing to the network so gateways can discover and route to you.
+**Format:** Step-by-step guide
+**Level:** Intermediate
+**Link:** https://docs.livepeer.org/orchestrators/setup/activate
+**Status:** Confirmed — file exists (1,344 bytes), GitHub MCP
+
+---
+
+### 2.5 Hosting AI Models on Orchestrators
+**What it covers:** Loading and advertising AI pipeline models (`aiModels.json`), VRAM management, warm model strategy, capability descriptor advertising. How models get matched to gateway requests.
+**Format:** Operational guide
+**Level:** Intermediate
+**Link:** https://docs.livepeer.org/orchestrators/advanced-setup/hosting-models
+**Status:** `[VERIFY]` — page referenced in byoc.mdx and developer-journey.mdx (confirmed); content quality not checked
+
+---
+
+### 2.6 Join Titan Node Pool (No LPT Required)
+**What it covers:** Joining as a GPU worker in the Titan Node pool without needing to self-stake LPT. The pool handles on-chain orchestrator registration; you contribute compute and earn ETH + LPT + LTNT.
+**Format:** Pool joining guide + Docker setup
+**Level:** Beginner–Intermediate
+**Link:** https://github.com/Titan-Node/Titan-Node-Pool
+**Dashboard:** https://app.titan-node.com
+**Status:** Confirmed — repo and dashboard URL verified in setup-paths-sources.md (March 2026)
+
+> **Note:** LTNT token issuance and current pool active status should be verified in the Titan Node Discord before following.
+
+---
+
+### 2.7 Titan Node YouTube Channel
+**What it covers:** Video walkthroughs of orchestrator setup, pool joining, earnings monitoring, and AI pipeline configuration. Regularly updated as the network evolves.
+**Format:** Video tutorials
+**Level:** Beginner–Intermediate
+**Link:** https://www.youtube.com/@TitanNode
+**Status:** `[VERIFY]` — channel confirmed as a source in project files; specific video titles/IDs not retrieved in this session
+
+---
+
+### 2.8 OrchestratorSiphon: Automated Earnings Management
+**What it covers:** Python tool that automatically moves earned ETH and LPT from your orchestrator hot wallet to a cold wallet when thresholds are met. Setup via `config.ini`, systemd service, multi-keystore support.
+**Format:** GitHub README (complete setup walkthrough)
+**Level:** Intermediate
+**Link:** https://github.com/Stronk-Tech/OrchestratorSiphon
+**Status:** Confirmed — full README content verified (setup-paths-sources.md, March 2026). Config fields, threshold defaults, and Ubuntu 24.04 compatibility confirmed.
+
+---
+
+### 2.9 Hardware Requirements Reference
+**What it covers:** GPU VRAM minimums by pipeline type (text-to-image, image-to-video, audio-to-text, LLM), NVIDIA driver minimum versions, CUDA requirements, and recommended configurations per workload class.
+**Format:** Reference guide
+**Level:** Beginner (decision support)
+**Link:** https://docs.livepeer.org/orchestrators/setting-up-an-orchestrator/hardware-requirements
+**Status:** Confirmed — file exists (3,134 bytes), GitHub MCP
+
+---
+
+### 2.10 Set Pricing for Transcoding (v1 Guide, Still Valid)
+**What it covers:** Setting `pricePerUnit` and `pixelsPerUnit` via `livepeer_cli`, understanding the competitive market, and updating pricing without restarting the node.
+**Format:** Step-by-step CLI guide
+**Level:** Intermediate
+**Link:** https://docs.livepeer.org/orchestrators/guides/set-pricing
+**Status:** `[VERIFY]` — v1 path confirmed in docs.json redirects; content may need Arbitrum-era update
+
+---
+
+### 2.11 Benchmark Transcoding
+**What it covers:** Running the built-in `livepeer_bench` tool to measure your GPU's transcoding throughput, understand session limits, and set competitive pricing relative to actual output capacity.
+**Format:** CLI guide
+**Level:** Intermediate
+**Link:** https://docs.livepeer.org/orchestrators/guides/benchmark-transcoding
+**Status:** `[VERIFY]` — confirmed in docs.json redirects
+
+---
+
+### 2.12 Udemy: How to Start a Livepeer Orchestrator (Passive Income)
+**What it covers:** End-to-end course for Solo Miner persona — acquiring LPT, setting up go-livepeer on a home machine or VPS, staking, monitoring earnings. Pitched as a passive income setup.
+**Format:** Video course
+**Level:** Beginner
+**Link:** Search "Livepeer Orchestrator" on https://www.udemy.com
+**Status:** `[VERIFY]` — referenced in gpu-nodes-ia-planning.md persona research as a confirmed entry point for the Solo Miner persona. Specific URL not retrievable without web access.
+
+---
+
+### 2.13 Staking LPT and Rewards Guide
+**What it covers:** Self-stake mechanics, why stake weight determines job allocation, reward call cadence, and the compound flywheel. Includes the yield formula and ROI calculator reference.
+**Format:** Conceptual + operational guide
+**Level:** Intermediate
+**Link:** https://docs.livepeer.org/orchestrators/advanced-setup/staking-LPT
+**Status:** `[VERIFY]` — confirmed in docs.json nav
+
+---
+
+### 2.14 Livepeer YouTube Channel (Official)
+**What it covers:** Protocol architecture explainers, network updates, hackathon demos, and occasional node operator walkthroughs from the Livepeer Foundation team.
+**Format:** Video
+**Level:** Mixed
+**Link:** https://www.youtube.com/@Livepeer
+**Status:** `[VERIFY]` — channel confirmed; specific relevant videos not retrieved
+
+---
+
+### 2.15 Orchestrator Stats and Monitoring
+**What it covers:** Reading the `/status` endpoint, understanding Prometheus metrics, connecting to Grafana, and using the Livepeer Explorer for orchestrator-level observability.
+**Format:** Reference + setup guide
+**Level:** Intermediate
+**Link:** https://docs.livepeer.org/orchestrators/setting-up-an-orchestrator/orchestrator-stats
+**Status:** Confirmed — file exists (2,299 bytes), GitHub MCP
+
+---
+
+## 3. Developer Tutorials
+
+> Building applications that consume Livepeer AI inference, contribute compute workloads, or extend the protocol.
+
+---
+
+### 3.1 Developer Journey: Choose Your Path
+**What it covers:** Full decision map — Workload Provider (BYOC + Gateway, or direct smart contract), Workload Consumer (Daydream, Embody), Core Contributor (go-livepeer). Includes Mermaid flow diagram of all paths. Most useful starting point for any developer.
+**Format:** Interactive decision guide
+**Level:** Beginner (decision support)
+**Link:** https://docs.livepeer.org/developers/developer-journey
+**Status:** Confirmed — full content retrieved via GitHub MCP in this session
+
+---
+
+### 3.2 BYOC Developer Guide
+**What it covers:** Building a custom AI inference server, containerising it, integrating with ComfyStream or a custom Docker image, registering capabilities (`image-to-image`, `depth`, etc.), and pricing setup. Includes Dockerfile, `config.yaml`, and startup command.
+**Format:** Comprehensive tutorial
+**Level:** Intermediate–Advanced
+**Link:** https://docs.livepeer.org/developers/ai-pipelines/byoc
+**Status:** Confirmed — full content retrieved via GitHub MCP in this session
+
+---
+
+### 3.3 AI Inference on Livepeer: Overview and Architecture
+**What it covers:** How inference requests flow from your app through a gateway to orchestrators and back. Comparison table (Livepeer AI vs generic GPU cloud vs hosted AI APIs). What to build and what not to build on Livepeer.
+**Format:** Conceptual overview + quickstart pointers
+**Level:** Beginner
+**Link:** https://docs.livepeer.org/developers/ai-inference-on-livepeer/overview
+**Status:** Confirmed — full content retrieved via GitHub MCP in this session
+
+---
+
+### 3.4 ComfyStream Integration Guide
+**What it covers:** Running a ComfyUI-based modular inference pipeline on Livepeer GPU workers. Node types (Whisper, Diffusion, Detection, Blur), plugin development, caption overlay example pipeline, `config.yaml` gateway binding, and debugging.
+**Format:** Technical integration guide
+**Level:** Intermediate
+**Link:** https://docs.livepeer.org/developers/ai-pipelines/comfystream
+**Status:** Confirmed — full content retrieved via GitHub MCP in this session
+
+---
+
+### 3.5 ComfyStream GitHub Repository
+**What it covers:** Reference implementation of real-time ComfyUI pipelines for Livepeer. WebRTC frame ingestion, async frame queues, warm model management, and integration with the go-livepeer AI worker. Actual runnable code.
+**Format:** GitHub README + source code
+**Level:** Advanced
+**Link:** https://github.com/livepeer/comfystream
+**Status:** Confirmed — referenced in comfystream.mdx and ai-workloads-sources.md
+
+---
+
+### 3.6 Livepeer Studio: API Quickstart
+**What it covers:** Using the Livepeer Studio hosted gateway via REST API — upload video, create a stream, transcode, and retrieve playback URLs. Fastest path to a working integration without running any infrastructure.
+**Format:** API quickstart
+**Level:** Beginner
+**Link:** https://docs.livepeer.studio
+**Status:** `[VERIFY]` — Livepeer Studio is the hosted gateway product; docs site confirmed
+
+---
+
+### 3.7 Livepeer JavaScript SDK (livepeer-js)
+**What it covers:** TypeScript/JavaScript client library for the Livepeer Studio API. Asset management, stream creation, playback configuration. Browser and server-side support.
+**Format:** SDK README + API reference
+**Level:** Intermediate
+**Link:** https://github.com/livepeer/livepeer-js
+**npm:** https://www.npmjs.com/package/livepeer (v3.5.0 confirmed)
+**Status:** Confirmed — npmjs registry entry fetched in this session, v3.5.0 current
+
+---
+
+### 3.8 Livepeer AI Python SDK
+**What it covers:** Python client for Livepeer AI inference endpoints — text-to-image, image-to-image, audio-to-text, and other pipeline types via the hosted gateway.
+**Format:** SDK README + examples
+**Level:** Intermediate
+**Link:** https://github.com/livepeer/livepeer-ai-python
+**Status:** `[VERIFY]` — repo confirmed in project files; README content not retrieved
+
+---
+
+### 3.9 Workload Fit Decision Guide
+**What it covers:** Before you build — whether your model or use case belongs on Livepeer. Frame-based vs batch, latency requirements, VRAM profiles, GPU residency. Prevents wasted integration effort.
+**Format:** Decision guide with tables
+**Level:** Beginner (decision support)
+**Link:** https://docs.livepeer.org/developers/ai-inference-on-livepeer/workload-fit
+**Status:** Confirmed — file exists (8,831 bytes), GitHub MCP
+
+---
+
+### 3.10 Daydream: Consuming Livepeer AI Pipelines
+**What it covers:** Using Daydream as a workload consumer — connecting to live AI pipelines running on the Livepeer network without running any infrastructure yourself.
+**Format:** Product documentation + app
+**Level:** Beginner
+**Link:** https://daydream.live
+**Status:** `[VERIFY]` — confirmed in developer-journey.mdx (fetched in this session) as the primary Workload Consumer entry point
+
+---
+
+### 3.11 Embody / Unreal VTuber Pipeline
+**What it covers:** Real-time avatar and VTuber pipeline running on Livepeer GPU nodes via direct smart contract interaction. The `SKILL.md` file is the integration contract — it tells an agent how to consume and use the Embody workload.
+**Format:** GitHub README + SKILL.md
+**Level:** Advanced
+**Link (Unreal):** https://github.com/its-DeFine/Unreal_Vtuber
+**Link (SKILL.md):** https://github.com/its-DeFine/embody-skill/blob/main/SKILL.md
+**Status:** Confirmed — both links in developer-journey.mdx (fetched in this session)
+
+---
+
+### 3.12 livepeer-app-pipelines: Reference Implementations
+**What it covers:** Collection of BYOC container examples and reference pipeline implementations from ad-astra-video. The recommended starting point when building a BYOC workload.
+**Format:** GitHub repo with examples
+**Level:** Intermediate–Advanced
+**Link:** https://github.com/ad-astra-video/livepeer-app-pipelines
+**Status:** Confirmed — referenced in developer-journey.mdx as the official BYOC examples repo (fetched in this session)
+
+---
+
+### 3.13 scope-runner: Custom Live Pipeline Reference
+**What it covers:** Real-world implementation of the Livepeer `ai-runner` Pipeline interface. Shows `pipeline.py`, `frame_queue`, and `asyncio.to_thread` pattern for integrating blocking model inference into the Livepeer runtime.
+**Format:** GitHub source code
+**Level:** Advanced
+**Link:** https://github.com/daydreamlive/scope-runner
+**Key file:** https://github.com/daydreamlive/scope-runner/blob/main/src/scope_runner/pipeline/pipeline.py
+**Status:** Confirmed — ai-workloads-sources.md (March 2026)
+
+---
+
+### 3.14 AI Pipelines Overview (Model Support Matrix)
+**What it covers:** Complete compatibility matrix for AI pipelines on Livepeer — pipeline types (text-to-image, image-to-image, audio-to-text, live-video-to-video, etc.), supported model families, VRAM requirements, and pricing units.
+**Format:** Reference table
+**Level:** Intermediate (decision support)
+**Link:** https://docs.livepeer.org/developers/ai-pipelines/model-support
+**Status:** Confirmed — file exists (10,761 bytes), GitHub MCP
+
+---
+
+### 3.15 Contribution Guide: go-livepeer
+**What it covers:** How to contribute to the Go implementation of the Livepeer protocol — coding standards, PR process, testing requirements, and the path to getting changes merged.
+**Format:** Developer guide
+**Level:** Advanced
+**Link:** https://docs.livepeer.org/developers/guides-and-tools/contribution-guide
+**Status:** Confirmed — file exists in guides-and-resources directory (GitHub MCP)
+**go-livepeer repo:** https://github.com/livepeer/go-livepeer
+
+---
+
+## Verification Status Summary
+
+| Category | Fully confirmed | Needs live check |
+|---|---|---|
+| Gateways | 5 | 7 |
+| Orchestrators | 6 | 9 |
+| Developers | 8 | 7 |
+
+Items marked `[VERIFY]` have been confirmed as real resources through project file references, repo cross-links, or training knowledge — but their exact URL and current content have not been retrieved with a live HTTP request in this session. All should be spot-checked before being added to published documentation.

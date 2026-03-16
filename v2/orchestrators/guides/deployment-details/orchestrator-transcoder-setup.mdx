@@ -1,0 +1,398 @@
+---
+title: 'Orchestrator-Transcoder Split Setup'
+sidebarTitle: 'O-T Split'
+description: >-
+  Run go-livepeer's Orchestrator and Transcoder as separate processes on separate
+  machines - isolating protocol operations from GPU workload, scaling Transcoders
+  independently, and connecting multiple GPU machines to one Orchestrator.
+keywords:
+  - livepeer
+  - orchestrator
+  - transcoder
+  - split
+  - o-t split
+  - orchSecret
+  - orchAddr
+  - standalone transcoder
+  - separate machines
+  - multi-transcoder
+  - split setup
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: orchestrator
+purpose: guide
+status: current
+lastVerified: '2026-03-15'
+---
+
+{/* TODO:
+Verify:
+- Mermaid diagrams use theme colours (hardcoded)
+- Fontawesome icons on cards/accordions
+- Tables use StyledTable with thead/tbody
+- No em-dashes
+- UK spelling throughout
+- REVIEW flags below for SME
+Human:
+- REVIEW: confirm -maxSessions still valid on both O and T processes in current go-livepeer releases (Rick)
+- REVIEW: port 8935 required for both inbound Gateway connections AND Transcoder connections - confirm no separate port for T-O communication
+- REVIEW: orchSecret file-based path (-orchSecret /path/to/secret.txt) still supported in current releases (Rick)
+*/}
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { ScrollableDiagram } from '/snippets/components/content/zoomableDiagram.jsx'
+
+<CustomDivider />
+
+By default, go-livepeer runs the Orchestrator and Transcoder as a single combined process on one
+machine. The split setup separates them: one machine handles protocol operations (on-chain
+interactions, job routing, reward calling) and one or more machines handle the GPU work. The two
+connect over the network using a shared secret.
+
+This is also the architectural foundation for
+<LinkArrow href="/v2/orchestrators/guides/advanced-operations/pool-operators" label="running a pool" newline={false} />.
+A pool extends the O-T split to accept connections from external workers.
+
+For a comparison of all alternate deployment options, see <LinkArrow href="/v2/orchestrators/guides/deployment-details/setup-options" label="Alternate Deployments" newline={false} />.
+
+<CustomDivider middleText="Why Split?" />
+
+## Reasons to Split
+
+<CardGroup cols={2}>
+  <Card title="Security isolation" icon="shield-halved">
+    The Ethereum keystore lives only on the Orchestrator machine. GPU worker machines have no wallet access. A compromised worker cannot drain funds or perform on-chain actions.
+  </Card>
+  <Card title="Independent scaling" icon="server">
+    Add or remove Transcoder machines without touching the Orchestrator. Scale GPU capacity by connecting more Transcoder nodes - each reports its own capacity to the Orchestrator.
+  </Card>
+  <Card title="Stable reward calling" icon="clock">
+    The Orchestrator machine is usually a small stable VPS with no GPU. Reward calls come from this machine, independent of GPU machine availability.
+  </Card>
+  <Card title="Role-optimised hardware" icon="microchip">
+    Optimise the Orchestrator for fast CPU, reliable network, and stable uptime. Optimise Transcoder machines purely for GPU throughput.
+  </Card>
+</CardGroup>
+
+<CustomDivider middleText="Architecture" />
+
+## Architecture
+
+<ScrollableDiagram title="O-T Split Architecture" maxHeight="380px">
+
+```mermaid title="O-T split architecture"
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+graph LR
+    GW["Gateway"] -->|"port 8935\n(public)"| O["Orchestrator\nVPS or stable server\n- Ethereum keystore\n- reward calling\n- job routing\n- no GPU required"]
+    O -->|"port 8935\n(orchSecret)"| T1["Transcoder 1\nGPU machine"]
+    O -->|"port 8935\n(orchSecret)"| T2["Transcoder 2\nGPU machine"]
+    O -->|"port 8935\n(orchSecret)"| T3["Transcoder 3\nGPU machine"]
+
+    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+```
+
+</ScrollableDiagram>
+
+**Data flow:**
+
+1. A Gateway connects to the Orchestrator on port 8935 (the public service URI)
+2. The Orchestrator receives the job and dispatches it to an available connected Transcoder via gRPC
+3. The Transcoder processes the segment and returns results to the Orchestrator
+4. The Orchestrator returns results to the Gateway
+
+The protocol sees only the Orchestrator. Transcoders stay behind that public endpoint.
+
+<CustomDivider middleText="Part 1: Orchestrator" />
+
+## Part 1 - Orchestrator Machine
+
+The Orchestrator machine needs a publicly accessible IP or hostname, an Ethereum keystore, and
+outbound access to an Arbitrum RPC endpoint. GPU hardware stays on the Transcoder machines.
+
+```bash icon="terminal" title="Orchestrator machine command"
+livepeer \
+    -network arbitrum-one-mainnet \
+    -ethUrl <ARBITRUM_RPC_URL> \
+    -ethAcctAddr <YOUR_ETH_ADDRESS> \
+    -orchestrator \
+    -orchSecret <ORCH_SECRET> \
+    -serviceAddr <YOUR_PUBLIC_HOST>:8935 \
+    -pricePerUnit <PRICE_PER_UNIT>
+```
+
+**Key flags for the Orchestrator-only process:**
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Flag</TableCell>
+      <TableCell header>Description</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`-orchestrator`</TableCell>
+      <TableCell>Runs as an Orchestrator and handles Gateway connections plus job routing. Local transcoding stays disabled in this process.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-orchSecret`</TableCell>
+      <TableCell>Shared secret Transcoders use to authenticate connections. Pass as plaintext or as a file path: `-orchSecret /path/to/secret.txt`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-serviceAddr`</TableCell>
+      <TableCell>Public hostname or IP and port - must match the on-chain service URI. Example: `orch.yourdomain.com:8935`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-pricePerUnit`</TableCell>
+      <TableCell>Transcoding price in wei per pixel</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+With `-orchestrator` alone, go-livepeer runs in standalone Orchestrator mode. It routes jobs to
+connected Transcoders and performs no local transcoding. Job assignments start once at least one
+Transcoder connects.
+
+<Note>
+Pass `-orchSecret` as a file path for production setups. Plaintext secrets remain visible in the
+process list via `ps aux`.
+
+```bash icon="terminal" title="Store orchSecret in a file"
+echo "my-secret-value" > /etc/livepeer/orchsecret.txt
+chmod 600 /etc/livepeer/orchsecret.txt
+# then: -orchSecret /etc/livepeer/orchsecret.txt
+```
+</Note>
+
+<CustomDivider middleText="Part 2: Transcoder" />
+
+## Part 2 - Transcoder Machines
+
+Each Transcoder machine needs an NVIDIA GPU with drivers installed and network connectivity to the
+Orchestrator on port 8935. Ethereum account management, LPT stake, and Arbitrum RPC stay on the
+Orchestrator machine.
+
+```bash icon="terminal" title="Transcoder machine command"
+livepeer \
+    -transcoder \
+    -nvidia <GPU_IDs> \
+    -orchSecret <ORCH_SECRET> \
+    -orchAddr <ORCHESTRATOR_HOST>:8935 \
+    -maxSessions <MAX_SESSIONS>
+```
+
+**Key flags for the Transcoder-only process:**
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Flag</TableCell>
+      <TableCell header>Description</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`-transcoder`</TableCell>
+      <TableCell>Runs as a Transcoder-only process that handles GPU work while the Orchestrator handles protocol and on-chain actions</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-nvidia`</TableCell>
+      <TableCell>Comma-separated GPU IDs to use for transcoding. Example: `0` for one GPU, `0,1` for two</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-orchSecret`</TableCell>
+      <TableCell>Must match the Orchestrator's `-orchSecret` exactly - this authenticates the connection</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-orchAddr`</TableCell>
+      <TableCell>The Orchestrator's hostname and port. Example: `orch.yourdomain.com:8935`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-maxSessions`</TableCell>
+      <TableCell>Maximum concurrent transcoding sessions this Transcoder will accept</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+### Verifying the connection
+
+When the Transcoder connects successfully, the Orchestrator logs show:
+
+```text icon="terminal" title="Successful transcoder registration"
+Got a RegisterTranscoder request from transcoder=10.3.27.1 capacity=10
+```
+
+The `capacity` field reflects the Transcoder's `-maxSessions` value. Once this line appears, the
+Orchestrator begins routing jobs to the connected Transcoder.
+
+<CustomDivider middleText="Multiple Transcoders" />
+
+## Connecting Multiple Transcoders
+
+Any number of Transcoders connect to a single Orchestrator using the same `-orchSecret`. Each
+connection appears in Orchestrator logs:
+
+```text icon="terminal" title="Multiple transcoder registrations"
+Got a RegisterTranscoder request from transcoder=10.3.27.1 capacity=10
+Got a RegisterTranscoder request from transcoder=10.3.27.2 capacity=8
+Got a RegisterTranscoder request from transcoder=10.3.27.3 capacity=12
+```
+
+The Orchestrator distributes incoming job segments across all connected Transcoders automatically.
+The effective session capacity is the sum of all connected Transcoder capacities. In the example
+above, that means 30 concurrent sessions. New Transcoders are added at any time, and the
+Orchestrator routes to them immediately.
+
+<CustomDivider middleText="Pool Relationship" />
+
+## Relationship to Pool Operations
+
+The O-T split and a worker pool are the same architecture. The difference is operational scope:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>O-T split</TableCell>
+      <TableCell header>Worker pool</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>The operator owns and runs all machines</TableCell>
+      <TableCell>External workers connect their own machines</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Transcoders are internal</TableCell>
+      <TableCell>Workers are third parties</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Operator-owned fleet with direct internal accounting</TableCell>
+      <TableCell>Off-chain payout tracking required</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+For pool operations, including external worker connections and off-chain fee distribution, see
+<LinkArrow href="/v2/orchestrators/guides/advanced-operations/pool-operators" label="Run a Pool" newline={false} />.
+
+<CustomDivider middleText="Security" />
+
+## Security Considerations
+
+<AccordionGroup>
+  <Accordion title="Protect the orchSecret" icon="key">
+
+    The `orchSecret` is the only authentication between Orchestrator and Transcoder. Any node with
+    this secret is able to connect as a Transcoder and receive job assignments. Keep it private: leave it
+    out of public Docker images, public configuration files, and version control. Use file-based
+    secrets with restricted permissions.
+
+  </Accordion>
+  <Accordion title="Transcoders stay off-chain" icon="shield-halved">
+
+    In a correctly configured split setup, Transcoder machines stay keystore-free and run with
+    workload-only flags. Only the Orchestrator submits on-chain transactions. Keep GPU worker
+    machines dedicated to workload processing and leave keystores on the Orchestrator side.
+
+  </Accordion>
+  <Accordion title="Port 8935 on the Orchestrator" icon="network-wired">
+
+    Port 8935 must be publicly accessible for both Gateway and Transcoder connections. Gateways
+    connect inbound to route jobs; Transcoders connect inbound to register and receive work. Firewall
+    rules therefore need to allow inbound TCP on port 8935.
+
+  </Accordion>
+  <Accordion title="Rotating the orchSecret" icon="arrows-rotate">
+
+    A compromised `-orchSecret` requires immediate rotation: generate a new secret, update the
+    Orchestrator launch command, communicate the new secret to all Transcoder operators, then
+    restart the Orchestrator. Existing Transcoder connections drop during the restart and reconnect
+    automatically with the new secret. Rotation requires a short reconnection window.
+
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider middleText="Troubleshooting" />
+
+## Troubleshooting
+
+Primary endpoints used in this setup:
+- Status endpoint: `https://<orchestrator-host>:8935/status`
+- Metrics endpoint: `http://localhost:7935/metrics`
+
+Use the status endpoint to confirm the public Orchestrator is responding and the metrics endpoint to
+inspect local workload and capacity counters before opening the accordion checks below.
+
+<AccordionGroup>
+  <Accordion title="Transcoder connection never reaches Orchestrator logs" icon="triangle-exclamation">
+
+    Check in order:
+    1. Verify port 8935 is reachable from the Transcoder: `curl -v https://<orchestrator-host>:8935/status`
+    2. Confirm `-orchSecret` matches exactly on both sides (case-sensitive)
+    3. For HTTPS deployments, confirm the TLS certificate chain is trusted by the Transcoder host
+    4. Check Transcoder startup logs for the GPU test result. A GPU test failure exits the process
+       before it connects
+
+  </Accordion>
+  <Accordion title="Transcoder connects but stays idle" icon="circle-pause">
+
+    Once `Got a RegisterTranscoder request` appears in Orchestrator logs, the Transcoder is
+    connected and eligible for work. When jobs are arriving at the Orchestrator and the Transcoder
+    still stays idle:
+    - Check whether the Transcoder's `-maxSessions` capacity is already reported as fully used
+    - Check the Orchestrator metrics endpoint
+    - An idle Orchestrator usually points to Gateway routing - see
+      <LinkArrow href="/v2/orchestrators/guides/advanced-operations/gateway-relationships" label="Working with Gateways" newline={false} />
+
+  </Accordion>
+  <Accordion title="Cannot allocate memory at Transcoder startup" icon="memory">
+
+    The Transcoder's GPU startup test failed, typically because the NVENC session cap has been
+    reached on that GPU. See the GPU and memory errors section of the
+    <LinkArrow href="/v2/orchestrators/guides/monitoring-and-tooling/troubleshooting" label="Troubleshooting Guide" newline={false} />.
+
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Alternate Deployments" icon="map" href="/v2/orchestrators/guides/deployment-details/setup-options" arrow horizontal>
+    Overview of all three alternate deployment options and how to choose between them.
+  </Card>
+  <Card title="Siphon Setup" icon="shield-halved" href="/v2/orchestrators/guides/deployment-details/siphon-setup" arrow horizontal>
+    Combine the split architecture with OrchestratorSiphon for keystore isolation and reward safety.
+  </Card>
+  <Card title="Run a Pool" icon="users" href="/v2/orchestrators/guides/advanced-operations/pool-operators" arrow horizontal>
+    Extend this architecture to accept external worker connections.
+  </Card>
+  <Card title="Large-Scale Operations" icon="building" href="/v2/orchestrators/guides/advanced-operations/scale-operations" arrow horizontal>
+    Fleet architecture and multi-Orchestrator operations.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  "How do I run a split O-T architecture?" When to split (multi-GPU, security
+  isolation, dedicated protocol node). Orchestrator node config (no GPU needed).
+  Transcoder node config (-transcoder, -orchSecret, GPU assignment). Networking
+  between O and T. Multi-transcoder: adding GPUs across machines. Monitoring
+  split deployments.
+
+  PLAN TARGET: orchestrator-transcoder-setup (keep)
+  SECTION: Deployment Details → "What do I need and which path?"
+  JOB STORIES: J4 (scaling infrastructure)
+
+  CROSS-REFS:
+  - Deployment Details > Setup Options - choosing split vs solo
+  - Advanced Operations > Fleet Operations - scaling O-T further
+  - Monitoring & Tools > Metrics and Alerting - monitoring split nodes
+*/}

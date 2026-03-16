@@ -1,0 +1,397 @@
+---
+title: 'Gateway Pricing Strategy'
+sidebarTitle: 'Pricing Strategy'
+description: 'Configure price caps for video and AI workloads on a Livepeer gateway. Covers maxPricePerUnit, maxPricePerCapability, Live AI interval pricing, USD conversion via Chainlink, and setting caps by operational mode.'
+keywords: ["livepeer", "gateway", "pricing", "maxPricePerUnit", "maxPricePerCapability", "orchestrator", "wei", "ETH", "AI pipeline", "livePaymentInterval", "Chainlink"]
+og:image: /snippets/assets/site/og-image/fallback.png
+pageType: 'guide'
+audience: 'gateway-operator'
+purpose: operations
+status: 'current'
+lastVerified: '2026-03-15'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- ~~Mermaid diagrams use theme colours~~ (N/A)
+- ~~Fontawesome icons are used on accordions and tabs~~
+- ~~Tables use StyledTable component~~
+- ~~No em-dashes are used (instead use standard -)~~
+- UK spelling is used
+- ~~Headers are concise and technical - no long headers or questions (aim for max 3 words)~~
+- ~~CustomDivider is used~~
+- Placeholders for Media & Video Resources are in comments with a TODO for a human. (N/A)
+- ~~REVIEW flags are in JSX flags for a human.~~
+Human:
+- Restructured to serve both operational modes (on-chain and off-chain)
+- "Competitive positioning" replaced with "Setting Caps" covering both modes
+- Voice converted to entity-led throughout
+- All markdown tables converted to StyledTable
+- Broken links fixed (fund-your-gateway → funding-guide, payment-paths → payment-guide)
+*/}
+
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from "/snippets/components/layout/containers.jsx"
+
+<Tip>
+  **Gateways pay Orchestrators. They do not charge clients.** <br/> The flags on this page control configuration options for what controlling compute job costs.
+</Tip>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+Gateways set **price caps** that control the maximum amount paid to Orchestrators per job.
+These caps apply regardless of operational mode - both on-chain and off-chain gateways configure the same pricing flags.
+The Operational mode determines context: on-chain gateways filter Orchestrators from an open marketplace, while off-chain gateways set safety ceilings for known Orchestrators specified via `-orchAddr`.
+
+## Pricing Mechanics
+
+Livepeer workload fees are denominated in **ETH (wei)**, with an option to configure caps in **USD** (converted at runtime via a [Chainlink price feed](https://docs.chain.link/data-feeds/price-feeds/)).
+
+Gateways set **caps** on prices they are willing to pay. When the Gateway selects an Orchestrator, it checks the Orchestrator's advertised price against the cap.
+Any Orchestrator above the cap is skipped for that job. If no Orchestrator is within the cap, the job fails unless `-ignoreMaxPriceIfNeeded` is enabled.
+
+<BorderedBox variant="accent">
+    <Tabs>
+        <Tab title="On-chain Prcing" icon="link">
+            On-chain gateways discover Orchestrators automatically via the Livepeer protocol. The price cap acts as a **marketplace filter** - it determines the range of the network the gateway can access. A higher cap means more Orchestrators available; a lower cap means fewer options but lower costs.
+
+            Orchestrators advertise prices publicly. Query current rates via [Livepeer Explorer](https://explorer.livepeer.org) or `livepeer_cli` before setting caps.
+        </Tab>
+        <Tab title="Off-chain Prcing" icon="cloud">
+            Off-chain gateways specify Orchestrators directly via `-orchAddr`. The gateway already knows who it is paying. In this context, the price cap acts as a **safety ceiling** - it prevents unexpected cost spikes if an Orchestrator raises prices, but it does not filter from a marketplace.
+
+            Set the cap based on the agreed rate with the known Orchestrators, plus a margin for price adjustments.
+        </Tab>
+    </Tabs>
+</BorderedBox>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Pricing Configuration
+<Tabs>
+    <Tab title = "Video Configuration">
+        ### Video Pricing
+
+        Video transcoding is priced **per pixel**. The gateway calculates fees based on the resolution and length of each transcoded segment. Video transcoding requires on-chain operational mode.
+
+        **Key flags:**
+
+        <StyledTable>
+        <TableRow header>
+            <TableCell header>Flag</TableCell>
+            <TableCell header>Type</TableCell>
+            <TableCell header>Default</TableCell>
+            <TableCell header>Description</TableCell>
+        </TableRow>
+        <TableRow>
+            <TableCell>`-maxPricePerUnit`</TableCell>
+            <TableCell>int (wei) or USD string</TableCell>
+            <TableCell>`0` (any price)</TableCell>
+            <TableCell>Maximum price per `pixelsPerUnit` pixels</TableCell>
+        </TableRow>
+        <TableRow>
+            <TableCell>`-pixelsPerUnit`</TableCell>
+            <TableCell>int</TableCell>
+            <TableCell>`1`</TableCell>
+            <TableCell>How many pixels constitute one pricing unit</TableCell>
+        </TableRow>
+        <TableRow>
+            <TableCell>`-ignoreMaxPriceIfNeeded`</TableCell>
+            <TableCell>bool</TableCell>
+            <TableCell>`false`</TableCell>
+            <TableCell>Accept any price if no Orchestrators are in range</TableCell>
+        </TableRow>
+        </StyledTable>
+
+        **Fee calculation:** The effective cap is `maxPricePerUnit` wei per `pixelsPerUnit` pixels. A 1920x1080 frame contains 2,073,600 pixels. With a cap of 1,000 wei per pixel and `pixelsPerUnit` of 1, that frame costs at most 2,073,600 wei (about 0.000002 ETH).
+
+        Most operators leave `pixelsPerUnit` at the default of `1` and adjust only `-maxPricePerUnit`.
+
+        ```bash icon="terminal"
+        livepeer \
+        -gateway \
+        -maxPricePerUnit 1000 \
+        -pixelsPerUnit 1 \
+        ...
+        ```
+
+        #### USD pricing
+
+ To configure caps in USD instead of wei, pass a USD value:
+
+        ```bash icon="terminal"
+        -maxPricePerUnit 0.02USD
+        ```
+
+        This requires a **Chainlink ETH/USD price feed** configured via `-priceFeedAddr`. The gateway converts the USD cap to wei at runtime using the oracle price.
+<Warning>
+        A gateway configured with a fixed wei cap pays more or less in USD terms as ETH price moves. USD-denominated pricing with a Chainlink feed stabilises the effective cost but requires the oracle to be reachable and accurate.
+        </Warning>
+
+    </Tab>
+    <Tab title="AI Configuration">
+        ### AI Pricing
+
+        AI workloads are priced differently from video. Each pipeline and model can have its own price cap, and the unit of measurement varies by pipeline type. AI pricing applies to both on-chain and off-chain operational modes.
+
+        #### Payment types
+
+        The AI payment system uses three models depending on the pipeline:
+
+        <StyledTable>
+        <TableRow header>
+            <TableCell header>Payment type</TableCell>
+            <TableCell header>Used for</TableCell>
+            <TableCell header>Unit</TableCell>
+        </TableRow>
+        <TableRow>
+            <TableCell>**Per-pixel**</TableCell>
+            <TableCell>Image and video generation pipelines</TableCell>
+            <TableCell>`width x height x outputs`</TableCell>
+        </TableRow>
+        <TableRow>
+            <TableCell>**Per-request**</TableCell>
+            <TableCell>Single-output pipelines</TableCell>
+            <TableCell>One payment per API call</TableCell>
+        </TableRow>
+        <TableRow>
+            <TableCell>**Live video interval**</TableCell>
+            <TableCell>Live AI (live-video-to-video)</TableCell>
+            <TableCell>Time-based, every N seconds</TableCell>
+        </TableRow>
+        </StyledTable>
+
+        The `live-video-to-video` pipeline uses interval-based payments controlled by `-livePaymentInterval`. All other AI pipelines use per-pixel or per-request models based on their output type.
+
+        #### AI price caps
+
+        Use `-maxPricePerCapability` to set per-pipeline caps as a JSON structure. This flag accepts either a JSON string directly or a path to a JSON file.
+
+        **Example `maxPrices.json`:**
+
+        ```json icon="terminal"
+        {
+        "capabilities_prices": [
+            {
+            "pipeline": "text-to-image",
+            "model_id": "default",
+            "price_per_unit": 4768371,
+            "pixels_per_unit": 1
+            },
+            {
+            "pipeline": "image-to-image",
+            "model_id": "ByteDance/SDXL-Lightning",
+            "price_per_unit": 1700000,
+            "pixels_per_unit": 1
+            },
+            {
+            "pipeline": "image-to-video",
+            "model_id": "default",
+            "price_per_unit": 3390842,
+            "pixels_per_unit": 1
+            },
+            {
+            "pipeline": "audio-to-text",
+            "model_id": "default",
+            "price_per_unit": 12882811,
+            "pixels_per_unit": 1
+            },
+            {
+            "pipeline": "live-video-to-video",
+            "model_id": "default",
+            "price_per_unit": 100000,
+            "pixels_per_unit": 1
+            }
+        ]
+        }
+        ```
+
+        Pass it at startup:
+
+        ```bash icon="terminal"
+        -maxPricePerCapability /etc/livepeer/maxPrices.json
+        ```
+
+        <Note>
+        Use `"model_id": "default"` to apply a cap to all models in a pipeline. Specific model caps and a default fallback can coexist in the same file - the specific model match takes precedence.
+        </Note>
+
+        **Pipeline-specific units:**
+
+        - **Image and video pipelines** (text-to-image, image-to-image, image-to-video): price is per pixel (`width x height x outputs`).
+        - **Audio pipelines** (audio-to-text): price is per millisecond of audio.
+        - **LLM pipelines**: price is per token where supported.
+- **Live video (live-video-to-video)**: interval-based; see below.
+
+        ### Live AI intervals
+
+ For the `live-video-to-video` pipeline, the gateway sends periodic payments instead of per-frame or per-request. The interval is configured with:
+
+        ```bash icon="terminal"
+        -livePaymentInterval 5s
+        ```
+
+        The default is 5 seconds. Orchestrators receive a payment every interval for the duration of the live session. A shorter interval means more frequent, smaller payments; a longer interval means fewer, larger ones.
+
+    </Tab>
+</Tabs>
+
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
+
+## Pricing Flag Reference
+
+All pricing flags at a glance:
+
+<StyledTable>
+  <TableRow header>
+    <TableCell header>Flag</TableCell>
+    <TableCell header>Workload</TableCell>
+    <TableCell header>Default</TableCell>
+    <TableCell header>Notes</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`-maxPricePerUnit`</TableCell>
+    <TableCell>Video</TableCell>
+    <TableCell>`0` (any price)</TableCell>
+    <TableCell>Global cap in wei or USD</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`-pixelsPerUnit`</TableCell>
+    <TableCell>Video</TableCell>
+    <TableCell>`1`</TableCell>
+    <TableCell>Pixels per pricing unit</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`-maxPricePerCapability`</TableCell>
+    <TableCell>AI</TableCell>
+    <TableCell>None</TableCell>
+    <TableCell>JSON file or string with per-pipeline caps</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`-livePaymentInterval`</TableCell>
+    <TableCell>Live AI only</TableCell>
+    <TableCell>`5s`</TableCell>
+    <TableCell>Payment frequency for live-video-to-video</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`-ignoreMaxPriceIfNeeded`</TableCell>
+    <TableCell>Both</TableCell>
+    <TableCell>`false`</TableCell>
+    <TableCell>Accept any price when no in-range Orchestrators exist</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`-priceFeedAddr`</TableCell>
+    <TableCell>Both (USD mode)</TableCell>
+    <TableCell>None</TableCell>
+    <TableCell>Chainlink oracle address for ETH/USD conversion</TableCell>
+  </TableRow>
+</StyledTable>
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Pricing Cap Guidance
+
+<Tabs>
+  <Tab title="On-chain" icon="link">
+    **Discover current rates:**
+
+    Query [Livepeer Explorer](https://explorer.livepeer.org) for the cheapest Orchestrators currently active on the required pipeline. Alternatively, use `livepeer_cli` to view connected Orchestrator pricing.
+**Set the cap with headroom:**
+
+    1. Find the cheapest active Orchestrators on the required pipeline.
+    2. Set the cap 20 to 30 percent above their current rate. This provides headroom during gas spikes without overpaying.
+    3. Monitor job success rates. If jobs fail frequently, raise the cap. If all jobs succeed consistently, try lowering it gradually.
+
+    **Orchestrator pricing behaviour:**
+
+    - Orchestrators can set **per-gateway prices** using `-pricePerGateway`, giving specific gateways custom rates based on relationships or volume.
+    - Some Orchestrators enable **`autoAdjustPrice`**, which shifts their advertised rate based on current gas costs. A tight cap can briefly knock all Orchestrators out of range during a gas spike.
+  </Tab>
+  <Tab title="Off-chain" icon="cloud">
+    **Set the cap based on agreed rates:**
+
+    1. Confirm the pricing terms with the known Orchestrators.
+    2. Set the cap at or slightly above the agreed rate.
+ 3. The cap prevents cost spikes if an Orchestrator raises prices unexpectedly. Jobs fail instead of overpaying.
+
+    **Using the community signer:**
+
+    When using the community remote signer at `signer.eliteencoder.net` for testing, Orchestrator pricing may be pre-negotiated. Set a reasonable cap and adjust based on job success rates.
+  </Tab>
+</Tabs>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Pricing Setup Paths
+
+Pricing can be set at startup, in a config file, or updated at runtime without restarting the gateway.
+
+<Tabs>
+  <Tab title="CLI flags" icon="terminal">
+    Pass flags directly in the startup command:
+
+    ```bash icon="terminal"
+    livepeer \
+      -gateway \
+      -maxPricePerUnit 5000000 \
+      -pixelsPerUnit 1 \
+      -maxPricePerCapability /etc/livepeer/maxPrices.json \
+      -livePaymentInterval 5s \
+      ...
+    ```
+  </Tab>
+
+  <Tab title="Config file" icon="file">
+    Create a config file in key-value format and pass it with `-config`:
+
+    ``` icon="terminal"
+    maxPricePerUnit 5000000
+    pixelsPerUnit 1
+    maxPricePerCapability /etc/livepeer/maxPrices.json
+    livePaymentInterval 5s
+    ```
+
+    ```bash icon="terminal"
+    livepeer -gateway -config /etc/livepeer/gateway.conf
+    ```
+  </Tab>
+
+  <Tab title="HTTP API" icon="globe">
+    Adjust pricing without restarting the gateway via the internal HTTP API:
+
+    ```bash icon="terminal"
+    # Set video pricing
+    curl -X POST http://127.0.0.1:5935/setBroadcastConfig \
+      -d "maxPricePerUnit=5000000&pixelsPerUnit=1"
+
+    # Set AI pipeline cap at runtime
+    curl -X POST http://127.0.0.1:5935/setMaxPriceForCapability \
+      -d '{"pipeline":"text-to-image","model_id":"default","price_per_unit":4768371,"pixels_per_unit":1}'
+    ```
+</Tab>
+
+  <Tab title="livepeer_cli" icon="rectangle-terminal">
+    Use the interactive CLI tool and select **Option 16: Set broadcast config** to update video pricing interactively.
+</Tab>
+</Tabs>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Funding Guide" icon="coins" href="/v2/gateways/guides/payments-and-pricing/funding-guide">
+    Deposit ETH into the TicketBroker contract. Required for on-chain gateways before setting prices.
+  </Card>
+  <Card title="Payments Guide" icon="code-branch" href="/v2/gateways/guides/payments-and-pricing/payment-guide">
+    Revisit the payment architecture decision guide.
+  </Card>
+  <Card title="Pipeline Configuration" icon="sliders" href="/v2/gateways/guides/node-pipelines/pipeline-configuration">
+    Tuning transcoding profiles and AI retry behaviour.
+  </Card>
+  <Card title="Remote Signers" icon="shield-check" href="/v2/gateways/guides/payments-and-pricing/remote-signers">
+    Separate key management for off-chain gateways.
+  </Card>
+</CardGroup>

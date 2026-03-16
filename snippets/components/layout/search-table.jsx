@@ -1,3 +1,30 @@
+/**
+ * @component SearchTable
+ * @category layout
+ * @tier composite
+ * @status stable
+ * @description Search Table layout component for arranging documentation content without MDX inline styles.
+ * @contentAffinity overview, tutorial, reference
+ * @owner docs
+ * @dependencies none
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @param {any} [TableComponent=null] - Table Component prop.
+ * @param {any} [tableTitle=null] - table Title prop.
+ * @param {Array} [headerList=[]] - header List prop.
+ * @param {Array} [itemsList=[]] - items List prop.
+ * @param {Array} [monospaceColumns=[]] - monospace Columns prop.
+ * @param {any} margin - margin prop.
+ * @param {string} [searchPlaceholder='Search...'] - search Placeholder prop.
+ * @param {Array} [searchColumns=[]] - search Columns prop.
+ * @param {string} [categoryColumn='Category'] - category Column prop.
+ * @example
+ * <SearchTable margin="example" />
+ */
 export const SearchTable = ({
   TableComponent = null,
   tableTitle = null,

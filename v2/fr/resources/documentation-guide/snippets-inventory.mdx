@@ -19,7 +19,7 @@ keywords:
 'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
 ---
 {/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9zbmlwcGV0cy1pbnZlbnRvcnkubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9zbmlwcGV0cy1pbnZlbnRvcnkiLCJzb3VyY2VIYXNoIjoiNjI0NDFjNTIxMTFmNDgxNTc5MzllZTU5NDM2Mzg1NTlhNGQyNGFkYTA5NzliYjg4YTU3ZjUwMzRhOTE1Y2MwNiIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxMjoyNDo1OC40MDRaIn0= */}
-import { CustomDivider } from "snippets/components/primitives/divider.jsx"
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
 
 ## Aperçu
 
@@ -38,10 +38,10 @@ Le dossier des extraits contient :
 
 ### Composants (`/snippets/components/`)
 
-Composants React/JSX personnalisés organisés par objectif :
+Composants React/JSX personnalisés organisés par objectif. La bibliothèque active utilise désormais 5 catégories de production, plus `_archive/` pour les modules historiques conservés pendant la revue de migration.
 
 #### Primitifs (`/snippets/components/primitives/`)
-- `buttons.jsx` - Composants de bouton (BasicBtn, DownloadButton)
+- `buttons.jsx` - Composants de bouton (DownloadButton)
 - `divider.jsx` - Composant CustomDivider
 - `icons.jsx` - Livepeer icônes de marque (LivepeerIcon, LivepeerSVG, etc.)
 - `links.jsx` - Composants de lien et de navigation (GotoLink, GotoCard, CustomCallout, etc.)
@@ -50,42 +50,36 @@ Composants React/JSX personnalisés organisés par objectif :
 #### Disposition (`/snippets/components/layout/`)
 - `cards.jsx` - Composants de mise en page de carte (PostCard, BlogCard, ScrollBox)
 - `lists.jsx` - Composants de liste (BasicList, IconList, StepList, etc.)
-- `list-steps.jsx` - Composant ListSteps pour afficher des listes sous forme d'étapes
+- `listSteps.jsx` - Composant ListSteps pour afficher des listes sous forme d'étapes
 - `steps.jsx` - Composants d'étape stylisés (StyledSteps, StyledStep)
 - `table.jsx` - Composant DynamicTable
-- `quad-grid.jsx` - Composant de mise en page QuadGrid
+- `quadGrid.jsx` - Composant de mise en page QuadGrid
 - `text.jsx` - Composants de mise en page de texte (AccordionLayout)
-
-#### Afficher (`/snippets/components/display/`)
-- `video.jsx` - Composants vidéo (YouTubeVideo, CardVideo, LinkedInEmbed)
-- `image.jsx` - Composants image (Image, LinkImage)
-- `embed.jsx` - Composants intégrés (MarkdownEmbed, EmbedMarkdown)
-- `zoomable-diagram.jsx` - Composant ScrollableDiagram
-- `quote.jsx` - Composants de citation (Quote, FrameQuote)
-- `frame-mode.jsx` - Composants d'en-tête en mode Frame (PageHeader, H1-H6, P, Divider)
-- `showcase-cards.jsx` - Composant ShowcaseCards
-- `social-links.jsx` - Composant SocialLinks
-- `card-carousel.jsx` - Composant CardCarousel
 
 #### Contenu (`/snippets/components/content/`)
 - `code.jsx` - Composants d'affichage de code (CustomCodeBlock, CodeComponent, ComplexCodeBlock)
-- `external-content.jsx` - Composant ExternalContent pour charger des documents externes
+- `externalContent.jsx` - Composant ExternalContent pour charger des documents externes
+- `math.jsx` - Utilitaires MathInline et MathBlock
+- `quote.jsx` - Composants Quote et FrameQuote
 - `release.jsx` - Composant LatestVersion
-- `response-field.jsx` - Composants de champs de réponse d'API (ResponseFieldGroup, ValueResponseField, etc.)
+- `responseField.jsx` - Composants de champs de réponse d'API (ResponseFieldGroup, ValueResponseField, etc.)
+- `video.jsx` - Composants vidéo, d'intégration et de téléchargement
+- `zoomableDiagram.jsx` - Composant ScrollableDiagram
 
-#### Intégrations (`/snippets/components/integrations/`)
+#### Données (`/snippets/components/data/`)
 - `coingecko.jsx` - Composant CoinGeckoExchanges
+- `data.jsx` - Mises en page pour blog, forum, événements et flux sociaux
+- `embed.jsx` - Composants MarkdownEmbed, TwitterTimeline et PdfEmbed
+- `showcaseCards.jsx` - Composant ShowcaseCards
+- `videoData.jsx` - Composant auxiliaire YouTubeVideoData
 
-#### Domaine (`/snippets/components/domain/`)
-Composants spécifiques au domaine organisés par section de documentation :
+#### Structure de page (`/snippets/components/page-structure/`)
+- `frameMode.jsx` - Composants d'en-tête et de typographie en mode Frame
+- `heroGif.jsx` - Composant d'animation de champ d'étoiles
+- `portals.jsx` - Composants de mise en page pour les pages portail
 
-- `04_GATEWAYS/` - Composants spécifiques au portail
-  - `callouts.jsx` - Avertissements/notes du portail
-  - `quickstartTabs.jsx` - Composants d'interface utilisateur de démarrage rapide du portail
-- `SHARED/` - Composants partagés entre les domaines
-  - `HeroGif.jsx` - Composant d'animation de champ d'étoiles
-  - `Portals.jsx` - Composants de mise en page de la page d'accueil
-  - `previewCallouts.jsx` - Appels d'offre de prévisualisation/à venir
+#### Archive (`/snippets/components/_archive/`)
+- Code historique et dossiers retirés conservés uniquement pour la revue de migration
 
 ### Données (`/snippets/data/`)
 
@@ -156,7 +150,7 @@ Actifs statiques, y compris les images, les logos et les médias :
 
 ### Styles (`/snippets/styles/`)
 
-- `themeStyles.jsx` - Définitions du thème (obsolète - utilisez les propriétés CSS personnalisées dans `style.css` à la place)
+- Fichier hérité de styles de thème - obsolète; utilisez les propriétés CSS personnalisées de `style.css`
 
 ### SnippetsWiki (`/snippets/snippetsWiki/`)
 
@@ -171,7 +165,7 @@ Documentation interne sur le système des extraits :
 
 ## Résumé du nombre de fichiers
 
-- **Composants**: ~50+ fichiers JSX/TSX répartis en 6 catégories
+- **Composants**: ~50+ fichiers JSX/TSX répartis en 5 catégories actives, plus `_archive/` pour la revue de migration
 - **Fichiers de données**: ~20+ fichiers JSX/MDX
 - **Modules de page**: ~20+ fichiers MDX
 - **Scripts**: ~10+ scripts shell/JS
@@ -185,7 +179,7 @@ Documentation interne sur le système des extraits :
 
 ```jsx
 // Import from components
-import { YouTubeVideo } from "/snippets/components/display/video.jsx";
+import { YouTubeVideo } from "/snippets/components/content/video.jsx";
 import { GotoCard } from "/snippets/components/primitives/links.jsx";
 import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
 ```
@@ -194,7 +188,7 @@ import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
 
 ```jsx
 // Import data files
-import { DOCKER_CODE } from "/snippets/data/gateways/code.jsx";
+import { GatewaySteps } from "/snippets/data/gateways.jsx";
 import { latestVersion } from "/snippets/automations/globals/globals.jsx";
 ```
 
@@ -202,7 +196,7 @@ import { latestVersion } from "/snippets/automations/globals/globals.jsx";
 
 ```jsx
 // Import MDX page modules
-import DockerOffChainTab from "/snippets/pages/04_GATEWAYS/run/quickstart/views/docker/dockerOffChainTab.mdx";
+import ProjectShowcase from "/snippets/pages/00_HOME/project-showcase.mdx";
 ```
 
 ## Automatisation
@@ -226,4 +220,3 @@ Ce script génère automatiquement une structure d'arbre listant tous les compos
 - [Guide de style](./style-guide) - Style et Mintlify des pièges
 - [Wiki des extraits](/snippets/snippetsWiki/index) - Documentation des extraits internes
 - [Guide du comportement Mintlify](/snippets/snippetsWiki/mintlify-behaviour) - Modèles spécifiques à Mintlify
-

@@ -1,0 +1,61 @@
+---
+title: 'Staking and Delegation'
+sidebarTitle: Staking and Delegation
+description: 'Description of rcs-staking-delegation'
+audience: developer
+pageType: landing
+purpose: landing
+status: draft
+lastVerified: 2026-03-11
+keywords:
+  - livepeer
+  - keyword
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+
+{/* merged file */}
+
+Staking **Livepeer Token (LPT)** is a protocol requirement for participating as an orchestrator. It provides Sybil resistance, economic collateral for slashing, and determines **video** work allocation (the active set is the top 100 by stake). **AI** job routing is not stake-weighted; it is based on capability, price, and latency.
+
+## Bonding
+
+You must **bond LPT to yourself** to register as a transcoder, earn inflation rewards, and receive video work. Use [livepeer_cli](https://github.com/livepeer/go-livepeer) or the [Explorer](https://explorer.livepeer.org/) to bond. Bonded stake becomes active in the next round. Unbonding starts a lock-up period defined by the protocol.
+
+## Delegated stake
+
+Delegators can bond their LPT to your orchestrator. Your **total active stake** = self-stake + delegated stake. This total sets your share of inflation rewards and your probability of being selected for video jobs. Attracting delegators often means offering a competitive reward cut and fee share; see [Rewards and fees](./rewards-and-fees) and [Delegation](./delegation).
+
+## Video vs AI
+
+- **Video transcoding:** Selection is proportional to bonded stake. Higher stake means more video segments.
+- **AI inference:** Routing is based on price, latency, and GPU capability. Stake does **not** determine AI job assignment.
+
+## See also
+
+<Columns cols={2}>
+  <Card title="Rewards and fees" icon="coins" href="./rewards-and-fees" arrow />
+  <Card title="Delegation" icon="users" href="./delegation" arrow />
+  <Card title="Install and activate" icon="rocket" href="../setup/install-go-livepeer" arrow />
+  <Card title="Explorer" icon="external-link" href="https://explorer.livepeer.org" arrow />
+</Columns>
+
+
+**Delegators** are LPT holders who bond their tokens to your orchestrator. Their stake counts toward your total active stake, which increases your share of inflation rewards and your probability of receiving video work. In return, they receive a share of LPT rewards and ETH fees according to your **reward cut** and **fee share**.
+
+## Attracting delegators
+
+- Set a **reward cut** and **fee share** that are competitive with other orchestrators. Too high and delegators leave; too low and your operational margins suffer.
+- Maintain **uptime** and **reliability**. Missed reward calls or poor performance hurt your reputation and delegator confidence.
+- Use the [Explorer](https://explorer.livepeer.org/) to compare your metrics and payouts with others.
+
+## Your responsibilities
+
+You are responsible for calling **reward()** each round so that both you and your delegators receive inflation. Slashing (e.g. For misbehaviour) affects delegated stake proportionally; delegators share the risk.
+
+## See also
+
+<Columns cols={2}>
+  <Card title="Staking LPT" icon="coins" href="./staking-LPT" arrow />
+  <Card title="Rewards and fees" icon="coins" href="./rewards-and-fees" arrow />
+  <Card title="Explorer" icon="external-link" href="https://explorer.livepeer.org" arrow />
+</Columns>

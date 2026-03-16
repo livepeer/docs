@@ -1,0 +1,228 @@
+---
+title: Transcoding Jobs Quickstart
+description: >-
+  Submit a Livepeer Studio Transcode job, poll the task status, and verify
+  completion. Built from the GitHub-validated Studio OpenAPI spec and pending TD
+  accuracy review.
+keywords:
+  - livepeer
+  - transcoding jobs
+  - quickstart
+  - studio api
+  - transcode
+  - tasks api
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: quickstart
+audience: developer
+purpose: concept
+---
+
+# Transcoding Jobs Quickstart
+
+Submit an on-demand transcoding job through the Livepeer Studio API and track it to completion using the Tasks API.
+
+## AI-ready summary (for humans and assistants)
+
+- Use the Studio API base URL: `https://livepeer.studio/api`
+- Submit jobs with `POST /transcode`
+- Transcoding is asynchronous; poll `GET /task/{id}`
+- A successful `POST /transcode` returns a `task.id`
+- Final technical accuracy review is required from Rick (TD)
+
+## Review status
+
+This quickstart is structurally complete and based on the GitHub-validated Studio OpenAPI spec, but **Rick (TD) review is required** before final publish for canonical flow accuracy and user-facing defaults.
+
+## 1. Prerequisites
+
+- A Livepeer API key (backend use only)
+- `curl` (and optionally `jq`)
+- Input video accessible over HTTP **or** a S3-compatible source
+- Output storage destination (S3-compatible or web3.storage delegation proof)
+
+## 2. Base URL and authentication
+
+- Base URL: `https://livepeer.studio/api`
+- Auth header: `Authorization: Bearer <LIVEPEER_API_KEY>`
+
+```bash
+export LIVEPEER_API_KEY="<YOUR_API_KEY>"
+```
+
+## 3. Submit a transcode job
+
+The Studio spec requires:
+
+- `input`
+- `storage`
+- `outputs`
+
+The example below uses:
+
+- HTTP input URL
+- S3-compatible storage output
+- HLS + MP4 outputs
+
+### Example request body
+
+```json
+{
+  "input": {
+    "url": "https://example.com/video.mp4"
+  },
+  "storage": {
+    "type": "s3",
+    "endpoint": "https://gateway.storjshare.io",
+    "bucket": "outputbucket",
+    "credentials": {
+      "accessKeyId": "<ACCESS_KEY_ID>",
+      "secretAccessKey": "<SECRET_ACCESS_KEY>"
+    }
+  },
+  "outputs": {
+    "hls": {
+      "path": "/samplevideo/hls"
+    },
+    "mp4": {
+      "path": "/samplevideo/mp4"
+    }
+  },
+  "profiles": [
+    {
+      "name": "720p",
+      "width": 1280,
+      "height": 720,
+      "bitrate": 3000000,
+      "fps": 30
+    }
+  ]
+}
+```
+
+### Example curl request
+
+```bash
+curl -sS \
+  -X POST "https://livepeer.studio/api/transcode" \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": { "url": "https://example.com/video.mp4" },
+    "storage": {
+      "type": "s3",
+      "endpoint": "https://gateway.storjshare.io",
+      "bucket": "outputbucket",
+      "credentials": {
+        "accessKeyId": "<ACCESS_KEY_ID>",
+        "secretAccessKey": "<SECRET_ACCESS_KEY>"
+      }
+    },
+    "outputs": {
+      "hls": { "path": "/samplevideo/hls" },
+      "mp4": { "path": "/samplevideo/mp4" }
+    },
+    "profiles": [
+      {
+        "name": "720p",
+        "width": 1280,
+        "height": 720,
+        "bitrate": 3000000,
+        "fps": 30
+      }
+    ]
+  }'
+```
+
+## 4. Capture the task ID
+
+Transcoding is asynchronous. The response is a `task` object. Save the `id` field and poll the task endpoint.
+
+Example response shape (trimmed):
+
+```json
+{
+  "id": "09F8B46C-61A0-4254-9875-F71F4C605BC7",
+  "type": "transcode-file",
+  "status": {
+    "phase": "pending",
+    "updatedAt": 1587667174725
+  }
+}
+```
+
+## 5. Poll the task status
+
+Use `GET /task/{id}` until `status.phase` is `completed` or `failed`.
+
+```bash
+TASK_ID="<TASK_ID_FROM_TRANSCODE_RESPONSE>"
+
+curl -sS \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  "https://livepeer.studio/api/task/$TASK_ID"
+```
+
+Phases defined in the Studio spec include:
+
+- `pending`
+- `waiting`
+- `running`
+- `failed`
+- `completed`
+- `cancelled`
+
+## 6. Verify completion and outputs
+
+When `status.phase` is `completed`:
+
+- Confirm the task did not report an `errorMessage`
+- Inspect task output metadata and/or linked asset IDs
+- Verify the output paths you requested under `outputs` in your destination storage
+
+## 7. Common failure modes
+
+### `401 Unauthorized`
+
+- Invalid API key
+- Missing/incorrect `Authorization` header
+
+### `422 Validation Error`
+
+- Missing required top-level fields (`input`, `storage`, `outputs`)
+- Invalid `input` schema (URL vs S3 object mismatch)
+- Invalid `profiles` shape
+
+### Task enters `failed`
+
+- Check `status.errorMessage`
+- Verify input URL is accessible to the service
+- Verify output storage credentials and bucket permissions
+- Re-run with a minimal profile/output combination first
+
+## 8. Rick (TD) review checklist (blocking before final publish)
+
+- Confirm canonical user-facing transcoding flow for 2026 docs
+- Confirm recommended default profile example(s)
+- Confirm polling expectations and completion verification guidance
+- Confirm deprecated legacy examples should be removed/labeled
+- Confirm boundary with realtime APIs (what belongs elsewhere)
+
+## 9. Next steps
+
+- [Create Transcode Job endpoint reference](/solutions/livepeer-studio/api-reference/transcode/create)
+- [Transcode API overview](/solutions/livepeer-studio/api-reference/transcode/overview)
+- [Tasks API overview](/solutions/livepeer-studio/api-reference/tasks/overview)
+- [Get Task endpoint reference](/solutions/livepeer-studio/api-reference/tasks/get)
+- [Studio API overview](/solutions/livepeer-studio/reference/api)
+- [SDKs overview](/solutions/livepeer-studio/reference/sdks)
+
+## Canonical references (source-of-truth first)
+
+- GitHub (primary): [livepeer/docs `api/studio.yaml`](https://github.com/livepeer/docs/blob/main/api/studio.yaml)
+- GitHub (primary): [livepeer/docs `api/gateway.openapi.yaml`](https://github.com/livepeer/docs/blob/main/api/gateway.openapi.yaml) (for shared `generate` tag context)
+- DeepWiki (corroboration only): [livepeer/docs | DeepWiki](https://deepwiki.com/livepeer/docs)
+- Repo-local docs refs (unvalidated until cross-checked): `/solutions/livepeer-studio/api-reference/transcode/create`, `/solutions/livepeer-studio/api-reference/tasks/get`

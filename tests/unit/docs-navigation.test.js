@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-C1, R-R14
  * @purpose-statement Validates docs.json page-entry syntax, reports missing routes, warns on orphaned canonical v2 pages, suggests remaps, and optionally applies approved remaps
- * @pipeline          P1 (commit, via run-all)
+ * @pipeline          P1, P3, P6
  * @dualmode          dual-mode (document flags)
  * @usage             node tests/unit/docs-navigation.test.js [flags]
  */
@@ -17,12 +17,7 @@ const path = require('path');
 const readline = require('readline');
 const { execSync } = require('child_process');
 const { listMintIgnoredRepoPaths } = require('../utils/mintignore');
-const {
-  collectDocsJsonRouteKeysFromObject,
-  collectNavigationPageEntries,
-  isExemptNavigationEntry,
-  loadNavigationExclusions
-} = require('../../tools/lib/docs-navigation');
+const { isExcludedV2ExperimentalPath } = require('../../tools/lib/docs-publishability');
 
 const REPORT_MD_REL = 'tasks/reports/navigation-links/navigation-report.md';
 const REPORT_JSON_REL = 'tasks/reports/navigation-links/navigation-report.json';
@@ -31,7 +26,6 @@ const DEFAULT_REMAP_THRESHOLD = 0.85;
 const RESOURCE_HUB_REDIRECT_ROUTE = 'v2/resources/redirect';
 const RESOURCE_HUB_PORTAL_ROUTE = 'v2/resources/resources-portal';
 const LEGACY_RESOURCE_HUB_ROUTE = 'v2/pages/07_resources/redirect';
-const NAVIGATION_VALIDATOR_NAME = 'docs-navigation.test.js';
 
 let errors = [];
 let warnings = [];
@@ -127,6 +121,35 @@ function collectExistingRoutes(repoRoot) {
   return [...routeSet];
 }
 
+function collectPageEntries(node, pointer, out = []) {
+  if (Array.isArray(node)) {
+    node.forEach((item, index) => collectPageEntries(item, `${pointer}[${index}]`, out));
+    return out;
+  }
+
+  if (!node || typeof node !== 'object') {
+    return out;
+  }
+
+  if (Array.isArray(node.pages)) {
+    node.pages.forEach((entry, index) => {
+      const entryPointer = `${pointer}.pages[${index}]`;
+      if (typeof entry === 'string') {
+        out.push({ value: entry, pointer: entryPointer });
+        return;
+      }
+      collectPageEntries(entry, entryPointer, out);
+    });
+  }
+
+  Object.entries(node).forEach(([key, value]) => {
+    if (key === 'pages') return;
+    collectPageEntries(value, `${pointer}.${key}`, out);
+  });
+
+  return out;
+}
+
 function collectObjectNodes(node, pointer, out = []) {
   if (Array.isArray(node)) {
     node.forEach((item, index) => collectObjectNodes(item, `${pointer}[${index}]`, out));
@@ -178,12 +201,27 @@ function loadI18nTargetLanguages(repoRoot) {
   }
 }
 
-function isExemptNavEntry(value, node, repoRoot, exclusions) {
-  return isExemptNavigationEntry(value, node, {
-    repoRoot,
-    validatorName: NAVIGATION_VALIDATOR_NAME,
-    exclusions
+function getV2EnglishNavigationRouteKeys(docsJson) {
+  const versions = Array.isArray(docsJson?.navigation?.versions) ? docsJson.navigation.versions : [];
+  const v2VersionIndex = versions.findIndex((versionNode) => versionNode?.version === 'v2');
+  if (v2VersionIndex === -1) return new Set();
+
+  const languages = Array.isArray(versions[v2VersionIndex]?.languages) ? versions[v2VersionIndex].languages : [];
+  const englishLanguageIndex = languages.findIndex((languageNode) => languageNode?.language === 'en');
+  if (englishLanguageIndex === -1) return new Set();
+
+  const pointer = `navigation.versions[${v2VersionIndex}].languages[${englishLanguageIndex}]`;
+  const entries = collectPageEntries(languages[englishLanguageIndex], pointer);
+  const routeKeys = new Set();
+
+  entries.forEach(({ value }) => {
+    const normalized = normalizeOrphanRouteKey(value);
+    if (normalized.startsWith('v2/')) {
+      routeKeys.add(normalized);
+    }
   });
+
+  return routeKeys;
 }
 
 function toOrphanRouteKeyFromFile(repoRoot, filePath) {
@@ -200,7 +238,7 @@ function shouldExcludeOrphanCandidate(relPath, localeSet) {
   if (localeSet.has(topLevelDir)) return true;
   if (topLevelDir === 'internal') return true;
 
-  if (segments.some((segment) => String(segment || '').toLowerCase().startsWith('x-'))) {
+  if (isExcludedV2ExperimentalPath(normalized)) {
     return true;
   }
 
@@ -229,12 +267,7 @@ function shouldExcludeOrphanCandidate(relPath, localeSet) {
 
 function collectOrphanedV2Pages(repoRoot, docsJson) {
   const localeSet = loadI18nTargetLanguages(repoRoot);
-  const navRouteKeys = collectDocsJsonRouteKeysFromObject(docsJson, {
-    repoRoot,
-    version: 'v2',
-    language: 'en',
-    validatorName: NAVIGATION_VALIDATOR_NAME
-  });
+  const navRouteKeys = getV2EnglishNavigationRouteKeys(docsJson);
   if (navRouteKeys.size === 0) return [];
 
   const v2Root = path.join(repoRoot, 'v2');
@@ -400,8 +433,33 @@ function getCanonicalMap(normalizedRoute) {
       'v2/pages/04_gateways/quickstart/gateway-setup'
     ],
     'v2/pages/04_gateways/references/video-flags': ['v2/pages/04_gateways/references/configuration-flags'],
+    'v2/orchestrators/setting-up-an-orchestrator/overview': ['v2/orchestrators/setup/guide'],
+    'v2/orchestrators/setting-up-an-orchestrator/hardware-requirements': [
+      'v2/orchestrators/setup/rcs-requirements'
+    ],
+    'v2/orchestrators/setup/rs-install': [
+      'v2/orchestrators/setup/rs-install'
+    ],
+    'v2/orchestrators/setting-up-an-orchestrator/orchestrator-stats': [
+      'v2/orchestrators/setup/orchestrator-stats'
+    ],
+    'v2/orchestrators/setting-up-an-orchestrator/data-centre-setup': [
+      'v2/orchestrators/setup/data-centre-setup'
+    ],
+    'v2/orchestrators/setting-up-an-orchestrator/data-centres-and-large-scale-hardware-providers': [
+      'v2/orchestrators/setup/data-centres-and-large-scale-hardware-providers'
+    ],
+    'v2/orchestrators/setting-up-an-orchestrator/enterprise-and-data-centres': [
+      'v2/orchestrators/setup/enterprise-and-data-centres'
+    ],
+    'v2/orchestrators/setup/activate': [
+      'v2/orchestrators/setup/activate'
+    ],
+    'v2/orchestrators/setting-up-an-orchestrator/setting-up-an-orchestrator/quickstart-add-your-gpu-to-livepeer': [
+      'v2/orchestrators/setup/r-configure'
+    ],
     'v2/orchestrators/setting-up-an-orchestrator/setting-up-an-orchestrator/data-centres-and-large-scale-hardware-providers': [
-      'v2/orchestrators/setting-up-an-orchestrator/data-centres-and-large-scale-hardware-providers'
+      'v2/orchestrators/setup/data-centres-and-large-scale-hardware-providers'
     ],
     'v2/pages/02_community/livepeer-community/media-kit': ['v2/resources/media-kit'],
     'v2/pages/01_about/livepeer-network/actors': ['v2/about/livepeer-network/actors'],
@@ -766,12 +824,11 @@ function runTests(options = {}) {
     };
   }
 
-  const navigationExclusions = loadNavigationExclusions(repoRoot);
-  const entries = collectNavigationPageEntries(docsJson.navigation || docsJson, { pointer: 'navigation' });
+  const entries = collectPageEntries(docsJson.navigation || docsJson, 'navigation');
   const syntaxErrors = [];
   const missingRoutes = [];
 
-  entries.forEach(({ value, pointer, node }) => {
+  entries.forEach(({ value, pointer }) => {
     const raw = String(value);
     const trimmed = raw.trim();
     const normalized = normalizeRoute(raw);
@@ -783,10 +840,6 @@ function runTests(options = {}) {
         message: `Legacy route "${LEGACY_RESOURCE_HUB_ROUTE}" is not allowed; use "${RESOURCE_HUB_REDIRECT_ROUTE}"`,
         pointer
       });
-    }
-
-    if (isExemptNavEntry(raw, node, repoRoot, navigationExclusions)) {
-      return;
     }
 
     if (!trimmed) {

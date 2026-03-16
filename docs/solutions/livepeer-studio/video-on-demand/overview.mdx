@@ -1,0 +1,52 @@
+---
+title: Video on demand overview
+description: >-
+  Concepts for VOD in Livepeer Studio: assets, playback, recordings, clips, and
+  encrypted assets.
+keywords:
+  - livepeer
+  - docs
+  - solutions
+  - livepeer studio
+  - video on demand
+  - overview
+  - video
+  - demand
+  - concepts
+  - studio
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: platform-builder
+purpose: overview
+---
+
+An **asset** in Livepeer Studio is a video object you create by uploading a file, or by creating a **recording** or **clip** from a stream. Assets have a unique ID and **playback ID**; Livepeer handles storage, transcoding, and playback URLs.
+
+## Creating assets
+
+- **Upload** - Use the [Asset upload API](https://livepeer.studio/docs/api-reference/asset/upload) (TUS resumable recommended) or [upload via URL](https://livepeer.studio/docs/api-reference/asset/upload-via-url). See [Upload an asset](./upload-asset).
+- **Recording** - When recording is enabled on a stream, the session can be stored as an asset when the stream ends.
+- **Clip** - Clips created from a livestream are stored as assets. See [Clip a livestream](../livestream/clip-livestream).
+
+Webhooks: `asset.created`, `asset.updated`, `asset.ready`, `asset.failed`, `asset.deleted`.
+
+## Playback
+
+- Use the **playback ID** with the [Livepeer Player](../player) or the [Playback Info API](https://livepeer.studio/docs/api-reference/playback/get) to get HLS/MP4 URLs.
+- Short assets may have MP4 renditions for fast time-to-first-frame; longer assets use HLS. Viewership metrics are available via the [viewership API](https://livepeer.studio/docs/api-reference/viewership/get-viewership-metrics).
+
+## Encrypted assets
+
+You can upload **encrypted** video (AES-CBC, key encrypted with Livepeer's public key) and control access via [access control](../access-control/overview). See [Encrypted assets](./encrypted-assets).
+
+## Guides
+
+- [Upload an asset](./upload-asset)
+- [Play an asset](./playback-asset)
+- [Encrypted assets](./encrypted-assets)
+- [Thumbnails (VOD)](./thumbnails-vod)
+- [Transcode video](./transcode-video)

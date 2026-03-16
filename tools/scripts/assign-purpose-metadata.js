@@ -1,35 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script assign-purpose-metadata
- * @summary Assign purpose and audience frontmatter metadata for docs.json EN-routable v2 pages using deterministic rules with optional LLM classification for unclassified pages.
- * @owner docs
- * @scope tools/scripts, tools/lib/docs-usefulness, tools/config, v2
- * @pipeline manual — interactive developer tool, not suited for automated pipelines
- *
- * @usage
- *   node tools/scripts/assign-purpose-metadata.js --scope pilot --dry-run
- *
- * @inputs
- *   --dry-run Report changes without writing files.
- *   --scope <pilot|all|unclassified> Scope selector (default: pilot).
- *   --files <path[,path...]> Explicit files to process (overrides scope).
- *   --classify-with-llm Use OpenRouter to classify unclassified pages.
- *   --llm-tier <free|good|optimal> Tier for LLM classification (default: free).
- *
- * @outputs
- *   - TSV report to stdout with path, purpose, audience, source, changed.
- *   - Updated frontmatter for selected files unless --dry-run.
- *
- * @exit-codes
- *   0 = completed
- *   1 = invalid args, missing API key for LLM mode, or runtime failure
- *
- * @examples
- *   node tools/scripts/assign-purpose-metadata.js --scope pilot
- *   OPENROUTER_API_KEY=... node tools/scripts/assign-purpose-metadata.js --scope unclassified --classify-with-llm --llm-tier good
- *
- * @notes
- *   Existing purpose/audience fields are never overwritten.
+ * @script            assign-purpose-metadata
+ * @category          generator
+ * @purpose           qa:content-quality
+ * @scope             tools/scripts, tools/lib/docs-usefulness, tools/config, v2
+ * @owner             docs
+ * @needs             E-R1, R-R11
+ * @purpose-statement Purpose metadata assigner — fills purpose and audience frontmatter for routable v2 pages
+ * @pipeline          manual — interactive developer tool, not suited for automated pipelines
+ * @usage             node tools/scripts/assign-purpose-metadata.js [flags]
  */
 
 'use strict';

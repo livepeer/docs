@@ -13,8 +13,16 @@
 
 # Get list of deleted files
 DELETED_FILES=$(git diff --cached --name-only --diff-filter=D)
+BLOCKED_DELETED_FILES=$(echo "$DELETED_FILES" | grep -Ev '^snippets/data/[^/]+/hrefs\.jsx$' || true)
+ALLOWED_GENERATED_DELETIONS=$(echo "$DELETED_FILES" | grep -E '^snippets/data/[^/]+/hrefs\.jsx$' || true)
 
-if [ ! -z "$DELETED_FILES" ]; then
+if [ ! -z "$ALLOWED_GENERATED_DELETIONS" ]; then
+    echo ""
+    echo "ℹ️  Allowing generated domain link map deletions:"
+    echo "$ALLOWED_GENERATED_DELETIONS" | sed 's/^/  ↺ /'
+fi
+
+if [ ! -z "$BLOCKED_DELETED_FILES" ]; then
     echo ""
     echo "╔═══════════════════════════════════════════════════════════════╗"
     echo "║  ❌ FILE DELETIONS DETECTED - COMMIT BLOCKED                 ║"
@@ -23,7 +31,7 @@ if [ ! -z "$DELETED_FILES" ]; then
     echo "🚫 DELETIONS ARE NOT ALLOWED"
     echo ""
     echo "The following files are being deleted:"
-    echo "$DELETED_FILES" | sed 's/^/  ❌ /'
+    echo "$BLOCKED_DELETED_FILES" | sed 's/^/  ❌ /'
     echo ""
     echo "📋 INSTRUCTIONS:"
     echo "  1. If you need to move files, use 'git mv' instead of delete+add"

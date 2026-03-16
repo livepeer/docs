@@ -6,52 +6,34 @@
  * @scope             tests/unit, tools/scripts/codex-safe-merge-with-stash.js
  * @owner             docs
  * @needs             R-R27, R-R30
- * @purpose-statement Tests codex-safe-merge-with-stash.js — validates safe merge logic with stash handling
+ * @purpose-statement Tests codex-safe-merge-with-stash.js — asserts the deprecated stash helper hard-fails and points callers to the supported Codex lifecycle
  * @pipeline          manual — developer tool
  * @dualmode          dual-mode (document flags)
  * @usage             node tests/unit/codex-safe-merge-with-stash.test.js [flags]
  */
 
 const assert = require('assert');
-const fs = require('fs');
-const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
 const REPO_ROOT = process.cwd();
 const SCRIPT_PATH = path.join(REPO_ROOT, 'tools/scripts/codex-safe-merge-with-stash.js');
+const GIT_ENV_STRIP_KEYS = ['GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_PREFIX'];
 
-function run(cmd, args, cwd) {
-  return spawnSync(cmd, args, { cwd, encoding: 'utf8' });
+function getSanitizedGitEnv(overrides = {}) {
+  const env = { ...process.env, ...overrides };
+  GIT_ENV_STRIP_KEYS.forEach((key) => {
+    delete env[key];
+  });
+  return env;
 }
 
-function runGit(args, cwd) {
-  const out = run('git', args, cwd);
-  if (out.status !== 0) {
-    throw new Error(`git ${args.join(' ')} failed: ${out.stderr || out.stdout}`);
-  }
-  return (out.stdout || '').trim();
-}
-
-function writeFile(absPath, content) {
-  fs.mkdirSync(path.dirname(absPath), { recursive: true });
-  fs.writeFileSync(absPath, content, 'utf8');
-}
-
-function mkRepo(prefix) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
-  runGit(['init', '-b', 'main'], dir);
-  runGit(['config', 'user.email', 'tests@example.com'], dir);
-  runGit(['config', 'user.name', 'test-runner'], dir);
-  writeFile(path.join(dir, 'app.txt'), 'base\n');
-  runGit(['add', 'app.txt'], dir);
-  runGit(['commit', '-m', 'init'], dir);
-  runGit(['checkout', '-b', 'feature'], dir);
-  return dir;
-}
-
-function runScript(args, cwd) {
-  return run('node', [SCRIPT_PATH, ...args], cwd);
+function runScript(args) {
+  return spawnSync('node', [SCRIPT_PATH, ...args], {
+    cwd: REPO_ROOT,
+    encoding: 'utf8',
+    env: getSanitizedGitEnv()
+  });
 }
 
 async function runTests() {
@@ -59,59 +41,22 @@ async function runTests() {
   const cases = [];
 
   cases.push(async () => {
-    const repo = mkRepo('codex-safe-merge-clean-');
-    runGit(['checkout', 'main'], repo);
-    writeFile(path.join(repo, 'app.txt'), 'base\nmain-change\n');
-    runGit(['add', 'app.txt'], repo);
-    runGit(['commit', '-m', 'main change'], repo);
-    runGit(['checkout', 'feature'], repo);
-
-    const exec = runScript(['--target', 'main'], repo);
-    assert.strictEqual(exec.status, 0, exec.stderr || exec.stdout);
-    const merged = fs.readFileSync(path.join(repo, 'app.txt'), 'utf8');
-    assert.match(merged, /main-change/, 'feature should include merged change');
+    const exec = runScript(['--target', 'docs-v2']);
+    assert.strictEqual(exec.status, 1, 'compatibility shim should fail');
+    const output = `${exec.stdout}\n${exec.stderr}`;
+    assert.match(output, /stash-based codex merge flow is disabled/i);
+    assert.match(output, /task-finalize\.js/i);
+    assert.match(output, /lock-release\.js/i);
+    assert.match(output, /task-cleanup\.js/i);
   });
 
   cases.push(async () => {
-    const repo = mkRepo('codex-safe-merge-dirty-');
-    runGit(['checkout', 'main'], repo);
-    writeFile(path.join(repo, 'app.txt'), 'base\nmain-change\n');
-    runGit(['add', 'app.txt'], repo);
-    runGit(['commit', '-m', 'main change'], repo);
-    runGit(['checkout', 'feature'], repo);
-
-    writeFile(path.join(repo, 'local.txt'), 'local-dirty\n');
-    writeFile(path.join(repo, 'temp-untracked.txt'), 'temp\n');
-    runGit(['add', 'local.txt'], repo);
-
-    const exec = runScript(['--target', 'main'], repo);
-    assert.strictEqual(exec.status, 0, exec.stderr || exec.stdout);
-
-    const localTracked = fs.readFileSync(path.join(repo, 'local.txt'), 'utf8');
-    const localUntracked = fs.readFileSync(path.join(repo, 'temp-untracked.txt'), 'utf8');
-    assert.match(localTracked, /local-dirty/, 'tracked local file should be restored');
-    assert.match(localUntracked, /temp/, 'untracked local file should be restored');
-  });
-
-  cases.push(async () => {
-    const repo = mkRepo('codex-safe-merge-conflict-');
-    runGit(['checkout', 'main'], repo);
-    writeFile(path.join(repo, 'app.txt'), 'main-version\n');
-    runGit(['add', 'app.txt'], repo);
-    runGit(['commit', '-m', 'main update'], repo);
-    runGit(['checkout', 'feature'], repo);
-    writeFile(path.join(repo, 'app.txt'), 'feature-version\n');
-    runGit(['add', 'app.txt'], repo);
-    runGit(['commit', '-m', 'feature update'], repo);
-
-    writeFile(path.join(repo, 'dirty.txt'), 'dirty\n');
-    runGit(['add', 'dirty.txt'], repo);
-
-    const exec = runScript(['--target', 'main'], repo);
-    assert.strictEqual(exec.status, 1, 'merge conflict should fail');
-
-    const stashList = runGit(['stash', 'list'], repo);
-    assert.match(stashList, /codex-safe-merge:/, 'stash should be preserved when merge fails');
+    const exec = runScript(['--target', 'docs-v2', '--json']);
+    assert.strictEqual(exec.status, 1, 'json mode should still fail');
+    const payload = JSON.parse(exec.stdout);
+    assert.strictEqual(payload.passed, false);
+    assert.strictEqual(payload.target, 'docs-v2');
+    assert.match(payload.message, /disabled/i);
   });
 
   for (let i = 0; i < cases.length; i += 1) {

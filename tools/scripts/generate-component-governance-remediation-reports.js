@@ -1,44 +1,30 @@
 #!/usr/bin/env node
 /**
- * @script generate-component-governance-remediation-reports
- * @summary Generate Phase 2a remediation reports from the approved component-governance audit and live repo state.
- * @owner docs
- * @scope tools/scripts, tasks/reports, snippets/components, v2, style.css
- *
- * @usage
- *   node tools/scripts/generate-component-governance-remediation-reports.js [flags]
- *
- * @inputs
- *   --audit-file <repo-relative-path> (default: tasks/reports/component-governance-audit.md)
- *   --output-dir <repo-relative-path> (default: tasks/reports)
- *   --reports <migration,colours,tokens,defensive> (default: all)
- *   --strict / --no-strict (default: strict)
- *
- * @outputs
- *   - tasks/reports/migration-impact-report.md
- *   - tasks/reports/colour-remediation-report.md
- *   - tasks/reports/style-css-token-audit.md
- *   - tasks/reports/defensive-rendering-remediation-report.md
- *
- * @exit-codes
- *   0 = reports generated successfully
- *   1 = invalid args, audit drift that blocks strict mode, or runtime failure
- *
- * @examples
- *   node tools/scripts/generate-component-governance-remediation-reports.js
- *   node tools/scripts/generate-component-governance-remediation-reports.js --reports migration,defensive
- *   node tools/scripts/generate-component-governance-remediation-reports.js --no-strict
- *
- * @notes
- *   Phase 2a is read-only for runtime docs/component source. This script only reads repo state and writes report artefacts.
+ * @script            generate-component-governance-remediation-reports
+ * @category          generator
+ * @purpose           qa:repo-health
+ * @scope             generated-output
+ * @owner             docs
+ * @needs             R-R10, R-R29
+ * @purpose-statement Generates component-governance remediation reports from the approved audit and live repo state, including defensive-rendering guidance for MDX-facing components.
+ * @pipeline          manual — report generation
+ * @usage             node tools/scripts/generate-component-governance-remediation-reports.js [flags]
  */
 
 const fs = require('fs');
 const path = require('path');
+const {
+  buildGeneratedMarkdownCommentLines,
+  sanitizeMarkdownTableCellText
+} = require('../lib/mdx-safe-markdown');
+const {
+  buildMdxFacingComponentIndex
+} = require('./validators/components/check-mdx-component-scope');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const DEFAULT_AUDIT_FILE = 'tasks/reports/component-governance-audit.md';
 const DEFAULT_OUTPUT_DIR = 'tasks/reports';
+const REPORT_GENERATOR_SCRIPT = 'tools/scripts/generate-component-governance-remediation-reports.js';
 const VALID_REPORTS = ['migration', 'colours', 'tokens', 'defensive'];
 const REPORT_FILE_NAMES = {
   migration: 'migration-impact-report.md',
@@ -501,7 +487,8 @@ function buildContext(options) {
   const defensiveAnalysis = analyseDefensiveRendering(
     audit.defensiveRendering,
     audit.statusAssessment,
-    componentIndex
+    componentIndex,
+    buildMdxFacingComponentIndex()
   );
 
   return {
@@ -1829,7 +1816,7 @@ function analyseTokenInventory(styleTokens, tokenUsage, stylingAnalysis) {
   };
 }
 
-function analyseDefensiveRendering(defensiveRows, statusRows, componentIndex) {
+function analyseDefensiveRendering(defensiveRows, statusRows, componentIndex, mdxFacingComponentIndex) {
   const statusByComponent = new Map(statusRows.map((row) => [row.component, row]));
   const highRows = [];
   const mediumGroups = new Map();
@@ -1841,7 +1828,7 @@ function analyseDefensiveRendering(defensiveRows, statusRows, componentIndex) {
     }
 
     if (row.crashRisk === 'HIGH') {
-      highRows.push(buildHighRiskEntry(row, componentMeta, statusByComponent));
+      highRows.push(buildHighRiskEntry(row, componentMeta, statusByComponent, mdxFacingComponentIndex));
       return;
     }
 
@@ -1877,7 +1864,7 @@ function analyseDefensiveRendering(defensiveRows, statusRows, componentIndex) {
   };
 }
 
-function buildHighRiskEntry(defensiveRow, componentMeta, statusByComponent) {
+function buildHighRiskEntry(defensiveRow, componentMeta, statusByComponent, mdxFacingComponentIndex) {
   const source = readSource(componentMeta.filePath);
   const override = HIGH_RISK_OVERRIDES[defensiveRow.component];
   const statusRow = statusByComponent.get(defensiveRow.component) || {};
@@ -1892,7 +1879,12 @@ function buildHighRiskEntry(defensiveRow, componentMeta, statusByComponent) {
 
   const currentSnippet = extractSnippet(source.lines, evidenceLine, 6);
   const fixSnippet = override ? override.fix : buildGenericHighRiskFix(componentMeta);
-  const guards = override ? override.guards : deriveGenericGuardChecklist(componentMeta);
+  const guards = override ? [...override.guards] : deriveGenericGuardChecklist(componentMeta);
+  if (mdxFacingComponentIndex?.has(componentMeta.filePath)) {
+    guards.push(
+      'This file is imported directly by routable MDX pages. Do not hoist the fix into a private file-scope helper; keep it inline in the exported component or import it from a colocated .js helper module.'
+    );
+  }
 
   return {
     component: defensiveRow.component,
@@ -2074,9 +2066,11 @@ function deriveGenericGuardChecklist(componentMeta) {
 
 function renderMigrationImpactReport(context) {
   const lines = [
-    '# Migration Impact Report',
-    '',
-    `Generated: ${context.generatedAt}`,
+    ...buildGeneratedReportPreamble(
+      'Migration Impact Report',
+      'Summarize component import-rewrite impact and migration risk for the component-governance remediation phase.',
+      context
+    ),
     `Source: ${context.auditFile}`,
     '',
     '## Risk Summary',
@@ -2116,7 +2110,7 @@ function renderMigrationImpactReport(context) {
     } else {
       group.importRows.forEach((row) => {
         lines.push(
-          `| ${escapeMarkdownCell(row.filePath)} | ${escapeMarkdownCell(inlineCode(row.currentImportStatement))} | ${escapeMarkdownCell(row.newImportStatements.map((statement) => inlineCode(statement)).join('<br>'))} |`
+          `| ${escapeMarkdownCell(row.filePath)} | ${escapeMarkdownCell(inlineCode(row.currentImportStatement))} | ${escapeMarkdownCell(row.newImportStatements.map((statement) => inlineCode(statement)).join('<br />'))} |`
         );
       });
     }
@@ -2176,9 +2170,11 @@ function renderColourRemediationReport(context) {
   const deliberateRows = colourGroups.filter((group) => group.deliberate);
 
   const lines = [
-    '# Colour Remediation Report',
-    '',
-    `Generated: ${context.generatedAt}`,
+    ...buildGeneratedReportPreamble(
+      'Colour Remediation Report',
+      'Catalog hardcoded colour usage, token gaps, and replacement decisions for the component-governance remediation phase.',
+      context
+    ),
     '',
     '## Token Coverage Summary',
     '',
@@ -2281,9 +2277,11 @@ function renderColourRemediationReport(context) {
 function renderStyleTokenAuditReport(context) {
   const usageRows = context.tokenAudit.usageRows;
   const lines = [
-    '# style.css Token Audit',
-    '',
-    `Generated: ${context.generatedAt}`,
+    ...buildGeneratedReportPreamble(
+      'style.css Token Audit',
+      'Inventory style.css token usage and namespace gaps for the component-governance remediation phase.',
+      context
+    ),
     `File: ${context.stylePath}`,
     '',
     '## Token Inventory',
@@ -2347,9 +2345,11 @@ function renderStyleTokenAuditReport(context) {
 
 function renderDefensiveRenderingReport(context) {
   const lines = [
-    '# Defensive Rendering Remediation Report',
-    '',
-    `Generated: ${context.generatedAt}`,
+    ...buildGeneratedReportPreamble(
+      'Defensive Rendering Remediation Report',
+      'Summarize component crash-risk findings and defensive rendering fixes for the component-governance remediation phase.',
+      context
+    ),
     `Source: ${context.auditFile} (Defensive Rendering section)`,
     '',
     `## HIGH Crash Risk (${context.defensiveAnalysis.highRows.length} components)`,
@@ -2437,6 +2437,22 @@ function appendDriftNotes(lines, driftNotes, prefixes = null) {
   });
 
   return `${lines.join('\n').trim()}\n`;
+}
+
+function buildGeneratedReportPreamble(title, purpose, context) {
+  return [
+    ...buildGeneratedMarkdownCommentLines({
+      marker: 'generated-remediation-report:v1',
+      script: REPORT_GENERATOR_SCRIPT,
+      purpose,
+      runWhen: 'The approved component-governance audit changes or remediation reports need regeneration.',
+      runCommand: `node ${REPORT_GENERATOR_SCRIPT}`
+    }),
+    '',
+    `# ${title}`,
+    '',
+    `Generated: ${context.generatedAt}`
+  ];
 }
 
 function walkFiles(rootDir, predicate, out = []) {
@@ -2971,9 +2987,7 @@ function extractCssBlock(content, selector) {
 }
 
 function escapeMarkdownCell(value) {
-  return String(value || '')
-    .replace(/\|/g, '\\|')
-    .replace(/\n/g, '<br>');
+  return sanitizeMarkdownTableCellText(value).replace(/\|/g, '\\|');
 }
 
 function trimBlankLines(value) {

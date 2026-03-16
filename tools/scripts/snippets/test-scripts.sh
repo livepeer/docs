@@ -6,7 +6,7 @@
 # @owner             docs
 # @needs             E-C6, F-C1
 # @purpose-statement Snippet test runner — runs basic validation on snippet scripts
-# @pipeline          manual — diagnostic/investigation tool, run on-demand only
+# @pipeline          manual — developer tool
 # @usage             bash tools/scripts/snippets/test-scripts.sh [flags]
 # Test suite for tools/scripts/snippets
 # Run this before using scripts to verify they work correctly

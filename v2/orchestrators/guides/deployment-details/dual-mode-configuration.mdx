@@ -1,0 +1,442 @@
+---
+title: 'Dual Mode Configuration'
+sidebarTitle: 'Dual Mode'
+description: >-
+  Configure your orchestrator node to serve both video transcoding and AI
+  inference jobs from a single go-livepeer process.
+keywords:
+  - livepeer
+  - orchestrator
+  - dual mode
+  - dual-workload
+  - video transcoding
+  - AI inference
+  - aiWorker
+  - aiModels
+  - GPU
+  - NVENC
+  - setup
+pageType: how_to
+audience: orchestrator
+purpose: setup
+status: draft
+lastVerified: '2026-03-16'
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+{/* TODO:
+Terminology Validation:
+- Confirm "Dual Mode" badge (color="green") is consistent with glossary usage
+- Confirm "dual-workload configuration" in prose aligns with SKILL.md terminology rules
+
+Verify:
+- Mermaid diagrams use hardcoded theme colours from /snippets/components/page-structure/mermaidColours.jsx
+- FontAwesome icons used on all Tabs and Steps
+- UK spelling throughout
+- No em-dashes anywhere in the file
+- Headers are concise and Technical (guide target: 3 words or less)
+- Media placeholders added as TODO comments where screenshots would help
+
+SME review required before merge:
+- REVIEW: Confirm complete dual-mode flag set with Rick (@rickstaa) — specifically whether
+  -serviceAddr port for a combined node is 8935, 8936, or configurable.
+- REVIEW: Confirm dl_checkpoints.sh model download command syntax against current ai-runner release.
+- REVIEW: Validate VRAM figures in resource table against model-vram-reference.mdx when that page merges.
+- REVIEW: Earnings estimates section — add illustrative figures once Explorer pricing data confirmed.
+*/}
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+
+<CustomDivider />
+
+A <Badge color="green">Dual Mode</Badge> orchestrator serves video transcoding and AI inference jobs from a single go-livepeer process. Video transcoding routes through NVENC and NVDEC, the fixed-function hardware blocks built into NVIDIA GPUs. AI inference runs on CUDA compute. Because these two execution paths use separate hardware resources, adding AI capabilities to a running video node requires no changes to your on-chain registration, staking, or existing transcoding configuration.
+
+<Note>
+  Dual Mode requires Linux. The AI Runner container supports Linux only.
+</Note>
+
+<CustomDivider middleText="What Changes" />
+
+## What Changes
+
+A video-only orchestrator and a Dual Mode orchestrator run the same go-livepeer binary. The difference is configuration: Dual Mode adds three flags and one `aiModels.json` file to your existing setup.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header></TableCell>
+      <TableCell header><Badge color="blue">Video only</Badge></TableCell>
+      <TableCell header><Badge color="purple">AI only</Badge></TableCell>
+      <TableCell header><Badge color="green">Dual Mode</Badge></TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Revenue streams**</TableCell>
+      <TableCell>ETH transcoding fees + LPT rewards</TableCell>
+      <TableCell>ETH AI inference fees</TableCell>
+      <TableCell>Both streams simultaneously</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Pricing config**</TableCell>
+      <TableCell>`-pricePerUnit` (wei per pixel)</TableCell>
+      <TableCell>`aiModels.json` per pipeline</TableCell>
+      <TableCell>Both `-pricePerUnit` and `aiModels.json`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**GPU execution path**</TableCell>
+      <TableCell>NVENC/NVDEC hardware blocks</TableCell>
+      <TableCell>CUDA compute cores</TableCell>
+      <TableCell>Both paths, independent queues</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**VRAM requirement**</TableCell>
+      <TableCell>Minimal (frame buffers only)</TableCell>
+      <TableCell>8-24 GB depending on model</TableCell>
+      <TableCell>16 GB recommended; 8 GB viable for LLM-only pipelines</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Active set**</TableCell>
+      <TableCell>Required for video job eligibility</TableCell>
+      <TableCell>AI job eligibility routes through capability advertisement</TableCell>
+      <TableCell>Required for video; AI routes via capability advertisement</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**OS support**</TableCell>
+      <TableCell>Linux, Windows</TableCell>
+      <TableCell>Linux only</TableCell>
+      <TableCell>Linux only</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="Before You Start" />
+
+## Before You Start
+
+Confirm these prerequisites before starting:
+
+- **Hardware:** NVIDIA GPU with 16 GB VRAM or more. 8 GB is sufficient for LLM pipelines via the Ollama runner. Most diffusion model pipelines require 16 GB or more. See <LinkArrow href="/v2/orchestrators/guides/operator-considerations/requirements" label="Hardware Requirements" /> for per-GPU capability guidance.
+- **OS:** Linux. The AI Runner container is Linux-only.
+- **Docker and NVIDIA Container Toolkit:** Docker installed and the NVIDIA Container Toolkit configured so that `nvidia-smi` runs successfully inside a container.
+- **For video transcoding:** Your Arbitrum wallet is funded with ETH for gas, your node is activated via `livepeer_cli`, and you are staked with enough LPT to be eligible for the active set.
+- **AI model weights:** Model weights downloaded to your host machine before starting the AI Runner. See <LinkArrow href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup" label="AI Pipelines" /> for download instructions.
+
+<CustomDivider middleText="Setup" />
+
+## Setup
+
+Select the path that matches your current state.
+
+<BorderedBox variant="accent" padding="16px">
+<Tabs>
+  <Tab title="Starting fresh" icon="bolt">
+
+    These steps set up a Dual Mode orchestrator from scratch on a machine with no existing Livepeer configuration. Complete all four steps in order.
+
+    <StyledSteps iconColor="#2d9a67" titleColor="var(--accent)">
+
+      <StyledStep title="Download model weights" icon="download">
+
+        Model weights must be present on the host machine before go-livepeer starts the AI Runner containers. Use the download script from the official AI runner image to pull your chosen model.
+
+        ```bash icon="terminal" title="Run the dual-mode container"
+        docker run --rm \
+          -v ~/.lpData/models:/models \
+          --gpus all \
+          livepeer/ai-runner:latest \
+          bash -c "PIPELINE=text-to-image MODEL_ID=ByteDance/SDXL-Lightning bash /app/dl_checkpoints.sh"
+        ```
+
+        Replace `PIPELINE` and `MODEL_ID` with your chosen values. For all supported pipelines, model IDs, and VRAM requirements, see <LinkArrow href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup" label="AI Pipelines" />.
+
+      </StyledStep>
+
+      <StyledStep title="Create aiModels.json" icon="file-code">
+
+        Create `~/.lpData/aiModels.json` with at least one pipeline entry. Each entry declares a pipeline, model, price, and whether the model stays warm in VRAM between jobs.
+
+        ```json icon="code" title="aiModels.json"
+        [
+          {
+            "pipeline": "text-to-image",
+            "model_id": "ByteDance/SDXL-Lightning",
+            "price_per_unit": 4768371,
+            "warm": true
+          }
+        ]
+        ```
+
+        `price_per_unit` is denominated in wei. The value above is illustrative. Check current
+        per-pipeline market rates on <LinkArrow href="https://tools.livepeer.cloud/ai/network-capabilities" label="tools.livepeer.cloud" /> before setting your own.
+
+        To run multiple AI pipelines, add one entry per pipeline. To assign different pipelines to different GPUs, add separate entries referencing each GPU ID. The full `aiModels.json` schema is documented in <LinkArrow href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup" label="AI Pipelines" />.
+
+      </StyledStep>
+
+      <StyledStep title="Start go-livepeer" icon="docker">
+
+        The command below starts a Dual Mode orchestrator. It combines the standard video transcoding flags with the three AI-specific additions.
+
+        ```bash icon="terminal" title="Run the dual-mode container"
+        docker run \
+          --name livepeer_dual_orchestrator \
+          -v ~/.lpData/:/root/.lpData/ \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          --network host \
+          --gpus all \
+          livepeer/go-livepeer:master \
+          -network arbitrum-one-mainnet \
+          -ethUrl <ARBITRUM_RPC_URL> \
+          -ethAcctAddr <ETH_ACCOUNT_ADDRESS> \
+          -orchestrator \
+          -transcoder \
+          -nvidia 0 \
+          -pricePerUnit <WEI_PER_PIXEL> \
+          -serviceAddr <YOUR_PUBLIC_IP>:8935 \
+          -aiWorker \
+          -aiModels /root/.lpData/aiModels.json \
+          -aiModelsDir ~/.lpData/models
+        ```
+
+        The three AI-specific flags are:
+
+        <StyledTable variant="bordered">
+          <thead>
+            <TableRow header>
+              <TableCell header>Flag</TableCell>
+              <TableCell header>Purpose</TableCell>
+            </TableRow>
+          </thead>
+          <tbody>
+            <TableRow>
+              <TableCell>`-aiWorker`</TableCell>
+              <TableCell>Enables AI inference mode alongside transcoding</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>`-aiModels`</TableCell>
+              <TableCell>Path to `aiModels.json` inside the container (`/root/.lpData/`)</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>`-aiModelsDir`</TableCell>
+              <TableCell>Path to model weights on the host machine, required by Docker-out-of-Docker</TableCell>
+            </TableRow>
+          </tbody>
+        </StyledTable>
+
+        `-nvidia 0` assigns GPU 0 to the node. Use a comma-separated list (`0,1`) for multiple GPUs. `all` assigns every GPU. Mixed-VRAM hosts still need each container to fit on the GPU it lands on.
+
+      </StyledStep>
+
+      <StyledStep title="Activate on-chain" icon="link">
+
+        Run `livepeer_cli` to register as an Orchestrator, set the reward cut and fee cut, and
+        stake LPT. This step is required to receive video transcoding jobs. AI inference jobs route
+        through capability advertisement and start reaching a node before it enters the active set
+        for video work.
+
+        ```bash icon="terminal" title="Run livepeer_cli"
+        livepeer_cli
+        ```
+
+        Select the "Invoke multi-step become an orchestrator" option. After activation, your node must reach the top 100 orchestrators by total stake to enter the active set and begin receiving video jobs. Check your standing on <LinkArrow href="https://explorer.livepeer.org/orchestrators" label="Livepeer Explorer" />.
+
+      </StyledStep>
+
+    </StyledSteps>
+
+  </Tab>
+
+  <Tab title="Adding AI to existing node" icon="circle-plus">
+
+    A running video transcoding orchestrator adds AI inference through three changes only: a model download, a new `aiModels.json`, and three additional flags in the start command. On-chain registration, staking, and transcoding configuration stay unchanged.
+
+    <StyledSteps iconColor="#2d9a67" titleColor="var(--accent)">
+
+      <StyledStep title="Download model weights" icon="download">
+
+        Pull model weights to the host machine before restarting the node. The AI Runner containers
+        mount this directory at startup, so the weights need to be present already.
+
+        ```bash icon="terminal" title="Download model weights"
+        docker run --rm \
+          -v ~/.lpData/models:/models \
+          --gpus all \
+          livepeer/ai-runner:latest \
+          bash -c "PIPELINE=text-to-image MODEL_ID=ByteDance/SDXL-Lightning bash /app/dl_checkpoints.sh"
+        ```
+
+        Replace `PIPELINE` and `MODEL_ID` with your chosen values. Supported pipelines and model IDs are listed in <LinkArrow href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup" label="AI Pipelines" />.
+
+      </StyledStep>
+
+      <StyledStep title="Create aiModels.json" icon="file-code">
+
+        Create `~/.lpData/aiModels.json` with the pipeline configuration. The same format applies to
+        single-pipeline and multi-pipeline setups.
+
+        ```json icon="code" title="aiModels.json"
+        [
+          {
+            "pipeline": "text-to-image",
+            "model_id": "ByteDance/SDXL-Lightning",
+            "price_per_unit": 4768371,
+            "warm": true
+          }
+        ]
+        ```
+
+        Check current per-pipeline market rates on <LinkArrow href="https://tools.livepeer.cloud/ai/network-capabilities" label="tools.livepeer.cloud" /> before setting `price_per_unit`. Prices above the
+        current Gateway buy-side range stop AI jobs from routing to that pipeline regardless of
+        hardware capability.
+
+      </StyledStep>
+
+      <StyledStep title="Add AI flags to your start command" icon="plus">
+
+        Add the three AI flags to your existing go-livepeer command. Your existing flags stay in place.
+
+        ```bash icon="terminal" title="Add AI flags to the start command"
+        # Add to your existing start command:
+          -aiWorker \
+          -aiModels /root/.lpData/aiModels.json \
+          -aiModelsDir ~/.lpData/models
+        ```
+
+        Also mount the Docker socket when it is missing. go-livepeer uses Docker-out-of-Docker to
+        manage AI Runner containers:
+
+        ```bash icon="terminal" title="Add the Docker socket mount"
+        # Include this volume mount:
+          -v /var/run/docker.sock:/var/run/docker.sock \
+        ```
+
+        Restart the container with these additions. Your transcoding configuration, service address, and on-chain registration carry over unchanged.
+
+      </StyledStep>
+
+    </StyledSteps>
+
+  </Tab>
+</Tabs>
+</BorderedBox>
+
+<CustomDivider middleText="Verify" />
+
+## Verify
+
+After starting your node, confirm that both workload types are advertised to the network.
+
+**Check local capability registration:**
+
+```bash icon="terminal" title="Check local capabilities"
+curl http://localhost:7935/getNetworkCapabilities | jq
+```
+
+The response includes a `pipelines` array listing your registered AI capabilities alongside your transcoding capability profile. A missing pipeline indicates a configuration error in `aiModels.json` or a container startup failure.
+
+**Check external network visibility:**
+
+Your node's capabilities, including warm models, are visible externally at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). Search by service address or ETH account address to confirm the network sees the AI pipelines alongside transcoding registration.
+
+        AI pipelines that remain absent externally for two to three minutes after startup usually
+        point to a container startup or registration issue. Inspect the container logs:
+
+```bash icon="terminal" title="Inspect AI container logs"
+docker logs livepeer_dual_orchestrator 2>&1 | grep -i "ai-runner\|container\|pipeline\|error"
+```
+
+For a full error reference including AI runner startup failures and capability registration issues, see <LinkArrow href="/v2/orchestrators/resources/faq" label="Orchestrator FAQ" />.
+
+<CustomDivider middleText="Resource Management" />
+
+## Resource Management
+
+Understanding how your GPU handles both workloads prevents VRAM-related failures.
+
+### Why contention is lower than expected
+
+NVIDIA GPUs contain dedicated NVENC and NVDEC silicon for video encoding and decoding. These hardware blocks are separate from the CUDA execution units used for AI inference. Video transcoding in go-livepeer routes through NVENC and leaves CUDA cores for AI work. The VRAM constraint for a Dual Mode node is set by AI model weights.
+
+### GPU class and viable AI pipelines
+
+The table below maps common GPU classes to AI pipeline combinations that are viable for Dual Mode. Transcoding capacity is available on all cards listed regardless of which AI pipelines are running.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>GPU class</TableCell>
+      <TableCell header>VRAM</TableCell>
+      <TableCell header>AI pipelines viable alongside transcoding</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>RTX 2060 / 3060</TableCell>
+      <TableCell>8-12 GB</TableCell>
+      <TableCell>LLM via Ollama runner, `audio-to-text`, `image-to-text`, and light diffusion models with SFAST optimisation enabled.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>RTX 3080 / 4070</TableCell>
+      <TableCell>10-12 GB</TableCell>
+      <TableCell>Most batch pipelines. `text-to-image` with SDXL-Lightning. `image-to-video` pipelines require more VRAM than this class provides.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>RTX 3090 / 4090 / A5000</TableCell>
+      <TableCell>24 GB</TableCell>
+      <TableCell>All batch pipelines including `image-to-video`, multiple warm models simultaneously, and live-video-to-video pipelines with VRAM headroom.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+### Earnings
+
+Dual Mode operators earn from two revenue streams with independent demand patterns. Transcoding fees track network video demand. AI inference fees track per-capability demand from application developers. Both are paid in ETH via probabilistic micropayments.
+
+Current per-pipeline AI pricing and per-orchestrator earnings are live on <LinkArrow href="https://explorer.livepeer.org" label="Livepeer Explorer" /> and <LinkArrow href="https://tools.livepeer.cloud" label="tools.livepeer.cloud" />. Market rates shift as network supply and demand change, so third-party figures age quickly.
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="AI Pipelines" icon="robot" href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup" arrow horizontal>
+    Full `aiModels.json` schema, per-pipeline VRAM requirements, model download commands, and warm model management.
+  </Card>
+  <Card title="Gateway Relationships" icon="diagram-project" href="/v2/orchestrators/guides/advanced-operations/gateway-relationships" arrow horizontal>
+    How gateways discover your capabilities and select your node for both video and AI jobs.
+  </Card>
+  <Card title="Earnings and Pricing" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earning-model" arrow horizontal>
+    Setting competitive prices for video transcoding and AI inference to maximise job volume from both revenue streams.
+  </Card>
+  <Card title="Orchestrator FAQ" icon="circle-question" href="/v2/orchestrators/resources/faq" arrow horizontal>
+    Common errors and fixes: AI runner startup failures, VRAM out-of-memory, and capability registration issues.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  "How do I run both video and AI on the same node?" The dual mode execution page.
+  For new operators: unified docker-compose with all flags. For existing video
+  operators: the exact configuration delta (add -aiWorker, -aiModels, AI runner
+  container). VRAM coexistence: NVENC uses dedicated silicon and stays separate from
+  CUDA for AI), but CUDA cores and VRAM are shared. Warm model strategy for dual
+  nodes. When to split to O-T instead of running dual on one card.
+
+  PLAN TARGET: dual-mode-configuration (move to Config & Optimisation)
+  SECTION: Currently Deployment Details, target is Config & Optimisation → "How do I tune?"
+  JOB STORIES: J2 (add AI to video)
+
+  CROSS-REFS:
+  - Workloads & AI > AI Inference Operations - AI architecture concepts
+  - Config & Optimisation > Capacity Planning - VRAM budgeting
+  - Config & Optimisation > AI Model Management - warm/cold strategy
+  - Deployment Details > O-T Setup - when to split instead of dual
+*/}

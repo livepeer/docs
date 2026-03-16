@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement Tests OpenRouter provider — validates API call logic and response parsing
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
+ * @pipeline          manual — not yet in pipeline
  * @usage             node tools/scripts/i18n/test/provider-openrouter.test.js [flags]
  */
 const test = require('node:test');

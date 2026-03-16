@@ -1,0 +1,45 @@
+---
+title: Upload an asset
+description: Upload video files to Livepeer Studio with TUS resumable uploads or PUT.
+keywords:
+  - livepeer
+  - docs
+  - solutions
+  - livepeer studio
+  - video on demand
+  - upload asset
+  - upload
+  - asset
+  - video
+  - files
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+---
+
+Upload videos via the Livepeer Studio API. **TUS resumable upload** is recommended; **PUT** is also supported.
+
+<Info>
+ TUS supports resumable uploads and is recommended for all uploads, especially large files.
+</Info>
+
+## Create upload with the SDK
+
+From your backend, create an asset to get an upload URL (TUS or PUT):
+
+```javascript
+const { data } = await livepeer.asset.create({ name: "my-video.mp4" });
+// data.tusUploadUrl for TUS client on frontend
+// data.asset has asset id
+```
+
+Use the **TUS upload URL** with a [TUS client](https://github.com/TUS/TUS-js-client) on the frontend to upload the file. When processing finishes, use the asset **playback ID** to play it. See [Play an asset](./playback-asset) and [Listen to events](../analytics/listen-to-events).
+
+## Next steps
+
+- [Play an asset](./playback-asset)
+- [Encrypted assets](encrypted-assets)
+- [Thumbnails (VOD)](./thumbnails-vod)

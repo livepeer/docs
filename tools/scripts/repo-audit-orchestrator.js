@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R29
  * @purpose-statement Repo audit orchestrator — dispatches all static analysis validators in sequence. Supports --mode (static/full), --scope (full/changed), --quarantine, --agent-pack.
- * @pipeline          P6 (on-demand, health audit)
+ * @pipeline          manual
  * @usage             node tools/scripts/repo-audit-orchestrator.js [flags]
  */
 

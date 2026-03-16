@@ -3,24 +3,29 @@
  * @script            check-double-headers
  * @category          validator
  * @purpose           qa:content-quality
- * @scope             tools/scripts/validators/content, v2, docs.json
+ * @scope             v2-content
  * @owner             docs
  * @needs             1.12, 1.13
  * @purpose-statement Detects duplicate body H1 headings and opening paragraphs that repeat frontmatter title or description content.
- * @pipeline          manual — validator, run on-demand only
- * @usage             node tools/scripts/validators/content/check-double-headers.js [--file <path>] [--files <a,b>] [--fix]
+ * @pipeline          P1
+ * @usage             node tools/scripts/validators/content/check-double-headers.js [--staged|--file <path>|--files <a,b>] [--fix]
  */
 
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 const matter = require('gray-matter');
-const { getMdxFiles } = require('../../../../tests/utils/file-walker');
+const { getAuthoredMdxFiles, getStagedAuthoredDocsPageFiles } = require('../../../../tests/utils/file-walker');
 
 const RULE_DUPLICATE_TITLE = 'duplicate-title';
 const RULE_DUPLICATE_DESCRIPTION = 'duplicate-description';
 
 let parserPromise = null;
+
+function loadPlugin(name) {
+  const plugin = require(name);
+  return plugin.default || plugin;
+}
 
 function getRepoRoot() {
   try {
@@ -35,8 +40,10 @@ const REPO_ROOT = getRepoRoot();
 async function getParser() {
   if (!parserPromise) {
     parserPromise = (async () => {
-      const [{ unified }, { default: remarkParse }, { default: remarkGfm }, { default: remarkMdx }] =
-        await Promise.all([import('unified'), import('remark-parse'), import('remark-gfm'), import('remark-mdx')]);
+      const { unified } = require('unified');
+      const remarkParse = loadPlugin('remark-parse');
+      const remarkGfm = loadPlugin('remark-gfm');
+      const remarkMdx = loadPlugin('remark-mdx');
       return unified().use(remarkParse).use(remarkGfm).use(remarkMdx);
     })();
   }
@@ -48,9 +55,10 @@ function printHelp() {
   process.stdout.write(
     [
       'Usage:',
-      '  node tools/scripts/validators/content/check-double-headers.js [--file <path>] [--files <a,b>] [--fix]',
+      '  node tools/scripts/validators/content/check-double-headers.js [--staged|--file <path>] [--files <a,b>] [--fix]',
       '',
       'Options:',
+      '  --staged        Scan staged routable v2 MDX pages only.',
       '  --file <path>   Scan a single file (repeatable). Accepts absolute or repo-relative paths.',
       '  --files <a,b>   Scan a comma-separated list of files.',
       '  --fix           Remove flagged duplicate H1 headings and exact duplicate opening paragraphs.',
@@ -67,6 +75,7 @@ function parseArgs(argv) {
   const args = {
     fix: false,
     help: false,
+    stagedOnly: false,
     files: []
   };
 
@@ -79,6 +88,10 @@ function parseArgs(argv) {
     }
     if (token === '--fix') {
       args.fix = true;
+      continue;
+    }
+    if (token === '--staged') {
+      args.stagedOnly = true;
       continue;
     }
     if (token === '--file') {
@@ -109,6 +122,10 @@ function parseArgs(argv) {
     }
 
     throw new Error(`Unknown argument: ${token}`);
+  }
+
+  if (args.stagedOnly && args.files.length > 0) {
+    throw new Error('Use either --staged or explicit --file/--files targets, not both.');
   }
 
   args.files = dedupe(args.files.map(resolveInputPath));
@@ -479,15 +496,22 @@ async function scanFile(filePath, options = {}) {
   return result;
 }
 
-function getDefaultTargets() {
-  return getMdxFiles(REPO_ROOT)
+function getDefaultTargets(options = {}) {
+  if (options.stagedOnly) {
+    return getStagedAuthoredDocsPageFiles(REPO_ROOT)
+      .filter((filePath) => filePath.endsWith('.mdx'))
+      .map((filePath) => path.resolve(filePath));
+  }
+
+  return getAuthoredMdxFiles(REPO_ROOT)
     .filter((filePath) => filePath.endsWith('.mdx'))
     .map((filePath) => path.resolve(filePath));
 }
 
 async function run(options = {}) {
   const explicitFiles = Array.isArray(options.files) ? options.files : [];
-  const targets = explicitFiles.length > 0 ? dedupe(explicitFiles.map(resolveInputPath)) : getDefaultTargets();
+  const stagedOnly = Boolean(options.stagedOnly);
+  const targets = explicitFiles.length > 0 ? dedupe(explicitFiles.map(resolveInputPath)) : getDefaultTargets({ stagedOnly });
   const results = [];
 
   for (const target of targets) {
@@ -554,6 +578,7 @@ if (require.main === module) {
 
 module.exports = {
   isSimilar,
+  parseArgs,
   run,
   scanFile
 };

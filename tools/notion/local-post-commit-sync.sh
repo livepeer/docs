@@ -1,5 +1,13 @@
 #!/bin/bash
-
+# @script            local-post-commit-sync
+# @category          orchestrator
+# @purpose           tooling:dev-tools
+# @scope             external
+# @owner             docs
+# @needs             bash, git, node, NOTION_LOCAL_SYNC_MODE(optional), NOTION_LOCAL_SYNC_STALE_TAB_NAME(optional), NOTION_LOCAL_SYNC_DISABLE(optional)
+# @purpose-statement Detects docs.json or v2 content changes in the latest commit and runs the canonical Notion sync locally when enabled.
+# @pipeline          manual
+# @usage             bash tools/notion/local-post-commit-sync.sh [flags]
 set -u
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

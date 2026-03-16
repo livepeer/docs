@@ -3,212 +3,84 @@
  * @script            check-page-endings
  * @category          validator
  * @purpose           qa:content-quality
- * @scope             tools/scripts/validators/content, v2, docs.json
+ * @scope             tools/scripts/validators/content, v2
  * @owner             docs
- * @needs             SE-2-04, S-1.7
- * @purpose-statement Checks English route-backed v2 docs for canonical resources or next-step endings in the visible last 20 lines.
- * @pipeline          manual — scheduled advisory validator, run on-demand only
- * @usage             node tools/scripts/validators/content/check-page-endings.js [--path <repo-path>] [--strict]
+ * @needs             R-R14
+ * @purpose-statement Validates that English v2 MDX pages end with an approved navigational or closing element
+ * @pipeline          manual, ci
+ * @usage             node tools/scripts/validators/content/check-page-endings.js [--fix] [--json]
  */
 
 const fs = require('fs');
 const path = require('path');
+const { spawnSync } = require('child_process');
+const { isExcludedV2ExperimentalPath } = require('../../../lib/docs-publishability');
+const { isGeneratedDocsPageFile } = require('../../../lib/docs-page-scope');
 
-const REPO_ROOT = path.resolve(__dirname, '../../../../');
-const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
-const SUPPORTED_EXTENSIONS = new Set(['.mdx', '.md']);
-const TAIL_LINE_COUNT = 20;
-const CANONICAL_HEADINGS = new Set([
-  '## Additional Resources',
-  '## Resources',
-  '## Further Reading',
-  '## Next Steps',
-  "## What's Next",
-  '## What’s Next'
-]);
-const NON_CANONICAL_RELATED_RESOURCES = '## Related Resources';
-const CARD_PATTERNS = [/<\s*CardGroup\b/, /<\s*GotoCard\b/, /<\s*Card\b/];
+const TODO_COMMENT = '<!-- TODO: add page ending -->';
+const REPO_ROOT = getRepoRoot();
+const V2_ROOT = path.join(REPO_ROOT, 'v2');
+
+function getRepoRoot() {
+  const result = spawnSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' });
+  if (result.status === 0 && String(result.stdout || '').trim()) {
+    return String(result.stdout || '').trim();
+  }
+  return process.cwd();
+}
 
 function toPosix(value) {
   return String(value || '').split(path.sep).join('/');
 }
 
 function usage() {
-  console.log(
-    'Usage: node tools/scripts/validators/content/check-page-endings.js [--path <repo-path>] [--strict]'
-  );
+  console.log('Usage: node tools/scripts/validators/content/check-page-endings.js [--fix] [--json]');
 }
 
 function parseArgs(argv) {
-  const options = {
-    targetPath: '',
-    strict: false
+  const args = {
+    fix: false,
+    json: false
   };
 
   for (let index = 0; index < argv.length; index += 1) {
     const token = argv[index];
 
-    if (token === '--strict') {
-      options.strict = true;
+    if (token === '--fix') {
+      args.fix = true;
+      continue;
+    }
+
+    if (token === '--json') {
+      args.json = true;
       continue;
     }
 
     if (token === '--help' || token === '-h') {
-      usage();
-      process.exit(0);
-    }
-
-    if (token === '--path') {
-      options.targetPath = String(argv[index + 1] || '').trim();
-      index += 1;
-      continue;
-    }
-
-    if (token.startsWith('--path=')) {
-      options.targetPath = token.slice('--path='.length).trim();
+      args.help = true;
       continue;
     }
 
     throw new Error(`Unknown argument: ${token}`);
   }
 
-  if (argv.includes('--path') && !options.targetPath) {
-    throw new Error('Missing value for --path');
-  }
-
-  return options;
-}
-
-function normalizeRoutePath(routePath) {
-  return toPosix(routePath)
-    .trim()
-    .replace(/^\/+/, '')
-    .replace(/\.(md|mdx)$/i, '')
-    .replace(/\/index$/i, '')
-    .replace(/\/+$/, '');
+  return args;
 }
 
 function shouldExclude(repoPath) {
   const relPath = toPosix(repoPath).replace(/^\/+/, '');
   if (!relPath.startsWith('v2/')) return true;
+  if (!/\.mdx$/i.test(relPath)) return true;
   if (relPath.startsWith('v2/es/') || relPath.startsWith('v2/fr/') || relPath.startsWith('v2/cn/')) return true;
   if (relPath.startsWith('v2/internal/')) return true;
   if (relPath.includes('/_contextData_/') || relPath.includes('/_context_data_/')) return true;
   if (relPath.includes('/_move_me/') || relPath.includes('/_tests-to-delete/')) return true;
-  if (relPath.endsWith('todo.txt') || relPath.endsWith('todo.mdx') || relPath.endsWith('NOTES_V2.md')) return true;
-
-  return relPath
-    .split('/')
-    .some((segment) => segment.toLowerCase().startsWith('x-'));
+  if (relPath.endsWith('/todo.mdx') || relPath.endsWith('/NOTES_V2.md') || relPath.endsWith('/todo.txt')) return true;
+  return isExcludedV2ExperimentalPath(relPath);
 }
 
-function isSupportedDocFile(repoPath) {
-  return SUPPORTED_EXTENSIONS.has(path.extname(repoPath).toLowerCase());
-}
-
-function collectDocsPageEntries(node, out = []) {
-  if (typeof node === 'string') {
-    const value = node.trim().replace(/^\/+/, '');
-    if (value.startsWith('v2/') && !shouldExclude(value)) {
-      out.push(value);
-    }
-    return out;
-  }
-
-  if (Array.isArray(node)) {
-    node.forEach((item) => collectDocsPageEntries(item, out));
-    return out;
-  }
-
-  if (!node || typeof node !== 'object') {
-    return out;
-  }
-
-  Object.values(node).forEach((value) => collectDocsPageEntries(value, out));
-  return out;
-}
-
-function fileEntryFromRepoPath(repoPath) {
-  return {
-    absPath: path.join(REPO_ROOT, repoPath),
-    relPath: toPosix(repoPath)
-  };
-}
-
-function getEligibleRoutePaths() {
-  if (!fs.existsSync(DOCS_JSON_PATH)) {
-    throw new Error('docs.json not found at repository root');
-  }
-
-  const docsJson = JSON.parse(fs.readFileSync(DOCS_JSON_PATH, 'utf8'));
-  const versions = docsJson?.navigation?.versions || [];
-  const routeEntries = [];
-
-  versions.forEach((versionNode) => {
-    const languages = versionNode?.languages;
-
-    if (Array.isArray(languages)) {
-      languages
-        .filter((item) => item && item.language === 'en')
-        .forEach((item) => collectDocsPageEntries(item, routeEntries));
-      return;
-    }
-
-    if (languages && typeof languages === 'object' && languages.en) {
-      collectDocsPageEntries(languages.en, routeEntries);
-      return;
-    }
-
-    collectDocsPageEntries(versionNode, routeEntries);
-  });
-
-  const files = [];
-  const seen = new Set();
-
-  routeEntries.forEach((routePath) => {
-    const routeKey = normalizeRoutePath(routePath);
-    if (!routeKey) return;
-
-    ['.mdx', '.md'].forEach((extension) => {
-      const repoPath = `${routeKey}${extension}`;
-      if (seen.has(repoPath) || shouldExclude(repoPath)) return;
-      if (!fs.existsSync(path.join(REPO_ROOT, repoPath))) return;
-
-      seen.add(repoPath);
-      files.push(repoPath);
-    });
-  });
-
-  return files.sort();
-}
-
-function loadDefaultFiles() {
-  return getEligibleRoutePaths().map(fileEntryFromRepoPath);
-}
-
-function resolvePathInput(targetPath) {
-  const candidatePaths = [];
-  const raw = path.isAbsolute(targetPath) ? targetPath : path.join(REPO_ROOT, targetPath);
-  candidatePaths.push(raw);
-
-  if (!path.extname(raw)) {
-    candidatePaths.push(`${raw}.mdx`, `${raw}.md`);
-  }
-
-  const resolved = candidatePaths.find((candidate) => fs.existsSync(candidate));
-  if (!resolved) {
-    throw new Error(`Path not found: ${targetPath}`);
-  }
-
-  const repoRelative = toPosix(path.relative(REPO_ROOT, resolved));
-  if (repoRelative.startsWith('..')) {
-    throw new Error(`Path must be inside the repository: ${targetPath}`);
-  }
-
-  return resolved;
-}
-
-function walkDirectory(dirPath, out = []) {
+function walkFiles(dirPath, out = []) {
+  if (!fs.existsSync(dirPath)) return out;
   const entries = fs.readdirSync(dirPath, { withFileTypes: true });
 
   entries.forEach((entry) => {
@@ -217,231 +89,220 @@ function walkDirectory(dirPath, out = []) {
     }
 
     const absPath = path.join(dirPath, entry.name);
-
     if (entry.isDirectory()) {
-      walkDirectory(absPath, out);
+      walkFiles(absPath, out);
       return;
     }
 
-    out.push(absPath);
+    const relPath = toPosix(path.relative(REPO_ROOT, absPath));
+    if (shouldExclude(relPath)) return;
+    if (isGeneratedDocsPageFile(absPath)) return;
+    out.push({ absPath, relPath });
   });
 
   return out;
 }
 
-function loadTargetFiles(targetPath) {
-  const eligiblePaths = new Set(getEligibleRoutePaths());
-  const resolvedPath = resolvePathInput(targetPath);
-  const stat = fs.statSync(resolvedPath);
-  const candidates = stat.isDirectory() ? walkDirectory(resolvedPath) : [resolvedPath];
-  const files = [];
-  const seen = new Set();
-
-  candidates.forEach((absPath) => {
-    const relPath = toPosix(path.relative(REPO_ROOT, absPath));
-    if (seen.has(relPath)) return;
-    if (!isSupportedDocFile(relPath) || shouldExclude(relPath)) return;
-    if (!eligiblePaths.has(relPath)) return;
-
-    seen.add(relPath);
-    files.push({ absPath, relPath });
-  });
-
-  return files.sort((left, right) => left.relPath.localeCompare(right.relPath));
+function maskComments(content) {
+  return String(content || '')
+    .replace(/\{\/\*[\s\S]*?\*\/\}/g, (match) => match.replace(/[^\n]/g, ' '))
+    .replace(/<!--[\s\S]*?-->/g, (match) => match.replace(/[^\n]/g, ' '));
 }
 
-function escapeRegExp(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function stripFrontmatter(content) {
+  const raw = String(content || '');
+  if (!raw.startsWith('---')) return raw;
+  const match = raw.match(/^---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(?:\r?\n|$)/);
+  return match ? raw.slice(match[0].length) : raw;
 }
 
-function stripFencedCodeBlocks(raw) {
-  const normalized = String(raw || '').replace(/\r\n?/g, '\n');
-  const lines = normalized.split('\n');
-  const out = [];
-  let activeFenceChar = '';
-  let activeFenceLength = 0;
+function getTrimmedBody(content) {
+  return stripFrontmatter(maskComments(content)).replace(/\s+$/, '');
+}
 
-  lines.forEach((line) => {
-    if (!activeFenceChar) {
-      const openMatch = line.match(/^\s*(`{3,}|~{3,})/);
-      if (openMatch) {
-        activeFenceChar = openMatch[1][0];
-        activeFenceLength = openMatch[1].length;
-        return;
-      }
+function getLastMeaningfulRecord(body) {
+  const lines = String(body || '').split('\n');
+  let inCodeFence = false;
+  let lastRecord = null;
 
-      out.push(line);
+  lines.forEach((line, index) => {
+    const trimmed = String(line || '').trim();
+    if (!trimmed) return;
+    if (/^(import|export)\b/.test(trimmed)) return;
+
+    if (/^```/.test(trimmed)) {
+      lastRecord = {
+        line: index + 1,
+        type: 'code-fence',
+        text: trimmed
+      };
+      inCodeFence = !inCodeFence;
       return;
     }
 
-    const closePattern = new RegExp(`^\\s*${escapeRegExp(activeFenceChar)}{${activeFenceLength},}\\s*$`);
-    if (closePattern.test(line)) {
-      activeFenceChar = '';
-      activeFenceLength = 0;
-    }
+    lastRecord = {
+      line: index + 1,
+      type: inCodeFence ? 'code' : 'body',
+      text: trimmed
+    };
   });
 
-  return out.join('\n');
+  return lastRecord;
 }
 
-function stripVisibleNoise(raw) {
-  return stripFencedCodeBlocks(raw)
-    .replace(/\{\/\*[\s\S]*?\*\/\}/g, '')
-    .replace(/<!--[\s\S]*?-->/g, '');
+function endsWithApprovedComponent(body) {
+  const trimmed = String(body || '').trim();
+  if (!trimmed) return false;
+
+  return (
+    /<CardGroup\b[\s\S]*<\/CardGroup>\s*$/i.test(trimmed) ||
+    /<AccordionGroup\b[\s\S]*<\/AccordionGroup>\s*$/i.test(trimmed) ||
+    /<Card\b[\s\S]*<\/Card>\s*$/i.test(trimmed) ||
+    /<Card\b[^\n]*\/>\s*$/i.test(trimmed)
+  );
 }
 
-function getVisibleTailLines(raw) {
-  const lines = stripVisibleNoise(raw)
-    .split('\n')
-    .map((line) => line.replace(/\s+$/, ''));
+function getLastHeadingSection(body) {
+  const lines = String(body || '').split('\n');
+  const headings = [];
+  let inCodeFence = false;
 
-  while (lines.length > 0 && !lines[lines.length - 1].trim()) {
-    lines.pop();
-  }
-
-  return lines.slice(-TAIL_LINE_COUNT);
-}
-
-function hasCardPattern(line) {
-  return CARD_PATTERNS.some((pattern) => pattern.test(line));
-}
-
-function analyzeTailLines(lines) {
-  let hasCanonicalPattern = false;
-  let hasAliasHeading = false;
-
-  lines.forEach((line) => {
-    const trimmed = line.trim();
+  lines.forEach((line, index) => {
+    const trimmed = String(line || '').trim();
     if (!trimmed) return;
 
-    if (CANONICAL_HEADINGS.has(trimmed) || hasCardPattern(trimmed)) {
-      hasCanonicalPattern = true;
+    if (/^```/.test(trimmed)) {
+      inCodeFence = !inCodeFence;
+      return;
     }
 
-    if (trimmed === NON_CANONICAL_RELATED_RESOURCES) {
-      hasAliasHeading = true;
-    }
+    if (inCodeFence) return;
+
+    const match = trimmed.match(/^(#{1,6})\s+(.+?)\s*#*\s*$/);
+    if (!match) return;
+
+    headings.push({
+      title: match[2].trim(),
+      lineIndex: index
+    });
   });
 
-  const findings = [];
-
-  if (hasAliasHeading) {
-    findings.push({
-      kind: 'non-canonical-related-resources',
-      message:
-        'Ends with non-canonical heading "## Related Resources"; use a canonical resources or next-steps ending.'
-    });
-  } else if (!hasCanonicalPattern) {
-    findings.push({
-      kind: 'missing-ending-pattern',
-      message:
-        'Missing canonical ending pattern in the visible last 20 lines (resources heading, next-steps heading, CardGroup/Card, or GotoCard).'
-    });
-  }
-
+  if (headings.length === 0) return null;
+  const heading = headings[headings.length - 1];
   return {
-    compliant: hasCanonicalPattern,
-    findings
+    title: heading.title,
+    sectionBody: lines.slice(heading.lineIndex + 1).join('\n')
   };
 }
 
-function analyzeFile(file) {
+function hasApprovedNavigationalEnding(body) {
+  const lastHeading = getLastHeadingSection(body);
+  if (!lastHeading) return false;
+
+  if (!/^(related|next\s+steps|see\s+also|resources)\b/i.test(lastHeading.title)) {
+    return false;
+  }
+
+  return /\[[^\]]+\]\([^)]+\)|<(Card|CardGroup|AccordionGroup)\b/i.test(lastHeading.sectionBody);
+}
+
+function analyzeFile(file, options) {
   const raw = fs.readFileSync(file.absPath, 'utf8');
-  const tailLines = getVisibleTailLines(raw);
-  const analysis = analyzeTailLines(tailLines);
+  const body = getTrimmedBody(raw);
+  const lastRecord = getLastMeaningfulRecord(body);
+
+  let verdict = 'ok';
+  let reason = 'approved-closing';
+
+  if (!body.trim()) {
+    verdict = 'warning';
+    reason = 'no-meaningful-content';
+  } else if (endsWithApprovedComponent(body)) {
+    reason = 'approved-component-ending';
+  } else if (hasApprovedNavigationalEnding(body)) {
+    reason = 'approved-navigation-ending';
+  } else if (lastRecord && (lastRecord.type === 'code' || lastRecord.type === 'code-fence')) {
+    verdict = 'warning';
+    reason = 'ends-with-code-block';
+  } else {
+    verdict = 'warning';
+    reason = 'ends-with-raw-prose';
+  }
+
+  let fixed = false;
+  if (options.fix && verdict === 'warning' && !new RegExp(`${TODO_COMMENT.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`).test(raw)) {
+    const nextContent = raw.replace(/\s*$/, '');
+    fs.writeFileSync(file.absPath, `${nextContent}\n\n${TODO_COMMENT}\n`, 'utf8');
+    fixed = true;
+  }
 
   return {
     file: file.relPath,
-    compliant: analysis.compliant,
-    findings: analysis.findings
+    verdict,
+    reason,
+    fixed
   };
 }
 
-function analyzeFiles(files) {
-  const analyses = files.map(analyzeFile);
-  const findings = analyses.flatMap((analysis) =>
-    analysis.findings.map((finding) => ({
-      file: analysis.file,
-      kind: finding.kind,
-      message: finding.message
-    }))
-  );
-
-  return {
-    analyses,
-    findings,
-    filesChecked: files.length,
-    compliantPages: analyses.filter((analysis) => analysis.compliant).length,
-    aliasFindings: findings.filter((finding) => finding.kind === 'non-canonical-related-resources').length,
-    missingFindings: findings.filter((finding) => finding.kind === 'missing-ending-pattern').length
+function summarize(results) {
+  const summary = {
+    filesScanned: results.length,
+    ok: 0,
+    warnings: 0,
+    fixed: 0
   };
-}
 
-function printFindings(findings) {
-  if (findings.length === 0) {
-    return;
-  }
-
-  console.warn('\nPage ending advisories:\n');
-  findings.forEach((finding) => {
-    console.warn(`  ${finding.file} - ${finding.message}`);
+  results.forEach((result) => {
+    if (result.verdict === 'warning') {
+      summary.warnings += 1;
+    } else {
+      summary.ok += 1;
+    }
+    if (result.fixed) summary.fixed += 1;
   });
+
+  return summary;
 }
 
-function summaryLine(result) {
-  return [
-    `files checked: ${result.filesChecked}`,
-    `compliant pages: ${result.compliantPages}`,
-    `alias findings: ${result.aliasFindings}`,
-    `missing-pattern findings: ${result.missingFindings}`
-  ].join(', ');
+function writeHumanReport(results, summary) {
+  results.forEach((result) => {
+    const state = result.verdict === 'warning' ? 'WARN' : 'OK';
+    const suffix = result.fixed ? ' (comment appended)' : '';
+    console.log(`${state} ${result.file} ${result.reason}${suffix}`);
+  });
+
+  console.log(
+    `Summary: ${summary.filesScanned} files, ${summary.ok} OK, ${summary.warnings} warnings, ${summary.fixed} fixed`
+  );
 }
 
 function main() {
-  const options = parseArgs(process.argv.slice(2));
-  const files = options.targetPath ? loadTargetFiles(options.targetPath) : loadDefaultFiles();
-
-  if (files.length === 0) {
-    console.log('No eligible English v2 docs files found for page ending validation.');
-    process.exit(0);
-  }
-
-  const result = analyzeFiles(files);
-  printFindings(result.findings);
-
-  const summary = summaryLine(result);
-  if (result.findings.length === 0) {
-    console.log(`\nPage ending checks passed (${summary})`);
-    process.exit(0);
-  }
-
-  if (options.strict) {
-    console.error(`\nPage ending scan failed (${summary})`);
-    process.exit(1);
-  }
-
-  console.log(`\nPage ending scan complete (${summary})`);
-}
-
-if (require.main === module) {
   try {
-    main();
+    const args = parseArgs(process.argv.slice(2));
+    if (args.help) {
+      usage();
+      process.exit(0);
+    }
+
+    const results = walkFiles(V2_ROOT)
+      .sort((left, right) => left.relPath.localeCompare(right.relPath))
+      .map((file) => analyzeFile(file, args));
+    const summary = summarize(results);
+    const payload = {
+      summary,
+      results
+    };
+
+    if (args.json) {
+      process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
+    } else {
+      writeHumanReport(results, summary);
+    }
   } catch (error) {
-    console.error(`Page ending validator failed: ${error.message}`);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`check-page-endings failed: ${message}`);
     process.exit(1);
   }
 }
 
-module.exports = {
-  analyzeFile,
-  analyzeFiles,
-  analyzeTailLines,
-  getEligibleRoutePaths,
-  getVisibleTailLines,
-  loadDefaultFiles,
-  loadTargetFiles,
-  parseArgs,
-  shouldExclude,
-  stripFencedCodeBlocks,
-  stripVisibleNoise
-};
+main();

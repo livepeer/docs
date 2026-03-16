@@ -1,0 +1,318 @@
+---
+title: 'Operator Impact'
+sidebarTitle: 'Operator Impact'
+description: >-
+  How Orchestrators shape the Livepeer protocol - governance weight, what gets voted on,
+  the sovereign compute thesis, and why open video infrastructure matters.
+keywords:
+  - livepeer
+  - orchestrator
+  - governance
+  - protocol influence
+  - LPT voting
+  - LIPs
+  - livepeer improvement proposals
+  - sovereign compute
+  - open infrastructure
+  - treasury
+  - decentralised governance
+  - delegator voting
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: orchestrator
+purpose: evaluation
+status: current
+lastVerified: '2026-03-15'
+---
+
+{/* TODO:
+Verify:
+- Mermaid diagrams use theme colours (hardcoded)
+- Tables use StyledTable with thead/tbody
+- No em-dashes
+- UK spelling throughout
+- Headers concise and technical
+Human:
+- Recheck the factual TODO comments, especially historical governance examples
+- Check governance mechanics against current LivepeerGovernor contract state
+- Verify poll creation cost (100 LPT) is still current
+*/}
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { ScrollableDiagram } from '/snippets/components/content/zoomableDiagram.jsx'
+import { CenteredContainer, BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+<CustomDivider />
+
+Governance weight is the part of the Orchestrator role that starts after the earnings model makes sense. Bonded stake determines how much influence you carry over protocol rules, treasury direction, and the case for open compute infrastructure.
+
+Orchestrators hold **governance weight** proportional to their total bonded stake. Every LPT staked
+to an Orchestrator - whether self-staked or delegated - becomes voting influence over the protocol
+that shapes operator economics, network priorities, and the infrastructure Livepeer can support.
+
+For the mechanics of staking and delegation, see <LinkArrow href="/v2/orchestrators/guides/staking-and-rewards/network-participation" label="Governance Guide" newline={false} />. For delegator voting rights, see <LinkArrow href="/v2/orchestrators/guides/staking-and-rewards/delegate-operations" label="Attracting Delegators" newline={false} />.
+
+<CustomDivider middleText="Governance Mechanics" />
+
+## How Votes Work
+
+Livepeer governance uses a **stake-weighted voting system** built around Livepeer Improvement
+Proposals (LIPs). Every active participant in the network - Orchestrators, Delegators, and LPT
+holders - can influence protocol decisions through this mechanism.
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+flowchart LR
+    A["Proposal drafted\n(community discussion)"] --> B["LIP submitted\n(GitHub livepeer/LIPs)"]
+    B --> C["On-chain poll created\n(costs 100 LPT)"]
+    C --> D["Polling period\n(~10 rounds, ~10 days)"]
+    D --> E{"Passes threshold?\n33.33% of staked LPT\n+ 50% of votes cast"}
+    E -->|Yes| F["Protocol change\nimplemented"]
+    E -->|No| G["Proposal fails\nor revised"]
+
+    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+```
+
+Key mechanics:
+
+- **Voting weight** equals total bonded stake (Orchestrator self-stake plus all delegated LPT)
+- **Passing threshold** requires 33.33% of all staked LPT to support AND 50% of votes cast to approve
+- **Delegator override** - Delegators can vote independently, overriding their Orchestrator's position on a specific LIP
+- **Poll creation cost** - 100 LPT to create an on-chain poll, preventing low-effort or spam proposals
+
+{/* TODO: Confirm the current poll-creation cost on the live governance contract. */}
+
+This design gives Orchestrators with large bonded stake substantial influence, while preserving
+Delegator autonomy. An Orchestrator cannot vote on behalf of Delegators who choose to exercise
+their own governance rights.
+
+<CustomDivider middleText="What Gets Voted On" />
+
+## Scope of Governance
+
+Governance is not a side topic. It reaches directly into operator economics, network direction, and
+the conditions under which future workloads become viable.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Category</TableCell>
+      <TableCell header>Examples</TableCell>
+      <TableCell header>Orchestrator relevance</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Protocol parameters**</TableCell>
+      <TableCell>Inflation rate targets, active set size, unbonding periods, slashing conditions</TableCell>
+      <TableCell>Directly affects earnings (inflation) and competitive dynamics (active set size)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Fee structures**</TableCell>
+      <TableCell>Ticket pricing models, payment ticket mechanics, fee distribution</TableCell>
+      <TableCell>Affects how ETH service fees flow from Gateways to Orchestrators</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Technical upgrades**</TableCell>
+      <TableCell>New workload types, contract upgrades, AI subnet integration, capability expansions</TableCell>
+      <TableCell>Determines which workloads the network supports and how they are priced</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Treasury allocation**</TableCell>
+      <TableCell>SPE grants, development funding, ecosystem programmes, infrastructure support</TableCell>
+      <TableCell>Funds that support Orchestrator tooling, community pools, and ecosystem growth</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Governance process**</TableCell>
+      <TableCell>Quorum thresholds, voting periods, Foundation structure, DAO operations</TableCell>
+      <TableCell>Shapes how future decisions are made</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+The Livepeer Foundation, launched in 2025, coordinates ecosystem development and stewards the
+long-term protocol vision. It does not replace stake-weighted governance over protocol parameters.
+Operators with large bonded stake remain consequential participants in major protocol decisions.
+
+<Note>
+Governance proposals and active LIPs are tracked on the [Livepeer Forum](https://forum.livepeer.org/c/governance/17)
+and the [livepeer/LIPs GitHub repository](https://github.com/livepeer/LIPs). Following these is
+a practical prerequisite for informed governance participation.
+</Note>
+
+<CustomDivider middleText="Influence and Stake" />
+
+## Stake as Governance Capital
+
+For operators, stake is both economic capital and political capital inside the network. It determines
+not only reward exposure, but how much influence an operator carries when the protocol changes.
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+flowchart LR
+    A["Operate well\n(uptime, performance,\nfair cut settings)"] --> B["Attract more\ndelegated stake"]
+    B --> C["Higher total\nbonded stake"]
+    C --> D["Greater governance\nvote weight"]
+    D --> E["Influence protocol\ndecisions that affect\noperator economics"]
+    E --> A
+
+    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+```
+
+This creates a direct link between operating well and carrying more influence. Orchestrators who
+deliver reliable service, maintain competitive pricing, and build trust with Delegators accumulate
+more bonded stake over time - and with it, more governance weight.
+
+The concentration of stake matters. Active Orchestrators represent the majority of staked LPT in
+the network. On any contested governance vote, the position taken by large Orchestrators is often
+decisive.
+
+<Warning>
+Governance weight comes with governance responsibility. Orchestrators that hold large stake and vote
+on proposals affect outcomes for all network participants - Delegators who trusted them with LPT,
+Gateways that depend on the network for their products, and the broader Livepeer ecosystem. Most
+Delegators do not vote independently; their stake defaults to their Orchestrator's position.
+</Warning>
+
+<CustomDivider middleText="The Sovereign Compute Case" />
+
+## Beyond Earnings: Sovereign Compute
+
+The economic case for running a Livepeer Orchestrator is covered in <LinkArrow href="/v2/orchestrators/guides/operator-considerations/operator-rationale" label="Operating Rationale" newline={false} />. The non-financial case starts with a different question: who should control the infrastructure that serves video and AI workloads?
+
+The dominant alternative is centralised cloud compute. AWS, Azure, and GCP provide the GPU
+infrastructure that powers the majority of video transcoding and AI inference globally. This
+concentration creates:
+
+- **Single points of control** - a policy change at a major provider affects all its customers
+  simultaneously
+- **Censorship vectors** - centralised providers can and do restrict access to certain content or
+  customers under legal or commercial pressure
+- **Vendor lock-in** - platforms built on proprietary cloud infrastructure cannot easily migrate
+  away
+- **Pricing power** - without competitive alternatives, cloud providers set the terms
+
+Livepeer Orchestrators collectively run the alternative. A decentralised network of GPU operators,
+governed by token holders themselves, leaves no single provider able to suspend, censor, or price out
+the entire market.
+
+<AccordionGroup>
+  <Accordion title="For independent media" icon="video">
+
+    Video infrastructure controlled by centralised platforms is subject to those platforms' content
+    policies. Independent creators in jurisdictions with restrictive internet governance, or producing
+    content that falls into contested categories, have limited recourse when a cloud provider
+    terminates service.
+
+    A permissionless compute network with no single controller provides a meaningfully different
+    infrastructure substrate. Orchestrators are the physical embodiment of that alternative.
+
+  </Accordion>
+  <Accordion title="For AI researchers" icon="microchip">
+
+    AI research increasingly requires GPU access at scale. Centralised providers gatekeep this through
+    pricing, account verification, acceptable use policies, and geographic restrictions. Researchers
+    in emerging markets or working on models that touch policy-sensitive domains face additional
+    barriers.
+
+    Livepeer's permissionless AI inference network lowers these barriers. Any application can access
+    GPU compute by paying the market rate in ETH - no account approval, no content policy review,
+    no geographic restriction.
+
+  </Accordion>
+  <Accordion title="For platforms avoiding lock-in" icon="building">
+
+    Platforms built on proprietary cloud infrastructure are subject to that provider's pricing and
+    availability. A provider raising GPU pricing by 30%, or deprecating a service, creates immediate
+    operational risk.
+
+    Building on an open, permissionless network with multiple competing Orchestrators distributes
+    that risk. No single Orchestrator's failure or pricing change can disrupt a well-configured Gateway.
+
+  </Accordion>
+  <Accordion title="For developers building on open compute" icon="code">
+
+    Open compute infrastructure enables applications that would not exist on centralised platforms:
+    uncensorable media archives, AI applications with no usage monitoring, platforms operating across
+    jurisdictions where centralised services are blocked.
+
+    The developer community building on Livepeer depends on Orchestrators to make this infrastructure
+    available. An Orchestrator is more than an earning node - it is part of the substrate that makes these
+    applications possible.
+
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider middleText="Participation in Practice" />
+
+## Practical Governance Participation
+
+If the motivation case is clear, the practical question becomes what an operator actually does with
+that influence. Governance participation means more than showing up on voting day. The most
+consequential work happens before a proposal reaches an on-chain poll.
+
+**Follow active proposals.** The [Livepeer Forum governance category](https://forum.livepeer.org/c/governance/17)
+is where proposals develop before reaching an on-chain vote. Early discussion shapes what ends up
+being voted on. Orchestrators with specific operational perspectives - pricing mechanics, hardware
+requirements for new workload types, impact on earnings - provide signal that proposal authors and
+the broader community need.
+
+**Vote on LIPs.** Voting can be done via the [Livepeer Explorer](https://explorer.livepeer.org/voting).
+Orchestrators that hold large stake but consistently abstain reduce the effective quorum
+available for passing beneficial proposals and signal low engagement to their Delegators.
+
+**Communicate governance positions to Delegators.** Since Delegators default to their Orchestrator's
+vote unless they vote independently, Orchestrators with large delegated stake have an obligation to
+communicate how they intend to vote on major proposals. Transparent governance communication is
+a quality signal that influences delegation decisions.
+
+**Engage with SPE proposals.** The Strategic Priority Enabler (SPE) framework allocates treasury
+resources to specific ecosystem initiatives. SPE proposals affect what infrastructure, tooling, and
+growth programmes get funded. Orchestrators who benefit from or are affected by specific SPE programmes
+have direct interest in these votes.
+
+{/* TODO: Add links to active SPE governance discussions when they are available. */}
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Operating Rationale" icon="scale-balanced" href="/v2/orchestrators/guides/operator-considerations/operator-rationale" arrow horizontal>
+    The financial case for running a node - costs, revenue, and decision matrix.
+  </Card>
+  <Card title="Governance Guide" icon="vote-yea" href="/v2/orchestrators/guides/staking-and-rewards/network-participation" arrow horizontal>
+    How to participate in governance - voting steps, proposal process, and Explorer guide.
+  </Card>
+  <Card title="Attracting Delegators" icon="users" href="/v2/orchestrators/guides/staking-and-rewards/delegate-operations" arrow horizontal>
+    How to grow delegated stake and build the governance weight that comes with it.
+  </Card>
+  <Card title="LPT Token Overview" icon="coins" href="/v2/lpt/about/overview" arrow horizontal>
+    The role of LPT in governance, staking, and the broader Livepeer protocol.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  "Why does this matter beyond money?" The sovereignty and governance case.
+  Orchestrators carry governance weight proportional to total stake. What gets
+  voted on (LIPs, treasury, protocol parameters). The sovereign compute thesis:
+  open infrastructure vs cloud monopoly. Censorship resistance. Permissionless
+  GPU access. The compounding effect: better operation leads to more delegation
+  leads to more governance weight leads to more protocol influence.
+
+  PLAN TARGET: protocol-influence (keep)
+  SECTION: Operator Considerations → "Should I operate?"
+  JOB STORIES: J5 (governance influence)
+
+  CROSS-REFS:
+  - Staking & Earning > Governance Participation - voting mechanics (how)
+  - Staking & Earning > Growing Delegation - growing governance weight
+  - LPT Tab > Governance - shared governance model
+*/}

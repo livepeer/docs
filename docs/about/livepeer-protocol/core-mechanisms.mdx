@@ -1,0 +1,462 @@
+---
+title: Core Mechanisms and Functions
+sidebarTitle: Core Mechanisms
+description: >-
+  The Livepeer protocol secures a decentralised marketplace for verifiable media
+  and AI compute through a tightly coupled set of economic and cryptographic
+  systems. These mechanisms include LPT bonding, dynamic inflation, staking and
+  delegation, slashing conditions, and rewards distribution - all executed
+  through Ethereum-based smart contracts on Arbitrum. This page details each
+  core mechanism, how it interacts with others, and why these design decisions
+  underpin Livepeer’s scalable, permissionless infrastructure.
+keywords:
+  - livepeer
+  - about
+  - livepeer protocol
+  - protocol
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: general
+purpose: faq
+---
+
+
+
+
+import { CardTitleTextWithArrow } from '/snippets/components/primitives/text.jsx'
+import { AccordionTitleWithArrow } from '/snippets/components/primitives/text.jsx'
+import { Quote, FrameQuote } from '/snippets/components/content/quote.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { ValueResponseField } from '/snippets/components/content/responseField.jsx'
+import { DynamicTable } from '/snippets/components/layout/table.jsx'
+
+{/* This page describes:
+2. **Core Components & Mechanisms of the Livepeer Protocol**
+
+   * Staking
+   * Delegation
+   * Reward distribution
+   * Inflation model
+   * Slashing
+   * Rounds */}
+
+<div style={{ display: "flex", justifyContent: "center"}}>
+ <CardTitleTextWithArrow icon="github" horizontal href="https://github.com/livepeer/go-livepeer"> go-livepeer </CardTitleTextWithArrow>
+</div>
+<CustomDivider style={{margin: 0, marginBottom: "-1rem"}} />
+{/* <Quote> The Protocol is the **on-chain coordination and economic security layer** deployed on a blockchain to leverage unique cyrptoeconomic primitives. It is responsible for _governing the network_, _securing the system_, and _incentivising desired behaviour_ from participants. </Quote> */}
+
+## Mechanism Objectives
+Livepeer’s core mechanisms are designed to:
+
+- **Incentivise honest behavior** among participants (Orchestrators, Delegators, Gateways/Broadcasters)
+
+- **Scale supply capacity** by rewarding infrastructure providers proportionally
+
+- **Secure verification** of off-chain video and AI workloads through bonded stake
+
+- **Disincentivise dishonest actors** via penalties (slashing)
+
+## Protocol Features
+Core features of the Livepeer Protocol include:
+<AccordionGroup>
+   <Accordion title="Blockchain Attributes" icon="cubes">
+      #### Blockchain Base
+ All protocol state (bonds, delegations, votes, job payments, etc.) lives on Arbitrum.
+ The LPT token is ERC-20-based and bridged between L1 and L2.
+
+ The Arbitrum rollup finalizes via Ethereum; thus the underlying security is Ethereum’s.
+
+ After Confluence (LIP-73), Ethereum mainnet now mainly serves as a historical source – new stake/votes are on Arbitrum only.
+   </Accordion>
+   <Accordion title="Consensus & Finality" icon="handshake">
+      #### Consensus & Finality
+ Livepeer does not use its own consensus; it relies on Arbitrum’s optimistic rollup.
+ Blocks (called rounds) occur roughly every 24 hrs, and after a ~7-day challenge window the state is finalized on Ethereum.
+
+ This means trust assumptions are similar to other Ethereum Layer-2s: Arbitrum’s rollup validators and Ethereum miners secure the chain; fraud proofs protect against invalid blocks.
+   </Accordion>
+   <Accordion title="Security Model" icon="shield-check">
+      #### Security Model
+ Livepeer’s core contracts are on an Ethereum Layer-2 (Arbitrum One), which inherits Ethereum-level security via optimistic rollup.
+
+ LPT stakers (orchestrators and delegators) provide economic collateral against misbehavior.
+ Protocol rules penalize malfeasance by slashing stake (e.g. Losing part or all delegated tokens).
+
+ Off-chain video verification and optional arbitration ensure correct transcoding.
+   </Accordion>
+   <Accordion title="Node-Level Trust" icon="circle-nodes">
+      #### Node-Level Trust
+ Gateways/Broadcasters (clients) and orchestrators exchange signed data (video segments, “tickets,” job outcomes).
+
+ These off-chain interactions can be audited (via perceptual hashes or full verification), so a bad actor’s forged data can be proven on-chain by a [dispute mechanism](https://forum.livepeer.org/t/transcoding-verification-improvements-fast-full-verification/1499).
+
+ Orchestrators commit to jobs by staking, and any detected mis-transcoding can trigger an on-chain slashing penalty.
+   </Accordion>
+</AccordionGroup>
+
+## Protocol Actors
+
+The Livepeer Protocol defines several key actors that participate in the network and perform specific functions.
+<AccordionGroup>
+   <Accordion title="Orchestrators" icon="microchip">
+ **Orchestrators**
+
+ Orchestrators are the main participants in the Livepeer Protocol. They are responsible for processing video and AI jobs, earning fees and rewards, and maintaining the network's security and decentralization.
+   </Accordion>
+   <Accordion title="Gateways" icon="torii-gate">
+ **Gateways**
+
+ Gateways are the entry point for applications into the Livepeer network. They are the coordination layer that connects real-time AI and video workloads to the orchestrators who perform the GPU compute.
+   </Accordion>
+   <Accordion title="Delegators" icon="hand-holding-circle-dollar">
+ **Delegators**
+
+ Delegators are LPT holders who delegate their tokens to an orchestrator of their choice. They share in the rewards and fees earned by the orchestrator, and also share in any slashing penalties.
+   </Accordion>
+</AccordionGroup>
+
+## Protocol Mechanisms
+
+Livepeer relies on Gateways (prev. Broadcasters), Orchestrators and Delegators to process compute loads on the network.
+
+The Livepeer Protocol defines several key operational rules for the network and network actors.
+
+<span style={{display: "flex", lineHeight: "2rem", alignItems: "center", gap: "0.5rem"}}> <Icon icon="warning" /> **AI vs Video Mechanisms** <Icon icon="warning" /></span>
+
+AI services do not participate in the same reward distribution or round-based active set election as video Orchestrators
+<FrameQuote>
+The video transcoding system and AI system are architecturally separate and operate independently.
+</FrameQuote>
+
+This separation allows AI services to operate without requiring LPT staking, making them more accessible while preserving the security model of video transcoding through economic bonding.
+
+<span style={{marginBottom: "-1rem"}}>**Incentive Structure Comparison**</span>
+<DynamicTable
+   headerList={["Component", "Video Orchestrators", "AI Services"]}
+   itemsList={[
+      { "Component": <span style={{color: "var(--hero-text)", fontWeight: "bold"}}>Protocol Rewards</span>, "Video Orchestrators": "Inflationary LPT rewards", "AI Services": "None" },
+      { "Component": <span style={{color: "var(--hero-text)", fontWeight: "bold"}}>Staking Required</span>, "Video Orchestrators": "Yes - LPT bonding to transcoderPool", "AI Services": "No" },
+      { "Component": <span style={{color: "var(--hero-text)", fontWeight: "bold"}}>Active Set Benefits</span>, "Video Orchestrators": "Stake-weighted election to active set", "AI Services": "No active set concept" },
+      { "Component": <span style={{color: "var(--hero-text)", fontWeight: "bold"}}>Fee Earnings</span>, "Video Orchestrators": "Yes via TicketBroker integration", "AI Services": "None in protocol" },
+   ]}
+/>
+{/*
+The network runs in daily rounds, selecting the top-staked Orchestrators to handle work each round.
+
+After each round, rewards are distributed: newly minted LPT tokens (inflation) and collected ETH streaming fees are paid out to Orchestrators and their Delegators, based on stake and performance. */}
+{/*
+The Livepeer protocol operates in daily “rounds”. In each round, an active set of top-staked Orchestrators is selected for video transcoding (NOTE: this is not true for AI pipelines).
+
+After each round, newly minted LPT (aka inflationary rewards) and collected ETH fees are distributed to operators and their delegators based on stake and performance (for Orchestrators) and stake and operator share fee (for Delegators).
+
+Security and good behaviour is enforced via stake: Delegation keeps the network decentralised and resilient and misbehaving nodes can be penalised via slashing of their stake for dishonest or negligent behaviour. */}
+### Mechanism Details
+Note that Staking, Rewards and Payments operate differently for AI pipelines
+
+<div style={{border: "1px solid var(--accent)", borderRadius: "8px", padding: "1rem"}}>
+<Tabs>
+   <Tab title="Rounds">
+      ### Rounds and Timing
+
+ The Livepeer protocol uses a round-based system, where each round represents a fixed-length epoch in blocks, to coordinate reward distribution and staking activities.
+
+ **Mechanism**
+      1. Rounds have a fixed length in blocks (configured in `RoundsManager`)
+      2. New rounds must be initialized by calling `initializeRound()`
+      3. Various protocol operations are only valid during specific times in a round
+      4. Parameter updates are restricted during "locked" periods of a round
+      5. Rewards can only be claimed once per round by a transcoder
+
+ **Functions**
+
+ The round system coordinates the protocol operations for:
+
+      - Staking/Unbonding: Changes take effect in the next round
+      - Reward Distribution: Calculated per round based on active stake
+      - Parameter Updates: Restricted during lock periods
+      - Earnings Claiming: Can only claim for rounds that have been initialised
+
+ **Implementation Mechanics**
+
+ This mechanism is implemented in the `RoundsManager` contract, which manages round lifecycle,
+ including length configuration, initialisation tracking and locking periods that gate protocol operations.
+
+ {/* <ValueResponseField name="Round Length Configuration" label="function" post={["setRoundLength()"]} default={5760} > */}
+      <AccordionGroup>
+         <Accordion title={<ValueResponseField line={false} name="Round Length Configuration" label="function" post={["setRoundLength()"]} default={5760} />} >
+         - `roundLength` state variable stores the number of blocks per round.
+         - default configuration is _5760 blocks_ for mainnet deployments (~24 hours at 15-second block times)
+         - development environment default is _50 blocks_ for faster testing
+         - updated via `setRoundLength()` (governed by Controller owner)
+         </Accordion>
+ {/* </ValueResponseField> */}
+         <Accordion title={<ValueResponseField line={false} name="Round Length Configuration" label="function" post={["setRoundLength()"]} default={5760} />} >
+         - `roundLength` state variable stores the number of blocks per round.
+         - default configuration is _5760 blocks_ for mainnet deployments and _50 blocks_ for development environments
+         - updated via `setRoundLength()` (governed by Controller owner)
+         </Accordion>
+         <ValueResponseField name="Round Initialisation" label="function" post={["initializeRound()"]} >
+         - public function that can be called externally by any EOA to mark the start of a new round. Typically triggered by Orchestrators
+         - advances the protocol epoch by updating current round number and round initialisation status
+         - performs critical setup: stores block hash, sets active stake, snapshots stake for reward calculations and unlocks mintable rewards.
+         - can only be called once per round and reverts if system is paused or round is not complete
+         </ValueResponseField>
+      </AccordionGroup>
+
+   </Tab>
+   <Tab title="Staking">
+      ### Delegation & Staking
+
+ The *video transcoding* system was designed around token economics to bootstrap network participation:
+
+      - Inflation rewards compensate Orchestrators for infrastructure costs
+      - Staking requirements ensure skin in the game
+      - Round-based rewards provide predictable income streams
+
+ <Note> *AI services*, using only `AIServiceRegistry`, operate more like a basic directory service **without** economic incentives built into the protocol layer. <br/> See Rewards Section </Note>
+
+ **Mechanism**
+
+      - Orchestrators bond Livepeer Token (LPT) to participate in the network.
+      - Bonded stake weight determines the proportion of new LPT minted each round that an orchestrator receives and governs its ranking in the network.
+      - Delegators are LPT holders who delegate to an orchestrator of their choice and share in its rewards (% set by the Orchestrator).
+      - Staking gives both orchestrators and delegators voting power in governance (delegators via the Orchestrators vote).
+      - Misbehaviour (e.g. double‑claiming payments, downtime) can trigger slashing, burning a portion of the orchestrator’s stake and that of its delegators.
+
+ These mechanisms create a strong reputational incentive to act honestly and maintain service quality.
+
+ **Functions**
+
+ The Staking and delegation mechanism allows token holders to:
+
+      1. Bond tokens to themselves or other addresses using bond()
+      2. Register as transcoders with transcoder() specifying reward cut and fee share
+      3. Unbond tokens with unbond() which creates an unbonding lock
+      4. Withdraw tokens after the unbonding period with withdrawStake()
+
+ The protocol maintains a limited active set of transcoders, ordered by total stake, which are eligible to perform transcoding work and earn rewards.
+
+ **Implementation Mechanics**
+
+ -- 2.1 Staking and delegation
+
+Orchestrators must bond Livepeer Token (LPT) to participate.
+Bonded stake determines the proportion of new LPT minted each round that an orchestrator receives and governs its ranking in the network.
+Delegators are LPT holders who delegate to an orchestrator of their choice and share in its rewards. Staking gives both orchestrators and delegators voting power in governance.
+Misbehaviour (e.g. Double‑claiming payments, downtime) can trigger slashing, burning a portion of the orchestrator’s stake and that of its delegators.
+This creates a strong incentive to act honestly and maintain uptime.
+
+   </Tab>
+   <Tab title="Rewards">
+      ### Reward System
+
+ Livepeer uses a round-based reward system.
+
+      - Service fees (paid in ETH by content consumers) and inflationary LPT are pooled each round.
+      - Active Orchestrators receive rewards proportional to their stake and work done
+      - Delegators share in rewards and governance (% set by the Orchestrator)
+      - Round-based rewards provide predictable income streams
+
+ **Mechanisms**
+ **Functions**
+ **Implementation Mechanics**
+ The reward system distributes newly minted tokens based on:
+
+      1. A transcoder calling `reward()` during its active round
+      2. The protocol's current inflation rate (managed by the Minter)
+      3. The transcoder's rewardCut parameter which determines commission percentage
+      4. The treasury's treasuryRewardCutRate which allocates a portion to the protocol treasury
+      5. The remaining rewards distributed proportionally to delegators
+
+ Rewards accumulate in earnings pools which are claimed by delegators through claimEarnings() or automatically when performing bonding operations.
+
+ ---
+ 2.3 Dynamic inflation and rewards
+
+Livepeer uses a dynamic inflation model. New LPT is minted every round and distributed to orchestrators and delegators proportional to their stake and participation. If less than 50 % of the LPT supply is staked, inflation increases to encourage more staking; if more than 50 % is staked, inflation decreases. This adaptive system balances security (high stake) with token dilution. Inflation rewards are in addition to the ETH fees earned from work, providing a dual revenue stream for orchestrators and delegators.
+
+ ---
+
+2.4 Slashing and quality enforcement
+
+To maintain service quality, the protocol includes slashing conditions. Orchestrators that misbehave by submitting invalid results, double‑claiming tickets or going offline can have their LPT stake partially burned. Delegators who bond to a misbehaving orchestrator share in the penalty, incentivising careful selection of operators. Slashing protects the integrity of the system and aligns incentives towards honest behaviour.
+
+
+
+   </Tab>
+   <Tab title="Payments">
+      ### Micropayment System
+ **Mechanisms**
+ **Functions**
+ **Implementation Mechanics**
+ The probabilistic micropayment system allows broadcasters to pay orchestrators efficiently at high throughput. It works as follows:
+
+      1. Broadcasters fund their account with a deposit and reserve via fundDepositAndReserve()
+      2. For each video segment, the broadcaster creates a signed ticket with faceValue and winProb
+      3. Tickets are submitted off-chain to the orchestrator
+      4. Orchestrators redeem winning tickets on-chain via redeemWinningTicket()
+      5. Funds are transferred from the broadcaster's reserve to the orchestrator's account
+
+ This system allows for efficient microtransactions without requiring every payment to be recorded on-chain.
+
+ ---
+ 2.2 Payment and probabilistic tickets
+
+Broadcasters fund an ETH deposit on‑chain. With each transcoded segment, they send an off‑chain probabilistic payment ticket to the orchestrator. Each ticket has a win probability and face value. Winning tickets can be redeemed on‑chain for ETH, debiting the broadcaster’s deposit; losing tickets are worthless. This mechanism drastically reduces on‑chain transactions while ensuring that orchestrators are paid fairly. Since the probability of winning and the face value are known, broadcasters can predict their costs, and orchestrators can estimate expected earnings.
+
+   </Tab>
+   <Tab title="Upgrades">
+      ### Upgradeabilitity
+ **Mechanisms**
+ **Functions**
+ **Implementation Mechanics**
+ The protocol uses a standard proxy pattern for upgradeability, for example when new LIPs are passed and implemented.
+ {/* The Controller contract stores the addresses of the current implementation contracts for each contract ID.
+ When an upgrade is needed, a new implementation contract is deployed and its address is registered in the Controller.
+ All protocol contracts check with the Controller for the current implementation address to ensure they are always using the latest version. */}
+
+      1. The Controller maintains a registry of contract IDs to implementation addresses
+      2. Each core contract is deployed with a proxy that delegates calls to the implementation
+      3. Upgrades are performed by deploying a new implementation contract
+      4. The Governor is used to update the implementation address in the Controller
+      5. Proxies continue to maintain state while using the new implementation logic
+
+ This pattern allows the protocol to evolve without migrating state or requiring users to interact with new addresses.
+
+   </Tab>
+   <Tab title="Other">
+      ### Deployment and Network Configuration
+ **Mechanisms**
+ **Functions**
+ **Implementation Mechanics**
+ The protocol is deployed on Ethereum mainnet though is actively used on Arbitrum One (due to its lower fees and hight throughput), with specific configurations for each environment.
+
+ The main configuration parameters include:
+
+      - Number of active transcoders
+      - Unbonding period length
+      - Round length and lock parameters
+      - Inflation rate and target bonding rate
+      - Treasury reward cut rate
+
+   </Tab>
+</Tabs>
+</div>
+
+ {/* ### Protocol Timing & Rounds
+ The protocol uses a round-based system for timing and progress where:
+ {/* Each round has a fixed number of blocks and represents a period for reward distribution and staking activity. */}
+ {/* The RoundsManager contract defines the length of rounds in blocks and initializes new rounds. It tracks the current round number and round initialization status. */}
+ {/*
+   1. Rounds have a fixed length in blocks (configured in RoundsManager)
+   2. New rounds must be initialized by calling initializeRound()
+   3. Various protocol operations are only valid during specific times in a round
+   4. Parameter updates are restricted during "locked" periods of a round
+   5. Rewards can only be claimed once per round by a transcoder
+
+ This timing system ensures orderly progression of the protocol and synchronizes important state transitions. */}
+{/*
+Livepeer is an open, decentralized live video streaming network. It uses Broadcasters (video publishers), Orchestrators (transcoding operators) and Delegators (token supporters) to process live video. The network runs in daily rounds, selecting the top-staked Orchestrators to handle work each round. After each round, rewards are distributed: newly minted LPT tokens (inflation) and collected ETH streaming fees are paid out to Orchestrators and their Delegators, based on stake and performance.
+
+Live video is streamed through the Trickle protocol, an HTTP-based segmented publish/subscribe pipeline:
+Gateways (broadcasters) POST video segments to Orchestrators, which transcode them, and the final video
+is delivered via standard CDNs or player protocols.
+Overall, Livepeer’s core mechanism ties together staking, token rewards, and off-chain video processing into one seamless video infrastructure.
+
+# Livepeer Protocol
+
+Livepeer is a full-stack platform for video streaming & AI. The software is underpinned by a network of actors that perform the work needed to compute, transcode & orchestrate video & AI jobs in the Livepeer network. */}
+
+{/* The Livepeer Protocol is build on Ethereum and uses a collection of smart contracts to govern:
+
+- LivepeerToken (LPT) ownership and delegation
+- Staking and selection of active transcoder operators (orchestrators)
+- Distribution of inflationary rewards and fees to participants
+- Time-based progression of the protocol through rounds
+- Payment processing through a probabilistic micropayment system
+
+There are 3 core categories of governance in the Livepeer Protocol contracts:
+1. Core Protocol Contracts
+2. Token System
+3. Governance
+
+### 1. Core Protocol Contracts
+
+The core protocol contracts are the backbone of the Livepeer Protocol.
+They manage the staking, delegation, and reward distribution for orchestrators.
+They also manage the time-based progression of the protocol through rounds and the payment processing through a probabilistic micropayment system.
+
+- Controller
+- Bonding Manager
+- Rounds Manager
+- TicketBroker
+- Minter
+- ServiceRegistry
+
+
+**Controller**
+
+The [Controller](https://github.com/livepeer/protocol/blob/e8b6243c/deploy/deploy_contracts.ts) is the central registry for all protocol contracts. It maintains a mapping of contract IDs to their addresses, enabling protocol upgrades by updating the registered implementation addresses. All protocol contracts check with the Controller for the addresses of other contracts they need to interact with.
+
+
+**Bonding Manager**
+
+The [BondingManager](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/bonding/BondingManager.sol#L23-L449) is one of the most critical contracts, responsible for:
+
+Managing token stake from delegators
+Maintaining the active transcoder set
+Tracking rewards and fees
+Processing stake-related operations (bonding, unbonding, claiming rewards)
+
+**Rounds Manager**
+
+The RoundsManager manages the timing and progression of the protocol through rounds. It:
+
+Defines the length of rounds in blocks
+Initializes rounds
+Tracks current round information
+Signals to other contracts when rounds change
+Manages the round lock mechanism that prevents parameter updates during specific periods
+
+**TicketBroker**
+
+The TicketBroker implements the probabilistic micropayment system used by broadcasters to pay orchestrators (transcoders) for transcoding work. Key functions include:
+
+Managing broadcaster deposits and reserves
+Processing ticket redemptions
+Handling the withdrawal of fees to orchestrators
+Updating the BondingManager when fees are earned
+
+**Minter**
+
+The Minter controls token inflation according to the protocol's monetary policy. It mints new LPT tokens as rewards and manages the protocol's token supply.
+
+### 2. Token System
+
+The LivepeerToken is the ERC20 implementation of the Livepeer Token (LPT). <br/>
+The token system is responsible for managing the LivepeerToken (LPT) and its distribution.
+The LPT token is used to stake and delegate to orchestrators, and is also used to pay for video transcoding and AI inference jobs. The LPT token is also used for governance, with tokenholders able to vote on protocol upgrades and parameter changes.
+
+
+### 3. Governance
+The governance system consists of:
+
+**Governor**:
+
+Handles protocol upgrades through a multi-step transaction proposal and execution process
+
+**LivepeerGovernor**:
+
+Implements LPT-based voting
+
+**BondingVotes**:
+
+Tracks voting power based on delegated stake
+
+**Treasury**:
+
+Manages protocol funds and timelock functionality for governance actions */}

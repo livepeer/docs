@@ -1,0 +1,183 @@
+---
+title: Activate on the Network
+sidebarTitle: Activate
+description: >-
+  Activate your orchestrator on the Livepeer network using livepeer_cli — set
+  reward cut, fee cut, and service URI, and verify you are in the active set.
+keywords:
+  - livepeer
+  - orchestrator
+  - activate
+  - livepeer_cli
+  - active set
+  - LPT
+  - stake
+  - reward cut
+  - service URI
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: current
+lastVerified: 2026-03-13
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+This guide shows you how to activate your orchestrator on the Livepeer network so it can receive jobs.
+
+## Prerequisites
+
+Before proceeding:
+
+- go-livepeer is running and connected to Arbitrum One (see [Connect to Arbitrum](/v2/orchestrators/setup/sc-connect))
+- Your Ethereum account has LPT available to stake. The amount required to enter the active set varies — see the [Active set](#the-active-set) section below.
+- Your account has a small amount of arbETH for gas. A few dollars is sufficient.
+
+<CustomDivider />
+
+## Activate your orchestrator
+
+With go-livepeer running, open a second terminal and start `livepeer_cli`:
+
+```bash icon="terminal"
+livepeer_cli
+```
+
+You will see a numbered menu of actions. Select the option labelled:
+
+``` icon="terminal"
+Invoke multi-step "become an orchestrator"
+```
+
+The tool will walk you through the following parameters in sequence.
+
+<Steps>
+  <Step title="Set reward cut">
+    ``` icon="terminal"
+    Enter block reward cut percentage (current=0 default=10) ->
+    ```
+
+    This is the percentage of LPT block rewards you keep. The remainder is distributed to your delegators. The default is 10% — you keep 10%, delegators share 90%.
+
+    If you have no delegators, the value makes no immediate difference to your earnings, but it affects how attractive your node looks to potential delegators. Most new orchestrators accept the default.
+  </Step>
+
+  <Step title="Set fee cut">
+    ``` icon="terminal"
+    Enter fee cut percentage (current=100 default=95) ->
+    ```
+
+    This is the percentage of ETH transcoding and inference fees you keep. The default is 95% — you keep 95%, delegators share 5%.
+
+    Accept the default unless you have a specific reason to change it.
+  </Step>
+
+  <Step title="Set pixels per unit">
+    ``` icon="terminal"
+    Enter amount of pixels that make up a single unit (default: 1 pixel) >
+    ```
+
+    Accept the default (1). This is the pricing granularity unit. You can adjust this later.
+  </Step>
+
+  <Step title="Set price per unit">
+    ``` icon="terminal"
+    Enter the price for transcoding in Wei per unit >
+    ```
+
+    This should match or be consistent with the `-pricePerUnit` value you used when starting go-livepeer. It is the price you charge per pixel for transcoding.
+
+    <Note>
+    Setting your price too high relative to other orchestrators means gateways will route jobs elsewhere. Check current network pricing on [Livepeer Explorer](https://explorer.livepeer.org) or [livepeer.tools](https://livepeer.tools) to set a competitive rate.
+    </Note>
+  </Step>
+
+  <Step title="Set service address">
+    ``` icon="terminal"
+    Enter the public host:port of node (default: 1.1.1.1:8935) >
+    ```
+
+    Enter the publicly accessible address at which your orchestrator accepts connections. This must match the value you used with the `-serviceAddr` flag. Format: `hostname_or_ip:port`, for example `myorchestrator.example.com:8935`.
+
+    <Warning>
+    This address must be externally reachable from the internet. If your server is behind NAT or a firewall, configure port forwarding for port 8935 before activating. Gateways will attempt to connect to this address to route jobs to your node.
+    </Warning>
+  </Step>
+
+  <Step title="Set stake amount">
+    ``` icon="terminal"
+    Enter amount of tokens to stake (in LPTU) >
+    ```
+
+    Stake is denominated in LPTU where **1 LPT = 1,000,000,000,000,000,000 LPTU (1e18)**. To stake 5 LPT, enter `5000000000000000000`.
+
+    The minimum amount to enter the active set depends on the current network state — see the [Active set](#the-active-set) section below.
+  </Step>
+
+  <Step title="Confirm and wait">
+    `livepeer_cli` will submit two transactions: an `approve` (to authorise the staking contract to move your LPT) and a `bond` (to stake). You will see log lines in your go-livepeer terminal as each transaction is submitted and confirmed on Arbitrum.
+
+    Once both transactions confirm, your orchestrator will join the active set at the start of the **following round**.
+  </Step>
+</Steps>
+
+<CustomDivider />
+
+## Verify you are in the active set
+
+1. Open [Livepeer Explorer](https://explorer.livepeer.org)
+2. Search for your Ethereum address in the search bar
+3. Your orchestrator profile will show its status. Look for **Active** in the status field — this confirms you are in the current round's active set and eligible to receive jobs.
+
+If your profile shows **Registered** but not **Active**, your total stake (self-stake plus delegated stake) is not yet in the top 100. See the section below.
+
+<Note>
+After your activation transactions confirm, it may take until the next round begins before your status changes to Active in Explorer. Livepeer rounds are approximately 24 hours. {/* REVIEW: confirm current round length with protocol team */}
+</Note>
+
+<CustomDivider />
+
+## The active set
+
+The active set consists of the top 100 orchestrators by total LPT stake on the network. Only active orchestrators are eligible to receive jobs and earn rewards in a given round.
+
+To find the minimum stake currently required to enter the active set, visit [Livepeer Explorer](https://explorer.livepeer.org), sort orchestrators by stake, and look at the stake held by the 100th-ranked orchestrator. You need at least that amount of total stake (self-stake plus stake delegated to you) to enter.
+
+If your orchestrator drops below the top 100, it becomes inactive and stops receiving jobs. It will not automatically re-enter the active set unless:
+1. You re-register (submit a new activation transaction), or
+2. Your total stake changes enough (through additional self-bonding or delegation) to push you back into the top 100
+
+<CustomDivider />
+
+<Accordion  title="Not receiving jobs after activation?" icon="triangle-exclamation">
+
+If your orchestrator is active in Explorer but not receiving transcoding or AI inference jobs, check the following:
+
+**1. Your service address is not externally reachable**
+This is the most common cause. Run a connectivity test from an external network to confirm port 8935 on your `serviceAddr` is open and responding. Check your firewall and router port-forwarding configuration.
+
+**2. Your price is set too high**
+Gateways set a maximum price per unit (`-maxPricePerUnit`). If your `pricePerUnit` exceeds the gateway's maximum, no jobs will be routed to your node. Compare your price against other active orchestrators on [Livepeer Explorer](https://explorer.livepeer.org).
+
+**3. Your stake is at the edge of the active set**
+Being in the active set does not guarantee job selection. Gateways select orchestrators based on a combination of price, performance history, and stake. New orchestrators with minimal stake and no performance history may receive few jobs initially. This improves over time.
+
+**4. Your activation transaction has not yet propagated**
+After activation, your node joins the active set in the following round (approximately 24 hours). If you have just activated, wait for the round to change and check Explorer again.
+
+For further troubleshooting, see [FAQ](/v2/orchestrators/resources/faq) or ask in `#orchestrating` on [Discord](https://discord.gg/livepeer).
+</Accordion>
+
+<CustomDivider />
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Verify Your Setup" icon="circle-check" href="/v2/orchestrators/setup/test" arrow />
+  <Card title="Monitor" icon="chart-line" href="/v2/orchestrators/setup/r-monitor" arrow />
+  <Card title="Earnings Explained" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earnings" arrow />
+</CardGroup>

@@ -1,0 +1,141 @@
+---
+title: Setup Checklist
+sidebarTitle: Prerequisites
+description: >-
+  Pre-flight checklist for orchestrator setup — confirm hardware, software,
+  network, wallet, and tokens before installing go-livepeer.
+keywords:
+  - livepeer
+  - orchestrators
+  - hardware
+  - GPU
+  - requirements
+  - checklist
+  - prerequisites
+  - CUDA
+  - NVIDIA
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: current
+lastVerified: 2026-03-13
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+Confirm every item on this checklist before proceeding to [Install go-livepeer](/v2/orchestrators/setup/rs-install). If any item fails, fix it first — setup issues are much harder to diagnose after activation.
+
+<CustomDivider />
+
+## Hardware
+
+- **NVIDIA GPU** with NVENC/NVDEC support installed and visible via `nvidia-smi`
+- **NVIDIA driver** version 525+ (Linux) or 527+ (Windows)
+- **CUDA 12.0+** installed (or plan to use the Docker image, which bundles CUDA)
+- **CPU:** 4+ cores minimum, 8+ recommended
+- **RAM:** 16 GB minimum, 32 GB recommended
+- **Storage:** 100 GB SSD minimum (NVMe recommended for AI model weights)
+
+<Tip>
+For AI inference, VRAM is the primary constraint: 8 GB for LLM-only, 16 GB for basic batch AI, 24 GB+ for the full pipeline suite. See [Model and Demand Reference](/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference) for detailed per-workload guidance.
+</Tip>
+
+## Software
+
+- **OS:** Linux (Ubuntu 22.04+ recommended). macOS and Windows work for development but are not recommended for production GPU workloads.
+- **Docker Engine** installed if using the container install path
+- **NVIDIA Container Toolkit** installed if using Docker with GPU (`docker run --gpus all nvidia/cuda:12.0-base nvidia-smi` should succeed)
+- `curl` and `tar` available (Linux/macOS) or PowerShell (Windows)
+
+## Network
+
+- **Port 8935 TCP** open to the public internet (firewall, router NAT, cloud security group)
+- **Static IP** or stable hostname (dynamic DNS if on a home connection)
+- **Bandwidth:** 100 Mbps symmetric minimum; 1 Gbps recommended for multi-stream transcoding
+- **Latency:** Under 50 ms to major regions improves gateway selection probability
+
+Verify port access from an external machine:
+```bash icon="terminal"
+curl -k https://YOUR_PUBLIC_IP:8935/status
+```
+
+## Wallet and tokens
+
+- **Ethereum wallet** — an existing account or go-livepeer will create one on first run
+- **ETH on Arbitrum One** — for gas (activation, reward calls, ticket redemption). A few dollars is sufficient.
+- **LPT on Arbitrum One** — for staking. The amount needed to enter the active set (top 100) varies — check [Livepeer Explorer](https://explorer.livepeer.org) for the current threshold.
+
+See [Arbitrum Exchanges](/v2/orchestrators/resources/arbitrum-exchanges) for where to acquire ETH and LPT on Arbitrum.
+
+## Arbitrum RPC
+
+- **RPC endpoint** for Arbitrum One — Alchemy (free tier), Infura, or self-hosted. You will need this for the `-ethUrl` flag.
+
+See [Arbitrum RPCs](/v2/orchestrators/resources/arbitrum-rpc) for provider comparison and setup.
+
+<CustomDivider />
+
+## Quick verification commands
+
+```bash icon="terminal"
+# GPU visible?
+nvidia-smi
+
+# CUDA version?
+nvcc --version
+
+# Docker GPU access? (if using Docker)
+docker run --gpus all nvidia/cuda:12.0-base nvidia-smi
+
+# Port open? (run from a different machine)
+curl -k https://YOUR_PUBLIC_IP:8935/status
+```
+
+<CustomDivider />
+
+## Ready?
+
+Once all checklist items pass, proceed to installation.
+
+<Card title="Install go-livepeer" icon="download" href="/v2/orchestrators/setup/rs-install" arrow>
+  Download and install the go-livepeer binary or Docker image for your platform.
+</Card>
+
+{/*
+  PURPOSE:
+  Requirements checklist - actionable checklist of everything needed
+  before starting orchestrator setup (hardware, software, accounts, funds).
+
+  SECTION HOME: Setup
+  JOURNEY POSITION: 2 of 7 in Setup
+  CROSS-REFS:
+  - Deployment Details > Requirements - detailed hardware reference
+  - Resources > GPU Support - GPU compatibility
+*/}

@@ -4,10 +4,10 @@
  * @category          validator
  * @purpose           qa:link-integrity
  * @scope             tests
- * @owner             docs
+ * @domain            docs
  * @needs             E-R12, E-R14
  * @purpose-statement Validates MDX internal links and snippet import paths are resolvable
- * @pipeline          P1 (commit, via run-all)
+ * @pipeline          P1, P3
  * @usage             node tests/unit/links-imports.test.js [flags]
  */
 /**
@@ -17,11 +17,19 @@
 
 const fs = require('fs');
 const path = require('path');
+const { spawnSync } = require('child_process');
 const { getMdxFiles, getStagedDocsPageFiles, readFile } = require('../utils/file-walker');
 const { extractImports } = require('../utils/mdx-parser');
 
 let errors = [];
 let warnings = [];
+const GENERATED_EXTERNAL_DOCS = [
+  'awesome-livepeer-readme.mdx',
+  'box-additional-config.mdx',
+  'gwid-readme.mdx',
+  'whitepaper.mdx',
+  'wiki-readme.mdx'
+];
 const V2_DOMAIN_DIRS = new Set([
   'home',
   'about',
@@ -37,6 +45,85 @@ const V2_DOMAIN_DIRS = new Set([
   'experimental',
   'notes'
 ]);
+
+function parseArgs(argv) {
+  const parsed = {
+    stagedOnly: false,
+    files: []
+  };
+
+  for (let i = 0; i < argv.length; i += 1) {
+    const token = argv[i];
+    if (token === '--staged') {
+      parsed.stagedOnly = true;
+      continue;
+    }
+    if (token === '--files' || token === '--file') {
+      const raw = String(argv[i + 1] || '').trim();
+      if (raw) {
+        raw
+          .split(',')
+          .map((entry) => entry.trim())
+          .filter(Boolean)
+          .forEach((entry) => {
+            parsed.files.push(path.isAbsolute(entry) ? entry : path.resolve(process.cwd(), entry));
+          });
+      }
+      i += 1;
+    }
+  }
+
+  parsed.files = [...new Set(parsed.files)];
+  return parsed;
+}
+
+function ensureExternalDocs() {
+  const repoRoot = process.cwd();
+  const externalDir = path.join(repoRoot, 'snippets', 'external');
+  const missingFiles = GENERATED_EXTERNAL_DOCS.filter(
+    (fileName) => !fs.existsSync(path.join(externalDir, fileName))
+  );
+
+  if (missingFiles.length === 0) {
+    return;
+  }
+
+  const fetchScript = path.join(repoRoot, 'tools', 'scripts', 'snippets', 'fetch-external-docs.sh');
+  if (!fs.existsSync(fetchScript)) {
+    warnings.push({
+      file: 'tools/scripts/snippets/fetch-external-docs.sh',
+      message: `Missing external-doc bootstrap script; generated imports may fail: ${missingFiles.join(', ')}`
+    });
+    return;
+  }
+
+  const result = spawnSync('bash', [fetchScript], {
+    cwd: repoRoot,
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      LC_ALL: process.env.LC_ALL || 'C',
+      LANG: process.env.LANG || 'C'
+    }
+  });
+
+  if (result.status !== 0) {
+    const detail = String(result.stderr || result.stdout || '')
+      .trim()
+      .split('\n')
+      .slice(-3)
+      .join(' ');
+    errors.push({
+      file: 'tools/scripts/snippets/fetch-external-docs.sh',
+      rule: 'External docs fetch',
+      message: `Failed to fetch generated external docs required for import validation.${detail ? ` ${detail}` : ''}`
+    });
+  }
+}
+
+function isStyleGuideExampleFile(file) {
+  return file.includes('style-guide.mdx');
+}
 
 /**
  * Resolve a file path relative to the repository root
@@ -83,13 +170,23 @@ function fileExists(filePath) {
  */
 function linkToFilePath(linkPath, currentFile) {
   const rootDir = process.cwd();
-  const normalizedLinkPath = linkPath.split('#')[0].split('?')[0];
+  let normalizedLinkPath = linkPath
+    .split('#')[0]
+    .split('?')[0]
+    .trim()
+    .replace(/^['"]+|['"]+$/g, '');
+
+  try {
+    normalizedLinkPath = decodeURI(normalizedLinkPath);
+  } catch (_error) {
+    // Leave malformed encodings untouched so the validator can report them.
+  }
   
   // Skip external links
-  if (linkPath.startsWith('http://') || 
-      linkPath.startsWith('https://') || 
-      linkPath.startsWith('mailto:') ||
-      linkPath.startsWith('#') ||
+  if (normalizedLinkPath.startsWith('http://') ||
+      normalizedLinkPath.startsWith('https://') ||
+      normalizedLinkPath.startsWith('mailto:') ||
+      normalizedLinkPath.startsWith('#') ||
       normalizedLinkPath.length === 0) {
     return null;
   }
@@ -158,6 +255,8 @@ function linkToFilePath(linkPath, currentFile) {
 function getIgnoredRanges(content) {
   const ignoredRanges = [];
   const ignoreRegexes = [
+    /```[\s\S]*?```/g,
+    /~~~[\s\S]*?~~~/g,
     /\{\/\*[\s\S]*?\*\/\}/g,
     /<!--[\s\S]*?-->/g
   ];
@@ -201,16 +300,17 @@ function checkBrokenLinks(files) {
   files.forEach(file => {
     const content = readFile(file);
     if (!content) return;
+    const ignoredRanges = getIgnoredRanges(content);
     
     // Check markdown links [text](url)
     const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-    let match;
+    const markdownMatches = getMatchesOutsideIgnoredRanges(content, markdownLinkRegex, ignoredRanges);
     
-    while ((match = markdownLinkRegex.exec(content)) !== null) {
+    markdownMatches.forEach((match) => {
       const linkPath = match[2];
       const filePath = linkToFilePath(linkPath, file);
       
-      if (!filePath) continue; // External link, skip
+      if (!filePath) return; // External link, skip
       
       const exists = fileExists(filePath);
       if (!exists.exists) {
@@ -222,15 +322,16 @@ function checkBrokenLinks(files) {
           expected: filePath.replace(process.cwd() + '/', '')
         });
       }
-    }
+    });
     
     // Check HTML anchor tags <a href="...">
     const anchorRegex = /<a[^>]+href=["']([^"']+)["'][^>]*>/gi;
-    while ((match = anchorRegex.exec(content)) !== null) {
+    const anchorMatches = getMatchesOutsideIgnoredRanges(content, anchorRegex, ignoredRanges);
+    anchorMatches.forEach((match) => {
       const linkPath = match[1];
       const filePath = linkToFilePath(linkPath, file);
       
-      if (!filePath) continue; // External link, skip
+      if (!filePath) return; // External link, skip
       
       const exists = fileExists(filePath);
       if (!exists.exists) {
@@ -242,7 +343,7 @@ function checkBrokenLinks(files) {
           expected: filePath.replace(process.cwd() + '/', '')
         });
       }
-    }
+    });
   });
 }
 
@@ -364,6 +465,7 @@ function checkBrokenImports(files) {
 function runTests(options = {}) {
   errors = [];
   warnings = [];
+  ensureExternalDocs();
   
   const { files = null, stagedOnly = false } = options;
   
@@ -375,7 +477,9 @@ function runTests(options = {}) {
       testFiles = getMdxFiles();
     }
   }
-  testFiles = testFiles.filter(f => !f.includes('style-guide.mdx'));
+
+  // Style guide pages intentionally contain invalid example links/imports.
+  testFiles = testFiles.filter((file) => !isStyleGuideExampleFile(file));
   
   checkBrokenLinks(testFiles);
   checkEmptyLinks(testFiles);
@@ -391,10 +495,11 @@ function runTests(options = {}) {
 
 // Run if called directly
 if (require.main === module) {
-  const args = process.argv.slice(2);
-  const stagedOnly = args.includes('--staged');
-  
-  const result = runTests({ stagedOnly });
+  const parsed = parseArgs(process.argv.slice(2));
+  const result = runTests({
+    stagedOnly: parsed.stagedOnly,
+    files: parsed.files.length > 0 ? parsed.files : null
+  });
   
   if (result.errors.length > 0) {
     console.error('\n❌ Broken Links/Imports Errors:\n');
@@ -424,4 +529,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { runTests };
+module.exports = { parseArgs, runTests };

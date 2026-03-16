@@ -1,0 +1,130 @@
+---
+title: Discover & Connect Marketplace Compute Services
+sidebarTitle: Discover & Connect Services
+description: >-
+  This page explains how to find and broker Orchestrator AI & Video Offerings
+  via your Gateway for Livepeer Application consumption.
+purpose: operations
+pageType: guide
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - connect
+  - connect with offerings
+  - discover
+  - marketplace
+  - compute
+  - services
+  - explains
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: gateway-operator
+lastVerified: 2026-03-17
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Terminology is consistent with resources/glossary
+*/}
+
+
+
+
+
+import { CustomCallout } from '/snippets/components/primitives/links.jsx'
+import { ScrollableDiagram } from '/snippets/components/content/zoomableDiagram.jsx'
+
+# How to Discover & Connect Marketplace Offerings
+
+This page explains how Gateways can discover and offer Orchestrator Services,
+available on the Marketplace, to Applications & Builders.
+
+## Discovery Process
+
+Gateways discover orchestrators through the orchestrator pool in `discovery/discovery.go` [discovery.go:64-111](https://github.com/livepeer/go-livepeer/blob/5691cb48/discovery/discovery.go#L64-L111)
+
+1. **Query orchestrators**: Get `OrchestratorInfo` from each orchestrator
+2. **Filter capabilities & price**: Match against required capabilities & pricing limits & optionally rank results
+3. **Expose results**: Make matching orchestrator services available through HTTP endpoints
+4. **Route requests**: Forward incoming requests to selected orchestrators
+
+## Find All Orchestrators & Offerings
+
+The `/getNetworkCapabilities` endpoint in [server/handlers.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/server/handlers.go#L275-L295)
+exposes all available orchestrator offerings
+
+```go icon="terminal"
+func (s *LivepeerServer) getNetworkCapabilitiesHandler() http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // Returns orchestrators with their capabilities, pricing, and hardware
+    })
+}
+```
+
+**Response Data Structure**
+
+The response uses NetworkCapabilities structure from `common/types.go` [types.go:166-176](https://github.com/livepeer/go-livepeer/blob/5691cb48/common/types.go#L166-L176)
+
+```go icon="terminal"
+type NetworkCapabilities struct {
+    Orchestrators []*OrchNetworkCapabilities `json:"orchestrators"`
+}
+
+type OrchNetworkCapabilities struct {
+    Address            string                     `json:"address"`
+    LocalAddress       string                     `json:"local_address"`
+    OrchURI            string                     `json:"orch_uri"`
+    Capabilities       *net.Capabilities          `json:"capabilities"`
+    CapabilitiesPrices []*net.PriceInfo           `json:"capabilities_prices"`
+    Hardware           []*net.HardwareInformation `json:"hardware"`
+}
+```
+
+## Gateway
+
+Gateways expose offerings describing:
+
+### **1. Supported Models**
+
+Example:
+
+- `stable-diffusion-v1.5`
+- `depth-anything`
+- `controlnet_lineart`
+- `ip_adapter`
+
+### **2. Supported Pipelines**
+
+- Daydream-style real-time style transfer
+- ComfyStream workflows
+- BYOC containers
+- Custom inference graphs
+
+### **3. Pricing**
+
+A Gateway may price:
+
+- `$0.004 / frame`
+- `$0.06 / second`
+- `$0.0005 / inference token`
+
+### **4. Regions**
+
+Example:
+
+- `us-east`
+- `eu-central`
+- `ap-southeast`
+
+### **5. Reliability Scores**
+
+Gateways may publish:
+
+- Availability %
+- Average inference latency
+- Failover configuration

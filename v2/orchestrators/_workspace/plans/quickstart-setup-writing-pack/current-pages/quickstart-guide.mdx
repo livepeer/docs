@@ -1,0 +1,177 @@
+---
+title: Orchestrator Quickstart
+sidebarTitle: Overview
+description: >-
+  Choose your quickstart path — video transcoding, AI inference, or join a pool —
+  and get your first orchestrator node running.
+keywords:
+  - livepeer
+  - orchestrator
+  - quickstart
+  - transcoding
+  - AI
+  - go-livepeer
+  - GPU
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: orchestrator
+status: current
+lastVerified: 2026-03-13
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+{/* REVIEW: THIS SHOULD NOT BE IN QUICKSTART - BE VERBOSE ABOUT THE EASIEST SETUP PATH FOR QUICKSTART. */}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+The quickstart gets you from zero to a working orchestrator node as fast as possible. Pick the path that matches your goal.
+
+<CustomDivider />
+
+## Choose your path
+
+<CardGroup cols={2}>
+  <Card title="Video Transcoding" icon="film" href="/v2/orchestrators/quickstart/video-transcoding" arrow>
+    The default path. Run a transcoding orchestrator with Docker in under 30 minutes. Requires an NVIDIA GPU.
+  </Card>
+  <Card title="Join a Pool" icon="users" href="/v2/orchestrators/guides/deployment-details/join-a-pool" arrow>
+    Contribute your GPU to an existing orchestrator pool. No staking, no activation — just install and connect.
+  </Card>
+</CardGroup>
+
+<Note>
+**AI quickstart coming soon.** To add AI inference pipelines to your node today, complete the video transcoding quickstart first, then follow the [AI Inference Operations](/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations).
+</Note>
+
+<CustomDivider />
+
+## What you will need
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Requirement</TableCell>
+    <TableCell header>Details</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**GPU**</TableCell>
+    <TableCell>NVIDIA with NVENC support (GTX 1060+ for transcoding, RTX 3090+ for AI)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**OS**</TableCell>
+    <TableCell>Linux recommended. macOS/Windows for development only.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Docker**</TableCell>
+    <TableCell>Docker Engine + NVIDIA Container Toolkit</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Wallet**</TableCell>
+    <TableCell>Ethereum account with ETH and LPT on Arbitrum One</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Port**</TableCell>
+    <TableCell>8935 TCP open to the public internet</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**RPC**</TableCell>
+    <TableCell>Arbitrum One endpoint (Alchemy or Infura free tier)</TableCell>
+  </TableRow>
+</StyledTable>
+
+For detailed hardware guidance, see [Requirements](/v2/orchestrators/guides/operator-considerations/requirements).
+
+<CustomDivider />
+
+## Quickstart vs Setup guide
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header></TableCell>
+    <TableCell header>Quickstart</TableCell>
+    <TableCell header>Setup Guide</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Goal**</TableCell>
+    <TableCell>First working node, fast</TableCell>
+    <TableCell>Production-ready deployment</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Install method**</TableCell>
+    <TableCell>Docker only</TableCell>
+    <TableCell>Docker, binary, or source</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Decisions**</TableCell>
+    <TableCell>Opinionated defaults</TableCell>
+    <TableCell>You choose every flag</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Time**</TableCell>
+    <TableCell>~30 minutes</TableCell>
+    <TableCell>~1–2 hours</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Best for**</TableCell>
+    <TableCell>First-time operators, evaluation</TableCell>
+    <TableCell>Production, custom configurations</TableCell>
+  </TableRow>
+</StyledTable>
+
+If you need more control — custom binary installs, split orchestrator/transcoder, advanced pricing, or AI pipelines — use the [Setup Guide](/v2/orchestrators/setup/guide) instead.
+
+<CustomDivider />
+
+## After the quickstart
+
+Once your node is running and you have received your first job:
+
+<CardGroup cols={2}>
+  <Card title="Add AI Workloads" icon="microchip-ai" href="/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations" arrow>
+    Add AI inference pipelines alongside transcoding.
+  </Card>
+  <Card title="Optimise Earnings" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earning-model" arrow>
+    Understand your revenue streams and tune your parameters.
+  </Card>
+  <Card title="Set Up Monitoring" icon="chart-line" href="/v2/orchestrators/setup/r-monitor" arrow>
+    Enable Prometheus metrics and track node health.
+  </Card>
+  <Card title="Delegate Operations" icon="users" href="/v2/orchestrators/guides/staking-and-rewards/delegate-operations" arrow>
+    Increase your stake and job selection probability.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  Quickstart overview - orienting page for the quickstart section.
+  Should route users to the appropriate quickstart path.
+
+  SECTION HOME: Quickstart
+  JOURNEY POSITION: 1 of 3 in Quickstart
+*/}

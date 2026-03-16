@@ -1,0 +1,325 @@
+---
+title: Documentation Governance
+sidebarTitle: Governance
+description: 'Review process, ownership, and ticketing system for Livepeer documentation'
+keywords:
+  - livepeer
+  - internal
+  - governance
+  - review
+  - ownership
+  - ticketing
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: internal
+purpose: how_to
+---
+
+
+
+This page documents the governance model for Livepeer documentation, including review processes, ownership, and how to report issues.
+
+---
+
+## Review Process
+
+### Pull Request Review Workflow
+
+<Steps>
+  <Steps.Step title="PR Submitted">
+    Contributor opens a Pull Request with documentation changes.
+
+    **Automated checks run:**
+    - Broken link validation
+    - Formatting checks
+    - Build verification
+  </Steps.Step>
+
+  <Steps.Step title="Initial Review">
+    A maintainer or section owner reviews the PR within **48-72 hours**.
+
+    **Review criteria:**
+    - Clarity & comprehension
+    - Technical accuracy
+    - Completeness
+    - Style consistency
+    - UX & information architecture
+  </Steps.Step>
+
+  <Steps.Step title="Feedback & Changes">
+    If changes are needed, the reviewer provides feedback.
+
+    Contributor addresses feedback and updates the PR.
+  </Steps.Step>
+
+  <Steps.Step title="Approval & Merge">
+    Once approved, the PR is merged to `docs-v2-preview`.
+
+    Changes are deployed automatically.
+  </Steps.Step>
+</Steps>
+
+### Review SLAs
+
+| PR Type | Target Review Time | Priority |
+|---------|-------------------|----------|
+| **Critical fixes** (broken links, security) | 24 hours | High |
+| **Content updates** (typos, clarifications) | 48 hours | Medium |
+| **New content** (pages, guides) | 72 hours | Medium |
+| **Major restructures** (IA changes) | 1 week | Low |
+
+### Review Rubric
+
+Each PR is evaluated against:
+
+| Criterion | Description | Must Fix / Optional |
+|-----------|-------------|-------------------|
+| **Clarity & Comprehension** | Is the content clear and easy to understand? | Must fix if unclear |
+| **Technical Accuracy** | Are the facts correct and up-to-date? | Must fix if inaccurate |
+| **Completeness** | Does it cover the topic adequately? | Optional improvements |
+| **UX & IA** | Does it fit well in the information architecture? | Must fix if breaks IA |
+| **Strategic Alignment** | Does it align with Livepeer's goals? | Optional consideration |
+| **Style Consistency** | Does it follow style guides? | Must fix if inconsistent |
+
+---
+
+## Ownership
+
+### Section Owners
+
+Documentation sections have designated owners who are responsible for reviewing changes and maintaining quality:
+
+| Section | Path | Owners |
+|---------|------|--------|
+| **AI & Gateways** | `v2/developers/ai-inference-on-livepeer/`, `v2/pages/04_gateways/` | @rickstaa |
+| **Developers** | `v2/developers/` | @livepeer/studio-team, @DeveloperAlly |
+| **About** | `v2/pages/01_about/` | @livepeer/studio-team, @DeveloperAlly |
+| **Orchestrators** | `v2/orchestrators/` | @livepeer/studio-team |
+| **Delegators** | `v2/pages/06_delegators/` | @livepeer/studio-team |
+| **Resources** | `v2/resources/` | @livepeer/studio-team, @DeveloperAlly |
+| **Help** | `v2/pages/08_help/` | @livepeer/studio-team, @DeveloperAlly |
+| **Home** | `v2/home/` | @livepeer/studio-team, @DeveloperAlly |
+| **Products** | `v2/pages/010_products/` | @livepeer/studio-team |
+
+**Full ownership map:** See [`.github/CODEOWNERS`](https://github.com/livepeer/docs/blob/main/.github/CODEOWNERS)
+
+### Owner Responsibilities
+
+Section owners are responsible for:
+
+- ✅ Reviewing PRs in their section
+- ✅ Maintaining technical accuracy
+- ✅ Ensuring style consistency
+- ✅ Updating content as products evolve
+- ✅ Responding to questions about their section
+
+### Becoming an Owner
+
+Interested in becoming a section owner?
+
+1. Make consistent, high-quality contributions to a section
+2. Demonstrate expertise in the subject matter
+3. Express interest to current maintainers
+4. Current owners will evaluate and may invite you
+
+---
+
+## Ticketing System
+
+### Reporting Issues
+
+Use GitHub Issues to report problems, suggest improvements, or ask questions:
+
+**Issue Types:**
+
+| Type | When to Use | Template |
+|------|-------------|----------|
+| **Bug Report** | Broken links, incorrect information, formatting issues | [Bug Report Template](https://github.com/livepeer/docs/issues/new?template=bug_report.md) |
+| **Feature Request** | New content, improvements, enhancements | [Feature Request Template](https://github.com/livepeer/docs/issues/new?template=feature_request.md) |
+| **Question** | Clarifications, how-to questions | [Question Template](https://github.com/livepeer/docs/issues/new?template=question.md) |
+| **Documentation Request** | Missing documentation, unclear explanations | Use Feature Request template |
+
+### Issue Labels
+
+We use labels to categorize issues, classify severity/impact, and set maintainer scheduling priority:
+
+**Classification (severity/impact):**
+- `classification: urgent` - Immediate triage needed (release-blocking, unsafe guidance, or widespread breakage)
+- `classification: high` - Significant blocker or major user impact
+- `classification: moderate` - Meaningful friction/confusion with limited scope or workaround
+- `classification: minor` - Cosmetic or low-risk localized issue (links, style, small wording fixes)
+
+Classification is separate from priority:
+- `classification:*` = severity/impact of the issue as reported
+- `priority:*` = maintainer scheduling/sequence decision (may differ due to roadmap, staffing, or deadlines)
+
+Examples:
+- Docs/page issue: broken link or styling inconsistency on one page -> `classification: minor`
+- Tooling/CI issue: default-branch required CI workflow failing -> `classification: urgent`
+
+**Priority:**
+- `priority: critical` - Security issues, broken critical paths
+- `priority: high` - Important content gaps, user blockers
+- `priority: medium` - Standard improvements
+- `priority: low` - Nice-to-have enhancements
+
+**Type:**
+- `type: bug` - Something is broken
+- `type: enhancement` - Improvement or new feature
+- `type: documentation` - Documentation-related
+- `type: question` - Question or clarification needed
+
+**Area:**
+- `area: ai` - AI/Gateway documentation
+- `area: developers` - Developer documentation
+- `area: orchestrators` - Orchestrator documentation
+- `area: gateways` - Gateway documentation
+- `area: about` - About section
+- `area: resources` - Resources section
+
+**Status:**
+- `status: needs-triage` - Needs initial review
+- `status: in-progress` - Work in progress
+- `status: blocked` - Blocked on something
+- `good first issue` - Good for new contributors
+
+### Issue SLAs
+
+| Issue Type | Target Response | Target Resolution |
+|------------|----------------|-------------------|
+| **Priority: critical** | 24 hours | 1 week |
+| **Priority: high** | 48 hours | 2 weeks |
+| **Priority: medium** | 1 week | 1 month |
+| **Priority: low** | 2 weeks | As capacity allows |
+
+### Triage Process
+
+1. **Initial Triage** - A maintainer reviews and labels the issue
+2. **Assignment** - Issue is assigned to a section owner or contributor
+3. **Work** - Contributor works on the issue
+4. **Review** - PR is reviewed and merged
+5. **Close** - Issue is closed when resolved
+
+---
+
+## Reviewers
+
+### Core Reviewers
+
+| Role | Responsibilities | Contact |
+|------|-----------------|---------|
+| **Technical Director** | Overall documentation strategy, unified voice | Via GitHub |
+| **Section Owners** | Review PRs in their section | See CODEOWNERS |
+| **Subject Matter Experts** | Technical accuracy review | @rickstaa (AI), others TBD |
+| **Community Maintainers** | Help review community contributions | @DeveloperAlly |
+
+### Review by Category
+
+For major changes, we may request review from:
+
+- **Site-wide changes** - All maintainers
+- **Home/About** - @livepeer/studio-team, @DeveloperAlly
+- **Developers** - @livepeer/studio-team, @DeveloperAlly
+- **Gateways** - @rickstaa
+- **Orchestrators** - @livepeer/studio-team
+- **Resources** - @livepeer/studio-team, @DeveloperAlly
+
+### Community Reviewers
+
+Active contributors may be invited to become reviewers. Criteria:
+
+- Consistent, high-quality contributions
+- Good understanding of documentation standards
+- Willingness to help review PRs
+
+---
+
+## Versioning and Deprecation
+
+### Versioning Policy
+
+- **Current version:** `v2` (default)
+- **Legacy version:** `v1` (maintained for reference)
+- **Versioning model:** URL-based (`/v2/...`, `/v1/...`)
+
+### Deprecation Process
+
+When deprecating content:
+
+1. **Mark as deprecated** - Add deprecation notice to page
+2. **Create redirect** - Add redirect in `docs.json`
+3. **Update references** - Update all links pointing to deprecated content
+4. **Archive** - Move to `v1/` or archive location
+5. **Document** - Update changelog with deprecation notice
+
+### Changelog
+
+All significant changes are documented in the [Changelog](/v2/resources/changelog/changelog).
+
+---
+
+## Quarterly Review Process
+
+Every quarter, we review:
+
+- ✅ Content accuracy and freshness
+- ✅ Broken links and references
+- ✅ User feedback and common questions
+- ✅ Content gaps and improvements
+- ✅ Style guide compliance
+- ✅ Information architecture effectiveness
+
+**Review checklist:** See [Quarterly Review Checklist](#quarterly-review-checklist)
+
+---
+
+## Quarterly Review Checklist
+
+Use this checklist for quarterly documentation reviews:
+
+### Content Quality
+
+- All pages reviewed for accuracy
+- Outdated information updated
+- Broken links fixed
+- Examples tested and verified
+- Code snippets updated if APIs changed
+
+### User Experience
+
+- User feedback reviewed and addressed
+- Common questions documented
+- Navigation structure optimized
+- Search functionality working well
+- Mobile experience verified
+
+### Technical
+
+- Build process working
+- CI/CD checks passing
+- Performance optimized
+- SEO metadata current
+- Analytics reviewed
+
+### Governance
+
+- CODEOWNERS up to date
+- Review process documented
+- SLAs being met
+- Contributor onboarding smooth
+- Style guides current
+
+---
+
+## Questions?
+
+- **GitHub Issues** - [Open an issue](https://github.com/livepeer/docs/issues) for governance questions
+- **Discord** - Join [#docs](https://livepeer.org/discord) for discussion
+- **Email** - Contact maintainers directly for sensitive matters
+
+---
+
+*Last updated: 2026-02-16*

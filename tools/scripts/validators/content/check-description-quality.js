@@ -13,8 +13,9 @@
 
 const fs = require('fs');
 const path = require('path');
-const yaml = require('js-yaml');
-const { collectDocsJsonRouteKeys } = require('../../../lib/docs-navigation');
+const yaml = require('../../lib/load-js-yaml');
+const { isExcludedV2ExperimentalPath } = require('../../lib/docs-publishability');
+const { isGeneratedDocsPageFile } = require('../../lib/docs-page-scope');
 
 const REPO_ROOT = path.resolve(__dirname, '../../../../');
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
@@ -78,6 +79,15 @@ function parseArgs(argv) {
   return options;
 }
 
+function normalizeRoutePath(routePath) {
+  return toPosix(routePath)
+    .trim()
+    .replace(/^\/+/, '')
+    .replace(/\.(md|mdx)$/i, '')
+    .replace(/\/index$/i, '')
+    .replace(/\/+$/, '');
+}
+
 function shouldExclude(repoPath) {
   const relPath = toPosix(repoPath).replace(/^\/+/, '');
   if (!relPath.startsWith('v2/')) return true;
@@ -87,13 +97,33 @@ function shouldExclude(repoPath) {
   if (relPath.includes('/_move_me/') || relPath.includes('/_tests-to-delete/')) return true;
   if (relPath.endsWith('todo.txt') || relPath.endsWith('todo.mdx') || relPath.endsWith('NOTES_V2.md')) return true;
 
-  return relPath
-    .split('/')
-    .some((segment) => segment.toLowerCase().startsWith('x-'));
+  return isExcludedV2ExperimentalPath(relPath);
 }
 
 function isSupportedDocFile(repoPath) {
   return SUPPORTED_EXTENSIONS.has(path.extname(repoPath).toLowerCase());
+}
+
+function collectDocsPageEntries(node, out = []) {
+  if (typeof node === 'string') {
+    const value = node.trim().replace(/^\/+/, '');
+    if (value.startsWith('v2/') && !shouldExclude(value)) {
+      out.push(value);
+    }
+    return out;
+  }
+
+  if (Array.isArray(node)) {
+    node.forEach((item) => collectDocsPageEntries(item, out));
+    return out;
+  }
+
+  if (!node || typeof node !== 'object') {
+    return out;
+  }
+
+  Object.values(node).forEach((value) => collectDocsPageEntries(value, out));
+  return out;
 }
 
 function fileEntryFromRepoPath(repoPath) {
@@ -103,27 +133,54 @@ function fileEntryFromRepoPath(repoPath) {
   };
 }
 
+function isGeneratedEntry(entry) {
+  return isGeneratedDocsPageFile(entry.absPath);
+}
+
 function loadDefaultFiles() {
   if (!fs.existsSync(DOCS_JSON_PATH)) {
     throw new Error('docs.json not found at repository root');
   }
 
-  const routeEntries = [...collectDocsJsonRouteKeys(REPO_ROOT, {
-    version: 'v2',
-    language: 'en',
-    validatorName: 'check-description-quality'
-  })].filter((routePath) => !shouldExclude(routePath));
+  const docsJson = JSON.parse(fs.readFileSync(DOCS_JSON_PATH, 'utf8'));
+  const versions = docsJson?.navigation?.versions || [];
+  const routeEntries = [];
+
+  versions.forEach((versionNode) => {
+    const languages = versionNode?.languages;
+
+    if (Array.isArray(languages)) {
+      languages
+        .filter((item) => item && item.language === 'en')
+        .forEach((item) => collectDocsPageEntries(item, routeEntries));
+      return;
+    }
+
+    if (languages && typeof languages === 'object' && languages.en) {
+      collectDocsPageEntries(languages.en, routeEntries);
+      return;
+    }
+
+    collectDocsPageEntries(versionNode, routeEntries);
+  });
+
   const files = [];
   const seen = new Set();
 
   routeEntries.forEach((routePath) => {
+    const routeKey = normalizeRoutePath(routePath);
+    if (!routeKey) return;
+
     ['.mdx', '.md'].forEach((extension) => {
-      const repoPath = `${routePath}${extension}`;
+      const repoPath = `${routeKey}${extension}`;
       if (seen.has(repoPath) || shouldExclude(repoPath)) return;
       if (!fs.existsSync(path.join(REPO_ROOT, repoPath))) return;
 
       seen.add(repoPath);
-      files.push(fileEntryFromRepoPath(repoPath));
+      const entry = fileEntryFromRepoPath(repoPath);
+      if (!isGeneratedEntry(entry)) {
+        files.push(entry);
+      }
     });
   });
 
@@ -172,10 +229,13 @@ function walkDirectory(dirPath, out = []) {
       return;
     }
 
-    out.push({
+    const entry = {
       absPath,
       relPath
-    });
+    };
+    if (!isGeneratedEntry(entry)) {
+      out.push(entry);
+    }
   });
 
   return out;
@@ -194,7 +254,8 @@ function loadTargetFiles(targetPath) {
     return [];
   }
 
-  return [{ absPath: resolvedPath, relPath }];
+  const entry = { absPath: resolvedPath, relPath };
+  return isGeneratedEntry(entry) ? [] : [entry];
 }
 
 function extractFrontmatter(content) {

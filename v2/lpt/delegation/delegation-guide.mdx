@@ -1,9 +1,27 @@
 ---
-title: 'Delegation Guide'
-sidebarTitle: 'Delegation Guide'
-description: 'Contract-level, step-by-step guide to bonding, delegating, unbonding, rebonding, and verifying LPT delegation on-chain.'
-keywords: ["livepeer", "lpt", "delegation", "staking", "bonding", "unbonding", "rewards", "guide"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+title: Delegation Guide
+sidebarTitle: Delegation Guide
+description: >-
+  Contract-level, step-by-step guide to bonding, delegating, unbonding,
+  rebonding, and verifying LPT delegation on-chain.
+pageType: guide
+keywords:
+  - livepeer
+  - lpt
+  - delegation
+  - staking
+  - bonding
+  - unbonding
+  - rewards
+  - guide
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: delegator
+lastVerified: 2026-03-17
+purpose: operations
 ---
 import { MathInline, MathBlock } from '/snippets/components/content/math.jsx'
 
@@ -17,7 +35,7 @@ This guide provides a protocol-accurate, contract-aware walkthrough of delegatin
 
 Delegation modifies protocol state. It does not modify network routing or execution directly.
 
----
+<CustomDivider />
 
 ## 1. Preconditions
 
@@ -31,7 +49,7 @@ Canonical contract references: [Contract Addresses](https://docs.livepeer.org/re
 
 Delegation interacts primarily with the BondingManager contract.
 
----
+<CustomDivider />
 
 ## 2. Step 1 - Approve Token Transfer
 
@@ -43,7 +61,7 @@ Approval does not change bonding state; it only authorizes the staking contract 
 
 State impact: none (allowance update only).
 
----
+<CustomDivider />
 
 ## 3. Step 2 - Bond and Delegate
 
@@ -62,7 +80,7 @@ State transition:
 
 Delegation immediately affects stake attribution for subsequent rounds (subject to protocol timing rules).
 
----
+<CustomDivider />
 
 ## 4. Step 3 - Verify On-Chain State
 
@@ -79,7 +97,7 @@ Verification methods:
 
 Delegation must be verifiable via on-chain state, not UI display alone.
 
----
+<CustomDivider />
 
 ## 5. Reward Accrual and Checkpointing
 
@@ -99,7 +117,7 @@ Rewards may require checkpointing before they are claimable or rebondable.
 
 Checkpointing updates internal accounting but does not automatically transfer tokens unless explicitly claimed.
 
----
+<CustomDivider />
 
 ## 6. Step 4 - Rebond (Optional Compounding)
 
@@ -113,7 +131,7 @@ Compounding increases future weight:
 
 <MathBlock latex={String.raw`W_i = \frac{B_i}{B_T}`} />
 
----
+<CustomDivider />
 
 ## 7. Step 5 - Initiate Unbonding
 
@@ -134,7 +152,7 @@ During unbonding:
 - Stake does not earn rewards.
 - Stake cannot be immediately withdrawn.
 
----
+<CustomDivider />
 
 ## 8. Unbonding Delay
 
@@ -156,7 +174,7 @@ stateDiagram-v2
     Withdrawable --> [*] : withdraw()
 ```
 
----
+<CustomDivider />
 
 ## 9. Step 6 - Withdraw Stake
 
@@ -169,7 +187,7 @@ State impact:
 
 Withdrawal finalizes the exit.
 
----
+<CustomDivider />
 
 ## 10. Risk Review Checklist
 
@@ -183,7 +201,7 @@ Before delegating, evaluate:
 
 Delegation is a capital allocation decision under constrained liquidity.
 
----
+<CustomDivider />
 
 ## 11. Protocol vs Network Separation
 
@@ -203,7 +221,7 @@ Delegation is a capital allocation decision under constrained liquidity.
 
 Delegation changes protocol state; it does not change routing behavior directly.
 
----
+<CustomDivider />
 
 ## 12. Sequence Diagram (End-to-End)
 
@@ -222,7 +240,7 @@ sequenceDiagram
     D->>BM: withdraw()
 ```
 
----
+<CustomDivider />
 
 ## References
 

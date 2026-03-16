@@ -4,7 +4,7 @@
  * @category          enforcer
  * @purpose           governance:agent-governance
  * @scope             tools/scripts/codex, tools/scripts/validate-codex-task-contract.js, tools/scripts/verify-pay-orc-gate-finalize.sh
- * @owner             docs
+ * @domain            docs
  * @needs             R-R27, R-R30
  * @purpose-statement Codex task finaliser — enforces task completion requirements before closing
  * @pipeline          manual — interactive developer tool, not suited for automated pipelines
@@ -112,12 +112,19 @@ function main() {
     throw new Error('Unable to detect branch; pass --branch explicitly');
   }
 
-  const contractCheckArgs = ['tools/scripts/validate-codex-task-contract.js', '--branch', branch, '--contract', args.contractPath];
+  const contractCheckArgs = [
+    'tools/scripts/validate-codex-task-contract.js',
+    '--branch',
+    branch,
+    '--contract',
+    args.contractPath,
+    '--require-pr-ready'
+  ];
   if (args.baseRef) {
     contractCheckArgs.push('--base-ref', args.baseRef);
   }
 
-  console.log('🔍 Running contract scope check...');
+  console.log('🔍 Running contract scope and PR-readiness check...');
   if (!run('node', contractCheckArgs)) {
     throw new Error('Contract scope check failed');
   }
@@ -125,6 +132,16 @@ function main() {
   console.log('🔍 Running local lock check...');
   if (!run('node', ['tools/scripts/codex/validate-locks.js', '--branch', branch])) {
     throw new Error('Local lock check failed');
+  }
+
+  const prDryRunArgs = ['tools/scripts/create-codex-pr.js', '--contract', args.contractPath, '--head', branch, '--create', '--dry-run'];
+  if (args.baseRef) {
+    prDryRunArgs.push('--base', args.baseRef);
+  }
+
+  console.log('🔍 Dry-running codex PR creation...');
+  if (!run('node', prDryRunArgs)) {
+    throw new Error('Codex PR dry-run failed');
   }
 
   if (args.profile) {
@@ -139,7 +156,10 @@ function main() {
   }
 
   console.log('✅ Codex task finalize checks passed');
-  console.log('ℹ️  Next step: node tools/scripts/codex/lock-release.js');
+  console.log('ℹ️  Next steps:');
+  console.log(`  1. Commit or merge ${branch} into ${args.baseRef || 'docs-v2-dev'}`);
+  console.log(`  2. After ${args.baseRef || 'docs-v2-dev'} contains the task commit, node tools/scripts/codex/lock-release.js --branch ${branch}`);
+  console.log(`  3. After ${args.baseRef || 'docs-v2-dev'} contains the task commit, node tools/scripts/codex/task-cleanup.js --branch ${branch} --apply`);
 }
 
 if (require.main === module) {

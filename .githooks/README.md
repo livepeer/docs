@@ -2,8 +2,8 @@
 
 Canonical policy and ownership:
 
-- `docs-guide/quality-testing/infrastructure-principles.mdx`
-- `docs-guide/quality-testing/quality-gates.mdx`
+- `docs-guide/policies/infrastructure-principles.mdx`
+- `docs-guide/policies/quality-gates.mdx`
 
 This file is intentionally brief. Rule text should live in canonical policy docs above.
 
@@ -57,3 +57,4 @@ When explicit human override is requested, follow:
 
 - Contributor hook guide: `contribute/CONTRIBUTING/GIT-HOOKS.md`
 - Test execution matrix: `tests/WHEN-TESTS-RUN.md`
+- Codex lifecycle: `.codex/README.md` (`task-preflight` -> `validate-locks` -> `task-finalize` -> `lock-release` -> `task-cleanup`)

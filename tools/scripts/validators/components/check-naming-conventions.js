@@ -6,9 +6,9 @@
  * @scope             tools/scripts/validators/components, tests/run-all.js, tests/run-pr-checks.js, snippets/components
  * @owner             docs
  * @needs             R-R10
- * @purpose-statement Validates component filename kebab-case and exported PascalCase naming under snippets/components.
- * @pipeline          PR/manual validator for snippets/components/** scope
- * @usage             node tools/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]]
+ * @purpose-statement Validates active component filenames against directory-aware file naming and PascalCase exports under snippets/components.
+ * @pipeline          P1, P3
+ * @usage             node tools/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel]
  */
 
 const fs = require('fs');
@@ -16,9 +16,13 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const DEFAULT_TARGET = 'snippets/components';
+const DEFAULT_MODE = process.env.LP_COMPONENT_NAMING_MODE || 'strict-camel';
+const VALID_MODES = new Set(['migration', 'strict-camel']);
 const FILE_RULE_LABEL = '[4.6]';
 const EXPORT_RULE_LABEL = '[4.7]';
-const FILE_NAME_RE = /^[a-z][a-z0-9-]*\.jsx$/;
+const CAMEL_FILE_NAME_RE = /^[a-z][a-zA-Z0-9]*\.jsx$/;
+const KEBAB_FILE_NAME_RE = /^[a-z][a-z0-9-]*\.jsx$/;
+const PASCAL_FILE_NAME_RE = /^[A-Z][a-zA-Z0-9]*\.jsx$/;
 const EXPORT_NAME_RE = /^[A-Z][a-zA-Z0-9]*$/;
 
 function getRepoRoot() {
@@ -40,7 +44,7 @@ function toPosix(value) {
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]]'
+    'Usage: node tools/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel]'
   );
 }
 
@@ -48,6 +52,7 @@ function parseArgs(argv) {
   const args = {
     targetPath: DEFAULT_TARGET,
     files: [],
+    mode: DEFAULT_MODE,
     help: false
   };
 
@@ -103,19 +108,41 @@ function parseArgs(argv) {
       continue;
     }
 
+    if (token === '--mode') {
+      args.mode = String(argv[index + 1] || '').trim() || DEFAULT_MODE;
+      index += 1;
+      continue;
+    }
+
+    if (token.startsWith('--mode=')) {
+      args.mode = token.slice('--mode='.length).trim() || DEFAULT_MODE;
+      continue;
+    }
+
     throw new Error(`Unknown argument: ${token}`);
   }
 
   args.files = [...new Set(args.files)];
+  if (!VALID_MODES.has(args.mode)) {
+    throw new Error(`Invalid mode: ${args.mode}`);
+  }
   return args;
 }
 
 function resolveRepoPath(inputPath) {
   const raw = String(inputPath || '').trim();
   const candidate = raw || DEFAULT_TARGET;
-  const absolute = path.isAbsolute(candidate)
+  let absolute = path.isAbsolute(candidate)
     ? path.resolve(candidate)
     : path.resolve(REPO_ROOT, candidate);
+
+  if (fs.existsSync(absolute)) {
+    const realPath = fs.realpathSync.native
+      ? fs.realpathSync.native(absolute)
+      : fs.realpathSync(absolute);
+    absolute = path.resolve(realPath);
+  }
+
   const relative = toPosix(path.relative(REPO_ROOT, absolute));
 
   if (relative === '..' || relative.startsWith('../')) {
@@ -128,16 +155,28 @@ function resolveRepoPath(inputPath) {
   };
 }
 
+function shouldSkipDirectory(displayPath) {
+  return (
+    displayPath.includes('/_archive/') ||
+    displayPath.endsWith('/_archive') ||
+    displayPath.includes('/node_modules/') ||
+    displayPath.includes('/.git/')
+  );
+}
+
 function walkJsxFiles(absDir, out = []) {
   const entries = fs.readdirSync(absDir, { withFileTypes: true });
 
   entries.forEach((entry) => {
-    if (entry.name === '.git' || entry.name === 'node_modules') {
+    const absPath = path.join(absDir, entry.name);
+    const displayPath = toPosix(path.relative(REPO_ROOT, absPath));
+
+    if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === '_archive') {
       return;
     }
 
-    const absPath = path.join(absDir, entry.name);
     if (entry.isDirectory()) {
+      if (shouldSkipDirectory(displayPath)) return;
       walkJsxFiles(absPath, out);
       return;
     }
@@ -146,9 +185,11 @@ function walkJsxFiles(absDir, out = []) {
       return;
     }
 
+    if (displayPath.includes('/_archive/')) return;
+
     out.push({
       absolutePath: absPath,
-      displayPath: toPosix(path.relative(REPO_ROOT, absPath))
+      displayPath
     });
   });
 
@@ -176,6 +217,10 @@ function collectTargetFiles(targetPath = DEFAULT_TARGET, options = {}) {
         return;
       }
 
+      if (resolved.relative.includes('/_archive/')) {
+        return;
+      }
+
       expanded.push({
         absolutePath: resolved.absolute,
         displayPath: resolved.relative
@@ -193,6 +238,10 @@ function collectTargetFiles(targetPath = DEFAULT_TARGET, options = {}) {
   const stat = fs.statSync(resolved.absolute);
   if (stat.isFile()) {
     if (path.extname(resolved.absolute).toLowerCase() !== '.jsx') {
+      return [];
+    }
+
+    if (resolved.relative.includes('/_archive/')) {
       return [];
     }
 
@@ -285,11 +334,6 @@ function splitTopLevel(input, separator = ',') {
 
 function lineNumberAt(content, index) {
   return String(content || '').slice(0, Math.max(0, index)).split('\n').length;
-}
-
-function isGrandfatheredFilename(displayPath) {
-  const normalized = toPosix(displayPath);
-  return normalized.startsWith('snippets/components/domain/SHARED/');
 }
 
 function makeFinding(file, line, rule, message, name) {
@@ -393,8 +437,38 @@ function scanExports(content) {
   return exportsList;
 }
 
+function usesDisplayKebabCase(displayPath) {
+  return toPosix(displayPath).startsWith('snippets/components/display/');
+}
+
+function isAllowedFilename(fileName, mode, displayPath) {
+  if (mode === 'strict-camel') {
+    if (usesDisplayKebabCase(displayPath)) {
+      return KEBAB_FILE_NAME_RE.test(fileName);
+    }
+    return CAMEL_FILE_NAME_RE.test(fileName);
+  }
+
+  return (
+    CAMEL_FILE_NAME_RE.test(fileName) ||
+    KEBAB_FILE_NAME_RE.test(fileName) ||
+    PASCAL_FILE_NAME_RE.test(fileName)
+  );
+}
+
+function fileNamingMessage(mode, fileName, displayPath) {
+  if (mode === 'strict-camel') {
+    if (usesDisplayKebabCase(displayPath)) {
+      return `Filename must be kebab-case in display/: ${fileName}`;
+    }
+    return `Filename must be camelCase: ${fileName}`;
+  }
+  return `Filename must be legacy-compatible or camelCase during migration: ${fileName}`;
+}
+
 function analyzeFile(absolutePath, options = {}) {
   const displayPath = options.displayPath || toPosix(path.relative(REPO_ROOT, absolutePath));
+  const mode = options.mode || DEFAULT_MODE;
   const findings = {
     items: [],
     _seen: new Set()
@@ -402,14 +476,14 @@ function analyzeFile(absolutePath, options = {}) {
   const content = fs.readFileSync(absolutePath, 'utf8');
   const fileName = path.basename(displayPath);
 
-  if (!isGrandfatheredFilename(displayPath) && !FILE_NAME_RE.test(fileName)) {
+  if (!isAllowedFilename(fileName, mode, displayPath)) {
     addFinding(
       findings,
       makeFinding(
         displayPath,
         1,
         FILE_RULE_LABEL,
-        `Filename must be kebab-case: ${fileName}`,
+        fileNamingMessage(mode, fileName, displayPath),
         fileName
       )
     );
@@ -463,17 +537,23 @@ function formatFinding(finding) {
 }
 
 function run(options = {}) {
+  const mode = options.mode || DEFAULT_MODE;
+  if (!VALID_MODES.has(mode)) {
+    throw new Error(`Invalid mode: ${mode}`);
+  }
+
   const files = collectTargetFiles(options.targetPath || DEFAULT_TARGET, {
     files: options.files
   });
   const findings = [];
 
   files.forEach((file) => {
-    findings.push(...analyzeFile(file.absolutePath, { displayPath: file.displayPath }));
+    findings.push(...analyzeFile(file.absolutePath, { displayPath: file.displayPath, mode }));
   });
 
   const sortedFindings = sortFindings(findings);
   return {
+    mode,
     filesScanned: files.length,
     findings: sortedFindings,
     exitCode: sortedFindings.length === 0 ? 0 : 1
@@ -500,7 +580,8 @@ if (require.main === module) {
   try {
     result = run({
       targetPath: args.targetPath,
-      files: args.files
+      files: args.files,
+      mode: args.mode
     });
   } catch (error) {
     console.error(`Error: ${error.message}`);
@@ -512,7 +593,7 @@ if (require.main === module) {
   });
 
   if (result.findings.length === 0) {
-    console.log('No component naming violations found.');
+    console.log(`No component naming violations found (${result.mode}).`);
   }
 
   process.exit(result.exitCode);

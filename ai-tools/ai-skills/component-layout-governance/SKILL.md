@@ -1,6 +1,12 @@
 ---
 name: component-layout-governance
-description: Enforce component layout contracts by page type using required sections, allowed components, and forbidden patterns.
+version: "1.0"
+description: >-
+  Validate page-type layout contracts, enforce allowed component patterns, and surface structural composition problems before inconsistent documentation pages reach readers or reviewers.
+invoke_when:
+  - "validate page layout contracts"
+  - "enforce allowed docs components"
+  - "check page composition against layout rules"
 ---
 
 SKILL: Component Layout Governance

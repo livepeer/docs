@@ -10,11 +10,11 @@
 **Report generated:** 2026-02-21  
 **Status:** v2 live and deployed; finalisation in progress (EoW)
 
----
+<CustomDivider />
 
 > **Note on data sources.** This audit synthesises evidence from six sources: (1) the live deployed v2 documentation site at docs.livepeer.org/v2; (2) the docs-v2 branch repository files provided (README.md, docs-guide/\*, retrospective draft, claim verification matrix, plan audit); (3) Google Drive documents found via search (Milestone 1 & 2 report, Stakeholder WG meeting notes); (4) the Livepeer community forum RFP thread; (5) Notion workspace data; and (6) Google Calendar. Where a source did not return data or was inaccessible, this is noted explicitly. Alison should supplement this report with actual weekly hours worked per period and any Notion/internal documents not surfaced here.
 
----
+<CustomDivider />
 
 ## Part 1: Engagement Overview
 
@@ -73,7 +73,7 @@ The original proposal was intentionally modest in how it described outputs, fram
 
 The engagement also ran significantly longer than the originally proposed 10-week timeline, extending from late 2024 through February 2026. This reflects both the genuine complexity of the work and the expanded scope that emerged through stakeholder engagement.
 
----
+<CustomDivider />
 
 ## Part 2: Stakeholder Engagement and Communication
 
@@ -133,7 +133,7 @@ All Wonderland posts on forum.livepeer.org identified in the RFP thread:
 
 > **Note:** Additional Wonderland posts in other forum categories (watercooler, governance, general) were not accessible via the available APIs at the time of this audit. Alison should supplement this list with any additional forum posts beyond the RFP thread.
 
----
+<CustomDivider />
 
 ## Part 3: Discovery and Strategy Work
 
@@ -207,7 +207,7 @@ The deployed IA (confirmed live) is a persona-first model with the following top
 
 A comprehensive brand strategy analysis was conducted examining Livepeer's messaging framework, voice, positioning, and competitive advantage. This work informed the copy and positioning throughout the v2 documentation, including the "Mission Control" framing, the product positioning as "Open AI-Infrastructure for Real-Time Interactive Video," and the stakeholder-oriented hero card navigation on the homepage.
 
----
+<CustomDivider />
 
 ## Part 4: Complete Work Delivered — RFP Deliverables
 
@@ -313,7 +313,7 @@ Two PR templates also exist: `.github/pull_request_template.md` and `.github/pul
 
 **Status:** Verified.
 
----
+<CustomDivider />
 
 ## Part 5: Above and Beyond — Work Delivered Beyond the Original RFP Scope
 
@@ -335,7 +335,7 @@ This is substantial software engineering work delivered as part of the documenta
 
 **The `lpd` CLI.** A unified command-line interface for all repository operations: `lpd setup`, `lpd dev`, `lpd test`, `lpd ci`, `lpd hooks`, `lpd scripts`. The CLI provides setup bootstrapping, local development, test orchestration, hook management, and script execution. It is the primary operator interface for the entire repository.
 
-Runbooks documented in `docs-guide/lpd.mdx` cover first-time setup, local docs development, test entrypoints, hook management, and script discovery. The CLI includes a `.lpdignore` pattern system for excluding scripts from discovery.
+Runbooks documented in `docs-guide/tooling/lpd-cli.mdx` cover first-time setup, local docs development, test entrypoints, hook management, and script discovery. The CLI includes a `.lpdignore` pattern system for excluding scripts from discovery.
 
 **Pre-commit enforcement system.** The `.githooks/pre-commit` hook runs a comprehensive set of checks before every commit, including:
 
@@ -361,9 +361,9 @@ A dedicated `pre-commit-no-deletions` hook prevents accidental bulk deletions.
 - Integration tests: `tests/integration/browser.test.js` (Puppeteer), `tests/integration/domain-pages-audit.js`, `tests/integration/v2-link-audit.js`
 - Test runners: `tests/run-all.js`, `tests/run-pr-checks.js`
 
-**Source-of-truth policy.** A documented and enforced source-of-truth policy (`docs-guide/source-of-truth-policy.mdx`) defines canonical ownership boundaries across README, docs-guide, tests, and Mintlify pages — preventing documentation drift. The policy is enforced via `tests/unit/docs-guide-sot.test.js` and `tools/scripts/generate-docs-guide-indexes.js --check`.
+**Source-of-truth policy.** A documented and enforced source-of-truth policy (`docs-guide/policies/source-of-truth-policy.mdx`) defines canonical ownership boundaries across README, docs-guide, tests, and Mintlify pages — preventing documentation drift. The policy is enforced via `tests/unit/docs-guide-sot.test.js` and `tools/scripts/generate-docs-guide-indexes.js --check`.
 
-**Repo evidence (full script inventory):** See `docs-guide/indexes/scripts-index.mdx` for all 58 scripts catalogued with summary, usage, and owner. Key entries include `.githooks/pre-commit`, `.githooks/verify.sh`, `tests/unit/script-docs.test.js`, `tests/run-pr-checks.js`, `tools/scripts/generate-pages-index.js`.
+**Repo evidence (full script inventory):** See `docs-guide/catalog/scripts-catalog.mdx` for all 58 scripts catalogued with summary, usage, and owner. Key entries include `.githooks/pre-commit`, `.githooks/verify.sh`, `tests/unit/script-docs.test.js`, `tests/run-pr-checks.js`, `tools/scripts/generate-pages-index.js`.
 
 ### 5c. AI, Automations, and Community Pipelines
 
@@ -397,7 +397,7 @@ A multi-source automation layer was built providing ongoing content freshness an
 - `build-review-assets.yml`, `generate-review-table.yml`, `update-review-template.yml` — automated review workflow tooling
 - `auto-assign-docs-reviewers.yml` — automatic reviewer assignment
 
-**Full workflow inventory:** 17 workflows documented in `docs-guide/indexes/workflows-index.mdx`.
+**Full workflow inventory:** 17 workflows documented in `docs-guide/catalog/workflows-catalog.mdx`.
 
 **Repo evidence:** `.github/scripts/fetch-forum-data.js`, `.github/scripts/fetch-ghost-blog-data.js`, `.github/scripts/fetch-youtube-data.js`, `.github/scripts/project-showcase-sync.js`, `.github/workflows/project-showcase-sync.yml`, `.github/workflows/update-*.yml`, `snippets/automations/scripts/n8n/`, `snippets/automations/forum/forumData.jsx`, `snippets/automations/blog/ghostBlogData.jsx`, `snippets/automations/youtube/youtubeData.jsx`, `snippets/automations/showcase/showcaseData.jsx`
 
@@ -423,7 +423,7 @@ A suite of maintenance scripts was built to ensure the documentation system rema
 
 **API documentation generation.** `tools/scripts/snippets/generate-api-docs.sh` and `tools/scripts/snippets/fetch-openapi-specs.sh` handle OpenAPI spec fetching and API documentation generation.
 
-**Repo evidence:** All 58 scripts catalogued in `docs-guide/indexes/scripts-index.mdx`.
+**Repo evidence:** All 58 scripts catalogued in `docs-guide/catalog/scripts-catalog.mdx`.
 
 ### 5e. AI-Ready Architecture
 
@@ -471,27 +471,27 @@ The docs-guide system comprises eight canonical manual files plus three generate
 
 | File                                 | Contents                                                              |
 | ------------------------------------ | --------------------------------------------------------------------- |
-| `docs-guide/README.mdx`               | Source-of-truth model, start-here index, update rules                 |
-| `docs-guide/feature-guides/feature-map.mdx`          | Complete repository capability map across 8 feature areas             |
-| `docs-guide/feature-guides/architecture-map.mdx`     | Data and control flow, execution layers, key contract edges           |
-| `docs-guide/lpd.mdx`                  | CLI behavior, operator runbooks for all command groups                |
-| `docs-guide/quality-testing/quality-gates.mdx`        | Full matrix of local and CI enforcement with blocking/advisory status |
-| `docs-guide/feature-guides/automation-pipelines.mdx` | All automation surfaces, pipeline coverage, operational controls      |
-| `docs-guide/feature-guides/content-system.mdx`       | IA model, content layers, copy and quality principles                 |
-| `docs-guide/feature-guides/data-integrations.mdx`    | API specifications, external feeds, internal data layers              |
-| `docs-guide/indexes/scripts-index.mdx`        | Generated: all 58 scripts with summary, usage, owner                  |
-| `docs-guide/indexes/workflows-index.mdx`      | Generated: all 17 workflows with triggers, purpose, blocking policy   |
-| `docs-guide/indexes/templates-index.mdx`      | Generated: all 10 issue and PR templates with labels and ownership    |
+| `docs-guide/overview.mdx`               | Source-of-truth model, start-here index, update rules                 |
+| `docs-guide/features/feature-map.mdx`          | Complete repository capability map across 8 feature areas             |
+| `docs-guide/features/architecture-map.mdx`     | Data and control flow, execution layers, key contract edges           |
+| `docs-guide/tooling/lpd-cli.mdx`                  | CLI behavior, operator runbooks for all command groups                |
+| `docs-guide/policies/quality-gates.mdx`        | Full matrix of local and CI enforcement with blocking/advisory status |
+| `docs-guide/features/automations.mdx` | All automation surfaces, pipeline coverage, operational controls      |
+| `docs-guide/frameworks/content-system.mdx`           | IA model, content layers, copy and quality principles                 |
+| `docs-guide/features/data-integrations.mdx`    | API specifications, external feeds, internal data layers              |
+| `docs-guide/catalog/scripts-catalog.mdx`      | Generated: all 58 scripts with summary, usage, owner                  |
+| `docs-guide/catalog/workflows-catalog.mdx`    | Generated: all 17 workflows with triggers, purpose, blocking policy   |
+| `docs-guide/catalog/templates-catalog.mdx`    | Generated: all 10 issue and PR templates with labels and ownership    |
 
-The source-of-truth policy enforced through `docs-guide/source-of-truth-policy.mdx` defines canonical ownership boundaries and change management rules — ensuring that as the documentation system evolves, it does so without introducing drift or duplication.
+The source-of-truth policy enforced through `docs-guide/policies/source-of-truth-policy.mdx` defines canonical ownership boundaries and change management rules — ensuring that as the documentation system evolves, it does so without introducing drift or duplication.
 
----
+<CustomDivider />
 
 ## Part 6: Time Spent Matrix and Estimates
 
 > **How to read this section.** Every discrete work item in this audit has been independently estimated using three inputs: (1) the complexity and depth of the artifact or output as evidenced in the repo and deployed site; (2) professional benchmarks for comparable work (technical writing, DevRel, software engineering, product management); and (3) the engagement duration and meeting cadence. Estimates are presented as Low–High ranges. The "Actuals" column is for Alison to populate. All figures are in **hours**.
 
----
+<CustomDivider />
 
 ### 6.1 Budgeted Hours (From Proposal)
 
@@ -505,7 +505,7 @@ The source-of-truth policy enforced through `docs-guide/source-of-truth-policy.m
 | Actual engagement length                        | ~20 weeks (Oct 2024 – Feb 2025)     |
 | Actual engagement length (incl. strategy phase) | ~22–24 weeks (Sept 2024 – Feb 2025) |
 
----
+<CustomDivider />
 
 ### 6.2 Meeting and Synchronous Time Matrix
 
@@ -523,7 +523,7 @@ Every confirmed and estimated meeting is itemised below. Duration reflects the m
 | M8  | Meeting follow-up (action items, Notion updates, summaries) | Per meeting         | 20 min avg           | —                  | ~40 sessions         | 13      | 18        | \_\_    |
 |     |                                                             |                     |                      |                    | **MEETING SUBTOTAL** | **69**  | **104.5** | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.3 Phase 0 — Onboarding and Project Setup
 
@@ -537,7 +537,7 @@ Every confirmed and estimated meeting is itemised below. Duration reflects the m
 | P0.6 | Engagement planning (timeline, milestones, risk mapping) | Detailed work plan for all 4 phases                                           | 4       | 6        | \_\_    |
 |      |                                                          | **PHASE 0 SUBTOTAL**                                                          | **20**  | **33**   | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.4 Phase 1 — Foundational Analysis and Strategy
 
@@ -599,7 +599,7 @@ Every confirmed and estimated meeting is itemised below. Duration reflects the m
 | A5.4 | "Mission Control" framing and product positioning | Developing the "Open AI-Infrastructure for Real-Time Interactive Video" positioning | 3       | 6        | \_\_    |
 |      |                                                   | **BRAND STRATEGY SUBTOTAL**                                                         | **15**  | **25**   | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.5 Phase 2 — Community Engagement
 
@@ -623,7 +623,7 @@ Every confirmed and estimated meeting is itemised below. Duration reflects the m
 | C16 | Automation pipeline design (9 pipeline concepts)      | Designing auto-update and aggregation pipeline architecture                | 4       | 7        | \_\_    |
 |     |                                                       | **PHASE 2 SUBTOTAL**                                                       | **61**  | **108**  | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.6 Phase 3 — Implementation: Content
 
@@ -656,7 +656,7 @@ Content rewrites are estimated per section based on the number of pages, depth o
 | W23 | Brand voice and positioning integration throughout                | Embedding brand strategy into all copy | Medium — woven through all content               | 8       | 14       | \_\_    |
 |     |                                                                   |                                        | **CONTENT SUBTOTAL**                             | **237** | **390**  | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.7 Phase 3 — Implementation: Infrastructure and Engineering
 
@@ -784,18 +784,18 @@ This section covers all software engineering, automation, and tooling work — t
 
 | #   | Work item                                   | Description                                                  | Low hrs | High hrs | Actuals |
 | --- | ------------------------------------------- | ------------------------------------------------------------ | ------- | -------- | ------- |
-| D1  | `docs-guide/README.mdx`                      | Source-of-truth model, index, update rules                   | 2       | 4        | \_\_    |
-| D2  | `docs-guide/feature-guides/feature-map.mdx`                 | Complete 8-area capability map                               | 3       | 5        | \_\_    |
-| D3  | `docs-guide/feature-guides/architecture-map.mdx`            | Data flow, execution layers, contract edges, Mermaid diagram | 3       | 5        | \_\_    |
-| D4  | `docs-guide/lpd.mdx`                         | CLI behaviour and operator runbooks for all command groups   | 4       | 7        | \_\_    |
-| D5  | `docs-guide/quality-testing/quality-gates.mdx`               | Gate matrix — local, PR, browser; blocking vs advisory       | 3       | 5        | \_\_    |
-| D6  | `docs-guide/feature-guides/automation-pipelines.mdx`        | All automation surfaces and pipeline coverage                | 3       | 5        | \_\_    |
-| D7  | `docs-guide/feature-guides/content-system.mdx`              | IA model, content layers, copy principles                    | 2       | 4        | \_\_    |
-| D8  | `docs-guide/feature-guides/data-integrations.mdx`           | API specs, external feeds, internal data layers              | 2       | 4        | \_\_    |
-| D9  | `docs-guide/source-of-truth-policy.mdx`      | Canonical ownership boundaries and change management rules   | 3       | 5        | \_\_    |
-| D10 | `docs-guide/indexes/scripts-index.mdx` (generated)   | 58-script catalog — generated and validated                  | 2       | 3        | \_\_    |
-| D11 | `docs-guide/indexes/workflows-index.mdx` (generated) | 17-workflow catalog — generated and validated                | 2       | 3        | \_\_    |
-| D12 | `docs-guide/indexes/templates-index.mdx` (generated) | 10-template catalog — generated and validated                | 1       | 2        | \_\_    |
+| D1  | `docs-guide/overview.mdx`                      | Source-of-truth model, index, update rules                   | 2       | 4        | \_\_    |
+| D2  | `docs-guide/features/feature-map.mdx`                 | Complete 8-area capability map                               | 3       | 5        | \_\_    |
+| D3  | `docs-guide/features/architecture-map.mdx`            | Data flow, execution layers, contract edges, Mermaid diagram | 3       | 5        | \_\_    |
+| D4  | `docs-guide/tooling/lpd-cli.mdx`                         | CLI behaviour and operator runbooks for all command groups   | 4       | 7        | \_\_    |
+| D5  | `docs-guide/policies/quality-gates.mdx`               | Gate matrix — local, PR, browser; blocking vs advisory       | 3       | 5        | \_\_    |
+| D6  | `docs-guide/features/automations.mdx`        | All automation surfaces and pipeline coverage                | 3       | 5        | \_\_    |
+| D7  | `docs-guide/frameworks/content-system.mdx`                 | IA model, content layers, copy principles                    | 2       | 4        | \_\_    |
+| D8  | `docs-guide/features/data-integrations.mdx`           | API specs, external feeds, internal data layers              | 2       | 4        | \_\_    |
+| D9  | `docs-guide/policies/source-of-truth-policy.mdx`      | Canonical ownership boundaries and change management rules   | 3       | 5        | \_\_    |
+| D10 | `docs-guide/catalog/scripts-catalog.mdx` (generated)   | 58-script catalog — generated and validated                  | 2       | 3        | \_\_    |
+| D11 | `docs-guide/catalog/workflows-catalog.mdx` (generated) | 17-workflow catalog — generated and validated                | 2       | 3        | \_\_    |
+| D12 | `docs-guide/catalog/templates-catalog.mdx` (generated) | 10-template catalog — generated and validated                | 1       | 2        | \_\_    |
 |     |                                             | **DOCS-GUIDE SUBTOTAL**                                      | **30**  | **52**   | \_\_    |
 
 #### 6.7h Governance, Templates, and CODEOWNERS
@@ -842,7 +842,7 @@ This section covers all software engineering, automation, and tooling work — t
 | X7  | LinkedIn video download utilities             | `download-linkedin-video.sh`, `download-linkedin-with-cookies.sh` | 1       | 2        | \_\_    |
 |     |                                               | **API & DATA SUBTOTAL**                                           | **14**  | **28**   | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.8 Phase 4 — Reporting, Documentation, and Project Management
 
@@ -864,7 +864,7 @@ This section covers all software engineering, automation, and tooling work — t
 | PM14 | This audit report                                                  | Comprehensive engagement audit                          | 6       | 10       | \_\_    |
 |      |                                                                    | **REPORTING & PM SUBTOTAL**                             | **59**  | **104**  | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.9 Complete Time Summary Matrix
 
@@ -895,7 +895,7 @@ This section covers all software engineering, automation, and tooling work — t
 | **Proposed hours (RFP)**                     |      | **250**  | **250**   | —       |
 | **Estimated overdelivery ratio**             |      | **3.8x** | **6.8x**  | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.10 Market Rate Valuation of Work Delivered
 
@@ -919,7 +919,7 @@ The following table applies standard market rates for the type of work delivered
 
 > The market rate valuation uses blended Sydney / remote rates for professional services in 2024–2025. Even at the low end of both hours and rates, the market value of work delivered is approximately **3.4x** the contracted fee. At the high end it is nearly **9x**. The contracted rate of $100/hour (implied) is well below market for the combination of technical writing, software engineering, product strategy, and DevRel expertise required.
 
----
+<CustomDivider />
 
 ### 6.11 Hours Overdelivery Summary
 
@@ -937,7 +937,7 @@ The following table applies standard market rates for the type of work delivered
 
 > **Action for Alison:** Fill in the "Actuals" column throughout Section 6 with your real hours per work item. Even rough weekly logs broken down by category (e.g., "week of Oct 14: ~8 hrs content, ~6 hrs CLI, ~4 hrs meetings") will substantially improve the precision of this section and make the overdelivery case more concrete and verifiable.
 
----
+<CustomDivider />
 
 ## Part 7: RFP Completion Matrix
 
@@ -955,16 +955,16 @@ The following table applies standard market rates for the type of work delivered
 | Ownership handoff model              | ✅ Complete                     | `.github/CODEOWNERS`; `v2/pages/09_internal/governance.mdx`; docs-guide SoT policy                           | Codified in repo and documentation                                                                  |
 | Ticketing / triage model             | ✅ Complete                     | 8 GitHub issue templates with labels and automation; `issue-auto-label.yml`                                  | Fully operational                                                                                   |
 
----
+<CustomDivider />
 
 ## Part 8: Above and Beyond Matrix
 
 | Work Item                             | Category            | Description                                                                                   | Repo Evidence                                                                                | Estimated Scope             |
 | ------------------------------------- | ------------------- | --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | --------------------------- |
-| `lpd` CLI                             | Back-end ops        | Unified maintainer CLI for all repo operations (setup, dev, test, hooks, scripts)             | `lpd`, `docs-guide/lpd.mdx`                                                                   | Large (20–30 hrs)           |
+| `lpd` CLI                             | Back-end ops        | Unified maintainer CLI for all repo operations (setup, dev, test, hooks, scripts)             | `lpd`, `docs-guide/tooling/lpd-cli.mdx`                                                                   | Large (20–30 hrs)           |
 | Pre-commit hook system                | Back-end ops        | Structure, style, MDX, links, spelling, script docs, pages index — all enforced pre-commit    | `.githooks/pre-commit`, `.githooks/verify.sh`                                                | Medium (10–15 hrs)          |
-| CI test suite (17 workflows)          | Back-end ops / CI   | Full GitHub Actions workflow suite for PR validation, browser testing, link checking          | `.github/workflows/*.yml`; `docs-guide/indexes/workflows-index.mdx`                                   | Large (20–30 hrs)           |
-| 58-script test and ops infrastructure | Back-end ops        | Unit, integration, and browser tests; run-all and run-pr-checks orchestrators                 | `docs-guide/indexes/scripts-index.mdx`; `tests/`                                                      | Very large (30–45 hrs)      |
+| CI test suite (17 workflows)          | Back-end ops / CI   | Full GitHub Actions workflow suite for PR validation, browser testing, link checking          | `.github/workflows/*.yml`; `docs-guide/catalog/workflows-catalog.mdx`                                 | Large (20–30 hrs)           |
+| 58-script test and ops infrastructure | Back-end ops        | Unit, integration, and browser tests; run-all and run-pr-checks orchestrators                 | `docs-guide/catalog/scripts-catalog.mdx`; `tests/`                                                    | Very large (30–45 hrs)      |
 | Componentised UI system               | Front-end           | Reusable MDX component library; structural style enforcement                                  | `snippets/components/`; `v2/resources/documentation-guide/component-library.mdx`    | Medium (20–30 hrs)          |
 | Forum data ingestion pipeline         | Automation          | Automated scheduled fetch and normalisation of Livepeer forum data                            | `.github/scripts/fetch-forum-data.js`; `update-forum-data.yml`                               | Medium                      |
 | Ghost blog data ingestion pipeline    | Automation          | Automated scheduled fetch of Livepeer blog content                                            | `.github/scripts/fetch-ghost-blog-data.js`; `update-ghost-blog-data.yml`                     | Medium                      |
@@ -979,7 +979,7 @@ The following table applies standard market rates for the type of work delivered
 | Docs-guide index generator            | Maintenance scripts | Generates script, workflow, and template catalogs in docs-guide/                              | `tools/scripts/generate-docs-guide-indexes.js`                                               | Small                       |
 | Script self-documentation system      | Maintenance scripts | Enforces script header schema; auto-generates script index; `new-script.js` template creator  | `tests/unit/script-docs.test.js`; `tools/scripts/new-script.js`                              | Medium                      |
 | Internal docs-guide system            | Governance          | 8 canonical internal maintainer documents + 3 generated indexes                               | `docs-guide/*.md`                                                                            | Medium (20–30 hrs)          |
-| Source-of-truth policy                | Governance          | Canonical ownership boundaries, change management rules, enforced via CI                      | `docs-guide/source-of-truth-policy.mdx`; `tests/unit/docs-guide-sot.test.js`                  | Small                       |
+| Source-of-truth policy                | Governance          | Canonical ownership boundaries, change management rules, enforced via CI                      | `docs-guide/policies/source-of-truth-policy.mdx`; `tests/unit/docs-guide-sot.test.js`                  | Small                       |
 | AI-ready content structure            | AI-readiness        | Semantic headings, consistent frontmatter, component-driven construction for LLM parsing      | Site-wide                                                                                    | Embedded in content work    |
 | `llms.txt` documentation guidance     | AI-readiness        | Structured guidance for LLM discoverability of the Livepeer docs estate                       | `tools/ai-rules/llms.txt.information.md`                                                     | Small                       |
 | AI assistant integration              | AI-readiness        | Mintlify AI assistant integrated; test surface created                                        | `v2/pages/00_home/test.mdx`; `README.md:245`                                                 | Small                       |
@@ -996,7 +996,7 @@ The following table applies standard market rates for the type of work delivered
 | Product-forward copy and positioning  | Content             | Mission Control framing, "Open AI-Infrastructure" positioning, zero-to-hero paths             | Live site; docs.json                                                                         | Large (embedded in content) |
 | Framer landing page prototype         | Content             | New Livepeer website landing page V1 prototyped                                               | External — Alison to confirm URL                                                             | Small–medium                |
 
----
+<CustomDivider />
 
 ## Part 9: Notion Documents Found
 
@@ -1076,7 +1076,7 @@ All sessions recorded via Fireflies.ai. Attendees: Rich, Rick, Mehrdad, Nick, Al
 
 > **Action for Alison:** Review this list and add any Notion pages, databases, or Miro boards not captured here. The Notion meeting database likely contains additional session records beyond the 8 confirmed above.
 
----
+<CustomDivider />
 
 ## Part 10: Google Drive and Email Documents Found
 
@@ -1098,7 +1098,7 @@ Email search was conducted across all accessible accounts. Specific email thread
 
 > **Action for Alison:** Please review your email for Livepeer-related threads (particularly to/from rich@livepeer.org, rick@livepeer.org, mehrdad@livepeer.foundation) and add subject lines, dates, and brief summaries to this section for completeness.
 
----
+<CustomDivider />
 
 ## Part 11: Calendar Audit
 
@@ -1124,7 +1124,7 @@ February 3, 2025 — Docs Stakeholder WG (launch timeline)
 
 > **Action for Alison:** Please export your calendar events from September 2024 to February 2025 and add to this section. The full calendar review (including categorisation of non-Livepeer events) will be completed once calendar data is accessible. Mark all meetings as CONFIRMED LIVEPEER, LIKELY LIVEPEER, or UNRELATED per your review.
 
----
+<CustomDivider />
 
 ## Part 12: Summary — The Strategic Case for This Work
 
@@ -1144,6 +1144,6 @@ The v2 documentation at docs.livepeer.org is now:
 
 The original RFP budget of $25,000 for a 250-hour engagement did not price this scope of work. The infrastructure, automation, and AI-readiness layers alone would constitute a separate substantial engagement. The time investment evidenced in this audit conservatively represents 3–5x the originally proposed hours, with scope that is 2–3x broader than what was specified in the RFP.
 
----
+<CustomDivider />
 
 _End of audit. This document should be treated as a living record. Alison Haire should supplement the calendar section, the email section, and the time accounting section with actuals. The Notion section should be reviewed for completeness and any missing pages added._

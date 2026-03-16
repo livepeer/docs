@@ -1,0 +1,380 @@
+---
+title: 'Gateway Requirements'
+sidebarTitle: 'Setup Requirements'
+description: 'Hardware, operating system, network, and skills requirements for running a Livepeer gateway. Covers both off-chain and on-chain deployment modes.'
+keywords:
+  - livepeer
+  - gateway requirements
+  - gateway hardware
+  - gateway server
+  - gateway OS
+  - Linux gateway
+  - on-chain requirements
+  - off-chain requirements
+  - gateway skills
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: gateway-operator
+purpose: operations
+status: current
+lastVerified: '2026-03-14'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)
+- Fontawesome icons are used on accordions and tabs
+- Tables use StyledTable component
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical - no long headers or questions (aim for max 3 words)
+- CustomDivider is used with <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} /> for all --- separator breaks
+- Placeholders for Media & Video Resources are in comments with a TODO for a human.
+- REVIEW flags are in JSX flags for a human.
+*/}
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { BorderedBox, CenteredContainer } from '/snippets/components/layout/containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Gateways are software nodes that require network optimisations (bandwidth and latency) and only minimal hardware (CPU and RAM).</Tip>
+</CenteredContainer>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+A Livepeer gateway routes jobs between your application and the compute network. It does not run AI models or transcode video - orchestrator nodes handle that.
+Requirements vary by deployment mode: off-chain gateways have a lighter setup, while on-chain gateways need Ethereum infrastructure.
+
+{/* <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} middleText="Hardware" /> */}
+
+## Hardware
+
+Hardware requirements are the same across deployment modes. The gateway is a routing layer, not a compute layer.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Requirement</TableCell>
+      <TableCell header>Minimum</TableCell>
+      <TableCell header>Recommended</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**CPU**</TableCell>
+      <TableCell>2 cores</TableCell>
+      <TableCell>4-8 cores</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**RAM**</TableCell>
+      <TableCell>4 GB</TableCell>
+      <TableCell>16-32 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Storage**</TableCell>
+      <TableCell>20 GB SSD</TableCell>
+      <TableCell>100 GB NVMe SSD</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Network**</TableCell>
+      <TableCell>50 Mbps symmetric</TableCell>
+      <TableCell>1 Gbps, low latency</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**GPU**</TableCell>
+      <TableCell>Not required</TableCell>
+      <TableCell>Not required</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+Gateways are lightweight routing nodes. Minimum specs are sufficient for development and low-traffic deployments.
+
+<Note>
+**Node type differences:** <Badge color="purple">AI</Badge> or <Badge color="green">Dual</Badge> gateways require Linux. <Badge color="blue">Video</Badge> gateways also support Windows via WSL2/Docker and macOS (build from source). On-chain gateways additionally require a public IP, static IP or domain, and ports 1935 (RTMP), 8935 (HTTP), and optionally 7935 (CLI).
+</Note>
+
+<CustomDivider style={{margin: "0 0 -1rem 0"}} middleText="Operating Systems" />
+
+## Operating Systems
+
+Not all operating systems support all node types.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>OS</TableCell>
+      <TableCell header>Video</TableCell>
+      <TableCell header>AI</TableCell>
+      <TableCell header>Notes</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Linux** (Ubuntu 20.04+)</TableCell>
+      <TableCell>✅ Full support</TableCell>
+      <TableCell>✅ Full support</TableCell>
+      <TableCell>Recommended for all production gateways</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Linux** (other distros)</TableCell>
+      <TableCell>✅ Generally supported</TableCell>
+      <TableCell>✅ Generally supported</TableCell>
+      <TableCell>Debian, CentOS, Arch - verify binary compatibility</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**macOS** (Intel / Apple Silicon)</TableCell>
+      <TableCell>⚠️ Dev only - build from source</TableCell>
+      <TableCell>❌ No binaries available</TableCell>
+      <TableCell>Local dev/routing only; Docker often fails for AI gateway</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Windows** (native)</TableCell>
+      <TableCell>⚠️ Limited support</TableCell>
+      <TableCell>❌ Not supported</TableCell>
+      <TableCell>No native AI gateway binary for Windows</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Windows** (WSL2 + Docker)</TableCell>
+      <TableCell>✅ Supported via Docker</TableCell>
+      <TableCell>⚠️ Fragile - use Linux VM instead</TableCell>
+      <TableCell>Linux in WSL</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Docker** (Linux host)</TableCell>
+      <TableCell>✅ Supported</TableCell>
+      <TableCell>✅ Supported</TableCell>
+      <TableCell>Recommended deployment method for most setups</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider style={{margin: "0 0 -1rem 0"}} middleText="Network" />
+
+## Networking Needs
+
+Your gateway is a routing layer. Network quality directly determines job latency and stream reliability.
+
+<Tabs>
+  <Tab title="Off-chain">
+    Off-chain gateways initiate outbound connections to orchestrators. They do not need to be publicly reachable.
+
+    <StyledTable variant="bordered">
+      <thead>
+        <TableRow header>
+          <TableCell header>Requirement</TableCell>
+          <TableCell header>Detail</TableCell>
+          <TableCell header>Node Type</TableCell>
+        </TableRow>
+      </thead>
+      <tbody>
+        <TableRow>
+          <TableCell>**Bandwidth**</TableCell>
+          <TableCell>Sufficient for your request volume. AI inference payloads (images, audio) are smaller than video streams.</TableCell>
+          <TableCell><Badge color="purple">AI</Badge> lower; <Badge color="blue">Video</Badge> <Badge color="green">Dual</Badge> higher</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**Latency**</TableCell>
+          <TableCell>Low latency to orchestrators improves response times. Colocation in regions with strong orchestrator presence helps.</TableCell>
+          <TableCell>All node types</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**Public IP**</TableCell>
+          <TableCell>Not required - gateway initiates all connections outbound</TableCell>
+          <TableCell>All node types</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**Outbound access**</TableCell>
+          <TableCell>To orchestrators (port 443 or as configured) and remote signer endpoint</TableCell>
+          <TableCell>All node types</TableCell>
+        </TableRow>
+      </tbody>
+    </StyledTable>
+
+    <Note>
+    **Ports:** Outbound to orchestrators on port 443 (or as configured). No inbound ports required.
+    </Note>
+  </Tab>
+  <Tab title="On-chain">
+    On-chain gateways must be publicly reachable. Bandwidth is the primary constraint - the gateway receives ingest streams and relays transcoded output.
+
+    <StyledTable variant="bordered">
+      <thead>
+        <TableRow header>
+          <TableCell header>Requirement</TableCell>
+          <TableCell header>Detail</TableCell>
+          <TableCell header>Node Type</TableCell>
+        </TableRow>
+      </thead>
+      <tbody>
+        <TableRow>
+          <TableCell>**Bandwidth**</TableCell>
+          <TableCell>High sustained throughput. Scale with concurrent stream count or inference request volume.</TableCell>
+          <TableCell><Badge color="blue">Video</Badge> <Badge color="green">Dual</Badge> highest; <Badge color="purple">AI</Badge> moderate</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**Latency**</TableCell>
+          <TableCell>Low latency to orchestrators and viewers. Live video is latency-sensitive - every hop adds delay.</TableCell>
+          <TableCell><Badge color="blue">Video</Badge> <Badge color="green">Dual</Badge> critical; <Badge color="purple">AI</Badge> important</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**Public IP or domain**</TableCell>
+          <TableCell>Required (`-serviceAddr`) - orchestrators and encoders must reach your gateway. Static IP or domain recommended.</TableCell>
+          <TableCell>All node types</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**Uptime**</TableCell>
+          <TableCell>High availability expected - live streams drop if the gateway goes down. VPS or cloud instance strongly recommended over home connections.</TableCell>
+          <TableCell><Badge color="blue">Video</Badge> <Badge color="green">Dual</Badge> critical; <Badge color="purple">AI</Badge> recommended</TableCell>
+        </TableRow>
+      </tbody>
+    </StyledTable>
+
+    <Note>
+    **Ports:** RTMP ingest on 1935, HTTP API on 8935, CLI on 7935 (optional, keep internal). Ensure these are open and reachable.
+    </Note>
+  </Tab>
+</Tabs>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} middleText="On-Chain Requirements" />
+
+## On-Chain Requirements
+
+On-chain deployment mode requires Ethereum infrastructure. Off-chain operators can skip this section.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Requirement</TableCell>
+      <TableCell header>Detail</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Arbitrum RPC URL**</TableCell>
+      <TableCell>Connection to Arbitrum One where Livepeer's smart contracts are deployed. Options: public RPC (`https://arb1.arbitrum.io/rpc`), third-party (Alchemy, Infura, QuickNode), community (`https://arb1.livepeer.community`), or self-hosted. See the [Arbitrum RPC reference](/v2/gateways/resources/technical/arbitrum-rpc).</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Ethereum wallet**</TableCell>
+      <TableCell>An Ethereum account on Arbitrum to hold funds and sign payment tickets. go-livepeer can auto-create on first run, or bring an existing wallet via `-ethAcctAddr`. See the [on-chain setup guide](/v2/gateways/setup/requirements/on-chain%20setup/on-chain).</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**ETH on Arbitrum**</TableCell>
+      <TableCell>Minimum for testing: **0.1 ETH**. Production: **0.065 ETH deposit + 0.03 ETH reserve**. Must be bridged from Ethereum mainnet. See [Bridge LPT to Arbitrum](/v2/gateways/setup/requirements/on-chain%20setup/bridge-lpt-to-arbitrum) and the [fund gateway guide](/v2/gateways/setup/requirements/on-chain%20setup/fund-gateway).</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+<Note>
+Gateways pay in ETH, not LPT. LPT is used for staking and governance by orchestrators - gateways never need LPT.
+</Note>
+
+<CustomDivider style={{margin: "0 0 -1rem 0"}} middleText="Off-Chain Requirements" />
+
+## Off-Chain Requirements
+
+Off-chain deployment mode removes all Ethereum requirements from your gateway. You need three things instead.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Requirement</TableCell>
+      <TableCell header>Detail</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Linux server**</TableCell>
+      <TableCell>Ubuntu 20.04 or later, or Docker on Linux</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Remote signer**</TableCell>
+      <TableCell>Either self-hosted or a community-hosted endpoint</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Orchestrator list**</TableCell>
+      <TableCell>One or more AI-capable orchestrator addresses for `-orchAddr`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**`-httpIngest` flag**</TableCell>
+      <TableCell>Required: enables HTTP job ingestion</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<Note>
+**Remote signer:** The remote signer handles Ethereum payment signing on behalf of your gateway, so you do not need a funded wallet on the gateway node itself. Options: community signer (`https://signer.eliteencoder.net/` - free) or self-hosted for full control.
+</Note>
+<CustomDivider style={{margin: "0 0 -1rem 0"}} middleText="Integration Notes" />
+
+## Integration Notes
+
+- **Off-chain gateways** supply orchestrator addresses directly via `-orchAddr`. On-chain gateways discover orchestrators automatically through the Livepeer protocol.
+- <Badge color="purple">AI</Badge> or <Badge color="green">Dual</Badge> node types require orchestrators running `ai-runner` containers. <Badge color="blue">Video</Badge> node types work with any orchestrator advertising transcoding capabilities.
+
+{/* SME: No documented discovery endpoint or registry exists for off-chain gateways as of March 2026. */}
+{/* j0sh noted in Discord: "I'll also try to publish docs soon." */}
+{/* When a discovery endpoint is documented, replace this section with a direct link. */}
+
+<CustomDivider style={{margin: "0 0 -1rem 0"}} middleText="Skills" />
+
+## Technical Skills
+
+Technical skills required depend on your deployment mode and stage.
+
+<AccordionGroup>
+  <Accordion title="Minimum: comfortable with a terminal and Docker">
+    You can get an AI gateway running with:
+
+    - Basic Linux command line (navigate directories, run commands, read logs)
+    - Docker: pull an image, run a container, read container logs
+    - Ability to edit a configuration file or Docker Compose YAML
+    - An understanding of what a REST API is (for connecting your application)
+
+    This is the minimum for an off-chain gateway. On-chain deployment mode adds the Ethereum steps below.
+  </Accordion>
+  <Accordion title="On-chain: also need Ethereum basics">
+    Running a gateway in on-chain deployment mode requires:
+
+    - Creating and managing an Ethereum wallet
+    - Understanding the Arbitrum L2 network (not the same as Ethereum mainnet)
+    - Bridging ETH from Ethereum to Arbitrum
+    - Running `livepeer_cli` to allocate deposit and reserve funds
+    - Monitoring your ETH balance and topping up when needed
+
+    None of this requires deep crypto expertise, but it is more involved than the off-chain path. If you have never used a crypto wallet before, budget extra time for the on-chain setup steps.
+  </Accordion>
+  <Accordion title="Production: systems administration">
+    For a production gateway handling production traffic, you additionally want:
+
+    - Linux systems administration (systemd services, log rotation, process monitoring)
+    - Basic networking (firewall rules, DNS, reverse proxy configuration)
+    - Docker Compose or equivalent for managing multi-container deployments
+    - Familiarity with Prometheus/Grafana or equivalent monitoring stack
+
+    These are not requirements to get started, but they become important for any gateway you plan to rely on.
+  </Accordion>
+</AccordionGroup>
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Install with Docker" icon="docker" href="/v2/gateways/setup/install/docker-install" arrow horizontal>
+    Quickest path to a running gateway. Docker handles dependencies automatically.
+  </Card>
+  <Card title="Install on Linux" icon="linux" href="/v2/gateways/setup/install/linux-install" arrow horizontal>
+    Install the go-livepeer binary directly on your Linux host.
+  </Card>
+  <Card title="AI Gateway Quickstart" icon="bolt" href="/v2/gateways/quickstart/gateway-setup" arrow horizontal>
+    Step-by-step from zero to a running AI gateway, including Docker command and test request.
+  </Card>
+  <Card title="Community Install Methods" icon="people-group" href="/v2/gateways/setup/install/community-projects" arrow horizontal>
+    Ansible, Docker Compose, and community-maintained install scripts.
+  </Card>
+</CardGroup>

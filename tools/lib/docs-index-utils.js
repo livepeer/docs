@@ -7,14 +7,14 @@
  * @owner             docs
  * @needs             R-R16, R-R17
  * @purpose-statement Shared utilities for docs-index.json generation — path resolution, frontmatter extraction, index merging
- * @pipeline          indirect — library module imported by other scripts, not invoked directly
+ * @pipeline          indirect — library module
  * @usage             node tools/lib/docs-index-utils.js [flags]
  */
 
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
-const yaml = require('js-yaml');
+const yaml = require('./load-js-yaml');
 
 const DOMAIN_RENAME_MAP = {
   '00_home': 'home',

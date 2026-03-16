@@ -1,0 +1,101 @@
+---
+title: Carte des critères de qualité
+sidebarTitle: Critères de qualité
+description: >-
+  Ce document mappe le comportement d'application locale et en CI, et indique si
+  les vérifications sont bloquantes ou conseillées.
+keywords:
+  - livepeer
+  - quality gates
+  - internal
+  - map
+  - quality
+  - gates
+  - enforcement
+  - behavior
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJkb2NzLWd1aWRlL3BvbGljaWVzL3F1YWxpdHktZ2F0ZXMubWR4Iiwic291cmNlUm91dGUiOiJkb2NzLWd1aWRlL3BvbGljaWVzL3F1YWxpdHktZ2F0ZXMiLCJzb3VyY2VIYXNoIjoiODRhNmM5ZmI3ZTA2NTlkNTMyY2I1ZTY1MDliZDMzNjBmZmI2ZDdhMTVkMTU5MDM0YTExZDllYWY1OTcwNjhjNCIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxNzoxOTowNS4yNzFaIn0= */}
+## Couches de portail
+
+### 1) Pré-validation (local)
+
+Entrée :
+
+- `.githooks/pre-commit`
+
+Vérifications clés :
+
+- règles de structure du dépôt
+- vérifications du guide de style
+- vérifications de syntaxe/verification (`.githooks/verify.sh`)
+- séries de tests en attente (`tests/run-all.js --staged --skip-browser`)
+- audits de WCAG en attente (lien/domaine)
+- exécutions d'audits WCAG en attente`tests/integration/v2-wcag-audit.js --staged --fix --stage --max-pages 10 --fail-impact serious ...`
+- application de la documentation des scripts
+- synchronisation de l'index des pages
+
+Politique de blocage :
+
+- blocage en cas d'échec des vérifications structurelles/style/test
+- blocage en cas d'échec des exécutions WCAG en attente et de restes`serious`/`critical`résultats d'accessibilité après autofixation conservatrice
+- `color-contrast`les résultats sont conseillés uniquement (non bloquants) dans l'audit WCAG jusqu'à ce que les mises à jour de couleur soient approuvées
+- vérification du guide de documentation actuellement conseillée
+
+### 2) Vérifications des fichiers modifiés dans la PR
+
+Entrée :
+
+- `tests/run-pr-checks.js`
+- `.github/workflows/test-suite.yml` (mode PR)
+
+Vérifications clés :
+
+- style, MDX, orthographe, qualité, liens/importations (portée modifiée)
+- règles de base MDX + vérifications de la navigation de la documentation
+- vérifications de la documentation des scripts modifiés
+- audit strict des liens sur les pages de documentation modifiées
+- vérification du guide de documentation actuellement conseillée
+
+Politique de blocage :
+
+- blocage en cas d'échec des vérifications obligatoires
+- comportement conseillé pour les exceptions de PR d'intégration et la vérification du guide de documentation
+
+### 3) Validation du navigateur / Balayages
+
+Entrées :
+
+- `tests/integration/browser.test.js`
+- `tools/scripts/test-v2-pages.js`
+- `.github/workflows/test-v2-pages.yml`
+
+Politique de blocage :
+
+- les échecs du navigateur sont traités comme bloquants dans les flux CI principaux
+
+## Fichiers sources
+
+- `.githooks/pre-commit`
+- `.githooks/verify.sh`
+- `tests/run-all.js`
+- `tests/run-pr-checks.js`
+- `tests/integration/v2-wcag-audit.js`
+- `.github/workflows/test-suite.yml`
+- `.github/workflows/test-v2-pages.yml`
+- `tests/WHEN-TESTS-RUN.md`
+- `tests/PR-CI-TESTS-AND-SCRIPT-RUN-MATRIX.md`
+
+## Règles de base pour la documentation SoT
+
+Les vérifications des règles de base sont implémentées dans :
+
+- `tests/unit/docs-guide-sot.test.js`
+
+La fraîcheur de l'index généré est vérifiée via :
+
+- `tools/scripts/generate-docs-guide-indexes.js --check`
+
+Intention de déploiement conseillé :
+
+1. conseillé dans la pré-validation + résumés CI
+2. passer à bloquant une fois que la structure du guide de documentation est stabilisée et que le taux de dérive est faible

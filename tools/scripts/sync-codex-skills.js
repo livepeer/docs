@@ -6,42 +6,45 @@
  * @scope             tools/scripts, ai-tools/ai-skills/templates, tests/unit/codex-skill-sync.test.js
  * @owner             docs
  * @needs             R-R27, R-R30
- * @purpose-statement Codex skills sync — synchronises skill definition files between local and remote sources. Supports --check mode.
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
+ * @purpose-statement Codex skills sync — synchronises skill definition files and managed companion resources between canonical templates and local Codex installs. Supports --check mode.
+ * @pipeline          manual — not yet in pipeline
  * @usage             node tools/scripts/sync-codex-skills.js [flags]
  */
 
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const yaml = require('js-yaml');
+const {
+  RESOURCE_BUNDLES,
+  collectResourceEntries,
+  discoverTemplates,
+  parseSkillsList,
+  selectTemplates,
+  toPosix
+} = require('../lib/codex-skill-templates');
 
 const REPO_ROOT = process.cwd();
 const DEFAULT_SOURCE_DIR = 'ai-tools/ai-skills/templates';
-const TEMPLATE_SUFFIX = '.template.md';
-const TEMPLATE_FILE_RE = /^\d{2}-[a-z0-9-]+\.template\.md$/;
-const SKILL_NAME_RE = /^[a-z0-9][a-z0-9-]*$/;
+const MANIFEST_FILE = '.codex-sync-manifest.json';
 
-const REQUIRED_FRONTMATTER_KEYS = [
-  'name',
-  'description',
-  'tier',
-  'triggers',
-  'primary_paths',
-  'primary_commands'
-];
-
-const REQUIRED_SECTIONS = [
-  'SKILL:',
-  'Goal',
-  'Constraints',
-  'Workflow',
-  'Deliverable Format',
-  'Failure Modes / Fallback',
-  'Validation Checklist'
-];
-
-const ACRONYMS = new Set(['GH', 'MCP', 'API', 'CI', 'CLI', 'LLM', 'PDF', 'PR', 'UI', 'URL', 'SQL', 'SEO', 'MDX', 'WCAG', 'LPD', 'N8N']);
+const ACRONYMS = new Set([
+  'GH',
+  'MCP',
+  'API',
+  'CI',
+  'CLI',
+  'LLM',
+  'PDF',
+  'PR',
+  'UI',
+  'URL',
+  'SQL',
+  'SEO',
+  'MDX',
+  'WCAG',
+  'LPD',
+  'N8N'
+]);
 const BRANDS = new Map([
   ['openai', 'OpenAI'],
   ['openapi', 'OpenAPI'],
@@ -51,10 +54,6 @@ const BRANDS = new Map([
   ['cspell', 'cspell']
 ]);
 const SMALL_WORDS = new Set(['and', 'or', 'to', 'up', 'with', 'of', 'for']);
-
-function toPosix(value) {
-  return String(value || '').split(path.sep).join('/');
-}
 
 function usage() {
   const msg = [
@@ -68,19 +67,15 @@ function usage() {
     '  --skills <a,b,c>        Optional subset by template frontmatter name',
     '  --openai-yaml           Generate/open update agents/openai.yaml (default)',
     '  --no-openai-yaml        Skip agents/openai.yaml generation',
-    '  --help                  Show this message'
+    '  --help                  Show this message',
+    '',
+    'Optional companion bundle directories:',
+    ...RESOURCE_BUNDLES.map((bundle) => {
+      const source = `<template-stem>${bundle.sourceSuffix}/`;
+      return `  ${source.padEnd(28, ' ')} -> sync to skill ${bundle.destDir}/`;
+    })
   ];
   console.log(msg.join('\n'));
-}
-
-function parseSkillsList(raw) {
-  if (!raw) return null;
-  const values = String(raw)
-    .split(',')
-    .map((item) => item.trim())
-    .filter(Boolean);
-  if (values.length === 0) return null;
-  return [...new Set(values)];
 }
 
 function resolveDefaultDest() {
@@ -159,99 +154,6 @@ function parseArgs(argv) {
   return out;
 }
 
-function splitFrontmatter(content, filePath) {
-  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
-  if (!match) {
-    throw new Error(`${toPosix(filePath)}: missing or invalid YAML frontmatter`);
-  }
-  return {
-    frontmatterRaw: match[1],
-    body: content.slice(match[0].length)
-  };
-}
-
-function escapeRegExp(value) {
-  return String(value || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function requireSection(body, sectionTitle, filePath) {
-  const re = new RegExp(`^${escapeRegExp(sectionTitle)}(?:\\b|\\s|:)`, 'm');
-  if (!re.test(body)) {
-    throw new Error(`${toPosix(filePath)}: missing required section "${sectionTitle}"`);
-  }
-}
-
-function assertArrayCount(value, minCount, field, filePath) {
-  if (!Array.isArray(value)) {
-    throw new Error(`${toPosix(filePath)}: frontmatter "${field}" must be an array`);
-  }
-  if (value.length < minCount) {
-    throw new Error(`${toPosix(filePath)}: frontmatter "${field}" must have at least ${minCount} entries`);
-  }
-}
-
-function parseTemplateFile(filePathAbs) {
-  const content = fs.readFileSync(filePathAbs, 'utf8');
-  const { frontmatterRaw, body } = splitFrontmatter(content, filePathAbs);
-  let frontmatter;
-
-  try {
-    frontmatter = yaml.load(frontmatterRaw);
-  } catch (error) {
-    throw new Error(`${toPosix(filePathAbs)}: invalid frontmatter YAML (${error.message})`);
-  }
-
-  if (!frontmatter || typeof frontmatter !== 'object' || Array.isArray(frontmatter)) {
-    throw new Error(`${toPosix(filePathAbs)}: frontmatter must be a YAML object`);
-  }
-
-  for (const key of REQUIRED_FRONTMATTER_KEYS) {
-    if (!(key in frontmatter)) {
-      throw new Error(`${toPosix(filePathAbs)}: missing required frontmatter key "${key}"`);
-    }
-  }
-
-  const name = String(frontmatter.name || '').trim();
-  if (!name) {
-    throw new Error(`${toPosix(filePathAbs)}: frontmatter "name" must be non-empty`);
-  }
-  if (!SKILL_NAME_RE.test(name)) {
-    throw new Error(`${toPosix(filePathAbs)}: frontmatter "name" must match ${SKILL_NAME_RE}`);
-  }
-
-  assertArrayCount(frontmatter.triggers, 3, 'triggers', filePathAbs);
-  assertArrayCount(frontmatter.primary_commands, 2, 'primary_commands', filePathAbs);
-
-  for (const section of REQUIRED_SECTIONS) {
-    requireSection(body, section, filePathAbs);
-  }
-
-  return {
-    name,
-    templatePathAbs: filePathAbs,
-    templatePathRel: toPosix(path.relative(REPO_ROOT, filePathAbs)),
-    content
-  };
-}
-
-function discoverTemplates(sourceDirAbs) {
-  if (!fs.existsSync(sourceDirAbs) || !fs.statSync(sourceDirAbs).isDirectory()) {
-    throw new Error(`Template source directory does not exist: ${toPosix(sourceDirAbs)}`);
-  }
-
-  const entries = fs
-    .readdirSync(sourceDirAbs)
-    .filter((name) => name.endsWith(TEMPLATE_SUFFIX))
-    .filter((name) => TEMPLATE_FILE_RE.test(name))
-    .sort();
-
-  if (entries.length === 0) {
-    throw new Error(`No template files found in ${toPosix(sourceDirAbs)}`);
-  }
-
-  return entries.map((entry) => parseTemplateFile(path.join(sourceDirAbs, entry)));
-}
-
 function toDisplayName(skillName) {
   const words = skillName.split('-').filter(Boolean);
   return words
@@ -310,14 +212,20 @@ function buildOpenAiYaml(skillName) {
   ].join('\n');
 }
 
+function toBuffer(value) {
+  if (Buffer.isBuffer(value)) return value;
+  return Buffer.from(String(value), 'utf8');
+}
+
 function readExisting(filePathAbs) {
   if (!fs.existsSync(filePathAbs)) return null;
-  return fs.readFileSync(filePathAbs, 'utf8');
+  return fs.readFileSync(filePathAbs);
 }
 
 function computeFileOp(expected, existing) {
+  const expectedBuffer = toBuffer(expected);
   if (existing === null) return 'create';
-  if (existing !== expected) return 'update';
+  if (!expectedBuffer.equals(existing)) return 'update';
   return 'unchanged';
 }
 
@@ -327,70 +235,138 @@ function formatPlannedFile(relPath, op) {
   return `keep   ${relPath}`;
 }
 
-function selectTemplates(templates, selectedNames) {
-  if (!selectedNames || selectedNames.length === 0) return templates;
-  const byName = new Map(templates.map((tpl) => [tpl.name, tpl]));
-  const missing = selectedNames.filter((name) => !byName.has(name));
-  if (missing.length > 0) {
-    throw new Error(`Unknown --skills value(s): ${missing.join(', ')}`);
+function loadManifest(skillDir) {
+  const manifestPath = path.join(skillDir, MANIFEST_FILE);
+  if (!fs.existsSync(manifestPath)) {
+    return {
+      relPath: MANIFEST_FILE,
+      managedFiles: []
+    };
   }
-  return selectedNames.map((name) => byName.get(name));
+
+  let parsed;
+  try {
+    parsed = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  } catch (error) {
+    throw new Error(`${toPosix(manifestPath)}: invalid managed manifest JSON (${error.message})`);
+  }
+
+  const managedFiles = Array.isArray(parsed.managed_files)
+    ? parsed.managed_files.map((entry) => toPosix(String(entry || '').trim())).filter(Boolean)
+    : [];
+
+  return {
+    relPath: MANIFEST_FILE,
+    managedFiles: [...new Set(managedFiles)].sort()
+  };
+}
+
+function buildManifestContent(template, managedFiles) {
+  return `${JSON.stringify(
+    {
+      version: 1,
+      skill: template.name,
+      template: template.templatePathRel,
+      managed_files: [...new Set(managedFiles)].sort()
+    },
+    null,
+    2
+  )}\n`;
+}
+
+function removeFileAndEmptyParents(filePathAbs, skillDir) {
+  if (fs.existsSync(filePathAbs)) {
+    fs.rmSync(filePathAbs, { force: true });
+  }
+
+  let currentDir = path.dirname(filePathAbs);
+  const root = path.resolve(skillDir);
+
+  while (currentDir.startsWith(root) && currentDir !== root) {
+    if (!fs.existsSync(currentDir)) {
+      currentDir = path.dirname(currentDir);
+      continue;
+    }
+    if (fs.readdirSync(currentDir).length > 0) break;
+    fs.rmdirSync(currentDir);
+    currentDir = path.dirname(currentDir);
+  }
 }
 
 function syncTemplate(template, options) {
   const skillDir = path.join(options.dest, template.name);
-  const skillPath = path.join(skillDir, 'SKILL.md');
-  const skillRel = toPosix(path.relative(REPO_ROOT, skillPath));
-  const skillExisting = readExisting(skillPath);
-  const skillOp = computeFileOp(template.content, skillExisting);
+  const managedManifest = loadManifest(skillDir);
+  const fileEntries = [];
 
-  let openaiPath = '';
-  let openaiRel = '';
-  let openaiOp = 'skipped';
-  let openaiExpected = '';
+  fileEntries.push({
+    relPath: 'SKILL.md',
+    expected: template.content
+  });
 
   if (options.openaiYaml) {
-    openaiPath = path.join(skillDir, 'agents', 'openai.yaml');
-    openaiRel = toPosix(path.relative(REPO_ROOT, openaiPath));
-    openaiExpected = buildOpenAiYaml(template.name);
-    const openaiExisting = readExisting(openaiPath);
-    openaiOp = computeFileOp(openaiExpected, openaiExisting);
+    fileEntries.push({
+      relPath: 'agents/openai.yaml',
+      expected: buildOpenAiYaml(template.name)
+    });
   }
 
-  const drift = skillOp !== 'unchanged' || (options.openaiYaml && openaiOp !== 'unchanged');
-  const status = skillOp === 'create' ? 'created' : drift ? 'updated' : 'unchanged';
+  collectResourceEntries(template).forEach((entry) => {
+    fileEntries.push({
+      relPath: entry.relPath,
+      expected: entry.expected
+    });
+  });
 
-  if (options.check) {
+  const managedFiles = fileEntries.map((entry) => entry.relPath);
+  fileEntries.push({
+    relPath: MANIFEST_FILE,
+    expected: buildManifestContent(template, managedFiles)
+  });
+
+  const fileOps = fileEntries.map((entry) => {
+    const absPath = path.join(skillDir, entry.relPath);
+    const existing = readExisting(absPath);
     return {
-      name: template.name,
-      status,
-      drift,
-      skillOp,
-      skillRel,
-      openaiOp,
-      openaiRel
+      relPath: entry.relPath,
+      absPath,
+      expected: entry.expected,
+      op: computeFileOp(entry.expected, existing)
     };
-  }
+  });
 
-  if (!options.dryRun) {
+  const managedSet = new Set(managedFiles);
+  const pruned = managedManifest.managedFiles
+    .filter((relPath) => !managedSet.has(relPath))
+    .filter((relPath) => fs.existsSync(path.join(skillDir, relPath)))
+    .sort();
+
+  const drift = fileOps.some((entry) => entry.op !== 'unchanged') || pruned.length > 0;
+  const created = fileOps.some((entry) => entry.op === 'create' && entry.relPath === 'SKILL.md');
+  const status = created ? 'created' : drift ? 'updated' : 'unchanged';
+
+  if (!options.check && !options.dryRun) {
     fs.mkdirSync(skillDir, { recursive: true });
-    if (skillOp === 'create' || skillOp === 'update') {
-      fs.writeFileSync(skillPath, template.content, 'utf8');
-    }
-    if (options.openaiYaml && (openaiOp === 'create' || openaiOp === 'update')) {
-      fs.mkdirSync(path.dirname(openaiPath), { recursive: true });
-      fs.writeFileSync(openaiPath, openaiExpected, 'utf8');
-    }
+
+    fileOps.forEach((entry) => {
+      if (entry.op === 'unchanged') return;
+      fs.mkdirSync(path.dirname(entry.absPath), { recursive: true });
+      fs.writeFileSync(entry.absPath, toBuffer(entry.expected));
+    });
+
+    pruned.forEach((relPath) => {
+      removeFileAndEmptyParents(path.join(skillDir, relPath), skillDir);
+    });
   }
 
   return {
     name: template.name,
     status,
     drift,
-    skillOp,
-    skillRel,
-    openaiOp,
-    openaiRel
+    fileOps: fileOps.map((entry) => ({
+      relPath: entry.relPath,
+      op: entry.op
+    })),
+    pruned
   };
 }
 
@@ -409,7 +385,8 @@ function summarize(results, options) {
     updated: 0,
     unchanged: 0,
     failed: 0,
-    drift: 0
+    drift: 0,
+    pruned: 0
   };
 
   for (const result of results) {
@@ -419,6 +396,7 @@ function summarize(results, options) {
     }
     summary[result.status] += 1;
     if (result.drift) summary.drift += 1;
+    summary.pruned += result.pruned.length;
   }
 
   console.log('---');
@@ -426,6 +404,7 @@ function summarize(results, options) {
   console.log(`updated=${summary.updated}`);
   console.log(`unchanged=${summary.unchanged}`);
   console.log(`failed=${summary.failed}`);
+  console.log(`pruned=${summary.pruned}`);
   if (options.check) {
     console.log(`drift=${summary.drift}`);
   }
@@ -443,15 +422,17 @@ function printResultLines(results, options) {
       ? 'plan'
       : 'sync';
     console.log(`${label}: ${result.name}`);
-    console.log(`  ${formatPlannedFile(result.skillRel, result.skillOp)}`);
-    if (options.openaiYaml) {
-      console.log(`  ${formatPlannedFile(result.openaiRel, result.openaiOp)}`);
-    }
+    result.fileOps.forEach((entry) => {
+      console.log(`  ${formatPlannedFile(entry.relPath, entry.op)}`);
+    });
+    result.pruned.forEach((relPath) => {
+      console.log(`  prune  ${relPath}`);
+    });
   }
 }
 
 function run(options) {
-  const templates = discoverTemplates(options.sourceDir);
+  const templates = discoverTemplates(options.sourceDir, { repoRoot: REPO_ROOT });
   const selected = selectTemplates(templates, options.skills);
 
   printConfig(options, templates, selected);
@@ -497,7 +478,10 @@ if (require.main === module) {
 }
 
 module.exports = {
+  MANIFEST_FILE,
   buildOpenAiYaml,
+  buildManifestContent,
+  collectResourceEntries,
   discoverTemplates,
   parseArgs,
   run,

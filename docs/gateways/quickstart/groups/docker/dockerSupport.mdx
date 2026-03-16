@@ -1,0 +1,71 @@
+---
+title: Docker Support
+description: Docker support matrix for running Livepeer gateway nodes across Linux, macOS, and Windows.
+keywords:
+  - livepeer
+  - docs
+  - gateways
+  - quickstart
+  - groups
+  - docker
+  - dockersupport
+  - support
+  - supports
+  - running
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+## Docker OS Support for Livepeer Gateway
+
+Docker supports running Livepeer gateway nodes on <Badge stroke color="yellow" icon="linux" size="sm"> **Linux**</Badge>, <Badge stroke color="green" icon="apple" size="sm"> **macOS**</Badge>, and <Badge stroke color="blue" icon="windows" size="sm"> **Windows**</Badge> with different architecture support and feature limitations.
+<br/>
+<br/>
+
+**Supported Platforms**
+
+| OS | Architectures | GPU Compute Support | Notes |
+|---|---|---|---|
+| <Badge stroke color="yellow" icon="linux" size="sm">**Linux**</Badge> | amd64, arm64 | NVIDIA (GPU workloads only) | Full feature support |
+| <Badge stroke color="green" icon="apple" size="sm">**macOS**</Badge> | amd64, arm64 | No | **CPU-only transcoding** |
+| <Badge stroke color="blue" icon="windows" size="sm">**Windows**</Badge> | amd64 | No | **CPU-only transcoding** |
+
+<Note>
+ NVIDIA drivers are not a baseline requirement for a gateway. They are only
+ required when the same host is also running GPU workloads such as an
+ orchestrator or AI worker.
+</Note>
+
+## Implementation Details
+
+#### Docker Build Configuration
+The Dockerfile uses a multi-stage build with CUDA base images for GPU support. The build process supports cross-compilation for multiple architectures.
+
+#### Build Matrix
+The CI/CD pipeline builds for:
+- <Badge stroke color="yellow" icon="linux" size="sm">**Linux** </Badge> amd64/arm64 (CPU and GPU variants)
+- <Badge stroke color="green" icon="apple" size="sm">**macOS** </Badge> amd64/arm64 (CPU only)
+- <Badge stroke color="blue" icon="windows" size="sm">**Windows** </Badge> amd64 (CPU only)
+
+#### Cross-Compilation Support
+The Makefile includes cross-compilation configuration for different platforms:
+- <Badge stroke color="green" icon="apple" size="sm"> Darwin (macOS)</Badge> with Intel and Apple Silicon
+- <Badge stroke color="yellow" icon="linux" size="sm"> Linux </Badge> with x86_64 and ARM64
+- <Badge stroke color="blue" icon="windows" size="sm"> Windows</Badge> x86_64
+
+### GPU Limitations
+
+GPU transcoding is <Badge stroke color="yellow" icon="linux"> **Linux only** </Badge>.
+The Docker images include NVIDIA CUDA support but _this only works on **Linux hosts.**_
+
+### Notes
+
+- ARM64 Docker images are built but note that **ARM64 support is still experimental**
+- For production use, **Linux is recommended for full feature support**
+- _macOS and Windows support is primarily for **development and testing**_
+- The box development environment supports both Linux and macOS: <br/>
+
+ <Icon icon="github" size={20} /> [Box Example Gateway](https://github.com/livepeer/go-livepeer/blob/master/box/box.md) <Icon icon="arrow-up-right" color="#2d9a67" size={10}/>

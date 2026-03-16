@@ -1,0 +1,295 @@
+---
+mode: frame
+title: Gateway Home Portal
+sidebarTitle: Gateway Portal
+description: 'Welcome To The Gateway Portal: Explore, Navigate, Create'
+keywords:
+  - home
+  - index
+  - landing
+  - gateway
+  - gateways
+  - applications
+  - production builds
+  - broadcaster
+  - livepeer gateway
+  - livepeer gateways
+  - livepeer broadcaster
+  - livepeer broadcasters
+  - livepeer broadcasting
+  - livepeer broadcast
+  - livepeer broadcasts
+  - livepeer broadcast portal
+  - livepeer gateways portal
+  - livepeer broadcaster portal
+  - livepeer broadcasters portal
+  - livepeer broadcasting portal
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+tag: Start Here
+pageType: landing
+audience: gateway-operator
+purpose: landing
+---
+
+import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer } from '/snippets/components/page-structure/portals.jsx'
+import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { BlinkingIcon } from '/snippets/components/primitives/links.jsx'
+import { Starfield } from "/snippets/components/page-structure/heroGif.jsx";
+
+{/* HeroSectionContainer - Full width of content area (excludes sidebar, adapts to sidebar collapse) */}
+<HeroSectionContainer>
+
+ {/* HeroImageBackgroundComponent: Full-width Starfield Background - fills entire content area */}
+  <HeroImageBackgroundComponent>
+    <Starfield />
+  </HeroImageBackgroundComponent>
+
+ {/* HeroContentContainer - 80% width, centered within content area */}
+  <HeroContentContainer>
+ {/* LogoHeroContainer */}
+      <LogoHeroContainer imgHeight="20px" />
+
+ {/* PortalHeroContent */}
+        <PortalHeroContent
+          title="Gateways"
+          subtitle="Build – Create – Innovate"
+          refCardLink={
+              <Card
+                title="go-livepeer"
+                href="https://github.com/livepeer/go-livepeer"
+                icon="github"
+                arrow
+                horizontal
+              />
+            }
+          overview={
+          <>
+            Gateways serve as the primary demand aggregation layer in the Livepeer network.
+            They accept video transcoding and AI inference requests from end customers,
+            then distribute these jobs across the network of GPU-equipped Orchestrators.
+              <br />
+              <br />
+              Gateways are the core building block for those developers looking to productise applications built on top of the Livepeer protocol.
+              {/* <div style={{ fontSize: "0.9rem", fontStyle: "italic", color: "#888" }}>
+                  Note: In earlier documentation, Gateways were referred to as Broadcasters
+              </div> */}
+          </>
+          }
+        />
+
+      </HeroContentContainer>
+
+</HeroSectionContainer>
+ {/* END HERO */}
+
+<PortalContentContainer>
+{/* MOVE TO EXPLAINER / PRIMER */}
+ {/* <H5>*Mental Model*</H5>
+    <AccordionGroup>
+      <Accordion title="From a Cloud Background?" icon="cloud" >
+
+ Running a Gateway is similar to operating an API Gateway or Load Balancer in cloud computing -
+ it ingests traffic, routes workloads to backend GPU nodes, and manages session flow
+ without doing the heavy compute itself.
+
+      <ScrollableDiagram title="Gateway as Cloud Infrastructure">
+
+    ```mermaid
+    %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+    flowchart LR
+        subgraph Clients["Client / Application Layer"]
+            A["Apps & SDKs<br/>• Video Ingest<br/>• AI Inference Requests<br/>• WebRTC / HTTP"]
+        end
+
+        subgraph Gateway["Gateway Layer (Livepeer Gateway)"]
+            B["Gateway Node<br/><br/>Cloud Analogy:<br/>• API Gateway<br/>• L7 Load Balancer<br/>• Control Plane<br/><br/>Responsibilities:<br/>• Auth & Rate Limits<br/>• Stream Segmentation<br/>• Job Routing<br/>• Health Checks<br/>• Retry & Failover"]
+        end
+
+        subgraph Compute["Compute Layer (Supply Side)"]
+            C["Orchestrators<br/>GPU Workers<br/><br/>Cloud Analogy:<br/>• Auto-scaling GPU Fleet<br/>• Managed Inference Pool"]
+        end
+
+        subgraph Settlement["Coordination & Settlement"]
+            D["Ethereum + Livepeer Protocol<br/><br/>• Payments<br/>• Accounting<br/>• Slashing / Security"]
+        end
+
+        A -->|Requests| B
+        B -->|Dispatch Jobs| C
+        C -->|Results / Streams| B
+        B -->|Responses| A
+        C -->|Usage & Proof| D
+
+        classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+        style Clients fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+        style Gateway fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+        style Compute fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+        style Settlement fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+    ```
+
+      </ScrollableDiagram>
+      </Accordion>
+      <Accordion title="From an Ethereum Background?" icon="coin" >
+
+ Running a Gateway is **not** like running a validator on Ethereum.
+ Validators secure consensus whereas Gateways route workloads. It's more akin to a Sequencer on a Layer 2.
+ Just as a Sequencer ingests user transactions, orders them, and routes them into the rollup execution layer,
+ a Livepeer Gateway performs the same function for the Livepeer compute network.
+
+      <ScrollableDiagram title="Gateways as L2 Sequencers">
+
+    ```mermaid
+    %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+    flowchart LR
+        subgraph User["User Layer"]
+            A["Client<br/>Video/AI Request"]
+        end
+
+        subgraph Gateway["Gateway Layer"]
+            B["Livepeer Gateway<br/>= L2 Sequencer<br/><br/>• Ingests Requests<br/>• Segments/Preprocesses<br/>• Selects Orchestrators<br/>• Routes Jobs<br/>• Returns Results"]
+        end
+
+        subgraph Compute["Compute Layer"]
+            C["Orchestrators<br/>GPU Workers<br/><br/>= L2 Execution Layer"]
+        end
+
+        subgraph Settlement["Settlement Layer"]
+            D["Ethereum<br/>Consensus & Payment Security"]
+        end
+
+        A --> B
+        B --> C
+        C --> B
+        B --> A
+        C --> D
+
+        classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+        style User fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+        style Gateway fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+        style Compute fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+        style Settlement fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+    ```
+
+      </ScrollableDiagram>
+      </Accordion>
+      <Accordion title="Neither? You can still run a gateway!" icon="film" >
+
+ For the rest of us, running a Gateway is like being a film producer.
+ You take a request, assemble the right specialists, manage constraints,
+ and ensure the final result is delivered reliably-without doing every task yourself.
+
+      <ScrollableDiagram title="Gateway as Film Producer">
+
+    ```mermaid
+    %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+    flowchart LR
+        subgraph Persona["Persona: Gateway Operator = Film Producer"]
+            P["Film Producer Mindset<br/>• Owns delivery<br/>• Sets constraints<br/>• Chooses specialists<br/>• Ensures quality"]
+        end
+
+        subgraph Request["Act I - The Pitch"]
+            A["Incoming Request<br/>• Live Video Stream<br/>• AI Inference Job<br/>• Quality & Latency Requirements"]
+        end
+
+        subgraph Planning["Act II - Pre-Production"]
+            B["Gateway (Producer)<br/><br/>• Interpret the request<br/>• Set budget & latency constraints<br/>• Choose specialists<br/>• Plan execution"]
+        end
+
+        subgraph Crew["Act III - Production Crew"]
+            C["Orchestrators / GPU Workers<br/><br/>• Transcoding<br/>• AI Inference<br/>• Real-time Processing"]
+        end
+
+        subgraph Delivery["Act IV - Final Cut & Release"]
+            D["Verified Output<br/>• Stream / AI Result<br/>• Quality checked<br/>• Delivered on time"]
+        end
+
+        subgraph Settlement["Credits & Accounting"]
+            E["Onchain Settlement<br/>• Usage recorded<br/>• Payments distributed<br/>• Trust enforced"]
+        end
+
+        P --> A
+        A --> B
+        B --> C
+        C --> B
+        B --> D
+        C --> E
+
+        classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+        style Persona fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+        style Request fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+        style Planning fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+        style Crew fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+        style Delivery fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+        style Settlement fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+    ```
+
+      </ScrollableDiagram>
+      </Accordion>
+ </AccordionGroup> */}
+
+    <PortalCardsHeader title="Gateway Portal">
+        <BlinkingIcon icon="circle-play" size={20}  />
+    </PortalCardsHeader>
+
+    <Columns cols={2}>
+      <Card
+        title="What's a Gateway?"
+        icon="comment-question"
+        href="./about/explainer"
+        arrow
+      >
+ What? Where Am I? What's a Gateway? Why do I need one?
+      </Card>
+      <Card
+        title="Gateway Services & Providers"
+        icon="film-canister"
+        href="./using-gateways/choosing-a-gateway"
+        arrow
+      >
+ Find Video and AI Services available via Gateways on the Livepeer Network.
+      </Card>
+      <Card
+        title="Run a Gateway"
+        icon="rocket"
+        href="./run-a-gateway/run-a-gateway"
+        arrow
+      >
+        <Badge color="green" icon="wand-magic-sparkles">
+ Developer Level Up
+        </Badge>
+        <br />
+ Deploy your own Gateway on the Livepeer Protocol - no GPU required!
+      </Card>
+      <Card
+        title="Gateway Tools & Dashboards"
+        icon="tools"
+        href="./gateway-tools/explorer"
+        arrow
+      >
+ Tools and Dashboards to help find and manage Gateways -> for users and
+ operators.
+      </Card>
+      <Card
+        title="Gateway Guides & Resources"
+        icon="laptop-file"
+        href="./guides-and-resources/community-guides"
+        arrow
+      >
+ Full guides, examples and tutorials on running a Livepeer Gateway node.
+      </Card>
+      <Card
+        title="Gateway Technical References"
+        icon="code"
+        href="./references/technical-architecture"
+        arrow
+      >
+ All your Gateway questions answered.
+      </Card>
+    </Columns>
+
+    <br />
+</PortalContentContainer>

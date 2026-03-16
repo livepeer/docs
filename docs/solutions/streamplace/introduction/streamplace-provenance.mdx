@@ -1,0 +1,155 @@
+---
+title: Provenance & Metadata
+description: >-
+  How C2PA manifests, Ethereum signatures, and the Streamplace metadata schema
+  create verifiable, rights-aware video.
+keywords:
+  - livepeer
+  - developers
+  - developer platforms
+  - streamplace
+  - streamplace provenance
+  - provenance
+  - metadata
+  - manifests
+  - ethereum
+  - signatures
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+purpose: concept
+---
+
+
+
+
+---
+
+Streamplace is the first decentralized video infrastructure layer to combine:
+
+- **C2PA content authenticity manifests**
+- **Ethereum-based cryptographic signatures**
+- **A complete metadata system for rights, warnings, and distribution rules**
+
+This creates a _verifiable, tamper-evident, rights-aware video pipeline_ suitable for decentralized social networks, journalism, creator ecosystems, and Web3-native platforms.
+
+---
+
+# 🛡️ Why Provenance Matters
+
+Traditional video platforms provide no guarantees about:
+
+- Who created a video
+- Whether it has been altered
+- Whether rights or warnings attached to it are authentic
+
+Streamplace solves this by ensuring that **every single 1-second video segment carries cryptographic proof** of origin and policy.
+
+---
+
+# 🧬 Provenance Pipeline Diagram
+
+```mermaid
+flowchart LR
+    A[MP4 Segment (1s)] --> B[C2PA Manifest]
+    A --> C[Ethereum Signature]
+    B --> D[Composite Provenance]
+    C --> D
+    D --> E[Transcoding on Livepeer]
+    E --> F[Playback + Verification]
+```
+
+---
+
+# 🔐 C2PA Manifests
+
+Each segment includes a **C2PA (Content Credentials) manifest**, which:
+
+- Captures creator identity
+- Includes claims about rights, sources, edits, and warnings
+- Provides tamper-evident cryptographic sealing
+
+C2PA provenance is _standards-based_, making Streamplace output compatible with tooling used by:
+
+- Adobe
+- Microsoft
+- Nikon
+- The Content Authenticity Initiative
+
+Reference: [https://spec.c2pa.org/](https://spec.c2pa.org/)
+
+---
+
+# 🔏 Ethereum Signatures
+
+In addition to C2PA, Streamplace attaches **Ethereum signatures** that:
+
+- Bind creator identity to content
+- Integrate with Web3 identity systems
+- Allow on-chain verification
+
+This creates a _dual provenance layer_: open standards + decentralized identity.
+
+---
+
+# 🧱 Metadata Schema (Rights, Warnings, Policies)
+
+Streamplace defines a rich metadata system under `place.stream.metadata.*`.
+
+Key fields:
+
+- `contentRights` - licensing, attribution, copyright
+- `contentWarnings` - safety, graphic content, flashing lights, etc.
+- `distributionPolicy` - retention rules, syndication permissions, geography
+- `configuration` - playback preferences
+- `story/series` metadata - episode, chapter, continuity
+
+Docs: [https://stream.place/docs/video-metadata/metadata-record/](https://stream.place/docs/video-metadata/metadata-record/)
+
+---
+
+# 🌐 How Metadata + Provenance Survive Transcoding
+
+A major design innovation: **provenance persists even after Livepeer transcoding**.
+
+The process:
+
+1. Streamplace embeds provenance into each segment before sending to Livepeer.
+2. Orchestrators transcode segments without stripping provenance.
+3. Streamplace reconstructs manifests with provenance intact.
+4. Playback clients can verify signatures independently.
+
+This creates an **end-to-end authenticity chain**, even across decentralized compute.
+
+---
+
+# 🧩 Example Use Cases
+
+### **1. Decentralized Social Networks**
+
+Users get video with automatic rights, warnings, and authorship.
+
+### **2. Citizen Journalism**
+
+Segments can be independently verified for authenticity.
+
+### **3. Creator Economy Platforms**
+
+Rights metadata travels with content, enabling automatic attribution.
+
+### **4. Moderation Tools**
+
+Platforms can rely on embedded metadata instead of platform-owned signals.
+
+---
+
+# 📚 Related Pages
+
+- [Streamplace Overview](/solutions/streamplace/overview)
+- [How Streamplace Works](/solutions/streamplace/introduction/streamplace-guide)
+- [Architecture](/solutions/streamplace/introduction/streamplace-architecture)
+- [SPE Funding Model](/solutions/streamplace/introduction/streamplace-funding-model)
+- [Developer Integration Guide](/solutions/streamplace/introduction/streamplace-integration)

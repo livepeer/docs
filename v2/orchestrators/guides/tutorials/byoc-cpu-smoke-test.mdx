@@ -1,0 +1,424 @@
+---
+title: 'BYOC CPU Smoke Test'
+sidebarTitle: 'BYOC Smoke Test'
+description: >-
+  Verify the Livepeer orchestrator framework works on your machine in under
+  20 minutes - no GPU, no wallet, no on-chain registration required.
+keywords:
+  - livepeer
+  - orchestrator
+  - byoc
+  - cpu
+  - tutorial
+  - smoke test
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: orchestrator
+status: current
+lastVerified: '2026-03-16'
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+
+<Tip>
+  This tutorial proves the Livepeer orchestrator pipeline works on your machine before you commit GPU hardware, ETH, or LPT. A job enters a gateway, routes to the orchestrator, executes in a CPU Docker container, and returns a response. No GPU, no wallet, no on-chain registration.
+</Tip>
+
+---
+
+This smoke test runs a complete Livepeer gateway and orchestrator on one machine using a CPU-only Docker container as a BYOC (Bring Your Own Container) pipeline. By the end, a test job has travelled from the gateway through the orchestrator into a custom container and back. Estimated time: 20 minutes.
+
+**You will verify:**
+- The orchestrator accepts and routes BYOC jobs correctly
+- Your BYOC container registers and serves requests
+- The gateway receives the result from the orchestrator
+
+<CustomDivider middleText="Prerequisites" />
+
+## Prerequisites
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Requirement</TableCell>
+      <TableCell header>Verify with</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Docker Engine 24+</TableCell>
+      <TableCell>`docker --version`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Python 3.10+</TableCell>
+      <TableCell>`python3 --version`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>go-livepeer binary (Linux amd64)</TableCell>
+      <TableCell>`livepeer --version` (or download below)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Ports 7935 and 8935 free</TableCell>
+      <TableCell>`ss -tlnp | grep -E ':7935|:8935'` (no output = free)</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+No GPU, Ethereum wallet, Arbitrum RPC, or on-chain registration is required.
+
+<CustomDivider middleText="Part 1: BYOC Container" />
+
+## Build the CPU BYOC container
+
+The pipeline is a CPU-only Python passthrough: frames in, frames out unchanged. This proves the job routing framework works without any model inference.
+
+<StyledSteps>
+
+  <StyledStep title="Create the project directory">
+
+    ```bash icon="terminal" filename="setup"
+    mkdir byoc-smoke-test && cd byoc-smoke-test
+    ```
+
+  </StyledStep>
+
+  <StyledStep title="Write the pipeline code">
+
+    Create `pipeline.py`:
+
+    ```python icon="code" filename="pipeline.py"
+    import asyncio
+    import logging
+
+    from runner.live.pipelines import Pipeline, BaseParams
+    from runner.live.trickle import VideoFrame, VideoOutput
+
+
+    class PassthroughParams(BaseParams):
+        """No custom parameters needed for passthrough."""
+        pass
+
+
+    class PassthroughPipeline(Pipeline):
+        """
+        CPU-only passthrough pipeline for BYOC smoke testing.
+        Echoes every incoming frame directly to the output queue.
+        No model loading, no GPU required.
+        """
+
+        def __init__(self):
+            self.frame_queue: asyncio.Queue[VideoOutput] = asyncio.Queue()
+            self._running = True
+
+        async def initialize(self, **params):
+            logging.info("PassthroughPipeline: initialized (CPU, no model loading)")
+
+        async def put_video_frame(self, frame: VideoFrame, request_id: str):
+            if self._running:
+                await self.frame_queue.put(VideoOutput(frame, request_id))
+
+        async def get_processed_video_frame(self) -> VideoOutput:
+            return await self.frame_queue.get()
+
+        async def update_params(self, **params):
+            logging.info(f"PassthroughPipeline: params update: {params}")
+
+        async def stop(self):
+            self._running = False
+            logging.info("PassthroughPipeline: stopped")
+
+        @classmethod
+        def prepare_models(cls):
+            logging.info("PassthroughPipeline: no models to prepare (CPU passthrough)")
+    ```
+
+  </StyledStep>
+
+  <StyledStep title="Write the entrypoint">
+
+    Create `main.py`:
+
+    ```python icon="code" filename="main.py"
+    import os
+    from runner.app import start_app
+    from runner.live.pipelines import PipelineSpec
+
+    pipeline_spec = PipelineSpec(
+        name="passthrough-cpu",
+        pipeline_cls="pipeline:PassthroughPipeline",
+        params_cls="pipeline:PassthroughParams",
+        initial_params={},
+    )
+
+    if __name__ == "__main__":
+        start_app(pipeline=pipeline_spec)
+    ```
+
+  </StyledStep>
+
+  <StyledStep title="Write the Dockerfile">
+
+    Create `Dockerfile`:
+
+    ```dockerfile icon="code" filename="Dockerfile"
+    ARG BASE_IMAGE=livepeer/ai-runner:live-base
+    FROM ${BASE_IMAGE}
+
+    WORKDIR /app
+
+    COPY pipeline.py ./pipeline.py
+    COPY main.py ./main.py
+
+    ENV HF_HUB_OFFLINE=1
+
+    ENTRYPOINT ["python", "main.py"]
+    ```
+
+  </StyledStep>
+
+  <StyledStep title="Build and verify the image">
+
+    ```bash icon="terminal" filename="build"
+    docker build -t byoc-cpu-passthrough:latest .
+    ```
+
+    Expected output ends with:
+    ```text icon="terminal" title="Expected image build output"
+    Successfully tagged byoc-cpu-passthrough:latest
+    ```
+
+    Verify:
+    ```bash icon="terminal" filename="verify-image"
+    docker images | grep byoc-cpu-passthrough
+    ```
+
+    One line should appear with a recent creation time.
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Part 2: Orchestrator" />
+
+## Start the orchestrator
+
+<StyledSteps>
+
+  <StyledStep title="Install go-livepeer">
+
+    Use the existing binary if it is already on the machine.
+
+    ```bash icon="terminal" filename="install"
+    # Replace vX.Y.Z with the latest release tag
+    # from github.com/livepeer/go-livepeer/releases
+    curl -LO https://github.com/livepeer/go-livepeer/releases/latest/download/livepeer-linux-amd64.tar.gz
+    tar -xzf livepeer-linux-amd64.tar.gz
+    chmod +x livepeer livepeer_cli
+    ```
+
+    {/* FACT CHECK: Confirm the latest release tag and archive filename. Rick to verify that the download URL pattern remains stable across releases. */}
+
+  </StyledStep>
+
+  <StyledStep title="Start the BYOC container">
+
+    Start the pipeline container before the orchestrator so it is ready when the orchestrator registers capabilities:
+
+    ```bash icon="terminal" filename="start-byoc"
+    docker run -d \
+      --name byoc-cpu-passthrough \
+      --network host \
+      -p 8000:8000 \
+      byoc-cpu-passthrough:latest
+    ```
+
+    Verify the container started cleanly:
+
+    ```bash icon="terminal" filename="check-byoc"
+    docker logs byoc-cpu-passthrough
+    ```
+
+    Expected output:
+    ```text icon="terminal" title="Expected BYOC container log"
+    PassthroughPipeline: initialized (CPU, no model loading)
+    ```
+
+  </StyledStep>
+
+  <StyledStep title="Start the orchestrator (off-chain mode)">
+
+    In a new terminal, run the orchestrator. Off-chain mode requires no Ethereum wallet or RPC:
+
+    ```bash icon="terminal" filename="start-orchestrator"
+    ./livepeer \
+      -orchestrator \
+      -serviceAddr 0.0.0.0:8935 \
+      -cliAddr 127.0.0.1:7935 \
+      -byoc \
+      -byocContainerURL http://localhost:8000 \
+      -byocModelID passthrough-cpu \
+      -pricePerUnit 1 \
+      -network offchain \
+      -datadir ./data-orchestrator
+    ```
+
+    Expected log output:
+    ```text icon="terminal" title="Expected orchestrator log"
+    Orchestrator registered with service address 0.0.0.0:8935
+    BYOC capability registered: passthrough-cpu
+    ```
+
+    Keep this terminal open.
+
+    {/* FACT CHECK: Confirm `-byoc`, `-byocContainerURL`, and `-byocModelID` are still the correct flag names in the current go-livepeer release. Rick to verify. */}
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Part 3: Gateway" />
+
+## Start the gateway
+
+<StyledSteps>
+
+  <StyledStep title="Start the gateway (off-chain mode with remote signer)">
+
+    In a third terminal, start the gateway. The community remote signer handles all Ethereum operations so no wallet is needed:
+
+    ```bash icon="terminal" filename="start-gateway"
+    ./livepeer \
+      -gateway \
+      -cliAddr 127.0.0.1:7936 \
+      -httpAddr 0.0.0.0:8936 \
+      -orchAddr http://localhost:8935 \
+      -remoteSignerAddr https://signer.eliteencoder.net \
+      -network offchain \
+      -datadir ./data-gateway
+    ```
+
+    Expected log output:
+    ```text icon="terminal" title="Expected gateway startup log"
+    Gateway started on :8936
+    Connected to remote signer at https://signer.eliteencoder.net
+    Registered orchestrator: localhost:8935
+    ```
+
+    <Note>
+      The remote signer at `signer.eliteencoder.net` is a community-hosted service for testing off-chain gateway setups. Confirm availability in [#local-gateways on Discord](https://discord.gg/livepeer) if you encounter connection errors.
+    </Note>
+
+  </StyledStep>
+
+  <StyledStep title="Verify both processes are reachable">
+
+    Check the gateway API responds:
+
+    ```bash icon="terminal" filename="check-gateway"
+    curl http://localhost:8936/health
+    ```
+
+    Expected: `{"status":"ok"}`
+
+    Check the orchestrator is registered with the gateway:
+
+    ```bash icon="terminal" filename="check-orch"
+    curl http://localhost:7936/registeredOrchestrators
+    ```
+
+    Expected: a JSON array containing your orchestrator entry at `localhost:8935`.
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Part 4: Send Test Job" />
+
+## Send a test job
+
+<StyledSteps>
+
+  <StyledStep title="Send a BYOC job via curl">
+
+    Send a test payload through the gateway to the orchestrator and into the BYOC container:
+
+    ```bash icon="terminal" filename="test-job"
+    curl -X POST http://localhost:8936/live/video-to-video \
+      -H "Content-Type: application/octet-stream" \
+      --data-binary @/dev/urandom \
+      --max-time 10 \
+      -o response.bin
+    ```
+
+    A non-error HTTP response confirms the pipeline is reachable and the session was established. The response binary is the passthrough output (identical to the input payload).
+
+    Check file size:
+
+    ```bash icon="terminal" filename="check-response"
+    ls -lh response.bin
+    ```
+
+    A non-zero file size confirms the full roundtrip completed.
+
+  </StyledStep>
+
+  <StyledStep title="Inspect the log trail">
+
+    Confirm payment signing occurred in the gateway terminal:
+
+    ```bash icon="terminal" filename="check-logs"
+    # Look for these lines in the gateway terminal output:
+    # Calling remote signer: getOrchInfoSig
+    # Calling remote signer: signTicket
+    ```
+
+    Confirm the orchestrator received and routed the job:
+
+    ```bash icon="terminal" filename="check-orch-logs"
+    # Look for these in the orchestrator terminal:
+    # Received BYOC job: passthrough-cpu
+    # Job complete
+    ```
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="What Just Happened" />
+
+## What happened
+
+Three processes ran on your machine and handled a complete job lifecycle:
+
+1. **Your BYOC container** registered as a pipeline called `passthrough-cpu`, exposing a health endpoint at `:8000`.
+2. **The orchestrator** started in off-chain mode, registered the BYOC container's capability, and listened for jobs at `:8935`.
+3. **The gateway** started in off-chain mode with no Ethereum wallet, connected to the community remote signer for payment operations, and pointed at your local orchestrator.
+4. **The test request** entered the gateway at `:8936`, the gateway routed it to the orchestrator (with a payment ticket signed by the remote signer), the orchestrator forwarded it to the BYOC container, the container processed and returned the payload, and the result returned through the chain to the HTTP response.
+
+The off-chain path used here has no on-chain settlement. In production, an on-chain orchestrator submits winning payment tickets to the Arbitrum TicketBroker contract for ETH redemption.
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Zero to First Reward" icon="trophy" href="/v2/orchestrators/guides/tutorials/zero-to-first-reward" arrow horizontal>
+    Full production setup: install, configure, stake, activate, and claim a first LPT reward with a GPU node.
+  </Card>
+  <Card title="AI Earning Quickstart" icon="microchip" href="/v2/orchestrators/guides/tutorials/ai-earning-quickstart" arrow horizontal>
+    Start earning from AI inference with one GPU and one warm model.
+  </Card>
+  <Card title="AI Inference Operations" icon="sliders" href="/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations" arrow horizontal>
+    Full aiModels.json reference and pipeline architecture for production AI workloads.
+  </Card>
+  <Card title="Dual Mode Configuration" icon="layer-group" href="/v2/orchestrators/guides/deployment-details/dual-mode-configuration" arrow horizontal>
+    Run video transcoding and AI inference from a single node.
+  </Card>
+</CardGroup>

@@ -1,38 +1,21 @@
 #!/usr/bin/env node
 /**
- * @script generate-pages-index
- * @summary Generate and verify section-style index.mdx files for v2 docs folders, plus the root aggregate index.
- * @owner docs
- * @scope tools/scripts, v2
- * @pipeline manual — interactive developer tool, not suited for automated pipelines
- *
- * @usage
- *   node tools/scripts/generate-pages-index.js --write
- *
- * @inputs
- *   --staged Only run when staged files include v2 docs changes.
- *   --write Regenerate index files.
- *   --stage Stage generated index updates with git add.
- *   --rebuild-indexes Force full rebuild even when --staged has no matching files.
- *
- * @outputs
- *   - v2/pages/<top-level-folder>/index.mdx (while legacy root exists)
- *   - v2/pages/index.mdx (while legacy root exists)
- *
- * @exit-codes
- *   0 = success
- *   1 = validation or write/stage failure
- *
- * @examples
- *   node tools/scripts/generate-pages-index.js --staged --write --stage
- *
- * @notes
- *   Keep script behavior deterministic and update script indexes after changes.
+ * @script            generate-pages-index
+ * @category          generator
+ * @purpose           governance:index-management
+ * @scope             tools/scripts, v2
+ * @domain            docs
+ * @needs             R-R16, R-R17
+ * @purpose-statement Pages index generator — generates and verifies section-style index.mdx files for v2 docs folders plus root aggregate index
+ * @pipeline          P1
+ * @dualmode          --check (enforcer) | --write (generator)
+ * @usage             node tools/scripts/generate-pages-index.js [flags]
  */
 
 const fs = require('fs');
 const path = require('path');
 const { execSync, spawnSync } = require('child_process');
+const { isExcludedV2ExperimentalPath } = require('../lib/docs-publishability');
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
@@ -71,8 +54,6 @@ const GENERATED_DETAILS = {
   runWhen: 'v2 docs pages are added, removed, or renamed.',
   runCommand: 'node tools/scripts/generate-pages-index.js --write'
 };
-
-const EXCLUDED_GENERATED_INDEX_DIRS = new Set(['x-archived']);
 
 function getRepoRoot() {
   try {
@@ -159,32 +140,82 @@ function isIndexFile(fileName) {
   return lower === INDEX_FILENAME || lower === LEGACY_INDEX_FILENAME;
 }
 
-function sortAlpha(values) {
-  return [...values].sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
+function isMaintainerOnlyIndexPath(relPath) {
+  return isExcludedV2ExperimentalPath(normalizeRel(relPath));
 }
 
-function shouldExcludeGeneratedIndexDir(dirName) {
-  return EXCLUDED_GENERATED_INDEX_DIRS.has(String(dirName || '').trim().toLowerCase());
+function sortAlpha(values) {
+  return [...new Set(values)].sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
+}
+
+function listTrackedPathsUnder(repoDirRel) {
+  const scope = normalizeRel(repoDirRel);
+
+  try {
+    const output = execSync(`git ls-files -- "${scope}"`, {
+      encoding: 'utf8',
+      cwd: REPO_ROOT
+    });
+
+    return output
+      .split('\n')
+      .map((line) => normalizeRel(line.trim()))
+      .filter(Boolean)
+      .filter((relPath) => relPath === scope || relPath.startsWith(`${scope}/`))
+      .filter((relPath) => !isMaintainerOnlyIndexPath(relPath))
+      .filter((relPath) => fs.existsSync(path.join(REPO_ROOT, relPath)));
+  } catch (_err) {
+    return [];
+  }
 }
 
 function getDirectSubdirs(absDir) {
   if (!fs.existsSync(absDir)) return [];
-  const entries = fs.readdirSync(absDir, { withFileTypes: true });
-  return sortAlpha(
-    entries
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name)
-      .filter((name) => !shouldExcludeGeneratedIndexDir(name))
-  );
+  const repoDirRel = normalizeRel(path.relative(REPO_ROOT, absDir));
+  const trackedPaths = listTrackedPathsUnder(repoDirRel);
+
+  if (trackedPaths.length === 0) {
+    return sortAlpha(
+      fs.readdirSync(absDir, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name)
+        .filter((name) => !isMaintainerOnlyIndexPath(path.posix.join(repoDirRel, name)))
+    );
+  }
+
+  const directSubdirs = new Set();
+  trackedPaths.forEach((relPath) => {
+    const remainder = normalizeRel(path.posix.relative(repoDirRel, relPath));
+    if (!remainder || remainder === relPath) return;
+    const [firstSegment, ...tail] = remainder.split('/').filter(Boolean);
+    if (firstSegment && tail.length > 0) {
+      directSubdirs.add(firstSegment);
+    }
+  });
+
+  return sortAlpha([...directSubdirs]);
 }
 
 function getDirectMarkdownFiles(absDir) {
   if (!fs.existsSync(absDir)) return [];
-  const entries = fs.readdirSync(absDir, { withFileTypes: true });
+  const repoDirRel = normalizeRel(path.relative(REPO_ROOT, absDir));
+  const trackedPaths = listTrackedPathsUnder(repoDirRel);
+
+  if (trackedPaths.length === 0) {
+    return sortAlpha(
+      fs.readdirSync(absDir, { withFileTypes: true })
+        .filter((entry) => entry.isFile())
+        .map((entry) => entry.name)
+        .filter((name) => isMarkdownFile(name) && !isIndexFile(name))
+        .filter((name) => !isMaintainerOnlyIndexPath(path.posix.join(repoDirRel, name)))
+    );
+  }
+
   return sortAlpha(
-    entries
-      .filter((entry) => entry.isFile())
-      .map((entry) => entry.name)
+    trackedPaths
+      .map((relPath) => normalizeRel(path.posix.relative(repoDirRel, relPath)))
+      .filter(Boolean)
+      .filter((relPath) => !relPath.includes('/'))
       .filter((name) => isMarkdownFile(name) && !isIndexFile(name))
   );
 }
@@ -403,6 +434,7 @@ function buildIndexMeta(outputDirRel) {
     title: displayName,
     sidebarTitle: displayName,
     description: `Generated table of contents for docs pages under ${normalized}.`,
+    pageType: 'overview',
     keywords: ['livepeer', 'generated index', 'table of contents', normalized]
   };
 }
@@ -412,6 +444,7 @@ function buildRootMeta() {
     title: 'Pages Index',
     sidebarTitle: 'Pages Index',
     description: 'Generated table of contents for v2 docs folders.',
+    pageType: 'overview',
     keywords: ['livepeer', 'generated index', 'table of contents', 'v2']
   };
 }
@@ -612,6 +645,27 @@ function getStagedFiles() {
   }
 }
 
+function getAffectedTopLevelDirs(stagedFiles, topLevelDirs) {
+  const available = new Set(topLevelDirs.map((dirRel) => normalizeRel(dirRel)));
+  const affected = new Set();
+
+  stagedFiles.forEach((file) => {
+    const preferred = resolvePreferredRepoPath(file);
+    const normalized = normalizeRel(preferred);
+    const relative = normalizeRel(path.posix.relative(PAGES_ROOT, normalized));
+
+    if (!relative || relative.startsWith('..')) return;
+
+    const [topLevelName] = relative.split('/').filter(Boolean);
+    if (!topLevelName) return;
+
+    const candidate = normalizeRel(path.join(PAGES_ROOT, topLevelName));
+    if (available.has(candidate)) affected.add(candidate);
+  });
+
+  return sortAlpha([...affected]);
+}
+
 function stagePaths(repoRelativePaths) {
   if (repoRelativePaths.length === 0) return null;
   const unique = [...new Set(repoRelativePaths.map((p) => normalizeRel(p)))];
@@ -635,29 +689,52 @@ function findNestedIndexFiles(topLevelDirRel, docsRouteKeys = new Set()) {
   ]);
 
   const nested = [];
+  const trackedPaths = listTrackedPathsUnder(topLevelDirRel);
 
-  function walk(currentAbs) {
-    const entries = fs.readdirSync(currentAbs, { withFileTypes: true });
-    for (const entry of entries) {
-      const fullPath = path.join(currentAbs, entry.name);
-      if (entry.isDirectory()) {
-        walk(fullPath);
-        continue;
-      }
-      if (!entry.isFile() || !isIndexFile(entry.name)) {
-        continue;
-      }
-      const relPath = normalizeRel(path.relative(REPO_ROOT, fullPath));
-      const routeKey = normalizeDocsRouteKey(relPath);
-      const isRoutableIndex = routeKey && docsRouteKeys.has(routeKey);
-      if (!allowedTopLevelIndexes.has(relPath)) {
-        if (isRoutableIndex) continue;
-        nested.push(relPath);
+  if (trackedPaths.length === 0) {
+    function walk(currentAbs) {
+      const entries = fs.readdirSync(currentAbs, { withFileTypes: true });
+      for (const entry of entries) {
+        const fullPath = path.join(currentAbs, entry.name);
+        if (entry.isDirectory()) {
+          walk(fullPath);
+          continue;
+        }
+        if (!entry.isFile() || !isIndexFile(entry.name)) {
+          continue;
+        }
+        const relPath = normalizeRel(path.relative(REPO_ROOT, fullPath));
+        if (isMaintainerOnlyIndexPath(relPath)) {
+          continue;
+        }
+        const routeKey = normalizeDocsRouteKey(relPath);
+        const isRoutableIndex = routeKey && docsRouteKeys.has(routeKey);
+        if (!allowedTopLevelIndexes.has(relPath)) {
+          if (isRoutableIndex) continue;
+          nested.push(relPath);
+        }
       }
     }
+
+    walk(topLevelAbs);
+    return sortAlpha(nested);
   }
 
-  walk(topLevelAbs);
+  trackedPaths.forEach((relPath) => {
+    if (!isIndexFile(path.basename(relPath))) {
+      return;
+    }
+    if (isMaintainerOnlyIndexPath(relPath)) {
+      return;
+    }
+    const routeKey = normalizeDocsRouteKey(relPath);
+    const isRoutableIndex = routeKey && docsRouteKeys.has(routeKey);
+    if (!allowedTopLevelIndexes.has(relPath)) {
+      if (isRoutableIndex) return;
+      nested.push(relPath);
+    }
+  });
+
   return sortAlpha(nested);
 }
 
@@ -686,6 +763,11 @@ function run(options = {}) {
   }
 
   const topLevelDirs = getDirectSubdirs(PAGES_ROOT_ABS).map((name) => normalizeRel(path.join(PAGES_ROOT, name)));
+  const scopedTopLevelDirs =
+    stagedOnly && !rebuildIndexes
+      ? getAffectedTopLevelDirs(stagedFiles, topLevelDirs)
+      : topLevelDirs;
+  const topLevelDirsToProcess = scopedTopLevelDirs.length > 0 ? scopedTopLevelDirs : topLevelDirs;
   const expectedByTopDir = new Map();
 
   let docsRouteKeys = new Set();
@@ -696,7 +778,7 @@ function run(options = {}) {
     return { passed: false, skipped: false, errors, warnings, changed, removedLegacy, removedNested };
   }
 
-  for (const dirRel of topLevelDirs) {
+  for (const dirRel of topLevelDirsToProcess) {
     const sourceDirRel = resolveSourceDirRel(dirRel);
     const data = buildFolderIndexData(dirRel, sourceDirRel, docsRouteKeys);
     const content = renderIndexContent(data, buildIndexMeta(dirRel));
@@ -744,7 +826,22 @@ function run(options = {}) {
   }
 
   const contentByTopDir = new Map();
-  topLevelDirs.forEach((dirRel) => contentByTopDir.set(dirRel, expectedByTopDir.get(dirRel) || ''));
+  topLevelDirs.forEach((dirRel) => {
+    if (expectedByTopDir.has(dirRel)) {
+      contentByTopDir.set(dirRel, expectedByTopDir.get(dirRel) || '');
+      return;
+    }
+
+    const existingIndexAbs = path.join(REPO_ROOT, dirRel, INDEX_FILENAME);
+    if (fileExists(existingIndexAbs)) {
+      contentByTopDir.set(dirRel, readTextSafe(existingIndexAbs));
+      return;
+    }
+
+    const sourceDirRel = resolveSourceDirRel(dirRel);
+    const data = buildFolderIndexData(dirRel, sourceDirRel, docsRouteKeys);
+    contentByTopDir.set(dirRel, renderIndexContent(data, buildIndexMeta(dirRel)));
+  });
 
   const rootIndexAbs = path.join(PAGES_ROOT_ABS, INDEX_FILENAME);
   const aggregate = renderAggregateContent(buildAggregateData(topLevelDirs, contentByTopDir, rootIndexAbs), buildRootMeta());

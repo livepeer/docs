@@ -1,0 +1,612 @@
+---
+title: 'BYOC smoke-test: CPU gateway and orchestrator (off-chain to on-chain)'
+sidebarTitle: 'BYOC CPU tutorial'
+description: 'Run a complete Livepeer gateway and orchestrator on one machine using a CPU Docker container as a BYOC pipeline, test end-to-end with off-chain payments via a remote signer, then graduate to a production on-chain setup.'
+keywords: ["livepeer", "BYOC", "gateway", "orchestrator", "CPU", "tutorial", "off-chain", "remote signer", "Docker"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+This tutorial walks through a complete end-to-end test of the Livepeer gateway + orchestrator pipeline using BYOC (Bring Your Own Container) with a CPU-only Docker container. No GPU is required.
+
+By the end you will have:
+- A go-livepeer orchestrator running locally accepting BYOC jobs
+- A go-livepeer gateway running in off-chain mode pointed at a community remote signer
+- A simple CPU Docker container registered as a BYOC pipeline
+- A verified end-to-end job sent from your gateway through your orchestrator and back
+- A clear path to taking this setup to production on-chain
+
+<Warning>
+This tutorial uses the **off-chain gateway mode** (remote signer) for simplicity. Off-chain mode was introduced in Q4 2025 via PRs [#3791](https://github.com/livepeer/go-livepeer/pull/3791) and [#3822](https://github.com/livepeer/go-livepeer/pull/3822). It is the recommended starting point for all new AI and BYOC gateway deployments.
+</Warning>
+
+<Note>
+**BYOC vs LV2V:** BYOC uses a different job flow from LV2V (live-video-to-video). BYOC does not use gRPC to fetch OrchestratorInfo — discovery is done by HTTP capability query. The gateway's start-stream request can explicitly set an allow-list or block-list of orchestrators. This makes BYOC well-suited to browser and CPU-only deployments where gRPC dependencies are undesirable.
+</Note>
+
+---
+
+## Prerequisites
+
+<CardGroup cols={2}>
+  <Card title="Docker" icon="docker">
+    Docker Engine 24+ installed and running. Verify with `docker --version`.
+  </Card>
+  <Card title="go-livepeer binary" icon="download">
+    Latest tagged release from [github.com/livepeer/go-livepeer/releases](https://github.com/livepeer/go-livepeer/releases). Linux amd64 recommended.
+  </Card>
+  <Card title="Python 3.10+" icon="python">
+    Required if you want to use the Python gateway SDK for sending test jobs. Optional for the go-livepeer-only path.
+  </Card>
+  <Card title="Free ports" icon="plug">
+    The following ports must be free on your machine: `7935` (orchestrator HTTP), `8935` (gateway AI API), `9090` (orchestrator metrics — optional).
+  </Card>
+</CardGroup>
+
+You do **not** need:
+- A GPU
+- An Ethereum wallet or ETH
+- An Arbitrum RPC endpoint
+- On-chain registration
+
+The community remote signer at `https://signer.eliteencoder.net/` handles all Ethereum operations for you during testing.
+
+---
+
+## Architecture overview
+
+```
+Your machine
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                   │
+│  ┌──────────────┐    job request     ┌────────────────────────┐  │
+│  │   Gateway    │ ─────────────────> │     Orchestrator       │  │
+│  │  (port 8935) │ <───────────────── │     (port 7935)        │  │
+│  │  off-chain   │    job result      │                        │  │
+│  └──────┬───────┘                   │  ┌──────────────────┐  │  │
+│         │                           │  │  BYOC Container  │  │  │
+│         │ signTicket                │  │  (CPU pipeline)  │  │  │
+│         ▼                           │  └──────────────────┘  │  │
+│  ┌──────────────┐                   └────────────────────────┘  │
+│  │Remote Signer │                                                 │
+│  │(external)    │                                                 │
+│  └──────────────┘                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+The gateway handles no Ethereum operations itself. All payment signing is delegated to the community remote signer. The orchestrator is registered locally only — no on-chain registration needed for this smoke test.
+
+---
+
+## Part 1: Build the CPU BYOC container
+
+We will use a minimal Python image that echoes video frames back — a CPU-only passthrough pipeline useful for testing the full job flow without any GPU or model inference.
+
+<Steps>
+  <Step title="Create the pipeline directory">
+    ```bash
+    mkdir byoc-cpu-test
+    cd byoc-cpu-test
+    ```
+  </Step>
+
+  <Step title="Write the pipeline code">
+    Create `pipeline.py`:
+
+    ```python
+    import asyncio
+    import logging
+
+    from runner.live.pipelines import Pipeline, BaseParams
+    from runner.live.trickle import VideoFrame, VideoOutput
+
+
+    class PassthroughParams(BaseParams):
+        """No custom parameters needed for passthrough."""
+        pass
+
+
+    class PassthroughPipeline(Pipeline):
+        """
+        CPU-only passthrough pipeline for BYOC smoke testing.
+        Echoes every incoming video frame directly to the output queue.
+        No model loading, no GPU required.
+        """
+
+        def __init__(self):
+            self.frame_queue: asyncio.Queue[VideoOutput] = asyncio.Queue()
+            self._running = True
+
+        async def initialize(self, **params):
+            logging.info("PassthroughPipeline: initialized (CPU, no model loading)")
+
+        async def put_video_frame(self, frame: VideoFrame, request_id: str):
+            if self._running:
+                # Pass the frame through unchanged
+                await self.frame_queue.put(VideoOutput(frame, request_id))
+
+        async def get_processed_video_frame(self) -> VideoOutput:
+            return await self.frame_queue.get()
+
+        async def update_params(self, **params):
+            logging.info(f"PassthroughPipeline: params update received: {params}")
+
+        async def stop(self):
+            self._running = False
+            logging.info("PassthroughPipeline: stopped")
+
+        @classmethod
+        def prepare_models(cls):
+            logging.info("PassthroughPipeline: no models to prepare (CPU passthrough)")
+    ```
+  </Step>
+
+  <Step title="Write the entrypoint">
+    Create `main.py`:
+
+    ```python
+    import os
+    from runner.app import start_app
+    from runner.live.pipelines import PipelineSpec
+
+    pipeline_spec = PipelineSpec(
+        name="passthrough-cpu",          # This is your model_id in go-livepeer
+        pipeline_cls="pipeline:PassthroughPipeline",
+        params_cls="pipeline:PassthroughParams",
+        initial_params={},
+    )
+
+    if __name__ == "__main__":
+        start_app(pipeline=pipeline_spec)
+    ```
+  </Step>
+
+  <Step title="Write the Dockerfile">
+    Create `Dockerfile`:
+
+    ```dockerfile
+    # Pin to a specific ai-runner live-base version
+    ARG BASE_IMAGE=livepeer/ai-runner:live-base
+    FROM ${BASE_IMAGE}
+
+    WORKDIR /app
+
+    # Copy pipeline files
+    COPY pipeline.py ./pipeline.py
+    COPY main.py ./main.py
+
+    # No additional dependencies needed for CPU passthrough
+
+    ENV HF_HUB_OFFLINE=1
+
+    ENTRYPOINT ["python", "main.py"]
+    ```
+  </Step>
+
+  <Step title="Build the Docker image">
+    ```bash
+    docker build -t byoc-cpu-passthrough:latest .
+    ```
+
+    Expected output ends with:
+    ```
+    Successfully tagged byoc-cpu-passthrough:latest
+    ```
+
+    Verify:
+    ```bash
+    docker images | grep byoc-cpu-passthrough
+    ```
+  </Step>
+</Steps>
+
+---
+
+## Part 2: Run the orchestrator
+
+The orchestrator accepts jobs from the gateway and routes them to the BYOC container.
+
+<Steps>
+  <Step title="Download the go-livepeer binary">
+    ```bash
+    # Replace vX.Y.Z with the latest release from github.com/livepeer/go-livepeer/releases
+    curl -LO https://github.com/livepeer/go-livepeer/releases/download/vX.Y.Z/livepeer_linux_amd64.tar.gz
+    tar -xzf livepeer_linux_amd64.tar.gz
+    chmod +x livepeer livepeer_cli
+    ```
+  </Step>
+
+  <Step title="Start the BYOC container">
+    Start your pipeline container before the orchestrator so it is ready when the orchestrator registers capabilities:
+
+    ```bash
+    docker run -d \
+      --name byoc-cpu-passthrough \
+      --network host \
+      -p 8000:8000 \
+      byoc-cpu-passthrough:latest
+    ```
+
+    Verify the container is running:
+    ```bash
+    docker logs byoc-cpu-passthrough
+    # Should see: PassthroughPipeline: initialized (CPU, no model loading)
+    ```
+  </Step>
+
+  <Step title="Start the orchestrator">
+    Run the orchestrator in `-orchestrator` mode, advertising the BYOC capability and pointing at the running Docker container:
+
+    ```bash
+    ./livepeer \
+      -orchestrator \
+      -serviceAddr 0.0.0.0:8935 \
+      -cliAddr 127.0.0.1:7935 \
+      -byoc \
+      -byocContainerURL http://localhost:8000 \
+      -byocModelID passthrough-cpu \
+      -pricePerUnit 1 \
+      -network offchain \
+      -datadir ./data-orchestrator
+    ```
+
+    **Flag explanation:**
+    - `-orchestrator` — run in orchestrator mode
+    - `-serviceAddr` — the address the gateway will connect to
+    - `-cliAddr` — local CLI management port
+    - `-byoc` — enable BYOC mode
+    - `-byocContainerURL` — URL of the running BYOC Docker container
+    - `-byocModelID` — must match the `name` in your pipeline's `PipelineSpec`
+    - `-pricePerUnit 1` — set a nominal price (1 wei equivalent) for testing
+    - `-network offchain` — no Ethereum dependency, local registration only
+    - `-datadir` — separate data directory from the gateway
+
+    Successful startup logs include:
+    ```
+    Orchestrator registered with service address 0.0.0.0:8935
+    BYOC capability registered: passthrough-cpu
+    ```
+  </Step>
+</Steps>
+
+---
+
+## Part 3: Run the gateway (off-chain mode)
+
+<Steps>
+  <Step title="Start the gateway with remote signer">
+    In a new terminal, run the gateway in off-chain mode pointed at the community remote signer and your local orchestrator:
+
+    ```bash
+    ./livepeer \
+      -gateway \
+      -cliAddr 127.0.0.1:7936 \
+      -httpAddr 0.0.0.0:8935 \
+      -orchAddr http://localhost:8935 \
+      -remoteSignerAddr https://signer.eliteencoder.net \
+      -network offchain \
+      -datadir ./data-gateway
+    ```
+
+    **Flag explanation:**
+    - `-gateway` — run in gateway mode
+    - `-cliAddr` — separate CLI port from the orchestrator (must differ)
+    - `-httpAddr` — AI API port that your applications will call
+    - `-orchAddr` — point directly at your local orchestrator
+    - `-remoteSignerAddr` — the community-hosted remote signer (provides free ETH for testing)
+    - `-network offchain` — no Arbitrum RPC required
+    - `-datadir` — separate data directory
+
+    Successful startup logs include:
+    ```
+    Gateway started on :8935
+    Connected to remote signer at https://signer.eliteencoder.net
+    Registered orchestrator: localhost:8935
+    ```
+
+    <Note>
+    The remote signer at `signer.eliteencoder.net` is a community-hosted service maintained by John (Elite Encoder). It provides free ETH for testing off-chain gateway setups. Confirm availability in [#local-gateways on Discord](https://discord.gg/livepeer) if you encounter connection errors.
+    </Note>
+  </Step>
+
+  <Step title="Verify both processes are running">
+    Check the gateway API is responding:
+
+    ```bash
+    curl http://localhost:8935/health
+    # Expected: {"status":"ok"}
+    ```
+
+    Check the orchestrator is reachable from the gateway:
+    ```bash
+    curl http://localhost:7935/registeredOrchestrators
+    # Expected: JSON array with your orchestrator entry
+    ```
+  </Step>
+</Steps>
+
+---
+
+## Part 4: Send a test job
+
+<Steps>
+  <Step title="Install the Python gateway SDK (optional but recommended)">
+    The Python SDK makes it easy to send a structured BYOC job and observe payments:
+
+    ```bash
+    pip install git+https://github.com/j0sh/livepeer-python-gateway.git
+    ```
+  </Step>
+
+  <Step title="Send a BYOC job via the SDK">
+    Create `test_job.py`:
+
+    ```python
+    import asyncio
+    from livepeer_gateway import GatewayClient
+
+    async def main():
+        client = GatewayClient(
+            gateway_url="http://localhost:8935",
+            model_id="passthrough-cpu",
+        )
+
+        print("Starting BYOC job...")
+        async with client.start_byoc_job() as session:
+            # Send a small test payload (simulated video frame as bytes)
+            test_frame = b"\x00" * 1024  # 1KB of zeros — minimal CPU test payload
+            await session.send(test_frame)
+            print("Frame sent. Waiting for response...")
+
+            result = await session.receive()
+            print(f"Job complete. Response size: {len(result)} bytes")
+            assert len(result) > 0, "Expected non-empty response from passthrough pipeline"
+
+        print("BYOC test passed.")
+
+    asyncio.run(main())
+    ```
+
+    Run it:
+    ```bash
+    python test_job.py
+    ```
+
+    Successful output:
+    ```
+    Starting BYOC job...
+    Frame sent. Waiting for response...
+    Job complete. Response size: 1024 bytes
+    BYOC test passed.
+    ```
+  </Step>
+
+  <Step title="Alternative: Test via curl (gateway HTTP API)">
+    If you prefer not to install the SDK, you can test via the gateway's HTTP endpoint directly:
+
+    ```bash
+    curl -X POST http://localhost:8935/live/video-to-video \
+      -H "Content-Type: application/octet-stream" \
+      --data-binary @/dev/urandom \
+      --max-time 10
+    ```
+
+    A non-error response confirms the pipeline is reachable and the session was established.
+  </Step>
+
+  <Step title="Inspect the logs">
+    In the gateway terminal, you should see payment-related log lines confirming the remote signer was used:
+    ```
+    Calling remote signer: getOrchInfoSig
+    Calling remote signer: signTicket
+    Ticket sent to orchestrator localhost:8935
+    ```
+
+    In the orchestrator terminal:
+    ```
+    BYOC job received: model_id=passthrough-cpu
+    Forwarding to container at http://localhost:8000
+    Job complete
+    ```
+  </Step>
+</Steps>
+
+---
+
+## Part 5: Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Gateway cannot connect to remote signer">
+    Confirm the community remote signer is online:
+    ```bash
+    curl https://signer.eliteencoder.net/health
+    ```
+    If this fails, post in [#local-gateways on Discord](https://discord.gg/livepeer) — the signer may be down or the URL may have changed. As a fallback, you can run your own remote signer from the go-livepeer source using the `-remoteSigner` flag with your own Ethereum key.
+  </Accordion>
+
+  <Accordion title="Orchestrator not registering the BYOC capability">
+    Check that your Docker container is running and reachable before starting the orchestrator:
+    ```bash
+    docker ps | grep byoc-cpu-passthrough
+    curl http://localhost:8000/health
+    ```
+    If the container is not reachable, the orchestrator will start but will not advertise the BYOC capability to the gateway.
+  </Accordion>
+
+  <Accordion title="Port conflict errors">
+    If either port 7935, 7936, or 8935 is already in use:
+    ```bash
+    lsof -i :8935
+    lsof -i :7935
+    ```
+    Adjust the `-serviceAddr`, `-cliAddr`, and `-httpAddr` flags accordingly. Make sure `-orchAddr` on the gateway matches the orchestrator's `-serviceAddr`.
+  </Accordion>
+
+  <Accordion title="Gateway cannot find the orchestrator">
+    Check that the orchestrator's `-serviceAddr` is reachable from the gateway process:
+    ```bash
+    curl http://localhost:8935/getOrchestrators
+    ```
+    If the orchestrator is on a different interface, update `-orchAddr` to use the correct IP. For a same-machine setup, `localhost` or `127.0.0.1` should always work.
+  </Accordion>
+
+  <Accordion title="BYOC container exits immediately">
+    Check Docker logs:
+    ```bash
+    docker logs byoc-cpu-passthrough
+    ```
+    Common causes: missing `ai-runner` base image (pull it first with `docker pull livepeer/ai-runner:live-base`), or a Python import error in your pipeline code.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Part 6: Graduate to on-chain production
+
+Once your off-chain smoke test passes, follow this path to move to a production on-chain deployment.
+
+<Steps>
+  <Step title="Acquire ETH on Arbitrum One">
+    On-chain gateways require a PM deposit (approximately 0.065 ETH) and a PM reserve (approximately 0.03 ETH) on Arbitrum One.
+
+    Options for acquiring Arbitrum ETH:
+    - Bridge from Ethereum mainnet via the [official Arbitrum bridge](https://bridge.arbitrum.io/)
+    - Buy directly on Arbitrum via exchanges listed at the [Arbitrum Exchanges reference](/v2/gateways/resources/technical/arbitrum-exchanges)
+    - Buy on a CEX (Coinbase, Binance) and withdraw directly to Arbitrum One
+
+    <Warning>
+    Confirm current ETH deposit requirements in [#lounge on Discord](https://discord.gg/livepeer) or the [on-chain requirements page](/v2/gateways/setup/requirements/on-chain%20setup/on-chain) before depositing — amounts can change as ETH/USD rates shift.
+    </Warning>
+  </Step>
+
+  <Step title="Create an Ethereum wallet for your gateway">
+    Your production gateway needs a dedicated Ethereum wallet. Do not reuse a personal wallet.
+
+    ```bash
+    ./livepeer_cli \
+      -network arbitrum-one \
+      -datadir ./data-gateway \
+      # Follow the CLI prompts to create a new keystore
+    ```
+
+    Note your wallet address. You will need it for the PM deposit and reserve transactions.
+  </Step>
+
+  <Step title="Set up an Arbitrum RPC endpoint">
+    Your on-chain gateway needs a reliable Arbitrum One RPC. Options:
+    - [Infura](https://infura.io) — `https://arbitrum-mainnet.infura.io/v3/YOUR_KEY`
+    - [Alchemy](https://alchemy.com) — `https://arb-mainnet.g.alchemy.com/v2/YOUR_KEY`
+    - Community Arbitrum RPC (see [Arbitrum RPC reference](/v2/gateways/resources/technical/arbitrum-rpc))
+
+    Test your RPC:
+    ```bash
+    curl -X POST YOUR_RPC_URL \
+      -H "Content-Type: application/json" \
+      -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
+    ```
+  </Step>
+
+  <Step title="Deposit PM funds on-chain">
+    Use `livepeer_cli` to make your PM deposit and reserve:
+
+    ```bash
+    ./livepeer_cli \
+      -network arbitrum-one \
+      -ethUrl YOUR_ARBITRUM_RPC \
+      -datadir ./data-gateway
+    ```
+
+    From the CLI menu, select:
+    1. **Deposit broadcasting funds (ETH)** — deposit approximately 0.065 ETH
+    2. **Request unlock broadcasting funds** is not needed yet; this is for withdrawal
+
+    After depositing, confirm your balance:
+    ```bash
+    ./livepeer_cli \
+      -network arbitrum-one \
+      -ethUrl YOUR_ARBITRUM_RPC \
+      -datadir ./data-gateway \
+      # Select "Get node status" to see PM deposit balance
+    ```
+  </Step>
+
+  <Step title="Register your orchestrator on-chain">
+    Your production orchestrator needs to activate and set pricing on-chain:
+
+    ```bash
+    ./livepeer \
+      -orchestrator \
+      -serviceAddr YOUR_PUBLIC_IP:8935 \
+      -network arbitrum-one \
+      -ethUrl YOUR_ARBITRUM_RPC \
+      -datadir ./data-orchestrator \
+      -byoc \
+      -byocContainerURL http://localhost:8000 \
+      -byocModelID passthrough-cpu \
+      -pricePerUnit 1000
+    ```
+
+    Then activate via the CLI:
+    ```bash
+    ./livepeer_cli \
+      -network arbitrum-one \
+      -ethUrl YOUR_ARBITRUM_RPC \
+      -datadir ./data-orchestrator
+    # Select: "Activate orchestrator"
+    # Set your service fee, block reward cut, and pricing
+    ```
+  </Step>
+
+  <Step title="Switch the gateway to on-chain mode">
+    Remove `-network offchain` and `-remoteSignerAddr`, and add your Arbitrum RPC and on-chain flags:
+
+    ```bash
+    ./livepeer \
+      -gateway \
+      -cliAddr 127.0.0.1:7936 \
+      -httpAddr 0.0.0.0:8935 \
+      -network arbitrum-one \
+      -ethUrl YOUR_ARBITRUM_RPC \
+      -datadir ./data-gateway
+    ```
+
+    The gateway will now discover orchestrators from the on-chain registry and sign PM tickets directly using your wallet's signing key.
+
+    <Note>
+    Once on-chain, you no longer need the community remote signer. Your gateway holds the PM signing key and handles all Ethereum operations directly. This is the standard mode for video gateways and is also supported for AI gateways that prefer full on-chain custody.
+    </Note>
+  </Step>
+
+  <Step title="Verify on-chain operation">
+    Confirm your gateway is visible on the network:
+
+    1. Visit [explorer.livepeer.org](https://explorer.livepeer.org) and search for your gateway address
+    2. Check that PM tickets are being sent via the gateway logs: look for `Ticket sent` lines
+    3. Monitor your ETH balance — it should decrease slowly as PM deposits fund tickets
+    4. Use [tools.livepeer.cloud](https://tools.livepeer.cloud) to check your orchestrator's visibility and performance
+  </Step>
+</Steps>
+
+---
+
+## What next
+
+<CardGroup cols={2}>
+  <Card title="Custom pipeline beyond passthrough" href="https://github.com/livepeer/ai-runner/blob/main/docs/custom-pipeline.md" icon="wand-magic-sparkles">
+    Build a real CPU or GPU pipeline extending ai-runner. Add model loading, frame processing logic, and custom parameters.
+  </Card>
+  <Card title="Remote signers deep dive" href="/v2/gateways/payments/remote-signers" icon="key">
+    Understand the full remote signer protocol, stateless design, and how to run your own signer for production security.
+  </Card>
+  <Card title="Payment clearinghouse" href="/v2/gateways/payments/payment-clearinghouse" icon="building-columns">
+    Build a Gateway-as-a-Service layer: JWT auth, user management, accounting on top of the remote signer model (NaaP reference implementation).
+  </Card>
+  <Card title="Monitoring and optimisation" href="/v2/gateways/setup/monitor/monitor-and-optimise" icon="gauge">
+    Set up Prometheus metrics, Loki log queries, and ETH balance alerts for production gateway operation.
+  </Card>
+</CardGroup>
+
+---
+
+<Note>
+BYOC and off-chain gateway support is actively developed. For the latest status of BYOC payments, remote signer compatibility, and SDK updates, follow the [#local-gateways channel on Discord](https://discord.gg/livepeer) and the [livepeer-python-gateway PR queue](https://github.com/j0sh/livepeer-python-gateway/pulls).
+</Note>

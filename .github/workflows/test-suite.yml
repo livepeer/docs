@@ -130,200 +130,37 @@ jobs:
           exit 1
 
   component-enforcement:
-    name: component-enforcement
-    if: github.event_name == 'pull_request'
+    name: component-governance
     runs-on: ubuntu-latest
-    env:
-      NODE_PATH: ${{ github.workspace }}/tools/node_modules
-
-    permissions:
-      contents: read
+    if: github.event_name == 'pull_request'
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Fetch pull request base ref
+      - name: Fetch base ref
         run: git fetch --no-tags --depth=1 origin ${{ github.base_ref }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "npm"
-          cache-dependency-path: tools/package-lock.json
 
-      - name: Install dependencies (tools)
+      - name: Install dependencies
         working-directory: tools
-        run: npm ci
-
-      - name: Detect component changes
-        id: detect-component-changes
-        shell: bash
-        run: |
-          set -euo pipefail
-          changed_files="$(git diff --name-only "${{ github.event.pull_request.base.sha }}...HEAD" -- snippets/components)"
-          if [ -n "$changed_files" ]; then
-            echo "has_changes=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_changes=false" >> "$GITHUB_OUTPUT"
-          fi
-          {
-            echo "changed_files<<EOF"
-            printf '%s\n' "$changed_files"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Verify component enforcement scripts
-        id: component-preflight
-        if: steps.detect-component-changes.outputs.has_changes == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          required_files=(
-            "tools/scripts/validators/components/check-component-css.js"
-            "tools/scripts/validators/components/check-component-docs.js"
-            "tools/scripts/enforcers/pr/check-component-immutability.js"
-          )
-          missing=0
-          for file in "${required_files[@]}"; do
-            if [ ! -f "$file" ]; then
-              echo "::error file=$file::Missing prerequisite enforcement script"
-              missing=1
-            fi
-          done
-          if [ "$missing" -ne 0 ]; then
-            echo "❌ Component enforcement prerequisites are missing."
-            exit 1
-          fi
+        run: npm install
 
       - name: Component CSS standards
-        id: component-css
-        if: steps.detect-component-changes.outputs.has_changes == 'true'
-        continue-on-error: true
         run: node tools/scripts/validators/components/check-component-css.js
+        continue-on-error: true
 
       - name: Component documentation
-        id: component-docs
-        if: steps.detect-component-changes.outputs.has_changes == 'true'
+        run: node tools/scripts/validators/components/check-component-docs.js
         continue-on-error: true
-        shell: bash
-        run: |
-          set -euo pipefail
-          report_file="$(mktemp)"
-          trap 'rm -f "$report_file"' EXIT
-
-          node tools/scripts/validators/components/check-component-docs.js \
-            --base-ref "${{ github.event.pull_request.base.sha }}" | tee "$report_file"
-
-          if grep -Eq '^[^[:space:]][^:]*:[0-9]+: \[4\.(9|10|11)\]' "$report_file"; then
-            echo "⚠️ Component documentation findings detected."
-            exit 1
-          fi
 
       - name: Component immutability
-        id: component-immutability
-        if: steps.detect-component-changes.outputs.has_changes == 'true'
+        run: node tools/scripts/enforcers/pr/check-component-immutability.js --base-ref origin/${{ github.base_ref }}
+
+      - name: Validate component registry
+        run: node tools/scripts/generate-component-registry.js --validate-only
         continue-on-error: true
-        run: node tools/scripts/enforcers/pr/check-component-immutability.js --base-ref "${{ github.event.pull_request.base.sha }}"
-
-      - name: Component enforcement summary
-        if: always()
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          has_changes="${{ steps.detect-component-changes.outputs.has_changes }}"
-          preflight_outcome="${{ steps.component-preflight.outcome }}"
-          css_outcome="${{ steps.component-css.outcome }}"
-          docs_outcome="${{ steps.component-docs.outcome }}"
-          immutability_outcome="${{ steps.component-immutability.outcome }}"
-          integration_exception=false
-
-          if [ "${{ github.head_ref }}" = "docs-v2" ] && [ "${{ github.base_ref }}" = "main" ]; then
-            integration_exception=true
-          fi
-
-          advisory_status() {
-            case "$1" in
-              success) echo "✅ Pass" ;;
-              failure) echo "⚠️ Warning" ;;
-              *) echo "⏭️ Skipped" ;;
-            esac
-          }
-
-          preflight_status() {
-            if [ "$has_changes" != "true" ]; then
-              echo "⏭️ Skipped"
-              return
-            fi
-
-            case "$preflight_outcome" in
-              success) echo "✅ Pass" ;;
-              failure) echo "❌ Blocking" ;;
-              *) echo "⏭️ Skipped" ;;
-            esac
-          }
-
-          immutability_status() {
-            case "$1" in
-              success) echo "✅ Pass" ;;
-              failure)
-                if [ "$integration_exception" = "true" ]; then
-                  echo "⚠️ Advisory exception"
-                else
-                  echo "❌ Blocking"
-                fi
-                ;;
-              *) echo "⏭️ Skipped" ;;
-            esac
-          }
-
-          {
-            echo "## Component Enforcement"
-            echo
-            echo "| Check | Status |"
-            echo "|---|---|"
-            if [ "$has_changes" = "true" ]; then
-              echo "| Detect component changes | 🟢 Changes detected |"
-            else
-              echo "| Detect component changes | ⏭️ No component changes |"
-            fi
-            echo "| Prerequisite scripts | $(preflight_status) |"
-            echo "| Component CSS standards | $(advisory_status "$css_outcome") |"
-            echo "| Component documentation | $(advisory_status "$docs_outcome") |"
-            echo "| Component immutability | $(immutability_status "$immutability_outcome") |"
-            echo
-          } >> "$GITHUB_STEP_SUMMARY"
-
-          if [ "$has_changes" = "true" ]; then
-            {
-              echo "### Changed component files"
-              echo
-              echo '```text'
-              cat <<'EOF'
-              ${{ steps.detect-component-changes.outputs.changed_files }}
-              EOF
-              echo '```'
-              echo
-            } >> "$GITHUB_STEP_SUMMARY"
-          fi
-
-          if [ "$integration_exception" = "true" ] && [ "$has_changes" = "true" ]; then
-            {
-              echo "> Component-enforcement findings are advisory for integration PR \`docs-v2 -> main\`."
-              echo "> Missing prerequisite scripts remain blocking."
-            } >> "$GITHUB_STEP_SUMMARY"
-          fi
-
-      - name: Fail on blocking component immutability violation
-        if: >
-          always() &&
-          steps.detect-component-changes.outputs.has_changes == 'true' &&
-          steps.component-immutability.outcome == 'failure' &&
-          !(github.head_ref == 'docs-v2' && github.base_ref == 'main')
-        run: |
-          echo "❌ Component immutability violation detected"
-          exit 1

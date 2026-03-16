@@ -118,7 +118,7 @@ import { Component } from "/snippets/components/Component.jsx";
 
 **⚠️ CRITIQUE :**Les agents DOIVENT absolument ne pas contourner les hooks sans permission explicite de l'utilisateur.
 
-Le `.github/augment-instructions.md` indique explicitement :
+La gouvernance canonique des agents dans `AGENTS.md` et `docs-guide/policies/agent-governance-framework.mdx` indique explicitement :
 - **JAMAIS** utiliser le drapeau `--no-verify` pour contourner les hooks
 - C'est une contrainte de projet rigoureuse
 
@@ -232,4 +232,5 @@ Lorsque vous travaillez sur un fork :
 - [Documentation complète sur les hooks Git](./GIT-HOOKS)
 - [Guide de style](../../resources/documentation-guide/style-guide)
 - [Prérequis de l'agent](../../PLAN/AGENT-PREREQUISITES.md)
-- [Instructions d'extension](../../.github/augment-instructions.md)
+- [Cadre de gouvernance des agents](../../../../docs-guide/policies/agent-governance-framework.mdx)
+- [Gouvernance de la allowlist racine](../../../../docs-guide/policies/root-allowlist-governance.mdx)

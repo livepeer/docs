@@ -1,0 +1,93 @@
+---
+title: Configure Transcoding Options
+icon: gear
+description:
+  To better control your encoding profiles it is recommended to use a json file
+  to specify the resolution and bitrate for your encoding ladder.
+---
+
+# Create the JSON file
+
+Use the following as a template for your json file
+
+```
+[
+{
+  "name": "480p0",
+  "fps": 0,
+  "bitrate": 1600000,
+  "width": 854,
+  "height": 480,
+  "profile": "h264constrainedhigh",
+  "gop": "1"
+},
+{
+  "name": "720p0",
+  "fps": 0,
+  "bitrate": 3000000,
+  "width": 1280,
+  "height": 720,
+  "profile": "h264constrainedhigh",
+  "gop": "1"
+},
+{
+  "name": "1080p0",
+  "fps": 0,
+  "bitrate": 6500000,
+  "width": 1920,
+  "height": 1080,
+  "profile": "h264constrainedhigh",
+  "gop": "1"
+}
+]
+```
+
+## Modify Docker Config
+
+Create the transcodingOptions.json file using the above template.
+
+```
+nano -p /var/lib/docker/volumes/gateway-lpData/_data/transcodingOptions.json
+```
+
+Modify the docker-compose.yml file from the root user's home directory _/root/_
+and add the following below `-pixelsPerUnit=1`
+
+```
+-transcodingOptions=/root/.lpData/transcodingOptions.json
+```
+
+## Modify Linux Config
+
+Create the transcodingOptions.json file using the above template.
+
+```
+sudo nano /usr/local/bin/lptConfig/transcodingOptions.json
+```
+
+Modify the Linux Service file /etc/systemd/system/livepeer.service and add the
+following below `-pixelsPerUnit=1`
+
+```
+-transcodingOptions=/usr/local/bin/lptConfig/transcodingOptions.json \
+```
+
+## Modify Windows Config
+
+Create the transcodingOptions.json file using the above template.
+
+Open notepad (or your text editor of choice) paste the template above and save
+the transcodingOptions.json file in the following location.
+
+**Note:** Replace **YOUR_USER_NAME** with your actual user name
+
+```
+C:\Users\YOUR_USER_NAME\.lpData\transcodingOptions.json
+```
+
+Modify Windows bat file to include the following command after
+`-pixelsPerUnit=1`
+
+```
+-transcodingOptions=C:\Users\YOUR_USER_NAME\.lpData\transcodingOptions.json
+```

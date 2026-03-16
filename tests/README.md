@@ -40,6 +40,7 @@ Explicitly refreshes:
 - `node tests/unit/docs-guide-sot.test.js`
 - `node tools/scripts/generate-pages-index.js`
 - `node tools/scripts/enforce-generated-file-banners.js --check`
+- `.mintignore` and shared file-selection helpers should exclude governed non-publishable lanes such as `_workspace/`, `x-deprecated/`, and `v2/x-archived/` once enforcement lands.
 
 ### Integration Suites
 - `node tests/integration/browser.test.js`
@@ -51,6 +52,7 @@ Domain load audit against deployed docs URLs.
 - `node tests/integration/v2-link-audit.js`
 Comprehensive static link/import audit for all `v2/pages` MDX files and recursively imported MDX dependencies.
 Excludes any `x-*` path segments under `v2/`.
+Also respects `.mintignore` by default, so governed non-publishable lanes can be excluded from routine publishability checks without muting routed pages.
 Generates:
   - `tasks/reports/navigation-links/LINK_TEST_REPORT.md`
   - `tasks/reports/navigation-links/LINK_TEST_REPORT.json`
@@ -59,6 +61,7 @@ Generates:
 - `node tests/integration/v2-wcag-audit.js`
 Hybrid v2 accessibility audit for filesystem docs pages under `v2/` (excluding any `x-*` directories).
 Runs conservative static checks/autofix on all selected files and browser-rendered WCAG checks (axe-core) on routable pages.
+Also respects `.mintignore` by default, which is how governed non-publishable lanes are excluded from routine page audits.
 Generates deterministic reports (overwritten each run) at:
   - `tasks/reports/quality-accessibility/v2-wcag-audit-report.md`
   - `tasks/reports/quality-accessibility/v2-wcag-audit-report.json`
@@ -75,7 +78,7 @@ Autofix boundaries:
   - only deterministic normalization (`METHOD` casing, spacing, leading slash)
   - no semantic endpoint guess/rewrites
 Rolling issue behavior:
-  - single marker issue `<!-- openapi-reference-audit -->`
+  - single marker issue `[//]: # (openapi-reference-audit)`
   - opens/updates on unresolved failures
   - comments and closes automatically when resolved
 
@@ -165,6 +168,9 @@ bash lpd test --full --link-audit-external
 bash lpd test --full --wcag --wcag-no-fix
 bash lpd tools wcag-repair-common -- --staged --stage
 node tests/run-pr-checks.js --base-ref main
+node tests/run-pr-checks.js --base-ref main --lane branch-health
+node tools/scripts/create-codex-pr.js --advisory-research --changed-files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx
+node tools/scripts/docs-page-research-pr-report.js --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx --report-md /tmp/page-content-research-pr.md --report-json /tmp/page-content-research-pr.json
 ```
 
 ### npm Scripts (`tests/package.json`)
@@ -204,9 +210,27 @@ npm --prefix tests run test:wcag:selftest
 
 ## PR CI Behavior (Changed-File Blocking)
 - `.github/workflows/test-suite.yml` runs changed-file scoped blocking checks on pull requests:
-  - style guide, MDX, spelling, quality, links/imports
+- `tests/run-pr-checks.js` defaults to the `branch-health` lane when `--lane` is omitted.
+- `node tests/run-pr-checks.js --base-ref <branch> --lane branch-health` is the explicit local form when you want the supported lane spelled out.
+- style guide, MDX, spelling, quality, links/imports
   - script docs enforcement on changed scripts (`tests/unit/script-docs.test.js --files ...`)
   - strict V2 link audit on changed docs pages (`tests/integration/v2-link-audit.js --files ... --strict`)
+- Advisory research pass for tracked claim families is available locally via:
+  `node tools/scripts/docs-page-research-pr-report.js --files <changed-file[,changed-file...]> --report-md /tmp/page-content-research-pr.md --report-json /tmp/page-content-research-pr.json`
+- Experimental advisory integration is also available in local/manual PR prep via:
+  `node tools/scripts/create-codex-pr.js --advisory-research --changed-files <changed-file[,changed-file...]>`
+- This helper is intentionally not wired into blocking PR CI yet. Use it after changed-file checks when a diff touches tracked gateway/orchestrator factual claim surfaces.
+- Legacy route-centric helper note:
+  `node tools/scripts/docs-claim-ledger-pr-report.js ...` is retained only for comparison while the fact-runner advisory path is adopted. It is no longer the active PR workflow.
+
+## Experimental Page Research Usage
+
+The fact-check research workflow is documented canonically in:
+
+- Internal operator runbook: `/docs-guide/frameworks/research-skill-workflow`
+- Public contributor page: `/v2/resources/documentation-guide/research-and-fact-checking`
+
+Use those pages for workflow scope, commands, readiness, outputs, and source-of-truth boundaries.
 - Integration PR exception: for `docs-v2 -> main`, changed-file static failures are advisory while browser failures remain blocking.
 - The same workflow also runs full browser tests from `docs.json`.
 - `.github/workflows/test-v2-pages.yml` is responsible for PR comments and artifact uploads for V2 browser sweep results.
@@ -235,7 +259,7 @@ npm --prefix tests run test:wcag:selftest
 Newly added scripts must include these tags near the top of the file:
 - `@script`
 - `@summary`
-- `@owner`
+- `@domain`
 - `@scope`
 - `@usage`
 - `@inputs`
@@ -249,7 +273,7 @@ Example:
 /**
  * @script domain-pages-audit
  * @summary Audit deployed docs page load status.
- * @owner docs
+ * @domain docs
  * @scope tests/integration, tests/reports
  *
  * @usage
@@ -278,7 +302,7 @@ Example:
 Use the generator to create a new script with header already attached:
 ```bash
 node tools/scripts/new-script.js --path tools/scripts/my-script.js
-node tools/scripts/new-script.js --path tasks/scripts/my-script.sh --owner docs --scope tasks/scripts
+node tools/scripts/new-script.js --path tasks/scripts/my-script.sh --domain docs --scope tasks/scripts
 ```
 
 {/* SCRIPT-INDEX:START */}
@@ -287,7 +311,7 @@ node tools/scripts/new-script.js --path tasks/scripts/my-script.sh --owner docs 
 | Script | Summary | Usage |
 |---|---|---|
 | `tests/integration/domain-pages-audit.js` | Audit deployed docs page load status and emit a stable JSON report. | `node tests/integration/domain-pages-audit.js --version both` |
-| `tests/run-pr-checks.js` | Run changed-file scoped validation checks for pull request CI. | `node tests/run-pr-checks.js --base-ref main` |
+| `tests/run-pr-checks.js` | Run changed-file scoped validation checks for pull request CI. Defaults to the `branch-health` lane. | `node tests/run-pr-checks.js --base-ref main --lane branch-health` |
 | `tests/integration/v2-link-audit.js` | Comprehensive V2 MDX link audit with internal strict checks and optional external URL validation. | `node tests/integration/v2-link-audit.js --full --write-links --strict` |
 | `tests/unit/v2-link-audit.test.js` | Unit tests for v2 link audit args, external validation helpers, and x-* scope exclusion behavior. | `node tests/unit/v2-link-audit.test.js` |
 | `tests/integration/v2-link-audit.selftest.js` | Script-level self-tests for v2 link audit external validation using a local HTTP fixture and temporary MDX file. | `node tests/integration/v2-link-audit.selftest.js` |

@@ -1,0 +1,235 @@
+---
+title: Connecting to the Livepeer Network on Arbitrum
+sidebarTitle: Connect & Activate
+description: >-
+  Connect go-livepeer to the Arbitrum network using a hosted or self-hosted RPC
+  endpoint — required for staking, activation, and payments.
+keywords:
+  - livepeer
+  - orchestrator
+  - Arbitrum
+  - RPC
+  - ethUrl
+  - Alchemy
+  - Infura
+  - Ethereum
+  - connection
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: current
+lastVerified: '2026-03-15'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+This guide shows you how to connect go-livepeer to the Arbitrum network using an RPC endpoint.
+
+<Note>
+Livepeer runs on **Arbitrum One**, an Ethereum Layer 2 network. Arbitrum handles the protocol's staking, payments, and governance contracts. Your orchestrator node needs a live connection to Arbitrum to activate, receive payments, and submit on-chain transactions. This connection is provided by an RPC endpoint — either from a hosted provider or a self-hosted node.
+</Note>
+
+## Prerequisites
+
+Before proceeding:
+
+- go-livepeer is installed and your GPU is verified (see [Install go-livepeer](/v2/orchestrators/setup/rs-install)) {/* REVIEW: confirm path */}
+- Your Ethereum account has a small amount of ETH on Arbitrum One for gas. Typical activation transactions cost fractions of a cent; a few dollars of arbETH is sufficient to get started. {/* REVIEW: check current gas costs with Mehrdad/community */}
+- You have an Arbitrum RPC endpoint (covered in Step 1 below)
+
+<CustomDivider />
+
+## Step 1 — Choose an RPC endpoint
+
+Your node needs a stable, low-latency connection to Arbitrum One. You have three options:
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Option</TableCell>
+    <TableCell header>Best for</TableCell>
+    <TableCell header>Rate limits</TableCell>
+    <TableCell header>Sign-up</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Alchemy (free tier)</TableCell>
+    <TableCell>Most operators</TableCell>
+    <TableCell>Generous — 300M compute units/month</TableCell>
+    <TableCell>Required</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Infura (free tier)</TableCell>
+    <TableCell>Most operators</TableCell>
+    <TableCell>100K requests/day</TableCell>
+    <TableCell>Required</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Public endpoint (`arb1.arbitrum.io/rpc`)</TableCell>
+    <TableCell>Testing only</TableCell>
+    <TableCell>Yes — may throttle under load</TableCell>
+    <TableCell>None</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Self-hosted Arbitrum node</TableCell>
+    <TableCell>Advanced / privacy-focused</TableCell>
+    <TableCell>None</TableCell>
+    <TableCell>None</TableCell>
+  </TableRow>
+</StyledTable>
+
+For production orchestrator nodes, a hosted provider (Alchemy or Infura) is strongly recommended. Public endpoints have no uptime guarantees and will drop your sessions if they become unavailable.
+
+<Tabs>
+  <Tab  title="Alchemy" icon="square-terminal">
+    1. Create a free account at [alchemy.com](https://www.alchemy.com)
+    2. Create a new app — select **Arbitrum** as the chain and **Mainnet** as the network
+    3. Copy your HTTPS endpoint. It will look like:
+
+    ``` icon="terminal"
+    https://arb-mainnet.g.alchemy.com/v2/<YOUR_API_KEY>
+    ```
+
+    Use this URL as your `-ethUrl` value in the next step.
+  </Tab>
+  <Tab  title="Infura" icon="square-terminal">
+    1. Create a free account at [infura.io](https://infura.io)
+    2. Create a new API key — select **Web3 API**
+    3. In your key settings, enable the **Arbitrum** network
+    4. Your endpoint will look like:
+
+    ``` icon="terminal"
+    https://arbitrum-mainnet.infura.io/v3/<YOUR_PROJECT_ID>
+    ```
+
+    Use this URL as your `-ethUrl` value in the next step.
+  </Tab>
+  <Tab  title="Public endpoint" icon="square-terminal">
+    The Offchain Labs public endpoint requires no sign-up:
+
+    ``` icon="terminal"
+    https://arb1.arbitrum.io/rpc
+    ```
+
+    <Warning>
+    Public RPC endpoints have rate limits and no uptime guarantees. If the endpoint becomes unavailable, your orchestrator will drop all active sessions. Use a hosted provider for a production node.
+    </Warning>
+  </Tab>
+</Tabs>
+
+<CustomDivider />
+
+## Step 2 — Add the flag to your startup command
+
+Add `-ethUrl` and `-network arbitrum-one-mainnet` to your go-livepeer startup command:
+
+```bash icon="terminal"
+livepeer \
+  -network arbitrum-one-mainnet \
+  -ethUrl <YOUR_RPC_URL> \
+  -orchestrator \
+  -transcoder \
+  -nvidia 0 \
+  -pricePerUnit <PRICE_PER_UNIT> \
+  -serviceAddr <SERVICE_ADDR>
+```
+
+Replace `<YOUR_RPC_URL>` with the endpoint from Step 1.
+
+If you already have an Ethereum account and want to use it, add the `-ethAcctAddr` flag:
+
+```bash icon="terminal"
+livepeer \
+  -network arbitrum-one-mainnet \
+  -ethUrl <YOUR_RPC_URL> \
+  -ethAcctAddr <YOUR_ETH_ADDRESS> \
+  ...
+```
+
+<Note>
+If you omit `-ethAcctAddr`, go-livepeer will create a new Ethereum account on first run and prompt you for a passphrase to protect the keystore. The private key is stored at `~/.lpData/arbitrum-one-mainnet/keystore`.
+</Note>
+
+<CustomDivider />
+
+## Step 3 — Verify the connection
+
+Start go-livepeer. Within a few seconds you should see both of these log lines:
+
+``` icon="terminal"
+I0302 15:27:26.456804 rpc.go:167] Listening for RPC on :8935
+I0302 15:27:28.463151 rpc.go:207] Received Ping request
+```
+
+The `Received Ping request` line confirms your node is publicly reachable on the network.
+
+**If you see RPC errors instead**, check:
+- Your RPC URL is correctly formatted (no trailing slashes, correct API key)
+- Your API key has Arbitrum One enabled in the provider dashboard
+- The endpoint is reachable: test it directly with curl:
+
+```bash icon="terminal"
+curl -X POST <YOUR_RPC_URL> \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
+```
+
+A valid response looks like `{"id":1,"result":"0x1a2b3c4d","jsonrpc":"2.0"}`. An error or empty response means your endpoint or API key is not working.
+
+<CustomDivider />
+
+<Warning>
+**Protect your keystore.** Your Ethereum account controls your orchestrator identity and any LPT you stake. The private key is stored at `~/.lpData/arbitrum-one-mainnet/keystore`. Back it up to secure offline storage. Your passphrase and private key together allow anyone to sign transactions and move funds from your account — never share either.
+
+If you lose access to your private key, you lose access to your orchestrator account and any staked LPT permanently.
+</Warning>
+
+<CustomDivider />
+
+## Related
+
+- [Connect and Activate](/v2/orchestrators/setup/connect-and-activate) — register on-chain and join the active set
+- [Frequently Asked Questions](/v2/orchestrators/resources/faq) — Arbitrum RPC error reference {/* REVIEW: confirm path */}
+{/* REVIEW: Deleted setting-up-an-orchestrator/connect-to-arbitrum.mdx had: "Use a stable RPC; flaky endpoints can cause missed reward calls." Not present in new draft. Human to decide whether to include. */}
+
+{/*
+  PURPOSE:
+  Connect to Arbitrum and activate on-chain - merged flow covering
+  ETH/LPT funding, Arbitrum network connection, and on-chain activation
+  to join the orchestrator set.
+
+  NOTE: Merged from separate connect and activate pages.
+
+  SECTION HOME: Setup
+  JOURNEY POSITION: 5 of 7 in Setup
+  CROSS-REFS:
+  - Resources > Arbitrum RPC - RPC endpoint selection
+  - Resources > Arbitrum Exchanges - acquiring ETH/LPT
+  - Staking & Rewards > Rewards and Fees - post-activation reward calling
+*/}

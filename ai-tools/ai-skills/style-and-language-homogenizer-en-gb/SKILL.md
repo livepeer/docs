@@ -1,6 +1,12 @@
 ---
 name: style-and-language-homogenizer-en-gb
-description: Enforce UK English and style homogenization rules on English v2 docs in phase 1.
+version: "1.0"
+description: >-
+  Enforce UK English usage and shared style conventions across English v2 docs so language drift is corrected before review and publication.
+invoke_when:
+  - "enforce uk english across docs"
+  - "normalize en-gb style in v2 docs"
+  - "homogenize english docs language"
 ---
 
 SKILL: Style and Language Homogenizer (EN-GB)

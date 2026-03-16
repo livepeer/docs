@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Test for add-callouts.js — validates callout insertion logic against fixtures
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
+ * @pipeline          manual — developer tool
  * @usage             node tools/scripts/dev/test-add-callouts.js [flags]
  */
 
@@ -79,7 +79,7 @@ This page has content and imports.
 title: 'Test Page'
 ---
 
-import {ComingSoonCallout} from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import {ComingSoonCallout} from '/snippets/components/primitives/previewCallouts.jsx'
 
 <ComingSoonCallout />
 `,
@@ -93,7 +93,7 @@ import {ComingSoonCallout} from '/snippets/components/domain/SHARED/previewCallo
 title: 'Test Page'
 ---
 
-import { PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import { PreviewCallout } from '/snippets/components/primitives/previewCallouts.jsx'
 
 <PreviewCallout />
 
@@ -111,7 +111,7 @@ Some content here.
 title: 'Test Page'
 ---
 
-import { PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import { PreviewCallout } from '/snippets/components/primitives/previewCallouts.jsx'
 
 <PreviewCallout />
 
@@ -131,7 +131,7 @@ Some content here.
 title: 'Test Page'
 ---
 
-import {ComingSoonCallout} from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import {ComingSoonCallout} from '/snippets/components/primitives/previewCallouts.jsx'
 
 <ComingSoonCallout />
 
@@ -151,7 +151,7 @@ Some content here.
 title: 'Test Page'
 ---
 
-import { PreviewCallout, ReviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import { PreviewCallout, ReviewCallout } from '/snippets/components/primitives/previewCallouts.jsx'
 
 <PreviewCallout />
 
@@ -175,7 +175,7 @@ Some content here.
 title: 'Test Page'
 ---
 
-import { PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import { PreviewCallout } from '/snippets/components/primitives/previewCallouts.jsx'
 
 <PreviewCallout />
 `,
@@ -239,7 +239,7 @@ function cleanupPreviewCalloutImports(content, usage) {
 
       if (filtered.length === 0) return null;
 
-      return `import { ${filtered.join(', ')} } from ${quote}/snippets/components/domain/SHARED/previewCallouts.jsx${quote}${hasSemicolon ? ';' : ''}`;
+      return `import { ${filtered.join(', ')} } from ${quote}/snippets/components/primitives/previewCallouts.jsx${quote}${hasSemicolon ? ';' : ''}`;
     })
     .filter((line) => line !== null)
     .join('\n');

@@ -4,7 +4,7 @@
  * @category          utility
  * @purpose           governance:agent-governance
  * @scope             tools/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
- * @owner             docs
+ * @domain            docs
  * @needs             R-R27, R-R30
  * @purpose-statement Codex lock release utility — releases stale codex lock files
  * @pipeline          manual — interactive developer tool, not suited for automated pipelines
@@ -14,10 +14,11 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const yaml = require('js-yaml');
+const yaml = require('../../lib/load-js-yaml');
 
 const LOCK_DIR_REL = '.codex/locks-local';
 const DEFAULT_CONTRACT = '.codex/task-contract.yaml';
+const DEFAULT_BASE_REF = 'docs-v2-dev';
 
 const REPO_ROOT = getRepoRoot();
 
@@ -43,11 +44,20 @@ function runGit(args) {
   return String(result.stdout || '').trim();
 }
 
+function tryRunGit(args) {
+  try {
+    return runGit(args);
+  } catch (_error) {
+    return '';
+  }
+}
+
 function parseArgs(argv) {
   const args = {
     branch: '',
     lockId: '',
-    contractPath: DEFAULT_CONTRACT
+    contractPath: DEFAULT_CONTRACT,
+    baseRef: ''
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -79,6 +89,15 @@ function parseArgs(argv) {
       args.contractPath = token.slice('--contract='.length).trim();
       continue;
     }
+    if (token === '--base-ref') {
+      args.baseRef = String(argv[i + 1] || '').trim();
+      i += 1;
+      continue;
+    }
+    if (token.startsWith('--base-ref=')) {
+      args.baseRef = token.slice('--base-ref='.length).trim();
+      continue;
+    }
     if (token === '--help' || token === '-h') {
       args.help = true;
       continue;
@@ -91,7 +110,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-  console.log('Usage: node tools/scripts/codex/lock-release.js [--branch <name>] [--lock-id <id>] [--contract <path>]');
+  console.log('Usage: node tools/scripts/codex/lock-release.js [--branch <name>] [--lock-id <id>] [--contract <path>] [--base-ref <branch>]');
 }
 
 function detectBranch(args) {
@@ -111,6 +130,48 @@ function detectBranch(args) {
   return runGit(['rev-parse', '--abbrev-ref', 'HEAD']);
 }
 
+function detectBaseRef(args) {
+  if (args.baseRef) return args.baseRef;
+
+  const contractAbs = path.resolve(REPO_ROOT, args.contractPath);
+  if (fs.existsSync(contractAbs)) {
+    try {
+      const parsed = yaml.load(fs.readFileSync(contractAbs, 'utf8'));
+      const contractBase = String(parsed && parsed.base_branch ? parsed.base_branch : '').trim();
+      if (contractBase) return contractBase;
+    } catch (_error) {
+      // ignore and fallback to default
+    }
+  }
+
+  return DEFAULT_BASE_REF;
+}
+
+function resolveBaseTarget(baseRef) {
+  if (tryRunGit(['rev-parse', '--verify', `refs/remotes/origin/${baseRef}`])) {
+    return `origin/${baseRef}`;
+  }
+  if (tryRunGit(['rev-parse', '--verify', `refs/heads/${baseRef}`])) {
+    return baseRef;
+  }
+  throw new Error(`Unable to resolve base ref ${baseRef}`);
+}
+
+function ensureBranchIntegrated(branch, baseRef) {
+  const baseTarget = resolveBaseTarget(baseRef);
+  const branchHead = runGit(['rev-parse', '--verify', branch]);
+  const merged = spawnSync('git', ['merge-base', '--is-ancestor', branchHead, baseTarget], {
+    cwd: REPO_ROOT,
+    encoding: 'utf8'
+  }).status === 0;
+
+  if (!merged) {
+    throw new Error(
+      `Task is not complete until ${branch} is committed to ${baseRef}. Release blocked.`
+    );
+  }
+}
+
 function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
@@ -119,6 +180,8 @@ function main() {
   }
 
   const branch = detectBranch(args);
+  const baseRef = detectBaseRef(args);
+  ensureBranchIntegrated(branch, baseRef);
   const lockDirAbs = path.join(REPO_ROOT, LOCK_DIR_REL);
   if (!fs.existsSync(lockDirAbs)) {
     throw new Error(`Lock directory not found: ${LOCK_DIR_REL}`);
@@ -160,6 +223,8 @@ function main() {
   }
 
   console.log(`✅ Released ${releasedCount} lock(s) for ${args.lockId ? `lock_id=${args.lockId}` : branch}`);
+  console.log(`ℹ️  Verified ${branch} is already committed to ${baseRef}.`);
+  console.log(`ℹ️  Next step: node tools/scripts/codex/task-cleanup.js --branch ${branch} --apply`);
 }
 
 if (require.main === module) {

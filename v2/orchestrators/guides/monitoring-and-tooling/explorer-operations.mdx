@@ -1,0 +1,287 @@
+---
+title: Explorer Operations
+sidebarTitle: Explorer Guide
+description: >-
+  A walkthrough of every metric on your Livepeer Explorer orchestrator page —
+  what each number means, what healthy looks like, and what to do when something
+  is wrong.
+keywords:
+  - livepeer
+  - explorer
+  - orchestrator
+  - stake
+  - reward
+  - earnings
+  - delegators
+  - active set
+  - monitoring
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: orchestrator
+purpose: guide
+status: published
+lastVerified: 2026-03-13
+---
+{/* Draft note: keep Explorer guidance practical, route unresolved fact checks to internal comments only, and keep cross-links in the supporting pages. */}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+Use the Livepeer Explorer to read the public state of your orchestrator: stake, cuts, reward calls, fee earnings, and service URI. Every number here comes from on-chain data indexed from Arbitrum, so the page is best used to confirm protocol state, compare your settings with peers, and spot drift between what you intended and what the network sees.
+
+**Your orchestrator profile:**
+```text icon="terminal" title="Explorer orchestrator profile URL"
+https://explorer.livepeer.org/accounts/<your-address>/orchestrating
+```
+
+<CustomDivider />
+
+## Explorer scope
+
+Before diving into metrics, understanding the Explorer's scope avoids confusion.
+
+**What it shows:**
+- On-chain state as written to Arbitrum — stake, cuts, reward calls, fee earnings
+- Protocol-level data: your registered service URI, your active/inactive status
+- Your delegators and their individual stake amounts
+
+**What it leaves out:**
+- Live node health or uptime (use Prometheus for this)
+- Off-chain pool worker contributions (pool workers are invisible to the protocol)
+- AI model warm status or per-pipeline job counts (use [tools.livepeer.cloud](https://tools.livepeer.cloud/ai/network-capabilities))
+- Which gateways are currently routing work to you (use the Loki gateway API)
+
+<CustomDivider />
+
+## Active Set status
+
+<Frame>
+  The active set is the top 100 orchestrators by total stake at each round boundary. Only active set members receive transcoding work.
+</Frame>
+
+**What to watch:**
+- Your rank among all orchestrators
+- Whether you are currently active or inactive
+- Your trend over the past 30 days
+
+**Outside the active set:**
+
+Your stake (self-stake plus delegated stake) is insufficient to rank in the top 100. The gap between your stake and the 100th-place orchestrator is the amount you need to close. Your options are to increase your self-stake directly, or to attract more delegators.
+
+{/* FACT CHECK: Confirm "top 100" is still the current active set size. Appears consistently in project files but verify against the current protocol parameter. Mehrdad/Rick to confirm. */}
+
+<CustomDivider />
+
+## Total stake
+
+This is the sum of your self-stake and all delegated stake. It is the single most important variable for your active set ranking, and for the proportion of video transcoding work routed to you by stake-weighted gateways.
+
+<AccordionGroup>
+
+<Accordion  title="Self-stake vs delegated stake" icon="coins">
+Your self-stake is the LPT you bonded to yourself. Delegated stake comes from LPT holders who chose to delegate to you.
+
+Increase your self-stake directly by bonding more LPT. Attracting delegators requires competitive reward cut and fee share settings plus a strong performance track record — see [Getting Delegates](/v2/orchestrators/guides/staking-and-rewards/delegate-operations).
+</Accordion>
+
+<Accordion  title="How stake affects job routing" icon="coins">
+For video transcoding, stake weighting affects selection probability. Higher stake means you are more likely to be selected by stake-weighted gateways. For AI inference, routing is primarily capability-based (does your node support the requested model?) and price-based (is your price within the gateway's limit?). Stake plays a smaller role in AI job routing.
+</Accordion>
+
+<Accordion  title="Pending stake vs current stake" icon="coins">
+Pending stake refers to delegations and undelegations that have been submitted but have not yet taken effect. Changes to stake take effect at the next round boundary.
+</Accordion>
+
+</AccordionGroup>
+
+<CustomDivider />
+
+## Reward cut and fee share
+
+These two parameters are your public service terms, visible to any potential delegator evaluating your orchestrator.
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Parameter</TableCell>
+    <TableCell header>What it means</TableCell>
+    <TableCell header>Who it affects</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Reward cut**</TableCell>
+    <TableCell>Percentage of LPT inflation you keep. The rest goes to delegators proportional to their stake.</TableCell>
+    <TableCell>Your income + delegator attraction</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Fee share**</TableCell>
+    <TableCell>Percentage of ETH transcoding fees you share with delegators.</TableCell>
+    <TableCell>Delegator yield</TableCell>
+  </TableRow>
+</StyledTable>
+
+**What competitive looks like:**
+
+Check the top 20 active orchestrators on the Explorer and compare your settings. Reward cut of 5–15% and fee share of 0–10% is typical for competitive operators. Very high reward cuts (above 30%) make delegation unattractive; delegators earn less per LPT staked than they would on a lower-cut orchestrator.
+
+**Changing these parameters** requires an on-chain transaction and takes effect at the next round boundary. You can update them via `livepeer_cli` or directly in the Explorer interface if your wallet is connected.
+
+<Warning>
+  Changes to reward cut and fee share are publicly visible to delegators and affect their yield. Frequent large changes can reduce delegator confidence. Communicate changes in advance if your delegator base is large.
+</Warning>
+
+<CustomDivider />
+
+## Reward call history
+
+This is the most operationally important metric to monitor regularly.
+
+Each round (~22 hours on Arbitrum), your node must call `reward()` to claim that round's LPT inflation. The Explorer shows your call history round by round.
+
+``` icon="terminal"
+Round 4021 ✓ reward called
+Round 4022 ✓ reward called
+Round 4023 ✗ missed
+Round 4024 ✓ reward called
+```
+
+**What a missed round costs:**
+
+When you miss a round, that round's LPT inflation that would have been minted to your address is permanently lost. You and your delegators both miss their share. This compounds over time — delegators whose yield is consistently reduced by missed rounds will unbond and move their stake elsewhere.
+
+**Target: 100% call rate.**
+
+**Diagnosing missed rounds:**
+
+<AccordionGroup>
+
+<Accordion  title="Reward calling disabled" icon="coins">
+`-reward=false` disables reward calling. In split setups where the orchestrator and transcoder run as separate processes, keep the flag state consistent across every launch command. A common mistake is disabling reward on the orchestrator while a second process still owns the wallet.
+</Accordion>
+
+<Accordion  title="Check your ETH balance for gas" icon="circle-question">
+Reward calls require ETH on Arbitrum for gas. A dry wallet causes reward calls to fail silently. Check your orchestrator address ETH balance on Arbiscan and keep at least 0.02–0.05 ETH in the wallet as a buffer.
+</Accordion>
+
+<Accordion  title="Check node uptime at round boundaries" icon="server">
+A node offline at the round boundary misses the reward call. The Arbitrum round length is approximately 22 hours. Compare regular maintenance windows against round boundaries before you dismiss the gap as random.
+</Accordion>
+
+<Accordion  title="Using OrchestratorSiphon" icon="circle-question">
+If missed rewards are a recurrent problem, consider the [split setup](/v2/orchestrators/guides/deployment-details/siphon-setup). OrchestratorSiphon runs reward calling on a separate, stable machine independently of your GPU workload machine.
+</Accordion>
+
+</AccordionGroup>
+
+<CustomDivider />
+
+## Fees earned
+
+Cumulative ETH earned from video transcoding and AI inference fees. This is separate from LPT inflation rewards.
+
+**How to read it:**
+
+A low or zero fee balance despite being in the active set usually means one of three things:
+
+1. **Price is too high** — your `-pricePerUnit` exceeds what gateways are willing to pay. Check [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) to compare your price to other active orchestrators. Most gateways have a maximum price they will pay, and any orchestrator above that ceiling receives no work.
+
+2. **Node is unreachable** — gateways cannot connect to your service URI. Test reachability from outside your network: `curl -v https://<your-service-uri>:8935/status`. Port 8935 must be accessible from the public internet.
+
+3. **Capabilities not registered** — for AI workloads, your `aiModels.json` configuration must match what gateways are requesting. Check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) to confirm your pipelines appear.
+
+<CustomDivider />
+
+## Delegator list
+
+Your delegators are LPT holders who have staked to your orchestrator. Their stake contributes to your total and increases your routing probability.
+
+**What to watch:**
+- Delegators with unbonding status — they are in the process of leaving. This reduces your stake at the next round.
+- New delegations — incoming stake increasing your rank.
+- Large single-delegator dependence can destabilise your active set position. One delegator holding most of your stake can move you sharply when they leave.
+
+**Why delegators leave:**
+
+Delegators evaluate your orchestrator on reward cut, fee share, reward call rate, and general reputation. Missed reward calls reduce their yield directly and are the most common reason for unbonding.
+
+<CustomDivider />
+
+## Service URI
+
+Your registered service URI is what gateways use to connect to your node. It must:
+- Resolve to your current node's IP or hostname
+- Have port 8935 publicly accessible
+- Match what your node is actually serving on
+
+If there is a mismatch between what is on-chain and where your node is actually running, you will see this error at startup:
+
+``` icon="terminal"
+Service address https://127.0.0.1:4433 did not match discovered address https://121.5.10.8:8935;
+set the correct address in livepeer_cli or use -serviceAddr
+```
+
+Fix by setting `-serviceAddr <public-ip>:8935` to match what is on-chain, or update the on-chain service URI via `livepeer_cli`.
+
+<CustomDivider />
+
+## Rounds active
+
+A simple counter of how long your orchestrator has been registered. This is a soft trust signal for delegators — longer operation with consistent reward calling suggests stability.
+
+<CustomDivider />
+
+## Common patterns to act on
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>What you see</TableCell>
+    <TableCell header>What it means</TableCell>
+    <TableCell header>What to do</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Active set rank dropping week-over-week</TableCell>
+    <TableCell>Relative stake declining vs competitors</TableCell>
+    <TableCell>Attract delegators or increase self-stake</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Missed reward rounds</TableCell>
+    <TableCell>Reward calling failing</TableCell>
+    <TableCell>Check ETH balance, `-reward` flag, consider Siphon</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Zero fee earnings despite active status</TableCell>
+    <TableCell>Not receiving work</TableCell>
+    <TableCell>Check pricing, reachability, capabilities</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Delegator count falling</TableCell>
+    <TableCell>Delegators unbonding</TableCell>
+    <TableCell>Check reward call rate, review reward cut competitiveness</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Service URI mismatch warning at startup</TableCell>
+    <TableCell>On-chain URI doesn't match node IP</TableCell>
+    <TableCell>Update `-serviceAddr` or update on-chain URI</TableCell>
+  </TableRow>
+</StyledTable>
+
+<CustomDivider />
+
+<CardGroup cols={2}>
+  <Card title="Metrics and Monitoring" icon="gauge" href="/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting">
+    Set up Prometheus and Grafana for live node health monitoring.
+  </Card>
+  <Card title="Getting Delegates" icon="users" href="/v2/orchestrators/guides/staking-and-rewards/delegate-operations">
+    How to attract LPT delegators and grow your stake.
+  </Card>
+  <Card title="Reward Calling Guide" icon="clock" href="/v2/orchestrators/guides/staking-and-rewards/reward-mechanics">
+    Reward calling mechanics, gas costs, and automation.
+  </Card>
+  <Card title="Troubleshooting" icon="triangle-exclamation" href="/v2/orchestrators/guides/monitoring-and-tooling/troubleshooting">
+    Common errors and how to resolve them.
+  </Card>
+</CardGroup>
+
+{/* Draft note: Explorer page stays focused on reading and acting on profile signals; deeper staking and troubleshooting mechanics live in the linked guides. */}

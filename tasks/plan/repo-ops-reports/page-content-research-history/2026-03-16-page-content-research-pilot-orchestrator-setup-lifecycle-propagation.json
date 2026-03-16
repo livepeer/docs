@@ -1,0 +1,94 @@
+{
+  "generated_at": "2026-03-16",
+  "ledger_version": 1,
+  "selection": {
+    "type": "entity",
+    "value": "orchestrator-setup-lifecycle"
+  },
+  "claims": [
+    {
+      "claim_id": "orch-activation-verification-monitoring-loop",
+      "entity": "orchestrator-setup-lifecycle",
+      "claim_summary": "Activation, verification, and monitoring pages together define the canonical post-install lifecycle: activate on-chain, verify active status and service URI, then confirm jobs and reward calls through logs, Explorer, and metrics.",
+      "canonical_owner": "v2/orchestrators/setup/activate.mdx",
+      "source_type": "repo-setup-flow",
+      "source_ref": "v2/orchestrators/setup/activate.mdx",
+      "last_verified": "2026-03-16",
+      "stale_alias_pages": [],
+      "status": "verified"
+    },
+    {
+      "claim_id": "orch-explorer-status-and-service-uri-crosscheck",
+      "entity": "orchestrator-setup-lifecycle",
+      "claim_summary": "Explorer status, active-set membership, and service URI matching are treated as the main on-chain verification surfaces across activate and verify pages.",
+      "canonical_owner": "v2/orchestrators/setup/test.mdx",
+      "source_type": "repo-verification-guide",
+      "source_ref": "v2/orchestrators/setup/test.mdx",
+      "last_verified": "2026-03-16",
+      "stale_alias_pages": [],
+      "status": "verified"
+    },
+    {
+      "claim_id": "orch-round-and-reward-timing-guidance",
+      "entity": "orchestrator-setup-lifecycle",
+      "claim_summary": "The setup flow repeatedly tells operators that activation, active-set status, and reward observation are round-bound and commonly framed as roughly 24-hour timing, but some of that language still depends on review-sensitive timing assumptions.",
+      "canonical_owner": "v2/orchestrators/setup/activate.mdx",
+      "source_type": "repo-setup-flow",
+      "source_ref": "v2/orchestrators/setup/activate.mdx",
+      "last_verified": "2026-03-16",
+      "stale_alias_pages": [],
+      "status": "needs-review"
+    }
+  ],
+  "page_queue": [
+    {
+      "file": "v2/orchestrators/setup/activate.mdx",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "page_class": "other",
+      "claim_ids": [
+        "orch-activation-verification-monitoring-loop",
+        "orch-explorer-status-and-service-uri-crosscheck",
+        "orch-round-and-reward-timing-guidance"
+      ]
+    },
+    {
+      "file": "v2/orchestrators/setup/test.mdx",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "page_class": "other",
+      "claim_ids": [
+        "orch-activation-verification-monitoring-loop",
+        "orch-explorer-status-and-service-uri-crosscheck",
+        "orch-round-and-reward-timing-guidance"
+      ]
+    },
+    {
+      "file": "v2/orchestrators/setup/guide.mdx",
+      "role": "dependent-page",
+      "action": "update-now",
+      "page_class": "other",
+      "claim_ids": [
+        "orch-activation-verification-monitoring-loop"
+      ]
+    },
+    {
+      "file": "v2/orchestrators/setup/r-monitor.mdx",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "page_class": "other",
+      "claim_ids": [
+        "orch-activation-verification-monitoring-loop",
+        "orch-explorer-status-and-service-uri-crosscheck",
+        "orch-round-and-reward-timing-guidance"
+      ]
+    }
+  ],
+  "unresolved_items": [
+    {
+      "claim_id": "orch-round-and-reward-timing-guidance",
+      "status": "needs-review",
+      "canonical_owner": "v2/orchestrators/setup/activate.mdx"
+    }
+  ]
+}

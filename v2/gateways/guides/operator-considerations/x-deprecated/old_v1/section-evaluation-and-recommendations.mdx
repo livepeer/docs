@@ -1,0 +1,253 @@
+# Section Evaluation: "Should I Run a Gateway?" (Motivations, Feasibility, Requirements)
+
+**Method:** For each persona, list the questions they arrive with at this stage. Test each page against those questions: does it answer them?
+
+---
+
+## The questions this section must answer
+
+At this point in the journey, a user has not committed. They are evaluating. The questions are:
+
+| Persona | The questions they need answered |
+|---------|--------------------------------|
+| **A — App Developer (Graduate)** | What exactly do I gain by running my own vs using Daydream/Studio? Does the AI gateway actually require ETH? Is this genuinely easy to start, or is there a hidden crypto cliff? |
+| **B — Provider (commercial gateway service)** | What business can I realistically build? How does the payment flow work end-to-end? What margins are available? |
+| **C — SDK Builder** | Can I implement a gateway without the Go binary? Where do I start if I want a Python or browser client? Is there a path that doesn't require deep Ethereum work? |
+| **D — Broadcaster (video infrastructure)** | Is this actually cheaper than Mux/MediaLive/Wowza? By how much? What's the ETH requirement — is that a hard gate? |
+| **E — Enterprise / Platform Builder** | Can this support multi-tenancy, auth, and API key management at scale? What's the NaaP model and is it production-ready? |
+
+---
+
+## Page 1: `why-run-a-gateway.mdx`
+
+| Question | Answer? | Detail |
+|----------|---------|--------|
+| A: What do I gain vs Daydream? | ❌ No | Eight accordions of abstract business concepts. The direct comparison "here is what self-hosting gives you that Daydream doesn't" is never made. A user graduating from Daydream leaves without an answer. |
+| A: Does the AI gateway require ETH? | ❌ No | ETH not mentioned. User building AI apps assumes they need crypto and bounces. |
+| B: What business can I build? | ⚠️ Partial | Monetisation accordion covers service-layer revenue conceptually. No payment flow, no numbers. |
+| C: Can I implement without the Go binary? | ❌ No | SDK builder persona is invisible. No mention of Python gateway, remote signer, alternative implementations. |
+| D: Is this cheaper than Mux? By how much? | ❌ No | "Avoid third-party gateway fees" appears once. Zero cost comparison. Zero numbers. |
+| E: Does this support multi-tenancy at scale? | ❌ No | Not addressed. |
+
+**Score: 0.5 / 6 questions answered.** Written for the concept of a commercial gateway provider, not for any real persona arriving at this page. The section is abstract where it needs to be specific.
+
+---
+
+## Page 2: `operator-opportunities.mdx`
+
+| Question | Answer? | Detail |
+|----------|---------|--------|
+| A: What do I gain vs hosted gateway? | ✅ Yes | "Avoid third-party gateway fees" is stated. Good. |
+| B: What business can I build? | ⚠️ Partial | Core model correct, five business reasons covered. Missing: AI inference as the primary growth opportunity in 2025–2026. Missing: what margins look like. |
+| B: How does payment flow end-to-end? | ❌ No | Not here — belongs in economics, but this page doesn't bridge there. |
+| C: SDK builder path | ❌ No | Invisible. |
+| D: Cheaper than alternatives? | ❌ No | No comparison to cloud alternatives anywhere. |
+| E: NaaP / multi-tenancy model | ❌ No | NaaP appears once in a table row with no explanation. |
+
+**Score: 1.5 / 6 questions answered.** The best page in the section but was written before off-chain mode shipped. The single biggest opportunity story — AI inference gateway with zero ETH startup cost — is completely absent. This page is also missing the SPE grant path, which you have flagged as belonging here.
+
+---
+
+## Page 3: `hardware-requirements.mdx`
+
+| Question | Answer? | Detail |
+|----------|---------|--------|
+| A: What hardware do I need? | ❌ Wrong | Recommends NVIDIA GPU with NVENC/NVDEC. Gateways do not use GPUs. Actively misleads. |
+| D: What server spec do I need? | ❌ Wrong | Same error. A broadcaster reads this and thinks they need a gaming GPU. |
+| Any persona: What OS? What skills? | ❌ Missing | Not covered anywhere on this page. |
+| Any persona: On-chain vs off-chain requirements? | ❌ Missing | The single most important feasibility distinction for AI vs video operators is absent. |
+
+**Score: 0 / 4 questions answered.** This is v1 GPU content for orchestrators. Every piece of technical content is wrong for this section's audience. It is not "needs updating" — it is "must be replaced".
+
+---
+
+## Page 4: `economics.mdx`
+
+| Question | Answer? | Detail |
+|----------|---------|--------|
+| A: Does the AI gateway require ETH? | ❌ Misleads | States "gateways pay using ETH" as a universal. Off-chain mode (zero ETH for AI gateway) is not mentioned. A user building an AI app reads this and thinks they need to buy and bridge ETH. This is the most damaging inaccuracy in the section. |
+| B: How does the payment flow work? | ⚠️ Partial | Core model correct. PM tickets mentioned. But how tickets actually work, what deposit vs reserve means, what happens when deposit runs low — shallow. |
+| D: What will transcoding cost me in ETH? | ❌ No | Flags shown (`-maxPricePerUnit`) but no example pricing, no context for current network rates. |
+| A/E: What does the off-chain model cost? | ❌ No | Entirely absent. Zero ETH for AI off-chain is the most important economics fact of the past 12 months. |
+| B: What margins are realistic? | ❌ No | No concrete examples of orchestrator rates vs what gateway services charge customers. |
+
+**Score: 0.5 / 5 questions answered.** Correctly identifies the basic model but fails on the two most critical questions: (1) AI gateway off-chain = no ETH cost, and (2) what do costs and margins actually look like. The ETH-required implication for AI gateways is the worst factual error in the section.
+
+---
+
+## Page 5: `community-projects.mdx`
+
+| Question | Answer? | Detail |
+|----------|---------|--------|
+| Any persona: What has been built on gateways? | ❌ Empty | Page body is empty. |
+| E: What does a production gateway product look like? | ❌ Empty | Not answered. |
+| A: Is anyone else doing what I want to do? | ❌ Empty | Not answered. |
+
+**Score: 0 / 3 questions answered.** An empty page in the nav.
+
+---
+
+## Section-level gaps
+
+### Gap 1 — AI gateway path invisible throughout
+
+Every page was written before off-chain mode shipped (Q4 2025). The result: an AI gateway operator reads "Gateway Economics" and concludes they need ETH to start (false), reads "Hardware Requirements" and concludes they need a GPU (false), and finds no page that says clearly: "if you are building an AI application, you can start today with Linux, Docker, and zero ETH."
+
+This is the most consequential gap. Off-chain AI gateway with a community-hosted remote signer is genuinely easy to start. The section does not communicate this.
+
+### Gap 2 — No cost comparison to alternatives
+
+Persona D's primary question ("is this cheaper than Mux?") is never answered. The community claim of significant cost savings exists in livepeer.cloud blog posts and Mirror articles but is absent here entirely. A broadcaster evaluating the switch has no evidence to make a decision.
+
+### Gap 3 — Persona C (SDK Builder) has no entry point
+
+The SDK builder's question — "can I implement a lightweight gateway client in Python without the Go binary?" — has a clear yes answer (via remote signer architecture) but that answer does not appear anywhere in this section.
+
+### Gap 4 — economics.mdx conflates on-chain and off-chain
+
+The off-chain architecture means the ETH mechanics described in economics.mdx do not apply to AI gateway operators. No qualifier exists — the page reads as universal. An AI gateway operator gets video gateway economics.
+
+---
+
+## Recommended page changes
+
+| Page | Problem | Action |
+|------|---------|--------|
+| `economics.mdx` | Implies ETH required for all gateways — the most damaging inaccuracy | Lead with on-chain vs off-chain split; AI off-chain = zero ETH is the opening statement |
+| `why-run-a-gateway.mdx` | Doesn't concretely answer "what do I gain?" for any persona | Restructure as persona-driven comparison: Daydream vs self-hosted, cloud transcoding vs Livepeer, SDK path |
+| `hardware-requirements.mdx` | Entirely wrong content (GPU focus, v1 orchestrator page) | Replace with correct gateway requirements: no GPU, OS table, skills, on/off-chain split |
+| `operator-opportunities.mdx` | Missing AI era and SPE grant path | Rewrite: application developer business opportunities, AI inference margin, off-chain zero cost, SPE path |
+| `community-projects.mdx` | Empty | Create: real projects, real builders, community tools |
+
+
+# Sources, REVIEW Flags, and Recommendations
+## Gateways — Motivations, Feasibility, and Opportunities Section
+
+**Pages produced:**
+- `why-run-a-gateway.mdx` — rewrite
+- `operator-opportunities.mdx` — rewrite (slug: `opportunities/operator-opportunities`)
+- `spe-grant-model.mdx` — new (slug: `opportunities/spe-grant-model`)
+- `gateway-requirements.mdx` — replacement for v1 `hardware-requirements.mdx`
+- `gateway-economics.mdx` — rewrite of `economics.mdx`
+- `ecosystem-projects.mdx` — replacement for empty `community-projects.mdx`
+
+---
+
+## Sources used
+
+### Tier 1 — Technical ground truth
+
+| Source | Path | Used for |
+|--------|------|----------|
+| Remote Signers design doc | `/mnt/project/Remote_signers.md` | Off-chain mode facts; AI gateway zero-ETH requirement; remote signer protocol |
+| go-livepeer source | `github.com/livepeer/go-livepeer` | Flag names, defaults, binary availability per OS |
+| Gateways research report | `/mnt/project/gateways-research-report.md` | Pre-verified technical facts across all pages |
+
+### Tier 2 — Foundation sources
+
+| Source | Path | Used for |
+|--------|------|----------|
+| Gateways IA planning | `/mnt/project/gateways-ia-planning.md` | Persona questions, gap analysis, section structure |
+| Personas research | `/mnt/user-data/uploads/personas.md` | All 5 persona motivations, entry points, pain points |
+| Gateways tab summary | `/mnt/project/gateways-tab-summary.md` | SPE mentions, page assessment |
+
+### Tier 3 — Community
+
+| Source | Path / URL | Used for |
+|--------|-----------|----------|
+| Discord `#local-gateways` | `/mnt/project/local-gateways-discord.txt` | NaaP definition and quote ("user never interacts with Livepeer contracts"); clearinghouse architecture; off-chain pain points |
+| Livepeer Forum | `forum.livepeer.org` | SPE proposal process — referenced, not read directly |
+
+### Tier 4 — Existing uploaded files (verified before use)
+
+| File | Used for | Notes |
+|------|----------|-------|
+| `setup.mdx` | Hardware specs, OS table, off-chain vs on-chain requirements | ✅ Used — confirmed current |
+| `fund-gateway.mdx` | ETH deposit amounts, CLI funding steps | ⚠️ REVIEW — amounts may be stale |
+| `economics.mdx` (original) | Core model (gateways pay, orchestrators earn), currency distinction | Rewritten — inline styles replaced, `-broadcaster` flag corrected, AI off-chain added |
+| `operator-opportunities.mdx` (original) | Operator table (Studio, Daydream, Cloud SPE), core business model | Rewritten — AI era added, SPE grant path separated out |
+| `why-run-a-gateway.mdx` (original) | Accordion structure reference | Rewritten — persona-specific framing added |
+| `hardware-requirements.mdx` (original) | Not used — v1 GPU content | Replaced entirely |
+| `community-projects.mdx` (original) | Not used — empty | Replaced with `ecosystem-projects.mdx` |
+
+---
+
+## All REVIEW flags
+
+### High priority — user-facing factual claims
+
+| Flag | Pages affected | Owner | Action |
+|------|---------------|-------|--------|
+| Is `signer.eliteencoder.net` still live and free? | `gateway-requirements.mdx`, `gateway-economics.mdx`, `ecosystem-projects.mdx` | Elite Encoder / `#local-gateways` Discord | Check Discord or ping directly |
+| ETH deposit/reserve amounts — still ~0.065 + 0.03 ETH? | `gateway-requirements.mdx`, `gateway-economics.mdx` | Mehrdad / Rick | Check `fund-gateway.mdx` against current network. Issue open: github.com/livepeer/go-livepeer/issues/3744 |
+
+### Medium priority
+
+| Flag | Pages affected | Owner | Action |
+|------|---------------|-------|--------|
+| AI Video Startup Programme — name, eligibility, application URL | `why-run-a-gateway.mdx`, `spe-grant-model.mdx` | Foundation BD | Get URL and add to both pages |
+| NaaP public URL and production timeline | `operator-opportunities.mdx`, `ecosystem-projects.mdx` | Qiang Han | Confirm URL and status |
+| SPE governance: current quorum and approval threshold | `spe-grant-model.mdx` | Mehrdad | Confirm governance parameters haven't changed |
+| `-livePaymentInterval` default value and LV2V cost unit | `gateway-economics.mdx` | Peter (AI SPE Lead) | Confirm exact default and pricing unit for LV2V |
+| Daydream current website URL | `operator-opportunities.mdx`, `ecosystem-projects.mdx` | Foundation | Add link |
+| Embody Avatars — own gateway or using public? | `ecosystem-projects.mdx` | Foundation BD | Confirm model before describing as gateway operator |
+| livepeer.cloud URLs — all active? | `ecosystem-projects.mdx` | Cloud SPE | Verify blog and tutorial URLs |
+
+### Low priority
+
+| Flag | Pages affected | Owner | Action |
+|------|---------------|-------|--------|
+| Cost comparison figures — "significant savings vs Mux/AWS" | `operator-opportunities.mdx`, `why-run-a-gateway.mdx` | Foundation / Cloud SPE | Find published benchmark; add specific number |
+| Titan Node YouTube — any gateway tutorial URLs | `why-run-a-gateway.mdx` | Community | Search `@TitanNode`, add embed |
+| Livepeer Foundation YouTube — gateway/AI operator content | `why-run-a-gateway.mdx`, `ecosystem-projects.mdx` | Foundation | Search `@LivepeerVideo`, add embed |
+| Owncast + Livepeer tutorial — confirm blog URL | `ecosystem-projects.mdx` | Cloud SPE | Add direct link |
+| Reserve requirement issue #3744 — resolved? | `gateway-requirements.mdx` | Rick | If resolved, update amounts |
+
+---
+
+## Page naming for Opportunities group
+
+The docs.json structure requires:
+
+```json
+{
+  "group": "Opportunities",
+  "pages": [
+    "v2/gateways/guides/opportunities/operator-opportunities",
+    "v2/gateways/guides/opportunities/spe-grant-model"
+  ]
+}
+```
+
+**Recommended slug for first page:** `operator-opportunities`
+**Recommended `sidebarTitle`:** `Build on Gateways`
+**Recommended `title`:** `Gateway Operator Opportunities`
+
+The slug `operator-opportunities` is descriptive and consistent with existing naming. The `sidebarTitle` "Build on Gateways" differentiates it clearly from the second page ("SPE Grant Model") in the nav.
+
+---
+
+## Files to action in repo
+
+| File | Action | Notes |
+|------|--------|-------|
+| `why-run-a-gateway.mdx` | Replace existing | Rewritten with persona-specific framing |
+| `operator-opportunities.mdx` → `opportunities/operator-opportunities.mdx` | Move + replace | Reorganised under `opportunities/` subfolder |
+| `spe-grant-model.mdx` → `opportunities/spe-grant-model.mdx` | Create new | New page |
+| `hardware-requirements.mdx` → archive | Archive | v1 GPU content, wrong for this section |
+| `gateway-requirements.mdx` | Create new | Replacement for above |
+| `economics.mdx` → `gateway-economics.mdx` | Replace + rename | Rewritten with AI off-chain, fixed component imports |
+| `community-projects.mdx` → archive | Archive | Empty page |
+| `ecosystem-projects.mdx` | Create new | Replacement for above |
+
+---
+
+## Video content — search queries to run
+
+None confirmed during research. Actively search these before publishing:
+
+- YouTube: `"livepeer gateway" setup 2024` → Titan Node channel (`@TitanNode`)
+- YouTube: `"livepeer broadcaster"` → older term, still useful for video gateway
+- YouTube: `"livepeer AI inference gateway"` → Foundation channel (`@LivepeerVideo`)
+- livepeer.cloud/blog: any embedded video alongside gateway setup articles
+- Livepeer Foundation webinars / AI Video Startup Programme recordings

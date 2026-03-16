@@ -1,0 +1,125 @@
+---
+title: Configure your Orchestrator
+sidebarTitle: Add your GPU to Livepeer
+description: >-
+  Configure go-livepeer after installation: Arbitrum connection, pricing,
+  service address, and optional transcoding or AI config.
+keywords:
+  - livepeer
+  - orchestrators
+  - configuration
+  - pricePerUnit
+  - serviceAddr
+  - transcoding
+  - AI
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: orchestrator
+purpose: tutorial
+---
+
+import { CustomCodeBlock } from '/snippets/components/content/code.jsx'
+
+After [installing go-livepeer](../install-go-livepeer), configure the node so gateways can discover you and send work. This page covers core flags and optional config files.
+
+## Core configuration
+
+### Network and wallet
+
+- **-ethUrl** - Arbitrum RPC URL. See [Connect to Arbitrum](../connect-to-arbitrum).
+- **-ethAcctAddr** - (Optional) ETH account address if you already have a keystore.
+- **-network** - Use `arbitrum-one-mainnet` for production.
+
+### Orchestrator identity and pricing
+
+- **-serviceAddr** - Public hostname or IP and port (e.g. `orchestrator.example.com:8935`). Prefer a hostname you control; changing it later requires an on-chain update.
+- **-pricePerUnit** - Price in wei per pixel (transcoding). Required at startup; can be updated later via CLI or on-chain.
+- **-pixelsPerUnit** - Pixels per pricing unit (default 1). Affects how price is calculated per segment.
+
+### GPU and mode
+
+- **-orchestrator** - Run in orchestrator mode.
+- **-transcoder** - Enable GPU transcoding.
+- **-nvidia** - Comma-separated NVIDIA GPU IDs (e.g. `0,1`). Omit for CPU-only.
+
+Example minimal run:
+
+<CustomCodeBlock
+  codeString={`livepeer \\
+  -orchestrator \\
+  -transcoder \\
+  -network arbitrum-one-mainnet \\
+  -ethUrl <ETH_URL> \\
+  -serviceAddr <HOST:8935> \\
+  -pricePerUnit <WEI_PER_PIXEL> \\
+  -nvidia 0,1`}
+  language="bash"
+  icon="terminal"
+/>
+
+## Optional: transcoding options
+
+You can define transcoding profiles in a JSON file and reference them. Example structure:
+
+<CustomCodeBlock
+  codeString={`[
+  {
+    "name": "240p",
+    "width": 426,
+    "height": 240,
+    "bitrate": 250000,
+    "fps": 30,
+    "profile": "h264constrainedhigh"
+  },
+  {
+    "name": "720p",
+    "width": 1280,
+    "height": 720,
+    "bitrate": 3000000,
+    "fps": 30,
+    "profile": "h264constrainedhigh"
+  }
+]`}
+  language="json"
+  icon="brackets-curly"
+  filename="transcodingOptions.json"
+/>
+
+## Optional: AI models (AI orchestrators)
+
+If you run AI inference, create an **aiModels.json** to specify pipelines and models:
+
+<CustomCodeBlock
+  codeString={`[
+  {
+    "pipeline": "text-to-image",
+    "model_id": "stabilityai/sd-turbo",
+    "warm": true
+  }
+]`}
+  language="json"
+  icon="brackets-curly"
+  filename="aiModels.json"
+/>
+
+See [AI pipelines](../../advanced-setup/ai-pipelines) and [Developers BYOC](/developers/ai-pipelines/byoc) for full AI setup.
+
+## Verification
+
+After starting the node:
+
+- Logs show `Listening for RPC on :8935` and no RPC errors.
+- [Explorer](https://explorer.livepeer.org/) shows your node after activation.
+- Under load, GPU usage (e.g. `nvidia-smi`) increases when jobs are processed.
+
+## See also
+
+<Columns cols={2}>
+  <Card title="Install go-livepeer" icon="download" href="../install-go-livepeer" arrow />
+  <Card title="Connect to Arbitrum" icon="plug" href="../connect-to-arbitrum" arrow />
+  <Card title="CLI flags reference" icon="terminal" href="../../references/cli-flags" arrow />
+  <Card title="Rewards and fees" icon="coins" href="../../advanced-setup/rewards-and-fees" arrow />
+</Columns>

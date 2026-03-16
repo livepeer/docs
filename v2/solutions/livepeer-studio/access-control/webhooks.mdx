@@ -1,8 +1,29 @@
 ---
-title: "Access control with webhooks"
-description: "Gate playback using a webhook that validates the viewer and returns allow or deny."
+title: Access control with webhooks
+description: >-
+  Gate playback using a webhook that validates the viewer and returns allow or
+  deny.
+purpose: operations
+pageType: guide
+keywords:
+  - livepeer
+  - solutions
+  - livepeer studio
+  - access control
+  - webhooks
+  - access
+  - control
+  - with
+  - gate
+  - playback
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+lastVerified: 2026-03-17
 ---
-
 With **webhook** access control, when a viewer tries to play gated content, Livepeer Studio calls your endpoint. You return 2XX to allow, or non-2XX to deny.
 
 ## 1. Create an access-control webhook
@@ -13,7 +34,7 @@ In [Livepeer Studio → Developers → Webhooks](https://livepeer.studio/dashboa
 
 When creating the stream or asset, set `playbackPolicy` to the webhook type and your webhook ID and context:
 
-```ts
+```ts icon="terminal"
 await livepeer.stream.create({
   name: "Gated stream",
   playbackPolicy: {
@@ -30,7 +51,7 @@ Same idea for `livepeer.asset.create` with `playbackPolicy`.
 
 Pass an **access key** (e.g. Session token or user id) to the Player. The Player sends it to Livepeer, which forwards it to your webhook:
 
-```tsx
+```tsx icon="terminal"
 <Player.Root src={src} accessKey={getAccessKeyForUser()}>
   <Player.Container><Player.Video /></Player.Container>
 </Player.Root>

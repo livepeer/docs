@@ -1,0 +1,1285 @@
+{
+  "generated_at": "2026-03-09T21:40:18.024Z",
+  "source": {
+    "mode": "dry-run-plan",
+    "script": "tools/scripts/validators/governance/review-governance-repair-checklist.js",
+    "audit_script": "tools/scripts/validators/governance/audit-script-inventory.js"
+  },
+  "summary": {
+    "total_fixes": 265,
+    "tier_1_json_sync": 210,
+    "tier_2_header_completion": 0,
+    "tier_3_pipeline_corrections": 55,
+    "judgement_field_autofill_scripts": 0,
+    "judgement_field_autofill_fields": 0,
+    "pipeline_correction_scripts": 55,
+    "pipeline_drop_risk_scripts": 0,
+    "pipeline_multi_detected_scripts": 1,
+    "pipeline_multi_proposed_scripts": 2
+  },
+  "repairs_applied": {
+    "json_phantoms_removed": 0,
+    "json_entries_added": 0,
+    "json_entries_updated": 210,
+    "headers_category_added": 0,
+    "headers_purpose_added": 0,
+    "headers_owner_added": 0,
+    "headers_script_added": 0,
+    "headers_usage_added": 0,
+    "headers_scope_added": 0,
+    "headers_needs_added": 0,
+    "headers_purpose_statement_added": 0,
+    "headers_pipeline_corrected": 55,
+    "indexes_regenerated": true,
+    "total_fixes": 265,
+    "files_modified": []
+  },
+  "needs_human_count": 168,
+  "judgement_field_review": {
+    "total_scripts": 0,
+    "field_counts": {
+      "category": 0,
+      "purpose": 0,
+      "needs": 0,
+      "purpose_statement": 0
+    },
+    "source_counts": {
+      "existing-classification-row": 0,
+      "generated-classification-row": 0,
+      "planned-classification-row": 0,
+      "header-derivation": 0
+    },
+    "items": []
+  },
+  "pipeline_review": {
+    "total_scripts": 55,
+    "risk_counts": {
+      "drops-detected-pipelines": 0,
+      "aligns-to-detected-pipelines": 1,
+      "broadens-claim": 1,
+      "label-normalization-only": 53,
+      "review": 0
+    },
+    "detected_multi_pipeline": 1,
+    "proposed_multi_pipeline": 2,
+    "items": [
+      {
+        "path": ".githooks/verify-browser.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — legacy browser validator invoked by .githooks/verify.sh when run directly",
+        "proposed_pipeline": "manual — developer tool",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": ".githooks/verify.sh",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — legacy pre-commit sub-hook retained for on-demand verification",
+        "proposed_pipeline": "manual — developer tool",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tests/run-all.js",
+        "trigger_group": "P1",
+        "current_pipeline": "P1 (commit, orchestrator)",
+        "proposed_pipeline": "P1, P2, P3",
+        "pipeline_actual": "P1 (pre-commit); manual (npm script: test); manual (npm script: test)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "P1"
+        ],
+        "proposed_pipelines": [
+          "P1",
+          "P2",
+          "P3"
+        ],
+        "detected_pipelines": [
+          "P1"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": true,
+        "risk": "broadens-claim",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": [
+          "P2",
+          "P3"
+        ]
+      },
+      {
+        "path": "tools/lib/docs-index-utils.js",
+        "trigger_group": "Indirect",
+        "current_pipeline": "indirect — library module imported by other scripts, not invoked directly",
+        "proposed_pipeline": "indirect — library module",
+        "pipeline_actual": "indirect via tools/notion/sync-v2-en-canonical.js; indirect via tools/scripts/generate-ai-sitemap.js; indirect via tools/scripts/generate-content-gap-reconciliation.js; indirect via tools/scripts/generate-docs-index.js",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "indirect"
+        ],
+        "proposed_pipelines": [
+          "indirect"
+        ],
+        "detected_pipelines": [
+          "indirect"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/lib/generated-file-banners.js",
+        "trigger_group": "Indirect",
+        "current_pipeline": "indirect — library module imported by other scripts, not invoked directly",
+        "proposed_pipeline": "indirect — library module",
+        "pipeline_actual": "indirect via tests/unit/script-docs.test.js; indirect via tools/scripts/enforce-generated-file-banners.js; indirect via tools/scripts/generate-component-docs.js; indirect via tools/scripts/generate-docs-guide-components-index.js; indirect via tools/scripts/generate-docs-guide-indexes.js; indirect via tools/scripts/generate-docs-guide-pages-index.js; indirect via tools/scripts/generate-pages-index.js; indirect via tools/scripts/i18n/translate-docs.js",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "indirect"
+        ],
+        "proposed_pipelines": [
+          "indirect"
+        ],
+        "detected_pipelines": [
+          "indirect"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/audit-tasks-folders.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/codex-commit.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/codex-safe-merge-with-stash.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — compatibility shim only",
+        "proposed_pipeline": "manual — developer tool",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/convert-rss-to-mdx.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/create-codex-pr.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (npm script: codex:pr)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/cross-agent-packager.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (npm script: pack:agents)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/debug-mint-dev.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+        "proposed_pipeline": "manual — developer tool",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/dev/batch-update-og-image.sh",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — developer tool",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/dev/replace-og-image.py",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — developer tool",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/dev/test-add-callouts.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+        "proposed_pipeline": "manual — developer tool",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/dev/test-seo-generator.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+        "proposed_pipeline": "manual — developer tool",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/dev/update-all-og-images.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — developer tool",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/enforce-generated-file-banners.js",
+        "trigger_group": "P1",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "P1, P3",
+        "pipeline_actual": "P1 (pre-commit); P3 via run-pr-checks; indirect via .githooks/pre-commit; indirect via tests/run-pr-checks.js; manual (npm script: test:generated-banners)",
+        "pipeline_verified": "MISMATCH:undeclared automation P1, P3",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "P1",
+          "P3"
+        ],
+        "detected_pipelines": [
+          "P1",
+          "P3"
+        ],
+        "detected_multi_pipeline": true,
+        "proposed_multi_pipeline": true,
+        "risk": "aligns-to-detected-pipelines",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/generate-component-governance-remediation-reports.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual",
+        "proposed_pipeline": "manual — report generation",
+        "pipeline_actual": "manual (npm script: report:component-governance-remediation)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/generate-docs-guide-indexes.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (npm script: docs-guide:indexes)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/generate-docs-guide-pages-index.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/lib/common.js",
+        "trigger_group": "Indirect",
+        "current_pipeline": "indirect — library module imported by other scripts, not invoked directly",
+        "proposed_pipeline": "indirect — library module",
+        "pipeline_actual": "indirect via tools/scripts/i18n/generate-localized-docs-json.js; indirect via tools/scripts/i18n/lib/config.js; indirect via tools/scripts/i18n/lib/docs-json-localizer.js; indirect via tools/scripts/i18n/lib/docs-routes.js; indirect via tools/scripts/i18n/lib/path-utils.js; indirect via tools/scripts/i18n/lib/provider-openrouter.js; indirect via tools/scripts/i18n/translate-docs.js; indirect via tools/scripts/i18n/validate-generated.js",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "indirect"
+        ],
+        "proposed_pipelines": [
+          "indirect"
+        ],
+        "detected_pipelines": [
+          "indirect"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/lib/config.js",
+        "trigger_group": "Indirect",
+        "current_pipeline": "indirect — library module imported by other scripts, not invoked directly",
+        "proposed_pipeline": "indirect — library module",
+        "pipeline_actual": "indirect via tools/scripts/enforce-generated-file-banners.js; indirect via tools/scripts/i18n/generate-localized-docs-json.js; indirect via tools/scripts/i18n/translate-docs.js; indirect via tools/scripts/i18n/validate-generated.js",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "indirect"
+        ],
+        "proposed_pipelines": [
+          "indirect"
+        ],
+        "detected_pipelines": [
+          "indirect"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/lib/docs-json-localizer.js",
+        "trigger_group": "Indirect",
+        "current_pipeline": "indirect — library module imported by other scripts, not invoked directly",
+        "proposed_pipeline": "indirect — library module",
+        "pipeline_actual": "indirect via tools/scripts/i18n/generate-localized-docs-json.js; indirect via tools/scripts/i18n/test/docs-json-localizer.test.js",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "indirect"
+        ],
+        "proposed_pipelines": [
+          "indirect"
+        ],
+        "detected_pipelines": [
+          "indirect"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/lib/docs-routes.js",
+        "trigger_group": "Indirect",
+        "current_pipeline": "indirect — library module imported by other scripts, not invoked directly",
+        "proposed_pipeline": "indirect — library module",
+        "pipeline_actual": "indirect via tools/scripts/i18n/generate-localized-docs-json.js; indirect via tools/scripts/i18n/translate-docs.js; indirect via tools/scripts/i18n/validate-generated.js",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "indirect"
+        ],
+        "proposed_pipelines": [
+          "indirect"
+        ],
+        "detected_pipelines": [
+          "indirect"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/lib/frontmatter.js",
+        "trigger_group": "Indirect",
+        "current_pipeline": "indirect — library module imported by other scripts, not invoked directly",
+        "proposed_pipeline": "indirect — library module",
+        "pipeline_actual": "indirect via tools/scripts/i18n/test/frontmatter.test.js; indirect via tools/scripts/i18n/test/provenance.test.js; indirect via tools/scripts/i18n/translate-docs.js; indirect via tools/scripts/i18n/validate-generated.js",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "indirect"
+        ],
+        "proposed_pipelines": [
+          "indirect"
+        ],
+        "detected_pipelines": [
+          "indirect"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/lib/mdx-parser.js",
+        "trigger_group": "Indirect",
+        "current_pipeline": "indirect — library module imported by other scripts, not invoked directly",
+        "proposed_pipeline": "indirect — library module",
+        "pipeline_actual": "indirect via tools/scripts/i18n/lib/mdx-translate.js; indirect via tools/scripts/i18n/validate-generated.js; indirect via tools/scripts/remediators/content/repair-spelling.js",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "indirect"
+        ],
+        "proposed_pipelines": [
+          "indirect"
+        ],
+        "detected_pipelines": [
+          "indirect"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/lib/mdx-translate.js",
+        "trigger_group": "Indirect",
+        "current_pipeline": "indirect — library module imported by other scripts, not invoked directly",
+        "proposed_pipeline": "indirect — library module",
+        "pipeline_actual": "indirect via tools/scripts/i18n/lib/docs-json-localizer.js; indirect via tools/scripts/i18n/lib/frontmatter.js; indirect via tools/scripts/i18n/test/mdx-translate.test.js; indirect via tools/scripts/i18n/translate-docs.js",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "indirect"
+        ],
+        "proposed_pipelines": [
+          "indirect"
+        ],
+        "detected_pipelines": [
+          "indirect"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/lib/path-utils.js",
+        "trigger_group": "Indirect",
+        "current_pipeline": "indirect — library module imported by other scripts, not invoked directly",
+        "proposed_pipeline": "indirect — library module",
+        "pipeline_actual": "indirect via tools/scripts/i18n/lib/docs-json-localizer.js; indirect via tools/scripts/i18n/lib/docs-routes.js; indirect via tools/scripts/i18n/lib/mdx-translate.js; indirect via tools/scripts/i18n/translate-docs.js",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "indirect"
+        ],
+        "proposed_pipelines": [
+          "indirect"
+        ],
+        "detected_pipelines": [
+          "indirect"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/lib/provenance.js",
+        "trigger_group": "Indirect",
+        "current_pipeline": "indirect — library module imported by other scripts, not invoked directly",
+        "proposed_pipeline": "indirect — library module",
+        "pipeline_actual": "indirect via tools/scripts/enforce-generated-file-banners.js; indirect via tools/scripts/generate-component-docs.js; indirect via tools/scripts/i18n/lib/docs-routes.js; indirect via tools/scripts/i18n/test/provenance.test.js; indirect via tools/scripts/i18n/translate-docs.js; indirect via tools/scripts/i18n/validate-generated.js",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "indirect"
+        ],
+        "proposed_pipelines": [
+          "indirect"
+        ],
+        "detected_pipelines": [
+          "indirect"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/lib/provider-mock.js",
+        "trigger_group": "Indirect",
+        "current_pipeline": "indirect — library module imported by other scripts, not invoked directly",
+        "proposed_pipeline": "indirect — library module",
+        "pipeline_actual": "indirect via tools/scripts/i18n/lib/providers.js",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "indirect"
+        ],
+        "proposed_pipelines": [
+          "indirect"
+        ],
+        "detected_pipelines": [
+          "indirect"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/lib/provider-openrouter.js",
+        "trigger_group": "Indirect",
+        "current_pipeline": "indirect — library module imported by other scripts, not invoked directly",
+        "proposed_pipeline": "indirect — library module",
+        "pipeline_actual": "indirect via tools/scripts/i18n/lib/providers.js; indirect via tools/scripts/i18n/test/provider-openrouter.test.js",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "indirect"
+        ],
+        "proposed_pipelines": [
+          "indirect"
+        ],
+        "detected_pipelines": [
+          "indirect"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/lib/providers.js",
+        "trigger_group": "Indirect",
+        "current_pipeline": "indirect — library module imported by other scripts, not invoked directly",
+        "proposed_pipeline": "indirect — library module",
+        "pipeline_actual": "indirect via tools/scripts/i18n/generate-localized-docs-json.js; indirect via tools/scripts/i18n/test/provider-openrouter.test.js; indirect via tools/scripts/i18n/translate-docs.js",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "indirect"
+        ],
+        "proposed_pipelines": [
+          "indirect"
+        ],
+        "detected_pipelines": [
+          "indirect"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/test-mintlify-version-language-toggle.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/test/cli-guardrails.test.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/test/docs-json-localizer.test.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/test/frontmatter.test.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/test/mdx-translate.test.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/test/provenance.test.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/i18n/test/provider-openrouter.test.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/mint-dev.sh",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — developer tool",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/new-script.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/publish-v2-internal-reports.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/script-footprint-and-usage-audit.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/snippets/fetch-lpt-exchanges.sh",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/snippets/fetch-openapi-specs.sh",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/snippets/generate-api-docs.sh",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/snippets/generate-data/scripts/generate-glossary.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/snippets/generate-data/scripts/terminology-search.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/snippets/test-scripts.sh",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+        "proposed_pipeline": "manual — developer tool",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/sync-codex-skills.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (npm script: skills:sync:codex); manual (npm script: skills:sync:codex:check)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/verify-all-pages.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/verify-pay-orc-gate-finalize.sh",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/verify/.verify-large-change.sh",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — diagnostic/investigation tool, run on-demand only",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      },
+      {
+        "path": "tools/scripts/wcag-repair-common.js",
+        "trigger_group": "Manual",
+        "current_pipeline": "manual — interactive developer tool, not suited for automated pipelines",
+        "proposed_pipeline": "manual — not yet in pipeline",
+        "pipeline_actual": "manual (none)",
+        "pipeline_verified": "MATCH",
+        "current_pipelines": [
+          "manual"
+        ],
+        "proposed_pipelines": [
+          "manual"
+        ],
+        "detected_pipelines": [
+          "manual"
+        ],
+        "detected_multi_pipeline": false,
+        "proposed_multi_pipeline": false,
+        "risk": "label-normalization-only",
+        "missing_detected_pipelines": [],
+        "added_beyond_detected": []
+      }
+    ]
+  }
+}

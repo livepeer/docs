@@ -1,0 +1,71 @@
+---
+title: Publish Offerings
+sidebarTitle: Publish Offerings
+description: How to Publish Offerings to the Marketplace
+keywords:
+  - livepeer
+  - orchestrators
+  - setting up an orchestrator
+  - publish offerings
+  - publish
+  - offerings
+  - marketplace
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { PreviewCallout } from '/snippets/components/primitives/previewCallouts.jsx'
+
+<PreviewCallout />
+
+
+## Publishing as an Orchestrator (MOVE ME)
+
+Orchestrators publish compute offerings showing:
+
+### **GPU Inventory**
+
+- 4090
+- A40
+- L40S
+- V100
+
+### **Model Compatibility**
+
+- TensorRT support
+- Torch Compile accelerations
+
+### **Benchmarks**
+
+- Frames per second
+- Tokens per second
+- Latency per model
+
+## Marketplace Submission Workflow
+
+```mermaid
+sequenceDiagram
+    participant Operator
+    participant Marketplace
+    participant Applications
+
+    Operator->>Marketplace: Submit offering (models, pricing, regions)
+    Marketplace->>Applications: Expose offering via API
+    Applications->>Marketplace: Query offerings (filter by price, capability)
+    Marketplace->>Applications: Return best matches
+```
+
+## Updating Offerings
+
+Operators can dynamically update:
+
+- Pricing
+- Model support
+- Pipeline versions
+- GPU availability
+ Performance metrics
+
+Updates propagate automatically to Marketplace consumers.

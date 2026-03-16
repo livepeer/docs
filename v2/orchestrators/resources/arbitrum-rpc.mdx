@@ -1,0 +1,192 @@
+---
+title: Arbitrum RPCs
+sidebarTitle: Arbitrum RPCs
+description: 'Arbitrum One RPC endpoint options for Livepeer orchestrators — provider comparison, rate limits, and configuration.'
+keywords:
+  - livepeer
+  - orchestrator
+  - arbitrum
+  - RPC
+  - ethUrl
+  - Alchemy
+  - Infura
+  - Ankr
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: orchestrator
+purpose: reference
+status: review
+lastVerified: 2026-03-13
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+Livepeer orchestrators require an Arbitrum One RPC endpoint to interact with the protocol — staking, reward calls, ticket redemption, and service registration all happen on Arbitrum. The endpoint is configured via the `-ethUrl` flag.
+
+<CustomDivider />
+
+## Requirements
+
+Your RPC endpoint must:
+
+- Connect to **Arbitrum One** (chain ID `42161` / `0xa4b1`) — not Ethereum L1
+- Support standard JSON-RPC methods (`eth_call`, `eth_sendRawTransaction`, `eth_getBlockByNumber`, `eth_getLogs`)
+- Handle the request volume your orchestrator generates — active orchestrators with frequent reward calls and ticket redemptions may exceed free-tier limits
+
+<CustomDivider />
+
+## Provider Options
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Provider</TableCell>
+    <TableCell header>Free Tier</TableCell>
+    <TableCell header>Rate Limit (free)</TableCell>
+    <TableCell header>Notes</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>[Alchemy](https://www.alchemy.com/)</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>300 CU/s (~100 req/s)</TableCell>
+    <TableCell>Most commonly used by orchestrators. Arbitrum One supported natively.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>[Infura](https://www.infura.io/)</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>100k req/day</TableCell>
+    <TableCell>Requires separate Arbitrum add-on in dashboard.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>[Ankr](https://www.ankr.com/)</TableCell>
+    <TableCell>Yes (public)</TableCell>
+    <TableCell>Shared, best-effort</TableCell>
+    <TableCell>Public endpoint: `https://rpc.ankr.com/arbitrum`. No API key needed.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>[QuickNode](https://www.quicknode.com/)</TableCell>
+    <TableCell>Paid</TableCell>
+    <TableCell>Varies by plan</TableCell>
+    <TableCell>Low-latency option for high-volume orchestrators.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>[Chainstack](https://chainstack.com/)</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>25 req/s</TableCell>
+    <TableCell>Arbitrum One supported.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>[Public Arbitrum RPC](https://arb1.arbitrum.io/rpc)</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Shared, rate-limited</TableCell>
+    <TableCell>Official Arbitrum public endpoint. Suitable for testing only — not recommended for production orchestrators.</TableCell>
+  </TableRow>
+</StyledTable>
+<CustomDivider />
+
+## Configuration
+
+Set the endpoint when starting your orchestrator:
+
+```bash icon="terminal"
+livepeer \
+  -network arbitrum-one-mainnet \
+  -ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY \
+  -orchestrator \
+  -transcoder \
+  ...
+```
+
+### Verify Your Endpoint
+
+Test that the endpoint is reachable and returns the correct chain ID:
+
+```bash icon="terminal"
+curl -X POST -H "Content-Type: application/json" \
+  --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
+  YOUR_ETH_URL
+```
+
+Expected response includes `"result":"0xa4b1"` (42161 in decimal = Arbitrum One).
+
+<CustomDivider />
+
+## Common Issues
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Problem</TableCell>
+    <TableCell header>Cause</TableCell>
+    <TableCell header>Fix</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`dial tcp: connection refused`</TableCell>
+    <TableCell>Wrong URL or provider down</TableCell>
+    <TableCell>Verify URL, test with `curl`, try alternate provider</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`could not retrieve chain ID`</TableCell>
+    <TableCell>Using Ethereum L1 endpoint instead of Arbitrum</TableCell>
+    <TableCell>Switch to an Arbitrum One endpoint</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`context deadline exceeded`</TableCell>
+    <TableCell>Rate-limited or slow provider</TableCell>
+    <TableCell>Upgrade plan or switch provider</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Reward calls failing intermittently</TableCell>
+    <TableCell>Free-tier rate limit hit during peak</TableCell>
+    <TableCell>Upgrade to paid tier or use a dedicated node</TableCell>
+  </TableRow>
+</StyledTable>
+
+For detailed troubleshooting, see the [FAQ](/v2/orchestrators/resources/faq#arbitrum-rpc-connection-failing--node-will-not-start).
+
+<CustomDivider />
+
+## See Also
+
+<CardGroup cols={3}>
+  <Card title="Arbitrum Exchanges" href="/v2/orchestrators/resources/arbitrum-exchanges" icon="coins" />
+  <Card title="Contract Addresses" href="/v2/orchestrators/resources/technical/x-contract-addresses" icon="file-contract" />
+  <Card title="FAQ" href="/v2/orchestrators/resources/faq" icon="circle-question" />
+</CardGroup>
+
+{/*
+  PURPOSE:
+  Arbitrum RPC endpoint reference - public and private RPC providers
+  for connecting orchestrators to the Arbitrum network.
+
+  SECTION HOME: Resources > Technical Reference
+  CROSS-REFS:
+  - Setup > Connect and Activate - using RPC in setup
+  - Staking & Rewards > Rewards and Fees - RPC for reward calling
+*/}

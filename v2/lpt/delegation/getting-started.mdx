@@ -1,20 +1,35 @@
 ---
 title: 'Delegating LPT: Getting Started'
-sidebarTitle: 'Getting Started'
-description: 'How to delegate LPT to an orchestrator, earn rewards, and participate in Livepeer network security - a step-by-step guide for new delegators.'
-keywords: ["livepeer", "delegate lpt", "staking", "delegation", "orchestrator", "rewards", "bonding", "livepeer explorer"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+sidebarTitle: Getting Started
+description: >-
+  How to delegate LPT to an orchestrator, earn rewards, and participate in
+  Livepeer network security - a step-by-step guide for new delegators.
+keywords:
+  - livepeer
+  - delegate lpt
+  - staking
+  - delegation
+  - orchestrator
+  - rewards
+  - bonding
+  - livepeer explorer
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+purpose: concept
 pageType: guide
 audience: delegator
+lastVerified: 2026-03-17
 status: current
 ---
-
-import { StyledTable, TableRow, TableCell } from '/snippets/components/primitives/tables.jsx'
-import { BorderedBox } from '/snippets/components/primitives/containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
 import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
 
 
-Delegating LPT means bonding your tokens to an orchestrator on the Livepeer Network. In return, you share in the orchestrator's rewards - both inflationary LPT and usage-based ETH fees. Your tokens remain under your control throughout.
+Delegating LPT means bonding your tokens to an orchestrator on the Livepeer network. In return, you share in the orchestrator's rewards - both inflationary LPT and usage-based ETH fees. Your tokens remain under your control throughout.
 
 This guide walks you through the full process: from understanding what you're doing to claiming your first rewards.
 
@@ -29,7 +44,7 @@ This guide walks you through the full process: from understanding what you're do
 
 </BorderedBox>
 
----
+<CustomDivider />
 
 ## What Is Delegation?
 
@@ -44,10 +59,10 @@ In exchange, delegators receive a share of the orchestrator's rewards - the perc
 - Not delegating means your LPT is being diluted by inflation earned by active delegators
 
 <Note>
- If less than ~50% of LPT is bonded, inflation increases to incentivise more delegation. If more than ~50% is bonded, inflation decreases. Unbonded LPT holders miss out on this inflation - effectively being diluted by those who delegate.
+ If less than ~50% of LPT is bonded, inflation increases to incentivise more delegation. If more than ~50% is bonded, inflation decreases. Unbonded LPT holders miss out on this inflation - diluted by those who delegate.
 </Note>
 
----
+<CustomDivider />
 
 ## What You Earn
 
@@ -59,7 +74,7 @@ Delegators can earn from two sources:
 
 Returns depend on: the orchestrator's commission settings, their performance (how much work they win), network usage levels, and the current inflation rate.
 
----
+<CustomDivider />
 
 ## Before You Start
 
@@ -68,11 +83,11 @@ You need:
 - ETH on Arbitrum One for gas fees (gas costs are low on Arbitrum - a few cents per transaction)
 - LPT bridged to Arbitrum One (Livepeer operates on Arbitrum L2)
 
-<Card title="Bridge LPT to Arbitrum" icon="bridge" href="/v2/gateways/run-a-gateway/requirements/on-chain%20setup/bridge-lpt-to-arbitrum" arrow horizontal>
+<Card title="Bridge LPT to Arbitrum" icon="bridge" href="/v2/gateways/setup/requirements/on-chain%20setup/bridge-lpt-to-arbitrum" arrow horizontal>
  If your LPT is on Ethereum mainnet, bridge it to Arbitrum One first.
 </Card>
 
----
+<CustomDivider />
 
 ## Step-by-Step: How to Delegate
 
@@ -134,7 +149,7 @@ You need:
   </StyledStep>
 </StyledSteps>
 
----
+<CustomDivider />
 
 ## Risk Factors
 
@@ -144,31 +159,31 @@ Delegation is not risk-free. Understand these before bonding:
 
 - **Operator underperformance** - If your orchestrator stops calling `Reward()`, you earn no LPT inflation. Choose operators with consistent history.
 - **Slashing** - Currently disabled on Livepeer, but the mechanism exists. Future activation could penalise delegators for orchestrator misbehaviour.
-- **Market volatility** - LPT and ETH prices fluctuate. Your returns in USD terms depend on token prices, not just reward percentages.
+- **Market volatility** - LPT and ETH prices fluctuate. Your returns in USD terms depend on token prices, beyond reward percentages.
 - **Concentration risk** - Large orchestrators with many delegators earn more work but distribute rewards across more stake. Consider diversification across the ecosystem.
 - **Unbonding delay** - Your stake is locked during the ~21 hour unbonding period and cannot be moved quickly in response to market events.
 
 </BorderedBox>
 
----
+<CustomDivider />
 
 ## Reward Calculation Reference
 
 Your LPT reward per round from inflation:
 
-```text
+```text icon="terminal"
 Your share = Orchestrator's inflation reward × (1 - rewardCut) × (your stake / total orchestrator stake)
 ```
 
 Your ETH reward per round from fees:
 
-```text
+```text icon="terminal"
 Your share = Orchestrator's ETH fee revenue × (feeShare) × (your stake / total orchestrator stake)
 ```
 
 The actual inflation reward each round depends on the current inflation rate and total supply. View live rates at the [Livepeer Explorer](https://explorer.livepeer.org).
 
----
+<CustomDivider />
 
 ## Related Pages
 

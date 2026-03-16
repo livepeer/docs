@@ -1,0 +1,275 @@
+---
+title: 'Publishing a Gateway'
+sidebarTitle: 'Discoverability'
+description: 'Make a Livepeer Gateway discoverable - service URI configuration, DNS setup, capability advertising, community presence, and current discoverability options.'
+keywords: ['livepeer', 'gateway', 'publishing', 'discoverability', 'serviceAddr', 'gatewayHost', 'DNS', 'marketplace', 'capability advertising']
+og:image: '/snippets/assets/site/og-image/fallback.png'
+pageType: 'guide'
+audience: 'gateway-operator'
+purpose: operations
+status: 'current'
+lastVerified: '2026-03-15'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- ~~Mermaid diagrams use theme colours~~ (N/A)
+- ~~Fontawesome icons are used on accordions and tabs~~
+- ~~Tables use StyledTable component~~
+- ~~No em-dashes are used (instead use standard -)~~
+- UK spelling is used
+- ~~Headers are concise and technical~~
+- ~~CustomDivider is used~~
+- Placeholders for Media & Video Resources are in comments with a TODO for a human. (N/A)
+- ~~REVIEW flags are in JSX flags for a human.~~
+Human:
+- Voice converted to entity-led
+- Em dashes removed
+- "What is planned" section labelled as speculative per SKILL.md
+- production-hardening link already replaced with gateway-middleware
+*/}
+
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from "/snippets/components/layout/containers.jsx"
+import { StyledSteps, StyledStep } from "/snippets/components/layout/steps.jsx"
+
+<Tip>
+AI Gateways can register on-chain via the [`AIServiceRegistry`](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract using the `-aiServiceRegistry` flag. Video/transcoding Gateways do not yet have an equivalent on-chain registry - discoverability for video is currently manual and community-driven.
+
+A Gateway Explorer Page is in Development: <LinkArrow label="Gateway Explorer Preview" href="https://explorer-arbitrum-one-git-feat-add-g-10dba1-livepeer-foundation.vercel.app/"/><LinkArrow label="Github PR #410" href="https://github.com/livepeer/explorer/pull/410"/>
+</Tip>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+This guide covers how to make a Gateway reachable and findable, so that other developers and applications can discover and use it.
+
+<StyledSteps>
+    <StyledStep icon="satellite-dish">
+        ### Service URI
+
+        The first requirement is that the Gateway is reachable at a stable, public address.
+
+        ```bash icon="terminal" -serviceAddr
+        -serviceAddr gateway.example.com:8935
+        ```
+
+        `-serviceAddr` tells the Gateway what address to advertise. For a public Gateway, this must be an externally resolvable DNS name and port, not `localhost` or an internal IP.
+
+        For the external hostname used in responses:
+
+        ```bash icon="terminal" -gatewayHost
+        -gatewayHost gateway.example.com
+        ```
+        <CustomDivider style={{margin: "-2.5rem auto -2rem auto", width: "50%"}} />
+</StyledStep>
+    <StyledStep icon="signature">
+        ### DNS setup
+
+ Point a dedicated subdomain at the Gateway server's public IP. A dedicated subdomain (instead of an IP address) allows changing servers without updating customer integrations.
+
+        ```txt icon="wrench" DNS Setup
+        ai-gateway.yourdomain.com.   A   <server-ip>
+        ```
+
+        For multi-region deployments, use GeoDNS or a load balancer DNS record that routes to the nearest region.
+        <CustomDivider style={{margin: "-2rem auto -2rem auto", width: "50%"}} />
+    </StyledStep>
+    <StyledStep icon="wifi">
+        ### HTTPS required
+
+        External clients must reach the Gateway over HTTPS. Set up TLS termination via a reverse proxy (Caddy, Nginx, or a cloud load balancer) before exposing the service. See <LinkArrow href="/v2/gateways/guides/advanced-operations/gateway-middleware" label="Gateway Middleware" newline={false} /> for reverse proxy architecture patterns.
+    </StyledStep>
+</StyledSteps>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Capability Advertising
+
+Developers choosing a Gateway need to know what it supports. There is no standard machine-readable format for this yet, but publishing a clear capabilities document on the domain is current best practice.
+
+<AccordionGroup>
+  <Accordion title="Supported workloads" icon="list-check">
+    State explicitly whether the Gateway handles:
+    - AI inference (and which pipelines: text-to-image, image-to-video, LLM, etc.)
+    - Video transcoding
+    - Live AI (video-to-video)
+    - BYOC pipelines
+
+    For AI inference, list the models available via connected Orchestrators. Generate this dynamically from the Gateway's `/getNetworkCapabilities` endpoint:
+
+    ```bash icon="terminal"
+    curl https://gateway.example.com/getNetworkCapabilities | \
+      jq '[.orchestrators[].capabilities_prices[].model_id] | unique'
+    ```
+  </Accordion>
+  <Accordion title="Pricing" icon="tag">
+ Publish customer-facing pricing. The Gateway has two pricing layers:
+
+    - What it pays Orchestrators (`-maxPricePerCapability`, `-maxPricePerUnit`) - the cost floor
+    - What it charges customers - the business decision
+
+ These do not need to match. Most public Gateways add a margin and present pricing in human-readable units (per image, per minute of video) instead of in wei per pixel.
+  </Accordion>
+  <Accordion title="Authentication" icon="key">
+    Describe how developers authenticate: API key, OAuth, or open access. If registration is required, link to the signup page.
+  </Accordion>
+  <Accordion title="Rate limits and SLAs" icon="gauge-high">
+    Document any rate limits and what SLA is offered. Even a best-effort statement ("target 99% uptime") sets expectations and builds trust.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Discovery Methods
+
+These are the mechanisms developers use today to find public Gateways.
+
+<BorderedBox variant="accent">
+    <Tabs>
+    <Tab title="Community" icon="comments">
+        The most effective current method. Announce the Gateway in the [Livepeer Discord](https://discord.gg/livepeer) in the `#local-gateways` channel. Include:
+
+        - Gateway endpoint URL
+        - Supported pipelines and models
+        - Pricing and any access requirements
+        - Operating region(s)
+
+        The Forum at [forum.livepeer.org](https://forum.livepeer.org) is appropriate for longer announcements with more detail, and threads are indexed by search engines.
+    </Tab>
+    <Tab title="Livepeer Tools" icon="gauge-high">
+        [tools.livepeer.cloud](https://tools.livepeer.cloud) is a community-maintained dashboard that tracks active network participants. Contact the maintainers to have the Gateway listed.
+</Tab>
+    <Tab title="Providers directory" icon="list">
+        The Foundation maintains a list of known public Gateways in the Gateway Providers page. Contact the Foundation to have the Gateway added.
+
+        SPE-funded Gateways (Livepeer Cloud, Daydream) are listed automatically as part of their SPE agreement.
+    </Tab>
+    <Tab title="Direct integration" icon="plug">
+        For developers building applications, the most common path is direct integration: they find the Gateway through one of the channels above and hardcode the endpoint. Make it easy by providing:
+
+        - A clear API reference (the Gateway endpoint + the standard <LinkArrow href="/v2/gateways/resources/technical/api-reference/AI-API/ai" label="AI API reference" newline={false} />)
+        - A working quickstart curl command
+        - A stable versioned endpoint URL
+    </Tab>
+    </Tabs>
+</BorderedBox>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Marketplace Context
+
+The Livepeer Marketplace is a programmatic interface for Orchestrators to advertise compute and for Gateways to discover and route to that compute. It is not a discovery mechanism for applications to find Gateways.
+
+As a Gateway operator, the relationship to the marketplace is as a **broker**: the Gateway queries it to find Orchestrators, not to list itself for applications to find. The marketplace is upstream of the Gateway, not downstream.
+
+``` icon="terminal"
+Applications -> [Gateway] -> Marketplace -> Orchestrators
+```
+
+There is currently no Gateway layer in the marketplace. On-chain Gateway registration (equivalent to how Orchestrators register via ServiceRegistry) is on the roadmap but not yet available.
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Video Gateways
+<Badge color="blue"> Video </Badge>
+
+Video Gateways use `-serviceAddr` differently from AI Gateways. For a Video Gateway, `-serviceAddr` is the address that the Gateway advertises to Orchestrators so they can report results back. It must be reachable by Orchestrators on the network.
+
+This means the Video Gateway's service address must be publicly reachable on the Gateway's HTTP port (default 8935). If behind NAT, configure port forwarding or use a server with a public IP.
+
+RTMP ingest (port 1935) is separate from the service address and is what video sources connect to. These can be on different ports or even different network interfaces.
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## On-chain Discovery
+
+<BorderedBox variant="accent">
+    <Tabs>
+        <Tab title="AI Registry" icon="brain">
+            <Badge color="purple">AI</Badge> &nbsp; <Badge color="green">Dual</Badge>
+
+            The `-aiServiceRegistry` flag enables on-chain discovery for AI Gateways. When set, the Gateway registers with the [`AIServiceRegistry`](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) contract on Arbitrum Mainnet, making it discoverable by AI Orchestrators on-chain.
+
+            ### Usage
+
+            Add `-aiServiceRegistry` to the Gateway startup command alongside the on-chain flags:
+
+            ```bash icon="terminal" -aiServiceRegistry
+            livepeer \
+            -gateway \
+            -aiServiceRegistry \
+            -network arbitrum-one-mainnet \
+            -ethUrl https://arb1.arbitrum.io/rpc \
+            -ethKeystorePath ~/.lpData/keystore \
+            -httpAddr 0.0.0.0:8935 \
+            -httpIngest \
+            ...
+            ```
+
+            ### What it does
+
+            - Registers the Gateway's AI capabilities with the on-chain `AIServiceRegistry` contract
+            - Enables automatic Orchestrator discovery for AI workloads (no need for manual `-orchAddr` lists)
+            - Requires on-chain operational mode (`-network=arbitrum-one-mainnet`, `-ethUrl`, funded ETH account)
+
+            ### When to use it
+
+ Use `-aiServiceRegistry` when the Gateway should discover AI Orchestrators from the open network instead of relying on a manually curated `-orchAddr` list. This is the on-chain equivalent of off-chain manual discovery.
+
+            Without this flag, the Gateway operates off-chain and requires explicit Orchestrator addresses via `-orchAddr`.
+</Tab>
+
+        <Tab title="Video Registry" icon="video">
+            <Badge color="yellow">Planned</Badge> &nbsp; <Badge color="blue">Video</Badge>
+
+            There is no equivalent of the Orchestrator `ServiceRegistry` for transcoding Gateways. Orchestrators register on-chain via `ServiceRegistry` and appear in the Livepeer Explorer automatically, but transcoding Gateways cannot register in the same way.
+
+            On-chain Gateway registration for the transcoding network is on the roadmap but not yet available. Until it ships, Video and Dual Gateways rely on the community channels and manual listing methods described in the Discovery Methods section above.
+</Tab>
+    </Tabs>
+</BorderedBox>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Gateway Middleware" icon="layer-group" href="/v2/gateways/guides/advanced-operations/gateway-middleware">
+    Auth and routing - prerequisites for a public-facing Gateway.
+  </Card>
+  <Card title="Opportunities" icon="lightbulb" href="/v2/gateways/guides/roadmap-and-funding/operator-support">
+    Revenue models and Foundation support for Gateway operators.
+  </Card>
+  <Card title="NaaP Multi-Tenancy" icon="users" href="/v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy">
+    Network as a Platform architecture for multi-tenant operation.
+  </Card>
+  <Card title="Technical Architecture" icon="diagram-project" href="/v2/gateways/resources/technical/technical-architecture">
+    Network architecture context for how Gateways fit into the ecosystem.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  Journey step: "Make your gateway discoverable"
+  Guide for operators who want their gateway to be found by applications
+  and users on the network. Covers marketplace integration, service
+  advertising, and discoverability.
+
+  NOTE: This is a known gap in the docs - no formal gateway registry exists.
+  This page documents current mechanisms and identifies planned improvements.
+
+  SECTION HOME: Guides > Advanced Operations
+
+  JOURNEY POSITION:
+  1. Orchestrator Selection - "Choose the best orchestrators"
+  2. Scaling & Resource Management - "When and how to scale"
+  3. Gateway Middleware - "Custom middleware and integrations"
+  4. Publishing Your Gateway (this page) - "Make your gateway discoverable"
+
+  CROSS-REFS:
+  - Opportunities > Overview - why discoverability matters for revenue
+  - Orchestrator Selection (this section) - how gateways find orchestrators (reverse of this page)
+  - Resources > Technical Architecture - network architecture context
+*/}

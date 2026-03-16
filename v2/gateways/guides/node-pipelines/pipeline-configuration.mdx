@@ -1,0 +1,537 @@
+---
+title: 'Pipeline Configuration'
+sidebarTitle: 'Pipeline Configuration'
+description: 'Post-setup tuning for Livepeer gateway pipelines - video transcoding profiles (JSON encoding ladder, presets, recipes) and AI inference tuning (retry timeouts, model selection, warm vs cold behaviour).'
+keywords:
+  - livepeer
+  - gateway
+  - transcoding options
+  - transcoding profiles
+  - pipeline configuration
+  - transcodingOptions
+  - encoding ladder
+  - aiProcessingRetryTimeout
+  - warm model
+  - inference steps
+og:image: /snippets/assets/site/og-image/fallback.png
+pageType: guide
+audience: gateway-operator
+purpose: operations
+status: current
+lastVerified: '2026-03-15'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- ~~Mermaid diagrams use theme colours~~ (N/A - no mermaid diagrams)
+- ~~Fontawesome icons are used on accordions and tabs~~
+- ~~Tables use StyledTable component~~
+- ~~No em-dashes are used (instead use standard -)~~
+- UK spelling is used
+- ~~Headers are concise and technical - no long headers or questions (aim for max 3 words)~~
+- ~~CustomDivider is used with <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} /> for all --- separator breaks~~
+- Placeholders for Media & Video Resources are in comments with a TODO for a human. (N/A)
+- ~~REVIEW flags are in JSX flags for a human.~~ (N/A)
+Human:
+- Pricing sections moved to pricing-strategy.mdx (see payments-and-pricing/to-include.md for gaps)
+- AI routing flags (orchAddr, discovery) covered in ai-pipelines.mdx
+- Dual gateway resource allocation covered in setup/configure/dual-configuration.mdx and advanced-operations/scaling.mdx
+- Port 8935 used as standard per quickstart code.jsx (all AI and video endpoints share the -httpAddr port)
+*/}
+
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox, CenteredContainer } from "/snippets/components/layout/containers.jsx"
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+<CenteredContainer preset="readable80">
+
+    This page covers post-setup tuning mechanisms for video and AI pipelines.
+    - Video tuning centres on the transcoding profile (output renditions).
+    - AI tuning centres on retry behaviour, model selection, and inference parameters.
+    <br/>
+    _Quick Reference_
+    <Tabs>
+        <Tab title="Video tuning" icon="video">
+            <StyledTable headers={["Flag", "What it controls"]}>
+            <TableRow>
+                <TableCell>`-transcodingOptions`</TableCell>
+                <TableCell>Encoding ladder (output renditions, bitrate, codec, GOP)</TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell>`-maxPricePerUnit`</TableCell>
+                <TableCell>Per-pixel price cap for orchestrator selection</TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell>`-maxSessions`</TableCell>
+                <TableCell>Concurrent stream limit (default: 10)</TableCell>
+            </TableRow>
+            </StyledTable>
+        </Tab>
+        <Tab title="AI tuning" icon="brain">
+            <StyledTable headers={["Flag", "What it controls"]}>
+            <TableRow>
+                <TableCell>`-httpIngest`</TableCell>
+                <TableCell>Enables AI pipeline endpoints on the HTTP port (required)</TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell>`-aiProcessingRetryTimeout`</TableCell>
+                <TableCell>Failover speed when an orchestrator is slow or unresponsive</TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell>`-maxPricePerCapability`</TableCell>
+                <TableCell>Per-pipeline, per-model price cap</TableCell>
+            </TableRow>
+            </StyledTable>
+        </Tab>
+    </Tabs>
+</CenteredContainer>
+
+<CustomDivider style={{ margin: "0 0 -1rem 0"}} />
+
+## Configuration Details
+
+<BorderedBox variant="accent">
+    <Tabs>
+        <Tab title="Video" icon="video">
+            ## Video Transcoding Tuning
+
+            Pass a profile to the gateway via the `-transcodingOptions` flag, either as a comma-separated list of built-in presets or as a path to a JSON file.
+
+            ### Built-in Presets
+
+            The simplest option. Presets follow the pattern `P<height>p<fps>fps<aspect>`:
+
+            ```bash icon="terminal"
+            -transcodingOptions P240p30fps16x9,P360p30fps16x9,P720p30fps16x9
+            ```
+
+            Use built-in presets for development or when the defaults match your use case. For production, a JSON profile gives you control over bitrate, codec, and GOP size.
+
+            ### JSON Format
+
+            Create a `transcodingOptions.json` file and reference it with `-transcodingOptions /path/to/transcodingOptions.json`.
+
+            ```json icon="terminal"
+            [
+            {
+                "name": "1080p",
+                "width": 1920,
+                "height": 1080,
+                "bitrate": 6500000,
+                "fps": 0,
+                "profile": "h264constrainedhigh",
+                "gop": "1"
+            },
+            {
+                "name": "720p",
+                "width": 1280,
+                "height": 720,
+                "bitrate": 3000000,
+                "fps": 0,
+                "profile": "h264constrainedhigh",
+                "gop": "1"
+            },
+            {
+                "name": "480p",
+                "width": 854,
+                "height": 480,
+                "bitrate": 1600000,
+                "fps": 0,
+                "profile": "h264constrainedhigh",
+                "gop": "1"
+            },
+            {
+                "name": "240p",
+                "width": 426,
+                "height": 240,
+                "bitrate": 600000,
+                "fps": 0,
+                "profile": "h264constrainedhigh",
+                "gop": "1"
+            }
+            ]
+            ```
+
+            **Field reference:**
+
+            <StyledTable headers={["Field", "Required", "Notes"]}>
+                <TableRow>
+                    <TableCell>`width`</TableCell>
+                    <TableCell>Yes</TableCell>
+                    <TableCell>Output width in pixels</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>`height`</TableCell>
+                    <TableCell>Yes</TableCell>
+                    <TableCell>Output height in pixels</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>`bitrate`</TableCell>
+                    <TableCell>Yes</TableCell>
+                    <TableCell>Output bitrate in bits per second</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>`name`</TableCell>
+                    <TableCell>No</TableCell>
+                    <TableCell>Human-readable label, used in HLS manifest</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>`fps`</TableCell>
+                    <TableCell>No</TableCell>
+                    <TableCell>Target frames per second; `0` preserves source FPS</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>`profile`</TableCell>
+                    <TableCell>No</TableCell>
+                    <TableCell>H.264 profile: `h264constrainedhigh`, `h264high`, `h264main`, `h264baseline`</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>`gop`</TableCell>
+                    <TableCell>No</TableCell>
+                    <TableCell>GOP size in seconds or `"intra"` for keyframe-only; lower values reduce latency</TableCell>
+                </TableRow>
+            </StyledTable>
+
+            ### Per-platform Setup
+
+            <AccordionGroup>
+                <Accordion title="Docker" icon="docker">
+                    Mount the JSON file as a volume and reference it via a path inside the container:
+
+                    ```yaml icon="terminal"
+                    # docker-compose.yml
+                    services:
+                    gateway:
+                        image: livepeer/go-livepeer:master
+                        volumes:
+                        - ./transcodingOptions.json:/config/transcodingOptions.json
+                        - gateway-data:/root/.lpData
+                        command: |
+                        -gateway
+                        -transcodingOptions /config/transcodingOptions.json
+                        -rtmpAddr 0.0.0.0:1935
+                        -httpAddr 0.0.0.0:8935
+                        -orchAddr https://orch1.example.com:8935
+                    ```
+
+                    Alternatively, write directly to the gateway's data volume:
+
+                    ```bash icon="terminal"
+                    nano /var/lib/docker/volumes/gateway-lpData/_data/transcodingOptions.json
+                    ```
+
+                    And reference it at the container path:
+
+                    ``` icon="terminal"
+                    -transcodingOptions /root/.lpData/transcodingOptions.json
+                    ```
+                </Accordion>
+                <Accordion title="Linux (systemd)" icon="linux">
+                    Create the profile file in your chosen config directory:
+
+                    ```bash icon="terminal"
+                    sudo nano /usr/local/bin/lptConfig/transcodingOptions.json
+                    ```
+
+                    Reference it in your systemd service file (`/etc/systemd/system/livepeer.service`):
+
+                    ```ini icon="terminal"
+                    ExecStart=/usr/local/bin/livepeer \
+                    -gateway \
+                    -transcodingOptions /usr/local/bin/lptConfig/transcodingOptions.json \
+                    -rtmpAddr 0.0.0.0:1935 \
+                    -httpAddr 0.0.0.0:8935
+                    ```
+
+                    Reload systemd after any service file change:
+
+                    ```bash icon="terminal"
+                    sudo systemctl daemon-reload && sudo systemctl restart livepeer
+                    ```
+                </Accordion>
+                <Accordion title="Windows" icon="windows">
+                    Create the profile file in the `.lpData` directory:
+
+                    ``` icon="terminal"
+                    C:\Users\%USERNAME%\.lpData\transcodingOptions.json
+                    ```
+
+                    Reference it in your startup `.bat` file:
+
+                    ```bat icon="terminal"
+                    livepeer.exe ^
+                    -gateway ^
+                    -transcodingOptions C:\Users\%USERNAME%\.lpData\transcodingOptions.json ^
+                    -rtmpAddr 0.0.0.0:1935 ^
+                    -httpAddr 0.0.0.0:8935
+                    ```
+                </Accordion>
+            </AccordionGroup>
+
+            ### Profile Recipes
+
+            <AccordionGroup>
+                <Accordion title="Standard adaptive bitrate ladder (recommended)" icon="layer-group">
+                    Four renditions covering mobile to desktop. Viewers' players switch automatically based on available bandwidth.
+
+                    ```json icon="terminal"
+                    [
+                    { "name": "720p",  "width": 1280, "height": 720,  "bitrate": 3000000, "fps": 0, "profile": "h264constrainedhigh", "gop": "1" },
+                    { "name": "480p",  "width": 854,  "height": 480,  "bitrate": 1600000, "fps": 0, "profile": "h264constrainedhigh", "gop": "1" },
+                    { "name": "360p",  "width": 640,  "height": 360,  "bitrate": 800000,  "fps": 0, "profile": "h264constrainedhigh", "gop": "1" },
+                    { "name": "240p",  "width": 426,  "height": 240,  "bitrate": 400000,  "fps": 0, "profile": "h264constrainedhigh", "gop": "1" }
+                    ]
+                    ```
+                </Accordion>
+
+                <Accordion title="Low-latency single rendition" icon="bolt">
+                    For use cases where you need a single output with minimal end-to-end latency (for example, feeding a monitoring pipeline or an AI processing step).
+
+                    ```json icon="terminal"
+                    [
+                    { "name": "480p-lowlat", "width": 854, "height": 480, "bitrate": 1200000, "fps": 0, "profile": "h264baseline", "gop": "0.5" }
+                    ]
+                    ```
+
+                    `h264baseline` is more compatible with edge players. `"gop": "0.5"` halves the default GOP, reducing segment duration and latency.
+                </Accordion>
+
+                <Accordion title="High-quality archive (1080p)" icon="archive">
+                    Single high-quality rendition for recording or post-production.
+
+                    ```json icon="terminal"
+                    [
+                    { "name": "1080p-hq", "width": 1920, "height": 1080, "bitrate": 8000000, "fps": 0, "profile": "h264high", "gop": "2" }
+                    ]
+                    ```
+
+                    Higher bitrate and larger GOP (less overhead, better compression). Not suitable for live playback - use with `-objectStore` for archival.
+                </Accordion>
+            </AccordionGroup>
+        </Tab>
+
+        <Tab title="AI" icon="user-robot">
+            ## AI Tuning
+
+            AI tuning focuses on retry behaviour, model selection, and inference parameters.
+
+            <Note>
+ For AI routing architecture and orchestrator discovery, see <LinkArrow href="./ai-pipelines" label="AI Pipelines" newline={false} />. This section explains the tuning parameters you adjust after your AI gateway is running.
+            </Note>
+
+            ### Retry Timeouts
+
+            The `-aiProcessingRetryTimeout` flag controls how long the gateway waits before retrying a failed AI request with another orchestrator. The value accepts Go duration format (`30s`, `1m`, `2m30s`).
+
+            ```bash icon="terminal"
+            -aiProcessingRetryTimeout 30s
+            ```
+
+            The right value depends on your workload:
+
+            <StyledTable headers={["Workload", "Recommended", "Rationale"]}>
+                <TableRow>
+                    <TableCell>Lightning / LCM models</TableCell>
+                    <TableCell>`15s`</TableCell>
+                    <TableCell>Fast inference (4-8 steps), warm models respond in seconds</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>Standard diffusion (SDXL)</TableCell>
+                    <TableCell>`30s`</TableCell>
+                    <TableCell>20-50 inference steps, moderate GPU time</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>Audio / LLM pipelines</TableCell>
+                    <TableCell>`45s`</TableCell>
+                    <TableCell>Variable processing time depending on input length</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>BYOC / large models</TableCell>
+                    <TableCell>`60s` or higher</TableCell>
+                    <TableCell>Custom containers may have cold-start delays or heavy compute</TableCell>
+                </TableRow>
+            </StyledTable>
+
+            Setting this too low causes the gateway to retry before the orchestrator has loaded the model, producing multiple failed attempts. Setting it too high delays failover when an orchestrator is genuinely unresponsive.
+
+            ### Model Selection
+
+            The model you request in each API call directly affects latency, quality, and cost.
+
+            **Warm vs cold models:**
+
+            Orchestrators load models into GPU memory. A warm model responds in milliseconds. A cold model must load from disk first, adding seconds to minutes of latency. During the current beta, orchestrators support one warm model per GPU.
+Check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) before selecting a model. For latency-sensitive applications, confirm your chosen model is warm on at least one connected orchestrator.
+
+            **Inference parameters by model family:**
+
+            <StyledTable headers={["Model Family", "Steps", "Guidance Scale", "Notes"]}>
+                <TableRow>
+                    <TableCell>Lightning / Turbo</TableCell>
+                    <TableCell>4-8</TableCell>
+                    <TableCell>1.0-2.0</TableCell>
+                    <TableCell>Optimised for speed. Too many steps degrades quality.</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>LCM (Latent Consistency)</TableCell>
+                    <TableCell>4-8</TableCell>
+                    <TableCell>1.0-2.0</TableCell>
+                    <TableCell>Similar to Lightning. Fast, low step count.</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>Standard SDXL</TableCell>
+                    <TableCell>20-50</TableCell>
+                    <TableCell>7.0-9.0</TableCell>
+                    <TableCell>Higher quality, slower. Too few steps produces noisy output.</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>SD 1.5 / 2.x</TableCell>
+                    <TableCell>20-30</TableCell>
+                    <TableCell>7.0-9.0</TableCell>
+                    <TableCell>Older generation. Lower VRAM requirements.</TableCell>
+                </TableRow>
+            </StyledTable>
+
+            Using the wrong step count for a model family produces either slow responses (too many steps on a Lightning model) or degraded image quality (too few steps on a standard model).
+        </Tab>
+    </Tabs>
+</BorderedBox>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Key Differences
+
+AI gateways do not use RTMP, do not need `-transcodingOptions`, and require `-httpIngest` to enable AI endpoints on the HTTP port. The `-httpIngest` flag is a boolean toggle with no value - it activates AI pipeline endpoints (`/text-to-image`, `/llm`, etc.) on whatever port `-httpAddr` is set to.
+
+<StyledTable headers={["Aspect", "Video Gateway", "AI Gateway"]}>
+  <TableRow>
+    <TableCell>Ingest</TableCell>
+    <TableCell>RTMP (`-rtmpAddr`) + HTTP</TableCell>
+    <TableCell>HTTP only (`-httpIngest` required)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Profile config</TableCell>
+    <TableCell>`-transcodingOptions` (encoding ladder)</TableCell>
+    <TableCell>No profile - model selected per request</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Session limits</TableCell>
+    <TableCell>`-maxSessions` (concurrent streams)</TableCell>
+    <TableCell>No session limit flag</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Retry control</TableCell>
+    <TableCell>Automatic (per segment)</TableCell>
+    <TableCell>`-aiProcessingRetryTimeout` (per request)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Pricing flag</TableCell>
+    <TableCell>`-maxPricePerUnit` (per pixel)</TableCell>
+    <TableCell>`-maxPricePerCapability` (per pipeline/model)</TableCell>
+  </TableRow>
+</StyledTable>
+
+For the full side-by-side comparison, see <LinkArrow href="./ai-pipelines#ai-vs-video-comparison" label="AI vs Video Comparison" newline={false} />.
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Configuration Verification
+
+<BorderedBox variant="accent">
+    <Tabs>
+    <Tab title="Video" icon="video">
+        **Check startup log for profile loading:**
+
+        ``` icon="terminal"
+        I0501 11:07:47.609839  1 mediaserver.go:201] Transcode Job Type: [{480p0 ...} {720p0 ...}]
+        ```
+
+        **Send a test stream and check the HLS manifest:**
+
+        ```bash icon="terminal"
+        ffprobe http://localhost:8935/<stream-key>.m3u8
+        ```
+
+        **Update transcoding options at runtime:**
+
+        ```bash icon="terminal"
+        curl -X POST http://localhost:5935/setTranscodingOptions \
+        -d "transcodingOptions=P240p30fps16x9,P720p30fps16x9"
+        ```
+    </Tab>
+    <Tab title="AI" icon="brain">
+        **Check the health endpoint:**
+
+        ```bash icon="terminal"
+        curl -s http://localhost:8935/health
+        ```
+
+        **Send a test inference request:**
+
+        ```bash icon="terminal"
+        curl -X POST http://localhost:8935/text-to-image \
+        -H "Content-Type: application/json" \
+        -d '{
+            "model_id": "SG161222/RealVisXL_V4.0_Lightning",
+            "prompt": "a test image",
+            "width": 512,
+            "height": 512,
+            "num_inference_steps": 4,
+            "guidance_scale": 1.5
+        }'
+        ```
+
+        A JSON response with an `images` array confirms routing is working.
+
+        **Check connected orchestrators and their capabilities:**
+
+        ```bash icon="terminal"
+        curl http://localhost:5935/getOrchestrators
+        ```
+    </Tab>
+    <Tab title="General" icon="terminal">
+        **Check effective configuration via livepeer_cli:**
+
+        ```bash icon="terminal"
+        livepeer_cli -host 127.0.0.1 -http 5935
+        ```
+
+        Option 1 ("Get node status") shows your current deposit, reserve, connected orchestrators, and active sessions.
+
+        **Check gateway status:**
+
+        ```bash icon="terminal"
+        curl http://localhost:5935/status
+        ```
+    </Tab>
+    </Tabs>
+</BorderedBox>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="AI Pipelines" icon="brain" href="./ai-pipelines">
+    AI routing architecture, orchestrator discovery, and capability matching.
+  </Card>
+  <Card title="Video Pipelines" icon="video" href="./video-pipelines">
+    Video transcoding pipeline flow, RTMP/HTTP ingest, and orchestrator selection.
+  </Card>
+  <Card title="Pricing Strategy" icon="tag" href="../payments-and-pricing/pricing-strategy">
+    Price caps for video and AI, competitive positioning, and ETH volatility handling.
+  </Card>
+  <Card title="Dual Configuration" icon="clone" href="/v2/gateways/setup/configure/dual-configuration">
+    Architecture, port setup, and session management for dual gateways.
+  </Card>
+  <Card title="Scaling" icon="arrow-up-right-dots" href="../advanced-operations/scaling">
+    Resource contention signals, GPU memory pressure, and when to split workloads.
+  </Card>
+  <Card title="Configuration Flags" icon="list" href="/v2/gateways/resources/technical/configuration-flags">
+    Complete flag reference for all go-livepeer gateway flags.
+  </Card>
+</CardGroup>

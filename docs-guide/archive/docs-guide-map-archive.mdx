@@ -1,0 +1,97 @@
+---
+title: Docs Guide Map Archive
+sidebarTitle: Map Archive
+description: Archived pre-canonical docs-guide map retained for migration traceability.
+keywords:
+  - livepeer
+  - docs guide
+  - internal
+  - source of truth
+  - repository
+  - features
+  - functionality
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+# Docs Guide Map Archive
+**Contributing**
+
+Entry point for people working in the repo. Covers how to contribute, how work is structured, expected workflows, and the minimum standards for making safe, consistent changes.
+
+**Features**
+
+Overview of the major systems and functional areas in the repo. Explains how the content system, architecture maps, automation pipelines, data integrations, and related feature areas fit together.
+
+**Tooling**
+
+Developer utilities, helpers, snippets, scripts, and local tools that make working in the repo faster and safer. Includes practical tooling support rather than repo rules or architecture explanation.
+
+**Frameworks**
+
+The structural models and repo-wide conventions that govern how content, components, scripts, and systems are designed and organised. This is the "how the repo is structured and why" section.
+
+**Policies**
+
+Rules, safeguards, validation layers, audit logic, and quality controls used to keep the repo consistent, maintainable, and production-safe. Includes enforcement-oriented material such as quality gates, quarantine/cleanup rules, schemas, and review constraints.
+
+# Docs Guide (Internal Source of Truth)
+
+This folder is the internal maintainer navigation source of truth for repository features and functionality. It is not part of Mintlify navigation in `docs.json`; it exists to keep operational documentation discoverable, non-duplicative, and maintainable.
+
+## Source-of-Truth Model
+
+- Runtime behavior: source of truth is code and tests.
+- Feature and operations navigation: source of truth is this `docs-guide/` folder.
+- Public docs UX/content: source of truth is Mintlify pages under `v2/`.
+- Generated catalogs: source of truth is generator scripts; generated files are read-only.
+
+See [source-of-truth-policy.mdx](../policies/source-of-truth-policy.mdx) for full boundaries.
+
+## Start Here
+
+| If you need to understand...                  | Canonical file                                           |
+| --------------------------------------------- | -------------------------------------------------------- |
+| Governance and canonical ownership            | [source-of-truth-policy.mdx](../policies/source-of-truth-policy.mdx) |
+| Complete repo capability map                  | [feature-map.mdx](../features/feature-map.mdx) |
+| Data + control flow across systems            | [architecture-map.mdx](../features/architecture-map.mdx) |
+| CLI behavior and operator runbooks            | [lpd-cli.mdx](../tooling/lpd-cli.mdx) |
+| Validation and enforcement gates              | [quality-gates.mdx](../policies/quality-gates.mdx) |
+| Audit system and scorecard workflow           | [audit-system-overview.mdx](../policies/audit-system-overview.mdx) |
+| Skill pipeline run order and contracts        | [skill-pipeline-map.mdx](../policies/skill-pipeline-map.mdx) |
+| Cleanup and quarantine policy                 | [cleanup-quarantine-policy.mdx](../policies/cleanup-quarantine-policy.mdx) |
+| Component layout decision matrix              | [component-layout-decisions.mdx](../policies/component-layout-decisions.mdx) |
+| GitHub Actions, n8n, and automation pipelines | [automations.mdx](../features/automations.mdx) |
+| Information architecture and content strategy | [content-system.mdx](../frameworks/content-system.mdx) |
+| APIs and external data integrations           | [data-integrations.mdx](../features/data-integrations.mdx) |
+| AI tools and skill inventory                  | [ai-tools.mdx](../catalog/ai-tools.mdx) |
+| Pages tree catalog (generated)                | [pages-catalog.mdx](../catalog/pages-catalog.mdx) |
+| Components catalog (generated)                | [components-catalog.mdx](../catalog/components-catalog.mdx) |
+| Script catalog (generated)                    | [scripts-catalog.mdx](../catalog/scripts-catalog.mdx) |
+| Workflow catalog (generated)                  | [workflows-catalog.mdx](../catalog/workflows-catalog.mdx) |
+| Issue/PR template catalog (generated)         | [templates-catalog.mdx](../catalog/templates-catalog.mdx) |
+
+## Update Rules
+
+1. Update manual docs when behavior, process, ownership, or architecture changes.
+2. Regenerate generated catalogs when scripts/workflows/templates change:
+   - `node tools/scripts/generate-docs-guide-indexes.js --write`
+   - `node tools/scripts/generate-docs-guide-pages-index.js --write`
+   - `node tools/scripts/generate-docs-guide-components-index.js --write`
+   - `node tests/unit/script-docs.test.js --write --rebuild-indexes`
+   - `node tools/scripts/enforce-generated-file-banners.js --check`
+3. Re-run the docs audit pipeline when docs, scripts, reports, or routing paths change:
+   - `node tools/scripts/repo-audit-orchestrator.js --mode static --scope full`
+   - `node tools/scripts/cross-agent-packager.js --agent-pack all`
+4. Keep `README.md` high-level and link to canonical docs-guide files for deep detail.
+5. Do not duplicate long procedural guidance across README, tests docs, and docs-guide. Link to canonical pages instead.
+
+## Related Areas
+
+- Root orientation: [`README.md`](../README.md)
+- Public docs guide: [`v2/resources/documentation-guide/`](../v2/resources/documentation-guide/)
+- Contributor procedures: [`contribute/CONTRIBUTING/`](../contribute/CONTRIBUTING/)
+- Test matrices and CI behavior: [`tests/`](../tests/)

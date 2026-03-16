@@ -1,0 +1,172 @@
+---
+title: Configuring AI Models
+---
+
+Before deploying your AI Orchestrator node on the Livepeer AI network, you must
+choose the AI models you want to serve for AI inference tasks. This guide
+assists in configuring these models. The following page,
+[Download AI Models](/ai/orchestrators/models-download), provides instructions
+for their download. For details on supported pipelines and models, refer to
+[Pipelines](/ai/pipelines/text-to-image).
+
+## Configuration File Format
+
+Orchestrators specify supported AI models in an `aiModels.json` file, typically
+located in the `~/.lpData` directory. Below is an example configuration showing
+currently **recommended** models and their respective prices.
+
+<Info>
+  Pricing used in this example is subject to change and should be set
+  competitively based on market research and costs to provide the compute.
+</Info>
+
+```json
+[
+  {
+    "pipeline": "text-to-image",
+    "model_id": "SG161222/RealVisXL_V4.0_Lightning",
+    "price_per_unit": 4768371
+  },
+  {
+    "pipeline": "upscale",
+    "model_id": "stabilityai/stable-diffusion-x4-upscaler",
+    "price_per_unit": "0.5e-2USD",
+    "warm": true,
+    "optimization_flags": {
+      "SFAST": true,
+      "DEEPCACHE": false
+    }
+  },
+  {
+    "pipeline": "audio-to-text",
+    "model_id": "openai/whisper-large-v3",
+    "price_per_unit": 12882811,
+    "pixels_per_unit": 1,
+    "currency": "USD",
+    "url": "<CONTAINER_URL>:<PORT>",
+    "token": "<OPTIONAL_BEARER_TOKEN>",
+    "capacity": 1
+  }
+]
+```
+
+### Key Configuration Fields
+
+<Info>
+  During the **Beta** phase, only one "warm" model per GPU is supported.
+</Info>
+
+<ParamField path="pipeline" type="string" required="true">
+  The inference pipeline to which the model belongs (e.g., `text-to-image`).
+</ParamField>
+<ParamField path="model_id" type="string" required="true">
+  The [Hugging Face model
+  ID](https://huggingface.co/docs/transformers/en/main_classes/model).
+</ParamField>
+<ParamField path="price_per_unit" type="integer" required="true">
+  The price in [Wei](https://ethdocs.org/en/latest/ether.html) per unit, which
+  varies based on the pipeline (e.g., per pixel for `image-to-video`).
+</ParamField>
+<ParamField path="warm" type="boolean">
+  If `true`, the model is preloaded on the GPU to decrease runtime.
+</ParamField>
+<ParamField path="optimization_flags" type="object">
+  Optional flags to enhance performance (details below).
+</ParamField>
+<ParamField path="url" type="string" optional="true">
+  Optional URL and port where the model container or custom container manager
+  software is running. [See External Containers](#external-containers)
+</ParamField>
+<ParamField path="token" type="string">
+  Optional token required to interact with the model container or custom
+  container manager software. [See External Containers](#external-containers)
+</ParamField>
+<ParamField path="capacity" type="integer">
+  Optional capacity of the model. This is the number of inference tasks the
+  model can handle at the same time. This defaults to 1. [See External
+  Containers](#external-containers)
+</ParamField>
+
+### Optimization Flags
+
+<Warning>
+  These flags are still **experimental** and may not always perform as expected.
+  If you encounter any issues, please report them to the [go-livepeer
+  repository](https://github.com/livepeer/go-livepeer/issues/new/choose).
+</Warning>
+
+<Note>At this time, these flags are only compatible with **warm** models.</Note>
+
+The Livepeer AI pipelines offer a suite of optimization flags. These are
+designed to enhance the performance of **warm** models by either increasing
+**inference speed** or reducing **VRAM** usage. Currently, the following flags
+are available:
+
+#### Image-to-video Pipeline Optimization
+
+<ParamField path="SFAST" type="boolean">
+  The `SFAST` flag enables the [Stable
+  Fast](https://github.com/chengzeyi/stable-fast) optimization framework,
+  potentially boosting inference speed by up to **25%** with **no quality
+  loss**. Cannot be used in conjunction with `DEEPCACHE`.
+</ParamField>
+
+#### Text-to-image Pipeline Optimization
+
+<Warning>
+  **DO NOT** enable `DEEPCACHE` for Lightning/Turbo models since they're already
+  optimized. Due to [known
+  limitations](https://github.com/horseee/DeepCache/issues/27), it does not
+  provide speed benefits and may significantly lower image quality.
+</Warning>
+
+<ParamField path="DEEPCACHE" type="boolean">
+  The `DEEPCACHE` flag enables the
+  [DeepCache](https://github.com/horseee/DeepCache) optimization framework,
+  which can enhance inference speed by up to **50%** with **minimal quality
+  loss**. The speedup becomes more pronounced as the number of inference steps
+  increases. Cannot be used simultaneously with `SFAST`.
+</ParamField>
+
+### External Containers
+
+<Warning>
+  This feature is intended for advanced users. Incorrect setup can lead to a
+  lower orchestrator score and reduced fees. If external containers are used, it
+  is the Orchestrator's responsibility to ensure the correct container with the
+  correct endpoints is running behind the specified `url`.
+</Warning>
+
+External containers can be for one model to stack on top of managed model
+containers, an auto-scaling GPU cluster behind a load balancer or anything in
+between. Orchestrators can use external containers to extend the models served
+or fully replace the AI Worker managed model containers using the
+[Docker client Go library](https://pkg.go.dev/github.com/docker/docker/client)
+to start and stop containers specified at startup of the AI Worker.
+
+External containers can be used by specifying the `url`, `capacity` and `token`
+fields in the model configuration. The only requirement is that the `url`
+specified responds as expected to the AI Worker same as the managed containers
+would respond (including http error codes). As long as the container management
+software acts as a pass through to the model container you can use any container
+management software to implement the custom management of the runner containers
+including [Kubernetes](https://kubernetes.io/), [Podman](https://podman.io/),
+[Docker Swarm](https://docs.docker.com/engine/swarm/),
+[Nomad](https://www.nomadproject.io/), or custom scripts to manage container
+lifecycles based on request volume
+
+- The `url` set will be used to confirm a model container is running at startup
+  of the AI Worker using the `/health` endpoint. Inference requests will be
+  forwarded to the `url` same as they are to the managed containers after
+  startup.
+- The `capacity` should be set to the maximum amount of requests that can be
+  processed concurrently for the pipeline/model id (default is 1). If auto
+  scaling containers, take care that the startup time is fast if setting
+  `warm: true` because slow response time will negatively impact your selection
+  by Gateways for future requests.
+- The `token` field is used to secure the model container `url` from
+  unauthorized access and is strongly suggested to use if the containers are
+  exposed to external networks.
+
+We welcome feedback to improve this feature, so please reach out to us if you
+have suggestions to enable better experience running external containers.

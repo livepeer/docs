@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-C6, F-C1
  * @purpose-statement Mintlify dev debugger — diagnostic tool for troubleshooting mint dev server issues
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
+ * @pipeline          manual — developer tool
  * @usage             node tools/scripts/debug-mint-dev.js [flags]
  */
 /**

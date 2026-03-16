@@ -1,0 +1,316 @@
+---
+title: Setup Options to Running an Orchestrator
+sidebarTitle: Navigator
+description: >-
+  Not sure where to start? Answer three questions about your goals, resources,
+  and risk tolerance — then follow the path that fits. Covers pool worker,
+  solo orchestrator, and the Siphon split-setup.
+keywords:
+  - livepeer
+  - orchestrator
+  - GPU
+  - setup
+  - pool
+  - siphon
+  - go-livepeer
+  - start here
+  - navigator
+  - path
+  - decision
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+tag: start here
+audience: orchestrator
+purpose: orientation
+pageType: landing
+status: published
+lastVerified: 2026-03-13
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+You have a GPU. Or you are thinking about getting one. Now what?
+
+There are three ways to earn on the Livepeer network with compute — and they suit very different situations. This page exists so you do not spend three hours reading the wrong docs before realising you needed a different path. Answer the questions below and you will land on the right starting point in under five minutes.
+
+<CustomDivider />
+
+## Three questions to find your path
+
+<AccordionGroup>
+
+<Accordion  title="1. Do you want direct control over your node?" icon="server">
+**Yes, I want to set my own prices, choose my workloads, and manage my own setup.**
+
+You want a **solo orchestrator**. You register on-chain, hold your own stake, and earn directly. This is the core Livepeer operator path. Choose between a single-machine setup (full go-livepeer) or a split setup that keeps your keystore secure on a separate machine (Siphon).
+
+**No, I just want to point my GPU at a pool and earn passively.**
+
+You want to be a **pool worker**. You do not stake LPT, you do not manage keys, and you earn via the pool operator's payout schedule. The ops lift is significantly lower. The tradeoff is you depend on the pool operator for payouts, and you cannot set your own prices. → [Join a Pool](/v2/orchestrators/guides/setup-paths/join-a-pool)
+</Accordion>
+
+<Accordion  title="2. Do you have LPT to stake?" icon="coins">
+Solo orchestrators must activate on-chain by staking LPT. There is no minimum enforced by the protocol, but in practice you need enough stake to rank in the top 100 active orchestrators to receive transcoding work. The current competitive stake threshold varies — check [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) for current rankings.
+
+If you do not yet have LPT, **joining a pool** is the practical entry point while you accumulate stake. You can start earning ETH for transcoding work immediately without any on-chain registration.
+
+{/* REVIEW: Confirm whether the "top 100 active orchestrators" limit is still current with Mehrdad/Rick. This figure appears consistently in project audit files but the protocol parameter should be verified on-chain. */}
+</Accordion>
+
+<Accordion  title="3. How much operational complexity are you comfortable with?" icon="circle-question">
+**Low ops lift — I want it running with minimal ongoing management.**
+
+Start with a pool, or run a full go-livepeer node once you have stake. A single-machine go-livepeer node is the simplest solo path.
+
+**Medium ops lift — I can manage two machines or services.**
+
+Consider the **Siphon split setup**: one secure machine handles your keystore and reward claiming, a separate GPU machine runs go-livepeer and processes workloads. This protects your stake from missed reward rounds if your GPU machine goes down. → [Siphon Setup](/v2/orchestrators/guides/setup-paths/siphon-setup)
+
+**High ops lift — I am running a data centre or multi-node fleet.**
+
+Contact the Livepeer Foundation directly for enterprise onboarding support.
+</Accordion>
+
+</AccordionGroup>
+
+<CustomDivider />
+
+## The four paths at a glance
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Path</TableCell>
+    <TableCell header>Who it suits</TableCell>
+    <TableCell header>Stake required</TableCell>
+    <TableCell header>Ops lift</TableCell>
+    <TableCell header>Start here</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Pool worker**</TableCell>
+    <TableCell>GPU owner wanting passive income; no protocol ops</TableCell>
+    <TableCell>No</TableCell>
+    <TableCell>Low</TableCell>
+    <TableCell>[Join a Pool →](/v2/orchestrators/guides/setup-paths/join-a-pool)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Solo orchestrator**</TableCell>
+    <TableCell>Single machine, full control, comfortable with ops</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Medium</TableCell>
+    <TableCell>[Setup Guide →](/v2/orchestrators/setup/guide)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Split setup (Siphon)**</TableCell>
+    <TableCell>Reward safety + key isolation; scale GPU machines independently</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>Medium</TableCell>
+    <TableCell>[Siphon Setup →](/v2/orchestrators/guides/setup-paths/siphon-setup)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Enterprise / fleet**</TableCell>
+    <TableCell>Data centre, multi-node, commercial scale</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>High</TableCell>
+    <TableCell>[Contact Livepeer Foundation →](https://livepeer.org/contact)</TableCell>
+  </TableRow>
+</StyledTable>
+
+<CustomDivider />
+
+## Solo vs pool vs Siphon: what actually differs
+
+It helps to understand what each setup controls before choosing.
+
+<CardGroup cols={3}>
+
+<Card title="Pool worker" icon="users">
+**You control:** which pool you join, your GPU hardware, when to switch pools.
+
+**The pool controls:** on-chain registration, staking, pricing, reward calling, payout schedules.
+
+**You earn:** off-chain, via the pool operator's payment system. No on-chain record for your individual GPU.
+</Card>
+
+<Card title="Solo orchestrator (go-livepeer)" icon="server">
+**You control:** everything. Pricing, stake, workloads, reward calling, uptime.
+
+**Benefit:** full margins, direct on-chain payouts, no intermediary.
+
+**Risk:** if your node goes down mid-round, you miss that round's LPT inflation reward. Everything runs on one machine.
+</Card>
+
+<Card title="Split setup (Siphon)" icon="shield-check">
+**You control:** everything — but responsibilities are split across two machines.
+
+**Benefit:** keystore stays on a secure, isolated machine. Your GPU machine can restart or go down without you missing rewards. You can scale GPU machines independently.
+
+**Risk:** slightly more complex to set up and keep in sync.
+</Card>
+
+</CardGroup>
+
+<CustomDivider />
+
+## Choosing your workload type
+
+Before you set up your node, decide what work you want to process. This decision affects your GPU requirements, pricing model, and configuration path.
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui', 'clusterBkg': 'rgba(255,255,255,0.05)', 'clusterBorder': '#2d9a67' }}}%%
+flowchart TD
+    classDef default stroke-width:2px
+    classDef highlight fill:#2d9a67,color:#fff,stroke:#2d9a67
+
+    Start["Do you have a GPU?"] --> HasGPU{"Is it NVIDIA?"}
+    HasGPU -->|No| Pool["Join a Pool\n(limited options)"]
+    HasGPU -->|Yes| VRAM{"How much VRAM?"}
+
+    VRAM -->|"< 8 GB"| Trans["Transcoding only\n(NVENC-capable)"]
+    VRAM -->|"8–16 GB"| Both["Transcoding + Batch AI"]
+    VRAM -->|"> 16 GB"| Full["All workloads\n(Transcoding + AI + Live AI)"]
+
+    Trans --> PathA["Solo Orch or Pool\n→ Setup Guide"]
+    Both --> PathB["Solo Orch\n→ Batch AI Setup"]
+    Full --> PathC["Solo Orch + Siphon\n→ Real-time AI Setup"]
+
+    class Full,PathC highlight
+```
+
+<Note>
+Running both transcoding and AI inference on the same node is supported and common. The two workload types use separate configuration files (`-pricePerUnit` for transcoding, `aiModels.json` for AI) and do not conflict. See [Job Types Overview](/v2/orchestrators/guides/workloads-and-ai/job-types) for a full comparison.
+</Note>
+
+**Workload quick reference:**
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Workload</TableCell>
+    <TableCell header>Min hardware</TableCell>
+    <TableCell header>Pricing</TableCell>
+    <TableCell header>Selection by gateway</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Video transcoding</TableCell>
+    <TableCell>Any NVENC-capable NVIDIA GPU</TableCell>
+    <TableCell>Wei per pixel; must be below gateway's `-maxPricePerUnit`</TableCell>
+    <TableCell>Stake + price + performance score</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Batch AI inference</TableCell>
+    <TableCell>4–24 GB VRAM depending on pipeline</TableCell>
+    <TableCell>Wei per pixel or per request; must be within gateway's capability price range</TableCell>
+    <TableCell>Capability match + price (`-maxPricePerCapability`)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Real-time AI (live-video-to-video)</TableCell>
+    <TableCell>8 GB+ VRAM</TableCell>
+    <TableCell>Per-interval during stream; price advertised per capability</TableCell>
+    <TableCell>Capability match + latency</TableCell>
+  </TableRow>
+</StyledTable>
+
+<Tip>
+Gateways filter orchestrators by price before routing work. For video transcoding, your `-pricePerUnit` must be at or below the gateway's `-maxPricePerUnit`. For AI, each capability has its own price ceiling configured on the gateway. If your prices are too high for current market rates, you will not receive work even if your hardware is competitive. Check [Configure Pricing](/v2/orchestrators/setup/r-configure) before going live.
+</Tip>
+
+<CustomDivider />
+
+## The full decision tree
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui', 'clusterBkg': 'rgba(255,255,255,0.05)', 'clusterBorder': '#2d9a67' }}}%%
+flowchart TD
+    classDef default stroke-width:2px
+
+    Q1["Want full control\nover pricing & operations?"] -->|No| POOL["Join a Pool"]
+    Q1 -->|Yes| Q2["Have LPT to stake?"]
+
+    Q2 -->|No / Not yet| POOL
+    Q2 -->|Yes| Q3["Concerned about\nmissed reward rounds?"]
+
+    Q3 -->|No, single machine is fine| SOLO["Solo go-livepeer\n→ Setup Guide"]
+    Q3 -->|Yes, want key isolation| SIPHON["Split Setup\n→ Siphon Setup"]
+
+    SOLO --> WORK["Choose workloads\n→ Job Types Overview"]
+    SIPHON --> WORK
+    POOL --> DONE["Follow pool\noperator instructions"]
+```
+
+<CustomDivider />
+
+## Where to go from here
+
+<CardGroup cols={2}>
+  <Card title="Join a Pool" icon="users" href="/v2/orchestrators/guides/setup-paths/join-a-pool">
+    Contribute your GPU to an existing orchestrator pool. No staking, no on-chain registration, lower barrier to entry.
+  </Card>
+  <Card title="Solo Setup Guide" icon="server" href="/v2/orchestrators/setup/guide">
+    The standard path. Install go-livepeer, register on-chain, and start processing workloads on a single machine.
+  </Card>
+  <Card title="Siphon Split Setup" icon="shield-check" href="/v2/orchestrators/guides/setup-paths/siphon-setup">
+    Keep your keystore on a secure machine; run your GPU on a separate worker machine. The reward-safe path.
+  </Card>
+  <Card title="Feasibility and Economics" icon="scale-balanced" href="/v2/orchestrators/guides/feasibility-and-hardware/feasibility-economics">
+    Not sure if it is worth it? Review the full cost and revenue breakdown before committing to hardware.
+  </Card>
+</CardGroup>
+
+<Card title="Job Types Overview" icon="list-check" href="/v2/orchestrators/guides/workloads-and-ai/job-types">
+  Understand the four workload categories — transcoding, batch AI, real-time AI, and LLM — before you configure your node.
+</Card>
+
+{/*
+  PURPOSE:
+  Journey step: "Which deployment path is right for me?"
+  Guide comparing orchestrator deployment options: solo operator, pool worker,
+  pool operator, O-T split, and siphon configurations.
+
+  CONTENT SHOULD INCLUDE:
+  - Decision framework: solo vs pool vs split
+  - Solo operator: full control, full responsibility, full earnings
+  - Pool worker: simplest path, shared infrastructure, reduced earnings
+  - Pool operator: running infrastructure for others
+  - O-T split: separate orchestrator and transcoder nodes
+  - Siphon setup: lightweight transcoder feeding an orchestrator
+  - Comparison table: complexity, earnings, hardware requirements per option
+
+  SECTION HOME: Guides > Deployment Details
+
+  JOURNEY POSITION:
+  1. Setup Options (this page) - "Which path?"
+  2. Requirements - "What do I need?"
+  3. Join a Pool - "How do I join a pool?"
+
+  CROSS-REFS:
+  - Setup section - practical setup steps for chosen path
+  - Advanced Operations > O-T Setup - detailed split architecture
+  - Advanced Operations > Run a Pool - pool operator guide
+  - Operator Considerations > Value Proposition - economics per path
+*/}

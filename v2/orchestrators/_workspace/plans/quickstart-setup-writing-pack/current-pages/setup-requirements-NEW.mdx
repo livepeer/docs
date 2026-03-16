@@ -1,0 +1,336 @@
+---
+title: 'Setup Checklist'
+sidebarTitle: 'Prerequisites'
+description: 'Pre-flight checklist for orchestrator setup - hardware, software, network, wallet, and tokens by node mode before installing go-livepeer.'
+keywords:
+  - livepeer
+  - orchestrators
+  - hardware
+  - GPU
+  - requirements
+  - checklist
+  - prerequisites
+  - CUDA
+  - NVIDIA
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: current
+lastVerified: '2026-03-16'
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+Confirm every item on this checklist before proceeding to <LinkArrow href="/v2/orchestrators/setup/rs-install" label="Install go-livepeer" newline={false} />. Issues found after installation are harder to diagnose.
+
+<BorderedBox variant="accent">
+**Node mode:** <Badge color="blue">Video</Badge> transcoding | <Badge color="purple">AI</Badge> inference | <Badge color="green">Dual</Badge> both video and AI
+
+Requirements differ by node mode. Items marked with a badge apply only to that mode. Unmarked items apply to all modes.
+</BorderedBox>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Hardware
+
+<Tabs>
+  <Tab title="Video" icon="video">
+    <StyledTable variant="bordered">
+      <thead>
+        <TableRow header>
+          <TableCell header>Component</TableCell>
+          <TableCell header>Minimum</TableCell>
+          <TableCell header>Recommended</TableCell>
+        </TableRow>
+      </thead>
+      <tbody>
+        <TableRow>
+          <TableCell>**GPU**</TableCell>
+          <TableCell>Any NVIDIA with NVENC/NVDEC</TableCell>
+          <TableCell>RTX 3060+ (consumer) or T4+ (datacentre)</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**VRAM**</TableCell>
+          <TableCell>4 GB</TableCell>
+          <TableCell>8 GB+</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**CPU**</TableCell>
+          <TableCell>4 cores</TableCell>
+          <TableCell>8 cores</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**RAM**</TableCell>
+          <TableCell>16 GB</TableCell>
+          <TableCell>32 GB</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**Storage**</TableCell>
+          <TableCell>50 GB SSD</TableCell>
+          <TableCell>100 GB NVMe SSD</TableCell>
+        </TableRow>
+      </tbody>
+    </StyledTable>
+
+    <Note>
+    CPU-only transcoding is possible (omit the `-nvidia` flag) but significantly slower. Not recommended for production.
+    </Note>
+  </Tab>
+
+  <Tab title="AI" icon="brain">
+    <StyledTable variant="bordered">
+      <thead>
+        <TableRow header>
+          <TableCell header>Component</TableCell>
+          <TableCell header>Minimum</TableCell>
+          <TableCell header>Recommended</TableCell>
+        </TableRow>
+      </thead>
+      <tbody>
+        <TableRow>
+          <TableCell>**GPU**</TableCell>
+          <TableCell>NVIDIA with CUDA support</TableCell>
+          <TableCell>RTX 3090 / 4090 / A100</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**VRAM**</TableCell>
+          <TableCell>8 GB (LLM only via Ollama)</TableCell>
+          <TableCell>24 GB+ (diffusion + LLM + audio)</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**CPU**</TableCell>
+          <TableCell>4 cores</TableCell>
+          <TableCell>8 cores</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**RAM**</TableCell>
+          <TableCell>16 GB</TableCell>
+          <TableCell>32 GB</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**Storage**</TableCell>
+          <TableCell>100 GB SSD</TableCell>
+          <TableCell>250 GB+ NVMe SSD (AI model weights)</TableCell>
+        </TableRow>
+      </tbody>
+    </StyledTable>
+
+    <Tip>
+    VRAM determines which AI pipelines the orchestrator can serve. 8 GB runs quantised LLMs only. 24 GB+ unlocks diffusion, audio, vision, and real-time AI. See <LinkArrow href="/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference" label="Model and Demand Reference" newline={false} /> for per-model VRAM requirements.
+    </Tip>
+  </Tab>
+
+  <Tab title="Dual" icon="layer-group">
+    <StyledTable variant="bordered">
+      <thead>
+        <TableRow header>
+          <TableCell header>Component</TableCell>
+          <TableCell header>Minimum</TableCell>
+          <TableCell header>Recommended</TableCell>
+        </TableRow>
+      </thead>
+      <tbody>
+        <TableRow>
+          <TableCell>**GPU**</TableCell>
+          <TableCell>NVIDIA with NVENC + CUDA</TableCell>
+          <TableCell>RTX 3090 / 4090 (24 GB VRAM)</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**VRAM**</TableCell>
+          <TableCell>16 GB</TableCell>
+          <TableCell>24 GB+ (one warm AI model + video transcoding)</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**CPU**</TableCell>
+          <TableCell>4 cores</TableCell>
+          <TableCell>8+ cores</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**RAM**</TableCell>
+          <TableCell>16 GB</TableCell>
+          <TableCell>32 GB</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>**Storage**</TableCell>
+          <TableCell>100 GB SSD</TableCell>
+          <TableCell>250 GB+ NVMe SSD</TableCell>
+        </TableRow>
+      </tbody>
+    </StyledTable>
+
+    <Note>
+    NVENC/NVDEC (video) use dedicated silicon that does not compete with CUDA cores (AI). Both workloads share VRAM. With 24 GB, the orchestrator can run video transcoding and one warm AI model simultaneously. See <LinkArrow href="/v2/orchestrators/guides/deployment-details/dual-mode-configuration" label="Dual Mode Configuration" newline={false} /> for VRAM coexistence details.
+    </Note>
+  </Tab>
+</Tabs>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Software
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Requirement</TableCell>
+      <TableCell header>Detail</TableCell>
+      <TableCell header>Verify</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**OS**</TableCell>
+      <TableCell>Linux (Ubuntu 22.04+ recommended). <Badge color="blue">Video</Badge> also works on Windows (WSL2) and macOS. <Badge color="purple">AI</Badge> and <Badge color="green">Dual</Badge> require Linux.</TableCell>
+      <TableCell>`uname -a`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**NVIDIA driver**</TableCell>
+      <TableCell>Version 525+ (Linux) or 527+ (Windows)</TableCell>
+      <TableCell>`nvidia-smi`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**CUDA**</TableCell>
+      <TableCell>12.0+ (or use Docker image which bundles CUDA)</TableCell>
+      <TableCell>`nvcc --version`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Docker** (recommended)</TableCell>
+      <TableCell>Docker Engine + NVIDIA Container Toolkit for GPU passthrough</TableCell>
+      <TableCell>`docker run --gpus all nvidia/cuda:12.0-base nvidia-smi`</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Network
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Requirement</TableCell>
+      <TableCell header>Detail</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Port 8935 TCP**</TableCell>
+      <TableCell>Open to the public internet (firewall, router NAT, cloud security group). This is how gateways reach the orchestrator.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Static IP or hostname**</TableCell>
+      <TableCell>Required for the service URI that gateways connect to. Dynamic DNS acceptable for home connections.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Bandwidth**</TableCell>
+      <TableCell>100 Mbps symmetric minimum. 1 Gbps recommended for multi-stream video transcoding. AI inference requires less bandwidth per job.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Latency**</TableCell>
+      <TableCell>Under 50 ms to major regions improves gateway selection probability.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Wallet and Tokens
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Requirement</TableCell>
+      <TableCell header>Detail</TableCell>
+      <TableCell header>Where to get</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Ethereum wallet**</TableCell>
+      <TableCell>An existing account, or go-livepeer creates one on first run</TableCell>
+      <TableCell>Automatic on first start</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**ETH on Arbitrum One**</TableCell>
+      <TableCell>For gas (activation, reward calls, ticket redemption). 0.05+ ETH recommended.</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/resources/arbitrum-exchanges" label="Arbitrum Exchanges" newline={false} /></TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**LPT on Arbitrum One**</TableCell>
+      <TableCell>For staking. Amount varies by active set competition. <Badge color="purple">AI</Badge>-only operators need minimal LPT (enough to activate). <Badge color="blue">Video</Badge> operators need enough for active set membership.</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/resources/arbitrum-exchanges" label="Arbitrum Exchanges" newline={false} /></TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Arbitrum RPC**</TableCell>
+      <TableCell>RPC endpoint for the `-ethUrl` flag. Alchemy (free tier), Infura, or self-hosted.</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/resources/arbitrum-rpc" label="Arbitrum RPCs" newline={false} /></TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+{/* REVIEW: confirm current active set threshold. Historically top-100. Check Explorer for current minimum stake. */}
+
+<Warning>
+Acquiring LPT may take hours to days depending on exchange availability and bridging from Ethereum L1. Plan this step in advance.
+</Warning>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Quick Verification
+
+Run these commands to confirm the prerequisites are met:
+
+```bash icon="terminal" filename="verify-prerequisites"
+# GPU visible and driver installed
+nvidia-smi
+
+# CUDA version (skip if using Docker - it bundles CUDA)
+nvcc --version
+
+# Docker GPU passthrough works
+docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi
+
+# Port 8935 reachable (run from a DIFFERENT machine)
+curl -k https://YOUR_PUBLIC_IP:8935/status
+```
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Ready
+
+Once all items pass, proceed to installation.
+
+<CardGroup cols={2}>
+  <Card title="Install go-livepeer" icon="download" href="/v2/orchestrators/setup/rs-install" arrow>
+    Download and install the go-livepeer binary or Docker image.
+  </Card>
+  <Card title="Full Requirements Reference" icon="clipboard-list" href="/v2/orchestrators/guides/operator-considerations/requirements" arrow>
+    Detailed hardware tiers, VRAM per workload, and non-technical requirements.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  Pre-flight checklist for orchestrator setup. Tabbed by node mode (Video/AI/Dual)
+  because hardware requirements differ significantly. Covers: hardware, software,
+  network, wallet/tokens. Every item has a verification command. Links forward to
+  Install and to the full Requirements reference in Guides.
+
+  SECTION: Setup (step 2 of 5)
+  JOB STORIES: J1
+
+  CROSS-REFS:
+  - Setup > Install - next step
+  - Guides > Operator Considerations > Requirements - detailed reference
+  - Resources > GPU Support - GPU compatibility list
+  - Resources > Arbitrum Exchanges - acquiring ETH and LPT
+  - Resources > Arbitrum RPCs - RPC endpoint options
+*/}

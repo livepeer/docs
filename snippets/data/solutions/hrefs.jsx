@@ -120,8 +120,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/video.jsx",
-      "resolvedPath": "snippets/components/display/video.jsx",
+      "rawPath": "/snippets/components/content/video.jsx",
+      "resolvedPath": "snippets/components/content/video.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -275,8 +275,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/video.jsx",
-      "resolvedPath": "snippets/components/display/video.jsx",
+      "rawPath": "/snippets/components/content/video.jsx",
+      "resolvedPath": "snippets/components/content/video.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -377,11 +377,11 @@ export const LINK_MAP = {
   "v2/solutions/embody/overview.mdx": [
     {
       "sourceType": "jsx-attr",
-      "linkType": "internal-rooted",
-      "rawPath": "/snippets/assets/domain/10_PRODUCTS/Embody/Videos/arealiensreal.mp4",
-      "resolvedPath": "snippets/assets/domain/10_PRODUCTS/Embody/Videos/arealiensreal.mp4",
-      "exists": true,
-      "status": "ok",
+      "linkType": "external-https",
+      "rawPath": "https://raw.githubusercontent.com/livepeer/docs/docs-v2-assets/snippets/assets/domain/10_PRODUCTS/Embody/Videos/arealiensreal.mp4",
+      "resolvedPath": null,
+      "exists": null,
+      "status": "🟡 untested-external",
       "movedCandidates": []
     },
     {
@@ -414,8 +414,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/video.jsx",
-      "resolvedPath": "snippets/components/display/video.jsx",
+      "rawPath": "/snippets/components/content/video.jsx",
+      "resolvedPath": "snippets/components/content/video.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -515,8 +515,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/video.jsx",
-      "resolvedPath": "snippets/components/display/video.jsx",
+      "rawPath": "/snippets/components/content/video.jsx",
+      "resolvedPath": "snippets/components/content/video.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2765,8 +2765,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/SHARED/Portals.jsx",
-      "resolvedPath": "snippets/components/domain/SHARED/Portals.jsx",
+      "rawPath": "/snippets/components/page-structure/portals.jsx",
+      "resolvedPath": "snippets/components/page-structure/portals.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2801,8 +2801,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/domain/SHARED/HeroGif.jsx",
-      "resolvedPath": "snippets/components/domain/SHARED/HeroGif.jsx",
+      "rawPath": "/snippets/components/page-structure/heroGif.jsx",
+      "resolvedPath": "snippets/components/page-structure/heroGif.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2810,8 +2810,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/video.jsx",
-      "resolvedPath": "snippets/components/display/video.jsx",
+      "rawPath": "/snippets/components/content/video.jsx",
+      "resolvedPath": "snippets/components/content/video.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []

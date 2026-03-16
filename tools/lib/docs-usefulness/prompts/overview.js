@@ -1,4 +1,59 @@
 'use strict';
+/**
+ * @script            prompts/overview
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement LLM prompt template for overview page-type usefulness evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { getPrompt } = require('../lib/docs-usefulness/prompts/overview');
+ */
+/**
+ * @script            prompts/overview
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement LLM prompt template for overview page-type usefulness evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { getPrompt } = require('../lib/docs-usefulness/prompts/overview');
+ */
+/**
+ * @script            prompts/overview
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement LLM prompt template for overview page-type usefulness evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { getPrompt } = require('../lib/docs-usefulness/prompts/overview');
+ */
+/**
+ * @script            prompts/overview
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement LLM prompt template for overview page-type usefulness evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { getPrompt } = require('../lib/docs-usefulness/prompts/overview');
+ */
+/**
+ * @script            prompts/overview
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement LLM prompt template for overview page-type usefulness evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { getPrompt } = require('../lib/docs-usefulness/prompts/overview');
+ */
 
 const SYSTEM_BASE = 'You are a documentation quality evaluator for Livepeer docs. Return ONLY JSON: {"score":0-100,"pass":true/false,"reasoning":"one sentence"}.';
 

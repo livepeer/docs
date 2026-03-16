@@ -1,0 +1,141 @@
+---
+title: Streams API
+description: >-
+  The Livestream API is used to create, retrieve, update, delete stream object
+  from pipeline
+keywords:
+  - livepeer
+  - studio
+  - api
+  - streams
+  - livestream
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: platform-builder
+purpose: overview
+---
+
+
+
+# Streams API
+
+The Livestream API is used to create, retrieve, update, delete stream objects from the pipeline.
+
+## Stream Object
+
+<ResponseField name="id" type="string" readOnly="true">
+ Unique identifier for the stream.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+ Name of the stream.
+</ResponseField>
+
+<ResponseField name="creatorId" type="string">
+ Reference to the creator-id schema.
+</ResponseField>
+
+<ResponseField name="lastSeen" type="number">
+ Timestamp of the last activity on the stream.
+</ResponseField>
+
+<ResponseField name="sourceSegments" type="number">
+ Number of source segments.
+</ResponseField>
+
+<ResponseField name="transcodedSegments" type="number">
+ Number of transcoded segments.
+</ResponseField>
+
+<ResponseField name="sourceSegmentsDuration" type="number">
+ Duration of all the source segments in seconds.
+</ResponseField>
+
+<ResponseField name="transcodedSegmentsDuration" type="number">
+ Duration of all the transcoded segments in seconds.
+</ResponseField>
+
+<ResponseField name="sourceBytes" type="number">
+ Total bytes of source segments.
+</ResponseField>
+
+<ResponseField name="transcodedBytes" type="number">
+ Total bytes of transcoded segments.
+</ResponseField>
+
+<ResponseField name="ingestRate" type="number">
+ Rate at which sourceBytes increases (bytes/second).
+</ResponseField>
+
+<ResponseField name="outgoingRate" type="number">
+ Rate at which transcodedBytes increases (bytes/second).
+</ResponseField>
+
+<ResponseField name="isActive" type="boolean">
+ Indicates if the stream is currently active.
+</ResponseField>
+
+<ResponseField name="isHealthy" type="object">
+ Reference to the stream-health-payload schema for health status.
+</ResponseField>
+
+<ResponseField name="issues" type="object">
+ Reference to the stream-health-payload schema for human-readable issues.
+</ResponseField>
+
+<ResponseField name="createdByTokenName" type="string" readOnly="true">
+ Name of the token used to create this stream.
+</ResponseField>
+
+<ResponseField name="createdAt" type="number" readOnly="true">
+ Timestamp (in milliseconds) of when the stream object was created.
+</ResponseField>
+
+<ResponseField name="parentId" type="string">
+ Identifier for the parent stream object.
+</ResponseField>
+
+<ResponseField name="streamKey" type="string">
+ Key used to form the RTMP ingest URL.
+</ResponseField>
+
+<ResponseField name="playbackId" type="string">
+ Identifier used to form the playback URL.
+</ResponseField>
+
+<ResponseField name="playbackPolicy" type="object">
+ Reference to the playback-policy schema.
+</ResponseField>
+
+<ResponseField name="profiles" type="array">
+ Array of profiles detailing various streaming qualities.
+</ResponseField>
+
+<ResponseField name="record" type="boolean">
+ Indicates if the stream should be recorded.
+</ResponseField>
+
+<ResponseField name="multistream" type="object">
+ Details about multistreaming targets and their configurations.
+</ResponseField>
+
+<ResponseField name="suspended" type="boolean">
+ Indicates if the stream is currently suspended.
+</ResponseField>
+
+## Endpoints
+
+- [Create Stream](./create) - `POST /stream`
+- [Get Stream](./get) - `GET /stream/{id}`
+- [Get All Streams](./get-all) - `GET /stream`
+- [Update Stream](./update) - `PATCH /stream/{id}`
+- [Delete Stream](./delete) - `DELETE /stream/{id}`
+- [Terminate Stream](./terminate) - `POST /stream/{id}/terminate`
+- [Create Clip](./create-clip) - `POST /stream/{id}/clip`
+- [Get Clip](./get-clip) - `GET /stream/{id}/clip/{clipId}`
+- [Add Multistream Target](./add-multistream-target) - `POST /stream/{id}/multistream/target`
+- [Delete Multistream Target](./delete-multistream-target) - `DELETE /stream/{id}/multistream/target/{targetId}`

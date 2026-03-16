@@ -1,6 +1,12 @@
 ---
 name: repo-audit-orchestrator
-description: Run the full docs-as-infrastructure audit pipeline, aggregate stage reports, and emit one prioritized scorecard.
+version: "1.0"
+description: >-
+  Run the docs-as-infrastructure audit pipeline, aggregate stage results, and emit one prioritized scorecard that maintainers can use to sequence repository fixes.
+invoke_when:
+  - "run the full docs audit pipeline"
+  - "aggregate repo audit stages"
+  - "produce one repo audit scorecard"
 ---
 
 SKILL: Repo Audit Orchestrator

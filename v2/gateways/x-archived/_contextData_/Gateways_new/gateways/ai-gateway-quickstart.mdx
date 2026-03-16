@@ -1,0 +1,238 @@
+---
+title: 'AI Gateway Quickstart'
+description: 'Run an off-chain Livepeer AI gateway on Linux and route your first AI inference job in minutes. No ETH or on-chain setup required.'
+sidebarTitle: 'AI Gateway Quickstart'
+keywords: ["livepeer", "AI gateway", "off-chain", "quickstart", "tutorial", "AI inference", "orchAddr", "Linux", "gateway"]
+pageType: 'tutorial'
+audience: 'gateway'
+status: 'current'
+---
+
+By the end of this guide, your AI gateway will be running and you will have routed your first AI inference job.
+
+This guide covers the **off-chain AI gateway** only. Off-chain means no ETH, no Arbitrum, no on-chain transactions. You configure the gateway with a list of AI-capable orchestrator addresses and it routes jobs directly.
+
+<Warning>
+  The AI gateway binary is only available for Linux. Windows and macOS are not currently supported for AI gateway mode.
+</Warning>
+
+---
+
+## Before you start
+
+**You need:**
+
+- [ ] Linux machine (Ubuntu 20.04+ on amd64 recommended)
+- [ ] `curl` installed
+- [ ] At least one AI-capable orchestrator address for `-orchAddr`
+
+<Accordion title="Where do I get an orchestrator address?">
+  The off-chain gateway does not use on-chain orchestrator discovery — you supply orchestrator addresses directly via the `-orchAddr` flag.
+
+  To find AI-capable orchestrators:
+
+  - **Livepeer Explorer** — [explorer.livepeer.org](https://explorer.livepeer.org). Look for orchestrators advertising AI capabilities.
+  - **Discord `#local-gateways`** — community members share orchestrator addresses for testing. Ask there if you're setting up for development.
+  - **Your own orchestrator** — if you are running an AI orchestrator node, use its `host:port` (default port `8935`).
+
+  The `-orchAddr` flag accepts a comma-separated list: `-orchAddr https://orch1.example.com:8935,https://orch2.example.com:8935`
+</Accordion>
+
+<Note>
+  Not on Linux? See [Gateway Setup Paths](/v2/gateways/get-started/gateway-setup-paths) for other gateway types and their OS requirements.
+</Note>
+
+---
+
+## Option A — Docker (recommended)
+
+Docker is the fastest path. No binary download required.
+
+<Steps>
+  <Step title="Pull the image">
+    ```bash
+    docker pull livepeer/go-livepeer:master
+    ```
+
+    Expected output:
+    ```
+    master: Pulling from livepeer/go-livepeer
+    ...
+    Status: Downloaded newer image for livepeer/go-livepeer:master
+    ```
+  </Step>
+
+  <Step title="Start the AI gateway">
+    Replace `<ORCH_ADDRESSES>` with your comma-separated list of orchestrator addresses.
+
+    ```bash
+    docker run \
+      --name livepeer_ai_gateway \
+      -v ~/.lpData2/:/root/.lpData2 \
+      -p 8937:8937 \
+      --network host \
+      livepeer/go-livepeer:master \
+      -datadir ~/.lpData2 \
+      -gateway \
+      -orchAddr <ORCH_ADDRESSES> \
+      -httpAddr 0.0.0.0:8937 \
+      -v 6 \
+      -httpIngest
+    ```
+
+    Expected output when the gateway is ready:
+    ```
+    HTTP Server listening on http://0.0.0.0:8937
+    LPMS Server listening on rtmp://127.0.0.1:1935
+    ```
+
+    The gateway is ready when you see `HTTP Server listening`.
+  </Step>
+
+  <Step title="Verify with a test request">
+    Open a second terminal and run:
+
+    ```bash
+    curl -s http://localhost:8937/text-to-image \
+      -X POST \
+      -H "Content-Type: application/json" \
+      -d '{"model_id":"ByteDance/SDXL-Lightning","prompt":"a cat sitting on a chair","width":512,"height":512}'
+    ```
+
+    A successful response returns a JSON object with an `images` field containing base64-encoded image data. If you see a JSON response, your gateway is working and routing AI inference jobs.
+
+    If you receive an error, see [Troubleshooting](#troubleshooting) below.
+  </Step>
+</Steps>
+
+---
+
+## Option B — Binary
+
+Use this if you prefer not to run Docker.
+
+<Steps>
+  <Step title="Download the binary">
+    Check [go-livepeer releases](https://github.com/livepeer/go-livepeer/releases) for the current release version, then run:
+
+    ```bash
+    export RELEASE_VERSION=<RELEASE_VERSION>  # e.g. v0.8.5 — check releases page
+    wget https://github.com/livepeer/go-livepeer/releases/download/${RELEASE_VERSION}/livepeer-linux-amd64.tar.gz
+    ```
+
+    Expected output:
+    ```
+    livepeer-linux-amd64.tar.gz   100%[=============================>]  ...
+    ```
+  </Step>
+
+  <Step title="Extract and install">
+    ```bash
+    tar -zxvf livepeer-linux-amd64.tar.gz
+    sudo mv livepeer-linux-amd64/livepeer /usr/local/bin/
+    sudo mv livepeer-linux-amd64/livepeer_cli /usr/local/bin/
+    ```
+
+    Verify the binary is accessible:
+    ```bash
+    livepeer --version
+    ```
+
+    Expected output:
+    ```
+    Livepeer version: <version>
+    ```
+  </Step>
+
+  <Step title="Start the AI gateway">
+    Replace `<ORCH_ADDRESSES>` with your comma-separated list of orchestrator addresses.
+
+    ```bash
+    livepeer \
+      -datadir ~/.lpData2 \
+      -gateway \
+      -orchAddr <ORCH_ADDRESSES> \
+      -httpAddr 0.0.0.0:8937 \
+      -v 6 \
+      -httpIngest
+    ```
+
+    Expected output when the gateway is ready:
+    ```
+    HTTP Server listening on http://0.0.0.0:8937
+    LPMS Server listening on rtmp://127.0.0.1:1935
+    ```
+  </Step>
+
+  <Step title="Verify with a test request">
+    Open a second terminal and run:
+
+    ```bash
+    curl -s http://localhost:8937/text-to-image \
+      -X POST \
+      -H "Content-Type: application/json" \
+      -d '{"model_id":"ByteDance/SDXL-Lightning","prompt":"a cat sitting on a chair","width":512,"height":512}'
+    ```
+
+    A successful response returns a JSON object with an `images` field. If you see a JSON response, your gateway is routing AI inference jobs.
+  </Step>
+</Steps>
+
+---
+
+## Flags used in this guide
+
+| Flag | What it does | Required |
+|---|---|---|
+| `-gateway` | Runs the binary in gateway mode | Yes |
+| `-orchAddr` | Comma-separated list of orchestrator addresses to route jobs to | Yes |
+| `-httpAddr` | Address and port the gateway API listens on (default: `0.0.0.0:8935`) | Recommended |
+| `-httpIngest` | Enables HTTP ingest for AI pipeline requests | Yes for AI mode |
+| `-datadir` | Directory for gateway data and logs | Recommended |
+| `-v 6` | Verbose logging level — useful during setup | Optional |
+
+For a full flag reference, see [Configuration Reference](/v2/gateways/setup/configure/configuration-flags).
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Gateway starts but I get 'connection refused' on port 8937">
+    Confirm the gateway started successfully by checking the logs for `HTTP Server listening on http://0.0.0.0:8937`. If using Docker, confirm the port is mapped with `-p 8937:8937`. If running the binary behind a firewall, check that port 8937 is open.
+  </Accordion>
+
+  <Accordion title="Request returns an error or empty response">
+    The most common cause is that none of the orchestrators in your `-orchAddr` list are online, reachable, or capable of handling the requested pipeline. Check that:
+
+    - Your orchestrator addresses are correct and include the port (e.g. `https://orch.example.com:8935`)
+    - The orchestrators you are connecting to support the pipeline you are requesting (e.g. `text-to-image`)
+    - There are no network or firewall issues between your gateway and the orchestrators
+
+    See [Gateway FAQ](/v2/gateways/resources/faq) for more error patterns.
+  </Accordion>
+
+  <Accordion title="The binary fails to start on Windows or macOS">
+    The AI gateway binary is not available for Windows or macOS. Linux (amd64) is required. If you are not on Linux, see [Gateway Setup Paths](/v2/gateways/get-started/gateway-setup-paths) — the video gateway supports Windows and macOS.
+  </Accordion>
+
+  <Accordion title="Gateway starts but logs show 'no orchestrators available'">
+    The gateway could not connect to any of the orchestrators in your `-orchAddr` list. Verify that the addresses are correct, that the orchestrators are running, and that the orchestrators advertise AI pipeline support. Ask in [Discord `#local-gateways`](https://discord.gg/livepeer) for a working orchestrator address to test with.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## What's next
+
+<CardGroup cols={3}>
+  <Card title="AI Gateway Configuration" icon="sliders" href="/v2/gateways/setup/configure/ai-configuration">
+    Set pricing, configure pipelines, and tune your gateway for production AI workloads.
+  </Card>
+  <Card title="Pricing Configuration" icon="tag" href="/v2/gateways/setup/configure/pricing-configuration">
+    Set the maximum price your gateway pays orchestrators per pipeline and model.
+  </Card>
+  <Card title="FAQ and Troubleshooting" icon="circle-question" href="/v2/gateways/resources/faq">
+    Common errors and fixes for AI gateway operators.
+  </Card>
+</CardGroup>

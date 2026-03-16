@@ -1,4 +1,59 @@
 'use strict';
+/**
+ * @script            llm-evaluator
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Wraps LLM API calls for rubric-based page quality evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { evaluate } = require('../lib/docs-usefulness/llm-evaluator');
+ */
+/**
+ * @script            llm-evaluator
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Wraps LLM API calls for rubric-based page quality evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { evaluate } = require('../lib/docs-usefulness/llm-evaluator');
+ */
+/**
+ * @script            llm-evaluator
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Wraps LLM API calls for rubric-based page quality evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { evaluate } = require('../lib/docs-usefulness/llm-evaluator');
+ */
+/**
+ * @script            llm-evaluator
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Wraps LLM API calls for rubric-based page quality evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { evaluate } = require('../lib/docs-usefulness/llm-evaluator');
+ */
+/**
+ * @script            llm-evaluator
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Wraps LLM API calls for rubric-based page quality evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { evaluate } = require('../lib/docs-usefulness/llm-evaluator');
+ */
 
 const fs = require('fs');
 const path = require('path');

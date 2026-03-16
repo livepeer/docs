@@ -37,7 +37,7 @@ The script analyzes each MDX file to determine if it has substantial content:
 
 **ComingSoonCallout:**
 ```jsx
-import {ComingSoonCallout} from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import {ComingSoonCallout} from '/snippets/components/primitives/previewCallouts.jsx'
 
 <ComingSoonCallout />
 ```
@@ -45,7 +45,7 @@ Displays: "This page is still cooking... Expect big things soon!"
 
 **PreviewCallout:**
 ```jsx
-import { PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import { PreviewCallout } from '/snippets/components/primitives/previewCallouts.jsx'
 
 <PreviewCallout />
 ```
@@ -200,7 +200,7 @@ title: 'New Feature'
 title: 'New Feature'
 ---
 
-import {ComingSoonCallout} from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import {ComingSoonCallout} from '/snippets/components/primitives/previewCallouts.jsx'
 
 <ComingSoonCallout />
 
@@ -224,7 +224,7 @@ This guide covers the API endpoints...
 title: 'API Guide'
 ---
 
-import { PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import { PreviewCallout } from '/snippets/components/primitives/previewCallouts.jsx'
 
 <PreviewCallout />
 
@@ -235,5 +235,5 @@ This guide covers the API endpoints...
 
 ## Related Files
 
-- Callout components: `/snippets/components/domain/SHARED/previewCallouts.jsx`
+- Callout components: `/snippets/components/primitives/previewCallouts.jsx`
 - Target directory: `v2/pages/` (and all subdirectories)

@@ -1,7 +1,7 @@
 # Project Showcase Application Workflow (n8n)
 
 Workflow file:
-- `/Users/alisonhaire/Documents/Livepeer/livepeer-docs-current/snippets/automations/scripts/n8n/Project Showcase Application Workflow.json`
+- `/Users/alisonhaire/Documents/Livepeer/livepeer-docs-current/snippets/automations/scripts/n8n/project-showcase-application-workflow.json`
 
 This workflow handles:
 - New project submission intake from Google Sheets

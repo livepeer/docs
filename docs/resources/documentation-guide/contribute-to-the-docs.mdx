@@ -1,0 +1,663 @@
+---
+title: Contribute To The Docs
+sidebarTitle: Contribute
+description: Contribute to the Livepeer documentation and help us make it even better!
+keywords:
+  - livepeer
+  - resources
+  - documentation guide
+  - contribute to the docs
+  - contribute
+  - docs
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: everyone
+purpose: concept
+---
+
+We love community feedback and contributions, and it's our mission to make it easy for everyone to contribute to these docs and provide feedback for us to make them even better!
+
+## Provide Feedback
+
+### On Any Page
+
+You can provide feedback directly on any documentation page:
+
+- **Thumbs Up/Down** - Quick feedback on whether the page was helpful
+- **Comments** - Share specific feedback, suggestions, or questions
+- **Issue Reporting** - Report errors, outdated information, or broken links
+
+<Tip>
+Feedback mechanisms are provided by Mintlify. Look for feedback options at the bottom of pages or in the page header.
+</Tip>
+
+### General Feedback Channels
+
+If you prefer other channels:
+
+- **GitHub Issues** - Open an issue in the [Livepeer Docs repository](https://github.com/livepeer/docs)
+- **Discord** - Share feedback in the Livepeer community Discord
+- **Email** - Contact the documentation team directly
+
+## Contributing to the Docs
+
+We welcome contributions from everyone, regardless of technical background!
+
+### Non-Technical Contributions
+
+You don't need to know Git or Markdown to contribute:
+
+#### Option 1: Feedback Form
+
+<Tip>
+A feedback form is available for non-technical contributions. This allows you to suggest improvements, report issues, or share content ideas without needing to work with code.
+</Tip>
+
+#### Option 2: Content Suggestions
+
+- Identify areas that need clarification
+- Suggest new topics or guides
+- Report outdated information
+- Share use cases or examples
+
+<Warning>
+For detailed information about non-technical contribution workflows, see the [Non-Technical Contribution Proposal](#non-technical-contribution-proposal) section below.
+</Warning>
+
+### Technical Contributions (Git & Markdown)
+
+If you're comfortable with Git and Markdown, you can contribute directly:
+
+## Pull Request Workflow
+
+### Step-by-Step Guide
+
+#### 1. Fork the Repository
+
+1. Navigate to [github.com/livepeer/docs](https://github.com/livepeer/docs)
+2. Click the "Fork" button in the top right
+3. This creates your own copy of the repository
+
+#### 2. Clone Your Fork
+
+```bash
+git clone https://github.com/YOUR_USERNAME/docs.git
+cd docs
+```
+
+#### 3. Set Up Remote Tracking
+
+```bash
+# Add the original repository as upstream
+git remote add upstream https://github.com/livepeer/docs.git
+
+# Verify remotes
+git remote -v
+```
+
+#### 4. Create a Branch
+
+<Warning>
+**Important:** Always create a new branch for your changes. Never commit directly to `main` or `docs-v2-preview`.
+</Warning>
+
+```bash
+# Make sure you're on the latest version
+git checkout docs-v2-preview
+git pull upstream docs-v2-preview
+
+# Create a new branch with a descriptive name
+git checkout -b docs/fix-typo-quickstart-guide
+# or
+git checkout -b docs/add-api-example
+# or
+git checkout -b docs/update-component-docs
+```
+
+**Branch naming conventions:**
+- `docs/` prefix for documentation changes
+- Use descriptive names: `docs/fix-typo-quickstart-guide`
+- Use kebab-case (lowercase with hyphens)
+
+#### 5. Install Pre-commit Hooks
+
+<Tip>
+Pre-commit hooks automatically check your code for style guide violations and syntax errors before you commit.
+</Tip>
+
+```bash
+# Install the pre-commit hook
+./.githooks/install.sh
+```
+
+The pre-commit hook will:
+- Check for deprecated `ThemeData` usage
+- Warn about hardcoded hex colours
+- Validate MDX, JSON, and JavaScript syntax
+- Check for relative imports
+- Verify absolute import paths
+
+#### 6. Make Your Changes
+
+Edit the relevant files:
+
+**Where to edit content:**
+- **Main documentation pages:** `v2/` (organized by section)
+- **Components:** `snippets/components/`
+- **Data files:** `snippets/data/`
+- **Assets:** `snippets/assets/`
+
+**File structure:**
+```text
+v2/
+├── home/          # Home tab content
+├── about/         # About tab content
+├── community/     # Community tab content
+├── developers/    # Developers tab content
+├── gateways/      # Gateways tab content
+├── orchestrators/ # Orchestrators tab content
+├── lpt/           # LPT token and delegation content
+├── solutions/     # Solutions and product content
+├── resources/     # Resources tab content
+└── internal/      # Internal documentation
+```
+
+**Naming conventions:**
+- Use kebab-case for file names: `quickstart-guide.mdx`
+- Use descriptive names that reflect content
+- Follow the existing structure in each section
+
+#### 7. Test Locally
+
+<Warning>
+**Always test your changes locally before submitting a PR!**
+</Warning>
+
+```bash
+# Install Mintlify CLI (if not already installed)
+npm i -g mintlify
+
+# Run the development server
+mint dev
+```
+
+This starts a local server (usually at `http://localhost:3000`) where you can preview your changes.
+
+**What to check:**
+- ✅ Pages render correctly
+- ✅ No console errors
+- ✅ Links work correctly
+- ✅ Components display properly
+- ✅ Both light and dark modes work
+- ✅ Mobile responsiveness
+
+#### 8. Commit Your Changes
+
+```bash
+# Stage your changes
+git add .
+
+# Commit with a clear message
+git commit -m "docs: fix typo in quickstart guide"
+```
+
+**Commit message conventions:**
+- Use prefixes: `docs:`, `fix:`, `feat:`, `chore:`
+- Be descriptive: "docs: add API authentication example"
+- Reference issues: "docs: update gateway setup (fixes #123)"
+
+**The pre-commit hook will run automatically** and may block your commit if there are style guide violations.
+
+If a human intentionally needs to edit `.allowlist`, use:
+
+```bash
+git commit -m "Update .allowlist" --trailer "allowlist-edit=true"
+```
+
+If a human intentionally needs to allow file deletions, use:
+
+```bash
+git commit -m "Remove obsolete files" --trailer "allow-deletions=true"
+```
+
+#### 9. Push to Your Fork
+
+```bash
+git push origin docs/your-branch-name
+```
+
+#### 10. Create a Pull Request
+
+1. Navigate to [github.com/livepeer/docs](https://github.com/livepeer/docs)
+2. You should see a banner suggesting to create a PR from your recent push
+3. Click "Compare & pull request"
+4. Fill out the PR template:
+   - **Title:** Clear, descriptive title
+   - **Description:** Explain what and why you changed
+   - **Related Issues:** Link to any related issues
+   - **Type:** Mark as documentation change
+   - **Testing:** Describe how you tested
+
+**PR Template:**
+```markdown
+## Description
+Brief description of changes
+
+## Type of Change
+- [ ] Bug fix (typo, broken link, incorrect information)
+- [ ] New content (guide, tutorial, example)
+- [ ] Content improvement (clarification, better examples)
+- [ ] Component or styling update
+
+## Related Issues
+Fixes #123
+
+## Testing
+- [ ] Tested locally with `mint dev`
+- [ ] Checked light and dark modes
+- [ ] Verified all links work
+- [ ] No console errors
+```
+
+#### 11. Address Review Feedback
+
+<Tip>
+All PRs require at least one review from a maintainer. See [Review Process](#review-process) below for details.
+</Tip>
+
+- Respond to comments
+- Make requested changes
+- Push updates to the same branch (they'll appear in the PR automatically)
+- Mark conversations as resolved when done
+
+#### 12. Merge and Cleanup
+
+Once your PR is approved and merged:
+- Delete your branch locally: `git branch -d docs/your-branch-name`
+- Delete your branch on GitHub (option available after merge)
+- Update your fork: `git checkout docs-v2-preview && git pull upstream docs-v2-preview`
+
+## Development Setup
+
+### Prerequisites
+
+- **Node.js** (v18 or higher recommended)
+- **Git**
+- **GitHub account**
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/livepeer/docs.git
+cd docs
+
+# Install Mintlify CLI globally
+npm i -g mintlify
+
+# Install pre-commit hooks
+./.githooks/install.sh
+```
+
+### Running Locally
+
+```bash
+# Start development server
+mint dev
+
+# Server runs on http://localhost:3000 by default
+```
+
+### Project Structure
+
+```text
+docs/
+├── v2/                    # Main documentation pages (MDX)
+├── snippets/              # Reusable components and data
+│   ├── components/        # React/JSX components
+│   ├── data/             # Data files (JSX)
+│   ├── assets/           # Images, logos, media
+│   └── scripts/          # Automation scripts
+├── .github/              # GitHub Actions workflows
+├── .githooks/            # Pre-commit hooks
+├── docs.json             # Mintlify navigation config
+└── style.css             # Global CSS variables
+```
+
+## Contribution Guidelines
+
+### Style Guide
+
+<Warning>
+**MANDATORY:** Read the [Style Guide](./style-guide) before making any changes!
+</Warning>
+
+**Critical rules:**
+- ✅ Use CSS Custom Properties (`var(--accent)`) only
+- ❌ Never use `ThemeData` or hardcode colours
+- ✅ Use absolute imports: `/snippets/components/...`
+- ❌ No relative imports for snippets
+- ✅ Test in both light and dark modes
+
+### Component Usage
+
+- Use components from the [Component Library](./component-library)
+- Check component documentation before creating new components
+- Follow existing patterns and conventions
+
+### Content Guidelines
+
+- **Be clear and concise** - Write for your audience
+- **Use examples** - Show, don't just tell
+- **Keep it up-to-date** - Remove outdated information
+- **Link appropriately** - Use internal links to related content
+- **Add keywords** - Help with discoverability
+
+### Code Examples
+
+- Use proper syntax highlighting
+- Include complete, runnable examples when possible
+- Explain what the code does
+- Show expected output when relevant
+
+### Testing Requirements
+
+Before submitting a PR, ensure:
+- [ ] All pages render without errors
+- [ ] No console errors in browser
+- [ ] Links work correctly
+- [ ] Components display properly
+- [ ] Works in both light and dark modes
+- [ ] Mobile responsive
+- [ ] Pre-commit hooks pass
+
+## Review Process
+
+### Who Reviews What
+
+Documentation changes are reviewed by section owners. See [CODEOWNERS](https://github.com/livepeer/docs/blob/docs-v2-preview/.github/CODEOWNERS) for details.
+
+**General review assignments:**
+- **Developers section:** Developer relations team
+- **Gateways section:** Gateway team
+- **Orchestrators section:** Orchestrator team
+- **Delegators section:** Delegator team
+- **Resources section:** Documentation team
+- **General/Cross-cutting:** Documentation team
+
+### Review Timeline
+
+<Tip>
+We aim to review PRs within **48-72 hours** during business days.
+</Tip>
+
+- **Small changes** (typos, broken links): Usually reviewed within 24 hours
+- **Medium changes** (content updates, examples): 48-72 hours
+- **Large changes** (new guides, major restructuring): May take longer, discuss in issue first
+
+### Review Criteria
+
+Reviewers check for:
+- ✅ Accuracy and correctness
+- ✅ Style guide compliance
+- ✅ Proper component usage
+- ✅ Working links and examples
+- ✅ Appropriate tone and clarity
+- ✅ SEO and discoverability
+
+### Addressing Feedback
+
+- Respond to all comments
+- Make requested changes or explain why not
+- Push updates to the same branch
+- Mark conversations as resolved
+- Request re-review when ready
+
+## What to Contribute
+
+We welcome contributions in many areas:
+
+### Content Improvements
+- Fix typos and grammatical errors
+- Clarify confusing explanations
+- Update outdated information
+- Improve code examples
+- Add missing information
+
+### New Content
+- Tutorials and guides
+- Quickstarts for new features
+- API documentation
+- Code examples and snippets
+- Component examples
+
+### Technical Improvements
+- Component enhancements
+- Styling improvements
+- Automation scripts
+- Documentation tooling
+
+### Translations
+- Help translate content (when multilingual support is ready)
+- Improve existing translations
+
+## File Structure Guide
+
+### Where to Edit Different Types of Content
+
+| Content Type | Location | Example |
+|-------------|----------|---------|
+| **Main pages** | `v2/[section]/` | `v2/developers/guides-and-tools/` |
+| **Components** | `snippets/components/` | `snippets/components/primitives/links.jsx` |
+| **Data files** | `snippets/data/` | `snippets/data/gateways/flags.jsx` |
+| **Assets** | `snippets/assets/` | `snippets/assets/logos/` |
+| **Navigation** | `docs.json` | Root level |
+| **Styling** | `style.css` | Root level |
+
+### Section Organisation
+
+```text
+v2/
+├── home/                 # Home tab
+│   ├── mission-control.mdx
+│   ├── introduction/
+│   └── project-showcase/
+├── about/             # About tab
+│   ├── about-portal.mdx
+│   └── core-concepts/
+├── developers/            # Developers tab
+│   ├── building-on-livepeer/
+│   ├── guides-and-tools/
+│   └── builder-opportunities/
+├── gateways/          # Gateways tab
+│   ├── gateway-portal.mdx
+│   ├── run/
+│   └── build/
+├── orchestrators/     # Orchestrators tab
+│   ├── orchestrator-portal.mdx
+│   └── run/
+├── delegators/        # Delegators tab
+│   └── delegator-portal.mdx
+└── resources/         # Resources tab
+    ├── resources-portal.mdx
+    └── documentation-guide/
+```
+
+## Resources for Contributors
+
+<CardGroup cols={2}>
+  <Card title="Style Guide" icon="palette" href="./style-guide" arrow>
+ Complete styling guidelines, Mintlify gotchas, and best practices.
+  </Card>
+  <Card title="Component Library" icon="puzzle-piece" href="./component-library" arrow>
+ Reference all custom components with live examples and usage instructions.
+  </Card>
+  <Card title="Mintlify Documentation" icon="book" href="https://mintlify.com/docs" arrow>
+ Official Mintlify documentation for built-in components and features.
+  </Card>
+  <Card title="GitHub Repository" icon="github" href="https://github.com/livepeer/docs" arrow>
+ Source code and issue tracker for the documentation.
+  </Card>
+  <Card title="Documentation Guide" icon="book-open" href="./documentation-guide" arrow>
+ Learn how the documentation is structured and organised.
+  </Card>
+  <Card title="CODEOWNERS" icon="users" href="https://github.com/livepeer/docs/blob/docs-v2-preview/.github/CODEOWNERS" arrow>
+ See who reviews changes to each section.
+  </Card>
+</CardGroup>
+
+## Contribution Workflow Summary
+
+### For Small Changes (Typos, Broken Links)
+
+1. Fork and create branch
+2. Make the fix
+3. Test locally
+4. Submit PR
+5. Address any feedback
+
+### For Medium Changes (Content Updates, Examples)
+
+1. Open an issue to discuss (optional but recommended)
+2. Fork and create branch
+3. Make changes
+4. Test thoroughly
+5. Submit PR with clear description
+6. Iterate based on feedback
+
+### For Large Changes (New Guides, Major Restructuring)
+
+1. **Always discuss first** - Open an issue or discussion
+2. Get feedback and approval before starting
+3. Create a detailed plan
+4. Fork and create branch
+5. Work incrementally (consider draft PR)
+6. Submit PR with comprehensive description
+7. Iterate based on extensive feedback
+
+## Recognition
+
+Contributors are recognised and appreciated! Your contributions help make the Livepeer documentation better for everyone in the community.
+
+## Questions?
+
+If you have questions about contributing:
+
+- Check the [Documentation Guide](./documentation-guide) for structure and conventions
+- Review the [Style Guide](./style-guide) for styling guidelines
+- Check the [Component Library](./component-library) for component usage
+- Review [CODEOWNERS](https://github.com/livepeer/docs/blob/docs-v2-preview/.github/CODEOWNERS) to see who reviews what
+- Open a GitHub issue or discussion
+- Ask in the Livepeer Discord community
+
+Thank you for helping improve the Livepeer documentation! 🎉
+
+---
+
+## Non-Technical Contribution Proposal
+
+<Tip>
+This section outlines proposed workflows for contributors who don't use Git, Markdown, or React. These are **proposals** and may not be fully implemented yet.
+</Tip>
+
+### Current Options
+
+1. **GitHub Web Editor** - Edit files directly in the browser
+2. **Feedback Forms** - Submit suggestions via forms
+3. **Issue Reporting** - Open GitHub issues with content suggestions
+
+### Proposed Workflows
+
+#### Option 1: Mintlify Web Editor Integration
+
+**Proposal:** Integrate Mintlify's web editor for direct page editing.
+
+**Workflow:**
+1. Click "Edit this page" button on any documentation page
+2. Opens Mintlify web editor (requires authentication)
+3. Make edits in visual or markdown mode
+4. Submit changes which create a GitHub PR automatically
+
+**Requirements:**
+- Mintlify web editor access
+- GitHub authentication
+- Automatic PR creation
+
+**Status:** ⚠️ Requires Mintlify configuration and GitHub integration
+
+#### Option 2: Form-Based Submission System
+
+**Proposal:** Create a form that converts submissions to GitHub issues or PRs.
+
+**Workflow:**
+1. User fills out form with:
+   - Page URL or section
+   - Type of change (typo, clarification, new content)
+   - Current text (if applicable)
+   - Proposed text
+   - Reason for change
+2. Form submission creates GitHub issue
+3. Maintainer reviews and either:
+   - Implements the change
+   - Converts to PR template for user
+   - Requests more information
+
+**Requirements:**
+- Form creation (Google Forms, Typeform, or custom)
+- GitHub API integration
+- Issue template automation
+
+**Status:** 📋 Proposal - requires implementation
+
+#### Option 3: "Edit This Page" Button with PR Template
+
+**Proposal:** Add "Edit this page" buttons that link to GitHub's web editor with pre-filled PR template.
+
+**Workflow:**
+1. Click "Edit this page" button
+2. Opens GitHub web editor for that file
+3. User makes changes
+4. GitHub prompts to create PR with template
+5. User fills out PR description
+6. PR is created for review
+
+**Requirements:**
+- Add "Edit this page" buttons to all pages
+- Create PR template
+- Link to GitHub web editor with correct branch
+
+**Status:** ✅ Partially implementable - can add buttons and PR template
+
+#### Option 4: External CMS Integration
+
+**Proposal:** Integrate with a headless CMS (e.g., Contentful, Strapi) for non-technical editing.
+
+**Workflow:**
+1. Non-technical users edit content in CMS
+2. CMS webhooks trigger GitHub Actions
+3. Changes are automatically committed and PR created
+4. Maintainer reviews PR
+
+**Requirements:**
+- CMS setup and configuration
+- GitHub Actions workflow
+- Content synchronization
+- Authentication and permissions
+
+**Status:** 📋 Long-term proposal - significant infrastructure required
+
+### Recommended Implementation Order
+
+1. **Phase 1 (Quick Win):** Add "Edit this page" buttons linking to GitHub web editor
+2. **Phase 2 (Medium Effort):** Create form-based submission system with GitHub issue automation
+3. **Phase 3 (Long-term):** Evaluate Mintlify web editor integration or CMS solution
+
+### Feedback Welcome
+
+If you have ideas for making non-technical contributions easier, please:
+- Open a GitHub issue with your suggestion
+- Discuss in the Livepeer Discord
+- Contact the documentation team

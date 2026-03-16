@@ -1,0 +1,178 @@
+---
+title: 'Operator Support & Programmes'
+description: 'Funding and support programmes for Livepeer Gateway operators - SPE grants, AI Video Startup Programme, community resources, and how to contribute to the ecosystem.'
+purpose: operations
+sidebarTitle: 'Operator Support'
+keywords:
+  - livepeer
+  - gateway operator
+  - SPE grant
+  - AI Video Startup Programme
+  - funding
+  - support
+  - community
+  - contribute
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: 'guide'
+audience: 'gateway-operator'
+status: 'current'
+lastVerified: '2026-03-15'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- ~~Fontawesome icons are used on accordions and tabs~~
+- ~~No em-dashes are used (instead use standard -)~~
+- UK spelling is used
+- ~~Headers are concise and technical~~
+- ~~CustomDivider is used~~
+- ~~REVIEW flags are in JSX flags for a human.~~
+Human:
+- Renamed from overview.mdx
+- Business case content removed (lives in operator-considerations/business-case.mdx)
+- Refocused on funding, support programmes, and contribution paths
+- Voice converted to entity-led
+*/}
+
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from "/snippets/components/layout/containers.jsx"
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+The Livepeer ecosystem provides funding, programmes, and community resources for Gateway operators at every stage - from first-time builders to production platform operators. This page covers what support is available and how to access it.
+
+<CardGroup cols={1}>
+  <Card title="Business Case" icon="chart-line" href="/v2/gateways/guides/operator-considerations/business-case">
+    For the business rationale, operator models, and cost/revenue analysis, see the Business Case guide in Operator Considerations.
+  </Card>
+</CardGroup>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Funding Paths
+
+<Tabs>
+  <Tab title="SPE Grants" icon="coins">
+    **Special Purpose Entity (SPE)** grants fund Gateway operators through the Livepeer treasury governance process. SPEs run public Gateways that serve the broader network - public access, new capabilities, increased demand - without needing a commercial revenue stream from day one.
+
+    **Currently funded SPEs operating Gateways:**
+
+    <StyledTable>
+      <TableRow header>
+        <TableCell header>SPE</TableCell>
+        <TableCell header>What it funds</TableCell>
+        <TableCell header>Status</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>**Livepeer Cloud SPE**</TableCell>
+        <TableCell>Free public AI and video Gateways</TableCell>
+        <TableCell>Active</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>**LLM SPE**</TableCell>
+        <TableCell>LLM inference routing on the Livepeer network</TableCell>
+        <TableCell>Active</TableCell>
+      </TableRow>
+    </StyledTable>
+
+    **How to propose an SPE:**
+    1. Engage the community on [Discord](https://discord.gg/livepeer) and [Forum](https://forum.livepeer.org)
+    2. Write a proposal with clear public benefit, verifiable milestones, and realistic budget
+    3. Post to the Livepeer Forum for community discussion
+    4. Submit for on-chain governance vote (token holder approval)
+    5. Execute and report on milestones
+
+    For the full SPE guide, see <LinkArrow href="/v2/gateways/guides/roadmap-and-funding/spe-grant-model" label="SPE Grant Model" newline={false} />.
+  </Tab>
+
+  <Tab title="AI Video Startup Programme" icon="rocket">
+    The Livepeer Foundation runs a programme for startups and teams building AI-powered video products on Livepeer. Accepted teams receive:
+
+    - Network resources and compute credits
+    - Technical support from the Livepeer engineering team
+    - Investor introductions and go-to-market guidance
+    - Community visibility
+
+    This programme is specifically for teams building products that route AI inference through the Livepeer network. Running a Gateway is the operational foundation.
+<Note>
+    The AI Video Startup Programme runs in cohorts. Check [Discord #local-gateways](https://discord.gg/livepeer) or the [Livepeer Forum](https://forum.livepeer.org) for current application windows.
+    </Note>
+  </Tab>
+
+  <Tab title="Community Signer" icon="shield-check">
+    For operators who want to start without any crypto setup, the community-hosted remote signer at `signer.eliteencoder.net` provides free ETH for testing and development. This removes all Ethereum complexity from the Gateway operator's responsibilities.
+The community signer is not for production workloads without understanding the custody implications. For production, run a dedicated signer instance. See <LinkArrow href="/v2/gateways/guides/payments-and-pricing/remote-signers" label="Remote Signers" newline={false} />.
+  </Tab>
+</Tabs>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Community Resources
+
+<AccordionGroup>
+  <Accordion title="Discord" icon="discord">
+    The `#local-gateways` channel on [Discord](https://discord.gg/livepeer) is the primary real-time support channel for Gateway operators. Most operators respond within a few hours. Use it for:
+    - Technical setup questions
+    - Finding AI-capable Orchestrator addresses
+    - Sharing Gateway endpoints and capabilities
+    - Debugging routing issues with community help
+  </Accordion>
+
+  <Accordion title="Forum" icon="comments">
+    The [Livepeer Forum](https://forum.livepeer.org) is the right place for longer discussions, SPE proposals, architecture design, and feature requests. Forum threads are indexed by search engines and serve as a permanent record. Tag posts with `gateway` and `go-livepeer`.
+  </Accordion>
+
+  <Accordion title="GitHub" icon="github">
+    - [go-livepeer](https://github.com/livepeer/go-livepeer) - the Gateway binary. File issues for bugs, feature requests, and flag verification.
+    - [livepeer/naap](https://github.com/livepeer/naap) - Network as a Platform reference implementation for multi-tenant Gateways.
+    - [livepeer/explorer](https://github.com/livepeer/explorer) - the Livepeer Explorer. Gateway Explorer page in development ([PR #410](https://github.com/livepeer/explorer/pull/410)).
+    - [livepeer/docs](https://github.com/livepeer/docs) - documentation. Report gaps or contribute improvements.
+  </Accordion>
+
+  <Accordion title="Livepeer Tools" icon="gauge-high">
+    [tools.livepeer.cloud](https://tools.livepeer.cloud) is a community-maintained dashboard for network monitoring and Gateway observability. Contact the maintainers to have a Gateway listed.
+</Accordion>
+</AccordionGroup>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Contribute
+
+<BorderedBox variant="accent">
+
+The Livepeer Gateway ecosystem grows through operator contributions. Here are concrete ways to contribute:
+
+- **Run a public Gateway** and share the endpoint in `#local-gateways` - more Gateways increase network resilience and developer access
+- **Report documentation gaps** by opening issues at [github.com/livepeer/docs](https://github.com/livepeer/docs/issues)
+- **Build tools** - monitoring dashboards, Gateway management UIs, SDK wrappers, deployment scripts
+- **Write tutorials** - setup guides, integration walkthroughs, use case examples. Submit via Forum or GitHub PR
+- **Propose an SPE** if there is a gap in Gateway capacity, capability, or adoption that treasury funding could fill
+- **Join the NaaP effort** - the Network as a Platform reference implementation welcomes contributors at [github.com/livepeer/naap](https://github.com/livepeer/naap)
+
+</BorderedBox>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="NaaP & Multi-Tenancy" icon="users" href="/v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy">
+    Build a multi-tenant platform with API keys, billing, and user management.
+  </Card>
+  <Card title="SPE Grant Model" icon="coins" href="/v2/gateways/guides/roadmap-and-funding/spe-grant-model">
+    How to propose and execute a treasury-funded Gateway SPE.
+  </Card>
+  <Card title="Gateway Showcase" icon="globe" href="/v2/gateways/guides/roadmap-and-funding/gateway-showcase">
+    Production projects and tools built on Livepeer Gateways.
+  </Card>
+  <Card title="Business Case" icon="chart-line" href="/v2/gateways/guides/operator-considerations/business-case">
+    Operator models, cost structures, and revenue analysis.
+  </Card>
+</CardGroup>

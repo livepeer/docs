@@ -1,0 +1,172 @@
+title: AI Tools Governance Index
+sidebarTitle: AI Tools
+description: 'Current governance entrypoint for the AI-tools registry, lane contract, audit-pipeline catalog, and generated pack outputs.'
+keywords:
+  - livepeer
+  - ai tools
+  - skills
+  - audit
+  - codex
+  - cursor
+  - claude
+  - windsurf
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+<CustomDivider />
+
+## Wave 1 Canonical Registry
+
+- Canonical inventory + lifecycle + lane source: `ai-tools/registry/ai-tools-registry.json`
+- Registry schema: `ai-tools/registry/ai-tools-registry.schema.json`
+- Generated inventory report: `ai-tools/registry/ai-tools-inventory.md`
+- Validator CLI: `tools/scripts/validate-ai-tools-registry.js`
+
+Primary commands:
+
+```bash icon="terminal"
+node tools/scripts/validate-ai-tools-registry.js --check --coverage
+node tools/scripts/validate-ai-tools-registry.js --check --lanes
+node tools/scripts/validate-ai-tools-registry.js --write-report
+```
+
+The registry is now the canonical source for what exists under `ai-tools/**`, how each artifact is classified, and which lane it belongs to.
+
+## Current Lane Model
+
+| Lane | What it governs now | Notes |
+| --- | --- | --- |
+| `templates` | `ai-tools/ai-skills/templates/**` | Canonical portable skill templates and companion bundles |
+| `local` | repo-local `SKILL.md` roots under `ai-tools/ai-skills/*/SKILL.md` | Includes both legacy local-only skills and template-synced local roots |
+| `workspace` | research, packages, and source snapshots under `ai-tools/ai-skills/` | Non-canonical material kept out of template/export lanes |
+| `exports` | `ai-tools/agent-packs/**` | Generated agent-pack outputs and portable skill exports |
+| `rules` | `ai-tools/ai-rules/**` | Legacy/internal rule surfaces pending later normalization |
+| `manual-doc` | registry, setup guides, pipeline catalog docs, and framework/support docs | Human-readable governance/support material |
+| `retired` | reserved for future retired AI-tools material | Not active in Wave 1 |
+
+## Subsystem-Scoped Audit Pipeline Catalog
+
+These files remain active and unchanged in role for the repo-audit pipeline, but they are not the full AI-tools registry:
+
+- Catalogue schema: `ai-tools/ai-skills/catalog/skill-catalog.schema.json`
+- Catalogue data: `ai-tools/ai-skills/catalog/skill-catalog.json`
+- Execution manifest: `ai-tools/ai-skills/catalog/execution-manifest.json`
+
+Use these files only for:
+
+- repo-audit orchestrator run order and stage metadata
+- cross-agent packager manifest inputs
+- audit-pipeline policy docs that describe that subsystem specifically
+
+The generated aggregate AI-tools catalog is deferred to Wave 2. Until then, use the registry and generated inventory report as the complete inventory surface.
+
+## Codex Planning Entry Point
+
+- Skill: `agentic-project-management-orchestrator`
+- Triggers: `skill-plan`, `plan this repo change`, `full plan for this`
+- Use this as the first step for ambiguous repo-change planning, especially when the work may touch docs content, navigation, scripts, generated indexes, or governance surfaces.
+
+## One-Command Audit
+
+```bash icon="terminal"
+node tools/scripts/repo-audit-orchestrator.js --mode static --scope full
+```
+
+## Cross-Agent Installation Path
+
+Generate packs:
+
+```bash icon="terminal"
+node tools/scripts/cross-agent-packager.js --agent-pack all
+```
+
+Produced assets:
+
+- Codex: `ai-tools/agent-packs/codex/skills-manifest.json`
+- Cursor: `ai-tools/agent-packs/cursor/rules.md`
+- Claude Code: `ai-tools/agent-packs/claude/CLAUDE.md`
+- Windsurf: `ai-tools/agent-packs/windsurf/rules.md`
+
+These are generated reference packs and onboarding aids, not the canonical source of repo governance policy.
+
+## Portable Skill Content Ownership
+
+- Canonical source: `ai-tools/ai-skills/templates/*.template.md`
+- Canonical template companions: `ai-tools/ai-skills/templates/*.references/**`
+- Local repo skill roots are either `legacy-active` or `local-synced` in the registry; they are not the global source of truth for portable skill content.
+
+## Canonical Governance
+
+Canonical policy pages:
+
+- Agent governance: `docs-guide/policies/agent-governance-framework.mdx`
+- Root and allowlist governance: `docs-guide/policies/root-allowlist-governance.mdx`
+
+Approved runtime targets:
+
+- `AGENTS.md`
+- `.github/copilot-instructions.md`
+- `.claude/CLAUDE.md`
+- `.cursor/rules/*.mdc`
+- `.windsurf/rules/*.md`
+
+## Agent Onboarding Path
+
+1. Read `docs-guide/policies/agent-governance-framework.mdx` and `docs-guide/policies/root-allowlist-governance.mdx` first.
+2. Use the approved runtime target for the chosen agent family.
+3. Optionally run `node tools/scripts/cross-agent-packager.js --agent-pack all` to generate supplemental reference packs under `ai-tools/agent-packs/`.
+4. Run `node tools/scripts/repo-audit-orchestrator.js --mode static --scope full` as the first verification run.
+
+## Codex Skill Portability
+
+- Canonical source: `ai-tools/ai-skills/templates/*.template.md`
+- Local install target: `$CODEX_HOME/skills` (fallback: `~/.codex/skills`)
+- Sync behavior: safe upsert only (creates/updates managed skills; no deletion)
+- Preferred bootstrap path: `bash lpd setup --yes` syncs the planning skill automatically during repo setup
+
+Runbook:
+
+```bash icon="terminal"
+bash lpd setup --yes
+node tools/scripts/sync-codex-skills.js --skills agentic-project-management-orchestrator
+node tools/scripts/sync-codex-skills.js --check
+node tools/scripts/sync-codex-skills.js
+node tools/scripts/sync-codex-skills.js --skills lpd-bootstrap-and-doctor,staged-test-suite-runner --dry-run
+```
+
+Generated metadata:
+
+- `agents/openai.yaml` is generated deterministically for each synced skill.
+- Optional companion bundles are sourced from directories beside the template file:
+  - `<template-stem>.references/` syncs to `references/`
+  - `<template-stem>.scripts/` syncs to `scripts/`
+  - `<template-stem>.assets/` syncs to `assets/`
+- Sync is managed, not destructive:
+  - managed files inside an installed skill are created or updated from the canonical template bundle
+  - stale managed bundle files are pruned on resync
+  - unmanaged skills and unmanaged files inside a skill folder are preserved
+
+## Fact-Check Research Workflow
+
+The page-content research workflow is the active docs fact-checking skill family.
+
+Canonical operator references:
+
+- Internal runbook: `/docs-guide/frameworks/research-skill-workflow`
+- Public contributor page: `/v2/resources/documentation-guide/research-and-fact-checking`
+- Research-to-plan template: `docs-guide/tooling/research-to-implementation-plan-template.md`
+
+Primary entrypoints:
+
+```bash icon="terminal"
+node tools/scripts/docs-fact-registry.js --validate --registry tasks/research/claims
+node tools/scripts/docs-page-research.js --page v2/orchestrators/guides/deployment-details/setup-options.mdx --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json
+node tools/scripts/docs-page-research-pr-report.js --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx --report-md /tmp/page-content-research-pr.md --report-json /tmp/page-content-research-pr.json
+node tools/scripts/docs-research-packet.js --nav tools/config/scoped-navigation/docs-gate-work.json --version v2 --language en --tab Orchestrators --group Guides --out tasks/reports/orchestrator-guides-review/research-guides-review
+```
+
+The workflow is experimental and advisory-first. Use it for factual verification, contradiction review, claim-family propagation, and research packets, not generic MDX or link hygiene.
+
+When research findings need phased execution planning rather than direct fixes, use the `docs-research-to-implementation-plan` follow-on skill.

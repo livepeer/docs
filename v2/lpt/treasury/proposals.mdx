@@ -1,9 +1,26 @@
 ---
-title: 'Treasury Proposals'
-sidebarTitle: 'Proposals'
-description: 'Formal structure and execution semantics of treasury proposals as governance-authorized on-chain actions.'
-keywords: ["livepeer", "lpt", "treasury", "proposals", "governance", "grants", "execution"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+title: Treasury Proposals
+sidebarTitle: Proposals
+description: >-
+  Formal structure and execution semantics of treasury proposals as
+  governance-authorized on-chain actions.
+pageType: concept
+keywords:
+  - livepeer
+  - lpt
+  - treasury
+  - proposals
+  - governance
+  - grants
+  - execution
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: delegator
+lastVerified: 2026-03-17
+purpose: concept
 ---
 import { MathInline, MathBlock } from '/snippets/components/content/math.jsx'
 
@@ -27,14 +44,14 @@ This page defines the structure of treasury proposal payloads, their execution s
  Use the [Livepeer Explorer](https://explorer.livepeer.org) to submit the proposal on-chain. The encoded calldata determines what executes if the proposal passes.
   </Step>
   <Step title="Voting Period">
- Token holders vote during the designated window. **Quorum:** 33% of bonded LPT must participate. **Threshold:** >50% for votes must be in favour.
+ Token holders vote during the designated window. **Quorum:** 33% of bonded LPT must participate. **Threshold:** &gt;50% for votes must be in favour.
   </Step>
   <Step title="Timelock and Execution">
  Approved proposals enter a timelock period before automatic execution. Monitor status at [explorer.livepeer.org/treasury](https://explorer.livepeer.org/treasury).
   </Step>
 </Steps>
 
----
+<CustomDivider />
 
 ## 1. Formal Definition
 
@@ -54,7 +71,7 @@ Where:
 
 The proposal passes through governance and executes after timelock.
 
----
+<CustomDivider />
 
 ## 2. Governance Authorization
 
@@ -120,7 +137,7 @@ Recipient balance increases by <MathInline latex={String.raw`A`} /> under the as
 
 ## 6. Failure Modes
 
-Treasury proposal execution can fail for several reasons.
+Treasury proposal execution can fail for multiple reasons.
 
 ### 6.1 Calldata Error
 
@@ -176,7 +193,7 @@ flowchart TD
     Execute -->|revert| Failed
 ```
 
----
+<CustomDivider />
 
 ## 9. Protocol vs Network Separation
 
@@ -193,7 +210,7 @@ flowchart TD
 
 Treasury proposals are enforced by protocol logic; outcomes require off-chain delivery.
 
----
+<CustomDivider />
 
 ## References
 

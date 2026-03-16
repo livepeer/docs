@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Detects and fixes incorrect proper noun capitalisation in prose while skipping code, frontmatter, URLs, and path-like tokens.
- * @pipeline          P6 (on-demand)
+ * @pipeline          manual
  * @dualmode          --check (default) | --fix
  * @usage             node tools/scripts/validators/content/check-proper-nouns.js [--file <path[,path...]>] [--fix]
  */
@@ -18,7 +18,7 @@ const { execSync } = require('child_process');
 const { unified } = require('unified');
 const remarkParse = require('remark-parse').default;
 const remarkMdx = require('remark-mdx').default;
-const { getMdxFiles } = require('../../../../tests/utils/file-walker');
+const { getAuthoredMdxFiles } = require('../../../../tests/utils/file-walker');
 
 const PROPER_NOUNS = {
   livepeer: 'Livepeer',
@@ -147,7 +147,7 @@ function resolveTargetFiles(explicitFiles) {
     return explicitFiles;
   }
 
-  return getMdxFiles(REPO_ROOT).map((filePath) => path.resolve(filePath));
+  return getAuthoredMdxFiles(REPO_ROOT).map((filePath) => path.resolve(filePath));
 }
 
 function splitFrontmatter(raw) {

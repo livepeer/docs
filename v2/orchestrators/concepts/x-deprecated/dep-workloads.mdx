@@ -1,0 +1,235 @@
+---
+title: Orchestrator Core Services and Workloads
+sidebarTitle: Workloads
+description: >-
+  The job types an orchestrator can process — transcoding, batch AI inference,
+  real-time AI (Cascade), and LLM inference — with hardware requirements,
+  pricing models, and how to choose which to run.
+keywords:
+  - livepeer
+  - orchestrator
+  - job types
+  - transcoding
+  - AI inference
+  - Cascade
+  - LLM
+  - batch AI
+  - real-time AI
+  - GPU
+  - VRAM
+  - pipeline
+  - ComfyStream
+  - aiModels.json
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: orchestrator
+status: current
+---
+{/* Covers the compute domains orchestrators support.
+
+Video
+Video transcoding and related media processing workloads.
+
+AI
+AI inference, pipelines, and custom compute workloads, including containerized and BYOC-style jobs. */}
+
+
+Orchestrators on Livepeer do not just transcode video. They can earn fees from four distinct categories of work, each with different GPU requirements, pricing models, and configuration paths. This page explains what each job type is, how it reaches your node, and what hardware it demands — so you can decide which to run before choosing a setup path.
+
+## Overview
+
+| Job Category | What it does | Min VRAM | Pricing unit | Configured via |
+|---|---|---|---|---|
+| Transcoding | Converts video streams to multiple formats/resolutions | None (NVENC/NVDEC for GPU-accelerated) | Wei per pixel | `-pricePerUnit` flag |
+| Batch AI Inference | Processes single AI requests (image generation, audio transcription, captioning) | 4–24GB depending on pipeline | Wei per pixel or per millisecond | `aiModels.json` |
+| Real-time AI (Cascade) | Applies AI to a live video stream continuously | 8GB+ (model-dependent) | {/* REVIEW pricing unit TBC - see SME note */} | `aiModels.json` + ComfyStream |
+| LLM Inference | Generates text responses using large language models | 8GB (quantised 7–8B models) | Wei per token unit | `aiModels.json` + Ollama runner |
+
+---
+
+## Transcoding
+
+Transcoding is the original job type on the Livepeer network, live since 2017. When a broadcaster sends a live video stream to a Gateway, the Gateway routes individual segments to orchestrators for conversion into multiple resolution and bitrate formats. Your node receives raw video segments, decodes them, re-encodes them into the requested output profiles, and returns the results.
+
+**From the orchestrator's perspective**, transcoding is a high-throughput, short-duration job. Each segment is a few seconds of video. Your node processes dozens or hundreds of segments per stream, per session. Sessions can run for hours.
+
+### Hardware requirements
+
+Transcoding can run on CPU alone, but GPU-accelerated transcoding via NVIDIA NVENC/NVDEC is strongly recommended for performance and to remain competitive on the network. {/* REVIEW: confirm minimum NVIDIA driver/CUDA version from go-livepeer README */}
+
+### Pricing model
+
+Transcoding is priced in **wei per pixel**. A pixel here is a single pixel of output video — width × height × number of output frames. You set your price using the `-pricePerUnit` flag when starting your node; `-pixelsPerUnit` defaults to 1 (one pixel per unit). Gateways filter orchestrators by their advertised maximum price, so your pricing directly affects which jobs you receive.
+
+### Configuration
+
+Configured via the `-pricePerUnit` (and optionally `-pixelsPerUnit`) flags at node start. See [Configure Your Orchestrator](/v2/orchestrators/setup/r-configure) for the full flag reference.
+
+---
+
+## Batch AI Inference
+
+Batch AI inference covers all single-request AI jobs: you receive a request, run inference on your GPU, and return the result. The session is stateless — the Gateway sends a request and waits for a response; once the result is returned, the job is complete.
+
+The Livepeer AI Subnet launched in Q3 2024 and added this category to the network alongside transcoding. The subnet currently supports nine distinct pipelines.
+
+**From the orchestrator's perspective**, a batch AI job arrives as an HTTP request routed from the Gateway to your `ai-runner` Docker container. The container either uses a pre-loaded ("warm") model for immediate processing, or loads the model on demand. Results are returned to the Gateway as a JSON response containing URLs, text, or binary outputs depending on the pipeline.
+
+### Current pipelines
+
+| Pipeline | What it produces | Min VRAM | Recommended pricing |
+|---|---|---|---|
+| `text-to-image` | Image from text prompt | 24GB | 1.9073484e-08 USD per output pixel |
+| `image-to-image` | Transformed image from input image + prompt | 20GB | 1.9073484e-08 USD per input pixel |
+| `image-to-video` | Short video clip from input image | 16GB+ {/* REVIEW */} | ~3.39e-06 USD per pixel |
+| `image-to-text` | Text caption from image | 4GB | 2.5e-10 USD per input pixel |
+| `audio-to-text` | Transcript from audio file | 12GB | 0.02e-06 USD per millisecond of audio |
+| `upscale` | High-resolution image from low-resolution input | {/* REVIEW */} | {/* REVIEW */} |
+| `segment-anything-2` | Segmentation masks from image | 6GB | 3.22e-11 USD per input pixel |
+| `text-to-speech` | Speech audio from text | {/* REVIEW */} | {/* REVIEW */} |
+
+<Note>
+The `upscale` and `text-to-speech` VRAM requirements are not confirmed in this draft — they will be filled before publication. Check [AI Pipelines](/v2/orchestrators/guides/workloads-and-ai/ai-workloads-guide) for current per-pipeline specs.
+</Note>
+
+### Hardware requirements
+
+The AI subnet requires an **NVIDIA GPU with at least 16GB of VRAM** for most pipelines. For optimal performance and a higher chance of being selected for jobs, RTX 30/40 series or equivalent are recommended. The exception is `image-to-text` (4GB) and `segment-anything-2` (6GB), which can run on lower-spec cards.
+
+<Note>
+If you have a consumer GPU with less than 16GB VRAM, you are not excluded from AI inference. The `image-to-text` and `segment-anything-2` pipelines run at 4GB and 6GB respectively. The LLM pipeline can run at 8GB with the Ollama-based runner. See [LLM Inference](#llm-inference) below.
+</Note>
+
+### Pricing model
+
+AI inference pipelines use a **per-unit pricing model** where the unit depends on the pipeline type. For image-based pipelines, the unit is a pixel (height × width). For audio, the unit is a millisecond of input audio. You set prices per pipeline and model in your `aiModels.json` configuration file. On-chain, prices are expressed in wei per unit; the `aiModels.json` format also supports USD-denominated pricing.
+
+### Configuration
+
+Configured via the `aiModels.json` file. Each entry specifies the pipeline name, model ID, pricing, whether the model is kept warm, and the URL of the runner container. See [Configure AI Pipelines](/v2/orchestrators/guides/workloads-and-ai/ai-workloads-guide) for the configuration reference.
+
+---
+
+## Real-time AI (Cascade)
+
+Real-time AI is architecturally distinct from batch inference. Instead of processing a single request and returning a result, your GPU is allocated to a **persistent, continuous stream** — receiving live video frames, running inference on each frame, and returning the transformed stream in real time.
+
+Cascade is the strategic name for Livepeer's real-time AI vision, first articulated in late 2024. The underlying technical implementation is [ComfyStream](https://github.com/livepeer/comfystream) — an open-source project that runs ComfyUI as a backend inference engine and applies ComfyUI workflows to live video. Cascade Phase 1 shipped in December 2024; ComfyStream integrated with Livepeer network payments on 30 January 2025.
+
+**From the orchestrator's perspective**, a real-time AI job is closer to a transcoding session than a batch inference request. A Gateway establishes a persistent connection to your node. Your ComfyStream instance holds a ComfyUI workflow in memory and processes each incoming video frame through it, returning the transformed frame before the next one arrives. The GPU remains allocated for the duration of the stream.
+
+The gap between batch AI and real-time AI comes down to latency tolerance. Batch inference can take seconds or tens of seconds — that is acceptable for generating a still image. Real-time inference on a 30fps video stream must process each frame in roughly 33ms or less. This drives both the hardware requirements (faster GPUs, more VRAM for caching intermediate tensors) and the software architecture (ComfyUI's node graph stays compiled and warm rather than re-loading per request).
+
+### Use cases
+
+Real-time AI pipelines currently in use on the network include: live VTuber avatar generation, style transfer overlays on streams, real-time video agents, and AI-enhanced scene analysis for interactive applications.
+
+### Hardware requirements
+
+Requirements are model-dependent. The ComfyStream input nodes themselves use less than 500MB of VRAM, but the AI models within the workflow dominate the budget. A style transfer workflow using a lightweight one-step UNet requires significantly less VRAM than one using a full SDXL model. As a practical baseline:
+
+- **Minimum:** 8GB VRAM for lightweight real-time workflows
+- **Recommended:** 16–24GB VRAM for production-grade style transfer and avatar workflows
+
+<Note>
+Unlike batch AI, where you can accept or decline jobs by model, real-time AI pipelines are defined by ComfyUI workflows that you install and host. The VRAM budget depends on which workflows you choose to offer.
+</Note>
+
+### Pricing model
+
+{/* REVIEW: Cascade/ComfyStream pricing unit is not confirmed in official documentation. SME review needed before publication. Pricing may be per-session, per-stream-minute, or per-frame. Ask Peter (AI SPE) or post in #orchestrating. */}
+
+### Configuration
+
+Configured via `aiModels.json` and requires a running ComfyStream instance. See [Set Up Real-time AI Pipelines](/v2/orchestrators/guides/workloads-and-ai/ai-workloads-guide#live-video-to-video-cascade) for the setup guide.
+
+---
+
+## LLM Inference
+
+The LLM pipeline allows orchestrators to serve large language model inference — text completion, chat, and instruction-following tasks. It was added as part of the LLM SPE initiative announced in Q3 2024.
+
+Unlike the image and video pipelines, which use the standard `ai-runner` Docker image, **LLM inference requires a separate Ollama-based runner**. Ollama is an open-source inference runtime for language models. The Cloud SPE built and maintains a custom `livepeer-ollama-runner` that wraps Ollama in a Livepeer-compatible HTTP interface.
+
+**From the orchestrator's perspective**, an LLM job arrives the same way as any batch AI job — as an HTTP request from a Gateway. Your orchestrator routes it to the Ollama runner container, which generates the text response and returns it. The session ends once the response is complete (streaming responses follow the same model but return tokens progressively).
+
+A key practical difference from image pipelines: quantised LLMs (e.g., 4-bit quantised 7B models) fit into 8GB of VRAM and run efficiently, which means orchestrators with older consumer GPUs can participate in the AI subnet through LLM inference even if they cannot run the diffusion-based image pipelines.
+
+### Current supported models
+
+Models are loaded and managed by Ollama using its standard naming convention. Any model available via `ollama pull` can theoretically be served. Confirmed tested on the Livepeer network:
+
+- `meta-llama/Meta-Llama-3.1-8B-Instruct` (Ollama: `llama3.1:8b`)
+
+{/* REVIEW: full supported model list — check go-livepeer LLM pipeline docs or Cloud SPE guide for updated list */}
+
+### Hardware requirements
+
+| Setup | Min VRAM | Notes |
+|---|---|---|
+| 7–8B quantised model (Q4) | 8GB | Cloud SPE Ollama runner; GTX 1080, 2060 class |
+| 13B quantised model (Q4) | 16GB | |
+| 70B quantised model (Q4) | 40GB+ | Data-centre class only |
+
+<Note>
+The official Livepeer AI Subnet documentation recommends 16GB VRAM for most AI pipelines. The LLM pipeline is the main exception: the Cloud SPE Ollama runner enables 7–8B models to run on 8GB cards. Official minimum spec applies to the diffusion-based pipelines.
+</Note>
+
+### Pricing model
+
+LLM pricing is configured in `aiModels.json` using a `pixels_per_unit` abstraction where one unit equals one million tokens (or a comparable token batch). Example configuration:
+
+```json
+{
+  "pipeline": "llm",
+  "model_id": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+  "warm": true,
+  "price_per_unit": 0.18,
+  "currency": "USD",
+  "pixels_per_unit": 1000000,
+  "url": "http://llm_runner:8000"
+}
+```
+
+{/* REVIEW: confirm canonical pricing unit for LLM — is this per-token, per-request, or per-million-tokens? Check Cloud SPE documentation and go-livepeer source */}
+
+### Configuration
+
+Requires deploying the Ollama runner container alongside your orchestrator. Configured via `aiModels.json` with `"pipeline": "llm"`. See [Set Up the LLM Pipeline](/v2/orchestrators/guides/workloads-and-ai/ai-workloads-guide#llm-inference-ollama-runner) for the deployment guide.
+
+---
+
+## Choosing Your Setup
+
+The job types you can run depend on your hardware and what you want to optimise for.
+
+| Your situation | Recommended starting point |
+|---|---|
+| Consumer GPU (8–12GB VRAM), want passive income | Transcoding + LLM inference (Ollama runner) |
+| Consumer GPU (16GB VRAM), want to enter AI | Transcoding + batch AI (image-to-text, audio-to-text, segment-anything-2) |
+| High-VRAM GPU (24GB+), want to run diffusion models | Transcoding + full batch AI suite (text-to-image, image-to-image, image-to-video) |
+| GPU already running transcoding, want to add AI | See the AI setup guide to add pipelines to your existing node |
+| Dedicated AI inference, real-time video | Batch AI + real-time AI (ComfyStream); 16–24GB VRAM recommended |
+| ML workstation, new to Livepeer | Start with batch AI; add Cascade once batch inference is running |
+
+<CardGroup>
+  <Card
+    title="Choose your setup path"
+    icon="map"
+    href="/v2/orchestrators/guides/setup-paths/setup-navigator"
+  >
+    Pick the right installation path for your hardware and goals.
+  </Card>
+  <Card
+    title="Add AI to your node"
+    icon="cpu"
+    href="/v2/orchestrators/get-started/AI-prompt-start"
+  >
+    Configure AI pipelines on an existing orchestrator.
+  </Card>
+</CardGroup>
+{/* REVIEW: Current file had CardGroup quickstart links — not present in new draft. Human to decide whether to include. */}

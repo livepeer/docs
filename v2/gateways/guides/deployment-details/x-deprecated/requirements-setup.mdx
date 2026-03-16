@@ -1,0 +1,145 @@
+---
+title: 'Gateway Requirements'
+description: 'System and account requirements for running a Livepeer gateway: video (on-chain), AI (off-chain), or dual. Covers OS, ETH, hardware, and orchestrator requirements per type.'
+sidebarTitle: 'Requirements'
+keywords: ["livepeer", "gateway", "requirements", "ETH", "on-chain", "off-chain", "AI gateway", "hardware", "Linux", "orchestrator"]
+pageType: 'reference'
+audience: 'gateway'
+status: 'current'
+---
+{/* TODO:
+Verify:
+- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)
+- Fontawesome icons are used on accordions and tabs
+- Tables use StyledTable component
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical - no long headers or questions (aim for max 3 words)
+- CustomDivider is used with <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} /> for all --- separator breaks
+- Placeholders for Media & Video Resources are in comments with a TODO for a human.
+- REVIEW flags are in JSX flags for a human.
+*/}
+
+Requirements differ by gateway type. Select your type below.
+
+Not sure which type to run? See [Choose Your Gateway Type](/v2/gateways/guides/setup-options/setup-paths) first.
+
+<Tabs>
+  <Tab title="AI Gateway (off-chain)">
+
+    <Note>
+      **No ETH, LPT, or Arbitrum setup required.** The off-chain AI gateway routes jobs directly to orchestrators without any on-chain transactions. This is the fastest path to running a gateway.
+    </Note>
+
+    <Warning>
+      The AI gateway binary is only available for Linux. Windows and macOS are not currently supported.
+    </Warning>
+
+    ## Requirements
+
+    | Requirement | Details | Required? |
+    |---|---|---|
+    | **Operating system** | Linux — Ubuntu 20.04+ recommended, amd64 architecture | Required |
+    | **CPU** | 2+ cores recommended | Required |
+    | **RAM** | 4 GB minimum recommended | Required |
+    | **Disk** | 1 GB free for data directory | Required |
+    | **Network** | Outbound internet access to orchestrator endpoints | Required |
+    | **Port 8937** | Open and accessible if external traffic will reach the gateway API | Required (if exposing externally) |
+    | **curl** | For verification after setup | Recommended |
+    | **Docker** | If using the Docker install method (recommended) | Optional |
+    | **Ethereum wallet** | Not required | Not needed |
+    | **ETH** | Not required | Not needed |
+    | **LPT** | Not required | Not needed |
+    | **Arbitrum RPC** | Not required | Not needed |
+    | **Orchestrator addresses** | At least one AI-capable orchestrator address for `-orchAddr` | Required |
+
+    [//]: # (SME: CPU/RAM minimums are not formally documented. These values are community estimates.)
+[//]: # (Rick / j0sh to confirm or provide official minimums.)
+
+    ### Orchestrator addresses
+
+    The off-chain gateway does not use on-chain discovery. You must supply a list of AI-capable orchestrators directly via the `-orchAddr` flag. See [Where to find orchestrator addresses](/v2/gateways/guides/operator-considerations/requirements-off-chain#orchestrator-addresses) for options.
+
+    ## Ready to install?
+
+    [AI Gateway Quickstart →](/v2/gateways/quickstart/gateway-setup)
+
+  </Tab>
+
+  <Tab title="Video Gateway (on-chain)">
+
+    ## Requirements
+
+    | Requirement | Details | Required? |
+    |---|---|---|
+    | **Operating system** | Linux (recommended), Windows, macOS | Required |
+    | **CPU** | 2+ cores recommended | Required |
+    | **RAM** | 4 GB minimum recommended | Required |
+    | **Disk** | 1 GB free for data directory and keystore | Required |
+    | **Network** | Outbound internet access; inbound access to port 8935 if exposing service | Required |
+    | **Docker** | If using the Docker install method (recommended) | Optional |
+    | **Ethereum wallet** | An ETH address with a keystore file — go-livepeer will create one if absent | Required |
+    | **ETH on Arbitrum One** | For probabilistic micropayment deposit and reserve. Gas fees on Arbitrum One are low (typically < $0.01/tx) | Required |
+    | **Arbitrum RPC endpoint** | A WebSocket or HTTPS RPC URL for Arbitrum One | Required |
+    | **LPT** | Not required to run a gateway | Not needed |
+
+    [//]: # (SME: No official minimum ETH deposit amount is documented.)
+[//]: # (The gateway requires both a deposit and reserve to be funded before it can route jobs.)
+[//]: # (Rick / Mehrdad to confirm a practical minimum (e.g. "start with 0.05 ETH on Arbitrum"\).)
+
+    ### Arbitrum RPC options
+
+    You need an Arbitrum One RPC endpoint for `-ethUrl`. Options:
+
+    - **Alchemy** — [alchemy.com](https://alchemy.com) — free tier sufficient for a single gateway node
+    - **Infura** — [infura.io](https://infura.io) — free tier available
+    - **Livepeer Community Node** — Free public Arbitrum RPC maintained by the LiveInfra SPE: `https://arb1.livepeer.community` (check Discord for current endpoint)
+    - **Self-hosted Arbitrum node** — Advanced; see Arbitrum docs
+
+    ### ETH on Arbitrum
+
+    Your gateway wallet must hold ETH on Arbitrum One (not Ethereum mainnet). Arbitrum gas fees are under $0.01 per transaction. You need enough ETH for:
+
+    1. Gas for contract transactions (deposit, reserve, ticket redemption)
+    2. The payment deposit and reserve amounts that fund your gateway's probabilistic micropayment capacity
+
+    See [Fund the Gateway](/v2/gateways/setup/requirements/on-chain%20setup/fund-gateway) for exact steps.
+
+    ## Ready to install?
+
+    [Video Gateway Quickstart →](/v2/gateways/quickstart/gateway-setup)
+
+  </Tab>
+
+  <Tab title="Dual Gateway">
+
+    <Warning>
+      The dual gateway requires Linux. The AI components are not available on Windows or macOS.
+    </Warning>
+
+    A dual gateway combines on-chain video routing with off-chain AI routing. Requirements are the union of both types, with Linux as the only supported OS.
+
+    ## Requirements
+
+    | Requirement | Details | Required? |
+    |---|---|---|
+    | **Operating system** | Linux only — Ubuntu 20.04+ recommended | Required |
+    | **CPU** | 4+ cores recommended | Required |
+    | **RAM** | 8 GB recommended | Required |
+    | **Disk** | 1 GB free for data directory and keystore | Required |
+    | **Network** | Outbound internet access; inbound access to ports 8935 and 8937 | Required |
+    | **Ethereum wallet** | Required for the video/on-chain component | Required |
+    | **ETH on Arbitrum One** | For video gateway probabilistic micropayment deposit and reserve | Required |
+    | **Arbitrum RPC endpoint** | Required for the on-chain component | Required |
+    | **Orchestrator addresses** | AI-capable orchestrators for `-orchAddr` (AI component) | Required |
+    | **LPT** | Not required | Not needed |
+
+    [//]: # (SME: Confirm whether a dual gateway uses a single -orchAddr list for both AI and video jobs,)
+[//]: # (or separate flags. Rick to confirm.)
+
+    ## Ready to install?
+
+    [Dual Gateway Configuration →](/v2/gateways/setup/configure/dual-configuration)
+
+  </Tab>
+</Tabs>

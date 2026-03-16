@@ -1,0 +1,1629 @@
+{
+  "generated_at": "2026-03-15T18:33:29.813Z",
+  "scope": {
+    "target_files": [
+      "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+      "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+      "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+      "v2/orchestrators/guides/deployment-options/siphon-setup.mdx",
+      "v2/orchestrators/setup/r-configure.mdx",
+      "v2/orchestrators/setup/rcs-requirements.mdx"
+    ]
+  },
+  "claims_reviewed": [
+    {
+      "file": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+      "extracted_claims": [
+        "Orchestrators on Livepeer can earn fees from four distinct categories of work.",
+        "At a glance Job type What it does Min VRAM Pricing unit Configured via Video Transcoding Converts video streams to multiple resolutions and bitrates None (GPU accelerated via NVENC/NVDEC) Wei per pixel of output flag Batch AI Inference Processes single AI requests — image generation, audio transcription, captioning 4–24 GB depending on pipeline Wei per pixel or per millisecond Real time AI (Cascade) Applies AI to a live video stream frame by frame, continuously 8 GB+ (model dependent) + ComfyStream LLM Inference Generates text responses using large language models 8 GB (quantised 7–8B models) Custom token unit + Ollama runner How routing works — and why it differs per job type The routing mechanics differ significantly by job type.",
+        "Video transcoding Transcoding jobs are routed by gateways using a multi factor algorithm: stake weight + price + performance score.",
+        "Gateways favour orchestrators with more total stake (own + delegated), competitive pricing, and high historical success rates.",
+        "This means new or low stake orchestrators are at a structural disadvantage for transcoding — they compete against established nodes with large delegator bases.",
+        "Being in the active set (top 100 by stake) is a prerequisite, and even within the active set, high stake nodes capture disproportionate transcoding volume.",
+        "The gateway checks: does this orchestrator support the requested pipeline and model?",
+        "Stake plays a much smaller role.",
+        "This matters for operators: a new orchestrator with 24 GB VRAM and correctly configured AI pipelines can compete for AI jobs immediately, regardless of stake.",
+        "Real time AI (Cascade) Routing adds latency as a primary factor alongside capability and price.",
+        "Persistent streaming jobs cannot tolerate high jitter or cold model loads — gateways select orchestrators with the right workflow loaded warm and with low round trip latency.",
+        "LLM inference Routes the same way as batch AI — capability match and price — but the capability check is against a specific Ollama model ID rather than a diffusion pipeline."
+      ],
+      "matched_claim_families": [
+        "orch-ai-routing-capability-based",
+        "orch-price-ceiling-filtering"
+      ]
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+      "extracted_claims": [
+        "You register on chain, hold your own stake, and earn directly.",
+        "You do not stake LPT, you do not manage keys, and you earn via the pool operator's payout schedule.",
+        "→ Solo orchestrators must activate on chain by staking LPT.",
+        "There is no minimum enforced by the protocol, but in practice you need enough stake to rank in the top 100 active orchestrators to receive transcoding work.",
+        "The current competitive stake threshold varies — check for current rankings.",
+        "If you do not yet have LPT, joining a pool is the practical entry point while you accumulate stake.",
+        "Start with a pool, or run a full go livepeer node once you have stake.",
+        "Consider the Siphon split setup: one secure machine handles your keystore and reward claiming, a separate GPU machine runs go livepeer and processes workloads.",
+        "This protects your stake from missed reward rounds if your GPU machine goes down.",
+        "The four paths at a glance Path Who it suits Stake required Ops lift Start here Pool worker GPU owner wanting passive income; no protocol ops No Low Solo orchestrator Single machine, full control, comfortable with ops Yes Medium Split setup (Siphon) Reward safety + key isolation; scale GPU machines independently Yes Medium Enterprise / fleet Data centre, multi node, commercial scale Yes High Solo vs pool vs Siphon: what actually differs It helps to understand what each setup controls before choosing.",
+        "The pool controls: on chain registration, staking, pricing, reward calling, payout schedules.",
+        "Pricing, stake, workloads, reward calling, uptime."
+      ],
+      "matched_claim_families": [
+        "orch-active-set-threshold",
+        "orch-ai-routing-capability-based",
+        "orch-batch-ai-vram-threshold",
+        "orch-pool-vs-solo-prerequisites",
+        "orch-price-ceiling-filtering",
+        "orch-siphon-github-current",
+        "orch-siphon-reward-isolation"
+      ]
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+      "extracted_claims": [
+        "If you have a GPU and want to earn network fees with minimal protocol operations, first.",
+        "Step 1 — Should you run an orchestrator?",
+        "Workload Minimum GPU Recommended GPU Video transcoding only NVIDIA RTX 3060 (8 GB VRAM) RTX 4080 / A4000 Batch AI inference NVIDIA RTX 3090 / A40 (24 GB VRAM) RTX 4090 / A100 Real time AI (Cascade) NVIDIA RTX 3090 (24 GB VRAM) RTX 4090 / A100 LLM inference only NVIDIA RTX 3060 Ti (8 GB VRAM) RTX 3090+ NVIDIA GPUs only.",
+        "AMD and Apple Silicon are not supported by go livepeer's AI runner.",
+        "You need enough bonded LPT to enter the active set (top 100 by stake).",
+        "Running with too little stake means your node activates but receives very little transcoding work.",
+        "For AI inference, routing is capability based rather than stake weighted, so low stake AI nodes can still receive jobs.",
+        "If you cannot stake enough LPT to compete but want to earn network fees, the pool worker path is specifically designed for you.",
+        "If you answered yes to hardware and LPT, continue to Step 2.",
+        "Step 2 — Choose your path Contribute your GPU to an existing orchestrator's pool.",
+        "Register on chain, stake LPT, and process workloads.",
+        "Separate keystore management and reward calling (Siphon, secure machine) from workload processing (go livepeer, GPU machine)."
+      ],
+      "matched_claim_families": [
+        "orch-active-set-threshold",
+        "orch-ai-routing-capability-based",
+        "orch-batch-ai-vram-threshold",
+        "orch-pool-vs-solo-prerequisites",
+        "orch-siphon-github-current",
+        "orch-siphon-reward-isolation"
+      ]
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/siphon-setup.mdx",
+      "extracted_claims": [
+        "If the GPU machine is busy or reboots mid round, you miss that round's LPT inflation reward — and missed rewards compound against you over time.",
+        "And a machine actively processing untrusted media data is not the safest place for a key that controls your staked LPT.",
+        "OrchestratorSiphon runs on a small, secure machine and handles all on chain actions: reward calling, fee withdrawal, governance voting, and service URI updates.",
+        "Your GPU machine can restart, be replaced, or be taken offline for maintenance without interrupting reward claims.",
+        "Architecture overview Machine What it does GPU required Secure machine Keystore, reward calling, on chain actions No GPU machine Segment processing, AI inference, ticket redemption Yes When to choose this setup You want reward safety independent of GPU uptime, key isolation from workload processing, or you plan to run multiple GPU machines behind one orchestrator identity.",
+        "Also the right entry path if you want to start earning inflation rewards before your GPU infrastructure is ready.",
+        "You want the simplest possible single machine setup and are comfortable managing reward calling alongside workloads.",
+        "You can run Siphon alone — with no GPU machine — to earn LPT inflation rewards while you prepare your GPU infrastructure.",
+        "When ready, deploy go livepeer in transcoder mode and point your service URI at the GPU machine.",
+        "Prerequisites Requirement Secure machine GPU machine OS Linux (Ubuntu 20.04+) Linux with NVIDIA GPU Python python3 + pip Not required Network Outbound to Arbitrum One RPC Static IP or stable DNS entry Ethereum Orchestrator keystore + ETH for gas Small ETH balance for ticket redemption Stake LPT staked on chain Not applicable The secure machine does not need a GPU.",
+        "A small VPS (1 vCPU, 512 MB RAM) is sufficient.",
+        "Part 1: Secure machine — install and configure OrchestratorSiphon A lightweight Python toolkit for managing a Livepeer orchestrator keystore."
+      ],
+      "matched_claim_families": [
+        "orch-siphon-reward-isolation"
+      ]
+    },
+    {
+      "file": "v2/orchestrators/setup/r-configure.mdx",
+      "extracted_claims": [
+        "Essential flags These are the flags you must set every time you start go livepeer as an orchestrator.",
+        "You must set it explicitly for mainnet.",
+        "Options: — production network — testnet (deprecated; check current testnet name in release notes) — local/dev only, no on chain participation What it does: Points go livepeer at an Arbitrum One RPC endpoint to read and write on chain state (orchestrator registration, reward calls, ticket redemption).",
+        "Example: This must be an Arbitrum One endpoint, not an Ethereum L1 endpoint.",
+        "This account holds your staked LPT, receives ETH fee payments, and signs on chain transactions.",
+        "What they do: enables the on chain protocol role — your node participates in job routing, makes reward calls, and is visible to gateways.",
+        "This is the most common configuration mistake.",
+        "1 ETH = 1,000,000,000,000,000,000 wei (1e18) A typical starting price for transcoding is in the range of 500–2,000 wei per pixel Check to see what active orchestrators are currently charging If you set this value in ETH (e.g.",
+        "Common mistakes: Using an internal/private IP (e.g.",
+        "Adding AI inference If you want to serve AI inference jobs — text to image, image to video, LLM, and other pipelines — you need three additional flags alongside your standard configuration.",
+        "Path to your configuration file, which defines which pipelines and models you will serve.",
+        "When running in Docker, the AI orchestrator needs access to the Docker socket to manage AI Runner containers: The AI orchestrator uses port 8936 by default to avoid conflicts if you are also running a transcoding orchestrator on the same machine (which uses 8935)."
+      ],
+      "matched_claim_families": [
+        "orch-price-ceiling-filtering"
+      ]
+    },
+    {
+      "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+      "extracted_claims": [
+        "Hardware NVIDIA GPU with NVENC/NVDEC support installed and visible via NVIDIA driver version 525+ (Linux) or 527+ (Windows) CUDA 12.0+ installed (or plan to use the Docker image, which bundles CUDA) CPU: 4+ cores minimum, 8+ recommended RAM: 16 GB minimum, 32 GB recommended Storage: 100 GB SSD minimum (NVMe recommended for AI model weights) For AI inference, VRAM is the primary constraint: 8 GB for LLM only, 16 GB for basic batch AI, 24 GB+ for the full pipeline suite.",
+        "Software OS: Linux (Ubuntu 22.04+ recommended).",
+        "Docker Engine installed if using the container install path NVIDIA Container Toolkit installed if using Docker with GPU ( should succeed) and available (Linux/macOS) or PowerShell (Windows) Network Port 8935 TCP open to the public internet (firewall, router NAT, cloud security group) Static IP or stable hostname (dynamic DNS if on a home connection) Bandwidth: 100 Mbps symmetric minimum; 1 Gbps recommended for multi stream transcoding Latency: Under 50 ms to major regions improves gateway selection probability Verify port access from an external machine: Wallet and tokens Ethereum wallet — an existing account or go livepeer will create one on first run ETH on Arbitrum One — for gas (activation, reward calls, ticket redemption).",
+        "The amount needed to enter the active set (top 100) varies — check for the current threshold."
+      ],
+      "matched_claim_families": [
+        "orch-active-set-threshold",
+        "orch-batch-ai-vram-threshold",
+        "orch-pool-vs-solo-prerequisites"
+      ]
+    }
+  ],
+  "verified_claims": [
+    {
+      "claim_id": "orch-siphon-github-current",
+      "claim_family": "community-tooling-status",
+      "entity": "orchestrator",
+      "canonical_owner": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+      "registry_status": "verified",
+      "status": "verified",
+      "freshness_class": "review-periodic",
+      "confidence": "high",
+      "summary": "Split-setup guidance depends on OrchestratorSiphon still being an active community-maintained project. That claim should be checked against the current GitHub repository, not just repeated in docs.",
+      "evidence": [
+        {
+          "type": "github-repo",
+          "ref": "https://github.com/Stronk-Tech/OrchestratorSiphon",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "GitHub evidence matched"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "snippets": [
+            "Solo orchestrator / split setup / fleet: Yes.",
+            "Separate keystore management and reward calling (Siphon, secure machine) from workload processing (go livepeer, GPU machine).",
+            "Decision table Pool Worker Solo Orchestrator Split Setup (Siphon) Fleet LPT required No Yes Yes Yes (significant) GPU required Yes Yes Yes (GPU machine) Yes (multiple) On chain ops Pool handles it You manage Siphon handles it Dedicated ops Key security Pool's keystore Same machine as GPU Keystore isolated Dedicated secure machine Reward safety Pool handles it Risk if node is busy Siphon runs independently Dedicated reward infra Setup complexity Low Medium Medium High AI inference ready Depends on pool Yes, with aiModels.json Yes Yes Start here → → → → Contact us Workload type — decide before hardware or pricing Your path choice intersects with your workload choice.",
+            "Path 3: Split Setup (Siphon) Best for: Operators who want reward reliability, key isolation, or plan to scale GPU machines independently."
+          ],
+          "values": [
+            "Siphon"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "snippets": [
+            "Choose between a single machine setup (full go livepeer) or a split setup that keeps your keystore secure on a separate machine (Siphon).",
+            "Consider the Siphon split setup: one secure machine handles your keystore and reward claiming, a separate GPU machine runs go livepeer and processes workloads.",
+            "The four paths at a glance Path Who it suits Stake required Ops lift Start here Pool worker GPU owner wanting passive income; no protocol ops No Low Solo orchestrator Single machine, full control, comfortable with ops Yes Medium Split setup (Siphon) Reward safety + key isolation; scale GPU machines independently Yes Medium Enterprise / fleet Data centre, multi node, commercial scale Yes High Solo vs pool vs Siphon: what actually differs It helps to understand what each setup controls before choosing."
+          ],
+          "values": [
+            "Siphon"
+          ]
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "update-now",
+          "claim_id": "orch-siphon-github-current"
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "update-now",
+          "claim_id": "orch-siphon-github-current"
+        }
+      ],
+      "contradictions": [],
+      "notes": "Use GitHub repository metadata to confirm the project still exists and is publicly accessible."
+    },
+    {
+      "claim_id": "orch-price-ceiling-filtering",
+      "claim_family": "gateway-price-filtering",
+      "entity": "orchestrator",
+      "canonical_owner": "v2/orchestrators/setup/r-configure.mdx",
+      "registry_status": "verified",
+      "status": "verified",
+      "freshness_class": "review-on-change",
+      "confidence": "high",
+      "summary": "Gateways filter orchestrators by price ceilings before routing work. Competitive hardware alone is not enough if operator pricing exceeds gateway maxima.",
+      "evidence": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/setup/r-configure.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/orchestrators/setup/r-configure.mdx",
+          "snippets": [],
+          "values": []
+        },
+        {
+          "file": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+          "snippets": [],
+          "values": []
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "snippets": [
+            "Workload quick reference: Workload Min hardware Pricing Selection by gateway Video transcoding Any NVENC capable NVIDIA GPU Wei per pixel; must be below gateway's Stake + price + performance score Batch AI inference 4–24 GB VRAM depending on pipeline Wei per pixel or per request; must be within gateway's capability price range Capability match + price ( ) Real time AI (live video to video) 8 GB+ VRAM Per interval during stream; price advertised per capability Capability match + latency Gateways filter orchestrators by price before routing work.",
+            "If your prices are too high for current market rates, you will not receive work even if your hardware is competitive."
+          ],
+          "values": [
+            "will not receive work"
+          ]
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "update-now",
+          "claim_id": "orch-price-ceiling-filtering"
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "update-now",
+          "claim_id": "orch-price-ceiling-filtering"
+        },
+        {
+          "file": "v2/orchestrators/setup/r-configure.mdx",
+          "page_class": "setup",
+          "role": "canonical-owner",
+          "action": "update-now",
+          "claim_id": "orch-price-ceiling-filtering"
+        }
+      ],
+      "contradictions": [],
+      "notes": "This family covers both transcoding `-pricePerUnit` and AI capability price ceilings because both are gateway-side filters on whether work reaches the node."
+    }
+  ],
+  "conflicted_claims": [
+    {
+      "claim_id": "orch-batch-ai-vram-threshold",
+      "claim_family": "hardware-vram-minimums",
+      "entity": "orchestrator",
+      "canonical_owner": "v2/orchestrators/guides/operator-considerations/hardware-reference.mdx",
+      "registry_status": "conflicted",
+      "status": "conflicted",
+      "freshness_class": "review-on-change",
+      "confidence": "low",
+      "summary": "Docs disagree on the practical VRAM minimum for batch AI and real-time AI workloads. Hardware and setup pages should not present conflicting minimums as equally current.",
+      "evidence": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/operator-considerations/hardware-reference.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/setup/rcs-requirements.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/orchestrators/guides/operator-considerations/hardware-reference.mdx",
+          "snippets": [
+            "This page is a practical reference: GPU support policy, session limits by card, VRAM tiers by pipeline, and the minimum system stack needed before your node goes live.",
+            "It does not require large VRAM – model loading is not involved.",
+            "Batch AI inference AI inference requires VRAM.",
+            "The table below is a summary – full pipeline by pipeline VRAM figures are in ."
+          ],
+          "values": []
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "snippets": [
+            "Workload quick reference: Workload Min hardware Pricing Selection by gateway Video transcoding Any NVENC capable NVIDIA GPU Wei per pixel; must be below gateway's Stake + price + performance score Batch AI inference 4–24 GB VRAM depending on pipeline Wei per pixel or per request; must be within gateway's capability price range Capability match + price ( ) Real time AI (live video to video) 8 GB+ VRAM Per interval during stream; price advertised per capability Capability match + latency Gateways filter orchestrators by price before routing work.",
+            "Understand the four workload categories — transcoding, batch AI, real time AI, and LLM — before you configure your node."
+          ],
+          "values": [
+            "24 GB",
+            "8 GB"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "snippets": [
+            "Workload Minimum GPU Recommended GPU Video transcoding only NVIDIA RTX 3060 (8 GB VRAM) RTX 4080 / A4000 Batch AI inference NVIDIA RTX 3090 / A40 (24 GB VRAM) RTX 4090 / A100 Real time AI (Cascade) NVIDIA RTX 3090 (24 GB VRAM) RTX 4090 / A100 LLM inference only NVIDIA RTX 3060 Ti (8 GB VRAM) RTX 3090+ NVIDIA GPUs only.",
+            "If your GPU has limited VRAM (under 16 GB), you can start with LLM inference and , which run comfortably at 8–12 GB.",
+            "Video transcoding, batch AI, real time AI, and LLM — what each workload earns and requires.",
+            "GPU tiers, VRAM requirements, driver versions, and the pre launch checklist."
+          ],
+          "values": [
+            "16 GB",
+            "24 GB",
+            "8 GB",
+            "8–12 GB",
+            "A40",
+            "RTX 3090"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+          "snippets": [
+            "AI inference (batch): 8–24 GB VRAM depending on which pipelines you want to run.",
+            "An RTX 3090 (24 GB) is the practical minimum for competitive diffusion pipelines.",
+            "AI inference (real time / Cascade): 24 GB VRAM minimum.",
+            "GPU power draw varies significantly: GPU Typical load power draw RTX 3060 ~150–170 W RTX 3090 ~300–350 W RTX 4090 ~350–450 W A100 80 GB ~250–400 W Running an RTX 4090 24/7 at full load costs approximately £30–60/month in electricity at UK residential rates, or $35–70 at US average rates."
+          ],
+          "values": [
+            "24 GB",
+            "8–24 GB",
+            "RTX 3090"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+          "snippets": [
+            "Hardware NVIDIA GPU with NVENC/NVDEC support installed and visible via NVIDIA driver version 525+ (Linux) or 527+ (Windows) CUDA 12.0+ installed (or plan to use the Docker image, which bundles CUDA) CPU: 4+ cores minimum, 8+ recommended RAM: 16 GB minimum, 32 GB recommended Storage: 100 GB SSD minimum (NVMe recommended for AI model weights) For AI inference, VRAM is the primary constraint: 8 GB for LLM only, 16 GB for basic batch AI, 24 GB+ for the full pipeline suite."
+          ],
+          "values": [
+            "16 GB",
+            "24 GB",
+            "8 GB"
+          ]
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "orch-batch-ai-vram-threshold"
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "orch-batch-ai-vram-threshold"
+        },
+        {
+          "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "orch-batch-ai-vram-threshold"
+        },
+        {
+          "file": "v2/orchestrators/guides/operator-considerations/hardware-reference.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "claim_id": "orch-batch-ai-vram-threshold"
+        },
+        {
+          "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+          "page_class": "setup",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "orch-batch-ai-vram-threshold"
+        }
+      ],
+      "contradictions": [
+        {
+          "claim_family": "hardware-vram-minimums",
+          "claim_id": "orch-batch-ai-vram-threshold",
+          "pages": [
+            {
+              "file": "v2/orchestrators/guides/operator-considerations/hardware-reference.mdx",
+              "values": [],
+              "snippet": "This page is a practical reference: GPU support policy, session limits by card, VRAM tiers by pipeline, and the minimum system stack needed before your node goes live."
+            },
+            {
+              "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+              "values": [
+                "24 GB",
+                "8 GB"
+              ],
+              "snippet": "Workload quick reference: Workload Min hardware Pricing Selection by gateway Video transcoding Any NVENC capable NVIDIA GPU Wei per pixel; must be below gateway's Stake + price + performance score Batch AI inference 4–24 GB VRAM depending on pipeline Wei per pixel or per request; must be within gateway's capability price range Capability match + price ( ) Real time AI (live video to video) 8 GB+ VRAM Per interval during stream; price advertised per capability Capability match + latency Gateways filter orchestrators by price before routing work."
+            },
+            {
+              "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+              "values": [
+                "16 GB",
+                "24 GB",
+                "8 GB",
+                "8–12 GB",
+                "A40",
+                "RTX 3090"
+              ],
+              "snippet": "Workload Minimum GPU Recommended GPU Video transcoding only NVIDIA RTX 3060 (8 GB VRAM) RTX 4080 / A4000 Batch AI inference NVIDIA RTX 3090 / A40 (24 GB VRAM) RTX 4090 / A100 Real time AI (Cascade) NVIDIA RTX 3090 (24 GB VRAM) RTX 4090 / A100 LLM inference only NVIDIA RTX 3060 Ti (8 GB VRAM) RTX 3090+ NVIDIA GPUs only."
+            },
+            {
+              "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+              "values": [
+                "24 GB",
+                "8–24 GB",
+                "RTX 3090"
+              ],
+              "snippet": "AI inference (batch): 8–24 GB VRAM depending on which pipelines you want to run."
+            },
+            {
+              "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+              "values": [
+                "16 GB",
+                "24 GB",
+                "8 GB"
+              ],
+              "snippet": "Hardware NVIDIA GPU with NVENC/NVDEC support installed and visible via NVIDIA driver version 525+ (Linux) or 527+ (Windows) CUDA 12.0+ installed (or plan to use the Docker image, which bundles CUDA) CPU: 4+ cores minimum, 8+ recommended RAM: 16 GB minimum, 32 GB recommended Storage: 100 GB SSD minimum (NVMe recommended for AI model weights) For AI inference, VRAM is the primary constraint: 8 GB for LLM only, 16 GB for basic batch AI, 24 GB+ for the full pipeline suite."
+            }
+          ],
+          "best_known_truth": "Docs disagree on the practical VRAM minimum for batch AI and real-time AI workloads. Hardware and setup pages should not present conflicting minimums as equally current.",
+          "confidence": "low",
+          "recommended_action": "verify-more"
+        }
+      ],
+      "notes": "The current authored pages mention 8 GB, 16 GB, 24 GB, and 24 GB+ depending on context. The runner should surface those differences explicitly."
+    },
+    {
+      "claim_id": "orch-siphon-reward-isolation",
+      "claim_family": "split-setup-reward-safety",
+      "entity": "orchestrator",
+      "canonical_owner": "v2/orchestrators/guides/deployment-options/siphon-setup.mdx",
+      "registry_status": "verified",
+      "status": "conflicted",
+      "freshness_class": "review-periodic",
+      "confidence": "low",
+      "summary": "A split setup with OrchestratorSiphon isolates the keystore from the GPU machine and keeps reward calling independent of GPU uptime. Docs should keep that claim aligned across setup-path pages.",
+      "evidence": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-options/siphon-setup.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        },
+        {
+          "type": "github-repo",
+          "ref": "https://github.com/Stronk-Tech/OrchestratorSiphon",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "GitHub evidence matched"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/orchestrators/guides/deployment-options/siphon-setup.mdx",
+          "snippets": [
+            "If the GPU machine is busy or reboots mid round, you miss that round's LPT inflation reward — and missed rewards compound against you over time.",
+            "The split setup solves both.",
+            "OrchestratorSiphon runs on a small, secure machine and handles all on chain actions: reward calling, fee withdrawal, governance voting, and service URI updates.",
+            "Your GPU machine can restart, be replaced, or be taken offline for maintenance without interrupting reward claims."
+          ],
+          "values": [
+            "GPU machine can restart",
+            "reward",
+            "reward calling"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "snippets": [
+            "Choose between a single machine setup (full go livepeer) or a split setup that keeps your keystore secure on a separate machine (Siphon).",
+            "Consider the Siphon split setup: one secure machine handles your keystore and reward claiming, a separate GPU machine runs go livepeer and processes workloads.",
+            "The four paths at a glance Path Who it suits Stake required Ops lift Start here Pool worker GPU owner wanting passive income; no protocol ops No Low Solo orchestrator Single machine, full control, comfortable with ops Yes Medium Split setup (Siphon) Reward safety + key isolation; scale GPU machines independently Yes Medium Enterprise / fleet Data centre, multi node, commercial scale Yes High Solo vs pool vs Siphon: what actually differs It helps to understand what each setup controls before choosing.",
+            "The pool controls: on chain registration, staking, pricing, reward calling, payout schedules."
+          ],
+          "values": [
+            "Reward safety",
+            "keystore secure",
+            "reward",
+            "reward calling"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "snippets": [
+            "Solo orchestrator / split setup / fleet: Yes.",
+            "Separate keystore management and reward calling (Siphon, secure machine) from workload processing (go livepeer, GPU machine).",
+            "Decision table Pool Worker Solo Orchestrator Split Setup (Siphon) Fleet LPT required No Yes Yes Yes (significant) GPU required Yes Yes Yes (GPU machine) Yes (multiple) On chain ops Pool handles it You manage Siphon handles it Dedicated ops Key security Pool's keystore Same machine as GPU Keystore isolated Dedicated secure machine Reward safety Pool handles it Risk if node is busy Siphon runs independently Dedicated reward infra Setup complexity Low Medium Medium High AI inference ready Depends on pool Yes, with aiModels.json Yes Yes Start here → → → → Contact us Workload type — decide before hardware or pricing Your path choice intersects with your workload choice.",
+            "The pool operator manages LPT staking, reward calling, on chain registration, and pricing negotiation."
+          ],
+          "values": [
+            "Keystore isolated",
+            "Reward safety",
+            "reward",
+            "reward calling"
+          ]
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "orch-siphon-reward-isolation"
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "orch-siphon-reward-isolation"
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/siphon-setup.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "claim_id": "orch-siphon-reward-isolation"
+        }
+      ],
+      "contradictions": [
+        {
+          "claim_family": "split-setup-reward-safety",
+          "claim_id": "orch-siphon-reward-isolation",
+          "pages": [
+            {
+              "file": "v2/orchestrators/guides/deployment-options/siphon-setup.mdx",
+              "values": [
+                "GPU machine can restart",
+                "reward",
+                "reward calling"
+              ],
+              "snippet": "If the GPU machine is busy or reboots mid round, you miss that round's LPT inflation reward — and missed rewards compound against you over time."
+            },
+            {
+              "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+              "values": [
+                "Reward safety",
+                "keystore secure",
+                "reward",
+                "reward calling"
+              ],
+              "snippet": "Choose between a single machine setup (full go livepeer) or a split setup that keeps your keystore secure on a separate machine (Siphon)."
+            },
+            {
+              "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+              "values": [
+                "Keystore isolated",
+                "Reward safety",
+                "reward",
+                "reward calling"
+              ],
+              "snippet": "Solo orchestrator / split setup / fleet: Yes."
+            }
+          ],
+          "best_known_truth": "A split setup with OrchestratorSiphon isolates the keystore from the GPU machine and keeps reward calling independent of GPU uptime. Docs should keep that claim aligned across setup-path pages.",
+          "confidence": "low",
+          "recommended_action": "verify-more"
+        }
+      ],
+      "notes": "This family is partly repo-doc backed and partly GitHub backed because the live project status matters alongside the docs explanation."
+    },
+    {
+      "claim_id": "orch-active-set-threshold",
+      "claim_family": "stake-threshold",
+      "entity": "orchestrator",
+      "canonical_owner": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+      "registry_status": "time-sensitive",
+      "status": "conflicted",
+      "freshness_class": "volatile",
+      "confidence": "low",
+      "summary": "Solo transcoding guidance repeatedly states that operators need enough bonded LPT to enter the active set, often phrased as top 100, but that wording is time-sensitive and should not be treated as durable fact without current evidence.",
+      "evidence": [
+        {
+          "type": "official-page",
+          "ref": "https://explorer.livepeer.org/orchestrators",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": false,
+          "summary": "official page fetched but signal missing"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+          "snippets": [
+            "LPT rewards require bonded LPT, an active orchestrator registration, and a running node that calls each round.",
+            "To receive video transcoding jobs as a solo orchestrator, you must be in the active set — currently the top orchestrators by total bonded stake.",
+            "If you don't have sufficient LPT for the active set, you have two alternatives: 1.",
+            "Stake requirements, active set sizes, and fee levels shift over time."
+          ],
+          "values": [
+            "active set"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "snippets": [
+            "There is no minimum enforced by the protocol, but in practice you need enough stake to rank in the top 100 active orchestrators to receive transcoding work.",
+            "The current competitive stake threshold varies — check for current rankings."
+          ],
+          "values": [
+            "top 100"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "snippets": [
+            "You need enough bonded LPT to enter the active set (top 100 by stake)."
+          ],
+          "values": [
+            "active set",
+            "top 100"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+          "snippets": [
+            "The amount needed to enter the active set (top 100) varies — check for the current threshold."
+          ],
+          "values": [
+            "active set",
+            "top 100"
+          ]
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "orch-active-set-threshold"
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "orch-active-set-threshold"
+        },
+        {
+          "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "claim_id": "orch-active-set-threshold"
+        },
+        {
+          "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+          "page_class": "setup",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "orch-active-set-threshold"
+        }
+      ],
+      "contradictions": [
+        {
+          "claim_family": "stake-threshold",
+          "claim_id": "orch-active-set-threshold",
+          "pages": [
+            {
+              "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+              "values": [
+                "active set"
+              ],
+              "snippet": "LPT rewards require bonded LPT, an active orchestrator registration, and a running node that calls each round."
+            },
+            {
+              "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+              "values": [
+                "top 100"
+              ],
+              "snippet": "There is no minimum enforced by the protocol, but in practice you need enough stake to rank in the top 100 active orchestrators to receive transcoding work."
+            },
+            {
+              "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+              "values": [
+                "active set",
+                "top 100"
+              ],
+              "snippet": "You need enough bonded LPT to enter the active set (top 100 by stake)."
+            },
+            {
+              "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+              "values": [
+                "active set",
+                "top 100"
+              ],
+              "snippet": "The amount needed to enter the active set (top 100) varies — check for the current threshold."
+            }
+          ],
+          "best_known_truth": "Solo transcoding guidance repeatedly states that operators need enough bonded LPT to enter the active set, often phrased as top 100, but that wording is time-sensitive and should not be treated as durable fact without current evidence.",
+          "confidence": "low",
+          "recommended_action": "verify-more"
+        }
+      ],
+      "notes": "Use Explorer or protocol-facing sources for current state. Treat 'top 100' wording as volatile until rechecked."
+    },
+    {
+      "claim_id": "orch-pool-vs-solo-prerequisites",
+      "claim_family": "setup-prerequisites",
+      "entity": "orchestrator",
+      "canonical_owner": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+      "registry_status": "verified",
+      "status": "conflicted",
+      "freshness_class": "review-on-change",
+      "confidence": "low",
+      "summary": "Pool workers and solo operators have different prerequisites. Pages should not imply that LPT, ETH, or public service exposure are universal requirements for every orchestrator entry path.",
+      "evidence": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "snippets": [
+            "You can migrate to a solo orchestrator later.",
+            "It depends on your chosen path: Pool worker: No LPT required.",
+            "The pool operator handles staking and on chain operations.",
+            "Solo orchestrator / split setup / fleet: Yes."
+          ],
+          "values": [
+            "No LPT required",
+            "Pool worker",
+            "Solo orchestrator",
+            "solo orchestrator"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "snippets": [
+            "You want a solo orchestrator.",
+            "You want to be a pool worker.",
+            "→ Solo orchestrators must activate on chain by staking LPT.",
+            "The four paths at a glance Path Who it suits Stake required Ops lift Start here Pool worker GPU owner wanting passive income; no protocol ops No Low Solo orchestrator Single machine, full control, comfortable with ops Yes Medium Split setup (Siphon) Reward safety + key isolation; scale GPU machines independently Yes Medium Enterprise / fleet Data centre, multi node, commercial scale Yes High Solo vs pool vs Siphon: what actually differs It helps to understand what each setup controls before choosing."
+          ],
+          "values": [
+            "Pool worker",
+            "Solo orchestrator",
+            "pool worker",
+            "solo orchestrator"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+          "snippets": [
+            "To receive video transcoding jobs as a solo orchestrator, you must be in the active set — currently the top orchestrators by total bonded stake.",
+            "Ongoing time costs include: Initial setup and configuration: 4–16 hours Monitoring and maintenance: 1–3 hours/week once stable Troubleshooting edge cases: variable Keeping go livepeer updated: 30–60 minutes per release Pool workers have minimal ongoing time investment once the worker process is configured.",
+            "Solo orchestrators require more consistent attention, especially for reward calling reliability and gateway relationship management.",
+            "If you can't maintain ~95%+ uptime, the pool worker path is more appropriate."
+          ],
+          "values": [
+            "pool worker",
+            "solo orchestrator"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+          "snippets": [
+            "LPT on Arbitrum One — for staking."
+          ],
+          "values": []
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "orch-pool-vs-solo-prerequisites"
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "claim_id": "orch-pool-vs-solo-prerequisites"
+        },
+        {
+          "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "orch-pool-vs-solo-prerequisites"
+        },
+        {
+          "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+          "page_class": "setup",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "orch-pool-vs-solo-prerequisites"
+        }
+      ],
+      "contradictions": [
+        {
+          "claim_family": "setup-prerequisites",
+          "claim_id": "orch-pool-vs-solo-prerequisites",
+          "pages": [
+            {
+              "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+              "values": [
+                "No LPT required",
+                "Pool worker",
+                "Solo orchestrator",
+                "solo orchestrator"
+              ],
+              "snippet": "You can migrate to a solo orchestrator later."
+            },
+            {
+              "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+              "values": [
+                "Pool worker",
+                "Solo orchestrator",
+                "pool worker",
+                "solo orchestrator"
+              ],
+              "snippet": "You want a solo orchestrator."
+            },
+            {
+              "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+              "values": [
+                "pool worker",
+                "solo orchestrator"
+              ],
+              "snippet": "To receive video transcoding jobs as a solo orchestrator, you must be in the active set — currently the top orchestrators by total bonded stake."
+            },
+            {
+              "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+              "values": [],
+              "snippet": "LPT on Arbitrum One — for staking."
+            }
+          ],
+          "best_known_truth": "Pool workers and solo operators have different prerequisites. Pages should not imply that LPT, ETH, or public service exposure are universal requirements for every orchestrator entry path.",
+          "confidence": "low",
+          "recommended_action": "verify-more"
+        }
+      ],
+      "notes": "This is a durable claim family but still needs contradiction checks against setup-facing pages."
+    },
+    {
+      "claim_id": "orch-ai-routing-capability-based",
+      "claim_family": "ai-routing-mechanics",
+      "entity": "orchestrator",
+      "canonical_owner": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+      "registry_status": "verified",
+      "status": "conflicted",
+      "freshness_class": "review-on-change",
+      "confidence": "low",
+      "summary": "AI jobs are routed primarily by capability match and price ceilings rather than by stake weight. Docs should not collapse AI routing into the same rules as transcoding routing.",
+      "evidence": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+          "snippets": [
+            "Batch AI inference AI jobs route on capability match + price ceiling.",
+            "Stake plays a much smaller role.",
+            "This matters for operators: a new orchestrator with 24 GB VRAM and correctly configured AI pipelines can compete for AI jobs immediately, regardless of stake.",
+            "LLM inference Routes the same way as batch AI — capability match and price — but the capability check is against a specific Ollama model ID rather than a diffusion pipeline."
+          ],
+          "values": [
+            "Stake plays a much smaller role",
+            "capability match"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "snippets": [
+            "Workload quick reference: Workload Min hardware Pricing Selection by gateway Video transcoding Any NVENC capable NVIDIA GPU Wei per pixel; must be below gateway's Stake + price + performance score Batch AI inference 4–24 GB VRAM depending on pipeline Wei per pixel or per request; must be within gateway's capability price range Capability match + price ( ) Real time AI (live video to video) 8 GB+ VRAM Per interval during stream; price advertised per capability Capability match + latency Gateways filter orchestrators by price before routing work.",
+            "For AI, each capability has its own price ceiling configured on the gateway."
+          ],
+          "values": [
+            "Capability match"
+          ]
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "snippets": [],
+          "values": []
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "claim_id": "orch-ai-routing-capability-based"
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "orch-ai-routing-capability-based"
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "orch-ai-routing-capability-based"
+        }
+      ],
+      "contradictions": [
+        {
+          "claim_family": "ai-routing-mechanics",
+          "claim_id": "orch-ai-routing-capability-based",
+          "pages": [
+            {
+              "file": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+              "values": [
+                "Stake plays a much smaller role",
+                "capability match"
+              ],
+              "snippet": "Batch AI inference AI jobs route on capability match + price ceiling."
+            },
+            {
+              "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+              "values": [
+                "Capability match"
+              ],
+              "snippet": "Workload quick reference: Workload Min hardware Pricing Selection by gateway Video transcoding Any NVENC capable NVIDIA GPU Wei per pixel; must be below gateway's Stake + price + performance score Batch AI inference 4–24 GB VRAM depending on pipeline Wei per pixel or per request; must be within gateway's capability price range Capability match + price ( ) Real time AI (live video to video) 8 GB+ VRAM Per interval during stream; price advertised per capability Capability match + latency Gateways filter orchestrators by price before routing work."
+            }
+          ],
+          "best_known_truth": "AI jobs are routed primarily by capability match and price ceilings rather than by stake weight. Docs should not collapse AI routing into the same rules as transcoding routing.",
+          "confidence": "low",
+          "recommended_action": "verify-more"
+        }
+      ],
+      "notes": "This family is high-value because setup pages frequently mix stake-sensitive transcoding guidance with AI inference guidance."
+    },
+    {
+      "claim_id": "orch-reward-profitability-threshold",
+      "claim_family": "reward-profitability",
+      "entity": "orchestrator",
+      "canonical_owner": "v2/orchestrators/guides/staking-and-rewards/rewards-and-fees.mdx",
+      "registry_status": "time-sensitive",
+      "status": "conflicted",
+      "freshness_class": "volatile",
+      "confidence": "low",
+      "summary": "Reward-call profitability guidance should remain explicitly time-sensitive because gas cost, ETH price, and LPT price move. Docs must not present rough thresholds as durable constants.",
+      "evidence": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/staking-and-rewards/rewards-and-fees.mdx",
+          "checked_on": "2026-03-16",
+          "ok": true,
+          "matched": true,
+          "summary": "repo evidence matched"
+        }
+      ],
+      "page_observations": [
+        {
+          "file": "v2/orchestrators/guides/staking-and-rewards/rewards-and-fees.mdx",
+          "snippets": [
+            "This page covers the operational mechanics of how LPT rewards flow, how to call reliably, the economics of when calling reward is profitable, and how ETH fees move from job to wallet.",
+            "Calling Reward() — your options Option 1: Automatic (default, recommended) By default, go livepeer automatically calls at the start of each new round.",
+            "Option 2: Disable automatic, call manually Use this approach when you are newly activated with very low stake, and want to evaluate whether the gas cost exceeds the LPT value before committing to automatic calling.",
+            "Step 1: Disable automatic reward calls Step 2: Estimate whether calling is profitable this round Gather three inputs: 1."
+          ],
+          "values": []
+        },
+        {
+          "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+          "snippets": [
+            "Your orchestrator wallet needs ETH on Arbitrum One for: Reward() calls — one per round, approximately every 22 hours.",
+            "Is reward calling profitable for my stake?",
+            "If your stake is small, the LPT you'd receive per round may be worth less than the gas cost.",
+            "A rough check: open and find your orchestrator's \"Estimated Reward This Round.\" If that LPT value (converted to ETH at the current price) is less than approximately 0.00005 ETH ($0.12 at ETH=$2,500), the gas cost may exceed the reward."
+          ],
+          "values": [
+            "0.00005 ETH",
+            "approximately every 22 hours"
+          ]
+        }
+      ],
+      "propagation_queue": [
+        {
+          "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+          "page_class": "guide",
+          "role": "dependent-page",
+          "action": "verify-only",
+          "claim_id": "orch-reward-profitability-threshold"
+        },
+        {
+          "file": "v2/orchestrators/guides/staking-and-rewards/rewards-and-fees.mdx",
+          "page_class": "guide",
+          "role": "canonical-owner",
+          "action": "verify-only",
+          "claim_id": "orch-reward-profitability-threshold"
+        }
+      ],
+      "contradictions": [
+        {
+          "claim_family": "reward-profitability",
+          "claim_id": "orch-reward-profitability-threshold",
+          "pages": [
+            {
+              "file": "v2/orchestrators/guides/staking-and-rewards/rewards-and-fees.mdx",
+              "values": [],
+              "snippet": "This page covers the operational mechanics of how LPT rewards flow, how to call reliably, the economics of when calling reward is profitable, and how ETH fees move from job to wallet."
+            },
+            {
+              "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+              "values": [
+                "0.00005 ETH",
+                "approximately every 22 hours"
+              ],
+              "snippet": "Your orchestrator wallet needs ETH on Arbitrum One for: Reward() calls — one per round, approximately every 22 hours."
+            }
+          ],
+          "best_known_truth": "Reward-call profitability guidance should remain explicitly time-sensitive because gas cost, ETH price, and LPT price move. Docs must not present rough thresholds as durable constants.",
+          "confidence": "low",
+          "recommended_action": "verify-more"
+        }
+      ],
+      "notes": "Surface rough thresholds as review-sensitive even when the docs provide a range."
+    }
+  ],
+  "time_sensitive_claims": [],
+  "unverified_or_historical_claims": [],
+  "cross_page_contradictions": [
+    {
+      "claim_family": "hardware-vram-minimums",
+      "claim_id": "orch-batch-ai-vram-threshold",
+      "pages": [
+        {
+          "file": "v2/orchestrators/guides/operator-considerations/hardware-reference.mdx",
+          "values": [],
+          "snippet": "This page is a practical reference: GPU support policy, session limits by card, VRAM tiers by pipeline, and the minimum system stack needed before your node goes live."
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "values": [
+            "24 GB",
+            "8 GB"
+          ],
+          "snippet": "Workload quick reference: Workload Min hardware Pricing Selection by gateway Video transcoding Any NVENC capable NVIDIA GPU Wei per pixel; must be below gateway's Stake + price + performance score Batch AI inference 4–24 GB VRAM depending on pipeline Wei per pixel or per request; must be within gateway's capability price range Capability match + price ( ) Real time AI (live video to video) 8 GB+ VRAM Per interval during stream; price advertised per capability Capability match + latency Gateways filter orchestrators by price before routing work."
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "values": [
+            "16 GB",
+            "24 GB",
+            "8 GB",
+            "8–12 GB",
+            "A40",
+            "RTX 3090"
+          ],
+          "snippet": "Workload Minimum GPU Recommended GPU Video transcoding only NVIDIA RTX 3060 (8 GB VRAM) RTX 4080 / A4000 Batch AI inference NVIDIA RTX 3090 / A40 (24 GB VRAM) RTX 4090 / A100 Real time AI (Cascade) NVIDIA RTX 3090 (24 GB VRAM) RTX 4090 / A100 LLM inference only NVIDIA RTX 3060 Ti (8 GB VRAM) RTX 3090+ NVIDIA GPUs only."
+        },
+        {
+          "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+          "values": [
+            "24 GB",
+            "8–24 GB",
+            "RTX 3090"
+          ],
+          "snippet": "AI inference (batch): 8–24 GB VRAM depending on which pipelines you want to run."
+        },
+        {
+          "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+          "values": [
+            "16 GB",
+            "24 GB",
+            "8 GB"
+          ],
+          "snippet": "Hardware NVIDIA GPU with NVENC/NVDEC support installed and visible via NVIDIA driver version 525+ (Linux) or 527+ (Windows) CUDA 12.0+ installed (or plan to use the Docker image, which bundles CUDA) CPU: 4+ cores minimum, 8+ recommended RAM: 16 GB minimum, 32 GB recommended Storage: 100 GB SSD minimum (NVMe recommended for AI model weights) For AI inference, VRAM is the primary constraint: 8 GB for LLM only, 16 GB for basic batch AI, 24 GB+ for the full pipeline suite."
+        }
+      ],
+      "best_known_truth": "Docs disagree on the practical VRAM minimum for batch AI and real-time AI workloads. Hardware and setup pages should not present conflicting minimums as equally current.",
+      "confidence": "low",
+      "recommended_action": "verify-more"
+    },
+    {
+      "claim_family": "split-setup-reward-safety",
+      "claim_id": "orch-siphon-reward-isolation",
+      "pages": [
+        {
+          "file": "v2/orchestrators/guides/deployment-options/siphon-setup.mdx",
+          "values": [
+            "GPU machine can restart",
+            "reward",
+            "reward calling"
+          ],
+          "snippet": "If the GPU machine is busy or reboots mid round, you miss that round's LPT inflation reward — and missed rewards compound against you over time."
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "values": [
+            "Reward safety",
+            "keystore secure",
+            "reward",
+            "reward calling"
+          ],
+          "snippet": "Choose between a single machine setup (full go livepeer) or a split setup that keeps your keystore secure on a separate machine (Siphon)."
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "values": [
+            "Keystore isolated",
+            "Reward safety",
+            "reward",
+            "reward calling"
+          ],
+          "snippet": "Solo orchestrator / split setup / fleet: Yes."
+        }
+      ],
+      "best_known_truth": "A split setup with OrchestratorSiphon isolates the keystore from the GPU machine and keeps reward calling independent of GPU uptime. Docs should keep that claim aligned across setup-path pages.",
+      "confidence": "low",
+      "recommended_action": "verify-more"
+    },
+    {
+      "claim_family": "stake-threshold",
+      "claim_id": "orch-active-set-threshold",
+      "pages": [
+        {
+          "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+          "values": [
+            "active set"
+          ],
+          "snippet": "LPT rewards require bonded LPT, an active orchestrator registration, and a running node that calls each round."
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "values": [
+            "top 100"
+          ],
+          "snippet": "There is no minimum enforced by the protocol, but in practice you need enough stake to rank in the top 100 active orchestrators to receive transcoding work."
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "values": [
+            "active set",
+            "top 100"
+          ],
+          "snippet": "You need enough bonded LPT to enter the active set (top 100 by stake)."
+        },
+        {
+          "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+          "values": [
+            "active set",
+            "top 100"
+          ],
+          "snippet": "The amount needed to enter the active set (top 100) varies — check for the current threshold."
+        }
+      ],
+      "best_known_truth": "Solo transcoding guidance repeatedly states that operators need enough bonded LPT to enter the active set, often phrased as top 100, but that wording is time-sensitive and should not be treated as durable fact without current evidence.",
+      "confidence": "low",
+      "recommended_action": "verify-more"
+    },
+    {
+      "claim_family": "setup-prerequisites",
+      "claim_id": "orch-pool-vs-solo-prerequisites",
+      "pages": [
+        {
+          "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+          "values": [
+            "No LPT required",
+            "Pool worker",
+            "Solo orchestrator",
+            "solo orchestrator"
+          ],
+          "snippet": "You can migrate to a solo orchestrator later."
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "values": [
+            "Pool worker",
+            "Solo orchestrator",
+            "pool worker",
+            "solo orchestrator"
+          ],
+          "snippet": "You want a solo orchestrator."
+        },
+        {
+          "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+          "values": [
+            "pool worker",
+            "solo orchestrator"
+          ],
+          "snippet": "To receive video transcoding jobs as a solo orchestrator, you must be in the active set — currently the top orchestrators by total bonded stake."
+        },
+        {
+          "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+          "values": [],
+          "snippet": "LPT on Arbitrum One — for staking."
+        }
+      ],
+      "best_known_truth": "Pool workers and solo operators have different prerequisites. Pages should not imply that LPT, ETH, or public service exposure are universal requirements for every orchestrator entry path.",
+      "confidence": "low",
+      "recommended_action": "verify-more"
+    },
+    {
+      "claim_family": "ai-routing-mechanics",
+      "claim_id": "orch-ai-routing-capability-based",
+      "pages": [
+        {
+          "file": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+          "values": [
+            "Stake plays a much smaller role",
+            "capability match"
+          ],
+          "snippet": "Batch AI inference AI jobs route on capability match + price ceiling."
+        },
+        {
+          "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+          "values": [
+            "Capability match"
+          ],
+          "snippet": "Workload quick reference: Workload Min hardware Pricing Selection by gateway Video transcoding Any NVENC capable NVIDIA GPU Wei per pixel; must be below gateway's Stake + price + performance score Batch AI inference 4–24 GB VRAM depending on pipeline Wei per pixel or per request; must be within gateway's capability price range Capability match + price ( ) Real time AI (live video to video) 8 GB+ VRAM Per interval during stream; price advertised per capability Capability match + latency Gateways filter orchestrators by price before routing work."
+        }
+      ],
+      "best_known_truth": "AI jobs are routed primarily by capability match and price ceilings rather than by stake weight. Docs should not collapse AI routing into the same rules as transcoding routing.",
+      "confidence": "low",
+      "recommended_action": "verify-more"
+    },
+    {
+      "claim_family": "reward-profitability",
+      "claim_id": "orch-reward-profitability-threshold",
+      "pages": [
+        {
+          "file": "v2/orchestrators/guides/staking-and-rewards/rewards-and-fees.mdx",
+          "values": [],
+          "snippet": "This page covers the operational mechanics of how LPT rewards flow, how to call reliably, the economics of when calling reward is profitable, and how ETH fees move from job to wallet."
+        },
+        {
+          "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+          "values": [
+            "0.00005 ETH",
+            "approximately every 22 hours"
+          ],
+          "snippet": "Your orchestrator wallet needs ETH on Arbitrum One for: Reward() calls — one per round, approximately every 22 hours."
+        }
+      ],
+      "best_known_truth": "Reward-call profitability guidance should remain explicitly time-sensitive because gas cost, ETH price, and LPT price move. Docs must not present rough thresholds as durable constants.",
+      "confidence": "low",
+      "recommended_action": "verify-more"
+    }
+  ],
+  "propagation_queue": [
+    {
+      "file": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_id": "orch-ai-routing-capability-based"
+    },
+    {
+      "file": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "update-now",
+      "claim_id": "orch-price-ceiling-filtering"
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "orch-active-set-threshold"
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "orch-ai-routing-capability-based"
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "orch-batch-ai-vram-threshold"
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "orch-pool-vs-solo-prerequisites"
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "update-now",
+      "claim_id": "orch-price-ceiling-filtering"
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "update-now",
+      "claim_id": "orch-siphon-github-current"
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "orch-siphon-reward-isolation"
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "orch-active-set-threshold"
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "orch-ai-routing-capability-based"
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "orch-batch-ai-vram-threshold"
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_id": "orch-pool-vs-solo-prerequisites"
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "update-now",
+      "claim_id": "orch-siphon-github-current"
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "orch-siphon-reward-isolation"
+    },
+    {
+      "file": "v2/orchestrators/guides/deployment-options/siphon-setup.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_id": "orch-siphon-reward-isolation"
+    },
+    {
+      "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_id": "orch-active-set-threshold"
+    },
+    {
+      "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "orch-batch-ai-vram-threshold"
+    },
+    {
+      "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "orch-pool-vs-solo-prerequisites"
+    },
+    {
+      "file": "v2/orchestrators/guides/operator-considerations/feasibility-economics.mdx",
+      "page_class": "guide",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "orch-reward-profitability-threshold"
+    },
+    {
+      "file": "v2/orchestrators/guides/operator-considerations/hardware-reference.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_id": "orch-batch-ai-vram-threshold"
+    },
+    {
+      "file": "v2/orchestrators/guides/staking-and-rewards/rewards-and-fees.mdx",
+      "page_class": "guide",
+      "role": "canonical-owner",
+      "action": "verify-only",
+      "claim_id": "orch-reward-profitability-threshold"
+    },
+    {
+      "file": "v2/orchestrators/setup/r-configure.mdx",
+      "page_class": "setup",
+      "role": "canonical-owner",
+      "action": "update-now",
+      "claim_id": "orch-price-ceiling-filtering"
+    },
+    {
+      "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+      "page_class": "setup",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "orch-active-set-threshold"
+    },
+    {
+      "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+      "page_class": "setup",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "orch-batch-ai-vram-threshold"
+    },
+    {
+      "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+      "page_class": "setup",
+      "role": "dependent-page",
+      "action": "verify-only",
+      "claim_id": "orch-pool-vs-solo-prerequisites"
+    }
+  ],
+  "evidence_sources": [
+    {
+      "claim_id": "orch-batch-ai-vram-threshold",
+      "type": "repo-file",
+      "ref": "v2/orchestrators/guides/operator-considerations/hardware-reference.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "orch-batch-ai-vram-threshold",
+      "type": "repo-file",
+      "ref": "v2/orchestrators/setup/rcs-requirements.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "orch-siphon-reward-isolation",
+      "type": "repo-file",
+      "ref": "v2/orchestrators/guides/deployment-options/siphon-setup.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "orch-siphon-reward-isolation",
+      "type": "github-repo",
+      "ref": "https://github.com/Stronk-Tech/OrchestratorSiphon",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "GitHub evidence matched"
+    },
+    {
+      "claim_id": "orch-active-set-threshold",
+      "type": "official-page",
+      "ref": "https://explorer.livepeer.org/orchestrators",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": false,
+      "summary": "official page fetched but signal missing"
+    },
+    {
+      "claim_id": "orch-pool-vs-solo-prerequisites",
+      "type": "repo-file",
+      "ref": "v2/orchestrators/guides/deployment-options/setup-navigator.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "orch-pool-vs-solo-prerequisites",
+      "type": "repo-file",
+      "ref": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "orch-ai-routing-capability-based",
+      "type": "repo-file",
+      "ref": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "orch-ai-routing-capability-based",
+      "type": "repo-file",
+      "ref": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "orch-siphon-github-current",
+      "type": "github-repo",
+      "ref": "https://github.com/Stronk-Tech/OrchestratorSiphon",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "GitHub evidence matched"
+    },
+    {
+      "claim_id": "orch-price-ceiling-filtering",
+      "type": "repo-file",
+      "ref": "v2/orchestrators/setup/r-configure.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "orch-price-ceiling-filtering",
+      "type": "repo-file",
+      "ref": "v2/orchestrators/guides/deployment-options/find-your-path.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    },
+    {
+      "claim_id": "orch-reward-profitability-threshold",
+      "type": "repo-file",
+      "ref": "v2/orchestrators/guides/staking-and-rewards/rewards-and-fees.mdx",
+      "checked_on": "2026-03-16",
+      "ok": true,
+      "matched": true,
+      "summary": "repo evidence matched"
+    }
+  ],
+  "validation": {
+    "target_files": 6,
+    "claim_families": 7,
+    "contradictions": 6,
+    "evidence_sources": 13
+  }
+}

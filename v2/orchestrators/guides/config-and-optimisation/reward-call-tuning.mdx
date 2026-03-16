@@ -1,0 +1,176 @@
+---
+title: 'Reward Call Tuning'
+sidebarTitle: 'Reward Tuning'
+description: >-
+  Calculate whether reward calling is profitable at your stake level, configure
+  automatic vs manual calling, and optimise timing to minimise gas costs on Arbitrum.
+keywords:
+  - livepeer
+  - orchestrator
+  - reward calling
+  - LPT inflation
+  - gas costs
+  - Arbitrum
+  - reward cut
+  - stake threshold
+  - -reward flag
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: current
+lastVerified: '2026-03-16'
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+
+<Tip>
+  Every missed reward call is a permanently forfeited LPT allocation. There is no catch-up mechanism. Optimise the call timing and ETH balance to ensure reliability before optimising for gas efficiency.
+</Tip>
+
+---
+
+Every round (approximately 22 hours on Arbitrum), an active orchestrator calls `Reward()` on-chain to claim its proportional share of newly minted LPT. The call is a gas transaction on Arbitrum One. Small-stake operators reach a break-even threshold where gas overtakes the LPT value received, and calling reward starts destroying value instead of creating it.
+
+Use this page to calculate profitability, configure the `-reward` flag, choose between automatic and manual calling, and decide when skipping rounds is justified.
+
+<CustomDivider middleText="Profitability Threshold" />
+
+## Profitability calculation
+
+Reward calling is profitable when the LPT received (expressed in ETH) exceeds the gas cost of the transaction.
+
+**Gas cost per reward call:**
+
+```text icon="terminal" title="Reward call gas cost estimate"
+gas cost (ETH) = gas_used × gas_price_in_ETH
+
+Typical gas used:       350,000 – 450,000 gas
+Arbitrum gas price:     0.01 – 0.1 gwei (1 gwei = 1e-9 ETH)
+Approximate ETH cost:   0.0000035 – 0.000045 ETH
+```
+
+**LPT value per round:**
+
+```text icon="terminal" title="Round issuance formula"
+LPT earned = (your total stake / total active stake) × round_issuance × 0.90
+
+0.90 = 90% remaining after the 10% LIP-89 Treasury allocation
+```
+
+Round issuance varies with the current inflation rate. The Explorer shows current inflation at [explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators).
+
+**Break-even stake (illustrative):**
+
+At a typical Arbitrum gas cost of ~0.00002 ETH and LPT price of ~$4 USD, the minimum stake for profitable calling is approximately a few thousand LPT. The exact threshold moves with ETH/LPT price ratio and gas conditions.
+
+{/* FACT CHECK: Provide a worked numerical example once current inflation rate and LPT/ETH price are confirmed. The illustrative break-even figure (a few thousand LPT) is directionally correct but should be updated with current figures. Mehrdad / Livepeer protocol data to advise. */}
+
+Use the Explorer's "Estimated Reward This Round" figure on your orchestrator page as the quickest operational reference.
+
+<CustomDivider middleText="Automatic vs Manual" />
+
+## Automatic vs manual calling
+
+### Automatic calling (default)
+
+By default, go-livepeer calls `Reward()` automatically at the start of each new round. No action required after initial activation.
+
+```bash icon="terminal" title="Default automatic reward configuration"
+# Automatic reward is ON by default.
+# Confirm no -reward=false in your startup flags.
+livepeer \
+    -network arbitrum-one-mainnet \
+    -orchestrator \
+    ...
+```
+
+Requirements for successful automatic calling:
+- Node must be running at round initialisation (~22-hour intervals)
+- Orchestrator wallet must hold sufficient ETH on Arbitrum for the transaction
+- Orchestrator must be in the active set that round
+
+<Warning>
+  A node offline at round initialisation misses that round's reward permanently. Use a systemd service or Docker restart policy (`restart: unless-stopped`) to keep the node running continuously.
+</Warning>
+
+### Manual calling
+
+Disable automatic reward calls with `-reward=false` and call manually to evaluate profitability before committing:
+
+```bash icon="terminal" title="Disable automatic reward calls"
+livepeer \
+    -network arbitrum-one-mainnet \
+    -reward=false \
+    ...
+```
+
+Manual call via `livepeer_cli`:
+
+1. Verify the node is running
+2. Run `livepeer_cli`
+3. Select the `Invoke "reward"` option
+4. Wait for the transaction to confirm — confirmation appears in node logs
+
+```bash icon="terminal" title="Monitor reward call logs"
+# Monitor logs for reward confirmation
+journalctl -u livepeer -f | grep -i "reward"
+```
+
+{/* FACT CHECK: Confirm the exact livepeer_cli option name or number for manual reward calling in the current release. Rick to verify against the current livepeer_cli menu. */}
+
+<CustomDivider middleText="Timing Strategies" />
+
+## Timing considerations
+
+Arbitrum gas prices fluctuate. Calling early in a round (within the first minutes of initialisation) guarantees the call succeeds for that round, but it sometimes coincides with elevated gas during clustered orchestrator activity. Calling later in the round reduces that gas spike exposure while increasing downtime risk before the deadline.
+
+**For most operators:** leave automatic calling enabled. The gas savings from optimal timing are negligible on Arbitrum compared to the risk of a missed round from manual management.
+
+**For low-stake operators evaluating profitability:** run with `-reward=false` for 3 to 5 rounds. Check Arbiscan for current gas costs and use the Explorer to read the LPT value for those rounds. Continue without calling until delegation or price changes move the round value above gas cost.
+
+### When to skip calling intentionally
+
+Skip calling only when the profitability calculation is definitively negative. At Arbitrum gas prices, the break-even point is much lower than it was historically on Ethereum L1. Most operators with more than a few thousand LPT delegated will find automatic calling profitable.
+
+Only claimed LPT compounds. Unclaimed LPT stops accruing immediately, and the round allocation is lost instead of deferred.
+
+<CustomDivider middleText="Monitoring" />
+
+## Monitoring reward calls
+
+### Alert for missed rounds
+
+Set a Prometheus alert on the `livepeer_round_last_claim` metric. A value that stays fixed across rounds indicates a missed call.
+
+{/* FACT CHECK: Confirm the exact Prometheus metric name for last successful reward call or round tracking. Rick to verify against the current go-livepeer metrics export. */}
+
+### Check call history
+
+Your orchestrator's reward call history is visible on [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) on your orchestrator page. Each round shows whether the call succeeded, was skipped, or was missed.
+
+Monitor your ETH balance on Arbitrum via [Arbiscan](https://arbiscan.io/). The reward call gas cost appears as an outbound ETH transaction approximately every 22 hours when automatic calling is active.
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Reward Mechanics" icon="rotate" href="/v2/orchestrators/guides/staking-and-rewards/reward-mechanics" arrow horizontal>
+    Full reward flow, LPT inflation dynamics, and the rewardCut setting.
+  </Card>
+  <Card title="Earning Model" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earning-model" arrow horizontal>
+    How LPT inflation rewards combine with ETH job fees to form total income.
+  </Card>
+  <Card title="Metrics and Alerting" icon="chart-mixed" href="/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting" arrow horizontal>
+    Prometheus metrics including round tracking, alerting, and reward call confirmation.
+  </Card>
+  <Card title="Payment Receipts" icon="receipt" href="/v2/orchestrators/guides/payments-and-pricing/payment-receipts" arrow horizontal>
+    ETH fee receipt mechanics — the second income stream alongside LPT rewards.
+  </Card>
+</CardGroup>

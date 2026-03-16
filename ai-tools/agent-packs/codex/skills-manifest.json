@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-07T07:35:40.685Z",
+  "generated_at": "2026-03-14T13:24:21.828Z",
   "source_catalog": "ai-tools/ai-skills/catalog/skill-catalog.json",
   "source_manifest": "ai-tools/ai-skills/catalog/execution-manifest.json",
   "pipeline": [
@@ -138,6 +138,79 @@
       ],
       "severity_model": "info-only",
       "autofix_mode": "safe"
+    }
+  ],
+  "reference_skills": [
+    {
+      "id": "repo-audit-orchestrator",
+      "goal": "Run a full docs infrastructure audit pipeline and produce a unified scorecard.",
+      "commands": [
+        {
+          "name": "orchestrate",
+          "run": "node tools/scripts/repo-audit-orchestrator.js --mode static --scope full",
+          "modes": [
+            "static",
+            "runtime",
+            "full"
+          ]
+        }
+      ],
+      "inputs": [
+        "repo state",
+        "audit mode",
+        "scope",
+        "pipeline manifest",
+        "skill catalog"
+      ],
+      "outputs": [
+        "tasks/reports/repo-ops/repo-audit-summary.md",
+        "tasks/reports/repo-ops/repo-audit-summary.json"
+      ]
+    },
+    {
+      "id": "rubric-static-review",
+      "goal": "Provide static rubric-based scoring and risk prioritization.",
+      "commands": [
+        {
+          "name": "review",
+          "run": "read ai-tools/ai-skills/rubric-static-review/SKILL.md",
+          "modes": [
+            "static",
+            "full"
+          ]
+        }
+      ],
+      "inputs": [
+        "repository files",
+        "architecture docs",
+        "quality checks"
+      ],
+      "outputs": [
+        "scorecard",
+        "top actions"
+      ]
+    },
+    {
+      "id": "page-authoring",
+      "goal": "Comprehensive guide for writing new v2 documentation pages with correct UX patterns, components, frontmatter, UK English, journey mapping, and content standards.",
+      "commands": [
+        {
+          "name": "reference",
+          "run": "read ai-tools/ai-skills/page-authoring/SKILL.md",
+          "modes": [
+            "static"
+          ]
+        }
+      ],
+      "inputs": [
+        "page type",
+        "audience",
+        "section placement",
+        "persona context"
+      ],
+      "outputs": [
+        "new MDX page conforming to all repo standards"
+      ]
     }
   ],
   "catalog_version": "1.0.0",

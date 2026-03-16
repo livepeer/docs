@@ -1,0 +1,158 @@
+---
+mode: frame
+title: Gateway Home Portal
+sidebarTitle: Portal
+description: 'Welcome To The Gateway Portal: Explore, Navigate, Create'
+keywords:
+  - home
+  - index
+  - landing
+  - gateway
+  - gateways
+  - applications
+  - production builds
+  - broadcaster
+  - livepeer gateway
+  - livepeer gateways
+  - livepeer broadcaster
+  - livepeer broadcasters
+  - livepeer broadcasting
+  - livepeer broadcast
+  - livepeer broadcasts
+  - livepeer broadcast portal
+  - livepeer gateways portal
+  - livepeer broadcaster portal
+  - livepeer broadcasters portal
+  - livepeer broadcasting portal
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: landing
+audience: gateway-operator
+purpose: landing
+lastVerified: '2026-03-17'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Terminology is consistent with resources/glossary
+*/}
+
+
+import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer } from '/snippets/components/page-structure/portals.jsx'
+import { H1, H2, H5, P } from '/snippets/components/display/frame-mode.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { BlinkingIcon } from '/snippets/components/primitives/links.jsx'
+import { Starfield } from "/snippets/components/page-structure/heroGif.jsx";
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { CustomCardTitle } from '/snippets/components/primitives/customCardTitle.jsx'
+
+{/* HeroSectionContainer - Full width of content area (excludes sidebar, adapts to sidebar collapse) */}
+<HeroSectionContainer>
+
+ {/* HeroImageBackgroundComponent: Full-width Starfield Background - fills entire content area */}
+  <HeroImageBackgroundComponent>
+    <Starfield />
+  </HeroImageBackgroundComponent>
+
+ {/* HeroContentContainer - 80% width, centered within content area */}
+  <HeroContentContainer>
+ {/* LogoHeroContainer */}
+      <LogoHeroContainer imgHeight="20px" />
+
+ {/* PortalHeroContent */}
+        <PortalHeroContent
+          title="Gateways"
+          subtitle="Build – Create – Innovate"
+          refCardLink={
+              <Card
+                title="go-livepeer"
+                href="https://github.com/livepeer/go-livepeer"
+                icon="github"
+                arrow
+                horizontal
+              />
+            }
+          overview={
+          <>
+            Gateways serve as the primary demand aggregation layer in the Livepeer network.
+            They accept video transcoding and AI inference requests from end customers,
+            then distribute these jobs across the network of GPU-equipped Orchestrators.
+              <br />
+              <br />
+              Gateways are the core building block for those developers looking to productise applications built on top of the Livepeer protocol.
+              {/* <div style={{ fontSize: "0.9rem", fontStyle: "italic", color: "#888" }}>
+                  Note: In earlier documentation, Gateways were referred to as Broadcasters
+              </div> */}
+          </>
+          }
+        />
+
+      </HeroContentContainer>
+
+</HeroSectionContainer>
+ {/* END HERO */}
+
+<PortalContentContainer>
+    <PortalCardsHeader title="Gateway Portal">
+        <BlinkingIcon icon="circle-play" size={20}  />
+    </PortalCardsHeader>
+
+    <Columns cols={2}>
+      <Card
+        title={<CustomCardTitle icon="comment-question" title="What's a Gateway?" />}
+        href="./concepts/"
+        arrow
+      >
+        What? Where Am I? What's a Gateway? Why do I need one?
+        <LinkArrow href="./concepts/" label="Concepts" />
+      </Card>
+      <Card
+        title={<CustomCardTitle icon="film-canister" title="Gateway Navigator" />}
+        href="./navigator"
+        arrow
+      >
+        A map to Gateway paths & concepts by goal, topic & journey stage.
+         <LinkArrow href="./navigator" label="Navigator" />
+      </Card>
+            <Card
+        title={<CustomCardTitle icon="tools" title="Quickstart" />}
+        href="./quickstart/gateway-setup"
+        arrow
+      >
+        Get started with Gateways running a local go-livepeer node for video transcoding.
+
+        _Related:_ <LinkArrow href="./guides/tutorials/tutorial-1-offchain-transcoding-test" label="Full Gateway-Orchestrator Tutorial"/>
+      </Card>
+      <Card
+        title={<CustomCardTitle icon="rocket" title="Run a Gateway" />}
+        href="./setup"
+        arrow
+      >
+        <Badge color="green" icon="wand-magic-sparkles">
+        Developer Level Up
+        </Badge>
+        <br />
+            Deploy your own Gateway on the Livepeer Protocol with go-livepeer!
+      </Card>
+      <Card
+        title={<CustomCardTitle icon="laptop-file" title="Advanced Operations & Guides" />}
+        href="./guides/"
+        arrow
+      >
+        Full guides, tools, troubleshooting and tutorials for running a Livepeer Gateway node.
+      </Card>
+      <Card
+        title={<CustomCardTitle icon="code" title="Gateway Technical References" />}
+        href="./resources/technical"
+        arrow
+      >
+        Find API references, protocol specs, and other technical docs related to Gateways.
+      </Card>
+    </Columns>
+
+    <br />
+</PortalContentContainer>

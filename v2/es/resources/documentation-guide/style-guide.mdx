@@ -16,7 +16,7 @@ keywords:
 'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
 ---
 {/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9zdHlsZS1ndWlkZS5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3Jlc291cmNlcy9kb2N1bWVudGF0aW9uLWd1aWRlL3N0eWxlLWd1aWRlIiwic291cmNlSGFzaCI6IjA0NzExZDkxN2Y1YzQ4M2I4NDY2NDgyMWZjODBhNDFlZDY5NTgwODRmYmMxMDcyZDRkZGFlYzM1NzQxZWRiOWYiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDMtMDFUMTE6NTM6NTQuNzI1WiJ9 */}
-import { PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import { PreviewCallout } from '/snippets/components/primitives/previewCallouts.jsx'
 import { FocusableScrollRegions } from '/snippets/components/primitives/a11y.jsx'
 
 <PreviewCallout />
@@ -298,7 +298,7 @@ export const MyComponent = ({ variant = "default" }) => {
 
 **Después (✅ CORRECTO):**
 ```mdx
-import { FlexContainer } from '/snippets/components/primitives/layout.jsx';
+import { FlexContainer } from '/snippets/components/layout/layout.jsx';
 
 <FlexContainer gap="1rem">
   <Card>Content 1</Card>
@@ -477,7 +477,7 @@ import { GotoLink } from '/snippets/components/primitives/links.jsx';
 > This is a quote
 
 {/* ✅ Custom quote component with attribution */}
-import { FrameQuote } from '/snippets/components/display/quote.jsx';
+import { FrameQuote } from '/snippets/components/content/quote.jsx';
 <FrameQuote author="John Doe" source="Livepeer Blog" href="https://livepeer.org/blog">
   This is a quote with better visual design.
 </FrameQuote>
@@ -761,11 +761,11 @@ return <Accordion {...props}>{content}</Accordion>;
 Modo Frame (`mode: frame` en el frontmatter) elimina todo el estilo predeterminado de Mintlify. Al usar el modo frame:
 
 - Las encabezados de markdown predeterminados pueden no renderizarse correctamente
-- Use componentes de encabezado personalizados de `frame-mode.jsx`
+- Use componentes de encabezado personalizados de `frameMode.jsx`
 - Todo el estilo debe ser personalizado
 - Los componentes Mintlify aún funcionan pero pierden los estilos predeterminados
 - Mantenga las primitivas de diseño responsivo en `style.css` (`.frame-mode-container`, `.frame-mode-hero-full`, paginación de marco)
-- Mantenga la estructura específica de portal/página en componentes JSX compartidos (por ejemplo `/snippets/components/domain/SHARED/Portals.jsx`)
+- Mantenga la estructura específica de portal/página en componentes JSX compartidos (por ejemplo `/snippets/components/page-structure/portals.jsx`)
 - No use constantes de ruptura fijas directamente en los estilos de los componentes (por ejemplo, valores hardcodeados `96px`, `20px`, o fijas `%` anchuras)
 - Preferir variables de CSS + puntos de interrupción para el diseño en modo marco, y propiedades personalizadas de CSS (`var(--...)`) para la temática
 

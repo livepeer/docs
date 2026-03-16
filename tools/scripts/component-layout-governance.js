@@ -1,32 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script component-layout-governance
- * @summary Validate v2 English docs against component-layout contracts by page type.
- * @owner docs
- * @scope tools/scripts, v2, tools/config/component-layout-profile.json
- * @pipeline manual — interactive developer tool, not suited for automated pipelines
- *
- * @usage
- *   node tools/scripts/component-layout-governance.js --scope full
- *
- * @inputs
- *   --scope <changed|full> (default: full)
- *   --output-dir <path> (default: tasks/reports/repo-ops)
- *   --profile <path> (default: tools/config/component-layout-profile.json)
- *
- * @outputs
- *   - tasks/reports/repo-ops/component-layout-governance.md
- *   - tasks/reports/repo-ops/component-layout-governance.json
- *
- * @exit-codes
- *   0 = audit completed
- *   1 = runtime error
- *
- * @examples
- *   node tools/scripts/component-layout-governance.js --scope changed
- *
- * @notes
- *   Static-only analysis. Phase-1 scope is English v2 documentation.
+ * @script            component-layout-governance
+ * @category          validator
+ * @purpose           qa:repo-health
+ * @scope             tools/scripts, v2, tools/config/component-layout-profile.json
+ * @owner             docs
+ * @needs             E-C1, R-R14
+ * @purpose-statement Component layout governance validator — checks v2 page layouts against approved component contracts
+ * @pipeline          P5, P6
+ * @usage             node tools/scripts/component-layout-governance.js [flags]
  */
 
 const fs = require('fs');

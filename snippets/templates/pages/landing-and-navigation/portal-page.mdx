@@ -1,0 +1,111 @@
+---
+mode: frame
+title: Portal Page Template
+sidebarTitle: Portal Template
+tag: Start Here
+description: Copy-ready portal landing page scaffold with frame-mode hero content and mission cards.
+keywords:
+  - livepeer
+  - portal
+  - landing
+  - template
+audience: everyone
+pageType: landing
+purpose: landing
+status: draft
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+{/* Copy this template into a routable docs path and replace the placeholder content. */}
+{/* Keep the frame-mode heading imports and CustomDivider import unless portals.jsx is updated to own those dependencies internally. */}
+
+import {
+  PortalHeroContent,
+  HeroImageBackgroundComponent,
+  LogoHeroContainer,
+  HeroContentContainer,
+  HeroSectionContainer,
+  PortalCardsHeader,
+  PortalContentContainer,
+} from '/snippets/components/page-structure/portals.jsx'
+import { H1, H2 } from '/snippets/components/display/frame-mode.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { BlinkingIcon } from '/snippets/components/primitives/links.jsx'
+import { Starfield } from '/snippets/components/page-structure/heroGif.jsx'
+
+<HeroSectionContainer>
+  <HeroImageBackgroundComponent>
+    <Starfield />
+  </HeroImageBackgroundComponent>
+
+  <HeroContentContainer>
+    <LogoHeroContainer imgHeight="20px" />
+
+    <PortalHeroContent
+      title="Portal Hero Title"
+      subtitle="Explore - Learn - Build"
+      refCardLink={
+        <Card
+          title="Reference Repo"
+          href="https://github.com/livepeer/docs"
+          icon="github"
+          arrow
+          horizontal
+        />
+      }
+      overview={
+        <>
+          Replace this copy with a short overview that explains what this portal covers and who should use it.
+          <br />
+          <br />
+          Keep the hero summary concise, then route readers into the card grid below.
+        </>
+      }
+    />
+  </HeroContentContainer>
+</HeroSectionContainer>
+
+<PortalContentContainer>
+  <PortalCardsHeader title="Portal Name">
+    <BlinkingIcon icon="circle-play" size={20} />
+  </PortalCardsHeader>
+
+  <Columns cols={2}>
+    <Card
+      title="Start here"
+      icon="compass"
+      href="/templates/pages/overview-page-template"
+      arrow
+    >
+      Introduce the first recommended path for readers who are new to this section.
+    </Card>
+    <Card
+      title="Primary workflow"
+      icon="rocket"
+      href="/templates/pages/how-to-page-template"
+      arrow
+    >
+      Point readers to the main setup, onboarding, or execution flow for this portal.
+    </Card>
+    <Card
+      title="Advanced path"
+      icon="wrench"
+      href="/templates/pages/setup-and-code-layouts/multi-view-page-template"
+      arrow
+    >
+      Route experienced users to deeper operational, architectural, or optimization guidance.
+    </Card>
+    <Card
+      title="Tools and resources"
+      icon="book"
+      href="/templates/pages/reference-page-template"
+      arrow
+    >
+      Link to FAQs, references, dashboards, guides, and supporting materials.
+    </Card>
+  </Columns>
+</PortalContentContainer>

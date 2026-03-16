@@ -2,11 +2,11 @@
 # @script            mint-dev
 # @category          utility
 # @purpose           tooling:dev-tools
-# @scope             tools/scripts
+# @scope             full-repo
 # @owner             docs
 # @needs             E-C6, F-C1
 # @purpose-statement Mintlify dev server launcher — starts mint dev with correct configuration
-# @pipeline          manual — interactive developer tool, not suited for automated pipelines
+# @pipeline          manual — developer tool
 # @usage             bash tools/scripts/mint-dev.sh [flags]
 set -euo pipefail
 
@@ -14,6 +14,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 MINT_WORKDIR="$REPO_ROOT"
 SCOPE_GENERATOR="$REPO_ROOT/tools/scripts/dev/generate-mint-dev-scope.js"
 SCOPED_MODE="${LPD_SCOPED_MINT_DEV:-0}"
+DOCS_CONFIG="${LPD_MINT_DOCS_CONFIG:-}"
 SCOPE_INTERACTIVE="${LPD_MINT_SCOPE_INTERACTIVE:-0}"
 SCOPE_FILE="${LPD_MINT_SCOPE_FILE:-}"
 SCOPE_VERSIONS="${LPD_MINT_SCOPE_VERSIONS:-}"
@@ -37,7 +38,7 @@ path_has_glob_meta() {
     esac
 }
 
-if path_has_glob_meta "$REPO_ROOT"; then
+if [ "$SCOPED_MODE" != "1" ] && path_has_glob_meta "$REPO_ROOT"; then
     REPO_HASH="$(printf '%s' "$REPO_ROOT" | cksum | awk '{print $1}')"
     WATCH_SAFE_LINK="/tmp/mint-dev-${REPO_HASH}"
     ln -sfn "$REPO_ROOT" "$WATCH_SAFE_LINK"
@@ -80,7 +81,7 @@ cleanup_lock_file() {
     fi
 }
 
-build_scoped_workspace() {
+run_scoped_workspace_session() {
     if ! command -v node >/dev/null 2>&1; then
         echo "Error: node is required for --scoped dev profile generation." >&2
         exit 1
@@ -92,8 +93,11 @@ build_scoped_workspace() {
     fi
 
     local -a scope_cmd
-    scope_cmd=(node "$SCOPE_GENERATOR" --repo-root "$REPO_ROOT")
+    scope_cmd=(node "$SCOPE_GENERATOR" --repo-root "$REPO_ROOT" --run-scoped-session)
 
+    if [ -n "$DOCS_CONFIG" ]; then
+        scope_cmd+=(--docs-config "$DOCS_CONFIG")
+    fi
     if [ "$SCOPE_INTERACTIVE" = "1" ]; then
         scope_cmd+=(--interactive)
     fi
@@ -116,38 +120,11 @@ build_scoped_workspace() {
         scope_cmd+=(--disable-openapi)
     fi
 
-    local scope_json
-    if ! scope_json="$("${scope_cmd[@]}")"; then
-        echo "Error: failed to generate scoped Mint workspace." >&2
-        exit 1
+    if [ "$#" -gt 0 ]; then
+        scope_cmd+=(-- "$@")
     fi
 
-    local parsed
-    if ! parsed="$(printf '%s' "$scope_json" | node -e '
-let input = "";
-process.stdin.on("data", (chunk) => { input += chunk; });
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
-  const original = payload && payload.routeCounts ? Number(payload.routeCounts.original || 0) : 0;
-  const scoped = payload && payload.routeCounts ? Number(payload.routeCounts.scoped || 0) : 0;
-  const data = [payload.workspaceDir || "", payload.scopeHash || "", String(original), String(scoped)];
-  process.stdout.write(data.join("|"));
-});
-')"; then
-        echo "Error: invalid scoped profile output from generator." >&2
-        exit 1
-    fi
-
-    local scoped_workspace scope_hash original_routes scoped_routes
-    IFS='|' read -r scoped_workspace scope_hash original_routes scoped_routes <<< "$parsed"
-
-    if [ -z "$scoped_workspace" ] || [ ! -d "$scoped_workspace" ]; then
-        echo "Error: scoped workspace path is invalid: $scoped_workspace" >&2
-        exit 1
-    fi
-
-    MINT_WORKDIR="$scoped_workspace"
-    echo "Using scoped Mint workspace: $MINT_WORKDIR (routes ${scoped_routes}/${original_routes}, hash ${scope_hash})"
+    "${scope_cmd[@]}"
 }
 
 cd "$REPO_ROOT"
@@ -189,9 +166,7 @@ fi
 echo "Fetching external snippets..."
 bash tools/scripts/snippets/fetch-external-docs.sh
 
-if [ "$SCOPED_MODE" = "1" ]; then
-    build_scoped_workspace
-elif [ "$DISABLE_OPENAPI" = "1" ]; then
+if [ "$SCOPED_MODE" != "1" ] && [ "$DISABLE_OPENAPI" = "1" ]; then
     echo "Warning: --disable-openapi has no effect without --scoped."
 fi
 
@@ -199,9 +174,17 @@ MINT_LOCK_FILE="$(mint_lock_file_path)"
 ensure_no_active_mint_dev "$MINT_LOCK_FILE"
 {
     echo "$$"
-    echo "$MINT_WORKDIR"
+    if [ "$SCOPED_MODE" = "1" ]; then
+        echo "scoped-session"
+    else
+        echo "$MINT_WORKDIR"
+    fi
 } > "$MINT_LOCK_FILE"
 trap cleanup_lock_file EXIT INT TERM
 
-cd "$MINT_WORKDIR"
-mint dev "$@"
+if [ "$SCOPED_MODE" = "1" ]; then
+    run_scoped_workspace_session "$@"
+else
+    cd "$MINT_WORKDIR"
+    mint dev "$@"
+fi

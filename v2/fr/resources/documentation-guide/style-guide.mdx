@@ -16,7 +16,7 @@ keywords:
 'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
 ---
 {/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9zdHlsZS1ndWlkZS5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3Jlc291cmNlcy9kb2N1bWVudGF0aW9uLWd1aWRlL3N0eWxlLWd1aWRlIiwic291cmNlSGFzaCI6IjA0NzExZDkxN2Y1YzQ4M2I4NDY2NDgyMWZjODBhNDFlZDY5NTgwODRmYmMxMDcyZDRkZGFlYzM1NzQxZWRiOWYiLCJsYW5ndWFnZSI6ImZyIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDMtMDFUMTI6MjI6MTMuNzMxWiJ9 */}
-import { PreviewCallout } from '/snippets/components/domain/SHARED/previewCallouts.jsx'
+import { PreviewCallout } from '/snippets/components/primitives/previewCallouts.jsx'
 import { FocusableScrollRegions } from '/snippets/components/primitives/a11y.jsx'
 
 <PreviewCallout />
@@ -298,7 +298,7 @@ export const MyComponent = ({ variant = "default" }) => {
 
 **Après (✅ CORRECT) :**
 ```mdx
-import { FlexContainer } from '/snippets/components/primitives/layout.jsx';
+import { FlexContainer } from '/snippets/components/layout/layout.jsx';
 
 <FlexContainer gap="1rem">
   <Card>Content 1</Card>
@@ -477,7 +477,7 @@ import { GotoLink } from '/snippets/components/primitives/links.jsx';
 > This is a quote
 
 {/* ✅ Custom quote component with attribution */}
-import { FrameQuote } from '/snippets/components/display/quote.jsx';
+import { FrameQuote } from '/snippets/components/content/quote.jsx';
 <FrameQuote author="John Doe" source="Livepeer Blog" href="https://livepeer.org/blog">
   This is a quote with better visual design.
 </FrameQuote>
@@ -761,11 +761,11 @@ return <Accordion {...props}>{content}</Accordion>;
 Mode Frame (`mode: frame` dans le frontmatter) supprime tous les styles par défaut Mintlify. Lors de l'utilisation du mode frame :
 
 - Les titres markdown par défaut peuvent ne pas s'afficher correctement
-- Utilisez les composants de titre personnalisés de `frame-mode.jsx`
+- Utilisez les composants de titre personnalisés de `frameMode.jsx`
 - Tous les styles doivent être personnalisés
 - Mintlify les composants fonctionnent toujours mais perdent les styles par défaut
 - Conservez les primitives de mise en page réactive dans `style.css` (`.frame-mode-container`, `.frame-mode-hero-full`, pagination des cadres)
-- Conserve la structure spécifique à la page dans les composants JSX partagés (par exemple `/snippets/components/domain/SHARED/Portals.jsx`)
+- Conserve la structure spécifique à la page dans les composants JSX partagés (par exemple `/snippets/components/page-structure/portals.jsx`)
 - N'utilisez pas directement des constantes de déblocage fixes dans les styles des composants (par exemple, une valeur codée en dur `96px`, `20px`, ou des largeurs fixes `%`)}
 - Préférez les variables CSS + les points de cassure pour le mode de disposition du cadre, et les propriétés CSS personnalisées (`var(--...)`) pour le thème
 
@@ -920,7 +920,7 @@ Avant de soumettre la documentation :
 1. Utilisez Puppeteer ou un outil similaire pour charger chaque page
 2. Attendez que le réseau soit inactif
 3. Vérifiez les erreurs de la console (en filtrant les artefacts du script de test)
-4. Vérifier la longueur du contenu > 500 caractères
+4. Vérifier la longueur du contenu &gt; 500 caractères
 5. Vérifier l'existence d'un élément H1
 6. Rechercher des erreurs 404
 

@@ -6,12 +6,13 @@
  * @owner             docs
  * @needs             E-C1, R-R14
  * @purpose-statement Component usage auditor — scans pages for component usage patterns and reports statistics
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
+ * @pipeline          P5, P6
  * @usage             node tools/scripts/audit-component-usage.js [flags]
  */
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { getEnglishComponentLibraryDocPaths } = require('../lib/component-governance-utils');
 
 const REPORT_PATH = path.join(__dirname, '..', '..', 'tasks', 'reports', 'repo-ops', 'component-usage-audit.json');
 
@@ -37,6 +38,13 @@ function resolveFirstExistingPath(candidates) {
     if (fs.existsSync(candidate)) return candidate;
   }
   return candidates[0];
+}
+
+function getComponentLibraryAuditFiles() {
+  return getEnglishComponentLibraryDocPaths()
+    .map((filePath) => resolveFirstExistingPath([filePath]))
+    .filter((filePath, index, files) => filePath && files.indexOf(filePath) === index)
+    .filter((filePath) => fs.existsSync(filePath));
 }
 
 // Get all exported components from snippets/components
@@ -105,37 +113,7 @@ function getCategory(filePath) {
 function getComponentLibraryComponents() {
   const used = new Set();
   const commented = new Set();
-  
-  const libFiles = [
-    resolveFirstExistingPath([
-      'v2/resources/documentation-guide/component-library.mdx',
-      'v2/resources/documentation-guide/component-library.mdx'
-    ]),
-    resolveFirstExistingPath([
-      'v2/resources/documentation-guide/component-library/primitives.mdx',
-      'v2/resources/documentation-guide/component-library/primitives.mdx'
-    ]),
-    resolveFirstExistingPath([
-      'v2/resources/documentation-guide/component-library/display.mdx',
-      'v2/resources/documentation-guide/component-library/display.mdx'
-    ]),
-    resolveFirstExistingPath([
-      'v2/resources/documentation-guide/component-library/content.mdx',
-      'v2/resources/documentation-guide/component-library/content.mdx'
-    ]),
-    resolveFirstExistingPath([
-      'v2/resources/documentation-guide/component-library/layout.mdx',
-      'v2/resources/documentation-guide/component-library/layout.mdx'
-    ]),
-    resolveFirstExistingPath([
-      'v2/resources/documentation-guide/component-library/integrations.mdx',
-      'v2/resources/documentation-guide/component-library/integrations.mdx'
-    ]),
-    resolveFirstExistingPath([
-      'v2/resources/documentation-guide/component-library/domain.mdx',
-      'v2/resources/documentation-guide/component-library/domain.mdx'
-    ])
-  ];
+  const libFiles = getComponentLibraryAuditFiles();
   
   libFiles.forEach(file => {
     if (!fs.existsSync(file)) return;
@@ -250,59 +228,77 @@ function getSnippetsComponents() {
   return used;
 }
 
-// Main audit
-const allComponents = getAllExportedComponents();
-const libComponents = getComponentLibraryComponents();
-const v2Components = getV2PageComponents();
-const snippetComponents = getSnippetsComponents();
+function buildReport() {
+  const allComponents = getAllExportedComponents();
+  const libComponents = getComponentLibraryComponents();
+  const v2Components = getV2PageComponents();
+  const snippetComponents = getSnippetsComponents();
 
-// Combine all usage
-const allUsed = new Set();
-v2Components.forEach((files, comp) => allUsed.add(comp));
-snippetComponents.forEach((files, comp) => allUsed.add(comp));
-libComponents.used.forEach(comp => allUsed.add(comp));
+  const allUsed = new Set();
+  v2Components.forEach((_files, componentName) => allUsed.add(componentName));
+  snippetComponents.forEach((_files, componentName) => allUsed.add(componentName));
+  libComponents.used.forEach((componentName) => allUsed.add(componentName));
 
-// Find components NOT in component library but used in v2 pages
-const notInLibraryButUsed = [];
-v2Components.forEach((files, comp) => {
-  if (!libComponents.used.has(comp) && !libComponents.commented.has(comp)) {
-    notInLibraryButUsed.push({
-      component: comp,
-      files: files,
-      category: allComponents.get(comp)?.category || 'unknown'
-    });
-  }
-});
+  const notInLibraryButUsed = [];
+  v2Components.forEach((files, componentName) => {
+    if (!libComponents.used.has(componentName) && !libComponents.commented.has(componentName)) {
+      notInLibraryButUsed.push({
+        component: componentName,
+        files,
+        category: allComponents.get(componentName)?.category || 'unknown'
+      });
+    }
+  });
 
-// Find components NOT used anywhere
-const notUsed = [];
-allComponents.forEach((info, comp) => {
-  if (!allUsed.has(comp)) {
-    notUsed.push({
-      component: comp,
-      file: info.relativePath,
-      category: info.category
-    });
-  }
-});
+  const notUsed = [];
+  allComponents.forEach((info, componentName) => {
+    if (!allUsed.has(componentName)) {
+      notUsed.push({
+        component: componentName,
+        file: info.relativePath,
+        category: info.category
+      });
+    }
+  });
 
-// Generate report
-const report = {
-  summary: {
-    totalComponents: allComponents.size,
-    inComponentLibrary: libComponents.used.size,
-    commentedOutInLibrary: libComponents.commented.size,
-    usedInV2Pages: v2Components.size,
-    usedInSnippets: snippetComponents.size,
-    notInLibraryButUsedInV2: notInLibraryButUsed.length,
-    notUsedAnywhere: notUsed.length
-  },
-  notInLibraryButUsedInV2: notInLibraryButUsed.sort((a, b) => a.component.localeCompare(b.component)),
-  notUsedAnywhere: notUsed.sort((a, b) => a.component.localeCompare(b.component))
+  return {
+    summary: {
+      totalComponents: allComponents.size,
+      inComponentLibrary: libComponents.used.size,
+      commentedOutInLibrary: libComponents.commented.size,
+      usedInV2Pages: v2Components.size,
+      usedInSnippets: snippetComponents.size,
+      notInLibraryButUsedInV2: notInLibraryButUsed.length,
+      notUsedAnywhere: notUsed.length
+    },
+    notInLibraryButUsedInV2: notInLibraryButUsed.sort((left, right) =>
+      left.component.localeCompare(right.component)
+    ),
+    notUsedAnywhere: notUsed.sort((left, right) =>
+      left.component.localeCompare(right.component)
+    )
+  };
+}
+
+function writeReport(report) {
+  fs.mkdirSync(path.dirname(REPORT_PATH), { recursive: true });
+  fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2));
+}
+
+function run() {
+  const report = buildReport();
+  console.log(JSON.stringify(report, null, 2));
+  writeReport(report);
+  return report;
+}
+
+if (require.main === module) {
+  run();
+}
+
+module.exports = {
+  getComponentLibraryAuditFiles,
+  getComponentLibraryComponents,
+  buildReport,
+  run
 };
-
-console.log(JSON.stringify(report, null, 2));
-
-// Also write to file
-fs.mkdirSync(path.dirname(REPORT_PATH), { recursive: true });
-fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2));

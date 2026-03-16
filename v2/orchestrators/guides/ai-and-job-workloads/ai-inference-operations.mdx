@@ -1,0 +1,468 @@
+---
+title: AI Inference Operations
+sidebarTitle: AI Inference
+description: >-
+  How AI inference works on the Livepeer network — pipeline types, the batch vs
+  live-video distinction, hardware requirements, and how jobs flow from application
+  to your GPU node.
+keywords:
+  - livepeer
+  - orchestrator
+  - ai workloads
+  - batch ai
+  - live-video ai
+  - cascade
+  - live-video-to-video
+  - ai pipelines
+  - gpu inference
+  - comfystream
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: orchestrator
+purpose: concept
+status: published
+lastVerified: 2026-03-13
+---
+{/* Draft note: keep copy direct, UK spelling, and route unresolved factual checks to JSX comments only. */}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+Livepeer's AI subnet launched in Q3 2024 and has grown into a major source of new fee revenue for orchestrators. It turns GPU nodes into open, composable inference infrastructure that serves image generation, live-video effects, and large language model completions.
+
+AI workloads reach your node through gateway routing, capability advertisement, and container-based inference. The core operator distinction is between batch inference and live-video inference because the hardware profile and routing logic differ.
+
+<BorderedBox variant="accent">
+  <AccordionGroup>
+    <Accordion title="Already running video?" icon="clapperboard">
+      AI pipelines sit beside an existing video orchestrator. The usual delta is:
+
+      - keep the existing go-livepeer service and video pricing flags
+      - add the AI worker and `aiModels.json`
+      - budget VRAM for the models you want warm
+      - expose only the pipelines you keep healthy under load
+
+      See [Dual Mode Configuration](/v2/orchestrators/guides/deployment-details/dual-mode-configuration) for the exact operational delta and [Diffusion Pipeline Setup](/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup) for the first AI worker path.
+    </Accordion>
+  </AccordionGroup>
+</BorderedBox>
+
+<Note>
+  **Low-LPT entry path:** AI inference is often a better starting point than solo video orchestration when stake is limited. Capability, pricing, and latency matter more than active-set position for many AI jobs.
+</Note>
+
+<CustomDivider />
+
+## How the network routes AI jobs
+
+Applications never communicate with orchestrators directly. Every request flows through a gateway, which handles authentication, pricing negotiation, and routing to qualified nodes.
+
+``` icon="terminal"
+Application / User
+       ↓
+Gateway (routing, auth, pricing, QoS)
+       ↓
+Orchestrator (go-livepeer + AI Worker)
+       ↓
+AI Runner container (your GPU + model)
+       ↓
+Result returned through gateway
+```
+
+Your orchestrator advertises **capabilities** — which pipelines it supports and at what price — and gateways route matching jobs to it. You never build a marketplace, billing system, or authentication layer. You run excellent inference infrastructure.
+
+When a gateway selects your orchestrator, it is because your combination of capability, pricing, latency, and uptime made you the best option for that specific request.
+
+### How gateway selection actually works
+
+Gateways discover orchestrators through the `OrchestratorInfo` structure, which your node broadcasts and updates on-chain. The key fields that determine whether you receive AI jobs are:
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Field</TableCell>
+    <TableCell header>What it controls</TableCell>
+    <TableCell header>Operator implication</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`capabilities`</TableCell>
+    <TableCell>Which pipelines you support</TableCell>
+    <TableCell>Declare every pipeline in `aiModels.json`</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`capabilities_prices`</TableCell>
+    <TableCell>Your price per pipeline and model</TableCell>
+    <TableCell>Must be below the gateway's `-maxPricePerCapability`</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`hardware`</TableCell>
+    <TableCell>GPU specs advertised to the gateway</TableCell>
+    <TableCell>Auto-populated by go-livepeer</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`price_info`</TableCell>
+    <TableCell>Base transcoding price</TableCell>
+    <TableCell>Controls transcoding job eligibility</TableCell>
+  </TableRow>
+</StyledTable>
+
+**Gateway pricing is a hard gate.** Gateways configure a maximum price they will pay per capability using the `-maxPricePerCapability` JSON flag. A pipeline priced above that maximum receives no jobs from that gateway, regardless of hardware quality.
+
+Before setting prices in `aiModels.json`, check what prices the major gateways are using. See [Models and VRAM Reference](/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference) for a pricing reference table and [Gateway Orchestrator Offerings](/v2/gateways/resources/technical/orchestrator-offerings) for the full capability discovery protocol documentation.
+
+For the complete list of supported pipelines and their model architectures, see [AI Model Support](/v2/developers/concepts/ai-on-livepeer) in the Developers section.
+
+<CustomDivider />
+
+## The two workload types
+
+The most important distinction for operators is between **batch AI** and **live-video AI**. These are different job types with different hardware profiles, different runtime architectures, and different operational characteristics.
+
+<CardGroup cols={2}>
+  <Card title="Batch AI" icon="layer-group" href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup">
+    Request-response inference. An application sends a prompt or media file, your node processes it and returns the result. Includes text-to-image, audio-to-text, image-to-video, LLM completions, and more.
+  </Card>
+  <Card title="Cascade live-video AI" icon="video" href="/v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup">
+    Continuous frame-by-frame video transformation. Live video streams in, processed video streams out with sub-100ms latency. Used for live AI effects, generative video overlays, and streaming AI agents.
+  </Card>
+</CardGroup>
+
+### Comparison
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header></TableCell>
+    <TableCell header>Batch AI</TableCell>
+    <TableCell header>Live-video AI</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Latency target**</TableCell>
+    <TableCell>Seconds per request</TableCell>
+    <TableCell>&lt;100ms per frame</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Input type**</TableCell>
+    <TableCell>Text, image, audio, video files</TableCell>
+    <TableCell>Live video stream (WebRTC)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Output type**</TableCell>
+    <TableCell>Image, text, audio, video</TableCell>
+    <TableCell>Processed live video stream</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Runtime**</TableCell>
+    <TableCell>`livepeer/ai-runner` containers</TableCell>
+    <TableCell>`livepeer/ai-runner:live-base` + ComfyStream</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Min VRAM**</TableCell>
+    <TableCell>4–24 GB depending on pipeline</TableCell>
+    <TableCell>24 GB recommended</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Good for**</TableCell>
+    <TableCell>High-throughput, varied workloads</TableCell>
+    <TableCell>Streaming AI effects, Cascade pipeline</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Entry hardware**</TableCell>
+    <TableCell>RTX 2060 (8 GB) for LLM; RTX 3090/4090 for diffusion</TableCell>
+    <TableCell>RTX 4090 (24 GB) or better</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Pricing unit**</TableCell>
+    <TableCell>Per pixel, per token, or per ms</TableCell>
+    <TableCell>Per frame</TableCell>
+  </TableRow>
+</StyledTable>
+
+<CustomDivider />
+
+## AI pipeline types
+
+Livepeer's AI worker supports ten pipeline types. Each pipeline handles a specific class of inference task, with its own model format, VRAM floor, and pricing unit.
+
+<AccordionGroup>
+
+<Accordion  title="text-to-image — Generate images from text prompts" icon="circle-question">
+The most widely used batch AI pipeline on the network. Takes a text prompt and sampling parameters, returns a generated image.
+
+**Minimum VRAM:** 24 GB
+**Pricing unit:** Per output pixel
+**Recommended model:** `SG161222/RealVisXL_V4.0_Lightning`
+**Typical hardware:** RTX 3090, RTX 4090, A5000
+
+Diffusion models (Stable Diffusion, SDXL variants) run natively on the managed `livepeer/ai-runner` container. The Lightning and Turbo variants reduce step count to deliver results in under 2 seconds on an RTX 4090.
+
+**Source:** [SG161222/RealVisXL_V4.0_Lightning on HuggingFace](https://huggingface.co/SG161222/RealVisXL_V4.0_Lightning)
+</Accordion>
+
+<Accordion  title="image-to-image — Style transfer and transformation" icon="circle-question">
+Takes an input image and applies diffusion-based transformation, style transfer, or enhancement. Used for artistic style application, image enhancement, and controlled generation.
+
+**Minimum VRAM:** 24 GB
+**Pricing unit:** Per output pixel
+**Recommended model:** SDXL variants, `ByteDance/SDXL-Lightning`
+**Typical hardware:** RTX 3090, RTX 4090
+</Accordion>
+
+<Accordion  title="image-to-video — Animate a still image" icon="video">
+Generates a short video clip from a single input image. Significantly more VRAM and compute-intensive than image-to-image.
+
+**Minimum VRAM:** 24 GB
+**Pricing unit:** Per output pixel
+**Typical hardware:** RTX 4090, A100
+</Accordion>
+
+<Accordion  title="image-to-text — Vision-language captioning" icon="circle-question">
+Takes an image and returns a text description. Lower VRAM floor makes this accessible to operators with older consumer cards.
+
+**Minimum VRAM:** 4 GB
+**Pricing unit:** Per input pixel
+**Recommended model:** `Salesforce/blip-image-captioning-large`
+**Typical hardware:** RTX 2060, GTX 1080 (as secondary pipeline)
+</Accordion>
+
+<Accordion  title="audio-to-text — Speech recognition and transcription" icon="circle-question">
+Runs Whisper-class speech recognition with timestamps. Widely used for transcription, captioning, and audio search.
+
+**Minimum VRAM:** 12 GB
+**Pricing unit:** Per millisecond of audio
+**Recommended model:** `openai/whisper-large-v3`
+**Typical hardware:** RTX 3060 12 GB, RTX 3080 10 GB
+
+**Source:** [openai/whisper-large-v3 on HuggingFace](https://huggingface.co/openai/whisper-large-v3)
+</Accordion>
+
+<Accordion  title="segment-anything-2 — Promptable segmentation" icon="circle-question">
+Pixel-level object segmentation using SAM2. Takes a prompt (point, box, or mask) and returns a segmentation mask over the input image or video frame.
+
+**Recommended model:** SAM2 variants
+**Source:** [facebookresearch/segment-anything-2 on GitHub](https://github.com/facebookresearch/segment-anything-2)
+</Accordion>
+
+<Accordion  title="text-to-speech — Natural speech synthesis" icon="circle-question">
+Converts text to natural speech audio. Growing use case for AI-generated video narration and interactive media.
+
+**Pricing unit:** Per character / per millisecond of output audio
+</Accordion>
+
+<Accordion  title="upscale — Resolution enhancement" icon="circle-question">
+Upscales low-resolution input to high resolution using diffusion-based super-resolution.
+
+**Recommended model:** `stabilityai/stable-diffusion-x4-upscaler`
+**Pricing unit:** Per input pixel
+</Accordion>
+
+<Accordion  title="llm — Large language model inference" icon="microchip">
+OpenAI-compatible text completion endpoint backed by an Ollama-based runner. Runs quantised LLMs with as little as 8 GB VRAM, making it accessible to operators with older consumer GPUs that are unsuitable for diffusion pipelines.
+
+**Minimum VRAM:** 8 GB
+**Pricing unit:** Per custom unit (typically per million tokens)
+**Recommended model:** `meta-llama/Meta-Llama-3.1-8B-Instruct` (via Ollama)
+**Typical hardware:** GTX 1070 Ti, GTX 1080, RTX 2060
+
+The LLM pipeline uses a separate runner architecture from the standard `livepeer/ai-runner` image. See [Batch AI Setup](/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup) for the Ollama deployment guide.
+
+**Source:** [Cloud SPE Ollama runner blog post](https://www.livepeer.cloud/self-hosting-livepeers-llm-pipeline-deploying-an-ollama-based-gpu-runner-for-ai-orchestrators/)
+</Accordion>
+
+<Accordion  title="live-video-to-video — Cascade streaming AI" icon="microchip">
+Continuous frame-by-frame transformation of live video streams. This pipeline takes a WebRTC stream as input and returns a transformed WebRTC stream with sub-100ms per-frame latency.
+
+**Minimum VRAM:** 24 GB recommended
+**Pricing unit:** Per frame
+**Runtime:** `livepeer/ai-runner:live-base` + ComfyStream
+**Typical hardware:** RTX 4090, A100, H100
+
+This pipeline powers the **Cascade** architecture — Livepeer's live-video AI system. It supports live AI effects, live style transfer, and streaming AI agents.
+
+**Source:** [ComfyStream on GitHub](https://github.com/livepeer/comfystream)
+</Accordion>
+
+</AccordionGroup>
+
+<CustomDivider />
+
+## Hardware by workload type
+
+<Note>
+  These are minimum requirements. Running at the minimum will result in longer cold-start times and reduced job competitiveness. The figures below reflect production-ready recommendations.
+</Note>
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Pipeline</TableCell>
+    <TableCell header>Min VRAM</TableCell>
+    <TableCell header>Recommended card</TableCell>
+    <TableCell header>Notes</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`llm`</TableCell>
+    <TableCell>8 GB</TableCell>
+    <TableCell>GTX 1080, RTX 2060</TableCell>
+    <TableCell>Quantised LLM via Ollama</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`image-to-text`</TableCell>
+    <TableCell>4 GB</TableCell>
+    <TableCell>Any NVIDIA GPU</TableCell>
+    <TableCell>Very low VRAM floor</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`audio-to-text`</TableCell>
+    <TableCell>12 GB</TableCell>
+    <TableCell>RTX 3060 12 GB</TableCell>
+    <TableCell>Whisper-large-v3</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`segment-anything-2`</TableCell>
+    <TableCell>12 GB</TableCell>
+    <TableCell>RTX 3060 12 GB</TableCell>
+    <TableCell>SAM2 base models</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`upscale`</TableCell>
+    <TableCell>16 GB</TableCell>
+    <TableCell>RTX 3080</TableCell>
+    <TableCell>Diffusion upscaler</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`text-to-image`</TableCell>
+    <TableCell>24 GB</TableCell>
+    <TableCell>RTX 3090, RTX 4090</TableCell>
+    <TableCell>SDXL-class models</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`image-to-image`</TableCell>
+    <TableCell>24 GB</TableCell>
+    <TableCell>RTX 3090, RTX 4090</TableCell>
+    <TableCell>SDXL-class models</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`image-to-video`</TableCell>
+    <TableCell>24 GB</TableCell>
+    <TableCell>RTX 4090, A100</TableCell>
+    <TableCell>Higher compute demand</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`live-video-to-video`</TableCell>
+    <TableCell>24 GB</TableCell>
+    <TableCell>RTX 4090, A100</TableCell>
+    <TableCell>Live-video latency requirement</TableCell>
+  </TableRow>
+</StyledTable>
+
+For detailed VRAM planning, warm model strategy, and multi-pipeline configuration, see [Model Hosting and VRAM Planning](/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference).
+
+<CustomDivider />
+
+## What you build and what the network supplies
+
+The Livepeer protocol handles the hard parts of running an inference marketplace. As an orchestrator:
+
+**You do need to:**
+- Run and maintain GPU infrastructure
+- Configure `aiModels.json` with your supported pipelines and pricing
+- Keep your primary models warm and your node performant
+- Stay competitive on latency and pricing
+
+**The network already supplies:**
+- Build a marketplace or API
+- Implement authentication or billing
+- Handle service discovery
+- Build brand recognition
+
+Gateways provide all of that. Your competitive advantage is performance: lower latency, better-tuned models, higher uptime, specialised capabilities.
+
+<CustomDivider />
+
+## Network participation
+
+To verify your pipelines are visible to the network and check live capability coverage:
+
+- **Network capabilities:** [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)
+- **Orchestrator performance:** [explorer.livepeer.org](https://explorer.livepeer.org)
+
+The network capabilities tool shows all registered orchestrators and their advertised pipelines currently visible on the network. Before your orchestrator receives AI jobs, it must appear there under at least one pipeline.
+
+<CustomDivider />
+
+## Watch: AI on Livepeer
+
+<Frame>
+  <iframe
+    width="100%"
+    height="400"
+    src="https://www.youtube.com/embed/UKWdvJBqrNw"
+  title="Live Video AI on Livepeer - Encode Club Bootcamp"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowFullScreen
+  />
+</Frame>
+
+<CardGroup cols={2}>
+  <Card
+    title="Encode Club Live Video AI Bootcamp"
+    icon="graduation-cap"
+    href="https://www.youtube.com/watch?v=UKWdvJBqrNw"
+  >
+    Full session from the Q1 2025 bootcamp covering ComfyStream, live AI video pipelines, and orchestrator setup for Cascade workloads.
+  </Card>
+  <Card
+    title="ComfyStream Demo"
+    icon="play"
+    href="https://www.youtube.com/watch?v=7a6kBrL0RYg"
+  >
+    Live demonstration of ComfyStream running live-video AI effects through a Livepeer orchestrator.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Batch AI Setup" icon="gears" href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup">
+    Configure pipelines, aiModels.json, the Ollama LLM runner, and BYOC external containers.
+  </Card>
+  <Card title="Cascade Setup" icon="bolt" href="/v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup">
+    Deploy the live-video-to-video pipeline with ComfyStream for live-video AI effects.
+  </Card>
+  <Card title="Model Hosting and VRAM" icon="microchip" href="/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference">
+    VRAM planning, warm model strategy, pricing, and aiModels.json reference.
+  </Card>
+  <Card title="Batch AI Setup" icon="rocket" href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup">
+    Upgrade path for existing transcoding orchestrators adding AI pipelines.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  "How does AI inference work from my node's perspective?" AI worker/runner
+  architecture: go-livepeer orchestrates, separate AI runner containers execute.
+  Two runner types: livepeer/ai-runner (diffusion, vision, audio) and Ollama (LLM).
+  aiModels.json overview. Model lifecycle: download, load, warm/cold, serve. On-chain
+  capability registration (-aiServiceRegistry). 10 pipeline types and their profiles.
+
+  MUST INCLUDE: "Already running video? Here is what to add" bridge section for J2.
+  MUST INCLUDE: "No active set needed for AI" callout for J6 low-LPT operators.
+
+  PLAN TARGET: ai-inference-operations (consider rename)
+  UPDATE NEEDED: Add J2 bridge accordion. Add J6 low-LPT value prop callout.
+
+  SECTION: Workloads & AI → "What jobs do I run?"
+  JOB STORIES: J2 (add AI to video), J6 (AI-first entry)
+
+  CROSS-REFS:
+  - Config & Optimisation > Dual Mode Configuration - add AI to existing video
+  - Config & Optimisation > AI Model Management - operational model management
+  - Workloads & AI > Diffusion Pipeline Setup - specific pipeline setup
+  - Gateway Tab > Node Pipelines > AI Pipelines - gateway routing perspective
+*/}

@@ -265,13 +265,13 @@ jobs:
 
             const openUnclassifiedIssues = openIssues.filter((issue) => !issue._classification);
             const openUnprioritizedIssues = openIssues.filter((issue) => !issue._priority);
-            const needsTriageOpenCount = openIssues.filter((issue) => issue._statuses.includes('status: needs-triage')).length;
+            const needsTriageOpenCount = openIssues.filter((issue) => issue._statuses.includes('status: needs-routing')).length;
 
             const summaryLines = [
               `- Open docs-v2 issues: **${openIssues.length}**`,
               `- Recently closed docs-v2 issues (${RECENTLY_CLOSED_DAYS}d): **${recentClosedIssues.length}**`,
               `- Open docs-v2 issues missing classification: **${openUnclassifiedIssues.length}**`,
-              `- Open docs-v2 issues with \`status: needs-triage\`: **${needsTriageOpenCount}**`,
+              `- Open docs-v2 issues with \`status: needs-routing\`: **${needsTriageOpenCount}**`,
             ];
 
             const openIssuesTable = markdownTable(

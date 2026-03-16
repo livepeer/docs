@@ -1,0 +1,375 @@
+---
+title: Pricing Configuration
+sidebarTitle: Pricing Configuration
+description: Configure Pricing for Livepeer Gateway Services
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - configure
+  - pricing configuration
+  - pricing
+  - configuration
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: gateway-operator
+purpose: concept
+icon: hand-holding-dollar
+---
+
+
+
+
+import { DynamicTable } from '/snippets/components/layout/table.jsx'
+
+Gateways in Livepeer configure pricing to control costs and margins.
+As consumers of video transcoding and AI services, gateways set maximum prices
+they're willing to pay Orchestrators for processing work.
+
+## Pricing Concepts
+
+#### Payment Currency
+
+All payments are made in <Badge color="green">ETH(wei)</Badge> - **not** Livepeer tokens (LPT).
+
+#### Pricing Models
+
+1. <Badge color="blue">Video Transcoding</Badge>: Per video segment processed
+
+- Unit: Pixels processed (width x height)
+- Calculation: pixels processed × price per pixel
+
+2. <Badge color="purple"> AI Processing</Badge>: Priced per capability /
+ model.{' '}
+
+- Unit: Price per capability/model
+- Calculation:
+  - Per-pixel payments: Calculated as width × height × outputs
+  - Per-request payments: Single payment per AI request
+  - Live video payments: Interval-based payments during streaming (configurable)
+
+{/* ### Setting Price Limits For Work Performed by Orchestrators */}
+
+## Pricing Configuration Flags
+
+#### Video Transcoding Core Flags
+
+<Card>
+ <Badge color="blue">Video</Badge>
+  <ResponseField name="-maxPricePerUnit" type="int" default="0 (wei)">
+ Maximum price per pixelsPerUnit (in wei `integer` or a custom currency
+ format like 0.50USD or 0.02USD) for transcoding work
+    <Note>
+ {' '}
+ All pricing is in `wei` unless currency conversion is configured{' '}
+    </Note>
+  </ResponseField>
+  <ResponseField name="-pixelsPerUnit" type="int" default="1">
+ Number of pixels per pricing unit
+  </ResponseField>
+  <ResponseField name="-ignoreMaxPriceIfNeeded" type="boolean" default="false">
+ Allow exceeding max price if no suitable Orchestrator exists
+  </ResponseField>
+</Card>
+
+#### AI Processing Core Flags
+
+<Card>
+ <Badge color="purple">AI</Badge>
+  <ResponseField name="-maxPricePerCapability" type="string" default="none">
+ JSON list (or `path/to/ai-pricing.json` file) of maximum prices per AI capability/model
+
+      ```json icon="file" ExampleFormat.json
+      {
+        "capabilities_prices": [
+          {
+            "pipeline": "text-to-image",
+            "model_id": "stabilityai/sd-turbo",
+            "price_per_unit": 1000,
+            "pixels_per_unit": 1
+          }
+        ]
+      }
+      ```
+
+  </ResponseField>
+  <ResponseField name="-livePaymentInterval" type="duration" default="5s">
+ Payment processing frequency (e.g. 5s, 10s, 300ms)for Live AI Video workflows, where the gateway needs to send periodic payments to the orchestrator.
+
+ {/*
+ Live AI Video Processing: The interval is used when processing live video streams with AI models, where the gateway needs to send periodic payments to the orchestrator ai_live_video.go:95 ai_http.go:212
+ Payment Processor: It's passed to the LivePaymentProcessor which handles the timing of payment transactions live_payment_processor.go:33-42
+ Gateway-Orchestrator Communication: Specifically for "Gateway <> Orchestrator Payments for Live AI Video" as stated in the flag description.
+ You only need to configure this flag if:
+
+ You're running a gateway that processes Live AI Video streams
+ You need to customize the payment frequency (default is 5 seconds)
+ You're working with orchestrators that require payment processing for AI workloads
+
+ For standard offchain gateway operations without AI video processing, the default behavior is sufficient and you don't need to set this flag.
+ */}
+
+  </ResponseField>
+</Card>
+
+{/* ### Price Calculation
+
+The actual price calculation happens in the orchestrator's `priceInfo` function, which:
+
+1. Checks for fixed prices per manifest ID
+2. Gets base price from Orchestrator configuration
+3. For AI workloads, sums prices of individual capability/model pairs
+4. Applies auto-adjustment based on transaction costs if enabled */}
+
+## Fee Payment Calculation & Process
+
+Gateways pay fees through different mechanisms depending on workload type:
+
+_Video Transcoding_
+
+- Per-segment payments: Each video segment generates a payment ticket -> [<Icon icon="github" /> segment_rpc.go:](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/segment_rpc.go)
+- Fee calculation: Based on pixels processed × price per pixel -> [<Icon icon="github" /> segment_rpc.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/segment_rpc.go)
+
+_AI Processing_
+
+- Per-pixel payments: Calculated as width × height × outputs [<Icon icon="github" /> live_payment.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/live_payment.go)
+- Live video: Uses interval-based payments during streaming [<Icon icon="github" /> ai_http.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/server/ai_http.go)
+
+_Payment Processing Flow_
+
+1. Gateway sends payment with segment/request to orchestrator [<Icon icon="github" /> live_payment.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/live_payment.go)
+2. Orchestrator validates payment and updates balance [<Icon icon="github" /> segment_rpc.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/segment_rpc.go)
+3. Fees are debited from gateway's balance account [<Icon icon="github" /> ai_http.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/server/ai_http.go)
+
+## Configuration Methods
+
+Gateways set maximum prices they're willing to pay through configuration flags in
+the `transcodingConfig.json` or directly in the CLI.
+
+1. **Command-line** flags
+   ```bash
+     -maxPricePerUnit=1000 \
+     -pixelsPerUnit=1
+   ```
+2. **JSON Configuration** file (plain text key value format)
+
+ For AI capabilities, use JSON files with model-specific pricing
+
+3. **HTTP API** - can be used at runtime to make adjustments without restart
+   - /setBroadcastConfig: Set general pricing
+   - /setMaxPriceForCapability: Set AI model pricing
+4. **CLI Tool**
+
+ Use livepeer_cli -> **Option 16**: "Set broadcast config"
+
+## Orchestrator Configuration & Price Information (Gateway Reference)
+
+A reference for Gateway Operators on how Orchestrators configure pricing and fees for services.
+
+#### Per-Gateway Pricing (can be set by Orchestrators)
+
+Orchestrators can set specific prices for individual gateways using
+`-pricePerGateway` [<Icon icon="github" /> starter.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/cmd/livepeer/starter.go)
+
+```json
+{
+  "gateways": [
+    {
+      "ethaddress": "0x123...",
+      "priceperunit": 0.5,
+      "currency": "USD",
+      "pixelsperunit": 1000000000000
+    }
+  ]
+}
+```
+
+#### Price Calculation
+
+The actual price calculation happens in the orchestrator's `priceInfo` function [<Icon icon="github" /> orchestrator.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/orchestrator.go)
+
+1. Checks for fixed prices per manifest ID
+2. Gets base price from orchestrator configuration
+3. For AI workloads, sums prices of individual capability/model pairs
+4. Applies auto-adjustment based on transaction costs if enabled
+
+#### Dynamic Price Adjustment
+
+Orchestrators can enable automatic price adjustments based on transaction costs - which is why it's important to set maxPricing flags -> [<Icon icon="github" /> orchestrator.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/orchestrator.go)
+
+```go
+if !orch.node.AutoAdjustPrice {
+    return basePrice, nil
+}
+// Apply overhead multiplier based on tx costs
+overhead := big.NewRat(1, 1)
+if basePrice.Num().Cmp(big.NewInt(0)) > 0 {
+    txCostMultiplier, err := orch.node.Recipient.TxCostMultiplier(sender)
+    if txCostMultiplier.Cmp(big.NewRat(0, 1)) > 0 {
+        overhead = overhead.Add(overhead, new(big.Rat).Inv(txCostMultiplier))
+    }
+}
+```
+
+## Full List of Gateway Pricing Configuration Flags
+
+#### Video Transcoding Pricing Flags
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    {
+      Flag: '-maxPricePerUnit',
+      Default: '0',
+      Purpose: 'Maximum price per pixelsPerUnit for transcoding',
+    },
+    {
+      Flag: '-pixelsPerUnit',
+      Default: '1',
+      Purpose: 'Number of pixels per pricing unit',
+    },
+    {
+      Flag: '-ignoreMaxPriceIfNeeded',
+      Default: 'false',
+      Purpose: 'Allow exceeding max price if no suitable orchestrator exists',
+    },
+    {
+      Flag: '-priceFeedAddr',
+      Default: 'Chainlink ETH/USD address',
+      Purpose: 'Price feed for currency conversion',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+#### AI Processing Pricing Flags
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    {
+      Flag: '-maxPricePerCapability',
+      Default: '""',
+      Purpose: 'JSON list of prices per AI pipeline/model',
+    },
+    {
+      Flag: '-aiModels',
+      Default: '""',
+      Purpose: 'Model configurations with pricing info',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+#### Payment Ticket Flags
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    {
+      Flag: '-ticketEV',
+      Default: '8000000000',
+      Purpose: 'Expected value for payment tickets',
+    },
+    {
+      Flag: '-maxFaceValue',
+      Default: '0',
+      Purpose: 'Maximum ticket face value in wei',
+    },
+    {
+      Flag: '-maxTicketEV',
+      Default: '3000000000000',
+      Purpose: 'Maximum acceptable expected value per ticket',
+    },
+    {
+      Flag: '-maxTotalEV',
+      Default: '20000000000000',
+      Purpose: 'Maximum acceptable expected value per payment',
+    },
+    {
+      Flag: '-depositMultiplier',
+      Default: '1',
+      Purpose: 'Deposit multiplier for ticket faceValue',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+#### Gas & Transaction Flags (Affect Pricing)
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    { Flag: '-minGasPrice', Default: '0', Purpose: 'Minimum gas price in wei' },
+    { Flag: '-maxGasPrice', Default: '0', Purpose: 'Maximum gas price in wei' },
+    { Flag: '-gasLimit', Default: '0', Purpose: 'Gas limit for transactions' },
+    {
+      Flag: '-txTimeout',
+      Default: '5m',
+      Purpose: 'Transaction timeout duration',
+    },
+    {
+      Flag: '-maxTxReplacements',
+      Default: '1',
+      Purpose: 'Max transaction replacements',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+#### Orchestrator-Specific Pricing (For Reference)
+
+<DynamicTable
+  headerList={['Flag', 'Default', 'Purpose']}
+  itemsList={[
+    {
+      Flag: '-pricePerUnit',
+      Default: '0',
+      Purpose: 'Price per pixelsPerUnit (orchestrator only)',
+    },
+    {
+      Flag: '-pricePerGateway',
+      Default: '""',
+      Purpose: 'Per-gateway pricing (orchestrator only)',
+    },
+    {
+      Flag: '-autoAdjustPrice',
+      Default: 'true',
+      Purpose: 'Auto-adjust prices based on gas costs',
+    },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+#### Notes
+
+- **Gateway flags** control what you **pay** (max prices)
+- **Orchestrator flags** control what you **charge** (actual prices)
+- AI pricing uses the `maxPricePerCapability` JSON structure for per-model pricing
+- All prices can be specified in wei or with currency suffix (e.g., "0.50USD")
+- Default "0" values mean accept any price or use system defaults
+
+## Related Pages
+
+<Columns cols={2}>
+  <Card
+      title="Gateway Economics"
+      href="../../about/economics"
+      icon="hand-holding-dollar"
+      arrow
+      >
+ How gateways earn fees for services
+  </Card>
+
+  <Card
+        title="Funding Your Gateway"
+        href="../requirements/on-chain%20setup/fund-gateway"
+        icon="coins"
+        arrow
+        >
+ How to fund your gateway.
+  </Card>
+</Columns>

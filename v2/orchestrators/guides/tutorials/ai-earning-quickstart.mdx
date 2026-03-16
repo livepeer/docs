@@ -1,0 +1,384 @@
+---
+title: 'AI Earning Quickstart'
+sidebarTitle: 'AI Quickstart'
+description: >-
+  Start earning from AI inference in under 2 hours - one GPU, one warm model,
+  no active set membership required.
+keywords:
+  - livepeer
+  - orchestrator
+  - ai
+  - quickstart
+  - tutorial
+  - gpu
+  - text-to-image
+  - aiModels.json
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: orchestrator
+status: current
+lastVerified: '2026-03-16'
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+
+<Tip>
+  AI inference routing follows capability and price. A node with a 24 GB GPU and a warm model enters the routing pool as soon as registration propagates, without waiting for active-set entry or a large LPT bond.
+</Tip>
+
+---
+
+This tutorial gets an orchestrator earning from AI inference in under two hours. One GPU, one warm diffusion model, no active set membership needed. Estimated time: **1.5 to 2.5 hours** (most of this is model download time - approximately 6 GB).
+
+**You will verify:**
+- go-livepeer starts with the AI worker enabled
+- The warm model registers at `tools.livepeer.cloud/ai/network-capabilities`
+- A local test inference returns a result
+- The node is live on the Livepeer AI network
+
+<CustomDivider middleText="Prerequisites" />
+
+## Prerequisites
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Requirement</TableCell>
+      <TableCell header>Minimum</TableCell>
+      <TableCell header>Verify with</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Linux server</TableCell>
+      <TableCell>Ubuntu 22.04+</TableCell>
+      <TableCell>`lsb_release -a`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>NVIDIA GPU</TableCell>
+      <TableCell>24 GB VRAM for diffusion models (8 GB for LLM or audio pipelines)</TableCell>
+      <TableCell>`nvidia-smi` - shows GPU and VRAM</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>NVIDIA drivers</TableCell>
+      <TableCell>CUDA 12.0 compatible (`525.60.13`+)</TableCell>
+      <TableCell>`nvidia-smi` shows driver version</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Docker + NVIDIA Container Toolkit</TableCell>
+      <TableCell>Docker Engine 24+</TableCell>
+      <TableCell>`docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Arbitrum One RPC endpoint</TableCell>
+      <TableCell>Free tier (Alchemy / Infura)</TableCell>
+      <TableCell>Must return `"result":"0xa4b1"` for `eth_chainId`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>ETH on Arbitrum One</TableCell>
+      <TableCell>~0.005 ETH for AI registration gas</TableCell>
+      <TableCell>Check your wallet on [arbiscan.io](https://arbiscan.io)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Disk space</TableCell>
+      <TableCell>20 GB free on the model directory partition</TableCell>
+      <TableCell>`df -h ~/.lpData/`</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="Step 1: Install" />
+
+## Step 1: Install go-livepeer and pull the AI runner
+
+<StyledSteps>
+
+  <StyledStep title="Pull the go-livepeer Docker image">
+
+    ```bash icon="terminal" filename="pull-livepeer"
+    docker pull livepeer/go-livepeer:latest
+    ```
+
+    Verify:
+
+    ```bash icon="terminal" filename="verify-livepeer"
+    docker run --rm livepeer/go-livepeer:latest livepeer --version
+    ```
+
+  </StyledStep>
+
+  <StyledStep title="Verify GPU access for the AI runner">
+
+    go-livepeer uses Docker-out-of-Docker to manage AI runner containers. Verify the container runtime can see the GPU:
+
+    ```bash icon="terminal" filename="verify-gpu"
+    docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi
+    ```
+
+    Expected: the `nvidia-smi` table showing your GPU, driver version, and VRAM. Re-install the NVIDIA Container Toolkit until this command succeeds.
+
+  </StyledStep>
+
+  <StyledStep title="Create directories and volume">
+
+    ```bash icon="terminal" filename="setup-dirs"
+    mkdir -p ~/.lpData/models
+    docker volume create livepeer-ai-data
+    ```
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Step 2: Configure aiModels.json" />
+
+## Step 2: Write aiModels.json
+
+`aiModels.json` declares which AI pipelines and models the node serves, and at what price.
+
+<StyledSteps>
+
+  <StyledStep title="Choose your model">
+
+    For a 24 GB GPU, `ByteDance/SDXL-Lightning` is the recommended starting model for `text-to-image`. It is fast (4 inference steps), in high demand, and approximately 6 GB on disk.
+
+    Check current network demand at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) before deciding. The models with the most gateway registrations receive the most routing traffic.
+
+  </StyledStep>
+
+  <StyledStep title="Create aiModels.json">
+
+    ```bash icon="terminal" filename="create-aimodels"
+    cat > ~/.lpData/aiModels.json << 'EOF'
+    [
+      {
+        "pipeline": "text-to-image",
+        "model_id": "ByteDance/SDXL-Lightning",
+        "price_per_unit": 4768371,
+        "warm": true
+      }
+    ]
+    EOF
+    ```
+
+    Field reference:
+    - `pipeline` - the pipeline type (must match exactly)
+    - `model_id` - the HuggingFace model ID (case-sensitive, including the org prefix)
+    - `price_per_unit` - price in wei per output pixel (`4768371` ≈ $0.0005 per megapixel at late-2025 ETH rates)
+    - `warm: true` - load the model into VRAM at startup for instant first-response
+
+    Check current competitive pricing at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) before finalising `price_per_unit`. Gateways skip orchestrators priced above their cap.
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Step 3: Download the Model" />
+
+## Step 3: Pre-download the model
+
+Download model weights before starting the node. The warm model must be available at startup or the AI worker will attempt to download it on-demand, which delays the first inference.
+
+```bash icon="terminal" filename="download-model"
+docker run --rm \
+  -v ~/.lpData/models:/models \
+  --gpus all \
+  livepeer/ai-runner:latest \
+  bash -c "PIPELINE=text-to-image MODEL_ID=ByteDance/SDXL-Lightning bash /app/dl_checkpoints.sh"
+```
+
+This downloads approximately 6 GB. On a 100 Mbps connection, expect 8 to 12 minutes. Watch for the download progress output.
+
+{/* FACT CHECK: Confirm the `dl_checkpoints.sh` script name and invocation pattern in the latest ai-runner image. Rick and the ai-runner team to verify. */}
+
+Verify the model files are present:
+
+```bash icon="terminal" filename="verify-model"
+ls -lh ~/.lpData/models/
+```
+
+A non-empty directory confirms the download completed.
+
+<CustomDivider middleText="Step 4: Start the Node" />
+
+## Step 4: Start go-livepeer with AI worker
+
+<StyledSteps>
+
+  <StyledStep title="Start the node">
+
+    ```bash icon="terminal" filename="start-ai-node"
+    docker run -d \
+      --name livepeer-ai-orchestrator \
+      -v ~/.lpData/:/root/.lpData/ \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      --network host \
+      --gpus all \
+      livepeer/go-livepeer:latest \
+      -network arbitrum-one-mainnet \
+      -ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY \
+      -orchestrator \
+      -transcoder \
+      -nvidia 0 \
+      -pricePerUnit 1000 \
+      -serviceAddr YOUR_PUBLIC_IP:8935 \
+      -aiWorker \
+      -aiModels /root/.lpData/aiModels.json \
+      -aiModelsDir /root/.lpData/models
+    ```
+
+    Replace `YOUR_API_KEY` and `YOUR_PUBLIC_IP`. The three AI-specific flags:
+    - `-aiWorker` - enables the AI inference worker
+    - `-aiModels` - path to `aiModels.json` inside the container
+    - `-aiModelsDir` - path to model weights on the **host machine** (Docker mounts this into AI runner containers)
+
+    <Warning>
+      `-aiModelsDir` must be a host path, not a path inside the container. Docker uses this path to mount model files into AI Runner containers via Docker-out-of-Docker. A container-local path will not resolve correctly.
+    </Warning>
+
+  </StyledStep>
+
+  <StyledStep title="Watch for AI worker startup">
+
+    ```bash icon="terminal" filename="watch-startup"
+    docker logs -f livepeer-ai-orchestrator 2>&1 | grep -i "ai-runner\|pipeline\|warm\|model\|container"
+    ```
+
+    Expected lines (may take 2 to 5 minutes while the model loads into VRAM):
+    ```text icon="terminal" title="Expected startup lines"
+    Starting AI worker
+    Pulling livepeer/ai-runner container
+    Pipeline text-to-image started
+    Warm model loaded: ByteDance/SDXL-Lightning
+    ```
+
+    A missing `Warm model loaded` line after 10 minutes points to a startup problem. Check for errors:
+
+    ```bash icon="terminal" filename="check-errors"
+    docker logs livepeer-ai-orchestrator 2>&1 | grep -i "error\|fail\|oom" | tail -20
+    ```
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Step 5: Register on the Network" />
+
+## Step 5: Register AI capabilities
+
+<StyledSteps>
+
+  <StyledStep title="Activate on-chain for a new node">
+
+    Existing video orchestrators can keep their current on-chain registration. New AI-only nodes should run `livepeer_cli` to register:
+
+    ```bash icon="terminal" filename="activate"
+    docker exec -it livepeer-ai-orchestrator livepeer_cli
+    ```
+
+    Select **"Invoke multi-step become an orchestrator"**. Minimal LPT self-delegation is sufficient for AI-only operation - the active set threshold applies to video transcoding routing, not AI routing.
+
+    {/* FACT CHECK: Confirm the exact `livepeer_cli` activation option name in the current release. Rick to verify. */}
+
+  </StyledStep>
+
+  <StyledStep title="Verify local capability registration">
+
+    ```bash icon="terminal" filename="check-capabilities"
+    curl http://localhost:7935/getNetworkCapabilities | python3 -m json.tool
+    ```
+
+    Expected: a JSON response with a `pipelines` array that includes `text-to-image` with your model listed.
+
+  </StyledStep>
+
+  <StyledStep title="Verify external network registration">
+
+    Open [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities).
+
+    Search by your Ethereum address or service URI. Your node should appear under `text-to-image` with status **Warm** within 2 to 5 minutes of the AI worker reporting the model loaded.
+
+    A missing entry after 10 minutes points to a registration or container problem. Inspect container status:
+
+    ```bash icon="terminal" filename="check-containers"
+    docker ps --filter name=livepeer
+    ```
+
+    All containers (`livepeer-ai-orchestrator` and the AI runner container) should show `Up`. A restarting AI runner container indicates a model load failure.
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Step 6: Test Locally" />
+
+## Step 6: Test a local inference
+
+Send a test inference request directly to the orchestrator to confirm the pipeline is serving:
+
+```bash icon="terminal" filename="test-inference"
+curl -X POST http://localhost:8935/text-to-image \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_id": "ByteDance/SDXL-Lightning",
+    "prompt": "a blue mountain lake at sunrise",
+    "width": 512,
+    "height": 512,
+    "num_inference_steps": 4
+  }' \
+  -o test-output.png
+```
+
+{/* FACT CHECK: Confirm the exact local test endpoint path and request body format for the orchestrator's direct AI HTTP API. Rick and j0sh to verify the current endpoint. */}
+
+Verify the response:
+
+```bash icon="terminal" filename="check-output"
+file test-output.png
+ls -lh test-output.png
+```
+
+Expected: `test-output.png: PNG image data` with a non-zero file size. The PNG is the generated image.
+
+<Note>
+  The first inference after startup is slower than later requests because the CUDA kernels warm up. That is normal. From the second request onward, SDXL-Lightning at 512×512 should complete in under 5 seconds.
+</Note>
+
+<CustomDivider middleText="What Just Happened" />
+
+## What happened
+
+The node completed the AI inference path:
+
+1. **go-livepeer started with `-aiWorker`** - it read `aiModels.json`, pulled the `livepeer/ai-runner` container, mounted the model weights from the host, and loaded `ByteDance/SDXL-Lightning` into GPU VRAM as a warm model.
+2. **Capability advertisement** - go-livepeer registered the `text-to-image` pipeline and warm model status on-chain (via the AI Service Registry) and announced it to the network. Gateways that query for `text-to-image` capability now see this node in their routing pool.
+3. **The test inference** travelled from the local HTTP call to the AI worker, to the AI runner container, through SDXL-Lightning's inference pipeline, and back as a PNG. In production, this same path is triggered by a gateway routing an inference request.
+4. **Earning begins** when a gateway routes a job to this node. Each completed job sends a PM ticket worth approximately `price_per_unit × pixels_in_output` wei. See <LinkArrow href="/v2/orchestrators/guides/payments-and-pricing/payment-receipts" label="Payment Receipts" newline={false} /> for how winning tickets translate to ETH.
+
+**AI routing ignores active-set rank.** It checks capability advertisement and price instead. A new node with a warm model and a competitive price starts receiving AI jobs on the same day it registers.
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Add AI to a Video Node" icon="layer-group" href="/v2/orchestrators/guides/tutorials/add-ai-to-video-node" arrow horizontal>
+    Add AI to an existing video orchestrator without touching the video configuration.
+  </Card>
+  <Card title="Model Demand Reference" icon="chart-bar" href="/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference" arrow horizontal>
+    Which models are receiving the most gateway requests and at what price tiers.
+  </Card>
+  <Card title="Pricing Strategy" icon="tag" href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy" arrow horizontal>
+    Set AI pricing in aiModels.json: wei vs USD notation and competitive positioning.
+  </Card>
+  <Card title="AI Model Management" icon="sliders" href="/v2/orchestrators/guides/config-and-optimisation/ai-model-management" arrow horizontal>
+    Warm vs cold strategy, VRAM allocation, and optimisation flags.
+  </Card>
+</CardGroup>

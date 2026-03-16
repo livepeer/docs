@@ -16,7 +16,7 @@ Use this for EVERY interaction with ANY AI on this repo.
 - [ ] You explicitly approve or reject
 - [ ] AI executes ONLY after approval
 
-## During Large Changes (> 10 files)
+## During Large Changes (&gt; 10 files)
 
 - [ ] AI lists EXACT files being changed
 - [ ] AI explains WHY each file changes

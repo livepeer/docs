@@ -1,0 +1,148 @@
+---
+title: 'Source of Truth Policy'
+sidebarTitle: 'Source of Truth Policy'
+description: 'Canonical ownership boundaries to prevent drift across README, docs-guide, tests docs, and Mintlify pages'
+keywords:
+  [
+    'livepeer',
+    'source of truth policy',
+    'canonical',
+    'ownership',
+    'boundaries',
+    'drift',
+    'readme',
+    'docs-guide',
+    'tests docs',
+    'mintlify pages',
+  ]
+---
+
+# Source of Truth Policy
+
+This document defines canonical source boundaries to prevent drift across README, docs-guide, tests docs, and Mintlify pages.
+
+Related policy:
+
+- `docs-guide/policies/generated-artifact-and-hook-governance.mdx` defines generated artifact classes, hook rules, and local-only report boundaries.
+
+## Canonical Boundaries
+
+| Concern                         | Canonical source                                      | Notes                                                                  |
+| ------------------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------- |
+| Script/runtime behavior         | Code + tests                                          | Behavioral truth always lives in executable code and validation tests. |
+| Script metadata and inventory   | Script headers + generated indexes                    | Script headers feed script index generation.                           |
+| AI-tools inventory + lifecycle  | `ai-tools/registry/ai-tools-registry.json`            | Canonical for AI-tools artifact inventory, lifecycle state, lane assignment, and generated inventory coverage. |
+| Repo feature navigation map     | `docs-guide/*.mdx` (manual canonical files)           | Internal maintainer source of truth for repo feature navigation.       |
+| Codex skill portability         | `ai-tools/ai-skills/templates/*.template.md`          | Local installs are synced from templates via `sync-codex-skills.js`; preferred bootstrap path is `bash lpd setup --yes`. |
+| Audit pipeline skill catalog    | `ai-tools/ai-skills/catalog/*.json`                   | Canonical only for the repo-audit pipeline and cross-agent packager inputs, not for the full AI-tools inventory. |
+| Public user-facing docs content | `v2/**`                                               | Mintlify docs in `docs.json` navigation, with publishability constrained by the V2 folder-governance contract. |
+| CI/test execution behavior      | Workflow files + test runner scripts                  | Narrative summaries must link to these files.                          |
+| Issue/PR intake behavior        | `.github/ISSUE_TEMPLATE/*` + PR templates + workflows | Generated templates catalog summarizes usage.                            |
+
+## Required docs-guide Canonical Files
+
+The following files must exist and be non-empty:
+
+- `docs-guide/overview.mdx`
+- `docs-guide/features/feature-map.mdx`
+- `docs-guide/features/architecture-map.mdx`
+- `docs-guide/policies/v2-folder-governance.mdx`
+- `docs-guide/tooling/lpd-cli.mdx`
+- `docs-guide/policies/quality-gates.mdx`
+- `docs-guide/features/automations.mdx`
+- `docs-guide/frameworks/content-system.mdx`
+- `docs-guide/frameworks/component-governance.mdx`
+- `docs-guide/features/data-integrations.mdx`
+- `docs-guide/policies/ownerless-governance.mdx`
+- `docs-guide/policies/root-allowlist-governance.mdx`
+- `docs-guide/policies/agent-governance-framework.mdx`
+
+## Generated Index Files
+
+The following files are generated and should not be edited directly:
+
+- `docs-guide/catalog/scripts-catalog.mdx`
+- `docs-guide/catalog/workflows-catalog.mdx`
+- `docs-guide/catalog/templates-catalog.mdx`
+- `docs-guide/catalog/pages-catalog.mdx`
+- `docs-guide/catalog/components-catalog.mdx`
+
+Regenerate with:
+
+```bash icon="terminal"
+node tools/scripts/generate-docs-guide-indexes.js --write
+node tools/scripts/generate-docs-guide-pages-index.js --write
+node tools/scripts/generate-docs-guide-components-index.js --write
+node tests/unit/script-docs.test.js --write --rebuild-indexes
+```
+
+## Generated AI-Tools Inventory
+
+The following AI-tools inventory surface is generated and should not be edited directly:
+
+- `ai-tools/registry/ai-tools-inventory.md`
+
+Regenerate with:
+
+```bash icon="terminal"
+node tools/scripts/validate-ai-tools-registry.js --write-report
+```
+
+## Generated File Banners
+
+Generated and mixed generated files should include a standardized banner at the top that documents:
+
+- generator script(s)
+- purpose
+- when to rerun the generator
+- a do-not-edit warning
+
+Guidelines:
+
+- Use a full-file banner for files that are entirely generated.
+- Use a mixed-file banner for files that contain generated sections only.
+- Use `unknown/external` when the generator cannot be confirmed in-repo.
+- Do not edit generated JSON files directly; JSON artifacts should be inventoried/reported instead of commented.
+
+Use the generated banner enforcer utility:
+
+```bash icon="terminal"
+node tools/scripts/enforce-generated-file-banners.js --write
+node tools/scripts/enforce-generated-file-banners.js --check
+```
+
+## Generated Artifact Governance
+
+Generated artifacts must be governed explicitly, not by convention alone.
+
+- Hook-managed and CI-managed generated outputs must be declared in `tools/config/generated-artifacts.json`.
+- Authoritative generated artifacts may be committed only when runtime, tests, or repo contracts require them.
+- Report-only or inspection-only outputs must not be hook-staged and should live in non-authoritative locations.
+- Pre-commit should fail with a targeted regeneration command instead of auto-staging broad generated diffs.
+
+## README Contract
+
+`README.md` is an orientation document, not a full operations manual.
+
+It must include:
+
+- what the repo is
+- how to run quickly (`lpd setup`, `lpd dev`, basic test)
+- high-level feature map
+- links to docs-guide canonical files
+
+It should not duplicate deep procedures that already exist in:
+
+- `docs-guide/`
+- `tests/*.md`
+- `contribute/CONTRIBUTING/*.md`
+- `v2/resources/documentation-guide/*.mdx`
+
+## Change Management Rules
+
+1. Any meaningful process change must update the relevant docs-guide canonical file in the same PR.
+2. Any script/workflow/template change must regenerate indexes in the same PR.
+3. If README and docs-guide disagree, docs-guide canonical files are considered authoritative for operational navigation.
+4. Codex skill installs must be generated from templates using `node tools/scripts/sync-codex-skills.js` or the `bash lpd setup --yes` bootstrap path (manual edits in local skill folders are non-canonical).
+5. AI-tools inventory, lifecycle, or lane changes must update `ai-tools/registry/ai-tools-registry.json` and regenerate `ai-tools/registry/ai-tools-inventory.md` in the same PR.
+6. `v2/**` contains both publishable docs and governed non-publishable material; `docs.json` plus `docs-guide/policies/v2-folder-governance.mdx` decide which paths are eligible to route.

@@ -97,6 +97,21 @@ async function runTests() {
     assert.strictEqual(parsed.endpoint.key, 'POST /task/{id}');
   });
 
+  await runCase('Ignores literal <OpenAPI /> snippets inside inline code and fenced blocks', async () => {
+    const tags = audit.extractOpenApiTags([
+      'Literal example: `<OpenAPI path="GET /ignore-inline" />`',
+      '',
+      '```mdx',
+      '<OpenAPI path="GET /ignore-fence" />',
+      '```',
+      '',
+      '<OpenAPI path="GET /stream" />'
+    ].join('\n'));
+
+    assert.strictEqual(tags.length, 1);
+    assert.strictEqual(tags[0].tag, '<OpenAPI path="GET /stream" />');
+  });
+
   await runCase('Ignores non-endpoint frontmatter openapi values', async () => {
     assert.strictEqual(audit.isIgnoredFrontmatterOpenapiValue('3.0.3'), true);
     assert.strictEqual(audit.isIgnoredFrontmatterOpenapiValue('api/openapi.yaml'), true);
@@ -106,6 +121,47 @@ async function runTests() {
   await runCase('Resolves locale Studio API files to api/studio.yaml', async () => {
     const spec = audit.resolveSpecForFile('v2/es/solutions/livepeer-studio/api-reference/streams/create.mdx');
     assert.strictEqual(spec, 'api/studio.yaml');
+  });
+
+  await runCase('Resolves technical gateway API files to api/openapi.yaml', async () => {
+    const spec = audit.resolveSpecForFile('v2/gateways/resources/technical/api-reference/AI-API/audio-to-text.mdx');
+    assert.strictEqual(spec, 'api/openapi.yaml');
+  });
+
+  await runCase('Infers spec from unique endpoint when file path mapping is absent', async () => {
+    const fixture = mkFixture(
+      'v2/gateways/guides/monitoring-and-tooling/x-resources/__openapi-audit-unit__',
+      `inferred-${Date.now()}.mdx`,
+      [
+        '---',
+        "title: 'Inferred mapping fixture'",
+        "openapi: 'GET /health'",
+        '---',
+        '',
+        '# Inferred mapping',
+        '',
+        '<OpenAPI path="GET /health" />',
+        ''
+      ].join('\n')
+    );
+
+    try {
+      const result = await audit.runAudit({
+        argv: [
+          '--files', fixture.relFile,
+          '--strict',
+          '--report', '/tmp/openapi-audit-unit-inferred.md',
+          '--report-json', '/tmp/openapi-audit-unit-inferred.json'
+        ]
+      });
+
+      assert.strictEqual(result.exitCode, 0);
+      assert.ok(
+        !result.findings.some((finding) => finding.type === audit.FINDING_TYPES.MISSING_SPEC_MAPPING)
+      );
+    } finally {
+      cleanupFixture(fixture);
+    }
   });
 
   await runCase('Flags unknown endpoint not found in resolved spec', async () => {
@@ -260,7 +316,7 @@ async function runTests() {
     errors,
     warnings,
     passed: errors.length === 0,
-    total: 10
+    total: 13
   };
 }
 

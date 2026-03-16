@@ -1,0 +1,163 @@
+[
+  {
+    "name": "Flags HTML comments",
+    "filePath": "fixtures/comment.md",
+    "contentLines": [
+      "# Example",
+      "<!-- hidden guidance -->"
+    ],
+    "expectedRules": ["html-comment", "parse-error"]
+  },
+  {
+    "name": "Flags raw table breaks",
+    "filePath": "fixtures/table-breaks.md",
+    "contentLines": [
+      "| Column | Notes |",
+      "| --- | --- |",
+      "| One | first<br>second |"
+    ],
+    "expectedRules": ["raw-br-in-table", "parse-error"]
+  },
+  {
+    "name": "Flags code-like table cells",
+    "filePath": "fixtures/table-code.md",
+    "contentLines": [
+      "| Column | Snippet |",
+      "| --- | --- |",
+      "| One | style={{ color: token }} |"
+    ],
+    "expectedRules": ["code-like-table-cell"]
+  },
+  {
+    "name": "Flags angle bracket placeholders",
+    "filePath": "fixtures/placeholders.md",
+    "contentLines": [
+      "Use branch codex/<issue-id>-<slug> for the task."
+    ],
+    "expectedRules": ["angle-placeholder", "parse-error"]
+  },
+  {
+    "name": "Flags raw comparison operators that break MDX parsing",
+    "filePath": "fixtures/comparison.md",
+    "contentLines": [
+      "Keep section paragraphs <= 4 lines where possible."
+    ],
+    "expectedRules": ["comparison-operator", "parse-error"]
+  },
+  {
+    "name": "Allows math blocks rendered with fraction syntax",
+    "filePath": "fixtures/math.mdx",
+    "contentLines": [
+      "$$",
+      "yield_{ETH} = (v_{daily} * 365) * s_{fees} * \\frac{p}{p + l_{orch}}",
+      "$$"
+    ],
+    "expectedRules": []
+  },
+  {
+    "name": "Flags REVIEW comments written as HTML comments",
+    "filePath": "fixtures/review-comment.mdx",
+    "contentLines": [
+      "Paragraph before.",
+      "<!-- REVIEW: confirm path -->"
+    ],
+    "expectedRules": ["html-comment", "parse-error"]
+  },
+  {
+    "name": "Flags standalone markdown dividers for CustomDivider repair",
+    "filePath": "fixtures/divider.mdx",
+    "contentLines": [
+      "---",
+      "title: Divider Example",
+      "---",
+      "",
+      "Paragraph before.",
+      "",
+      "---",
+      "",
+      "## Next"
+    ],
+    "expectedRules": ["markdown-divider"]
+  },
+  {
+    "name": "Ignores markdown dividers nested inside Tabs layouts",
+    "filePath": "fixtures/divider-in-tabs.mdx",
+    "contentLines": [
+      "---",
+      "title: Tabs Divider Example",
+      "---",
+      "",
+      "<Tabs>",
+      "  <Tab title=\"One\" icon=\"bolt\">",
+      "",
+      "---",
+      "",
+      "  </Tab>",
+      "</Tabs>"
+    ],
+    "expectedRules": []
+  },
+  {
+    "name": "Ignores markdown dividers nested inside Steps layouts",
+    "filePath": "fixtures/divider-in-steps.mdx",
+    "contentLines": [
+      "---",
+      "title: Steps Divider Example",
+      "---",
+      "",
+      "<Steps>",
+      "  <Step title=\"One\">",
+      "",
+      "---",
+      "",
+      "  </Step>",
+      "</Steps>"
+    ],
+    "expectedRules": []
+  },
+  {
+    "name": "Flags top-level markdown dividers without blank padding",
+    "filePath": "fixtures/divider-no-padding.mdx",
+    "contentLines": [
+      "---",
+      "title: Divider Example",
+      "---",
+      "",
+      "Paragraph before.",
+      "---",
+      "## Next"
+    ],
+    "expectedRules": ["markdown-divider"]
+  },
+  {
+    "name": "Flags dividers after inline code placeholders",
+    "filePath": "fixtures/divider-after-inline-code.mdx",
+    "contentLines": [
+      "---",
+      "title: Divider Example",
+      "---",
+      "",
+      "Test reachability with `curl -v https://<your-service-uri>:8935/status`.",
+      "",
+      "---",
+      "",
+      "## Next"
+    ],
+    "expectedRules": ["markdown-divider"]
+  },
+  {
+    "name": "Flags authored code blocks missing icon and filename metadata",
+    "filePath": "v2/orchestrators/setup/guide.mdx",
+    "contentLines": [
+      "---",
+      "title: Setup Guide",
+      "pageType: guide",
+      "---",
+      "",
+      "```bash",
+      "livepeer_cli status",
+      "```"
+    ],
+    "expectedRules": ["code-block-icon", "code-block-filename"]
+  }
+]

@@ -1,13 +1,22 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "page_types": [
     {
       "page_type": "landing",
       "match": {
-        "path_contains": ["/index.mdx", "portal", "overview"]
+        "path_contains": ["/index.mdx", "portal", "mission-control", "-hub"]
       },
       "required_sections": ["Overview"],
-      "allowed_components": ["Card", "CardGroup", "Tabs", "Accordion", "Steps", "Note", "Info", "Tip", "Warning"],
+      "allowed_components": ["Card", "CardGroup", "Tabs", "Accordion", "AccordionGroup", "Note", "Info", "Tip", "Warning"],
+      "forbidden_patterns": ["TODO", "TBD"]
+    },
+    {
+      "page_type": "overview",
+      "match": {
+        "path_contains": ["overview"]
+      },
+      "required_sections": ["Overview"],
+      "allowed_components": ["Card", "CardGroup", "Tabs", "Accordion", "AccordionGroup", "CodeGroup", "Note", "Info", "Tip", "Warning"],
       "forbidden_patterns": ["TODO", "TBD"]
     },
     {
@@ -36,6 +45,51 @@
       "required_sections": ["Prerequisites", "Steps", "Next Steps"],
       "allowed_components": ["Steps", "Step", "CodeGroup", "Tip", "Warning", "Check", "Note"],
       "forbidden_patterns": ["Coming Soon"]
+    },
+    {
+      "page_type": "concept",
+      "match": {
+        "path_contains": ["/concepts/", "-concept", "concept-"]
+      },
+      "required_sections": ["Overview"],
+      "allowed_components": ["Card", "CardGroup", "Accordion", "AccordionGroup", "CodeGroup", "Tabs", "Note", "Info", "Tip", "Warning"],
+      "forbidden_patterns": ["TODO", "TBD"]
+    },
+    {
+      "page_type": "faq",
+      "match": {
+        "path_contains": ["faq"]
+      },
+      "required_sections": ["Frequently Asked Questions"],
+      "allowed_components": ["Accordion", "AccordionGroup", "Note", "Info", "Tip", "Warning"],
+      "forbidden_patterns": ["TODO", "TBD"]
+    },
+    {
+      "page_type": "troubleshooting",
+      "match": {
+        "path_contains": ["troubleshoot", "troubleshooting"]
+      },
+      "required_sections": ["Fix", "Verify"],
+      "allowed_components": ["Accordion", "AccordionGroup", "CodeGroup", "Tabs", "Warning", "Note", "Tip", "Check"],
+      "forbidden_patterns": ["TODO", "TBD", "Coming Soon"]
+    },
+    {
+      "page_type": "glossary",
+      "match": {
+        "path_contains": ["glossary"]
+      },
+      "required_sections": ["Terms"],
+      "allowed_components": ["Accordion", "AccordionGroup", "Table", "Note", "Info"],
+      "forbidden_patterns": ["TODO", "TBD"]
+    },
+    {
+      "page_type": "changelog",
+      "match": {
+        "path_contains": ["changelog", "release-notes"]
+      },
+      "required_sections": ["Changes"],
+      "allowed_components": ["Accordion", "AccordionGroup", "CodeGroup", "Note", "Info", "Tip"],
+      "forbidden_patterns": ["TODO", "TBD"]
     }
   ]
 }

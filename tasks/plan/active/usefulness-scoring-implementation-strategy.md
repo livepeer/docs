@@ -1,3 +1,7 @@
+---
+plan-type: analysis
+---
+
 # Usefulness Scoring Implementation Strategy
 
 ## Scope

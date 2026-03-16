@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R27, R-R30
  * @purpose-statement Codex commit helper — audits codex branch state and generates compliant commit messages
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
+ * @pipeline          manual — not yet in pipeline
  * @dualmode          dual-mode (document flags)
  * @usage             node tools/scripts/codex-commit.js [flags]
  */

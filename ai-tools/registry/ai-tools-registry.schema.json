@@ -1,0 +1,235 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AI Tools Registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "discovery_roots",
+    "exclusions",
+    "lanes",
+    "lifecycle_states",
+    "artifacts"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "discovery_roots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "lanes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/lane"
+      }
+    },
+    "lifecycle_states": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/lifecycleState"
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/artifact"
+      }
+    }
+  },
+  "$defs": {
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "lane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "description",
+        "path_patterns"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "templates",
+            "local",
+            "workspace",
+            "exports",
+            "rules",
+            "manual-doc",
+            "retired"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10
+        },
+        "path_patterns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "advisory_only": {
+          "type": "boolean"
+        }
+      }
+    },
+    "lifecycleState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "description"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "canonical-template",
+            "local-synced",
+            "portable-export",
+            "manual-doc",
+            "workspace-draft",
+            "legacy-active",
+            "retired"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "artifact_type",
+        "category",
+        "lifecycle_state",
+        "current_lane",
+        "target_lane",
+        "canonical_source",
+        "derived_outputs",
+        "runtime_targets",
+        "validators",
+        "repair_commands",
+        "catalog_group",
+        "status",
+        "migration_wave",
+        "notes"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^ai-tools/"
+        },
+        "artifact_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lifecycle_state": {
+          "type": "string",
+          "enum": [
+            "canonical-template",
+            "local-synced",
+            "portable-export",
+            "manual-doc",
+            "workspace-draft",
+            "legacy-active",
+            "retired"
+          ]
+        },
+        "current_lane": {
+          "type": "string",
+          "enum": [
+            "templates",
+            "local",
+            "workspace",
+            "exports",
+            "rules",
+            "manual-doc",
+            "retired"
+          ]
+        },
+        "target_lane": {
+          "type": "string",
+          "enum": [
+            "templates",
+            "local",
+            "workspace",
+            "exports",
+            "rules",
+            "manual-doc",
+            "retired"
+          ]
+        },
+        "canonical_source": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "derived_outputs": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "runtime_targets": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "validators": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "repair_commands": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "catalog_group": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "migration_wave": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

@@ -1,19 +1,37 @@
 ---
-title: 'Core Mechanisms and Functions'
-sidebarTitle: 'Core Mechanisms'
-description: 'The Livepeer protocol secures a decentralised marketplace for verifiable media and AI compute through a tightly coupled set of economic and cryptographic systems. These mechanisms include LPT bonding, dynamic inflation, staking and delegation, slashing conditions, and rewards distribution - all executed through Ethereum-based smart contracts on Arbitrum. This page details each core mechanism, how it interacts with others, and why these design decisions underpin Livepeer’s scalable, permissionless infrastructure.'
-keywords: ["livepeer", "about", "livepeer protocol", "protocol"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+title: Core Mechanisms and Functions
+sidebarTitle: Core Mechanisms
+description: >-
+  The Livepeer protocol secures a decentralised marketplace for verifiable media
+  and AI compute through a tightly coupled set of economic and cryptographic
+  systems. These mechanisms include LPT bonding, dynamic inflation, staking and
+  delegation, slashing conditions, and rewards distribution - all executed
+  through Ethereum-based smart contracts on Arbitrum. This page details each
+  core mechanism, how it interacts with others, and why these design decisions
+  underpin Livepeer’s scalable, permissionless infrastructure.
+pageType: concept
+keywords:
+  - livepeer
+  - about
+  - livepeer protocol
+  - protocol
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: general
+lastVerified: 2026-03-17
+purpose: concept
 ---
-
 
 
 
 import { CardTitleTextWithArrow } from '/snippets/components/primitives/text.jsx'
 import { AccordionTitleWithArrow } from '/snippets/components/primitives/text.jsx'
-import { Quote, FrameQuote } from '/snippets/components/display/quote.jsx'
+import { Quote, FrameQuote } from '/snippets/components/content/quote.jsx'
 import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
-import { ValueResponseField } from '/snippets/components/content/response-field.jsx'
+import { ValueResponseField } from '/snippets/components/content/responseField.jsx'
 import { DynamicTable } from '/snippets/components/layout/table.jsx'
 
 {/* This page describes:
@@ -83,7 +101,7 @@ Core features of the Livepeer Protocol include:
 
 ## Protocol Actors
 
-The Livepeer Protocol defines several key actors that participate in the network and perform specific functions.
+The Livepeer Protocol defines multiple key actors that participate in the network and perform specific functions.
 <AccordionGroup>
    <Accordion title="Orchestrators" icon="microchip">
  **Orchestrators**
@@ -93,7 +111,7 @@ The Livepeer Protocol defines several key actors that participate in the network
    <Accordion title="Gateways" icon="torii-gate">
  **Gateways**
 
- Gateways are the entry point for applications into the Livepeer Network. They are the coordination layer that connects real-time AI and video workloads to the orchestrators who perform the GPU compute.
+ Gateways are the entry point for applications into the Livepeer network. They are the coordination layer that connects real-time AI and video workloads to the orchestrators who perform the GPU compute.
    </Accordion>
    <Accordion title="Delegators" icon="hand-holding-circle-dollar">
  **Delegators**
@@ -106,7 +124,7 @@ The Livepeer Protocol defines several key actors that participate in the network
 
 Livepeer relies on Gateways (prev. Broadcasters), Orchestrators and Delegators to process compute loads on the network.
 
-The Livepeer Protocol defines several key operational rules for the network and network actors.
+The Livepeer Protocol defines multiple key operational rules for the network and network actors.
 
 <span style={{display: "flex", lineHeight: "2rem", alignItems: "center", gap: "0.5rem"}}> <Icon icon="warning" /> **AI vs Video Mechanisms** <Icon icon="warning" /></span>
 
@@ -150,7 +168,7 @@ Note that Staking, Rewards and Payments operate differently for AI pipelines
  **Mechanism**
       1. Rounds have a fixed length in blocks (configured in `RoundsManager`)
       2. New rounds must be initialized by calling `initializeRound()`
-      3. Various protocol operations are only valid during specific times in a round
+ 3. Multiple protocol operations are only valid during specific times in a round
       4. Parameter updates are restricted during "locked" periods of a round
       5. Rewards can only be claimed once per round by a transcoder
 
@@ -170,14 +188,14 @@ Note that Staking, Rewards and Payments operate differently for AI pipelines
 
  {/* <ValueResponseField name="Round Length Configuration" label="function" post={["setRoundLength()"]} default={5760} > */}
       <AccordionGroup>
-         <Accordion title={<ValueResponseField line={false} name="Round Length Configuration" label="function" post={["setRoundLength()"]} default={5760} />} >
+         <Accordion title="Round Length Configuration">
          - `roundLength` state variable stores the number of blocks per round.
          - default configuration is _5760 blocks_ for mainnet deployments (~24 hours at 15-second block times)
          - development environment default is _50 blocks_ for faster testing
          - updated via `setRoundLength()` (governed by Controller owner)
          </Accordion>
  {/* </ValueResponseField> */}
-         <Accordion title={<ValueResponseField line={false} name="Round Length Configuration" label="function" post={["setRoundLength()"]} default={5760} />} >
+         <Accordion title="Round Length Configuration">
          - `roundLength` state variable stores the number of blocks per round.
          - default configuration is _5760 blocks_ for mainnet deployments and _50 blocks_ for development environments
          - updated via `setRoundLength()` (governed by Controller owner)

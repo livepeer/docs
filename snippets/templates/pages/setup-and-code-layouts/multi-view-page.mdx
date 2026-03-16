@@ -1,0 +1,243 @@
+---
+title: Multi-View Setup Template
+sidebarTitle: Multi-View Template
+description: Copy-ready scaffold for setup guides that switch between platform or environment views and include nested mode tabs, code blocks, reference cards, and validation steps.
+keywords:
+  - livepeer
+  - template
+  - setup
+  - quickstart
+  - multi-view
+audience: everyone
+pageType: quickstart
+purpose: how_to
+status: draft
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+{/* Copy this template into a routable docs path and replace the placeholder content. */}
+{/* Keep page-local data, groups, or large tab bodies next to the target page once the guide outgrows inline content. */}
+
+import { CustomCodeBlock } from '/snippets/components/content/code.jsx'
+import { TipWithArrow } from '/snippets/components/primitives/links.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { WidthCard } from '/snippets/components/layout/customCards.jsx'
+
+<TipWithArrow>
+  Use the view dropdown at the top-right of this page to switch between setup paths for different platforms or runtimes.
+</TipWithArrow>
+
+<WidthCard
+  title="Primary Repository or Package"
+  href="https://github.com/livepeer/docs"
+  icon="github"
+  arrow
+  horizontal
+>
+  Replace this card with the main repository, SDK, binary release, or package readers should start from.
+</WidthCard>
+
+<CustomDivider />
+
+# Setup Guide Title
+
+Explain what this guide gets running, who it is for, and when readers should prefer one view over another.
+
+*This guide includes:*
+- Separate setup paths for each platform, runtime, or packaging method.
+- Nested mode tabs for local/dev, production, or other deployment variants.
+- Reference links for prerequisites, configuration, validation, and troubleshooting.
+
+<Note>
+State the recommended setup path here, such as Docker for most users or Linux for production environments.
+</Note>
+
+<View title="Docker" icon="docker" iconType="solid">
+  ## Docker Quickstart
+
+  <Accordion title="Supported hosts and prerequisites" icon="info-circle">
+    List supported host OSes, runtime requirements, container prerequisites, and any production caveats for this view.
+  </Accordion>
+
+  Use this view when the container or packaged runtime is the recommended install path.
+
+  <Tip>
+    Call out why this path is recommended and which readers should use it.
+  </Tip>
+
+  _**Choose your mode:**_
+
+  <Tabs>
+    <Tab title="Local / dev">
+      <Steps>
+        <Step title="Install the required runtime">
+          Replace this step with the shortest viable setup action for local development.
+
+          <CustomCodeBlock
+            filename="install-runtime.sh"
+            icon="terminal"
+            language="bash"
+            codeString={`# Replace with your setup command
+docker pull your-image:latest`}
+          />
+        </Step>
+        <Step title="Start the service">
+          Explain how to launch the service with the minimum required flags, ports, or config files.
+        </Step>
+      </Steps>
+    </Tab>
+    <Tab title="Production">
+      <Steps>
+        <Step title="Prepare production prerequisites">
+          Document networking, secrets, storage, TLS, monitoring, or chain access requirements for production use.
+        </Step>
+        <Step title="Run the production configuration">
+          Replace this step with the production command, compose file, or deployment workflow.
+        </Step>
+      </Steps>
+    </Tab>
+  </Tabs>
+
+  ## Reference Pages
+
+  <Columns cols={2}>
+    <Card title="Installation Guide" href="/templates/pages/how-to-page-template" arrow horizontal>
+      Link to the full install reference for this setup path.
+    </Card>
+    <Card title="Configuration Reference" href="/templates/pages/reference-page-template" arrow horizontal>
+      Link to the configuration flags, env vars, or settings page.
+    </Card>
+  </Columns>
+</View>
+
+<View title="Linux / macOS" icon="linux" iconType="solid">
+  ## Linux / macOS Quickstart
+
+  <Accordion title="Supported distributions and packages" icon="info-circle">
+    Describe supported distros, package managers, compiler toolchains, GPU requirements, or host-specific warnings.
+  </Accordion>
+
+  Use this view for native installs, source builds, or CLI-first workflows.
+
+  <Tabs>
+    <Tab title="Binary install">
+      <Steps>
+        <Step title="Download the release">
+          Tell readers how to choose the correct architecture or build target.
+        </Step>
+        <Step title="Verify and install">
+          Add checksum verification and installation steps here.
+        </Step>
+      </Steps>
+    </Tab>
+    <Tab title="Build from source">
+      <Steps>
+        <Step title="Install build dependencies">
+          List the required packages, compilers, and language runtimes.
+        </Step>
+        <Step title="Build and verify">
+          Explain how to build, install, and confirm the binary works.
+        </Step>
+      </Steps>
+    </Tab>
+  </Tabs>
+
+  ## Reference Pages
+
+  <Columns cols={2}>
+    <Card title="Native Install Guide" href="/templates/pages/how-to-page-template" arrow horizontal>
+      Link to the detailed binary or source install page.
+    </Card>
+    <Card title="Host Requirements" href="/templates/pages/reference-page-template" arrow horizontal>
+      Link to OS, hardware, and dependency requirements.
+    </Card>
+  </Columns>
+</View>
+
+<View title="Windows" icon="windows" iconType="solid">
+  ## Windows Quickstart
+
+  <Accordion title="Windows-specific notes" icon="warning">
+    Capture the Windows support level, missing features, path differences, shell requirements, and any production limitations.
+  </Accordion>
+
+  <Tabs>
+    <Tab title="Native setup">
+      <Steps>
+        <Step title="Install the prerequisites">
+          Explain the required shell, runtime, package manager, or drivers for Windows users.
+        </Step>
+        <Step title="Start the service">
+          Replace this with the PowerShell or executable-based startup flow.
+        </Step>
+      </Steps>
+    </Tab>
+    <Tab title="Known limitations">
+      Summarize anything Windows users should know before they choose this setup path.
+    </Tab>
+  </Tabs>
+
+  ## Reference Pages
+
+  <Columns cols={2}>
+    <Card title="Windows Install Guide" href="/templates/pages/how-to-page-template" arrow horizontal>
+      Link to the detailed Windows instructions.
+    </Card>
+    <Card title="Troubleshooting" href="/templates/pages/troubleshooting-page-template" arrow horizontal>
+      Link to Windows-specific or common troubleshooting guidance.
+    </Card>
+  </Columns>
+</View>
+
+## Validate
+
+Use this section to confirm the service is running end to end after readers complete one of the views above.
+
+<Steps>
+  <Step title="Confirm the process or container is healthy">
+    Describe the expected process status, container health, or version output.
+  </Step>
+  <Step title="Run a smoke test">
+    Explain the simplest request, job, or workflow that proves the service is working.
+  </Step>
+  <Step title="Check logs and output">
+    Tell readers which success signal to look for in logs, metrics, or returned data.
+  </Step>
+  <Step title="Link to deeper troubleshooting">
+    Route failures to the most relevant troubleshooting or FAQ page.
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<Card
+  title="Common Issues"
+  href="/templates/pages/troubleshooting-page-template"
+  icon="triangle-exclamation"
+  iconType="solid"
+  arrow
+  horizontal
+>
+  Link to the main troubleshooting page for this workflow.
+</Card>
+
+## Related Pages
+
+<Columns cols={2}>
+  <Card title="Requirements" href="/templates/pages/reference-page-template" arrow horizontal>
+    Link to prerequisites and setup constraints.
+  </Card>
+  <Card title="Configuration" href="/templates/pages/reference-page-template" arrow horizontal>
+    Link to configuration flags, files, or environment variables.
+  </Card>
+  <Card title="Architecture" href="/templates/pages/overview-page-template" arrow horizontal>
+    Link to the conceptual or architectural overview for this system.
+  </Card>
+  <Card title="Advanced Operations" href="/templates/pages/tutorial-page-template" arrow horizontal>
+    Link to tuning, scaling, monitoring, or production hardening guidance.
+  </Card>
+</Columns>

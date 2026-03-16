@@ -37,12 +37,24 @@ MINT_ENTRY_REALPATH="$(node -e 'const fs=require("fs"); console.log(fs.realpathS
 MINT_ROOT="$(cd "$(dirname "$MINT_ENTRY_REALPATH")" && pwd)"
 LISTENER_PATH="$MINT_ROOT/node_modules/@mintlify/previewing/dist/local-preview/listener/index.js"
 
+pattern_in_file() {
+    local pattern="$1"
+    local file_path="$2"
+
+    if command -v rg >/dev/null 2>&1; then
+        rg -q "$pattern" "$file_path"
+        return
+    fi
+
+    grep -Eq "$pattern" "$file_path"
+}
+
 if [ ! -f "$LISTENER_PATH" ]; then
     echo "Error: Mint listener file not found at: $LISTENER_PATH" >&2
     exit 2
 fi
 
-if rg -q "disableGlobbing:\\s*true" "$LISTENER_PATH"; then
+if pattern_in_file "disableGlobbing:[[:space:]]*true" "$LISTENER_PATH"; then
     echo "Mint watcher patch present: $LISTENER_PATH"
     exit 0
 fi
@@ -52,7 +64,7 @@ if [ "$MODE" = "check" ]; then
     exit 1
 fi
 
-if ! rg -q "^\\s*ignoreInitial:\\s*true," "$LISTENER_PATH"; then
+if ! pattern_in_file "^[[:space:]]*ignoreInitial:[[:space:]]*true," "$LISTENER_PATH"; then
     echo "Error: Could not find expected watcher option in listener file." >&2
     exit 2
 fi

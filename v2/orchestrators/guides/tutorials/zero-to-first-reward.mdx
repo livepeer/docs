@@ -1,0 +1,367 @@
+---
+title: 'Zero to First Reward'
+sidebarTitle: 'Zero to Reward'
+description: >-
+  End-to-end tutorial: install go-livepeer, configure video transcoding, fund
+  and stake LPT, activate on the Livepeer network, and claim a first LPT reward.
+keywords:
+  - livepeer
+  - orchestrator
+  - tutorial
+  - reward
+  - lpt
+  - staking
+  - activate
+  - arbitrum
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: orchestrator
+status: current
+lastVerified: '2026-03-16'
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+
+<Tip>
+  Follow this path when the goal is straightforward: start a production video orchestrator, enter the active set, and claim a first LPT reward. AI pipelines, dual mode, and pool joining build on this baseline.
+</Tip>
+
+---
+
+By the end, the orchestrator node is running on Arbitrum One mainnet, processing video transcoding jobs, and has successfully called `Reward()` to claim its first LPT inflation allocation. Plan for **4 to 8 hours**. LPT acquisition and bridge confirmation usually take the longest.
+
+**Success criteria:**
+- The node appears on [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) in the active set
+- At least one reward round has completed and ETH + LPT balances reflect earnings
+
+<CustomDivider middleText="Prerequisites" />
+
+## Prerequisites
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Requirement</TableCell>
+      <TableCell header>Notes</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Linux server (Ubuntu 22.04 or 24.04 recommended)</TableCell>
+      <TableCell>Production GPU transcoding runs on Linux. Use macOS for CLI reference only.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>NVIDIA GPU with CUDA 12.0+ drivers</TableCell>
+      <TableCell>Verify: `nvidia-smi` shows the GPU. Minimum driver: `525.60.13`.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Docker Engine + NVIDIA Container Toolkit</TableCell>
+      <TableCell>Verify: `docker run --rm --gpus all nvidia/cuda:12.0.0-base-ubuntu20.04 nvidia-smi`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Public static IP or hostname</TableCell>
+      <TableCell>Port 8935 must be reachable from the internet. Test after node starts.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Arbitrum One RPC endpoint</TableCell>
+      <TableCell>Use an Arbitrum One endpoint from Alchemy (`arb-mainnet.g.alchemy.com`) or Infura.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>ETH on Arbitrum One</TableCell>
+      <TableCell>~0.01 ETH minimum for gas. Bridge from L1 at [bridge.arbitrum.io](https://bridge.arbitrum.io) or buy directly on a CEX with Arbitrum withdrawal.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>LPT on Arbitrum One</TableCell>
+      <TableCell>Enough to stake. The active set is the top 100 orchestrators by total stake. Check the current threshold at [Livepeer Explorer](https://explorer.livepeer.org/orchestrators). Plan for a multi-hour acquisition window before starting.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<Warning>
+  Acquiring LPT on Arbitrum One usually takes hours because exchange support and bridge confirmation timing vary. Start once LPT is already in the wallet, or reserve that waiting time up front.
+</Warning>
+
+<CustomDivider middleText="Step 1: Install" />
+
+## Step 1: Install go-livepeer
+
+<StyledSteps>
+
+  <StyledStep title="Pull the Docker image">
+
+    ```bash icon="terminal" filename="install"
+    docker pull livepeer/go-livepeer:latest
+    ```
+
+    Verify:
+
+    ```bash icon="terminal" filename="verify-install"
+    docker run --rm livepeer/go-livepeer:latest livepeer --version
+    ```
+
+    Expected output includes the version string, e.g. `Livepeer Node Version: v0.8.9`.
+
+  </StyledStep>
+
+  <StyledStep title="Create persistent data volume">
+
+    ```bash icon="terminal" filename="create-volume"
+    docker volume create livepeer-data
+    ```
+
+    All node data (keystore, chain data, config) persists in this volume across container restarts.
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Step 2: Configure" />
+
+## Step 2: Configure the node
+
+<StyledSteps>
+
+  <StyledStep title="Identify your GPU device ID">
+
+    ```bash icon="terminal" filename="check-gpu"
+    nvidia-smi -L
+    ```
+
+    Expected output:
+    ```text icon="terminal" title="Example GPU output"
+    GPU 0: NVIDIA GeForce RTX 4090 (UUID: GPU-...)
+    ```
+
+    Note the GPU index (usually `0` for a single GPU). Use `0,1` for two GPUs, or `all` for all available.
+
+  </StyledStep>
+
+  <StyledStep title="Start the node for the first time (key generation)">
+
+    Start the node once to generate the Ethereum keystore. Replace all placeholders:
+
+    ```bash icon="terminal" filename="first-start"
+    docker run -d \
+      --name livepeer-orchestrator \
+      -v livepeer-data:/root/.lpData \
+      --network host \
+      --gpus all \
+      livepeer/go-livepeer:latest \
+      -network arbitrum-one-mainnet \
+      -ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY \
+      -orchestrator \
+      -transcoder \
+      -nvidia 0 \
+      -maxSessions 10 \
+      -pricePerUnit 1000 \
+      -serviceAddr YOUR_PUBLIC_IP:8935
+    ```
+
+    Replace:
+    - `YOUR_API_KEY` with your Alchemy or Infura Arbitrum One API key
+    - `YOUR_PUBLIC_IP` with the machine's public IP address or domain name
+    - `-nvidia 0` with your GPU device ID(s)
+
+    On first start, go-livepeer creates a new Ethereum keystore and prompts for a passphrase via the container logs:
+
+    ```bash icon="terminal" filename="get-passphrase-prompt"
+    docker logs livepeer-orchestrator 2>&1 | grep -i "passphrase\|Enter"
+    ```
+
+    Set a strong passphrase and record it securely. The keystore is at `/root/.lpData/arbitrum-one-mainnet/keystore` inside the volume.
+
+    <Warning>
+      The private key controls the orchestrator identity and all staked LPT. Back up the keystore file to offline storage. Loss of the keystore means permanent loss of access to the account and all bonded LPT.
+    </Warning>
+
+  </StyledStep>
+
+  <StyledStep title="Note your orchestrator Ethereum address">
+
+    ```bash icon="terminal" filename="get-address"
+    docker logs livepeer-orchestrator 2>&1 | grep -i "account\|address" | head -5
+    ```
+
+    The address appears in the startup logs. You will use it to send ETH and LPT.
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Step 3: Fund the Wallet" />
+
+## Step 3: Fund the wallet
+
+**Two assets are needed on Arbitrum One:**
+
+1. **ETH** - for gas (reward calls, ticket redemption, activation). Keep at least 0.01 ETH.
+2. **LPT** - for staking. The active set is the top 100 orchestrators by total stake. Check the current threshold at [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) before acquiring.
+
+<Note>
+  This is the waiting step. Bridge ETH from Ethereum L1 at [bridge.arbitrum.io](https://bridge.arbitrum.io) with a typical 10 to 15 minute confirmation, or buy directly from a centralised exchange with Arbitrum One withdrawal support. LPT acquisition follows the timeline of the exchange path you choose and usually takes longer.
+</Note>
+
+Verify balances are available:
+
+```bash icon="terminal" filename="check-balances"
+docker exec livepeer-orchestrator livepeer_cli
+# Select: "Get node status" to view ETH and LPT balances
+```
+
+{/* FACT CHECK: Confirm the exact `livepeer_cli` menu option for viewing account balances in the current release. Rick to verify the option name or number. */}
+
+<CustomDivider middleText="Step 4: Activate" />
+
+## Step 4: Stake LPT and activate
+
+Activation registers the orchestrator on-chain, sets commission rates, and makes the node eligible for the active set.
+
+<StyledSteps>
+
+  <StyledStep title="Open livepeer_cli">
+
+    ```bash icon="terminal" filename="open-cli"
+    docker exec -it livepeer-orchestrator livepeer_cli
+    ```
+
+  </StyledStep>
+
+  <StyledStep title="Activate as an orchestrator">
+
+    Select **"Invoke multi-step become an orchestrator"** from the menu.
+
+    The multi-step process prompts for:
+    - **Reward cut** - the percentage of LPT inflation you keep (remainder goes to delegators). Setting 0% attracts more delegation; setting 100% keeps all inflation yourself.
+    - **Fee cut** - the percentage of ETH job fees you keep. Higher fee cut means less passed to delegators.
+    - **Service URI** - your public address (e.g. `https://YOUR_PUBLIC_IP:8935`). Must match `-serviceAddr` exactly.
+    - **LPT to self-delegate** - the amount to bond to your own node. This is your stake.
+
+    Confirm each prompt. The activation transaction submits to Arbitrum. Confirmation takes 1-3 minutes.
+
+    {/* FACT CHECK: Confirm the exact `livepeer_cli` menu item name for activation in the current release. Rick to verify whether "Invoke multi-step become an orchestrator" is still the current wording. */}
+
+  </StyledStep>
+
+  <StyledStep title="Verify activation in logs">
+
+    ```bash icon="terminal" filename="check-activation"
+    docker logs livepeer-orchestrator 2>&1 | grep -i "activate\|active\|registered" | tail -10
+    ```
+
+    Expected:
+    ```text icon="terminal" title="Expected activation log"
+    Registered orchestrator on chain
+    Transcoding on Nvidia GPU 0
+    Listening for RPC on :8935
+    Received Ping request
+    ```
+
+    The `Received Ping request` line confirms the node is publicly reachable.
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Step 5: Verify on Explorer" />
+
+## Step 5: Verify on Livepeer Explorer
+
+Open [explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators) and search for your Ethereum address.
+
+Confirm:
+- The node appears in the orchestrator list
+- **Status** shows as Active after the next round begins, roughly 22 hours after activation
+- **Service URI** matches the address you set in `-serviceAddr`
+- **Price per pixel** reflects your `-pricePerUnit` setting (after conversion from wei)
+
+<Note>
+  Active-set entry starts at the next round boundary. The node becomes active when its total stake is already above the current 100th orchestrator at that boundary. Use Explorer to watch your ranking and add more delegated LPT whenever the node stays below the cutoff.
+</Note>
+
+Also verify the port is reachable from outside the network. Test from a machine different from your server:
+
+```bash icon="terminal" filename="port-check"
+curl -k https://YOUR_PUBLIC_IP:8935/status
+```
+
+Any response (including an error JSON) confirms the port is open. A connection timeout means the firewall is blocking port 8935.
+
+<CustomDivider middleText="Step 6: First Reward" />
+
+## Step 6: Claim the first reward
+
+Livepeer distributes LPT inflation to active orchestrators once per round (approximately every 22 hours). go-livepeer automatically calls `Reward()` at round initialisation by default.
+
+**Verify automatic reward calling is enabled:**
+
+```bash icon="terminal" filename="check-reward-flag"
+docker inspect livepeer-orchestrator | grep -A 5 "Cmd"
+# Confirm -reward=false is NOT in the command - if absent, auto-reward is on
+```
+
+**Wait for the next round to complete.** Round timing is visible on [Explorer](https://explorer.livepeer.org) under the current round number and time remaining.
+
+**Verify the reward call succeeded:**
+
+```bash icon="terminal" filename="check-reward-log"
+docker logs livepeer-orchestrator 2>&1 | grep -i "reward" | tail -5
+```
+
+Expected:
+    ```text icon="terminal" title="Expected reward log"
+    Called Reward() for round XXXXX
+    ```
+
+**Verify on Explorer:**
+
+On your orchestrator page on Explorer, the **Rewards** section updates after a successful call, showing the LPT received for the round.
+
+<Note>
+  Rewards accrue only in rounds where the node entered the active set before the round started. A zero first round usually means the node crossed the threshold after round initialisation. Confirm active-set membership on Explorer and check again next round.
+</Note>
+
+<CustomDivider middleText="What Just Happened" />
+
+## What happened
+
+The node completed the full video orchestrator lifecycle:
+
+1. **Installed** go-livepeer and generated an Ethereum identity (keystore)
+2. **Configured** for video transcoding with GPU selection, pricing, and public address
+3. **Funded** the wallet with ETH (for gas) and LPT (for staking)
+4. **Activated** on-chain via `livepeer_cli`, setting commission rates and self-delegating LPT to enter the active set
+5. **Verified** public reachability and Explorer visibility
+6. **Earned** the first LPT inflation reward by calling `Reward()` at round initialisation
+
+**Reward income formula:**
+```text icon="terminal" title="Reward income formula"
+LPT earned per round = (your total stake / network active stake) × round_issuance × 0.90 × your_reward_cut
+```
+
+ETH fee income is separate and arrives as gateways route transcoding jobs to the node. Fee income scales with job volume, while reward size scales with stake.
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Add AI to a Video Node" icon="microchip" href="/v2/orchestrators/guides/tutorials/add-ai-to-video-node" arrow horizontal>
+    Add AI inference to this running node without changing video configuration.
+  </Card>
+  <Card title="AI Earning Quickstart" icon="bolt" href="/v2/orchestrators/guides/tutorials/ai-earning-quickstart" arrow horizontal>
+    Start earning from AI inference with minimal LPT - the alternative first path.
+  </Card>
+  <Card title="Earning Model" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earning-model" arrow horizontal>
+    How LPT rewards and ETH fees combine into total orchestrator income.
+  </Card>
+  <Card title="Reward Call Tuning" icon="sliders" href="/v2/orchestrators/guides/config-and-optimisation/reward-call-tuning" arrow horizontal>
+    Calculate reward call profitability and optimise timing at your stake level.
+  </Card>
+</CardGroup>

@@ -1,0 +1,284 @@
+---
+title: Delegate Operations
+sidebarTitle: Delegate Operations
+description: >-
+  How to attract and retain LPT delegators as a Livepeer orchestrator — what
+  delegators evaluate, the Explorer ROI formulas explained, commission strategy,
+  reputation, and the compounding stake flywheel.
+keywords:
+  - livepeer
+  - orchestrator
+  - delegators
+  - lpt delegation
+  - stake
+  - reward cut
+  - fee share
+  - orchestrator reputation
+  - yield calculation
+  - roi
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: orchestrator
+purpose: guide
+status: published
+lastVerified: 2026-03-13
+---
+{/* Draft note: keep delegation economics concrete, route unresolved factual checks to internal comments only, and keep the page focused on operator-side decisions. */}
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { MathInline, MathBlock } from '/snippets/components/primitives/math.jsx'
+
+Delegated LPT lets third-party token holders increase your orchestrator's total stake. More stake means a larger share of protocol inflation, stronger positioning in the transcoding queue, and greater credibility in the network. Use this page to understand why delegation matters, what delegators evaluate, how the Explorer yield calculation works, and what persuades delegators to stay.
+
+<CustomDivider />
+
+## Why delegators matter
+
+An orchestrator's **total stake** is the sum of its own self-bonded LPT and all LPT delegated to it by third parties. This total drives two things simultaneously:
+
+``` icon="terminal"
+More total stake
+       ├── Larger share of LPT inflation each round
+       └── Higher position in the active set → more transcoding jobs
+                    ↓
+            More ETH fee revenue
+                    ↓
+         Higher v_daily (daily fee volume average)
+                    ↓
+        Even more attractive to delegators (compounding)
+```
+
+The compounding dynamic is visible in every historical reporting period. The orchestrators near the top of the active set by stake captured disproportionately more of both inflation rewards and job volume.
+
+Delegators contribute their LPT in exchange for a share of the orchestrator's earnings. They trust you to keep commission stable, call reward every round, and keep the node performant. In return, they expect a return that is competitive with the other orchestrators on the table.
+
+<CustomDivider />
+
+## What delegators actually evaluate
+
+The [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) displays a calculated return on investment for delegating to any given orchestrator. Understanding exactly how that calculation works puts you in the position of knowing what levers you control.
+
+### The Explorer ROI calculation
+
+The Explorer's yield estimate for a delegator with stake <MathInline latex={String.raw`p`} /> on your orchestrator combines ETH fee yield and LPT inflation yield:
+
+#### ETH (fee) yield
+
+<MathBlock latex={String.raw`yield_{ETH} = (v_{daily} \times 365) \times s_{fees} \times \frac{p}{p + l_{orch}}`} />
+
+Where:
+- <MathInline latex={String.raw`v_{daily}`} /> = your 90-day average daily fee volume in ETH
+- <MathInline latex={String.raw`s_{fees}`} /> = your `feeShare` rate (as a decimal, e.g. 0.5 for 50%)
+- <MathInline latex={String.raw`p`} /> = the delegator's stake they're considering bonding
+- <MathInline latex={String.raw`l_{orch}`} /> = your current total active stake
+
+The fee yield estimate extrapolates your recent daily fee volume over a year, applies your fee share, and scales by the delegator's proportion of your total stake.
+
+#### LPT (inflation) yield
+
+<MathBlock latex={String.raw`yield_{LPT} = \frac{l_{total} \times (1 + r_{inf})^{417} - l_{total}}{l_{active}} \times ((p + l_{orch}) \times r_{rewards}) \times \left( s_{rewards} \times \frac{p}{p + l_{orch}} \right)`} />
+
+Where:
+- <MathInline latex={String.raw`l_{total}`} /> = current total LPT supply
+- <MathInline latex={String.raw`r_{inf}`} /> = current inflation rate per round
+- <MathInline latex={String.raw`l_{active}`} /> = total LPT bonded across the network
+- <MathInline latex={String.raw`r_{rewards}`} /> = your reward call ratio (`rewardCalls / n`, up to 90 rounds)
+- <MathInline latex={String.raw`s_{rewards}`} /> = your `rewardShare` rate (1 − rewardCut)
+- <MathInline latex={String.raw`417`} /> = approximate rounds per year at Arbitrum block times
+
+#### Combined yield
+
+<MathBlock latex={String.raw`yield_{total} = yield_{LPT} + yield_{ETH} \times price_{LPT/ETH}`} />
+
+The ETH fee yield is converted into LPT terms using the current <MathInline latex={String.raw`price_{LPT/ETH}`} /> Uniswap price. Total yield is expressed in LPT terms so delegators compare it directly to the LPT they're bonding.
+
+The implementation of this calculation lives in the [Explorer's roi.ts](https://github.com/livepeer/explorer/blob/main/lib/roi.ts).
+
+<Note>
+  This formula is a projection built from the current inflation rate, fee volume, and commission settings. Treat the headline rate as directional and use stability over time as the stronger trust signal.
+</Note>
+
+<CustomDivider />
+
+## The four things delegators look at
+
+### 1. Reward call ratio
+
+Your `rewardCalls / n` ratio over the trailing 90 rounds is visible on your Explorer profile and feeds directly into the yield formula. Every missed round reduces this ratio, which reduces every delegator's projected yield — and every delegator who recalculates sees a worse number.
+
+A ratio below 1.0 is a signal of either unreliability or low-stake economics. Delegators migrate away from orchestrators with declining reward ratios.
+
+**What you control:** Keep your node running and your ETH balance sufficient for gas. A value of <MathInline latex={String.raw`r_{rewards} = 1.0`} /> (100%) is achievable and expected.
+
+### 2. Fee share and reward share
+
+Your `feeShare` and `rewardCut` set what percentage of your earnings pass through to delegators. These are visible in Explorer and are the most direct signal of how "delegator-friendly" your orchestrator is.
+
+The competitive range as of early 2026:
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Parameter</TableCell>
+    <TableCell header>Very competitive</TableCell>
+    <TableCell header>Moderate</TableCell>
+    <TableCell header>Operator-heavy</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`rewardCut`</TableCell>
+    <TableCell>0–10%</TableCell>
+    <TableCell>10–25%</TableCell>
+    <TableCell>25–100%</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`feeShare`</TableCell>
+    <TableCell>75–100%</TableCell>
+    <TableCell>30–75%</TableCell>
+    <TableCell>0–30%</TableCell>
+  </TableRow>
+</StyledTable>
+
+New orchestrators building their initial delegation base should be at the competitive end. Once you have a stable delegation base and reputation, modest increases in `rewardCut` are less disruptive — but they should still be telegraphed to delegators in advance.
+
+### 3. Daily fee volume (v_daily)
+
+Your 90-day average daily fee volume in ETH shows delegators how much fee-producing work your orchestrator is winning. A high <MathInline latex={String.raw`v_{daily}`} /> means more ETH flowing through the fee share calculation, raising the ETH yield component significantly.
+
+Gateway demand and node performance determine <MathInline latex={String.raw`v_{daily}`} />. Improve it by:
+- Keep your transcoding session limits competitive
+- Run popular AI models warm at competitive prices
+- Maintain high uptime and low latency to stay preferred by gateways
+
+### 4. Active stake dilution
+
+When a delegator adds new stake <MathInline latex={String.raw`p`} /> to your orchestrator, their yield is diluted by the total stake they're joining: <MathInline latex={String.raw`\frac{p}{p + l_{orch}}`} />. Smaller orchestrators offer higher yield per unit of delegated stake because the denominator is smaller. This is why new and mid-tier orchestrators still offer competitive yields despite lower absolute fee volumes.
+
+<CustomDivider />
+
+## Building reputation
+
+The yield formula explains the maths, but reputation is what keeps delegators when market conditions change.
+
+### Transparency
+
+Some high-performing orchestrators publish their operational setup, uptime history, and commission change notices publicly via:
+- Livepeer Forum post introducing their orchestrator
+- Discord announcements in the #orchestrators channel
+- On-chain commission change with advance notice (one round is a minimum; a week is better)
+
+Delegators on the forum and Discord actively discuss which orchestrators they trust. A reputation thread or introduction builds discoverability.
+
+### Commission stability
+
+The most common delegator complaint (visible throughout the Livepeer Forum history) is orchestrators who set attractive rates to attract initial delegation and then change them. The protocol permits this, but it is reputationally damaging. Delegators who experience this switch orchestrators immediately.
+
+The Explorer shows your commission change history. Delegators check this.
+
+### Running AI capabilities
+
+Since Q3 2024, orchestrators running AI inference pipelines have seen higher <MathInline latex={String.raw`v_{daily}`} /> values than transcoding-only nodes. Higher fee volume improves your ETH yield component, making you more attractive to yield-focused delegators. Running popular models warm is a compounding advantage: more fees → higher yield → more delegation → more stake → more jobs.
+
+<CustomDivider />
+
+## The delegation mechanics (what delegators actually do)
+
+It's useful to understand the delegator's side of the process to anticipate their questions.
+
+<StyledSteps>
+
+<StyledStep title="Delegator connects wallet to Explorer">
+At [explorer.livepeer.org](https://explorer.livepeer.org), a delegator connects their Ethereum/Arbitrum wallet.
+</StyledStep>
+
+<StyledStep title="Browse orchestrator list">
+The Active Orchestrators table shows every orchestrator's current stake, commission parameters, reward call history, and estimated ROI. Delegators filter and sort here.
+</StyledStep>
+
+<StyledStep title="Evaluate the target orchestrator">
+Clicking through to an orchestrator's profile shows: stake history, daily fee volume graph, delegator count, reward call ratio, commission change history, and the personalised yield calculator where they enter their own stake amount <MathInline latex={String.raw`p`} />.
+</StyledStep>
+
+<StyledStep title="Bond LPT">
+Delegating requires holding LPT on Arbitrum and approving the bonding transaction. The LPT stays in the delegator's wallet while bonding to the orchestrator's stake until unbonding.
+</StyledStep>
+
+<StyledStep title="Unbonding period">
+Delegators who leave enter an unbonding period of approximately 7 days before their LPT is liquid again. This creates some natural stickiness in the delegation relationship.
+</StyledStep>
+
+</StyledSteps>
+
+<CustomDivider />
+
+## Common pitfalls for delegators (and what they mean for you)
+
+These are documented in the yield-calculation source material and are known to the delegator community. Understanding them helps you avoid the behaviours that cause delegators to leave.
+
+### Variable commission rates
+
+**The risk:** Orchestrators change `feeShare` and `rewardCut` on-chain at any time. The Explorer yield projection uses your current rates and assumes they stay constant. Raising `rewardCut` after attracting delegation pulls realised yield below the projection delegators saw.
+
+**Your response:** Treat commission rates as a public commitment. Announce any changes in advance, with clear reasons. A small planned increase communicated honestly is far less damaging than an unannounced change.
+
+### Inflation rate changes
+
+The yield formula assumes a constant inflation rate. Bonded participation above 50% decreases the inflation rate and reduces LPT yield for all delegators. This is outside your control, but some delegators interpret reduced yields as your fault.
+
+**Your response:** Be transparent about protocol-level factors. The Explorer shows the current inflation rate, so link informed delegators directly to that data and show the protocol-level cause.
+
+### Missed reward rounds
+
+Every missed round reduces <MathInline latex={String.raw`r_{rewards}`} />, which directly reduces projected LPT yield in the formula. Delegators notice and migrate.
+
+**Your response:** This is fully within your control. Automate reward calling, monitor with alerts, keep ETH in your wallet. See [Rewards and Fees](/v2/orchestrators/guides/staking-and-rewards/reward-mechanics) for the complete setup.
+
+<CustomDivider />
+
+## Resources to share
+
+Pointing incoming delegators to good educational resources reduces confusion and builds trust:
+
+- **Explorer yield calculator:** [explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators) — enter any stake amount to see projected yield for your orchestrator specifically
+- **LPT delegation guide:** [v2/lpt/delegation](/v2/lpt/delegation) — protocol-level guide to the bonding process
+- **Livepeer primer:** [livepeer.org/primer](https://livepeer.org/primer) — accessible introduction to the protocol
+
+<CustomDivider />
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Earnings Explained" icon="chart-line" href="/v2/orchestrators/guides/staking-and-rewards/earning-model">
+    The full picture of how ETH fees and LPT rewards work.
+  </Card>
+  <Card title="Rewards and Fees" icon="hand-holding-dollar" href="/v2/orchestrators/guides/staking-and-rewards/reward-mechanics">
+    Reward call automation, gas thresholds, and commission setting via livepeer_cli.
+  </Card>
+  <Card title="LPT Token" icon="coins" href="/v2/lpt/about/purpose">
+    Why LPT exists and how it functions in the protocol.
+  </Card>
+  <Card title="Livepeer Explorer" icon="compass" href="https://explorer.livepeer.org">
+    Live ROI data, orchestrator rankings, and your own earnings dashboard.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  "How do I attract more delegated stake?" Why delegation matters (active set
+  position, reward share, governance weight). What delegators evaluate: reward cut,
+  fee cut, uptime, performance, communication. Building reputation: Explorer
+  profile, Discord presence, governance participation, transparent communication.
+  Self-stake signalling. When to lower cuts vs hold.
+
+  PLAN TARGET: growing-delegation (consider rename)
+  TARGET SECTION: Staking & Earning → "How do I earn?" (merged section)
+  JOB STORIES: J3 (delegation growth)
+
+  CROSS-REFS:
+  - Monitoring & Tools > Explorer Operations - managing Explorer profile
+  - Staking & Earning > Reward Mechanics - setting competitive cuts
+  - Delegators Tab > Delegation Guide - delegator decision process
+*/}

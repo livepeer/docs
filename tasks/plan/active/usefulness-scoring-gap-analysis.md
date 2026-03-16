@@ -1,3 +1,7 @@
+---
+plan-type: analysis
+---
+
 # Usefulness Scoring Gap Analysis
 
 ## Primary Gaps Addressed By Cutover

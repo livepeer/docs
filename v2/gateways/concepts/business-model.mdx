@@ -1,0 +1,279 @@
+---
+title: Gateway Business Model
+sidebarTitle: Business Model
+description: >-
+  How gateways earn money, what they pay, the payment flow between applications,
+  gateways, and orchestrators, and the four operator models.
+keywords:
+  - livepeer
+  - gateways
+  - gateway economics
+  - gateway business model
+  - gateway pricing
+  - gateway fees
+  - payment flow
+  - arbitrage
+  - maxPricePerUnit
+  - ETH
+  - LPT
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: gateway-operator
+purpose: concept
+status: current
+lastVerified: 2026-03-13
+---
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { CenteredContainer } from '/snippets/components/layout/containers.jsx'
+
+<CenteredContainer maxWidth="960px">
+  <Tip>Gateways are application service routers that earn at the business layer. You control customer pricing while the protocol sets the network-side cost of routed work.</Tip>
+</CenteredContainer>
+
+<CustomDivider middleText="Payment Flow" />
+
+## Payments Flow
+
+Gateways are **consumers** of compute services. They pay orchestrators to do work on behalf of their application customers.
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+flowchart LR
+    A["End users /<br/>Applications"] -->|"Pay gateway's rate<br/>(business layer)"| B["Gateway"]
+    B -->|"Pay network rate<br/>(ETH payment tickets)"| C["Orchestrator"]
+    C -->|"Pay workers"| D["Transcoder /<br/>AI Runner"]
+    C -->|"Redeem tickets"| E["Arbitrum<br/>(on-chain)"]
+
+    B -.->|"Keep margin"| F["Gateway revenue"]
+
+    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+```
+
+The payment chain:
+
+1. **End users pay the gateway** at the operator's application-layer rate
+2. **The gateway pays orchestrators** via probabilistic micropayment tickets (ETH on Arbitrum)
+3. **Orchestrators pay their workers** (transcoders, AI runners) and redeem winning tickets on-chain
+4. **The gateway keeps the difference** between what customers pay and what orchestrators charge
+
+<CustomDivider middleText="Who Earns What" />
+
+## Gateway Earnings
+
+Gateway earnings come from business-layer margins. Gateways buy network services instead of earning protocol rewards.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Participant</TableCell>
+      <TableCell header>Earns at protocol level?</TableCell>
+      <TableCell header>How</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Orchestrator**</TableCell>
+      <TableCell>Yes</TableCell>
+      <TableCell>LPT rewards (staking) + ETH fees (payment tickets from gateways)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Transcoder / AI Worker**</TableCell>
+      <TableCell>Yes</TableCell>
+      <TableCell>Paid by orchestrators for GPU compute work</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Redeemer**</TableCell>
+      <TableCell>Yes</TableCell>
+      <TableCell>Fees for redeeming winning payment tickets on-chain</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Gateway**</TableCell>
+      <TableCell>**No**</TableCell>
+      <TableCell>Pays for services (earns at business layer only)</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="Gateway Costs" />
+
+## Gateway Costs
+
+Gateway costs are determined by the work you route and the orchestrator prices on the network.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Cost type</TableCell>
+      <TableCell header>Pricing unit</TableCell>
+      <TableCell header>Description</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Video transcoding**</TableCell>
+      <TableCell>Wei per pixel per segment</TableCell>
+      <TableCell>Width x height x frames of output video</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**AI inference**</TableCell>
+      <TableCell>Wei per pixel or per millisecond</TableCell>
+      <TableCell>Varies by pipeline (image = per pixel, audio = per ms)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Real-time AI**</TableCell>
+      <TableCell>Interval-based</TableCell>
+      <TableCell>Payments during the duration of a live stream</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+### Currency
+
+Gateways pay orchestrators in **ETH** on Arbitrum. LPT remains the staking, governance, and reward token for orchestrators and delegators.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Currency</TableCell>
+      <TableCell header>Purpose</TableCell>
+      <TableCell header>Used by</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**ETH / Wei**</TableCell>
+      <TableCell>Service payments (transcoding, AI)</TableCell>
+      <TableCell>Gateways pay orchestrators</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**LPT**</TableCell>
+      <TableCell>Staking, governance, rewards</TableCell>
+      <TableCell>Orchestrators, delegators</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+ETH handles service payments while LPT handles protocol governance and staking. This keeps service costs denominated in a stable currency while LPT serves its governance function.
+
+<CustomDivider middleText="Why Run a Gateway" />
+
+## Gateway Operator Models
+
+Four operator models show how gateways earn at the **business layer**:
+
+<AccordionGroup>
+  <Accordion title="Self-hosted gateway (cost savings)" icon="server">
+    Running your own gateway removes a third-party routing fee. If you are already building an application on Livepeer, self-hosting keeps that margin inside your stack.
+
+    **Who:** App developers scaling past hosted APIs (Daydream, Livepeer.Cloud)
+
+    **Revenue model:** Cost reduction. You keep the margin that a third-party gateway would otherwise charge.
+  </Accordion>
+  <Accordion title="Service provider (arbitrage)" icon="store">
+    Charge end users more than you pay orchestrators. The difference is your margin. This is the classic gateway business model.
+
+    **Who:** Livepeer.Cloud SPE, LLM SPE, Streamplace
+
+    **Revenue model:** Per-request, per-minute, or subscription pricing to customers. Pay orchestrators at network rates.
+  </Accordion>
+  <Accordion title="Platform builder (NaaP)" icon="building">
+    Build a full platform on top of the gateway layer - API key management, multi-tenancy, billing, SLA monitoring, orchestrator tiering.
+
+    **Who:** NaaP (Network as a Platform), enterprise integrators
+
+    **Revenue model:** SaaS pricing with usage-based billing. The gateway is the infrastructure layer of a larger product.
+  </Accordion>
+  <Accordion title="Content provider (SLA control)" icon="video">
+    Run a gateway to ensure SLA guarantees on your orchestrators. Control orchestrator selection, failover, and pricing for your specific content.
+
+    **Who:** Streaming platforms, media companies, live event producers
+
+    **Revenue model:** The gateway supports the core business through stronger SLA control and workload routing.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider middleText="Fee Structure" />
+
+## Pricing and Fees
+
+As a gateway operator, you set pricing at two levels:
+
+### Protocol-level costs (what you pay)
+
+You control your maximum cost per job using CLI flags:
+
+```bash icon="terminal" title="gateway cost limits"
+# Maximum you'll pay per pixel for transcoding
+-maxPricePerUnit=1000
+
+# Maximum you'll pay per AI capability/model
+-maxPricePerCapability='{"capabilities_prices": [{"pipeline": "text-to-image", "model_id": "stabilityai/sd-turbo", "price_per_unit": 1000}]}'
+```
+
+These flags set an upper bound. The gateway will only route to orchestrators whose prices are at or below your maximum. Lower maximums mean fewer available orchestrators; higher maximums mean more options but higher costs.
+
+### Business Layer Pricing
+
+Your fees to end users are set entirely at the application layer, outside the Livepeer protocol. Common approaches:
+
+1. **Per-request pricing** - charge per API call to your gateway
+2. **Usage-based pricing** - charge per minute of video or per AI generation
+3. **Subscription models** - monthly fees for access to your gateway services
+
+```go icon="terminal" title="application pricing example"
+// Your application code (not in Livepeer protocol)
+func calculateUserPrice(requestType string, pixels int64) float64 {
+    basePrice := getYourBusinessPrice(requestType)
+    yourCost := getOrchestratorCost(pixels)
+    profitMargin := 0.20 // 20% margin
+
+    return basePrice + yourCost*profitMargin
+}
+```
+
+### Price Discovery
+
+Use the CLI to discover current orchestrator market rates:
+
+```bash icon="terminal" title="livepeer_cli price discovery"
+livepeer_cli
+# Select "Set broadcast config" to see current market rates
+# Then set your max prices accordingly
+```
+
+Your margin = what customers pay you - what you pay orchestrators.
+
+<CustomDivider middleText="Case Studies" />
+
+## Production Gateways
+
+**[Streamplace](/v2/solutions/streamplace/overview)** operates a gateway providing video processing services to content creators. Creators pay Streamplace; Streamplace pays orchestrators. The margin is Streamplace's revenue.
+
+**[Daydream](/v2/solutions/daydream/overview)** operates a gateway providing AI video processing. Builders and creators pay Daydream; Daydream pays orchestrators. The margin is Daydream's revenue.
+
+Both demonstrate the arbitrage model: the gateway sits between application demand and network supply, adding value through routing quality, developer experience, and service reliability.
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Gateway Role" icon="user-gear" href="/v2/gateways/concepts/role" arrow horizontal>
+    What gateways are and how the role has evolved.
+  </Card>
+  <Card title="Gateway Capabilities" icon="gears" href="/v2/gateways/concepts/capabilities" arrow horizontal>
+    Workload types, orchestrator selection, and session management.
+  </Card>
+  <Card title="Payment System" icon="credit-card" href="/v2/gateways/guides/payments-and-pricing/payment-guide" arrow horizontal>
+    How probabilistic micropayments work.
+  </Card>
+  <Card title="Orchestrator Incentives" icon="coins" href="/v2/orchestrators/concepts/incentive-model" arrow horizontal>
+    How the supply side (orchestrators) earns - for comparison.
+  </Card>
+</CardGroup>

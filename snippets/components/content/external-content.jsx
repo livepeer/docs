@@ -1,14 +1,25 @@
 /**
- * ExternalContent - A reusable component for displaying external GitHub content
- * Usage:
- *   import { ExternalContent } from '/snippets/components/content/external-content.jsx'
- *   import MyContent from '/snippets/external/my-content.mdx'
- *   <ExternalContent
- *     repoName="livepeer/awesome-livepeer"
- *     githubUrl="https://github.com/livepeer/awesome-livepeer"
- *   >
- *     <MyContent />
- *   </ExternalContent>
+ * @component ExternalContent
+ * @category content
+ * @tier composite
+ * @status stable
+ * @description External Content content component for rendering reader-facing documentation content.
+ * @contentAffinity tutorial, concept, reference
+ * @owner docs
+ * @dependencies none
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @param {any} repoName - repo Name prop.
+ * @param {any} githubUrl - github Url prop.
+ * @param {string} [maxHeight="1000px"] - max Height prop.
+ * @param {string} [icon="github"] - icon prop.
+ * @param {any} children - children prop.
+ * @example
+ * <ExternalContent repoName="example" githubUrl="example">Example content</ExternalContent>
  */
 
 export const ExternalContent = ({

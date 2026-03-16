@@ -82,7 +82,7 @@ async function runTests() {
       '### Full error output',
       '### Reproduction conditions',
       '### Expected behavior',
-      '### Action requested from maintainers',
+      '### Requested repository outcome',
       '### Classification',
       '### Priority'
     ];

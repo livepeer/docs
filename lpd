@@ -4,7 +4,7 @@
 # @category          orchestrator
 # @purpose           infrastructure:pipeline-orchestration
 # @scope             full-repo
-# @owner             docs
+# @domain            docs
 # @needs             R-R29
 # @purpose-statement Developer CLI orchestrator — unified command surface for setup, dev server, testing, hooks, and script execution across all repo domains
 # @pipeline          manual — not yet in pipeline
@@ -46,16 +46,16 @@ Usage:
   lpd version
     - info: Print CLI version.
 
-  lpd setup [--yes] [--no-tools] [--no-tests] [--no-hooks] [--with-mintlify] [--no-cli] [--json]
-    - flags: control dependency installs, hook install, Mintlify install, and CLI PATH wiring.
+  lpd setup [--yes] [--no-tools] [--no-tests] [--no-hooks] [--with-mintlify] [--no-cli] [--no-codex-skills] [--json]
+    - flags: control dependency installs, hook install, Mintlify install, CLI PATH wiring, and Codex skill sync.
     - info: Bootstrap local environment for docs development.
 
   lpd doctor [--strict] [--json]
     - flags: `--strict` makes warnings fail.
     - info: Check local environment and repo readiness.
 
-  lpd dev [--test] [--test-mode fast|staged|full] [--script <path>] [--scoped] [--scope-...] [-- ...mint args]
-    - flags: run advisory tests first, optional scoped docs profile for large docs.json, override launcher script, pass-through Mintlify args.
+  lpd dev [--test] [--test-mode fast|staged|full] [--script <path>] [--scoped] [--docs-config <path>] [--scope-...] [-- ...mint args]
+    - flags: run advisory tests first, optional scoped docs profile for large docs.json or alternate docs config, override launcher script, pass-through Mintlify args.
     - info: Run local docs dev launcher.
 
   lpd mint dev [--scoped] [--scope-...] [-- ...mint args]
@@ -66,6 +66,10 @@ Usage:
     - flags: choose test scope and optional browser/domain/WCAG/external-link-audit checks.
     - info: Run test suite with optional integration checks.
 
+  lpd move-page <old> <new> [--yes] [--check] [--no-stage]
+    - flags: dry-run with `--check`, skip `git add` with `--no-stage`, auto-confirm via `--yes`.
+    - info: Move a docs page with `git mv`, then run governed docs path sync.
+
   lpd ai-sitemap [--write|--check] [--json]
     - flags: write or verify the AI sitemap artifact.
     - info: Generate or validate sitemap-ai.xml.
@@ -73,6 +77,10 @@ Usage:
   lpd ci [--skip-browser] [--base-url URL]
     - flags: optionally skip browser checks and set domain audit base URL.
     - info: Run CI-like validation flow locally.
+
+  lpd repair --surface <id> [--staged|--files <path[,path...]>|--full] [--write] [--stage]
+    - flags: choose the governed surface, optional scope, write mode, and optional staging of repaired outputs.
+    - info: Run ownerless-governance repair flows through one deterministic entrypoint.
 
   lpd hooks <install|status|verify|info|<hook-script tokens...>>
     - flags: subcommands define the hook action.
@@ -105,6 +113,9 @@ Examples:
   lpd ai-sitemap --write
     - Generates sitemap-ai.xml at repo root.
 
+  lpd repair --surface script-governance --write --staged
+    - Repairs staged script-governance metadata drift with bounded scope.
+
   lpd scripts list --group tools
     - Lists available scripts in the tools group.
 
@@ -115,6 +126,7 @@ Examples:
     - Previews the exact task-script command without executing.
 
 Notes:
+  - `lpd setup` syncs the repo planning skill to `$CODEX_HOME/skills` (fallback: `~/.codex/skills`) unless `--no-codex-skills` is used.
   - `lpd dev` auto-installs/updates pre-commit hooks via tools/scripts/mint-dev.sh.
   - Human `.allowlist` edits require: `git commit -m "msg" --trailer "allowlist-edit=true"`.
   - Human deletions require: `git commit -m "msg" --trailer "allow-deletions=true"`.
@@ -146,12 +158,14 @@ It standardizes setup, local preview, test runs, hooks, and curated script execu
 
 Command Groups:
   core
-    lpd setup [--yes] [--no-tools] [--no-tests] [--no-hooks] [--with-mintlify] [--no-cli]
+    lpd setup [--yes] [--no-tools] [--no-tests] [--no-hooks] [--with-mintlify] [--no-cli] [--no-codex-skills]
     lpd doctor [--strict] [--json]
-    lpd dev [--test] [--test-mode fast|staged|full] [--scoped] [--scope-...] [-- ...mint args]
+    lpd dev [--test] [--test-mode fast|staged|full] [--scoped] [--docs-config <path>] [--scope-...] [-- ...mint args]
     lpd test [--staged|--full] [--browser] [--domain v1|v2|both] [--wcag] [--wcag-no-fix] [--link-audit-external] [--base-url URL]
+    lpd move-page <old> <new> [--yes] [--check] [--no-stage]
     lpd ai-sitemap [--write|--check] [--json]
     lpd ci [--skip-browser] [--base-url URL]
+    lpd repair --surface <id> [--staged|--files <path[,path...]>|--full] [--write] [--stage]
 
   hooks
     lpd hooks install
@@ -175,13 +189,44 @@ Common Workflows:
     lpd tools dev test-add-callouts -- --help
   regenerate AI sitemap
     lpd ai-sitemap --write
+  repair a governed surface
+    lpd repair --surface script-governance --write --staged
+  move a docs page and sync docs.json
+    lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/get-started/new.mdx
 
 Notes:
+  - `lpd setup` syncs the repo planning skill to `$CODEX_HOME/skills` (fallback: `~/.codex/skills`) unless `--no-codex-skills` is used.
   - lpd uses .lpdignore (if present) to hide/block scripts from discovery and execution.
   - Human `.allowlist` edits require: `git commit -m "msg" --trailer "allowlist-edit=true"`.
   - Human deletions require: `git commit -m "msg" --trailer "allow-deletions=true"`.
   - High-risk script groups require confirmation unless --yes is supplied.
 EOF
+}
+
+codex_skills_target_dir() {
+    if [ -n "${CODEX_HOME:-}" ]; then
+        printf '%s\n' "$CODEX_HOME/skills"
+        return 0
+    fi
+    printf '%s\n' "$HOME/.codex/skills"
+}
+
+sync_codex_planner_skill() {
+    local target_dir
+    target_dir="$(codex_skills_target_dir)"
+
+    if ! command -v node >/dev/null 2>&1; then
+        echo "Node is required to sync Codex skills." >&2
+        return 1
+    fi
+
+    if [ ! -f "$REPO_ROOT/tools/scripts/sync-codex-skills.js" ]; then
+        echo "sync-codex-skills.js not found at $REPO_ROOT/tools/scripts/sync-codex-skills.js" >&2
+        return 1
+    fi
+
+    echo "Syncing Codex planner skill to $target_dir..."
+    node tools/scripts/sync-codex-skills.js --skills agentic-project-management-orchestrator
 }
 
 emit_json() {
@@ -560,6 +605,13 @@ run_step() {
     return 1
 }
 
+run_cli_step() {
+    printf '→'
+    printf ' %q' "$@"
+    printf '\n'
+    "$@"
+}
+
 hook_status_check() {
     local source_hook="$REPO_ROOT/.githooks/pre-commit"
     # Support both regular repos and worktrees
@@ -796,6 +848,7 @@ cmd_setup() {
     local install_hooks=1
     local install_mint=0
     local install_cli=1
+    local install_codex_skills=1
 
     while [ "$#" -gt 0 ]; do
         case "$1" in
@@ -817,12 +870,15 @@ cmd_setup() {
             --no-cli)
                 install_cli=0
                 ;;
+            --no-codex-skills)
+                install_codex_skills=0
+                ;;
             --json)
                 GLOBAL_JSON=1
                 ;;
             --help|-h)
                 cat <<'EOF'
-Usage: lpd setup [--yes] [--no-tools] [--no-tests] [--no-hooks] [--with-mintlify] [--no-cli] [--json]
+Usage: lpd setup [--yes] [--no-tools] [--no-tests] [--no-hooks] [--with-mintlify] [--no-cli] [--no-codex-skills] [--json]
 EOF
                 return 0
                 ;;
@@ -870,6 +926,13 @@ EOF
             n|N|no|NO) install_cli=0 ;;
             *) install_cli=1 ;;
         esac
+
+        printf "Sync the Codex planning skill to %s? [Y/n]: " "$(codex_skills_target_dir)"
+        read -r answer || true
+        case "$answer" in
+            n|N|no|NO) install_codex_skills=0 ;;
+            *) install_codex_skills=1 ;;
+        esac
     fi
 
     local failures=0
@@ -895,6 +958,11 @@ EOF
     fi
     if [ "$install_cli" = "1" ]; then
         if ! install_cli_link; then
+            failures=$((failures + 1))
+        fi
+    fi
+    if [ "$install_codex_skills" = "1" ]; then
+        if ! sync_codex_planner_skill; then
             failures=$((failures + 1))
         fi
     fi
@@ -930,6 +998,7 @@ cmd_dev() {
     local script_path="$REPO_ROOT/tools/scripts/mint-dev.sh"
     local dry_run=0
     local scoped_mode=0
+    local docs_config=""
     local scope_interactive=0
     local scope_file=""
     local scope_versions=""
@@ -970,6 +1039,19 @@ cmd_dev() {
                 ;;
             --scoped)
                 scoped_mode=1
+                ;;
+            --docs-config)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "dev" "--docs-config requires a path."
+                    return 1
+                fi
+                scoped_mode=1
+                docs_config="$2"
+                shift
+                ;;
+            --docs-config=*)
+                scoped_mode=1
+                docs_config="${1#--docs-config=}"
                 ;;
             --scope-interactive)
                 scoped_mode=1
@@ -1087,7 +1169,7 @@ cmd_dev() {
                 ;;
             --help|-h)
                 cat <<'EOF'
-Usage: lpd dev [--test] [--test-mode fast|staged|full] [--script <path>] [--dry-run] [--scoped] [--scope-interactive] [--scope-file <path>] [--scope-version <csv>] [--scope-language <csv>] [--scope-tab <csv>] [--scope-prefix <csv>] [--skip-external-fetch] [--disable-openapi] [-- ...mint args]
+Usage: lpd dev [--test] [--test-mode fast|staged|full] [--script <path>] [--dry-run] [--scoped] [--docs-config <path>] [--scope-interactive] [--scope-file <path>] [--scope-version <csv>] [--scope-language <csv>] [--scope-tab <csv>] [--scope-prefix <csv>] [--skip-external-fetch] [--disable-openapi] [-- ...mint args]
 EOF
                 return 0
                 ;;
@@ -1118,9 +1200,12 @@ EOF
         fi
     fi
 
-    if [ "$dry_run" = "1" ]; then
+        if [ "$dry_run" = "1" ]; then
         if [ "$scoped_mode" = "1" ]; then
             echo "Scoped mint profile: enabled"
+            if [ -n "$docs_config" ]; then
+                echo "  docs_config: $docs_config"
+            fi
             if [ "$scope_interactive" = "1" ]; then
                 echo "  scope_interactive: true"
             fi
@@ -1159,6 +1244,9 @@ EOF
     env_vars=()
     if [ "$scoped_mode" = "1" ]; then
         env_vars+=("LPD_SCOPED_MINT_DEV=1")
+    fi
+    if [ -n "$docs_config" ]; then
+        env_vars+=("LPD_MINT_DOCS_CONFIG=$docs_config")
     fi
     if [ "$scope_interactive" = "1" ]; then
         env_vars+=("LPD_MINT_SCOPE_INTERACTIVE=1")
@@ -1423,6 +1511,267 @@ EOF
     finish 0 "ci" "CI simulation completed successfully."
 }
 
+cmd_repair() {
+    local surface=""
+    local scope_mode="staged"
+    local files_csv=""
+    local scope_count=0
+    local mode="check"
+    local stage_outputs=0
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --surface)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "repair" "--surface requires a value."
+                    return 1
+                fi
+                surface="$2"
+                shift
+                ;;
+            --surface=*)
+                surface="${1#--surface=}"
+                ;;
+            --staged)
+                scope_mode="staged"
+                scope_count=$((scope_count + 1))
+                ;;
+            --files)
+                if [ "$#" -lt 2 ]; then
+                    finish 1 "repair" "--files requires a comma-separated value."
+                    return 1
+                fi
+                files_csv="$2"
+                scope_mode="files"
+                scope_count=$((scope_count + 1))
+                shift
+                ;;
+            --files=*)
+                files_csv="${1#--files=}"
+                scope_mode="files"
+                scope_count=$((scope_count + 1))
+                ;;
+            --full)
+                scope_mode="full"
+                scope_count=$((scope_count + 1))
+                ;;
+            --write)
+                mode="write"
+                ;;
+            --check)
+                mode="check"
+                ;;
+            --stage)
+                stage_outputs=1
+                mode="write"
+                ;;
+            --json)
+                GLOBAL_JSON=1
+                ;;
+            --help|-h)
+                cat <<'EOF'
+Usage: lpd repair --surface <id> [--staged|--files <path[,path...]>|--full] [--write] [--stage]
+
+Surfaces:
+  portable-skills
+  docs-guide-generated
+  ui-templates
+  script-governance
+  component-governance
+  frontmatter-contract
+
+Notes:
+  - Default mode is --check.
+  - --stage implies --write.
+  - frontmatter-contract is check-only because there is no deterministic writer.
+EOF
+                return 0
+                ;;
+            *)
+                finish 1 "repair" "Unknown option: $1"
+                return 1
+                ;;
+        esac
+        shift
+    done
+
+    if [ -z "$surface" ]; then
+      finish 1 "repair" "Missing required --surface value."
+      return 1
+    fi
+
+    if [ "$scope_count" -gt 1 ]; then
+      finish 1 "repair" "Choose only one scope flag: --staged, --files, or --full."
+      return 1
+    fi
+
+    local -a quality_scope
+    quality_scope=()
+    if [ "$scope_mode" = "staged" ]; then
+      quality_scope+=(--staged)
+    elif [ "$scope_mode" = "files" ]; then
+      quality_scope+=(--files "$files_csv")
+    fi
+
+    case "$surface" in
+      portable-skills)
+        if [ "$mode" = "write" ]; then
+          run_cli_step node tools/scripts/export-portable-skills.js --write || {
+            finish 1 "repair" "Portable skills export failed."
+            return 1
+          }
+          if [ "$stage_outputs" = "1" ]; then
+            git add ai-tools/ai-skills/templates ai-tools/agent-packs/skills || true
+          fi
+        fi
+        run_cli_step node tests/unit/export-portable-skills.test.js || {
+          finish 1 "repair" "Portable skills validation failed."
+          return 1
+        }
+        run_cli_step node tests/unit/codex-skill-sync.test.js || {
+          finish 1 "repair" "Codex skill sync validation failed."
+          return 1
+        }
+        ;;
+      docs-guide-generated)
+        if [ "$mode" = "write" ]; then
+          run_cli_step node tools/scripts/generate-docs-guide-indexes.js --write || {
+            finish 1 "repair" "Docs-guide index generation failed."
+            return 1
+          }
+          run_cli_step node tools/scripts/generate-docs-guide-pages-index.js --write || {
+            finish 1 "repair" "Docs-guide pages index generation failed."
+            return 1
+          }
+          run_cli_step node tools/scripts/generate-docs-guide-components-index.js --write || {
+            finish 1 "repair" "Docs-guide components index generation failed."
+            return 1
+          }
+          run_cli_step node tests/unit/script-docs.test.js --write --rebuild-indexes || {
+            finish 1 "repair" "Script catalog regeneration failed."
+            return 1
+          }
+          if [ "$stage_outputs" = "1" ]; then
+            git add docs-guide/catalog tests/script-index.md tools/script-index.md tools/lib/script-index.md tasks/reports/script-classifications.json || true
+          fi
+        fi
+        run_cli_step node tests/unit/docs-guide-sot.test.js || {
+          finish 1 "repair" "Docs-guide source-of-truth validation failed."
+          return 1
+        }
+        ;;
+      ui-templates)
+        if [ ! -f "$REPO_ROOT/tools/scripts/generate-ui-templates.js" ] || [ ! -f "$REPO_ROOT/tests/unit/ui-template-generator.test.js" ]; then
+          finish 1 "repair" "ui-templates surface is not available on this branch yet."
+          return 1
+        fi
+        if [ "$mode" = "write" ]; then
+          run_cli_step node tools/scripts/generate-ui-templates.js --write || {
+            finish 1 "repair" "UI template generation failed."
+            return 1
+          }
+          if [ "$stage_outputs" = "1" ]; then
+            git add snippets/templates v2/templates .vscode/templates.code-snippets .vscode/components.code-snippets docs-guide/catalog/ui-templates.mdx || true
+          fi
+        fi
+        run_cli_step node tests/unit/ui-template-generator.test.js || {
+          finish 1 "repair" "UI template validation failed."
+          return 1
+        }
+        ;;
+      script-governance)
+        if [ "$mode" = "write" ]; then
+          if [ "$scope_mode" = "full" ]; then
+            finish 1 "repair" "Full-repo script-governance repair is disabled during the @owner -> @domain migration. Use --staged or --files."
+            return 1
+          fi
+          if [ "$scope_mode" != "staged" ] && [ "$scope_mode" != "files" ]; then
+            finish 1 "repair" "Script-governance write mode requires explicit scope. Use --staged or --files."
+            return 1
+          fi
+          local -a script_cmd
+          script_cmd=(node tools/scripts/orchestrators/repair-governance.js)
+          if [ "$scope_mode" = "staged" ]; then
+            script_cmd+=(--staged)
+          else
+            script_cmd+=(--files "$files_csv")
+          fi
+          run_cli_step "${script_cmd[@]}" || {
+            finish 1 "repair" "Script governance repair failed."
+            return 1
+          }
+        else
+          run_cli_step node tests/unit/script-docs.test.js "${quality_scope[@]}" || {
+            finish 1 "repair" "Script governance validation failed."
+            return 1
+          }
+        fi
+        ;;
+      component-governance)
+        local -a component_cmd
+        component_cmd=(node tools/scripts/remediators/components/repair-component-metadata.js)
+        if [ "$mode" = "write" ]; then
+          component_cmd+=(--fix)
+        else
+          component_cmd+=(--dry-run)
+        fi
+        if [ "$scope_mode" = "staged" ]; then
+          component_cmd+=(--staged)
+        fi
+        run_cli_step "${component_cmd[@]}" || {
+          finish 1 "repair" "Component metadata repair failed."
+          return 1
+        }
+        if [ "$mode" = "write" ]; then
+          run_cli_step node tools/scripts/generate-component-registry.js || {
+            finish 1 "repair" "Component registry generation failed."
+            return 1
+          }
+          run_cli_step node tools/scripts/generate-component-docs.js --fix --template-only || {
+            finish 1 "repair" "Component docs generation failed."
+            return 1
+          }
+          if [ "$stage_outputs" = "1" ]; then
+            git add snippets/components docs-guide/component-registry.json docs-guide/component-registry-schema.json v2/resources/documentation-guide/component-library || true
+          fi
+        else
+          run_cli_step node tools/scripts/generate-component-registry.js --validate-only || {
+            finish 1 "repair" "Component registry validation failed."
+            return 1
+          }
+          run_cli_step node tools/scripts/generate-component-docs.js --check --template-only || {
+            finish 1 "repair" "Component docs validation failed."
+            return 1
+          }
+        fi
+        run_cli_step node tests/unit/component-governance-generators.test.js || {
+          finish 1 "repair" "Component governance validation failed."
+          return 1
+        }
+        ;;
+      frontmatter-contract)
+        if [ "$mode" = "write" ] || [ "$stage_outputs" = "1" ]; then
+          finish 1 "repair" "frontmatter-contract is check-only because there is no deterministic writer."
+          return 1
+        fi
+        run_cli_step node tests/unit/quality.test.js "${quality_scope[@]}" || {
+          finish 1 "repair" "Frontmatter contract validation failed."
+          return 1
+        }
+        run_cli_step node tests/unit/frontmatter-taxonomy.test.js || {
+          finish 1 "repair" "Frontmatter taxonomy validation failed."
+          return 1
+        }
+        ;;
+      *)
+        finish 1 "repair" "Unknown surface: $surface"
+        return 1
+        ;;
+    esac
+
+    finish 0 "repair" "Repair flow completed for $surface ($mode)."
+}
+
 cmd_ai_sitemap() {
     local mode="check"
 
@@ -1468,6 +1817,88 @@ EOF
     fi
 
     finish 0 "ai-sitemap" "AI sitemap command completed successfully."
+}
+
+cmd_move_page() {
+    local check_only=0
+    local stage_changes=1
+    local assume_yes=0
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --check)
+                check_only=1
+                ;;
+            --no-stage)
+                stage_changes=0
+                ;;
+            --yes)
+                assume_yes=1
+                ;;
+            --json)
+                GLOBAL_JSON=1
+                ;;
+            --help|-h)
+                cat <<'EOF'
+Usage: lpd move-page <old> <new> [--yes] [--check] [--no-stage] [--json]
+EOF
+                return 0
+                ;;
+            --*)
+                finish 1 "move-page" "Unknown option: $1"
+                return 1
+                ;;
+            *)
+                break
+                ;;
+        esac
+        shift
+    done
+
+    if [ "$#" -ne 2 ]; then
+        finish 1 "move-page" "Usage: lpd move-page <old> <new> [--yes] [--check] [--no-stage]"
+        return 1
+    fi
+
+    local source_path="$1"
+    local target_path="$2"
+    local -a sync_cmd
+    sync_cmd=(node tools/scripts/remediators/content/sync-docs-paths.js)
+
+    if [ "$check_only" = "1" ]; then
+        sync_cmd+=(--dry-run)
+    else
+        if [ "$assume_yes" != "1" ]; then
+            printf 'Move %s -> %s and sync docs paths? [y/N] ' "$source_path" "$target_path"
+            read -r reply
+            case "$reply" in
+                y|Y|yes|YES) ;;
+                *)
+                    finish 1 "move-page" "Cancelled."
+                    return 1
+                    ;;
+            esac
+        fi
+
+        if ! git mv -- "$source_path" "$target_path"; then
+            finish 1 "move-page" "git mv failed."
+            return 1
+        fi
+
+        sync_cmd+=(--write)
+    fi
+
+    sync_cmd+=(--from "$source_path" --to "$target_path")
+    if [ "$stage_changes" = "1" ] && [ "$check_only" != "1" ]; then
+        sync_cmd+=(--stage)
+    fi
+
+    if ! "${sync_cmd[@]}"; then
+        finish 1 "move-page" "Docs path sync failed."
+        return 1
+    fi
+
+    finish 0 "move-page" "Docs move sync completed successfully."
 }
 
 cmd_scripts_list() {
@@ -1686,11 +2117,17 @@ case "$COMMAND" in
     test)
         cmd_test "$@"
         ;;
+    move-page)
+        cmd_move_page "$@"
+        ;;
     ai-sitemap)
         cmd_ai_sitemap "$@"
         ;;
     ci)
         cmd_ci "$@"
+        ;;
+    repair)
+        cmd_repair "$@"
         ;;
     hooks)
         cmd_hooks "$@"

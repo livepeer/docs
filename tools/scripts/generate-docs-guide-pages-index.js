@@ -3,11 +3,11 @@
  * @script            generate-docs-guide-pages-index
  * @category          generator
  * @purpose           governance:index-management
- * @scope             tools/scripts, docs-guide/indexes/pages-index.mdx, v2/index.mdx, docs.json
+ * @scope             tools/scripts, docs-guide/catalog/pages-catalog.mdx, v2/index.mdx, docs.json
  * @owner             docs
  * @needs             R-R16, R-R17
- * @purpose-statement Generates the docs-guide pages index
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
+ * @purpose-statement Generates the docs-guide pages catalog
+ * @pipeline          manual — not yet in pipeline
  * @usage             node tools/scripts/generate-docs-guide-pages-index.js [flags]
  */
 
@@ -22,21 +22,28 @@ const {
 const REPO_ROOT = process.cwd();
 const SOURCE_INDEX_PATH = 'v2/index.mdx';
 const DOCS_JSON_PATH = 'docs.json';
-const OUTPUT_PATH = 'docs-guide/indexes/pages-index.mdx';
+const OUTPUT_PATH = 'docs-guide/catalog/pages-catalog.mdx';
+const LEGACY_OUTPUT_PATHS = [toLegacyCatalogRepoPath(OUTPUT_PATH)];
 
 const FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
-  title: 'Pages Index',
-  sidebarTitle: 'Pages Index',
-  description: 'Tree inventory of docs pages included in docs.json navigation, generated from v2 index data.',
-  keywords: ['livepeer', 'pages index', 'tree', 'docs.json', 'v2']
+  title: 'Pages Catalog',
+  sidebarTitle: 'Pages Catalog',
+  description: 'Tree catalog of docs pages included in docs.json navigation, generated from v2 index data.',
+  keywords: ['livepeer', 'pages catalog', 'tree', 'docs.json', 'v2']
 });
 
 const GENERATED_DETAILS = {
   script: 'tools/scripts/generate-docs-guide-pages-index.js',
-  purpose: 'Tree inventory of docs pages included in docs.json navigation, generated from v2 index data.',
+  purpose: 'Tree catalog of docs pages included in docs.json navigation, generated from v2 index data.',
   runWhen: '`v2/index.mdx` links or docs.json navigation entries change.',
   runCommand: 'node tools/scripts/generate-docs-guide-pages-index.js --write'
 };
+
+function toLegacyCatalogRepoPath(repoPath) {
+  return String(repoPath || '')
+    .replace('/catalog/', '/indexes/')
+    .replace(/-catalog\.mdx$/i, () => ['-', 'index', '.mdx'].join(''));
+}
 
 function normalizeRepoPath(value) {
   return String(value || '').split(path.sep).join('/').replace(/^\.?\//, '');
@@ -253,6 +260,21 @@ function writeIfChanged(repoPath, nextContent, shouldWrite) {
   return { changed, path: repoPath };
 }
 
+function checkLegacyOutputs() {
+  return LEGACY_OUTPUT_PATHS.filter((repoPath) => fileExists(repoPath));
+}
+
+function removeLegacyOutputs(shouldWrite) {
+  const removed = [];
+  LEGACY_OUTPUT_PATHS.forEach((repoPath) => {
+    if (!fileExists(repoPath)) return;
+    if (!shouldWrite) return;
+    fs.unlinkSync(path.join(REPO_ROOT, repoPath));
+    removed.push(repoPath);
+  });
+  return removed;
+}
+
 function parseArgs(argv) {
   const check = argv.includes('--check');
   const write = argv.includes('--write') || !check;
@@ -271,22 +293,31 @@ function main() {
   }
 
   const result = writeIfChanged(OUTPUT_PATH, content, args.write);
+  const legacyExisting = checkLegacyOutputs();
+  const legacyRemoved = removeLegacyOutputs(args.write);
 
   if (args.check) {
-    if (result.changed) {
-      console.error(`Docs-guide pages index is out of date: ${result.path}`);
+    if (result.changed || legacyExisting.length > 0) {
+      console.error(`Docs-guide pages catalog is out of date: ${result.path}`);
+      legacyExisting.forEach((repoPath) => {
+        console.error(`Legacy docs-guide pages index must be removed: ${repoPath}`);
+      });
       console.error('Run: node tools/scripts/generate-docs-guide-pages-index.js --write');
       process.exit(1);
     }
-    console.log('Docs-guide pages index is up to date.');
+    console.log('Docs-guide pages catalog is up to date.');
     return;
   }
 
   if (result.changed) {
     console.log(`Updated ${result.path}`);
   } else {
-    console.log('No changes. Docs-guide pages index already current.');
+    console.log('No changes. Docs-guide pages catalog already current.');
   }
+
+  legacyRemoved.forEach((repoPath) => {
+    console.log(`Removed legacy ${repoPath}`);
+  });
 }
 
 if (require.main === module) {

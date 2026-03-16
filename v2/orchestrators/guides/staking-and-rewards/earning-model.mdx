@@ -1,0 +1,304 @@
+---
+title: Earning Model
+sidebarTitle: Earning Model
+description: >-
+  How orchestrators earn on Livepeer — ETH service fees, LPT inflationary
+  rewards, commission parameters, what wins jobs, and how AI changes the
+  fee landscape.
+keywords:
+  - livepeer
+  - orchestrator earnings
+  - lpt rewards
+  - eth fees
+  - reward cut
+  - fee share
+  - transcoding fees
+  - ai inference fees
+  - orchestrator income
+  - commission
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: orchestrator
+purpose: concept
+status: published
+lastVerified: 2026-03-13
+---
+{/* Draft note: keep copy direct, UK spelling, and route unresolved factual checks to internal comments only. */}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+Running a Livepeer orchestrator pays through two distinct revenue streams with different mechanics. Know both before you decide how to configure the node, grow stake, or price work.
+
+<Note>
+  **New here?** Start here for the mechanics. For what those mechanics mean in practice for your specific hardware and situation, see [Feasibility and Economics](/v2/orchestrators/guides/operator-considerations/operator-rationale). For the step-by-step operations of reward calling and commission setting, continue to [Rewards and Fees](/v2/orchestrators/guides/staking-and-rewards/reward-mechanics).
+</Note>
+
+<CustomDivider />
+
+## The two revenue streams
+
+<CardGroup cols={2}>
+  <Card title="ETH Service Fees" icon="ethereum">
+    Gateways pay you in ETH for every transcoding or AI inference job you complete. Demand-driven: you only earn when you win jobs.
+  </Card>
+  <Card title="LPT Inflationary Rewards" icon="coins">
+    The protocol mints new LPT every round and distributes it to active staked orchestrators. You must call `Reward()` each round to claim your share.
+  </Card>
+</CardGroup>
+
+These streams behave very differently. ETH fees depend on market demand and your competitiveness. LPT rewards depend on your stake, the current inflation rate, and whether you call `Reward()` every round without missing one. Both matter for total income.
+
+<CustomDivider />
+
+## ETH service fees
+
+Every time a gateway routes a job to your orchestrator and you complete it successfully, you earn ETH. The gateway sends payment via Livepeer's **probabilistic micropayment** system — a series of signed tickets that represent ETH obligations. When you receive a winning ticket, you submit it on-chain to redeem the ETH.
+
+Fees exist for two workload types:
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Workload</TableCell>
+    <TableCell header>Pricing unit</TableCell>
+    <TableCell header>Typical fee level</TableCell>
+    <TableCell header>GPU required?</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Video transcoding</TableCell>
+    <TableCell>Per segment (~2s of video)</TableCell>
+    <TableCell>Low (commoditised)</TableCell>
+    <TableCell>Recommended for throughput</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>AI inference</TableCell>
+    <TableCell>Per inference job (pixel, ms, token)</TableCell>
+    <TableCell>Higher (GPU-intensive)</TableCell>
+    <TableCell>Required</TableCell>
+  </TableRow>
+</StyledTable>
+
+AI inference commands higher fees per job because the work is more GPU-intensive. An orchestrator running popular AI models warm on a high-VRAM GPU is positioned very differently in the fee market than one doing transcoding alone.
+
+### What determines how much work you win
+
+Gateways route jobs through a competitive filter across multiple factors at once:
+
+``` icon="terminal"
+Stake weight         → higher stake = larger active set position = more segments
+Capability match     → do you support the requested pipeline or resolution?
+Performance history  → transcoding success rate, AI inference latency, uptime
+Pricing              → are your fees below the gateway's maxPricePerUnit?
+Model warmth (AI)    → warm models win over cold ones for latency-sensitive jobs
+```
+
+None of these factors alone is decisive. A high-stake orchestrator with uncompetitive pricing wins fewer jobs than a moderate-stake node priced correctly. A well-priced node without warm models loses AI jobs to one that has them.
+
+<CustomDivider />
+
+## LPT inflationary rewards
+
+Each round (approximately every 22 hours on Arbitrum), the Livepeer protocol mints new LPT and distributes it to active orchestrators proportional to their **total stake** — that is, their own self-bonded LPT plus all delegated stake from third parties.
+
+Three things must be true for you to receive that round's rewards:
+
+1. You are in the **active set** (top orchestrators by stake weight)
+2. You successfully call `Reward()` on-chain that round
+3. Your node has LPT bonded (self-stake)
+
+**Inflation rate dynamics:** The rate is dynamic. It rises when less than ~50% of total LPT supply is bonded, and falls when more than ~50% is bonded. The protocol targets 50% participation. As of early 2026, approximately 61% of LPT supply was bonded, so the inflation rate was gradually declining towards its floor.
+
+**Treasury allocation:** As of LIP-89 (March 2026), 10% of each round's newly minted LPT goes to the [Livepeer Treasury](https://explorer.livepeer.org/treasury) before distribution to orchestrators. The remaining 90% is distributed as before.
+
+<Warning>
+  Missing a round's `Reward()` call means that round's inflation allocation is permanently lost. For a well-staked orchestrator, a single missed round forfeits a noticeable amount of LPT. Automate this.
+</Warning>
+
+<CustomDivider />
+
+## Commission parameters
+
+When you register as an orchestrator, you set two commission parameters that determine how you split earnings with delegators. Both update on-chain immediately, and frequent changes damage delegator trust.
+
+### Reward cut
+
+The percentage of LPT inflationary rewards **you keep as the operator**. Delegators receive the rest, split proportionally by their stake.
+
+``` icon="terminal"
+Your LPT = Round issuance share × rewardCut
+Delegator LPT = Round issuance share × (1 − rewardCut) × (their stake / total stake)
+```
+
+**Example:** Your orchestrator earns 100 LPT this round. Your `rewardCut` is 20%.
+- You keep: 20 LPT
+- Delegators split: 80 LPT (in proportion to their individual stakes)
+
+### Fee share
+
+The percentage of ETH job fee revenue that is **shared with your delegators**. The remainder you keep.
+
+``` icon="terminal"
+Delegator ETH = Job fees × feeShare × (their stake / total stake)
+Your ETH = Job fees × (1 − feeShare)
+```
+
+**Example:** You earn 0.1 ETH in fees this round. Your `feeShare` is 50%.
+- You keep: 0.05 ETH
+- Delegators split: 0.05 ETH
+
+<Note>
+  Commission rates directly affect delegator yield calculations on the [Livepeer Explorer](https://explorer.livepeer.org). Delegators compare orchestrators by ROI. Setting competitive rates attracts more stake, which increases your inflation share and job routing weight — a compounding dynamic. See [Getting Delegates](/v2/orchestrators/guides/staking-and-rewards/delegate-operations) for the full strategy.
+</Note>
+
+<CustomDivider />
+
+## Transcoding vs AI fees in practice
+
+The fee landscape is shifting. AI inference jobs now represent a growing share of total network fee revenue.
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header></TableCell>
+    <TableCell header>Video Transcoding</TableCell>
+    <TableCell header>AI Inference</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Fee source**</TableCell>
+    <TableCell>Live stream demand</TableCell>
+    <TableCell>Application API calls</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Pricing unit**</TableCell>
+    <TableCell>Per segment</TableCell>
+    <TableCell>Per pixel / ms / token</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Revenue characteristic**</TableCell>
+    <TableCell>Continuous, lower margin</TableCell>
+    <TableCell>Per-request, higher margin</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Competitiveness factor**</TableCell>
+    <TableCell>Stake + price</TableCell>
+    <TableCell>Capability + model warmth + price</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**GPU dependency**</TableCell>
+    <TableCell>Recommended</TableCell>
+    <TableCell>Required</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Stake affects routing?**</TableCell>
+    <TableCell>Yes (stake-weighted)</TableCell>
+    <TableCell>Partially (capability first, price second)</TableCell>
+  </TableRow>
+</StyledTable>
+
+A key distinction: for video transcoding, stake weight directly determines your position in the routing queue. For AI inference, the gateway first filters by capability and price — your stake matters less than having the right pipeline running at a competitive price.
+
+This supports two parallel strategies on a single node:
+- **Transcoding income:** grow stake to capture more segments
+- **AI inference income:** run popular models warm at competitive prices
+
+<CustomDivider />
+
+## Payment flow summary
+
+``` icon="terminal"
+Gateway routes job → you complete it
+       ↓
+Gateway sends payment ticket (signed ETH obligation)
+       ↓
+You receive winning tickets (probabilistic — not every ticket wins)
+       ↓
+Redeemer submits winning tickets on-chain (Arbitrum)
+       ↓
+ETH arrives in your orchestrator wallet
+```
+
+For the full mechanics of how probabilistic micropayments work, ticket face values, and on-chain redemption, see [Payments](/v2/orchestrators/guides/payments-and-pricing/payment-receipts).
+
+<CustomDivider />
+
+## Monitoring your earnings
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Tool</TableCell>
+    <TableCell header>What it shows</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>[explorer.livepeer.org](https://explorer.livepeer.org)</TableCell>
+    <TableCell>Stake composition, delegator list, reward call history, fee revenue, active set status</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>[tools.livepeer.cloud](https://tools.livepeer.cloud)</TableCell>
+    <TableCell>AI pipeline capability coverage, per-orchestrator network data</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>go-livepeer Prometheus metrics</TableCell>
+    <TableCell>Current job counts, success rates, ticket values</TableCell>
+  </TableRow>
+</StyledTable>
+
+Check your reward call history on Explorer regularly. A gap in the reward history means missed rounds and lost LPT. For monitoring setup, see [Metrics and Monitoring](/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting).
+
+<CustomDivider />
+
+## Watch: Orchestrator economics overview
+
+<Frame>
+  <iframe
+    width="100%"
+    height="400"
+    src="https://www.youtube.com/embed/OVMjzJKMJnI"
+    title="Livepeer Orchestrator Economics — How to Earn LPT and ETH"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowFullScreen
+  />
+</Frame>
+
+<CustomDivider />
+
+## Continue in this section
+
+<CardGroup cols={2}>
+  <Card title="Rewards and Fees" icon="hand-holding-dollar" href="/v2/orchestrators/guides/staking-and-rewards/reward-mechanics">
+    Reward call mechanics, automation, gas thresholds, and fee redemption operations.
+  </Card>
+  <Card title="Getting Delegates" icon="people-group" href="/v2/orchestrators/guides/staking-and-rewards/delegate-operations">
+    How to attract delegators, what the Explorer ROI calculation shows them, and how to build reputation.
+  </Card>
+  <Card title="Payments" icon="receipt" href="/v2/orchestrators/guides/payments-and-pricing/payment-receipts">
+    How ETH moves from gateway to your wallet — probabilistic micropayments, ticket redemption, and the Redeemer.
+  </Card>
+  <Card title="Governance and Voting" icon="check-to-slot" href="/v2/orchestrators/guides/staking-and-rewards/network-participation">
+    Voting on Livepeer Improvement Proposals using livepeer_cli.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  "How does earning work on Livepeer?" Complete picture of both revenue streams.
+  ETH service fees: paid per job via PM tickets, proportional to work done, split
+  with delegators via fee cut. LPT inflation rewards: minted per round, proportional
+  to total bonded stake, split via reward cut. Video vs AI earning profiles
+  (video = steady/lower margin, AI = variable/higher margin). Profitability
+  threshold: when do earnings exceed costs?
+
+  PLAN TARGET: earning-model (rename, add strategic framing)
+  UPDATE NEEDED: Add "how to earn more" strategic framing alongside mechanics.
+  TARGET SECTION: Staking & Earning → "How do I earn?" (merged section)
+  JOB STORIES: J1 (earnings understanding), J3 (yield maximisation)
+
+  CROSS-REFS:
+  - Operator Considerations > Operator Rationale - cost/benefit evaluation
+  - Config & Optimisation > Pricing Strategy - pricing affects fee earnings
+  - Staking & Earning > Reward Mechanics - reward calling detail
+  - Staking & Earning > Growing Delegation - growing stake for more rewards
+*/}

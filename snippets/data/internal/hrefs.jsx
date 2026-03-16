@@ -3,11 +3,11 @@ export const LINK_MAP = {
   "v2/internal/docs-philosophy.mdx": [
     {
       "sourceType": "markdown-link",
-      "linkType": "internal-relative",
-      "rawPath": "./v2/internal/rfp/reports/ai-first-report.mdx",
-      "resolvedPath": "v2/internal/v2/internal/rfp/reports/ai-first-report.mdx",
-      "exists": false,
-      "status": "missing",
+      "linkType": "internal-rooted",
+      "rawPath": "/v2/internal/rfp/reports/livepeer-ai-first-docs-plan.pdf",
+      "resolvedPath": "v2/internal/rfp/reports/livepeer-ai-first-docs-plan.pdf",
+      "exists": true,
+      "status": "ok",
       "movedCandidates": []
     },
     {
@@ -88,13 +88,11 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "internal-relative",
-      "rawPath": "./strategic-alignment",
-      "resolvedPath": "v2/internal/strategic-alignment",
-      "exists": false,
-      "status": "missing",
-      "movedCandidates": [
-        "v2/internal/overview/strategic-alignment.mdx"
-      ]
+      "rawPath": "./overview/strategic-alignment",
+      "resolvedPath": "v2/internal/overview/strategic-alignment.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
     },
     {
       "sourceType": "jsx-attr",
@@ -108,13 +106,11 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "internal-relative",
-      "rawPath": "./personas",
-      "resolvedPath": "v2/internal/personas",
-      "exists": false,
-      "status": "missing",
-      "movedCandidates": [
-        "v2/internal/overview/personas.mdx"
-      ]
+      "rawPath": "./overview/personas",
+      "resolvedPath": "v2/internal/overview/personas.mdx",
+      "exists": true,
+      "status": "ok",
+      "movedCandidates": []
     },
     {
       "sourceType": "jsx-attr",
@@ -330,8 +326,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/quote.jsx",
-      "resolvedPath": "snippets/components/display/quote.jsx",
+      "rawPath": "/snippets/components/content/quote.jsx",
+      "resolvedPath": "snippets/components/content/quote.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -348,8 +344,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/custom-cards.jsx",
-      "resolvedPath": "snippets/components/display/custom-cards.jsx",
+      "rawPath": "/snippets/components/primitives/customCardTitle.jsx",
+      "resolvedPath": "snippets/components/primitives/customCardTitle.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -357,8 +353,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/embed.mdx",
-      "resolvedPath": "snippets/components/display/embed.mdx",
+      "rawPath": "/snippets/components/data/embed.jsx",
+      "resolvedPath": "snippets/components/data/embed.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -366,8 +362,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/containers.mdx",
-      "resolvedPath": "snippets/components/display/containers.mdx",
+      "rawPath": "/snippets/components/layout/containers.jsx",
+      "resolvedPath": "snippets/components/layout/containers.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -451,7 +447,7 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "external-https",
-      "rawPath": "\"https://github.com/shtukaresearch/livepeer-data-geography/tree/main/roles\"",
+      "rawPath": "https://github.com/shtukaresearch/livepeer-data-geography/tree/main/roles",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -482,8 +478,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/quote.jsx",
-      "resolvedPath": "snippets/components/display/quote.jsx",
+      "rawPath": "/snippets/components/content/quote.jsx",
+      "resolvedPath": "snippets/components/content/quote.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -491,8 +487,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/containers.mdx",
-      "resolvedPath": "snippets/components/display/containers.mdx",
+      "rawPath": "/snippets/components/layout/containers.jsx",
+      "resolvedPath": "snippets/components/layout/containers.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -500,8 +496,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/video.jsx",
-      "resolvedPath": "snippets/components/display/video.jsx",
+      "rawPath": "/snippets/components/content/video.jsx",
+      "resolvedPath": "snippets/components/content/video.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -509,8 +505,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/embed.mdx",
-      "resolvedPath": "snippets/components/display/embed.mdx",
+      "rawPath": "/snippets/components/data/embed.jsx",
+      "resolvedPath": "snippets/components/data/embed.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -522,8 +518,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/custom-cards.jsx",
-      "resolvedPath": "snippets/components/display/custom-cards.jsx",
+      "rawPath": "/snippets/components/layout/customCards.jsx",
+      "resolvedPath": "snippets/components/layout/customCards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -533,8 +529,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/primitives/tables.jsx",
-      "resolvedPath": "snippets/components/primitives/tables.jsx",
+      "rawPath": "/snippets/components/layout/tables.jsx",
+      "resolvedPath": "snippets/components/layout/tables.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -542,8 +538,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/quote.jsx",
-      "resolvedPath": "snippets/components/display/quote.jsx",
+      "rawPath": "/snippets/components/content/quote.jsx",
+      "resolvedPath": "snippets/components/content/quote.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -557,9 +553,7 @@ export const LINK_MAP = {
       "status": "ok",
       "movedCandidates": []
     }
-  ],
-  "snippets/components/display/embed.mdx": [],
-  "snippets/components/display/containers.mdx": []
+  ]
 };
 
 export default LINK_MAP;

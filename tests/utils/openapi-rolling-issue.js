@@ -7,13 +7,13 @@
  * @owner             docs
  * @needs             F-R17
  * @purpose-statement OpenAPI rolling issue utility — creates/updates GitHub issues for persistent OpenAPI audit findings
- * @pipeline          indirect — library module
+ * @pipeline          indirect -- library module
  * @usage             node tests/utils/openapi-rolling-issue.js [flags]
  */
 
 const ROLLING_ISSUE_MARKER = '<!-- openapi-reference-audit -->';
 const ROLLING_ISSUE_TITLE = '[tooling]: OpenAPI reference validation failures';
-const ROLLING_ISSUE_LABELS = ['docs-v2', 'help wanted', 'status: needs-triage', 'type: bug', 'area: ci-cd'];
+const ROLLING_ISSUE_LABELS = ['docs-v2', 'help wanted', 'status: needs-routing', 'type: bug', 'area: ci-cd'];
 
 function compareFindings(a, b) {
   const fileA = String(a?.file || '');
@@ -103,7 +103,7 @@ function buildIssueBody({
     '### Expected behavior',
     'All OpenAPI endpoint references should resolve to the canonical mapped spec and pass strict validation.',
     '',
-    '### Action requested from maintainers',
+    '### Requested repository outcome',
     'Review reported references, apply required content corrections, and re-run the OpenAPI reference audit workflow.',
     '',
     '### Classification',

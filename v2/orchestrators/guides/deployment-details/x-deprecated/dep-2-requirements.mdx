@@ -1,0 +1,406 @@
+---
+title: 'Hardware Requirements'
+sidebarTitle: 'Hardware Requirements'
+description: >-
+  GPU support policy, NVENC and NVDEC session limits by card tier, VRAM requirements
+  by AI pipeline, system stack minimums, and a pre-launch readiness checklist.
+keywords:
+  - livepeer
+  - orchestrator
+  - hardware
+  - gpu
+  - nvidia
+  - nvenc
+  - nvdec
+  - vram
+  - cuda
+  - session limits
+  - transcoding hardware
+  - ai inference hardware
+  - requirements
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: orchestrator
+purpose: reference
+status: current
+lastVerified: '2026-03-15'
+---
+
+{/* TODO:
+Verify:
+- Tables use StyledTable with thead/tbody
+- No em-dashes
+- UK spelling throughout
+- REVIEW flags below for SME
+Human:
+- REVIEW: NVENC consumer card session cap (2-3 for RTX 40xx) - Ada Lovelace generation may have changed. Rick to confirm.
+- REVIEW: CUDA minimum version (12.0) - verify against current AI runner container base image
+- Confirm port numbers (8935 orchestrator RPC, 7935 CLI) are still current go-livepeer defaults
+*/}
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+Hardware is the primary constraint for every workload type on Livepeer. This page is a practical
+reference: GPU support policy, session limits by card tier, VRAM requirements by AI pipeline, the
+minimum system stack, and the checklist to run before activating on the network.
+
+For help choosing the right path before setup, see <LinkArrow href="/v2/orchestrators/guides/deployment-details/setup-options" label="Setup Options" newline={false} />. For measuring actual GPU transcoding capacity, see <LinkArrow href="/v2/orchestrators/guides/deployment-details/benchmarking" label="Benchmarking" newline={false} />.
+
+<CustomDivider middleText="GPU Support" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## GPU Vendor Support
+
+NVIDIA is the supported GPU vendor for go-livepeer. AMD and Intel GPUs are not supported for
+hardware-accelerated transcoding or AI inference. NVIDIA CUDA is required for both NVENC video
+transcoding and all AI inference pipelines.
+
+### Driver requirements
+
+Verify NVIDIA drivers are installed and current before anything else:
+
+```bash icon="terminal"
+nvidia-smi
+# Output shows: driver version, CUDA version, GPU name, memory
+# e.g. NVIDIA-SMI 550.54.14    Driver Version: 550.54.14    CUDA Version: 12.4
+```
+
+If `nvidia-smi` fails or is missing, install NVIDIA drivers for the target OS before proceeding.
+go-livepeer cannot use the GPU without working NVIDIA drivers.
+
+**Minimum CUDA version:** 12.0. Earlier versions are not supported by the AI runner containers.
+
+{/* REVIEW: Confirm CUDA 12.0 minimum against current AI runner base image. This was accurate in March 2026 but may change with AI runner updates. */}
+
+<CustomDivider middleText="Session Limits" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## NVENC/NVDEC Session Limits
+
+NVIDIA consumer GPUs enforce **concurrent encoding session limits** via NVENC (hardware video
+encoder) and NVDEC (hardware video decoder). These limits directly constrain how many simultaneous
+transcoding streams a card can handle in hardware mode.
+
+<Warning>
+Consumer NVIDIA cards (GeForce RTX series) are capped at a small number of concurrent NVENC sessions
+by default. Data centre cards (A-series, L-series, H-series) have no such cap.
+</Warning>
+
+Consumer cards are typically limited to **2-3 concurrent NVENC encode sessions** before throttling
+or failing with `NvEncOpenEncodeSessionEx` errors. This is a hardware-enforced licensing restriction,
+not a software limitation in go-livepeer.
+
+The official NVIDIA matrix shows NVENC and NVDEC session counts per GPU generation:
+
+**[developer.nvidia.com/video-encode-decode-gpu-support-matrix](https://developer.nvidia.com/video-encode-decode-gpu-support-matrix)**
+
+{/* REVIEW: Consumer card session cap may have changed for Ada Lovelace (RTX 40xx series). Rick to verify current RTX 4090 / 4080 NVENC session cap against the matrix. */}
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>GPU tier</TableCell>
+      <TableCell header>NVENC session cap</TableCell>
+      <TableCell header>Notes</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**GeForce RTX (consumer)**</TableCell>
+      <TableCell>2-3 concurrent sessions</TableCell>
+      <TableCell>Hardware licensing cap; check matrix for exact figure per generation</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**RTX Workstation / Quadro**</TableCell>
+      <TableCell>Uncapped</TableCell>
+      <TableCell>Commercial hardware, no artificial limit</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**NVIDIA A-series (A100, A4000, A5000)**</TableCell>
+      <TableCell>Uncapped</TableCell>
+      <TableCell>Data centre; full concurrent session headroom</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**NVIDIA L-series (L4, L40)**</TableCell>
+      <TableCell>Uncapped</TableCell>
+      <TableCell>Data centre</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**NVIDIA H-series (H100)**</TableCell>
+      <TableCell>Uncapped</TableCell>
+      <TableCell>Data centre; highest throughput tier</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+Exact session counts can vary by GPU generation and NVIDIA policy. Verify the specific card in
+the matrix rather than assuming a tier-wide cap applies. If running a consumer card,
+<LinkArrow href="/v2/orchestrators/guides/deployment-details/benchmarking" label="benchmark it" newline={false} /> first - the NVENC cap will constrain the practical ceiling to 2-3 sessions.
+
+<CustomDivider middleText="Hardware Tiers" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Hardware Tiers by Workload
+
+### Video transcoding
+
+Video transcoding is NVENC/NVDEC throughput and memory bandwidth. Large VRAM is not required -
+model loading is not involved.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Hardware tier</TableCell>
+      <TableCell header>Example GPUs</TableCell>
+      <TableCell header>Transcoding suitability</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Consumer (NVENC-capped)**</TableCell>
+      <TableCell>RTX 3060, 3070, 3080, 4070, 4080, 4090</TableCell>
+      <TableCell>2-3 concurrent sessions (NVENC hardware cap). Verify in NVIDIA matrix.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Data centre / workstation**</TableCell>
+      <TableCell>A4000, A5000, RTX 6000, L4</TableCell>
+      <TableCell>Uncapped - 10-20+ concurrent sessions depending on compute</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**High-end data centre**</TableCell>
+      <TableCell>A100, H100</TableCell>
+      <TableCell>Uncapped - maximum concurrent session headroom</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+**CPU transcoding:** Possible without a GPU, but throughput is significantly lower. Practical
+capacity is low single-digit concurrent sessions, varies heavily by CPU generation and codec mix.
+Not competitive at scale.
+
+### Batch AI inference
+
+AI inference requires VRAM. The table below is a summary - full pipeline-by-pipeline VRAM figures
+are in <LinkArrow href="/v2/orchestrators/guides/workloads-and-ai/model-vram-reference" label="Models and VRAM Reference" newline={false} />.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>VRAM tier</TableCell>
+      <TableCell header>GPU examples</TableCell>
+      <TableCell header>Pipelines available</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**8-12 GB**</TableCell>
+      <TableCell>RTX 3060 12GB, RTX 3060 Ti 8GB, RTX 2060 Super 8GB</TableCell>
+      <TableCell>`audio-to-text` (Whisper), `image-to-text` (BLIP), `segment-anything-2` (base), small LLMs via Ollama</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**24 GB**</TableCell>
+      <TableCell>RTX 3090, RTX 4090, A5000</TableCell>
+      <TableCell>All diffusion pipelines (`text-to-image`, `image-to-image`, `image-to-video`, `upscale`); full model access</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**40-80 GB**</TableCell>
+      <TableCell>A100 40GB, A100 80GB, H100</TableCell>
+      <TableCell>Multiple large models simultaneously; highest-throughput AI operation</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+### Real-time AI inference (Cascade)
+
+Real-time video AI has stricter requirements than batch AI:
+
+- **Minimum VRAM:** 12-16 GB (StreamDiffusion with SD 1.5)
+- **Competitive VRAM:** 24 GB (StreamDiffusion with SDXL)
+- **Additional requirements:** fast PCIe bandwidth for frame buffer throughput; low-latency memory
+- **Frame buffer overhead:** add 1-2 GB on top of the model's base VRAM footprint
+
+Real-time pipelines require models warm at all times. A cold start during an active stream causes
+visible interruption for end users. See <LinkArrow href="/v2/orchestrators/guides/workloads-and-ai/realtime-ai-setup" label="Realtime AI Setup" newline={false} /> for full runtime requirements.
+
+<CustomDivider middleText="System Stack" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## System Requirements
+
+Beyond the GPU, the full system stack has minimum requirements:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Component</TableCell>
+      <TableCell header>Minimum</TableCell>
+      <TableCell header>Recommended</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**CPU**</TableCell>
+      <TableCell>4 cores</TableCell>
+      <TableCell>8-16 cores</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**RAM**</TableCell>
+      <TableCell>16 GB</TableCell>
+      <TableCell>32-64 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Storage**</TableCell>
+      <TableCell>100 GB SSD</TableCell>
+      <TableCell>1 TB NVMe SSD (more for AI model weights)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Network**</TableCell>
+      <TableCell>100 Mbps symmetric</TableCell>
+      <TableCell>1 Gbps symmetric</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**OS**</TableCell>
+      <TableCell>Ubuntu 22.04 LTS</TableCell>
+      <TableCell>Ubuntu 22.04 or 24.04 LTS</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**CUDA**</TableCell>
+      <TableCell>12.0</TableCell>
+      <TableCell>12.4+</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Docker**</TableCell>
+      <TableCell>Required for AI runner</TableCell>
+      <TableCell>Required for AI runner</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**NVIDIA Container Toolkit**</TableCell>
+      <TableCell>Required for AI runner</TableCell>
+      <TableCell>Required for AI runner</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+**Storage note:** AI model weights are large. A single SDXL model is approximately 7-8 GB.
+Running multiple pipelines requires fast storage (NVMe) to load models without introducing latency
+spikes. Budget at least 100 GB of fast storage per 4-5 models served simultaneously.
+
+**Network note:** Latency to Gateways matters more than raw throughput for AI jobs. A 100 Mbps
+connection with sub-20ms latency to major regions outperforms a 1 Gbps connection with high
+latency for real-time AI workloads.
+
+<CustomDivider middleText="Pre-launch Checklist" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Checklist Before Going Live
+
+Run through this before activating on the network:
+
+<StyledSteps>
+
+  <StyledStep title="Verify GPU is visible">
+
+    ```bash icon="terminal"
+    nvidia-smi
+    # Should output: GPU name, driver version, CUDA version, memory used/total
+    # If this fails: drivers are not installed correctly
+    ```
+
+  </StyledStep>
+
+  <StyledStep title="Verify Docker can access the GPU">
+
+    ```bash icon="terminal"
+    docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi
+    # Should output the same as nvidia-smi above
+    # If this fails: NVIDIA Container Toolkit is not installed or configured
+    ```
+
+  </StyledStep>
+
+  <StyledStep title="Install NVIDIA Container Toolkit if needed">
+
+    ```bash icon="terminal"
+    # Ubuntu 22.04 / 24.04
+    curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | \
+      sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+    curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+      sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+      sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+    sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+    sudo nvidia-ctk runtime configure --runtime=docker
+    sudo systemctl restart docker
+    ```
+
+    See the [NVIDIA Container Toolkit install guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) for other distributions.
+
+  </StyledStep>
+
+  <StyledStep title="Confirm required ports are open">
+
+    ```bash icon="terminal"
+    # Default go-livepeer Orchestrator ports:
+    # 8935 - Orchestrator RPC (must be reachable from the internet)
+    # 7935 - CLI HTTP interface (localhost only; not exposed externally)
+    sudo ufw status
+    # or: sudo iptables -L
+    ```
+
+    Port 8935 must be reachable from the internet. If behind NAT, configure port forwarding.
+
+  </StyledStep>
+
+  <StyledStep title="Confirm Arbitrum RPC access">
+
+    An Arbitrum One RPC endpoint is required. Options:
+
+    - Public: `https://arb1.arbitrum.io/rpc`
+    - Alchemy, Infura, QuickNode (recommended for production - more reliable)
+
+    ```bash icon="terminal"
+    curl -s https://arb1.arbitrum.io/rpc \
+      -H "Content-Type: application/json" \
+      -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' | python3 -m json.tool
+    ```
+
+  </StyledStep>
+
+  <StyledStep title="Check static IP or DDNS">
+
+    The `serviceAddr` (the address Gateways use to reach the Orchestrator) must be stable.
+    Home connections with dynamic IPs need DDNS or a static IP via the ISP. Changing IP without
+    updating `serviceAddr` causes Gateways to lose contact.
+
+  </StyledStep>
+
+  <StyledStep title="Confirm ETH balance on Arbitrum">
+
+    The Orchestrator wallet needs ETH on Arbitrum One before activation. Budget at least 0.01 ETH
+    for the activation transaction and initial reward calls. See <LinkArrow href="/v2/orchestrators/guides/staking-and-rewards/payments" label="Payments" newline={false} /> for ongoing ETH requirements.
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Benchmarking" icon="gauge-high" href="/v2/orchestrators/guides/deployment-details/benchmarking" arrow horizontal>
+    Use `livepeer_bench` to find the GPU's actual concurrent session capacity before setting `-maxSessions`.
+  </Card>
+  <Card title="Session Limits" icon="gauge" href="/v2/orchestrators/guides/deployment-details/session-limits" arrow horizontal>
+    Calculate bandwidth and hardware limits and derive the correct `-maxSessions` value.
+  </Card>
+  <Card title="Models and VRAM Reference" icon="memory" href="/v2/orchestrators/guides/workloads-and-ai/model-vram-reference" arrow horizontal>
+    Full VRAM table by AI pipeline and model, warm strategy, and multi-GPU configuration.
+  </Card>
+  <Card title="Operating Rationale" icon="scale-balanced" href="/v2/orchestrators/guides/operator-considerations/operator-rationale" arrow horizontal>
+    Cost and revenue breakdown before committing hardware.
+  </Card>
+</CardGroup>

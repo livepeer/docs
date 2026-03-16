@@ -3,11 +3,11 @@
  * @script            script-docs-test
  * @category          validator
  * @purpose           qa:repo-health
- * @scope             .githooks, .github/scripts, tests, tools/scripts, tasks/scripts, docs-guide/indexes/scripts-index.mdx
- * @owner             docs
+ * @scope             .githooks, .github/scripts, tests, tools/scripts, tasks/scripts, docs-guide/catalog/scripts-catalog.mdx
+ * @domain            docs
  * @needs             E-C1, R-R14
- * @purpose-statement Enforces script header schema, keeps group script indexes in sync, and builds aggregate script index
- * @pipeline          P1 (commit, via run-all)
+ * @purpose-statement Enforces script header schema, keeps group script indexes in sync, and builds aggregate script catalog
+ * @pipeline          P1, P3
  * @dualmode          --check (validator) | --write --rebuild-indexes (generator)
  * @usage             node tests/unit/script-docs.test.js [flags]
  */
@@ -20,8 +20,26 @@ const {
   buildGeneratedHiddenBannerLines,
   buildGeneratedNoteLines
 } = require('../../tools/lib/generated-file-banners');
+const {
+  extractLeadingScriptHeader,
+  getSectionLines,
+  getTagValue,
+  hasFrameworkHeaderTags
+} = require('../../tools/lib/script-header-utils');
+const {
+  AGGREGATE_INDEX_PATH,
+  CLASSIFICATION_DATA_PATH,
+  GOVERNED_ROOTS,
+  GROUP_INDEX_MAP,
+  INDEXED_ROOTS,
+  LEGACY_AGGREGATE_INDEX_PATH,
+  SCRIPT_EXTENSIONS: GOVERNED_SCRIPT_EXTENSIONS,
+  isWithinRoots,
+  normalizeRepoPath,
+  shouldExcludeScriptPath
+} = require('../../tools/lib/script-governance-config');
 
-const REPO_ROOT = process.cwd();
+const REPO_ROOT = path.resolve(__dirname, '../..');
 const INDEX_START = '{/* SCRIPT-INDEX:START */}';
 const INDEX_END = '{/* SCRIPT-INDEX:END */}';
 
@@ -45,10 +63,11 @@ const FRAMEWORK_REQUIRED_TAGS = [
   '@category',
   '@purpose',
   '@scope',
-  '@owner',
+  '@domain',
   '@needs',
   '@purpose-statement',
-  '@pipeline'
+  '@pipeline',
+  '@usage'
 ];
 const FRAMEWORK_INLINE_REQUIRED_TAGS = FRAMEWORK_REQUIRED_TAGS;
 const PLACEHOLDER_PATTERNS = [
@@ -63,35 +82,21 @@ const PLACEHOLDER_PATTERNS = [
   /^placeholder$/i
 ];
 
-const SCRIPT_EXTENSIONS = new Set(['.js', '.cjs', '.mjs', '.ts', '.tsx', '.sh', '.bash', '.py']);
-const SCOPED_ROOTS = ['.githooks', '.github/scripts', 'tests', 'tools/scripts', 'tasks/scripts'];
-
-const GROUP_INDEX_MAP = [
-  { root: '.githooks', index: '.githooks/script-index.md' },
-  { root: '.github/scripts', index: '.github/script-index.md' },
-  { root: 'tests', index: 'tests/script-index.md' },
-  { root: 'tools/scripts', index: 'tools/script-index.md' },
-  { root: 'tasks/scripts', index: 'tasks/scripts/script-index.md' }
-];
-
-const AGGREGATE_INDEX_PATH = 'docs-guide/indexes/scripts-index.mdx';
-const LEGACY_AGGREGATE_INDEX_PATH = 'docs-guide/indexes/scripts-index.md';
+const SCRIPT_EXTENSIONS = new Set(GOVERNED_SCRIPT_EXTENSIONS);
+const VALIDATION_ROOTS = GOVERNED_ROOTS;
+const CLASSIFICATION_ROOTS = GOVERNED_ROOTS;
 const AGGREGATE_FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
-  title: 'Scripts Index',
-  sidebarTitle: 'Scripts Index',
+  title: 'Scripts Catalog',
+  sidebarTitle: 'Scripts Catalog',
   description: 'This page provides an aggregate catalog inventory of repository scripts generated from group script indexes.',
-  keywords: ['livepeer', 'scripts index', 'aggregate inventory', 'repository', 'scripts']
+  keywords: ['livepeer', 'scripts catalog', 'aggregate inventory', 'repository', 'scripts']
 });
 const AGGREGATE_DETAILS = {
   script: 'tests/unit/script-docs.test.js',
-  purpose: 'Enforce script header schema, keep group script indexes in sync, and build aggregate script index.',
-  runWhen: 'Scripts are added, removed, renamed, or script metadata changes in scoped roots.',
+  purpose: 'Enforce script header schema, keep group script indexes in sync, and build aggregate script catalog.',
+  runWhen: 'Script metadata changes in validation roots or script changes in indexed roots.',
   runCommand: 'node tests/unit/script-docs.test.js --write --rebuild-indexes'
 };
-
-function normalizeRepoPath(filePath) {
-  return filePath.split(path.sep).join('/');
-}
 
 function readFileSafe(repoPath) {
   try {
@@ -107,19 +112,7 @@ function escapeRegExp(value) {
 
 function shouldExclude(repoPath) {
   const p = normalizeRepoPath(repoPath);
-  return (
-    p.includes('/node_modules/') ||
-    p.startsWith('node_modules/') ||
-    p.includes('/.git/') ||
-    p.startsWith('.git/') ||
-    p.includes('/.venv/') ||
-    p.startsWith('.venv/') ||
-    p.includes('/tmp/') ||
-    p.startsWith('tmp/') ||
-    p.startsWith('notion/') ||
-    p.includes('.bak') ||
-    p.endsWith('.disabled')
-  );
+  return shouldExcludeScriptPath(p) || p.includes('/.venv/') || p.startsWith('.venv/') || p.includes('/tmp/') || p.startsWith('tmp/');
 }
 
 function isScriptFile(repoPath) {
@@ -147,18 +140,128 @@ function walkFiles(dirPath, out = []) {
   return out;
 }
 
-function getAllScopedScripts() {
+function getTrackedFilesForRoot(dirPath) {
+  try {
+    const output = execSync(`git ls-files -- "${normalizeRepoPath(dirPath)}"`, {
+      cwd: REPO_ROOT,
+      encoding: 'utf8'
+    });
+
+    return output
+      .split('\n')
+      .map((line) => normalizeRepoPath(line.trim()))
+      .filter(Boolean)
+      .filter((repoPath) => fileExists(repoPath));
+  } catch (_err) {
+    return [];
+  }
+}
+
+function getScriptsForRoots(roots) {
   const scripts = [];
-  for (const root of SCOPED_ROOTS) {
+  for (const root of roots) {
+    const trackedFiles = getTrackedFilesForRoot(root);
+    if (trackedFiles.length > 0) {
+      scripts.push(...trackedFiles);
+      continue;
+    }
     walkFiles(root, scripts);
   }
   return [...new Set(scripts)].filter(isScriptFile).sort();
 }
 
+function getAllValidationScripts() {
+  return getScriptsForRoots(VALIDATION_ROOTS);
+}
+
+function getAllIndexedScripts() {
+  return getScriptsForRoots(INDEXED_ROOTS);
+}
+
+function getAllClassificationScripts() {
+  return getScriptsForRoots(CLASSIFICATION_ROOTS);
+}
+
+function isManagedRootPath(repoPath) {
+  return isWithinRoots(repoPath, CLASSIFICATION_ROOTS);
+}
+
+function fileExists(repoPath) {
+  const fullPath = path.join(REPO_ROOT, repoPath);
+  return fs.existsSync(fullPath) && fs.statSync(fullPath).isFile();
+}
+
+function loadClassificationData() {
+  const fullPath = path.join(REPO_ROOT, CLASSIFICATION_DATA_PATH);
+  const raw = fs.readFileSync(fullPath, 'utf8');
+  const parsed = JSON.parse(raw);
+
+  if (!Array.isArray(parsed)) {
+    throw new Error('Classification data must be a JSON array.');
+  }
+
+  return parsed.map((row, index) => {
+    if (!row || typeof row !== 'object' || Array.isArray(row)) {
+      throw new Error(`classification[${index}] must be an object.`);
+    }
+
+    const repoPath = normalizeRepoPath(String(row.path || '').trim());
+    if (!repoPath) {
+      throw new Error(`classification[${index}].path is required.`);
+    }
+
+    return { ...row, path: repoPath };
+  });
+}
+
+function validateClassificationCoverage(scopedScripts, classificationRows) {
+  const errors = [];
+  const liveScripts = [...new Set(scopedScripts.map(normalizeRepoPath))].sort();
+  const managedRows = classificationRows
+    .filter((row) => isManagedRootPath(row.path))
+    .sort((a, b) => a.path.localeCompare(b.path));
+  const classifiedPaths = new Set(managedRows.map((row) => row.path));
+
+  for (const scriptPath of liveScripts) {
+    if (!classifiedPaths.has(scriptPath)) {
+      errors.push({
+        file: CLASSIFICATION_DATA_PATH,
+        rule: 'Script classification coverage',
+        message: `Missing classification row for managed script: ${scriptPath}`,
+        line: 1
+      });
+    }
+  }
+
+  for (const row of managedRows) {
+    if (!fileExists(row.path)) {
+      errors.push({
+        file: CLASSIFICATION_DATA_PATH,
+        rule: 'Script classification coverage',
+        message: `Classification row points to a missing file: ${row.path}`,
+        line: 1
+      });
+    }
+  }
+
+  for (const row of classificationRows) {
+    if (row.path === 'tools/scripts/archive' || row.path.startsWith('tools/scripts/archive/')) {
+      errors.push({
+        file: CLASSIFICATION_DATA_PATH,
+        rule: 'Script classification coverage',
+        message: `Archive path must not appear in script classifications: ${row.path}`,
+        line: 1
+      });
+    }
+  }
+
+  return errors;
+}
+
 function getStagedAddedScripts() {
   let output = '';
   try {
-    output = execSync('git diff --cached --name-only --diff-filter=A', { encoding: 'utf8' });
+    output = execSync('git diff --cached --name-only --diff-filter=A', { cwd: REPO_ROOT, encoding: 'utf8' });
   } catch (_err) {
     return [];
   }
@@ -168,26 +271,12 @@ function getStagedAddedScripts() {
     .map((line) => line.trim())
     .filter(Boolean)
     .map(normalizeRepoPath)
-    .filter((file) => SCOPED_ROOTS.some((root) => file === root || file.startsWith(`${root}/`)))
+    .filter((file) => isWithinRoots(file, VALIDATION_ROOTS))
     .filter(isScriptFile);
-}
-
-function getHeaderChunk(content) {
-  return content.split('\n').slice(0, 160).join('\n');
-}
-
-function hasFrameworkHeaderTags(header) {
-  return header.includes('@category') || header.includes('@purpose') || header.includes('@purpose-statement');
 }
 
 function detectHeaderMode(header) {
   return hasFrameworkHeaderTags(header) ? 'framework' : 'legacy';
-}
-
-function getTagValue(header, tagName) {
-  const re = new RegExp(`\\${tagName}\\s+(.+)`);
-  const match = header.match(re);
-  return match ? match[1].trim() : '';
 }
 
 function isPlaceholderValue(value) {
@@ -196,50 +285,61 @@ function isPlaceholderValue(value) {
   return PLACEHOLDER_PATTERNS.some((pattern) => pattern.test(v));
 }
 
-function getSectionLines(header, tagName) {
-  const lines = header.split('\n');
-  const tagToken = tagName.replace('@', '');
-  const idx = lines.findIndex((line) => line.includes(`@${tagToken}`));
-  if (idx === -1) return [];
-
-  const out = [];
-  for (let i = idx + 1; i < lines.length; i++) {
-    const raw = lines[i];
-    const trimmed = raw.trim();
-    if (!trimmed) continue;
-
-    const stripped = trimmed
-      .replace(/^\*\s?/, '')
-      .replace(/^#\s?/, '')
-      .trim();
-
-    if (stripped.startsWith('@')) break;
-    if (stripped.startsWith('/**') || stripped.startsWith('*/')) continue;
-    out.push(stripped);
-  }
-
-  return out;
-}
-
 function extractPrimaryUsage(header) {
   const inlineUsage = getTagValue(header, '@usage');
-  if (inlineUsage && !isPlaceholderValue(inlineUsage)) return inlineUsage;
-
   const lines = getSectionLines(header, '@usage');
-  for (const line of lines) {
-    if (line && !line.startsWith('@')) return line;
-  }
-  return '';
+  const command = [
+    inlineUsage && !isPlaceholderValue(inlineUsage) ? inlineUsage : '',
+    ...lines.filter((line) => line && !line.startsWith('@'))
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .replace(/\s*\\\s*/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return command;
+}
+
+function normalizeTableCellValue(value) {
+  return String(value || '')
+    .replace(/\r?\n/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function escapeMarkdownTableCell(value) {
+  return normalizeTableCellValue(value).replace(/\|/g, '\\|');
+}
+
+function escapeMdxTableCell(value) {
+  return normalizeTableCellValue(value)
+    .replace(/&/g, '&amp;')
+    .replace(/\|/g, '&#124;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\{/g, '&#123;')
+    .replace(/\}/g, '&#125;');
+}
+
+function renderMdxCodeCell(value) {
+  const escaped = escapeMdxTableCell(value);
+  if (!escaped) return '';
+  return escaped.includes('`') ? `<code>${escaped}</code>` : `\`${escaped}\``;
 }
 
 function validateTemplate(repoPath) {
   const content = readFileSafe(repoPath);
-  const header = getHeaderChunk(content);
+  const header = extractLeadingScriptHeader(content);
   const mode = detectHeaderMode(header);
   const requiredTags = mode === 'framework' ? FRAMEWORK_REQUIRED_TAGS : LEGACY_REQUIRED_TAGS;
   const inlineTags = mode === 'framework' ? FRAMEWORK_INLINE_REQUIRED_TAGS : LEGACY_INLINE_REQUIRED_TAGS;
   const blockTags = mode === 'framework' ? [] : LEGACY_BLOCK_REQUIRED_TAGS;
-  const missing = requiredTags.filter((tag) => !header.includes(tag));
+  const missing = requiredTags.filter((tag) => {
+    if (mode === 'framework') {
+      return !getTagValue(header, tag);
+    }
+    return !header.includes(tag);
+  });
   const empty = [];
 
   for (const tag of inlineTags) {
@@ -255,17 +355,15 @@ function validateTemplate(repoPath) {
     if (meaningful.length === 0) empty.push(tag);
   }
 
-  // Framework headers encode usage inline; when present, enforce non-placeholder content.
-  if (mode === 'framework' && !missing.includes('@usage')) {
-    const usage = getTagValue(header, '@usage');
-    if (usage && isPlaceholderValue(usage)) empty.push('@usage');
-  }
-
-  const summary =
-    getTagValue(header, '@summary') ||
-    getTagValue(header, '@purpose-statement') ||
-    getTagValue(header, '@purpose') ||
-    '';
+  const summary = mode === 'framework'
+    ? getTagValue(header, '@purpose-statement') ||
+      getTagValue(header, '@purpose') ||
+      getTagValue(header, '@summary') ||
+      ''
+    : getTagValue(header, '@summary') ||
+      getTagValue(header, '@purpose-statement') ||
+      getTagValue(header, '@purpose') ||
+      '';
   const usage = extractPrimaryUsage(header) || (mode === 'framework' ? buildUsageDefault(repoPath) : '');
 
   return {
@@ -275,7 +373,7 @@ function validateTemplate(repoPath) {
     empty,
     script: getTagValue(header, '@script') || path.basename(repoPath),
     summary,
-    owner: getTagValue(header, '@owner') || '',
+    domain: getTagValue(header, '@domain') || '',
     usage
   };
 }
@@ -309,13 +407,13 @@ function buildTemplateValues(repoPath, placeholderMode) {
   const scriptName = path.basename(repoPath, path.extname(repoPath));
   const usageDefault = buildUsageDefault(repoPath);
   const group = GROUP_INDEX_MAP.find((g) => repoPath === g.root || repoPath.startsWith(`${g.root}/`));
-  const ownerValue = 'docs';
+  const domainValue = 'docs';
 
   if (placeholderMode) {
     return {
       script: scriptName,
       summary: 'TODO: one-line purpose',
-      owner: ownerValue,
+      domain: domainValue,
       scope: group ? group.root : path.dirname(repoPath),
       usage: usageDefault,
       inputs: 'TODO: --flag <description> (default: ...)',
@@ -329,7 +427,7 @@ function buildTemplateValues(repoPath, placeholderMode) {
   return {
     script: scriptName,
     summary: `Utility script for ${repoPath}.`,
-    owner: ownerValue,
+    domain: domainValue,
     scope: group ? group.root : path.dirname(repoPath),
     usage: usageDefault,
     inputs: 'No required CLI flags; optional flags are documented inline.',
@@ -348,7 +446,7 @@ function buildTemplateBlock(repoPath, placeholderMode) {
     return [
       `# @script ${values.script}`,
       `# @summary ${values.summary}`,
-      `# @owner ${values.owner}`,
+      `# @domain ${values.domain}`,
       `# @scope ${values.scope}`,
       '#',
       '# @usage',
@@ -377,7 +475,7 @@ function buildTemplateBlock(repoPath, placeholderMode) {
     '/**',
     ` * @script ${values.script}`,
     ` * @summary ${values.summary}`,
-    ` * @owner ${values.owner}`,
+    ` * @domain ${values.domain}`,
     ` * @scope ${values.scope}`,
     ' *',
     ' * @usage',
@@ -408,7 +506,7 @@ function injectTemplate(repoPath, placeholderMode) {
   const existing = readFileSafe(repoPath);
   if (!existing) return false;
 
-  const header = getHeaderChunk(existing);
+  const header = extractLeadingScriptHeader(existing);
   const hasAnyTag = LEGACY_REQUIRED_TAGS.some((tag) => header.includes(tag)) || hasFrameworkHeaderTags(header);
   if (hasAnyTag) return false;
 
@@ -428,7 +526,7 @@ function injectTemplate(repoPath, placeholderMode) {
 function stageFiles(repoPaths) {
   if (!repoPaths.length) return;
   const args = repoPaths.map((p) => `"${p}"`).join(' ');
-  execSync(`git add ${args}`, { stdio: 'ignore' });
+  execSync(`git add ${args}`, { cwd: REPO_ROOT, stdio: 'ignore' });
 }
 
 function buildDefaultIndexContent(indexPath) {
@@ -454,7 +552,7 @@ function ensureIndexFile(indexPath) {
 }
 
 function scriptsForGroup(root) {
-  return getAllScopedScripts().filter((file) => file === root || file.startsWith(`${root}/`));
+  return getAllIndexedScripts().filter((file) => file === root || file.startsWith(`${root}/`));
 }
 
 function buildGroupRows(root) {
@@ -466,8 +564,35 @@ function buildGroupRows(root) {
       script: entry.file,
       summary: entry.summary || '',
       usage: entry.usage || '',
-      owner: entry.owner || ''
+      domain: entry.domain || ''
     }));
+}
+
+function normalizeTableCellValue(value) {
+  return String(value || '')
+    .replace(/\r?\n/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function escapeMarkdownTableCell(value) {
+  return normalizeTableCellValue(value).replace(/\|/g, '\\|');
+}
+
+function escapeMdxTableCell(value) {
+  return normalizeTableCellValue(value)
+    .replace(/&/g, '&amp;')
+    .replace(/\|/g, '&#124;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\{/g, '&#123;')
+    .replace(/\}/g, '&#125;');
+}
+
+function renderMdxCodeCell(value) {
+  const escaped = escapeMdxTableCell(value);
+  if (!escaped) return '';
+  return escaped.includes('`') ? `<code>${escaped}</code>` : `\`${escaped}\``;
 }
 
 function buildGroupIndexMarkdown(root) {
@@ -477,12 +602,12 @@ function buildGroupIndexMarkdown(root) {
     return ['## Script Index', '', '_No scripts indexed yet._'].join('\n');
   }
 
-  const lines = ['## Script Index', '', '| Script | Summary | Usage | Owner |', '|---|---|---|---|'];
+  const lines = ['## Script Index', '', '| Script | Summary | Usage | Domain |', '|---|---|---|---|'];
   rows.forEach((row) => {
-    const summary = row.summary.replace(/\|/g, '\\|');
-    const usage = row.usage.replace(/\|/g, '\\|');
-    const owner = row.owner.replace(/\|/g, '\\|');
-    lines.push(`| \`${row.script}\` | ${summary} | \`${usage}\` | ${owner} |`);
+    const summary = escapeMarkdownTableCell(row.summary);
+    const usage = escapeMarkdownTableCell(row.usage);
+    const domain = escapeMarkdownTableCell(row.domain);
+    lines.push(`| \`${row.script}\` | ${summary} | \`${usage}\` | ${domain} |`);
   });
   return lines.join('\n');
 }
@@ -531,13 +656,12 @@ function buildAggregateMarkdown() {
       lines.push('');
       continue;
     }
-    lines.push('| Script | Summary | Usage | Owner |');
+    lines.push('| Script | Summary | Usage | Domain |');
     lines.push('|---|---|---|---|');
     rows.forEach((row) => {
-      const summary = row.summary.replace(/\|/g, '\\|');
-      const usage = row.usage.replace(/\|/g, '\\|');
-      const owner = row.owner.replace(/\|/g, '\\|');
-      lines.push(`| \`${row.script}\` | ${summary} | \`${usage}\` | ${owner} |`);
+      lines.push(
+        `| ${renderMdxCodeCell(row.script)} | ${escapeMdxTableCell(row.summary)} | ${renderMdxCodeCell(row.usage)} | ${escapeMdxTableCell(row.domain)} |`
+      );
     });
     lines.push('');
   }
@@ -573,6 +697,7 @@ function runTests(options = {}) {
   const stagedOnly = Boolean(options.stagedOnly);
   const write = Boolean(options.write);
   const checkIndexes = Boolean(options.checkIndexes);
+  const checkClassification = Boolean(options.checkClassification);
   const stage = Boolean(options.stage);
   const autofill = Boolean(options.autofill);
   const backfillExisting = Boolean(options.backfillExisting);
@@ -586,10 +711,11 @@ function runTests(options = {}) {
   const autofilledScripts = [];
   const backfilledScripts = [];
 
-  const scopedScripts = getAllScopedScripts();
+  const validationScripts = getAllValidationScripts();
+  const classificationScripts = getAllClassificationScripts();
   const stagedAddedScripts = getStagedAddedScripts();
   const explicitTargets = [...new Set(files.map(normalizeRepoPath))]
-    .filter((file) => SCOPED_ROOTS.some((root) => file === root || file.startsWith(`${root}/`)))
+    .filter((file) => isWithinRoots(file, VALIDATION_ROOTS))
     .filter(isScriptFile);
 
   if (autofill) {
@@ -599,7 +725,7 @@ function runTests(options = {}) {
   }
 
   if (backfillExisting) {
-    for (const scriptPath of scopedScripts) {
+    for (const scriptPath of validationScripts) {
       if (injectTemplate(scriptPath, false)) backfilledScripts.push(scriptPath);
     }
   }
@@ -607,7 +733,7 @@ function runTests(options = {}) {
   const enforceTargets = explicitTargets.length > 0
     ? explicitTargets
     : enforceExisting
-      ? scopedScripts
+      ? validationScripts
       : stagedOnly
         ? stagedAddedScripts
         : [];
@@ -621,13 +747,27 @@ function runTests(options = {}) {
     }
   }
 
+  if (checkClassification) {
+    try {
+      const classificationRows = loadClassificationData();
+      errors.push(...validateClassificationCoverage(classificationScripts, classificationRows));
+    } catch (error) {
+      errors.push({
+        file: CLASSIFICATION_DATA_PATH,
+        rule: 'Script classification coverage',
+        message: `Unable to validate script classifications: ${error.message}`,
+        line: 1
+      });
+    }
+  }
+
   const stagedPaths = [...autofilledScripts, ...backfilledScripts];
 
   if (write || rebuildIndexes || checkIndexes) {
     const indexTargets = rebuildIndexes || checkIndexes
       ? GROUP_INDEX_MAP
       : GROUP_INDEX_MAP.filter((g) => {
-          const candidates = stagedOnly ? stagedAddedScripts : scopedScripts;
+          const candidates = stagedOnly ? stagedAddedScripts : validationScripts;
           return candidates.some((f) => f === g.root || f.startsWith(`${g.root}/`));
         });
 
@@ -661,14 +801,14 @@ function runTests(options = {}) {
         errors.push({
           file: AGGREGATE_INDEX_PATH,
           rule: 'Aggregate script index freshness',
-          message: 'Missing aggregate scripts index. Run with --write --rebuild-indexes.',
+        message: 'Missing aggregate scripts catalog. Run with --write --rebuild-indexes.',
           line: 1
         });
       } else if (aggregateCheck.changed) {
         errors.push({
           file: AGGREGATE_INDEX_PATH,
           rule: 'Aggregate script index freshness',
-          message: 'Outdated aggregate scripts index. Run with --write --rebuild-indexes.',
+        message: 'Outdated aggregate scripts catalog. Run with --write --rebuild-indexes.',
           line: 1
         });
       }
@@ -681,7 +821,7 @@ function runTests(options = {}) {
       errors.push({
         file: LEGACY_AGGREGATE_INDEX_PATH,
         rule: 'Legacy aggregate script index',
-        message: 'Legacy scripts-index.md should be removed; use scripts-index.mdx.',
+        message: 'Legacy scripts index should be removed; use docs-guide/catalog/scripts-catalog.mdx.',
         line: 1
       });
     }
@@ -712,14 +852,16 @@ function runTests(options = {}) {
 
 if (require.main === module) {
   const args = process.argv.slice(2);
+  const checkMode = args.includes('--check');
   const stagedOnly = args.includes('--staged');
   const write = args.includes('--write');
   const stage = args.includes('--stage');
   const autofill = args.includes('--autofill');
   const backfillExisting = args.includes('--backfill-existing');
-  const enforceExisting = args.includes('--enforce-existing');
-  const checkIndexes = args.includes('--check-indexes');
+  const enforceExisting = checkMode || args.includes('--enforce-existing');
+  const checkIndexes = checkMode || args.includes('--check-indexes');
   const rebuildIndexes = args.includes('--rebuild-indexes');
+  const checkClassification = checkMode || enforceExisting || rebuildIndexes || checkIndexes;
   const files = collectFilesFromArgs(args);
 
   const result = runTests({
@@ -731,6 +873,7 @@ if (require.main === module) {
     backfillExisting,
     enforceExisting,
     rebuildIndexes,
+    checkClassification,
     files
   });
 
@@ -770,4 +913,9 @@ if (require.main === module) {
   process.exit(1);
 }
 
-module.exports = { runTests };
+module.exports = {
+  AGGREGATE_INDEX_PATH,
+  buildAggregateMarkdown,
+  checkAggregateIndex,
+  runTests
+};

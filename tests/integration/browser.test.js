@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Puppeteer browser integration test — renders pages from docs.json and checks for console errors, load failures, and visual regressions
- * @pipeline          P3 (PR, Track A)
+ * @pipeline          P1
  * @dualmode          dual-mode (document flags)
  * @usage             node tests/integration/browser.test.js [flags]
  */
@@ -16,9 +16,27 @@
  * Tests pages in headless browser with theme checks
  */
 
-const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
+
+function getRepoRoot() {
+  try {
+    return execSync('git rev-parse --show-toplevel', { encoding: 'utf8' }).trim();
+  } catch (_error) {
+    return process.cwd();
+  }
+}
+
+const REPO_ROOT = getRepoRoot();
+
+let puppeteer;
+try {
+  puppeteer = require('puppeteer');
+} catch (_error) {
+  puppeteer = require(path.join(REPO_ROOT, 'tools', 'node_modules', 'puppeteer'));
+}
+
 const { getMdxFiles, getStagedDocsPageFiles } = require('../utils/file-walker');
 const { getV2Pages } = require('../../tools/scripts/test-v2-pages');
 const { ensureServerRunning, stopServer, getServerUrl } = require('../../.githooks/server-manager');
@@ -75,7 +93,6 @@ async function testPage(browser, filePath, options = {}) {
   }
   
   const errors = [];
-  const consoleErrors = [];
   const warnings = [];
   
   // Listen for console errors
@@ -100,10 +117,7 @@ async function testPage(browser, filePath, options = {}) {
       'await is only valid in async functions'  // Test script artifacts
     ];
     if (type === 'error' && !ignored.some(i => text.toLowerCase().includes(i.toLowerCase()))) {
-      consoleErrors.push({
-        url: page.url() || fullUrl,
-        message: text
-      });
+      errors.push(`Console: ${text}`);
     }
   });
   
@@ -137,13 +151,6 @@ async function testPage(browser, filePath, options = {}) {
     await page.goto(fullUrl, { waitUntil: 'networkidle2', timeout: TIMEOUT });
     // Wait for content to render
     await new Promise(resolve => setTimeout(resolve, 2000));
-
-    if (consoleErrors.length > 0) {
-      errors.push(`Console errors (${consoleErrors.length}) detected`);
-      consoleErrors.forEach(consoleError => {
-        errors.push(`Console (${consoleError.url}): ${consoleError.message}`);
-      });
-    }
     
     // Check content
     const bodyText = await page.evaluate(() => document.body.innerText);
@@ -199,20 +206,12 @@ async function testPage(browser, filePath, options = {}) {
       contentLength: bodyText ? bodyText.length : 0
     };
   } catch (error) {
-    const navigationErrors = [`Navigation Error: ${error.message}`];
-    if (consoleErrors.length > 0) {
-      navigationErrors.push(`Console errors (${consoleErrors.length}) detected`);
-      consoleErrors.forEach(consoleError => {
-        navigationErrors.push(`Console (${consoleError.url}): ${consoleError.message}`);
-      });
-    }
-
     return {
       filePath,
       url: fullUrl,
       theme,
       success: false,
-      errors: navigationErrors,
+      errors: [`Navigation Error: ${error.message}`],
       warnings
     };
   } finally {

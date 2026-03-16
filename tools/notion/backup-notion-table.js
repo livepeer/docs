@@ -1,4 +1,16 @@
 #!/usr/bin/env node
+/**
+ * @script            backup-notion-table
+ * @category          utility
+ * @purpose           tooling:dev-tools
+ * @scope             external
+ * @owner             docs
+ * @needs             node, @notionhq/client, dotenv, NOTION_API_KEY, NOTION_DATABASE_ID or NOTION_WRITABLE_DATABASE_ID
+ * @purpose-statement Backs up the current Notion data source rows and metadata into timestamped JSON and CSV artifacts with a manifest.
+ * @pipeline          manual
+ * @usage             node tools/notion/backup-notion-table.js [flags]
+ */
+
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");

@@ -4,10 +4,10 @@
  * @category          generator
  * @purpose           qa:repo-health
  * @scope             tools/scripts, tests/unit/script-docs.test.js
- * @owner             docs
+ * @domain            docs
  * @needs             E-C1, R-R14
  * @purpose-statement Script scaffolder — creates a new script file prefilled with the required docs header template
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
+ * @pipeline          manual — not yet in pipeline
  * @usage             node tools/scripts/new-script.js [flags]
  */
 
@@ -24,7 +24,7 @@ function argValue(name) {
 }
 
 function usage() {
-  console.log('Usage: node tools/scripts/new-script.js --path <repo-relative-path> [--owner <value>] [--summary <value>] [--scope <value>]');
+  console.log('Usage: node tools/scripts/new-script.js --path <repo-relative-path> [--domain <value>] [--summary <value>] [--scope <value>]');
 }
 
 function usageDefault(filePath) {
@@ -37,28 +37,14 @@ function hashTemplate(params) {
   const cmd = usageDefault(params.filePath);
   const lines = [
     '# @script ' + params.scriptName,
-    '# @summary ' + params.summary,
-    '# @owner ' + params.owner,
+    '# @category utility',
+    '# @purpose tooling:dev-tools',
+    '# @needs TODO: requirement-id',
+    '# @domain ' + params.domain,
     '# @scope ' + params.scope,
-    '#',
-    '# @usage',
-    '#   ' + cmd,
-    '#',
-    '# @inputs',
-    '#   TODO: --flag <description> (default: ...)',
-    '#',
-    '# @outputs',
-    '#   - TODO: output file/path/side effect',
-    '#',
-    '# @exit-codes',
-    '#   0 = success',
-    '#   1 = failure',
-    '#',
-    '# @examples',
-    '#   ' + cmd,
-    '#',
-    '# @notes',
-    '#   TODO: caveats, constraints, safety notes',
+    '# @purpose-statement ' + params.summary,
+    '# @pipeline manual — interactive developer tool, not suited for automated pipelines',
+    '# @usage ' + cmd + ' [flags]',
     ''
   ];
   return lines.join('\n');
@@ -69,38 +55,24 @@ function blockTemplate(params) {
   const lines = [
     '/**',
     ` * @script ${params.scriptName}`,
-    ` * @summary ${params.summary}`,
-    ` * @owner ${params.owner}`,
+    ' * @category utility',
+    ' * @purpose tooling:dev-tools',
+    ' * @needs TODO: requirement-id',
+    ` * @domain ${params.domain}`,
     ` * @scope ${params.scope}`,
-    ' *',
-    ' * @usage',
-    ` *   ${cmd}`,
-    ' *',
-    ' * @inputs',
-    ' *   TODO: --flag <description> (default: ...)',
-    ' *',
-    ' * @outputs',
-    ' *   - TODO: output file/path/side effect',
-    ' *',
-    ' * @exit-codes',
-    ' *   0 = success',
-    ' *   1 = failure',
-    ' *',
-    ' * @examples',
-    ` *   ${cmd}`,
-    ' *',
-    ' * @notes',
-    ' *   TODO: caveats, constraints, safety notes',
+    ` * @purpose-statement ${params.summary}`,
+    ' * @pipeline manual — interactive developer tool, not suited for automated pipelines',
+    ` * @usage ${cmd} [flags]`,
     ' */',
     ''
   ];
   return lines.join('\n');
 }
 
-function createContent(filePath, owner, summary, scope) {
+function createContent(filePath, domain, summary, scope) {
   const ext = path.extname(filePath).toLowerCase();
   const scriptName = path.basename(filePath, ext);
-  const params = { filePath, owner, summary, scope, scriptName };
+  const params = { filePath, domain, summary, scope, scriptName };
   const hashStyle = ext === '.sh' || ext === '.bash' || ext === '.py';
 
   let shebang = '';
@@ -126,10 +98,10 @@ function main() {
     process.exit(1);
   }
 
-  const owner = argValue('--owner') || 'docs';
+  const domain = argValue('--domain') || argValue('--owner') || 'docs';
   const summary = argValue('--summary') || 'TODO: one-line purpose';
   const scope = argValue('--scope') || path.dirname(normalized);
-  const content = createContent(normalized, owner, summary, scope);
+  const content = createContent(normalized, domain, summary, scope);
 
   fs.mkdirSync(path.dirname(fullPath), { recursive: true });
   fs.writeFileSync(fullPath, content, 'utf8');
@@ -139,4 +111,3 @@ function main() {
 }
 
 main();
-

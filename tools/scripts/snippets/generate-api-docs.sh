@@ -6,7 +6,7 @@
 # @owner             docs
 # @needs             E-C6, F-C1
 # @purpose-statement API docs generator — generates API reference pages from OpenAPI specs
-# @pipeline          manual — interactive developer tool, not suited for automated pipelines
+# @pipeline          manual — not yet in pipeline
 # @usage             bash tools/scripts/snippets/generate-api-docs.sh [flags]
 # Generate API documentation from OpenAPI spec
 # Creates: landing page + individual endpoint pages + navigation JSON

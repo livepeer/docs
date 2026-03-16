@@ -1,0 +1,94 @@
+---
+title: 'Gateways Vs. Orchestrators: What’s the Difference?'
+sidebarTitle: Gateways Vs. Orchestrators
+description: >-
+  Livepeer uses two core node types-**Gateways** and **Orchestrators**-that work
+  together to provide real-time AI video compute at scale. Although closely
+  connected, they serve entirely different purposes. This page breaks down how
+  they differ and why both roles matter for a decentralized compute marketplace.
+keywords:
+  - livepeer
+  - about
+  - livepeer network
+  - gateways vs orchestrators
+  - gateways
+  - orchestrators
+  - what
+  - difference
+  - types
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: general
+---
+
+
+
+
+---
+
+## Overview
+
+In brief:
+
+<Callout >
+<div style={{display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
+<Icon icon="torii-gate" /> **Gateways coordinate.**
+
+<Icon icon="microchip"/> **Orchestrators compute.**
+</div>
+</Callout>
+
+Together, they form the backbone of the Livepeer AI video pipeline.
+
+```mermaid
+sequenceDiagram
+    participant App as Application
+    participant GW as Gateway
+    participant ORC as Orchestrator
+
+    App->>GW: Submit job (model, parameters, video frames)
+    GW->>ORC: Route job to best GPU
+    ORC->>GW: Return processed frames/output
+    GW->>App: Send results back to user
+```
+
+| Role             | Function                                       | Performs GPU Work? | External-Facing? |
+| ---------------- | ---------------------------------------------- | ------------------ | ---------------- |
+| **Gateway**      | Job intake, pricing, routing, capability match | ❌ No              | ✅ Yes           |
+| **Orchestrator** | GPU compute, inference, transcoding, BYOC      | ✅ Yes             | ❌ No            |
+
+## Gateway Responsibilities
+
+Gateways act as the front door to the network:
+
+- Receive jobs from applications
+- Determine required model, pipeline, or GPU
+- Select the best orchestrator based on performance and pricing
+- Route the workload with low latency
+- Return results to the client
+- Publish marketplace offerings (models, pipelines, cost per frame, etc.)
+
+Gateways provide _service intelligence_, not compute.
+
+---
+
+## Orchestrator Responsibilities
+
+Orchestrators are GPU operators who run:
+
+- Real-time AI inference
+- Daydream / ComfyStream pipelines
+- BYOC containers
+- Traditional transcoding
+
+They provide:
+
+- GPU horsepower
+- Model execution
+- Deterministic and verifiable output
+- Performance guarantees
+
+They do not expose external APIs directly-Gateways handle that.

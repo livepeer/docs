@@ -1,0 +1,195 @@
+---
+title: 'Pricing Configuration'
+description: 'Configure the maximum price your Livepeer gateway pays orchestrators per compute unit. Covers how price caps work and the flags for video and AI job pricing.'
+sidebarTitle: 'Pricing Configuration'
+keywords: ["livepeer", "gateway", "pricing", "maxPricePerUnit", "orchestrator", "payment", "configuration", "price cap"]
+pageType: 'how_to'
+audience: 'gateway'
+status: 'current'
+---
+
+<Note>
+  **The gateway pays orchestrators — it does not charge clients.**
+
+  The flags on this page set the maximum your gateway will pay to orchestrators for compute. They have nothing to do with what you charge your application's end users. If you want to bill clients, you need to implement that in your application layer. See [How Payments Work](/v2/gateways/guides/how-payments-work) for the full payment flow.
+</Note>
+
+---
+
+## How price caps work
+
+When your gateway receives a job, it selects an orchestrator from your `-orchAddr` list. Each orchestrator advertises its own price. Your gateway compares that advertised price against your configured maximum and rejects any orchestrator whose price exceeds your cap.
+
+If **all** orchestrators in your list exceed your price cap, the job fails. To allow processing even when no orchestrators are below your cap, set `-ignoreMaxPriceIfNeeded=true` (see below).
+
+**Default behaviour:** If you set no price cap (`-maxPricePerUnit 0`), your gateway will accept any price from any orchestrator. This is fine for development but exposes you to unbounded cost in production.
+
+---
+
+## Configuration
+
+<Steps>
+  <Step title="Set a global price cap">
+    The `-maxPricePerUnit` flag sets the maximum your gateway will pay per compute unit.
+
+    **For video jobs**, the unit is **pixels per segment** (controlled by `-pixelsPerUnit`).
+
+    **For AI jobs**, the unit is **pixels** (for image/video pipelines) or **milliseconds** (for audio pipelines). See the pipeline pricing table below.
+
+    ```bash
+    # Accept up to 1000 wei per pixelsPerUnit
+    -maxPricePerUnit 1000
+
+    # Or use USD (requires -priceFeedAddr to be configured)
+    -maxPricePerUnit 0.02USD
+    ```
+
+    [//]: # (REVIEW: Confirm that -maxPricePerUnit in USD requires -priceFeedAddr (Chainlink\) to be set.)
+[//]: # (Source: go-livepeer source flag description says "When using a custom currency, a corresponding)
+[//]: # (price feed must be configured with -priceFeedAddr". Verify this is still current. Rick.)
+
+    The default is `0`, meaning the gateway accepts any price. In production, set an explicit cap.
+  </Step>
+
+  <Step title="(Optional) Adjust pixels per unit">
+    The `-pixelsPerUnit` flag controls the granularity of pricing. Default is `1` (one wei per pixel). Increase this to set a less granular price:
+
+    ```bash
+    -pixelsPerUnit 1000000
+    ```
+
+    This is used together with `-maxPricePerUnit` — the effective cap is `maxPricePerUnit` wei per `pixelsPerUnit` pixels.
+
+    Most operators leave this at the default of `1`.
+  </Step>
+
+  <Step title="(Optional) Set per-pipeline AI price caps">
+    For AI workloads, you can set different price caps per pipeline and model using `-maxPricePerCapability`. This overrides `-maxPricePerUnit` for any pipeline/model combination you specify. If a pipeline is not listed, `-maxPricePerUnit` applies as the fallback.
+
+    Create a JSON file (`maxPrices.json`):
+
+    ```json
+    {
+      "capabilities_prices": [
+        {
+          "pipeline": "text-to-image",
+          "model_id": "default",
+          "price_per_unit": 4768371,
+          "pixels_per_unit": 1
+        },
+        {
+          "pipeline": "image-to-image",
+          "model_id": "ByteDance/SDXL-Lightning",
+          "price_per_unit": 1700000,
+          "pixels_per_unit": 1
+        },
+        {
+          "pipeline": "image-to-video",
+          "model_id": "default",
+          "price_per_unit": 3390842,
+          "pixels_per_unit": 1
+        },
+        {
+          "pipeline": "audio-to-text",
+          "model_id": "default",
+          "price_per_unit": 12882811,
+          "pixels_per_unit": 1
+        }
+      ]
+    }
+    ```
+
+    Then pass the path to your gateway at startup:
+
+    ```bash
+    -maxPricePerCapability /path/to/maxPrices.json
+    ```
+
+    Use `"model_id": "default"` to apply the same cap to all models in a pipeline.
+
+    <Note>
+      Pricing units differ between pipeline types. Image and video pipelines price per **pixel**. Audio pipelines price per **millisecond of audio**. LLM pipelines price per **token** (where applicable). Set your caps accordingly.
+    </Note>
+  </Step>
+
+  <Step title="(Optional) Allow processing when no orchestrators are in range">
+    By default, if no orchestrators are below your price cap, the job fails. To override this and allow any price if needed:
+
+    ```bash
+    -ignoreMaxPriceIfNeeded=true
+    ```
+
+    Use this with caution in production. It removes the price protection entirely when no in-range orchestrators are available.
+  </Step>
+</Steps>
+
+---
+
+## Complete example with pricing flags
+
+```bash
+livepeer \
+  -datadir ~/.lpData2 \
+  -gateway \
+  -orchAddr https://orch1.example.com:8935 \
+  -httpAddr 0.0.0.0:8937 \
+  -httpIngest \
+  -maxPricePerUnit 5000000 \                          # Global fallback cap: 5,000,000 wei/pixel
+  -pixelsPerUnit 1 \                                  # Default — 1 pixel granularity
+  -maxPricePerCapability /etc/livepeer/maxPrices.json  # Per-pipeline AI caps (optional)
+```
+
+---
+
+## Pricing reference
+
+### Video gateway pricing
+
+| Flag | Description | Default |
+|---|---|---|
+| `-maxPricePerUnit` | Max price gateway pays per `pixelsPerUnit` pixels (wei or USD) | `0` (any price) |
+| `-pixelsPerUnit` | Pixels per pricing unit | `1` |
+| `-autoAdjustPrice` | Auto-adjust price based on ticket redemption overhead | `true` |
+
+### AI gateway pricing
+
+| Flag | Description | Default |
+|---|---|---|
+| `-maxPricePerUnit` | Global max price cap (applies to all AI pipelines unless overridden) | `0` (any price) |
+| `-maxPricePerCapability` | Path to JSON file with per-pipeline/model price caps | None |
+| `-ignoreMaxPriceIfNeeded` | Process jobs even if all orchestrators exceed price cap | `false` |
+
+### Pipeline pricing units
+
+| Pipeline type | Pricing unit |
+|---|---|
+| `text-to-image`, `image-to-image`, `image-to-video`, `upscale`, `image-to-text`, `segment-anything-2` | Pixels |
+| `audio-to-text`, `text-to-speech` | Milliseconds |
+
+[//]: # (REVIEW: LLM pipeline pricing unit — confirm whether it is tokens or pixels or something else.)
+[//]: # (Not confirmed from current source. j0sh / Rick to verify.)
+
+---
+
+## Pricing in off-chain vs on-chain mode
+
+The price cap flags work in both modes, but with a key difference:
+
+- **Off-chain (AI gateway, no ETH):** Price caps are enforced but there are no on-chain payments. Payment mechanics are in development for off-chain mode. Setting price caps is still recommended to avoid routing jobs to unexpectedly expensive orchestrators once payment flows are established.
+- **On-chain (video and dual):** Price caps feed into the probabilistic micropayment system. Orchestrators above your cap are rejected from selection. The `-autoAdjustPrice` flag helps compensate for Ethereum gas cost volatility.
+
+[//]: # (REVIEW: Confirm whether off-chain pricing enforcement is currently active or future-state.)
+[//]: # (Discord context suggests this is still in development. j0sh to confirm.)
+
+---
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="How Payments Work" icon="circle-dollar-to-slot" href="/v2/gateways/guides/how-payments-work">
+    Understand the full payment flow — probabilistic micropayments, ticket mechanics, and ETH redemption.
+  </Card>
+  <Card title="Configuration Flags Reference" icon="list" href="/v2/gateways/resources/configuration-flags">
+    Complete reference for all go-livepeer gateway flags.
+  </Card>
+</CardGroup>

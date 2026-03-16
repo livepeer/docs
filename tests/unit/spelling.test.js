@@ -4,10 +4,10 @@
  * @category          validator
  * @purpose           qa:content-quality
  * @scope             tests
- * @owner             docs
+ * @domain            docs
  * @needs             E-R1, R-R11
  * @purpose-statement Spelling check — validates content against custom dictionary with en-GB rules
- * @pipeline          P1 (commit, via run-all)
+ * @pipeline          P1, P3
  * @usage             node tests/unit/spelling.test.js [flags]
  */
 /**
@@ -15,10 +15,43 @@
  */
 
 const { execSync } = require('child_process');
-const { getMdxFiles, getStagedDocsPageFiles } = require('../utils/file-walker');
+const path = require('path');
+const { getAuthoredMdxFiles, getStagedAuthoredDocsPageFiles } = require('../utils/file-walker');
 const { checkMultipleFiles, resolveCspellBinary, resolveCspellConfig } = require('../utils/spell-checker');
+const { filterAuthoredDocsPageFiles } = require('../../tools/lib/docs-page-scope');
 
 let errors = [];
+
+function parseArgs(argv) {
+  const parsed = {
+    stagedOnly: false,
+    files: []
+  };
+
+  for (let i = 0; i < argv.length; i += 1) {
+    const token = argv[i];
+    if (token === '--staged') {
+      parsed.stagedOnly = true;
+      continue;
+    }
+    if (token === '--files' || token === '--file') {
+      const raw = String(argv[i + 1] || '').trim();
+      if (raw) {
+        raw
+          .split(',')
+          .map((entry) => entry.trim())
+          .filter(Boolean)
+          .forEach((entry) => {
+            parsed.files.push(path.isAbsolute(entry) ? entry : path.resolve(process.cwd(), entry));
+          });
+      }
+      i += 1;
+    }
+  }
+
+  parsed.files = [...new Set(parsed.files)];
+  return parsed;
+}
 
 /**
  * Extract text content from MDX (excluding code blocks and frontmatter)
@@ -50,10 +83,12 @@ async function runTests(options = {}) {
   let testFiles = files;
   if (!testFiles) {
     if (stagedOnly) {
-      testFiles = getStagedDocsPageFiles().filter(f => f.endsWith('.mdx'));
+      testFiles = getStagedAuthoredDocsPageFiles().filter(f => f.endsWith('.mdx'));
     } else {
-      testFiles = getMdxFiles();
+      testFiles = getAuthoredMdxFiles();
     }
+  } else {
+    testFiles = filterAuthoredDocsPageFiles(testFiles).filter(f => f.endsWith('.mdx'));
   }
   
   // Check if cspell is available
@@ -90,10 +125,12 @@ async function runTests(options = {}) {
 
 // Run if called directly
 if (require.main === module) {
-  const args = process.argv.slice(2);
-  const stagedOnly = args.includes('--staged');
-  
-  runTests({ stagedOnly }).then(result => {
+  const parsed = parseArgs(process.argv.slice(2));
+
+  runTests({
+    stagedOnly: parsed.stagedOnly,
+    files: parsed.files.length > 0 ? parsed.files : null
+  }).then(result => {
     if (result.errors.length > 0) {
       console.error('\n❌ Spelling Errors:\n');
       result.errors.forEach(fileError => {
@@ -118,4 +155,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { runTests };
+module.exports = { parseArgs, runTests };

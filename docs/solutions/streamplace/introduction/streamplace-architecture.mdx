@@ -1,0 +1,220 @@
+---
+title: Streamplace Architecture
+description: >-
+  Detailed architecture showing Streamplace, Livepeer, Orchestrators,
+  provenance, and user layers.
+keywords:
+  - livepeer
+  - developers
+  - developer platforms
+  - streamplace
+  - streamplace architecture
+  - architecture
+  - detailed
+  - showing
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+purpose: concept
+---
+
+
+
+
+---
+
+Streamplace sits between decentralized social applications and the Livepeer Network to provide a **full ingestion → provenance → transcoding → distribution** pipeline.
+
+This page consolidates the full architectural model, including:
+
+- Streamplace SPE responsibilities
+- Node & SDK architecture
+- C2PA + Ethereum provenance flow
+- Livepeer broadcaster + orchestrator roles
+- User playback and verification
+
+---
+
+# 🧩 High-Level Architecture Diagram
+
+```mermaid
+flowchart TB
+
+    subgraph DAO[Livepeer Foundation / DAO]
+        T[Treasury Grants & Governance]
+    end
+
+    subgraph SPE[Streamplace SPE]
+        S1[Node / SDK / APIs]
+        S2[Metadata Schema]
+        S3[C2PA + Ethereum Signatures]
+    end
+
+    subgraph Social[Decentralized Social Apps]
+        U1[AT Protocol Apps]
+        U2[Fediverse Clients]
+        U3[Web3 Video Platforms]
+    end
+
+    subgraph Node[Streamplace Node]
+        N1[Ingest WHIP/WHEP/RTMP]
+        N2[Segment MP4 (1s)]
+        N3[Embed Metadata + Rights]
+        N4[Apply Provenance]
+    end
+
+    subgraph Livepeer[Livepeer Network]
+        B[Broadcaster]
+        O[Orchestrators - GPU]
+        V[Verifiability Layer]
+    end
+
+    subgraph Playback[Playback Layer]
+        P[HLS/WebRTC Player]
+    end
+
+    DAO --> SPE
+    Social --> Node
+    SPE --> Node
+    Node --> Livepeer
+    Livepeer --> Playback
+```
+
+---
+
+# 🧠 Architecture Layer Explanations
+
+## 1. **Livepeer Foundation / DAO (Funding Layer)**
+
+The Livepeer Treasury funds Streamplace as a **Special Purpose Entity** to deliver:
+
+- open-source video infrastructure
+- provenance systems
+- a node + SDK usable by any decentralized social app
+
+This ensures long-term sustainability and alignment with public-goods principles.
+
+---
+
+## 2. **Streamplace SPE Layer**
+
+Streamplace’s responsibilities include:
+
+- designing and maintaining the **streaming node**
+- providing developer **SDKs + APIs**
+- managing the **metadata schema** (`place.stream.metadata.*`)
+- developing the **C2PA + Ethereum provenance pipeline**
+
+This layer ships infrastructure-not a hosted platform.
+
+---
+
+## 3. **Application / Client Layer (Decentralized Social Apps)**
+
+Apps integrate the Streamplace SDK to:
+
+- start livestreams
+- configure metadata (rights, warnings, policies)
+- authenticate creators via wallets or identity systems
+
+Examples:
+
+- AT Protocol apps
+- Fediverse clients
+- Web3 creator tools
+
+---
+
+## 4. **Streamplace Node Layer (Ingest & Provenance)**
+
+The Streamplace Node performs the bulk of technical heavy lifting:
+
+### Ingest
+
+Supports:
+
+- WHIP / WHEP
+- RTMP
+- Browser WebRTC
+
+### Segmentation
+
+Splits video into **1-second MP4 segments**.
+
+### Provenance
+
+Each segment receives:
+
+- **C2PA manifest**
+- **Ethereum signature** for identity binding
+
+### Metadata Embedding
+
+Attaches:
+
+- content rights
+- distribution policy
+- content warnings
+- playback configuration
+
+---
+
+## 5. **Livepeer Network Layer**
+
+Once Streamplace packages segments, it hands off video to Livepeer.
+
+**Broadcaster Role:**
+
+- receives signed segments
+- dispatches them to orchestrators
+
+**Orchestrators:**
+
+- GPU-accelerated transcoding
+- ABR (multi-bitrate) generation
+- may include environment metadata
+
+**Verifiability Layer:**
+
+- ensures correct transcoding
+- enables trust-minimized delivery
+
+---
+
+## 6. **Distribution Layer (Streamplace Output)**
+
+Streamplace reconstructs:
+
+- HLS manifests
+- WebRTC session outputs
+- metadata-enriched playback structures
+
+It also ensures:
+
+- provenance integrity is preserved end-to-end
+- distributionPolicy rules are enforced
+
+---
+
+## 7. **Playback Layer (User-Facing)**
+
+Users receive:
+
+- HLS or WebRTC streams
+- metadata, warnings, rights displays
+- verifiable provenance (C2PA + Ethereum)
+
+This makes video **trustworthy, rights-aware, and censorship-resistant**.
+
+---
+
+# 🔗 Related Pages
+
+- [Overview](/solutions/streamplace/overview)
+- [How Streamplace Works](/solutions/streamplace/introduction/streamplace-guide)
+- [Provenance & Metadata](/solutions/streamplace/introduction/streamplace-provenance)
+- [Funding Model](/solutions/streamplace/introduction/streamplace-funding-model)
+- [Developer Integration Guide](/solutions/streamplace/introduction/streamplace-integration)

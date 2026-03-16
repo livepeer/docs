@@ -1,0 +1,102 @@
+---
+title: Actors Overview
+sidebarTitle: Actors Overview
+description: 'Who participates in Livepeer, what each role does, and how roles interact.'
+keywords:
+  - livepeer
+  - about
+  - actors
+  - gateway
+  - orchestrator
+  - delegator
+  - developers
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: general
+purpose: concept
+---
+
+
+
+and performs actions defined by the system. In Livepeer architecture, “actor” is a formal category used to describe participants with distinct responsibilities, incentives, and interactions. Actors are fundamental to describing how the network functions end-to-end from a systems engineering perspective.
+Livepeer’s ecosystem involves both protocol actors (on-chain roles) and network actors (network participants and builders)
+
+Actors are the participants that make the Livepeer network function economically and technically.
+
+## Core Actors
+The Livepeer network has three main actor roles: Orchestrators, Delegators, and Gateways (formerly called Broadcasters)
+. (Transcoders now refer simply to the GPU instances attached to Orchestrators.) Each plays a distinct part:
+Orchestrators (Node Operators): These run the go-livepeer client software and provide compute (usually GPU-accelerated) to transcode video streams or run AI inference jobs
+. Orchestrators stake LPT (self-bond) to become active: the higher their stake (plus delegated stake), the more work they are assigned
+. They set pricing parameters (ETH per pixel, fee share %, reward share %) and must call on-chain functions (like reward) to claim ETH fees and LPT inflation each round
+. To run efficiently, orchestrators typically use hardware encoders (e.g. Nvidia NVENC/NVDEC) and maintain strong network connectivity
+.
+Delegators (Token Holders): Any LPT holder can stake their tokens by delegating to one or more Orchestrators. This strengthens network security and gives Delegators a share of the rewards. Delegation does not transfer token ownership – the LPT remains in the delegator’s wallet, bonded by the staking contract. In return, Delegators receive a fraction of each Orchestrator’s fees and inflation (according to the Orchestrator’s chosen feeShare and rewardShare percentages)
+. Delegators must stay staked (and migrated to Arbitrum) to continue earning; after Confluence, failing to move stake would forfeit rewards
+. Delegators also gain governance rights: they can detach their stake to vote on proposals, or vote via their Orchestrator
+.
+Gateways (Broadcasters/Clients): Gateways are entities that publish video streams or AI inference requests to the network (these were called Broadcasters pre-Confluence)
+. A Gateway sends raw media segments to the network along with ETH to pay for services. It negotiates with Orchestrators (off-chain) to select a suitable worker, attaches tickets as payment promises for each segment, and eventually receives the transcoded output. Gateways pay ETH fees (on-chain via the TicketBroker contract) and do not need LPT. They may either retrieve finished videos for end-users, or forward them to streaming clients via CDN. Gateways are the network’s demand side and do not earn stake rewards.
+🔍 Key Role Flow: Delegators ▶ stake LPT to support Orchestrators, which powers security and gives Delegators a cut of rewards
+. Orchestrators ▶ register on-chain, declare capacity and pricing, then accept work from Gateways. Gateways ▶ submit video/AI jobs (paying fees) to Orchestrators for processing, receiving back transformed data.
+
+--
+
+## Role Summary
+
+### Developers And Applications
+
+- Bring demand into the network
+- Integrate through gateway-facing APIs
+- Optimise for latency, quality, and cost
+
+### Gateway Operators
+
+- Provide job intake and coordination
+- Match workloads to available orchestrators
+- Handle routing, retries, and service-level interfaces
+
+### Orchestrator Operators
+
+- Provide supply-side compute participation
+- Execute or coordinate transcoding and AI workloads
+- Earn fees and rewards based on activity and stake backing
+
+### Delegators
+
+- Bond LPT to orchestrators
+- Influence security and economic weight
+- Share in reward and fee outcomes
+
+## Interaction Pattern
+
+Applications do not usually coordinate directly with every compute node.
+
+A common pattern is:
+
+- Application -> Gateway -> Orchestrator -> Gateway -> Application
+
+This separation improves operator specialization and system composability.
+
+## Actor Pages
+
+- [Gateways](./livepeer-actors/gateways)
+- [Orchestrators](/v2/orchestrators/orchestrators-portal)
+- [Delegators](./livepeer-actors/delegators)
+- [Builders and End Users](./livepeer-actors/end-users)
+
+## Why Role Separation Matters
+
+- Better developer experience on the demand side
+- Operational specialization on the supply side
+- Open competition across service and compute providers
+- Clearer accountability for pricing, performance, and reliability
+
+## Related Pages
+
+- [Demand Side](./demand-side)
+- [Supply Side](./supply-side)
+- [Job Lifecycle](./job-lifecycle)

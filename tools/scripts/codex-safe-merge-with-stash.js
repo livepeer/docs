@@ -3,21 +3,17 @@
  * @script            codex-safe-merge-with-stash
  * @category          utility
  * @purpose           governance:agent-governance
- * @scope             tools/scripts
+ * @scope             tools/scripts, tools/scripts/codex
  * @owner             docs
  * @needs             R-R27, R-R30
- * @purpose-statement Codex merge utility — safely merges branches with stash handling to avoid codex conflicts
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
+ * @purpose-statement Deprecated compatibility shim — blocks stash-based Codex merge flow and directs users to task-finalize, lock-release, and task-cleanup
+ * @pipeline          manual — developer tool
  * @usage             node tools/scripts/codex-safe-merge-with-stash.js [flags]
  */
-
-const { spawnSync } = require('child_process');
 
 function parseArgs(argv) {
   const args = {
     target: '',
-    stashUntracked: true,
-    dryRun: false,
     json: false
   };
 
@@ -32,80 +28,46 @@ function parseArgs(argv) {
       args.target = token.slice('--target='.length).trim();
       continue;
     }
-    if (token === '--stash-untracked') {
-      args.stashUntracked = true;
-      continue;
-    }
-    if (token === '--no-stash-untracked') {
-      args.stashUntracked = false;
-      continue;
-    }
-    if (token === '--dry-run') {
-      args.dryRun = true;
-      continue;
-    }
     if (token === '--json') {
       args.json = true;
       continue;
     }
+    if (token === '--dry-run') {
+      continue;
+    }
+    if (token === '--stash-untracked' || token === '--no-stash-untracked') {
+      continue;
+    }
     if (token === '--help' || token === '-h') {
-      printUsage();
+      usage();
       process.exit(0);
     }
-    throw new Error(`Unknown argument: ${token}`);
-  }
 
-  if (!args.target) {
-    throw new Error('Missing required --target <branch-or-ref>');
+    throw new Error(`Unknown argument: ${token}`);
   }
 
   return args;
 }
 
-function printUsage() {
-  console.log('Usage: node tools/scripts/codex-safe-merge-with-stash.js --target <branch-or-ref> [--dry-run] [--json]');
+function usage() {
+  console.log('Usage: node tools/scripts/codex-safe-merge-with-stash.js --target <branch-or-ref> [--json]');
 }
 
-function runGit(args, options = {}) {
-  const res = spawnSync('git', args, {
-    encoding: 'utf8',
-    ...options
-  });
+function buildResult(target) {
+  const suffix = target ? ` for target ${target}` : '';
   return {
-    status: res.status,
-    stdout: String(res.stdout || ''),
-    stderr: String(res.stderr || ''),
-    ok: res.status === 0
+    passed: false,
+    target,
+    message: `stash-based Codex merge flow is disabled${suffix}`,
+    recovery: [
+      'Do not use git stash for Codex task isolation in this repository.',
+      'Use the Codex lifecycle instead:',
+      '  1. node tools/scripts/codex/task-finalize.js --branch codex/<id>-<slug>',
+      '  2. Merge the branch into docs-v2',
+      '  3. node tools/scripts/codex/lock-release.js --branch codex/<id>-<slug>',
+      '  4. node tools/scripts/codex/task-cleanup.js --branch codex/<id>-<slug> --apply'
+    ]
   };
-}
-
-function runGitOrThrow(args, options = {}) {
-  const res = runGit(args, options);
-  if (!res.ok) {
-    const detail = (res.stderr || res.stdout).trim() || `git ${args.join(' ')} failed`;
-    throw new Error(detail);
-  }
-  return res.stdout.trim();
-}
-
-function hasOriginRemote() {
-  const res = runGit(['remote', 'get-url', 'origin']);
-  return res.ok;
-}
-
-function getStashRefByMessage(marker) {
-  const list = runGitOrThrow(['stash', 'list', '--format=%gd|%s']);
-  if (!list) return '';
-  const line = list
-    .split('\n')
-    .map((entry) => entry.trim())
-    .find((entry) => entry.includes(marker));
-  if (!line) return '';
-  return line.split('|')[0].trim();
-}
-
-function getGitStatusPorcelain() {
-  return runGitOrThrow(['status', '--porcelain']);
 }
 
 function printResult(result, jsonMode) {
@@ -114,155 +76,28 @@ function printResult(result, jsonMode) {
     return;
   }
 
-  const statusIcon = result.passed ? '✅' : '❌';
-  console.log(`${statusIcon} ${result.message}`);
-  if (result.actions && result.actions.length > 0) {
-    result.actions.forEach((action) => console.log(`  - ${action}`));
-  }
-  if (result.recovery && result.recovery.length > 0) {
-    console.log('Recovery steps:');
-    result.recovery.forEach((line) => console.log(`  - ${line}`));
-  }
+  console.error(`❌ ${result.message}`);
+  result.recovery.forEach((line) => console.error(line.startsWith('  ') ? line : `  - ${line}`));
 }
 
 function main() {
   const args = parseArgs(process.argv.slice(2));
-  const actions = [];
-  const recovery = [];
+  if (!args.target) {
+    throw new Error('Missing required --target <branch-or-ref>');
+  }
 
+  const result = buildResult(args.target);
+  printResult(result, args.json);
+  process.exit(1);
+}
+
+if (require.main === module) {
   try {
-    const branch = runGitOrThrow(['rev-parse', '--abbrev-ref', 'HEAD']);
-    const dirty = getGitStatusPorcelain().trim().length > 0;
-    const marker = `codex-safe-merge:${new Date().toISOString()}:${args.target}`;
-    let stashRef = '';
-
-    if (args.dryRun) {
-      actions.push(`would evaluate dirty tree on branch ${branch}`);
-      if (dirty) {
-        actions.push(
-          `would run git stash push ${args.stashUntracked ? '-u ' : ''}-m "${marker}"`
-        );
-      }
-      if (hasOriginRemote()) {
-        actions.push(`would run git fetch origin ${args.target}`);
-      }
-      actions.push(`would run git merge --no-edit ${args.target}`);
-      if (dirty) {
-        actions.push('would run git stash pop <stash-ref> after successful merge');
-      }
-
-      printResult(
-        {
-          passed: true,
-          message: 'Dry-run completed.',
-          branch,
-          target: args.target,
-          dirty,
-          actions,
-          recovery
-        },
-        args.json
-      );
-      process.exit(0);
-    }
-
-    if (dirty) {
-      const stashArgs = ['stash', 'push'];
-      if (args.stashUntracked) stashArgs.push('-u');
-      stashArgs.push('-m', marker);
-      runGitOrThrow(stashArgs);
-      stashRef = getStashRefByMessage(marker);
-      actions.push(`stashed local changes as ${stashRef || marker}`);
-    }
-
-    if (hasOriginRemote()) {
-      const fetchRes = runGit(['fetch', 'origin', args.target]);
-      if (!fetchRes.ok) {
-        actions.push(`fetch skipped/failed for target ${args.target}; proceeding with local refs`);
-      } else {
-        actions.push(`fetched target from origin: ${args.target}`);
-      }
-    }
-
-    const mergeRes = runGit(['merge', '--no-edit', args.target]);
-    if (!mergeRes.ok) {
-      actions.push(`merge failed for target ${args.target}`);
-      recovery.push('Resolve or abort merge explicitly (for example: git merge --abort).');
-      if (stashRef) {
-        recovery.push(`Stashed changes are preserved in ${stashRef}. Apply later with: git stash pop ${stashRef}`);
-      }
-
-      printResult(
-        {
-          passed: false,
-          message: `Merge failed for target ${args.target}.`,
-          branch,
-          target: args.target,
-          dirty,
-          stashRef,
-          actions,
-          recovery
-        },
-        args.json
-      );
-      process.exit(1);
-    }
-
-    actions.push(`merged target ${args.target} into ${branch}`);
-
-    if (stashRef) {
-      const popRes = runGit(['stash', 'pop', stashRef]);
-      if (!popRes.ok) {
-        actions.push(`stash pop failed for ${stashRef}`);
-        recovery.push('Resolve stash-pop conflicts and stage resolved files manually.');
-        recovery.push(`If needed, stash remains available as ${stashRef}.`);
-
-        printResult(
-          {
-            passed: false,
-            message: 'Merge succeeded but stash pop reported conflicts.',
-            branch,
-            target: args.target,
-            dirty,
-            stashRef,
-            actions,
-            recovery
-          },
-          args.json
-        );
-        process.exit(1);
-      }
-      actions.push(`restored stashed changes from ${stashRef}`);
-    }
-
-    printResult(
-      {
-        passed: true,
-        message: `Safe merge completed for target ${args.target}.`,
-        branch,
-        target: args.target,
-        dirty,
-        stashRef,
-        actions,
-        recovery
-      },
-      args.json
-    );
-    process.exit(0);
+    main();
   } catch (error) {
-    printResult(
-      {
-        passed: false,
-        message: error.message,
-        actions,
-        recovery
-      },
-      args.json
-    );
+    console.error(`❌ ${error.message}`);
     process.exit(1);
   }
 }
 
-if (require.main === module) {
-  main();
-}
+module.exports = { buildResult, parseArgs };

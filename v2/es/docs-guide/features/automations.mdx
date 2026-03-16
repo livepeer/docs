@@ -1,0 +1,83 @@
+---
+title: Mapa de Flujos de Automatización
+sidebarTitle: Flujos de Automatización
+description: Este documento rastrea los sistemas de automatización y dónde escriben datos.
+keywords:
+  - livepeer
+  - automation pipelines
+  - internal
+  - map
+  - automation
+  - systems
+  - write
+  - data
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJkb2NzLWd1aWRlL2ZlYXR1cmVzL2F1dG9tYXRpb25zLm1keCIsInNvdXJjZVJvdXRlIjoiZG9jcy1ndWlkZS9mZWF0dXJlcy9hdXRvbWF0aW9ucyIsInNvdXJjZUhhc2giOiI5ZDQ3ODM5MmE2MGQ2ZGJkY2ZjMjAzZmRlZTlhNzNkMWY2NGE2NGE4MWM0OGMyNWI3OTAwMjU2Mzk0Njk5MTk1IiwibGFuZ3VhZ2UiOiJlcyIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAzLTAxVDE3OjA4OjM0LjQzOFoifQ== */}
+## Superficies de Automatización
+
+- Flujos de trabajo de GitHub Actions en `.github/workflows/`
+- scripts de ayuda de flujo de trabajo en `.github/scripts/`
+- activos de pipeline de n8n en `snippets/automations/scripts/n8n/`
+- scripts de mantenimiento en `tools/scripts/`
+
+Vea el inventario de flujos de trabajo generados: [workflows-catalog.mdx](../catalog/workflows-catalog).
+
+## Pipelines Principales
+
+### 1) Calidad + CI
+
+- `test-suite.yml` - verificaciones de archivos cambiados + pruebas de navegador
+- `test-v2-pages.yml` - barrido de navegador v2 + artefactos/comentarios
+- `broken-links.yml` - verificador de enlaces de advertencia
+
+### 2) Pipelines de Actualización de Datos
+
+- `update-livepeer-release.yml` -> actualiza los datos de lanzamiento globales
+- `update-forum-data.yml` -> actualiza fragmentos de datos del foro
+- `update-ghost-blog-data.yml` -> actualiza fragmentos de datos del blog de ghost
+- `update-youtube-data.yml` -> actualiza fragmentos de datos de YouTube
+- `project-showcase-sync.yml` -> actualiza los datos del pipeline de showcase
+
+### 3) Pipelines de Gobernanza + Entrada
+
+- `discord-issue-intake.yml` + `issue-auto-label.yml`
+- flujos de trabajo de automatización de revisión (`build-review-assets.yml`, `generate-review-table.yml`, `update-review-template.yml`)
+
+## Notas del Pipeline de Showcase + Temas Tendencia
+
+### Showcase
+
+Artifacts principales:
+
+- `snippets/automations/showcase/showcaseData.jsx`
+- flujo de trabajo y activos de n8n para la sincronización de showcase
+
+Propósito operativo:
+
+- entradas del ecosistema buscables/ordenables
+- pipeline reutilizable para fuentes adicionales de curación
+
+### Temas Tendencia / Agregación
+
+Artifacts principales:
+
+- `snippets/automations/forum/forumData.jsx`
+- `snippets/automations/blog/ghostBlogData.jsx`
+- `snippets/automations/youtube/youtubeData.jsx`
+
+Propósito operativo:
+
+- agregar señales recientes de la comunidad en foro/blog/YouTube
+- actualizar las secciones "últimas" y mantener la frescura automáticamente
+
+## Controles Operativos
+
+- Catálogos generados para scripts/flujos de trabajo/plantillas previenen puntos ciegos.
+- Verificaciones de CI y pre-commit reducen la desviación entre las salidas del pipeline y las expectativas de los documentos.
+- Donde GitHub Actions y n8n se solapan, ambos se mantienen para flexibilidad del mantenedor.
+
+## Relacionado
+
+- guía de flujos de trabajo públicos: `v2/resources/documentation-guide/automations-workflows.mdx`
+- mapa de calidad interno: [quality-gates.md](../policies/quality-gates)
+- inventario de scripts: [scripts-catalog.mdx](../catalog/scripts-catalog)

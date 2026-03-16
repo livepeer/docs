@@ -52,7 +52,7 @@ Proceed? (yes/no)
 - Mass operations > 50 files without approval
 ```
 
-### Rule 4: LARGE CHANGE PROTOCOL (> 10 files)
+### Rule 4: LARGE CHANGE PROTOCOL (&gt; 10 files)
 
 ```
 1. AI lists EXACT files being modified
@@ -90,7 +90,7 @@ Example:
 
 AI MUST WARN before:
 
-- Restoring files from commits > 24 hours old
+- Restoring files from commits &gt; 24 hours old
 - Deleting ANY file
 - Renaming directories
 - Changing file structure
@@ -113,7 +113,7 @@ Every operation logs to: `.ai-operations.log`
 
 ### Rule 10: DRY-RUN FOR COMPLEX OPS
 
-Before any operation affecting > 5 files:
+Before any operation affecting &gt; 5 files:
 
 ```
 1. AI shows DRY-RUN (what WOULD happen)
@@ -168,7 +168,7 @@ Before each AI session with YOUR docs:
 - [ ] Know your current branch
 - [ ] Have rollback commands ready (see ROLLBACK-GUIDE.md)
 - [ ] Verify AI shows preflight checklist EVERY TIME
-- [ ] Never let AI skip approval for > 10 file changes
+- [ ] Never let AI skip approval for &gt; 10 file changes
 - [ ] Check audit log (.ai-operations.log) regularly
 
 ---

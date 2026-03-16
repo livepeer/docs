@@ -1,0 +1,178 @@
+---
+title: 'Video Transcoding: Replace Your Cloud Provider'
+sidebarTitle: 'Video Transcoding'
+description: 'The business case for using Livepeer as a replacement for cloud video transcoding — cost comparison with Mux, AWS MediaLive, and Wowza, and what the switch actually involves.'
+keywords:
+  - livepeer
+  - video transcoding
+  - replace Mux
+  - replace AWS MediaLive
+  - Wowza alternative
+  - RTMP transcoding
+  - OBS Livepeer
+  - cheaper video transcoding
+  - self-hosted streaming
+  - Owncast Livepeer
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: gateway-operator
+purpose: guides
+status: current
+lastVerified: '2026-03-13'
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+If you are using Mux, AWS MediaLive, Wowza, or a similar service for live video transcoding, the Livepeer network offers a decentralised alternative at significantly lower per-minute cost. Your existing encoder (OBS, FFmpeg, hardware encoder) connects via RTMP. Transcoded output returns as HLS. The switch is largely transparent to your viewers.
+
+This page explains the economics, what the switch involves, and where it fits well vs where it does not.
+
+---
+
+## The cost case
+
+Cloud transcoding services charge per minute of output, per resolution tier. Costs scale directly with usage and there is no self-hosting option.
+
+Livepeer gateways pay GPU operators (orchestrators) at network rates — rates that are set competitively by supply and demand, not by a corporate pricing team. The practical difference at scale is significant.
+
+{/* REVIEW: Get specific cost comparison figures from Livepeer Foundation or Cloud SPE. The "significant savings vs cloud providers" claim is widely referenced in community content (livepeer.cloud blog, Mirror posts) but specific per-minute numbers vs Mux/AWS MediaLive have not been independently verified in this research pass. Assign to Foundation or Cloud SPE team to provide a citable benchmark. */}
+
+<Note>
+Livepeer transcoding quality depends on the orchestrators you route to. For production workloads, you will want to select and filter orchestrators based on performance history rather than accepting the cheapest available. The [Livepeer Explorer](https://explorer.livepeer.org) and [tools.livepeer.cloud](https://tools.livepeer.cloud) provide orchestrator performance data.
+</Note>
+
+---
+
+## How the video gateway fits your stack
+
+A Livepeer video gateway is a drop-in replacement for your cloud transcoding service at the ingest layer.
+
+```
+Your encoder (OBS / FFmpeg / hardware)
+         │
+         │  RTMP push  (port 1935)
+         ▼
+  Livepeer gateway  ←── you run this
+         │
+         │  selects orchestrators, pays via ETH
+         ▼
+  Livepeer network (GPU operators do the transcoding)
+         │
+         │  HLS output
+         ▼
+  Your CDN / viewer delivery
+```
+
+Your viewers receive the same HLS output they would from any transcoding service. The Livepeer layer is invisible to them.
+
+---
+
+## What changes vs a hosted transcoding service
+
+<Tabs>
+  <Tab title="What stays the same">
+    - RTMP ingest from OBS, FFmpeg, or any standard encoder — no changes to your stream source
+    - HLS output for viewer delivery — same format as Mux, AWS, Wowza
+    - Transcoding profiles (resolution, bitrate, codec) — fully configurable
+    - Standard monitoring tooling — the gateway exposes Prometheus metrics and log endpoints
+  </Tab>
+  <Tab title="What is different">
+    **On-chain setup required:** Unlike a SaaS platform, you manage your own ETH wallet and Arbitrum deposit. This is a one-time setup step but it is the main friction point for non-crypto users.
+
+    **You choose your orchestrators:** You are not routing to a managed fleet. You configure which orchestrators receive your jobs and what you are willing to pay. This is both a feature (full control) and a responsibility (you need to monitor and filter orchestrators).
+
+    **No managed SLA:** There is no support team to call. Reliability depends on orchestrator selection, your deposit balance, and your routing configuration. Self-hosted infrastructure.
+
+    **Uptime is your responsibility:** The gateway process, the ETH deposit balance, and the orchestrator list all require active management. Budget time for operational maintenance.
+  </Tab>
+</Tabs>
+
+---
+
+## What you will need
+
+| Requirement | Detail |
+|-------------|--------|
+| **Linux server** | Ubuntu 20.04 or later recommended. Windows is supported for video-only gateway; macOS for local dev only. |
+| **Public static IP or domain** | Orchestrators must be able to reach your gateway. Home internet with NAT is problematic. |
+| **Port 1935 open** | RTMP ingest from your encoder |
+| **Port 8935 open** | HTTP interface and orchestrator communication |
+| **ETH on Arbitrum** | ~0.065 ETH deposit + 0.03 ETH reserve to start. Fund via the [Arbitrum bridge](https://bridge.arbitrum.io). |
+| **Arbitrum RPC URL** | Free public RPC is sufficient for a single gateway: `https://arb1.arbitrum.io/rpc` |
+
+{/* REVIEW: Confirm ETH deposit/reserve amounts with Mehrdad/Rick. Issue open to reduce reserve: github.com/livepeer/go-livepeer/issues/3744 */}
+
+---
+
+## Broadcaster → Gateway: the name change
+
+If you have followed older Livepeer guides, the gateway was previously called the **broadcaster**. The go-livepeer binary flag was `-broadcaster`. It is now `-gateway`.
+
+Older community guides (pre-2024) and some forum threads still use the old terminology. The software is the same; the flag name changed.
+
+<Warning>
+If you see `-broadcaster=true` in a guide, replace it with `-gateway`. The old flag is deprecated.
+</Warning>
+
+---
+
+## Tested community setups
+
+### Owncast + Livepeer
+
+[Owncast](https://owncast.online) is an open-source self-hosted streaming platform. It accepts RTMP from OBS and other encoders and can forward transcoding to a Livepeer gateway. This is the most common setup for self-hosted streamers who want Livepeer transcoding without building a custom stack.
+
+- Owncast documentation: [owncast.online](https://owncast.online)
+- Livepeer + Owncast integration guide: [livepeer.cloud blog](https://livepeer.cloud/blog)
+
+{/* REVIEW: Add direct link to the Livepeer + Owncast integration article when URL confirmed with Cloud SPE. */}
+
+### OBS → Gateway direct
+
+OBS Studio can push RTMP directly to a Livepeer gateway endpoint. Set the OBS stream server to `rtmp://YOUR_GATEWAY_IP:1935/live` and the stream key to your desired stream ID.
+
+No plugin or modification required — OBS treats the gateway like any other RTMP server.
+
+---
+
+## Video tutorials
+
+{/* REVIEW: Titan Node YouTube channel (@TitanNode) likely has broadcaster/gateway setup tutorials. Search specifically for:
+- "livepeer broadcaster setup"
+- "livepeer gateway OBS"
+- "livepeer transcoding setup"
+Embed the most recent relevant video (2023 or later) here once URL confirmed. */}
+
+{/* REVIEW: livepeer.cloud/blog — check for any video walkthroughs alongside the Owncast integration guide. */}
+
+---
+
+## Not the right fit if...
+
+Before committing to the switch, be honest about these scenarios:
+
+- **You need a managed SLA and support contract** — Livepeer is self-hosted infrastructure; there is no SLA guarantee
+- **Your viewers are on mobile and require specific HLS packaging** — verify your required output format against what the gateway produces before switching production
+- **You have strict geographic processing requirements** — orchestrator routing can be filtered by region, but it is your responsibility to configure this correctly
+- **You are not comfortable managing an ETH wallet and deposit** — the on-chain setup is a real friction point; if crypto infrastructure is genuinely not something your team can manage, a hosted gateway like Livepeer Studio is available
+
+---
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Gateway requirements" icon="clipboard-check" href="/v2/gateways/guides/gateway-requirements">
+    Hardware, OS, network, and on-chain requirements for a video gateway.
+  </Card>
+  <Card title="Fund your gateway" icon="ethereum" href="/v2/gateways/setup/requirements/on-chain/fund-gateway">
+    Get ETH on Arbitrum and allocate your deposit and reserve.
+  </Card>
+  <Card title="Video gateway quickstart" icon="bolt" href="/v2/gateways/get-started/gateway-setup">
+    Step-by-step from zero to a live RTMP stream via Livepeer.
+  </Card>
+</CardGroup>

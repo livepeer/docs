@@ -1,0 +1,298 @@
+---
+title: 'Add AI to Your Node'
+description: 'An Experimental AI Prompt for setting up your GPU as a Livepeer Orchestrator. Add AI inference pipelines to an existing go-livepeer transcoding node — hardware check, aiModels.json configuration, and startup command update.'
+sidebarTitle: 'AI Prompt: Orchestrator Setup'
+keywords: ["livepeer", "orchestrator", "AI inference", "AI runner", "aiModels.json", "pipeline", "VRAM", "Cascade", "batch AI", "GPU"]
+pageType: 'guide'
+audience: 'orchestrator'
+status: 'review'
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+lastVerified: '2026-03-10'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+{/* REVIEW: THIS CONTENT DOESNT SEEM TO MATCH ITS PURPOSE */}
+
+By the end of this guide, your orchestrator will accept AI inference jobs alongside transcoding.
+
+## Prerequisites
+
+Before you begin:
+
+- go-livepeer is installed and running as a transcoding orchestrator on Arbitrum mainnet (see [Install go-livepeer](/v2/orchestrators/setup/rs-install) and [Get Started](/v2/orchestrators/quickstart/guide)) {/* REVIEW: confirm target paths */}
+- Your orchestrator is in the Top 100 active set on the Livepeer network
+- Docker is installed with `nvidia-container-toolkit` enabled (GPU passthrough required for the AI runner containers)
+- Your GPU has at least **4GB of VRAM** available to run at least one AI pipeline (see the hardware check below)
+- Model weights pre-downloaded for the pipeline(s) you want to serve (see [Model Hosting](/v2/orchestrators/guides/ai-and-job-workloads/model-hosting)) {/* REVIEW: confirm path */}
+
+<Note>
+This guide adds AI inference to an existing transcoding node. If you are setting up from scratch, start with [Install go-livepeer](/v2/orchestrators/setup/rs-install).
+</Note>
+
+<CustomDivider />
+
+## Check your hardware
+
+AI inference runs in a separate Docker container alongside your transcoding process. If both share the same GPU, VRAM is split between them. Before configuring anything, confirm how much VRAM your GPU has available.
+
+Run this command to list your GPUs and their VRAM:
+
+```bash icon="terminal"
+nvidia-smi --query-gpu=index,name,memory.total,memory.free --format=csv
+```
+
+You should see output similar to:
+
+``` icon="terminal"
+index, name, memory.total [MiB], memory.free [MiB]
+0, NVIDIA GeForce RTX 3090, 24576 MiB, 22000 MiB
+```
+
+Use the table below to see which pipelines you can run based on your available VRAM:
+
+| Pipeline | Min VRAM | Notes |
+|---|---|---|
+| `image-to-text` | 4GB | Caption generation; lowest barrier to entry |
+| `segment-anything-2` | 6GB | Object segmentation |
+| LLM (`llm`) | 8GB | Requires Ollama runner; 7–8B quantised models |
+| `audio-to-text` | 12GB | Speech transcription; Whisper-based |
+| `image-to-video` | 16GB+ {/* REVIEW */} | Animated video from image |
+| `image-to-image` | 20GB | Style transfer, image manipulation |
+| `text-to-image` | 24GB | Text-to-image generation (Stable Diffusion, SDXL) |
+| `upscale` | {/* REVIEW */} | Image upscaling |
+| `text-to-speech` | {/* REVIEW */} | Speech synthesis |
+
+For details on each pipeline, see [Workload Options](/v2/orchestrators/guides/ai-and-job-workloads/workload-options).
+
+<Warning>
+If your GPU does not have enough free VRAM to run both transcoding and your chosen AI pipeline, AI runner containers will fail to start. Either select a lower-VRAM pipeline, dedicate a second GPU exclusively to AI, or stop transcoding on that GPU before enabling AI. {/* REVIEW: confirm safe VRAM headroom needed alongside transcoding from Discord/#orchestrating */}
+</Warning>
+
+<CustomDivider />
+
+## Step 1 — Pull the AI runner image
+
+The AI subnet uses a separate Docker image (`livepeer/ai-runner`) to run inference. Pull it before starting your node:
+
+```bash icon="terminal"
+docker pull livepeer/ai-runner:latest
+```
+
+If you plan to run the `segment-anything-2` pipeline, also pull its pipeline-specific image:
+
+```bash icon="terminal"
+docker pull livepeer/ai-runner:segment-anything-2
+```
+
+Check the [AI Inference Operations](/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations) documentation for any other pipeline-specific images.
+
+<CustomDivider />
+
+## Step 2 — Configure aiModels.json
+
+The `aiModels.json` file tells your orchestrator which AI pipelines and models to serve, what to charge, and whether to keep models warm in VRAM.
+
+Create the file at `~/.lpData/aiModels.json`:
+
+```bash icon="terminal"
+touch ~/.lpData/aiModels.json
+```
+
+Add at least one pipeline entry. The example below configures a single `text-to-image` pipeline with a warm model — the minimal working configuration:
+
+```json icon="terminal"
+[
+  {
+    "pipeline": "text-to-image",
+    "model_id": "ByteDance/SDXL-Lightning",
+    "price_per_unit": 4768371,
+    "warm": true
+  }
+]
+```
+
+### Field reference
+
+| Field | Required | Description |
+|---|---|---|
+| `pipeline` | Yes | Pipeline name (e.g. `"text-to-image"`, `"audio-to-text"`, `"llm"`) |
+| `model_id` | Yes | HuggingFace model ID |
+| `price_per_unit` | Yes | Price in wei per unit (integer), or USD string e.g. `"0.5e-2USD"` |
+| `warm` | No | If `true`, model is preloaded into VRAM on startup |
+| `capacity` | No | Max concurrent inference requests (default: 1) |
+| `optimization_flags` | No | Performance flags: `SFAST` (up to +25% speed) and/or `DEEPCACHE` (up to +50% speed) |
+| `url` | No | For external containers only — URL of a separately managed runner |
+| `token` | No | Bearer token for external container authentication |
+
+<Note>
+During Beta, only one warm model per GPU is supported. Set `"warm": true` for the model you want pre-loaded; additional models will load on demand when requested.
+</Note>
+
+For recommended pricing per pipeline, see [Workload Options](/v2/orchestrators/guides/ai-and-job-workloads/workload-options). For a full multi-pipeline example, see [AI Inference Operations](/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations). {/* REVIEW: confirm path */}
+
+<CustomDivider />
+
+## Step 3 — Update your startup command
+
+Stop your current go-livepeer process, then restart it with the following additions. Three flags enable AI:
+
+- `-aiWorker` — enables the AI worker functionality
+- `-aiModels` — path to your `aiModels.json` file
+- `-aiModelsDir` — directory where model weights are stored on the host machine
+
+**Before (transcoding only):**
+
+```bash icon="terminal"
+livepeer \
+  -network arbitrum-one-mainnet \
+  -ethUrl <ETH_URL> \
+  -orchestrator \
+  -transcoder \
+  -nvidia 0 \
+  -pricePerUnit <PRICE> \
+  -serviceAddr <SERVICE_ADDR>
+```
+
+**After (transcoding + AI):**
+
+```bash icon="terminal"
+livepeer \
+  -network arbitrum-one-mainnet \
+  -ethUrl <ETH_URL> \
+  -orchestrator \
+  -transcoder \
+  -nvidia 0 \
+  -pricePerUnit <PRICE> \
+  -serviceAddr <SERVICE_ADDR> \
+  -aiWorker \
+  -aiModels ~/.lpData/aiModels.json \
+  -aiModelsDir ~/.lpData/models
+```
+
+If you are running via Docker, mount the Docker socket so the orchestrator can manage ai-runner containers:
+
+```bash icon="terminal"
+docker run \
+  --name livepeer_orchestrator \
+  -v ~/.lpData/:/root/.lpData/ \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --network host \
+  --gpus all \
+  livepeer/go-livepeer:master \
+  -network arbitrum-one-mainnet \
+  -ethUrl <ETH_URL> \
+  -orchestrator \
+  -transcoder \
+  -nvidia 0 \
+  -pricePerUnit <PRICE> \
+  -serviceAddr <SERVICE_ADDR> \
+  -aiWorker \
+  -aiModels /root/.lpData/aiModels.json \
+  -aiModelsDir ~/.lpData/models
+```
+
+<Note>
+The `-aiModelsDir` path must be the **host machine path**, not the path inside the Docker container. The orchestrator uses docker-out-of-docker to start ai-runner containers, and passes this path directly to them.
+</Note>
+
+<CustomDivider />
+
+## Step 4 — Verify AI is active
+
+### Check the logs
+
+Within a few seconds of startup, you should see a line like this for each model configured as warm:
+
+``` icon="terminal"
+2024/05/01 09:01:39 INFO Starting managed container gpu=0 name=text-to-image_ByteDance_SDXL-Lightning modelID=ByteDance/SDXL-Lightning
+```
+
+If you see the standard RPC ping without the managed container line, check that:
+- `aiModels.json` is valid JSON and at the path specified in `-aiModels`
+- The model weights are present in `-aiModelsDir`
+- The Docker socket is mounted (Docker mode only)
+
+### Test the AI runner directly
+
+Once running, confirm the AI runner responds by sending a test inference request. Navigate to `http://localhost:8000/docs` in your browser to access the Swagger UI for the ai-runner container.
+
+Alternatively, use curl:
+
+```bash icon="terminal"
+curl -X POST "http://localhost:8000/text-to-image" \
+  -H "Content-Type: application/json" \
+  -d '{"model_id": "ByteDance/SDXL-Lightning", "prompt": "A cool cat on the beach", "width": 512, "height": 512}'
+```
+
+A successful response returns a JSON object with an `images` array containing a base64-encoded PNG URL.
+
+### Confirm pipelines are advertised
+
+{/* REVIEW: confirm the exact livepeer_cli command to view advertised AI capabilities; not found in this research pass. Check go-livepeer CLI reference or ask in #orchestrating. */}
+
+Your AI pipelines will appear in the [Livepeer Explorer](https://explorer.livepeer.org) on your orchestrator's profile once on-chain capability advertisement is configured. See [Connect and Activate](/v2/orchestrators/setup/connect-and-activate) for that step. {/* REVIEW: confirm path */}
+
+<CustomDivider />
+
+## Choose your AI path
+
+Your AI runner is active. The next step depends on which pipeline type you want to specialise in.
+
+<CardGroup>
+  <Card
+    title="Set up batch AI inference"
+    icon="image"
+    href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup"
+  >
+    Configure image, audio, and video generation pipelines. Covers model downloads, pricing, and on-chain registration for batch inference.
+  </Card>
+  <Card
+    title="Set up real-time AI (Cascade)"
+    icon="video"
+    href="/v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup"
+  >
+    Configure ComfyStream for persistent video stream processing. Covers ComfyUI workflow deployment and GPU allocation.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Related
+
+- [Workload Options](/v2/orchestrators/guides/ai-and-job-workloads/workload-options) — understand the difference between transcoding, batch AI, real-time AI, and LLM inference before choosing a path
+- [AI Inference Operations](/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations) — advanced aiModels.json options, multi-GPU setup, external containers, and optimization flags {/* REVIEW: confirm path */}
+
+{/*
+  PURPOSE:
+  Experimental AI-assisted quickstart - using an AI prompt to guide
+  operators through adding their GPU to the Livepeer network.
+
+  SECTION HOME: Quickstart
+  JOURNEY POSITION: 3 of 3 in Quickstart
+*/}

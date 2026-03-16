@@ -1,0 +1,232 @@
+---
+title: 'Find Your Path'
+sidebarTitle: 'Navigator'
+description: 'Choose the right orchestrator path based on your situation - hardware, stake, workload goals, and operational model.'
+keywords:
+  - livepeer
+  - orchestrator
+  - navigator
+  - path
+  - pool
+  - solo
+  - AI
+  - video
+  - dual mode
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: landing
+audience: orchestrator
+purpose: orientation
+status: current
+lastVerified: '2026-03-16'
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+This page routes to the right starting point based on the operator's current situation. Not every operator follows the same path - hardware, LPT access, and goals determine where to start.
+
+<CustomDivider middleText="What is your situation?" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Choose Your Starting Point
+
+<AccordionGroup>
+  <Accordion title="I have a GPU and want to try Livepeer" icon="flask">
+    **Start with the Quickstart.** Verify the technology works on the hardware before committing time or money. Off-chain, no staking, no ETH - pure hardware verification.
+
+    <CardGroup cols={2}>
+      <Card title="Quickstart" icon="bolt" href="/v2/orchestrators/quickstart/guide" arrow>
+        Verify video transcoding and AI inference work on the GPU. Under 1 hour.
+      </Card>
+      <Card title="Operator Rationale" icon="scale-balanced" href="/v2/orchestrators/guides/operator-considerations/operator-rationale" arrow>
+        Review costs, revenue streams, and break-even analysis before committing.
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="I want to earn from my GPU with minimal setup" icon="coins">
+    **Join a pool.** No LPT staking, no on-chain activation, no protocol management. Connect the GPU to an existing pool operator and start processing jobs. The pool operator handles everything else.
+
+    <Note>
+    Joining a pool requires finding a pool operator willing to accept workers. This is a social process (Discord, community pools directory) that may take days. The technical setup is fast once pool access is obtained.
+    </Note>
+
+    <CardGroup cols={2}>
+      <Card title="Join a Pool" icon="users" href="/v2/orchestrators/guides/deployment-details/join-a-pool" arrow>
+        Evaluate pools, connect as a worker, start earning.
+      </Card>
+      <Card title="Community Pools" icon="list" href="/v2/orchestrators/resources/community-pools" arrow>
+        Directory of active orchestrator pools accepting workers.
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="I have a 24 GB+ GPU and want to earn from AI" icon="brain">
+    **AI inference does not require active set membership.** Routing is capability-based, not stake-based. An operator with a capable GPU and minimal LPT can register on the AIServiceRegistry and start receiving AI jobs immediately.
+
+    <CardGroup cols={2}>
+      <Card title="AI Inference Operations" icon="microchip" href="/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations" arrow>
+        How AI routing works, aiModels.json configuration, and pipeline types.
+      </Card>
+      <Card title="Setup Guide" icon="gear" href="/v2/orchestrators/setup/guide" arrow>
+        Full setup flow including AI configuration and on-chain registration.
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="I already run video transcoding and want to add AI" icon="layer-group">
+    **Dual mode is additive.** The existing video configuration does not change. Add `-aiWorker`, `-aiModels`, and an AI runner container. NVENC/NVDEC (video) use dedicated silicon that does not compete with CUDA (AI). Both workloads share VRAM.
+
+    <CardGroup cols={2}>
+      <Card title="Dual Mode Configuration" icon="plus" href="/v2/orchestrators/guides/deployment-details/dual-mode-configuration" arrow>
+        The exact configuration delta for adding AI to a running video node.
+      </Card>
+      <Card title="Model and Demand Reference" icon="chart-bar" href="/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference" arrow>
+        Which AI models fit the available VRAM and are in demand on the network.
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="I want to run a solo orchestrator (full control)" icon="server">
+    **The standard path.** Full control over pricing, workloads, and protocol participation. Requires LPT for staking, ETH for gas, and ongoing operational commitment.
+
+    <CardGroup cols={2}>
+      <Card title="Setup Guide" icon="gear" href="/v2/orchestrators/setup/guide" arrow>
+        Complete setup: install, configure, connect to Arbitrum, verify.
+      </Card>
+      <Card title="Requirements" icon="clipboard-check" href="/v2/orchestrators/setup/rcs-requirements" arrow>
+        Hardware, software, network, and token prerequisites by node mode.
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="I run a business that needs GPU compute at scale" icon="building">
+    **Commercial orchestrator operation.** Serve application workloads under SLAs. Per-gateway pricing. O-T split architecture for reliability. Fleet deployment patterns.
+
+    <CardGroup cols={2}>
+      <Card title="Business Case" icon="briefcase" href="/v2/orchestrators/guides/operator-considerations/business-case" arrow>
+        The commercial orchestrator model - service fees, SLAs, per-gateway pricing.
+      </Card>
+      <Card title="Scale Operations" icon="chart-line" href="/v2/orchestrators/guides/advanced-operations/scale-operations" arrow>
+        Fleet deployment, multi-GPU, multi-machine architecture.
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="I want to influence the protocol's direction" icon="landmark">
+    **Orchestrators carry governance weight.** Total bonded stake (self + delegated) determines voting power on LIPs, treasury proposals, and protocol parameters. Operating a well-run node attracts delegation, which compounds governance influence.
+
+    <CardGroup cols={2}>
+      <Card title="Operator Impact" icon="gavel" href="/v2/orchestrators/guides/operator-considerations/operator-impact" arrow>
+        Governance weight, the sovereign compute thesis, and what gets voted on.
+      </Card>
+      <Card title="Network Participation" icon="vote-yea" href="/v2/orchestrators/guides/staking-and-rewards/network-participation" arrow>
+        How to vote on LIPs, quorum requirements, and SPE proposals.
+      </Card>
+    </CardGroup>
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider middleText="Path Matrix" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Quick Reference
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Situation</TableCell>
+      <TableCell header>Start here</TableCell>
+      <TableCell header>Then</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Want to try before committing</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/quickstart/guide" label="Quickstart" newline={false} /></TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/guides/operator-considerations/operator-rationale" label="Operator Rationale" newline={false} /></TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Want GPU earnings, no staking</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/guides/deployment-details/join-a-pool" label="Join a Pool" newline={false} /></TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/resources/community-pools" label="Community Pools" newline={false} /></TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Have 24 GB+ GPU, limited LPT</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations" label="AI Inference" newline={false} /></TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/setup/guide" label="Setup" newline={false} /></TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Already run video, want to add AI</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/guides/deployment-details/dual-mode-configuration" label="Dual Mode" newline={false} /></TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference" label="Model Reference" newline={false} /></TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Ready for full solo setup</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/setup/guide" label="Setup Guide" newline={false} /></TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/guides/staking-and-rewards/earning-model" label="Earning Model" newline={false} /></TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Commercial / enterprise scale</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/guides/operator-considerations/business-case" label="Business Case" newline={false} /></TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/guides/advanced-operations/scale-operations" label="Scale Operations" newline={false} /></TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider middleText="Guides Overview" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## All Sections
+
+<CardGroup cols={3}>
+  <Card title="Operator Considerations" icon="scale-balanced" href="/v2/orchestrators/guides/operator-considerations/operator-rationale">
+    Should I operate? Costs, revenue, business case, protocol influence.
+  </Card>
+  <Card title="Deployment Details" icon="server" href="/v2/orchestrators/guides/deployment-details/setup-options">
+    Which path? Solo, pool, O-T split, siphon, dual mode.
+  </Card>
+  <Card title="Workloads and AI" icon="microchip" href="/v2/orchestrators/guides/ai-and-job-workloads/workload-options">
+    What to run? Video, AI diffusion, LLM, realtime, audio.
+  </Card>
+  <Card title="Staking and Earning" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earning-model">
+    How to earn? Service fees, inflation rewards, delegation.
+  </Card>
+  <Card title="Config and Optimisation" icon="sliders" href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy">
+    How to tune? Pricing, capacity, model management.
+  </Card>
+  <Card title="Monitoring and Tools" icon="gauge" href="/v2/orchestrators/guides/monitoring-and-tooling/operator-toolbox">
+    How to keep running? Explorer, metrics, troubleshooting.
+  </Card>
+  <Card title="Advanced Operations" icon="chart-line" href="/v2/orchestrators/guides/advanced-operations/gateway-relationships">
+    How to scale? Gateway relationships, pools, fleet ops.
+  </Card>
+  <Card title="Roadmap and Funding" icon="road" href="/v2/orchestrators/guides/roadmap-and-funding/funding-and-support">
+    What support exists? SPE grants, community, operator profiles.
+  </Card>
+  <Card title="Tutorials" icon="graduation-cap" href="/v2/orchestrators/guides/tutorials/zero-to-first-reward">
+    Show me. End-to-end walkthroughs from zero to earning.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  Job-story router for the Orchestrators tab. Routes by SITUATION ("what is your
+  situation?") not by persona or section. Seven entry points mapped to job stories
+  J1-J7. Quick reference path matrix with working links. All Sections overview
+  linking to every guide section's entry page.
+
+  SECTION: Start Here
+  JOB STORIES: All (J1-J7 routing)
+
+  CROSS-REFS:
+  - Every guide section's first page
+  - Quickstart > Guide
+  - Setup > Guide
+  - Resources > Community Pools
+*/}

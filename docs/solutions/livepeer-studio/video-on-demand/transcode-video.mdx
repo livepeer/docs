@@ -1,0 +1,51 @@
+---
+title: Transcode video
+description: >-
+  Use the Transcode API to transcode video from and to S3-compatible storage
+  (e.g. Storj, W3S).
+keywords:
+  - livepeer
+  - docs
+  - solutions
+  - livepeer studio
+  - video on demand
+  - transcode video
+  - transcode
+  - video
+  - from
+  - compatible
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+---
+
+The Livepeer Studio **Transcode API** lets you transcode video files that are stored in **S3-compatible** storage (e.g. Storj, W3S, AWS S3). You specify an input location (bucket/path) and output locations for HLS and/or MP4; Livepeer transcodes and writes the results to your storage.
+
+<Info>
+ The Transcode API works with any S3-compatible provider. You need valid S3 credentials (access key, secret key, endpoint, bucket) for both the source and destination.
+</Info>
+
+## Prerequisites
+
+- A [Livepeer Studio account](https://livepeer.studio) and [API key](../reference/api).
+- Video file already uploaded to your S3-compatible bucket (e.g. via Storj uplink, AWS CLI, or S3 SDK).
+- S3 credentials with read access to the source path and write access to the output path.
+
+## Basic flow
+
+1. **Get S3 credentials** for your provider (e.g. [Storj S3 credentials](https://docs.storj.io/dcs/api-reference/s3-compatible-gateway)).
+2. **Call the Transcode API** with:
+   - `input`: type `s3`, endpoint, credentials, bucket, path to the source video.
+   - `storage`: type `s3`, endpoint, credentials, bucket (and optional path prefix for outputs).
+   - `outputs`: e.g. `hls: { path: "/output/hls" }`, `mp4: { path: "/output/mp4" }`.
+3. Poll the returned task or listen for webhooks until the job completes. Output files appear in your bucket at the given paths.
+
+For exact request shape and response, see the [Transcode API reference](https://livepeer.studio/docs/api-reference/transcode/create). Code examples for Node.js and other languages are available in the [Livepeer Studio docs](https://livepeer.studio/docs).
+
+## Guides
+
+- [Upload an asset](./upload-asset) - For uploading and playing in the Studio pipeline (TUS/PUT).
+- [VOD overview](./overview) - Assets, playback, and storage.

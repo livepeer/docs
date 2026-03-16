@@ -1,0 +1,183 @@
+---
+title: 'Payment Paths for Gateway Operators'
+sidebarTitle: 'Payments Guide'
+description: 'Choose the right payment path for a Livepeer gateway. Covers on-chain self-managed, remote signer, and clearinghouse options by operational mode and node type.'
+keywords: ["livepeer", "gateway", "payments", "ETH", "on-chain", "off-chain", "remote signer", "clearinghouse", "probabilistic micropayments", "Arbitrum"]
+og:image: /snippets/assets/site/og-image/fallback.png
+pageType: 'guide'
+audience: 'gateway-operator'
+purpose: 'orientation'
+status: 'current'
+lastVerified: '2026-03-15'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- ~~Mermaid diagrams use theme colours~~ (N/A)
+- ~~Fontawesome icons are used on accordions and tabs~~
+- ~~Tables use StyledTable component~~
+- ~~No em-dashes are used (instead use standard -)~~
+- UK spelling is used
+- ~~Headers are concise and technical - no long headers or questions (aim for max 3 words)~~
+- ~~CustomDivider is used~~
+- Placeholders for Media & Video Resources are in comments with a TODO for a human. (N/A)
+- ~~REVIEW flags are in JSX flags for a human.~~
+Human:
+- PM mechanics moved to brief summary; full explanation belongs in concepts/economics
+- Payment Architectures tabs trimmed to 2-3 sentence pointers (downstream pages have full detail)
+- Path Mapper reframed around operational mode, moved above architecture details
+- Contradictory "video + key isolation" accordion removed (remote signing not supported for video)
+- "Gateway type" matrix replaced with operational mode table (separates node type from operational mode)
+*/}
+
+<Note>
+  Livepeer fees between Gateways and Orchestrators are settled in **ETH on Arbitrum One** via probabilistic micropayment (PM) tickets. Gateways can configure price caps in wei or in USD (converted at runtime via a Chainlink price feed). LPT is the staking and governance token and plays no role in day-to-day payment flows.
+</Note>
+
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from "/snippets/components/layout/containers.jsx"
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Payments Guide
+After initial gateway setup, the next step is configuring how the gateway pays Orchestrators for compute. The right payment path depends on the gateway's operational mode and node type.
+
+<AccordionGroup>
+  <Accordion title={<span><Badge color="purple">AI</Badge> Off-chain AI gateway</span>} icon="cloud">
+    The gateway holds no ETH and no Ethereum key. Payments are handled by a connected remote signer or clearinghouse. For testing, use the community signer at `signer.eliteencoder.net`. Once a public clearinghouse reaches GA, this becomes a pure API key sign-up.
+
+    Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/clearinghouse-guide" label="Clearinghouses" newline={false} />
+  </Accordion>
+
+  <Accordion title={<span><Badge color="blue">Video</Badge> On-chain video gateway</span>} icon="link">
+    Video transcoding requires the on-chain self-managed path. The gateway holds an Ethereum keystore, signs PM tickets directly, and needs a funded deposit and reserve on Arbitrum. Remote signing is not supported for video workloads.
+
+    Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/funding-guide" label="Funding Guide" newline={false} />
+  </Accordion>
+
+  <Accordion title={<span><Badge color="purple">AI</Badge> On-chain AI gateway</span>} icon="link">
+    AI gateways can also run on-chain, using `-aiServiceRegistry` for automatic orchestrator discovery and self-managed PM tickets. The gateway holds an Ethereum keystore and a funded account, same as a video gateway.
+
+    Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/funding-guide" label="Funding Guide" newline={false} />
+  </Accordion>
+
+  <Accordion title={<span><Badge color="green">Dual</Badge> On-chain dual gateway</span>} icon="link">
+    Because the video component requires on-chain payments, a dual gateway follows the on-chain self-managed path. The AI component uses the same funded account. Fund the gateway, then configure pricing for both video (per-pixel) and AI (per-pipeline).
+
+    Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/funding-guide" label="Funding Guide" newline={false} />
+  </Accordion>
+
+  <Accordion title={<span><Badge color="purple">AI</Badge> SDK or non-Go gateway</span>} icon="code">
+    Non-Go gateways (Python, mobile, browser) use the remote signer path via the Livepeer SDK. The SDK handles PM signing interaction with the remote signer. The gateway holds no Ethereum dependency.
+
+    Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/remote-signers" label="Remote Signers" newline={false} />
+  </Accordion>
+
+  <Accordion title={<span><Badge color="blue">Video</Badge> <Badge color="purple">AI</Badge> <Badge color="green">Dual</Badge> Gateway-as-a-service operator</span>} icon="building-columns">
+    Build or integrate with a clearinghouse. A clearinghouse runs remote signer instances, holds ETH, and adds user management, accounting, and billing. See the Opportunities section for NaaP infrastructure guidance.
+
+    Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/clearinghouse-guide" label="Clearinghouses" newline={false} />
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Operational Modes
+
+The gateway's operational mode determines whether the gateway process itself handles Ethereum interactions or delegates them to a remote signer or clearinghouse.
+
+<StyledTable variant="accent">
+  <TableRow header>
+    <TableCell header>Function</TableCell>
+    <TableCell header>{<span><Icon icon="link" size={16}/> On-chain <br/><Badge color="gray">Processes</Badge></span>}</TableCell>
+    <TableCell header>{<span><Icon icon="cloud" size={16}/> Off-chain <br/><Badge color="gray">Delegates</Badge></span>}</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Protocol integration**</TableCell>
+    <TableCell>Connects to Livepeer protocol on Arbitrum</TableCell>
+    <TableCell>None - no blockchain interaction at the gateway</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Orchestrator discovery**</TableCell>
+    <TableCell>Automatic via protocol</TableCell>
+    <TableCell>Manual (`-orchAddr`) or via discovery endpoint</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Payment signing**</TableCell>
+    <TableCell>Gateway signs PM tickets directly</TableCell>
+    <TableCell>Remote signer or clearinghouse signs tickets</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**ETH required in gateway**</TableCell>
+    <TableCell>Yes - deposit + reserve on Arbitrum</TableCell>
+    <TableCell>No - held by signer or clearinghouse</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Private key in gateway**</TableCell>
+    <TableCell>Yes</TableCell>
+    <TableCell>No</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Video transcoding**</TableCell>
+    <TableCell>Supported</TableCell>
+    <TableCell>Not supported (requires on-chain)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**AI inference**</TableCell>
+    <TableCell>Supported</TableCell>
+    <TableCell>Supported (Live AI via remote signer)</TableCell>
+  </TableRow>
+</StyledTable>
+<Note>
+ **Off-chain does not mean free.** Off-chain gateways still pay Orchestrators via PM tickets - the signing and ETH custody are handled by a remote signer or clearinghouse instead of the gateway process itself.
+</Note>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Payment Setup
+
+Three payment architectures exist. Each downstream page covers setup in full.
+
+<BorderedBox variant="accent">
+    <Tabs>
+    <Tab title="Self-managed" icon="key">
+        The gateway holds an Ethereum keystore with a funded account on Arbitrum. It signs PM tickets directly. Required for video transcoding and dual gateways.
+
+        Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/funding-guide" label="Funding Guide" newline={false} />
+    </Tab>
+
+    <Tab title="Remote signer" icon="shield-check">
+        A separate `go-livepeer` service holds the key and signs tickets. The gateway is keyless. Supported for Live AI workloads and SDK-based gateways. Not supported for video transcoding.
+
+        Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/remote-signers" label="Remote Signers" newline={false} />
+    </Tab>
+
+    <Tab title="Clearinghouse" icon="building-columns">
+        A third-party service manages ETH custody, PM signing, and orchestrator settlement. The gateway gets an API key. No public clearinghouse is at general availability as of early 2026.
+
+        Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/clearinghouse-guide" label="Clearinghouses" newline={false} />
+    </Tab>
+    </Tabs>
+</BorderedBox>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Funding Guide" icon="coins" href="/v2/gateways/guides/payments-and-pricing/funding-guide">
+    Deposit ETH into the TicketBroker contract and set the reserve. Required for on-chain gateways.
+  </Card>
+  <Card title="Pricing Strategy" icon="chart-line" href="/v2/gateways/guides/payments-and-pricing/pricing-strategy">
+    Set maximum prices per pipeline and model. Controls which Orchestrators the gateway can access.
+  </Card>
+  <Card title="Remote Signers" icon="shield-check" href="/v2/gateways/guides/payments-and-pricing/remote-signers">
+    Isolate the Ethereum key into a separate signing service. Required for keyless Live AI gateways.
+  </Card>
+  <Card title="Clearinghouses" icon="building-columns" href="/v2/gateways/guides/payments-and-pricing/clearinghouse-guide">
+    Delegate all ETH management to a third-party clearinghouse.
+  </Card>
+</CardGroup>

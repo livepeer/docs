@@ -63,6 +63,69 @@ get_staged_docs_pages() {
 }
 
 STAGED_DOCS_PAGES=$(get_staged_docs_pages)
+
+get_forbidden_staged_generated_outputs() {
+    if ! command -v node &>/dev/null || [ ! -f "tools/lib/generated-artifacts.js" ]; then
+        return 0
+    fi
+
+    node - <<'NODE'
+const { getForbiddenEphemeralFiles } = require('./tools/lib/generated-artifacts');
+const files = String(process.env.LPD_STAGED_FILES_SNAPSHOT || '')
+  .split(/\r?\n/)
+  .map((entry) => entry.trim())
+  .filter(Boolean);
+process.stdout.write(getForbiddenEphemeralFiles(files).join('\n'));
+NODE
+}
+
+format_generated_artifact_message() {
+    local artifact_path="$1"
+    local mode="${2:-summary}"
+
+    if ! command -v node &>/dev/null || [ ! -f "tools/lib/generated-artifacts.js" ]; then
+        return 0
+    fi
+
+    GENERATED_ARTIFACT_PATH="$artifact_path" GENERATED_ARTIFACT_MODE="$mode" node - <<'NODE'
+const { getFirstArtifactByPath } = require('./tools/lib/generated-artifacts');
+const target = String(process.env.GENERATED_ARTIFACT_PATH || '').trim();
+const mode = String(process.env.GENERATED_ARTIFACT_MODE || 'summary').trim();
+const artifact = getFirstArtifactByPath(target);
+if (!artifact) {
+  process.exit(0);
+}
+if (mode === 'generator') {
+  process.stdout.write(artifact.generator);
+  process.exit(0);
+}
+const detail = `${artifact.path} (${artifact.class}, hook_policy=${artifact.hook_policy}, delta_strategy=${artifact.delta_strategy})`;
+process.stdout.write(detail);
+NODE
+}
+
+should_check_generated_artifact() {
+    local artifact_path="$1"
+
+    if ! command -v node &>/dev/null || [ ! -f "tools/lib/generated-artifacts.js" ]; then
+        return 1
+    fi
+
+    GENERATED_ARTIFACT_PATH="$artifact_path" LPD_STAGED_FILES_SNAPSHOT_ALL="$STAGED_FILES_SNAPSHOT_ALL" node - <<'NODE'
+const { getFirstArtifactByPath, isArtifactAffectedByFiles } = require('./tools/lib/generated-artifacts');
+const target = String(process.env.GENERATED_ARTIFACT_PATH || '').trim();
+const files = String(process.env.LPD_STAGED_FILES_SNAPSHOT_ALL || '')
+  .split(/\r?\n/)
+  .map((entry) => entry.trim())
+  .filter(Boolean);
+const artifact = getFirstArtifactByPath(target);
+if (!artifact) {
+  process.exit(1);
+}
+process.exit(isArtifactAffectedByFiles(artifact, files) ? 0 : 1);
+NODE
+}
+
 # pre-commit hooks do not receive commit args directly. Detect trailer usage
 # from the parent git commit command.
 PARENT_GIT_CMD=$(ps -o command= -p "$PPID" 2>/dev/null || true)
@@ -400,20 +463,123 @@ if [ -n "$WHITELIST_CHANGES" ]; then
     fi
 fi
 
-# Check for docs.json /redirect route changes (BLOCKED)
+# Navigation exclusions — intentional Mintlify workarounds
+# See tools/config/navigation-exclusions.json for documented patterns.
+# Validators must load this config and skip:
+#   - anchors with value " " (empty anchor sidebar separators)
+#   - pages listed in intentionalPatterns.redirectRoutes.paths
+NAVIGATION_EXCLUSIONS_CONFIG="tools/config/navigation-exclusions.json"
+
+# Check for docs.json /redirect route changes (BLOCKED unless staged docs.json stays aligned with source-of-truth)
 DOCS_JSON_REDIRECT_DIFF=$(git diff --cached --unified=0 -- docs.json | grep -E '^[+-][^+-].*/redirect' || true)
 if [ -n "$DOCS_JSON_REDIRECT_DIFF" ]; then
-    VIOLATIONS=$((VIOLATIONS + 1))
-    echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${RED}║  docs.json /redirect CHANGES BLOCKED                         ║${NC}"
-    echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
-    echo ""
-    echo -e "${RED}The staged docs.json diff includes '/redirect' entries:${NC}"
-    echo "$DOCS_JSON_REDIRECT_DIFF" | sed 's/^/  ❌ /'
-    echo ""
-    echo -e "${YELLOW}Remove '/redirect' lines from docs.json changes before committing.${NC}"
-    echo ""
-    WARNINGS+=("❌ docs.json includes blocked '/redirect' diff lines")
+    DOCS_JSON_REDIRECT_STATUS=$(node - <<'NODE'
+const { spawnSync } = require('child_process');
+
+function runGit(args) {
+  const result = spawnSync('git', args, { encoding: 'utf8' });
+  if (result.status !== 0) {
+    return '';
+  }
+  return String(result.stdout || '');
+}
+
+function collectDocsJsonRedirectEntries(raw) {
+  if (!raw) return [];
+  const docsJson = JSON.parse(raw);
+  const entries = [];
+  const normalizeTabName = (tabName) => (tabName === 'GPU Nodes' ? 'Orchestrators' : tabName || '');
+  const v2Version = Array.isArray(docsJson?.navigation?.versions)
+    ? docsJson.navigation.versions.find((entry) => entry && entry.version === 'v2')
+    : null;
+  const english = Array.isArray(v2Version?.languages)
+    ? v2Version.languages.find((entry) => entry && entry.language === 'en')
+    : null;
+
+  function visitPages(node, context = { tab: null, anchor: null, group: null }) {
+    if (Array.isArray(node)) {
+      node.forEach((item) => visitPages(item, context));
+      return;
+    }
+    if (!node || typeof node !== 'object') return;
+
+    const nextContext = { ...context };
+    if (typeof node.tab === 'string') nextContext.tab = node.tab;
+    if (typeof node.anchor === 'string') nextContext.anchor = node.anchor;
+    if (typeof node.group === 'string') nextContext.group = node.group;
+
+    if (Array.isArray(node.pages)) {
+      node.pages.forEach((page) => {
+        if (typeof page === 'string' && page.includes('/redirect')) {
+          entries.push(
+            `page|tab=${normalizeTabName(nextContext.tab)}|anchor=${nextContext.anchor || ''}|group=${nextContext.group || ''}|value=${page}`
+          );
+        } else {
+          visitPages(page, nextContext);
+        }
+      });
+    }
+
+    if (Array.isArray(node.anchors)) visitPages(node.anchors, nextContext);
+    if (Array.isArray(node.groups)) visitPages(node.groups, nextContext);
+  }
+
+  if (english) {
+    visitPages(english.tabs);
+  }
+
+  (docsJson.redirects || []).forEach((entry) => {
+    if (!entry || typeof entry !== 'object') return;
+    if (typeof entry.source === 'string' && entry.source.includes('/redirect')) {
+      entries.push(`redirect|source=${entry.source}|destination=${entry.destination || ''}`);
+    }
+    if (typeof entry.destination === 'string' && entry.destination.includes('/redirect')) {
+      entries.push(`redirect-destination|source=${entry.source || ''}|destination=${entry.destination}`);
+    }
+  });
+
+  return entries.sort();
+}
+
+const headDocs = runGit(['show', 'HEAD:docs.json']);
+const stagedDocs = runGit(['show', ':docs.json']);
+const stagedScopedDocs =
+  runGit(['show', ':tools/config/scoped-navigation/docs-gate-orch.json']) ||
+  runGit(['show', 'HEAD:tools/config/scoped-navigation/docs-gate-orch.json']);
+
+const headEntries = collectDocsJsonRedirectEntries(headDocs);
+const stagedEntries = collectDocsJsonRedirectEntries(stagedDocs);
+const scopedEntries = collectDocsJsonRedirectEntries(stagedScopedDocs);
+
+const sameAsHead = JSON.stringify(stagedEntries) === JSON.stringify(headEntries);
+const sameAsScoped = stagedScopedDocs && JSON.stringify(stagedEntries) === JSON.stringify(scopedEntries);
+
+if (sameAsHead || sameAsScoped) {
+  process.stdout.write('ALLOW');
+  process.exit(0);
+}
+
+const headSet = new Set(headEntries);
+const stagedSet = new Set(stagedEntries);
+const removed = headEntries.filter((entry) => !stagedSet.has(entry));
+const added = stagedEntries.filter((entry) => !headSet.has(entry));
+process.stdout.write(JSON.stringify({ removed, added }, null, 2));
+process.exit(1);
+NODE
+)
+    if [ "$?" -ne 0 ]; then
+        VIOLATIONS=$((VIOLATIONS + 1))
+        echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
+        echo -e "${RED}║  docs.json /redirect CHANGES BLOCKED                         ║${NC}"
+        echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
+        echo ""
+        echo -e "${RED}The staged docs.json redirect surface no longer matches HEAD or the staged scoped-navigation source-of-truth:${NC}"
+        echo "$DOCS_JSON_REDIRECT_STATUS" | sed 's/^/  ❌ /'
+        echo ""
+        echo -e "${YELLOW}Keep docs.json redirect surfaces aligned with tools/config/scoped-navigation/docs-gate-orch.json, or avoid redirect-surface edits in this commit.${NC}"
+        echo ""
+        WARNINGS+=("❌ docs.json includes blocked semantic '/redirect' changes")
+    fi
 fi
 
 # Check root directory structure against allowlist
@@ -665,6 +831,18 @@ else
     echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${YELLOW}Skipping legacy verify.sh in pre-commit (staged-only fast mode).${NC}"
     echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    FORBIDDEN_GENERATED_OUTPUTS=$(get_forbidden_staged_generated_outputs)
+    if [ -n "$FORBIDDEN_GENERATED_OUTPUTS" ]; then
+        echo -e "${RED}Forbidden staged ephemeral generated outputs detected:${NC}"
+        while IFS= read -r path; do
+            [ -z "$path" ] && continue
+            echo "  - $path"
+            WARNINGS+=("❌ Forbidden staged ephemeral generated output: $path")
+            VIOLATIONS=$((VIOLATIONS + 1))
+        done <<< "$FORBIDDEN_GENERATED_OUTPUTS"
+        echo "Move local-only reports to an ignored scratch path instead of committing them."
+        exit 1
+    fi
     echo "Checking generated file banners..."
     if node tools/scripts/enforce-generated-file-banners.js --check --staged; then
         echo -e "${GREEN}✓ Generated file banner check passed${NC}"
@@ -691,6 +869,496 @@ run_node_check() {
     return 1
 }
 
+supports_governance_repair_flow() {
+    if [ ! -f "tools/scripts/validators/governance/audit-script-inventory.js" ] || \
+       [ ! -f "tools/lib/script-governance-config.js" ] || \
+       [ ! -f "tests/unit/script-docs.test.js" ]; then
+        return 1
+    fi
+
+    local help_out
+    help_out=$(node tools/scripts/validators/governance/audit-script-inventory.js --help 2>&1) || return 1
+    [[ "$help_out" == *"--staged-only"* ]] || return 1
+    [[ "$help_out" == *"--quiet"* ]] || return 1
+    return 0
+}
+
+get_staged_governed_scripts() {
+    local staged_files
+    staged_files=$(git diff --cached --name-only --diff-filter=ACM 2>/dev/null || true)
+    if [ -z "$staged_files" ]; then
+        return 0
+    fi
+
+    GOVERNANCE_STAGED_FILES="$staged_files" node - <<'NODE'
+const config = require('./tools/lib/script-governance-config');
+
+const files = String(process.env.GOVERNANCE_STAGED_FILES || '')
+  .split(/\r?\n/)
+  .map((line) => line.trim())
+  .filter(Boolean);
+
+const governed = files.filter((filePath) =>
+  config.isDiscoveredScriptPath(filePath) && config.isWithinRoots(filePath, config.GOVERNED_ROOTS)
+);
+
+process.stdout.write(governed.join('\n'));
+NODE
+}
+
+governance_report_fix_count() {
+    local report_path="$1"
+    node - "$report_path" <<'NODE'
+const fs = require('fs');
+const reportPath = process.argv[2];
+const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+process.stdout.write(String(report?.repair?.fixes?.total_fixes || 0));
+NODE
+}
+
+governance_report_needs_human_count() {
+    local report_path="$1"
+    node - "$report_path" <<'NODE'
+const fs = require('fs');
+const reportPath = process.argv[2];
+const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+const count = Array.isArray(report?.repair?.needs_human) ? report.repair.needs_human.length : 0;
+process.stdout.write(String(count));
+NODE
+}
+
+governance_report_list_files() {
+    local report_path="$1"
+    local field_name="$2"
+    node - "$report_path" "$field_name" <<'NODE'
+const fs = require('fs');
+const reportPath = process.argv[2];
+const fieldName = process.argv[3];
+const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+const files = Array.isArray(report?.repair?.fixes?.[fieldName]) ? report.repair.fixes[fieldName] : [];
+process.stdout.write(files.join('\n'));
+NODE
+}
+
+capture_governance_header_snapshot() {
+    local snapshot_path="$1"
+    shift
+
+    node - "$snapshot_path" "$@" <<'NODE'
+const fs = require('fs');
+
+const snapshotPath = process.argv[2];
+const files = process.argv.slice(3);
+const tags = [
+  '@script',
+  '@category',
+  '@purpose',
+  '@scope',
+  '@owner',
+  '@needs',
+  '@purpose-statement',
+  '@pipeline',
+  '@usage'
+];
+
+function readTag(header, tag) {
+  const match = header.match(new RegExp(`\\${tag}[ \\t]+([^\\n\\r]+)`));
+  return match ? match[1].trim() : '';
+}
+
+const snapshot = {};
+for (const filePath of files) {
+  let header = '';
+  try {
+    header = fs.readFileSync(filePath, 'utf8').split(/\r?\n/).slice(0, 220).join('\n');
+  } catch (_error) {
+    header = '';
+  }
+
+  snapshot[filePath] = {};
+  for (const tag of tags) {
+    snapshot[filePath][tag] = readTag(header, tag);
+  }
+}
+
+fs.writeFileSync(snapshotPath, JSON.stringify(snapshot, null, 2));
+NODE
+}
+
+print_governance_header_fixes() {
+    local snapshot_path="$1"
+    shift
+
+    node - "$snapshot_path" "$@" <<'NODE'
+const fs = require('fs');
+
+const snapshotPath = process.argv[2];
+const files = process.argv.slice(3);
+const tags = [
+  '@script',
+  '@category',
+  '@purpose',
+  '@scope',
+  '@owner',
+  '@needs',
+  '@purpose-statement',
+  '@pipeline',
+  '@usage'
+];
+
+function readTag(header, tag) {
+  const match = header.match(new RegExp(`\\${tag}[ \\t]+([^\\n\\r]+)`));
+  return match ? match[1].trim() : '';
+}
+
+const before = JSON.parse(fs.readFileSync(snapshotPath, 'utf8'));
+const lines = [];
+
+for (const filePath of files) {
+  let header = '';
+  try {
+    header = fs.readFileSync(filePath, 'utf8').split(/\r?\n/).slice(0, 220).join('\n');
+  } catch (_error) {
+    header = '';
+  }
+
+  for (const tag of tags) {
+    const previous = before?.[filePath]?.[tag] || '';
+    const next = readTag(header, tag);
+    if (!next || previous === next) continue;
+    if (!previous) {
+      lines.push(`  ✓ Fixed: added ${tag} ${next} to ${filePath}`);
+    } else {
+      lines.push(`  ✓ Fixed: corrected ${tag} to ${next} in ${filePath}`);
+    }
+  }
+}
+
+if (lines.length > 0) {
+  process.stdout.write(`${lines.join('\n')}\n`);
+}
+NODE
+}
+
+print_governance_manual_guidance() {
+    local report_path="$1"
+    node - "$report_path" <<'NODE'
+const fs = require('fs');
+const config = require('./tools/lib/script-governance-config');
+
+const reportPath = process.argv[2];
+const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+const entries = Array.isArray(report?.repair?.needs_human) ? report.repair.needs_human.slice() : [];
+
+const guidance = {
+  '@category': `choose from: ${config.CATEGORY_ENUM.join(', ')}`,
+  '@purpose': `choose from: ${config.PURPOSE_ENUM.join(', ')}`,
+  '@scope': `choose from: ${config.SCOPE_ENUM.join(', ')}`,
+  '@needs': 'add requirement references, e.g. R-R14',
+  '@purpose-statement': 'add a one-line human-readable purpose statement',
+  '@pipeline': 'declare the actual pipeline, e.g. P1, P2, P3, P5, P6, manual',
+  'classification-row': 'add the missing governed metadata row via the governance repair workflow'
+};
+
+console.log('✗ These issues require manual fixes:');
+console.log('');
+
+entries
+  .sort((left, right) => String(left.path || '').localeCompare(String(right.path || '')))
+  .forEach((entry) => {
+    console.log(`  ${entry.path}`);
+    (entry.missing || []).forEach((missing) => {
+      const suffix = guidance[missing] || 'add the missing governed metadata';
+      console.log(`    Missing ${missing}: ${suffix}`);
+    });
+  });
+NODE
+}
+
+print_governance_dependency_error() {
+    echo ""
+    echo "✗ Governance auto-repair is unavailable in this checkout."
+    echo ""
+    echo "  REPAIR-00a is not merged here yet."
+    echo "  Expected tools/scripts/validators/governance/audit-script-inventory.js"
+    echo "  to support --staged-only and --quiet."
+    echo ""
+    echo "  Update from docs-v2 after REPAIR-00a merges, then retry."
+    echo "  Run 'cd tools && npm run repair:governance -- --dry-run' for more detail."
+    echo "  To skip: SKIP_VERIFICATION=1 git commit -m 'message'"
+    echo ""
+}
+
+print_governance_command_error() {
+    local label="$1"
+    local output="$2"
+
+    echo ""
+    echo "✗ ${label}"
+    echo ""
+    if [ -n "$output" ]; then
+        printf '%s\n' "$output" | sed 's/^/  /'
+        echo ""
+    fi
+    echo "  Run 'cd tools && npm run repair:governance -- --dry-run' for more detail."
+    echo "  To skip: SKIP_VERIFICATION=1 git commit -m 'message'"
+    echo ""
+}
+
+run_governance_auto_repair() {
+    (
+        local governed_scripts=()
+        local tmp_dir=""
+        local report_path=""
+        local snapshot_path=""
+        local preview_out=""
+        local apply_out=""
+        local script_docs_out=""
+        local preview_fix_count=0
+        local preview_needs_count=0
+        local apply_fix_count=0
+        local verify_fix_count=0
+        local verify_needs_count=0
+        local preview_rc=0
+        local apply_rc=0
+        local script_docs_rc=0
+        local auto_repaired=0
+        local governed_script=""
+        local modified_file=""
+        while IFS= read -r governed_script; do
+            if [ -n "$governed_script" ]; then
+                governed_scripts+=("$governed_script")
+            fi
+        done < <(get_staged_governed_scripts)
+        if [ ${#governed_scripts[@]} -eq 0 ]; then
+            exit 0
+        fi
+
+        if ! supports_governance_repair_flow; then
+            print_governance_dependency_error
+            exit 1
+        fi
+
+        tmp_dir=$(mktemp -d "${TMPDIR:-/tmp}/precommit-governance.XXXXXX") || {
+            print_governance_command_error "Failed to create a temporary governance report directory." ""
+            exit 1
+        }
+        trap 'rm -rf "$tmp_dir"' EXIT
+
+        report_path="$tmp_dir/SCRIPT_INVENTORY_FULL.json"
+        snapshot_path="$tmp_dir/governance-header-snapshot.json"
+
+        preview_out=$(node tools/scripts/validators/governance/audit-script-inventory.js \
+            --fix --dry-run --staged-only --quiet --json --output "$tmp_dir" 2>&1)
+        preview_rc=$?
+        if [ $preview_rc -ne 0 ] || [ ! -f "$report_path" ]; then
+            print_governance_command_error "Governance preview failed before repair." "$preview_out"
+            exit 1
+        fi
+
+        preview_fix_count=$(governance_report_fix_count "$report_path")
+        preview_needs_count=$(governance_report_needs_human_count "$report_path")
+
+        if [ "$preview_fix_count" -eq 0 ] && [ "$preview_needs_count" -gt 0 ]; then
+            echo ""
+            print_governance_manual_guidance "$report_path"
+            echo ""
+            echo "  Run 'cd tools && npm run repair:governance -- --dry-run' for more detail."
+            echo "  To skip: SKIP_VERIFICATION=1 git commit -m 'message'"
+            echo ""
+            exit 1
+        fi
+
+        if [ "$preview_fix_count" -gt 0 ]; then
+            local planned_files=()
+            local dirty_targets=()
+            local planned_file=""
+            local dirty_target=""
+            local modified_files=()
+
+            while IFS= read -r planned_file; do
+                if [ -n "$planned_file" ]; then
+                    planned_files+=("$planned_file")
+                fi
+            done < <(governance_report_list_files "$report_path" planned_files)
+            for planned_file in "${planned_files[@]}"; do
+                if [ -z "$planned_file" ]; then
+                    continue
+                fi
+                if [ -e "$planned_file" ] && ! git diff --quiet -- "$planned_file" 2>/dev/null; then
+                    dirty_targets+=("$planned_file")
+                fi
+            done
+
+            if [ ${#dirty_targets[@]} -gt 0 ]; then
+                echo ""
+                echo "✗ Governance auto-repair blocked by unstaged edits."
+                echo ""
+                for dirty_target in "${dirty_targets[@]}"; do
+                    echo "  $dirty_target"
+                done
+                echo ""
+                echo "  Stage or discard the unstaged edits in these files, then retry."
+                echo "  Run 'cd tools && npm run repair:governance -- --dry-run' for more detail."
+                echo "  To skip: SKIP_VERIFICATION=1 git commit -m 'message'"
+                echo ""
+                exit 1
+            fi
+
+            if ! capture_governance_header_snapshot "$snapshot_path" "${governed_scripts[@]}"; then
+                print_governance_command_error "Failed to snapshot governed script headers before repair." ""
+                exit 1
+            fi
+
+            echo ""
+            echo "⚠  Governance issues detected. Attempting auto-repair..."
+            echo ""
+
+            apply_out=$(node tools/scripts/validators/governance/audit-script-inventory.js \
+                --fix --staged-only --quiet --json --output "$tmp_dir" 2>&1)
+            apply_rc=$?
+            if [ $apply_rc -ne 0 ] || [ ! -f "$report_path" ]; then
+                print_governance_command_error "Governance auto-repair failed." "$apply_out"
+                exit 1
+            fi
+
+            while IFS= read -r modified_file; do
+                if [ -n "$modified_file" ]; then
+                    modified_files+=("$modified_file")
+                fi
+            done < <(governance_report_list_files "$report_path" files_modified)
+            if [ ${#modified_files[@]} -gt 0 ]; then
+                if ! git add -- "${modified_files[@]}" 2>/dev/null; then
+                    print_governance_command_error "Failed to re-stage governance repair outputs." ""
+                    exit 1
+                fi
+            fi
+
+            print_governance_header_fixes "$snapshot_path" "${governed_scripts[@]}"
+            apply_fix_count=$(governance_report_fix_count "$report_path")
+            auto_repaired=1
+        fi
+
+        preview_out=$(node tools/scripts/validators/governance/audit-script-inventory.js \
+            --fix --dry-run --staged-only --quiet --json --output "$tmp_dir" 2>&1)
+        preview_rc=$?
+        if [ $preview_rc -ne 0 ] || [ ! -f "$report_path" ]; then
+            print_governance_command_error "Governance verification preview failed after repair." "$preview_out"
+            exit 1
+        fi
+
+        verify_fix_count=$(governance_report_fix_count "$report_path")
+        verify_needs_count=$(governance_report_needs_human_count "$report_path")
+        script_docs_out=$(node tests/unit/script-docs.test.js --staged 2>&1)
+        script_docs_rc=$?
+
+        if [ "$verify_needs_count" -gt 0 ]; then
+            echo ""
+            print_governance_manual_guidance "$report_path"
+            echo ""
+            echo "  Run 'cd tools && npm run repair:governance -- --dry-run' for more detail."
+            echo "  To skip: SKIP_VERIFICATION=1 git commit -m 'message'"
+            echo ""
+            exit 1
+        fi
+
+        if [ "$verify_fix_count" -gt 0 ]; then
+            echo ""
+            echo "✗ Governance auto-repair did not converge."
+            echo ""
+            echo "  Remaining automated fixes are still reported after repair."
+            echo "  Run 'cd tools && npm run repair:governance -- --dry-run' for more detail."
+            echo "  To skip: SKIP_VERIFICATION=1 git commit -m 'message'"
+            echo ""
+            exit 1
+        fi
+
+        if [ $script_docs_rc -ne 0 ]; then
+            echo ""
+            echo "✗ Script documentation enforcement still failed after governance repair."
+            echo ""
+            printf '%s\n' "$script_docs_out" | sed 's/^/  /'
+            echo ""
+            echo "  Run 'cd tools && npm run repair:governance -- --dry-run' for more detail."
+            echo "  To skip: SKIP_VERIFICATION=1 git commit -m 'message'"
+            echo ""
+            exit 1
+        fi
+
+        if [ "$auto_repaired" = "1" ]; then
+            echo ""
+            echo "✓ Auto-repaired ${apply_fix_count} issue(s). Proceeding with commit."
+            echo ""
+        fi
+
+        exit 0
+    )
+}
+
+# Component governance checks
+if [ "$SKIP_TESTS" != "1" ]; then
+    STAGED_COMPONENTS=$(git diff --cached --name-only --diff-filter=ACM -- snippets/components | grep -E '\.jsx$' | grep -v '/_archive/' || true)
+    if [ -n "$STAGED_COMPONENTS" ]; then
+        run_node_check \
+          "Running component JSDoc validation (staged)..." \
+          "❌ Component JSDoc validation failed" \
+          tools/scripts/validators/components/check-component-docs.js --staged
+
+        run_node_check \
+          "Running component styling validation (staged)..." \
+          "❌ Component styling validation failed" \
+          tools/scripts/validators/components/check-component-css.js --staged
+
+        if [ $VIOLATIONS -eq 0 ]; then
+            echo -e "${YELLOW}Repairing derived component metadata...${NC}"
+            if node tools/scripts/remediators/components/repair-component-metadata.js --staged --fix 2>&1; then
+                echo "$STAGED_COMPONENTS" | xargs git add 2>/dev/null
+                echo -e "${GREEN}✓ Component metadata repaired${NC}"
+            else
+                VIOLATIONS=$((VIOLATIONS + 1))
+                WARNINGS+=("❌ Component metadata has NEEDS_HUMAN errors - inspect repair-component-metadata output")
+                echo -e "${RED}❌ Component metadata repair found issues requiring human attention${NC}"
+            fi
+        fi
+
+        if [ $VIOLATIONS -eq 0 ]; then
+            echo -e "${YELLOW}Regenerating component registry...${NC}"
+            if node tools/scripts/generate-component-registry.js 2>&1; then
+                git add docs-guide/component-registry.json docs-guide/component-registry-schema.json 2>/dev/null
+                echo -e "${GREEN}✓ Component registry regenerated${NC}"
+            else
+                VIOLATIONS=$((VIOLATIONS + 1))
+                WARNINGS+=("❌ Component registry generation failed")
+                echo -e "${RED}❌ Component registry generation failed${NC}"
+            fi
+        fi
+
+        if [ $VIOLATIONS -eq 0 ]; then
+            echo -e "${YELLOW}Regenerating component usage map...${NC}"
+            if node tools/scripts/scan-component-imports.js 2>&1; then
+                git add docs-guide/component-usage-map.json 2>/dev/null
+                echo -e "${GREEN}✓ Component usage map regenerated${NC}"
+            else
+                VIOLATIONS=$((VIOLATIONS + 1))
+                WARNINGS+=("❌ Component usage map generation failed")
+                echo -e "${RED}❌ Component usage map generation failed${NC}"
+            fi
+        fi
+
+        if [ $VIOLATIONS -eq 0 ] && [ -f "tools/scripts/generate-docs-guide-components-index.js" ]; then
+            echo -e "${YELLOW}Regenerating components catalog...${NC}"
+            if node tools/scripts/generate-docs-guide-components-index.js --fix 2>&1; then
+                git add docs-guide/catalog/components-catalog.mdx 2>/dev/null
+                echo -e "${GREEN}✓ Components catalog regenerated${NC}"
+            else
+                VIOLATIONS=$((VIOLATIONS + 1))
+                WARNINGS+=("❌ Components catalog generation failed")
+                echo -e "${RED}❌ Components catalog generation failed${NC}"
+            fi
+        fi
+    fi
+fi
+
 # Run test suite (fast mode for pre-commit)
 if [ "$SKIP_TESTS" = "1" ]; then
     echo -e "${YELLOW}⚠️  Test suite bypassed (SKIP_TESTS=1)${NC}"
@@ -707,11 +1375,10 @@ else
             echo -e "${YELLOW}⚠️  Dependencies not installed. Run 'cd tools && npm install' or 'cd tests && npm install' to enable tests${NC}"
         fi
 
-        if [ -f "tests/unit/script-docs.test.js" ]; then
-            run_node_check \
-              "Running script documentation enforcement (staged additions)..." \
-              "❌ Script documentation enforcement failed - missing required script header template" \
-              tests/unit/script-docs.test.js --staged --write --stage --autofill
+        if [ "$SKIP_VERIFICATION" != "1" ] && [ $VIOLATIONS -eq 0 ]; then
+            if ! run_governance_auto_repair; then
+                exit 1
+            fi
         fi
 
         if [ -f "tools/scripts/generate-pages-index.js" ]; then
@@ -721,25 +1388,49 @@ else
               tools/scripts/generate-pages-index.js --staged --write --stage
         fi
 
+        if [ -f "tools/scripts/remediators/content/repair-mdx-safe-markdown.js" ]; then
+            run_node_check \
+              "Running staged MDX-safe markdown auto-repair..." \
+              "❌ MDX-safe markdown auto-repair failed - inspect repair-mdx-safe-markdown output" \
+              tools/scripts/remediators/content/repair-mdx-safe-markdown.js --write --staged --stage
+        fi
+
+        if [ -f "tools/scripts/validators/content/check-mdx-safe-markdown.js" ]; then
+            run_node_check \
+              "Running staged MDX-safe markdown validation..." \
+              "❌ MDX-safe markdown validation failed - inspect check-mdx-safe-markdown output" \
+              tools/scripts/validators/content/check-mdx-safe-markdown.js --staged
+        fi
+
         if [ -f "tools/scripts/generate-docs-index.js" ]; then
-            if echo "$STAGED_FILES_SNAPSHOT_ALL" | grep -Eq '^(docs\.json|v1/|v2/|snippets/)'; then
-                echo -e "${YELLOW}Checking docs-index sync...${NC}"
-                if node tools/scripts/generate-docs-index.js --check >/dev/null 2>&1; then
-                    echo -e "${GREEN}✓ docs-index.json is up to date${NC}"
+            if should_check_generated_artifact "docs-index.json"; then
+                echo -e "${YELLOW}Checking generated artifact freshness...${NC}"
+                GENERATED_ARTIFACT_SUMMARY=$(format_generated_artifact_message "docs-index.json" "summary")
+                DOCS_INDEX_ARGS="--staged"
+                if echo "$STAGED_FILES_SNAPSHOT_ALL" | grep -Eq '^docs\.json$'; then
+                    DOCS_INDEX_ARGS=""
+                fi
+                if node tools/scripts/generate-docs-index.js --check $DOCS_INDEX_ARGS >/dev/null 2>&1; then
+                    echo -e "${GREEN}✓ ${GENERATED_ARTIFACT_SUMMARY} is up to date${NC}"
                 else
-                    echo -e "${YELLOW}docs-index.json out of date, regenerating...${NC}"
-                    if node tools/scripts/generate-docs-index.js --write 2>&1; then
-                        git add docs-index.json
-                        echo -e "${GREEN}✓ docs-index.json regenerated and staged${NC}"
-                    else
-                        VIOLATIONS=$((VIOLATIONS + 1))
-                        WARNINGS+=("❌ docs-index generation failed - run node tools/scripts/generate-docs-index.js --write")
-                        echo -e "${RED}❌ docs-index generation failed${NC}"
-                    fi
+                    VIOLATIONS=$((VIOLATIONS + 1))
+                    GENERATED_ARTIFACT_GENERATOR=$(format_generated_artifact_message "docs-index.json" "generator")
+                    WARNINGS+=("❌ Generated artifact freshness issue: docs-index.json is stale. Run: ${GENERATED_ARTIFACT_GENERATOR}")
+                    echo -e "${RED}❌ ${GENERATED_ARTIFACT_SUMMARY} is stale${NC}"
+                    echo "   Source files changed within its declared manifest scope."
+                    echo "   Remediation: ${GENERATED_ARTIFACT_GENERATOR}"
+                    exit 1
                 fi
             else
-                echo -e "${GREEN}✓ No docs/nav changes staged, skipping docs-index sync${NC}"
+                echo -e "${GREEN}✓ No manifest-declared docs-index sources staged, skipping docs-index freshness check${NC}"
             fi
+        fi
+
+        if [ -f "tools/scripts/remediators/content/sync-docs-paths.js" ]; then
+            run_node_check \
+              "Running staged docs path sync..." \
+              "❌ Docs path sync failed - inspect sync-docs-paths output" \
+              tools/scripts/remediators/content/sync-docs-paths.js --write --staged --stage
         fi
 
         run_node_check \

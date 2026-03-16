@@ -1,11 +1,29 @@
 ---
-title: 'Livepeer Token'
-sidebarTitle: 'Token (LPT) Utility'
-description: 'Livepeer Token (LPT) is the native proof-of-stake token of the Livepeer network. It is the key to participating in the protocol: to operate or delegate in the transcoding network, to earn rewards, and to vote on governance proposals. This page details the technical attributes, token supply dynamics, inflation model, and contract integrations that define LPT’s role.'
-keywords: ["livepeer", "about", "livepeer network", "livepeer token economics", "token", "learn"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+title: Livepeer Token
+sidebarTitle: Token (LPT) Utility
+description: >-
+  Livepeer Token (LPT) is the native proof-of-stake token of the Livepeer
+  network. It is the key to participating in the protocol: to operate or
+  delegate in the transcoding network, to earn rewards, and to vote on
+  governance proposals. This page details the technical attributes, token supply
+  dynamics, inflation model, and contract integrations that define LPT’s role.
+pageType: concept
+keywords:
+  - livepeer
+  - about
+  - livepeer network
+  - livepeer token economics
+  - token
+  - learn
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: general
+lastVerified: 2026-03-17
+purpose: concept
 ---
-
 {/* This page describes:
 3. **Token (LPT)**
 
@@ -19,11 +37,11 @@ BUT ONLY BRIEFLY -> DEFERS TO TOKEN TAB
 
 import { CardTitleTextWithArrow } from '/snippets/components/primitives/text.jsx'
 import { AccordionTitleWithArrow } from '/snippets/components/primitives/text.jsx'
-import { Quote } from '/snippets/components/display/quote.jsx'
+import { Quote } from '/snippets/components/content/quote.jsx'
 import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
 import { LinkArrow } from '/snippets/components/primitives/links.jsx'
 import { DynamicTable } from '/snippets/components/layout/table.jsx'
-import { ScrollableDiagram } from '/snippets/components/display/zoomable-diagram.jsx'
+import { ScrollableDiagram } from '/snippets/components/content/zoomableDiagram.jsx'
 
 <div style={{ display: "flex", justifyContent: "center"}}>
  <CardTitleTextWithArrow icon="hand-holding-dollar" horizontal href="https://www.livepeer.org/lpt"> Livepeer Token </CardTitleTextWithArrow>
@@ -62,12 +80,12 @@ One of the biggest competitive advantages of Livepeer is its decentralisation - 
 
 ### Token Purpose
  {/* The Livepeer Token (LPT) is used for **staking**, **securing** the network, and **governance**. */}
-The Livepeer Token (LPT) has several key functions within the protocol:
+The Livepeer Token (LPT) has multiple key functions within the protocol:
 - **Staking**: LPT must be staked (bonded) in the protocol via the BondingManager contract to operate as an Orchestrator or to delegate.
 - **Governance**: Any staked LPT can vote on proposals. Delegators’ votes are cast via their chosen Orchestrator.
 - **Security**: The protocol is secured by stake. If an Orchestrator misbehaves, its staked LPT (and its Delegators’) can be slashed.
 
-{ /* The Livepeer Token (LPT) has several key functions within the protocol:
+{ /* The Livepeer Token (LPT) has multiple key functions within the protocol:
  - **Securing the network** through **staking** and **bonding**
    - _Operators (Orchestrators) bond LPT to run transcoding services;_
    - _Delegators stake LPT to support operators they trust._
@@ -124,13 +142,13 @@ Livepeer ties LPT emissions to bonding participation. This model ensures:
 - Dilution impacts only unstaked participants
 - Governance participation scales with protocol security
 
-This mechanism introduces meaningful opportunity cost for passivity, encouraging active delegation and rebalancing.
+This mechanism introduces a clear opportunity cost for passivity, encouraging active delegation and rebalancing.
 
 <Accordion title="See Inflation Modelling Calculations" icon="calculator">
 
  Livepeer’s inflation is dynamic - designed to calibrate toward a target bonding rate (β*) and secure the protocol with sufficient staked LPT.
 
-   ```bash Inflation Update Rule
+   ```bash icon="terminal" Inflation Update Rule
    If B(t)/S(t) < β*:
    r(t+1) = min(r(t) + Δ, r_max)
    Else:
@@ -138,7 +156,7 @@ This mechanism introduces meaningful opportunity cost for passivity, encouraging
    ```
 
  where:
-   ```text
+   ```text icon="terminal"
    - S(t) = total circulating supply of LPT
    - B(t) = total bonded supply
    - β* = target bonding rate (e.g. 50%)
@@ -147,7 +165,7 @@ This mechanism introduces meaningful opportunity cost for passivity, encouraging
    - r_min, r_max = protocol-set bounds (e.g. 0.5% to 7%)
    ```
 
-   ```bash Minting Function
+   ```bash icon="terminal" Minting Function
    M(t) = r(t) * S(t)
    ```
 </Accordion>
@@ -195,7 +213,7 @@ Voting power is proportional to bonded stake at snapshot block. Voters can deleg
 #TODO
 A portion of LPT emissions flows to a community treasury. The treasury is meant to fund ecosystem-wide projects (public goods). Livepeer’s social consensus is that treasury funds should primarily go to SPEs, which then deploy them to specific initiatives.
 
----
+<CustomDivider />
 
 #MOVE THESE
 
@@ -256,7 +274,7 @@ Broadcaster → (PM tickets/segments) → Orchestrator → (tasks) → Transcode
 Delegators → (bonded LPT) → Orchestrator → (rewards/fees split back) → Delegators. */}
 
 
----
+<CustomDivider />
 #REVIEW
 
 
@@ -268,4 +286,5 @@ Show:
 - Governance → Treasury allocation
 
 (-> Staking, Rewards, Fees & Slashing)
+
 

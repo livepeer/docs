@@ -1,0 +1,24 @@
+# Research Review — Deployment Details
+
+**Fact registry validation:** pass
+**Adjudication validation:** pass
+**Page research run:** pass
+**PR report run:** pass
+
+## Findings summary
+- Conflicted claims: 3
+- Time-sensitive claims: 2
+- Cross-page contradictions: 3
+- Unverified or historical claims: 1
+- Propagation follow-ups: 24
+- Matched claim families: 7
+- Unresolved factual risk: undefined
+
+## Recommended changes
+- Resolve conflicted claims before any copy pass closes these pages.
+- Downgrade or date volatile operational claims where current truth may shift quickly.
+- Remove or qualify unsupported historical claims unless fresh evidence is added.
+- Apply claim-family propagation to every dependent gateway page before final edits.
+
+## Evidence notes
+- See `research-pages.md` and `research-pr.md` for the full evidence trail and claim-family details.

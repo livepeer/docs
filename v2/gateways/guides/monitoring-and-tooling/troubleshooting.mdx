@@ -1,0 +1,602 @@
+---
+title: 'Gateway Troubleshooting'
+description: 'Fix common Livepeer Gateway errors - organised by symptom for Video, AI, and Dual Gateways. Port conflicts, RPC failures, deposit depletion, CUDA errors, Docker issues, and more.'
+sidebarTitle: 'Troubleshooting'
+keywords:
+  - livepeer
+  - gateway
+  - troubleshooting
+  - errors
+  - not receiving jobs
+  - rpc failure
+  - cuda error
+  - port conflict
+  - deposit
+  - docker
+  - ai gateway
+  - windows
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: troubleshooting
+audience: gateway-operator
+purpose: troubleshooting
+status: current
+lastVerified: '2026-03-15'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- ~~Mermaid diagrams use theme colours~~ (N/A)
+- ~~Fontawesome icons are used on accordions and tabs~~
+- ~~Tables use StyledTable component~~
+- ~~No em-dashes are used (instead use standard -)~~
+- UK spelling is used
+- ~~Headers are concise and technical~~
+- ~~CustomDivider is used~~
+- Placeholders for Media & Video Resources are in comments with a TODO for a human. (N/A)
+- ~~REVIEW flags are in JSX flags for a human.~~
+Human:
+- Port 8937 → 8935 throughout
+- Dual port conflict section rewritten (single port architecture)
+- "AI gateway is off-chain" → acknowledges both modes
+- Broken links fixed (gateway-health-checks → health-checks, fund-your-gateway → funding-guide)
+- Voice converted to entity-led
+- Em dashes removed throughout
+- Accordion icons added
+- BROADCASTER STATS legacy notes added
+*/}
+
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+This page covers errors operators encounter. For "how does X work?" questions, see the <LinkArrow href="/v2/gateways/resources/faq" label="FAQ" newline={false} />.
+
+## Video Issues
+
+<AccordionGroup>
+
+  <Accordion title="Gateway running but not receiving transcoding jobs" icon="circle-xmark">
+    Work through these causes in order. The first one confirmed is the fix.
+
+    **1. ETH deposit or reserve is depleted.**
+
+    When the deposit reaches zero, the Gateway silently stops routing - no error is surfaced to the stream sender. Check immediately:
+
+    ```bash icon="terminal"
+    livepeer_cli -host 127.0.0.1 -http 5935
+    # Select Option 1: Get node status
+    # Check: Deposit and Reserve under BROADCASTER STATS
+    ```
+
+    The CLI uses the legacy term "Broadcaster" for Gateway. If either value is zero, top up via Option 11 (Deposit broadcasting funds). See <LinkArrow href="/v2/gateways/guides/payments-and-pricing/funding-guide" label="Funding Guide" newline={false} />.
+
+    **2. `-maxPricePerUnit` is set too low.**
+
+    `-maxPricePerUnit` is the maximum wei per pixel the Gateway pays Orchestrators. If Orchestrators on the network charge more than the cap, none accept jobs.
+
+    Community standard for testing:
+    ```bash icon="terminal"
+    -maxPricePerUnit 300 -pixelsPerUnit 1
+    ```
+
+    Adjust upward in increments if jobs are still not routing after confirming the deposit is funded.
+
+    **3. No reachable Orchestrators.**
+
+    If a manual `-orchAddr` list is specified, verify those addresses are active on [Livepeer Explorer](https://explorer.livepeer.org). Remove unreachable addresses and add active ones.
+
+    **4. Arbitrum RPC is disconnected.**
+
+    The Gateway requires a working Arbitrum RPC to issue and track payment tickets. See the Arbitrum RPC accordion below.
+  </Accordion>
+
+  <Accordion title="Arbitrum RPC connection failing" icon="plug-circle-xmark">
+    An Arbitrum RPC URL is required for all on-chain Gateway operations.
+
+    **Test the RPC endpoint:**
+    ```bash icon="terminal"
+    curl -X POST <YOUR_ETH_URL> \
+      -H "Content-Type: application/json" \
+      -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
+    ```
+    A working endpoint returns a JSON object with a `result` field containing a hex block number. A failed one returns an HTTP error or times out.
+
+    **Common causes and fixes:**
+
+    <StyledTable>
+      <TableRow header>
+        <TableCell header>Cause</TableCell>
+        <TableCell header>Fix</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>Free-tier rate limit exceeded</TableCell>
+        <TableCell>Upgrade to paid Infura/Alchemy tier, or use a different provider</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>Missing `https://` prefix</TableCell>
+        <TableCell>Add `https://` to the start of the `-ethUrl` value</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>Wrong network (Ethereum mainnet instead of Arbitrum)</TableCell>
+        <TableCell>Use an Arbitrum One endpoint, not Ethereum mainnet</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>Stale/deprecated public RPC</TableCell>
+        <TableCell>Switch to `https://arb1.arbitrum.io/rpc` as fallback</TableCell>
+      </TableRow>
+    </StyledTable>
+
+    **RPC endpoint options:**
+    - Infura: [infura.io](https://www.infura.io) (free tier available)
+    - Alchemy: [alchemy.com](https://www.alchemy.com) (free tier available)
+    - Public fallback: `https://arb1.arbitrum.io/rpc` (rate-limited, not for production)
+    - Self-hosted: [Arbitrum full node guide](https://docs.arbitrum.io/node-running/how-tos/running-a-full-node)
+
+    Update the startup command:
+    ```bash icon="terminal"
+    -ethUrl https://<new-rpc-endpoint>
+    ```
+  </Accordion>
+
+  <Accordion title="ETH deposit shows zero after bridging" icon="coins">
+    Bridging ETH from Ethereum mainnet to Arbitrum One transfers ETH to the wallet address on Arbitrum, but does **not** automatically allocate it as a Gateway deposit. Deposit and reserve must be set explicitly via `livepeer_cli` after the bridge confirms.
+
+    ```bash icon="terminal"
+    livepeer_cli -host 127.0.0.1 -http 5935
+    # Select Option 11: Deposit broadcasting funds
+    # Enter deposit amount (e.g. 0.07 ETH)
+    # Enter reserve amount (e.g. 0.03 ETH)
+    ```
+
+    After the transaction confirms, run Option 1 (Get node status) to verify the deposit and reserve appear in the BROADCASTER STATS section (legacy term for Gateway).
+
+    If ETH has not arrived in the Arbitrum wallet at all, check the bridge transaction on Arbiscan. Arbitrum bridge deposits are typically confirmed within 15 minutes but can take longer during congestion.
+  </Accordion>
+
+  <Accordion title="TicketParams expired errors in logs" icon="clock">
+    ``` icon="terminal"
+    TicketParams expired
+    ```
+
+    This error means the Gateway sent a payment ticket with parameters that had expired by the time the Orchestrator processed it. The expiration window is measured in Ethereum L1 blocks.
+
+    This is not an operator error - it is expected behaviour when there is a delay between the Gateway requesting Orchestrator info and sending the subsequent segment. The Gateway automatically retries with fresh ticket parameters.
+
+    **When to investigate further:**
+    - If this error appears *constantly* (not intermittently) across all sessions, the Arbitrum RPC may be returning stale block numbers. Test the RPC with `eth_blockNumber` and compare to Arbiscan's current block.
+    - If retries are consistently failing after the error, check `livepeer_payment_create_errors` in Prometheus.
+
+    For context on the expiry mechanism, see [go-livepeer issue #1343](https://github.com/livepeer/go-livepeer/issues/1343).
+  </Accordion>
+
+  <Accordion title="Transcode session timed out or job lost" icon="hourglass-end">
+    Log patterns:
+    ``` icon="terminal"
+    Transcode loop timed out
+    Segment loop timed out
+    ```
+
+    These are not errors - they indicate a session was cleaned up because no segments arrived for an extended period. This is expected when streams end.
+
+    If these appear during active streams:
+
+    1. **Re-publish the stream** - the Gateway selects a new Orchestrator and session automatically.
+    2. **If it happens repeatedly:** the Orchestrators in the pool may be dropping sessions. Remove underperforming addresses from `-orchAddr` using Explorer to find more reliable alternatives.
+    3. **If CUDA errors appear in logs** (`CUDA_ERROR_UNKNOWN`, `Cannot allocate memory`) these originate on the Orchestrator side. The Gateway retries with a different Orchestrator automatically.
+
+    Enable verbose logging for session-level detail:
+    ```bash icon="terminal"
+    -v 6
+    ```
+  </Accordion>
+
+  <Accordion title="Gateway calling reward function unexpectedly" icon="gas-pump">
+    If the Gateway is unexpectedly calling the reward function and spending gas, ensure `-reward=false` is set in the launch command even when using a config file. Config file values can be overridden by command-line flags; always set `reward=false` explicitly on the command line.
+
+    ```bash icon="terminal"
+    livepeer -gateway -reward=false [other flags...]
+    ```
+  </Accordion>
+
+</AccordionGroup>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## AI Issues
+
+<AccordionGroup>
+
+  <Accordion title="AI binary not available on Windows or macOS" icon="desktop">
+    The Livepeer AI Gateway binary is **not currently available for Windows or macOS (Intel)**. The AI inference stack depends on a GPU/CUDA toolchain tested only on Linux.
+**Workaround: Docker on Linux.**
+
+    ```bash icon="terminal"
+    docker run \
+      --name livepeer_ai_gateway \
+      -v ~/.lpData2/:/root/.lpData2 \
+      -p 8935:8935 \
+      --network host \
+      livepeer/go-livepeer:master \
+      -datadir /root/.lpData2 \
+      -gateway \
+      -orchAddr <orchestrator-list> \
+      -httpAddr 0.0.0.0:8935 \
+      -v 6 \
+      -httpIngest
+    ```
+
+    On Windows, install [Docker Desktop](https://www.docker.com/products/docker-desktop/) with WSL2 backend and run the container inside WSL2.
+
+    The standard video Gateway binary (`livepeer-windows-amd64`) remains available and works normally for video transcoding workloads on Windows.
+  </Accordion>
+
+  <Accordion title="AI Gateway starts but not receiving jobs" icon="circle-xmark">
+    Off-chain AI Gateways route jobs only to Orchestrators specified in `-orchAddr` that are currently online and running the requested pipeline. On-chain AI Gateways using `-aiServiceRegistry` discover Orchestrators automatically via the protocol.
+
+    **Check the `-orchAddr` list (off-chain):**
+
+    ```bash icon="terminal"
+    # Verify the Orchestrator is reachable
+    curl https://<orchestrator-address>:<port>/getOrchestratorInfo
+    ```
+If the Orchestrator responds with its capability list and does not include the requested pipeline, it will not accept jobs regardless of connectivity.
+
+    **Finding AI-capable Orchestrators:**
+
+    - [Discord #local-gateways](https://discord.gg/livepeer) - community operators share endpoints
+    - [Livepeer Explorer](https://explorer.livepeer.org) - contact active Orchestrators directly
+    - [Livepeer Forum](https://forum.livepeer.org) - search for community AI Orchestrator lists
+
+    **Common mistake:** pointing an AI Gateway at video-only Orchestrators. These reject AI jobs silently.
+  </Accordion>
+
+  <Accordion title="Some AI pipelines return errors but others work" icon="triangle-exclamation">
+    Each AI pipeline requires specific models to be loaded on the Orchestrator. Errors on specific pipelines typically indicate:
+
+    1. **The pipeline is not supported** by the connected Orchestrators - they may support `text-to-image` but not `image-to-video`.
+    2. **The model is not loaded** - the Orchestrator supports the pipeline but the specific model variant (e.g. `ByteDance/SDXL-Lightning`) is not warm. Some Orchestrators support cold loading (slower first request).
+    3. **Model ID mismatch** - the model ID string in the request must exactly match what the Orchestrator has. Case and formatting matter.
+**Diagnostic approach:** Start with `text-to-image` using a common model against a known-good Orchestrator before testing less common pipelines.
+  </Accordion>
+
+  <Accordion title="Cannot discover available AI models or pipelines" icon="magnifying-glass">
+    There is currently no unified registry or discovery endpoint listing all AI capabilities network-wide.
+
+    Per-Orchestrator capability query:
+    ```bash icon="terminal"
+    curl https://<orchestrator-address>:<port>/getOrchestratorInfo
+    ```
+Community discussion on a unified discovery mechanism is active in [Discord #local-gateways](https://discord.gg/livepeer) and the [Livepeer Forum](https://forum.livepeer.org).
+  </Accordion>
+
+</AccordionGroup>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Dual Issues
+
+<AccordionGroup>
+
+  <Accordion title="Resource contention between video and AI" icon="memory">
+    When video transcoding and AI inference run simultaneously, they compete for GPU memory and compute. Signs of contention:
+
+    - AI model loading failures during active video sessions
+    - Increased transcoding latency correlated with AI request peaks
+    - GPU memory at or near 100% in `/hardware/stats`
+
+    **Diagnose:**
+    ```bash icon="terminal"
+    # Watch GPU stats every 10 seconds
+    watch -n 10 'curl -s http://localhost:8935/hardware/stats'
+    ```
+
+    **Mitigations in order of escalation:**
+    1. Reduce AI session concurrency with `-maxSessions`
+    2. Schedule AI-heavy workloads during lower video traffic periods
+    3. Separate video and AI onto dedicated nodes
+
+    If GPU memory consistently exceeds 85% under normal load, dedicated nodes are the right path. See <LinkArrow href="/v2/gateways/guides/advanced-operations/scaling" label="Scaling" newline={false} />.
+  </Accordion>
+
+  <Accordion title="Port conflict on startup" icon="plug-circle-xmark">
+    Both video and AI endpoints share the same `-httpAddr` port (default 8935). A Dual Gateway does not open two separate ports - the `-httpIngest` flag enables AI endpoints on the same port used for video.
+
+    <StyledTable>
+      <TableRow header>
+        <TableCell header>Service</TableCell>
+        <TableCell header>Default port</TableCell>
+        <TableCell header>Notes</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>HTTP API (video + AI)</TableCell>
+        <TableCell>8935</TableCell>
+        <TableCell>Set via `-httpAddr`. `-httpIngest` enables AI endpoints on this port.</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>RTMP ingest</TableCell>
+        <TableCell>1935</TableCell>
+        <TableCell>Set via `-rtmpAddr`. Video ingest only.</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>CLI API</TableCell>
+        <TableCell>5935</TableCell>
+        <TableCell>Set via `-cliAddr`. Used by livepeer_cli.</TableCell>
+      </TableRow>
+    </StyledTable>
+
+    If the default port is occupied, check for lingering processes:
+    ```bash icon="terminal"
+    lsof -i :8935
+    ```
+
+    Override the port:
+    ```bash icon="terminal"
+    -httpAddr 0.0.0.0:9000
+    ```
+  </Accordion>
+
+</AccordionGroup>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Common Errors
+
+<AccordionGroup>
+
+  <Accordion title="listen tcp 0.0.0.0:8935: bind: address already in use" icon="circle-exclamation">
+    Another process is already occupying the port.
+
+    **Find and resolve (Linux/macOS):**
+    ```bash icon="terminal"
+    lsof -i :8935
+    # Note the PID in the output
+    kill -9 <PID>
+    ```
+
+    **Find and resolve (Windows):**
+    ```cmd icon="terminal"
+    netstat -ano | findstr :8935
+    taskkill /PID <PID> /F
+    ```
+
+    **Change the port instead:**
+    ```bash icon="terminal"
+    -httpAddr 0.0.0.0:9000
+    ```
+
+    Most common cause: a previous `livepeer` process that did not exit cleanly. Check for lingering processes with `ps aux | grep livepeer` (Linux) or Task Manager (Windows) before restarting.
+  </Accordion>
+
+  <Accordion title="libnppig.so.11: cannot open shared object file" icon="file-circle-xmark">
+    The GPU-accelerated binary (`livepeer-linux-gpu-amd64`) was downloaded but CUDA Toolkit v12 is not installed, or is installed at a non-standard path.
+
+    **Fix 1 - Use the non-GPU binary** (most Gateway operators do not need local GPU transcoding):
+    ```bash icon="terminal"
+    wget https://github.com/livepeer/go-livepeer/releases/download/<VERSION>/livepeer-linux-amd64.tar.gz
+    ```
+
+    **Fix 2 - Point to CUDA libraries:**
+    ```bash icon="terminal"
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    ./livepeer -gateway ...
+    ```
+
+    The GPU binary is only needed if the Gateway performs local transcoding with an NVIDIA GPU. Most operators route transcoding to network Orchestrators.
+  </Accordion>
+
+  <Accordion title="Could not connect to Ethereum node" icon="plug-circle-xmark">
+    The Gateway cannot reach its Arbitrum RPC.
+
+    ```bash icon="terminal"
+    curl -X POST <YOUR_ETH_URL> \
+      -H "Content-Type: application/json" \
+      -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
+    ```
+
+    A working RPC returns a JSON response. Fix the `-ethUrl` flag and restart. See the Arbitrum RPC accordion under Video Issues for full diagnosis.
+  </Accordion>
+
+  <Accordion title="ETH account unlock fails" icon="lock">
+    The Gateway cannot find or unlock the keystore file.
+
+    **Check the keystore path:**
+    ```bash icon="terminal"
+    ls ~/.lpData/<network>/keystore/
+    ```
+    The keystore directory should contain a file with a name matching the ETH account address.
+
+    **Check the password file for trailing newlines:**
+    ```bash icon="terminal"
+    cat -A /path/to/eth-password.txt
+    # A trailing $ followed by nothing is fine; a trailing ^J means a newline that may cause issues
+    ```
+
+    **Recreate the password file safely:**
+    ```bash icon="terminal"
+    echo -n "your-password" > /path/to/eth-password.txt
+    ```
+
+    If a different `datadir` or `network` was used in the past, copy the keystore file to the expected location:
+    ```bash icon="terminal"
+    cp ~/.lpData/<old-network>/keystore/* ~/.lpData/<new-network>/keystore/
+    ```
+
+    <Warning>
+      If the password to the keystore is lost, it cannot be recovered. Create a new wallet and fund the new address.
+    </Warning>
+  </Accordion>
+
+  <Accordion title="Docker container exits immediately" icon="docker">
+    The container is crashing on startup. Always check logs first:
+
+    ```bash icon="terminal"
+    docker logs <container_name> --tail 50
+    ```
+
+    **Common causes:**
+
+    1. **ETH password file not mounted or wrong path inside container:**
+       The volume mount must include the password file, and the path in `-ethPassword` must be the path *inside the container*, not on the host.
+       ```yaml icon="terminal"
+       volumes:
+         - /host/path/to/password.txt:/run/secrets/eth-password.txt
+       command: "-gateway -ethPassword /run/secrets/eth-password.txt ..."
+       ```
+
+    2. **`-cliAddr` using `localhost` instead of the container hostname:**
+       ```yaml icon="terminal"
+       command: "-cliAddr gateway:5935 ..."
+       ```
+
+    3. **Deprecated `version:` field in docker-compose.yml:**
+       Remove the `version: '3.9'` line at the top of the compose file - it is deprecated in current Docker Compose versions and can cause unexpected behaviour on some systems.
+
+    4. **Missing required flags:**
+       On-chain Gateways require at minimum: `-network`, `-ethUrl`, `-ethKeystorePath`, `-ethPassword`.
+  </Accordion>
+
+  <Accordion title="Cannot allocate memory with -nvidia flag" icon="microchip">
+    This error on startup with the `-nvidia` flag means GPU encoding/decoding session limits were hit during startup tests. Different NVIDIA GPUs have different limits.
+
+    This is a hardware constraint. Options:
+    - Check the GPU's session limits in the [NVIDIA encode/decode support matrix](https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new)
+    - Reduce concurrent sessions via `-maxSessions`
+    - Upgrade to a GPU with higher session limits for production workloads
+  </Accordion>
+
+  <Accordion title="Unsupported input pixel format" icon="image">
+    A stream is being pushed with a pixel format that go-livepeer cannot transcode. This is not an operator-actionable error - the stream source needs to encode in a supported format (typically `yuv420p`).
+
+    If the stream is operator-controlled, add `-pix_fmt yuv420p` to the FFmpeg command.
+  </Accordion>
+
+</AccordionGroup>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Log Interpretation
+
+Enable verbose logging when diagnosing issues:
+
+```bash icon="terminal"
+-v 6
+```
+
+Save logs to file while also displaying in terminal:
+
+```bash icon="terminal"
+./livepeer -gateway [flags] 2>&1 | tee livepeer.log
+```
+
+### Severity guide
+
+<StyledTable>
+  <TableRow header>
+    <TableCell header>Pattern</TableCell>
+    <TableCell header>Severity</TableCell>
+    <TableCell header>Action</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`INFO` messages with normal activity</TableCell>
+    <TableCell>Normal</TableCell>
+    <TableCell>None</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`Transcode loop timed out`</TableCell>
+    <TableCell>Normal</TableCell>
+    <TableCell>None - expected when streams end</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`Segment loop timed out`</TableCell>
+    <TableCell>Normal</TableCell>
+    <TableCell>None - expected when streams end</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`TicketParams expired`</TableCell>
+    <TableCell>Info</TableCell>
+    <TableCell>None - Gateway retries automatically</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`MB rate > Level limit`</TableCell>
+    <TableCell>Warning</TableCell>
+    <TableCell>None - does not impact transcoding</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`Could not connect to Ethereum node`</TableCell>
+    <TableCell>Error</TableCell>
+    <TableCell>Fix RPC immediately</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`TicketParams expired` (constant)</TableCell>
+    <TableCell>Warning</TableCell>
+    <TableCell>Investigate RPC block sync</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`CUDA_ERROR_UNKNOWN`</TableCell>
+    <TableCell>Error (Orchestrator-side)</TableCell>
+    <TableCell>Gateway retries; investigate if persistent</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`payment_create_errors` increasing</TableCell>
+    <TableCell>Error</TableCell>
+    <TableCell>Investigate deposit balance + RPC</TableCell>
+  </TableRow>
+</StyledTable>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Escalation
+
+If none of the above resolves the issue, include the following in a support request:
+
+- Gateway node type (<Badge color="blue">Video</Badge> / <Badge color="purple">AI</Badge> / <Badge color="green">Dual</Badge>)
+- go-livepeer version (`./livepeer --version`)
+- Operating system and architecture
+- Exact error message (copy from logs)
+- First 50 lines of startup logs (`-v 6`)
+- Output of `livepeer_cli` Option 1 (Get node status) - redact the ETH private key path
+
+<CardGroup cols={3}>
+  <Card title="Discord #local-gateways" icon="discord" href="https://discord.gg/livepeer">
+    Primary Gateway operator channel. Most operators respond within a few hours.
+  </Card>
+  <Card title="Livepeer Forum" icon="comments" href="https://forum.livepeer.org">
+    Search existing threads before posting. Tag with `gateway` and `go-livepeer`.
+  </Card>
+  <Card title="Report a docs gap" icon="github" href="https://github.com/livepeer/docs/issues">
+    If an error is not covered here, open a docs issue with Gateway type, version, OS, and error.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  Journey step: "Something broke - how do I fix it?"
+  Comprehensive troubleshooting page organised by SYMPTOM (what the operator sees),
+  not by cause. Covers video, AI, and dual gateway failure modes. Every fix includes
+  exact CLI commands.
+
+  Separate from FAQ - troubleshooting = "X is broken, fix it". FAQ = "how does X work?"
+
+  SECTION HOME: Guides > Monitoring & Tooling
+
+  JOURNEY POSITION:
+  1. Health Checks - "Is it alive?"
+  2. Tools & Dashboards - "Where do I see what's happening?"
+  3. Monitoring Setup - "How do I set up proper observability?"
+  4. On-Chain Metrics - "What's happening at the contract layer?"
+  5. Troubleshooting (this page) - "Something broke"
+
+  CROSS-REFS:
+  - Health Checks (this section) - verify before troubleshooting
+  - Tools & Dashboards (this section) - use tools to diagnose
+  - Monitoring Setup (this section) - metrics to identify issues
+  - Payments & Pricing > Funding Guide - deposit depletion fix
+  - FAQ (Resources) - "how does X work" vs "X is broken"
+*/}

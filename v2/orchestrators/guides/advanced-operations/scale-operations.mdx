@@ -1,0 +1,247 @@
+---
+title: Scale Operations
+sidebarTitle: Scale Operations
+description: >-
+  Architectural patterns for running multiple Livepeer orchestrator nodes at
+  data-centre scale — multi-orchestrator setup, capacity management, rolling
+  updates, fleet-wide monitoring, and enterprise onboarding.
+keywords:
+  - livepeer
+  - orchestrator
+  - fleet
+  - multi-orchestrator
+  - data centre
+  - enterprise
+  - scale
+  - multi-o
+  - load balancing
+  - rolling update
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: orchestrator
+purpose: concept
+status: published
+lastVerified: 2026-03-13
+---
+{/* Draft note: keep this page focused on multi-node fleet patterns, rollout mechanics, and operational separation; route unresolved fact checks to internal comments only. */}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+Run a fleet when one orchestrator is no longer enough for the GPU footprint, failure isolation, or regional coverage you need. The sections below cover the multi-node patterns, worker scaling model, rollout mechanics, and enterprise handoff points that apply once you are beyond a single machine.
+
+<CustomDivider />
+
+## When you need fleet operations
+
+Single-node operation is appropriate for most orchestrators. You are in fleet territory when these conditions start to apply:
+
+- Your workload requires more GPU capacity than fits in one machine
+- You need geographic distribution for latency-sensitive AI workloads
+- You want to separate concerns — one node for reward calling, one for ticket redemption, separate GPU workers
+- You are operating at data-centre scale with SLA commitments to gateway operators
+
+Start with a single node unless one of these conditions already applies. Fleet architecture adds operational complexity, and the gains only justify that overhead once scale pressure is already present.
+
+<CustomDivider />
+
+## Multi-orchestrator architecture
+
+go-livepeer supports running multiple orchestrator nodes behind a single on-chain identity. This is documented in `doc/multi-o.md` in the go-livepeer repository.
+
+The key insight: **each orchestrator node has its own keypair and accepts payments on behalf of the same on-chain registered Ethereum address.** Node separation allows you to assign specific functions to specific nodes:
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'background': '#0d0d0d', 'fontFamily': 'system-ui' }}}%%
+graph TD
+    GW["Gateways"] --> LB["Load Balancer\n(optional)"]
+    LB --> O1["Orchestrator Node A\n(workload processing)"]
+    LB --> O2["Orchestrator Node B\n(workload processing)"]
+    O1 --> W1["GPU Workers"]
+    O2 --> W2["GPU Workers"]
+    separate["Separate nodes:"]
+    R["Reward Node\n(calls reward() each round)"]
+    T["Ticket Redeemer Node\n(redeems winning tickets)"]
+    separate -.-> R
+    separate -.-> T
+```
+
+**Separation patterns:**
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Node role</TableCell>
+    <TableCell header>What it does</TableCell>
+    <TableCell header>Why separate it</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Workload nodes</TableCell>
+    <TableCell>Process transcoding and AI inference jobs</TableCell>
+    <TableCell>Scale horizontally; restart without affecting rewards</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Reward node</TableCell>
+    <TableCell>Calls `reward()` each round</TableCell>
+    <TableCell>Reward safety — dedicated stable machine, not affected by workload disruption</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Redeemer node</TableCell>
+    <TableCell>Redeems winning payment tickets</TableCell>
+    <TableCell>High-volume ticket processing on dedicated hardware</TableCell>
+  </TableRow>
+</StyledTable>
+
+This pattern is architecturally similar to the [Siphon split setup](/v2/orchestrators/guides/deployment-details/siphon-setup). The same principle separates reward calling from workload processing, but the split is implemented entirely within go-livepeer instead of through OrchestratorSiphon.
+
+<Card title="doc/multi-o.md — go-livepeer" icon="github" href="https://github.com/livepeer/go-livepeer/blob/master/doc/multi-o.md">
+  The canonical multi-orchestrator architecture documentation in the go-livepeer repository.
+</Card>
+
+<CustomDivider />
+
+## Scaling GPU workers
+
+Whether you are running a single orchestrator or a fleet, GPU workers scale horizontally. Each worker connects to an orchestrator with `-orchSecret` and the orchestrator distributes segments across all connected workers.
+
+**Adding capacity:**
+
+1. Provision a new machine with NVIDIA GPU and drivers
+2. Install go-livepeer
+3. Start in transcoder mode:
+   ```bash icon="terminal" title="Add a worker to the fleet"
+   livepeer \
+     -transcoder \
+     -orchAddr <orchestrator-host>:8935 \
+     -orchSecret <shared-secret> \
+     -nvidia 0,1,2 \
+     -maxSessions 10
+   ```
+4. The orchestrator immediately begins routing to the new worker — no configuration change on the orchestrator required
+
+Orchestrator logs confirm each new connection:
+``` icon="terminal"
+Got a RegisterTranscoder request from transcoder=10.3.27.5 capacity=10
+```
+
+<CustomDivider />
+
+## Capacity management at fleet scale
+
+Each worker advertises its capacity (the `-maxSessions` value). The orchestrator tracks capacity across all connected workers and routes jobs accordingly. There is no manual load balancing step — go-livepeer handles distribution internally.
+
+**What to monitor fleet-wide:**
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Metric</TableCell>
+    <TableCell header>What it reveals</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Sessions per worker</TableCell>
+    <TableCell>Whether load is balanced or some workers are always idle</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Workers at max sessions</TableCell>
+    <TableCell>Your fleet is at capacity — add workers or increase per-worker `maxSessions`</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Worker disconnections</TableCell>
+    <TableCell>Hardware issues, network instability, or software crashes</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Segment failure rate per worker</TableCell>
+    <TableCell>A single problematic worker pulling down fleet-wide success rate</TableCell>
+  </TableRow>
+</StyledTable>
+
+For Prometheus fleet monitoring, run the [livepeer/livepeer-monitoring](https://github.com/livepeer/livepeer-monitoring) Docker image configured with all worker node addresses:
+
+```bash icon="terminal" title="Run the monitoring stack for a fleet"
+docker run --net=host \
+  --env LP_MODE=standalone \
+  --env LP_NODES=worker1:7935,worker2:7935,worker3:7935,orch:7935 \
+  livepeer/monitoring:latest
+```
+
+<CustomDivider />
+
+## Rolling updates
+
+Updating a single-node orchestrator drops all in-flight sessions. At fleet scale, you can do rolling updates to minimise disruption:
+
+**Basic rolling update procedure:**
+
+1. **Remove one node from the rotation.** Update the load balancer or `-orchAddr` configs to stop routing to the node being updated. Wait for in-flight sessions to complete (typically a few minutes).
+2. **Update the node.** Pull the new go-livepeer binary and restart the service.
+3. **Verify the updated node.** Confirm it connects and is receiving sessions before proceeding.
+4. **Repeat for remaining nodes.**
+
+This requires at least two workload nodes to maintain service continuity during updates. With a single orchestrator, updates are always disruptive.
+
+<Note>
+  Workers reconnect automatically when an orchestrator restarts. From a worker's perspective, the orchestrator briefly disappears and then reappears. No manual action is needed on the worker side.
+</Note>
+
+<CustomDivider />
+
+## Network and key management at scale
+
+Fleet operations introduce key management complexity that does not exist on single-node deployments.
+
+**Key considerations:**
+
+- Each orchestrator node needs access to the same Ethereum keystore to accept payments on behalf of your on-chain address. Distribute the keystore file carefully — only over encrypted channels, with restricted file permissions on each machine.
+- For reward calling, you want exactly **one** node calling `reward()` per round. Running reward calling on multiple nodes risks duplicate submissions and wasted gas. Designate a single node for reward calling and set `-reward=false` on all others.
+- For ticket redemption, the Redeemer can be run as a separate process. See `doc/redeemer.md` in the go-livepeer repository.
+- Static IPs or stable DNS names are essential at fleet scale — your service URI is stored on-chain and must resolve consistently.
+
+<CustomDivider />
+
+## Enterprise and data-centre onboarding
+
+If you are operating at data-centre scale, multiple co-location sites, or with commercial-grade SLA requirements, the Livepeer Foundation offers direct engagement support.
+
+<Card title="Contact Livepeer Foundation" icon="building" href="https://livepeer.org/contact">
+  For enterprise and data-centre operators. Direct support for fleet integration, custom gateway relationships, and commercial partnership discussions.
+</Card>
+
+The SPE (Special Purpose Entity) programme is the primary pathway for professional GPU operators who want a structured relationship with the network. Current SPEs include Titan Node (video mining) and MuxionLabs (formerly known as the AI SPE). See the Livepeer Forum and Discord for active SPE discussions.
+
+<CustomDivider />
+
+<CardGroup cols={2}>
+  <Card title="Run a Pool" icon="server" href="/v2/orchestrators/guides/advanced-operations/pool-operators">
+    Pool operations — accepting worker connections and managing off-chain payouts.
+  </Card>
+  <Card title="Split O-T Setup" icon="plug" href="/v2/orchestrators/guides/deployment-details/siphon-setup">
+    The foundational split between orchestrator and transcoder processes.
+  </Card>
+  <Card title="Siphon Setup" icon="shield-check" href="/v2/orchestrators/guides/deployment-details/siphon-setup">
+    The reward-safe split setup using OrchestratorSiphon.
+  </Card>
+  <Card title="Metrics and Monitoring" icon="gauge" href="/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting">
+    Scaling Prometheus monitoring to a multi-node fleet.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  "How do I run orchestrators at data-centre scale?" Multi-GPU single machine.
+  Multi-machine fleet deployment. Config management (Ansible, Terraform). Cost
+  optimisation at scale. Geographic distribution (transcoders in multiple DCs
+  feeding single orchestrator). When to run multiple orchestrator identities vs
+  one orchestrator with many transcoders.
+
+  PLAN TARGET: fleet-operations (keep)
+  SECTION: Advanced Operations → "How do I scale?"
+  JOB STORIES: J4 (enterprise scale)
+
+  CROSS-REFS:
+  - Deployment Details > O-T Setup - split architecture for scaling
+  - Deployment Details > Requirements - hardware at scale
+  - Monitoring & Tools > Metrics and Alerting - fleet monitoring
+*/}

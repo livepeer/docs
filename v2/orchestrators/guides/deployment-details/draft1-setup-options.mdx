@@ -1,0 +1,240 @@
+---
+title: 'Setup Options'
+sidebarTitle: 'Setup Options'
+description: 'Four decisions define an orchestrator deployment - setup type, software path, operational mode, and workload mode. Choose each and follow the matching guide.'
+keywords:
+  - livepeer
+  - orchestrator
+  - setup options
+  - on-chain
+  - off-chain
+  - go-livepeer
+  - siphon
+  - pool node
+  - solo
+  - dual mode
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: orchestrator
+purpose: orientation
+status: current
+lastVerified: '2026-03-17'
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+
+<CustomDivider />
+
+The key decisions for Orchestrator setup are:
+1. **Setup Type** - On-chain or off-chain
+2. **Setup Path** - What software is installed
+3. **Operational Mode** - Whether you control and handle all operational requirements or delegate them
+4. **Workload Mode** - What compute job workloads the node processes
+
+<CardGroup cols={2}>
+  <Card title="Setup Type" icon="link">
+    <Badge color="surface">On-chain</Badge> <Badge color="surface">Off-chain</Badge>
+
+    Protocol connection, discovery, and reward eligibility. Applies to <Badge color="surface">Solo</Badge> <Badge color="surface">O-T Split</Badge> <Badge color="yellow">Siphon</Badge>
+  </Card>
+  <Card title="Software Path" icon="terminal">
+    <Badge color="green">go-livepeer</Badge> <Badge color="yellow">OrchestratorSiphon</Badge>
+
+    What runs on each machine. <Badge color="surface">Solo</Badge> and <Badge color="surface">O-T Split</Badge> use go-livepeer only. <Badge color="yellow">Siphon</Badge> adds OrchestratorSiphon for keystore isolation.
+  </Card>
+  <Card title="Operational Mode" icon="server">
+    <Badge color="surface">Solo</Badge> <Badge color="surface">Pool Node</Badge> <Badge color="surface">O-T Split</Badge>
+
+    Who handles protocol operations, who provides GPU compute. Determines LPT requirement, machine count, and operational responsibility.
+  </Card>
+  <Card title="Workload Mode" icon="microchip">
+    <Badge color="blue">Video</Badge> <Badge color="purple">AI</Badge> <Badge color="green">Dual</Badge>
+
+    What compute jobs the node processes. Any operational mode supports any workload mode.
+  </Card>
+</CardGroup>
+
+## Setup Type
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header></TableCell>
+      <TableCell header><Icon icon="link" size={14} /> On-chain</TableCell>
+      <TableCell header><Icon icon="cloud" size={14} /> Off-chain</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Protocol**</TableCell>
+      <TableCell>Connected to Livepeer on Arbitrum</TableCell>
+      <TableCell>No blockchain connection</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Discovery**</TableCell>
+      <TableCell>Gateways find the node via protocol registry</TableCell>
+      <TableCell>Only gateways with explicit `-orchAddr`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Rewards**</TableCell>
+      <TableCell>LPT inflation each round</TableCell>
+      <TableCell>None</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Requires**</TableCell>
+      <TableCell>Arbitrum RPC, arbETH, LPT stake</TableCell>
+      <TableCell>GPU and a gateway to serve</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Use for**</TableCell>
+      <TableCell>Production orchestrators serving the network</TableCell>
+      <TableCell>Private orchestrators for a specific gateway, development, testing</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+## Software Path
+
+**go-livepeer** is the Livepeer protocol implementation. It runs as a single process or in split orchestrator/transcoder mode. Handles protocol operations, GPU compute, and job routing. All setup paths use go-livepeer for the compute side.
+
+**OrchestratorSiphon** is a Python companion tool that handles keystore operations, reward calling, and governance on a separate secure machine. The GPU machine still runs go-livepeer in transcoder mode. Siphon exists because GPU machines restart - and a missed reward round is permanent LPT loss.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header></TableCell>
+      <TableCell header>go-livepeer only</TableCell>
+      <TableCell header>go-livepeer + Siphon</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Machines**</TableCell>
+      <TableCell>1 (or 2+ for O-T split)</TableCell>
+      <TableCell>2 (secure machine + GPU machine)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Keystore**</TableCell>
+      <TableCell>On the same machine as GPU</TableCell>
+      <TableCell>Isolated on secure machine</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Reward calling**</TableCell>
+      <TableCell>Tied to GPU machine uptime</TableCell>
+      <TableCell>Independent of GPU machine</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Complexity**</TableCell>
+      <TableCell>Lower</TableCell>
+      <TableCell>Higher (Python tool + config sync)</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<LinkArrow href="/v2/orchestrators/guides/deployment-details/siphon-setup" label="Siphon Setup Guide" />
+
+## Operational Mode
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Mode</TableCell>
+      <TableCell header>What it is</TableCell>
+      <TableCell header>LPT</TableCell>
+      <TableCell header>Machines</TableCell>
+      <TableCell header>Guide</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Solo**</TableCell>
+      <TableCell>One go-livepeer process runs protocol and GPU. Full control over pricing, workloads, stake, and earnings. Direct on-chain payouts. Governance weight. Single point of failure for rewards.</TableCell>
+      <TableCell>Active set threshold (video) or minimal (AI)</TableCell>
+      <TableCell>1</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/setup/guide" label="Setup Guide" newline={false} /></TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Pool node**</TableCell>
+      <TableCell>go-livepeer in transcoder mode, connected to a pool operator. No staking, no reward calling, no pricing decisions, no keystore management, no upgrade responsibility. Passive GPU earnings distributed off-chain by the pool operator.</TableCell>
+      <TableCell>None</TableCell>
+      <TableCell>1</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/guides/deployment-details/join-a-pool" label="Join a Pool" newline={false} /></TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**O-T split**</TableCell>
+      <TableCell>Orchestrator process (protocol, routing, no GPU) and transcoder process (GPU compute) on separate machines. Keystore isolated from GPU. GPU machines scale independently. Reward calling from stable server. Foundation for running a pool.</TableCell>
+      <TableCell>Active set threshold</TableCell>
+      <TableCell>2+</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup" label="O-T Split" newline={false} /></TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<Note>
+Running a pool (accepting external GPU operators) is an extension of the O-T split pattern. See <LinkArrow href="/v2/orchestrators/guides/advanced-operations/pool-operators" label="Pool Operators" newline={false} /> in Advanced Operations.
+</Note>
+
+## Workload Mode
+
+The Livepeer protocol routes video and AI as separate job types through different mechanisms. Video jobs flow through the segment-based transcoding pipeline. AI jobs flow through the capability-based inference pipeline. <Badge color="green">Dual</Badge> mode runs both from one orchestrator process - the most common production configuration.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Mode</TableCell>
+      <TableCell header>Pipeline</TableCell>
+      <TableCell header>Min VRAM</TableCell>
+      <TableCell header>Pricing</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell><Badge color="blue">Video</Badge></TableCell>
+      <TableCell>Segment transcoding via NVENC/NVDEC</TableCell>
+      <TableCell>4 GB</TableCell>
+      <TableCell>`-pricePerUnit` (wei per pixel)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell><Badge color="purple">AI</Badge></TableCell>
+      <TableCell>Inference via CUDA compute</TableCell>
+      <TableCell>8-24 GB</TableCell>
+      <TableCell>`aiModels.json` per pipeline</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell><Badge color="green">Dual</Badge></TableCell>
+      <TableCell>Both pipelines, one process</TableCell>
+      <TableCell>16-24 GB</TableCell>
+      <TableCell>Both</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+NVENC/NVDEC (video) and CUDA (AI) use separate execution paths on the GPU. A 24 GB card runs both workloads with one warm AI model loaded.
+
+<LinkArrow href="/v2/orchestrators/guides/deployment-details/dual-mode-configuration" label="Dual Mode Configuration" />
+<LinkArrow href="/v2/orchestrators/guides/ai-and-job-workloads/workload-options" label="Workload Options" />
+
+<CustomDivider />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Requirements" icon="clipboard-check" href="/v2/orchestrators/guides/operator-considerations/requirements" arrow horizontal>
+    Hardware, software, network, and token prerequisites by node mode.
+  </Card>
+  <Card title="Setup Guide" icon="gear" href="/v2/orchestrators/setup/guide" arrow horizontal>
+    Install, configure, connect, verify.
+  </Card>
+  <Card title="Join a Pool" icon="users" href="/v2/orchestrators/guides/deployment-details/join-a-pool" arrow horizontal>
+    Contribute GPU via an existing pool operator.
+  </Card>
+  <Card title="Operator Rationale" icon="scale-balanced" href="/v2/orchestrators/guides/operator-considerations/operator-rationale" arrow horizontal>
+    Cost, revenue, and viability analysis.
+  </Card>
+</CardGroup>

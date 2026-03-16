@@ -1,0 +1,333 @@
+---
+title: 'Visual Explainer Workflows'
+sidebarTitle: 'Visual Explainer'
+description: 'Pilot workflow guidance for using visual-explainer in docs maintenance, review, and reporting.'
+keywords:
+  [
+    'livepeer',
+    'visual explainer',
+    'docs guide',
+    'feature guide',
+    'pilot workflow',
+    'diff review',
+    'plan review',
+    'fact check',
+    'project recap',
+  ]
+---
+
+# Visual Explainer — Livepeer docs-v2 Implementation Guide
+
+> **What this is:** A practical guide to implementing [nicobailon/visual-explainer](https://github.com/nicobailon/visual-explainer) as a developer/maintainer tooling layer for the `livepeer/docs` `docs-v2` branch. This is not a content authoring tool — it operates alongside the docs, not inside Mintlify.
+
+---
+
+## Pilot Scope (Current)
+
+This workflow is currently an **optional, maintainer-focused pilot**.
+
+- It is not a required contributor gate.
+- It is not a Mintlify runtime feature.
+- It is not part of CI or GitHub Actions.
+- Generated diagram/review artifacts should remain out-of-repo during the pilot.
+
+---
+
+## Understanding the Boundary
+
+Visual-explainer outputs **standalone HTML files** to `~/.agent/diagrams/`. It is a **Claude Code skill** — it runs in your terminal workflow, not inside Mintlify. This means:
+
+- It does **not** replace Mermaid diagrams already rendering correctly in MDX pages
+- It does **not** write to the repo directly
+- It **does** produce shareable, linked reference pages and maintainer-tooling outputs
+- It **does** activate automatically when you ask Claude Code for diagrams, architecture overviews, or plan comparisons
+- It uses Claude Code slash commands (for example `/diff-review`) and should not be treated as a Mintlify or CI command
+
+---
+
+## Installation
+
+```bash
+# Install into Claude Code skills directory
+git clone https://github.com/nicobailon/visual-explainer.git ~/.claude/skills/visual-explainer
+```
+
+That's it. No restart required. Claude Code reads the `SKILL.md` on each session.
+
+---
+
+## Priority 1: `/plan-review` on the AI-First Docs Plan
+
+**What it does:** Cross-references every claim in a plan document against the actual codebase. Produces a current vs. planned architecture diagram and flags risks and gaps.
+
+**Why it matters here:** The `livepeeraifirstdocsplan.pdf` is a concrete implementation plan with sprint deliverables. Running `/plan-review` against `docs-v2` gives you a machine-verified gap analysis — which items are landed, which are still outstanding, and where the delta lives in the file system.
+
+**How to run it:**
+
+```bash
+# From the docs repo root, on the docs-v2 branch
+cd ~/path/to/livepeer/docs
+git checkout docs-v2
+
+# In Claude Code
+/plan-review ~/path/to/livepeeraifirstdocsplan.pdf
+```
+
+**What to expect in the output:**
+- Every sprint item mapped to a file path in `v2/`, `ai-tools/`, or `tools/scripts/`
+- Items flagged as **not yet landed** in current docs-v2 coverage (for example quickstart/tutorial gaps, migration docs, accessibility follow-ups)
+- A risk/gap matrix formatted as a visual HTML page you can share directly with stakeholders
+
+**Use this output for:** Delivery reporting, handover documentation, addressing scope/completion criticism with a verifiable artifact rather than prose claims.
+
+---
+
+## Priority 2: `/diff-review` on docs-v2 PRs
+
+**What it does:** Generates a full visual review page for any git diff — before/after architecture diagrams, KPI dashboard, structured code review (Good/Bad/Ugly), and a decision log with confidence indicators.
+
+**Why it matters here:** The docs-v2 branch has deep history and broad surface area. PRs touching `docs.json` (navigation structure), `snippets/components/` (component system), or `.github/workflows/` (CI) are structurally complex and hard to reason about in GitHub's flat diff view.
+
+**How to run it:**
+
+```bash
+# Default: feature branch vs main
+/diff-review
+
+# Specific commit
+/diff-review abc123
+
+# Committed changes only (excludes staged/unstaged)
+/diff-review main..HEAD
+
+# Pull request by number
+/diff-review #42
+```
+
+**The highest-value PR types to run this on:**
+
+| PR Type | Why Visual Review Helps |
+|---|---|
+| `docs.json` changes | Navigation structure changes are invisible in text diff; architecture diagram makes them obvious |
+| `snippets/components/` additions | Component graph changes affect every page that imports them |
+| `.github/workflows/` changes | CI dependency changes need a flow diagram, not line-by-line YAML review |
+| Large `v2/` restructures | Section moves affect redirect chains and cross-links non-obviously |
+
+**How to integrate into workflow (pilot):** Keep this optional and maintainer-led first. For now, use it before opening or reviewing structural PRs and gather evidence on review quality.
+
+---
+
+## Priority 3: Architecture Diagrams for Commented-Out Mermaid
+
+**What it does:** Generates a full-page, zoom/pan-enabled, dark/light themed diagram using ELK layout — significantly more capable than Mintlify's inline Mermaid renderer.
+
+**Why it matters here:** Two substantial architecture diagrams are **commented out** in the existing MDX files, almost certainly because they were too complex to render cleanly in-page:
+
+- `v2/gateways/references/technical-architecture.mdx` — Marketplace Interaction Model (commented out)
+- `v2/gateways/references/technical-architecture.mdx` — BYOC Container Architecture (commented out)
+
+These are exactly the diagrams that orchestrator and gateway operator audiences need most.
+
+**How to rescue them:**
+
+```bash
+# Option A: Ask Claude Code to generate from the commented Mermaid source
+# Open the file, then:
+> generate a web diagram for the BYOC container architecture from this file
+
+# Option B: Describe the architecture directly
+> draw a diagram of the BYOC container runtime flow: developer container → 
+  compliant runtime spec → gateway intake → capability validation → 
+  orchestrator container runner → GPU execution
+```
+
+**Where to link the output:**
+
+The generated HTML files live at `~/.agent/diagrams/`. Host them or link to them from the relevant reference pages. In the MDX, replace the commented-out Mermaid block with:
+
+```mdx
+<Note>
+  View the interactive [BYOC Architecture Diagram](/path/to/hosted/diagram.html) 
+  for a zoomable, full-page version of this flow.
+</Note>
+```
+
+Or embed as an iframe if Mintlify supports it in your configuration.
+
+---
+
+## Priority 4: `/fact-check` on Delivery Reports
+
+**What it does:** Takes any document that makes claims about code and verifies every claim against the actual codebase. Produces a verification log as a visual HTML page.
+
+**Why it matters here:** The RFP delivery report and retrospective make specific claims about what was built — script/test coverage, component library work, GitHub Actions workflows, CLI tools, AI-first tooling. `/fact-check` produces a machine-verified evidence log.
+
+**How to run it:**
+
+```bash
+# Verify the RFP delivery report
+/fact-check ~/path/to/Livepeer_Docs_v2_RFP_Delivery_Report_with_Sections.docx
+
+# Verify the retrospective
+/fact-check ~/path/to/livepeer_docs_v_2_retrospective.md
+```
+
+**What it checks against the repo:**
+- Every script claimed → existence in `tools/scripts/`
+- Every workflow claimed → existence in `.github/workflows/`
+- Every component claimed → existence in `snippets/components/`
+- Every page structure claimed → existence in `v2/`
+
+**Use this output for:** A timestamped, verifiable evidence artifact that can accompany delivery documentation. Share the HTML file directly with stakeholders as a supplement to the written report.
+
+---
+
+## Priority 5: `/project-recap` for Contributor Onboarding
+
+**What it does:** Scans recent git activity and produces an architecture snapshot, decision log, and cognitive debt hotspots — a mental model of the current project state.
+
+**Why it matters here:** The repo has multiple maintainers/contributors and `docs-guide/` as the canonical navigation source of truth. `/project-recap` produces a single visual page that helps reduce orientation time.
+
+**How to run it:**
+
+```bash
+# From the docs repo root
+cd ~/path/to/livepeer/docs
+/project-recap
+```
+
+**What the output will surface:**
+- Which areas of the repo have the most recent churn (for example `v2/developers/` and adjacent docs sections)
+- The test suite structure across `tests/` and `.github/workflows/`
+- The automation pipeline map
+- Cognitive debt hotspots — files with high change frequency and high complexity
+
+**How to integrate:**
+
+Add a reference to `contribute/CONTRIBUTING/README.md`:
+
+```markdown
+## Getting Oriented Quickly
+
+If you're new to the repo or returning after time away, run:
+
+```bash
+/project-recap
+```
+
+This generates a visual architecture snapshot of the current project state, including recent decisions and areas of active change.
+```
+
+Regenerate before major handovers or when onboarding new maintainers.
+
+---
+
+## Priority 6: Persona Routing Matrix Table
+
+**What it does:** Visual-explainer's HTML table renderer with KPI badges produces significantly more scannable comparison tables than MDX table syntax.
+
+**The specific table worth generating:** A persona-to-entrypoint routing matrix — the implicit routing logic that lives in `docs.json` and the persona portal pages, surfaced as a single visual reference.
+
+**Ask Claude Code:**
+
+```bash
+> generate a data table showing Livepeer documentation persona routing:
+  columns: User Type | Primary Question | Entry Point Page | Zero-to-Hero Path | Key Reference
+  rows: Developer (AI Jobs), Developer (Transcoding), Gateway Operator, 
+        Orchestrator, Delegator, Community Contributor
+```
+
+**Where to use it (pilot):** Use internally first in `docs-guide/frameworks/content-system.mdx` and maintainer handoff docs. Delay homepage "Mission Control" placement until pilot usefulness is validated.
+
+---
+
+## What NOT to Use Visual Explainer For
+
+| Context | Why to Skip It |
+|---|---|
+| MDX content pages (end-user docs) | Not Mintlify-native; breaks inline reading experience; Mermaid already renders for these |
+| `ai-tools/` directory (llms.txt, docs-index.json, JSON-LD) | Machine-readable formats; visual-explainer produces human-readable HTML — no overlap |
+| Test suite output | `lpd` CLI and GitHub Actions CI already provide structured output in the right channels |
+| Automated CI pipeline | Visual-explainer is interactive/agent-driven, not a headless script runner |
+
+---
+
+## 4-Week Pilot Rollout
+
+### Week 1: Baseline
+
+- Keep this guide aligned with current repo paths (`v2/**`, not `v2/pages/**`).
+- Keep contributor-facing messaging optional.
+- Track pilot scope in docs-guide contributor docs, not as a required contribution gate.
+
+### Weeks 1-2: Operational Pilot
+
+- Run `/diff-review` on at least five structural PRs touching one or more of:
+  - `docs.json`
+  - `snippets/components/**`
+  - `.github/workflows/**`
+- Run `/plan-review` once against the AI-first plan.
+- Use artifact naming:
+  - `YYYY-MM-DD_diff-review_<ref>.html`
+  - `YYYY-MM-DD_plan-review_ai-first-plan.html`
+
+### Week 2: Diagram Rescue Pilot
+
+- Generate diagram artifacts for the two commented Mermaid diagrams in:
+  - `v2/gateways/references/technical-architecture.mdx`
+- Keep links internal during the pilot (do not publish into user-facing pages yet).
+
+### Weeks 3-4: Evidence and Onboarding
+
+- Run `/fact-check` on delivery and retrospective documents.
+- Run `/project-recap` for onboarding/handoff context.
+- Generate a persona-routing matrix as an internal artifact only.
+
+### End of Week 4: Decision Gate
+
+Promote to contributor-facing recommendation only if all are true:
+
+- Pilot runs are repeatable by multiple maintainers.
+- Artifact quality is consistently useful.
+- No path drift or command confusion was observed.
+
+If these conditions are not met, keep this workflow internal to maintainers.
+
+---
+
+## Operator Runbook (Planning Only)
+
+Use this checklist after the relocation is complete. Do not execute these commands as part of this migration change.
+
+1. `/diff-review`: run for structural PRs (`docs.json`, `snippets/components/**`, `.github/workflows/**`) and capture one artifact per review.
+2. `/plan-review`: run once against the AI-first plan document and save a single gap-analysis artifact.
+3. `/fact-check`: run on delivery/retrospective docs before stakeholder circulation.
+4. `/project-recap`: run once per onboarding/handoff cycle to generate orientation context.
+
+Outputs should remain out-of-repo and follow the naming convention in this guide.
+
+---
+
+## Quick Reference: Commands
+
+| Command | Best Use in This Repo |
+|---|---|
+| `/plan-review <file>` | Gap analysis of AI-first docs plan vs. actual delivered state |
+| `/diff-review` | PR review for structural changes (docs.json, components, workflows) |
+| `/generate-web-diagram` | Rescue commented-out architecture diagrams; generate new ones on demand |
+| `/project-recap` | Contributor onboarding and maintainer context-switching |
+| `/fact-check <file>` | Verify delivery report claims against codebase before stakeholder communication |
+
+---
+
+## Files to Know in docs-v2
+
+| File | Relevance to Visual Explainer Use |
+|---|---|
+| `docs.json` | Navigation structure — primary target for `/diff-review` on nav PRs |
+| `v2/gateways/references/technical-architecture.mdx` | Contains commented-out BYOC and Marketplace diagrams to rescue |
+| `v2/gateways/about/architecture.mdx` | English gateway architecture page with diagrams that may benefit from full-page outputs |
+| `tools/scripts/` | Target for `/fact-check` script claim verification |
+| `.github/workflows/` | Target for `/fact-check` workflow claim verification |
+| `contribute/CONTRIBUTING/README.md` | Add `/project-recap` and `/diff-review` recommendations here |
+| `docs-guide/features/architecture-map.mdx` | Source material for `/project-recap` output context |

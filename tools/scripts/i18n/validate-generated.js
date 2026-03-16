@@ -1,33 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script validate-generated
- * @summary Validate generated localized MDX files parse cleanly and exist for successful route-map entries.
- * @owner docs
- * @scope tools/scripts/i18n, v2
- * @pipeline manual — diagnostic/investigation tool, run on-demand only
- *
- * @usage
- *   node tools/scripts/i18n/validate-generated.js --languages es,fr,zh-CN --route-map /tmp/route-map.json --report-json /tmp/validate-report.json
- *   node tools/scripts/i18n/validate-generated.js --languages es --fail-on-mock-artifacts
- *
- * @inputs
- *   --languages <csv>, --route-map <path>, --report-json <path>, --fail-on-mock-artifacts, --fail-on-missing-provenance, --config <path>
- *
- * @outputs
- *   - Validation summary in stdout
- *   - Validation report JSON when --report-json is provided
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node tools/scripts/i18n/validate-generated.js --languages es,fr,zh-CN --fail-on-mock-artifacts
- *   node tools/scripts/i18n/validate-generated.js --route-map /tmp/route-map.json --report-json /tmp/validate.json
- *
- * @notes
- *   When --route-map is omitted, validation scans existing localized artifacts for configured languages.
- *   Missing provenance is reported and can be promoted to hard failure with --fail-on-missing-provenance.
+ * @script            validate-generated
+ * @category          validator
+ * @purpose           feature:translation
+ * @scope             tools/scripts/i18n, v2
+ * @owner             docs
+ * @needs             F-R6, F-R7
+ * @purpose-statement Generated localisation validator — checks generated translated MDX files and route-map outputs for integrity
+ * @pipeline          P6
+ * @usage             node tools/scripts/i18n/validate-generated.js [flags]
  */
 
 const fs = require('fs');

@@ -1,0 +1,51 @@
+---
+title: Component Layout Decisions
+sidebarTitle: Layout Decisions
+description: Page-type layout contract for required sections and approved component sets.
+keywords:
+  - livepeer
+  - component layout
+  - governance
+  - page types
+  - docs
+audience: internal
+pageType: reference
+purpose: reference
+status: current
+lastVerified: 2026-03-12
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+## Purpose
+
+Use this matrix to decide how content should be structured and which components are acceptable for each page type.
+
+## Policy Source
+
+- `tools/config/component-layout-profile.json`
+- `tools/config/component-layout-profile.schema.json`
+
+## Matrix
+
+| Page Type | Required Sections | Preferred Components | Avoid |
+|---|---|---|---|
+| `landing` | `Overview` | `Card`, `CardGroup`, `Tabs`, `Accordion`, `AccordionGroup`, `Note` | TODO/TBD placeholders |
+| `overview` | `Overview` | `Card`, `CardGroup`, `Tabs`, `Accordion`, `AccordionGroup`, `CodeGroup`, `Note` | TODO/TBD placeholders |
+| `how_to` | `Prerequisites`, `Steps` | `Steps`, `Step`, `CodeGroup`, `Warning`, `Check`, `Tip` | `Coming Soon`, `PreviewCallout` |
+| `reference` | `Reference` | `ParamField`, `ResponseField`, `CodeGroup`, `Tabs`, `Table` | TODO/TBD/Coming Soon |
+| `tutorial` | `Prerequisites`, `Steps`, `Next Steps` | `Steps`, `Step`, `CodeGroup`, `Tip`, `Warning`, `Check` | `Coming Soon` |
+| `concept` | `Overview` | `Accordion`, `AccordionGroup`, `CodeGroup`, `Tabs`, `Note`, `Info`, `Tip` | TODO/TBD placeholders |
+| `faq` | `Frequently Asked Questions` | `Accordion`, `AccordionGroup`, `Note`, `Info`, `Tip` | TODO/TBD placeholders |
+| `troubleshooting` | `Fix`, `Verify` | `Accordion`, `AccordionGroup`, `CodeGroup`, `Tabs`, `Warning`, `Check` | TODO/TBD/Coming Soon |
+| `glossary` | `Terms` | `Accordion`, `AccordionGroup`, `Table`, `Note`, `Info` | TODO/TBD placeholders |
+| `changelog` | `Changes` | `Accordion`, `AccordionGroup`, `CodeGroup`, `Note`, `Info` | TODO/TBD placeholders |
+
+## Validation Command
+
+```bash
+node tools/scripts/component-layout-governance.js --scope full --output-dir tasks/reports/repo-ops
+```

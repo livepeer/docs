@@ -1,0 +1,93 @@
+---
+title: Create a livestream
+description: >-
+  Create a livestream with the Livepeer Studio API and get a stream key and
+  playback ID.
+keywords:
+  - livepeer
+  - docs
+  - solutions
+  - livepeer studio
+  - livestream
+  - create livestream
+  - create
+  - with
+  - studio
+  - stream
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+---
+
+Create a stream via the API or SDK to get a **stream key** (for broadcasters) and a **playback ID** (for viewers). The example below uses the [Create Stream API](https://livepeer.studio/docs/api-reference/stream/create).
+
+## Create a stream with the SDK
+
+<Tabs>
+  <Tab title="Node.js">
+    ```javascript
+    import { Livepeer } from "livepeer";
+
+    const livepeer = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+
+    const { data } = await livepeer.stream.create({
+      name: "my-stream",
+    });
+
+    console.log("Stream key:", data.streamKey);
+    console.log("Playback ID:", data.playbackId);
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    from livepeer import Livepeer
+
+    livepeer = Livepeer(api_key=os.environ["LIVEPEER_API_KEY"])
+    response = livepeer.stream.create({"name": "my-stream"})
+
+    if response.stream:
+        print("Stream key:", response.stream.stream_key)
+        print("Playback ID:", response.stream.playback_id)
+    ```
+  </Tab>
+  <Tab title="Go">
+    ```go
+    package main
+
+    import (
+        "github.com/livepeer/livepeer-go"
+        "context"
+    )
+
+    func main() {
+        client := livepeer.New(livepeer.WithAPIKey(os.Getenv("LIVEPEER_API_KEY")))
+        ctx := context.Background()
+        res, err := client.Stream.Create(ctx, livepeer.StreamCreationPayload{
+            Name: livepeer.String("my-stream"),
+        })
+        if err != nil {
+            log.Fatal(err)
+        }
+        if res.Stream != nil {
+            fmt.Println("Stream key:", *res.Stream.StreamKey)
+            fmt.Println("Playback ID:", *res.Stream.PlaybackId)
+        }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Use the stream key and playback ID
+
+- **Stream key** - Give this to the broadcaster. They enter it in OBS (or another encoder) or use it for [in-browser WebRTC broadcast](livestream-from-browser). Keep the stream key secret; anyone with it can push video to the stream.
+- **Playback ID** - Use this in your app to play the stream (e.g. with the [Livepeer Player](../player) or the [Playback Info API](https://livepeer.studio/docs/api-reference/playback/get)). You can expose the playback ID to viewers.
+
+## Next steps
+
+- [Play a livestream](./playback-livestream) - Play the stream in your app.
+- [Stream via OBS](stream-via-obs) - Configure OBS with the stream key.
+- [Livestream from browser](livestream-from-browser) - Broadcast with WebRTC from the browser.
+- [Multistream](multistream) - Send the stream to multiple destinations.

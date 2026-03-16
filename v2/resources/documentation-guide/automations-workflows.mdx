@@ -1,15 +1,30 @@
 ---
-sidebarTitle: 'Automations & Workflows'
-title: 'Automations & Workflows Guide'
-description: 'Complete guide to all automation scripts, GitHub Actions workflows, n8n automations, and pre-commit hooks in the Livepeer documentation repository'
-keywords: ["livepeer", "resources", "documentation guide", "automations", "workflows", "scripts", "github actions", "n8n", "pre-commit", "hooks"]
-og:image: "/snippets/assets/domain/07_RESOURCES/social-preview-resources.jpg"
+title: Automations & Workflows Guide
+sidebarTitle: Automations & Workflows
+description: >-
+  Complete guide to all automation scripts, GitHub Actions workflows, n8n
+  automations, and pre-commit hooks in the Livepeer documentation repository
+pageType: concept
+keywords:
+  - livepeer
+  - resources
+  - documentation guide
+  - automations
+  - workflows
+  - scripts
+  - github actions
+  - n8n
+  - pre-commit
+  - hooks
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: everyone
+lastVerified: 2026-03-17
+purpose: concept
 ---
-
-<Tip>
-For a detailed audit of all automations, see the [Automations & Workflows Audit Report](/tasks/reports/_legacy-unmanaged/ungenerated/20-automations-workflows-audit-report.md).
-</Tip>
-
 ## Overview
 
 The documentation repository uses multiple automation systems to keep content up-to-date, validate quality, and streamline workflows:
@@ -20,7 +35,7 @@ The documentation repository uses multiple automation systems to keep content up
 - **Pre-commit Hooks** - Local validation to enforce style guide compliance
 
 <Tip>
-**Intentional Duplication:** Both GitHub Actions and n8n workflows exist for the same functionality (Ghost blog, Forum, YouTube data). This is intentional to provide flexibility for future maintainers. Use whichever platform you prefer based on your needs.
+**Current ownership model:** GitHub Actions is the canonical in-repo automation surface for Ghost, Forum, YouTube, Showcase, and freshness monitoring. Repo-tracked n8n assets are now split between active external dependencies (Discord announcements, Luma events, Discord issue intake), superseded definitions with tracked archive copies, and showcase overlap that still needs human review.
 </Tip>
 
 ## GitHub Actions Workflows
@@ -49,7 +64,7 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
 
 **Policy:** ⚠️ Advisory-only while legacy link cleanup is in progress (`continue-on-error: true`)
 
----
+<CustomDivider />
 
 #### Docs CI - Content Quality Suite
 
@@ -78,7 +93,7 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
 
 **Exception:** For integration PR `docs-v2 -> main`, changed-file static failures are treated as advisory; browser failures still block.
 
----
+<CustomDivider />
 
 #### SDK Generation
 
@@ -103,7 +118,7 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
 **Required secrets:**
 - `SPEAKEASY_API_KEY` - Speakeasy API key for SDK generation
 
----
+<CustomDivider />
 
 #### Docs CI - V2 Browser Sweep
 
@@ -129,7 +144,7 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
 - PR comments with test results
 - Artifact: `v2-page-test-report.json`
 
----
+<CustomDivider />
 
 #### Update Livepeer Release Version
 
@@ -155,9 +170,32 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
 
 **Output file:** `snippets/automations/globals/globals.mdx`
 
----
+**Audit note:** The March 9, 2026 freshness audit found version drift (`v0.7.7` in `globals.mdx` vs `v0.8.9` upstream) and a path mismatch inside this workflow. Treat the workflow as needing maintainer review before assuming it is healthy.
 
-#### Discord Issue Intake (n8n Import)
+<CustomDivider />
+
+#### Pipeline Freshness Monitor
+
+**File:** `.github/workflows/freshness-monitor.yml`
+
+**Purpose:** Reports stale or missing derived automation outputs without modifying repository data
+
+**Triggers:**
+- Daily at 08:00 UTC (scheduled)
+- Manual dispatch
+
+**What it does:**
+1. Checks git history timestamps for the seven canonical pipeline output files
+2. Writes a markdown summary table to the GitHub Actions job summary
+3. Emits a warning annotation when any file is missing or older than 72 hours
+
+**Required secrets:** None
+
+**Output:** GitHub Actions step summary only
+
+<CustomDivider />
+
+#### Discord Issue Intake (Phase 1)
 
 **File:** `.github/workflows/discord-issue-intake.yml`
 
@@ -196,7 +234,7 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
 - `snippets/assets/scripts/n8n/README-discord-issue-intake-workflow.md`
 - `.github/workflows/issue-auto-label.yml`
 
----
+<CustomDivider />
 
 #### Issue Auto Label
 
@@ -218,7 +256,7 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
   - `Classification` is only treated as required when the issue body already contains a `### Classification` section
   - This prevents older issues from being auto-labeled `status: needs-info` during re-triage edits
 - The workflow skips the docs-v2 top-level issue index by checking for the hidden marker:
-  - `<!-- docs-v2-issue-indexer -->`
+  - `[//]: # (docs-v2-issue-indexer)`
   - Do not remove or rename this marker without updating both this workflow and the indexer workflow
 
 **Manual validation checklist after edits:**
@@ -227,7 +265,7 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
 3. Change classification in the issue body and confirm the old `classification:*` label is removed
 4. Confirm the docs-v2 index issue is not auto-labeled with `status: needs-triage`
 
----
+<CustomDivider />
 
 #### Docs v2 Issue Indexer
 
@@ -241,7 +279,7 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
 - manual dispatch
 
 **What it does:**
-1. Finds the index issue by hidden marker in the issue body (`<!-- docs-v2-issue-indexer -->`)
+1. Finds the index issue by hidden marker in the issue body (`[//]: # (docs-v2-issue-indexer)`)
 2. Creates the index issue if it does not exist
 3. Queries all open `docs-v2` issues and recently closed `docs-v2` issues (default 30-day window)
 4. Generates summary counts + breakdown tables + issue tables
@@ -258,7 +296,7 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
 
 **Operational troubleshooting:**
 - Duplicate index issues:
-  - Ensure only one issue contains the marker `<!-- docs-v2-issue-indexer -->`
+  - Ensure only one issue contains the marker `[//]: # (docs-v2-issue-indexer)`
   - Remove the marker from duplicates, then run the workflow manually
 - Missing labels in breakdowns:
   - Check `.github/workflows/issue-auto-label.yml` managed prefixes and label parsing
@@ -266,17 +304,17 @@ GitHub Actions workflows are located in `.github/workflows/` and run automatical
 - Unexpected "unclassified" open issues:
   - These are usually legacy issues (pre-classification) or issues created from older Discord intake schema `1.0.0`
 
----
+<CustomDivider />
 
-### Data Fetching Workflows (GitHub Actions & n8n Available)
+### Data Fetching Workflows (GitHub Actions Canonical)
 
-The GitHub Actions implementation uses dedicated workflows split by data source (`update-forum-data.yml`, `update-ghost-blog-data.yml`, and `update-youtube-data.yml`). N8n versions of these flows are also maintained for teams that prefer external automation orchestration.
+The GitHub Actions implementation is the canonical in-repo path for Ghost, Forum, and YouTube data refresh. Older n8n definitions for those feeds now have tracked archive copies under `tasks/staging/deprecated-n8n/` so they are recoverable while the original files await human-approved cleanup.
 
 #### Update Forum Data
 
 **File:** `.github/workflows/update-forum-data.yml`
 
-**Status:** ⚠️ **Alternative to n8n** - See note in workflow file
+**Status:** Canonical GitHub Actions workflow
 
 **Purpose:** Fetches latest forum topics from Livepeer forum
 
@@ -293,15 +331,15 @@ The GitHub Actions implementation uses dedicated workflows split by data source 
 - `DOCS_V2` - GitHub token for docs repository access
 - `GHOST_CONTENT_API_KEY` - Ghost Content API key used by `.github/scripts/fetch-ghost-blog-data.js`
 
-**Note:** Both GitHub Actions and n8n workflows are available for this functionality. Use whichever you prefer.
+**Deprecated copy:** `tasks/staging/deprecated-n8n/Forum-To-Mintlify-Latest-Topics.json`
 
----
+<CustomDivider />
 
 #### Update Ghost Blog Data
 
 **File:** `.github/workflows/update-ghost-blog-data.yml`
 
-**Status:** ⚠️ **Alternative to n8n** - See note in workflow file
+**Status:** Canonical GitHub Actions workflow
 
 **Purpose:** Fetches latest blog posts from Ghost CMS
 
@@ -317,15 +355,15 @@ The GitHub Actions implementation uses dedicated workflows split by data source 
 **Required secrets:**
 - `DOCS_V2` - GitHub token for docs repository access
 
-**Note:** Both GitHub Actions and n8n workflows are available for this functionality. Use whichever you prefer.
+**Deprecated copy:** `tasks/staging/deprecated-n8n/Ghost-to-Mintlify.json`
 
----
+<CustomDivider />
 
 #### Update YouTube Data
 
 **File:** `.github/workflows/update-youtube-data.yml`
 
-**Status:** ⚠️ **Alternative to n8n** - See note in workflow file
+**Status:** Canonical GitHub Actions workflow
 
 **Purpose:** Fetches latest YouTube videos from Livepeer channel
 
@@ -342,25 +380,52 @@ The GitHub Actions implementation uses dedicated workflows split by data source 
 **Required secrets:**
 - `YOUTUBE_API_KEY` - YouTube Data API v3 key
 
-**Note:** Both GitHub Actions and n8n workflows are available for this functionality. Use whichever you prefer.
+**Deprecated copy:** `tasks/staging/deprecated-n8n/YouTube-To-Mintlify.json`
 
----
+<CustomDivider />
 
 ## n8n Automation Workflows
 
-n8n workflows are JSON files located in `snippets/automations/scripts/n8n/`. These workflows run on an external n8n instance and can be imported/configured there.
+n8n workflows are JSON files located in `snippets/automations/scripts/n8n/`. These workflows run on an external n8n instance and can be imported/configured there. Superseded repo-tracked definitions now also have tracked archive copies under `tasks/staging/deprecated-n8n/`.
 
 <Warning>
-Most n8n workflows are currently **inactive** (`"active": false`). Only active workflows are documented below. See audit report for full status.
+The repository does not prove where the external n8n instance is hosted or which archived definitions are still deployed remotely. Treat repo JSON state as evidence, not runtime truth.
 </Warning>
 
+### Repo-tracked n8n workflows still in scope
+
+| Workflow | Repo status | Ownership |
+|---|---|---|
+| `Discord_Announce_to_Mintlify.json` | Retained in active directory | Only repo-tracked Discord announcements pipeline; external trigger and hosting still need maintainer confirmation. |
+| `Luma-To-Mintlify.json` | Retained in active directory | Only repo-tracked Luma events pipeline; marked active in JSON but external runtime ownership is undocumented. |
+| `Discord-Issue-Intake.json` | Retained in active directory | Paired with `.github/workflows/discord-issue-intake.yml`; n8n handles Discord interaction intake and GitHub Actions creates the issue. |
+| `Project Showcase Application Workflow.json` | Retained in active directory | Overlaps with `project-showcase-sync.yml`; repo evidence suggests live usage, so retirement requires human review. |
+| `Showcase_Project_Pipeline.json` | Retained in active directory | Overlaps with `project-showcase-sync.yml`; repo evidence suggests live usage, so retirement requires human review. |
+
 ### Active n8n Workflows
+
+#### Discord Announcements to Mintlify
+
+**File:** `snippets/automations/scripts/n8n/Discord_Announce_to_Mintlify.json`
+
+**Status:** Repo-tracked n8n-only feed
+
+**Purpose:** Generates `snippets/automations/discord/discordAnnouncementsData.jsx`
+
+**Trigger:** Schedule trigger in n8n
+
+**What we know from the repo:**
+1. No GitHub Actions workflow currently writes the Discord announcements data file
+2. The JSON workflow targets `docs-v2` and the canonical Discord data output path
+3. The JSON defaults to inactive in the repo, so external activation and hosting must be confirmed outside the repository
+
+**Output:** `snippets/automations/discord/discordAnnouncementsData.jsx`
 
 #### Luma Events to Mintlify
 
 **File:** `snippets/automations/scripts/n8n/Luma-To-Mintlify.json`
 
-**Status:** ✅ **Active**
+**Status:** Repo-tracked n8n-only feed
 
 **Purpose:** Fetches Luma calendar events and updates documentation
 
@@ -384,46 +449,18 @@ Most n8n workflows are currently **inactive** (`"active": false`). Only active w
 - GitHub API token with write access
 - Luma calendar ID: `cal-X93qV3PuUH0wq0f`
 
----
+<CustomDivider />
 
-#### Showcase Project Pipeline
+#### Showcase Overlap (Needs Human Review)
 
-**File:** `snippets/automations/scripts/n8n/Showcase_To_Mintlify_Pipeline.json`
+The repository currently contains both `.github/workflows/project-showcase-sync.yml` and active showcase-focused n8n JSON assets:
 
-**Status:** ✅ **Active**
+- `snippets/automations/scripts/n8n/Project Showcase Application Workflow.json`
+- `snippets/automations/scripts/n8n/Showcase_Project_Pipeline.json`
 
-**Purpose:** Handles showcase project submissions, approvals, and updates
+Treat these as overlapping automation surfaces until Alison or Rick confirms which external pipeline is still authoritative. A third showcase JSON (`Showcase_To_Mintlify_Pipeline.json`) remains in the repo and appears to be an older prototype with placeholder paths, but it was intentionally left unchanged in this commit.
 
-**Trigger:** Google Sheets trigger (hourly polling)
-
-**What it does:**
-1. Monitors Google Sheets for new project submissions
-2. Validates submission data
-3. Sends Discord notifications for approval
-4. Downloads media files from Google Drive
-5. Updates `snippets/automations/showcase/showcaseData.jsx` when approved
-6. Sends notifications to submitters
-
-**Output:** `snippets/automations/showcase/showcaseData.jsx`
-
-**How to use:**
-1. Import JSON file into n8n instance
-2. Configure Google Sheets, Discord, and GitHub credentials
-3. Set up Google Form for submissions
-4. Activate workflow
-
-**Required credentials:**
-- Google Sheets OAuth2
-- Discord Bot API
-- GitHub API token
-- Google Drive OAuth2
-
-**Dependencies:**
-- Google Form for project submissions
-- Google Sheet for tracking submissions
-- Discord server for approval workflow
-
----
+<CustomDivider />
 
 #### Discord Issue Intake (Phase 1)
 
@@ -460,23 +497,21 @@ Most n8n workflows are currently **inactive** (`"active": false`). Only active w
 - `GITHUB_POLL_ATTEMPTS`
 - `GITHUB_POLL_DELAY_MS`
 
----
+<CustomDivider />
 
-### Additional n8n Workflows (Alternative to GitHub Actions)
+### Archived Superseded n8n Workflows
 
-The following n8n workflows provide alternative implementations to GitHub Actions. Both are maintained for flexibility:
+The following repo-tracked n8n definitions now have copies in `tasks/staging/deprecated-n8n/` because GitHub Actions is the canonical in-repo owner or the JSON no longer reflects the live contract:
 
-- **Ghost-to-Mintlify.json** - Fetches Ghost blog posts (alternative to `update-ghost-blog-data.yml`)
-- **Forum-To-Mintlify-Latest-Topics.json** - Fetches forum topics (alternative to `update-forum-data.yml`)
-- **YouTube-To-Mintlify.json** - Fetches YouTube videos (alternative to `update-youtube-data.yml`)
-- **Discord_Announce_to_Mintlify.json** - Fetches Discord announcements (n8n only - no GitHub Action equivalent)
-- **Discord-Issue-Intake.json** - Discord issue intake relay (paired with `.github/workflows/discord-issue-intake.yml`)
+- **Ghost-to-Mintlify.json** - archived in favor of `update-ghost-blog-data.yml`
+- **Forum-To-Mintlify-Latest-Topics.json** - archived in favor of `update-forum-data.yml`
+- **YouTube-To-Mintlify.json** - archived in favor of `update-youtube-data.yml`
 
 <Warning>
 **Repository Configuration:** Some n8n workflows may be configured to write to `DeveloperAlly/livepeer-automations` instead of `livepeer/docs`. Before activating, verify the GitHub node is configured to write to the correct repository (`livepeer/docs`) and branch (`docs-v2`).
 </Warning>
 
----
+<CustomDivider />
 
 ### Utility Workflows
 
@@ -510,11 +545,11 @@ The following n8n workflows provide alternative implementations to GitHub Action
 - `optimize` (default: true) - Use palette optimisation
 - `output_path` (optional) - Output file path
 
----
+<CustomDivider />
 
 ## Scripts
 
-Scripts are organized into several directories based on their purpose. All scripts use git-based repo root detection with fallback to `paths.config.json`.
+Scripts are organized into multiple directories based on their purpose. All scripts use git-based repo root detection with fallback to `paths.config.json`.
 
 ### Content Generation Scripts
 
@@ -525,11 +560,14 @@ Scripts are organized into several directories based on their purpose. All scrip
 **Purpose:** Automatically generates and updates SEO metadata for MDX documentation pages
 
 **Usage:**
-```bash
-# Dry run (preview changes)
+```bash icon="terminal"
+# Generate the site-level PNG assets and manifest first
+node tools/scripts/snippets/generate-og-images.js
+
+# Dry run the frontmatter rewrite
 node tools/scripts/snippets/generate-seo.js --dry-run
 
-# Process all files
+# Process all authored MDX files
 node tools/scripts/snippets/generate-seo.js
 
 # Process single file
@@ -537,19 +575,25 @@ node tools/scripts/snippets/generate-seo.js --file=v2/home/mission-control.mdx
 ```
 
 **What it does:**
-1. Scans all MDX files in `v2/pages/`
-2. Generates `keywords` from file path, title, and description
-3. Adds `og:image` using domain-specific or default social preview images
-4. Preserves existing SEO metadata (won't overwrite if already present)
+1. Generates the canonical site-level OG image PNG set and manifest
+2. Scans authored MDX files in `v2/`, `docs/`, `docs-guide/`, `contribute/`, and `snippets/pages/`
+3. Generates `keywords` and `description` only when missing
+4. Writes canonical OG metadata:
+   - `og:image`
+   - `og:image:alt`
+   - `og:image:type`
+   - `og:image:width`
+   - `og:image:height`
+5. Uses top-level tab assets for docs.json-routable pages and the fallback asset for non-routable authored pages
 
 **Output:** Updates frontmatter in MDX files
 
 **When to run:**
 - After creating new documentation pages
-- When updating page titles or descriptions
-- Before deploying to improve SEO
+- After changing OG branding or localized tab labels
+- Before deploying to re-normalize canonical OG metadata
 
----
+<CustomDivider />
 
 #### Generate API Documentation
 
@@ -558,15 +602,15 @@ node tools/scripts/snippets/generate-seo.js --file=v2/home/mission-control.mdx
 **Purpose:** Generates Mintlify API documentation from an OpenAPI specification file
 
 **Usage:**
-```bash
+```bash icon="terminal"
 ./tools/scripts/snippets/generate-api-docs.sh <openapi-spec> <output-dir> <api-name> [github-repo-url]
 ```
 
 **Example:**
-```bash
+```bash icon="terminal"
 ./tools/scripts/snippets/generate-api-docs.sh \
   ai/worker/api/openapi.yaml \
-  v2/pages/04_gateways/api-reference/AI-API \
+  v2/gateways/references/api-reference/AI-API \
   "AI API" \
   "https://github.com/livepeer/ai-worker"
 ```
@@ -578,7 +622,7 @@ node tools/scripts/snippets/generate-seo.js --file=v2/home/mission-control.mdx
 4. Outputs a **docs.json navigation snippet** ready to copy-paste
 
 **Output structure:**
-```text
+```text icon="terminal"
 output-dir/
 ├── ai-api.mdx           # Landing page with Base URLs + CardGroups
 ├── text-to-image.mdx    # openapi: post /text-to-image
@@ -588,32 +632,33 @@ output-dir/
 
 **After running:** Copy the outputted JSON snippet into your `docs.json` navigation.
 
----
+<CustomDivider />
 
 #### Update Component Library
 
-**File:** `tools/scripts/snippets/update-component-library.sh`
+**File:** `tools/scripts/generate-component-docs.js`
 
-**Purpose:** Auto-generates the component library index page from the current `snippets/components/` folder structure
+**Purpose:** Generates the published component-library pages from governed component metadata
 
 **Usage:**
-```bash
-./tools/scripts/snippets/update-component-library.sh
+```bash icon="terminal"
+npm --prefix tools run components:docs
 ```
 
 **What it does:**
-1. Scans `snippets/components/` directory structure
-2. Generates a `<Tree>` component with all folders and files
-3. Updates `snippets/snippetsWiki/componentLibrary/index.mdx`
+1. Reads `docs-guide/component-registry.json`
+2. Generates the English component-library pages in `v2/resources/documentation-guide/component-library/`
+3. Generates locale scaffold pages for `es`, `fr`, and `cn`
+4. Archives the legacy shell entrypoint and removes retired generated pages when required
 
-**Output:** Updates the auto-generated section in `snippets/snippetsWiki/componentLibrary/index.mdx` between the `AUTO-GENERATED` comments.
+**Output:** `v2/resources/documentation-guide/component-library/*.mdx`
 
 **When to run:**
-- After adding new components to `snippets/components/`
-- After reorganizing the components folder structure
-- After renaming or deleting component files
+- After component metadata, usage-map output, or registry output changes
+- After adding, moving, or removing governed components
+- When localized component-library scaffolds need refreshing
 
----
+<CustomDivider />
 
 ### Data Fetching Scripts
 
@@ -624,7 +669,7 @@ output-dir/
 **Purpose:** Fetches OpenAPI specification files from the livepeer/ai-runner repository
 
 **Usage:**
-```bash
+```bash icon="terminal"
 ./tools/scripts/snippets/fetch-openapi-specs.sh
 ```
 
@@ -636,7 +681,7 @@ output-dir/
 - `openapi.yaml` - AI Runner API spec
 - `gateway.openapi.yaml` - AI Gateway API spec
 
----
+<CustomDivider />
 
 #### Fetch External Documentation
 
@@ -645,7 +690,7 @@ output-dir/
 **Purpose:** Fetches external documentation files from other Livepeer repositories and sanitizes them for MDX compatibility
 
 **Usage:**
-```bash
+```bash icon="terminal"
 ./tools/scripts/snippets/fetch-external-docs.sh
 ```
 
@@ -666,7 +711,7 @@ output-dir/
 - Removing HTML comments
 - Converting HTML tags to Markdown equivalents
 
----
+<CustomDivider />
 
 #### Fetch LPT Exchanges
 
@@ -675,7 +720,7 @@ output-dir/
 **Purpose:** Fetches LPT exchange listings from CoinGecko API and updates the exchanges page
 
 **Usage:**
-```bash
+```bash icon="terminal"
 ./tools/scripts/snippets/fetch-lpt-exchanges.sh
 ```
 
@@ -683,13 +728,13 @@ output-dir/
 1. Fetches live data from CoinGecko API for Livepeer token
 2. Generates a styled table of CEX exchanges with volume and trust scores
 3. Appends DEX information and contract addresses
-4. Updates `v2/pages/06_delegators/token-resources/lpt-exchanges.mdx`
+4. Updates `v2/lpt/resources/exchanges.mdx`
 
 **When to run:**
 - Periodically to update exchange listings
 - Before major releases to ensure current data
 
----
+<CustomDivider />
 
 ### Testing Scripts
 
@@ -700,7 +745,7 @@ output-dir/
 **Purpose:** Tests all v2 pages for console errors and rendering issues
 
 **Usage:**
-```bash
+```bash icon="terminal"
 cd tools && npm run test:v2-pages
 # or
 node tools/scripts/test-v2-pages.js
@@ -724,7 +769,7 @@ node tools/scripts/test-v2-pages.js
 **Environment variables:**
 - `MINT_BASE_URL` - Base URL for Mintlify dev server (default: `http://localhost:3000`)
 
----
+<CustomDivider />
 
 ### GitHub Scripts (Used by Workflows)
 
@@ -734,7 +779,7 @@ These scripts are used by GitHub Actions workflows and typically shouldn't be ru
 - **`.github/scripts/fetch-ghost-blog-data.js`** - Fetches Ghost blog data (used by `update-ghost-blog-data.yml`)
 - **`.github/scripts/fetch-youtube-data.js`** - Fetches YouTube data (used by `update-youtube-data.yml`)
 
----
+<CustomDivider />
 
 ## Pre-commit Hooks
 
@@ -744,12 +789,12 @@ Pre-commit hooks automatically run when you attempt to commit code. They enforce
 
 **MANDATORY:** You must install the hooks before making any commits:
 
-```bash
+```bash icon="terminal"
 ./.githooks/install.sh
 ```
 
 Or manually:
-```bash
+```bash icon="terminal"
 cp .githooks/pre-commit .git/hooks/pre-commit
 chmod +x .git/hooks/pre-commit
 ```
@@ -803,7 +848,7 @@ The hooks include headless browser validation that tests MDX files actually rend
 
 For intentional `.allowlist` edits by a human, use:
 
-```bash
+```bash icon="terminal"
 git commit -m "Update .allowlist" --trailer "allowlist-edit=true"
 ```
 
@@ -811,13 +856,13 @@ This keeps all other pre-commit checks enabled.
 
 For intentional file deletions by a human, use:
 
-```bash
+```bash icon="terminal"
 git commit -m "Remove obsolete files" --trailer "allow-deletions=true"
 ```
 
 This also keeps all other pre-commit checks enabled.
 
-```bash
+```bash icon="terminal"
 # Bypass pre-commit hook
 git commit --no-verify -m "message"
 ```
@@ -830,7 +875,7 @@ git commit --no-verify -m "message"
 
 For full details on the hooks, see the [Git Hooks Documentation](/contribute/CONTRIBUTING/GIT-HOOKS.md).
 
----
+<CustomDivider />
 
 ## Running Automations
 
@@ -848,7 +893,7 @@ For full details on the hooks, see the [Git Hooks Documentation](/contribute/CON
 
 Most scripts can be run directly from the command line:
 
-```bash
+```bash icon="terminal"
 # From repository root
 node tools/scripts/snippets/generate-seo.js
 ./tools/scripts/snippets/fetch-lpt-exchanges.sh
@@ -873,7 +918,7 @@ npm run test:v2-pages
 - **n8n** - Check n8n dashboard for execution history
 - **Scripts** - Check console output and generated files
 
----
+<CustomDivider />
 
 ## Troubleshooting
 
@@ -929,7 +974,7 @@ npm run test:v2-pages
 3. Verify secret names match workflow file exactly
 4. For n8n, configure credentials in n8n dashboard
 
----
+<CustomDivider />
 
 ## Best Practices
 
@@ -960,7 +1005,7 @@ npm run test:v2-pages
 
 ### Keeping Automations Updated
 
-1. **Review audit reports** - Check `docs/PLAN/reports/` for automation status
+1. **Review workflow inventories** - Check the workflow and script sections in this guide for current automation status
 2. **Test before deploying** - Run scripts locally before committing
 3. **Monitor workflow runs** - Check GitHub Actions and n8n dashboards regularly
 4. **Update documentation** - Keep this guide current as automations change
@@ -972,7 +1017,7 @@ npm run test:v2-pages
 - **Limit token permissions** - Use least-privilege access for API tokens
 - **Audit regularly** - Review automation access and permissions periodically
 
----
+<CustomDivider />
 
 ## Related Documentation
 
@@ -981,16 +1026,15 @@ npm run test:v2-pages
 - [Git Hooks Documentation](/contribute/CONTRIBUTING/GIT-HOOKS.md) - Complete pre-commit hook documentation
 - [Scripts README](/tools/scripts/snippets/README.mdx) - Detailed scripts documentation
 - [Automations README](/snippets/automations/README.mdx) - Automation overview
-- [Audit Report](/tasks/reports/_legacy-unmanaged/ungenerated/20-automations-workflows-audit-report.md) - Comprehensive automation audit
 
----
+<CustomDivider />
 
 ## Getting Help
 
 If you encounter issues with automations:
 
 1. Check this guide for troubleshooting steps
-2. Review the audit report for known issues
+2. Review the workflow and script sections here for known issues
 3. Check workflow/script documentation
 4. Review execution logs (GitHub Actions or n8n)
 5. Ask in the repository or community channels

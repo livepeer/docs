@@ -1,0 +1,193 @@
+---
+title: Icon Map
+sidebarTitle: Icon Map
+description: Proposed icon-to-usage map for tabs, accordions, cards, and guide navigation across current Livepeer docs.
+keywords:
+  - livepeer
+  - icon map
+  - fontawesome
+  - reference map
+  - docs guide
+  - authoring
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: internal
+pageType: reference
+purpose: reference
+status: draft
+lastVerified: 2026-03-15
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { iconMapMethodology, iconMapSections, iconMapReviewQueue } from '/snippets/data/reference-maps/icon-map.jsx'
+
+<Note>
+This page is a proposed semantic icon map for current docs usage. It is meant to
+make icon decisions easier to review before we enforce more of them.
+</Note>
+
+<Tip>
+The rendered page is backed by `/snippets/data/reference-maps/icon-map.jsx` so the
+same mapping can later feed validators, authoring helpers, or generated reference
+pages instead of drifting inside one MDX file.
+</Tip>
+
+<CustomDivider />
+
+## Scope
+
+- Scan scope: {iconMapMethodology.scope}
+- Exclusions: {iconMapMethodology.exclusions.join(', ')}
+- Generated: {iconMapMethodology.generatedOn}
+
+This pass focuses on current English docs and `docs-guide` usage so the map is not
+distorted by archived or translated duplicates.
+
+<CustomDivider />
+
+## Section Jump
+
+<CardGroup cols={3}>
+  {iconMapSections.map((section) => (
+    <Card
+      key={section.id}
+      title={section.title}
+      icon={section.entries[0].icon}
+      href={`#${section.id}`}
+      arrow
+    >
+      {section.description}
+    </Card>
+  ))}
+</CardGroup>
+
+{iconMapSections.map((section) => (
+  <div key={section.id} id={section.id}>
+    <CustomDivider />
+
+    <h2>{section.title}</h2>
+
+    <p>{section.description}</p>
+
+    <StyledTable>
+      <TableRow header>
+        <TableCell header>Icon</TableCell>
+        <TableCell header>Use for</TableCell>
+        <TableCell header>Avoid for</TableCell>
+        <TableCell header>Best in</TableCell>
+        <TableCell header>Scan</TableCell>
+        <TableCell header>Examples</TableCell>
+      </TableRow>
+
+      {section.entries.map((entry) => (
+        <TableRow key={`${section.id}-${entry.icon}`}>
+          <TableCell>
+            <Icon icon={entry.icon} size={18} /> <strong>{entry.label}</strong>
+            <br />
+            <code>{entry.icon}</code>
+          </TableCell>
+          <TableCell>{entry.useFor}</TableCell>
+          <TableCell>{entry.avoid}</TableCell>
+          <TableCell>{entry.components.join(', ')}</TableCell>
+          <TableCell>{entry.scanCount}</TableCell>
+          <TableCell>
+            <ul>
+              {entry.examples.map((example) => (
+                <li key={example}>
+                  <code>{example}</code>
+                </li>
+              ))}
+            </ul>
+          </TableCell>
+        </TableRow>
+      ))}
+    </StyledTable>
+  </div>
+))}
+
+<CustomDivider />
+
+## Review Queue
+
+These are the icons that look most overloaded or ambiguous in the current docs set.
+
+<StyledTable>
+  <TableRow header>
+    <TableCell header>Icon</TableCell>
+    <TableCell header>Current issue</TableCell>
+    <TableCell header>Recommendation</TableCell>
+  </TableRow>
+
+  {iconMapReviewQueue.map((entry) => (
+    <TableRow key={entry.icon}>
+      <TableCell>
+        <Icon icon={entry.icon} size={18} /> <code>{entry.icon}</code>
+      </TableCell>
+      <TableCell>{entry.issue}</TableCell>
+      <TableCell>{entry.recommendation}</TableCell>
+    </TableRow>
+  ))}
+</StyledTable>
+
+### Inline Review Notes
+
+### `wand-magic-sparkles`
+- **Decision:** keep `wand-magic-sparkles` for AI entry surfaces only. Good fits are `Build an AI product` in `v2/gateways/navigator.mdx` and `ComfyStream` in `v2/gateways/guides/node-pipelines/guide.mdx`.
+- **Products and named solutions should not inherit `wand-magic-sparkles` by default:** pages such as `What is Daydream?` in `v2/solutions/daydream/overview.mdx` and `Transcode` in `v2/solutions/livepeer-studio/reference/overview.mdx` should use a product icon or brand icon instead.
+- **Quickstarts should use `bolt`, not `wand-magic-sparkles` or `rocket`:** this should become the default quickstart cue across portal and setup-entry surfaces.
+- **Badges need their own icon map:** the current `Developer Level Up` badge on `Run a Gateway` in `v2/gateways/portal.mdx` and `Run an Orchestrator` in `v2/orchestrators/portal.mdx` should move to a badge-specific set. Candidate icons: `gamepad`, `trophy`, or `medal`. Follow-up: fold badge semantics into this icon map rather than creating a separate disconnected reference.
+- **Managed or hosted platforms should use a consistent platform icon:** `Managed Platform` in `v2/gateways/guides/deployment-details/setup-options.mdx` should converge on `cloud` as the default unless the platform has its own product icon.
+- **Tutorials, guides, and references should use page-type icons instead:** for example, `Building Real-Time AI Video Effects with ComfyStream` in `v2/developers/guides/developer-guides.mdx` should resolve through tutorial or guide defaults rather than the AI-entry icon.
+
+### `book`
+- **Decision:** keep `book` for generic non-technical guides and concept pages. Good fits are `Contribution Guide` in `v2/developers/get-started/contributor-quickstart.mdx` and concept-oriented reading surfaces where the destination is primarily explanatory.
+- **References, tutorials, and resources should not default to `book`:** `Orchestrator References` in `v2/orchestrators/portal.mdx` and `Orchestrator Offerings Reference` in `v2/gateways/guides/advanced-operations/production-hardening.mdx` should align to the resources/reference icon family instead. Tutorials should have their own default icon, likely `circle-play`.
+- **External docs should use a product icon first, then an external-doc fallback:** `Daydream docs` in `v2/solutions/daydream/overview.mdx`, `ComfyStream documentation` in `v2/developers/get-started/comfystream-quickstart.mdx`, and `Frameworks docs` in `v2/solutions/frameworks/overview.mdx` should use a product icon where available, otherwise a generic external-link cue such as `up-right-from-square`.
+- **Technical guides should use a technical-guide icon, not `book`:** items like `Python SDK Quickstart (Official Docs)` in `v2/developers/guides/developer-guides.mdx` should likely move to `laptop-file` or the agreed technical-guide default.
+- **GitHub destinations should always use `github`:** `Documentation` and `Livepeer Docs` in `v2/developers/guides/contribution-guide.mdx` are GitHub links and should be branded as such, not rendered as generic books.
+- **Likely default split by page type:** `book` for non-technical guides and concepts, `laptop-file` for technical guides, `circle-play` for tutorials, and the existing resources/reference icon family for references.
+
+### `server`
+- **Gateway or node deployment paths:** used when the reader is choosing a self-hosted path. Examples: `Set Up a Gateway` in `v2/developers/concepts/running-a-gateway.mdx`, `Solo orchestrator (go-livepeer)` in `v2/orchestrators/guides/setup-paths/find-your-path.mdx`, and `Path 4: Fleet / Enterprise` in `v2/orchestrators/guides/setup-paths/setup-navigator.mdx`.
+- **Direct infrastructure configuration:** used when the page is about explicit node-to-node or self-managed infrastructure setup. Examples: `Direct configuration (-orchAddr)` in `v2/gateways/guides/node-pipelines/ai-pipelines.mdx` and `Self-hosted gateway (cost savings)` in `v2/gateways/concepts/business-model.mdx`.
+- **Infra software and node-adjacent services:** also used for software or infrastructure resources rather than operator roles. Examples: `Livepeer Catalyst (MistServer)` in `v2/developers/guides/resources.mdx`, `Community Arbitrum Node` in `v2/community/resources/awesome-livepeer.mdx`, and `Livepeer LPMS` in `v2/gateways/resources/knowledge-base/resources.mdx`.
+- **Provider personas and opportunities:** used for role-routing and grant surfaces as well. Examples: `Workload Provider` in `v2/developers/developer-journey.mdx`, `Earn from Idle GPU` in `v2/home/get-started.mdx`, and `Supply Side / Network Health Grants` in `v2/developers/opportunities/grants-and-programmes.mdx`.
+
+### `tools`
+- **Tooling or quickstart hubs:** used when the destination is positioned as a tooling collection or jump-off page. Examples: `Quickstart` in `v2/gateways/portal.mdx` and `Running AI Pipelines on your Orchestrator` in `v2/orchestrators/portal.mdx`.
+- **Setup helpers and install prerequisites:** used when the card is really telling the reader to do setup work first. Examples: `Install Your Gateway Software First` in `v2/gateways/setup/requirements/on-chain setup/on-chain.mdx`.
+- **Verification and operational checks:** used inside setup flows for confirmation steps. Examples: `Verify Configuration` in `v2/gateways/quickstart/views/docker/dockerOnChainTab.mdx`.
+- **Config utility views:** also used for configuration-entry views that are not tool collections. Examples: `Full Config Guide` in `v2/gateways/setup/configure/video-configuration-view.mdx` and `GWID SPE tooling` in `v2/community/resources/guides.mdx`.
+
+### `coins`
+- **Staking, rewards, and earnings:** used when the topic is protocol economics or operator returns. Examples: `Earnings Explained` in `v2/orchestrators/setup/activate.mdx`, `Staking & Rewards` in `v2/orchestrators/setup/guide.mdx`, `LPT Inflationary Rewards` in `v2/orchestrators/guides/staking-and-rewards/earnings.mdx`, and `Protocol Economics` in `v2/about/livepeer-protocol/overview.mdx`.
+- **Delegator entry points:** used for tokenholder and delegator routing. Examples: `Delegators` in `v2/about/livepeer-overview.mdx`, `Delegate LPT` in `v2/home/get-started.mdx`, and `LPT Token Purpose` in `v2/lpt/delegation/getting-started.mdx`.
+- **Gateway funding and payment steps:** also used when the action is specifically about ETH funding or payment setup. Examples: `Funding Guide` in `v2/gateways/guides/payments-and-pricing/payment-guide.mdx`, `Deposit` in `v2/gateways/guides/payments-and-pricing/funding-guide.mdx`, and `Fund Your Gateway` in `v2/gateways/guides/payments-and-pricing/remote-signers.mdx`.
+- **Treasury, grants, and revenue opportunities:** used for ecosystem funding or opportunity surfaces. Examples: `Livepeer Treasury Explorer` in `v2/developers/opportunities/rfps-and-proposals.mdx`, `SPE Grant Model` in `v2/gateways/guides/opportunities/community-ecosystem.mdx`, and `Treasury Forum` in `v2/community/livepeer-community/livepeer-latest-topics.mdx`.
+
+### `link`
+- **On-chain mode labels:** used when the icon stands in for the on-chain operational mode itself. Examples: `On-chain context` in `v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx`, `On-Chain Gateway` in `v2/gateways/quickstart/views/docker/dockerOnChainTab.mdx`, and `On-chain gateway` in `v2/gateways/concepts/role.mdx`.
+- **Discovery, routing, and connection flows:** used when the page is specifically about connecting to the network or discovering orchestrators. Examples: `On-chain discovery (-aiServiceRegistry)` in `v2/gateways/guides/node-pipelines/ai-pipelines.mdx`, `On-chain discovery (automatic)` in `v2/gateways/guides/node-pipelines/guide.mdx`, and `Connect to Arbitrum` in `v2/orchestrators/setup/dep-config.mdx`.
+- **RPC and endpoint references:** used for endpoint or connection resource links. Examples: `See All RPC Options` in `v2/gateways/setup/requirements/on-chain setup/on-chain.mdx`, `Community Arbitrum RPC` in `v2/developers/guides/resources.mdx`, and `Connect with Orchestrator Offerings` in `v2/gateways/resources/knowledge-base/guides.mdx`.
+- **Generic external destinations:** also used for links that are not really about connectivity. Examples: `Encode Club` in `v2/developers/opportunities/grants-and-programmes.mdx` and `Next Video Build: Web3 Social with Lens Protocol and Next.js` in `v2/developers/guides/developer-guides.mdx`.
+
+<CustomDivider />
+
+## Data Location
+
+The mapping lives in `/snippets/data/reference-maps/icon-map.jsx`.
+
+That is deliberate:
+
+- the page can render a reusable data source
+- future validators can consume the same map without copying MDX tables
+- more reference maps can sit beside it under `snippets/data/reference-maps/`
+
+If a map is only narrative and will never be reused, inline MDX is fine. For
+reusable authoring/reference maps consumed by docs pages, `snippets/data/reference-maps/`
+is the better home. `tools/config/` should stay reserved for governed runtime or
+script-facing config.

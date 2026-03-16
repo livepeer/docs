@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-C6, F-C1
  * @purpose-statement Manages Mintlify dev server lifecycle for browser tests (start/stop/health-check)
- * @pipeline          manual — developer tool
+ * @pipeline          indirect — legacy browser-validation module imported by .githooks/verify-browser.js
  * @usage             node .githooks/server-manager.js [flags]
  */
 /**
@@ -16,17 +16,32 @@
  */
 
 const { spawn, execSync } = require('child_process');
+const crypto = require('crypto');
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
+function getRepoRoot() {
+  try {
+    return execSync('git rev-parse --show-toplevel', {
+      encoding: 'utf8',
+      cwd: process.cwd()
+    }).trim();
+  } catch (_error) {
+    return process.cwd();
+  }
+}
+
+const REPO_ROOT = getRepoRoot();
+const REPO_KEY = crypto.createHash('sha1').update(REPO_ROOT).digest('hex').slice(0, 12);
+
 // Use a dedicated port for browser validation tests (unlikely to be in use)
 const TEST_PORT = 3145;
 const BASE_URL = process.env.MINT_BASE_URL || `http://localhost:${TEST_PORT}`;
 const PORT = new URL(BASE_URL).port || TEST_PORT;
-const PID_FILE = path.join(os.tmpdir(), 'mint-dev-test.pid');
-const LOG_FILE = path.join(os.tmpdir(), 'mint-dev-test.log');
+const PID_FILE = path.join(os.tmpdir(), `mint-dev-test-${REPO_KEY}.pid`);
+const LOG_FILE = path.join(os.tmpdir(), `mint-dev-test-${REPO_KEY}.log`);
 
 let serverProcess = null;
 let serverStartedByUs = false;
@@ -34,7 +49,8 @@ let actualServerUrl = BASE_URL; // Will be updated if port is detected from log
 let detectedServerPort = null; // Port where server was actually found
 
 /**
- * Check if server is already running (on expected port, detected port, or common ports)
+ * Check if server is already running for this worktree.
+ * Ambient servers on common dev ports are only reused when explicitly allowed.
  */
 async function isServerRunning(options = {}) {
   const { probePath, allowCommonPorts = true } = options;
@@ -56,12 +72,10 @@ async function isServerRunning(options = {}) {
     }
   }
   
-  // Check if log shows server on different port
-  if (allowCommonPorts) {
-    const detectedPort = detectPortFromLog();
-    if (detectedPort && detectedPort !== PORT) {
-      return await isServerRunningOnPort(detectedPort, probePath);
-    }
+  // Check if this worktree's log shows a different chosen port.
+  const detectedPort = detectPortFromLog();
+  if (detectedPort && detectedPort !== PORT) {
+    return await isServerRunningOnPort(detectedPort, probePath);
   }
   
   return false;
@@ -147,7 +161,7 @@ async function isServerRunningOnPort(port, probePath) {
 }
 
 /**
- * Wait for server to be ready, checking expected port, common ports, and detected port from log
+ * Wait for server to be ready, checking expected port, optional common ports, and this worktree's log.
  */
 async function waitForServer(maxAttempts = 60, interval = 2000, options = {}) {
   const { probePath, allowCommonPorts = true } = options;
@@ -168,8 +182,8 @@ async function waitForServer(maxAttempts = 60, interval = 2000, options = {}) {
       }
     }
     
-    // If not on expected or common ports, try to detect from log (after a few attempts to let log populate)
-    if (allowCommonPorts && i >= 3) {
+    // After a few attempts, inspect this worktree's log in case Mint chose a fallback port.
+    if (i >= 3) {
       const detectedPort = detectPortFromLog();
       if (detectedPort && detectedPort !== PORT) {
         // Check detected port

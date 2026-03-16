@@ -1,0 +1,191 @@
+---
+title: Find Gateway Services
+sidebarTitle: Find Gateway Services
+description: >-
+  How to choose the right Livepeer gateway for your use case - whether you need
+  a hosted service, a community gateway, or want to run your own.
+keywords:
+  - livepeer
+  - gateways
+  - using gateways
+  - choose gateway
+  - gateway providers
+  - livepeer studio
+  - daydream
+  - cloud spe
+  - self-hosted gateway
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+purpose: concept
+pageType: guide
+audience: 'developer, gateway-operator'
+status: current
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+import { DoubleIconLink } from '/snippets/components/primitives/links.jsx'
+
+
+A Livepeer Gateway is the access point your application uses to route video and AI jobs to the network. The gateway handles authentication, routing, payment, and job coordination - your app talks to the gateway, and the gateway talks to the GPU network.
+
+You have three options:
+
+1. **Use a hosted gateway** (Livepeer Studio, Daydream, Cloud SPE) - lowest barrier to entry, managed for you
+2. **Use a community-run gateway** - often free or low-cost, community-maintained
+3. **Run your own gateway** - maximum control, required for production-grade custom deployments
+
+## Start here in 5 minutes
+
+<BorderedBox variant="accent" padding="16px">
+
+- **Prereqs:** Clear use case (video, AI, or both) and rough reliability/cost requirements
+- **Time:** 5 minutes
+- **Outcome:** A provider or self-hosted path chosen with a concrete next step
+- **First action:** Use the **Quick Decision Guide**, then open exactly one provider page or the gateway quickstart
+
+</BorderedBox>
+
+---
+
+## Quick Decision Guide
+
+<BorderedBox variant="accent" padding="16px">
+
+**Use a hosted gateway if:**
+- You want to be live quickly (minutes, not days)
+- You need a managed API with SLA, dashboards, and support
+- You're building on standard video streaming or common AI pipelines
+- You don't want to manage infrastructure
+
+**Run your own gateway if:**
+- You need custom SLAs, routing control, or compliance requirements
+- You're building a product that routes Livepeer jobs as part of its core offering
+- You want to avoid per-request margin paid to another gateway operator
+- You need BYOC pipelines or custom AI models at scale
+
+</BorderedBox>
+
+---
+
+## Hosted Gateways
+
+<CardGroup cols={2}>
+  <Card
+    title="Livepeer Studio"
+    icon="video-arrow-up-right"
+    href="./gateway-providers/livepeer-studio-gateway"
+    arrow
+  >
+ Production-grade hosted gateway for live streaming and video-on-demand. REST API + SDKs. Best for developers building video applications.
+  </Card>
+  <Card
+    title="Daydream"
+    icon="wand-magic-sparkles"
+    href="./gateway-providers/daydream-gateway"
+    arrow
+  >
+ Real-time AI video gateway. StreamDiffusion-powered style transfer, image-to-video, and custom AI pipelines on live video. Best for AI video products and creators.
+  </Card>
+  <Card
+    title="Cloud SPE Gateway"
+    icon="cloud-binary"
+    href="./gateway-providers/cloud-spe-gateway"
+    arrow
+  >
+ Community-run, free-to-use RTMP and AI gateways. Operated by Livepeer.Cloud, a treasury-funded Special Purpose Entity. Best for experimentation and open-source projects.
+  </Card>
+  <Card
+    title="Other Providers"
+    icon="webhook"
+    href="../guides-and-resources/community-projects"
+    arrow
+  >
+ Community-run gateways and integrations. Discover projects built by the Livepeer ecosystem.
+  </Card>
+</CardGroup>
+
+---
+
+## Provider Comparison
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+ <TableCell header>Provider</TableCell>
+ <TableCell header>Best For</TableCell>
+ <TableCell header>Video</TableCell>
+ <TableCell header>AI Inference</TableCell>
+ <TableCell header>Cost</TableCell>
+ <TableCell header>Self-Hosted</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+ <TableCell>**Livepeer Studio**</TableCell>
+ <TableCell>App developers</TableCell>
+ <TableCell>✅ Live + VOD</TableCell>
+ <TableCell>✅ AI generate endpoints</TableCell>
+ <TableCell>Paid (usage-based)</TableCell>
+ <TableCell>❌ (managed)</TableCell>
+    </TableRow>
+    <TableRow>
+ <TableCell>**Daydream**</TableCell>
+ <TableCell>AI video creators & builders</TableCell>
+ <TableCell>⚠️ Video as input</TableCell>
+ <TableCell>✅ Real-time AI video</TableCell>
+ <TableCell>Paid / Free tier</TableCell>
+ <TableCell>❌ (managed)</TableCell>
+    </TableRow>
+    <TableRow>
+ <TableCell>**Cloud SPE**</TableCell>
+ <TableCell>Experimentation, OSS projects</TableCell>
+ <TableCell>✅ RTMP</TableCell>
+ <TableCell>✅ AI community gateway</TableCell>
+ <TableCell>Free</TableCell>
+ <TableCell>❌ (managed)</TableCell>
+    </TableRow>
+    <TableRow>
+ <TableCell>**Self-hosted**</TableCell>
+ <TableCell>Products, enterprises, operators</TableCell>
+ <TableCell>✅ Full control</TableCell>
+ <TableCell>✅ Full control</TableCell>
+ <TableCell>Infrastructure cost</TableCell>
+ <TableCell>✅</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+---
+
+## The Livepeer Explorer
+
+The [Livepeer Explorer](https://explorer.livepeer.org) lists active gateways on the network. You can discover operator performance, available capabilities, and pricing for on-chain gateways.
+
+<Card title="Livepeer Explorer" icon="compass" href="https://explorer.livepeer.org" arrow horizontal>
+ Browse active gateways and network statistics on-chain.
+</Card>
+
+---
+
+## Running Your Own Gateway
+
+Operators who want direct protocol access, custom pricing, or enterprise-grade control run their own go-livepeer gateway node. This is the path taken by products like Daydream and Livepeer Studio themselves.
+
+<CardGroup cols={2}>
+  <Card title="Why Run a Gateway" href="../run-a-gateway/why-run-a-gateway" icon="lightbulb" arrow>
+ Business and technical reasons to operate your own gateway node.
+  </Card>
+  <Card title="Gateway Quickstart" href="../quickstart/gateway-setup" icon="bolt-lightning" arrow>
+ Get a gateway running in under 10 minutes.
+  </Card>
+  <Card title="Requirements" href="../run-a-gateway/requirements/setup" icon="clipboard-check" arrow>
+ Hardware, network, and software requirements.
+  </Card>
+  <Card title="Gateway Operator Opportunities" href="../run-a-gateway/gateway-operator-opportunities" icon="briefcase" arrow>
+ Business models and opportunities for gateway operators.
+  </Card>
+</CardGroup>

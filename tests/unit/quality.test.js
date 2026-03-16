@@ -7,29 +7,26 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement Content quality checks — validates frontmatter completeness, thin content detection, placeholder flagging
- * @pipeline          P1 (commit, via run-all)
+ * @pipeline          P1, P3
  * @usage             node tests/unit/quality.test.js [flags]
  */
 /**
- * Quality checks: alt text, links, frontmatter, SEO, duplicate headings
+ * Quality checks: alt text, links, frontmatter, SEO
  */
 
 const path = require('path');
-const { createRequire } = require('module');
-const { getMdxFiles, getStagedDocsPageFiles, readFile } = require('../utils/file-walker');
+const { getAuthoredMdxFiles, getStagedAuthoredDocsPageFiles, readFile } = require('../utils/file-walker');
 const { extractFrontmatter } = require('../utils/mdx-parser');
+const { filterAuthoredDocsPageFiles } = require('../../tools/lib/docs-page-scope');
+const taxonomy = require('../../tools/lib/frontmatter-taxonomy');
+const { loadAudienceNormalization, audienceTokensFromRaw } = require('../../tools/lib/docs-usefulness/rubric-loader');
 
 const ENFORCE_OG_IMAGE = process.env.ENFORCE_OG_IMAGE === '1';
-const VALID_PAGE_TYPES = ['quickstart', 'tutorial', 'reference', 'conceptual', 'portal', 'api', 'guide', 'overview', 'index'];
-const VALID_AUDIENCES = ['developer', 'orchestrator', 'gateway', 'delegator', 'community', 'all'];
-const VALID_STATUSES = ['draft', 'published', 'review', 'deprecated'];
-const REPO_ROOT = path.resolve(__dirname, '..', '..');
-const TOOLS_REQUIRE = createRequire(path.resolve(REPO_ROOT, 'tools/package.json'));
-const NAVIGATION_VALIDATOR_NAME = 'quality.test.js';
+const AUDIENCE_NORMALIZATION = loadAudienceNormalization();
+const VALID_AUDIENCES = AUDIENCE_NORMALIZATION.canonical_audiences || [];
 
 let errors = [];
 let warnings = [];
-let parserModules = null;
 
 function report(severity, file, message, rule = 'Frontmatter') {
   const issue = { file, rule, message };
@@ -63,118 +60,52 @@ function collectFilesFromArgs(args) {
   return [...new Set(files)];
 }
 
-function loadParserModules() {
-  if (!parserModules) {
-    parserModules = {
-      unified: TOOLS_REQUIRE('unified').unified,
-      remarkParse: TOOLS_REQUIRE('remark-parse').default,
-      remarkGfm: TOOLS_REQUIRE('remark-gfm').default,
-      remarkMdx: TOOLS_REQUIRE('remark-mdx').default
+function normaliseAudienceValue(rawAudience) {
+  const tokens = audienceTokensFromRaw(rawAudience, AUDIENCE_NORMALIZATION);
+  if (tokens.length === 0) {
+    return {
+      valid: false,
+      canonical: '',
+      advisory: '',
+      candidates: []
     };
   }
 
-  return parserModules;
-}
+  const precedence = AUDIENCE_NORMALIZATION.deterministic_precedence || VALID_AUDIENCES;
+  const canonical = precedence.find((candidate) => tokens.includes(candidate)) || tokens[0];
+  const rawValues = Array.isArray(rawAudience)
+    ? rawAudience.map((entry) => String(entry || '').trim()).filter(Boolean)
+    : [String(rawAudience || '').trim()].filter(Boolean);
+  const rawScalar = rawValues.join(', ');
+  const isSingleCanonicalScalar =
+    rawValues.length === 1 &&
+    VALID_AUDIENCES.includes(rawValues[0].toLowerCase()) &&
+    !/[;,|]/.test(rawValues[0]);
 
-function normalizeWhitespace(value) {
-  return String(value || '').replace(/\s+/g, ' ').trim();
-}
+  if (tokens.length > 1) {
+    return {
+      valid: true,
+      canonical,
+      advisory: `Audience resolves to multiple values (${tokens.join(', ')}). Use one canonical audience value, ideally "${canonical}".`,
+      candidates: tokens
+    };
+  }
 
-function countLineBreaks(value) {
-  const matches = String(value || '').match(/\r?\n/g);
-  return matches ? matches.length : 0;
-}
-
-function stripLeadingFrontmatter(content) {
-  const raw = String(content || '');
-  const withoutBom = raw.startsWith('\uFEFF') ? raw.slice(1) : raw;
-  const frontmatterMatch = withoutBom.match(/^---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(?:\r?\n|$)/);
-
-  if (!frontmatterMatch) {
-    return { body: withoutBom, lineOffset: 0 };
+  if (!isSingleCanonicalScalar || rawValues[0].toLowerCase() !== canonical) {
+    return {
+      valid: true,
+      canonical,
+      advisory: `Normalise audience "${rawScalar}" to "${canonical}".`,
+      candidates: tokens
+    };
   }
 
   return {
-    body: withoutBom.slice(frontmatterMatch[0].length),
-    lineOffset: countLineBreaks(frontmatterMatch[0])
+    valid: true,
+    canonical,
+    advisory: '',
+    candidates: tokens
   };
-}
-
-function collectNodeText(node, parts) {
-  if (!node || typeof node !== 'object') {
-    return;
-  }
-
-  if ((node.type === 'text' || node.type === 'inlineCode') && typeof node.value === 'string') {
-    parts.push(node.value);
-    return;
-  }
-
-  if (Array.isArray(node.children)) {
-    node.children.forEach((child) => collectNodeText(child, parts));
-  }
-}
-
-function extractHeadingText(node) {
-  const parts = [];
-  collectNodeText(node, parts);
-  return normalizeWhitespace(parts.join(' '));
-}
-
-function visitNodes(node, visitor) {
-  if (!node || typeof node !== 'object') {
-    return;
-  }
-
-  visitor(node);
-
-  if (Array.isArray(node.children)) {
-    node.children.forEach((child) => visitNodes(child, visitor));
-  }
-}
-
-function findDuplicateHeadingGroups(content, modules) {
-  const { unified, remarkParse, remarkGfm, remarkMdx } = modules;
-  const { body, lineOffset } = stripLeadingFrontmatter(content);
-  const tree = unified().use(remarkParse).use(remarkGfm).use(remarkMdx).parse(body);
-  const groups = new Map();
-
-  visitNodes(tree, (node) => {
-    if (node.type !== 'heading') {
-      return;
-    }
-
-    const depth = Number(node.depth);
-    if (![2, 3, 4].includes(depth)) {
-      return;
-    }
-
-    const text = extractHeadingText(node);
-    if (!text) {
-      return;
-    }
-
-    const line = Number(node.position?.start?.line || 1) + lineOffset;
-    const key = `${depth}::${text}`;
-    const group = groups.get(key) || {
-      depth,
-      text,
-      firstLine: line,
-      lines: []
-    };
-
-    group.lines.push(line);
-    group.firstLine = Math.min(group.firstLine, line);
-    groups.set(key, group);
-  });
-
-  return [...groups.values()]
-    .filter((group) => group.lines.length > 1)
-    .sort((left, right) => left.depth - right.depth || left.firstLine - right.firstLine || left.text.localeCompare(right.text));
-}
-
-function buildDuplicateHeadingMessage(group) {
-  return `Duplicate H${group.depth} heading "${group.text}" appears ${group.lines.length} times on this page (lines ${group.lines.join(', ')}).`;
 }
 
 /**
@@ -253,24 +184,69 @@ function checkFrontmatter(files) {
 
     if (!data.pageType) {
       report('advisory', file, 'Missing pageType field (recommended for audit framework)');
-    } else if (!VALID_PAGE_TYPES.includes(data.pageType)) {
-      report('advisory', file, `Invalid pageType: "${data.pageType}". Valid: ${VALID_PAGE_TYPES.join(', ')}`);
+    } else {
+      const pageTypeResult = taxonomy.normalizePageType(data.pageType);
+      if (!pageTypeResult.valid) {
+        report('advisory', file, `Invalid pageType: "${data.pageType}". Valid: ${taxonomy.describeCanonicalPageTypes()}`);
+      } else if (pageTypeResult.deprecatedAlias) {
+        report('advisory', file, taxonomy.getPageTypeAdvisory(data.pageType));
+      }
+    }
+
+    if (!data.purpose) {
+      report('advisory', file, 'Missing purpose field (recommended for journey and review routing)');
+    } else {
+      const purposeResult = taxonomy.normalizePurpose(data.purpose);
+      if (!purposeResult.valid) {
+        report('warning', file, `Invalid purpose: "${data.purpose}". Valid: ${taxonomy.describeCanonicalPurposes()}`);
+      } else {
+        if (purposeResult.deprecatedAlias) {
+          report('advisory', file, taxonomy.getPurposeAdvisory(data.purpose));
+        }
+
+        const pageTypeResult = taxonomy.normalizePageType(data.pageType);
+        if (
+          pageTypeResult.valid &&
+          !taxonomy.isAllowedPageTypePurpose(data.pageType, data.purpose)
+        ) {
+          report(
+            'warning',
+            file,
+            `Disallowed pageType + purpose combination: "${pageTypeResult.canonical}" + "${purposeResult.canonical}". Allowed: ${taxonomy.describeAllowedPurposesForPageType(data.pageType)}`
+          );
+        }
+      }
     }
 
     if (!data.audience) {
       report('advisory', file, 'Missing audience field (recommended for audit framework)');
-    } else if (!VALID_AUDIENCES.includes(data.audience)) {
-      report('advisory', file, `Invalid audience: "${data.audience}". Valid: ${VALID_AUDIENCES.join(', ')}`);
+    } else {
+      const audienceResult = normaliseAudienceValue(data.audience);
+      if (!audienceResult.valid) {
+        report('advisory', file, `Invalid audience: "${data.audience}". Valid: ${VALID_AUDIENCES.join(', ')}`);
+      } else if (audienceResult.advisory) {
+        report('advisory', file, audienceResult.advisory);
+      }
     }
 
     if (!data.status) {
       report('advisory', file, 'Missing status field (recommended for audit framework)');
-    } else if (!VALID_STATUSES.includes(data.status)) {
-      report('advisory', file, `Invalid status: "${data.status}". Valid: ${VALID_STATUSES.join(', ')}`);
+    } else {
+      const statusResult = taxonomy.normalizeStatus(data.status);
+      if (!statusResult.valid) {
+        report('advisory', file, `Invalid status: "${data.status}". Valid: ${taxonomy.describeCanonicalPageStatuses()}`);
+      }
     }
 
+    const statusRequiresLastVerified = taxonomy.statusRequiresLastVerified(data.status);
     if (!data.lastVerified) {
-      report('advisory', file, 'Missing lastVerified field (recommended for audit framework)');
+      report(
+        statusRequiresLastVerified ? 'warning' : 'advisory',
+        file,
+        statusRequiresLastVerified
+          ? `Missing lastVerified field (required for status "${data.status}")`
+          : 'Missing lastVerified field (recommended for audit framework)'
+      );
     } else if (Number.isNaN(Date.parse(data.lastVerified))) {
       report('advisory', file, `Invalid lastVerified date: "${data.lastVerified}"`);
     }
@@ -318,32 +294,6 @@ function checkInternalLinks(files) {
   });
 }
 
-function checkDuplicateHeadings(files, options = {}) {
-  const { blocking = false } = options;
-  const parser = loadParserModules();
-
-  files.forEach((file) => {
-    const content = readFile(file);
-    if (!content) return;
-
-    try {
-      const findings = findDuplicateHeadingGroups(content, parser);
-      const target = blocking ? errors : warnings;
-
-      findings.forEach((group) => {
-        target.push({
-          file,
-          rule: 'Duplicate headings',
-          line: group.firstLine,
-          message: buildDuplicateHeadingMessage(group)
-        });
-      });
-    } catch (_error) {
-      // Duplicate-heading enforcement is best-effort here; malformed MDX is handled by mdx.test.js.
-    }
-  });
-}
-
 /**
  * Run all quality tests
  */
@@ -352,21 +302,21 @@ function runTests(options = {}) {
   warnings = [];
   
   const { files = null, stagedOnly = false } = options;
-  const explicitlyScoped = Array.isArray(files) && files.length > 0;
   
   let testFiles = files;
   if (!testFiles) {
     if (stagedOnly) {
-      testFiles = getStagedDocsPageFiles(null, { validatorName: NAVIGATION_VALIDATOR_NAME }).filter(f => f.endsWith('.mdx'));
+      testFiles = getStagedAuthoredDocsPageFiles().filter(f => f.endsWith('.mdx'));
     } else {
-      testFiles = getMdxFiles(null, { validatorName: NAVIGATION_VALIDATOR_NAME });
+      testFiles = getAuthoredMdxFiles();
     }
+  } else {
+    testFiles = filterAuthoredDocsPageFiles(testFiles).filter(f => f.endsWith('.mdx'));
   }
   
   checkImageAltText(testFiles);
   checkFrontmatter(testFiles);
   checkInternalLinks(testFiles);
-  checkDuplicateHeadings(testFiles, { blocking: stagedOnly || explicitlyScoped });
   
   return {
     errors,

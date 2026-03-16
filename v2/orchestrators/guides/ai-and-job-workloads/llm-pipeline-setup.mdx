@@ -1,0 +1,297 @@
+---
+title: 'LLM Pipeline Setup'
+sidebarTitle: 'LLM Setup'
+description: >-
+  Set up the llm pipeline on a Livepeer orchestrator using the Ollama-based runner.
+  Covers Docker Compose configuration, model selection for 8 GB VRAM GPUs, model ID
+  mapping, aiModels.json entries, and USD pricing for token-based workloads.
+keywords:
+  - livepeer
+  - orchestrator
+  - LLM
+  - Ollama
+  - llm pipeline
+  - aiModels.json
+  - llama3
+  - 8GB VRAM
+  - GPU
+  - inference
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: draft
+lastVerified: '2026-03-16'
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+
+<Tip>
+  The `llm` pipeline is the entry point for operators with older or smaller GPUs. A quantised 8B parameter model runs within 8 GB VRAM — opening AI participation to cards that cannot run diffusion models at all.
+</Tip>
+
+---
+
+The `llm` pipeline uses a different architecture from all other Livepeer AI pipelines. Where diffusion and audio pipelines use the standard `livepeer/ai-runner` container, the LLM pipeline routes through an **Ollama-based runner** maintained by Cloud SPE. This enables quantised large language models to run on consumer GPUs with 8 GB of VRAM or more.
+
+The pipeline flow is:
+
+```text icon="terminal" title="LLM pipeline flow"
+go-livepeer → livepeer-ollama-runner → ollama container → quantised model
+```
+
+go-livepeer reaches the LLM stack over HTTP instead of managing model weights directly. The Ollama runner and Ollama container run as separate Docker services, and go-livepeer connects to them via the `url` field in `aiModels.json`.
+
+<CustomDivider middleText="Architecture Difference" />
+
+## Architecture split
+
+All other batch AI pipelines (text-to-image, audio-to-text, segment-anything-2, text-to-speech) use the `livepeer/ai-runner` container. go-livepeer spawns that container automatically based on `aiModels.json` and manages its lifecycle.
+
+The `llm` pipeline requires you to run the Ollama stack manually:
+- **Ollama container** — the model runtime that loads and serves quantised LLM weights
+- **livepeer-ollama-runner** — a shim container that translates between go-livepeer's AI worker protocol and the Ollama API
+
+go-livepeer connects to the `livepeer-ollama-runner` via the `url` field. The runner must be reachable on a shared Docker network.
+
+<CustomDivider middleText="Setup" />
+
+## Setup
+
+### Prerequisites
+
+- Docker and Docker Compose installed
+- NVIDIA Container Toolkit configured (for GPU passthrough)
+- An existing go-livepeer orchestrator with `-aiWorker` enabled
+- 8 GB or more of GPU VRAM (minimum for quantised 7B/8B models)
+
+<StyledSteps>
+
+  <StyledStep title="Create a Docker volume for model persistence">
+
+    ```bash icon="terminal" title="Create the Ollama volume"
+    docker volume create ollama
+    ```
+
+    This volume persists model weights across container restarts. Without it, models must be re-downloaded every time the Ollama container restarts.
+
+  </StyledStep>
+
+  <StyledStep title="Create docker-compose.yml for the Ollama stack">
+
+    ```yaml icon="code" title="docker-compose.yml"
+    services:
+      ollama-ai-runner:
+        image: tztcloud/livepeer-ollama-runner:0.1.1
+        container_name: llm_runner
+        restart: unless-stopped
+        runtime: nvidia
+        networks:
+          - livepeer-ai
+
+      ollama:
+        image: ollama/ollama:latest
+        container_name: ollama
+        restart: unless-stopped
+        runtime: nvidia
+        volumes:
+          - ollama:/root/.ollama
+        environment:
+          - OLLAMA_GPU_ENABLED=true
+        deploy:
+          resources:
+            reservations:
+              devices:
+                - capabilities: [gpu]
+                  driver: nvidia
+                  count: all
+        networks:
+          - livepeer-ai
+
+    networks:
+      livepeer-ai:
+        external: true
+
+    volumes:
+      ollama:
+        external: true
+    ```
+
+    The `livepeer-ai` network must be the same network your go-livepeer container is on. The runner uses the Docker service name `llm_runner` as the hostname — go-livepeer resolves this via the shared network.
+
+  </StyledStep>
+
+  <StyledStep title="Start the stack">
+
+    ```bash icon="terminal" title="Start the Ollama stack"
+    docker compose up -d
+    ```
+
+  </StyledStep>
+
+  <StyledStep title="Pull your LLM model">
+
+    ```bash icon="terminal" title="Pull the first Ollama model"
+    docker exec -it ollama ollama pull llama3.1:8b
+    ```
+
+    Replace `llama3.1:8b` with your chosen model tag. The model downloads into the `ollama` volume and persists across restarts.
+
+  </StyledStep>
+
+  <StyledStep title="Add the LLM entry to aiModels.json">
+
+    ```json icon="code" title="~/.lpData/aiModels.json"
+    {
+      "pipeline": "llm",
+      "model_id": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+      "warm": true,
+      "price_per_unit": 0.18,
+      "currency": "USD",
+      "pixels_per_unit": 1000000,
+      "url": "http://llm_runner:8000"
+    }
+    ```
+
+    The `url` references the Docker service name `llm_runner` defined in the compose file. Both containers must share the `livepeer-ai` network for this hostname to resolve.
+
+  </StyledStep>
+
+  <StyledStep title="Restart the AI worker and verify">
+
+    Restart your go-livepeer process, or restart the AI worker component, to load the new `aiModels.json` entry.
+
+    After 2 to 3 minutes, check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) and search for your orchestrator address. The `llm` pipeline should appear with **Warm** status.
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider middleText="Model Selection" />
+
+## Model selection for 8 GB VRAM
+
+Quantised models reduce precision (typically from float32 to 4-bit integer) to fit within smaller VRAM budgets with minimal quality reduction. Ollama handles quantisation automatically via its model tags.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Model</TableCell>
+      <TableCell header>Ollama tag</TableCell>
+      <TableCell header>HuggingFace model_id</TableCell>
+      <TableCell header>VRAM</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Llama 3.1 8B</TableCell>
+      <TableCell>`llama3.1:8b`</TableCell>
+      <TableCell>`meta-llama/Meta-Llama-3.1-8B-Instruct`</TableCell>
+      <TableCell>~8 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Mistral 7B</TableCell>
+      <TableCell>`mistral:7b`</TableCell>
+      <TableCell>`mistralai/Mistral-7B-Instruct-v0.3`</TableCell>
+      <TableCell>~8 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Gemma 2 9B</TableCell>
+      <TableCell>`gemma2:9b`</TableCell>
+      <TableCell>`google/gemma-2-9b-it`</TableCell>
+      <TableCell>~10 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Llama 3.1 70B Q4</TableCell>
+      <TableCell>`llama3.1:70b`</TableCell>
+      <TableCell>`meta-llama/Meta-Llama-3.1-70B-Instruct`</TableCell>
+      <TableCell>~40 GB</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+For 8 GB VRAM GPUs, use `llama3.1:8b` or `mistral:7b`. The Gemma 2 9B typically requires closer to 10 GB, so single 8 GB cards should stay on the 7B to 8B class.
+
+### Model ID mapping
+
+The **Ollama tag** (`llama3.1:8b`) and the **Livepeer model_id** (`meta-llama/Meta-Llama-3.1-8B-Instruct`) are different naming conventions for the same model family. Ollama uses its own tag format internally; go-livepeer uses HuggingFace IDs for on-chain capability advertisement.
+
+Both identify the same underlying model. The `aiModels.json` entry uses the HuggingFace ID in `model_id`, while the `ollama pull` command uses the Ollama tag.
+
+<CustomDivider middleText="Pricing" />
+
+## Pricing the LLM pipeline
+
+LLM pricing differs from pixel-based pipelines. Use USD notation with `pixels_per_unit` as a token-count proxy:
+
+```json icon="code" title="LLM pricing in aiModels.json"
+{
+  "pipeline": "llm",
+  "model_id": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+  "price_per_unit": 0.18,
+  "currency": "USD",
+  "pixels_per_unit": 1000000,
+  "warm": true,
+  "url": "http://llm_runner:8000"
+}
+```
+
+This example sets a rate of $0.18 per million tokens (equivalent to $0.18/1M tokens, a competitive rate for 8B parameter models as of early 2026). Adjust based on your GPU's inference throughput and current market rates.
+
+Check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) for current LLM pipeline pricing from other orchestrators before setting your rate.
+
+<CustomDivider middleText="Testing" />
+
+## Testing locally
+
+After the stack is running, test the Ollama runner directly before routing live traffic:
+
+```bash icon="terminal" title="Test LLM inference locally"
+# Check Ollama is running and the model is loaded
+docker exec -it ollama ollama list
+
+# Test inference via the runner (adjust port if different)
+curl -X POST http://localhost:8000/llm \
+  -H "Content-Type: application/json" \
+  -d '{"model": "llama3.1:8b", "prompt": "Hello"}'
+```
+
+Verify the runner health endpoint is responding:
+
+```bash icon="terminal" title="Check the runner health endpoint"
+curl http://localhost:8000/health
+# Expected: HTTP 200
+```
+
+<CustomDivider />
+
+## Related pages
+
+{/*
+  REVIEW:
+  - Confirm the current stable `tztcloud/livepeer-ollama-runner` image tag.
+  - Confirm the current Livepeer-compatible Ollama model list.
+  - Confirm LLM pricing semantics for `pixels_per_unit` and token-based pricing.
+  - Confirm the current runner test endpoint path and request body.
+*/}
+
+<CardGroup cols={2}>
+  <Card title="AI Inference Operations" icon="microchip" href="/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations" arrow horizontal>
+    aiModels.json reference and full pipeline architecture including the url field for external containers.
+  </Card>
+  <Card title="Diffusion Pipeline Setup" icon="image" href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup" arrow horizontal>
+    text-to-image, image-to-image, and other diffusion pipelines requiring the standard ai-runner.
+  </Card>
+  <Card title="Audio and Vision Pipelines" icon="waveform-lines" href="/v2/orchestrators/guides/ai-and-job-workloads/audio-and-vision-pipelines" arrow horizontal>
+    audio-to-text, text-to-speech, image-to-text, and segment-anything-2 setup.
+  </Card>
+  <Card title="AI Model Management" icon="sliders" href="/v2/orchestrators/guides/config-and-optimisation/ai-model-management" arrow horizontal>
+    Warm vs cold strategy and optimisation flags for AI pipelines.
+  </Card>
+</CardGroup>

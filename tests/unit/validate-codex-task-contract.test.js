@@ -4,7 +4,7 @@
  * @category          enforcer
  * @purpose           governance:agent-governance
  * @scope             tests/unit, tools/scripts/validate-codex-task-contract.js
- * @owner             docs
+ * @domain            docs
  * @needs             R-R27, R-R30
  * @purpose-statement Tests validate-codex-task-contract.js — validates contract checking logic
  * @pipeline          manual — not yet in pipeline
@@ -44,7 +44,7 @@ function runScript(args, env = {}) {
 function writeContract(absPath, taskId, branchName) {
   const content = [
     `task_id: ${taskId}`,
-    'base_branch: docs-v2',
+    'base_branch: docs-v2-dev',
     `branch: ${branchName}`,
     'scope_in:',
     '  - .codex/task-contract.yaml',
@@ -52,7 +52,7 @@ function writeContract(absPath, taskId, branchName) {
     '  - v1/',
     'allowed_generated: []',
     'acceptance_checks:',
-    '  - node tests/run-pr-checks.js --base-ref docs-v2',
+    '  - node tests/run-pr-checks.js --base-ref docs-v2-dev',
     'risk_flags: []',
     'follow_up_issues: []',
     ''
@@ -314,13 +314,95 @@ async function runTests() {
     });
     assertFailedWith(ghUnavailable, /issue readiness check failed/i, 'expected gh failure to fail readiness check');
     console.log('   ✓ issue-state unavailable case passed');
+
+    const committedWorkPass = runScript(
+      [
+        '--branch',
+        branchName,
+        '--contract',
+        contractPath,
+        '--require-committed-work',
+        '--base-ref',
+        'docs-v2-dev',
+        '--files',
+        '.codex/task-contract.yaml'
+      ],
+      {
+        ...baseEnv,
+        CODEX_MOCK_AHEAD_COUNT: '2'
+      }
+    );
+    assert.strictEqual(
+      committedWorkPass.status,
+      0,
+      `expected committed-work pass: ${committedWorkPass.stderr || committedWorkPass.stdout}`
+    );
+    console.log('   ✓ committed-work pass case passed');
+
+    const committedWorkMissingCommit = runScript(
+      [
+        '--branch',
+        branchName,
+        '--contract',
+        contractPath,
+        '--require-committed-work',
+        '--base-ref',
+        'docs-v2-dev',
+        '--files',
+        '.codex/task-contract.yaml'
+      ],
+      {
+        ...baseEnv,
+        CODEX_MOCK_AHEAD_COUNT: '0'
+      }
+    );
+    assertFailedWith(
+      committedWorkMissingCommit,
+      /has no commits ahead of docs-v2-dev/i,
+      'expected missing committed work to fail'
+    );
+    console.log('   ✓ committed-work missing commit case passed');
+
+    const cleanTreePass = runScript(
+      [
+        '--branch',
+        branchName,
+        '--contract',
+        contractPath,
+        '--validate-contract-only',
+        '--require-clean-tree'
+      ],
+      {
+        ...baseEnv,
+        CODEX_MOCK_WORKTREE_STATUS: ''
+      }
+    );
+    assert.strictEqual(cleanTreePass.status, 0, `expected clean-tree pass: ${cleanTreePass.stderr || cleanTreePass.stdout}`);
+    console.log('   ✓ clean-tree pass case passed');
+
+    const cleanTreeFail = runScript(
+      [
+        '--branch',
+        branchName,
+        '--contract',
+        contractPath,
+        '--validate-contract-only',
+        '--require-clean-tree'
+      ],
+      {
+        ...baseEnv,
+        CODEX_MOCK_WORKTREE_STATUS: ' M docs.json\n?? tasks/generated-report.md'
+      }
+    );
+    assertFailedWith(cleanTreeFail, /working tree is not clean/i, 'expected dirty worktree to fail');
+    console.log('   ✓ clean-tree dirty case passed');
   } catch (error) {
     failures.push(error.message);
   }
 
   return {
     passed: failures.length === 0,
-    total: 9,
+    total: 13,
     errors: failures
   };
 }

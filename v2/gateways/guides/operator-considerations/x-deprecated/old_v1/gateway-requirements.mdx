@@ -1,0 +1,286 @@
+---
+title: 'Gateway Requirements'
+sidebarTitle: 'Requirements'
+description: 'Hardware, operating system, network, and skills requirements for running a Livepeer gateway. Covers both AI gateway (off-chain) and video gateway (on-chain) paths.'
+keywords:
+  - livepeer
+  - gateway requirements
+  - gateway hardware
+  - gateway server
+  - gateway OS
+  - Linux gateway
+  - on-chain requirements
+  - off-chain requirements
+  - gateway skills
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: gateway-operator
+purpose: guides
+status: current
+lastVerified: '2026-03-13'
+icon: clipboard-check
+---
+
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+
+A Livepeer gateway routes jobs between your application and the Livepeer compute network. It does not run AI models or transcode video — that happens on orchestrator nodes. This means the hardware requirements are much lighter than you might expect.
+
+<Note>
+Gateways do not require a GPU. All compute runs on orchestrators. Your gateway needs CPU, RAM, and stable network throughput — not graphics hardware.
+</Note>
+
+---
+
+## Requirements by gateway type
+
+Your requirements depend on whether you are running an AI gateway, a video gateway, or both.
+
+<Tabs>
+  <Tab title="AI gateway (off-chain)">
+    The recommended starting point for new AI gateway operators. Off-chain mode was introduced in Q4 2025 and removes all Ethereum and Arbitrum requirements from the gateway node itself.
+
+    | Requirement | Minimum | Recommended |
+    |-------------|---------|-------------|
+    | **CPU** | 2 cores | 4–8 cores |
+    | **RAM** | 8 GB | 16–32 GB |
+    | **Storage** | 20 GB SSD | 50 GB NVMe SSD |
+    | **Network** | 100 Mbps | 1 Gbps, low latency |
+    | **OS** | Linux (Ubuntu 20.04+) | Linux (Ubuntu 22.04 LTS) |
+    | **ETH wallet** | Not required | Not required |
+    | **Arbitrum RPC** | Not required | Not required |
+    | **GPU** | Not required | Not required |
+
+    <Warning>
+    AI gateway binaries are only available for Linux. Windows and macOS (AMD64) binaries are not available for the AI gateway. Docker on macOS may work for local development but is not supported for production. Use Linux for any production AI gateway deployment.
+    </Warning>
+  </Tab>
+  <Tab title="Video gateway (on-chain)">
+    The original Livepeer gateway type. Routes live video transcoding. Requires an Ethereum account with funds on Arbitrum.
+
+    | Requirement | Minimum | Recommended |
+    |-------------|---------|-------------|
+    | **CPU** | 2 cores | 4–8 cores |
+    | **RAM** | 8 GB | 16–32 GB |
+    | **Storage** | 20 GB SSD | 50 GB NVMe SSD |
+    | **Network** | 100 Mbps | 1 Gbps, low latency |
+    | **OS** | Linux, Windows (WSL2/Docker), macOS | Linux (Ubuntu 22.04 LTS) |
+    | **ETH wallet** | Required — Arbitrum | Required |
+    | **Arbitrum RPC** | Required | Dedicated RPC endpoint |
+    | **GPU** | Not required | Not required |
+    | **Public IP** | Required (`-serviceAddr`) | Static IP or domain |
+    | **Ports open** | 1935 (RTMP), 8935 (HTTP) | As above + 7935 (CLI) |
+  </Tab>
+  <Tab title="Dual (AI + video)">
+    Running both AI and video capabilities on one go-livepeer instance. All requirements from both paths apply. The AI gateway restriction (Linux only) takes precedence.
+
+    | Requirement | Notes |
+    |-------------|-------|
+    | **OS** | Linux only — the AI gateway restriction applies |
+    | **Ports** | 1935 (RTMP), 8935/8937 (HTTP AI), 7935 (CLI) |
+    | **ETH wallet** | Required — video path requires on-chain funding |
+    | **RAM** | 32 GB recommended — dual gateway is more memory-intensive |
+
+    {/* REVIEW: Confirm RAM recommendation for dual gateway with Rick. Current figure from setup.mdx general guidance. */}
+  </Tab>
+</Tabs>
+
+---
+
+## OS compatibility
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>OS</TableCell>
+      <TableCell header>Video gateway</TableCell>
+      <TableCell header>AI gateway</TableCell>
+      <TableCell header>Notes</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Linux** (Ubuntu 20.04+)</TableCell>
+      <TableCell>✅ Full support</TableCell>
+      <TableCell>✅ Full support</TableCell>
+      <TableCell>Recommended OS for all production gateways</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Linux** (other distros)</TableCell>
+      <TableCell>✅ Generally supported</TableCell>
+      <TableCell>✅ Generally supported</TableCell>
+      <TableCell>Debian, CentOS, Arch — verify binary compatibility</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**macOS** (Intel / Apple Silicon)</TableCell>
+      <TableCell>⚠️ Dev only — build from source</TableCell>
+      <TableCell>❌ No binaries available</TableCell>
+      <TableCell>macOS useful for local dev/routing only; Docker often fails on macOS for AI gateway</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Windows** (native)</TableCell>
+      <TableCell>⚠️ Limited support — see install guide</TableCell>
+      <TableCell>❌ Not supported</TableCell>
+      <TableCell>No native AI gateway binary for Windows</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Windows** (WSL2 + Docker)</TableCell>
+      <TableCell>✅ Supported via Docker</TableCell>
+      <TableCell>⚠️ Fragile — use Linux VM instead</TableCell>
+      <TableCell>Effectively Linux-in-WSL. NVIDIA + CUDA not relevant for gateway role.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Docker** (Linux host)</TableCell>
+      <TableCell>✅ Supported</TableCell>
+      <TableCell>✅ Supported</TableCell>
+      <TableCell>Recommended deployment method for most setups</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+---
+
+## Network requirements
+
+### All gateways
+
+- Stable internet connection with sufficient bandwidth for your expected job volume
+- Low latency connectivity to orchestrators improves reliability — colocation in regions with strong Livepeer orchestrator presence helps
+
+### Video gateway
+
+Your video gateway must be publicly reachable from orchestrators:
+
+| Requirement | Detail |
+|-------------|--------|
+| **Public IP or domain** | Required for `-serviceAddr` — orchestrators must be able to reach your gateway |
+| **Port 1935** | RTMP ingest (your encoder pushes here) |
+| **Port 8935** | HTTP API and orchestrator communication |
+| **Port 7935** | CLI access (optional, keep internal) |
+
+<Note>
+Home internet connections with NAT often cause issues with gateway discovery. A VPS or cloud instance with a dedicated static IP is strongly recommended for any production video gateway.
+</Note>
+
+### AI gateway (off-chain)
+
+Off-chain AI gateways do not need to be publicly reachable from the Livepeer network — they initiate outbound connections to orchestrators. You still need:
+
+- Outbound connections to orchestrators (port 443 or as configured)
+- Outbound connections to your remote signer endpoint
+- HTTP API port accessible to your application (port 8937 by default)
+
+---
+
+## Skills requirements
+
+<AccordionGroup>
+  <Accordion title="Minimum: comfortable with a terminal and Docker">
+    You can get an AI gateway running with:
+
+    - Basic Linux command line (navigate directories, run commands, read logs)
+    - Docker: pull an image, run a container, read container logs
+    - Ability to edit a configuration file or Docker Compose YAML
+    - An understanding of what a REST API is (for connecting your application)
+
+    This is the minimum for an off-chain AI gateway. Video gateway adds the on-chain setup steps below.
+  </Accordion>
+  <Accordion title="Video gateway: also need Ethereum basics">
+    Running a video gateway requires:
+
+    - Creating and managing an Ethereum wallet
+    - Understanding the Arbitrum L2 network (not the same as Ethereum mainnet)
+    - Bridging ETH from Ethereum to Arbitrum
+    - Running `livepeer_cli` to allocate deposit and reserve funds
+    - Monitoring your ETH balance and topping up when needed
+
+    None of this requires deep crypto expertise, but it is more involved than the off-chain AI path. If you have never used a crypto wallet before, budget extra time for the on-chain setup steps.
+  </Accordion>
+  <Accordion title="Production deployments: systems administration">
+    For a production gateway handling real traffic, you additionally want:
+
+    - Linux systems administration (systemd services, log rotation, process monitoring)
+    - Basic networking (firewall rules, DNS, reverse proxy configuration)
+    - Docker Compose or equivalent for managing multi-container deployments
+    - Familiarity with Prometheus/Grafana or equivalent monitoring stack
+
+    These are not requirements to get started, but they become important for any gateway you plan to rely on.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## On-chain requirements (video gateway only)
+
+Off-chain AI gateway operators can skip this section. On-chain setup is required only for video transcoding gateways.
+
+<Steps>
+  <Step title="Get an Arbitrum RPC URL">
+    You need a connection to the Arbitrum One network, where Livepeer's smart contracts are deployed. Options:
+
+    - **Public RPC (free, rate-limited):** `https://arb1.arbitrum.io/rpc` — sufficient for a single gateway
+    - **Third-party provider (paid):** Alchemy, Infura, QuickNode — needed at higher volume
+    - **Self-hosted:** Run your own Arbitrum node (advanced; see Arbitrum docs)
+
+    See the [Arbitrum RPC reference](/v2/gateways/references/arbitrum-rpc) for a full list.
+  </Step>
+  <Step title="Create or import an Ethereum wallet">
+    Your gateway needs an Ethereum account on Arbitrum to hold funds and sign payment tickets.
+
+    - go-livepeer can auto-create a wallet on first run if you leave `-ethAcctAddr` empty
+    - Bring an existing wallet by providing its public address to `-ethAcctAddr`
+    - Store the keystore file securely — it contains your encrypted private key
+
+    See the [on-chain setup guide](/v2/gateways/setup/requirements/on-chain/on-chain) for full instructions.
+  </Step>
+  <Step title="Fund the wallet with ETH on Arbitrum">
+    Your gateway needs ETH on the Arbitrum network to pay for transcoding via probabilistic micropayments.
+
+    Minimum recommended for testing: **0.1 ETH** on Arbitrum
+    Recommended for production: **0.065 ETH deposit + 0.03 ETH reserve**
+
+    {/* REVIEW: Confirm current deposit/reserve amounts with Mehrdad or Rick. These figures are from fund-gateway.mdx and may have changed. Issue open to reduce reserve requirement: github.com/livepeer/go-livepeer/issues/3744 */}
+
+    ETH must be bridged from Ethereum mainnet to Arbitrum before it can be used. See [Bridge LPT to Arbitrum](/v2/gateways/setup/requirements/on-chain/bridge-lpt) and the [fund gateway guide](/v2/gateways/setup/requirements/on-chain/fund-gateway).
+  </Step>
+</Steps>
+
+---
+
+## Off-chain requirements (AI gateway)
+
+Off-chain mode removes all Ethereum requirements from your gateway. What you need instead:
+
+| Requirement | Detail |
+|-------------|--------|
+| **Linux server** | Ubuntu 20.04 or later, or Docker on Linux |
+| **Remote signer** | Either self-hosted or a community-hosted endpoint. Community option: `https://signer.eliteencoder.net/` (free ETH, publicly available) |
+| **Orchestrator list** | One or more AI-capable orchestrator addresses or a discovery URL. Use `tools.livepeer.cloud` to browse available orchestrators. |
+| **`-httpIngest` flag** | Required for AI gateway: enables HTTP job ingestion |
+
+{/* REVIEW: Confirm signer.eliteencoder.net is still operational and free. Verify with Elite Encoder in Discord #local-gateways. */}
+
+---
+
+## Next: installation
+
+Once you have confirmed your requirements, proceed to installation.
+
+<CardGroup cols={2}>
+  <Card title="Install with Docker" icon="docker" href="/v2/gateways/setup/install/docker-install">
+    Quickest path to a running gateway. Docker handles dependencies automatically.
+  </Card>
+  <Card title="Install on Linux" icon="linux" href="/v2/gateways/setup/install/linux-install">
+    Install the go-livepeer binary directly on your Linux host.
+  </Card>
+  <Card title="AI gateway quickstart" icon="bolt" href="/v2/gateways/get-started/gateway-setup">
+    Step-by-step from zero to a running AI gateway, including Docker command and test request.
+  </Card>
+  <Card title="Community install methods" icon="people-group" href="/v2/gateways/setup/install/community-projects">
+    Ansible, Docker Compose, and community-maintained install scripts.
+  </Card>
+</CardGroup>

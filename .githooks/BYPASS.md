@@ -120,6 +120,7 @@ SKIP_ALL=1 git commit -m "Emergency commit - all checks bypassed"
 - **Regular commits** - Normal development should pass all checks
 - **Permanent bypass** - Don't make bypassing a habit
 - **Skipping to avoid fixing issues** - Fix the issues instead
+- **Generated artifact churn** - A stale managed artifact is a signal to run the declared generator or fix governance, not a reason to bypass hooks
 
 ## Best Practices
 
@@ -127,6 +128,7 @@ SKIP_ALL=1 git commit -m "Emergency commit - all checks bypassed"
 2. **Document why** - If you must bypass, explain why in the commit message
 3. **Follow up** - If you bypassed checks, fix the issues in a follow-up commit
 4. **Review carefully** - If bypassing, manually verify your changes are correct
+5. **Do not hide generated-artifact failures** - targeted generated freshness failures should be resolved, not skipped
 
 ## Examples
 
@@ -155,3 +157,16 @@ Bypassing pre-commit hooks can lead to:
 - Merge conflicts
 
 **Always verify your changes work correctly after bypassing checks.**
+
+## Generated Artifact Guidance
+
+Generated-file churn is not, by itself, a valid reason to bypass hooks.
+
+If a generated-artifact check fails:
+
+1. Read the artifact name and remediation command in the hook output.
+2. Run the declared generator for that managed artifact.
+3. Review whether the generated diff belongs in your current task scope.
+4. If the diff is unexpectedly broad, treat that as a governance defect instead of bypassing the hook.
+
+Do not use bypass flags to force through stale `docs-index.json`, stale docs-guide catalogs, or staged local-only report output.

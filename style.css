@@ -36,34 +36,104 @@ F61067 - Razzmatazz Pink
 
 /* ============================================
    GLOBAL THEME VARIABLES
-   Matches ThemeData from snippets/styles/themeStyles.jsx
+   Component governance source of truth
    ============================================ */
 
 :root {
-  /* Light Mode Colors */
-  --accent: #3cb540;
-  --accent-dark: #18794e;
-  --hero-text: #181c18;
-  --text: #717571;
-  --muted-text: #9ca3af;
-  --background: #ffffff;
-  --card-background: #f9fafb;
-  --border: #e5e7eb;
-  --button-text: #ffffff;
+  --lp-color-accent: #3cb540;
+  --lp-color-accent-strong: #18794e;
+  --lp-color-accent-soft: #6bbf59;
+  --lp-color-accent-bright: #5dd662;
+  --lp-color-accent-brightest: #a0f0a5;
+  --lp-color-text-primary: #181c18;
+  --lp-color-text-secondary: #717571;
+  --lp-color-text-muted: #9ca3af;
+  --lp-color-bg-page: #ffffff;
+  --lp-color-bg-card: #f9fafb;
+  --lp-color-bg-elevated: #f3f6f4;
+  --lp-color-bg-subtle: rgba(24, 28, 24, 0.04);
+  --lp-color-bg-overlay: rgba(12, 12, 12, 0.5);
+  --lp-color-border-default: #e5e7eb;
+  --lp-color-border-strong: rgba(24, 28, 24, 0.18);
+  --lp-color-border-inverse: rgba(255, 255, 255, 0.5);
+  --lp-color-on-accent: #ffffff;
+  --lp-color-link: #18794e;
+  --lp-color-link-hover: #004225;
+  --lp-color-brand-discord: #5865f2;
+  --lp-color-brand-forum: #00aeef;
+  --lp-color-brand-github: #181c18;
+  --lp-color-brand-x: #181c18;
+  --lp-color-brand-preview: #b636dd;
+  --lp-color-brand-coming-soon: #ef1a73;
+  --lp-color-status-good: #22c55e;
+  --lp-color-status-warn: #fbbf24;
+  --lp-color-status-bad: #ef4444;
+  --lp-spacing-1: 0.25rem;
+  --lp-spacing-2: 0.5rem;
+  --lp-spacing-3: 0.75rem;
+  --lp-spacing-4: 1rem;
+  --lp-spacing-6: 1.5rem;
+  --lp-spacing-8: 2rem;
+  --lp-font-sans: "Inter", "Segoe UI", sans-serif;
+  --lp-font-mono: "SFMono-Regular", "SF Mono", "Menlo", monospace;
+  --lp-radius-sm: 0.25rem;
+  --lp-radius-md: 0.5rem;
+  --lp-radius-lg: 0.75rem;
+  --lp-shadow-card: 0 8px 24px rgba(24, 28, 24, 0.08);
+  --lp-z-base: 1;
+  --lp-z-overlay: 10;
+  --lp-z-modal: 50;
+
+  /* Legacy aliases maintained during migration */
+  --accent: var(--lp-color-accent);
+  --accent-dark: var(--lp-color-accent-strong);
+  --hero-text: var(--lp-color-text-primary);
+  --text: var(--lp-color-text-secondary);
+  --text-secondary: var(--lp-color-text-secondary);
+  --muted-text: var(--lp-color-text-muted);
+  --background: var(--lp-color-bg-page);
+  --card-background: var(--lp-color-bg-card);
+  --background-highlight: var(--lp-color-bg-subtle);
+  --border: var(--lp-color-border-default);
+  --button-text: var(--lp-color-on-accent);
+  --page-header-description-color: var(--lp-color-text-secondary);
 }
 
 .dark {
-  /* Dark Mode Colors */
-  --accent: #2b9a66;
-  --accent-dark: #18794e;
-  --hero-text: #e0e4e0;
-  --text: #a0a4a0;
-  --muted-text: #6b7280;
-  --background: #0d0d0d;
-  --card-background: #1a1a1a;
-  --border: #333333;
-  --button-text: #ffffff;
-  --background-highlight: rgba(255, 255, 255, 0.1);
+  --lp-color-accent: #2b9a66;
+  --lp-color-accent-strong: #18794e;
+  --lp-color-accent-soft: #3cb540;
+  --lp-color-accent-bright: #5dd662;
+  --lp-color-accent-brightest: #7fe584;
+  --lp-color-text-primary: #e0e4e0;
+  --lp-color-text-secondary: #a0a4a0;
+  --lp-color-text-muted: #6b7280;
+  --lp-color-bg-page: #0d0d0d;
+  --lp-color-bg-card: #1a1a1a;
+  --lp-color-bg-elevated: #141a16;
+  --lp-color-bg-subtle: rgba(255, 255, 255, 0.1);
+  --lp-color-bg-overlay: rgba(0, 0, 0, 0.5);
+  --lp-color-border-default: #333333;
+  --lp-color-border-strong: rgba(255, 255, 255, 0.3);
+  --lp-color-border-inverse: rgba(255, 255, 255, 0.5);
+  --lp-color-on-accent: #ffffff;
+  --lp-color-link: #5dd662;
+  --lp-color-link-hover: #a0f0a5;
+  --lp-color-brand-github: #f0f0f0;
+
+  /* Legacy aliases maintained during migration */
+  --accent: var(--lp-color-accent);
+  --accent-dark: var(--lp-color-accent-strong);
+  --hero-text: var(--lp-color-text-primary);
+  --text: var(--lp-color-text-secondary);
+  --text-secondary: var(--lp-color-text-secondary);
+  --muted-text: var(--lp-color-text-muted);
+  --background: var(--lp-color-bg-page);
+  --card-background: var(--lp-color-bg-card);
+  --background-highlight: var(--lp-color-bg-subtle);
+  --border: var(--lp-color-border-default);
+  --button-text: var(--lp-color-on-accent);
+  --page-header-description-color: var(--lp-color-text-secondary);
 }
 /* ============================================ */
 
@@ -333,7 +403,7 @@ img[alt="US"][src*="flags/US.svg"]::before {
   left: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  background-image: url("/snippets/assets/united-kingdom-flag-icon.svg") !important;
+  background-image: url("/snippets/assets/site/united-kingdom-flag-icon.svg") !important;
   background-size: cover !important;
   background-position: center !important;
   border-radius: 50% !important;
@@ -345,6 +415,27 @@ img[alt="US"][src*="flags/US.svg"]::before {
 #table-of-contents-layout:empty,
 #content-side-layout:has(#table-of-contents-layout:empty) {
   display: none;
+}
+
+/* StyledTable should sit flush inside its own border shell.
+   Mint wraps rendered tables in a scroll container with vertical padding,
+   which creates a false gap above/below the header row. */
+[data-docs-styled-table-shell] > div {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* BorderedBox should own its internal spacing.
+   Trim default block margins on the first/last rendered child so headings
+   and paragraphs do not add a false gap inside the padded shell. */
+[data-docs-bordered-box] > :first-child {
+  margin-top: 0 !important;
+}
+
+[data-docs-bordered-box] > :last-child {
+  margin-bottom: 0 !important;
 }
 
 /* Frame mode container - 80% of #content-container width, centered */

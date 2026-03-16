@@ -14,9 +14,9 @@ Live site: [docs.livepeer.org](https://docs.livepeer.org)
 
 If you only have a few minutes, this is the model:
 
-1. `v2/pages/` + `snippets/` are the primary docs content system.
+1. `v2/` + `snippets/` are the primary docs content system.
 2. `docs.json` controls navigation/routes.
-3. `lpd` is the maintainer CLI for setup/dev/test/hooks/scripts.
+3. `lpd` is the repo CLI for setup/dev/test/hooks/scripts.
 4. `.githooks/`, `tests/`, and CI workflows enforce quality gates.
 5. `docs-guide/` is the internal source of truth for navigating all repo capabilities.
 
@@ -37,6 +37,8 @@ npm i -g mintlify
 bash lpd setup --yes
 lpd dev
 ```
+
+`bash lpd setup --yes` also syncs the canonical Codex planning skill to `$CODEX_HOME/skills` (fallback: `~/.codex/skills`). For ambiguous repo-change planning, use `skill-plan` after setup. The canonical runbook lives in [`docs-guide/catalog/ai-tools.mdx`](docs-guide/catalog/ai-tools.mdx).
 
 If `lpd` is not on PATH yet:
 
@@ -103,26 +105,36 @@ Recovery:
 
 | Need | Canonical doc |
 |---|---|
-| Start here + update rules | [`docs-guide/README.mdx`](docs-guide/README.mdx) |
-| Source-of-truth boundaries | [`docs-guide/source-of-truth-policy.mdx`](docs-guide/source-of-truth-policy.mdx) |
-| Full feature inventory | [`docs-guide/feature-guides/feature-map.mdx`](docs-guide/feature-guides/feature-map.mdx) |
-| System/data/control flow | [`docs-guide/feature-guides/architecture-map.mdx`](docs-guide/feature-guides/architecture-map.mdx) |
-| CLI commands and runbooks | [`docs-guide/lpd.mdx`](docs-guide/lpd.mdx) |
-| Validation + enforcement gates | [`docs-guide/quality-testing/quality-gates.mdx`](docs-guide/quality-testing/quality-gates.mdx) |
-| Automation pipelines map | [`docs-guide/feature-guides/automation-pipelines.mdx`](docs-guide/feature-guides/automation-pipelines.mdx) |
-| Content system and IA model | [`docs-guide/feature-guides/content-system.mdx`](docs-guide/feature-guides/content-system.mdx) |
-| APIs and data integrations | [`docs-guide/feature-guides/data-integrations.mdx`](docs-guide/feature-guides/data-integrations.mdx) |
-| Generated pages tree inventory | [`docs-guide/indexes/pages-index.mdx`](docs-guide/indexes/pages-index.mdx) |
-| Generated components inventory | [`docs-guide/indexes/components-index.mdx`](docs-guide/indexes/components-index.mdx) |
-| Generated script inventory | [`docs-guide/indexes/scripts-index.mdx`](docs-guide/indexes/scripts-index.mdx) |
-| Generated workflow inventory | [`docs-guide/indexes/workflows-index.mdx`](docs-guide/indexes/workflows-index.mdx) |
-| Generated issue/PR template inventory | [`docs-guide/indexes/templates-index.mdx`](docs-guide/indexes/templates-index.mdx) |
+| Start here + update rules | [`docs-guide/overview.mdx`](docs-guide/overview.mdx) |
+| Source-of-truth boundaries | [`docs-guide/policies/source-of-truth-policy.mdx`](docs-guide/policies/source-of-truth-policy.mdx) |
+| Generated artifact and hook policy | [`docs-guide/policies/generated-artifact-and-hook-governance.mdx`](docs-guide/policies/generated-artifact-and-hook-governance.mdx) |
+| V2 publishability and workspace lanes | [`docs-guide/policies/v2-folder-governance.mdx`](docs-guide/policies/v2-folder-governance.mdx) |
+| Ownerless governance contract | [`docs-guide/policies/ownerless-governance.mdx`](docs-guide/policies/ownerless-governance.mdx) |
+| Full feature inventory | [`docs-guide/features/feature-map.mdx`](docs-guide/features/feature-map.mdx) |
+| System/data/control flow | [`docs-guide/features/architecture-map.mdx`](docs-guide/features/architecture-map.mdx) |
+| CLI commands and runbooks | [`docs-guide/tooling/lpd-cli.mdx`](docs-guide/tooling/lpd-cli.mdx) |
+| Validation + enforcement gates | [`docs-guide/policies/quality-gates.mdx`](docs-guide/policies/quality-gates.mdx) |
+| Audit system design and checks | [`docs-guide/policies/audit-system-overview.mdx`](docs-guide/policies/audit-system-overview.mdx) |
+| Skill pipeline map | [`docs-guide/policies/skill-pipeline-map.mdx`](docs-guide/policies/skill-pipeline-map.mdx) |
+| Cleanup and quarantine rules | [`docs-guide/policies/cleanup-quarantine-policy.mdx`](docs-guide/policies/cleanup-quarantine-policy.mdx) |
+| Component layout policy decisions | [`docs-guide/policies/component-layout-decisions.mdx`](docs-guide/policies/component-layout-decisions.mdx) |
+| Automation pipelines map | [`docs-guide/features/automations.mdx`](docs-guide/features/automations.mdx) |
+| Content system and IA model | [`docs-guide/frameworks/content-system.mdx`](docs-guide/frameworks/content-system.mdx) |
+| APIs and data integrations | [`docs-guide/features/data-integrations.mdx`](docs-guide/features/data-integrations.mdx) |
+| UI authoring system | [`docs-guide/features/ui-system.mdx`](docs-guide/features/ui-system.mdx) |
+| AI tools catalog | [`docs-guide/catalog/ai-tools.mdx`](docs-guide/catalog/ai-tools.mdx) |
+| Generated UI template inventory | [`docs-guide/catalog/ui-templates.mdx`](docs-guide/catalog/ui-templates.mdx) |
+| Generated pages tree inventory | [`docs-guide/catalog/pages-catalog.mdx`](docs-guide/catalog/pages-catalog.mdx) |
+| Generated components inventory | [`docs-guide/catalog/components-catalog.mdx`](docs-guide/catalog/components-catalog.mdx) |
+| Generated script inventory | [`docs-guide/catalog/scripts-catalog.mdx`](docs-guide/catalog/scripts-catalog.mdx) |
+| Generated workflow inventory | [`docs-guide/catalog/workflows-catalog.mdx`](docs-guide/catalog/workflows-catalog.mdx) |
+| Generated issue/PR template inventory | [`docs-guide/catalog/templates-catalog.mdx`](docs-guide/catalog/templates-catalog.mdx) |
 
 ## Contributing (Quick Path)
 
 1. Read style and component standards:
    - [`v2/resources/documentation-guide/style-guide.mdx`](v2/resources/documentation-guide/style-guide.mdx)
-   - [`v2/resources/documentation-guide/component-library.mdx`](v2/resources/documentation-guide/component-library.mdx)
+   - [`v2/resources/documentation-guide/component-library/`](v2/resources/documentation-guide/component-library/)
 2. Install/update hooks:
 
 ```bash
@@ -163,7 +175,7 @@ Contributor deep docs:
 ### Local (pre-commit)
 
 - `.githooks/pre-commit` runs structure/style verification and staged checks
-- includes script docs enforcement and pages index synchronization
+- includes script docs enforcement and pages catalog synchronization
 - includes staged WCAG accessibility audit with conservative autofix for common raw-tag issues
 - docs-guide source-of-truth checks currently run in advisory mode
 
@@ -182,7 +194,7 @@ Deep matrix:
 
 High-level directory map:
 
-- `v2/pages/` active docs pages
+- `v2/` active docs pages
 - `v1/` legacy/frozen docs
 - `snippets/` components, data, automations, shared assets
 - `tools/scripts/` operational/generation scripts
@@ -203,13 +215,15 @@ Key automation categories:
 
 Automation deep docs:
 
-- [`docs-guide/feature-guides/automation-pipelines.mdx`](docs-guide/feature-guides/automation-pipelines.mdx)
+- [`docs-guide/features/automations.mdx`](docs-guide/features/automations.mdx)
 - [`v2/resources/documentation-guide/automations-workflows.mdx`](v2/resources/documentation-guide/automations-workflows.mdx)
 
-## AI and Maintainer Guidance
+## AI and Repo Guidance
 
 - AI assistant rules and safety: `tools/ai-rules/`
-- repository AI guidance files: `.github/AGENTS.md`, `.cursorrules`
+- canonical repo baseline: `AGENTS.md`
+- native adapters: `.github/copilot-instructions.md`, `.claude/CLAUDE.md`, `.cursor/rules/repo-governance.mdc`, `.windsurf/rules/repo-governance.md`
+- governance policy docs: `docs-guide/policies/agent-governance-framework.mdx`, `docs-guide/policies/root-allowlist-governance.mdx`
 
 ## Source-of-Truth Contract (Short Form)
 

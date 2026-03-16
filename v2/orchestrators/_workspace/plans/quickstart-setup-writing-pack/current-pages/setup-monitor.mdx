@@ -1,0 +1,255 @@
+---
+title: Set Up Monitoring
+sidebarTitle: Monitor
+description: >-
+  Enable Prometheus metrics, track key health signals, and verify your
+  orchestrator is earning — the minimum monitoring setup for a new node.
+keywords:
+  - livepeer
+  - orchestrator
+  - monitoring
+  - Prometheus
+  - metrics
+  - nvidia-smi
+  - GPU
+  - reward call
+  - Explorer
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: current
+lastVerified: 2026-03-13
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+This page covers the minimum monitoring you should have in place once your orchestrator is live. For full observability (Grafana dashboards, alerting, DCGM exporter), see the [Metrics & Monitoring guide](/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting).
+
+<CustomDivider />
+
+## Enable Prometheus metrics
+
+Add `-monitor` to your go-livepeer startup command:
+
+```bash icon="terminal"
+livepeer \
+  -network arbitrum-one-mainnet \
+  -ethUrl <YOUR_RPC_URL> \
+  -orchestrator \
+  -transcoder \
+  -nvidia 0 \
+  -monitor \
+  ...
+```
+
+Metrics are exposed at:
+
+``` icon="terminal"
+http://localhost:7935/metrics
+```
+
+Verify with:
+
+```bash icon="terminal"
+curl -s http://localhost:7935/metrics | head -20
+```
+
+<CustomDivider />
+
+## Key metrics to watch
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Metric</TableCell>
+    <TableCell header>What it tells you</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`segment_source_appeared_total`</TableCell>
+    <TableCell>Total segments received — confirms you are getting jobs</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`segment_transcoded_total`</TableCell>
+    <TableCell>Successfully transcoded segments</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`segment_transcode_errors_total`</TableCell>
+    <TableCell>Failed transcodes — high values reduce gateway selection probability</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`transcode_latency_seconds`</TableCell>
+    <TableCell>Time to transcode each segment — should stay well under real-time</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`current_round`</TableCell>
+    <TableCell>Current Livepeer protocol round</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`reward_call_count`</TableCell>
+    <TableCell>Number of reward calls submitted — should increment once per round</TableCell>
+  </TableRow>
+</StyledTable>
+
+For AI inference metrics, also watch `ai_request_count` and `ai_request_latency_seconds`.
+
+<CustomDivider />
+
+## Check Explorer
+
+After each round (~24 hours), verify on [Livepeer Explorer](https://explorer.livepeer.org):
+
+1. **Status** — should show **Active**
+2. **Reward calls** — should show a reward for each round your node was online
+3. **Fees earned** — will appear after you process transcoding or AI jobs
+
+If reward calls are missing, check:
+- Your node was online and connected during the round
+- You did **not** start with `-reward=false`
+- Your Arbitrum ETH balance is sufficient for gas
+
+<CustomDivider />
+
+## GPU monitoring
+
+Check GPU health and utilisation:
+
+```bash icon="terminal"
+# Current status
+nvidia-smi
+
+# Continuous monitoring (updates every 2 seconds)
+nvidia-smi -l 2
+
+# CSV output for logging: utilisation, memory, temperature
+nvidia-smi --query-gpu=utilization.gpu,utilization.memory,memory.used,memory.total,temperature.gpu --format=csv -l 5
+```
+
+Watch for:
+- **Temperature** above 85°C — indicates inadequate cooling
+- **Memory utilisation** near 100% — may cause out-of-memory errors for AI workloads
+- **GPU utilisation** at 0% when you should be processing jobs — check go-livepeer logs
+
+<CustomDivider />
+
+## Quick symptom guide
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Symptom</TableCell>
+    <TableCell header>Likely cause</TableCell>
+    <TableCell header>Action</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>No segments in logs</TableCell>
+    <TableCell>Service address unreachable or price too high</TableCell>
+    <TableCell>Re-check port 8935 from external machine; compare pricing on Explorer</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Reward calls missing</TableCell>
+    <TableCell>Node offline during round, or `-reward=false`</TableCell>
+    <TableCell>Confirm uptime; check startup flags</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>High transcode errors</TableCell>
+    <TableCell>GPU driver issue or CUDA mismatch</TableCell>
+    <TableCell>Run `nvidia-smi`; check go-livepeer error logs</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>RPC errors in logs</TableCell>
+    <TableCell>Arbitrum endpoint down or rate-limited</TableCell>
+    <TableCell>Test RPC with `curl`; switch to a different provider if needed</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>AI runner not responding</TableCell>
+    <TableCell>Container crashed or port conflict</TableCell>
+    <TableCell>`docker logs <container>`; check `curl localhost:8000/health`</TableCell>
+  </TableRow>
+</StyledTable>
+
+For detailed troubleshooting, see the [FAQ](/v2/orchestrators/resources/faq).
+
+<CustomDivider />
+
+## Minimal Prometheus setup
+
+If you want to scrape and store metrics, add a `prometheus.yml`:
+
+```yaml icon="terminal"
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'go-livepeer'
+    static_configs:
+      - targets: ['localhost:7935']
+```
+
+Run Prometheus with Docker:
+
+```bash icon="terminal"
+docker run -d \
+  --name prometheus \
+  --network host \
+  -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml \
+  prom/prometheus
+```
+
+Access the Prometheus UI at `http://localhost:9090`.
+
+<CustomDivider />
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Metrics & Monitoring" icon="chart-line" href="/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting" arrow>
+    Full observability setup with Grafana dashboards and alerting.
+  </Card>
+  <Card title="Explorer Guide" icon="compass" href="/v2/orchestrators/guides/monitoring-and-tooling/explorer-operations" arrow>
+    Navigate the Livepeer Explorer to track your performance.
+  </Card>
+  <Card title="Troubleshooting" icon="circle-question" href="/v2/orchestrators/guides/monitoring-and-tooling/troubleshooting" arrow>
+    Common errors and fixes for orchestrator operations.
+  </Card>
+  <Card title="Community Tools" icon="screwdriver-wrench" href="/v2/orchestrators/guides/monitoring-and-tooling/operator-toolbox" arrow>
+    Third-party dashboards and monitoring tools.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  Basic monitoring setup - the minimum monitoring an operator should
+  configure immediately after setup (before the full monitoring guide).
+
+  SECTION HOME: Setup
+  JOURNEY POSITION: 7 of 7 in Setup (final setup step)
+  CROSS-REFS:
+  - Monitoring & Tools > Metrics Monitoring - full monitoring guide
+  - Monitoring & Tools > Tools - available monitoring tools
+*/}

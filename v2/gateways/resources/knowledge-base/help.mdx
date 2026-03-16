@@ -1,0 +1,248 @@
+---
+title: 'Gateway help'
+sidebarTitle: 'Get help'
+description: 'Every channel available to get help running a Livepeer gateway — Discord, forum, GitHub issues, office hours, SPE contacts, and security reporting.'
+purpose: operations
+audience: gateway-operator
+pageType: guide
+keywords: ["livepeer", "gateway", "help", "support", "discord", "forum", "github issues", "office hours"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+lastVerified: "2026-03-13"
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Terminology is consistent with resources/glossary
+*/}
+
+
+Every channel available for gateway operator support — from quick questions in Discord to production incident escalation. Choose the right channel for your situation.
+
+<CustomDivider />
+
+## Quick reference
+
+| Situation | Best channel |
+|-----------|-------------|
+| Off-chain gateway setup, remote signer, SDK questions | [#local-gateways on Discord](https://discord.gg/livepeer) |
+| Video gateway, on-chain setup, go-livepeer binary | [#lounge on Discord](https://discord.gg/livepeer) |
+| AI inference pipelines, ComfyUI, ComfyStream, BYOC | [#ai-research on Discord](https://discord.gg/livepeer) |
+| Payment mechanics, PM tickets, Arbitrum, clearinghouse | [#local-gateways on Discord](https://discord.gg/livepeer) or [forum](https://forum.livepeer.org) |
+| Protocol governance, network parameters, LIPs | [#governance on Discord](https://discord.gg/livepeer) |
+| Confirmed bug in go-livepeer | [go-livepeer GitHub Issues](https://github.com/livepeer/go-livepeer/issues) |
+| Confirmed bug in ai-runner | [ai-runner GitHub Issues](https://github.com/livepeer/ai-runner/issues) |
+| Security vulnerability | [Immunefi Bug Bounty](https://immunefi.com/bug-bounty/livepeer/information/) — never GitHub |
+| Gateway business / grants / SPE | [Livepeer Foundation grants](https://livepeer.org/grants) or [#governance Discord](https://discord.gg/livepeer) |
+| Daydream API or platform issues | [Daydream Docs](https://docs.daydream.live) and Daydream Discord |
+| Livepeer.Cloud gateway service | [livepeer.cloud](https://livepeer.cloud) — contact page |
+
+<CustomDivider />
+
+## Discord
+
+The primary real-time support channel for gateway operators. Join at [discord.gg/livepeer](https://discord.gg/livepeer).
+
+<AccordionGroup>
+  <Accordion title="#local-gateways (BUILDERS section)">
+    **Best for:** Off-chain gateway setup, remote signer configuration, BYOC, Python gateway SDK, orchestrator discovery, payment clearinghouse, NaaP dashboard.
+
+    The most active channel for cutting-edge gateway development. j0sh (Livepeer), John (Elite Encoder), and Qiang Han (NaaP) are active here. This is where the remote signer design was coordinated, BYOC payments were developed, and the OrchestratorSession API was designed.
+
+    Typical questions answered here:
+    - "How do I configure `remoteSignerAddr` for off-chain mode?"
+    - "What orchAddr should I use for local testing?"
+    - "BYOC payments aren't working — where do I look in the logs?"
+    - "Which SDK version supports remote signer for BYOC?"
+    - "How does orchestrator discovery work without an Ethereum RPC?"
+  </Accordion>
+
+  <Accordion title="#lounge (BUILDERS section)">
+    **Best for:** General go-livepeer gateway questions, binary install, on-chain gateway setup, broadcaster mode, transcoding configuration, general developer questions.
+
+    The main developer channel. Covers the full go-livepeer gateway setup path: downloading binaries, flag configuration, Arbitrum RPC, PM deposit, and connecting to orchestrators.
+
+    Typical questions answered here:
+    - "What's the right way to set up an on-chain video gateway?"
+    - "My gateway isn't finding any orchestrators — what do I check?"
+    - "What's the minimum ETH deposit for a new gateway?"
+    - "How do I set max price per unit across all capabilities?"
+  </Accordion>
+
+  <Accordion title="#ai-research (BUILDERS section)">
+    **Best for:** AI inference workloads, ComfyUI, ComfyStream, Daydream API, GPU requirements for orchestrators, AI pipeline architecture.
+
+    Focus is on the AI side of the network: what pipelines are available, what GPU specs are required per model, how to configure a gateway for specific AI capabilities, and how ComfyStream / BYOC work at the pipeline level.
+
+    Typical questions answered here:
+    - "What GPU is needed to run text-to-image at acceptable latency?"
+    - "How does ComfyStream integrate with the gateway pipeline?"
+    - "What AI pipelines are currently live on the network?"
+    - "How do I test a new AI pipeline before connecting to the network?"
+  </Accordion>
+
+  <Accordion title="#governance (PROTOCOL section)">
+    **Best for:** Livepeer Improvement Proposals (LIPs), protocol governance votes, SPE proposals, grant pre-applications.
+
+    If you are running a public gateway and want to apply for an SPE grant or submit a governance proposal affecting gateway economics, start here. Ping #governance before submitting a formal proposal.
+  </Accordion>
+
+  <Accordion title="#delegating (NETWORK section)">
+    **Best for:** LPT delegation, staking, orchestrator selection from a delegator perspective, staking rewards.
+
+    Relevant if you are running a gateway and also staking LPT to your own orchestrator (or selecting which orchestrators to support through delegation).
+  </Accordion>
+
+  <Accordion title="#landing-pad and #introductions (WELCOME section)">
+    **Best for:** First-time arrivals who have not yet figured out which channel to use.
+
+    Describe what you are building or what kind of operator you are in #landing-pad and the community will direct you to the right channel.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+## Livepeer Forum
+
+[forum.livepeer.org](https://forum.livepeer.org) — for longer-form questions, troubleshooting threads, and discussions that benefit from persistent searchable records.
+
+The forum has the following categories relevant to gateway operators:
+
+**Help: Development** — Technical implementation questions that are too detailed for Discord and benefit from being searchable. Past threads include production log monitoring guides, PM deposit troubleshooting, and orchestrator selection configuration.
+
+**Help: Orchestrators** — Questions about running orchestrators connected to your gateway. Relevant if you are operating both sides of the pipeline.
+
+**Protocol** — Network-level protocol discussion. Gateway economics, payment mechanics, and any protocol changes that affect gateway operation.
+
+**Governance** — LIP discussion, SPE proposals, and Treasury decisions. SPE applications for funded gateway operator roles live here.
+
+<Tip>
+Search the forum before posting — many gateway setup questions have been answered in detail in persistent threads. Good search terms: "gateway", "broadcaster", "remote signer", "BYOC", "PM deposit", "orchestrator discovery", "maxPricePerUnit".
+</Tip>
+
+<CustomDivider />
+
+## Developer Office Hours
+
+Bi-weekly video calls hosted by the Livepeer Foundation. Calendar and sign-up at [livepeer.org/dev-hub](https://www.livepeer.org/dev-hub).
+
+These calls are the best route for:
+- Raising a complex gateway setup problem that has not been resolved via Discord or the forum
+- Getting input from j0sh, Peter, or other core engineers on SDK and BYOC design decisions
+- Demonstrating a gateway integration you are building
+- Asking about grants, SPE opportunities, or the Foundation's current infrastructure priorities
+
+Recent calls have included live demos of ComfyUI pipelines, the remote signer E2E demo, and coordinated planning for the NaaP dashboard.
+
+<CustomDivider />
+
+## GitHub Issues
+
+Use GitHub Issues for **confirmed bugs** or **feature requests** — not for setup help or configuration questions (use Discord or the forum first).
+
+<CardGroup cols={2}>
+  <Card title="go-livepeer Issues" href="https://github.com/livepeer/go-livepeer/issues" icon="bug">
+    Bugs in the gateway binary: flag parsing errors, PM ticket failures, startup crashes, orchestrator connection issues. Include your go-livepeer version, full flag set (redact keys), and relevant log lines.
+  </Card>
+  <Card title="ai-runner Issues" href="https://github.com/livepeer/ai-runner/issues" icon="bug">
+    Bugs in the AI inference runtime: pipeline errors, Docker image issues, BYOC integration failures. Include ai-runner version and full error output.
+  </Card>
+  <Card title="livepeer-python-gateway Issues" href="https://github.com/j0sh/livepeer-python-gateway/issues" icon="python">
+    Bugs in the Python gateway SDK: payment session failures, remote signer connection errors, BYOC session management issues. Check open PRs first — there is active development here.
+  </Card>
+  <Card title="NaaP Issues" href="https://github.com/livepeer/naap/issues" icon="network-wired">
+    Issues with the NaaP dashboard or JWT auth integration. Tag Qiang Han in the issue.
+  </Card>
+  <Card title="livepeer/docs Issues" href="https://github.com/livepeer/docs/issues" icon="book">
+    Documentation errors, missing content, or inaccurate information in these docs. The team triages docs issues weekly. Include the page URL and what is incorrect or missing.
+  </Card>
+  <Card title="Scope Runner Issues" href="https://github.com/livepeer/scope-runner/issues" icon="box">
+    Issues with the reference BYOC implementation. Relevant when building custom pipelines based on the scope-runner template.
+  </Card>
+</CardGroup>
+
+<Warning>
+**Never report security vulnerabilities via GitHub Issues.** Use the [Immunefi bug bounty](https://immunefi.com/bug-bounty/livepeer/information/) instead. This applies to the PM protocol, smart contracts, and any signing key exposure risk.
+</Warning>
+
+<CustomDivider />
+
+## Hosted gateway platform support
+
+If you are **using** a hosted gateway instead of running your own, contact the gateway platform directly.
+
+<CardGroup cols={2}>
+  <Card title="Daydream API" href="https://docs.daydream.live" icon="cloud">
+    Support for the Daydream hosted AI video API. Documentation at docs.daydream.live. Community channel in the Livepeer Discord (look for #daydream or ask in #ai-research).
+  </Card>
+  <Card title="Livepeer.Cloud" href="https://livepeer.cloud" icon="cloud">
+    Livepeer.Cloud SPE gateway service. Support and contact information on their website. Technical questions about the Livepeer.Cloud gateway also welcome in #lounge.
+  </Card>
+  <Card title="Livepeer Studio" href="https://livepeer.studio" icon="studio">
+    Studio is the official hosted API and dashboard. Support at [support.livepeer.studio](https://support.livepeer.studio) or [support@livepeer.studio](mailto:support@livepeer.studio).
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Security and vulnerability reporting
+
+<Warning>
+**Do not report security vulnerabilities in Discord, GitHub Issues, or the forum.** The correct channel is the Immunefi bug bounty programme.
+</Warning>
+
+<CardGroup cols={1}>
+  <Card title="Immunefi Bug Bounty Programme" href="https://immunefi.com/bug-bounty/livepeer/information/" icon="shield-halved">
+    Scope covers Livepeer smart contracts (PM protocol, bonding manager, staking contracts) on Arbitrum One. USDC rewards. KYC required. Provides secure, private disclosure with a defined review process and reward schedule.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Grants, funding, and SPE programmes
+
+<CardGroup cols={2}>
+  <Card title="Livepeer Grants Programme" href="https://livepeer.org/grants" icon="hand-holding-dollar">
+    Foundation grants for gateway operators building public infrastructure. Open Network and Video Disruptor tracks. Paid in LPT. Bi-weekly review. Post in #governance on Discord to discuss your proposal before applying.
+  </Card>
+  <Card title="Software Bounties" href="https://github.com/livepeer/bounties" icon="list-check">
+    Scoped development tasks with defined compensation. Check for open gateway-related bounties here.
+  </Card>
+  <Card title="Builder Accelerator (Dev Hub)" href="https://www.livepeer.org/dev-hub" icon="rocket">
+    Foundation's builder support programme: office hours, BD introductions, technical mentorship, and fast-track grants for gateway operators building products.
+  </Card>
+  <Card title="SPE Governance (Forum)" href="https://forum.livepeer.org" icon="building">
+    Strategic Partner Engagement proposals live in the governance category of the forum. Existing examples include the Cloud SPE (Livepeer.Cloud), LLM SPE, and NaaP. Read these before writing your own proposal.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Social and community channels
+
+<CardGroup cols={2}>
+  <Card title="Livepeer Discord" href="https://discord.gg/livepeer" icon="discord">
+    Primary community hub. All sections: WELCOME, GENERAL, BUILDERS, NETWORK, PROTOCOL. Most active community and fastest response time for gateway questions.
+  </Card>
+  <Card title="Livepeer Forum" href="https://forum.livepeer.org" icon="comments">
+    Long-form discussion, troubleshooting threads, governance proposals, and SPE applications. Fully searchable archive.
+  </Card>
+  <Card title="Livepeer on X (@Livepeer)" href="https://twitter.com/Livepeer" icon="twitter">
+    Official announcements and product news. Not a support channel. Follow for protocol updates, new blog posts, and ecosystem news.
+  </Card>
+  <Card title="Livepeer Blog" href="https://blog.livepeer.org" icon="newspaper">
+    Detailed product updates, builder stories, technical deep dives, and network vision posts. Subscribe for the most substantive updates.
+  </Card>
+  <Card title="Livepeer YouTube" href="https://www.youtube.com/results?search_query=livepeer" icon="youtube">
+    Community and official video content: node setup walkthroughs, conference talks, live demos, and Dev Office Hours recordings.
+  </Card>
+  <Card title="Livepeer Reddit" href="https://www.reddit.com/r/livepeer/" icon="reddit">
+    Community discussion forum. Less active than Discord for technical questions but useful for broader ecosystem conversations.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+<Note>
+If you have tried all the above and are still stuck, post in #lounge on Discord with as much context as possible: your go-livepeer version, your exact flags (redact private keys), the full error output, and what you have already tried.
+</Note>

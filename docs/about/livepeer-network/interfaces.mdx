@@ -1,0 +1,175 @@
+---
+title: Network Interfaces
+sidebarTitle: Interfaces
+description: >-
+  How to interact with the Livepeer Network and protocol: REST and gRPC APIs,
+  GraphQL, JS SDK, CLI, and smart contract interfaces.
+keywords:
+  - livepeer
+  - about
+  - livepeer network
+  - interfaces
+  - API
+  - SDK
+  - CLI
+  - GraphQL
+  - REST
+  - gRPC
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: general
+---
+
+import { DynamicTable } from '/snippets/components/layout/table.jsx'
+import { GotoLink } from '/snippets/components/primitives/links.jsx'
+
+
+Livepeer exposes multiple access interfaces for developers, creators, and infrastructure operators to interact with the protocol and network. These include SDKs, REST and gRPC APIs, the CLI, GraphQL endpoints, and playback tooling for on-chain and off-chain applications. This page breaks down each interface by use case, target user, and sample integration paths.
+
+## Interface categories
+
+<DynamicTable
+  headerList={["Interface", "Use case", "Users", "Access"]}
+  itemsList={[
+    { "Interface": "REST API", "Use case": "Start sessions, control workflows", "Users": "App developers, Gateways", "Access": "HTTPS" },
+    { "Interface": "gRPC API", "Use case": "Fast low-latency session control", "Users": "Gateway nodes", "Access": "gRPC" },
+    { "Interface": "GraphQL API", "Use case": "Explore network, jobs, rewards", "Users": "Analysts, explorers", "Access": "GraphQL" },
+    { "Interface": "JS SDK", "Use case": "Playback, ingest, session control", "Users": "Frontend developers", "Access": "JavaScript" },
+    { "Interface": "CLI", "Use case": "Orchestrator & delegator control", "Users": "Node operators", "Access": "Terminal" },
+    { "Interface": "Smart contracts", "Use case": "Protocol-level operations (stake, redeem, govern)", "Users": "Power users, devs", "Access": "Solidity / RPC" }
+  ]}
+/>
+
+## REST API (Livepeer Studio)
+
+Available at: `https://livepeer.studio/api`
+
+**Common endpoints:**
+
+- `POST /stream` - Create video stream ingest session
+- `POST /transcode` - On-demand file transcode
+- `POST /ai/infer` - Submit AI job (e.g. image enhancement)
+- `GET /session/:id` - Fetch session status
+
+**Docs:** [livepeer.studio/docs](https://livepeer.studio/docs)
+
+## gRPC API (Gateway nodes)
+
+gRPC allows high-throughput, low-latency Orchestrator routing.
+
+**Methods (examples):** `ReserveSession`, `Heartbeat`, `ReportJobComplete`, `OrchestratorList`
+
+Used by: Studio Gateway, Daydream Gateway, Cascade.
+
+**Proto:** [gateway.proto](https://github.com/livepeer/protocol/blob/master/proto/gateway.proto)
+
+## GraphQL Explorer API
+
+Access detailed Livepeer on-chain and network state.
+
+**Endpoint:** `https://explorer.livepeer.org/graphql`
+
+**Example query:**
+
+```graphql
+query GetOrchestrators {
+  orchestrators {
+    id
+    totalStake
+    rewardCut
+    serviceURI
+  }
+}
+```
+
+Also supports: delegator rewards, inflation rate, total active stake, round info. Used by [Explorer](https://explorer.livepeer.org).
+
+## JS SDK
+
+**GitHub:** [@livepeer/sdk](https://github.com/livepeer/js-sdk)
+
+**Install:**
+
+```bash
+npm install @livepeer/sdk
+```
+
+**Features:** Ingest (create stream, push video), AI job submit, view session output, wallet support (ETH, credit), playback and stats.
+
+**Example:**
+
+```javascript
+const { createStream } = require('@livepeer/sdk');
+const stream = await createStream({ name: 'My Stream' });
+```
+
+Used in: Livepeer Studio, Daydream, VJ apps (e.g. MetaDJ).
+
+## CLI
+
+Install via Go build or Docker:
+
+```bash
+go install github.com/livepeer/go-livepeer
+```
+
+**Commands (examples):** `stake`, `unbond`, `withdraw`, `reward`, `claim`, `transcode`, `broadcast`, `query`
+
+Ideal for Orchestrator testing and protocol analysis.
+
+## Smart contract interfaces
+
+Interact directly with the protocol (Arbitrum) via RPC and ABIs.
+
+<DynamicTable
+  headerList={["Contract", "Function (examples)", "Address source"]}
+  itemsList={[
+    { "Contract": "BondingManager", "Function (examples)": "stake, reward, unbond", "Address source": "See Blockchain contracts" },
+    { "Contract": "TicketBroker", "Function (examples)": "redeem tickets, deposit, withdraw", "Address source": "See Blockchain contracts" },
+    { "Contract": "Governor", "Function (examples)": "vote, queue, execute LIPs", "Address source": "See Blockchain contracts" }
+  ]}
+/>
+
+<Note>
+Current Arbitrum contract addresses and ABIs are listed in [Blockchain contracts](../resources/blockchain-contracts). Use `ethers.js`, `viem`, `hardhat`, or JSON-RPC to call contracts.
+</Note>
+
+## Workflow examples
+
+**Transcode from web app:**
+
+```javascript
+await sdk.createStream({ profile: '720p', name: 'MyCam' });
+```
+
+**Run AI image-to-image (curl):**
+
+```bash
+curl -X POST https://livepeer.studio/api/ai/infer \
+  -d '{ "model": "sdxl", "input": "image.png" }'
+```
+
+**Check node metrics:**
+
+```bash
+livepeer_cli status
+```
+
+## See also
+
+- [Technical architecture](./technical-architecture) - Stack overview, Orchestrator, Gateway, workers
+- [Marketplace](./marketplace) - Routing and pricing
+- [Job lifecycle](./job-lifecycle) - Session flow and settlement
+- [Blockchain contracts](../resources/blockchain-contracts) - Contract addresses and ABIs
+- [Livepeer Protocol repo](https://github.com/livepeer/protocol)
+
+## References
+
+- [Livepeer Studio API](https://livepeer.studio/docs)
+- [Livepeer Explorer GraphQL](https://explorer.livepeer.org/graphql)
+- [Livepeer JS SDK](https://github.com/livepeer/js-sdk)
+- [Protocol ABIs](https://github.com/livepeer/protocol/tree/master/abi)
+- [Livepeer Protocol repo](https://github.com/livepeer/protocol)

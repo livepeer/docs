@@ -1,0 +1,349 @@
+---
+title: Bandwidth and Session Limits
+sidebarTitle: Bandwidth & Session Limits
+description: >-
+  How to calculate your bandwidth limit per concurrent stream, derive the right
+  -maxSessions value from hardware and bandwidth ceilings, and configure
+  session limits on your orchestrator node.
+keywords:
+  - livepeer
+  - orchestrator
+  - maxSessions
+  - session limits
+  - bandwidth
+  - abr ladder
+  - concurrent streams
+  - orchestratorcapped
+  - transcoding capacity
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: orchestrator
+purpose: guide
+status: published
+lastVerified: 2026-03-13
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+Your session limit is the ceiling on how many concurrent transcoding streams your node will accept. Set it too low and you leave capacity unused. Set it too high and your node falls behind — segments pile up, gateways get errors, and your performance reputation suffers.
+
+This page explains how to calculate both your bandwidth limit and hardware limit, then combine them into the right `-maxSessions` value.
+
+<Note>
+  Complete [Benchmarking Your Setup](/v2/orchestrators/guides/feasibility-and-hardware/benchmarking) first. That process gives you the hardware limit number this page uses as an input.
+</Note>
+
+<CustomDivider />
+
+## Why session limits matter
+
+Go-livepeer has a default maximum of **10 concurrent sessions** (`MaxSessions = 10`). When an incoming stream request would exceed this limit, the orchestrator returns an `OrchestratorCapped` error and the gateway stops routing work to you until capacity frees up.
+
+{/* REVIEW: `OrchestratorCapped` is the error name from v1 docs. Verify this string is still the correct error returned in current go-livepeer when MaxSessions is exceeded. Rick to check against current source — couldn't confirm in source scrape due to GitHub API limitations. */}
+
+Setting a limit based on your actual hardware and bandwidth has two benefits:
+
+- **Protects quality** — prevents your node from accepting more work than it can process in real time, which would cause failed transcode jobs and hurt your reputation score with gateways.
+- **Maximises utilisation** — a properly calibrated limit means you use as much of your hardware as you can reliably deliver.
+
+<CustomDivider />
+
+## Bandwidth per stream
+
+Every transcoding job requires both download (receiving the source stream) and upload (delivering output renditions). The bandwidth requirement per stream depends on the rendition profile set being used.
+
+The current standard output rendition set in `transcodingOptions.json` is:
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Profile</TableCell>
+    <TableCell header>Resolution</TableCell>
+    <TableCell header>Output bitrate</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`240p0`</TableCell>
+    <TableCell>426×240</TableCell>
+    <TableCell>250 kbps</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`360p0`</TableCell>
+    <TableCell>640×360</TableCell>
+    <TableCell>800 kbps</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`480p0`</TableCell>
+    <TableCell>854×480</TableCell>
+    <TableCell>1,600 kbps</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`720p0`</TableCell>
+    <TableCell>1,280×720</TableCell>
+    <TableCell>3,000 kbps</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Total output**</TableCell>
+    <TableCell></TableCell>
+    <TableCell>**5,650 kbps**</TableCell>
+  </TableRow>
+</StyledTable>
+
+{/* REVIEW: This table is verified from the current go-livepeer transcodingOptions.json (March 2026). The v1 documentation included a fifth profile — 1080p at 6000 kbps — which is NO LONGER in the file. The v1-derived bandwidth figures (6 Mbps download + 5.6 Mbps upload) may therefore no longer reflect what gateways actually send. Rick and community to confirm: (1) Is 1080p source still common on the network? (2) Do gateways send a 1080p profile in their own rendition sets that differs from the bench tool's config? The upload bandwidth (~5.65 Mbps) tracks closely with v1's 5.6 Mbps figure, but download depends on source resolution. */}
+
+**Upload bandwidth per stream:** approximately **5.7 Mbps** (sum of all output rendition bitrates).
+
+**Download bandwidth per stream:** depends on source stream resolution. For a 720p source at 3,000 kbps, download is approximately **3 Mbps** per stream. For a 1080p source, download could be **6 Mbps** per stream or more.
+
+For planning purposes, budget **~6 Mbps symmetric** per concurrent stream to cover both source download and output upload with margin.
+
+### Estimating your stream count from bandwidth
+
+``` icon="terminal"
+Bandwidth limit = available bandwidth (Mbps) ÷ bandwidth per stream (Mbps)
+```
+
+**Examples:**
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Available bandwidth</TableCell>
+    <TableCell header>Bandwidth limit (streams)</TableCell>
+    <TableCell header>With ~20% burst margin</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>100 Mbps symmetric</TableCell>
+    <TableCell>~16 streams</TableCell>
+    <TableCell>~13 streams</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>500 Mbps symmetric</TableCell>
+    <TableCell>~83 streams</TableCell>
+    <TableCell>~66 streams</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>1 Gbps symmetric</TableCell>
+    <TableCell>~166 streams</TableCell>
+    <TableCell>~133 streams</TableCell>
+  </TableRow>
+</StyledTable>
+
+The 20% burst margin accounts for segments arriving in bursts rather than perfectly spaced. Most operators use the conservative figure when setting `-maxSessions`.
+
+<Warning>
+  These are theoretical bandwidth limits. Your actual ISP connection may have asymmetric speeds (higher download than upload). Use the lower of upload and download rates for calculating your bandwidth limit. Many residential connections with 100 Mbps download have only 20–30 Mbps upload — the upload constraint dominates.
+</Warning>
+
+<CustomDivider />
+
+## Deriving your session limit
+
+Your session limit is the **minimum** of your hardware limit and your bandwidth limit:
+
+``` icon="terminal"
+session limit = min(hardware limit, bandwidth limit)
+```
+
+**Hardware limit** — the last concurrent session count in your benchmark where the Real-Time Duration Ratio was ≤ 0.8. See [Benchmarking Your Setup](/v2/orchestrators/guides/feasibility-and-hardware/benchmarking).
+
+**Bandwidth limit** — calculated above from your available symmetric bandwidth.
+
+**Example:**
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Input</TableCell>
+    <TableCell header>Value</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Hardware limit (from benchmarking)</TableCell>
+    <TableCell>12 sessions</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Available bandwidth</TableCell>
+    <TableCell>100 Mbps symmetric</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Bandwidth limit (100 Mbps ÷ 6 Mbps, with 20% margin)</TableCell>
+    <TableCell>~13 sessions</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Session limit**</TableCell>
+    <TableCell>**min(12, 13) = 12**</TableCell>
+  </TableRow>
+</StyledTable>
+
+In this example, hardware is the binding constraint. Use `-maxSessions 12`.
+
+<CustomDivider />
+
+## Setting the session limit
+
+Pass `-maxSessions` to the `livepeer` binary. It applies to both orchestrators and transcoders.
+
+### Combined orchestrator + transcoder
+
+```bash icon="terminal"
+livepeer \
+    -orchestrator \
+    -transcoder \
+    -maxSessions 12 \
+    -network arbitrum-one-mainnet \
+    # ... other flags
+```
+
+### Split setup (orchestrator + separate transcoder)
+
+Set `-maxSessions` on both the orchestrator and the transcoder nodes. The orchestrator uses it to know its total capacity; the transcoder uses it to control how many concurrent jobs it accepts.
+
+```bash icon="terminal"
+# Orchestrator node
+livepeer \
+    -orchestrator \
+    -maxSessions 12 \
+    -network arbitrum-one-mainnet
+
+# Transcoder node (separate machine or process)
+livepeer \
+    -transcoder \
+    -maxSessions 12 \
+    -orchAddr <orchestrator-ip>:8935
+```
+
+{/* REVIEW: Confirm -maxSessions is still valid on both O and T in the current split-node setup. This was accurate in v1 docs. Rick to verify no flag rename has occurred. */}
+
+### CPU transcoding
+
+CPU-only setups typically handle significantly fewer sessions than GPU setups before the ratio exceeds 1.0. Use your benchmark result directly.
+
+{/* REVIEW: v1 docs suggest CPU transcoding limit is approximately 5 sessions as a rule of thumb. This figure is from 2021 hardware. On modern CPUs (e.g. Ryzen 9, Threadripper), the practical limit may be higher. Community to confirm current convention. */}
+
+<CustomDivider />
+
+## Tuning after going live
+
+The benchmark gives you a starting estimate. Real network conditions introduce variables not captured in the benchmark:
+
+- Actual segment sizes and bitrates from gateways vary
+- Upload latency and jitter add overhead beyond raw bandwidth
+- Reward() calls and ticket redemptions consume CPU/network intermittently
+
+**Start with your benchmark-derived limit and watch your metrics.** Key things to monitor after going live:
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Metric</TableCell>
+    <TableCell header>What to watch</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`livepeer_transcode_duration_seconds`</TableCell>
+    <TableCell>Should stay below segment duration (2s) per session</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`livepeer_real_time_seg_transcoded`</TableCell>
+    <TableCell>Drops below 1 when segments are falling behind</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Gateway job rejection rate</TableCell>
+    <TableCell>If gateways stop sending you work, check OrchestratorCapped errors in logs</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>CPU/GPU utilisation</TableCell>
+    <TableCell>Sustained &gt;95% utilisation is a signal to reduce sessions</TableCell>
+  </TableRow>
+</StyledTable>
+
+If your node is consistently handling work without degradation, you can experiment with incrementally raising `-maxSessions`. Adjust based on observed performance, not just theoretical headroom.
+
+<CustomDivider />
+
+## AI workloads and session limits
+
+`-maxSessions` applies to video transcoding sessions. AI inference capacity is managed differently — through the `capacity` field in `aiModels.json` per pipeline entry:
+
+```json icon="terminal"
+{
+    "pipeline": "text-to-image",
+    "model_id": "SG161222/RealVisXL_V4.0_Lightning",
+    "price_per_unit": 4768371,
+    "warm": true,
+    "capacity": 2
+}
+```
+
+The `capacity` field limits concurrent inference requests to that pipeline. AI capacity is bounded by VRAM rather than by stream count or bandwidth. For the full AI capacity reference, see [Models and VRAM Reference](/v2/orchestrators/guides/workloads-and-ai/model-vram-reference).
+
+<CustomDivider />
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Benchmarking Your Setup" icon="gauge-high" href="/v2/orchestrators/guides/feasibility-and-hardware/benchmarking">
+    Run livepeer_bench to measure your hardware session ceiling.
+  </Card>
+  <Card title="Models and VRAM Reference" icon="memory" href="/v2/orchestrators/guides/workloads-and-ai/model-vram-reference">
+    AI inference capacity — VRAM tiers, warm model strategy, and the capacity field.
+  </Card>
+  <Card title="Feasibility and Economics" icon="scale-balanced" href="/v2/orchestrators/guides/feasibility-and-hardware/feasibility-economics">
+    Full cost and revenue breakdown before you commit to setup.
+  </Card>
+  <Card title="Metrics and Monitoring" icon="chart-mixed" href="/v2/orchestrators/guides/monitoring-and-troubleshooting/metrics-monitoring">
+    Prometheus metrics to watch for transcoding throughput and session health.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  Journey step: "How many concurrent jobs can my orchestrator handle?"
+  Guide for understanding and configuring session limits to maximise
+  throughput without overloading hardware.
+
+  CONTENT SHOULD INCLUDE:
+  - What sessions are (concurrent video streams or AI inference jobs)
+  - -maxSessions flag and how to set it
+  - Factors affecting capacity: GPU VRAM, CPU, bandwidth, model size
+  - Video vs AI session resource profiles
+  - Monitoring session utilisation (Prometheus metrics)
+  - When to increase limits vs add hardware
+
+  SECTION HOME: Guides > Deployment Details
+
+  JOURNEY POSITION:
+  1. Setup Options - "Which path?"
+  2. Requirements - "What do I need?"
+  3. Benchmarking - "How does my hardware perform?"
+  4. Session Limits (this page) - "How many jobs can I handle?"
+  5. Join a Pool - "How do I join a pool?"
+
+  CROSS-REFS:
+  - Deployment Details > Benchmarking - performance data informing limits
+  - Monitoring & Tools > Metrics Monitoring - tracking session utilisation
+  - Advanced Operations > Large-Scale Operations - scaling beyond single node
+  - Deployment Details > Requirements - hardware driving capacity
+*/}

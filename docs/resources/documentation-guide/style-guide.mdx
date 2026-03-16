@@ -1,0 +1,1121 @@
+---
+title: Documentation Style Guide
+sidebarTitle: Style Guide
+description: >-
+  Style guide, Mintlify gotchas, and best practices for writing Livepeer
+  documentation
+keywords:
+  - livepeer
+  - resources
+  - documentation guide
+  - style guide
+  - styling
+  - mintlify
+  - gotchas
+  - best practices
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { FocusableScrollRegions } from '/snippets/components/primitives/a11y.jsx'
+
+<FocusableScrollRegions />
+
+
+# Documentation Style Guide
+
+This guide covers styling conventions, Mintlify-specific gotchas, and best practices for contributing to the Livepeer documentation.
+
+## Production-Grade Styling for Mintlify
+
+### Framework: CSS Custom Properties (CSS Variables)
+
+**Mintlify uses CSS Custom Properties (CSS Variables) as the production-grade styling framework.** This is the official, supported approach for theming in Mintlify documentation.
+
+### Theme Architecture
+
+The documentation uses **CSS Custom Properties** defined in `style.css` at the repository root. This is the **ONLY** production-grade approach for styling Mintlify documentation.
+
+**DO NOT USE:**
+- ❌ JavaScript theme objects (ThemeData, themeStyles.jsx) - **DEPRECATED**
+- ❌ Inline style objects with hardcoded colors
+- ❌ JavaScript-based theme switching
+
+**USE INSTEAD:**
+- ✅ CSS Custom Properties (`--variable-name`)
+- ✅ Global CSS variables in `style.css`
+- ✅ Mintlify theme configuration in `docs.json`
+
+### Color System
+
+All theme colors are defined as CSS Custom Properties in `style.css`:
+
+| Variable | Light Mode | Dark Mode | Usage |
+|----------|-----------|-----------|-------|
+| `--accent` | `#3CB540` (Jade Green) | `#2b9a66` (Dark Jade) | Highlights, icons, links |
+| `--accent-dark` | `#18794E` | `#18794E` | Step icons, emphasis |
+| `--hero-text` | `#181C18` | `#E0E4E0` | Headings, titles |
+| `--text` | `#717571` | `#A0A4A0` | Body text |
+| `--muted-text` | `#9ca3af` | `#6b7280` | Secondary text |
+| `--background` | `#ffffff` | `#0d0d0d` | Page background |
+| `--card-background` | `#f9fafb` | `#1a1a1a` | Cards, containers |
+| `--border` | `#e5e7eb` | `#333333` | Borders, dividers |
+| `--button-text` | `#ffffff` | `#ffffff` | Button text |
+
+### Using CSS Custom Properties
+
+#### Inline Styles (Recommended)
+
+```jsx
+<div style={{ 
+  color: "var(--accent)", 
+  border: "1px solid var(--border)",
+  background: "var(--card-background)"
+}}>
+  Content
+</div>
+```
+
+#### Component-Level CSS
+
+```jsx
+export const MyComponent = () => {
+  return (
+    <>
+      <div className="my-component">
+        Content
+      </div>
+      <style>{`
+        .my-component {
+          color: var(--text);
+          background: var(--card-background);
+          border: 1px solid var(--border);
+        }
+      `}</style>
+    </>
+  );
+};
+```
+
+#### Global CSS in style.css
+
+```css
+.my-custom-class {
+  color: var(--accent);
+  background: var(--card-background);
+}
+```
+
+### How Theme Switching Works
+
+Mintlify automatically adds a `.dark` class to the `<html>` element when dark mode is active. CSS variables automatically switch based on the theme:
+
+```css
+:root {
+  --accent: #3CB540; /* Light mode */
+}
+
+.dark {
+  --accent: #2b9a66; /* Dark mode */
+}
+```
+
+**No JavaScript required** - theme switching is handled entirely by CSS.
+
+### Color Rules
+
+| Use Case | Approach |
+|----------|----------|
+| Brand colors (green) | Use `--accent` or `--accent-dark` |
+| Headings | Use `--hero-text` |
+| Body text | Use `--text` |
+| Secondary text | Use `--muted-text` |
+| Backgrounds | Use `--background` or `--card-background` |
+| Borders | Use `--border` |
+| Semantic colors (error, warning, success) | Keep fixed (don't theme) |
+| White text on green headers | Keep fixed as `#fff` |
+
+### Deprecated Approaches
+
+**DO NOT USE THESE:**
+
+1. **ThemeData Object** - `snippets/styles/themeStyles.jsx` is **DEPRECATED**
+   ```jsx
+   // ❌ WRONG - DO NOT USE
+   import { ThemeData } from "/snippets/styles/themeStyles.jsx";
+   <div style={{ color: ThemeData.light.accent }}>Content</div>
+   ```
+
+2. **Hardcoded Colors** - Never hardcode hex values that should adapt to theme
+   ```jsx
+   // ❌ WRONG - DO NOT USE
+   <div style={{ color: "#3CB540" }}>Content</div>
+   ```
+
+3. **JavaScript Theme Switching** - Not needed, CSS handles this automatically
+
+### What NOT to Do
+
+- ❌ Don't import or use `ThemeData` from `themeStyles.jsx`
+- ❌ Don't hardcode hex colors that should adapt to theme
+- ❌ Don't use generic grays without checking theme compatibility
+- ❌ Don't make semantic colors (trust scores, error states) theme-dependent
+- ❌ Don't override white text on intentionally colored backgrounds
+- ❌ Don't create custom JavaScript theme objects
+
+## Styling Framework Architecture
+
+The Livepeer documentation uses a **three-layer styling framework** designed to work within Mintlify's constraints while maintaining consistency and maintainability.
+
+### Framework Layers
+
+#### Layer 1: Global CSS (`style.css`)
+
+**Purpose**: Theme variables and framework-level overrides only
+
+**What belongs here:**
+- ✅ CSS Custom Properties (theme variables)
+- ✅ Mintlify component overrides (navigation, footer, etc.)
+- ✅ Frame mode container classes
+- ✅ Utility classes for patterns used 5+ times across pages
+
+**What does NOT belong here:**
+- ❌ Page-specific styles
+- ❌ Component-specific styles (belong in JSX)
+- ❌ One-off styling needs
+
+**Structure:**
+```css
+/* ============================================
+   THEME VARIABLES (CSS Custom Properties)
+   ============================================ */
+:root { /* Light mode */ }
+.dark { /* Dark mode */ }
+
+/* ============================================
+   FRAMEWORK OVERRIDES (Mintlify-specific)
+   ============================================ */
+/* Navigation, footer, frame mode containers */
+
+/* ============================================
+   UTILITY CLASSES (Reusable patterns)
+   ============================================ */
+/* Only for patterns used 5+ times across pages */
+```
+
+#### Layer 2: JSX Components (`snippets/components/**/*.jsx`)
+
+**Purpose**: Self-contained components with internal styling
+
+**Rules:**
+- ✅ Use CSS Custom Properties (`var(--accent)`, `var(--text)`, etc.)
+- ✅ Styles must be within the component file
+- ✅ Use `<style>` tags for complex styling (pseudo-classes, media queries)
+- ✅ Use inline style objects for simple styling
+- ❌ Import external CSS files
+- ❌ Hardcode theme colors (use CSS variables)
+- ❌ Use `className` without corresponding `<style>` tag
+
+**Pattern A: Inline Style Objects (Simple components)**
+```jsx
+export const MyComponent = () => {
+  return (
+    <div style={{
+      color: "var(--text)",
+      backgroundColor: "var(--card-background)",
+      border: "1px solid var(--border)",
+      padding: "1rem"
+    }}>
+      Content
+    </div>
+  );
+};
+```
+
+**Pattern B: Style Tag (Complex components)**
+```jsx
+export const MyComponent = () => {
+  return (
+    <>
+      <div className="my-component">
+        Content
+      </div>
+      <style>{`
+        .my-component {
+          color: var(--text);
+          background: var(--card-background);
+        }
+        .my-component:hover {
+          border-color: var(--accent);
+        }
+      `}</style>
+    </>
+  );
+};
+```
+
+**Pattern C: Style Constants (Reusable within component)**
+```jsx
+export const MyComponent = ({ variant = "default" }) => {
+  const baseStyle = {
+    color: "var(--text)",
+    padding: "1rem"
+  };
+  
+  const variantStyles = {
+    default: { border: "1px solid var(--border)" },
+    accent: { border: "1px solid var(--accent)" }
+  };
+  
+  return (
+    <div style={{ ...baseStyle, ...variantStyles[variant] }}>
+      Content
+    </div>
+  );
+};
+```
+
+#### Layer 3: MDX Files (`v2/**/*.mdx`)
+
+**Purpose**: Content only - **ZERO inline styles**
+
+**Rules:**
+- ✅ Use component primitives for all styling needs
+- ✅ Use Mintlify global components (`Card`, `Tabs`, `Steps`, etc.)
+- ✅ Import custom components from `/snippets/components/`
+- ❌ **NO inline `style={{}}` attributes**
+- ❌ **NO hardcoded colors**
+- ❌ **NO custom `className` attributes**
+
+**Before (❌ WRONG):**
+```mdx
+<div style={{ display: "flex", gap: "1rem" }}>
+  <Card>Content 1</Card>
+  <Card>Content 2</Card>
+</div>
+```
+
+**After (✅ CORRECT):**
+```mdx
+import { FlexContainer } from '/snippets/components/layout/layout.jsx';
+
+<FlexContainer gap="1rem">
+  <Card>Content 1</Card>
+  <Card>Content 2</Card>
+</FlexContainer>
+```
+
+### Decision Tree: Where Does This Style Go?
+
+1. **Is it a theme color?** → Add to `style.css` as CSS Custom Property
+2. **Is it used in a component?** → Put in JSX component file (inline or `<style>` tag)
+3. **Is it needed in MDX?** → Create/use a component primitive
+4. **Is it used 5+ times globally?** → Add utility class to `style.css`
+5. **Is it page-specific?** → Create a component primitive (don't put in `style.css`)
+
+### Component Primitives Library
+
+For common styling needs in MDX files, use component primitives from `/snippets/components/primitives/`:
+
+- **Layout**: `FlexContainer`, `GridContainer`, `Spacer`
+- **Tables**: `StyledTable`, `TableRow`, `TableCell`
+- **Containers**: `BorderedBox`, `CenteredContainer`, `FullWidthContainer`
+
+See the [Component Library](./component-library/primitives) for complete reference.
+
+## Typography
+
+### Headings
+
+Use standard Markdown headings (`#`, `##`, `###`, etc.) for most content. Mintlify automatically styles these.
+
+For **frame mode pages**, use custom heading components:
+
+```jsx
+import { H1, H2, PageHeader } from "/snippets/components/page-structure/frameMode.jsx";
+
+<PageHeader>Main Title</PageHeader>
+<H1>Section Title</H1>
+<H2>Subsection Title</H2>
+```
+
+**Note:** Frame mode components use CSS Custom Properties internally - no ThemeData import needed.
+
+### Text Styling
+
+- Use **bold** (`**text**`) for emphasis
+- Use *italic* (`*text*`) sparingly
+- Use `code` (backticks) for inline code
+- Use code blocks for multi-line code
+
+### Punctuation
+
+- Do not use em dashes in English docs prose. Replace `—` with spaced en dash ` – ` or rewrite the sentence if a comma or colon reads more clearly.
+
+### Mathematical Expressions
+
+Mintlify supports LaTeX for rendering mathematical expressions. Use proper syntax to ensure equations render correctly.
+
+#### Inline Math
+
+Use single dollar signs `$...$` for inline mathematical expressions within text:
+
+```mdx
+The voting power is calculated as $V_i = \frac{B_i}{B_T}$ where $B_i$ is bonded stake.
+```
+
+**Result:** The voting power is calculated as $V_i = \frac{B_i}{B_T}$ where $B_i$ is bonded stake.
+
+#### Block Equations
+
+Use double dollar signs `$$...$$` for standalone equations on their own line:
+
+```mdx
+$$
+R_t = S_t \cdot r_t
+$$
+```
+
+**Result:**
+$$
+R_t = S_t \cdot r_t
+$$
+
+#### Common LaTeX Syntax
+
+| Expression | Syntax | Result |
+|------------|--------|--------|
+| Fractions | `$\frac{a}{b}$` | $\frac{a}{b}$ |
+| Subscripts | `$B_i$` | $B_i$ |
+| Superscripts | `$x^2$` | $x^2$ |
+| Greek letters | `$\alpha, \beta, \theta$` | $\alpha, \beta, \theta$ |
+| Summation | `$\sum_{i=1}^{n} x_i$` | $\sum_{i=1}^{n} x_i$ |
+| Square root | `$\sqrt{x}$` | $\sqrt{x}$ |
+| Proportional | `$\propto$` | $\propto$ |
+| Greater/less than or equal | `$\geq, \leq$` | $\geq, \leq$ |
+
+#### Critical: Do NOT Use Backslash Delimiters
+
+**WRONG - These will cause MDX errors:**
+
+```mdx
+{/* ❌ WRONG - backslash delimiters break MDX */}
+\(B_i\) for inline math
+\[R_t = S_t \cdot r_t\] for block math
+```
+
+**CORRECT - Use dollar sign delimiters:**
+
+```mdx
+{/* ✅ CORRECT - dollar sign delimiters */}
+$B_i$ for inline math
+$$R_t = S_t \cdot r_t$$ for block math
+```
+
+#### LaTeX Configuration
+
+You can configure LaTeX rendering in `docs.json` under `styles.latex` to override automated detection if needed. See [Mintlify LaTeX docs](https://mintlify.com/docs/text) for details.
+
+## Spacing & Layout
+
+### Consistent Spacing
+
+- Use consistent spacing between sections
+- Group related content together
+- Use dividers (`<CustomDivider />`) to separate major sections
+
+### Page Layouts
+
+- **Portals** - Use CardGroups for key entry points
+- **Guides** - Use Steps for sequential instructions
+- **References** - Use Tables or Accordions for organized data
+- **Quickstarts** - Use Tabs for different paths (OS, on-chain/off-chain)
+
+## Component Usage
+
+### When to Use Components
+
+- **Tabs** - Separate content by context (OS, workflow type, user type)
+- **Views** - Show different content based on operating system or user path
+- **Steps** - Sequential instructions for processes
+- **Card Groups** - Visual groupings for portals, hubs, and related content
+- **Accordions** - Expandable sections for detailed information
+- **Callouts** - Important notes, tips, warnings, and information boxes
+
+### Callout Types
+
+- `<Info>` - General information and tips
+- `<Tip>` - Helpful suggestions
+- `<Warning>` - Important cautions
+- `<Danger>` - Critical warnings
+- `<Note>` - Additional context
+
+### Prefer Custom Components for Links and Navigation
+
+**Preference**: Use custom components for links, cards, quotes, and other visually appealing elements instead of plain Mintlify links.
+
+**Why**: Custom components provide better visual design, consistent theming, enhanced user experience, and better integration with the Livepeer documentation design system.
+
+**Custom Components to Use:**
+
+- **Links**: Use `<GotoLink>` and `<GotoCard>` instead of plain markdown links or Mintlify `<Card>` with `href`
+- **Quotes**: Use `<Quote>` and `<FrameQuote>` instead of plain blockquotes
+- **Cards**: Use `<GotoCard>` for navigation cards with better styling
+- **Callouts**: Use `<CustomCallout>` and `<TipWithArrow>` for enhanced visual callouts
+- **External Links**: Use `<DoubleIconLink>` for external links (GitHub, etc.)
+
+**Examples:**
+
+```mdx
+{/* ❌ Plain markdown link */}
+[Getting Started](/get-started)
+
+{/* ✅ Custom component with better styling */}
+import { GotoLink } from '/snippets/components/primitives/links.jsx';
+<GotoLink label="Getting Started" relativePath="/get-started" icon="arrow-right" />
+```
+
+```mdx
+{/* ❌ Plain blockquote */}
+> This is a quote
+
+{/* ✅ Custom quote component with attribution */}
+import { FrameQuote } from '/snippets/components/content/quote.jsx';
+<FrameQuote author="John Doe" source="Livepeer Blog" href="https://livepeer.org/blog">
+  This is a quote with better visual design.
+</FrameQuote>
+```
+
+```mdx
+{/* ❌ Basic Mintlify Card with href */}
+<Card title="API Reference" href="/api/reference">
+  API documentation
+</Card>
+
+{/* ✅ Custom GotoCard with enhanced styling */}
+import { GotoCard } from '/snippets/components/primitives/links.jsx';
+<GotoCard
+  label="API Reference"
+  relativePath="/api/reference"
+  icon="book"
+  text="Complete API documentation with examples"
+  cta="View Docs"
+/>
+```
+
+**When to Use Plain Links:**
+
+- Inline links within paragraphs (markdown links are fine)
+- Links in code examples or technical references
+- Links that don't need visual emphasis
+
+**See the [Component Library](./component-library) for all available custom components.**
+
+## Mintlify Overrides & Best Practices
+
+Our styling framework intentionally overrides some Mintlify default recommendations to work better within Mintlify's constraints and maintain consistency.
+
+### Override: "Use Tailwind classes"
+
+**Mintlify suggests**: Use Tailwind utility classes  
+**Our approach**: ❌ Don't use Tailwind - use component primitives  
+**Reason**: Tailwind classes in MDX create maintenance burden and reduce semantic meaning. Component primitives are more maintainable and self-documenting.
+
+**Example:**
+```mdx
+{/* ❌ Don't use Tailwind */}
+<div className="flex gap-4 items-center">
+  <Card>Content</Card>
+</div>
+
+{/* ✅ Use component primitives */}
+<FlexContainer gap="1rem" align="center">
+  <Card>Content</Card>
+</FlexContainer>
+```
+
+### Override: "Inline styles are fine for quick fixes"
+
+**Mintlify suggests**: Inline styles acceptable in MDX  
+**Our approach**: ❌ No inline styles in MDX, only in JSX components  
+**Reason**: Consistency and maintainability. Inline styles in MDX make it harder to maintain theme consistency and create visual inconsistencies.
+
+**Example:**
+```mdx
+{/* ❌ Don't use inline styles in MDX */}
+<div style={{ display: "flex", gap: "1rem" }}>
+  <Card>Content</Card>
+</div>
+
+{/* ✅ Use component primitives */}
+<FlexContainer gap="1rem">
+  <Card>Content</Card>
+</FlexContainer>
+```
+
+### Override: "Use global CSS for everything"
+
+**Mintlify suggests**: Put all styles in `style.css`  
+**Our approach**: ✅ Only theme variables and framework overrides in `style.css`  
+**Reason**: Mintlify only allows one global CSS file. Putting everything there makes it unmaintainable. Component-specific styles belong in JSX components.
+
+**What goes in `style.css`:**
+- ✅ Theme variables (CSS Custom Properties)
+- ✅ Mintlify component overrides (nav, footer)
+- ✅ Frame mode container classes
+- ✅ Utility classes used 5+ times globally
+
+**What does NOT go in `style.css`:**
+- ❌ Component-specific styles (put in JSX)
+- ❌ Page-specific styles (create component primitives)
+- ❌ One-off styling needs (create component primitives)
+
+### Override: "Component styles can be external"
+
+**Mintlify suggests**: External CSS files for components  
+**Our approach**: ❌ Styles must be within JSX component files  
+**Reason**: Mintlify doesn't support CSS imports in components reliably. Inline styles and `<style>` tags within components work consistently.
+
+**Pattern:**
+```jsx
+{/* ✅ Styles within component */}
+export const MyComponent = () => {
+  return (
+    <>
+      <div className="my-component">Content</div>
+      <style>{`
+        .my-component {
+          color: var(--text);
+        }
+      `}</style>
+    </>
+  );
+};
+```
+
+## Mintlify Gotchas & Limitations
+
+### Critical Limitations
+
+#### 1. Import Paths Must Be Absolute
+
+```jsx
+// ✅ Correct - absolute path from repo root
+import { MyComponent } from '/snippets/components/MyComponent.jsx';
+
+// ❌ Wrong - relative paths don't work
+import { MyComponent } from '../components/MyComponent.jsx';
+```
+
+#### 2. File Extensions Required
+
+```jsx
+// ✅ Include extension
+import { Component } from '/snippets/Component.jsx';
+
+// ❌ May not resolve
+import { Component } from '/snippets/Component';
+```
+
+#### 3. Cannot Import into Component Files
+
+**You CANNOT import data or other components into a JSX component file:**
+
+```jsx
+// ❌ WRONG - This will fail
+// snippets/components/MyComponent.jsx
+import { themeColor } from '/snippets/styles/themeStyles.jsx';
+
+export const MyComponent = () => {
+  return <div style={{ color: themeColor.light.accent }}>Hello</div>;
+};
+```
+
+**Solution: Import in the MDX file that uses the component:**
+
+```jsx
+// ✅ CORRECT
+// MyPage.mdx
+import { MyComponent } from '/snippets/components/MyComponent.jsx';
+import { ThemeData } from '/snippets/styles/themeStyles.jsx';
+
+<MyComponent />
+// MyComponent can access ThemeData from parent scope
+```
+
+#### 4. JSX Files Cannot Import Other JSX Files
+
+Mintlify does not allow JSX files to import other JSX files. This is why we use MDX-in-MDX patterns instead.
+
+#### 5. MDX Scope Inheritance
+
+When importing MDX files into other MDX files:
+
+- ✅ **Child MDX inherits parent scope for props** - Parent's imports work when used as component props
+- ❌ **Child MDX may NOT inherit parent scope for direct JSX interpolation** - Variables used as `{variable}` may need re-import
+- ✅ **Child can import its own variables** - If the child needs something the parent doesn't import
+
+**Example:**
+
+```mdx
+// Parent.mdx
+import { DOCKER_CODE } from '/snippets/data/gateways/code.jsx'
+import ChildView from '/snippets/pages/ChildView.mdx'
+
+<ChildView />
+```
+
+```mdx
+// ChildView.mdx
+{/* Can use DOCKER_CODE as props */}
+<CustomCodeBlock {...DOCKER_CODE.install} />  {/* ✅ Works */}
+
+{/* But direct interpolation may need re-import */}
+<Badge>{latestVersion}</Badge>  {/* ❌ May need import */}
+```
+
+#### 6. React Hooks Are Global
+
+Mintlify provides React hooks globally - no imports needed:
+
+```jsx
+// ✅ Works - hooks available without import
+export function MyComponent() {
+  const [count, setCount] = useState(0);
+  useEffect(() => { /* ... */ }, []);
+  return <div>{count}</div>;
+}
+
+// ❌ Not needed - will cause errors
+import React, { useState, useEffect } from 'react';
+```
+
+#### 7. Icon Component Behavior
+
+**CRITICAL:** Mintlify's `<Icon>` component renders custom icons as `<img alt="Image">` elements, NOT inline SVG.
+
+```jsx
+// ❌ This will NOT work - color styling has no effect
+<span style={{ color: "#3CB540" }}>
+  <Icon icon="/path/to/icon.svg" size={20} />
+</span>
+```
+
+**Solution:** Use theme-aware SVG files with internal CSS, or use different files for each theme.
+
+#### 8. Mintlify Global Components
+
+These components are available globally - **do not import them**:
+
+- `React`, `Frame`, `Card`, `Icon`, `Steps`, `Step`, `Tabs`, `Tab`
+- `Note`, `Warning`, `Info`, `Tip`, `Danger`
+- `Accordion`, `Columns`, `CardGroup`, `CodeBlock`, `Expandable`, `Badge`, `Tooltip`
+
+```jsx
+// ✅ Correct - use directly
+<Card title="Title">Content</Card>
+<Tabs>
+  <Tab title="Tab 1">Content</Tab>
+</Tabs>
+
+// ❌ Wrong - don't import
+import { Card, Tabs } from "@mintlify/components";
+```
+
+**CRITICAL:** Mintlify global components **cannot be stored in variables** - they must be used directly as JSX:
+
+```jsx
+// ❌ WRONG - Will cause "ReferenceError: Expandable is not defined"
+const componentMap = {
+  expandable: Expandable,
+  accordion: Accordion
+};
+const Component = componentMap[component];
+
+// ✅ CORRECT - Use conditional rendering with direct JSX
+if (component === "expandable") {
+  return <Expandable {...props}>{content}</Expandable>;
+}
+return <Accordion {...props}>{content}</Accordion>;
+```
+
+#### 9. JSX Comments Don't Prevent MDX Parsing
+
+**CRITICAL:** JSX comments (`{/* */}`) in MDX files do **NOT** prevent MDX from parsing the content inside them. MDX will still try to evaluate JSX components and expressions within comments.
+
+```mdx
+{/* ❌ WRONG - MDX will still try to parse CustomCodeBlock */}
+{/* 
+<CustomCodeBlock codeString="test" />
+*/}
+
+{/* ✅ CORRECT - Remove the entire section, don't comment it */}
+{/* Code components temporarily unavailable - see component-bugs.md */}
+```
+
+**If you need to temporarily disable a component section:**
+1. **Remove the entire section** from the MDX file
+2. **Add a comment explaining why** it was removed
+3. **Document in `docs/PLAN/errors/component-bugs.md`** if it's a component bug
+4. **Do NOT use JSX comments** to "comment out" component usage
+
+#### 9. Frame Mode Limitations
+
+Frame mode (`mode: frame` in frontmatter) removes all default Mintlify styling. When using frame mode:
+
+- Default markdown headings may not render correctly
+- Use custom heading components from `frame-mode.jsx`
+- All styling must be custom
+- Mintlify components still work but lose default styles
+- Keep responsive layout primitives in `style.css` (`.frame-mode-container`, `.frame-mode-hero-full`, frame pagination)
+- Keep portal/page-specific structure in shared JSX components (for example `/snippets/components/page-structure/portals.jsx`)
+- Do not use fixed breakout constants directly in component styles (for example hardcoded `96px`, `20px`, or fixed `%` widths)
+- Prefer CSS variables + breakpoints for frame mode layout, and CSS custom properties (`var(--...)`) for theming
+
+### Import Patterns
+
+#### Correct Pattern: Import in MDX, Use in Component
+
+```mdx
+// ✅ MyPage.mdx
+import { MyComponent } from '/snippets/components/MyComponent.jsx';
+import { DOCKER_CODE } from '/snippets/data/gateways/code.jsx';
+
+<MyComponent />
+```
+
+```jsx
+// ✅ MyComponent.jsx - uses CSS Custom Properties (production-grade)
+export const MyComponent = () => {
+  return (
+    <div style={{ color: "var(--accent)" }}>
+      <CustomCodeBlock {...DOCKER_CODE.install} />
+    </div>
+  );
+};
+```
+
+## Git Workflow
+
+### Branch Management
+
+**ALWAYS create a new branch from `docs-v2`:**
+
+```bash
+git checkout docs-v2
+git pull
+git checkout -b docs-plan/XX-task-name
+```
+
+**Never work directly on:**
+- `docs-v2` (active docs branch)
+- `main` or `master`
+- Any branch another agent is using
+
+**Branch naming:** Use pattern `docs-plan/XX-task-name` where XX is the task number.
+
+## Best Practices
+
+### Code Organization
+
+1. **Keep components in `/snippets/components/`** organized by purpose:
+   - `primitives/` - Basic UI elements
+   - `layout/` - Layout components
+   - `display/` - Media and embeds
+   - `content/` - Content display
+   - `integrations/` - External services
+   - `domain/` - Domain-specific components
+
+2. **Keep data in `/snippets/data/`** for reusable code strings and variables
+
+3. **Use `/snippets/pages/`** for modular MDX content that's imported into main pages
+
+### Writing Style
+
+1. **Be Clear and Concise** - Write for users with varying technical backgrounds
+2. **Use Examples** - Include code examples and real-world scenarios
+3. **Provide Context** - Explain why, not just how
+4. **Link Related Content** - Help users discover related information
+5. **Test Both Themes** - Verify content looks good in both light and dark modes
+
+### Component Guidelines
+
+1. **Use CSS Custom Properties ONLY** - Never use ThemeData or hardcode colors
+2. **Reference Variables from style.css** - All theme colors are in `style.css` as CSS variables
+3. **Test Components** - Ensure components render correctly
+4. **Handle Children Properly** - Always handle children as arrays when mapping
+5. **Document Props** - Include JSDoc comments for component props
+6. **Provide Examples** - Add examples in the `examples/` folder for each component
+
+### Component Immutability
+
+**CRITICAL RULE: Components in `snippets/components/` are IMMUTABLE**
+
+**NEVER modify files in `snippets/components/`** - These components are used across many pages. Any changes could break existing functionality.
+
+**Allowed:**
+- Creating new components
+- Modifying MDX files that use components
+- Fixing MDX imports and usage
+
+**Forbidden:**
+- Modifying existing component files
+- Changing component function signatures
+- Adding/removing component exports
+- Changing component logic
+
+**Exception:** Only if explicitly requested by user AND after confirming impact assessment.
+
+**If a component appears to have a bug:**
+
+1. **Comment out the component section** in the MDX file where it's used
+2. **Verify the page renders** without that section
+3. **If page renders correctly** → Component is the issue
+4. **Document the error** in `docs/PLAN/errors/component-bugs.md` with:
+   - Component name and file path
+   - Error message from console
+   - Page where error occurs
+   - Verification that commenting out fixes the page
+   - Recommendation for component fix (but do not implement)
+
+**DO NOT fix the component** - Components are immutable without explicit user permission.
+
+### File Naming
+
+- Use kebab-case for file names: `my-component.mdx`
+- Use PascalCase for component names: `MyComponent`
+- Use descriptive names that indicate purpose
+
+## Testing Checklist
+
+Before submitting documentation:
+
+- Content renders correctly in dark mode (default)
+- Content renders correctly in light mode
+- All links work and point to correct pages
+- Code examples are accurate and tested
+- Images load and have appropriate alt text
+- Components use theme-aware colors
+- No hardcoded colors that should adapt to theme
+- Components render correctly
+- No console errors in browser dev tools
+- MDX syntax errors checked and fixed
+- All pages verified in headless browser (see Verification Requirements below)
+
+## Verification Requirements
+
+### MDX Syntax Checking
+
+**Before declaring work complete, check MDX files:**
+
+1. Use linting tools to check all modified MDX files
+2. Check for:
+   - Unclosed JSX tags
+   - Invalid import syntax
+   - Missing frontmatter
+   - Syntax errors
+3. Fix any MDX errors before considering work complete
+
+### Headless Browser Verification
+
+**Before declaring work complete, verify each page in a headless browser:**
+
+1. Use Puppeteer or similar tool to load each page
+2. Wait for network idle
+3. Check for console errors (filtering out test script artifacts)
+4. Verify content length &gt; 500 chars
+5. Verify H1 element exists
+6. Check for 404 errors
+
+**Filter out false positives:**
+- Ignore "require is not defined" from test scripts
+- Ignore "puppeteer" related errors
+- Ignore "fs has already been declared" errors
+- Focus on real component errors
+
+**Report must show:**
+- Page URL
+- Content length
+- H1 text
+- List of real console errors (if any)
+- Status: ✅ OK or ❌ ERRORS
+
+### URL Structure Verification
+
+**Mintlify pages use full path structure:**
+
+- Page path in `docs.json`: `v2/resources/documentation-guide/component-library/primitives`
+- URL: `/v2/resources/documentation-guide/component-library/primitives`
+
+**Do not assume URL patterns - verify by testing actual URLs.**
+
+## Mintlify Theme Configuration
+
+Mintlify also supports theme configuration in `docs.json`:
+
+```json
+{
+  "theme": "palm",
+  "colors": {
+    "primary": "#3CB540",
+    "light": "#2b9a66",
+    "dark": "#3CB540"
+  }
+}
+```
+
+This controls Mintlify's built-in components (buttons, links, etc.). For custom styling, always use CSS Custom Properties in `style.css`.
+
+## Pre-Commit Hooks
+
+This repository uses Git pre-commit hooks to automatically enforce the style guide rules. **These hooks are mandatory and will block commits that violate the style guide.**
+
+### What Gets Checked
+
+The pre-commit hooks automatically check for:
+
+- **Deprecated `ThemeData` Usage** - Blocks imports of `ThemeData` from `snippets/styles/themeStyles.jsx`
+- **Hardcoded Theme Colors** - Warns about direct hex color codes that should use CSS Custom Properties
+- **Relative Snippets Imports** - Flags imports from `snippets/` that use relative paths instead of absolute paths
+- **Unnecessary Imports** - Warns about explicit imports for Mintlify's globally available components and React hooks
+- **Syntax Validation** - Checks MDX, JSON, Shell, and JavaScript syntax
+- **Browser Validation** - Tests that MDX pages actually render correctly in a headless browser (if `mint dev` is running)
+
+### Installation
+
+**MANDATORY**: You must install the hooks before making any commits:
+
+```bash
+./.githooks/install.sh
+```
+
+### What Happens on Violation
+
+If you attempt to commit code that violates the style guide:
+
+1. The commit is **blocked**
+2. You receive a detailed error message listing all violations
+3. You must fix the violations before committing again
+
+### Protected `.allowlist` Edits (Human-Only)
+
+The `.allowlist` file is protected by pre-commit checks.
+
+If a human intentionally needs to edit `.allowlist`, use:
+
+```bash
+git commit -m "Update .allowlist" --trailer "allowlist-edit=true"
+```
+
+This override still runs all other pre-commit checks.
+
+If a human intentionally needs to allow file deletions, use:
+
+```bash
+git commit -m "Remove obsolete files" --trailer "allow-deletions=true"
+```
+
+This deletion override also runs all other pre-commit checks.
+
+### Example Error Output
+
+```
+╔═══════════════════════════════════════════════════════════════╗
+║  STYLE GUIDE VIOLATIONS DETECTED - COMMIT BLOCKED           ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Found 2 violation(s):
+
+❌ my-component.jsx: Uses deprecated ThemeData - use CSS Custom Properties instead
+⚠️  my-page.mdx: Contains hardcoded theme colors - use CSS Custom Properties (var(--accent), etc.)
+
+📖 MANDATORY: Read the Style Guide before committing:
+   v2/resources/documentation-guide/style-guide.mdx
+```
+
+### Browser Validation
+
+The hooks include headless browser validation that tests MDX files actually render in the browser. This catches:
+
+- Runtime errors in components
+- Failed imports
+- Console errors
+- Render failures
+
+**Note**: Browser validation requires `mint dev` to be running. If it's not running, the check is skipped (doesn't block commit).
+
+### Comprehensive Test Suite
+
+The repository includes a comprehensive test suite that validates all style guide rules and more:
+
+#### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run specific test suites
+npm run test:style      # Style guide validation
+npm run test:mdx        # MDX syntax validation
+npm run test:spell      # UK English spelling
+npm run test:quality    # Quality checks (alt text, links, frontmatter)
+npm run test:browser    # Browser rendering tests
+```
+
+#### What Gets Tested
+
+**Style Guide Tests** (`test:style`):
+- CSS Custom Properties usage (no ThemeData, no hardcoded colors)
+- No inline styles in MDX files
+- No em dashes in English `v2` docs prose (use ` – ` or rewrite the sentence)
+- No Tailwind classes
+- Absolute import paths
+- File naming conventions
+- Component immutability warnings
+
+**MDX Validation** (`test:mdx`):
+- Frontmatter validation
+- Unclosed JSX tags
+- Invalid import syntax
+- MDX scope inheritance issues
+
+**Spelling Tests** (`test:spell`):
+- UK English spelling validation
+- Custom dictionary for technical terms (Livepeer, Arbitrum, etc.)
+- Excludes code blocks and frontmatter
+
+**Quality Checks** (`test:quality`):
+- Image alt text presence
+- Frontmatter completeness
+- Internal link validation
+- SEO metadata validation
+
+**Browser Tests** (`test:browser`):
+- Page rendering in headless browser
+- Console error detection
+- Theme testing (light/dark)
+- Content validation (H1, content length)
+
+The test suite runs automatically in pre-commit hooks (staged/fast mode) and in CI/CD.
+In pull request CI, static checks are changed-file scoped for blocking, while browser sweeps keep full-route coverage.
+
+For full details on the hooks, see the [Git Hooks Documentation](/contribute/CONTRIBUTING/GIT-HOOKS.md).
+
+## Resources
+
+- [Component Library](./component-library) - Complete component reference
+- [Mintlify Documentation](https://mintlify.com/docs) - Official Mintlify docs
+- [Mintlify Behavior Guide](/snippets/snippetsWiki/mintlify-behaviour) - Comprehensive Mintlify gotchas
+- [Git Hooks Documentation](/contribute/CONTRIBUTING/GIT-HOOKS.md) - Complete pre-commit hook documentation
+- `style.css` - Global CSS Custom Properties for theming
+
+## Next Steps
+
+- Review the [Component Library](./component-library) for available components
+- Check [Snippets Inventory](./snippets-inventory) for all available snippets
+- Read [Mintlify Behavior Guide](/snippets/snippetsWiki/mintlify-behaviour) for detailed gotchas
+- See [Contribute to the Docs](./contribute-to-the-docs) for contribution guidelines
+- Install Git hooks: `./.githooks/install.sh`

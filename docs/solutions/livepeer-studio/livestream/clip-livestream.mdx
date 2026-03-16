@@ -1,0 +1,73 @@
+---
+title: Clip a livestream
+description: Create short clips from active livestreams using the Create Clip API.
+keywords:
+  - livepeer
+  - docs
+  - solutions
+  - livepeer studio
+  - livestream
+  - clip livestream
+  - clip
+  - create
+  - short
+  - clips
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+purpose: concept
+---
+
+You can create **clips** from active Livepeer Studio streams via the API. A clip is a segment of the stream (e.g. The last N seconds or a chosen range) and is stored as an **asset** that you can play back like any VOD asset.
+
+<Warning>
+ Clipping is supported only for **livestreams** and **livestream recordings**. Other asset types are not supported for clipping.
+</Warning>
+
+## How clipping works
+
+- Clips are created from the **viewer’s perspective**: e.g. “last 30 seconds” is the last 30 seconds that viewer saw (based on their playhead).
+- You send **start and end timestamps** (UNIX milliseconds). These typically come from the player (e.g. HLS.js `playingDate` or the Livepeer Player’s clip trigger).
+- Livepeer creates an **asset** for the clip. You can poll the asset or listen for the `asset.ready` webhook to know when the clip is playable.
+
+## Create a clip via API
+
+Use the [Create Clip API](https://livepeer.studio/docs/api-reference/stream/create-clip) with:
+
+- `playbackId` - The **active stream’s** playback ID.
+- `startTime` - Start of the clip (UNIX ms, from playhead).
+- `endTime` - End of the clip (UNIX ms).
+- `name` - (Optional) Name for the clip asset.
+
+Ensure `startTime` is at or after the stream start and `endTime` is not in the future.
+
+### Example (Node.js)
+
+```ts
+const result = await livepeer.stream.createClip({
+  playbackId: process.env.PLAYBACK_ID_OF_RUNNING_STREAM,
+  startTime: endTime - 30000, // 30 seconds before end
+  endTime: Date.now(),
+  name: "My clip",
+});
+// result.asset has the new clip asset; result.task has the task ID
+```
+
+### With the Livepeer Player
+
+The Player’s [Clip trigger](https://www.npmjs.com/package/@livepeer/react#player) can provide `playbackId`, `startTime`, and `endTime`. Call the **Create Clip API from your backend** (with the same parameters) and validate input (e.g. Max clip length, rate limiting).
+
+## Monitor clip status
+
+- **Polling** - Call `GET /asset/{assetId}` until `asset.status` is `ready`.
+- **Webhooks** - Subscribe to `asset.ready` (and optionally `asset.failed`). Use the `assetId` from the create-clip response to match the event.
+- The clip asset has `source.type === "clip"` and a `sessionId` so you can tell it’s a clip.
+
+Clips get **source playback** first (playable quickly); transcoded renditions are added when processing finishes. Use the clip’s `playbackId` with the [Playback Info API](https://livepeer.studio/docs/api-reference/playback/get) or the [Player](../player) to play it.
+
+## List clips for a stream
+
+Use the [Clips for livestream API](https://livepeer.studio/docs/api-reference/stream/get-clip) (by stream or session) to list clips created from a stream.

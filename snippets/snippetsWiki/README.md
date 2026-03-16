@@ -92,9 +92,9 @@ data/
 └── globals.jsx
 ```
 
-We also have Gateway specific components in the snippets/components/domain/04_GATEWAYS
-folder. (example: the callout components used in the quickstart page for
-offchain and onchain warnings.
+We also have Gateway-specific quickstart components alongside the route in
+`v2/gateways/quickstart/components/`. These power the quickstart callouts and
+tabbed gateway setup flows.
 
 Note: As Mintlify does not allow MDX component import in JSX files, if you try
 to make some of these modular, its not possible to do without either creating
@@ -104,7 +104,7 @@ decide or have opinions on! - improvement suggestion feedback always welcome.)
 
 ```bash
 components/
-└── gateways/
+└── v2/gateways/quickstart/components/
     ├── callouts.jsx
     └── quickstartTabs.jsx
 ```

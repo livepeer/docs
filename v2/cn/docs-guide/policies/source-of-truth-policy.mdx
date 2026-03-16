@@ -1,0 +1,115 @@
+---
+title: 真相来源政策
+sidebarTitle: 真相来源政策
+description: 规范的所有权边界，以防止在 README、docs-guide、测试文档和 Mintlify 页面之间出现偏差
+keywords:
+  - livepeer
+  - source of truth policy
+  - canonical
+  - ownership
+  - boundaries
+  - drift
+  - readme
+  - docs-guide
+  - tests docs
+  - mintlify pages
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJkb2NzLWd1aWRlL3BvbGljaWVzL3NvdXJjZS1vZi10cnV0aC1wb2xpY3kubWR4Iiwic291cmNlUm91dGUiOiJkb2NzLWd1aWRlL3BvbGljaWVzL3NvdXJjZS1vZi10cnV0aC1wb2xpY3kiLCJzb3VyY2VIYXNoIjoiZDYzZGMwMjIxMjA0NzEzNjQ2NmEyNmFjOWJkMDhiNzc5MWMzOWM3NDgxYzE3YTRkZmZmNmI0OWUwZmRmNDY3ZCIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxNzozMDozNC4zNjdaIn0= */}
+# 真相来源政策
+
+本文件定义了规范的所有权边界，以防止在README、docs-guide、测试文档和Mintlify页面之间出现偏差。
+
+## 规范边界
+
+| 关注点                         | 规范来源                                      | 注释                                                                  |
+| ------------------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------- |
+| 脚本/运行时行为         | 代码 + 测试                                          | 行为真相始终存在于可执行代码和验证测试中。 |
+| 脚本元数据和清单   | 脚本头 + 生成的索引                    | 脚本头用于生成脚本目录。                           |
+| 仓库功能导航图     | `docs-guide/*.mdx`（手动规范文件）           | 内部维护者真相来源。                                   |
+| 公开用户面向文档内容 | `v2/pages/**`                                         | Mintlify 文档在`docs.json` 导航中。                               |
+| CI/测试执行行为      | 工作流文件 + 测试运行器脚本                  | 叙述性摘要必须链接到这些文件。                          |
+| 问题/PR接收行为        | `.github/ISSUE_TEMPLATE/*` + PR模板 + 工作流 | 生成的模板目录总结了使用情况。                            |
+
+## 必需的docs-guide规范文件
+
+以下文件必须存在且非空：
+
+- `docs-guide/overview.mdx`
+- `docs-guide/features/feature-map.mdx`
+- `docs-guide/features/architecture-map.mdx`
+- `docs-guide/policies/v2-folder-governance.mdx`
+- `docs-guide/tooling/lpd-cli.mdx`
+- `docs-guide/policies/quality-gates.mdx`
+- `docs-guide/features/automations.mdx`
+- `docs-guide/frameworks/content-system.mdx`
+- `docs-guide/frameworks/component-governance.mdx`
+- `docs-guide/features/data-integrations.mdx`
+- `docs-guide/policies/ownerless-governance.mdx`
+- `docs-guide/policies/root-allowlist-governance.mdx`
+- `docs-guide/policies/agent-governance-framework.mdx`
+
+## 生成的索引文件
+
+以下文件是生成的，不应直接编辑：
+
+- `docs-guide/catalog/scripts-catalog.mdx`
+- `docs-guide/catalog/workflows-catalog.mdx`
+- `docs-guide/catalog/templates-catalog.mdx`
+- `docs-guide/catalog/pages-catalog.mdx`
+- `docs-guide/catalog/components-catalog.mdx`
+
+重新生成方式：
+
+```bash icon="terminal"
+node tools/scripts/generate-docs-guide-indexes.js --write
+node tools/scripts/generate-docs-guide-pages-index.js --write
+node tools/scripts/generate-docs-guide-components-index.js --write
+node tests/unit/script-docs.test.js --write --rebuild-indexes
+```
+
+## 生成文件横幅
+
+生成和混合生成文件应在顶部包含标准化横幅，记录：
+
+- 生成器脚本（s）
+- 目的
+- 何时重新运行生成器
+- 不要编辑警告
+
+指南：
+
+- 对完全生成的文件使用全文件横幅。
+- 对仅包含生成部分的文件使用混合文件横幅。
+- 使用`unknown/external`当无法在仓库中确认生成器时。
+- 不要直接编辑生成的JSON文件；JSON工件应被记录/报告而不是被注释。
+
+如果你的分支包含生成的横幅强制工具，使用：
+
+```bash icon="terminal"
+node tools/scripts/enforce-generated-file-banners.js --write
+node tools/scripts/enforce-generated-file-banners.js --check
+```
+
+## README 合同
+
+`README.md`是一个导向文档，而不是完整的操作手册。
+
+它必须包括：
+
+- 仓库的用途
+- 快速运行方式（`lpd setup`, `lpd dev`, 基本测试）
+- 高级功能图
+- 链接到 docs-guide 的规范文件
+
+它不应重复已存在于以下内容中的深度流程：
+
+- `docs-guide/`
+- `tests/*.md`
+- `contribute/CONTRIBUTING/*.md`
+- `v2/resources/documentation-guide/*.mdx`
+
+## 变更管理规则
+
+1. 任何有意义的流程变更必须在同一个 PR 中更新相关的 docs-guide 规范文件。
+2. 任何脚本/工作流/模板的变更必须在同一个 PR 中重新生成索引。
+3. 如果 README 和 docs-guide 不一致，docs-guide 规范文件被视为操作导航的权威来源。

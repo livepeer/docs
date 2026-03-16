@@ -1,35 +1,14 @@
 #!/usr/bin/env node
 /**
- * @script generate-content-gap-reconciliation
- * @summary Generate IA reconciliation CSV and summary from blueprint and v2 MDX coverage.
- * @owner docs
- * @scope tools/scripts, tools/config, tools/lib, v2, tasks/reports/content-gap
- * @pipeline manual — interactive developer tool, not suited for automated pipelines
- *
- * @usage
- *   node tools/scripts/generate-content-gap-reconciliation.js
- *   node tools/scripts/generate-content-gap-reconciliation.js --out-dir tasks/reports/content-gap
- *
- * @inputs
- *   --blueprint-pages <path> (default: tools/config/blueprint-pages.json)
- *   --blueprint-mapping <path> (default: tools/config/blueprint-mapping.json)
- *   --v2-root <path> (default: v2)
- *   --out-dir <path> (default: tasks/reports/content-gap)
- *
- * @outputs
- *   - tasks/reports/content-gap/reconciliation.csv
- *   - tasks/reports/content-gap/reconciliation-summary.md
- *
- * @exit-codes
- *   0 = success
- *   1 = runtime or validation failure
- *
- * @examples
- *   node tools/scripts/generate-content-gap-reconciliation.js
- *   node tools/scripts/generate-content-gap-reconciliation.js --out-dir tasks/reports/content-gap
- *
- * @notes
- *   Includes v2/internal pages in REPO_ONLY analysis and excludes cn/es/fr/x-archived/x-deprecated/x-experimental/x-notes/views/groups.
+ * @script            generate-content-gap-reconciliation
+ * @category          generator
+ * @purpose           governance:index-management
+ * @scope             tools/scripts, tools/config, tools/lib, v2, tasks/reports/content-gap
+ * @owner             docs
+ * @needs             R-R16, R-R17
+ * @purpose-statement Content-gap reconciliation generator — compares blueprint coverage against v2 MDX and writes reconciliation artefacts
+ * @pipeline          manual — not yet in pipeline
+ * @usage             node tools/scripts/generate-content-gap-reconciliation.js [flags]
  */
 
 const fs = require('fs');
@@ -67,13 +46,12 @@ const CSV_COLUMNS = [
   'notes'
 ];
 
-const DECISION_OPTIONS_COMMENT = '# decision options: KEEP, CREATE, EXPAND, MERGE, RENAME, DELETE, ADD_TO_BLUEPRINT, ARCHIVE';
+const DECISION_OPTIONS_COMMENT = '# decision options: KEEP, CREATE, EXPAND, MERGE, RENAME, DELETE, ADD_TO_BLUEPRINT';
 
 const EXCLUDED_REPO_ONLY_SEGMENTS = new Set([
   'cn',
   'es',
   'fr',
-  'x-archived',
   'x-deprecated',
   'x-experimental',
   'x-notes',

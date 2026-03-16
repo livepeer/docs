@@ -1,0 +1,153 @@
+---
+title: Using the Cloud SPE Gateway
+sidebarTitle: Cloud SPE
+description: >-
+  Livepeer.Cloud SPE provides free-to-use RTMP and AI gateways powered by the Livepeer network. Run by a Livepeer
+  treasury-funded Special Purpose Entity - great for experimentation, OSS projects, and getting started.
+purpose: concept
+keywords:
+  - livepeer
+  - cloud spe
+  - livepeer cloud
+  - free gateway
+  - rtmp gateway
+  - ai gateway
+  - community gateway
+  - spe
+'og:image': /snippets/assets/domain/04_GATEWAYS/social-preview-gateways.jpg
+pageType: guide
+audience: developer
+status: current
+---
+
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+
+Livepeer.Cloud is a **community-run, free-to-use gateway service** for the Livepeer network, operated by the Cloud SPE (Special Purpose Entity). Cloud SPE is funded by the Livepeer treasury and its mission is to increase accessibility and adoption of the Livepeer network.
+
+<Info>
+ Cloud SPE operates free gateways as a public good for the Livepeer ecosystem. These gateways are ideal for experimentation, development, and open-source projects. For production applications with SLA requirements, consider [Livepeer Studio](/v2/gateways/using-gateways/gateway-providers/livepeer-studio-gateway). As of 02-March-2026, Cloud SPE publishes AI gateway access through [tools.livepeer.cloud](https://tools.livepeer.cloud); check provider docs for the current direct API base URL and auth requirements.
+</Info>
+
+## Start here in 5 minutes
+
+<BorderedBox variant="accent" padding="16px">
+
+- **Prereqs:** A backend runtime for API calls (as of 02-March-2026, the default Cloud SPE AI gateway path works without an API key)
+- **Time:** 5 minutes
+- **Outcome:** AI gateway endpoint discovered and first request scaffolded
+- **First action:** Open [tools.livepeer.cloud](https://tools.livepeer.cloud), confirm the active gateway URL, then run a test request
+
+</BorderedBox>
+
+---
+
+## What Cloud SPE Provides
+
+Cloud SPE operates two types of gateways:
+
+**RTMP Gateway** - Free-to-use RTMP ingest for live video streaming powered by the Livepeer transcoding network. Ideal for live streaming applications, Owncast integrations, and developers building on decentralized video infrastructure.
+
+**AI Gateway** - Free access point to the Livepeer AI network for running inference pipelines. Includes support for text-to-image, image-to-image, LLM inference, and more. Access and current endpoint details are published at [tools.livepeer.cloud](https://tools.livepeer.cloud).
+
+---
+
+## Getting Started
+
+### Access the AI Gateway
+
+The Cloud SPE AI gateway is available at [tools.livepeer.cloud](https://tools.livepeer.cloud). As of 02-March-2026, this portal is the canonical source for current AI endpoint and auth details. The tools page also shows available AI pipelines, network capabilities, and which orchestrators are warm (ready to serve requests without model loading delay).
+
+<Card title="Cloud SPE Tools" icon="wrench" href="https://tools.livepeer.cloud" arrow horizontal>
+ Browse AI pipelines, check network capabilities, and access the AI gateway.
+</Card>
+
+### First Request Example (Portal-Guided API)
+
+Use the tools portal as the source of truth for the active endpoint and required auth mode:
+
+```bash
+CLOUD_SPE_AI_BASE="https://dream-gateway.livepeer.cloud"
+
+curl -X POST "$CLOUD_SPE_AI_BASE/text-to-image" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "glass greenhouse in a misty forest, cinematic lighting",
+    "model_id": "ByteDance/SDXL-Lightning"
+  }'
+```
+
+As of 02-March-2026, Cloud SPE tools default to `https://dream-gateway.livepeer.cloud`, and unauthenticated `POST /text-to-image` requests succeed. If Cloud SPE changes auth policy, use the current requirement shown in [tools.livepeer.cloud](https://tools.livepeer.cloud).
+
+Expected success signal: HTTP `200` response with an output object (for example, an image URL, base64 payload, or job/result handle depending on the active route).
+
+### Access the RTMP Gateway
+
+Cloud SPE provides RTMP ingest for live streaming. Visit [livepeer.cloud](https://www.livepeer.cloud) to get started and access documentation on configuring your encoder.
+
+<Card title="Livepeer.Cloud" icon="cloud" href="https://www.livepeer.cloud" arrow horizontal>
+ Get started with Cloud SPE's free RTMP streaming infrastructure.
+</Card>
+
+---
+
+## What Cloud SPE Has Built
+
+Beyond running gateways, Cloud SPE contributes tooling to the Livepeer ecosystem:
+
+**Owncast Integration** - Integration between Livepeer's decentralized transcoding network and Owncast, the open-source self-hosted live streaming platform. Stream through decentralized infrastructure without centralized dependencies.
+
+**Ollama-Based LLM Runner** - A custom AI runner optimized for LLM inference on GPUs with as little as 8GB VRAM (GTX 1080, 1070 Ti, RTX 2060, and others). This lowers the GPU barrier for AI orchestrators significantly from the official 16GB VRAM requirement.
+
+**Network Capabilities Dashboard** - Live visibility into which AI pipelines are available on the network and which orchestrators are serving them warm. Available at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities).
+
+**Decentralized Metrics Initiative** - Cloud SPE proposed and is delivering decentralized SLA metrics and reliability infrastructure for the Livepeer network, improving transparency and usability for the whole ecosystem.
+
+---
+
+## When to Use Cloud SPE
+
+<BorderedBox variant="accent" padding="16px">
+
+**Good fit:**
+- Learning how Livepeer AI and video infrastructure works
+- Prototyping and development before committing to a hosted service
+- Open-source projects and community applications
+- Streaming with Owncast or other self-hosted platforms
+- Testing AI pipelines and checking network capabilities
+
+**Consider an alternative if:**
+- You need guaranteed SLA or uptime commitments
+- You're building a production application with paying users
+- You need custom authentication, rate limits, or compliance controls
+- You need dedicated capacity or dedicated orchestrator routing
+
+</BorderedBox>
+
+---
+
+## Community and Resources
+
+- [livepeer.cloud](https://www.livepeer.cloud) - Cloud SPE website and RTMP gateway
+- [tools.livepeer.cloud](https://tools.livepeer.cloud) - AI tools, network capabilities, and gateway access
+- [Livepeer Forum - Cloud SPE](https://forum.livepeer.org) - Treasury proposals, financial reports, and community updates
+- [Discord - #orchestrating](https://discord.gg/xpKATpA7) - Get help from Cloud SPE team (ping @mike_zoop)
+
+---
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Find Gateway Services" href="../choosing-a-gateway" icon="compass" arrow>
+ Compare all gateway options.
+  </Card>
+  <Card title="Run Your Own Gateway" href="/v2/gateways/run-a-gateway/run-a-gateway" icon="server" arrow>
+ Build your own self-hosted gateway node.
+  </Card>
+  <Card title="AI Quickstart" href="/v2/developers/quickstart/ai/ai-pipelines" icon="robot" arrow>
+ Get started with Livepeer AI inference in minutes.
+  </Card>
+  <Card title="Livepeer Studio" href="/v2/gateways/using-gateways/gateway-providers/livepeer-studio-gateway" icon="video-arrow-up-right" arrow>
+ Production-grade hosted gateway for video + AI.
+  </Card>
+</CardGroup>

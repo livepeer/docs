@@ -1,0 +1,50 @@
+---
+title: Webhooks
+description: >-
+  Receive real-time events from Livepeer Studio (stream, asset, recording,
+  multistream, task, access control).
+keywords:
+  - livepeer
+  - docs
+  - solutions
+  - livepeer studio
+  - analytics
+  - webhooks
+  - receive
+  - real
+  - time
+  - events
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+---
+
+**Webhooks** let Livepeer Studio send HTTP POST requests to your endpoint when events occur. You can react to stream/asset state changes, recordings, multistream status, and access-control checks.
+
+## Event types
+
+| Event | Description |
+|-------|-------------|
+| **Stream** | `stream.started`, `stream.idle` |
+| **Recording** | `recording.started`, `recording.ready`, `recording.waiting` |
+| **Multistream** | `multistream.connected`, `multistream.error`, `multistream.disconnected` |
+| **Asset** | `asset.created`, `asset.updated`, `asset.ready`, `asset.failed`, `asset.deleted` |
+| **Task** | `task.spawned`, `task.updated`, `task.completed`, `task.failed` |
+| **Access control** | `playback.accessControl` (for gated playback; your endpoint allows or denies) |
+
+## Set up a webhook
+
+1. **Create an HTTP endpoint** in your app that accepts POST and returns 2XX quickly (process async if needed).
+2. **Register in Studio** - [Developers → Webhooks](https://livepeer.studio/dashboard/developers/webhooks), click Create, enter your URL and select the events you want.
+3. **Verify signatures** - Each request includes a `Livepeer-Signature` header (timestamp and HMAC). Verify it using your webhook secret to avoid accepting forged events. See [Livepeer Studio docs](https://livepeer.studio/docs) for the signature scheme.
+
+Payload fields typically include `webhookId`, `timestamp`, `event`, and `event_object` (the stream, asset, or task). Use `timestamp` in signature verification to guard against replay.
+
+## Local development
+
+Use a tunnel (e.g. [ngrok](https://ngrok.com)) to expose your local server and use that URL as the webhook endpoint. For production, deploy your server to a public URL.
+
+See [Listen to events](../analytics/listen-to-events) for asset/stream event usage and [Access control with webhooks](../access-control/webhooks) for gated playback.

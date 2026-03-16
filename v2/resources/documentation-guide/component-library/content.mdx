@@ -1,452 +1,897 @@
 ---
-title: 'Content Components'
+title: 'Content'
 sidebarTitle: 'Content'
-description: 'Components for displaying code, data, external content, and API documentation: code blocks, external content loaders, API response fields, version displays, and data layouts for blogs, forums, and events'
-keywords: ["livepeer", "components", "content", "code", "api", "data"]
+description: 'Renderers for reader-facing media, code, quotations, and structured content.'
+pageType: reference
 ---
 
-import { CustomCodeBlock, CodeComponent, ComplexCodeBlock, CodeSection } from '/snippets/components/content/code.jsx'
-import { ExternalContent } from '/snippets/components/content/external-content.jsx'
-import { ValueResponseField, CustomResponseField, ResponseFieldExpandable, ResponseFieldAccordion, ResponseFieldGroup } from '/snippets/components/content/response-field.jsx'
-import { LatestVersion } from '/snippets/components/content/release.jsx'
-import { BlogCard, PostCard, CardBlogDataLayout, ColumnsBlogCardLayout, BlogDataLayout, CardColumnsPostLayout, ForumLatestLayout, DiscordAnnouncements, LumaEvents } from '/snippets/components/content/data.jsx'
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+{/*
+generated-file-banner: generated-file-banner:v1
+Generation Script: tools/scripts/generate-component-docs.js
+Purpose: Generated component-library MDX pages derived from docs-guide/component-registry.json.
+Run when: Component governance metadata, registry outputs, or published component-library templates change.
+Run command: node tools/scripts/generate-component-docs.js --fix --template-only --category content
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `tools/scripts/generate-component-docs.js`. <br/>
+**Purpose**: Generated component-library MDX pages derived from docs-guide/component-registry.json. <br/>
+**Run when**: Component governance metadata, registry outputs, or published component-library templates change. <br/>
+**Important**: Do not manually edit this file; run `node tools/scripts/generate-component-docs.js --fix --template-only --category content`. <br/>
+</Note>
 
 <Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
- Return to the main component library index
+  Return to the generated component library landing page.
 </Card>
 
-<CustomDivider middleText="Code Components" />
+## Content
 
-## Code Components
+Renderers for reader-facing media, code, quotations, and structured content.
 
-### CustomCodeBlock
+This category currently contains **24** governed export(s).
 
-Advanced code block with placeholder replacement, pre/post notes, and optional expandable output section.
+### Decision Tree Excerpt
 
-**Import:**
+1. Bound to an external data source or automation pipeline? `data/`
+2. Only makes sense on frame-mode or portal pages? `page-structure/`
+3. Accepts children and arranges them spatially? `layout/`
+4. Formats or renders content for the reader? `content/`
+5. Otherwise: `primitives/`
+
+### Summary Table
+
+| Component | Tier | Status | Import path | Description |
+| --- | --- | --- | --- | --- |
+| CardVideo | `composite` | `stable` | `/snippets/components/content/video.jsx` | Card Video content component for rendering reader-facing documentation content. |
+| CodeComponent | `composite` | `stable` | `/snippets/components/content/code.jsx` | Code Component content component for rendering reader-facing documentation content. |
+| CodeSection | `composite` | `stable` | `/snippets/components/content/code.jsx` | Thin wrapper that maps a `fields` object into the complex code block renderer. |
+| ComplexCodeBlock | `composite` | `stable` | `/snippets/components/content/code.jsx` | Complex Code Block content component for rendering reader-facing documentation content. |
+| CustomCodeBlock | `composite` | `stable` | `/snippets/components/content/code.jsx` | Custom Code Block content component for rendering reader-facing documentation content. |
+| CustomResponseField | `composite` | `stable` | `/snippets/components/content/responseField.jsx` | Renders the custom response field component |
+| EmbedMarkdown | `composite` | `stable` | `/snippets/components/content/embed.jsx` | Embed Markdown content component for rendering reader-facing documentation content. |
+| ExternalContent | `composite` | `stable` | `/snippets/components/content/external-content.jsx` | External Content content component for rendering reader-facing documentation content. |
+| FrameQuote | `composite` | `stable` | `/snippets/components/content/quote.jsx` | Frame Quote content component for rendering reader-facing documentation content. |
+| LinkedInEmbed | `composite` | `stable` | `/snippets/components/content/video.jsx` | Linked In Embed content component for rendering reader-facing documentation content. |
+| MarkdownEmbed | `composite` | `stable` | `/snippets/components/content/embed.jsx` | Markdown Embed content component for rendering reader-facing documentation content. |
+| Quote | `composite` | `stable` | `/snippets/components/content/quote.jsx` | Quote content component for rendering reader-facing documentation content. |
+| ResponseFieldAccordion | `composite` | `stable` | `/snippets/components/content/responseField.jsx` | Renders the response field accordion component |
+| ResponseFieldExpandable | `composite` | `stable` | `/snippets/components/content/responseField.jsx` | Renders the response field expandable component |
+| ResponseFieldGroup | `composite` | `stable` | `/snippets/components/content/responseField.jsx` | Renders the response field group component |
+| ScrollableDiagram | `composite` | `stable` | `/snippets/components/content/zoomableDiagram.jsx` | ────────────────────────────────────────────────────────────── |
+| ShowcaseVideo | `composite` | `stable` | `/snippets/components/content/video.jsx` | Showcase Video content component for rendering reader-facing documentation content. |
+| TitledVideo | `composite` | `stable` | `/snippets/components/content/video.jsx` | Titled Video content component for rendering reader-facing documentation content. |
+| TwitterTimeline | `composite` | `stable` | `/snippets/components/content/embed.jsx` | Twitter Timeline content component for rendering reader-facing documentation content. |
+| ValueResponseField | `composite` | `stable` | `/snippets/components/content/responseField.jsx` | CustomResponseField - ResponseField wrapper that hides the bottom divider |
+| Video | `composite` | `stable` | `/snippets/components/content/video.jsx` | Video content component for rendering reader-facing documentation content. |
+| YouTubeVideo | `composite` | `stable` | `/snippets/components/content/video.jsx` | You Tube Video content component for rendering reader-facing documentation content. |
+| YouTubeVideoData | `composite` | `stable` | `/snippets/components/content/video.jsx` | You Tube Video Data content component for rendering reader-facing documentation content. |
+| YouTubeVideoDownload | `composite` | `deprecated` | `/snippets/components/content/video.jsx` | You Tube Video Download content component for rendering reader-facing documentation content. |
+
+## Component Reference
+
+### CardVideo
+Use **CardVideo** when you need card Video content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: Card Video content component for rendering reader-facing documentation content.
+**Import path**
 ```jsx
-import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
+import { CardVideo } from '/snippets/components/content/video.jsx'
 ```
-
-**Props:**
-
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `LinkedInEmbed`, `TitledVideo`, `Video`, `YouTubeVideo`, `YouTubeVideoData`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/home/primer.mdx`
+**Props**
 | Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `filename` | `string` | - | No | Name of the file to display in header |
-| `icon` | `string` | - | No | Icon to display in header |
-| `language` | `string` | - | No | Programming language for syntax highlighting |
-| `highlight` | `string` | - | No | Line numbers/ranges to highlight (e.g., "1-3,5") |
-| `codeString` | `string` | `""` | No | The code content to display |
-| `placeholderValue` | `string` | `""` | No | Value to replace {PLACEHOLDER} with |
-| `wrap` | `boolean` | `true` | No | Whether to wrap long lines |
-| `lines` | `boolean` | `true` | No | Whether to show line numbers |
-| `preNote` | `string` | `""` | No | Note to display before code block |
-| `postNote` | `string` | `""` | No | Note to display after code block |
-| `output` | `object` | - | No | Optional output configuration |
-| `output.codeString` | `string` | - | No | Output code content |
-| `output.filename` | `string` | - | No | Output filename |
-| `output.icon` | `string` | - | No | Output icon |
-| `output.language` | `string` | - | No | Output language |
+| --- | --- | --- | --- | --- |
+| `embedUrl` | `any` | `` | Yes | embed Url prop. |
+| `title` | `any` | `` | Yes | title prop. |
+| `style` | `any` | `` | Yes | style prop. |
 
-**Examples:**
+**Code example**
 
-<Tabs>
-  <Tab title="Basic">
-    <CustomCodeBlock
-      filename="example.js"
-      language="javascript"
-      codeString="const apiKey = 'your-key-here';"
-    />
-  </Tab>
-  <Tab title="With Placeholder">
-    <CustomCodeBlock
-      filename="config.js"
-      language="javascript"
-      codeString="const API_KEY = '{PLACEHOLDER}';"
-      placeholderValue="your-api-key-here"
-      preNote="Add this to your configuration file"
-    />
-  </Tab>
-  <Tab title="Code">
 ```jsx
-<CustomCodeBlock
-  filename="example.js"
-  language="javascript"
-  codeString="const apiKey = 'your-key';"
-  preNote="Configuration example"
-  postNote="Remember to keep your API key secure"
-/>
+<CardVideo embedUrl="example" title="example" />
 ```
-  </Tab>
-</Tabs>
 
----
+<CustomDivider />
 
 ### CodeComponent
-
-Simple code block wrapper component.
-
-**Import:**
+Use **CodeComponent** when you need code Component content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: Code Component content component for rendering reader-facing documentation content.
+**Import path**
 ```jsx
-import { CodeComponent } from "/snippets/components/content/code.jsx";
+import { CodeComponent } from '/snippets/components/content/code.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CodeSection`, `ComplexCodeBlock`, `CustomCodeBlock`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/gateways/run-a-gateway/install/linux-install.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `filename` | `string` | `""` | No | filename prop. |
+| `icon` | `string` | `"terminal"` | No | icon prop. |
+| `language` | `string` | `""` | No | language prop. |
+| `highlight` | `string` | `""` | No | highlight prop. |
+| `expandable` | `boolean` | `false` | No | expandable prop. |
+| `wrap` | `boolean` | `true` | No | wrap prop. |
+| `lines` | `boolean` | `true` | No | lines prop. |
+| `codeString` | `string` | `""` | No | code String prop. |
+| `placeholderValue` | `string` | `""` | No | placeholder Value prop. |
+
+**Code example**
+
+```jsx
+<CodeComponent />
 ```
 
-**Props:** Accepts standard CodeBlock props (language, filename, icon, etc.)
-
-**Note:** This is a wrapper around Mintlify's CodeBlock component.
-
----
-
-### ComplexCodeBlock
-
-Advanced code block with multiple features including placeholder replacement and output sections.
-
-**Import:**
-```jsx
-import { ComplexCodeBlock } from "/snippets/components/content/code.jsx";
-```
-
-**Props:** Similar to `CustomCodeBlock` with additional complexity handling.
-
----
+<CustomDivider />
 
 ### CodeSection
-
-Section wrapper for organizing multiple code blocks.
-
-**Import:**
+Use **CodeSection** when you need thin wrapper that maps a `fields` object into the complex code block renderer.. Best suited for tutorial, concept, reference page types.
+Source description: Thin wrapper that maps a `fields` object into the complex code block renderer.
+**Import path**
 ```jsx
-import { CodeSection } from "/snippets/components/content/code.jsx";
+import { CodeSection } from '/snippets/components/content/code.jsx'
 ```
-
-**Props:**
-
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `ComplexCodeBlock`, `CustomCodeBlock`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/gateways/quickstart/gateway-setup.mdx`
+**Props**
 | Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Yes** | Code blocks to display |
+| --- | --- | --- | --- | --- |
+| `fields` | `object` | `{}` | No | fields prop. |
 
-<CustomDivider middleText="External Content" />
+**Code example**
 
-## External Content
-
-### ExternalContent
-
-Reusable component for displaying external GitHub content with header and scrollable container.
-
-**Import:**
 ```jsx
-import { ExternalContent } from "/snippets/components/content/external-content.jsx";
+<CodeSection />
 ```
 
-**Props:**
+<CustomDivider />
 
+### ComplexCodeBlock
+Use **ComplexCodeBlock** when you need complex Code Block content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: Complex Code Block content component for rendering reader-facing documentation content.
+**Import path**
+```jsx
+import { ComplexCodeBlock } from '/snippets/components/content/code.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CodeSection`, `CustomCodeBlock`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/gateways/quickstart/gateway-setup.mdx`
+**Props**
 | Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `repoName` | `string` | - | **Yes** | Repository name (e.g., "Livepeer/awesome-livepeer") |
-| `githubUrl` | `string` | - | **Yes** | Full GitHub repository URL |
-| `maxHeight` | `string` | `"1000px"` | No | Maximum height of scrollable container |
-| `icon` | `string` | `"github"` | No | Icon to display in header |
-| `children` | `ReactNode` | - | **Yes** | Content to display (typically imported MDX) |
+| --- | --- | --- | --- | --- |
+| `filename` | `any` | `` | Yes | filename prop. |
+| `icon` | `any` | `` | Yes | icon prop. |
+| `language` | `any` | `` | Yes | language prop. |
+| `highlight` | `any` | `` | Yes | highlight prop. |
+| `codeString` | `string` | `""` | No | code String prop. |
+| `placeholderValue` | `string` | `""` | No | placeholder Value prop. |
+| `wrap` | `boolean` | `true` | No | wrap prop. |
+| `lines` | `boolean` | `true` | No | lines prop. |
+| `preNote` | `any` | `null` | No | pre Note prop. |
+| `postNote` | `any` | `null` | No | post Note prop. |
 
-**Examples:**
+**Code example**
 
-<Tabs>
-  <Tab title="Live Example">
-    <ExternalContent
-      repoName="livepeer/docs"
-      githubUrl="https://github.com/livepeer/docs"
-      maxHeight="150px"
-    >
- <p>External content from the Livepeer documentation repository.</p>
-      <ul>
- <li>Automatically styled container</li>
- <li>Link to GitHub source</li>
-      </ul>
-    </ExternalContent>
-  </Tab>
-  <Tab title="Code">
 ```jsx
-import ProtocolConcept from '/snippets/pages/01_ABOUT/concepts/protocol.mdx'
-
-<ExternalContent
-  repoName="livepeer/awesome-livepeer"
-  githubUrl="https://github.com/livepeer/awesome-livepeer"
-  maxHeight="800px"
->
-  <ProtocolConcept />
-</ExternalContent>
-```
-  </Tab>
-</Tabs>
-
-<CustomDivider middleText="API Response Fields" />
-
-## API Response Fields
-
-### ValueResponseField
-
-ResponseField wrapper that displays a value with optional label and line styling.
-
-**Import:**
-```jsx
-import { ValueResponseField } from "/snippets/components/content/response-field.jsx";
+<ComplexCodeBlock filename="example" icon="example" />
 ```
 
-**Props:**
+<CustomDivider />
 
+### CustomCodeBlock
+Use **CustomCodeBlock** when you need custom Code Block content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: Custom Code Block content component for rendering reader-facing documentation content.
+**Import path**
+```jsx
+import { CustomCodeBlock } from '/snippets/components/content/code.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CodeSection`, `ComplexCodeBlock`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `medium`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/gateways/quickstart/gateway-setup.mdx`, `v2/gateways/run-a-gateway/install/linux-install.mdx`, `v2/gateways/run-a-gateway/install/windows-install.mdx`, `v2/orchestrators/old/orchestrators-portal.mdx`, `v2/orchestrators/old/setting-up-an-orchestrator/connect-to-arbitrum.mdx`, `v2/orchestrators/old/setting-up-an-orchestrator/install-go-livepeer.mdx`, and 9 more page(s)
+**Props**
 | Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `description` | `string\|function` | - | No | Description text or function that returns description |
-| `post` | `any` | `null` | No | Value to display after description |
-| `label` | `string` | `"value"` | No | Label for the value |
-| `line` | `boolean` | `true` | No | Whether to show bottom border line |
-| `children` | `ReactNode` | - | No | Additional content |
-| `...props` | `object` | - | No | Additional ResponseField props (name, type, default, required, etc.) |
+| --- | --- | --- | --- | --- |
+| `filename` | `any` | `` | Yes | filename prop. |
+| `icon` | `any` | `` | Yes | icon prop. |
+| `language` | `any` | `` | Yes | language prop. |
+| `highlight` | `any` | `` | Yes | highlight prop. |
+| `codeString` | `string` | `""` | No | code String prop. |
+| `placeholderValue` | `string` | `""` | No | placeholder Value prop. |
+| `wrap` | `boolean` | `true` | No | wrap prop. |
+| `lines` | `boolean` | `true` | No | lines prop. |
+| `preNote` | `string` | `""` | No | pre Note prop. |
+| `postNote` | `string` | `""` | No | post Note prop. |
+| `output` | `string` | `""` | No | output prop. |
 
----
+**Code example**
+
+```jsx
+<CustomCodeBlock filename="example" icon="example" />
+```
+
+<CustomDivider />
 
 ### CustomResponseField
-
-ResponseField wrapper that hides the bottom divider.
-
-**Import:**
+Use **CustomResponseField** when you need renders the custom response field component. Best suited for how_to page types.
+Source description: Renders the custom response field component
+**Import path**
 ```jsx
-import { CustomResponseField } from "/snippets/components/content/response-field.jsx";
+import { CustomResponseField } from '/snippets/components/content/responseField.jsx'
+```
+**Metadata**
+- Content affinity: `how_to`
+- Dependencies: `ResponseFieldAccordion`, `ResponseFieldExpandable`, `ResponseFieldGroup`, `ValueResponseField`
+- Data source: `none`
+- Last meaningful change: `2026-03-08`
+- Breaking change risk: `low`
+- Owner: `@livepeer/docs-team`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/gateways/quickstart/gateway-setup.mdx`, `v2/gateways/run-a-gateway/configure/video-configuration.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `description` | `React.ReactNode` | `` | Yes | Primary content rendered by the component. |
+| `props` | `object` | `` | No | Additional props forwarded to ResponseField. |
+
+**Code example**
+
+```jsx
+<CustomResponseField description="Example" />
 ```
 
-**Props:**
+<CustomDivider />
 
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `description` | `string` | - | No | Description text |
-| `...props` | `object` | - | No | All ResponseField props (name, type, default, required, post, etc.) |
-
----
-
-### ResponseFieldExpandable
-
-Groups multiple response fields in an expandable section.
-
-**Import:**
+### EmbedMarkdown
+Use **EmbedMarkdown** when you need embed Markdown content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: Embed Markdown content component for rendering reader-facing documentation content.
+**Import path**
 ```jsx
-import { ResponseFieldExpandable } from "/snippets/components/content/response-field.jsx";
+import { EmbedMarkdown } from '/snippets/components/content/embed.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `MarkdownEmbed`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: none
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `url` | `any` | `` | Yes | url prop. |
+
+**Code example**
+
+```jsx
+<EmbedMarkdown url="example" />
 ```
 
-**Props:**
+<CustomDivider />
 
+### ExternalContent
+Use **ExternalContent** when you need external Content content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: External Content content component for rendering reader-facing documentation content.
+**Import path**
+```jsx
+import { ExternalContent } from '/snippets/components/content/external-content.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `none`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: none
+**Props**
 | Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `fields` | `Array\|Object` | `{}` | No | Array or object of field definitions |
-| `...props` | `object` | - | No | Expandable component props (title, etc.) |
+| --- | --- | --- | --- | --- |
+| `repoName` | `any` | `` | Yes | repo Name prop. |
+| `githubUrl` | `any` | `` | Yes | github Url prop. |
+| `maxHeight` | `string` | `"1000px"` | No | max Height prop. |
+| `icon` | `string` | `"github"` | No | icon prop. |
+| `children` | `any` | `` | Yes | children prop. |
 
----
+**Code example**
+
+```jsx
+<ExternalContent repoName="example" githubUrl="example">Example content</ExternalContent>
+```
+
+<CustomDivider />
+
+### FrameQuote
+Use **FrameQuote** when you need frame Quote content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: Frame Quote content component for rendering reader-facing documentation content.
+**Import path**
+```jsx
+import { FrameQuote } from '/snippets/components/content/quote.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `none`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/about/livepeer-protocol/core-mechanisms.mdx`, `v2/about/livepeer-protocol/overview.mdx`, `v2/home/about-livepeer/benefits.mdx`, `v2/home/about-livepeer/ecosystem.mdx`, `v2/home/about-livepeer/vision.mdx`, `v2/internal/overview/docs-philosophy.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+| `author` | `any` | `` | Yes | author prop. |
+| `source` | `any` | `` | Yes | source prop. |
+| `href` | `any` | `` | Yes | href prop. |
+| `frame` | `boolean` | `true` | No | frame prop. |
+| `align` | `string` | `'right'` | No | align prop. |
+| `borderColor` | `any` | `` | Yes | border Color prop. |
+| `img` | `any` | `` | Yes | img prop. |
+| `spacing` | `boolean` | `true` | No | spacing prop. |
+| `props` | `any` | `` | Yes | props prop. |
+
+**Code example**
+
+```jsx
+<FrameQuote author="example" source="example">Example content</FrameQuote>
+```
+
+<CustomDivider />
+
+### LinkedInEmbed
+Use **LinkedInEmbed** when you need linked In Embed content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: Linked In Embed content component for rendering reader-facing documentation content.
+**Import path**
+```jsx
+import { LinkedInEmbed } from '/snippets/components/content/video.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CardVideo`, `TitledVideo`, `Video`, `YouTubeVideo`, `YouTubeVideoData`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: none
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `embedUrl` | `any` | `` | Yes | embed Url prop. |
+| `title` | `string` | `"Embedded post"` | No | title prop. |
+| `hint` | `string` | `""` | No | hint prop. |
+| `caption` | `any` | `` | Yes | caption prop. |
+| `height` | `string` | `"399"` | No | height prop. |
+
+**Code example**
+
+```jsx
+<LinkedInEmbed embedUrl="example" caption="example" />
+```
+
+<CustomDivider />
+
+### MarkdownEmbed
+Use **MarkdownEmbed** when you need markdown Embed content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: Markdown Embed content component for rendering reader-facing documentation content.
+**Import path**
+```jsx
+import { MarkdownEmbed } from '/snippets/components/content/embed.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `EmbedMarkdown`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: none
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `url` | `any` | `` | Yes | url prop. |
+
+**Code example**
+
+```jsx
+<MarkdownEmbed url="example" />
+```
+
+<CustomDivider />
+
+### Quote
+Use **Quote** when you need content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: Quote content component for rendering reader-facing documentation content.
+**Import path**
+```jsx
+import { Quote } from '/snippets/components/content/quote.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `none`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `medium`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/about/livepeer-protocol/core-mechanisms.mdx`, `v2/about/livepeer-protocol/governance-model.mdx`, `v2/about/livepeer-protocol/livepeer-token.mdx`, `v2/about/livepeer-protocol/overview.mdx`, `v2/about/livepeer-protocol/technical-architecture.mdx`, `v2/about/livepeer-protocol/treasury.mdx`, and 5 more page(s)
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `any` | `` | Yes | children prop. |
+
+**Code example**
+
+```jsx
+<Quote>Example content</Quote>
+```
+
+<CustomDivider />
 
 ### ResponseFieldAccordion
-
-Groups multiple response fields in an accordion component.
-
-**Import:**
+Use **ResponseFieldAccordion** when you need renders the response field accordion component. Best suited for universal page types.
+Source description: Renders the response field accordion component
+**Import path**
 ```jsx
-import { ResponseFieldAccordion } from "/snippets/components/content/response-field.jsx";
+import { ResponseFieldAccordion } from '/snippets/components/content/responseField.jsx'
+```
+**Metadata**
+- Content affinity: `universal`
+- Dependencies: `CustomResponseField`, `ResponseFieldExpandable`, `ResponseFieldGroup`, `ValueResponseField`
+- Data source: `none`
+- Last meaningful change: `2026-03-08`
+- Breaking change risk: `low`
+- Owner: `@livepeer/docs-team`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/gateways/quickstart/gateway-setup.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `fields` | `object` | `{}` | No | Fields used by the component. |
+| `props` | `object` | `` | No | Additional props forwarded to Accordion. |
+
+**Code example**
+
+```jsx
+<ResponseFieldAccordion />
 ```
 
-**Props:**
+<CustomDivider />
 
+### ResponseFieldExpandable
+Use **ResponseFieldExpandable** when you need renders the response field expandable component. Best suited for how_to page types.
+Source description: Renders the response field expandable component
+**Import path**
+```jsx
+import { ResponseFieldExpandable } from '/snippets/components/content/responseField.jsx'
+```
+**Metadata**
+- Content affinity: `how_to`
+- Dependencies: `CustomResponseField`, `ResponseFieldAccordion`, `ResponseFieldGroup`, `ValueResponseField`
+- Data source: `none`
+- Last meaningful change: `2026-03-08`
+- Breaking change risk: `low`
+- Owner: `@livepeer/docs-team`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/gateways/quickstart/gateway-setup.mdx`
+**Props**
 | Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `fields` | `Array\|Object` | `{}` | No | Array or object of field definitions |
-| `...props` | `object` | - | No | Accordion component props (title, etc.) |
+| --- | --- | --- | --- | --- |
+| `fields` | `object` | `{}` | No | Fields used by the component. |
+| `props` | `object` | `` | No | Additional props forwarded to Expandable. |
 
----
+**Code example**
+
+```jsx
+<ResponseFieldExpandable />
+```
+
+<CustomDivider />
 
 ### ResponseFieldGroup
-
-Wrapper that chooses accordion or expandable layout at runtime.
-
-**Import:**
+Use **ResponseFieldGroup** when you need renders the response field group component. Best suited for universal page types.
+Source description: Renders the response field group component
+**Import path**
 ```jsx
-import { ResponseFieldGroup } from "/snippets/components/content/response-field.jsx";
+import { ResponseFieldGroup } from '/snippets/components/content/responseField.jsx'
+```
+**Metadata**
+- Content affinity: `universal`
+- Dependencies: `CustomResponseField`, `ResponseFieldAccordion`, `ResponseFieldExpandable`, `ValueResponseField`
+- Data source: `none`
+- Last meaningful change: `2026-03-08`
+- Breaking change risk: `low`
+- Owner: `@livepeer/docs-team`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: none
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `component` | `string` | `"accordion"` | No | Component used by the component. |
+| `fields` | `object` | `{}` | No | Fields used by the component. |
+| `props` | `object` | `` | No | Additional props forwarded to the selected wrapper component. |
+
+**Code example**
+
+```jsx
+<ResponseFieldGroup />
 ```
 
-**Props:**
+<CustomDivider />
 
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `component` | `string` | `"accordion"` | No | Component type: "accordion" or "expandable" |
-| `fields` | `Array\|Object` | `{}` | No | Array or object of field definitions |
-| `...props` | `object` | - | No | Component props (title, etc.) |
-
-<CustomDivider middleText="Data Display Components" />
-
-## Data Display Components
-
-### BlogCard
-
-Card component specifically designed for blog posts with reading time and excerpt support.
-
-**Import:**
+### ScrollableDiagram
+Use **ScrollableDiagram** when you need ──────────────────────────────────────────────────────────────. Best suited for universal page types.
+Source description: ──────────────────────────────────────────────────────────────
+**Import path**
 ```jsx
-import { BlogCard } from "/snippets/components/content/data.jsx";
+import { ScrollableDiagram } from '/snippets/components/content/zoomableDiagram.jsx'
+```
+**Metadata**
+- Content affinity: `universal`
+- Dependencies: `none`
+- Data source: `none`
+- Last meaningful change: `2026-03-08`
+- Breaking change risk: `medium`
+- Owner: `@livepeer/docs-team`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/about/livepeer-protocol/livepeer-token.mdx`, `v2/about/livepeer-protocol/technical-architecture.mdx`, `v2/gateways/about/architecture.mdx`, `v2/gateways/references/technical-architecture.mdx`, `v2/gateways/run-a-gateway/configure/dual-configuration.mdx`, `v2/gateways/run-a-gateway/configure/video-configuration-view.mdx`, and 6 more page(s)
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `React.ReactNode` | `` | Yes | Content rendered inside the component. |
+| `title` | `string` | `""` | No | Title text rendered by the component. |
+| `maxHeight` | `string` | `"500px"` | No | Max height used by the component. |
+| `minWidth` | `string` | `"100%"` | No | Min width used by the component. |
+| `showControls` | `boolean` | `false` | No | Boolean flag that controls component behaviour. |
+
+**Code example**
+
+```jsx
+<ScrollableDiagram>Example</ScrollableDiagram>
 ```
 
-**Props:**
+<CustomDivider />
 
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `title` | `string` | - | **Yes** | The title of the blog post |
-| `content` | `string` | - | **Yes** | HTML content to display |
-| `href` | `string` | - | **Yes** | Link URL for the blog post |
-| `author` | `string` | `"Livepeer Team"` | No | Author name |
-| `datePosted` | `string` | `null` | No | Publication date |
-| `excerpt` | `string` | `null` | No | Short excerpt (use if linking to external blog) |
-| `readingTime` | `number` | `null` | No | Estimated reading time in minutes |
-| `icon` | `string` | `"book-open"` | No | Icon for the card |
-| `cta` | `string` | `"Read More"` | No | Call-to-action button text |
-| `img` | `string` | `null` | No | Optional image URL |
-
----
-
-### PostCard
-
-Card component for displaying forum posts or articles with author, date, and metadata.
-
-**Import:**
+### ShowcaseVideo
+Use **ShowcaseVideo** when you need showcase Video content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: Showcase Video content component for rendering reader-facing documentation content.
+**Import path**
 ```jsx
-import { PostCard } from "/snippets/components/content/data.jsx";
+import { ShowcaseVideo } from '/snippets/components/content/video.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CardVideo`, `LinkedInEmbed`, `TitledVideo`, `Video`, `YouTubeVideo`, `YouTubeVideoData`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/home/solutions/showcase.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `src` | `any` | `` | Yes | src prop. |
+| `title` | `any` | `` | Yes | title prop. |
+| `subtitle` | `any` | `` | Yes | subtitle prop. |
+
+**Code example**
+
+```jsx
+<ShowcaseVideo src="example" title="example" />
 ```
 
-**Props:**
+<CustomDivider />
 
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `title` | `string` | - | **Yes** | The title of the post |
-| `content` | `string` | - | **Yes** | HTML content to display |
-| `href` | `string` | - | **Yes** | Link URL for the card |
-| `author` | `string` | `"Unknown"` | No | Author name |
-| `datePosted` | `string` | `null` | No | Date the post was published |
-| `icon` | `string` | `"book-open"` | No | Icon to display on the card |
-| `cta` | `string` | `"Read More"` | No | Call-to-action button text |
-| `img` | `string` | `null` | No | Optional image URL for the card |
-
----
-
-### CardBlogDataLayout
-
-Layout component for displaying multiple BlogCards in a vertical layout.
-
-**Import:**
+### TitledVideo
+Use **TitledVideo** when you need titled Video content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: Titled Video content component for rendering reader-facing documentation content.
+**Import path**
 ```jsx
-import { CardBlogDataLayout } from "/snippets/components/content/data.jsx";
+import { TitledVideo } from '/snippets/components/content/video.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CardVideo`, `LinkedInEmbed`, `Video`, `YouTubeVideo`, `YouTubeVideoData`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/home/solutions/showcase.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `src` | `any` | `` | Yes | src prop. |
+| `title` | `any` | `` | Yes | title prop. |
+| `subtitle` | `any` | `` | Yes | subtitle prop. |
+| `arrow` | `boolean` | `false` | No | arrow prop. |
+| `borderRadius` | `string` | `"12px"` | No | border Radius prop. |
+| `style` | `object` | `{}` | No | style prop. |
+
+**Code example**
+
+```jsx
+<TitledVideo src="example" title="example" />
 ```
 
-**Props:**
+<CustomDivider />
 
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `items` | `Array` | `[]` | No | Array of BlogCard props objects |
-| `limit` | `number` | - | No | Optional limit on number of items |
-
----
-
-### ColumnsBlogCardLayout
-
-Layout component for displaying multiple BlogCards in columns.
-
-**Import:**
+### TwitterTimeline
+Use **TwitterTimeline** when you need twitter Timeline content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: Twitter Timeline content component for rendering reader-facing documentation content.
+**Import path**
 ```jsx
-import { ColumnsBlogCardLayout } from "/snippets/components/content/data.jsx";
+import { TwitterTimeline } from '/snippets/components/content/embed.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `EmbedMarkdown`, `MarkdownEmbed`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/community/livepeer-community/trending-topics.mdx`, `v2/home/trending.mdx`
+**Props**
+No documented props.
+
+**Code example**
+
+```jsx
+<TwitterTimeline />
 ```
 
-**Props:**
+<CustomDivider />
 
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `items` | `Array` | `[]` | No | Array of BlogCard props objects |
-| `cols` | `number` | `2` | No | Number of columns |
-| `limit` | `number` | - | No | Optional limit on number of items |
-
----
-
-### CardColumnsPostLayout
-
-Layout component for displaying multiple PostCards in columns.
-
-**Import:**
+### ValueResponseField
+Use **ValueResponseField** when you need customResponseField - ResponseField wrapper that hides the bottom divider. Best suited for concept page types.
+Source description: CustomResponseField - ResponseField wrapper that hides the bottom divider
+**Import path**
 ```jsx
-import { CardColumnsPostLayout } from "/snippets/components/content/data.jsx";
+import { ValueResponseField } from '/snippets/components/content/responseField.jsx'
+```
+**Metadata**
+- Content affinity: `concept`
+- Dependencies: `CustomResponseField`, `ResponseFieldAccordion`, `ResponseFieldExpandable`, `ResponseFieldGroup`
+- Data source: `none`
+- Last meaningful change: `2026-03-08`
+- Breaking change risk: `low`
+- Owner: `@livepeer/docs-team`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/about/livepeer-protocol/core-mechanisms.mdx`, `v2/gateways/quickstart/gateway-setup.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `description` | `React.ReactNode` | `` | Yes | Primary content rendered by the component. |
+| `post` | `string` | `null` | No | Post used by the component. |
+| `label` | `string` | `"value"` | No | Label text rendered by the component. |
+| `line` | `boolean` | `true` | No | Boolean flag that controls component behaviour. |
+| `children` | `React.ReactNode` | `` | Yes | Content rendered inside the component. |
+| `props` | `object` | `` | No | Additional props forwarded to ResponseField. |
+
+**Code example**
+
+```jsx
+<ValueResponseField description="Example" />
 ```
 
-**Props:**
+<CustomDivider />
 
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `cols` | `number` | `2` | No | Number of columns to display |
-| `items` | `Array` | `[]` | No | Array of PostCard props objects |
-| `limit` | `number` | - | No | Optional limit on number of items |
-
----
-
-### DiscordAnnouncements
-
-Displays Discord announcements from discordAnnouncementsData.jsx.
-
-**Import:**
+### Video
+Use **Video** when you need content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: Video content component for rendering reader-facing documentation content.
+**Import path**
 ```jsx
-import { DiscordAnnouncements } from "/snippets/components/content/data.jsx";
+import { Video } from '/snippets/components/content/video.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CardVideo`, `LinkedInEmbed`, `TitledVideo`, `YouTubeVideo`, `YouTubeVideoData`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/solutions/embody/overview.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `src` | `any` | `` | Yes | src prop. |
+| `title` | `string` | `""` | No | title prop. |
+| `author` | `string` | `""` | No | author prop. |
+| `caption` | `any` | `` | Yes | caption prop. |
+| `href` | `string` | `""` | No | href prop. |
+| `controls` | `boolean` | `true` | No | controls prop. |
+| `autoPlay` | `boolean` | `false` | No | auto Play prop. |
+| `loop` | `boolean` | `false` | No | loop prop. |
+| `muted` | `boolean` | `false` | No | muted prop. |
+| `children` | `any` | `` | Yes | children prop. |
+
+**Code example**
+
+```jsx
+<Video src="example" caption="example">Example content</Video>
 ```
 
-**Props:**
+<CustomDivider />
 
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `items` | `Array` | `[]` | No | Array of announcement objects |
-| `limit` | `number` | - | No | Optional limit on number of announcements |
-
-**Note:** Requires data from `snippets/automations/discord/discordAnnouncementsData.jsx`
-
----
-
-### LumaEvents
-
-Displays Luma events from lumaEventsData.jsx.
-
-**Import:**
+### YouTubeVideo
+Use **YouTubeVideo** when you need you Tube Video content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: You Tube Video content component for rendering reader-facing documentation content.
+**Import path**
 ```jsx
-import { LumaEvents } from "/snippets/components/content/data.jsx";
+import { YouTubeVideo } from '/snippets/components/content/video.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CardVideo`, `LinkedInEmbed`, `TitledVideo`, `Video`, `YouTubeVideoData`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `medium`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/community/community-portal.mdx`, `v2/community/livepeer-community/trending-topics.mdx`, `v2/gateways/run-a-gateway/install/community-projects.mdx`, `v2/home/about-livepeer/benefits.mdx`, `v2/home/about-livepeer/evolution.mdx`, `v2/home/about-livepeer/vision.mdx`, and 7 more page(s)
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `embedUrl` | `any` | `` | Yes | embed Url prop. |
+| `title` | `string` | `""` | No | title prop. |
+| `author` | `string` | `""` | No | author prop. |
+| `hint` | `string` | `""` | No | hint prop. |
+| `caption` | `any` | `` | Yes | caption prop. |
+
+**Code example**
+
+```jsx
+<YouTubeVideo embedUrl="example" caption="example" />
 ```
 
-**Props:**
+<CustomDivider />
 
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `data` | `Object` | - | **Yes** | Event data object with upcoming and past arrays |
-| `limit` | `number` | - | No | Optional limit on number of events |
-| `type` | `string` | `"upcoming"` | No | Type of events: "upcoming", "past", or "all" |
-
-**Note:** Requires data from `snippets/automations/luma/lumaEventsData.jsx`
-
-<CustomDivider middleText="Version Components" />
-
-## Version Components
-
-### LatestVersion
-
-Wrapper for GitHub action which fetches most recent release version of go-livepeer.
-
-**Import:**
+### YouTubeVideoData
+Use **YouTubeVideoData** when you need you Tube Video Data content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: You Tube Video Data content component for rendering reader-facing documentation content.
+**Import path**
 ```jsx
-import { LatestVersion } from "/snippets/components/content/release.jsx";
+import { YouTubeVideoData } from '/snippets/components/content/video.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CardVideo`, `LinkedInEmbed`, `TitledVideo`, `Video`, `YouTubeVideo`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/community/livepeer-community/trending-topics.mdx`, `v2/home/trending.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+| `cols` | `number` | `2` | No | cols prop. |
+
+**Code example**
+
+```jsx
+<YouTubeVideoData limit={1} />
 ```
 
-**Props:**
+<CustomDivider />
 
+### YouTubeVideoDownload
+Use **YouTubeVideoDownload** when you need you Tube Video Download content component for rendering reader-facing documentation content.. Best suited for tutorial, concept, reference page types.
+Source description: You Tube Video Download content component for rendering reader-facing documentation content.
+**Import path**
+```jsx
+import { YouTubeVideoDownload } from '/snippets/components/content/video.jsx'
+```
+**Metadata**
+- Content affinity: `tutorial`, `concept`, `reference`
+- Dependencies: `CardVideo`, `LinkedInEmbed`, `TitledVideo`, `Video`, `YouTubeVideo`, `YouTubeVideoData`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `deprecated`
+- Tier: `composite`
+- `@usedIn`: `v2/home/primer.mdx`
+
+Deprecation note: YouTubeVideoDownload is deprecated and should not be used for new content. See `YouTubeVideo`.
+**Props**
 | Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `version` | `string` | - | **Yes** | Version string (typically from GitHub action) |
+| --- | --- | --- | --- | --- |
+| `embedUrl` | `any` | `` | Yes | embed Url prop. |
+| `title` | `any` | `` | Yes | title prop. |
+| `hint` | `any` | `` | Yes | hint prop. |
+| `caption` | `string` | `""` | No | caption prop. |
 
----
+**Code example**
 
-<Card title="Next: Layout Components" icon="arrow-right" href="../component-library/layout" arrow>
- Continue to Layout Components →
-</Card>
+```jsx
+<YouTubeVideoDownload embedUrl="example" title="example" />
+```

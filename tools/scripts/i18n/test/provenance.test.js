@@ -6,7 +6,7 @@
  * @owner             docs
  * @needs             F-R6, F-R7
  * @purpose-statement Tests provenance tracker — validates translation provenance recording
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
+ * @pipeline          manual — not yet in pipeline
  * @usage             node tools/scripts/i18n/test/provenance.test.js [flags]
  */
 const test = require('node:test');

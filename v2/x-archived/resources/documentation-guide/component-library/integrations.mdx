@@ -1,0 +1,78 @@
+---
+title: Integration Components
+sidebarTitle: Integrations
+description: >-
+  Components that integrate with external services and APIs: CoinGecko exchange
+  data, social media integrations, and other third-party service connectors
+keywords:
+  - livepeer
+  - components
+  - integrations
+  - coingecko
+  - external
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { CoinGeckoExchanges } from '/snippets/components/integrations/coingecko.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+<Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
+  Return to the main component library index
+</Card>
+
+<CustomDivider middleText="CoinGecko Integration" />
+
+## CoinGecko Integration
+
+### CoinGeckoExchanges
+
+Dynamically fetches and displays exchanges that support a coin from CoinGecko API. Shows a sortable table of exchanges (CEX and DEX) with trading pairs, trust scores, and links.
+
+**Import:**
+```jsx
+import { CoinGeckoExchanges } from "/snippets/components/integrations/coingecko.jsx";
+```
+
+**Props:**
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `coinId` | `string` | `"arbitrum"` | No | The CoinGecko coin ID (e.g., "arbitrum", "ethereum", "bitcoin") |
+
+**Features:**
+- Automatically fetches exchange data from CoinGecko API
+- Displays exchanges in a sortable table
+- Shows exchange type (CEX/DEX), trading pairs, and trust scores
+- Includes links to trading pages
+- Supports sorting by name or type
+- Loading and error states
+
+**Examples:**
+
+<Tabs>
+  <Tab title="Default (Arbitrum)">
+    <CoinGeckoExchanges />
+  </Tab>
+  <Tab title="Ethereum">
+    <CoinGeckoExchanges coinId="ethereum" />
+  </Tab>
+  <Tab title="Code">
+```jsx
+<CoinGeckoExchanges coinId="arbitrum" />
+<CoinGeckoExchanges coinId="ethereum" />
+<CoinGeckoExchanges coinId="bitcoin" />
+```
+  </Tab>
+</Tabs>
+
+**Note:** This component makes a live API call to CoinGecko. Ensure you're not exceeding rate limits if using multiple instances on a page.
+
+---
+
+<Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
+  Return to the main component library index
+</Card>

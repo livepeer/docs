@@ -1,0 +1,261 @@
+---
+title: 'AI Model Management'
+sidebarTitle: 'Model Management'
+description: >-
+  Manage warm and cold model strategy, VRAM allocation, model rotation by demand,
+  and optimisation flags for diffusion pipelines on a Livepeer orchestrator.
+keywords:
+  - livepeer
+  - orchestrator
+  - AI model management
+  - warm model
+  - cold model
+  - VRAM
+  - SFAST
+  - DEEPCACHE
+  - aiModels.json
+  - model rotation
+  - optimisation flags
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: draft
+lastVerified: '2026-03-16'
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+<Tip>
+  Warm the model gateways request most often on the pipeline with the highest demand. Check tools.livepeer.cloud weekly — demand shifts as new models are listed and gateways update their routing preferences.
+</Tip>
+
+---
+
+AI model management covers the operational decisions made after models are downloaded: which models to keep warm in VRAM, how to allocate VRAM across multiple pipelines, when to rotate warm models based on demand changes, and which optimisation flags to apply for throughput gains.
+
+Model sourcing and downloading is covered separately in <LinkArrow href="/v2/orchestrators/guides/ai-and-job-workloads/model-hosting" label="Model Hosting" newline={false} />.
+
+<CustomDivider middleText="Warm vs Cold" />
+
+## Warm vs cold strategy
+
+**Warm** means the model weights are loaded into GPU VRAM at container startup. Job requests are served immediately with no loading latency.
+
+**Cold** keeps the container available while leaving the weights out of VRAM. The first request triggers a model load — typically 10 to 60 seconds depending on model size and NVMe storage speed — before inference begins.
+
+### Impact on job routing
+
+Gateways track first-response latency per orchestrator. Nodes with fast first responses win more jobs. For latency-sensitive pipelines — particularly `text-to-image` and `image-to-image` — cold loading creates a competitive disadvantage on the first request of each session.
+
+The practical rule: warm your primary revenue pipeline. Keep secondary pipelines cold until VRAM capacity allows warming them.
+
+### Beta constraint: one warm model per GPU
+
+During the Beta phase, only one warm model per GPU is supported. Setting `"warm": true` on more entries than you have GPUs causes the AI worker to log a conflict at startup and skip the excess entries.
+
+{/* FACT CHECK: Confirm whether the one-warm-model-per-GPU Beta constraint is still in effect. Rick / ai-runner team to verify — this may have been lifted in a recent release. */}
+
+Check logs on startup for:
+
+```bash icon="terminal" title="Check warm model startup logs"
+docker logs <ai-runner-container> 2>&1 | grep -i "warm\|conflict\|error"
+```
+
+The `Error loading warm model` message indicates a warm model conflict. Reduce `"warm": true` entries to match your GPU count.
+
+### VRAM allocation
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Pipeline</TableCell>
+      <TableCell header>Warm VRAM</TableCell>
+      <TableCell header>Notes</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`text-to-image` (SDXL-Lightning)</TableCell>
+      <TableCell>~12–18 GB</TableCell>
+      <TableCell>Lightning models lean toward 12 GB end</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-image` (SDXL)</TableCell>
+      <TableCell>~12–18 GB</TableCell>
+      <TableCell>Same architecture as text-to-image</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-video` (SVD)</TableCell>
+      <TableCell>~24 GB+</TableCell>
+      <TableCell>Requires 24 GB minimum; 32 GB preferred for longer clips</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`audio-to-text` (Whisper large-v3)</TableCell>
+      <TableCell>~3 GB</TableCell>
+      <TableCell>VRAM-efficient; pairs well with diffusion models on 24 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-text` (BLIP)</TableCell>
+      <TableCell>~1–2 GB</TableCell>
+      <TableCell>Runs warm on 4 GB GPUs</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`llm` (Llama 3.1 8B q4)</TableCell>
+      <TableCell>~8 GB</TableCell>
+      <TableCell>Via Ollama runner; suited for 8–12 GB GPUs</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`upscale` (SD x4)</TableCell>
+      <TableCell>~8 GB</TableCell>
+      <TableCell>Smaller than generation models; pairs with Whisper on 16 GB</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`segment-anything-2` (large)</TableCell>
+      <TableCell>~12–24 GB</TableCell>
+      <TableCell>Variant-dependent; check model card for exact requirement</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+A 24 GB GPU holds one large diffusion model warm, with a small pipeline (Whisper or BLIP) warm on the same card when using a multi-GPU system. Keep multiple large diffusion models off a single 24 GB GPU — the Beta constraint blocks it, and VRAM is insufficient anyway.
+
+<CustomDivider middleText="Model Rotation" />
+
+## Model rotation by demand
+
+Demand on the Livepeer AI network shifts over time. A model leading one week often falls back the next as new models are listed or gateway preferences change. Warm model selection should track demand and revenue opportunity.
+
+### Checking current demand
+
+Visit [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) weekly. Filter by pipeline to see which models active gateways are requesting. Models with the most gateway registrations are receiving the most routing traffic.
+
+The [Livepeer Explorer AI leaderboard](https://explorer.livepeer.org) shows per-orchestrator earnings data, which reveals which price tiers and pipelines are earning the most jobs.
+
+### Rotating the warm model
+
+To swap which model is warm, update `aiModels.json` and restart the AI worker:
+
+```json icon="code" title="aiModels.json — rotate warm model"
+[
+  {
+    "pipeline": "text-to-image",
+    "model_id": "SG161222/RealVisXL_V4.0_Lightning",
+    "price_per_unit": 4768371,
+    "warm": true
+  },
+  {
+    "pipeline": "text-to-image",
+    "model_id": "ByteDance/SDXL-Lightning",
+    "price_per_unit": 4768371,
+    "warm": false
+  }
+]
+```
+
+The model with `"warm": true` loads at startup. The cold entry is available but will incur first-request latency. After restarting the AI worker container, verify the new warm model appears with **Warm** status at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities).
+
+Restart the AI worker container and leave the full go-livepeer process running to minimise downtime:
+
+```bash icon="terminal" title="Restart the AI worker"
+docker restart <ai-runner-container-name>
+```
+
+{/* FACT CHECK: Confirm that restarting only the AI runner container while leaving go-livepeer running correctly picks up aiModels.json changes. Rick to verify. */}
+
+<CustomDivider middleText="Optimisation Flags" />
+
+## Optimisation flags
+
+Optimisation flags apply to **warm diffusion models only** — `text-to-image`, `image-to-image`, and `upscale` entries with `"warm": true`. They have no effect on cold models or on non-diffusion pipelines.
+
+Both flags are experimental. Apply one at a time and verify output quality before serving jobs.
+
+<BorderedBox variant="accent">
+  <Tabs>
+    <Tab title="SFAST" icon="bolt">
+      **SFAST (Stable Fast)** compiles the diffusion model's compute graph on first run. Subsequent inferences skip redundant operations, delivering up to 25% faster inference with no measurable quality reduction.
+
+      The first inference after startup is slower than normal — compilation overhead applies once. Subsequent requests are faster.
+
+      ```json icon="code" title="Enabling SFAST"
+      {
+        "pipeline": "text-to-image",
+        "model_id": "SG161222/RealVisXL_V4.0_Lightning",
+        "price_per_unit": 4768371,
+        "warm": true,
+        "optimization_flags": { "SFAST": true }
+      }
+      ```
+
+      Best for: operators processing frequent repeated requests on the same warm model, where the compilation overhead amortises across many jobs.
+    </Tab>
+    <Tab title="DEEPCACHE" icon="database">
+      **DEEPCACHE** caches intermediate diffusion steps to reduce redundant recomputation across inference calls. Delivers up to 50% faster inference with minor quality reduction (slight reduction in fine detail at high step counts).
+
+      Quality degradation is more visible at low step counts. Reserve DEEPCACHE for standard-step models. Lightning and Turbo variants are already step-optimised for 1 to 4 inference steps, and DEEPCACHE degrades their output without adding speed.
+
+      ```json icon="code" title="Enabling DEEPCACHE"
+      {
+        "pipeline": "text-to-image",
+        "model_id": "stabilityai/stable-diffusion-xl-base-1.0",
+        "price_per_unit": 4768371,
+        "warm": true,
+        "optimization_flags": { "DEEPCACHE": true }
+      }
+      ```
+
+      Best for: high-quality base SDXL models at normal step counts (20+), where the 50% speed gain justifies the minor quality trade-off.
+    </Tab>
+  </Tabs>
+</BorderedBox>
+
+**SFAST and DEEPCACHE cannot be combined.** Set only one, or neither, in `optimization_flags`.
+
+<Warning>
+  Reserve DEEPCACHE for standard-step models. Lightning and Turbo variants (for example `ByteDance/SDXL-Lightning` and `SG161222/RealVisXL_V4.0_Lightning`) operate at 1 to 4 inference steps, so DEEPCACHE degrades output quality without adding speed.
+</Warning>
+
+<CustomDivider middleText="Monitoring" />
+
+## Monitoring model loading
+
+Verify model state after startup by checking the AI runner container logs:
+
+```bash icon="terminal" title="Check model loading logs"
+docker logs <ai-runner-container> 2>&1 | grep -E "warm|loaded|error" | tail -30
+```
+
+Then confirm via the network registry. Your orchestrator should appear under the correct pipeline with **Warm** status:
+
+[tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)
+
+A warm model missing from the registry after 5 minutes usually indicates one of these causes:
+- `Error loading warm model` — warm model conflict (too many `"warm": true` entries for available GPUs)
+- Container restart loops — check `docker ps` for restart counts
+- Model download still in progress — warm models must finish downloading before the container loads them
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Model Hosting" icon="hard-drive" href="/v2/orchestrators/guides/ai-and-job-workloads/model-hosting" arrow horizontal>
+    Download mechanics, storage layout, HuggingFace sourcing, and gated model access.
+  </Card>
+  <Card title="AI Inference Operations" icon="microchip" href="/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations" arrow horizontal>
+    Full aiModels.json reference and pipeline architecture.
+  </Card>
+  <Card title="Model Demand Reference" icon="chart-bar" href="/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference" arrow horizontal>
+    VRAM requirements and demand context for all supported pipelines.
+  </Card>
+  <Card title="Capacity Planning" icon="gauge" href="/v2/orchestrators/guides/config-and-optimisation/capacity-planning" arrow horizontal>
+    VRAM budgeting and the capacity field for AI pipeline concurrency.
+  </Card>
+</CardGroup>

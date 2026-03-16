@@ -1,0 +1,84 @@
+---
+title: 'The Livepeer Open Source Stack'
+description: 'Maps the main Livepeer open-source repositories — go-livepeer, livepeer-protocol, ai-worker, comfystream, and livepeer.js — and explains how they connect, for developers wanting to contribute.'
+sidebarTitle: 'OSS Stack'
+keywords: ["livepeer", "open source", "go-livepeer", "protocol", "ai-worker", "comfystream", "contribute", "SPE", "OSS"]
+pageType: 'concept'
+audience: 'developer'
+status: 'draft'
+---
+
+The Livepeer network is built entirely in the open. Every component — from the Go node implementation to the Solidity staking contracts to the AI inference runtime — lives in public repositories on GitHub under the `livepeer` organisation.
+
+This page maps the main repos, explains how they connect, and points you to the right starting point for the kind of contribution you want to make.
+
+---
+
+## Repo map
+
+| Repo | What it does | Language | Role in the stack |
+|------|-------------|----------|------------------|
+| [`livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer) | The Livepeer node — implements Broadcaster, Orchestrator, Transcoder, and Gateway roles | Go | Core runtime; everything else depends on or connects to this |
+| [`livepeer/livepeer-protocol`](https://github.com/livepeer/livepeer-protocol) | Solidity smart contracts governing staking, bonding, and on-chain job settlement on Arbitrum | Solidity | Protocol layer; go-livepeer calls these contracts for on-chain operations |
+| [`livepeer/ai-worker`](https://github.com/livepeer/ai-worker) | The AI runner — containerised Python inference service for batch and real-time AI pipelines | Python | go-livepeer spawns `ai-runner` Docker containers per pipeline to handle inference |
+| [`livepeer/comfystream`](https://github.com/livepeer/comfystream) | Real-time AI video pipeline engine built on ComfyUI; the primary tool for building `live-video-to-video` workflows | Python | Connects to the Livepeer network via the trickle protocol (see pytrickle) |
+| [`livepeer/pytrickle`](https://github.com/livepeer/pytrickle) | Python SDK for the trickle streaming protocol — the transport layer used by comfystream and BYOC pipelines | Python | Transport layer; used by comfystream and by custom BYOC containers (via PyTrickle `FrameProcessor`) |
+| [`livepeer/livepeer.js`](https://github.com/livepeer/livepeer.js) / [`livepeer/ui-kit`](https://github.com/livepeer/ui-kit) | Frontend SDK and React components for integrating Livepeer video into web applications | TypeScript / React | Application layer; independent of the AI and protocol stack |
+| [`livepeer/docs`](https://github.com/livepeer/docs) | This documentation site | MDX (Mintlify) | Docs; you are reading the output of this repo right now |
+
+[//]: # (REVIEW: Confirm whether livepeer.js has fully moved to livepeer/ui-kit or if both repos remain active. Verify with Rick. Also confirm livepeer/pipelines repo purpose — it appears to be a newer product repo separate from go-livepeer.)
+
+---
+
+## How the repos connect
+
+`go-livepeer` is the foundation. It implements the node software that every participant in the network runs — in Gateway mode, Orchestrator mode, or both. When AI inference is enabled, `go-livepeer` spawns one or more `ai-runner` Docker containers (from `livepeer/ai-worker`) per GPU, and proxies inference requests to them via a local REST interface.
+
+`livepeer-protocol` defines the on-chain rules. The Solidity contracts on Arbitrum govern staking, bonding, reward distribution, and slashing. `go-livepeer` calls these contracts when a node registers on-chain or settles payments. Off-chain AI gateways bypass this layer entirely — they talk directly to orchestrators without on-chain settlement.
+
+`comfystream` sits above `go-livepeer` for the real-time AI path. It runs alongside ComfyUI and uses `pytrickle` to exchange frames with an orchestrator over the trickle streaming protocol. A BYOC developer using `pytrickle` directly implements their own `FrameProcessor` class — the same interface that `comfystream` uses internally.
+
+`livepeer.js` / `ui-kit` is independent of the above. It is the application SDK for developers building Studio-integrated video apps — stream playback, upload, asset management. It does not interact with `go-livepeer` directly.
+
+---
+
+## Where to start contributing
+
+| If you want to… | Start with | Look for |
+|----------------|-----------|---------|
+| **Build or improve AI pipelines** (batch inference, new pipeline types) | [`livepeer/ai-worker`](https://github.com/livepeer/ai-worker) | Open issues and `runner/pipelines/` Python modules |
+| **Build real-time AI workflows** (ComfyStream, BYOC, trickle transport) | [`livepeer/comfystream`](https://github.com/livepeer/comfystream) or [`livepeer/pytrickle`](https://github.com/livepeer/pytrickle) | Open issues; ask in `#comfystream` Discord |
+| **Contribute to the core node** (gateway, orchestrator, transcoder logic) | [`livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer) | "Contributing to go-livepeer" guide in the README; open issues |
+| **Work on protocol contracts** (staking, bonding, governance) | [`livepeer/livepeer-protocol`](https://github.com/livepeer/livepeer-protocol) | Open issues; Protocol R&D SPE (Sidestream) for mentorship |
+| **Build the frontend SDK** (player, React components, Studio API integration) | [`livepeer/ui-kit`](https://github.com/livepeer/ui-kit) | Open issues; `#developers` Discord |
+| **Improve documentation** | [`livepeer/docs`](https://github.com/livepeer/docs) — branch `docs-v2` | Open issues tagged `docs`; contribution guide |
+
+All repositories accept pull requests. The `go-livepeer` README links directly to a contributing guide. For `ai-worker` and `comfystream`, open issues are the best starting point — ask in the relevant Discord channel (`#comfystream`, `#developers`, `#protocol-development`) before starting work on anything substantial.
+
+---
+
+## Contributing pathways
+
+Most contributions start informally — a bug fix, a PR on an issue you ran into, a node in `ai-worker` you needed for your own project. Many contributors move from there into more sustained, funded work.
+
+The Livepeer ecosystem funds independent development through **Special Purpose Entities (SPEs)** — focused teams that propose specific work to the community treasury, receive a LPT grant on approval, and are accountable to the community for delivery. Active SPEs cover AI infrastructure (Cloud SPE, MuxionLabs/AI SPE), protocol security (Sidestream), network-as-a-platform tooling (Cloud SPE / NaaP), governance (GovWorks), and video infrastructure (Streamplace).
+
+The path from contributor to SPE grantee is not formal — it runs through the Forum. A team builds a track record, drafts a pre-proposal, collects community feedback, then submits a full treasury proposal for a governance vote. SPE funding is ongoing (monthly or milestone-based) rather than a one-time grant.
+
+For the full picture on current opportunities, open roles within SPEs, and how to get involved, see [OSS Opportunities](/v2/developers/opportunities/oss-contributions).
+
+---
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Contributor Quickstart" icon="code-pull-request" href="/v2/developers/get-started/contributor-quickstart">
+    Step-by-step guide to setting up a local dev environment and submitting your first PR.
+  </Card>
+  <Card title="Contribution Guide" icon="book" href="/v2/developers/guides/contribution-guide">
+    Standards, conventions, and review process across Livepeer repos.
+  </Card>
+  <Card title="OSS Opportunities" icon="hand-holding-heart" href="/v2/developers/opportunities/oss-contributions">
+    Current open roles, bounties, and SPE opportunities across the ecosystem.
+  </Card>
+</CardGroup>

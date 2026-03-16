@@ -1,17 +1,22 @@
 /**
- * LivepeerSVG - Inline SVG version of the Livepeer logo
- *
- * @description
- * Renders the Livepeer logo as an inline SVG element.
- * Uses em units for responsive sizing.
- *
- * @param {number} [size=24] - Size of the icon (currently unused, uses 1em)
- * @param {Object} props - Additional SVG props
- *
+ * @component LivepeerSVG
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Livepeer SVG primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies LivepeerIcon, LivepeerIconFlipped, LivepeerIconOld
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @param {number} [size=24] - size prop.
+ * @param {any} props - props prop.
  * @example
- * <LivepeerSVG size={32} />
- *
- * @author Livepeer Documentation Team
+ * <LivepeerSVG props="example" />
  */
 export const LivepeerSVG = ({ size = 24, ...props }) => {
   return (
@@ -23,7 +28,7 @@ export const LivepeerSVG = ({ size = 24, ...props }) => {
       {...props}
     >
       <path
-        fill="#fff"
+        fill="currentColor"
         fillRule="evenodd"
         d="M.017.377v71.028h71.027V.377H.017Zm130.355 82.72v71.028H201.4V83.097h-71.028Zm130.6 153.28v-71.028H332v71.028h-71.028Zm-130.6 12.185v71.028H201.4v-71.028h-71.028ZM.017 402.31v-71.027h71.027v71.027H.017Zm0-236.492v71.028h71.027v-71.028H.017Z"
         clipRule="evenodd"
@@ -33,18 +38,23 @@ export const LivepeerSVG = ({ size = 24, ...props }) => {
 };
 
 /**
- * LivepeerIconOld - Legacy Livepeer icon component
- *
- * @description
- * Displays the Livepeer logo using the light symbol SVG file.
- * This is the older version of the icon component.
- *
- * @param {Object} props - Icon component props
- *
+ * @component LivepeerIconOld
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Livepeer Icon Old primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies LivepeerIcon, LivepeerIconFlipped, LivepeerSVG
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @param {any} props - props prop.
  * @example
- * <LivepeerIconOld size={20} />
- *
- * @author Livepeer Documentation Team
+ * <LivepeerIconOld props="example" />
  */
 export const LivepeerIconOld = ({ ...props }) => {
   return (
@@ -56,18 +66,23 @@ export const LivepeerIconOld = ({ ...props }) => {
 };
 
 /**
- * LivepeerIconFlipped - Horizontally flipped Livepeer icon
- *
- * @description
- * Displays the Livepeer logo flipped horizontally using CSS transform.
- * Useful for decorative purposes or directional indicators.
- *
- * @param {Object} props - Icon component props
- *
+ * @component LivepeerIconFlipped
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Livepeer Icon Flipped primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies LivepeerIcon, LivepeerIconOld, LivepeerSVG
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @param {any} props - props prop.
  * @example
- * <LivepeerIconFlipped size={20} />
- *
- * @author Livepeer Documentation Team
+ * <LivepeerIconFlipped props="example" />
  */
 export const LivepeerIconFlipped = ({ ...props }) => {
   return (
@@ -81,28 +96,32 @@ export const LivepeerIconFlipped = ({ ...props }) => {
 };
 
 /**
- * LivepeerIcon - Theme-aware Livepeer icon component
- *
- * @description
- * Displays the Livepeer logo with automatic color adaptation for light/dark themes.
- * Uses CSS custom properties for theme-aware coloring.
- *
- * @param {number} [size=16] - Size of the icon in pixels
- * @param {string} [color] - Custom color override (defaults to theme-aware color)
- * @param {Object} props - Additional Icon component props
- *
+ * @component LivepeerIcon
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Livepeer Icon primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies LivepeerIconFlipped, LivepeerIconOld, LivepeerSVG
+ * @usedIn v2/home/mission-control.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @param {number} [size=16] - size prop.
+ * @param {any} color - color prop.
+ * @param {any} props - props prop.
  * @example
- * <LivepeerIcon size={24} />
- * <LivepeerIcon size={20} color="#ff0000" />
- *
- * @author Livepeer Documentation Team
+ * <LivepeerIcon color="example" props="example" />
  */
 export const LivepeerIcon = ({ size = 16, color, ...props }) => {
   return (
     <span
       style={{
         display: "inline-flex",
-        color: color || "var(--livepeer-icon-color, #a1a1aa)",
+        color: color || "var(--livepeer-icon-color, var(--lp-color-text-muted))",
       }}
       className="livepeer-icon"
     >
@@ -113,14 +132,14 @@ export const LivepeerIcon = ({ size = 16, color, ...props }) => {
       />
       <style>{`
         :root {
-          --livepeer-icon-color: #6b7280;
+          --livepeer-icon-color: var(--lp-color-text-secondary);
         }
         .dark {
-          --livepeer-icon-color: #a1a1aa;
+          --livepeer-icon-color: var(--lp-color-text-muted);
         }
         @media (prefers-color-scheme: dark) {
           :root:not(.light) {
-            --livepeer-icon-color: #a1a1aa;
+            --livepeer-icon-color: var(--lp-color-text-muted);
           }
         }
       `}</style>

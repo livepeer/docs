@@ -1,6 +1,6 @@
 # tasks/reports/quality-accessibility/docs-usefulness Audit
 
-Generated: 2026-03-03T09:45:12.427Z
+Generated: 2026-03-09T04:26:18.413Z
 Scope: `tasks/reports/quality-accessibility/docs-usefulness`
 Total files in scope: 19
 

@@ -1,0 +1,339 @@
+---
+title: 'Pricing Strategy'
+sidebarTitle: 'Pricing Strategy'
+description: >-
+  Set competitive pricing for video and AI workloads on a Livepeer orchestrator.
+  Covers pricePerUnit, per-pipeline AI pricing in aiModels.json, pricePerGateway,
+  autoAdjustPrice, and market positioning methodology.
+keywords:
+  - livepeer
+  - orchestrator
+  - pricing
+  - pricePerUnit
+  - pricePerGateway
+  - autoAdjustPrice
+  - aiModels.json
+  - wei
+  - USD
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: draft
+lastVerified: '2026-03-16'
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+<Tip>
+  Gateways filter orchestrators by price before routing jobs. An orchestrator priced above a gateway's cap receives no work from that gateway. An orchestrator priced below the network floor earns less than its operating costs. Both extremes produce zero net income.
+</Tip>
+
+---
+
+Livepeer pricing operates in two domains: **video transcoding** (a single global price per pixel) and **AI inference** (per-pipeline, per-model pricing in `aiModels.json`). Commercial relationships add a third layer: per-gateway custom pricing via `-pricePerGateway`.
+
+The correct price for each domain is derived from the same principle: find the range where active gateways are accepting work, then position within that range based on hardware cost.
+
+<CustomDivider middleText="Video Pricing" />
+
+## Video pricing
+
+Video transcoding is priced in **wei per pixel**. One ETH equals 1,000,000,000,000,000,000 wei (1e18). The pixel count for a job is `width × height × output_renditions`.
+
+The active network range changes as ETH price, gateway caps, and redemption overhead move. Use the current Livepeer Explorer and your own routed volume as the reference point. Historical ranges are only context.
+
+{/* FACT CHECK: Verify current active network price range with Rick / tools.livepeer.cloud. The 500-2,000 wei figure is from config-draft research (March 2026) and may have shifted. */}
+
+### Setting the price
+
+Set `-pricePerUnit` at startup:
+
+```bash icon="terminal" title="Video price startup flags"
+livepeer \
+  -orchestrator \
+  -transcoder \
+  -pricePerUnit 1000 \
+  -pixelsPerUnit 1 \
+  ...
+```
+
+`-pixelsPerUnit` is the denominator. Leave it at `1` unless you prefer expressing price over a larger pixel batch for readability.
+
+To price in USD, append the `USD` suffix. go-livepeer converts the value to wei at runtime using a Chainlink ETH/USD price feed on Arbitrum:
+
+```bash icon="terminal" title="Video price in USD"
+-pixelsPerUnit 1000000000000 \
+-pricePerUnit 0.41USD
+```
+
+This example sets a price of $0.41 per trillion pixels. Adjust `pixelsPerUnit` to keep `pricePerUnit` as a readable decimal. The `-pixelsPerUnit` flag supports exponential notation (`1e12`); `-pricePerUnit` does not.
+
+{/* FACT CHECK: Confirm -priceFeedAddr is not required when using USD notation on Arbitrum mainnet (the default feed should be pre-configured in go-livepeer). Rick to verify. */}
+
+### Surveying the market
+
+Check [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) for the current price distribution across the active set. Active orchestrators are listed with their advertised price. A practical starting point is the lower half of currently active prices, then adjust upward only after you confirm that job volume still holds.
+
+Use `livepeer_cli` to inspect connected orchestrators and their current prices from your node's perspective.
+
+### autoAdjustPrice
+
+By default, go-livepeer automatically adjusts the price it advertises to gateways based on the estimated cost of ticket redemption. When gas prices rise, the overhead for redeeming a winning ticket increases as a percentage of the ticket face value. The adjustment compensates for this:
+
+| Overhead | Base price 1,000 wei | Advertised price |
+|----------|---------------------|-----------------|
+| 1% | 1,000 wei | 1,010 wei |
+| 20% | 1,000 wei | 1,200 wei |
+| 50% | 1,000 wei | 1,500 wei |
+
+The adjustment is automatic and continuous. To disable it and advertise a fixed price regardless of gas conditions:
+
+```bash icon="terminal" title="Disable autoAdjustPrice"
+-autoAdjustPrice=false
+```
+
+Disabling autoAdjustPrice is appropriate when you want a predictable advertised rate for commercial relationships, or when you are setting per-gateway prices manually. For general network participation, keep the default on.
+
+{/* FACT CHECK: Confirm -autoAdjustPrice is production-stable and not gated behind any feature flag. Rick to verify current go-livepeer source. */}
+
+<CustomDivider middleText="AI Pricing" />
+
+## AI pricing
+
+AI inference pricing is configured per pipeline and per model in `aiModels.json`. Each entry sets its own `price_per_unit` independently of the video transcoding price.
+
+### Pricing units by pipeline
+
+The unit of work varies by pipeline type:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Pipeline</TableCell>
+      <TableCell header>Pricing unit</TableCell>
+      <TableCell header>Typical price_per_unit</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`text-to-image`</TableCell>
+      <TableCell>Per output pixel</TableCell>
+      <TableCell>~4,768,371 wei</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-image`</TableCell>
+      <TableCell>Per output pixel</TableCell>
+      <TableCell>~4,768,371 wei</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-video`</TableCell>
+      <TableCell>Per output pixel</TableCell>
+      <TableCell>~9,536,742 wei</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`upscale`</TableCell>
+      <TableCell>Per input pixel</TableCell>
+      <TableCell>~4,768,371 wei</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`audio-to-text`</TableCell>
+      <TableCell>Per millisecond of audio</TableCell>
+      <TableCell>~12,882,811 wei</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`segment-anything-2`</TableCell>
+      <TableCell>Per input pixel</TableCell>
+      <TableCell>~4,768,371 wei</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`image-to-text`</TableCell>
+      <TableCell>Per input pixel</TableCell>
+      <TableCell>~1,192,093 wei</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`text-to-speech`</TableCell>
+      <TableCell>Per character or per ms of audio</TableCell>
+      <TableCell>~5,960,465 wei</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`llm`</TableCell>
+      <TableCell>Per custom unit (typically per 1M tokens)</TableCell>
+      <TableCell>USD-denominated (see below)</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+{/* FACT CHECK: Confirm typical price ranges for each pipeline with current network data from tools.livepeer.cloud/ai/network-capabilities. The wei figures above are from diffusion-pipeline-setup.mdx (March 2026) and should be treated as illustrative baselines, not current market rates. */}
+
+### aiModels.json pricing fields
+
+```json icon="code" title="aiModels.json pricing fields"
+{
+  "pipeline": "text-to-image",
+  "model_id": "SG161222/RealVisXL_V4.0_Lightning",
+  "price_per_unit": 4768371,
+  "pixels_per_unit": 1,
+  "warm": true
+}
+```
+
+The `price_per_unit` field accepts:
+- **Integer** — value in wei
+- **USD string** — scientific notation with `USD` suffix, e.g. `"0.5e-3USD"` (requires `"currency": "USD"`)
+
+The `pixels_per_unit` field adjusts pricing granularity. Setting it to a larger value (e.g. `1000000`) lets you express `price_per_unit` as a more readable number over a batch of pixels.
+
+### USD notation for AI pricing
+
+USD-denominated AI pricing is particularly useful for LLM pipelines, where per-token economics are easier to reason about than wei values:
+
+```json icon="code" title="LLM USD pricing example"
+{
+  "pipeline": "llm",
+  "model_id": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+  "price_per_unit": 0.18,
+  "currency": "USD",
+  "pixels_per_unit": 1000000,
+  "url": "http://llm_runner:8000",
+  "warm": true
+}
+```
+
+For image pipelines, USD notation eliminates the need to convert from wei manually:
+
+```json icon="code" title="Image pipeline USD pricing"
+{
+  "pipeline": "text-to-image",
+  "model_id": "SG161222/RealVisXL_V4.0_Lightning",
+  "price_per_unit": "0.5e-3USD",
+  "currency": "USD",
+  "warm": true
+}
+```
+
+`0.5e-3USD` is $0.0005 per megapixel at the ETH/USD rate at runtime. The conversion uses the same Chainlink price feed as the `-pricePerUnit` USD mode for video.
+
+### Checking competitive AI rates
+
+Visit [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) and filter by pipeline to see which price tiers are currently earning jobs. Orchestrators priced above gateway caps receive no work for that pipeline. Start at or below the median for the pipeline you are entering, then adjust based on job volume.
+
+<CustomDivider middleText="Per-Gateway Pricing" />
+
+## Per-gateway pricing
+
+The `-pricePerGateway` flag sets a custom price for a specific gateway address, overriding your global `-pricePerUnit` for jobs from that gateway. This is the mechanism for commercial relationships where you negotiate a custom rate with a gateway operator.
+
+The current CLI reference documents the value as either a JSON payload or a path to a JSON file:
+
+```json icon="code" title="pricePerGateway JSON"
+{
+  "gateways": [
+    {
+      "ethaddress": "0xGatewayAddress1",
+      "priceperunit": 1000,
+      "pixelsperunit": 1
+    },
+    {
+      "ethaddress": "0xGatewayAddress2",
+      "priceperunit": 1200,
+      "pixelsperunit": 1
+    }
+  ]
+}
+```
+
+Use `-pricePerGateway` when:
+- A gateway operator negotiates a dedicated rate in exchange for consistent job volume
+- You are running a combined orchestrator and gateway on the same operator stack
+- You want to offer a preferential rate to a specific partner while keeping a higher public rate
+
+<CustomDivider middleText="Pricing Flag Reference" />
+
+## Pricing flag reference
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Flag</TableCell>
+      <TableCell header>Scope</TableCell>
+      <TableCell header>Default</TableCell>
+      <TableCell header>Notes</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`-pricePerUnit`</TableCell>
+      <TableCell>Video</TableCell>
+      <TableCell>Required</TableCell>
+      <TableCell>Wei per pixel, or USD string (e.g. `0.41USD`)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-pixelsPerUnit`</TableCell>
+      <TableCell>Video</TableCell>
+      <TableCell>`1`</TableCell>
+      <TableCell>Pixels per pricing unit; adjust for readability</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-autoAdjustPrice`</TableCell>
+      <TableCell>Video</TableCell>
+      <TableCell>`true`</TableCell>
+      <TableCell>Adjusts advertised price for ticket redemption overhead; set `false` for fixed price</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-pricePerGateway`</TableCell>
+      <TableCell>Video</TableCell>
+      <TableCell>None</TableCell>
+      <TableCell>Custom price for a specific gateway address</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-priceFeedAddr`</TableCell>
+      <TableCell>Both (USD mode)</TableCell>
+      <TableCell>Arbitrum ETH/USD feed</TableCell>
+      <TableCell>Chainlink oracle address for custom currency or non-mainnet deployments</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`price_per_unit` (aiModels.json)</TableCell>
+      <TableCell>AI</TableCell>
+      <TableCell>Required per entry</TableCell>
+      <TableCell>Integer (wei) or USD string per pipeline entry</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`pixels_per_unit` (aiModels.json)</TableCell>
+      <TableCell>AI</TableCell>
+      <TableCell>`1`</TableCell>
+      <TableCell>Pricing granularity per pipeline entry</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`currency` (aiModels.json)</TableCell>
+      <TableCell>AI</TableCell>
+      <TableCell>None (wei)</TableCell>
+      <TableCell>Set to `"USD"` when using USD notation in `price_per_unit`</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Gateway Pricing Strategy" icon="sliders" href="/v2/gateways/guides/payments-and-pricing/pricing-strategy" arrow horizontal>
+    The buy-side mirror: how gateways set price caps and filter orchestrators.
+  </Card>
+  <Card title="Gateway Relationships" icon="handshake" href="/v2/orchestrators/guides/advanced-operations/gateway-relationships" arrow horizontal>
+    How gateways evaluate and select orchestrators, including price as a filter criterion.
+  </Card>
+  <Card title="Earning Model" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earning-model" arrow horizontal>
+    How pricing decisions translate into fee earnings alongside LPT inflation rewards.
+  </Card>
+  <Card title="AI Inference Operations" icon="microchip" href="/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations" arrow horizontal>
+    Full aiModels.json reference and pipeline configuration.
+  </Card>
+</CardGroup>

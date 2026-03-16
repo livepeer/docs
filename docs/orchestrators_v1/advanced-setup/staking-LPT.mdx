@@ -1,0 +1,44 @@
+---
+title: Staking LPT
+sidebarTitle: Staking LPT
+description: >-
+  Why orchestrators stake LPT, how bonding works, and how stake affects video vs
+  AI work.
+keywords:
+  - livepeer
+  - orchestrators
+  - staking
+  - LPT
+  - bonding
+  - active set
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: orchestrator
+---
+
+Staking **Livepeer Token (LPT)** is a protocol requirement for participating as an orchestrator. It provides Sybil resistance, economic collateral for slashing, and determines **video** work allocation (the active set is the top 100 by stake). **AI** job routing is not stake-weighted; it is based on capability, price, and latency.
+
+## Bonding
+
+You must **bond LPT to yourself** to register as a transcoder, earn inflation rewards, and receive video work. Use [livepeer_cli](https://github.com/livepeer/go-livepeer) or the [Explorer](https://explorer.livepeer.org/) to bond. Bonded stake becomes active in the next round. Unbonding starts a lock-up period defined by the protocol.
+
+## Delegated stake
+
+Delegators can bond their LPT to your orchestrator. Your **total active stake** = self-stake + delegated stake. This total sets your share of inflation rewards and your probability of being selected for video jobs. Attracting delegators often means offering a competitive reward cut and fee share; see [Rewards and fees](./rewards-and-fees) and [Delegation](./delegation).
+
+## Video vs AI
+
+- **Video transcoding:** Selection is proportional to bonded stake. Higher stake means more video segments.
+- **AI inference:** Routing is based on price, latency, and GPU capability. Stake does **not** determine AI job assignment.
+
+## See also
+
+<Columns cols={2}>
+  <Card title="Rewards and fees" icon="coins" href="./rewards-and-fees" arrow />
+  <Card title="Delegation" icon="users" href="./delegation" arrow />
+  <Card title="Install and activate" icon="rocket" href="../setting-up-an-orchestrator/install-go-livepeer" arrow />
+  <Card title="Explorer" icon="external-link" href="https://explorer.livepeer.org" arrow />
+</Columns>

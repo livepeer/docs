@@ -1,35 +1,33 @@
 /**
- * Frame Mode Headers - Custom heading components for Mintlify frame mode
+ * @component PageHeader
+ * @category page-structure
+ * @tier pattern
+ * @status stable
+ * @description Renders the page header component
+ * @contentAffinity universal
+ * @owner @livepeer/docs-team
+ * @dependencies H1, H2, H3, H4
+ * @usedIn v2/resources/documentation-guide/component-library/component-library.mdx
+ *   v2/resources/documentation-guide/component-library/display.mdx
+ *   v2/resources/documentation-guide/component-library/overview.mdx
+ *   v2/resources/documentation-guide/style-guide.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
  *
- * @description
- * These components provide styled headings (H1-H6) that work properly in Mintlify's
- * frame mode where default markdown headings may not render correctly.
- *
- * All components support optional icons at the beginning of the heading.
- * Icons use theme-aware colors that adapt to light/dark mode.
- *
- * @note Icon is a Mintlify global component - no import needed
- * @note Uses global CSS variables (--accent, --hero-text, --text, --border) for theming
- *
- * @author Alison Haire
- */
-
-/**
- * H1 - Custom H1 heading component for frame mode
- *
- * @param {string} children - The heading text
- * @param {string} icon - Optional icon name or path to theme-aware SVG (e.g., "rocket", "/snippets/assets/logos/icon.svg")
- * @param {number} iconSize - Size of the icon (default: 32)
- * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
- * @param {string} align - Text alignment: "left", "center", "right" (default: "left")
- * @param {string} gap - Gap between icon and text (default: "0.75rem")
+ * @param {React.ReactNode} title - Title text rendered by the component.
+ * @param {React.ReactNode} subtitle - Subtitle text rendered by the component.
+ * @param {React.ReactNode} description - Primary content rendered by the component.
+ * @param {React.ReactNode} children - Content rendered inside the component.
+ * @param {string} titleColor - Title color used by the component.
+ * @param {string} subtitleColor - Subtitle color used by the component.
+ * @param {string} descriptionColor - Description color used by the component.
  *
  * @example
- * <H1>Simple Heading</H1>
- * <H1 icon="rocket">Heading with Icon</H1>
- * <H1 icon="/snippets/assets/logos/Livepeer-Logo-Symbol-Theme.svg" align="center">Centered with Theme Icon</H1>
+ * <PageHeader title="Example" subtitle="Example" description="Example" />
  */
-
 const PageHeader = ({
   title,
   subtitle,
@@ -39,6 +37,11 @@ const PageHeader = ({
   subtitleColor,
   descriptionColor,
 }) => {
+  if (!title && !subtitle && !description && children == null) {
+    console.warn("[PageHeader] Missing heading content");
+    return null;
+  }
+
   return (
     <div
       style={{
@@ -93,7 +96,7 @@ const PageHeader = ({
   );
 };
 
-// import { Starfield as HeroStarfield } from "/snippets/components/domain/SHARED/HeroGif.jsx";
+// import { Starfield as HeroStarfield } from "/snippets/components/page-structure/heroGif.jsx";
 // const PageHeader2 = ({
 //   title,
 //   subtitle,
@@ -124,7 +127,6 @@ const PageHeader = ({
 //             fontWeight: "bold",
 //             lineHeight: "1.2",
 //             marginBottom: "1rem",
-//             color: titleColor ?? ThemeData.light.heroText,
 //           }}
 //         >
 //           {title}
@@ -135,7 +137,6 @@ const PageHeader = ({
 //             style={{
 //               fontSize: "1.5rem",
 //               fontWeight: "500",
-//               color: subtitleColor ?? ThemeData.light.accent,
 //             }}
 //           >
 //             {subtitle}
@@ -147,7 +148,6 @@ const PageHeader = ({
 //             style={{
 //               fontSize: "1.1rem",
 //               marginTop: "1.5rem",
-//               color: descriptionColor ?? ThemeData.light.text,
 //             }}
 //           >
 //             {description}
@@ -164,6 +164,38 @@ const PageHeader = ({
 //   );
 // };
 
+/**
+ * @component H1
+ * @category page-structure
+ * @tier pattern
+ * @status stable
+ * @description Renders the h1 component
+ * @contentAffinity universal
+ * @owner @livepeer/docs-team
+ * @dependencies H2, H3, H4, H5
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx
+ *   v2/gateways/gateways-portal.mdx, v2/home/mission-control.mdx
+ *   v2/orchestrators/orchestrators-portal.mdx
+ *   v2/resources/documentation-guide/component-library/component-library.mdx
+ *   v2/resources/documentation-guide/component-library/display.mdx
+ *   v2/resources/documentation-guide/component-library/overview.mdx
+ *   v2/resources/documentation-guide/style-guide.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk medium
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
+ * @param {React.ReactNode} children - Content rendered inside the component.
+ * @param {string} icon - Icon configuration used by the component.
+ * @param {number} [iconSize=32] - Icon configuration used by the component.
+ * @param {string} iconColor - Icon configuration used by the component.
+ * @param {string} [align="left"] - Align used by the component.
+ * @param {string} [gap="0.75rem"] - Gap used by the component.
+ *
+ * @example
+ * <H1 icon="sparkles" iconColor="value" />
+ */
 const H1 = ({
   children,
   icon,
@@ -172,6 +204,11 @@ const H1 = ({
   align = "left",
   gap = "0.75rem",
 }) => {
+  if (children == null && !icon) {
+    console.warn("[H1] Missing heading content");
+    return null;
+  }
+
   const resolvedIconColor = iconColor || "var(--accent)";
 
   const containerStyle = {
@@ -213,6 +250,38 @@ const H1 = ({
  * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
  * @param {string} align - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} gap - Gap between icon and text (default: "0.75rem")
+ */
+/**
+ * @component H2
+ * @category page-structure
+ * @tier pattern
+ * @status stable
+ * @description H2 - Custom H2 heading component for frame mode
+ * @contentAffinity universal
+ * @owner @livepeer/docs-team
+ * @dependencies H3, H4
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx
+ *   v2/gateways/gateways-portal.mdx, v2/home/mission-control.mdx
+ *   v2/orchestrators/orchestrators-portal.mdx
+ *   v2/resources/documentation-guide/component-library/component-library.mdx
+ *   v2/resources/documentation-guide/component-library/display.mdx
+ *   v2/resources/documentation-guide/component-library/overview.mdx
+ *   v2/resources/documentation-guide/style-guide.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk medium
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
+ * @param {React.ReactNode} children - Content rendered inside the component.
+ * @param {string} icon - Icon configuration used by the component.
+ * @param {number} [iconSize=28] - Icon configuration used by the component.
+ * @param {string} iconColor - Icon configuration used by the component.
+ * @param {string} [align="left"] - Align used by the component.
+ * @param {string} [gap="0.75rem"] - Gap used by the component.
+ *
+ * @example
+ * <H2 icon="sparkles" iconColor="value" />
  */
 const H2 = ({
   children,
@@ -264,6 +333,35 @@ const H2 = ({
  * @param {string} align - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} gap - Gap between icon and text (default: "0.5rem")
  */
+/**
+ * @component H3
+ * @category page-structure
+ * @tier pattern
+ * @status stable
+ * @description H3 - Custom H3 heading component for frame mode
+ * @contentAffinity universal
+ * @owner @livepeer/docs-team
+ * @dependencies H4, H5
+ * @usedIn v2/community/community-portal.mdx
+ *   v2/resources/documentation-guide/component-library/component-library.mdx
+ *   v2/resources/documentation-guide/component-library/display.mdx
+ *   v2/resources/documentation-guide/component-library/overview.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
+ * @param {React.ReactNode} children - Content rendered inside the component.
+ * @param {string} icon - Icon configuration used by the component.
+ * @param {number} [iconSize=24] - Icon configuration used by the component.
+ * @param {string} iconColor - Icon configuration used by the component.
+ * @param {string} [align="left"] - Align used by the component.
+ * @param {string} [gap="0.5rem"] - Gap used by the component.
+ *
+ * @example
+ * <H3 icon="sparkles" iconColor="value" />
+ */
 const H3 = ({
   children,
   icon,
@@ -313,6 +411,34 @@ const H3 = ({
  * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
  * @param {string} align - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} gap - Gap between icon and text (default: "0.5rem")
+ */
+/**
+ * @component H4
+ * @category page-structure
+ * @tier pattern
+ * @status stable
+ * @description H4 - Custom H4 heading component for frame mode
+ * @contentAffinity universal
+ * @owner @livepeer/docs-team
+ * @dependencies H5, H6
+ * @usedIn v2/resources/documentation-guide/component-library/component-library.mdx
+ *   v2/resources/documentation-guide/component-library/display.mdx
+ *   v2/resources/documentation-guide/component-library/overview.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
+ * @param {React.ReactNode} children - Content rendered inside the component.
+ * @param {string} icon - Icon configuration used by the component.
+ * @param {number} [iconSize=20] - Icon configuration used by the component.
+ * @param {string} iconColor - Icon configuration used by the component.
+ * @param {string} [align="left"] - Align used by the component.
+ * @param {string} [gap="0.5rem"] - Gap used by the component.
+ *
+ * @example
+ * <H4 icon="sparkles" iconColor="value" />
  */
 const H4 = ({
   children,
@@ -364,6 +490,36 @@ const H4 = ({
  * @param {string} align - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} gap - Gap between icon and text (default: "0.5rem")
  */
+/**
+ * @component H5
+ * @category page-structure
+ * @tier pattern
+ * @status stable
+ * @description H5 - Custom H5 heading component for frame mode
+ * @contentAffinity universal
+ * @owner @livepeer/docs-team
+ * @dependencies H6, P
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx
+ *   v2/gateways/gateways-portal.mdx, v2/orchestrators/orchestrators-portal.mdx
+ *   v2/resources/documentation-guide/component-library/component-library.mdx
+ *   v2/resources/documentation-guide/component-library/display.mdx
+ *   v2/resources/documentation-guide/component-library/overview.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
+ * @param {React.ReactNode} children - Content rendered inside the component.
+ * @param {string} icon - Icon configuration used by the component.
+ * @param {number} [iconSize=18] - Icon configuration used by the component.
+ * @param {string} iconColor - Icon configuration used by the component.
+ * @param {string} [align="left"] - Align used by the component.
+ * @param {string} [gap="0.5rem"] - Gap used by the component.
+ *
+ * @example
+ * <H5 icon="sparkles" iconColor="value" />
+ */
 const H5 = ({
   children,
   icon,
@@ -413,6 +569,34 @@ const H5 = ({
  * @param {string} iconColor - Color of the icon (default: theme-aware accent color)
  * @param {string} align - Text alignment: "left", "center", "right" (default: "left")
  * @param {string} gap - Gap between icon and text (default: "0.5rem")
+ */
+/**
+ * @component H6
+ * @category page-structure
+ * @tier pattern
+ * @status stable
+ * @description H6 - Custom H6 heading component for frame mode
+ * @contentAffinity universal
+ * @owner @livepeer/docs-team
+ * @dependencies Divider, P
+ * @usedIn v2/resources/documentation-guide/component-library/component-library.mdx
+ *   v2/resources/documentation-guide/component-library/display.mdx
+ *   v2/resources/documentation-guide/component-library/overview.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
+ * @param {React.ReactNode} children - Content rendered inside the component.
+ * @param {string} icon - Icon configuration used by the component.
+ * @param {number} [iconSize=16] - Icon configuration used by the component.
+ * @param {string} iconColor - Icon configuration used by the component.
+ * @param {string} [align="left"] - Align used by the component.
+ * @param {string} [gap="0.5rem"] - Gap used by the component.
+ *
+ * @example
+ * <H6 icon="sparkles" iconColor="value" />
  */
 const H6 = ({
   children,
@@ -469,6 +653,38 @@ const H6 = ({
  * <P icon="info-circle">Paragraph with icon</P>
  * <P icon="/snippets/assets/logos/icon.svg" align="center">Centered with theme icon</P>
  */
+/**
+ * @component P
+ * @category page-structure
+ * @tier pattern
+ * @status stable
+ * @description P - Custom paragraph component for frame mode
+ * @contentAffinity universal
+ * @owner @livepeer/docs-team
+ * @dependencies Divider, H1, H2, H3, H4, H5, H6, PageHeader
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx
+ *   v2/gateways/gateways-portal.mdx, v2/home/mission-control.mdx
+ *   v2/orchestrators/orchestrators-portal.mdx
+ *   v2/resources/documentation-guide/component-library/component-library.mdx
+ *   v2/resources/documentation-guide/component-library/display.mdx
+ *   v2/resources/documentation-guide/component-library/overview.mdx
+ *   v2/resources/documentation-guide/snippets-inventory.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk medium
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
+ * @param {React.ReactNode} children - Content rendered inside the component.
+ * @param {string} icon - Icon configuration used by the component.
+ * @param {number} [iconSize=16] - Icon configuration used by the component.
+ * @param {string} iconColor - Icon configuration used by the component.
+ * @param {string} [align="left"] - Align used by the component.
+ * @param {string} [gap="0.5rem"] - Gap used by the component.
+ *
+ * @example
+ * <P icon="sparkles" iconColor="value" />
+ */
 const P = ({
   children,
   icon,
@@ -520,6 +736,32 @@ const P = ({
  * @example
  * <Divider />
  * <Divider margin="2rem 0" opacity={0.5} />
+ */
+/**
+ * @component Divider
+ * @category page-structure
+ * @tier pattern
+ * @status stable
+ * @description Renders a horizontal rule (---) with proper styling for frame mode. Uses theme-aware
+ *   border color that adapts to light and dark themes
+ * @contentAffinity universal
+ * @owner @livepeer/docs-team
+ * @dependencies H1, H2, H3, H4, H5, H6, P, PageHeader
+ * @usedIn v2/resources/documentation-guide/component-library/component-library.mdx
+ *   v2/resources/documentation-guide/component-library/display.mdx
+ *   v2/resources/documentation-guide/component-library/overview.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-08
+ *
+ * @param {string} color - Color used by the component.
+ * @param {string} [margin="1.5rem 0"] - Margin used by the component.
+ * @param {number} [opacity=0.2] - Opacity used by the component.
+ *
+ * @example
+ * <Divider color="value" />
  */
 const Divider = ({ color, margin = "1.5rem 0", opacity = 0.2 }) => {
   return (

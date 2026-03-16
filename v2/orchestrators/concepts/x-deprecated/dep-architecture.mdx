@@ -1,0 +1,316 @@
+---
+title: Orchestrator Architecture
+sidebarTitle: Architecture
+description: >-
+  How orchestrators fit into the Livepeer stack — layer position, system
+  interactions, request flow, and key components.
+keywords:
+  - livepeer
+  - orchestrators
+  - architecture
+  - gateway
+  - transcoder
+  - AI runner
+  - go-livepeer
+  - Arbitrum
+  - protocol
+  - request flow
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: orchestrator
+status: current
+lastVerified: 2026-03-13
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+This page explains where orchestrators sit in the Livepeer stack, how they interact with other network participants, how work flows through the system, and the key components involved.
+
+For what orchestrators *do*, see [Role](/v2/orchestrators/concepts/role). For the workloads they run, see [Capabilities](/v2/orchestrators/concepts/capabilities).
+
+<CustomDivider />
+
+## Layer position
+
+The Livepeer network has three functional layers. Orchestrators operate at the compute layer, bridging the protocol layer (on-chain) and the application layer (off-chain).
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d' }}}%%
+flowchart TB
+    classDef default stroke-width:2px
+
+    subgraph Application["Application Layer"]
+        Apps["Applications & Users"]
+        GW["Gateways"]
+    end
+
+    subgraph Compute["Compute Layer"]
+        OC["Orchestrator Controller\n(go-livepeer)"]
+        TR["Transcoder\n(GPU worker)"]
+        AI["AI Runner\n(inference container)"]
+    end
+
+    subgraph Protocol["Protocol Layer (Arbitrum One)"]
+        Staking["Staking & Bonding"]
+        Payments["Probabilistic Micropayments"]
+        Governance["Governance (LIPs)"]
+    end
+
+    Apps -->|"send jobs"| GW
+    GW -->|"route work"| OC
+    OC --> TR
+    OC --> AI
+    OC -->|"register, stake, reward"| Staking
+    GW -->|"issue payment tickets"| Payments
+    OC -->|"redeem tickets"| Payments
+    OC -->|"vote"| Governance
+```
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Layer</TableCell>
+    <TableCell header>Participants</TableCell>
+    <TableCell header>Responsibility</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Application**</TableCell>
+    <TableCell>Developers, end users, gateways</TableCell>
+    <TableCell>Ingest content, route jobs, deliver results</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Compute**</TableCell>
+    <TableCell>Orchestrators, transcoders, AI runners</TableCell>
+    <TableCell>Execute video and AI work on GPUs</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Protocol**</TableCell>
+    <TableCell>Arbitrum smart contracts</TableCell>
+    <TableCell>Staking, payments, governance, round management</TableCell>
+  </TableRow>
+</StyledTable>
+
+Orchestrators are the only participants that interact with all three layers — they receive work from gateways, execute it on GPU hardware, and settle on-chain.
+
+<CustomDivider />
+
+## System interactions
+
+An orchestrator interacts with four categories of actors:
+
+### Gateways
+
+Gateways are the demand side of the network. They receive jobs from applications (livestreams, AI requests) and select orchestrators to perform the work based on price, performance history, and stake weight.
+
+- Gateways discover orchestrators through the on-chain registry
+- Job routing uses a selection algorithm that factors in price (`-pricePerUnit`), latency, past performance, and stake
+- Payment is handled via probabilistic micropayment tickets attached to each job segment
+
+### Delegators
+
+Delegators stake LPT to orchestrators, increasing the orchestrator's total stake and improving selection probability. In return, orchestrators share a portion of rewards and fees (configured via reward cut and fee cut).
+
+- More delegated stake = higher ranking in the active set
+- Orchestrators compete for delegation by offering competitive cuts and maintaining good performance
+- See [Attracting Delegates](/v2/orchestrators/guides/staking-and-rewards/attracting-delegates)
+
+### GPU workers
+
+In the simplest setup, the orchestrator and transcoder run on the same machine as a single go-livepeer process. In split configurations, the orchestrator controller can route work to remote transcoder or AI runner processes.
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Configuration</TableCell>
+    <TableCell header>How it works</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Combined** (default)</TableCell>
+    <TableCell>One go-livepeer process runs as both orchestrator and transcoder. `-orchestrator -transcoder` flags.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Split O/T**</TableCell>
+    <TableCell>Orchestrator controller on one machine delegates GPU work to separate transcoder nodes. Used for multi-GPU or multi-machine setups.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**AI Runner**</TableCell>
+    <TableCell>A separate Docker container runs AI inference models. The orchestrator routes AI jobs to it via `aiModels.json`.</TableCell>
+  </TableRow>
+</StyledTable>
+
+See [Orchestrator-Transcoder Split](/v2/orchestrators/guides/advanced-operations/orchestrator-transcoder-setup) for the split configuration.
+
+### Arbitrum protocol
+
+The orchestrator's on-chain identity lives on Arbitrum One. Key interactions:
+
+- **Registration** — `livepeer_cli` submits a bond transaction to register as an orchestrator
+- **Reward calls** — once per round (~24 hours), the node calls `reward()` to mint new LPT
+- **Ticket redemption** — payment tickets from gateways are redeemed on-chain for ETH
+- **Governance** — orchestrators can vote on Livepeer Improvement Proposals (LIPs)
+
+<CustomDivider />
+
+## Request flow
+
+This is the lifecycle of a single job — from a user's request through execution and payment.
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2d9a67', 'lineColor': '#2d9a67', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d' }}}%%
+sequenceDiagram
+    participant App as Application
+    participant GW as Gateway
+    participant O as Orchestrator
+    participant GPU as GPU Worker
+    participant Arb as Arbitrum
+
+    App->>GW: Submit job (video segment or AI request)
+    GW->>GW: Select orchestrator (price, stake, latency)
+    GW->>O: Send work + payment ticket
+    O->>GPU: Dispatch to transcoder or AI runner
+    GPU->>O: Return result (transcoded segment / inference output)
+    O->>GW: Deliver result
+    GW->>App: Return processed output
+    Note over O,Arb: Periodically
+    O->>Arb: Redeem accumulated payment tickets
+    O->>Arb: Call reward() each round
+```
+
+### Step-by-step
+
+1. **Job submission** — An application sends a video segment or AI inference request to a gateway.
+2. **Orchestrator selection** — The gateway picks an orchestrator from the active set based on price, performance, latency, and stake weight.
+3. **Work dispatch** — The gateway sends the segment/request to the orchestrator along with a probabilistic micropayment ticket.
+4. **Execution** — The orchestrator's controller routes the work to the appropriate GPU worker (transcoder process for video, AI Runner container for inference).
+5. **Result delivery** — The GPU worker returns the output to the orchestrator, which sends it back to the gateway.
+6. **Payment settlement** — The orchestrator accumulates payment tickets and periodically redeems them on Arbitrum for ETH.
+7. **Reward minting** — Once per round, the orchestrator calls `reward()` on Arbitrum to mint LPT proportional to its stake.
+
+<CustomDivider />
+
+## Key components
+
+### go-livepeer
+
+The core node software. Runs as the orchestrator controller and (in combined mode) the transcoder. Handles:
+
+- Job negotiation with gateways
+- GPU work dispatch
+- Payment ticket management
+- Reward calls and on-chain transactions
+- Prometheus metrics (port 7935)
+
+Source: [github.com/livepeer/go-livepeer](https://github.com/livepeer/go-livepeer)
+
+### livepeer_cli
+
+A command-line tool that connects to a running go-livepeer node. Used for:
+
+- Activation (registering as an orchestrator, staking LPT)
+- Updating reward cut, fee cut, and service URI
+- Withdrawing funds
+
+### AI Runner
+
+A Docker container that serves AI inference models. The orchestrator discovers available models through `aiModels.json` and routes matching AI requests to the runner.
+
+Source: [github.com/livepeer/ai-worker](https://github.com/livepeer/ai-worker)
+
+### Arbitrum smart contracts
+
+The Livepeer protocol contracts on Arbitrum One manage:
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Contract</TableCell>
+    <TableCell header>Purpose</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**BondingManager**</TableCell>
+    <TableCell>Staking, delegation, active set management</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**RoundsManager**</TableCell>
+    <TableCell>Round lifecycle (~24 hours), reward eligibility</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**TicketBroker**</TableCell>
+    <TableCell>Probabilistic micropayment ticket redemption</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**ServiceRegistry**</TableCell>
+    <TableCell>On-chain service URI for orchestrator discovery</TableCell>
+  </TableRow>
+</StyledTable>
+
+See [Contract Addresses](/v2/orchestrators/resources/technical/x-contract-addresses) for deployed addresses.
+
+### Livepeer Explorer
+
+A web interface at [explorer.livepeer.org](https://explorer.livepeer.org) for viewing orchestrator status, stake, performance, and governance activity. Not a node component, but the primary tool for monitoring your on-chain presence.
+
+<CustomDivider />
+
+## Related
+
+<CardGroup cols={3}>
+  <Card title="Role" icon="user-gear" href="/v2/orchestrators/concepts/role" arrow />
+  <Card title="Capabilities" icon="gears" href="/v2/orchestrators/concepts/capabilities" arrow />
+  <Card title="Incentives" icon="coins" href="/v2/orchestrators/concepts/rcs-incentives" arrow />
+</CardGroup>
+
+{/*
+  PURPOSE:
+  Journey step: "How does an Orchestrator WORK?"
+  Concept page explaining the technical architecture of an orchestrator node:
+  go-livepeer internals, networking, session management, and protocol interaction.
+
+  CONTENT SHOULD INCLUDE:
+  - go-livepeer node architecture (orchestrator mode)
+  - Session lifecycle (discovery, selection, job execution, payment)
+  - Networking: how orchestrators advertise and receive work
+  - Orchestrator-Transcoder (O-T) split architecture
+  - On-chain vs off-chain operational modes
+  - Protocol interaction (staking, reward calling, ticket redemption)
+  - Port architecture (CLI, service URI, ETH connection)
+
+  SECTION HOME: Concepts
+
+  JOURNEY POSITION:
+  1. Role - "What IS an Orchestrator?"
+  2. Capabilities - "What can it DO?"
+  3. Architecture (this page) - "How does it WORK?"
+  4. Incentive Model - "Why should I CARE?"
+
+  CROSS-REFS:
+  - Setup > Configure - practical configuration of the architecture
+  - Advanced Operations > O-T Setup - detailed split architecture guide
+  - Gateway Tab > Concepts > Architecture - gateway-side architecture
+  - Payments & Pricing > Payments - payment flow through the architecture
+*/}

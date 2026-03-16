@@ -1,0 +1,56 @@
+---
+title: Player and embed
+description: >-
+  Use the Livepeer Player component and the lvpr.tv embeddable player for
+  playback.
+keywords:
+  - livepeer
+  - docs
+  - solutions
+  - livepeer studio
+  - player
+  - embed
+  - component
+  - lvpr
+  - embeddable
+  - playback
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+---
+
+The **Livepeer Player** is a React component (and an embeddable player at `lvpr.tv`) for playing streams and assets. It supports WebRTC (low latency) and HLS/MP4 fallback, and reports viewership metrics when used with the Studio API.
+
+## React Player
+
+From `@livepeer/react`, use `Player.Root`, `Player.Video`, `Player.Controls`, and other primitives. Pass a **src** (from `getSrc(playbackInfo)` from the [Playback Info API](https://livepeer.studio/docs/api-reference/playback/get)) or a **playbackId** (with a provider). The Player prefers WebRTC for live and MP4 for short VOD; it falls back to HLS on errors or when WebRTC isn't available (e.g. B-frames in stream).
+
+- **Livestream:** [Play a livestream](./livestream/playback-livestream)
+- **VOD:** [Play an asset](./video-on-demand/playback-asset)
+- **Access control:** Pass `accessKey` or `jwt` as needed. See [Access control](access-control/overview).
+
+## Embeddable player (iframe)
+
+```html
+<iframe
+  src="https://lvpr.tv?v=PLAYBACK_ID"
+  allowfullscreen
+  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+  frameborder="0"
+></iframe>
+```
+
+- **Livestreams:** Default is low-latency WebRTC. Use `&lowLatency=false` for HLS or `&lowLatency=force` for WebRTC only. Use `&clipLength=60` (max 120) for clipping. Use `constant=true` for constant playback (e.g. music).
+- **VOD:** Options include `&muted=false`, `&autoplay=false`, `&loop=true`.
+
+## Thumbnails
+
+- **VOD** - Thumbnails are in the playback info (WebVTT + keyframe images). See [Thumbnails (VOD)](./video-on-demand/thumbnails-vod).
+- **Livestream** - Playback info includes a PNG thumbnail URL that updates with the latest frame. The Player can use it as the video poster.
+
+## Metrics
+
+The Livepeer Player reports engagement to Livepeer when used with the Studio API. Query [viewership and analytics](./analytics/overview) via the API or dashboards.

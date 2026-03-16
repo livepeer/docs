@@ -1,6 +1,12 @@
 ---
 name: rubric-static-review
-description: Static-only rubric-based code review scored 0-100 by category with concrete code evidence and prioritized recommendations. Use when asked to review a repository without running build, test, or runtime commands.
+version: "1.0"
+description: >-
+  Static-only rubric-based code review scored 0-100 by category with concrete code evidence and prioritized recommendations. Use when asked to review a repository without running build, test, or runtime commands.
+invoke_when:
+  - "review this repository without running tests"
+  - "score the repo with a static rubric"
+  - "perform a static-only code review"
 ---
 
 SKILL: Rubric-Based Static Code Review (0–100)
@@ -62,7 +68,7 @@ For each category, include:
 
 C) Cross-Cutting “Top Actions” Summary (end)
 - Top 5–10 actions across the whole repo, prioritized.
-- Identify quick wins (≤1 day), short projects (≤1 week), and strategic refactors (>1 week).
+- Identify quick wins (≤1 day), short projects (≤1 week), and strategic refactors (&gt;1 week).
 - Call out any “must-fix before ship” items.
 
 Tone & Rigor

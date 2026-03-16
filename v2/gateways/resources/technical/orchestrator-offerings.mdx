@@ -1,0 +1,171 @@
+---
+title: Orchestrator Offerings Reference
+sidebarTitle: Orchestrator Offerings
+description: 'Reference: Orchestrator Offerings & Discovery'
+keywords:
+  - livepeer
+  - gateways
+  - references
+  - orchestrator offerings
+  - orchestrator
+  - offerings
+  - reference
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+
+
+
+Orchestrators publish their offerings through the `OrchestratorInfo` data structure
+
+```protobuf
+message OrchestratorInfo {
+    string transcoder = 1;           // Service URI
+    TicketParams ticket_params = 2;   // Payment parameters
+    PriceInfo price_info = 3;         // Pricing information
+    bytes address = 4;               // ETH address
+    Capabilities capabilities = 5;    // Supported features
+    AuthToken auth_token = 6;         // Authentication
+    repeated HardwareInformation hardware = 7;  // Hardware specs
+    repeated OSInfo storage = 32;     // Storage options
+    repeated PriceInfo capabilities_prices = 33;  // AI model pricing
+}
+```
+
+### Registration Process
+
+Orchestrators register on-chain via the `activateOrchestrator` endpoint
+
+```bash
+# Required parameters for registration
+-blockRewardCut=5.0
+-feeShare=10.0
+-pricePerUnit=1000
+-pixelsPerUnit=1000000000000
+-serviceURI=https://orchestrator.example.com:8935
+```
+
+## What is Published
+
+### 1. Service Capabilities
+
+Orchestrators declare their processing capabilities through the `Capabilities` system
+
+- **Video Transcoding**: Format conversion, bitrate adaptation
+- **AI Processing**: Text-to-image, image-to-video, upscaling, etc.
+- **Live AI**: Real-time video-to-video processing
+
+### 2. Pricing Information
+
+Two-tier pricing structure
+
+- **Base Pricing**: Per-pixel rates for transcoding (`-pricePerUnit`)
+- **Capability Pricing**: Per-model AI pricing (`-maxPricePerCapability`)
+
+### 3. Hardware Specifications
+
+Detailed hardware info for performance matching
+
+```go
+type HardwareInformation struct {
+    Pipeline string                    // GPU pipeline info
+    ModelId  string                    // AI model identifier
+    GpuInfo  map[string]*GPUComputeInfo // GPU specifications
+}
+```
+
+## Discovery Mechanisms
+
+### 1. Direct Discovery
+
+Gateways specify orchestrators directly
+
+```bash
+-orchAddr=https://orch1.example.com:8935,https://orch2.example.com:8935
+```
+
+### 2. Webhook Discovery
+
+Dynamic discovery via external service
+
+```bash
+-orchWebhookUrl=https://discovery.example.com/orchestrators/portal
+```
+
+### 3. On-Chain Discovery
+
+Automatic discovery of registered orchestrators
+
+- Queries blockchain for active orchestrators
+- Caches results in local database
+- Polls for updates periodically
+
+### 4. Network Capabilities API
+
+RESTful discovery endpoint
+
+```bash
+GET /getNetworkCapabilities
+```
+
+Returns:
+
+```json
+{
+  "capabilities_names": {...},
+  "orchestrators": [
+    {
+      "address": "0x...",
+      "localAddress": "0x...",
+      "orchURI": "https://...",
+      "capabilities": {...},
+      "capabilities_prices": [...],
+      "hardware": [...]
+    }
+  ]
+}
+```
+
+## Selection Process
+
+### Gateway Selection Logic
+
+Gateways select orchestrators based on a multi-factor scoring algorithm
+
+1. **Capability Matching**: Required features supported
+2. **Price Constraints**: Within maximum price limits
+3. **Performance Scores**: Historical performance metrics
+4. **Blacklist Filtering**: Exclude problematic orchestrators
+5. **Latency Considerations**: Network proximity
+
+### Selection Algorithm
+
+The discovery system uses a multi-factor scoring algorithm
+
+- **Random Factor** (`-selectRandFreq`): Prevents centralization
+- **Stake Weight** (`-selectStakeWeight`): Considers LPT stake
+- **Price Weight** (`-selectPriceWeight`): Favors competitive pricing
+
+## Marketplace Monitoring
+
+### CLI Tools
+
+Discovery and monitoring via `livepeer_cli`
+
+```bash
+livepeer_cli
+# Select "Set broadcast config" to see market rates
+# View available orchestrators and pricing
+```
+
+### HTTP Endpoints
+
+Real-time marketplace data
+
+- `/registeredOrchestrators` - All on-chain orchestrators
+- `/orchestratorInfo` - Specific orchestrator details
+- `/getNetworkCapabilities` - Available services and pricing

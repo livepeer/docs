@@ -4,23 +4,27 @@
  * @category          generator
  * @purpose           governance:agent-governance
  * @scope             tools/scripts, .codex/task-contract.yaml
- * @owner             docs
+ * @domain            docs
  * @needs             R-R27, R-R30
  * @purpose-statement Codex PR creator — generates codex PR with correct branch naming, labels, and body template
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
+ * @pipeline          manual — not yet in pipeline
  * @usage             node tools/scripts/create-codex-pr.js [flags]
  */
 
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const yaml = require('js-yaml');
+const yaml = require('../lib/load-js-yaml');
 
 const DEFAULT_CONTRACT_PATH = '.codex/task-contract.yaml';
 const DEFAULT_OUTPUT_PATH = '.codex/pr-body.generated.md';
-const DEFAULT_BASE_BRANCH = 'docs-v2';
+const DEFAULT_RESEARCH_MD_PATH = '.codex/pr-research.generated.md';
+const DEFAULT_RESEARCH_JSON_PATH = '.codex/pr-research.generated.json';
+const DEFAULT_BASE_BRANCH = 'docs-v2-dev';
 const CODEX_BRANCH_RE = /^codex\/(\d+)-([a-z0-9][a-z0-9-]*)$/;
 const PR_GENERATOR_MARKER_PREFIX = 'codex-pr-body-generated';
+const RESEARCH_SCRIPT_REL = 'tools/scripts/docs-page-research-pr-report.js';
+const RESEARCH_REGISTRY_REL = 'tasks/research/claims';
 
 const REPO_ROOT = getRepoRoot();
 
@@ -52,6 +56,9 @@ function usage() {
     '  --base <branch>          Optional base branch override',
     '  --head <branch>          Optional head branch override',
     '  --changed-files <a,b,c>  Optional explicit changed file list',
+    '  --advisory-research      Run experimental non-blocking fact-check PR research pass',
+    '  --research-output-md <path>    Advisory research markdown output (default: .codex/pr-research.generated.md)',
+    '  --research-output-json <path>  Advisory research json output (default: .codex/pr-research.generated.json)',
     '  --create                 Run gh pr create with generated body',
     '  --draft                  Create PR as draft (requires --create)',
     '  --dry-run                Print gh command instead of executing',
@@ -69,6 +76,9 @@ function parseArgs(argv) {
     base: '',
     head: '',
     changedFiles: null,
+    advisoryResearch: false,
+    researchOutputMd: DEFAULT_RESEARCH_MD_PATH,
+    researchOutputJson: DEFAULT_RESEARCH_JSON_PATH,
     create: false,
     draft: false,
     dryRun: false,
@@ -139,6 +149,29 @@ function parseArgs(argv) {
     }
     if (token.startsWith('--changed-files=')) {
       args.changedFiles = parseCsv(token.slice('--changed-files='.length));
+      continue;
+    }
+
+    if (token === '--advisory-research') {
+      args.advisoryResearch = true;
+      continue;
+    }
+    if (token === '--research-output-md') {
+      args.researchOutputMd = String(argv[i + 1] || '').trim() || args.researchOutputMd;
+      i += 1;
+      continue;
+    }
+    if (token.startsWith('--research-output-md=')) {
+      args.researchOutputMd = token.slice('--research-output-md='.length).trim() || args.researchOutputMd;
+      continue;
+    }
+    if (token === '--research-output-json') {
+      args.researchOutputJson = String(argv[i + 1] || '').trim() || args.researchOutputJson;
+      i += 1;
+      continue;
+    }
+    if (token.startsWith('--research-output-json=')) {
+      args.researchOutputJson = token.slice('--research-output-json='.length).trim() || args.researchOutputJson;
       continue;
     }
 
@@ -338,6 +371,23 @@ function buildBody(contract, context) {
   lines.push(...withCodeList(context.changedFiles, 'none detected'));
   lines.push('');
 
+  if (context.research) {
+    lines.push('## Advisory Research');
+    lines.push('');
+    lines.push('- Status: experimental, non-blocking');
+    if (context.research.ok) {
+      lines.push(`- Matched claim families: ${context.research.matchedClaimFamilies}`);
+      lines.push(`- Contradiction groups: ${context.research.contradictionGroups}`);
+      lines.push(`- Unresolved claims: ${context.research.unresolvedClaims}`);
+      lines.push(`- Propagation queue items: ${context.research.propagationQueueItems}`);
+      lines.push(`- Markdown artifact: \`${context.research.bodyFile}\``);
+      lines.push(`- JSON artifact: \`${context.research.jsonFile}\``);
+    } else {
+      lines.push(`- Warning: advisory research pass did not complete - ${context.research.error}`);
+    }
+    lines.push('');
+  }
+
   lines.push('## Validation');
   lines.push('');
   lines.push('Acceptance checks from `.codex/task-contract.yaml`:');
@@ -383,6 +433,56 @@ function createPullRequest({ baseBranch, headBranch, title, bodyPathAbs, draft, 
   return { ok: true, dryRun: false };
 }
 
+function runAdvisoryResearch(changedFiles, outputMdAbs, outputJsonAbs) {
+  ensureDirForFile(outputMdAbs);
+  ensureDirForFile(outputJsonAbs);
+  const scriptAbs = path.resolve(REPO_ROOT, RESEARCH_SCRIPT_REL);
+  const registryAbs = path.resolve(REPO_ROOT, RESEARCH_REGISTRY_REL);
+
+  if (!fs.existsSync(scriptAbs)) {
+    return { ok: false, error: `missing ${toPosix(path.relative(REPO_ROOT, scriptAbs))}` };
+  }
+  if (!fs.existsSync(registryAbs)) {
+    return { ok: false, error: `missing ${toPosix(path.relative(REPO_ROOT, registryAbs))}` };
+  }
+
+  const result = spawnSync(
+    'node',
+    [
+      scriptAbs,
+      '--registry',
+      registryAbs,
+      '--files',
+      changedFiles.join(','),
+      '--report-md',
+      outputMdAbs,
+      '--report-json',
+      outputJsonAbs,
+      '--quiet'
+    ],
+    {
+      cwd: REPO_ROOT,
+      encoding: 'utf8'
+    }
+  );
+
+  if (result.status !== 0) {
+    const error = String(result.stderr || result.stdout || 'advisory research failed').trim();
+    return { ok: false, error };
+  }
+
+  const parsed = JSON.parse(fs.readFileSync(outputJsonAbs, 'utf8'));
+  return {
+    ok: true,
+    matchedClaimFamilies: Number(parsed.summary?.matched_claim_families || 0),
+    contradictionGroups: Number(parsed.summary?.contradiction_groups || 0),
+    unresolvedClaims: Number(parsed.summary?.unresolved_claims || 0),
+    propagationQueueItems: Number(parsed.summary?.propagation_queue_items || 0),
+    bodyFile: toPosix(path.relative(REPO_ROOT, outputMdAbs)),
+    jsonFile: toPosix(path.relative(REPO_ROOT, outputJsonAbs))
+  };
+}
+
 function main() {
   try {
     const args = parseArgs(process.argv.slice(2));
@@ -400,10 +500,20 @@ function main() {
     if (!headBranch) throw new Error('Unable to determine head branch; pass --head explicitly.');
 
     const changedFiles = getChangedFiles(baseBranch, headBranch, args.changedFiles);
+    let research = null;
+    if (args.advisoryResearch && changedFiles.length > 0) {
+      const researchMdAbs = path.resolve(REPO_ROOT, args.researchOutputMd);
+      const researchJsonAbs = path.resolve(REPO_ROOT, args.researchOutputJson);
+      research = runAdvisoryResearch(changedFiles, researchMdAbs, researchJsonAbs);
+      if (!research.ok) {
+        console.warn(`⚠️  Advisory research pass skipped: ${research.error}`);
+      }
+    }
     const body = buildBody(contract, {
       headBranch,
       baseBranch,
       changedFiles,
+      research,
       contractPathRel: toPosix(path.relative(REPO_ROOT, contractPathAbs))
     });
 
@@ -423,6 +533,16 @@ function main() {
       headBranch,
       changedFiles
     };
+    if (research && research.ok) {
+      output.advisoryResearch = {
+        matchedClaimFamilies: research.matchedClaimFamilies,
+        contradictionGroups: research.contradictionGroups,
+        unresolvedClaims: research.unresolvedClaims,
+        propagationQueueItems: research.propagationQueueItems,
+        bodyFile: research.bodyFile,
+        jsonFile: research.jsonFile
+      };
+    }
 
     if (args.create) {
       const result = createPullRequest({

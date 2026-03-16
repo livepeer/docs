@@ -1,0 +1,178 @@
+---
+title: 'Gateway guides and resources — master list'
+sidebarTitle: 'Master list'
+description: 'Complete annotated index of every guide, tool, dashboard, blog post, SDK, and reference resource found across the Livepeer gateway ecosystem.'
+keywords: ["livepeer", "gateway", "guides", "resources", "master list", "index"]
+og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+---
+
+Complete annotated index of every guide and resource curated for the Livepeer gateway ecosystem — 82 items across guides (how-to / tutorial / walkthrough) and resources (reference / tool / blog / dashboard / SDK). Compiled March 2026.
+
+---
+
+## Part 1 — Guides
+
+How-to guides, tutorials, and walkthroughs for running Livepeer gateways.
+
+### Getting started
+
+1. **[Official Gateway Setup Guide](https://docs.livepeer.org/gateways/run-a-gateway/gateway-setup)** — Canonical quickstart in these docs. Binary or Docker install, essential flags, verify the node is running. Official.
+2. **[Livepeer Gateway Path (Decision Matrix)](https://docs.livepeer.org/gateways/gateway-path)** — Video vs AI gateway, on-chain vs off-chain, hosted service vs self-hosted. Choose your entry point before touching any config. Official.
+3. **[Why Run a Gateway](https://docs.livepeer.org/gateways/guides/operator-considerations/business-case)** — Business case: cost savings at scale, full orchestrator control, lower latency, inference fee capture. Official.
+4. **[go-livepeer Releases](https://github.com/livepeer/go-livepeer/releases)** — Official binary releases for Linux amd64 and arm64. Always download a tagged release for production.
+5. **[Gateway Architecture Overview](https://docs.livepeer.org/gateways/about/architecture)** — System architecture covering on-chain gateway, off-chain gateway, dual mode, and the remote signer model. Official.
+
+### Off-chain AI gateway setup
+
+6. **[AI Gateway Quickstart (Off-chain)](https://docs.livepeer.org/gateways/quickstart/AI-prompt)** — Minimal Docker command to run an off-chain AI gateway with a community remote signer and local orchestrator. Official.
+7. **[Remote Signers Design Doc (PR #3791)](https://github.com/livepeer/go-livepeer/pull/3791)** — GetOrchestratorInfo remote signing spec by j0sh. Part one of the off-chain gateway design. GitHub PR.
+8. **[Remote Signers Design Doc (PR #3822)](https://github.com/livepeer/go-livepeer/pull/3822)** — Payments remote signing spec by j0sh. Part two. Together with #3791, these define the complete off-chain gateway model introduced Q4 2025. GitHub PR.
+9. **[Remote Signers: Design and Setup (Docs)](https://docs.livepeer.org/gateways/payments/remote-signers)** — Signing protocol walkthrough (getOrchInfoSig → signTicket), stateless design rationale, and how to point a gateway at a remote signer. Official.
+10. **[Elite Encoder Remote Signer (Community-hosted)](https://signer.eliteencoder.net/)** — Publicly available remote signer with free ETH for testing off-chain gateways. Confirmed operational by Elite Encoder in #local-gateways Discord.
+11. **[Orchestrator Discovery for Off-chain Gateways (SDK examples)](https://github.com/j0sh/livepeer-python-gateway/tree/main/examples)** — Three discovery methods demonstrated: explicit orchAddr list, discovery webhook URL, remote signer GetOrchestrators endpoint. j0sh / Livepeer.
+12. **[AI Configuration Reference](https://docs.livepeer.org/gateways/setup/configure/ai-configuration)** — AI-specific flags: `-aiWorker`, `-orchAddr`, `-remoteSignerAddr`, ports, and startup log verification. Official.
+13. **[select_orchestrator.py (SDK example)](https://github.com/j0sh/livepeer-python-gateway/blob/main/examples/select_orchestrator.py)** — Discovery and selection via the remote signer's GetOrchestrators endpoint, filtered by model ID and capability. Python gateway SDK.
+14. **[Elite Encoder Orch List Endpoint Proposal](https://github.com/eliteprox/go-livepeer/commit/bf6f151dde3508646439f993610899ac04ee3f42)** — Proposed HTTP endpoint for off-chain gateways to retrieve on-chain orchestrator lists without a full Ethereum dependency. Community.
+
+### BYOC — Bring Your Own Container
+
+15. **[BYOC Smoke-Test Tutorial: CPU Gateway + Orchestrator (Off-chain → On-chain)](https://docs.livepeer.org/gateways/guides-and-tools/byoc-cpu-tutorial)** — Step-by-step: gateway + orchestrator + CPU Docker container on one machine, tested with off-chain payments, then graduated to production on-chain. Original tutorial in these docs.
+16. **[Creating a Custom Live Pipeline (ai-runner)](https://github.com/livepeer/ai-runner/blob/main/docs/custom-pipeline.md)** — Official guide: implement the Pipeline interface, define custom params, build a Docker image extending `livepeer/ai-runner:live-base`. Uses scope-runner as reference.
+17. **[Scope Runner (Reference BYOC Implementation)](https://github.com/livepeer/scope-runner)** — Production BYOC reference implementation. Extends `ai-runner[realtime]`, implements the Pipeline interface, ships as a Docker image. Official / Daydream.
+18. **[BYOC Payments PR (#3866)](https://github.com/livepeer/go-livepeer/pull/3866)** — BYOC remote signer payments by Elite Encoder. Token refresh, remote signer changes for external capabilities, difference between BYOC and LV2V discovery. GitHub PR.
+19. **[livepeer-python-gateway SDK (BYOC support)](https://github.com/j0sh/livepeer-python-gateway)** — Reference Python gateway SDK by j0sh. LV2V payments, remote signer, BYOC support, orchestrator discovery, session management. Actively maintained.
+20. **[ComfyUI BYOC Integration (Elite Encoder)](https://github.com/eliteprox/livepeer-python-gateway/commit/e80e539ee4336afe36543e1fa5380dd0d6c7c0f9)** — livepeer-python-gateway used as a ComfyUI node BYOC backend. Tested stable for multi-minute streams with LV2V payments from main. Community.
+21. **[OrchestratorSession Class Spec (Elite Encoder gist)](https://gist.github.com/eliteprox/a018fc30ee3366220873469c496b8c75)** — Spec for the OrchestratorSession class combining discovery, payment refresh, publish, and subscription in one managed session. Foundation of the BYOC SDK work.
+22. **[Old BYOC Data Channel PR (#3706)](https://github.com/livepeer/go-livepeer/pull/3706)** — Earlier BYOC data output trickle channel attempt (closed, never merged — BYOC now has its own endpoint). Historical reference for understanding the BYOC architecture decision.
+
+### Video gateway setup (on-chain)
+
+23. **[Run a Video Gateway](https://docs.livepeer.org/gateways/setup/run-a-gateway)** — Full on-chain video transcoding gateway setup: RTMP input, ETH key, Arbitrum RPC, orchestrator connection. Official.
+24. **[On-chain Requirements](https://docs.livepeer.org/gateways/run-a-gateway/requirements/on-chain)** — ETH deposit and reserve requirements, Arbitrum RPC setup, wallet management, and `livepeer_cli` commands to deposit and activate. Official.
+25. **[Video Configuration](https://docs.livepeer.org/gateways/setup/configure/video-configuration)** — Video-specific flags: `-broadcaster`, RTMP port, transcode profiles, segment size, and webhook auth config. Official.
+26. **[Advanced Transcoding Config](https://docs.livepeer.org/gateways/setup/transcoding)** — Output profiles, per-capability pricing, and `setbroadcastconfig` CLI commands for production transcoding. Official.
+27. **[Bridge LPT to Arbitrum](https://docs.livepeer.org/gateways/resources/technical/bridge-lpt-to-arbitrum)** — How to move LPT from Ethereum mainnet to Arbitrum One for on-chain registration and staking. Official.
+28. **[Livepeer Gateway Node Setup (YouTube — Titan Node)](https://www.youtube.com/results?search_query=livepeer+gateway+setup+titan+node)** — Community video walkthrough of the full gateway setup process. Binary install, flags, on-chain registration. Community.
+
+### Dual gateway (video + AI)
+
+29. **[Dual Configuration Guide](https://docs.livepeer.org/gateways/setup/configure/dual-configuration)** — Run video transcoding and AI inference from the same go-livepeer instance. Port assignments, flag combinations, pitfalls. Official.
+
+### Payments and economics
+
+30. **[How Payments Work](https://docs.livepeer.org/gateways/payments/how-payments-work)** — PM mechanics: ticket face value, per-pixel pricing for AI, per-segment pricing for video, deposit/reserve lifecycle. Official.
+31. **[Pricing Configuration](https://docs.livepeer.org/gateways/setup/configure/pricing-configuration)** — Set `-maxPricePerUnit` and `-maxPricePerCapability`, format the AI pricing JSON, price negotiation between gateway and orchestrators. Official.
+32. **[Payment Clearinghouse](https://docs.livepeer.org/gateways/payments/payment-clearinghouse)** — What a clearinghouse is (remote signer + user management + auth + accounting), current status, and NaaP dashboard as reference implementation. Official.
+33. **[NaaP Dashboard: JWT Auth Demo](https://github.com/livepeer/naap)** — Developer API Keys section implementing JWT issuer service (SIWE → user-scoped JWT). Reference for building user auth on top of a remote signer. Qiang Han / Livepeer.
+34. **[JWT Issuer Service Implementation (Elite Encoder)](https://forum.livepeer.org)** — SIWE flow via `/auth/login` endpoint, JWT tied to eth address, drafted into NaaP dashboard. Described in #local-gateways Discord. Community.
+35. **[x402 and ERC-3009 Clearinghouse Discussion](https://github.com/livepeer/go-livepeer/discussions)** — Discussion on pre-pay clearinghouse models using ERC-3009 transferWithAuthorization for user → signer payments while keeping PM tickets for signer → orchestrator. Community research thread.
+
+### Orchestrator discovery
+
+36. **[Connect with Orchestrator Offerings](https://docs.livepeer.org/gateways/setup/connect/connect-with-offerings)** — How an on-chain gateway connects to orchestrators: stake-weighted for video, capability-based for AI. Official.
+37. **[Discover Orchestrator Offerings](https://docs.livepeer.org/gateways/setup/connect/discover-offerings)** — Browse available orchestrators by capability, model support, and pricing via the Livepeer Marketplace. Official.
+38. **[Livepeer Marketplace](https://docs.livepeer.org/gateways/setup/connect/lp-marketplace)** — How the on-chain marketplace works: publishing, pricing, and capability advertisement. Official.
+
+### Monitoring and operations
+
+39. **[Monitor and Optimise](https://docs.livepeer.org/gateways/guides/monitoring-and-tooling/monitoring-setup)** — Key metrics, ETH balance monitoring, ticket redemption rates, log patterns for payment and session failures. Official.
+40. **[Gateway Introspection with Loki](https://docs.livepeer.org/gateways/gateway-tools/gateway-introspection)** — Query gateway logs via Loki API at `loki.livepeer.report`. Pre-built queries for session starts, payment failures, orchestrator errors. Official.
+41. **[Gateway Middleware](https://docs.livepeer.org/gateways/gateway-tools/gateway-middleware)** — Auth, rate limiting, and request routing in front of your gateway. Patterns for the Gateway-as-a-Service model using go-livepeer webhook hooks. Official.
+42. **[Production Log Monitoring for Gateways (Forum)](https://forum.livepeer.org)** — Detailed forum guide on structured logging, alerting, pattern matching for production nodes. Search "Production Log Monitoring" on the forum.
+
+### Gateway-as-a-Service (Provider persona)
+
+43. **[Operator Support & Programmes](https://docs.livepeer.org/gateways/guides/roadmap-and-funding/operator-support)** — Funding, support programmes, SPE grants, and ecosystem pathways for gateway operators. Official.
+44. **[Livepeer.Cloud — How to Run a Gateway Node](https://livepeer.cloud/how-to-run-a-livepeer-gateway-node)** — Livepeer.Cloud SPE's own operator guide. Real-world operational detail from an active multi-region gateway provider. SPE community.
+
+### Contributing to gateway repos
+
+45. **[go-livepeer Contributing Guide](https://github.com/livepeer/go-livepeer/blob/master/CONTRIBUTING.md)** — Commit structure, changelog requirements, rebase-and-merge policy for the main gateway implementation. Official.
+46. **[ai-runner Contributing Guide](https://github.com/livepeer/ai-runner/blob/main/CONTRIBUTING.md)** — How to contribute to the AI inference runtime: pipeline interface, Docker image conventions, test suite. Official.
+
+### Video walkthroughs
+
+47. **[Livepeer Gateway Node Setup (YouTube — Titan Node)](https://www.youtube.com/results?search_query=livepeer+gateway+setup+titan+node)** — Community video gateway setup walkthrough: binary install, flags, and on-chain registration.
+48. **[ComfyStream Live AI Demo](https://blog.livepeer.org/building-real-time-ai-video-effects-with-comfystream/)** — Video demo of ComfyStream processing live video via a gateway → orchestrator pipeline with real-time AI effects.
+49. **[Livepeer Dev Office Hours (bi-weekly)](https://www.livepeer.org/dev-hub)** — Bi-weekly Foundation calls including live gateway demos, ComfyUI sessions, and E2E remote signer pipeline demos. Calendar in Dev Hub.
+
+---
+
+## Part 2 — Resources
+
+Reference material, tools, dashboards, SDKs, blogs, and platforms.
+
+### Official software and repos
+
+50. **[go-livepeer](https://github.com/livepeer/go-livepeer)** — Official Go implementation of the Livepeer protocol. Gateway, orchestrator, transcoder, redeemer, and remote signer modes. The primary gateway binary.
+51. **[ai-runner](https://github.com/livepeer/ai-runner)** — AI inference runtime running on orchestrator nodes. Pipeline interface, BYOC support, Docker base images `livepeer/ai-runner:live-base`.
+52. **[scope-runner](https://github.com/livepeer/scope-runner)** — Production BYOC reference implementation by Daydream. Extends ai-runner, ships as a Docker image. Use as a template for custom pipelines.
+53. **[Livepeer LPMS](https://github.com/livepeer/lpms)** — Low-level media server: RTMP in, RTMP/HLS out. The media layer used by go-livepeer for video transcoding.
+54. **[Livepeer Catalyst / MistServer](https://github.com/livepeer/catalyst)** — Open-source media server powering Livepeer Studio. Relevant for gateway operators building custom ingest layers.
+
+### SDKs and developer libraries
+
+55. **[livepeer-python-gateway (j0sh)](https://github.com/j0sh/livepeer-python-gateway)** — Reference Python gateway SDK. LV2V payments, remote signer, BYOC, orchestrator discovery, session management. Actively maintained by j0sh.
+56. **[Livepeer AI Python SDK](https://github.com/livepeer/livepeer-ai-python)** — Official Python SDK for the Livepeer AI API (`pip install livepeer-ai`). Typed models, retry logic, full pipeline support.
+57. **[Livepeer AI JavaScript SDK (@livepeer/ai)](https://github.com/livepeer/livepeer-ai-js)** — Official TypeScript/JS SDK for the AI API (`npm install @livepeer/ai`). Text-to-image, image-to-image, image-to-video, LLM pipelines.
+58. **[livepeer.js / @livepeer/react](https://github.com/livepeer/livepeer.js)** — React hooks and components for video streaming and uploads. Used by app developers connecting through a gateway.
+59. **[NaaP (Network as a Platform)](https://github.com/livepeer/naap)** — Dashboard and SDK for Gateway-as-a-Service operators. JWT issuer, Developer API Keys, remote signer plugin. Qiang Han / Livepeer Foundation.
+60. **[Livepeer Protocol Smart Contracts SDK](https://github.com/livepeer/sdk)** — JS SDK for on-chain interaction: delegations, protocol state, earnings queries. Used by gateway operators doing on-chain registration.
+
+### Official tools and platforms
+
+61. **[Livepeer Explorer](https://explorer.livepeer.org)** — Official network explorer: orchestrators, delegation, governance votes, protocol metrics, PM redemption activity, gateway fee data.
+62. **[Livepeer Studio](https://livepeer.studio)** — Official developer dashboard and hosted gateway: API keys, stream management, asset pipeline. The hosted alternative to running your own gateway.
+63. **[Daydream](https://daydream.live)** — Livepeer's hosted real-time AI video platform and API. Runs as a gateway on top of the network.
+64. **[Daydream API Documentation](https://docs.daydream.live)** — Setup, API reference, and guides for the Daydream AI video API. The hosted gateway product documentation.
+65. **[Livepeer Dev Hub](https://www.livepeer.org/dev-hub)** — Developer hub: quickstarts, SDKs, grants, office hours calendar, and builder accelerator programme.
+66. **[tools.livepeer.cloud](https://tools.livepeer.cloud)** — Community tool suite run by the Livepeer.Cloud SPE: stream tester, orchestrator explorer, performance dashboards, pricing visibility.
+
+### Network dashboards and analytics
+
+67. **[Livepeer Arbitrum Dune Dashboard](https://dune.com/livepeer)** — Protocol-level analytics: fees paid, orchestrator activity, LPT flows, gateway demand trends.
+68. **[Livepeer AI Dune Dashboard](https://dune.com/livepeer)** — AI subnet metrics: inference volumes, pipeline types, AI fee revenue (72% of total network fees as of Nov 2025).
+69. **[Livepeer Macro Financial Statements (Messari Dune)](https://messari.io/asset/livepeer)** — Macro financial statements and protocol health. Quarterly comparisons.
+70. **[Web3 Index](https://web3index.org)** — Usage-based fee metrics for web3 infrastructure. Livepeer ranked by real demand-side revenue.
+71. **[StakingRewards (Livepeer)](https://www.stakingrewards.com/earn/livepeer/)** — Staking APR, total staked LPT, and delegator return estimates. Useful for gateway operators also running orchestrators.
+72. **[Messari State of Livepeer (Quarterly)](https://messari.io/asset/livepeer)** — Quarterly protocol metrics and ecosystem health reports.
+
+### Monitoring tools
+
+73. **[Loki Gateway Log API](https://loki.livepeer.report)** — Community-maintained Loki endpoint for querying gateway and orchestrator logs. Pre-built query patterns for session, payment, and error monitoring.
+74. **[Livepeer Exporter (Prometheus)](https://github.com/livepeer/awesome-livepeer#tools)** — Prometheus-compatible metrics exporter. Pairs with Grafana for production gateway monitoring.
+75. **[Stream Tester](https://github.com/livepeer/awesome-livepeer#tools)** — Benchmarks gateway and orchestrator streaming performance.
+76. **[AI Inference Tester](https://github.com/livepeer/awesome-livepeer#tools)** — GPU inference benchmarking for orchestrators connected to your gateway.
+77. **[Livepeer Reward Watcher](https://github.com/livepeer/awesome-livepeer#tools)** — Monitors orchestrator reward calls and sends alerts. Relevant for gateway operators also managing orchestrators.
+
+### Key blog posts and reading
+
+78. **[A Real-Time Update to the Livepeer Network Vision (November 2025)](https://blog.livepeer.org/a-real-time-update-to-the-livepeer-network-vision/)** — 72% of fees from AI. The clearest statement of the gateway's current role and the network's direction.
+79. **[Introducing Livepeer Cascade (February 2025)](https://blog.livepeer.org/introducing-livepeer-cascade-a-vision-for-livepeers-future-in-the-age-of-real-time-ai-video/)** — Strategic vision: gateways as the distribution layer for real-time AI video at global scale.
+80. **[Building Real-Time AI Video Effects with ComfyStream (February 2025)](https://blog.livepeer.org/building-real-time-ai-video-effects-with-comfystream/)** — Gateway → orchestrator → ComfyStream pipeline: frame rates, session management, architecture. Livepeer Blog.
+81. **[ComfyUI and Real-Time Video AI Processing (January 2025)](https://blog.livepeer.org/comfyui-and-real-time-video-ai-processing/)** — DAG architecture, pipeline design, and real-time AI use cases from the gateway perspective. Livepeer Blog.
+82. **[Builder Story: StreamDiffusionTD + Daydream API (September 2025)](https://blog.livepeer.org/builder-story-dotsimulate-x-daydream/)** — Gateway + BYOC-style pipeline powering live generative video performances with TouchDesigner. Livepeer Blog.
+83. **[Introducing Daydream Beta (September 2025)](https://blog.livepeer.org/introducing-daydream/)** — Daydream is the hosted gateway and API layer on top of the network. Essential context for operators deciding whether to self-host or build on top of Daydream. Livepeer Blog.
+84. **[Remote Signers Design Doc (Full text)](https://github.com/livepeer/go-livepeer/pull/3822)** — The most important technical document for any AI gateway operator in 2025–2026. Complete PM bookkeeping spec, stateless design, alternatives considered.
+85. **[j0sh Ecosystem Notes Gist](https://gist.github.com/j0sh/0ee58c48ac00739bd10babc44dc293da)** — Working notes from j0sh on the gateway ecosystem: SDK design, clearinghouse thinking, discovery architecture, open problems. Updated periodically.
+86. **[AI Subnet Explainer (Coinmonks, July 2024)](https://medium.com/coinmonks/why-the-livepeer-ai-subnet-is-a-big-deal-454228dc09d3)** — Architecture explainer: gateways, orchestrators, AI workers, and payment flows in the AI subnet. Medium.
+87. **[OKX Guide to Livepeer Protocol and LPT (December 2025)](https://www.okx.com/en-eu/learn/livepeer-guide)** — Third-party explainer for operators less familiar with the broader Livepeer protocol and token economics.
+
+### Community aggregators
+
+88. **[Awesome Livepeer (Official)](https://github.com/livepeer/awesome-livepeer)** — Community-curated list of tutorials, tools, projects. Also at `livepeer.cool`. Gateway tools, monitoring scripts, and node operator guides.
+89. **[Awesome Livepeer (rickstaa fork)](https://github.com/rickstaa/awesome-livepeer)** — Extended fork with additional AI tools, AI Dune Dashboard, and infrastructure tooling.
+90. **[Livepeer Subgraph (The Graph)](https://thegraph.com/explorer/subgraphs?search=livepeer)** — GraphQL queries for orchestrators, delegators, earning pools, gateway registrations, and staking rounds.
+
+### Security and funding
+
+91. **[Livepeer Bug Bounty (Immunefi)](https://immunefi.com/bug-bounty/livepeer/information/)** — Smart contract bug bounty. USDC rewards, KYC required. Scope: PM protocol, bonding manager, staking contracts on Arbitrum One. Never report vulnerabilities via GitHub.
+92. **[Livepeer Grants Programme](https://livepeer.org/grants)** — Foundation grants for gateway operators building public infrastructure. Open Network and Video Disruptor tracks. Paid in LPT.
+93. **[Software Bounties](https://github.com/livepeer/bounties)** — Scoped development tasks with defined compensation. Check for open gateway-related bounties.
+94. **[Builder Accelerator (Dev Hub)](https://www.livepeer.org/dev-hub)** — Foundation builder support: office hours, BD introductions, technical mentorship, and fast-track grants.
+
+---
+
+<Note>
+This list was compiled in March 2026. URLs are verified at time of curation. If you find a broken link or know of a resource that should be included, [open an issue](https://github.com/livepeer/docs/issues) in the docs repository.
+</Note>

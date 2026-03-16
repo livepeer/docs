@@ -1,0 +1,186 @@
+---
+title: AI Configuration
+description: Configure AI Inference Services on a Livepeer Gateway
+audience: gateway-operator
+purpose: concept
+sidebarTitle: AI Configuration
+icon: user-robot
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - configure
+  - ai configuration
+  - configuration
+  - inference
+  - services
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+
+
+
+
+import { DoubleIconLink, BlinkingIcon } from '/snippets/components/primitives/links.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+
+This page will walk you through the process of deploying and configuring a Livepeer Gateway for AI inference services.
+
+## Gateway Modes
+
+You can run a gateway
+
+- **"Off-chain"** -> dev or local mode
+- **"On-chain"** -> production mode connected to the blockchain-based Livepeer network.
+
+<Warning>
+ If you run your gateway **off-chain** - **you will need to run your own Orchestrator node** ie. Have access to a GPU and set it up as an Orchestrator, in order to test Gateway functionality.
+</Warning>
+<Note>
+ There is currently no Livepeer "Testnet" available which has Orchestrator offerings, though there are conversations underway to enable this in the future.
+
+ **Do you think Livepeer should have a "testnet" available for Gateways to connect to?**
+
+ Follow & contribute to the discussion in the [Discord](https://discord.gg/livepeer) and on the [Forum](https://forum.livepeer.org)
+
+</Note>
+
+## Deploy a Gateway for AI Inference Services
+
+You can run the Livepeer AI software using one of the following methods:
+
+- **Docker** (Recommended): The simplest and preferred method.
+- **Pre-built Binaries**: An alternative if you prefer not to use Docker.
+
+## <BlinkingIcon size={20} /> Deploy an AI Gateway
+
+Follow the steps below to start your Livepeer AI Gateway node.
+
+<Note> These instructions apply to both on-chain & off-chain Gateway deployments. </Note>
+<br />
+<Tabs>
+    <Tab title="Use Docker (Recommended)">
+        <StyledSteps iconColor="#18794e" titleColor="#fff" lineColor="" iconSize="24px">
+            <StyledStep title="Retrieve the Livepeer AI Docker Image">
+ Fetch the latest <DoubleIconLink label="Livepeer AI Docker image" href="https://hub.docker.com/r/livepeer/go-livepeer" iconLeft="docker" /> with the following command:
+
+                ```bash icon="terminal" Pull Docker Image
+                docker pull livepeer/go-livepeer:master
+                ```
+            </StyledStep>
+            <StyledStep title="Launch a Localhost (Off-chain) AI Gateway">
+ Run the Docker container for your AI Gateway node:
+
+                ```bash icon="terminal"
+                docker run \
+                    --name livepeer_ai_gateway \
+                    -v ~/.lpData2/:/root/.lpData2 \
+                    -p 8937:8937 \
+                    --network host \
+                    livepeer/go-livepeer:master \
+                    -datadir ~/.lpData2 \
+                    -gateway \
+                    -orchAddr <orchestrator list> \
+                    -httpAddr 0.0.0.0:8937 \
+                    -v 6 \
+                    -httpIngest
+                ```
+
+ This command launches a local (**off-chain**) AI Gateway node. The flags are similar to those used for a Mainnet Transcoding Network Gateway. <Danger>(fixme) See the [go-livepeer CLI reference](/gateways/references/go-livepeer/cli-reference) for details.</Danger>
+            </StyledStep>
+            <StyledStep title="Confirm Successful Startup">
+ Upon successful startup, you should see output similar to:
+
+                ```bash icon="terminal"
+                I0501 11:07:47.609839       1 mediaserver.go:201] Transcode Job Type: [{P240p30fps16x9 600k 30 0 426x240 16:9 0 0 0s 0 0 0 0} {P360p30fps16x9 1200k 30 0 640x360 16:9 0 0 0s 0 0 0 0}]
+                I0501 11:07:47.609917       1 mediaserver.go:226] HTTP Server listening on http://0.0.0.0:8937
+                I0501 11:07:47.609963       1 lpms.go:92] LPMS Server listening on rtmp://127.0.0.1:1935
+                ```
+            </StyledStep>
+            <StyledStep title="Check Port Availability">
+ Ensure that port `8937` is open and accessible, and configure your router for port forwarding if necessary to make the Gateway accessible from the internet.
+            </StyledStep>
+            <StyledStep title="Test the AI Gateway">
+ Follow the instructions in the <DoubleIconLink label="AI Gateway Testing Guide" href="/gateways/run-a-gateway/test/test-gateway" iconLeft="link" /> to verify that the AI Gateway is operational.
+            </StyledStep>
+        </StyledSteps>
+    </Tab>
+
+    <Tab title="Use Binaries">
+        <StyledSteps>
+            <StyledStep title="Download the Latest Livepeer AI Binary">
+ Download the latest Livepeer AI binary for your system:
+
+                ```bash icon="terminal"
+                wget https://build.livepeer.live/go-livepeer/livepeer-<OS>-<ARCH>.tar.gz
+                ```
+
+ Replace `<OS>` and `<ARCH>` with your operating system and architecture (e.g., `linux-amd64` for Linux AMD64). For more details, see the [go-livepeer installation guide](/orchestrators/setting-up-an-orchestrator/install-go-livepeer#install-using-a-binary-release).
+
+ <Warning>The Windows and MacOS (amd64) binaries of Livepeer AI are **not** available yet.</Warning>
+            </StyledStep>
+            <StyledStep title="Extract and Configure the Binary">
+ Once downloaded, extract the binary to a directory of your choice.
+            </StyledStep>
+            <StyledStep title="Launch an Off-chain AI Gateway">
+ Start the AI Gateway node with the following command:
+
+                ```bash icon="terminal"
+                ./livepeer \
+                    -datadir ~/.lpData2 \
+                    -gateway \
+                    -orchAddr <orchestrator list> \
+                    -httpAddr 0.0.0.0:8937 \
+                    -v 6 \
+                    -httpIngest
+                ```
+
+ This command launches an **off-chain** AI Gateway node. Refer to the [go-livepeer CLI reference](/gateways/references/go-livepeer/cli-reference) for more details on the flags.
+            </StyledStep>
+            <StyledStep title="Confirm Successful Startup">
+ Check the terminal for the following output to confirm successful startup:
+
+                ```bash icon="terminal"
+                I0501 11:07:47.609839       1 mediaserver.go:201] Transcode Job Type: [{P240p30fps16x9 600k 30 0 426x240 16:9 0 0 0s 0 0 0 0} {P360p30fps16x9 1200k 30 0 640x360 16:9 0 0 0s 0 0 0 0}]
+                I0501 11:07:47.609917       1 mediaserver.go:226] HTTP Server listening on http://0.0.0.0:8937
+                I0501 11:07:47.609963       1 lpms.go:92] LPMS Server listening on rtmp://127.0.0.1:1935
+                ```
+            </StyledStep>
+            <StyledStep title="Check Port Availability">
+ Ensure that port `8937` is open and accessible, and configure port forwarding if needed.
+            </StyledStep>
+            <StyledStep title="Test the AI Gateway">
+ Follow the instructions in the <DoubleIconLink label="AI Gateway Testing Guide" href="/gateways/run-a-gateway/test/test-gateway" iconLeft="link" /> to verify that the AI Gateway is operational.
+            </StyledStep>
+        </StyledSteps>
+
+        <Note>
+ If binaries are unavailable for your system, you can build the [master branch](https://github.com/livepeer/go-livepeer/tree/master) of [go-livepeer](https://github.com/livepeer/go-livepeer) from source. Refer to the [Livepeer installation guide](/orchestrators/setting-up-an-orchestrator/install-go-livepeer#install-using-a-binary-release) or reach out to the Livepeer community on [Discord](https://discord.gg/livepeer) for assistance.
+        </Note>
+    </Tab>
+
+</Tabs>
+
+## Gateway Code Links
+
+For AI processing, the Gateway extends its functionality to handle AI-specific workflows.
+
+<Card
+  title="go-livepeer/server/ai_mediaserver.go"
+  icon="github"
+  href="https://github.com/livepeer/go-livepeer/blob/5691cb48/server/ai_mediaserver.go"
+  horizontal
+  arrow
+/>
+
+Key components include:
+
+- **AISessionManager**: Manages AI processing sessions and selects appropriate Orchestrators with AI capabilities <DoubleIconLink label="ai_http.go" href="https://github.com/livepeer/go-livepeer/blob/5691cb48/server/ai_http.go" iconLeft="github" />
+- **MediaMTX Integration**: Handles media streaming for AI processing
+- **Trickle Protocol**: Enables efficient streaming for real-time AI video processing
+
+The AI workflow <DoubleIconLink label="server/ai_process.go" href="https://github.com/livepeer/go-livepeer/blob/5691cb48/server/ai_process.go" iconLeft="github" /> involves
+
+- authenticating AI streams,
+- selecting AI-capable Orchestrators,
+- processing payments **based on pixels**, and
+- managing live AI pipelines

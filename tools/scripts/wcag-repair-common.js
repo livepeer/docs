@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement WCAG repair shared logic — common repair functions used by WCAG audit fix mode
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
+ * @pipeline          manual — not yet in pipeline
  * @usage             node tools/scripts/wcag-repair-common.js [flags]
  */
 

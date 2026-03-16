@@ -1,0 +1,641 @@
+---
+title: Data
+sidebarTitle: Data
+description: 'Components that are coupled to feeds, release data, or other external sources.'
+keywords:
+  - livepeer
+  - docs
+  - resources
+  - documentation guide
+  - component library
+  - data
+  - components
+  - that
+  - coupled
+  - feeds
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+---
+
+{/*
+generated-file-banner: generated-file-banner:v1
+Generation Script: tools/scripts/generate-component-docs.js
+Purpose: Generated component-library MDX pages derived from docs-guide/component-registry.json.
+Run when: Component governance metadata, registry outputs, or published component-library templates change.
+Run command: node tools/scripts/generate-component-docs.js --fix --template-only --category data
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `tools/scripts/generate-component-docs.js`. <br/>
+**Purpose**: Generated component-library MDX pages derived from docs-guide/component-registry.json. <br/>
+**Run when**: Component governance metadata, registry outputs, or published component-library templates change. <br/>
+**Important**: Do not manually edit this file; run `node tools/scripts/generate-component-docs.js --fix --template-only --category data`. <br/>
+</Note>
+
+<Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
+  Return to the generated component library landing page.
+</Card>
+
+## Data
+
+Components that are coupled to feeds, release data, or other external sources.
+
+This category currently contains **17** governed export(s).
+
+### Decision Tree Excerpt
+
+1. Bound to an external data source or automation pipeline? `data/`
+2. Only makes sense on frame-mode or portal pages? `page-structure/`
+3. Accepts children and arranges them spatially? `layout/`
+4. Formats or renders content for the reader? `content/`
+5. Otherwise: `primitives/`
+
+### Summary Table
+
+| Component | Tier | Status | Import path | Description |
+| --- | --- | --- | --- | --- |
+| BlogCard | `composite` | `stable` | `/snippets/components/data/data.jsx` | Blog Card data-driven component for rendering automated or API-backed documentation content. |
+| BlogDataLayout | `composite` | `stable` | `/snippets/components/data/data.jsx` | Blog Data Layout data-driven component for rendering automated or API-backed documentation content. |
+| CardBlogDataLayout | `composite` | `stable` | `/snippets/components/data/data.jsx` | Card Blog Data Layout data-driven component for rendering automated or API-backed documentation content. |
+| CardColumnsPostLayout | `composite` | `stable` | `/snippets/components/data/data.jsx` | Card Columns Post Layout data-driven component for rendering automated or API-backed documentation content. |
+| CardInCardLayout | `composite` | `stable` | `/snippets/components/data/data.jsx` | Card In Card Layout data-driven component for rendering automated or API-backed documentation content. |
+| CoinGeckoExchanges | `composite` | `stable` | `/snippets/components/data/coingecko.jsx` | Fetches and displays exchange availability for a token from the CoinGecko API. |
+| ColumnsBlogCardLayout | `composite` | `stable` | `/snippets/components/data/data.jsx` | Columns Blog Card Layout data-driven component for rendering automated or API-backed documentation content. |
+| DiscordAnnouncements | `composite` | `stable` | `/snippets/components/data/data.jsx` | Discord Announcements data-driven component for rendering automated or API-backed documentation content. |
+| ForumLatestLayout | `composite` | `stable` | `/snippets/components/data/data.jsx` | Forum Latest Layout data-driven component for rendering automated or API-backed documentation content. |
+| LatestVersion | `composite` | `stable` | `/snippets/components/data/release.jsx` | Displays the latest release version value supplied by the release-version workflow. |
+| LumaEvents | `composite` | `stable` | `/snippets/components/data/data.jsx` | Luma Events data-driven component for rendering automated or API-backed documentation content. |
+| MarkdownEmbed | `pattern` | `stable` | `/snippets/components/data/embed.jsx` | Dynamically fetches markdown content from a remote URL and renders it. Uses React hooks to manage the fetch lifecycle |
+| PdfEmbed | `pattern` | `stable` | `/snippets/components/data/embed.jsx` | Wraps an iframe in a Mintlify Frame so long-form external documents can be embedded with a caption and responsive width |
+| PostCard | `composite` | `stable` | `/snippets/components/data/data.jsx` | Post Card data-driven component for rendering automated or API-backed documentation content. |
+| ShowcaseCards | `pattern` | `experimental` | `/snippets/components/data/showcaseCards.jsx` | Renders the showcase cards component |
+| TwitterTimeline | `pattern` | `stable` | `/snippets/components/data/embed.jsx` | Renders the twitter timeline component |
+| YouTubeVideoData | `pattern` | `stable` | `/snippets/components/data/videoData.jsx` | YouTubeVideoData - Renders YouTube videos from youtubeData.jsx format |
+
+## Component Reference
+
+### BlogCard
+Use **BlogCard** when you need blog Card data-driven component for rendering automated or API-backed documentation content.. Best suited for overview, reference page types.
+Source description: Blog Card data-driven component for rendering automated or API-backed documentation content.
+**Import path**
+```jsx
+import { BlogCard } from '/snippets/components/data/data.jsx'
+```
+**Metadata**
+- Content affinity: `overview`, `reference`
+- Dependencies: `CardBlogDataLayout`, `CardColumnsPostLayout`, `DiscordAnnouncements`, `LumaEvents`, `PostCard`
+- Data source: `automationData/blog`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/community/livepeer-community/trending-topics.mdx`, `v2/home/trending.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `title` | `any` | `` | Yes | title prop. |
+| `content` | `any` | `` | Yes | content prop. |
+| `href` | `any` | `` | Yes | href prop. |
+| `author` | `string` | `"Livepeer Team"` | No | author prop. |
+| `datePosted` | `any` | `null` | No | date Posted prop. |
+| `excerpt` | `any` | `null` | No | excerpt prop. |
+| `readingTime` | `any` | `null` | No | reading Time prop. |
+| `icon` | `string` | `"book-open"` | No | icon prop. |
+| `authorIcon` | `string` | `"user-pen"` | No | author Icon prop. |
+| `dateIcon` | `string` | `"calendar"` | No | date Icon prop. |
+| `cta` | `string` | `"Read More"` | No | cta prop. |
+| `img` | `any` | `null` | No | img prop. |
+
+**Code example**
+
+```jsx
+<BlogCard title="example" content="example" />
+```
+
+---
+
+### BlogDataLayout
+Use **BlogDataLayout** when you need blog Data Layout data-driven component for rendering automated or API-backed documentation content.. Best suited for overview, reference page types.
+Source description: Blog Data Layout data-driven component for rendering automated or API-backed documentation content.
+**Import path**
+```jsx
+import { BlogDataLayout } from '/snippets/components/data/data.jsx'
+```
+**Metadata**
+- Content affinity: `overview`, `reference`
+- Dependencies: `BlogCard`, `CardBlogDataLayout`, `CardColumnsPostLayout`, `DiscordAnnouncements`, `LumaEvents`, `PostCard`
+- Data source: `automationData/blog`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: none
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+
+**Code example**
+
+```jsx
+<BlogDataLayout limit={1} />
+```
+
+---
+
+### CardBlogDataLayout
+Use **CardBlogDataLayout** when you need card Blog Data Layout data-driven component for rendering automated or API-backed documentation content.. Best suited for overview, reference page types.
+Source description: Card Blog Data Layout data-driven component for rendering automated or API-backed documentation content.
+**Import path**
+```jsx
+import { CardBlogDataLayout } from '/snippets/components/data/data.jsx'
+```
+**Metadata**
+- Content affinity: `overview`, `reference`
+- Dependencies: `BlogCard`, `CardColumnsPostLayout`, `DiscordAnnouncements`, `LumaEvents`, `PostCard`
+- Data source: `automationData/blog`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/community/livepeer-community/trending-topics.mdx`, `v2/home/trending.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+
+**Code example**
+
+```jsx
+<CardBlogDataLayout limit={1} />
+```
+
+---
+
+### CardColumnsPostLayout
+Use **CardColumnsPostLayout** when you need card Columns Post Layout data-driven component for rendering automated or API-backed documentation content.. Best suited for overview, reference page types.
+Source description: Card Columns Post Layout data-driven component for rendering automated or API-backed documentation content.
+**Import path**
+```jsx
+import { CardColumnsPostLayout } from '/snippets/components/data/data.jsx'
+```
+**Metadata**
+- Content affinity: `overview`, `reference`
+- Dependencies: `BlogCard`, `CardBlogDataLayout`, `DiscordAnnouncements`, `LumaEvents`, `PostCard`
+- Data source: `automationData/blog`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/community/livepeer-community/trending-topics.mdx`, `v2/home/trending.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `cols` | `number` | `2` | No | cols prop. |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+
+**Code example**
+
+```jsx
+<CardColumnsPostLayout limit={1} />
+```
+
+---
+
+### CardInCardLayout
+Use **CardInCardLayout** when you need card In Card Layout data-driven component for rendering automated or API-backed documentation content.. Best suited for overview, reference page types.
+Source description: Card In Card Layout data-driven component for rendering automated or API-backed documentation content.
+**Import path**
+```jsx
+import { CardInCardLayout } from '/snippets/components/data/data.jsx'
+```
+**Metadata**
+- Content affinity: `overview`, `reference`
+- Dependencies: `BlogCard`, `CardBlogDataLayout`, `CardColumnsPostLayout`, `DiscordAnnouncements`, `LumaEvents`, `PostCard`
+- Data source: `none`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: none
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+
+**Code example**
+
+```jsx
+<CardInCardLayout limit={1} />
+```
+
+---
+
+### CoinGeckoExchanges
+Use **CoinGeckoExchanges** when you need fetches and displays exchange availability for a token from the CoinGecko API.. Best suited for overview, reference page types.
+Source description: Fetches and displays exchange availability for a token from the CoinGecko API.
+**Import path**
+```jsx
+import { CoinGeckoExchanges } from '/snippets/components/data/coingecko.jsx'
+```
+**Metadata**
+- Content affinity: `overview`, `reference`
+- Dependencies: `none`
+- Data source: `CoinGecko API`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/gateways-new/resources/arbitrum-exchanges.mdx`, `v2/gateways-new/resources/livepeer-exchanges.mdx`, `v2/gateways/references/arbitrum-exchanges.mdx`, `v2/gateways/references/livepeer-exchanges.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `coinId` | `string` | `"arbitrum"` | No | coin Id prop. |
+
+**Code example**
+
+```jsx
+<CoinGeckoExchanges />
+```
+
+---
+
+### ColumnsBlogCardLayout
+Use **ColumnsBlogCardLayout** when you need columns Blog Card Layout data-driven component for rendering automated or API-backed documentation content.. Best suited for overview, reference page types.
+Source description: Columns Blog Card Layout data-driven component for rendering automated or API-backed documentation content.
+**Import path**
+```jsx
+import { ColumnsBlogCardLayout } from '/snippets/components/data/data.jsx'
+```
+**Metadata**
+- Content affinity: `overview`, `reference`
+- Dependencies: `BlogCard`, `CardBlogDataLayout`, `CardColumnsPostLayout`, `DiscordAnnouncements`, `LumaEvents`, `PostCard`
+- Data source: `automationData/blog`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/community/livepeer-community/trending-topics.mdx`, `v2/home/trending.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `cols` | `number` | `2` | No | cols prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+
+**Code example**
+
+```jsx
+<ColumnsBlogCardLayout limit={1} />
+```
+
+---
+
+### DiscordAnnouncements
+Use **DiscordAnnouncements** when you need discord Announcements data-driven component for rendering automated or API-backed documentation content.. Best suited for overview, reference page types.
+Source description: Discord Announcements data-driven component for rendering automated or API-backed documentation content.
+**Import path**
+```jsx
+import { DiscordAnnouncements } from '/snippets/components/data/data.jsx'
+```
+**Metadata**
+- Content affinity: `overview`, `reference`
+- Dependencies: `BlogCard`, `CardBlogDataLayout`, `CardColumnsPostLayout`, `LumaEvents`, `PostCard`
+- Data source: `automationData/discord`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/community/livepeer-community/trending-topics.mdx`, `v2/home/trending.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+
+**Code example**
+
+```jsx
+<DiscordAnnouncements limit={1} />
+```
+
+---
+
+### ForumLatestLayout
+Use **ForumLatestLayout** when you need forum Latest Layout data-driven component for rendering automated or API-backed documentation content.. Best suited for overview, reference page types.
+Source description: Forum Latest Layout data-driven component for rendering automated or API-backed documentation content.
+**Import path**
+```jsx
+import { ForumLatestLayout } from '/snippets/components/data/data.jsx'
+```
+**Metadata**
+- Content affinity: `overview`, `reference`
+- Dependencies: `BlogCard`, `CardBlogDataLayout`, `CardColumnsPostLayout`, `DiscordAnnouncements`, `LumaEvents`, `PostCard`
+- Data source: `automationData/forum`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/community/livepeer-community/livepeer-latest-topics.mdx`, `v2/community/livepeer-community/trending-topics.mdx`, `v2/home/trending.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - items prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+
+**Code example**
+
+```jsx
+<ForumLatestLayout limit={1} />
+```
+
+---
+
+### LatestVersion
+Use **LatestVersion** when you need displays the latest release version value supplied by the release-version workflow.. Best suited for overview, reference page types.
+Source description: Displays the latest release version value supplied by the release-version workflow.
+**Import path**
+```jsx
+import { LatestVersion } from '/snippets/components/data/release.jsx'
+```
+**Metadata**
+- Content affinity: `overview`, `reference`
+- Dependencies: `none`
+- Data source: `release-version workflow`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: none
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `version` | `any` | `` | Yes | version prop. |
+
+**Code example**
+
+```jsx
+<LatestVersion version="example" />
+```
+
+---
+
+### LumaEvents
+Use **LumaEvents** when you need luma Events data-driven component for rendering automated or API-backed documentation content.. Best suited for overview, reference page types.
+Source description: Luma Events data-driven component for rendering automated or API-backed documentation content.
+**Import path**
+```jsx
+import { LumaEvents } from '/snippets/components/data/data.jsx'
+```
+**Metadata**
+- Content affinity: `overview`, `reference`
+- Dependencies: `BlogCard`, `CardBlogDataLayout`, `CardColumnsPostLayout`, `DiscordAnnouncements`, `PostCard`
+- Data source: `automationData/luma`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/community/livepeer-connect/events-and-community-streams.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `data` | `any` | `` | Yes | data prop. |
+| `limit` | `any` | `` | Yes | limit prop. |
+| `type` | `string` | `"upcoming"` | No | type prop. |
+
+**Code example**
+
+```jsx
+<LumaEvents data="example" limit={1} />
+```
+
+---
+
+### MarkdownEmbed
+Use **MarkdownEmbed** when you need dynamically fetches markdown content from a remote URL and renders it. Uses React hooks to manage the fetch lifecycle. Best suited for universal page types.
+Source description: Dynamically fetches markdown content from a remote URL and renders it. Uses React hooks to manage the fetch lifecycle
+**Import path**
+```jsx
+import { MarkdownEmbed } from '/snippets/components/data/embed.jsx'
+```
+**Metadata**
+- Content affinity: `universal`
+- Dependencies: `PdfEmbed`, `TwitterTimeline`
+- Data source: `live API`
+- Last meaningful change: `2026-03-08`
+- Breaking change risk: `low`
+- Owner: `@livepeer/docs-team`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `pattern`
+- `@usedIn`: none
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `url` | `string` | `` | Yes | Destination URL used by the component. |
+
+**Code example**
+
+```jsx
+<MarkdownEmbed url="/example" />
+```
+
+---
+
+### PdfEmbed
+Use **PdfEmbed** when you need wraps an iframe in a Mintlify Frame so long-form external documents can be embedded with a caption and responsive width. Best suited for universal page types.
+Source description: Wraps an iframe in a Mintlify Frame so long-form external documents can be embedded with a caption and responsive width
+**Import path**
+```jsx
+import { PdfEmbed } from '/snippets/components/data/embed.jsx'
+```
+**Metadata**
+- Content affinity: `universal`
+- Dependencies: `TwitterTimeline`
+- Data source: `live API`
+- Last meaningful change: `2026-03-08`
+- Breaking change risk: `low`
+- Owner: `@livepeer/docs-team`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `pattern`
+- `@usedIn`: `v2/gateways-new/advanced/payment-clearinghouse.mdx`, `v2/gateways/payments/payment-clearinghouse.mdx`, `v2/internal/overview/docs-philosophy.mdx`, `v2/internal/rfp/aims.mdx`, `v2/lpt/treasury/overview.mdx`, `v2/resources/media-kit.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `title` | `React.ReactNode` | `` | Yes | Title text rendered by the component. |
+| `src` | `string` | `` | Yes | Asset or embed source used by the component. |
+| `height` | `string` | `'700px'` | No | Height used by the component. |
+| `width` | `string` | `'100%'` | No | Width used by the component. |
+
+**Code example**
+
+```jsx
+<PdfEmbed title="Example" src="https://example.com" />
+```
+
+---
+
+### PostCard
+Use **PostCard** when you need post Card data-driven component for rendering automated or API-backed documentation content.. Best suited for overview, reference page types.
+Source description: Post Card data-driven component for rendering automated or API-backed documentation content.
+**Import path**
+```jsx
+import { PostCard } from '/snippets/components/data/data.jsx'
+```
+**Metadata**
+- Content affinity: `overview`, `reference`
+- Dependencies: `BlogCard`, `CardBlogDataLayout`, `CardColumnsPostLayout`, `DiscordAnnouncements`, `LumaEvents`
+- Data source: `automationData/blog`
+- Last meaningful change: `2026-03-10`
+- Breaking change risk: `low`
+- Owner: `docs`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `composite`
+- `@usedIn`: `v2/community/livepeer-community/trending-topics.mdx`, `v2/home/trending.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `title` | `any` | `` | Yes | title prop. |
+| `content` | `any` | `` | Yes | content prop. |
+| `href` | `any` | `` | Yes | href prop. |
+| `author` | `string` | `"Unknown"` | No | author prop. |
+| `datePosted` | `any` | `null` | No | date Posted prop. |
+| `replyCount` | `any` | `null` | No | reply Count prop. |
+| `icon` | `string` | `"book-open"` | No | icon prop. |
+| `authorIcon` | `string` | `"user-pen"` | No | author Icon prop. |
+| `dateIcon` | `string` | `"calendar"` | No | date Icon prop. |
+| `cta` | `string` | `"Read More"` | No | cta prop. |
+| `img` | `any` | `null` | No | img prop. |
+
+**Code example**
+
+```jsx
+<PostCard title="example" content="example" />
+```
+
+---
+
+### ShowcaseCards
+Use **ShowcaseCards** when you need renders the showcase cards component. Best suited for landing page types.
+Source description: Renders the showcase cards component
+**Import path**
+```jsx
+import { ShowcaseCards } from '/snippets/components/data/showcaseCards.jsx'
+```
+**Metadata**
+- Content affinity: `landing`
+- Dependencies: `none`
+- Data source: `none`
+- Last meaningful change: `2026-03-08`
+- Breaking change risk: `low`
+- Owner: `@livepeer/docs-team`
+- Decision: `KEEP`
+- Status: `experimental`
+- Tier: `pattern`
+- `@usedIn`: `v2/home/solutions/showcase.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - Collection data rendered by the component. |
+| `limit` | `number` | `null` | No | Limit used by the component. |
+| `pageSize` | `number` | `10` | No | Page size used by the component. |
+
+**Code example**
+
+```jsx
+<ShowcaseCards />
+```
+
+---
+
+### TwitterTimeline
+Use **TwitterTimeline** when you need renders the twitter timeline component. Best suited for universal page types.
+Source description: Renders the twitter timeline component
+**Import path**
+```jsx
+import { TwitterTimeline } from '/snippets/components/data/embed.jsx'
+```
+**Metadata**
+- Content affinity: `universal`
+- Dependencies: `none`
+- Data source: `live API`
+- Last meaningful change: `2026-03-08`
+- Breaking change risk: `low`
+- Owner: `@livepeer/docs-team`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `pattern`
+- `@usedIn`: `v2/community/livepeer-community/trending-topics.mdx`, `v2/home/trending.mdx`
+**Props**
+No documented props.
+
+**Code example**
+
+```jsx
+<TwitterTimeline />
+```
+
+---
+
+### YouTubeVideoData
+Use **YouTubeVideoData** when you need - Renders YouTube videos from youtubeData.jsx format. Best suited for universal page types.
+Source description: YouTubeVideoData - Renders YouTube videos from youtubeData.jsx format
+**Import path**
+```jsx
+import { YouTubeVideoData } from '/snippets/components/data/videoData.jsx'
+```
+**Metadata**
+- Content affinity: `universal`
+- Dependencies: `none`
+- Data source: `/snippets/automations/youtube/youtubeData.jsx`
+- Last meaningful change: `2026-03-08`
+- Breaking change risk: `low`
+- Owner: `@livepeer/docs-team`
+- Decision: `KEEP`
+- Status: `stable`
+- Tier: `pattern`
+- `@usedIn`: `v2/community/livepeer-community/trending-topics.mdx`, `v2/home/trending.mdx`
+**Props**
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `items` | `Array` | `[` | No | ] - Collection data rendered by the component. |
+| `limit` | `number` | `` | Yes | Limit used by the component. |
+| `cols` | `number` | `2` | No | Cols used by the component. |
+
+**Code example**
+
+```jsx
+<YouTubeVideoData limit={1} />
+```

@@ -1,0 +1,196 @@
+---
+title: 'AI Gateway Configuration'
+description: 'Configure a Livepeer gateway to route AI inference jobs: enable AI mode, specify orchestrators, set pipeline routing preferences, and verify the configuration.'
+sidebarTitle: 'AI Configuration'
+keywords: ["livepeer", "AI gateway", "configuration", "flags", "orchAddr", "AI pipelines", "off-chain", "how-to"]
+pageType: 'how_to'
+audience: 'gateway'
+status: 'current'
+---
+
+This guide shows you how to configure your gateway to route AI inference jobs. It covers the flags specific to AI operation — orchestrator targeting, retry behaviour, and optional pipeline preferences.
+
+**Prerequisite:** go-livepeer installed and your minimum AI gateway startup working. If you have not completed that step, start at [AI Gateway Quickstart](/v2/gateways/get-started/ai-gateway-quickstart).
+
+---
+
+## Flags audit notes
+
+[//]: # (REVIEW: The flag -broadcaster is deprecated. The current flag is -gateway.)
+[//]: # (Any existing content using -broadcaster should be updated to -gateway.)
+[//]: # (Source: CLI reference states "gateway: Set to true to be a gateway (formerly known as Broadcaster\)")
+[//]: # (Confirm with Rick (@rickstaa\) before merging if the old page used -broadcaster.)
+
+[//]: # (REVIEW: -aiServiceRegistry is an on-chain-only flag. It must not appear in off-chain AI configuration.)
+[//]: # (It is included in the Dual / On-chain section below only. Confirm scope with Rick.)
+
+---
+
+## Configuration
+
+<Steps>
+  <Step title="Enable AI gateway mode">
+    The `-gateway` flag enables gateway mode. Without it, the binary does nothing.
+
+    ```bash
+    -gateway
+    ```
+
+    [//]: # (REVIEW: flag formerly known as -broadcaster — confirm any existing page content)
+[//]: # (does not use the old name)
+
+    <Note>
+      There is no separate flag to "enable AI mode." The same `-gateway` flag is used for video, AI, and dual gateways. AI pipeline routing is enabled automatically when you provide `-httpIngest` and point `-orchAddr` at AI-capable orchestrators.
+    </Note>
+  </Step>
+
+  <Step title="Specify AI-capable orchestrators">
+    The `-orchAddr` flag accepts a comma-separated list of orchestrator addresses. For off-chain AI operation, this is your only orchestrator discovery mechanism — there is no on-chain registry query in off-chain mode.
+
+    ```bash
+    -orchAddr https://orch1.example.com:8935,https://orch2.example.com:8935
+    ```
+
+    **Format:** `scheme://host:port` — the port is required. Default orchestrator port is `8935`.
+
+    If you only have one orchestrator:
+
+    ```bash
+    -orchAddr https://orch1.example.com:8935
+    ```
+
+    <Note>
+      The orchestrators you list must be running AI-capable `ai-runner` containers and advertising the pipelines you intend to route. If an orchestrator does not support a requested pipeline, the job will fail or fall back to another orchestrator if one is available.
+    </Note>
+  </Step>
+
+  <Step title="Enable HTTP ingest for AI pipelines">
+    The `-httpIngest` flag must be set to enable the HTTP endpoint that accepts AI inference requests.
+
+    ```bash
+    -httpIngest
+    ```
+
+    Without this flag, the AI pipeline API endpoint at port `8937` will not accept incoming requests.
+  </Step>
+
+  <Step title="Set the API listen address">
+    Configure which address and port the gateway API listens on:
+
+    ```bash
+    -httpAddr 0.0.0.0:8937
+    ```
+
+    Use `0.0.0.0` to accept connections on all interfaces. Use `127.0.0.1` to restrict to localhost only. The AI pipeline endpoint is then accessible at `http://<your-host>:8937/<pipeline>`.
+  </Step>
+
+  <Step title="(Optional) Configure retry timeout">
+    Control how long the gateway waits before retrying a failed AI processing request:
+
+    ```bash
+    -aiProcessingRetryTimeout 30s
+    ```
+
+    The value accepts Go duration format: `30s`, `1m`, `2m30s`. If not set, the default applies. Increase this for pipelines with slow model load times (cold models).
+  </Step>
+</Steps>
+
+---
+
+## Complete example command
+
+The following starts an off-chain AI gateway with all recommended flags:
+
+```bash
+livepeer \
+  -datadir ~/.lpData2 \
+  -gateway \                              # Enable gateway mode
+  -orchAddr https://orch1.example.com:8935,https://orch2.example.com:8935 \  # AI-capable orchestrators
+  -httpAddr 0.0.0.0:8937 \               # API listen address
+  -httpIngest \                           # Enable HTTP AI pipeline endpoint
+  -maxPricePerUnit 0 \                    # Accept any price (default — see Pricing Configuration)
+  -v 6                                    # Verbose logging (recommended during setup)
+```
+
+For Docker:
+
+```bash
+docker run \
+  --name livepeer_ai_gateway \
+  -v ~/.lpData2/:/root/.lpData2 \
+  -p 8937:8937 \
+  --network host \
+  livepeer/go-livepeer:master \
+  -datadir ~/.lpData2 \
+  -gateway \
+  -orchAddr https://orch1.example.com:8935,https://orch2.example.com:8935 \
+  -httpAddr 0.0.0.0:8937 \
+  -httpIngest \
+  -v 6
+```
+
+---
+
+## Verify the configuration is applied
+
+After starting the gateway, confirm the API is responding:
+
+```bash
+curl -s http://localhost:8937/text-to-image \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"model_id":"ByteDance/SDXL-Lightning","prompt":"a photo of a cat","width":512,"height":512}'
+```
+
+A JSON response with an `images` field confirms the gateway is running and routing AI jobs. If you receive a connection error or empty response, check the startup logs for `HTTP Server listening on http://0.0.0.0:8937`.
+
+---
+
+## On-chain AI gateway (Dual mode)
+
+The flags above are for **off-chain AI operation only**. If you are running a dual gateway (AI + video, on-chain), you additionally need:
+
+[//]: # (REVIEW: -aiServiceRegistry flag — confirm this is still current and required for on-chain AI operation)
+
+```bash
+-aiServiceRegistry              # Connect to the Livepeer AI service registry (on-chain only)
+-network=arbitrum-one-mainnet   # Connect to Arbitrum mainnet
+-ethUrl=https://arb1.arbitrum.io/rpc  # Arbitrum RPC — replace with your own
+-ethKeystorePath=/root/.lpData/arbitrum-one-mainnet/keystore
+-ethAcctAddr <YOUR_ETH_ADDRESS>
+-ethPassword=/root/.lpData/.eth_secret
+```
+
+See [Dual Gateway Configuration](/v2/gateways/setup/configure/dual-configuration) for the complete on-chain setup.
+
+---
+
+## Supported AI pipelines
+
+The Livepeer AI network currently supports these pipelines. Use the pipeline name as the endpoint path when sending requests to your gateway:
+
+| Pipeline | Endpoint | Pricing unit |
+|---|---|---|
+| `text-to-image` | `/text-to-image` | Pixels |
+| `image-to-image` | `/image-to-image` | Pixels |
+| `image-to-video` | `/image-to-video` | Pixels |
+| `upscale` | `/upscale` | Pixels |
+| `audio-to-text` | `/audio-to-text` | Milliseconds of audio |
+| `image-to-text` | `/image-to-text` | Pixels |
+| `text-to-speech` | `/text-to-speech` | Milliseconds |
+| `segment-anything-2` | `/segment-anything-2` | Pixels |
+
+For the full list of supported models per pipeline, see the [AI Pipelines overview](/ai/pipelines/overview).
+
+---
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Pricing Configuration" icon="tag" href="/v2/gateways/setup/configure/pricing-configuration">
+    Set the maximum price your gateway pays orchestrators per pipeline and model.
+  </Card>
+  <Card title="Configuration Flags Reference" icon="list" href="/v2/gateways/resources/configuration-flags">
+    Complete reference for all go-livepeer gateway flags.
+  </Card>
+</CardGroup>

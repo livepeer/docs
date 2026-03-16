@@ -1,0 +1,824 @@
+---
+title: LPD CLI
+sidebarTitle: LPD CLI
+description: Accurate contributor guide and command reference for the repository lpd CLI.
+keywords:
+  - livepeer
+  - lpd
+  - cli
+  - docs
+  - mintlify
+  - local development
+  - testing
+  - hooks
+  - scripts
+audience: internal
+pageType: reference
+purpose: reference
+status: draft
+lastVerified: 2026-03-16T00:00:00.000Z
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { DynamicTable } from "/snippets/components/layout/table.jsx";
+
+<Tip>
+`lpd` is the repository CLI for setup, local docs development, governed page moves, testing, hooks, and managed script execution.
+</Tip>
+
+<Note>
+Use `bash lpd ...` until you have run `bash lpd setup --yes` and confirmed `lpd` is on your PATH. After that, plain `lpd ...` is the normal form.
+</Note>
+
+## What `lpd` does
+
+`lpd` standardizes the main contributor workflows for this repo:
+
+- bootstrap local dependencies
+- sync the repo planning skill into the local Codex skills directory
+- verify your environment
+- run Mint locally
+- launch scoped docs previews for large navs
+- load alternate docs config files through scoped dev or the custom loader alias
+- run tests and CI-like checks
+- manage hooks
+- move pages with governed docs-path sync
+- discover and run repo-managed scripts
+
+## Most common workflows
+
+### Start local docs
+
+```bash icon="terminal"
+bash lpd setup --yes
+lpd dev -- --port 3333
+```
+
+`bash lpd setup --yes` installs tools/tests dependencies, refreshes hooks, optionally installs `lpd` on PATH, and syncs `agentic-project-management-orchestrator` into `$CODEX_HOME/skills` (fallback: `~/.codex/skills`).
+
+### Start a scoped Mint session
+
+```bash icon="terminal"
+bash lpd dev --scoped --scope-version v2 --scope-language en --scope-prefix v2/orchestrators
+```
+
+### Load an alternate docs config
+
+```bash icon="terminal"
+bash lpd dev --scoped --docs-config docs-orch-work.json
+bash lpd dev --scoped --docs-config docs-gate-work.json
+```
+
+### Use the custom Mint loader helper
+
+```bash icon="terminal"
+bash tools/scripts/dev/mint-custom-loader.sh docs-orch-work.json
+```
+
+### Run pre-PR checks
+
+```bash icon="terminal"
+lpd doctor --strict
+lpd test --staged
+lpd ci --skip-browser
+```
+
+### Move a page with governed rewrites
+
+```bash icon="terminal"
+bash lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/get-started/new.mdx --check
+```
+
+## Command quick index
+
+<DynamicTable
+  headerList={["Command", "Purpose", "Key flags"]}
+  itemsList={[
+    { Command: "lpd help", Purpose: "Show the root command summary and examples.", "Key flags": "none" },
+    { Command: "lpd info", Purpose: "Show command groups and common workflows.", "Key flags": "--help" },
+    { Command: "lpd version", Purpose: "Print the CLI version.", "Key flags": "--json (global form supported)" },
+    { Command: "lpd setup", Purpose: "Bootstrap tools/tests dependencies, hooks, optional PATH install, and Codex planner-skill sync.", "Key flags": "--yes, --no-tools, --no-tests, --no-hooks, --with-mintlify, --no-cli, --no-codex-skills, --json" },
+    { Command: "lpd doctor", Purpose: "Check repo readiness, dependencies, Mint, and hook state.", "Key flags": "--strict, --json" },
+    { Command: "lpd dev", Purpose: "Run local Mint development, optionally scoped by version, language, tab, or route prefix.", "Key flags": "--test, --test-mode, --scoped, --scope-file, --scope-version, --scope-language, --scope-tab, --scope-prefix, --disable-openapi, --" },
+    { Command: "lpd mint dev", Purpose: "Compatibility alias to `lpd dev`.", "Key flags": "same as `lpd dev`" },
+    { Command: "lpd test", Purpose: "Run staged/full tests with optional browser, domain, WCAG, and external-link audits.", "Key flags": "--staged, --full, --browser, --domain, --wcag, --wcag-no-fix, --link-audit-external, --base-url, --json" },
+    { Command: "lpd ci", Purpose: "Run CI-like local validation.", "Key flags": "--skip-browser, --base-url, --json" },
+    { Command: "lpd move-page", Purpose: "Move a docs page with `git mv` and governed docs-path sync.", "Key flags": "--yes, --check, --no-stage, --json" },
+    { Command: "lpd ai-sitemap", Purpose: "Generate or validate `sitemap-ai.xml`.", "Key flags": "--write, --check, --json" },
+    { Command: "lpd hooks", Purpose: "Manage hooks or run `.githooks` scripts.", "Key flags": "install, status, verify, info, -- script args" },
+    { Command: "lpd scripts list", Purpose: "List managed scripts by group.", "Key flags": "--group, --show-ignored, --json" },
+    { Command: "lpd scripts run", Purpose: "Resolve and execute one managed script.", "Key flags": "--dry-run, --yes, --json, --" },
+    { Command: "lpd <tools|tasks|tests|v2>", Purpose: "Shorthand wrapper around `lpd scripts run`.", "Key flags": "-- script args" },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+## Command guide
+
+<AccordionGroup>
+  <Accordion title="Getting Started" icon="rocket">
+
+  <ResponseField name="bash lpd setup" type="command">
+    Bootstrap the local repo environment.
+
+    **Usage**
+    ```bash icon="terminal"
+    bash lpd setup [--yes] [--no-tools] [--no-tests] [--no-hooks] [--with-mintlify] [--no-cli] [--no-codex-skills] [--json]
+    ```
+
+    **What it does**
+    - installs `tools` dependencies
+    - installs `tests` dependencies
+    - installs or refreshes git hooks
+    - optionally installs Mintlify globally
+    - optionally installs `lpd` on your PATH
+    - syncs `agentic-project-management-orchestrator` into `$CODEX_HOME/skills` (fallback: `~/.codex/skills`)
+
+    **Examples**
+    ```bash icon="terminal"
+    bash lpd setup --yes
+    bash lpd setup --no-tests --no-cli
+    bash lpd setup --yes --no-codex-skills
+    bash lpd setup --with-mintlify
+    ```
+
+    **Flags**
+    <ResponseField name="--yes" type="boolean" default="false">
+      Run setup non-interactively with default choices.
+    </ResponseField>
+    <ResponseField name="--no-tools" type="boolean" default="false">
+      Skip `cd tools && npm install`.
+    </ResponseField>
+    <ResponseField name="--no-tests" type="boolean" default="false">
+      Skip `cd tests && npm install`.
+    </ResponseField>
+    <ResponseField name="--no-hooks" type="boolean" default="false">
+      Skip `.githooks/install.sh`.
+    </ResponseField>
+    <ResponseField name="--with-mintlify" type="boolean" default="false">
+      Run `npm i -g mintlify`.
+    </ResponseField>
+    <ResponseField name="--no-cli" type="boolean" default="false">
+      Skip PATH installation for `lpd`.
+    </ResponseField>
+    <ResponseField name="--no-codex-skills" type="boolean" default="false">
+      Skip syncing `agentic-project-management-orchestrator` into the local Codex skills directory.
+    </ResponseField>
+    <ResponseField name="--json" type="boolean" default="false">
+      Emit the standard JSON status envelope.
+    </ResponseField>
+  </ResponseField>
+
+  <ResponseField name="lpd doctor" type="command">
+    Check whether your repo and local environment are ready.
+
+    **Usage**
+    ```bash icon="terminal"
+    lpd doctor [--strict] [--json]
+    ```
+
+    **Checks**
+    - git repository context
+    - Node availability
+    - Mint availability
+    - `tools/node_modules`
+    - `tests/node_modules`
+    - hook sync state
+
+    **Examples**
+    ```bash icon="terminal"
+    lpd doctor
+    lpd doctor --strict
+    lpd --json doctor
+    ```
+
+    **Flags**
+    <ResponseField name="--strict" type="boolean" default="false">
+      Fail with a non-zero exit code if any issue is found.
+    </ResponseField>
+    <ResponseField name="--json" type="boolean" default="false">
+      Emit the standard JSON status envelope.
+    </ResponseField>
+  </ResponseField>
+
+  <ResponseField name="lpd help | lpd info | lpd version" type="command">
+    Use these as the fast discovery commands.
+
+    **Examples**
+    ```bash icon="terminal"
+    lpd help
+    lpd info
+    lpd version
+    lpd --json version
+    ```
+  </ResponseField>
+
+  </Accordion>
+
+  <Accordion title="Local Dev And Scoped Docs" icon="terminal">
+
+  <ResponseField name="lpd dev" type="command">
+    Run the local docs dev launcher.
+
+    **Usage**
+    ```bash icon="terminal"
+    lpd dev [--test] [--test-mode fast|staged|full] [--script [path]] [--dry-run] [--scoped] [--docs-config [path]] [--scope-interactive] [--scope-file [path]] [--scope-version [csv]] [--scope-language [csv]] [--scope-tab [csv]] [--scope-prefix [csv]] [--skip-external-fetch] [--disable-openapi] [-- ...mint args]
+    ```
+
+    **What `--scoped` does**
+    Generates a reduced dev-only Mint profile so large docs nav trees start faster and route changes are lighter when you are filtering the main docs navigation.
+
+    **Examples**
+    ```bash icon="terminal"
+    lpd dev
+    lpd dev -- --port 3333
+    lpd dev --test --test-mode staged
+    lpd dev --scoped --scope-version v2 --scope-language en --scope-tab Developers
+    lpd dev --scoped --scope-prefix v2/orchestrators
+    lpd dev --scoped --scope-interactive
+    lpd dev --dry-run --scoped --scope-prefix v2/orchestrators
+    ```
+
+    **Recommended use**
+    Use `lpd dev --scoped` for filtered previews of the main docs navigation and for alternate scoped navigation files such as `docs-orch-work.json` or `docs-gate-work.json`.
+
+    **Advanced distinction**
+    <ResponseField name="--docs-config [path]" type="string" default="">
+      Use an alternate docs config as the scoped navigation source. Scoped dev keeps Mint on a projected workspace and rewrites the active workspace-root `docs.json` when this source file changes.
+    </ResponseField>
+    <ResponseField name="--scope-file [path]" type="string" default="">
+      Load scoped selection settings from JSON. This is for filters such as `versions`, `languages`, `tabs`, `prefixes`, and optional `disableOpenapi`.
+    </ResponseField>
+
+    **Flags**
+    <ResponseField name="--test" type="boolean" default="false">
+      Run advisory tests before starting the dev server.
+    </ResponseField>
+    <ResponseField name="--test-mode fast|staged|full" type="enum" default="fast">
+      Choose which advisory test mode to run with `--test`.
+    </ResponseField>
+    <ResponseField name="--script [path]" type="string" default="tools/scripts/mint-dev.sh">
+      Override the launcher script path.
+    </ResponseField>
+    <ResponseField name="--dry-run" type="boolean" default="false">
+      Print the resolved launcher command and scoped settings, then exit.
+    </ResponseField>
+    <ResponseField name="--scoped" type="boolean" default="false">
+      Enable scoped Mint profile generation.
+    </ResponseField>
+    <ResponseField name="--scope-interactive" type="boolean" default="false">
+      Prompt for scoped filters interactively.
+    </ResponseField>
+    <ResponseField name="--scope-version [csv]" type="string" default="all">
+      Limit included versions.
+    </ResponseField>
+    <ResponseField name="--scope-language [csv]" type="string" default="all">
+      Limit included languages.
+    </ResponseField>
+    <ResponseField name="--scope-tab [csv]" type="string" default="all">
+      Limit included tabs.
+    </ResponseField>
+    <ResponseField name="--scope-prefix [csv]" type="string" default="all">
+      Limit included routes by prefix such as `v2/orchestrators`.
+    </ResponseField>
+    <ResponseField name="--skip-external-fetch" type="boolean" default="false">
+      Set `MINT_SKIP_EXTERNAL_FETCH=1` for this run.
+    </ResponseField>
+    <ResponseField name="--disable-openapi" type="boolean" default="false">
+      Exclude OpenAPI routes from the scoped profile.
+    </ResponseField>
+    <ResponseField name="--" type="separator">
+      Pass the remaining arguments to the Mint launcher.
+    </ResponseField>
+  </ResponseField>
+
+  <ResponseField name="lpd mint dev" type="command">
+    Compatibility alias to `lpd dev`.
+
+    **Usage**
+    ```bash icon="terminal"
+    lpd mint dev [--scoped] [--scope-...] [-- ...mint args]
+    ```
+
+    **Examples**
+    ```bash icon="terminal"
+    lpd mint dev
+    lpd mint dev -- --port 3333
+    lpd mint dev --scoped --scope-prefix v2/orchestrators
+    ```
+  </ResponseField>
+
+  <ResponseField name="mint-custom-loader helper" type="command">
+    Thin alias for `lpd dev --scoped --docs-config`.
+
+    **Usage**
+    ```bash icon="terminal"
+    bash tools/scripts/dev/mint-custom-loader.sh <custom-docs-json> [-- ...mint args]
+    ```
+
+    **Examples**
+    ```bash icon="terminal"
+    bash tools/scripts/dev/mint-custom-loader.sh docs-orch-work.json
+    bash tools/scripts/dev/mint-custom-loader.sh docs-gate-work.json -- --port 3333
+    ```
+
+    **Use this when**
+    - you want a shorter alias for `lpd dev --scoped --docs-config ...`
+    - you want alternate navigation from `docs-gate-work.json`
+    - you want a custom docs config, not just a filtered view of the main docs nav
+  </ResponseField>
+
+  </Accordion>
+
+  <Accordion title="Validation And CI" icon="check-circle">
+
+  <ResponseField name="lpd test" type="command">
+    Run the main test suite with optional integration checks.
+
+    **Usage**
+    ```bash icon="terminal"
+    lpd test [--staged|--full] [--browser] [--domain v1|v2|both] [--wcag] [--wcag-no-fix] [--link-audit-external] [--base-url URL] [--json]
+    ```
+
+    **Examples**
+    ```bash icon="terminal"
+    lpd test --staged
+    lpd test --staged --wcag
+    lpd test --full --link-audit-external
+    lpd test --browser
+    lpd test --domain both --base-url http://localhost:3000
+    ```
+  </ResponseField>
+
+  <ResponseField name="lpd ci" type="command">
+    Run the local CI-like validation flow.
+
+    **Usage**
+    ```bash icon="terminal"
+    lpd ci [--skip-browser] [--base-url URL] [--json]
+    ```
+
+    **Examples**
+    ```bash icon="terminal"
+    lpd ci
+    lpd ci --skip-browser
+    lpd ci --base-url http://localhost:3000
+    ```
+  </ResponseField>
+
+  <ResponseField name="lpd ai-sitemap" type="command">
+    Generate or validate `sitemap-ai.xml`.
+
+    **Usage**
+    ```bash icon="terminal"
+    lpd ai-sitemap [--write|--check] [--json]
+    ```
+
+    **Examples**
+    ```bash icon="terminal"
+    lpd ai-sitemap --check
+    lpd ai-sitemap --write
+    lpd --json ai-sitemap --check
+    ```
+  </ResponseField>
+
+  </Accordion>
+
+  <Accordion title="Page Operations" icon="files">
+
+  <ResponseField name="lpd move-page" type="command">
+    Move a docs page with governed rewrites.
+
+    **Usage**
+    ```bash icon="terminal"
+    bash lpd move-page <old> <new> [--yes] [--check] [--no-stage] [--json]
+    ```
+
+    **What it does**
+    - runs `git mv`
+    - runs governed docs-path sync
+    - stages related rewrites unless you opt out
+
+    **Examples**
+    ```bash icon="terminal"
+    bash lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/get-started/new.mdx --check
+    bash lpd move-page v2/orchestrators/setup/old.mdx v2/orchestrators/get-started/new.mdx --yes
+    ```
+
+    **Flags**
+    <ResponseField name="--yes" type="boolean" default="false">
+      Auto-confirm the move.
+    </ResponseField>
+    <ResponseField name="--check" type="boolean" default="false">
+      Dry-run the move path sync flow.
+    </ResponseField>
+    <ResponseField name="--no-stage" type="boolean" default="false">
+      Do not stage rewritten files after the move.
+    </ResponseField>
+    <ResponseField name="--json" type="boolean" default="false">
+      Emit the standard JSON status envelope.
+    </ResponseField>
+  </ResponseField>
+
+  </Accordion>
+
+  <Accordion title="Hooks And Script Runner" icon="gear">
+
+  <ResponseField name="lpd hooks" type="command">
+    Manage hooks or run `.githooks` scripts.
+
+    **Usage**
+    ```bash icon="terminal"
+    lpd hooks <install|status|verify|info|<hook-script tokens...>> [-- script args]
+    ```
+
+    **Examples**
+    ```bash icon="terminal"
+    lpd hooks install
+    lpd hooks status
+    lpd hooks verify
+    lpd hooks info
+    lpd hooks verify-browser --dry-run
+    ```
+
+    **Built-in subcommands**
+    <ResponseField name="install" type="subcommand">
+      Install or update `.git/hooks/pre-commit` from `.githooks/pre-commit`.
+    </ResponseField>
+    <ResponseField name="status" type="subcommand">
+      Check whether the installed hook exists, is executable, and matches source.
+    </ResponseField>
+    <ResponseField name="verify" type="subcommand">
+      Run `.githooks/verify.sh`.
+    </ResponseField>
+    <ResponseField name="info" type="subcommand">
+      Print hook scripts, bypass flags, and human-only override trailers.
+    </ResponseField>
+    <ResponseField name="<hook-script tokens...>" type="subcommand">
+      Fallback resolution into managed scripts under `.githooks/`.
+    </ResponseField>
+  </ResponseField>
+
+  <ResponseField name="lpd scripts list" type="command">
+    List managed scripts across `tools`, `tasks`, `tests`, `v2`, and `hooks`.
+
+    **Usage**
+    ```bash icon="terminal"
+    lpd scripts list [--group tools|tasks|tests|v2|hooks] [--show-ignored] [--json]
+    ```
+
+    **Examples**
+    ```bash icon="terminal"
+    lpd scripts list
+    lpd scripts list --group tools
+    lpd scripts list --group hooks --show-ignored
+    lpd --json scripts list --group tests
+    ```
+  </ResponseField>
+
+  <ResponseField name="lpd scripts run" type="command">
+    Resolve and run a managed script.
+
+    **Usage**
+    ```bash icon="terminal"
+    lpd scripts run <group> <script-path tokens...> [--dry-run] [--yes] [--json] [-- script args]
+    ```
+
+    **Examples**
+    ```bash icon="terminal"
+    lpd scripts run tools dev test-add-callouts -- --help
+    lpd scripts run tasks run-audit --dry-run
+    lpd scripts run tasks run-audit --yes
+    ```
+
+    **Inputs**
+    <ResponseField name="GROUP" type="enum" required>
+      One of `tools`, `tasks`, `tests`, `v2`, or `hooks`.
+    </ResponseField>
+    <ResponseField name="<script-path tokens...>" type="string" required>
+      Space-delimited command path that resolves to a discovered script.
+    </ResponseField>
+
+    **Flags**
+    <ResponseField name="--dry-run" type="boolean" default="false">
+      Prints the resolved executable command and exits.
+    </ResponseField>
+    <ResponseField name="--yes" type="boolean" default="false">
+      Auto-confirms high-risk script groups.
+    </ResponseField>
+    <ResponseField name="--json" type="boolean" default="false">
+      Enables JSON status envelope output.
+    </ResponseField>
+    <ResponseField name="--" type="separator">
+      Passes remaining args to the resolved script target.
+      Example: `lpd scripts run tools dev test-add-callouts -- --help`
+    </ResponseField>
+  </ResponseField>
+
+  <ResponseField name="lpd <tools|tasks|tests|v2>" type="command">
+    Group shorthand alias for `lpd scripts run <group> ...`.
+
+    **Usage**
+    ```bash icon="terminal"
+    lpd tools <script-path tokens...> [-- script args]
+    lpd tasks <script-path tokens...> [-- script args]
+    lpd tests <script-path tokens...> [-- script args]
+    lpd v2 <script-path tokens...> [-- script args]
+    ```
+
+    **Examples**
+    ```bash icon="terminal"
+    lpd tools dev test-add-callouts -- --help
+    lpd tests unit lpd-scoped-mint-dev.test -- --help
+    lpd v2 wcag-repair-common -- --staged --stage
+    ```
+  </ResponseField>
+
+  <ResponseField name="Script risk model" type="command">
+    Scripts are assigned risk by group and may require confirmation.
+
+    **Usage**
+    ```bash icon="terminal"
+    low: tests
+    medium: tools, hooks
+    high: tasks, v2
+    ```
+
+    **Examples**
+    ```bash icon="terminal"
+    lpd scripts run tasks run-audit
+    lpd scripts run tasks run-audit --yes
+    ```
+
+    High-risk groups prompt for confirmation unless `--yes` is supplied.
+    In non-interactive mode, high-risk commands fail without `--yes`.
+  </ResponseField>
+
+  <Note>
+  Human-only override trailers:
+  `git commit -m "msg" --trailer "allowlist-edit=true"` and
+  `git commit -m "msg" --trailer "allow-deletions=true"`.
+  </Note>
+  </Accordion>
+
+  <Accordion title="Troubleshooting And JSON Output" icon="wrench">
+
+  <ResponseField name="`lpd` not found" type="troubleshooting">
+    Run:
+
+    ```bash icon="terminal"
+    bash lpd setup --yes
+    ```
+
+    Then open a new shell or source your shell rc file. Until PATH is updated, use `bash lpd ...`.
+  </ResponseField>
+
+  <ResponseField name="Hook mismatch" type="troubleshooting">
+    Run:
+
+    ```bash icon="terminal"
+    lpd hooks status
+    lpd hooks install
+    lpd hooks verify
+    ```
+  </ResponseField>
+
+  <ResponseField name="Slow Mint startup on large navs" type="troubleshooting">
+    Prefer scoped mode:
+
+    ```bash icon="terminal"
+    lpd dev --scoped --scope-prefix v2/orchestrators
+    ```
+
+    For alternate docs configs, use the helper:
+
+    ```bash icon="terminal"
+    bash tools/scripts/dev/mint-custom-loader.sh docs-orch-work.json
+    bash tools/scripts/dev/mint-custom-loader.sh docs-gate-work.json
+    ```
+  </ResponseField>
+
+  <ResponseField name="JSON output" type="response">
+    Many commands support the standard finish-envelope JSON output.
+
+    **Examples**
+    ```bash icon="terminal"
+    lpd --json version
+    lpd doctor --json
+    lpd ci --json
+    lpd scripts list --group tools --json
+    ```
+
+    The envelope typically includes:
+    - command label
+    - status
+    - message
+    - command-specific payload where supported
+  </ResponseField>
+
+  </Accordion>
+</AccordionGroup>
+
+## Script Catalog
+  <Note>
+  For generated full script metadata (script path, summary, usage, domain), see [`scripts-catalog`](../catalog/scripts-catalog.mdx).
+  </Note>
+
+<TabsContainer>
+  <Tab title="Tools">
+  #### Tools Scripts: `tools` (39)
+
+  | Script token | Flags available | Resolved path | PURPOSE |
+  |---|---|---|---|
+  | `audit-all-pages-simple` | script-specific via `-- <args>` | `tools/scripts/audit-all-pages-simple.js` | Utility script for tasks/scripts/audit-all-pages-simple.js. |
+  | `audit-all-pages` | script-specific via `-- <args>` | `tools/scripts/audit-all-pages.js` | Utility script for tasks/scripts/audit-all-pages.js. |
+  | `audit-all-v2-pages` | script-specific via `-- <args>` | `tools/scripts/audit-all-v2-pages.js` | Utility script for tools/scripts/audit-all-v2-pages.js. |
+  | `audit-scripts` | script-specific via `-- <args>` | `tools/scripts/audit-scripts.js` | Audit full-repo executable scripts, categorize usage/overlap, and overwrite SCRIPT_AUDIT reports. |
+  | `audit-tasks-folders` | script-specific via `-- <args>` | `tools/scripts/audit-tasks-folders.js` | Audit tasks folders, optionally normalise report locations, and optionally apply audit recommendations with conflict-safe moves. |
+  | `audit-v2-usefulness` | script-specific via `-- <args>` | `tools/scripts/audit-v2-usefulness.js` | Audit v2 MDX pages (excluding x-* directories) and emit page-level usefulness matrix rows with source-weighted 2026 accuracy verification fields. |
+  | `convert-rss-to-mdx` | script-specific via `-- <args>` | `tools/scripts/convert-rss-to-mdx.js` | Runs `tools/scripts/convert-rss-to-mdx.js`. |
+  | `debug-mint-dev` | script-specific via `-- <args>` | `tools/scripts/debug-mint-dev.js` | Utility script for tools/scripts/debug-mint-dev.js. |
+  | `deprecated project-management-output-script` | script-specific via `-- <args>` | `tools/scripts/deprecated/project-management-output-script.js` | Deprecated legacy project-management output script retained as a reference stub. |
+  | `dev add-callouts` | script-specific via `-- <args>` | `tools/scripts/dev/add-callouts.js` | Utility script for tools/scripts/dev/add-callouts.js. |
+  | `dev batch-update-og-image` | script-specific via `-- <args>` | `tools/scripts/dev/batch-update-og-image.sh` | Utility script for tools/scripts/dev/batch-update-og-image.sh. |
+  | `dev ensure-mint-watcher-patch` | script-specific via `-- <args>` | `tools/scripts/dev/ensure-mint-watcher-patch.sh` | Ensure Mint local-preview watcher disables glob expansion in repo paths. |
+  | `dev replace-og-image` | script-specific via `-- <args>` | `tools/scripts/dev/replace-og-image.py` | Utility script for tools/scripts/dev/replace-og-image.py. |
+  | `dev test-add-callouts` | script-specific via `-- <args>` | `tools/scripts/dev/test-add-callouts.js` | Utility script for tools/scripts/dev/test-add-callouts.js. |
+  | `generate-ai-sitemap` | script-specific via `-- <args>` | `tools/scripts/generate-ai-sitemap.js` | Generate an AI-focused sitemap from v2 docs navigation. |
+  | `generate-docs-guide-indexes` | script-specific via `-- <args>` | `tools/scripts/generate-docs-guide-indexes.js` | Generate docs-guide workflow/template indexes and optionally verify they are up to date. |
+  | `generate-docs-guide-pages-index` | script-specific via `-- <args>` | `tools/scripts/generate-docs-guide-pages-index.js` | Generate docs-guide/catalog/pages-catalog.mdx from v2/index.mdx entries filtered to docs.json navigation pages. |
+  | `generate-docs-index` | script-specific via `-- <args>` | `tools/scripts/generate-docs-index.js` | Generate docs-index.json and optionally backfill v2 frontmatter metadata. |
+  | `generate-llms-files` | script-specific via `-- <args>` | `tools/scripts/generate-llms-files.js` | Generate llms.txt and llms-full.txt from v2 docs navigation. |
+  | `generate-pages-index` | script-specific via `-- <args>` | `tools/scripts/generate-pages-index.js` | Generate and verify section-style index.mdx files for v2 docs folders, plus the root aggregate index. |
+  | `mint-dev` | script-specific via `-- <args>` | `tools/scripts/mint-dev.sh` | Utility script for tools/scripts/mint-dev.sh. |
+  | `new-script` | script-specific via `-- <args>` | `tools/scripts/new-script.js` | Create a new script file prefilled with the required docs header template. |
+  | `publish-v2-internal-reports` | script-specific via `-- <args>` | `tools/scripts/publish-v2-internal-reports.js` | Duplicate approved markdown reports into v2/internal/reports pages with metadata and update docs.json. |
+  | `snippets fetch-external-docs` | script-specific via `-- <args>` | `tools/scripts/snippets/fetch-external-docs.sh` | Utility script for tools/scripts/snippets/fetch-external-docs.sh. |
+  | `snippets fetch-lpt-exchanges` | script-specific via `-- <args>` | `tools/scripts/snippets/fetch-lpt-exchanges.sh` | Utility script for tools/scripts/snippets/fetch-lpt-exchanges.sh. |
+  | `snippets fetch-openapi-specs` | script-specific via `-- <args>` | `tools/scripts/snippets/fetch-openapi-specs.sh` | Utility script for tools/scripts/snippets/fetch-openapi-specs.sh. |
+  | `snippets generate-api-docs` | script-specific via `-- <args>` | `tools/scripts/snippets/generate-api-docs.sh` | Utility script for tools/scripts/snippets/generate-api-docs.sh. |
+  | `snippets generate-data scripts generate-glossary` | script-specific via `-- <args>` | `tools/scripts/snippets/generate-data/scripts/generate-glossary.js` | Utility script for tools/scripts/snippets/generate-data/scripts/generate-glossary.js. |
+  | `snippets generate-data scripts terminology-search` | script-specific via `-- <args>` | `tools/scripts/snippets/generate-data/scripts/terminology-search.js` | Utility script for tools/scripts/snippets/generate-data/scripts/terminology-search.js. |
+  | `snippets generate-seo` | script-specific via `-- <args>` | `tools/scripts/snippets/generate-seo.js` | Utility script for tools/scripts/snippets/generate-seo.js. |
+  | `snippets test-scripts` | script-specific via `-- <args>` | `tools/scripts/snippets/test-scripts.sh` | Utility script for tools/scripts/snippets/test-scripts.sh. |
+  | `generate-component-docs` | `--dry-run`, `--fix`, `--check`, `--template-only`, `--category <name>` | `tools/scripts/generate-component-docs.js` | Generates the published component-library pages and localized scaffolds from governed component metadata. |
+  | `test-all-pages-browser` | script-specific via `-- <args>` | `tools/scripts/test-all-pages-browser.js` | Utility script for tools/scripts/test-all-pages-browser.js. |
+  | `test-all-pages-comprehensive` | script-specific via `-- <args>` | `tools/scripts/test-all-pages-comprehensive.js` | Utility script for tools/scripts/test-all-pages-comprehensive.js. |
+  | `test-v2-pages` | script-specific via `-- <args>` | `tools/scripts/test-v2-pages.js` | Utility script for tools/scripts/test-v2-pages.js. |
+  | `test-youtube-pages` | script-specific via `-- <args>` | `tools/scripts/test-youtube-pages.js` | Utility script for tools/scripts/test-youtube-pages.js. |
+  | `test test-youtube-pages` | script-specific via `-- <args>` | `tools/scripts/test/test-youtube-pages.js` | Utility script for tools/scripts/test/test-youtube-pages.js. |
+  | `verify .verify-large-change` | script-specific via `-- <args>` | `tools/scripts/verify/.verify-large-change.sh` | Reserved verifier hook placeholder for large-change checks. |
+  | `wcag-repair-common` | script-specific via `-- <args>` | `tools/scripts/wcag-repair-common.js` | Apply conservative WCAG-related source autofixes across v2 docs (common raw-tag issues) and write deterministic repair reports. |
+  </Tab>
+  <Tab title="Tasks">
+  #### Tasks Scripts: `tasks` (3)
+
+  | Script token | Flags available | Resolved path | PURPOSE |
+  |---|---|---|---|
+  | `audit-minimal` | script-specific via `-- <args>` | `tasks/scripts/audit-minimal.js` | Utility script for tasks/scripts/audit-minimal.js. |
+  | `audit-python` | script-specific via `-- <args>` | `tasks/scripts/audit-python.py` | Utility script for tasks/scripts/audit-python.py. |
+  | `run-audit-now` | script-specific via `-- <args>` | `tasks/scripts/run-audit-now.js` | Utility script for tasks/scripts/run-audit-now.js. |
+
+  </Tab>
+  <Tab title="Tests">
+  #### Test Scripts: `tests` (23)
+
+  | Script token | Flags available | Resolved path | PURPOSE |
+  |---|---|---|---|
+  | `integration browser.test` | script-specific via `-- <args>` | `tests/integration/browser.test.js` | Utility script for tests/integration/browser.test.js. |
+  | `integration domain-pages-audit` | script-specific via `-- <args>` | `tests/integration/domain-pages-audit.js` | Audit deployed docs page load status and emit a stable JSON report. |
+  | `integration v2-link-audit` | script-specific via `-- <args>` | `tests/integration/v2-link-audit.js` | Comprehensive V2 MDX link audit with internal strict checks and optional external URL validation. |
+  | `integration v2-link-audit.selftest` | script-specific via `-- <args>` | `tests/integration/v2-link-audit.selftest.js` | Script-level self-tests for v2 link audit external validation using a local HTTP fixture and temporary MDX file. |
+  | `integration v2-wcag-audit` | script-specific via `-- <args>` | `tests/integration/v2-wcag-audit.js` | Audit v2 docs.json navigation pages for accessibility (WCAG 2.2 AA) with deterministic reports and conservative source autofixes. |
+  | `integration v2-wcag-audit.selftest` | script-specific via `-- <args>` | `tests/integration/v2-wcag-audit.selftest.js` | Script-level self-tests for the v2 WCAG audit (local HTTP + Puppeteer axe run, and temp-file fix/stage behaviour without Mintlify). |
+  | `run-all` | script-specific via `-- <args>` | `tests/run-all.js` | Utility script for tests/run-all.js. |
+  | `run-pr-checks` | script-specific via `-- <args>` | `tests/run-pr-checks.js` | Run changed-file scoped validation checks for pull request CI. |
+  | `unit docs-guide-sot.test` | script-specific via `-- <args>` | `tests/unit/docs-guide-sot.test.js` | Validate docs-guide source-of-truth coverage, README pointers, and generated index freshness. |
+  | `unit docs-navigation.test` | script-specific via `-- <args>` | `tests/unit/docs-navigation.test.js` | Validate docs.json page-entry syntax, report missing routes, suggest remaps, and optionally apply approved remaps (`--write-report` to refresh navigation-report artifacts). |
+  | `unit docs-usefulness-accuracy-verifier.test` | script-specific via `-- <args>` | `tests/unit/docs-usefulness-accuracy-verifier.test.js` | Validate source-weighted 2026 accuracy verification rules (GitHub vs DeepWiki precedence, freshness, fallback, and cache reuse). |
+  | `unit links-imports.test` | script-specific via `-- <args>` | `tests/unit/links-imports.test.js` | Utility script for tests/unit/links-imports.test.js. |
+  | `unit mdx-guards.test` | script-specific via `-- <args>` | `tests/unit/mdx-guards.test.js` | Enforce MDX guardrails for globals imports, math delimiters, and markdown table line breaks. |
+  | `unit mdx.test` | script-specific via `-- <args>` | `tests/unit/mdx.test.js` | Utility script for tests/unit/mdx.test.js. |
+  | `unit quality.test` | script-specific via `-- <args>` | `tests/unit/quality.test.js` | Utility script for tests/unit/quality.test.js. |
+  | `unit script-docs.test` | script-specific via `-- <args>` | `tests/unit/script-docs.test.js` | Enforce script header schema, keep group script indexes in sync, and build aggregate script index. |
+  | `unit spelling.test` | script-specific via `-- <args>` | `tests/unit/spelling.test.js` | Utility script for tests/unit/spelling.test.js. |
+  | `unit style-guide.test` | script-specific via `-- <args>` | `tests/unit/style-guide.test.js` | Utility script for tests/unit/style-guide.test.js. |
+  | `unit v2-link-audit.test` | script-specific via `-- <args>` | `tests/unit/v2-link-audit.test.js` | Unit tests for v2 link audit args, external validation helpers, and x-* scope exclusion behaviour. |
+  | `unit v2-wcag-audit.test` | script-specific via `-- <args>` | `tests/unit/v2-wcag-audit.test.js` | Unit tests for v2 WCAG audit helper logic (args, thresholds, route mapping, report sorting, and conservative autofixes). |
+  | `utils file-walker` | script-specific via `-- <args>` | `tests/utils/file-walker.js` | Utility script for tests/utils/file-walker.js. |
+  | `utils mdx-parser` | script-specific via `-- <args>` | `tests/utils/mdx-parser.js` | Utility script for tests/utils/mdx-parser.js. |
+  | `utils spell-checker` | script-specific via `-- <args>` | `tests/utils/spell-checker.js` | Utility script for tests/utils/spell-checker.js. |
+
+  </Tab>
+  <Tab title="Other">
+  #### Other Scripts: `v2` (5)
+
+  | Script token | Flags available | Resolved path | PURPOSE |
+  |---|---|---|---|
+  | `add-callouts` | script-specific via `-- <args>` | `tools/scripts/dev/add-callouts.js` | Utility script for tools/scripts/dev/add-callouts.js. |
+  | `batch-update-og-image` | script-specific via `-- <args>` | `tools/scripts/dev/batch-update-og-image.sh` | Utility script for tools/scripts/dev/batch-update-og-image.sh. |
+  | `ensure-mint-watcher-patch` | script-specific via `-- <args>` | `tools/scripts/dev/ensure-mint-watcher-patch.sh` | Ensure Mint local-preview watcher disables glob expansion in repo paths. |
+  | `replace-og-image` | script-specific via `-- <args>` | `tools/scripts/dev/replace-og-image.py` | Utility script for tools/scripts/dev/replace-og-image.py. |
+  | `test-add-callouts` | script-specific via `-- <args>` | `tools/scripts/dev/test-add-callouts.js` | Utility script for tools/scripts/dev/test-add-callouts.js. |
+
+  </Tab>
+</TabsContainer>
+
+
+## Troubleshooting
+
+### `lpd` not found
+
+Use the repo-local fallback and verify setup:
+
+```bash icon="terminal"
+bash lpd setup --yes
+bash lpd version
+```
+
+If needed, reload your shell rc file (`source ~/.zshrc` or equivalent).
+
+### Hooks mismatch
+
+Check and reinstall hooks:
+
+```bash icon="terminal"
+lpd hooks status
+lpd hooks install
+lpd hooks verify
+```
+
+### `--json` expectations
+
+Global JSON mode is prefix form: `lpd --json <command> ...`.
+Some commands also accept local `--json`.
+`lpd info --json` is invalid because `info` only accepts `--help|-h`.
+
+### Port collision on `lpd dev`
+
+Pass a port through the launcher:
+
+```bash icon="terminal"
+lpd dev -- --port 3334
+```
+
+### Slow startup or slow route changes on very large `docs.json`
+
+Use scoped dev mode so Mint loads only the version, language, tab, or prefix you are actively editing:
+
+```bash icon="terminal"
+lpd dev --scoped --scope-version v2 --scope-language en --scope-tab Developers
+```
+
+Interactive picker:
+
+```bash icon="terminal"
+lpd dev --scoped --scope-interactive
+```
+
+## JSON Output
+
+When JSON mode is active on finish-based commands, output uses this status envelope:
+
+<Accordion title="JSON Output Envelope" icon="code">
+  <ResponseField name="ok" type="boolean">
+    `true` for success and `false` for failure.
+  </ResponseField>
+
+  <ResponseField name="command" type="string">
+    Normalised command label (for example: `test`, `scripts list`, `hooks status`).
+  </ResponseField>
+
+  <ResponseField name="message" type="string">
+    Human-readable summary of the command result.
+  </ResponseField>
+
+  <ResponseField name="exit_code" type="number">
+    Exit code returned by the command path.
+  </ResponseField>
+
+  <ResponseField name="repo_root" type="string">
+    Absolute repo root used during command execution.
+  </ResponseField>
+
+  Example:
+
+  ```json icon="terminal"
+  {
+    "ok": true,
+    "command": "version",
+    "message": "lpd 0.2.0",
+    "exit_code": 0,
+    "repo_root": "/path/to/livepeer-docs-repo"
+  }
+  ```
+
+  <Note>
+  `lpd info` does not emit a structured JSON envelope.
+  Use JSON mode with commands that complete via `finish()`.
+  </Note>
+</Accordion>

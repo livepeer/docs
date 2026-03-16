@@ -1,0 +1,96 @@
+---
+title: 'Generated Artifact And Hook Governance'
+sidebarTitle: 'Generated Artifact Governance'
+description: 'Policy for governing generated artifacts, hook behavior, and local-only reports without widening commit scope.'
+keywords:
+  [
+    'generated artifacts',
+    'hook governance',
+    'pre-commit',
+    'docs-index',
+    'source of truth',
+    'repo governance',
+    'livepeer docs',
+  ]
+---
+
+# Generated Artifact And Hook Governance
+
+This policy defines how generated artifacts are classified, where they belong, and what hooks are allowed to do with them.
+
+The canonical configuration lives in `tools/config/generated-artifacts.json`. Hooks and supporting utilities must read from that manifest instead of embedding path-specific generated-file rules directly in shell logic.
+
+## Artifact Classes
+
+| Class | Meaning | Commit rule | Hook rule |
+| --- | --- | --- | --- |
+| `committed_authoritative` | Generated artifact is part of runtime, tests, or repo contract. | May be required in git. | Prefer `check_only`; do not widen scope automatically. |
+| `committed_derived_scoped` | Generated artifact is committed, but only derives from a declared source set. | Commit only when its source set changed and the generator was intentionally run. | Prefer `check_only`; regenerate explicitly. |
+| `ephemeral_local` | Generated artifact exists for human inspection or local diagnostics only. | Do not commit. | Ignore for regeneration; block if staged when policy says `forbidden`. |
+
+## Practical Rules
+
+1. If an artifact is needed by runtime, tests, or repo contracts, it may be committed.
+2. If an artifact only supports human inspection, it must not be hook-staged and should usually be ignored.
+3. Hooks must act only on artifacts listed in `tools/config/generated-artifacts.json`.
+4. Auto-staging is exceptional and allowed only for small deterministic artifacts with bounded diffs.
+5. Broad repo-wide regeneration is not allowed in `pre-commit`; use `check_only` and fail with a targeted command instead.
+6. Every generated artifact must declare its upstream sources and delta strategy.
+7. Reports, audits, scratch outputs, and one-off inventories must live in non-authoritative locations and never become implicit source of truth.
+8. When a generated artifact changes outside its declared source scope, treat that as a governance defect, not a commit-time convenience issue.
+
+## Manifest Contract
+
+Each manifest entry must define:
+
+- `path`
+- `owner`
+- `generator`
+- `sources`
+- `class`
+- `commit_policy`
+- `hook_policy`
+- `ci_policy`
+- `delta_strategy`
+- `notes`
+
+Allowed enums:
+
+- `class`: `committed_authoritative`, `committed_derived_scoped`, `ephemeral_local`
+- `commit_policy`: `required`, `manual`, `forbidden`
+- `hook_policy`: `check_only`, `write_and_stage`, `ignore`
+- `ci_policy`: `enforce`, `advisory`, `ignore`
+- `delta_strategy`: `full`, `staged`, `source_glob`, `none`
+
+## Hook Policy
+
+`pre-commit` must distinguish three outcomes:
+
+- source-file problems
+- generated-artifact freshness problems
+- forbidden staged ephemeral outputs
+
+For managed generated artifacts:
+
+- `check_only` means the hook fails with a targeted remediation command.
+- `write_and_stage` is reserved for bounded deterministic artifacts and must be justified in the manifest.
+- `ignore` means the hook does not manage the artifact at commit time.
+
+`docs-index.json` remains committed for now, but its hook policy is `check_only`. If `docs.json` or manifest-declared content sources change and `docs-index.json` is stale, the hook must fail and print the exact regeneration command instead of staging a repo-wide diff.
+
+## Placement Rules
+
+- Authoritative committed artifacts stay in their canonical runtime or contract path.
+- Human-authored governance docs live in `docs-guide/policies/` or `tasks/reports/repo-ops/`.
+- Machine-generated reports live in `tasks/reports/**`.
+- Local scratch outputs belong in ignored local-only buckets such as `tasks/reports/_local/`.
+
+## Maintainer Workflow
+
+When a generated artifact check fails:
+
+1. Identify the managed artifact from the hook output.
+2. Confirm the staged files are inside that artifact's declared source scope.
+3. Run the exact generator command from the manifest.
+4. Review the generated diff as part of the same task if it belongs to that task's declared scope.
+5. If the diff is broad or unexpected, stop and treat it as a governance defect rather than forcing it through the hook.

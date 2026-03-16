@@ -1,0 +1,169 @@
+---
+title: Arbitrum Exchanges
+sidebarTitle: Exchanges & Bridges
+description: 'Where to acquire ETH (for gas) and LPT (for staking) on Arbitrum One — exchanges, bridges, and DEXs for Livepeer orchestrators.'
+keywords:
+  - livepeer
+  - orchestrator
+  - arbitrum
+  - exchanges
+  - LPT
+  - ETH
+  - bridge
+  - Uniswap
+  - staking
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: orchestrator
+purpose: reference
+status: review
+lastVerified: 2026-03-13
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+Orchestrators need two tokens on Arbitrum One:
+
+- **ETH** — for gas (reward calls, ticket redemption, service registration, staking transactions)
+- **LPT** — for staking (self-delegation to enter the active orchestrator set)
+
+<CustomDivider />
+
+## ETH on Arbitrum
+
+ETH is the gas token on Arbitrum One. Gas costs are significantly lower than Ethereum L1.
+
+### Getting ETH to Arbitrum
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Method</TableCell>
+    <TableCell header>Notes</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>[Arbitrum Bridge](https://bridge.arbitrum.io/)</TableCell>
+    <TableCell>Official bridge from Ethereum L1 to Arbitrum One. Bridge time: ~10 minutes L1→L2, ~7 days L2→L1.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>[Hop Protocol](https://hop.exchange/)</TableCell>
+    <TableCell>Cross-chain bridge supporting Arbitrum. Faster L2→L1 withdrawals (minutes, not days).</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>[Stargate](https://stargate.finance/)</TableCell>
+    <TableCell>Cross-chain bridge via LayerZero.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Direct withdrawal from CEX</TableCell>
+    <TableCell>Many centralised exchanges (Binance, Coinbase, Kraken, OKX) support direct withdrawal to Arbitrum One — check your exchange's withdrawal network options. This avoids bridging entirely.</TableCell>
+  </TableRow>
+</StyledTable>
+<CustomDivider />
+
+## LPT on Arbitrum
+
+LPT is the Livepeer protocol token. Orchestrators stake LPT to enter the active set and earn inflation rewards.
+
+### Acquiring LPT
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Method</TableCell>
+    <TableCell header>Notes</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>[Uniswap (Arbitrum)](https://app.uniswap.org/swap?chain=arbitrum)</TableCell>
+    <TableCell>Primary DEX for LPT/ETH swaps on Arbitrum One. Deepest liquidity.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>[Arbitrum Bridge](https://bridge.arbitrum.io/)</TableCell>
+    <TableCell>Bridge LPT from Ethereum L1 to Arbitrum One if you already hold LPT on L1.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>Centralised exchanges</TableCell>
+    <TableCell>Some CEXs list LPT — check whether they support Arbitrum One withdrawals directly, or only Ethereum L1 (which would require a subsequent bridge).</TableCell>
+  </TableRow>
+</StyledTable>
+
+### LPT Contract Address (Arbitrum One)
+
+``` icon="terminal"
+0x289ba1701C2F088cf0faf8B3705246331cB8A839
+```
+<Warning>
+  Always verify the token contract address before swapping. Scam tokens with similar names exist on DEXs.
+</Warning>
+
+<CustomDivider />
+
+## How Much Do You Need?
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Token</TableCell>
+    <TableCell header>Purpose</TableCell>
+    <TableCell header>Rough Estimate</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>ETH</TableCell>
+    <TableCell>Gas for activation, reward calls, ticket redemption</TableCell>
+    <TableCell>0.01–0.05 ETH is sufficient for weeks of operation at current Arbitrum gas prices</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>LPT</TableCell>
+    <TableCell>Self-stake to enter the active set (top 100)</TableCell>
+    <TableCell>Check [Explorer](https://explorer.livepeer.org) for the current 100th orchestrator's stake — that is the minimum threshold</TableCell>
+  </TableRow>
+</StyledTable>
+
+<Note>
+ The LPT required to enter the active set changes over time as orchestrators join and leave. The threshold has historically ranged from a few hundred to multiple thousand LPT.
+</Note>
+
+<CustomDivider />
+
+## See Also
+
+<CardGroup cols={3}>
+  <Card title="Arbitrum RPCs" href="/v2/orchestrators/resources/arbitrum-rpc" icon="server" />
+  <Card title="Staking LPT" href="/v2/orchestrators/setup/connect-and-activate" icon="coins" />
+  <Card title="Contract Addresses" href="/v2/orchestrators/resources/technical/x-contract-addresses" icon="file-contract" />
+</CardGroup>
+
+{/*
+  PURPOSE:
+  Guide to acquiring ETH and LPT on Arbitrum - exchanges, bridges,
+  and methods for funding an orchestrator wallet.
+
+  SECTION HOME: Resources > Technical Reference
+  CROSS-REFS:
+  - Setup > Connect and Activate - funding before activation
+  - Staking & Rewards - LPT for self-staking
+*/}

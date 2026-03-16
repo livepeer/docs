@@ -4,7 +4,7 @@
  * @category          validator
  * @purpose           qa:content-quality
  * @scope             tests/unit, tests/integration
- * @owner             docs
+ * @domain            docs
  * @needs             E-R1, R-R11
  * @purpose-statement Unit tests for v2-wcag-audit.js — tests individual WCAG rules
  * @pipeline          manual — not yet in pipeline
@@ -39,9 +39,13 @@ function runTests() {
 
   console.log('🧪 v2 WCAG Audit Unit Tests');
 
-  runCase('Excludes x-* paths anywhere under v2', () => {
+  runCase('Excludes only explicit unpublished v2 path buckets', () => {
     assert.strictEqual(fileWalker.isExcludedV2ExperimentalPath('v2/x-pages/a.mdx'), true);
-    assert.strictEqual(fileWalker.isExcludedV2ExperimentalPath('v2/about/x-archive/a.mdx'), true);
+    assert.strictEqual(fileWalker.isExcludedV2ExperimentalPath('v2/about/x-experimental/a.mdx'), true);
+    assert.strictEqual(fileWalker.isExcludedV2ExperimentalPath('v2/orchestrators/_workspace/plans/plan.md'), true);
+    assert.strictEqual(fileWalker.isExcludedV2ExperimentalPath('v2/orchestrators/_contextData/product-thinking-handoff.md'), true);
+    assert.strictEqual(fileWalker.isExcludedV2ExperimentalPath('v2/gateways/guides/payments-and-pricing/review.md'), true);
+    assert.strictEqual(fileWalker.isExcludedV2ExperimentalPath('v2/orchestrators/operations/x-running-workloads.mdx'), false);
     assert.strictEqual(fileWalker.isExcludedV2ExperimentalPath('v2/about/livepeer-overview.mdx'), false);
   });
 

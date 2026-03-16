@@ -22,6 +22,7 @@
 - Staged WCAG accessibility audit with conservative autofix (`tests/integration/v2-wcag-audit.js --staged --fix --stage --max-pages 10 --fail-impact serious ...`)
 - Staged strict V2 link audit (`tests/integration/v2-link-audit.js --staged --strict ...`)
 - Staged domain audit (`tests/integration/domain-pages-audit.js --staged ...`)
+- Staged selection will eventually exclude governed V2 non-publishable lanes through `.mintignore`; legacy buckets such as `_contextData`, `_plans-and-research`, `x-resources`, and nested `review.md` remain in inventory until move waves complete.
 
 **Speed:** Fast (~10-30 seconds) for most commits, depends on staged scope
 
@@ -32,7 +33,7 @@
 ./.githooks/install.sh
 ```
 
----
+<CustomDivider />
 
 ## 2. CI/CD Workflows (GitHub Actions - Automatic)
 
@@ -133,10 +134,10 @@
 - No semantic path rewrites
 
 **Rolling Issue Behavior:**
-- Single marker issue: `<!-- openapi-reference-audit -->`
+- Single marker issue: `[//]: # (openapi-reference-audit)`
 - Opens/updates when unresolved failures remain
 - Closes with resolution comment when a run is clean
-- Labels ensured idempotently: `docs-v2`, `help wanted`, `status: needs-triage`, `type: bug`, `area: ci-cd`
+- Labels ensured idempotently: `docs-v2`, `help wanted`, `status: needs-routing`, `type: bug`, `area: ci-cd`
 
 **Output:**
 - Artifacts:
@@ -150,7 +151,7 @@
 
 **Blocks PR:** YES when unresolved findings remain
 
----
+<CustomDivider />
 
 ## 3. Manual Execution (On-Demand)
 
@@ -175,7 +176,9 @@ bash lpd test --full --wcag
 bash lpd test --full --wcag --wcag-no-fix
 
 # Changed-file PR simulation (local)
+# branch-health is the default lane
 node tests/run-pr-checks.js --base-ref main
+node tests/run-pr-checks.js --base-ref main --lane branch-health
 
 # Strict link audit on explicit files
 node tests/integration/v2-link-audit.js --files v2/community/livepeer-community/trending-topics.mdx --strict
@@ -193,7 +196,7 @@ node tests/integration/openapi-reference-audit.js --files v2/solutions/livepeer-
 4. If endpoint is intentionally removed, retire page + locale variants and remove navigation references in `docs.json`.
 5. Re-run strict audit until findings are zero.
 
----
+<CustomDivider />
 
 ## Execution Flow (PR)
 
@@ -204,7 +207,7 @@ Content Quality Suite starts
   ↓
 Compute changed files from merge-base (origin/<base_ref>..HEAD)
   ↓
-Run changed-file blocking checks
+Run changed-file blocking checks (`branch-health` lane by default)
   ↓
 Start Mintlify dev server
   ↓
@@ -215,7 +218,7 @@ Step summary updated
 ✅ PR can merge OR ❌ PR blocked
 ```
 
----
+<CustomDivider />
 
 ## Future Graduation to Full-Repo Blocking
 
@@ -226,7 +229,7 @@ Graduate to full-repo blocking only after agreed criteria are met, for example:
 - The team agrees the remaining debt is not expected to cause widespread PR failures
 - CI timing and developer experience remain acceptable after widening scope
 
----
+<CustomDivider />
 
 ## Detailed Matrix
 

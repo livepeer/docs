@@ -1,6 +1,61 @@
 'use strict';
+/**
+ * @script            journey-check
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14, R-C6
+ * @purpose-statement Evaluates docs pages against user journey completeness criteria.
+ * @pipeline          indirect -- library module
+ * @usage             const { checkJourney } = require('../lib/docs-usefulness/journey-check');
+ */
+/**
+ * @script            journey-check
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14, R-C6
+ * @purpose-statement Evaluates docs pages against user journey completeness criteria.
+ * @pipeline          indirect -- library module
+ * @usage             const { checkJourney } = require('../lib/docs-usefulness/journey-check');
+ */
+/**
+ * @script            journey-check
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14, R-C6
+ * @purpose-statement Evaluates docs pages against user journey completeness criteria.
+ * @pipeline          indirect -- library module
+ * @usage             const { checkJourney } = require('../lib/docs-usefulness/journey-check');
+ */
+/**
+ * @script            journey-check
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14, R-C6
+ * @purpose-statement Evaluates docs pages against user journey completeness criteria.
+ * @pipeline          indirect -- library module
+ * @usage             const { checkJourney } = require('../lib/docs-usefulness/journey-check');
+ */
+/**
+ * @script            journey-check
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14, R-C6
+ * @purpose-statement Evaluates docs pages against user journey completeness criteria.
+ * @pipeline          indirect -- library module
+ * @usage             const { checkJourney } = require('../lib/docs-usefulness/journey-check');
+ */
 
-const { minimatch } = require('minimatch');
+const { minimatch } = require('../load-minimatch');
 const { loadJourneys } = require('./rubric-loader');
 
 function chooseBestPage(pages) {

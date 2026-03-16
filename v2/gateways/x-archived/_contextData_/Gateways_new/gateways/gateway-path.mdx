@@ -1,0 +1,63 @@
+---
+title: 'Choose Your Gateway Type'
+description: 'Decide whether to run a video gateway, AI gateway, or dual gateway on Livepeer. Compares OS support, ETH requirements, and use cases before you begin setup.'
+sidebarTitle: 'Choose Your Path'
+keywords: ["livepeer", "gateway", "video gateway", "AI gateway", "off-chain", "on-chain", "gateway type", "choose"]
+pageType: 'overview'
+audience: 'gateway'
+status: 'current'
+---
+
+Choose your gateway type before setting anything up. The three gateway types have different OS requirements, funding requirements, and setup paths — picking the wrong one wastes time.
+
+## Which type should I run?
+
+| Gateway type | What it routes | OS support | ETH required | LPT required | Best for |
+|---|---|---|---|---|---|
+| **Video Gateway** | Transcoding jobs (RTMP/HLS) | Linux, Windows, macOS | Yes — ETH deposit on Arbitrum | No | Video infrastructure, live streaming, encoding pipelines |
+| **AI Gateway** | AI inference jobs (text-to-image, image-to-video, LLM, etc.) | **Linux only** | No | No | AI workloads, fastest onboarding, off-chain operation |
+| **Dual Gateway** | Both transcoding and AI inference | **Linux only** | Yes — ETH deposit on Arbitrum | No | Running both workload types on a single node |
+
+<Note>
+All three gateway types use the same `go-livepeer` binary. Gateway type is determined by how you configure and run it, not by which binary you download.
+</Note>
+
+<Warning>
+The AI gateway binary is not available for Windows or macOS. If you are not on Linux, your only option today is the Video Gateway.
+</Warning>
+
+## Pick your setup path
+
+<CardGroup cols={3}>
+  <Card title="Run a Video Gateway" icon="video" href="/v2/gateways/get-started/gateway-setup">
+    On-chain. Requires ETH on Arbitrum. Runs on Linux, Windows, and macOS. Routes transcoding and live streaming jobs.
+  </Card>
+  <Card title="Run an AI Gateway" icon="microchip" href="/v2/gateways/get-started/ai-gateway-quickstart">
+    Off-chain. No ETH required. Linux only. Routes AI inference jobs. Fastest path to your first routed job.
+  </Card>
+  <Card title="Run a Dual Gateway" icon="arrows-split-up-and-left" href="/v2/gateways/setup/configure/dual-configuration">
+    On-chain. Requires ETH on Arbitrum. Linux only. Routes both transcoding and AI inference from a single node.
+  </Card>
+</CardGroup>
+
+<Accordion title="I'm building an app, not running infrastructure">
+  If you want to add AI video features to an application, you probably don't need to run a gateway node at all.
+
+  - **Daydream** — Hosted AI video platform. Build against it directly without managing any infrastructure.
+  - **Livepeer Cloud** — Community-hosted AI gateway. Access the Livepeer AI network with an API key, no node required.
+  - **Livepeer Studio** — Video infrastructure API for transcoding, live streaming, and on-demand video.
+
+  Running your own gateway makes sense when you have reached a scale where cost savings, latency control, or feature customisation justify the operational overhead. If you're just starting out, start with a hosted option and graduate to self-hosted when the time is right.
+
+  See the [Developers tab](/v2/developers) for hosted gateway options.
+</Accordion>
+
+---
+
+## Not sure which workload you need?
+
+- If your application processes video streams (live transcoding, RTMP ingest, HLS delivery) → **Video Gateway**
+- If your application calls AI pipelines (text-to-image, image-to-video, upscaling, LLM inference) → **AI Gateway**
+- If your application does both → **Dual Gateway**, or run a Video and AI Gateway on separate nodes
+
+Still unsure? Ask in [Discord #local-gateways](https://discord.gg/livepeer).

@@ -1,0 +1,232 @@
+---
+title: 'Gateway Terminology Glossary'
+sidebarTitle: Glossary
+description: 'Terminology and concept definitions for Livepeer gateways - operational modes, setup types, node types, and key infrastructure terms.'
+audience: gateway-operator
+pageType: reference
+purpose: reference
+status: current
+lastVerified: '2026-03-14'
+keywords:
+  - livepeer
+  - gateway glossary
+  - operational mode
+  - on-chain
+  - off-chain
+  - setup type
+  - node type
+  - gateway terminology
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Terminology is consistent with resources/glossary
+*/}
+
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
+
+## Deployment
+
+A **deployment** is the complete configuration of a Livepeer gateway, defined by three independent choices: operational mode, setup type, and node type. These axes are orthogonal - each can be selected independently of the others.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Axis</TableCell>
+      <TableCell header>Options</TableCell>
+      <TableCell header>What it decides</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Operational mode**</TableCell>
+      <TableCell>On-chain / Off-chain</TableCell>
+      <TableCell>How your gateway integrates with the Livepeer protocol - blockchain interaction, orchestrator discovery, payment settlement, ETH management</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Setup type**</TableCell>
+      <TableCell>go-livepeer / SDK / GWID / Hosted</TableCell>
+      <TableCell>What software you run and how you install it</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Node type**</TableCell>
+      <TableCell>Video / AI / Dual</TableCell>
+      <TableCell>What workloads your gateway routes</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Operational Mode
+
+The operational mode determines how your gateway connects to the Livepeer network and settles payments with orchestrators. This is a product decision that affects your entire operational model.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header></TableCell>
+      <TableCell header><Icon icon="cloud" size={14} /> Off-chain</TableCell>
+      <TableCell header><Icon icon="link" size={14} /> On-chain</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Protocol integration**</TableCell>
+      <TableCell>None - no blockchain interaction at the gateway</TableCell>
+      <TableCell>Connects to the Livepeer protocol on Arbitrum</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Orchestrator discovery**</TableCell>
+      <TableCell>Manual - you specify orchestrator addresses (`-orchAddr`)</TableCell>
+      <TableCell>Automatic - protocol discovers registered orchestrators</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Payment settlement**</TableCell>
+      <TableCell>Remote signer handles all payment operations</TableCell>
+      <TableCell>Gateway manages its own Ethereum wallet and probabilistic micropayments</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**ETH required**</TableCell>
+      <TableCell>No - community signer is free</TableCell>
+      <TableCell>Yes - deposit + reserve on Arbitrum</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Crypto knowledge**</TableCell>
+      <TableCell>None at the gateway layer</TableCell>
+      <TableCell>Wallet, keystore, Arbitrum RPC, bridging</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<Note>
+Operational mode is independent of node type. Both on-chain and off-chain gateways can route <Badge color="blue">Video</Badge>, <Badge color="purple">AI</Badge>, or <Badge color="green">Dual</Badge> workloads.
+</Note>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Setup Type
+
+The setup type determines what software you run and how you install it.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Setup type</TableCell>
+      <TableCell header>Description</TableCell>
+      <TableCell header>Operational modes</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**go-livepeer**</TableCell>
+      <TableCell>The standard Livepeer gateway binary. Install via Docker (recommended) or build from source. Supports all node types and both operational modes.</TableCell>
+      <TableCell>On-chain, Off-chain</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**SDK / Custom**</TableCell>
+      <TableCell>Build a gateway client in Python, browser, mobile, or embedded systems using the remote signer architecture. No Go binary required.</TableCell>
+      <TableCell>Off-chain only</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**GWID**</TableCell>
+      <TableCell>Gateway Wizard - a managed DevOps platform for single-click Livepeer gateway deployment. Community project, not maintained by Livepeer.</TableCell>
+      <TableCell>On-chain, Off-chain</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Hosted**</TableCell>
+      <TableCell>Use an existing gateway operator (Livepeer Studio, Livepeer Cloud, Daydream) instead of running your own. You pay their service rate.</TableCell>
+      <TableCell>Managed by provider</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Node Type
+
+The node type determines what workloads your gateway routes to orchestrators.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Node type</TableCell>
+      <TableCell header>Workloads</TableCell>
+      <TableCell header>OS support</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell><Badge color="blue">Video</Badge></TableCell>
+      <TableCell>RTMP transcoding to HLS. Replaces cloud transcoding services (Mux, AWS MediaLive, Wowza).</TableCell>
+      <TableCell>Linux, Windows (WSL2/Docker)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell><Badge color="purple">AI</Badge></TableCell>
+      <TableCell>Inference routing - text-to-image, image-to-video, LLM, audio-to-text, live-video-to-video, and more.</TableCell>
+      <TableCell>Linux</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell><Badge color="green">Dual</Badge></TableCell>
+      <TableCell>Both video transcoding and AI inference on a single gateway node.</TableCell>
+      <TableCell>Linux only (AI component requires Linux)</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Key Terms
+
+<AccordionGroup>
+  <Accordion title="Deployment" icon="layer-group">
+    The holistic configuration of a Livepeer gateway. A deployment is defined by three independent choices: **operational mode** (on-chain or off-chain), **setup type** (go-livepeer, SDK, GWID, or hosted), and **node type** (Video, AI, or Dual). For example, "an off-chain go-livepeer AI gateway" describes a single deployment across all three axes.
+  </Accordion>
+  <Accordion title="Gateway" icon="server">
+    The routing layer between applications and the Livepeer orchestrator network. A gateway receives requests (video streams, AI inference jobs), selects orchestrators, routes the work, and returns results. A gateway does not perform compute - it routes to orchestrators that do. No GPU is required.
+  </Accordion>
+  <Accordion title="Orchestrator" icon="microchip">
+    A node that performs compute work on the Livepeer network - video transcoding, AI inference, or both. Orchestrators register on the Livepeer protocol, advertise their capabilities and pricing, and receive work from gateways.
+  </Accordion>
+  <Accordion title="Remote signer" icon="key">
+    A separate service that holds an Ethereum key and signs payment tickets on behalf of an off-chain gateway. The gateway itself holds no ETH. A community-hosted remote signer at `signer.eliteencoder.net` is publicly available and free to use.
+  </Accordion>
+  <Accordion title="Probabilistic micropayments (PM)" icon="ticket">
+    The payment mechanism used by the Livepeer protocol. Instead of paying for every job individually, gateways send lottery tickets to orchestrators. Over time, the expected value of winning tickets equals the fair payment. This reduces on-chain transaction costs.
+  </Accordion>
+  <Accordion title="NaaP (Network as a Platform)" icon="users">
+    A reference implementation for multi-tenant gateway operation. Provides JWT-based authentication, developer API keys, and per-user usage tracking on top of a Livepeer gateway. Repository: [github.com/livepeer/naap](https://github.com/livepeer/naap).
+  </Accordion>
+  <Accordion title="SPE (Special Purpose Entity)" icon="building">
+ An organisation funded by the Livepeer treasury through a governance proposal. SPEs have defined mandates, budgets, and milestone accountability. Multiple gateway operators (Livepeer Cloud SPE, LLM SPE) are funded through this model.
+  </Accordion>
+  <Accordion title="Broadcaster (deprecated term)" icon="circle-exclamation">
+    The pre-2023 name for a gateway. Older community guides and documentation may reference `-broadcaster=true` - this flag has been replaced by `-gateway`. The terms are functionally equivalent.
+  </Accordion>
+</AccordionGroup>
+
+## Payment Clearinghouse
+A Payment Clearinghouse is an abstraction implementation of a <LinkArrow href="/v2/gateways/guides/payments-and-pricing/remote-signers" label="remote signer" newline={false} /> with additional commercial services including:
+- Multi-user support,
+- API key authentication,
+- Usage accounting, and
+- Billing in fiat, stablecoins, or credits.
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+## Operational Mode Asymmetry: Gateways vs Orchestrators
+
+Gateways and orchestrators share go-livepeer but differ fundamentally in how operational modes apply:
+
+- **Gateways have a genuine on-chain/off-chain fork.** Off-chain gateways use a remote signer for payment operations and are a sustainable production configuration. On-chain gateways manage their own wallet. This fork affects the entire setup, payment, and monitoring journey.
+- **Orchestrators do not have this fork.** Off-chain orchestrators (`-network offchain`) cannot be discovered by the protocol, cannot earn inflation rewards, and cannot join the active set. Off-chain is a testing/development configuration for orchestrators, not a production choice. Orchestrator documentation treats on-chain as the default.
+
+This asymmetry is why the gateway documentation requires on-chain/off-chain branching throughout while the orchestrator documentation does not.

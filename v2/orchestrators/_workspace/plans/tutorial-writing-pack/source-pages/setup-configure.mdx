@@ -1,0 +1,491 @@
+---
+title: 'Configuring Your Orchestrator'
+sidebarTitle: 'Configure'
+description: >-
+  Set the go-livepeer flags needed to run as an Orchestrator - GPU selection,
+  pricing, session limits, networking, and AI worker configuration.
+keywords:
+  - livepeer
+  - go-livepeer
+  - orchestrator
+  - configuration
+  - flags
+  - pricePerUnit
+  - maxSessions
+  - serviceAddr
+  - nvidia
+  - AI worker
+  - CLI
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: current
+lastVerified: '2026-03-15'
+---
+
+{/* TODO:
+Verify:
+- Tables use StyledTable with thead/tbody
+- No em-dashes
+- UK spelling throughout
+- Accordion icons are meaningful (not circle-question)
+- REVIEW flags below for SME
+Human:
+- REVIEW: testnet network flag name - arbitrum-one-rinkeby is deprecated. Rick to confirm current testnet flag value.
+- REVIEW: confirm -ethPassword or equivalent flag for keystore passphrase in systemd (Rick, re issue #2047)
+- REVIEW: confirm native -config file flag added to go-livepeer (Rick, re issue #2047)
+*/}
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+This page covers the go-livepeer flags needed to run as an Orchestrator. By the end, a working
+startup command is ready and each flag is understood.
+
+**Prerequisites:**
+- go-livepeer installed and GPU detected. See <LinkArrow href="/v2/orchestrators/setup/rs-install" label="Install go-livepeer" newline={false} />.
+- Arbitrum wallet with ETH for gas. See <LinkArrow href="/v2/orchestrators/setup/sc-connect" label="Connect to Arbitrum" newline={false} />.
+- The hardware session limit number from the `livepeer_bench` test in <LinkArrow href="/v2/orchestrators/guides/deployment-details/requirements" label="Requirements" newline={false} />.
+
+<CustomDivider middleText="Essential Flags" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Essential Flags
+
+These flags must be set every time go-livepeer starts as an Orchestrator.
+
+<Steps>
+
+<Step title="Set the network">
+
+```text icon="terminal"
+-network arbitrum-one-mainnet
+```
+
+Tells go-livepeer which network to connect to. The default is `offchain` - without this flag the
+node does not participate in the Livepeer protocol at all.
+
+**Options:**
+- `arbitrum-one-mainnet` - production network
+- `offchain` - local or dev only, no on-chain participation
+
+{/* REVIEW: Confirm current testnet network flag value - arbitrum-one-rinkeby is deprecated. Rick to advise replacement. */}
+
+</Step>
+
+<Step title="Connect to Arbitrum RPC">
+
+```text icon="terminal"
+-ethUrl <YOUR_ARBITRUM_RPC_URL>
+```
+
+Points go-livepeer at an Arbitrum One RPC endpoint to read and write on-chain state - Orchestrator
+registration, reward calls, ticket redemption.
+
+```bash icon="terminal"
+-ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY
+```
+
+This must be an **Arbitrum One** endpoint, not an Ethereum L1 endpoint. See
+<LinkArrow href="/v2/orchestrators/setup/sc-connect" label="Connect to Arbitrum" newline={false} /> for how to set up a reliable RPC.
+
+</Step>
+
+<Step title="Set the Ethereum account (optional)">
+
+```text icon="terminal"
+-ethAcctAddr <YOUR_ETH_ADDRESS>
+```
+
+Specifies which ETH account acts as the Orchestrator identity on the network. This account holds
+staked LPT, receives ETH fee payments, and signs on-chain transactions.
+
+If omitted, go-livepeer creates a new account and prompts for a passphrase to encrypt the keystore.
+The key is stored at `~/.lpData/arbitrum-one-mainnet/keystore` by default.
+
+<Warning>
+The private key controls the wallet and all funds on it. Back it up securely before proceeding.
+A lost keystore cannot be recovered.
+</Warning>
+
+</Step>
+
+<Step title="Enable Orchestrator and Transcoder mode">
+
+```text icon="terminal"
+-orchestrator -transcoder
+```
+
+`-orchestrator` enables the on-chain protocol role - the node participates in job routing, makes
+reward calls, and is visible to Gateways.
+
+`-transcoder` enables local GPU transcoding - the node processes jobs using its GPU.
+
+Use both together for the standard combined setup where one machine handles all roles. For
+alternate configurations:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Mode</TableCell>
+      <TableCell header>Flags</TableCell>
+      <TableCell header>Use when</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Combined** (most common)</TableCell>
+      <TableCell>`-orchestrator -transcoder`</TableCell>
+      <TableCell>One machine handles all roles</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Orchestrator-only**</TableCell>
+      <TableCell>`-orchestrator`</TableCell>
+      <TableCell>Remote Transcoder workers are connected via `-orchSecret`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Transcoder-only**</TableCell>
+      <TableCell>`-transcoder -orchAddr <host:port>`</TableCell>
+      <TableCell>Contributing GPU to another Orchestrator's pool</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+See <LinkArrow href="/v2/orchestrators/guides/deployment-details/setup-options" label="Alternate Deployments" newline={false} /> for the O-T split and Siphon configurations.
+
+</Step>
+
+<Step title="Select the GPU">
+
+```text icon="terminal"
+-nvidia <GPU_IDs>
+```
+
+Specifies which NVIDIA GPUs go-livepeer uses for transcoding. Omitting this flag falls back to
+CPU transcoding, which is significantly slower and not competitive on the network.
+
+```bash icon="terminal"
+-nvidia 0        # Single GPU - device ID 0
+-nvidia 0,1      # Two GPUs
+-nvidia all      # All available GPUs
+```
+
+Check GPU IDs before starting:
+
+```bash icon="terminal"
+nvidia-smi -L
+```
+
+<Note>
+For AI-only operation (no video transcoding), `-transcoder` is not required but `-nvidia` is
+still needed to expose the GPU to AI runner containers. See [Adding AI inference](#adding-ai-inference) below.
+</Note>
+
+</Step>
+
+<Step title="Set the session limit">
+
+```text icon="terminal"
+-maxSessions <VALUE>
+```
+
+Sets the maximum concurrent transcoding sessions the node accepts. The default is 10. Set it
+to the **minimum of the hardware limit and the bandwidth limit**.
+
+**Hardware limit:** the last session count from the `livepeer_bench` test in
+<LinkArrow href="/v2/orchestrators/guides/deployment-details/requirements" label="Requirements" newline={false} /> where Real-Time Duration Ratio was ≤ 0.8.
+
+**Bandwidth limit:** available symmetric bandwidth (Mbps) ÷ 6 Mbps per stream × 0.8 margin.
+
+```text icon="terminal"
+session limit = min(hardware limit, bandwidth limit)
+```
+
+Example: hardware limit 12, bandwidth 100 Mbps → bandwidth limit ~13 → use `-maxSessions 12`.
+
+<Note>
+`-maxSessions` applies to video transcoding only. AI inference capacity is controlled per pipeline
+by the `capacity` field in `aiModels.json`. See [Adding AI inference](#adding-ai-inference) below.
+</Note>
+
+</Step>
+
+<Step title="Set the price">
+
+```text icon="terminal"
+-pricePerUnit <VALUE_IN_WEI>
+```
+
+Sets the price charged per unit of transcoding work. The unit is **wei per pixel**, not ETH.
+
+- 1 ETH = 1,000,000,000,000,000,000 wei
+- A typical starting price is **500-2,000 wei per pixel**
+- Check current market rates at [tools.livepeer.cloud](https://tools.livepeer.cloud/ai/network-capabilities)
+
+Setting this in ETH rather than wei results in a price orders of magnitude below market rate.
+Setting it too high means Gateways route jobs to lower-priced Orchestrators instead.
+
+```bash icon="terminal"
+-pricePerUnit 1000
+```
+
+<Note>
+`-pricePerUnit` sets the startup price. The on-chain registered price used for discovery is set
+separately during activation via `livepeer_cli`. Both can be adjusted independently later.
+</Note>
+
+</Step>
+
+<Step title="Set the service address">
+
+```text icon="terminal"
+-serviceAddr <YOUR_PUBLIC_IP_OR_HOSTNAME>:<PORT>
+```
+
+Declares the public address at which Gateways reach the Orchestrator. This is stored on-chain
+during activation and is how the network discovers the node.
+
+```bash icon="terminal"
+-serviceAddr 203.0.113.42:8935
+# or with a domain name (preferred):
+-serviceAddr orch.yourdomain.com:8935
+```
+
+**Common mistakes:**
+- Using an internal IP (`192.168.x.x`, `10.x.x.x`) - not routable from the internet
+- Using `0.0.0.0` - binds locally but is not a network address
+- Changing the IP without updating on-chain registration - Gateways lose contact
+
+A domain name is preferable to a bare IP. If the server's IP changes, a DNS record can be updated
+without a new on-chain registration transaction.
+
+</Step>
+
+</Steps>
+
+<CustomDivider middleText="Full Command" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Full Startup Command
+
+Replace every placeholder with actual values:
+
+```bash icon="terminal"
+livepeer \
+  -network arbitrum-one-mainnet \
+  -ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY \
+  -ethAcctAddr YOUR_ETH_ADDRESS \
+  -orchestrator \
+  -transcoder \
+  -nvidia 0 \
+  -maxSessions 10 \
+  -pricePerUnit 1000 \
+  -serviceAddr YOUR_PUBLIC_IP:8935
+```
+
+On first run with a new account (omitting `-ethAcctAddr`), go-livepeer prompts for a passphrase
+to create and encrypt a new keystore. This passphrase is required on every subsequent start.
+
+For verbose logging while getting started:
+
+```bash icon="terminal"
+livepeer ... -v 6
+```
+
+This outputs detailed logs including transcoding activity, RPC calls, and session events.
+
+<CustomDivider middleText="Adding AI Inference" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Adding AI Inference
+
+To serve AI inference jobs alongside or instead of transcoding, three additional flags are needed.
+
+<Accordion title="AI worker flags" icon="microchip">
+
+```bash icon="terminal"
+-aiWorker \
+-aiModels /path/to/aiModels.json \
+-aiModelsDir /path/to/models/
+```
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Flag</TableCell>
+      <TableCell header>What it does</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`-aiWorker`</TableCell>
+      <TableCell>Enables the AI worker component. Without this flag, go-livepeer ignores all AI configuration.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-aiModels`</TableCell>
+      <TableCell>Path to `aiModels.json` - defines which pipelines and models to serve. Default: `~/.lpData/aiModels.json`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-aiModelsDir`</TableCell>
+      <TableCell>Path to the directory where go-livepeer looks for cached model weights. Default: `~/.lpData/models/`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`-aiRunnerImage`</TableCell>
+      <TableCell>Optional. The Docker image for AI runner containers. Defaults to `livepeer/ai-runner:latest`. Pin to a specific tag in production.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+**When running in Docker**, the AI Orchestrator needs access to the Docker socket to manage AI
+runner containers:
+
+```bash icon="terminal"
+docker run \
+  --name livepeer_ai_orchestrator \
+  -v ~/.lpData/:/root/.lpData/ \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --network host \
+  --gpus all \
+  livepeer/go-livepeer:master \
+  -orchestrator \
+  -serviceAddr 0.0.0.0:8936 \
+  -nvidia 0 \
+  -aiWorker \
+  -aiModels /root/.lpData/aiModels.json \
+  -aiModelsDir ~/.lpData/models
+```
+
+<Note>
+The AI Orchestrator uses port **8936** by default to avoid conflict with a transcoding Orchestrator
+on the same machine (which uses 8935). Set `-serviceAddr` accordingly.
+</Note>
+
+<Warning>
+With Docker-out-of-Docker, the `-aiModelsDir` path must be a path on the **host machine**, not
+inside the container. Docker uses this path to mount model files into AI runner containers it spawns.
+</Warning>
+
+For the full guide to configuring `aiModels.json` and receiving the first AI job, see
+<LinkArrow href="/v2/orchestrators/guides/workloads-and-ai/batch-ai-setup" label="Batch AI Setup" newline={false} />.
+
+</Accordion>
+
+<CustomDivider middleText="Variants" style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Variants
+
+<AccordionGroup>
+
+<Accordion title="Docker - full Orchestrator in a container" icon="docker">
+
+```bash icon="terminal"
+docker run \
+  --name livepeer_orchestrator \
+  -v ~/.lpData/:/root/.lpData/ \
+  --network host \
+  --gpus all \
+  livepeer/go-livepeer:latest \
+  -network arbitrum-one-mainnet \
+  -ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY \
+  -orchestrator \
+  -transcoder \
+  -nvidia 0 \
+  -maxSessions 10 \
+  -pricePerUnit 1000 \
+  -serviceAddr YOUR_PUBLIC_IP:8935
+```
+
+Mount `~/.lpData/` so the keystore and data persist between container restarts. Without this
+mount, a new ETH account is created on every run.
+
+</Accordion>
+
+<Accordion title="systemd service" icon="server">
+
+Create `/etc/systemd/system/livepeer.service`:
+
+```ini icon="code" title="/etc/systemd/system/livepeer.service"
+[Unit]
+Description=Livepeer Orchestrator
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+ExecStart=/usr/local/bin/livepeer \
+  -network arbitrum-one-mainnet \
+  -ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY \
+  -orchestrator \
+  -transcoder \
+  -nvidia 0 \
+  -maxSessions 10 \
+  -pricePerUnit 1000 \
+  -serviceAddr YOUR_PUBLIC_IP:8935
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable and start:
+
+```bash icon="terminal"
+sudo systemctl daemon-reload
+sudo systemctl enable livepeer
+sudo systemctl start livepeer
+journalctl -u livepeer -f
+```
+
+{/* REVIEW: If the ETH passphrase is required at startup and the node runs as a systemd service, confirm the correct passphrase-file flag name - check go-livepeer for -ethPassword or similar. Rick to advise. */}
+
+</Accordion>
+
+<Accordion title="Config file pattern" icon="file-code">
+
+go-livepeer does not have a native config file flag. The standard pattern stores flags in a plain
+text file and expands them at startup:
+
+```bash icon="code" title="/etc/livepeer/livepeer.conf"
+-network arbitrum-one-mainnet
+-ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY
+-orchestrator
+-transcoder
+-nvidia 0
+-maxSessions 10
+-pricePerUnit 1000
+-serviceAddr YOUR_PUBLIC_IP:8935
+```
+
+```bash icon="terminal"
+livepeer $(< /etc/livepeer/livepeer.conf)
+```
+
+In a systemd unit file, this requires an `ExecStart` wrapper shell script rather than calling the
+binary directly - systemd does not perform shell expansion in `ExecStart`.
+
+{/* REVIEW: Confirm whether a native -config flag was added to go-livepeer after issue #2047. If so, replace this section with the native approach. Rick to check. */}
+
+</Accordion>
+
+</AccordionGroup>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Next Steps
+
+<CardGroup cols={3}>
+  <Card title="Connect to Arbitrum" icon="link" href="/v2/orchestrators/setup/sc-connect" arrow horizontal>
+    Set up the Arbitrum RPC endpoint and fund the wallet with ETH for gas.
+  </Card>
+  <Card title="Activate on the network" icon="circle-check" href="/v2/orchestrators/setup/activate" arrow horizontal>
+    Register the Orchestrator on-chain and enter the active set via `livepeer_cli`.
+  </Card>
+  <Card title="CLI reference" icon="terminal" href="/v2/orchestrators/resources/technical/cli-flags" arrow horizontal>
+    Every flag, its type, default, and description.
+  </Card>
+</CardGroup>

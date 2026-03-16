@@ -1,0 +1,193 @@
+---
+title: Delegation Economics
+sidebarTitle: Economics
+description: >-
+  How LPT inflation works, what rewardCut and feeShare mean, and how to
+  estimate what you can expect to earn from delegating.
+keywords:
+  - livepeer
+  - lpt
+  - delegation
+  - economics
+  - staking
+  - rewards
+  - inflation
+  - rewardCut
+  - feeShare
+  - orchestrators
+  - delegators
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: delegator
+purpose: concept
+status: current
+lastVerified: 2026-03-13
+---
+
+import { MathInline, MathBlock } from '/snippets/components/content/math.jsx'
+
+Delegating LPT earns you two things: a share of newly minted LPT (inflation rewards) and a share of the ETH the orchestrator earns from processing jobs (fee revenue). Understanding how both are calculated helps you evaluate orchestrators meaningfully rather than just picking the lowest commission number.
+
+---
+
+## LPT inflation rewards
+
+### Where new LPT comes from
+
+Each protocol round, the BondingManager contract mints new LPT and distributes it proportionally to all bonded stake. The amount minted is determined by a parametric inflation rate that adjusts based on how much of the total supply is currently bonded.
+
+The target participation rate is approximately 50% of circulating supply bonded. If the bonding ratio falls below that target, the inflation rate increases each round to incentivise more delegation. If it rises above, the inflation rate decreases.
+
+**In plain terms:** if you hold LPT but do not delegate, active delegators receive your share of the newly minted supply. The longer you stay unbonded, the more your proportional share of total LPT supply erodes.
+
+<Note>
+  As of March 2026, 10% of each round's issuance is diverted to the Livepeer Treasury under LIP-89. The remaining 90% is distributed to orchestrators and their delegators. The examples below use the delegator-accessible 90%.
+</Note>
+
+### How much you earn: the formula
+
+Your LPT reward per round:
+
+<MathBlock latex={String.raw`R_{delegator} = R_{round} \times 0.9 \times \frac{B_O}{B_T} \times (1 - c_O) \times \frac{b_D}{B_O}`} />
+
+Where:
+- <MathInline latex={String.raw`R_{round}`} /> is the total LPT minted that round
+- <MathInline latex={String.raw`0.9`} /> accounts for the 10% treasury diversion (LIP-89)
+- <MathInline latex={String.raw`B_O`} /> is total stake bonded to your orchestrator
+- <MathInline latex={String.raw`B_T`} /> is total bonded stake across the whole network
+- <MathInline latex={String.raw`c_O`} /> is the orchestrator's `rewardCut` (their commission on inflation rewards)
+- <MathInline latex={String.raw`b_D`} /> is your bonded stake
+
+**In plain English:** your share of total stake, after the orchestrator takes their cut, scaled by that orchestrator's share of total network stake, multiplied by the minted amount for the round.
+
+### Worked example
+
+Suppose:
+- Total LPT minted this round: 1,000 LPT
+- Treasury takes 10%: 100 LPT
+- Delegator-accessible issuance: 900 LPT
+- Your orchestrator holds 5% of total bonded stake: 45 LPT goes to your orchestrator's pool
+- Orchestrator rewardCut is 10%: orchestrator keeps 4.5 LPT
+- Delegators in your orchestrator's pool share 40.5 LPT
+- You hold 10% of your orchestrator's total stake
+- **Your reward: 4.05 LPT this round**
+
+---
+
+## ETH fee revenue
+
+### Where ETH fees come from
+
+Gateways pay orchestrators in ETH for processing video transcoding and AI inference jobs. These payments use a probabilistic micropayment system (PM tickets). When tickets are redeemed, the ETH appears in the orchestrator's on-chain balance.
+
+Fee revenue is **demand-driven** and varies with network usage. It is not guaranteed — an orchestrator that earns zero fees in a round because no jobs were routed to them will distribute zero fees that round, regardless of their commission settings.
+
+### The feeShare parameter
+
+Orchestrators set a `feeShare` value: the fraction of their ETH fee earnings they pass to delegators. A higher feeShare means more ETH for delegators.
+
+<Warning>
+  The Explorer UI displays this as "Fee Share" — the percentage of fees distributed to delegators. This is different from rewardCut. For feeShare, **higher is better for delegators**. For rewardCut, **lower is better for delegators**. Do not confuse the two.
+</Warning>
+
+Your ETH reward per round:
+
+<MathBlock latex={String.raw`F_{delegator} = F_O \times f_O \times \frac{b_D}{B_O}`} />
+
+Where:
+- <MathInline latex={String.raw`F_O`} /> is total ETH fee revenue earned by your orchestrator that round
+- <MathInline latex={String.raw`f_O`} /> is the orchestrator's `feeShare` (the fraction passed to delegators)
+- <MathInline latex={String.raw`b_D`} /> is your bonded stake
+- <MathInline latex={String.raw`B_O`} /> is total stake bonded to that orchestrator
+
+---
+
+## rewardCut and feeShare: plain English summary
+
+| Parameter | What it controls | Good for delegators |
+|---|---|---|
+| `rewardCut` | % of LPT inflation the orchestrator keeps | Lower is better (e.g. 10% means delegators get 90%) |
+| `feeShare` | % of ETH fees passed to delegators | Higher is better (e.g. 80% means delegators get 80% of fees) |
+
+### Example comparison
+
+| Orchestrator | rewardCut | feeShare | Inflation reward share | Fee share |
+|---|---|---|---|---|
+| Orchestrator A | 5% | 90% | 95% to delegators | 90% to delegators |
+| Orchestrator B | 20% | 25% | 80% to delegators | 25% to delegators |
+| Orchestrator C | 0% | 0% | 100% to delegators | 0% to delegators |
+
+Orchestrator C looks attractive on rewardCut but passes no fees to delegators at all. Orchestrator A offers a strong overall package if they also have a reliable reward-calling track record.
+
+**Commission settings alone do not determine your returns.** An orchestrator with a 0% rewardCut who never calls `Reward()` earns you nothing. Reliability matters more than the headline rate.
+
+---
+
+## The reward call: why it matters
+
+Each round, an active orchestrator must call the `Reward()` function on-chain. This triggers the minting and distribution of that round's inflation rewards. If an orchestrator does not call `Reward()` in a given round, **no rewards are minted for that round's stake** — for them or their delegators.
+
+Missing reward calls directly reduces your actual yield versus theoretical yield. When evaluating orchestrators, check how consistently they have called `Reward()` over recent rounds. The Explorer shows this history.
+
+---
+
+## Combined yield
+
+The Livepeer Explorer calculates an estimated combined annual yield that factors in both LPT inflation and ETH fee revenue. The formula used in `explorer/lib/roi.ts`:
+
+<MathBlock latex={String.raw`\text{APY} \approx \left( r_{inflation} \times (1 - c_O) \times \frac{B_O}{B_T} \right) + \left( \frac{F_{annual}}{b_D} \times f_O \right)`} />
+
+{/* REVIEW: 417 rounds per year is the figure from v1 yield-calculation.mdx. Verify this matches current Arbitrum One block timing before publishing. One round = one Ethereum block approximately 13s historically, but Arbitrum block time differs. */}
+
+This figure is an estimate. Actual returns depend on:
+- Current inflation rate (changes each round based on bonding ratio)
+- Your orchestrator's fee revenue (market-driven)
+- Whether your orchestrator calls `Reward()` every round
+- Changes your orchestrator makes to their commission settings
+
+---
+
+## How rewards accrue
+
+Rewards do not automatically arrive in your wallet. They accumulate in the BondingManager contract against your bonded balance. To realise them, you call `claimEarnings`. You can then:
+- **Rebond them** (compound): adds them to your bonded stake, increasing future rewards
+- **Withdraw them**: initiates an unbonding lock before they can leave the contract
+
+Most users rebond for compounding unless they have a specific need for liquid LPT. See [Manage Your Delegation](./manage-your-delegation) for step-by-step instructions.
+
+---
+
+## What affects your returns in practice
+
+<AccordionGroup>
+
+<Accordion title="Inflation rate changes every round">
+  The protocol adjusts the inflation rate each round. If the bonding ratio climbs above 50%, inflation decreases round by round until equilibrium is reached. Your LPT yield in absolute terms may vary over time even if nothing else changes.
+</Accordion>
+
+<Accordion title="Your orchestrator's commission can change">
+  Orchestrators can update their rewardCut and feeShare at any time, effective from the next round. There is no lock-in from their side. Monitor your orchestrator's settings periodically, especially after a significant change in their behaviour or public announcements.
+</Accordion>
+
+<Accordion title="Fee revenue is not guaranteed">
+  ETH fees depend on actual transcoding and AI inference demand routed to your orchestrator. An orchestrator with excellent uptime but low routing volume earns limited fees. Revenue varies with network load and the orchestrator's competitive position.
+</Accordion>
+
+<Accordion title="Stake concentration affects your share">
+  If your orchestrator attracts a lot of new delegators after you join, your proportional share of the orchestrator's pool decreases. The total pool earns proportionally more from the network, but you share it with more stake. Net effect depends on how much new delegation arrives versus how much the orchestrator's network share increases.
+</Accordion>
+
+</AccordionGroup>
+
+---
+
+## References
+
+- [Livepeer Explorer ROI calculation](https://github.com/livepeer/explorer/blob/main/lib/roi.ts)
+- [LIP-89 (Treasury allocation)](https://github.com/livepeer/LIPs)
+- [Protocol contract addresses](https://docs.livepeer.org/references/contract-addresses)
+- [Choose an Orchestrator](./choose-an-orchestrator)

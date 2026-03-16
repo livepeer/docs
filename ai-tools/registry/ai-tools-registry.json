@@ -1,0 +1,4991 @@
+{
+  "version": 1,
+  "discovery_roots": [
+    "ai-tools"
+  ],
+  "exclusions": [],
+  "lanes": [
+    {
+      "id": "templates",
+      "description": "Canonical portable-skill templates and companion bundles under the current ai-skills template roots.",
+      "path_patterns": [
+        "ai-tools/ai-skills/templates/**"
+      ],
+      "advisory_only": false
+    },
+    {
+      "id": "local",
+      "description": "Repo-local SKILL.md roots that are consumed in-place inside this repository.",
+      "path_patterns": [
+        "ai-tools/ai-skills/*/SKILL.md"
+      ],
+      "advisory_only": false
+    },
+    {
+      "id": "workspace",
+      "description": "Research, package, and source-snapshot material that must stay out of canonical skill and export lanes.",
+      "path_patterns": [
+        "ai-tools/ai-skills/source-content/**",
+        "ai-tools/ai-skills/*research*.md",
+        "ai-tools/ai-skills/*package*.md"
+      ],
+      "advisory_only": true
+    },
+    {
+      "id": "exports",
+      "description": "Generated agent-pack manifests, adapters, and portable skill export bundles.",
+      "path_patterns": [
+        "ai-tools/agent-packs/**"
+      ],
+      "advisory_only": false
+    },
+    {
+      "id": "rules",
+      "description": "Legacy or imported AI rule material kept under ai-tools until later normalization.",
+      "path_patterns": [
+        "ai-tools/ai-rules/**"
+      ],
+      "advisory_only": true
+    },
+    {
+      "id": "manual-doc",
+      "description": "Authoritative manual docs, registry artifacts, and subsystem-scoped governance/support documents.",
+      "path_patterns": [
+        "ai-tools/*.mdx",
+        "ai-tools/registry/**",
+        "ai-tools/ai-skills/catalog/**",
+        "ai-tools/ai-skills/docs-copy/**",
+        "ai-tools/ai-skills/content-map.md",
+        "ai-tools/ai-skills/inventory.json",
+        "ai-tools/ai-skills/skill-spec-contract.md",
+        "ai-tools/ai-skills/skills-template.md"
+      ],
+      "advisory_only": false
+    },
+    {
+      "id": "retired",
+      "description": "Historical AI-tools material retained only for reference and excluded from active governance flows.",
+      "path_patterns": [
+        "ai-tools/retired/**"
+      ],
+      "advisory_only": true
+    }
+  ],
+  "lifecycle_states": [
+    {
+      "id": "canonical-template",
+      "description": "Canonical editable source for portable skills and companion template bundles."
+    },
+    {
+      "id": "local-synced",
+      "description": "Repo-local skill roots that are derived from canonical portable templates."
+    },
+    {
+      "id": "portable-export",
+      "description": "Generated export artifacts derived from canonical AI-tools sources."
+    },
+    {
+      "id": "manual-doc",
+      "description": "Human-readable canonical docs, registry artifacts, or subsystem-scoped governance documents."
+    },
+    {
+      "id": "workspace-draft",
+      "description": "Non-canonical research, drafts, or handoff material excluded from active generated catalogs."
+    },
+    {
+      "id": "legacy-active",
+      "description": "Active legacy surfaces that are still in use but require later normalization or retirement."
+    },
+    {
+      "id": "retired",
+      "description": "Historical material retained only as reference and not used by active generators or runtime flows."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "agent-packs-claude-claude-md",
+      "path": "ai-tools/agent-packs/claude/CLAUDE.md",
+      "artifact_type": "generated-export",
+      "category": "agent-packs",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md",
+        "ai-tools/ai-skills/catalog/skill-catalog.json",
+        "ai-tools/ai-skills/catalog/execution-manifest.json"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/cross-agent-packager.js --agent-pack all"
+      ],
+      "catalog_group": "agent-packs",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Generated adapter/manifests for cross-agent packs. They are outputs, not canonical source material."
+    },
+    {
+      "id": "agent-packs-codex-skills-manifest-json",
+      "path": "ai-tools/agent-packs/codex/skills-manifest.json",
+      "artifact_type": "generated-export",
+      "category": "agent-packs",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md",
+        "ai-tools/ai-skills/catalog/skill-catalog.json",
+        "ai-tools/ai-skills/catalog/execution-manifest.json"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/cross-agent-packager.js --agent-pack all"
+      ],
+      "catalog_group": "agent-packs",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Generated adapter/manifests for cross-agent packs. They are outputs, not canonical source material."
+    },
+    {
+      "id": "agent-packs-cursor-rules-md",
+      "path": "ai-tools/agent-packs/cursor/rules.md",
+      "artifact_type": "generated-export",
+      "category": "agent-packs",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md",
+        "ai-tools/ai-skills/catalog/skill-catalog.json",
+        "ai-tools/ai-skills/catalog/execution-manifest.json"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/cross-agent-packager.js --agent-pack all"
+      ],
+      "catalog_group": "agent-packs",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Generated adapter/manifests for cross-agent packs. They are outputs, not canonical source material."
+    },
+    {
+      "id": "agent-packs-readme-md",
+      "path": "ai-tools/agent-packs/README.md",
+      "artifact_type": "generated-export",
+      "category": "agent-packs",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md",
+        "ai-tools/ai-skills/catalog/skill-catalog.json",
+        "ai-tools/ai-skills/catalog/execution-manifest.json"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/cross-agent-packager.js --agent-pack all"
+      ],
+      "catalog_group": "agent-packs",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Generated adapter/manifests for cross-agent packs. They are outputs, not canonical source material."
+    },
+    {
+      "id": "agent-packs-skills-agentic-project-management-orchestrator-skill-md",
+      "path": "ai-tools/agent-packs/skills/agentic-project-management-orchestrator/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-broken-links-advisory-triage-skill-md",
+      "path": "ai-tools/agent-packs/skills/broken-links-advisory-triage/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-codex-task-isolation-standard-skill-md",
+      "path": "ai-tools/agent-packs/skills/codex-task-isolation-standard/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-component-library-guided-authoring-skill-md",
+      "path": "ai-tools/agent-packs/skills/component-library-guided-authoring/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-component-library-index-refresh-skill-md",
+      "path": "ai-tools/agent-packs/skills/component-library-index-refresh/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-discord-issue-intake-maintenance-skill-md",
+      "path": "ai-tools/agent-packs/skills/discord-issue-intake-maintenance/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-docs-change-review-references-review-rubric-md",
+      "path": "ai-tools/agent-packs/skills/docs-change-review/references/review-rubric.md",
+      "artifact_type": "portable-skill-reference",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable reference bundles derived from template companion directories."
+    },
+    {
+      "id": "agent-packs-skills-docs-change-review-references-severity-and-verdicts-md",
+      "path": "ai-tools/agent-packs/skills/docs-change-review/references/severity-and-verdicts.md",
+      "artifact_type": "portable-skill-reference",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable reference bundles derived from template companion directories."
+    },
+    {
+      "id": "agent-packs-skills-docs-change-review-skill-md",
+      "path": "ai-tools/agent-packs/skills/docs-change-review/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-docs-copy-references-handoff-checklist-md",
+      "path": "ai-tools/agent-packs/skills/docs-copy/references/handoff-checklist.md",
+      "artifact_type": "portable-skill-reference",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable reference bundles derived from template companion directories."
+    },
+    {
+      "id": "agent-packs-skills-docs-copy-references-task-routing-md",
+      "path": "ai-tools/agent-packs/skills/docs-copy/references/task-routing.md",
+      "artifact_type": "portable-skill-reference",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable reference bundles derived from template companion directories."
+    },
+    {
+      "id": "agent-packs-skills-docs-copy-references-workflow-md",
+      "path": "ai-tools/agent-packs/skills/docs-copy/references/workflow.md",
+      "artifact_type": "portable-skill-reference",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable reference bundles derived from template companion directories."
+    },
+    {
+      "id": "agent-packs-skills-docs-copy-skill-md",
+      "path": "ai-tools/agent-packs/skills/docs-copy/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-docs-ia-route-placement-skill-md",
+      "path": "ai-tools/agent-packs/skills/docs-ia-route-placement/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-docs-impact-propagation-references-claim-map-method-md",
+      "path": "ai-tools/agent-packs/skills/docs-impact-propagation/references/claim-map-method.md",
+      "artifact_type": "portable-skill-reference",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable reference bundles derived from template companion directories."
+    },
+    {
+      "id": "agent-packs-skills-docs-impact-propagation-references-propagation-checklist-md",
+      "path": "ai-tools/agent-packs/skills/docs-impact-propagation/references/propagation-checklist.md",
+      "artifact_type": "portable-skill-reference",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable reference bundles derived from template companion directories."
+    },
+    {
+      "id": "agent-packs-skills-docs-impact-propagation-skill-md",
+      "path": "ai-tools/agent-packs/skills/docs-impact-propagation/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-docs-json-navigation-maintenance-skill-md",
+      "path": "ai-tools/agent-packs/skills/docs-json-navigation-maintenance/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-docs-source-verification-references-claim-ledger-md",
+      "path": "ai-tools/agent-packs/skills/docs-source-verification/references/claim-ledger.md",
+      "artifact_type": "portable-skill-reference",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable reference bundles derived from template companion directories."
+    },
+    {
+      "id": "agent-packs-skills-docs-source-verification-references-source-priority-md",
+      "path": "ai-tools/agent-packs/skills/docs-source-verification/references/source-priority.md",
+      "artifact_type": "portable-skill-reference",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable reference bundles derived from template companion directories."
+    },
+    {
+      "id": "agent-packs-skills-docs-source-verification-skill-md",
+      "path": "ai-tools/agent-packs/skills/docs-source-verification/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-docs-status-table-generation-skill-md",
+      "path": "ai-tools/agent-packs/skills/docs-status-table-generation/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-domain-pages-audit-runbook-skill-md",
+      "path": "ai-tools/agent-packs/skills/domain-pages-audit-runbook/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-external-docs-sync-and-sanitize-skill-md",
+      "path": "ai-tools/agent-packs/skills/external-docs-sync-and-sanitize/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-github-actions-data-pipeline-maintenance-skill-md",
+      "path": "ai-tools/agent-packs/skills/github-actions-data-pipeline-maintenance/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-glossary-terminology-generation-skill-md",
+      "path": "ai-tools/agent-packs/skills/glossary-terminology-generation/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-lpd-bootstrap-and-doctor-skill-md",
+      "path": "ai-tools/agent-packs/skills/lpd-bootstrap-and-doctor/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-manifest-json",
+      "path": "ai-tools/agent-packs/skills/manifest.json",
+      "artifact_type": "generated-export",
+      "category": "agent-packs",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md",
+        "ai-tools/ai-skills/catalog/skill-catalog.json",
+        "ai-tools/ai-skills/catalog/execution-manifest.json"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/cross-agent-packager.js --agent-pack all"
+      ],
+      "catalog_group": "agent-packs",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Generated adapter/manifests for cross-agent packs. They are outputs, not canonical source material."
+    },
+    {
+      "id": "agent-packs-skills-mdx-parent-child-scope-patterns-skill-md",
+      "path": "ai-tools/agent-packs/skills/mdx-parent-child-scope-patterns/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-mint-dev-and-hook-install-skill-md",
+      "path": "ai-tools/agent-packs/skills/mint-dev-and-hook-install/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-mintlify-authoring-style-compliance-skill-md",
+      "path": "ai-tools/agent-packs/skills/mintlify-authoring-style-compliance/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-n8n-workflow-maintenance-skill-md",
+      "path": "ai-tools/agent-packs/skills/n8n-workflow-maintenance/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-new-script-scaffold-skill-md",
+      "path": "ai-tools/agent-packs/skills/new-script-scaffold/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-openapi-sync-and-api-doc-generation-skill-md",
+      "path": "ai-tools/agent-packs/skills/openapi-sync-and-api-doc-generation/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-page-content-research-review-references-report-template-md",
+      "path": "ai-tools/agent-packs/skills/page-content-research-review/references/report-template.md",
+      "artifact_type": "portable-skill-reference",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable reference bundles derived from template companion directories."
+    },
+    {
+      "id": "agent-packs-skills-page-content-research-review-references-workflow-router-md",
+      "path": "ai-tools/agent-packs/skills/page-content-research-review/references/workflow-router.md",
+      "artifact_type": "portable-skill-reference",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable reference bundles derived from template companion directories."
+    },
+    {
+      "id": "agent-packs-skills-page-content-research-review-skill-md",
+      "path": "ai-tools/agent-packs/skills/page-content-research-review/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-pr-changed-file-ci-simulation-skill-md",
+      "path": "ai-tools/agent-packs/skills/pr-changed-file-ci-simulation/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-precommit-failure-triage-skill-md",
+      "path": "ai-tools/agent-packs/skills/precommit-failure-triage/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-release-version-workflow-maintenance-skill-md",
+      "path": "ai-tools/agent-packs/skills/release-version-workflow-maintenance/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-script-header-and-index-sync-skill-md",
+      "path": "ai-tools/agent-packs/skills/script-header-and-index-sync/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-seo-frontmatter-generation-skill-md",
+      "path": "ai-tools/agent-packs/skills/seo-frontmatter-generation/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-skill-docs-skill-md",
+      "path": "ai-tools/agent-packs/skills/skill-docs/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-spelling-and-cspell-maintenance-skill-md",
+      "path": "ai-tools/agent-packs/skills/spelling-and-cspell-maintenance/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-staged-test-suite-runner-skill-md",
+      "path": "ai-tools/agent-packs/skills/staged-test-suite-runner/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-structure-and-allowlist-guardrails-skill-md",
+      "path": "ai-tools/agent-packs/skills/structure-and-allowlist-guardrails/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-style-mdx-quality-fix-playbook-skill-md",
+      "path": "ai-tools/agent-packs/skills/style-mdx-quality-fix-playbook/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-v2-browser-sweep-runbook-skill-md",
+      "path": "ai-tools/agent-packs/skills/v2-browser-sweep-runbook/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-v2-link-audit-runbook-skill-md",
+      "path": "ai-tools/agent-packs/skills/v2-link-audit-runbook/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-skills-v2-pages-index-sync-skill-md",
+      "path": "ai-tools/agent-packs/skills/v2-pages-index-sync/SKILL.md",
+      "artifact_type": "portable-skill",
+      "category": "agent-packs-skills",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write"
+      ],
+      "catalog_group": "agent-packs/skills",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Portable SKILL.md exports derived from canonical templates."
+    },
+    {
+      "id": "agent-packs-windsurf-rules-md",
+      "path": "ai-tools/agent-packs/windsurf/rules.md",
+      "artifact_type": "generated-export",
+      "category": "agent-packs",
+      "lifecycle_state": "portable-export",
+      "current_lane": "exports",
+      "target_lane": "exports",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md",
+        "ai-tools/ai-skills/catalog/skill-catalog.json",
+        "ai-tools/ai-skills/catalog/execution-manifest.json"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/**"
+      ],
+      "runtime_targets": [
+        "Codex",
+        "Cursor",
+        "Claude",
+        "Windsurf"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/cross-agent-packager.js --agent-pack all"
+      ],
+      "catalog_group": "agent-packs",
+      "status": "generated-active",
+      "migration_wave": "wave-2",
+      "notes": "Generated adapter/manifests for cross-agent packs. They are outputs, not canonical source material."
+    },
+    {
+      "id": "ai-rules-ai-safeguards-md",
+      "path": "ai-tools/ai-rules/.AI-SAFEGUARDS.md",
+      "artifact_type": "governance-doc",
+      "category": "ai-rules",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [
+        "ai-tools/ai-rules/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "contradictory-active",
+      "migration_wave": "wave-4",
+      "notes": "Manual AI-rules documents living under ai-tools. Several contradict the current AGENTS/docs-guide governance model and are active legacy sources rather than approved canonical repo governance."
+    },
+    {
+      "id": "ai-rules-augment-guidelines",
+      "path": "ai-tools/ai-rules/.augment-guidelines",
+      "artifact_type": "governance-doc",
+      "category": "ai-rules",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [
+        "ai-tools/ai-rules/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "contradictory-active",
+      "migration_wave": "wave-4",
+      "notes": "Manual AI-rules documents living under ai-tools. Several contradict the current AGENTS/docs-guide governance model and are active legacy sources rather than approved canonical repo governance."
+    },
+    {
+      "id": "ai-rules-augment-augment-guidelines",
+      "path": "ai-tools/ai-rules/.augment/.augment-guidelines",
+      "artifact_type": "rule-file",
+      "category": "ai-rules-runtime",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [
+        "ai-tools/ai-rules/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "Augment",
+        "Cursor"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "unapproved-runtime-surface",
+      "migration_wave": "wave-4",
+      "notes": "Runtime-oriented rule files inside ai-tools rather than approved native adapter locations. These are active surfaces but outside the repo-approved agent governance layout."
+    },
+    {
+      "id": "ai-rules-augment-rules-git-safety-md",
+      "path": "ai-tools/ai-rules/.augment/rules/git-safety.md",
+      "artifact_type": "rule-file",
+      "category": "ai-rules-runtime",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [
+        "ai-tools/ai-rules/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "Augment",
+        "Cursor"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "unapproved-runtime-surface",
+      "migration_wave": "wave-4",
+      "notes": "Runtime-oriented rule files inside ai-tools rather than approved native adapter locations. These are active surfaces but outside the repo-approved agent governance layout."
+    },
+    {
+      "id": "ai-rules-augment-rules-imported-ai-guidelines-md",
+      "path": "ai-tools/ai-rules/.augment/rules/imported/AI_GUIDELINES.md",
+      "artifact_type": "imported-rule-copy",
+      "category": "ai-rules-imported",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "duplicated-import",
+      "migration_wave": "wave-4",
+      "notes": "Imported copies of rule material. These behave like snapshots/reference copies rather than governed canonical assets."
+    },
+    {
+      "id": "ai-rules-augment-rules-imported-copilot-instructions-md",
+      "path": "ai-tools/ai-rules/.augment/rules/imported/copilot-instructions.md",
+      "artifact_type": "imported-rule-copy",
+      "category": "ai-rules-imported",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "duplicated-import",
+      "migration_wave": "wave-4",
+      "notes": "Imported copies of rule material. These behave like snapshots/reference copies rather than governed canonical assets."
+    },
+    {
+      "id": "ai-rules-cursor-rules-no-deletions-mdc",
+      "path": "ai-tools/ai-rules/.cursor/rules/no-deletions.mdc",
+      "artifact_type": "rule-file",
+      "category": "ai-rules-runtime",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [
+        "ai-tools/ai-rules/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "Augment",
+        "Cursor"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "unapproved-runtime-surface",
+      "migration_wave": "wave-4",
+      "notes": "Runtime-oriented rule files inside ai-tools rather than approved native adapter locations. These are active surfaces but outside the repo-approved agent governance layout."
+    },
+    {
+      "id": "ai-rules-ai-guidelines-md",
+      "path": "ai-tools/ai-rules/AI_GUIDELINES.md",
+      "artifact_type": "governance-doc",
+      "category": "ai-rules",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [
+        "ai-tools/ai-rules/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "contradictory-active",
+      "migration_wave": "wave-4",
+      "notes": "Manual AI-rules documents living under ai-tools. Several contradict the current AGENTS/docs-guide governance model and are active legacy sources rather than approved canonical repo governance."
+    },
+    {
+      "id": "ai-rules-ai-accountability-checklist-md",
+      "path": "ai-tools/ai-rules/AI-ACCOUNTABILITY-CHECKLIST.md",
+      "artifact_type": "governance-doc",
+      "category": "ai-rules",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [
+        "ai-tools/ai-rules/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "contradictory-active",
+      "migration_wave": "wave-4",
+      "notes": "Manual AI-rules documents living under ai-tools. Several contradict the current AGENTS/docs-guide governance model and are active legacy sources rather than approved canonical repo governance."
+    },
+    {
+      "id": "ai-rules-human-override-policy-md",
+      "path": "ai-tools/ai-rules/HUMAN-OVERRIDE-POLICY.md",
+      "artifact_type": "governance-doc",
+      "category": "ai-rules",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [
+        "ai-tools/ai-rules/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "contradictory-active",
+      "migration_wave": "wave-4",
+      "notes": "Manual AI-rules documents living under ai-tools. Several contradict the current AGENTS/docs-guide governance model and are active legacy sources rather than approved canonical repo governance."
+    },
+    {
+      "id": "ai-rules-llms-txt-information-md",
+      "path": "ai-tools/ai-rules/llms.txt.information.md",
+      "artifact_type": "governance-doc",
+      "category": "ai-rules",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [
+        "ai-tools/ai-rules/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "contradictory-active",
+      "migration_wave": "wave-4",
+      "notes": "Manual AI-rules documents living under ai-tools. Several contradict the current AGENTS/docs-guide governance model and are active legacy sources rather than approved canonical repo governance."
+    },
+    {
+      "id": "ai-rules-review-table-md",
+      "path": "ai-tools/ai-rules/REVIEW_TABLE.md",
+      "artifact_type": "governance-doc",
+      "category": "ai-rules",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [
+        "ai-tools/ai-rules/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "contradictory-active",
+      "migration_wave": "wave-4",
+      "notes": "Manual AI-rules documents living under ai-tools. Several contradict the current AGENTS/docs-guide governance model and are active legacy sources rather than approved canonical repo governance."
+    },
+    {
+      "id": "ai-rules-rollback-guide-md",
+      "path": "ai-tools/ai-rules/ROLLBACK-GUIDE.md",
+      "artifact_type": "governance-doc",
+      "category": "ai-rules",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [
+        "ai-tools/ai-rules/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "contradictory-active",
+      "migration_wave": "wave-4",
+      "notes": "Manual AI-rules documents living under ai-tools. Several contradict the current AGENTS/docs-guide governance model and are active legacy sources rather than approved canonical repo governance."
+    },
+    {
+      "id": "ai-rules-rules-git-safety-md",
+      "path": "ai-tools/ai-rules/rules/git-safety.md",
+      "artifact_type": "rule-file",
+      "category": "ai-rules-runtime",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [
+        "ai-tools/ai-rules/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "Augment",
+        "Cursor"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "unapproved-runtime-surface",
+      "migration_wave": "wave-4",
+      "notes": "Runtime-oriented rule files inside ai-tools rather than approved native adapter locations. These are active surfaces but outside the repo-approved agent governance layout."
+    },
+    {
+      "id": "ai-rules-rules-imported-ai-guidelines-md",
+      "path": "ai-tools/ai-rules/rules/imported/AI_GUIDELINES.md",
+      "artifact_type": "imported-rule-copy",
+      "category": "ai-rules-imported",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "duplicated-import",
+      "migration_wave": "wave-4",
+      "notes": "Imported copies of rule material. These behave like snapshots/reference copies rather than governed canonical assets."
+    },
+    {
+      "id": "ai-rules-rules-imported-copilot-instructions-md",
+      "path": "ai-tools/ai-rules/rules/imported/copilot-instructions.md",
+      "artifact_type": "imported-rule-copy",
+      "category": "ai-rules-imported",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "duplicated-import",
+      "migration_wave": "wave-4",
+      "notes": "Imported copies of rule material. These behave like snapshots/reference copies rather than governed canonical assets."
+    },
+    {
+      "id": "ai-rules-tasks-directory-structure-mdc",
+      "path": "ai-tools/ai-rules/tasks-directory-structure.mdc",
+      "artifact_type": "rule-file",
+      "category": "ai-rules-runtime",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [
+        "ai-tools/ai-rules/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "Augment",
+        "Cursor"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "unapproved-runtime-surface",
+      "migration_wave": "wave-4",
+      "notes": "Runtime-oriented rule files inside ai-tools rather than approved native adapter locations. These are active surfaces but outside the repo-approved agent governance layout."
+    },
+    {
+      "id": "ai-rules-universal-ai-protocol-md",
+      "path": "ai-tools/ai-rules/UNIVERSAL-AI-PROTOCOL.md",
+      "artifact_type": "governance-doc",
+      "category": "ai-rules",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "rules",
+      "target_lane": "rules",
+      "canonical_source": [
+        "ai-tools/ai-rules/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-rules",
+      "status": "contradictory-active",
+      "migration_wave": "wave-4",
+      "notes": "Manual AI-rules documents living under ai-tools. Several contradict the current AGENTS/docs-guide governance model and are active legacy sources rather than approved canonical repo governance."
+    },
+    {
+      "id": "ai-skills-catalog-execution-manifest-json",
+      "path": "ai-tools/ai-skills/catalog/execution-manifest.json",
+      "artifact_type": "pipeline-catalog",
+      "category": "ai-skills-catalog",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/catalog/skill-catalog.json",
+        "ai-tools/ai-skills/catalog/execution-manifest.json"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/codex/skills-manifest.json"
+      ],
+      "runtime_targets": [
+        "tools/scripts/repo-audit-orchestrator.js",
+        "tools/scripts/cross-agent-packager.js"
+      ],
+      "validators": [
+        "tests/unit/repo-audit-pipeline.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/catalog",
+      "status": "narrow-scope-canonical",
+      "migration_wave": "wave-2",
+      "notes": "Canonical only for the repo-audit pipeline, not for all AI-tools or all skills. The naming overstates its scope."
+    },
+    {
+      "id": "ai-skills-catalog-readme-md",
+      "path": "ai-tools/ai-skills/catalog/README.md",
+      "artifact_type": "pipeline-catalog",
+      "category": "ai-skills-catalog",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/catalog/skill-catalog.json",
+        "ai-tools/ai-skills/catalog/execution-manifest.json"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/codex/skills-manifest.json"
+      ],
+      "runtime_targets": [
+        "tools/scripts/repo-audit-orchestrator.js",
+        "tools/scripts/cross-agent-packager.js"
+      ],
+      "validators": [
+        "tests/unit/repo-audit-pipeline.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/catalog",
+      "status": "narrow-scope-canonical",
+      "migration_wave": "wave-2",
+      "notes": "Canonical only for the repo-audit pipeline, not for all AI-tools or all skills. The naming overstates its scope."
+    },
+    {
+      "id": "ai-skills-catalog-skill-catalog-json",
+      "path": "ai-tools/ai-skills/catalog/skill-catalog.json",
+      "artifact_type": "pipeline-catalog",
+      "category": "ai-skills-catalog",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/catalog/skill-catalog.json",
+        "ai-tools/ai-skills/catalog/execution-manifest.json"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/codex/skills-manifest.json"
+      ],
+      "runtime_targets": [
+        "tools/scripts/repo-audit-orchestrator.js",
+        "tools/scripts/cross-agent-packager.js"
+      ],
+      "validators": [
+        "tests/unit/repo-audit-pipeline.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/catalog",
+      "status": "narrow-scope-canonical",
+      "migration_wave": "wave-2",
+      "notes": "Canonical only for the repo-audit pipeline, not for all AI-tools or all skills. The naming overstates its scope."
+    },
+    {
+      "id": "ai-skills-catalog-skill-catalog-schema-json",
+      "path": "ai-tools/ai-skills/catalog/skill-catalog.schema.json",
+      "artifact_type": "pipeline-catalog",
+      "category": "ai-skills-catalog",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/catalog/skill-catalog.json",
+        "ai-tools/ai-skills/catalog/execution-manifest.json"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/codex/skills-manifest.json"
+      ],
+      "runtime_targets": [
+        "tools/scripts/repo-audit-orchestrator.js",
+        "tools/scripts/cross-agent-packager.js"
+      ],
+      "validators": [
+        "tests/unit/repo-audit-pipeline.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/catalog",
+      "status": "narrow-scope-canonical",
+      "migration_wave": "wave-2",
+      "notes": "Canonical only for the repo-audit pipeline, not for all AI-tools or all skills. The naming overstates its scope."
+    },
+    {
+      "id": "ai-skills-cleanup-quarantine-manager-skill-md",
+      "path": "ai-tools/ai-skills/cleanup-quarantine-manager/SKILL.md",
+      "artifact_type": "skill-root",
+      "category": "ai-skills-local",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "local",
+      "target_lane": "local",
+      "canonical_source": [
+        "ai-tools/ai-skills/*/SKILL.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "repo-local skill use"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/local-skills",
+      "status": "split-source",
+      "migration_wave": "wave-3",
+      "notes": "Local skill roots that do not participate in the current template-first portable lifecycle. They act as active source files and create split governance."
+    },
+    {
+      "id": "ai-skills-component-layout-governance-skill-md",
+      "path": "ai-tools/ai-skills/component-layout-governance/SKILL.md",
+      "artifact_type": "skill-root",
+      "category": "ai-skills-local",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "local",
+      "target_lane": "local",
+      "canonical_source": [
+        "ai-tools/ai-skills/*/SKILL.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "repo-local skill use"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/local-skills",
+      "status": "split-source",
+      "migration_wave": "wave-3",
+      "notes": "Local skill roots that do not participate in the current template-first portable lifecycle. They act as active source files and create split governance."
+    },
+    {
+      "id": "ai-skills-content-map-md",
+      "path": "ai-tools/ai-skills/content-map.md",
+      "artifact_type": "generated-index",
+      "category": "ai-skills-indexes",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "tools/scripts/generate-ai-skills-indexes.js"
+      ],
+      "derived_outputs": [
+        "ai-tools/ai-skills/content-map.md",
+        "ai-tools/ai-skills/inventory.json"
+      ],
+      "runtime_targets": [
+        "agent governance reporting"
+      ],
+      "validators": [],
+      "repair_commands": [
+        "node tools/scripts/generate-ai-skills-indexes.js --write"
+      ],
+      "catalog_group": "ai-skills",
+      "status": "misnamed-generated-output",
+      "migration_wave": "wave-2",
+      "notes": "Generated indexes stored under ai-skills but derived from agent-governance surfaces outside ai-skills. The filenames imply AI-skills inventory even though the content does not inventory skills."
+    },
+    {
+      "id": "ai-skills-copywriting-research-md",
+      "path": "ai-tools/ai-skills/copywriting-research.md",
+      "artifact_type": "research-or-package-doc",
+      "category": "ai-skills-research",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "workspace",
+      "target_lane": "workspace",
+      "canonical_source": [
+        "ai-tools/ai-skills/*.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/research",
+      "status": "misplaced-research",
+      "migration_wave": "wave-4",
+      "notes": "Research/package documents living at ai-skills root instead of a governed workspace lane in this checkout."
+    },
+    {
+      "id": "ai-skills-cross-agent-packager-skill-md",
+      "path": "ai-tools/ai-skills/cross-agent-packager/SKILL.md",
+      "artifact_type": "skill-root",
+      "category": "ai-skills-local",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "local",
+      "target_lane": "local",
+      "canonical_source": [
+        "ai-tools/ai-skills/*/SKILL.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "repo-local skill use"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/local-skills",
+      "status": "split-source",
+      "migration_wave": "wave-3",
+      "notes": "Local skill roots that do not participate in the current template-first portable lifecycle. They act as active source files and create split governance."
+    },
+    {
+      "id": "ai-skills-docs-copy-readme-md",
+      "path": "ai-tools/ai-skills/docs-copy/README.md",
+      "artifact_type": "framework-doc",
+      "category": "ai-skills-framework",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/docs-copy/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "manual skill loading"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/docs-copy",
+      "status": "active-framework",
+      "migration_wave": "wave-2",
+      "notes": "Manual companion framework files for docs-copy. These are not represented in the pipeline catalog or the template registry, but they are active repo content."
+    },
+    {
+      "id": "ai-skills-docs-copy-reference-banned-phrases-txt",
+      "path": "ai-tools/ai-skills/docs-copy/reference/banned-phrases.txt",
+      "artifact_type": "framework-doc",
+      "category": "ai-skills-framework",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/docs-copy/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "manual skill loading"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/docs-copy",
+      "status": "active-framework",
+      "migration_wave": "wave-2",
+      "notes": "Manual companion framework files for docs-copy. These are not represented in the pipeline catalog or the template registry, but they are active repo content."
+    },
+    {
+      "id": "ai-skills-docs-copy-reference-banned-words-txt",
+      "path": "ai-tools/ai-skills/docs-copy/reference/banned-words.txt",
+      "artifact_type": "framework-doc",
+      "category": "ai-skills-framework",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/docs-copy/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "manual skill loading"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/docs-copy",
+      "status": "active-framework",
+      "migration_wave": "wave-2",
+      "notes": "Manual companion framework files for docs-copy. These are not represented in the pipeline catalog or the template registry, but they are active repo content."
+    },
+    {
+      "id": "ai-skills-docs-copy-reference-invocation-guide-md",
+      "path": "ai-tools/ai-skills/docs-copy/reference/invocation-guide.md",
+      "artifact_type": "framework-doc",
+      "category": "ai-skills-framework",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/docs-copy/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "manual skill loading"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/docs-copy",
+      "status": "active-framework",
+      "migration_wave": "wave-2",
+      "notes": "Manual companion framework files for docs-copy. These are not represented in the pipeline catalog or the template registry, but they are active repo content."
+    },
+    {
+      "id": "ai-skills-docs-copy-reference-phrase-mapping-md",
+      "path": "ai-tools/ai-skills/docs-copy/reference/phrase-mapping.md",
+      "artifact_type": "framework-doc",
+      "category": "ai-skills-framework",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/docs-copy/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "manual skill loading"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/docs-copy",
+      "status": "active-framework",
+      "migration_wave": "wave-2",
+      "notes": "Manual companion framework files for docs-copy. These are not represented in the pipeline catalog or the template registry, but they are active repo content."
+    },
+    {
+      "id": "ai-skills-docs-copy-skill-md",
+      "path": "ai-tools/ai-skills/docs-copy/SKILL.md",
+      "artifact_type": "skill-root",
+      "category": "ai-skills-local",
+      "lifecycle_state": "local-synced",
+      "current_lane": "local",
+      "target_lane": "local",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/33-skill-docs.template.md",
+        "ai-tools/ai-skills/templates/36-docs-copy.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/ai-skills/docs-copy/SKILL.md",
+        "ai-tools/ai-skills/skill-docs/SKILL.md"
+      ],
+      "runtime_targets": [
+        "repo-local skill use"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/sync-codex-skills.js --check"
+      ],
+      "catalog_group": "ai-skills/local-skills",
+      "status": "mixed-lifecycle",
+      "migration_wave": "wave-3",
+      "notes": "Repo-local SKILL.md files that overlap with the portable template lifecycle, unlike most local skill roots."
+    },
+    {
+      "id": "ai-skills-docs-copy-skills-copy-rules-md",
+      "path": "ai-tools/ai-skills/docs-copy/skills/copy-rules.md",
+      "artifact_type": "framework-doc",
+      "category": "ai-skills-framework",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/docs-copy/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "manual skill loading"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/docs-copy",
+      "status": "active-framework",
+      "migration_wave": "wave-2",
+      "notes": "Manual companion framework files for docs-copy. These are not represented in the pipeline catalog or the template registry, but they are active repo content."
+    },
+    {
+      "id": "ai-skills-docs-copy-skills-iteration-diagnostic-md",
+      "path": "ai-tools/ai-skills/docs-copy/skills/iteration-diagnostic.md",
+      "artifact_type": "framework-doc",
+      "category": "ai-skills-framework",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/docs-copy/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "manual skill loading"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/docs-copy",
+      "status": "active-framework",
+      "migration_wave": "wave-2",
+      "notes": "Manual companion framework files for docs-copy. These are not represented in the pipeline catalog or the template registry, but they are active repo content."
+    },
+    {
+      "id": "ai-skills-docs-copy-skills-pattern-observer-md",
+      "path": "ai-tools/ai-skills/docs-copy/skills/pattern-observer.md",
+      "artifact_type": "framework-doc",
+      "category": "ai-skills-framework",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/docs-copy/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "manual skill loading"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/docs-copy",
+      "status": "active-framework",
+      "migration_wave": "wave-2",
+      "notes": "Manual companion framework files for docs-copy. These are not represented in the pipeline catalog or the template registry, but they are active repo content."
+    },
+    {
+      "id": "ai-skills-docs-copy-skills-persona-routing-md",
+      "path": "ai-tools/ai-skills/docs-copy/skills/persona-routing.md",
+      "artifact_type": "framework-doc",
+      "category": "ai-skills-framework",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/docs-copy/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "manual skill loading"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/docs-copy",
+      "status": "active-framework",
+      "migration_wave": "wave-2",
+      "notes": "Manual companion framework files for docs-copy. These are not represented in the pipeline catalog or the template registry, but they are active repo content."
+    },
+    {
+      "id": "ai-skills-docs-copy-skills-review-gate-md",
+      "path": "ai-tools/ai-skills/docs-copy/skills/review-gate.md",
+      "artifact_type": "framework-doc",
+      "category": "ai-skills-framework",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/docs-copy/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "manual skill loading"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/docs-copy",
+      "status": "active-framework",
+      "migration_wave": "wave-2",
+      "notes": "Manual companion framework files for docs-copy. These are not represented in the pipeline catalog or the template registry, but they are active repo content."
+    },
+    {
+      "id": "ai-skills-docs-copy-skills-skill-docs-md",
+      "path": "ai-tools/ai-skills/docs-copy/skills/skill-docs.md",
+      "artifact_type": "framework-doc",
+      "category": "ai-skills-framework",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/docs-copy/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "manual skill loading"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/docs-copy",
+      "status": "active-framework",
+      "migration_wave": "wave-2",
+      "notes": "Manual companion framework files for docs-copy. These are not represented in the pipeline catalog or the template registry, but they are active repo content."
+    },
+    {
+      "id": "ai-skills-docs-copy-skills-structure-rules-md",
+      "path": "ai-tools/ai-skills/docs-copy/skills/structure-rules.md",
+      "artifact_type": "framework-doc",
+      "category": "ai-skills-framework",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/docs-copy/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "manual skill loading"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/docs-copy",
+      "status": "active-framework",
+      "migration_wave": "wave-2",
+      "notes": "Manual companion framework files for docs-copy. These are not represented in the pipeline catalog or the template registry, but they are active repo content."
+    },
+    {
+      "id": "ai-skills-docs-copy-skills-value-prop-check-md",
+      "path": "ai-tools/ai-skills/docs-copy/skills/value-prop-check.md",
+      "artifact_type": "framework-doc",
+      "category": "ai-skills-framework",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/docs-copy/**"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "manual skill loading"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/docs-copy",
+      "status": "active-framework",
+      "migration_wave": "wave-2",
+      "notes": "Manual companion framework files for docs-copy. These are not represented in the pipeline catalog or the template registry, but they are active repo content."
+    },
+    {
+      "id": "ai-skills-docs-coverage-and-route-integrity-audit-skill-md",
+      "path": "ai-tools/ai-skills/docs-coverage-and-route-integrity-audit/SKILL.md",
+      "artifact_type": "skill-root",
+      "category": "ai-skills-local",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "local",
+      "target_lane": "local",
+      "canonical_source": [
+        "ai-tools/ai-skills/*/SKILL.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "repo-local skill use"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/local-skills",
+      "status": "split-source",
+      "migration_wave": "wave-3",
+      "notes": "Local skill roots that do not participate in the current template-first portable lifecycle. They act as active source files and create split governance."
+    },
+    {
+      "id": "ai-skills-docs-quality-and-freshness-audit-skill-md",
+      "path": "ai-tools/ai-skills/docs-quality-and-freshness-audit/SKILL.md",
+      "artifact_type": "skill-root",
+      "category": "ai-skills-local",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "local",
+      "target_lane": "local",
+      "canonical_source": [
+        "ai-tools/ai-skills/*/SKILL.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "repo-local skill use"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/local-skills",
+      "status": "split-source",
+      "migration_wave": "wave-3",
+      "notes": "Local skill roots that do not participate in the current template-first portable lifecycle. They act as active source files and create split governance."
+    },
+    {
+      "id": "ai-skills-generated-mdx-banners-governance-skill-md",
+      "path": "ai-tools/ai-skills/generated-mdx-banners-governance/SKILL.md",
+      "artifact_type": "skill-root",
+      "category": "ai-skills-local",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "local",
+      "target_lane": "local",
+      "canonical_source": [
+        "ai-tools/ai-skills/*/SKILL.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "repo-local skill use"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/local-skills",
+      "status": "split-source",
+      "migration_wave": "wave-3",
+      "notes": "Local skill roots that do not participate in the current template-first portable lifecycle. They act as active source files and create split governance."
+    },
+    {
+      "id": "ai-skills-inventory-json",
+      "path": "ai-tools/ai-skills/inventory.json",
+      "artifact_type": "generated-index",
+      "category": "ai-skills-indexes",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "tools/scripts/generate-ai-skills-indexes.js"
+      ],
+      "derived_outputs": [
+        "ai-tools/ai-skills/content-map.md",
+        "ai-tools/ai-skills/inventory.json"
+      ],
+      "runtime_targets": [
+        "agent governance reporting"
+      ],
+      "validators": [],
+      "repair_commands": [
+        "node tools/scripts/generate-ai-skills-indexes.js --write"
+      ],
+      "catalog_group": "ai-skills",
+      "status": "misnamed-generated-output",
+      "migration_wave": "wave-2",
+      "notes": "Generated indexes stored under ai-skills but derived from agent-governance surfaces outside ai-skills. The filenames imply AI-skills inventory even though the content does not inventory skills."
+    },
+    {
+      "id": "ai-skills-page-authoring-skill-md",
+      "path": "ai-tools/ai-skills/page-authoring/SKILL.md",
+      "artifact_type": "skill-root",
+      "category": "ai-skills-local",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "local",
+      "target_lane": "local",
+      "canonical_source": [
+        "ai-tools/ai-skills/*/SKILL.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "repo-local skill use"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/local-skills",
+      "status": "split-source",
+      "migration_wave": "wave-3",
+      "notes": "Local skill roots that do not participate in the current template-first portable lifecycle. They act as active source files and create split governance."
+    },
+    {
+      "id": "ai-skills-product-thinking-skill-md",
+      "path": "ai-tools/ai-skills/product-thinking/SKILL.md",
+      "artifact_type": "skill-root",
+      "category": "ai-skills-local",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "local",
+      "target_lane": "local",
+      "canonical_source": [
+        "ai-tools/ai-skills/*/SKILL.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "repo-local skill use"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/local-skills",
+      "status": "split-source",
+      "migration_wave": "wave-3",
+      "notes": "Local skill roots that do not participate in the current template-first portable lifecycle. They act as active source files and create split governance."
+    },
+    {
+      "id": "ai-skills-product-writing-research-sources-md",
+      "path": "ai-tools/ai-skills/product-writing-research-sources.md",
+      "artifact_type": "research-or-package-doc",
+      "category": "ai-skills-research",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "workspace",
+      "target_lane": "workspace",
+      "canonical_source": [
+        "ai-tools/ai-skills/*.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/research",
+      "status": "misplaced-research",
+      "migration_wave": "wave-4",
+      "notes": "Research/package documents living at ai-skills root instead of a governed workspace lane in this checkout."
+    },
+    {
+      "id": "ai-skills-product-writing-skill-package-md",
+      "path": "ai-tools/ai-skills/product-writing-skill-package.md",
+      "artifact_type": "research-or-package-doc",
+      "category": "ai-skills-research",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "workspace",
+      "target_lane": "workspace",
+      "canonical_source": [
+        "ai-tools/ai-skills/*.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/research",
+      "status": "misplaced-research",
+      "migration_wave": "wave-4",
+      "notes": "Research/package documents living at ai-skills root instead of a governed workspace lane in this checkout."
+    },
+    {
+      "id": "ai-skills-repo-audit-orchestrator-skill-md",
+      "path": "ai-tools/ai-skills/repo-audit-orchestrator/SKILL.md",
+      "artifact_type": "skill-root",
+      "category": "ai-skills-local",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "local",
+      "target_lane": "local",
+      "canonical_source": [
+        "ai-tools/ai-skills/*/SKILL.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "repo-local skill use"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/local-skills",
+      "status": "split-source",
+      "migration_wave": "wave-3",
+      "notes": "Local skill roots that do not participate in the current template-first portable lifecycle. They act as active source files and create split governance."
+    },
+    {
+      "id": "ai-skills-rubric-static-review-skill-md",
+      "path": "ai-tools/ai-skills/rubric-static-review/SKILL.md",
+      "artifact_type": "skill-root",
+      "category": "ai-skills-local",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "local",
+      "target_lane": "local",
+      "canonical_source": [
+        "ai-tools/ai-skills/*/SKILL.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "repo-local skill use"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/local-skills",
+      "status": "split-source",
+      "migration_wave": "wave-3",
+      "notes": "Local skill roots that do not participate in the current template-first portable lifecycle. They act as active source files and create split governance."
+    },
+    {
+      "id": "ai-skills-script-footprint-and-usage-audit-skill-md",
+      "path": "ai-tools/ai-skills/script-footprint-and-usage-audit/SKILL.md",
+      "artifact_type": "skill-root",
+      "category": "ai-skills-local",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "local",
+      "target_lane": "local",
+      "canonical_source": [
+        "ai-tools/ai-skills/*/SKILL.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "repo-local skill use"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/local-skills",
+      "status": "split-source",
+      "migration_wave": "wave-3",
+      "notes": "Local skill roots that do not participate in the current template-first portable lifecycle. They act as active source files and create split governance."
+    },
+    {
+      "id": "ai-skills-skill-docs-skill-md",
+      "path": "ai-tools/ai-skills/skill-docs/SKILL.md",
+      "artifact_type": "skill-root",
+      "category": "ai-skills-local",
+      "lifecycle_state": "local-synced",
+      "current_lane": "local",
+      "target_lane": "local",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/33-skill-docs.template.md",
+        "ai-tools/ai-skills/templates/36-docs-copy.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/ai-skills/docs-copy/SKILL.md",
+        "ai-tools/ai-skills/skill-docs/SKILL.md"
+      ],
+      "runtime_targets": [
+        "repo-local skill use"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/sync-codex-skills.js --check"
+      ],
+      "catalog_group": "ai-skills/local-skills",
+      "status": "mixed-lifecycle",
+      "migration_wave": "wave-3",
+      "notes": "Repo-local SKILL.md files that overlap with the portable template lifecycle, unlike most local skill roots."
+    },
+    {
+      "id": "ai-skills-skill-spec-contract-md",
+      "path": "ai-tools/ai-skills/skill-spec-contract.md",
+      "artifact_type": "contract-doc",
+      "category": "ai-skills-governance",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/skill-spec-contract.md",
+        "ai-tools/ai-skills/skills-template.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills",
+      "status": "partial-governance",
+      "migration_wave": "wave-2",
+      "notes": "Manual contract/template guidance for governed skill artifacts. These documents govern only part of the tree."
+    },
+    {
+      "id": "ai-skills-skills-template-md",
+      "path": "ai-tools/ai-skills/skills-template.md",
+      "artifact_type": "contract-doc",
+      "category": "ai-skills-governance",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/ai-skills/skill-spec-contract.md",
+        "ai-tools/ai-skills/skills-template.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills",
+      "status": "partial-governance",
+      "migration_wave": "wave-2",
+      "notes": "Manual contract/template guidance for governed skill artifacts. These documents govern only part of the tree."
+    },
+    {
+      "id": "ai-skills-source-content-github-augment-instructions-md",
+      "path": "ai-tools/ai-skills/source-content/.github/augment-instructions.md",
+      "artifact_type": "source-snapshot",
+      "category": "ai-skills-source-content",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "workspace",
+      "target_lane": "workspace",
+      "canonical_source": [
+        "external or upstream governance/content surfaces"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/source-content",
+      "status": "snapshot-active",
+      "migration_wave": "wave-4",
+      "notes": "Snapshot copies of upstream source content used for AI-skills inventories and packaging."
+    },
+    {
+      "id": "ai-skills-source-content-contribute-contributing-agent-instructions-md",
+      "path": "ai-tools/ai-skills/source-content/contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md",
+      "artifact_type": "source-snapshot",
+      "category": "ai-skills-source-content",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "workspace",
+      "target_lane": "workspace",
+      "canonical_source": [
+        "external or upstream governance/content surfaces"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/source-content",
+      "status": "snapshot-active",
+      "migration_wave": "wave-4",
+      "notes": "Snapshot copies of upstream source content used for AI-skills inventories and packaging."
+    },
+    {
+      "id": "ai-skills-source-content-llms-txt",
+      "path": "ai-tools/ai-skills/source-content/llms.txt",
+      "artifact_type": "source-snapshot",
+      "category": "ai-skills-source-content",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "workspace",
+      "target_lane": "workspace",
+      "canonical_source": [
+        "external or upstream governance/content surfaces"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/source-content",
+      "status": "snapshot-active",
+      "migration_wave": "wave-4",
+      "notes": "Snapshot copies of upstream source content used for AI-skills inventories and packaging."
+    },
+    {
+      "id": "ai-skills-source-content-v2-cn-contribute-contributing-agent-instructions-md",
+      "path": "ai-tools/ai-skills/source-content/v2/cn/contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md",
+      "artifact_type": "source-snapshot",
+      "category": "ai-skills-source-content",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "workspace",
+      "target_lane": "workspace",
+      "canonical_source": [
+        "external or upstream governance/content surfaces"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/source-content",
+      "status": "snapshot-active",
+      "migration_wave": "wave-4",
+      "notes": "Snapshot copies of upstream source content used for AI-skills inventories and packaging."
+    },
+    {
+      "id": "ai-skills-source-content-v2-es-contribute-contributing-agent-instructions-md",
+      "path": "ai-tools/ai-skills/source-content/v2/es/contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md",
+      "artifact_type": "source-snapshot",
+      "category": "ai-skills-source-content",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "workspace",
+      "target_lane": "workspace",
+      "canonical_source": [
+        "external or upstream governance/content surfaces"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/source-content",
+      "status": "snapshot-active",
+      "migration_wave": "wave-4",
+      "notes": "Snapshot copies of upstream source content used for AI-skills inventories and packaging."
+    },
+    {
+      "id": "ai-skills-source-content-v2-fr-contribute-contributing-agent-instructions-md",
+      "path": "ai-tools/ai-skills/source-content/v2/fr/contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md",
+      "artifact_type": "source-snapshot",
+      "category": "ai-skills-source-content",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "workspace",
+      "target_lane": "workspace",
+      "canonical_source": [
+        "external or upstream governance/content surfaces"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/source-content",
+      "status": "snapshot-active",
+      "migration_wave": "wave-4",
+      "notes": "Snapshot copies of upstream source content used for AI-skills inventories and packaging."
+    },
+    {
+      "id": "ai-skills-style-and-language-homogenizer-en-gb-skill-md",
+      "path": "ai-tools/ai-skills/style-and-language-homogenizer-en-gb/SKILL.md",
+      "artifact_type": "skill-root",
+      "category": "ai-skills-local",
+      "lifecycle_state": "legacy-active",
+      "current_lane": "local",
+      "target_lane": "local",
+      "canonical_source": [
+        "ai-tools/ai-skills/*/SKILL.md"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "repo-local skill use"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-skills/local-skills",
+      "status": "split-source",
+      "migration_wave": "wave-3",
+      "notes": "Local skill roots that do not participate in the current template-first portable lifecycle. They act as active source files and create split governance."
+    },
+    {
+      "id": "ai-skills-templates-01-lpd-bootstrap-and-doctor-template-md",
+      "path": "ai-tools/ai-skills/templates/01-lpd-bootstrap-and-doctor.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-02-mint-dev-and-hook-install-template-md",
+      "path": "ai-tools/ai-skills/templates/02-mint-dev-and-hook-install.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-03-mintlify-authoring-style-compliance-template-md",
+      "path": "ai-tools/ai-skills/templates/03-mintlify-authoring-style-compliance.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-04-component-library-guided-authoring-template-md",
+      "path": "ai-tools/ai-skills/templates/04-component-library-guided-authoring.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-05-mdx-parent-child-scope-patterns-template-md",
+      "path": "ai-tools/ai-skills/templates/05-mdx-parent-child-scope-patterns.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-06-docs-ia-route-placement-template-md",
+      "path": "ai-tools/ai-skills/templates/06-docs-ia-route-placement.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-07-docs-json-navigation-maintenance-template-md",
+      "path": "ai-tools/ai-skills/templates/07-docs-json-navigation-maintenance.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-08-structure-and-allowlist-guardrails-template-md",
+      "path": "ai-tools/ai-skills/templates/08-structure-and-allowlist-guardrails.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-09-precommit-failure-triage-template-md",
+      "path": "ai-tools/ai-skills/templates/09-precommit-failure-triage.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-10-staged-test-suite-runner-template-md",
+      "path": "ai-tools/ai-skills/templates/10-staged-test-suite-runner.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-11-pr-changed-file-ci-simulation-template-md",
+      "path": "ai-tools/ai-skills/templates/11-pr-changed-file-ci-simulation.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-12-style-mdx-quality-fix-playbook-template-md",
+      "path": "ai-tools/ai-skills/templates/12-style-mdx-quality-fix-playbook.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-13-spelling-and-cspell-maintenance-template-md",
+      "path": "ai-tools/ai-skills/templates/13-spelling-and-cspell-maintenance.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-14-v2-link-audit-runbook-template-md",
+      "path": "ai-tools/ai-skills/templates/14-v2-link-audit-runbook.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-15-domain-pages-audit-runbook-template-md",
+      "path": "ai-tools/ai-skills/templates/15-domain-pages-audit-runbook.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-16-v2-browser-sweep-runbook-template-md",
+      "path": "ai-tools/ai-skills/templates/16-v2-browser-sweep-runbook.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-17-broken-links-advisory-triage-template-md",
+      "path": "ai-tools/ai-skills/templates/17-broken-links-advisory-triage.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-18-new-script-scaffold-template-md",
+      "path": "ai-tools/ai-skills/templates/18-new-script-scaffold.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-19-script-header-and-index-sync-template-md",
+      "path": "ai-tools/ai-skills/templates/19-script-header-and-index-sync.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-20-v2-pages-index-sync-template-md",
+      "path": "ai-tools/ai-skills/templates/20-v2-pages-index-sync.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-21-component-library-index-refresh-template-md",
+      "path": "ai-tools/ai-skills/templates/21-component-library-index-refresh.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-22-docs-status-table-generation-template-md",
+      "path": "ai-tools/ai-skills/templates/22-docs-status-table-generation.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-23-seo-frontmatter-generation-template-md",
+      "path": "ai-tools/ai-skills/templates/23-seo-frontmatter-generation.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-24-openapi-sync-and-api-doc-generation-template-md",
+      "path": "ai-tools/ai-skills/templates/24-openapi-sync-and-api-doc-generation.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-25-external-docs-sync-and-sanitize-template-md",
+      "path": "ai-tools/ai-skills/templates/25-external-docs-sync-and-sanitize.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-26-glossary-terminology-generation-template-md",
+      "path": "ai-tools/ai-skills/templates/26-glossary-terminology-generation.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-27-github-actions-data-pipeline-maintenance-template-md",
+      "path": "ai-tools/ai-skills/templates/27-github-actions-data-pipeline-maintenance.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-28-release-version-workflow-maintenance-template-md",
+      "path": "ai-tools/ai-skills/templates/28-release-version-workflow-maintenance.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-29-n8n-workflow-maintenance-template-md",
+      "path": "ai-tools/ai-skills/templates/29-n8n-workflow-maintenance.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-30-discord-issue-intake-maintenance-template-md",
+      "path": "ai-tools/ai-skills/templates/30-discord-issue-intake-maintenance.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-31-codex-task-isolation-standard-template-md",
+      "path": "ai-tools/ai-skills/templates/31-codex-task-isolation-standard.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-32-agentic-project-management-orchestrator-template-md",
+      "path": "ai-tools/ai-skills/templates/32-agentic-project-management-orchestrator.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-32-page-content-research-review-references-report-template-md",
+      "path": "ai-tools/ai-skills/templates/32-page-content-research-review.references/report-template.md",
+      "artifact_type": "template-companion-bundle",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**",
+        "~/.codex/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical companion reference bundles for template-first skills."
+    },
+    {
+      "id": "ai-skills-templates-32-page-content-research-review-references-workflow-router-md",
+      "path": "ai-tools/ai-skills/templates/32-page-content-research-review.references/workflow-router.md",
+      "artifact_type": "template-companion-bundle",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**",
+        "~/.codex/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical companion reference bundles for template-first skills."
+    },
+    {
+      "id": "ai-skills-templates-32-page-content-research-review-template-md",
+      "path": "ai-tools/ai-skills/templates/32-page-content-research-review.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-33-docs-source-verification-references-claim-ledger-md",
+      "path": "ai-tools/ai-skills/templates/33-docs-source-verification.references/claim-ledger.md",
+      "artifact_type": "template-companion-bundle",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**",
+        "~/.codex/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical companion reference bundles for template-first skills."
+    },
+    {
+      "id": "ai-skills-templates-33-docs-source-verification-references-source-priority-md",
+      "path": "ai-tools/ai-skills/templates/33-docs-source-verification.references/source-priority.md",
+      "artifact_type": "template-companion-bundle",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**",
+        "~/.codex/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical companion reference bundles for template-first skills."
+    },
+    {
+      "id": "ai-skills-templates-33-docs-source-verification-template-md",
+      "path": "ai-tools/ai-skills/templates/33-docs-source-verification.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-33-skill-docs-template-md",
+      "path": "ai-tools/ai-skills/templates/33-skill-docs.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-34-docs-change-review-references-review-rubric-md",
+      "path": "ai-tools/ai-skills/templates/34-docs-change-review.references/review-rubric.md",
+      "artifact_type": "template-companion-bundle",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**",
+        "~/.codex/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical companion reference bundles for template-first skills."
+    },
+    {
+      "id": "ai-skills-templates-34-docs-change-review-references-severity-and-verdicts-md",
+      "path": "ai-tools/ai-skills/templates/34-docs-change-review.references/severity-and-verdicts.md",
+      "artifact_type": "template-companion-bundle",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**",
+        "~/.codex/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical companion reference bundles for template-first skills."
+    },
+    {
+      "id": "ai-skills-templates-34-docs-change-review-template-md",
+      "path": "ai-tools/ai-skills/templates/34-docs-change-review.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-35-docs-impact-propagation-references-claim-map-method-md",
+      "path": "ai-tools/ai-skills/templates/35-docs-impact-propagation.references/claim-map-method.md",
+      "artifact_type": "template-companion-bundle",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**",
+        "~/.codex/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical companion reference bundles for template-first skills."
+    },
+    {
+      "id": "ai-skills-templates-35-docs-impact-propagation-references-propagation-checklist-md",
+      "path": "ai-tools/ai-skills/templates/35-docs-impact-propagation.references/propagation-checklist.md",
+      "artifact_type": "template-companion-bundle",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**",
+        "~/.codex/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical companion reference bundles for template-first skills."
+    },
+    {
+      "id": "ai-skills-templates-35-docs-impact-propagation-template-md",
+      "path": "ai-tools/ai-skills/templates/35-docs-impact-propagation.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "ai-skills-templates-36-docs-copy-references-handoff-checklist-md",
+      "path": "ai-tools/ai-skills/templates/36-docs-copy.references/handoff-checklist.md",
+      "artifact_type": "template-companion-bundle",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**",
+        "~/.codex/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical companion reference bundles for template-first skills."
+    },
+    {
+      "id": "ai-skills-templates-36-docs-copy-references-task-routing-md",
+      "path": "ai-tools/ai-skills/templates/36-docs-copy.references/task-routing.md",
+      "artifact_type": "template-companion-bundle",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**",
+        "~/.codex/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical companion reference bundles for template-first skills."
+    },
+    {
+      "id": "ai-skills-templates-36-docs-copy-references-workflow-md",
+      "path": "ai-tools/ai-skills/templates/36-docs-copy.references/workflow.md",
+      "artifact_type": "template-companion-bundle",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.references/**"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**/references/**",
+        "~/.codex/skills/**/references/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical companion reference bundles for template-first skills."
+    },
+    {
+      "id": "ai-skills-templates-36-docs-copy-template-md",
+      "path": "ai-tools/ai-skills/templates/36-docs-copy.template.md",
+      "artifact_type": "skill-template",
+      "category": "ai-skills-templates",
+      "lifecycle_state": "canonical-template",
+      "current_lane": "templates",
+      "target_lane": "templates",
+      "canonical_source": [
+        "ai-tools/ai-skills/templates/*.template.md"
+      ],
+      "derived_outputs": [
+        "ai-tools/agent-packs/skills/**",
+        "~/.codex/skills/**"
+      ],
+      "runtime_targets": [
+        "portable skill export",
+        "codex local sync"
+      ],
+      "validators": [
+        "tests/unit/skill-docs.test.js",
+        "tests/unit/export-portable-skills.test.js",
+        "tests/unit/codex-skill-sync.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/export-portable-skills.js --write",
+        "node tools/scripts/sync-codex-skills.js"
+      ],
+      "catalog_group": "ai-skills/templates",
+      "status": "canonical-active",
+      "migration_wave": "wave-2",
+      "notes": "Canonical template-first skill source for the portable/synced skill lifecycle."
+    },
+    {
+      "id": "claude-code-mdx",
+      "path": "ai-tools/claude-code.mdx",
+      "artifact_type": "setup-guide",
+      "category": "agent-setup-guides",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/claude-code.mdx",
+        "ai-tools/cursor.mdx",
+        "ai-tools/windsurf.mdx"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        ".claude/CLAUDE.md",
+        ".cursor/rules/*.mdc",
+        ".windsurf/rules/*.md"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "root-guides",
+      "status": "active",
+      "migration_wave": "wave-2",
+      "notes": "Human-authored setup guides at ai-tools root. These are canonical documents for setup guidance, but they are not a full AI-tools inventory or registry."
+    },
+    {
+      "id": "cursor-mdx",
+      "path": "ai-tools/cursor.mdx",
+      "artifact_type": "setup-guide",
+      "category": "agent-setup-guides",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/claude-code.mdx",
+        "ai-tools/cursor.mdx",
+        "ai-tools/windsurf.mdx"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        ".claude/CLAUDE.md",
+        ".cursor/rules/*.mdc",
+        ".windsurf/rules/*.md"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "root-guides",
+      "status": "active",
+      "migration_wave": "wave-2",
+      "notes": "Human-authored setup guides at ai-tools root. These are canonical documents for setup guidance, but they are not a full AI-tools inventory or registry."
+    },
+    {
+      "id": "registry-ai-tools-inventory-md",
+      "path": "ai-tools/registry/ai-tools-inventory.md",
+      "artifact_type": "generated-inventory",
+      "category": "ai-tools-registry",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/registry/ai-tools-registry.json"
+      ],
+      "derived_outputs": [
+        "ai-tools/registry/ai-tools-inventory.md"
+      ],
+      "runtime_targets": [
+        "human-readable AI-tools inventory"
+      ],
+      "validators": [
+        "tests/unit/ai-tools-registry.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/validate-ai-tools-registry.js --write-report"
+      ],
+      "catalog_group": "ai-tools/registry",
+      "status": "generated-active",
+      "migration_wave": "wave-1",
+      "notes": "Generated human-readable companion inventory derived from the canonical AI-tools registry."
+    },
+    {
+      "id": "registry-ai-tools-registry-json",
+      "path": "ai-tools/registry/ai-tools-registry.json",
+      "artifact_type": "registry-data",
+      "category": "ai-tools-registry",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/registry/ai-tools-registry.json"
+      ],
+      "derived_outputs": [
+        "ai-tools/registry/ai-tools-inventory.md"
+      ],
+      "runtime_targets": [
+        "docs-guide/catalog/ai-tools.mdx",
+        "tools/scripts/validate-ai-tools-registry.js"
+      ],
+      "validators": [
+        "tests/unit/ai-tools-registry.test.js"
+      ],
+      "repair_commands": [
+        "node tools/scripts/validate-ai-tools-registry.js --write-report"
+      ],
+      "catalog_group": "ai-tools/registry",
+      "status": "canonical-active",
+      "migration_wave": "wave-1",
+      "notes": "Canonical AI-tools inventory, lifecycle, and lane assignment registry for Wave 1 governance."
+    },
+    {
+      "id": "registry-ai-tools-registry-schema-json",
+      "path": "ai-tools/registry/ai-tools-registry.schema.json",
+      "artifact_type": "registry-schema",
+      "category": "ai-tools-registry",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/registry/ai-tools-registry.schema.json"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        "tools/scripts/validate-ai-tools-registry.js"
+      ],
+      "validators": [
+        "tests/unit/ai-tools-registry.test.js"
+      ],
+      "repair_commands": [],
+      "catalog_group": "ai-tools/registry",
+      "status": "canonical-active",
+      "migration_wave": "wave-1",
+      "notes": "Canonical schema for the AI-tools registry contract."
+    },
+    {
+      "id": "windsurf-mdx",
+      "path": "ai-tools/windsurf.mdx",
+      "artifact_type": "setup-guide",
+      "category": "agent-setup-guides",
+      "lifecycle_state": "manual-doc",
+      "current_lane": "manual-doc",
+      "target_lane": "manual-doc",
+      "canonical_source": [
+        "ai-tools/claude-code.mdx",
+        "ai-tools/cursor.mdx",
+        "ai-tools/windsurf.mdx"
+      ],
+      "derived_outputs": [],
+      "runtime_targets": [
+        ".claude/CLAUDE.md",
+        ".cursor/rules/*.mdc",
+        ".windsurf/rules/*.md"
+      ],
+      "validators": [],
+      "repair_commands": [],
+      "catalog_group": "root-guides",
+      "status": "active",
+      "migration_wave": "wave-2",
+      "notes": "Human-authored setup guides at ai-tools root. These are canonical documents for setup guidance, but they are not a full AI-tools inventory or registry."
+    }
+  ]
+}

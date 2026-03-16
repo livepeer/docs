@@ -1,0 +1,85 @@
+name: Pipeline Freshness Monitor
+
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-freshness:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check pipeline freshness
+        id: freshness
+        shell: bash
+        continue-on-error: true
+        run: |
+          echo "## Pipeline Freshness Report" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Data File | Last Commit | Hours Stale | Status |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|---:|---|" >> "$GITHUB_STEP_SUMMARY"
+
+          stale_count=0
+          now_epoch=$(date +%s)
+
+          for file in \
+            snippets/automations/blog/ghostBlogData.jsx \
+            snippets/automations/discord/discordAnnouncementsData.jsx \
+            snippets/automations/forum/forumData.jsx \
+            snippets/automations/luma/lumaEventsData.jsx \
+            snippets/automations/showcase/showcaseData.jsx \
+            snippets/automations/youtube/youtubeData.jsx \
+            snippets/automations/globals/globals.mdx; do
+
+            if [ ! -f "$file" ]; then
+              echo "| $file | FILE MISSING | — | 🔴 MISSING |" >> "$GITHUB_STEP_SUMMARY"
+              stale_count=$((stale_count + 1))
+              continue
+            fi
+
+            last_epoch=$(git log -1 --format='%ct' -- "$file" 2>/dev/null || echo "0")
+            last_date=$(git log -1 --format='%ci' -- "$file" 2>/dev/null || echo "NO COMMITS")
+
+            if [ -z "$last_epoch" ] || [ "$last_epoch" = "0" ]; then
+              echo "| $file | $last_date | unknown | 🔴 NO HISTORY |" >> "$GITHUB_STEP_SUMMARY"
+              stale_count=$((stale_count + 1))
+              continue
+            fi
+
+            hours_stale=$(( (now_epoch - last_epoch) / 3600 ))
+
+            if [ "$hours_stale" -le 24 ]; then
+              status="🟢 GREEN"
+            elif [ "$hours_stale" -le 72 ]; then
+              status="🟡 YELLOW"
+            else
+              status="🔴 RED"
+              stale_count=$((stale_count + 1))
+            fi
+
+            echo "| $file | $last_date | ${hours_stale}h | $status |" >> "$GITHUB_STEP_SUMMARY"
+          done
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Stale or missing pipelines (>72h): ${stale_count}**" >> "$GITHUB_STEP_SUMMARY"
+
+          echo "stale_count=${stale_count}" >> "$GITHUB_OUTPUT"
+          if [ "$stale_count" -gt 0 ]; then
+            echo "stale=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "stale=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Advisory warning for stale pipelines
+        if: steps.freshness.outputs.stale == 'true'
+        run: |
+          echo "::warning::${{ steps.freshness.outputs.stale_count }} pipeline(s) are stale or missing. Review the workflow summary for details."

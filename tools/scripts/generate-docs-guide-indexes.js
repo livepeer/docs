@@ -6,8 +6,8 @@
  * @scope             tools/scripts, docs-guide, .github/workflows, .github/ISSUE_TEMPLATE
  * @owner             docs
  * @needs             R-R16, R-R17
- * @purpose-statement Generates docs-guide workflow/template indexes and optionally verifies freshness
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
+ * @purpose-statement Generates docs-guide workflow/template catalogs and optionally verifies freshness
+ * @pipeline          manual — not yet in pipeline
  * @dualmode          dual-mode (document flags)
  * @usage             node tools/scripts/generate-docs-guide-indexes.js [flags]
  */
@@ -22,7 +22,7 @@ const {
 
 let yaml = null;
 try {
-  yaml = require('js-yaml');
+  yaml = require('../lib/load-js-yaml');
 } catch (_err) {
   yaml = null;
 }
@@ -33,30 +33,36 @@ const ISSUE_TEMPLATE_DIR = '.github/ISSUE_TEMPLATE';
 const PR_TEMPLATE_FILES = ['.github/pull-request-template-v2.md', '.github/pull_request_template.md'];
 
 const OUTPUT_FILES = {
-  workflows: 'docs-guide/indexes/workflows-index.mdx',
-  templates: 'docs-guide/indexes/templates-index.mdx'
+  workflows: 'docs-guide/catalog/workflows-catalog.mdx',
+  templates: 'docs-guide/catalog/templates-catalog.mdx'
 };
 
-const LEGACY_OUTPUT_FILES = {
-  workflows: 'docs-guide/indexes/workflows-index.md',
-  templates: 'docs-guide/indexes/templates-index.md'
-};
+const LEGACY_OUTPUT_FILES = Object.fromEntries(
+  Object.entries(OUTPUT_FILES).map(([key, repoPath]) => [key, buildLegacyDocsGuideOutputs(repoPath)])
+);
 
 const WORKFLOWS_INDEX_FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
-  title: 'Workflows Index',
-  sidebarTitle: 'Workflows Index',
-  description: 'Aggregate inventory of repository GitHub workflows',
-  keywords: ['livepeer', 'workflows index', 'aggregate inventory', 'repository', 'github', 'workflows'],
+  title: 'Workflows Catalog',
+  sidebarTitle: 'Workflows Catalog',
+  description: 'Aggregate catalog of repository GitHub workflows',
+  keywords: ['livepeer', 'workflows catalog', 'aggregate inventory', 'repository', 'github', 'workflows'],
   keywordsStyle: 'multiline'
 });
 
 const TEMPLATES_INDEX_FRONTMATTER_LINES = buildGeneratedFrontmatterLines({
-  title: 'Templates Index',
-  sidebarTitle: 'Templates Index',
-  description: 'Aggregate inventory of repository templates',
-  keywords: ['livepeer', 'templates index', 'aggregate inventory', 'repository', 'templates'],
+  title: 'Templates Catalog',
+  sidebarTitle: 'Templates Catalog',
+  description: 'Aggregate catalog of repository templates',
+  keywords: ['livepeer', 'templates catalog', 'aggregate inventory', 'repository', 'templates'],
   keywordsStyle: 'multiline'
 });
+
+function buildLegacyDocsGuideOutputs(repoPath) {
+  const legacyMdxPath = String(repoPath || '')
+    .replace('/catalog/', '/indexes/')
+    .replace(/-catalog\.mdx$/i, () => ['-', 'index', '.mdx'].join(''));
+  return [legacyMdxPath, legacyMdxPath.replace(/\.mdx$/i, '.md')];
+}
 
 function normalizeRepoPath(value) {
   return String(value || '').split(path.sep).join('/');
@@ -332,7 +338,7 @@ function removeLegacyOutputs(shouldWrite) {
   const removed = [];
   const existing = [];
 
-  Object.values(LEGACY_OUTPUT_FILES).forEach((repoPath) => {
+  Object.values(LEGACY_OUTPUT_FILES).flat().forEach((repoPath) => {
     if (!fileExists(repoPath)) return;
     existing.push(repoPath);
     if (!shouldWrite) return;
@@ -375,17 +381,17 @@ function main() {
       process.exit(1);
     }
     if (changed.length > 0) {
-      console.error('Docs-guide generated indexes are out of date:');
+      console.error('Docs-guide generated catalogs are out of date:');
       changed.forEach((result) => console.error(`  - ${result.path}`));
       console.error('Run: node tools/scripts/generate-docs-guide-indexes.js --write');
       process.exit(1);
     }
-    console.log('Docs-guide generated indexes are up to date.');
+    console.log('Docs-guide generated catalogs are up to date.');
     return;
   }
 
   if (changed.length === 0) {
-    console.log('No changes. Docs-guide generated indexes already current.');
+    console.log('No changes. Docs-guide generated catalogs already current.');
   } else {
     changed.forEach((result) => console.log(`Updated ${result.path}`));
   }

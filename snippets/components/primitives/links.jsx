@@ -1,23 +1,26 @@
 /**
- * CustomCallout - Customizable callout/alert box component
- *
- * @description
- * Displays a styled callout box with an icon and custom colors.
- * Automatically converts hex colors to rgba for proper opacity handling.
- *
+ * @component CustomCallout
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Displays a styled callout box with an icon and custom colors.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies BlinkingIcon, BlinkingTerminal, DoubleIconLink, GotoCard, GotoLink, LinkArrow, TipWithArrow
+ * @usedIn v2/gateways/run-a-gateway/connect/connect-with-offerings.mdx, v2/gateways/run-a-gateway/publish/connect-with-offerings.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {React.ReactNode} children - Content to display in the callout
  * @param {string} [icon="lightbulb"] - Icon name to display
- * @param {string} [color] - Primary color for icon, border, and background (defaults to theme accent)
+ * @param {string} color - Primary color for icon, border, and background (defaults to theme accent)
  * @param {number} [iconSize=16] - Size of the icon in pixels
  * @param {string} [textSize="0.875rem"] - Font size for the text content
- * @param {string} [textColor] - Text color (defaults to match icon color)
- *
+ * @param {string} textColor - Text color (defaults to match icon color)
  * @example
- * <CustomCallout icon="info" color="#3b82f6">
- *   This is an important message!
- * </CustomCallout>
- *
- * @author Livepeer Documentation Team
+ * <CustomCallout color="example" textColor="example">Example content</CustomCallout>
  */
 const CustomCallout = ({
   children,
@@ -74,20 +77,25 @@ const CustomCallout = ({
 };
 
 /**
- * BlinkingIcon - Animated blinking icon component
- *
- * @description
- * Displays an icon with a smooth blinking animation (fades between full and 30% opacity).
- * Animation cycles every 3 seconds.
- *
+ * @component BlinkingIcon
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Displays an icon with a smooth blinking animation (fades between full and 30% opacity).
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies BlinkingTerminal, CustomCallout, DoubleIconLink, GotoCard, GotoLink, LinkArrow, TipWithArrow
+ * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/gateways-portal.mdx, v2/gateways/run-a-gateway/configure/ai-configuration.mdx, v2/gateways/run-a-gateway/requirements/on-chain setup/on-chain.mdx, v2/home/mission-control.mdx, v2/lpt/token-portal.mdx, v2/orchestrators/old/orchestrators-portal.mdx, v2/orchestrators/portal.mdx, v2/orchestrators/v2-dev/orchestrators-portal.mdx, v2/solutions/portal.mdx
+ * @breakingChangeRisk medium
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {string} [icon="terminal"] - Icon name to display
  * @param {number} [size=16] - Size of the icon in pixels
- * @param {string} [color] - Color of the icon (defaults to theme accent)
- *
+ * @param {string} color - Color of the icon (defaults to theme accent)
  * @example
- * <BlinkingIcon icon="circle" color="#ff0000" size={20} />
- *
- * @author Livepeer Documentation Team
+ * <BlinkingIcon color="example" />
  */
 const BlinkingIcon = ({ icon = "terminal", size = 16, color }) => {
   const resolvedColor = color || "var(--accent)";
@@ -112,38 +120,49 @@ const BlinkingIcon = ({ icon = "terminal", size = 16, color }) => {
 };
 
 /**
- * BlinkingTerminal - Alias for BlinkingIcon (backwards compatibility)
- *
- * @description
- * Legacy alias for BlinkingIcon component. Use BlinkingIcon instead.
- *
- * @deprecated Use BlinkingIcon instead
- * @author Livepeer Documentation Team
+ * @component BlinkingTerminal
+ * @category primitives
+ * @tier primitive
+ * @status deprecated
+ * @description Blinking Terminal primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies BlinkingIcon, CustomCallout, DoubleIconLink, GotoCard, GotoLink, LinkArrow, TipWithArrow
+ * @usedIn none
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates BlinkingIcon
+ * @lastMeaningfulChange 2026-03-10
+ * @deprecated BlinkingTerminal is deprecated and should not be used for new content.
+ * @see BlinkingIcon
+ * @example
+ * <BlinkingTerminal />
  */
 const BlinkingTerminal = BlinkingIcon;
 
 /**
- * DoubleIconLink - Link component with icons on both sides
- *
- * @description
- * Displays a link with an icon on the left and right, plus optional text prefix.
- * Commonly used for external links (e.g., GitHub links with external link indicator).
- *
+ * @component DoubleIconLink
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Displays a link with an icon on the left and right, plus optional text prefix.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies BlinkingIcon, BlinkingTerminal, CustomCallout, GotoCard, GotoLink, LinkArrow, TipWithArrow
+ * @usedIn v2/gateways/_contextData_/docker-install.mdx, v2/gateways/about/architecture.mdx, v2/gateways/quickstart/gateway-setup.mdx, v2/gateways/references/configuration-flags.mdx, v2/gateways/run-a-gateway/configure/ai-configuration.mdx, v2/gateways/run-a-gateway/configure/dual-configuration.mdx, v2/gateways/run-a-gateway/configure/video-configuration-view.mdx, v2/gateways/run-a-gateway/configure/video-configuration.mdx, v2/gateways/run-a-gateway/install/docker-install.mdx, v2/gateways/run-a-gateway/install/install-overview.mdx, v2/gateways/run-a-gateway/monitor/monitor-and-optimise.mdx, v2/gateways/run-a-gateway/requirements/on-chain setup/on-chain.mdx, v2/gateways/run-a-gateway/requirements/setup.mdx, v2/gateways/using-gateways/choosing-a-gateway.mdx, v2/gateways/using-gateways/gateway-providers/daydream-gateway.mdx
+ * @breakingChangeRisk medium
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {string} [label=""] - Link text/label
  * @param {string} [href="#"] - Link URL
  * @param {string} [text=""] - Optional text to display before the link
  * @param {string} [iconLeft="github"] - Icon to display on the left
  * @param {string} [iconRight="arrow-up-right"] - Icon to display on the right
- *
  * @example
- * <DoubleIconLink
- *   label="View on GitHub"
- *   href="https://github.com/livepeer/go-livepeer"
- *   iconLeft="github"
- *   iconRight="arrow-up-right"
- * />
- *
- * @author Livepeer Documentation Team
+ * <DoubleIconLink />
  */
 const DoubleIconLink = ({
   label = "",
@@ -173,24 +192,26 @@ const DoubleIconLink = ({
 };
 
 /**
- * GotoLink - Simple navigation link with icon
- *
- * @description
- * Displays a link with an icon, typically used for internal navigation.
- *
+ * @component GotoLink
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Displays a link with an icon, typically used for internal navigation.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies BlinkingIcon, BlinkingTerminal, CustomCallout, DoubleIconLink, GotoCard, LinkArrow, TipWithArrow
+ * @usedIn v2/about/livepeer-network/interfaces.mdx, v2/about/livepeer-network/marketplace.mdx, v2/about/livepeer-network/technical-architecture.mdx, v2/about/livepeer-protocol/technical-architecture.mdx, v2/developers/_archive/ai-inference-overview-old.mdx, v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/_archive/ai-pipelines-byoc-old.mdx, v2/developers/_archive/developer-platforms/builder-hub.mdx, v2/developers/build/workload-fit.mdx, v2/gateways/about/quickstart.mdx, v2/gateways/gateway-tools/explorer.mdx, v2/gateways/run-a-gateway/install/community-projects.mdx, v2/gateways/run-a-gateway/install/install-overview.mdx, v2/gateways/run-a-gateway/run-a-gateway.mdx, v2/gateways/using-gateways/gateway-providers.mdx, v2/home/about-livepeer/vision.mdx, v2/home/primer.mdx, v2/orchestrators/old/advanced-setup/hosting-models.mdx, v2/orchestrators/operations/hosting-models.mdx, v2/orchestrators/v2-dev/advanced/hosting-models.mdx, v2/solutions/product-hub.mdx
+ * @breakingChangeRisk medium
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {string} label - Link text/label
  * @param {string} relativePath - Relative URL path
  * @param {string} [text=""] - Optional text to display before the link
  * @param {string} [icon="arrow-turn-down-right"] - Icon to display
- *
  * @example
- * <GotoLink
- *   label="Getting Started"
- *   relativePath="/guides/getting-started"
- *   icon="arrow-right"
- * />
- *
- * @author Livepeer Documentation Team
+ * <GotoLink label="example" relativePath="example" />
  */
 const GotoLink = ({
   label,
@@ -210,29 +231,28 @@ const GotoLink = ({
 };
 
 /**
- * GotoCard - Card component for navigation
- *
- * @description
- * Wraps content in a Card component with a link, icon, and optional CTA.
- *
+ * @component GotoCard
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Wraps content in a Card component with a link, icon, and optional CTA.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies BlinkingIcon, BlinkingTerminal, CustomCallout, DoubleIconLink, GotoLink, LinkArrow, TipWithArrow
+ * @usedIn v2/about/livepeer-network/marketplace.mdx, v2/about/livepeer-network/technical-architecture.mdx, v2/about/livepeer-protocol/technical-architecture.mdx, v2/developers/_archive/ai-inference-overview-old.mdx, v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/_archive/ai-pipelines-byoc-old.mdx, v2/developers/_archive/ai-pipelines-model-support-old.mdx, v2/developers/build/workload-fit.mdx, v2/developers/guides/developer-guides.mdx, v2/developers/guides/developer-help.mdx, v2/developers/guides/resources.mdx, v2/developers/opportunities/grants-and-programmes.mdx, v2/developers/opportunities/overview.mdx, v2/gateways/about/explainer.mdx, v2/gateways/gateway-tools/explorer.mdx, v2/gateways/gateway-tools/livepeer-tools.mdx, v2/gateways/run-a-gateway/install/community-projects.mdx, v2/home/about-livepeer/vision.mdx, v2/home/primer.mdx, v2/orchestrators/old/advanced-setup/hosting-models.mdx, v2/orchestrators/operations/hosting-models.mdx, v2/orchestrators/v2-dev/advanced/hosting-models.mdx
+ * @breakingChangeRisk medium
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {string} label - Card title
  * @param {string} relativePath - Relative URL path
- * @param {string} [icon] - Icon to display (defaults to "arrow-turn-down-right")
+ * @param {string} icon - Icon to display (defaults to "arrow-turn-down-right")
  * @param {React.ReactNode} text - Card content
  * @param {string} [cta=""] - Call-to-action button text
- *
+ * @param {any} props - props prop.
  * @example
- * <GotoCard
- *   label="API Reference"
- *   relativePath="/api/reference"
- *   icon="book"
- *   text="Complete API documentation"
- *   cta="View Docs"
- * />
- *
- * @author Livepeer Documentation Team
- *
- * Kind of an irrelevant component - just use card?
+ * <GotoCard label="example" relativePath="example" />
  */
 const GotoCard = ({ label, relativePath, icon, text, cta = "", ...props }) => {
   icon = icon ? icon : "arrow-turn-down-right";
@@ -244,25 +264,28 @@ const GotoCard = ({ label, relativePath, icon, text, cta = "", ...props }) => {
 };
 
 /**
- * TipWithArrow - Callout box with an arrow indicator
- *
- * @description
- * Similar to CustomCallout but includes an arrow icon in the top-right corner.
- * Useful for tips that point to related content or actions.
- *
+ * @component TipWithArrow
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Similar to CustomCallout but includes an arrow icon in the top-right corner.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies BlinkingIcon, BlinkingTerminal, CustomCallout, DoubleIconLink, GotoCard, GotoLink, LinkArrow
+ * @usedIn v2/gateways/quickstart/gateway-setup.mdx
+ * @breakingChangeRisk low
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
  * @param {React.ReactNode} children - Content to display in the tip
  * @param {string} [icon="lightbulb"] - Main icon to display on the left
  * @param {string} [arrowIcon="arrow-up-right"] - Arrow icon to display in top-right
- * @param {string} [color] - Primary color for icons, border, and background (defaults to theme accent)
+ * @param {string} color - Primary color for icons, border, and background (defaults to theme accent)
  * @param {number} [iconSize=16] - Size of the main icon in pixels
  * @param {number} [arrowSize=16] - Size of the arrow icon in pixels
- *
  * @example
- * <TipWithArrow icon="info" arrowIcon="arrow-right" color="#3b82f6">
- *   Check out the related documentation for more details!
- * </TipWithArrow>
- *
- * @author Livepeer Documentation Team
+ * <TipWithArrow color="example">Example content</TipWithArrow>
  */
 const TipWithArrow = ({
   children,
@@ -329,6 +352,29 @@ const TipWithArrow = ({
   );
 };
 
+/**
+ * @component LinkArrow
+ * @category primitives
+ * @tier primitive
+ * @status stable
+ * @description Link Arrow primitive used in authored documentation and component-library examples.
+ * @contentAffinity universal
+ * @owner docs
+ * @dependencies BlinkingIcon, BlinkingTerminal, CustomCallout, DoubleIconLink, GotoCard, GotoLink, TipWithArrow
+ * @usedIn v2/about/livepeer-overview.mdx, v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/livepeer-token.mdx, v2/about/livepeer-protocol/overview.mdx, v2/about/resources/blockchain-contracts.mdx, v2/community/livepeer-community/trending-topics.mdx, v2/community/livepeer-connect/events-and-community-streams.mdx, v2/developers/_archive/guides-res-contribution.mdx, v2/developers/guides/contribution-guide.mdx, v2/gateways/using-gateways/gateway-providers.mdx, v2/home/about-livepeer/benefits.mdx, v2/home/about-livepeer/ecosystem.mdx, v2/home/about-livepeer/evolution.mdx, v2/home/about-livepeer/vision.mdx, v2/home/get-started.mdx, v2/home/solutions/landscape.mdx, v2/home/solutions/showcase.mdx, v2/home/trending.mdx, v2/orchestrators/old/about-orchestrators/overview.mdx, v2/orchestrators/quickstart/join-a-pool.mdx, v2/orchestrators/v2-dev/concepts/overview.mdx, v2/orchestrators/v2-dev/get-started/join-a-pool.mdx
+ * @breakingChangeRisk medium
+ * @decision KEEP
+ * @dataSource none
+ * @duplicates none
+ * @lastMeaningfulChange 2026-03-10
+ * @param {any} href - href prop.
+ * @param {any} label - label prop.
+ * @param {any} description - description prop.
+ * @param {boolean} [newline=true] - newline prop.
+ * @param {any} borderColor - border Color prop.
+ * @example
+ * <LinkArrow href="example" label="example" />
+ */
 const LinkArrow = ({
   href,
   label,

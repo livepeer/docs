@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             E-R12, E-R14
  * @purpose-statement Comprehensive V2 MDX link audit — checks internal links, external links, anchor refs. Supports --staged, --full, --strict, --write-links modes.
- * @pipeline          P5 (scheduled, full audit)
+ * @pipeline          P1, P5, P6
  * @dualmode          --full (validator) | --write-links (remediator)
  * @usage             node tests/integration/v2-link-audit.js [flags]
  */
@@ -17,6 +17,8 @@ const path = require('path');
 const { execSync } = require('child_process');
 const { extractImports } = require('../utils/mdx-parser');
 const {
+  getDocsJsonGroupFiles,
+  getDocsJsonTabFiles,
   getStagedFiles,
   isExcludedV2ExperimentalPath,
   filterPathsByMintIgnore
@@ -61,7 +63,7 @@ const MIGRATED_V2_DOMAIN_DIRS = new Set([
   'notes'
 ]);
 const MISSING_LINK_ALLOWLIST = new Set([
-  '/gateways/run-a-gateway/test/test-gateway',
+  '/gateways/quickstart/gateway-setup',
   './protocol-economics'
 ]);
 const EXTRA_V2_DIRS = (() => {
@@ -124,6 +126,14 @@ function parseIntegerFlag(raw, fallback, { min = 0 } = {}) {
   return floored;
 }
 
+function deriveJsonReportPath(reportPath) {
+  const parsed = path.parse(path.resolve(REPO_ROOT, reportPath || DEFAULT_REPORT));
+  if (!parsed.ext) {
+    return path.join(parsed.dir, `${parsed.base}.json`);
+  }
+  return path.join(parsed.dir, `${parsed.name}.json`);
+}
+
 function parseArgs(argv) {
   const args = {
     mode: 'full',
@@ -131,6 +141,7 @@ function parseArgs(argv) {
     reportJson: DEFAULT_REPORT_JSON,
     respectMintIgnore: true,
     strict: false,
+    strictRootsOnly: false,
     writeLinks: undefined,
     externalPolicy: 'classify',
     externalLinkTypes: 'navigational',
@@ -138,8 +149,13 @@ function parseArgs(argv) {
     externalConcurrency: 12,
     externalPerHostConcurrency: 2,
     externalRetries: 1,
+    tab: '',
+    anchor: '',
+    group: '',
     files: []
   };
+  let reportExplicit = false;
+  let reportJsonExplicit = false;
 
   for (let i = 0; i < argv.length; i += 1) {
     const token = argv[i];
@@ -156,15 +172,30 @@ function parseArgs(argv) {
       }
       i += 1;
     }
+    else if (token === '--tab') {
+      args.tab = String(argv[i + 1] || '').trim();
+      i += 1;
+    }
+    else if (token === '--anchor') {
+      args.anchor = String(argv[i + 1] || '').trim();
+      i += 1;
+    }
+    else if (token === '--group') {
+      args.group = String(argv[i + 1] || '').trim();
+      i += 1;
+    }
     else if (token === '--strict') args.strict = true;
+    else if (token === '--strict-roots-only') args.strictRootsOnly = true;
     else if (token === '--no-mintignore') args.respectMintIgnore = false;
     else if (token === '--write-links') args.writeLinks = true;
     else if (token === '--no-write-links') args.writeLinks = false;
     else if (token === '--report') {
       args.report = path.resolve(REPO_ROOT, argv[i + 1] || '');
+      reportExplicit = true;
       i += 1;
     } else if (token === '--report-json') {
       args.reportJson = path.resolve(REPO_ROOT, argv[i + 1] || '');
+      reportJsonExplicit = true;
       i += 1;
     } else if (token === '--external-policy') {
       args.externalPolicy = String(argv[i + 1] || '').trim().toLowerCase();
@@ -200,10 +231,24 @@ function parseArgs(argv) {
   args.files = [...new Set(args.files)];
   if (args.files.length > 0) {
     args.mode = 'files';
+  } else if (args.tab) {
+    args.mode = 'tab';
+  }
+
+  if (args.group && !args.tab) {
+    throw new Error('The --group option requires --tab.');
+  }
+
+  if (args.anchor && !args.tab) {
+    throw new Error('The --anchor option requires --tab.');
   }
 
   if (typeof args.writeLinks === 'undefined') {
     args.writeLinks = args.mode === 'full';
+  }
+
+  if (reportExplicit && !reportJsonExplicit) {
+    args.reportJson = deriveJsonReportPath(args.report);
   }
 
   return args;
@@ -374,10 +419,23 @@ function getExplicitTargets(files, options = {}) {
 }
 
 function getInitialTargets(mode, explicitFiles = [], options = {}) {
-  const { respectMintIgnore = true } = options;
+  const { respectMintIgnore = true, tab = '', anchor = '', group = '' } = options;
   const isIndexMdx = (abs) => path.basename(abs).toLowerCase() === 'index.mdx';
   if (mode === 'files') {
     return getExplicitTargets(explicitFiles, { respectMintIgnore });
+  }
+
+  if (mode === 'tab') {
+    const navTargets = group
+      ? getDocsJsonGroupFiles({ tab, anchor, group, rootDir: REPO_ROOT })
+      : getDocsJsonTabFiles(tab, REPO_ROOT);
+    return filterPathsByMintIgnore(
+      navTargets.filter((abs) => abs.endsWith('.mdx') && fs.existsSync(abs) && !isIndexMdx(abs)),
+      {
+        rootDir: REPO_ROOT,
+        respectMintIgnore
+      }
+    );
   }
 
   if (mode === 'staged') {
@@ -462,6 +520,15 @@ function resolveInternalPath(raw, currentFileAbs) {
     const rooted = normalized.replace(/^\/+/, '');
     if (rooted.startsWith('v2/') || rooted.startsWith('v1/') || rooted.startsWith('snippets/') || rooted.startsWith('tests/') || rooted.startsWith('tasks/')) {
       return path.join(REPO_ROOT, rooted);
+    }
+    const asModernV2 = path.join(REPO_ROOT, 'v2', rooted);
+    if (
+      fs.existsSync(asModernV2) ||
+      fs.existsSync(`${asModernV2}.mdx`) ||
+      fs.existsSync(`${asModernV2}.md`) ||
+      INDEX_CANDIDATES.some((indexName) => fs.existsSync(path.join(asModernV2, indexName)))
+    ) {
+      return asModernV2;
     }
     const first = rooted.split('/')[0];
     if (MIGRATED_V2_DOMAIN_DIRS.has(first)) {
@@ -1491,22 +1558,28 @@ function buildClassifyExternalSummary(fileResults, args) {
   };
 }
 
-function countSummary(fileResults) {
+function countSummary(fileResults, options = {}) {
+  const { blockingFiles = null } = options;
   const linkTypeCounts = {};
   const statusCounts = {};
   let totalRefs = 0;
   let missingCount = 0;
+  let blockingMissingCount = 0;
 
   for (const result of fileResults.values()) {
+    const countsTowardBlocking = !blockingFiles || blockingFiles.has(result.file);
     for (const ref of result.refs) {
       totalRefs += 1;
       linkTypeCounts[ref.linkType] = (linkTypeCounts[ref.linkType] || 0) + 1;
       statusCounts[ref.status] = (statusCounts[ref.status] || 0) + 1;
-      if (ref.status === 'missing' || ref.status === 'route-missing') missingCount += 1;
+      if (ref.status === 'missing' || ref.status === 'route-missing') {
+        missingCount += 1;
+        if (countsTowardBlocking) blockingMissingCount += 1;
+      }
     }
   }
 
-  return { totalRefs, linkTypeCounts, statusCounts, missingCount };
+  return { totalRefs, linkTypeCounts, statusCounts, missingCount, blockingMissingCount };
 }
 
 function mdEscape(s) {
@@ -1553,6 +1626,9 @@ function renderReport({ args, structure, fileResults, unindexedByDomain, summary
   lines.push(`- Timestamp: ${new Date().toISOString()}`);
   lines.push(`- Mode: ${args.mode}`);
   lines.push(`- Strict: ${args.strict ? 'true' : 'false'} (internal refs only)`);
+  if (args.strictRootsOnly) {
+    lines.push('- Strict scope: root targets only');
+  }
   lines.push(`- Files analyzed: ${fileResults.size}`);
   lines.push(`- Total extracted references: ${summary.totalRefs}`);
   lines.push(`- Report JSON: ${relFromRoot(args.reportJson)}`);
@@ -1698,6 +1774,7 @@ function buildJsonReport({ args, summary, fileResults, externalValidation }) {
     args: {
       mode: args.mode,
       strict: args.strict,
+      strictRootsOnly: args.strictRootsOnly,
       report: relFromRoot(args.report),
       reportJson: relFromRoot(args.reportJson),
       respectMintIgnore: args.respectMintIgnore,
@@ -1714,6 +1791,7 @@ function buildJsonReport({ args, summary, fileResults, externalValidation }) {
       filesAnalyzed: fileResults.size,
       totalRefs: summary.totalRefs,
       internalMissingRefs: summary.missingCount,
+      blockingMissingRefs: summary.blockingMissingCount,
       linkTypeCounts: Object.fromEntries(Object.entries(summary.linkTypeCounts).sort((a, b) => a[0].localeCompare(b[0]))),
       statusCounts: Object.fromEntries(Object.entries(summary.statusCounts).sort((a, b) => a[0].localeCompare(b[0]))),
       external: {
@@ -1749,7 +1827,22 @@ function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
 }
 
+function listExistingDomainLinkOutputs() {
+  const dataRoot = path.join(REPO_ROOT, 'snippets', 'data');
+  if (!fs.existsSync(dataRoot)) return [];
+
+  const outPaths = [];
+  for (const entry of fs.readdirSync(dataRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const candidate = path.join(dataRoot, entry.name, 'hrefs.jsx');
+    if (fs.existsSync(candidate)) outPaths.push(candidate);
+  }
+
+  return outPaths;
+}
+
 function writeDomainLinks(domainLinks) {
+  const staleOutputs = new Set(listExistingDomainLinkOutputs());
   const outPaths = [];
   for (const [domain, map] of domainLinks.entries()) {
     const dir = path.join(REPO_ROOT, 'snippets', 'data', domain);
@@ -1757,8 +1850,14 @@ function writeDomainLinks(domainLinks) {
     const out = path.join(dir, 'hrefs.jsx');
     const body = `export const LINK_MAP = ${JSON.stringify(map, null, 2)};\n\nexport default LINK_MAP;\n`;
     fs.writeFileSync(out, body, 'utf8');
+    staleOutputs.delete(out);
     outPaths.push(out);
   }
+
+  for (const stalePath of staleOutputs) {
+    fs.unlinkSync(stalePath);
+  }
+
   return outPaths;
 }
 
@@ -1774,7 +1873,10 @@ async function runAudit(options = {}) {
   const { folderToDomain } = buildDomainMaps(structure);
 
   const rootTargets = getInitialTargets(args.mode, args.files, {
-    respectMintIgnore: args.respectMintIgnore
+    respectMintIgnore: args.respectMintIgnore,
+    tab: args.tab,
+    anchor: args.anchor,
+    group: args.group
   });
   if (!rootTargets.length) {
     console.log('No target MDX files found for selected mode.');
@@ -1816,7 +1918,10 @@ async function runAudit(options = {}) {
     ? await applyExternalValidation(fileResults, args)
     : buildClassifyExternalSummary(fileResults, args);
 
-  const summary = countSummary(fileResults);
+  const blockingFiles = args.strictRootsOnly
+    ? new Set(rootTargets.map((absPath) => relFromRoot(absPath)))
+    : null;
+  const summary = countSummary(fileResults, { blockingFiles });
   const report = renderReport({ args, structure, fileResults, unindexedByDomain, summary, externalValidation });
   const jsonReport = buildJsonReport({ args, summary, fileResults, externalValidation });
 
@@ -1841,18 +1946,23 @@ async function runAudit(options = {}) {
   console.log(`📄 Files analyzed: ${fileResults.size}`);
   console.log(`🔍 Total refs: ${summary.totalRefs}`);
   console.log(`❌ Missing refs: ${summary.missingCount}`);
+  if (args.strictRootsOnly) {
+    console.log(`🚫 Strict-scope missing refs: ${summary.blockingMissingCount}`);
+  }
   if (args.externalPolicy === 'validate') {
     console.log(`🌐 External eligible refs: ${externalValidation.eligibleRefCount}`);
     console.log(`🌐 External unique URLs: ${externalValidation.uniqueUrlCount}`);
     console.log(`🌐 External URL classes: ${JSON.stringify(externalValidation.urlClassCounts)}`);
   }
 
-  const exitCode = args.strict && summary.missingCount > 0 ? 1 : 0;
+  const strictMissingCount = args.strictRootsOnly ? summary.blockingMissingCount : summary.missingCount;
+  const exitCode = args.strict && strictMissingCount > 0 ? 1 : 0;
 
   return {
     exitCode,
     args,
     summary,
+    jsonReport,
     externalValidation,
     reportPath: args.report,
     reportJsonPath: args.reportJson,
@@ -1877,10 +1987,12 @@ module.exports = {
   EXTERNAL_OK,
   EXTERNAL_SOFT_FAIL,
   EXTERNAL_HARD_FAIL,
+  deriveJsonReportPath,
   parseArgs,
   normalizeExternalUrl,
   shouldValidateExternalRef,
   classifyExternalStatus,
+  resolveInternalPath,
   requestExternalUrlWithRetries,
   validateExternalUrls,
   runAudit

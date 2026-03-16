@@ -1,0 +1,216 @@
+---
+title: 'Gateway and Orchestrator Interface'
+sidebarTitle: 'Gateway Interface'
+description: >-
+  Configure a node running both a gateway and an orchestrator on Livepeer.
+  Covers deployment architecture, port allocation, self-routing behaviour,
+  pricing alignment, and the off-chain gateway with on-chain orchestrator pattern.
+keywords:
+  - livepeer
+  - orchestrator
+  - gateway
+  - combined node
+  - gateway orchestrator
+  - self-routing
+  - off-chain gateway
+  - on-chain orchestrator
+  - serviceAddr
+  - httpAddr
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: orchestrator
+status: current
+lastVerified: '2026-03-16'
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+<Tip>
+  The most common combined deployment is an off-chain gateway routing to a dedicated on-chain orchestrator. The gateway handles inbound client traffic; the orchestrator handles on-chain protocol participation. Running both roles on one machine is supported but requires deliberate port separation.
+</Tip>
+
+---
+
+Running both a gateway and an orchestrator under your control gives full visibility into both sides of the job pipeline, allows you to test your own inference, and enables serving your own products without depending on third-party orchestrators. This page covers the architectural patterns and configuration differences that apply when operating both roles.
+
+For detailed gateway setup, see the <LinkArrow href="/v2/gateways/quickstart/gateway-setup" label="Gateway Setup" newline={false} /> guide. For orchestrator setup, see the orchestrators setup section.
+
+<CustomDivider middleText="Deployment Patterns" />
+
+## Deployment patterns
+
+Three deployment patterns cover most use cases:
+
+<BorderedBox variant="accent">
+  <Tabs>
+    <Tab title="Off-chain gateway + on-chain orchestrator" icon="cloud">
+      **The most common pattern.** The gateway runs without on-chain participation — it holds no ETH, no keystore, and connects to your orchestrator directly via `-orchAddr`. The orchestrator runs with full on-chain registration and stake.
+
+      The gateway routes jobs to the orchestrator via direct address specification rather than protocol discovery. Payment is handled by a remote signer or clearinghouse connected to the gateway.
+
+      This pattern suits operators who want gateway capability without managing ETH deposits in the gateway process itself. The orchestrator handles all on-chain protocol activity.
+
+      **Port layout:** Gateway on `:7935` (HTTP) and `:7935` (RTMP). Orchestrator on `:8935` (serviceAddr). No port conflict.
+    </Tab>
+    <Tab title="Same machine (combined)" icon="server">
+      Both gateway and orchestrator processes run on one machine. Each runs as a separate go-livepeer process with different flags and different ports.
+
+      This pattern suits operators with a single powerful machine who want to eliminate network latency between gateway and orchestrator. Combined with an AI worker, this is the densest configuration possible for a single node.
+
+      **Port conflict risk is high on same-machine deployments.** Assign distinct ports to each role. See port allocation below.
+    </Tab>
+    <Tab title="Separate machines" icon="network-wired">
+      Gateway and orchestrator run on separate machines connected over the network. The gateway is configured with `-orchAddr <orchestrator-ip>:8935` for an off-chain gateway, or discovers the orchestrator via on-chain registration if running on-chain.
+
+      This pattern is appropriate at scale — a gateway facing external traffic can be horizontally scaled without affecting orchestrator registration or staking.
+    </Tab>
+  </Tabs>
+</BorderedBox>
+
+<CustomDivider middleText="Port Allocation" />
+
+## Port allocation
+
+The two roles use different network interfaces and ports. On a single machine, assign each process its own non-overlapping ports.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Role</TableCell>
+      <TableCell header>Flag</TableCell>
+      <TableCell header>Default port</TableCell>
+      <TableCell header>Purpose</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Gateway</TableCell>
+      <TableCell>`-httpAddr`</TableCell>
+      <TableCell>`:7935`</TableCell>
+      <TableCell>Gateway HTTP API for client connections</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Gateway</TableCell>
+      <TableCell>`-rtmpAddr`</TableCell>
+      <TableCell>`:1935`</TableCell>
+      <TableCell>RTMP ingest port for video streams</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Orchestrator</TableCell>
+      <TableCell>`-serviceAddr`</TableCell>
+      <TableCell>`:8935`</TableCell>
+      <TableCell>Public address gateways connect to for job execution</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Orchestrator</TableCell>
+      <TableCell>`-cliAddr`</TableCell>
+      <TableCell>`:7936`</TableCell>
+      <TableCell>Internal livepeer_cli management interface</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+The gateway and orchestrator defaults do not conflict when running on the same machine. Verify no other process is bound to these ports before starting both roles:
+
+```bash icon="terminal"
+ss -tlnp | grep -E ':7935|:8935|:1935|:7936'
+```
+
+{/* REVIEW: Confirm -serviceAddr default port for a dual-mode (video + AI) combined node is still 8935. v1 AI docs reference port 8936 for some AI configurations. Rick to confirm whether dual-mode registers a single port, or whether AI adds a second serviceAddr. */}
+
+<CustomDivider middleText="Self-Routing" />
+
+## Self-routing
+
+Self-routing is when a gateway you control routes jobs to an orchestrator you also control.
+
+**Off-chain gateway to own orchestrator:** Configure the gateway with `-orchAddr <your-orchestrator-ip>:8935`. The gateway routes all jobs to the specified address. This is explicit self-routing — the gateway sends all work to your orchestrator.
+
+**On-chain gateway discovering own orchestrator:** If both your gateway and orchestrator are on-chain, the gateway discovers your orchestrator through the normal protocol selection process, alongside all other active orchestrators. Your orchestrator competes on price and stake like any other.
+
+Self-routing via explicit `-orchAddr` is appropriate when:
+- Testing AI inference quality before serving jobs to clients
+- Running a dedicated internal service (e.g. transcoding your own content)
+- You want guaranteed routing to your own infrastructure without depending on protocol selection
+
+Self-routing through on-chain discovery is not a guarantee — your orchestrator must win the selection process (price, stake, performance) to receive the job. For dedicated routing, use off-chain gateway with direct `-orchAddr`.
+
+**Pricing alignment:** The gateway's `-maxPricePerUnit` (or `-maxPricePerCapability` for AI) must be at or above the orchestrator's `-pricePerUnit` (or `price_per_unit` in `aiModels.json`). A gateway with a cap below the orchestrator's advertised price will fail to route any jobs to it.
+
+<CustomDivider middleText="Pricing Alignment" />
+
+## Pricing alignment
+
+When you control both gateway and orchestrator, configure the gateway's caps relative to the orchestrator's advertised prices:
+
+```text icon="terminal"
+gateway -maxPricePerUnit  ≥  orchestrator -pricePerUnit
+gateway -maxPricePerCapability  ≥  orchestrator aiModels.json price_per_unit (per pipeline)
+```
+
+A gateway cap exactly equal to the orchestrator price is sufficient for self-routing but leaves no margin for `autoAdjustPrice` adjustments (which increase the advertised price during gas spikes). Set the gateway cap 20 to 30% above the orchestrator base price to prevent job failures during gas price increases.
+
+Example video pricing alignment:
+
+```bash icon="terminal"
+# Orchestrator startup
+-pricePerUnit 1000
+-autoAdjustPrice=true    # may raise advertised price during gas spikes
+
+# Gateway startup (same operator)
+-maxPricePerUnit 1300    # 30% above base to absorb autoAdjustPrice headroom
+```
+
+<CustomDivider middleText="Monitoring Both Roles" />
+
+## Monitoring both roles
+
+Each role produces its own Prometheus metrics. On a single machine, ensure both processes export to different ports to avoid metric collisions.
+
+**Orchestrator metrics to watch:**
+- `livepeer_transcode_duration_seconds` — transcoding latency
+- `livepeer_winning_ticket_count` — PM ticket win frequency
+- `livepeer_reward_call_success` — reward call outcome per round
+
+**Gateway metrics to watch:**
+- `livepeer_broadcaster_sessions_total` — active inbound sessions
+- `livepeer_broadcaster_upload_errors` — upload failures (may indicate orchestrator issues)
+
+{/* REVIEW: Confirm exact Prometheus metric names for gateway (broadcaster) metrics in the current go-livepeer release. The metric names above are from v1 documentation patterns. Rick to verify against current metrics export. */}
+
+For production deployments running both roles, maintain separate log streams per process to avoid interleaving:
+
+```bash icon="terminal"
+# Two separate systemd units or Docker containers
+# Gateway logs
+journalctl -u livepeer-gateway -f
+
+# Orchestrator logs
+journalctl -u livepeer-orchestrator -f
+```
+
+<CustomDivider />
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Gateway Setup" icon="server" href="/v2/gateways/quickstart/gateway-setup" arrow horizontal>
+    Full gateway configuration guide including payment mode selection and pipeline configuration.
+  </Card>
+  <Card title="Gateway Relationships" icon="handshake" href="/v2/orchestrators/guides/advanced-operations/gateway-relationships" arrow horizontal>
+    How gateways discover and select orchestrators — selection criteria from the orchestrator side.
+  </Card>
+  <Card title="Dual Mode Configuration" icon="layer-group" href="/v2/orchestrators/guides/deployment-details/dual-mode-configuration" arrow horizontal>
+    Running video transcoding and AI inference from a single go-livepeer process.
+  </Card>
+  <Card title="Pricing Strategy" icon="tag" href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy" arrow horizontal>
+    Aligning orchestrator price with gateway caps for self-routing and commercial relationships.
+  </Card>
+</CardGroup>

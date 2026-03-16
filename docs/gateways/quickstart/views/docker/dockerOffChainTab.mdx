@@ -1,0 +1,300 @@
+---
+title: Docker Off-Chain Gateway Quickstart TAB VIEW
+description: >-
+  Pull the docker image from <Icon icon="arrow-up-right" color="var(--accent)"
+  /> Livepeer Docker Hub
+keywords:
+  - livepeer
+  - docs
+  - gateways
+  - quickstart
+  - views
+  - docker
+  - dockeroffchaintab
+  - chain
+  - gateway
+  - view
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+<Tab title="Off-Chain Gateway" icon="floppy-disk">
+  <GatewayOffChainWarning />
+  <Steps titleSize="h3">
+    <Step title="Install Gateway Software">
+ Pull the docker image from <Icon icon="arrow-up-right" color="var(--accent)" /> [Livepeer Docker Hub]("https://hub.docker.com/r/livepeer/go-livepeer")
+      <CustomCodeBlock
+        {...DOCKER_CODE.install}
+        wrap
+      />
+    </Step>
+    <Step title="Configure Gateway">
+ <Badge color="blue">Video</Badge> {" "} <Badge color="purple">AI</Badge>
+
+ Create the `docker-compose.yml` file that defines the <Badge color="green">dual</Badge> gateway service.
+
+      <OrchAddrNote />
+
+      <CustomCodeBlock
+        codeString={DOCKER_YML.offChain.dual}
+        language="yaml"
+        icon="docker"
+        filename="docker-compose.yml"
+        highlight="[18]"
+        expandable={true}
+        wrap={false}
+      />
+
+ <Danger> fix me </Danger>
+ *See flag details below:*
+      <AccordionGroup>
+        <ResponseFieldAccordion
+          title="Required Flags"
+          icon="file-circle-exclamation"
+          fields={CONFIG_FLAGS.offchain.required}
+        />
+        <ResponseFieldAccordion
+          title="Recommended Flags"
+          icon="file-circle-info"
+          fields={CONFIG_FLAGS.offchain.optional}
+        />
+      </AccordionGroup>
+ *See Example transcoding options json below:*
+      <Accordion title="Transcoding Options Example" icon="brackets-curly">
+        <CustomCodeBlock
+            codeString={CONFIG_FILES.video.transcodingOptionsJson}
+            language="json"
+            icon="brackets-curly"
+            filename="Example transcodingOptions.json"
+        />
+      </Accordion>
+
+    </Step>
+    <Step title="Run Gateway">
+        <CustomCodeBlock
+        {...DOCKER_CODE.create}
+      />
+        <CustomCodeBlock
+        {...DOCKER_CODE.run}
+      />
+        <CustomCodeBlock
+        {...DOCKER_CODE.verify}
+      />
+    </Step>
+    <Step title="Test Gateway">
+ <Danger> Fix me (onchain nicer) </Danger>
+      <Tabs>
+        <Tab title="Video" icon="camera-movie">
+ {/* You need a test video file (test-video.mp4) in your current directory to use the command */}
+ Send a video stream to the gateway:
+          <TestVideoDownload>
+            <DownloadButton
+              label="test-video.mp4"
+              downloadLink="https://raw.githubusercontent.com/livepeer/docs/docs-v2-assets/snippets/assets/domain/04_GATEWAYS/test-video.mp4"
+            />
+          </TestVideoDownload>
+
+ From a host terminal (not in Docker or Volume), run this command:
+              <CustomCodeBlock
+              {...BASH_CODE.testRTMPingest}
+            />
+
+ After streaming, check the HLS playback output:
+          <CustomCodeBlock
+            {...BASH_CODE.testHLS}
+            wrap
+            />
+ Tips:
+              - Replace localhost with your gateway's IP if running remotely
+              - The stream name (test) becomes part of the HLS playback URL
+        </Tab>
+        <Tab title="AI" icon="user-robot">
+ To test AI functionality in Livepeer, you can make HTTP requests to the AI endpoints exposed by your gateway.
+ The gateway routes these requests to orchestrators with AI workers for processing.
+
+          <CustomCodeBlock
+            {...BASH_CODE.testHTTPingest}
+            wrap
+          />
+
+          <CustomCodeBlock
+            {...BASH_CODE.checkStatus}
+            wrap
+          />
+
+          <CustomCodeBlock
+            {...BASH_CODE.aiCapabilities}
+            wrap
+          />
+
+ Use the AI API to test functionality of available models.
+
+          <Expandable title="AI API Example Commands">
+ <Danger> Fix code formatting </Danger>
+            <br/>
+            <CustomCodeBlock
+              {...AI_TEST_COMMANDS.textToImage}
+              wrap
+            />
+            <CustomCodeBlock
+              {...AI_TEST_COMMANDS.LLM}
+              wrap
+            />
+            <CustomCodeBlock
+              {...AI_TEST_COMMANDS.liveVideoAI}
+              wrap
+            />
+          </Expandable>
+
+          <Card
+            title="AI API"
+            href="/v2/gateways/references/api-reference/AI-API/ai"
+            icon="books"
+            arrow
+            horizontal
+          >
+ View AI API Full Reference here
+          </Card>
+
+
+ {/* Pre-req's for testing
+          - AI Worker Running: Your orchestrator must have an AI worker with models loaded
+        - Gateway Connected: Gateway must be connected to the orchestrator with -orchAddr
+        - Models Available: The AI worker must have the requested models available */}
+
+        </Tab>
+      </Tabs>
+
+    </Step>
+    <Step title="Monitor Gateway">
+ <Danger> Needs Review </Danger>
+ The `-monitor=true` flag in the docker-compose.yml already has basic monitoring enabled which exposes metrics in Prometheus format at `http://localhost:8935/metrics`.
+
+ Metrics collected include:
+        - Stream metrics (created, started, ended)
+        - Transcoding metrics (success rate, latency)
+        - Payment metrics (tickets sent, deposits)
+        - AI-specific metrics (attempts, orchestrators available)
+
+ *See More Metrics Options Below:*
+        <Accordion title="Prometheus Metrics" icon="monitor-waveform">
+
+ Access Prometheus metrics at:
+        ```bash
+        curl http://localhost:8935/metrics
+        ```
+
+ Key metrics include:
+        - `livepeer_stream_created_total` - Total streams created
+        - `livepeer_current_sessions_total` - Active transcoding sessions
+        - `livepeer_success_rate` - Transcoding success rate
+        - `livepeer_ai_live_attempts` - AI processing attempts
+        - `livepeer_gateway_deposit` - Current ETH deposit
+
+        </Accordion>
+        <Accordion title="CLI Monitoring Commands" icon="terminal">
+ *CLI Monitoring Commands*
+
+ Check gateway status:
+        ```bash
+        curl http://localhost:5935/status
+        ```
+
+ Monitor available orchestrators:
+        ```bash
+        curl http://localhost:5935/getOrchestrators
+        ```
+
+ See all CLI options:
+        <CustomCodeBlock
+          {...DOCKER_CODE.flags}
+        />
+
+        ```bash Run Livepeer CLI
+          livepeer_cli # livepeer_cli --host=localhost --http=5935
+        ```
+        ```bash Livepeer CLI Output
+        +-----------------------------------------------------------+
+        | Welcome to livepeer-cli, your Livepeer command line tool  |
+        +-----------------------------------------------------------+
+
+        What would you like to do? (default = stats)
+        1. Get node status
+        2. View protocol parameters
+        3. List registered orchestrators
+        4. Invoke "initialize round"
+        5. Invoke "bond"
+        ...
+        ```
+        </Accordion>
+        <Accordion title="AI-Specific Monitoring" icon="user-robot">
+ *AI-Specific Monitoring*
+
+ For AI workflows, the gateway sends detailed events including:
+        - Stream request events
+        - Orchestrator selection info
+        - Ingest metrics
+        - Error events
+
+        </Accordion>
+        <Accordion title="Enhanced Monitoring Options" icon="chart-line">
+ *Enhanced Monitoring Options*
+
+ Add to your Docker Compose for more monitoring:
+
+        ```yaml
+        # Enable per-stream metrics
+        - -metricsPerStream=true
+
+        # Expose client IPs in metrics
+        - -metricsClientIP=true
+
+        # Kafka integration (requires setup)
+        - -kafkaBootstrapServers=kafka:9092
+        - -kafkaUser=username
+        - -kafkaPassword=password
+        - -kafkaGatewayTopic=livepeer-gateway
+        ```
+        </Accordion>
+        <Accordion title="Log Monitoring" icon="file-lines">
+ *Log Monitoring*
+
+ Monitor logs in real-time:
+        ```bash
+        docker logs -f dual-gateway
+        ```
+
+ Look for key events:
+        - "Received live video AI request"
+        - "Orchestrator selected"
+        - "Transcoding completed"
+        - Payment processing events
+
+        </Accordion>
+    </Step>
+    <Step title="Gateway Tips">
+ {/* FFmpeg is a prerequisite for Livepeer development and is included in the Livepeer Docker images Dockerfile:44-47
+ The box scripts in the repository show examples of using FFmpeg for streaming to Livepeer gateways stream.sh:28-34 */}
+ See all available config flags:
+      <CustomCodeBlock
+        {...DOCKER_CODE.flags}
+      />
+ {/* The gateway will automatically create the data directory structure on first run
+ {/* All configuration can be updated dynamically via the CLI API without restarting */}
+ {/* The -orchAddr flag is required and must point to a running orchestrator */}
+ {/* For production use, consider adding authentication via -authWebhookUrl flags.go:136 */}
+
+ Useful [CLI Commands](/v2/gateways/references/cli-commands) <Icon icon="arrow-up-right" />
+      <CustomCodeBlock
+        {...CLI_CODE.cliOptions}
+      />
+    </Step>
+ {/* <Step title="Troubleshooting">
+ .
+ </Step> */}
+  </Steps>
+
+</Tab>

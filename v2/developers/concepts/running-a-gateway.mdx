@@ -1,0 +1,87 @@
+---
+title: 'When to Run Your Own Gateway'
+description: 'A decision guide for developers considering self-hosting a Livepeer gateway — covering the trade-offs between hosted APIs and self-hosted infrastructure, and what self-hosting requires.'
+purpose: concept
+sidebarTitle: 'Run Your Own Gateway'
+keywords: ["livepeer", "gateway", "self-host", "developer", "graduation", "AI gateway", "off-chain", "cost", "decision"]
+pageType: 'concept'
+audience: 'developer'
+status: 'draft'
+lastVerified: '2026-03-17'
+---
+A gateway is the node that routes your AI inference requests to orchestrators on the Livepeer network. By default, you access a gateway hosted by Livepeer Studio or a community provider. When you run your own, you control the orchestrator selection, the auth model, and the cost structure.
+
+This page helps you decide whether self-hosting is the right move for where you are now.
+
+<CustomDivider />
+
+## When to run your own gateway
+
+| If you need… | Self-hosted gateway | Hosted API (Studio / community) |
+|-------------|--------------------|---------------------------------|
+| **Get started fast** | No — setup adds overhead | Yes — API key and go |
+| **Cost savings at scale** | Yes — direct orchestrator settlement, no hosted-API markup | No — hosted provider margin on top of network price |
+| **Custom orchestrator selection** | Yes — pass any `-orchAddr` list or custom discovery endpoint | No — provider controls routing |
+| **Data stays within your infrastructure** | Yes — gateway runs on your servers; requests never leave your stack | No — requests route through provider |
+| **Production resilience / redundancy** | Yes — run multiple gateways, control failover logic | Partial — depends on provider SLAs |
+| **Custom auth or billing model** | Yes — integrate your own user management, remote signer, JWT layer | No — provider auth model only |
+| **Zero infrastructure overhead** | No — you own the binary and the machine | Yes — nothing to run |
+
+The natural path for most developers is: start with the hosted API, build and validate your application, then self-host as usage grows and the cost or control trade-offs become worth the overhead.
+
+The Nov 2025 Network Vision blog described this arc directly:
+
+> "Similarly to how startups start to build on platforms like Heroku, Netlify, or Vercel, and then as they scale and need more control and cost savings they build direct on AWS, and then ultimately move to their own datacenters after reaching even more scale — users of Daydream or a real-time Agent platform built on Livepeer, may ultimately choose to run their own gateway."
+
+There is no hard threshold at which you must switch. The signals are: your monthly API spend is material, you want to specify which orchestrators handle your jobs, or you need the inference path to stay within your own infrastructure.
+
+<CustomDivider />
+
+## What self-hosting requires
+
+This is not a setup guide — for that, go to the [Gateways tab](/v2/gateways). This is a realistic checklist of what you are signing up for before you commit.
+
+<Warning>
+Windows and macOS binaries for the AI gateway are not currently available. Running a self-hosted AI gateway requires Linux or Docker.
+</Warning>
+
+| Requirement | AI gateway (off-chain) | Video gateway (on-chain) |
+|-------------|----------------------|-------------------------|
+| **Operating system** | Linux (or Docker on any host) | Linux |
+| **ETH / on-chain account** | Not required | Required — ETH account + Arbitrum RPC URL |
+| **Staking / LPT** | Not required | Not required (for gateway role) |
+| **go-livepeer binary** | Required — Linux binary or `livepeer/go-livepeer:master` Docker image | Required — same binary |
+| **Orchestrator list** | Required — at least one `-orchAddr` endpoint to route to | Required — network discovery via on-chain signalling |
+| **Open port** | Port 8937 (default) accessible from your app | Port 8937 (default) |
+| **Time to first request** | ~15 minutes with Docker; longer for binary + config | Longer — requires ETH account setup and on-chain registration |
+
+The AI gateway path is designed for developers, not infrastructure operators. A single Docker command launches a functional gateway. The on-chain video gateway path is more involved and is primarily relevant to operators running the full Livepeer transcoding node.
+
+<CustomDivider />
+
+## The two gateway types
+
+| Type | Use for | On-chain? | ETH required? | Where to start |
+|------|---------|-----------|--------------|----------------|
+| **AI gateway (off-chain)** | AI inference — text-to-image, LLM, ComfyStream, BYOC | No | No | [Set up an AI Gateway](/v2/gateways/quickstart/gateway-setup) |
+| **Video gateway (on-chain broadcaster)** | Video transcoding, HLS delivery | Yes | Yes | [Set up a Video Gateway](/v2/gateways/setup/run-a-gateway) |
+
+<Note>
+The public gateway at `dream-gateway.livepeer.cloud` and the Livepeer Studio AI API are both off-chain AI gateway implementations of the same go-livepeer binary. When you self-host, you run that same binary yourself.
+</Note>
+
+<CustomDivider />
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Set Up a Gateway" icon="server" href="/v2/gateways">
+    Full setup guide for self-hosted AI and video gateways in the Gateways tab.
+  </Card>
+  <Card title="Back to the AI API" icon="bolt" href="/v2/developers/get-started/ai-quickstart">
+    Not ready to self-host yet. Return to the hosted API quickstart.
+  </Card>
+  <Card title="What is a Gateway?" icon="circle-question" href="/v2/gateways/concepts/role">
+    Understand how gateways work before deciding whether to run one.
+  </Card>
+</CardGroup>

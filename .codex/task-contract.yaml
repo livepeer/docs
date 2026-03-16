@@ -1,24 +1,40 @@
-task_id: 788
-branch: codex/788-performance-baseline
-base_branch: docs-v2
+task_id: 20260317
+branch: codex/20260317-merge-readiness-style-root-cause
+base_branch: docs-v2-dev
 scope_in:
-  - .codex/task-contract.yaml
-  - tools/scripts/measure-performance.js
+  - .codex/
+  - docs-guide/
+  - docs-index.json
+  - snippets/components/layout/
+  - snippets/components/primitives/divider.jsx
+  - snippets/data/gateways/
+  - tasks/reports/merge-readiness/
+  - tests/unit/style-guide.test.js
+  - tools/scripts/
+  - v2/about/
+  - v2/cn/resources/documentation-guide/component-library/
+  - v2/community/
+  - v2/developers/
+  - v2/es/resources/documentation-guide/component-library/
+  - v2/fr/resources/documentation-guide/component-library/
+  - v2/gateways/
+  - v2/home/
+  - v2/internal/
+  - v2/lpt/
+  - v2/orchestrators/
+  - v2/resources/
+  - v2/index.mdx
+  - v2/solutions/
 scope_out: []
 allowed_generated:
   - .codex/pr-body.generated.md
-  - tools/script-index.md
-  - docs-guide/indexes/scripts-index.mdx
-  - docs-guide/indexes/workflows-index.mdx
-  - docs-guide/indexes/pages-index.mdx
-  - tasks/reports/performance/
 acceptance_checks:
-  - node tests/unit/script-docs.test.js --files tools/scripts/measure-performance.js --enforce-existing
-  - node tests/unit/script-docs.test.js --enforce-existing --write --rebuild-indexes
-  - node tools/scripts/measure-performance.js --domain all
-  - node tests/run-pr-checks.js --base-ref docs-v2
-  - node tools/scripts/validate-codex-task-contract.js --branch codex/788-performance-baseline --require-pr-body --pr-body-file .codex/pr-body.generated.md
+  - node tests/unit/style-guide.test.js --staged
+  - node tests/unit/copy-lint.test.js --staged
+  - node tests/unit/mdx.test.js --staged
+  - node tests/unit/quality.test.js --staged
+  - node tools/scripts/validate-codex-task-contract.js --branch codex/20260317-merge-readiness-style-root-cause
 risk_flags:
-  - external-network
-  - generated-artifacts
+  - authoring-governance
+  - routed-page-normalization
 follow_up_issues: []

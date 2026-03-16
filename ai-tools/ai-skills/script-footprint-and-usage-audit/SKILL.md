@@ -1,6 +1,12 @@
 ---
 name: script-footprint-and-usage-audit
-description: Audit script sprawl, duplicate/fixture placeholders, backup artifacts, and run-context drift across tools/tests/tasks scripts.
+version: "1.0"
+description: >-
+  Audit script sprawl, duplicate automation, placeholder fixtures, and run-context drift so maintainers can reduce repository complexity without losing governance coverage.
+invoke_when:
+  - "audit script sprawl in the repo"
+  - "find duplicate or obsolete scripts"
+  - "review script footprint and usage drift"
 ---
 
 SKILL: Script Footprint and Usage Audit

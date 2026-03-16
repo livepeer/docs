@@ -3,7 +3,7 @@
  * @script            audit-scripts
  * @category          validator
  * @purpose           qa:repo-health
- * @scope             tools/scripts, tasks/reports, tests/unit/script-docs.test.js, tests/README.md
+ * @scope             tools/scripts, tasks/README.md, tasks/reports, tests/unit/script-docs.test.js, tests/README.md
  * @owner             docs
  * @needs             E-C1, R-R14
  * @purpose-statement Script auditor — analyses all repo scripts, categorises usage/overlap, generates SCRIPT_AUDIT reports
@@ -15,11 +15,17 @@ const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
 const { execSync } = require('child_process')
+const {
+  extractLeadingScriptHeader,
+  getSectionLines,
+  getTagValue,
+  hasFrameworkHeaderTags,
+} = require('../lib/script-header-utils')
 
 let yaml = null
 try {
   // Optional dependency; parser falls back to text heuristics if unavailable.
-  yaml = require('js-yaml')
+  yaml = require('../lib/load-js-yaml')
 } catch (_err) {
   yaml = null
 }
@@ -27,10 +33,11 @@ try {
 const REPO_ROOT = process.cwd()
 const DEFAULT_FORMAT = 'both'
 const DEFAULT_OUTPUT_DIR = 'tasks/reports/repo-ops'
+const REPORTS_INDEX_PATH = path.join('tasks', 'reports', 'INDEX.md')
 
 const RULES_SOURCE = ['tests/unit/script-docs.test.js', 'tests/README.md']
 
-const REQUIRED_TAGS = [
+const LEGACY_REQUIRED_TAGS = [
   '@script',
   '@summary',
   '@owner',
@@ -43,8 +50,20 @@ const REQUIRED_TAGS = [
   '@notes',
 ]
 
-const INLINE_REQUIRED_TAGS = ['@script', '@summary', '@owner', '@scope']
-const BLOCK_REQUIRED_TAGS = [
+const FRAMEWORK_REQUIRED_TAGS = [
+  '@script',
+  '@category',
+  '@purpose',
+  '@scope',
+  '@owner',
+  '@needs',
+  '@purpose-statement',
+  '@pipeline',
+]
+
+const LEGACY_INLINE_REQUIRED_TAGS = ['@script', '@summary', '@owner', '@scope']
+const FRAMEWORK_INLINE_REQUIRED_TAGS = FRAMEWORK_REQUIRED_TAGS
+const LEGACY_BLOCK_REQUIRED_TAGS = [
   '@usage',
   '@inputs',
   '@outputs',
@@ -234,43 +253,8 @@ function discoverScripts() {
   return [...out].sort()
 }
 
-function getHeaderChunk(content) {
-  return String(content || '')
-    .split('\n')
-    .slice(0, 180)
-    .join('\n')
-}
-
-function getTagValue(header, tagName) {
-  const re = new RegExp(`\\${tagName}\\s+(.+)`)
-  const match = header.match(re)
-  return match ? String(match[1] || '').trim() : ''
-}
-
-function getSectionLines(header, tagName) {
-  const lines = String(header || '').split('\n')
-  const target = tagName.replace('@', '')
-  const idx = lines.findIndex((line) => line.includes(`@${target}`))
-  if (idx === -1) return []
-
-  const out = []
-  for (let i = idx + 1; i < lines.length; i += 1) {
-    const raw = lines[i]
-    const trimmed = String(raw || '').trim()
-    if (!trimmed) continue
-
-    const cleaned = trimmed
-      .replace(/^\*\s?/, '')
-      .replace(/^#\s?/, '')
-      .trim()
-
-    if (!cleaned) continue
-    if (cleaned.startsWith('@')) break
-    if (cleaned.startsWith('/**') || cleaned.startsWith('*/')) continue
-    out.push(cleaned)
-  }
-
-  return out
+function detectHeaderMode(header) {
+  return hasFrameworkHeaderTags(header) ? 'framework' : 'legacy'
 }
 
 function isPlaceholderValue(value) {
@@ -280,39 +264,69 @@ function isPlaceholderValue(value) {
 }
 
 function extractPrimaryUsage(header) {
+  const inlineUsage = getTagValue(header, '@usage')
   const lines = getSectionLines(header, '@usage')
-  for (const line of lines) {
-    if (line && !line.startsWith('@')) return line
-  }
-  return ''
+  return [
+    inlineUsage && !isPlaceholderValue(inlineUsage) ? inlineUsage : '',
+    ...lines.filter((line) => line && !line.startsWith('@'))
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .replace(/\s*\\\s*/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 function validateTemplate(repoPath) {
   const content = readFileSafe(repoPath)
-  const header = getHeaderChunk(content)
-  const missingTags = REQUIRED_TAGS.filter((tag) => !header.includes(tag))
+  const header = extractLeadingScriptHeader(content)
+  const mode = detectHeaderMode(header)
+  const requiredTags =
+    mode === 'framework' ? FRAMEWORK_REQUIRED_TAGS : LEGACY_REQUIRED_TAGS
+  const inlineRequiredTags =
+    mode === 'framework' ? FRAMEWORK_INLINE_REQUIRED_TAGS : LEGACY_INLINE_REQUIRED_TAGS
+  const blockRequiredTags =
+    mode === 'framework' ? [] : LEGACY_BLOCK_REQUIRED_TAGS
+  const missingTags = requiredTags.filter((tag) => !header.includes(tag))
   const emptyTags = []
 
-  for (const tag of INLINE_REQUIRED_TAGS) {
+  for (const tag of inlineRequiredTags) {
     if (missingTags.includes(tag)) continue
     if (isPlaceholderValue(getTagValue(header, tag))) emptyTags.push(tag)
   }
 
-  for (const tag of BLOCK_REQUIRED_TAGS) {
+  for (const tag of blockRequiredTags) {
     if (missingTags.includes(tag)) continue
     const lines = getSectionLines(header, tag)
     const meaningful = lines.filter((line) => !isPlaceholderValue(line))
     if (meaningful.length === 0) emptyTags.push(tag)
   }
 
+  if (mode === 'framework' && !missingTags.includes('@usage')) {
+    const usage = getTagValue(header, '@usage')
+    if (usage && isPlaceholderValue(usage)) emptyTags.push('@usage')
+  }
+
   return {
     valid: missingTags.length === 0 && emptyTags.length === 0,
+    mode,
     missingTags,
     emptyTags,
     scriptTag: getTagValue(header, '@script') || path.basename(repoPath),
-    summaryTag: getTagValue(header, '@summary') || '',
+    summaryTag:
+      (mode === 'framework'
+        ? getTagValue(header, '@purpose-statement') ||
+          getTagValue(header, '@purpose') ||
+          getTagValue(header, '@summary')
+        : getTagValue(header, '@summary') ||
+          getTagValue(header, '@purpose-statement') ||
+          getTagValue(header, '@purpose')) ||
+      '',
     ownerTag: getTagValue(header, '@owner') || '',
     scopeTag: getTagValue(header, '@scope') || '',
+    categoryTag: getTagValue(header, '@category') || '',
+    purposeTag: getTagValue(header, '@purpose') || '',
+    purposeStatementTag: getTagValue(header, '@purpose-statement') || '',
     usageTag: extractPrimaryUsage(header),
   }
 }
@@ -554,6 +568,38 @@ function parseWorkflowFile(repoPath) {
   return { raw, parsed }
 }
 
+function extractRawWorkflowOnBlock(rawText) {
+  const lines = String(rawText || '').split(/\r?\n/)
+  const captured = []
+  let collecting = false
+  let onIndent = -1
+
+  for (const line of lines) {
+    const trimmed = String(line || '').trim()
+    const indent = lineIndent(line)
+
+    if (!collecting) {
+      if (/^on:\s*$/.test(trimmed)) {
+        collecting = true
+        onIndent = indent
+        captured.push(line)
+        continue
+      }
+
+      const inlineMatch = line.match(/^(\s*)on:\s+(.+)$/)
+      if (inlineMatch) {
+        return line
+      }
+      continue
+    }
+
+    if (trimmed && indent <= onIndent) break
+    captured.push(line)
+  }
+
+  return captured.join('\n')
+}
+
 function extractWorkflowTriggers(parsed, rawText) {
   const tags = new Set()
   const triggerMap = {
@@ -584,7 +630,7 @@ function extractWorkflowTriggers(parsed, rawText) {
   }
 
   if (tags.size === 0) {
-    const raw = String(rawText || '')
+    const raw = extractRawWorkflowOnBlock(rawText)
     if (/\bpull_request\b/.test(raw)) tags.add('pr')
     if (/\bschedule\b/.test(raw)) tags.add('scheduled')
     if (/\bworkflow_dispatch\b/.test(raw)) tags.add('workflow-dispatch')
@@ -607,6 +653,150 @@ function extractCommandLinesFromHook(content) {
     out.push({ line: i + 1, command: trimmed })
   }
   return out
+}
+
+function parseYamlScalar(value) {
+  return String(value || '')
+    .trim()
+    .replace(/^['"]/, '')
+    .replace(/['"]$/, '')
+}
+
+function lineIndent(line) {
+  const match = String(line || '').match(/^ */)
+  return match ? match[0].length : 0
+}
+
+function extractWorkflowRunStepsFromRaw(rawText) {
+  const lines = String(rawText || '').split(/\r?\n/)
+  const steps = []
+  let inJobs = false
+  let currentJobId = ''
+  let currentJobWorkingDir = ''
+  let currentStep = null
+
+  function flushStep() {
+    if (!currentStep || !String(currentStep.run || '').trim()) return
+    steps.push({
+      jobId: currentStep.jobId || currentJobId || 'job',
+      name: currentStep.name || 'run',
+      workingDirectory:
+        currentStep.workingDirectory || currentJobWorkingDir || '',
+      run: currentStep.run,
+    })
+  }
+
+  for (let i = 0; i < lines.length; i += 1) {
+    const line = lines[i]
+    const indent = lineIndent(line)
+    const trimmed = String(line || '').trim()
+
+    if (!trimmed) continue
+    if (trimmed === 'jobs:') {
+      inJobs = true
+      continue
+    }
+    if (!inJobs) continue
+
+    const jobMatch = line.match(/^  ([A-Za-z0-9_-]+):\s*$/)
+    if (jobMatch) {
+      flushStep()
+      currentStep = null
+      currentJobId = jobMatch[1]
+      currentJobWorkingDir = ''
+      continue
+    }
+    if (!currentJobId) continue
+
+    const stepStartMatch = line.match(/^(\s*)-\s+(name|run|uses):\s*(.*)$/)
+    if (stepStartMatch) {
+      flushStep()
+      currentStep = {
+        jobId: currentJobId,
+        name: 'run',
+        workingDirectory: '',
+        run: '',
+        indent: stepStartMatch[1].length,
+      }
+      const field = stepStartMatch[2]
+      const rawValue = stepStartMatch[3]
+      if (field === 'name') currentStep.name = parseYamlScalar(rawValue)
+      if (field === 'run') currentStep.run = parseYamlScalar(rawValue)
+
+      if (field === 'run' && /^[>|]-?$/.test(rawValue.trim())) {
+        const blockIndent = indent + 2
+        const blockLines = []
+        for (let j = i + 1; j < lines.length; j += 1) {
+          const nextLine = lines[j]
+          const nextTrimmed = String(nextLine || '').trim()
+          const nextIndent = lineIndent(nextLine)
+          if (nextTrimmed && nextIndent <= indent) break
+          if (!nextTrimmed) {
+            blockLines.push('')
+            i = j
+            continue
+          }
+          blockLines.push(nextLine.slice(Math.min(nextLine.length, blockIndent)))
+          i = j
+        }
+        currentStep.run = blockLines.join('\n').trim()
+      }
+      continue
+    }
+
+    if (currentStep) {
+      if (indent <= currentStep.indent) {
+        flushStep()
+        currentStep = null
+      } else {
+        const nameMatch = line.match(/^\s+name:\s*(.+)$/)
+        if (nameMatch) {
+          currentStep.name = parseYamlScalar(nameMatch[1])
+          continue
+        }
+
+        const workingDirMatch = line.match(/^\s+working-directory:\s*(.+)$/)
+        if (workingDirMatch) {
+          currentStep.workingDirectory = parseYamlScalar(workingDirMatch[1])
+          continue
+        }
+
+        const runMatch = line.match(/^\s+run:\s*(.*)$/)
+        if (runMatch) {
+          const rawValue = runMatch[1]
+          if (/^[>|]-?$/.test(rawValue.trim())) {
+            const blockIndent = indent + 2
+            const blockLines = []
+            for (let j = i + 1; j < lines.length; j += 1) {
+              const nextLine = lines[j]
+              const nextTrimmed = String(nextLine || '').trim()
+              const nextIndent = lineIndent(nextLine)
+              if (nextTrimmed && nextIndent <= indent) break
+              if (!nextTrimmed) {
+                blockLines.push('')
+                i = j
+                continue
+              }
+              blockLines.push(nextLine.slice(Math.min(nextLine.length, blockIndent)))
+              i = j
+            }
+            currentStep.run = blockLines.join('\n').trim()
+          } else {
+            currentStep.run = parseYamlScalar(rawValue)
+          }
+          continue
+        }
+      }
+    }
+
+    const jobWorkingDirMatch = line.match(/^\s+working-directory:\s*(.+)$/)
+    if (jobWorkingDirMatch) {
+      currentJobWorkingDir = parseYamlScalar(jobWorkingDirMatch[1])
+    }
+  }
+
+  flushStep()
+  return steps
 }
 
 function buildUsageMap(scriptPaths, scriptSet, packageScriptsByDir) {
@@ -699,6 +889,33 @@ function buildUsageMap(scriptPaths, scriptSet, packageScriptsByDir) {
           }
         }
       }
+
+      if (Object.keys(jobs).length === 0) {
+        const rawSteps = extractWorkflowRunStepsFromRaw(raw)
+        for (const step of rawSteps) {
+          const refs = collectScriptRefsFromCommand(
+            step.run,
+            normalizeRepoPath(step.workingDirectory || ''),
+            scriptSet,
+            packageScriptsByDir
+          )
+          for (const ref of refs) {
+            const whenTags = new Set(triggerTags)
+            if (ref.viaNpm) whenTags.add('npm-script')
+
+            addUsage(usageMap, ref.path, {
+              sourceType: 'workflow',
+              sourcePath: workflowPath,
+              location: `${displayName} > ${step.jobId} > ${step.name}`,
+              whenTags: [...whenTags].sort(),
+              viaNpm: ref.viaNpm,
+              evidence: [`run: ${compactText(step.run, 240)}`].concat(
+                ref.evidence
+              ),
+            })
+          }
+        }
+      }
     }
   }
 
@@ -744,13 +961,39 @@ function hasAnyUsageWithTag(usages, tag) {
   return usages.some((entry) => (entry.whenTags || []).includes(tag))
 }
 
-function assignCategories(scriptPath, purpose, usages) {
+function assignCategories(scriptPath, purpose, usages, template = {}) {
   const roleTags = new Set()
   const runContextTags = new Set()
   const evidence = []
 
   const basename = path.basename(scriptPath).toLowerCase()
-  const lower = `${scriptPath} ${purpose}`.toLowerCase()
+  const lower = [
+    scriptPath,
+    purpose,
+    template.categoryTag || '',
+    template.purposeTag || '',
+    template.purposeStatementTag || '',
+  ]
+    .join(' ')
+    .toLowerCase()
+
+  if (template.categoryTag === 'generator') {
+    roleTags.add('generator')
+    evidence.push('role:generator via @category generator')
+  }
+
+  if (template.categoryTag === 'enforcer') {
+    roleTags.add('enforcement')
+    evidence.push('role:enforcement via @category enforcer')
+  }
+
+  if (
+    template.categoryTag === 'generator' &&
+    template.purposeTag === 'feature:translation'
+  ) {
+    roleTags.add('sync')
+    evidence.push('role:sync via feature:translation generator metadata')
+  }
 
   if (scriptPath.startsWith('tests/') || basename.includes('.test.')) {
     roleTags.add('test')
@@ -1115,7 +1358,7 @@ function buildScriptRecords(scriptPaths, usageMap) {
     const template = validateTemplate(scriptPath)
     const purpose = template.summaryTag || fallbackPurpose(scriptPath)
     const usedBy = usageMap.get(scriptPath) || []
-    const categories = assignCategories(scriptPath, purpose, usedBy)
+    const categories = assignCategories(scriptPath, purpose, usedBy, template)
 
     records.push({
       path: scriptPath,
@@ -1291,6 +1534,72 @@ function buildMarkdownReport(report) {
   return `${lines.join('\n').trim()}\n`
 }
 
+function getCurrentBranch() {
+  try {
+    return execSync('git branch --show-current', {
+      cwd: REPO_ROOT,
+      encoding: 'utf8',
+    }).trim()
+  } catch (_err) {
+    return 'unknown'
+  }
+}
+
+function parseApprovedGeneratorRows() {
+  const readmePath = path.join(REPO_ROOT, 'tasks', 'README.md')
+  if (!fs.existsSync(readmePath)) return []
+
+  const lines = fs.readFileSync(readmePath, 'utf8').split('\n')
+  const sectionIndex = lines.findIndex(
+    (line) => line.trim() === '## Approved generators'
+  )
+  if (sectionIndex === -1) return []
+
+  const tableHeaderIndex = lines.findIndex(
+    (line, idx) =>
+      idx > sectionIndex &&
+      line.trim() === '| Generator script | Output path(s) |'
+  )
+  if (tableHeaderIndex === -1) return []
+
+  const rows = []
+  for (let i = tableHeaderIndex + 2; i < lines.length; i += 1) {
+    const line = lines[i].trim()
+    if (!line.startsWith('|')) break
+    const parts = line.split('|').map((part) => part.trim())
+    if (parts.length < 4) continue
+    rows.push({
+      generator: parts[1],
+      outputs: parts[2],
+    })
+  }
+  return rows
+}
+
+function buildReportsIndex() {
+  const rows = parseApprovedGeneratorRows()
+  const lines = [
+    '# tasks/reports Index',
+    '',
+    `Generated: ${new Date().toISOString()}`,
+    'Generator: `tools/scripts/audit-scripts.js`',
+    `Branch: ${getCurrentBranch()}`,
+    '',
+    '| Generator script | Output path(s) |',
+    '|---|---|',
+  ]
+
+  if (rows.length === 0) {
+    lines.push('| _No approved generators found_ | _Check `tasks/README.md`_ |')
+  } else {
+    for (const row of rows) {
+      lines.push(`| ${row.generator} | ${row.outputs} |`)
+    }
+  }
+
+  return `${lines.join('\n')}\n`
+}
+
 function writeReports(report, options) {
   const outputDir = path.isAbsolute(options.outputDir)
     ? options.outputDir
@@ -1299,6 +1608,7 @@ function writeReports(report, options) {
 
   const mdPath = path.join(outputDir, 'SCRIPT_AUDIT.md')
   const jsonPath = path.join(outputDir, 'SCRIPT_AUDIT.json')
+  const indexPath = path.join(REPO_ROOT, REPORTS_INDEX_PATH)
 
   if (options.format === 'both' || options.format === 'md') {
     fs.writeFileSync(mdPath, buildMarkdownReport(report), 'utf8')
@@ -1308,10 +1618,14 @@ function writeReports(report, options) {
     fs.writeFileSync(jsonPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8')
   }
 
+  fs.mkdirSync(path.dirname(indexPath), { recursive: true })
+  fs.writeFileSync(indexPath, buildReportsIndex(), 'utf8')
+
   return {
     outputDir,
     mdPath,
     jsonPath,
+    indexPath,
   }
 }
 

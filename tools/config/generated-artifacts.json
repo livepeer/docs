@@ -1,0 +1,191 @@
+{
+  "version": "generated-artifacts.v1",
+  "artifacts": [
+    {
+      "path": "docs-index.json",
+      "owner": "docs",
+      "generator": "node tools/scripts/generate-docs-index.js --write",
+      "sources": [
+        "docs.json",
+        "v1/**/*.md",
+        "v1/**/*.mdx",
+        "v2/**/*.md",
+        "v2/**/*.mdx",
+        "snippets/**/*.md",
+        "snippets/**/*.mdx"
+      ],
+      "class": "committed_authoritative",
+      "commit_policy": "required",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "staged",
+      "notes": "Repo-wide machine-readable navigation index used by runtime- and governance-adjacent tooling. Pre-commit must check freshness but not auto-stage."
+    },
+    {
+      "path": "docs-guide/catalog/components-catalog.mdx",
+      "owner": "docs",
+      "generator": "node tools/scripts/generate-docs-guide-components-index.js --write",
+      "sources": [
+        "snippets/components/**/*.js",
+        "snippets/components/**/*.jsx",
+        "snippets/components/**/*.ts",
+        "snippets/components/**/*.tsx",
+        "snippets/components/**/*.mdx",
+        "docs-guide/**/*.mdx",
+        "tools/scripts/generate-docs-guide-components-index.js",
+        "tools/lib/generated-file-banners.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated maintainer catalog. Fail with a targeted regeneration command instead of expanding commit scope in pre-commit."
+    },
+    {
+      "path": "docs-guide/catalog/pages-catalog.mdx",
+      "owner": "docs",
+      "generator": "node tools/scripts/generate-docs-guide-pages-index.js --write",
+      "sources": [
+        "docs.json",
+        "v2/**/*.md",
+        "v2/**/*.mdx",
+        "docs-guide/**/*.mdx",
+        "tools/scripts/generate-docs-guide-pages-index.js",
+        "tools/lib/generated-file-banners.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated from docs.json and current v2 page inventory."
+    },
+    {
+      "path": "docs-guide/catalog/scripts-catalog.mdx",
+      "owner": "docs",
+      "generator": "node tests/unit/script-docs.test.js --write --rebuild-indexes",
+      "sources": [
+        ".githooks/**/*",
+        "tests/**/*.js",
+        "tools/**/*.js",
+        "tools/**/*.sh",
+        "tools/**/*.py",
+        "docs-guide/**/*.mdx"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated script inventory for maintainers."
+    },
+    {
+      "path": "docs-guide/catalog/templates-catalog.mdx",
+      "owner": "docs",
+      "generator": "node tools/scripts/generate-docs-guide-indexes.js --write",
+      "sources": [
+        ".github/**/*.md",
+        ".github/**/*.yml",
+        ".github/**/*.yaml",
+        "docs-guide/**/*.mdx",
+        "tests/**/*.js",
+        "tools/**/*.js",
+        "tools/**/*.sh"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated docs-guide template catalog."
+    },
+    {
+      "path": "docs-guide/catalog/workflows-catalog.mdx",
+      "owner": "docs",
+      "generator": "node tools/scripts/generate-docs-guide-indexes.js --write",
+      "sources": [
+        ".github/workflows/**/*.yml",
+        ".github/workflows/**/*.yaml",
+        "docs-guide/**/*.mdx",
+        "tests/**/*.js",
+        "tools/**/*.js",
+        "tools/**/*.sh"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated docs-guide workflow catalog."
+    },
+    {
+      "path": "v2/index.mdx",
+      "owner": "docs",
+      "generator": "node tools/scripts/generate-pages-index.js --write",
+      "sources": [
+        "docs.json",
+        "v2/**/*.md",
+        "v2/**/*.mdx",
+        "tools/scripts/generate-pages-index.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated v2 root index page."
+    },
+    {
+      "path": "v2/*/index.mdx",
+      "owner": "docs",
+      "generator": "node tools/scripts/generate-pages-index.js --write",
+      "sources": [
+        "docs.json",
+        "v2/**/*.md",
+        "v2/**/*.mdx",
+        "tools/scripts/generate-pages-index.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated section index pages."
+    },
+    {
+      "path": "v2/resources/documentation-guide/component-library/*.mdx",
+      "owner": "docs",
+      "generator": "node tools/scripts/generate-component-docs.js --fix --template-only",
+      "sources": [
+        "snippets/components/**/*.js",
+        "snippets/components/**/*.jsx",
+        "snippets/components/**/*.ts",
+        "snippets/components/**/*.tsx",
+        "snippets/components/**/*.mdx",
+        "tools/scripts/generate-component-docs.js",
+        "tools/lib/generated-file-banners.js"
+      ],
+      "class": "committed_derived_scoped",
+      "commit_policy": "manual",
+      "hook_policy": "check_only",
+      "ci_policy": "enforce",
+      "delta_strategy": "source_glob",
+      "notes": "Generated public component-library docs."
+    },
+    {
+      "path": "tasks/reports/_local/**",
+      "owner": "docs",
+      "generator": "local-only report generators and scratch audits",
+      "sources": [
+        "tasks/reports/_local/**"
+      ],
+      "class": "ephemeral_local",
+      "commit_policy": "forbidden",
+      "hook_policy": "ignore",
+      "ci_policy": "ignore",
+      "delta_strategy": "none",
+      "notes": "Local-only report scratch space. These outputs are not source of truth and must never be auto-staged by pre-commit."
+    }
+  ]
+}

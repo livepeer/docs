@@ -1,0 +1,324 @@
+{
+  "name": "Forum-To-Mintlify-Latest-Topics",
+  "nodes": [
+    {
+      "parameters": {
+        "functionCode": "return items.map(item => {\n  const topic = item.json;\n  const first = topic.post_stream?.posts?.find(p => p.post_number === 1);\n  return {\n    json: {\n      id: topic.id,\n      title: topic.title,\n      url: `https://forum.livepeer.org/t/${topic.id}`,\n      authorName: first?.name || first?.username || \"Unknown\",\n      authorUsername: first?.username || \"unknown\",\n      body: first?.cooked || \"\",\n      replyCount: topic.posts_count - 1 || 0, // Subtract 1 for original post\n      createdAt: topic.created_at || first?.created_at || \"\",\n      updatedAt: topic.updated_at || first?.updated_at || \"\"\n    }\n  };\n});"
+      },
+      "id": "9c954e20-38a6-4f89-b661-9653e835fe49",
+      "name": "Extract Original Post w/ Author",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        2560,
+        720
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "DeveloperAlly",
+          "mode": "list",
+          "cachedResultName": "DeveloperAlly",
+          "cachedResultUrl": "https://github.com/DeveloperAlly"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "livepeer-automations",
+          "mode": "list",
+          "cachedResultName": "livepeer-automations",
+          "cachedResultUrl": "https://github.com/DeveloperAlly/livepeer-automations"
+        },
+        "filePath": "data/forumData.jsx",
+        "fileContent": "={{ $json.fileContent }}",
+        "commitMessage": "=Update forum data - {{ $now.toISO() }}"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        3712,
+        848
+      ],
+      "id": "84e56137-4d69-49a2-8ae7-d914c49776e6",
+      "name": "Edit a file",
+      "webhookId": "0a16afd5-8684-4178-bff3-e0eaea0c81bb",
+      "credentials": {
+        "githubApi": {
+          "id": "jjy0epl4eqPHYqlG",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2944,
+        848
+      ],
+      "id": "1c6bc37f-5c4b-4a7a-ae7e-bef6e2d02e1e",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "functionCode": "const list = items[0].json.topic_list?.topics || [];\nreturn list.map(t => ({ json: t }));"
+      },
+      "id": "1d258870-9cbf-4779-851d-1cd3e0d04716",
+      "name": "Extract All Topics",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        1792,
+        736
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "https://forum.livepeer.org/latest.json",
+        "options": {}
+      },
+      "id": "4b036856-5604-481a-b608-9fb47b6e3160",
+      "name": "Fetch Latest Topics",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1536,
+        736
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "functionCode": "function isOldPinned(t) {\n  const pinned = t.json.pinned === true || t.json.pinned_globally === true;\n  if (!pinned) return false;\n  const created = new Date(t.json.created_at);\n  const now = new Date();\n  const ageDays = (now - created) / (1000 * 60 * 60 * 24);\n  return ageDays > 30;\n}\n\nlet topics = items.filter(t => !isOldPinned(t));\nconst top4 = topics.slice(0, 4);\nreturn top4;"
+      },
+      "id": "3a2a14b5-c878-47ad-bd45-001e4d48942a",
+      "name": "Filter Top 4 (Exclude Old Pinned)",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        2032,
+        736
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "=https://forum.livepeer.org/t/{{$json.id}}",
+        "options": {
+          "fullResponse": false
+        }
+      },
+      "id": "95915c7f-1c6e-433c-817f-5c92a11b7d11",
+      "name": "Fetch Topic JSON",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2304,
+        720
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "=https://forum.livepeer.org/raw/{{$json.id }}/1",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2304,
+        896
+      ],
+      "id": "c04b94f3-7c8e-4c4c-8bee-3e51eca30e7b",
+      "name": "Fetch Topic Raw"
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{ json: { topics: items.map(i => i.json) } }];"
+      },
+      "id": "9c693984-c37c-47e7-bfea-b4cc57b3d8c2",
+      "name": "Aggregate Topics",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        3248,
+        848
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {}
+          ]
+        }
+      },
+      "id": "b650689a-f9d1-4751-803e-d689e63d6a67",
+      "name": "Run Daily",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        1280,
+        736
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "const topics = items[0].json.topics;\nconst forumData = [];\n\n// HTML cleaner function - keeps basic HTML formatting\nfunction cleanAndFormatHTML(html) {\n  let cleanHTML = html;\n  \n  // Remove anchor navigation links\n  cleanHTML = cleanHTML.replace(/<a[^>]*name=\"[^\"]*\"[^>]*class=\"anchor\"[^>]*>.*?<\\/a>/g, '');\n  \n  // Clean up headings\n  cleanHTML = cleanHTML.replace(/<h1[^>]*>(.*?)<\\/h1>/g, '<h3>$1</h3>');\n  cleanHTML = cleanHTML.replace(/<h2[^>]*>(.*?)<\\/h2>/g, '<h4>$1</h4>');\n  cleanHTML = cleanHTML.replace(/<h3[^>]*>(.*?)<\\/h3>/g, '<h5>$1</h5>');\n  cleanHTML = cleanHTML.replace(/<h[4-6][^>]*>(.*?)<\\/h[4-6]>/g, '<h6>$1</h6>');\n  \n  // Clean up images and their references\n  cleanHTML = cleanHTML.replace(/<a[^>]*class=\"lightbox\"[^>]*>.*?<\\/a>/g, ''); // Remove lightbox wrappers\n  cleanHTML = cleanHTML.replace(/<div[^>]*class=\"lightbox-wrapper\"[^>]*>.*?<\\/div>/g, ''); // Remove lightbox divs\n  cleanHTML = cleanHTML.replace(/<img[^>]*>/g, ''); // Remove img tags\n  cleanHTML = cleanHTML.replace(/\\[!\\[.*?\\]\\(.*?\\)\\]\\(.*?\\)/g, ''); // Remove markdown image links\n  cleanHTML = cleanHTML.replace(/image\\d+×\\d+\\s+[\\d.]+\\s*[KM]B/gi, ''); // Remove image size text\n  \n  // Keep paragraphs, lists, emphasis, code\n  cleanHTML = cleanHTML.replace(/<p>/g, '<p>');\n  cleanHTML = cleanHTML.replace(/<\\/p>/g, '</p>');\n  cleanHTML = cleanHTML.replace(/<ul>/g, '<ul>');\n  cleanHTML = cleanHTML.replace(/<\\/ul>/g, '</ul>');\n  cleanHTML = cleanHTML.replace(/<li>/g, '<li>');\n  cleanHTML = cleanHTML.replace(/<\\/li>/g, '</li>');\n  cleanHTML = cleanHTML.replace(/<strong>(.*?)<\\/strong>/g, '<strong>$1</strong>');\n  cleanHTML = cleanHTML.replace(/<em>(.*?)<\\/em>/g, '<em>$1</em>');\n  cleanHTML = cleanHTML.replace(/<code>(.*?)<\\/code>/g, '<code>$1</code>');\n  \n  // Simplify links\n  cleanHTML = cleanHTML.replace(/<a[^>]*href=\"([^\"]*)\"[^>]*>(.*?)<\\/a>/g, '<a href=\"$1\" target=\"_blank\">$2</a>');\n  \n  // Decode HTML entities\n  cleanHTML = cleanHTML.replace(/&amp;/g, '&');\n  cleanHTML = cleanHTML.replace(/&lt;/g, '<');\n  cleanHTML = cleanHTML.replace(/&gt;/g, '>');\n  cleanHTML = cleanHTML.replace(/&quot;/g, '\"');\n  cleanHTML = cleanHTML.replace(/&#39;/g, \"'\");\n  cleanHTML = cleanHTML.replace(/&nbsp;/g, ' ');\n  \n  // Clean up whitespace\n  cleanHTML = cleanHTML.replace(/\\s+/g, ' ');\n  cleanHTML = cleanHTML.replace(/<p>\\s*<\\/p>/g, '');\n  \n  cleanHTML = cleanHTML.trim();\n  \n  return cleanHTML;\n}\n\nfor (const t of topics) {\n  // Convert to clean HTML\n  const htmlContent = cleanAndFormatHTML(t.body);\n  \n  // Format the date nicely\n  const datePosted = t.createdAt ? new Date(t.createdAt).toLocaleDateString('en-US', {\n    year: 'numeric',\n    month: 'short',\n    day: 'numeric'\n  }) : '';\n  \n  forumData.push({\n    title: t.title,\n    href: t.url,\n    author: `By ${t.authorName} (@${t.authorUsername})`,\n    content: htmlContent, // Clean HTML\n    replyCount: t.replyCount || 0,\n    datePosted: datePosted\n  });\n}\n\n// Generate the JavaScript export string\nlet jsExport = 'export const forumData = [\\n';\nforumData.forEach((item, index) => {\n  jsExport += '  {\\n';\n  \n  // Title\n  jsExport += `    title: '${item.title.replace(/\\\\/g, '\\\\\\\\').replace(/'/g, \"\\\\'\")}',\\n`;\n  \n  // URL\n  jsExport += `    href: '${item.href}',\\n`;\n  \n  // Author\n  jsExport += `    author: '${item.author.replace(/\\\\/g, '\\\\\\\\').replace(/'/g, \"\\\\'\")}',\\n`;\n  \n  // Content - HTML, properly escaped for JS string\n  const escapedContent = item.content\n    .replace(/\\\\/g, '\\\\\\\\')\n    .replace(/'/g, \"\\\\'\")\n    .replace(/\"/g, '\\\\\"')\n    .replace(/\\n/g, '\\\\n')\n    .replace(/\\r/g, '\\\\r')\n    .replace(/\\t/g, '\\\\t');\n  jsExport += `    content: '${escapedContent}',\\n`;\n  \n  // Reply count\n  jsExport += `    replyCount: ${item.replyCount},\\n`;\n  \n  // Date posted\n  jsExport += `    datePosted: '${item.datePosted}',\\n`;\n  \n  jsExport += '  }';\n  if (index < forumData.length - 1) {\n    jsExport += ',';\n  }\n  jsExport += '\\n';\n});\njsExport += '];\\n';\n\nreturn [{ json: { fileContent: jsExport } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3488,
+        848
+      ],
+      "id": "738c8086-e2fd-4815-a78a-021c0539c69d",
+      "name": "Build ForumData.jsx [mdx content]"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Extract Original Post w/ Author": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit a file": {
+      "main": [
+        []
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Topics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract All Topics": {
+      "main": [
+        [
+          {
+            "node": "Filter Top 4 (Exclude Old Pinned)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Latest Topics": {
+      "main": [
+        [
+          {
+            "node": "Extract All Topics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Top 4 (Exclude Old Pinned)": {
+      "main": [
+        [
+          {
+            "node": "Fetch Topic JSON",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Topic Raw",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Topic JSON": {
+      "main": [
+        [
+          {
+            "node": "Extract Original Post w/ Author",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Topic Raw": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Aggregate Topics": {
+      "main": [
+        [
+          {
+            "node": "Build ForumData.jsx [mdx content]",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Daily": {
+      "main": [
+        [
+          {
+            "node": "Fetch Latest Topics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build ForumData.jsx [mdx content]": {
+      "main": [
+        [
+          {
+            "node": "Edit a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "dc5aba83-7f21-405f-b960-6d7ded2b952e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b77ce31e344450acd6ad20bd6cde79f46c1e07d55921483122bfba86e8350352"
+  },
+  "id": "qBcNA3S15BdUz55M",
+  "tags": []
+}

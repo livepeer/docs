@@ -1,0 +1,196 @@
+---
+mode: frame
+title: Orchestrator Portal
+sidebarTitle: Portal
+description: 'Welcome To The Orchestrator Portal: Explore, Earn, Operate'
+pageType: landing
+audience: orchestrator
+purpose: landing
+status: current
+lastVerified: '2026-03-16'
+keywords:
+  - home
+  - index
+  - landing
+  - gpu
+  - earn
+  - rewards
+  - orchestrator
+  - orchestrators
+  - livepeer orchestrator
+  - livepeer orchestrators
+  - livepeer orchestrator portal
+  - livepeer orchestrators portal
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+{/* TEST: Barrel export from index.jsx */}
+import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer } from '/snippets/components/page-structure/portals.jsx'
+import { H1, H2, H5, P } from '/snippets/components/display/frame-mode.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { BlinkingIcon } from '/snippets/components/primitives/links.jsx'
+import { Starfield } from "/snippets/components/page-structure/heroGif.jsx"
+import { CustomCodeBlock } from '/snippets/components/content/code.jsx'
+
+{/* ## <Icon icon="map-location" size={32} color={"var(--accent)"}/> Orchestrator Portal: Map */}
+
+{/* **Definition**
+Orchestrators are...
+
+**Quick Intro**
+Get Situated  */}
+
+<HeroSectionContainer>
+
+<HeroImageBackgroundComponent>
+  <Starfield />
+</HeroImageBackgroundComponent>
+
+  <HeroContentContainer>
+      <LogoHeroContainer imgHeight="20px" />
+
+        <PortalHeroContent
+          title="GPUs for AI Video"
+          subtitle="Run - Provide - Earn"
+          callout={<Tip>In the Livepeer network, GPU nodes are known as Orchestrators.</Tip>}
+          refCardLink={
+              <Card
+                title="go-livepeer"
+                href="https://github.com/livepeer/go-livepeer"
+                icon="github"
+                arrow
+                horizontal
+              />
+            }
+          overview={
+            <>
+              Orchestrators are the GPU compute nodes that power the Livepeer network. They provide the GPU horsepower and services to run AI pipelines and live video workloads.
+                <br />
+                <br />
+              Anyone can add a GPU to the Livepeer network and earn from idle GPU downtimes - either by adding it to a pool or setting up their own orchestrator container.
+                <br />
+                <br />
+              <div><CustomCodeBlock
+                codeString="docker pull livepeer/go-livepeer:master"
+                language="bash"
+                icon="terminal"
+                filename="go-livepeer"
+                wrap={false}
+              /></div>
+            </>
+          }
+        >
+        </PortalHeroContent>
+
+      </HeroContentContainer>
+
+</HeroSectionContainer>
+
+<PortalContentContainer>
+    <PortalCardsHeader title="Orchestrator Portal">
+        <BlinkingIcon icon="circle-play" size={20}  />
+    </PortalCardsHeader>
+
+    <Columns cols={2}>
+      <Card
+        title="Find Your Path"
+        icon="compass"
+        href="/v2/orchestrators/navigator"
+        arrow
+      >
+Choose the right starting point based on your situation - whether evaluating, joining a pool, running solo, or scaling commercially.
+</Card>
+<Card
+        title="Quickstart: Verify Your Hardware"
+        icon="bolt"
+        href="/v2/orchestrators/quickstart/guide"
+        arrow
+      >
+Test video transcoding and AI inference on your GPU in under an hour. Off-chain, no staking required.
+</Card>
+<Card
+        title="Full Setup Guide"
+        icon="gear"
+        href="/v2/orchestrators/setup/guide"
+        arrow
+      >
+Install, configure, connect to Arbitrum, and verify. Covers video, AI, and dual mode.
+</Card>
+<Card
+        title="Is It Worth It?"
+        icon="scale-balanced"
+        href="/v2/orchestrators/guides/operator-considerations/operator-rationale"
+        arrow
+      >
+Costs, revenue streams, break-even analysis, and a decision matrix by deployment path.
+</Card>
+<Card
+        title="AI and Workloads"
+        icon="microchip"
+        href="/v2/orchestrators/guides/ai-and-job-workloads/workload-options"
+        arrow
+      >
+Video transcoding, AI diffusion, LLM, live AI, audio - what to run and what earns.
+</Card>
+<Card
+        title="Earning and Staking"
+        icon="coins"
+        href="/v2/orchestrators/guides/staking-and-rewards/earning-model"
+        arrow
+      >
+Service fees, inflation rewards, delegation, reward calling, and governance participation.
+</Card>
+</Columns>
+
+</PortalContentContainer>
+
+
+
+{/* ?Gateway Portal FAQs
+
+## <Icon icon="wand-magic-sparkles" size={32} color={"var(--accent)"}/> Gateway Portal Jump Pad
+
+Bit irrelevant after the missions
+Jump to
+
+- [What's a Gateway?](#whats-a-gateway)
+- [Gateway Services & Providers](#gateway-services--providers)
+- [Run a Gateway](#run-a-gateway)
+- [Gateway Tools & Dashboards](#gateway-tools--dashboards)
+- [Gateway Guides & Resources](#gateway-guides--resources)  */}
+
+{/*
+  PURPOSE:
+  Landing page for the Orchestrators tab. Hero section with value proposition,
+  quick-start paths by persona, and navigation to key sections.
+
+  SECTION HOME: Start Here
+  JOURNEY POSITION: Entry point for all orchestrator personas
+*/}

@@ -7,14 +7,14 @@
  * @owner             docs
  * @needs             R-R27, R-R30
  * @purpose-statement Codex lock validator — checks for stale or conflicting lock files before push
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
+ * @pipeline          P1 (commit), P2 (push)
  * @usage             node tools/scripts/codex/validate-locks.js [flags]
  */
 
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const yaml = require('js-yaml');
+const yaml = require('../../lib/load-js-yaml');
 
 const CODEX_BRANCH_RE = /^codex\/(\d+)-[a-z0-9][a-z0-9-]*$/;
 const DEFAULT_CONTRACT = '.codex/task-contract.yaml';
@@ -227,6 +227,14 @@ function validateLockShape(lock) {
   return required.filter((field) => !(field in lock));
 }
 
+function sortLocksNewestFirst(locks) {
+  return [...locks].sort((a, b) => {
+    const aTime = Date.parse(String(a.created_at || '')) || 0;
+    const bTime = Date.parse(String(b.created_at || '')) || 0;
+    return bTime - aTime;
+  });
+}
+
 function writeResult(result, jsonMode) {
   if (jsonMode) {
     process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
@@ -289,14 +297,19 @@ function main() {
       }
     });
 
-    const ownLock = activeLocks.find((lock) => String(lock.branch || '') === branch);
+    const ownBranchLocks = sortLocksNewestFirst(
+      activeLocks.filter((lock) => String(lock.branch || '') === branch)
+    );
+    const ownLock = ownBranchLocks[0];
     if (!ownLock) {
       errors.push(`No active local lock found for branch ${branch} in ${LOCK_DIR_REL}`);
     }
 
     const changedFiles = getChangedFiles(args);
     if (changedFiles.length > 0 && ownLock) {
-      const others = activeLocks.filter((lock) => lock.lock_id !== ownLock.lock_id);
+      const others = activeLocks.filter((lock) =>
+        lock.lock_id !== ownLock.lock_id && String(lock.branch || '') !== branch
+      );
       others.forEach((lock) => {
         const scope = Array.isArray(lock.scope_in)
           ? lock.scope_in.map((entry) => String(entry || '').trim()).filter(Boolean)

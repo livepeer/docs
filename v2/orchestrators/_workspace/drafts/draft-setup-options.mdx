@@ -1,0 +1,354 @@
+---
+title: 'Setup Options'
+sidebarTitle: 'Setup Options'
+description: 'Choose the right setup path for a Livepeer orchestrator - solo, pool node, O-T split, siphon, or off-chain - based on hardware, stake, and operational goals.'
+keywords:
+  - livepeer
+  - orchestrator
+  - setup options
+  - deployment
+  - pool node
+  - solo
+  - o-t split
+  - siphon
+  - off-chain
+  - dual mode
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: orchestrator
+purpose: orientation
+status: current
+lastVerified: '2026-03-17'
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+
+<Tip>
+Key decisions for orchestrator setup:
+1. **Setup path** - who handles protocol operations and who provides GPU compute
+2. **Setup type** - on-chain or off-chain
+3. **Operational mode** - full control or delegate to a pool
+4. **Workload mode** - video, AI, or both
+</Tip>
+
+<CustomDivider />
+
+## Setup Paths
+
+The setup path determines who handles protocol operations (staking, reward calling, routing), who provides GPU compute, and how risk is distributed across machines.
+
+### Solo Orchestrator
+
+A single go-livepeer process on one machine. Protocol operations, job routing, and GPU compute all run together.
+
+- Direct on-chain earnings with no intermediary
+- Full control over pricing, workloads, and orchestrator identity
+- Direct delegation from LPT holders
+- Protocol governance weight proportional to total stake
+- Single codebase to maintain
+
+<BorderedBox variant="accent" padding="16px">
+**Needs:** LPT (active set threshold for video, minimal for AI-only). NVIDIA GPU. Public IP or hostname. Arbitrum RPC endpoint. arbETH for gas.
+</BorderedBox>
+
+<LinkArrow href="/v2/orchestrators/setup/guide" label="Setup Guide" />
+
+### Pool Node
+
+A go-livepeer process in transcoder mode, connected to an existing pool operator's orchestrator. The pool operator handles all protocol operations.
+
+- No LPT capital requirement
+- No protocol management, reward calling, or pricing decisions
+- No software upgrade responsibility for protocol changes
+- No keystore or on-chain identity to secure
+- Passive GPU earnings with minimal ongoing attention
+- Freedom to switch pools without on-chain transactions
+
+<BorderedBox variant="accent" padding="16px">
+**Needs:** NVIDIA GPU. Pool operator address and shared secret. Nothing else.
+</BorderedBox>
+
+<LinkArrow href="/v2/orchestrators/guides/deployment-details/join-a-pool" label="Join a Pool" />
+
+### O-T Split
+
+Orchestrator and transcoder as separate go-livepeer processes on separate machines. The orchestrator machine handles protocol and routing (no GPU required). Transcoder machines handle GPU compute. Connected by a shared secret.
+
+- Keystore never stored on GPU machines
+- GPU machines scale independently - add or remove without touching the orchestrator
+- Reward calling runs from a lightweight, stable server unaffected by GPU workload
+- Hardware optimised per role - cheap VPS for protocol, dedicated GPU rigs for compute
+- Architectural foundation for running a pool
+
+<BorderedBox variant="accent" padding="16px">
+**Needs:** LPT (active set threshold). 2+ machines. Shared `-orchSecret`. Public IP on orchestrator machine. Arbitrum RPC.
+</BorderedBox>
+
+<LinkArrow href="/v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup" label="O-T Split Setup" />
+
+### Siphon
+
+OrchestratorSiphon (a Python tool) runs on a secure machine and handles keystore operations, reward calling, fee withdrawal, and governance voting. A separate GPU machine runs go-livepeer in transcoder mode for compute work.
+
+- GPU machine restarts, crashes, or maintenance do not cause missed reward rounds
+- Keystore completely isolated from the machine processing untrusted media data
+- Inflation rewards can be earned before GPU infrastructure is ready
+- GPU machine upgrades carry zero risk to staked LPT
+- Independent software update cycles for protocol tool and compute node
+
+<BorderedBox variant="accent" padding="16px">
+**Needs:** LPT (active set threshold). 2 machines. Python on the secure machine. Arbitrum RPC.
+</BorderedBox>
+
+<LinkArrow href="/v2/orchestrators/guides/deployment-details/siphon-setup" label="Siphon Setup" />
+
+### Off-chain
+
+An orchestrator running with `-network offchain`. No blockchain connection. Gateways that know the orchestrator's address send work directly via `-orchAddr`.
+
+- No blockchain interaction or Arbitrum RPC required
+- No staking, no gas costs, no reward calling
+- Private infrastructure for a dedicated gateway relationship
+- Fast to deploy for specific use cases
+- Suitable for development, testing, or serving a known gateway exclusively
+
+<BorderedBox variant="accent" padding="16px">
+**Needs:** NVIDIA GPU. A gateway operator pointing at the node via `-orchAddr`. Nothing else.
+</BorderedBox>
+
+<LinkArrow href="/v2/orchestrators/setup/guide" label="Setup Guide (use -network offchain flag)" />
+
+<Note>
+Off-chain orchestrators do not appear in protocol discovery. Only gateways explicitly configured with the orchestrator's address will route work to it. There are no inflation rewards. This is a legitimate production configuration for private or dedicated gateway relationships, not only for testing.
+</Note>
+
+<CustomDivider />
+
+## Risk Profile
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Path</TableCell>
+      <TableCell header>Primary risk</TableCell>
+      <TableCell header>Mitigation</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Solo**</TableCell>
+      <TableCell>Single point of failure. Machine downtime = missed reward rounds (permanent LPT loss) and lost jobs.</TableCell>
+      <TableCell>Reliable hardware, UPS, monitoring with alerting.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Pool node**</TableCell>
+      <TableCell>Payout dependency. Pool operator controls distribution schedule and amounts. No on-chain record of individual contributions.</TableCell>
+      <TableCell>Evaluate pool reputation. Monitor payouts. Be prepared to switch pools.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**O-T split**</TableCell>
+      <TableCell>Infrastructure complexity. Two machines, networking between them, shared secret management.</TableCell>
+      <TableCell>Stable orchestrator VPS. Automate transcoder provisioning.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Siphon**</TableCell>
+      <TableCell>Coordination overhead. Two machines, Python tool configuration, service URI updates when GPU machine changes.</TableCell>
+      <TableCell>Stable secure machine. Document the config. Test failover.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Off-chain**</TableCell>
+      <TableCell>No protocol discovery. Only gateways with explicit `-orchAddr` configuration send work. No inflation rewards.</TableCell>
+      <TableCell>Direct relationship with gateway operator. Suitable only when demand source is known.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Setup Type
+
+The setup type determines how the orchestrator connects to the Livepeer protocol.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header></TableCell>
+      <TableCell header><Icon icon="link" size={14} /> On-chain</TableCell>
+      <TableCell header><Icon icon="cloud" size={14} /> Off-chain</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Protocol**</TableCell>
+      <TableCell>Connects to Livepeer on Arbitrum</TableCell>
+      <TableCell>No blockchain connection</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Discovery**</TableCell>
+      <TableCell>Gateways find the orchestrator via protocol</TableCell>
+      <TableCell>Only gateways with explicit `-orchAddr`</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Rewards**</TableCell>
+      <TableCell>LPT inflation rewards each round</TableCell>
+      <TableCell>None</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Requirements**</TableCell>
+      <TableCell>Arbitrum RPC, arbETH for gas, LPT for staking</TableCell>
+      <TableCell>GPU and a gateway to serve</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Production use**</TableCell>
+      <TableCell>Public orchestrators serving the network</TableCell>
+      <TableCell>Private orchestrators serving specific gateways</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Workload Mode
+
+Livepeer routes video and AI as different job types through different protocol mechanisms. The video pipeline processes RTMP streams as segments via NVENC hardware encoding. The AI pipeline processes inference requests via CUDA compute. Dual mode runs both pipelines from a single orchestrator process.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Mode</TableCell>
+      <TableCell header>Pipeline</TableCell>
+      <TableCell header>Min VRAM</TableCell>
+      <TableCell header>Pricing</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell><Badge color="blue">Video</Badge></TableCell>
+      <TableCell>Segment-based transcoding via NVENC/NVDEC</TableCell>
+      <TableCell>4 GB (any NVENC GPU)</TableCell>
+      <TableCell>`-pricePerUnit` (wei per pixel)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell><Badge color="purple">AI</Badge></TableCell>
+      <TableCell>Capability-based inference via CUDA</TableCell>
+      <TableCell>8 GB (LLM) to 24 GB+ (diffusion)</TableCell>
+      <TableCell>`aiModels.json` per pipeline</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell><Badge color="green">Dual</Badge></TableCell>
+      <TableCell>Both pipelines from one process</TableCell>
+      <TableCell>16-24 GB</TableCell>
+      <TableCell>Both pricing mechanisms</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<Badge color="green">Dual</Badge> mode is the most common production configuration. NVENC and NVDEC are dedicated hardware blocks separate from CUDA compute cores. Video transcoding and AI inference use independent execution paths on the same GPU. A 24 GB card supports both workloads with one warm AI model loaded.
+
+<LinkArrow href="/v2/orchestrators/guides/deployment-details/dual-mode-configuration" label="Dual Mode Configuration" />
+<LinkArrow href="/v2/orchestrators/guides/ai-and-job-workloads/workload-options" label="Workload Options" />
+
+<CustomDivider />
+
+## Reference
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Path</TableCell>
+      <TableCell header>Machines</TableCell>
+      <TableCell header>LPT</TableCell>
+      <TableCell header>Complexity</TableCell>
+      <TableCell header>Software</TableCell>
+      <TableCell header>Guide</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Solo**</TableCell>
+      <TableCell>1</TableCell>
+      <TableCell>Active set (video) or minimal (AI)</TableCell>
+      <TableCell>Medium</TableCell>
+      <TableCell>go-livepeer</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/setup/guide" label="Setup" newline={false} /></TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Pool node**</TableCell>
+      <TableCell>1</TableCell>
+      <TableCell>None</TableCell>
+      <TableCell>Low</TableCell>
+      <TableCell>go-livepeer (transcoder mode)</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/guides/deployment-details/join-a-pool" label="Join Pool" newline={false} /></TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**O-T split**</TableCell>
+      <TableCell>2+</TableCell>
+      <TableCell>Active set</TableCell>
+      <TableCell>Medium-High</TableCell>
+      <TableCell>go-livepeer (both roles)</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup" label="O-T Split" newline={false} /></TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Siphon**</TableCell>
+      <TableCell>2</TableCell>
+      <TableCell>Active set</TableCell>
+      <TableCell>Medium</TableCell>
+      <TableCell>OrchestratorSiphon + go-livepeer</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/guides/deployment-details/siphon-setup" label="Siphon" newline={false} /></TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Off-chain**</TableCell>
+      <TableCell>1</TableCell>
+      <TableCell>None</TableCell>
+      <TableCell>Low</TableCell>
+      <TableCell>go-livepeer (`-network offchain`)</TableCell>
+      <TableCell><LinkArrow href="/v2/orchestrators/setup/guide" label="Setup" newline={false} /></TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Requirements" icon="clipboard-check" href="/v2/orchestrators/guides/operator-considerations/requirements" arrow horizontal>
+    Hardware, software, network, and token prerequisites by node mode.
+  </Card>
+  <Card title="Setup Guide" icon="gear" href="/v2/orchestrators/setup/guide" arrow horizontal>
+    Install, configure, connect to Arbitrum, and verify.
+  </Card>
+  <Card title="Dual Mode" icon="layer-group" href="/v2/orchestrators/guides/deployment-details/dual-mode-configuration" arrow horizontal>
+    Run video and AI from one node.
+  </Card>
+  <Card title="Operator Rationale" icon="scale-balanced" href="/v2/orchestrators/guides/operator-considerations/operator-rationale" arrow horizontal>
+    Cost, revenue, and break-even analysis.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  "I'm ready to set up - which path matches my hardware, stake, and goals?"
+  Lists all setup paths with why each exists (5 value props per path). Covers
+  setup type (on-chain vs off-chain), workload mode (video/AI/dual), and risk
+  profile. Reference table at the end as lookup. No preamble - answers the
+  reader's question immediately.
+
+  TIER QUESTIONS:
+  0. Which setup path fits me? → The paths and their reasons (opening)
+  1. Why different paths? → Protocol control, GPU ownership, keystore, rewards, capital
+  2. What's the risk? → Risk profile table
+  3. What do I need? → BorderedBox per path
+  4. Simplest for my situation? → Value props guide the choice
+  5. After I choose? → Next Steps cards
+
+  SECTION: Deployment Details
+  JOB STORIES: J1 (path selection)
+*/}

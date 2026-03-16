@@ -1,0 +1,380 @@
+---
+title: Operator Rationale
+sidebarTitle: Operator Rationale
+description: >-
+  Is running a Livepeer orchestrator worth it for your situation? Cost
+  categories, revenue sources, viability thresholds, and a decision matrix
+  to help you choose your path before committing hardware or stake.
+keywords:
+  - livepeer
+  - orchestrator
+  - feasibility
+  - worth it
+  - economics
+  - lpt stake
+  - cost
+  - earnings
+  - pool worker
+  - solo orchestrator
+  - ai inference
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: orchestrator
+purpose: concept
+status: published
+lastVerified: 2026-03-13
+---
+{/* TODO:
+Terminology Validation:
+- Ensure authoring skill is used to validate page style/copy ai-tools/ai-skills/page-authoring/SKILL.md
+- Voice converted to entity-led
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours / styles - for large diagrams use vertical flow and enclose in ScrollableDiagram setting height at 400-500px
+- Fontawesome icons are used on accordions and tabs (reference map in docs-guide/tooling/reference-maps/icon-map.mdx)
+- Tables use StyledTable component
+- Tabs should be surrounded by BorderedBox variant="accent"
+- Code blocks should have icon="terminal" for bash (default), icon="code" for scripts, icon="copy" for text copy. Add brief filename.
+- All tabs and accordions should have icons
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical
+- CustomDivider is used
+- Placeholders for Media and Video Resources are in comments with a TODO for a human
+- REVIEW flags are in JSX comments for a human
+- Accuracy is verified across repo as much as possible
+Human:
+- REVIEW flags
+- Review Page Layout
+*/}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+This page is for people who are considering running a Livepeer orchestrator but haven't committed yet. It covers the real costs, revenue ceiling questions, and practical decision points — so you can make an honest assessment before spending time on setup.
+
+If you've already decided to run a node and just need to set it up, go directly to [Setup Paths](/v2/orchestrators/guides/setup-paths/setup-navigator).
+
+<CustomDivider />
+
+## What you can earn
+
+Orchestrators earn from two sources. Understanding both matters before you begin:
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Revenue stream</TableCell>
+    <TableCell header>How it works</TableCell>
+    <TableCell header>Depends on</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**ETH job fees**</TableCell>
+    <TableCell>Gateways pay you per transcoding segment or AI inference job</TableCell>
+    <TableCell>Your capability, pricing, performance, uptime</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**LPT inflation rewards**</TableCell>
+    <TableCell>Protocol mints LPT each round; you claim your share by calling `Reward()`</TableCell>
+    <TableCell>Your total bonded stake, inflation rate, reward call reliability</TableCell>
+  </TableRow>
+</StyledTable>
+
+Neither stream pays from day one without setup. ETH fees require gateways to route work to you. LPT rewards require bonded LPT, an active orchestrator registration, and a running node that calls `Reward()` each round.
+
+For the full mechanics, see [Earnings Explained](/v2/orchestrators/guides/staking-and-rewards/earnings).
+
+<CustomDivider />
+
+## What it costs
+
+Before modelling any revenue, be honest about costs. These are the real categories:
+
+<AccordionGroup>
+
+<Accordion  title="Hardware" icon="server">
+
+The primary upfront cost. You need at least one NVIDIA GPU.
+
+- **Video transcoding only:** An NVIDIA GPU with NVENC/NVDEC support. Consumer RTX cards (3060, 3070, 3080) are common. GPU is recommended but transcoding without a GPU is possible at significantly lower throughput.
+- **AI inference (batch):** 8–24 GB VRAM depending on which pipelines you want to run. An RTX 3090 (24 GB) is the practical minimum for competitive diffusion pipelines.
+- **AI inference (real-time / Cascade):** 24 GB VRAM minimum. Real-time pipelines are more demanding than batch.
+
+See [GPU and Hardware Reference](/v2/orchestrators/guides/feasibility-and-hardware/hardware-reference) for specific per-workload requirements.
+
+Hardware you already own has zero ongoing cost. Hardware you're buying to run Livepeer has an amortisation cost you should model explicitly: if you spend £800 on an RTX 4090 and earn £30/month, the payback period is over 2 years before electricity.
+
+</Accordion>
+
+<Accordion  title="LPT stake (for video transcoding)" icon="video">
+
+To receive video transcoding jobs as a solo orchestrator, you must be in the **active set** — currently the top orchestrators by total bonded stake.
+
+{/* REVIEW: Verify current active set size — was top 100 per gpu-nodes-tab-audit.md and historical docs, but this may have changed. Rick to confirm. */}
+
+LPT must be acquired and bonded to your orchestrator address. You cannot borrow it. Acquiring meaningful LPT at current market prices is the primary entry barrier for solo video orchestrators.
+
+**If you don't have sufficient LPT for the active set, you have two alternatives:**
+1. Join a pool as a worker (no LPT needed — the pool orchestrator handles on-chain operations)
+2. Run AI inference only (AI job routing prioritises capability and price over stake position)
+
+For stake requirements by path, see the decision matrix below.
+
+</Accordion>
+
+<Accordion  title="ETH for gas on Arbitrum" icon="link">
+
+Your orchestrator wallet needs ETH on Arbitrum One for:
+
+- **Reward() calls** — one per round, approximately every 22 hours. Cost: ~$0.01–0.12 per call at current Arbitrum gas prices.
+- **Ticket redemptions** — periodic. Cost: ~$0.01–0.05 per redemption batch.
+- **Activation transaction** — one-time setup cost.
+
+This is a running cost but very low on Arbitrum L2. Budget roughly $5–15/month in ETH for a mid-volume node. A depleted ETH wallet means missed reward rounds (permanent loss) and unredeemed winning tickets.
+
+</Accordion>
+
+<Accordion  title="Bandwidth" icon="circle-question">
+
+Video transcoding is bandwidth-intensive. Each live stream you transcode requires approximately:
+- **6 Mbps download** (source stream)
+- **5.6 Mbps upload** (output renditions)
+
+{/* REVIEW: ABR ladder from v1 set-session-limits.mdx (1080p/720p/480p/360p/240p). Verify this is still the common rendition set on the current network — has the standard ladder changed? Ask Rick or check recent gateway requests in Discord. */}
+
+A 1 Gbps symmetric connection supports approximately 100+ concurrent streams on bandwidth alone. For most home operators (100–500 Mbps), bandwidth becomes the session limit constraint before hardware does.
+
+AI inference is much lighter on bandwidth per job — it's a single image or audio clip in, a result out, rather than a continuous stream.
+
+</Accordion>
+
+<Accordion  title="Electricity" icon="circle-question">
+
+GPU power draw varies significantly:
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>GPU</TableCell>
+    <TableCell header>Typical load power draw</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>RTX 3060</TableCell>
+    <TableCell>~150–170 W</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>RTX 3090</TableCell>
+    <TableCell>~300–350 W</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>RTX 4090</TableCell>
+    <TableCell>~350–450 W</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>A100 80 GB</TableCell>
+    <TableCell>~250–400 W</TableCell>
+  </TableRow>
+</StyledTable>
+
+Running an RTX 4090 24/7 at full load costs approximately £30–60/month in electricity at UK residential rates, or $35–70 at US average rates. Factor this into your break-even calculation.
+
+</Accordion>
+
+<Accordion  title="Time" icon="circle-question">
+
+Orchestrator operation is not completely passive. Ongoing time costs include:
+
+- Initial setup and configuration: 4–16 hours
+- Monitoring and maintenance: 1–3 hours/week once stable
+- Troubleshooting edge cases: variable
+- Keeping go-livepeer updated: 30–60 minutes per release
+
+Pool workers have minimal ongoing time investment once the worker process is configured. Solo orchestrators require more consistent attention, especially for reward calling reliability and gateway relationship management.
+
+</Accordion>
+
+</AccordionGroup>
+
+<CustomDivider />
+
+## The three viability questions
+
+Before choosing a path, answer these three honestly:
+
+### 1. Is reward calling profitable for my stake?
+
+Calling `Reward()` costs gas. If your stake is small, the LPT you'd receive per round may be worth less than the gas cost.
+
+A rough check: open [explorer.livepeer.org](https://explorer.livepeer.org) and find your orchestrator's "Estimated Reward This Round." If that LPT value (converted to ETH at the current price) is less than approximately 0.00005 ETH ($0.12 at ETH=$2,500), the gas cost may exceed the reward. In that case, start with manual reward calling until your stake grows.
+
+This threshold changes with LPT price, ETH price, and inflation rate. It is not a fixed number. See [Rewards and Fees](/v2/orchestrators/guides/staking-and-rewards/rewards-and-fees) for the detailed calculation.
+
+### 2. Can I compete on pricing and capability?
+
+For video transcoding: gateways filter orchestrators by both stake position and price. If your `pricePerUnit` is above a gateway's `maxPricePerUnit`, you receive no jobs from that gateway regardless of your hardware.
+
+For AI inference: gateways filter first by capability (do you have the requested pipeline and model?), then by price. Stake matters less here — a well-configured AI node with warm models can compete from day one.
+
+Check current competitive pricing at [explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators). Sort by fee volume to see what pricing levels active earners are running.
+
+### 3. Is my setup stable enough?
+
+Missing reward rounds is permanent lost LPT. Receiving jobs you can't complete damages your performance reputation with gateways. Both require reliable node operation — not production-grade necessarily, but reliably online and monitored.
+
+Home setups with unreliable internet connections, power cuts, or machines that get turned off are real viability risks. If you can't maintain ~95%+ uptime, the pool worker path is more appropriate.
+
+<CustomDivider />
+
+## Decision matrix
+
+<Note>
+  This table describes current network conditions as of early 2026. Stake requirements, active set sizes, and fee levels shift over time.
+</Note>
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Path</TableCell>
+    <TableCell header>Min hardware</TableCell>
+    <TableCell header>LPT needed</TableCell>
+    <TableCell header>Setup effort</TableCell>
+    <TableCell header>Best for</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Pool worker**</TableCell>
+    <TableCell>Any NVIDIA GPU</TableCell>
+    <TableCell>None</TableCell>
+    <TableCell>Low (1–4 hours)</TableCell>
+    <TableCell>Home miners with GPU but limited LPT. Earn transcoding fees without on-chain ops.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Solo video orchestrator**</TableCell>
+    <TableCell>NVIDIA GPU + reliable 100 Mbps+</TableCell>
+    <TableCell>Active set stake {/* REVIEW */}</TableCell>
+    <TableCell>High (8–16 hours)</TableCell>
+    <TableCell>Operators who can acquire LPT and want full control and LPT inflation rewards.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Solo AI orchestrator**</TableCell>
+    <TableCell>24 GB VRAM GPU</TableCell>
+    <TableCell>Minimal (enough to activate)</TableCell>
+    <TableCell>Medium (4–8 hours)</TableCell>
+    <TableCell>ML practitioners with high-VRAM GPU. Stake is less critical than capability.</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Pool operator**</TableCell>
+    <TableCell>Multiple GPUs + reliable infra</TableCell>
+    <TableCell>Active set stake + buffer</TableCell>
+    <TableCell>Very high</TableCell>
+    <TableCell>Infrastructure operators who want to onboard worker nodes and run the orchestrator layer.</TableCell>
+  </TableRow>
+</StyledTable>
+
+The pool worker path is **significantly lower barrier** than solo orchestrating. If you're new to Livepeer and have a GPU but limited LPT, start there. You can always migrate to solo orchestrating later after building understanding of the network.
+
+<CustomDivider />
+
+## AI vs transcoding: which to start with?
+
+If you have a high-VRAM GPU (24 GB+), AI inference is worth evaluating as a starting point — or in addition to transcoding.
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header></TableCell>
+    <TableCell header>Video transcoding</TableCell>
+    <TableCell header>AI inference</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Entry requirement**</TableCell>
+    <TableCell>Active set stake (high)</TableCell>
+    <TableCell>Capability registration (low)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Revenue stability**</TableCell>
+    <TableCell>Stable, continuous for active streams</TableCell>
+    <TableCell>Variable, demand-dependent</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**GPU dependency**</TableCell>
+    <TableCell>Recommended, not required</TableCell>
+    <TableCell>Required</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Competition level**</TableCell>
+    <TableCell>Highly competitive (mature network)</TableCell>
+    <TableCell>Growing but less saturated (as of 2026)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Revenue per job**</TableCell>
+    <TableCell>Low per segment</TableCell>
+    <TableCell>Higher per inference job</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Setup complexity**</TableCell>
+    <TableCell>Lower</TableCell>
+    <TableCell>Higher (aiModels.json, model downloads)</TableCell>
+  </TableRow>
+</StyledTable>
+
+AI inference is not a guaranteed shortcut to revenue — demand for specific pipelines varies, and running cold models earns very little. But the reduced stake barrier makes it accessible to new operators with capable hardware.
+
+<CustomDivider />
+
+## Useful tools before you commit
+
+Check these before setting up a node:
+
+- **[explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators)** — See current active orchestrators, their stake, fee volumes, and commission rates. Understand what you'd be competing against.
+- **[tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)** — Check which AI pipelines and models are currently being served by the network, and at what prices.
+- **[Livepeer Discord — #orchestrators](https://discord.gg/livepeer)** — Active orchestrators discuss current earnings, pricing strategy, and hardware. The best source for current market conditions.
+
+<CustomDivider />
+
+## Continue
+
+<CardGroup cols={2}>
+  <Card title="GPU and Hardware Reference" icon="microchip" href="/v2/orchestrators/guides/feasibility-and-hardware/hardware-reference">
+    Which GPU for which workloads, NVENC session caps, and production hardware checklist.
+  </Card>
+  <Card title="Benchmarking Your Setup" icon="gauge-high" href="/v2/orchestrators/guides/deployment-details/benchmarking">
+    Test your GPU's actual transcoding capacity with livepeer_bench before going live.
+  </Card>
+  <Card title="Setup Paths — Navigator" icon="map" href="/v2/orchestrators/guides/setup-paths/setup-navigator">
+    Decided? Choose your setup path: pool worker, solo orchestrator, or pool operator.
+  </Card>
+  <Card title="Earnings Explained" icon="chart-line" href="/v2/orchestrators/guides/staking-and-rewards/earnings">
+    Full mechanics of how ETH fees and LPT rewards flow to your wallet.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  Journey step: "Why run an orchestrator? What is the full case?"
+  The comprehensive rationale for operating an orchestrator - financial,
+  commercial, and governance/sovereignty dimensions combined.
+
+  CONTENT SHOULD INCLUDE:
+  - Financial case: earnings landscape (video fees, AI fees, inflation rewards)
+  - Hardware cost analysis by tier (consumer GPU, pro GPU, enterprise)
+  - Break-even analysis framework
+  - Comparison: solo operator vs pool worker vs pool operator
+  - AI as growth opportunity (emerging demand, higher margins)
+  - Sovereignty case: open infrastructure vs centralised cloud
+  - Governance weight: stake-proportional influence on protocol direction
+  - Risks and considerations (ETH price, competition, hardware depreciation)
+
+  SECTION HOME: Guides > Operator Considerations
+
+  JOURNEY POSITION:
+  1. Operator Rationale (this page) - "Why run an orchestrator?"
+  2. Business Case - "What does commercial orchestration look like?"
+  3. Protocol Influence - "How do I shape the protocol's future?"
+
+  CROSS-REFS:
+  - Concepts > Incentive Model - protocol-level economics
+  - Staking & Rewards > Earnings - detailed earnings mechanics
+  - Deployment Details > Requirements - what hardware do I need
+  - Workloads & AI > Job Types - what work is available
+  - Operator Considerations > Protocol Influence - sovereignty deep dive
+*/}

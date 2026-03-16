@@ -1,0 +1,311 @@
+---
+title: 'On-Chain Metrics and Monitoring'
+description: 'Monitor on-chain Gateway activity - TicketBroker contract events, Arbiscan watchlists, deposit and reserve verification, gas price impact, and deposit depletion tracking on Arbitrum.'
+sidebarTitle: 'On-Chain Metrics'
+keywords:
+  - livepeer
+  - gateway
+  - arbitrum
+  - on-chain
+  - ticketbroker
+  - arbiscan
+  - contract
+  - deposit
+  - reserve
+  - gas
+  - probabilistic micropayments
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: gateway-operator
+purpose: operations
+status: current
+lastVerified: '2026-03-15'
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- ~~Mermaid diagrams use theme colours~~ (N/A)
+- ~~Fontawesome icons are used on accordions and tabs~~
+- ~~Tables use StyledTable component~~
+- ~~No em-dashes are used (instead use standard -)~~
+- UK spelling is used
+- ~~Headers are concise and technical~~
+- ~~CustomDivider is used~~
+- Placeholders for Media & Video Resources are in comments with a TODO for a human. (N/A)
+- ~~REVIEW flags are in JSX flags for a human.~~
+Human:
+- Scoping Note updated to on-chain operational mode (includes AI)
+- Broken link fund-your-gateway → funding-guide
+- Voice converted to entity-led
+- Em/en dashes removed
+- PM primer tightened to brief context
+- Steps → StyledSteps component
+- BROADCASTER STATS legacy note added
+*/}
+
+import { CustomDivider } from "/snippets/components/primitives/divider.jsx"
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+
+<Note>
+  This page applies to **Gateways running in on-chain operational mode** (<Badge color="blue">Video</Badge> <Badge color="purple">AI</Badge> <Badge color="green">Dual</Badge>). Off-chain Gateways do not interact with Arbitrum contracts and can skip this page.
+</Note>
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+On-chain metrics show what is actually happening at the contract layer on Arbitrum
+- where ETH is moving,
+- which tickets Orchestrators are redeeming, and
+- whether gas costs are affecting the payment system.
+
+The Gateway's deposit and reserve on the `TicketBroker` contract fund all PM ticket redemptions.
+
+When the deposit is exhausted:
+- Orchestrators reject tickets,
+- job routing stops **silently**, and
+- Prometheus shows `livepeer_gateway_deposit` at zero.
+
+Arbiscan can help debug the cause (which Orchestrators redeemed, how much, when).
+
+For full context on PM mechanics, see <LinkArrow href="/v2/gateways/guides/payments-and-pricing/payment-guide" label="Payments Guide" newline={false} />.
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Arbiscan
+
+[Arbiscan](https://arbiscan.io) is the block explorer for Arbitrum One. For on-chain Gateway operators, it is the primary tool for viewing transactions, watching TicketBroker redemption events, monitoring deposit changes, and checking gas price history.
+
+### Find the Gateway
+
+The Gateway's ETH address is shown in `livepeer_cli` **Option 1 (Get node status) **under **ETH Account**.
+
+Navigate to:
+
+``` icon="terminal"
+https://arbiscan.io/address/<GATEWAY_ETH_ADDRESS>
+```
+
+Key Arbiscan tabs:
+
+<StyledTable>
+  <TableRow header>
+    <TableCell header>Tab</TableCell>
+    <TableCell header>What it shows</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Transactions**</TableCell>
+    <TableCell>All outgoing transactions (bridging, deposits)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Internal Txns**</TableCell>
+    <TableCell>Contract-initiated transfers - ticket redemptions appear here</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Token Transfers**</TableCell>
+    <TableCell>ERC-20 token movements (LPT bridging)</TableCell>
+  </TableRow>
+</StyledTable>
+
+### Contract Events
+
+The `TicketBroker` contract emits events for every deposit, reserve, and redemption action:
+<StyledTable>
+  <TableRow header>
+    <TableCell header>Event</TableCell>
+    <TableCell header>Meaning</TableCell>
+    <TableCell header>When it fires</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`FundDeposit`</TableCell>
+    <TableCell>ETH added to Gateway deposit</TableCell>
+    <TableCell>livepeer_cli Option 11 (Deposit broadcasting funds)</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`FundReserve`</TableCell>
+    <TableCell>ETH added to reserve</TableCell>
+    <TableCell>Reserve set during deposit flow</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`RedeemWinningTicket`</TableCell>
+    <TableCell>Orchestrator redeemed a winning ticket</TableCell>
+    <TableCell>Each winning ticket redemption</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`Unlock`</TableCell>
+    <TableCell>Withdrawal unlock period started</TableCell>
+    <TableCell>Unlock called on deposited funds</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`Withdraw`</TableCell>
+    <TableCell>Funds withdrawn after unlock period</TableCell>
+    <TableCell>Withdrawal after unlock expires</TableCell>
+  </TableRow>
+</StyledTable>
+
+To find redemptions against a Gateway: filter Arbiscan events by the TicketBroker contract address, then filter by `RedeemWinningTicket` events where the `sender` field matches the Gateway address.
+For the current TicketBroker address, see <LinkArrow href="/v2/gateways/resources/technical/contract-addresses" label="Contract Addresses" newline={false} />.
+
+### Watchlist Alerts
+
+Arbiscan allows email alerts when a watched address is involved in a transaction. This is the fastest way to detect unexpected deposit activity.
+
+1. Create an Arbiscan account at [arbiscan.io](https://arbiscan.io)
+2. Navigate to **My Account > Watch List > Add Address**
+3. Enter the Gateway ETH address
+4. Select notification triggers: "Transaction sent to" and "Transaction sent from"
+5. Enable email notifications
+
+An email arrives each time a ticket redemption occurs against the deposit, allowing early detection of unexpected drain rates.
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Deposit Verification
+
+Prometheus shows the deposit via `livepeer_gateway_deposit`, but the [TicketBroker]("https://arbiscan.io/address/0xea1b0F6c8D158328a6e3D3F924B86A759F41465c") contract can also be queried directly to verify node-reported values against chain state.
+
+### Status: livepeer_cli
+
+```bash icon="terminal" CLI: Get Node Status
+livepeer_cli -host 127.0.0.1 -http 5935
+# Select Option 1: Get node status
+# Look for: BROADCASTER STATS > Deposit, Reserve
+```
+
+The CLI uses the legacy term "Broadcaster" for Gateway.
+
+### Status: Arbitrum RPC
+
+Query the [TicketBroker]("https://arbiscan.io/address/0xea1b0F6c8D158328a6e3D3F924B86A759F41465c") contract directly via **JSON-RPC** to get deposit and reserve independently of the running node:
+```bash icon="terminal" CLI: Get Node Status
+# Encode call to getSenderInfo(<gateway_address>)
+# Function selector: first 4 bytes of keccak256("getSenderInfo(address)")
+# Advanced technique - see Arbitrum/Solidity docs for ABI encoding
+
+curl -X POST https://arb1.arbitrum.io/rpc \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "eth_call",
+    "params": [{
+      "to": "<TICKET_BROKER_CONTRACT_ADDRESS>",
+      "data": "<ENCODED_CALL>"
+    }, "latest"],
+    "id": 1
+  }'
+```
+
+For most operators, `livepeer_cli` is sufficient. Direct contract queries are useful when the node is offline or when verifying that node-reported state matches chain state.
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Gas Monitoring
+
+<Tip>
+    Arbitrum gas fees are generally 90% to over 99% cheaper than Ethereum mainnet, with typical transactions costing only a few cents (approx. $0.01–$0.30).
+    <br/><br/> As a Layer 2 rollup, Arbitrum bundles transactions, significantly reducing costs compared to the high fees often seen on Ethereum, especially during congestion
+
+    Gas Prices are not generally a cause of error since the mirgration to Arbitrum from Ethereum Mainnet.
+</Tip>
+
+Arbitrum One gas prices can fluctuate.
+When gas is expensive, Orchestrators pay more to redeem winning tickets - this cost is reflected in their pricing to Gateways. High gas periods can cause Orchestrators to increase prices above the `-maxPricePerUnit` cap, leading to routing failures even when the deposit is healthy.
+
+### Current Gas Price
+
+```bash icon="terminal" Query Gas Price
+curl -X POST https://arb1.arbitrum.io/rpc \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"eth_gasPrice","params":[],"id":1}'
+```
+
+The response is in wei. Convert to Gwei (divide by 1e9) for a human-readable figure.
+
+### Prometheus gas metric
+
+```promql icon="gauge-high" Query Gas Price
+# Current suggested gas price from node's oracle (in wei)
+livepeer_suggested_gas_price
+
+# Convert to Gwei
+livepeer_suggested_gas_price / 1e9
+```
+
+Alert when `livepeer_suggested_gas_price` spikes significantly above its baseline - this is a leading indicator that Orchestrators may raise prices above the cap, causing job routing to slow.
+
+### Gas spike response
+
+During sustained high-gas periods:
+
+1. **Raise `-maxPricePerUnit` temporarily** to keep jobs routing to Orchestrators absorbing higher redemption costs
+2. **Monitor `livepeer_payment_create_errors`** - increases during gas spikes indicate ticket-related failures
+3. **Use USD-mode pricing** (`-priceFeedAddr`) for stable USD-denominated caps that auto-adjust with ETH price. See <LinkArrow href="/v2/gateways/guides/payments-and-pricing/pricing-strategy" label="Pricing Strategy" newline={false} />
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Depletion Tracking
+
+Understanding how fast the deposit depletes helps plan top-ups before service interruptions.
+
+### From Prometheus
+
+```promql icon="terminal"
+# Deposit depletion rate (wei per second, negative = spending)
+deriv(livepeer_gateway_deposit[1h])
+
+# Estimated time to deposit exhaustion at current rate (seconds)
+livepeer_gateway_deposit /
+  abs(deriv(livepeer_gateway_deposit[1h]))
+```
+
+### From Arbiscan
+
+Sort `RedeemWinningTicket` events by timestamp to see redemption frequency and value patterns. Unusually large or frequent redemptions from a single Orchestrator may indicate that Orchestrator is experiencing high gas costs, or in a worst case, receiving a disproportionate share of winning tickets.
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Diagnostic Checklist
+
+If the Gateway stops routing jobs without clear error messages, work through this checklist in order:
+
+<StyledSteps iconColor="#2d9a67" titleColor="var(--accent)">
+  <StyledStep title="Check Prometheus deposit" icon="gauge-high">
+    `livepeer_gateway_deposit` - if zero, top up immediately via <LinkArrow href="/v2/gateways/guides/payments-and-pricing/funding-guide" label="Funding Guide" newline={false} />. If non-zero, continue.
+  </StyledStep>
+  <StyledStep title="Check livepeer_cli" icon="terminal">
+    Option 1: Get node status. Under BROADCASTER STATS (legacy term for Gateway), both Deposit and Reserve must be non-zero.
+  </StyledStep>
+  <StyledStep title="Check Arbiscan redemptions" icon="magnifying-glass">
+    Look for a burst of `RedeemWinningTicket` events in the last 30-60 minutes. A sudden burst may have drained the deposit faster than expected.
+  </StyledStep>
+  <StyledStep title="Test Arbitrum RPC" icon="plug">
+    `curl -X POST <ethUrl> -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'` - if this fails, the RPC is the problem, not the deposit.
+  </StyledStep>
+  <StyledStep title="Check gas price" icon="gas-pump">
+    `livepeer_suggested_gas_price` - if gas spiked, Orchestrators may have raised prices above `-maxPricePerUnit`.
+  </StyledStep>
+  <StyledStep title="Verify Orchestrators" icon="server">
+    Visit [Livepeer Explorer](https://explorer.livepeer.org) to confirm the configured Orchestrators are active.
+  </StyledStep>
+</StyledSteps>
+
+<CustomDivider style={{margin: "0 0 -2rem 0"}} />
+
+## Related Pages
+
+<CardGroup cols={3}>
+  <Card title="Contract Addresses" icon="file-contract" href="/v2/gateways/resources/technical/contract-addresses">
+    TicketBroker, BondingManager, and all Livepeer contracts on Arbitrum.
+  </Card>
+  <Card title="Funding Guide" icon="coins" href="/v2/gateways/guides/payments-and-pricing/funding-guide">
+    Top up deposit and reserve via livepeer_cli.
+  </Card>
+  <Card title="Monitoring Setup" icon="chart-line" href="/v2/gateways/guides/monitoring-and-tooling/monitoring-setup">
+    Prometheus + Grafana for node-level metrics.
+  </Card>
+</CardGroup>

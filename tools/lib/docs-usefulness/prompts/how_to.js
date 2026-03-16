@@ -1,4 +1,59 @@
 'use strict';
+/**
+ * @script            prompts/how_to
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement LLM prompt template for how_to page-type usefulness evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { getPrompt } = require('../lib/docs-usefulness/prompts/how_to');
+ */
+/**
+ * @script            prompts/how_to
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement LLM prompt template for how_to page-type usefulness evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { getPrompt } = require('../lib/docs-usefulness/prompts/how_to');
+ */
+/**
+ * @script            prompts/how_to
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement LLM prompt template for how_to page-type usefulness evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { getPrompt } = require('../lib/docs-usefulness/prompts/how_to');
+ */
+/**
+ * @script            prompts/how_to
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement LLM prompt template for how_to page-type usefulness evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { getPrompt } = require('../lib/docs-usefulness/prompts/how_to');
+ */
+/**
+ * @script            prompts/how_to
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement LLM prompt template for how_to page-type usefulness evaluation.
+ * @pipeline          indirect -- library module
+ * @usage             const { getPrompt } = require('../lib/docs-usefulness/prompts/how_to');
+ */
 
 const SYSTEM_BASE = 'You are a documentation quality evaluator for Livepeer docs. Return ONLY JSON: {"score":0-100,"pass":true/false,"reasoning":"one sentence"}.';
 

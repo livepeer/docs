@@ -1,0 +1,81 @@
+---
+title: Livestream from browser
+description: >-
+  Broadcast live from the browser using WebRTC and the Livepeer Broadcast
+  component or custom WHIP.
+keywords:
+  - livepeer
+  - docs
+  - solutions
+  - livepeer studio
+  - livestream
+  - livestream from browser
+  - from
+  - browser
+  - broadcast
+  - live
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+---
+
+In-browser broadcasting sends live video from the user's device to Livepeer over **WebRTC** (e.g. WHIP), without OBS. It is optimized for low latency by default.
+
+## Flow
+
+1. Create a stream via the API and get a **stream key**.
+2. Open a WebRTC connection to Livepeer ingest using that key (STUN/TURN required).
+3. Capture camera, microphone, and/or screen in the browser and send over WebRTC.
+4. Viewers watch via the stream **playback ID** in the [Livepeer Player](../player).
+
+## Using the Broadcast component
+
+With `@livepeer/react`, use the Broadcast primitives and the stream ingest URL:
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+import { getIngest } from "@livepeer/react/external";
+
+const streamKey = "your-stream-key";
+
+export function DemoBroadcast() {
+  return (
+    <Broadcast.Root ingestUrl={getIngest(streamKey)}>
+      <Broadcast.Container>
+        <Broadcast.Video title="Live stream" />
+        <Broadcast.Controls>
+          <Broadcast.EnabledTrigger />
+        </Broadcast.Controls>
+      </Broadcast.Container>
+    </Broadcast.Root>
+  );
+}
+```
+
+## Embeddable broadcast
+
+```html
+<iframe
+  src="https://lvpr.tv/broadcast/STREAM_KEY"
+  allow="autoplay; camera; microphone; display-capture"
+  frameborder="0"
+></iframe>
+```
+
+Replace `STREAM_KEY` with your stream key.
+
+## Custom WebRTC (WHIP)
+
+1. Send `HEAD` to `https://livepeer.studio/webrtc/{STREAM_KEY}` and follow the `Location` redirect for the ingest URL.
+2. Create `RTCPeerConnection` with ICE servers from that host (STUN/TURN).
+3. Create SDP offer, gather ICE, POST offer to ingest URL, set answer as remote description.
+4. Add media tracks and send. End of broadcast is detected when packets stop; no DELETE required.
+
+<Warning>
+ STUN/TURN are required for in-browser broadcasting. The Broadcast component and lvpr.tv broadcast page use Livepeer's servers.
+</Warning>
+
+See [Playback](playback-livestream) and [Optimise latency](optimize-latency).

@@ -1,0 +1,150 @@
+---
+title: Developer Integration Guide
+description: >-
+  How to integrate Streamplace into decentralized social apps, Web3 platforms,
+  and Livepeer-powered video pipelines.
+keywords:
+  - livepeer
+  - developers
+  - developer platforms
+  - streamplace
+  - streamplace integration
+  - developer
+  - integration
+  - guide
+  - integrate
+  - decentralized
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+---
+
+
+
+
+---
+
+# Developer Integration Guide
+
+This guide explains how developers can integrate Streamplace into their decentralized applications. Streamplace provides a complete **ingest → provenance → transcoding → distribution** pipeline that plugs directly into the Livepeer Network.
+
+You get:
+
+- livestreaming
+- metadata & rights management
+- provenance (C2PA + Ethereum signatures)
+- seamless transcoding through Livepeer
+- HLS/WebRTC playback
+
+---
+
+# 🚀 Quick Start
+
+## 1. Install the Streamplace Node
+
+```bash
+curl -s https://get.stream.place/install | bash
+```
+
+## 2. Start a Livestream
+
+```bash
+streamplace stream start --source webcam
+```
+
+## 3. Add Metadata
+
+Configure content rights, warnings, and distribution policies:
+
+```json
+{
+  "contentRights": "CC-BY-4.0",
+  "contentWarnings": ["flashing lights"],
+  "distributionPolicy": {
+    "retainSegments": true,
+    "allowSyndication": true
+  }
+}
+```
+
+## 4. Use the Streamplace SDK
+
+```ts
+import { StreamplaceClient } from '@streamplace/sdk'
+
+const sp = new StreamplaceClient()
+const stream = await sp.createStream()
+```
+
+---
+
+# 🧩 How Streamplace Integrates With Livepeer
+
+Streamplace does **not** perform transcoding itself. Instead, it:
+
+1. Segments and signs each MP4 chunk (1s)
+2. Embeds metadata + provenance
+3. Sends segments to Livepeer broadcasters
+4. Orchestrators on the Livepeer Network handle GPU transcoding
+5. Streamplace rebuilds manifests and prepares playback outputs
+
+This offloads all compute-heavy work to the **decentralized GPU market**.
+
+---
+
+# 📦 Playback Integration
+
+Streamplace provides playback endpoints:
+
+- **HLS manifests**
+- **WebRTC sessions**
+
+Players can:
+
+- verify C2PA manifests
+- verify Ethereum signatures
+- display rights/warnings automatically
+
+Example UI component (React):
+
+```jsx
+<StreamplacePlayer src={manifestUrl} showProvenance={true} />
+```
+
+---
+
+# 🔧 Integration Patterns
+
+## 🤝 1. Social Networks (AT Protocol, Fediverse)
+
+- user livestream creation
+- automatic rights/warning surfacing
+- provenance-aware feeds
+
+## 🎥 2. Creator Platforms
+
+- per-video ownership proofs
+- automated licensing and credit display
+
+## 📰 3. Journalism & Fact-Checking
+
+- verifiable provenance for every segment
+- tamper detection built into playback
+
+## 🏛️ 4. Community-Run Video Platforms
+
+- self-hosted node + distributed moderation
+- metadata-driven distribution rules
+
+---
+
+# 📚 Related Pages
+
+- [Streamplace Overview](/solutions/streamplace/overview)
+- [How Streamplace Works](/solutions/streamplace/introduction/streamplace-guide)
+- [Architecture](/solutions/streamplace/introduction/streamplace-architecture)
+- [Provenance & Metadata](/solutions/streamplace/introduction/streamplace-provenance)
+- [SPE Funding Model](/solutions/streamplace/introduction/streamplace-funding-model)

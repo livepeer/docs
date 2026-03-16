@@ -7,7 +7,7 @@
  * @owner             docs
  * @needs             R-R27, R-R30
  * @purpose-statement Cross-agent packager — bundles audit reports and repo state into agent-consumable packages
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
+ * @pipeline          manual — not yet in pipeline
  * @usage             node tools/scripts/cross-agent-packager.js [flags]
  */
 
@@ -109,6 +109,14 @@ function pickPipelineSkills(catalog, manifest) {
     .filter((entry) => entry.skill);
 }
 
+function pickReferenceSkills(catalog, manifest) {
+  const pipelineIds = new Set(
+    (Array.isArray(manifest.pipeline) ? manifest.pipeline : []).map((e) => e.id)
+  );
+
+  return (catalog.skills || []).filter((skill) => !pipelineIds.has(skill.id));
+}
+
 function buildTopReadme(pipelineSkills) {
   const lines = [];
   lines.push('# Agent Packs');
@@ -130,7 +138,7 @@ function buildTopReadme(pipelineSkills) {
   return `${lines.join('\n')}\n`;
 }
 
-function writeCodexPack(baseDirAbs, pipelineSkills, catalog, manifest) {
+function writeCodexPack(baseDirAbs, pipelineSkills, referenceSkills, catalog, manifest) {
   const packDir = path.join(baseDirAbs, 'codex');
   ensureDir(packDir);
 
@@ -147,6 +155,13 @@ function writeCodexPack(baseDirAbs, pipelineSkills, catalog, manifest) {
       severity_model: entry.skill.severity_model,
       autofix_mode: entry.skill.autofix_mode
     })),
+    reference_skills: referenceSkills.map((skill) => ({
+      id: skill.id,
+      goal: skill.goal,
+      commands: skill.commands,
+      inputs: skill.inputs,
+      outputs: skill.outputs
+    })),
     catalog_version: catalog.version,
     manifest_version: manifest.version
   };
@@ -157,7 +172,7 @@ function writeCodexPack(baseDirAbs, pipelineSkills, catalog, manifest) {
   return [toPosix(path.relative(REPO_ROOT, manifestPath))];
 }
 
-function buildRulePackMarkdown(agentName, pipelineSkills) {
+function buildRulePackMarkdown(agentName, pipelineSkills, referenceSkills) {
   const lines = [];
   lines.push(`# ${agentName} Repo Audit Pack`);
   lines.push('');
@@ -181,37 +196,68 @@ function buildRulePackMarkdown(agentName, pipelineSkills) {
     lines.push('');
   });
 
+  if (referenceSkills && referenceSkills.length > 0) {
+    lines.push('---');
+    lines.push('');
+    lines.push('## Reference Skills');
+    lines.push('');
+    lines.push('These skills are not part of the audit pipeline but provide standards and guidance for authoring and review.');
+    lines.push('');
+
+    referenceSkills.forEach((skill) => {
+      lines.push(`### ${skill.id}`);
+      lines.push('');
+      lines.push(`- Goal: ${skill.goal}`);
+      if (skill.commands && skill.commands.length > 0) {
+        lines.push('- Access:');
+        skill.commands.forEach((command) => {
+          lines.push(`  - \`${command.run}\``);
+        });
+      }
+      if (skill.inputs && skill.inputs.length > 0) {
+        lines.push(`- Inputs: ${skill.inputs.join(', ')}`);
+      }
+      if (skill.outputs && skill.outputs.length > 0) {
+        lines.push('- Outputs:');
+        skill.outputs.forEach((output) => {
+          lines.push(`  - \`${output}\``);
+        });
+      }
+      lines.push('');
+    });
+  }
+
   lines.push('Run source: `node tools/scripts/cross-agent-packager.js --agent-pack all`');
   lines.push('');
   return `${lines.join('\n')}\n`;
 }
 
-function writeCursorPack(baseDirAbs, pipelineSkills) {
+function writeCursorPack(baseDirAbs, pipelineSkills, referenceSkills) {
   const packDir = path.join(baseDirAbs, 'cursor');
   ensureDir(packDir);
 
   const rulesPath = path.join(packDir, 'rules.md');
-  fs.writeFileSync(rulesPath, buildRulePackMarkdown('Cursor', pipelineSkills));
+  fs.writeFileSync(rulesPath, buildRulePackMarkdown('Cursor', pipelineSkills, referenceSkills));
 
   return [toPosix(path.relative(REPO_ROOT, rulesPath))];
 }
 
-function writeClaudePack(baseDirAbs, pipelineSkills) {
+function writeClaudePack(baseDirAbs, pipelineSkills, referenceSkills) {
   const packDir = path.join(baseDirAbs, 'claude');
   ensureDir(packDir);
 
   const claudePath = path.join(packDir, 'CLAUDE.md');
-  fs.writeFileSync(claudePath, buildRulePackMarkdown('Claude Code', pipelineSkills));
+  fs.writeFileSync(claudePath, buildRulePackMarkdown('Claude Code', pipelineSkills, referenceSkills));
 
   return [toPosix(path.relative(REPO_ROOT, claudePath))];
 }
 
-function writeWindsurfPack(baseDirAbs, pipelineSkills) {
+function writeWindsurfPack(baseDirAbs, pipelineSkills, referenceSkills) {
   const packDir = path.join(baseDirAbs, 'windsurf');
   ensureDir(packDir);
 
   const rulesPath = path.join(packDir, 'rules.md');
-  fs.writeFileSync(rulesPath, buildRulePackMarkdown('Windsurf', pipelineSkills));
+  fs.writeFileSync(rulesPath, buildRulePackMarkdown('Windsurf', pipelineSkills, referenceSkills));
 
   return [toPosix(path.relative(REPO_ROOT, rulesPath))];
 }
@@ -221,6 +267,7 @@ function main() {
   const catalog = readJson(args.catalogPath);
   const manifest = readJson(args.manifestPath);
   const pipelineSkills = pickPipelineSkills(catalog, manifest);
+  const referenceSkills = pickReferenceSkills(catalog, manifest);
 
   const outputDirAbs = path.resolve(REPO_ROOT, args.outputDir);
   ensureDir(outputDirAbs);
@@ -228,16 +275,16 @@ function main() {
   const generated = [];
 
   if (args.agentPack === 'all' || args.agentPack === 'codex') {
-    generated.push(...writeCodexPack(outputDirAbs, pipelineSkills, catalog, manifest));
+    generated.push(...writeCodexPack(outputDirAbs, pipelineSkills, referenceSkills, catalog, manifest));
   }
   if (args.agentPack === 'all' || args.agentPack === 'cursor') {
-    generated.push(...writeCursorPack(outputDirAbs, pipelineSkills));
+    generated.push(...writeCursorPack(outputDirAbs, pipelineSkills, referenceSkills));
   }
   if (args.agentPack === 'all' || args.agentPack === 'claude') {
-    generated.push(...writeClaudePack(outputDirAbs, pipelineSkills));
+    generated.push(...writeClaudePack(outputDirAbs, pipelineSkills, referenceSkills));
   }
   if (args.agentPack === 'all' || args.agentPack === 'windsurf') {
-    generated.push(...writeWindsurfPack(outputDirAbs, pipelineSkills));
+    generated.push(...writeWindsurfPack(outputDirAbs, pipelineSkills, referenceSkills));
   }
 
   const readmePath = path.join(outputDirAbs, 'README.md');

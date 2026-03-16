@@ -1,12 +1,32 @@
 ---
-sidebarTitle: 'Snippets Inventory'
-title: 'Snippets Folder Inventory'
-description: 'This page provides a comprehensive inventory of all files and folders in the `/snippets` directory. The snippets folder is the central location for all custom components, data, scripts, and assets used in the Livepeer documentation.'
-keywords: ["livepeer", "resources", "documentation guide", "snippets", "inventory", "components", "data", "scripts", "automations"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+title: Snippets Folder Inventory
+sidebarTitle: Snippets Inventory
+description: >-
+  This page provides a comprehensive inventory of all files and folders in the
+  `/snippets` directory. The snippets folder is the central location for all
+  custom components, data, scripts, and assets used in the Livepeer
+  documentation.
+keywords:
+  - livepeer
+  - resources
+  - documentation guide
+  - snippets
+  - inventory
+  - components
+  - data
+  - scripts
+  - automations
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: everyone
+pageType: reference
+purpose: reference
+status: current
+lastVerified: 2026-03-12
 ---
-
-import { CustomDivider } from "/snippets/components/primitives/divider.jsx";
 
 ## Overview
 
@@ -15,6 +35,7 @@ The snippets folder contains:
 - **Components** - Custom React/JSX components organized by purpose
 - **Data** - Reusable data files (code strings, variables, API specs)
 - **Pages** - Modular MDX content imported into main documentation pages
+- **Templates** - Copy-ready MDX page and block scaffolds for contributors
 - **Scripts** - Automation and generation scripts
 - **Automations** - Data fetching and processing automation files
 - **Assets** - Images, logos, media files, and static assets
@@ -43,36 +64,23 @@ Custom React/JSX components organized by purpose:
 - `quad-grid.jsx` - QuadGrid layout component
 - `text.jsx` - Text layout components (AccordionLayout)
 
-#### Display (`/snippets/components/display/`)
-- `video.jsx` - Video components (YouTubeVideo, CardVideo, LinkedInEmbed)
-- `image.jsx` - Image components (Image, LinkImage)
-- `embed.jsx` - Embed components (MarkdownEmbed, EmbedMarkdown)
-- `zoomable-diagram.jsx` - ScrollableDiagram component
-- `quote.jsx` - Quote components (Quote, FrameQuote)
-- `frame-mode.jsx` - Frame mode heading components (PageHeader, H1-H6, P, Divider)
-- `showcase-cards.jsx` - ShowcaseCards component
-- `social-links.jsx` - SocialLinks component
-- `card-carousel.jsx` - CardCarousel component
-
 #### Content (`/snippets/components/content/`)
 - `code.jsx` - Code display components (CustomCodeBlock, CodeComponent, ComplexCodeBlock)
+- `embed.jsx` - Embed components (MarkdownEmbed, EmbedMarkdown, TwitterTimeline)
 - `external-content.jsx` - ExternalContent component for loading external docs
-- `release.jsx` - LatestVersion component
-- `response-field.jsx` - API response field components (ResponseFieldGroup, ValueResponseField, etc.)
+- `quote.jsx` - Quote components (Quote, FrameQuote)
+- `responseField.jsx` - API response field components (ResponseFieldGroup, ValueResponseField, etc.)
 
-#### Integrations (`/snippets/components/integrations/`)
+#### Data (`/snippets/components/data/`)
 - `coingecko.jsx` - CoinGeckoExchanges component
+- `data.jsx` - Blog, Discord, Luma, and forum data layouts
+- `release.jsx` - LatestVersion component
 
-#### Domain (`/snippets/components/domain/`)
-Domain-specific components organized by documentation section:
-
-- `04_GATEWAYS/` - Gateway-specific components
-  - `callouts.jsx` - Gateway warning/note callouts
-  - `quickstartTabs.jsx` - Gateway quickstart UI components
-- `SHARED/` - Shared components across domains
-  - `HeroGif.jsx` - Starfield animation component
-  - `Portals.jsx` - Portal page layout components
-  - `previewCallouts.jsx` - Preview/coming soon callouts
+#### Page Structure (`/snippets/components/page-structure/`)
+- `customCards.jsx` - Custom card shells for portal pages
+- `frameMode.jsx` - Frame mode heading components (PageHeader, H1-H6, P, Divider)
+- `heroGif.jsx` - Starfield animation component
+- `portals.jsx` - Portal page layout components
 
 ### Data (`/snippets/data/`)
 
@@ -103,11 +111,22 @@ Modular MDX content imported into main documentation pages:
 - `05_GPUS/` - GPU-related content
 - `08_SHARED/` - Shared page content
 
+### Templates (`/snippets/templates/`)
+
+Copy-ready authoring scaffolds for contributors:
+
+- `README.mdx` - Entry point for the template catalog
+- `pages/faq-page.mdx` - FAQ page scaffold with `AccordionGroup`
+- `pages/troubleshooting-page.mdx` - Troubleshooting page scaffold with `Symptom`, `Cause`, `Fix`, and `Verify`
+- `pages/openapi-endpoint-page.mdx` - OpenAPI endpoint scaffold for `openapi: METHOD /path` pages
+- `blocks/related-pages-cta.mdx` - Reusable related-pages CTA block
+- `blocks/comparison-matrix.mdx` - Reusable comparison and decision matrix block
+
 ### Scripts (`/tools/scripts/snippets/`)
 
 Automation and generation scripts:
 
-- `update-component-library.sh` - Auto-updates component library listing
+- `generate-component-docs.js` - Generates the published component-library pages from governed component metadata
 - `generate-api-docs.sh` - Generates API documentation from OpenAPI specs
 - `generate-seo.js` - Generates SEO metadata
 - `fetch-external-docs.sh` - Fetches external documentation
@@ -143,7 +162,7 @@ Static assets including images, logos, and media:
 
 ### Styles (`/snippets/styles/`)
 
-- `legacy theme helper module` - Deprecated theme styling definitions; use CSS custom properties in the global stylesheet instead
+- `themeStyles` `.jsx` - Theme styling definitions (deprecated - use CSS Custom Properties in `style.css` instead)
 
 ### SnippetsWiki (`/snippets/snippetsWiki/`)
 
@@ -151,16 +170,17 @@ Internal documentation about the snippets system:
 
 - `index.mdx` - Overview of snippets folder
 - `mintlify-behaviour.mdx` - Mintlify-specific patterns and gotchas
-- `theme-colors.mdx` - Theme colour system documentation
+- `theme-colors.mdx` - Theme color system documentation
 - `componentLibrary/` - Component library documentation
   - `index.mdx` - Auto-generated component structure (updated by script)
   - `examples/` - Component examples
 
 ## File Count Summary
 
-- **Components**: ~50+ JSX/TSX files across 6 categories
+- **Components**: 37 JSX files across 5 active categories
 - **Data Files**: ~20+ JSX/MDX files
 - **Page Modules**: ~20+ MDX files
+- **Templates**: 6 MDX scaffolds
 - **Scripts**: ~10+ shell/JS scripts
 - **Automations**: ~15+ JSX/JSON files
 - **Assets**: 100+ image/media files
@@ -172,7 +192,7 @@ Internal documentation about the snippets system:
 
 ```jsx
 // Import from components
-import { YouTubeVideo } from "/snippets/components/display/video.jsx";
+import { YouTubeVideo } from "/snippets/components/content/video.jsx";
 import { GotoCard } from "/snippets/components/primitives/links.jsx";
 import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
 ```
@@ -181,7 +201,7 @@ import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
 
 ```jsx
 // Import data files
-import gatewayHrefs from "/snippets/data/gateways/hrefs.jsx";
+import { GatewaySteps } from "/snippets/data/gateways.jsx";
 import { latestVersion } from "/snippets/automations/globals/globals.jsx";
 ```
 
@@ -189,27 +209,27 @@ import { latestVersion } from "/snippets/automations/globals/globals.jsx";
 
 ```jsx
 // Import MDX page modules
-import ProtocolConcept from "/snippets/pages/01_ABOUT/concepts/protocol.mdx";
+import AboutOverview from "/snippets/pages/01_ABOUT/concepts/overview.mdx";
 ```
 
 ## Automation
 
 The component library listing is automated:
 
-**Script:** `tools/scripts/snippets/update-component-library.sh`
+**Script:** `tools/scripts/generate-component-docs.js`
 
-**Output:** `snippets/snippetsWiki/componentLibrary/index.mdx`
+**Output:** `v2/resources/documentation-guide/component-library/*.mdx`
 
 **Usage:**
 ```bash
-./tools/scripts/snippets/update-component-library.sh
+npm --prefix tools run components:docs
 ```
 
-This script automatically generates a Tree structure listing all components in `snippets/components/`.
+This script generates the published component-library pages from the governed component registry and localized scaffolds.
 
 ## Related Resources
 
-- [Component Library](./component-library) - Detailed component reference
+- [Component Library](./component-library/overview) - Detailed component reference
 - [Style Guide](./style-guide) - Styling and Mintlify gotchas
 - [Snippets Wiki](/snippets/snippetsWiki/index) - Internal snippets documentation
 - [Mintlify Behavior Guide](/snippets/snippetsWiki/mintlify-behaviour) - Mintlify-specific patterns

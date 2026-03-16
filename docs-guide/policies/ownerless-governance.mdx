@@ -1,0 +1,125 @@
+---
+title: Ownerless Governance
+sidebarTitle: Ownerless Governance
+description: >-
+  Canonical ownerless governance contract for repository surfaces that must
+  self-describe, self-validate, and provide exact repair paths for OSS
+  contributors and AI agents.
+audience: developer
+pageType: reference
+purpose: reference
+status: current
+lastVerified: 2026-03-16
+keywords:
+  - livepeer
+  - ownerless governance
+  - canonical source
+  - repair path
+  - self-governance
+  - oss
+  - ai agents
+---
+
+# Ownerless Governance
+
+This document is the canonical ownerless governance contract for this repository. It defines how repo-tracked governance works without relying on a standing human owner, maintainer team, or org membership to interpret or repair routine failures.
+
+## Core Rule
+
+Every governed surface must have:
+
+1. one canonical source
+2. one deterministic validator
+3. one exact repair path
+4. one primary gate layer
+
+If any of those are missing, the surface is not ownerless-ready and must remain advisory.
+
+## Vocabulary
+
+| Term | Meaning |
+| --- | --- |
+| Canonical source | The file or path that defines truth for a governed surface. |
+| Derived output | A generated or synced artifact that must match its canonical source. |
+| Repair command | The exact repo-backed command that repairs deterministic drift or restores policy compliance. |
+| Gate layer | The single primary enforcement layer for a surface: pre-commit, changed-file PR CI, scheduled CI, or manual/on-demand. |
+| Rollout state | The current posture of a surface: advisory, autofix, blocking, or migrating. |
+| Domain | Taxonomy metadata that classifies a governed artifact by repo concern. It is not a reviewer, person, team, or approval authority. |
+| Lock holder | The current actor holding a local execution lock for codex isolation. This is task state, not repository authority. |
+| Legacy review map | A historical repository file that may be archived for context. It is never a canonical source, gate layer, or approval authority. |
+
+## Gate Ownership Rules
+
+Each governed surface must declare exactly one primary gate layer in `tools/config/ownerless-governance-surfaces.json`.
+
+Allowed gate layers:
+
+- `pre-commit`
+- `pr-changed`
+- `scheduled`
+- `manual`
+
+Secondary checks may exist, but the manifest must name only one primary layer.
+
+## Repair Path Rules
+
+- Every blocking failure must print:
+  - why it failed
+  - the re-check command
+  - the repair command
+- Repair commands must be repo-backed commands that an OSS contributor or AI agent can run directly.
+- If repair is not deterministic, the surface stays advisory until deterministic repair exists.
+- Historical review-map files may remain archived for context, but they cannot act as an active routing or approval contract.
+
+## Rollout State Rules
+
+| State | Meaning |
+| --- | --- |
+| `advisory` | Validate and report only. Do not block merges or commits. |
+| `autofix` | Deterministic repair exists, but blocking promotion is not complete. |
+| `blocking` | Surface is ownerless-ready and enforced in its primary layer. |
+| `migrating` | Contract is changing and dual-read support is active until the repo is clean. |
+
+Promotion to `blocking` requires:
+
+1. one clean baseline run on the full governed surface
+2. changed-file PR simulation proving the scope is bounded
+3. exact repair output for every blocking failure mode
+
+## Surface Registry
+
+The machine-readable surface registry lives at:
+
+- `tools/config/ownerless-governance-surfaces.json`
+
+That manifest is the canonical index for:
+
+- governed globs
+- canonical sources
+- derived outputs
+- validators
+- repair commands
+- gate layer
+- rollout state
+- network dependence
+- ownerless readiness
+
+## OSS Contributor Loop
+
+The ownerless contributor path is:
+
+1. change canonical source or governed surface
+2. run or trigger the bounded validator
+3. read exact repair output
+4. run the repair command
+5. re-run the validator
+6. merge once the surface is green in its declared gate layer
+
+No repo-tracked governance surface should require private staff-only context for those steps.
+
+## Current Policy Connections
+
+- `docs-guide/policies/source-of-truth-policy.mdx` defines canonical boundaries.
+- `docs-guide/policies/infrastructure-principles.mdx` defines the gate-layer model.
+- `tests/unit/ownerless-governance.test.js` validates the manifest and ownerless language rules.
+- `tests/unit/ai-tools-registry.test.js` validates the migrating AI-tools registry surface declared in the ownerless manifest.

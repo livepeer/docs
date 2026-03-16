@@ -1,0 +1,122 @@
+---
+title: Payment Clearinghouses
+sidebarTitle: Payment Clearinghouses
+description: >-
+  How third-party clearinghouses can manage Ethereum custody, payment signing,
+  and PM settlement on behalf of gateway operators and app developers.
+keywords:
+  - livepeer
+  - new
+  - gateways new
+  - advanced
+  - payment clearinghouse
+  - payment
+  - clearinghouses
+  - third
+  - party
+  - manage
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+purpose: concept
+pageType: concept
+audience:
+  - gateway-operator
+  - developer
+status: coming-soon
+lastVerified: '2026-02-01'
+sourceOfTruth: 'https://github.com/livepeer/go-livepeer/pull/3822'
+---
+
+import { PdfEmbed } from '/snippets/components/data/embed.jsx'
+
+<PdfEmbed title="Livepeer Payment Clearinghouse" src="https://paragraph.com/@livepeer-2/livepeer-payment-clearinghouse" />
+
+
+A **payment clearinghouse** is a third-party service that takes on the Ethereum-related responsibilities of operating a Livepeer gateway — holding ETH, running a [Remote Signer](/v2/gateways/payments/remote-signers), managing PM settlement, and handling orchestrator payments — while settling with gateway operators and app developers in a traditional currency or alternative payment method.
+
+<Info>
+The underlying protocol for clearinghouses is implemented and in production use. No public clearinghouse service is operating at general availability as of early 2026. For the current managed access and observability surface, see [Livepeer Tools](/v2/gateways/gateway-tools/livepeer-tools).
+</Info>
+
+## Why Clearinghouses Exist
+
+Operating a Livepeer gateway currently requires:
+
+- Holding ETH on Arbitrum to fund PM deposits.
+- Managing Ethereum private keys securely across gateway instances.
+- Understanding PM protocol internals — nonces, ticket validity windows, fee calculations.
+- Debugging ETH-USD price oracle issues that affect ticket face values.
+
+This is a significant barrier for most app developers. A clearinghouse absorbs all of this complexity. The developer receives an API key; the clearinghouse handles everything beneath.
+
+## Architecture
+
+```text
+App / Developer
+      │  API Key (traditional auth)
+      ▼
+Clearinghouse Service
+  ├── Remote Signer (ETH custody + PM signing)
+  ├── User management / auth
+  ├── Accounting (credits, usage tracking)
+  └── Orchestrator discovery
+      │  Livepeer PM tickets on Arbitrum
+      ▼
+Orchestrator Network
+```
+
+The clearinghouse runs one or more Remote Signer instances and fronts them with traditional developer tooling — API keys, usage dashboards, rate limits, and billing.
+
+Orchestrators receive standard Livepeer probabilistic micropayment tickets and settle on-chain as normal. The clearinghouse abstracts the on-chain layer from the developer entirely.
+
+## What a Clearinghouse Manages
+
+| Responsibility | Traditional Gateway | With Clearinghouse |
+|----------------|--------------------|--------------------|
+| ETH deposit management | Gateway operator | Clearinghouse |
+| PM signing keys | Gateway operator | Clearinghouse (Remote Signer) |
+| Orchestrator discovery | Gateway operator | Clearinghouse |
+| Billing / invoicing | N/A | Clearinghouse ↔ developer |
+| On-chain redemption | Orchestrators | Orchestrators (unchanged) |
+
+## Developer Experience
+
+For app developers using a clearinghouse:
+
+1. Register with the clearinghouse service and obtain an API key.
+2. Point the Livepeer SDK or gateway to the clearinghouse endpoint.
+3. The clearinghouse provides a gateway interface — you submit AI inference jobs, the clearinghouse routes them to orchestrators and handles all payments.
+4. You receive usage reports and are billed in the clearinghouse's chosen currency (fiat, stablecoins, or other).
+
+This is the intended end state for direct-to-orchestrator SDK integrations, where a developer should be able to call `start_lv2v(api_key="...")` and have everything handled automatically.
+
+## Relationship to Remote Signers
+
+A clearinghouse **is** a remote signer plus:
+
+- User management and authentication
+- Accounting and credit tracking
+- Fiat or alternative currency billing
+- Potentially orchestrator discovery and geo-matching
+
+The [Remote Signer](/v2/gateways/payments/remote-signers) is the technical primitive. A clearinghouse layers commercial and operational services on top.
+
+## Current Status and NaaP
+
+The Livepeer Foundation's managed access surface is currently best represented by [Livepeer Tools](/v2/gateways/gateway-tools/livepeer-tools), which provides the current network-facing observability layer while clearinghouse-adjacent workflows continue to evolve.
+
+Independent clearinghouse operators may also emerge through the network's open infrastructure model.
+
+## Related Concepts
+
+<CardGroup cols={2}>
+  <Card title="Remote Signers" icon="shield-check" href="/v2/gateways/payments/remote-signers">
+ The technical building block underlying clearinghouse payment infrastructure.
+  </Card>
+  <Card title="Livepeer Tools" icon="gauge" href="/v2/gateways/gateway-tools/livepeer-tools">
+ The current managed network access and observability surface.
+  </Card>
+</CardGroup>

@@ -1,390 +1,61 @@
 ---
-title: Composants de mise en page
-sidebarTitle: Mise en page
-description: >-
-  Composants pour organiser et structurer le contenu sur la page : cartes,
-  listes, étapes, tableaux, grilles et mises en page de texte
-keywords:
-  - livepeer
-  - components
-  - layout
-  - cards
-  - lists
-  - steps
-  - tables
+title: 'Layout'
+sidebarTitle: 'Layout'
+description: 'Containers and arrangements that define spacing, grouping, and page flow.'
 ---
-{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9jb21wb25lbnQtbGlicmFyeS9sYXlvdXQubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9jb21wb25lbnQtbGlicmFyeS9sYXlvdXQiLCJzb3VyY2VIYXNoIjoiNDQ1NTUwNjA4NDBkZjg1N2YwN2QzOTQ2NjE4YWMyNjA1NWQwYzdmODg4OTI3ZDE4NjFjNjdjOGY2MDc5OGYwZSIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxMzo1MTowOC45OTFaIn0= */}
-import { ScrollBox } from '/snippets/components/layout/cards.jsx'
-import { BasicList, IconList, StepList, StepLinkList, UpdateList, UpdateLinkList } from '/snippets/components/layout/lists.jsx'
-// ListSteps commented out - component bug: Cannot read properties of undefined (reading 'map')
-import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
-import { DynamicTable } from '/snippets/components/layout/table.jsx'
-// ApiBaseUrlsTable commented out - component bug: url is not defined
-// AccordionLayout commented out - React error #418 (text node issue)
-// import { AccordionLayout } from '/snippets/components/layout/text.jsx'
-import { QuadGrid } from '/snippets/components/layout/quad-grid.jsx'
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9jb21wb25lbnQtbGlicmFyeS9sYXlvdXQubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9jb21wb25lbnQtbGlicmFyeS9sYXlvdXQiLCJzb3VyY2VIYXNoIjoiYTEyMjE3ZmQyOGI3YzIyOTM4ZjM0YjE3OGQ2ZGM4ZWQ3ZmE4MjdiZTlmMDM0YTFiY2Q2NDllZjJmNzkzOTI1OCIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6InNjYWZmb2xkIiwibW9kZWwiOiIiLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDMtMTZUMTc6MDk6MjYuMDEwWiJ9 */}
+{/* codex-i18n: scaffold — translation pending */}
+{/*
+generated-file-banner: generated-file-banner:v1
+Generation Script: tools/scripts/generate-component-docs.js
+Purpose: Generated localized component-library route scaffolds derived from docs-guide/component-registry.json.
+Run when: Component governance metadata, registry outputs, or component-library templates change.
+Run command: node tools/scripts/generate-component-docs.js --fix --template-only --category layout
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `tools/scripts/generate-component-docs.js`. <br/>
+**Purpose**: Generated localized component-library route scaffolds derived from docs-guide/component-registry.json. <br/>
+**Run when**: Component governance metadata, registry outputs, or component-library templates change. <br/>
+**Important**: Do not manually edit this file; run `node tools/scripts/generate-component-docs.js --fix --template-only --category layout`. <br/>
+</Note>
+
+<Note>Localized prose refresh for `fr` is pending. This page preserves the new route and mirrors the English category inventory at a summary level.</Note>
 
 <Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
-  Return to the main component library index
+  Return to the localized component-library landing page.
 </Card>
 
-<CustomDivider middleText="Card Components" />
-
-## Composants de carte
-
-### ScrollBox
-
-Un conteneur défilable à utiliser à l'intérieur des composants de carte. Fournit une zone défilable avec une hauteur maximale facultative et un indicateur de défilement.
-
-**Importer :**
-```jsx
-import { ScrollBox } from "/snippets/components/layout/cards.jsx";
-```
-
-**Props :**
-
-| Prop | Type | Par défaut | Requis | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Oui** | Contenu à afficher dans la zone de défilement |
-| `maxHeight` | `number\|string` | `300` | Non | Hauteur maximale avant le défilement (px ou valeur CSS) |
-| `showHint` | `boolean` | `true` | Non | Si afficher l'indication « Défiler pour en savoir plus » |
-| `style` | `object` | - | Non | Styles supplémentaires |
-
-**Exemples :**
-
-<Tabs>
-  <Tab title="Live Example">
-    <Card title="Scrollable Content">
-      <ScrollBox maxHeight={120} showHint={true}>
-        <p>Scrollable content inside a card.</p>
-        <p>Line 2 of content...</p>
-        <p>Line 3 of content...</p>
-        <p>Line 4 of content...</p>
-        <p>Line 5 of content...</p>
-      </ScrollBox>
-    </Card>
-  </Tab>
-  <Tab title="Code">
-```jsx
-<Card title="Gaming">
-  <ScrollBox maxHeight={200} showHint={true}>
-    <p>Long content here...</p>
-  </ScrollBox>
-</Card>
-```
-  </Tab>
-</Tabs>
-
-<CustomDivider middleText="List Components" />
-
-## Composants de liste
-
-### StepList
-
-Affiche une liste d'éléments en tant que Étapes. Affiche un tableau d'éléments en utilisant les composants Steps/Step.
-
-**Importer :**
-```jsx
-import { StepList } from "/snippets/components/layout/lists.jsx";
-```
-
-**Props :**
-
-| Prop | Type | Défaut | Requis | Description |
-|------|------|---------|----------|-------------|
-| `listItems` | `Array` | - | **Oui** | Tableau d'objets d'étape |
-| `listItems[].title` | `string` | - | **Oui** | Titre de l'étape |
-| `listItems[].icon` | `string` | - | Non | Nom de l'icône facultatif |
-| `listItems[].content` | `ReactNode` | - | **Oui** | Contenu de l'étape |
-
-**Exemples :**
-
-{/* StepList commented out temporarily - may have similar issue to ListSteps */}
-{/*
-<Tabs>
-  <Tab title="Live Example">
-    <StepList
-      listItems={[
-        { title: "Install", icon: "download", content: "Run npm install" },
-        { title: "Configure", icon: "gear", content: "Set up your config" },
-        { title: "Run", icon: "play", content: "Start the application" }
-      ]}
-    />
-  </Tab>
-  <Tab title="Code">
-```jsx
-const steps = [
-  { title: "Install", icon: "download", content: "Run npm install" },
-  { title: "Configure", icon: "gear", content: "Set up your config" }
-];
-<StepList listItems={steps} />
-```
-  </Tab>
-</Tabs>
-*/}
-<Tabs>
-  <Tab title="Code">
-```jsx
-// StepList - use Steps/Step directly for now
-<Steps>
-  <Step title="Install" icon="download">
-    Run npm install
-  </Step>
-  <Step title="Configure" icon="gear">
-    Set up your config
-  </Step>
-</Steps>
-```
-  </Tab>
-</Tabs>
-
----
-
-### StepLinkList
-
-Affiche une liste d'étapes avec des liens de navigation. Similaire à StepList, mais chaque étape contient un composant GotoLink.
-
-**Importer :**
-```jsx
-import { StepLinkList } from "/snippets/components/layout/lists.jsx";
-```
-
-**Props :**
-
-| Prop | Type | Défaut | Requis | Description |
-|------|------|---------|----------|-------------|
-| `listItems` | `Array` | - | **Oui** | Tableau d'objets d'étape avec des liens |
-| `listItems[].title` | `string` | - | **Oui** | Titre de l'étape |
-| `listItems[].icon` | `string` | - | Non | Nom d'icône facultatif |
-| `listItems[].content` | `string` | - | **Oui** | Texte du libellé du lien |
-| `listItems[].link` | `string` | - | **Oui** | Chemin relatif pour le lien |
-
----
-
-{/* ListSteps commented out - component bug: Cannot read properties of undefined (reading 'map') */}
-{/*
-### ListSteps
-
-Renders a list of items as Steps components. Takes an array of step items and renders them using Steps/Step.
-
-**Note:** Currently unavailable due to component bug. See component-bugs.md for details.
-*/}
-
----
-
-### BasicList, IconList, UpdateList, UpdateLinkList
-
-Composants de remplissage pour la fonctionnalité de liste. Actuellement, ils retournent des fragments vides (non fonctionnels).
-
-**Remarque :** Ces composants sont des éléments de remplissage et actuellement non fonctionnels.
-
-<CustomDivider middleText="Step Components" />
-
-## Composants Étape
-
-### StyledSteps
-
-Un composant Steps personnalisable avec un support de couleur et de style. Enveloppe le composant Steps standard avec un style CSS personnalisé.
-
-**Importation :**
-```jsx
-import { StyledSteps, StyledStep } from "/snippets/components/layout/steps.jsx";
-```
-
-**Props :**
-
-| Prop | Type | Défaut | Requis | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Oui** | Composants d'étape à afficher |
-| `iconColor` | `string` | `"#18794E"` | Non | Couleur de fond pour les icônes d'étape |
-| `titleColor` | `string` | Conscient du thème | Non | Couleur des titres d'étape |
-| `lineColor` | `string` | orienté thème | Non | Couleur de la ligne de connexion entre les étapes |
-| `iconSize` | `string` | `"24px"` | Non | Taille des icônes des étapes (actuellement non utilisée) |
-
-**Exemples :**
-
-{/* StyledSteps commented out temporarily to test React error #418 */}
-{/*
-<Tabs>
-  <Tab title="Live Example">
-    <StyledSteps iconColor="#00cc88" titleColor="#00cc88" lineColor="#00cc88">
-      <StyledStep title="Install" icon="download">
-        Run `npm install livepeer` to get started.
-      </StyledStep>
-      <StyledStep title="Configure" icon="gear">
-        Set up your API key.
-      </StyledStep>
-    </StyledSteps>
-  </Tab>
-  <Tab title="Code">
-*/}
-<Tabs>
-  <Tab title="Code">
-```jsx
-<StyledSteps iconColor="#00cc88" titleColor="#00cc88">
-  <StyledStep title="Install" icon="download">
-    Run npm install.
-  </StyledStep>
-</StyledSteps>
-```
-  </Tab>
-</Tabs>
-
----
-
-### StyledStep
-
-Un wrapper pour le composant Step avec une taille de titre personnalisable. Conçu pour être utilisé dans StyledSteps.
-
-**Importation :**
-```jsx
-import { StyledStep } from "/snippets/components/layout/steps.jsx";
-```
-
-**Props :**
-
-| Prop | Type | Par défaut | Requis | Description |
-|------|------|---------|----------|-------------|
-| `title` | `string` | - | **Oui** | Le titre de l'étape |
-| `icon` | `string` | - | Non | Nom de l'icône à afficher |
-| `titleSize` | `string` | `"h3"` | Non | Taille de l'en-tête HTML pour le titre (par exemple, "h1", "h2", "h3") |
-| `children` | `ReactNode` | - | **Oui** | Contenu à afficher dans l'étape |
-
-<CustomDivider middleText="Table Components" />
-
-## Composants de tableau
-
-### DynamicTable
-
-Un composant de tableau réutilisable avec un style cohérent sur le site. Affiche un tableau avec des en-têtes et des lignes de données, avec des colonnes monospaces optionnelles.
-
-**Importer :**
-```jsx
-import { DynamicTable } from "/snippets/components/layout/table.jsx";
-```
-
-**Props :**
-
-| Prop | Type | Défaut | Requis | Description |
-|------|------|---------|----------|-------------|
-| `tableTitle` | `string` | `null` | Non | Titre facultatif à afficher au-dessus du tableau |
-| `headerList` | `Array<string>` | `[]` | **Oui** | Tableau de chaînes pour les en-têtes de colonne |
-| `itemsList` | `Array<Object>` | `[]` | **Oui** | Tableau d'objets où les clés correspondent aux valeurs de headerList |
-| `monospaceColumns` | `Array<number>` | `[]` | Non | Tableau des indices de colonne (commençant à 0) à afficher en mode monospace |
-| `margin` | `string` | - | Non | Remplacement CSS de la marge facultatif (par exemple, "0", "1rem 0") |
-
-**Exemples :**
-
-<Tabs>
-  <Tab title="Live Example">
-    <DynamicTable
-      tableTitle="Network Endpoints"
-      headerList={["Network", "Endpoint", "Status"]}
-      itemsList={[
-        { Network: "Mainnet", Endpoint: "https://livepeer.network", Status: "Active" },
-        { Network: "Testnet", Endpoint: "https://testnet.livepeer.network", Status: "Active" }
-      ]}
-      monospaceColumns={[1]}
-    />
-  </Tab>
-  <Tab title="Code">
-```jsx
-<DynamicTable
-  headerList={["Network", "Endpoint", "Status"]}
-  itemsList={[
-    { Network: "Mainnet", Endpoint: "https://livepeer.network", Status: "Active" }
-  ]}
-  monospaceColumns={[1]}
-  margin="1rem 0"
-/>
-```
-  </Tab>
-</Tabs>
-
----
-
-{/* ApiBaseUrlsTable commented out - component bug: url is not defined */}
-{/*
-### ApiBaseUrlsTable
-
-Styled table for displaying API base URLs with environment names. Includes custom styling with Livepeer green header.
-
-**Note:** Currently unavailable due to component bug. See component-bugs.md for details.
-*/}
-
-<CustomDivider middleText="Grid Components" />
-
-## Composants de grille
-
-### QuadGrid
-
-Un layout de grille à 2 colonnes avec une icône animée tournante au centre. Utile pour afficher quatre éléments dans une grille avec un élément décoratif au centre.
-
-**Importer :**
-```jsx
-import { QuadGrid } from "/snippets/components/layout/quad-grid.jsx";
-```
-
-**Props :**
-
-| Prop | Type | Par défaut | Requis | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Oui** | Quatre éléments enfants à afficher dans une grille |
-| `icon` | `string` | `"arrows-spin"` | Non | Nom de l'icône à afficher au centre |
-| `iconSize` | `number` | `50` | Non | Taille de l'icône centrale |
-| `iconColor` | `string` | `"var(--accent)"` | Non | Couleur de l'icône centrale |
-| `spinDuration` | `string` | `"10s"` | Non | Durée d'animation pour l'icône tournante |
-
-**Exemples :**
-
-<Tabs>
-  <Tab title="Live Example">
-    <QuadGrid icon="arrows-spin" iconSize={50}>
-      <Card title="Item 1">Content 1</Card>
-      <Card title="Item 2">Content 2</Card>
-      <Card title="Item 3">Content 3</Card>
-      <Card title="Item 4">Content 4</Card>
-    </QuadGrid>
-  </Tab>
-  <Tab title="Code">
-```jsx
-<QuadGrid icon="arrows-spin" iconSize={50}>
-  <Card title="Item 1">Content 1</Card>
-  <Card title="Item 2">Content 2</Card>
-  <Card title="Item 3">Content 3</Card>
-  <Card title="Item 4">Content 4</Card>
-</QuadGrid>
-```
-  </Tab>
-</Tabs>
-
-{/* AccordionLayout commented out - React error #418 (text node issue) */}
-{/*
-<CustomDivider middleText="Text Layout Components" />
-
-## Text Layout Components
-
-### AccordionLayout
-
-Layout component for accordion items with consistent spacing.
-
-**Import:**
-```jsx
-import { AccordionLayout } from "/snippets/components/layout/text.jsx";
-```
-
-**Props:**
-
-| Prop | Type | Default | Required | Description |
-|------|------|---------|----------|-------------|
-| `children` | `ReactNode` | - | **Yes** | Accordion items to display |
-
-**Note:** AccordionLayout currently unavailable due to React error #418. See component-bugs.md for details.
-
----
-*/}
-
-<Card title="Next: Integration Components" icon="arrow-right" href="./integrations" arrow>
-  Continue to Integration Components →
-</Card>
+| Component | Status | Tier | Source file |
+| --- | --- | --- | --- |
+| AccordionGroupList | `stable` | `composite` | `/snippets/components/layout/accordionGroupList.jsx` |
+| AccordionLayout | `stable` | `composite` | `/snippets/components/layout/text.jsx` |
+| BasicList | `stable` | `composite` | `/snippets/components/layout/lists.jsx` |
+| BorderedBox | `stable` | `composite` | `/snippets/components/layout/containers.jsx` |
+| CardCarousel | `stable` | `composite` | `/snippets/components/layout/card-carousel.jsx` |
+| CenteredContainer | `stable` | `composite` | `/snippets/components/layout/containers.jsx` |
+| DisplayCard | `stable` | `composite` | `/snippets/components/layout/customCards.jsx` |
+| DynamicTable | `stable` | `composite` | `/snippets/components/layout/table.jsx` |
+| FlexContainer | `stable` | `composite` | `/snippets/components/layout/layout.jsx` |
+| FullWidthContainer | `stable` | `composite` | `/snippets/components/layout/containers.jsx` |
+| GridContainer | `stable` | `composite` | `/snippets/components/layout/layout.jsx` |
+| IconList | `stable` | `composite` | `/snippets/components/layout/lists.jsx` |
+| InlineImageCard | `stable` | `composite` | `/snippets/components/layout/customCards.jsx` |
+| InteractiveCard | `stable` | `composite` | `/snippets/components/layout/showcase-cards.jsx` |
+| InteractiveCards | `stable` | `composite` | `/snippets/components/layout/showcase-cards.jsx` |
+| ListSteps | `stable` | `composite` | `/snippets/components/layout/list-steps.jsx` |
+| QuadGrid | `stable` | `composite` | `/snippets/components/layout/quad-grid.jsx` |
+| ScrollBox | `stable` | `composite` | `/snippets/components/layout/cards.jsx` |
+| SearchTable | `stable` | `composite` | `/snippets/components/layout/search-table.jsx` |
+| ShowcaseCards | `stable` | `composite` | `/snippets/components/layout/showcase-cards.jsx` |
+| Spacer | `stable` | `composite` | `/snippets/components/layout/layout.jsx` |
+| StepLinkList | `stable` | `composite` | `/snippets/components/layout/lists.jsx` |
+| StepList | `stable` | `composite` | `/snippets/components/layout/lists.jsx` |
+| StyledStep | `stable` | `composite` | `/snippets/components/layout/steps.jsx` |
+| StyledSteps | `stable` | `composite` | `/snippets/components/layout/steps.jsx` |
+| StyledTable | `stable` | `composite` | `/snippets/components/layout/tables.jsx` |
+| TableCell | `stable` | `composite` | `/snippets/components/layout/tables.jsx` |
+| TableRow | `stable` | `composite` | `/snippets/components/layout/tables.jsx` |
+| UpdateLinkList | `stable` | `composite` | `/snippets/components/layout/lists.jsx` |
+| UpdateList | `stable` | `composite` | `/snippets/components/layout/lists.jsx` |
+| WidthCard | `stable` | `composite` | `/snippets/components/layout/customCards.jsx` |

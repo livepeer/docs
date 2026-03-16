@@ -1,0 +1,314 @@
+---
+title: Workload Options
+sidebarTitle: Workload Options
+description: >-
+  The four job types an orchestrator can process — transcoding, batch AI
+  inference, Cascade live-video AI, and LLM inference — with hardware
+  requirements, pricing models, routing mechanics, and how to choose which
+  workloads to run.
+keywords:
+  - livepeer
+  - orchestrator
+  - job types
+  - transcoding
+  - batch AI inference
+  - live-video ai
+  - Cascade
+  - LLM
+  - VRAM
+  - pipeline
+  - workloads
+  - routing
+'og:image': /snippets/assets/site/og-image/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: orchestrator
+purpose: concept
+status: published
+lastVerified: 2026-03-13
+---
+{/* Draft note: keep copy direct, UK spelling, and route unresolved factual checks to JSX comments only. */}
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+Orchestrators on Livepeer earn fees from four distinct categories of work. Each has different GPU requirements, a different pricing model, and a different path for how jobs reach your node. Use this page to compare the workload types, understand their routing logic, and choose the setup path that fits your hardware.
+
+<CustomDivider />
+
+## At a glance
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Job type</TableCell>
+    <TableCell header>What it does</TableCell>
+    <TableCell header>Min VRAM</TableCell>
+    <TableCell header>Pricing unit</TableCell>
+    <TableCell header>Configured via</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Video Transcoding**</TableCell>
+    <TableCell>Converts video streams to multiple resolutions and bitrates</TableCell>
+    <TableCell>None (GPU-accelerated via NVENC/NVDEC)</TableCell>
+    <TableCell>Wei per pixel of output</TableCell>
+    <TableCell>`-pricePerUnit` flag</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Batch AI Inference**</TableCell>
+    <TableCell>Processes single AI requests — image generation, audio transcription, captioning</TableCell>
+    <TableCell>4–24 GB depending on pipeline</TableCell>
+    <TableCell>Wei per pixel or per millisecond</TableCell>
+    <TableCell>`aiModels.json`</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**Cascade live-video AI**</TableCell>
+    <TableCell>Applies AI to a live video stream frame-by-frame, continuously</TableCell>
+    <TableCell>8 GB+ (model-dependent)</TableCell>
+    <TableCell>`Per frame / per stream unit`</TableCell>
+    <TableCell>`aiModels.json` + ComfyStream</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>**LLM Inference**</TableCell>
+    <TableCell>Generates text responses using large language models</TableCell>
+    <TableCell>8 GB (quantised 7–8B models)</TableCell>
+    <TableCell>Custom token unit</TableCell>
+    <TableCell>`aiModels.json` + Ollama runner</TableCell>
+  </TableRow>
+</StyledTable>
+
+<CustomDivider />
+
+## How routing works — and why it differs per job type
+
+The routing mechanics differ significantly by job type. Understanding this is the key insight for operators deciding which workloads to prioritise.
+
+### Video transcoding
+
+Transcoding jobs are routed by gateways using a multi-factor algorithm: **stake weight + price + performance score**. Gateways favour orchestrators with more total stake (own + delegated), competitive pricing, and high historical success rates.
+
+This means **new or low-stake orchestrators are at a structural disadvantage for transcoding** — they compete against established nodes with large delegator bases. Being in the active set (top 100 by stake) is a prerequisite, and even within the active set, high-stake nodes capture disproportionate transcoding volume.
+
+### Batch AI inference
+
+AI jobs route on **capability match + price ceiling**. The gateway checks: does this orchestrator support the requested pipeline and model? Is the price below the gateway's `-maxPricePerCapability` limit? Stake plays a much smaller role.
+
+This matters for operators: **a new orchestrator with 24 GB VRAM and correctly configured AI pipelines competes for AI jobs immediately**, regardless of stake. The barrier to entry for AI earnings is hardware and configuration, with delegation history playing a much smaller role.
+
+### Cascade live-video AI
+
+Routing adds **latency** as a primary factor alongside capability and price. Persistent streaming jobs cannot tolerate high jitter or cold model loads, so gateways select orchestrators with the right workflow already warm and with low round-trip latency. Geographic proximity to gateways matters here.
+
+### LLM inference
+
+Routes the same way as batch AI through capability match and price. The capability check targets a specific Ollama model ID instead of a diffusion pipeline. Operators running quantised 7B models on 8 GB cards receive LLM jobs without competing on the same axis as GPU-heavy diffusion operators.
+
+<Note>
+  **The practical upshot:** Low-stake nodes still earn AI fees while transcoding demand stays concentrated in higher-stake nodes. A capable GPU plus sound AI configuration is the faster route to active earnings.
+</Note>
+
+<CustomDivider />
+
+## Video transcoding
+
+Transcoding has been the Livepeer network's core workload since 2017. When a broadcaster sends a live video stream to a gateway, the gateway routes individual segments — roughly 2 seconds each — to orchestrators for conversion into multiple resolution and bitrate variants. Your node receives raw video, decodes it (NVDEC), re-encodes it to the requested output profiles (NVENC), and returns the results.
+
+Sessions often run for hours. Your node processes dozens or hundreds of segments per active stream. GPU-accelerated transcoding via NVIDIA hardware is strongly recommended — CPU transcoding remains viable for tests but rarely stays cost-competitive at current network prices.
+
+<Card title="Video Transcoding Guide" icon="film" href="/v2/orchestrators/guides/ai-and-job-workloads/video-transcoding-operations">
+  Pricing configuration (wei and USD), session limits, NVENC caps, output rendition profiles, and benchmarking your setup.
+</Card>
+
+<CustomDivider />
+
+## Batch AI inference
+
+The AI Subnet launched in Q3 2024, adding single-request inference as a job category alongside transcoding. A batch AI job arrives as an HTTP request routed from a gateway to your `ai-runner` Docker container. The container runs inference — generating an image, captioning a photo, transcribing audio — and returns the result. The session ends when the result is returned.
+
+**The nine current pipelines:**
+
+<StyledTable variant="bordered">
+  <TableRow header>
+    <TableCell header>Pipeline</TableCell>
+    <TableCell header>What it produces</TableCell>
+    <TableCell header>Min VRAM</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`text-to-image`</TableCell>
+    <TableCell>Image from text prompt</TableCell>
+    <TableCell>24 GB</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`image-to-image`</TableCell>
+    <TableCell>Transformed image from input + prompt</TableCell>
+    <TableCell>24 GB</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`image-to-video`</TableCell>
+    <TableCell>Short video clip from input image</TableCell>
+    <TableCell>24 GB</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`image-to-text`</TableCell>
+    <TableCell>Caption or description of an image</TableCell>
+    <TableCell>4 GB</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`audio-to-text`</TableCell>
+    <TableCell>Transcript from audio file</TableCell>
+    <TableCell>12 GB</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`upscale`</TableCell>
+    <TableCell>High-resolution image from low-resolution input</TableCell>
+    <TableCell>Model-dependent</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`segment-anything-2`</TableCell>
+    <TableCell>Segmentation masks from image</TableCell>
+    <TableCell>6 GB</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`text-to-speech`</TableCell>
+    <TableCell>Speech audio from text</TableCell>
+    <TableCell>Model-dependent</TableCell>
+  </TableRow>
+  <TableRow>
+    <TableCell>`llm`</TableCell>
+    <TableCell>Text completion and chat (via Ollama runner)</TableCell>
+    <TableCell>8 GB</TableCell>
+  </TableRow>
+</StyledTable>
+
+For warm model recommendations and per-pipeline pricing guidance, see [AI Pipelines](/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations) and the [Model and VRAM Reference](/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference).
+
+<CardGroup cols={2}>
+  <Card title="Batch AI Setup" icon="robot" href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup">
+    Install and configure the ai-runner container, aiModels.json, warm models, and pipeline pricing.
+  </Card>
+  <Card title="Model and VRAM Reference" icon="table" href="/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference">
+    Per-pipeline VRAM requirements, recommended models, and pricing benchmarks.
+  </Card>
+</CardGroup>
+
+<CustomDivider />
+
+## Cascade live-video AI
+
+Cascade live-video AI is architecturally distinct from batch inference. Instead of processing a single request and returning a result, your GPU is allocated to a **persistent, continuous stream** that receives live video frames, runs inference on each frame, and returns the transformed stream.
+
+Cascade is the network's strategic name for live-video AI. The underlying technical implementation is [ComfyStream](https://github.com/livepeer/comfystream), which runs ComfyUI as an inference backend and applies ComfyUI workflows to live video frames. Cascade Phase 1 shipped in December 2024, and ComfyStream integrated with Livepeer network payments in January 2025.
+
+The latency constraint is what separates this from batch inference: a 30 fps video stream must process each frame in roughly 33 ms or less. This drives both hardware requirements — faster GPUs, more VRAM for resident tensors — and configuration requirements: the ComfyUI workflow must be compiled and warm throughout the stream.
+
+Current use cases on the network include live avatar generation, style transfer overlays, live-video agents, and AI-enhanced scene analysis.
+
+<Card title="Cascade Setup" icon="video" href="/v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup">
+  ComfyStream setup, workflow configuration, latency requirements, and troubleshooting.
+</Card>
+
+<CustomDivider />
+
+## LLM inference
+
+The LLM pipeline serves large language model inference - text completion, chat, and instruction-following - through an Ollama-based runner built by the Cloud SPE. Diffusion pipelines use the standard `ai-runner` Docker image, while LLM inference uses a separate `livepeer-ollama-runner` container.
+
+Quantised LLMs are VRAM-efficient. A 4-bit quantised 7B model fits into 8 GB of VRAM and runs on hardware in the GTX 1080 / RTX 2060 class — machines that are too memory-constrained for most diffusion pipelines. This makes LLM inference the practical AI entry point for operators with older consumer GPUs.
+
+The Ollama catalogue is broad. Start with a network-tested model such as `meta-llama/Meta-Llama-3.1-8B-Instruct`.
+
+LLM jobs route via capability match and price, the same as batch AI. Hardware fit and configuration determine the primary advantage here.
+
+<CustomDivider />
+
+## What should I run?
+
+Match your hardware to the workloads that fit. Focused coverage beats trying to run every workload poorly.
+
+<AccordionGroup>
+
+<Accordion  title="8–12 GB VRAM — entry-level GPU (GTX 1080, RTX 2060, 3060)" icon="server">
+The diffusion pipelines that drive most AI fee volume require 16–24 GB. Your best options:
+
+- **Transcoding** — modern NVIDIA GPUs handle video transcoding sessions competitively; NVENC session caps on consumer cards still apply. Active-set operators use transcoding as baseline earnings.
+- **LLM inference** — quantised 7–8B models run well at 8 GB. Low barrier to entry for AI earnings.
+- **`image-to-text`, `segment-anything-2`** — the two AI pipelines with sub-8 GB requirements. Lower fee volume than diffusion, but feasible on these cards.
+
+Skip: `text-to-image`, `image-to-image`, `image-to-video`, `audio-to-text` — all require 12–24 GB minimum.
+</Accordion>
+
+<Accordion  title="16 GB VRAM — mid-range (RTX 3080, 4080, A4000)" icon="server">
+This tier supports the full batch AI suite except the most VRAM-heavy diffusion models:
+
+- **Transcoding** + **batch AI** (most pipelines)
+- `audio-to-text` (12 GB), `image-to-text` (4 GB), `segment-anything-2` (6 GB) all fit comfortably
+- `text-to-image` with smaller Lightning / Turbo variants (some fit at 16 GB)
+- **LLM inference** with 13B quantised models
+- **Cascade live-video AI** — lightweight workflows fit at 16 GB; heavier SDXL-based workflows stay tight
+
+Prioritise: get batch AI earning first on the lower-VRAM pipelines, then experiment with which diffusion models fit.
+</Accordion>
+
+<Accordion  title="24 GB VRAM — high-end (RTX 3090, 4090, A5000, A6000)" icon="server">
+A 24 GB card runs the full suite:
+
+- **Transcoding** — full output ladder, higher `maxSessions`
+- **Full batch AI** — all pipelines including `text-to-image`, `image-to-image`, `image-to-video` with production SDXL models
+- **Cascade live-video AI** — most ComfyStream workflows fit; latency-optimised workloads are feasible
+- **LLM inference** — 13B quantised models comfortably; 70B quantised models require multiple cards
+
+Strategy: warm your highest-fee pipeline (`text-to-image` is typically the most sought-after), cold the rest. See [Model and VRAM Reference](/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference) for per-pipeline earnings guidance.
+</Accordion>
+
+<Accordion  title="Multiple GPUs or data-centre class" icon="server">
+- Pool architecture — route jobs across multiple workers, each on separate GPUs
+- Different GPUs serve different pipelines simultaneously (assign per-GPU in `aiModels.json`)
+- Fleet operations for multi-machine deployments
+- Cascade becomes highly competitive with dedicated GPU per stream
+
+See [Run a Pool](/v2/orchestrators/guides/advanced-operations/pool-operators) and [Fleet Operations](/v2/orchestrators/guides/advanced-operations/scale-operations).
+</Accordion>
+
+</AccordionGroup>
+
+<CustomDivider />
+
+## Setup guides
+
+<CardGroup cols={2}>
+  <Card title="Video Transcoding" icon="film" href="/v2/orchestrators/guides/ai-and-job-workloads/video-transcoding-operations">
+    Configure pricing, session limits, and NVENC settings for transcoding.
+  </Card>
+  <Card title="AI Workloads Overview" icon="robot" href="/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations">
+    Pipeline overview, aiModels.json, warm model strategy.
+  </Card>
+  <Card title="Batch AI Setup" icon="layer-group" href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup">
+    Install the ai-runner and configure your first AI pipeline.
+  </Card>
+  <Card title="Cascade Setup" icon="video" href="/v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup">
+    ComfyStream setup for live video AI workloads.
+  </Card>
+</CardGroup>
+
+{/*
+  PURPOSE:
+  "What work exists on Livepeer and what pays?" Market overview of all workload
+  types. Video transcoding: established, steady demand, per-pixel pricing. Batch
+  AI inference: 10 pipeline types, growing demand, per-capability pricing. Real-time
+  AI (Cascade): emerging, highest value per compute second. BYOC: custom containers.
+  Comparison table: demand level, VRAM requirement, earning potential, entry barrier.
+  Links to tools.livepeer.cloud for current demand data.
+
+  PLAN TARGET: workload-landscape (rename from job-types)
+  UPDATE NEEDED: Add demand/earnings context. Rename.
+
+  SECTION: Workloads & AI → "What jobs do I run?"
+  JOB STORIES: J1 (workload landscape), J6 (which AI to prioritise)
+
+  CROSS-REFS:
+  - Operator Considerations > Operator Rationale - which workloads pay best
+  - Config & Optimisation > Pricing Strategy - pricing per workload type
+  - Workloads & AI > Model Demand Reference - model-level demand data
+*/}

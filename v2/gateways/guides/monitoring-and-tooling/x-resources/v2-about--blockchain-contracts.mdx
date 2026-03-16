@@ -1,0 +1,466 @@
+---
+title: Blockchain Contracts
+sidebarTitle: Blockchain Contracts
+description: An overview of the Livepeer protocol blockchain contracts.
+audience: general
+purpose: faq
+keywords:
+  - livepeer
+  - about
+  - livepeer protocol
+  - blockchain contracts
+  - blockchain
+  - contracts
+  - overview
+  - protocol
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+
+
+
+import { Image } from '/snippets/components/primitives/image.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { Subtitle, CopyText } from '/snippets/components/primitives/text.jsx'
+
+# Livepeer Blockchain Contracts
+
+Livepeer uses a comprehensive system of Ethereum smart contracts to permissionlessly govern its decentralized network.
+
+The Livepeer Protocol is currently deployed on Arbitrum One and uses a collection of Ethereum smart contracts to govern:
+
+- LivepeerToken (LPT) ownership and delegation
+- Staking and selection of active transcoder operators (orchestrators)
+- Distribution of inflationary rewards and fees to participants
+- Time-based progression of the protocol through rounds
+- Payment processing through a probabilistic micropayment system
+
+There are 3 core functions of contracts in the Livepeer Protocol:
+1. Core Protocol Contracts
+2. Token System
+3. Governance
+
+That consist of **10 smart contracts** that work together to manage staking, payments, governance, and service discovery:
+
+{/* 1. Controller [Core]
+2. BondingManager [Core]
+3. TicketBroker [Core]
+4. RoundsManager [Core]
+5. Minter [Core]
+6. ServiceRegistry [Core]
+7. MerkleSnapshot [Core]
+8. BondingVotes [Core]
+7. LivepeerToken [Token]
+8. Governor[Governance]
+9. LivepeerGovernor [Governance]
+10. Treasury [Governance] */}
+
+## Contract Interaction Architecture
+
+Here's how these contracts interact with each other:
+
+<Danger> FIX THIS DIAGRAM - unreadable </Danger>
+````mermaid
+graph TB
+    subgraph "Discovery Layer"
+        Controller["Controller<br/>Contract Registry"]
+        ServiceRegistry["ServiceRegistry<br/>URI Mapping"]
+    end
+
+    subgraph "Economic Layer"
+        LPT["LivepeerToken<br/>ERC20 Token"]
+        BondingManager["BondingManager<br/>Staking & Rewards"]
+        TicketBroker["TicketBroker<br/>Micropayments"]
+        Minter["Minter<br/>Token Inflation"]
+    end
+
+    subgraph "Time & Governance"
+        RoundsManager["RoundsManager<br/>Protocol Rounds"]
+        Governor["LivepeerGovernor<br/>Governance"]
+    end
+
+    subgraph "Participants"
+        Broadcaster["Broadcaster Node"]
+        Orchestrator["Orchestrator Node"]
+        Delegator["Token Holder"]
+    end
+
+    Controller -.->|"Address Lookup"| LPT
+    Controller -.->|"Address Lookup"| BondingManager
+    Controller -.->|"Address Lookup"| TicketBroker
+    Controller -.->|"Address Lookup"| RoundsManager
+    Controller -.->|"Address Lookup"| Minter
+    Controller -.->|"Address Lookup"| ServiceRegistry
+    Controller -.->|"Address Lookup"| Governor
+
+    Delegator -->|"Approve() LPT"| LPT
+    Delegator -->|"Bond(amount, orchestrator)"| BondingManager
+    BondingManager -->|"TransferFrom()"| LPT
+
+    Orchestrator -->|"Transcoder(cuts)"| BondingManager
+    Orchestrator -->|"SetServiceURI(url)"| ServiceRegistry
+    Orchestrator -->|"Reward()"| BondingManager
+    BondingManager -->|"CreateReward()"| Minter
+    Minter -->|"Mint() new LPT"| LPT
+
+    Broadcaster -->|"Approve() LPT"| LPT
+    Broadcaster -->|"FundDepositAndReserve()"| TicketBroker
+    TicketBroker -->|"TransferFrom()"| LPT
+
+    Orchestrator -->|"RedeemWinningTicket()"| TicketBroker
+    TicketBroker -->|"Transfer() to orchestrator"| LPT
+    TicketBroker -->|"Update claimedReserve"| BondingManager
+
+    RoundsManager -->|"Round data"| BondingManager
+    RoundsManager -->|"Block hashes"| TicketBroker
+
+    BondingManager -->|"Stake weight"| Governor
+    Delegator -->|"CastVote()"| Governor
+````
+
+
+## Core Protocol Contracts
+
+The core protocol contracts are the backbone of the Livepeer Protocol.
+They manage the staking, delegation, and reward distribution for orchestrators.
+They also manage the time-based progression of the protocol through rounds and the payment processing through a probabilistic micropayment system.
+The Controller serves as the central registry, enabling upgrades by updating implementation addresses
+
+{/* - Controller
+- Bonding Manager
+- Rounds Manager
+- TicketBroker
+- Minter
+- ServiceRegistry
+------ */}
+
+<Danger> Maybe put in tab view for better layout </Danger>
+#### **Controller**: <Subtitle text="Contract Registry" />
+
+The [Controller](https://github.com/livepeer/protocol/blob/e8b6243c/deploy/deploy_contracts.ts) is the central registry for all protocol contracts.
+All protocol contracts check with the Controller for the addresses of other contracts they need to interact with.
+
+<Accordion title="Controller">
+	The Controller acts as the central registry for all other contract addresses in the protocol.
+
+	It maintains a mapping of contract IDs to their addresses, enabling protocol upgrades by updating the registered implementation addresses.
+	It uses [Keccak256](https://en.wikipedia.org/wiki/Keccak#Keccak-256) hashes of contract names as keys to store their addresses, enabling upgradeable architecture without changing the Controller address itself.
+
+	**Address**:
+	<LinkArrow label="See on Arbiscan" href="https://arbiscan.io/address/0xD8E8328501E9645d16Cf49539efC04f734606ee4" newline={false} />
+		```text
+		0xD8E8328501E9645d16Cf49539efC04f734606ee4
+		```
+
+	**Purpose**:
+
+	- Central address registry for all protocol contracts
+	- Enables contract upgrades while maintaining a stable entry point
+	- Provides pause functionality for emergency situations
+
+	**Key Operations**:
+
+	- `getContract()` - Get address of a contract by name
+	- `setContract()` - Set address of a contract by name
+	- `pause()`/`unpause()` - Emergency pause for critical situations
+
+	<Image src="https://media1.tenor.com/m/_vT9Qzw03N4AAAAd/sir-topham-hatt-topham.gif" alt="Controller" />
+	{/* <iframe href="https://tenor.com/view/sir-topham-hatt-the-fat-controller-sir-toping-hat-happy-bald-gif-6999538172963206619"/> */}
+
+</Accordion>
+
+#### **BondingManager**: <Subtitle text="Staking & Delegation" />
+The [BondingManager](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/bonding/BondingManager.sol) is the most critical contract managing the staking economy, orchestrator registration, and reward distribution.
+
+<Accordion title="BondingManager">
+	**Address**:
+	<LinkArrow label="See on Arbiscan" href="https://arbiscan.io/address/0x0000000000000000000000000000000000000000" newline={false} />
+	```
+	0x0000000000000000000000000000000000000000
+	```
+
+	**Purpose**:
+
+	- Manages the transcoder (orchestrator) pool as a sorted linked list
+	- Handles bonding (staking) and delegation to orchestrators
+	- Distributes inflationary rewards and fees
+	- Manages unbonding periods and withdrawals
+	- Tracks earnings and claims
+
+	**Key Operations**:
+
+	- `Bond()` - Delegate stake to an orchestrator
+	- `Transcoder()` - Register as an orchestrator with reward/fee parameters
+	- `Unbond()` - Start withdrawal process (with lock period)
+	- `Reward()` - Called by orchestrators to mint inflationary rewards
+	- `ClaimEarnings()` - Claim accumulated rewards and fees
+
+</Accordion>
+
+#### **TicketBroker**: <Subtitle text="Probabilistic Micropayments" />
+
+The [TicketBroker](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/ticket/TicketBroker.sol) manages the off-chain payment system using probabilistic micropayments for broadcaster-to-orchestrator payments.
+
+<Accordion title="TicketBroker">
+	**Purpose**:
+
+	- Holds broadcaster deposits and reserves for micropayments
+	- Validates and settles winning payment tickets
+	- Manages unlock/withdrawal periods for broadcasters
+	- Tracks claimed reserves per orchestrator
+
+	**Key Operations**:
+
+	- `FundDepositAndReserve()` - Broadcaster deposits funds for payments
+	- `RedeemWinningTicket()` - Orchestrator redeems a winning ticket
+	- `Unlock()` - Start withdrawal process
+	- `Withdraw()` - Complete withdrawal after unlock period
+</Accordion>
+
+#### **RoundsManager**: <Subtitle text="Protocol Time Management" />
+
+The [RoundsManager](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/RoundsManager.sol) manages the protocol's time-based round system where each round has a fixed block length.
+
+<Accordion title="RoundsManager">
+	**Purpose**:
+
+	- Defines protocol rounds (epochs) of fixed block length
+	- Tracks round initialization and locking
+	- Provides block hashes for ticket validation
+	- Coordinates time-based protocol operations
+
+	**Key Operations**:
+
+	- `InitializeRound()` - Initialize new round
+	- `CurrentRound()` - Get current round number
+	- `BlockHashForRound()` - Get L1 block hash for ticket validation
+</Accordion>
+
+#### **Minter**: <Subtitle text="Token Inflation" />
+
+The [Minter](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/Minter.sol) controls the token supply inflation that rewards active orchestrators.
+
+<Accordion title="Minter">
+**Purpose**:
+
+- Manages LPT token inflation schedule
+- Calculates mintable tokens per round
+- Adjusts inflation based on target bonding rate
+- Called by BondingManager during reward distribution
+
+**Key Operations**:
+
+- `CurrentMintableTokens()` - Calculate tokens to mint for rewards
+- `Inflation()`, `InflationChange()` - Query inflation parameters
+
+</Accordion>
+
+#### **ServiceRegistry**: <Subtitle text="Orchestrator Discovery" />
+
+The [ServiceRegistry](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/service/ServiceRegistry.sol) maps Ethereum addresses to service URIs for orchestrator discovery.
+
+<Accordion title="ServiceRegistry">
+	**Purpose**:
+
+	- Allows orchestrators to advertise their network endpoints
+	- Enables broadcasters to discover and connect to orchestrators
+	- Stores URI strings on-chain
+
+	**Key Operations**:
+
+	- `SetServiceURI()` - Orchestrator registers their endpoint
+	- `GetServiceURI()` - Query orchestrator's service URL
+</Accordion>
+
+#### **MerkleSnapshot**
+
+[MerkleSnapshot](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/MerkleSnapshot.sol) creates a snapshot of the staking pool at a given round and generates a merkle root for verifiable delegation.
+
+<Accordion title="MerkleSnapshot">
+	**Purpose**:
+
+	- Creates a snapshot of the staking pool at a given round
+	- Generates a merkle root for verifiable delegation
+	- Used for delegator rewards and governance
+
+	**Key Operations**:
+
+	- `CreateSnapshot()` - Create snapshot at current round
+	- `MerkleRoot()` - Get merkle root for a round
+</Accordion>
+
+<CustomDivider />
+
+## Token & Utility Contracts
+
+<Tip>
+
+Livepeer moved from the Ethereum mainnet to the Arbitrum One network in 2022 to increase transaction throughput and reduce fees. <br/>
+
+On Ethereum mainnet, only the `LivepeerToken` and `BridgeMinter` contracts remain operational; all other contracts have migrated to Arbitrum One.
+
+This ensures the token has the higher security of the Ethereum mainnet while the network enjoys the higher throughput and lower fees of Arbitrum.
+
+</Tip>
+
+#### **LivepeerToken (LPT)**: <Subtitle text="ERC20 Token" />
+<Badge color="green">Ethereum Mainnet Only </Badge>
+
+The [LivepeerToken](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/token/LivepeerToken.sol) is the native protocol token used for staking, payments, and governance based on the [ERC-20](https://eips.ethereum.org/EIPS/eip-20) standard.
+
+<Accordion title="LivepeerToken">
+	**Purpose**:
+
+	- ERC20 token for all economic activity in the network
+	- Used for bonding/staking to orchestrators
+	- Required for broadcaster deposits and payments
+	- Governance voting weight
+
+	**Key Operations**:
+
+	- `Transfer()`, `BalanceOf()`, `TotalSupply()` - Standard ERC20 operations
+	- `Approve()` - Required before bonding or funding deposits
+</Accordion>
+
+#### **BridgeMinter**: <Subtitle text="Token Bridge" />
+<Badge color="green">Ethereum Mainnet Only </Badge>
+
+The [BridgeMinter](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/token/BridgeMinter.sol) is a minting contract that mints LPT tokens on the Arbitrum One network when it receives a valid deposit from the Ethereum mainnet.
+
+<Accordion title="BridgeMinter">
+	**Purpose**:
+
+	- Mints LPT tokens on Arbitrum One when it receives a valid deposit from the Ethereum mainnet
+
+</Accordion>
+
+#### **LivepeerTokenFaucet**: <Subtitle text="Test Token Distribution" />
+<Badge color="surface">Testnets Only </Badge>
+
+The [LivepeerTokenFaucet](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/token/LivepeerTokenFaucet.sol) is used on testnets for distributing test LPT tokens.
+
+<Accordion title="LivepeerTokenFaucet">
+	**Purpose**:
+
+	- Provides test tokens on testnets
+	- Rate-limited token requests
+	- Development and testing support
+
+</Accordion>
+
+<CustomDivider />
+
+## Governance Contracts
+
+#### **Governor**: <Subtitle text="Contract Upgrades" />
+
+[Governor](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/governance/Governor.sol) handles protocol upgrades through a multi-step transaction proposal and execution process.
+
+<Accordion title="Governor">
+	**Purpose**:
+
+	- Handles protocol upgrades through a multi-step transaction proposal and execution process
+
+	**Key Operations**:
+
+	- `Propose()` - Submit a new proposal
+	- `Queue()` - Queue a proposal for execution
+	- `Execute()` - Execute a queued proposal
+</Accordion>
+
+#### **LivepeerGovernor**: <Subtitle text=" Protocol Governance" />
+
+The [LivepeerGovernor](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/governance/LivepeerGovernor.sol) implements on-chain governance for protocol upgrades and parameter changes.
+
+<Accordion title="LivepeerGovernor">
+	**Purpose**:
+
+	- On-chain voting on protocol proposals
+	- Weighted by bonded stake
+	- Implements governance mechanisms
+
+	**Key Operations**:
+
+	- `CastVote()` - Vote on governance proposals
+	- `CastVoteWithReason()` - Vote with explanation
+</Accordion>
+
+#### **Treasury**: <Subtitle text="On-chain Treasury Management" />
+
+[Treasury](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/governance/Treasury.sol) manages the on-chain treasury for funding and accounting.
+
+<Accordion title="Treasury">
+	**Purpose**:
+
+	- Manages protocol treasury for funding
+	- Tracks allocations and expenditures
+	- Funds Special Purpose Entities (SPEs)
+
+	**Key Operations**:
+
+	- `Deposit()` - Add funds to the treasury
+	- `Withdraw()` - Allocate funds to recipients
+</Accordion>
+
+
+{/* ## Contract Interaction Architecture
+
+Here's how these contracts interact with each other:
+
+````mermaid
+graph TB
+    subgraph "Discovery Layer"
+        Controller["Controller<br/>Contract Registry"]
+        ServiceRegistry["ServiceRegistry<br/>URI Mapping"]
+    end
+
+    subgraph "Economic Layer"
+        LPT["LivepeerToken<br/>ERC20 Token"]
+        BondingManager["BondingManager<br/>Staking & Rewards"]
+        TicketBroker["TicketBroker<br/>Micropayments"]
+        Minter["Minter<br/>Token Inflation"]
+    end
+
+    subgraph "Time & Governance"
+        RoundsManager["RoundsManager<br/>Protocol Rounds"]
+        Governor["LivepeerGovernor<br/>Governance"]
+    end
+
+    subgraph "Participants"
+        Broadcaster["Broadcaster Node"]
+        Orchestrator["Orchestrator Node"]
+        Delegator["Token Holder"]
+    end
+
+    Controller -.->|"Address Lookup"| LPT
+    Controller -.->|"Address Lookup"| BondingManager
+    Controller -.->|"Address Lookup"| TicketBroker
+    Controller -.->|"Address Lookup"| RoundsManager
+    Controller -.->|"Address Lookup"| Minter
+    Controller -.->|"Address Lookup"| ServiceRegistry
+    Controller -.->|"Address Lookup"| Governor
+
+    Delegator -->|"Approve() LPT"| LPT
+    Delegator -->|"Bond(amount, orchestrator)"| BondingManager
+    BondingManager -->|"TransferFrom()"| LPT
+
+    Orchestrator -->|"Transcoder(cuts)"| BondingManager
+    Orchestrator -->|"SetServiceURI(url)"| ServiceRegistry
+    Orchestrator -->|"Reward()"| BondingManager
+    BondingManager -->|"CreateReward()"| Minter
+    Minter -->|"Mint() new LPT"| LPT
+
+    Broadcaster -->|"Approve() LPT"| LPT
+    Broadcaster -->|"FundDepositAndReserve()"| TicketBroker
+    TicketBroker -->|"TransferFrom()"| LPT
+
+    Orchestrator -->|"RedeemWinningTicket()"| TicketBroker
+    TicketBroker -->|"Transfer() to orchestrator"| LPT
+    TicketBroker -->|"Update claimedReserve"| BondingManager
+
+    RoundsManager -->|"Round data"| BondingManager
+    RoundsManager -->|"Block hashes"| TicketBroker
+
+    BondingManager -->|"Stake weight"| Governor
+    Delegator -->|"CastVote()"| Governor
+```  */}

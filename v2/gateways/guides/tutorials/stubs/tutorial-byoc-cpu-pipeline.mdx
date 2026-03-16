@@ -1,0 +1,80 @@
+---
+title: "Add AI: BYOC CPU Pipeline"
+description: "Build a custom AI pipeline container and route jobs through your gateway — no GPU required"
+status: stub
+tutorial: 2-of-3
+---
+
+# Add AI: BYOC CPU Pipeline
+
+<Note>This page is a stub. Content to be developed.</Note>
+
+## Outline
+
+### What you'll build
+- A BYOC (Bring Your Own Container) pipeline using PyTrickle
+- A trivial CPU-only processor (green tint / grayscale / passthrough)
+- Route jobs: gateway → orchestrator → your container → result
+- Optional: swap in whisper-tiny for real AI inference on CPU
+
+### Prerequisites
+- Completed Tutorial 1 (off-chain transcoding test)
+- Docker
+- Python 3.x (for PyTrickle processor)
+- No GPU required
+
+### Step 1 — Build a PyTrickle FrameProcessor
+- Minimal Python processor: receive frame → transform → return
+- Example: green tint overlay (from pytrickle `async_processor_example.py`)
+- Explain the FrameProcessor contract: input frame → output frame(s)
+
+### Step 2 — Package as Docker container
+- Dockerfile based on `python:3.11-slim` (NOT nvidia/cuda)
+- Install pytrickle, copy processor script
+- Expose trickle HTTP endpoints
+- Build and tag locally
+
+### Step 3 — Test locally with http-trickle
+- Run container standalone
+- Send test frames via http-trickle client
+- Verify transformed output
+- This validates the container before involving the network
+
+### Step 4 — Wire into gateway → orchestrator
+- Start orchestrator with BYOC pipeline registered
+- Start gateway pointing at orchestrator
+- Send a job through the gateway that routes to your container
+- Verify end-to-end: request in → custom processing → result out
+
+### Step 5 (Optional) — Swap in whisper-tiny
+- Replace green-tint processor with whisper-tiny (79M params, CPU mode)
+- `model = whisper.load_model("tiny", device="cpu")`
+- Send audio, get transcription back
+- Note: ~10x realtime on CPU — functional proof, not production speed
+
+### What just happened
+- Diagram: client → gateway → orchestrator → BYOC container (CPU) → result
+- You built a custom AI pipeline without a GPU
+- The same pattern works with GPU models — just change the base image and model
+
+### Next steps
+- → Page 3: Go production with on-chain, GPU, and network connect
+- → Workloads & AI guide: deeper pipeline configuration
+- → Developers BYOC guide: full BYOC development reference
+
+---
+
+## Reference files to draw from
+
+### Primary sources
+- `_contextData_/Developers_new/build-byoc-draft.mdx` — most complete BYOC tutorial draft (adapt for CPU)
+- `livepeer/pytrickle` (GitHub) — `async_processor_example.py` green-tint example
+- `j0sh/http-trickle` (GitHub) — trickle streaming protocol server for local testing
+- `v2/gateways/guides-and-resources/gateway-job-pipelines/byoc.mdx` — published BYOC page
+
+### Supporting sources
+- `v2/developers/ai-pipelines/byoc.mdx` — developer-facing BYOC docs
+- `_contextData_/Orchestrators_new/03-job-types-output.md` — job types and BYOC architecture
+- `v2/gateways/run-a-gateway/configure/ai-configuration.mdx` — AI config flags
+- `livepeer/ai-runner` (GitHub) — reference for how standard pipelines work (contrast with BYOC)
+- Discord `#local-gateways` — j0sh examples and community patterns

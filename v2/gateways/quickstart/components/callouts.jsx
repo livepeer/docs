@@ -66,7 +66,7 @@ const GatewayOnChainWarning = () => {
         </span>{" "}
         account on Arbitrum One to run an on-chain Gateway.
         <br /> <br /> See{" "}
-        <a href="/gateways/run-a-gateway/requirements/on-chain-setup/fund-gateway">
+        <a href="/gateways/setup/requirements/on-chain%20setup/fund-gateway">
           <Icon icon="arrow-up-right" color="var(--accent)" />{" "}
           Fund Your Gateway{" "}
         </a>

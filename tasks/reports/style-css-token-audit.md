@@ -1,6 +1,6 @@
 # style.css Token Audit
 
-Generated: 2026-03-08T04:17:15.679Z
+Generated: 2026-03-08T01:36:50.294Z
 File: style.css
 
 ## Token Inventory
@@ -44,17 +44,17 @@ File: style.css
 
 | Needed token | Required by | Current hardcoded value |
 |-------------|-------------|------------------------|
-| --background-dark | showcase-cards.jsx | — |
-| --lp-color-border-inverse-subtle | showcase-cards.jsx, data.jsx, video.jsx, cards.jsx | rgba(255,255,255,0.4) |
-| --lp-color-brand-discord | social-links.jsx, data.jsx | #5865F2 |
-| --lp-color-brand-forum | social-links.jsx | #00AEEF |
-| --lp-color-brand-github | social-links.jsx | #f0f0f0 |
+| --background-dark | showcaseCards.jsx | — |
+| --lp-color-border-inverse-subtle | showcaseCards.jsx, data.jsx, video.jsx, cards.jsx | rgba(255,255,255,0.4) |
+| --lp-color-brand-discord | socialLinks.jsx, data.jsx | #5865F2 |
+| --lp-color-brand-forum | socialLinks.jsx | #00AEEF |
+| --lp-color-brand-github | socialLinks.jsx | #f0f0f0 |
 | --lp-color-callout-coming-soon | previewCallouts.jsx | #ef1a73 |
 | --lp-color-callout-review | previewCallouts.jsx | #b636dd |
-| --lp-color-overlay-scrim | showcase-cards.jsx, video.jsx | rgba(0, 0, 0, 0.5) |
-| --lp-color-response-field-value | response-field.jsx | #3b82f6 |
-| --p-icon-color | frame-mode.jsx | — |
+| --lp-color-overlay-scrim | showcaseCards.jsx, video.jsx | rgba(0, 0, 0, 0.5) |
+| --lp-color-response-field-value | responseField.jsx | #3b82f6 |
+| --p-icon-color | frameMode.jsx | — |
 | --page-header-description-color | Portals.jsx | — |
-| --text-muted | showcase-cards.jsx | — |
+| --text-muted | showcaseCards.jsx | — |
 | --text-primary | Portals.jsx | — |
 | --text-secondary | data.jsx, video.jsx | — |

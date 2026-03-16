@@ -3,7 +3,7 @@
 {/* SCRIPT-INDEX:START */}
 ## Script Index
 
-| Script | Summary | Usage | Owner |
+| Script | Summary | Usage | Domain |
 |---|---|---|---|
 | `.github/scripts/fetch-forum-data.js` | Fetches latest topics and posts from Livepeer Forum API, writes to snippets/automations/forum/ | `node .github/scripts/fetch-forum-data.js [flags]` | docs |
 | `.github/scripts/fetch-ghost-blog-data.js` | Fetches blog posts from Ghost CMS API, writes to snippets/automations/blog/ | `node .github/scripts/fetch-ghost-blog-data.js [flags]` | docs |

@@ -1,0 +1,3646 @@
+{
+  "registryValidate": {
+    "status": 0,
+    "stdout": "✅ docs-fact-registry: valid with 26 claim family/families\n",
+    "stderr": ""
+  },
+  "adjudicationValidate": {
+    "status": 0,
+    "stdout": "✅ docs-research-adjudication: valid with 11 adjudication(s)\n",
+    "stderr": ""
+  },
+  "pageRun": {
+    "status": 0,
+    "stdout": "✅ docs-page-research: 9 claim family/families, 5 contradiction(s), 16 evidence source(s)\n",
+    "stderr": ""
+  },
+  "prRun": {
+    "status": 0,
+    "stdout": "✅ docs-page-research-pr-report: 9 claim family/families, 5 contradiction group(s), 16 evidence source(s)\n",
+    "stderr": ""
+  },
+  "pageReport": {
+    "report_kind": "page-research",
+    "report_id": "page-content-research-2026-03-16-430213952af4",
+    "generated_at": "2026-03-16T11:58:47.895Z",
+    "scope": {
+      "target_files": [
+        "v2/orchestrators/quickstart/AI-prompt-start.mdx",
+        "v2/orchestrators/quickstart/guide.mdx",
+        "v2/orchestrators/quickstart/tutorial.mdx",
+        "v2/orchestrators/quickstart/video-transcoding.mdx"
+      ]
+    },
+    "claims_reviewed": [
+      {
+        "file": "v2/orchestrators/quickstart/AI-prompt-start.mdx",
+        "extracted_claims": [
+          "Prerequisites Before you begin: go livepeer is installed and running as a transcoding orchestrator on Arbitrum mainnet (see and ) Your orchestrator is in the Top 100 active set on the Livepeer network Docker is installed with enabled (GPU passthrough required for the AI runner containers) Your GPU has at least 4GB of VRAM available to run at least one AI pipeline (see the hardware check below) Model weights pre downloaded for the pipeline(s) you want to serve (see ) This guide adds AI inference to an existing transcoding node.",
+          "If both share the same GPU, VRAM is split between them.",
+          "Before configuring anything, confirm how much VRAM your GPU has available.",
+          "Run this command to list your GPUs and their VRAM: You should see output similar to: Use the table below to see which pipelines you can run based on your available VRAM: Pipeline Min VRAM Notes 4GB Caption generation; lowest barrier to entry 6GB Object segmentation LLM ( ) 8GB Requires Ollama runner; 7–8B quantised models 12GB Speech transcription; Whisper based 16GB+ Animated video from image 20GB Style transfer, image manipulation 24GB Text to image generation (Stable Diffusion, SDXL) Image upscaling Speech synthesis For details on each pipeline, see .",
+          "If your GPU does not have enough free VRAM to run both transcoding and your chosen AI pipeline, AI runner containers will fail to start.",
+          "Either select a lower VRAM pipeline, dedicate a second GPU exclusively to AI, or stop transcoding on that GPU before enabling AI.",
+          "Step 1 — Pull the AI runner image The AI subnet uses a separate Docker image ( ) to run inference.",
+          "Pull it before starting your node: If you plan to run the pipeline, also pull its pipeline specific image: Check the documentation for any other pipeline specific images.",
+          "Step 2 — Configure aiModels.json The file tells your orchestrator which AI pipelines and models to serve, what to charge, and whether to keep models warm in VRAM.",
+          "Create the file at : Add at least one pipeline entry.",
+          "The example below configures a single pipeline with a warm model — the minimal working configuration: Field reference Field Required Description Yes Pipeline name (e.g.",
+          "No If , model is preloaded into VRAM on startup No Max concurrent inference requests (default: 1) No Performance flags: (up to +25% speed) and/or (up to +50% speed) No For external containers only — URL of a separately managed runner No Bearer token for external container authentication During Beta, only one warm model per GPU is supported."
+        ],
+        "matched_claim_families": []
+      },
+      {
+        "file": "v2/orchestrators/quickstart/guide.mdx",
+        "extracted_claims": [
+          "Choose your test 20 30 min.",
+          "Requires 24 GB VRAM for diffusion; 8 GB for LLM alternative.",
+          "What you need NVIDIA GPU — any model for the video test; 24 GB VRAM for AI diffusion (or 8 16 GB for the LLM alternative) Docker Engine — with NVIDIA Container Toolkit for GPU passthrough ffmpeg — for the video test only ( to check) Linux — required for the AI test (video test also works on WSL2 or macOS Docker) No Arbitrum wallet, no LPT, no ETH.",
+          "After the quickstart Configure for production: on chain, staking, reward calling."
+        ],
+        "matched_claim_families": []
+      },
+      {
+        "file": "v2/orchestrators/quickstart/tutorial.mdx",
+        "extracted_claims": [],
+        "matched_claim_families": []
+      },
+      {
+        "file": "v2/orchestrators/quickstart/video-transcoding.mdx",
+        "extracted_claims": [
+          "Two smoke tests on this page: video transcoding (20 30 min) and AI inference (35 65 min).",
+          "Prerequisites Confirm each item before starting: Requirement Verify with Notes NVIDIA GPU Note your VRAM total.",
+          "24 GB needed for AI diffusion; 8 GB minimum for LLM alternative.",
+          "Docker Engine Docker Engine 24+ recommended.",
+          "This simulates real video from OBS or a camera: Leave this running for 10 15 seconds, then stop it with .",
+          "AI inference test The diffusion test requires 24 GB VRAM.",
+          "For GPUs with 8 16 GB VRAM, skip to the LLM alternative below.",
+          "Time estimate: 35 65 minutes most of this is the model download (~6 GB for SDXL Lightning).",
+          "The actual inference test takes under 2 minutes once the model is loaded.",
+          "Create : loads the model into VRAM at startup this is required for the test to work reliably.",
+          "must be the host path ( ), not a path inside the container.",
+          "Watch the startup logs: The first start downloads model weights from HuggingFace (~6 GB)."
+        ],
+        "matched_claim_families": []
+      }
+    ],
+    "verified_claims": [
+      {
+        "claim_id": "orch-price-ceiling-filtering",
+        "claim_family": "gateway-price-filtering",
+        "entity": "orchestrator",
+        "canonical_owner": "v2/orchestrators/setup/configure.mdx",
+        "registry_status": "verified",
+        "status": "verified",
+        "freshness_class": "review-on-change",
+        "confidence": "high",
+        "summary": "Gateways filter orchestrators by price ceilings before routing work. Competitive hardware alone is not enough if operator pricing exceeds gateway maxima.",
+        "primary_evidence": {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx",
+          "summary": "repo evidence matched",
+          "selection_score": 190,
+          "ranking_reason": "source priority 90; 10 matched terms"
+        },
+        "evidence": [
+          {
+            "type": "repo-file",
+            "ref": "v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx",
+            "checked_on": "2026-03-16",
+            "ok": true,
+            "matched": true,
+            "summary": "repo evidence matched",
+            "matched_terms": [
+              "Price too high",
+              "maxPricePerCapability",
+              "receive no transcoding or AI jobs",
+              "gateways filter orchestrators by price",
+              "priceperunit",
+              "prices are too high",
+              "will not receive work",
+              "gateway price filtering",
+              "Gateways filter orchestrators by price ceilings before routing work. Competitive hardware alone is not enough if operator pricing exceeds gateway maxima.",
+              "configure"
+            ],
+            "matched_terms_count": 10,
+            "source_rank": 90,
+            "preference_score": 0,
+            "recency_score": 0,
+            "evidence_date": "",
+            "evidence_state": "repo-current",
+            "current_language_hits": 13,
+            "historical_language_hits": 1,
+            "selection_score": 190,
+            "ranking_reason": "source priority 90; 10 matched terms",
+            "selection_role": "primary",
+            "comparison_reason": "highest ranked matched source",
+            "primary_ref": "v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx"
+          },
+          {
+            "type": "repo-file",
+            "ref": "v2/orchestrators/setup/configure.mdx",
+            "checked_on": "2026-03-16",
+            "ok": true,
+            "matched": true,
+            "summary": "repo evidence matched",
+            "matched_terms": [
+              "gateways will route jobs to lower-priced orchestrators",
+              "pricePerUnit",
+              "gateways filter orchestrators by price",
+              "prices are too high",
+              "will not receive work",
+              "gateway price filtering",
+              "Gateways filter orchestrators by price ceilings before routing work. Competitive hardware alone is not enough if operator pricing exceeds gateway maxima.",
+              "configure"
+            ],
+            "matched_terms_count": 8,
+            "source_rank": 90,
+            "preference_score": 0,
+            "recency_score": 0,
+            "evidence_date": "",
+            "evidence_state": "repo-current",
+            "current_language_hits": 7,
+            "historical_language_hits": 1,
+            "selection_score": 170,
+            "ranking_reason": "source priority 90; 8 matched terms",
+            "selection_role": "weaker",
+            "comparison_reason": "fewer matched signals than primary evidence",
+            "primary_ref": "v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx"
+          }
+        ],
+        "page_observations": [
+          {
+            "file": "v2/orchestrators/setup/configure.mdx",
+            "snippets": [],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "snippets": [],
+            "values": []
+          }
+        ],
+        "propagation_queue": [
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "page_class": "guide",
+            "role": "dependent-page",
+            "action": "update-now",
+            "claim_id": "orch-price-ceiling-filtering"
+          },
+          {
+            "file": "v2/orchestrators/setup/configure.mdx",
+            "page_class": "setup",
+            "role": "canonical-owner",
+            "action": "update-now",
+            "claim_id": "orch-price-ceiling-filtering"
+          }
+        ],
+        "contradictions": [],
+        "notes": "This family covers both transcoding `-pricePerUnit` and AI capability price ceilings because both are gateway-side filters on whether work reaches the node."
+      }
+    ],
+    "conflicted_claims": [
+      {
+        "claim_id": "orch-batch-ai-vram-threshold",
+        "claim_family": "hardware-vram-minimums",
+        "entity": "orchestrator",
+        "canonical_owner": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+        "registry_status": "conflicted",
+        "status": "conflicted",
+        "freshness_class": "review-on-change",
+        "confidence": "low",
+        "summary": "Docs disagree on the practical VRAM minimum for batch AI and real-time AI workloads. Hardware and setup pages should not present conflicting minimums as equally current.",
+        "primary_evidence": {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/setup/rcs-requirements.mdx",
+          "summary": "repo evidence matched",
+          "selection_score": 205,
+          "ranking_reason": "source priority 90; 11 matched terms; current-language match 15; historical-language penalty 1"
+        },
+        "evidence": [
+          {
+            "type": "repo-file",
+            "ref": "v2/orchestrators/setup/rcs-requirements.mdx",
+            "checked_on": "2026-03-16",
+            "ok": true,
+            "matched": true,
+            "summary": "repo evidence matched",
+            "matched_terms": [
+              "24 GB+ for the full pipeline suite",
+              "8 GB for LLM-only",
+              "16 gb",
+              "24 gb",
+              "8 gb",
+              "real-time ai",
+              "rtx 3090",
+              "vram",
+              "hardware vram minimums",
+              "Docs disagree on the practical VRAM minimum for batch AI and real-time AI workloads. Hardware and setup pages should not present conflicting minimums as equally current.",
+              "requirements"
+            ],
+            "matched_terms_count": 11,
+            "source_rank": 90,
+            "preference_score": 0,
+            "recency_score": 0,
+            "evidence_date": "",
+            "evidence_state": "repo-current",
+            "current_language_hits": 15,
+            "historical_language_hits": 1,
+            "selection_score": 205,
+            "ranking_reason": "source priority 90; 11 matched terms; current-language match 15; historical-language penalty 1",
+            "selection_role": "primary",
+            "comparison_reason": "highest ranked matched source",
+            "primary_ref": "v2/orchestrators/setup/rcs-requirements.mdx"
+          },
+          {
+            "type": "repo-file",
+            "ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+            "checked_on": "2026-03-16",
+            "ok": false,
+            "matched": false,
+            "summary": "repo file missing",
+            "source_rank": 90,
+            "matched_terms": [],
+            "matched_terms_count": 0,
+            "current_language_hits": 0,
+            "historical_language_hits": 0,
+            "selection_score": 0,
+            "ranking_reason": "source priority 90; repo file missing",
+            "selection_role": "weaker",
+            "comparison_reason": "fetch failed or unsupported evidence type",
+            "primary_ref": "v2/orchestrators/setup/rcs-requirements.mdx"
+          }
+        ],
+        "page_observations": [
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "snippets": [],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+            "snippets": [
+              "This requires: Automated monitoring with immediate alerts on node failure Automated restart and recovery Stable, redundant connectivity (not shared home broadband) Consistent power supply (UPS or colocation) Hardware health monitoring (GPU temperatures, VRAM utilisation) Model warm up management For AI inference workloads, cold model starts (loading a model from disk into VRAM on first request) introduce latency that breaks user facing SLAs.",
+              "The practical implication: the VRAM requirements for commercial AI operation are determined by the sum of all models that must be simultaneously loaded, not just the largest single model.",
+              "Prioritise: Pipelines with few available Orchestrators and active demand High VRAM models that exclude commodity GPU competition Cascade (real time AI) pipelines if hardware supports it higher per job value Commercial pricing is part market positioning and part relationship management.",
+              "This is the natural next step for video Orchestrators who invest in high VRAM GPUs."
+            ],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+            "snippets": [
+              "Path Best fit today Main constraint Pool worker Any NVIDIA GPU, little or no LPT, lower operating commitment Lower control and lower earnings ceiling than running a full Orchestrator Solo AI Orchestrator 24 GB+ VRAM, limited LPT, willing to manage warm models and demand shifts AI demand, model selection, and pricing change faster than video workloads Solo video Orchestrator Reliable GPU and bandwidth, plus enough LPT to stay competitive for the active set Active set stake is the biggest barrier to receiving steady video work Commercial or pool operator Multiple GPUs or direct Gateway demand, and readiness for 99%+ operational standards Requires relationship building, monitoring, and disciplined pricing What Orchestrators Earn Orchestrators earn from two separate streams.",
+              "Batch AI inference: 8 24 GB VRAM depending on pipelines.",
+              "An RTX 3090 (24 GB) is the practical minimum for competitive diffusion pipelines.",
+              "Real time AI (Cascade): 24 GB VRAM minimum."
+            ],
+            "values": [
+              "24 GB",
+              "RTX 3090"
+            ]
+          },
+          {
+            "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+            "snippets": [
+              "Hardware Component Minimum Recommended GPU Any NVIDIA with NVENC/NVDEC RTX 3060+ (consumer) or T4+ (datacentre) VRAM 4 GB 8 GB+ CPU 4 cores 8 cores RAM 16 GB 32 GB Storage 50 GB SSD 100 GB NVMe SSD CPU only transcoding is possible (omit the flag) but significantly slower.",
+              "Component Minimum Recommended GPU NVIDIA with CUDA support RTX 3090 / 4090 / A100 VRAM 8 GB (LLM only via Ollama) 24 GB+ (diffusion + LLM + audio) CPU 4 cores 8 cores RAM 16 GB 32 GB Storage 100 GB SSD 250 GB+ NVMe SSD (AI model weights) VRAM determines which AI pipelines the orchestrator can serve.",
+              "8 GB runs quantised LLMs only.",
+              "24 GB+ unlocks diffusion, audio, vision, and real time AI."
+            ],
+            "values": [
+              "16 GB",
+              "24 GB",
+              "8 GB",
+              "RTX 3090"
+            ]
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx",
+            "snippets": [
+              "Video only AI only Dual Mode Revenue streams ETH transcoding fees + LPT rewards ETH AI inference fees Both streams simultaneously Pricing config (wei per pixel) per pipeline Both and GPU execution path NVENC/NVDEC hardware blocks CUDA compute cores Both paths, independent queues VRAM requirement Minimal (frame buffers only) 8 24 GB depending on model 16 GB recommended; 8 GB viable for LLM only pipelines Active set Required for video job eligibility AI job eligibility routes through capability advertisement Required for video; AI routes via capability advertisement OS support Linux, Windows Linux only Linux only Before You Start Confirm these prerequisites before starting: Hardware: NVIDIA GPU with 16 GB VRAM or more.",
+              "8 GB is sufficient for LLM pipelines via the Ollama runner.",
+              "Most diffusion model pipelines require 16 GB or more.",
+              "For all supported pipelines, model IDs, and VRAM requirements, see ."
+            ],
+            "values": [
+              "16 GB",
+              "24 GB",
+              "8 GB"
+            ]
+          }
+        ],
+        "propagation_queue": [
+          {
+            "file": "v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-batch-ai-vram-threshold"
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "page_class": "guide",
+            "role": "dependent-page",
+            "action": "verify-only",
+            "claim_id": "orch-batch-ai-vram-threshold"
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+            "page_class": "guide",
+            "role": "dependent-page",
+            "action": "verify-only",
+            "claim_id": "orch-batch-ai-vram-threshold"
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/operator-impact.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-batch-ai-vram-threshold"
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+            "page_class": "guide",
+            "role": "dependent-page",
+            "action": "verify-only",
+            "claim_id": "orch-batch-ai-vram-threshold"
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/requirements.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-batch-ai-vram-threshold"
+          },
+          {
+            "file": "v2/orchestrators/setup/configure.mdx",
+            "page_class": "setup",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-batch-ai-vram-threshold"
+          },
+          {
+            "file": "v2/orchestrators/setup/r-monitor.mdx",
+            "page_class": "setup",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-batch-ai-vram-threshold"
+          },
+          {
+            "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+            "page_class": "setup",
+            "role": "dependent-page",
+            "action": "verify-only",
+            "claim_id": "orch-batch-ai-vram-threshold"
+          }
+        ],
+        "contradictions": [
+          {
+            "claim_family": "hardware-vram-minimums",
+            "claim_id": "orch-batch-ai-vram-threshold",
+            "pages": [
+              {
+                "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+                "values": [],
+                "snippet": "This requires: Automated monitoring with immediate alerts on node failure Automated restart and recovery Stable, redundant connectivity (not shared home broadband) Consistent power supply (UPS or colocation) Hardware health monitoring (GPU temperatures, VRAM utilisation) Model warm up management For AI inference workloads, cold model starts (loading a model from disk into VRAM on first request) introduce latency that breaks user facing SLAs."
+              },
+              {
+                "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+                "values": [
+                  "24 GB",
+                  "RTX 3090"
+                ],
+                "snippet": "Path Best fit today Main constraint Pool worker Any NVIDIA GPU, little or no LPT, lower operating commitment Lower control and lower earnings ceiling than running a full Orchestrator Solo AI Orchestrator 24 GB+ VRAM, limited LPT, willing to manage warm models and demand shifts AI demand, model selection, and pricing change faster than video workloads Solo video Orchestrator Reliable GPU and bandwidth, plus enough LPT to stay competitive for the active set Active set stake is the biggest barrier to receiving steady video work Commercial or pool operator Multiple GPUs or direct Gateway demand, and readiness for 99%+ operational standards Requires relationship building, monitoring, and disciplined pricing What Orchestrators Earn Orchestrators earn from two separate streams."
+              },
+              {
+                "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+                "values": [
+                  "16 GB",
+                  "24 GB",
+                  "8 GB",
+                  "RTX 3090"
+                ],
+                "snippet": "Hardware Component Minimum Recommended GPU Any NVIDIA with NVENC/NVDEC RTX 3060+ (consumer) or T4+ (datacentre) VRAM 4 GB 8 GB+ CPU 4 cores 8 cores RAM 16 GB 32 GB Storage 50 GB SSD 100 GB NVMe SSD CPU only transcoding is possible (omit the flag) but significantly slower."
+              },
+              {
+                "file": "v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx",
+                "values": [
+                  "16 GB",
+                  "24 GB",
+                  "8 GB"
+                ],
+                "snippet": "Video only AI only Dual Mode Revenue streams ETH transcoding fees + LPT rewards ETH AI inference fees Both streams simultaneously Pricing config (wei per pixel) per pipeline Both and GPU execution path NVENC/NVDEC hardware blocks CUDA compute cores Both paths, independent queues VRAM requirement Minimal (frame buffers only) 8 24 GB depending on model 16 GB recommended; 8 GB viable for LLM only pipelines Active set Required for video job eligibility AI job eligibility routes through capability advertisement Required for video; AI routes via capability advertisement OS support Linux, Windows Linux only Linux only Before You Start Confirm these prerequisites before starting: Hardware: NVIDIA GPU with 16 GB VRAM or more."
+              }
+            ],
+            "best_known_truth": "Docs disagree on the practical VRAM minimum for batch AI and real-time AI workloads. Hardware and setup pages should not present conflicting minimums as equally current.",
+            "confidence": "low",
+            "recommended_action": "verify-more"
+          }
+        ],
+        "notes": "The current authored pages mention 8 GB, 16 GB, 24 GB, and 24 GB+ depending on context. The runner should surface those differences explicitly."
+      },
+      {
+        "claim_id": "orch-active-set-threshold",
+        "claim_family": "stake-threshold",
+        "entity": "orchestrator",
+        "canonical_owner": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+        "registry_status": "time-sensitive",
+        "status": "conflicted",
+        "freshness_class": "volatile",
+        "confidence": "low",
+        "summary": "Solo transcoding guidance repeatedly states that operators need enough bonded LPT to enter the active set, often phrased as top 100, but that wording is time-sensitive and should not be treated as durable fact without current evidence.",
+        "primary_evidence": {
+          "type": "official-page",
+          "ref": "https://explorer.livepeer.org/orchestrators",
+          "summary": "official page fetched but signal missing",
+          "selection_score": 100,
+          "ranking_reason": "source priority 100"
+        },
+        "evidence": [
+          {
+            "type": "official-page",
+            "ref": "https://explorer.livepeer.org/orchestrators",
+            "checked_on": "2026-03-16",
+            "ok": true,
+            "matched": false,
+            "summary": "official page fetched but signal missing",
+            "matched_terms": [],
+            "matched_terms_count": 0,
+            "source_rank": 100,
+            "preference_score": 0,
+            "recency_score": 0,
+            "evidence_date": "",
+            "evidence_state": "reachable",
+            "current_language_hits": 0,
+            "historical_language_hits": 0,
+            "selection_score": 100,
+            "ranking_reason": "source priority 100",
+            "selection_role": "primary",
+            "comparison_reason": "highest ranked matched source",
+            "primary_ref": "https://explorer.livepeer.org/orchestrators"
+          }
+        ],
+        "page_observations": [
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+            "snippets": [
+              "Path Best fit today Main constraint Pool worker Any NVIDIA GPU, little or no LPT, lower operating commitment Lower control and lower earnings ceiling than running a full Orchestrator Solo AI Orchestrator 24 GB+ VRAM, limited LPT, willing to manage warm models and demand shifts AI demand, model selection, and pricing change faster than video workloads Solo video Orchestrator Reliable GPU and bandwidth, plus enough LPT to stay competitive for the active set Active set stake is the biggest barrier to receiving steady video work Commercial or pool operator Multiple GPUs or direct Gateway demand, and readiness for 99%+ operational standards Requires relationship building, monitoring, and disciplined pricing What Orchestrators Earn Orchestrators earn from two separate streams.",
+              "To receive video transcoding jobs as a solo Orchestrator, the node must be in the active set the top Orchestrators by total bonded stake eligible to receive work each round.",
+              "Acquiring enough LPT to compete in the active set is the primary entry barrier for solo video Orchestrators.",
+              "A well configured AI node with warm models loaded can compete from day one without active set membership."
+            ],
+            "values": [
+              "Active set",
+              "active set"
+            ]
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "snippets": [],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+            "snippets": [
+              "That is the core shift in the business case: the upside comes from being part of an application's serving path, not just from holding more bonded LPT.",
+              "Practical discipline for commercial capability management: Declare only models that are loaded and warm at startup Remove capability declarations for models that are not being actively served Use to specify exactly which pipeline/model combinations to load on startup Monitor model load times and remove slow start models from the active set Building Gateway relationships Active commercial relationships with Gateways typically develop through: Consistent performance history visible on the Livepeer Explorer Participation in the channel on the Direct outreach to Gateway SPEs and ecosystem partners Demonstrated capability support for pipelines that specific Gateways need Gateways serving AI products actively look for Orchestrators with specific capability profiles."
+            ],
+            "values": [
+              "active set"
+            ]
+          },
+          {
+            "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+            "snippets": [
+              "Amount varies by active set competition.",
+              "Video operators need enough for active set membership."
+            ],
+            "values": [
+              "active set"
+            ]
+          }
+        ],
+        "propagation_queue": [
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "page_class": "guide",
+            "role": "dependent-page",
+            "action": "verify-only",
+            "claim_id": "orch-active-set-threshold"
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+            "page_class": "guide",
+            "role": "dependent-page",
+            "action": "verify-only",
+            "claim_id": "orch-active-set-threshold"
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+            "page_class": "guide",
+            "role": "canonical-owner",
+            "action": "verify-only",
+            "claim_id": "orch-active-set-threshold"
+          },
+          {
+            "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+            "page_class": "setup",
+            "role": "dependent-page",
+            "action": "verify-only",
+            "claim_id": "orch-active-set-threshold"
+          }
+        ],
+        "contradictions": [
+          {
+            "claim_family": "stake-threshold",
+            "claim_id": "orch-active-set-threshold",
+            "pages": [
+              {
+                "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+                "values": [
+                  "Active set",
+                  "active set"
+                ],
+                "snippet": "Path Best fit today Main constraint Pool worker Any NVIDIA GPU, little or no LPT, lower operating commitment Lower control and lower earnings ceiling than running a full Orchestrator Solo AI Orchestrator 24 GB+ VRAM, limited LPT, willing to manage warm models and demand shifts AI demand, model selection, and pricing change faster than video workloads Solo video Orchestrator Reliable GPU and bandwidth, plus enough LPT to stay competitive for the active set Active set stake is the biggest barrier to receiving steady video work Commercial or pool operator Multiple GPUs or direct Gateway demand, and readiness for 99%+ operational standards Requires relationship building, monitoring, and disciplined pricing What Orchestrators Earn Orchestrators earn from two separate streams."
+              },
+              {
+                "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+                "values": [
+                  "active set"
+                ],
+                "snippet": "That is the core shift in the business case: the upside comes from being part of an application's serving path, not just from holding more bonded LPT."
+              },
+              {
+                "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+                "values": [
+                  "active set"
+                ],
+                "snippet": "Amount varies by active set competition."
+              }
+            ],
+            "best_known_truth": "Solo transcoding guidance repeatedly states that operators need enough bonded LPT to enter the active set, often phrased as top 100, but that wording is time-sensitive and should not be treated as durable fact without current evidence.",
+            "confidence": "low",
+            "recommended_action": "verify-more"
+          }
+        ],
+        "notes": "Use Explorer or protocol-facing sources for current state. Treat 'top 100' wording as volatile until rechecked."
+      },
+      {
+        "claim_id": "orch-ai-routing-capability-based",
+        "claim_family": "ai-routing-mechanics",
+        "entity": "orchestrator",
+        "canonical_owner": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+        "registry_status": "verified",
+        "status": "conflicted",
+        "freshness_class": "review-on-change",
+        "confidence": "low",
+        "summary": "AI jobs are routed primarily by capability match and price ceilings rather than by stake weight. Docs should not collapse AI routing into the same rules as transcoding routing.",
+        "primary_evidence": {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+          "summary": "repo file missing",
+          "selection_score": 0,
+          "ranking_reason": "source priority 90; repo file missing"
+        },
+        "evidence": [
+          {
+            "type": "repo-file",
+            "ref": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+            "checked_on": "2026-03-16",
+            "ok": false,
+            "matched": false,
+            "summary": "repo file missing",
+            "source_rank": 90,
+            "matched_terms": [],
+            "matched_terms_count": 0,
+            "current_language_hits": 0,
+            "historical_language_hits": 0,
+            "selection_score": 0,
+            "ranking_reason": "source priority 90; repo file missing",
+            "selection_role": "primary",
+            "comparison_reason": "highest ranked matched source",
+            "primary_ref": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx"
+          },
+          {
+            "type": "repo-file",
+            "ref": "v2/orchestrators/guides/deployment-details/dual-workload-setup.mdx",
+            "checked_on": "2026-03-16",
+            "ok": false,
+            "matched": false,
+            "summary": "repo file missing",
+            "source_rank": 90,
+            "matched_terms": [],
+            "matched_terms_count": 0,
+            "current_language_hits": 0,
+            "historical_language_hits": 0,
+            "selection_score": 0,
+            "ranking_reason": "source priority 90; repo file missing",
+            "selection_role": "weaker",
+            "comparison_reason": "fetch failed or unsupported evidence type",
+            "primary_ref": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx"
+          }
+        ],
+        "page_observations": [
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "snippets": [],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx",
+            "snippets": [
+              "Batch AI inference AI jobs route on capability match + price ceiling.",
+              "Stake plays a much smaller role.",
+              "This matters for operators: a new orchestrator with 24 GB VRAM and correctly configured AI pipelines competes for AI jobs immediately, regardless of stake.",
+              "LLM inference Routes the same way as batch AI through capability match and price."
+            ],
+            "values": [
+              "Stake plays a much smaller role",
+              "capability match"
+            ]
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx",
+            "snippets": [
+              "Capability, pricing, and latency matter more than active set position for many AI jobs.",
+              "How the network routes AI jobs Applications never communicate with orchestrators directly.",
+              "The key fields that determine whether you receive AI jobs are: Field What it controls Operator implication Which pipelines you support Declare every pipeline in Your price per pipeline and model Must be below the gateway's GPU specs advertised to the gateway Auto populated by go livepeer Base transcoding price Controls transcoding job eligibility Gateway pricing is a hard gate.",
+              "Before your orchestrator receives AI jobs, it must appear there under at least one pipeline."
+            ],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx",
+            "snippets": [],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx",
+            "snippets": [],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/model-hosting.mdx",
+            "snippets": [],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup.mdx",
+            "snippets": [],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/video-transcoding-operations.mdx",
+            "snippets": [],
+            "values": []
+          }
+        ],
+        "propagation_queue": [
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-ai-routing-capability-based"
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-ai-routing-capability-based"
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-ai-routing-capability-based"
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/model-hosting.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-ai-routing-capability-based"
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-ai-routing-capability-based"
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/video-transcoding-operations.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-ai-routing-capability-based"
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-ai-routing-capability-based"
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-ai-routing-capability-based"
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "page_class": "guide",
+            "role": "dependent-page",
+            "action": "verify-only",
+            "claim_id": "orch-ai-routing-capability-based"
+          }
+        ],
+        "contradictions": [
+          {
+            "claim_family": "ai-routing-mechanics",
+            "claim_id": "orch-ai-routing-capability-based",
+            "pages": [
+              {
+                "file": "v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx",
+                "values": [
+                  "Stake plays a much smaller role",
+                  "capability match"
+                ],
+                "snippet": "Batch AI inference AI jobs route on capability match + price ceiling."
+              },
+              {
+                "file": "v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx",
+                "values": [],
+                "snippet": "Capability, pricing, and latency matter more than active set position for many AI jobs."
+              }
+            ],
+            "best_known_truth": "AI jobs are routed primarily by capability match and price ceilings rather than by stake weight. Docs should not collapse AI routing into the same rules as transcoding routing.",
+            "confidence": "low",
+            "recommended_action": "verify-more"
+          }
+        ],
+        "notes": "This family is high-value because setup pages frequently mix stake-sensitive transcoding guidance with AI inference guidance."
+      },
+      {
+        "claim_id": "orch-pool-vs-solo-prerequisites",
+        "claim_family": "setup-prerequisites",
+        "entity": "orchestrator",
+        "canonical_owner": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "registry_status": "verified",
+        "status": "conflicted",
+        "freshness_class": "review-on-change",
+        "confidence": "low",
+        "summary": "Pool workers and solo operators have different prerequisites. Pages should not imply that LPT, ETH, or public service exposure are universal requirements for every orchestrator entry path.",
+        "primary_evidence": {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx",
+          "summary": "repo evidence matched",
+          "selection_score": 180,
+          "ranking_reason": "source priority 90; 9 matched terms"
+        },
+        "evidence": [
+          {
+            "type": "repo-file",
+            "ref": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx",
+            "checked_on": "2026-03-16",
+            "ok": true,
+            "matched": true,
+            "summary": "repo evidence matched",
+            "matched_terms": [
+              "LPT stake required",
+              "No",
+              "Pool worker",
+              "no lpt required",
+              "on-chain ops",
+              "solo orchestrator",
+              "staking",
+              "Pool workers and solo operators have different prerequisites. Pages should not imply that LPT, ETH, or public service exposure are universal requirements for every orchestrator entry path.",
+              "setup options"
+            ],
+            "matched_terms_count": 9,
+            "source_rank": 90,
+            "preference_score": 0,
+            "recency_score": 0,
+            "evidence_date": "",
+            "evidence_state": "repo-current",
+            "current_language_hits": 11,
+            "historical_language_hits": 0,
+            "selection_score": 180,
+            "ranking_reason": "source priority 90; 9 matched terms",
+            "selection_role": "primary",
+            "comparison_reason": "highest ranked matched source",
+            "primary_ref": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx"
+          },
+          {
+            "type": "repo-file",
+            "ref": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "checked_on": "2026-03-16",
+            "ok": true,
+            "matched": true,
+            "summary": "repo evidence matched",
+            "matched_terms": [
+              "No LPT, just a GPU",
+              "Pool worker",
+              "not an Orchestrator at all",
+              "no lpt required",
+              "solo orchestrator",
+              "staking",
+              "setup options"
+            ],
+            "matched_terms_count": 7,
+            "source_rank": 90,
+            "preference_score": 0,
+            "recency_score": 0,
+            "evidence_date": "",
+            "evidence_state": "repo-current",
+            "current_language_hits": 2,
+            "historical_language_hits": 0,
+            "selection_score": 160,
+            "ranking_reason": "source priority 90; 7 matched terms",
+            "selection_role": "weaker",
+            "comparison_reason": "fewer matched signals than primary evidence",
+            "primary_ref": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx"
+          }
+        ],
+        "page_observations": [
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "snippets": [
+              "At a Glance Alternative What it solves What it requires Guide Pool worker Earn from GPU compute through a pool worker path with the operator handling stake and protocol operations GPU; a pool to join; zero stake O T split Separate protocol management from GPU workload processing; scale Transcoder machines independently Dedicated Orchestrator and Transcoder hosts; staked LPT; shared Siphon Keep the keystore on an isolated machine; GPU restarts leave LPT rewards uninterrupted Two machines; staked LPT; Python on secure machine Pool Worker A pool worker runs against an existing pool operator's Orchestrator address.",
+              "The pool operator handles staking, reward calling, pricing, and Gateway relationships.",
+              "Choosing the Right Alternative Situation Right path No LPT, just a GPU Pool worker worker only earnings path One machine, comfortable with the single process deployment Standard single process deployment see the Setup Guide for the default architecture Multiple GPU machines under one Orchestrator identity O T split scale Transcoder machines behind a single Orchestrator GPU machine uptime is uncertain; LPT rewards must be protected Siphon reward calling is independent of GPU machine state Keystore must be isolated from the media processing machine Siphon GPU machine never holds the keystore Earn inflation rewards before GPU hardware is ready Siphon (secure machine only) add GPU machine later without re registration Running a pool for external workers O T split as the foundation then see Related Pages Contribute GPU compute through an operator managed pool path with no staking or on chain operations."
+            ],
+            "values": [
+              "Pool Worker",
+              "Pool worker",
+              "pool worker"
+            ]
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+            "snippets": [
+              "Pool operators manage the Orchestrator registration, on chain staking, and reward calling for a fleet of GPU workers."
+            ],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+            "snippets": [
+              "Path Best fit today Main constraint Pool worker Any NVIDIA GPU, little or no LPT, lower operating commitment Lower control and lower earnings ceiling than running a full Orchestrator Solo AI Orchestrator 24 GB+ VRAM, limited LPT, willing to manage warm models and demand shifts AI demand, model selection, and pricing change faster than video workloads Solo video Orchestrator Reliable GPU and bandwidth, plus enough LPT to stay competitive for the active set Active set stake is the biggest barrier to receiving steady video work Commercial or pool operator Multiple GPUs or direct Gateway demand, and readiness for 99%+ operational standards Requires relationship building, monitoring, and disciplined pricing What Orchestrators Earn Orchestrators earn from two separate streams.",
+              "To receive video transcoding jobs as a solo Orchestrator, the node must be in the active set the top Orchestrators by total bonded stake eligible to receive work each round.",
+              "Realistic time commitments: Initial setup and configuration: 4 16 hours (varies by path) Monitoring and maintenance: 1 3 hours per week once stable Troubleshooting: variable go livepeer updates: 30 60 minutes per release Pool workers have minimal ongoing time investment once the worker process is configured.",
+              "Solo Orchestrators require consistent monitoring, particularly for reward call reliability and response to Gateway selection issues."
+            ],
+            "values": [
+              "Pool worker",
+              "solo Orchestrator"
+            ]
+          },
+          {
+            "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+            "snippets": [
+              "LPT on Arbitrum One For staking."
+            ],
+            "values": []
+          }
+        ],
+        "propagation_queue": [
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "page_class": "guide",
+            "role": "canonical-owner",
+            "action": "verify-only",
+            "claim_id": "orch-pool-vs-solo-prerequisites"
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+            "page_class": "guide",
+            "role": "dependent-page",
+            "action": "verify-only",
+            "claim_id": "orch-pool-vs-solo-prerequisites"
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+            "page_class": "guide",
+            "role": "dependent-page",
+            "action": "verify-only",
+            "claim_id": "orch-pool-vs-solo-prerequisites"
+          },
+          {
+            "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+            "page_class": "setup",
+            "role": "dependent-page",
+            "action": "verify-only",
+            "claim_id": "orch-pool-vs-solo-prerequisites"
+          }
+        ],
+        "contradictions": [
+          {
+            "claim_family": "setup-prerequisites",
+            "claim_id": "orch-pool-vs-solo-prerequisites",
+            "pages": [
+              {
+                "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+                "values": [
+                  "Pool Worker",
+                  "Pool worker",
+                  "pool worker"
+                ],
+                "snippet": "At a Glance Alternative What it solves What it requires Guide Pool worker Earn from GPU compute through a pool worker path with the operator handling stake and protocol operations GPU; a pool to join; zero stake O T split Separate protocol management from GPU workload processing; scale Transcoder machines independently Dedicated Orchestrator and Transcoder hosts; staked LPT; shared Siphon Keep the keystore on an isolated machine; GPU restarts leave LPT rewards uninterrupted Two machines; staked LPT; Python on secure machine Pool Worker A pool worker runs against an existing pool operator's Orchestrator address."
+              },
+              {
+                "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+                "values": [],
+                "snippet": "Pool operators manage the Orchestrator registration, on chain staking, and reward calling for a fleet of GPU workers."
+              },
+              {
+                "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+                "values": [
+                  "Pool worker",
+                  "solo Orchestrator"
+                ],
+                "snippet": "Path Best fit today Main constraint Pool worker Any NVIDIA GPU, little or no LPT, lower operating commitment Lower control and lower earnings ceiling than running a full Orchestrator Solo AI Orchestrator 24 GB+ VRAM, limited LPT, willing to manage warm models and demand shifts AI demand, model selection, and pricing change faster than video workloads Solo video Orchestrator Reliable GPU and bandwidth, plus enough LPT to stay competitive for the active set Active set stake is the biggest barrier to receiving steady video work Commercial or pool operator Multiple GPUs or direct Gateway demand, and readiness for 99%+ operational standards Requires relationship building, monitoring, and disciplined pricing What Orchestrators Earn Orchestrators earn from two separate streams."
+              },
+              {
+                "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+                "values": [],
+                "snippet": "LPT on Arbitrum One For staking."
+              }
+            ],
+            "best_known_truth": "Pool workers and solo operators have different prerequisites. Pages should not imply that LPT, ETH, or public service exposure are universal requirements for every orchestrator entry path.",
+            "confidence": "low",
+            "recommended_action": "verify-more"
+          }
+        ],
+        "notes": "This is a durable claim family but still needs contradiction checks against setup-facing pages."
+      },
+      {
+        "claim_id": "orch-siphon-reward-isolation",
+        "claim_family": "split-setup-reward-safety",
+        "entity": "orchestrator",
+        "canonical_owner": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+        "registry_status": "verified",
+        "status": "conflicted",
+        "freshness_class": "review-periodic",
+        "confidence": "low",
+        "summary": "A split setup with OrchestratorSiphon isolates the keystore from the GPU machine and keeps reward calling independent of GPU uptime. Docs should keep that claim aligned across setup-path pages.",
+        "primary_evidence": {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+          "summary": "repo evidence matched",
+          "selection_score": 200,
+          "ranking_reason": "source priority 90; 11 matched terms"
+        },
+        "evidence": [
+          {
+            "type": "repo-file",
+            "ref": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+            "checked_on": "2026-03-16",
+            "ok": true,
+            "matched": true,
+            "summary": "repo evidence matched",
+            "matched_terms": [
+              "GPU machine can restart",
+              "keystore stays on a secure, isolated machine",
+              "without you missing rewards",
+              "keystore isolated",
+              "missed rewards",
+              "reward calling",
+              "reward safety",
+              "split setup",
+              "split setup reward safety",
+              "A split setup with OrchestratorSiphon isolates the keystore from the GPU machine and keeps reward calling independent of GPU uptime. Docs should keep that claim aligned across setup-path pages.",
+              "siphon setup"
+            ],
+            "matched_terms_count": 11,
+            "source_rank": 90,
+            "preference_score": 0,
+            "recency_score": 0,
+            "evidence_date": "",
+            "evidence_state": "repo-current",
+            "current_language_hits": 6,
+            "historical_language_hits": 0,
+            "selection_score": 200,
+            "ranking_reason": "source priority 90; 11 matched terms",
+            "selection_role": "primary",
+            "comparison_reason": "highest ranked matched source",
+            "primary_ref": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx"
+          },
+          {
+            "type": "github-repo",
+            "ref": "https://github.com/Stronk-Tech/OrchestratorSiphon",
+            "checked_on": "2026-03-16",
+            "ok": true,
+            "matched": true,
+            "summary": "GitHub evidence matched",
+            "matched_terms": [
+              "OrchestratorSiphon",
+              "Stronk-Tech"
+            ],
+            "matched_terms_count": 2,
+            "source_rank": 60,
+            "preference_score": 0,
+            "recency_score": 8,
+            "evidence_date": "2026-01-19T11:10:59Z",
+            "evidence_state": "active",
+            "current_language_hits": 0,
+            "historical_language_hits": 0,
+            "selection_score": 88,
+            "ranking_reason": "source priority 60; 2 matched terms; recency 56d; state active",
+            "selection_role": "weaker",
+            "comparison_reason": "lower source priority than primary evidence",
+            "primary_ref": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx"
+          }
+        ],
+        "page_observations": [
+          {
+            "file": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+            "snippets": [
+              "A GPU machine reboot mid round permanently loses that round's LPT inflation reward, and missed rewards compound over time.",
+              "The Siphon split setup solves both.",
+              "OrchestratorSiphon runs on a small, secure machine and handles all on chain actions: reward calling, fee withdrawal, governance voting, and service URI updates.",
+              "Architecture Machine What it runs GPU required Secure machine OrchestratorSiphon keystore, reward calling, fee withdrawal, on chain actions No (a small VPS is sufficient) GPU machine go livepeer in transcoder mode segment processing, AI inference Yes When to Use This Setup GPU machine uptime is uncertain; keystore isolation from workload processing is needed; multiple GPU machines should run behind one Orchestrator identity; or LPT inflation rewards are needed before GPU infrastructure is ready."
+            ],
+            "values": [
+              "reward",
+              "reward calling"
+            ]
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "snippets": [
+              "The pool operator handles staking, reward calling, pricing, and Gateway relationships.",
+              "The Orchestrator process handles protocol operations, routing, reward calling, and keystore access on one machine.",
+              "This lightweight Python tool handles on chain operations only: reward calling, fee withdrawal, governance voting, and service URI updates.",
+              "Choosing the Right Alternative Situation Right path No LPT, just a GPU Pool worker worker only earnings path One machine, comfortable with the single process deployment Standard single process deployment see the Setup Guide for the default architecture Multiple GPU machines under one Orchestrator identity O T split scale Transcoder machines behind a single Orchestrator GPU machine uptime is uncertain; LPT rewards must be protected Siphon reward calling is independent of GPU machine state Keystore must be isolated from the media processing machine Siphon GPU machine never holds the keystore Earn inflation rewards before GPU hardware is ready Siphon (secure machine only) add GPU machine later without re registration Running a pool for external workers O T split as the foundation then see Related Pages Contribute GPU compute through an operator managed pool path with no staking or on chain operations."
+            ],
+            "values": [
+              "reward calling"
+            ]
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx",
+            "snippets": [
+              "The split setup separates them: one machine handles protocol operations (on chain interactions, job routing, reward calling) and one or more machines handle the GPU work.",
+              "In a correctly configured split setup, Transcoder machines stay keystore free and run with workload only flags.",
+              "Combine the split architecture with OrchestratorSiphon for keystore isolation and reward safety."
+            ],
+            "values": [
+              "reward calling",
+              "reward safety"
+            ]
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx",
+            "snippets": [],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx",
+            "snippets": [
+              "The pool operator handles staking, on chain registration, reward calling, and routing.",
+              "Pool vs solo orchestrator Pool worker Solo orchestrator LPT stake required No Yes On chain registration No (pool handles this) Yes Set your own prices No Yes Direct on chain payouts No (via pool operator) Yes Ops complexity Low Medium High Trust requirement Pool operator Yourself Reward calling responsibility Pool operator You (or Siphon) Good for GPU owners wanting passive income Operators wanting full control Step 1: Choose a pool The Livepeer community currently has a small number of active public pools."
+            ],
+            "values": [
+              "Reward calling",
+              "reward calling"
+            ]
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/new-join-a-pool.mdx",
+            "snippets": [
+              "The pool operator handles staking, on chain registration, reward calling, and job routing.",
+              "Pool Worker vs Solo Orchestrator Pool worker Solo Orchestrator LPT stake required No Yes On chain registration No (pool handles this) Yes Set own prices No Yes Direct on chain payouts No (via pool operator) Yes Operational complexity Low Medium High Trust requirement Pool operator Yourself Reward calling responsibility Pool operator Solo operator (or Siphon) Best for GPU owners wanting passive earnings without protocol management Operators wanting full control over pricing and earnings Step 1: Choose a Pool The Livepeer community currently has a small number of active public pools.",
+              "Related Pages Compare pool worker, solo Orchestrator, and split setup before choosing a path."
+            ],
+            "values": [
+              "Reward calling",
+              "reward calling"
+            ]
+          }
+        ],
+        "propagation_queue": [
+          {
+            "file": "v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-siphon-reward-isolation"
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-siphon-reward-isolation"
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/new-join-a-pool.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-siphon-reward-isolation"
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-siphon-reward-isolation"
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "page_class": "guide",
+            "role": "dependent-page",
+            "action": "verify-only",
+            "claim_id": "orch-siphon-reward-isolation"
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+            "page_class": "guide",
+            "role": "canonical-owner",
+            "action": "verify-only",
+            "claim_id": "orch-siphon-reward-isolation"
+          }
+        ],
+        "contradictions": [
+          {
+            "claim_family": "split-setup-reward-safety",
+            "claim_id": "orch-siphon-reward-isolation",
+            "pages": [
+              {
+                "file": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+                "values": [
+                  "reward",
+                  "reward calling"
+                ],
+                "snippet": "A GPU machine reboot mid round permanently loses that round's LPT inflation reward, and missed rewards compound over time."
+              },
+              {
+                "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+                "values": [
+                  "reward calling"
+                ],
+                "snippet": "The pool operator handles staking, reward calling, pricing, and Gateway relationships."
+              },
+              {
+                "file": "v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx",
+                "values": [
+                  "reward calling",
+                  "reward safety"
+                ],
+                "snippet": "The split setup separates them: one machine handles protocol operations (on chain interactions, job routing, reward calling) and one or more machines handle the GPU work."
+              },
+              {
+                "file": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx",
+                "values": [
+                  "Reward calling",
+                  "reward calling"
+                ],
+                "snippet": "The pool operator handles staking, on chain registration, reward calling, and routing."
+              },
+              {
+                "file": "v2/orchestrators/guides/deployment-details/new-join-a-pool.mdx",
+                "values": [
+                  "Reward calling",
+                  "reward calling"
+                ],
+                "snippet": "The pool operator handles staking, on chain registration, reward calling, and job routing."
+              }
+            ],
+            "best_known_truth": "A split setup with OrchestratorSiphon isolates the keystore from the GPU machine and keeps reward calling independent of GPU uptime. Docs should keep that claim aligned across setup-path pages.",
+            "confidence": "low",
+            "recommended_action": "verify-more"
+          }
+        ],
+        "notes": "This family is partly repo-doc backed and partly GitHub backed because the live project status matters alongside the docs explanation."
+      }
+    ],
+    "time_sensitive_claims": [
+      {
+        "claim_id": "orch-session-limit-default",
+        "claim_family": "transcoding-session-cap",
+        "entity": "orchestrator",
+        "canonical_owner": "v2/orchestrators/setup/configure.mdx",
+        "registry_status": "time-sensitive",
+        "status": "time-sensitive",
+        "freshness_class": "review-on-change",
+        "confidence": "medium",
+        "summary": "The default session limit and overload behavior are operational facts that multiple setup and hardware pages depend on. When docs state the default cap or the error condition, they should stay aligned with current go-livepeer behavior.",
+        "primary_evidence": {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/setup/configure.mdx",
+          "summary": "repo evidence matched",
+          "selection_score": 165,
+          "ranking_reason": "source priority 90; 7 matched terms; current-language match 7; historical-language penalty 1"
+        },
+        "evidence": [
+          {
+            "type": "repo-file",
+            "ref": "v2/orchestrators/setup/configure.mdx",
+            "checked_on": "2026-03-16",
+            "ok": true,
+            "matched": true,
+            "summary": "repo evidence matched",
+            "matched_terms": [
+              "10 concurrent sessions",
+              "maxSessions",
+              "maxsessions = 10",
+              "session limit",
+              "transcoding session cap",
+              "The default session limit and overload behavior are operational facts that multiple setup and hardware pages depend on. When docs state the default cap or the error condition, they should stay aligned with current go-livepeer behavior.",
+              "configure"
+            ],
+            "matched_terms_count": 7,
+            "source_rank": 90,
+            "preference_score": 0,
+            "recency_score": 0,
+            "evidence_date": "",
+            "evidence_state": "repo-current",
+            "current_language_hits": 7,
+            "historical_language_hits": 1,
+            "selection_score": 165,
+            "ranking_reason": "source priority 90; 7 matched terms; current-language match 7; historical-language penalty 1",
+            "selection_role": "primary",
+            "comparison_reason": "highest ranked matched source",
+            "primary_ref": "v2/orchestrators/setup/configure.mdx"
+          }
+        ],
+        "page_observations": [
+          {
+            "file": "v2/orchestrators/setup/configure.mdx",
+            "snippets": [
+              "docker compose template: Replace: with your Alchemy or Infura Arbitrum One API key with the machine's public IP address or domain name with the GPU device ID(s) from with your calculated session limit (see ) with a competitive price in wei per pixel Flag reference: Flag Required Notes Yes for production."
+            ],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/setup/connect-and-activate.mdx",
+            "snippets": [],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/setup/guide.mdx",
+            "snippets": [
+              "Tune pricing, capacity, session limits, and reward calling gas economics."
+            ],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+            "snippets": [],
+            "values": []
+          }
+        ],
+        "propagation_queue": [
+          {
+            "file": "v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-session-limit-default"
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-session-limit-default"
+          },
+          {
+            "file": "v2/orchestrators/setup/configure.mdx",
+            "page_class": "setup",
+            "role": "canonical-owner",
+            "action": "verify-only",
+            "claim_id": "orch-session-limit-default"
+          },
+          {
+            "file": "v2/orchestrators/setup/connect-and-activate.mdx",
+            "page_class": "setup",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-session-limit-default"
+          },
+          {
+            "file": "v2/orchestrators/setup/guide.mdx",
+            "page_class": "setup",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-session-limit-default"
+          },
+          {
+            "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+            "page_class": "setup",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-session-limit-default"
+          }
+        ],
+        "contradictions": [],
+        "notes": "The current page still carries a REVIEW note on OrchestratorCapped. Treat both the default value and error-name wording as review-on-change operational claims."
+      },
+      {
+        "claim_id": "orch-bandwidth-per-stream-planning",
+        "claim_family": "transcoding-bandwidth-planning",
+        "entity": "orchestrator",
+        "canonical_owner": "v2/orchestrators/setup/configure.mdx",
+        "registry_status": "time-sensitive",
+        "status": "time-sensitive",
+        "freshness_class": "review-periodic",
+        "confidence": "medium",
+        "summary": "Bandwidth planning for transcoding is currently presented as an approximate planning rule rather than a single durable network constant. Pages should make the source-resolution assumption and rendition-set basis explicit when quoting per-stream bandwidth.",
+        "primary_evidence": {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/setup/configure.mdx",
+          "summary": "repo evidence matched",
+          "selection_score": 115,
+          "ranking_reason": "source priority 90; 2 matched terms; current-language match 7; historical-language penalty 1"
+        },
+        "evidence": [
+          {
+            "type": "repo-file",
+            "ref": "v2/orchestrators/setup/configure.mdx",
+            "checked_on": "2026-03-16",
+            "ok": true,
+            "matched": true,
+            "summary": "repo evidence matched",
+            "matched_terms": [
+              "transcoding bandwidth planning",
+              "configure"
+            ],
+            "matched_terms_count": 2,
+            "source_rank": 90,
+            "preference_score": 0,
+            "recency_score": 0,
+            "evidence_date": "",
+            "evidence_state": "repo-current",
+            "current_language_hits": 7,
+            "historical_language_hits": 1,
+            "selection_score": 115,
+            "ranking_reason": "source priority 90; 2 matched terms; current-language match 7; historical-language penalty 1",
+            "selection_role": "primary",
+            "comparison_reason": "highest ranked matched source",
+            "primary_ref": "v2/orchestrators/setup/configure.mdx"
+          },
+          {
+            "type": "repo-file",
+            "ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+            "checked_on": "2026-03-16",
+            "ok": false,
+            "matched": false,
+            "summary": "repo file missing",
+            "source_rank": 90,
+            "matched_terms": [],
+            "matched_terms_count": 0,
+            "current_language_hits": 0,
+            "historical_language_hits": 0,
+            "selection_score": 0,
+            "ranking_reason": "source priority 90; repo file missing",
+            "selection_role": "weaker",
+            "comparison_reason": "fetch failed or unsupported evidence type",
+            "primary_ref": "v2/orchestrators/setup/configure.mdx"
+          }
+        ],
+        "page_observations": [
+          {
+            "file": "v2/orchestrators/setup/configure.mdx",
+            "snippets": [],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+            "snippets": [],
+            "values": []
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+            "snippets": [],
+            "values": []
+          }
+        ],
+        "propagation_queue": [
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+            "page_class": "guide",
+            "role": "dependent-page",
+            "action": "verify-only",
+            "claim_id": "orch-bandwidth-per-stream-planning"
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+            "page_class": "guide",
+            "role": "dependent-page",
+            "action": "verify-only",
+            "claim_id": "orch-bandwidth-per-stream-planning"
+          },
+          {
+            "file": "v2/orchestrators/setup/configure.mdx",
+            "page_class": "setup",
+            "role": "canonical-owner",
+            "action": "verify-only",
+            "claim_id": "orch-bandwidth-per-stream-planning"
+          }
+        ],
+        "contradictions": [],
+        "notes": "Current docs mix four-rendition benchmark data with planning guidance that assumes higher source bandwidth. Keep this as approximation-first wording, not a hard constant."
+      },
+      {
+        "claim_id": "orch-consumer-nvenc-session-cap",
+        "claim_family": "consumer-nvenc-session-cap",
+        "entity": "orchestrator",
+        "canonical_owner": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+        "registry_status": "time-sensitive",
+        "status": "time-sensitive",
+        "freshness_class": "volatile",
+        "confidence": "low",
+        "summary": "Consumer NVIDIA NVENC session-cap guidance is factual but volatile. Hardware requirement and transcoding guides should stay aligned on whether GeForce-class cards are typically capped at 2-3 concurrent sessions and whether newer generations changed that default.",
+        "primary_evidence": {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+          "summary": "repo file missing",
+          "selection_score": 0,
+          "ranking_reason": "source priority 90; repo file missing"
+        },
+        "evidence": [
+          {
+            "type": "repo-file",
+            "ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+            "checked_on": "2026-03-16",
+            "ok": false,
+            "matched": false,
+            "summary": "repo file missing",
+            "source_rank": 90,
+            "matched_terms": [],
+            "matched_terms_count": 0,
+            "current_language_hits": 0,
+            "historical_language_hits": 0,
+            "selection_score": 0,
+            "ranking_reason": "source priority 90; repo file missing",
+            "selection_role": "primary",
+            "comparison_reason": "highest ranked matched source",
+            "primary_ref": "v2/orchestrators/guides/deployment-details/requirements.mdx"
+          },
+          {
+            "type": "repo-file",
+            "ref": "v2/orchestrators/guides/ai-and-job-workloads/video-transcoding.mdx",
+            "checked_on": "2026-03-16",
+            "ok": false,
+            "matched": false,
+            "summary": "repo file missing",
+            "source_rank": 90,
+            "matched_terms": [],
+            "matched_terms_count": 0,
+            "current_language_hits": 0,
+            "historical_language_hits": 0,
+            "selection_score": 0,
+            "ranking_reason": "source priority 90; repo file missing",
+            "selection_role": "weaker",
+            "comparison_reason": "fetch failed or unsupported evidence type",
+            "primary_ref": "v2/orchestrators/guides/deployment-details/requirements.mdx"
+          }
+        ],
+        "page_observations": [
+          {
+            "file": "v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx",
+            "snippets": [
+              "When jobs are arriving at the Orchestrator and the Transcoder still stays idle: Check whether the Transcoder's capacity is already reported as fully used Check the Orchestrator metrics endpoint An idle Orchestrator usually points to Gateway routing see The Transcoder's GPU startup test failed, typically because the NVENC session cap has been reached on that GPU."
+            ],
+            "values": []
+          }
+        ],
+        "propagation_queue": [
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-consumer-nvenc-session-cap"
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-consumer-nvenc-session-cap"
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/llm-pipeline-setup.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-consumer-nvenc-session-cap"
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-consumer-nvenc-session-cap"
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-consumer-nvenc-session-cap"
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/video-transcoding-operations.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-consumer-nvenc-session-cap"
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-consumer-nvenc-session-cap"
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx",
+            "page_class": "guide",
+            "role": "inferred-page",
+            "action": "verify-only",
+            "claim_id": "orch-consumer-nvenc-session-cap"
+          }
+        ],
+        "contradictions": [],
+        "notes": "The current docs already carry REVIEW notes for Ada Lovelace uncertainty. The runner should treat these figures as volatile operational claims, not settled constants."
+      }
+    ],
+    "unverified_or_historical_claims": [],
+    "cross_page_contradictions": [
+      {
+        "claim_family": "hardware-vram-minimums",
+        "claim_id": "orch-batch-ai-vram-threshold",
+        "pages": [
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+            "values": [],
+            "snippet": "This requires: Automated monitoring with immediate alerts on node failure Automated restart and recovery Stable, redundant connectivity (not shared home broadband) Consistent power supply (UPS or colocation) Hardware health monitoring (GPU temperatures, VRAM utilisation) Model warm up management For AI inference workloads, cold model starts (loading a model from disk into VRAM on first request) introduce latency that breaks user facing SLAs."
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+            "values": [
+              "24 GB",
+              "RTX 3090"
+            ],
+            "snippet": "Path Best fit today Main constraint Pool worker Any NVIDIA GPU, little or no LPT, lower operating commitment Lower control and lower earnings ceiling than running a full Orchestrator Solo AI Orchestrator 24 GB+ VRAM, limited LPT, willing to manage warm models and demand shifts AI demand, model selection, and pricing change faster than video workloads Solo video Orchestrator Reliable GPU and bandwidth, plus enough LPT to stay competitive for the active set Active set stake is the biggest barrier to receiving steady video work Commercial or pool operator Multiple GPUs or direct Gateway demand, and readiness for 99%+ operational standards Requires relationship building, monitoring, and disciplined pricing What Orchestrators Earn Orchestrators earn from two separate streams."
+          },
+          {
+            "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+            "values": [
+              "16 GB",
+              "24 GB",
+              "8 GB",
+              "RTX 3090"
+            ],
+            "snippet": "Hardware Component Minimum Recommended GPU Any NVIDIA with NVENC/NVDEC RTX 3060+ (consumer) or T4+ (datacentre) VRAM 4 GB 8 GB+ CPU 4 cores 8 cores RAM 16 GB 32 GB Storage 50 GB SSD 100 GB NVMe SSD CPU only transcoding is possible (omit the flag) but significantly slower."
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx",
+            "values": [
+              "16 GB",
+              "24 GB",
+              "8 GB"
+            ],
+            "snippet": "Video only AI only Dual Mode Revenue streams ETH transcoding fees + LPT rewards ETH AI inference fees Both streams simultaneously Pricing config (wei per pixel) per pipeline Both and GPU execution path NVENC/NVDEC hardware blocks CUDA compute cores Both paths, independent queues VRAM requirement Minimal (frame buffers only) 8 24 GB depending on model 16 GB recommended; 8 GB viable for LLM only pipelines Active set Required for video job eligibility AI job eligibility routes through capability advertisement Required for video; AI routes via capability advertisement OS support Linux, Windows Linux only Linux only Before You Start Confirm these prerequisites before starting: Hardware: NVIDIA GPU with 16 GB VRAM or more."
+          }
+        ],
+        "best_known_truth": "Docs disagree on the practical VRAM minimum for batch AI and real-time AI workloads. Hardware and setup pages should not present conflicting minimums as equally current.",
+        "confidence": "low",
+        "recommended_action": "verify-more"
+      },
+      {
+        "claim_family": "stake-threshold",
+        "claim_id": "orch-active-set-threshold",
+        "pages": [
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+            "values": [
+              "Active set",
+              "active set"
+            ],
+            "snippet": "Path Best fit today Main constraint Pool worker Any NVIDIA GPU, little or no LPT, lower operating commitment Lower control and lower earnings ceiling than running a full Orchestrator Solo AI Orchestrator 24 GB+ VRAM, limited LPT, willing to manage warm models and demand shifts AI demand, model selection, and pricing change faster than video workloads Solo video Orchestrator Reliable GPU and bandwidth, plus enough LPT to stay competitive for the active set Active set stake is the biggest barrier to receiving steady video work Commercial or pool operator Multiple GPUs or direct Gateway demand, and readiness for 99%+ operational standards Requires relationship building, monitoring, and disciplined pricing What Orchestrators Earn Orchestrators earn from two separate streams."
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+            "values": [
+              "active set"
+            ],
+            "snippet": "That is the core shift in the business case: the upside comes from being part of an application's serving path, not just from holding more bonded LPT."
+          },
+          {
+            "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+            "values": [
+              "active set"
+            ],
+            "snippet": "Amount varies by active set competition."
+          }
+        ],
+        "best_known_truth": "Solo transcoding guidance repeatedly states that operators need enough bonded LPT to enter the active set, often phrased as top 100, but that wording is time-sensitive and should not be treated as durable fact without current evidence.",
+        "confidence": "low",
+        "recommended_action": "verify-more"
+      },
+      {
+        "claim_family": "ai-routing-mechanics",
+        "claim_id": "orch-ai-routing-capability-based",
+        "pages": [
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx",
+            "values": [
+              "Stake plays a much smaller role",
+              "capability match"
+            ],
+            "snippet": "Batch AI inference AI jobs route on capability match + price ceiling."
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx",
+            "values": [],
+            "snippet": "Capability, pricing, and latency matter more than active set position for many AI jobs."
+          }
+        ],
+        "best_known_truth": "AI jobs are routed primarily by capability match and price ceilings rather than by stake weight. Docs should not collapse AI routing into the same rules as transcoding routing.",
+        "confidence": "low",
+        "recommended_action": "verify-more"
+      },
+      {
+        "claim_family": "setup-prerequisites",
+        "claim_id": "orch-pool-vs-solo-prerequisites",
+        "pages": [
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "values": [
+              "Pool Worker",
+              "Pool worker",
+              "pool worker"
+            ],
+            "snippet": "At a Glance Alternative What it solves What it requires Guide Pool worker Earn from GPU compute through a pool worker path with the operator handling stake and protocol operations GPU; a pool to join; zero stake O T split Separate protocol management from GPU workload processing; scale Transcoder machines independently Dedicated Orchestrator and Transcoder hosts; staked LPT; shared Siphon Keep the keystore on an isolated machine; GPU restarts leave LPT rewards uninterrupted Two machines; staked LPT; Python on secure machine Pool Worker A pool worker runs against an existing pool operator's Orchestrator address."
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+            "values": [],
+            "snippet": "Pool operators manage the Orchestrator registration, on chain staking, and reward calling for a fleet of GPU workers."
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+            "values": [
+              "Pool worker",
+              "solo Orchestrator"
+            ],
+            "snippet": "Path Best fit today Main constraint Pool worker Any NVIDIA GPU, little or no LPT, lower operating commitment Lower control and lower earnings ceiling than running a full Orchestrator Solo AI Orchestrator 24 GB+ VRAM, limited LPT, willing to manage warm models and demand shifts AI demand, model selection, and pricing change faster than video workloads Solo video Orchestrator Reliable GPU and bandwidth, plus enough LPT to stay competitive for the active set Active set stake is the biggest barrier to receiving steady video work Commercial or pool operator Multiple GPUs or direct Gateway demand, and readiness for 99%+ operational standards Requires relationship building, monitoring, and disciplined pricing What Orchestrators Earn Orchestrators earn from two separate streams."
+          },
+          {
+            "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+            "values": [],
+            "snippet": "LPT on Arbitrum One For staking."
+          }
+        ],
+        "best_known_truth": "Pool workers and solo operators have different prerequisites. Pages should not imply that LPT, ETH, or public service exposure are universal requirements for every orchestrator entry path.",
+        "confidence": "low",
+        "recommended_action": "verify-more"
+      },
+      {
+        "claim_family": "split-setup-reward-safety",
+        "claim_id": "orch-siphon-reward-isolation",
+        "pages": [
+          {
+            "file": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+            "values": [
+              "reward",
+              "reward calling"
+            ],
+            "snippet": "A GPU machine reboot mid round permanently loses that round's LPT inflation reward, and missed rewards compound over time."
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "values": [
+              "reward calling"
+            ],
+            "snippet": "The pool operator handles staking, reward calling, pricing, and Gateway relationships."
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx",
+            "values": [
+              "reward calling",
+              "reward safety"
+            ],
+            "snippet": "The split setup separates them: one machine handles protocol operations (on chain interactions, job routing, reward calling) and one or more machines handle the GPU work."
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx",
+            "values": [
+              "Reward calling",
+              "reward calling"
+            ],
+            "snippet": "The pool operator handles staking, on chain registration, reward calling, and routing."
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/new-join-a-pool.mdx",
+            "values": [
+              "Reward calling",
+              "reward calling"
+            ],
+            "snippet": "The pool operator handles staking, on chain registration, reward calling, and job routing."
+          }
+        ],
+        "best_known_truth": "A split setup with OrchestratorSiphon isolates the keystore from the GPU machine and keeps reward calling independent of GPU uptime. Docs should keep that claim aligned across setup-path pages.",
+        "confidence": "low",
+        "recommended_action": "verify-more"
+      }
+    ],
+    "propagation_queue": [
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/llm-pipeline-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/model-hosting.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/video-transcoding-operations.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/video-transcoding-operations.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-siphon-reward-isolation"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-siphon-reward-isolation"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/new-join-a-pool.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-siphon-reward-isolation"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-session-limit-default"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-siphon-reward-isolation"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-active-set-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "page_class": "guide",
+        "role": "canonical-owner",
+        "action": "verify-only",
+        "claim_id": "orch-pool-vs-solo-prerequisites"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "update-now",
+        "claim_id": "orch-price-ceiling-filtering"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-siphon-reward-isolation"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-session-limit-default"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+        "page_class": "guide",
+        "role": "canonical-owner",
+        "action": "verify-only",
+        "claim_id": "orch-siphon-reward-isolation"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-active-set-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-bandwidth-per-stream-planning"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-pool-vs-solo-prerequisites"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/operator-impact.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+        "page_class": "guide",
+        "role": "canonical-owner",
+        "action": "verify-only",
+        "claim_id": "orch-active-set-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-bandwidth-per-stream-planning"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-pool-vs-solo-prerequisites"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/requirements.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/setup/configure.mdx",
+        "page_class": "setup",
+        "role": "canonical-owner",
+        "action": "verify-only",
+        "claim_id": "orch-bandwidth-per-stream-planning"
+      },
+      {
+        "file": "v2/orchestrators/setup/configure.mdx",
+        "page_class": "setup",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/setup/configure.mdx",
+        "page_class": "setup",
+        "role": "canonical-owner",
+        "action": "update-now",
+        "claim_id": "orch-price-ceiling-filtering"
+      },
+      {
+        "file": "v2/orchestrators/setup/configure.mdx",
+        "page_class": "setup",
+        "role": "canonical-owner",
+        "action": "verify-only",
+        "claim_id": "orch-session-limit-default"
+      },
+      {
+        "file": "v2/orchestrators/setup/connect-and-activate.mdx",
+        "page_class": "setup",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-session-limit-default"
+      },
+      {
+        "file": "v2/orchestrators/setup/guide.mdx",
+        "page_class": "setup",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-session-limit-default"
+      },
+      {
+        "file": "v2/orchestrators/setup/r-monitor.mdx",
+        "page_class": "setup",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+        "page_class": "setup",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-active-set-threshold"
+      },
+      {
+        "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+        "page_class": "setup",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+        "page_class": "setup",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-pool-vs-solo-prerequisites"
+      },
+      {
+        "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+        "page_class": "setup",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-session-limit-default"
+      }
+    ],
+    "evidence_sources": [
+      {
+        "claim_id": "orch-batch-ai-vram-threshold",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/setup/rcs-requirements.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "24 GB+ for the full pipeline suite",
+          "8 GB for LLM-only",
+          "16 gb",
+          "24 gb",
+          "8 gb",
+          "real-time ai",
+          "rtx 3090",
+          "vram",
+          "hardware vram minimums",
+          "Docs disagree on the practical VRAM minimum for batch AI and real-time AI workloads. Hardware and setup pages should not present conflicting minimums as equally current.",
+          "requirements"
+        ],
+        "selection_score": 205,
+        "ranking_reason": "source priority 90; 11 matched terms; current-language match 15; historical-language penalty 1",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/setup/rcs-requirements.mdx"
+      },
+      {
+        "claim_id": "orch-batch-ai-vram-threshold",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+        "checked_on": "2026-03-16",
+        "ok": false,
+        "matched": false,
+        "summary": "repo file missing",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "",
+        "matched_terms": [],
+        "selection_score": 0,
+        "ranking_reason": "source priority 90; repo file missing",
+        "selection_role": "weaker",
+        "comparison_reason": "fetch failed or unsupported evidence type",
+        "primary_ref": "v2/orchestrators/setup/rcs-requirements.mdx"
+      },
+      {
+        "claim_id": "orch-session-limit-default",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/setup/configure.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "10 concurrent sessions",
+          "maxSessions",
+          "maxsessions = 10",
+          "session limit",
+          "transcoding session cap",
+          "The default session limit and overload behavior are operational facts that multiple setup and hardware pages depend on. When docs state the default cap or the error condition, they should stay aligned with current go-livepeer behavior.",
+          "configure"
+        ],
+        "selection_score": 165,
+        "ranking_reason": "source priority 90; 7 matched terms; current-language match 7; historical-language penalty 1",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/setup/configure.mdx"
+      },
+      {
+        "claim_id": "orch-bandwidth-per-stream-planning",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/setup/configure.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "transcoding bandwidth planning",
+          "configure"
+        ],
+        "selection_score": 115,
+        "ranking_reason": "source priority 90; 2 matched terms; current-language match 7; historical-language penalty 1",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/setup/configure.mdx"
+      },
+      {
+        "claim_id": "orch-bandwidth-per-stream-planning",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+        "checked_on": "2026-03-16",
+        "ok": false,
+        "matched": false,
+        "summary": "repo file missing",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "",
+        "matched_terms": [],
+        "selection_score": 0,
+        "ranking_reason": "source priority 90; repo file missing",
+        "selection_role": "weaker",
+        "comparison_reason": "fetch failed or unsupported evidence type",
+        "primary_ref": "v2/orchestrators/setup/configure.mdx"
+      },
+      {
+        "claim_id": "orch-consumer-nvenc-session-cap",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+        "checked_on": "2026-03-16",
+        "ok": false,
+        "matched": false,
+        "summary": "repo file missing",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "",
+        "matched_terms": [],
+        "selection_score": 0,
+        "ranking_reason": "source priority 90; repo file missing",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/guides/deployment-details/requirements.mdx"
+      },
+      {
+        "claim_id": "orch-consumer-nvenc-session-cap",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/ai-and-job-workloads/video-transcoding.mdx",
+        "checked_on": "2026-03-16",
+        "ok": false,
+        "matched": false,
+        "summary": "repo file missing",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "",
+        "matched_terms": [],
+        "selection_score": 0,
+        "ranking_reason": "source priority 90; repo file missing",
+        "selection_role": "weaker",
+        "comparison_reason": "fetch failed or unsupported evidence type",
+        "primary_ref": "v2/orchestrators/guides/deployment-details/requirements.mdx"
+      },
+      {
+        "claim_id": "orch-price-ceiling-filtering",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "Price too high",
+          "maxPricePerCapability",
+          "receive no transcoding or AI jobs",
+          "gateways filter orchestrators by price",
+          "priceperunit",
+          "prices are too high",
+          "will not receive work",
+          "gateway price filtering",
+          "Gateways filter orchestrators by price ceilings before routing work. Competitive hardware alone is not enough if operator pricing exceeds gateway maxima.",
+          "configure"
+        ],
+        "selection_score": 190,
+        "ranking_reason": "source priority 90; 10 matched terms",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx"
+      },
+      {
+        "claim_id": "orch-price-ceiling-filtering",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/setup/configure.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "gateways will route jobs to lower-priced orchestrators",
+          "pricePerUnit",
+          "gateways filter orchestrators by price",
+          "prices are too high",
+          "will not receive work",
+          "gateway price filtering",
+          "Gateways filter orchestrators by price ceilings before routing work. Competitive hardware alone is not enough if operator pricing exceeds gateway maxima.",
+          "configure"
+        ],
+        "selection_score": 170,
+        "ranking_reason": "source priority 90; 8 matched terms",
+        "selection_role": "weaker",
+        "comparison_reason": "fewer matched signals than primary evidence",
+        "primary_ref": "v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx"
+      },
+      {
+        "claim_id": "orch-active-set-threshold",
+        "type": "official-page",
+        "ref": "https://explorer.livepeer.org/orchestrators",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": false,
+        "summary": "official page fetched but signal missing",
+        "source_rank": 100,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "reachable",
+        "matched_terms": [],
+        "selection_score": 100,
+        "ranking_reason": "source priority 100",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "https://explorer.livepeer.org/orchestrators"
+      },
+      {
+        "claim_id": "orch-ai-routing-capability-based",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+        "checked_on": "2026-03-16",
+        "ok": false,
+        "matched": false,
+        "summary": "repo file missing",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "",
+        "matched_terms": [],
+        "selection_score": 0,
+        "ranking_reason": "source priority 90; repo file missing",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx"
+      },
+      {
+        "claim_id": "orch-ai-routing-capability-based",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/deployment-details/dual-workload-setup.mdx",
+        "checked_on": "2026-03-16",
+        "ok": false,
+        "matched": false,
+        "summary": "repo file missing",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "",
+        "matched_terms": [],
+        "selection_score": 0,
+        "ranking_reason": "source priority 90; repo file missing",
+        "selection_role": "weaker",
+        "comparison_reason": "fetch failed or unsupported evidence type",
+        "primary_ref": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx"
+      },
+      {
+        "claim_id": "orch-pool-vs-solo-prerequisites",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "LPT stake required",
+          "No",
+          "Pool worker",
+          "no lpt required",
+          "on-chain ops",
+          "solo orchestrator",
+          "staking",
+          "Pool workers and solo operators have different prerequisites. Pages should not imply that LPT, ETH, or public service exposure are universal requirements for every orchestrator entry path.",
+          "setup options"
+        ],
+        "selection_score": 180,
+        "ranking_reason": "source priority 90; 9 matched terms",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx"
+      },
+      {
+        "claim_id": "orch-pool-vs-solo-prerequisites",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "No LPT, just a GPU",
+          "Pool worker",
+          "not an Orchestrator at all",
+          "no lpt required",
+          "solo orchestrator",
+          "staking",
+          "setup options"
+        ],
+        "selection_score": 160,
+        "ranking_reason": "source priority 90; 7 matched terms",
+        "selection_role": "weaker",
+        "comparison_reason": "fewer matched signals than primary evidence",
+        "primary_ref": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx"
+      },
+      {
+        "claim_id": "orch-siphon-reward-isolation",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "GPU machine can restart",
+          "keystore stays on a secure, isolated machine",
+          "without you missing rewards",
+          "keystore isolated",
+          "missed rewards",
+          "reward calling",
+          "reward safety",
+          "split setup",
+          "split setup reward safety",
+          "A split setup with OrchestratorSiphon isolates the keystore from the GPU machine and keeps reward calling independent of GPU uptime. Docs should keep that claim aligned across setup-path pages.",
+          "siphon setup"
+        ],
+        "selection_score": 200,
+        "ranking_reason": "source priority 90; 11 matched terms",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx"
+      },
+      {
+        "claim_id": "orch-siphon-reward-isolation",
+        "type": "github-repo",
+        "ref": "https://github.com/Stronk-Tech/OrchestratorSiphon",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "GitHub evidence matched",
+        "source_rank": 60,
+        "preference_score": 0,
+        "recency_score": 8,
+        "evidence_date": "2026-01-19T11:10:59Z",
+        "evidence_state": "active",
+        "matched_terms": [
+          "OrchestratorSiphon",
+          "Stronk-Tech"
+        ],
+        "selection_score": 88,
+        "ranking_reason": "source priority 60; 2 matched terms; recency 56d; state active",
+        "selection_role": "weaker",
+        "comparison_reason": "lower source priority than primary evidence",
+        "primary_ref": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx"
+      }
+    ],
+    "trust_summary": {
+      "unresolved_claims": 0,
+      "contradiction_groups": 5,
+      "evidence_sources": 16,
+      "explicit_page_targets": 6,
+      "inferred_page_targets": 20
+    },
+    "validation": {
+      "target_files": 4,
+      "claim_families": 0,
+      "contradictions": 5,
+      "evidence_sources": 16
+    }
+  },
+  "prReport": {
+    "report_kind": "pr-advisory",
+    "report_id": "page-content-research-2026-03-16-11646da2a9f0",
+    "generated_at": "2026-03-16T11:58:56.275Z",
+    "changed_files": [
+      "v2/orchestrators/quickstart/guide.mdx",
+      "v2/orchestrators/quickstart/video-transcoding.mdx",
+      "v2/orchestrators/quickstart/tutorial.mdx",
+      "v2/orchestrators/quickstart/AI-prompt-start.mdx"
+    ],
+    "target_files": [
+      "v2/orchestrators/quickstart/guide.mdx",
+      "v2/orchestrators/quickstart/video-transcoding.mdx",
+      "v2/orchestrators/quickstart/tutorial.mdx",
+      "v2/orchestrators/quickstart/AI-prompt-start.mdx"
+    ],
+    "matched_claim_families": [
+      {
+        "claim_id": "orch-price-ceiling-filtering",
+        "claim_family": "gateway-price-filtering",
+        "status": "verified",
+        "canonical_owner": "v2/orchestrators/setup/configure.mdx",
+        "freshness_class": "review-on-change",
+        "confidence": "high"
+      },
+      {
+        "claim_id": "orch-batch-ai-vram-threshold",
+        "claim_family": "hardware-vram-minimums",
+        "status": "conflicted",
+        "canonical_owner": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+        "freshness_class": "review-on-change",
+        "confidence": "low"
+      },
+      {
+        "claim_id": "orch-active-set-threshold",
+        "claim_family": "stake-threshold",
+        "status": "conflicted",
+        "canonical_owner": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+        "freshness_class": "volatile",
+        "confidence": "low"
+      },
+      {
+        "claim_id": "orch-ai-routing-capability-based",
+        "claim_family": "ai-routing-mechanics",
+        "status": "conflicted",
+        "canonical_owner": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+        "freshness_class": "review-on-change",
+        "confidence": "low"
+      },
+      {
+        "claim_id": "orch-pool-vs-solo-prerequisites",
+        "claim_family": "setup-prerequisites",
+        "status": "conflicted",
+        "canonical_owner": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "freshness_class": "review-on-change",
+        "confidence": "low"
+      },
+      {
+        "claim_id": "orch-siphon-reward-isolation",
+        "claim_family": "split-setup-reward-safety",
+        "status": "conflicted",
+        "canonical_owner": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+        "freshness_class": "review-periodic",
+        "confidence": "low"
+      },
+      {
+        "claim_id": "orch-session-limit-default",
+        "claim_family": "transcoding-session-cap",
+        "status": "time-sensitive",
+        "canonical_owner": "v2/orchestrators/setup/configure.mdx",
+        "freshness_class": "review-on-change",
+        "confidence": "medium"
+      },
+      {
+        "claim_id": "orch-bandwidth-per-stream-planning",
+        "claim_family": "transcoding-bandwidth-planning",
+        "status": "time-sensitive",
+        "canonical_owner": "v2/orchestrators/setup/configure.mdx",
+        "freshness_class": "review-periodic",
+        "confidence": "medium"
+      },
+      {
+        "claim_id": "orch-consumer-nvenc-session-cap",
+        "claim_family": "consumer-nvenc-session-cap",
+        "status": "time-sensitive",
+        "canonical_owner": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+        "freshness_class": "volatile",
+        "confidence": "low"
+      }
+    ],
+    "summary": {
+      "matched_claim_families": 9,
+      "verified_claims": 1,
+      "conflicted_claims": 5,
+      "time_sensitive_claims": 3,
+      "unresolved_claims": 8,
+      "contradiction_groups": 5,
+      "propagation_queue_items": 51,
+      "evidence_sources": 16
+    },
+    "contradictions": [
+      {
+        "claim_family": "hardware-vram-minimums",
+        "claim_id": "orch-batch-ai-vram-threshold",
+        "pages": [
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+            "values": [],
+            "snippet": "This requires: Automated monitoring with immediate alerts on node failure Automated restart and recovery Stable, redundant connectivity (not shared home broadband) Consistent power supply (UPS or colocation) Hardware health monitoring (GPU temperatures, VRAM utilisation) Model warm up management For AI inference workloads, cold model starts (loading a model from disk into VRAM on first request) introduce latency that breaks user facing SLAs."
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+            "values": [
+              "24 GB",
+              "RTX 3090"
+            ],
+            "snippet": "Path Best fit today Main constraint Pool worker Any NVIDIA GPU, little or no LPT, lower operating commitment Lower control and lower earnings ceiling than running a full Orchestrator Solo AI Orchestrator 24 GB+ VRAM, limited LPT, willing to manage warm models and demand shifts AI demand, model selection, and pricing change faster than video workloads Solo video Orchestrator Reliable GPU and bandwidth, plus enough LPT to stay competitive for the active set Active set stake is the biggest barrier to receiving steady video work Commercial or pool operator Multiple GPUs or direct Gateway demand, and readiness for 99%+ operational standards Requires relationship building, monitoring, and disciplined pricing What Orchestrators Earn Orchestrators earn from two separate streams."
+          },
+          {
+            "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+            "values": [
+              "16 GB",
+              "24 GB",
+              "8 GB",
+              "RTX 3090"
+            ],
+            "snippet": "Hardware Component Minimum Recommended GPU Any NVIDIA with NVENC/NVDEC RTX 3060+ (consumer) or T4+ (datacentre) VRAM 4 GB 8 GB+ CPU 4 cores 8 cores RAM 16 GB 32 GB Storage 50 GB SSD 100 GB NVMe SSD CPU only transcoding is possible (omit the flag) but significantly slower."
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx",
+            "values": [
+              "16 GB",
+              "24 GB",
+              "8 GB"
+            ],
+            "snippet": "Video only AI only Dual Mode Revenue streams ETH transcoding fees + LPT rewards ETH AI inference fees Both streams simultaneously Pricing config (wei per pixel) per pipeline Both and GPU execution path NVENC/NVDEC hardware blocks CUDA compute cores Both paths, independent queues VRAM requirement Minimal (frame buffers only) 8 24 GB depending on model 16 GB recommended; 8 GB viable for LLM only pipelines Active set Required for video job eligibility AI job eligibility routes through capability advertisement Required for video; AI routes via capability advertisement OS support Linux, Windows Linux only Linux only Before You Start Confirm these prerequisites before starting: Hardware: NVIDIA GPU with 16 GB VRAM or more."
+          }
+        ],
+        "best_known_truth": "Docs disagree on the practical VRAM minimum for batch AI and real-time AI workloads. Hardware and setup pages should not present conflicting minimums as equally current.",
+        "confidence": "low",
+        "recommended_action": "verify-more"
+      },
+      {
+        "claim_family": "stake-threshold",
+        "claim_id": "orch-active-set-threshold",
+        "pages": [
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+            "values": [
+              "Active set",
+              "active set"
+            ],
+            "snippet": "Path Best fit today Main constraint Pool worker Any NVIDIA GPU, little or no LPT, lower operating commitment Lower control and lower earnings ceiling than running a full Orchestrator Solo AI Orchestrator 24 GB+ VRAM, limited LPT, willing to manage warm models and demand shifts AI demand, model selection, and pricing change faster than video workloads Solo video Orchestrator Reliable GPU and bandwidth, plus enough LPT to stay competitive for the active set Active set stake is the biggest barrier to receiving steady video work Commercial or pool operator Multiple GPUs or direct Gateway demand, and readiness for 99%+ operational standards Requires relationship building, monitoring, and disciplined pricing What Orchestrators Earn Orchestrators earn from two separate streams."
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+            "values": [
+              "active set"
+            ],
+            "snippet": "That is the core shift in the business case: the upside comes from being part of an application's serving path, not just from holding more bonded LPT."
+          },
+          {
+            "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+            "values": [
+              "active set"
+            ],
+            "snippet": "Amount varies by active set competition."
+          }
+        ],
+        "best_known_truth": "Solo transcoding guidance repeatedly states that operators need enough bonded LPT to enter the active set, often phrased as top 100, but that wording is time-sensitive and should not be treated as durable fact without current evidence.",
+        "confidence": "low",
+        "recommended_action": "verify-more"
+      },
+      {
+        "claim_family": "ai-routing-mechanics",
+        "claim_id": "orch-ai-routing-capability-based",
+        "pages": [
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx",
+            "values": [
+              "Stake plays a much smaller role",
+              "capability match"
+            ],
+            "snippet": "Batch AI inference AI jobs route on capability match + price ceiling."
+          },
+          {
+            "file": "v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx",
+            "values": [],
+            "snippet": "Capability, pricing, and latency matter more than active set position for many AI jobs."
+          }
+        ],
+        "best_known_truth": "AI jobs are routed primarily by capability match and price ceilings rather than by stake weight. Docs should not collapse AI routing into the same rules as transcoding routing.",
+        "confidence": "low",
+        "recommended_action": "verify-more"
+      },
+      {
+        "claim_family": "setup-prerequisites",
+        "claim_id": "orch-pool-vs-solo-prerequisites",
+        "pages": [
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "values": [
+              "Pool Worker",
+              "Pool worker",
+              "pool worker"
+            ],
+            "snippet": "At a Glance Alternative What it solves What it requires Guide Pool worker Earn from GPU compute through a pool worker path with the operator handling stake and protocol operations GPU; a pool to join; zero stake O T split Separate protocol management from GPU workload processing; scale Transcoder machines independently Dedicated Orchestrator and Transcoder hosts; staked LPT; shared Siphon Keep the keystore on an isolated machine; GPU restarts leave LPT rewards uninterrupted Two machines; staked LPT; Python on secure machine Pool Worker A pool worker runs against an existing pool operator's Orchestrator address."
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+            "values": [],
+            "snippet": "Pool operators manage the Orchestrator registration, on chain staking, and reward calling for a fleet of GPU workers."
+          },
+          {
+            "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+            "values": [
+              "Pool worker",
+              "solo Orchestrator"
+            ],
+            "snippet": "Path Best fit today Main constraint Pool worker Any NVIDIA GPU, little or no LPT, lower operating commitment Lower control and lower earnings ceiling than running a full Orchestrator Solo AI Orchestrator 24 GB+ VRAM, limited LPT, willing to manage warm models and demand shifts AI demand, model selection, and pricing change faster than video workloads Solo video Orchestrator Reliable GPU and bandwidth, plus enough LPT to stay competitive for the active set Active set stake is the biggest barrier to receiving steady video work Commercial or pool operator Multiple GPUs or direct Gateway demand, and readiness for 99%+ operational standards Requires relationship building, monitoring, and disciplined pricing What Orchestrators Earn Orchestrators earn from two separate streams."
+          },
+          {
+            "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+            "values": [],
+            "snippet": "LPT on Arbitrum One For staking."
+          }
+        ],
+        "best_known_truth": "Pool workers and solo operators have different prerequisites. Pages should not imply that LPT, ETH, or public service exposure are universal requirements for every orchestrator entry path.",
+        "confidence": "low",
+        "recommended_action": "verify-more"
+      },
+      {
+        "claim_family": "split-setup-reward-safety",
+        "claim_id": "orch-siphon-reward-isolation",
+        "pages": [
+          {
+            "file": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+            "values": [
+              "reward",
+              "reward calling"
+            ],
+            "snippet": "A GPU machine reboot mid round permanently loses that round's LPT inflation reward, and missed rewards compound over time."
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+            "values": [
+              "reward calling"
+            ],
+            "snippet": "The pool operator handles staking, reward calling, pricing, and Gateway relationships."
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx",
+            "values": [
+              "reward calling",
+              "reward safety"
+            ],
+            "snippet": "The split setup separates them: one machine handles protocol operations (on chain interactions, job routing, reward calling) and one or more machines handle the GPU work."
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx",
+            "values": [
+              "Reward calling",
+              "reward calling"
+            ],
+            "snippet": "The pool operator handles staking, on chain registration, reward calling, and routing."
+          },
+          {
+            "file": "v2/orchestrators/guides/deployment-details/new-join-a-pool.mdx",
+            "values": [
+              "Reward calling",
+              "reward calling"
+            ],
+            "snippet": "The pool operator handles staking, on chain registration, reward calling, and job routing."
+          }
+        ],
+        "best_known_truth": "A split setup with OrchestratorSiphon isolates the keystore from the GPU machine and keeps reward calling independent of GPU uptime. Docs should keep that claim aligned across setup-path pages.",
+        "confidence": "low",
+        "recommended_action": "verify-more"
+      }
+    ],
+    "unresolved_items": [
+      {
+        "claim_id": "orch-batch-ai-vram-threshold",
+        "claim_family": "hardware-vram-minimums",
+        "status": "conflicted",
+        "confidence": "low",
+        "canonical_owner": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+        "summary": "Docs disagree on the practical VRAM minimum for batch AI and real-time AI workloads. Hardware and setup pages should not present conflicting minimums as equally current."
+      },
+      {
+        "claim_id": "orch-active-set-threshold",
+        "claim_family": "stake-threshold",
+        "status": "conflicted",
+        "confidence": "low",
+        "canonical_owner": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+        "summary": "Solo transcoding guidance repeatedly states that operators need enough bonded LPT to enter the active set, often phrased as top 100, but that wording is time-sensitive and should not be treated as durable fact without current evidence."
+      },
+      {
+        "claim_id": "orch-ai-routing-capability-based",
+        "claim_family": "ai-routing-mechanics",
+        "status": "conflicted",
+        "confidence": "low",
+        "canonical_owner": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+        "summary": "AI jobs are routed primarily by capability match and price ceilings rather than by stake weight. Docs should not collapse AI routing into the same rules as transcoding routing."
+      },
+      {
+        "claim_id": "orch-pool-vs-solo-prerequisites",
+        "claim_family": "setup-prerequisites",
+        "status": "conflicted",
+        "confidence": "low",
+        "canonical_owner": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "summary": "Pool workers and solo operators have different prerequisites. Pages should not imply that LPT, ETH, or public service exposure are universal requirements for every orchestrator entry path."
+      },
+      {
+        "claim_id": "orch-siphon-reward-isolation",
+        "claim_family": "split-setup-reward-safety",
+        "status": "conflicted",
+        "confidence": "low",
+        "canonical_owner": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+        "summary": "A split setup with OrchestratorSiphon isolates the keystore from the GPU machine and keeps reward calling independent of GPU uptime. Docs should keep that claim aligned across setup-path pages."
+      },
+      {
+        "claim_id": "orch-session-limit-default",
+        "claim_family": "transcoding-session-cap",
+        "status": "time-sensitive",
+        "confidence": "medium",
+        "canonical_owner": "v2/orchestrators/setup/configure.mdx",
+        "summary": "The default session limit and overload behavior are operational facts that multiple setup and hardware pages depend on. When docs state the default cap or the error condition, they should stay aligned with current go-livepeer behavior."
+      },
+      {
+        "claim_id": "orch-bandwidth-per-stream-planning",
+        "claim_family": "transcoding-bandwidth-planning",
+        "status": "time-sensitive",
+        "confidence": "medium",
+        "canonical_owner": "v2/orchestrators/setup/configure.mdx",
+        "summary": "Bandwidth planning for transcoding is currently presented as an approximate planning rule rather than a single durable network constant. Pages should make the source-resolution assumption and rendition-set basis explicit when quoting per-stream bandwidth."
+      },
+      {
+        "claim_id": "orch-consumer-nvenc-session-cap",
+        "claim_family": "consumer-nvenc-session-cap",
+        "status": "time-sensitive",
+        "confidence": "low",
+        "canonical_owner": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+        "summary": "Consumer NVIDIA NVENC session-cap guidance is factual but volatile. Hardware requirement and transcoding guides should stay aligned on whether GeForce-class cards are typically capped at 2-3 concurrent sessions and whether newer generations changed that default."
+      }
+    ],
+    "propagation_queue": [
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/llm-pipeline-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/model-hosting.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/video-transcoding-operations.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/video-transcoding-operations.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-siphon-reward-isolation"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-siphon-reward-isolation"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/new-join-a-pool.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-siphon-reward-isolation"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-consumer-nvenc-session-cap"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-session-limit-default"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-siphon-reward-isolation"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-active-set-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-ai-routing-capability-based"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "page_class": "guide",
+        "role": "canonical-owner",
+        "action": "verify-only",
+        "claim_id": "orch-pool-vs-solo-prerequisites"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "update-now",
+        "claim_id": "orch-price-ceiling-filtering"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-siphon-reward-isolation"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-session-limit-default"
+      },
+      {
+        "file": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+        "page_class": "guide",
+        "role": "canonical-owner",
+        "action": "verify-only",
+        "claim_id": "orch-siphon-reward-isolation"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-active-set-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-bandwidth-per-stream-planning"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-pool-vs-solo-prerequisites"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/operator-impact.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+        "page_class": "guide",
+        "role": "canonical-owner",
+        "action": "verify-only",
+        "claim_id": "orch-active-set-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-bandwidth-per-stream-planning"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/operator-rationale.mdx",
+        "page_class": "guide",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-pool-vs-solo-prerequisites"
+      },
+      {
+        "file": "v2/orchestrators/guides/operator-considerations/requirements.mdx",
+        "page_class": "guide",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/setup/configure.mdx",
+        "page_class": "setup",
+        "role": "canonical-owner",
+        "action": "verify-only",
+        "claim_id": "orch-bandwidth-per-stream-planning"
+      },
+      {
+        "file": "v2/orchestrators/setup/configure.mdx",
+        "page_class": "setup",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/setup/configure.mdx",
+        "page_class": "setup",
+        "role": "canonical-owner",
+        "action": "update-now",
+        "claim_id": "orch-price-ceiling-filtering"
+      },
+      {
+        "file": "v2/orchestrators/setup/configure.mdx",
+        "page_class": "setup",
+        "role": "canonical-owner",
+        "action": "verify-only",
+        "claim_id": "orch-session-limit-default"
+      },
+      {
+        "file": "v2/orchestrators/setup/connect-and-activate.mdx",
+        "page_class": "setup",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-session-limit-default"
+      },
+      {
+        "file": "v2/orchestrators/setup/guide.mdx",
+        "page_class": "setup",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-session-limit-default"
+      },
+      {
+        "file": "v2/orchestrators/setup/r-monitor.mdx",
+        "page_class": "setup",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+        "page_class": "setup",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-active-set-threshold"
+      },
+      {
+        "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+        "page_class": "setup",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-batch-ai-vram-threshold"
+      },
+      {
+        "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+        "page_class": "setup",
+        "role": "dependent-page",
+        "action": "verify-only",
+        "claim_id": "orch-pool-vs-solo-prerequisites"
+      },
+      {
+        "file": "v2/orchestrators/setup/rcs-requirements.mdx",
+        "page_class": "setup",
+        "role": "inferred-page",
+        "action": "verify-only",
+        "claim_id": "orch-session-limit-default"
+      }
+    ],
+    "evidence_sources": [
+      {
+        "claim_id": "orch-batch-ai-vram-threshold",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/setup/rcs-requirements.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "24 GB+ for the full pipeline suite",
+          "8 GB for LLM-only",
+          "16 gb",
+          "24 gb",
+          "8 gb",
+          "real-time ai",
+          "rtx 3090",
+          "vram",
+          "hardware vram minimums",
+          "Docs disagree on the practical VRAM minimum for batch AI and real-time AI workloads. Hardware and setup pages should not present conflicting minimums as equally current.",
+          "requirements"
+        ],
+        "selection_score": 205,
+        "ranking_reason": "source priority 90; 11 matched terms; current-language match 15; historical-language penalty 1",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/setup/rcs-requirements.mdx"
+      },
+      {
+        "claim_id": "orch-batch-ai-vram-threshold",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+        "checked_on": "2026-03-16",
+        "ok": false,
+        "matched": false,
+        "summary": "repo file missing",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "",
+        "matched_terms": [],
+        "selection_score": 0,
+        "ranking_reason": "source priority 90; repo file missing",
+        "selection_role": "weaker",
+        "comparison_reason": "fetch failed or unsupported evidence type",
+        "primary_ref": "v2/orchestrators/setup/rcs-requirements.mdx"
+      },
+      {
+        "claim_id": "orch-session-limit-default",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/setup/configure.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "10 concurrent sessions",
+          "maxSessions",
+          "maxsessions = 10",
+          "session limit",
+          "transcoding session cap",
+          "The default session limit and overload behavior are operational facts that multiple setup and hardware pages depend on. When docs state the default cap or the error condition, they should stay aligned with current go-livepeer behavior.",
+          "configure"
+        ],
+        "selection_score": 165,
+        "ranking_reason": "source priority 90; 7 matched terms; current-language match 7; historical-language penalty 1",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/setup/configure.mdx"
+      },
+      {
+        "claim_id": "orch-bandwidth-per-stream-planning",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/setup/configure.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "transcoding bandwidth planning",
+          "configure"
+        ],
+        "selection_score": 115,
+        "ranking_reason": "source priority 90; 2 matched terms; current-language match 7; historical-language penalty 1",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/setup/configure.mdx"
+      },
+      {
+        "claim_id": "orch-bandwidth-per-stream-planning",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+        "checked_on": "2026-03-16",
+        "ok": false,
+        "matched": false,
+        "summary": "repo file missing",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "",
+        "matched_terms": [],
+        "selection_score": 0,
+        "ranking_reason": "source priority 90; repo file missing",
+        "selection_role": "weaker",
+        "comparison_reason": "fetch failed or unsupported evidence type",
+        "primary_ref": "v2/orchestrators/setup/configure.mdx"
+      },
+      {
+        "claim_id": "orch-consumer-nvenc-session-cap",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+        "checked_on": "2026-03-16",
+        "ok": false,
+        "matched": false,
+        "summary": "repo file missing",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "",
+        "matched_terms": [],
+        "selection_score": 0,
+        "ranking_reason": "source priority 90; repo file missing",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/guides/deployment-details/requirements.mdx"
+      },
+      {
+        "claim_id": "orch-consumer-nvenc-session-cap",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/ai-and-job-workloads/video-transcoding.mdx",
+        "checked_on": "2026-03-16",
+        "ok": false,
+        "matched": false,
+        "summary": "repo file missing",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "",
+        "matched_terms": [],
+        "selection_score": 0,
+        "ranking_reason": "source priority 90; repo file missing",
+        "selection_role": "weaker",
+        "comparison_reason": "fetch failed or unsupported evidence type",
+        "primary_ref": "v2/orchestrators/guides/deployment-details/requirements.mdx"
+      },
+      {
+        "claim_id": "orch-price-ceiling-filtering",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "Price too high",
+          "maxPricePerCapability",
+          "receive no transcoding or AI jobs",
+          "gateways filter orchestrators by price",
+          "priceperunit",
+          "prices are too high",
+          "will not receive work",
+          "gateway price filtering",
+          "Gateways filter orchestrators by price ceilings before routing work. Competitive hardware alone is not enough if operator pricing exceeds gateway maxima.",
+          "configure"
+        ],
+        "selection_score": 190,
+        "ranking_reason": "source priority 90; 10 matched terms",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx"
+      },
+      {
+        "claim_id": "orch-price-ceiling-filtering",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/setup/configure.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "gateways will route jobs to lower-priced orchestrators",
+          "pricePerUnit",
+          "gateways filter orchestrators by price",
+          "prices are too high",
+          "will not receive work",
+          "gateway price filtering",
+          "Gateways filter orchestrators by price ceilings before routing work. Competitive hardware alone is not enough if operator pricing exceeds gateway maxima.",
+          "configure"
+        ],
+        "selection_score": 170,
+        "ranking_reason": "source priority 90; 8 matched terms",
+        "selection_role": "weaker",
+        "comparison_reason": "fewer matched signals than primary evidence",
+        "primary_ref": "v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx"
+      },
+      {
+        "claim_id": "orch-active-set-threshold",
+        "type": "official-page",
+        "ref": "https://explorer.livepeer.org/orchestrators",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": false,
+        "summary": "official page fetched but signal missing",
+        "source_rank": 100,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "reachable",
+        "matched_terms": [],
+        "selection_score": 100,
+        "ranking_reason": "source priority 100",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "https://explorer.livepeer.org/orchestrators"
+      },
+      {
+        "claim_id": "orch-ai-routing-capability-based",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+        "checked_on": "2026-03-16",
+        "ok": false,
+        "matched": false,
+        "summary": "repo file missing",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "",
+        "matched_terms": [],
+        "selection_score": 0,
+        "ranking_reason": "source priority 90; repo file missing",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx"
+      },
+      {
+        "claim_id": "orch-ai-routing-capability-based",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/deployment-details/dual-workload-setup.mdx",
+        "checked_on": "2026-03-16",
+        "ok": false,
+        "matched": false,
+        "summary": "repo file missing",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "",
+        "matched_terms": [],
+        "selection_score": 0,
+        "ranking_reason": "source priority 90; repo file missing",
+        "selection_role": "weaker",
+        "comparison_reason": "fetch failed or unsupported evidence type",
+        "primary_ref": "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx"
+      },
+      {
+        "claim_id": "orch-pool-vs-solo-prerequisites",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "LPT stake required",
+          "No",
+          "Pool worker",
+          "no lpt required",
+          "on-chain ops",
+          "solo orchestrator",
+          "staking",
+          "Pool workers and solo operators have different prerequisites. Pages should not imply that LPT, ETH, or public service exposure are universal requirements for every orchestrator entry path.",
+          "setup options"
+        ],
+        "selection_score": 180,
+        "ranking_reason": "source priority 90; 9 matched terms",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx"
+      },
+      {
+        "claim_id": "orch-pool-vs-solo-prerequisites",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/deployment-details/setup-options.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "No LPT, just a GPU",
+          "Pool worker",
+          "not an Orchestrator at all",
+          "no lpt required",
+          "solo orchestrator",
+          "staking",
+          "setup options"
+        ],
+        "selection_score": 160,
+        "ranking_reason": "source priority 90; 7 matched terms",
+        "selection_role": "weaker",
+        "comparison_reason": "fewer matched signals than primary evidence",
+        "primary_ref": "v2/orchestrators/guides/deployment-details/join-a-pool.mdx"
+      },
+      {
+        "claim_id": "orch-siphon-reward-isolation",
+        "type": "repo-file",
+        "ref": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "repo evidence matched",
+        "source_rank": 90,
+        "preference_score": 0,
+        "recency_score": 0,
+        "evidence_date": "",
+        "evidence_state": "repo-current",
+        "matched_terms": [
+          "GPU machine can restart",
+          "keystore stays on a secure, isolated machine",
+          "without you missing rewards",
+          "keystore isolated",
+          "missed rewards",
+          "reward calling",
+          "reward safety",
+          "split setup",
+          "split setup reward safety",
+          "A split setup with OrchestratorSiphon isolates the keystore from the GPU machine and keeps reward calling independent of GPU uptime. Docs should keep that claim aligned across setup-path pages.",
+          "siphon setup"
+        ],
+        "selection_score": 200,
+        "ranking_reason": "source priority 90; 11 matched terms",
+        "selection_role": "primary",
+        "comparison_reason": "highest ranked matched source",
+        "primary_ref": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx"
+      },
+      {
+        "claim_id": "orch-siphon-reward-isolation",
+        "type": "github-repo",
+        "ref": "https://github.com/Stronk-Tech/OrchestratorSiphon",
+        "checked_on": "2026-03-16",
+        "ok": true,
+        "matched": true,
+        "summary": "GitHub evidence matched",
+        "source_rank": 60,
+        "preference_score": 0,
+        "recency_score": 8,
+        "evidence_date": "2026-01-19T11:10:59Z",
+        "evidence_state": "active",
+        "matched_terms": [
+          "OrchestratorSiphon",
+          "Stronk-Tech"
+        ],
+        "selection_score": 88,
+        "ranking_reason": "source priority 60; 2 matched terms; recency 56d; state active",
+        "selection_role": "weaker",
+        "comparison_reason": "lower source priority than primary evidence",
+        "primary_ref": "v2/orchestrators/guides/deployment-details/siphon-setup.mdx"
+      }
+    ],
+    "trust_summary": {
+      "unresolved_claims": 0,
+      "contradiction_groups": 5,
+      "evidence_sources": 16,
+      "explicit_page_targets": 6,
+      "inferred_page_targets": 20
+    },
+    "notes": [],
+    "markdown_artifact": "tasks/reports/orchestrator-guides-review/2026-03-16-copy-review-packet/10-quickstart/research-pr.md",
+    "json_artifact": "tasks/reports/orchestrator-guides-review/2026-03-16-copy-review-packet/10-quickstart/research-pr.json"
+  }
+}

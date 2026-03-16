@@ -1,0 +1,124 @@
+---
+title: V2 Folder Governance
+sidebarTitle: V2 Folder Governance
+description: Canonical policy for publishable versus non-publishable folder lanes in v2, legacy workspace retirement, and cleanup planning.
+keywords:
+  - livepeer
+  - v2 folder governance
+  - workspace lanes
+  - docs routing
+  - publishable pages
+  - mintignore
+  - cleanup matrix
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+# V2 Folder Governance
+
+This document is the canonical governance policy for `v2/` folder structure.
+
+It defines which `v2/` paths are publishable docs, where maintainer-only working material must live, and how legacy workspace buckets are reviewed and retired.
+
+## Canonical Target Model
+
+| Lane | Canonical path | Purpose |
+| --- | --- | --- |
+| Publishable section root | `v2/<section>/index.mdx`, `portal.mdx`, `navigator.mdx` | Section entry points intended for docs routing and live preview. |
+| Publishable content tree | `v2/<section>/<publishable-subtree>/...` | User-facing docs pages such as concepts, guides, references, resources, setup, or equivalent section IA. |
+| Active non-publishable working lane | `v2/<section>/_workspace/` | Maintainer-only plans, research, reviews, handoff notes, and draft prototypes that must not behave like docs pages. |
+| Section-local retirement lane | `v2/<section>/x-deprecated/` | Previously publishable pages pending redirect, migration, or removal. |
+| Global frozen archive lane | `v2/x-archived/<section>/` | Frozen historical material retained for reference only. |
+
+## Section-Root Contract
+
+Allowed publishable section-root files are:
+
+- `index.mdx`
+- `portal.mdx`
+- `navigator.mdx`
+
+Section roots must not accumulate ad hoc planning notes, reports, or review files beside publishable pages. If material is not meant to route or preview as docs content, it belongs in `_workspace/`, `x-deprecated/`, or `v2/x-archived/`.
+
+## `_workspace/` Contract
+
+`_workspace/` is the only approved active non-publishable working folder under `v2/<section>/`.
+
+Approved subfolders:
+
+| Subfolder | Use |
+| --- | --- |
+| `plans/` | Active restructuring plans, execution plans, migration matrices, and implementation notes. |
+| `research/` | Research notes, evidence packs, claim inventories, and working references. |
+| `research/sources/` | Source bundles, imported references, verification snapshots, and supporting evidence files. |
+| `reviews/` | Review notes, critique passes, and cleanup recommendations. |
+| `drafts/` | Page-shaped prototypes not yet promoted into the publishable tree. |
+| `handoff/` | Product, stakeholder, or authoring handoff material. |
+
+## File-Type Rules
+
+- Publishable pages are `.mdx`.
+- Workspace notes, reports, and review artifacts are `.md` by default.
+- `_workspace/drafts/` may contain `.mdx` when a page-shaped prototype is intentionally non-routable during development.
+
+## Routing and Linking Rules
+
+The canonical publishability contract is:
+
+1. `docs.json` must never point to `_workspace/**`, `x-deprecated/**`, or `v2/x-archived/**`.
+2. Publishable pages must not import from or link to non-publishable lanes except explicit maintainer-only references that are excluded from Mint/runtime.
+3. `portal.mdx` and `navigator.mdx` are publishable section entry points, not workspace files.
+4. `.mintignore`, file-selection helpers, and audits enforce this contract, but they are not the canonical source of truth by themselves.
+
+## Legacy Naming Retirement Rules
+
+The following legacy workspace patterns are inventory-only and must not be introduced again after this policy lands:
+
+- `_contextData`
+- `_contextData_`
+- `_context_data_`
+- `_plans-and-research`
+- section-level `review.md`
+- `x-resources`
+- `TO-ADD`
+- `_archive`
+- any other ad hoc planning or research bucket inside publishable trees
+
+Existing legacy folders are cleaned through review and approved move waves, not by silent suppression or one-off exceptions.
+
+## Transition and Cleanup Workflow
+
+This policy starts with documentation plus a recommendation-only cleanup matrix. No `v2/` files move until a human reviews the recommendations.
+
+Generator:
+
+```bash icon="terminal"
+node tools/scripts/generate-v2-folder-governance-cleanup-matrix.js --as-of 2026-03-16
+```
+
+Generated artifacts:
+
+- `tasks/reports/repo-ops/v2-folder-governance-cleanup-matrix.md`
+- `tasks/reports/repo-ops/v2-folder-governance-cleanup-matrix.json`
+
+The matrix inventories current `v2/` legacy workspace buckets, stray `.md` files, deprecated/archive folders, and similar non-publishable material. Locale trees are governed now but default to later move-wave review unless a human explicitly promotes them.
+
+## Follow-on Workstreams
+
+### Workstream A: Enforcement and Selection Updates
+
+- Update `.mintignore` to exclude the canonical non-publishable lanes.
+- Add transitional ignore coverage for current legacy names such as `_contextData`.
+- Update shared file-selection helpers and generators that still treat workspace artifacts as normal `v2` docs content.
+- Ensure docs navigation checks fail when a routed page resolves into an ignored or non-publishable lane.
+- Ensure scoped Mint generation inherits the same ignore contract.
+
+### Workstream B: Approved Moves
+
+- Execute only the file moves approved in the cleanup matrix.
+- Normalize section trees to the `_workspace`, `x-deprecated`, and `v2/x-archived` contract.
+- Retire legacy workspace folder names after their contents have been moved.
+- Regenerate affected indexes or catalogs and rerun validators after each approved move wave.

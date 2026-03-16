@@ -1,0 +1,242 @@
+---
+title: 'Gateway Operator Opportunities'
+sidebarTitle: 'Operator Opportunities'
+description: 'The business case for running a Livepeer gateway as an application developer — cost structures, revenue models, and what the off-chain AI gateway changes about the economics of building on Livepeer.'
+keywords:
+  - livepeer
+  - gateway operator
+  - gateway business model
+  - AI gateway opportunity
+  - gateway revenue
+  - off-chain gateway
+  - inference margin
+  - gateway-as-service
+  - NaaP
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: gateway-operator
+purpose: guides
+status: current
+lastVerified: '2026-03-13'
+---
+{/* TODO:
+Verify:
+- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/page-structure/mermaidColours.jsx)
+- Fontawesome icons are used on accordions and tabs
+- Tables use StyledTable component
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical - no long headers or questions (aim for max 3 words)
+- CustomDivider is used with <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} /> for all --- separator breaks
+- Placeholders for Media & Video Resources are in comments with a TODO for a human.
+- REVIEW flags are in JSX flags for a human.
+*/}
+
+import { BorderedBox } from '/snippets/components/layout/containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/layout/tables.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+Running a Livepeer gateway puts you between application demand and compute supply. Whether you are routing your own workloads or building a service on top of the network, the gateway is where business logic, margins, and customer relationships live.
+
+This page is for application developers and infrastructure builders evaluating the gateway model.
+
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
+
+## Core Business Model
+
+Gateways earn at the **business layer**, not at the protocol level. Orchestrators earn protocol fees. Gateways earn the margin between what they charge customers and what they pay for compute.
+
+```mermaid
+flowchart LR
+    A["Your customers\nor your own app"] -->|"Pay your service rate\n(fiat, crypto, subscription)"| B["Your gateway"]
+    B -->|"Pay network rate\n(ETH on Arbitrum)"| C["Livepeer network\n(orchestrators)"]
+    B -->|"Keep margin"| D["Your revenue"]
+```
+
+<Note>
+For AI gateways running in off-chain mode, your gateway node itself holds no ETH. A remote signer handles all on-chain payment operations. Your gateway operator costs are whatever you pay the signer — which can be zero if using a community-hosted signer.
+</Note>
+
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
+
+## Operator Models
+
+<Tabs>
+  <Tab title="Route your own workloads">
+    You are building a product and currently using a hosted gateway such as Daydream, Livepeer Studio, or Livepeer Cloud. You pay their service rate on every request. Running your own gateway removes that cost entirely — you pay orchestrators directly at network rates.
+
+    **What you capture:** The service margin you were previously paying to a third-party operator.
+
+    **What this requires:**
+    - A Linux server (for AI workloads; video also supports Windows)
+    - No ETH for AI off-chain mode; ETH deposit for video transcoding
+    - The same application code — only the endpoint changes
+
+    **Who is doing this:** App developers who scaled past the point where hosted gateway costs exceeded the operational cost of self-hosting.
+  </Tab>
+  <Tab title="Build an inference API">
+    You operate a gateway and offer AI inference access to other developers. They send API requests; you route them to Livepeer AI workers and return results. You charge per request, per generation, or via subscription. You pay orchestrators and keep the margin.
+
+    **What you capture:** Service margin on every job routed through your gateway. Your differentiation is reliability, model availability, pricing, and support.
+
+    **What this requires:**
+    - A production Linux server with stable uptime
+    - An auth layer (API keys, rate limiting) built on top of the go-livepeer gateway
+    - Billing integration outside the Livepeer protocol — the protocol only controls what you pay orchestrators, not what you charge customers
+
+    **Who is doing this:** Livepeer Cloud SPE (free public inference gateway), Daydream, LLM SPE (LLM inference routing).
+  </Tab>
+  <Tab title="Embed a gateway in your platform">
+    Your gateway is internal infrastructure — not exposed to users directly, but routing every AI or video request your platform makes. You charge customers for your product; the gateway is the cost layer underneath.
+
+    **What you capture:** Your product margin. The gateway keeps compute costs below what you would pay a hosted inference provider (Replicate, Fal, Mux, AWS) while giving you full routing control.
+
+    **What this requires:**
+    - For AI: off-chain mode, Linux, no ETH
+    - The same infrastructure as an inference API minus the external-facing billing layer
+
+    **Who is doing this:** Daydream (real-time AI video for creators), Embody Avatars, AI Video Startup Programme participants.
+  </Tab>
+  <Tab title="Build a gateway platform (NaaP)">
+    You operate a gateway platform that handles all crypto complexity on behalf of your users. Users sign up, receive API keys, and pay in fiat or standard crypto. Your platform converts that into ETH micropayments to orchestrators.
+
+    This is the Network as a Platform (NaaP) pattern. The NaaP dashboard (`github.com/livepeer/naap`) is the reference implementation: JWT-based auth, Developer API Keys, and usage metering built on top of go-livepeer.
+
+    From the Discord discussion that defined this model:
+    > "The user never interacts with Livepeer contracts. The signer uses incoming USDC revenue to keep its hot wallet funded for PM ticket generation. The two payment layers are fully independent."
+
+    **What you capture:** Full product margin plus ownership of the user relationship. Crypto is completely invisible to your users.
+
+    **Status:** NaaP is in active development. The demo is operational; production API is not yet stable.
+
+    {/* REVIEW: Confirm NaaP dashboard public URL and production timeline with Qiang Han. */}
+  </Tab>
+</Tabs>
+
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
+
+## Local Gateways
+
+Before late 2025, every gateway required an Ethereum account funded on Arbitrum.
+The off-chain payment mode (PR [3791](https://github.com/livepeer/go-livepeer/pull/3791) and [3822](https://github.com/livepeer/go-livepeer/pull/3822)) removes all of this from the gateway operator's responsibilities.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Factor</TableCell>
+      <TableCell header>On-chain gateway (video)</TableCell>
+      <TableCell header>Off-chain AI gateway</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Startup cost**</TableCell>
+      <TableCell>ETH deposit required (~0.065 ETH + 0.03 reserve on Arbitrum)</TableCell>
+      <TableCell>Zero — community-hosted signer is free</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Ongoing ETH management**</TableCell>
+      <TableCell>Monitor deposit balance; top up as it depletes</TableCell>
+      <TableCell>None — remote signer handles it</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**ETH price exposure**</TableCell>
+      <TableCell>Yes — volatile ETH price affects your effective compute cost</TableCell>
+      <TableCell>None — abstracted by signer or clearinghouse</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Crypto knowledge required**</TableCell>
+      <TableCell>Yes — wallet, keystore, Arbitrum RPC, bridging</TableCell>
+      <TableCell>No — none required at the gateway layer</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Time to first job**</TableCell>
+      <TableCell>Hours (wallet setup, bridging, funding deposit)</TableCell>
+      <TableCell>Minutes (Docker command, point at remote signer)</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+{/* REVIEW: Confirm current ETH deposit/reserve amounts with Mehrdad/Rick. ~0.065 + 0.03 from fund-gateway.mdx. Issue open to reduce reserve: github.com/livepeer/go-livepeer/issues/3744 */}
+
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
+
+## Gateway Primitives
+
+Beyond routing your own workloads, the go-livepeer gateway is a platform primitive. It exposes everything needed to build:
+
+<AccordionGroup>
+  <Accordion title="API key management and auth">
+    Wrap the gateway HTTP interface with standard auth middleware. The gateway itself has no built-in auth — this is intentional; it lives in your application layer. The NaaP project provides a reference implementation using JWT tokens issued via SIWE (Sign-In with Ethereum), but any standard auth pattern works.
+  </Accordion>
+  <Accordion title="Custom orchestrator routing">
+    `-orchAddr` lets you specify exactly which orchestrators receive your jobs. Build orchestrator tiers, geographic routing, or capability-specific pools. `-maxPricePerCapability` accepts a JSON configuration with per-pipeline, per-model price caps — route different job types to different orchestrator tiers with different pricing policies.
+  </Accordion>
+  <Accordion title="Billing and usage metering">
+    The gateway exposes per-job result data. Build usage accounting outside the protocol and charge customers however your product requires — per generation, per minute of video, subscription, or credits.
+  </Accordion>
+  <Accordion title="Alternative gateway implementations">
+    The remote signer architecture means you are not required to use the Go binary. Python, browser, and mobile gateway clients are possible — the signer handles Ethereum complexity. The `livepeer-python-gateway` SDK (`github.com/j0sh/livepeer-python-gateway`) is the reference Python implementation.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
+
+## Gateway Operators
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Operator</TableCell>
+      <TableCell header>Model</TableCell>
+      <TableCell header>Gateway type</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Daydream**</TableCell>
+      <TableCell>Commercial AI video product; subscription and per-use pricing</TableCell>
+      <TableCell>AI gateway embedded in product</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Livepeer Studio**</TableCell>
+      <TableCell>Video API for developers; per-minute pricing</TableCell>
+      <TableCell>Video gateway (on-chain)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Livepeer Cloud SPE**</TableCell>
+      <TableCell>Free public gateways funded by treasury SPE grant</TableCell>
+      <TableCell>AI and video</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**LLM SPE**</TableCell>
+      <TableCell>LLM inference routing on Livepeer network</TableCell>
+      <TableCell>AI gateway (LLM-focused)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Self-hosted developers**</TableCell>
+      <TableCell>Route own AI or video workloads; eliminate hosted gateway fees</TableCell>
+      <TableCell>AI or video depending on workload</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider style={{margin: "0 0 -1rem 0"}} />
+
+## Related Pages
+
+<CardGroup cols={3}>
+  <Card title="SPE grant model" icon="coins" href="/v2/gateways/guides/opportunities/spe-grant-model">
+    How to get treasury funding for a gateway that serves the broader ecosystem.
+  </Card>
+  <Card title="Gateway requirements" icon="clipboard-check" href="/v2/gateways/guides/operator-considerations/operator-requirements">
+    What hardware, OS, and skills your setup actually requires.
+  </Card>
+  <Card title="Choose your setup path" icon="arrow-right" href="/v2/gateways/guides/setup-options/setup-paths">
+    Find the right quickstart for your gateway type.
+  </Card>
+</CardGroup>

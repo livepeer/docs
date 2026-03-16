@@ -209,7 +209,7 @@ const STATIC_RENAME_MAP = new Map(
     ],
     [
       'v2/gateways/references/artibtrum-exchanges.mdx',
-      'v2/gateways/references/arbitrum-exchanges.mdx'
+      'v2/gateways/resources/technical/arbitrum-exchanges.mdx'
     ],
     [
       'v2/developers/livepeer-real-time-video/video-streaming-on-livepeer/README.mdx',

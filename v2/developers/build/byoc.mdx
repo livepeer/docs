@@ -1,0 +1,362 @@
+---
+title: Bring Your Own Container (BYOC)
+sidebarTitle: BYOC
+description: >-
+  Step-by-step guide to building a custom AI container using the PyTrickle
+  integration layer and deploying it as a worker on the Livepeer network.
+purpose: how_to
+keywords:
+  - BYOC
+  - bring your own container
+  - livepeer
+  - AI
+  - custom model
+  - docker
+  - pytrickle
+  - ai-worker
+  - container spec
+  - streaming
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: developer
+lastVerified: 2026-03-17
+status: draft
+---
+[//]: # (SCOPE: how_to page. Goal → Prerequisites → Steps → Variants → Related. Assumes reader has a custom AI model or processing function they want to run on the Livepeer network. Does not assume ComfyStream knowledge.)
+
+Bring Your Own Container (BYOC) lets you run any custom AI model on the Livepeer network inside your own Docker container. Your container receives a live video (or audio) stream, processes it with your model, and returns the processed output — all over the Livepeer network's trickle streaming protocol.
+
+BYOC was hardened to production-grade in Phase 4 (January 2026). The Embody SPE and Streamplace are currently running production BYOC workloads.
+
+If you are building with ComfyUI workflows specifically, see [Build with ComfyStream](/v2/developers/build/comfystream) — ComfyStream is already BYOC-compatible and may be all you need.
+
+<CustomDivider />
+
+## When to Use BYOC
+
+| Use BYOC when... | Use ComfyStream or the AI gateway API instead when... |
+|-----------------|------------------------------------------------------|
+| Your model does not fit into a ComfyUI node graph | Your model is already a ComfyUI workflow |
+| You need full control over the inference runtime | You want a hosted or managed inference path |
+| You are using a non-standard model architecture | You are running standard batch pipelines (text-to-image, etc.) |
+| You want to earn network fees as an AI worker | You are building a client application, not a worker |
+| Your pipeline requires Python packages not available in ComfyStream | — |
+
+<CustomDivider />
+
+## Prerequisites
+
+- Docker installed on a Linux machine with NVIDIA GPU
+- Your AI model or processing function implemented and tested locally
+- [go-livepeer](https://github.com/livepeer/go-livepeer) — to register your container as a worker on the network
+- Familiarity with the trickle streaming protocol (you do not need to implement it directly — PyTrickle handles this)
+
+<CustomDivider />
+
+## How BYOC Works
+
+Your BYOC container does two things:
+
+1. **Exposes a REST API** that the Livepeer gateway calls to start, stop, and update your processing session
+2. **Connects to the trickle streaming layer** — subscribes to an input stream URL and publishes to an output stream URL
+
+[PyTrickle](https://github.com/livepeer/pytrickle) handles both of these for you. You implement one Python class (`FrameProcessor`), and PyTrickle handles the streaming, encoding, decoding, and API surface.
+
+``` icon="terminal"
+Livepeer Gateway
+  ↓ trickle protocol
+PyTrickle StreamServer (inside your container)
+  ↓ VideoFrame / AudioFrame tensors
+Your FrameProcessor (your model logic here)
+  ↓ processed tensors
+PyTrickle StreamServer
+  ↓ trickle protocol
+Livepeer Gateway
+```
+
+<CustomDivider />
+
+## Step 1 — Implement Your Processor
+
+Install PyTrickle:
+
+```bash icon="terminal"
+pip install git+https://github.com/livepeer/pytrickle.git
+```
+
+Create your processor class:
+
+```python icon="terminal"
+from pytrickle import FrameProcessor, StreamServer
+from pytrickle.frames import VideoFrame, AudioFrame
+from typing import Optional, List
+import torch
+
+class MyAIProcessor(FrameProcessor):
+    """Custom AI video processor."""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.model = None
+
+    async def initialize(self):
+        """Load your model here. Called once on startup."""
+        # Load your model
+        self.model = load_my_model()  # your model loading logic
+
+    async def process_video_async(self, frame: VideoFrame) -> Optional[VideoFrame]:
+        """Process a single video frame. Called once per frame."""
+        tensor = frame.tensor  # PyTorch tensor: (H, W, C) or (C, H, W)
+
+        # Run your model
+        with torch.no_grad():
+            processed = self.model(tensor)
+
+        return frame.replace_tensor(processed)
+
+    async def process_audio_async(self, frame: AudioFrame) -> Optional[List[AudioFrame]]:
+        """Process audio. Return None to drop, return frame list to pass through."""
+        return [frame]
+
+    def update_params(self, params: dict):
+        """Handle real-time parameter updates from the gateway or client."""
+        pass  # implement if your model supports dynamic configuration
+
+
+async def main():
+    processor = MyAIProcessor()
+    await processor.start()
+
+    server = StreamServer(
+        frame_processor=processor,
+        port=8000,
+        capability_name="live-video-to-video",  # must match the pipeline type expected by the gateway
+    )
+    await server.run_forever()
+```
+
+[//]: # (REVIEW: Confirm the correct `capability_name` value for the standard Livepeer live-video-to-video pipeline. "live-video-to-video" is the pipeline type from go-livepeer; verify this matches what PyTrickle registers. (Rick / PyTrickle maintainers\))
+
+<CustomDivider />
+
+## Step 2 — Define the REST API Contract
+
+PyTrickle automatically exposes these endpoints on your container. The Livepeer gateway calls them to manage your processing session.
+
+| Endpoint | Method | Request body | Purpose |
+|----------|--------|-------------|---------|
+| `/api/stream/start` | POST | `{subscribe_url, publish_url, gateway_request_id, params}` | Start a new stream processing session |
+| `/api/stream/params` | POST | `{key: value, ...}` | Update parameters mid-stream |
+| `/api/stream/status` | GET | — | Returns current session status |
+| `/api/stream/stop` | POST | — | Stop the current session |
+
+You do not need to implement these — PyTrickle's `StreamServer` provides them.
+
+**`/api/stream/start` body:**
+
+```json icon="terminal"
+{
+  "subscribe_url": "http://<trickle-server>/<input-stream>",
+  "publish_url": "http://<trickle-server>/<output-stream>",
+  "gateway_request_id": "session-id-from-gateway",
+  "params": {
+    "width": 704,
+    "height": 384
+  }
+}
+```
+
+<CustomDivider />
+
+## Step 3 — Build Your Docker Container
+
+```dockerfile icon="terminal"
+FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
+
+RUN apt-get update && apt-get install -y python3 python3-pip ffmpeg git
+
+# Install PyTrickle and your dependencies
+RUN pip install git+https://github.com/livepeer/pytrickle.git
+RUN pip install torch torchvision  # and your other model dependencies
+
+WORKDIR /app
+COPY processor.py .
+
+EXPOSE 8000
+
+CMD ["python3", "processor.py"]
+```
+
+[//]: # (REVIEW: Confirm whether there is an official Livepeer base image (e.g., livepeer/ai-runner:base or a PyTrickle image\) that developers should use instead of building from nvidia/cuda. Check ai-runner repo for an official base image or Dockerfile. Rick to confirm.)
+
+Build and test locally:
+
+```bash icon="terminal"
+docker build -t my-ai-processor:latest .
+
+# Test the container starts and exposes port 8000
+docker run --gpus all -p 8000:8000 my-ai-processor:latest
+```
+
+<CustomDivider />
+
+## Step 4 — Test Locally
+
+Before deploying to the Livepeer network, verify your container processes a stream end-to-end.
+
+**Prerequisites for local testing:**
+1. Install `http-trickle` (the trickle protocol server):
+
+```bash icon="terminal"
+git clone https://github.com/livepeer/http-trickle.git ~/repos/http-trickle
+cd ~/repos/http-trickle && make build
+```
+
+**Test sequence:**
+
+<Steps>
+  <Step title="Start a local trickle server">
+    ```bash icon="terminal"
+    cd ~/repos/http-trickle && make trickle-server addr=0.0.0.0:3389
+    ```
+  </Step>
+
+  <Step title="Start your container">
+    ```bash icon="terminal"
+    docker run --gpus all -p 8000:8000 my-ai-processor:latest
+    ```
+  </Step>
+
+  <Step title="Start a test input stream">
+    ```bash icon="terminal"
+    cd ~/repos/http-trickle && make publisher-ffmpeg in=video.mp4 stream=input url=http://127.0.0.1:3389
+    ```
+  </Step>
+
+  <Step title="Send a start request">
+    ```bash icon="terminal"
+    curl -X POST http://localhost:8000/api/stream/start \
+      -H "Content-Type: application/json" \
+      -d '{
+        "subscribe_url": "http://127.0.0.1:3389/input",
+        "publish_url": "http://127.0.0.1:3389/output",
+        "gateway_request_id": "test-session",
+        "params": {"width": 704, "height": 384}
+      }'
+    ```
+  </Step>
+
+  <Step title="View processed output">
+    ```bash icon="terminal"
+    cd ~/repos/http-trickle && go run cmd/read2pipe/*.go --url http://127.0.0.1:3389/ --stream output | ffplay -
+    ```
+  </Step>
+</Steps>
+
+Check `GET /api/stream/status` to confirm the session is active:
+
+```bash icon="terminal"
+curl http://localhost:8000/api/stream/status
+```
+
+<CustomDivider />
+
+## Step 5 — Push to a Container Registry
+
+```bash icon="terminal"
+docker tag my-ai-processor:latest <your-registry>/<your-image>:latest
+docker push <your-registry>/<your-image>:latest
+```
+
+The image must be accessible to your orchestrator. Public Docker Hub or any registry your orchestrator can pull from works.
+
+<CustomDivider />
+
+## Step 6 — Deploy to the Livepeer Network
+
+Your BYOC container runs on an orchestrator. The orchestrator pulls your image, starts it, and routes live-video-to-video jobs to it.
+
+[//]: # (REVIEW: CRITICAL — confirm the exact go-livepeer orchestrator flags for registering a BYOC container. The following is a placeholder structure based on the Phase 4 architecture; exact flags must be verified from go-livepeer CLI reference or Rick.)
+
+To register your container with an orchestrator, you (or the orchestrator you are working with) configure go-livepeer to use BYOC mode and point to your container image:
+
+```bash icon="terminal"
+# Placeholder — exact flags not confirmed
+# REVIEW: Verify the correct go-livepeer flags for BYOC container registration
+livepeer \
+  -orchestrator \
+  -byoc \
+  -byocImage <your-registry>/<your-image>:latest \
+  # ... other orchestrator flags
+```
+
+For current orchestrators accepting BYOC workloads, see the [MuxionLabs BYOC example apps](https://github.com/muxionlabs/byoc-example-apps) — these include working deployment configurations that other orchestrators have used.
+
+<Note>
+BYOC orchestrator onboarding is actively scaling as of Phase 4 (January 2026). If you cannot find a willing orchestrator, reach out in the [Livepeer Discord](https://discord.com/invite/livepeer) `#developers` channel.
+</Note>
+
+<CustomDivider />
+
+## Building a Client Application on Top of BYOC
+
+Once your BYOC container is live on the network, applications connect to it through a Livepeer gateway using the `@muxionlabs/byoc-sdk`:
+
+```typescript icon="terminal"
+import { BYOCClient } from '@muxionlabs/byoc-sdk';
+
+const client = new BYOCClient({
+  gatewayUrl: 'https://<livepeer-gateway-url>',
+  capability: 'live-video-to-video',
+});
+
+// WebRTC streaming, data-channel support, React hooks built in
+await client.startStream({ videoElement, params: { /* your params */ } });
+```
+
+The SDK handles WebRTC streaming from the browser directly to your gateway without requiring a custom backend.
+
+[//]: # (REVIEW: Confirm SDK install name and basic API from npmjs.com/@muxionlabs/byoc-sdk.)
+
+<CustomDivider />
+
+## Variants
+
+### ComfyStream as a BYOC container
+
+ComfyStream is already integrated with PyTrickle (Phase 4). To run ComfyStream as a BYOC worker, use the `muxionlabs/comfystream` image instead of building from scratch:
+
+```bash icon="terminal"
+# REVIEW: Confirm the exact muxionlabs/comfystream image name and tag
+docker pull muxionlabs/comfystream:latest
+```
+
+See [Build with ComfyStream](/v2/developers/build/comfystream) for ComfyStream-specific configuration.
+
+### Python-native processing (no Docker)
+
+For development and testing, PyTrickle can run without Docker:
+
+```bash icon="terminal"
+pip install git+https://github.com/livepeer/pytrickle.git
+python processor.py
+```
+
+This does not register with the Livepeer network but is useful for local development.
+
+<CustomDivider />
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Build with ComfyStream" icon="camera" href="/v2/developers/build/comfystream">
+    Use ComfyStream's node-based pipeline system instead of implementing a FrameProcessor from scratch.
+  </Card>
+  <Card title="PyTrickle documentation" icon="book" href="https://muxionlabs.github.io/pytrickle/">
+    Full PyTrickle reference — FrameProcessor API, TrickleClient, advanced usage patterns.
+  </Card>
+</CardGroup>

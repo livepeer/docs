@@ -3,11 +3,11 @@
  * @script            v2-wcag-audit
  * @category          validator
  * @purpose           qa:content-quality
- * @scope             tests/integration, tests/utils, tasks/reports, v2
+ * @scope             v2-content
  * @owner             docs
  * @needs             E-R1, R-R11
  * @purpose-statement WCAG accessibility audit for v2 pages — checks heading hierarchy, alt text, ARIA. Supports --fix mode for auto-repair.
- * @pipeline          P6 (on-demand, WCAG audit/repair)
+ * @pipeline          P1
  * @usage             node tests/integration/v2-wcag-audit.js [flags]
  */
 
@@ -1170,7 +1170,7 @@ async function runAudit(options = {}) {
   let files = resolved.files;
   const excludedInputs = [...resolved.excludedInputs];
   if (excludedInputs.length) {
-    excludedInputs.forEach((rel) => console.warn(`⚠️  Excluding x-* path from audit scope: ${rel}`));
+    excludedInputs.forEach((rel) => console.warn(`⚠️  Excluding unpublished v2 path from audit scope: ${rel}`));
   }
 
   const navFiltered = filterFilesToDocsJsonV2Navigation(files, docsRoutes, { mode: args.mode });
