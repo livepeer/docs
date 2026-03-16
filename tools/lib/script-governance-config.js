@@ -111,6 +111,8 @@ const PURPOSE_ENUM = [
   'governance:repo-health',
   'feature:translation',
   'feature:seo',
+  'seo:og-image-assets',
+  'seo:og-image-governance',
   'infrastructure:data-feeds',
   'infrastructure:pipeline-orchestration',
   'tooling:api-spec',
