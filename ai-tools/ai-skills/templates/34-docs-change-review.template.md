@@ -1,8 +1,9 @@
 ---
 name: docs-change-review
-description: Review doc pages or diffs for factual contradictions, overstatement, ownership overlap, and reader-facing claim quality.
+version: "1.0"
+description: Review Livepeer Docs pages or diffs for factual contradictions, overstatement, ownership overlap, historical drift, unresolved evidence gaps, and reader-facing claim quality.
 tier: 2
-triggers:
+invoke_when:
   - "review this docs diff"
   - "check this page for clarity and correctness"
   - "give a docs review verdict on these changes"

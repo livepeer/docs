@@ -1,8 +1,9 @@
 ---
 name: page-content-research-review
-description: Route deep page-content research across source verification, claim-impact propagation, and final review for Livepeer Docs.
+version: "1.0"
+description: Route high-rigor Livepeer Docs fact-checking across claim extraction, source verification, contradiction analysis, claim-family propagation, and final research reporting workflows consistently.
 tier: 2
-triggers:
+invoke_when:
   - "deep research this docs page"
   - "verify whether this page is accurate and valid"
   - "review this page for stale or unsupported claims"

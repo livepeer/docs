@@ -1,8 +1,9 @@
 ---
 name: docs-impact-propagation
-description: Map changed claims to every dependent page, glossary, example, and comparison surface that should be updated.
+version: "1.0"
+description: Map changed claim families to every dependent page, glossary, example, comparison, and reference surface that should be verified or updated.
 tier: 2
-triggers:
+invoke_when:
   - "find every page affected by this docs change"
   - "propagate this claim update across the docs"
   - "identify downstream pages that depend on this statement"

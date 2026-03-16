@@ -1,8 +1,9 @@
 ---
 name: docs-source-verification
-description: Verify docs claims against primary sources, record evidence, and downgrade unsupported content before it ships.
+version: "1.0"
+description: Verify Livepeer Docs claims against ranked primary sources, record evidence, assess freshness risk, classify contradictions, and downgrade unsupported content before publication.
 tier: 2
-triggers:
+invoke_when:
   - "verify these docs claims"
   - "check whether this page is factually accurate"
   - "research authoritative sources for this docs content"
