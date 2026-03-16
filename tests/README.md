@@ -219,48 +219,12 @@ npm --prefix tests run test:wcag:selftest
 
 ## Experimental Page Research Usage
 
-The fact-check research runner is manual-first and experimental. Use it when you need evidence-backed review for a real docs cluster rather than structural lint.
+The fact-check research workflow is documented canonically in:
 
-Validate the registry first:
+- Internal operator runbook: `/docs-guide/frameworks/research-skill-workflow`
+- Public contributor page: `/v2/resources/documentation-guide/research-and-fact-checking`
 
-```bash
-node tools/scripts/docs-fact-registry.js --validate --registry tasks/research/claims
-```
-
-Run a single-page research pass:
-
-```bash
-node tools/scripts/docs-page-research.js \
-  --page v2/orchestrators/guides/deployment-details/setup-options.mdx \
-  --report-md /tmp/docs-page-research.md \
-  --report-json /tmp/docs-page-research.json
-```
-
-Run a cluster review when the same factual claim appears across several pages:
-
-```bash
-node tools/scripts/docs-page-research.js \
-  --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx \
-  --report-md /tmp/docs-page-research-cluster.md \
-  --report-json /tmp/docs-page-research-cluster.json
-```
-
-Expected outputs:
-- `Claims Reviewed`
-- `Verified Claims`
-- `Conflicted Claims`
-- `Time-Sensitive Claims`
-- `Unverified / Historical Claims`
-- `Cross-Page Contradictions`
-- `Propagation Queue`
-- `Evidence Sources`
-
-Evidence sources currently supported:
-- repo files
-- official pages
-- GitHub repos/issues/PRs/releases
-- forum topics
-- repo-available Discord/community signals
+Use those pages for workflow scope, commands, readiness, outputs, and source-of-truth boundaries.
 - Integration PR exception: for `docs-v2 -> main`, changed-file static failures are advisory while browser failures remain blocking.
 - The same workflow also runs full browser tests from `docs.json`.
 - `.github/workflows/test-v2-pages.yml` is responsible for PR comments and artifact uploads for V2 browser sweep results.

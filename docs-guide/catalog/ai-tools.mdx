@@ -88,3 +88,22 @@ Generated metadata:
   - managed files inside an installed skill are created or updated from the canonical template bundle
   - stale managed bundle files are pruned on resync
   - unmanaged skills and unmanaged files inside a skill folder are preserved
+
+## Fact-Check Research Workflow
+
+The page-content research workflow is the active docs fact-checking skill family.
+
+Canonical operator references:
+
+- Internal runbook: `/docs-guide/frameworks/research-skill-workflow`
+- Public contributor page: `/v2/resources/documentation-guide/research-and-fact-checking`
+
+Primary entrypoints:
+
+```bash icon="terminal"
+node tools/scripts/docs-fact-registry.js --validate --registry tasks/research/claims
+node tools/scripts/docs-page-research.js --page v2/orchestrators/guides/deployment-details/setup-options.mdx --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json
+node tools/scripts/docs-page-research-pr-report.js --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx --report-md /tmp/page-content-research-pr.md --report-json /tmp/page-content-research-pr.json
+```
+
+The workflow is experimental and advisory-first. Use it for factual verification, contradiction review, and claim-family propagation, not generic MDX or link hygiene.

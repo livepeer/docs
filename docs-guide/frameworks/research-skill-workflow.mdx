@@ -1,0 +1,199 @@
+---
+title: Research Skill Workflow
+sidebarTitle: Research Skill
+description: >-
+  Canonical internal runbook for the experimental docs fact-check research
+  workflow, including sources of truth, operator commands, and maintenance
+  expectations.
+keywords:
+  - livepeer
+  - docs guide
+  - research skill workflow
+  - fact checking
+  - docs operators
+  - codex
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: internal
+pageType: how_to
+purpose: how_to
+status: current
+lastVerified: 2026-03-16
+---
+
+# Research Skill Workflow
+
+This is the canonical operator runbook for the experimental page-content research workflow that landed in `docs-v2-dev`.
+
+Use this page for:
+
+- operational usage
+- source-of-truth boundaries
+- readiness status
+- maintenance and improvement workflow
+
+Do not use rollout reports or `tests/README.md` as the canonical narrative source.
+
+## What Is Canonical
+
+Canonical sources:
+
+- skill behavior: `ai-tools/ai-skills/templates/*.template.md`
+- fact storage: `tasks/research/claims/`
+- registry validation: `tools/scripts/docs-fact-registry.js`
+- manual fact runner: `tools/scripts/docs-page-research.js`
+- PR advisory runner: `tools/scripts/docs-page-research-pr-report.js`
+- local/manual PR prep integration: `tools/scripts/create-codex-pr.js --advisory-research`
+- forward plan: `tasks/plan/future/page-content-research-trust-roadmap.md`
+
+Generated or derived:
+
+- local installed Codex skills under `$CODEX_HOME/skills`
+- saved advisory reports and validation artifacts
+
+Historical only:
+
+- rollout evidence and exploratory pilots under `tasks/plan/repo-ops-reports/`
+
+Legacy:
+
+- route-centric claim-ledger advisory helpers are retained only as legacy comparison tooling and are not the active PR advisory path
+
+## Workflow Model
+
+The workflow is claim-led rather than route-led.
+
+It is responsible for:
+
+- extracting material factual claims
+- checking evidence sources
+- detecting contradictions across related pages
+- classifying claims by confidence and freshness risk
+- producing a propagation queue for dependent pages
+
+It is not responsible for:
+
+- MDX syntax validation
+- style-guide compliance
+- link and import integrity
+- generic navigation cleanup
+
+Route or ownership issues only belong here when they change factual ownership or contradiction resolution.
+
+## Readiness Status
+
+Current status:
+
+- **Codex-ready:** yes
+- **Cross-agent-ready:** portable with minor work
+- **Operating mode:** experimental and advisory-first
+
+Interpretation:
+
+- Codex skills can sync from the canonical template bundle immediately.
+- The public and internal docs now explain how to use the workflow.
+- Cross-agent portability exists structurally, but broader packaging and operator guidance still need hardening before claiming equal readiness across all agents.
+
+## Operator Commands
+
+Validate the registry:
+
+```bash icon="terminal"
+node tools/scripts/docs-fact-registry.js --validate --registry tasks/research/claims
+```
+
+Run a single-page pass:
+
+```bash icon="terminal"
+node tools/scripts/docs-page-research.js \
+  --page v2/orchestrators/guides/deployment-details/setup-options.mdx \
+  --report-md /tmp/docs-page-research.md \
+  --report-json /tmp/docs-page-research.json
+```
+
+Run a cluster review:
+
+```bash icon="terminal"
+node tools/scripts/docs-page-research.js \
+  --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx \
+  --report-md /tmp/docs-page-research-cluster.md \
+  --report-json /tmp/docs-page-research-cluster.json
+```
+
+Run the PR advisory helper:
+
+```bash icon="terminal"
+node tools/scripts/docs-page-research-pr-report.js \
+  --files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx \
+  --report-md /tmp/page-content-research-pr.md \
+  --report-json /tmp/page-content-research-pr.json
+```
+
+Run PR prep with advisory research:
+
+```bash icon="terminal"
+node tools/scripts/create-codex-pr.js \
+  --advisory-research \
+  --changed-files v2/orchestrators/guides/deployment-details/setup-options.mdx,v2/orchestrators/setup/rcs-requirements.mdx,v2/orchestrators/guides/operator-considerations/business-case.mdx
+```
+
+## Expected Outputs
+
+Every substantive run should surface some combination of:
+
+- verified claims
+- conflicted claims
+- time-sensitive claims
+- unresolved or historical-only claims
+- cross-page contradictions
+- propagation queue items
+- explicit evidence sources
+
+Operators should prefer conservative interpretation:
+
+- if evidence is weak, treat the claim as unresolved
+- if wording is stronger than the evidence, downgrade the wording
+- if the same claim appears elsewhere, queue propagation work instead of fixing one page in isolation
+
+## Source-of-Truth Boundaries
+
+Use this split consistently:
+
+- public contributor usage: `v2/resources/documentation-guide/`
+- internal operator workflow: this runbook in `docs-guide/frameworks/`
+- rollout/adoption record: `tasks/plan/repo-ops-reports/`
+- future hardening plan: `tasks/plan/future/`
+- executable behavior: scripts, templates, tests, and claim registries
+
+If these sources disagree:
+
+1. scripts and tests define runtime behavior
+2. template bundles define skill behavior
+3. this runbook defines operator workflow and readiness
+4. public documentation guide pages summarize contributor usage
+
+## Maintenance Workflow
+
+When improving the research skill:
+
+1. expand claim-family coverage in `tasks/research/claims/`
+2. improve evidence matching and classification logic in the runner
+3. validate on real orchestrator and gateway page clusters
+4. run PR advisory on tracked factual docs pages
+5. update this runbook when the operator contract changes
+
+Do not:
+
+- widen the workflow back into generic navigation QA
+- let `tests/README.md` become the primary narrative home again
+- treat exploratory reports as canonical instructions
+
+## Related Docs
+
+- Public contributor page: `/v2/resources/documentation-guide/research-and-fact-checking`
+- AI tools index: `/docs-guide/catalog/ai-tools`
+- Source of truth policy: `/docs-guide/policies/source-of-truth-policy`
+- Trust roadmap: `tasks/plan/future/page-content-research-trust-roadmap.md`

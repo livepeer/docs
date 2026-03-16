@@ -1,76 +1,28 @@
 task_id: 20260316
-branch: codex/20260316-ownerless-rollout
+branch: codex/20260316-research-skill-docs
 base_branch: docs-v2-dev
 scope_in:
   - .codex/task-contract.yaml
-  - .vscode/
-  - .github/
-  - README.md
-  - ai-tools/ai-skills/
-  - ai-tools/agent-packs/skills/
-  - contribute/CONTRIBUTING/
-  - docs-guide/overview.mdx
-  - docs-guide/catalog/scripts-catalog.mdx
-  - docs-guide/catalog/
-  - docs-guide/features/
-  - docs-guide/frameworks/
-  - docs-guide/policies/
+  - docs-guide/catalog/ai-tools.mdx
+  - docs-guide/catalog/pages-catalog.mdx
+  - docs-guide/frameworks
   - docs-index.json
-  - lpd
-  - snippets/templates/
-  - tasks/reports/script-classifications.json
-  - tests/script-index.md
-  - tests/run-all.js
-  - tests/run-pr-checks.js
-  - tests/WHEN-TESTS-RUN.md
-  - tests/integration/v2-link-audit.js
-  - tests/unit/
-  - tests/utils/
-  - tools/config/
-  - tools/lib/script-index.md
-  - tools/lib/
-  - tools/script-index.md
-  - tools/scripts/
-  - v2/about/index.mdx
-  - v2/community/index.mdx
-  - v2/developers/index.mdx
-  - v2/gateways/index.mdx
-  - v2/home/index.mdx
+  - docs-guide/overview.mdx
+  - docs.json
+  - tests/README.md
   - v2/index.mdx
-  - v2/internal/index.mdx
-  - v2/lpt/index.mdx
-  - v2/orchestrators/index.mdx
-  - v2/solutions/index.mdx
-  - v2/templates/
+  - v2/resources/index.mdx
+  - v2/resources/documentation-guide
 scope_out: []
 allowed_generated:
-  - .vscode/
-  - ai-tools/agent-packs/skills/
+  - .codex/pr-body.generated.md
   - docs-guide/catalog/pages-catalog.mdx
-  - docs-guide/catalog/ui-templates.mdx
-  - docs-guide/catalog/scripts-catalog.mdx
   - docs-index.json
-  - tests/script-index.md
-  - tools/lib/script-index.md
-  - tools/script-index.md
-  - v2/about/index.mdx
-  - v2/community/index.mdx
-  - v2/developers/index.mdx
-  - v2/gateways/index.mdx
-  - v2/home/index.mdx
   - v2/index.mdx
-  - v2/internal/index.mdx
-  - v2/lpt/index.mdx
-  - v2/orchestrators/index.mdx
-  - v2/solutions/index.mdx
-  - v2/templates/
+  - v2/resources/index.mdx
 acceptance_checks:
-  - node tests/unit/skill-docs.test.js
-  - node tests/unit/codex-skill-sync.test.js
-  - node tests/unit/export-portable-skills.test.js
-  - node tests/unit/v2-link-audit.test.js
-  - node tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged-ownerless.md
-  - node tests/run-all.js --staged --skip-browser
   - node tests/run-pr-checks.js --base-ref docs-v2-dev
-risk_flags: []
+risk_flags:
+  - docs-ia
+  - docs-governance
 follow_up_issues: []
