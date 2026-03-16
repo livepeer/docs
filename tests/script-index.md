@@ -25,6 +25,7 @@
 | `tests/unit/component-governance-generators.test.js` | Verifies component governance generators produce coherent registry, usage-map, and docs outputs. | `node tests/unit/component-governance-generators.test.js` | docs |
 | `tests/unit/component-governance-utils.test.js` | Verifies shared component governance utility parsing, scanning, and archive exclusion behavior. | `node tests/unit/component-governance-utils.test.js` | docs |
 | `tests/unit/components/TEMPLATE.test.js` | Template for category-scoped component unit tests. | `node tests/unit/components/TEMPLATE.test.js` | docs |
+| `tests/unit/copy-lint.test.js` | Copy lint unit suite — validates fixture-driven copy-governance checks and runs changed-file scoped lint aggregation for authored docs pages. | `node tests/unit/copy-lint.test.js [--staged] [--files <a,b,c>]` | docs |
 | `tests/unit/create-codex-pr.test.js` | Tests create-codex-pr.js — validates PR creation logic and branch naming | `node tests/unit/create-codex-pr.test.js [flags]` | docs |
 | `tests/unit/docs-authoring-rules.test.js` | Verifies guide-layout warning rules and deterministic code-block icon repair for authored docs pages. | `node tests/unit/docs-authoring-rules.test.js` | docs |
 | `tests/unit/docs-fact-registry.test.js` | Tests docs-fact-registry.js — validates claim-family registry schema checks and normalized loading by domain. | `node tests/unit/docs-fact-registry.test.js [flags]` | docs |
@@ -38,6 +39,8 @@
 | `tests/unit/docs-route-scope.test.js` | Verifies docs.json-derived tab and group route scopes resolve to live files. | `node tests/unit/docs-route-scope.test.js` | docs |
 | `tests/unit/export-portable-skills.test.js` | Tests export-portable-skills.js — validates portable skill export packs from canonical templates. | `node tests/unit/export-portable-skills.test.js [flags]` | docs |
 | `tests/unit/frontmatter-taxonomy.test.js` | Verifies shared docs frontmatter taxonomy normalization and purpose mapping. | `node tests/unit/frontmatter-taxonomy.test.js` | docs |
+| `tests/unit/generated-artifacts-policy.test.js` | Tests generated artifact governance manifest — validates enums, path matching, and hook-policy expectations | `node tests/unit/generated-artifacts-policy.test.js` | docs |
+| `tests/unit/legacy-root-v1-redirects.test.js` | Validates legacy root-to-v1 redirect integrity, docs.json sync, root catch-all fallbacks, and legacy fallback-page cleanup behavior. | `node tests/unit/legacy-root-v1-redirects.test.js` | docs |
 | `tests/unit/links-imports.test.js` | Validates MDX internal links and snippet import paths are resolvable | `node tests/unit/links-imports.test.js [flags]` | docs |
 | `tests/unit/lpd-scoped-mint-dev.test.js` | Tests lpd scoped mint-dev functionality — validates dev server scope filtering | `node tests/unit/lpd-scoped-mint-dev.test.js [flags]` | docs |
 | `tests/unit/mdx-component-runtime-smoke.test.js` | Unit tests for the MDX runtime smoke helpers — covers arg parsing, sentinel route selection, trigger logic, and failure classification. | `node tests/unit/mdx-component-runtime-smoke.test.js` | docs |

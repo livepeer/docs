@@ -407,12 +407,12 @@ function runOwnerlessGovernanceCheck(files) {
   };
 }
 
-function runAgentDocsFreshnessCheck(files) {
+async function runAgentDocsFreshnessCheck(files) {
   if (!files.length) {
     return { label: 'Agent Docs Freshness', status: 'skipped', files: 0, errors: 0, warnings: 0 };
   }
 
-  const result = checkAgentDocsFreshnessTests.runTests();
+  const result = await checkAgentDocsFreshnessTests.runTests();
   return {
     label: 'Agent Docs Freshness',
     status: result.passed ? 'passed' : 'failed',
@@ -763,7 +763,7 @@ async function main() {
   checks.push(runScriptDocsCheck(groups.scriptFiles));
   checks.push(runSkillDocsCheck(groups.skillDocsFiles));
   checks.push(runOwnerlessGovernanceCheck(groups.ownerlessGovernanceFiles));
-  checks.push(runAgentDocsFreshnessCheck(groups.ownerlessGovernanceFiles));
+  checks.push(await runAgentDocsFreshnessCheck(groups.ownerlessGovernanceFiles));
   checks.push(runRootAllowlistFormatCheck(groups.ownerlessGovernanceFiles));
   checks.push(await runAsyncGlobalCheck('Portable Skill Export', groups.portableSkillFiles, exportPortableSkillsTests.runTests));
   checks.push(runDocsGuideSotCheck(groups.docsGuideSotFiles));

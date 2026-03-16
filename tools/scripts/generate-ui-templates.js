@@ -161,6 +161,14 @@ function yamlSingleQuote(value) {
   return `'${String(value || '').replace(/'/g, "''")}'`;
 }
 
+function normalizeDateScalar(value, fallback) {
+  const source = value ?? fallback;
+  if (source instanceof Date && !Number.isNaN(source.getTime())) {
+    return source.toISOString().slice(0, 10);
+  }
+  return String(source || '').trim();
+}
+
 function toImportName(value) {
   const normalized = String(value || '')
     .replace(/\.[^.]+$/, '')
@@ -188,7 +196,7 @@ function buildPageSnippetLines(template) {
   const pageType = String(meta.pageType || 'overview').trim();
   const purpose = String(meta.purpose || pageType).trim();
   const status = String(meta.status || 'current').trim();
-  const lastVerified = String(meta.lastVerified || '2026-03-12').trim();
+  const lastVerified = normalizeDateScalar(meta.lastVerified, '2026-03-12');
   const mode = String(meta.mode || '').trim();
   const tag = String(meta.tag || '').trim();
   const keywords = Array.isArray(meta.keywords)

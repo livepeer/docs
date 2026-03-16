@@ -263,6 +263,26 @@
     "pipeline": "manual — not yet in pipeline"
   },
   {
+    "path": "tests/unit/generated-artifacts-policy.test.js",
+    "script": "generated-artifacts-policy.test",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tests/unit, tools/lib/generated-artifacts.js, tools/config/generated-artifacts.json",
+    "needs": "R-R16, R-R17",
+    "purpose_statement": "Tests generated artifact governance manifest — validates enums, path matching, and hook-policy expectations",
+    "pipeline": "manual — targeted governance test"
+  },
+  {
+    "path": "tests/unit/legacy-root-v1-redirects.test.js",
+    "script": "legacy-root-v1-redirects.test",
+    "category": "validator",
+    "purpose": "qa:repo-health",
+    "scope": "tests/unit, tools/scripts/redirects, tools/data/redirects, docs.json",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Validates legacy root-to-v1 redirect integrity, docs.json sync, root catch-all fallbacks, and legacy fallback-page cleanup behavior.",
+    "pipeline": "manual — targeted redirect migration coverage"
+  },
+  {
     "path": "tests/unit/codex-commit.test.js",
     "script": "codex-commit.test",
     "category": "validator",
@@ -1093,6 +1113,16 @@
     "pipeline": "indirect -- library module"
   },
   {
+    "path": "tools/lib/generated-artifacts.js",
+    "script": "generated-artifacts",
+    "category": "utility",
+    "purpose": "governance:index-management",
+    "scope": "tools/lib, tools/config, .githooks, tests/unit",
+    "needs": "R-R16, R-R17",
+    "purpose_statement": "Generated artifact governance helpers — load the manifest, validate enums, and match staged files to managed artifacts",
+    "pipeline": "indirect — library module"
+  },
+  {
     "path": "tools/lib/generated-file-banners.js",
     "script": "generated-file-banners",
     "category": "utility",
@@ -1522,6 +1552,16 @@
     "needs": "E-C6, F-C1",
     "purpose_statement": "Mint dev scope generator — creates a scoped docs.json for running mint dev on a subset of pages",
     "pipeline": "manual — developer tool"
+  },
+  {
+    "path": "tools/scripts/dev/lib/resolve-scoped-docs-config.js",
+    "script": "resolve-scoped-docs-config",
+    "category": "utility",
+    "purpose": "tooling:dev-tools",
+    "scope": "tools/scripts/dev/lib, tools/config/scoped-navigation",
+    "needs": "E-C6, F-C1",
+    "purpose_statement": "Scoped docs config resolver — resolves named scoped navigation configs and explicit docs config paths for mint-dev tooling",
+    "pipeline": "indirect -- library module"
   },
   {
     "path": "tools/scripts/dev/mint-custom-loader.sh",
@@ -2151,6 +2191,16 @@
     "needs": "E-C1, R-R14",
     "purpose_statement": "Report publisher — publishes v2 internal audit reports to configured output locations",
     "pipeline": "manual — not yet in pipeline"
+  },
+  {
+    "path": "tools/scripts/redirects/sync-legacy-root-v1.js",
+    "script": "sync-legacy-root-v1",
+    "category": "generator",
+    "purpose": "governance:index-management",
+    "scope": "full-repo",
+    "needs": "E-C1, R-R14",
+    "purpose_statement": "Legacy root redirect synchronizer — bootstraps root-level legacy-to-v1 mappings, rewrites managed docs.json redirects, installs root catch-all fallbacks, and removes legacy generated fallback pages",
+    "pipeline": "manual — on-demand maintainer sync tool"
   },
   {
     "path": "tools/scripts/remediators/assets/migrate-assets-to-branch.js",

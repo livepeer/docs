@@ -109,6 +109,7 @@ Recovery:
 | Source-of-truth boundaries | [`docs-guide/policies/source-of-truth-policy.mdx`](docs-guide/policies/source-of-truth-policy.mdx) |
 | V2 publishability and workspace lanes | [`docs-guide/policies/v2-folder-governance.mdx`](docs-guide/policies/v2-folder-governance.mdx) |
 | Ownerless governance contract | [`docs-guide/policies/ownerless-governance.mdx`](docs-guide/policies/ownerless-governance.mdx) |
+| Generated artifacts and hook governance | [`docs-guide/policies/generated-artifact-and-hook-governance.mdx`](docs-guide/policies/generated-artifact-and-hook-governance.mdx) |
 | Full feature inventory | [`docs-guide/features/feature-map.mdx`](docs-guide/features/feature-map.mdx) |
 | System/data/control flow | [`docs-guide/features/architecture-map.mdx`](docs-guide/features/architecture-map.mdx) |
 | CLI commands and runbooks | [`docs-guide/tooling/lpd-cli.mdx`](docs-guide/tooling/lpd-cli.mdx) |

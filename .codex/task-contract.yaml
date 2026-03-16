@@ -1,26 +1,50 @@
-task_id: 20260315-merge-docs-v2-into-docs-v2-dev-validation
-branch: tmp/merge-docs-v2-into-docs-v2-dev-validation-20260315
+task_id: 20260316
+branch: codex/20260316-merge-readiness-phase1
 base_branch: docs-v2-dev
 scope_in:
   - .codex/task-contract.yaml
-  - .vscode/settings.json
-  - docs-guide/**
-  - docs-index.json
-  - docs.json
-  - tasks/plan/active/merge-docs-v2-into-docs-v2-dev-root-cause-review.md
-  - tests/**
-  - tools/**
-  - v2/**
+  - README.md
+  - ai-tools/ai-skills/docs-copy/SKILL.md
+  - .vscode/components.code-snippets
+  - .vscode/templates.code-snippets
+  - docs-guide/catalog/scripts-catalog.mdx
+  - docs-guide/catalog/templates-catalog.mdx
+  - docs-guide/catalog/ui-templates.mdx
+  - docs-guide/catalog/workflows-catalog.mdx
+  - tasks/reports/script-classifications.json
+  - tests/run-pr-checks.js
+  - tests/script-index.md
+  - tools/lib/script-index.md
+  - tools/scripts/generate-ui-templates.js
+  - tools/script-index.md
+  - v2/index.mdx
+  - v2/templates/index.mdx
+  - v2/templates/pages/openapi-endpoint-page-template.mdx
 scope_out:
   - v1/**
-allowed_generated: []
+allowed_generated:
+  - docs-guide/catalog/scripts-catalog.mdx
+  - docs-guide/catalog/templates-catalog.mdx
+  - docs-guide/catalog/ui-templates.mdx
+  - docs-guide/catalog/workflows-catalog.mdx
+  - tasks/reports/script-classifications.json
+  - tests/script-index.md
+  - tools/lib/script-index.md
+  - tools/script-index.md
+  - .vscode/components.code-snippets
+  - .vscode/templates.code-snippets
+  - v2/index.mdx
+  - v2/templates/index.mdx
+  - v2/templates/pages/openapi-endpoint-page-template.mdx
 acceptance_checks:
-  - node tests/run-pr-checks.js --base-ref docs-v2
-  - npm --prefix tests run test:docs-guide
-  - node tests/integration/openapi-reference-audit.js --full --strict --report /tmp/openapi-audit-final.md --report-json /tmp/openapi-audit-final.json
-  - MINT_BASE_URL=http://localhost:3000 npm --prefix tools run test:browser
-  - MINT_BASE_URL=http://localhost:3000 npm --prefix tools run test:v2-pages
+  - node tests/unit/skill-docs.test.js
+  - node tests/unit/check-agent-docs-freshness.test.js
+  - node tests/unit/root-allowlist-format.test.js
+  - node tests/unit/script-docs.test.js --check-indexes
+  - node tests/unit/docs-guide-sot.test.js
+  - node tests/unit/ui-template-generator.test.js
+  - node tests/run-pr-checks.js --lane branch-health --base-ref docs-v2
 risk_flags:
-  - merge-validation
-  - no-pr
+  - generated-artifacts
+  - governance-contract
 follow_up_issues: []
