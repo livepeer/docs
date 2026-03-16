@@ -123,9 +123,25 @@ async function runTests() {
     assert.strictEqual(parsed.claim_families[0].domain, 'gateways');
   });
 
+  await runCase('Validate accepts repo-discord-signal evidence refs', async () => {
+    const root = mkTmpDir('docs-fact-registry-discord-');
+    const registry = sampleRegistry('gateways');
+    registry.claim_families[0].evidence_refs = [
+      {
+        type: 'repo-discord-signal',
+        ref: '.github/workflows/discord-issue-intake.yml',
+        match_any: ['discord']
+      }
+    ];
+    writeJson(path.join(root, 'gateways.json'), registry);
+
+    const result = runNode(['--validate', '--registry', root]);
+    assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+  });
+
   return {
     passed: errors.length === 0,
-    total: 3,
+    total: 4,
     errors
   };
 }

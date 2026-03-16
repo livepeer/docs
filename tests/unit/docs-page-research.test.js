@@ -155,6 +155,49 @@ Batch AI requires 24 GB VRAM for competitive diffusion pipelines.
     });
   });
 
+  await runCase('Evidence adapter matches public GA and repo Discord signal variants', async () => {
+    const root = mkTmpDir('docs-page-research-discord-');
+    const repoDir = path.join(root, 'repo');
+    const workflowPath = path.join(repoDir, '.github/workflows/discord-issue-intake.yml');
+    writeFile(
+      workflowPath,
+      'name: discord-issue-intake\non:\n  repository_dispatch:\n    types: [discord]\n# discord.com/channels/livepeer\n'
+    );
+
+    const previousCwd = process.cwd();
+    process.chdir(repoDir);
+    try {
+      const signalEvidence = await research.fetchEvidenceRef({
+        type: 'repo-discord-signal',
+        ref: '.github/workflows/discord-issue-intake.yml',
+        match_any: ['discord.com/channels', 'repository_dispatch']
+      });
+      assert.strictEqual(signalEvidence.ok, true);
+      assert.strictEqual(signalEvidence.matched, true);
+    } finally {
+      process.chdir(previousCwd);
+    }
+
+    await withMockedFetch(async () => ({
+      ok: true,
+      status: 200,
+      async text() {
+        return JSON.stringify({
+          title: 'Clearinghouse status',
+          cooked: 'No public clearinghouse service is at general availability yet; the community remote signer is still the testing path.'
+        });
+      }
+    }), async () => {
+      const evidence = await research.fetchEvidenceRef({
+        type: 'forum-topic',
+        ref: 'https://forum.livepeer.org/t/clearinghouse-status/9997',
+        match_any: ['public use status', 'community signer']
+      });
+      assert.strictEqual(evidence.ok, true);
+      assert.strictEqual(evidence.matched, true);
+    });
+  });
+
   await runCase('Research runner reports contradictions on real value drift', async () => {
     const root = mkTmpDir('docs-page-research-runner-');
     const repoDir = path.join(root, 'repo');
@@ -226,9 +269,74 @@ Batch AI requires 24 GB VRAM for competitive diffusion pipelines.
     }
   });
 
+  await runCase('Markdown report escapes raw braces in extracted claims', async () => {
+    const root = mkTmpDir('docs-page-research-markdown-');
+    const repoDir = path.join(root, 'repo');
+    const registryDir = path.join(repoDir, 'tasks/research/claims');
+    const guideA = 'v2/gateways/a.mdx';
+    writeFile(path.join(repoDir, guideA), '{/* TODO: test */}\nThe public clearinghouse is not at general availability yet.');
+    writeFile(
+      path.join(registryDir, 'gateways.json'),
+      `${JSON.stringify(
+        {
+          version: 1,
+          domain: 'gateways',
+          claim_families: [
+            {
+              claim_id: 'gw-clearinghouse-public-readiness',
+              claim_family: 'clearinghouse-public-readiness',
+              entity: 'gateway',
+              claim_summary: 'Use current public clearinghouse status wording.',
+              canonical_owner: guideA,
+              source_type: 'repo-doc-reference',
+              source_ref: guideA,
+              evidence_date: '2026-03-16',
+              status: 'time-sensitive',
+              freshness_class: 'review-periodic',
+              dependent_pages: [],
+              related_claims: [],
+              last_reviewed_by: 'codex',
+              notes: 'test',
+              match_terms: ['general availability'],
+              comparison_patterns: [],
+              evidence_refs: [
+                {
+                  type: 'repo-file',
+                  ref: guideA,
+                  match_any: ['general availability']
+                }
+              ]
+            }
+          ]
+        },
+        null,
+        2
+      )}\n`
+    );
+
+    const previousCwd = process.cwd();
+    process.chdir(repoDir);
+    try {
+      const reportPath = path.join(root, 'report.md');
+      await research.run({
+        registry: 'tasks/research/claims',
+        page: guideA,
+        files: [],
+        reportMd: reportPath,
+        reportJson: '',
+        quiet: true
+      });
+      const markdown = fs.readFileSync(reportPath, 'utf8');
+      assert.ok(!markdown.includes('{'));
+      assert.ok(!markdown.includes('{/* TODO: test */}'));
+    } finally {
+      process.chdir(previousCwd);
+    }
+  });
+
   return {
     passed: errors.length === 0,
-    total: 7,
+    total: 9,
     errors
   };
 }

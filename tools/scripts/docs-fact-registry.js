@@ -33,6 +33,7 @@ const VALID_FRESHNESS = new Set([
 const VALID_EVIDENCE_TYPES = new Set([
   'official-page',
   'repo-file',
+  'repo-discord-signal',
   'github-repo',
   'github-issue',
   'github-pr',

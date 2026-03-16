@@ -280,6 +280,18 @@ function normalizeForMatch(value) {
     .replace(/\bfeasibilit(?:y|ies)\b/g, ' viable ')
     .replace(/\bworth it\b/g, ' viable ')
     .replace(/\bprofitab(?:le|ility)\b/g, ' viable ')
+    .replace(/\bcommercial(?:ly)?\s+viable\b/g, ' viable ')
+    .replace(/\bpre[\s-]?loaded\b/g, ' warm ')
+    .replace(/\bkeep\s+(?:them|models?)\s+warm\b/g, ' warm ')
+    .replace(/\bwarmed?\s+at\s+startup\b/g, ' warm startup ')
+    .replace(/\bcold[\s-]?starts?\b/g, ' cold start ')
+    .replace(/\bservice[\s-]?level\s+agreement[s]?\b/g, ' sla ')
+    .replace(/\bgeneral\s+availability\b/g, ' public ga ')
+    .replace(/\bpublic\s+use\s+status\b/g, ' public ga ')
+    .replace(/\bmarketplace\s+filter\b/g, ' price filter ')
+    .replace(/\bsafety\s+ceiling\b/g, ' price ceiling ')
+    .replace(/\bsession\s+cap\b/g, ' session limit ')
+    .replace(/\bconcurrent\s+encoding\s+sessions?\b/g, ' nvenc session ')
     .replace(/\bmax\s*price\s*per\s*capability\b/g, ' price ceiling ')
     .replace(/\bmaxpricepercapability\b/g, ' price ceiling ')
     .replace(/\bmax\s*price\s*per\s*unit\b/g, ' price ceiling ')
@@ -357,20 +369,25 @@ async function fetchText(url, headers = {}) {
 
 async function fetchEvidenceRef(ref) {
   const checked_on = localIsoDate();
-  if (ref.type === 'repo-file') {
+  if (ref.type === 'repo-file' || ref.type === 'repo-discord-signal') {
     const absPath = path.resolve(repoRoot(), ref.ref);
     if (!fs.existsSync(absPath)) {
       return { type: ref.type, ref: ref.ref, checked_on, ok: false, matched: false, summary: 'repo file missing' };
     }
     const text = readFile(absPath);
     const matched = matchAnySignal(text, ref.match_any);
+    const matchedSummary = ref.type === 'repo-discord-signal' ? 'repo Discord/community signal matched' : 'repo evidence matched';
+    const missingSummary =
+      ref.type === 'repo-discord-signal'
+        ? 'repo Discord/community signal fetched but signal missing'
+        : 'repo evidence fetched but signal missing';
     return {
       type: ref.type,
       ref: ref.ref,
       checked_on,
       ok: true,
       matched,
-      summary: matched ? 'repo evidence matched' : 'repo evidence fetched but signal missing'
+      summary: matched ? matchedSummary : missingSummary
     };
   }
 
@@ -612,6 +629,11 @@ function buildValidation(report) {
 }
 
 function buildMarkdown(report) {
+  const mdxSafe = (value) =>
+    String(value || '')
+      .replace(/[{}]/g, (match) => `\\${match}`)
+      .replace(/\s+/g, ' ')
+      .trim();
   const lines = [];
   lines.push('# Docs Page Research Report');
   lines.push('');
@@ -624,7 +646,7 @@ function buildMarkdown(report) {
   report.claims_reviewed.forEach((entry) => {
     lines.push(`- \`${entry.file}\``);
     lines.push(`  - claim families: ${entry.matched_claim_families.length ? `\`${entry.matched_claim_families.join('`, `')}\`` : 'none'}`);
-    entry.extracted_claims.slice(0, 4).forEach((claim) => lines.push(`  - extracted: ${claim}`));
+    entry.extracted_claims.slice(0, 4).forEach((claim) => lines.push(`  - extracted: ${mdxSafe(claim)}`));
   });
   lines.push('');
 
@@ -643,7 +665,7 @@ function buildMarkdown(report) {
       entries.forEach((entry) => {
         lines.push(`- \`${entry.claim_id}\` (${entry.status}, ${entry.confidence})`);
         lines.push(`  - owner: \`${entry.canonical_owner}\``);
-        lines.push(`  - summary: ${entry.summary}`);
+        lines.push(`  - summary: ${mdxSafe(entry.summary)}`);
       });
     }
     lines.push('');
@@ -657,7 +679,7 @@ function buildMarkdown(report) {
     report.cross_page_contradictions.forEach((entry) => {
       lines.push(`- \`${entry.claim_id}\` (${entry.claim_family})`);
       lines.push(`  - action: ${entry.recommended_action}`);
-      entry.pages.forEach((page) => lines.push(`  - \`${page.file}\`: ${page.values.join(', ') || page.snippet}`));
+      entry.pages.forEach((page) => lines.push(`  - \`${page.file}\`: ${mdxSafe(page.values.join(', ') || page.snippet)}`));
     });
   }
   lines.push('');
@@ -677,9 +699,9 @@ function buildMarkdown(report) {
     lines.push('- None');
   } else {
     report.evidence_sources.forEach((entry) => {
-      lines.push(`- \`${entry.claim_id}\` → ${entry.type}: ${entry.ref}`);
+      lines.push(`- \`${entry.claim_id}\` → ${entry.type}: ${mdxSafe(entry.ref)}`);
       lines.push(`  - checked: ${entry.checked_on}`);
-      lines.push(`  - result: ${entry.summary}`);
+      lines.push(`  - result: ${mdxSafe(entry.summary)}`);
     });
   }
   lines.push('');
@@ -691,7 +713,7 @@ function buildMarkdown(report) {
   });
   lines.push('');
 
-  return `${lines.join('\n')}\n`;
+  return `${lines.join('\n').trimEnd()}\n`;
 }
 
 async function run(args) {

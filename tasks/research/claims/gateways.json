@@ -128,6 +128,180 @@
           ]
         }
       ]
+    },
+    {
+      "claim_id": "gw-price-cap-role",
+      "claim_family": "price-cap-role",
+      "entity": "gateway",
+      "claim_summary": "Gateway pricing docs should keep the role of caps aligned: on-chain caps act as marketplace filters, while off-chain caps act as safety ceilings for known orchestrators. The same claim family also covers how `-ignoreMaxPriceIfNeeded` changes job-failure behavior.",
+      "canonical_owner": "v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx",
+      "source_type": "repo-doc-reference",
+      "source_ref": "v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx",
+      "evidence_date": "2026-03-16",
+      "status": "verified",
+      "freshness_class": "review-on-change",
+      "dependent_pages": [
+        "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+        "v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx"
+      ],
+      "related_claims": [
+        "gw-clearinghouse-public-readiness"
+      ],
+      "last_reviewed_by": "codex",
+      "notes": "This is a routing-and-cost semantics family, not a navigation concern. It exists to catch factual drift in how gateway operators reason about price caps and fallback behavior.",
+      "match_terms": [
+        "marketplace filter",
+        "safety ceiling",
+        "ignoreMaxPriceIfNeeded",
+        "maxPricePerCapability",
+        "maxPricePerUnit",
+        "orchAddr"
+      ],
+      "comparison_patterns": [],
+      "evidence_refs": [
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx",
+          "match_any": [
+            "marketplace filter",
+            "safety ceiling",
+            "ignoreMaxPriceIfNeeded"
+          ]
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx",
+          "match_any": [
+            "orchAddr",
+            "maxPricePerCapability",
+            "route"
+          ]
+        }
+      ]
+    },
+    {
+      "claim_id": "gw-clearinghouse-public-readiness",
+      "claim_family": "clearinghouse-public-readiness",
+      "entity": "gateway",
+      "claim_summary": "Gateway payment docs should describe clearinghouse status with current precision: the protocol is implemented, but no public clearinghouse is generally available yet. Community-hosted signer access is a testing bridge, not evidence of GA.",
+      "canonical_owner": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+      "source_type": "github-pr",
+      "source_ref": "https://github.com/livepeer/go-livepeer/pull/3822",
+      "evidence_date": "2026-03-16",
+      "status": "time-sensitive",
+      "freshness_class": "review-periodic",
+      "dependent_pages": [
+        "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+        "v2/gateways/guides/roadmap-and-funding/operator-support.mdx"
+      ],
+      "related_claims": [
+        "gw-discord-community-signal",
+        "gw-price-cap-role"
+      ],
+      "last_reviewed_by": "codex",
+      "notes": "This family should stay explicit about protocol readiness versus public-service readiness. The docs should not blur implementation status into GA claims.",
+      "match_terms": [
+        "general availability",
+        "public use status",
+        "public clearinghouse",
+        "community remote signer",
+        "testing surface",
+        "API key sign-up"
+      ],
+      "comparison_patterns": [
+        "\\bgeneral\\s+availability\\b",
+        "\\bpublic\\s+clearinghouse\\b",
+        "\\bsigner\\.eliteencoder\\.net\\b"
+      ],
+      "evidence_refs": [
+        {
+          "type": "github-pr",
+          "ref": "https://github.com/livepeer/go-livepeer/pull/3791",
+          "match_any": [
+            "clearinghouse",
+            "remote signer"
+          ]
+        },
+        {
+          "type": "github-pr",
+          "ref": "https://github.com/livepeer/go-livepeer/pull/3822",
+          "match_any": [
+            "clearinghouse",
+            "signer"
+          ]
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+          "match_any": [
+            "general availability",
+            "community remote signer",
+            "testing surface"
+          ]
+        }
+      ]
+    },
+    {
+      "claim_id": "gw-community-signer-testing-surface",
+      "claim_family": "community-signer-testing-surface",
+      "entity": "gateway",
+      "claim_summary": "Docs that mention the Elite Encoder community signer should keep its role narrow and explicit: a repo/community-backed testing surface for early off-chain experimentation, not a generic production recommendation.",
+      "canonical_owner": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+      "source_type": "repo-discord-signal",
+      "source_ref": ".github/workflows/discord-issue-intake.yml",
+      "evidence_date": "2026-03-16",
+      "status": "time-sensitive",
+      "freshness_class": "review-periodic",
+      "dependent_pages": [
+        "v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx",
+        "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+        "v2/gateways/guides/payments-and-pricing/remote-signers.mdx"
+      ],
+      "related_claims": [
+        "gw-clearinghouse-public-readiness",
+        "gw-discord-community-signal"
+      ],
+      "last_reviewed_by": "codex",
+      "notes": "Phase 1 evidence should use repo-available community signals plus current docs, not live Discord scraping. This family keeps that role visible in the outputs.",
+      "match_terms": [
+        "signer.eliteencoder.net",
+        "community signer",
+        "testing surface",
+        "no ETH required",
+        "community-hosted remote signer"
+      ],
+      "comparison_patterns": [
+        "\\bsigner\\.eliteencoder\\.net\\b"
+      ],
+      "evidence_refs": [
+        {
+          "type": "repo-discord-signal",
+          "ref": ".github/workflows/discord-issue-intake.yml",
+          "match_any": [
+            "discord",
+            "repository_dispatch",
+            "community"
+          ]
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/payments-and-pricing/payment-guide.mdx",
+          "match_any": [
+            "signer.eliteencoder.net",
+            "testing",
+            "public clearinghouse reaches GA"
+          ]
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/gateways/guides/roadmap-and-funding/operator-support.mdx",
+          "match_any": [
+            "community-hosted remote signer",
+            "free ETH for testing",
+            "signer.eliteencoder.net"
+          ]
+        }
+      ]
     }
   ]
 }

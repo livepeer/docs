@@ -553,6 +553,120 @@
           ]
         }
       ]
+    },
+    {
+      "claim_id": "orch-commercial-model-warmth",
+      "claim_family": "commercial-model-warmth",
+      "entity": "orchestrator",
+      "claim_summary": "Commercial AI operator guidance should keep warm-model, pre-loaded startup, and cold-start SLA language aligned across setup and business-case pages. These claims describe real operational expectations, but they remain experimental and workload-sensitive.",
+      "canonical_owner": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+      "source_type": "repo-doc-reference",
+      "source_ref": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+      "evidence_date": "2026-03-16",
+      "status": "time-sensitive",
+      "freshness_class": "review-on-change",
+      "dependent_pages": [
+        "v2/orchestrators/guides/ai-and-job-workloads/ai-workloads-guide.mdx",
+        "v2/orchestrators/guides/ai-and-job-workloads/batch-ai-setup.mdx",
+        "v2/orchestrators/guides/deployment-details/dual-workload-setup.mdx"
+      ],
+      "related_claims": [
+        "orch-business-case-cost-viability",
+        "orch-batch-ai-vram-threshold"
+      ],
+      "last_reviewed_by": "codex",
+      "notes": "This family tracks whether docs consistently present warm models as a commercial latency/SLA requirement rather than a generic optimisation tip.",
+      "match_terms": [
+        "pre-loaded and warm",
+        "keep them warm",
+        "cold starts are SLA failures",
+        "warm at startup",
+        "cold start latency"
+      ],
+      "comparison_patterns": [],
+      "evidence_refs": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/operator-considerations/business-case.mdx",
+          "match_any": [
+            "pre-loaded and warm",
+            "cold starts are SLA failures",
+            "commercial Orchestrators pre-load all advertised models"
+          ]
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-details/dual-workload-setup.mdx",
+          "match_any": [
+            "\"warm\": true",
+            "model stays warm in VRAM",
+            "warm in VRAM"
+          ]
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/ai-and-job-workloads/batch-ai-setup.mdx",
+          "match_any": [
+            "warm: true",
+            "Eliminates cold-start latency",
+            "one warm model per GPU"
+          ]
+        }
+      ]
+    },
+    {
+      "claim_id": "orch-consumer-nvenc-session-cap",
+      "claim_family": "consumer-nvenc-session-cap",
+      "entity": "orchestrator",
+      "claim_summary": "Consumer NVIDIA NVENC session-cap guidance is factual but volatile. Hardware requirement and transcoding guides should stay aligned on whether GeForce-class cards are typically capped at 2-3 concurrent sessions and whether newer generations changed that default.",
+      "canonical_owner": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+      "source_type": "repo-doc-reference",
+      "source_ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+      "evidence_date": "2026-03-16",
+      "status": "time-sensitive",
+      "freshness_class": "volatile",
+      "dependent_pages": [
+        "v2/orchestrators/guides/ai-and-job-workloads/job-types.mdx",
+        "v2/orchestrators/guides/ai-and-job-workloads/video-transcoding.mdx"
+      ],
+      "related_claims": [
+        "orch-session-limit-default",
+        "orch-bandwidth-per-stream-planning"
+      ],
+      "last_reviewed_by": "codex",
+      "notes": "The current docs already carry REVIEW notes for Ada Lovelace uncertainty. The runner should treat these figures as volatile operational claims, not settled constants.",
+      "match_terms": [
+        "NVENC session cap",
+        "2-3 concurrent sessions",
+        "consumer cards",
+        "Ada Lovelace",
+        "RTX 40xx"
+      ],
+      "comparison_patterns": [
+        "\\b2-3\\s*concurrent\\s*(?:NVENC\\s*)?(?:encode\\s*)?sessions\\b",
+        "\\b3\\s*concurrent\\s*(?:NVENC\\s*)?(?:encode\\s*)?sessions\\b",
+        "\\bAda\\s+Lovelace\\b"
+      ],
+      "evidence_refs": [
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/deployment-details/requirements.mdx",
+          "match_any": [
+            "2-3 concurrent NVENC encode sessions",
+            "Ada Lovelace",
+            "NVIDIA matrix"
+          ]
+        },
+        {
+          "type": "repo-file",
+          "ref": "v2/orchestrators/guides/ai-and-job-workloads/video-transcoding.mdx",
+          "match_any": [
+            "NVENC session caps on consumer GPUs",
+            "If your GPU is capped at 3 concurrent NVENC sessions",
+            "Ada Lovelace"
+          ]
+        }
+      ]
     }
   ]
 }
