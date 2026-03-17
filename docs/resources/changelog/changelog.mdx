@@ -33,6 +33,27 @@ This changelog tracks significant updates to the Livepeer documentation. For pro
 
 > New releases and improvements
 
+<Update label="March 2026" description="go-livepeer v0.8.10" tags={["AI", "Features", "Bug Fixes"]} rss={{ title: "go-livepeer v0.8.10: Remote signer, BYOC improvements, and stability fixes", description: "New remote signer for AI Live gateways, BYOC capability discovery, and transcoding stability improvements" }}>
+  ## go-livepeer v0.8.10
+
+### New features
+
+- **Remote signer for AI Live gateways** — Gateways can now delegate on-chain signing to a dedicated remote signer node, removing the need for gateways to hold Ethereum keys or maintain on-chain connectivity. The remote signer also exposes orchestrator discovery, so gateways can find orchestrators and their supported capabilities without configuring a separate webhook. Learn more in the [AI gateway setup guide](/v1/ai/gateways/get-started).
+- **Unified BYOC capability discovery** — Bring-your-own-container (BYOC) capabilities and pricing are now merged into the standard orchestrator capability response. Clients no longer need a separate endpoint to discover which BYOC capabilities an orchestrator offers. See the [orchestrator setup guide](/v1/ai/orchestrators/get-started) for details.
+- **AI Live usage tracking** — Payment events for AI Live sessions are now tracked for billing, giving operators better visibility into per-session usage and costs.
+
+### Updates
+
+- **BYOC orchestrator swap reporting** — Orchestrator swaps in BYOC sessions are now reported with the same detail as live-video-to-video sessions, improving observability for operators.
+
+### Bug fixes
+
+- **Fixed broadcaster max price crash** — Resolved a crash when no per-capability price constraints were configured, falling back to the global max price correctly.
+- **Fixed BYOC orchestrator streaming reserve capacity** — Corrected a bug where reserve capacity was not properly tracked after a recent refactor, and ensured capacity reporting works even when no slots are available.
+- **Transcoding stability improvements** — Updated the media processing library (LPMS) with fixes for out-of-order timestamps, runaway encodes caused by malformed inputs, and DTS overlap between segments. These changes improve reliability for streams with non-standard timing or B-frames.
+
+</Update>
+
 <Update label="February 2026" tags={["Governance", "Contributions"]} rss={{ title: "Documentation Governance and Contribution Workflow", description: "Added comprehensive governance documentation, contribution guide, and CODEOWNERS" }}>
   ## Documentation Governance and Contribution Workflow
 
@@ -127,5 +148,5 @@ This changelog will be automatically updated via:
 
 ---
 
-*Last updated: 2026-02-16*
+*Last updated: 2026-03-17*
 *For protocol changelog, see [Livepeer Releases](https://github.com/livepeer/go-livepeer/releases)*
