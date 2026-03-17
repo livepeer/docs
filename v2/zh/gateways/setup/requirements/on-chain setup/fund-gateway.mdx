@@ -1,0 +1,234 @@
+---
+title: 为 Livepeer 网关充值
+sidebarTitle: 网关充值
+description: >-
+  以下步骤将指导您向网关 ETH 账户添加资金，包括在 Ethereum 主网上为 ETH 账户充值、将资金桥接到 Arbitrum 的 L2 网络，
+  然后使用 Livepeer CLI 分配适当的存款和储备金额。
+purpose: operations
+pageType: guide
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - requirements
+  - on chain setup
+  - fund gateway
+  - fund
+  - gateway
+  - 网关
+  - 充值
+  - 链上设置
+  - 运行网关
+  - 需求
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+icon: ethereum
+audience: gateway-operator
+lastVerified: 2026-03-17
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Terminology is consistent with resources/glossary
+*/}
+
+
+
+
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+
+<div id="add-funds-to-gateway-wallet">
+
+# 向网关钱包添加资金
+
+</div>
+
+要在生产环境中运行网关，您需要在 [Arbitrum One](https://arbitrum.io/) L2 区块链上拥有 Ethereum——Livepeer 的智能合约部署在该链上，它也提供了 Livepeer 的支付层。
+
+<Callout icon="question-circle" color="#2d9a67">
+ 不熟悉 Web3？
+  <Expandable title="Arbitrum 快速说明">
+ 每个区块链作为其自身的网络运行，并使用其自身的货币。
+ Ethereum 是 Ethereum L1 网络的货币，Arbitrum ETH 是 Arbitrum L2 网络的货币。Arbitrum 是 Ethereum 网络的扩展方案——它通过批量处理交易并在链下处理，然后与 Ethereum 主网进行对账，类似于商店每天汇总所有销售额并核对收据。
+ 这使得 Arbitrum 上的交易比 Ethereum 上便宜得多，同时仍然提供 Ethereum 网络的安全性和信任度。
+  </Expandable>
+</Callout>
+
+<Info>
+ _如果您在 Arbitrum L2 网络上已有 ETH，可以直接将资金转入新创建的网关 ETH 账户。_
+</Info>
+
+<StyledSteps>
+  <StyledStep title="购买 Ethereum" titleSize="h2">
+ 使用任何中心化交易所（CEX）或去中心化交易所（DEX）将 Ethereum 添加到钱包中。
+
+    <Tip>
+ 建议：使用新钱包隔离资金。
+
+ 通常在 CEX 上购买 ETH 更简便，例如 [Coinbase](https://www.coinbase.com/) 或 [Binance](https://www.binance.com/)。
+
+ 这些交易所会为您创建一个钱包地址来存储您的 ETH。
+    </Tip>
+
+ 在 [CoinGecko](https://www.coingecko.com/en/coins/arbitrum) 上查看支持 Arbitrum One 的交易所完整列表
+    <Card icon="books" title="支持 Arbitrum One 的交易所" href="/v2/zh/gateways/resources/technical/arbitrum-exchanges" arrow horizontal>
+ 查看参考表
+    </Card>
+
+    <Accordion title="查看说明：热门交易所" icon="wallet">
+      <Tabs>
+        <Tab title="Binance">
+ 您可以在 [Binance](https://www.binance.com/) 上购买 Ethereum (ETH)，该平台在超过 200 个国家/地区可用。
+
+ 按照此指南在 Binance 上购买 ETH：[Binance - 购买 Ethereum](https://www.binance.com/en/support/faq/360033617792)
+
+        <Note>
+ **可用性**：
+          - 全球可用：Binance 在超过 180 个国家/地区运营，包括欧洲、亚洲、非洲、澳洲和南美洲的大部分地区。
+          - 美国：面向美国公民和居民的 Binance 服务由独立实体 Binance.US 处理。您必须使用其专用应用程序和平台。
+          - 中国大陆：由于政策原因，无法直接访问 Binance 主站。
+          - 管辖区域重要提示：由于各地法律法规不同，可用的具体支付方式和服务因您的所在地而异。Binance 网站会在您登录并验证账户后自动显示适用于您所在国家/地区的相关选项。
+
+ **费用**：Binance 对加密货币的买卖收取费用，费用由您的所在地、支付方式和订单大小等因素决定。确切费用将在您最终确认交易前显示。
+
+        </Note>
+
+        <ExternalContent repoName="livepeer-docs" githubUrl="https://github.com/livepeer/livepeer-docs/blob/main/v1/images/delegating-guides/binance-buy-eth.png" />
+        </Tab>
+        <Tab title="Coinbase">
+ 您可以在 [Coinbase](https://www.coinbase.com/) 上购买 Ethereum (ETH)，该平台在超过 100 个国家/地区可用。
+
+ 按照此指南在 Coinbase 上购买 ETH：[Coinbase - 购买 Ethereum](https://www.coinbase.com/how-to-buy/ethereum)
+
+        <Note>
+ **可用性**：虽然 Coinbase 在许多国家/地区运营，但产品功能和支付方式的可用性受当地法规约束。您可以登录账户查看适用于您所在地的具体选项。
+
+ **费用**：Coinbase 对加密货币的买卖收取费用，费用由您的所在地、支付方式和订单大小等因素决定。确切费用将在您最终确认交易前显示。
+
+ **安全性**：Coinbase 是一家公开上市且受监管的美国公司，这意味着它以高度的财务透明度和安全标准运营。
+        </Note>
+
+          <ExternalContent repoName="livepeer-docs" githubUrl="https://github.com/livepeer/livepeer-docs/blob/main/v1/images/delegating-guides/coinbase-buy-eth.png" />
+        </Tab>
+        <Tab title="Kraken">
+ 您可以在 [Kraken](https://www.kraken.com/) 上购买 Ethereum (ETH)，该平台在超过 100 个国家/地区可用。
+
+ 按照此指南在 Kraken 上购买 ETH：[Kraken - 购买 Ethereum](https://support.kraken.com/hc/en-us/articles/360000920066-How-to-buy-Ethereum)
+
+        <Note>
+ **可用性**：Kraken 在许多国家/地区运营，但产品功能和支付方式的可用性受当地法规约束。您可以登录账户查看适用于您所在地的具体选项。
+
+ **费用**：Kraken 对加密货币的买卖收取费用，费用由您的所在地、支付方式和订单大小等因素决定。确切费用将在您最终确认交易前显示。
+
+ **安全性**：Kraken 是一个备受推崇且安全的平台，具有强大的安全功能和良好的运营记录。
+        </Note>
+        </Tab>
+      </Tabs>
+
+ {/* <ExternalContent repoName="livepeer-docs" githubUrl="https://github.com/livepeer/livepeer-docs/blob/main/v1/images/delegating-guides/coinbase-buy-eth.png" />
+ <ExternalContent repoName="livepeer-docs" githubUrl="https://github.com/livepeer/livepeer-docs/blob/main/v1/images/delegating-guides/binance-buy-eth.png" /> */}
+    </Accordion>
+
+  </StyledStep>
+  <StyledStep title="桥接到 Arbitrum" titleSize="h2">
+    <Info>
+ _Livepeer 运行在 Arbitrum 的 L2 网络上，需要将资金进行桥接。_
+    </Info>
+ 您可以将 ETH 发送到 Ethereum 主网上的网关地址，然后桥接到 Arbitrum 的 L2 网络。
+
+ 查看 [Arbitrum 桥接指南](https://docs.arbitrum.io/arbitrum-bridge/quickstart)
+
+    <iframe src="https://docs.arbitrum.io/arbitrum-bridge/quickstart" height="600px" width="100%" title="Embedded content from docs.arbitrum.io" />
+
+  </StyledStep>
+  <StyledStep title="存入网关" titleSize="h2">
+ <Note>您可以在上一步中直接将 Arbitrum ETH 发送到网关地址来完成此操作。</Note>
+
+ 在 Arbitrum 网络上拥有 ETH 后，将其转入您新创建的网关地址。
+
+  </StyledStep>
+  <StyledStep title="设置网关储备金和存入资金" titleSize="h2">
+ 现在我们需要将网关资金分为**存款**和**储备金**
+
+    <Note>
+ 存款流程要求：
+    - 网关以链上模式运行（非离链模式）
+    - 钱包中有足够的 ETH 用于存款 + gas 费用
+    - CLI 已连接到网关的 HTTP 端口（默认：7935）
+    </Note>
+
+    <Warning>
+ **对于生产环境**，我们建议**储备金**至少为 0.36 ETH，以防止在 gas 价格飙升时服务中断。较高的储备金额有助于在网络 gas 价格较高的时期维持服务连续性。有一个[开放的 issue](https://github.com/livepeer/go-livepeer/issues/3744) 计划在未来降低此要求。
+    </Warning>
+
+ 测试的最低建议金额为 0.1 ETH。
+
+ {/* To calculate the price your Gateway will pay for transcoding, divide the
+ _Reserve_ amount by 100. In our example each payment will be 0.0003 ETH (0.03
+ / 100) */}
+
+ 当您为服务付费时，支付的金额会从您的_存款_中扣除，因此请务必监控您的_存款_余额并及时充值，以保持网关服务的正常运行。
+
+<div id="open-the-livepeer-cli">
+
+    #### 打开 Livepeer CLI
+
+</div>
+
+ 按照您的平台说明操作：
+    <Tabs>
+        <Tab title="Linux / Mac" icon="linux">
+        ```bash icon="terminal" wrap lines
+        livepeer_cli --host=localhost --http=7935
+        ```
+      </Tab>
+      <Tab title="Docker" icon="docker">
+        ```bash icon="terminal" wrap lines
+        docker run -it --network host livepeer/go-livepeer:master livepeer_cli --host=localhost --http=7935
+        ```
+      </Tab>
+      <Tab title="Windows" icon="windows">
+        ```bash icon="terminal" wrap lines
+        livepeer_cli.exe --host=localhost --http=7935
+        ```
+      </Tab>
+    </Tabs>
+
+<div id="deposit-funds">
+
+    #### 存入资金
+
+</div>
+
+ 选择 **Option 11: Invoke "deposit broadcasting funds" (ETH)**
+
+    - 在提示时输入 0.065 作为**存款**金额。
+    - 在提示时输入 0.03 作为**储备金**金额。
+
+<div id="verify-funds">
+
+    #### 验证资金
+
+</div>
+
+ 选择 **Option 1: Get node status** 并确认显示的金额正确。
+
+ 您应该会看到类似以下内容：
+    ```bash icon="terminal" Wizard Stats
+      +-----------------+
+      |BROADCASTER STATS|
+      +-----------------+
+      Max Price Per Pixel    [your setting]
+      Deposit               0.065 ETH
+      Reserve               0.030 ETH
+    ```
+
+  </StyledStep>
+ {/* <StyledStep title="Optional Automation">
+ Create automation to deposit funds automatically when low.
+ </StyledStep> */}
+</StyledSteps>

@@ -1,0 +1,93 @@
+---
+title: Livepeer 代币用途
+sidebarTitle: 用途
+description: >-
+  LPT 在 Livepeer 中的核心用途：协议安全质押、奖励分配和治理参与。
+pageType: concept
+keywords:
+  - livepeer
+  - delegators
+  - about lpt livepeer token
+  - purpose
+  - delegation
+  - 委托人
+  - 代币用途
+  - 委托
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: delegator
+lastVerified: 2026-03-17
+purpose: concept
+---
+<div id="purpose-of-lpt">
+
+## LPT 的用途
+
+</div>
+
+LPT 是 Livepeer 协议的原生资产，具有三个不同的功能：
+
+- **安全质押** – Orchestrator 必须绑定 LPT 才能参与活跃集合。质押充当针对不当行为的抵押品，并决定 orchestrator 能执行多少工作。委托人将 LPT 绑定给 orchestrator 并分享奖励。虽然罚没机制目前已禁用，但可绑定代币的存在使网络能够在未来实施经济处罚。
+
+- **奖励分配** – 通过通胀新铸造的 LPT 按绑定质押的比例分配。这使 LPT 成为一种"工作代币"：orchestrator 拥有的质押越多，获得的通胀奖励就越多。委托人根据 orchestrator 配置的 `rewardCut` 分享这些奖励。以 ETH 支付的费用也按绑定质押比例分配，使两种收入流的激励保持一致。
+
+- **治理权力** – Livepeer 改进提案（LIPs）中的投票权重与绑定的 LPT 成正比。代币持有者可以提出协议变更、对国库分配进行投票并推动网络升级。委托人通过选择代表其偏好的 orchestrator 间接影响治理。
+
+重要的是，LPT 不用于支付工作费用。广播者和 AI 开发者以 ETH 或底层 gas 代币支付，而 orchestrator 赚取 ETH 费用。这种分离避免了将供需动态（由视频/AI 工作负载驱动）与安全激励（由 LPT 驱动）混为一谈。它还允许 Livepeer 利用 Ethereum 的 gas 市场进行支付，同时维持独立的安全模型。
+
+<div id="supply-and-inflation">
+
+### 供应量与通胀
+
+</div>
+
+LPT 以 2580 万枚代币的固定创世供应量启动，并通过动态通胀持续扩张。与 Bitcoin 的确定性减半计划不同，Livepeer 的发行量会适应网络状况。在每一轮开始时，BondingManager 铸造新的 LPT，将其添加到总供应量中，并按质押比例分配给活跃的 orchestrator。该算法公开了多个可调参数：
+
+- 初始分配与锁定期 – 在创世时，LPT 被分配给早期投资者、创始人、社区成员和协议国库。许多分配在多年内逐步释放，以对齐长期利益。目前大部分流通供应量由社区持有。
+
+- 自适应通胀 – 通胀率响应质押参与率：如果绑定的 LPT 少于约 50%，通胀率增加；如果超过约 50%，通胀率降低。这个反馈循环通过在需要时激励额外绑定来保持网络安全，同时在安全性充足时减少稀释。早期通胀超过每年 13%；随着参与率增长，社区投票将基础发行量降至约 6-8%，并将一部分导向社区国库。
+精确公式为 inflation := inflation ± inflationChangeRate，取决于绑定比率高于还是低于目标绑定率（初始为 50%）。InflationChangeRate 决定利率调整的速度（例如每轮 0.0005）。由于每轮大约每 21 小时发生一次，调整逐渐复合。这种设计防止突然冲击，同时引导网络趋向目标质押水平。
+
+- 质押乘数与轮次时长 – 协议的安全性不仅取决于绑定 LPT 的百分比，还取决于每单位质押的工作容量。随着视频/AI 吞吐量需求的增长，治理可以增加活跃 orchestrator 数量（通过 numActiveTranscoders）以扩大供给。反之，如果需求下降，通胀继续分配奖励但 orchestrator 收入下降，向运营者发出缩减容量的信号。
+
+- 未来调整 – 治理保留通过 LIPs 修改通胀参数的能力。例如，社区可以实施减半计划、将更大份额重定向到国库或引入新的奖励机制。通过将通胀编入治理，Livepeer 可以适应不断变化的网络状况。
+除了参数调整外，未来的提案可能会探索代币销毁机制（例如销毁一部分罚没处罚）、veLPT 锁定（投票托管模型，以更大权重倾斜长期持有者）或 L2 特定通胀（区分 Arbitrum 与主网上的发行量）。每项变更都需要彻底的经济分析和治理投票。
+
+<div id="community-treasury">
+
+### 社区国库
+
+</div>
+
+协议将一部分通胀路由到链上社区国库。在其首次迭代中，10% 的新铸造 LPT 流入由 Livepeer Foundation 和社区管理人控制的多签钱包。国库的目的是资助公共产品、研究、营销活动和有益于整个生态系统的工具。例子包括改善监控基础设施的资助、可验证转码研究以及对开发者的支持。当国库余额达到预定义上限时，供款暂停；未来的 LIPs 可以调整比率或恢复资助。
+
+国库资金不会自动累积给 orchestrator 或委托人。支出提案必须经治理批准，确保透明度和问责制。特殊目的实体（SPE）可以申请拨款以执行范围明确的项目（例如构建验证框架、开发新编解码器），并必须报告里程碑进展。这种结构将通胀转化为社区主导的对协议长期健康的投资，而非单纯的稀释。
+
+为确保国库支出与协议目标一致，Livepeer 社区已试验了公共产品资助框架。一个例子是透明的基于里程碑的资助模型：提案者提交预算和可交付成果，资金在完成后分批释放，进度在论坛上公开报告。另一个是二次方融资，可以将社区从国库的捐款进行匹配，以表明强大的草根支持。讨论还探讨了再生网络式的追溯性资助，即在证明影响力后对贡献者进行奖励。这些实验反映了去中心化治理中朝着更具包容性和问责性的资源分配方向的更广泛运动。
+
+<div id="rewards-distribution">
+
+### 奖励分配
+
+</div>
+
+Livepeer 有两种收入流：
+
+1. ETH 费用 – 当广播者或 AI 开发者兑换中奖票据时，ETH 从其存款转入 orchestrator。Orchestrator 与其委托人分享这些费用的可配置百分比（`feeShare`）。较高的 `feeShare` 吸引委托人但降低 orchestrator 的利润率。
+
+2. LPT 通胀 – 在每一轮中，BondingManager 为每个活跃的 orchestrator 调用 `reward()`。合约按 orchestrator 的总质押（绑定的 LPT + 委托）比例铸造新的 LPT 并转给 orchestrator。然后 orchestrator 根据其 `rewardCut`（保留的百分比）与委托人分配奖励。委托人调用 `claimEarnings()` 来领取累积的 LPT 和 ETH。
+
+绑定是非托管的：委托人的 LPT 保留在 BondingManager 中。要提取，委托人发起解绑。经过一轮的解冻期（目前约 21 小时）后，他们可以提取本金和任何未领取的奖励。此解绑期防止快速质押切换，并为实施罚没（启用时）提供时间。
+
+`rewardCut` 和 `feeShare` 的可配置性创造了一个定价市场。Orchestrator 必须决定保留多少奖励与分享多少以吸引委托人。委托人则根据正常运行时间、转码质量、`feeShare`、`rewardCut` 和治理一致性来评估 orchestrator。由此产生的竞争推动了更好的服务质量并分散了权力。
+
+奖励复利与通胀捕获
+
+由于通胀持续分配，委托人通过定期调用 `claimEarnings()` 或绑定额外的 LPT 来复利其收益而获益。多轮未领取不会丧失奖励，但可能延迟复利并因稀释降低有效收益。一些运营者运行机器人为其委托人自动执行 `claimEarnings()`，平滑复利过程并通过批量调用节省 gas。
+
+_**奖励泄漏与"费用开关"**_
+
+历史上 Livepeer 将所有通胀奖励分配给 orchestrator 及其委托人，同时通过 `feeShare` 将固定份额的费用分配给 orchestrator 的委托人。最近的讨论探讨了引入"费用开关"，将一部分费用路由到社区国库或销毁一部分费用以减少供应。此类变更需要 LIP 和经济分析。支持者认为，将费用流与公共产品资助对齐可以将网络增长与通胀脱钩；反对者警告，减少 orchestrator 收入可能会缩减服务容量。截至 2026 年 3 月 2 日，尚未实施任何费用开关，但这一讨论表明奖励分配是一个不断演进的设计领域。

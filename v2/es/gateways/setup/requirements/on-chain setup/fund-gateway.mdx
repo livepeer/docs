@@ -1,0 +1,238 @@
+---
+title: Financiar el Gateway de Livepeer
+sidebarTitle: Financiar Gateway
+description: >-
+  Los siguientes pasos le guiarán para agregar fondos a su cuenta ETH del
+  Gateway, incluyendo la financiación de la cuenta ETH en Ethereum Mainnet, el
+  puente de fondos a la Red L2 de Arbitrum, y luego el uso de la CLI de Livepeer
+  para asignar los montos adecuados de depósito y reserva.
+purpose: operations
+pageType: guide
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - requirements
+  - on chain setup
+  - fund gateway
+  - fund
+  - gateway
+  - ejecutar un gateway
+  - requisitos
+  - configuración en cadena
+  - financiar gateway
+  - financiar
+  - pasarela
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+icon: ethereum
+audience: gateway-operator
+lastVerified: 2026-03-17
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Terminology is consistent with resources/glossary
+*/}
+
+
+
+
+
+import { StyledSteps, StyledStep } from '/snippets/components/layout/steps.jsx'
+
+<div id="add-funds-to-gateway-wallet">
+# Agregar fondos a la billetera del Gateway
+</div>
+
+Para operar el Gateway en producción, necesita tener Ethereum en la Blockchain L2 [Arbitrum One](https://arbitrum.io/) - que es donde están desplegados los contratos inteligentes de Livepeer y que proporciona la capa de pagos para Livepeer.
+
+<Callout icon="question-circle" color="#2d9a67">
+ ¿No es nativo de Web3?
+  <Expandable title="Explicación rápida de Arbitrum">
+ Cada blockchain opera como su propia red y utiliza su propia moneda.
+ Ethereum es la moneda de la Red L1 de Ethereum y Arbitrum ETH es la
+ moneda de la Red L2 de Arbitrum. Arbitrum es una solución de escalado para la
+ red Ethereum - funciona agrupando transacciones y procesándolas
+ fuera de cadena, para luego conciliarlas con la red principal de Ethereum, algo así como una
+ tienda que suma todas sus ventas cada día y concilia sus recibos.
+ Esto hace que las transacciones en Arbitrum sean mucho más baratas que en Ethereum, mientras
+ que aún proporciona la seguridad y confianza de la red Ethereum.
+  </Expandable>
+</Callout>
+
+<Info>
+ _Si tiene ETH en la Red L2 de Arbitrum, simplemente puede transferir los fondos
+ a la cuenta ETH del Gateway recién creada._
+</Info>
+
+<StyledSteps>
+  <StyledStep title="Comprar Ethereum" titleSize="h2">
+ Use cualquier exchange centralizado (CEX) o exchange descentralizado (DEX) para agregar Ethereum a una billetera.
+
+    <Tip>
+ Recomendado: Use una billetera nueva para aislar los fondos.
+
+ Generalmente es más fácil comprar ETH en un CEX como [Coinbase](https://www.coinbase.com/) o [Binance](https://www.binance.com/).
+
+ Estos exchanges crearán una dirección de billetera para almacenar su ETH.
+    </Tip>
+
+ Vea una lista completa de exchanges que soportan Arbitrum One en [CoinGecko](https://www.coingecko.com/en/coins/arbitrum)
+    <Card icon="books" title="Exchanges que soportan Arbitrum One" href="/v2/es/gateways/resources/technical/arbitrum-exchanges" arrow horizontal>
+ Ver la tabla de referencia
+    </Card>
+
+    <Accordion title="Ver instrucciones: Exchanges populares" icon="wallet">
+      <Tabs>
+        <Tab title="Binance">
+ Puede comprar Ethereum (ETH) en [Binance](https://www.binance.com/) en más de 200 países donde la plataforma está disponible.
+
+ Siga esta guía para comprar ETH en Binance: [Binance - Comprar Ethereum](https://www.binance.com/en/support/faq/360033617792)
+
+        <Note>
+ **Disponibilidad**:
+          - Disponibilidad global: Binance opera en más de 180 países incluyendo la mayoría de Europa, Asia, África, Australia y América del Sur.
+          - Estados Unidos: Los servicios de Binance para ciudadanos y residentes de EE.UU. son gestionados por una entidad separada, Binance.US. Debe usar su aplicación y plataforma específicas.
+          - China continental: Por razones de política, el acceso directo al sitio principal de Binance está bloqueado.
+          - La jurisdicción importa: Los métodos de pago específicos y los servicios disponibles variarán dependiendo de su ubicación debido a las diferentes leyes y regulaciones locales. El sitio web de Binance le mostrará automáticamente las opciones relevantes para su país una vez que inicie sesión y verifique su cuenta.
+
+ **Comisiones**: Binance cobra comisiones por comprar y vender criptomonedas, que se determinan por factores como su ubicación, método de pago y tamaño de la orden. Las comisiones exactas se mostrarán antes de que finalice su transacción.
+
+        </Note>
+
+        <ExternalContent repoName="livepeer-docs" githubUrl="https://github.com/livepeer/livepeer-docs/blob/main/v1/images/delegating-guides/binance-buy-eth.png" />
+        </Tab>
+        <Tab title="Coinbase">
+ Puede comprar Ethereum (ETH) en [Coinbase](https://www.coinbase.com/) en más de 100 países donde la plataforma está disponible.
+
+ Siga esta guía para comprar ETH en Coinbase: [Coinbase - Comprar Ethereum](https://www.coinbase.com/how-to-buy/ethereum)
+
+        <Note>
+ **Disponibilidad**: Aunque Coinbase opera en muchos países, las características del producto y la disponibilidad de métodos de pago están sujetas a las regulaciones locales. Puede verificar las opciones específicas para su ubicación iniciando sesión en su cuenta.
+
+ **Comisiones**: Coinbase cobra comisiones por comprar y vender criptomonedas, que se determinan por factores como su ubicación, método de pago y tamaño de la orden. Las comisiones exactas se mostrarán antes de que finalice su transacción.
+
+ **Seguridad**: Coinbase es una empresa estadounidense que cotiza en bolsa y está regulada, lo que significa que opera con altos estándares de transparencia financiera y seguridad.
+        </Note>
+
+          <ExternalContent repoName="livepeer-docs" githubUrl="https://github.com/livepeer/livepeer-docs/blob/main/v1/images/delegating-guides/coinbase-buy-eth.png" />
+        </Tab>
+        <Tab title="Kraken">
+ Puede comprar Ethereum (ETH) en [Kraken](https://www.kraken.com/) en más de 100 países donde la plataforma está disponible.
+
+ Siga esta guía para comprar ETH en Kraken: [Kraken - Comprar Ethereum](https://support.kraken.com/hc/en-us/articles/360000920066-How-to-buy-Ethereum)
+
+        <Note>
+ **Disponibilidad**: Kraken opera en muchos países, pero las características del producto y la disponibilidad de métodos de pago están sujetas a las regulaciones locales. Puede verificar las opciones específicas para su ubicación iniciando sesión en su cuenta.
+
+ **Comisiones**: Kraken cobra comisiones por comprar y vender criptomonedas, que se determinan por factores como su ubicación, método de pago y tamaño de la orden. Las comisiones exactas se mostrarán antes de que finalice su transacción.
+
+ **Seguridad**: Kraken es una plataforma bien considerada y segura con robustas características de seguridad y un sólido historial.
+        </Note>
+        </Tab>
+      </Tabs>
+
+ {/* <ExternalContent repoName="livepeer-docs" githubUrl="https://github.com/livepeer/livepeer-docs/blob/main/v1/images/delegating-guides/coinbase-buy-eth.png" />
+ <ExternalContent repoName="livepeer-docs" githubUrl="https://github.com/livepeer/livepeer-docs/blob/main/v1/images/delegating-guides/binance-buy-eth.png" /> */}
+    </Accordion>
+
+  </StyledStep>
+  <StyledStep title="Puente a Arbitrum" titleSize="h2">
+    <Info>
+ _Livepeer se ejecuta en la Red L2 de Arbitrum y requiere que los fondos sean
+ puenteados._
+    </Info>
+ Puede enviar ETH a su dirección de Gateway en Ethereum Mainnet y luego puentearlo a la Red L2 de Arbitrum.
+
+ Vea la [Guía de puente de Arbitrum](https://docs.arbitrum.io/arbitrum-bridge/quickstart)
+
+    <iframe src="https://docs.arbitrum.io/arbitrum-bridge/quickstart" height="600px" width="100%" title="Embedded content from docs.arbitrum.io" />
+
+  </StyledStep>
+  <StyledStep title="Depositar en el Gateway" titleSize="h2">
+ <Note>Puede hacer esto en el paso anterior simplemente enviando el Arbitrum ETH a su dirección de Gateway.</Note>
+
+ Una vez que tenga ETH en la red Arbitrum, transfiéralo a su dirección de
+ Gateway recién creada.
+
+  </StyledStep>
+  <StyledStep title="Configurar la reserva del Gateway y depositar fondos" titleSize="h2">
+ Ahora necesitamos dividir los fondos del Gateway en un **Depósito** y una **Reserva**
+
+    <Note>
+ El proceso de depósito requiere:
+    - Gateway ejecutándose en modo on-chain (no offchain)
+    - Suficiente ETH en su billetera para el depósito + comisiones de gas
+    - CLI conectada al puerto HTTP de su gateway (predeterminado: 7935)
+    </Note>
+
+    <Warning>
+ **Para entornos de producción**, recomendamos una **Reserva** de al menos 0.36 ETH para prevenir interrupciones del servicio durante picos de gas. El monto mayor de reserva ayuda a mantener la continuidad del servicio durante períodos de precios altos de gas en la red. Hay [un issue abierto](https://github.com/livepeer/go-livepeer/issues/3744) para reducir este requisito en el futuro.
+    </Warning>
+
+ El mínimo recomendado para pruebas es 0.1 ETH.
+
+ {/* To calculate the price your Gateway will pay for transcoding, divide the
+ _Reserve_ amount by 100. In our example each payment will be 0.0003 ETH (0.03
+ / 100) */}
+
+ A medida que paga por los servicios, el monto pagado se resta de su _Depósito_, así
+ que asegúrese de monitorear el saldo de su _Depósito_ y recargarlo para mantener los servicios
+ de su Gateway en funcionamiento.
+
+    <div id="open-the-livepeer-cli">
+    #### Abrir la CLI de Livepeer
+    </div>
+ Siga las instrucciones para su plataforma:
+    <Tabs>
+        <Tab title="Linux / Mac" icon="linux">
+        ```bash icon="terminal" wrap lines
+        livepeer_cli --host=localhost --http=7935
+        ```
+      </Tab>
+      <Tab title="Docker" icon="docker">
+        ```bash icon="terminal" wrap lines
+        docker run -it --network host livepeer/go-livepeer:master livepeer_cli --host=localhost --http=7935
+        ```
+      </Tab>
+      <Tab title="Windows" icon="windows">
+        ```bash icon="terminal" wrap lines
+        livepeer_cli.exe --host=localhost --http=7935
+        ```
+      </Tab>
+    </Tabs>
+
+    <div id="deposit-funds">
+    #### Depositar fondos
+    </div>
+ Elija **Opción 11: Invocar "deposit broadcasting funds" (ETH)**
+
+    - Ingrese 0.065 para el monto del **Depósito** cuando se le solicite.
+    - Ingrese 0.03 para el monto de la **Reserva** cuando se le solicite.
+
+    <div id="verify-funds">
+    #### Verificar fondos
+    </div>
+ Elija **Opción 1: Get node status** y confirme que los montos correctos son
+ visibles.
+
+ Debería ver algo como esto:
+    ```bash icon="terminal" Wizard Stats
+      +-----------------+
+      |BROADCASTER STATS|
+      +-----------------+
+      Max Price Per Pixel    [your setting]
+      Deposit               0.065 ETH
+      Reserve               0.030 ETH
+    ```
+
+  </StyledStep>
+ {/* <StyledStep title="Optional Automation">
+ Create automation to deposit funds automatically when low.
+ </StyledStep> */}
+</StyledSteps>
