@@ -1,3 +1,8 @@
+---
+title: "Content Brief Template"
+description: "Structured content brief template with L0 value-proposition gates, persona mapping, and content sequence planning."
+---
+
 # Content Brief - [PAGE TITLE]
 
 **Tab:** [GPU Nodes / Gateways / Developers / Other]
