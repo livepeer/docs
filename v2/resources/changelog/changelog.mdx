@@ -19,8 +19,8 @@ keywords:
 'og:image:height': 630
 purpose: changelog
 audience: everyone
-lastVerified: 2026-03-17
-lastUpdated: 2026-03-17
+lastVerified: 2026-03-18
+lastUpdated: 2026-03-18
 ---
 
 
@@ -33,6 +33,33 @@ Review notable documentation updates here. Protocol changes continue to live in 
 <CustomDivider />
 
 > New releases and improvements
+
+<Update label="March 2026" description="Livepeer Explorer and NaaP platform updates" tags={["Features", "Bug Fixes", "UI"]} rss={{ title: "Explorer UX improvements and NaaP Service Gateway launch", description: "Livepeer Explorer gets mobile fixes and UI polish, while the NaaP platform ships the Service Gateway plugin, live network metrics, and auth hardening" }}>
+  ## Livepeer Explorer and NaaP platform updates
+
+### New features
+
+- **Service Gateway plugin** — The NaaP platform now includes a Service Gateway for managing API connectors. You can create connectors from templates, configure endpoints, manage secrets, and test requests directly from a built-in Play tab. The gateway supports multi-tenancy, usage analytics, and S3 storage.
+- **GPU commitment in Capacity Planner** — When committing to capacity requests on the NaaP platform, you can now specify exactly how many GPUs you want to contribute. Request cards show total provider count and GPU commitments at a glance.
+- **Live network metrics on dashboard** — The NaaP dashboard now pulls real-time protocol and fee data from the Livepeer subgraph, along with orchestrator performance data from the Leaderboard API.
+- **CLI voting instructions for treasury proposals** — The Livepeer Explorer now displays CLI commands for voting on treasury proposals, making it easier to participate in governance from the command line.
+- **Updated Livepeer branding** — The Explorer has been updated with the new uppercase Livepeer wordmark.
+
+### Updates
+
+- **Auth rate limiting** — Login, registration, password reset, and email verification endpoints on the NaaP platform now enforce rate limits, with clear feedback when limits are reached.
+- **Improved mobile experience in Explorer** — The bottom drawer for voting and delegation actions has been rebuilt for better compatibility with modern React. Transaction dialogs are now fully responsive on small screens, and the breakpoint for mobile vs. desktop layout has been aligned across the app.
+
+### Bug fixes
+
+- **Fixed orchestrator timestamp display** — Orchestrators that have never changed their fee or reward settings no longer show "~20521 days ago" in the Explorer. They now correctly display "Never."
+- **Fixed inflation change dropdown** — The dropdown for modeling inflation changes in the Explorer's ROI calculator no longer shows two identical options. The negative option now correctly displays "-0.00005% per round."
+- **Fixed proposal copy crash** — Copying a proposal ID in the Explorer no longer crashes the page. The underlying React 19 compatibility issue with the snackbar component has been resolved.
+- **Fixed auth redirect loop** — Resolved an issue on the NaaP platform where expired session cookies caused an infinite redirect between the dashboard and login page.
+- **Fixed Service Gateway admin loading** — The Service Gateway admin interface now correctly loads connectors, templates, and API keys.
+- **Fixed ROI calculation error** — A division-by-zero edge case in the Explorer's ROI calculator has been resolved.
+
+</Update>
 
 <Update label="March 2026" description="go-livepeer v0.8.10" tags={["AI", "Features", "Bug Fixes"]} rss={{ title: "go-livepeer v0.8.10: Remote signer, BYOC improvements, and stability fixes", description: "New remote signer for AI Live gateways, BYOC capability discovery, and transcoding stability improvements" }}>
   ## go-livepeer v0.8.10
@@ -149,5 +176,5 @@ This changelog will be automatically updated via:
 
 <CustomDivider />
 
-*Last updated: 2026-03-17*
+*Last updated: 2026-03-18*
 *For protocol changelog, see [Livepeer Releases](https://github.com/livepeer/go-livepeer/releases)*
