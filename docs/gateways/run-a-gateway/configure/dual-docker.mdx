@@ -36,21 +36,21 @@ Main Docker configuration file that defines the gateway service with both video 
 
 ### 2. aiModels.json
 
-AI model configuration file that specifies which AI pipelines and models to load [1](#54-0) .
+AI model configuration file that specifies which AI pipelines and models to load.
 
 ### 3. models/ directory
 
-Directory where AI model weights are stored [2](#54-1) .
+Directory where AI model weights are stored.
 
 ## Optional Files
 
 ### 4. transcodingOptions.json (optional)
 
-Video transcoding profile configuration if you want custom profiles beyond defaults [3](#54-2) .
+Video transcoding profile configuration if you want custom profiles beyond defaults.
 
 ### 5. password.txt (optional, on-chain only)
 
-File containing your Ethereum keystore password for on-chain operations [4](#54-3) .
+File containing your Ethereum keystore password for on-chain operations.
 
 ---
 
@@ -172,14 +172,14 @@ volumes:
    docker-compose up -d
    ```
 
-The gateway will handle both video transcoding (via RTMP ingest on port 1935) and AI processing (via HTTP API on port 8935) simultaneously [5](#54-4) .
+The gateway will handle both video transcoding (via RTMP ingest on port 1935) and AI processing (via HTTP API on port 8935) simultaneously.
 
 ## Notes
 
-- The `aiModels.json` file defines which AI pipelines and models the gateway will support [6](#54-5)
+- The `aiModels.json` file defines which AI pipelines and models the gateway will support
 - Models are downloaded on-demand when processing requests if not present in the models directory
 - For on-chain operation, add ETH configuration flags and mount the keystore directory
-- The dual gateway exposes both traditional video endpoints and AI processing endpoints through the same HTTP server [7](#54-6)
+- The dual gateway exposes both traditional video endpoints and AI processing endpoints through the same HTTP server
 
 Wiki pages you might want to explore:
 

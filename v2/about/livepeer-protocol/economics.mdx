@@ -83,7 +83,7 @@ The payment system uses probabilistic micropayments to minimize on-chain transac
 **Step 1: Broadcaster Deposits**
 Broadcasters fund their account via `FundDepositAndReserve()`:
 - **Deposit**: Locked collateral (can't be used immediately)
-- **Reserve**: Available pool for ticket redemptions [14](#0-13)
+- **Reserve**: Available pool for ticket redemptions
 
 **Step 2: Off-Chain Ticket Creation**
 For each video segment processed:
@@ -129,29 +129,29 @@ Orchestrators earn fees from ticket redemptions:
 
 ## Client Integration
 
-The go-livepeer client abstracts all contract interactions through the `LivepeerEthClient` interface: [15](#0-14)
+The go-livepeer client abstracts all contract interactions through the `LivepeerEthClient` interface:
 
 **Contract Address Resolution**:
-All contract addresses are dynamically discovered through the Controller registry using Keccak256 hashes of contract names. This enables contract upgrades without changing client code. [16](#0-15)
+All contract addresses are dynamically discovered through the Controller registry using Keccak256 hashes of contract names. This enables contract upgrades without changing client code.
 
 ## Gas Optimisation Strategies
 
 ### 1. **Pool Hints**
-When bonding or calling reward, the client calculates "hints" (previous/next positions in the sorted transcoder pool) to enable O(1) insertions instead of O(n) searches on-chain. [17](#0-16)
+When bonding or calling reward, the client calculates "hints" (previous/next positions in the sorted transcoder pool) to enable O(1) insertions instead of O(n) searches on-chain.
 
 ### 2. **Batch Operations**
 Multiple tickets can be created off-chain in batches, with only winning tickets requiring on-chain transactions.
 
 ### 3. **Dynamic Gas Pricing**
-The client implements sophisticated gas price management, using 2x base fee with user-specified ceilings to balance confirmation speed and cost. [18](#0-17)
+The client implements sophisticated gas price management, using 2x base fee with user-specified ceilings to balance confirmation speed and cost.
 
 ## Summary: Complete Money Flow
 
 1. **Token holders** approve and bond LPT → **BondingManager** (staking)
 2. **Minter** mints new LPT → **BondingManager** → **Orchestrators** (inflation rewards)
 3. **Orchestrators** distribute rewards → **Delegators** (minus commission)
-4. **Broadcasters** deposit LPT → **TicketBroker** (payment reserves)
-5. **Orchestrators** redeem tickets → receive LPT from **TicketBroker** (fees)
+4. **Broadcasters** deposit ETH → **TicketBroker** (payment reserves)
+5. **Orchestrators** redeem tickets → receive ETH from **TicketBroker** (fees)
 6. **Orchestrators** distribute fees → **Delegators** (minus commission)
 7. **Delegators** claim earnings from **BondingManager** (accumulated rewards + fees)
 
