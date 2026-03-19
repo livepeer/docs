@@ -17,9 +17,9 @@ const fs = require('fs');
 const path = require('path');
 const { getAuthoredMdxFiles, getStagedAuthoredDocsPageFiles } = require('../utils/file-walker');
 const { filterAuthoredDocsPageFiles } = require('../../tools/lib/docs-page-scope');
-const lintCopy = require('../../tools/scripts/lint-copy');
-const lintStructure = require('../../tools/scripts/lint-structure');
-const lintPatterns = require('../../tools/scripts/lint-patterns');
+const lintCopy = require('../../tools/scripts/validators/content/copy/lint-copy');
+const lintStructure = require('../../tools/scripts/validators/content/structure/lint-structure');
+const lintPatterns = require('../../tools/scripts/validators/content/copy/lint-patterns');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const FIXTURE_ROOT = path.join(REPO_ROOT, 'tests', 'copy-lint-fixtures');

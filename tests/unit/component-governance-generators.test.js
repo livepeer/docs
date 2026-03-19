@@ -15,11 +15,11 @@ const assert = require('assert');
 const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const { buildRegistry } = require('../../tools/scripts/generate-component-registry');
-const { buildUsageMap } = require('../../tools/scripts/scan-component-imports');
+const { buildRegistry } = require('../../tools/scripts/generators/components/library/generate-component-registry');
+const { buildUsageMap } = require('../../tools/scripts/generators/components/library/scan-component-imports');
 const { getComponentLibraryAuditFiles } = require('../../tools/scripts/audit-component-usage');
 const { parseArgs: parseDocsArgs } = require('../../tools/scripts/generate-component-docs');
-const { parseArgs: parseRepairArgs } = require('../../tools/scripts/remediators/components/repair-component-metadata');
+const { parseArgs: parseRepairArgs } = require('../../tools/scripts/remediators/components/library/repair-component-metadata');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 

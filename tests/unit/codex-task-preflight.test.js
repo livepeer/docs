@@ -3,7 +3,7 @@
  * @script            codex-task-preflight.test
  * @category          utility
  * @purpose           governance:agent-governance
- * @scope             tests/unit, tools/scripts/codex/task-preflight.js
+ * @scope             tests/unit, tools/scripts/dispatch/governance/codex/task-preflight.js
  * @owner             docs
  * @needs             R-R27, R-R30
  * @purpose-statement Tests codex/task-preflight.js — verifies managed worktree default behavior and the explicit in-place override
@@ -19,7 +19,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const REPO_ROOT = process.cwd();
-const SCRIPT_PATH = path.join(REPO_ROOT, 'tools/scripts/codex/task-preflight.js');
+const SCRIPT_PATH = path.join(REPO_ROOT, 'tools/scripts/dispatch/governance/codex/task-preflight.js');
 const GIT_ENV_STRIP_KEYS = ['GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_PREFIX'];
 
 function getSanitizedGitEnv(overrides = {}) {

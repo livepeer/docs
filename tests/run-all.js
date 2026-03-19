@@ -42,10 +42,10 @@ const precommitStagedCacheTests = require('./unit/precommit-staged-cache.test');
 const uiTemplateGeneratorTests = require('./unit/ui-template-generator.test');
 const componentGovernanceUtilsTests = require('./unit/component-governance-utils.test');
 const componentGovernanceGeneratorTests = require('./unit/component-governance-generators.test');
-const componentNamingTests = require('../tools/scripts/validators/components/check-naming-conventions');
-const doubleHeadersValidator = require('../tools/scripts/validators/content/check-double-headers');
-const mdxSafeMarkdownValidator = require('../tools/scripts/validators/content/check-mdx-safe-markdown');
-const pagesIndexGenerator = require('../tools/scripts/generate-pages-index');
+const componentNamingTests = require('../tools/scripts/validators/components/library/check-naming-conventions');
+const doubleHeadersValidator = require('../tools/scripts/validators/content/structure/check-double-headers');
+const mdxSafeMarkdownValidator = require('../tools/scripts/validators/content/structure/check-mdx-safe-markdown');
+const pagesIndexGenerator = require('../tools/scripts/generators/content/catalogs/generate-pages-index');
 const browserTests = require('./integration/browser.test');
 const { getStagedFiles } = require('./utils/file-walker');
 const REPO_ROOT = path.resolve(__dirname, '..');
@@ -91,11 +91,11 @@ function hasStagedComponentGovernanceChanges() {
     'docs-guide/component-usage-map.json',
     'tools/lib/component-governance-utils.js',
     'tools/scripts/audit-component-usage.js',
-    'tools/scripts/generate-component-registry.js',
-    'tools/scripts/scan-component-imports.js',
+    'tools/scripts/generators/components/library/generate-component-registry.js',
+    'tools/scripts/generators/components/library/scan-component-imports.js',
     'tools/scripts/generate-component-docs.js',
     'tools/scripts/generate-docs-guide-components-index.js',
-    'tools/scripts/remediators/components/repair-component-metadata.js',
+    'tools/scripts/remediators/components/library/repair-component-metadata.js',
     'tests/unit/component-governance-generators.test.js'
   ]);
 

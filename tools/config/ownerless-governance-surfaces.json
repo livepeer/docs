@@ -178,7 +178,7 @@
       "tools/lib/script-header-utils.js",
       "tests/unit/script-docs.test.js",
       "tools/scripts/validators/governance/audit-script-inventory.js",
-      "tools/scripts/orchestrators/repair-governance.js"
+      "tools/scripts/dispatch/governance/pipelines/repair-governance.js"
     ],
     "derived_outputs": [
       "docs-guide/catalog/scripts-catalog.mdx",
@@ -196,8 +196,8 @@
     "repair_commands": [
       "lpd repair --surface script-governance --write --staged",
       "lpd repair --surface script-governance --write --files <path[,path...]>",
-      "node tools/scripts/orchestrators/repair-governance.js --staged",
-      "node tools/scripts/orchestrators/repair-governance.js --files <path[,path...]>"
+      "node tools/scripts/dispatch/governance/pipelines/repair-governance.js --staged",
+      "node tools/scripts/dispatch/governance/pipelines/repair-governance.js --files <path[,path...]>"
     ],
     "gate_layer": "pre-commit",
     "rollout_state": "migrating",
@@ -215,23 +215,23 @@
     ],
     "canonical_sources": [
       "snippets/components/**",
-      "tools/scripts/generate-component-registry.js",
+      "tools/scripts/generators/components/library/generate-component-registry.js",
       "tools/scripts/generate-component-docs.js",
-      "tools/scripts/remediators/components/repair-component-metadata.js"
+      "tools/scripts/remediators/components/library/repair-component-metadata.js"
     ],
     "derived_outputs": [
       "docs-guide/component-registry.json",
       "v2/resources/documentation-guide/component-library/**"
     ],
     "validators": [
-      "tools/scripts/validators/components/check-component-docs.js",
+      "tools/scripts/validators/components/documentation/check-component-docs.js",
       "tests/unit/component-governance-generators.test.js",
       "tests/unit/ownerless-governance.test.js"
     ],
     "repair_commands": [
       "lpd repair --surface component-governance --write",
-      "node tools/scripts/remediators/components/repair-component-metadata.js --fix",
-      "node tools/scripts/generate-component-registry.js",
+      "node tools/scripts/remediators/components/library/repair-component-metadata.js --fix",
+      "node tools/scripts/generators/components/library/generate-component-registry.js",
       "node tools/scripts/generate-component-docs.js --fix"
     ],
     "gate_layer": "pr-changed",

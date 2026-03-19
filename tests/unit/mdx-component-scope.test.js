@@ -14,7 +14,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const scopeValidator = require('../../tools/scripts/validators/components/check-mdx-component-scope');
+const scopeValidator = require('../../tools/scripts/validators/components/library/check-mdx-component-scope');
 
 const REPO_ROOT = path.resolve(__dirname, '../..');
 const FIXTURE_ROOT = path.join(

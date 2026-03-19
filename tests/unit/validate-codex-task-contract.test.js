@@ -3,7 +3,7 @@
  * @script            validate-codex-task-contract.test
  * @category          enforcer
  * @purpose           governance:agent-governance
- * @scope             tests/unit, tools/scripts/validate-codex-task-contract.js
+ * @scope             tests/unit, tools/scripts/validators/governance/compliance/validate-codex-task-contract.js
  * @domain            docs
  * @needs             R-R27, R-R30
  * @purpose-statement Tests validate-codex-task-contract.js — validates contract checking logic
@@ -19,7 +19,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const REPO_ROOT = process.cwd();
-const SCRIPT_PATH = path.join(REPO_ROOT, 'tools/scripts/validate-codex-task-contract.js');
+const SCRIPT_PATH = path.join(REPO_ROOT, 'tools/scripts/validators/governance/compliance/validate-codex-task-contract.js');
 
 function mkTmpDir(prefix) {
   return fs.mkdtempSync(path.join(os.tmpdir(), prefix));

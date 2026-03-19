@@ -92,7 +92,7 @@ function ensureExternalDocs() {
   const fetchScript = path.join(repoRoot, 'tools', 'scripts', 'snippets', 'fetch-external-docs.sh');
   if (!fs.existsSync(fetchScript)) {
     warnings.push({
-      file: 'tools/scripts/snippets/fetch-external-docs.sh',
+      file: 'tools/scripts/automations/content/data/fetching/fetch-external-docs.sh',
       message: `Missing external-doc bootstrap script; generated imports may fail: ${missingFiles.join(', ')}`
     });
     return;
@@ -115,7 +115,7 @@ function ensureExternalDocs() {
       .slice(-3)
       .join(' ');
     errors.push({
-      file: 'tools/scripts/snippets/fetch-external-docs.sh',
+      file: 'tools/scripts/automations/content/data/fetching/fetch-external-docs.sh',
       rule: 'External docs fetch',
       message: `Failed to fetch generated external docs required for import validation.${detail ? ` ${detail}` : ''}`
     });

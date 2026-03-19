@@ -24,7 +24,7 @@ const {
   isGitHubBlobUrl,
   isLocalAssetPath,
   resolveOgImageForFile,
-} = require("../../tools/scripts/snippets/lib/og-image-policy");
+} = require("../../tools/scripts/config/og-image-policy");
 
 let errors = [];
 

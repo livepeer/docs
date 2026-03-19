@@ -23,17 +23,17 @@ jobs:
         continue-on-error: true
 
       - name: Component registry validation
-        run: node tools/scripts/generate-component-registry.js --validate-only
+        run: node tools/scripts/generators/components/library/generate-component-registry.js --validate-only
         continue-on-error: true
 
       - name: Component usage drift check
-        run: node tools/scripts/scan-component-imports.js --verify
+        run: node tools/scripts/generators/components/library/scan-component-imports.js --verify
         continue-on-error: true
 
       - name: Component metadata drift check
-        run: node tools/scripts/remediators/components/repair-component-metadata.js --dry-run
+        run: node tools/scripts/remediators/components/library/repair-component-metadata.js --dry-run
         continue-on-error: true
 
       - name: Component layout governance
-        run: node tools/scripts/component-layout-governance.js
+        run: node tools/scripts/validators/components/library/component-layout-governance.js
         continue-on-error: true

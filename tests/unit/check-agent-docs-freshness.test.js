@@ -13,7 +13,7 @@
 
 const assert = require('assert');
 
-const validator = require('../../tools/scripts/validators/governance/check-agent-docs-freshness');
+const validator = require('../../tools/scripts/validators/governance/compliance/check-agent-docs-freshness');
 
 let errors = [];
 let warnings = [];

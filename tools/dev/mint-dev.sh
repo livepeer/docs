@@ -212,7 +212,7 @@ else
 fi
 
 echo "Fetching external snippets..."
-bash tools/scripts/snippets/fetch-external-docs.sh
+bash tools/scripts/automations/content/data/fetching/fetch-external-docs.sh
 
 parse_port_args "$@"
 enforce_safe_port

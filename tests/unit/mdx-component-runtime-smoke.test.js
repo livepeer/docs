@@ -58,7 +58,7 @@ async function runTests() {
   await runCase('Trigger logic includes component, validator, smoke script, and sentinel page changes', async () => {
     assert.strictEqual(smoke.shouldRunForChangedFiles(['snippets/components/primitives/links.jsx']), true);
     assert.strictEqual(
-      smoke.shouldRunForChangedFiles(['tools/scripts/validators/components/check-mdx-component-scope.js']),
+      smoke.shouldRunForChangedFiles(['tools/scripts/validators/components/library/check-mdx-component-scope.js']),
       true
     );
     assert.strictEqual(smoke.shouldRunForChangedFiles(['tests/integration/mdx-component-runtime-smoke.js']), true);

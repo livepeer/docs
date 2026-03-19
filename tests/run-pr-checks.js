@@ -46,7 +46,7 @@ const rootAllowlistFormatTests = require('./unit/root-allowlist-format.test');
 const exportPortableSkillsTests = require('./unit/export-portable-skills.test');
 const docsGuideSotTests = require('./unit/docs-guide-sot.test');
 const uiTemplateGeneratorTests = require('./unit/ui-template-generator.test');
-const componentNamingTests = require('../tools/scripts/validators/components/check-naming-conventions');
+const componentNamingTests = require('../tools/scripts/validators/components/library/check-naming-conventions');
 const { isAiToolsRegistryRelevantPath } = require('../tools/lib/ai-tools-registry');
 
 const REPO_ROOT = getRepoRoot();
@@ -66,7 +66,7 @@ const GENERATED_AFFECTING_PREFIXES = [
   'tools/scripts/generate-docs-guide-',
   'tools/scripts/generate-pages-index.js',
   'tools/scripts/enforce-generated-file-banners.js',
-  'tools/scripts/i18n/lib/',
+  'tools/scripts/automations/content/language-translation/lib/',
   'tools/lib/generated-file-banners.js'
 ];
 const GENERATED_AFFECTING_EXACT = new Set([
@@ -93,7 +93,7 @@ try {
 
 let mdxSafeMarkdownValidator = null;
 try {
-  mdxSafeMarkdownValidator = require('../tools/scripts/validators/content/check-mdx-safe-markdown');
+  mdxSafeMarkdownValidator = require('../tools/scripts/validators/content/structure/check-mdx-safe-markdown');
 } catch (_error) {
   mdxSafeMarkdownValidator = null;
 }
@@ -302,7 +302,7 @@ function partitionFiles(changedFiles) {
     file === 'tests/unit/check-agent-docs-freshness.test.js' ||
     file === 'tests/unit/root-allowlist-format.test.js' ||
     file === 'tools/scripts/repair-ownerless-language.js' ||
-    file === 'tools/scripts/validators/governance/check-agent-docs-freshness.js' ||
+    file === 'tools/scripts/validators/governance/compliance/check-agent-docs-freshness.js' ||
     file === '.allowlist' ||
     file === 'AGENTS.md' ||
     file === '.github/copilot-instructions.md' ||
@@ -1035,7 +1035,7 @@ function runCodexTaskContractCheck(branch, changedFiles, baseRef) {
     };
   }
 
-  const args = ['tools/scripts/validate-codex-task-contract.js', '--branch', branch];
+  const args = ['tools/scripts/validators/governance/compliance/validate-codex-task-contract.js', '--branch', branch];
   console.log('ℹ️ Codex issue-readiness enforcement is skipped for changed-file PR checks.');
   if (baseRef) {
     args.push('--base-ref', baseRef);
@@ -1069,7 +1069,7 @@ function createBranchHealthRegistry(context) {
       label: 'Component Naming',
       files: groups.componentJsx,
       args: [
-        'tools/scripts/validators/components/check-naming-conventions.js',
+        'tools/scripts/validators/components/library/check-naming-conventions.js',
         ...buildFilesArgs(groups.componentJsx)
       ]
     }),
@@ -1091,7 +1091,7 @@ function createBranchHealthRegistry(context) {
     createCommandCheck({
       label: 'MDX-safe Markdown',
       files: groups.repoMarkdownFilesAbs,
-      args: ['tools/scripts/validators/content/check-mdx-safe-markdown.js', ...buildFilesArgs(groups.repoMarkdownFilesAbs)]
+      args: ['tools/scripts/validators/content/structure/check-mdx-safe-markdown.js', ...buildFilesArgs(groups.repoMarkdownFilesAbs)]
     }),
     createCommandCheck({
       label: 'Spelling',

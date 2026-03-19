@@ -18,7 +18,7 @@ const path = require('path');
 const {
   parseArgs,
   runRepair
-} = require('../../tools/scripts/orchestrators/repair-governance.js');
+} = require('../../tools/scripts/dispatch/governance/pipelines/repair-governance.js');
 
 const REPO_ROOT = path.resolve(__dirname, '../..');
 const AUDIT_SCRIPT_PATH = 'tools/scripts/validators/governance/audit-script-inventory.js';

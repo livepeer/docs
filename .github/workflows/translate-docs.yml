@@ -140,13 +140,13 @@ jobs:
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
             ARGS+=(--dry-run)
           fi
-          node tools/scripts/i18n/translate-docs.js "${ARGS[@]}"
+          node tools/scripts/automations/content/language-translation/translate-docs.js "${ARGS[@]}"
 
       - name: Update docs.json localized language nodes
         if: ${{ !inputs.dry_run }}
         run: |
           set -euo pipefail
-          node tools/scripts/i18n/generate-localized-docs-json.js \
+          node tools/scripts/automations/content/language-translation/generate-localized-docs-json.js \
             --write \
             --languages "${{ github.event.inputs.languages }}" \
             --route-map "$I18N_ARTIFACT_DIR/route-map.json" \
@@ -154,13 +154,13 @@ jobs:
 
       - name: Regenerate docs-index.json
         if: ${{ !inputs.dry_run }}
-        run: node tools/scripts/generate-docs-index.js --write
+        run: node tools/scripts/generators/content/catalogs/generate-docs-index.js --write
 
       - name: Validate generated localized MDX
         if: ${{ !inputs.dry_run }}
         run: |
           set -euo pipefail
-          node tools/scripts/i18n/validate-generated.js \
+          node tools/scripts/automations/content/language-translation/validate-generated.js \
             --languages "${{ github.event.inputs.languages }}" \
             --route-map "$I18N_ARTIFACT_DIR/route-map.json" \
             --report-json "$I18N_ARTIFACT_DIR/validate-report.json"

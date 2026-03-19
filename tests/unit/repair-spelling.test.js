@@ -17,7 +17,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const repairSpelling = require('../../tools/scripts/remediators/content/repair-spelling');
+const repairSpelling = require('../../tools/scripts/remediators/content/repair/repair-spelling');
 
 let errors = [];
 let warnings = [];

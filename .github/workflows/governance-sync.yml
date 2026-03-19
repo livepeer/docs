@@ -43,7 +43,7 @@ jobs:
       - name: Run governance repair
         id: repair
         run: |
-          node tools/scripts/orchestrators/repair-governance.js 2>&1 | tee /tmp/repair.log
+          node tools/scripts/dispatch/governance/pipelines/repair-governance.js 2>&1 | tee /tmp/repair.log
           FIXES=$(python3 -c "
           import json
           d = json.load(open('tasks/reports/repo-ops/REPAIR_REPORT_LATEST.json'))
