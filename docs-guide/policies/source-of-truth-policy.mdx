@@ -70,9 +70,9 @@ The following files are generated and should not be edited directly:
 Regenerate with:
 
 ```bash icon="terminal"
-node tools/scripts/generate-docs-guide-indexes.js --write
-node tools/scripts/generate-docs-guide-pages-index.js --write
-node tools/scripts/generate-docs-guide-components-index.js --write
+node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write
+node tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --write
+node tools/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --write
 node tests/unit/script-docs.test.js --write --rebuild-indexes
 ```
 
@@ -85,7 +85,7 @@ The following AI-tools inventory surface is generated and should not be edited d
 Regenerate with:
 
 ```bash icon="terminal"
-node tools/scripts/validate-ai-tools-registry.js --write-report
+node tools/scripts/validators/governance/compliance/validate-ai-tools-registry.js --write-report
 ```
 
 ## Generated File Banners
@@ -107,8 +107,8 @@ Guidelines:
 Use the generated banner enforcer utility:
 
 ```bash icon="terminal"
-node tools/scripts/enforce-generated-file-banners.js --write
-node tools/scripts/enforce-generated-file-banners.js --check
+node tools/scripts/validators/content/structure/enforce-generated-file-banners.js --write
+node tools/scripts/validators/content/structure/enforce-generated-file-banners.js --check
 ```
 
 ## Generated Artifact Governance
@@ -143,6 +143,6 @@ It should not duplicate deep procedures that already exist in:
 1. Any meaningful process change must update the relevant docs-guide canonical file in the same PR.
 2. Any script/workflow/template change must regenerate indexes in the same PR.
 3. If README and docs-guide disagree, docs-guide canonical files are considered authoritative for operational navigation.
-4. Codex skill installs must be generated from templates using `node tools/scripts/sync-codex-skills.js` or the `bash lpd setup --yes` bootstrap path (manual edits in local skill folders are non-canonical).
+4. Codex skill installs must be generated from templates using `node tools/scripts/dispatch/ai/agents/sync-codex-skills.js` or the `bash lpd setup --yes` bootstrap path (manual edits in local skill folders are non-canonical).
 5. AI-tools inventory, lifecycle, or lane changes must update `ai-tools/registry/ai-tools-registry.json` and regenerate `ai-tools/registry/ai-tools-inventory.md` in the same PR.
 6. `v2/**` contains both publishable docs and governed non-publishable material; `docs.json` plus `docs-guide/policies/v2-folder-governance.mdx` decide which paths are eligible to route.
