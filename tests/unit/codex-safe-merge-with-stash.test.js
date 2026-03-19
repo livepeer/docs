@@ -17,7 +17,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const REPO_ROOT = process.cwd();
-const SCRIPT_PATH = path.join(REPO_ROOT, 'tools/scripts/codex-safe-merge-with-stash.js');
+const SCRIPT_PATH = path.join(REPO_ROOT, 'tools/scripts/x-archive/codex-safe-merge-with-stash.js');
 const GIT_ENV_STRIP_KEYS = ['GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_PREFIX'];
 
 function getSanitizedGitEnv(overrides = {}) {

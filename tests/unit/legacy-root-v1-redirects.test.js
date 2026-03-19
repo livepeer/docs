@@ -17,11 +17,11 @@ const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
-const syncTool = require('../../tools/scripts/redirects/sync-legacy-root-v1');
+const syncTool = require('../../tools/scripts/x-archive/sync-legacy-root-v1');
 const { resolveDocPath } = require('../../tools/lib/docs-index-utils');
 
 const REPO_ROOT = path.join(__dirname, '..', '..');
-const SCRIPT_PATH = path.join(REPO_ROOT, 'tools', 'scripts', 'redirects', 'sync-legacy-root-v1.js');
+const SCRIPT_PATH = path.join(REPO_ROOT, 'tools', 'scripts', 'x-archive', 'sync-legacy-root-v1.js');
 const MANIFEST_REL = syncTool.DEFAULT_MANIFEST_REL;
 const FIXTURE_SOURCES = [
   '/ai/api-reference/overview',

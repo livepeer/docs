@@ -18,7 +18,7 @@ const {
   parseFrontmatterFields,
   rebuildFrontmatter,
   processFile,
-} = require('./seo-generator-safe.js')
+} = require('../x-archive/seo-generator-safe.js')
 
 console.log('Testing SEO Generator Script\n')
 
