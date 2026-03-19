@@ -30,7 +30,7 @@ export const Quote = ({ children }) => {
     padding: '1rem',
     margin: '1rem 0',
   }
-  return <div style={quoteStyle}>{children}</div>
+  return <blockquote style={quoteStyle}>{children}</blockquote>
 }
 
 /**
@@ -81,12 +81,13 @@ export const FrameQuote = ({
   }
 
   const content = (
-    <div
+    <blockquote
       style={{
         display: 'flex',
         flexDirection: 'column',
         padding: '0.75rem 1rem 0.25rem 1rem',
         gap: '0.25rem',
+        margin: 0,
       }}
     >
       <div
@@ -145,7 +146,7 @@ export const FrameQuote = ({
           </div>
         </div>
       )}
-    </div>
+    </blockquote>
   )
 
   return frame ? (

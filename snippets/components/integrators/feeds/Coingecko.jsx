@@ -157,6 +157,10 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
                   color: "var(--lp-color-on-accent)",
                 }}
                 onClick={() => handleSort("name")}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSort("name"); }}}
+                tabIndex={0}
+                role="columnheader"
+                aria-sort={sortBy === "name" ? (sortOrder === "asc" ? "ascending" : "descending") : "none"}
                 title="Click to sort by name"
               >
                 Exchange{" "}
@@ -173,6 +177,10 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
                   color: "var(--lp-color-on-accent)",
                 }}
                 onClick={() => handleSort("type")}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSort("type"); }}}
+                tabIndex={0}
+                role="columnheader"
+                aria-sort={sortBy === "type" ? (sortOrder === "asc" ? "ascending" : "descending") : "none"}
                 title="Click to sort by type"
               >
                 Type {sortBy === "type" && (sortOrder === "asc" ? "↑" : "↓")}

@@ -119,15 +119,16 @@ export const TwitterTimeline = ({}) => {
     >
       <iframe
         src="https://feed.mikle.com/widget/v2/176804/"
+        title="Livepeer Twitter Timeline"
         style={{
           border: 'none',
-          transform: 'scale(1.01)', // Shrink by 1% to hide border
+          transform: 'scale(1.01)',
           transformOrigin: 'center',
         }}
-        height="652px" // Increase height by 4px (2px top + 2px bottom)
-        width="100%" // Increase width by 4px (2px left + 2px right)
-        class="fw-iframe"
-        frameborder="none"
+        height="652px"
+        width="100%"
+        className="fw-iframe"
+        frameBorder="0"
         scrolling="no"
       ></iframe>
     </div>

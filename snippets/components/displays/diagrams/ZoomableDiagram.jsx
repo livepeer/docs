@@ -105,7 +105,7 @@ export const ScrollableDiagram = ({
             >
               Scroll to pan
             </span>
-            <button style={buttonStyle} onClick={zoomOut} title="Zoom out">
+            <button style={buttonStyle} onClick={zoomOut} title="Zoom out" aria-label="Zoom out">
               −
             </button>
             <span
@@ -118,13 +118,14 @@ export const ScrollableDiagram = ({
             >
               {zoom}%
             </span>
-            <button style={buttonStyle} onClick={zoomIn} title="Zoom in">
+            <button style={buttonStyle} onClick={zoomIn} title="Zoom in" aria-label="Zoom in">
               +
             </button>
             <button
               style={{ ...buttonStyle, background: "var(--border)" }}
               onClick={resetZoom}
               title="Reset zoom"
+              aria-label="Reset zoom to 100%"
             >
               100%
             </button>

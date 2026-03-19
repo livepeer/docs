@@ -72,6 +72,8 @@ export const CustomDivider = ({
 
   return (
     <div
+      role="separator"
+      aria-orientation="horizontal"
       style={{
         display: "flex",
         alignItems: "center",

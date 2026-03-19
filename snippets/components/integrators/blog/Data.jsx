@@ -543,7 +543,7 @@ export const CardInCardLayout = ({ items = [], limit }) => {
 export const ForumLatestLayout = ({ items = [], limit }) => {
   return (
     <>
-      <a href="https:/forum.livepeer.org" target="_blank" rel="noopener noreferrer">
+      <a href="https://forum.livepeer.org" target="_blank" rel="noopener noreferrer">
         <img
           src="/snippets/automations/forum/Hero_Livepeer_Forum.png"
           alt="Livepeer Forum"

@@ -246,6 +246,7 @@ export const Starfield = ({ density = 1.1 }) => {
   return (
     <canvas
       ref={canvasRef}
+      aria-hidden="true"
       style={{
         position: "absolute",
         inset: 0,

@@ -88,64 +88,34 @@ export const SocialLinks = ({
           marginTop: "0.5rem",
         }}
       >
-                <a
-          href="https://discord.com/invite/livepeer"
-          target="_blank" rel="noopener noreferrer"
-          rel="noopener noreferrer"
-          style={linkStyle}
-        >
+        <a href="https://discord.com/invite/livepeer" target="_blank" rel="noopener noreferrer" aria-label="Livepeer Discord" style={linkStyle}>
           <Tooltip headline="Livepeer Discord">
-            <Icon icon="discord" size={size} color={colors.discord} />
+            <Icon icon="discord" size={size} color={colors.discord} aria-hidden="true" />
           </Tooltip>
         </a>
-        <a
-          href="https://livepeer.org"
-          target="_blank" rel="noopener noreferrer"
-          rel="noopener noreferrer"
-          style={linkStyle}
-        >
+        <a href="https://livepeer.org" target="_blank" rel="noopener noreferrer" aria-label="Livepeer Website" style={linkStyle}>
           <Tooltip headline="Livepeer Website">
-            <Icon icon="globe" size={size} color={colors.website} />
+            <Icon icon="globe" size={size} color={colors.website} aria-hidden="true" />
           </Tooltip>
         </a>
-        <a
-          href="https://github.com/livepeer"
-          target="_blank" rel="noopener noreferrer"
-          rel="noopener noreferrer"
-          style={linkStyle}
-        >
+        <a href="https://github.com/livepeer" target="_blank" rel="noopener noreferrer" aria-label="Livepeer GitHub" style={linkStyle}>
           <Tooltip headline="Livepeer GitHub">
-            <Icon icon="github" size={size} color={colors.github} />
+            <Icon icon="github" size={size} color={colors.github} aria-hidden="true" />
           </Tooltip>
         </a>
-                        <a
-          href="https://forum.livepeer.org"
-          target="_blank" rel="noopener noreferrer"
-          rel="noopener noreferrer"
-          style={linkStyle}
-        >
+        <a href="https://forum.livepeer.org" target="_blank" rel="noopener noreferrer" aria-label="Livepeer Forum" style={linkStyle}>
           <Tooltip headline="Livepeer Forum">
-            <Icon icon="comment-pen" size={size} color={colors.forum} />
+            <Icon icon="comment-pen" size={size} color={colors.forum} aria-hidden="true" />
           </Tooltip>
         </a>
-        <a
-          href="https://livepeer.org/blog"
-          target="_blank" rel="noopener noreferrer"
-          rel="noopener noreferrer"
-          style={linkStyle}
-        >
+        <a href="https://livepeer.org/blog" target="_blank" rel="noopener noreferrer" aria-label="Livepeer Blog" style={linkStyle}>
           <Tooltip headline="Livepeer Blog">
-            <Icon icon="pen-line" size={size} color={colors.blog} />
+            <Icon icon="pen-line" size={size} color={colors.blog} aria-hidden="true" />
           </Tooltip>
         </a>
-                <a
-          href="https://x.com/livepeer"
-          target="_blank" rel="noopener noreferrer"
-          rel="noopener noreferrer"
-          style={linkStyle}
-        >
+        <a href="https://x.com/livepeer" target="_blank" rel="noopener noreferrer" aria-label="Livepeer X" style={linkStyle}>
           <Tooltip headline="Livepeer X">
-            <Icon icon="x-twitter" size={size} color={colors.twitter} />
+            <Icon icon="x-twitter" size={size} color={colors.twitter} aria-hidden="true" />
           </Tooltip>
         </a>
       </span>

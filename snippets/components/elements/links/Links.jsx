@@ -228,9 +228,9 @@ const GotoLink = ({
   icon = "arrow-turn-down-right",
 }) => {
   return (
-    <span>
-      <p style={{ marginRight: 8 }}>{text}</p>
-      <Icon icon={icon} />
+    <span style={{ display: "inline-flex", alignItems: "center" }}>
+      <span style={{ marginRight: 8 }}>{text}</span>
+      <Icon icon={icon} aria-hidden="true" />
       <a href={relativePath} style={{ marginLeft: 6 }}>
         {label}
       </a>

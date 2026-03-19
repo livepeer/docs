@@ -26,6 +26,8 @@ export const LivepeerSVG = ({ size = 24, ...props }) => {
       width="1em"
       height="1em"
       fill="none"
+      role="img"
+      aria-label="Livepeer logo"
       {...props}
     >
       <path
