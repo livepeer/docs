@@ -1,0 +1,92 @@
+---
+sidebarTitle: go-livepeer
+title: go-livepeer changelog
+description: >-
+  Notable releases and improvements to the Livepeer node software (go-livepeer).
+  Covers new features, updates, and bug fixes that affect gateway operators,
+  orchestrators, and developers.
+pageType: changelog
+keywords:
+  - livepeer
+  - go-livepeer
+  - changelog
+  - releases
+  - node
+  - gateway
+  - orchestrator
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+purpose: changelog
+audience: everyone
+lastVerified: 2026-03-19
+---
+
+Release notes for the Livepeer node software. For protocol-level changes, see the [Livepeer Improvement Proposals (LIPs)](https://github.com/livepeer/LIPs). For full release binaries, see the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases).
+
+<CustomDivider />
+
+<Update label="v0.8.10 — March 2026" description="Remote signer for Live AI, unified BYOC capability discovery, and stability fixes" tags={["Live AI", "BYOC", "Bug Fixes"]} rss={{ title: "go-livepeer v0.8.10", description: "Remote signer support for Live AI gateways, unified BYOC capability discovery, and broadcaster crash fix" }}>
+  ## v0.8.10
+
+### New features
+
+- **Remote signer for Live AI** — Gateways running Live AI (live-video-to-video) workloads can now delegate Ethereum payment signing to a separate remote signer service. This isolates private keys from the gateway process and enables keyless gateway deployments. The remote signer also supports orchestrator discovery, so lightweight gateways can rely on the signer node for both signing and network discovery. See the [remote signers guide](/v2/gateways/guides/payments-and-pricing/remote-signers) for setup details.
+
+### Updates
+
+- **Unified BYOC capability discovery** — BYOC (Bring Your Own Compute) capabilities and pricing are now included in the standard orchestrator capability response. Clients no longer need a separate call to discover which BYOC pipelines an orchestrator offers. This makes BYOC orchestrators visible through the same [capability system](/v2/gateways/concepts/capabilities) used for built-in workloads.
+- **BYOC orchestrator swap reporting** — BYOC streaming sessions now report orchestrator swaps using the same event format as Live AI sessions, improving observability for operators.
+- **LPMS update** — The media processing library (LPMS) has been updated with fixes for out-of-order timestamps and runaway encodes, improving transcoding stability.
+
+### Bug fixes
+
+- **Fixed crash in broadcaster max price calculation** — Resolved a crash that occurred when no per-capability price constraints were set. The broadcaster now correctly falls back to the global max price.
+- **Fixed BYOC orchestrator streaming reserve capacity** — Resolved a bug where BYOC orchestrators were not properly tracking reserved streaming capacity, which could cause incorrect orchestrator selection.
+
+</Update>
+
+<Update label="v0.8.9 — January 2026" description="BYOC streaming, new AI model support, and crash fixes" tags={["BYOC", "AI Models", "Bug Fixes"]} rss={{ title: "go-livepeer v0.8.9", description: "BYOC streaming workloads, new AI model support, WHEP playback improvements, and stability fixes" }}>
+  ## v0.8.9
+
+### New features
+
+- **BYOC streaming** — Orchestrators can now process streaming workloads through the BYOC pipeline, enabling real-time compute jobs alongside existing batch capabilities. See the [BYOC tutorial](/v2/gateways/guides/tutorials/tutorial-2-byoc-cpu-pipeline) for a walkthrough.
+- **New AI model support** — Added support for SD 1.5 and SDXL video-to-video pipelines, along with Scope pipeline support for orchestrator workers. These expand the range of [AI pipelines](/v2/developers/concepts/ai-on-livepeer) available on the network.
+- **Custom AI models JSON for Docker** — Operators running the Docker-based Livepeer Box can now specify a custom AI models configuration file, making it easier to tailor model availability.
+
+### Updates
+
+- **WHEP negotiation improvements** — The WebRTC playback server (WHEP) now handles MPEG-TS initialization errors as 404 responses and limits concurrent sessions, improving reliability for Live AI playback.
+- **Improved latency reporting** — Gateway-to-orchestrator latency measurement has been refined for more accurate performance tracking.
+
+### Bug fixes
+
+- **Fixed crash during RTMP ingest cleanup** — Resolved a panic that could occur when cleaning up RTMP ingest sessions for Live AI.
+- **Fixed crash when monitoring is disabled** — The node no longer panics if the monitoring subsystem is not enabled.
+- **Fixed concurrent map write panic** — Resolved a race condition that could cause a crash during concurrent Live AI session management.
+- **Fixed orchestrator stream setup failure handling** — BYOC orchestrators now handle stream setup failures gracefully instead of leaving sessions in a broken state.
+- **Fixed orphaned containers on shutdown** — Worker containers are now properly cleaned up when the node shuts down, preventing resource leaks.
+
+</Update>
+
+<CustomDivider />
+
+## Related resources
+
+<CardGroup cols={2}>
+  <Card title="GitHub releases" icon="github" href="https://github.com/livepeer/go-livepeer/releases" arrow>
+    Download binaries and view full release notes
+  </Card>
+  <Card title="Remote signers" icon="key" href="/v2/gateways/guides/payments-and-pricing/remote-signers" arrow>
+    Set up keyless gateway operation with remote signing
+  </Card>
+  <Card title="Gateway capabilities" icon="grid-2" href="/v2/gateways/concepts/capabilities" arrow>
+    How gateways discover and route to orchestrator capabilities
+  </Card>
+  <Card title="AI on Livepeer" icon="microchip-ai" href="/v2/developers/concepts/ai-on-livepeer" arrow>
+    Overview of AI pipeline categories on the network
+  </Card>
+</CardGroup>
