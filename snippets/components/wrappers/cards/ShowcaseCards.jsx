@@ -41,6 +41,7 @@ export const InteractiveCard = ({
   productTags = [],
   links = [],
   style = {},
+  className = "",
   ...cardProps
 }) => {
   const previewSrc = mediaSrc || logo || "";
@@ -49,7 +50,7 @@ export const InteractiveCard = ({
   const safeLinks = Array.isArray(links) ? links : [];
 
   return (
-    <Card href={href} arrow={false} {...cardProps}>
+    <Card href={href} arrow={false} className={className} {...cardProps}>
       <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", ...style }}>
         {previewSrc ? (
           <img
@@ -130,7 +131,7 @@ export const InteractiveCard = ({
  * @example
  * <InteractiveCards />
  */
-export const InteractiveCards = ({ items = [] }) => {
+export const InteractiveCards = ({ items = [], className = "", style = {}, ...rest }) => {
   const safeItems = Array.isArray(items) && items.length > 0
     ? items
     : [
@@ -151,7 +152,7 @@ export const InteractiveCards = ({ items = [] }) => {
       ];
 
   return (
-    <Columns cols={2}>
+    <Columns cols={2} className={className} style={style} {...rest}>
       {safeItems.map((item, index) => (
         <InteractiveCard key={item.title || `interactive-card-${index}`} {...item} />
       ))}
@@ -181,7 +182,7 @@ export const InteractiveCards = ({ items = [] }) => {
  * @example
  * <ShowcaseCards />
  */
-export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10 }) => {
+export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10, className = "", style = {}, ...rest }) => {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [productFilter, setProductFilter] = useState("All");
@@ -650,7 +651,7 @@ export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10 }) => {
   });
 
   return (
-    <div>
+    <div className={className} style={style} {...rest}>
       <div style={filterBarStyle}>
         <input
           type="text"

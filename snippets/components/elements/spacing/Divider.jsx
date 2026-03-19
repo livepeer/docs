@@ -47,6 +47,8 @@ export const CustomDivider = ({
   middleText = "",
   spacing = "default",
   style = {},
+  className = "",
+  ...rest
 }) => {
   const spacingPresets = {
     default: {
@@ -74,6 +76,7 @@ export const CustomDivider = ({
     <div
       role="separator"
       aria-orientation="horizontal"
+      className={className}
       style={{
         display: "flex",
         alignItems: "center",
@@ -82,6 +85,7 @@ export const CustomDivider = ({
         height: "fit-content",
         ...style,
       }}
+      {...rest}
     >
       <span
         style={{

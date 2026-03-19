@@ -57,11 +57,12 @@
  * @example
  * <HeroSectionContainer>Example content</HeroSectionContainer>
  */
-const HeroSectionContainer = ({ children, minHeight = "fit-content" }) => {
+const HeroSectionContainer = ({ children, minHeight = "fit-content", className = "", style = {}, ...rest }) => {
   return (
     <div
-      className="frame-mode-hero-full"
-      style={{ minHeight: minHeight, marginBottom: "0.5rem" }}
+      className={["frame-mode-hero-full", className].filter(Boolean).join(" ")}
+      style={{ minHeight: minHeight, marginBottom: "0.5rem", ...style }}
+      {...rest}
     >
       {children}
       {/* <HeroImageBackgroundComponent /> */}
@@ -106,15 +107,18 @@ const HeroSectionContainer = ({ children, minHeight = "fit-content" }) => {
  * @example
  * <HeroImageBackgroundComponent>Example content</HeroImageBackgroundComponent>
  */
-const HeroImageBackgroundComponent = ({ children }) => {
+const HeroImageBackgroundComponent = ({ children, className = "", style = {}, ...rest }) => {
   return (
     <div
+      className={className}
       style={{
         position: "absolute",
         inset: 0,
         overflow: "hidden",
         zIndex: 0,
+        ...style,
       }}
+      {...rest}
     >
       {children}
       {/* <Starfield /> */}
@@ -158,16 +162,18 @@ const HeroImageBackgroundComponent = ({ children }) => {
  * @example
  * <HeroContentContainer>Example content</HeroContentContainer>
  */
-const HeroContentContainer = ({ children }) => {
+const HeroContentContainer = ({ children, className = "", style = {}, ...rest }) => {
   return (
     <div
-      className="frame-mode-container"
+      className={["frame-mode-container", className].filter(Boolean).join(" ")}
       style={{
         position: "relative",
         zIndex: 1,
         height: "100%",
         marginBottom: 0,
+        ...style,
       }}
+      {...rest}
     >
       <div style={{ position: "relative", height: "100%" }}>{children}</div>
     </div>
@@ -195,9 +201,10 @@ const HeroContentContainer = ({ children }) => {
  * @example
  * <HeroOverviewContent>Example content</HeroOverviewContent>
  */
-const HeroOverviewContent = ({ children }) => {
+const HeroOverviewContent = ({ children, className = "", style = {}, ...rest }) => {
   return (
     <div
+      className={className}
       style={{
         display: "flex",
         alignItems: "center",
@@ -208,7 +215,9 @@ const HeroOverviewContent = ({ children }) => {
         margin: "0 auto",
         fontSize: "1.1rem",
         color: "var(--page-header-description-color)",
+        ...style,
       }}
+      {...rest}
     >
           {children}
           <div style={{ paddingBottom: "2.5rem" }}> 
@@ -250,9 +259,9 @@ const HeroOverviewContent = ({ children }) => {
  * @example
  * <PortalContentContainer>Example content</PortalContentContainer>
  */
-const PortalContentContainer = ({ children }) => {
+const PortalContentContainer = ({ children, className = "", style = {}, ...rest }) => {
     return (
-        <div className="frame-mode-container">
+        <div className={["frame-mode-container", className].filter(Boolean).join(" ")} style={style} {...rest}>
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>   
                 {children}
             </div>
@@ -323,10 +332,13 @@ const PortalHeroContent = ({
   titleColor,
   subtitleColor,
   children,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   return (
     // zIndex &&
-    <div style={{ position: "relative", zIndex: 1 }}>
+    <div className={className} style={{ position: "relative", zIndex: 1, ...style }} {...rest}>
       <div
         style={{
           textAlign: "center",
@@ -464,9 +476,9 @@ const PortalHeroContent = ({
  * @example
  * <PortalCardsHeader title="example">Example content</PortalCardsHeader>
  */
-const PortalCardsHeader = ({ children, title }) => {
+const PortalCardsHeader = ({ children, title, className = "", style = {}, ...rest }) => {
     return (
-    <div style={{ alignContent: "center", justifyContent: "center" }}>
+    <div className={className} style={{ alignContent: "center", justifyContent: "center", ...style }} {...rest}>
         <H2 icon="signs-post" iconSize={32} >
             {title}
         </H2>
@@ -503,9 +515,9 @@ const PortalCardsHeader = ({ children, title }) => {
  * @example
  * <PortalSectionHeader title="example" icon="example">Example content</PortalSectionHeader>
  */
-const PortalSectionHeader = ({ children, title, icon }) => {
+const PortalSectionHeader = ({ children, title, icon, className = "", style = {}, ...rest }) => {
     return (
-    <div style={{ alignContent: "center", justifyContent: "center", gap: "1rem 0" }}>
+    <div className={className} style={{ alignContent: "center", justifyContent: "center", gap: "1rem 0", ...style }} {...rest}>
         <H3 icon={icon} iconSize={32} >
             {title}
         </H3>
@@ -570,9 +582,13 @@ const LogoHeroContainer = ({
   imgWidth = "auto",
   objectFit = "contain",
   children,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   return (
     <div
+      className={className}
       style={{
         display: "flex",
         alignItems: "center",
@@ -580,7 +596,9 @@ const LogoHeroContainer = ({
         margin: margin,
         width: width,
         paddingBottom: children ? "3.5rem" : "0",
+        ...style,
       }}
+      {...rest}
     >
       <div style={{ position: "relative", display: "inline-block" }}>
         <img
@@ -627,16 +645,19 @@ const LogoHeroContainer = ({
  * @example
  * <RefCardContainer>Example content</RefCardContainer>
  */
-const RefCardContainer = ({ children }) => {
+const RefCardContainer = ({ children, className = "", style = {}, ...rest }) => {
   return (
     <div
+      className={className}
       style={{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "column",
         gap: "1rem",
+        ...style,
       }}
+      {...rest}
     >
       {children}
     </div>

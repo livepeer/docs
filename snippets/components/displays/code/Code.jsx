@@ -151,6 +151,9 @@ export const CodeComponent = ({
   lines = true,
   codeString = "",
   placeholderValue = "",
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const renderedCode = codeString.replace(/\{PLACEHOLDER\}/g, placeholderValue);
   return (
@@ -162,6 +165,9 @@ export const CodeComponent = ({
       expandable={expandable}
       wrap={wrap}
       lines={lines}
+      className={className}
+      style={style}
+      {...rest}
     >
       {renderedCode}
     </CodeBlock>
@@ -275,8 +281,8 @@ export const ComplexCodeBlock = ({
  * @example
  * <CodeSection />
  */
-export const CodeSection = ({ fields = {} }) => {
-  return <ComplexCodeBlock {...fields} />;
+export const CodeSection = ({ fields = {}, className = "", style = {}, ...rest }) => {
+  return <ComplexCodeBlock {...fields} className={className} style={style} {...rest} />;
 };
 
 // export const CodeSection = ({ fields = {} }) => {

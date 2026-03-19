@@ -53,6 +53,9 @@ export const SocialLinks = ({
   gap = "0.75rem",
   justify = "center",
   color,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const linkStyle = {
     border: "none",
@@ -72,7 +75,7 @@ export const SocialLinks = ({
   };
 
   return (
-    <>
+    <div className={className} style={style} {...rest}>
       <style>{`
         .social-links a {
           border: none;
@@ -119,6 +122,6 @@ export const SocialLinks = ({
           </Tooltip>
         </a>
       </span>
-    </>
+    </div>
   );
 };

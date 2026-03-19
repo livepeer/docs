@@ -68,9 +68,9 @@ export const IconList = ({ listItems: array }) => {
  * @example
  * <StepList listItems={[]} />
  */
-export const StepList = ({ listItems }) => {
+export const StepList = ({ listItems, className = "", style = {}, ...rest }) => {
   return (
-    <Steps>
+    <Steps className={className} style={style} {...rest}>
       {listItems.map(({ title, icon, content }, idx) => (
         <Step key={idx} title={title} icon={icon}>
           {content}
@@ -100,9 +100,9 @@ export const StepList = ({ listItems }) => {
  * @example
  * <StepLinkList listItems={[]} />
  */
-export const StepLinkList = ({ listItems }) => {
+export const StepLinkList = ({ listItems, className = "", style = {}, ...rest }) => {
   return (
-    <Steps>
+    <Steps className={className} style={style} {...rest}>
       {listItems.map(({ title, icon, content, link }, idx) => (
         <Step key={idx} title={title} icon={icon}>
           <GotoLink label={content} relativePath={link} />

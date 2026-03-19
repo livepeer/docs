@@ -36,9 +36,12 @@ export const FlexContainer = ({
   marginTop = "",
   marginBottom = "",
   style = {},
+  className = "",
+  ...rest
 }) => {
   return (
     <div
+      className={className}
       style={{
         display: "flex",
         flexDirection: direction,
@@ -50,6 +53,7 @@ export const FlexContainer = ({
         ...(marginBottom ? { marginBottom } : {}),
         ...style,
       }}
+      {...rest}
     >
       {children}
     </div>
@@ -84,6 +88,8 @@ export const GridContainer = ({
   columns,
   gap = "1rem",
   style = {},
+  className = "",
+  ...rest
 }) => {
   const gridTemplateColumns = columns
     ? typeof columns === "number"
@@ -93,12 +99,14 @@ export const GridContainer = ({
 
   return (
     <div
+      className={className}
       style={{
         display: "grid",
         gridTemplateColumns: gridTemplateColumns,
         gap: gap,
         ...style,
       }}
+      {...rest}
     >
       {children}
     </div>
@@ -126,14 +134,17 @@ export const GridContainer = ({
  * @example
  * <Spacer />
  */
-export const Spacer = ({ size = "1rem", direction = "vertical" }) => {
+export const Spacer = ({ size = "1rem", direction = "vertical", className = "", style = {}, ...rest }) => {
   return (
     <div
+      className={className}
       style={{
         ...(direction === "vertical"
           ? { height: size, width: "100%" }
           : { width: size, height: "100%" }),
+        ...style,
       }}
+      {...rest}
     />
   );
 };

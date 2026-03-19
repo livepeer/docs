@@ -37,7 +37,10 @@ export const SearchTable = ({
   margin,
   searchPlaceholder = 'Search...',
   searchColumns = [],
-  categoryColumn = 'Category'
+  categoryColumn = 'Category',
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const [query, setQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -79,7 +82,7 @@ export const SearchTable = ({
   });
 
   return (
-    <div>
+    <div className={className} style={style} {...rest}>
       <div
         style={{
           marginBottom: '0.5rem',

@@ -20,7 +20,7 @@
  * @example
  * <Starfield />
  */
-export const Starfield = ({ density = 1.1 }) => {
+export const Starfield = ({ density = 1.1, className = "", style = {}, ...rest }) => {
   const canvasRef = useRef(null);
 
   const readThemeColor = (tokenName, fallback) => {
@@ -247,6 +247,7 @@ export const Starfield = ({ density = 1.1 }) => {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
+      className={className}
       style={{
         position: "absolute",
         inset: 0,
@@ -254,7 +255,9 @@ export const Starfield = ({ density = 1.1 }) => {
         height: "100%",
         pointerEvents: "none",
         zIndex: 0,
+        ...style,
       }}
+      {...rest}
     />
   );
 };

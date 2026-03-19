@@ -49,14 +49,20 @@ const PageHeader = ({
   titleColor,
   subtitleColor,
   descriptionColor,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   return (
     <div
+      className={className}
       style={{
         textAlign: "center",
         marginTop: "2rem",
         marginBottom: "3rem",
+        ...style,
       }}
+      {...rest}
     >
       <h1
         style={{
@@ -136,6 +142,9 @@ const H1 = ({
   iconColor,
   align = "left",
   gap = "0.75rem",
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const resolvedIconColor = iconColor || "var(--accent)";
 
@@ -162,7 +171,7 @@ const H1 = ({
   };
 
   return (
-    <div style={containerStyle}>
+    <div className={className} style={{ ...containerStyle, ...style }} {...rest}>
       {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
       <h1 style={headingStyle}>{children}</h1>
     </div>
@@ -201,6 +210,9 @@ const H2 = ({
   iconColor,
   align = "left",
   gap = "0.75rem",
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const resolvedIconColor = iconColor || "var(--accent)";
 
@@ -227,7 +239,7 @@ const H2 = ({
   };
 
   return (
-    <div style={containerStyle}>
+    <div className={className} style={{ ...containerStyle, ...style }} {...rest}>
       {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
       <h2 style={headingStyle}>{children}</h2>
     </div>
@@ -266,6 +278,9 @@ const H3 = ({
   iconColor,
   align = "left",
   gap = "0.5rem",
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const resolvedIconColor = iconColor || "var(--accent)";
 
@@ -292,7 +307,7 @@ const H3 = ({
   };
 
   return (
-    <div style={containerStyle}>
+    <div className={className} style={{ ...containerStyle, ...style }} {...rest}>
       {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
       <h3 style={headingStyle}>{children}</h3>
     </div>
@@ -331,6 +346,9 @@ const H4 = ({
   iconColor,
   align = "left",
   gap = "0.5rem",
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const resolvedIconColor = iconColor || "var(--accent)";
 
@@ -357,7 +375,7 @@ const H4 = ({
   };
 
   return (
-    <div style={containerStyle}>
+    <div className={className} style={{ ...containerStyle, ...style }} {...rest}>
       {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
       <h4 style={headingStyle}>{children}</h4>
     </div>
@@ -396,6 +414,9 @@ const H5 = ({
   iconColor,
   align = "left",
   gap = "0.5rem",
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const resolvedIconColor = iconColor || "var(--accent)";
 
@@ -422,7 +443,7 @@ const H5 = ({
   };
 
   return (
-    <div style={containerStyle}>
+    <div className={className} style={{ ...containerStyle, ...style }} {...rest}>
       {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
       <h5 style={headingStyle}>{children}</h5>
     </div>
@@ -461,6 +482,9 @@ const H6 = ({
   iconColor,
   align = "left",
   gap = "0.5rem",
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const resolvedIconColor = iconColor || "var(--accent)";
 
@@ -487,7 +511,7 @@ const H6 = ({
   };
 
   return (
-    <div style={containerStyle}>
+    <div className={className} style={{ ...containerStyle, ...style }} {...rest}>
       {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
       <h6 style={headingStyle}>{children}</h6>
     </div>
@@ -526,6 +550,9 @@ const P = ({
   iconColor,
   align = "left",
   gap = "0.5rem",
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const resolvedIconColor = iconColor || "var(--p-icon-color)";
 
@@ -549,7 +576,7 @@ const P = ({
   };
 
   return (
-    <div style={containerStyle}>
+    <div className={className} style={{ ...containerStyle, ...style }} {...rest}>
       {icon && <Icon icon={icon} size={iconSize} color={resolvedIconColor} />}
       <p style={paragraphStyle}>{children}</p>
     </div>
@@ -578,15 +605,18 @@ const P = ({
  * @example
  * <Divider color="example" />
  */
-const Divider = ({ color, margin = "1.5rem 0", opacity = 0.2 }) => {
+const Divider = ({ color, margin = "1.5rem 0", opacity = 0.2, className = "", style = {}, ...rest }) => {
   return (
     <hr
+      className={className}
       style={{
         border: "none",
         borderTop: `1px solid ${color || "var(--border)"}`,
         margin: margin,
         opacity: opacity,
+        ...style,
       }}
+      {...rest}
     />
   );
 };

@@ -23,10 +23,10 @@
  * @example
  * <Image src="example" alt="example" />
  */
-export const Image = ({ src, alt = "", caption, icon, hint, fullwidth = true }) => {
+export const Image = ({ src, alt = "", caption, icon, hint, fullwidth = true, className = "", style = {}, ...rest }) => {
   icon = icon ? icon : "arrow-turn-down-right";
   return (
-    <Frame caption={caption} hint={hint}>
+    <Frame caption={caption} hint={hint} className={className} style={style} {...rest}>
       <img
         src={src}
         alt={alt}
@@ -61,10 +61,10 @@ export const Image = ({ src, alt = "", caption, icon, hint, fullwidth = true }) 
  * @example
  * <LinkImage src="example" alt="example" />
  */
-export const LinkImage = ({ src, alt = "", caption, icon, hint, href }) => {
+export const LinkImage = ({ src, alt = "", caption, icon, hint, href, className = "", style = {}, ...rest }) => {
   icon = icon ? icon : "arrow-turn-down-right";
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer">
+    <a href={href} target="_blank" rel="noopener noreferrer" className={className} style={style} {...rest}>
       <Frame caption={caption} hint={hint}>
         <img src={src} alt={alt} style={{ width: "100%" }} />
       </Frame>

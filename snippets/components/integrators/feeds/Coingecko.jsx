@@ -19,7 +19,7 @@
  * @example
  * <CoinGeckoExchanges />
  */
-export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
+export const CoinGeckoExchanges = ({ coinId = "arbitrum", className = "", style = {}, ...rest }) => {
   const [exchanges, setExchanges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -130,7 +130,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
   };
 
   return (
-    <div style={{ overflowX: "auto" }}>
+    <div className={className} style={{ overflowX: "auto", ...style }} {...rest}>
         <table
           style={{
             width: "100%",

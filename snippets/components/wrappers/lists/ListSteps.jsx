@@ -22,7 +22,7 @@
  * @example
  * <ListSteps listItems={[]} />
  */
-export const ListSteps = ({ listItems, stepsConfig = {} }) => {
+export const ListSteps = ({ listItems, stepsConfig = {}, className = "", style = {}, ...rest }) => {
   const safeItems = Array.isArray(listItems) ? listItems : [];
   if (safeItems.length === 0) {
     console.warn("[ListSteps] Missing required prop: listItems");
@@ -30,7 +30,7 @@ export const ListSteps = ({ listItems, stepsConfig = {} }) => {
   }
 
   return (
-    <Steps {...stepsConfig}>
+    <Steps className={className} style={style} {...stepsConfig} {...rest}>
       {safeItems.map(({ title, icon, children, ...props }, idx) => (
         <Step key={idx} title={title} icon={icon} {...props}>
           {children}

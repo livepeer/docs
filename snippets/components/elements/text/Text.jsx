@@ -20,22 +20,22 @@
  * @example
  * <Subtitle text="example">Example content</Subtitle>
  */
-export const Subtitle = ({ style = {}, text, children }) => {
+export const Subtitle = ({ style = {}, text, children, className = "", ...rest }) => {
   return (
-    <>
-      <span
-        style={{
-          fontSize: style.fontSize ? style.fontSize : "1rem",
-          fontStyle: style.fontStyle ? style.fontStyle : "italic",
-          color: style.color ? style.color : "var(--accent)",
-          marginBottom: style.marginBottom ? style.marginBottom : 0,
-          ...style,
-        }}
-      >
-        {text}
-        {children}
-      </span>
-    </>
+    <span
+      className={className}
+      style={{
+        fontSize: style.fontSize ? style.fontSize : "1rem",
+        fontStyle: style.fontStyle ? style.fontStyle : "italic",
+        color: style.color ? style.color : "var(--accent)",
+        marginBottom: style.marginBottom ? style.marginBottom : 0,
+        ...style,
+      }}
+      {...rest}
+    >
+      {text}
+      {children}
+    </span>
   );
 };
 
@@ -60,14 +60,16 @@ export const Subtitle = ({ style = {}, text, children }) => {
  * @example
  * <CopyText text="example" label="example" />
  */
-export const CopyText = ({ text, label }) => {
+export const CopyText = ({ text, label, className = "", style = {}, ...rest }) => {
   const handleCopy = () => {
     navigator.clipboard.writeText(text);
   };
 
   return (
     <span
-      style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem" }}
+      className={className}
+      style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", ...style }}
+      {...rest}
     >
       {label && <strong>{label}</strong>}
       <code
@@ -132,15 +134,17 @@ export const CopyText = ({ text, label }) => {
  * @example
  * <CardTitleTextWithArrow cardProps="example">Example content</CardTitleTextWithArrow>
  */
-export const CardTitleTextWithArrow = ({ children, ...cardProps }) => {
+export const CardTitleTextWithArrow = ({ children, className = "", style = {}, ...cardProps }) => {
   return (
     <div
+      className={className}
       style={{
         display: "flex",
         width: "fit-content",
         alignItems: "center",
         justifyContent: "center",
         marginTop: "-1rem",
+        ...style,
       }}
     >
       <Card
@@ -207,10 +211,14 @@ export const AccordionTitleWithArrow = ({
   text,
   children,
   color = "var(--text)",
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const label = text ?? children;
   return (
     <span
+      className={className}
       style={{
         justifyContent: "center",
         alignContent: "center",
@@ -220,7 +228,9 @@ export const AccordionTitleWithArrow = ({
         gap: "0.5rem",
         padding: "0.25rem 0",
         minHeight: 44,
+        ...style,
       }}
+      {...rest}
     >
       {label}
       <span style={{ alignSelf: "flex-end" }}>

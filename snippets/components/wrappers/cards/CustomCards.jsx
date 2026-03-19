@@ -29,6 +29,8 @@ export const DisplayCard = ({
   style,
   background = 'var(--card-background)',
   children,
+  className = "",
+  ...rest
 }) => {
   if (!title) {
     console.warn("[DisplayCard] Missing required prop: title");
@@ -66,7 +68,7 @@ export const DisplayCard = ({
     margin: 0,
   }
   return (
-    <div style={cardStyle}>
+    <div className={className} style={cardStyle} {...rest}>
       <div style={titleStyle}>
         <Icon icon={icon} size={20} color="var(--accent)" />
         {title}
@@ -99,14 +101,17 @@ export const DisplayCard = ({
  * @example
  * <WidthCard>Example</WidthCard>
  */
-export const WidthCard = ({ width = '80%', children, ...cardProps }) => {
+export const WidthCard = ({ width = '80%', children, cardProps, className = "", style = {}, ...rest }) => {
   return (
     <div
+      className={className}
       style={{
         display: 'flex',
         justifyContent: 'center',
         minWidth: 'fit-content',
+        ...style,
       }}
+      {...rest}
     >
       <div style={{ width: width }}>
         <Card {...cardProps}>{children}</Card>
@@ -146,6 +151,8 @@ export const InlineImageCard = ({
   imgStyle,
   cardProps,
   style,
+  className = "",
+  ...rest
 }) => {
   if (!imgProps?.src) {
     console.warn("[InlineImageCard] Missing required prop: imgProps.src");
@@ -153,7 +160,7 @@ export const InlineImageCard = ({
   }
 
   return (
-    <Card {...cardProps}>
+    <Card className={className} {...cardProps} {...rest}>
       <div
         style={{
           display: 'flex',

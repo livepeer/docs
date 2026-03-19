@@ -32,6 +32,8 @@ const ValueResponseField = ({
   label = "value",
   line = true,
   children,
+  className = "",
+  style = {},
   ...props
 }) => {
   const hasDescription =
@@ -52,7 +54,7 @@ const ValueResponseField = ({
     : null;
 
   return (
-    <div className={!line ? "vrf-noline" : undefined}>
+    <div className={[!line ? "vrf-noline" : "", className].filter(Boolean).join(" ") || undefined} style={style}>
       <style>{`
         .vrf-noline > .field {
           border-bottom: none;
@@ -102,11 +104,11 @@ const expandableCode = () => {
  * @example
  * <CustomResponseField description="Example" />
  */
-const CustomResponseField = ({ description, ...props }) => {
+const CustomResponseField = ({ description, className = "", style = {}, ...props }) => {
   const uniqueId = `custom-rf-${Math.random().toString(36).substring(2, 11)}`;
 
   return (
-    <div className={uniqueId}>
+    <div className={[uniqueId, className].filter(Boolean).join(" ")} style={style}>
       <style>{`
         .${uniqueId} > .field {
           border-bottom: none;
@@ -141,14 +143,14 @@ const CustomResponseField = ({ description, ...props }) => {
  * @example
  * <ResponseFieldExpandable />
  */
-const ResponseFieldExpandable = ({ fields = {}, ...props }) => {
+const ResponseFieldExpandable = ({ fields = {}, className = "", style = {}, ...props }) => {
   const fieldsArray = Array.isArray(fields) ? fields : Object.values(fields);
   if (fieldsArray.length === 0) {
     return null;
   }
 
   return (
-    <Expandable {...props}>
+    <Expandable className={className} style={style} {...props}>
       {fieldsArray.map((field, index) => (
         <ValueResponseField key={index} {...field} />
       ))}
@@ -180,7 +182,7 @@ const ResponseFieldExpandable = ({ fields = {}, ...props }) => {
  * @example
  * <ResponseFieldAccordion />
  */
-const ResponseFieldAccordion = ({ fields = {}, ...props }) => {
+const ResponseFieldAccordion = ({ fields = {}, className = "", style = {}, ...props }) => {
   const fieldsArray = Array.isArray(fields) ? fields : Object.values(fields);
   if (fieldsArray.length === 0) {
     console.warn("[ResponseFieldAccordion] Missing or invalid fields");
@@ -188,7 +190,7 @@ const ResponseFieldAccordion = ({ fields = {}, ...props }) => {
   }
 
   return (
-    <Accordion {...props}>
+    <Accordion className={className} style={style} {...props}>
       {fieldsArray.map((field, index) => (
         <ValueResponseField key={index} {...field} />
       ))}
@@ -225,6 +227,8 @@ const ResponseFieldAccordion = ({ fields = {}, ...props }) => {
 const ResponseFieldGroup = ({
   component = "accordion",
   fields = {},
+  className = "",
+  style = {},
   ...props
 }) => {
   const fieldsArray = Array.isArray(fields) ? fields : Object.values(fields);
@@ -239,7 +243,7 @@ const ResponseFieldGroup = ({
   };
   const Component = componentMap[component] || Accordion;
   return (
-    <Component {...props}>
+    <Component className={className} style={style} {...props}>
       {fieldsArray.map((field, index) => (
         <ValueResponseField key={index} {...field} />
       ))}

@@ -30,10 +30,13 @@ export const TitledVideo = ({
   arrow = false,
   borderRadius = "12px",
   style = {},
+  className = "",
+  ...rest
 }) => {
   const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   return (
     <div
+      className={className}
       style={{
         position: "relative",
         display: "block",
@@ -42,6 +45,7 @@ export const TitledVideo = ({
         isolation: "isolate",
         ...style,
       }}
+      {...rest}
     >
       <video
         autoPlay={!prefersReducedMotion}
@@ -138,9 +142,11 @@ export const TitledVideo = ({
  * @example
  * <ShowcaseVideo src="example" title="example" />
  */
-export const ShowcaseVideo = ({ src, title, subtitle }) => {
+export const ShowcaseVideo = ({ src, title, subtitle, className = "", style = {}, ...rest }) => {
   return (
     <TitledVideo
+      className={className}
+      {...rest}
       src={src}
       title={title}
       subtitle={subtitle}
@@ -151,6 +157,7 @@ export const ShowcaseVideo = ({ src, title, subtitle }) => {
         borderRadius: 0,
         maxHeight: "300px",
         width: "calc(100% + 4rem)",
+        ...style,
       }}
     />
   );
@@ -196,6 +203,9 @@ export const Video = ({
   loop = false,
   muted = false,
   children,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   // Build caption from author and caption
   const buildCaption = () => {
@@ -261,7 +271,7 @@ export const Video = ({
   const captionContent = buildCaption();
 
   return (
-    <Frame {...(captionContent ? { caption: captionContent } : {})}>
+    <Frame className={className} style={style} {...(captionContent ? { caption: captionContent } : {})} {...rest}>
       <video
         controls={controls}
         autoPlay={autoPlay}
@@ -307,6 +317,9 @@ export const YouTubeVideo = ({
   author = "",
   hint = "",
   caption,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   // Return null if embedUrl is missing or invalid
   if (!embedUrl || typeof embedUrl !== "string" || embedUrl.trim() === "") {
@@ -351,8 +364,11 @@ export const YouTubeVideo = ({
 
   return (
     <Frame
+      className={className}
+      style={style}
       {...(hint ? { hint } : {})}
       {...(captionContent ? { caption: captionContent } : {})}
+      {...rest}
     >
       <iframe
         className="w-full aspect-video rounded-xl"
@@ -511,15 +527,21 @@ export const YouTubeVideoDownload = ({
   title,
   hint,
   caption = "",
+  className = "",
+  style = {},
+  ...rest
 }) => {
   return (
     <div
+      className={className}
       style={{
         display: "flex",
         flexDirection: "column",
         alignItems: "stretch",
         width: "100%",
+        ...style,
       }}
+      {...rest}
     >
       {/* DownloadButton removed for Mintlify compatibility */}
       {/* <Frame
@@ -569,9 +591,9 @@ export const YouTubeVideoDownload = ({
  * @example
  * <CardVideo embedUrl="example" title="example" />
  */
-export const CardVideo = ({ embedUrl, title, style }) => {
+export const CardVideo = ({ embedUrl, title, style = {}, className = "", ...rest }) => {
   return (
-    <Card>
+    <Card className={className} {...rest}>
       <iframe
         className="w-full aspect-video rounded-xl"
         style={{ aspectRatio: "16/9", ...style }}

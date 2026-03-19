@@ -21,7 +21,7 @@
  * @example
  * <ComingSoonCallout />
  */
-const ComingSoonCallout = ({ type = "page" }) => {
+const ComingSoonCallout = ({ type = "page", className = "", style = {}, ...rest }) => {
   const rowStyle = {
     display: "flex",
     flexDirection: "row",
@@ -52,7 +52,7 @@ const ComingSoonCallout = ({ type = "page" }) => {
   };
 
   return (
-    <Callout icon="" color="var(--lp-color-callout-coming-soon)">
+    <Callout icon="" color="var(--lp-color-callout-coming-soon)" className={className} style={style} {...rest}>
       <div style={rowStyle}>
         <div style={{ flexShrink: 0 }}>
           <Icon
@@ -116,7 +116,7 @@ const ComingSoonCallout = ({ type = "page" }) => {
  * @example
  * <PreviewCallout />
  */
-const PreviewCallout = () => {
+const PreviewCallout = ({ className = "", style = {}, ...rest }) => {
   const rowStyle = {
     display: "flex",
     flexDirection: "row",
@@ -146,7 +146,7 @@ const PreviewCallout = () => {
     color: "var(--lp-color-callout-review)",
   };
   return (
-    <Callout icon="" color="var(--lp-color-callout-review)">
+    <Callout icon="" color="var(--lp-color-callout-review)" className={className} style={style} {...rest}>
       <div style={rowStyle}>
         <div style={{ flexShrink: 0 }}>
           <Icon icon="tools" size={30} color="var(--lp-color-callout-review)" />
@@ -200,9 +200,9 @@ const PreviewCallout = () => {
  * @example
  * <ReviewCallout />
  */
-const ReviewCallout = () => {
+const ReviewCallout = ({ className = "", style = {}, ...rest }) => {
   return (
-    <Callout icon="help" color="var(--lp-color-callout-review)">
+    <Callout icon="help" color="var(--lp-color-callout-review)" className={className} style={style} {...rest}>
       <div style={{ fontSize: "1.0rem" }}>
         Technical Review Needed! <br />
         Get in touch if you can help

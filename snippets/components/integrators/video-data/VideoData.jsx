@@ -23,7 +23,7 @@ import { YouTubeVideo } from "/snippets/components/displays/video/Video.jsx";
  * @example
  * <YouTubeVideoData limit={1} />
  */
-export const YouTubeVideoData = ({ items = [], limit, cols = 2 }) => {
+export const YouTubeVideoData = ({ items = [], limit, cols = 2, className = "", style = {}, ...rest }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
   if (!displayItems || displayItems.length === 0) {
     return (
@@ -42,7 +42,7 @@ export const YouTubeVideoData = ({ items = [], limit, cols = 2 }) => {
   };
 
   return (
-    <Columns cols={cols}>
+    <Columns cols={cols} className={className} style={style} {...rest}>
       {displayItems.map((item, idx) => {
         if (!item || !item.href) return null;
         return (

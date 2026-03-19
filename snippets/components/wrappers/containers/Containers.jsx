@@ -30,6 +30,8 @@ export const BorderedBox = ({
   borderRadius = "8px",
   accentBar = "",
   style = {},
+  className = "",
+  ...rest
 }) => {
   const variants = {
     default: {
@@ -53,6 +55,7 @@ export const BorderedBox = ({
   return (
     <div
       data-docs-bordered-box=""
+      className={className}
       style={{
         ...variants[variant],
         padding: padding,
@@ -62,6 +65,7 @@ export const BorderedBox = ({
           : {}),
         ...style,
       }}
+      {...rest}
     >
       {children}
     </div>
@@ -108,6 +112,8 @@ export const CenteredContainer = ({
   marginBottom = "",
   textAlign = "",
   style = {},
+  className = "",
+  ...rest
 }) => {
   const presets = {
     default: {},
@@ -134,6 +140,7 @@ export const CenteredContainer = ({
 
   return (
     <div
+      className={className}
       style={{
         maxWidth: presetStyle.maxWidth || maxWidth,
         margin: "0 auto",
@@ -147,6 +154,7 @@ export const CenteredContainer = ({
         ...(textAlign ? { textAlign } : {}),
         ...style,
       }}
+      {...rest}
     >
       {children}
     </div>
@@ -179,9 +187,12 @@ export const FullWidthContainer = ({
   children,
   backgroundColor,
   style = {},
+  className = "",
+  ...rest
 }) => {
   return (
     <div
+      className={className}
       style={{
         width: "100vw",
         position: "relative",
@@ -192,6 +203,7 @@ export const FullWidthContainer = ({
         ...(backgroundColor && { backgroundColor: backgroundColor }),
         ...style,
       }}
+      {...rest}
     >
       {children}
     </div>

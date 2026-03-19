@@ -19,6 +19,6 @@
  * <LatestVersion version="example" />
  */
 
-export const LatestVersion = ({ version }) => {
-  return <>{version}</>;
+export const LatestVersion = ({ version, className = "", style = {}, ...rest }) => {
+  return <span className={className} style={style} {...rest}>{version}</span>;
 };

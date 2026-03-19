@@ -18,7 +18,7 @@
  * @example
  * <Quote>Example content</Quote>
  */
-export const Quote = ({ children }) => {
+export const Quote = ({ children, className = "", style = {}, ...rest }) => {
   const quoteStyle = {
     fontSize: '1rem',
     textAlign: 'center',
@@ -29,8 +29,9 @@ export const Quote = ({ children }) => {
     borderRadius: '8px',
     padding: '1rem',
     margin: '1rem 0',
+    ...style,
   }
-  return <blockquote style={quoteStyle}>{children}</blockquote>
+  return <blockquote className={className} style={quoteStyle} {...rest}>{children}</blockquote>
 }
 
 /**
@@ -72,6 +73,8 @@ export const FrameQuote = ({
   borderColor,
   img,
   spacing = true,
+  className = "",
+  style = {},
   ...props
 }) => {
   const alignmentMap = {
@@ -151,13 +154,16 @@ export const FrameQuote = ({
 
   return frame ? (
     <div
+      className={className}
       style={{
         border: borderColor ? `1px solid ${borderColor}` : 'none',
         borderRadius: '8px',
         overflow: 'hidden',
+        ...style,
       }}
+      {...props}
     >
-      <Frame {...props} style={{ border: 'none' }}>
+      <Frame style={{ border: 'none' }}>
         {img && <img src={img.src} alt={img.alt} />}
         {content}
       </Frame>

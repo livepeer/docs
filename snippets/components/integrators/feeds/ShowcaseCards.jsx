@@ -23,7 +23,7 @@
  * @example
  * <ShowcaseCards />
  */
-export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10 }) => {
+export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10, className = "", style = {}, ...rest }) => {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [productFilter, setProductFilter] = useState("All");
@@ -93,6 +93,7 @@ export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10 }) => {
     contact = [],
     style = {},
     arrow = false,
+    className: cardClassName = "",
     ...cardProps
   }) => {
     const defaultMedia =
@@ -404,7 +405,7 @@ export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10 }) => {
     );
 
     return (
-      <Card href={href} arrow={false} {...cardProps}>
+      <Card href={href} arrow={false} className={cardClassName} {...cardProps}>
         {isDefaultMedia && logo ? logoMediaCard : mediaCard}
         <div style={subtitleContainerStyle}>
           {renderSubtitleArrow}
@@ -477,7 +478,7 @@ export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10 }) => {
   });
 
   return (
-    <div>
+    <div className={className} style={style} {...rest}>
       <div style={filterBarStyle}>
         <input
           type="text"

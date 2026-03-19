@@ -27,7 +27,9 @@ export const ScrollBox = ({
   maxHeight = 300,
   showHint = true,
   ariaLabel = "Scrollable content",
-  style,
+  style = {},
+  className = "",
+  ...rest
 }) => {
   const contentRef = useRef(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -49,7 +51,7 @@ export const ScrollBox = ({
   }, [maxHeight, children]);
 
   return (
-    <div style={{ position: "relative" }}>
+    <div className={className} style={{ position: "relative", ...style }} {...rest}>
       <div
         ref={contentRef}
         role="region"
@@ -60,7 +62,6 @@ export const ScrollBox = ({
             typeof maxHeight === "number" ? `${maxHeight}px` : maxHeight,
           overflowY: "auto",
           paddingRight: 4,
-          ...style,
         }}
         onScroll={(e) => {
           const el = e.target;

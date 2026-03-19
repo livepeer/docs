@@ -28,6 +28,9 @@ export const StyledSteps = ({
   titleColor,
   lineColor,
   iconSize = "24px",
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const stepsId = `styled-steps-${Math.random().toString(36).substr(2, 9)}`;
   const resolvedIconColor = iconColor || "var(--accent-dark, #18794E)";
@@ -35,7 +38,7 @@ export const StyledSteps = ({
   const resolvedLineColor = lineColor || "var(--accent)";
 
   return (
-    <>
+    <div className={className} style={style} {...rest}>
       <style>{`
         #${stepsId} .steps > div > div.absolute > div {
           background-color: ${resolvedIconColor};
@@ -50,7 +53,7 @@ export const StyledSteps = ({
       <div id={stepsId}>
         <Steps>{children}</Steps>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -77,9 +80,9 @@ export const StyledSteps = ({
  * @example
  * <StyledStep title="example" icon="example">Example content</StyledStep>
  */
-export const StyledStep = ({ title, icon, titleSize = "h3", children }) => {
+export const StyledStep = ({ title, icon, titleSize = "h3", children, className = "", style = {}, ...rest }) => {
   return (
-    <Step title={title} icon={icon} titleSize={titleSize}>
+    <Step title={title} icon={icon} titleSize={titleSize} className={className} style={style} {...rest}>
       {children}
     </Step>
   );

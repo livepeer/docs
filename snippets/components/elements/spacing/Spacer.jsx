@@ -21,14 +21,17 @@
  * @example
  * <Spacer />
  */
-export const Spacer = ({ size = "1rem", direction = "vertical" }) => {
+export const Spacer = ({ size = "1rem", direction = "vertical", className = "", style = {}, ...rest }) => {
   return (
     <div
+      className={className}
       style={{
         ...(direction === "vertical"
           ? { height: size, width: "100%" }
           : { width: size, height: "100%" }),
+        ...style,
       }}
+      {...rest}
     />
   );
 };

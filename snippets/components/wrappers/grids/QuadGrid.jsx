@@ -26,12 +26,15 @@
  * @example
  * <QuadGrid>Example</QuadGrid>
  */
-export const QuadGrid = ({ 
-  children, 
-  icon = "arrows-spin", 
-  iconSize = 50, 
+export const QuadGrid = ({
+  children,
+  icon = "arrows-spin",
+  iconSize = 50,
   iconColor = "var(--accent)",
   spinDuration = "10s",
+  className = "",
+  style = {},
+  ...rest
 }) => {
   if (children == null) {
     console.warn("[QuadGrid] Missing children");
@@ -39,7 +42,7 @@ export const QuadGrid = ({
   }
 
   return (
-    <div style={{ position: "relative" }}>
+    <div className={className} style={{ position: "relative", ...style }} {...rest}>
       <style>{`
         @keyframes quadGridSpin {
           from { transform: rotate(0deg); }

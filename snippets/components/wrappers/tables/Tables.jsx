@@ -20,7 +20,7 @@
  * @example
  * <StyledTable>Example content</StyledTable>
  */
-export const StyledTable = ({ children, variant = "default", style = {} }) => {
+export const StyledTable = ({ children, variant = "default", style = {}, className = "", ...rest }) => {
   const wrapperVariants = {
     default: {
       border: "1px solid var(--border)",
@@ -42,6 +42,7 @@ export const StyledTable = ({ children, variant = "default", style = {} }) => {
   return (
     <div
       data-docs-styled-table-shell
+      className={className}
       style={{
         width: "100%",
         padding: 0,
@@ -49,6 +50,7 @@ export const StyledTable = ({ children, variant = "default", style = {} }) => {
         ...wrapperVariants[variant],
         ...style,
       }}
+      {...rest}
     >
       <table
         data-docs-styled-table
@@ -95,6 +97,8 @@ export const TableRow = ({
   header = false,
   hover = false,
   style = {},
+  className = "",
+  ...rest
 }) => {
   const rowId = `table-row-${Math.random().toString(36).substr(2, 9)}`;
 
@@ -109,6 +113,7 @@ export const TableRow = ({
       )}
       <tr
         id={rowId}
+        className={className}
         style={{
           ...(header && {
             backgroundColor: "var(--accent-dark)",
@@ -117,6 +122,7 @@ export const TableRow = ({
           }),
           ...style,
         }}
+        {...rest}
       >
         {children}
       </tr>
@@ -152,17 +158,21 @@ export const TableCell = ({
   align = "left",
   header = false,
   style = {},
+  className = "",
+  ...rest
 }) => {
   const Component = header ? "th" : "td";
 
   return (
     <Component
+      className={className}
       style={{
         padding: "0.75rem 1rem",
         textAlign: align,
         border: header ? "none" : "1px solid var(--border)",
         ...style,
       }}
+      {...rest}
     >
       {children}
     </Component>

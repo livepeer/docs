@@ -17,8 +17,8 @@
  * @example
  * <BasicBtn />
  */
-export const BasicBtn = () => {
-  return <div></div>
+export const BasicBtn = ({ className = "", style = {}, ...rest }) => {
+  return <div className={className} style={style} {...rest}></div>
 }
 
 /**
@@ -51,6 +51,9 @@ export const DownloadButton = ({
   downloadLink,
   rightIcon = '',
   border = false,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const [isVisible, setIsVisible] = React.useState(false)
   const ref = React.useRef(null)
@@ -86,15 +89,16 @@ export const DownloadButton = ({
 
   if (!isVisible) {
     return (
-      <span ref={ref} style={{ minHeight: '20px', display: 'inline-block' }} />
+      <span ref={ref} className={className} style={{ minHeight: '20px', display: 'inline-block', ...style }} {...rest} />
     )
   }
 
   return (
     <span
       ref={ref}
-      style={
-        border
+      className={className}
+      style={{
+        ...(border
           ? {
               border: '1px solid grey',
               borderRadius: '6px',
@@ -102,8 +106,10 @@ export const DownloadButton = ({
               display: 'inline-block',
               cursor: 'pointer',
             }
-          : { cursor: 'pointer' }
-      }
+          : { cursor: 'pointer' }),
+        ...style,
+      }}
+      {...rest}
     >
       <Icon icon={icon} size={18} color="var(--accent)" />
       <button

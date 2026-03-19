@@ -30,6 +30,9 @@ export const ScrollableDiagram = ({
   maxHeight = "500px",
   minWidth = "100%",
   showControls = false,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const [zoom, setZoom] = useState(100);
 
@@ -61,7 +64,7 @@ export const ScrollableDiagram = ({
 
   return (
     <>
-      <div style={{ position: "relative", marginBottom: "1rem" }}>
+      <div className={className} style={{ position: "relative", marginBottom: "1rem", ...style }} {...rest}>
         {title && (
           <p
             style={{

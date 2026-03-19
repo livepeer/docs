@@ -21,7 +21,7 @@
  * @example
  * <CustomCardTitle icon="sparkles" title="Example" style={{}} />
  */
-export const CustomCardTitle = ({ icon, title, style }) => {
+export const CustomCardTitle = ({ icon, title, style = {}, className = "", ...rest }) => {
   const titleStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -33,7 +33,7 @@ export const CustomCardTitle = ({ icon, title, style }) => {
     ...style,
   }
   return (
-    <div style={titleStyle}>
+    <div className={className} style={titleStyle} {...rest}>
       <Icon icon={icon} size={20} color="var(--accent)" />
       {title}
     </div>

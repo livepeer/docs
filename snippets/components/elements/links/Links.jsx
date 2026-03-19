@@ -30,6 +30,9 @@ const CustomCallout = ({
   iconSize = 16,
   textSize = "0.875rem",
   textColor,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   // Use theme accent if no color specified
   const resolvedColor = color || "var(--accent)";
@@ -44,36 +47,37 @@ const CustomCallout = ({
   };
 
   return (
-    <>
+    <div
+      className={className}
+      style={{
+        display: "flex",
+        alignItems: "flex-start",
+        gap: "12px",
+        padding: "16px 20px",
+        borderRadius: "16px",
+        border: `1px solid ${hexToRgba(resolvedColor, 0.2)}`,
+        backgroundColor: hexToRgba(resolvedColor, 0.1),
+        marginTop: "16px",
+        marginBottom: "16px",
+        overflow: "hidden",
+        ...style,
+      }}
+      {...rest}
+    >
+      <div style={{ marginTop: "2px", width: iconSize, flexShrink: 0 }}>
+        <Icon icon={icon} size={iconSize} color={resolvedColor} />
+      </div>
       <div
         style={{
-          display: "flex",
-          alignItems: "flex-start",
-          gap: "12px",
-          padding: "16px 20px",
-          borderRadius: "16px",
-          border: `1px solid ${hexToRgba(resolvedColor, 0.2)}`,
-          backgroundColor: hexToRgba(resolvedColor, 0.1),
-          marginTop: "16px",
-          marginBottom: "16px",
-          overflow: "hidden",
+          fontSize: textSize,
+          color: resolvedTextColor,
+          minWidth: 0,
+          width: "100%",
         }}
       >
-        <div style={{ marginTop: "2px", width: iconSize, flexShrink: 0 }}>
-          <Icon icon={icon} size={iconSize} color={resolvedColor} />
-        </div>
-        <div
-          style={{
-            fontSize: textSize,
-            color: resolvedTextColor,
-            minWidth: 0,
-            width: "100%",
-          }}
-        >
-          {children}
-        </div>
+        {children}
       </div>
-    </>
+    </div>
   );
 };
 
@@ -99,10 +103,10 @@ const CustomCallout = ({
  * @example
  * <BlinkingIcon color="example" />
  */
-const BlinkingIcon = ({ icon = "terminal", size = 16, color }) => {
+const BlinkingIcon = ({ icon = "terminal", size = 16, color, className = "", style = {}, ...rest }) => {
   const resolvedColor = color || "var(--accent)";
   return (
-    <>
+    <span className={className} style={{ display: "inline-flex", ...style }} {...rest}>
       <style>{`
         @keyframes blink {
           0%, 100% { opacity: 1; }
@@ -120,7 +124,7 @@ const BlinkingIcon = ({ icon = "terminal", size = 16, color }) => {
       >
         <Icon icon={icon} size={size} color={resolvedColor} />
       </span>
-    </>
+    </span>
   );
 };
 
@@ -177,24 +181,28 @@ const DoubleIconLink = ({
   text = "",
   iconLeft = "github",
   iconRight = "arrow-up-right",
+  className = "",
+  style = {},
+  ...rest
 }) => {
   return (
-    <>
-      <span
-        style={{
-          whiteSpace: "nowrap",
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "0.25rem",
-          marginLeft: "0.3rem",
-        }}
-      >
-        {text && <span style={{ marginRight: 8 }}>{text}</span>}
-        <Icon icon={iconLeft} />
-        <a href={href}>{label}</a>
-        <Icon icon={iconRight} size={12} color="var(--accent)" />
-      </span>
-    </>
+    <span
+      className={className}
+      style={{
+        whiteSpace: "nowrap",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.25rem",
+        marginLeft: "0.3rem",
+        ...style,
+      }}
+      {...rest}
+    >
+      {text && <span style={{ marginRight: 8 }}>{text}</span>}
+      <Icon icon={iconLeft} />
+      <a href={href}>{label}</a>
+      <Icon icon={iconRight} size={12} color="var(--accent)" />
+    </span>
   );
 };
 
@@ -226,9 +234,12 @@ const GotoLink = ({
   relativePath,
   text = "",
   icon = "arrow-turn-down-right",
+  className = "",
+  style = {},
+  ...rest
 }) => {
   return (
-    <span style={{ display: "inline-flex", alignItems: "center" }}>
+    <span className={className} style={{ display: "inline-flex", alignItems: "center", ...style }} {...rest}>
       <span style={{ marginRight: 8 }}>{text}</span>
       <Icon icon={icon} aria-hidden="true" />
       <a href={relativePath} style={{ marginLeft: 6 }}>
@@ -263,10 +274,10 @@ const GotoLink = ({
  * @example
  * <GotoCard label="example" relativePath="example" />
  */
-const GotoCard = ({ label, relativePath, icon, text, cta = "", ...props }) => {
+const GotoCard = ({ label, relativePath, icon, text, cta = "", className = "", style = {}, ...props }) => {
   icon = icon ? icon : "arrow-turn-down-right";
   return (
-    <Card title={label} icon={icon} href={relativePath} cta={cta} {...props}>
+    <Card title={label} icon={icon} href={relativePath} cta={cta} className={className} style={style} {...props}>
       {text}
     </Card>
   );
@@ -304,6 +315,9 @@ const TipWithArrow = ({
   color,
   iconSize = 16,
   arrowSize = 16,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   // Use theme accent if no color specified
   const resolvedColor = color || "var(--accent)";
@@ -317,48 +331,49 @@ const TipWithArrow = ({
   };
 
   return (
-    <>
+    <div
+      className={className}
+      style={{
+        position: "relative",
+        display: "flex",
+        alignItems: "flex-start",
+        gap: "12px",
+        padding: "16px 20px",
+        paddingRight: "48px", // Extra space for the arrow
+        borderRadius: "16px",
+        border: `1px solid ${hexToRgba(resolvedColor, 0.2)}`,
+        backgroundColor: hexToRgba(resolvedColor, 0.1),
+        marginTop: "16px",
+        marginBottom: "16px",
+        overflow: "hidden",
+        ...style,
+      }}
+      {...rest}
+    >
+      <div style={{ marginTop: "2px", width: iconSize, flexShrink: 0 }}>
+        <Icon icon={icon} size={iconSize} color={resolvedColor} />
+      </div>
       <div
         style={{
-          position: "relative",
-          display: "flex",
-          alignItems: "flex-start",
-          gap: "12px",
-          padding: "16px 20px",
-          paddingRight: "48px", // Extra space for the arrow
-          borderRadius: "16px",
-          border: `1px solid ${hexToRgba(resolvedColor, 0.2)}`,
-          backgroundColor: hexToRgba(resolvedColor, 0.1),
-          marginTop: "16px",
-          marginBottom: "16px",
-          overflow: "hidden",
+          fontSize: "0.875rem",
+          color: resolvedColor,
+          minWidth: 0,
+          width: "100%",
         }}
       >
-        <div style={{ marginTop: "2px", width: iconSize, flexShrink: 0 }}>
-          <Icon icon={icon} size={iconSize} color={resolvedColor} />
-        </div>
-        <div
-          style={{
-            fontSize: "0.875rem",
-            color: resolvedColor,
-            minWidth: 0,
-            width: "100%",
-          }}
-        >
-          {children}
-        </div>
-        <div
-          style={{
-            position: "absolute",
-            top: "16px",
-            right: "16px",
-            opacity: 0.6,
-          }}
-        >
-          <Icon icon={arrowIcon} size={arrowSize} color={resolvedColor} />
-        </div>
+        {children}
       </div>
-    </>
+      <div
+        style={{
+          position: "absolute",
+          top: "16px",
+          right: "16px",
+          opacity: 0.6,
+        }}
+      >
+        <Icon icon={arrowIcon} size={arrowSize} color={resolvedColor} />
+      </div>
+    </div>
   );
 };
 
@@ -392,6 +407,9 @@ const LinkArrow = ({
   description,
   newline = true,
   borderColor,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   const linkArrowStyle = {
     display: "inline-flex",
@@ -402,7 +420,7 @@ const LinkArrow = ({
     ...(borderColor && { borderColor }),
   };
   return (
-    <>
+    <span className={className} style={style} {...rest}>
       {newline && <br />}
       <span style={linkArrowStyle}>
         <a href={href} target="_blank" rel="noopener noreferrer">
@@ -412,7 +430,7 @@ const LinkArrow = ({
       </span>
       {description && description}
       {description && <div style={{ height: "0.75rem" }} />}
-    </>
+    </span>
   );
 };
 

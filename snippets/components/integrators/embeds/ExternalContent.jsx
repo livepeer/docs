@@ -30,15 +30,21 @@ export const ExternalContent = ({
   maxHeight = "1000px",
   icon = "github",
   children,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   return (
     <div
+      className={className}
       style={{
         border: "1px solid var(--accent)",
           borderRadius: "8px",
           overflow: "hidden",
           marginTop: "1rem",
+          ...style,
         }}
+      {...rest}
       >
         <div
           style={{

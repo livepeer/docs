@@ -28,13 +28,16 @@ export const DynamicTable = ({
   itemsList = [],
   monospaceColumns = [],
   margin,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   if (!headerList.length) {
     return <div>No headers provided</div>;
   }
 
   return (
-    <>
+    <div className={className} style={style} {...rest}>
       {tableTitle && (
         <div style={{ fontStyle: "italic", margin: 0 }}>
           <strong>{tableTitle}</strong>
@@ -128,6 +131,6 @@ export const DynamicTable = ({
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 };

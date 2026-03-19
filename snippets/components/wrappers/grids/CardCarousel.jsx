@@ -29,7 +29,9 @@ export const CardCarousel = ({
   visibleCount = 3,
   gap = "1.5rem",
   showDots = true,
-  style,
+  style = {},
+  className = "",
+  ...rest
 }) => {
   const cards = useMemo(() => {
     if (children == null || children === false) return [];
@@ -58,6 +60,7 @@ export const CardCarousel = ({
 
   return (
     <div
+      className={className}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -65,6 +68,7 @@ export const CardCarousel = ({
         width: "100%",
         ...style,
       }}
+      {...rest}
     >
       <div
         style={{

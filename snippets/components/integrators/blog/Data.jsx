@@ -65,6 +65,9 @@ export const BlogCard = ({
   dateIcon = "calendar",
   cta = "Read More",
   img = null,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   // Show hint if content is likely to overflow (>500 chars as proxy)
   const showScrollHint = content && content.length > 500;
@@ -132,6 +135,8 @@ export const BlogCard = ({
 
   return (
     <Card
+      className={className}
+      style={style}
       title={
         <span style={titleStyle}>
           <span style={{ alignSelf: "top" }}>
@@ -144,6 +149,7 @@ export const BlogCard = ({
       cta={cta}
       img={img}
       arrow
+      {...rest}
     >
       {/* <div style={{ display: "flex", flexDirection: "row", gap: "0.5rem" }}> */}
       <div style={{ flex: 1 }}>
@@ -227,7 +233,7 @@ export const BlogCard = ({
  * @example
  * <CardBlogDataLayout limit={1} />
  */
-export const CardBlogDataLayout = ({ items = [], limit }) => {
+export const CardBlogDataLayout = ({ items = [], limit, className = "", style = {}, ...rest }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
   if (!displayItems || displayItems.length === 0) {
     return (
@@ -239,7 +245,7 @@ export const CardBlogDataLayout = ({ items = [], limit }) => {
     );
   }
   return (
-    <div>
+    <div className={className} style={style} {...rest}>
       {displayItems.map((props, idx) => (
         <BlogCard key={props.href || idx} {...props} />
       ))}
@@ -269,10 +275,10 @@ export const CardBlogDataLayout = ({ items = [], limit }) => {
  * @example
  * <ColumnsBlogCardLayout limit={1} />
  */
-export const ColumnsBlogCardLayout = ({ items = [], cols = 2, limit }) => {
+export const ColumnsBlogCardLayout = ({ items = [], cols = 2, limit, className = "", style = {}, ...rest }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
   return (
-    <Columns cols={cols}>
+    <Columns cols={cols} className={className} style={style} {...rest}>
       {displayItems.map((props, idx) => (
         <BlogCard key={props.href || idx} {...props} />
       ))}
@@ -301,10 +307,10 @@ export const ColumnsBlogCardLayout = ({ items = [], cols = 2, limit }) => {
  * @example
  * <BlogDataLayout limit={1} />
  */
-export const BlogDataLayout = ({ items = [], limit }) => {
+export const BlogDataLayout = ({ items = [], limit, className = "", style = {}, ...rest }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
   return (
-    <div>
+    <div className={className} style={style} {...rest}>
       {displayItems.map((props, idx) => (
         <BlogCard key={props.href || idx} {...props} />
       ))}
@@ -354,13 +360,16 @@ export const PostCard = ({
   dateIcon = "calendar",
   cta = "Read More",
   img = null,
+  className = "",
+  style = {},
+  ...rest
 }) => {
   // Show hint if content is likely to overflow (>500 chars as proxy)
   const showScrollHint = content && content.length > 500;
 
   // FIX STYLES
   return (
-    <Card title={title} icon={icon} href={href} cta={cta} img={img} arrow>
+    <Card className={className} style={style} title={title} icon={icon} href={href} cta={cta} img={img} arrow {...rest}>
       {author && (
         <div
           style={{
@@ -472,12 +481,12 @@ export const PostCard = ({
  * @example
  * <CardColumnsPostLayout limit={1} />
  */
-export const CardColumnsPostLayout = ({ cols = 2, items = [], limit }) => {
+export const CardColumnsPostLayout = ({ cols = 2, items = [], limit, className = "", style = {}, ...rest }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
 
   return (
     <>
-      <Columns cols={cols}>
+      <Columns cols={cols} className={className} style={style} {...rest}>
         {displayItems.map((props, idx) => (
           <PostCard key={props.href || idx} {...props} />
         ))}
@@ -507,9 +516,12 @@ export const CardColumnsPostLayout = ({ cols = 2, items = [], limit }) => {
  * @example
  * <CardInCardLayout limit={1} />
  */
-export const CardInCardLayout = ({ items = [], limit }) => {
+export const CardInCardLayout = ({ items = [], limit, className = "", style = {}, ...rest }) => {
   return (
     <Card
+      className={className}
+      style={style}
+      {...rest}
       img="/snippets/automations/forum/Hero_Livepeer_Forum.png"
       href="https://forum.livepeer.org"
       arrow={false}
@@ -540,9 +552,9 @@ export const CardInCardLayout = ({ items = [], limit }) => {
  * @example
  * <ForumLatestLayout limit={1} />
  */
-export const ForumLatestLayout = ({ items = [], limit }) => {
+export const ForumLatestLayout = ({ items = [], limit, className = "", style = {}, ...rest }) => {
   return (
-    <>
+    <div className={className} style={style} {...rest}>
       <a href="https://forum.livepeer.org" target="_blank" rel="noopener noreferrer">
         <img
           src="/snippets/automations/forum/Hero_Livepeer_Forum.png"
@@ -558,7 +570,7 @@ export const ForumLatestLayout = ({ items = [], limit }) => {
       </a>
 
       <CardColumnsPostLayout cols={2} items={items} limit={limit} />
-    </>
+    </div>
   );
 };
 
@@ -583,7 +595,7 @@ export const ForumLatestLayout = ({ items = [], limit }) => {
  * @example
  * <DiscordAnnouncements limit={1} />
  */
-export const DiscordAnnouncements = ({ items = [], limit }) => {
+export const DiscordAnnouncements = ({ items = [], limit, className = "", style = {}, ...rest }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
   if (!displayItems || displayItems.length === 0) {
     return (
@@ -607,6 +619,7 @@ export const DiscordAnnouncements = ({ items = [], limit }) => {
 
   return (
     <div
+      className={className}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -614,7 +627,9 @@ export const DiscordAnnouncements = ({ items = [], limit }) => {
         border: "1px solid var(--accent)",
         borderRadius: "0.5rem",
         padding: "1rem",
+        ...style,
       }}
+      {...rest}
     >
       {displayItems.map((announcement, index) => (
         <div key={announcement.id} href={announcement.url} target="_blank" rel="noopener noreferrer">
@@ -700,7 +715,7 @@ export const DiscordAnnouncements = ({ items = [], limit }) => {
  * @example
  * <LumaEvents data="example" limit={1} />
  */
-export const LumaEvents = ({ data, limit, type = "upcoming" }) => {
+export const LumaEvents = ({ data, limit, type = "upcoming", className = "", style = {}, ...rest }) => {
   let events = [];
 
   if (type === "all") {
@@ -731,7 +746,7 @@ export const LumaEvents = ({ data, limit, type = "upcoming" }) => {
     //     gap: "1rem",
     //   }}
     // >
-    <Columns cols={3}>
+    <Columns cols={3} className={className} style={style} {...rest}>
       {displayEvents.map((event, index) => (
         <Card
           key={index}

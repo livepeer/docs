@@ -20,7 +20,7 @@
  * @example
  * <MarkdownEmbed url="/example" />
  */
-export const MarkdownEmbed = ({ url }) => {
+export const MarkdownEmbed = ({ url, className = "", style = {}, ...rest }) => {
   const [content, setContent] = useState('')
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export const MarkdownEmbed = ({ url }) => {
       .then(setContent)
   }, [url])
 
-  return <Markdown>{content}</Markdown>
+  return <div className={className} style={style} {...rest}><Markdown>{content}</Markdown></div>
 }
 
 /**
@@ -79,14 +79,17 @@ export const PdfEmbed = ({
   src,
   height = '700px',
   width = '100%',
+  className = "",
+  style = {},
+  ...rest
 }) => (
-  <Frame caption={title}>
+  <Frame caption={title} className={className} style={style} {...rest}>
     <iframe src={src} width={width} height={height} frameBorder="0" title={title}></iframe>
   </Frame>
 )
 
 // ARCHIVED: duplicate of MarkdownEmbed - see tasks/reports/archived-components-review.md
-export const EmbedMarkdown = ({ url }) => <MarkdownEmbed url={url} />
+export const EmbedMarkdown = ({ url, className = "", style = {}, ...rest }) => <MarkdownEmbed url={url} className={className} style={style} {...rest} />
 
 /**
  * @component TwitterTimeline
@@ -107,15 +110,18 @@ export const EmbedMarkdown = ({ url }) => <MarkdownEmbed url={url} />
  * @example
  * <TwitterTimeline />
  */
-export const TwitterTimeline = ({}) => {
+export const TwitterTimeline = ({ className = "", style = {}, ...rest }) => {
   return (
     <div
+      className={className}
       style={{
         border: '3px solid var(--accent)',
         borderRadius: '12px',
         overflow: 'hidden',
         height: '600px',
+        ...style,
       }}
+      {...rest}
     >
       <iframe
         src="https://feed.mikle.com/widget/v2/176804/"
