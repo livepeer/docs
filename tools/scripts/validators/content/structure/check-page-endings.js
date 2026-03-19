@@ -7,7 +7,7 @@
  * @purpose     qa:content-quality
  * @description Validates that English v2 MDX pages end with an approved navigational or closing element
  * @mode        read-only
- * @pipeline    manual, ci
+ * @pipeline    manual → staged .mdx files → exit-code, stdout:violations; --fix → staged .mdx files → TODO comment appended, ci
  * @scope       tools/scripts/validators/content, v2
  * @usage       node tools/scripts/validators/content/structure/check-page-endings.js [--fix] [--json]
  * @policy      R-R14

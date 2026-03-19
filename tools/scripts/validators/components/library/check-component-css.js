@@ -7,7 +7,7 @@
  * @purpose     qa:repo-health
  * @description Validates component files against component governance styling rules.
  * @mode        read-only
- * @pipeline    manual, P3
+ * @pipeline    manual → component .jsx files → exit-code, stdout:violations; --fix → component .jsx files → CSS token replacements, P3
  * @scope       single-domain
  * @usage       node tools/scripts/validators/components/library/check-component-css.js [--path snippets/components] [--staged] [--fix] [--help]
  * @policy      R-R10

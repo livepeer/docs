@@ -7,7 +7,7 @@
  * @purpose     qa:content-quality
  * @description Detects and fixes incorrect proper noun capitalisation in prose while skipping code, frontmatter, URLs, and path-like tokens.
  * @mode        read-only
- * @pipeline    manual
+ * @pipeline    manual → staged .mdx files → exit-code, stdout:violations; --fix → staged .mdx files → edited files
  * @scope       v2, tools/scripts/validators/content, tests/config/spell-dict.json
  * @usage       node tools/scripts/validators/content/grammar/check-proper-nouns.js [--file <path[,path...]>] [--fix]
  * @policy      E-R1, R-R11

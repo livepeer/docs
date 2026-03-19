@@ -7,7 +7,7 @@
  * @purpose     qa:content-quality
  * @description Deterministic UK English grammar checker for prose content with optional conservative autofix for safe rules.
  * @mode        read-only
- * @pipeline    manual/CI validator for English v2 docs and explicit content files
+ * @pipeline    manual → staged .mdx files → exit-code, stdout:violations; --fix → staged .mdx files → edited files/CI validator for English v2 docs and explicit content files
  * @scope       tools/scripts/validators/content, tools/script-index.md, tests/script-index.md, docs-guide/catalog/scripts-catalog.mdx, v2
  * @usage       node tools/scripts/validators/content/grammar/check-grammar-en-gb.js [--scope full|changed] [--file <path[,path...]>] [--fix] [--strict]
  * @policy      SE-1-11, S-1.15
