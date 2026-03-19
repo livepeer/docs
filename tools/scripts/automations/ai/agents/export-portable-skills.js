@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      export-portable-skills
- * @type        dispatch
+ * @type        automation
  * @concern     ai
  * @niche       agents
  * @purpose     governance:agent-governance
@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts, ai-tools/ai-skills/templates, ai-tools/agent-packs, too../../../../lib/codex-skill-templates.js, tests/unit/export-portable-skills.test.js
- * @usage       node tools/scripts/dispatch/ai/agents/export-portable-skills.js --write|--check [--skills name[,name...]]
+ * @usage       node tools/scripts/automations/ai/agents/export-portable-skills.js --write|--check [--skills name[,name...]]
  * @policy      R-R27, R-R30
  */
 

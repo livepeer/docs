@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      sync-codex-skills
- * @type        dispatch
+ * @type        automation
  * @concern     ai
  * @niche       agents
  * @purpose     governance:agent-governance
@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts, ai-tools/ai-skills/templates, tests/unit/codex-skill-sync.test.js
- * @usage       node tools/scripts/dispatch/ai/agents/sync-codex-skills.js [flags]
+ * @usage       node tools/scripts/automations/ai/agents/sync-codex-skills.js [flags]
  * @policy      R-R27, R-R30
  */
 

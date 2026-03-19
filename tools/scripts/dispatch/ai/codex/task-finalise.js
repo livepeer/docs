@@ -132,7 +132,7 @@ function main() {
   }
 
   console.log('🔍 Running local lock check...');
-  if (!run('node', ['tools/scripts/dispatch/ai/codex/validate-locks.js', '--branch', branch])) {
+  if (!run('node', ['tools/scripts/validators/ai/codex/validate-locks.js', '--branch', branch])) {
     throw new Error('Local lock check failed');
   }
 
@@ -160,8 +160,8 @@ function main() {
   console.log('✅ Codex task finalize checks passed');
   console.log('ℹ️  Next steps:');
   console.log(`  1. Commit or merge ${branch} into ${args.baseRef || 'docs-v2-dev'}`);
-  console.log(`  2. After ${args.baseRef || 'docs-v2-dev'} contains the task commit, node tools/scripts/dispatch/ai/codex/lock-release.js --branch ${branch}`);
-  console.log(`  3. After ${args.baseRef || 'docs-v2-dev'} contains the task commit, node tools/scripts/dispatch/ai/codex/task-cleanup.js --branch ${branch} --apply`);
+  console.log(`  2. After ${args.baseRef || 'docs-v2-dev'} contains the task commit, node tools/scripts/automations/ai/codex/lock-release.js --branch ${branch}`);
+  console.log(`  3. After ${args.baseRef || 'docs-v2-dev'} contains the task commit, node tools/scripts/automations/ai/codex/task-cleanup.js --branch ${branch} --apply`);
 }
 
 if (require.main === module) {

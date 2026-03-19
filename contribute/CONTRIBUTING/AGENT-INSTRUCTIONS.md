@@ -39,14 +39,14 @@ Recommended lifecycle:
 
 ```bash
 # Start task scaffold (branch + contract + local lock)
-node tools/scripts/dispatch/ai/codex/task-preflight.js --task <issue-id> --slug <slug> --scope <a,b,c>
+node tools/scripts/automations/ai/codex/task-preflight.js --task <issue-id> --slug <slug> --scope <a,b,c>
 
 # Validate local lock + scope before commit
-node tools/scripts/dispatch/ai/codex/validate-locks.js --staged
+node tools/scripts/validators/ai/codex/validate-locks.js --staged
 
 # Finalize before PR, then release lock when done
 node tools/scripts/dispatch/ai/codex/task-finalise.js
-node tools/scripts/dispatch/ai/codex/lock-release.js
+node tools/scripts/automations/ai/codex/lock-release.js
 ```
 
 PR autofill command:

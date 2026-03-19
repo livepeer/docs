@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # @script      check-no-ai-stash
-# @type        dispatch
+# @type        validator
 # @concern     ai
 # @niche       codex
 # @purpose     governance:agent-governance
@@ -8,7 +8,7 @@
 # @mode        execute
 # @pipeline    manual
 # @scope       tools/scripts, .githooks/pre-commit
-# @usage       bash tools/scripts/dispatch/ai/codex/check-no-ai-stash.sh [flags]
+# @usage       bash tools/scripts/validators/ai/codex/check-no-ai-stash.sh [flags]
 # @policy      R-R27, R-R30
 set -euo pipefail
 

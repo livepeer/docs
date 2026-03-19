@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      codex/lock-release
- * @type        dispatch
+ * @type        automation
  * @concern     ai
  * @niche       codex
  * @purpose     governance:agent-governance
@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       tools/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
- * @usage       node tools/scripts/dispatch/ai/codex/lock-release.js [flags]
+ * @usage       node tools/scripts/automations/ai/codex/lock-release.js [flags]
  * @policy      R-R27, R-R30
  */
 

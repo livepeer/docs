@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      publish-v2-internal-reports
- * @type        dispatch
+ * @type        automation
  * @concern     governance
  * @niche       pipelines
  * @purpose     qa:repo-health
@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts, tools/config, v2/internal, docs.json, tasks/reports, tests/reports
- * @usage       node tools/scripts/dispatch/governance/pipelines/publish-v2-internal-reports.js [flags]
+ * @usage       node tools/scripts/automations/governance/pipelines/publish-v2-internal-reports.js [flags]
  * @policy      E-C1, R-R14
  */
 

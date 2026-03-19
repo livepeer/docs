@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      codex/validate-locks
- * @type        dispatch
+ * @type        validator
  * @concern     ai
  * @niche       codex
  * @purpose     governance:agent-governance
@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    commit), P2 (push)
  * @scope       tools/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
- * @usage       node tools/scripts/dispatch/ai/codex/validate-locks.js [flags]
+ * @usage       node tools/scripts/validators/ai/codex/validate-locks.js [flags]
  * @policy      R-R27, R-R30
  */
 
