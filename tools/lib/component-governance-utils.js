@@ -121,7 +121,8 @@ function isLegacyDuplicateComponentPath(filePath) {
 
 function isLegacyShimComponentPath(filePath) {
   const repoPath = normalizeRepoPath(filePath);
-  return repoPath === 'snippets/components/content/math.jsx' || repoPath === 'snippets/components/content/release.jsx';
+  // Legacy shims have been archived; this check is retained for backward compatibility
+  return false;
 }
 
 function hasGovernableExport(filePath) {
