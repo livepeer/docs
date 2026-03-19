@@ -16,13 +16,13 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const DEFAULT_TARGET = 'snippets/components';
-const DEFAULT_MODE = process.env.LP_COMPONENT_NAMING_MODE || 'strict-camel';
+const DEFAULT_MODE = process.env.LP_COMPONENT_NAMING_MODE || 'strict-pascal';
 const VALID_MODES = new Set(['migration', 'strict-camel']);
 const FILE_RULE_LABEL = '[4.6]';
 const EXPORT_RULE_LABEL = '[4.7]';
 const CAMEL_FILE_NAME_RE = /^[a-z][a-zA-Z0-9]*\.jsx$/;
 const KEBAB_FILE_NAME_RE = /^[a-z][a-z0-9-]*\.jsx$/;
-const PASCAL_FILE_NAME_RE = /^[A-Z][a-zA-Z0-9]*\.jsx$/;
+const PASCAL_FILE_NAME_RE = /^[A-Z][a-zA-Z0-9]*\.(?:jsx|mdx)$/;
 const EXPORT_NAME_RE = /^[A-Z][a-zA-Z0-9]*$/;
 
 function getRepoRoot() {
@@ -442,6 +442,9 @@ function usesDisplayKebabCase(displayPath) {
 }
 
 function isAllowedFilename(fileName, mode, displayPath) {
+  if (mode === 'strict-pascal') {
+    return PASCAL_FILE_NAME_RE.test(fileName);
+  }
   if (mode === 'strict-camel') {
     if (usesDisplayKebabCase(displayPath)) {
       return KEBAB_FILE_NAME_RE.test(fileName);
@@ -457,6 +460,9 @@ function isAllowedFilename(fileName, mode, displayPath) {
 }
 
 function fileNamingMessage(mode, fileName, displayPath) {
+  if (mode === 'strict-pascal') {
+    return `Filename must be PascalCase: ${fileName}`;
+  }
   if (mode === 'strict-camel') {
     if (usesDisplayKebabCase(displayPath)) {
       return `Filename must be kebab-case in display/: ${fileName}`;
