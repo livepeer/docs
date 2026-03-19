@@ -20,12 +20,12 @@ primary_paths:
   - "docs-guide/tooling/review-packet-plan-template.md"
 primary_commands:
   - "node tests/unit/copy-lint.test.js --files [csv]"
-  - "node tools/scripts/lint-copy.js [file-or-glob]"
-  - "node tools/scripts/lint-structure.js [file]"
-  - "node tools/scripts/lint-patterns.js [file-or-glob]"
-  - "node tools/scripts/pattern-observer.js --tab [name] --output [file]"
-  - "node tools/scripts/docs-page-research.js --files [csv] --report-md [file] --report-json [file]"
-  - "node tools/scripts/docs-page-research-pr-report.js --files [csv] --report-md [file] --report-json [file]"
+  - "node tools/scripts/validators/content/copy/lint-copy.js [file-or-glob]"
+  - "node tools/scripts/validators/content/structure/lint-structure.js [file]"
+  - "node tools/scripts/validators/content/copy/lint-patterns.js [file-or-glob]"
+  - "node tools/scripts/audits/content/veracity/pattern-observer.js --tab [name] --output [file]"
+  - "node tools/scripts/audits/content/veracity/docs-page-research.js --files [csv] --report-md [file] --report-json [file]"
+  - "node tools/scripts/dispatch/content/veracity/docs-page-research-pr-report.js --files [csv] --report-md [file] --report-json [file]"
 ---
 
 SKILL: Docs Review Packet Generation

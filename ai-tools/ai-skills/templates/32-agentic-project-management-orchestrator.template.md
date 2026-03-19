@@ -18,7 +18,7 @@ primary_paths:
   - "docs-guide/features/architecture-map.mdx"
   - "tests/README.md"
 primary_commands:
-  - "node tools/scripts/generate-docs-guide-indexes.js --check"
+  - "node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check"
   - "node tests/run-all.js --staged --skip-browser"
 ---
 
@@ -54,7 +54,7 @@ Workflow
 
 Command examples
 ```bash
-node tools/scripts/generate-docs-guide-indexes.js --check
+node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --check
 node tests/run-all.js --staged --skip-browser
 ```
 

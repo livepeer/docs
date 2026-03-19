@@ -13,8 +13,8 @@ invoke_when:
   - "build a research packet for these docs pages"
 primary_paths:
   - "tools/scripts/docs-research-packet.js"
-  - "tools/scripts/docs-page-research.js"
-  - "tools/scripts/docs-page-research-pr-report.js"
+  - "tools/scripts/audits/content/veracity/docs-page-research.js"
+  - "tools/scripts/dispatch/content/veracity/docs-page-research-pr-report.js"
   - "tools/scripts/docs-fact-registry.js"
   - "tools/scripts/docs-research-adjudication.js"
   - "docs-guide/frameworks/research-skill-workflow.mdx"
@@ -47,8 +47,8 @@ Workflow
 1. Classify the request into one packet mode: `nav`, `manifest`, or `paths`.
 2. Validate the fact registry and adjudication ledger before tranche execution.
 3. Derive tranche order from the nav source, manifest, or explicit path split requested by the user.
-4. Run `tools/scripts/docs-page-research.js` for each tranche and save `research-pages.md` and `research-pages.json`.
-5. Run `tools/scripts/docs-page-research-pr-report.js` for the same tranche and save `research-pr.md` and `research-pr.json`.
+4. Run `tools/scripts/audits/content/veracity/docs-page-research.js` for each tranche and save `research-pages.md` and `research-pages.json`.
+5. Run `tools/scripts/dispatch/content/veracity/docs-page-research-pr-report.js` for the same tranche and save `research-pr.md` and `research-pr.json`.
 6. Build `03-research.md`, `research-summary.json`, `00-master-packet.md`, and `packet-summary.json` without collapsing page-run and PR-run deltas.
 7. Return the packet root, the scope source used, the validation status, and any blocked tranche details.
 
