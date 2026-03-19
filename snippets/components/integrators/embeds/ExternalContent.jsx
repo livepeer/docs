@@ -58,7 +58,7 @@ export const ExternalContent = ({
           </span>
           <a
             href={githubUrl}
-            target="_blank"
+            target="_blank" rel="noopener noreferrer"
             style={{
               color: "var(--accent)",
               fontSize: "0.875rem",

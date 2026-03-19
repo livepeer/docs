@@ -90,7 +90,7 @@ export const SocialLinks = ({
       >
                 <a
           href="https://discord.com/invite/livepeer"
-          target="_blank"
+          target="_blank" rel="noopener noreferrer"
           rel="noopener noreferrer"
           style={linkStyle}
         >
@@ -100,7 +100,7 @@ export const SocialLinks = ({
         </a>
         <a
           href="https://livepeer.org"
-          target="_blank"
+          target="_blank" rel="noopener noreferrer"
           rel="noopener noreferrer"
           style={linkStyle}
         >
@@ -110,7 +110,7 @@ export const SocialLinks = ({
         </a>
         <a
           href="https://github.com/livepeer"
-          target="_blank"
+          target="_blank" rel="noopener noreferrer"
           rel="noopener noreferrer"
           style={linkStyle}
         >
@@ -120,7 +120,7 @@ export const SocialLinks = ({
         </a>
                         <a
           href="https://forum.livepeer.org"
-          target="_blank"
+          target="_blank" rel="noopener noreferrer"
           rel="noopener noreferrer"
           style={linkStyle}
         >
@@ -130,7 +130,7 @@ export const SocialLinks = ({
         </a>
         <a
           href="https://livepeer.org/blog"
-          target="_blank"
+          target="_blank" rel="noopener noreferrer"
           rel="noopener noreferrer"
           style={linkStyle}
         >
@@ -140,7 +140,7 @@ export const SocialLinks = ({
         </a>
                 <a
           href="https://x.com/livepeer"
-          target="_blank"
+          target="_blank" rel="noopener noreferrer"
           rel="noopener noreferrer"
           style={linkStyle}
         >

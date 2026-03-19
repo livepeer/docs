@@ -118,7 +118,7 @@ export const FrameQuote = ({
             )}
             {source &&
               (href ? (
-                <a href={href} target="_blank">
+                <a href={href} target="_blank" rel="noopener noreferrer">
                   <span
                     style={{
                       opacity: 0.7,

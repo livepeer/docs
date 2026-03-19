@@ -264,7 +264,7 @@ export const CoinGeckoExchanges = ({ coinId = "arbitrum" }) => {
                 <td style={{ padding: "10px 16px", textAlign: "center" }}>
                   <a
                     href={exchange.url}
-                    target="_blank"
+                    target="_blank" rel="noopener noreferrer"
                     rel="noopener noreferrer"
                     style={{
                       color: "var(--accent)",

@@ -31,12 +31,12 @@ export const TitledVideo = ({
   borderRadius = "12px",
   style = {},
 }) => {
+  const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   return (
     <div
       style={{
         position: "relative",
         display: "block",
-        // width: "calc(100% + 4rem)",
         borderRadius,
         overflow: "hidden",
         isolation: "isolate",
@@ -44,9 +44,9 @@ export const TitledVideo = ({
       }}
     >
       <video
-        autoPlay
+        autoPlay={!prefersReducedMotion}
         muted
-        loop
+        loop={!prefersReducedMotion}
         playsInline
         src={src}
         style={{
@@ -512,7 +512,6 @@ export const YouTubeVideoDownload = ({
   hint,
   caption = "",
 }) => {
-  console.log("props", embedUrl, title, hint);
   return (
     <div
       style={{
@@ -571,7 +570,6 @@ export const YouTubeVideoDownload = ({
  * <CardVideo embedUrl="example" title="example" />
  */
 export const CardVideo = ({ embedUrl, title, style }) => {
-  console.log("Props:", { embedUrl, title }); // Add this
   return (
     <Card>
       <iframe

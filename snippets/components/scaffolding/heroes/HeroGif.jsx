@@ -219,7 +219,13 @@ export const Starfield = ({ density = 1.1 }) => {
       if (cancelled) {
         return;
       }
+      // Respect prefers-reduced-motion: draw once but don't animate
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       resize();
+      if (prefersReducedMotion) {
+        draw(); // Single frame only
+        return;
+      }
       draw();
       window.addEventListener("resize", resize);
     };

@@ -5,8 +5,8 @@ import { GotoLink } from "/snippets/components/elements/links/Links.jsx";
  * @category wrappers
  * @subniche lists
  * @tier composite
- * @status stable
- * @description Basic List layout component for arranging documentation content without MDX inline styles.
+ * @status deprecated
+ * @description DEPRECATED: Non-functional stub (returns empty fragment). Basic List layout component for arranging documentation content without MDX inline styles.
  * @contentAffinity overview, tutorial, reference
  * @owner docs
  * @dependencies StepLinkList, StepList, UpdateLinkList
@@ -29,8 +29,8 @@ export const BasicList = ({ listItems: array }) => {
  * @category wrappers
  * @subniche lists
  * @tier composite
- * @status stable
- * @description Icon List layout component for arranging documentation content without MDX inline styles.
+ * @status deprecated
+ * @description DEPRECATED: Non-functional stub (returns empty fragment). Icon List layout component for arranging documentation content without MDX inline styles.
  * @contentAffinity overview, tutorial, reference
  * @owner docs
  * @dependencies StepLinkList, StepList, UpdateLinkList
@@ -69,7 +69,6 @@ export const IconList = ({ listItems: array }) => {
  * <StepList listItems={[]} />
  */
 export const StepList = ({ listItems }) => {
-  console.log("listItems", listItems);
   return (
     <Steps>
       {listItems.map(({ title, icon, content }, idx) => (
@@ -102,7 +101,6 @@ export const StepList = ({ listItems }) => {
  * <StepLinkList listItems={[]} />
  */
 export const StepLinkList = ({ listItems }) => {
-  console.log("listItems", listItems);
   return (
     <Steps>
       {listItems.map(({ title, icon, content, link }, idx) => (

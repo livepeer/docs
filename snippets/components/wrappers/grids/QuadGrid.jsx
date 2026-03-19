@@ -45,6 +45,9 @@ export const QuadGrid = ({
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
         }
+        @media (prefers-reduced-motion: reduce) {
+          * { animation: none !important; }
+        }
       `}</style>
       <Columns cols={2}>
         {children}

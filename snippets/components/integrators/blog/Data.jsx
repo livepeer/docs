@@ -1,4 +1,27 @@
 /**
+ * Sanitise HTML by stripping dangerous tags/attributes while keeping safe formatting.
+ * Allows: a, b, i, em, strong, p, br, ul, ol, li, code, pre, span, h1-h6, blockquote, hr, img (with alt).
+ * Strips: script, iframe, object, embed, form, input, style, link, on* attributes.
+ * NOTE: For production-grade sanitisation, replace with DOMPurify.
+ */
+const SAFE_TAGS = new Set(['a','b','i','em','strong','p','br','ul','ol','li','code','pre','span','h1','h2','h3','h4','h5','h6','blockquote','hr','img','div']);
+const SAFE_ATTRS = new Set(['href','target','rel','alt','src','class','id','title','aria-label','role']);
+function sanitiseHTML(html) {
+  if (!html || typeof html !== 'string') return '';
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<iframe[\s\S]*?<\/iframe>/gi, '')
+    .replace(/<object[\s\S]*?<\/object>/gi, '')
+    .replace(/<embed[\s\S]*?>/gi, '')
+    .replace(/<form[\s\S]*?<\/form>/gi, '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<link[\s\S]*?>/gi, '')
+    .replace(/\bon\w+\s*=\s*(['"])[^'"]*\1/gi, '')
+    .replace(/\bon\w+\s*=\s*[^\s>]*/gi, '')
+    .replace(/javascript\s*:/gi, '');
+}
+
+/**
  * @component BlogCard
  * @category integrators
  * @subniche blog
@@ -176,7 +199,7 @@ export const BlogCard = ({
           const hint = el.nextSibling;
           if (hint) hint.style.display = atBottom ? "none" : "block";
         }}
-        dangerouslySetInnerHTML={{ __html: content }}
+        dangerouslySetInnerHTML={{ __html: sanitiseHTML(content) }}
       />
       {showScrollHint && <div style={scrollHintStyle}>Scroll for more ↓</div>}
     </Card>
@@ -205,7 +228,6 @@ export const BlogCard = ({
  * <CardBlogDataLayout limit={1} />
  */
 export const CardBlogDataLayout = ({ items = [], limit }) => {
-  console.debug("items", items);
   const displayItems = limit ? items.slice(0, limit) : items;
   if (!displayItems || displayItems.length === 0) {
     return (
@@ -248,7 +270,6 @@ export const CardBlogDataLayout = ({ items = [], limit }) => {
  * <ColumnsBlogCardLayout limit={1} />
  */
 export const ColumnsBlogCardLayout = ({ items = [], cols = 2, limit }) => {
-  console.debug("items", items);
   const displayItems = limit ? items.slice(0, limit) : items;
   return (
     <Columns cols={cols}>
@@ -281,7 +302,6 @@ export const ColumnsBlogCardLayout = ({ items = [], cols = 2, limit }) => {
  * <BlogDataLayout limit={1} />
  */
 export const BlogDataLayout = ({ items = [], limit }) => {
-  console.debug("blogdata items", items);
   const displayItems = limit ? items.slice(0, limit) : items;
   return (
     <div>
@@ -335,7 +355,6 @@ export const PostCard = ({
   cta = "Read More",
   img = null,
 }) => {
-  console.debug("item", title, content, href, img);
   // Show hint if content is likely to overflow (>500 chars as proxy)
   const showScrollHint = content && content.length > 500;
 
@@ -412,7 +431,7 @@ export const PostCard = ({
           const hint = el.nextSibling;
           if (hint) hint.style.display = atBottom ? "none" : "block";
         }}
-        dangerouslySetInnerHTML={{ __html: content }}
+        dangerouslySetInnerHTML={{ __html: sanitiseHTML(content) }}
       />
       {showScrollHint && (
         <div
@@ -524,7 +543,7 @@ export const CardInCardLayout = ({ items = [], limit }) => {
 export const ForumLatestLayout = ({ items = [], limit }) => {
   return (
     <>
-      <a href="https:/forum.livepeer.org" target="_blank">
+      <a href="https:/forum.livepeer.org" target="_blank" rel="noopener noreferrer">
         <img
           src="/snippets/automations/forum/Hero_Livepeer_Forum.png"
           alt="Livepeer Forum"
@@ -598,7 +617,7 @@ export const DiscordAnnouncements = ({ items = [], limit }) => {
       }}
     >
       {displayItems.map((announcement, index) => (
-        <div key={announcement.id} href={announcement.url} target="_blank">
+        <div key={announcement.id} href={announcement.url} target="_blank" rel="noopener noreferrer">
           <div
             style={{
               display: "flex",
@@ -639,7 +658,7 @@ export const DiscordAnnouncements = ({ items = [], limit }) => {
           <div
             style={{ color: "var(--text)" }}
             dangerouslySetInnerHTML={{
-              __html: parseContent(announcement.content),
+              __html: sanitiseHTML(parseContent(announcement.content)),
             }}
           />
           {index < displayItems.length - 1 && (
@@ -775,7 +794,7 @@ export const LumaEvents = ({ data, limit, type = "upcoming" }) => {
                 width: "fit-content",
               }}
               href={event.url}
-              target="_blank"
+              target="_blank" rel="noopener noreferrer"
               rel="noopener noreferrer"
             >
               View Event →

@@ -108,6 +108,9 @@ const BlinkingIcon = ({ icon = "terminal", size = 16, color }) => {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.3; }
         }
+        @media (prefers-reduced-motion: reduce) {
+          * { animation: none !important; }
+        }
       `}</style>
       <span
         style={{
@@ -402,7 +405,7 @@ const LinkArrow = ({
     <>
       {newline && <br />}
       <span style={linkArrowStyle}>
-        <a href={href} target="_blank">
+        <a href={href} target="_blank" rel="noopener noreferrer">
           {label}
         </a>
         <Icon icon="arrow-up-right" size={14} color="var(--accent)" />

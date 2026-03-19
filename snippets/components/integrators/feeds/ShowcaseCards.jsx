@@ -362,7 +362,7 @@ export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10 }) => {
           return (
             <a
               href={value}
-              target="_blank"
+              target="_blank" rel="noopener noreferrer"
               key={`${key}-${index}`}
               style={linkIconStyle}
               aria-label={`Open ${key} link`}
@@ -387,7 +387,7 @@ export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10 }) => {
         {productTags.slice(0, 1).map((tag) => (
           <a
             href={(productTagHrefKeys[tag] || productTagHrefKeys["default"])[1]}
-            target="_blank"
+            target="_blank" rel="noopener noreferrer"
             key={tag}
             style={productTagStyle}
           >
