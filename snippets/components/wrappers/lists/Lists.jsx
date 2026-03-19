@@ -1,4 +1,4 @@
-import { GotoLink } from "/snippets/components/elements/links/links.jsx";
+import { GotoLink } from "/snippets/components/elements/links/Links.jsx";
 
 /**
  * @component BasicList

@@ -120,8 +120,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/displays/video/video.jsx",
-      "resolvedPath": "snippets/components/displays/video/video.jsx",
+      "rawPath": "/snippets/components/displays/video/Video.jsx",
+      "resolvedPath": "snippets/components/displays/video/Video.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -275,8 +275,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/displays/video/video.jsx",
-      "resolvedPath": "snippets/components/displays/video/video.jsx",
+      "rawPath": "/snippets/components/displays/video/Video.jsx",
+      "resolvedPath": "snippets/components/displays/video/Video.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -414,8 +414,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/displays/video/video.jsx",
-      "resolvedPath": "snippets/components/displays/video/video.jsx",
+      "rawPath": "/snippets/components/displays/video/Video.jsx",
+      "resolvedPath": "snippets/components/displays/video/Video.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -515,8 +515,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/displays/video/video.jsx",
-      "resolvedPath": "snippets/components/displays/video/video.jsx",
+      "rawPath": "/snippets/components/displays/video/Video.jsx",
+      "resolvedPath": "snippets/components/displays/video/Video.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2765,8 +2765,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/scaffolding/portals/portals.jsx",
-      "resolvedPath": "snippets/components/scaffolding/portals/portals.jsx",
+      "rawPath": "/snippets/components/scaffolding/portals/Portals.jsx",
+      "resolvedPath": "snippets/components/scaffolding/portals/Portals.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2774,8 +2774,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/scaffolding/frame-mode/frameMode.jsx",
-      "resolvedPath": "snippets/components/scaffolding/frame-mode/frameMode.jsx",
+      "rawPath": "/snippets/components/scaffolding/frame-mode/FrameMode.jsx",
+      "resolvedPath": "snippets/components/scaffolding/frame-mode/FrameMode.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2783,8 +2783,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/elements/spacing/divider.jsx",
-      "resolvedPath": "snippets/components/elements/spacing/divider.jsx",
+      "rawPath": "/snippets/components/elements/spacing/Divider.jsx",
+      "resolvedPath": "snippets/components/elements/spacing/Divider.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2792,8 +2792,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/elements/links/links.jsx",
-      "resolvedPath": "snippets/components/elements/links/links.jsx",
+      "rawPath": "/snippets/components/elements/links/Links.jsx",
+      "resolvedPath": "snippets/components/elements/links/Links.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2801,8 +2801,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/scaffolding/heroes/heroGif.jsx",
-      "resolvedPath": "snippets/components/scaffolding/heroes/heroGif.jsx",
+      "rawPath": "/snippets/components/scaffolding/heroes/HeroGif.jsx",
+      "resolvedPath": "snippets/components/scaffolding/heroes/HeroGif.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2810,8 +2810,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/displays/video/video.jsx",
-      "resolvedPath": "snippets/components/displays/video/video.jsx",
+      "rawPath": "/snippets/components/displays/video/Video.jsx",
+      "resolvedPath": "snippets/components/displays/video/Video.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -2911,8 +2911,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/elements/links/links.jsx",
-      "resolvedPath": "snippets/components/elements/links/links.jsx",
+      "rawPath": "/snippets/components/elements/links/Links.jsx",
+      "resolvedPath": "snippets/components/elements/links/Links.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []

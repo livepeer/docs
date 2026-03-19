@@ -300,8 +300,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/wrappers/cards/customCards.jsx",
-      "resolvedPath": "snippets/components/wrappers/cards/customCards.jsx",
+      "rawPath": "/snippets/components/wrappers/cards/CustomCards.jsx",
+      "resolvedPath": "snippets/components/wrappers/cards/CustomCards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -309,8 +309,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/elements/links/links.jsx",
-      "resolvedPath": "snippets/components/elements/links/links.jsx",
+      "rawPath": "/snippets/components/elements/links/Links.jsx",
+      "resolvedPath": "snippets/components/elements/links/Links.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []

@@ -326,8 +326,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/displays/quotes/quote.jsx",
-      "resolvedPath": "snippets/components/displays/quotes/quote.jsx",
+      "rawPath": "/snippets/components/displays/quotes/Quote.jsx",
+      "resolvedPath": "snippets/components/displays/quotes/Quote.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -335,8 +335,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/elements/buttons/buttons.jsx",
-      "resolvedPath": "snippets/components/elements/buttons/buttons.jsx",
+      "rawPath": "/snippets/components/elements/buttons/Buttons.jsx",
+      "resolvedPath": "snippets/components/elements/buttons/Buttons.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -344,8 +344,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/elements/text/customCardTitle.jsx",
-      "resolvedPath": "snippets/components/elements/text/customCardTitle.jsx",
+      "rawPath": "/snippets/components/elements/text/CustomCardTitle.jsx",
+      "resolvedPath": "snippets/components/elements/text/CustomCardTitle.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -353,8 +353,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/integrators/embeds/dataEmbed.jsx",
-      "resolvedPath": "snippets/components/integrators/embeds/dataEmbed.jsx",
+      "rawPath": "/snippets/components/integrators/embeds/DataEmbed.jsx",
+      "resolvedPath": "snippets/components/integrators/embeds/DataEmbed.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -362,8 +362,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/wrappers/containers/containers.jsx",
-      "resolvedPath": "snippets/components/wrappers/containers/containers.jsx",
+      "rawPath": "/snippets/components/wrappers/containers/Containers.jsx",
+      "resolvedPath": "snippets/components/wrappers/containers/Containers.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -478,8 +478,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/displays/quotes/quote.jsx",
-      "resolvedPath": "snippets/components/displays/quotes/quote.jsx",
+      "rawPath": "/snippets/components/displays/quotes/Quote.jsx",
+      "resolvedPath": "snippets/components/displays/quotes/Quote.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -487,8 +487,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/wrappers/containers/containers.jsx",
-      "resolvedPath": "snippets/components/wrappers/containers/containers.jsx",
+      "rawPath": "/snippets/components/wrappers/containers/Containers.jsx",
+      "resolvedPath": "snippets/components/wrappers/containers/Containers.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -496,8 +496,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/displays/video/video.jsx",
-      "resolvedPath": "snippets/components/displays/video/video.jsx",
+      "rawPath": "/snippets/components/displays/video/Video.jsx",
+      "resolvedPath": "snippets/components/displays/video/Video.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -505,8 +505,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/integrators/embeds/dataEmbed.jsx",
-      "resolvedPath": "snippets/components/integrators/embeds/dataEmbed.jsx",
+      "rawPath": "/snippets/components/integrators/embeds/DataEmbed.jsx",
+      "resolvedPath": "snippets/components/integrators/embeds/DataEmbed.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -518,8 +518,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/wrappers/cards/customCards.jsx",
-      "resolvedPath": "snippets/components/wrappers/cards/customCards.jsx",
+      "rawPath": "/snippets/components/wrappers/cards/CustomCards.jsx",
+      "resolvedPath": "snippets/components/wrappers/cards/CustomCards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -529,8 +529,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/wrappers/tables/tables.jsx",
-      "resolvedPath": "snippets/components/wrappers/tables/tables.jsx",
+      "rawPath": "/snippets/components/wrappers/tables/Tables.jsx",
+      "resolvedPath": "snippets/components/wrappers/tables/Tables.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -538,8 +538,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/displays/quotes/quote.jsx",
-      "resolvedPath": "snippets/components/displays/quotes/quote.jsx",
+      "rawPath": "/snippets/components/displays/quotes/Quote.jsx",
+      "resolvedPath": "snippets/components/displays/quotes/Quote.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
