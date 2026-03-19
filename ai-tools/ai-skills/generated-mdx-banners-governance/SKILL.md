@@ -34,12 +34,12 @@ Single Source of Formatting
 
 Primary Files to Touch
 - `tools/lib/generated-file-banners.js`
-- `tools/scripts/generate-docs-guide-indexes.js`
-- `tools/scripts/generate-docs-guide-pages-index.js`
-- `tools/scripts/generate-docs-guide-components-index.js`
-- `tools/scripts/generate-pages-index.js`
+- `tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js`
+- `tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js`
+- `tools/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js`
+- `tools/scripts/generators/content/catalogs/generate-pages-index.js`
 - `tests/unit/script-docs.test.js`
-- `tools/scripts/enforce-generated-file-banners.js`
+- `tools/scripts/validators/content/structure/enforce-generated-file-banners.js`
 - `tools/scripts/i18n/translate-docs.js`
 - `tests/unit/docs-guide-sot.test.js`
 - `tests/run-all.js`

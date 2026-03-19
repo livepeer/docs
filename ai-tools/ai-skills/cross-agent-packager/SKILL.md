@@ -16,7 +16,7 @@ Provide one packaging path so contributors can install and run the same audit sk
 
 Command
 ```bash
-node tools/scripts/cross-agent-packager.js --agent-pack all
+node tools/scripts/automations/ai/agents/cross-agent-packager.js --agent-pack all
 ```
 
 Outputs
