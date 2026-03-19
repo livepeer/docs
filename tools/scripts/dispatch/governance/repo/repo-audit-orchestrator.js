@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      repo-audit-orchestrator
- * @type        audit
+ * @type        dispatch
  * @concern     governance
  * @niche       repo
  * @purpose     infrastructure:pipeline-orchestration

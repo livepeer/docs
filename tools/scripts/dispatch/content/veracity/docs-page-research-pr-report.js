@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      docs-page-research-pr-report
- * @type        audit
+ * @type        dispatch
  * @concern     content
  * @niche       veracity
  * @purpose     governance:agent-governance
@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual — experimental advisory PR integration, non-blocking
  * @scope       tools/scripts, tasks/research/claims, tasks/reports/repo-ops, tests/unit/docs-page-research-pr-report.test.js
- * @usage       node tools/scripts/audits/content/veracity/docs-page-research-pr-report.js [flags]
+ * @usage       node tools/scripts/dispatch/content/veracity/docs-page-research-pr-report.js [flags]
  * @policy      R-R27, R-R30
  */
 

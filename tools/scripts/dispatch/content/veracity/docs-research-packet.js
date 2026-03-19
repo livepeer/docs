@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      docs-research-packet
- * @type        audit
+ * @type        dispatch
  * @concern     content
  * @niche       veracity
  * @purpose     tooling:dev-tools
@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual — packet generator for research review tranches
  * @scope       tools/scripts, tasks/reports, tools/config/scoped-navigation, tasks/research, tests/unit/docs-research-packet.test.js, tests/unit/orchestrator-guides-research-review.test.js
- * @usage       node tools/scripts/audits/content/veracity/docs-research-packet.js [flags]
+ * @usage       node tools/scripts/dispatch/content/veracity/docs-research-packet.js [flags]
  * @policy      R-R27, R-R30
  */
 

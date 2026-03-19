@@ -12,7 +12,7 @@
  */
 
 const assert = require('assert');
-const matrix = require('../../tools/scripts/generators/governance/reports/generate-v2-folder-governance-cleanup-matrix');
+const matrix = require('../../tools/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix');
 
 let failures = [];
 

@@ -17,8 +17,8 @@ const path = require('path');
 
 const REPO_ROOT = process.cwd();
 const NAV_PATH = path.join(REPO_ROOT, 'tools/config/scoped-navigation/docs-gate-work.json');
-const helpers = require('../../tools/scripts/audits/content/veracity/orchestrator-guides-research-review.js');
-const genericHelpers = require('../../tools/scripts/audits/content/veracity/docs-research-packet.js');
+const helpers = require('../../tools/scripts/dispatch/content/veracity/orchestrator-guides-research-review.js');
+const genericHelpers = require('../../tools/scripts/dispatch/content/veracity/docs-research-packet.js');
 
 async function runTests() {
   const failures = [];

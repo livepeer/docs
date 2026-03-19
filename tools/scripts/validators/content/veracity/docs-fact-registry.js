@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      docs-fact-registry
- * @type        audit
+ * @type        validator
  * @concern     content
  * @niche       veracity
  * @purpose     governance:agent-governance

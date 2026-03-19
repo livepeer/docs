@@ -17,7 +17,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const crypto = require('crypto');
-const { loadRegistry, flattenClaimFamilies } = require('./docs-fact-registry');
+const { loadRegistry, flattenClaimFamilies } = require('../../../validators/content/veracity/docs-fact-registry');
 
 const DEFAULT_REGISTRY = 'tasks/research/claims';
 const GENERIC_PATH_TOKENS = new Set([

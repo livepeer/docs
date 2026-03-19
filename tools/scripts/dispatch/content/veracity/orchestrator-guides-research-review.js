@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      orchestrator-guides-research-review
- * @type        audit
+ * @type        dispatch
  * @concern     content
  * @niche       veracity
  * @purpose     tooling:dev-tools
