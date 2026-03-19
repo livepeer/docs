@@ -26,11 +26,12 @@ const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-registry.jso
 const SCHEMA_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-registry-schema.json');
 
 const CATEGORY_PURPOSES = {
-  primitives: 'Standalone visual atoms',
-  layout: 'Spatial arrangement containers',
-  content: 'Content formatting and rendering',
-  data: 'Data-bound feed renderers',
-  'page-structure': 'Frame-mode and portal scaffolding'
+  elements: 'Smallest visual atoms — no children, no fetching, no arrangement',
+  wrappers: 'Holds, groups, or spatially arranges other components',
+  displays: 'Renders authored content into a specific visual format',
+  scaffolding: 'One-per-page structural skeleton — heroes, portals, frame-mode',
+  integrators: 'Fetches, embeds, or binds to external/third-party data',
+  config: 'Non-component config objects'
 };
 
 function usage() {
@@ -40,6 +41,7 @@ function usage() {
       '',
       'Options:',
       '  --validate-only    Validate component governance metadata without writing files',
+      '  --strict           Exit non-zero if any component is missing required governance fields',
       '  --help, -h         Show this help message'
     ].join('\n')
   );
@@ -48,11 +50,17 @@ function usage() {
 function parseArgs(argv) {
   const args = {
     validateOnly: false,
+    strict: false,
     help: false
   };
 
   argv.forEach((token) => {
     if (token === '--validate-only') {
+      args.validateOnly = true;
+      return;
+    }
+    if (token === '--strict') {
+      args.strict = true;
       args.validateOnly = true;
       return;
     }
@@ -318,6 +326,9 @@ function run(argv = process.argv.slice(2)) {
   if (issues.length > 0) {
     console.error('❌ Component registry generation failed:');
     issues.forEach((issue) => console.error(`- ${issue}`));
+    if (args.strict) {
+      console.error(`\n❌ --strict mode: ${issues.length} governance violation(s) found. Exiting non-zero.`);
+    }
     return 1;
   }
 
@@ -327,7 +338,7 @@ function run(argv = process.argv.slice(2)) {
     console.log(`Wrote ${path.relative(REPO_ROOT, REGISTRY_PATH)}`);
     console.log(`Wrote ${path.relative(REPO_ROOT, SCHEMA_PATH)}`);
   } else {
-    console.log(`Validated ${registry.components.length} governed component export(s).`);
+    console.log(`✅ Validated ${registry.components.length} governed component export(s). No issues.`);
   }
 
   return 0;

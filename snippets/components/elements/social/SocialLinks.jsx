@@ -26,7 +26,8 @@
     </span> */}
 /**
  * @component SocialLinks
- * @category primitives
+ * @category elements
+ * @subniche social
  * @tier primitive
  * @status stable
  * @description Renders the social links component

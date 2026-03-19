@@ -1,6 +1,7 @@
 /**
  * @component ScrollBox
- * @category layout
+ * @category wrappers
+ * @subniche containers
  * @tier composite
  * @status stable
  * @description Scroll Box layout component for arranging documentation content without MDX inline styles.

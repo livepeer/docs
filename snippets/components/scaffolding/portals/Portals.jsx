@@ -38,7 +38,8 @@
  */
 /**
  * @component HeroSectionContainer
- * @category page-structure
+ * @category scaffolding
+ * @subniche portals
  * @tier pattern
  * @status stable
  * @description Outer frame-mode hero section wrapper for portal layouts.
@@ -87,7 +88,8 @@ const HeroSectionContainer = ({ children, minHeight = "fit-content" }) => {
  */
 /**
  * @component HeroImageBackgroundComponent
- * @category page-structure
+ * @category scaffolding
+ * @subniche portals
  * @tier pattern
  * @status stable
  * @description Absolute-positioned hero background wrapper used behind portal hero content.
@@ -138,7 +140,8 @@ const HeroImageBackgroundComponent = ({ children }) => {
  */
 /**
  * @component HeroContentContainer
- * @category page-structure
+ * @category scaffolding
+ * @subniche portals
  * @tier pattern
  * @status stable
  * @description Centered frame-mode container for hero content stacked over hero backgrounds.
@@ -174,7 +177,8 @@ const HeroContentContainer = ({ children }) => {
 //unused
 /**
  * @component HeroOverviewContent
- * @category page-structure
+ * @category scaffolding
+ * @subniche portals
  * @tier pattern
  * @status stable
  * @description Centered hero overview wrapper for introductory portal copy blocks.
@@ -228,7 +232,8 @@ const HeroOverviewContent = ({ children }) => {
  */
 /**
  * @component PortalContentContainer
- * @category page-structure
+ * @category scaffolding
+ * @subniche portals
  * @tier pattern
  * @status stable
  * @description Frame-mode content wrapper for portal body sections.
@@ -276,7 +281,8 @@ const PortalContentContainer = ({ children }) => {
  */
 /**
  * @component PortalHeroContent
- * @category page-structure
+ * @category scaffolding
+ * @subniche portals
  * @tier pattern
  * @status stable
  * @description Hero scaffold for portal landing pages with title, subtitle, supporting content, and optional callouts.
@@ -439,7 +445,8 @@ const PortalHeroContent = ({
 
 /**
  * @component PortalCardsHeader
- * @category page-structure
+ * @category scaffolding
+ * @subniche portals
  * @tier pattern
  * @status stable
  * @description Header wrapper for portal card groups and section intros.
@@ -476,7 +483,8 @@ const PortalCardsHeader = ({ children, title }) => {
 
 /**
  * @component PortalSectionHeader
- * @category page-structure
+ * @category scaffolding
+ * @subniche portals
  * @tier pattern
  * @status stable
  * @description Section heading wrapper for portal subsections with optional icon treatment.
@@ -528,7 +536,8 @@ const PortalSectionHeader = ({ children, title, icon }) => {
  */
 /**
  * @component LogoHeroContainer
- * @category page-structure
+ * @category scaffolding
+ * @subniche portals
  * @tier pattern
  * @status stable
  * @description Portal hero logo wrapper that centers a themed brand asset above hero content.
@@ -600,7 +609,8 @@ const LogoHeroContainer = ({
 
 /**
  * @component RefCardContainer
- * @category page-structure
+ * @category scaffolding
+ * @subniche portals
  * @tier pattern
  * @status stable
  * @description Container for portal reference cards and related CTA blocks.

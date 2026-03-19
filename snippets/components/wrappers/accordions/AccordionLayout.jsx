@@ -1,6 +1,7 @@
 /**
  * @component AccordionLayout
- * @category layout
+ * @category wrappers
+ * @subniche accordions
  * @tier composite
  * @status stable
  * @description Accordion Layout layout component for arranging documentation content without MDX inline styles.

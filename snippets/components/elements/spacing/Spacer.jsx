@@ -1,6 +1,7 @@
 /**
  * @component Spacer
- * @category primitives
+ * @category elements
+ * @subniche spacing
  * @tier primitive
  * @status stable
  * @description Provides consistent spacing without requiring inline styles or empty divs in MDX

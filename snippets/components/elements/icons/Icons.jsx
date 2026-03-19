@@ -1,6 +1,7 @@
 /**
  * @component LivepeerSVG
- * @category primitives
+ * @category elements
+ * @subniche icons
  * @tier primitive
  * @status stable
  * @description Livepeer SVG primitive used in authored documentation and component-library examples.
@@ -39,7 +40,8 @@ export const LivepeerSVG = ({ size = 24, ...props }) => {
 
 /**
  * @component LivepeerIconOld
- * @category primitives
+ * @category elements
+ * @subniche icons
  * @tier primitive
  * @status stable
  * @description Livepeer Icon Old primitive used in authored documentation and component-library examples.
@@ -67,7 +69,8 @@ export const LivepeerIconOld = ({ ...props }) => {
 
 /**
  * @component LivepeerIconFlipped
- * @category primitives
+ * @category elements
+ * @subniche icons
  * @tier primitive
  * @status stable
  * @description Livepeer Icon Flipped primitive used in authored documentation and component-library examples.
@@ -97,7 +100,8 @@ export const LivepeerIconFlipped = ({ ...props }) => {
 
 /**
  * @component LivepeerIcon
- * @category primitives
+ * @category elements
+ * @subniche icons
  * @tier primitive
  * @status stable
  * @description Livepeer Icon primitive used in authored documentation and component-library examples.

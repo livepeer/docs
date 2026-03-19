@@ -1,6 +1,7 @@
 /**
  * @component BorderedBox
- * @category layout
+ * @category wrappers
+ * @subniche containers
  * @tier composite
  * @status stable
  * @description Bordered Box layout component for arranging documentation content without MDX inline styles.
@@ -69,7 +70,8 @@ export const BorderedBox = ({
 
 /**
  * @component CenteredContainer
- * @category layout
+ * @category wrappers
+ * @subniche containers
  * @tier composite
  * @status stable
  * @description Centered Container layout component for arranging documentation content without MDX inline styles.
@@ -153,7 +155,8 @@ export const CenteredContainer = ({
 
 /**
  * @component FullWidthContainer
- * @category layout
+ * @category wrappers
+ * @subniche containers
  * @tier composite
  * @status stable
  * @description Full Width Container layout component for arranging documentation content without MDX inline styles.

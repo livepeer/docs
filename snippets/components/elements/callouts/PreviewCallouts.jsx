@@ -2,7 +2,8 @@
 
 /**
  * @component ComingSoonCallout
- * @category primitives
+ * @category elements
+ * @subniche callouts
  * @tier primitive
  * @status stable
  * @description Renders the coming soon callout component
@@ -98,7 +99,8 @@ const ComingSoonCallout = ({ type = "page" }) => {
 
 /**
  * @component PreviewCallout
- * @category primitives
+ * @category elements
+ * @subniche callouts
  * @tier primitive
  * @status stable
  * @description Renders the preview callout component
@@ -181,7 +183,8 @@ const PreviewCallout = () => {
 
 /**
  * @component ReviewCallout
- * @category primitives
+ * @category elements
+ * @subniche callouts
  * @tier primitive
  * @status stable
  * @description Renders the review callout component

@@ -1,6 +1,7 @@
 /**
  * @component ValueResponseField
- * @category content
+ * @category displays
+ * @subniche response-fields
  * @tier composite
  * @status stable
  * @description CustomResponseField - ResponseField wrapper that hides the bottom divider
@@ -79,7 +80,8 @@ const expandableCode = () => {
 
 /**
  * @component CustomResponseField
- * @category content
+ * @category displays
+ * @subniche response-fields
  * @tier composite
  * @status stable
  * @description Renders the custom response field component
@@ -118,7 +120,8 @@ const CustomResponseField = ({ description, ...props }) => {
 
 /**
  * @component ResponseFieldExpandable
- * @category content
+ * @category displays
+ * @subniche response-fields
  * @tier composite
  * @status stable
  * @description Renders the response field expandable component
@@ -155,7 +158,8 @@ const ResponseFieldExpandable = ({ fields = {}, ...props }) => {
 
 /**
  * @component ResponseFieldAccordion
- * @category content
+ * @category displays
+ * @subniche response-fields
  * @tier composite
  * @status stable
  * @description Renders the response field accordion component
@@ -195,7 +199,8 @@ const ResponseFieldAccordion = ({ fields = {}, ...props }) => {
 // Wrapper that chooses accordion or expandable layout at runtime.
 /**
  * @component ResponseFieldGroup
- * @category content
+ * @category displays
+ * @subniche response-fields
  * @tier composite
  * @status stable
  * @description Renders the response field group component

@@ -2,7 +2,8 @@
 
 /**
  * @component InteractiveCard
- * @category layout
+ * @category wrappers
+ * @subniche cards
  * @tier composite
  * @status stable
  * @description Interactive Card layout component for arranging documentation content without MDX inline styles.
@@ -111,7 +112,8 @@ export const InteractiveCard = ({
 
 /**
  * @component InteractiveCards
- * @category layout
+ * @category wrappers
+ * @subniche cards
  * @tier composite
  * @status stable
  * @description Interactive Cards layout component for arranging documentation content without MDX inline styles.
@@ -159,7 +161,8 @@ export const InteractiveCards = ({ items = [] }) => {
 
 /**
  * @component ShowcaseCards
- * @category layout
+ * @category wrappers
+ * @subniche cards
  * @tier composite
  * @status stable
  * @description Showcase Cards layout component for arranging documentation content without MDX inline styles.

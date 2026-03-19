@@ -1,6 +1,7 @@
 /**
  * @component MarkdownEmbed
- * @category data
+ * @category integrators
+ * @subniche embeds
  * @tier pattern
  * @status stable
  * @description Dynamically fetches markdown content from a remote URL and renders it. Uses React
@@ -50,7 +51,8 @@ export const MarkdownEmbed = ({ url }) => {
  */
 /**
  * @component PdfEmbed
- * @category data
+ * @category integrators
+ * @subniche embeds
  * @tier pattern
  * @status stable
  * @description Wraps an iframe in a Mintlify Frame so long-form external documents can be embedded
@@ -88,7 +90,8 @@ export const EmbedMarkdown = ({ url }) => <MarkdownEmbed url={url} />
 
 /**
  * @component TwitterTimeline
- * @category data
+ * @category integrators
+ * @subniche embeds
  * @tier pattern
  * @status stable
  * @description Renders the twitter timeline component

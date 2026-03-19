@@ -1,6 +1,7 @@
 /**
  * @component FocusableScrollRegions
- * @category primitives
+ * @category elements
+ * @subniche a11y
  * @tier primitive
  * @status stable
  * @description Focusable Scroll Regions primitive used in authored documentation and component-library examples.

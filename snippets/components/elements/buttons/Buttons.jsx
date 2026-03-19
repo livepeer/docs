@@ -1,6 +1,7 @@
 /**
  * @component BasicBtn
- * @category primitives
+ * @category elements
+ * @subniche buttons
  * @tier primitive
  * @status stable
  * @description Basic Btn primitive used in authored documentation and component-library examples.
@@ -22,7 +23,8 @@ export const BasicBtn = () => {
 
 /**
  * @component DownloadButton
- * @category primitives
+ * @category elements
+ * @subniche buttons
  * @tier primitive
  * @status stable
  * @description Download Button primitive used in authored documentation and component-library examples.

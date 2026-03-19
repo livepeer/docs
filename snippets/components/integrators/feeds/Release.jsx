@@ -1,6 +1,7 @@
 /**
  * @component LatestVersion
- * @category data
+ * @category integrators
+ * @subniche feeds
  * @tier composite
  * @status stable
  * @description Displays the latest release version value supplied by the release-version workflow.

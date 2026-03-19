@@ -1,6 +1,7 @@
 /**
  * @component Starfield
- * @category page-structure
+ * @category scaffolding
+ * @subniche heroes
  * @tier pattern
  * @status stable
  * @description Renders the starfield component

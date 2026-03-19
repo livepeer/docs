@@ -2,7 +2,8 @@
 
 /**
  * @component ShowcaseCards
- * @category data
+ * @category integrators
+ * @subniche feeds
  * @tier pattern
  * @status experimental
  * @description Renders the showcase cards component

@@ -1,6 +1,7 @@
 /**
  * @component CustomCardTitle
- * @category primitives
+ * @category elements
+ * @subniche text
  * @tier primitive
  * @status stable
  * @description Renders the custom card title component

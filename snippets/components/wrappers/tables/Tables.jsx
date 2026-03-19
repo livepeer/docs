@@ -1,6 +1,7 @@
 /**
  * @component StyledTable
- * @category layout
+ * @category wrappers
+ * @subniche tables
  * @tier composite
  * @status stable
  * @description Styled Table layout component for arranging documentation content without MDX inline styles.
@@ -68,7 +69,8 @@ export const StyledTable = ({ children, variant = "default", style = {} }) => {
 
 /**
  * @component TableRow
- * @category layout
+ * @category wrappers
+ * @subniche tables
  * @tier composite
  * @status stable
  * @description Table Row layout component for arranging documentation content without MDX inline styles.
@@ -124,7 +126,8 @@ export const TableRow = ({
 
 /**
  * @component TableCell
- * @category layout
+ * @category wrappers
+ * @subniche tables
  * @tier composite
  * @status stable
  * @description Table Cell layout component for arranging documentation content without MDX inline styles.

@@ -1,6 +1,7 @@
 /**
  * @component ExternalContent
- * @category content
+ * @category integrators
+ * @subniche embeds
  * @tier composite
  * @status stable
  * @description ExternalContent - A reusable component for displaying external GitHub content

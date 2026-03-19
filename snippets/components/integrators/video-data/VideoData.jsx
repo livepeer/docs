@@ -2,7 +2,8 @@ import { YouTubeVideo } from "/snippets/components/displays/video/Video.jsx";
 
 /**
  * @component YouTubeVideoData
- * @category data
+ * @category integrators
+ * @subniche video-data
  * @tier pattern
  * @status stable
  * @description YouTubeVideoData - Renders YouTube videos from youtubeData.jsx format

@@ -1,6 +1,7 @@
 /**
  * @component BlogCard
- * @category data
+ * @category integrators
+ * @subniche blog
  * @tier composite
  * @status stable
  * @description Blog Card data-driven component for rendering automated or API-backed documentation content.
@@ -184,7 +185,8 @@ export const BlogCard = ({
 
 /**
  * @component CardBlogDataLayout
- * @category data
+ * @category integrators
+ * @subniche blog
  * @tier composite
  * @status stable
  * @description Card Blog Data Layout data-driven component for rendering automated or API-backed documentation content.
@@ -225,7 +227,8 @@ export const CardBlogDataLayout = ({ items = [], limit }) => {
 
 /**
  * @component ColumnsBlogCardLayout
- * @category data
+ * @category integrators
+ * @subniche blog
  * @tier composite
  * @status stable
  * @description Columns Blog Card Layout data-driven component for rendering automated or API-backed documentation content.
@@ -258,7 +261,8 @@ export const ColumnsBlogCardLayout = ({ items = [], cols = 2, limit }) => {
 
 /**
  * @component BlogDataLayout
- * @category data
+ * @category integrators
+ * @subniche blog
  * @tier composite
  * @status stable
  * @description Blog Data Layout data-driven component for rendering automated or API-backed documentation content.
@@ -290,7 +294,8 @@ export const BlogDataLayout = ({ items = [], limit }) => {
 
 /**
  * @component PostCard
- * @category data
+ * @category integrators
+ * @subniche blog
  * @tier composite
  * @status stable
  * @description Post Card data-driven component for rendering automated or API-backed documentation content.
@@ -428,7 +433,8 @@ export const PostCard = ({
 
 /**
  * @component CardColumnsPostLayout
- * @category data
+ * @category integrators
+ * @subniche blog
  * @tier composite
  * @status stable
  * @description Card Columns Post Layout data-driven component for rendering automated or API-backed documentation content.
@@ -463,7 +469,8 @@ export const CardColumnsPostLayout = ({ cols = 2, items = [], limit }) => {
 
 /**
  * @component CardInCardLayout
- * @category data
+ * @category integrators
+ * @subniche blog
  * @tier composite
  * @status stable
  * @description Card In Card Layout data-driven component for rendering automated or API-backed documentation content.
@@ -495,7 +502,8 @@ export const CardInCardLayout = ({ items = [], limit }) => {
 
 /**
  * @component ForumLatestLayout
- * @category data
+ * @category integrators
+ * @subniche blog
  * @tier composite
  * @status stable
  * @description Forum Latest Layout data-driven component for rendering automated or API-backed documentation content.
@@ -537,7 +545,8 @@ export const ForumLatestLayout = ({ items = [], limit }) => {
 
 /**
  * @component DiscordAnnouncements
- * @category data
+ * @category integrators
+ * @subniche blog
  * @tier composite
  * @status stable
  * @description Discord Announcements data-driven component for rendering automated or API-backed documentation content.
@@ -652,7 +661,8 @@ export const DiscordAnnouncements = ({ items = [], limit }) => {
 
 /**
  * @component LumaEvents
- * @category data
+ * @category integrators
+ * @subniche blog
  * @tier composite
  * @status stable
  * @description Luma Events data-driven component for rendering automated or API-backed documentation content.

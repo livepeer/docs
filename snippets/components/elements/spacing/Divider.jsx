@@ -21,7 +21,8 @@
 // FIX THIS - IT SHOULD DYNAMICALLY TAKE UP THE HEIGHT IT HAS
 /**
  * @component CustomDivider
- * @category primitives
+ * @category elements
+ * @subniche spacing
  * @tier primitive
  * @status stable
  * @description Custom Divider primitive used in authored documentation and component-library examples.

@@ -1,6 +1,7 @@
 /**
  * @component Subtitle
- * @category primitives
+ * @category elements
+ * @subniche text
  * @tier primitive
  * @status stable
  * @description Subtitle primitive used in authored documentation and component-library examples.
@@ -40,7 +41,8 @@ export const Subtitle = ({ style = {}, text, children }) => {
 
 /**
  * @component CopyText
- * @category primitives
+ * @category elements
+ * @subniche text
  * @tier primitive
  * @status stable
  * @description Copy Text primitive used in authored documentation and component-library examples.
@@ -111,7 +113,8 @@ export const CopyText = ({ text, label }) => {
 
 /**
  * @component CardTitleTextWithArrow
- * @category primitives
+ * @category elements
+ * @subniche text
  * @tier primitive
  * @status stable
  * @description Card Title Text With Arrow primitive used in authored documentation and component-library examples.
@@ -180,7 +183,8 @@ export const CardTitleTextWithArrow = ({ children, ...cardProps }) => {
 
 /**
  * @component AccordionTitleWithArrow
- * @category primitives
+ * @category elements
+ * @subniche text
  * @tier primitive
  * @status stable
  * @description Accordion Title With Arrow primitive used in authored documentation and component-library examples.

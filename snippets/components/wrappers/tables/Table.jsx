@@ -1,6 +1,7 @@
 /**
  * @component DynamicTable
- * @category layout
+ * @category wrappers
+ * @subniche tables
  * @tier composite
  * @status stable
  * @description Dynamic Table layout component for arranging documentation content without MDX inline styles.

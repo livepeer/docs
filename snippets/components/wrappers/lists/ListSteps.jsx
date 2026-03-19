@@ -1,6 +1,7 @@
 /**
  * @component ListSteps
- * @category layout
+ * @category wrappers
+ * @subniche lists
  * @tier pattern
  * @status stable
  * @description This component takes an array of step items and renders them using the Steps/Step

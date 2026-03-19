@@ -1,6 +1,7 @@
 /**
  * @component CustomCallout
- * @category primitives
+ * @category elements
+ * @subniche links
  * @tier primitive
  * @status stable
  * @description Displays a styled callout box with an icon and custom colors.
@@ -78,7 +79,8 @@ const CustomCallout = ({
 
 /**
  * @component BlinkingIcon
- * @category primitives
+ * @category elements
+ * @subniche links
  * @tier primitive
  * @status stable
  * @description Displays an icon with a smooth blinking animation (fades between full and 30% opacity).
@@ -121,7 +123,8 @@ const BlinkingIcon = ({ icon = "terminal", size = 16, color }) => {
 
 /**
  * @component BlinkingTerminal
- * @category primitives
+ * @category elements
+ * @subniche links
  * @tier primitive
  * @status deprecated
  * @description Blinking Terminal primitive used in authored documentation and component-library examples.
@@ -143,7 +146,8 @@ const BlinkingTerminal = BlinkingIcon;
 
 /**
  * @component DoubleIconLink
- * @category primitives
+ * @category elements
+ * @subniche links
  * @tier primitive
  * @status stable
  * @description Displays a link with an icon on the left and right, plus optional text prefix.
@@ -193,7 +197,8 @@ const DoubleIconLink = ({
 
 /**
  * @component GotoLink
- * @category primitives
+ * @category elements
+ * @subniche links
  * @tier primitive
  * @status stable
  * @description Displays a link with an icon, typically used for internal navigation.
@@ -232,7 +237,8 @@ const GotoLink = ({
 
 /**
  * @component GotoCard
- * @category primitives
+ * @category elements
+ * @subniche links
  * @tier primitive
  * @status stable
  * @description Wraps content in a Card component with a link, icon, and optional CTA.
@@ -265,7 +271,8 @@ const GotoCard = ({ label, relativePath, icon, text, cta = "", ...props }) => {
 
 /**
  * @component TipWithArrow
- * @category primitives
+ * @category elements
+ * @subniche links
  * @tier primitive
  * @status stable
  * @description Similar to CustomCallout but includes an arrow icon in the top-right corner.
@@ -354,7 +361,8 @@ const TipWithArrow = ({
 
 /**
  * @component LinkArrow
- * @category primitives
+ * @category elements
+ * @subniche links
  * @tier primitive
  * @status stable
  * @description Link Arrow primitive used in authored documentation and component-library examples.

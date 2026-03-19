@@ -2,7 +2,8 @@ import { GotoLink } from "/snippets/components/elements/links/Links.jsx";
 
 /**
  * @component BasicList
- * @category layout
+ * @category wrappers
+ * @subniche lists
  * @tier composite
  * @status stable
  * @description Basic List layout component for arranging documentation content without MDX inline styles.
@@ -25,7 +26,8 @@ export const BasicList = ({ listItems: array }) => {
 
 /**
  * @component IconList
- * @category layout
+ * @category wrappers
+ * @subniche lists
  * @tier composite
  * @status stable
  * @description Icon List layout component for arranging documentation content without MDX inline styles.
@@ -48,7 +50,8 @@ export const IconList = ({ listItems: array }) => {
 
 /**
  * @component StepList
- * @category layout
+ * @category wrappers
+ * @subniche lists
  * @tier composite
  * @status stable
  * @description Step List layout component for arranging documentation content without MDX inline styles.
@@ -80,7 +83,8 @@ export const StepList = ({ listItems }) => {
 
 /**
  * @component StepLinkList
- * @category layout
+ * @category wrappers
+ * @subniche lists
  * @tier composite
  * @status stable
  * @description Step Link List layout component for arranging documentation content without MDX inline styles.
@@ -112,7 +116,8 @@ export const StepLinkList = ({ listItems }) => {
 
 /**
  * @component UpdateList
- * @category layout
+ * @category wrappers
+ * @subniche lists
  * @tier composite
  * @status stable
  * @description Update List layout component for arranging documentation content without MDX inline styles.
@@ -142,7 +147,8 @@ export const UpdateList = ({ listItems: array }) => {
 
 /**
  * @component UpdateLinkList
- * @category layout
+ * @category wrappers
+ * @subniche lists
  * @tier composite
  * @status stable
  * @description Update Link List layout component for arranging documentation content without MDX inline styles.

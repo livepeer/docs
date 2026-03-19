@@ -1,6 +1,7 @@
 /**
  * @component SearchTable
- * @category layout
+ * @category wrappers
+ * @subniche tables
  * @tier pattern
  * @status stable
  * @description Renders the search table component

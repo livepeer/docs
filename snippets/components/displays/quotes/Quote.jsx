@@ -1,6 +1,7 @@
 /**
  * @component Quote
- * @category content
+ * @category displays
+ * @subniche quotes
  * @tier composite
  * @status stable
  * @description Quote content component for rendering reader-facing documentation content.
@@ -34,7 +35,8 @@ export const Quote = ({ children }) => {
 
 /**
  * @component FrameQuote
- * @category content
+ * @category displays
+ * @subniche quotes
  * @tier composite
  * @status stable
  * @description Frame Quote content component for rendering reader-facing documentation content.

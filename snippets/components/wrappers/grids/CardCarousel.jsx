@@ -1,6 +1,7 @@
 /**
  * @component CardCarousel
- * @category layout
+ * @category wrappers
+ * @subniche grids
  * @tier pattern
  * @status stable
  * @description Renders a simple carousel that paginates through a fixed number of cards

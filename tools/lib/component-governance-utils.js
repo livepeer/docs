@@ -15,7 +15,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const { isPublishedDocsPath: isPublishableDocsPath } = require('./docs-publishability');
 
-const VALID_CATEGORIES = ['primitives', 'layout', 'content', 'data', 'page-structure'];
+const VALID_CATEGORIES = ['elements', 'wrappers', 'displays', 'scaffolding', 'integrators', 'config'];
 const VALID_STATUSES = ['stable', 'experimental', 'deprecated', 'broken', 'placeholder'];
 const VALID_TIERS = ['primitive', 'composite', 'pattern'];
 const VALID_RISKS = ['low', 'medium', 'high'];
@@ -38,6 +38,7 @@ const VALID_CONTENT_AFFINITY = [
 const GOVERNANCE_FIELDS = [
   'component',
   'category',
+  'subniche',
   'tier',
   'status',
   'description',

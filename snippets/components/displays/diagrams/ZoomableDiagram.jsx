@@ -1,6 +1,7 @@
 /**
  * @component ScrollableDiagram
- * @category content
+ * @category displays
+ * @subniche diagrams
  * @tier composite
  * @status stable
  * @description ──────────────────────────────────────────────────────────────

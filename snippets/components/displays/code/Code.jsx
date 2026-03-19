@@ -1,7 +1,8 @@
 
 /**
  * @component CustomCodeBlock
- * @category content
+ * @category displays
+ * @subniche code
  * @tier composite
  * @status stable
  * @description Custom Code Block content component for rendering reader-facing documentation content.
@@ -114,7 +115,8 @@ export const CustomCodeBlock = ({
 
 /**
  * @component CodeComponent
- * @category content
+ * @category displays
+ * @subniche code
  * @tier composite
  * @status stable
  * @description Code Component content component for rendering reader-facing documentation content.
@@ -168,7 +170,8 @@ export const CodeComponent = ({
 
 /**
  * @component ComplexCodeBlock
- * @category content
+ * @category displays
+ * @subniche code
  * @tier composite
  * @status stable
  * @description Complex Code Block content component for rendering reader-facing documentation content.
@@ -254,7 +257,8 @@ export const ComplexCodeBlock = ({
 
 /**
  * @component CodeSection
- * @category content
+ * @category displays
+ * @subniche code
  * @tier composite
  * @status stable
  * @description Thin wrapper that maps a `fields` object into the complex code block renderer.

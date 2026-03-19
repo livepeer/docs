@@ -1,6 +1,7 @@
 /**
  * @component StyledSteps
- * @category layout
+ * @category wrappers
+ * @subniche steps
  * @tier composite
  * @status stable
  * @description Styled Steps layout component for arranging documentation content without MDX inline styles.
@@ -55,7 +56,8 @@ export const StyledSteps = ({
 
 /**
  * @component StyledStep
- * @category layout
+ * @category wrappers
+ * @subniche steps
  * @tier composite
  * @status stable
  * @description Styled Step layout component for arranging documentation content without MDX inline styles.

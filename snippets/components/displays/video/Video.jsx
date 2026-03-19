@@ -1,6 +1,7 @@
 /**
  * @component TitledVideo
- * @category content
+ * @category displays
+ * @subniche video
  * @tier composite
  * @status stable
  * @description Titled Video content component for rendering reader-facing documentation content.
@@ -117,7 +118,8 @@ export const TitledVideo = ({
 
 /**
  * @component ShowcaseVideo
- * @category content
+ * @category displays
+ * @subniche video
  * @tier composite
  * @status stable
  * @description Showcase Video content component for rendering reader-facing documentation content.
@@ -156,7 +158,8 @@ export const ShowcaseVideo = ({ src, title, subtitle }) => {
 
 /**
  * @component Video
- * @category content
+ * @category displays
+ * @subniche video
  * @tier composite
  * @status stable
  * @description Video content component for rendering reader-facing documentation content.
@@ -276,7 +279,8 @@ export const Video = ({
 
 /**
  * @component YouTubeVideo
- * @category content
+ * @category displays
+ * @subniche video
  * @tier composite
  * @status stable
  * @description You Tube Video content component for rendering reader-facing documentation content.
@@ -363,7 +367,8 @@ export const YouTubeVideo = ({
 
 /**
  * @component YouTubeVideoData
- * @category content
+ * @category displays
+ * @subniche video
  * @tier composite
  * @status stable
  * @description You Tube Video Data content component for rendering reader-facing documentation content.
@@ -420,7 +425,8 @@ export const YouTubeVideoData = ({ items = [], limit, cols = 2 }) => {
 
 /**
  * @component LinkedInEmbed
- * @category content
+ * @category displays
+ * @subniche video
  * @tier composite
  * @status stable
  * @description Linked In Embed content component for rendering reader-facing documentation content.
@@ -477,7 +483,8 @@ export const LinkedInEmbed = ({
 
 /**
  * @component YouTubeVideoDownload
- * @category content
+ * @category displays
+ * @subniche video
  * @tier composite
  * @status deprecated
  * @description You Tube Video Download content component for rendering reader-facing documentation content.
@@ -543,7 +550,8 @@ export const YouTubeVideoDownload = ({
 
 /**
  * @component CardVideo
- * @category content
+ * @category displays
+ * @subniche video
  * @tier composite
  * @status stable
  * @description Card Video content component for rendering reader-facing documentation content.

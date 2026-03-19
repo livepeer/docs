@@ -1,6 +1,7 @@
 /**
  * @component FlexContainer
- * @category layout
+ * @category wrappers
+ * @subniche containers
  * @tier composite
  * @status stable
  * @description Flex Container layout component for arranging documentation content without MDX inline styles.
@@ -57,7 +58,8 @@ export const FlexContainer = ({
 
 /**
  * @component GridContainer
- * @category layout
+ * @category wrappers
+ * @subniche containers
  * @tier composite
  * @status stable
  * @description Grid Container layout component for arranging documentation content without MDX inline styles.
@@ -105,7 +107,8 @@ export const GridContainer = ({
 
 /**
  * @component Spacer
- * @category layout
+ * @category wrappers
+ * @subniche containers
  * @tier composite
  * @status stable
  * @description Spacer layout component for arranging documentation content without MDX inline styles.

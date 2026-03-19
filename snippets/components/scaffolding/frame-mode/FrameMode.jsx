@@ -16,7 +16,8 @@
 
 /**
  * @component PageHeader
- * @category page-structure
+ * @category scaffolding
+ * @subniche frame-mode
  * @tier pattern
  * @status stable
  * @description H1 - Custom H1 heading component for frame mode
@@ -105,7 +106,8 @@ const PageHeader = ({
 
 /**
  * @component H1
- * @category page-structure
+ * @category scaffolding
+ * @subniche frame-mode
  * @tier pattern
  * @status stable
  * @description H1 page-structure component for frame-mode and portal layout scaffolding.
@@ -169,7 +171,8 @@ const H1 = ({
 
 /**
  * @component H2
- * @category page-structure
+ * @category scaffolding
+ * @subniche frame-mode
  * @tier pattern
  * @status stable
  * @description H2 - Custom H2 heading component for frame mode
@@ -233,7 +236,8 @@ const H2 = ({
 
 /**
  * @component H3
- * @category page-structure
+ * @category scaffolding
+ * @subniche frame-mode
  * @tier pattern
  * @status stable
  * @description H3 - Custom H3 heading component for frame mode
@@ -297,7 +301,8 @@ const H3 = ({
 
 /**
  * @component H4
- * @category page-structure
+ * @category scaffolding
+ * @subniche frame-mode
  * @tier pattern
  * @status stable
  * @description H4 - Custom H4 heading component for frame mode
@@ -361,7 +366,8 @@ const H4 = ({
 
 /**
  * @component H5
- * @category page-structure
+ * @category scaffolding
+ * @subniche frame-mode
  * @tier pattern
  * @status stable
  * @description H5 - Custom H5 heading component for frame mode
@@ -425,7 +431,8 @@ const H5 = ({
 
 /**
  * @component H6
- * @category page-structure
+ * @category scaffolding
+ * @subniche frame-mode
  * @tier pattern
  * @status stable
  * @description H6 - Custom H6 heading component for frame mode
@@ -489,7 +496,8 @@ const H6 = ({
 
 /**
  * @component P
- * @category page-structure
+ * @category scaffolding
+ * @subniche frame-mode
  * @tier pattern
  * @status stable
  * @description P - Custom paragraph component for frame mode
@@ -550,7 +558,8 @@ const P = ({
 
 /**
  * @component Divider
- * @category page-structure
+ * @category scaffolding
+ * @subniche frame-mode
  * @tier pattern
  * @status stable
  * @description Renders a horizontal rule (---) with proper styling for frame mode.

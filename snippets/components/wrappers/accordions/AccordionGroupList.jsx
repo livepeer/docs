@@ -1,6 +1,7 @@
 /**
  * @component AccordionGroupList
- * @category layout
+ * @category wrappers
+ * @subniche accordions
  * @tier composite
  * @status stable
  * @description Renders a configurable number of empty accordion sections for scaffold examples.

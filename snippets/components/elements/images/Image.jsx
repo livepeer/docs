@@ -1,6 +1,7 @@
 /**
  * @component Image
- * @category primitives
+ * @category elements
+ * @subniche images
  * @tier primitive
  * @status stable
  * @description Image primitive used in authored documentation and component-library examples.
@@ -37,7 +38,8 @@ export const Image = ({ src, alt, caption, icon, hint, fullwidth = true }) => {
 
 /**
  * @component LinkImage
- * @category primitives
+ * @category elements
+ * @subniche images
  * @tier primitive
  * @status stable
  * @description Link Image primitive used in authored documentation and component-library examples.

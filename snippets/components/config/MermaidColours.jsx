@@ -1,6 +1,6 @@
 /**
  * @component MermaidColours
- * @category page-structure
+ * @category config
  * @tier pattern
  * @status stable
  * @description Centralised colour definitions for Mermaid diagrams. Mermaid requires literal colour values and does not support CSS custom properties.

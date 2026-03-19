@@ -1,6 +1,7 @@
 /**
  * @component DisplayCard
- * @category layout
+ * @category wrappers
+ * @subniche cards
  * @tier composite
  * @status stable
  * @description --------
@@ -77,7 +78,8 @@ export const DisplayCard = ({
 
 /**
  * @component WidthCard
- * @category layout
+ * @category wrappers
+ * @subniche cards
  * @tier composite
  * @status stable
  * @description Renders the width card component
@@ -115,7 +117,8 @@ export const WidthCard = ({ width = '80%', children, ...cardProps }) => {
 
 /**
  * @component InlineImageCard
- * @category layout
+ * @category wrappers
+ * @subniche cards
  * @tier composite
  * @status stable
  * @description Renders the inline image card component

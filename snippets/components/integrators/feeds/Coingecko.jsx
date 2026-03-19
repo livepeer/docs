@@ -1,7 +1,8 @@
 
 /**
  * @component CoinGeckoExchanges
- * @category data
+ * @category integrators
+ * @subniche feeds
  * @tier composite
  * @status stable
  * @description Fetches and displays exchange availability for a token from the CoinGecko API.

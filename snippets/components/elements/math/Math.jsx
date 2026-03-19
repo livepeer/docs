@@ -1,6 +1,7 @@
 /**
  * @component MathInline
- * @category primitives
+ * @category elements
+ * @subniche math
  * @tier primitive
  * @status stable
  * @description Math Inline primitive used in authored documentation and component-library examples.
@@ -32,7 +33,8 @@ export const MathInline = ({ latex, className = "", ariaLabel }) => {
 
 /**
  * @component MathBlock
- * @category primitives
+ * @category elements
+ * @subniche math
  * @tier primitive
  * @status stable
  * @description Math Block primitive used in authored documentation and component-library examples.

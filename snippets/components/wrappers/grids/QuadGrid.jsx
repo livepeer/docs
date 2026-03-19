@@ -2,7 +2,8 @@
 
 /**
  * @component QuadGrid
- * @category layout
+ * @category wrappers
+ * @subniche grids
  * @tier pattern
  * @status stable
  * @description Renders the quad grid component
