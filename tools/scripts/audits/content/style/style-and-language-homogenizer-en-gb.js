@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      style-and-language-homogenizer-en-gb
- * @type        remediator
+ * @type        audit
  * @concern     content
  * @niche       style
  * @purpose     tooling:dev-tools

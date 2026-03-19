@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      generate-seo
- * @type        generator
+ * @type        remediator
  * @concern     content
  * @niche       seo
  * @purpose     feature:seo
