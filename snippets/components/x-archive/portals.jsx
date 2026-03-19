@@ -13,7 +13,7 @@
  * Note: Components use CSS globals defined in style.css - no imports needed.
  *
  * PortalHeroContent uses CustomDivider which needs to be imported on the MDX page:
- * import { CustomDivider } from "/snippets/components/primitives/divider.jsx";
+ * import { CustomDivider } from "/snippets/components/elements/spacing/divider.jsx";
  *
  * If not imported, components will not render correctly.
  *

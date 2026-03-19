@@ -138,7 +138,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/page-structure/portals.jsx",
+      "rawPath": "/snippets/components/scaffolding/portals/portals.jsx",
       "resolvedPath": "snippets/components/page-structure/portals.jsx",
       "exists": true,
       "status": "ok",
@@ -147,7 +147,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/display/frame-mode.jsx",
+      "rawPath": "/snippets/components/scaffolding/frame-mode/frameMode.jsx",
       "resolvedPath": "snippets/components/display/frame-mode.jsx",
       "exists": true,
       "status": "ok",
@@ -156,7 +156,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/primitives/divider.jsx",
+      "rawPath": "/snippets/components/elements/spacing/divider.jsx",
       "resolvedPath": "snippets/components/primitives/divider.jsx",
       "exists": true,
       "status": "ok",
@@ -165,7 +165,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/primitives/links.jsx",
+      "rawPath": "/snippets/components/elements/links/links.jsx",
       "resolvedPath": "snippets/components/primitives/links.jsx",
       "exists": true,
       "status": "ok",
@@ -174,7 +174,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/page-structure/heroGif.jsx",
+      "rawPath": "/snippets/components/scaffolding/heroes/heroGif.jsx",
       "resolvedPath": "snippets/components/page-structure/heroGif.jsx",
       "exists": true,
       "status": "ok",
@@ -183,7 +183,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/video.jsx",
+      "rawPath": "/snippets/components/displays/video/video.jsx",
       "resolvedPath": "snippets/components/content/video.jsx",
       "exists": true,
       "status": "ok",
@@ -664,7 +664,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/containers.jsx",
+      "rawPath": "/snippets/components/wrappers/containers/containers.jsx",
       "resolvedPath": "snippets/components/layout/containers.jsx",
       "exists": true,
       "status": "ok",
@@ -673,7 +673,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/primitives/divider.jsx",
+      "rawPath": "/snippets/components/elements/spacing/divider.jsx",
       "resolvedPath": "snippets/components/primitives/divider.jsx",
       "exists": true,
       "status": "ok",
@@ -682,7 +682,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/layout.jsx",
+      "rawPath": "/snippets/components/wrappers/accordions/layout.jsx",
       "resolvedPath": "snippets/components/layout/layout.jsx",
       "exists": true,
       "status": "ok",
@@ -691,7 +691,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/customCards.jsx",
+      "rawPath": "/snippets/components/wrappers/cards/customCards.jsx",
       "resolvedPath": "snippets/components/layout/customCards.jsx",
       "exists": true,
       "status": "ok",
@@ -700,7 +700,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/primitives/image.jsx",
+      "rawPath": "/snippets/components/elements/images/image.jsx",
       "resolvedPath": "snippets/components/primitives/image.jsx",
       "exists": true,
       "status": "ok",
@@ -983,7 +983,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/data/data.jsx",
+      "rawPath": "/snippets/components/integrators/blog/data.jsx",
       "resolvedPath": "snippets/components/data/data.jsx",
       "exists": true,
       "status": "ok",
@@ -1140,7 +1140,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/data/data.jsx",
+      "rawPath": "/snippets/components/integrators/blog/data.jsx",
       "resolvedPath": "snippets/components/data/data.jsx",
       "exists": true,
       "status": "ok",
@@ -1149,7 +1149,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/data/embed.jsx",
+      "rawPath": "/snippets/components/integrators/embeds/dataEmbed.jsx",
       "resolvedPath": "snippets/components/data/embed.jsx",
       "exists": true,
       "status": "ok",
@@ -1158,7 +1158,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/video.jsx",
+      "rawPath": "/snippets/components/displays/video/video.jsx",
       "resolvedPath": "snippets/components/content/video.jsx",
       "exists": true,
       "status": "ok",
@@ -1167,7 +1167,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/data/videoData.jsx",
+      "rawPath": "/snippets/components/integrators/video-data/videoData.jsx",
       "resolvedPath": "snippets/components/data/videoData.jsx",
       "exists": true,
       "status": "ok",
@@ -1176,7 +1176,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/primitives/links.jsx",
+      "rawPath": "/snippets/components/elements/links/links.jsx",
       "resolvedPath": "snippets/components/primitives/links.jsx",
       "exists": true,
       "status": "ok",
@@ -1250,7 +1250,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/data/data.jsx",
+      "rawPath": "/snippets/components/integrators/blog/data.jsx",
       "resolvedPath": "snippets/components/data/data.jsx",
       "exists": true,
       "status": "ok",
@@ -1259,7 +1259,7 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/primitives/links.jsx",
+      "rawPath": "/snippets/components/elements/links/links.jsx",
       "resolvedPath": "snippets/components/primitives/links.jsx",
       "exists": true,
       "status": "ok",

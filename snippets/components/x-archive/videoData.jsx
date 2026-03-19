@@ -1,4 +1,4 @@
-import { YouTubeVideo } from "/snippets/components/content/video.jsx";
+import { YouTubeVideo } from "/snippets/components/displays/video/video.jsx";
 
 /**
  * @component YouTubeVideoData

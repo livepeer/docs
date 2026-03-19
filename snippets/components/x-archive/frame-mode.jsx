@@ -96,7 +96,7 @@ const PageHeader = ({
   );
 };
 
-// import { Starfield as HeroStarfield } from "/snippets/components/page-structure/heroGif.jsx";
+// import { Starfield as HeroStarfield } from "/snippets/components/scaffolding/heroes/heroGif.jsx";
 // const PageHeader2 = ({
 //   title,
 //   subtitle,
