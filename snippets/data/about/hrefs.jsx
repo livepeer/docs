@@ -2360,8 +2360,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/wrappers/accordions/text.jsx",
-      "resolvedPath": "snippets/components/wrappers/accordions/text.jsx",
+      "rawPath": "/snippets/components/wrappers/accordions/accordionLayout.jsx",
+      "resolvedPath": "snippets/components/wrappers/accordions/accordionLayout.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []

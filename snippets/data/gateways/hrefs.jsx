@@ -304,8 +304,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/wrappers/accordions/layout.jsx",
-      "resolvedPath": "snippets/components/wrappers/accordions/layout.jsx",
+      "rawPath": "/snippets/components/wrappers/containers/layout.jsx",
+      "resolvedPath": "snippets/components/wrappers/containers/layout.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []

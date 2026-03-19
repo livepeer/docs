@@ -84,7 +84,7 @@ export const PdfEmbed = ({
 )
 
 // ARCHIVED: duplicate of MarkdownEmbed - see tasks/reports/archived-components-review.md
-// export const EmbedMarkdown = ({ url }) => <MarkdownEmbed url={url} />
+export const EmbedMarkdown = ({ url }) => <MarkdownEmbed url={url} />
 
 /**
  * @component TwitterTimeline
