@@ -5,31 +5,33 @@
 # @scope             .githooks
 # @domain            docs
 # @needs             R-R29
-# @purpose-statement Pre-commit hook orchestrator — runs structural checks, unit tests, codex validation, and docs-index freshness check before allowing commit
+# @purpose-statement Pre-commit hook — hard gates only (syntax, security, safety). All soft checks run in GitHub Actions PR workflows.
 # @pipeline          P1 (commit, hook entry point)
 # @usage             bash .githooks/pre-commit [flags]
-# Pre-commit hook to enforce style guide compliance
-# Checks for common violations before allowing commits
+#
+# HARD GATES ONLY — this hook blocks commits that would:
+#   1. Break MDX syntax (unparseable pages)
+#   2. Break docs.json redirect integrity
+#   3. Delete files without human override
+#   4. Modify .allowlist or v1/ (frozen/protected)
+#   5. Violate Codex branch isolation
+#
+# Everything else (style, copy, components, governance, indexes, catalogs)
+# runs in GitHub Actions workflows on pull_request events.
 #
 # To install this hook, run:
 #   bash .githooks/install.sh
 #   # or: lpd hooks install
 #
 # Bypass flags (use sparingly):
-#   SKIP_STRUCTURE_CHECK=1 - Skip root directory and snippets structure checks
-#   SKIP_STYLE_CHECK=1     - Skip style guide compliance checks
-#   SKIP_VERIFICATION=1    - Skip verification scripts
-#   SKIP_TESTS=1           - Skip test suite
-#   DISABLE_PRECOMMIT_STAGED_CACHE=1 - Force rerun of the expensive staged validation suite
+#   SKIP_STRUCTURE_CHECK=1 - Skip root directory structure checks
 #   SKIP_ALL=1             - Skip all checks (use with extreme caution)
 #
 # Human-only override flags:
-#   --trailer "allowlist-edit=true" - Allow editing .allowlist file (HUMANS ONLY - AIs must never use this)
-#   ALLOWLIST_EDIT=1                - Legacy fallback for automation contexts
-#   --trailer "allow-deletions=true"      - Allow file deletions (HUMANS ONLY - AIs must never use this)
-#   ALLOW_DELETIONS=1                      - Legacy fallback for automation contexts
+#   --trailer "allowlist-edit=true"   - Allow editing .allowlist file (HUMANS ONLY)
+#   --trailer "allow-deletions=true"  - Allow file deletions (HUMANS ONLY)
+#   --trailer "allow-main-commit=true" - Allow codex session to commit to docs-v2
 
-STYLE_GUIDE_PATH="v2/pages/07_resources/documentation-guide/style-guide.mdx"
 VIOLATIONS=0
 WARNINGS=()
 
@@ -41,167 +43,18 @@ NC='\033[0m' # No Color
 
 # Check for bypass flags
 SKIP_STRUCTURE_CHECK=${SKIP_STRUCTURE_CHECK:-0}
-SKIP_STYLE_CHECK=${SKIP_STYLE_CHECK:-0}
-SKIP_VERIFICATION=${SKIP_VERIFICATION:-0}
-SKIP_TESTS=${SKIP_TESTS:-0}
-DISABLE_PRECOMMIT_STAGED_CACHE=${DISABLE_PRECOMMIT_STAGED_CACHE:-0}
 SKIP_ALL=${SKIP_ALL:-0}
 ALLOW_DELETIONS=${ALLOW_DELETIONS:-0}
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
 
-# Freeze staged files snapshot to avoid hook-induced staging changes.
+# Freeze staged files snapshot
 STAGED_FILES_SNAPSHOT=$(git diff --cached --name-only --diff-filter=ACMR 2>/dev/null || true)
-STAGED_FILES_SNAPSHOT_ALL=$(git diff --cached --name-only --diff-filter=ACMRD 2>/dev/null || true)
-STAGED_FILES_SNAPSHOT_ADDED=$(git diff --cached --name-only --diff-filter=A 2>/dev/null || true)
 STAGED_FILES_SNAPSHOT_DELETED=$(git diff --cached --name-only --diff-filter=D 2>/dev/null || true)
-export LPD_STAGED_FILES_SNAPSHOT="$STAGED_FILES_SNAPSHOT"
 
-get_staged_docs_pages() {
-    if ! command -v node &>/dev/null || [ ! -f "tests/utils/file-walker.js" ]; then
-        return 0
-    fi
+# ═══════════════════════════════════════════════════════════════
+# HELPER FUNCTIONS
+# ═══════════════════════════════════════════════════════════════
 
-    node -e "const path = require('path'); const { getStagedDocsPageFiles } = require('./tests/utils/file-walker'); const root = process.cwd(); const files = getStagedDocsPageFiles(root).map((filePath) => path.relative(root, filePath).split(path.sep).join('/')); process.stdout.write(files.join('\n'));"
-}
-
-STAGED_DOCS_PAGES=$(get_staged_docs_pages)
-
-PRECOMMIT_STAGED_CACHE_HIT=0
-PRECOMMIT_STAGED_CACHE_KEY=""
-PRECOMMIT_STAGED_CACHE_INDEX_TREE=""
-PRECOMMIT_STAGED_CACHE_FILE=""
-PRECOMMIT_STAGED_CACHE_CREATED_AT=""
-
-can_use_precommit_staged_cache() {
-    if [ "$DISABLE_PRECOMMIT_STAGED_CACHE" = "1" ]; then
-        return 1
-    fi
-
-    if [ "$SKIP_VERIFICATION" = "1" ] || [ "$SKIP_TESTS" = "1" ]; then
-        return 1
-    fi
-
-    if ! command -v node &>/dev/null || [ ! -f "tools/lib/precommit-staged-cache.js" ]; then
-        return 1
-    fi
-
-    return 0
-}
-
-read_precommit_staged_cache() {
-    if ! can_use_precommit_staged_cache; then
-        return 1
-    fi
-
-    local output=""
-    output=$(node - "$PWD" <<'NODE'
-const cache = require('./tools/lib/precommit-staged-cache');
-const repoRoot = process.argv[2];
-
-try {
-  const result = cache.readCache({ repoRoot });
-  process.stdout.write([
-    result.hit ? '1' : '0',
-    result.key || '',
-    result.indexTree || '',
-    result.cacheFilePath || '',
-    result.entry?.createdAt || ''
-  ].join('\t'));
-} catch (error) {
-  process.stderr.write(`${error.message}\n`);
-  process.exit(1);
-}
-NODE
-    ) || return 1
-
-    IFS=$'\t' read -r PRECOMMIT_STAGED_CACHE_HIT PRECOMMIT_STAGED_CACHE_KEY PRECOMMIT_STAGED_CACHE_INDEX_TREE PRECOMMIT_STAGED_CACHE_FILE PRECOMMIT_STAGED_CACHE_CREATED_AT <<< "$output"
-    [ "$PRECOMMIT_STAGED_CACHE_HIT" = "1" ]
-}
-
-write_precommit_staged_cache() {
-    if ! can_use_precommit_staged_cache; then
-        return 1
-    fi
-
-    node - "$PWD" "$CURRENT_BRANCH" <<'NODE'
-const cache = require('./tools/lib/precommit-staged-cache');
-const repoRoot = process.argv[2];
-const branch = process.argv[3];
-
-cache.writeCache({
-  repoRoot,
-  metadata: {
-    branch,
-    source: 'pre-commit'
-  }
-});
-NODE
-}
-
-get_forbidden_staged_generated_outputs() {
-    if ! command -v node &>/dev/null || [ ! -f "tools/lib/generated-artifacts.js" ]; then
-        return 0
-    fi
-
-    node - <<'NODE'
-const { getForbiddenEphemeralFiles } = require('./tools/lib/generated-artifacts');
-const files = String(process.env.LPD_STAGED_FILES_SNAPSHOT || '')
-  .split(/\r?\n/)
-  .map((entry) => entry.trim())
-  .filter(Boolean);
-process.stdout.write(getForbiddenEphemeralFiles(files).join('\n'));
-NODE
-}
-
-format_generated_artifact_message() {
-    local artifact_path="$1"
-    local mode="${2:-summary}"
-
-    if ! command -v node &>/dev/null || [ ! -f "tools/lib/generated-artifacts.js" ]; then
-        return 0
-    fi
-
-    GENERATED_ARTIFACT_PATH="$artifact_path" GENERATED_ARTIFACT_MODE="$mode" node - <<'NODE'
-const { getFirstArtifactByPath } = require('./tools/lib/generated-artifacts');
-const target = String(process.env.GENERATED_ARTIFACT_PATH || '').trim();
-const mode = String(process.env.GENERATED_ARTIFACT_MODE || 'summary').trim();
-const artifact = getFirstArtifactByPath(target);
-if (!artifact) {
-  process.exit(0);
-}
-if (mode === 'generator') {
-  process.stdout.write(artifact.generator);
-  process.exit(0);
-}
-const detail = `${artifact.path} (${artifact.class}, hook_policy=${artifact.hook_policy}, delta_strategy=${artifact.delta_strategy})`;
-process.stdout.write(detail);
-NODE
-}
-
-should_check_generated_artifact() {
-    local artifact_path="$1"
-
-    if ! command -v node &>/dev/null || [ ! -f "tools/lib/generated-artifacts.js" ]; then
-        return 1
-    fi
-
-    GENERATED_ARTIFACT_PATH="$artifact_path" LPD_STAGED_FILES_SNAPSHOT_ALL="$STAGED_FILES_SNAPSHOT_ALL" node - <<'NODE'
-const { getFirstArtifactByPath, isArtifactAffectedByFiles } = require('./tools/lib/generated-artifacts');
-const target = String(process.env.GENERATED_ARTIFACT_PATH || '').trim();
-const files = String(process.env.LPD_STAGED_FILES_SNAPSHOT_ALL || '')
-  .split(/\r?\n/)
-  .map((entry) => entry.trim())
-  .filter(Boolean);
-const artifact = getFirstArtifactByPath(target);
-if (!artifact) {
-  process.exit(1);
-}
-process.exit(isArtifactAffectedByFiles(artifact, files) ? 0 : 1);
-NODE
-}
-
-# pre-commit hooks do not receive commit args directly. Detect trailer usage
-# from the parent git commit command.
 PARENT_GIT_CMD=$(ps -o command= -p "$PPID" 2>/dev/null || true)
 
 has_human_override_trailer() {
@@ -215,137 +68,16 @@ has_human_override_trailer() {
 }
 
 is_codex_session() {
-    if [[ "${CODEX_SHELL:-0}" == "1" ]]; then
-        return 0
-    fi
-
-    if [[ -n "${CODEX_THREAD_ID:-}" ]]; then
-        return 0
-    fi
-
-    if [[ "${CODEX_CI:-0}" == "1" ]]; then
-        return 0
-    fi
-
-    if [[ -n "${CODEX_INTERNAL_ORIGINATOR_OVERRIDE:-}" ]]; then
-        return 0
-    fi
-
+    if [[ "${CODEX_SHELL:-0}" == "1" ]]; then return 0; fi
+    if [[ -n "${CODEX_THREAD_ID:-}" ]]; then return 0; fi
+    if [[ "${CODEX_CI:-0}" == "1" ]]; then return 0; fi
+    if [[ -n "${CODEX_INTERNAL_ORIGINATOR_OVERRIDE:-}" ]]; then return 0; fi
     return 1
 }
 
 allow_docs_v2_commit_override() {
-    if [[ "${ALLOW_MAIN_COMMIT:-0}" == "1" ]]; then
-        return 0
-    fi
-
-    if has_human_override_trailer "allow-main-commit=true"; then
-        return 0
-    fi
-
-    return 1
-}
-
-enforce_docs_v2_codex_isolation() {
-    if [[ "$CURRENT_BRANCH" != "docs-v2" ]]; then
-        return 0
-    fi
-
-    if ! is_codex_session; then
-        return 0
-    fi
-
-    if allow_docs_v2_commit_override; then
-        echo -e "${YELLOW}⚠️  docs-v2 commit override detected (human-authorized).${NC}"
-        return 0
-    fi
-
-    echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${RED}║  ❌ COMMIT BLOCKED: CODEX SESSION ON docs-v2                 ║${NC}"
-    echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
-    echo ""
-    echo -e "${YELLOW}Do not stash/reset. Preserve current staged+unstaged edits by branching in-place:${NC}"
-    echo "  git switch -c codex/<issue-id>-<slug>"
-    echo "  # if branch exists already: git switch codex/<issue-id>-<slug>"
-    echo ""
-    echo -e "${YELLOW}Then initialize contract + lock:${NC}"
-    echo "  node tools/scripts/codex/task-preflight.js --task <issue-id> --slug <slug> --scope \"<path1,path2>\""
-    echo ""
-    echo -e "${YELLOW}Human override (explicit chat instruction required):${NC}"
-    echo "  ALLOW_MAIN_COMMIT=1 git commit -m \"...\" --trailer \"allow-main-commit=true\""
-    echo ""
-    return 1
-}
-
-run_codex_task_contract_check() {
-    if [[ "$CURRENT_BRANCH" != codex/* ]]; then
-        return 0
-    fi
-
-    echo -e "${YELLOW}🔍 Validating codex task contract...${NC}"
-    if node tools/scripts/validate-codex-task-contract.js --branch "$CURRENT_BRANCH" --validate-contract-only --quiet; then
-        echo -e "${GREEN}✓ Codex task contract check passed${NC}"
-        return 0
-    fi
-
-    VIOLATIONS=$((VIOLATIONS + 1))
-    WARNINGS+=("❌ Codex task contract validation failed")
-    echo -e "${RED}❌ Codex task contract validation failed${NC}"
-    return 1
-}
-
-run_codex_lock_check() {
-    if [[ "$CURRENT_BRANCH" != codex/* ]]; then
-        return 0
-    fi
-
-    local script_path="tools/scripts/codex/validate-locks.js"
-    if [ ! -f "$script_path" ]; then
-        WARNINGS+=("❌ Missing codex lock validator: $script_path")
-        VIOLATIONS=$((VIOLATIONS + 1))
-        echo -e "${RED}❌ Missing codex lock validator: $script_path${NC}"
-        return 1
-    fi
-
-    echo -e "${YELLOW}🔍 Validating codex local lock ownership...${NC}"
-    if node "$script_path" --branch "$CURRENT_BRANCH" --staged --quiet; then
-        echo -e "${GREEN}✓ Codex local lock check passed${NC}"
-        return 0
-    fi
-
-    WARNINGS+=("❌ Codex local lock validation failed")
-    VIOLATIONS=$((VIOLATIONS + 1))
-    echo -e "${RED}❌ Codex local lock validation failed${NC}"
-    return 1
-}
-
-run_ai_stash_policy_check() {
-    local script_path="tools/scripts/check-no-ai-stash.sh"
-    if [ ! -x "$script_path" ]; then
-        WARNINGS+=("❌ Missing executable guard script: $script_path")
-        VIOLATIONS=$((VIOLATIONS + 1))
-        echo -e "${RED}❌ Missing executable guard script: $script_path${NC}"
-        return 1
-    fi
-
-    echo -e "${YELLOW}🔍 Enforcing AI stash policy...${NC}"
-    if bash "$script_path" --quiet; then
-        echo -e "${GREEN}✓ AI stash policy check passed${NC}"
-        return 0
-    fi
-
-    VIOLATIONS=$((VIOLATIONS + 1))
-    WARNINGS+=("❌ AI stash policy violation: stash-based isolation detected")
-    echo -e "${RED}❌ AI stash policy violation: stash-based isolation detected${NC}"
-    echo -e "${YELLOW}   Required workflow: branch + WIP commit checkpoints (no git stash).${NC}"
-    return 1
-}
-
-should_enforce_ai_stash_policy() {
-    if [[ "$CURRENT_BRANCH" == codex/* ]]; then
-        return 0
-    fi
-
+    if [[ "${ALLOW_MAIN_COMMIT:-0}" == "1" ]]; then return 0; fi
+    if has_human_override_trailer "allow-main-commit=true"; then return 0; fi
     return 1
 }
 
@@ -356,15 +88,8 @@ get_git_blob_ref() {
 
 get_archive_followup_target() {
     local file_path="$1"
-
-    if [[ "$file_path" != v2/* ]]; then
-        return 1
-    fi
-
-    if [[ "$file_path" == v2/x-archived/* ]]; then
-        return 1
-    fi
-
+    if [[ "$file_path" != v2/* ]]; then return 1; fi
+    if [[ "$file_path" == v2/x-archived/* ]]; then return 1; fi
     printf 'v2/x-archived/%s\n' "${file_path#v2/}"
 }
 
@@ -373,29 +98,53 @@ is_allowed_archive_followup_delete() {
     local archive_path=""
     local source_blob=""
     local archive_blob=""
-
     archive_path=$(get_archive_followup_target "$file_path") || return 1
     source_blob=$(get_git_blob_ref "HEAD:$file_path")
-    if [ -z "$source_blob" ]; then
-        return 1
-    fi
-
+    if [ -z "$source_blob" ]; then return 1; fi
     archive_blob=$(get_git_blob_ref ":$archive_path")
     if [ -z "$archive_blob" ]; then
         archive_blob=$(get_git_blob_ref "HEAD:$archive_path")
     fi
-    if [ -z "$archive_blob" ]; then
-        return 1
-    fi
-
+    if [ -z "$archive_blob" ]; then return 1; fi
     [ "$source_blob" = "$archive_blob" ]
 }
+
+# ═══════════════════════════════════════════════════════════════
+# SKIP_ALL BYPASS
+# ═══════════════════════════════════════════════════════════════
 
 if [ "$SKIP_ALL" = "1" ]; then
     echo -e "${YELLOW}⚠️  WARNING: All pre-commit checks bypassed (SKIP_ALL=1)${NC}"
     echo -e "${YELLOW}   This should only be used in emergencies.${NC}"
     exit 0
 fi
+
+# ═══════════════════════════════════════════════════════════════
+# HARD GATE 1: CODEX BRANCH ISOLATION
+# ═══════════════════════════════════════════════════════════════
+
+enforce_docs_v2_codex_isolation() {
+    if [[ "$CURRENT_BRANCH" != "docs-v2" ]]; then return 0; fi
+    if ! is_codex_session; then return 0; fi
+    if allow_docs_v2_commit_override; then
+        echo -e "${YELLOW}⚠️  docs-v2 commit override detected (human-authorized).${NC}"
+        return 0
+    fi
+    echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${RED}║  ❌ COMMIT BLOCKED: CODEX SESSION ON docs-v2                 ║${NC}"
+    echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    echo -e "${YELLOW}Do not stash/reset. Preserve current staged+unstaged edits by branching in-place:${NC}"
+    echo "  git switch -c codex/<issue-id>-<slug>"
+    echo ""
+    echo -e "${YELLOW}Then initialize contract + lock:${NC}"
+    echo "  node tools/scripts/codex/task-preflight.js --task <issue-id> --slug <slug> --scope \"<path1,path2>\""
+    echo ""
+    echo -e "${YELLOW}Human override (explicit chat instruction required):${NC}"
+    echo "  ALLOW_MAIN_COMMIT=1 git commit -m \"...\" --trailer \"allow-main-commit=true\""
+    echo ""
+    return 1
+}
 
 if ! enforce_docs_v2_codex_isolation; then
     exit 1
@@ -405,14 +154,48 @@ if [[ "$CURRENT_BRANCH" == "docs-v2" ]]; then
     echo -e "${YELLOW}⚠️  You are committing on docs-v2. Recommended path for agent tasks is an isolated codex/<issue-id>-<slug> branch/worktree.${NC}"
 fi
 
-run_codex_task_contract_check
-run_codex_lock_check
-if should_enforce_ai_stash_policy; then
-    run_ai_stash_policy_check
+# Codex task contract check
+if [[ "$CURRENT_BRANCH" == codex/* ]]; then
+    echo -e "${YELLOW}🔍 Validating codex task contract...${NC}"
+    if node tools/scripts/validate-codex-task-contract.js --branch "$CURRENT_BRANCH" --validate-contract-only --quiet 2>/dev/null; then
+        echo -e "${GREEN}✓ Codex task contract check passed${NC}"
+    else
+        VIOLATIONS=$((VIOLATIONS + 1))
+        WARNINGS+=("❌ Codex task contract validation failed")
+        echo -e "${RED}❌ Codex task contract validation failed${NC}"
+    fi
+
+    # Codex lock check
+    local_lock_script="tools/scripts/codex/validate-locks.js"
+    if [ -f "$local_lock_script" ]; then
+        echo -e "${YELLOW}🔍 Validating codex local lock ownership...${NC}"
+        if node "$local_lock_script" --branch "$CURRENT_BRANCH" --staged --quiet 2>/dev/null; then
+            echo -e "${GREEN}✓ Codex local lock check passed${NC}"
+        else
+            VIOLATIONS=$((VIOLATIONS + 1))
+            WARNINGS+=("❌ Codex local lock validation failed")
+            echo -e "${RED}❌ Codex local lock validation failed${NC}"
+        fi
+    fi
+
+    # AI stash policy
+    stash_script="tools/scripts/check-no-ai-stash.sh"
+    if [ -x "$stash_script" ]; then
+        echo -e "${YELLOW}🔍 Enforcing AI stash policy...${NC}"
+        if bash "$stash_script" --quiet 2>/dev/null; then
+            echo -e "${GREEN}✓ AI stash policy check passed${NC}"
+        else
+            VIOLATIONS=$((VIOLATIONS + 1))
+            WARNINGS+=("❌ AI stash policy violation")
+            echo -e "${RED}❌ AI stash policy violation: stash-based isolation detected${NC}"
+        fi
+    fi
 fi
 
-# Check for file deletions (BLOCKED - requires human override)
-# NOTE: Deletions in tasks/ are allowed (AI-only working directory)
+# ═══════════════════════════════════════════════════════════════
+# HARD GATE 2: FILE DELETION GUARD
+# ═══════════════════════════════════════════════════════════════
+
 ALL_DELETED_FILES=$(git diff --cached --name-only --diff-filter=D || true)
 DELETED_FILES=$(echo "$ALL_DELETED_FILES" | grep -v '^tasks/' || true)
 ALLOWED_ARCHIVE_DELETIONS=""
@@ -420,15 +203,11 @@ ALLOWED_ARCHIVE_DELETIONS=""
 if [ -n "$DELETED_FILES" ]; then
     FILTERED_DELETED_FILES=""
     while IFS= read -r deleted_file; do
-        if [ -z "$deleted_file" ]; then
-            continue
-        fi
-
+        if [ -z "$deleted_file" ]; then continue; fi
         if is_allowed_archive_followup_delete "$deleted_file"; then
             ALLOWED_ARCHIVE_DELETIONS="${ALLOWED_ARCHIVE_DELETIONS}${deleted_file}"$'\n'
             continue
         fi
-
         FILTERED_DELETED_FILES="${FILTERED_DELETED_FILES}${deleted_file}"$'\n'
     done <<< "$DELETED_FILES"
     DELETED_FILES=$(printf '%s' "$FILTERED_DELETED_FILES")
@@ -445,53 +224,14 @@ if [ -n "$DELETED_FILES" ]; then
         echo -e "${RED}║  ❌ FILE DELETIONS DETECTED - COMMIT BLOCKED                 ║${NC}"
         echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
         echo ""
-        echo -e "${RED}🚫 DELETIONS ARE NOT ALLOWED${NC}"
-        echo ""
         echo "The following files are being deleted:"
         echo "$DELETED_FILES" | sed 's/^/  ❌ /'
         echo ""
-        if [ -n "$(echo "$ALL_DELETED_FILES" | grep '^tasks/')" ]; then
-            echo -e "${GREEN}ℹ️  Note: Deletions in tasks/ are allowed (AI-only working directory)${NC}"
-            echo ""
-        fi
-        echo -e "${YELLOW}📋 INSTRUCTIONS FOR AI AGENTS:${NC}"
-        echo ""
-        echo -e "${YELLOW}  ⚠️  DO NOT DELETE FILES - DETERMINE CORRECT LOCATION INSTEAD${NC}"
-        echo ""
-        echo "  1. READ THE FILES to understand their content and purpose"
-        echo "  2. CHECK THE MIGRATION PLAN: tasks/plan/migration-plan.md"
-        echo "  3. CHECK THE README: README.md (source of truth for structure)"
-        echo "  4. CHECK THE ALLOWLIST: .allowlist (allowed root files)"
-        echo "  5. DETERMINE CORRECT LOCATION based on file content and structure rules"
-        echo "  6. MOVE files to correct location using 'git mv' (NOT delete+add)"
-        echo ""
-        echo -e "${YELLOW}📋 CORRECT LOCATIONS (per migration plan):${NC}"
-        echo "  - Config files → tools/config/ (EXCEPT .prettierrc.yaml → ROOT)"
-        echo "  - .prettierrc.yaml → ROOT (Prettier convention)"
-        echo "  - .speakeasy/ → tools/config/.speakeasy/ (Speakeasy API docs tool config)"
-        echo "  - AI rules → tools/ai-rules/"
-        echo "  - Scripts → tools/scripts/ (organized by purpose)"
-        echo "  - Planning docs → tasks/plan/"
-        echo "  - Reports → tasks/reports/"
-        echo "  - API specs → api/"
-        echo "  - Contribution docs → contribute/"
-        echo "  - Assets → snippets/assets/site/"
-        echo ""
-        echo -e "${YELLOW}📋 FOR HUMANS:${NC}"
-        echo "  1. If you need to move files, use 'git mv' instead of delete+add"
-        echo "  2. If files should be removed, unstage them: 'git restore --staged <file>'"
-        echo "  3. If this deletion is intentional and necessary:"
-        echo "     - Document WHY in the commit message"
-        echo "     - Verify files are backed up"
-        echo "     - Use: git commit -m \"your message\" --trailer \"allow-deletions=true\""
-        echo "       (legacy fallback: ALLOW_DELETIONS=1 git commit)"
-        echo ""
-        echo -e "${RED}⚠️  HUMAN OVERRIDE: Use --trailer \"allow-deletions=true\" to allow deletions${NC}"
-        echo -e "${RED}   (AIs must NEVER use this flag - deletions are dangerous!)${NC}"
+        echo -e "${YELLOW}Use 'git mv' to move files instead of deleting.${NC}"
+        echo -e "${YELLOW}Human override: git commit --trailer \"allow-deletions=true\"${NC}"
         echo ""
     else
-        echo -e "${YELLOW}⚠️  WARNING: File deletions allowed (human override detected)${NC}"
-        echo -e "${YELLOW}   Make sure deletions are intentional and files are backed up!${NC}"
+        echo -e "${YELLOW}⚠️  File deletions allowed (human override detected)${NC}"
     fi
 fi
 
@@ -500,15 +240,15 @@ if [ -n "$ALLOWED_ARCHIVE_DELETIONS" ]; then
     echo "$ALLOWED_ARCHIVE_DELETIONS" | sed '/^$/d; s/^/  ↪ /'
 fi
 
-# Check for .allowlist file changes (BLOCKED for AIs, requires human override)
+# ═══════════════════════════════════════════════════════════════
+# HARD GATE 3: .ALLOWLIST PROTECTION
+# ═══════════════════════════════════════════════════════════════
+
 WHITELIST_CHANGES=$(git diff --cached --name-only | grep -E '^\.allowlist$|^\.allowlist ' || true)
 if [ -n "$WHITELIST_CHANGES" ]; then
     ALLOWLIST_EDIT=${ALLOWLIST_EDIT:-0}
-
     if [ "$ALLOWLIST_EDIT" != "1" ]; then
-        if has_human_override_trailer "allowlist-edit"; then
-            ALLOWLIST_EDIT=1
-        fi
+        if has_human_override_trailer "allowlist-edit"; then ALLOWLIST_EDIT=1; fi
     fi
 
     if [ "$ALLOWLIST_EDIT" != "1" ]; then
@@ -517,34 +257,20 @@ if [ -n "$WHITELIST_CHANGES" ]; then
         echo -e "${RED}║  .allowlist FILE CHANGES BLOCKED                              ║${NC}"
         echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
         echo ""
-        echo -e "${RED}Attempted changes to .allowlist:${NC}"
-        echo -e "${RED}  ❌ .allowlist${NC}"
-        echo ""
-        echo -e "${YELLOW}⚠️  CRITICAL: .allowlist file is protected.${NC}"
-        echo -e "${YELLOW}   The .allowlist file contains the rule:${NC}"
-        echo -e "${YELLOW}   'IF YOU ARE AN AI YOU ARE ABSOLUTELY NOT ALLOWED TO EDIT THIS FILE.'${NC}"
-        echo ""
-        echo -e "${YELLOW}To allow editing .allowlist (HUMANS ONLY):${NC}"
-        echo -e "${YELLOW}  git commit -m \"your message\" --trailer \"allowlist-edit=true\"${NC}"
-        echo -e "${YELLOW}  (legacy fallback: ALLOWLIST_EDIT=1 git commit -m \"your message\")${NC}"
-        echo ""
-        echo -e "${RED}Commit blocked. Only humans may edit .allowlist with explicit override.${NC}"
+        echo -e "${YELLOW}⚠️  .allowlist is protected. Only humans may edit it.${NC}"
+        echo -e "${YELLOW}Human override: git commit --trailer \"allowlist-edit=true\"${NC}"
         echo ""
         exit 1
     else
-        echo -e "${YELLOW}⚠️  WARNING: .allowlist edit allowed (human override detected)${NC}"
-        echo -e "${YELLOW}   This flag should ONLY be used by humans, never by AI agents.${NC}"
+        echo -e "${YELLOW}⚠️  .allowlist edit allowed (human override detected)${NC}"
     fi
 fi
 
-# Navigation exclusions — intentional Mintlify workarounds
-# See tools/config/navigation-exclusions.json for documented patterns.
-# Validators must load this config and skip:
-#   - anchors with value " " (empty anchor sidebar separators)
-#   - pages listed in intentionalPatterns.redirectRoutes.paths
-NAVIGATION_EXCLUSIONS_CONFIG="tools/config/navigation-exclusions.json"
+# ═══════════════════════════════════════════════════════════════
+# HARD GATE 4: DOCS.JSON REDIRECT INTEGRITY + ROOT STRUCTURE
+# ═══════════════════════════════════════════════════════════════
 
-# Check for docs.json /redirect route changes (BLOCKED unless staged docs.json stays aligned with source-of-truth)
+# docs.json /redirect route changes
 DOCS_JSON_REDIRECT_DIFF=$(git diff --cached --unified=0 -- docs.json | grep -E '^[+-][^+-].*/redirect' || true)
 if [ -n "$DOCS_JSON_REDIRECT_DIFF" ]; then
     DOCS_JSON_REDIRECT_STATUS=$(node - <<'NODE'
@@ -552,9 +278,7 @@ const { spawnSync } = require('child_process');
 
 function runGit(args) {
   const result = spawnSync('git', args, { encoding: 'utf8' });
-  if (result.status !== 0) {
-    return '';
-  }
+  if (result.status !== 0) return '';
   return String(result.stdout || '');
 }
 
@@ -571,36 +295,26 @@ function collectDocsJsonRedirectEntries(raw) {
     : null;
 
   function visitPages(node, context = { tab: null, anchor: null, group: null }) {
-    if (Array.isArray(node)) {
-      node.forEach((item) => visitPages(item, context));
-      return;
-    }
+    if (Array.isArray(node)) { node.forEach((item) => visitPages(item, context)); return; }
     if (!node || typeof node !== 'object') return;
-
     const nextContext = { ...context };
     if (typeof node.tab === 'string') nextContext.tab = node.tab;
     if (typeof node.anchor === 'string') nextContext.anchor = node.anchor;
     if (typeof node.group === 'string') nextContext.group = node.group;
-
     if (Array.isArray(node.pages)) {
       node.pages.forEach((page) => {
         if (typeof page === 'string' && page.includes('/redirect')) {
           entries.push(
             `page|tab=${normalizeTabName(nextContext.tab)}|anchor=${nextContext.anchor || ''}|group=${nextContext.group || ''}|value=${page}`
           );
-        } else {
-          visitPages(page, nextContext);
-        }
+        } else { visitPages(page, nextContext); }
       });
     }
-
     if (Array.isArray(node.anchors)) visitPages(node.anchors, nextContext);
     if (Array.isArray(node.groups)) visitPages(node.groups, nextContext);
   }
 
-  if (english) {
-    visitPages(english.tabs);
-  }
+  if (english) { visitPages(english.tabs); }
 
   (docsJson.redirects || []).forEach((entry) => {
     if (!entry || typeof entry !== 'object') return;
@@ -611,7 +325,6 @@ function collectDocsJsonRedirectEntries(raw) {
       entries.push(`redirect-destination|source=${entry.source || ''}|destination=${entry.destination}`);
     }
   });
-
   return entries.sort();
 }
 
@@ -628,10 +341,7 @@ const scopedEntries = collectDocsJsonRedirectEntries(stagedScopedDocs);
 const sameAsHead = JSON.stringify(stagedEntries) === JSON.stringify(headEntries);
 const sameAsScoped = stagedScopedDocs && JSON.stringify(stagedEntries) === JSON.stringify(scopedEntries);
 
-if (sameAsHead || sameAsScoped) {
-  process.stdout.write('ALLOW');
-  process.exit(0);
-}
+if (sameAsHead || sameAsScoped) { process.stdout.write('ALLOW'); process.exit(0); }
 
 const headSet = new Set(headEntries);
 const stagedSet = new Set(stagedEntries);
@@ -647,952 +357,92 @@ NODE
         echo -e "${RED}║  docs.json /redirect CHANGES BLOCKED                         ║${NC}"
         echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
         echo ""
-        echo -e "${RED}The staged docs.json redirect surface no longer matches HEAD or the staged scoped-navigation source-of-truth:${NC}"
         echo "$DOCS_JSON_REDIRECT_STATUS" | sed 's/^/  ❌ /'
         echo ""
-        echo -e "${YELLOW}Keep docs.json redirect surfaces aligned with tools/config/scoped-navigation/docs-gate-orch.json, or avoid redirect-surface edits in this commit.${NC}"
+        echo -e "${YELLOW}Keep docs.json redirect surfaces aligned with tools/config/scoped-navigation/docs-gate-orch.json${NC}"
         echo ""
         WARNINGS+=("❌ docs.json includes blocked semantic '/redirect' changes")
     fi
 fi
 
-# Check root directory structure against allowlist
+# Root directory structure against allowlist
 if [ "$SKIP_STRUCTURE_CHECK" = "1" ]; then
     echo -e "${YELLOW}⚠️  Structure checks bypassed (SKIP_STRUCTURE_CHECK=1)${NC}"
 else
-    echo -e "${YELLOW}🔍 Checking root directory structure...${NC}"
+    if [ -f ".allowlist" ]; then
+        ALLOWLIST=$(grep -v '^#' .allowlist | grep -v '^$' | tr '\n' '|' | sed 's/|$//')
+        if [[ "$CURRENT_BRANCH" == codex/* ]]; then ALLOWLIST="${ALLOWLIST}|.codex"; fi
 
-    if [ ! -f ".allowlist" ]; then
-        echo -e "${YELLOW}⚠️  .allowlist file not found, skipping root structure check${NC}"
-    else
-    # Read allowlist (skip comments and empty lines)
-    ALLOWLIST=$(grep -v '^#' .allowlist | grep -v '^$' | tr '\n' '|' | sed 's/|$//')
-    if [[ "$CURRENT_BRANCH" == codex/* ]]; then
-        ALLOWLIST="${ALLOWLIST}|.codex"
-    fi
-    
-    if [ -z "$ALLOWLIST" ]; then
-        echo -e "${YELLOW}⚠️  .allowlist is empty, skipping root structure check${NC}"
-    else
-        # Check for new root files (not in allowlist)
-        NEW_ROOT_FILES=$(git diff --cached --name-only --diff-filter=A | grep -E '^[^/]+$' | grep -vE "^($ALLOWLIST)$" || true)
-        
-        # Check for new root directories (not in allowlist)
-        NEW_ROOT_DIRS=$(git diff --cached --name-only --diff-filter=A | grep -E '^[^/]+/' | cut -d'/' -f1 | sort -u | grep -vE "^($ALLOWLIST)$" || true)
-        
-        if [ -n "$NEW_ROOT_FILES" ] || [ -n "$NEW_ROOT_DIRS" ]; then
-            VIOLATIONS=$((VIOLATIONS + 1))
-            echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
-            echo -e "${RED}║  UNAUTHORIZED ROOT FILES/DIRECTORIES DETECTED               ║${NC}"
-            echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
-            echo ""
-            
-            if [ -n "$NEW_ROOT_FILES" ]; then
-                echo -e "${RED}Unauthorized root files:${NC}"
-                while IFS= read -r file; do
-                    if [ -n "$file" ]; then
-                        echo -e "${RED}  ❌ $file${NC}"
-                        WARNINGS+=("❌ Unauthorized root file: $file")
-                    fi
-                done < <(echo "$NEW_ROOT_FILES")
+        if [ -n "$ALLOWLIST" ]; then
+            NEW_ROOT_FILES=$(git diff --cached --name-only --diff-filter=A | grep -E '^[^/]+$' | grep -vE "^($ALLOWLIST)$" || true)
+            NEW_ROOT_DIRS=$(git diff --cached --name-only --diff-filter=A | grep -E '^[^/]+/' | cut -d'/' -f1 | sort -u | grep -vE "^($ALLOWLIST)$" || true)
+
+            if [ -n "$NEW_ROOT_FILES" ] || [ -n "$NEW_ROOT_DIRS" ]; then
+                VIOLATIONS=$((VIOLATIONS + 1))
+                echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
+                echo -e "${RED}║  UNAUTHORIZED ROOT FILES/DIRECTORIES DETECTED               ║${NC}"
+                echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
                 echo ""
-            fi
-            
-            if [ -n "$NEW_ROOT_DIRS" ]; then
-                echo -e "${RED}Unauthorized root directories:${NC}"
-                while IFS= read -r dir; do
-                    if [ -n "$dir" ]; then
-                        echo -e "${RED}  ❌ $dir/${NC}"
-                        WARNINGS+=("❌ Unauthorized root directory: $dir/")
-                    fi
-                done < <(echo "$NEW_ROOT_DIRS")
+                if [ -n "$NEW_ROOT_FILES" ]; then
+                    echo -e "${RED}Unauthorized root files:${NC}"
+                    echo "$NEW_ROOT_FILES" | while IFS= read -r file; do
+                        [ -n "$file" ] && echo -e "${RED}  ❌ $file${NC}"
+                    done
+                fi
+                if [ -n "$NEW_ROOT_DIRS" ]; then
+                    echo -e "${RED}Unauthorized root directories:${NC}"
+                    echo "$NEW_ROOT_DIRS" | while IFS= read -r dir; do
+                        [ -n "$dir" ] && echo -e "${RED}  ❌ $dir/${NC}"
+                    done
+                fi
                 echo ""
+                echo -e "${YELLOW}Allowed root files/directories are listed in .allowlist${NC}"
+                echo ""
+                WARNINGS+=("❌ Unauthorized root files/directories")
             fi
-            
-            echo -e "${YELLOW}Allowed root files/directories are listed in .allowlist${NC}"
-            echo -e "${YELLOW}See contribute/STRUCTURE.md for repository structure rules${NC}"
-            echo ""
-        else
-            echo -e "${GREEN}✓ Root directory structure check passed${NC}"
         fi
     fi
-    fi
 fi
 
-# Check snippets directory structure
-if [ "$SKIP_STRUCTURE_CHECK" = "1" ]; then
-    echo -e "${YELLOW}⚠️  Snippets structure checks bypassed${NC}"
-else
-    echo ""
-    echo -e "${YELLOW}🔍 Checking snippets directory structure...${NC}"
+# ═══════════════════════════════════════════════════════════════
+# HARD GATE 5: V1/ FREEZE
+# ═══════════════════════════════════════════════════════════════
 
-    STAGED_SNIPPETS=$(git diff --cached --name-only --diff-filter=A | grep '^snippets/')
-
-    if [ -n "$STAGED_SNIPPETS" ]; then
-    # Check for scripts in snippets/
-    SNIPPETS_SCRIPTS=$(echo "$STAGED_SNIPPETS" | grep '^snippets/scripts/')
-    if [ -n "$SNIPPETS_SCRIPTS" ]; then
-        VIOLATIONS=$((VIOLATIONS + 1))
-        echo -e "${RED}❌ Scripts cannot be in snippets/. Move to tools/scripts/${NC}"
-        echo "$SNIPPETS_SCRIPTS" | while read -r file; do
-            WARNINGS+=("❌ $file: Scripts must be in tools/scripts/, not snippets/")
-        done
-    fi
-    
-    # Check for wiki/docs in snippets/
-    SNIPPETS_WIKI=$(echo "$STAGED_SNIPPETS" | grep '^snippets/snippetsWiki/')
-    if [ -n "$SNIPPETS_WIKI" ]; then
-        VIOLATIONS=$((VIOLATIONS + 1))
-        echo -e "${RED}❌ Wiki/docs cannot be in snippets/. Move to tools/wiki/${NC}"
-        echo "$SNIPPETS_WIKI" | while read -r file; do
-            WARNINGS+=("❌ $file: Wiki must be in tools/wiki/, not snippets/")
-        done
-    fi
-    
-    # Check for styles in snippets/
-    SNIPPETS_STYLES=$(echo "$STAGED_SNIPPETS" | grep '^snippets/styles/')
-    if [ -n "$SNIPPETS_STYLES" ]; then
-        VIOLATIONS=$((VIOLATIONS + 1))
-        echo -e "${RED}❌ Styles cannot be in snippets/. Use root style.css only${NC}"
-        echo "$SNIPPETS_STYLES" | while read -r file; do
-            WARNINGS+=("❌ $file: Styles must use root style.css, not snippets/styles/")
-        done
-    fi
-    fi
-fi
-
-# Check for changes to v1/ (frozen)
-if [ "$SKIP_STRUCTURE_CHECK" = "1" ]; then
-    echo -e "${YELLOW}⚠️  v1/ frozen check bypassed${NC}"
-else
-    echo ""
-    echo -e "${YELLOW}🔍 Checking v1/ directory (frozen)...${NC}"
-
-    V1_CHANGES=$(git diff --cached --name-only | grep '^v1/')
+if [ "$SKIP_STRUCTURE_CHECK" != "1" ]; then
+    V1_CHANGES=$(git diff --cached --name-only | grep '^v1/' || true)
     if [ -n "$V1_CHANGES" ]; then
         VIOLATIONS=$((VIOLATIONS + 1))
         echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
         echo -e "${RED}║  v1/ IS FROZEN - NO CHANGES ALLOWED                        ║${NC}"
         echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
         echo ""
-        echo -e "${RED}Attempted changes to v1/:${NC}"
-        echo "$V1_CHANGES" | while read -r file; do
+        echo "$V1_CHANGES" | while IFS= read -r file; do
             echo -e "${RED}  ❌ $file${NC}"
-            WARNINGS+=("❌ $file: v1/ is FROZEN - no changes allowed")
         done
         echo ""
-        echo -e "${RED}Commit blocked. v1/ is immutable and cannot be modified.${NC}"
-        echo ""
+        echo -e "${RED}Commit blocked. v1/ is immutable.${NC}"
         exit 1
-    else
-        echo -e "${GREEN}✓ v1/ directory check passed (no changes detected)${NC}"
     fi
 fi
 
-# Check style guide compliance
-if [ "$SKIP_STYLE_CHECK" = "1" ]; then
-    echo -e "${YELLOW}⚠️  Style guide checks bypassed (SKIP_STYLE_CHECK=1)${NC}"
-else
-    echo ""
-    echo -e "${YELLOW}🔍 Checking style guide compliance...${NC}"
+# ═══════════════════════════════════════════════════════════════
+# VERDICT
+# ═══════════════════════════════════════════════════════════════
 
-    # Get list of staged docs pages from docs.json (excluding style-guide.mdx, which documents anti-patterns).
-    if [ -n "$STAGED_DOCS_PAGES" ]; then
-        STAGED_FILES=$(echo "$STAGED_DOCS_PAGES" | grep -E '\.mdx$' | grep -v "style-guide" || true)
-    else
-        STAGED_FILES=""
-    fi
-
-    if [ -z "$STAGED_FILES" ]; then
-        echo -e "${GREEN}✓ No staged docs.json pages, skipping style checks${NC}"
-    else
-
-        # Check 1: ThemeData import/usage (DEPRECATED)
-        echo "Checking for ThemeData usage (deprecated)..."
-        for file in $STAGED_FILES; do
-    if [ -f "$file" ]; then
-        # Skip if it's the style guide itself (it documents ThemeData as deprecated)
-        if [[ "$file" == *"style-guide.mdx" ]]; then
-            continue
-        fi
-        # Warn-only for known legacy ThemeData files (not yet migrated)
-        if [[ "$file" == *"automations-workflows.mdx" || "$file" == *"contribute-to-the-docs.mdx" ]]; then
-            if grep -q "ThemeData\|themeStyles\.jsx" "$file" 2>/dev/null; then
-                echo -e "${YELLOW}⚠ $file: Still uses deprecated ThemeData (warn-only)${NC}"
-            fi
-            continue
-        fi
-        if grep -q "ThemeData\|themeStyles\.jsx" "$file" 2>/dev/null; then
-            WARNINGS+=("❌ $file: Uses deprecated ThemeData - use CSS Custom Properties instead")
-            VIOLATIONS=$((VIOLATIONS + 1))
-        fi
-        fi
-    done
-
-    # Check 2: Hardcoded hex colors that should use CSS variables
-    echo "Checking for hardcoded colors..."
-    for file in $STAGED_FILES; do
-    if [ -f "$file" ]; then
-        # Skip style guide (it documents colors in tables)
-        if echo "$file" | grep -q "style-guide.mdx"; then
-            continue
-        fi
-        # Project exception: media-kit currently contains approved hardcoded color tokens.
-        if [[ "$file" == "v2/resources/media-kit.mdx" ]]; then
-            continue
-        fi
-        # Check for common Livepeer colors hardcoded (should use CSS vars)
-        # Exclude markdown tables and code examples
-        if grep -E "(#3CB540|#2b9a66|#18794E|#181C18|#E0E4E0|#717571|#A0A4A0)" "$file" 2>/dev/null | grep -v "var(--" | grep -v "CSS Custom Properties" | grep -v "style-guide" | grep -v "Color System" | grep -v "Light Mode\|Dark Mode" | grep -v '^|' | grep -v '^```' > /dev/null; then
-            WARNINGS+=("⚠️  $file: Contains hardcoded theme colors - use CSS Custom Properties (var(--accent), etc.)")
-            VIOLATIONS=$((VIOLATIONS + 1))
-        fi
-        fi
-    done
-
-    # Check 3: Relative imports (should be absolute from root)
-    echo "Checking for relative imports..."
-    for file in $STAGED_FILES; do
-    if [ -f "$file" ]; then
-        # Skip style guide (it documents relative imports as examples of what NOT to do)
-        if [[ "$file" == *"style-guide"* ]]; then
-            continue
-        fi
-        if grep -E "from ['\"].*\.\./.*['\"]" "$file" 2>/dev/null | grep -v "node_modules" | grep -v "\.\./\.\./\.\." | grep -v "examples/" > /dev/null; then
-            WARNINGS+=("⚠️  $file: Uses relative imports - use absolute paths from root (/snippets/...)")
-            VIOLATIONS=$((VIOLATIONS + 1))
-        fi
-        fi
-    done
-
-    # Check 4: Import from @mintlify/components (should not import, they're global)
-    echo "Checking for @mintlify/components imports..."
-    for file in $STAGED_FILES; do
-    if [ -f "$file" ]; then
-        # Skip style guide (it documents this as a "don't do this" example)
-        if [[ "$file" == *"style-guide.mdx" ]]; then
-            continue
-        fi
-        if grep -q "from ['\"]@mintlify/components['\"]" "$file" 2>/dev/null; then
-            WARNINGS+=("⚠️  $file: Imports from @mintlify/components - these are global, no import needed")
-            VIOLATIONS=$((VIOLATIONS + 1))
-        fi
-        fi
-    done
-
-    # Check 5: React imports (hooks are global in Mintlify)
-    echo "Checking for unnecessary React imports..."
-    for file in $STAGED_FILES; do
-    if [ -f "$file" ]; then
-        # Skip style guide (it documents this as a "don't do this" example)
-        if [[ "$file" == *"style-guide.mdx" ]]; then
-            continue
-        fi
-        if grep -E "import.*\{.*useState|useEffect|useMemo|useCallback.*\}.*from ['\"]react['\"]" "$file" 2>/dev/null; then
-            WARNINGS+=("⚠️  $file: Imports React hooks - hooks are global in Mintlify, no import needed")
-            VIOLATIONS=$((VIOLATIONS + 1))
-        fi
-    fi
-    done
-    fi
-fi
-
-run_node_check() {
-    local label="$1"
-    local failure_message="$2"
-    shift 2
-
-    echo -e "${YELLOW}${label}${NC}"
-    if node "$@" 2>&1; then
-        echo -e "${GREEN}✓ ${label} passed${NC}"
-        return 0
-    fi
-
-    VIOLATIONS=$((VIOLATIONS + 1))
-    WARNINGS+=("${failure_message}")
-    echo -e "${RED}❌ ${label} failed${NC}"
-    return 1
-}
-
-supports_governance_repair_flow() {
-    if [ ! -f "tools/scripts/validators/governance/audit-script-inventory.js" ] || \
-       [ ! -f "tools/lib/script-governance-config.js" ] || \
-       [ ! -f "tests/unit/script-docs.test.js" ]; then
-        return 1
-    fi
-
-    local help_out
-    help_out=$(node tools/scripts/validators/governance/audit-script-inventory.js --help 2>&1) || return 1
-    [[ "$help_out" == *"--staged-only"* ]] || return 1
-    [[ "$help_out" == *"--quiet"* ]] || return 1
-    return 0
-}
-
-get_staged_governed_scripts() {
-    local staged_files
-    staged_files=$(git diff --cached --name-only --diff-filter=ACM 2>/dev/null || true)
-    if [ -z "$staged_files" ]; then
-        return 0
-    fi
-
-    GOVERNANCE_STAGED_FILES="$staged_files" node - <<'NODE'
-const config = require('./tools/lib/script-governance-config');
-
-const files = String(process.env.GOVERNANCE_STAGED_FILES || '')
-  .split(/\r?\n/)
-  .map((line) => line.trim())
-  .filter(Boolean);
-
-const governed = files.filter((filePath) =>
-  config.isDiscoveredScriptPath(filePath) && config.isWithinRoots(filePath, config.GOVERNED_ROOTS)
-);
-
-process.stdout.write(governed.join('\n'));
-NODE
-}
-
-governance_report_fix_count() {
-    local report_path="$1"
-    node - "$report_path" <<'NODE'
-const fs = require('fs');
-const reportPath = process.argv[2];
-const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
-process.stdout.write(String(report?.repair?.fixes?.total_fixes || 0));
-NODE
-}
-
-governance_report_needs_human_count() {
-    local report_path="$1"
-    node - "$report_path" <<'NODE'
-const fs = require('fs');
-const reportPath = process.argv[2];
-const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
-const count = Array.isArray(report?.repair?.needs_human) ? report.repair.needs_human.length : 0;
-process.stdout.write(String(count));
-NODE
-}
-
-governance_report_list_files() {
-    local report_path="$1"
-    local field_name="$2"
-    node - "$report_path" "$field_name" <<'NODE'
-const fs = require('fs');
-const reportPath = process.argv[2];
-const fieldName = process.argv[3];
-const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
-const files = Array.isArray(report?.repair?.fixes?.[fieldName]) ? report.repair.fixes[fieldName] : [];
-process.stdout.write(files.join('\n'));
-NODE
-}
-
-capture_governance_header_snapshot() {
-    local snapshot_path="$1"
-    shift
-
-    node - "$snapshot_path" "$@" <<'NODE'
-const fs = require('fs');
-
-const snapshotPath = process.argv[2];
-const files = process.argv.slice(3);
-const tags = [
-  '@script',
-  '@category',
-  '@purpose',
-  '@scope',
-  '@domain',
-  '@needs',
-  '@purpose-statement',
-  '@pipeline',
-  '@usage'
-];
-
-function readTag(header, tag) {
-  const match = header.match(new RegExp(`\\${tag}[ \\t]+([^\\n\\r]+)`));
-  return match ? match[1].trim() : '';
-}
-
-const snapshot = {};
-for (const filePath of files) {
-  let header = '';
-  try {
-    header = fs.readFileSync(filePath, 'utf8').split(/\r?\n/).slice(0, 220).join('\n');
-  } catch (_error) {
-    header = '';
-  }
-
-  snapshot[filePath] = {};
-  for (const tag of tags) {
-    snapshot[filePath][tag] = readTag(header, tag);
-  }
-}
-
-fs.writeFileSync(snapshotPath, JSON.stringify(snapshot, null, 2));
-NODE
-}
-
-print_governance_header_fixes() {
-    local snapshot_path="$1"
-    shift
-
-    node - "$snapshot_path" "$@" <<'NODE'
-const fs = require('fs');
-
-const snapshotPath = process.argv[2];
-const files = process.argv.slice(3);
-const tags = [
-  '@script',
-  '@category',
-  '@purpose',
-  '@scope',
-  '@domain',
-  '@needs',
-  '@purpose-statement',
-  '@pipeline',
-  '@usage'
-];
-
-function readTag(header, tag) {
-  const match = header.match(new RegExp(`\\${tag}[ \\t]+([^\\n\\r]+)`));
-  return match ? match[1].trim() : '';
-}
-
-const before = JSON.parse(fs.readFileSync(snapshotPath, 'utf8'));
-const lines = [];
-
-for (const filePath of files) {
-  let header = '';
-  try {
-    header = fs.readFileSync(filePath, 'utf8').split(/\r?\n/).slice(0, 220).join('\n');
-  } catch (_error) {
-    header = '';
-  }
-
-  for (const tag of tags) {
-    const previous = before?.[filePath]?.[tag] || '';
-    const next = readTag(header, tag);
-    if (!next || previous === next) continue;
-    if (!previous) {
-      lines.push(`  ✓ Fixed: added ${tag} ${next} to ${filePath}`);
-    } else {
-      lines.push(`  ✓ Fixed: corrected ${tag} to ${next} in ${filePath}`);
-    }
-  }
-}
-
-if (lines.length > 0) {
-  process.stdout.write(`${lines.join('\n')}\n`);
-}
-NODE
-}
-
-print_governance_manual_guidance() {
-    local report_path="$1"
-    node - "$report_path" <<'NODE'
-const fs = require('fs');
-const config = require('./tools/lib/script-governance-config');
-
-const reportPath = process.argv[2];
-const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
-const entries = Array.isArray(report?.repair?.needs_human) ? report.repair.needs_human.slice() : [];
-
-const guidance = {
-  '@category': `choose from: ${config.CATEGORY_ENUM.join(', ')}`,
-  '@purpose': `choose from: ${config.PURPOSE_ENUM.join(', ')}`,
-  '@scope': `choose from: ${config.SCOPE_ENUM.join(', ')}`,
-  '@needs': 'add requirement references, e.g. R-R14',
-  '@purpose-statement': 'add a one-line human-readable purpose statement',
-  '@pipeline': 'declare the actual pipeline, e.g. P1, P2, P3, P5, P6, manual',
-  'classification-row': 'add the missing governed metadata row via the governance repair workflow'
-};
-
-console.log('✗ These issues require manual fixes:');
-console.log('');
-
-entries
-  .sort((left, right) => String(left.path || '').localeCompare(String(right.path || '')))
-  .forEach((entry) => {
-    console.log(`  ${entry.path}`);
-    (entry.missing || []).forEach((missing) => {
-      const suffix = guidance[missing] || 'add the missing governed metadata';
-      console.log(`    Missing ${missing}: ${suffix}`);
-    });
-  });
-NODE
-}
-
-print_governance_dependency_error() {
-    echo ""
-    echo "✗ Governance auto-repair tooling is unavailable or outdated in this checkout."
-    echo ""
-    echo "  Expected tools/scripts/validators/governance/audit-script-inventory.js"
-    echo "  with --staged-only and --quiet support, plus the matching governance helpers."
-    echo ""
-    echo "  Sync the checkout to the current governance baseline and ensure repo dependencies are installed."
-    echo "  Run 'cd tools && npm run repair:governance -- --dry-run' for more detail."
-    echo "  To skip: SKIP_VERIFICATION=1 git commit -m 'message'"
-    echo ""
-}
-
-print_governance_command_error() {
-    local label="$1"
-    local output="$2"
-
-    echo ""
-    echo "✗ ${label}"
-    echo ""
-    if [ -n "$output" ]; then
-        printf '%s\n' "$output" | sed 's/^/  /'
-        echo ""
-    fi
-    echo "  Run 'cd tools && npm run repair:governance -- --dry-run' for more detail."
-    echo "  To skip: SKIP_VERIFICATION=1 git commit -m 'message'"
-    echo ""
-}
-
-run_governance_auto_repair() {
-    (
-        local governed_scripts=()
-        local tmp_dir=""
-        local report_path=""
-        local snapshot_path=""
-        local preview_out=""
-        local apply_out=""
-        local script_docs_out=""
-        local preview_fix_count=0
-        local preview_needs_count=0
-        local apply_fix_count=0
-        local verify_fix_count=0
-        local verify_needs_count=0
-        local preview_rc=0
-        local apply_rc=0
-        local script_docs_rc=0
-        local auto_repaired=0
-        local governed_script=""
-        local modified_file=""
-        while IFS= read -r governed_script; do
-            if [ -n "$governed_script" ]; then
-                governed_scripts+=("$governed_script")
-            fi
-        done < <(get_staged_governed_scripts)
-        if [ ${#governed_scripts[@]} -eq 0 ]; then
-            exit 0
-        fi
-
-        if ! supports_governance_repair_flow; then
-            print_governance_dependency_error
-            exit 1
-        fi
-
-        tmp_dir=$(mktemp -d "${TMPDIR:-/tmp}/precommit-governance.XXXXXX") || {
-            print_governance_command_error "Failed to create a temporary governance report directory." ""
-            exit 1
-        }
-        trap 'rm -rf "$tmp_dir"' EXIT
-
-        report_path="$tmp_dir/SCRIPT_INVENTORY_FULL.json"
-        snapshot_path="$tmp_dir/governance-header-snapshot.json"
-
-        preview_out=$(node tools/scripts/validators/governance/audit-script-inventory.js \
-            --fix --dry-run --staged-only --quiet --json --output "$tmp_dir" 2>&1)
-        preview_rc=$?
-        if [ $preview_rc -ne 0 ] || [ ! -f "$report_path" ]; then
-            print_governance_command_error "Governance preview failed before repair." "$preview_out"
-            exit 1
-        fi
-
-        preview_fix_count=$(governance_report_fix_count "$report_path")
-        preview_needs_count=$(governance_report_needs_human_count "$report_path")
-
-        if [ "$preview_fix_count" -eq 0 ] && [ "$preview_needs_count" -gt 0 ]; then
-            echo ""
-            print_governance_manual_guidance "$report_path"
-            echo ""
-            echo "  Run 'cd tools && npm run repair:governance -- --dry-run' for more detail."
-            echo "  To skip: SKIP_VERIFICATION=1 git commit -m 'message'"
-            echo ""
-            exit 1
-        fi
-
-        if [ "$preview_fix_count" -gt 0 ]; then
-            local planned_files=()
-            local dirty_targets=()
-            local planned_file=""
-            local dirty_target=""
-            local modified_files=()
-
-            while IFS= read -r planned_file; do
-                if [ -n "$planned_file" ]; then
-                    planned_files+=("$planned_file")
-                fi
-            done < <(governance_report_list_files "$report_path" planned_files)
-            for planned_file in "${planned_files[@]}"; do
-                if [ -z "$planned_file" ]; then
-                    continue
-                fi
-                if [ -e "$planned_file" ] && ! git diff --quiet -- "$planned_file" 2>/dev/null; then
-                    dirty_targets+=("$planned_file")
-                fi
-            done
-
-            if [ ${#dirty_targets[@]} -gt 0 ]; then
-                echo ""
-                echo "✗ Governance auto-repair blocked by unstaged edits."
-                echo ""
-                for dirty_target in "${dirty_targets[@]}"; do
-                    echo "  $dirty_target"
-                done
-                echo ""
-                echo "  Stage or discard the unstaged edits in these files, then retry."
-                echo "  Run 'cd tools && npm run repair:governance -- --dry-run' for more detail."
-                echo "  To skip: SKIP_VERIFICATION=1 git commit -m 'message'"
-                echo ""
-                exit 1
-            fi
-
-            if ! capture_governance_header_snapshot "$snapshot_path" "${governed_scripts[@]}"; then
-                print_governance_command_error "Failed to snapshot governed script headers before repair." ""
-                exit 1
-            fi
-
-            echo ""
-            echo "⚠  Governance issues detected. Attempting auto-repair..."
-            echo ""
-
-            apply_out=$(node tools/scripts/validators/governance/audit-script-inventory.js \
-                --fix --staged-only --quiet --json --output "$tmp_dir" 2>&1)
-            apply_rc=$?
-            if [ $apply_rc -ne 0 ] || [ ! -f "$report_path" ]; then
-                print_governance_command_error "Governance auto-repair failed." "$apply_out"
-                exit 1
-            fi
-
-            while IFS= read -r modified_file; do
-                if [ -n "$modified_file" ]; then
-                    modified_files+=("$modified_file")
-                fi
-            done < <(governance_report_list_files "$report_path" files_modified)
-            if [ ${#modified_files[@]} -gt 0 ]; then
-                if ! git add -- "${modified_files[@]}" 2>/dev/null; then
-                    print_governance_command_error "Failed to re-stage governance repair outputs." ""
-                    exit 1
-                fi
-            fi
-
-            print_governance_header_fixes "$snapshot_path" "${governed_scripts[@]}"
-            apply_fix_count=$(governance_report_fix_count "$report_path")
-            auto_repaired=1
-        fi
-
-        preview_out=$(node tools/scripts/validators/governance/audit-script-inventory.js \
-            --fix --dry-run --staged-only --quiet --json --output "$tmp_dir" 2>&1)
-        preview_rc=$?
-        if [ $preview_rc -ne 0 ] || [ ! -f "$report_path" ]; then
-            print_governance_command_error "Governance verification preview failed after repair." "$preview_out"
-            exit 1
-        fi
-
-        verify_fix_count=$(governance_report_fix_count "$report_path")
-        verify_needs_count=$(governance_report_needs_human_count "$report_path")
-        script_docs_out=$(node tests/unit/script-docs.test.js --staged 2>&1)
-        script_docs_rc=$?
-
-        if [ "$verify_needs_count" -gt 0 ]; then
-            echo ""
-            print_governance_manual_guidance "$report_path"
-            echo ""
-            echo "  Run 'cd tools && npm run repair:governance -- --dry-run' for more detail."
-            echo "  To skip: SKIP_VERIFICATION=1 git commit -m 'message'"
-            echo ""
-            exit 1
-        fi
-
-        if [ "$verify_fix_count" -gt 0 ]; then
-            echo ""
-            echo "✗ Governance auto-repair did not converge."
-            echo ""
-            echo "  Remaining automated fixes are still reported after repair."
-            echo "  Run 'cd tools && npm run repair:governance -- --dry-run' for more detail."
-            echo "  To skip: SKIP_VERIFICATION=1 git commit -m 'message'"
-            echo ""
-            exit 1
-        fi
-
-        if [ $script_docs_rc -ne 0 ]; then
-            echo ""
-            echo "✗ Script documentation enforcement still failed after governance repair."
-            echo ""
-            printf '%s\n' "$script_docs_out" | sed 's/^/  /'
-            echo ""
-            echo "  Run 'cd tools && npm run repair:governance -- --dry-run' for more detail."
-            echo "  To skip: SKIP_VERIFICATION=1 git commit -m 'message'"
-            echo ""
-            exit 1
-        fi
-
-        if [ "$auto_repaired" = "1" ]; then
-            echo ""
-            echo "✓ Auto-repaired ${apply_fix_count} issue(s). Proceeding with commit."
-            echo ""
-        fi
-
-        exit 0
-    )
-}
-
-RUN_PRECOMMIT_EXPENSIVE_SUITE=1
-
-if [ $VIOLATIONS -gt 0 ]; then
-    echo ""
-    echo -e "${YELLOW}Skipping expensive staged validation because blocking pre-check violations already exist.${NC}"
-    RUN_PRECOMMIT_EXPENSIVE_SUITE=0
-elif read_precommit_staged_cache; then
-    echo ""
-    echo -e "${GREEN}✓ Reusing cached staged validation for unchanged staged content${NC}"
-    if [ -n "$PRECOMMIT_STAGED_CACHE_CREATED_AT" ]; then
-        echo "  Cached at: $PRECOMMIT_STAGED_CACHE_CREATED_AT"
-    fi
-    RUN_PRECOMMIT_EXPENSIVE_SUITE=0
-fi
-
-if [ "$RUN_PRECOMMIT_EXPENSIVE_SUITE" = "1" ]; then
-    # Run verification scripts (legacy path disabled for faster staged-only hooks)
-    if [ "$SKIP_VERIFICATION" = "1" ]; then
-        echo -e "${YELLOW}⚠️  Verification scripts bypassed (SKIP_VERIFICATION=1)${NC}"
-    else
-        echo ""
-        echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        echo -e "${YELLOW}Skipping legacy verify.sh in pre-commit (staged-only fast mode).${NC}"
-        echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        FORBIDDEN_GENERATED_OUTPUTS=$(get_forbidden_staged_generated_outputs)
-        if [ -n "$FORBIDDEN_GENERATED_OUTPUTS" ]; then
-            echo -e "${RED}Forbidden staged ephemeral generated outputs detected:${NC}"
-            while IFS= read -r path; do
-                [ -z "$path" ] && continue
-                echo "  - $path"
-                WARNINGS+=("❌ Forbidden staged ephemeral generated output: $path")
-                VIOLATIONS=$((VIOLATIONS + 1))
-            done <<< "$FORBIDDEN_GENERATED_OUTPUTS"
-            echo "Move local-only reports to an ignored scratch path instead of committing them."
-            exit 1
-        fi
-        echo "Checking generated file banners..."
-        if node tools/scripts/enforce-generated-file-banners.js --check --staged; then
-            echo -e "${GREEN}✓ Generated file banner check passed${NC}"
-        else
-            echo "Generated file banners missing or incorrect. Run: node tools/scripts/enforce-generated-file-banners.js --write"
-            exit 1
-        fi
-    fi
-
-    # Component governance checks
-    if [ "$SKIP_TESTS" != "1" ]; then
-        STAGED_COMPONENTS=$(git diff --cached --name-only --diff-filter=ACM -- snippets/components | grep -E '\.jsx$' | grep -v '/_archive/' || true)
-        if [ -n "$STAGED_COMPONENTS" ]; then
-            run_node_check \
-              "Running component JSDoc validation (staged)..." \
-              "❌ Component JSDoc validation failed" \
-              tools/scripts/validators/components/check-component-docs.js --staged
-
-            run_node_check \
-              "Running component styling validation (staged)..." \
-              "❌ Component styling validation failed" \
-              tools/scripts/validators/components/check-component-css.js --staged
-
-            if [ $VIOLATIONS -eq 0 ]; then
-                echo -e "${YELLOW}Repairing derived component metadata...${NC}"
-                if node tools/scripts/remediators/components/repair-component-metadata.js --staged --fix 2>&1; then
-                    echo "$STAGED_COMPONENTS" | xargs git add 2>/dev/null
-                    echo -e "${GREEN}✓ Component metadata repaired${NC}"
-                else
-                    VIOLATIONS=$((VIOLATIONS + 1))
-                    WARNINGS+=("❌ Component metadata has NEEDS_HUMAN errors - inspect repair-component-metadata output")
-                    echo -e "${RED}❌ Component metadata repair found issues requiring human attention${NC}"
-                fi
-            fi
-
-            if [ $VIOLATIONS -eq 0 ]; then
-                echo -e "${YELLOW}Regenerating component registry...${NC}"
-                if node tools/scripts/generate-component-registry.js 2>&1; then
-                    git add docs-guide/component-registry.json docs-guide/component-registry-schema.json 2>/dev/null
-                    echo -e "${GREEN}✓ Component registry regenerated${NC}"
-                else
-                    VIOLATIONS=$((VIOLATIONS + 1))
-                    WARNINGS+=("❌ Component registry generation failed")
-                    echo -e "${RED}❌ Component registry generation failed${NC}"
-                fi
-            fi
-
-            if [ $VIOLATIONS -eq 0 ]; then
-                echo -e "${YELLOW}Regenerating component usage map...${NC}"
-                if node tools/scripts/scan-component-imports.js 2>&1; then
-                    git add docs-guide/component-usage-map.json 2>/dev/null
-                    echo -e "${GREEN}✓ Component usage map regenerated${NC}"
-                else
-                    VIOLATIONS=$((VIOLATIONS + 1))
-                    WARNINGS+=("❌ Component usage map generation failed")
-                    echo -e "${RED}❌ Component usage map generation failed${NC}"
-                fi
-            fi
-
-            if [ $VIOLATIONS -eq 0 ] && [ -f "tools/scripts/generate-docs-guide-components-index.js" ]; then
-                echo -e "${YELLOW}Regenerating components catalog...${NC}"
-                if node tools/scripts/generate-docs-guide-components-index.js --fix 2>&1; then
-                    git add docs-guide/catalog/components-catalog.mdx 2>/dev/null
-                    echo -e "${GREEN}✓ Components catalog regenerated${NC}"
-                else
-                    VIOLATIONS=$((VIOLATIONS + 1))
-                    WARNINGS+=("❌ Components catalog generation failed")
-                    echo -e "${RED}❌ Components catalog generation failed${NC}"
-                fi
-            fi
-        fi
-    fi
-
-    # Run test suite (fast mode for pre-commit)
-    if [ "$SKIP_TESTS" = "1" ]; then
-        echo -e "${YELLOW}⚠️  Test suite bypassed (SKIP_TESTS=1)${NC}"
-    else
-        echo ""
-        echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        echo -e "${YELLOW}Running test suite (staged files only)...${NC}"
-        if [ -f "tests/run-all.js" ] && command -v node &>/dev/null; then
-            if [ -d "tools/node_modules" ]; then
-                export NODE_PATH="$(pwd)/tools/node_modules:${NODE_PATH:-}"
-            elif [ -d "tests/node_modules" ]; then
-                export NODE_PATH="$(pwd)/tests/node_modules:${NODE_PATH:-}"
-            else
-                echo -e "${YELLOW}⚠️  Dependencies not installed. Run 'cd tools && npm install' or 'cd tests && npm install' to enable tests${NC}"
-            fi
-
-            if [ "$SKIP_VERIFICATION" != "1" ] && [ $VIOLATIONS -eq 0 ]; then
-                if ! run_governance_auto_repair; then
-                    exit 1
-                fi
-            fi
-
-            if [ -f "tools/scripts/generate-pages-index.js" ]; then
-                run_node_check \
-                  "Running v2/pages index generation (staged changes)..." \
-                  "❌ v2/pages index generation failed - fix index sync issues" \
-                  tools/scripts/generate-pages-index.js --staged --write --stage
-            fi
-
-            if [ -f "tools/scripts/remediators/content/repair-mdx-safe-markdown.js" ]; then
-                run_node_check \
-                  "Running staged MDX-safe markdown auto-repair..." \
-                  "❌ MDX-safe markdown auto-repair failed - inspect repair-mdx-safe-markdown output" \
-                  tools/scripts/remediators/content/repair-mdx-safe-markdown.js --write --staged --stage
-            fi
-
-            if [ -f "tools/scripts/validators/content/check-mdx-safe-markdown.js" ]; then
-                run_node_check \
-                  "Running staged MDX-safe markdown validation..." \
-                  "❌ MDX-safe markdown validation failed - inspect check-mdx-safe-markdown output" \
-                  tools/scripts/validators/content/check-mdx-safe-markdown.js --staged
-            fi
-
-            if [ -f "tools/scripts/generate-docs-index.js" ]; then
-                if should_check_generated_artifact "docs-index.json"; then
-                    echo -e "${YELLOW}Checking generated artifact freshness...${NC}"
-                    GENERATED_ARTIFACT_SUMMARY=$(format_generated_artifact_message "docs-index.json" "summary")
-                    DOCS_INDEX_ARGS="--staged"
-                    if echo "$STAGED_FILES_SNAPSHOT_ALL" | grep -Eq '^docs\.json$'; then
-                        DOCS_INDEX_ARGS=""
-                    fi
-                    if node tools/scripts/generate-docs-index.js --check $DOCS_INDEX_ARGS >/dev/null 2>&1; then
-                        echo -e "${GREEN}✓ ${GENERATED_ARTIFACT_SUMMARY} is up to date${NC}"
-                    else
-                        VIOLATIONS=$((VIOLATIONS + 1))
-                        GENERATED_ARTIFACT_GENERATOR=$(format_generated_artifact_message "docs-index.json" "generator")
-                        WARNINGS+=("❌ Generated artifact freshness issue: docs-index.json is stale. Run: ${GENERATED_ARTIFACT_GENERATOR}")
-                        echo -e "${RED}❌ ${GENERATED_ARTIFACT_SUMMARY} is stale${NC}"
-                        echo "   Source files changed within its declared manifest scope."
-                        echo "   Remediation: ${GENERATED_ARTIFACT_GENERATOR}"
-                        exit 1
-                    fi
-                else
-                    echo -e "${GREEN}✓ No manifest-declared docs-index sources staged, skipping docs-index freshness check${NC}"
-                fi
-            fi
-
-            if [ -f "tools/scripts/remediators/content/sync-docs-paths.js" ]; then
-                run_node_check \
-                  "Running staged docs path sync..." \
-                  "❌ Docs path sync failed - inspect sync-docs-paths output" \
-                  tools/scripts/remediators/content/sync-docs-paths.js --write --staged --stage
-            fi
-
-            run_all_args=(tests/run-all.js --staged --skip-browser --precommit-basic)
-            if [ "$SKIP_VERIFICATION" != "1" ]; then
-                run_all_args+=(--skip-mdx-safe-markdown-check --skip-pages-index --skip-script-docs)
-            fi
-            run_node_check \
-              "Running basic staged test suite..." \
-              "❌ Basic staged test suite failed - see output above" \
-              "${run_all_args[@]}"
-
-            if [ -n "$STAGED_DOCS_PAGES" ]; then
-                if [ -f "tests/integration/v2-link-audit.js" ]; then
-                    run_node_check \
-                      "Running staged V2 link audit..." \
-                      "❌ Staged V2 link audit failed - see /tmp/livepeer-link-audit-precommit.md" \
-                      tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-precommit.md
-                fi
-
-                if [ -f "tests/integration/v2-wcag-audit.js" ]; then
-                    run_node_check \
-                      "Running staged V2 WCAG accessibility audit..." \
-                      "❌ Staged V2 WCAG accessibility audit failed - see /tmp/livepeer-wcag-audit-precommit.md" \
-                      tests/integration/v2-wcag-audit.js --staged --fix --stage --max-pages 10 --fail-impact serious --report /tmp/livepeer-wcag-audit-precommit.md --report-json /tmp/livepeer-wcag-audit-precommit.json
-                fi
-            else
-                echo -e "${GREEN}✓ No staged docs pages, skipping link audit and WCAG audit${NC}"
-            fi
-        else
-            echo -e "${YELLOW}⚠️  Test suite not available, skipping...${NC}"
-        fi
-        echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    fi
-
-    if [ $VIOLATIONS -eq 0 ]; then
-        if write_precommit_staged_cache >/dev/null 2>&1; then
-            echo -e "${GREEN}✓ Cached staged validation results for reuse${NC}"
-        else
-            echo -e "${YELLOW}⚠️  Could not persist staged validation cache; future commits will rerun the expensive suite${NC}"
-        fi
-    fi
-fi
-
-# Report results
 echo ""
 if [ $VIOLATIONS -eq 0 ]; then
-    echo -e "${GREEN}✓ Style guide compliance check passed!${NC}"
+    echo -e "${GREEN}✓ Pre-commit checks passed (hard gates only)${NC}"
     exit 0
 else
     echo -e "${RED}╔═══════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${RED}║  STYLE GUIDE VIOLATIONS DETECTED - COMMIT BLOCKED           ║${NC}"
+    echo -e "${RED}║  PRE-COMMIT VIOLATIONS DETECTED - COMMIT BLOCKED            ║${NC}"
     echo -e "${RED}╚═══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
     echo -e "${YELLOW}Found $VIOLATIONS violation(s):${NC}"
-    echo ""
     for warning in "${WARNINGS[@]}"; do
-        echo -e "${RED}$warning${NC}"
+        echo -e "${RED}  $warning${NC}"
     done
     echo ""
-    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${YELLOW}📖 MANDATORY: Read the Style Guide before committing:${NC}"
-    echo -e "${YELLOW}   $STYLE_GUIDE_PATH${NC}"
-    echo ""
-    echo -e "${YELLOW}Key Rules:${NC}"
-    echo -e "  • Use CSS Custom Properties: var(--accent), var(--text), etc."
-    echo -e "  • NEVER use ThemeData from themeStyles.jsx (deprecated)"
-    echo -e "  • NEVER hardcode hex colors that should adapt to theme"
-    echo -e "  • Use absolute imports: /snippets/components/..."
-    echo -e "  • Mintlify components are global (no imports needed)"
-    echo -e "  • React hooks are global (no imports needed)"
-    echo ""
-    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${RED}Commit blocked. Fix violations and try again.${NC}"
-    echo ""
+    echo -e "${RED}Fix violations and try again.${NC}"
     exit 1
 fi
