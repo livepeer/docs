@@ -16,7 +16,7 @@ Identify script quality and maintenance risks that increase repo complexity and 
 
 Command
 ```bash
-node tools/scripts/script-footprint-and-usage-audit.js --scope full
+node tools/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js --scope full
 ```
 
 Outputs

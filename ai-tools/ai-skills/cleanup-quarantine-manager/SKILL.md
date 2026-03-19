@@ -16,8 +16,8 @@ Reduce repo noise safely by quarantining likely obsolete artifacts before any de
 
 Commands
 ```bash
-node tools/scripts/cleanup-quarantine-manager.js
-node tools/scripts/cleanup-quarantine-manager.js --apply
+node tools/scripts/remediators/content/repair/quarantine-manager.js
+node tools/scripts/remediators/content/repair/quarantine-manager.js --apply
 ```
 
 Outputs

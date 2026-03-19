@@ -16,7 +16,7 @@ Standardize language and style quality in English v2 docs while excluding locale
 
 Command
 ```bash
-node tools/scripts/style-and-language-homogenizer-en-gb.js --scope full
+node tools/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js --scope full
 ```
 
 Outputs

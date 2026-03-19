@@ -16,7 +16,7 @@ Measure content readiness and prioritize cleanup of incomplete or stale document
 
 Command
 ```bash
-node tools/scripts/docs-quality-and-freshness-audit.js --scope full
+node tools/scripts/audits/content/quality/docs-quality-and-freshness-audit.js --scope full
 ```
 
 Outputs

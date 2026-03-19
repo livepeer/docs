@@ -16,7 +16,7 @@ Prevent inconsistent page composition by validating against explicit layout cont
 
 Command
 ```bash
-node tools/scripts/component-layout-governance.js --scope full
+node tools/scripts/validators/components/library/component-layout-governance.js --scope full
 ```
 
 Outputs
