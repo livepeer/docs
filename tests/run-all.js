@@ -92,7 +92,7 @@ function hasStagedComponentGovernanceChanges() {
     'tools/lib/component-governance-utils.js',
     'tools/scripts/audit-component-usage.js',
     'tools/scripts/generators/components/library/generate-component-registry.js',
-    'tools/scripts/generators/components/library/scan-component-imports.js',
+    'tools/scripts/audits/components/library/scan-component-imports.js',
     'tools/scripts/generate-component-docs.js',
     'tools/scripts/generate-docs-guide-components-index.js',
     'tools/scripts/remediators/components/library/repair-component-metadata.js',

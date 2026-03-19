@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      scan-component-imports
- * @type        generator
+ * @type        audit
  * @concern     components
  * @niche       library
  * @purpose     governance:index-management
@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual, P6, manual
  * @scope       generated-output
- * @usage       node tools/scripts/generators/components/library/scan-component-imports.js [--verify]
+ * @usage       node tools/scripts/audits/components/library/scan-component-imports.js [--verify]
  * @policy      R-R10
  */
 

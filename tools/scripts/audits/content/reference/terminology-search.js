@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      terminology-search
- * @type        generator
+ * @type        audit
  * @concern     content
  * @niche       reference
  * @purpose     tooling:dev-tools
@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts
- * @usage       node tools/scripts/generators/content/reference/terminology-search.js [flags]
+ * @usage       node tools/scripts/audits/content/reference/terminology-search.js [flags]
  * @policy      E-C6, F-C1
  */
 

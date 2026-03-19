@@ -59,7 +59,7 @@ const DEFAULT_WATCHED_FILES = Object.freeze([
   'tools/scripts/remediators/components/library/repair-component-metadata.js',
   'tools/scripts/remediators/content/repair/repair-mdx-safe-markdown.js',
   'tools/scripts/remediators/content/repair/sync-docs-paths.js',
-  'tools/scripts/generators/components/library/scan-component-imports.js',
+  'tools/scripts/audits/components/library/scan-component-imports.js',
   'tools/scripts/sync-codex-skills.js',
   'tools/scripts/validators/components/library/check-component-css.js',
   'tools/scripts/validators/components/documentation/check-component-docs.js',

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      generate-component-governance-remediation-reports
- * @type        generator
+ * @type        audit
  * @concern     governance
  * @niche       reports
  * @purpose     qa:repo-health
@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual — report generation
  * @scope       generated-output
- * @usage       node tools/scripts/generators/governance/reports/generate-component-governance-remediation-reports.js [flags]
+ * @usage       node tools/scripts/audits/governance/reports/generate-component-governance-remediation-reports.js [flags]
  * @policy      R-R10, R-R29
  */
 

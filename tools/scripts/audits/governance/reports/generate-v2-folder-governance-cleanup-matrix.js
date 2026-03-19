@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @script      generate-v2-folder-governance-cleanup-matrix
- * @type        generator
+ * @type        audit
  * @concern     governance
  * @niche       reports
  * @purpose     governance:repo-health
@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual
  * @scope       tools/scripts, tools/lib, tasks/reports/repo-ops, v2, docs.json, tests/unit/v2-folder-governance-cleanup-matrix.test.js
- * @usage       node tools/scripts/generators/governance/reports/generate-v2-folder-governance-cleanup-matrix.js [--report-md <path>] [--report-json <path>] [--as-of <YYYY-MM-DD>]
+ * @usage       node tools/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js [--report-md <path>] [--report-json <path>] [--as-of <YYYY-MM-DD>]
  * @policy      E-C1, R-R14
  */
 
