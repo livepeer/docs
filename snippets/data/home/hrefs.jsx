@@ -301,7 +301,7 @@ export const LINK_MAP = {
       "sourceType": "import-path",
       "linkType": "import-path",
       "rawPath": "/snippets/components/wrappers/cards/customCards.jsx",
-      "resolvedPath": "snippets/components/layout/customCards.jsx",
+      "resolvedPath": "snippets/components/wrappers/cards/customCards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -310,7 +310,7 @@ export const LINK_MAP = {
       "sourceType": "import-path",
       "linkType": "import-path",
       "rawPath": "/snippets/components/elements/links/links.jsx",
-      "resolvedPath": "snippets/components/primitives/links.jsx",
+      "resolvedPath": "snippets/components/elements/links/links.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []

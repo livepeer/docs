@@ -14,8 +14,8 @@ keywords:
 'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
 ---
 {/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9zdHlsZS1ndWlkZS5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3Jlc291cmNlcy9kb2N1bWVudGF0aW9uLWd1aWRlL3N0eWxlLWd1aWRlIiwic291cmNlSGFzaCI6IjA0NzExZDkxN2Y1YzQ4M2I4NDY2NDgyMWZjODBhNDFlZDY5NTgwODRmYmMxMDcyZDRkZGFlYzM1NzQxZWRiOWYiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDMtMDFUMTI6NTk6NDQuMTg0WiJ9 */}
-import { PreviewCallout } from '/snippets/components/primitives/previewCallouts.jsx'
-import { FocusableScrollRegions } from '/snippets/components/primitives/a11y.jsx'
+import { PreviewCallout } from '/snippets/components/elements/callouts/previewCallouts.jsx'
+import { FocusableScrollRegions } from '/snippets/components/elements/a11y/a11y.jsx'
 
 <PreviewCallout />
 <FocusableScrollRegions />
@@ -296,7 +296,7 @@ export const MyComponent = ({ variant = "default" }) => {
 
 **之后（✅ 正确）：**
 ```mdx
-import { FlexContainer } from '/snippets/components/layout/layout.jsx';
+import { FlexContainer } from '/snippets/components/wrappers/accordions/layout.jsx';
 
 <FlexContainer gap="1rem">
   <Card>Content 1</Card>
@@ -466,7 +466,7 @@ $$R_t = S_t \cdot r_t$$ for block math
 [Getting Started](/get-started)
 
 {/* ✅ Custom component with better styling */}
-import { GotoLink } from '/snippets/components/primitives/links.jsx';
+import { GotoLink } from '/snippets/components/elements/links/links.jsx';
 <GotoLink label="Getting Started" relativePath="/get-started" icon="arrow-right" />
 ```
 
@@ -475,7 +475,7 @@ import { GotoLink } from '/snippets/components/primitives/links.jsx';
 > This is a quote
 
 {/* ✅ Custom quote component with attribution */}
-import { FrameQuote } from '/snippets/components/content/quote.jsx';
+import { FrameQuote } from '/snippets/components/displays/quotes/quote.jsx';
 <FrameQuote author="John Doe" source="Livepeer Blog" href="https://livepeer.org/blog">
   This is a quote with better visual design.
 </FrameQuote>
@@ -488,7 +488,7 @@ import { FrameQuote } from '/snippets/components/content/quote.jsx';
 </Card>
 
 {/* ✅ Custom GotoCard with enhanced styling */}
-import { GotoCard } from '/snippets/components/primitives/links.jsx';
+import { GotoCard } from '/snippets/components/elements/links/links.jsx';
 <GotoCard
   label="API Reference"
   relativePath="/api/reference"
@@ -763,7 +763,7 @@ return <Accordion {...props}>{content}</Accordion>;
 - 所有样式必须自定义
 - Mintlify 组件仍然有效，但会失去默认样式
 - 保留响应式布局基本组件`style.css` (`.frame-mode-container`, `.frame-mode-hero-full`, 帧分页)
-- 在共享 JSX 组件中保持门户/页面特定结构（例如`/snippets/components/page-structure/portals.jsx`)
+- 在共享 JSX 组件中保持门户/页面特定结构（例如`/snippets/components/scaffolding/portals/portals.jsx`)
 - 不要在组件样式中直接使用固定的断开常量（例如硬编码`96px`，`20px`或固定`%` 宽度)
 - 优先使用 CSS 变量 + 断点进行帧模式布局，并使用 CSS 自定义属性 (`var(--...)`) 进行主题设置
 
