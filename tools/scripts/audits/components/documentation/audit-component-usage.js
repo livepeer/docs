@@ -102,12 +102,12 @@ function getAllExportedComponents() {
 }
 
 function getCategory(filePath) {
-  if (filePath.includes('primitives/')) return 'primitives';
-  if (filePath.includes('display/')) return 'display';
-  if (filePath.includes('content/')) return 'content';
-  if (filePath.includes('layout/')) return 'layout';
-  if (filePath.includes('integrations/')) return 'integrations';
-  if (filePath.includes('domain/')) return 'domain';
+  if (filePath.includes('elements/')) return 'elements';
+  if (filePath.includes('wrappers/')) return 'wrappers';
+  if (filePath.includes('displays/')) return 'displays';
+  if (filePath.includes('scaffolding/')) return 'scaffolding';
+  if (filePath.includes('integrators/')) return 'integrators';
+  if (filePath.includes('config/')) return 'config';
   return 'unknown';
 }
 

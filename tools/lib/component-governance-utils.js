@@ -15,7 +15,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const { isPublishedDocsPath: isPublishableDocsPath } = require('./docs-publishability');
 
-const VALID_CATEGORIES = ['primitives', 'layout', 'content', 'data', 'page-structure'];
+const VALID_CATEGORIES = ['elements', 'wrappers', 'displays', 'scaffolding', 'integrators', 'config'];
 const VALID_STATUSES = ['stable', 'experimental', 'deprecated', 'broken', 'placeholder'];
 const VALID_TIERS = ['primitive', 'composite', 'pattern'];
 const VALID_RISKS = ['low', 'medium', 'high'];
@@ -37,20 +37,14 @@ const VALID_CONTENT_AFFINITY = [
 ];
 const GOVERNANCE_FIELDS = [
   'component',
-  'category',
-  'tier',
+  'type',
+  'subniche',
   'status',
   'description',
-  'contentAffinity',
-  'owner',
-  'dependencies',
-  'usedIn',
-  'breakingChangeRisk',
-  'decision',
-  'dataSource',
-  'duplicates',
-  'lastMeaningfulChange'
+  'accepts'
 ];
+// Optional field: 'dataSource' (required for integrators only)
+const OPTIONAL_GOVERNANCE_FIELDS = ['dataSource'];
 const COMPONENT_IMPORT_RE = /import\s*\{([\s\S]*?)\}\s*from\s*['"]([^'"]+)['"]/g;
 const COLOR_LITERAL_RE = /#[0-9a-fA-F]{3,8}\b|\brgba?\([^)]*\)|\bhsla?\([^)]*\)/g;
 const COLOR_CONTEXT_RE = /\b(?:accentcolor|background(?:color)?|border(?:color)?|caretcolor|color|fill|floodcolor|icon|lightingcolor|outlinecolor|stopcolor|stroke|textdecorationcolor)\b/;
@@ -120,7 +114,8 @@ function isLegacyDuplicateComponentPath(filePath) {
 
 function isLegacyShimComponentPath(filePath) {
   const repoPath = normalizeRepoPath(filePath);
-  return repoPath === 'snippets/components/content/math.jsx' || repoPath === 'snippets/components/content/release.jsx';
+  // Legacy shims have been archived; this check is retained for backward compatibility
+  return false;
 }
 
 function hasGovernableExport(filePath) {
@@ -682,47 +677,30 @@ function validateGovernanceFields(jsDoc, opts = {}) {
     errors.push(`@component must match export name (${exportName})`);
   }
 
-  if (jsDoc.category) {
-    if (!VALID_CATEGORIES.includes(jsDoc.category)) {
-      errors.push(`@category must be one of: ${VALID_CATEGORIES.join(', ')}`);
-    } else if (expectedCategory && jsDoc.category !== expectedCategory) {
-      errors.push(`@category ${jsDoc.category} does not match folder ${expectedCategory}`);
+  // @type replaces @category — validate against folder
+  if (jsDoc.type) {
+    if (!VALID_CATEGORIES.includes(jsDoc.type)) {
+      errors.push(`@type must be one of: ${VALID_CATEGORIES.join(', ')}`);
+    } else if (expectedCategory && jsDoc.type !== expectedCategory) {
+      errors.push(`@type ${jsDoc.type} does not match folder ${expectedCategory}`);
     }
   }
 
-  if (jsDoc.tier && !VALID_TIERS.includes(jsDoc.tier)) {
-    errors.push(`@tier must be one of: ${VALID_TIERS.join(', ')}`);
-  }
+  // Warn on removed tags
+  const REMOVED_TAGS = ['category', 'tier', 'owner', 'contentAffinity', 'decision', 'duplicates', 'lastMeaningfulChange', 'breakingChangeRisk', 'dependencies', 'usedIn'];
+  REMOVED_TAGS.forEach((tag) => {
+    if (jsDoc[tag]) {
+      warnings.push(`@${tag} is a removed tag — should be deleted`);
+    }
+  });
 
   if (jsDoc.status && !VALID_STATUSES.includes(jsDoc.status)) {
     errors.push(`@status must be one of: ${VALID_STATUSES.join(', ')}`);
   }
 
-  if (jsDoc.breakingChangeRisk && !VALID_RISKS.includes(jsDoc.breakingChangeRisk)) {
-    errors.push(`@breakingChangeRisk must be one of: ${VALID_RISKS.join(', ')}`);
-  }
-
-  if (jsDoc.decision && !VALID_DECISIONS.includes(jsDoc.decision)) {
-    errors.push(`@decision must be one of: ${VALID_DECISIONS.join(', ')}`);
-  }
-
-  if (jsDoc.contentAffinity) {
-    const values = jsDoc.contentAffinity
-      .split(',')
-      .map((value) => value.trim())
-      .filter(Boolean);
-    if (!values.length) {
-      errors.push('@contentAffinity must contain at least one value');
-    }
-    values.forEach((value) => {
-      if (!VALID_CONTENT_AFFINITY.includes(value)) {
-        errors.push(`@contentAffinity contains invalid value: ${value}`);
-      }
-    });
-  }
-
-  if (jsDoc.lastMeaningfulChange && Number.isNaN(Date.parse(jsDoc.lastMeaningfulChange))) {
-    errors.push('@lastMeaningfulChange must be a valid ISO 8601 date');
+  // Validate @dataSource is present for integrators
+  if (jsDoc.type === 'integrators' && !compactWhitespace(jsDoc.dataSource)) {
+    warnings.push('@dataSource is recommended for integrator components');
   }
 
   if (jsDoc.status === 'deprecated') {

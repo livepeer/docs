@@ -1,0 +1,62 @@
+/**
+ * @component Image
+ * @type elements
+ * @subniche images
+ * @status stable
+ * @description Framed image with optional caption and full-width toggle.
+ * @accepts style, className, ...rest
+ * @param {any} src - src prop.
+ * @param {any} alt - alt prop.
+ * @param {any} caption - caption prop.
+ * @param {any} icon - icon prop.
+ * @param {any} hint - hint prop.
+ * @param {boolean} [fullwidth=true] - fullwidth prop.
+ * @example
+ * <Image src="example" alt="example" />
+ */
+export const Image = ({ src, alt = "", caption, icon, hint, fullwidth = true, className = "", style = {}, ...rest }) => {
+  icon = icon ? icon : "arrow-turn-down-right";
+  return (
+    <Frame caption={caption} hint={hint} className={className} style={style} {...rest}>
+      <img
+        src={src}
+        alt={alt}
+        style={{ width: fullwidth ? "100%" : undefined }}
+      />
+    </Frame>
+  );
+};
+
+/**
+ * @component LinkImage
+ * @type elements
+ * @subniche images
+ * @status stable
+ * @description Clickable framed image that opens a URL in a new tab.
+ * @accepts style, className, ...rest
+ * @param {any} src - src prop.
+ * @param {any} alt - alt prop.
+ * @param {any} caption - caption prop.
+ * @param {any} icon - icon prop.
+ * @param {any} hint - hint prop.
+ * @param {any} href - href prop.
+ * @example
+ * <LinkImage src="example" alt="example" />
+ */
+export const LinkImage = ({ src, alt = "", caption, icon, hint, href, className = "", style = {}, ...rest }) => {
+  icon = icon ? icon : "arrow-turn-down-right";
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={className} style={style} {...rest}>
+      <Frame caption={caption} hint={hint}>
+        <img src={src} alt={alt} style={{ width: "100%" }} />
+      </Frame>
+    </a>
+  );
+};
+
+// <Frame>
+//   <img
+//     src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNjgxanlyczB0NW05M2xlYWEwdDg1N20zanowNGxmdzNnbWZ2bHQwdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Ae7SI3LoPYj8Q/giphy.gif"
+//     alt="Livepeer Community GIF"
+//   />
+// </Frame>

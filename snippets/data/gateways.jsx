@@ -6,7 +6,7 @@
 
 // import { latestVersion } from "/snippets/automations/globals/globals.mdx";
 
-// import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
+// import { CustomCodeBlock } from "/snippets/components/displays/code/Code.jsx";
 // import { latestVersion } from "/snippets/automations/globals/globals.mdx";
 
 /**

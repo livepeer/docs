@@ -86,8 +86,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/table.jsx",
-      "resolvedPath": "snippets/components/layout/table.jsx",
+      "rawPath": "/snippets/components/wrappers/tables/Table.jsx",
+      "resolvedPath": "snippets/components/wrappers/tables/Table.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -268,8 +268,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/responseField.jsx",
-      "resolvedPath": "snippets/components/content/responseField.jsx",
+      "rawPath": "/snippets/components/displays/response-fields/ResponseField.jsx",
+      "resolvedPath": "snippets/components/displays/response-fields/ResponseField.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -277,8 +277,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/code.jsx",
-      "resolvedPath": "snippets/components/content/code.jsx",
+      "rawPath": "/snippets/components/displays/code/Code.jsx",
+      "resolvedPath": "snippets/components/displays/code/Code.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -286,8 +286,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/primitives/links.jsx",
-      "resolvedPath": "snippets/components/primitives/links.jsx",
+      "rawPath": "/snippets/components/elements/links/Links.jsx",
+      "resolvedPath": "snippets/components/elements/links/Links.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -295,8 +295,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/primitives/buttons.jsx",
-      "resolvedPath": "snippets/components/primitives/buttons.jsx",
+      "rawPath": "/snippets/components/elements/buttons/Buttons.jsx",
+      "resolvedPath": "snippets/components/elements/buttons/Buttons.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -304,8 +304,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/layout.jsx",
-      "resolvedPath": "snippets/components/layout/layout.jsx",
+      "rawPath": "/snippets/components/wrappers/containers/Layout.jsx",
+      "resolvedPath": "snippets/components/wrappers/containers/Layout.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -322,8 +322,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/primitives/divider.jsx",
-      "resolvedPath": "snippets/components/primitives/divider.jsx",
+      "rawPath": "/snippets/components/elements/spacing/Divider.jsx",
+      "resolvedPath": "snippets/components/elements/spacing/Divider.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -331,8 +331,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/customCards.jsx",
-      "resolvedPath": "snippets/components/layout/customCards.jsx",
+      "rawPath": "/snippets/components/wrappers/cards/CustomCards.jsx",
+      "resolvedPath": "snippets/components/wrappers/cards/CustomCards.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []

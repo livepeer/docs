@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       tools/scripts/validators/components, tests/run-all.js, tests/run-pr-checks.js, snippets/components
- * @usage       node tools/scripts/validators/components/library/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel]
+ * @usage       node tools/scripts/validators/components/library/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel|strict-pascal]
  * @policy      R-R10
  */
 
@@ -18,13 +18,13 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const DEFAULT_TARGET = 'snippets/components';
-const DEFAULT_MODE = process.env.LP_COMPONENT_NAMING_MODE || 'strict-camel';
-const VALID_MODES = new Set(['migration', 'strict-camel']);
+const DEFAULT_MODE = process.env.LP_COMPONENT_NAMING_MODE || 'strict-pascal';
+const VALID_MODES = new Set(['migration', 'strict-camel', 'strict-pascal']);
 const FILE_RULE_LABEL = '[4.6]';
 const EXPORT_RULE_LABEL = '[4.7]';
 const CAMEL_FILE_NAME_RE = /^[a-z][a-zA-Z0-9]*\.jsx$/;
 const KEBAB_FILE_NAME_RE = /^[a-z][a-z0-9-]*\.jsx$/;
-const PASCAL_FILE_NAME_RE = /^[A-Z][a-zA-Z0-9]*\.jsx$/;
+const PASCAL_FILE_NAME_RE = /^[A-Z][a-zA-Z0-9]*\.(?:jsx|mdx)$/;
 const EXPORT_NAME_RE = /^[A-Z][a-zA-Z0-9]*$/;
 
 function getRepoRoot() {
@@ -46,7 +46,7 @@ function toPosix(value) {
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel]'
+    'Usage: node tools/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel|strict-pascal]'
   );
 }
 
@@ -161,6 +161,8 @@ function shouldSkipDirectory(displayPath) {
   return (
     displayPath.includes('/_archive/') ||
     displayPath.endsWith('/_archive') ||
+    displayPath.includes('/x-archive/') ||
+    displayPath.endsWith('/x-archive') ||
     displayPath.includes('/node_modules/') ||
     displayPath.includes('/.git/')
   );
@@ -173,7 +175,7 @@ function walkJsxFiles(absDir, out = []) {
     const absPath = path.join(absDir, entry.name);
     const displayPath = toPosix(path.relative(REPO_ROOT, absPath));
 
-    if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === '_archive') {
+    if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === '_archive' || entry.name === 'x-archive') {
       return;
     }
 
@@ -444,6 +446,9 @@ function usesDisplayKebabCase(displayPath) {
 }
 
 function isAllowedFilename(fileName, mode, displayPath) {
+  if (mode === 'strict-pascal') {
+    return PASCAL_FILE_NAME_RE.test(fileName);
+  }
   if (mode === 'strict-camel') {
     if (usesDisplayKebabCase(displayPath)) {
       return KEBAB_FILE_NAME_RE.test(fileName);
@@ -459,6 +464,9 @@ function isAllowedFilename(fileName, mode, displayPath) {
 }
 
 function fileNamingMessage(mode, fileName, displayPath) {
+  if (mode === 'strict-pascal') {
+    return `Filename must be PascalCase: ${fileName}`;
+  }
   if (mode === 'strict-camel') {
     if (usesDisplayKebabCase(displayPath)) {
       return `Filename must be kebab-case in display/: ${fileName}`;

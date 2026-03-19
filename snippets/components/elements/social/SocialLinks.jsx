@@ -1,0 +1,92 @@
+/**
+ * @component SocialLinks
+ * @type elements
+ * @subniche social
+ * @status stable
+ * @description Row of icon-only social media links with tooltips and aria-labels.
+ * @accepts style, className, ...rest
+ * @param {number} [size=20] - Size used by the component.
+ * @param {string} [gap="0.75rem"] - Gap used by the component.
+ * @param {string} [justify="center"] - Justify used by the component.
+ * @param {string} color - Color used by the component.
+ *
+ * @example
+ * <SocialLinks color="value" />
+ */
+export const SocialLinks = ({
+  size = 20,
+  gap = "0.75rem",
+  justify = "center",
+  color,
+  className = "",
+  style = {},
+  ...rest
+}) => {
+  const linkStyle = {
+    border: "none",
+    borderBottom: "none",
+    textDecoration: "none",
+    display: "inline-flex",
+  };
+
+  // Brand colors
+  const colors = {
+    discord: color ? color : "var(--lp-color-brand-discord)",
+    twitter: color ? color : "var(--hero-text)",
+    github: color ? color : "var(--lp-color-brand-github)",
+    forum: color ? color : "var(--lp-color-brand-forum)",
+    website: color ? color : "var(--accent)",
+    blog: color ? color : "var(--accent)",
+  };
+
+  return (
+    <div className={className} style={style} {...rest}>
+      <style>{`
+        .social-links a {
+          border: none;
+          border-bottom: none;
+        }
+      `}</style>
+      <span
+        className="social-links"
+        style={{
+          display: "flex",
+          justifyContent: justify,
+          gap: gap,
+          marginTop: "0.5rem",
+        }}
+      >
+        <a href="https://discord.com/invite/livepeer" target="_blank" rel="noopener noreferrer" aria-label="Livepeer Discord" style={linkStyle}>
+          <Tooltip headline="Livepeer Discord">
+            <Icon icon="discord" size={size} color={colors.discord} aria-hidden="true" />
+          </Tooltip>
+        </a>
+        <a href="https://livepeer.org" target="_blank" rel="noopener noreferrer" aria-label="Livepeer Website" style={linkStyle}>
+          <Tooltip headline="Livepeer Website">
+            <Icon icon="globe" size={size} color={colors.website} aria-hidden="true" />
+          </Tooltip>
+        </a>
+        <a href="https://github.com/livepeer" target="_blank" rel="noopener noreferrer" aria-label="Livepeer GitHub" style={linkStyle}>
+          <Tooltip headline="Livepeer GitHub">
+            <Icon icon="github" size={size} color={colors.github} aria-hidden="true" />
+          </Tooltip>
+        </a>
+        <a href="https://forum.livepeer.org" target="_blank" rel="noopener noreferrer" aria-label="Livepeer Forum" style={linkStyle}>
+          <Tooltip headline="Livepeer Forum">
+            <Icon icon="comment-pen" size={size} color={colors.forum} aria-hidden="true" />
+          </Tooltip>
+        </a>
+        <a href="https://livepeer.org/blog" target="_blank" rel="noopener noreferrer" aria-label="Livepeer Blog" style={linkStyle}>
+          <Tooltip headline="Livepeer Blog">
+            <Icon icon="pen-line" size={size} color={colors.blog} aria-hidden="true" />
+          </Tooltip>
+        </a>
+        <a href="https://x.com/livepeer" target="_blank" rel="noopener noreferrer" aria-label="Livepeer X" style={linkStyle}>
+          <Tooltip headline="Livepeer X">
+            <Icon icon="x-twitter" size={size} color={colors.twitter} aria-hidden="true" />
+          </Tooltip>
+        </a>
+      </span>
+    </div>
+  );
+};

@@ -21,8 +21,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/math.jsx",
-      "resolvedPath": "snippets/components/content/math.jsx",
+      "rawPath": "/snippets/components/elements/math/Math.jsx",
+      "resolvedPath": "snippets/components/elements/math/Math.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -68,8 +68,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/math.jsx",
-      "resolvedPath": "snippets/components/content/math.jsx",
+      "rawPath": "/snippets/components/elements/math/Math.jsx",
+      "resolvedPath": "snippets/components/elements/math/Math.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -98,8 +98,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/math.jsx",
-      "resolvedPath": "snippets/components/content/math.jsx",
+      "rawPath": "/snippets/components/elements/math/Math.jsx",
+      "resolvedPath": "snippets/components/elements/math/Math.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -136,8 +136,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/math.jsx",
-      "resolvedPath": "snippets/components/content/math.jsx",
+      "rawPath": "/snippets/components/elements/math/Math.jsx",
+      "resolvedPath": "snippets/components/elements/math/Math.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -212,8 +212,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/math.jsx",
-      "resolvedPath": "snippets/components/content/math.jsx",
+      "rawPath": "/snippets/components/elements/math/Math.jsx",
+      "resolvedPath": "snippets/components/elements/math/Math.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -304,8 +304,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/tables.jsx",
-      "resolvedPath": "snippets/components/layout/tables.jsx",
+      "rawPath": "/snippets/components/wrappers/tables/Tables.jsx",
+      "resolvedPath": "snippets/components/wrappers/tables/Tables.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -313,8 +313,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/containers.jsx",
-      "resolvedPath": "snippets/components/layout/containers.jsx",
+      "rawPath": "/snippets/components/wrappers/containers/Containers.jsx",
+      "resolvedPath": "snippets/components/wrappers/containers/Containers.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -322,8 +322,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/layout/steps.jsx",
-      "resolvedPath": "snippets/components/layout/steps.jsx",
+      "rawPath": "/snippets/components/wrappers/steps/Steps.jsx",
+      "resolvedPath": "snippets/components/wrappers/steps/Steps.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -360,8 +360,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/math.jsx",
-      "resolvedPath": "snippets/components/content/math.jsx",
+      "rawPath": "/snippets/components/elements/math/Math.jsx",
+      "resolvedPath": "snippets/components/elements/math/Math.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -398,8 +398,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/math.jsx",
-      "resolvedPath": "snippets/components/content/math.jsx",
+      "rawPath": "/snippets/components/elements/math/Math.jsx",
+      "resolvedPath": "snippets/components/elements/math/Math.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -454,8 +454,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/math.jsx",
-      "resolvedPath": "snippets/components/content/math.jsx",
+      "rawPath": "/snippets/components/elements/math/Math.jsx",
+      "resolvedPath": "snippets/components/elements/math/Math.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -519,8 +519,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/math.jsx",
-      "resolvedPath": "snippets/components/content/math.jsx",
+      "rawPath": "/snippets/components/elements/math/Math.jsx",
+      "resolvedPath": "snippets/components/elements/math/Math.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1472,8 +1472,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/page-structure/portals.jsx",
-      "resolvedPath": "snippets/components/page-structure/portals.jsx",
+      "rawPath": "/snippets/components/scaffolding/portals/Portals.jsx",
+      "resolvedPath": "snippets/components/scaffolding/portals/Portals.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1481,8 +1481,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/primitives/links.jsx",
-      "resolvedPath": "snippets/components/primitives/links.jsx",
+      "rawPath": "/snippets/components/elements/links/Links.jsx",
+      "resolvedPath": "snippets/components/elements/links/Links.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1490,8 +1490,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/page-structure/heroGif.jsx",
-      "resolvedPath": "snippets/components/page-structure/heroGif.jsx",
+      "rawPath": "/snippets/components/scaffolding/heroes/HeroGif.jsx",
+      "resolvedPath": "snippets/components/scaffolding/heroes/HeroGif.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1519,8 +1519,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/math.jsx",
-      "resolvedPath": "snippets/components/content/math.jsx",
+      "rawPath": "/snippets/components/elements/math/Math.jsx",
+      "resolvedPath": "snippets/components/elements/math/Math.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1566,8 +1566,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/math.jsx",
-      "resolvedPath": "snippets/components/content/math.jsx",
+      "rawPath": "/snippets/components/elements/math/Math.jsx",
+      "resolvedPath": "snippets/components/elements/math/Math.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1575,8 +1575,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/data/embed.jsx",
-      "resolvedPath": "snippets/components/data/embed.jsx",
+      "rawPath": "/snippets/components/integrators/embeds/DataEmbed.jsx",
+      "resolvedPath": "snippets/components/integrators/embeds/DataEmbed.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []
@@ -1640,8 +1640,8 @@ export const LINK_MAP = {
     {
       "sourceType": "import-path",
       "linkType": "import-path",
-      "rawPath": "/snippets/components/content/math.jsx",
-      "resolvedPath": "snippets/components/content/math.jsx",
+      "rawPath": "/snippets/components/elements/math/Math.jsx",
+      "resolvedPath": "snippets/components/elements/math/Math.jsx",
       "exists": true,
       "status": "ok",
       "movedCandidates": []

@@ -1,0 +1,568 @@
+/*
+ * Portal Components
+ *
+ * @description
+ * These Components are used on the Portal pages.
+ * Portal pages use mode: frame which is not correctly supported by Mintlify
+ * They do this to remove the frontmatter metadata from the page in order to customise the layout.
+ * mode: frame also strips all styling except for Mintlify components.
+ * Use display/frame-mode.jsx components for headings in frame mode pages.
+ *
+ * @imports: REQUIRED - These components require imports on the MDX page to function.
+ *
+ * Note: Components use CSS globals defined in style.css - no imports needed.
+ *
+ * PortalHeroContent uses CustomDivider which needs to be imported on the MDX page:
+ * import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx";
+ *
+ * If not imported, components will not render correctly.
+ *
+ * @author Alison Haire
+ */
+
+/*
+ * Background Image Container
+ *
+ * @description
+ * A container component for adding a background image to a portal page hero section.
+ * It uses className="frame-mode-hero-full" to fill the full width of the page.
+ * The image sits behind the hero header.
+ *
+ * @param {React.ReactNode} children:
+ * Should be:
+ * <ImageComponent />
+ * <HeroContainer />
+ * <IntroContent />
+ *
+ * @author Alison Haire
+ */
+/**
+ * @component HeroSectionContainer
+ * @type scaffolding
+ * @subniche portals
+ * @status stable
+ * @description Full-width hero section wrapper with min-height and gradient background.
+ * @accepts {any} children, {string} minHeight, {string} className, {object} style, ...rest
+ * @param {any} children - children prop.
+ * @param {string} [minHeight="fit-content"] - min Height prop.
+ */
+const HeroSectionContainer = ({ children, minHeight = "fit-content", className = "", style = {}, ...rest }) => {
+  return (
+    <div
+      className={["frame-mode-hero-full", className].filter(Boolean).join(" ")}
+      style={{ minHeight: minHeight, marginBottom: "0.5rem", ...style }}
+      {...rest}
+    >
+      {children}
+      {/* <HeroImageBackgroundComponent /> */}
+      {/* <HeroContainer/> */}
+    </div>
+  );
+};
+
+/*
+ * Hero Image Background Component
+ *
+ * @description
+ * A container component for the background of a portal page hero section.
+ * The background sits behind the hero header.
+ * The background is fixed and will not scroll with the page.
+ * Currently a gif is generated looking like a starfield using HeroGif.jsx
+ * This component should sit in a className="frame-mode-hero-full" element.
+ *
+ * @param {React.ReactNode} children:
+ * The background image component. Defaults to <Starfield />
+ * <Starfield /> is created in components/domain/SHARED/HeroGif.jsx
+ *
+ * @author Alison Haire
+ */
+/**
+ * @component HeroImageBackgroundComponent
+ * @type scaffolding
+ * @subniche portals
+ * @status stable
+ * @description Hero background with image overlay and gradient.
+ * @accepts {any} children, {string} className, {object} style, ...rest
+ * @param {any} children - children prop.
+ */
+const HeroImageBackgroundComponent = ({ children, className = "", style = {}, ...rest }) => {
+  return (
+    <div
+      className={className}
+      style={{
+        position: "absolute",
+        inset: 0,
+        overflow: "hidden",
+        zIndex: 0,
+        ...style,
+      }}
+      {...rest}
+    >
+      {children}
+      {/* <Starfield /> */}
+    </div>
+  );
+};
+
+/*
+ * Hero Container
+ *
+ * @description
+ * A container component for the hero content of a portal page.
+ * Uses className="frame-mode-container" for centering and margins.
+ * The content is centered & has margins and gap set.
+ *
+ * @param {React.ReactNode} children:
+ * The content of the hero section.
+ * Should be:
+ * <PortalHeroHeader />
+ * <IntroContent />
+ *
+ * @author Alison Haire
+ */
+/**
+ * @component HeroContentContainer
+ * @type scaffolding
+ * @subniche portals
+ * @status stable
+ * @description Centred content container inside hero sections.
+ * @accepts {any} children, {string} className, {object} style, ...rest
+ * @param {any} children - children prop.
+ */
+const HeroContentContainer = ({ children, className = "", style = {}, ...rest }) => {
+  return (
+    <div
+      className={["frame-mode-container", className].filter(Boolean).join(" ")}
+      style={{
+        position: "relative",
+        zIndex: 1,
+        height: "100%",
+        marginBottom: 0,
+        ...style,
+      }}
+      {...rest}
+    >
+      <div style={{ position: "relative", height: "100%" }}>{children}</div>
+    </div>
+  );
+};
+
+//unused
+/**
+ * @component HeroOverviewContent
+ * @type scaffolding
+ * @subniche portals
+ * @status stable
+ * @description Hero content layout with title, icon, subtitle, and CTA slots.
+ * @accepts {any} children, {string} className, {object} style, ...rest
+ * @param {any} children - children prop.
+ */
+const HeroOverviewContent = ({ children, className = "", style = {}, ...rest }) => {
+  return (
+    <div
+      className={className}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        gap: "1rem 0",
+        width: "80%",
+        margin: "0 auto",
+        fontSize: "1.1rem",
+        color: "var(--page-header-description-color)",
+        ...style,
+      }}
+      {...rest}
+    >
+          {children}
+          <div style={{ paddingBottom: "2.5rem" }}> 
+              <CustomDivider />
+         </div>
+    </div>
+  );
+};
+
+/*
+ * Portal Content Container
+ *
+ * @description
+ * A container component for the portal page content.
+ * Provides margins and centering for the page content.
+ *
+ * @param {React.ReactNode} children:
+ * The content of the page.
+ *
+ * @author Alison Haire
+ */
+/**
+ * @component PortalContentContainer
+ * @type scaffolding
+ * @subniche portals
+ * @status stable
+ * @description Outer container for portal page content below the hero.
+ * @accepts {any} children, {string} className, {object} style, ...rest
+ * @param {any} children - children prop.
+ */
+const PortalContentContainer = ({ children, className = "", style = {}, ...rest }) => {
+    return (
+        <div className={["frame-mode-container", className].filter(Boolean).join(" ")} style={style} {...rest}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>   
+                {children}
+            </div>
+        </div>
+    );
+};
+
+/*
+ * Portal Hero Content Component
+ *
+ * @description
+ * A custom header component for portal pages that supports theming and optional
+ * subheadings/descriptions.
+ * Wraps the content in a z-index container to sit on top of the
+ * background image by default - can be toggled off with zIndex=false
+ *
+ * @param {string} title: The title of the hero section.
+ * @param {string} subtitle: The subtitle of the hero section.
+ * @param {string} description: The description of the hero section.
+ * @param {React.ReactNode} children: Any additional content to include in the hero section.
+ * @param {string} titleColor: The color of the title text.
+ * @param {string} subtitleColor: The color of the subtitle text.
+ * @param {string} descriptionColor: The color of the description text.
+ *
+ * @author Alison Haire
+ */
+/**
+ * @component PortalHeroContent
+ * @type scaffolding
+ * @subniche portals
+ * @status stable
+ * @description Hero content with logo, title, tagline, description, and card grid.
+ * @accepts {boolean} zIndex, {string} title, {string} subtitle, {string} subtitleIcon, {any} description, {any} refCardLink, {any} overview, {boolean} divider, {any} callout, {any} titleColor, {any} subtitleColor, {any} children, {string} className, {object} style, ...rest
+ * @param {boolean} [zIndex=true] - z Index prop.
+ * @param {string} [title="Portal Page"] - title prop.
+ * @param {string} [subtitle="Build - Explore - Create"] - subtitle prop.
+ * @param {string} [subtitleIcon="/snippets/assets/logos/Livepeer-Logo-Symbol-Green-Theme.svg"] - subtitle Icon prop.
+ * @param {any} description - description prop.
+ * @param {any} refCardLink - ref Card Link prop.
+ * @param {any} overview - overview prop.
+ * @param {boolean} [divider=true] - divider prop.
+ * @param {any} [callout=null] - callout prop.
+ * @param {any} titleColor - title Color prop.
+ * @param {any} subtitleColor - subtitle Color prop.
+ * @param {any} children - children prop.
+ */
+const PortalHeroContent = ({
+  zIndex = true, //Not working currently
+  title = "Portal Page",
+  subtitle = "Build - Explore - Create",
+  subtitleIcon = "/snippets/assets/logos/Livepeer-Logo-Symbol-Green-Theme.svg",
+  description,
+  refCardLink,
+  overview,
+  divider = true,
+  callout=null,
+  titleColor,
+  subtitleColor,
+  children,
+  className = "",
+  style = {},
+  ...rest
+}) => {
+  return (
+    // zIndex &&
+    <div className={className} style={{ position: "relative", zIndex: 1, ...style }} {...rest}>
+      <div
+        style={{
+          textAlign: "center",
+          marginTop: "2rem",
+          marginBottom: "1rem",
+        }}
+      >
+        <H1 align="center"
+        >
+          {title}
+        </H1>
+        {subtitle && (
+          //   wrapper for icons
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5rem",
+            }}
+          >
+            {subtitleIcon && (
+              <span
+                style={{
+                  marginRight: "0.5rem",
+                }}
+              >
+                <Icon icon={subtitleIcon} size={20} />
+              </span>
+            )}
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "500",
+                opacity: 1,
+                color: subtitleColor || "var(--accent)",
+              }}
+            >
+              {subtitle} {/* flipped icon */}
+              {subtitleIcon && (
+                <span
+                  style={{
+                    display: "inline-block",
+                    transform: "scaleX(-1)",
+                    marginLeft: "0.5rem",
+                  }}
+                >
+                  <Icon icon={subtitleIcon} size={20} />
+                </span>
+              )}
+            </h2>
+          </div>
+        )}
+        {description && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              gap: "1rem 0",
+              width: "80%",
+              margin: "0 auto",
+              fontSize: "1.1rem",
+              color: "var(--text)",
+              paddingTop: "3rem",
+            }}
+          >
+            {description}
+          </div>
+        )}
+        {refCardLink && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "fit-content",
+              margin: "0 auto",
+              marginTop: "1rem",
+            }}
+           >
+            {refCardLink}
+          </div>
+              )}
+         <div style={{ width: "80%", margin: "0 auto", paddingBottom: "1rem" }}>
+          {callout && callout}
+          {divider ? <CustomDivider /> : null }
+          {/* <CustomDivider /> */}
+        </div>
+        {overview && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              gap: "1rem 0",
+              width: "80%",
+              margin: "0 auto",
+              fontSize: "1.1rem",
+              color: "var(--text)",
+            }}
+          >
+            {overview}
+          </div>
+              )}
+        <div style={{ width: "80%", margin: "0 auto", paddingTop: "1.5rem", paddingBottom: "0.1rem" }}>
+          {children ? <>{children}<CustomDivider /></> :  <CustomDivider />}
+        </div>
+        </div>
+      {/* zIndex && */}
+    </div>
+  );
+};
+
+/**
+ * @component PortalCardsHeader
+ * @type scaffolding
+ * @subniche portals
+ * @status stable
+ * @description Section header with mission label and optional subtitle.
+ * @accepts {any} children, {any} title, {string} className, {object} style, ...rest
+ * @param {any} children - children prop.
+ * @param {any} title - title prop.
+ */
+const PortalCardsHeader = ({ children, title, className = "", style = {}, ...rest }) => {
+    return (
+    <div className={className} style={{ alignContent: "center", justifyContent: "center", ...style }} {...rest}>
+        <H2 icon="signs-post" iconSize={32} >
+            {title}
+        </H2>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.1rem" }}>
+                <span style={{ lineHeight: "1", color: "var(--text-primary)", opacity: 1, fontStyle: "italic", fontSize: "1.2rem" }}>
+                    Choose Your Mission:
+                </span>
+                {children}
+        </div>
+    </div>
+  );
+};
+
+/**
+ * @component PortalSectionHeader
+ * @type scaffolding
+ * @subniche portals
+ * @status stable
+ * @description Section header with icon, title, and horizontal rule.
+ * @accepts {any} children, {any} title, {any} icon, {string} className, {object} style, ...rest
+ * @param {any} children - children prop.
+ * @param {any} title - title prop.
+ * @param {any} icon - icon prop.
+ */
+const PortalSectionHeader = ({ children, title, icon, className = "", style = {}, ...rest }) => {
+    return (
+    <div className={className} style={{ alignContent: "center", justifyContent: "center", gap: "1rem 0", ...style }} {...rest}>
+        <H3 icon={icon} iconSize={32} >
+            {title}
+        </H3>
+        {children}
+    </div>
+  );
+};
+
+/*
+ * Logo Hero Container Component
+ *
+ * @description
+ * A component for displaying a logo in the hero section of a portal page.
+ * Has:
+ * - A wrapper container for centering & constraining the image size
+ * - A Centered Image with objectFit: "contain" to resize the logo.
+ *
+ * @param {string} src: The source of the logo image. Defaults to theme mode aware Livepeer Logo in "/snippets/assets/logos/Livepeer-Logo-Full-Theme.svg"
+ * @param {string} alt: The alt text for the logo image. Defaults to "Livepeer Logo"
+ * @param {string} height: The height of the logo image. Defaults to "100px".
+ * @param {string} width: The width of the logo image. Defaults to "100%".
+ * @param {string} margin: The margin around the logo image. Defaults to "2rem auto".
+ * @param {string} imgHeight: The height of the logo image. Defaults to "100%".
+ * @param {string} imgWidth: The width of the logo image. Defaults to "auto".
+ * @param {string} objectFit: The object-fit property of the logo image. Defaults to "contain".
+ *
+ * @author Alison Haire
+ */
+/**
+ * @component LogoHeroContainer
+ * @type scaffolding
+ * @subniche portals
+ * @status stable
+ * @description Hero banner with centred logo image, title, and subtitle.
+ * @accepts {string} src, {string} alt, {string} width, {string} margin, {string} imgHeight, {string} imgWidth, {string} objectFit, {any} children, {string} className, {object} style, ...rest
+ * @param {string} [src="/snippets/assets/logos/Livepeer-Logo-Full-Theme.svg"] - src prop.
+ * @param {string} [alt="Livepeer Logo"] - alt prop.
+ * @param {string} [width="100%"] - width prop.
+ * @param {string} [margin="1rem auto 0 auto"] - margin prop.
+ * @param {string} [imgHeight="20px"] - img Height prop.
+ * @param {string} [imgWidth="auto"] - img Width prop.
+ * @param {string} [objectFit="contain"] - object Fit prop.
+ * @param {any} children - children prop.
+ */
+const LogoHeroContainer = ({
+  src = "/snippets/assets/logos/Livepeer-Logo-Full-Theme.svg",
+  alt = "Livepeer Logo",
+  width = "100%",
+  margin = "1rem auto 0 auto",
+  imgHeight = "20px",
+  imgWidth = "auto",
+  objectFit = "contain",
+  children,
+  className = "",
+  style = {},
+  ...rest
+}) => {
+  return (
+    <div
+      className={className}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        margin: margin,
+        width: width,
+        paddingBottom: children ? "3.5rem" : "0",
+        ...style,
+      }}
+      {...rest}
+    >
+      <div style={{ position: "relative", display: "inline-block" }}>
+        <img
+          src={src}
+          alt={alt}
+          style={{ height: imgHeight, width: imgWidth, objectFit: objectFit, display: "block" }}
+        />
+        {children &&
+          <div style={{
+            position: "absolute",
+            top: "100%",
+            right: "0",
+            fontSize: "2rem",
+            color: "var(--accent)",
+            fontWeight: "500",
+            lineHeight: "1",
+            paddingTop:"0.5rem"
+          }}>
+            {children}
+          </div>
+        }
+      </div>
+    </div>
+  );
+};
+
+/**
+ * @component RefCardContainer
+ * @type scaffolding
+ * @subniche portals
+ * @status stable
+ * @description Container for reference cards with configurable column count.
+ * @accepts {any} children, {string} className, {object} style, ...rest
+ * @param {any} children - children prop.
+ */
+const RefCardContainer = ({ children, className = "", style = {}, ...rest }) => {
+  return (
+    <div
+      className={className}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        gap: "1rem",
+        ...style,
+      }}
+      {...rest}
+    >
+      {children}
+    </div>
+  );
+};
+
+export {
+    HeroImageBackgroundComponent,
+    HeroContentContainer,
+    PortalContentContainer,
+    PortalHeroContent,
+    LogoHeroContainer,
+    RefCardContainer,
+    HeroOverviewContent,
+    HeroSectionContainer,
+    PortalCardsHeader,
+    PortalSectionHeader
+};
