@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual, ci
  * @scope       tools/scripts, ai-tools/ai-skills, AGENTS.md, .github, .claude, .cursor, .windsurf, docs-guide/policies, contribute, v2
- * @usage       node tools/scripts/generate-ai-skills-indexes.js [--check|--write]
+ * @usage       node tools/scripts/generators/governance/catalogs/generate-ai-skills-indexes.js [--check|--write]
  * @policy      R-R14, R-R18
  */
 

@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual, ci
  * @scope       v2-content
- * @usage       node tools/scripts/validators/content/check-anchor-usage.js [--json] [--scope <glob>]
+ * @usage       node tools/scripts/validators/content/structure/check-anchor-usage.js [--json] [--scope <glob>]
  * @policy      R-R14, R-C6
  */
 // Baseline 2026-03-09: 100 errors, 8106 warnings - wired as advisory until debt cleared

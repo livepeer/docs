@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual, P6
  * @scope       tools/scripts, docs.json, v2
- * @usage       node tools/scripts/generate-ai-sitemap.js [flags]
+ * @usage       node tools/scripts/generators/content/seo/generate-ai-sitemap.js [flags]
  * @policy      R-R16, R-R17
  */
 

@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    manual
  * @scope       tools/scripts, tasks/reports/repo-ops, tasks/quarantine
- * @usage       node tools/scripts/cleanup-quarantine-manager.js [flags]
+ * @usage       node tools/scripts/remediators/content/repair/quarantine-manager.js [flags]
  * @policy      E-C1, R-R14
  */
 

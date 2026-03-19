@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts, ai-tools/ai-skills/templates, tests/unit/codex-skill-sync.test.js
- * @usage       node tools/scripts/sync-codex-skills.js [flags]
+ * @usage       node tools/scripts/dispatch/ai/agents/sync-codex-skills.js [flags]
  * @policy      R-R27, R-R30
  */
 

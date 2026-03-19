@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts, docs-guide/catalog/pages-catalog.mdx, v2/index.mdx, docs.json
- * @usage       node tools/scripts/generate-docs-guide-pages-index.js [flags]
+ * @usage       node tools/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js [flags]
  * @policy      R-R16, R-R17
  */
 

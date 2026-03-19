@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only
  * @scope       tools/scripts, tasks/reports/media-audit
- * @usage       node tools/scripts/audit-media-assets.js [flags]
+ * @usage       node tools/scripts/audits/content/quality/audit-media-assets.js [flags]
  * @policy      R-R14
  */
 

@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    manual — deterministic metadata rollout utility for v2 docs
  * @scope       tools/scripts, v2, tasks/reports
- * @usage       node tools/scripts/add-pagetype-mechanical.js [flags]
+ * @usage       node tools/scripts/remediators/content/classification/add-pagetype-mechanical.js [flags]
  * @policy      E-R1, R-R11
  */
 

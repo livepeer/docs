@@ -7,9 +7,9 @@
  * @purpose     qa:content-quality
  * @description Enforce structural rules on MDX content files.
  * @mode        read-only
- * @pipeline    manual, manual
+ * @pipeline    manual
  * @scope       staged, changed, v2-content, single-file
- * @usage       node tools/scripts/lint-structure.js [file] [flags]
+ * @usage       node tools/scripts/validators/content/structure/lint-structure.js [file] [flags]
  * @policy      E-R1, R-R11
  */
 

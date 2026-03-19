@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only
  * @scope       tools/scripts, tasks/README.md, tasks/reports, tests/unit/script-docs.test.js, tests/README.md
- * @usage       node tools/scripts/audit-scripts.js [flags]
+ * @usage       node tools/scripts/audits/governance/scripts/audit-script-categories.js [flags]
  * @policy      E-C1, R-R14
  */
 

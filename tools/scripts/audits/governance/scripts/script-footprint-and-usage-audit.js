@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts, tests, tasks/reports, ai-tools/ai-skills
- * @usage       node tools/scripts/script-footprint-and-usage-audit.js [flags]
+ * @usage       node tools/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js [flags]
  * @policy      E-C1, R-R14
  */
 

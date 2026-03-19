@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts, tasks
- * @usage       node tools/scripts/audit-tasks-folders.js [flags]
+ * @usage       node tools/scripts/audits/governance/repo/audit-tasks-folders.js [flags]
  * @policy      E-C1, R-R14
  */
 

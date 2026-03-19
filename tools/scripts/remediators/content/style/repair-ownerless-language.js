@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    manual
  * @scope       AGENTS.md, .allowlist, .github, .claude, .cursor, .windsurf, README.md, contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md, docs-guide
- * @usage       node tools/scripts/repair-ownerless-language.js [--check|--write] [--files a,b]
+ * @usage       node tools/scripts/remediators/content/style/repair-ownerless-language.js [--check|--write] [--files a,b]
  * @policy      R-R14, R-R29
  */
 

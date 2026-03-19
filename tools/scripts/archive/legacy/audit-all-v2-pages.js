@@ -8,7 +8,7 @@
  * @needs             E-C6, F-C1
  * @purpose-statement V2-specific page auditor — checks v2/** pages for v2-specific requirements (frontmatter, components)
  * @pipeline          manual — diagnostic/investigation tool, run on-demand only
- * @usage             node tools/scripts/audit-all-v2-pages.js [flags]
+ * @usage             node tools/scripts/archive/legacy/audit-all-v2-pages.js [flags]
  */
 /**
  * Comprehensive Browser Audit of ALL v2 Pages

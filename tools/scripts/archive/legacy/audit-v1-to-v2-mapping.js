@@ -9,7 +9,7 @@
  * @purpose-statement Diagnostic — maps v1 page URLs to v2 equivalents for migration tracking
  * @pipeline          manual — diagnostic/investigation tool, run on-demand only
  * @dualmode          dual-mode (document flags)
- * @usage             node tools/scripts/audit-v1-to-v2-mapping.js [flags]
+ * @usage             node tools/scripts/archive/legacy/audit-v1-to-v2-mapping.js [flags]
  */
 
 const fs = require('fs');

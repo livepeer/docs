@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts, .githooks, ai-tools/ai-rules
- * @usage       node tools/scripts/codex-commit.js [flags]
+ * @usage       node tools/scripts/dispatch/ai/codex/codex-commit.js [flags]
  * @policy      R-R27, R-R30
  */
 

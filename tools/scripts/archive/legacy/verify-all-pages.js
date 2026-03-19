@@ -7,7 +7,7 @@
  * @needs             E-C1, R-R14
  * @purpose-statement Page verifier — checks all pages in docs.json resolve to valid files
  * @pipeline          manual — diagnostic/investigation tool, run on-demand only
- * @usage             node tools/scripts/verify-all-pages.js [flags]
+ * @usage             node tools/scripts/archive/legacy/verify-all-pages.js [flags]
  */
 const puppeteer = require('puppeteer');
 

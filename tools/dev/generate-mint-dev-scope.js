@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       tools/scripts/dev, docs.json, .mintignore
- * @usage       node tools/scripts/dev/generate-mint-dev-scope.js [flags]
+ * @usage       node tools/dev/generate-mint-dev-scope.js [flags]
  * @policy      E-C6, F-C1
  */
 

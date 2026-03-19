@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       tools/scripts, docs-guide/catalog, docs-guide/features, snippets/templates, v2/templates, .vscode
- * @usage       node tools/scripts/generate-ui-templates.js [flags]
+ * @usage       node tools/scripts/generators/components/library/generate-ui-templates.js [flags]
  * @policy      R-R16, R-R17
  */
 

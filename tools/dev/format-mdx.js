@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual
  * @scope       tools/scripts, tools/vscode/authoring-tools, tests/unit
- * @usage       node tools/scripts/format-mdx.js [--check|--write] [--files a,b]
+ * @usage       node tools/dev/format-mdx.js [--check|--write] [--files a,b]
  * @policy      E-C6, F-C1
  */
 

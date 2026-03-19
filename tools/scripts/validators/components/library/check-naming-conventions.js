@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       tools/scripts/validators/components, tests/run-all.js, tests/run-pr-checks.js, snippets/components
- * @usage       node tools/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel]
+ * @usage       node tools/scripts/validators/components/library/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel]
  * @policy      R-R10
  */
 

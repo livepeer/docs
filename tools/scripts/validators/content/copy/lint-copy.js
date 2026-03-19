@@ -7,9 +7,9 @@
  * @purpose     qa:content-quality
  * @description Enforce banned word and phrase rules on MDX content files.
  * @mode        read-only
- * @pipeline    manual, manual
+ * @pipeline    manual
  * @scope       staged, changed, v2-content, single-file
- * @usage       node tools/scripts/lint-copy.js [file or glob] [flags]
+ * @usage       node tools/scripts/validators/content/copy/lint-copy.js [file or glob] [flags]
  * @policy      E-R1, R-R11
  */
 

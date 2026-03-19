@@ -8,7 +8,7 @@
 # @mode        execute
 # @pipeline    manual — developer tool
 # @scope       full-repo
-# @usage       bash tools/scripts/mint-dev.sh [flags]
+# @usage       bash tools/dev/mint-dev.sh [flags]
 # @policy      E-C6, F-C1
 set -euo pipefail
 

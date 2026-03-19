@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       tools/scripts, v2, tasks/reports/quality-accessibility
- * @usage       node tools/scripts/docs-quality-and-freshness-audit.js [flags]
+ * @usage       node tools/scripts/audits/content/quality/docs-quality-and-freshness-audit.js [flags]
  * @policy      E-R1, R-R11
  */
 

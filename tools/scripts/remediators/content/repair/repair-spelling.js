@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    manual
  * @scope       v2-content
- * @usage       node tools/scripts/remediators/content/repair-spelling.js --dry-run
+ * @usage       node tools/scripts/remediators/content/repair/repair-spelling.js --dry-run
  * @policy      R-R2
  */
 

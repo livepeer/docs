@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual, P3
  * @scope       single-domain
- * @usage       node tools/scripts/validators/components/check-component-css.js [--path snippets/components] [--staged] [--fix] [--help]
+ * @usage       node tools/scripts/validators/components/library/check-component-css.js [--path snippets/components] [--staged] [--fix] [--help]
  * @policy      R-R10
  */
 

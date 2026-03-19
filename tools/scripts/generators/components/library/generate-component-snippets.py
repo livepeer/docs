@@ -8,7 +8,7 @@
 # @mode        generate
 # @pipeline    manual
 # @scope       tools/scripts, docs-guide/component-registry.json, .vscode/components.code-snippets
-# @usage       python3 tools/scripts/generate-component-snippets.py
+# @usage       python3 tools/scripts/generators/components/library/generate-component-snippets.py
 # @policy      R-R10
 """Generate VS Code component snippets from component-registry.json"""
 import json

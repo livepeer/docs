@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual — experimental research system
  * @scope       tools/scripts, tasks/research/claims, tests/unit/docs-page-research.test.js, tasks/reports/repo-ops
- * @usage       node tools/scripts/docs-page-research.js [flags]
+ * @usage       node tools/scripts/audits/content/veracity/docs-page-research.js [flags]
  * @policy      R-R27, R-R30
  */
 

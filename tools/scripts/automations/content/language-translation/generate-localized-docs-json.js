@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    on-demand, translation pipeline)
  * @scope       docs.json, tools/scripts/i18n
- * @usage       node tools/scripts/i18n/generate-localized-docs-json.js [flags]
+ * @usage       node tools/scripts/automations/content/language-translation/generate-localized-docs-json.js [flags]
  * @policy      F-R6, F-R7
  */
 

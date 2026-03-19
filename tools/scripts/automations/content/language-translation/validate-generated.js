@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual
  * @scope       tools/scripts/i18n, v2
- * @usage       node tools/scripts/i18n/validate-generated.js [flags]
+ * @usage       node tools/scripts/automations/content/language-translation/validate-generated.js [flags]
  * @policy      F-R6, F-R7
  */
 

@@ -8,7 +8,7 @@
  * @mode        read-only
  * @pipeline    manual — not yet in pipeline
  * @scope       single-domain
- * @usage       node tools/scripts/verify-all-pages.js
+ * @usage       node tools/scripts/validators/content/structure/verify-all-pages.js
  * @policy      E-C1, R-R14
  */
 const puppeteer = require('puppeteer');

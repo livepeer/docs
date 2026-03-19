@@ -8,7 +8,7 @@
 # @mode        execute
 # @pipeline    manual — interactive developer tool, not suited for automated pipelines
 # @scope       tools/scripts
-# @usage       bash tools/scripts/dev/ensure-mint-watcher-patch.sh [flags]
+# @usage       bash tools/dev/ensure-mint-watcher-patch.sh [flags]
 # @policy      E-C6, F-C1
 set -euo pipefail
 

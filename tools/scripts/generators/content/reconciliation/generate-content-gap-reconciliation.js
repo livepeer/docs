@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts, tools/config, tools/lib, v2, tasks/reports/content-gap
- * @usage       node tools/scripts/generate-content-gap-reconciliation.js [flags]
+ * @usage       node tools/scripts/generators/content/reconciliation/generate-content-gap-reconciliation.js [flags]
  * @policy      R-R16, R-R17
  */
 

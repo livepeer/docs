@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       v2-content
- * @usage       node tools/scripts/validators/content/check-double-headers.js [--staged|--file <path>|--files <a,b>] [--fix]
+ * @usage       node tools/scripts/validators/content/structure/check-double-headers.js [--staged|--file <path>|--files <a,b>] [--fix]
  * @policy      1.12, 1.13
  */
 

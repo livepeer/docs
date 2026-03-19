@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts, .codex/task-contract.yaml
- * @usage       node tools/scripts/create-codex-pr.js [flags]
+ * @usage       node tools/scripts/dispatch/ai/codex/create-codex-pr.js [flags]
  * @policy      R-R27, R-R30
  */
 

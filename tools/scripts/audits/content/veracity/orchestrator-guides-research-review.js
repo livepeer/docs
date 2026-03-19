@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual — packet generator compatibility wrapper
  * @scope       tools/scripts, tasks/reports/orchestrator-guides-review, tools/config/scoped-navigation/docs-gate-work.json, tasks/research, tests/unit/orchestrator-guides-research-review.test.js
- * @usage       node tools/scripts/orchestrator-guides-research-review.js [flags]
+ * @usage       node tools/scripts/audits/content/veracity/orchestrator-guides-research-review.js [flags]
  * @policy      R-R27, R-R30
  */
 

@@ -7,7 +7,7 @@
  * @needs             E-C6, F-C1
  * @purpose-statement Diagnostic — given a broken URL, attempts to find the correct v2 equivalent
  * @pipeline          manual — interactive developer tool, not suited for automated pipelines
- * @usage             node tools/scripts/find-correct-url.js [flags]
+ * @usage             node tools/scripts/archive/legacy/find-correct-url.js [flags]
  */
 const puppeteer = require('puppeteer');
 

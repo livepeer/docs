@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       full-repo
- * @usage       node tools/scripts/add-framework-headers.js --data script-classifications.json --dry-run
+ * @usage       node tools/scripts/remediators/content/classification/add-framework-headers.js --data script-classifications.json --dry-run
  * @policy      R-R14
  */
 

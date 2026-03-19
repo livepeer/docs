@@ -7,7 +7,7 @@
  * @needs             E-C1, R-R14
  * @purpose-statement Component error checker — scans pages for broken or misconfigured component usage
  * @pipeline          manual — diagnostic/investigation tool, run on-demand only
- * @usage             node tools/scripts/check-component-errors.js [flags]
+ * @usage             node tools/scripts/archive/legacy/check-component-errors.js [flags]
  */
 const puppeteer = require('puppeteer');
 

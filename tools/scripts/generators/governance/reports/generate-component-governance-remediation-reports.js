@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual — report generation
  * @scope       generated-output
- * @usage       node tools/scripts/generate-component-governance-remediation-reports.js [flags]
+ * @usage       node tools/scripts/generators/governance/reports/generate-component-governance-remediation-reports.js [flags]
  * @policy      R-R10, R-R29
  */
 

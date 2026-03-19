@@ -10,7 +10,7 @@
 # @needs             F-R1
 # @purpose-statement Component library updater — syncs component library documentation from source
 # @pipeline          manual — interactive developer tool, not suited for automated pipelines
-# @usage             bash tools/scripts/snippets/update-component-library.sh [flags]
+# @usage             bash tools/scripts/archive/deprecated/update-component-library.sh [flags]
 # Auto-updates snippets/snippetsWiki/componentLibrary/index.mdx
 # Run this script after changes to snippets/components/
 

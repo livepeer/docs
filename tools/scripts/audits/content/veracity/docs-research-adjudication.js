@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual — experimental research system
  * @scope       tools/scripts, tasks/research, tests/unit/docs-research-adjudication.test.js, tasks/reports/repo-ops, docs-guide/frameworks/research-skill-workflow.mdx
- * @usage       node tools/scripts/docs-research-adjudication.js [flags]
+ * @usage       node tools/scripts/audits/content/veracity/docs-research-adjudication.js [flags]
  * @policy      R-R27, R-R30
  */
 

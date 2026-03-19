@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    PR, Track B)
  * @scope       tools/scripts, .github/workflows, codex PR governance
- * @usage       node tools/scripts/check-codex-pr-overlap.js [flags]
+ * @usage       node tools/scripts/dispatch/ai/codex/check-codex-pr-overlap.js [flags]
  * @policy      R-R27, R-R30
  */
 

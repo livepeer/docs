@@ -7,9 +7,9 @@
  * @purpose     governance:index-management
  * @description Generates published component library MDX pages from the registry. Replaces update-component-library.sh.
  * @mode        generate
- * @pipeline    manual, manual
+ * @pipeline    manual
  * @scope       generated-output
- * @usage       node tools/scripts/generate-component-docs.js [--dry-run|--fix|--write|--check] [--template-only] [--category <name>]
+ * @usage       node tools/scripts/generators/components/documentation/generate-component-docs.js [--dry-run|--fix|--write|--check] [--template-only] [--category <name>]
  * @policy      R-R10
  */
 

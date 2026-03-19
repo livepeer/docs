@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    commit — auto-regenerated when components staged)
  * @scope       generated-output
- * @usage       node tools/scripts/generate-docs-guide-components-index.js [--fix|--write|--check]
+ * @usage       node tools/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js [--fix|--write|--check]
  * @policy      R-R10, R-R16, R-R17
  */
 

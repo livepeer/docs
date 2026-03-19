@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    manual
  * @scope       full-repo
- * @usage       node tools/scripts/remediators/content/repair-mdx-safe-markdown.js --dry-run [--staged|--files a,b]
+ * @usage       node tools/scripts/remediators/content/repair/repair-mdx-safe-markdown.js --dry-run [--staged|--files a,b]
  * @policy      E-R1, R-R11
  */
 

@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts, v2/internal/assets/transcripts
- * @usage       node tools/scripts/convert-rss-to-mdx.js [flags]
+ * @usage       node tools/scripts/automations/content/data/transforms/convert-rss-to-mdx.js [flags]
  * @policy      F-R1
  */
 

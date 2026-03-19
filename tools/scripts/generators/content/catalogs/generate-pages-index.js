@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual
  * @scope       tools/scripts, v2
- * @usage       node tools/scripts/generate-pages-index.js [flags]
+ * @usage       node tools/scripts/generators/content/catalogs/generate-pages-index.js [flags]
  * @policy      R-R16, R-R17
  */
 

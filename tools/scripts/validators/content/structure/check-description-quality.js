@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual — diagnostic/investigation tool, run on-demand only
  * @scope       tools/scripts/validators/content, v2
- * @usage       node tools/scripts/validators/content/check-description-quality.js [--path <repo-path>] [--strict]
+ * @usage       node tools/scripts/validators/content/structure/check-description-quality.js [--path <repo-path>] [--strict]
  * @policy      E-R1, R-R11
  */
 

@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       tools/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
- * @usage       node tools/scripts/codex/task-cleanup.js [flags]
+ * @usage       node tools/scripts/dispatch/ai/codex/task-cleanup.js [flags]
  * @policy      R-R27, R-R30
  */
 

@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual — run when OG assets, section labels, or branding change
  * @scope       tools/scripts, snippets/assets/site/og-image
- * @usage       node tools/scripts/snippets/generate-og-images.js [--dry-run] [--only <locale:section-id|fallback>]
+ * @usage       node tools/scripts/generators/content/seo/generate-og-images.js [--dry-run] [--only <locale:section-id|fallback>]
  * @policy      E-R1, R-R14
  */
 

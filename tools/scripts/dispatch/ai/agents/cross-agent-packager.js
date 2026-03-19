@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts, ai-tools/ai-skills/catalog, ai-tools/agent-packs
- * @usage       node tools/scripts/cross-agent-packager.js [flags]
+ * @usage       node tools/scripts/dispatch/ai/agents/cross-agent-packager.js [flags]
  * @policy      R-R27, R-R30
  */
 

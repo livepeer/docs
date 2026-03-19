@@ -7,9 +7,9 @@
  * @purpose     governance:repo-health
  * @description Reads the media-audit manifest, migrates flagged assets to docs-v2-assets, and rewrites MDX/JSX references to raw GitHub URLs.
  * @mode        edit
- * @pipeline    manual, manual
+ * @pipeline    manual
  * @scope       full-repo
- * @usage       node tools/scripts/remediators/assets/migrate-assets-to-branch.js --manifest tasks/reports/media-audit/media-audit-manifest.json --target migrate_r2,migrate_cloudinary --dry-run
+ * @usage       node tools/scripts/remediators/content/repair/migrate-assets-to-branch.js --manifest tasks/reports/media-audit/media-audit-manifest.json --target migrate_r2,migrate_cloudinary --dry-run
  * @policy      R-R14
  */
 

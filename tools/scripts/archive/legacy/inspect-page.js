@@ -7,7 +7,7 @@
  * @needs             E-C6, F-C1
  * @purpose-statement Page inspector — displays parsed metadata, frontmatter, components, and structure for a single page
  * @pipeline          manual — diagnostic/investigation tool, run on-demand only
- * @usage             node tools/scripts/inspect-page.js [flags]
+ * @usage             node tools/scripts/archive/legacy/inspect-page.js [flags]
  */
 const puppeteer = require('puppeteer');
 

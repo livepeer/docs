@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    on-demand, repair)
  * @scope       tools/scripts, v2, tools/config/style-language-profile-en-gb.json
- * @usage       node tools/scripts/style-and-language-homogenizer-en-gb.js [flags]
+ * @usage       node tools/scripts/remediators/content/style/style-and-language-homogenizer-en-gb.js [flags]
  * @policy      E-C6, F-C1
  */
 

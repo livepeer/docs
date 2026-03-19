@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       tools/scripts, v2, tools/config/component-layout-profile.json
- * @usage       node tools/scripts/component-layout-governance.js [flags]
+ * @usage       node tools/scripts/validators/components/library/component-layout-governance.js [flags]
  * @policy      E-C1, R-R14
  */
 

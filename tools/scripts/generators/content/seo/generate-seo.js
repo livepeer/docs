@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    on-demand, SEO refresh)
  * @scope       tools/scripts
- * @usage       node tools/scripts/snippets/generate-seo.js [flags]
+ * @usage       node tools/scripts/generators/content/seo/generate-seo.js [flags]
  * @policy      E-R19, F-R7
  */
 /**

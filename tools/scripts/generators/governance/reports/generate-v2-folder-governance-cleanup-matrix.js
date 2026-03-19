@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual
  * @scope       tools/scripts, tools/lib, tasks/reports/repo-ops, v2, docs.json, tests/unit/v2-folder-governance-cleanup-matrix.test.js
- * @usage       node tools/scripts/generate-v2-folder-governance-cleanup-matrix.js [--report-md <path>] [--report-json <path>] [--as-of <YYYY-MM-DD>]
+ * @usage       node tools/scripts/generators/governance/reports/generate-v2-folder-governance-cleanup-matrix.js [--report-md <path>] [--report-json <path>] [--as-of <YYYY-MM-DD>]
  * @policy      E-C1, R-R14
  */
 

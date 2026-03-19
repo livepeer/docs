@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       tools/scripts/dev/rename-vscode-codex-chat.js, .vscode/tasks.json, tools/package.json
- * @usage       node tools/scripts/dev/rename-vscode-codex-chat.js --title "New title" [--workspace <path>]
+ * @usage       node tools/dev/rename-vscode-codex-chat.js --title "New title" [--workspace <path>]
  * @policy      E-C1, R-R14
  */
 

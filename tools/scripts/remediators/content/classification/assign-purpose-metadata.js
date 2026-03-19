@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       tools/scripts, tools/lib/docs-usefulness, tools/config, v2
- * @usage       node tools/scripts/assign-purpose-metadata.js [flags]
+ * @usage       node tools/scripts/remediators/content/classification/assign-purpose-metadata.js [flags]
  * @policy      E-R1, R-R11
  */
 

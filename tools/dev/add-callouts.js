@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       tools/scripts
- * @usage       node tools/scripts/dev/add-callouts.js [flags]
+ * @usage       node tools/dev/add-callouts.js [flags]
  * @policy      E-R1, R-R11
  */
 

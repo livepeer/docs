@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual, P6, manual
  * @scope       generated-output
- * @usage       node tools/scripts/scan-component-imports.js [--verify]
+ * @usage       node tools/scripts/generators/components/library/scan-component-imports.js [--verify]
  * @policy      R-R10
  */
 

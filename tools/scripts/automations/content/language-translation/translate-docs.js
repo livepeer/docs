@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    on-demand, translation pipeline)
  * @scope       tools/scripts/i18n, docs.json, v2
- * @usage       node tools/scripts/i18n/translate-docs.js [flags]
+ * @usage       node tools/scripts/automations/content/language-translation/translate-docs.js [flags]
  * @policy      F-R6, F-R7
  */
 

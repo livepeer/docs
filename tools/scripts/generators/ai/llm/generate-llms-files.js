@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual, P6
  * @scope       tools/scripts, docs.json, v2
- * @usage       node tools/scripts/generate-llms-files.js [flags]
+ * @usage       node tools/scripts/generators/ai/llm/generate-llms-files.js [flags]
  * @policy      R-R16, R-R17
  */
 

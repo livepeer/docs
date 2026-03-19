@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
  * @scope       tools/scripts/codex, tools/scripts/validate-codex-task-contract.js, tools/scripts/verify-pay-orc-gate-finalize.sh
- * @usage       node tools/scripts/codex/task-finalize.js [flags]
+ * @usage       node tools/scripts/dispatch/ai/codex/task-finalise.js [flags]
  * @policy      R-R27, R-R30
  */
 

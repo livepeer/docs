@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual, P3, P6
  * @scope       tools/scripts, tools/lib, v2, docs.json, root
- * @usage       node tools/scripts/generate-docs-index.js [flags]
+ * @usage       node tools/scripts/generators/content/catalogs/generate-docs-index.js [flags]
  * @policy      R-R16, R-R17
  */
 

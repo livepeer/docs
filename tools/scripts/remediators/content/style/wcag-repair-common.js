@@ -9,7 +9,7 @@
  * @mode        edit
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts, tests/integration, tasks/reports, v2
- * @usage       node tools/scripts/wcag-repair-common.js [flags]
+ * @usage       node tools/scripts/remediators/content/style/wcag-repair-common.js [flags]
  * @policy      E-R1, R-R11
  */
 

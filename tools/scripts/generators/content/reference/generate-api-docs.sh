@@ -8,7 +8,7 @@
 # @mode        generate
 # @pipeline    manual — not yet in pipeline
 # @scope       tools/scripts
-# @usage       bash tools/scripts/snippets/generate-api-docs.sh [flags]
+# @usage       bash tools/scripts/generators/content/reference/generate-api-docs.sh [flags]
 # @policy      E-C6, F-C1
 # Generate API documentation from OpenAPI spec
 # Creates: landing page + individual endpoint pages + navigation JSON

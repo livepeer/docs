@@ -8,7 +8,7 @@
 # @mode        execute
 # @pipeline    manual
 # @scope       tools/scripts
-# @usage       bash tools/scripts/snippets/fetch-external-docs.sh [flags]
+# @usage       bash tools/scripts/automations/content/data/fetching/fetch-external-docs.sh [flags]
 # @policy      F-R1
 # Pre-build script to fetch external markdown files
 # Run this before building the docs to ensure external content is up-to-date

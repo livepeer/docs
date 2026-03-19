@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       staged
- * @usage       node tools/scripts/validators/content/check-docs-path-sync.js --staged
+ * @usage       node tools/scripts/validators/content/structure/check-docs-path-sync.js --staged
  * @policy      E-C1, R-R14
  */
 

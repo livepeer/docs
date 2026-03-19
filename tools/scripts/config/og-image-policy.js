@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual — library module imported by generators and validators
  * @scope       tools/scripts, snippets/assets/site/og-image, docs.json
- * @usage       node tools/scripts/snippets/lib/og-image-policy.js [flags]
+ * @usage       node tools/scripts/config/og-image-policy.js [flags]
  * @policy      E-R1, R-R14
  */
 

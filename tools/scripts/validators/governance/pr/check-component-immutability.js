@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       changed
- * @usage       node tools/scripts/enforcers/pr/check-component-immutability.js --base-ref main
+ * @usage       node tools/scripts/validators/governance/pr/check-component-immutability.js --base-ref main
  * @policy      R-R10
  */
 

@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual, ci
  * @scope       tools/scripts/validators/content, v2
- * @usage       node tools/scripts/validators/content/check-page-endings.js [--fix] [--json]
+ * @usage       node tools/scripts/validators/content/structure/check-page-endings.js [--fix] [--json]
  * @policy      R-R14
  */
 

@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual, ci
  * @scope       tools/scripts/validators/governance, AGENTS.md, .github, .claude, .cursor, .windsurf, docs-guide/policies, ai-tools/ai-skills, contribute
- * @usage       node tools/scripts/validators/governance/check-agent-docs-freshness.js [--threshold <days>] [--json]
+ * @usage       node tools/scripts/validators/governance/compliance/check-agent-docs-freshness.js [--threshold <days>] [--json]
  * @policy      R-R14, R-R18
  */
 

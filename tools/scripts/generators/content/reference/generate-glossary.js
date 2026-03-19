@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts
- * @usage       node tools/scripts/snippets/generate-data/scripts/generate-glossary.js [flags]
+ * @usage       node tools/scripts/generators/content/reference/generate-glossary.js [flags]
  * @policy      E-C6, F-C1
  */
 

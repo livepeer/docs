@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       tools/scripts, ai-tools/ai-skills/catalog, tasks/reports/repo-ops
- * @usage       node tools/scripts/repo-audit-orchestrator.js [flags]
+ * @usage       node tools/scripts/audits/governance/repo/repo-audit-orchestrator.js [flags]
  * @policy      R-R29
  */
 

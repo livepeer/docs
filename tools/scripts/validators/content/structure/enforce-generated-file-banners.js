@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       tools/scripts, tools/lib, docs-guide/catalog, v2, tests/unit/docs-guide-sot.test.js
- * @usage       node tools/scripts/enforce-generated-file-banners.js --check | --write [--staged]
+ * @usage       node tools/scripts/validators/content/structure/enforce-generated-file-banners.js --check | --write [--staged]
  * @policy      R-R16, R-R17
  */
 

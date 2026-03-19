@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — developer tool
  * @scope       tools/scripts
- * @usage       node tools/scripts/debug-mint-dev.js [flags]
+ * @usage       node tools/dev/debug-mint-dev.js [flags]
  * @policy      E-C6, F-C1
  */
 /**

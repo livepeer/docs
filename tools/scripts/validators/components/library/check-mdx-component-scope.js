@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       tools/scripts/validators/components, tests/run-all.js, tests/run-pr-checks.js, snippets/components, tests/utils
- * @usage       node tools/scripts/validators/components/check-mdx-component-scope.js [--files path[,path...]] [--staged]
+ * @usage       node tools/scripts/validators/components/library/check-mdx-component-scope.js [--files path[,path...]] [--staged]
  * @policy      R-R10, R-R29
  */
 

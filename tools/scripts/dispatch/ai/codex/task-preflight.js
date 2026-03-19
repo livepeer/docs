@@ -9,7 +9,7 @@
  * @mode        execute
  * @pipeline    manual — codex setup tool referenced by .githooks/pre-commit guidance, not auto-executed
  * @scope       tools/scripts/codex, .codex/task-contract.yaml, .codex/locks-local
- * @usage       node tools/scripts/codex/task-preflight.js [flags]
+ * @usage       node tools/scripts/dispatch/ai/codex/task-preflight.js [flags]
  * @policy      R-R27, R-R30
  */
 

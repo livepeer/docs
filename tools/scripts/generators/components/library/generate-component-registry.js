@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual, P3, P5, P6, manual, manual
  * @scope       single-domain
- * @usage       node tools/scripts/generate-component-registry.js [--validate-only]
+ * @usage       node tools/scripts/generators/components/library/generate-component-registry.js [--validate-only]
  * @policy      R-R10
  */
 

@@ -9,7 +9,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       v2, tools/scripts/validators/content, tests/config/spell-dict.json
- * @usage       node tools/scripts/validators/content/check-proper-nouns.js [--file <path[,path...]>] [--fix]
+ * @usage       node tools/scripts/validators/content/grammar/check-proper-nouns.js [--file <path[,path...]>] [--fix]
  * @policy      E-R1, R-R11
  */
 

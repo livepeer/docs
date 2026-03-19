@@ -8,7 +8,7 @@
  * @mode        read-only
  * @pipeline    manual
  * @scope       tools/scripts
- * @usage       node tools/scripts/audit-component-usage.js [flags]
+ * @usage       node tools/scripts/audits/components/documentation/audit-component-usage.js [flags]
  * @policy      E-C1, R-R14
  */
 const fs = require('fs');

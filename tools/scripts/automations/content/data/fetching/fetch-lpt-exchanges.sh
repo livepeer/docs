@@ -8,7 +8,7 @@
 # @mode        execute
 # @pipeline    manual — not yet in pipeline
 # @scope       tools/scripts
-# @usage       bash tools/scripts/snippets/fetch-lpt-exchanges.sh [flags]
+# @usage       bash tools/scripts/automations/content/data/fetching/fetch-lpt-exchanges.sh [flags]
 # @policy      F-R1
 # Fetch LPT exchange listings from CoinGecko API and append to lpt-exchanges.mdx
 # Usage: ./tools/scripts/snippets/fetch-lpt-exchanges.sh

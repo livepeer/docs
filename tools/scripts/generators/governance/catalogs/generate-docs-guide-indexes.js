@@ -9,7 +9,7 @@
  * @mode        generate
  * @pipeline    manual — not yet in pipeline
  * @scope       tools/scripts, docs-guide, .github/workflows, .github/ISSUE_TEMPLATE
- * @usage       node tools/scripts/generate-docs-guide-indexes.js [flags]
+ * @usage       node tools/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js [flags]
  * @policy      R-R16, R-R17
  */
 

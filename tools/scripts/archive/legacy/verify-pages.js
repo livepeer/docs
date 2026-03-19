@@ -7,7 +7,7 @@
  * @needs             E-C1, R-R14
  * @purpose-statement Page verifier — checks a subset of pages resolve to valid files
  * @pipeline          manual — diagnostic/investigation tool, run on-demand only
- * @usage             node tools/scripts/verify-pages.js [flags]
+ * @usage             node tools/scripts/archive/legacy/verify-pages.js [flags]
  */
 const puppeteer = require('puppeteer');
 
