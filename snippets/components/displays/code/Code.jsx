@@ -1,20 +1,11 @@
 
 /**
  * @component CustomCodeBlock
- * @category displays
+ * @type displays
  * @subniche code
- * @tier composite
  * @status stable
- * @description Custom Code Block content component for rendering reader-facing documentation content.
- * @contentAffinity tutorial, concept, reference
- * @owner docs
- * @dependencies CodeSection, ComplexCodeBlock
- * @usedIn v2/gateways/quickstart/gateway-setup.mdx, v2/gateways/run-a-gateway/install/linux-install.mdx, v2/gateways/run-a-gateway/install/windows-install.mdx, v2/orchestrators/old/orchestrators-portal.mdx, v2/orchestrators/old/setting-up-an-orchestrator/connect-to-arbitrum.mdx, v2/orchestrators/old/setting-up-an-orchestrator/install-go-livepeer.mdx, v2/orchestrators/old/setting-up-an-orchestrator/orch-config.mdx, v2/orchestrators/old/setting-up-an-orchestrator/orchestrator-stats.mdx, v2/orchestrators/old/setting-up-an-orchestrator/setting-up-an-orchestrator/quickstart-add-your-gpu-to-livepeer.mdx, v2/orchestrators/portal.mdx, v2/orchestrators/quickstart/quickstart.mdx, v2/orchestrators/v2-dev/get-started/quickstart.mdx, v2/orchestrators/v2-dev/orchestrators-portal.mdx, v2/orchestrators/v2-dev/setup/install-go-livepeer.mdx, v2/orchestrators/v2-dev/setup/orchestrator-stats.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Code block with optional pre/post notes and expandable wrapper.
+ * @accepts none
  * @param {any} filename - filename prop.
  * @param {any} icon - icon prop.
  * @param {any} language - language prop.
@@ -26,8 +17,6 @@
  * @param {string} [preNote=""] - pre Note prop.
  * @param {string} [postNote=""] - post Note prop.
  * @param {string} [output=""] - output prop.
- * @example
- * <CustomCodeBlock filename="example" icon="example" />
  */
 export const CustomCodeBlock = ({
   filename,
@@ -115,20 +104,11 @@ export const CustomCodeBlock = ({
 
 /**
  * @component CodeComponent
- * @category displays
+ * @type displays
  * @subniche code
- * @tier composite
  * @status stable
- * @description Code Component content component for rendering reader-facing documentation content.
- * @contentAffinity tutorial, concept, reference
- * @owner docs
- * @dependencies CodeSection, ComplexCodeBlock, CustomCodeBlock
- * @usedIn v2/gateways/run-a-gateway/install/linux-install.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Simple code block with title and language syntax highlighting.
+ * @accepts className, style, ...rest
  * @param {string} [filename=""] - filename prop.
  * @param {string} [icon="terminal"] - icon prop.
  * @param {string} [language=""] - language prop.
@@ -138,8 +118,6 @@ export const CustomCodeBlock = ({
  * @param {boolean} [lines=true] - lines prop.
  * @param {string} [codeString=""] - code String prop.
  * @param {string} [placeholderValue=""] - placeholder Value prop.
- * @example
- * <CodeComponent />
  */
 export const CodeComponent = ({
   filename = "",
@@ -176,20 +154,11 @@ export const CodeComponent = ({
 
 /**
  * @component ComplexCodeBlock
- * @category displays
+ * @type displays
  * @subniche code
- * @tier composite
  * @status stable
- * @description Complex Code Block content component for rendering reader-facing documentation content.
- * @contentAffinity tutorial, concept, reference
- * @owner docs
- * @dependencies CodeSection, CustomCodeBlock
- * @usedIn v2/gateways/quickstart/gateway-setup.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Code block with both pre-note and post-note sections.
+ * @accepts none
  * @param {any} filename - filename prop.
  * @param {any} icon - icon prop.
  * @param {any} language - language prop.
@@ -200,8 +169,6 @@ export const CodeComponent = ({
  * @param {boolean} [lines=true] - lines prop.
  * @param {any} [preNote=null] - pre Note prop.
  * @param {any} [postNote=null] - post Note prop.
- * @example
- * <ComplexCodeBlock filename="example" icon="example" />
  */
 export const ComplexCodeBlock = ({
   filename,
@@ -263,23 +230,12 @@ export const ComplexCodeBlock = ({
 
 /**
  * @component CodeSection
- * @category displays
+ * @type displays
  * @subniche code
- * @tier composite
  * @status stable
- * @description Thin wrapper that maps a `fields` object into the complex code block renderer.
- * @contentAffinity tutorial, concept, reference
- * @owner docs
- * @dependencies ComplexCodeBlock, CustomCodeBlock
- * @usedIn v2/gateways/quickstart/gateway-setup.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Expandable code section with title header.
+ * @accepts className, style, ...rest
  * @param {object} [fields={}] - fields prop.
- * @example
- * <CodeSection />
  */
 export const CodeSection = ({ fields = {}, className = "", style = {}, ...rest }) => {
   return <ComplexCodeBlock {...fields} className={className} style={style} {...rest} />;

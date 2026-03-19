@@ -1,28 +1,16 @@
 /**
  * @component ExternalContent
- * @category integrators
+ * @type integrators
  * @subniche embeds
- * @tier composite
  * @status stable
- * @description ExternalContent - A reusable component for displaying external GitHub content
- * @contentAffinity how_to
- * @owner @livepeer/docs-team
- * @dependencies none
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-08
- *
+ * @description Fetches and renders external markdown with scrollable container and source link.
+ * @dataSource fetch(url)
+ * @accepts {string} repoName, {string} githubUrl, {string} maxHeight, {string} icon, {React.ReactNode} children, {string} className, {object} style, ...rest
  * @param {string} repoName - Repo name used by the component.
  * @param {string} githubUrl - Github url used by the component.
  * @param {string} [maxHeight="1000px"] - Max height used by the component.
  * @param {string} [icon="github"] - Icon configuration used by the component.
  * @param {React.ReactNode} children - Content rendered inside the component.
- *
- * @example
- * <ExternalContent repoName="value" githubUrl="value" />
  */
 export const ExternalContent = ({
   repoName,

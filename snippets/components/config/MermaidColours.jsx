@@ -1,20 +1,9 @@
 /**
  * @component MermaidColours
- * @category config
- * @tier pattern
+ * @type config
  * @status stable
- * @description Centralised colour definitions for Mermaid diagrams. Mermaid requires literal colour values and does not support CSS custom properties.
- * @contentAffinity concept, reference
- * @owner docs
- * @dependencies none
- * @usedIn v2/gateways/concepts/architecture.mdx, v2/gateways/concepts/business-model.mdx, v2/gateways/concepts/capabilities.mdx, v2/gateways/concepts/role.mdx, v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx, v2/orchestrators/concepts/role.mdx, v2/orchestrators/guides/operator-considerations/business-case.mdx, v2/orchestrators/guides/operator-considerations/operator-rationale.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-16
- * @example
- * MermaidColours.mermaid.light.primaryColor
+ * @description Theme colour definitions for Mermaid diagrams (light/dark/CSS variable mappings).
+ * @accepts none (exported object literal)
  */
 export const MermaidColours = {
   font: {

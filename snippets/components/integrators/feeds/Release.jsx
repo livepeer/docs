@@ -1,22 +1,12 @@
 /**
  * @component LatestVersion
- * @category integrators
+ * @type integrators
  * @subniche feeds
- * @tier composite
- * @status stable
- * @description Displays the latest release version value supplied by the release-version workflow.
- * @contentAffinity overview, reference
- * @owner docs
- * @dependencies none
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
+ * @status experimental
+ * @description Displays the latest release version string from automation data.
  * @dataSource release-version workflow
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @accepts {any} version, {string} className, {object} style, ...rest
  * @param {any} version - version prop.
- * @example
- * <LatestVersion version="example" />
  */
 
 export const LatestVersion = ({ version, className = "", style = {}, ...rest }) => {

@@ -1,22 +1,11 @@
 /**
  * @component Quote
- * @category displays
+ * @type displays
  * @subniche quotes
- * @tier composite
  * @status stable
- * @description Quote content component for rendering reader-facing documentation content.
- * @contentAffinity tutorial, concept, reference
- * @owner docs
- * @dependencies none
- * @usedIn v2/about/livepeer-protocol/core-mechanisms.mdx, v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/livepeer-token.mdx, v2/about/livepeer-protocol/overview.mdx, v2/about/livepeer-protocol/technical-architecture.mdx, v2/about/livepeer-protocol/treasury.mdx, v2/home/about-livepeer/vision.mdx, v2/internal/rfp/aims.mdx, v2/internal/rfp/report.mdx, v2/orchestrators/quickstart/join-a-pool.mdx, v2/orchestrators/v2-dev/get-started/join-a-pool.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Styled blockquote with accent border and centred italic text.
+ * @accepts children, className, style, ...rest
  * @param {any} children - children prop.
- * @example
- * <Quote>Example content</Quote>
  */
 export const Quote = ({ children, className = "", style = {}, ...rest }) => {
   const quoteStyle = {
@@ -36,20 +25,11 @@ export const Quote = ({ children, className = "", style = {}, ...rest }) => {
 
 /**
  * @component FrameQuote
- * @category displays
+ * @type displays
  * @subniche quotes
- * @tier composite
  * @status stable
- * @description Frame Quote content component for rendering reader-facing documentation content.
- * @contentAffinity tutorial, concept, reference
- * @owner docs
- * @dependencies none
- * @usedIn v2/about/livepeer-protocol/core-mechanisms.mdx, v2/about/livepeer-protocol/overview.mdx, v2/home/about-livepeer/benefits.mdx, v2/home/about-livepeer/ecosystem.mdx, v2/home/about-livepeer/vision.mdx, v2/internal/overview/docs-philosophy.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Framed blockquote with optional author, source link, and image.
+ * @accepts children, className, style, ...props
  * @param {any} children - children prop.
  * @param {any} author - author prop.
  * @param {any} source - source prop.
@@ -60,8 +40,6 @@ export const Quote = ({ children, className = "", style = {}, ...rest }) => {
  * @param {any} img - img prop.
  * @param {boolean} [spacing=true] - spacing prop.
  * @param {any} props - props prop.
- * @example
- * <FrameQuote author="example" source="example">Example content</FrameQuote>
  */
 export const FrameQuote = ({
   children,

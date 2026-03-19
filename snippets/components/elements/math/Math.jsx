@@ -1,19 +1,10 @@
 /**
  * @component MathInline
- * @category elements
+ * @type elements
  * @subniche math
- * @tier primitive
  * @status stable
- * @description Math Inline primitive used in authored documentation and component-library examples.
- * @contentAffinity universal
- * @owner docs
- * @dependencies none
- * @usedIn v2/lpt/about/mechanics.mdx, v2/lpt/about/overview.mdx, v2/lpt/about/tokenomics.mdx, v2/lpt/delegation/about-delegators.mdx, v2/lpt/delegation/delegation-guide.mdx, v2/lpt/delegation/overview.mdx, v2/lpt/governance/model.mdx, v2/lpt/governance/overview.mdx, v2/lpt/governance/processes.mdx, v2/lpt/treasury/allocations.mdx, v2/lpt/treasury/overview.mdx, v2/lpt/treasury/proposals.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Renders LaTeX as inline math using KaTeX.
+ * @accepts style, className, ...rest
  * @param {any} latex - latex prop.
  * @param {string} [className=""] - class Name prop.
  * @param {any} ariaLabel - aria Label prop.
@@ -33,20 +24,11 @@ export const MathInline = ({ latex, className = "", ariaLabel, style = {}, ...re
 
 /**
  * @component MathBlock
- * @category elements
+ * @type elements
  * @subniche math
- * @tier primitive
  * @status stable
- * @description Math Block primitive used in authored documentation and component-library examples.
- * @contentAffinity universal
- * @owner docs
- * @dependencies none
- * @usedIn v2/lpt/about/mechanics.mdx, v2/lpt/about/overview.mdx, v2/lpt/about/tokenomics.mdx, v2/lpt/delegation/about-delegators.mdx, v2/lpt/delegation/delegation-guide.mdx, v2/lpt/delegation/overview.mdx, v2/lpt/governance/model.mdx, v2/lpt/governance/overview.mdx, v2/lpt/governance/processes.mdx, v2/lpt/treasury/allocations.mdx, v2/lpt/treasury/overview.mdx, v2/lpt/treasury/proposals.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Renders LaTeX as a block-level math expression using KaTeX.
+ * @accepts style, className, ...rest
  * @param {any} latex - latex prop.
  * @param {string} [className=""] - class Name prop.
  * @param {any} ariaLabel - aria Label prop.

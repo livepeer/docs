@@ -1,26 +1,12 @@
 /**
  * @component ListSteps
- * @category wrappers
+ * @type wrappers
  * @subniche lists
- * @tier pattern
  * @status stable
- * @description This component takes an array of step items and renders them using the Steps/Step
- *   components. Each item in the array is rendered as a Step with its own title, icon, and content
- * @contentAffinity universal
- * @owner @livepeer/docs-team
- * @dependencies none
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-08
- *
+ * @description Renders an array of step items inside Mintlify Steps component.
+ * @accepts className, style, ...rest
  * @param {Array} listItems - Collection data rendered by the component.
  * @param {object} [stepsConfig={}] - Steps config used by the component.
- *
- * @example
- * <ListSteps listItems={[]} />
  */
 export const ListSteps = ({ listItems, stepsConfig = {}, className = "", style = {}, ...rest }) => {
   const safeItems = Array.isArray(listItems) ? listItems : [];

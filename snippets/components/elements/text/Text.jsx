@@ -1,19 +1,10 @@
 /**
  * @component Subtitle
- * @category elements
+ * @type elements
  * @subniche text
- * @tier primitive
  * @status stable
- * @description Subtitle primitive used in authored documentation and component-library examples.
- * @contentAffinity universal
- * @owner docs
- * @dependencies none
- * @usedIn v2/about/mental-model.mdx, v2/about/resources/blockchain-contracts.mdx, v2/home/solutions/showcase.mdx, v2/home/solutions/verticals.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Styled subtitle text with configurable colour, size, and alignment.
+ * @accepts children, style, className, ...rest
  * @param {object} [style={}] - style prop.
  * @param {any} text - text prop.
  * @param {any} children - children prop.
@@ -41,20 +32,11 @@ export const Subtitle = ({ style = {}, text, children, className = "", ...rest }
 
 /**
  * @component CopyText
- * @category elements
+ * @type elements
  * @subniche text
- * @tier primitive
  * @status stable
- * @description Copy Text primitive used in authored documentation and component-library examples.
- * @contentAffinity universal
- * @owner docs
- * @dependencies none
- * @usedIn v2/about/resources/blockchain-contracts.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Text with a click-to-copy button that copies content to clipboard.
+ * @accepts style, className, ...rest
  * @param {any} text - text prop.
  * @param {any} label - label prop.
  * @example
@@ -115,20 +97,11 @@ export const CopyText = ({ text, label, className = "", style = {}, ...rest }) =
 
 /**
  * @component CardTitleTextWithArrow
- * @category elements
+ * @type elements
  * @subniche text
- * @tier primitive
  * @status stable
- * @description Card Title Text With Arrow primitive used in authored documentation and component-library examples.
- * @contentAffinity universal
- * @owner docs
- * @dependencies none
- * @usedIn v2/about/livepeer-protocol/core-mechanisms.mdx, v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/livepeer-token.mdx, v2/about/livepeer-protocol/overview.mdx, v2/about/livepeer-protocol/technical-architecture.mdx, v2/about/livepeer-protocol/treasury.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Card title with trailing arrow icon for navigation indication.
+ * @accepts children, style, className, ...cardProps
  * @param {any} children - children prop.
  * @param {any} cardProps - card Props prop.
  * @example
@@ -187,20 +160,11 @@ export const CardTitleTextWithArrow = ({ children, className = "", style = {}, .
 
 /**
  * @component AccordionTitleWithArrow
- * @category elements
+ * @type elements
  * @subniche text
- * @tier primitive
  * @status stable
- * @description Accordion Title With Arrow primitive used in authored documentation and component-library examples.
- * @contentAffinity universal
- * @owner docs
- * @dependencies none
- * @usedIn v2/about/livepeer-protocol/core-mechanisms.mdx, v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/livepeer-token.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Accordion header text with trailing arrow icon.
+ * @accepts children, style, className, ...rest
  * @param {any} text - text prop.
  * @param {any} children - children prop.
  * @param {string} [color="var(--text)"] - color prop.

@@ -2,20 +2,11 @@
 
 /**
  * @component ComingSoonCallout
- * @category elements
+ * @type elements
  * @subniche callouts
- * @tier primitive
  * @status stable
- * @description Renders the coming soon callout component
- * @contentAffinity changelog
- * @owner @livepeer/docs-team
- * @dependencies PreviewCallout, ReviewCallout
- * @usedIn v2/resources/changelog/migration-guide.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-09
+ * @description Banner indicating a feature or page is coming soon, with links to related resources.
+ * @accepts style, className, ...rest
  * @param {string} [type="page"] - Type used by the component.
  *
  * @example
@@ -99,20 +90,11 @@ const ComingSoonCallout = ({ type = "page", className = "", style = {}, ...rest 
 
 /**
  * @component PreviewCallout
- * @category elements
+ * @type elements
  * @subniche callouts
- * @tier primitive
  * @status stable
- * @description Renders the preview callout component
- * @contentAffinity universal
- * @owner @livepeer/docs-team
- * @dependencies ComingSoonCallout, ReviewCallout
- * @usedIn v2/developers/ai-inference-on-livepeer/overview.mdx, v2/developers/ai-inference-on-livepeer/workload-fit.mdx, v2/developers/livepeer-real-time-video/video-streaming-on-livepeer/video-streaming-101.mdx, v2/developers/quickstart/video/video-streaming-101.mdx, v2/orchestrators/setup/publish-offerings.mdx, v2/resources/concepts/brief-history-of-video.mdx, v2/resources/references/contract-addresses.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-09
+ * @description Banner indicating content is in preview/draft state with feedback links.
+ * @accepts style, className, ...rest
  * @example
  * <PreviewCallout />
  */
@@ -183,20 +165,11 @@ const PreviewCallout = ({ className = "", style = {}, ...rest }) => {
 
 /**
  * @component ReviewCallout
- * @category elements
+ * @type elements
  * @subniche callouts
- * @tier primitive
  * @status stable
- * @description Renders the review callout component
- * @contentAffinity universal
- * @owner @livepeer/docs-team
- * @dependencies ComingSoonCallout, PreviewCallout
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-09
+ * @description Banner indicating content is under review with status links.
+ * @accepts style, className, ...rest
  * @example
  * <ReviewCallout />
  */

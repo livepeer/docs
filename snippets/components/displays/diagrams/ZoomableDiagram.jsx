@@ -1,28 +1,15 @@
 /**
  * @component ScrollableDiagram
- * @category displays
+ * @type displays
  * @subniche diagrams
- * @tier composite
  * @status stable
- * @description ──────────────────────────────────────────────────────────────
- * @contentAffinity universal
- * @owner @livepeer/docs-team
- * @dependencies none
- * @usedIn v2/about/livepeer-protocol/livepeer-token.mdx, v2/about/livepeer-protocol/technical-architecture.mdx, v2/gateways/about/architecture.mdx, v2/gateways/references/technical-architecture.mdx, v2/gateways/run-a-gateway/configure/dual-configuration.mdx, v2/gateways/run-a-gateway/configure/video-configuration-view.mdx, v2/gateways/run-a-gateway/configure/video-configuration.mdx, v2/gateways/run-a-gateway/connect/connect-with-offerings.mdx, v2/gateways/run-a-gateway/connect/lp-marketplace.mdx, v2/gateways/run-a-gateway/monitor/monitor-and-optimise.mdx, v2/gateways/run-a-gateway/publish/connect-with-offerings.mdx, v2/gateways/run-a-gateway/run-a-gateway.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-08
- *
+ * @description Pannable, zoomable diagram container with zoom controls and accessible buttons.
+ * @accepts children, className, style, ...rest
  * @param {React.ReactNode} children - Content rendered inside the component.
  * @param {string} [title=""] - Title text rendered by the component.
  * @param {string} [maxHeight="500px"] - Max height used by the component.
  * @param {string} [minWidth="100%"] - Min width used by the component.
  * @param {boolean} [showControls=false] - Boolean flag that controls component behaviour.
- *
- * @example
- * <ScrollableDiagram>Example</ScrollableDiagram>
  */
 export const ScrollableDiagram = ({
   children,

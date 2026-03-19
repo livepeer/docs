@@ -2,26 +2,15 @@
 
 /**
  * @component ShowcaseCards
- * @category integrators
+ * @type integrators
  * @subniche feeds
- * @tier pattern
  * @status experimental
- * @description Renders the showcase cards component
- * @contentAffinity landing
- * @owner @livepeer/docs-team
- * @dependencies none
- * @usedIn v2/home/solutions/showcase.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Paginated project showcase with search, filtering, and media cards.
+ * @dataSource prop (items)
+ * @accepts {Array} items, {number} limit, {number} pageSize, {string} className, {object} style, ...rest
  * @param {Array} [items=[]] - Collection data rendered by the component.
  * @param {number} [limit=null] - Limit used by the component.
  * @param {number} [pageSize=10] - Page size used by the component.
- *
- * @example
- * <ShowcaseCards />
  */
 export const ShowcaseCards = ({ items = [], limit = null, pageSize = 10, className = "", style = {}, ...rest }) => {
   const [search, setSearch] = useState("");

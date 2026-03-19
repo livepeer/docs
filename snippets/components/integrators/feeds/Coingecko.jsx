@@ -1,23 +1,13 @@
 
 /**
  * @component CoinGeckoExchanges
- * @category integrators
+ * @type integrators
  * @subniche feeds
- * @tier composite
  * @status stable
- * @description Fetches and displays exchange availability for a token from the CoinGecko API.
- * @contentAffinity overview, reference
- * @owner docs
- * @dependencies none
- * @usedIn v2/gateways/references/arbitrum-exchanges.mdx, v2/gateways/references/livepeer-exchanges.mdx
- * @breakingChangeRisk low
- * @decision KEEP
+ * @description Sortable table of exchanges listing a token. Keyboard-accessible sort headers.
  * @dataSource CoinGecko API
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @accepts {string} coinId, {string} className, {object} style, ...rest
  * @param {string} [coinId="arbitrum"] - coin Id prop.
- * @example
- * <CoinGeckoExchanges />
  */
 export const CoinGeckoExchanges = ({ coinId = "arbitrum", className = "", style = {}, ...rest }) => {
   const [exchanges, setExchanges] = useState([]);

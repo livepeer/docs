@@ -1,19 +1,10 @@
 /**
  * @component CustomCallout
- * @category elements
+ * @type elements
  * @subniche links
- * @tier primitive
  * @status stable
- * @description Displays a styled callout box with an icon and custom colors.
- * @contentAffinity universal
- * @owner docs
- * @dependencies BlinkingIcon, BlinkingTerminal, DoubleIconLink, GotoCard, GotoLink, LinkArrow, TipWithArrow
- * @usedIn v2/gateways/run-a-gateway/connect/connect-with-offerings.mdx, v2/gateways/run-a-gateway/publish/connect-with-offerings.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Styled callout box with icon, custom colour, and child content.
+ * @accepts children, style, className, ...rest
  * @param {React.ReactNode} children - Content to display in the callout
  * @param {string} [icon="lightbulb"] - Icon name to display
  * @param {string} color - Primary color for icon, border, and background (defaults to theme accent)
@@ -83,20 +74,11 @@ const CustomCallout = ({
 
 /**
  * @component BlinkingIcon
- * @category elements
+ * @type elements
  * @subniche links
- * @tier primitive
  * @status stable
- * @description Displays an icon with a smooth blinking animation (fades between full and 30% opacity).
- * @contentAffinity universal
- * @owner docs
- * @dependencies BlinkingTerminal, CustomCallout, DoubleIconLink, GotoCard, GotoLink, LinkArrow, TipWithArrow
- * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/gateways-portal.mdx, v2/gateways/run-a-gateway/configure/ai-configuration.mdx, v2/gateways/run-a-gateway/requirements/on-chain setup/on-chain.mdx, v2/home/mission-control.mdx, v2/lpt/token-portal.mdx, v2/orchestrators/old/orchestrators-portal.mdx, v2/orchestrators/portal.mdx, v2/orchestrators/v2-dev/orchestrators-portal.mdx, v2/solutions/portal.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Animated icon with pulsing opacity. Respects prefers-reduced-motion.
+ * @accepts style, className, ...rest
  * @param {string} [icon="terminal"] - Icon name to display
  * @param {number} [size=16] - Size of the icon in pixels
  * @param {string} color - Color of the icon (defaults to theme accent)
@@ -130,22 +112,11 @@ const BlinkingIcon = ({ icon = "terminal", size = 16, color, className = "", sty
 
 /**
  * @component BlinkingTerminal
- * @category elements
+ * @type elements
  * @subniche links
- * @tier primitive
- * @status deprecated
- * @description Blinking Terminal primitive used in authored documentation and component-library examples.
- * @contentAffinity universal
- * @owner docs
- * @dependencies BlinkingIcon, CustomCallout, DoubleIconLink, GotoCard, GotoLink, LinkArrow, TipWithArrow
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates BlinkingIcon
- * @lastMeaningfulChange 2026-03-10
- * @deprecated BlinkingTerminal is deprecated and should not be used for new content.
- * @see BlinkingIcon
+ * @status stable
+ * @description Preset blinking terminal icon (alias for BlinkingIcon with terminal defaults).
+ * @accepts style, className, ...rest
  * @example
  * <BlinkingTerminal />
  */
@@ -153,20 +124,11 @@ const BlinkingTerminal = BlinkingIcon;
 
 /**
  * @component DoubleIconLink
- * @category elements
+ * @type elements
  * @subniche links
- * @tier primitive
  * @status stable
- * @description Displays a link with an icon on the left and right, plus optional text prefix.
- * @contentAffinity universal
- * @owner docs
- * @dependencies BlinkingIcon, BlinkingTerminal, CustomCallout, GotoCard, GotoLink, LinkArrow, TipWithArrow
- * @usedIn v2/gateways/_contextData_/docker-install.mdx, v2/gateways/about/architecture.mdx, v2/gateways/quickstart/gateway-setup.mdx, v2/gateways/references/configuration-flags.mdx, v2/gateways/run-a-gateway/configure/ai-configuration.mdx, v2/gateways/run-a-gateway/configure/dual-configuration.mdx, v2/gateways/run-a-gateway/configure/video-configuration-view.mdx, v2/gateways/run-a-gateway/configure/video-configuration.mdx, v2/gateways/run-a-gateway/install/docker-install.mdx, v2/gateways/run-a-gateway/install/install-overview.mdx, v2/gateways/run-a-gateway/monitor/monitor-and-optimise.mdx, v2/gateways/run-a-gateway/requirements/on-chain setup/on-chain.mdx, v2/gateways/run-a-gateway/requirements/setup.mdx, v2/gateways/using-gateways/choosing-a-gateway.mdx, v2/gateways/using-gateways/gateway-providers/daydream-gateway.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Inline link with icons on both sides.
+ * @accepts style, className, ...rest
  * @param {string} [label=""] - Link text/label
  * @param {string} [href="#"] - Link URL
  * @param {string} [text=""] - Optional text to display before the link
@@ -208,20 +170,11 @@ const DoubleIconLink = ({
 
 /**
  * @component GotoLink
- * @category elements
+ * @type elements
  * @subniche links
- * @tier primitive
  * @status stable
- * @description Displays a link with an icon, typically used for internal navigation.
- * @contentAffinity universal
- * @owner docs
- * @dependencies BlinkingIcon, BlinkingTerminal, CustomCallout, DoubleIconLink, GotoCard, LinkArrow, TipWithArrow
- * @usedIn v2/about/livepeer-network/interfaces.mdx, v2/about/livepeer-network/marketplace.mdx, v2/about/livepeer-network/technical-architecture.mdx, v2/about/livepeer-protocol/technical-architecture.mdx, v2/developers/_archive/ai-inference-overview-old.mdx, v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/_archive/ai-pipelines-byoc-old.mdx, v2/developers/_archive/developer-platforms/builder-hub.mdx, v2/developers/build/workload-fit.mdx, v2/gateways/about/quickstart.mdx, v2/gateways/gateway-tools/explorer.mdx, v2/gateways/run-a-gateway/install/community-projects.mdx, v2/gateways/run-a-gateway/install/install-overview.mdx, v2/gateways/run-a-gateway/run-a-gateway.mdx, v2/gateways/using-gateways/gateway-providers.mdx, v2/home/about-livepeer/vision.mdx, v2/home/primer.mdx, v2/orchestrators/old/advanced-setup/hosting-models.mdx, v2/orchestrators/operations/hosting-models.mdx, v2/orchestrators/v2-dev/advanced/hosting-models.mdx, v2/solutions/product-hub.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Inline navigation link with icon prefix and label.
+ * @accepts style, className, ...rest
  * @param {string} label - Link text/label
  * @param {string} relativePath - Relative URL path
  * @param {string} [text=""] - Optional text to display before the link
@@ -251,20 +204,11 @@ const GotoLink = ({
 
 /**
  * @component GotoCard
- * @category elements
+ * @type elements
  * @subniche links
- * @tier primitive
  * @status stable
- * @description Wraps content in a Card component with a link, icon, and optional CTA.
- * @contentAffinity universal
- * @owner docs
- * @dependencies BlinkingIcon, BlinkingTerminal, CustomCallout, DoubleIconLink, GotoLink, LinkArrow, TipWithArrow
- * @usedIn v2/about/livepeer-network/marketplace.mdx, v2/about/livepeer-network/technical-architecture.mdx, v2/about/livepeer-protocol/technical-architecture.mdx, v2/developers/_archive/ai-inference-overview-old.mdx, v2/developers/_archive/ai-inference-workload-fit-old.mdx, v2/developers/_archive/ai-pipelines-byoc-old.mdx, v2/developers/_archive/ai-pipelines-model-support-old.mdx, v2/developers/build/workload-fit.mdx, v2/developers/guides/developer-guides.mdx, v2/developers/guides/developer-help.mdx, v2/developers/guides/resources.mdx, v2/developers/opportunities/grants-and-programmes.mdx, v2/developers/opportunities/overview.mdx, v2/gateways/about/explainer.mdx, v2/gateways/gateway-tools/explorer.mdx, v2/gateways/gateway-tools/livepeer-tools.mdx, v2/gateways/run-a-gateway/install/community-projects.mdx, v2/home/about-livepeer/vision.mdx, v2/home/primer.mdx, v2/orchestrators/old/advanced-setup/hosting-models.mdx, v2/orchestrators/operations/hosting-models.mdx, v2/orchestrators/v2-dev/advanced/hosting-models.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Card-style navigation link wrapping Mintlify Card component.
+ * @accepts style, className, ...props
  * @param {string} label - Card title
  * @param {string} relativePath - Relative URL path
  * @param {string} icon - Icon to display (defaults to "arrow-turn-down-right")
@@ -285,20 +229,11 @@ const GotoCard = ({ label, relativePath, icon, text, cta = "", className = "", s
 
 /**
  * @component TipWithArrow
- * @category elements
+ * @type elements
  * @subniche links
- * @tier primitive
  * @status stable
- * @description Similar to CustomCallout but includes an arrow icon in the top-right corner.
- * @contentAffinity universal
- * @owner docs
- * @dependencies BlinkingIcon, BlinkingTerminal, CustomCallout, DoubleIconLink, GotoCard, GotoLink, LinkArrow
- * @usedIn v2/gateways/quickstart/gateway-setup.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Callout box with tip icon and corner arrow indicator.
+ * @accepts children, style, className, ...rest
  * @param {React.ReactNode} children - Content to display in the tip
  * @param {string} [icon="lightbulb"] - Main icon to display on the left
  * @param {string} [arrowIcon="arrow-up-right"] - Arrow icon to display in top-right
@@ -379,20 +314,11 @@ const TipWithArrow = ({
 
 /**
  * @component LinkArrow
- * @category elements
+ * @type elements
  * @subniche links
- * @tier primitive
  * @status stable
- * @description Link Arrow primitive used in authored documentation and component-library examples.
- * @contentAffinity universal
- * @owner docs
- * @dependencies BlinkingIcon, BlinkingTerminal, CustomCallout, DoubleIconLink, GotoCard, GotoLink, TipWithArrow
- * @usedIn v2/about/livepeer-overview.mdx, v2/about/livepeer-protocol/governance-model.mdx, v2/about/livepeer-protocol/livepeer-token.mdx, v2/about/livepeer-protocol/overview.mdx, v2/about/resources/blockchain-contracts.mdx, v2/community/livepeer-community/trending-topics.mdx, v2/community/livepeer-connect/events-and-community-streams.mdx, v2/developers/_archive/guides-res-contribution.mdx, v2/developers/guides/contribution-guide.mdx, v2/gateways/using-gateways/gateway-providers.mdx, v2/home/about-livepeer/benefits.mdx, v2/home/about-livepeer/ecosystem.mdx, v2/home/about-livepeer/evolution.mdx, v2/home/about-livepeer/vision.mdx, v2/home/get-started.mdx, v2/home/solutions/landscape.mdx, v2/home/solutions/showcase.mdx, v2/home/trending.mdx, v2/orchestrators/old/about-orchestrators/overview.mdx, v2/orchestrators/quickstart/join-a-pool.mdx, v2/orchestrators/v2-dev/concepts/overview.mdx, v2/orchestrators/v2-dev/get-started/join-a-pool.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description External link with arrow icon, optional description, and line break control.
+ * @accepts style, className, ...rest
  * @param {any} href - href prop.
  * @param {any} label - label prop.
  * @param {any} description - description prop.

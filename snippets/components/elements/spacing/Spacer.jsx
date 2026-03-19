@@ -1,20 +1,10 @@
 /**
  * @component Spacer
- * @category elements
+ * @type elements
  * @subniche spacing
- * @tier primitive
  * @status stable
- * @description Provides consistent spacing without requiring inline styles or empty divs in MDX
- *   files
- * @contentAffinity universal
- * @owner @livepeer/docs-team
- * @dependencies none
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Empty spacer div with configurable size and direction.
+ * @accepts style, className, ...rest
  * @param {string} [size="1rem"] - Size used by the component.
  * @param {string} [direction="vertical"] - Direction used by the component.
  *

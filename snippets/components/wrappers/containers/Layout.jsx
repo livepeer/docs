@@ -1,19 +1,10 @@
 /**
  * @component FlexContainer
- * @category wrappers
+ * @type wrappers
  * @subniche containers
- * @tier composite
  * @status stable
- * @description Flex Container layout component for arranging documentation content without MDX inline styles.
- * @contentAffinity overview, tutorial, reference
- * @owner docs
- * @dependencies GridContainer, Spacer
- * @usedIn v2/community/livepeer-community/community-guidelines.mdx, v2/developers/build/workload-fit.mdx, v2/gateways/quickstart/gateway-setup.mdx, v2/gateways/setup/run-a-gateway.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-11
+ * @description Flexbox container with configurable direction, gap, and alignment.
+ * @accepts children, className, ...rest
  * @param {any} children - children prop.
  * @param {string} [direction="row"] - direction prop.
  * @param {string} [gap="1rem"] - gap prop.
@@ -23,8 +14,6 @@
  * @param {string} [marginTop=""] - Optional top margin override.
  * @param {string} [marginBottom=""] - Optional bottom margin override.
  * @param {object} [style={}] - style prop.
- * @example
- * <FlexContainer>Example content</FlexContainer>
  */
 export const FlexContainer = ({
   children,
@@ -62,26 +51,15 @@ export const FlexContainer = ({
 
 /**
  * @component GridContainer
- * @category wrappers
+ * @type wrappers
  * @subniche containers
- * @tier composite
  * @status stable
- * @description Grid Container layout component for arranging documentation content without MDX inline styles.
- * @contentAffinity overview, tutorial, reference
- * @owner docs
- * @dependencies FlexContainer, Spacer
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-11
+ * @description CSS Grid container with configurable columns and gap.
+ * @accepts children, className, ...rest
  * @param {any} children - children prop.
  * @param {any} columns - columns prop.
  * @param {string} [gap="1rem"] - gap prop.
  * @param {object} [style={}] - style prop.
- * @example
- * <GridContainer columns="example">Example content</GridContainer>
  */
 export const GridContainer = ({
   children,
@@ -115,24 +93,13 @@ export const GridContainer = ({
 
 /**
  * @component Spacer
- * @category wrappers
+ * @type wrappers
  * @subniche containers
- * @tier composite
  * @status stable
- * @description Spacer layout component for arranging documentation content without MDX inline styles.
- * @contentAffinity overview, tutorial, reference
- * @owner docs
- * @dependencies FlexContainer, GridContainer
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-11
+ * @description Spacer element with configurable size.
+ * @accepts className, style, ...rest
  * @param {string} [size="1rem"] - size prop.
  * @param {string} [direction="vertical"] - direction prop.
- * @example
- * <Spacer />
  */
 export const Spacer = ({ size = "1rem", direction = "vertical", className = "", style = {}, ...rest }) => {
   return (

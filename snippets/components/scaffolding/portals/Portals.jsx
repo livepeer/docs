@@ -38,24 +38,13 @@
  */
 /**
  * @component HeroSectionContainer
- * @category scaffolding
+ * @type scaffolding
  * @subniche portals
- * @tier pattern
  * @status stable
- * @description Outer frame-mode hero section wrapper for portal layouts.
- * @contentAffinity landing, overview
- * @owner docs
- * @dependencies HeroContentContainer, HeroImageBackgroundComponent, HeroOverviewContent, LogoHeroContainer, PortalCardsHeader, PortalContentContainer, PortalHeroContent, PortalSectionHeader, RefCardContainer
- * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/gateways-portal.mdx, v2/home/mission-control.mdx, v2/lpt/token-portal.mdx, v2/orchestrators/old/orchestrators-portal.mdx, v2/orchestrators/portal.mdx, v2/orchestrators/v2-dev/orchestrators-portal.mdx, v2/solutions/portal.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Full-width hero section wrapper with min-height and gradient background.
+ * @accepts {any} children, {string} minHeight, {string} className, {object} style, ...rest
  * @param {any} children - children prop.
  * @param {string} [minHeight="fit-content"] - min Height prop.
- * @example
- * <HeroSectionContainer>Example content</HeroSectionContainer>
  */
 const HeroSectionContainer = ({ children, minHeight = "fit-content", className = "", style = {}, ...rest }) => {
   return (
@@ -89,23 +78,12 @@ const HeroSectionContainer = ({ children, minHeight = "fit-content", className =
  */
 /**
  * @component HeroImageBackgroundComponent
- * @category scaffolding
+ * @type scaffolding
  * @subniche portals
- * @tier pattern
  * @status stable
- * @description Absolute-positioned hero background wrapper used behind portal hero content.
- * @contentAffinity landing, overview
- * @owner docs
- * @dependencies HeroContentContainer, HeroOverviewContent, HeroSectionContainer, LogoHeroContainer, PortalCardsHeader, PortalContentContainer, PortalHeroContent, PortalSectionHeader, RefCardContainer
- * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/gateways-portal.mdx, v2/home/mission-control.mdx, v2/lpt/token-portal.mdx, v2/orchestrators/old/orchestrators-portal.mdx, v2/orchestrators/portal.mdx, v2/orchestrators/v2-dev/orchestrators-portal.mdx, v2/solutions/portal.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Hero background with image overlay and gradient.
+ * @accepts {any} children, {string} className, {object} style, ...rest
  * @param {any} children - children prop.
- * @example
- * <HeroImageBackgroundComponent>Example content</HeroImageBackgroundComponent>
  */
 const HeroImageBackgroundComponent = ({ children, className = "", style = {}, ...rest }) => {
   return (
@@ -144,23 +122,12 @@ const HeroImageBackgroundComponent = ({ children, className = "", style = {}, ..
  */
 /**
  * @component HeroContentContainer
- * @category scaffolding
+ * @type scaffolding
  * @subniche portals
- * @tier pattern
  * @status stable
- * @description Centered frame-mode container for hero content stacked over hero backgrounds.
- * @contentAffinity landing, overview
- * @owner docs
- * @dependencies HeroImageBackgroundComponent, HeroOverviewContent, HeroSectionContainer, LogoHeroContainer, PortalCardsHeader, PortalContentContainer, PortalHeroContent, PortalSectionHeader, RefCardContainer
- * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/gateways-portal.mdx, v2/home/mission-control.mdx, v2/lpt/token-portal.mdx, v2/orchestrators/old/orchestrators-portal.mdx, v2/orchestrators/portal.mdx, v2/orchestrators/v2-dev/orchestrators-portal.mdx, v2/solutions/portal.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Centred content container inside hero sections.
+ * @accepts {any} children, {string} className, {object} style, ...rest
  * @param {any} children - children prop.
- * @example
- * <HeroContentContainer>Example content</HeroContentContainer>
  */
 const HeroContentContainer = ({ children, className = "", style = {}, ...rest }) => {
   return (
@@ -183,23 +150,12 @@ const HeroContentContainer = ({ children, className = "", style = {}, ...rest })
 //unused
 /**
  * @component HeroOverviewContent
- * @category scaffolding
+ * @type scaffolding
  * @subniche portals
- * @tier pattern
  * @status stable
- * @description Centered hero overview wrapper for introductory portal copy blocks.
- * @contentAffinity landing, overview
- * @owner docs
- * @dependencies HeroContentContainer, HeroImageBackgroundComponent, HeroSectionContainer, LogoHeroContainer, PortalCardsHeader, PortalContentContainer, PortalHeroContent, PortalSectionHeader, RefCardContainer
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Hero content layout with title, icon, subtitle, and CTA slots.
+ * @accepts {any} children, {string} className, {object} style, ...rest
  * @param {any} children - children prop.
- * @example
- * <HeroOverviewContent>Example content</HeroOverviewContent>
  */
 const HeroOverviewContent = ({ children, className = "", style = {}, ...rest }) => {
   return (
@@ -241,23 +197,12 @@ const HeroOverviewContent = ({ children, className = "", style = {}, ...rest }) 
  */
 /**
  * @component PortalContentContainer
- * @category scaffolding
+ * @type scaffolding
  * @subniche portals
- * @tier pattern
  * @status stable
- * @description Frame-mode content wrapper for portal body sections.
- * @contentAffinity landing, overview
- * @owner docs
- * @dependencies HeroContentContainer, HeroImageBackgroundComponent, HeroOverviewContent, HeroSectionContainer, LogoHeroContainer, PortalCardsHeader, PortalHeroContent, PortalSectionHeader, RefCardContainer
- * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/gateways-portal.mdx, v2/home/mission-control.mdx, v2/lpt/token-portal.mdx, v2/orchestrators/old/orchestrators-portal.mdx, v2/orchestrators/portal.mdx, v2/orchestrators/v2-dev/orchestrators-portal.mdx, v2/solutions/portal.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Outer container for portal page content below the hero.
+ * @accepts {any} children, {string} className, {object} style, ...rest
  * @param {any} children - children prop.
- * @example
- * <PortalContentContainer>Example content</PortalContentContainer>
  */
 const PortalContentContainer = ({ children, className = "", style = {}, ...rest }) => {
     return (
@@ -290,20 +235,11 @@ const PortalContentContainer = ({ children, className = "", style = {}, ...rest 
  */
 /**
  * @component PortalHeroContent
- * @category scaffolding
+ * @type scaffolding
  * @subniche portals
- * @tier pattern
  * @status stable
- * @description Hero scaffold for portal landing pages with title, subtitle, supporting content, and optional callouts.
- * @contentAffinity landing, overview
- * @owner docs
- * @dependencies HeroContentContainer, HeroImageBackgroundComponent, HeroOverviewContent, HeroSectionContainer, LogoHeroContainer, PortalCardsHeader, PortalContentContainer, PortalSectionHeader, RefCardContainer
- * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/gateways-portal.mdx, v2/home/mission-control.mdx, v2/lpt/token-portal.mdx, v2/orchestrators/old/orchestrators-portal.mdx, v2/orchestrators/portal.mdx, v2/orchestrators/v2-dev/orchestrators-portal.mdx, v2/solutions/portal.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Hero content with logo, title, tagline, description, and card grid.
+ * @accepts {boolean} zIndex, {string} title, {string} subtitle, {string} subtitleIcon, {any} description, {any} refCardLink, {any} overview, {boolean} divider, {any} callout, {any} titleColor, {any} subtitleColor, {any} children, {string} className, {object} style, ...rest
  * @param {boolean} [zIndex=true] - z Index prop.
  * @param {string} [title="Portal Page"] - title prop.
  * @param {string} [subtitle="Build - Explore - Create"] - subtitle prop.
@@ -316,8 +252,6 @@ const PortalContentContainer = ({ children, className = "", style = {}, ...rest 
  * @param {any} titleColor - title Color prop.
  * @param {any} subtitleColor - subtitle Color prop.
  * @param {any} children - children prop.
- * @example
- * <PortalHeroContent description="example" refCardLink="example">Example content</PortalHeroContent>
  */
 const PortalHeroContent = ({
   zIndex = true, //Not working currently
@@ -457,24 +391,13 @@ const PortalHeroContent = ({
 
 /**
  * @component PortalCardsHeader
- * @category scaffolding
+ * @type scaffolding
  * @subniche portals
- * @tier pattern
  * @status stable
- * @description Header wrapper for portal card groups and section intros.
- * @contentAffinity landing, overview
- * @owner docs
- * @dependencies HeroContentContainer, HeroImageBackgroundComponent, HeroOverviewContent, HeroSectionContainer, LogoHeroContainer, PortalContentContainer, PortalHeroContent, PortalSectionHeader, RefCardContainer
- * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/gateways-portal.mdx, v2/home/mission-control.mdx, v2/lpt/token-portal.mdx, v2/orchestrators/old/orchestrators-portal.mdx, v2/orchestrators/portal.mdx, v2/orchestrators/v2-dev/orchestrators-portal.mdx, v2/solutions/portal.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Section header with mission label and optional subtitle.
+ * @accepts {any} children, {any} title, {string} className, {object} style, ...rest
  * @param {any} children - children prop.
  * @param {any} title - title prop.
- * @example
- * <PortalCardsHeader title="example">Example content</PortalCardsHeader>
  */
 const PortalCardsHeader = ({ children, title, className = "", style = {}, ...rest }) => {
     return (
@@ -495,25 +418,14 @@ const PortalCardsHeader = ({ children, title, className = "", style = {}, ...res
 
 /**
  * @component PortalSectionHeader
- * @category scaffolding
+ * @type scaffolding
  * @subniche portals
- * @tier pattern
  * @status stable
- * @description Section heading wrapper for portal subsections with optional icon treatment.
- * @contentAffinity landing, overview
- * @owner docs
- * @dependencies HeroContentContainer, HeroImageBackgroundComponent, HeroOverviewContent, HeroSectionContainer, LogoHeroContainer, PortalCardsHeader, PortalContentContainer, PortalHeroContent, RefCardContainer
- * @usedIn v2/community/community-portal.mdx, v2/lpt/token-portal.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Section header with icon, title, and horizontal rule.
+ * @accepts {any} children, {any} title, {any} icon, {string} className, {object} style, ...rest
  * @param {any} children - children prop.
  * @param {any} title - title prop.
  * @param {any} icon - icon prop.
- * @example
- * <PortalSectionHeader title="example" icon="example">Example content</PortalSectionHeader>
  */
 const PortalSectionHeader = ({ children, title, icon, className = "", style = {}, ...rest }) => {
     return (
@@ -548,20 +460,11 @@ const PortalSectionHeader = ({ children, title, icon, className = "", style = {}
  */
 /**
  * @component LogoHeroContainer
- * @category scaffolding
+ * @type scaffolding
  * @subniche portals
- * @tier pattern
  * @status stable
- * @description Portal hero logo wrapper that centers a themed brand asset above hero content.
- * @contentAffinity landing, overview
- * @owner docs
- * @dependencies HeroContentContainer, HeroImageBackgroundComponent, HeroOverviewContent, HeroSectionContainer, PortalCardsHeader, PortalContentContainer, PortalHeroContent, PortalSectionHeader, RefCardContainer
- * @usedIn v2/about/portal.mdx, v2/community/community-portal.mdx, v2/developers/portal.mdx, v2/gateways/gateways-portal.mdx, v2/home/mission-control.mdx, v2/lpt/token-portal.mdx, v2/orchestrators/old/orchestrators-portal.mdx, v2/orchestrators/portal.mdx, v2/orchestrators/v2-dev/orchestrators-portal.mdx, v2/solutions/portal.mdx
- * @breakingChangeRisk medium
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Hero banner with centred logo image, title, and subtitle.
+ * @accepts {string} src, {string} alt, {string} width, {string} margin, {string} imgHeight, {string} imgWidth, {string} objectFit, {any} children, {string} className, {object} style, ...rest
  * @param {string} [src="/snippets/assets/logos/Livepeer-Logo-Full-Theme.svg"] - src prop.
  * @param {string} [alt="Livepeer Logo"] - alt prop.
  * @param {string} [width="100%"] - width prop.
@@ -570,8 +473,6 @@ const PortalSectionHeader = ({ children, title, icon, className = "", style = {}
  * @param {string} [imgWidth="auto"] - img Width prop.
  * @param {string} [objectFit="contain"] - object Fit prop.
  * @param {any} children - children prop.
- * @example
- * <LogoHeroContainer>Example content</LogoHeroContainer>
  */
 const LogoHeroContainer = ({
   src = "/snippets/assets/logos/Livepeer-Logo-Full-Theme.svg",
@@ -627,23 +528,12 @@ const LogoHeroContainer = ({
 
 /**
  * @component RefCardContainer
- * @category scaffolding
+ * @type scaffolding
  * @subniche portals
- * @tier pattern
  * @status stable
- * @description Container for portal reference cards and related CTA blocks.
- * @contentAffinity landing, overview
- * @owner docs
- * @dependencies HeroContentContainer, HeroImageBackgroundComponent, HeroOverviewContent, HeroSectionContainer, LogoHeroContainer, PortalCardsHeader, PortalContentContainer, PortalHeroContent, PortalSectionHeader
- * @usedIn none
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource none
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Container for reference cards with configurable column count.
+ * @accepts {any} children, {string} className, {object} style, ...rest
  * @param {any} children - children prop.
- * @example
- * <RefCardContainer>Example content</RefCardContainer>
  */
 const RefCardContainer = ({ children, className = "", style = {}, ...rest }) => {
   return (

@@ -2,26 +2,15 @@ import { YouTubeVideo } from "/snippets/components/displays/video/Video.jsx";
 
 /**
  * @component YouTubeVideoData
- * @category integrators
+ * @type integrators
  * @subniche video-data
- * @tier pattern
  * @status stable
- * @description YouTubeVideoData - Renders YouTube videos from youtubeData.jsx format
- * @contentAffinity universal
- * @owner @livepeer/docs-team
- * @dependencies none
- * @usedIn v2/community/livepeer-community/trending-topics.mdx, v2/home/trending.mdx
- * @breakingChangeRisk low
- * @decision KEEP
- * @dataSource /snippets/automations/youtube/youtubeData.jsx
- * @duplicates none
- * @lastMeaningfulChange 2026-03-10
+ * @description Renders YouTube video data with video embed and metadata columns.
+ * @dataSource automation/youtube
+ * @accepts {Array} items, {number} limit, {number} cols, {string} className, {object} style, ...rest
  * @param {Array} [items=[]] - Collection data rendered by the component.
  * @param {number} limit - Limit used by the component.
  * @param {number} [cols=2] - Cols used by the component.
- *
- * @example
- * <YouTubeVideoData limit={1} />
  */
 export const YouTubeVideoData = ({ items = [], limit, cols = 2, className = "", style = {}, ...rest }) => {
   const displayItems = limit ? items.slice(0, limit) : items;
