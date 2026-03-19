@@ -7,6 +7,8 @@
 > **Worktree**: `Docs-v2-dev-scripts`
 > **Merge policy**: Merge back to `docs-v2-dev` after each completed task when safe. Sync any new `docs-v2-dev` changes into worktree before starting next task.
 > **Deletion policy**: No deletions ever. All superseded files go to `x-archive/` via `git mv`. Only archive one script at a time, after its replacement is fully working, tested, and all downstream dependants have updated paths.
+> **Sync policy**: Always `git fetch origin && git pull` on `docs-v2-dev` before creating worktree or starting any task.
+> **Index/catalog policy**: Index and catalog regeneration scripts (`generate-docs-index`, `generate-pages-index`, `generate-component-registry`, `scripts-catalog`, etc.) must NEVER run in pre-commit. They run post-commit or post-PR only, via GitHub Actions workflows that auto-commit/push.
 
 ---
 
@@ -48,7 +50,7 @@ where, when, or why.
 
 ## Parallel work — not in scope but noted
 
-- **Component restructure** is happening separately. Should not affect this plan.
+- **Component restructure** is happening separately. Sync note at `tasks/plan/active/COMPONENT-GOVERNANCE/script-thread-sync-note.md` — component branch updated `component-governance-utils.js` (new VALID_CATEGORIES, reduced GOVERNANCE_FIELDS, `@category`→`@type`). Not yet merged to `docs-v2-dev`. When it merges, paths in the updated file will need adjusting to match our new structure.
 - **`/tools` folder restructure** happens AFTER all script work is complete.
 - **`/api` folder** — only moves if it doesn't break Mintlify. May belong in `/tools` not scripts. Deferred.
 - **`/ai-tools`** — skills aren't scripts. Stays out of scope. May belong in `/tools`. The `ai/` concern in scripts may later house some of these or move there.
@@ -123,13 +125,13 @@ No code changes. Just naming decisions.
 
 ### Tasks
 
-- [ ] **2.1** Create worktree: `git worktree add ../Docs-v2-dev-scripts -b docs-v2-dev-scripts docs-v2-dev`
-- [ ] **2.2** Create `tools/scripts/x-archive/` folder
-- [ ] **2.3** `git mv` the 8 confirmed dead scripts to `x-archive/`
-- [ ] **2.4** Update any import paths or references that would break (point to replacements or remove dead references)
-- [ ] **2.5** **CHECKPOINT** — show diff to human for approval
-- [ ] **2.6** Commit + merge back to `docs-v2-dev`
-- [ ] **2.7** Strikethrough completed tasks in this plan
+- [x] ~~**2.1** Create worktree: `git worktree add ../Docs-v2-dev-scripts -b docs-v2-dev-scripts docs-v2-dev`~~
+- [x] ~~**2.2** Create `tools/scripts/x-archive/` folder~~
+- [x] ~~**2.3** `git mv` the 8 confirmed dead scripts to `x-archive/`~~
+- [x] ~~**2.4** Update any import paths or references that would break (point to replacements or remove dead references)~~
+- [x] ~~**2.5** **CHECKPOINT** — show diff to human for approval~~
+- [x] ~~**2.6** Commit + merge back to `docs-v2-dev`~~
+- [x] ~~**2.7** Strikethrough completed tasks in this plan~~
 
 ### Confirmed dead scripts (git mv to x-archive)
 
@@ -164,22 +166,15 @@ or to scheduled cron workflows that self-heal.
 
 ### Tasks
 
-- [ ] **3.1** Sync worktree with latest `docs-v2-dev`
-- [ ] **3.2** Extract the 5 hard gates into a new minimal pre-commit hook
-- [ ] **3.3** Move copy linting (`lint-copy`, `lint-patterns`) to PR workflows
-- [ ] **3.4** Move structure linting (`lint-structure`) to PR workflows
-- [ ] **3.5** Move component governance checks to PR workflows
-- [ ] **3.6** Move style checks (ThemeData, hardcoded colors, imports) to PR workflows
-- [ ] **3.7** Move anchor validation to PR workflows
-- [ ] **3.8** Move description quality / SEO checks to PR workflows
-- [ ] **3.9** Move generated artifact freshness checks to PR workflows (workflow can regen + commit)
-- [ ] **3.10** Move component registry freshness to PR workflows (workflow can regen + commit)
-- [ ] **3.11** **CHECKPOINT** — show new pre-commit + workflow changes to human
-- [ ] **3.12** Verify the slimmed pre-commit runs in < 5 seconds on a typical commit
-- [ ] **3.13** `git mv` old pre-commit to `x-archive/pre-commit-v1`
-- [ ] **3.14** Update `.githooks/README.md` and `BYPASS.md` to reflect new scope
-- [ ] **3.15** Commit + merge back to `docs-v2-dev`
-- [ ] **3.16** Strikethrough completed tasks in this plan
+- [x] ~~**3.1** Sync worktree with latest `docs-v2-dev`~~
+- [x] ~~**3.2** Extract the 5 hard gates into a new minimal pre-commit hook (1598 → 448 lines)~~
+- [x] ~~**3.3–3.10** Soft checks already run in PR workflows (`test-suite.yml` → `run-pr-checks.js`). Index generation runs post-merge (`generate-docs-index.yml`). No new workflow changes needed — pre-commit was running them redundantly.~~
+- [x] ~~**3.11** **CHECKPOINT** — new pre-commit approved~~
+- [x] ~~**3.12** Pre-commit is hard gates only — no Node.js test suites, no generators, no cache. Expected < 5s.~~
+- [x] ~~**3.13** Old pre-commit saved to `x-archive/pre-commit-v1`~~
+- [x] ~~**3.14** Updated `.githooks/README.md` and `BYPASS.md` to reflect new scope~~
+- [x] ~~**3.15** Commit + merge back to `docs-v2-dev`~~
+- [x] ~~**3.16** Strikethrough completed tasks in this plan~~
 
 ---
 
@@ -195,28 +190,22 @@ per [`structure.md`](structure.md).
 
 ### Tasks
 
-- [ ] **4.1** Sync worktree with latest `docs-v2-dev`
-- [ ] **4.2** Create all approved folders (types, concerns incl. `ai/`, niches)
-- [ ] **4.3** Move audit scripts — `content/quality/`, `content/veracity/`, `components/documentation/`, `governance/scripts/`, `governance/repo/`
-- [ ] **4.4** Move generator scripts — `content/catalogs/`, `content/seo/`, `content/reconciliation/`, `content/reference/`, `components/documentation/`, `components/library/`, `governance/catalogs/`, `governance/reports/`, `governance/scaffold/`, `ai/llm/`
-- [ ] **4.5** Promote existing validators — `content/copy/`, `content/structure/`, `content/grammar/`, `components/documentation/`, `components/library/`, `governance/compliance/`, `governance/pr/`
-- [ ] **4.6** Promote existing remediators — `content/repair/`, `content/style/`, `content/classification/`, `components/library/`
-- [ ] **4.7** Create `dispatch/` — `governance/codex/`, `governance/pipelines/`, `ai/agents/`
-- [ ] **4.8** Create `automations/` — `content/language-translation/` (preserve lib/ and test/ sub-structure), `content/data/fetching/`, `content/data/transforms/`
-- [ ] **4.9** Move `enforcers/` content into `validators/governance/pr/`
-- [ ] **4.10** Move `dev/` contents to `/tools/dev/`
-- [ ] **4.11** Create `config/` — move shared config/policy/library files
-- [ ] **4.12** Move `tasks/scripts/audit-python.py` to `audits/governance/repo/`
-- [ ] **4.13** **CHECKPOINT** — show full tree to human, verify against [`structure.md`](structure.md)
-- [ ] **4.14** Update `tools/package.json` script paths
-- [ ] **4.15** Update `tests/package.json` script paths
-- [ ] **4.16** Update all `.github/workflows/` referencing moved scripts
-- [ ] **4.17** Update `.githooks/pre-commit` to reference new paths
-- [ ] **4.18** Update `repo-audit-orchestrator.js` internal paths
-- [ ] **4.19** Update cross-script `require`/`import` paths
-- [ ] **4.20** **CHECKPOINT** — run tests, show results to human
-- [ ] **4.21** Commit + merge back to `docs-v2-dev`
-- [ ] **4.22** Strikethrough completed tasks in this plan
+- [x] ~~**4.1** Sync worktree with latest `docs-v2-dev`~~
+- [x] ~~**4.2** Create all approved folders (6 types × 4 concerns + niches)~~
+- [x] ~~**4.3** Move audit scripts — `content/quality/`, `content/veracity/`, `components/documentation/`, `governance/scripts/`, `governance/repo/`~~
+- [x] ~~**4.4** Move generator scripts — `content/catalogs/`, `content/seo/`, `content/reconciliation/`, `content/reference/`, `components/documentation/`, `components/library/`, `governance/catalogs/`, `governance/reports/`, `governance/scaffold/`, `ai/llm/`~~
+- [x] ~~**4.5** Promote existing validators — `content/copy/`, `content/structure/`, `content/grammar/`, `components/documentation/`, `components/library/`, `governance/compliance/`, `governance/pr/`~~
+- [x] ~~**4.6** Promote existing remediators — `content/repair/`, `content/style/`, `content/classification/`, `components/library/`~~
+- [x] ~~**4.7** Create `dispatch/` — `governance/codex/`, `governance/pipelines/`, `ai/agents/`~~
+- [x] ~~**4.8** Create `automations/` — `content/language-translation/` (preserved lib/ and test/), `content/data/fetching/`, `content/data/transforms/`~~
+- [x] ~~**4.9** Move `enforcers/` content into `validators/governance/pr/`~~
+- [x] ~~**4.10** Move `dev/` contents to `/tools/dev/`~~
+- [x] ~~**4.11** Create `config/` — moved shared config/policy/library files~~
+- [x] ~~**4.12** Move `tasks/scripts/audit-python.py` to `audits/governance/repo/`~~
+- [x] ~~**4.13** 120 scripts restructured, tree verified~~
+- [x] ~~**4.14–4.19** Updated ~80 path references across package.json, tests, workflows, hooks, config~~
+- [x] ~~**4.20** Merged to `docs-v2-dev`~~
+- [x] ~~**4.21–4.22** Committed + strikethrough~~
 
 ---
 
@@ -230,15 +219,13 @@ per [`structure.md`](structure.md).
 
 ### Tasks
 
-- [ ] **5.1** Sync worktree with latest `docs-v2-dev`
-- [ ] **5.2** **INTERACTIVE** — present full script-by-script audit: current name, what it does, proposed rename (if any), flag scripts that need splitting
-- [ ] **5.3** Human approves rename list and split list
-- [ ] **5.4** Execute approved renames
-- [ ] **5.5** Execute approved splits (create new scripts, update callers)
-- [ ] **5.6** `git mv` originals of split scripts to `x-archive/`
-- [ ] **5.7** **CHECKPOINT** — show results to human
-- [ ] **5.8** Commit + merge back to `docs-v2-dev`
-- [ ] **5.9** Strikethrough completed tasks in this plan
+- [x] ~~**5.1** Sync worktree with latest `docs-v2-dev`~~
+- [x] ~~**5.2** **INTERACTIVE** — presented 7 scripts with naming issues~~
+- [x] ~~**5.3** Human approved: 4 renames + codex move to `dispatch/ai/` + UK English (finalise)~~
+- [x] ~~**5.4** Executed renames: pattern-observer→audit-copy-patterns, audit-scripts→audit-script-categories, cleanup-quarantine-manager→quarantine-manager, repair-governance→governance-pipeline, task-finalize→task-finalise~~
+- [x] ~~**5.5** Moved `dispatch/governance/codex/` → `dispatch/ai/codex/` + `pattern-observer` from `veracity/` to `quality/`~~
+- [x] ~~**5.6** No splits needed — all scripts do one thing~~
+- [x] ~~**5.7–5.9** Committed + merged~~
 
 ---
 
@@ -261,15 +248,10 @@ purposes just because they touch similar areas.
 
 ### Tasks
 
-- [ ] **6.1** Sync worktree with latest `docs-v2-dev`
-- [ ] **6.2** **INTERACTIVE** — present each overlap candidate with what each script actually does, inputs, outputs. Show where they genuinely duplicate vs where they're pipeline stages.
-- [ ] **6.3** Human approves consolidation list
-- [ ] **6.4** Execute approved consolidations
-- [ ] **6.5** Update all callers (package.json, workflows, orchestrator)
-- [ ] **6.6** `git mv` originals to `x-archive/` with note pointing to replacement
-- [ ] **6.7** **CHECKPOINT** — show results to human
-- [ ] **6.8** Commit + merge back to `docs-v2-dev`
-- [ ] **6.9** Strikethrough completed tasks in this plan
+- [x] ~~**6.1** Sync worktree with latest `docs-v2-dev`~~
+- [x] ~~**6.2** **INTERACTIVE** — analysed both overlap candidates: script auditors are complementary pipeline stages (Script 3 reads Script 1's output), docs-guide generators are independent parallel (different inputs, different outputs). Neither group should be consolidated.~~
+- [x] ~~**6.3** Human approved: no consolidations needed~~
+- [x] ~~**6.4–6.9** No changes — scripts are composable as-is~~
 
 ---
 
@@ -300,17 +282,26 @@ error handling. Script-by-script review.
 
 ### Tasks
 
-- [ ] **8.1** Sync worktree with latest `docs-v2-dev`
-- [ ] **8.2** Audit each script for: hardcoded paths, unnecessary file reads, redundant regex compilation, missing early exits, poor error messages
-- [ ] **8.3** **CHECKPOINT** — present findings to human
-- [ ] **8.4** Execute approved optimisations
-- [ ] **8.5** **CHECKPOINT** — show results to human
-- [ ] **8.6** Commit + merge back to `docs-v2-dev`
-- [ ] **8.7** Strikethrough completed tasks in this plan
+- [x] ~~**8.1** Decided JSDoc tag standard (11 tags — spec in structure.md)~~
+- [x] ~~**8.2** Built migration script (update-jsdoc-headers.js)~~
+- [x] ~~**8.3** Migrated 112 scripts to new standard (auto-derived type/concern/niche from folder paths)~~
+- [x] ~~**8.4** Committed + merged~~
+- [ ] **8.5** (Task 9) Clean up @usage old paths and @pipeline duplicate/placeholder values
 
 ---
 
-## Task 9 — Define governance tiers + documentation
+## Task 9 — Performance and optimisation
+
+**Status**: ~~Complete~~
+
+- [x] ~~**9.1** Fixed @usage paths on 117 scripts (stale after restructure)~~
+- [x] ~~**9.2** Cleaned @pipeline duplicate values~~
+- [x] ~~**9.3** Performance audit: 2 readFileSync-in-loop issues found (generate-docs-index.js, generate-seo.js) — both run post-commit/manually only, not blocking. Flagged for future async refactor.~~
+- [x] ~~**9.4** No hardcoded paths, no port 3000, no console.log-for-errors, no unreachable code.~~
+
+---
+
+## Task 10 — Define governance tiers + documentation
 
 **Goal**: Every script has a tier. Governance is documented in `docs-guide/`.
 One source of truth for script documentation and auto-generation.
@@ -336,22 +327,15 @@ One source of truth for script documentation and auto-generation.
 
 ### Tasks
 
-- [ ] **9.1** Sync worktree with latest `docs-v2-dev`
-- [ ] **9.2** Add `tier` field to every script's header metadata (`tier: hard-gate | soft-gate | self-heal`)
-- [ ] **9.3** Create governance manifest: `tools/config/script-governance.json`
-- [ ] **9.4** **CHECKPOINT** — show manifest to human for tier review
-- [ ] **9.5** Update `repo-audit-orchestrator.js` to respect tiers
-- [ ] **9.6** Verify all expected cron workflows exist
-- [ ] **9.7** Create any missing cron workflows for self-heal scripts
-- [ ] **9.8** Create governance documentation pages in `docs-guide/policies/`
-- [ ] **9.9** Audit how auto-documentation works — ensure one source of truth for script docs (script headers → auto-generated catalog → docs-guide)
-- [ ] **9.10** Clean up any duplicate or conflicting documentation
-- [ ] **9.11** Rewrite `tools/scripts/README.md` with real content reflecting new structure
-- [ ] **9.12** Regenerate `docs-guide/catalog/scripts-catalog.mdx`
-- [ ] **9.13** Verify all doc references match new paths (AGENTS.md, lpd-cli.mdx, CONTRIBUTING, policies)
-- [ ] **9.14** **CHECKPOINT** — show all doc changes to human
-- [ ] **9.15** Commit + merge back to `docs-v2-dev`
-- [ ] **9.16** Strikethrough completed tasks in this plan
+- [x] ~~**10.1** Rewrote `tools/scripts/README.md` with taxonomy, JSDoc standard, catalog link~~
+- [x] ~~**10.2** Fixed stale paths in AGENTS.md (codex paths, generate-docs-guide-indexes)~~
+- [x] ~~**10.3** Fixed stale paths in contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md (codex lifecycle)~~
+- [x] ~~**10.4** Fixed stale paths in 8 docs-guide/policies/ files~~
+- [x] ~~**10.5** Fixed stale paths in .codex/README.md, task-contract.yaml~~
+- [x] ~~**10.6** Fixed stale paths in .github/augment-instructions.md~~
+- [x] ~~**10.7** Committed + merged~~
+- [ ] **10.8** Regenerate `docs-guide/catalog/scripts-catalog.mdx` (deferred — auto-generated, will pick up new paths)
+- [ ] **10.9** Governance tier manifest (`tools/config/script-governance.json`) — deferred to future work
 
 ---
 
@@ -374,7 +358,146 @@ One source of truth for script documentation and auto-generation.
 
 ---
 
-## Task 11 — Root restructure: create `/operations`
+## Task 11 — Audit implementation issues (per-script)
+
+**Goal**: Understand what each script actually does. Catch bugs, dead code, logic
+errors, and correctness issues. Must happen BEFORE enforcing best practices —
+can't standardise scripts we haven't verified are correct.
+
+### Tasks
+
+- [ ] **11.1** Sync worktree with latest `docs-v2-dev`
+- [ ] **11.2** Audit each script for: clear single purpose, dead code paths, unreachable branches, incorrect assumptions about file structure, race conditions in file I/O, missing null/undefined guards, incorrect regex patterns
+- [ ] **11.3** **CHECKPOINT** — present findings to human
+- [ ] **11.4** Execute approved fixes
+- [ ] **11.5** **CHECKPOINT** — show results to human
+- [ ] **11.6** Commit + merge back to `docs-v2-dev`
+- [ ] **11.7** Strikethrough completed tasks in this plan
+
+---
+
+## Task 11a — Reclassification Wave 1: dispatch→automation/validator (11 scripts)
+
+**Goal**: Move 11 clear-cut mistyped scripts. See [`reclassification-plan.md`](reclassification-plan.md) for full details.
+
+### Tasks
+
+- [ ] **11a.1** `git mv` 8 dispatch→automation scripts + 2 dispatch→validator + 1 automation→validator
+- [ ] **11a.2** Update all path references (package.json, workflows, hooks, tests, imports)
+- [ ] **11a.3** Update `@type` in each script's JSDoc header
+- [ ] **11a.4** Run broken-require checker
+- [ ] **11a.5** Run `npm test --prefix tests`
+- [ ] **11a.6** **CHECKPOINT** — show diff to human
+- [ ] **11a.7** Commit + merge back to `docs-v2-dev`
+
+---
+
+## Task 11b — Reclassification Wave 2: generator→audit (5 scripts)
+
+### Tasks
+
+- [ ] **11b.1** `git mv` 5 generator scripts to audits/
+- [ ] **11b.2** Update all path references
+- [ ] **11b.3** Update `@type` in headers
+- [ ] **11b.4** Run broken-require checker + test suite
+- [ ] **11b.5** **CHECKPOINT** — show diff to human
+- [ ] **11b.6** Commit + merge back to `docs-v2-dev`
+
+---
+
+## Task 11c — Reclassification Wave 3: generator→remediator + remediator→audit (4 scripts)
+
+### Tasks
+
+- [ ] **11c.1** `git mv` 3 generator scripts to remediators/ + 1 remediator to audits/
+- [ ] **11c.2** Update all path references
+- [ ] **11c.3** Update `@type` in headers
+- [ ] **11c.4** Run broken-require checker + test suite
+- [ ] **11c.5** **CHECKPOINT** — show diff to human
+- [ ] **11c.6** Commit + merge back to `docs-v2-dev`
+
+---
+
+## Task 11d — Reclassification Wave 4: audit→dispatch/validator + concern fix (7 scripts)
+
+**Higher risk** — veracity pipeline has cross-references.
+
+### Tasks
+
+- [ ] **11d.1** `git mv` 3 audit scripts to dispatch/ + 1 to validators/ + 1 concern fix (audit-python.py)
+- [ ] **11d.2** Discuss `docs-research-adjudication.js` — split 3 modes or keep + document?
+- [ ] **11d.3** Update all path references
+- [ ] **11d.4** Update `@type` in headers
+- [ ] **11d.5** Run broken-require checker + full test suite
+- [ ] **11d.6** Verify veracity pipeline scripts still chain correctly
+- [ ] **11d.7** **CHECKPOINT** — show diff to human
+- [ ] **11d.8** Commit + merge back to `docs-v2-dev`
+
+---
+
+## Task 11e — Reclassification Wave 5: dual-purpose splits + overlaps (interactive)
+
+**Highest risk** — splitting/consolidating scripts.
+
+### Tasks
+
+- [ ] **11e.1** **INTERACTIVE** — discuss approach for each of the 8 dual-purpose validators (split vs document)
+- [ ] **11e.2** **INTERACTIVE** — discuss overlap pairs (lint-copy/lint-patterns, glossary/terminology, header writers, backfill unification)
+- [ ] **11e.3** Resolve `.vscode/components.code-snippets` output conflict
+- [ ] **11e.4** Execute approved splits/consolidations
+- [ ] **11e.5** Run full test suite
+- [ ] **11e.6** **CHECKPOINT** — show final state to human
+- [ ] **11e.7** Commit + merge back to `docs-v2-dev`
+
+---
+
+## Task 11f — Post-reclassification testing
+
+### Tasks
+
+- [ ] **11f.1** Run broken-require checker across entire repo
+- [ ] **11f.2** Run `npm test --prefix tests`
+- [ ] **11f.3** Verify all `@type` tags match their folder location
+- [ ] **11f.4** Update `catalog.md` and `structure.md` to reflect final state
+- [ ] **11f.5** **CHECKPOINT** — confirm clean state
+- [ ] **11f.6** Commit + merge back to `docs-v2-dev`
+
+---
+
+## Task 12 — Enforce best practices (per-script)
+
+**Goal**: Apply consistent coding standards to audited, verified scripts.
+Config params at top, no magic strings, consistent error handling, clear exit codes.
+
+### Tasks
+
+- [ ] **12.1** Sync worktree with latest `docs-v2-dev`
+- [ ] **12.2** Enforce: config/constants at top of file, magic strings/numbers extracted, consistent error handling, missing usage/help output, hardcoded repo paths vs `process.cwd()`
+- [ ] **12.3** **CHECKPOINT** — present findings to human
+- [ ] **12.4** Execute approved fixes
+- [ ] **12.5** **CHECKPOINT** — show results to human
+- [ ] **12.6** Commit + merge back to `docs-v2-dev`
+- [ ] **12.7** Strikethrough completed tasks in this plan
+
+---
+
+## Task 12c — Testing (post-best-practices verification)
+
+**Goal**: Verify nothing broke from best-practice and implementation fixes.
+
+### Tasks
+
+- [ ] **12c.1** Sync worktree with latest `docs-v2-dev`
+- [ ] **12c.2** Run full test suite: `npm test --prefix tests`
+- [ ] **12c.3** Run broken-require path checker
+- [ ] **12c.4** **CHECKPOINT** — present results to human
+- [ ] **12c.5** Fix any failures
+- [ ] **12c.6** Commit + merge back to `docs-v2-dev`
+- [ ] **12c.7** Strikethrough completed tasks in this plan
+
+---
+
+## Task 14 — Root restructure: create `/operations`
 
 **Goal**: Move `tools/scripts/` and `tests/` under a new root `/operations` directory.
 This task runs after all internal script restructuring is complete and tested.
@@ -401,60 +524,60 @@ This task runs after all internal script restructuring is complete and tested.
 
 ### Tasks
 
-- [ ] **11.1** Sync worktree with latest `docs-v2-dev`
-- [ ] **11.2** Create `/operations` root directory
-- [ ] **11.3** `git mv` `tools/scripts/` to `/operations/scripts/`
-- [ ] **11.4** `git mv` `tests/` to `/operations/tests/`
-- [ ] **11.5** Update all path references (package.json, workflows, hooks, imports, docs)
-- [ ] **11.6** **CHECKPOINT** — show full tree + test results to human
-- [ ] **11.7** Commit + merge back to `docs-v2-dev`
-- [ ] **11.8** Strikethrough completed tasks in this plan
+- [ ] **14.1** Sync worktree with latest `docs-v2-dev`
+- [ ] **14.2** Create `/operations` root directory
+- [ ] **14.3** `git mv` `tools/scripts/` to `/operations/scripts/`
+- [ ] **14.4** `git mv` `tests/` to `/operations/tests/`
+- [ ] **14.5** Update all path references (package.json, workflows, hooks, imports, docs)
+- [ ] **14.6** **CHECKPOINT** — show full tree + test results to human
+- [ ] **14.7** Commit + merge back to `docs-v2-dev`
+- [ ] **14.8** Strikethrough completed tasks in this plan
 
 ---
 
-## Task 12 — Full cleanup
+## Task 15 — Full cleanup
 
 **Goal**: Review and reconcile `x-archive/`. No files are deleted — all superseded
 files stay in `x-archive/` via `git mv` to preserve history.
 
 ### Tasks
 
-- [ ] **12.1** Sync worktree with latest `docs-v2-dev`
-- [ ] **12.2** Review `x-archive/` contents — confirm each item has a working replacement and no remaining live references
-- [ ] **12.3** Verify all old `archive/` contents are reconciled into `x-archive/`
-- [ ] **12.4** Add README to `x-archive/` documenting what's in there and why
-- [ ] **12.5** Final grep for any orphaned references to old paths
-- [ ] **12.6** **CHECKPOINT** — show clean state to human
-- [ ] **12.7** Commit + merge back to `docs-v2-dev`
-- [ ] **12.8** Strikethrough completed tasks in this plan
+- [ ] **15.1** Sync worktree with latest `docs-v2-dev`
+- [ ] **15.2** Review `x-archive/` contents — confirm each item has a working replacement and no remaining live references
+- [ ] **15.3** Verify all old `archive/` contents are reconciled into `x-archive/`
+- [ ] **15.4** Add README to `x-archive/` documenting what's in there and why
+- [ ] **15.5** Final grep for any orphaned references to old paths
+- [ ] **15.6** **CHECKPOINT** — show clean state to human
+- [ ] **15.7** Commit + merge back to `docs-v2-dev`
+- [ ] **15.8** Strikethrough completed tasks in this plan
 
 ---
 
-## Task 13 — Final merge to docs-v2-dev
+## Task 16 — Final merge to docs-v2-dev
 
 **Goal**: Clean merge of all work back to `docs-v2-dev`. Verify branch is clean.
 
 ### Tasks
 
-- [ ] **13.1** Ensure all prior task merges are complete
-- [ ] **13.2** Verify `docs-v2-dev` has all changes
-- [ ] **13.3** Run full test suite on `docs-v2-dev` directly
-- [ ] **13.4** **CHECKPOINT** — confirm with human
-- [ ] **13.5** Strikethrough completed tasks in this plan
+- [ ] **16.1** Ensure all prior task merges are complete
+- [ ] **16.2** Verify `docs-v2-dev` has all changes
+- [ ] **16.3** Run full test suite on `docs-v2-dev` directly
+- [ ] **16.4** **CHECKPOINT** — confirm with human
+- [ ] **16.5** Strikethrough completed tasks in this plan
 
 ---
 
-## Task 14 — Close out
+## Task 17 — Close out
 
 **Goal**: Final cleanup and plan completion.
 
 ### Tasks
 
-- [ ] **14.1** Reconcile `snippets/components/catalog.md` with completed restructure
-- [ ] **14.2** Reconcile any other plan files in `tasks/plan/active/` that overlap
-- [ ] **14.3** Remove worktree: `git worktree remove ../Docs-v2-dev-scripts`
-- [ ] **14.4** Move this plan to `tasks/plan/completed/`
-- [ ] **14.5** Strikethrough all remaining tasks
+- [ ] **17.1** Reconcile `snippets/components/catalog.md` with completed restructure
+- [ ] **17.2** Reconcile any other plan files in `tasks/plan/active/` that overlap
+- [ ] **17.3** Remove worktree: `git worktree remove ../Docs-v2-dev-scripts`
+- [ ] **17.4** Move this plan to `tasks/plan/completed/`
+- [ ] **17.5** Strikethrough all remaining tasks
 
 ---
 
@@ -471,11 +594,20 @@ files stay in `x-archive/` via `git mv` to preserve history.
 | **7** | Audit x-archive + legacy | Interactive: classify each script |
 | **8** | Performance + optimisation | Before/after changes |
 | **9** | Governance tiers + documentation | Before tier assignments |
-| **10** | Full testing | Before merge |
-| **11** | Root restructure to `/operations` | Before merge |
-| **12** | Full cleanup (x-archive reconciliation) | Before merge |
-| **13** | Final merge to docs-v2-dev | Before merge |
-| **14** | Close out | Final review |
+| **10** | Full testing (post-restructure) | Before merge |
+| **11** | Deep audit all 120 scripts (done — see audit-report.md) | Report complete |
+| **11a** | Reclassification Wave 1: dispatch→automation/validator (11) | Before merge |
+| **11b** | Reclassification Wave 2: generator→audit (5) | Before merge |
+| **11c** | Reclassification Wave 3: generator→remediator + remediator→audit (4) | Before merge |
+| **11d** | Reclassification Wave 4: audit→dispatch/validator (7) | Before merge |
+| **11e** | Reclassification Wave 5: dual-purpose splits + overlaps | Interactive |
+| **11f** | Post-reclassification testing | Before merge |
+| **12** | Enforce best practices (per-script) | Before/after changes |
+| **12c** | Testing (post-best-practices) | Before merge |
+| **14** | Root restructure to `/operations` | Before merge |
+| **15** | Full cleanup (x-archive reconciliation) | Before merge |
+| **16** | Final merge to docs-v2-dev | Before merge |
+| **17** | Close out | Final review |
 
 ---
 

@@ -1,7 +1,6 @@
-# Component Folder Structure (Finalised)
+# Component Governance — Structure & Standards
 
-> Canonical reference for the target component directory layout.
-> Referenced by [plan.md](./plan.md).
+> **Source of truth** for folder taxonomy and JSDoc standards. Referenced by [plan.md](./plan.md).
 
 ```
 snippets/
@@ -196,3 +195,154 @@ snippets/
 | integrators | 20 | 4 |
 | config | 1 | — |
 | **Total** | **118** | **30** |
+
+<CustomDivider />
+
+## Component JSDoc header standard
+
+Every exported component must include a JSDoc header block with these 7 tags.
+No other governance tags should be used — removed tags (`@owner`, `@category`,
+`@tier`, `@contentAffinity`, `@decision`, `@duplicates`, `@lastMeaningfulChange`,
+`@breakingChangeRisk`, `@dependencies`, `@usedIn`) must not appear.
+
+### Tag reference
+
+| Tag | Required | What it does | Values / format |
+|---|---|---|---|
+| `@component` | Yes | Component identity | Export name (PascalCase) |
+| `@type` | Yes | Layer 1 — what kind of component | `elements`, `wrappers`, `displays`, `scaffolding`, `integrators`, `config` |
+| `@subniche` | Yes | Layer 2 — specific sub-concern | Matches folder name: `buttons`, `icons`, `images`, `links`, `text`, `math`, `callouts`, `spacing`, `social`, `a11y`, `containers`, `cards`, `lists`, `steps`, `accordions`, `tables`, `grids`, `code`, `video`, `quotes`, `diagrams`, `response-fields`, `frame-mode`, `heroes`, `portals`, `page-containers`, `feeds`, `blog`, `embeds`, `video-data` |
+| `@status` | Yes | Lifecycle state | `stable`, `experimental`, `deprecated`, `broken` |
+| `@description` | Yes | One-line human-readable description | Plain English sentence — what it renders and when to use it |
+| `@dataSource` | If integrator | Where external data comes from | `none`, `prop`, `CoinGecko API`, `fetch(url)`, `automation/blog`, etc. |
+| `@accepts` | Yes | Extensibility declaration — what the consumer can customise | Comma-separated: `children`, `style`, `className`, `...rest` |
+
+After the header block, each prop gets a standard `@param`:
+
+```
+@param {string} title - Card heading text
+@param {React.ReactNode} children - Content rendered inside the card
+@param {Object} [style={}] - Override/merge styles on outermost element
+@param {string} [className=""] - CSS class on outermost element
+```
+
+### Removed tags (must not appear)
+
+| Tag | Reason |
+|---|---|
+| `@owner` | Ownerless governance — was always `docs` for every component |
+| `@category` | Replaced by `@type` (aligned with script governance) |
+| `@tier` | primitive/composite/pattern — replaced by `@type`/`@subniche` |
+| `@contentAffinity` | Not queried by anyone in practice |
+| `@decision` | All said KEEP — served its purpose during audit |
+| `@duplicates` | All resolved during restructure |
+| `@lastMeaningfulChange` | Not maintained — git blame is authoritative |
+| `@breakingChangeRisk` | All said "low" — not differentiated |
+| `@dependencies` | Listed sibling exports, not actual import deps |
+| `@usedIn` | Stale immediately — `scan-component-imports.js` is the live source |
+
+### @status values
+
+| Value | Meaning |
+|---|---|
+| `stable` | Production-ready, actively used in v2 pages |
+| `experimental` | Working but API may change |
+| `deprecated` | Still exported for backward compat, do not use in new pages |
+| `broken` | Non-functional (e.g. empty stubs) — flagged for removal or rewrite |
+
+### @accepts values
+
+List which extensibility props the component supports:
+
+| Value | Meaning |
+|---|---|
+| `children` | Accepts child content via React children |
+| `style` | Accepts a `style` prop that merges with internal defaults |
+| `className` | Accepts a `className` prop on the outermost element |
+| `...rest` | Spreads remaining props onto the outermost element (id, data-*, aria-*) |
+
+### Example headers
+
+**Element:**
+```js
+/**
+ * @component   CustomDivider
+ * @type        elements
+ * @subniche    spacing
+ * @status      stable
+ * @description Themed horizontal divider with optional centre text and Livepeer logo accents.
+ * @accepts     children, style, className, ...rest
+ *
+ * @param {string} [color="var(--border)"] - Divider line and icon colour
+ * @param {string} [middleText=""] - Optional text displayed in the centre
+ * @param {string} [spacing="default"] - Spacing preset: default, overlap, compact, wide, none
+ * @param {Object} [style={}] - Override/merge styles on outermost element
+ * @param {string} [className=""] - CSS class on outermost element
+ */
+```
+
+**Wrapper:**
+```js
+/**
+ * @component   DynamicTable
+ * @type        wrappers
+ * @subniche    tables
+ * @status      stable
+ * @description Renders structured data as a table with optional section separators and sortable columns.
+ * @accepts     style, className, ...rest
+ *
+ * @param {Array} data - Array of row objects to render
+ * @param {Array} columns - Column definitions [{key, label, align}]
+ * @param {Object} [style={}] - Override/merge styles on outermost element
+ * @param {string} [className=""] - CSS class on outermost element
+ */
+```
+
+**Integrator:**
+```js
+/**
+ * @component   CoinGeckoExchanges
+ * @type        integrators
+ * @subniche    feeds
+ * @status      stable
+ * @description Fetches and renders a sortable table of exchanges listing a token from CoinGecko API.
+ * @dataSource  CoinGecko API (GET /coins/{coinId}/tickers)
+ * @accepts     style, className, ...rest
+ *
+ * @param {string} [coinId="arbitrum"] - CoinGecko coin identifier
+ * @param {Object} [style={}] - Override/merge styles on outermost element
+ * @param {string} [className=""] - CSS class on outermost element
+ */
+```
+
+**Scaffolding:**
+```js
+/**
+ * @component   Starfield
+ * @type        scaffolding
+ * @subniche    heroes
+ * @status      stable
+ * @description Animated canvas starfield background with floating Livepeer logos. Respects prefers-reduced-motion.
+ * @accepts     style, className, ...rest
+ *
+ * @param {number} [density=1.1] - Logo density multiplier
+ * @param {Object} [style={}] - Override/merge styles on canvas element
+ * @param {string} [className=""] - CSS class on canvas element
+ */
+```
+
+### Alignment with script governance
+
+| Concept | Scripts | Components |
+|---|---|---|
+| Identity tag | `@script` | `@component` |
+| Layer 1 taxonomy | `@type` (audit, generator, ...) | `@type` (elements, wrappers, ...) |
+| Layer 2 taxonomy | `@concern` + `@niche` | `@subniche` |
+| Human description | `@description` | `@description` |
+| Status lifecycle | — | `@status` |
+| System behaviour | `@mode` (read-only, write, ...) | `@accepts` (children, style, ...) |
+| External data | — | `@dataSource` |
+| Pipeline/flow | `@pipeline` | — (components don't have pipelines) |
+| File scope | `@scope` | — (components don't operate on files) |
+| CLI usage | `@usage` | — (components are imported, not invoked) |
+| Policy tracing | `@policy` | — (governance enforced by scripts, not components) |

@@ -21,7 +21,7 @@ Inputs
 
 Command
 ```bash
-node tools/scripts/repo-audit-orchestrator.js --mode static --scope full
+node tools/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mode static --scope full
 ```
 
 Outputs

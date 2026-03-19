@@ -70,8 +70,8 @@
 |---|---|
 | `content/` | (empty) |
 | `components/` | (empty) |
-| `governance/` | `codex/`, `pipelines/` |
-| `ai/` | `agents/` |
+| `governance/` | `pipelines/` |
+| `ai/` | `codex/`, `agents/` |
 
 **automations/**
 
@@ -94,21 +94,21 @@ tools/scripts/
 │   │   ├── quality/
 │   │   │   ├── docs-quality-and-freshness-audit.js
 │   │   │   ├── audit-v2-usefulness.js
-│   │   │   └── audit-media-assets.js
+│   │   │   ├── audit-media-assets.js
+│   │   │   └── audit-copy-patterns.js             ← renamed from pattern-observer.js, moved from veracity/
 │   │   └── veracity/
 │   │       ├── docs-fact-registry.js
 │   │       ├── docs-page-research.js
 │   │       ├── docs-page-research-pr-report.js
 │   │       ├── docs-research-adjudication.js
 │   │       ├── docs-research-packet.js
-│   │       ├── orchestrator-guides-research-review.js
-│   │       └── pattern-observer.js
+│   │       └── orchestrator-guides-research-review.js
 │   ├── components/
 │   │   └── documentation/
 │   │       └── audit-component-usage.js
 │   ├── governance/
 │   │   ├── scripts/
-│   │   │   ├── audit-scripts.js
+│   │   │   ├── audit-script-categories.js         ← renamed from audit-scripts.js
 │   │   │   └── script-footprint-and-usage-audit.js
 │   │   └── repo/
 │   │       ├── audit-tasks-folders.js
@@ -203,7 +203,7 @@ tools/scripts/
 │   │   │   ├── repair-spelling.js
 │   │   │   ├── sync-docs-paths.js
 │   │   │   ├── migrate-assets-to-branch.js        ← from remediators/assets/
-│   │   │   └── cleanup-quarantine-manager.js
+│   │   │   └── quarantine-manager.js              ← renamed from cleanup-quarantine-manager.js
 │   │   ├── style/
 │   │   │   ├── repair-ownerless-language.js
 │   │   │   ├── style-and-language-homogenizer-en-gb.js
@@ -226,20 +226,20 @@ tools/scripts/
 │   ├── components/
 │   │   (empty)
 │   ├── governance/
-│   │   ├── codex/
-│   │   │   ├── codex-commit.js
-│   │   │   ├── create-codex-pr.js
-│   │   │   ├── check-codex-pr-overlap.js
-│   │   │   ├── check-no-ai-stash.sh
-│   │   │   ├── lock-release.js                    ← from codex/
-│   │   │   ├── task-cleanup.js                    ← from codex/
-│   │   │   ├── task-finalize.js                   ← from codex/
-│   │   │   ├── task-preflight.js                  ← from codex/
-│   │   │   └── validate-locks.js                  ← from codex/
 │   │   └── pipelines/
-│   │       ├── repair-governance.js               ← from orchestrators/
+│   │       ├── governance-pipeline.js             ← renamed from repair-governance.js
 │   │       └── publish-v2-internal-reports.js
 │   └── ai/
+│       ├── codex/
+│       │   ├── codex-commit.js
+│       │   ├── create-codex-pr.js
+│       │   ├── check-codex-pr-overlap.js
+│       │   ├── check-no-ai-stash.sh
+│       │   ├── lock-release.js                    ← from codex/
+│       │   ├── task-cleanup.js                    ← from codex/
+│       │   ├── task-finalise.js                   ← renamed (UK English)
+│       │   ├── task-preflight.js                  ← from codex/
+│       │   └── validate-locks.js                  ← from codex/
 │       └── agents/
 │           ├── cross-agent-packager.js
 │           ├── export-portable-skills.js
@@ -333,3 +333,83 @@ tools/scripts/
 | `codex-safe-merge-with-stash.js` | Compatibility shim — directs to task-finalize |
 | `verify/.verify-large-change.sh` | No-op placeholder |
 | `redirects/sync-legacy-root-v1.js` | Not needed |
+
+---
+
+## Script JSDoc header standard
+
+Every script must include a JSDoc header block with these 11 tags. No other
+tags should be used — removed tags (`@owner`, `@category`, `@dualmode`) must
+not appear.
+
+### Tag reference
+
+| Tag | Required | What it does | Values / format |
+|---|---|---|---|
+| `@script` | Yes | Script identity | Filename without extension |
+| `@type` | Yes | Layer 1 — what the script does | `audit`, `generator`, `validator`, `remediator`, `dispatch`, `automation` |
+| `@concern` | Yes | Layer 2 — what domain the script is about | `content`, `components`, `governance`, `ai` |
+| `@niche` | Yes | Layer 3 — specific sub-concern | `quality`, `veracity`, `copy`, `structure`, `grammar`, `library`, `documentation`, `compliance`, `pr`, `codex`, `agents`, `pipelines`, `seo`, `catalogs`, `reference`, `reconciliation`, `repair`, `style`, `classification`, `data`, `language-translation`, `llm`, `scaffold`, `reports` |
+| `@purpose` | Yes | Functional category — what job the script performs | Freeform, e.g. `qa:content-quality`, `governance:agent-governance` |
+| `@description` | Yes | One-line human-readable description | Plain English sentence |
+| `@mode` | Yes | How the script affects the system | `read-only`, `write`, `edit`, `generate`, `execute` |
+| `@pipeline` | Yes | Flow declaration — trigger, inputs, outputs, dependants | `trigger → inputs → outputs [→ dependants]` |
+| `@scope` | Yes | What files/directories it operates on | Comma-separated paths or patterns |
+| `@usage` | Yes | CLI invocation example | Full command with flags |
+| `@policy` | If applicable | Governance/requirement traceability | Requirement IDs, e.g. `E-R1, R-R11` |
+
+### Removed tags (must not appear)
+
+| Tag | Reason |
+|---|---|
+| `@owner` | Ownerless governance — was always `docs` for every script |
+| `@category` | Replaced by `@type` |
+| `@dualmode` | Scripts should have one purpose |
+| `@purpose-statement` | Renamed to `@description` |
+| `@needs` | Renamed to `@policy` |
+
+### @mode values
+
+| Value | Meaning |
+|---|---|
+| `read-only` | Inspects and reports only — no file changes |
+| `write` | Creates new files |
+| `edit` | Modifies existing files in place |
+| `generate` | Produces artefacts (JSON, MDX, indexes, registries) |
+| `execute` | Runs external commands, dispatches work to other scripts/agents |
+
+### @pipeline format
+
+Single-line flow declaration using arrow notation:
+
+```
+@pipeline   trigger → inputs → outputs [→ dependants]
+```
+
+Examples:
+
+```
+@pipeline   pre-commit → staged .mdx files → stdout:report
+@pipeline   manual → docs.json, v2 frontmatter → docs-index.json → scripts-catalog
+@pipeline   cron:weekly → full v2 tree → governance-repair PR
+@pipeline   pr-workflow → changed .mdx files → exit-code, stdout:violations
+@pipeline   manual → component-registry.json → component-docs .mdx pages
+```
+
+### Example header
+
+```js
+/**
+ * @script      lint-copy
+ * @type        validator
+ * @concern     content
+ * @niche       copy
+ * @purpose     qa:content-quality
+ * @description Enforces banned word and phrase rules on MDX content files.
+ * @mode        read-only
+ * @pipeline    pr-workflow → staged .mdx files → exit-code, stdout:violations
+ * @scope       staged, changed, v2-content
+ * @usage       node tools/scripts/validators/content/copy/lint-copy.js [file or glob] [flags]
+ * @policy      E-R1, R-R11
+ */
+```

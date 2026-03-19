@@ -15,7 +15,7 @@
 - Create worktree at `/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev-components` on that branch.
 - Attach worktree to VSCode workspace for live editing.
 - **All work happens in the worktree**. No direct edits to the `docs-v2-dev` base.
-- Before starting each task: sync latest `docs-v2-dev` changes into the working branch.
+- Before starting each task: `git fetch origin && git merge origin/docs-v2-dev` in the worktree to sync latest remote changes.
 - **Nothing is deleted.** Superseded files are `git mv`'d to `components/x-archive/` only after all consumers (pages, imports, other components) are updated and verified.
 - Final merge back to `docs-v2-dev` only after full verification of the working branch.
 
@@ -305,7 +305,7 @@ snippets/
 - 2.9 ~~Strikethrough~~
 
 ### Task 3 — Move files & update all imports (incremental, per-category)
-- 3.1 Sync worktree with latest `docs-v2-dev`
+- 3.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
 - 3.2 Run `scan-component-imports.js` to produce baseline `component-usage-map.json`
 - 3.3 **Move elements/** — for each file:
   - 3.3.1 Copy file to new location in target sub-niche
@@ -331,7 +331,7 @@ snippets/
 - 3.18 ~~Strikethrough~~
 
 ### Task 4 — Deduplicate same-name file pairs
-- 4.1 Sync worktree with latest `docs-v2-dev`
+- 4.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
 - 4.2 Run `scan-component-imports.js` for current ground truth
 - 4.3 For each duplicate pair:
   - 4.3.1 Check import counts for both files
@@ -346,7 +346,7 @@ snippets/
 - 4.7 ~~Strikethrough~~
 
 ### Task 5 — Resolve cross-category duplicates
-- 5.1 Sync worktree with latest `docs-v2-dev`
+- 5.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
 - 5.2 For each cross-category duplicate (per Duplicate Resolution Summary):
   - 5.2.1 Confirm canonical location from approved mapping
   - 5.2.2 Find all pages importing from non-canonical location
@@ -361,24 +361,21 @@ snippets/
 - 5.7 Commit + merge back to `docs-v2-dev`
 - 5.8 ~~Strikethrough~~
 
-### Task 6 — Component-by-component audit (interactive)
-- 6.1 Sync worktree with latest `docs-v2-dev`
-- 6.2 Interactive chat: review each component for:
-  - Is it in the right category/sub-niche?
-  - Does it have one clear purpose?
-  - Is its name descriptive of its purpose/function?
-  - Should it be split (multi-purpose component)?
-  - Should it be consolidated with a near-duplicate?
-- 6.3 CHECKPOINT — agree on rename/split/consolidate list
-- 6.4 Execute agreed renames (update file + all import paths + grep verify)
-- 6.5 Execute agreed splits (create new files + update imports + grep verify + `git mv` old to `x-archive/`)
-- 6.6 Execute agreed consolidations (merge into one + update imports + grep verify + `git mv` old to `x-archive/`)
-- 6.7 CHECKPOINT — human reviews all changes
-- 6.8 Commit + merge back to `docs-v2-dev`
-- 6.9 ~~Strikethrough~~
+### ~~Task 6 — Component-by-component audit (interactive)~~
+- [x] **COMPLETED**
+- Reviewed all 48 component files across 5 categories
+- Executed: 4 renames, 3 archives (dupes), 1 consolidation, 1 sub-niche correction
+- **Deferred splits** (require JSX editing, flagged for later):
+  - `displays/video/video.jsx`: extract `YouTubeVideoData` → integrators, `LinkedInEmbed` → integrators
+  - `integrators/blog/data.jsx`: extract `ForumLatestLayout`, `DiscordAnnouncements`, `LumaEvents` → feeds
+  - `wrappers/containers/layout.jsx`: extract `Spacer` → elements/spacing
+- **Flagged items**:
+  - `integrators/feeds/release.jsx` (LatestVersion) — may not be working, verify later
+  - Files that consume automation data — verify before renaming (check all before renaming anything)
+  - `integrators/embeds/` sub-niche — user notes these are really feeds (data coming in); consider merging embeds/ into feeds/
 
 ### Task 7 — Enforce naming convention
-- 7.1 Sync worktree with latest `docs-v2-dev`
+- 7.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
 - 7.2 Agree on filename convention (camelCase vs kebab-case vs PascalCase)
 - 7.3 Generate rename list for all non-conforming files
 - 7.4 CHECKPOINT — human reviews rename list
@@ -389,7 +386,7 @@ snippets/
 - 7.9 ~~Strikethrough~~
 
 ### Task 8 — Add JSDoc `@label` enforcement
-- 8.1 Sync worktree with latest `docs-v2-dev`
+- 8.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
 - 8.2 Define required JSDoc fields: `@label` (category), `@subniche`, `@purpose`
 - 8.3 CHECKPOINT — human approves JSDoc field requirements
 - 8.4 Add JSDoc fields to all component exports
@@ -400,7 +397,7 @@ snippets/
 - 8.9 ~~Strikethrough~~
 
 ### Task 9 — Performance & optimisation (per-script)
-- 9.1 Sync worktree with latest `docs-v2-dev`
+- 9.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
 - 9.2 Audit each component governance script for:
   - Efficiency (unnecessary full-repo scans, redundant I/O)
   - Hardcoded paths or values
@@ -418,7 +415,7 @@ snippets/
 - 9.12 ~~Strikethrough~~
 
 ### Task 10 — Documentation & single source of truth
-- 10.1 Sync worktree with latest `docs-v2-dev`
+- 10.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
 - 10.2 Audit where component docs currently live (README.md, catalog.md, docs-guide pages, registry JSON, script-generated docs)
 - 10.3 CHECKPOINT — interactive chat to agree on single source of truth strategy
 - 10.4 Update `snippets/components/README.md` with final structure and component reference tables
@@ -432,7 +429,7 @@ snippets/
 - 10.12 ~~Strikethrough~~
 
 ### Task 11 — Trim governance overhead
-- 11.1 Sync worktree with latest `docs-v2-dev`
+- 11.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
 - 11.2 Identify which governance scripts/checks are actively used in CI vs unused
 - 11.3 CHECKPOINT — interactive chat: present "keep / simplify / archive" recommendation per artifact
 - 11.4 Execute agreed simplifications
@@ -442,7 +439,7 @@ snippets/
 - 11.8 ~~Strikethrough~~
 
 ### Task 12 — Testing
-- 12.1 Sync worktree with latest `docs-v2-dev`
+- 12.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
 - 12.2 Run `scan-component-imports.js` — verify zero broken imports
 - 12.3 Run `generate-component-registry.js --strict` — verify all labels present
 - 12.4 Run `audit-component-usage.js` — verify all components accounted for
@@ -456,30 +453,127 @@ snippets/
 - 12.12 Commit + merge back to `docs-v2-dev`
 - 12.13 ~~Strikethrough~~
 
-### Task 13 — Cleanup
-- 13.1 Sync worktree with latest `docs-v2-dev`
-- 13.2 Interactive chat: review everything in `x-archive/` — confirm each file is safe to remove
-- 13.3 CHECKPOINT — human approves removal list
-- 13.4 Delete approved files from `x-archive/`
-- 13.5 Remove `x-archive/` folder if empty
-- 13.6 Remove old empty folders (`primitives/`, `layout/`, `content/`, `data/`, `display/`, `page-structure/`, `domain/`, `integrations/`)
-- 13.7 CHECKPOINT — show final tree, human confirms
+### Task 13 — Responsive & dynamic audit (per-component)
+- 13.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
+- 13.2 Audit each component for responsive/dynamic behaviour:
+  - Does it handle different screen sizes? (no fixed px widths without responsive fallback)
+  - Does it accept `style` and `className` props for override?
+  - Does it spread parent props correctly (`...rest` or explicit forwarding)?
+  - Are prop imports following best practice? (destructured, typed where possible)
+- 13.3 CHECKPOINT — present findings, human reviews
+- 13.4 Fix responsive issues (add responsive fallbacks, remove hardcoded widths)
+- 13.5 Add `style`/`className` prop support where missing
+- 13.6 Ensure parent props are forwarded correctly
+- 13.7 CHECKPOINT — human reviews fixes
 - 13.8 Commit + merge back to `docs-v2-dev`
 - 13.9 ~~Strikethrough~~
 
-### Task 14 — Final merge & close out
-- 14.1 Final full test pass (repeat 12.2–12.8)
-- 14.2 CHECKPOINT — human gives final approval
-- 14.3 Merge `docs-v2-dev-components` into `docs-v2-dev`
-- 14.4 Remove worktree
-- 14.5 Move plan to `tasks/plan/completed/`
-- 14.6 ~~Strikethrough all~~
+### Task 14 — WCAG accessibility audit (per-component)
+- 14.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
+- 14.2 Audit each component against WCAG 2.1 AA (excluding colour contrast):
+  - Semantic HTML (correct heading levels, landmarks, lists)
+  - Keyboard accessibility (focusable elements, tab order, focus indicators)
+  - ARIA attributes (labels, roles, states where needed)
+  - Screen reader support (alt text, aria-labels, hidden decorative elements)
+  - Motion/animation (respects `prefers-reduced-motion`)
+- 14.3 CHECKPOINT — present findings, human reviews
+- 14.4 Fix accessibility issues
+- 14.5 CHECKPOINT — human reviews fixes
+- 14.6 Commit + merge back to `docs-v2-dev`
+- 14.7 ~~Strikethrough~~
+
+### Task 15 — Style homogenisation (per-component)
+- 15.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
+- 15.2 Audit styling patterns across all components:
+  - Are styles defined at the top of the component file? (not inline in JSX)
+  - Are widths/heights set correctly? (responsive units, not arbitrary px)
+  - Consistent pattern for style objects vs inline styles vs CSS classes
+  - Do components accept `style` prop that merges with defaults?
+  - Are there hardcoded values that should be configurable via props?
+- 15.3 CHECKPOINT — present findings and proposed style convention, human reviews
+- 15.4 Refactor styles to follow agreed convention
+- 15.5 CHECKPOINT — human reviews refactored components
+- 15.6 Commit + merge back to `docs-v2-dev`
+- 15.7 ~~Strikethrough~~
+
+### Task 16 — Post-quality testing
+- 16.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
+- 16.2 Run full `scan-component-imports.js` — verify zero broken imports
+- 16.3 Run `generate-component-registry.js --strict` — verify all labels present
+- 16.4 Run test suite (`tests/run-all.js`)
+- 16.5 Run `mintlify dev` on non-3000 port — spot-check component-heavy pages
+- 16.6 CHECKPOINT — human reviews full test results
+- 16.7 Fix any issues found
+- 16.8 Commit + merge back to `docs-v2-dev`
+- 16.9 ~~Strikethrough~~
+
+### Task 17 — Cleanup (x-archive)
+- 17.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
+- 17.2 Interactive chat: review everything in `x-archive/` — confirm each file is safe to remove
+- 17.3 CHECKPOINT — human approves removal list
+- 17.4 Delete approved files from `x-archive/`
+- 17.5 Remove `x-archive/` folder if empty
+- 17.6 Remove old empty folders (`primitives/`, `layout/`, `content/`, `data/`, `display/`, `page-structure/`, `domain/`, `integrations/`)
+- 17.7 CHECKPOINT — show final tree, human confirms
+- 17.8 Commit + merge back to `docs-v2-dev`
+- 17.9 ~~Strikethrough~~
+
+### Task 18 — VSCode component tooling
+- 18.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
+- 18.2 Audit existing `tools/vscode/` extensions (authoring-tools, markdown-list, page-templates)
+- 18.3 CHECKPOINT — interactive chat: agree on what tooling to build for components
+- 18.4 Build component snippets extension in `tools/vscode/components/`:
+  - Snippet definitions for each category (elements, wrappers, displays, scaffolding, integrators)
+  - Auto-complete for component imports (correct PascalCase paths)
+  - Quick-insert templates for common component patterns
+  - Category-based picker (type `!element.` → see all element components)
+- 18.5 Add workspace-level VSCode snippets to `.vscode/`:
+  - `.vscode/components.code-snippets` — project-scoped snippets for quick component insertion
+  - Import snippets (e.g., `imp-video` → full import line for Video.jsx)
+  - Component usage snippets (e.g., `use-youtube` → `<YouTubeVideo url="" />`)
+- 18.6 CHECKPOINT — human reviews snippets and tests in VSCode
+- 18.6 Commit + merge back to `docs-v2-dev`
+- 18.7 ~~Strikethrough~~
+
+### Task 19 — Composable templates
+- 19.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
+- 19.2 Create `snippets/composables/` directory structure
+- 19.3 CHECKPOINT — interactive chat: agree on which common composable patterns to template
+- 19.4 Template common composables (e.g., page sections with hero + cards, tutorial step layouts, API reference blocks, data feed + table combos)
+- 19.5 Document composables in README with usage examples
+- 19.6 CHECKPOINT — human reviews composable templates
+- 19.7 Commit + merge back to `docs-v2-dev`
+- 19.8 ~~Strikethrough~~
+
+### Task 20 — Final testing & cleanup
+- 20.1 Sync worktree: `git fetch origin && git merge origin/docs-v2-dev`
+- 20.2 Full test pass (imports, registry, lint, test suite, mintlify dev)
+- 20.3 Interactive chat: review everything in `x-archive/` — confirm each file is safe to remove
+- 20.4 CHECKPOINT — human approves removal list
+- 20.5 Delete approved files from `x-archive/`
+- 20.6 Remove `x-archive/` folder if empty
+- 20.7 Remove old empty folders (`primitives/`, `layout/`, `content/`, `data/`, `display/`, `page-structure/`, `domain/`, `integrations/`)
+- 20.8 CHECKPOINT — show final tree, human confirms
+- 20.9 Commit + merge back to `docs-v2-dev`
+- 20.10 ~~Strikethrough~~
+
+### Task 21 — Final merge & close out
+- 21.1 Final full test pass
+- 21.2 CHECKPOINT — human gives final approval
+- 21.3 Merge `docs-v2-dev-components` into `docs-v2-dev`
+- 21.4 Remove worktree
+- 21.5 Move plan to `tasks/plan/completed/`
+- 21.6 ~~Strikethrough all~~
 
 <CustomDivider />
 
 ## Reference
 
 - **Target folder structure**: [structure.md](./structure.md) — canonical reference for all categories, sub-niches, and per-component file layout
+- **Component catalog**: [catalog.md](./catalog.md) — full inventory of 44 files, 118 exports, import counts, and flags
+- **Quality audit report**: [audit-report.md](./audit-report.md) — combined responsive, WCAG, and style audit findings across all 44 files
+- **Changelog**: [changelog.md](./changelog.md) — full record of all changes, commits, and stats
+- **JSDoc reference**: [jsdoc-reference.md](./jsdoc-reference.md) — all 118 exports with target JSDoc tag values on one page
 - **Old governance doc**: https://docs.google.com/document/d/1t3eR8Ehm8H6HaUOZFMO7c5Vgka9VechosCgS06FNZ2A/edit?usp=sharing
 - **Component registry script**: `tools/scripts/generate-component-registry.js`
 - **Import scanner**: `tools/scripts/scan-component-imports.js`
