@@ -8,7 +8,7 @@
  * @needs             R-R10
  * @purpose-statement Validates active component filenames against directory-aware file naming and PascalCase exports under snippets/components.
  * @pipeline          P1, P3
- * @usage             node tools/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel]
+ * @usage             node tools/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel|strict-pascal]
  */
 
 const fs = require('fs');
@@ -17,7 +17,7 @@ const { spawnSync } = require('child_process');
 
 const DEFAULT_TARGET = 'snippets/components';
 const DEFAULT_MODE = process.env.LP_COMPONENT_NAMING_MODE || 'strict-pascal';
-const VALID_MODES = new Set(['migration', 'strict-camel']);
+const VALID_MODES = new Set(['migration', 'strict-camel', 'strict-pascal']);
 const FILE_RULE_LABEL = '[4.6]';
 const EXPORT_RULE_LABEL = '[4.7]';
 const CAMEL_FILE_NAME_RE = /^[a-z][a-zA-Z0-9]*\.jsx$/;
@@ -44,7 +44,7 @@ function toPosix(value) {
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel]'
+    'Usage: node tools/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel|strict-pascal]'
   );
 }
 
@@ -159,6 +159,8 @@ function shouldSkipDirectory(displayPath) {
   return (
     displayPath.includes('/_archive/') ||
     displayPath.endsWith('/_archive') ||
+    displayPath.includes('/x-archive/') ||
+    displayPath.endsWith('/x-archive') ||
     displayPath.includes('/node_modules/') ||
     displayPath.includes('/.git/')
   );
@@ -171,7 +173,7 @@ function walkJsxFiles(absDir, out = []) {
     const absPath = path.join(absDir, entry.name);
     const displayPath = toPosix(path.relative(REPO_ROOT, absPath));
 
-    if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === '_archive') {
+    if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === '_archive' || entry.name === 'x-archive') {
       return;
     }
 
