@@ -155,7 +155,7 @@ function parseArgs(argv) {
 
 function usage() {
   console.log(
-    'Usage: node tools/scripts/codex/task-cleanup.js [--branch <name>] [--contract <path>] [--base-ref <branch>] [--apply] [--no-sweep] [--keep-branch] [--json]'
+    'Usage: node tools/scripts/dispatch/ai/codex/task-cleanup.js [--branch <name>] [--contract <path>] [--base-ref <branch>] [--apply] [--no-sweep] [--keep-branch] [--json]'
   );
 }
 

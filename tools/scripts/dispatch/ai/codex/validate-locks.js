@@ -123,7 +123,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-  console.log('Usage: node tools/scripts/codex/validate-locks.js [--contract <path>] [--branch <name>] [--files <a,b,c>] [--staged] [--quiet] [--json]');
+  console.log('Usage: node tools/scripts/dispatch/ai/codex/validate-locks.js [--contract <path>] [--branch <name>] [--files <a,b,c>] [--staged] [--quiet] [--json]');
 }
 
 function detectBranch(explicitBranch) {

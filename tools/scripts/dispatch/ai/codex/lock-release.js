@@ -112,7 +112,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-  console.log('Usage: node tools/scripts/codex/lock-release.js [--branch <name>] [--lock-id <id>] [--contract <path>] [--base-ref <branch>]');
+  console.log('Usage: node tools/scripts/dispatch/ai/codex/lock-release.js [--branch <name>] [--lock-id <id>] [--contract <path>] [--base-ref <branch>]');
 }
 
 function detectBranch(args) {
@@ -226,7 +226,7 @@ function main() {
 
   console.log(`✅ Released ${releasedCount} lock(s) for ${args.lockId ? `lock_id=${args.lockId}` : branch}`);
   console.log(`ℹ️  Verified ${branch} is already committed to ${baseRef}.`);
-  console.log(`ℹ️  Next step: node tools/scripts/codex/task-cleanup.js --branch ${branch} --apply`);
+  console.log(`ℹ️  Next step: node tools/scripts/dispatch/ai/codex/task-cleanup.js --branch ${branch} --apply`);
 }
 
 if (require.main === module) {

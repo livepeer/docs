@@ -190,7 +190,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-  console.log('Usage: node tools/scripts/codex/task-preflight.js --task <id> --slug <slug> (--scope <a,b,c> | --scope-file <path>) [--base docs-v2-dev] [--worktree <path> | --in-place] [--dry-run]');
+  console.log('Usage: node tools/scripts/dispatch/ai/codex/task-preflight.js --task <id> --slug <slug> (--scope <a,b,c> | --scope-file <path>) [--base docs-v2-dev] [--worktree <path> | --in-place] [--dry-run]');
 }
 
 function readScopeFromFile(scopeFile) {
