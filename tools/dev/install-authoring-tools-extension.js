@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            install-authoring-tools-extension
- * @category          utility
- * @purpose           tooling:dev-tools
- * @scope             tools/scripts, tools/vscode/authoring-tools, .vscode/settings.json
- * @owner             docs
- * @needs             E-C6, F-C1
- * @purpose-statement VS Code/Cursor authoring tools installer — installs the repo-owned Livepeer authoring extension into local editor extension directories.
- * @pipeline          manual
- * @usage             node tools/scripts/install-authoring-tools-extension.js [--targets vscode,cursor] [--force]
+ * @script      install-authoring-tools-extension
+ * @type        automation
+ * @concern     governance
+ * @niche       dev-tools
+ * @purpose     tooling:dev-tools
+ * @description VS Code/Cursor authoring tools installer — installs the repo-owned Livepeer authoring extension into local editor extension directories.
+ * @mode        execute
+ * @pipeline    manual
+ * @scope       tools/scripts, tools/vscode/authoring-tools, .vscode/settings.json
+ * @usage       node tools/scripts/install-authoring-tools-extension.js [--targets vscode,cursor] [--force]
+ * @policy      E-C6, F-C1
  */
 
 'use strict';

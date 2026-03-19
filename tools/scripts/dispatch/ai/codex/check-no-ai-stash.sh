@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-# @script            check-no-ai-stash
-# @category          enforcer
-# @purpose           governance:agent-governance
-# @scope             tools/scripts, .githooks/pre-commit
-# @owner             docs
-# @needs             R-R27, R-R30
-# @purpose-statement AI stash enforcer — blocks push if AI temporary/stash files are present in working tree
-# @pipeline          P1, P2
-# @usage             bash tools/scripts/check-no-ai-stash.sh [flags]
+# @script      check-no-ai-stash
+# @type        dispatch
+# @concern     ai
+# @niche       codex
+# @purpose     governance:agent-governance
+# @description AI stash enforcer — blocks push if AI temporary/stash files are present in working tree
+# @mode        execute
+# @pipeline    manual
+# @scope       tools/scripts, .githooks/pre-commit
+# @usage       bash tools/scripts/check-no-ai-stash.sh [flags]
+# @policy      R-R27, R-R30
 set -euo pipefail
 
 branch=""

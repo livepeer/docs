@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-# @script            audit-python
-# @category          validator
-# @purpose           qa:repo-health
-# @scope             tasks/scripts
-# @owner             docs
-# @needs             E-C1, R-R14
-# @purpose-statement Python audit utility — runs Python-based audit checks (alternative to Node auditors)
-# @pipeline          manual — not yet in pipeline
-# @usage             python3 tasks/scripts/audit-python.py [flags]
+# @script      audit-python
+# @type        audit
+# @concern     governance
+# @niche       repo
+# @purpose     qa:repo-health
+# @description Python audit utility — runs Python-based audit checks (alternative to Node auditors)
+# @mode        read-only
+# @pipeline    manual — not yet in pipeline
+# @scope       tasks/scripts
+# @usage       python3 tasks/scripts/audit-python.py [flags]
+# @policy      E-C1, R-R14
 """
 Comprehensive audit script for all v2 pages
 Runs file checks, MDX validation, and link checking

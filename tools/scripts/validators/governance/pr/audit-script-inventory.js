@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            audit-script-inventory
- * @category          validator
- * @purpose           governance:repo-health
- * @scope             full-repo
- * @domain            docs
- * @needs             R-R14, R-R18, R-C6
- * @purpose-statement Deep inventory audit of every script in the repo. Traces triggers, outputs, downstream chains, and governance compliance. Produces reports grouped by trigger category.
- * @pipeline          P1 (commit), indirect
- * @usage             node tools/scripts/validators/governance/audit-script-inventory.js [--fix] [--dry-run] [--staged-only|--staged] [--files <path[,path...]>] [--quiet] [--json] [--md] [--output <dir>] [--verbose]
+ * @script      audit-script-inventory
+ * @type        validator
+ * @concern     governance
+ * @niche       pr
+ * @purpose     governance:repo-health
+ * @description Deep inventory audit of every script in the repo. Traces triggers, outputs, downstream chains, and governance compliance. Produces reports grouped by trigger category.
+ * @mode        read-only
+ * @pipeline    commit), manual
+ * @scope       full-repo
+ * @usage       node tools/scripts/validators/governance/audit-script-inventory.js [--fix] [--dry-run] [--staged-only|--staged] [--files <path[,path...]>] [--quiet] [--json] [--md] [--output <dir>] [--verbose]
+ * @policy      R-R14, R-R18, R-C6
  */
 
 const fs = require('fs');

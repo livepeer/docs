@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            server-manager
- * @category          utility
- * @purpose           tooling:dev-tools
- * @scope             .githooks
- * @owner             docs
- * @needs             E-C6, F-C1
- * @purpose-statement Manages Mintlify dev server lifecycle for browser tests (start/stop/health-check)
- * @pipeline          indirect — legacy browser-validation module imported by .githooks/verify-browser.js
- * @usage             node .githooks/server-manager.js [flags]
+ * @script      server-manager
+ * @type        dispatch
+ * @concern     governance
+ * @niche       hooks
+ * @purpose     tooling:dev-tools
+ * @description Manages Mintlify dev server lifecycle for browser tests (start/stop/health-check)
+ * @mode        execute
+ * @pipeline    manual — legacy browser-validation module imported by .githooks/verify-browser.js
+ * @scope       .githooks
+ * @usage       node .githooks/server-manager.js [flags]
+ * @policy      E-C6, F-C1
  */
 /**
  * Server management utility for browser tests

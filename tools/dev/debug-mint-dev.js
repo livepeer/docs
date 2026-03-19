@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            debug-mint-dev
- * @category          utility
- * @purpose           tooling:dev-tools
- * @scope             tools/scripts
- * @owner             docs
- * @needs             E-C6, F-C1
- * @purpose-statement Mintlify dev debugger — diagnostic tool for troubleshooting mint dev server issues
- * @pipeline          manual — developer tool
- * @usage             node tools/scripts/debug-mint-dev.js [flags]
+ * @script      debug-mint-dev
+ * @type        automation
+ * @concern     governance
+ * @niche       dev-tools
+ * @purpose     tooling:dev-tools
+ * @description Mintlify dev debugger — diagnostic tool for troubleshooting mint dev server issues
+ * @mode        execute
+ * @pipeline    manual — developer tool
+ * @scope       tools/scripts
+ * @usage       node tools/scripts/debug-mint-dev.js [flags]
+ * @policy      E-C6, F-C1
  */
 /**
  * Debug script: gather evidence for why "mint dev" hangs at "preparing local preview".

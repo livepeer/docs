@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            new-script
- * @category          generator
- * @purpose           qa:repo-health
- * @scope             tools/scripts, tests/unit/script-docs.test.js
- * @domain            docs
- * @needs             E-C1, R-R14
- * @purpose-statement Script scaffolder — creates a new script file prefilled with the required docs header template
- * @pipeline          manual — not yet in pipeline
- * @usage             node tools/scripts/new-script.js [flags]
+ * @script      ${params.scriptName}`,
+ * @type        generator
+ * @concern     governance
+ * @niche       scaffold
+ * @purpose     tooling:dev-tools',
+ * @description ${params.summary}`,
+ * @mode        generate
+ * @pipeline    manual — interactive developer tool, not suited for automated pipelines',
+ * @scope       ${params.scope}`,
+ * @usage       ${cmd} [flags]`,
+ * @policy      TODO: requirement-id',
  */
 
 const fs = require('fs');

@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            translate-docs
- * @category          generator
- * @purpose           feature:translation
- * @scope             tools/scripts/i18n, docs.json, v2
- * @owner             docs
- * @needs             F-R6, F-R7
- * @purpose-statement Translation generator — translates v2 MDX pages to target languages via OpenRouter API
- * @pipeline          P6 (on-demand, translation pipeline)
- * @usage             node tools/scripts/i18n/translate-docs.js [flags]
+ * @script      translate-docs
+ * @type        automation
+ * @concern     content
+ * @niche       language-translation
+ * @purpose     feature:translation
+ * @description Translation generator — translates v2 MDX pages to target languages via OpenRouter API
+ * @mode        execute
+ * @pipeline    on-demand, translation pipeline)
+ * @scope       tools/scripts/i18n, docs.json, v2
+ * @usage       node tools/scripts/i18n/translate-docs.js [flags]
+ * @policy      F-R6, F-R7
  */
 
 const fs = require('fs');

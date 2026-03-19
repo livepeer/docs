@@ -1,13 +1,15 @@
 #!/bin/bash
-# @script            fetch-openapi-specs
-# @category          automation
-# @purpose           tooling:api-spec
-# @scope             tools/scripts
-# @owner             docs
-# @needs             F-R17
-# @purpose-statement OpenAPI spec fetcher — pulls latest OpenAPI specs from Livepeer services for reference pages
-# @pipeline          manual — not yet in pipeline
-# @usage             bash tools/scripts/snippets/fetch-openapi-specs.sh [flags]
+# @script      fetch-openapi-specs
+# @type        automation
+# @concern     content
+# @niche       data
+# @purpose     tooling:api-spec
+# @description OpenAPI spec fetcher — pulls latest OpenAPI specs from Livepeer services for reference pages
+# @mode        execute
+# @pipeline    manual — not yet in pipeline
+# @scope       tools/scripts
+# @usage       bash tools/scripts/snippets/fetch-openapi-specs.sh [flags]
+# @policy      F-R17
 # Pre-build script to fetch external OpenAPI specification files
 # Run this before building the docs to ensure API specs are up-to-date
 

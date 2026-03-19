@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-localized-docs-json
- * @category          generator
- * @purpose           feature:translation
- * @scope             docs.json, tools/scripts/i18n
- * @owner             docs
- * @needs             F-R6, F-R7
- * @purpose-statement Locale docs.json generator — produces localised docs.json variants from route-map and source docs.json
- * @pipeline          P6 (on-demand, translation pipeline)
- * @usage             node tools/scripts/i18n/generate-localized-docs-json.js [flags]
+ * @script      generate-localized-docs-json
+ * @type        automation
+ * @concern     content
+ * @niche       language-translation
+ * @purpose     feature:translation
+ * @description Locale docs.json generator — produces localised docs.json variants from route-map and source docs.json
+ * @mode        execute
+ * @pipeline    on-demand, translation pipeline)
+ * @scope       docs.json, tools/scripts/i18n
+ * @usage       node tools/scripts/i18n/generate-localized-docs-json.js [flags]
+ * @policy      F-R6, F-R7
  */
 
 const fs = require('fs');

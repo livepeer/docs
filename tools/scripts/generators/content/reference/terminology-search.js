@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            terminology-search
- * @category          generator
- * @purpose           tooling:dev-tools
- * @scope             tools/scripts
- * @owner             docs
- * @needs             E-C6, F-C1
- * @purpose-statement Terminology search — searches glossary/terminology data for definitions
- * @pipeline          manual — not yet in pipeline
- * @usage             node tools/scripts/snippets/generate-data/scripts/terminology-search.js [flags]
+ * @script      terminology-search
+ * @type        generator
+ * @concern     content
+ * @niche       reference
+ * @purpose     tooling:dev-tools
+ * @description Terminology search — searches glossary/terminology data for definitions
+ * @mode        generate
+ * @pipeline    manual — not yet in pipeline
+ * @scope       tools/scripts
+ * @usage       node tools/scripts/snippets/generate-data/scripts/terminology-search.js [flags]
+ * @policy      E-C6, F-C1
  */
 
 /**

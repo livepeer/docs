@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-mint-dev-scope
- * @category          generator
- * @purpose           tooling:dev-tools
- * @scope             tools/scripts/dev, docs.json, .mintignore
- * @owner             docs
- * @needs             E-C6, F-C1
- * @purpose-statement Mint dev scope generator — creates a scoped docs.json for running mint dev on a subset of pages
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
- * @usage             node tools/scripts/dev/generate-mint-dev-scope.js [flags]
+ * @script      generate-mint-dev-scope
+ * @type        automation
+ * @concern     governance
+ * @niche       dev-tools
+ * @purpose     tooling:dev-tools
+ * @description Mint dev scope generator — creates a scoped docs.json for running mint dev on a subset of pages
+ * @mode        execute
+ * @pipeline    manual — interactive developer tool, not suited for automated pipelines
+ * @scope       tools/scripts/dev, docs.json, .mintignore
+ * @usage       node tools/scripts/dev/generate-mint-dev-scope.js [flags]
+ * @policy      E-C6, F-C1
  */
 
 const fs = require('fs');

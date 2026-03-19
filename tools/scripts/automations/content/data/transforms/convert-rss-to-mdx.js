@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            convert-rss-to-mdx
- * @category          automation
- * @purpose           infrastructure:data-feeds
- * @scope             tools/scripts, v2/internal/assets/transcripts
- * @owner             docs
- * @needs             F-R1
- * @purpose-statement RSS-to-MDX converter — imports RSS feed items and converts to MDX page format
- * @pipeline          manual — not yet in pipeline
- * @usage             node tools/scripts/convert-rss-to-mdx.js [flags]
+ * @script      convert-rss-to-mdx
+ * @type        automation
+ * @concern     content
+ * @niche       data
+ * @purpose     infrastructure:data-feeds
+ * @description RSS-to-MDX converter — imports RSS feed items and converts to MDX page format
+ * @mode        execute
+ * @pipeline    manual — not yet in pipeline
+ * @scope       tools/scripts, v2/internal/assets/transcripts
+ * @usage       node tools/scripts/convert-rss-to-mdx.js [flags]
+ * @policy      F-R1
  */
 
 const fs = require('fs')

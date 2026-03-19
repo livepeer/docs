@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script rename-vscode-codex-chat
- * @category utility
- * @purpose tooling:dev-tools
- * @scope tools/scripts/dev/rename-vscode-codex-chat.js, .vscode/tasks.json, tools/package.json
- * @domain docs
- * @needs E-C1, R-R14
- * @purpose-statement VS Code Codex chat rename utility — finds recent VS Code chat session files, filters to Codex sessions, and updates the stored customTitle without manual JSON editing.
- * @pipeline manual — interactive developer tool, not suited for automated pipelines
- * @usage node tools/scripts/dev/rename-vscode-codex-chat.js --title "New title" [--workspace <path>]
+ * @script      rename-vscode-codex-chat
+ * @type        automation
+ * @concern     governance
+ * @niche       dev-tools
+ * @purpose     tooling:dev-tools
+ * @description VS Code Codex chat rename utility — finds recent VS Code chat session files, filters to Codex sessions, and updates the stored customTitle without manual JSON editing.
+ * @mode        execute
+ * @pipeline    manual — interactive developer tool, not suited for automated pipelines
+ * @scope       tools/scripts/dev/rename-vscode-codex-chat.js, .vscode/tasks.json, tools/package.json
+ * @usage       node tools/scripts/dev/rename-vscode-codex-chat.js --title "New title" [--workspace <path>]
+ * @policy      E-C1, R-R14
  */
 
 const fs = require('fs');

@@ -1,13 +1,15 @@
 #!/bin/bash
-# @script            fetch-lpt-exchanges
-# @category          automation
-# @purpose           infrastructure:data-feeds
-# @scope             tools/scripts
-# @owner             docs
-# @needs             F-R1
-# @purpose-statement LPT exchange data fetcher — pulls exchange listing data for LPT token pages
-# @pipeline          manual — not yet in pipeline
-# @usage             bash tools/scripts/snippets/fetch-lpt-exchanges.sh [flags]
+# @script      fetch-lpt-exchanges
+# @type        automation
+# @concern     content
+# @niche       data
+# @purpose     infrastructure:data-feeds
+# @description LPT exchange data fetcher — pulls exchange listing data for LPT token pages
+# @mode        execute
+# @pipeline    manual — not yet in pipeline
+# @scope       tools/scripts
+# @usage       bash tools/scripts/snippets/fetch-lpt-exchanges.sh [flags]
+# @policy      F-R1
 # Fetch LPT exchange listings from CoinGecko API and append to lpt-exchanges.mdx
 # Usage: ./tools/scripts/snippets/fetch-lpt-exchanges.sh
 

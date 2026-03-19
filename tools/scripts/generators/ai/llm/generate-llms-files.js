@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-llms-files
- * @category          generator
- * @purpose           governance:index-management
- * @scope             tools/scripts, docs.json, v2
- * @owner             docs
- * @needs             R-R16, R-R17
- * @purpose-statement LLMs file generator — produces llms.txt and llms-full.txt for AI consumption. Dual-mode: --check / --write.
- * @pipeline          P2, P3, P6
- * @dualmode          --check (enforcer) | --write (generator)
- * @usage             node tools/scripts/generate-llms-files.js [flags]
+ * @script      generate-llms-files
+ * @type        generator
+ * @concern     ai
+ * @niche       llm
+ * @purpose     governance:index-management
+ * @description LLMs file generator — produces llms.txt and llms-full.txt for AI consumption. Dual-mode: --check / --write.
+ * @mode        generate
+ * @pipeline    manual, P6
+ * @scope       tools/scripts, docs.json, v2
+ * @usage       node tools/scripts/generate-llms-files.js [flags]
+ * @policy      R-R16, R-R17
  */
 
 const fs = require('fs');

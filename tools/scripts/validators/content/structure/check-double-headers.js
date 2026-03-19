@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            check-double-headers
- * @category          validator
- * @purpose           qa:content-quality
- * @scope             v2-content
- * @owner             docs
- * @needs             1.12, 1.13
- * @purpose-statement Detects duplicate body H1 headings and opening paragraphs that repeat frontmatter title or description content.
- * @pipeline          P1
- * @usage             node tools/scripts/validators/content/check-double-headers.js [--staged|--file <path>|--files <a,b>] [--fix]
+ * @script      check-double-headers
+ * @type        validator
+ * @concern     content
+ * @niche       structure
+ * @purpose     qa:content-quality
+ * @description Detects duplicate body H1 headings and opening paragraphs that repeat frontmatter title or description content.
+ * @mode        read-only
+ * @pipeline    manual
+ * @scope       v2-content
+ * @usage       node tools/scripts/validators/content/check-double-headers.js [--staged|--file <path>|--files <a,b>] [--fix]
+ * @policy      1.12, 1.13
  */
 
 const fs = require('fs');

@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            check-anchor-usage
- * @category          validator
- * @purpose           qa:content-quality
- * @scope             v2-content
- * @owner             docs
- * @needs             R-R14, R-C6
- * @purpose-statement Validates same-page anchor links in maintained v2 MDX files against heading IDs on the same page
- * @pipeline          manual, ci
- * @usage             node tools/scripts/validators/content/check-anchor-usage.js [--json] [--scope <glob>]
+ * @script      check-anchor-usage
+ * @type        validator
+ * @concern     content
+ * @niche       structure
+ * @purpose     qa:content-quality
+ * @description Validates same-page anchor links in maintained v2 MDX files against heading IDs on the same page
+ * @mode        read-only
+ * @pipeline    manual, ci
+ * @scope       v2-content
+ * @usage       node tools/scripts/validators/content/check-anchor-usage.js [--json] [--scope <glob>]
+ * @policy      R-R14, R-C6
  */
 // Baseline 2026-03-09: 100 errors, 8106 warnings - wired as advisory until debt cleared
 // Promote to blocking once error count reaches 0

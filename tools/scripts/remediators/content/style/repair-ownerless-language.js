@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            repair-ownerless-language
- * @category          remediator
- * @purpose           governance:agent-governance
- * @scope             AGENTS.md, .allowlist, .github, .claude, .cursor, .windsurf, README.md, contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md, docs-guide
- * @owner             docs
- * @needs             R-R14, R-R29
- * @purpose-statement Applies deterministic wording repairs that remove human-owner dependency from governed GitHub and contributor surfaces.
- * @pipeline          manual
- * @dualmode          --check (default) | --write
- * @usage             node tools/scripts/repair-ownerless-language.js [--check|--write] [--files a,b]
+ * @script      repair-ownerless-language
+ * @type        remediator
+ * @concern     content
+ * @niche       style
+ * @purpose     governance:agent-governance
+ * @description Applies deterministic wording repairs that remove human-owner dependency from governed GitHub and contributor surfaces.
+ * @mode        edit
+ * @pipeline    manual
+ * @scope       AGENTS.md, .allowlist, .github, .claude, .cursor, .windsurf, README.md, contribute/CONTRIBUTING/AGENT-INSTRUCTIONS.md, docs-guide
+ * @usage       node tools/scripts/repair-ownerless-language.js [--check|--write] [--files a,b]
+ * @policy      R-R14, R-R29
  */
 
 const fs = require('fs');

@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-og-images
- * @category          generator
- * @purpose           seo:og-image-assets
- * @scope             tools/scripts, snippets/assets/site/og-image
- * @owner             docs
- * @needs             E-R1, R-R14
- * @purpose-statement Generate canonical site-level Open Graph image assets and manifest for fallback and section-level social previews.
- * @pipeline          manual — run when OG assets, section labels, or branding change
- * @usage             node tools/scripts/snippets/generate-og-images.js [--dry-run] [--only <locale:section-id|fallback>]
+ * @script      generate-og-images
+ * @type        generator
+ * @concern     content
+ * @niche       seo
+ * @purpose     seo:og-image-assets
+ * @description Generate canonical site-level Open Graph image assets and manifest for fallback and section-level social previews.
+ * @mode        generate
+ * @pipeline    manual — run when OG assets, section labels, or branding change
+ * @scope       tools/scripts, snippets/assets/site/og-image
+ * @usage       node tools/scripts/snippets/generate-og-images.js [--dry-run] [--only <locale:section-id|fallback>]
+ * @policy      E-R1, R-R14
  */
 
 const fs = require("fs");

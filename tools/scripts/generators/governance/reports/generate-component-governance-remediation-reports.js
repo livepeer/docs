@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-component-governance-remediation-reports
- * @category          generator
- * @purpose           qa:repo-health
- * @scope             generated-output
- * @owner             docs
- * @needs             R-R10, R-R29
- * @purpose-statement Generates component-governance remediation reports from the approved audit and live repo state, including defensive-rendering guidance for MDX-facing components.
- * @pipeline          manual — report generation
- * @usage             node tools/scripts/generate-component-governance-remediation-reports.js [flags]
+ * @script      generate-component-governance-remediation-reports
+ * @type        generator
+ * @concern     governance
+ * @niche       reports
+ * @purpose     qa:repo-health
+ * @description Generates component-governance remediation reports from the approved audit and live repo state, including defensive-rendering guidance for MDX-facing components.
+ * @mode        generate
+ * @pipeline    manual — report generation
+ * @scope       generated-output
+ * @usage       node tools/scripts/generate-component-governance-remediation-reports.js [flags]
+ * @policy      R-R10, R-R29
  */
 
 const fs = require('fs');

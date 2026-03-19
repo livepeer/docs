@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            lint-structure
- * @category          enforcer
- * @purpose           qa:content-quality
- * @scope             staged, changed, v2-content, single-file
- * @owner             docs
- * @needs             E-R1, R-R11
- * @purpose-statement Enforce structural rules on MDX content files.
- * @pipeline          indirect, manual
- * @usage             node tools/scripts/lint-structure.js [file] [flags]
+ * @script      lint-structure
+ * @type        validator
+ * @concern     content
+ * @niche       structure
+ * @purpose     qa:content-quality
+ * @description Enforce structural rules on MDX content files.
+ * @mode        read-only
+ * @pipeline    manual, manual
+ * @scope       staged, changed, v2-content, single-file
+ * @usage       node tools/scripts/lint-structure.js [file] [flags]
+ * @policy      E-R1, R-R11
  */
 
 'use strict';

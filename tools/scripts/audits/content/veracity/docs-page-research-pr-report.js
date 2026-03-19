@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            docs-page-research-pr-report
- * @category          orchestrator
- * @purpose           governance:agent-governance
- * @scope             tools/scripts, tasks/research/claims, tasks/reports/repo-ops, tests/unit/docs-page-research-pr-report.test.js
- * @domain            docs
- * @needs             R-R27, R-R30
- * @purpose-statement Docs page research PR report — runs the fact-check research runner on changed docs pages and emits an advisory PR artifact summarizing claim families, contradictions, unresolved factual risk, and propagation follow-up.
- * @pipeline          manual — experimental advisory PR integration, non-blocking
- * @usage             node tools/scripts/docs-page-research-pr-report.js [flags]
+ * @script      docs-page-research-pr-report
+ * @type        audit
+ * @concern     content
+ * @niche       veracity
+ * @purpose     governance:agent-governance
+ * @description Docs page research PR report — runs the fact-check research runner on changed docs pages and emits an advisory PR artifact summarizing claim families, contradictions, unresolved factual risk, and propagation follow-up.
+ * @mode        read-only
+ * @pipeline    manual — experimental advisory PR integration, non-blocking
+ * @scope       tools/scripts, tasks/research/claims, tasks/reports/repo-ops, tests/unit/docs-page-research-pr-report.test.js
+ * @usage       node tools/scripts/docs-page-research-pr-report.js [flags]
+ * @policy      R-R27, R-R30
  */
 
 const fs = require('fs');

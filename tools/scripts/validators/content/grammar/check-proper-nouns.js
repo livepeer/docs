@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            check-proper-nouns
- * @category          validator
- * @purpose           qa:content-quality
- * @scope             v2, tools/scripts/validators/content, tests/config/spell-dict.json
- * @owner             docs
- * @needs             E-R1, R-R11
- * @purpose-statement Detects and fixes incorrect proper noun capitalisation in prose while skipping code, frontmatter, URLs, and path-like tokens.
- * @pipeline          manual
- * @dualmode          --check (default) | --fix
- * @usage             node tools/scripts/validators/content/check-proper-nouns.js [--file <path[,path...]>] [--fix]
+ * @script      check-proper-nouns
+ * @type        validator
+ * @concern     content
+ * @niche       grammar
+ * @purpose     qa:content-quality
+ * @description Detects and fixes incorrect proper noun capitalisation in prose while skipping code, frontmatter, URLs, and path-like tokens.
+ * @mode        read-only
+ * @pipeline    manual
+ * @scope       v2, tools/scripts/validators/content, tests/config/spell-dict.json
+ * @usage       node tools/scripts/validators/content/check-proper-nouns.js [--file <path[,path...]>] [--fix]
+ * @policy      E-R1, R-R11
  */
 
 const fs = require('fs');

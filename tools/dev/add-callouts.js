@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            add-callouts
- * @category          remediator
- * @purpose           qa:content-quality
- * @scope             tools/scripts
- * @owner             docs
- * @needs             E-R1, R-R11
- * @purpose-statement Callout inserter — adds Note/Tip/Warning callout components to MDX files based on content patterns
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
- * @usage             node tools/scripts/dev/add-callouts.js [flags]
+ * @script      add-callouts
+ * @type        automation
+ * @concern     governance
+ * @niche       dev-tools
+ * @purpose     qa:content-quality
+ * @description Callout inserter — adds Note/Tip/Warning callout components to MDX files based on content patterns
+ * @mode        execute
+ * @pipeline    manual — interactive developer tool, not suited for automated pipelines
+ * @scope       tools/scripts
+ * @usage       node tools/scripts/dev/add-callouts.js [flags]
+ * @policy      E-R1, R-R11
  */
 
 /**

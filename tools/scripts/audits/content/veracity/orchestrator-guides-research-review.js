@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            orchestrator-guides-research-review
- * @category          generator
- * @purpose           tooling:dev-tools
- * @scope             tools/scripts, tasks/reports/orchestrator-guides-review, tools/config/scoped-navigation/docs-gate-work.json, tasks/research, tests/unit/orchestrator-guides-research-review.test.js
- * @domain            docs
- * @needs             R-R27, R-R30
- * @purpose-statement Orchestrator guides research review packet wrapper — delegates to the generic docs-research-packet engine with the live Orchestrators Guides nav scope and legacy default output root.
- * @pipeline          manual — packet generator compatibility wrapper
- * @usage             node tools/scripts/orchestrator-guides-research-review.js [flags]
+ * @script      orchestrator-guides-research-review
+ * @type        audit
+ * @concern     content
+ * @niche       veracity
+ * @purpose     tooling:dev-tools
+ * @description Orchestrator guides research review packet wrapper — delegates to the generic docs-research-packet engine with the live Orchestrators Guides nav scope and legacy default output root.
+ * @mode        read-only
+ * @pipeline    manual — packet generator compatibility wrapper
+ * @scope       tools/scripts, tasks/reports/orchestrator-guides-review, tools/config/scoped-navigation/docs-gate-work.json, tasks/research, tests/unit/orchestrator-guides-research-review.test.js
+ * @usage       node tools/scripts/orchestrator-guides-research-review.js [flags]
+ * @policy      R-R27, R-R30
  */
 
 const packet = require('./docs-research-packet');

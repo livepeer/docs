@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-# @script            verify-pay-orc-gate-finalize
-# @category          enforcer
-# @purpose           qa:repo-health
-# @scope             v2-content
-# @owner             docs
-# @needs             E-C1, R-R14
-# @purpose-statement Payment/orchestrator gate verifier — checks payment and orchestrator documentation gate conditions
-# @pipeline          manual — not yet in pipeline
-# @usage             bash tools/scripts/verify-pay-orc-gate-finalize.sh [flags]
+# @script      verify-pay-orc-gate-finalize
+# @type        validator
+# @concern     governance
+# @niche       compliance
+# @purpose     qa:repo-health
+# @description Payment/orchestrator gate verifier — checks payment and orchestrator documentation gate conditions
+# @mode        read-only
+# @pipeline    manual — not yet in pipeline
+# @scope       v2-content
+# @usage       bash tools/scripts/verify-pay-orc-gate-finalize.sh [flags]
+# @policy      E-C1, R-R14
 set -euo pipefail
 
 quiet=0

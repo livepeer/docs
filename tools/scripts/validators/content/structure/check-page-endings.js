@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            check-page-endings
- * @category          validator
- * @purpose           qa:content-quality
- * @scope             tools/scripts/validators/content, v2
- * @owner             docs
- * @needs             R-R14
- * @purpose-statement Validates that English v2 MDX pages end with an approved navigational or closing element
- * @pipeline          manual, ci
- * @usage             node tools/scripts/validators/content/check-page-endings.js [--fix] [--json]
+ * @script      check-page-endings
+ * @type        validator
+ * @concern     content
+ * @niche       structure
+ * @purpose     qa:content-quality
+ * @description Validates that English v2 MDX pages end with an approved navigational or closing element
+ * @mode        read-only
+ * @pipeline    manual, ci
+ * @scope       tools/scripts/validators/content, v2
+ * @usage       node tools/scripts/validators/content/check-page-endings.js [--fix] [--json]
+ * @policy      R-R14
  */
 
 const fs = require('fs');

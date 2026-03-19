@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-# @script            mint-dev
-# @category          utility
-# @purpose           tooling:dev-tools
-# @scope             full-repo
-# @owner             docs
-# @needs             E-C6, F-C1
-# @purpose-statement Mintlify dev server launcher — starts mint dev with correct configuration
-# @pipeline          manual — developer tool
-# @usage             bash tools/scripts/mint-dev.sh [flags]
+# @script      mint-dev
+# @type        automation
+# @concern     governance
+# @niche       dev-tools
+# @purpose     tooling:dev-tools
+# @description Mintlify dev server launcher — starts mint dev with correct configuration
+# @mode        execute
+# @pipeline    manual — developer tool
+# @scope       full-repo
+# @usage       bash tools/scripts/mint-dev.sh [flags]
+# @policy      E-C6, F-C1
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"

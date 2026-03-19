@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-docs-index
- * @category          generator
- * @purpose           governance:index-management
- * @scope             tools/scripts, tools/lib, v2, docs.json, root
- * @owner             docs
- * @needs             R-R16, R-R17
- * @purpose-statement Docs index generator — produces docs-index.json from v2 frontmatter and docs.json. Dual-mode: --check (enforcer) / --write (generator). Most-called script in the repo.
- * @pipeline          P1, P2, P3, P6
- * @dualmode          --check (enforcer) | --write (generator)
- * @usage             node tools/scripts/generate-docs-index.js [flags]
+ * @script      generate-docs-index
+ * @type        generator
+ * @concern     content
+ * @niche       catalogs
+ * @purpose     governance:index-management
+ * @description Docs index generator — produces docs-index.json from v2 frontmatter and docs.json. Dual-mode: --check (enforcer) / --write (generator). Most-called script in the repo.
+ * @mode        generate
+ * @pipeline    manual, P3, P6
+ * @scope       tools/scripts, tools/lib, v2, docs.json, root
+ * @usage       node tools/scripts/generate-docs-index.js [flags]
+ * @policy      R-R16, R-R17
  */
 
 const fs = require('fs');

@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-v2-folder-governance-cleanup-matrix
- * @category          generator
- * @purpose           governance:repo-health
- * @scope             tools/scripts, tools/lib, tasks/reports/repo-ops, v2, docs.json, tests/unit/v2-folder-governance-cleanup-matrix.test.js
- * @domain            docs
- * @needs             E-C1, R-R14
- * @purpose-statement V2 folder governance cleanup matrix generator — inventories non-publishable and legacy v2 artifacts and emits human-review markdown/json recommendations before any moves are applied.
- * @pipeline          manual
- * @usage             node tools/scripts/generate-v2-folder-governance-cleanup-matrix.js [--report-md <path>] [--report-json <path>] [--as-of <YYYY-MM-DD>]
+ * @script      generate-v2-folder-governance-cleanup-matrix
+ * @type        generator
+ * @concern     governance
+ * @niche       reports
+ * @purpose     governance:repo-health
+ * @description V2 folder governance cleanup matrix generator — inventories non-publishable and legacy v2 artifacts and emits human-review markdown/json recommendations before any moves are applied.
+ * @mode        generate
+ * @pipeline    manual
+ * @scope       tools/scripts, tools/lib, tasks/reports/repo-ops, v2, docs.json, tests/unit/v2-folder-governance-cleanup-matrix.test.js
+ * @usage       node tools/scripts/generate-v2-folder-governance-cleanup-matrix.js [--report-md <path>] [--report-json <path>] [--as-of <YYYY-MM-DD>]
+ * @policy      E-C1, R-R14
  */
 
 const fs = require('fs');

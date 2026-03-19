@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            check-naming-conventions
- * @category          validator
- * @purpose           qa:repo-health
- * @scope             tools/scripts/validators/components, tests/run-all.js, tests/run-pr-checks.js, snippets/components
- * @owner             docs
- * @needs             R-R10
- * @purpose-statement Validates active component filenames against directory-aware file naming and PascalCase exports under snippets/components.
- * @pipeline          P1, P3
- * @usage             node tools/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel]
+ * @script      check-naming-conventions
+ * @type        validator
+ * @concern     components
+ * @niche       library
+ * @purpose     qa:repo-health
+ * @description Validates active component filenames against directory-aware file naming and PascalCase exports under snippets/components.
+ * @mode        read-only
+ * @pipeline    manual
+ * @scope       tools/scripts/validators/components, tests/run-all.js, tests/run-pr-checks.js, snippets/components
+ * @usage       node tools/scripts/validators/components/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel]
+ * @policy      R-R10
  */
 
 const fs = require('fs');

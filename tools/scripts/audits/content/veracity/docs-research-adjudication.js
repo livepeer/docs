@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            docs-research-adjudication
- * @category          validator
- * @purpose           governance:agent-governance
- * @scope             tools/scripts, tasks/research, tests/unit/docs-research-adjudication.test.js, tasks/reports/repo-ops, docs-guide/frameworks/research-skill-workflow.mdx
- * @domain            docs
- * @needs             R-R27, R-R30
- * @purpose-statement Docs research adjudication ledger — validates, records, and summarizes measured review outcomes for the page-content research workflow so trust decisions are based on real usage rather than intuition.
- * @pipeline          manual — experimental research system
- * @usage             node tools/scripts/docs-research-adjudication.js [flags]
+ * @script      docs-research-adjudication
+ * @type        audit
+ * @concern     content
+ * @niche       veracity
+ * @purpose     governance:agent-governance
+ * @description Docs research adjudication ledger — validates, records, and summarizes measured review outcomes for the page-content research workflow so trust decisions are based on real usage rather than intuition.
+ * @mode        read-only
+ * @pipeline    manual — experimental research system
+ * @scope       tools/scripts, tasks/research, tests/unit/docs-research-adjudication.test.js, tasks/reports/repo-ops, docs-guide/frameworks/research-skill-workflow.mdx
+ * @usage       node tools/scripts/docs-research-adjudication.js [flags]
+ * @policy      R-R27, R-R30
  */
 
 const fs = require('fs');

@@ -1,13 +1,15 @@
 /**
- * @script            audit-component-usage
- * @category          validator
- * @purpose           qa:repo-health
- * @scope             tools/scripts
- * @owner             docs
- * @needs             E-C1, R-R14
- * @purpose-statement Component usage auditor — scans pages for component usage patterns and reports statistics
- * @pipeline          P5, P6
- * @usage             node tools/scripts/audit-component-usage.js [flags]
+ * @script      audit-component-usage
+ * @type        audit
+ * @concern     components
+ * @niche       documentation
+ * @purpose     qa:repo-health
+ * @description Component usage auditor — scans pages for component usage patterns and reports statistics
+ * @mode        read-only
+ * @pipeline    manual
+ * @scope       tools/scripts
+ * @usage       node tools/scripts/audit-component-usage.js [flags]
+ * @policy      E-C1, R-R14
  */
 const fs = require('fs');
 const path = require('path');

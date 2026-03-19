@@ -1,13 +1,15 @@
 #!/bin/bash
-# @script            verify
-# @category          utility
-# @purpose           tooling:dev-tools
-# @scope             .githooks
-# @owner             docs
-# @needs             E-C6, F-C1
-# @purpose-statement Pre-commit sub-hook — verifies file-walker is available and runs structural checks on staged files
-# @pipeline          manual — developer tool
-# @usage             bash .githooks/verify.sh [flags]
+# @script      verify
+# @type        dispatch
+# @concern     governance
+# @niche       hooks
+# @purpose     tooling:dev-tools
+# @description Pre-commit sub-hook — verifies file-walker is available and runs structural checks on staged files
+# @mode        execute
+# @pipeline    manual — developer tool
+# @scope       .githooks
+# @usage       bash .githooks/verify.sh [flags]
+# @policy      E-C6, F-C1
 # Verification script for pre-commit hook
 # Runs various validation checks on staged files
 

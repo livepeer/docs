@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            sync-docs-paths
- * @category          remediator
- * @purpose           qa:repo-health
- * @scope             staged
- * @owner             docs
- * @needs             E-C1, R-R14
- * @purpose-statement Docs path sync remediator — applies deterministic docs.json and governed reference rewrites for moved docs pages.
- * @pipeline          P1, P6
- * @dualmode          --dry-run (validator) | --write (remediator)
- * @usage             node tools/scripts/remediators/content/sync-docs-paths.js --staged --dry-run
+ * @script      sync-docs-paths
+ * @type        remediator
+ * @concern     content
+ * @niche       repair
+ * @purpose     qa:repo-health
+ * @description Docs path sync remediator — applies deterministic docs.json and governed reference rewrites for moved docs pages.
+ * @mode        edit
+ * @pipeline    manual
+ * @scope       staged
+ * @usage       node tools/scripts/remediators/content/sync-docs-paths.js --staged --dry-run
+ * @policy      E-C1, R-R14
  */
 
 const sync = require('../../../config/docs-path-sync');

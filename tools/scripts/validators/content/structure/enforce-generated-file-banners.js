@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            enforce-generated-file-banners
- * @category          remediator
- * @purpose           governance:index-management
- * @scope             tools/scripts, tools/lib, docs-guide/catalog, v2, tests/unit/docs-guide-sot.test.js
- * @owner             docs
- * @needs             R-R16, R-R17
- * @purpose-statement Generated file banner enforcer — checks (--check) or writes (default) "do not edit" banners on generated files.
- * @pipeline          P1, P3
- * @usage             node tools/scripts/enforce-generated-file-banners.js --check | --write [--staged]
+ * @script      enforce-generated-file-banners
+ * @type        validator
+ * @concern     content
+ * @niche       structure
+ * @purpose     governance:index-management
+ * @description Generated file banner enforcer — checks (--check) or writes (default) "do not edit" banners on generated files.
+ * @mode        read-only
+ * @pipeline    manual
+ * @scope       tools/scripts, tools/lib, docs-guide/catalog, v2, tests/unit/docs-guide-sot.test.js
+ * @usage       node tools/scripts/enforce-generated-file-banners.js --check | --write [--staged]
+ * @policy      R-R16, R-R17
  */
 
 const fs = require('fs');

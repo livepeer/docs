@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-component-docs
- * @category          generator
- * @purpose           governance:index-management
- * @scope             generated-output
- * @owner             docs
- * @needs             R-R10
- * @purpose-statement Generates published component library MDX pages from the registry. Replaces update-component-library.sh.
- * @pipeline          indirect, manual
- * @usage             node tools/scripts/generate-component-docs.js [--dry-run|--fix|--write|--check] [--template-only] [--category <name>]
+ * @script      generate-component-docs
+ * @type        generator
+ * @concern     components
+ * @niche       documentation
+ * @purpose     governance:index-management
+ * @description Generates published component library MDX pages from the registry. Replaces update-component-library.sh.
+ * @mode        generate
+ * @pipeline    manual, manual
+ * @scope       generated-output
+ * @usage       node tools/scripts/generate-component-docs.js [--dry-run|--fix|--write|--check] [--template-only] [--category <name>]
+ * @policy      R-R10
  */
 
 const crypto = require('crypto');

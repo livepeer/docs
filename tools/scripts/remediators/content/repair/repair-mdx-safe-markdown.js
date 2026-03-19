@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            repair-mdx-safe-markdown
- * @category          remediator
- * @purpose           qa:content-quality
- * @scope             full-repo
- * @owner             docs
- * @needs             E-R1, R-R11
- * @purpose-statement Auto-repairs deterministic MDX-unsafe markdown patterns across first-party markdown and MDX content.
- * @pipeline          P1
- * @dualmode          --dry-run (validator) | --write (remediator)
- * @usage             node tools/scripts/remediators/content/repair-mdx-safe-markdown.js --dry-run [--staged|--files a,b]
+ * @script      repair-mdx-safe-markdown
+ * @type        remediator
+ * @concern     content
+ * @niche       repair
+ * @purpose     qa:content-quality
+ * @description Auto-repairs deterministic MDX-unsafe markdown patterns across first-party markdown and MDX content.
+ * @mode        edit
+ * @pipeline    manual
+ * @scope       full-repo
+ * @usage       node tools/scripts/remediators/content/repair-mdx-safe-markdown.js --dry-run [--staged|--files a,b]
+ * @policy      E-R1, R-R11
  */
 
 const fs = require('fs');

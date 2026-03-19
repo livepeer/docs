@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            docs-path-sync
- * @category          utility
- * @purpose           qa:repo-health
- * @scope             full-repo
- * @owner             docs
- * @needs             E-C1, R-R14
- * @purpose-statement Shared docs path sync library — detects staged page moves, plans deterministic route rewrites, and applies governed docs.json/path reference updates.
- * @pipeline          indirect -- library module
- * @usage             const sync = require('./docs-path-sync');
+ * @script      docs-path-sync
+ * @type        generator
+ * @concern     governance
+ * @niche       config
+ * @purpose     qa:repo-health
+ * @description Shared docs path sync library — detects staged page moves, plans deterministic route rewrites, and applies governed docs.json/path reference updates.
+ * @mode        generate
+ * @pipeline    manual -- library module
+ * @scope       full-repo
+ * @usage       const sync = require('./docs-path-sync');
+ * @policy      E-C1, R-R14
  */
 
 const fs = require('fs');

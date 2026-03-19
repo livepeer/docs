@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-docs-guide-indexes
- * @category          generator
- * @purpose           governance:index-management
- * @scope             tools/scripts, docs-guide, .github/workflows, .github/ISSUE_TEMPLATE
- * @owner             docs
- * @needs             R-R16, R-R17
- * @purpose-statement Generates docs-guide workflow/template catalogs and optionally verifies freshness
- * @pipeline          manual — not yet in pipeline
- * @dualmode          dual-mode (document flags)
- * @usage             node tools/scripts/generate-docs-guide-indexes.js [flags]
+ * @script      generate-docs-guide-indexes
+ * @type        generator
+ * @concern     governance
+ * @niche       catalogs
+ * @purpose     governance:index-management
+ * @description Generates docs-guide workflow/template catalogs and optionally verifies freshness
+ * @mode        generate
+ * @pipeline    manual — not yet in pipeline
+ * @scope       tools/scripts, docs-guide, .github/workflows, .github/ISSUE_TEMPLATE
+ * @usage       node tools/scripts/generate-docs-guide-indexes.js [flags]
+ * @policy      R-R16, R-R17
  */
 
 const fs = require('fs');

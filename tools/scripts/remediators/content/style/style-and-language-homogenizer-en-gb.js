@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            style-and-language-homogenizer-en-gb
- * @category          remediator
- * @purpose           tooling:dev-tools
- * @scope             tools/scripts, v2, tools/config/style-language-profile-en-gb.json
- * @owner             docs
- * @needs             E-C6, F-C1
- * @purpose-statement EN-GB style homogeniser — finds and fixes American English spellings, style guide violations, and formatting inconsistencies across v2 content
- * @pipeline          P6 (on-demand, repair)
- * @usage             node tools/scripts/style-and-language-homogenizer-en-gb.js [flags]
+ * @script      style-and-language-homogenizer-en-gb
+ * @type        remediator
+ * @concern     content
+ * @niche       style
+ * @purpose     tooling:dev-tools
+ * @description EN-GB style homogeniser — finds and fixes American English spellings, style guide violations, and formatting inconsistencies across v2 content
+ * @mode        edit
+ * @pipeline    on-demand, repair)
+ * @scope       tools/scripts, v2, tools/config/style-language-profile-en-gb.json
+ * @usage       node tools/scripts/style-and-language-homogenizer-en-gb.js [flags]
+ * @policy      E-C6, F-C1
  */
 
 const fs = require('fs');

@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            check-agent-docs-freshness
- * @category          validator
- * @purpose           governance:agent-governance
- * @scope             tools/scripts/validators/governance, AGENTS.md, .github, .claude, .cursor, .windsurf, docs-guide/policies, ai-tools/ai-skills, contribute
- * @owner             docs
- * @needs             R-R14, R-R18
- * @purpose-statement Validates that canonical agent governance docs and native adapters exist and have been touched within a freshness threshold
- * @pipeline          manual, ci
- * @usage             node tools/scripts/validators/governance/check-agent-docs-freshness.js [--threshold <days>] [--json]
+ * @script      check-agent-docs-freshness
+ * @type        validator
+ * @concern     governance
+ * @niche       compliance
+ * @purpose     governance:agent-governance
+ * @description Validates that canonical agent governance docs and native adapters exist and have been touched within a freshness threshold
+ * @mode        read-only
+ * @pipeline    manual, ci
+ * @scope       tools/scripts/validators/governance, AGENTS.md, .github, .claude, .cursor, .windsurf, docs-guide/policies, ai-tools/ai-skills, contribute
+ * @usage       node tools/scripts/validators/governance/check-agent-docs-freshness.js [--threshold <days>] [--json]
+ * @policy      R-R14, R-R18
  */
 
 const fs = require('fs');

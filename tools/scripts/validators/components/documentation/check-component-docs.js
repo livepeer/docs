@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            check-component-docs
- * @category          validator
- * @purpose           qa:repo-health
- * @scope             single-domain
- * @owner             docs
- * @needs             R-R10
- * @purpose-statement Validates component JSDoc coverage, prop documentation, docs-entry coverage, and governance metadata.
- * @pipeline          P1, P2, P3
- * @usage             node tools/scripts/validators/components/check-component-docs.js [--path snippets/components] [--base-ref docs-v2] [--staged] [--strict-governance] [--help]
+ * @script      check-component-docs
+ * @type        validator
+ * @concern     components
+ * @niche       documentation
+ * @purpose     qa:repo-health
+ * @description Validates component JSDoc coverage, prop documentation, docs-entry coverage, and governance metadata.
+ * @mode        read-only
+ * @pipeline    manual, P3
+ * @scope       single-domain
+ * @usage       node tools/scripts/validators/components/check-component-docs.js [--path snippets/components] [--base-ref docs-v2] [--staged] [--strict-governance] [--help]
+ * @policy      R-R10
  */
 
 const fs = require('fs');

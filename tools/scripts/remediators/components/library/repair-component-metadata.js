@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            repair-component-metadata
- * @category          remediator
- * @purpose           governance:repo-health
- * @scope             single-domain
- * @owner             docs
- * @needs             R-R10
- * @purpose-statement Auto-repairs derived JSDoc metadata fields from repo state. Safe fields only. Mirrors AUDIT-00 --fix pattern for components.
- * @pipeline          P1, P5, P6, indirect
- * @usage             node tools/scripts/remediators/components/repair-component-metadata.js [--dry-run] [--fix] [--staged]
+ * @script      repair-component-metadata
+ * @type        remediator
+ * @concern     components
+ * @niche       library
+ * @purpose     governance:repo-health
+ * @description Auto-repairs derived JSDoc metadata fields from repo state. Safe fields only. Mirrors AUDIT-00 --fix pattern for components.
+ * @mode        edit
+ * @pipeline    manual, P6, manual
+ * @scope       single-domain
+ * @usage       node tools/scripts/remediators/components/repair-component-metadata.js [--dry-run] [--fix] [--staged]
+ * @policy      R-R10
  */
 
 const fs = require('fs');

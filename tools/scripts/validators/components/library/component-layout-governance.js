@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            component-layout-governance
- * @category          validator
- * @purpose           qa:repo-health
- * @scope             tools/scripts, v2, tools/config/component-layout-profile.json
- * @owner             docs
- * @needs             E-C1, R-R14
- * @purpose-statement Component layout governance validator — checks v2 page layouts against approved component contracts
- * @pipeline          P5, P6
- * @usage             node tools/scripts/component-layout-governance.js [flags]
+ * @script      component-layout-governance
+ * @type        validator
+ * @concern     components
+ * @niche       library
+ * @purpose     qa:repo-health
+ * @description Component layout governance validator — checks v2 page layouts against approved component contracts
+ * @mode        read-only
+ * @pipeline    manual
+ * @scope       tools/scripts, v2, tools/config/component-layout-profile.json
+ * @usage       node tools/scripts/component-layout-governance.js [flags]
+ * @policy      E-C1, R-R14
  */
 
 const fs = require('fs');

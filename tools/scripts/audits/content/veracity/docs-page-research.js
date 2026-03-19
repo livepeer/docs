@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            docs-page-research
- * @category          validator
- * @purpose           governance:agent-governance
- * @scope             tools/scripts, tasks/research/claims, tests/unit/docs-page-research.test.js, tasks/reports/repo-ops
- * @domain            docs
- * @needs             R-R27, R-R30
- * @purpose-statement Docs page research runner — extracts factual claims from docs pages, checks evidence sources, detects contradictions across related pages, and emits manual-first research reports.
- * @pipeline          manual — experimental research system
- * @usage             node tools/scripts/docs-page-research.js [flags]
+ * @script      docs-page-research
+ * @type        audit
+ * @concern     content
+ * @niche       veracity
+ * @purpose     governance:agent-governance
+ * @description Docs page research runner — extracts factual claims from docs pages, checks evidence sources, detects contradictions across related pages, and emits manual-first research reports.
+ * @mode        read-only
+ * @pipeline    manual — experimental research system
+ * @scope       tools/scripts, tasks/research/claims, tests/unit/docs-page-research.test.js, tasks/reports/repo-ops
+ * @usage       node tools/scripts/docs-page-research.js [flags]
+ * @policy      R-R27, R-R30
  */
 
 const fs = require('fs');

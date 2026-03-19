@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            sync-codex-skills
- * @category          automation
- * @purpose           governance:agent-governance
- * @scope             tools/scripts, ai-tools/ai-skills/templates, tests/unit/codex-skill-sync.test.js
- * @owner             docs
- * @needs             R-R27, R-R30
- * @purpose-statement Codex skills sync — synchronises skill definition files and managed companion resources between canonical templates and local Codex installs. Supports --check mode.
- * @pipeline          manual — not yet in pipeline
- * @usage             node tools/scripts/sync-codex-skills.js [flags]
+ * @script      sync-codex-skills
+ * @type        dispatch
+ * @concern     ai
+ * @niche       agents
+ * @purpose     governance:agent-governance
+ * @description Codex skills sync — synchronises skill definition files and managed companion resources between canonical templates and local Codex installs. Supports --check mode.
+ * @mode        execute
+ * @pipeline    manual — not yet in pipeline
+ * @scope       tools/scripts, ai-tools/ai-skills/templates, tests/unit/codex-skill-sync.test.js
+ * @usage       node tools/scripts/sync-codex-skills.js [flags]
+ * @policy      R-R27, R-R30
  */
 
 const fs = require('fs');

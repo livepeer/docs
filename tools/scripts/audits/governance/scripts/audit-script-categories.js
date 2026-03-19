@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            audit-scripts
- * @category          validator
- * @purpose           qa:repo-health
- * @scope             tools/scripts, tasks/README.md, tasks/reports, tests/unit/script-docs.test.js, tests/README.md
- * @owner             docs
- * @needs             E-C1, R-R14
- * @purpose-statement Script auditor — analyses all repo scripts, categorises usage/overlap, generates SCRIPT_AUDIT reports
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
- * @usage             node tools/scripts/audit-scripts.js [flags]
+ * @script      audit-scripts
+ * @type        audit
+ * @concern     governance
+ * @niche       scripts
+ * @purpose     qa:repo-health
+ * @description Script auditor — analyses all repo scripts, categorises usage/overlap, generates SCRIPT_AUDIT reports
+ * @mode        read-only
+ * @pipeline    manual — diagnostic/investigation tool, run on-demand only
+ * @scope       tools/scripts, tasks/README.md, tasks/reports, tests/unit/script-docs.test.js, tests/README.md
+ * @usage       node tools/scripts/audit-scripts.js [flags]
+ * @policy      E-C1, R-R14
  */
 
 const fs = require('fs')

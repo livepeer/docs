@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-ai-sitemap
- * @category          generator
- * @purpose           governance:index-management
- * @scope             tools/scripts, docs.json, v2
- * @owner             docs
- * @needs             R-R16, R-R17
- * @purpose-statement AI sitemap generator — produces AI-optimised sitemap files. Dual-mode: --check (enforcer) / --write (generator).
- * @pipeline          P2, P3, P6
- * @dualmode          --check (enforcer) | --write (generator)
- * @usage             node tools/scripts/generate-ai-sitemap.js [flags]
+ * @script      generate-ai-sitemap
+ * @type        generator
+ * @concern     content
+ * @niche       seo
+ * @purpose     governance:index-management
+ * @description AI sitemap generator — produces AI-optimised sitemap files. Dual-mode: --check (enforcer) / --write (generator).
+ * @mode        generate
+ * @pipeline    manual, P6
+ * @scope       tools/scripts, docs.json, v2
+ * @usage       node tools/scripts/generate-ai-sitemap.js [flags]
+ * @policy      R-R16, R-R17
  */
 
 const fs = require('fs');

@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            validate-codex-task-contract
- * @category          enforcer
- * @purpose           governance:agent-governance
- * @scope             tools/scripts, .codex/task-contract.yaml, tests/config/codex-issue-policy.json, .github/pull_request_template.md, .github/pull-request-template-v2.md
- * @domain            docs
- * @needs             R-R27, R-R30
- * @purpose-statement Codex task contract enforcer — validates branch naming, task files, PR body, and issue state for codex branches
- * @pipeline          P1 (commit), P2 (push), P3 (PR, Track B)
- * @usage             node tools/scripts/validate-codex-task-contract.js [flags]
+ * @script      validate-codex-task-contract
+ * @type        validator
+ * @concern     governance
+ * @niche       compliance
+ * @purpose     governance:agent-governance
+ * @description Codex task contract enforcer — validates branch naming, task files, PR body, and issue state for codex branches
+ * @mode        read-only
+ * @pipeline    commit), P2 (push), P3 (PR, Track B)
+ * @scope       tools/scripts, .codex/task-contract.yaml, tests/config/codex-issue-policy.json, .github/pull_request_template.md, .github/pull-request-template-v2.md
+ * @usage       node tools/scripts/validate-codex-task-contract.js [flags]
+ * @policy      R-R27, R-R30
  */
 
 const fs = require('fs');

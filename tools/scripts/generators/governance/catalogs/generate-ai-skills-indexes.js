@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-ai-skills-indexes
- * @category          generator
- * @purpose           governance:agent-governance
- * @scope             tools/scripts, ai-tools/ai-skills, AGENTS.md, .github, .claude, .cursor, .windsurf, docs-guide/policies, contribute, v2
- * @owner             docs
- * @needs             R-R14, R-R18
- * @purpose-statement Generates ai-tools/ai-skills inventory.json and content-map.md from the canonical agent-governance surface manifest.
- * @pipeline          manual, ci
- * @dualmode          --check | --write
- * @usage             node tools/scripts/generate-ai-skills-indexes.js [--check|--write]
+ * @script      generate-ai-skills-indexes
+ * @type        generator
+ * @concern     governance
+ * @niche       catalogs
+ * @purpose     governance:agent-governance
+ * @description Generates ai-tools/ai-skills inventory.json and content-map.md from the canonical agent-governance surface manifest.
+ * @mode        generate
+ * @pipeline    manual, ci
+ * @scope       tools/scripts, ai-tools/ai-skills, AGENTS.md, .github, .claude, .cursor, .windsurf, docs-guide/policies, contribute, v2
+ * @usage       node tools/scripts/generate-ai-skills-indexes.js [--check|--write]
+ * @policy      R-R14, R-R18
  */
 
 const fs = require('fs');

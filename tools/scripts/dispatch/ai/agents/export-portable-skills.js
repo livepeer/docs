@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            export-portable-skills
- * @category          generator
- * @purpose           governance:agent-governance
- * @scope             tools/scripts, ai-tools/ai-skills/templates, ai-tools/agent-packs, too../../../../lib/codex-skill-templates.js, tests/unit/export-portable-skills.test.js
- * @owner             docs
- * @needs             R-R27, R-R30
- * @purpose-statement Portable skills exporter — copies canonical template skills into cross-agent pack folders and validates drift.
- * @pipeline          manual — not yet in pipeline
- * @dualmode          --write (generator) | --check (validator)
- * @usage             node tools/scripts/export-portable-skills.js --write|--check [--skills name[,name...]]
+ * @script      export-portable-skills
+ * @type        dispatch
+ * @concern     ai
+ * @niche       agents
+ * @purpose     governance:agent-governance
+ * @description Portable skills exporter — copies canonical template skills into cross-agent pack folders and validates drift.
+ * @mode        execute
+ * @pipeline    manual — not yet in pipeline
+ * @scope       tools/scripts, ai-tools/ai-skills/templates, ai-tools/agent-packs, too../../../../lib/codex-skill-templates.js, tests/unit/export-portable-skills.test.js
+ * @usage       node tools/scripts/export-portable-skills.js --write|--check [--skills name[,name...]]
+ * @policy      R-R27, R-R30
  */
 
 const fs = require('fs');

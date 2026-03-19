@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            docs-fact-registry
- * @category          validator
- * @purpose           governance:agent-governance
- * @scope             tools/scripts, tasks/research/claims, tests/unit/docs-fact-registry.test.js
- * @owner             docs
- * @needs             R-R27, R-R30
- * @purpose-statement Docs fact registry validator — validates repo-native research claim registries and provides normalized claim-family data for the manual research runner.
- * @pipeline          manual — experimental research system
- * @usage             node tools/scripts/docs-fact-registry.js [flags]
+ * @script      docs-fact-registry
+ * @type        audit
+ * @concern     content
+ * @niche       veracity
+ * @purpose     governance:agent-governance
+ * @description Docs fact registry validator — validates repo-native research claim registries and provides normalized claim-family data for the manual research runner.
+ * @mode        read-only
+ * @pipeline    manual — experimental research system
+ * @scope       tools/scripts, tasks/research/claims, tests/unit/docs-fact-registry.test.js
+ * @usage       node tools/scripts/docs-fact-registry.js [flags]
+ * @policy      R-R27, R-R30
  */
 
 const fs = require('fs');

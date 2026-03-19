@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-seo
- * @category          generator
- * @purpose           feature:seo
- * @scope             tools/scripts
- * @owner             docs
- * @needs             E-R19, F-R7
- * @purpose-statement SEO generator — generates SEO metadata (title, description, keywords) for v2 pages from content analysis
- * @pipeline          P6 (on-demand, SEO refresh)
- * @usage             node tools/scripts/snippets/generate-seo.js [flags]
+ * @script      generate-seo
+ * @type        generator
+ * @concern     content
+ * @niche       seo
+ * @purpose     feature:seo
+ * @description SEO generator — generates SEO metadata (title, description, keywords) for v2 pages from content analysis
+ * @mode        generate
+ * @pipeline    on-demand, SEO refresh)
+ * @scope       tools/scripts
+ * @usage       node tools/scripts/snippets/generate-seo.js [flags]
+ * @policy      E-R19, F-R7
  */
 /**
  * SEO Generator for Livepeer Documentation

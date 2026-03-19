@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            cleanup-quarantine-manager
- * @category          remediator
- * @purpose           qa:repo-health
- * @scope             tools/scripts, tasks/reports/repo-ops, tasks/quarantine
- * @owner             docs
- * @needs             E-C1, R-R14
- * @purpose-statement Quarantine manager — classifies files for quarantine (default) or applies quarantine moves (--apply)
- * @pipeline          manual
- * @usage             node tools/scripts/cleanup-quarantine-manager.js [flags]
+ * @script      cleanup-quarantine-manager
+ * @type        remediator
+ * @concern     content
+ * @niche       repair
+ * @purpose     qa:repo-health
+ * @description Quarantine manager — classifies files for quarantine (default) or applies quarantine moves (--apply)
+ * @mode        edit
+ * @pipeline    manual
+ * @scope       tools/scripts, tasks/reports/repo-ops, tasks/quarantine
+ * @usage       node tools/scripts/cleanup-quarantine-manager.js [flags]
+ * @policy      E-C1, R-R14
  */
 
 const fs = require('fs');

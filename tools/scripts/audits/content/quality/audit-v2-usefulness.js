@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            audit-v2-usefulness
- * @category          validator
- * @purpose           qa:content-quality
- * @scope             tools/scripts, v2, tasks/reports, tools/config
- * @owner             docs
- * @needs             E-R1, R-R11
- * @purpose-statement Usefulness auditor — scores v2 MDX pages on human and agent usefulness with source-weighted 2026 accuracy verification
- * @pipeline          manual — diagnostic/investigation tool, run on-demand only
- * @usage             node tools/scripts/audit-v2-usefulness.js [flags]
+ * @script      audit-v2-usefulness
+ * @type        audit
+ * @concern     content
+ * @niche       quality
+ * @purpose     qa:content-quality
+ * @description Usefulness auditor — scores v2 MDX pages on human and agent usefulness with source-weighted 2026 accuracy verification
+ * @mode        read-only
+ * @pipeline    manual — diagnostic/investigation tool, run on-demand only
+ * @scope       tools/scripts, v2, tasks/reports, tools/config
+ * @usage       node tools/scripts/audit-v2-usefulness.js [flags]
+ * @policy      E-R1, R-R11
  */
 
 'use strict';

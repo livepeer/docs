@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            docs-research-packet
- * @category          generator
- * @purpose           tooling:dev-tools
- * @scope             tools/scripts, tasks/reports, tools/config/scoped-navigation, tasks/research, tests/unit/docs-research-packet.test.js, tests/unit/orchestrator-guides-research-review.test.js
- * @domain            docs
- * @needs             R-R27, R-R30
- * @purpose-statement Docs research packet generator — derives nav, manifest, or explicit path scope; runs the research stack tranche-by-tranche; and writes reusable packet reports plus a master rollup.
- * @pipeline          manual — packet generator for research review tranches
- * @usage             node tools/scripts/docs-research-packet.js [flags]
+ * @script      docs-research-packet
+ * @type        audit
+ * @concern     content
+ * @niche       veracity
+ * @purpose     tooling:dev-tools
+ * @description Docs research packet generator — derives nav, manifest, or explicit path scope; runs the research stack tranche-by-tranche; and writes reusable packet reports plus a master rollup.
+ * @mode        read-only
+ * @pipeline    manual — packet generator for research review tranches
+ * @scope       tools/scripts, tasks/reports, tools/config/scoped-navigation, tasks/research, tests/unit/docs-research-packet.test.js, tests/unit/orchestrator-guides-research-review.test.js
+ * @usage       node tools/scripts/docs-research-packet.js [flags]
+ * @policy      R-R27, R-R30
  */
 
 const fs = require('fs');

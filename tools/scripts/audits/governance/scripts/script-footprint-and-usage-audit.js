@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            script-footprint-and-usage-audit
- * @category          validator
- * @purpose           qa:repo-health
- * @scope             tools/scripts, tests, tasks/reports, ai-tools/ai-skills
- * @owner             docs
- * @needs             E-C1, R-R14
- * @purpose-statement Script footprint auditor — analyses script file sizes, dependencies, and usage patterns across the repo
- * @pipeline          manual — not yet in pipeline
- * @usage             node tools/scripts/script-footprint-and-usage-audit.js [flags]
+ * @script      script-footprint-and-usage-audit
+ * @type        audit
+ * @concern     governance
+ * @niche       scripts
+ * @purpose     qa:repo-health
+ * @description Script footprint auditor — analyses script file sizes, dependencies, and usage patterns across the repo
+ * @mode        read-only
+ * @pipeline    manual — not yet in pipeline
+ * @scope       tools/scripts, tests, tasks/reports, ai-tools/ai-skills
+ * @usage       node tools/scripts/script-footprint-and-usage-audit.js [flags]
+ * @policy      E-C1, R-R14
  */
 
 const fs = require('fs');

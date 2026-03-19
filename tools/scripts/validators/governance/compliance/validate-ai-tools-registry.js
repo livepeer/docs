@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            validate-ai-tools-registry
- * @category          validator
- * @purpose           governance:agent-governance
- * @scope             tools/scripts, tools/lib/ai-tools-registry.js, ai-tools/registry, tests/unit/ai-tools-registry.test.js, tools/config/ownerless-governance-surfaces.json, docs-guide/policies/source-of-truth-policy.mdx, docs-guide/catalog/ai-tools.mdx, docs-guide/policies/audit-system-overview.mdx, docs-guide/policies/skill-pipeline-map.mdx
- * @domain            docs
- * @needs             R-R14, R-R29
- * @purpose-statement AI-tools registry validator and report writer for source-of-truth coverage, lifecycle, lane alignment, and generated inventory output.
- * @pipeline          manual -- bounded validator CLI
- * @usage             node tools/scripts/validate-ai-tools-registry.js [--check] [--coverage] [--lanes] [--write-report]
+ * @script      validate-ai-tools-registry
+ * @type        validator
+ * @concern     governance
+ * @niche       compliance
+ * @purpose     governance:agent-governance
+ * @description AI-tools registry validator and report writer for source-of-truth coverage, lifecycle, lane alignment, and generated inventory output.
+ * @mode        read-only
+ * @pipeline    manual -- bounded validator CLI
+ * @scope       tools/scripts, tools/lib/ai-tools-registry.js, ai-tools/registry, tests/unit/ai-tools-registry.test.js, tools/config/ownerless-governance-surfaces.json, docs-guide/policies/source-of-truth-policy.mdx, docs-guide/catalog/ai-tools.mdx, docs-guide/policies/audit-system-overview.mdx, docs-guide/policies/skill-pipeline-map.mdx
+ * @usage       node tools/scripts/validate-ai-tools-registry.js [--check] [--coverage] [--lanes] [--write-report]
+ * @policy      R-R14, R-R29
  */
 
 const {

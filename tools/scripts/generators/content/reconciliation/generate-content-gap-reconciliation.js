@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-content-gap-reconciliation
- * @category          generator
- * @purpose           governance:index-management
- * @scope             tools/scripts, tools/config, tools/lib, v2, tasks/reports/content-gap
- * @owner             docs
- * @needs             R-R16, R-R17
- * @purpose-statement Content-gap reconciliation generator — compares blueprint coverage against v2 MDX and writes reconciliation artefacts
- * @pipeline          manual — not yet in pipeline
- * @usage             node tools/scripts/generate-content-gap-reconciliation.js [flags]
+ * @script      generate-content-gap-reconciliation
+ * @type        generator
+ * @concern     content
+ * @niche       reconciliation
+ * @purpose     governance:index-management
+ * @description Content-gap reconciliation generator — compares blueprint coverage against v2 MDX and writes reconciliation artefacts
+ * @mode        generate
+ * @pipeline    manual — not yet in pipeline
+ * @scope       tools/scripts, tools/config, tools/lib, v2, tasks/reports/content-gap
+ * @usage       node tools/scripts/generate-content-gap-reconciliation.js [flags]
+ * @policy      R-R16, R-R17
  */
 
 const fs = require('fs');

@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            og-image-policy
- * @category          utility
- * @purpose           seo:og-image-governance
- * @scope             tools/scripts, snippets/assets/site/og-image, docs.json
- * @owner             docs
- * @needs             E-R1, R-R14
- * @purpose-statement OG image policy helper — resolves authored MDX pages to canonical section or fallback social images and metadata.
- * @pipeline          indirect — library module imported by generators and validators
- * @usage             node tools/scripts/snippets/lib/og-image-policy.js [flags]
+ * @script      og-image-policy
+ * @type        generator
+ * @concern     governance
+ * @niche       config
+ * @purpose     seo:og-image-governance
+ * @description OG image policy helper — resolves authored MDX pages to canonical section or fallback social images and metadata.
+ * @mode        generate
+ * @pipeline    manual — library module imported by generators and validators
+ * @scope       tools/scripts, snippets/assets/site/og-image, docs.json
+ * @usage       node tools/scripts/snippets/lib/og-image-policy.js [flags]
+ * @policy      E-R1, R-R14
  */
 
 const fs = require("fs");

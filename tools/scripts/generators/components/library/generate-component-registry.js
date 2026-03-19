@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-component-registry
- * @category          generator
- * @purpose           governance:index-management
- * @scope             single-domain
- * @owner             docs
- * @needs             R-R10
- * @purpose-statement Parses JSDoc from all component exports and produces component-registry.json.
- * @pipeline          P1, P2, P3, P5, P6, indirect, manual
- * @usage             node tools/scripts/generate-component-registry.js [--validate-only]
+ * @script      generate-component-registry
+ * @type        generator
+ * @concern     components
+ * @niche       library
+ * @purpose     governance:index-management
+ * @description Parses JSDoc from all component exports and produces component-registry.json.
+ * @mode        generate
+ * @pipeline    manual, P3, P5, P6, manual, manual
+ * @scope       single-domain
+ * @usage       node tools/scripts/generate-component-registry.js [--validate-only]
+ * @policy      R-R10
  */
 
 const fs = require('fs');

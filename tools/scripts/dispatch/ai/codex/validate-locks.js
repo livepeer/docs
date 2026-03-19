@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            codex/validate-locks
- * @category          enforcer
- * @purpose           governance:agent-governance
- * @scope             tools/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
- * @owner             docs
- * @needs             R-R27, R-R30
- * @purpose-statement Codex lock validator — checks for stale or conflicting lock files before push
- * @pipeline          P1 (commit), P2 (push)
- * @usage             node tools/scripts/codex/validate-locks.js [flags]
+ * @script      codex/validate-locks
+ * @type        dispatch
+ * @concern     ai
+ * @niche       codex
+ * @purpose     governance:agent-governance
+ * @description Codex lock validator — checks for stale or conflicting lock files before push
+ * @mode        execute
+ * @pipeline    commit), P2 (push)
+ * @scope       tools/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
+ * @usage       node tools/scripts/codex/validate-locks.js [flags]
+ * @policy      R-R27, R-R30
  */
 
 const fs = require('fs');

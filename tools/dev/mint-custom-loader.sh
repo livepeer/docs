@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-# @script            mint-custom-loader
-# @category          utility
-# @purpose           tooling:dev-tools
-# @scope             generated-output
-# @owner             docs
-# @needs             E-C6, F-C1
-# @purpose-statement Mint custom loader — launches lpd dev with an alternate docs config as the active Mint navigation source.
-# @pipeline          manual — developer tool
-# @usage             bash tools/scripts/dev/mint-custom-loader.sh [flags]
+# @script      mint-custom-loader
+# @type        automation
+# @concern     governance
+# @niche       dev-tools
+# @purpose     tooling:dev-tools
+# @description Mint custom loader — launches lpd dev with an alternate docs config as the active Mint navigation source.
+# @mode        execute
+# @pipeline    manual — developer tool
+# @scope       generated-output
+# @usage       bash tools/scripts/dev/mint-custom-loader.sh [flags]
+# @policy      E-C6, F-C1
 # Custom Mintlify loader for alternate docs config
 # Usage: bash tools/scripts/dev/mint-custom-loader.sh <custom-docs-json> [-- ...mint args]
 

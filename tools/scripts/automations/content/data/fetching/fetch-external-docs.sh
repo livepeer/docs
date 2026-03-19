@@ -1,13 +1,15 @@
 #!/bin/bash
-# @script            fetch-external-docs
-# @category          automation
-# @purpose           infrastructure:data-feeds
-# @scope             tools/scripts
-# @owner             docs
-# @needs             F-R1
-# @purpose-statement External docs fetcher — pulls doc fragments from external GitHub repos into snippets/data/ for inclusion in builds
-# @pipeline          P2, P3
-# @usage             bash tools/scripts/snippets/fetch-external-docs.sh [flags]
+# @script      fetch-external-docs
+# @type        automation
+# @concern     content
+# @niche       data
+# @purpose     infrastructure:data-feeds
+# @description External docs fetcher — pulls doc fragments from external GitHub repos into snippets/data/ for inclusion in builds
+# @mode        execute
+# @pipeline    manual
+# @scope       tools/scripts
+# @usage       bash tools/scripts/snippets/fetch-external-docs.sh [flags]
+# @policy      F-R1
 # Pre-build script to fetch external markdown files
 # Run this before building the docs to ensure external content is up-to-date
 # Sanitizes markdown to be MDX-compatible

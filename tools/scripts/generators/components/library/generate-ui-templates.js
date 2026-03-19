@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            generate-ui-templates
- * @category          generator
- * @purpose           governance:index-management
- * @scope             tools/scripts, docs-guide/catalog, docs-guide/features, snippets/templates, v2/templates, .vscode
- * @owner             docs
- * @needs             R-R16, R-R17
- * @purpose-statement Generates the UI template catalog, template preview routes, and VS Code snippets from canonical template/component sources
- * @pipeline          manual — interactive developer tool, not suited for automated pipelines
- * @dualmode          --check (validator) | --write (generator)
- * @usage             node tools/scripts/generate-ui-templates.js [flags]
+ * @script      generate-ui-templates
+ * @type        generator
+ * @concern     components
+ * @niche       library
+ * @purpose     governance:index-management
+ * @description Generates the UI template catalog, template preview routes, and VS Code snippets from canonical template/component sources
+ * @mode        generate
+ * @pipeline    manual — interactive developer tool, not suited for automated pipelines
+ * @scope       tools/scripts, docs-guide/catalog, docs-guide/features, snippets/templates, v2/templates, .vscode
+ * @usage       node tools/scripts/generate-ui-templates.js [flags]
+ * @policy      R-R16, R-R17
  */
 
 const fs = require('fs');
