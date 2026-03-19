@@ -9,12 +9,12 @@ invoke_when:
   - "identify downstream pages that depend on this statement"
 primary_paths:
   - "v2"
-  - "tools/scripts/docs-fact-registry.js"
+  - "tools/scripts/validators/content/veracity/docs-fact-registry.js"
   - "tools/scripts/audits/content/veracity/docs-page-research.js"
   - "tasks/research/claims"
   - "tasks/reports"
 primary_commands:
-  - "node tools/scripts/docs-fact-registry.js --validate --registry tasks/research/claims"
+  - "node tools/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry tasks/research/claims"
   - "node tools/scripts/audits/content/veracity/docs-page-research.js --page [path] --report-md /tmp/docs-page-research.md --report-json /tmp/docs-page-research.json"
 ---
 

@@ -15,7 +15,7 @@ primary_paths:
   - "v2/resources/documentation-guide/documentation-guide.mdx"
 primary_commands:
   - "rg --files v2/pages"
-  - "node tools/scripts/generate-pages-index.js --staged"
+  - "node tools/scripts/generators/content/catalogs/generate-pages-index.js --staged"
 ---
 
 SKILL: Docs IA Route Placement
@@ -37,7 +37,7 @@ Workflow
 Command examples
 ```bash
 rg --files v2/pages
-node tools/scripts/generate-pages-index.js --staged
+node tools/scripts/generators/content/catalogs/generate-pages-index.js --staged
 ```
 
 Deliverable Format

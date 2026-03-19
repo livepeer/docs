@@ -12,18 +12,18 @@ invoke_when:
   - "review this docs section and write research reports"
   - "build a research packet for these docs pages"
 primary_paths:
-  - "tools/scripts/docs-research-packet.js"
+  - "tools/scripts/dispatch/content/veracity/docs-research-packet.js"
   - "tools/scripts/audits/content/veracity/docs-page-research.js"
   - "tools/scripts/dispatch/content/veracity/docs-page-research-pr-report.js"
-  - "tools/scripts/docs-fact-registry.js"
-  - "tools/scripts/docs-research-adjudication.js"
+  - "tools/scripts/validators/content/veracity/docs-fact-registry.js"
+  - "tools/scripts/audits/content/veracity/docs-research-adjudication.js"
   - "docs-guide/frameworks/research-skill-workflow.mdx"
   - "docs-guide/tooling/research-review-packet-plan-template.md"
   - "tasks/reports"
 primary_commands:
-  - "node tools/scripts/docs-fact-registry.js --validate --registry tasks/research/claims"
-  - "node tools/scripts/docs-research-adjudication.js --validate --ledger tasks/research/adjudication/page-content-research-outcomes.json"
-  - "node tools/scripts/docs-research-packet.js --tab [name] --group [name] --out [path]"
+  - "node tools/scripts/validators/content/veracity/docs-fact-registry.js --validate --registry tasks/research/claims"
+  - "node tools/scripts/audits/content/veracity/docs-research-adjudication.js --validate --ledger tasks/research/adjudication/page-content-research-outcomes.json"
+  - "node tools/scripts/dispatch/content/veracity/docs-research-packet.js --tab [name] --group [name] --out [path]"
 ---
 
 SKILL: Docs Research Packet Generation

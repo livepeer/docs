@@ -11,10 +11,10 @@ invoke_when:
 primary_paths:
   - "docs.json"
   - "tests/utils/file-walker.js"
-  - "tools/scripts/generate-pages-index.js"
+  - "tools/scripts/generators/content/catalogs/generate-pages-index.js"
   - "tests/integration/v2-link-audit.js"
 primary_commands:
-  - "node tools/scripts/generate-pages-index.js"
+  - "node tools/scripts/generators/content/catalogs/generate-pages-index.js"
   - "node tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged.md"
 ---
 
@@ -36,7 +36,7 @@ Workflow
 
 Command examples
 ```bash
-node tools/scripts/generate-pages-index.js
+node tools/scripts/generators/content/catalogs/generate-pages-index.js
 node tests/integration/v2-link-audit.js --staged --strict --report /tmp/livepeer-link-audit-staged.md
 ```
 
