@@ -16,7 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const REPO_ROOT = path.resolve(__dirname, '../..');
+const REPO_ROOT = process.cwd();
 const OUTPUTS = {
   inventory: 'ai-tools/ai-skills/inventory.json',
   contentMap: 'ai-tools/ai-skills/content-map.md'

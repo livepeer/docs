@@ -22,7 +22,7 @@ const { getMdxFiles, getStagedDocsPageFiles } = require('../../../../../tests/ut
 const { resolveCspellConfig } = require('../../../../../tests/utils/spell-checker');
 const { parseMdx } = require('../../../automations/content/language-translation/lib/mdx-parser');
 
-const REPO_ROOT = path.resolve(__dirname, '..', '..', '..', '..');
+const REPO_ROOT = process.cwd();
 const URL_REGEX = /\b(?:https?:\/\/|mailto:)[^\s<`)"']+/gi;
 
 let cspellApiPromise = null;

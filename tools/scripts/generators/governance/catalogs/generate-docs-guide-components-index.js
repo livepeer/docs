@@ -22,7 +22,7 @@ const {
   buildGeneratedNoteLines
 } = require('../../../../lib/generated-file-banners');
 
-const REPO_ROOT = path.resolve(__dirname, '..', '..');
+const REPO_ROOT = process.cwd();
 const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-registry.json');
 const USAGE_MAP_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-usage-map.json');
 const OUTPUT_PATH = path.join(REPO_ROOT, 'docs-guide', 'catalog', 'components-catalog.mdx');

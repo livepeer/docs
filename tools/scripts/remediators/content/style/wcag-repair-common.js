@@ -15,7 +15,7 @@
 
 const path = require('path');
 
-const REPO_ROOT = path.resolve(__dirname, '..', '..');
+const REPO_ROOT = process.cwd();
 const DEFAULT_REPORT_MD = path.join(REPO_ROOT, 'tasks', 'reports', 'quality-accessibility', 'v2-wcag-repair-common-report.md');
 const DEFAULT_REPORT_JSON = path.join(REPO_ROOT, 'tasks', 'reports', 'quality-accessibility', 'v2-wcag-repair-common-report.json');
 

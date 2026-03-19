@@ -23,7 +23,7 @@ const {
   VALID_CATEGORIES
 } = require('../../../../lib/component-governance-utils');
 
-const REPO_ROOT = path.resolve(__dirname, '..', '..');
+const REPO_ROOT = process.cwd();
 const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-registry.json');
 const SCHEMA_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-registry-schema.json');
 

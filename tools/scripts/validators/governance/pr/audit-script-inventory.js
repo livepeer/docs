@@ -45,7 +45,7 @@ const {
   hasFrameworkHeaderTags
 } = require('../../../../lib/script-header-utils');
 
-const REPO_ROOT = path.resolve(__dirname, '../../../..');
+const REPO_ROOT = process.cwd();
 const DEFAULT_OUTPUT_DIR = 'tasks/reports/repo-ops';
 const DEFAULT_MD_PATH = 'SCRIPT_INVENTORY_FULL.md';
 const DEFAULT_JSON_PATH = 'SCRIPT_INVENTORY_FULL.json';

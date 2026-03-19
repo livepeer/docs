@@ -19,7 +19,7 @@ const yaml = require('../../../../lib/load-js-yaml');
 const { isExcludedV2ExperimentalPath } = require('../../../../lib/docs-publishability');
 const { isGeneratedDocsPageFile } = require('../../../../lib/docs-page-scope');
 
-const REPO_ROOT = path.resolve(__dirname, '../../../../');
+const REPO_ROOT = process.cwd();
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
 const SUPPORTED_EXTENSIONS = new Set(['.mdx', '.md']);
 const BOILERPLATE_OPENINGS = [

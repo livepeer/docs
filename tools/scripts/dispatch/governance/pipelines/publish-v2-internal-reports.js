@@ -18,7 +18,7 @@ const path = require('path');
 
 const manifest = require('../../../../config/v2-internal-report-pages');
 
-const REPO_ROOT = path.resolve(__dirname, '..', '..');
+const REPO_ROOT = process.cwd();
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
 const INTERNAL_REPORTS_ROOT = path.join(REPO_ROOT, 'v2', 'internal', 'reports');
 const GENERATED_OG_IMAGE = '/snippets/assets/site/og-image/fallback.png';

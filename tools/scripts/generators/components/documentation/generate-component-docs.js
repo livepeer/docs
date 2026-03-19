@@ -32,7 +32,7 @@ const {
   parseProvenanceComment
 } = require('../../../automations/content/language-translation/lib/provenance');
 
-const REPO_ROOT = path.resolve(__dirname, '..', '..');
+const REPO_ROOT = process.cwd();
 const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-registry.json');
 const EDITORIAL_CACHE_PATH = path.join(REPO_ROOT, 'docs-guide', '.editorial-cache.json');
 const ENGLISH_OUTPUT_DIR = path.join(REPO_ROOT, 'v2', 'resources', 'documentation-guide', 'component-library');

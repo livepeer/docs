@@ -25,7 +25,7 @@ const {
   scanMDXImports
 } = require('../../../../lib/component-governance-utils');
 
-const REPO_ROOT = path.resolve(__dirname, '..', '..');
+const REPO_ROOT = process.cwd();
 const OUTPUT_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-usage-map.json');
 
 function usage() {

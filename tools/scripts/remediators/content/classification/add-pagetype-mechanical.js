@@ -20,7 +20,7 @@ const path = require('path');
 const matter = require('gray-matter');
 const { CANONICAL_PAGE_TYPES, normalizePageType } = require('../../../../lib/frontmatter-taxonomy');
 
-const REPO_ROOT = path.resolve(__dirname, '..', '..');
+const REPO_ROOT = process.cwd();
 const V2_ROOT = path.join(REPO_ROOT, 'v2');
 const EXCLUDED_SEGMENTS = new Set(['cn', 'es', 'fr', 'views', 'groups']);
 const SUMMARY_TYPES = ['reference', 'landing', 'quickstart', 'glossary', 'overview', 'faq', 'troubleshooting'];

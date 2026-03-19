@@ -23,7 +23,7 @@ const {
   buildMdxFacingComponentIndex
 } = require('../../validators/components/library/check-mdx-component-scope');
 
-const REPO_ROOT = path.resolve(__dirname, '..', '..');
+const REPO_ROOT = process.cwd();
 const DEFAULT_AUDIT_FILE = 'tasks/reports/component-governance-audit.md';
 const DEFAULT_OUTPUT_DIR = 'tasks/reports';
 const REPORT_GENERATOR_SCRIPT = 'tools/scripts/generate-component-governance-remediation-reports.js';

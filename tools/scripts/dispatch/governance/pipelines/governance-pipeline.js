@@ -20,7 +20,7 @@ const {
   CLASSIFICATION_DATA_PATH
 } = require('../../../../lib/script-governance-config');
 
-const REPO_ROOT = path.resolve(__dirname, '../../..');
+const REPO_ROOT = process.cwd();
 const AUDIT_SCRIPT_PATH = 'tools/scripts/validators/governance/audit-script-inventory.js';
 const SCRIPT_DOCS_TEST_PATH = 'tests/unit/script-docs.test.js';
 const INVENTORY_JSON_PATH = 'tasks/reports/repo-ops/SCRIPT_INVENTORY_FULL.json';
