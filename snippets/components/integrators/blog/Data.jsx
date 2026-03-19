@@ -376,7 +376,7 @@ export const PostCard = ({
             display: "flex",
             marginTop: "12px",
             fontSize: 13,
-            color: "white",
+            color: "var(--text)",
             gap: 8,
           }}
         >
@@ -392,7 +392,7 @@ export const PostCard = ({
             display: "flex",
             marginTop: "10px",
             fontSize: 12,
-            color: "white",
+            color: "var(--text)",
             gap: 8,
           }}
         >
