@@ -15,7 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
-const yaml = require('../lib/load-js-yaml');
+const yaml = require('../../../../lib/load-js-yaml');
 
 const BASE_URL = 'https://docs.livepeer.org/';
 const DOCS_JSON = 'docs.json';

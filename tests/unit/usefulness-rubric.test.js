@@ -23,7 +23,7 @@ const { EVALUATORS, BOOLEAN_CHECKS } = require('../../tools/lib/docs-usefulness/
 const { resolvePurpose, resolveAudience, loadRubric, loadAudienceNormalization } = require('../../tools/lib/docs-usefulness/rubric-loader');
 const { validateUsefulnessConfig } = require('../../tools/lib/docs-usefulness/config-validator');
 const { analyzeMdxPage, scorePage } = require('../../tools/lib/docs-usefulness/scoring');
-const { parseArgs, resolveRouteToFile } = require('../../tools/scripts/audit-v2-usefulness');
+const { parseArgs, resolveRouteToFile } = require('../../tools/scripts/audits/content/quality/audit-v2-usefulness');
 const { LlmEvaluator } = require('../../tools/lib/docs-usefulness/llm-evaluator');
 const { shouldRunGeneratedBannerCheck } = require('../run-pr-checks');
 

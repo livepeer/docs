@@ -18,7 +18,7 @@ const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
-const migrateAssets = require('../../tools/scripts/remediators/assets/migrate-assets-to-branch');
+const migrateAssets = require('../../tools/scripts/remediators/content/repair/migrate-assets-to-branch');
 
 const SCRIPT_PATH = path.join(
   __dirname,

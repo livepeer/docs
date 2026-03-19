@@ -17,7 +17,7 @@ const {
   buildRepairPlan,
   buildProjectedHeaderState,
   selectSafePipelineProposal
-} = require('../../tools/scripts/validators/governance/audit-script-inventory.js');
+} = require('../../tools/scripts/validators/governance/pr/audit-script-inventory.js');
 
 let failures = [];
 

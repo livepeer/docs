@@ -35,13 +35,13 @@ const {
   isWithinRoots,
   normalizeRepoPath,
   parseDeclaredPipelines
-} = require('../../../lib/script-governance-config');
+} = require('../../../../lib/script-governance-config');
 const {
   extractLeadingScriptHeader,
   getSectionLines,
   getTagValue,
   hasFrameworkHeaderTags
-} = require('../../../lib/script-header-utils');
+} = require('../../../../lib/script-header-utils');
 
 const REPO_ROOT = path.resolve(__dirname, '../../../..');
 const DEFAULT_OUTPUT_DIR = 'tasks/reports/repo-ops';

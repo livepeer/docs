@@ -12,7 +12,7 @@
  * @usage             node tools/scripts/validators/content/check-docs-path-sync.js --staged
  */
 
-const sync = require('../../lib/docs-path-sync');
+const sync = require('../../../config/docs-path-sync');
 
 function parseArgs(argv) {
   const args = { staged: true, json: false, help: false, from: '', to: '' };

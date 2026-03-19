@@ -18,7 +18,7 @@ const {
   getRepoRoot,
   validateRegistry,
   writeInventoryReport
-} = require('../lib/ai-tools-registry');
+} = require('../../../../lib/ai-tools-registry');
 
 function usage() {
   process.stdout.write(

@@ -21,7 +21,7 @@ const {
   parseGeneratedHiddenBanner
 } = require('../../tools/lib/generated-file-banners');
 const { checkAggregateIndex } = require('./script-docs.test.js');
-const uiTemplateGenerator = require('../../tools/scripts/generate-ui-templates');
+const uiTemplateGenerator = require('../../tools/scripts/generators/components/library/generate-ui-templates');
 
 function getRepoRoot() {
   try {

@@ -16,10 +16,10 @@ const path = require('path');
 const {
   buildGeneratedMarkdownCommentLines,
   sanitizeMarkdownTableCellText
-} = require('../lib/mdx-safe-markdown');
+} = require('../../../../lib/mdx-safe-markdown');
 const {
   buildMdxFacingComponentIndex
-} = require('./validators/components/check-mdx-component-scope');
+} = require('../../validators/components/library/check-mdx-component-scope');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const DEFAULT_AUDIT_FILE = 'tasks/reports/component-governance-audit.md';

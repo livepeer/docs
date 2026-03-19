@@ -15,7 +15,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 const matter = require('gray-matter');
-const { getAuthoredMdxFiles, getStagedAuthoredDocsPageFiles } = require('../../../../tests/utils/file-walker');
+const { getAuthoredMdxFiles, getStagedAuthoredDocsPageFiles } = require('../../../../../tests/utils/file-walker');
 
 const RULE_DUPLICATE_TITLE = 'duplicate-title';
 const RULE_DUPLICATE_DESCRIPTION = 'duplicate-description';

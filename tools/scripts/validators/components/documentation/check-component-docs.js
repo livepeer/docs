@@ -20,7 +20,7 @@ const {
   isArchivePath,
   parseJSDocBlock,
   validateGovernanceFields
-} = require('../../../lib/component-governance-utils');
+} = require('../../../../lib/component-governance-utils');
 
 const DEFAULT_COMPONENTS_PATH = 'snippets/components';
 const COMPONENT_LIBRARY_DIR = 'v2/resources/documentation-guide/component-library';

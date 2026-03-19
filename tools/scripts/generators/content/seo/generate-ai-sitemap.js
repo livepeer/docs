@@ -25,7 +25,7 @@ const {
   countWords,
   buildGitLastModifiedMap,
   getLastVerified
-} = require('../lib/docs-index-utils');
+} = require('../../../../lib/docs-index-utils');
 
 const BASE_URL = 'https://docs.livepeer.org';
 const DOCS_JSON = 'docs.json';

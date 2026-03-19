@@ -14,7 +14,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const yaml = require('../../lib/load-js-yaml');
+const yaml = require('../../../../lib/load-js-yaml');
 
 const DEFAULT_BASE_REF = 'docs-v2-dev';
 const DEFAULT_CONTRACT = '.codex/task-contract.yaml';

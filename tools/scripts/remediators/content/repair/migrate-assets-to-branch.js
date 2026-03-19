@@ -17,7 +17,7 @@ const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
-const auditMediaAssets = require('../../audit-media-assets');
+const auditMediaAssets = require('../../../audits/content/quality/audit-media-assets');
 
 const REPO_ROOT = process.cwd();
 const DEFAULT_TARGETS = ['migrate_r2', 'migrate_cloudinary'];

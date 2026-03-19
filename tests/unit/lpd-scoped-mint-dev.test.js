@@ -27,7 +27,7 @@ const {
   ScopedMintSessionSupervisor,
   createScopedManifest,
   createScopedProfile
-} = require('../../tools/scripts/dev/generate-mint-dev-scope');
+} = require('../../tools/dev/generate-mint-dev-scope');
 
 const REPO_ROOT = process.cwd();
 const LPD_PATH = path.join(REPO_ROOT, 'lpd');

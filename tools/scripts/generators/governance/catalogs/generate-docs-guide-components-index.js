@@ -13,12 +13,12 @@
 
 const fs = require('fs');
 const path = require('path');
-const { VALID_CATEGORIES, VALID_STATUSES } = require('../lib/component-governance-utils');
+const { VALID_CATEGORIES, VALID_STATUSES } = require('../../../../lib/component-governance-utils');
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
   buildGeneratedNoteLines
-} = require('../lib/generated-file-banners');
+} = require('../../../../lib/generated-file-banners');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-registry.json');

@@ -14,19 +14,19 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { loadI18nConfig } = require('./i18n/lib/config');
-const { parseProvenanceComment } = require('./i18n/lib/provenance');
+const { loadI18nConfig } = require('../../../automations/content/language-translation/lib/config');
+const { parseProvenanceComment } = require('../../../automations/content/language-translation/lib/provenance');
 const {
   GENERATED_HIDDEN_MARKER,
   parseGeneratedHiddenBanner,
   hasGeneratedNote,
   removeGeneratedNotes,
   hasFrontmatterKey
-} = require('../lib/generated-file-banners');
+} = require('../../../../lib/generated-file-banners');
 const {
   readManifest,
   pathMatches
-} = require('../lib/generated-artifacts');
+} = require('../../../../lib/generated-artifacts');
 
 const REPO_ROOT = process.cwd();
 const STAGED_SNAPSHOT_ENV = 'LPD_STAGED_FILES_SNAPSHOT';

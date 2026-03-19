@@ -20,14 +20,14 @@ const { execSync } = require('child_process');
 const {
   getDocsJsonRouteKeys,
   toDocsRouteKeyFromFileV2Aware
-} = require('../../tests/utils/file-walker');
-const { isGeneratedDocsPageContent } = require('../lib/docs-page-scope');
-const { analyzeMdxPage, scorePage, computeBand } = require('../lib/docs-usefulness/scoring');
-const { getRulesForPage } = require('../lib/docs-usefulness/rubric-loader');
-const { checkJourneys } = require('../lib/docs-usefulness/journey-check');
-const { LlmEvaluator } = require('../lib/docs-usefulness/llm-evaluator');
-const prompts = require('../lib/docs-usefulness/prompts');
-const { loadAndValidateUsefulnessConfig } = require('../lib/docs-usefulness/config-validator');
+} = require('../../../../../tests/utils/file-walker');
+const { isGeneratedDocsPageContent } = require('../../../../lib/docs-page-scope');
+const { analyzeMdxPage, scorePage, computeBand } = require('../../../../lib/docs-usefulness/scoring');
+const { getRulesForPage } = require('../../../../lib/docs-usefulness/rubric-loader');
+const { checkJourneys } = require('../../../../lib/docs-usefulness/journey-check');
+const { LlmEvaluator } = require('../../../../lib/docs-usefulness/llm-evaluator');
+const prompts = require('../../../../lib/docs-usefulness/prompts');
+const { loadAndValidateUsefulnessConfig } = require('../../../../lib/docs-usefulness/config-validator');
 
 const REMOVED_FLAGS = new Set([
   '--accuracy-mode',

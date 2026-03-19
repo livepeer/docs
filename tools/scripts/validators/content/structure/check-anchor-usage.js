@@ -16,7 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { isExcludedV2ExperimentalPath } = require('../../../lib/docs-publishability');
+const { isExcludedV2ExperimentalPath } = require('../../../../lib/docs-publishability');
 
 const REPO_ROOT = getRepoRoot();
 const V2_ROOT = path.join(REPO_ROOT, 'v2');

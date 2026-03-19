@@ -21,17 +21,17 @@ const {
   getDocsJsonRouteKeys,
   toDocsRouteKeyFromFileV2Aware,
   getV2DocsFiles
-} = require('../../tests/utils/file-walker');
+} = require('../../../../../tests/utils/file-walker');
 const {
   audienceTokensFromRaw,
   loadAudienceNormalization,
   loadLlmTiers,
   AUDIENCE_ENUM,
   PURPOSE_ENUM
-} = require('../lib/docs-usefulness/rubric-loader');
-const { analyzeMdxPage } = require('../lib/docs-usefulness/scoring');
-const prompts = require('../lib/docs-usefulness/prompts');
-const { loadAndValidateUsefulnessConfig } = require('../lib/docs-usefulness/config-validator');
+} = require('../../../../lib/docs-usefulness/rubric-loader');
+const { analyzeMdxPage } = require('../../../../lib/docs-usefulness/scoring');
+const prompts = require('../../../../lib/docs-usefulness/prompts');
+const { loadAndValidateUsefulnessConfig } = require('../../../../lib/docs-usefulness/config-validator');
 
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 

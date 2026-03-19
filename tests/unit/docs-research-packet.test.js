@@ -17,7 +17,7 @@ const path = require('path');
 
 const REPO_ROOT = process.cwd();
 const NAV_PATH = path.join(REPO_ROOT, 'tools/config/scoped-navigation/docs-gate-work.json');
-const helpers = require('../../tools/scripts/docs-research-packet.js');
+const helpers = require('../../tools/scripts/audits/content/veracity/docs-research-packet.js');
 
 function mkTmpDir(prefix) {
   const root = path.join(REPO_ROOT, '.tmp');

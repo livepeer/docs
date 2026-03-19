@@ -17,9 +17,9 @@ const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
-const { getMdxFiles, getStagedDocsPageFiles } = require('../../../../tests/utils/file-walker');
-const { resolveCspellConfig } = require('../../../../tests/utils/spell-checker');
-const { parseMdx } = require('../../i18n/lib/mdx-parser');
+const { getMdxFiles, getStagedDocsPageFiles } = require('../../../../../tests/utils/file-walker');
+const { resolveCspellConfig } = require('../../../../../tests/utils/spell-checker');
+const { parseMdx } = require('../../../automations/content/language-translation/lib/mdx-parser');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..', '..', '..');
 const URL_REGEX = /\b(?:https?:\/\/|mailto:)[^\s<`)"']+/gi;

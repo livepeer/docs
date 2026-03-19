@@ -18,7 +18,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 const matter = require('gray-matter');
 
-const COPY_GOVERNANCE_DIR = path.resolve(__dirname, '../lib/copy-governance');
+const COPY_GOVERNANCE_DIR = path.resolve(__dirname, '../../../../lib/copy-governance');
 
 const BANNED_WORDS = fs
   .readFileSync(path.join(COPY_GOVERNANCE_DIR, 'banned-words.txt'), 'utf8')

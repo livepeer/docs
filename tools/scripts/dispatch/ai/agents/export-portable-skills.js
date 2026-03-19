@@ -3,7 +3,7 @@
  * @script            export-portable-skills
  * @category          generator
  * @purpose           governance:agent-governance
- * @scope             tools/scripts, ai-tools/ai-skills/templates, ai-tools/agent-packs, tools/lib/codex-skill-templates.js, tests/unit/export-portable-skills.test.js
+ * @scope             tools/scripts, ai-tools/ai-skills/templates, ai-tools/agent-packs, too../../../../lib/codex-skill-templates.js, tests/unit/export-portable-skills.test.js
  * @owner             docs
  * @needs             R-R27, R-R30
  * @purpose-statement Portable skills exporter — copies canonical template skills into cross-agent pack folders and validates drift.
@@ -21,7 +21,7 @@ const {
   parseSkillsList,
   selectTemplates,
   toPosix
-} = require('../lib/codex-skill-templates');
+} = require('../../../../lib/codex-skill-templates');
 
 const REPO_ROOT = process.cwd();
 const DEFAULT_SOURCE_DIR = 'ai-tools/ai-skills/templates';

@@ -14,8 +14,8 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { isExcludedV2ExperimentalPath } = require('../../../lib/docs-publishability');
-const { isGeneratedDocsPageFile } = require('../../../lib/docs-page-scope');
+const { isExcludedV2ExperimentalPath } = require('../../../../lib/docs-publishability');
+const { isGeneratedDocsPageFile } = require('../../../../lib/docs-page-scope');
 
 const TODO_COMMENT = '<!-- TODO: add page ending -->';
 const REPO_ROOT = getRepoRoot();

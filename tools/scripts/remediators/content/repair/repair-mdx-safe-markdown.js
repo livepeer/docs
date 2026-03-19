@@ -21,7 +21,7 @@ const {
   normalizeRepoPath,
   readFileSafe,
   repairMarkdownContent
-} = require('../../../lib/mdx-safe-markdown');
+} = require('../../../../lib/mdx-safe-markdown');
 
 function printHelp() {
   console.log(

@@ -18,17 +18,17 @@ const {
   VALID_CATEGORIES,
   compactWhitespace,
   normalizeRepoPath
-} = require('../lib/component-governance-utils');
+} = require('../../../../lib/component-governance-utils');
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
   buildGeneratedNoteLines
-} = require('../lib/generated-file-banners');
+} = require('../../../../lib/generated-file-banners');
 const {
   buildProvenanceComment,
   injectOrReplaceProvenanceComment,
   parseProvenanceComment
-} = require('./i18n/lib/provenance');
+} = require('../../automations/content/language-translation/lib/provenance');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'component-registry.json');

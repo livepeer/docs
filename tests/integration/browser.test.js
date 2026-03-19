@@ -38,7 +38,7 @@ try {
 }
 
 const { getMdxFiles, getStagedDocsPageFiles } = require('../utils/file-walker');
-const { getV2Pages } = require('../../tools/scripts/test-v2-pages');
+const { getV2Pages } = require('../../tools/scripts/validators/content/structure/test-v2-pages');
 const { ensureServerRunning, stopServer, getServerUrl } = require('../../.githooks/server-manager');
 
 const DEFAULT_BASE_URL = process.env.MINT_BASE_URL || 'http://localhost:3000';

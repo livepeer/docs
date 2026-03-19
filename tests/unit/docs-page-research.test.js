@@ -16,7 +16,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const research = require('../../tools/scripts/docs-page-research');
+const research = require('../../tools/scripts/audits/content/veracity/docs-page-research');
 
 let errors = [];
 

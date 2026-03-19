@@ -616,7 +616,7 @@ function truncateString(value, maxLen) {
 
 function getV2DocsJsonRoutes() {
   try {
-    const { getV2Pages } = require('../../tools/scripts/test-v2-pages');
+    const { getV2Pages } = require('../../tools/scripts/validators/content/structure/test-v2-pages');
     return new Set(getV2Pages().map((route) => normalizeInputPath(route)));
   } catch (error) {
     console.warn(`⚠️  Could not load docs.json v2 pages from tools/scripts/test-v2-pages.js: ${error.message}`);

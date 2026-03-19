@@ -108,7 +108,7 @@ async function testRunAuditFixAndStage() {
 
   fs.writeFileSync(abs, '# Temp WCAG Selftest\n\n<img src="/tmp-selftest.png" />\n', 'utf8');
 
-  const testV2Pages = require('../../tools/scripts/test-v2-pages');
+  const testV2Pages = require('../../tools/scripts/validators/content/structure/test-v2-pages');
   const originalGetV2Pages = testV2Pages.getV2Pages;
   testV2Pages.getV2Pages = function patchedGetV2Pages() {
     const base = originalGetV2Pages.call(this);

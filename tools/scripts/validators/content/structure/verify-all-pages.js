@@ -10,7 +10,7 @@
  * @usage             node tools/scripts/verify-all-pages.js
  */
 const puppeteer = require('puppeteer');
-const { getEnglishComponentLibraryRoutes } = require('../lib/component-governance-utils');
+const { getEnglishComponentLibraryRoutes } = require('../../../../lib/component-governance-utils');
 
 const BASE_URL = 'http://localhost:3333';
 const ROUTE_LABELS = {

@@ -18,8 +18,8 @@ const {
   getMdxFiles,
   getStagedDocsPageFiles,
   getStagedFiles
-} = require('../../../../tests/utils/file-walker');
-const { extractImports } = require('../../../../tests/utils/mdx-parser');
+} = require('../../../../../tests/utils/file-walker');
+const { extractImports } = require('../../../../../tests/utils/mdx-parser');
 
 const RULE_LABEL = '[4.12]';
 const DEFAULT_COMPONENT_ROOT = 'snippets/components';

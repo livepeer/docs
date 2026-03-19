@@ -18,7 +18,7 @@ const {
   stripForWordCount,
   countWords,
   normalizeRel
-} = require('../lib/docs-index-utils');
+} = require('../../../../lib/docs-index-utils');
 
 const REPO_ROOT = process.cwd();
 

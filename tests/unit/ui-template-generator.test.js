@@ -14,7 +14,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const generator = require('../../tools/scripts/generate-ui-templates');
+const generator = require('../../tools/scripts/generators/components/library/generate-ui-templates');
 
 const REPO_ROOT = process.cwd();
 

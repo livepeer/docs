@@ -18,11 +18,11 @@ const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
   buildGeneratedNoteLines
-} = require('../lib/generated-file-banners');
+} = require('../../../../lib/generated-file-banners');
 
 let yaml = null;
 try {
-  yaml = require('../lib/load-js-yaml');
+  yaml = require('../../../../lib/load-js-yaml');
 } catch (_err) {
   yaml = null;
 }

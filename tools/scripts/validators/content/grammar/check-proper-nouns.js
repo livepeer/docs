@@ -18,7 +18,7 @@ const { execSync } = require('child_process');
 const { unified } = require('unified');
 const remarkParse = require('remark-parse').default;
 const remarkMdx = require('remark-mdx').default;
-const { getAuthoredMdxFiles } = require('../../../../tests/utils/file-walker');
+const { getAuthoredMdxFiles } = require('../../../../../tests/utils/file-walker');
 
 const PROPER_NOUNS = {
   livepeer: 'Livepeer',

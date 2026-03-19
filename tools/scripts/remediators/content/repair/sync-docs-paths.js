@@ -12,7 +12,7 @@
  * @usage             node tools/scripts/remediators/content/sync-docs-paths.js --staged --dry-run
  */
 
-const sync = require('../../lib/docs-path-sync');
+const sync = require('../../../config/docs-path-sync');
 
 function parseArgs(argv) {
   const args = { mode: 'dry-run', staged: true, stage: false, json: false, help: false, from: '', to: '' };

@@ -17,7 +17,7 @@ const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
   buildGeneratedNoteLines
-} = require('../lib/generated-file-banners');
+} = require('../../../../lib/generated-file-banners');
 
 const REPO_ROOT = process.cwd();
 const SOURCE_INDEX_PATH = 'v2/index.mdx';

@@ -35,12 +35,12 @@ const {
   extractFirstParagraph,
   sentenceFromParagraph,
   formatInlineArray
-} = require('../lib/docs-index-utils');
+} = require('../../../../lib/docs-index-utils');
 const {
   readManifest,
   getFirstArtifactByPath,
   matchesAnyPattern
-} = require('../lib/generated-artifacts');
+} = require('../../../../lib/generated-artifacts');
 
 const BASE_URL = 'https://docs.livepeer.org';
 const VERSION = 'docs-index.v1';
