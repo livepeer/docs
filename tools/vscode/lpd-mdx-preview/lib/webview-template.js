@@ -11,7 +11,7 @@ function buildWebviewHtml({ bodyHtml, cssUri, jsUri, markdownItUri, mermaidUri, 
   <meta http-equiv="Content-Security-Policy"
     content="default-src 'none';
              img-src vscode-resource: https: data:;
-             style-src vscode-resource: 'unsafe-inline';
+             style-src vscode-resource: https: 'unsafe-inline';
              script-src vscode-resource: 'unsafe-inline';
              font-src vscode-resource: https:;">
   <link rel="stylesheet" href="${cssUri}">

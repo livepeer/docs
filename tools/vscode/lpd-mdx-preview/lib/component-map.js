@@ -2,6 +2,11 @@
 
 const mintlify = require('./mintlify-components');
 
+function iconBadge(name) {
+  if (!name) return '';
+  return `<i class="fa-solid fa-${escapeHtml(name)}" style="color: var(--accent); margin-right: 6px;"></i>`;
+}
+
 /**
  * 3-tier component rendering:
  *   Tier 1: Mintlify built-ins (mintlify-components.js)
@@ -158,28 +163,22 @@ const livepeerComponents = {
 
   // FrameMode headings
   H1(props, children) {
-    const icon = props.icon || '';
-    return `<h1>${icon ? escapeHtml(`[${icon}] `) : ''}${children}</h1>`;
+    return `<h1>${iconBadge(props.icon)}${children}</h1>`;
   },
   H2(props, children) {
-    const icon = props.icon || '';
-    return `<h2>${icon ? escapeHtml(`[${icon}] `) : ''}${children}</h2>`;
+    return `<h2>${iconBadge(props.icon)}${children}</h2>`;
   },
   H3(props, children) {
-    const icon = props.icon || '';
-    return `<h3>${icon ? escapeHtml(`[${icon}] `) : ''}${children}</h3>`;
+    return `<h3>${iconBadge(props.icon)}${children}</h3>`;
   },
   H4(props, children) {
-    const icon = props.icon || '';
-    return `<h4>${icon ? escapeHtml(`[${icon}] `) : ''}${children}</h4>`;
+    return `<h4>${iconBadge(props.icon)}${children}</h4>`;
   },
   H5(props, children) {
-    const icon = props.icon || '';
-    return `<h5>${icon ? escapeHtml(`[${icon}] `) : ''}${children}</h5>`;
+    return `<h5>${iconBadge(props.icon)}${children}</h5>`;
   },
   H6(props, children) {
-    const icon = props.icon || '';
-    return `<h6>${icon ? escapeHtml(`[${icon}] `) : ''}${children}</h6>`;
+    return `<h6>${iconBadge(props.icon)}${children}</h6>`;
   },
   P(props, children) {
     return `<p>${children}</p>`;

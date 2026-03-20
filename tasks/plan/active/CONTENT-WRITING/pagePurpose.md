@@ -14,6 +14,7 @@
 **Description**: Why this page exists and what it produces for the reader. Purpose governs what content is needed, what outcome is expected, and what voice and structure best serve the reader's state when they arrive.
 **Defines**: What should this page help the reader do, decide, understand, or find?
 **Governs**:
+
 1. Content need — what state the reader is in when they arrive
 2. Content outcome — what they can do, decide, or know after reading
 3. Voice — what register and framing this purpose requires
@@ -33,6 +34,7 @@
 **Defines**: What should this page help the reader do? — Understand what exists and where to go next
 
 **Governs**:
+
 1. Content need: reader is new to this section or product and is disoriented
 2. Content outcome: reader knows where they are, what's available, and which path is theirs
 3. Voice: neutral and orienting — naming and routing, not explaining; low instruction density
@@ -48,6 +50,7 @@
 **Defines**: What should this page help the reader do? — Understand how something works at a mechanistic level
 
 **Governs**:
+
 1. Content need: reader needs to understand HOW something works
 2. Content outcome: reader can reason about the system, predict behaviour, make informed decisions when using it
 3. Voice: precise and conceptual — cause-and-effect framing, no imperative instructions
@@ -63,6 +66,7 @@
 **Defines**: What should this page help the reader do? — Acquire the vocabulary and foundational concepts needed to proceed
 
 **Governs**:
+
 1. Content need: reader lacks prerequisite vocabulary or conceptual foundations
 2. Content outcome: reader can read and understand more advanced content; has the vocabulary to look things up; can communicate using correct terms
 3. Voice: accessible and definitional — plain-language first, technical terms introduced with explanation, no assumed prior knowledge
@@ -78,6 +82,7 @@
 **Defines**: What should this page help the reader do? — Make a confident, justified decision between known options
 
 **Governs**:
+
 1. Content need: reader needs to pick between known options and doesn't know which suits them
 2. Content outcome: reader makes a decision and has justification for it
 3. Voice: direct and prescriptive — "if you are X, use Y" framing, clear recommendation, minimal hedging
@@ -93,6 +98,7 @@
 **Defines**: What should this page help the reader do? — Form an informed judgment about viability, performance, or comparative value
 
 **Governs**:
+
 1. Content need: reader is researching whether something is worth doing or which approach to take — no decision committed to yet
 2. Content outcome: reader has sufficient evidence and analytical framework to form a judgment; knows what questions remain
 3. Voice: analytical and evidential — data-forward, trade-off framing, financial/economic register where appropriate, no prescription
@@ -108,6 +114,7 @@
 **Defines**: What should this page help the reader do? — Reach a minimal working state quickly and know where to go for depth
 
 **Governs**:
+
 1. Content need: reader wants to be functional quickly; depth is not the priority right now
 2. Content outcome: reader has something working; knows the path to full depth; has not been slowed down by irrelevant detail
 3. Voice: direct and step-numbered — "do this, then this, then this"; callouts only for blockers; no preamble
@@ -123,6 +130,7 @@
 **Defines**: What should this page help the reader do? — Complete a full implementation that is working, understood, and production-appropriate
 
 **Governs**:
+
 1. Content need: reader is implementing something end-to-end, with the intent to ship
 2. Content outcome: reader has a working, production-appropriate implementation; understands what was built and why; can maintain and extend it
 3. Voice: instructional with rationale — steps numbered but non-obvious decisions explained; not just "do this" but "do this because"
@@ -138,6 +146,7 @@
 **Defines**: What should this page help the reader do? — Configure the system to meet their specific requirements
 
 **Governs**:
+
 1. Content need: reader needs to adjust system behaviour to match their requirements
 2. Content outcome: system is configured to the reader's requirements; reader understands the configuration choices made and can revisit them
 3. Voice: precise and option-oriented — parameter tables, valid values, implication statements; "if you need X, set Y to Z"
@@ -153,6 +162,7 @@
 **Defines**: What should this page help the reader do? — Manage a live system effectively in day-to-day operation
 
 **Governs**:
+
 1. Content need: reader is responsible for a live system and needs to perform operational tasks or make operational decisions
 2. Content outcome: reader can perform routine operational tasks, make management decisions, maintain system health, and act on operational signals
 3. Voice: precise and direct — imperative for procedures, no narrative warm-up, commands explicit, expected outputs stated
@@ -168,6 +178,7 @@
 **Defines**: What should this page help the reader do? — Diagnose and resolve a specific problem and confirm the system is restored
 
 **Governs**:
+
 1. Content need: reader has a problem; the system is not working as expected
 2. Content outcome: root cause identified, resolution applied, system restored, reader understands what happened
 3. Voice: direct and diagnostic — no preamble, symptom → cause → fix structure, expected outputs explicit
@@ -183,6 +194,7 @@
 **Defines**: What should this page help the reader do? — Confirm the system is correct and know what to do if a check fails
 
 **Governs**:
+
 1. Content need: reader wants to confirm correctness after a setup or deployment step, or as a regular health check
 2. Content outcome: reader has confirmed the system is set up correctly; any check failures are surfaced with a clear path to resolution
 3. Voice: procedural and confirmatory — "run this, expect this, if you see this instead go here"
@@ -198,6 +210,7 @@
 **Defines**: What should this page help the reader do? — Connect Livepeer with another system and understand the data and authentication contract between them
 
 **Governs**:
+
 1. Content need: reader needs Livepeer to connect with an external system, platform, or tool
 2. Content outcome: integration is complete and functioning; reader understands the data contract, authentication model, and how to maintain the connection
 3. Voice: technical and bilateral — names both systems explicitly, data formats specified, no assumed knowledge of the target system
@@ -213,6 +226,7 @@
 **Defines**: What should this page help the reader do? — Improve the system on a specific performance, cost, or reliability metric with measurable confidence
 
 **Governs**:
+
 1. Content need: reader has a working system and wants to improve performance, reduce cost, or increase reliability
 2. Content outcome: reader has made specific improvements; understands the levers and their trade-offs; can measure the result
 3. Voice: analytical and technical — metrics-forward, trade-off framing, quantitative where possible
@@ -228,6 +242,7 @@
 **Defines**: What should this page help the reader do? — Find the exact fact, parameter, syntax, or specification they need without friction
 
 **Governs**:
+
 1. Content need: reader needs a specific fact, value, syntax, or specification and knows what they're looking for
 2. Content outcome: reader has the exact information; returns to their work immediately
 3. Voice: neutral and precise — no narrative, no explanation, no framing; data speaks for itself
@@ -243,6 +258,7 @@
 **Defines**: What should this page help the reader do? — Know what changed, assess the impact, and take any required action
 
 **Governs**:
+
 1. Content need: reader needs to know about a change and whether it requires action
 2. Content outcome: reader is aware of the change; understands the impact; knows what action to take and when
 3. Voice: informational and clear — change stated first, impact second, action third; severity explicit
@@ -259,21 +275,21 @@ troubleshoot, verify, integrate, optimise, reference, update
 
 ## Deprecated aliases (validator migration)
 
-| Deprecated value | Maps to |
-|---|---|
-| `landing` | `orient` |
-| `overview` | `orient` |
-| `orientation` | `orient` |
-| `concept` | `explain` |
-| `tutorial` | `learn` |
-| `evaluation` | `evaluate` |
-| `decision` | `choose` |
-| `setup` | `configure` |
-| `how_to` | `build` or `configure` |
-| `operations` | `operate` |
-| `troubleshooting` | `troubleshoot` |
-| `faq` | `reference` |
-| `glossary` | `reference` |
-| `changelog` | `update` |
-| `compare` | `evaluate` or `choose` |
-| `optimize` | `optimise` |
+| Deprecated value  | Maps to                |
+| ----------------- | ---------------------- |
+| `landing`         | `orient`               |
+| `overview`        | `orient`               |
+| `orientation`     | `orient`               |
+| `concept`         | `explain`              |
+| `tutorial`        | `learn`                |
+| `evaluation`      | `evaluate`             |
+| `decision`        | `choose`               |
+| `setup`           | `configure`            |
+| `how_to`          | `build` or `configure` |
+| `operations`      | `operate`              |
+| `troubleshooting` | `troubleshoot`         |
+| `faq`             | `reference`            |
+| `glossary`        | `reference`            |
+| `changelog`       | `update`               |
+| `compare`         | `evaluate` or `choose` |
+| `optimize`        | `optimise`             |
